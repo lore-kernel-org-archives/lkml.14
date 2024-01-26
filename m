@@ -1,233 +1,203 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8FE2554E
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C2124B31
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706306268; cv=none; b=uDQmHX00ovfOXow00c2wSqTPwgaVyvrUYnhSGH83w0wxhuY0MsZQ73/7cl0Q475bt6lpcaWBznAnNWk+w7lCIjh2hCN0YfX9YWXvXnSc7Cictzv/Gspt1HMiDVv7mxkCnthPy+JCsFiyVRDCzzxr401JznFQ/QI+o9coUod7bu4=
+	t=1706306327; cv=none; b=GEAI9rqyF91FRXaip+Kp638MOL32/KqwesqU+PxtRUe57aOg9rkkxxwjNuzuTG0/G/zEqStx16mW7Kfrg2iVTRTJQhuRP8kBF6gGkR4h1Bb05crQs5xUw7nu9OodWnp/A30RgxGpH8gQUQ8ZynGoAQxz+tKKu/bR4P/exoOZeIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706306268; c=relaxed/simple;
-	bh=BVrGq/7XfOhF9vHBuLXUYQUG8qvDs8RmRicYvfTIGJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M5XNliKHKLhc8Ubkd1biQb7o3RKfWVbZDZ+J4cK9PIdbEixoNVt8idEJL11ZQbptw5V159MhdagAcPPNdoEo3xf1fLGZFVn89v0hLGKlrEPcg0R3CLfx6UDF6hwyYpblh2i74lKaBLwAdBIyZ+eCoJFLp43HfE/6REc5iR/8hX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mgr@pengutronix.de>)
-	id 1rTUCX-0001Od-Nf; Fri, 26 Jan 2024 22:57:29 +0100
-Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mgr@pengutronix.de>)
-	id 1rTUCU-002atY-LE; Fri, 26 Jan 2024 22:57:26 +0100
-Received: from mgr by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
-	(envelope-from <mgr@pengutronix.de>)
-	id 1rTUCU-0020WK-IA; Fri, 26 Jan 2024 22:57:26 +0100
-Date: Fri, 26 Jan 2024 22:57:26 +0100
-From: Michael Grzeschik <mgr@pengutronix.de>
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Dominique Martinet <asmadeus@codewreck.org>,
-	Jan =?iso-8859-15?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Latchesar Ionkov <lucho@ionkov.net>, linux-usb@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	v9fs@lists.linux.dev,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de, Eric Van Hensbergen <ericvh@kernel.org>
-Subject: Re: [PATCH 0/3] usb: gadget: 9pfs transport
-Message-ID: <20240126215726.GA183863@pengutronix.de>
-References: <20240116-ml-topic-u9p-v1-0-ad8c306f9a4e@pengutronix.de>
- <ZaZsUQUhSlMPLJg0@codewreck.org>
- <0aba51a8be0fb165b44ec956bec7a9698a9518a2.camel@pengutronix.de>
- <Zaex_fkKcui7QZd7@codewreck.org>
- <80c4e788-65df-4a82-8453-74683289abcb@collabora.com>
+	s=arc-20240116; t=1706306327; c=relaxed/simple;
+	bh=D45Up2bdBfDyI7OgcSPW8IyQu74BTfqA+rIamsUdIsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mBYWRYX0U/rbZ8HtlvwTjEBcHxy/y5qcLzum4E+DKsVAMP04S17xeBSgk7NuUPWSx7Sfp2wI2+aAHfFAFoIIdZhxXu9JEGhf/FRTmU2Ck145QMxJVOqL62kDGfYG/1OtFRv4dyJmpbiuWk5Zh+FaihNszB9bm76ZA1HHyff40DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnZWwvIf; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnZWwvIf"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d7232dcb3eso6448155ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:58:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706306325; x=1706911125; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=TWFD8GN2cVl4vpBfTmCVEM0ZmFoZqktV+61fEzV3wTw=;
+        b=HnZWwvIf3AHGBe/bVjNpWYif4NOzxbvAIU74ZfJkfdQDXvbhjmDp+FPdEah+AmrRMs
+         QT4WMAWT6Xcsp/RsaCieypnSfDagDoeXQVk3Qnv0v4EE4SoK9kEDLmPN5r+MdamP55zH
+         msiWXeQGaUky1kjv/+YpgWTQhCbCiQD+OS2hXqL7HfnD0nCe4uRVN7nfUs2Fh4WRJSad
+         3XJgi7aJcZ39PL5ORf7S7xWEB5Wh30czeTFSrwz51CTi+9zFIHoWJC+4Vdm7IMnlvH7V
+         oC5+9EyGIlUkzMrEL78E3UeS6L7CcZdaly0L0aFdXj1lHupsQG+yTQkybTLUwpE4sA10
+         PQ7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706306325; x=1706911125;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TWFD8GN2cVl4vpBfTmCVEM0ZmFoZqktV+61fEzV3wTw=;
+        b=HkBYUyui9p4FHSmYGQYW39iw330rvB0qJPzWim7h94UJn7SiqQeP7537fk3KgwJ449
+         ZQcVQFJfDtXk/uZXjmsHfkuxbzOF/ipB43lhI/p22oMuf8k18eD7RQCwEMy7U2yeEN80
+         +S0Ij35nZp8TwjNIsPcJFE8TXklvbO0bZMYkMJJl6oZVqxqIgtFvfIoRpAbHy9tx70dH
+         XsjJL1DHH10NrM0EBhlCp7y4vk4L+MBK8Q2y8fsFUsjgd7WEoTE+KnGnRLINhgQEjicl
+         nViNUI36QZbxKnsRZRoPcsNq1IUmi23Nt5AwWp+h/3cx2+JMMH8+qcD1iN9qXN1ZdCek
+         ScAA==
+X-Gm-Message-State: AOJu0Yy8/uE5ifCV4oLdCICgjYIgv28uTtmh7JEFQI5eNv9BJHISOPJm
+	X4EODNL9hYgUMxjIR9iM9UZYEQosHGQd1YLQUPOcHJ9fed9y7CUPjnPvFF7Y
+X-Google-Smtp-Source: AGHT+IHP9cd5TIFAOU3gcvoQsz/ywakikA29dHOhFvI+6g0y8TcHrpoLhO6RIX2q0dFBv0cZyGCAeA==
+X-Received: by 2002:a17:902:b08d:b0:1d7:8e11:152c with SMTP id p13-20020a170902b08d00b001d78e11152cmr411980plr.3.1706306324723;
+        Fri, 26 Jan 2024 13:58:44 -0800 (PST)
+Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
+        by smtp.gmail.com with ESMTPSA id ko3-20020a17090307c300b001d77c28ae9dsm1403355plb.17.2024.01.26.13.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 13:58:44 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Fri, 26 Jan 2024 11:58:43 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH wq/for-6.9] workqueue: Break up enum definitions and give
+ names to the types
+Message-ID: <ZbQrE6xwqiSUlTRn@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <80c4e788-65df-4a82-8453-74683289abcb@collabora.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mgr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+From e563d0a7cdc1890ff36bb177b5c8c2854d881e4d Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Fri, 26 Jan 2024 11:55:50 -1000
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+workqueue is collecting different sorts of enums into a single unnamed enum
+type which can increase confusion around enum width. Also, unnamed enums
+can't be accessed from BPF. Let's break up enum definitions according to
+their purposes and give them type names.
 
-On Fri, Jan 26, 2024 at 08:47:22PM +0100, Andrzej Pietrasiewicz wrote:
->Hi,
->
->W dniu 17.01.2024 o=A011:54, Dominique Martinet pisze:
->>Jan L=FCbbe wrote on Tue, Jan 16, 2024 at 04:51:41PM +0100:
->>>>So I didn't have time to look at everything through, just want to make
->>>>sure, this series allows sharing data from an usb gadget (e.g. some
->>>>device with storage) over 9p as an alternative to things like MTP ?
->>>
->>>It's the other way around. :) The USB host exports a filesystem, while t=
-he
->>>gadget on the USB device side makes it mountable. Our main use-case is t=
-o use it
->>>as an alternative to NFS root booting during the development of embedded=
- Linux
->>>devices. NFS root works in many cases, but has some downsides, which mak=
-e it
->>>cumbersome to use in more and more cases.
->>
->>Oh!
->>Okay, this makes a lot more sense. And that'll need a bit more
->>explanations in the commits & Documentation/ as you've concluded :)
->>
->>
->>>NFS root needs correctly configured Ethernet interfaces on both the deve=
-lopment
->>>host and the target device. On the target, this can interfere with the n=
-etwork
->>>configuration that is used for the normal device operation (DHCP client,=
- ...).
->>>For the host, configuring a NFS (and perhaps DHCP) server can be an obst=
-acle.
->>>
->>>For target devices which don't have a real Ethernet interface, NFS root =
-would
->>>also work with the USB Ethernet gadget, but this increases the complexity
->>>further.
->>>
->>>As many embedded boards have a USB device port anyway, which is used dur=
-ing
->>>development for uploading the boot-loader and to flash filesystem images=
- (i.e.
->>>via the fastboot protocol), we want to just reuse that single data cable=
- to
->>>allow access to the root filesystem as well.
->>>
->>>Compared to flashing images, using a network filesystem like NFS and 9P =
-reduces
->>>the time between compiling on the host and running the binary on the tar=
-get, as
->>>no flash and reboot cycle is needed. That can get rid of many minutes of=
- waiting
->>>over a day. :)
->>
->>My other hat is on embedded development (dayjob at Atmark Techno[1], the
->>only english page linked is about 4 years out of date but I guess it's
->>better than no page at all), so I can understand where you're coming
->>from -- thanks for the background.
->>
->>[1] https://www.atmark-techno.com/english
->>
->>That means I'll actually want to test this, but kind of always busy so
->>it might take a few weeks...
->>Or better, do you happen to know if qemu can create a USB controller
->>that supports OTG so it'll be easy to test for folks with no such
->>hardware?
->
->Maybe dummy_hcd is what you want?
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+Applied to wq/for-6.9.
 
-I did a lot of testing with dummy_hcd. So this should work.
+ include/linux/workqueue.h | 41 +++++++++++++++++++++++----------------
+ kernel/workqueue.c        |  6 +++++-
+ 2 files changed, 29 insertions(+), 18 deletions(-)
 
-But of course testing the special case of rootfs is tricky. Since you
-will have to share the gadget with qemu to boot the rootfs from
-somewhere else.
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index 2cc0a9606175..78047d0d9882 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -22,7 +22,7 @@
+  */
+ #define work_data_bits(work) ((unsigned long *)(&(work)->data))
+ 
+-enum {
++enum work_bits {
+ 	WORK_STRUCT_PENDING_BIT	= 0,	/* work item is pending execution */
+ 	WORK_STRUCT_INACTIVE_BIT= 1,	/* work item is inactive */
+ 	WORK_STRUCT_PWQ_BIT	= 2,	/* data points to pwq */
+@@ -36,21 +36,6 @@ enum {
+ 
+ 	WORK_STRUCT_COLOR_BITS	= 4,
+ 
+-	WORK_STRUCT_PENDING	= 1 << WORK_STRUCT_PENDING_BIT,
+-	WORK_STRUCT_INACTIVE	= 1 << WORK_STRUCT_INACTIVE_BIT,
+-	WORK_STRUCT_PWQ		= 1 << WORK_STRUCT_PWQ_BIT,
+-	WORK_STRUCT_LINKED	= 1 << WORK_STRUCT_LINKED_BIT,
+-#ifdef CONFIG_DEBUG_OBJECTS_WORK
+-	WORK_STRUCT_STATIC	= 1 << WORK_STRUCT_STATIC_BIT,
+-#else
+-	WORK_STRUCT_STATIC	= 0,
+-#endif
+-
+-	WORK_NR_COLORS		= (1 << WORK_STRUCT_COLOR_BITS),
+-
+-	/* not bound to any CPU, prefer the local CPU */
+-	WORK_CPU_UNBOUND	= NR_CPUS,
+-
+ 	/*
+ 	 * Reserve 8 bits off of pwq pointer w/ debugobjects turned off.
+ 	 * This makes pwqs aligned to 256 bytes and allows 16 workqueue
+@@ -74,6 +59,26 @@ enum {
+ 	WORK_OFFQ_LEFT		= BITS_PER_LONG - WORK_OFFQ_POOL_SHIFT,
+ 	WORK_OFFQ_POOL_BITS	= WORK_OFFQ_LEFT <= 31 ? WORK_OFFQ_LEFT : 31,
+ 
++};
++
++enum work_flags {
++	WORK_STRUCT_PENDING	= 1 << WORK_STRUCT_PENDING_BIT,
++	WORK_STRUCT_INACTIVE	= 1 << WORK_STRUCT_INACTIVE_BIT,
++	WORK_STRUCT_PWQ		= 1 << WORK_STRUCT_PWQ_BIT,
++	WORK_STRUCT_LINKED	= 1 << WORK_STRUCT_LINKED_BIT,
++#ifdef CONFIG_DEBUG_OBJECTS_WORK
++	WORK_STRUCT_STATIC	= 1 << WORK_STRUCT_STATIC_BIT,
++#else
++	WORK_STRUCT_STATIC	= 0,
++#endif
++};
++
++enum wq_misc_consts {
++	WORK_NR_COLORS		= (1 << WORK_STRUCT_COLOR_BITS),
++
++	/* not bound to any CPU, prefer the local CPU */
++	WORK_CPU_UNBOUND	= NR_CPUS,
++
+ 	/* bit mask for work_busy() return values */
+ 	WORK_BUSY_PENDING	= 1 << 0,
+ 	WORK_BUSY_RUNNING	= 1 << 1,
+@@ -347,7 +352,7 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
+  * Workqueue flags and constants.  For details, please refer to
+  * Documentation/core-api/workqueue.rst.
+  */
+-enum {
++enum wq_flags {
+ 	WQ_UNBOUND		= 1 << 1, /* not bound to any cpu */
+ 	WQ_FREEZABLE		= 1 << 2, /* freeze during suspend */
+ 	WQ_MEM_RECLAIM		= 1 << 3, /* may be used for memory reclaim */
+@@ -387,7 +392,9 @@ enum {
+ 	__WQ_ORDERED		= 1 << 17, /* internal: workqueue is ordered */
+ 	__WQ_LEGACY		= 1 << 18, /* internal: create*_workqueue() */
+ 	__WQ_ORDERED_EXPLICIT	= 1 << 19, /* internal: alloc_ordered_workqueue() */
++};
+ 
++enum wq_consts {
+ 	WQ_MAX_ACTIVE		= 512,	  /* I like 512, better ideas? */
+ 	WQ_UNBOUND_MAX_ACTIVE	= WQ_MAX_ACTIVE,
+ 	WQ_DFL_ACTIVE		= WQ_MAX_ACTIVE / 2,
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index b6b690a17f7c..45d0a784ba4f 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -56,7 +56,7 @@
+ 
+ #include "workqueue_internal.h"
+ 
+-enum {
++enum worker_pool_flags {
+ 	/*
+ 	 * worker_pool flags
+ 	 *
+@@ -75,7 +75,9 @@ enum {
+ 	 */
+ 	POOL_MANAGER_ACTIVE	= 1 << 0,	/* being managed */
+ 	POOL_DISASSOCIATED	= 1 << 2,	/* cpu can't serve workers */
++};
+ 
++enum worker_flags {
+ 	/* worker flags */
+ 	WORKER_DIE		= 1 << 1,	/* die die die */
+ 	WORKER_IDLE		= 1 << 2,	/* is idle */
+@@ -86,7 +88,9 @@ enum {
+ 
+ 	WORKER_NOT_RUNNING	= WORKER_PREP | WORKER_CPU_INTENSIVE |
+ 				  WORKER_UNBOUND | WORKER_REBOUND,
++};
+ 
++enum wq_internal_consts {
+ 	NR_STD_WORKER_POOLS	= 2,		/* # standard pools per cpu */
+ 
+ 	UNBOUND_POOL_HASH_ORDER	= 6,		/* hashed by pool->attrs */
+-- 
+2.43.0
 
-Regards,
-Michael
-
->>We've got enough 9p protocols that aren't actually tested on a regular
->>basis, it'd be great if we could have something that can run anywhere.
->>
->>
->>>diod (9pfs server) and the forwarder are on the development host, where =
-the root
->>>filesystem is actually stored. The gadget is initialized during boot (or=
- later)
->>>on the embedded board. Then the forwarder will find it on the USB bus an=
-d start
->>>forwarding requests.
->>>
->>>It may seem a bit unusual that in this case the requests come from the d=
-evice
->>>and are handled by the host. The reason is that USB device ports are nor=
-mally
->>>not available on PCs, so a connection in the other direction would not w=
-ork.
->>
->>Right, most host PCs won't have OTG available...
->>I was also perplexed by the linux foundation (0x1d6b):0x0109 id, that
->>might be clearer once it's properly documented -- I'll let someone from
->>the usb side chime on this as I have no idea what's appropriate.
->>
->>
->>>In the future, the functionality of the forwarder could be integrated in=
-to the
->>>9pfs server. Alternatively, an improved forwarder could also react to ud=
-ev
->>>events of gadgets showing up and forward them to different 9PFS server o=
-ver the
->>>network (when you have multiple target devices connected to one USB host=
-).
->>
->>Plenty of potential work ahead :)
->>Frankly at this stage I don't think it's much simpler than e.g. CDC
->>ethernet gadget and mounting nfs over tcp, but with further improvements
->>it can definitely get simpler.
->>
->>
->>>Perhaps, the inverse setup (9PFS server on the USB gadget side, mounted =
-on a PC)
->>>also would be useful in the future and could share some of this code. Th=
-en,
->>>you'd have an alternative to MTP.
->>
->>(Yeah, I'm not actively looking for that -- was just asking because MTP
->>has been kind of dead lately and I'm not aware of any potential
->>alternative, but I didn't go looking for them either -- let's leave that
->>to later)
->>
->
->
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAmW0KsMACgkQC+njFXoe
-LGRMDA//TS98JSMa3OqGApgt33CFV5o169WiV14RCxkouF2ELFSZ8MKaiYrpijV6
-joMER3osdUuvuaRcrw2HDK9TzeKEfm6PwkrSrJu0mTt7VHBN6vFlhcuTVME8ED+G
-Wah5cpVq8wVjLybR8m27R6WYkLUH629ARvpJAEa13A5+76ZIBPM6gUklEvrtUJ0k
-WQEsF6G5e0ddRp48CAFalniGBFGr+yKmiEJ+emBDGCJycFWg6clmXSuQR86ZTfU4
-wQ76yg8lNbMXk178yjzNLhc2kHjbr/JO7Gn3CQMl3wzgkmhGBqPoF5DEgxEcKA5a
-yulcwwmn8S1zTSJqKApd1vMSlf7qhG3O2kf6e3P+oG+eMJKALk5xud5u0n3gtMgK
-Mk7CqlWP/UJ+SqgmBi+30i/+jKYnXuaIa9BHk77NNpPfXYZOMhheXqhw2wKHl/UW
-90Qq6DFQyLkfaGZpkuXkmmhmBmOKQ0R8AXz00luWKuVhZjC5oi6B0mTcrUDpBUt6
-aBOiKQxE6l/MK6l6wk36H6S9MPA+OAQbD8FfsaLkKJsTaS9qr4h28mruWpPq6uJU
-iD7SDFCR35Yu/6y4U/m9w4imQNUFv+HwBGmRXukRDQ9apVUEYSJ6GO+6RHMmNUPR
-AHmjXrN9n/IfQbHXjhus37xuDOs5D1U+FBFeuWcRATMifkult+M=
-=UteF
------END PGP SIGNATURE-----
-
---gBBFr7Ir9EOA20Yy--
