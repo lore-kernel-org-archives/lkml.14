@@ -1,162 +1,199 @@
-Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F2922EF8;
-	Fri, 26 Jan 2024 19:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.28.40.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A77D225CC
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 19:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706298939; cv=none; b=aHSVSolgwO5SViNc80vlY7IR6BFXhkFNvUg/raA6KeGt2V5NRNUSfc9vGdzKZ1PxnGipQM7bWnbUXQ3x7NA3s2BBwu/Q8hbwlA3Zg3/kgVii0O6B1MqUwgQJb1QcPL/h8qU3bV4UlAonIuxsXAtUW4CI4a/LkekQiNa3+891Le4=
+	t=1706299072; cv=none; b=lrYZ/m94dnxMeLMKHCrsNIjHuJ3McwJki866/y8EbWnKhwQECIDymnNy3uqxFLADUhjoGyqjfI0z59BEHhCBwTl6pUa7A97ngGqgt5rb58jCjFfNjucP311IRlYAMThbl7OdYyLpPoYFqvearQ9zfIcI4d2Zjyr5UD98pjCEo3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706298939; c=relaxed/simple;
-	bh=+npbQHZuZBd0gTA1lLyMDwpNWnMD0l2Ea23p7bvYMBU=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CNH0/V7BHSOFWiLicixWjqEBXNGWnBL0DCszttVn5Le7Dm5VRHIscgAk3sI4e51p8NqMb4D/LFv/3axIl332Ikf8pmKykjIUXZGweFuj/BLL9t7cJxY8EZlQymMIqFhUWOdMPlFS2k1rXmv5qnUY5piMKbcxjxzpJA0KfmTuTok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=P7o5HwKN; arc=none smtp.client-ip=139.28.40.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
+	s=arc-20240116; t=1706299072; c=relaxed/simple;
+	bh=HH+bibQgvv7Bgy7TKR8pWSXYp9b8IZvCD70dInTijM0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sfthUlmrgDnzeG3Bu5PDXYFSI8eh4mFY9jrAXGdZ9KlmX+BdZxS3haKDT/QhaFaQVVw5O0Igi13cXOERctuKw5s4DYBU8x4VrF3Z+8UDsGDbHO3UcO0C7abATLJ+cHHCr+FarIowFBgt1v7eh6ca9SoR44MC7qMdm2Kh8Lzk4Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Zxdxsvq4; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="P7o5HwKN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202305; t=1706298452;
-	bh=+npbQHZuZBd0gTA1lLyMDwpNWnMD0l2Ea23p7bvYMBU=;
-	h=Date:From:To:Subject:From;
-	b=P7o5HwKNFO+kfvsL1sw4+yniPUjmqIu2HTGQ6gIAjOfpXdtsgEiGdWl8Vr1R0aV7d
-	 7lmOAli/Rt3X99FdYa0x12uH1hf708rq00vR8sOa9I+Mdl89EkiNwUgaQdKGrAUXuy
-	 dgDTRsvoD13EXaROiEqreobxlCS2iUTDJ9gcwdLB2N32yQ9WQ1Ap95+tQ2gBokvI/A
-	 KlciJ8Zmh33fSDaiH558EduyMoq1gq8sStg31sFpePefAhGdgUM4506dWgmaSe2g/w
-	 5n/E5C0HgxG64rgIIFcDxbxnxSNQ4/Nc9VQ8K9UzEsTgpZ7SvWvNiufvbwFPq4E2SO
-	 r7G4eQL6oBtXw==
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id AB97C34A;
-	Fri, 26 Jan 2024 20:47:32 +0100 (CET)
-Date: Fri, 26 Jan 2024 20:47:32 +0100
-From: 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-To: Brian Norris <briannorris@chromium.org>, Kalle Valo <kvalo@kernel.org>, 
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: memcpy: detected field-spanning write (size 101) of single field
- "ext_scan->tlv_buffer" at drivers/net/wireless/marvell/mwifiex/scan.c:2251
- (size 1)
-Message-ID: <xebnh5c5rnfequ6khyhieugefrtt5mdftr6rsw522ocpg3yvln@tarta.nabijaczleweli.xyz>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Zxdxsvq4"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6dc8b280155so700780a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:57:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1706299070; x=1706903870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N8qZh8tfmWARSxkgMSjgm0Ee+mYC8Et59eGzshH4MMI=;
+        b=Zxdxsvq4TBjA+0cUGpJrzLCgYFdfXtX7pzeSC+ylQFgoMjT+3mhg2P1OJ2yHi7/oZ+
+         Zj36Dg36oGXwMBsEVznbe1mtwJnNldYROKzpvmDrRecfWomlve1m5S8iye6wnO7YYArS
+         mfBbQPSK8INqcdhCpmTi32JKMuTf6AHW7mR3o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706299070; x=1706903870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N8qZh8tfmWARSxkgMSjgm0Ee+mYC8Et59eGzshH4MMI=;
+        b=ZAJ0NI0hF2GKKtgE2inJFqZyQ6oVi7WxiMuw2zTkrZ7yRigDVRFKSo38yGBmfZJbj1
+         2Q1hQUrHzyA/MpAR1n1RtVYiREYJ2JJeq6C4lGy35s6drmNTajbtgQPrLP6mVISgLpl4
+         IrW812klMBBijwqi05dAQsNLfmyo/P9P9ZiIgytQOWAjKgbIdiojAGThtKsXqczJRRZL
+         4ZN7llWY8UraXotqT89rrGvyuOZtd0u5NmgKEEqXS+N1HgowVAisMk8bTMEgY2L3nGxT
+         t61a9EU3Zzw/BcsOJrr3d8a530dSfCJlEbBKgg0gkLA8a3JFDYRCA0WsQQlv1udYTosK
+         fjQQ==
+X-Gm-Message-State: AOJu0Yw8mCcEfFrtkjY/iTu+Gqdt5G0p/t2rbJraYm1HJ8x5HJpw8349
+	PTdUNqkAOxgNRmZashVlpb326wzL8ajr/pIiPnujP/F9bdCaPED5QXMgmqYzuKIMLpUr9uvk5UA
+	4jXKvNkVKWvBBuY1myE3PVXivhjgmxeCMwDXI
+X-Google-Smtp-Source: AGHT+IGQ/4wSd/NSTRBeIlGwXqntNHpdR66dbLfhnzA2JaEkrHh6UrnPd664+kqFzjqkh4QOOamCSyjf8dZjuF4i4Ck=
+X-Received: by 2002:a05:6830:134f:b0:6dd:9d3a:2421 with SMTP id
+ r15-20020a056830134f00b006dd9d3a2421mr221283otq.3.1706299070172; Fri, 26 Jan
+ 2024 11:57:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mluzsztmpjhpplhn"
-Content-Disposition: inline
-User-Agent: NeoMutt/20231221-2-4202cf-dirty
-
-
---mluzsztmpjhpplhn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240124030458.98408-1-dregan@broadcom.com> <20240124030458.98408-11-dregan@broadcom.com>
+ <20240124184027.712b1e47@xps-13> <CAA_RMS42FaiN+Za1iY12o0YUANH9rJarBTBa=9jNn8x6_g-Fng@mail.gmail.com>
+ <20240126071913.699c3795@xps-13>
+In-Reply-To: <20240126071913.699c3795@xps-13>
+From: David Regan <dregan@broadcom.com>
+Date: Fri, 26 Jan 2024 11:57:39 -0800
+Message-ID: <CAA_RMS5gX88v_Qt1csgSL_ffMNsqo2G8B164EB_Hg=hXd620eg@mail.gmail.com>
+Subject: Re: [PATCH v3 10/10] mtd: rawnand: brcmnand: allow for on-die ecc
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: David Regan <dregan@broadcom.com>, dregan@mail.com, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	computersforpeace@gmail.com, kdasu.kdev@gmail.com, 
+	linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Joel Peshkin <joel.peshkin@broadcom.com>, 
+	Tomer Yacoby <tomer.yacoby@broadcom.com>, Dan Beygelman <dan.beygelman@broadcom.com>, 
+	William Zhang <william.zhang@broadcom.com>, Anand Gore <anand.gore@broadcom.com>, 
+	Kursad Oney <kursad.oney@broadcom.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, 
+	andre.przywara@arm.com, baruch@tkos.co.il, 
+	linux-arm-kernel@lists.infradead.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi Miqu=C3=A8l,
 
-I have a Google Hana (mt8173-elm-hana.dts) laptop with Wi-Fi provided by
-the mmc@11260000/mwifiex@1 device ("marvell,sd8897").
+On Thu, Jan 25, 2024 at 10:19=E2=80=AFPM Miquel Raynal
+<miquel.raynal@bootlin.com> wrote:
+>
+> Hi David,
+>
+> dregan@broadcom.com wrote on Thu, 25 Jan 2024 11:47:46 -0800:
+>
+> > Hi Miqu=C3=A8l,
+> >
+> > On Wed, Jan 24, 2024 at 9:40=E2=80=AFAM Miquel Raynal <miquel.raynal@bo=
+otlin.com> wrote:
+> > >
+> > > Hi David,
+> > >
+> > > dregan@broadcom.com wrote on Tue, 23 Jan 2024 19:04:58 -0800:
+> > >
+> > > > Allow settings for on-die ecc such that if on-die ECC is selected
+> > > > don't error out but require ECC strap setting of zero
+> > > >
+> > > > Signed-off-by: David Regan <dregan@broadcom.com>
+> > > > Reviewed-by: William Zhang <william.zhang@broadcom.com>
+> > > > ---
+> > > > Changes in v3: None
+> > > > ---
+> > > > Changes in v2:
+> > > > - Added to patch series
+> > > > ---
+> > > >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 14 ++++++++++----
+> > > >  1 file changed, 10 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd=
+/nand/raw/brcmnand/brcmnand.c
+> > > > index a4e311b6798c..42526f3250c9 100644
+> > > > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > > > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > > > @@ -2727,9 +2727,11 @@ static int brcmnand_setup_dev(struct brcmnan=
+d_host *host)
+> > > >       cfg->blk_adr_bytes =3D get_blk_adr_bytes(mtd->size, mtd->writ=
+esize);
+> > > >
+> > > >       if (chip->ecc.engine_type !=3D NAND_ECC_ENGINE_TYPE_ON_HOST) =
+{
+> > > > -             dev_err(ctrl->dev, "only HW ECC supported; selected: =
+%d\n",
+> > > > -                     chip->ecc.engine_type);
+> > > > -             return -EINVAL;
+> > > > +             if (chip->ecc.strength) {
+> > > > +                     dev_err(ctrl->dev, "ERROR!!! HW ECC must be s=
+et to zero for non-hardware ECC; selected: %d\n",
+> > > > +                             chip->ecc.strength);
+> > >
+> > > Can you use a more formal string? Also clarify it because I don't
+> > > really understand what it leads to.
+> >
+> > How about:
+> >
+> > dev_err(ctrl->dev, "HW ECC set to %d, must be zero for on-die ECC\n",
+>
+> Actually I am wondering how legitimate this is. Just don't enable the
+> on host ECC engine if it's not in use. No need to check the core's
+> choice.
 
-On 6.6.11 in the dmesg I see
-[   41.314595] ------------[ cut here ]------------
-[   41.314634] memcpy: detected field-spanning write (size 101) of single f=
-ield "ext_scan->tlv_buffer" at drivers/net/wireless/marvell/mwifiex/scan.c:=
-2251 (size 1)
-[   41.314739] WARNING: CPU: 1 PID: 298 at drivers/net/wireless/marvell/mwi=
-fiex/scan.c:2251 mwifiex_cmd_802_11_scan_ext+0xa8/0xb8 [mwifiex]
-[   41.314802] Modules linked in: uvcvideo uvc videobuf2_vmalloc xhci_mtk_h=
-cd xhci_hcd hid_multitouch joydev sbs_battery snd_soc_hdmi_codec btmrvl_sdi=
-o evdev btmrvl crct10dif_ce bluetooth polyval_ce mwifiex_sdio polyval_gener=
-ic sha2_ce sha256_arm64 mwifiex sha1_ce arm_smc_wdt mt8173_rt5650 ecdh_gene=
-ric mt8173_afe_pcm snd_soc_rt5645 snd_soc_mtk_common snd_soc_rl6231 snd_soc=
-_core snd_pcm_dmaengine snd_pcm snd_timer mtu3 snd ofpart udc_core spi_nor =
-i2c_hid_of soundcore i2c_hid elan_i2c elants_i2c melfas_mip4 da9211_regulat=
-or mt6577_auxadc spi_mt65xx gpio_keys ghash_generic ghash_ce gf128mul gcm a=
-es_ce_ccm algif_aead crypto_null des_generic libdes ecb algif_skcipher aes_=
-neon_blk aes_ce_blk aes_ce_cipher md4 cfg80211 algif_hash af_alg rfkill bin=
-fmt_misc pkcs8_key_parser dm_mod loop efi_pstore dax configfs nfnetlink ip_=
-tables x_tables autofs4
-[   41.315059] CPU: 1 PID: 298 Comm: iwd Not tainted 6.6.11 #75=20
-[   41.315072] Hardware name: Google Hana (DT)
-[   41.315082] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[   41.315096] pc : mwifiex_cmd_802_11_scan_ext+0xa8/0xb8 [mwifiex]
-[   41.315132] lr : mwifiex_cmd_802_11_scan_ext+0xa4/0xb8 [mwifiex]
-[   41.315169] sp : ffff800082e43620
-[   41.315177] x29: ffff800082e43620 x28: 0000000000000000 x27: 00000000000=
-00000
-[   41.315196] x26: 0000000000000107 x25: 0000000000000001 x24: 00000000000=
-00000
-[   41.315213] x23: ffff0000cb4d3400 x22: ffff0000cb694000 x21: 00000000000=
-00065
-[   41.315230] x20: ffff0000cbc6e3c0 x19: ffff0000cb4d3400 x18: ffff8000815=
-4d871
-[   41.315248] x17: 0000000000000001 x16: ffffffffffffffff x15: 00000000000=
-00004
-[   41.315265] x14: ffff800081f1eee8 x13: 0000000000000003 x12: 00000000000=
-00003
-[   41.315283] x11: 0000000000000000 x10: 0000000000000027 x9 : bd143d0859b=
-fb200
-[   41.315300] x8 : bd143d0859bfb200 x7 : 205d343336343133 x6 : 332e3134202=
-0205b
-[   41.315318] x5 : ffff80008215d2ff x4 : ffff800082e431d7 x3 : 00000000000=
-00000
-[   41.315335] x2 : 0000000000000065 x1 : ffff800082e433d0 x0 : 00000000000=
-00094
-[   41.315353] Call trace:
-[   41.315362]  mwifiex_cmd_802_11_scan_ext+0xa8/0xb8 [mwifiex]
-[   41.315399]  mwifiex_sta_prepare_cmd+0x774/0x848 [mwifiex]
-[   41.315435]  mwifiex_send_cmd+0x28c/0x300 [mwifiex]
-[   41.315470]  mwifiex_scan_channel_list+0x294/0x348 [mwifiex]
-[   41.315506]  mwifiex_scan_networks+0x1a4/0x3b8 [mwifiex]
-[   41.315541]  mwifiex_cfg80211_scan+0x37c/0x850 [mwifiex]
-[   41.315577]  cfg80211_scan+0x48/0x2d0 [cfg80211]
-[   41.315734]  nl80211_trigger_scan+0x728/0x788 [cfg80211]
-[   41.315836]  genl_family_rcv_msg_doit+0xc4/0x128
-[   41.315855]  genl_rcv_msg+0x214/0x228
-[   41.315868]  netlink_rcv_skb+0x128/0x148
-[   41.315881]  genl_rcv+0x40/0x60
-[   41.315893]  netlink_unicast+0x24c/0x400
-[   41.315905]  netlink_sendmsg+0x2d8/0x3d8
-[   41.315917]  __sys_sendto+0x16c/0x1f8
-[   41.315931]  __arm64_sys_sendto+0x34/0x50
-[   41.315944]  invoke_syscall+0x78/0x108
-[   41.315959]  el0_svc_common+0x8c/0xf0
-[   41.315972]  do_el0_svc+0x28/0x40
-[   41.315984]  el0_svc+0x40/0xc8
-[   41.315997]  el0t_64_sync_handler+0x90/0x100
-[   41.316009]  el0t_64_sync+0x190/0x198
-[   41.316021] ---[ end trace 0000000000000000 ]---
+Our chip ECC engine will either be on if it's needed or off if it's not.
+Either I can do that in one place or put checks in before each
+read/write to turn on/off the ECC engine, which seems a lot more
+work and changes and possible issues/problems.
+Turning it on/off as needed has not been explicitly tested and
+could cause unforeseen consequences. This
+is a minimal change which should have minimal impact.
 
-(With the line unchanged in ecb1b8288dc7ccbdcb3b9df005fa1c0e0c0388a7.)
+>
+> >
+> > >
+> > > > +                     return -EINVAL;
+> > > > +             }
+> > > >       }
+> > > >
+> > > >       if (chip->ecc.algo =3D=3D NAND_ECC_ALGO_UNKNOWN) {
+> > > > @@ -2797,7 +2799,11 @@ static int brcmnand_setup_dev(struct brcmnan=
+d_host *host)
+> > > >       if (ret)
+> > > >               return ret;
+> > > >
+> > > > -     brcmnand_set_ecc_enabled(host, 1);
+> > > > +     if (chip->ecc.engine_type =3D=3D NAND_ECC_ENGINE_TYPE_ON_DIE)=
+ {
+> > > > +             dev_dbg(ctrl->dev, "Disable HW ECC for on-die ECC\n")=
+;
+> > >
+> > > Not needed.
+> >
+> > Will remove.
+> >
+> > >
+> > > > +             brcmnand_set_ecc_enabled(host, 0);
+> > > > +     } else
+> > > > +             brcmnand_set_ecc_enabled(host, 1);
+> > >
+> > > Style is wrong, but otherwise I think ECC should be kept disabled whi=
+le
+> > > not in active use, so I am a bit surprised by this line.
+> >
+> > This is a double check to turn on/off our hardware ECC.
+>
+> I expect the engine to be always disabled. Enable it only when you
+> need (may require an additional patch before this one).
 
-I don't really know what the relevancy or meaning of this is,
-but one has to assume a WARNING with a backtrace is never good,
-so forwarding.
+We are already turning on the ECC enable at this point,
+this is just adding the option to turn it off if the NAND chip
+itself will be doing the ECC instead of our controller.
 
-Best,
+>
+> Thanks,
+> Miqu=C3=A8l
 
---mluzsztmpjhpplhn
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks!
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmW0DFEACgkQvP0LAY0m
-WPFGHw//XnD9pn4PLO9yHjKSz8FVAkpgWOPK9NUe8dKdSvjoAF0cyzrhYcy04f6T
-pTUeNGjxQss9yMKsJMMGAWaA8jo9u8CAeXocbOSdyN7BeYGwi2Ya7TJfH8xz8Y03
-IsxXaiJJsKD/53Vkv5GGicT40Uv1tcI78j6dhpEpIjkWYZPLb8LZbBxmMkR2V9+j
-5h2Muixny8ZJFE9Cr+xWh7xabVwYJrOYh7MroGQINEaDurXOB74cYiItM5OwGwTk
-5L8VhO9MtUkz7wFgWwC1cl0SP0ZCuwVHIwzBZTzcJaFxGvMore1CoOQv939im7FR
-16dD9P/SHgPT5/Lxm4UA9WX97YBAs2GXe7OARIwzMAHazpTfmfAXIQob0YInST4N
-B0bvimBGFY/tBbd1FSZszwRAw7Qwxj7/7//pGmiS5At+i8l7Gza7tvAavjsb4HCQ
-azpg5fnK9LFcoJQxS70vURlgRpnN505gqYbpK36GCMUuNtBzlFFmR7iXPWWi0OI/
-vjhZZVDPG9Nsw9SctZlmhc5BtJN3HGVP78jbxiGnyDvFQx/QVmVICFg6DQ2UrarT
-K7f2snMhA6YNhB+ttSyd5h9IrK6sL9SrwM5EBSDKNHsK1jt24AsrFy50NK8IJiN1
-oAxiLFR0zTmLpjR552EkDbQx/3iTZb5O5kR5MnzQWLDtagTUapM=
-=feCv
------END PGP SIGNATURE-----
-
---mluzsztmpjhpplhn--
+-Dave
