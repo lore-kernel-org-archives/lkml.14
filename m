@@ -1,239 +1,163 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0787C249F3
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E09249F5
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706304037; cv=none; b=K1Eftb0Qob6Z8SHySN8HlAZkXy1xhtsElZ+/ihzAfThC1+UQs3wlgYRAKxzG3pcLbBbCWxLUcO+SaqMxWJnEJQYhT2GLxlRDk2MLx+xTOXLS7tpcbOoMoWiSGY0FstCm34gSgeF6cGQ5bOzyg93kNIHe+5ZD0YJN9Cq3blNsAsQ=
+	t=1706304054; cv=none; b=lrl+WeqkecE/L0VOttbGzzmfBWgd67L2rwuCuRel9NEQArx2wUjj2Md97RlSZl7QfK/vh/iYLSZ00O0FUY/p+OyYuq3fzXipiloMWiB7fYE4u3wlNuCTjZkW8YYET4oGcno/PSVs4ivBLUScmwjbB9Y85/Aa1afpTlrwnXYJLTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706304037; c=relaxed/simple;
-	bh=odxHTToTJU2/SbyIkTBKpGt7WgEtQaCKYn9sGh5p7BQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AfdxkEwh/gUsJ8rpqQbAv7dHVMmFjCv/TkSr2/etgmBy7Lf2L2pWyuhlm1wQ1xO92fmRQXkdIhS1HYyfU241HJafIeAiKhZA2lSRfYSzPzdZEL4Ku8ANMR74QaLflTr5EPHD3J4Fqg93H69QmIBoGhAlEUopxhStTZ8LynKdD3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=pZFDzsMT; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1706304054; c=relaxed/simple;
+	bh=li0J15xsdzoQMYSfgqZD+7xj6XkdotMlIQR8ht0mUpM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SzcMZTfPuuOaK3AqMX3HLv7m84Tn1iQXXx28dgqSJymf8c/ulRvVB0U3c8TS2ikEnFsy7CTlW4fKGlvDcml5GyRlsBtOupUr9A/um6ztxYg65QNInHe8MhYlywAKl18+7+O6Dwyn2qBXz0RrF63xuKDIqlkSLP1sNXxs4k9VGpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tnDNMgYd; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="pZFDzsMT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tnDNMgYd"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40eb033c1b0so13200995e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:20:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=XFCuG/Z4yvnpYhuF2VxZ98NM62bQ4w15uaXbSvjepTM=;
-  b=pZFDzsMTkXHx0Dr4geskIGzK8AWJUB4mPWC55klx3ax4oAdj+IGy4wyX
-   lgCpbMNh8Q+MjejVLD6dl+OAJBJdKoaxlBcZ6aESur+5nw9PembZhPqcs
-   dJWgCIkDMHzKJ4t5a6nM5n0W1pTspFP/o25gU+xgCdqOQl7QelpZQulud
-   8=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.05,216,1701126000"; 
-   d="scan'208";a="77960880"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 22:20:25 +0100
-Date: Fri, 26 Jan 2024 22:20:24 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Vincent Guittot <vincent.guittot@linaro.org>
-cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, 
-    linux-kernel@vger.kernel.org
-Subject: Re: EEVDF and NUMA balancing
-In-Reply-To: <CAKfTPtC9Px_W84YRJqnFNkL8oofO15D-P=VTCMUUu7NJr+xwBA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2401262210190.3247@hadrien>
-References: <alpine.DEB.2.22.394.2310032059060.3220@hadrien> <CAKfTPtAeFvrZxApK3RruWwCjMxbQvOkU+_YgZSo4QPT_AD6FxA@mail.gmail.com> <9dc451b5-9dd8-89f2-1c9c-7c358faeaad@inria.fr> <CAKfTPtDCsLnDnVje9maP5s-L7TbtSu4CvF19xHOxbkvSNd7vZg@mail.gmail.com>
- <2359ab5-4556-1a73-9255-3fcf2fc57ec@inria.fr> <6618dcfa-a42f-567c-2a9d-a76786683b29@inria.fr> <CAKfTPtDrULyOB9+RhjoPfCpHKVhx5kRf6dq79DSE6jZgsEairw@mail.gmail.com> <edbd8ecd-148c-b366-fd46-3531dec39d49@inria.fr> <cecfd395-f067-99e1-bdd2-fec2ebc3db3@inria.fr>
- <CAKfTPtCAcHuzhcDvry6_nH2K29wc-LEo2yOi-J-mnZkwMvGDbw@mail.gmail.com> <cfae246d-9383-59d-ee5b-81ea3dd0a795@inria.fr> <CAKfTPtD0B29zadkeEOCWvry123zWVEEm41ouKj7noXwQdoh2+Q@mail.gmail.com> <7a845b43-bd8e-6c7d-6bca-2e6f174f671@inria.fr> <36f2cc93-db10-5977-78ab-d9d07c3f445@inria.fr>
- <CAKfTPtA31Z0N9hd4z_GPvoZwK=KTf4fPbx_jDbK653mdVDLEbw@mail.gmail.com> <alpine.DEB.2.22.394.2401182304170.3296@hadrien> <CAKfTPtC9Px_W84YRJqnFNkL8oofO15D-P=VTCMUUu7NJr+xwBA@mail.gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        d=linaro.org; s=google; t=1706304051; x=1706908851; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ckLdbkYosqR4Batu5HIoSckjmeDoA5OjOfUTS7alHpg=;
+        b=tnDNMgYdXyWh0MiP4DjYXiHERnfiVrBYaVy3DNE/8kbw4RV+QQE8CFzCjCQQuf9lgs
+         2okP3Q8ZDUxpyXMps0qPhrfEaYdV/CNyf57DcF9noRKlNqT6OJJwa7ZA44xV2z0pd288
+         DmLGuqxn++cEU1tNsoVoe/9ZnTVaPG6jLK7+sU8JCvKVPnc+FCqlenzqRtDzQaKx/mDh
+         x9l7MGOHsBZdaiu/0yDRho8n3FQbVVevXlsAiHwltkHKl6ChIyT5CMAI3Wb2FEOnwCJC
+         xaodCevnMkFQukMaqlos/ocX35ofNzapPEJohZ+Nd7vRLwD1Ljp3SKm67uB1qIQsJDp2
+         EIPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706304051; x=1706908851;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ckLdbkYosqR4Batu5HIoSckjmeDoA5OjOfUTS7alHpg=;
+        b=skvZSwGU5D69N63qxxFbo5G62TA0tb8HuP+YICfBBZRdUctKObhQKD0k8cWRU+EvRQ
+         qOq2+37/lyx3drCeZif4jpKT//b4WR7vN8Ey94FaEwunDRXJvsQK5nxVRR4DWTKBQJqS
+         Z0aQub0b4CRt3ZnLbjFkT+4CtVOGH+h9PYpAuCkwPGh90sjoArSwvBE2EjEER7xemzIr
+         Sxzg68JUyiG+/pVhHDA/IQtTP+WaFKSg1GgivE9ND3qcnDjx7HRVKvKNJ3/dT4NGiyk3
+         9jbMlrbwDdKDFeXMbsougCP4vfU46UZ+3CwnqnVkFVJlFIW/KXbG7L5jdFqhTCLxCY5x
+         HWHg==
+X-Gm-Message-State: AOJu0Yw/d19XBUO+ZTqARRXakytwi2oKAV5K3G8pfnbR6Lg2ReY/kvNf
+	+u8Wu+lb5QjAQbjJrw7f80uTkRv0bX6XlHomJpwuXvDNbmDRrUMKF7L49b2zc9U=
+X-Google-Smtp-Source: AGHT+IFWnVaV/VRp7Y5n09XhjbL3qsH+jvvcN81KHkbuPDQHoIiucel4O1eWjYMAYLhSs0rXQsy6Xg==
+X-Received: by 2002:a05:600c:4f13:b0:40e:df1c:cf1 with SMTP id l19-20020a05600c4f1300b0040edf1c0cf1mr295035wmq.135.1706304051180;
+        Fri, 26 Jan 2024 13:20:51 -0800 (PST)
+Received: from [192.168.231.132] (178235179146.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.146])
+        by smtp.gmail.com with ESMTPSA id ef14-20020a05640228ce00b0055d18d6a586sm972863edb.13.2024.01.26.13.20.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 13:20:50 -0800 (PST)
+Message-ID: <566a10b0-a7dc-42f3-9b8c-f9acd8d3a22c@linaro.org>
+Date: Fri, 26 Jan 2024 22:20:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc8280xp: Introduce additional tsens
+ instances
+To: Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+References: <20240126-sc8280xp-tsens2_3-v2-1-8504d18828de@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240126-sc8280xp-tsens2_3-v2-1-8504d18828de@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 26.01.2024 16:12, Bjorn Andersson wrote:
+> The SC8280XP contains two additional tsens instances, providing among
+> other things thermal measurements for the GPU.
+> 
+> Add these and a GPU thermal-zone.
+> 
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> ---
+> Changes in v2:
+> - Drop TM/SROT comments
+> - Remove polling delays, rely on interrupts
+> - Link to v1: https://lore.kernel.org/r/20240118-sc8280xp-tsens2_3-v1-1-e86bce14f6bf@quicinc.com
+> ---
+>  arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 37 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+> index febf28356ff8..7bfbb1bd8f4a 100644
+> --- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+> @@ -4033,6 +4033,28 @@ tsens1: thermal-sensor@c265000 {
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> +		tsens2: thermal-sensor@c251000 {
+> +			compatible = "qcom,sc8280xp-tsens", "qcom,tsens-v2";
+> +			reg = <0 0x0c251000 0 0x1ff>,
+> +			      <0 0x0c224000 0 0x8>;
+> +			#qcom,sensors = <11>;
+> +			interrupts-extended = <&pdc 122 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&pdc 124 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow", "critical";
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+> +		tsens3: thermal-sensor@c252000 {
+> +			compatible = "qcom,sc8280xp-tsens", "qcom,tsens-v2";
+> +			reg = <0 0x0c252000 0 0x1ff>,
+> +			      <0 0x0c225000 0 0x8>;
+> +			#qcom,sensors = <5>;
+> +			interrupts-extended = <&pdc 123 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&pdc 125 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow", "critical";
+> +			#thermal-sensor-cells = <1>;
 
+With the sorting issue that Johan mentioned resolved:
 
-On Fri, 19 Jan 2024, Vincent Guittot wrote:
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-> On Thu, 18 Jan 2024 at 23:13, Julia Lawall <julia.lawall@inria.fr> wrote:
-> >
-> >
-> >
-> > On Thu, 18 Jan 2024, Vincent Guittot wrote:
-> >
-> > > Hi Julia,
-> > >
-> > > Sorry for the delay. I have been involved on other perf regression
-> > >
-> > > On Fri, 5 Jan 2024 at 18:27, Julia Lawall <julia.lawall@inria.fr> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On Fri, 5 Jan 2024, Julia Lawall wrote:
-> > > >
-> > > > >
-> > > > >
-> > > > > On Fri, 5 Jan 2024, Vincent Guittot wrote:
-> > > > >
-> > > > > > On Fri, 5 Jan 2024 at 15:51, Julia Lawall <julia.lawall@inria.fr> wrote:
-> > > > > > >
-> > > > > > > > Your system is calling the polling mode and not the default
-> > > > > > > > cpuidle_idle_call() ? This could explain why I don't see such problem
-> > > > > > > > on my system which doesn't have polling
-> > > > > > > >
-> > > > > > > > Are you forcing the use of polling mode ?
-> > > > > > > > If yes, could you check that this problem disappears without forcing
-> > > > > > > > polling mode ?
-> > > > > > >
-> > > > > > > I expanded the code in do_idle to:
-> > > > > > >
-> > > > > > >                 if (cpu_idle_force_poll) { c1++;
-> > > > > > >                         tick_nohz_idle_restart_tick();
-> > > > > > >                         cpu_idle_poll();
-> > > > > > >                 } else if (tick_check_broadcast_expired()) { c2++;
-> > > > > > >                         tick_nohz_idle_restart_tick();
-> > > > > > >                         cpu_idle_poll();
-> > > > > > >                 } else { c3++;
-> > > > > > >                         cpuidle_idle_call();
-> > > > > > >                 }
-> > > > > > >
-> > > > > > > Later, I have:
-> > > > > > >
-> > > > > > >         trace_printk("force poll: %d: c1: %d, c2: %d, c3: %d\n",cpu_idle_force_poll, c1, c2, c3);
-> > > > > > >         flush_smp_call_function_queue();
-> > > > > > >         schedule_idle();
-> > > > > > >
-> > > > > > > force poll, c1 and c2 are always 0, and c3 is always some non-zero value.
-> > > > > > > Sometimes small (often 1), and sometimes large (304 or 305).
-> > > > > > >
-> > > > > > > So I don't think it's calling cpu_idle_poll().
-> > > > > >
-> > > > > > I agree that something else
-> > > > > >
-> > > > > > >
-> > > > > > > x86 has TIF_POLLING_NRFLAG defined to be a non zero value, which I think
-> > > > > > > is sufficient to cause the issue.
-> > > > > >
-> > > > > > Could you trace trace_sched_wake_idle_without_ipi() ans csd traces as well ?
-> > > > > > I don't understand what set need_resched() in your case; having in
-> > > > > > mind that I don't see the problem on my Arm systems and IIRC Peter
-> > > > > > said that he didn't face the problem on his x86 system.
-> > > > >
-> > > > > TIF_POLLING_NRFLAG doesn't seem to be defined on Arm.
-> > > > >
-> > > > > Peter said that he didn't see the problem, but perhaps that was just
-> > > > > random.  It requires a NUMA move to occur.  I make 20 runs to be sure to
-> > > > > see the problem at least once.  But another machine might behave
-> > > > > differently.
-> > > > >
-> > > > > I believe the call chain is:
-> > > > >
-> > > > > scheduler_tick
-> > > > >   trigger_load_balance
-> > > > >     nohz_balancer_kick
-> > > > >       kick_ilb
-> > > > >         smp_call_function_single_async
-> > > > >           generic_exec_single
-> > > > >             __smp_call_single_queue
-> > > > >               send_call_function_single_ipi
-> > > > >                 call_function_single_prep_ipi
-> > > > >                   set_nr_if_polling <====== sets need_resched
-> > > > >
-> > > > > I'll make a trace to reverify that.
-> > > >
-> > > > This is what I see at a tick, which corresponds to the call chain shown
-> > > > above:
-> > > >
-> > > >           bt.B.x-4184  [046]   466.410605: bputs:                scheduler_tick: calling trigger_load_balance
-> > > >           bt.B.x-4184  [046]   466.410605: bputs:                trigger_load_balance: calling nohz_balancer_kick
-> > > >           bt.B.x-4184  [046]   466.410605: bputs:                trigger_load_balance: calling kick_ilb
-> > > >           bt.B.x-4184  [046]   466.410607: bprint:               trigger_load_balance: calling smp_call_function_single_async 22
-> > > >           bt.B.x-4184  [046]   466.410607: bputs:                smp_call_function_single_async: calling generic_exec_single
-> > > >           bt.B.x-4184  [046]   466.410607: bputs:                generic_exec_single: calling __smp_call_single_queue
-> > > >           bt.B.x-4184  [046]   466.410608: bputs:                __smp_call_single_queue: calling send_call_function_single_ipi
-> > > >           bt.B.x-4184  [046]   466.410608: bputs:                __smp_call_single_queue: calling call_function_single_prep_ipi
-> > > >           bt.B.x-4184  [046]   466.410608: bputs:                call_function_single_prep_ipi: calling set_nr_if_polling
-> > > >           bt.B.x-4184  [046]   466.410609: sched_wake_idle_without_ipi: cpu=22
-> > >
-> > > I don't know if you have made progress on this in the meantime.
-> > >
-> > > Regarding the trace above, do you know if anything happens on CPU22
-> > > just before the scheduler tried to kick the ILB on it ?
-> > >
-> > > Have you found why TIF_POLLING_NRFLAG seems to be always set when the
-> > > kick_ilb happens ? It should be cleared once entering the idle state.
-> >
-> > I haven't figured out everything, but the attached graph shows
-> > that TIF_POLLING_NRFLAG is not always set.  Sometimes it is and sometimes
-> > it isn't.
-> >
-> > In the graph, on core 57, the blue box and the green x are before and
-> > after the call to cpuidle_idle_call(), resplectively.  One can't see it in
-> > this graph, but the green x comes before the blue box.  So almost all of
-> > the time, it is in cpuidle_idle_call(), only in the tiny gap between the x
-> > and the box is it back in do_idle with TIF_POLLING_NRFLAG set.
-> >
-> > Afterwards, there is a diamond for the polling case and a triangle for the
-> > non polling case.  These also occur on clock ticks, and may be
-> > microscopically closer to (polling) or further from (not polling) the
-> > green x and blue box.
->
-> Your problem really looks like weird timing.
->
-> It would be good to know which idle states are selected ? or even
-> better if it's possible, disable all but one idle state and see if one
-> idle state in particular trigger your problem
->
-> idle state can be disable here :
-> echo 1 > /sys/devices/system/cpu/cpu*/cpuidle/state*/disable
-
-I tried all possible options (states 0-3 each disabled or not).  If all of
-states 1-3 are disabled, the call to cpuidle_idle_call(); only lasts a
-chose time (around 1/4ms, but not exactly that). In all other cases, that
-call lasts for 4ms.  If all of 1-3 are disabled, set_nr_if_polling does
-not seem to be called.  In the other cases, set_nr_if_polling is called,
-and finds that the idle core is polling or not polling, but polling is
-more common (typically by 3x).
-
-The problem of large gaps can happen regardless of which idle states are
-disabled.
-
-
->
-> One possible sequence:
-> tick is not stopped on the idle cpu
-> tick fires on busy and idle cpus
-> idle cpu wakes up and the wake up time varies depending of wakeup
-> latency of the entered c-state
-> busy cpu executes call_function_single_prep_ipi() and idle cpu could
-> be already woken or not depending of the time to wake up
->
-> >
-> > I haven't yet studied what happens afterwards in the non polling case.
->
-> Side point, according to your trace above, you can 2 consecutives real
-> idle load balance so the patch that I proposed, should be able to
-> trigger active migration because the nr_balance_failed will be != 0
-> the 2nd idle load balance. Are I missing something ?
-
-Indeed, nr_balance_failed does get increased on the non polling
-iterations.  But it is still the case that the fbq type on the overloaded
-socket is all, so nothing happens.
-
-julia
-
-> Vincent
-> >
-> > julia
-> >
-> > >
-> > > Could you check your cpuidle driver ?
-> > >
-> > > Vincent
-> > >
-> > > >
-> > > > julia
-> > >
->
+Konrad
