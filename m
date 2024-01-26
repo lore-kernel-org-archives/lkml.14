@@ -1,45 +1,45 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79906087E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78EC60879;
 	Fri, 26 Jan 2024 23:56:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706313366; cv=none; b=h+CLc7zFP50qCnYnjCKJFG39NLB5Z0Dn5crIE416XQQtlR+pJVAPWhiJsqQCJBiSuOY/TW9LFxcyreUdxUSh5zGXZ+bNIC4zq1jMkOVeer/s/0ZDs3VimbZvyxrDjE67M7BQiVkoMy4xl/mkycPkv3iNzBsn55pagQgDW42BFpE=
+	t=1706313365; cv=none; b=qZKQrMGOgAHc9VWm/17QNL0ApdANHlQaqzDPlOZ/6L2i0otqetReaEQte87qPDYBbmnKEW4Z/fuRxcHm14JOS1PbwhB9CZ7K9sHN4Yfb//oSwZlLLPm5rKqyewIBBFr8Jvpku1qfNPe7u8NXteOpixwj6xeG7kUsl0s5AqN/T1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706313366; c=relaxed/simple;
-	bh=cRfEBFsdnBK2iADLYrmymzMIGjloxIXjg8ZzIDcctLM=;
+	s=arc-20240116; t=1706313365; c=relaxed/simple;
+	bh=uL5+npRYaSGCnMh8Fm60HV+nRAhoajM/Hs2+4VxFmnA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z5suOSFWwTM18CV0E26Gv2iRAZsv31uX6ZSCrEjumKXiaRmbIlm/q5ou7uUNXflt9PiSLAPtDvwQOTRvyQz7nj4hcmZNubFzpPIVUmkj95WspSEkfzbUH3+684Yy7T8fcuWpMNj8P9DFqY5/SpWP3uLiwhkWWdIv6l7HMWuwfSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dtx+kKzF; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=l33YgTTWkDrNwvKU0M22L+W4FXysy2PrxF8TuPDhbucW96wJnyP/oGadyhvH7X5qWv6QAuMWIjXqR1n1D5xLDoKrR9dFy+6GRWcit9sDNmElgOiba5rlOXAV8cKfyljqYoKaWWFPFbHO8apgYpCh0avr22xgmHrMaKuA4xSF2dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TGwA/Y/I; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dtx+kKzF"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QNtSgI004148;
-	Fri, 26 Jan 2024 23:55:28 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TGwA/Y/I"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QNdYat008658;
+	Fri, 26 Jan 2024 23:55:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=eShHXpDCJ4BD5txejNCW
-	e8HZLN5QHa+jpumCWHtQOjg=; b=dtx+kKzFFiOgXb9S5cPzxhv1vZWWC8GApfaa
-	ErnXCETEtdz2dhS1u9bpUTudvYHLBsmfNno8Vl1SG+Y2JPb5p2iMw7030KliCRta
-	ihTizeueyDnMINo+aM+5aVNSeP0GfbFfzSJcbGOcmp0wa1TICPRIwGGFZqrwyhHM
-	X1TSHLvLB/lAVnjmJTExOKxfltiXIcUBNJDfnG5q5Wv2ZaPoZN/C1GcHU6Ty02kX
-	iOapJ+uitg9LCJllXlP5iUX3VvOhd3xNX6+AEQ460yI/fHalFBiRv2nR9hfMqv9h
-	9VilgrtAcsd6EjdzvW24CMvxJGEc3IFqEVcjA+b7KfwnZkKNEw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvjbg8g0p-1
+	:mime-version:content-type; s=qcppdkim1; bh=KCJm0dJ1lEjoehqyNacn
+	zNbiUGF+gV0ewKaAufw0NKM=; b=TGwA/Y/IOpjea7SusS+lNyIzwywxvfjmllUl
+	wgBrIVsObxapGh1OBC8vlJjtw49qO/ILnbDFTr2mKhVHgmf15tNZQpqR6gZ/BglB
+	/5lX1r6eESQZhGlM39TCQ3DIU6a1oJ4OQrx/PL3a+4V3k1VPD4o1DoAriKGAEVsV
+	hwMmJ11LoGF68u0HF+LVcthtOupmQFXQJUtL3Y9DDwFxM0dm1i7yePLGt0lQzCbm
+	VQSamZ7nE8mlq5FAeoaKRhy5sJUgtc6GiBSqmqFbzNwm9OzNCybabNTQtqR2IZb4
+	DMJssDpjT5dRROQGUfZR+4lNFqxmIrdsv0bnb/+9VcAn+4ohZg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvjx88dm8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:28 +0000 (GMT)
+	Fri, 26 Jan 2024 23:55:05 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNtRAi009502
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNt43Q011314
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:27 GMT
+	Fri, 26 Jan 2024 23:55:04 GMT
 Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 26 Jan 2024 15:55:10 -0800
+ 15.2.1118.40; Fri, 26 Jan 2024 15:54:59 -0800
 From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
         <frowand.list@gmail.com>, <vgupta@kernel.org>, <arnd@arndb.de>,
@@ -55,9 +55,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <kernel@quicinc.com>, Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH 28/46] um: resrved_mem: Move fdt_init_reserved_mem() below unflatten_device_tree()
-Date: Fri, 26 Jan 2024 15:54:07 -0800
-Message-ID: <20240126235425.12233-29-quic_obabatun@quicinc.com>
+Subject: [PATCH 06/46] csky: reserved_mem: Implement the new processing order for reserved memory
+Date: Fri, 26 Jan 2024 15:53:45 -0800
+Message-ID: <20240126235425.12233-7-quic_obabatun@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240126235425.12233-1-quic_obabatun@quicinc.com>
 References: <20240126235425.12233-1-quic_obabatun@quicinc.com>
@@ -72,47 +72,74 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JdUDySUL0Sb0attbw7OLSmGrM1dNMKEH
-X-Proofpoint-ORIG-GUID: JdUDySUL0Sb0attbw7OLSmGrM1dNMKEH
+X-Proofpoint-ORIG-GUID: 76b69Fyi_LVahkFNXdLy-ZNB-4Dp2px2
+X-Proofpoint-GUID: 76b69Fyi_LVahkFNXdLy-ZNB-4Dp2px2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- priorityscore=1501 mlxlogscore=764 phishscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 phishscore=0 clxscore=1015 malwarescore=0
+ suspectscore=0 mlxlogscore=738 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401190000 definitions=main-2401260176
 
-The unflattened devicetree structure is available to be used not long
-after the page tables have been set up on most architectures, and is
-available even before that on other architectures.
+Call early_fdt_scan_reserved_mem() in place of
+early_init_fdt_scan_reserved_mem() to carry out the first stage of the
+reserved memory processing only.
 
-Hence, move the call to fdt_init_reserved_mem() to after
-unflatten_device_tree() is called so that the reserved memory nodes can
-be accessed using the unflattened device tree APIs.
+The early_fdt_scan_reserved_mem() function is used to scan through the
+DT and mark all the reserved memory regions as reserved or nomap as
+needed, as well as allocate the memory required by the
+dynamically-placed
+reserved memory regions.
 
-Using the unflattened devicetree APIs is more efficient than using the
-flattened devicetree APIs.
+The second stage of the reserved memory processing is done by
+fdt_init_reserved_mem(). This function is used to store the information
+of the statically-placed reserved memory nodes in the reserved_mem
+array as well as call the region specific initialization function on all
+the stored reserved memory regions.
+
+The call to fdt_init_reserved_mem() is placed after setup_arch_memory()
+in preparation for the dynamic allocation of the reserved_mem array
+using memblock. This is because memblock allocated memory is not
+writable until after the page tables have been setup on the csky
+architecture.
 
 Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 ---
- arch/um/kernel/dtb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/csky/kernel/setup.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/kernel/dtb.c b/arch/um/kernel/dtb.c
-index 3ecee151a083..ad6003412319 100644
---- a/arch/um/kernel/dtb.c
-+++ b/arch/um/kernel/dtb.c
-@@ -27,8 +27,8 @@ void uml_dtb_init(void)
- 	}
+diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
+index 51012e90780d..4e2b739ac968 100644
+--- a/arch/csky/kernel/setup.c
++++ b/arch/csky/kernel/setup.c
+@@ -6,6 +6,7 @@
+ #include <linux/initrd.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/start_kernel.h>
+ #include <linux/dma-map-ops.h>
+ #include <asm/sections.h>
+@@ -22,7 +23,7 @@ static void __init csky_memblock_init(void)
+ 	memblock_reserve(__pa(_start), _end - _start);
  
- 	early_fdt_scan_reserved_mem();
--	fdt_init_reserved_mem();
- 	unflatten_device_tree();
+ 	early_init_fdt_reserve_self();
+-	early_init_fdt_scan_reserved_mem();
++	early_fdt_scan_reserved_mem();
+ 
+ 	memblock_dump_all();
+ 
+@@ -72,6 +73,8 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	csky_memblock_init();
+ 
 +	fdt_init_reserved_mem();
- }
++
+ 	unflatten_and_copy_device_tree();
  
- static int __init uml_dtb_setup(char *line, int *add)
+ #ifdef CONFIG_SMP
 -- 
 2.17.1
 
