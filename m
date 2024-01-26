@@ -1,116 +1,73 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from alerce.blitiri.com.ar (alerce.blitiri.com.ar [49.12.208.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C772030A;
-	Fri, 26 Jan 2024 14:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBE61D556
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.208.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706279103; cv=none; b=e+Ev/roHu/FiGq4f4q5nwW9FqJrZUnpj2XeghkzpSdeBVy58wTm1YE9abtgNokfxf67hk3lvEVx1tL7miaBHgzZkK/DxWkfZ+BmYXA2J1xsxY2E0RggIxokOyvHDE/fZOFzExz/1YN9Gf+vfR3kAopMSZQnnptprfoE5v/tkOJw=
+	t=1706279131; cv=none; b=dQgKhnijdb9k0hWuIZSgZvIXsF8/sg/5Vmycr3l9KUlgFdSkJmEr1Hot+LTec+rUeZIz1TzW3TRRKIw3rQrVW+dLR/OFof1R74badSBh3Lr/FyV2R0rVrOx9rW+8b0IMLRrUHTAHLCWj/bP0gt0lfOYOWS9vY982TfDXWujFSVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706279103; c=relaxed/simple;
-	bh=lGOt20atkVEg9U8C7LSGX4rCm3axcdD6rMU6JLeU+Cg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QLTClqRn/UhbjYul5lwdZCKdC2ZxuB2jfYIPnSmB5Icbs7g8geLY0YAszn+iIURXepf/YG/8jgJxhwHvVriSyxxnrjK07jIfIGxmxX/aKVq51ixr/WzORi494SlTXxVV3Ljv+yiVDdqEz9jqYlGH8y1673kAegpA1x9UTd6kZRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5ff821b9acfso4051057b3.1;
-        Fri, 26 Jan 2024 06:25:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706279100; x=1706883900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AobresbOLLicv0OGCL/TB/MYyPZSt0c9M3tIrPkCdUo=;
-        b=lGeXrvtd4F2oN121ttLZd82BYYbRlP+myEPE/aXmrjwMPwZOOekPH70dBpP+WtwcbD
-         vnqRjKb6nZ/BKlwYhVJ/jB68zSsHJQ1rkv5wNaWSwMSG8LkvBAk+WZbIbWoQH2j2/SRh
-         hTKF/cLEpC3GaeGfFKdmSOsXbLkqiBeOP0oR+c1+oEy+2m1E6WDeyT3aIENGRVMhTdCE
-         OMyFr3d67XzmHaC546ENtbUAXKUo1XIH6r1UXdm0VaQ+UhPHnXE4ebHFCp1tyyUQGIu7
-         99E9XWWXGCVF5qK7b6mWQevKxZ46hRyu5TZjVjL2TUNx3k72wd9LQtjnltkNw07FO01B
-         zuaA==
-X-Gm-Message-State: AOJu0YzxKdYarRdabX/gILdacPTyWOptmN3CZuSRm+GbWz5TffXH6gdY
-	1yGh94yHiJF68huH3ZFGsX4eqT5i9p+/GAMK6SJ4q7Mo4vXz14Uv6eHzOIluecM=
-X-Google-Smtp-Source: AGHT+IHSyl7ChSwD8TQvLm8DRI5o+x9RWRc3RQhHs0SU/W7/JYTnogKIIAfB5D3GnkEROxLImLqUtg==
-X-Received: by 2002:a0d:d895:0:b0:602:b24c:2321 with SMTP id a143-20020a0dd895000000b00602b24c2321mr1329450ywe.62.1706279099987;
-        Fri, 26 Jan 2024 06:24:59 -0800 (PST)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id r12-20020a0de80c000000b005f900790763sm416158ywe.49.2024.01.26.06.24.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 06:24:59 -0800 (PST)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5ffe7e7b7b3so3919657b3.3;
-        Fri, 26 Jan 2024 06:24:59 -0800 (PST)
-X-Received: by 2002:a81:a10f:0:b0:600:ec7f:5442 with SMTP id
- y15-20020a81a10f000000b00600ec7f5442mr1174685ywg.70.1706279099354; Fri, 26
- Jan 2024 06:24:59 -0800 (PST)
+	s=arc-20240116; t=1706279131; c=relaxed/simple;
+	bh=sbhZ/NdHAucnYQnxUho3gN2gMhD/hGaKGFKuXYzPsA8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uM5y9RNOHrGHKmpcybsVOio5KThJpKKOo+vdm1ev56h2+PvL6p+n56oSwKChtQB/s6XtiFWdfrTrMsoqY3zmW/fUGwnJttRiwFWf0ZHbJZl0igQzEp5sSqWLYUmzcoMQs7+TK4iHYs4EFvTk1wU4J7lTAy1Lrct3kJNmdnEoMiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sdfg.com.ar; spf=pass smtp.mailfrom=sdfg.com.ar; arc=none smtp.client-ip=49.12.208.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sdfg.com.ar
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sdfg.com.ar
+Received: from localhost.localdomain
+	by sdfg.com.ar (chasquid) with ESMTPSA
+	tls TLS_AES_128_GCM_SHA256
+	(over submission, TLS-1.3, envelope from "rodrigo@sdfg.com.ar")
+	; Fri, 26 Jan 2024 14:25:25 +0000
+From: Rodrigo Campos <rodrigo@sdfg.com.ar>
+To: Willy Tarreau <w@1wt.eu>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org,
+	Rodrigo Campos <rodrigo@sdfg.com.ar>
+Subject: [PATCH 1/1] tools/nolibc/string: export strlen()
+Date: Fri, 26 Jan 2024 15:24:11 +0100
+Message-ID: <20240126142411.22972-2-rodrigo@sdfg.com.ar>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240126142411.22972-1-rodrigo@sdfg.com.ar>
+References: <20240126142411.22972-1-rodrigo@sdfg.com.ar>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117131807.24997-1-wsa+renesas@sang-engineering.com> <20240117131807.24997-3-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20240117131807.24997-3-wsa+renesas@sang-engineering.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 26 Jan 2024 15:24:48 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX7Z8w0JykKuboP__ZE4x+LeKSQAGdyrUezERxysPUCKA@mail.gmail.com>
-Message-ID: <CAMuHMdX7Z8w0JykKuboP__ZE4x+LeKSQAGdyrUezERxysPUCKA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/2] arm64: dts: renesas: ulcb-kf: add node for GNSS
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Wolfram,
+As with commit 8d304a374023, "tools/nolibc/string: export memset() and
+memmove()", gcc -Os without -ffreestanding may fail to compile with:
 
-On Wed, Jan 17, 2024 at 2:18=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
-> Changes since last version:
->
-> * use 'reg_3p3v' instead of custom regulator
+	cc -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib -lgcc -c test.c -o test.o
+	cc test.o -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib -lgcc  -static -o test
+	/usr/bin/ld: test.o: in function `main':
+	test.c:(.text.startup+0x32): undefined reference to `strlen'
+	collect2: error: ld returned 1 exit status
 
-Thanks for the update!
+As on the aforementioned commit, this patch adds a section to export
+this function so compilation works on those cases too.
 
-> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-> @@ -392,6 +392,13 @@ &scif1 {
->         pinctrl-names =3D "default";
->
->         status =3D "okay";
-> +
-> +       gnss {
-> +               compatible =3D "u-blox,neo-m8";
-> +               reset-gpios =3D <&gpio_exp_75 6 GPIO_ACTIVE_LOW>;
-> +               vcc-supply =3D <&reg_3p3v>;
-> +               current-speed =3D <9600>;
-> +       };
->  };
->
->  &sdhi3 {
+Signed-off-by: Rodrigo Campos <rodrigo@sdfg.com.ar>
+---
+ tools/include/nolibc/string.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+diff --git a/tools/include/nolibc/string.h b/tools/include/nolibc/string.h
+index a01c69dd495f..ed15c22b1b2a 100644
+--- a/tools/include/nolibc/string.h
++++ b/tools/include/nolibc/string.h
+@@ -123,7 +123,7 @@ char *strcpy(char *dst, const char *src)
+  * thus itself, hence the asm() statement below that's meant to disable this
+  * confusing practice.
+  */
+-static __attribute__((unused))
++__attribute__((weak,unused,section(".text.nolibc_strlen")))
+ size_t strlen(const char *str)
+ {
+ 	size_t len;
+-- 
+2.43.0
 
-Before I queue this, I have one remaining question.
-The device is also connected to I2C bus i2c@7 aka AUDIO_S{DA,CL}.
-Can it be used over I2C too? Is there some strapping to select the
-interface used? I couldn't find that in the documentation.
-(It does support clock stretching! ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
