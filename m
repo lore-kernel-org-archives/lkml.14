@@ -1,347 +1,203 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79795250EC
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850CA250E8
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706307339; cv=none; b=pgJS3fxl2FUf9cTaivbaNdwmDdKI5VhfN/rB3FTQ8EDgSGNqaP/gVswhHBfWM9FJUClUdE18r3cz6yOU3bWeoaLGFQm9WhX9zzO0/KLUPe4NHA9MdlPVCL02A/3DrPc2PQ2i/LAeN3S6wk2oBD9vT3k2Z2Dm/X6hVdwFV3mlRl0=
+	t=1706307371; cv=none; b=g4oAA0yBXwZtnVp4tEXKrSfLkTjJyO5dkiT1uSsJI2ByJM51KeU7OaANy/I1BRxkvXdh9W5ptLZ5ipquQLLuGD+JyEwAaKroscxaSz1dH5L2ZadIXPl6LakT4eZ+4FqI8GKCUwT20GyKn0yXHD5lKI1pgqAI99ZrYHkVfBgGdOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706307339; c=relaxed/simple;
-	bh=T02XmBJDADvKcZTilAObNi55rEWmd0jbEWH/a/5XHYo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BWs3a7n1LrO2vVuVP7Qagkjmhojy3wGjpPXWGaGfjqeCfonKOqUPNl2VaeFnWqI0FOV0YfLyCENVsvpa/BB/zb7heUWlcwUBfOtUwSUmHt83Hl4WeB2bTv2dDufohSjzOx0BS+pD9rZZDKWN4e5dAi4603OW63Pw/pkq+91tv8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RmGvwOMt; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com
+	s=arc-20240116; t=1706307371; c=relaxed/simple;
+	bh=nAhawsEsqsCcYVI70CFznEmT+o0U/Fr8IYx1ftWwQBM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G9hzogxdyz1qaetZEMuOtD3+a+TmSbLP6IGSJsnLzgPcA5Kfkt7MroRVk33+rEyvoHrHSpG/HhbN8d91/vy4HMzalWofPg2e+VWm0VqOzis3ROePHdzpgaJlFrU2Vmy7zV6gh4VnRsrQhq8W0qJrC80CHymSat8GoyRMhcSqqIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PDbd/c5Z; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RmGvwOMt"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5fffb2798bfso13677907b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:15:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PDbd/c5Z"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc6432ee799so1102202276.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:16:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706307336; x=1706912136; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wfOq9kvoZ78MTfE+CrR6Nj3VpN/I/l27htej84EdWP4=;
-        b=RmGvwOMtmHKzcpqKp5qcbkfxgrIlZ9w1Ja5U0BjEHDeGORA55k9prG2jHWGUMuyR1n
-         iKCsSYT+c1ePB7KO4fH9x7WTYFktZszFjjFbDrrcdAqUJPbMo165IbPg8nX7wjE6PY4y
-         eEhpJg8zsVxhKnkab5aAr+lJkK/TEnqFLZMvYXjh2Z0LlndWNhMl8skp/vGhyFGAYM8O
-         R/lVgmPn+4S56F5VZPLwi8gTFsklLNMTXBfb235cDQjkBsgmMID6x3/vis7C//iXio9S
-         eQGn/wFyaANJvgJHzgH6lL+mE1tIH0s+8OiD8eBXmrOk29DLHU9JQYbaVQiSgLEnzxnz
-         UL8A==
+        d=linaro.org; s=google; t=1706307368; x=1706912168; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8bNr7T/Lt7XgOwTMWUS4eY73fyol+sxeCZ+LiWLeDes=;
+        b=PDbd/c5Z0zU8OA3zDfQt2phmH3qCZaxjt2EV055Ih7RXyk0WCNhsLfS5AtrsYA+bl0
+         PdeUzS8s1mzV09huzGBSFO4CGtN1PkGIfCtcMtjFeNWT8licxwzY4oxMczGRYY2gXZnT
+         Aef53uRDYalsJkQEugUGpri5UISm0MV66i9+cugn8xYXQ+ciow9prCOzg99dEmPbcJ5t
+         qBHi+qzzls7syk+F0331dEY4ZpviPVzc1LdzyFsTrQcOnADJkDJrgm1gWYcrW2Vu74Qi
+         Lk+AWmKAtqgmRwHi84Ns4ly44BI5pxKXWicLTFIT+xdkRw9U7xGj/asLpXH+sKcZ0HjN
+         Y01Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706307336; x=1706912136;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wfOq9kvoZ78MTfE+CrR6Nj3VpN/I/l27htej84EdWP4=;
-        b=vbB16nL0OPdALBJpBxnz7/lNuCdPPe16L655TOOAZChXals5M827wTfnA8eCTg1zWO
-         OK/zd+VNuu1NgMyCifcghpHX8YjmsxB/dO50ZDNXWHMAGuQS3XCHWEhiFZNvjioxQvFi
-         ZApptLj7dV5clPXRg+PoQ48kyMESTfWA4xfkEKBiL+yy1qY5pewyUY5J26f8iorYTFlg
-         XNvwEsq41ErKM7LVAO/kLQjwm4pnuQ/Qkckn9nJb4aHiRdsdbmDKY0teqYHYRLnLsvJr
-         TtOdKXLK4PSEvTZ/xIHbWGM9knEa2cjxXX1XV6SWfD66GEYYgimiGBN/dooVrRMs7SyO
-         N4lQ==
-X-Gm-Message-State: AOJu0YyzBK80wwOxVPlVCgVK47ZZLFLXPvTGxb0/LTQex/SuiyCEoJJm
-	O4TH/emlI35jeA9PoZP6Nn+T7BTc/6U4+TtGVXRfOtcM3aPkc3C2+E7CJ75mSb+3NL7Qp1juvw=
-	=
-X-Google-Smtp-Source: AGHT+IE6htndHGdPTl+G+lmUHLoJ75Z4eKrFu6nBmvxCp4uHri9nfyOa4lYFJnuF5baBpwP0Uw21cH4rVA==
-X-Received: from rmoar-specialist.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:45d3])
- (user=rmoar job=sendgmr) by 2002:a81:9a16:0:b0:600:2501:19b8 with SMTP id
- r22-20020a819a16000000b00600250119b8mr211259ywg.2.1706307336515; Fri, 26 Jan
- 2024 14:15:36 -0800 (PST)
-Date: Fri, 26 Jan 2024 22:14:26 +0000
+        d=1e100.net; s=20230601; t=1706307368; x=1706912168;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8bNr7T/Lt7XgOwTMWUS4eY73fyol+sxeCZ+LiWLeDes=;
+        b=A2tLr2+uY2HdFGRi2vpGdpqGl0ASMm4uWx/iZyRImMSyEu3NfvponWTBbmdt5h7m7v
+         mlPX/qoKUU2cUh+qjYk6dGyjRWHBM168l/661oluiq7V7pS7ynq4xhnZVjJ4Pk0R1euj
+         s/8m1oRwtAs7ZdqN3MA6JHrYxFkmHlJTIzim10JuMkuSupNuW2LPsWRXJ+cl8cfWBGqE
+         WUHBBT12pscdaNO5UBQ5Dk84EjaVjWCXf0TqBcmx43OxO2vx9pzfnD3wX6ObBBScRYLl
+         TaUqIyes6fnjGLDU3t2Lc8/yQ+e7trgjlF3jPaEiL8ivUG3TDZAVNuLyHR2uojDZkzyA
+         ePZw==
+X-Gm-Message-State: AOJu0YyK2bSEncFPYgTxwt2msU6F+EwoYPTM35C+Ipo/w4uQQTnv59Gw
+	aOUdhpMwoyhSFS3FwwAQyC+SRpUM3eiQ46QWuLLbFuZ8PK5ElXg5J0CBL6EFlXsIrKGcIZ4avIH
+	RJg5BWm5bgbwzP/j9QoZUqhSisGthmKwiMifJA0kb9BBg80pP
+X-Google-Smtp-Source: AGHT+IGH9PIpDz86GiZJM/3ppwDCWLHJvH4MBuLirKV+K5VXuQ0BbMh9OPE5LvfC/zo87pjPEP8Xg7xOoK4CmBCjreY=
+X-Received: by 2002:a25:bcc5:0:b0:dbe:3ddf:57e8 with SMTP id
+ l5-20020a25bcc5000000b00dbe3ddf57e8mr623154ybm.55.1706307368333; Fri, 26 Jan
+ 2024 14:16:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240126221426.4173112-1-rmoar@google.com>
-Subject: [KTAP V2 PATCH v2] ktap_v2: add test metadata
-From: Rae Moar <rmoar@google.com>
-To: frowand.list@gmail.com, davidgow@google.com, keescook@chromium.org, 
-	Tim.Bird@sony.com, shuah@kernel.org, brendanhiggins@google.com, 
-	dlatypov@google.com
-Cc: tytso@google.com, gustavo.padovan@collabora.com, 
-	ricardo.canuelo@collabora.com, guillaume.tucker@collabora.com, corbet@lwn.net, 
-	kernelci@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Rae Moar <rmoar@google.com>
+MIME-Version: 1.0
+References: <20240122124243.44002-5-brgl@bgdev.pl> <170627361652.398.12825437185563577604.tip-bot2@tip-bot2>
+ <20240126210509.GA1212219@dev-arch.thelio-3990X>
+In-Reply-To: <20240126210509.GA1212219@dev-arch.thelio-3990X>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Fri, 26 Jan 2024 23:15:57 +0100
+Message-ID: <CACMJSesVR_3-PBt1ScricSKNMRzH5gesqtTVW3mqN=gg0-O-7w@mail.gmail.com>
+Subject: Re: [tip: irq/core] genirq/irq_sim: Shrink code by using cleanup helpers
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, linux-tip-commits@vger.kernel.org, 
+	maz@kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add specification for test metadata to the KTAP v2 spec.
+On Fri, 26 Jan 2024 at 22:05, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> On Fri, Jan 26, 2024 at 12:53:36PM -0000, tip-bot2 for Bartosz Golaszewski wrote:
+> > The following commit has been merged into the irq/core branch of tip:
+> >
+> > Commit-ID:     590610d72a790458431cbbebc71ee24521533b5e
+> > Gitweb:        https://git.kernel.org/tip/590610d72a790458431cbbebc71ee24521533b5e
+> > Author:        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > AuthorDate:    Mon, 22 Jan 2024 13:42:43 +01:00
+> > Committer:     Thomas Gleixner <tglx@linutronix.de>
+> > CommitterDate: Fri, 26 Jan 2024 13:44:48 +01:00
+> >
+> > genirq/irq_sim: Shrink code by using cleanup helpers
+> >
+> > Use the new __free() mechanism to remove all gotos and simplify the error
+> > paths.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Link: https://lore.kernel.org/r/20240122124243.44002-5-brgl@bgdev.pl
+> >
+> > ---
+> >  kernel/irq/irq_sim.c | 25 ++++++++++---------------
+> >  1 file changed, 10 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+> > index b0d50b4..fe8fd30 100644
+> > --- a/kernel/irq/irq_sim.c
+> > +++ b/kernel/irq/irq_sim.c
+> > @@ -4,6 +4,7 @@
+> >   * Copyright (C) 2020 Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >   */
+> >
+> > +#include <linux/cleanup.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irq.h>
+> >  #include <linux/irq_sim.h>
+> > @@ -163,33 +164,27 @@ static const struct irq_domain_ops irq_sim_domain_ops = {
+> >  struct irq_domain *irq_domain_create_sim(struct fwnode_handle *fwnode,
+> >                                        unsigned int num_irqs)
+> >  {
+> > -     struct irq_sim_work_ctx *work_ctx;
+> > +     struct irq_sim_work_ctx *work_ctx __free(kfree) = kmalloc(sizeof(*work_ctx), GFP_KERNEL);
+> > +     unsigned long *pending;
+> >
+> > -     work_ctx = kmalloc(sizeof(*work_ctx), GFP_KERNEL);
+> >       if (!work_ctx)
+> > -             goto err_out;
+> > +             return ERR_PTR(-ENOMEM);
+> >
+> > -     work_ctx->pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
+> > -     if (!work_ctx->pending)
+> > -             goto err_free_work_ctx;
+> > +     pending = __free(bitmap) = bitmap_zalloc(num_irqs, GFP_KERNEL);
+>
+> Apologies if this has already been reported elsewhere. This does not
+> match what was sent and it causes the build to break with both GCC:
+>
 
-KTAP v1 only specifies the output format of very basic test information:
-test result and test name. Any additional test information either gets
-added to general diagnostic data or is not included in the output at all.
+I did not see any other report. I don't know what happened here but
+this was a ninja edit as it's not what I sent. If Thomas' intention
+was to move the variable declaration and detach it from the assignment
+then 'pending' should at least be set to NULL and __free() must
+decorate the declaration.
 
-The purpose of KTAP metadata is to create a framework to include and
-easily identify additional important test information in KTAP.
+But the coding style of declaring variables when they're first
+assigned their auto-cleaned value is what Linus Torvalds explicitly
+asked me to do when I first started sending PRs containing uses of
+linux/cleanup.h.
 
-KTAP metadata could include any test information that is pertinent for
-user interaction before or after the running of the test. For example,
-the test file path or the test speed.
+Bartosz
 
-Since this includes a large variety of information, this specification
-will recognize notable types of KTAP metadata to ensure consistent format
-across test frameworks. See the full list of types in the specification.
-
-Example of KTAP Metadata:
-
- KTAP version 2
- # ktap_test: main
- # ktap_arch: uml
- 1..1
-     KTAP version 2
-     # ktap_test: suite_1
-     # ktap_subsystem: example
-     # ktap_test_file: lib/test.c
-     1..2
-     ok 1 test_1
-     # ktap_test: test_2
-     # ktap_speed: very_slow
-     # custom_is_flaky: true
-     ok 2 test_2
- ok 1 test_suite
-
-The changes to the KTAP specification outline the format, location, and
-different types of metadata.
-
-Here is a link to a version of the KUnit parser that is able to parse test
-metadata lines for KTAP version 2. Note this includes test metadata
-lines for the main level of KTAP.
-
-Link: https://kunit-review.googlesource.com/c/linux/+/5889
-
-Signed-off-by: Rae Moar <rmoar@google.com>
----
- Documentation/dev-tools/ktap.rst | 163 ++++++++++++++++++++++++++++++-
- 1 file changed, 159 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/dev-tools/ktap.rst b/Documentation/dev-tools/ktap.rst
-index ff77f4aaa6ef..4480eaf5bbc3 100644
---- a/Documentation/dev-tools/ktap.rst
-+++ b/Documentation/dev-tools/ktap.rst
-@@ -17,19 +17,20 @@ KTAP test results describe a series of tests (which may be nested: i.e., test
- can have subtests), each of which can contain both diagnostic data -- e.g., log
- lines -- and a final result. The test structure and results are
- machine-readable, whereas the diagnostic data is unstructured and is there to
--aid human debugging.
-+aid human debugging. One exception to this is test metadata lines - a type
-+of diagnostic lines. Test metadata is used to identify important supplemental
-+test information and can be machine-readable.
- 
- KTAP output is built from four different types of lines:
- - Version lines
- - Plan lines
- - Test case result lines
--- Diagnostic lines
-+- Diagnostic lines (including test metadata)
- 
- In general, valid KTAP output should also form valid TAP output, but some
- information, in particular nested test results, may be lost. Also note that
- there is a stagnant draft specification for TAP14, KTAP diverges from this in
--a couple of places (notably the "Subtest" header), which are described where
--relevant later in this document.
-+a couple of places, which are described where relevant later in this document.
- 
- Version lines
- -------------
-@@ -166,6 +167,154 @@ even if they do not start with a "#": this is to capture any other useful
- kernel output which may help debug the test. It is nevertheless recommended
- that tests always prefix any diagnostic output they have with a "#" character.
- 
-+KTAP metadata lines
-+-------------------
-+
-+KTAP metadata lines are a subset of diagnostic lines that are used to include
-+and easily identify important supplemental test information in KTAP.
-+
-+.. code-block:: none
-+
-+	# <prefix>_<metadata type>: <metadata value>
-+
-+The <prefix> indicates where to find the specification for the type of
-+metadata. The metadata types listed below use the prefix "ktap" (See Types of
-+KTAP Metadata).
-+
-+Types that are instead specified by an individual test framework use the
-+framework name as the prefix. For example, a metadata type documented by the
-+kselftest specification would use the prefix "kselftest". Any metadata type
-+that is not listed in a specification must use the prefix "custom". Note the
-+prefix must not include spaces or the characters ":" or "_".
-+
-+The format of <metadata type> and <value> varies based on the type. See the
-+individual specification. For "custom" types the <metadata type> can be any
-+string excluding ":", spaces, or newline characters and the <value> can be any
-+string.
-+
-+**Location:**
-+
-+The first KTAP metadata entry for a test must be "# ktap_test: <test name>",
-+which acts as a header to associate metadata with the correct test.
-+
-+For test cases, the location of the metadata is between the prior test result
-+line and the current test result line. For test suites, the location of the
-+metadata is between the suite's version line and test plan line. See the
-+example below.
-+
-+KTAP metadata for a test does not need to be contiguous. For example, a kernel
-+warning or other diagnostic output could interrupt metadata lines. However, it
-+is recommended to keep a test's metadata lines together when possible, as this
-+improves readability.
-+
-+**Here is an example of using KTAP metadata:**
-+
-+::
-+
-+        KTAP version 2
-+        # ktap_test: main
-+        # ktap_arch: uml
-+        1..1
-+          KTAP version 2
-+          # ktap_test: suite_1
-+          # ktap_subsystem: example
-+          # ktap_test_file: lib/test.c
-+          1..2
-+          ok 1 test_1
-+          # ktap_test: test_2
-+          # ktap_speed: very_slow
-+          # custom_is_flaky: true
-+          ok 2 test_2
-+        # suite_1 passed
-+        ok 1 suite_1
-+
-+In this example, the tests are running on UML. The test suite "suite_1" is part
-+of the subsystem "example" and belongs to the file "lib/example_test.c". It has
-+two subtests, "test_1" and "test_2". The subtest "test_2" has a speed of
-+"very_slow" and has been marked with a custom KTAP metadata type called
-+"custom_is_flaky" with the value of "true".
-+
-+**Types of KTAP Metadata:**
-+
-+This is the current list of KTAP metadata types recognized in this
-+specification. Note that all of these metadata types are optional (except for
-+ktap_test as the KTAP metadata header).
-+
-+- ``ktap_test``: Name of test (used as header of KTAP metadata). This should
-+  match the test name printed in the test result line: "ok 1 [test_name]".
-+
-+- ``ktap_module``: Name of the module containing the test
-+
-+- ``ktap_subsystem``: Name of the subsystem being tested
-+
-+- ``ktap_start_time``: Time tests started in ISO8601 format
-+
-+  - Example: "# ktap_start_time: 2024-01-09T13:09:01.990000+00:00"
-+
-+- ``ktap_duration``: Time taken (in seconds) to execute the test
-+
-+  - Example: "ktap_duration: 10.154s"
-+
-+- ``ktap_speed``: Category of how fast test runs: "normal", "slow", or
-+  "very_slow"
-+
-+- ``ktap_test_file``: Path to source file containing the test. This metadata
-+  line can be repeated if the test is spread across multiple files.
-+
-+  - Example: "# ktap_test_file: lib/test.c"
-+
-+- ``ktap_generated_file``: Description of and path to file generated during
-+  test execution. This could be a core dump, generated filesystem image, some
-+  form of visual output (for graphics drivers), etc. This metadata line can be
-+  repeated to attach multiple files to the test.
-+
-+  - Example: "# ktap_generated_file: Core dump: /var/lib/systemd/coredump/hello.core"
-+
-+- ``ktap_log_file``: Path to file containing kernel log test output
-+
-+  - Example: "# ktap_log_file: /sys/kernel/debugfs/kunit/example/results"
-+
-+- ``ktap_error_file``: Path to file containing context for test failure or
-+  error. This could include the difference between optimal test output and
-+  actual test output.
-+
-+  - Example: "# ktap_error_file: fs/results/example.out.bad"
-+
-+- ``ktap_results_url``: Link to webpage describing this test run and its
-+  results
-+
-+  - Example: "# ktap_results_url: https://kcidb.kernelci.org/hello"
-+
-+- ``ktap_arch``: Architecture used during test run
-+
-+  - Example: "# ktap_arch: x86_64"
-+
-+- ``ktap_compiler``: Compiler used during test run
-+
-+  - Example: "# ktap_compiler: gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)"
-+
-+- ``ktap_respository_url``: Link to git repository of the checked out code.
-+
-+  - Example: "# ktap_respository_url: https://github.com/torvalds/linux.git"
-+
-+- ``ktap_git_branch``: Name of git branch of checked out code
-+
-+  - Example: "# ktap_git_branch: kselftest/kunit"
-+
-+- ``ktap_kernel_version``: Version of Linux Kernel being used during test run
-+
-+  - Example: "# ktap_kernel_version: 6.7-rc1"
-+
-+- ``ktap_commit_hash``: The full git commit hash of the checked out base code.
-+
-+  - Example: "# ktap_commit_hash: 064725faf8ec2e6e36d51e22d3b86d2707f0f47f"
-+
-+**Other Metadata Types:**
-+
-+There can also be KTAP metadata that is not included in the recognized list
-+above. This metadata must be prefixed with the test framework, ie. "kselftest",
-+or with the prefix "custom". For example, "# custom_batch: 20".
-+
- Unknown lines
- -------------
- 
-@@ -206,6 +355,7 @@ An example of a test with two nested subtests:
- 	KTAP version 2
- 	1..1
- 	  KTAP version 2
-+	  # ktap_test: example
- 	  1..2
- 	  ok 1 test_1
- 	  not ok 2 test_2
-@@ -219,6 +369,7 @@ An example format with multiple levels of nested testing:
- 	KTAP version 2
- 	1..2
- 	  KTAP version 2
-+	  # ktap_test: example_test_1
- 	  1..2
- 	    KTAP version 2
- 	    1..2
-@@ -254,6 +405,7 @@ Example KTAP output
- 	KTAP version 2
- 	1..1
- 	  KTAP version 2
-+	  # ktap_test: main_test
- 	  1..3
- 	    KTAP version 2
- 	    1..1
-@@ -261,11 +413,14 @@ Example KTAP output
- 	    ok 1 test_1
- 	  ok 1 example_test_1
- 	    KTAP version 2
-+        # ktap_test: example_test_2
-+        # ktap_speed: slow
- 	    1..2
- 	    ok 1 test_1 # SKIP test_1 skipped
- 	    ok 2 test_2
- 	  ok 2 example_test_2
- 	    KTAP version 2
-+	    # ktap_test: example_test_3
- 	    1..3
- 	    ok 1 test_1
- 	    # test_2: FAIL
-
-base-commit: 906f02e42adfbd5ae70d328ee71656ecb602aaf5
--- 
-2.43.0.429.g432eaa2c6b-goog
-
+>   In file included from include/linux/compiler_types.h:89,
+>                    from <command-line>:
+>   kernel/irq/irq_sim.c: In function 'irq_domain_create_sim':
+>   include/linux/compiler_attributes.h:76:41: error: expected expression before '__attribute__'
+>      76 | #define __cleanup(func)                 __attribute__((__cleanup__(func)))
+>         |                                         ^~~~~~~~~~~~~
+>   include/linux/cleanup.h:64:25: note: in expansion of macro '__cleanup'
+>      64 | #define __free(_name)   __cleanup(__free_##_name)
+>         |                         ^~~~~~~~~
+>   kernel/irq/irq_sim.c:173:19: note: in expansion of macro '__free'
+>     173 |         pending = __free(bitmap) = bitmap_zalloc(num_irqs, GFP_KERNEL);
+>         |                   ^~~~~~
+>
+> and Clang:
+>
+>   kernel/irq/irq_sim.c:173:12: error: expected expression
+>     173 |         pending = __free(bitmap) = bitmap_zalloc(num_irqs, GFP_KERNEL);
+>         |                   ^
+>   include/linux/cleanup.h:64:23: note: expanded from macro '__free'
+>      64 | #define __free(_name)   __cleanup(__free_##_name)
+>         |                         ^
+>   include/linux/compiler-clang.h:15:25: note: expanded from macro '__cleanup'
+>      15 | #define __cleanup(func) __maybe_unused __attribute__((__cleanup__(func)))
+>         |                         ^
+>   include/linux/compiler_attributes.h:344:41: note: expanded from macro '__maybe_unused'
+>     344 | #define __maybe_unused                  __attribute__((__unused__))
+>         |                                         ^
+>   1 error generated.
+>
+> This was initially noticed by our CI:
+>
+> https://github.com/ClangBuiltLinux/continuous-integration2/actions/runs/7671789235/job/20915505965
+> https://storage.tuxsuite.com/public/clangbuiltlinux/continuous-integration2/builds/2bVGKZUmat8fRr582Nh8hNA6FXD/build.log
+>
+> Cheers,
+> Nathan
+>
+> > +     if (!pending)
+> > +             return ERR_PTR(-ENOMEM);
+> >
+> >       work_ctx->domain = irq_domain_create_linear(fwnode, num_irqs,
+> >                                                   &irq_sim_domain_ops,
+> >                                                   work_ctx);
+> >       if (!work_ctx->domain)
+> > -             goto err_free_bitmap;
+> > +             return ERR_PTR(-ENOMEM);
+> >
+> >       work_ctx->irq_count = num_irqs;
+> >       work_ctx->work = IRQ_WORK_INIT_HARD(irq_sim_handle_irq);
+> > +     work_ctx->pending = no_free_ptr(pending);
+> >
+> > -     return work_ctx->domain;
+> > -
+> > -err_free_bitmap:
+> > -     bitmap_free(work_ctx->pending);
+> > -err_free_work_ctx:
+> > -     kfree(work_ctx);
+> > -err_out:
+> > -     return ERR_PTR(-ENOMEM);
+> > +     return no_free_ptr(work_ctx)->domain;
+> >  }
+> >  EXPORT_SYMBOL_GPL(irq_domain_create_sim);
+> >
