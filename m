@@ -1,86 +1,99 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1BB14263;
-	Fri, 26 Jan 2024 09:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A944B14263;
+	Fri, 26 Jan 2024 09:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706260216; cv=none; b=gbkIDN7mTp7G308F2+MIR2+0jOx84tP0ipmNLZOAWbZNh2xw4fNTp1Z/2lHq9ArpFwJ7FB0uxJXC7h9q2WViHBGnRXBZaaHuNMRvIUGnZWtG+Svk7IcE2Ictajaa+RvBt1ck1OPgOfAyNPNMhCJVaOndYBkRxJqW3fFeb/LTjtQ=
+	t=1706260250; cv=none; b=mX1KSkJIDIYLIGtNqZY0zBA2qvo3oDybkpjAQvrSsQmYv9bu64eXSRos08w0OcVS+CY9SgHjLpEE9Z65F6so51wGqF5FYn0EdRRBDOVhrzP5kysJBa7vdrXJnpX6gQIFsUyEI6ab6ofPK/ojvros4nBJ7yEAqQXl+YjAUSDjufA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706260216; c=relaxed/simple;
-	bh=SxA01WsGYaiPR9ygKYJLgo2WCbqnCyZLRDfMY+rV6Bs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UmoblvM+ALBOAI4BDuzkvfJuEoAYrOKQlXVRpxKC2v1iDkCxguldvGzJiOkzsglh4tcaAK9YReNYNEeU9kb5Dp8UdVWHQUHFI+a0+nR+HTLzDTlkkdxMtcDkz3bJh80aHyenTwuZWVinxs//HPddJndkQLYBTUHWQ0JBIQQ+CR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CsidsPSI; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706260250; c=relaxed/simple;
+	bh=iqbcOpTlEh5SlO47biheNN9vN+dMs8WVH0huJV/6Kbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jYHuXRoQ7SstXoXWCsF/IemAZixw33vqEONA8n1IY9MEWAwe26uay17PpXmLl5XfdfNYukVTtRD4zBjFS88rzafzJPkaw06sTMYZfWRHv34VatlqW2M/lBoff3hrPsVfoDLRhiz49Msqk3Td4yc83Y4rE27D5H5TUq/XHneLAuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=Bw6d/FAj; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CsidsPSI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706260212;
-	bh=SxA01WsGYaiPR9ygKYJLgo2WCbqnCyZLRDfMY+rV6Bs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CsidsPSIcR6/+pQuEXLQ9vCn7YW8F3/zKlwAHE0vJHrGn2i/BPbqxIOpepjB9sAm/
-	 Jow9+j7iW3P3bA5Tl8zbNkF5YP3rrLUrJL7ROX2xOAlJrKbhtH9No00Bj1oMDQvBOo
-	 GwaPUkP1zUmcgI+TbHCAOFbvninsgIVC6bswXBOfAy4eT6t2jZRFT1cjhzXN7n0CER
-	 92GretTOS43sE6H5tsSw6iTZze9FKn4MA71i6pkqZpSqFPoSjbK8Iv+tBsec01x8jJ
-	 7TlrqglJdNwUFOuvz0mIrZVs90w7NilbiqKR8aXfhdbAg23xfSbMRPxm6SGCXwN20r
-	 VdPHNW1d7Dd8A==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1DBBC3782080;
-	Fri, 26 Jan 2024 09:10:12 +0000 (UTC)
-Message-ID: <051a0b5b-068d-43ce-a73a-f70f94888f8c@collabora.com>
-Date: Fri, 26 Jan 2024 10:10:12 +0100
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="Bw6d/FAj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=O99d2OhA5yD9439wbiGDNw8gbQ6j47VNjuChaGpSepE=; b=Bw6d/FAjzh7JS+ZSE9l79uyRPs
+	ug04KQ4kugdFE5zsfhVBsrVF2KMCrN6Wcf5FMm0YeEfICSLMtXV/BtvW8kTaYW6Pj+P2UuTo9fOuJ
+	0awaRMrNFxYiit77EkNuu67cqTdgC4cDdnzQ9R8aMnSlXwZiUTvOjdpaOr6TzbyJw3cbxE3l1ih7V
+	ft407vgmgel6hwcDzRGDgXQBT32XxiaxXKF0tsTU9gxg+6x043M2Qr01DwNi75xISHtWmWW68e+JK
+	r0fy6wb7SsazDKW2TZ6Bx8xC+zzO+yizMv+ZiSTcwTyQouj9l1Y4shrHnZtTDWsiQLYztk46/IexG
+	YxXL017w==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rTIEX-000GfG-V8; Fri, 26 Jan 2024 10:10:45 +0100
+Received: from [87.49.42.9] (helo=localhost)
+	by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <esben@geanix.com>)
+	id 1rTIEX-0004SN-3Z; Fri, 26 Jan 2024 10:10:45 +0100
+From: Esben Haabendal <esben@geanix.com>
+To: netdev@vger.kernel.org,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Christian Marangi <ansuelsmth@gmail.com>
+Cc: stable@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] net: stmmac: do not clear TBS enable bit on link up/down
+Date: Fri, 26 Jan 2024 10:10:41 +0100
+Message-ID: <a1d6f5ca9aad795dfc8e0bbb9bb06d8bb7b46649.1706256158.git.esben@geanix.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1706256158.git.esben@geanix.com>
+References: <cover.1706256158.git.esben@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/9] arm64: dts: mediatek: Add MT8186 Krabby platform
- based Tentacruel / Tentacool
-Content-Language: en-US
-To: Chen-Yu Tsai <wenst@chromium.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Eugen Hristev <eugen.hristev@collabora.com>, devicetree@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
-References: <20240126083802.2728610-1-wenst@chromium.org>
- <20240126083802.2728610-7-wenst@chromium.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240126083802.2728610-7-wenst@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27165/Thu Jan 25 10:51:15 2024)
 
-Il 26/01/24 09:37, Chen-Yu Tsai ha scritto:
-> Tentacruel and Tentacool are MT8186 based Chromebooks based on the
-> Krabby design.
-> 
-> Tentacruel, also known as the ASUS Chromebook CM14 Flip CM1402F, is a
-> convertible device with touchscreen and stylus.
-> 
-> Tentacool, also known as the ASUS Chromebook CM14 CM1402C, is a laptop
-> device. It does not have a touchscreen or stylus.
-> 
-> The two devices both have two variants. The difference is a second
-> source trackpad controller that shares the same address as the original,
-> but is incompatible.
-> 
-> The extra SKU IDs for the Tentacruel devices map to different sensor
-> components attached to the Embedded Controller. These are not visible
-> to the main processor.
-> 
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+With the dma conf being reallocated on each call to stmmac_open(), any
+information in there is lost, unless we specifically handle it.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+The STMMAC_TBS_EN bit is set when adding an etf qdisc, and the etf qdisc
+therefore would stop working when link was set down and then back up.
 
+Fixes: ba39b344e924 ("net: ethernet: stmicro: stmmac: generate stmmac dma conf before open")
+Cc: stable@vger.kernel.org
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b334eb16da23..25519952f754 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3932,6 +3932,9 @@ static int __stmmac_open(struct net_device *dev,
+ 	priv->rx_copybreak = STMMAC_RX_COPYBREAK;
+ 
+ 	buf_sz = dma_conf->dma_buf_sz;
++	for (int i = 0; i < MTL_MAX_TX_QUEUES; i++)
++		if (priv->dma_conf.tx_queue[i].tbs & STMMAC_TBS_EN)
++			dma_conf->tx_queue[i].tbs = priv->dma_conf.tx_queue[i].tbs;
+ 	memcpy(&priv->dma_conf, dma_conf, sizeof(*dma_conf));
+ 
+ 	stmmac_reset_queues_param(priv);
+-- 
+2.43.0
 
