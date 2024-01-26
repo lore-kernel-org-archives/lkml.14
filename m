@@ -1,159 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF9C1B7E8;
-	Fri, 26 Jan 2024 12:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEA214288
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706272162; cv=none; b=uxodGLlnvVyJL06Zq/9SO2e+U6J4W/420W/k4eQhXRQJ9xY82bbD3F+6+DDv92CFGFnR0AYtHyBuLaHTXUxyCuZFo743nbYVI0e78FkU9NL7SPslj+2RGIsip/C5D850gXs84Bpofj4IjaONm7pYkD24LcCN+v6zZ0Oppzsm7pg=
+	t=1706272439; cv=none; b=kcUwpchxVq9+nd1kmD0SVvIypIsJZE1IGSDpd9tlqmjxpAG+w4W9zu9MD/DXNKBdR76zeiOIvz+InfF+bvYrMOwssMRkrarIuDoU3jOt/utVzVn6MeUvFQ9LOnTis3HRRKg0tJapbfv+BZiBaOYzBDR47PVc4lVDxWaz6RFXnrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706272162; c=relaxed/simple;
-	bh=m34am/tbomi6cgCuIDffvsmNZlwPxjAWYsFaQ9DxZl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JJfhnNxvrVMwfRW1UCOimIlZG//tWS1PKAcCcBUeRlONcXmKMKdFOnXLx6tljPkEf8/6szcjxVhIdIdafPje65cYCm0VO9UJNOhALyiNQNtcoT71JyBXKmfgqLvIK82ADzoDbIAxUe5YpCPxeu2Dpy9hL0X8JIZil+6jzuLJXcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YDMt9w6Z; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706272439; c=relaxed/simple;
+	bh=4m99W9RcPeeWbt8DFEWQI2sp/PfyobyGjckKTyyGec4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rJWwpdieUi6awf7vBSixIHBcTcm2HMN7veC0b1IMSx24yvmGdfMwA+T5byuIiAEbW+uK4WcR6W104optuOBa7jhMGcQkAonlabg3lt4bVtQqTfkYMMfPa+WgSHvFaD3sKMhG2pCL+gtMPH9t+Fr6JWrOYtHxDTk+T0rQvfwnFCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ciNgwp8s; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDMt9w6Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706272160; x=1737808160;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m34am/tbomi6cgCuIDffvsmNZlwPxjAWYsFaQ9DxZl8=;
-  b=YDMt9w6ZnqXEic/9gmDNeYYXQQ2iu2C/kuYUns1kESIO+EtzVqz3Qjs4
-   fy8h2zZ3ecDWxdsULDqGUVLZxSqHi8zorjILIzKU4Yzf2E9+szuDIca0T
-   L4J/nNu2KW+xuBnq1zLF9yGCnQe8Uv6FgKbrRplJDToEdCoO5pEaTVuuM
-   ZwNHaUT5dPG5DX2UCNfraCjP+mYuctvSmdmVN5SgguaovBfBknCJ/ytQJ
-   R5RqOf7QkNpTVkeWRRAcSsrv/TUKiYt/Md3tOYV2gw82G/8NLHFXrLZG9
-   3jqWCcxhTxoTVAxo00Kxjb7FT1FnHgA94KoHglN9+dmVZapaNmRRwMd00
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9207969"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9207969"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 04:29:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2732248"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 26 Jan 2024 04:29:17 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTLKc-00011E-2y;
-	Fri, 26 Jan 2024 12:29:14 +0000
-Date: Fri, 26 Jan 2024 20:28:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Davis <afd@ti.com>, Sebastian Reichel <sre@kernel.org>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Davis <afd@ti.com>
-Subject: Re: [PATCH 09/21] power: supply: max8925: Use
- devm_power_supply_register() helper
-Message-ID: <202401262006.hqYtlg6E-lkp@intel.com>
-References: <20240123163653.384385-10-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ciNgwp8s"
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4676a37e2c4so84653137.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 04:33:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706272437; x=1706877237; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9UqArqULVidH7ROM7QOynYR0nvQSPMOUC/XDGfU+9xg=;
+        b=ciNgwp8sroWZ8vcx6ilBXJVZMMl1A7d/fA6LoOetvf4Hnxzof7UigiSb0HwHdZP5lP
+         /mo29IlxvGuFpYTdcSDEVoWfGnfTIPYQcr1aEsaHq26F7J1YOEk6JBxwGLzkGLELtOVh
+         OfSh+013KV0az6vxbyOlOHWaqnB7Ga9E9533BuQQJdw2Yr3a5vbgLf3e7VEImPTU5GET
+         nZw8M10Cx+cFWiM4Soi+F1uj0wfWlk5/i/0PoavMfheSbBuNdorZoW8xbxBbweX+qp9w
+         cBMOUTgwTZxsOHwAShRzKafRX9w5YpqP1r/F/8UY0gUdY5U6f/AfGT9GzIY9fLKHztdP
+         HX+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706272437; x=1706877237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9UqArqULVidH7ROM7QOynYR0nvQSPMOUC/XDGfU+9xg=;
+        b=HNDS1CNA50W0vUcj6CB4sZivZB05LfkwszAFeadx3sIBEmYxXXXAB1rw69X+P5DmcX
+         bFv2bZrEyM7acx2PeVbc9KTZD5M3+9KzYFpS0lsM3pR0WzyosN4/RvZgVZrMuQ4WfikL
+         9xb57LQCKrvqalz3ez+HELPAfwEGdzwufA/G3n/QiEl9vUwrMKacWvJPHnMbOOtX0Hhn
+         OW9NY4gB4LlUF0Jr5beb4otKSl+pvJjP1Rfu4RMZP5nbijyDtOHMdcvh1XhJaWDOTWGJ
+         zcyHV/3yAvUe72gVirEipqLcphVBEfIY3ZislTlNN4FzAQTn2PknSuIVbYZX8OCNec6Y
+         psWw==
+X-Gm-Message-State: AOJu0YxNPn3Gt8p8MjRftqpoCtxQWoDNRCaUPGGzaVG51uz0++JNJDER
+	2pR/1uLVwvjlrLxlmKVnbN6LzN/EQMiZac0nHgRMwbF1ZrannrYBoX+2ARQY0sDgfC+/r17NKkZ
+	ZpiF+af2G3VsLDFsYrtNpH8IutWQlP/i5t9no
+X-Google-Smtp-Source: AGHT+IGd62n+2RxpM3PIhY6cym3GnlSNkz7sZpZK5qZcCreUyKwry0eMpuKUCEZGpL8I0eVhgGC860sdXzu9+PQOL0A=
+X-Received: by 2002:a05:6122:2a07:b0:4b6:e71d:362d with SMTP id
+ fw7-20020a0561222a0700b004b6e71d362dmr862145vkb.18.1706272437051; Fri, 26 Jan
+ 2024 04:33:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123163653.384385-10-afd@ti.com>
+References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
+ <20240124-alice-mm-v1-3-d1abcec83c44@google.com> <ZbMA1yiM6Bqv9Sqg@boqun-archlinux>
+In-Reply-To: <ZbMA1yiM6Bqv9Sqg@boqun-archlinux>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 26 Jan 2024 13:33:46 +0100
+Message-ID: <CAH5fLgiNphSebaG82XkQHGFPFp1Mf1egyaiX6MFzsU2X3-Ni8w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: add abstraction for `struct page`
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Kees Cook <keescook@chromium.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Fri, Jan 26, 2024 at 1:47=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Wed, Jan 24, 2024 at 11:20:23AM +0000, Alice Ryhl wrote:
+> > +    /// Maps the page and reads from it into the given buffer.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// Callers must ensure that `dest` is valid for writing `len` byt=
+es.
+> > +    pub unsafe fn read(&self, dest: *mut u8, offset: usize, len: usize=
+) -> Result {
+> > +        self.with_pointer_into_page(offset, len, move |from_ptr| {
+> > +            // SAFETY: If `with_pointer_into_page` calls into this clo=
+sure, then
+> > +            // it has performed a bounds check and guarantees that `fr=
+om_ptr` is
+> > +            // valid for `len` bytes.
+> > +            unsafe { ptr::copy(from_ptr, dest, len) };
+> > +            Ok(())
+> > +        })
+> > +    }
+> > +
+> > +    /// Maps the page and writes into it from the given buffer.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// Callers must ensure that `src` is valid for reading `len` byte=
+s.
+> > +    pub unsafe fn write(&self, src: *const u8, offset: usize, len: usi=
+ze) -> Result {
+>
+> Use a slice like type as `src` maybe? Then the function can be safe:
+>
+>         pub fn write<S: AsRef<[u8]>>(&self, src: S, offset: usize) -> Res=
+ult
+>
+> Besides, since `Page` impl `Sync`, shouldn't this `write` and the
+> `fill_zero` be a `&mut self` function? Or make them both `unsafe`
+> because of potential race and add some safety requirement?
 
-kernel test robot noticed the following build warnings:
+Ideally, we don't want data races with these methods to be UB. They
+could be mapped into the address space of a userspace process.
 
-[auto build test WARNING on sre-power-supply/for-next]
-[also build test WARNING on linus/master v6.8-rc1 next-20240125]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andrew-Davis/power-supply-da9030-Use-devm_power_supply_register-helper/20240124-004253
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
-patch link:    https://lore.kernel.org/r/20240123163653.384385-10-afd%40ti.com
-patch subject: [PATCH 09/21] power: supply: max8925: Use devm_power_supply_register() helper
-config: i386-buildonly-randconfig-001-20240126 (https://download.01.org/0day-ci/archive/20240126/202401262006.hqYtlg6E-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240126/202401262006.hqYtlg6E-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401262006.hqYtlg6E-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/power/supply/max8925_power.c:510:6: warning: unused variable 'ret' [-Wunused-variable]
-     510 |         int ret;
-         |             ^~~
-   1 warning generated.
-
-
-vim +/ret +510 drivers/power/supply/max8925_power.c
-
-eba3b670a9166a drivers/power/max8925_power.c        Qing Xu             2012-11-19  503  
-c8afa6406e60ae drivers/power/max8925_power.c        Bill Pemberton      2012-11-19  504  static int max8925_power_probe(struct platform_device *pdev)
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  505  {
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  506  	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-2dc9215d7c94f7 drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  507  	struct power_supply_config psy_cfg = {}; /* Only for ac and usb */
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  508  	struct max8925_power_pdata *pdata = NULL;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  509  	struct max8925_power_info *info;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25 @510  	int ret;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  511  
-eba3b670a9166a drivers/power/max8925_power.c        Qing Xu             2012-11-19  512  	pdata = max8925_power_dt_init(pdev);
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  513  	if (!pdata) {
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  514  		dev_err(&pdev->dev, "platform data isn't assigned to "
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  515  			"power supply\n");
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  516  		return -EINVAL;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  517  	}
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  518  
-feeb3a92b1f4e4 drivers/power/max8925_power.c        Jingoo Han          2013-03-11  519  	info = devm_kzalloc(&pdev->dev, sizeof(struct max8925_power_info),
-feeb3a92b1f4e4 drivers/power/max8925_power.c        Jingoo Han          2013-03-11  520  				GFP_KERNEL);
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  521  	if (!info)
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  522  		return -ENOMEM;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  523  	info->chip = chip;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  524  	info->gpm = chip->i2c;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  525  	info->adc = chip->adc;
-2402ca5e300db0 drivers/power/max8925_power.c        Haojian Zhuang      2011-04-18  526  	platform_set_drvdata(pdev, info);
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  527  
-2dc9215d7c94f7 drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  528  	psy_cfg.supplied_to = pdata->supplied_to;
-2dc9215d7c94f7 drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  529  	psy_cfg.num_supplicants = pdata->num_supplicants;
-2dc9215d7c94f7 drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  530  
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  531  	info->ac = devm_power_supply_register(&pdev->dev, &ac_desc, &psy_cfg);
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  532  	if (IS_ERR(info->ac))
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  533  		return PTR_ERR(info->ac);
-297d716f6260cc drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  534  	info->ac->dev.parent = &pdev->dev;
-e7a5f6d55991fb drivers/power/max8925_power.c        Philip Rakity       2011-08-29  535  
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  536  	info->usb = devm_power_supply_register(&pdev->dev, &usb_desc, &psy_cfg);
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  537  	if (IS_ERR(info->usb))
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  538  		return PTR_ERR(info->usb);
-297d716f6260cc drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  539  	info->usb->dev.parent = &pdev->dev;
-297d716f6260cc drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  540  
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  541  	info->battery = devm_power_supply_register(&pdev->dev, &battery_desc, NULL);
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  542  	if (IS_ERR(info->battery))
-fec07f69a3e201 drivers/power/supply/max8925_power.c Andrew Davis        2024-01-23  543  		return PTR_ERR(info->battery);
-297d716f6260cc drivers/power/max8925_power.c        Krzysztof Kozlowski 2015-03-12  544  	info->battery->dev.parent = &pdev->dev;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  545  
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  546  	info->batt_detect = pdata->batt_detect;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  547  	info->topoff_threshold = pdata->topoff_threshold;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  548  	info->fast_charge = pdata->fast_charge;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  549  	info->set_charger = pdata->set_charger;
-92de378b739115 drivers/power/max8925_power.c        Philip Rakity       2011-11-25  550  	info->no_temp_support = pdata->no_temp_support;
-5ba1fa0ae288e9 drivers/power/max8925_power.c        Philip Rakity       2011-11-25  551  	info->no_insert_detect = pdata->no_insert_detect;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  552  
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  553  	max8925_init_charger(chip, info);
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  554  	return 0;
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  555  }
-28db38888b2a53 drivers/power/max8925_power.c        Haojian Zhuang      2010-01-25  556  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alice
