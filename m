@@ -1,35 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04DE17E9;
-	Fri, 26 Jan 2024 01:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D364522E;
+	Fri, 26 Jan 2024 01:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706233225; cv=none; b=QBeFL9urObh7uJCSWQdtbQhcJzshKNn1sz0qwRQ21sgwbq67+cukP1dmzPV0huNqJahf2NYD+ZQEeIKYWDavHb2DiaNlXY3kKKBPiMO0kkiSn1GiJdlgh+eCMdV2EAUVoW1dtbQ5JRzjNRciz4kLg/YY4DQvejLF6GogVoS4dxs=
+	t=1706233229; cv=none; b=mCLAhwEMrgSB+51dMLL4OorBUZvaD9dnjSIb0HeiYUJpBV8P8OPahQ2K8BFQMmEfk19YtOd3GYiQWjbABLyaQclWqcnl5wsPg4JjeK78ilOd7KaJEWG1VM/RRFi4Zljx9swLPrzHuSc7Xj6f+xsKcWPsHu62Bd5/wHEoNRllsAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706233225; c=relaxed/simple;
-	bh=wJvNS3eGItxJktKZUgWX28Xkf8EoVdyha55c9fq7F+4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CPE+NXoI8uDiGaamqxOiINjPB8lcc0jQ/KL/XNBeiQu1Lyq1q4ipSfsZRgzyippNcPzkp8LoVfetH25yNXnceKsRQwP5CQMxF+LtyH/2R1li+IpTQGPi5/KUAbN+EPfChIzG1jMw/KM8SFrQyOn3vXawFtQ2QoJ01msoKeVSmxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q348R1if; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706233229; c=relaxed/simple;
+	bh=dEKy3mt/WPL6E30nghtcx9sbGmG9T5AiLwENf8K/kU4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y0JEP5XIEjmP0HMl3vEK3GiWZKPxC0vHgmwR8WHH0gVPjY5eTFa9Ow9hXhh3K4cW2FDyrnj2tGiJ6XKBtxPtX+6XtL/D6RI5obwXYg82vCrdMfVaZ345rWoLIRGNygu8YEsgzLTkV/d0Lh3cCGdV7mGpDK4lex+WIH8vjuNYybg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFpKaysN; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q348R1if"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CB89C433C7;
-	Fri, 26 Jan 2024 01:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706233225;
-	bh=wJvNS3eGItxJktKZUgWX28Xkf8EoVdyha55c9fq7F+4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=q348R1ifm/PCzl/JiXEY/zN3JcP7xRDVrJWCCvpQBId2+KYob9+4+hn/KnCHzne9k
-	 jXjAsaOzU74yOEgrOl04r0lyek9JedVU/dRQvteRH0I+tpfQwQIc5Q7AymYXEVX9T0
-	 GOz3LvUaLD36DDhvv0ToQSW9TAtP4DqaDhUCVJJK5PyaVPtlm8fz6vQf6cReqeAVh4
-	 AYaaGrGJDi/9LFj+treWgltvY+y1bQqwLj0xBuMIabC8l+oLX2IEu1TzapOq7aRwNY
-	 jC9xBe4ZKY+Kyo66PgHX69jsECMbRGPHr9ech0FK0esEt+G+kSEVDtaPIFC8nvj81p
-	 g22q5ZewA78Og==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 225C6DFF767;
-	Fri, 26 Jan 2024 01:40:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFpKaysN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706233226; x=1737769226;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dEKy3mt/WPL6E30nghtcx9sbGmG9T5AiLwENf8K/kU4=;
+  b=hFpKaysN3cQSoyCaMPhka0oe39bMBe4cnlyo2WTwxRZPJ9E3WmLq/Jwr
+   1YnfoNT/tB5STV24o3KPT3wkzHMqHXPKy7CubtCzFsCynx6MJ/O6CE6kx
+   mUGh22/7+/B0pkYhaqez//m/uJ9AroX6SifdpGcgEjX92AhxabvQmSy4F
+   oiDzMo4L8cADJcjKNcDths22JyigytfFrYtzGtX28KqbI0PVakdTSLhg0
+   koMCU3drEbbU6paCh0w5K6sXmrfBw0xx0wu/e1G/EwGRgjfTm56J23SHF
+   De6hbK7CHR9xkZvLX2mqpsoFSO5dNU0DcF5NZ09OwS1hZ5fzNSLeqBytY
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15718453"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="15718453"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 17:40:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2533094"
+Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
+  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 17:40:23 -0800
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+To: baolu.lu@linux.intel.com,
+	bhelgaas@google.com,
+	robin.murphy@arm.com,
+	jgg@ziepe.ca
+Cc: kevin.tian@intel.com,
+	dwmw2@infradead.org,
+	will@kernel.org,
+	lukas@wunner.de,
+	yi.l.liu@intel.com,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Ethan Zhao <haifeng.zhao@linux.intel.com>,
+	Haorong Ye <yehaorong@bytedance.com>
+Subject: [PATCH v11 1/5] PCI: make pci_dev_is_disconnected() helper public for other drivers
+Date: Thu, 25 Jan 2024 20:39:58 -0500
+Message-Id: <20240126014002.481294-2-haifeng.zhao@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
+References: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,44 +67,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: ethernet: mtk_eth_soc: set DMA coherent mask to get
- PPE working
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170623322513.12449.11770533425186411622.git-patchwork-notify@kernel.org>
-Date: Fri, 26 Jan 2024 01:40:25 +0000
-References: <97e90925368b405f0974b9b15f1b7377c4a329ad.1706113251.git.daniel@makrotopia.org>
-In-Reply-To: <97e90925368b405f0974b9b15f1b7377c4a329ad.1706113251.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: nbd@nbd.name, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
- lorenzo@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
 
-Hello:
+Make pci_dev_is_disconnected() public so that it can be called from
+Intel VT-d driver to quickly fix/workaround the surprise removal
+unplug hang issue for those ATS capable devices on PCIe switch downstream
+hotplug capable ports.
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Beside pci_device_is_present() function, this one has no config space
+space access, so is light enough to optimize the normal pure surprise
+removal and safe removal flow.
 
-On Wed, 24 Jan 2024 16:22:09 +0000 you wrote:
-> Set DMA coherent mask to 32-bit which makes PPE offloading engine start
-> working on BPi-R4 which got 4 GiB of RAM.
-> 
-> Fixes: 2d75891ebc09 ("net: ethernet: mtk_eth_soc: support 36-bit DMA addressing on MT7988")
-> Suggested-by: Elad Yifee <eladwf@users.github.com>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> 
-> [...]
+Tested-by: Haorong Ye <yehaorong@bytedance.com>
+Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+---
+ drivers/pci/pci.h   | 5 -----
+ include/linux/pci.h | 5 +++++
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Here is the summary with links:
-  - [net] net: ethernet: mtk_eth_soc: set DMA coherent mask to get PPE working
-    https://git.kernel.org/netdev/net/c/cae1f1c36661
-
-You are awesome, thank you!
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2336a8d1edab..94118c4cff54 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -368,11 +368,6 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 	return 0;
+ }
+ 
+-static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+-{
+-	return dev->error_state == pci_channel_io_perm_failure;
+-}
+-
+ /* pci_dev priv_flags */
+ #define PCI_DEV_ADDED 0
+ #define PCI_DPC_RECOVERED 1
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index add9368e6314..19dfe5f16fc9 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2512,6 +2512,11 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
+ 	return NULL;
+ }
+ 
++static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
++{
++	return dev->error_state == pci_channel_io_perm_failure;
++}
++
+ void pci_request_acs(void);
+ bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
+ bool pci_acs_path_enabled(struct pci_dev *start,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.31.1
 
