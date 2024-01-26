@@ -1,286 +1,104 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4301D250F1
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 19:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA0E225CE;
+	Fri, 26 Jan 2024 19:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706297554; cv=none; b=uSeSVwrUMal6oVIwiRah0Wj1FUYLWNGCtbVD8RlSAlYSDJfjlQbj3OGewgKG+8v37bOv10wlK48yrV8EZIwRU+jWpZ1rgOmj/hxqO0odHiuU1QcQN9wS4Czi6829si4CrDdEaSFQue6uprhYUrWjVtJFQ91PwX0iJrk8pLpZecw=
+	t=1706297643; cv=none; b=JngSd0klYSeBmaOxuB3lLpJ8a+S8wDuuksF23krnds09Z+cEOTwD9Ztb7Iomj3iId2AdFnbpcoVt6cr4sB/COnDi+oJYcB7yaK2ilzMPzmbSzSSnLa5CiFv12xq9vr6daFuYlEcIVBDYdFyggDnG+4GaHeO4p89vIXDmESWq/Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706297554; c=relaxed/simple;
-	bh=G7bXN1UU7tRHuhRNiFDWOUYFSBIKcFwI1z+6qWkllUs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VppObHeGjjgx3JpjxDPrwentrAMVjlV8AxJ6Kc5T2shiJAgBE1KAvoecHzYaOm+MX1F0mU1k3WXqlqA8gOHyaMJj5lHZj2sB8gJhcu6oK745loFMH4AmB78Q2c3Aw9Ns/BS/XV/u1sK+21ZtbxAyyxJxsV4J8vtQCxrW7MOd/ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BdG+fjbV; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1706297643; c=relaxed/simple;
+	bh=X2tv7YC7rvxoUUooCnssnmB276xID1n7i+KGcjgXyaY=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=gCl4el3NiA+Pecvm/NWYSFxFxHuBbPcvn5MPZ30MpzEGYh3RPzZxup4vvJ4ywUPj2GkjFZE+H3vD8wJJbwfZS5uNhduzFdz0ESnLpKN0k76XNTtsF4gE3eUUsGqb2eQNy4Q44UXShqCB4Qw7FvQNNcVJOp6hzBxqlweJ/Sn6eYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=CYryvNhP; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BdG+fjbV"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6dbd093c2baso503092b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:32:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706297552; x=1706902352; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HZnAUMJ/rBNfk0zriTt4DNaLm50XXQ05JIKVH4sIBy8=;
-        b=BdG+fjbVyUIqrKOw3uVUKxJ8o/XFwNRo0rwZYz4jD/lnHkacK5/bItbaX4IVsj+Cfq
-         0UMaS5QAx8nqewtyAF/WU4og8GesrXHxckaca9Lu2zkazGVUiMOTgTqVPBAP023SGG9e
-         2iriWh31YizgBjXz6lkjIJz7cZSSYXDWeH4X0718UymPnjiwKZMb296jy/eWT2eF/fCF
-         eVuIRBgi/V2QpfnHnqXKVNVrSUifLA2vrRDYU+OgGoVLwujNVC/KpAtzFbcQY4sEBa7r
-         5p9KzxQ+G+l5szsgQkp4MUl/LNno/buj79kk7z5V8+ViS4MS896AYzU08hIhvwJBJyJl
-         a/qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706297552; x=1706902352;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HZnAUMJ/rBNfk0zriTt4DNaLm50XXQ05JIKVH4sIBy8=;
-        b=j737ZRCjSSeJL91/PlHgPSm1MOGEVenQYW32DtEC2P9yft4fxPtTTuqjheWeFAAET5
-         R4W8xtaIU170G0qZJxZHYJfi9VZ7h4tiQsS9ZgsFdZfp7oZGfrSBWAqKRrgyqCbed+Vj
-         puq9HEgS94/zs/acoWV/TICJX5ZimhylwcEztaaMvk9HUpTPbAdHVw/Pu0hpDeRC8Ptb
-         7ET3mK215dnxHJp020MDreghk0L+AsXIKOv1k0cyICxuxXSEd/OqMroLTSICs/VN8mru
-         jLRWT69Nee8Dicje9UdUZ5qKtjS+Va3glvV5PomRD9dG+Igvthn44eZeB5hHqZWlQzY0
-         CcyQ==
-X-Gm-Message-State: AOJu0Yy0xc1j5n7hh7CqW/4U/gmzEGD1PpvtdlqO42rfHx/7j4LBeIqz
-	oxpYP21A4osUDC5UAyM+JwMZRuW5XXKRsHV2d9zCkPEP6seCqcvd6lEztQ+LHwHAF+Npa7FxKRx
-	GZQ==
-X-Google-Smtp-Source: AGHT+IHM5VqGTPfsIsGNcbuR2VfSqB1AGkIPq1pRvYCtl3Dzv46BIfBqP1NL9KevmFyYzQje/NXy4EWVYsU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:1bc4:b0:6d9:b26d:d05d with SMTP id
- o4-20020a056a001bc400b006d9b26dd05dmr27073pfw.6.1706297552566; Fri, 26 Jan
- 2024 11:32:32 -0800 (PST)
-Date: Fri, 26 Jan 2024 11:32:31 -0800
-In-Reply-To: <20231005143839.365297-8-thuth@redhat.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CYryvNhP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1706297639;
+	bh=X2tv7YC7rvxoUUooCnssnmB276xID1n7i+KGcjgXyaY=;
+	h=Date:From:To:Subject:From;
+	b=CYryvNhPZbC7x2vM29ob6YlU9y7XqdYN1eE+S0JMTNZyFT6FwPl1FFNqD+a7/3OUg
+	 363JrNqGqicCxn1V0gzmJktc5SGfN5Q8hC5GwNmbXcb319GcfZRSAdMDf2LQIX6oC+
+	 lSxIcSLX3c/Ymagubv0PVRA6dDJJAjaAz/H1FkwBC/ixYQx0tXlnzCzCx5cOvEkold
+	 HkWWXgW0zcyim0acOvi0AoVPw1CIgk4mbGbJYNaEAr8+JhoLp0wx9vgkrPYTNu79IF
+	 KbWX5iKoCx6k/HjFrH1cjNfKeof6FDhCfoj/1KDcMcAr8o0JhZK5J+EMm/O1D8m9xo
+	 XOnbGShcIXNUQ==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TM7D72M8NzVDZ;
+	Fri, 26 Jan 2024 14:33:59 -0500 (EST)
+Message-ID: <e523b29c-0fd0-4b7c-bf8c-d3424ee2c031@efficios.com>
+Date: Fri, 26 Jan 2024 14:33:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231005143839.365297-1-thuth@redhat.com> <20231005143839.365297-8-thuth@redhat.com>
-Message-ID: <ZbQIz3thIczeRhCs@google.com>
-Subject: Re: [PATCH v2 7/7] KVM: selftests: x86: Use TAP interface in the
- userspace_msr_exit test
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Huth <thuth@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm
+ <linux-mm@kvack.org>, linux-arch@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+ Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Subject: [REGRESSION] v5.13: FS_DAX unavailable on 32-bit ARM
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 05, 2023, Thomas Huth wrote:
-> Use the kselftest_harness.h interface in this test to get TAP
-> output, so that it is easier for the user to see what the test
-> is doing.
-> 
-> Note: We're not using the KVM_ONE_VCPU_TEST() macro here (but the
-> generic TEST() macro from kselftest_harness.h) since each of the
-> tests needs a different guest code function.
+Hi,
 
-I would much rather we add a KVM framework that can deal with this, i.e. build
-something that is flexible from the get-go.  Allowing tests to set the entry point
-after vCPU is fairly straightforward (patch below, compile tested only on x86).
+This commit introduced in v5.13 prevents building FS_DAX on 32-bit ARM,
+even on ARMv7 which does not have virtually aliased dcaches:
 
-With that, my vote would be to have KVM_ONE_VCPU_TEST_SUITE() *always* pass NULL
-for the entry point, and instead always require sub-tests to pass the guest code
-to KVM_ONE_VCPU_TEST().  I think having the sub-test explicitly specify its guest
-code will be helpful for developers reading the code.  And maybe waaay down the
-road if we can get all tests converted to the framework, we can drop @guest_code
-from vm_create_with_one_vcpu() entirely.
+commit d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
 
-Apologies for the horrifically slow review, I got waylaid by non-upstream stuff
-for almost all of November=>January. :-(
+It used to work fine before: I have customers using dax over pmem on ARMv7, but
+this regression will likely prevent them from upgrading their kernel.
 
----
-From: Sean Christopherson <seanjc@google.com>
-Date: Fri, 26 Jan 2024 11:15:13 -0800
-Subject: [PATCH] KVM: selftests: Move setting a vCPU's entry point to a
- dedicated API
+The root of the issue here is the fact that DAX was never designed to handle
+virtually aliased dcache (VIVT and VIPT with aliased dcache). It touches the
+pages through their linear mapping, which is not consistent with the userspace
+mappings on virtually aliased dcaches.
 
-Extract the code to set a vCPU's entry point out of vm_arch_vcpu_add() and
-into a new API, vcpu_arch_set_entry_point().  Providing a separate API
-will allow creating a KVM selftests hardness that can handle tests that
-use different entry points for sub-tests, whereas *requiring* the entry
-point to be specified at vCPU creation makes it difficult to create a
-generic harness, e.g. the boilerplate setup/teardown can't easily create
-and destroy the VM and vCPUs.
+I can see a few ways forward to address this:
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- .../selftests/kvm/include/kvm_util_base.h     | 11 +++++----
- .../selftests/kvm/lib/aarch64/processor.c     | 23 ++++++++++++++-----
- .../selftests/kvm/lib/riscv/processor.c       |  9 +++++---
- .../selftests/kvm/lib/s390x/processor.c       | 13 ++++++-----
- .../selftests/kvm/lib/x86_64/processor.c      | 13 ++++++++---
- 5 files changed, 47 insertions(+), 22 deletions(-)
+A) I have prepared a patch series introducing cache_is_aliasing() with new Kconfig
+    options:
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
-index 9e5afc472c14..a6e7738a8db7 100644
---- a/tools/testing/selftests/kvm/include/kvm_util_base.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
-@@ -969,15 +969,18 @@ static inline void vcpu_dump(FILE *stream, struct kvm_vcpu *vcpu,
-  * Input Args:
-  *   vm - Virtual Machine
-  *   vcpu_id - The id of the VCPU to add to the VM.
-- *   guest_code - The vCPU's entry point
-  */
--struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
--				  void *guest_code);
-+struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id);
-+void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu, void *guest_code);
- 
- static inline struct kvm_vcpu *vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
- 					   void *guest_code)
- {
--	return vm_arch_vcpu_add(vm, vcpu_id, guest_code);
-+	struct kvm_vcpu *vcpu = vm_arch_vcpu_add(vm, vcpu_id);
-+
-+	vcpu_arch_set_entry_point(vcpu, guest_code);
-+
-+	return vcpu;
- }
- 
- /* Re-create a vCPU after restarting a VM, e.g. for state save/restore tests. */
-diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-index 43b9a7283360..ed4ab29f4fad 100644
---- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-@@ -365,8 +365,13 @@ void vcpu_arch_dump(FILE *stream, struct kvm_vcpu *vcpu, uint8_t indent)
- 		indent, "", pstate, pc);
- }
- 
--struct kvm_vcpu *aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
--				  struct kvm_vcpu_init *init, void *guest_code)
-+void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu, void *guest_code)
-+{
-+	vcpu_set_reg(vcpu, ARM64_CORE_REG(regs.pc), (uint64_t)guest_code);
-+}
-+
-+static struct kvm_vcpu *__aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
-+					   struct kvm_vcpu_init *init)
- {
- 	size_t stack_size;
- 	uint64_t stack_vaddr;
-@@ -381,15 +386,21 @@ struct kvm_vcpu *aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
- 	aarch64_vcpu_setup(vcpu, init);
- 
- 	vcpu_set_reg(vcpu, ARM64_CORE_REG(sp_el1), stack_vaddr + stack_size);
--	vcpu_set_reg(vcpu, ARM64_CORE_REG(regs.pc), (uint64_t)guest_code);
-+}
-+
-+struct kvm_vcpu *aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
-+				  struct kvm_vcpu_init *init, void *guest_code)
-+{
-+	struct kvm_vcpu *vcpu = __aarch64_vcpu_add(vm, vcpu_id, init);
-+
-+	vcpu_arch_set_entry_point(vcpu, guest_code);
- 
- 	return vcpu;
- }
- 
--struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
--				  void *guest_code)
-+struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
- {
--	return aarch64_vcpu_add(vm, vcpu_id, NULL, guest_code);
-+	return __aarch64_vcpu_add(vm, vcpu_id, NULL);
- }
- 
- void vcpu_args_set(struct kvm_vcpu *vcpu, unsigned int num, ...)
-diff --git a/tools/testing/selftests/kvm/lib/riscv/processor.c b/tools/testing/selftests/kvm/lib/riscv/processor.c
-index 2bb33a8ac03c..6d5ef6ed0234 100644
---- a/tools/testing/selftests/kvm/lib/riscv/processor.c
-+++ b/tools/testing/selftests/kvm/lib/riscv/processor.c
-@@ -277,8 +277,12 @@ static void __aligned(16) guest_unexp_trap(void)
- 		  0, 0, 0, 0, 0, 0);
- }
- 
--struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
--				  void *guest_code)
-+void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu, void *guest_code)
-+{
-+	vcpu_set_reg(vcpu, RISCV_CORE_REG(regs.pc), (unsigned long)guest_code);
-+}
-+
-+struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
- {
- 	int r;
- 	size_t stack_size;
-@@ -312,7 +316,6 @@ struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
- 
- 	/* Setup stack pointer and program counter of guest */
- 	vcpu_set_reg(vcpu, RISCV_CORE_REG(regs.sp), stack_vaddr + stack_size);
--	vcpu_set_reg(vcpu, RISCV_CORE_REG(regs.pc), (unsigned long)guest_code);
- 
- 	/* Setup default exception vector of guest */
- 	vcpu_set_reg(vcpu, RISCV_GENERAL_CSR_REG(stvec), (unsigned long)guest_unexp_trap);
-diff --git a/tools/testing/selftests/kvm/lib/s390x/processor.c b/tools/testing/selftests/kvm/lib/s390x/processor.c
-index f6d227892cbc..4ad4492eea1d 100644
---- a/tools/testing/selftests/kvm/lib/s390x/processor.c
-+++ b/tools/testing/selftests/kvm/lib/s390x/processor.c
-@@ -155,15 +155,18 @@ void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
- 	virt_dump_region(stream, vm, indent, vm->pgd);
- }
- 
--struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
--				  void *guest_code)
-+void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu, void *guest_code)
-+{
-+	vcpu->run->psw_addr = (uintptr_t)guest_code;
-+}
-+
-+struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
- {
- 	size_t stack_size =  DEFAULT_STACK_PGS * getpagesize();
- 	uint64_t stack_vaddr;
- 	struct kvm_regs regs;
- 	struct kvm_sregs sregs;
- 	struct kvm_vcpu *vcpu;
--	struct kvm_run *run;
- 
- 	TEST_ASSERT(vm->page_size == 4096, "Unsupported page size: 0x%x",
- 		    vm->page_size);
-@@ -184,9 +187,7 @@ struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
- 	sregs.crs[1] = vm->pgd | 0xf;		/* Primary region table */
- 	vcpu_sregs_set(vcpu, &sregs);
- 
--	run = vcpu->run;
--	run->psw_mask = 0x0400000180000000ULL;  /* DAT enabled + 64 bit mode */
--	run->psw_addr = (uintptr_t)guest_code;
-+	vcpu->run->psw_mask = 0x0400000180000000ULL;  /* DAT enabled + 64 bit mode */
- 
- 	return vcpu;
- }
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index 4bc52948447d..18dfabc1c6e7 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -562,8 +562,16 @@ void kvm_arch_vm_post_create(struct kvm_vm *vm)
- 	sync_global_to_guest(vm, host_cpu_is_amd);
- }
- 
--struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
--				  void *guest_code)
-+void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu, void *guest_code)
-+{
-+	struct kvm_regs regs;
-+
-+	vcpu_regs_get(vcpu, &regs);
-+	regs.rip = (unsigned long) guest_code;
-+	vcpu_regs_set(vcpu, &regs);
-+}
-+
-+struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
- {
- 	struct kvm_mp_state mp_state;
- 	struct kvm_regs regs;
-@@ -597,7 +605,6 @@ struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
- 	vcpu_regs_get(vcpu, &regs);
- 	regs.rflags = regs.rflags | 0x2;
- 	regs.rsp = stack_vaddr;
--	regs.rip = (unsigned long) guest_code;
- 	vcpu_regs_set(vcpu, &regs);
- 
- 	/* Setup the MP state */
+   * ARCH_HAS_CACHE_ALIASING
+   * ARCH_HAS_CACHE_ALIASING_DYNAMIC
 
-base-commit: e19ec6e3e05fa223f05c72806028dfa531dbd0ae
+and implemented it for all architectures. The "DYNAMIC" implementation
+implements cache_is_aliasing() as a runtime check, which is what is needed
+on architectures like 32-bit ARM.
+
+With this we can basically narrow down the list of architectures which are
+unsupported by DAX to those which are really affected, without actually solving
+the issue for architectures with virtually aliased dcaches.
+
+B) Another approach would be to dig into what exactly DAX is doing with the linear
+    mapping, and try to fix this. I see two options there:
+
+B.1) Either we extend vmap to allow vmap'd pages to be aligned on specific multiples,
+      and use a coloring trick based on SHMLBA like userspace mappings do for all DAX
+      internal pages accesses, or
+
+B.2) We introduce flush_dcache_folio() at relevant spots (perhaps dax_flush() ?) to
+      synchronize the linear mapping wrt userspace mappings. (would this work ?)
+
+Any thoughts on how to best move forward with this issue are welcome.
+
+Thanks,
+
+Mathieu
+
 -- 
-
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
