@@ -1,202 +1,115 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ADB1CD1B;
-	Fri, 26 Jan 2024 15:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231CD1B970
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706281271; cv=none; b=AAeglmJOFvjx6FQWQ0MWUQKwN7P4yH91Yh1MlEyAsn42DpsZeC33is4z645D0x+JARj1VVfATHtz/Be0wgRK+WuWfcbqgy6r2VSc3enwn0udZGctda/PRRuOVbGMSOsDofcc9RQz/lyhric+4j8purdASwI1syv0zQW7qcxvQHc=
+	t=1706281372; cv=none; b=KfG+iZ6UnjzfqKARpEBPqgCdFKXDq59zDs0KbM1TK8kNtzK1BvAKehII7ZTcmXAySmod0hU25FVO1aczXwctfkVnv83/R3Lf8mJzbD9uKOzJJQ/XKoX/IwvNkcT5o+47AvvdR8iwr/2dNw4xpAchhy2H20R9dYbZvmL1EykZt70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706281271; c=relaxed/simple;
-	bh=ogH/WxYNzbxPJyMWY22zLDSZVE6tO2CwW3DYcs0iSi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LQW+P1/dMFh9QJwO5y0gDTdoWdkESHW1SAFLkqPQKKWRvpfNzZQqhCktUbPP7PlhGsURCBpCpyel/GhEBvKx0w/ZUiJzrUfibfmnIWf3OSMzB5QXOo0P5aFgyjSKsyJVOBuQeDzY69V56MfKU9gQ9+U3MQ15pFwSAE0gJA0yYzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OsPyVERI; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706281372; c=relaxed/simple;
+	bh=JsxP7toU+yaQhyM85mOfisB9eNURYXeJZZvgfcckwgo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=u7c0rAT1UKG7CfP5RvunwvphlY1hSZZiXj/bBJsR3i6O/9Nx+I73DV7bTSsKaYFxrVizbM+x/x56PtKVCg5ia6UIvM9exs8d34zvXWFFTrvMAE6gYGTegMxpuNKgsEqKkPGDgvfugW66y59NjHMxZzj3VJxa/5gmwRzksNwpDyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=CRZ/YJgz; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OsPyVERI"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40QF0wKq085493;
-	Fri, 26 Jan 2024 09:00:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706281258;
-	bh=c771FDHfVeJbjIOLYa+Ep4vTxtf3uSuzaoVrdsfKZ6U=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=OsPyVERIck5lszwtfBEiqG1MbXfFj/2fkfU6V6HLKAwgd5a2yKWRbrDg9EA5HzJ9d
-	 i8W+2LnXtHpC5knhxEUvtX9P+4FhtO9aynmbK4mXEOs7/tNN3uzbCZSMuG4mW+E7wv
-	 FtLVvhlpfKmNVrxEzBPVgUXdDmxc7cQVGM2Kmt2E=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40QF0wUA021144
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 26 Jan 2024 09:00:58 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 26
- Jan 2024 09:00:57 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 26 Jan 2024 09:00:57 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40QF0vjJ004728;
-	Fri, 26 Jan 2024 09:00:57 -0600
-Message-ID: <16473ecf-c837-4424-a279-e5d921c2a588@ti.com>
-Date: Fri, 26 Jan 2024 09:00:57 -0600
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="CRZ/YJgz"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5101ae8ac40so582794e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:02:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1706281367; x=1706886167; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JsxP7toU+yaQhyM85mOfisB9eNURYXeJZZvgfcckwgo=;
+        b=CRZ/YJgzYD5N5KWq15AxTWpEQ5RWgQVuC+8pw6Lmu17LHhvJuTQo6m6/Bt6cN2G4HH
+         cTn7xc2CAKgpNc5V25fhwxnBz73WsRD1nzDkTO4D/wkBtQ6cuTqrdmDWlmKqSB/PLFtq
+         WBqmC7Ex6wtlApJav4DkWpw9AJHhOzP5vPu9Vx9g+213U9N783A6M677B+3up8GKLcR7
+         yyGP6teEDyPddKv3HCM/om9pM48/OKFmw94kpWkKmu5cNzEGGRXEZoubixGSNPTS9TtX
+         Xpfolc963eYBi22isSrSQMYTAfVYvfIVmpzTtpw8WqNSmViBDSJ5egiZdhEQzuIoG6uz
+         s/oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706281367; x=1706886167;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JsxP7toU+yaQhyM85mOfisB9eNURYXeJZZvgfcckwgo=;
+        b=s4M+uhxsEehkmUaO2d+jITndasUYT7HlifvaJmxYN2nqfh3ddJkT8AsEjEIeyf1hWn
+         ZzPqRUU9tgbtI2lSl8gNAqs0hURUOm7spCJZWjZuHvnx9efnu48TYD8SVR4Lfj2k7KMw
+         /S9j3mBkrPcfn75Q8RDX9LVI8mLt+AaaMMeJsxLXTzP9XFFgqdA9Wufov75ck0wHR7rn
+         2I0wYh0BuVY8VgpIXE0wjwYahwc70Ktgv6T3wqK7tMuH2AsWQkWOz6jMuEDHENhVWitx
+         crmNodnOp8uCvcvZvZqKhxEIjozk/FDmZUme2KMCdqIZSIGTxrz3G6fzTXlp6qe8/Zz0
+         VomA==
+X-Gm-Message-State: AOJu0YzgeaGmSZBqgphIz5aUFRolHTqVYegypoPCQn7tToWePHPP6xYk
+	59RK0MVU9DXY2OBnLiggEIloF4Q3LvhX+iYx78nwxAir9727aGescOqCVoKXAfU=
+X-Google-Smtp-Source: AGHT+IHF+mmyHTGOk00si2Y5/cuhZYWBxwC8inIRzI2KQ0mNT1wWw/ycoPdqIaDsdcQkRfWRT6iyHw==
+X-Received: by 2002:ac2:563a:0:b0:510:1721:4784 with SMTP id b26-20020ac2563a000000b0051017214784mr724538lff.72.1706281366950;
+        Fri, 26 Jan 2024 07:02:46 -0800 (PST)
+Received: from smtpclient.apple ([84.252.147.253])
+        by smtp.gmail.com with ESMTPSA id x23-20020a19e017000000b0050e758ee006sm204457lfg.205.2024.01.26.07.02.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jan 2024 07:02:45 -0800 (PST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] arm64: dts: ti: k3-am62/a/p: use sub-node for
- USB_PHY_CTRL registers
-To: Roger Quadros <rogerq@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <srk@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240126125951.18585-1-rogerq@kernel.org>
- <20240126125951.18585-2-rogerq@kernel.org>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240126125951.18585-2-rogerq@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
+Subject: Re: [PATCH] hfs: fix a memleak in hfs_find_init
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+In-Reply-To: <20240122172719.3843098-1-alexious@zju.edu.cn>
+Date: Fri, 26 Jan 2024 18:02:34 +0300
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Desmond Cheong Zhi Xi <desmondcheongzx@gmail.com>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F36C0C80-DAF3-4D8F-8EA3-5209E8FB5BE3@dubeyko.com>
+References: <20240122172719.3843098-1-alexious@zju.edu.cn>
+To: Zhipeng Lu <alexious@zju.edu.cn>
+X-Mailer: Apple Mail (2.3774.400.31)
 
-On 1/26/24 6:59 AM, Roger Quadros wrote:
-> Exposing the entire CTRL_MMR space to syscon is not a good idea.
-> Add sub-nodes for USB0_PHY_CTRL and USB1_PHY_CTRL and use them
-> in the USB0/USB1 nodes.
-> 
-> Signed-off-by: Roger Quadros <rogerq@kernel.org>
+
+
+> On 22 Jan 2024, at 20:27, Zhipeng Lu <alexious@zju.edu.cn> wrote:
+>=20
+> When the switch statment goes to default and return an error, ptr =
+should
+> be freed since it is allocated in hfs_find_init.
+>=20
+
+Do you have any memory leaks report? Could you share it in the comments?
+Which use-case reproduces the issue? It will be easier to review the fix
+If you can share the path of reproduction.
+
+Thanks,
+Slava.
+
+> Fixes: b3b2177a2d79 ("hfs: add lock nesting notation to =
+hfs_find_init")
+> Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 > ---
->   arch/arm64/boot/dts/ti/k3-am62-main.dtsi    |  4 ++--
->   arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi  | 10 ++++++++++
->   arch/arm64/boot/dts/ti/k3-am62a-main.dtsi   |  4 ++--
->   arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi | 10 ++++++++++
->   arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi | 10 ++++++++++
->   5 files changed, 34 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-> index 464b7565d085..9432ed344d52 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-> @@ -625,7 +625,7 @@ usbss0: dwc3-usb@f900000 {
->   		reg = <0x00 0x0f900000 0x00 0x800>;
->   		clocks = <&k3_clks 161 3>;
->   		clock-names = "ref";
-> -		ti,syscon-phy-pll-refclk = <&wkup_conf 0x4008>;
-> +		ti,syscon-phy-pll-refclk = <&usb0_phy_ctrl 0x0>;
->   		#address-cells = <2>;
->   		#size-cells = <2>;
->   		power-domains = <&k3_pds 178 TI_SCI_PD_EXCLUSIVE>;
-> @@ -648,7 +648,7 @@ usbss1: dwc3-usb@f910000 {
->   		reg = <0x00 0x0f910000 0x00 0x800>;
->   		clocks = <&k3_clks 162 3>;
->   		clock-names = "ref";
-> -		ti,syscon-phy-pll-refclk = <&wkup_conf 0x4018>;
-> +		ti,syscon-phy-pll-refclk = <&usb1_phy_ctrl 0x0>;
->   		#address-cells = <2>;
->   		#size-cells = <2>;
->   		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
-> index fef76f52a52e..bd09662a3c29 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
-> @@ -19,6 +19,16 @@ chipid: chipid@14 {
->   			compatible = "ti,am654-chipid";
->   			reg = <0x14 0x4>;
->   		};
-> +
-> +		usb0_phy_ctrl: syscon@4008 {
-> +			compatible = "syscon";
+> fs/hfs/bfind.c | 1 +
+> 1 file changed, 1 insertion(+)
+>=20
+> diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
+> index ef9498a6e88a..7aa3b9aba4d1 100644
+> --- a/fs/hfs/bfind.c
+> +++ b/fs/hfs/bfind.c
+> @@ -36,6 +36,7 @@ int hfs_find_init(struct hfs_btree *tree, struct =
+hfs_find_data *fd)
+> mutex_lock_nested(&tree->tree_lock, ATTR_BTREE_MUTEX);
+> break;
+> default:
+> + kfree(fd->search_key);
+> return -EINVAL;
+> }
+> return 0;
+> --=20
+> 2.34.1
+>=20
 
-You'll want to add a binding for this to the simple syscon list.
-See this patch for an example[0]. Otherwise this gives a DT check
-warning.
-
-Also, adding the new nodes for AM62p should be moved to the
-next patch in this series. Fixing AM62 and AM62a should be
-a standalone patch.
-
-Andrew
-
-[0] commit cb523495ee2a ("dt-bindings: mfd: syscon: Add ti,am654-dss-oldi-io-ctrl compatible")
-
-> +			reg = <0x4008 0x4>;
-> +		};
-> +
-> +		usb1_phy_ctrl: syscon@4018 {
-> +			compatible = "syscon";
-> +			reg = <0x4018 0x4>;
-> +		};
->   	};
->   
->   	wkup_uart0: serial@2b300000 {
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> index f0b8c9ab1459..8311c7c44cd3 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> @@ -566,7 +566,7 @@ usbss0: dwc3-usb@f900000 {
->   		reg = <0x00 0x0f900000 0x00 0x800>;
->   		clocks = <&k3_clks 161 3>;
->   		clock-names = "ref";
-> -		ti,syscon-phy-pll-refclk = <&wkup_conf 0x4008>;
-> +		ti,syscon-phy-pll-refclk = <&usb0_phy_ctrl 0x0>;
->   		#address-cells = <2>;
->   		#size-cells = <2>;
->   		power-domains = <&k3_pds 178 TI_SCI_PD_EXCLUSIVE>;
-> @@ -589,7 +589,7 @@ usbss1: dwc3-usb@f910000 {
->   		reg = <0x00 0x0f910000 0x00 0x800>;
->   		clocks = <&k3_clks 162 3>;
->   		clock-names = "ref";
-> -		ti,syscon-phy-pll-refclk = <&wkup_conf 0x4018>;
-> +		ti,syscon-phy-pll-refclk = <&usb1_phy_ctrl 0x0>;
->   		#address-cells = <2>;
->   		#size-cells = <2>;
->   		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-> index 4e8279fa01e1..26e9fd9da78f 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-> @@ -17,6 +17,16 @@ chipid: chipid@14 {
->   			compatible = "ti,am654-chipid";
->   			reg = <0x14 0x4>;
->   		};
-> +
-> +		usb0_phy_ctrl: syscon@4008 {
-> +			compatible = "syscon";
-> +			reg = <0x4008 0x4>;
-> +		};
-> +
-> +		usb1_phy_ctrl: syscon@4018 {
-> +			compatible = "syscon";
-> +			reg = <0x4018 0x4>;
-> +		};
->   	};
->   
->   	wkup_uart0: serial@2b300000 {
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> index 19f42b39394e..0893e63c399a 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> @@ -18,6 +18,16 @@ chipid: chipid@14 {
->   			reg = <0x14 0x4>;
->   			bootph-all;
->   		};
-> +
-> +		usb0_phy_ctrl: syscon@4008 {
-> +			compatible = "syscon";
-> +			reg = <0x4008 0x4>;
-> +		};
-> +
-> +		usb1_phy_ctrl: syscon@4018 {
-> +			compatible = "syscon";
-> +			reg = <0x4018 0x4>;
-> +		};
->   	};
->   
->   	wkup_uart0: serial@2b300000 {
