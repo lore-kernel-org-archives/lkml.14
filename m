@@ -1,101 +1,93 @@
-Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C310C1CA8D;
-	Fri, 26 Jan 2024 09:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.132.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C497C1759E;
+	Fri, 26 Jan 2024 09:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706261149; cv=none; b=AFWKf0Ptt1HJT5lj2Uv1/gCmKwt8zbOKJZqe70xQ9zH0YxK/t4Ua2R1T7X0S0DoqufsRuPlPQCjgAQYgSBPMV9CQNY9ZE6F0qVQ/YG86zz7R/iLYtDnOdwaefEJlxCoaAt0Zn29wFaiGaf+nUZsMRYHVh6XIRe9OxgNFXh56kW8=
+	t=1706261222; cv=none; b=cy1LoA6qdoVoGfbmmeleu40mC4K66byqtxccg3IzI9vIJOxt6/U5SFNgWjGMXFeJlDraxaH2DJIZsUGjyCRfwnfKGUO+LdUBD1zME8CWlsh+dvJ1SBW5kRmiaQojVzwmLvYb+qngFPUgESkTTmUBDBltO9Leey8uoPWtE+arkpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706261149; c=relaxed/simple;
-	bh=n1UBKAu2ZgXN3cWai6jMRx5pc8gubthvcwbKikKKg3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmKjgfmg4CDINBkpMc8mrTRLx0lYuoJ3EBxIO+390DYunqfeSZbmAGeqtodbmqHAaOG1esdEsvUy7T4/1iP7+oWoZ58z/adcfuBdrq1Sy/H9+yhzjMdyAWR7IfbAW2zJLfzwyXjix96pfubMQ/JOvYVO835x3jBTpQjyBE88ScE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro; spf=pass smtp.mailfrom=subdimension.ro; dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b=YttUgaxp; arc=none smtp.client-ip=172.104.132.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="YttUgaxp"
-Received: from sunspire (unknown [188.24.94.216])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.subdimension.ro (Postfix) with ESMTPSA id 13D5928B531;
-	Fri, 26 Jan 2024 09:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
-	s=skycaves; t=1706260710;
-	bh=n1UBKAu2ZgXN3cWai6jMRx5pc8gubthvcwbKikKKg3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YttUgaxpksQHLTeHn0Hb0BPTrat5FxykCUHJwI+qKvaTADWKd+3lNkZdI9UvnCQwG
-	 hZ4aJ3ii1dpTVaU+sx7IljtS/h6lexJaEmOAr4rZ0P6F1Q4rH4byiQgKN+EEz+8d8p
-	 uSr3392UmlC/IyQdWe6rZescC3cS1AOp+Eu3w5AE=
-Date: Fri, 26 Jan 2024 11:18:28 +0200
-From: Petre Rodan <petre.rodan@subdimension.ro>
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>
-Subject: Re: [PATCH v4 5/5] iio: amplifiers: hmc425a: add support for LTC6373
- Instrumentation Amplifier
-Message-ID: <ZbN45P3yAZxtb8jA@sunspire>
-References: <20240117125124.8326-1-mitrutzceclan@gmail.com>
- <20240117125124.8326-6-mitrutzceclan@gmail.com>
+	s=arc-20240116; t=1706261222; c=relaxed/simple;
+	bh=FIx1uLPId8BHIh6NPhhScj8PP6AhDmIDrtP/uDFs44k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PW5ay9/9Y5ul/XMT310OFO9OMrVzOeK9eZKKn887toAoo+6MPfZDINgHc8Ur9/TxOGaCkuyYkEeT9h867oXpHAV8qiKcEpfTH8lRKBVWh5tSfyo2MwXulITEuu2jKwMVIQNXdQ5cPgmzgAup4Q0KTVLYCe4IQJMe25/4mXEUIzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TLsld4SR5z4f3l72;
+	Fri, 26 Jan 2024 17:26:53 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 95ECD1A0272;
+	Fri, 26 Jan 2024 17:26:57 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBHferNlLsUdCA--.25360S4;
+	Fri, 26 Jan 2024 17:26:57 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org,
+	neilb@suse.com,
+	shli@fb.com,
+	mariusz.tkaczyk@linux.intel.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v4 0/4]  md: Don't clear MD_CLOSING when the raid is about to stop
+Date: Fri, 26 Jan 2024 17:22:50 +0800
+Message-Id: <20240126092254.1314908-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="W4yEtjcCTOC3q2WB"
-Content-Disposition: inline
-In-Reply-To: <20240117125124.8326-6-mitrutzceclan@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCXaBHferNlLsUdCA--.25360S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrurW8KFWfZr1xJF1fWF15Jwb_yoW3urc_Jr
+	WkAa4rGrn7GFWSka45Kr4DArW0yrWjgw4UXF4xtrWfXr1aqa4UWa1DJrs7Xwn7XFWrAF4F
+	kw1UAFWfZF4qqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBSoJUUUUU=
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
+From: Li Nan <linan122@huawei.com>
 
---W4yEtjcCTOC3q2WB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes in v4:
+ - insert 'break;' to avoid fall-through in patch 3.
 
+Changes in v3:
+ - rename vaires 'did_set_md_closing' in patch 1.
+ - rename function mddev_set_closing_and_sync_blockdev() in patch 2.
+ - reorganize conditions in patch 3.
+ - add a new patch to clean up md_set_readonly().
 
-hello Dumitru,
+Changes in v2:
+ - don't clear MD_CLOSING in md_clean().
+ - set MD_CLOSING and sync blockdev in array_state_store().
 
-I know this is not part of your current patch, but you might also want to h=
-ave
-a look at ltc6373_write_powerdown():
+Li Nan (4):
+  md: Don't clear MD_CLOSING when the raid is about to stop
+  md: factor out a helper to sync mddev
+  md: sync blockdev before stopping raid or setting readonly
+  md: check mddev->pers before calling md_set_readonly()
 
-hmc425a.c:239:2: warning: Value stored to 'ret' is never read [deadcode.Dea=
-dStores]
-  239 |         ret =3D hmc425a_write(indio_dev, code);
+ drivers/md/md.c | 98 ++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 69 insertions(+), 29 deletions(-)
 
-cheers,
-peter
+-- 
+2.39.2
 
---=20
-petre rodan
-
---W4yEtjcCTOC3q2WB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE2Ap/wXYVGTXsPl+pzyaZmYROfzAFAmWzeN8ACgkQzyaZmYRO
-fzBf7RAAjWm86CjoHWJlT6gbM37H+Lb91tIr2zGAt8neIdjIv1TZNHv05LTbRLy5
-LQ+RdDK6GGRI17aflYYpdeauAyKr+aHnf7o5E73e0p/R9cVN5MmvWgc0oUjcIFHf
-r8IFvWpSrt9XWgUMBzoxqYkFmzKgVytqJtIUTXbpTGhFld1lZNFyEi+vRV/zSrxk
-qmRZ7Ry7xZ+BTAJuKatIFsqmCPjnV7b/5myc4U4ekKm9/6x/jL6ZtTjywBFCeb5K
-UKmQAeHQWWLdxeeUq1xGovEPLs2kgxUt5fEJcNyNiuELcfWkefXxy4xmzsieyPiB
-galm9pXqxojORHaFB5zdH1fIoyid7p/YqtxsNrvNHT6avlhPjjCD8lepI/cCD5tT
-4W/5GGwd0L0MJozkw5fR+yem4BqVFCsMlTMbB+oDU86KjpsFgWGYJ+4gUi/mAzaQ
-xBtlrMmed6X21Np8AfpXd5528PXpU5Uk2QU9+acqKjp5RM4TB4Qx2cDVkD9/wfTn
-ttCfD0cM/Q/PKViOEQlo9Iko4yVHYW9vjHupbmLAS5qgh7Pdgp5mwjqejC1qkXYc
-6QsQJ67JG7VEFcbxjR8XpjAABKcgfFPGLKZwNMDq5/1NcAi8Kkg7o3FVAlB0iHN4
-aJ7Cap9euRjp4ZXV+BYOa6vHwKegf4etzbB5BIaq9ubF4yIZ2Z8=
-=N8Nm
------END PGP SIGNATURE-----
-
---W4yEtjcCTOC3q2WB--
