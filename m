@@ -1,92 +1,55 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59C150A83
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9898850A9C;
+	Fri, 26 Jan 2024 08:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259564; cv=none; b=VRQvrlpPCdj9MXviaVch/Ry/aXRRpqbktkNIQlKPFeBguuZQ4EiSJ2OJw+gxwhKNu4l57gfLX2XCClZchBkmK6mby2EtXfkJcmuJPVpqSOD2K0ugkQ7y9Ol8GuNYNjRbDwq5h0+kfzsFVR6chSKV542PPPQKbuatypjzFPtLm6s=
+	t=1706259589; cv=none; b=bd/FWSQosuH8w1+B5AIkbqLuMNZnQlk6hG60Dm56jP3209CnvNU+DBBWLKBNnnDJXvcG5u+E8kF4EZe2g+51MJm2eFIBwsHSLcgDvKpItOsE+lctwohf+6Lrozfyz/bp2TCtsb3hKgdr85AJXIcFYtma3yPz6sfII9Y8K2vVWeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259564; c=relaxed/simple;
-	bh=836H8CGuHwNWoT8y45F3p7ZGOUU+Or9lzM4KtbucyVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sShKV55zVqHWYp90qLU3hOTarktDtTC1HVazSczblP+6lL0RPqFRCsXRdBvmT8KvoVF/39VGccGfx2/MsMCvMR/1t1Tq36zPCbrwI4fa8RH6OJG3xziO9lzFEoOcwQpWkMZCNxaEYJuGIuV+NN3fvRH4yFG+qSb0uGjG4quzhvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hZaTYq6y; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hZaTYq6y"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706259559;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UEiYHt6EA6JI2A3oFzAKFbfq5nte6C1ofdfTW06tbP8=;
-	b=hZaTYq6yORpyB61XP6FMuKwBdf5riISYuB3djvq9huZIB+zXVjpCYtDIbBToipBg9QPfet
-	CYsKkoucQO52QVjWiED1IvybA9EJBl5Or/kkOqLNp40LRro9eS0hDb+jFjPzQfPdSiwIyM
-	+RiZki+Mn0KsyOk3pt7xvKYoflnmRGE=
-From: Yajun Deng <yajun.deng@linux.dev>
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Yajun Deng <yajun.deng@linux.dev>
-Subject: [PATCH] mm/mmap: use SZ_{8M, 128M} helper macro
-Date: Fri, 26 Jan 2024 16:59:05 +0800
-Message-Id: <20240126085905.2835513-1-yajun.deng@linux.dev>
+	s=arc-20240116; t=1706259589; c=relaxed/simple;
+	bh=BFZKQfwPlkgBrQm0U3pdSu3J+I3igl1BqYMLLM1Hs6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O6jqaU6VduAek7FKTneuxBMqwKW+xwYoZuqXGVGHSVtvbi93jrdintQ2pXqeb4uutoSYuWMK1iAJkGhUPyDS51LQIEDk+9niFIpKNLlwdolpbLoWaROR24CPuDWoikYkjNRoGRU4jg9LSKaF941EdLyg560dIiSlZgiOu/qUKJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rTI3q-006EcS-2V; Fri, 26 Jan 2024 16:59:43 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jan 2024 16:59:54 +0800
+Date: Fri, 26 Jan 2024 16:59:54 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: clayc@hpe.com
+Cc: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dhowells@redhat.com,
+	davem@davemloft.net
+Subject: Re: [PATCH] KEYS: include header for EINVAL definition
+Message-ID: <ZbN0ikVlrgRqyByZ@gondor.apana.org.au>
+References: <20240107132842.4024084-1-clayc@hpe.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240107132842.4024084-1-clayc@hpe.com>
 
-Use SZ_{8M, 128M} macro intead of the number in init_user_reserve and
-reserve_mem_notifier.
+On Sun, Jan 07, 2024 at 09:28:42PM +0800, clayc@hpe.com wrote:
+> From: Clay Chang <clayc@hpe.com>
+> 
+> This patch includes linux/errno.h to address the issue of 'EINVAL' being
+> undeclared.
+> 
+> Signed-off-by: Clay Chang <clayc@hpe.com>
+> ---
+>  include/crypto/public_key.h | 1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
----
- mm/mmap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 476de5daf598..f90924b2a6d2 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3845,7 +3845,7 @@ static int init_user_reserve(void)
- 
- 	free_kbytes = K(global_zone_page_state(NR_FREE_PAGES));
- 
--	sysctl_user_reserve_kbytes = min(free_kbytes / 32, 1UL << 17);
-+	sysctl_user_reserve_kbytes = min(free_kbytes / 32, SZ_128M);
- 	return 0;
- }
- subsys_initcall(init_user_reserve);
-@@ -3866,7 +3866,7 @@ static int init_admin_reserve(void)
- 
- 	free_kbytes = K(global_zone_page_state(NR_FREE_PAGES));
- 
--	sysctl_admin_reserve_kbytes = min(free_kbytes / 32, 1UL << 13);
-+	sysctl_admin_reserve_kbytes = min(free_kbytes / 32, SZ_8M);
- 	return 0;
- }
- subsys_initcall(init_admin_reserve);
-@@ -3898,12 +3898,12 @@ static int reserve_mem_notifier(struct notifier_block *nb,
- 	case MEM_ONLINE:
- 		/* Default max is 128MB. Leave alone if modified by operator. */
- 		tmp = sysctl_user_reserve_kbytes;
--		if (0 < tmp && tmp < (1UL << 17))
-+		if (tmp > 0 && tmp < SZ_128M)
- 			init_user_reserve();
- 
- 		/* Default max is 8MB.  Leave alone if modified by operator. */
- 		tmp = sysctl_admin_reserve_kbytes;
--		if (0 < tmp && tmp < (1UL << 13))
-+		if (tmp > 0 && tmp < SZ_8M)
- 			init_admin_reserve();
- 
- 		break;
+Patch applied.  Thanks.
 -- 
-2.25.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
