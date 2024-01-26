@@ -1,112 +1,112 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8001DFE4
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 19:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAC0224DA;
+	Fri, 26 Jan 2024 19:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706297141; cv=none; b=f6qi7n1JQoDPsl0HZVIW4Vv8lbuhlDVVgoC4xqAH64APd3cF6RXAT/MZofNMYXl7krPcWqHT8Q8H6OrTYXQhs+7ej/AjgNvzGJYjXMCYa4y6z5wAWg0jU5NpszN1lYCtfQmCzywIUN+BszrseSMD3mtTW6xvuG6GOCJy6IoXcQA=
+	t=1706297182; cv=none; b=MSLegGBFg8KuofeB4H1n9kdegAncrBoIabsV/9D+I71F3qAahI4vsB2J02w09nWYUs7diMvTVYaoeplTRBxoOgzzlQJvPjcd7evYhED9x+zWN8pOaDUZ8VhVqNBj50KxMOF+NdMaI6e6VyQlB87HRMol/9M22v99v8fIpa7JqO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706297141; c=relaxed/simple;
-	bh=rUiNaZKR3Iuzu1fK+xJ+TVad4AnomEYlxpttSGZqYUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qN45H2ofIZQhMCSeiXHbjWdGfCxNmBM94vN0l9J1c8+8QL61Mp+zZbNbU51/LntZ89h1Z3SRk01LYEybLgpObmhJyC4UeUELQFD7+SyP2U8snk56m9mY5SSazaMiMoXcVZp9vnShFhlKo8mwC3ND8E2gW+CBC5YTJdlq7IPKeHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hiPcoD9v; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706297182; c=relaxed/simple;
+	bh=T2Dsd8FsdX7PC+vZVdIMwKBV3nNVwsFSL3SmRekSYOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iS3gLAUjTiFLv6LBqNdYNmnfoDKvlIAW1mNryupt6cPd0gmATYACw79fENMEZroS0jzTmwNF3tSU+BGCTnZz948jWeL2p4Mw7jiR+vAInrY9M9AOLpArz3eEjmc5DDbwQCEqVbNvevCY/6Oxnu4idhb7hBgiU3QsCfNTr70ohhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h5SjkSvb; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hiPcoD9v"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5101055a16fso855413e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:25:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706297137; x=1706901937; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SVgLLemGUp0dKHDCBdd+B6bdetHWY79sotP32hy6/1o=;
-        b=hiPcoD9vgOxA32Ms8HIo0WBEpyioIENu0tg6MfaHyINAlsUSK/bNeN6CJdztgJ3GZV
-         Gj7lHTWT0kvHzhmTWbdm0yIBDNIdPBPvkIg6ECyfsgzA0bWxsDRCFm2t2HwpkJQ98Cc5
-         E1LLN87wmaRunhtx5wpwe77fbYgxhjYVYnaHI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706297137; x=1706901937;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SVgLLemGUp0dKHDCBdd+B6bdetHWY79sotP32hy6/1o=;
-        b=doLeTwdLSEUOaWj3doBSlY9ERmoQyQR9IlBdwn6jizF7thXz7ZtmzTJ6pClnJ/jcAs
-         ANJYiF1RsSsdYKwTcPjq4dm0XVN85janEVAopU6Wbt27PX88wdZcZtHE9xp0prl+uOTy
-         KfL3euyGf1Z7q89RX1YRcETLkj5uvM77Q3tgQlmhCKyakiZmxJ0Z60aLJr11TuXPsBcw
-         NVjYUamiwhLCWxMJdHi+LC6nrvR6H3HhrKZNcAY0uHuxKUnKQaFlDhCYKijSGfx3HVK9
-         a+dItlzmnFjxDmzzLdU/r4xUyKNdn/TPGDtHokH7uFsYn1N8V0QXnVxPfedQ5NST33ZC
-         rK+Q==
-X-Gm-Message-State: AOJu0YxavlmxUs9BKtHsO7HpVGz9x10sy7/dC4zMwiWhylOv6Jdhc8Dc
-	PtJPerNBzu4pIKZNrGLARGkhxNvb4fS//8HBR7APOZQaZ5QeH2mCEPtp0jpTWX4NLIgbEEmjaC/
-	UdKy+2A==
-X-Google-Smtp-Source: AGHT+IEeNbX/me87KxHE3MjsmUa/KgKQLWWYfqmYwhTPDp8ttn7kXfRjdgDLihJ7JOE06eQZnF6XTg==
-X-Received: by 2002:ac2:4564:0:b0:510:253f:32d6 with SMTP id k4-20020ac24564000000b00510253f32d6mr95751lfm.32.1706297137186;
-        Fri, 26 Jan 2024 11:25:37 -0800 (PST)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id y1-20020ac255a1000000b005100d4e7d02sm263149lfg.27.2024.01.26.11.25.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 11:25:36 -0800 (PST)
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cf4a845a76so8714601fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:25:36 -0800 (PST)
-X-Received: by 2002:a2e:b8c4:0:b0:2cc:a67d:fee6 with SMTP id
- s4-20020a2eb8c4000000b002cca67dfee6mr236974ljp.39.1706297136223; Fri, 26 Jan
- 2024 11:25:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h5SjkSvb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=HaAu8QaTfuj/1bKwP39c5NDE0gj5e/ufSqth9B+stzU=; b=h5SjkSvbAZ8Nl4MpgfmkPoV4mj
+	DmLxDEQt1ChnBYPk5yokNEItG291CMfJ9OvlnL8LPg/TKHM9b7kFPwIXS4n7+yjSwQwtUycfSv3Qm
+	EuOnR8TNpHdkfjAUKSTH8vfjS014Pt0SaDQuf8JOQjvDMQ18Nj95okj4dkFaYjAvVeb7VbVK6bk1p
+	863YD96Xmg1mEvHYiPqv1vApb/8KvO2Xka42Ktl8FbgbirFR1Er/4lUp9qH8fyGp6oMCwtNuVscWR
+	DHgLp8D+cBmehdUUtqkw1qbeaueiv99Bxn3j/YE1CjftKVKoTLfVjBTuXrnigunVwArYeBbhHkwv+
+	vpeoH7GQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rTRqD-0000000EcFc-1O9T;
+	Fri, 26 Jan 2024 19:26:17 +0000
+Date: Fri, 26 Jan 2024 19:26:17 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: kernel test robot <oliver.sang@intel.com>,
+	Daniel Gomez <da.gomez@samsung.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org,
+	"gost.dev@samsung.com" <gost.dev@samsung.com>,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH 1/2] test_xarray: add tests for advanced multi-index use
+Message-ID: <ZbQHWf0Hh04OwoZx@casper.infradead.org>
+References: <20231104005747.1389762-2-da.gomez@samsung.com>
+ <202311152254.610174ff-oliver.sang@intel.com>
+ <ZVfS8fiudvHADtoR@bombadil.infradead.org>
+ <ZVfT3bs9+F0jqIAw@casper.infradead.org>
+ <ZVfUnhzv4UDigZKa@bombadil.infradead.org>
+ <ZbQEA6WIh0HrFTbP@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1705946889.git.dsterba@suse.com>
-In-Reply-To: <cover.1705946889.git.dsterba@suse.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 26 Jan 2024 11:25:19 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com>
-Message-ID: <CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com>
-Subject: Re: [GIT PULL] Btrfs fixes for 6.8-rc2
-To: David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbQEA6WIh0HrFTbP@bombadil.infradead.org>
 
-On Mon, 22 Jan 2024 at 10:34, David Sterba <dsterba@suse.com> wrote:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.8-rc1-tag
+On Fri, Jan 26, 2024 at 11:12:03AM -0800, Luis Chamberlain wrote:
+> On Fri, Nov 17, 2023 at 01:01:18PM -0800, Luis Chamberlain wrote:
+> > On Fri, Nov 17, 2023 at 08:58:05PM +0000, Matthew Wilcox wrote:
+> > > On Fri, Nov 17, 2023 at 12:54:09PM -0800, Luis Chamberlain wrote:
+> > > > +/*
+> > > > + * Can be used in contexts which busy loop on large number of entries but can
+> > > > + * sleep and timing is if no importance to test correctness.
+> > > > + */
+> > > > +#define XA_BUG_ON_RELAX(xa, x) do {				\
+> > > > +	if ((tests_run % 1000) == 0)				\
+> > > > +		schedule();					\
+> > > > +	XA_BUG_ON(xa, x);					\
+> > > > +} while (0)
+> > > 
+> > > That is awful.  Please don't do that.  You're mixing two completely
+> > > unrelated thing into the same macro, which makes no sense.  Not only
+> > > that, it's a macro which refers to something in the containing
+> > > environment that isn't a paramter to the macro.
+> > 
+> > I figured you'd puke. Would you prefer I just open code the check on the loop
+> > though? I'm sure another alternative is we *not care* about these
+> > overloaded systems running the test. What would you prefer?
+> 
+> OK without any particular preferences outlined this is what I have,
+> splitting the two contexts and making the busy loop fix clearer.
+> 
+> +#define XA_BUSY_LOOP_RELAX(xa, x) do {                         \
+> +       if ((i % 1000) == 0)                                    \
+> +               schedule();                                     \
+> +} while (0)
+> +
+> +/*
+> + * Can be used in contexts which busy loop on large number of entries but can
+> + * sleep and timing is if no importance to test correctness.
+> + */
+> +#define XA_BUG_ON_RELAX(i, xa, x) do {                         \
+> +       XA_BUSY_LOOP_RELAX(i);                                  \
+> +       XA_BUG_ON(xa, x);                                       \
+> +} while (0)
 
-I have no idea if this is related to the new fixes, but I have never
-seen it before:
+No.  XA_BUG_ON_RELAX is not OK.  Really.
 
-  BTRFS critical (device dm-0): corrupted node, root=256
-block=8550954455682405139 owner mismatch, have 11858205567642294356
-expect [256, 18446744073709551360]
-  BTRFS critical (device dm-0): corrupted node, root=256
-block=8550954455682405139 owner mismatch, have 11858205567642294356
-expect [256, 18446744073709551360]
-  BTRFS critical (device dm-0): corrupted node, root=256
-block=8550954455682405139 owner mismatch, have 11858205567642294356
-expect [256, 18446744073709551360]
-  SELinux: inode_doinit_use_xattr:  getxattr returned 117 for dev=dm-0
-ino=5737268
-  SELinux: inode_doinit_use_xattr:  getxattr returned 117 for dev=dm-0
-ino=5737267
+We have a perfectly good system for "relaxing":
 
-and it caused an actual warning to be printed for my kernel tree from 'git':
+        xas_for_each_marked(&xas, page, end, PAGECACHE_TAG_DIRTY) {
+                xas_set_mark(&xas, PAGECACHE_TAG_TOWRITE);
+                if (++tagged % XA_CHECK_SCHED)
+                        continue;
 
-   error: failed to stat 'sound/pci/ice1712/se.c': Structure needs cleaning
+                xas_pause(&xas);
+                xas_unlock_irq(&xas);
+                cond_resched();
+                xas_lock_irq(&xas);
+        }
 
-(and yes, 117 is EUCLEAN, aka "Structure needs cleaning")
-
-The problem seems to have self-corrected, because it didn't happen
-when repeating the command, and that file that failed to stat looks
-perfectly fine.
-
-But it is clearly worrisome.
-
-The "owner mismatch" check isn't new - it was added back in 5.19 in
-commit 88c602ab4460 ("btrfs: tree-checker: check extent buffer owner
-against owner rootid"). So something else must have changed to trigger
-it.
-
-           Linus
