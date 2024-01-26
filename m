@@ -1,251 +1,172 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAC71B940
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706276093; cv=none; b=BUUk9l69MenIyQkARVWU4riE82S2Dy9yBfKz7HH+70QkcW4A7vLoJ5tA8TH+HsQBMcSi10VuPWgvO+0h9TzEoR0cvCaA+YuFD1HWVmlJuFdLcT5Sy+DHLrVtAEFGtmxP97G95ocCx4zuLKgKQdn+de8vRjxyajDmDheYsz6FTmI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706276093; c=relaxed/simple;
-	bh=SXW7lbZNDt9+OBY/kl/kDaQemXbieJQFK+PfERW5Oio=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lRW3UE1sUMH+P6fphGGY2nRrDo9NVykW5pgHxe5HPxgnEhKbUNYq2bwffTHp5g53kkj5pd2MLl3ra5uZgzaVtGCxFBuuuW/wPv/nlKG+aPnok8RY3a7CNsietpWsbdQMbrf8kM9aVdFSrKfYhjrN8t55uJTWluO1asN917n2CXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=N9o5eV6m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=flbvpouR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=N9o5eV6m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=flbvpouR; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9F11B81A;
+	Fri, 26 Jan 2024 13:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706276307; cv=fail; b=juclDkACCIKFQ0xAisZw5ApjmtxsW50DI4JHyfGJjCcSbQIayW64w5o64HhjH5H/h8ZfUmJRoa9RGAmDdxUk9uFoxaVSmi22MuOXGtTueash30L2SHZrzTdU1RdGB8ZD5FBO/AmIkBIt+PzX2MVkkNd0glb+/GLG0uK9bv7h1Aw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706276307; c=relaxed/simple;
+	bh=nK+ir5gcrsS7nvQqXtNwH9wfAa6YaKZMwxSbs6J7VVc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=eEWcaOTLS0D7gijalc3YPzQt20rzEG9FA4UgXzvv4+0ikKbpDbpd6dn3+NBvATK+V9IupAhQ+dGZmaDvYGp5Ocne5yWdeJuy3jDsZt29209rvgxak8APXvsITvGij1a8GoS0KbGGCOhLDwVu5D4U1Rlkj5WCxfDrOlLdUBgTs1M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r0Waz5Pv; arc=fail smtp.client-ip=40.107.244.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="N9o5eV6m";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="flbvpouR";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="N9o5eV6m";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="flbvpouR"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 087EC1FB86;
-	Fri, 26 Jan 2024 13:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706275721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=lOk2BIcfzAusKFaGCivdX0uaXpJqguldERnjAnE9s14=;
-	b=N9o5eV6mcPjcpsshbfL1XNF14fshtlf/pxqlKGOC5c08/IwvDLHzoCyvPaR0PCh9IXfvvj
-	knGnhc1UDDfcLC3YyYKOLjaLmJQS4zUaO/e3FbhKJiuUU8BjECbuXtsvtH7j0IVLdqtbOq
-	Rv+AH0N+MZ8MLRoxWrmms4Zc1rI4qN4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706275721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=lOk2BIcfzAusKFaGCivdX0uaXpJqguldERnjAnE9s14=;
-	b=flbvpouR5kNVeW/lqTw+/eeiz2fopMFr1G9Gvj2cQCGgH50wMis8u29Ft7pCjtvt0pNuTd
-	IeHGpj0tIsug+WDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706275721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=lOk2BIcfzAusKFaGCivdX0uaXpJqguldERnjAnE9s14=;
-	b=N9o5eV6mcPjcpsshbfL1XNF14fshtlf/pxqlKGOC5c08/IwvDLHzoCyvPaR0PCh9IXfvvj
-	knGnhc1UDDfcLC3YyYKOLjaLmJQS4zUaO/e3FbhKJiuUU8BjECbuXtsvtH7j0IVLdqtbOq
-	Rv+AH0N+MZ8MLRoxWrmms4Zc1rI4qN4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706275721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=lOk2BIcfzAusKFaGCivdX0uaXpJqguldERnjAnE9s14=;
-	b=flbvpouR5kNVeW/lqTw+/eeiz2fopMFr1G9Gvj2cQCGgH50wMis8u29Ft7pCjtvt0pNuTd
-	IeHGpj0tIsug+WDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB1EA134C3;
-	Fri, 26 Jan 2024 13:28:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ei/5N4izs2W9XQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Fri, 26 Jan 2024 13:28:40 +0000
-From: Daniel Wagner <dwagner@suse.de>
-To: James Smart <james.smart@broadcom.com>
-Cc: Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Hannes Reinecke <hare@suse.de>,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v4] nvme-fc: do not wait in vain when unloading module
-Date: Fri, 26 Jan 2024 14:28:28 +0100
-Message-ID: <20240126132828.15315-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r0Waz5Pv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A3zYjlZZHWsBx/vN2uNYlU5enUTVJkeBi6j6R6pAxKEVpXkOLLQCroYwwM8fZKJQEYr2y3QBAraYRn5q/XsIjbGy6s3ZxberRYdNcm/Why8jeXb2VuXMWXZ3zCR/IAsbE4GJnnSW1Iun2ayXWSuAaTTl8oW0FxpQHfkOLqXnTuVYo2CliSAIbGBSFLb9yvdBEPC4tELZwTLCLg3uIFCA4NEFIlu77mLImXH7EB7BKhjmITzgv+uUAWIGsO7y8VX2EpMqabWYeZfzpzVTqVyYO7F8ICouDuUoCJYu+pzcUiGZvwKYUO0gdi1H/085ZUDh1CC/eOr18s3Qrw1xrhJ3cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h+GUTtaKucFCq6vqq9rA+mKlwenh9lc75e2oNsZLSY4=;
+ b=TH5Q00EYDiLg6P3TZEn0YklhiX7+h8YoZUqYZIj9Z1IRXuiqYf0n47xh6OCKFt7l5GN2VvJ8JpVoRRU8TT3JBSG57pbWjAufxggMGgTpDlwFaBrbKpzKQgotmxAz6bhwmAO7Pvsg+a5G1Eab0GWd18cmiSyuEMVc7wqiiFfQ9V2lma1rL3o86CehJ5hAaI9Uj4yvnRbFtAyz1HPxSFbMsOOf/m2DzhxwnjXZATGzNsNtKP7YGHboUHRKO7IbweE9Bbf9uALUb9vk/38V30vP3ZoVjk6OWAglP2S/tuC4AYp87fU2QGJ10SDFRm3J+9Dak37DWaRbGZ9WOYbt3mfWAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h+GUTtaKucFCq6vqq9rA+mKlwenh9lc75e2oNsZLSY4=;
+ b=r0Waz5PvdANJYyDzy5TDig3v+irOABT7ScZmJzIrXNIChTMTNwuifE8vUl2NxnMPmT5vBJuwRVCZRo7xZzG33mLtbCCMt0JWLhaTQiGD+5hs8XpogC4BYKtZANpZbD2losUZek+ZisupLKyaXJykUXYoaXm+b3UGZItB6xQTVWQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SA1PR12MB8162.namprd12.prod.outlook.com (2603:10b6:806:33a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
+ 2024 13:38:22 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7228.026; Fri, 26 Jan 2024
+ 13:38:22 +0000
+Message-ID: <f5fe17fc-2d5a-4f78-9315-9fd05f58142e@amd.com>
+Date: Fri, 26 Jan 2024 14:38:16 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] drm/ttm: Make sure the mapped tt pages are decrypted
+ when needed
+Content-Language: en-US
+To: Zack Rusin <zack.rusin@broadcom.com>, dri-devel@lists.freedesktop.org
+Cc: =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Huang Rui <ray.huang@amd.com>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <2b5648aa-f83d-d8f7-b0fd-39c859f32f33@linux.intel.com>
+ <20240105135105.1921947-1-zack.rusin@broadcom.com>
+ <CABQX2QMg4L3oQe4pU4saBgopXw7CKyGrQa_LKE0xtSwyEKacnw@mail.gmail.com>
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <CABQX2QMg4L3oQe4pU4saBgopXw7CKyGrQa_LKE0xtSwyEKacnw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR4P281CA0137.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b8::17) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [1.90 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Level: *
-X-Spam-Score: 1.90
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA1PR12MB8162:EE_
+X-MS-Office365-Filtering-Correlation-Id: eb365a75-4acd-421b-87fa-08dc1e74108d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	6CLbZwRuCd6hEYb7Dx6EoykDm8jRnbjrjJ//JlNQWLDmFlh1EyxYWLYhgD2Htioxe2iBFk5B87TYsRlP1rj69ro0B45vcPBymjMLB+pUJu0NXun6AgndktlSPJBsgkvNlB6SgaKOnfutC+SXNozz4qkofgaY5L8M8O7mnWO0JgSKSqJCZ19ByMFt5KvFKGJ0cWf/cCE2lyMWU0fvGk5dm/XdWIDZRYEGF1iznhXN6exBft99QPmgcqj2kSlJJuZwpj+0B5+LOTxOrRW0+ATe+vCKFULtStthxY3HIhD+NrS53Ic08A40dYLvbNC4Z5DO0z96fyi/uH8ie77vml/oRstlNWGELgwbANCJzBxOu9dwwr5gT9IqbSJjqW20zKxTBswI0VzpuMgUKJivZtVGVXP+R0hS/9fIYUsRyAT/glxdVrQgYWTumido7XoqM+xqzHY5cXhwqOriO+I/G2LIM8lpq4/y+Nc+/WUETZaI4NMg/1a4yjWUtqG7Xz5wA7snzqgO1WJ+RN1twsS5Xd77KdatNvJCWGxnrkgMAVJspkhczn9OIH6Z+D9o82oJG/JUY1lJtKzUTgrtb0EnIOO6zT+ton3qG8ruzhlmAlZrSbUteBgBglSl/rOnD71ZvxoX28zBz7ywke7xkzAKK3RCNA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(346002)(39860400002)(376002)(396003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(36756003)(38100700002)(31686004)(83380400001)(6506007)(2616005)(26005)(53546011)(6666004)(41300700001)(6512007)(2906002)(478600001)(5660300002)(31696002)(316002)(66556008)(66476007)(54906003)(66946007)(66899024)(86362001)(6486002)(8936002)(8676002)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QTN0R01yd2w5VzZ4SXFMekNrU0JRcUt5V25LV3VjOFRlaUpBckNPK1JYWHdU?=
+ =?utf-8?B?N2pOQWtIZlpKWFVlTWMzY0pGMjZGZG9kcktGRlJhazBYL0xmVjgrTUNubGhT?=
+ =?utf-8?B?V0xIQSthUFNacFY2NkdFYklTVHVMMmc1VVRXNUpiZ2QrOVg2T005MzRKeEVI?=
+ =?utf-8?B?bUpGcDIwaVcvaXhySVpSQ1dEbkRKWTI5OThXaERVVkFsaEY0bTRGajgxVHZT?=
+ =?utf-8?B?bTk2VVFOQ2lYaDh4RTZ1cjJvZVNvam1zWDBheGlMbUE5d3phVTlHbzdmd3RW?=
+ =?utf-8?B?dWlpZ01xYlBtR3I3bWsxZ1l0M2hlT1UwcS9KalFqOWE4Uk5MNUZmZno2VDQy?=
+ =?utf-8?B?Ykp0YWtoVit5TjdwVE1KcXhxNjZXNVlLUm1HbTYzcHBmblJRYVVYRXVoNmNQ?=
+ =?utf-8?B?a0JvUm95VDBENVcyVW04RmRaMzhZams0RzI0akthVms5dU02N0lVWXMxU1Jm?=
+ =?utf-8?B?WEdpQkZRTHJMMDdmL0JmZUpyd21yamYwR1NFUWJFY0xkNnk1SU1LdFRlWHpG?=
+ =?utf-8?B?eFl3cGRRRlpMVU9IRER2WnJGTWZkM0ZGZjJpUWlJcWh3SkxYTTZXUlNiZjdN?=
+ =?utf-8?B?dkcwazRJNXVyNVJUaGZTSVhRRUFNVjJRM2FkdW4yYzczOElCcEx0UCt0eHlF?=
+ =?utf-8?B?MkFEVWVFQy9yZzRmRFFiTVdBQ3JPVnNVSEZScklOZEtGc3pVUk4zbXZyb3dm?=
+ =?utf-8?B?Vis1VlpBVDZ3RlJTWXQyajdZVWVMUURncG1VbXdMc1VyaXBCc0VwOUh3YmVV?=
+ =?utf-8?B?MG5TaVZ5K1FCOXpteU5RektoSklueE40OXdtdTNLTGF6VHRvMTdTUTNDTWRK?=
+ =?utf-8?B?VVQ5U2NNazJnS2QrWlVjYXhHRUh2R2NMODM0N0FMOFRGUFAyZDZPZ0tVRjMx?=
+ =?utf-8?B?Y1JxNDZPTjNTaXpLODZaMEVyUnpoemlnamFSVVJna0V5WHoxY2RoUC9oSGh4?=
+ =?utf-8?B?VUhYN3ZnbktxaTNvdy9zdy8xaWkzaUJaVzI2eGZDZk1zMGNNb2w5cCs4NXkx?=
+ =?utf-8?B?L2JXY20yMjFDUVhNQVJqVUVDWHZYektNdHZZenI1ZElPTkYrU1Z0TlY0S1VX?=
+ =?utf-8?B?aWE0QlFVbW1GUkZ0SWhrY3R2Sk1XYWhubnM2Rkc0b2U4TVhnN2xrUFUvbjA1?=
+ =?utf-8?B?Y3c5OUl4YW1HZ2xOclVjSGprcVlIL2p1aWJKRDFTTUhBTHg4SWpLcWx0YUM3?=
+ =?utf-8?B?WW1nTk9qQnRnL05DVmQ2am1OYktHdDZSYlJQYjl4MjFkeE40TjcrNHZabjFV?=
+ =?utf-8?B?WUtxNGJWcERnZ1FwVmQ3R25QbHZIZXBlZWl6WkRZR1V2SEdqaVB2cUttRDFF?=
+ =?utf-8?B?MS9aMFp5R2liWEo2OHc1Ylkvc3duMWs0WG1rUG9Ld0dZM0MyaXl6bGwzWlQr?=
+ =?utf-8?B?Z0J0QllMN2VnVFZudDBTanh2YTNUMDBpakNHSGxaZjRCamZEVW9mcUk0ekJU?=
+ =?utf-8?B?TkVkZUUyNmxlSm5JRUtvTkRvT0lYMHdwN2Rsak8yVDZkcHdUZDNpQlJneWND?=
+ =?utf-8?B?cUZLUkhhcXRlSHJsZHU3M0lodll5b1BrZmdiQjNWVGxiYndHV0kzVGQ4bVNi?=
+ =?utf-8?B?Um1pQTVlRHlCN0xwN0w3MkhJUThoU25VOVR3ektneTFtR1RHVit5dmU3NXdF?=
+ =?utf-8?B?ZmQxdXd3Z0FwUXhTY1pkZnVLQWVOQzUrVjRRZ3MrVm04TmpzV040ekwwVzlD?=
+ =?utf-8?B?cWZielRtZ0hUbWQ3UUhBcmo1Lys5bDhUWllxQURwRng4cXJVTm5qSW41dGh3?=
+ =?utf-8?B?OCtZVjFZY2tOcEFCYnVXUng5WG9ka3F4eGNHaFVFVTFwK04zSFNqdzViSlJZ?=
+ =?utf-8?B?T1F6UEJXWXlHKzBRc1FuSDZ4dXhIdFN5dDRORWd0RnlNclA5OStnYVpCN1g3?=
+ =?utf-8?B?bHlxZmJreXZiNHNKZndqS0tuMkJhcDg4YWsrdzNHWjBFUXFwSlBnMlZ3SnM1?=
+ =?utf-8?B?VVc1b2t3dXZ4WGZhdGxiYnIyUStaUkk4ZTRiaXptRW84eHFoazFGZC9UdWV1?=
+ =?utf-8?B?QU1ud0k0M29XSVYyeUNYcTNMdTE0NThUdlg4ZTAxblJLUjNGcmJNd2Z4dmV1?=
+ =?utf-8?B?TGlvRzNwSzRFbU9vWHljeXFWcFBPZTFHaTZ1R1VTa3czZmFucFZFN1Q4dkp1?=
+ =?utf-8?Q?1mjIxuCPg/nrra6eNjV+Bds6o?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb365a75-4acd-421b-87fa-08dc1e74108d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 13:38:22.3924
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: //A68E9ohceVO8wyDRFzmzTI9zhCXdJfWMEPaAn4w5AjLDhUJAD51/LDfiKHIHSJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8162
 
-The module exit path has race between deleting all controllers and
-freeing 'left over IDs'. To prevent double free a synchronization
-between nvme_delete_ctrl and ida_destroy has been added by the initial
-commit.
+Am 26.01.24 um 06:10 schrieb Zack Rusin:
+> On Fri, Jan 5, 2024 at 8:51 AM Zack Rusin <zack.rusin@broadcom.com> wrote:
+>> Some drivers require the mapped tt pages to be decrypted. In an ideal
+>> world this would have been handled by the dma layer, but the TTM page
+>> fault handling would have to be rewritten to able to do that.
+>>
+>> A side-effect of the TTM page fault handling is using a dma allocation
+>> per order (via ttm_pool_alloc_page) which makes it impossible to just
+>> trivially use dma_mmap_attrs. As a result ttm has to be very careful
+>> about trying to make its pgprot for the mapped tt pages match what
+>> the dma layer thinks it is. At the ttm layer it's possible to
+>> deduce the requirement to have tt pages decrypted by checking
+>> whether coherent dma allocations have been requested and the system
+>> is running with confidential computing technologies.
+>>
+>> This approach isn't ideal but keeping TTM matching DMAs expectations
+>> for the page properties is in general fragile, unfortunately proper
+>> fix would require a rewrite of TTM's page fault handling.
+>>
+>> Fixes vmwgfx with SEV enabled.
+>>
+>> v2: Explicitly include cc_platform.h
+>> v3: Use CC_ATTR_GUEST_MEM_ENCRYPT instead of CC_ATTR_MEM_ENCRYPT to
+>> limit the scope to guests and log when memory decryption is enabled.
+> Hi, Christian.
+>
+> Gentle ping on that one. This is probably the cleanest we can get this
+> code. Can we land this or is there anything else you'd like to see?
 
-There is some logic around trying to prevent from hanging forever in
-wait_for_completion, though it does not handling all cases. E.g.
-blktests is able to reproduce the situation where the module unload
-hangs forever.
+Sorry for the delay.
 
-If we completely rely on the cleanup code executed from the
-nvme_delete_ctrl path, all IDs will be freed eventually. This makes
-calling ida_destroy unnecessary. We only have to ensure that all
-nvme_delete_ctrl code has been executed before we leave
-nvme_fc_exit_module. This is done by flushing the nvme_delete_wq
-workqueue.
+I'm not too familiar with the technical background, so I can't 100% 
+judge if this is correct or not.
 
-While at it, remove the unused nvme_fc_wq workqueue too.
+But if it works for you I think we should give it a try, feel free to 
+add my Acked-by and push upstream through whatever branch you like.
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
+Regards,
+Christian.
 
-I've splitted this patch out of the 'enable nvmet-fc for blktests' series.
-The series needs a bit more thinking and this patch seems ready to me.
-
-https://lore.kernel.org/linux-nvme/20231218153105.12717-1-dwagner@suse.de/
-
-changes:
-v4:
- - replace sync logic with a simple workqueue flush
-
-
- drivers/nvme/host/fc.c | 47 ++++++------------------------------------
- 1 file changed, 6 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index e2308119f8f0..7006f4caac2f 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -221,11 +221,6 @@ static LIST_HEAD(nvme_fc_lport_list);
- static DEFINE_IDA(nvme_fc_local_port_cnt);
- static DEFINE_IDA(nvme_fc_ctrl_cnt);
- 
--static struct workqueue_struct *nvme_fc_wq;
--
--static bool nvme_fc_waiting_to_unload;
--static DECLARE_COMPLETION(nvme_fc_unload_proceed);
--
- /*
-  * These items are short-term. They will eventually be moved into
-  * a generic FC class. See comments in module init.
-@@ -255,8 +250,6 @@ nvme_fc_free_lport(struct kref *ref)
- 	/* remove from transport list */
- 	spin_lock_irqsave(&nvme_fc_lock, flags);
- 	list_del(&lport->port_list);
--	if (nvme_fc_waiting_to_unload && list_empty(&nvme_fc_lport_list))
--		complete(&nvme_fc_unload_proceed);
- 	spin_unlock_irqrestore(&nvme_fc_lock, flags);
- 
- 	ida_free(&nvme_fc_local_port_cnt, lport->localport.port_num);
-@@ -3894,10 +3887,6 @@ static int __init nvme_fc_init_module(void)
- {
- 	int ret;
- 
--	nvme_fc_wq = alloc_workqueue("nvme_fc_wq", WQ_MEM_RECLAIM, 0);
--	if (!nvme_fc_wq)
--		return -ENOMEM;
--
- 	/*
- 	 * NOTE:
- 	 * It is expected that in the future the kernel will combine
-@@ -3915,7 +3904,7 @@ static int __init nvme_fc_init_module(void)
- 	ret = class_register(&fc_class);
- 	if (ret) {
- 		pr_err("couldn't register class fc\n");
--		goto out_destroy_wq;
-+		return ret;
- 	}
- 
- 	/*
-@@ -3939,8 +3928,6 @@ static int __init nvme_fc_init_module(void)
- 	device_destroy(&fc_class, MKDEV(0, 0));
- out_destroy_class:
- 	class_unregister(&fc_class);
--out_destroy_wq:
--	destroy_workqueue(nvme_fc_wq);
- 
- 	return ret;
- }
-@@ -3960,45 +3947,23 @@ nvme_fc_delete_controllers(struct nvme_fc_rport *rport)
- 	spin_unlock(&rport->lock);
- }
- 
--static void
--nvme_fc_cleanup_for_unload(void)
-+static void __exit nvme_fc_exit_module(void)
- {
- 	struct nvme_fc_lport *lport;
- 	struct nvme_fc_rport *rport;
--
--	list_for_each_entry(lport, &nvme_fc_lport_list, port_list) {
--		list_for_each_entry(rport, &lport->endp_list, endp_list) {
--			nvme_fc_delete_controllers(rport);
--		}
--	}
--}
--
--static void __exit nvme_fc_exit_module(void)
--{
- 	unsigned long flags;
--	bool need_cleanup = false;
- 
- 	spin_lock_irqsave(&nvme_fc_lock, flags);
--	nvme_fc_waiting_to_unload = true;
--	if (!list_empty(&nvme_fc_lport_list)) {
--		need_cleanup = true;
--		nvme_fc_cleanup_for_unload();
--	}
-+	list_for_each_entry(lport, &nvme_fc_lport_list, port_list)
-+		list_for_each_entry(rport, &lport->endp_list, endp_list)
-+			nvme_fc_delete_controllers(rport);
- 	spin_unlock_irqrestore(&nvme_fc_lock, flags);
--	if (need_cleanup) {
--		pr_info("%s: waiting for ctlr deletes\n", __func__);
--		wait_for_completion(&nvme_fc_unload_proceed);
--		pr_info("%s: ctrl deletes complete\n", __func__);
--	}
-+	flush_workqueue(nvme_delete_wq);
- 
- 	nvmf_unregister_transport(&nvme_fc_transport);
- 
--	ida_destroy(&nvme_fc_local_port_cnt);
--	ida_destroy(&nvme_fc_ctrl_cnt);
--
- 	device_destroy(&fc_class, MKDEV(0, 0));
- 	class_unregister(&fc_class);
--	destroy_workqueue(nvme_fc_wq);
- }
- 
- module_init(nvme_fc_init_module);
--- 
-2.43.0
+>
+> z
 
