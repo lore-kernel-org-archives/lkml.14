@@ -1,148 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8967111700;
-	Fri, 26 Jan 2024 07:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA16759178;
+	Fri, 26 Jan 2024 07:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706254785; cv=none; b=ME4pKaoTw+vOj5fc0gVv3cj9mRotwBNW1ccUD2ad6jw7t2xim4W67GndabG49LIwJIHwgONN4oYyS/d5px2PpIgIt/F9YMp4Xto+quXfabn2jnCn2/dViHut6oamtqFKlb3VgqcAVS3JFHWn0Ga582uTsYEYQA+p/TbhxHv5TBU=
+	t=1706254791; cv=none; b=YhegbTBQAdT3uylY2/bq+rzXOK3ACAmhl7FjrMBnqI2rROeqFKb8/Ia9sqf1bYB9T+U3tt5LQNOYZrNyVnL/cyfUCCYLmR3fhLinwMGj/spFNC8et98fUv4VPfMthmFKbfKRmUj7RpOld6qbR5e5Sy4H6LjzMl91PEiPi07xbWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706254785; c=relaxed/simple;
-	bh=U9mNTNgZsSW+bVbmEnmLkw4a/p6CuTR5Z5KKpN05XeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DQbFBCmBPoefhun4yYTvqsjFmOXldO1pclML3QbD/VbKhAyaNymne3CAyOZcj8w8YfbkdjtWnyho6CFs/GxIbhicLLk6pUxDNFVHe0MrchCcEVd1Bev/6rz3PJHudtYrj9eL1DtXKkAXNsgYQ5WZSiqJrrZnNtZbXvjaJOQYqx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGO/xmxd; arc=none smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706254791; c=relaxed/simple;
+	bh=/5nfxaGJlWyx/ZQwtNE2vSIVj6OswyRL9cg0CrI3JNA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RXFo3DzTtcQeT9URk8tESXd82Q1+NMUV0NfYA4tcp7fvoOU4o0XTmVFtRnm2bhKkL7sSjj+hJumecRs+vlxJ3jcoqR9q+E6if2C857IpZVrQVFCe5rBGT62+JUTGbK0MtAJYgfyFu3m3RgxlUFS9zCdCHB+yCgb90zMlDqZko38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqQ2AlIB; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGO/xmxd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706254783; x=1737790783;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U9mNTNgZsSW+bVbmEnmLkw4a/p6CuTR5Z5KKpN05XeQ=;
-  b=GGO/xmxdPb+7QhoqXI/U8mp+6Mc8vkv1wfaEpqlUxM2SGGjv+pTqt9nl
-   eyuNa4kuc6MhKDtZuU+2D9Gza8F3otPcLf/eT2nO3SLjuXog8jIkR/cBI
-   zqDLTS9RngUxP0Ab7TX2N5xHAB6fp737zFP1XO86FwGAK7PcQQYQmEh18
-   PN1n+hvLgY40Muzf5cSgG22DY/vg3bo1kBYVG5YVB2xK+ZpRHBqF4KVw5
-   WG+iGn6qli9JAnlEjjjDxXZlJPyzCiTKpNWF0iwvXXetYTWxrr6z4/ZTx
-   9YvRwkmNDr3+x1BXvkNCGTn3oLsmYjqpG5vUhAwpPNx+LYTAJazY0PXbS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="406145211"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="406145211"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 23:39:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2684770"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 25 Jan 2024 23:39:41 -0800
-Date: Fri, 26 Jan 2024 15:36:20 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH 1/4] KVM: Always flush async #PF workqueue when vCPU is
- being destroyed
-Message-ID: <ZbNg9BFT2o6NbgRX@yilunxu-OptiPlex-7050>
-References: <20240110011533.503302-1-seanjc@google.com>
- <20240110011533.503302-2-seanjc@google.com>
- <Zau/VQ0B5MCwoqZT@yilunxu-OptiPlex-7050>
- <ZbFfVxp76qoBstul@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqQ2AlIB"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d70a98c189so451025ad.1;
+        Thu, 25 Jan 2024 23:39:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706254789; x=1706859589; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sIHoB0tO6UnT+9FCYFnrGjYBTfQtZYcWxPgffZVZp6I=;
+        b=RqQ2AlIBmTlEUKIs2ot5Gzyc+2tuOSzNngNAowUL8ZSY8YjFMn716lWlianjMQae0Q
+         GxAfMBgfDplDw6Otn62MBvXbglRhDbN8yQKAEaaND6mTXuud0ex2J3JwioFMMAD5f1bJ
+         vBpgNdo4eIvsmExgWIbmzPeP7ELoY1tI7uoQF8pnM3gaz2PmxN5VMeCunn9tJfDGGBob
+         jr7yt4/LBAhSfJNpJQGf+zOFpWNgKt3oxTEihDRaclRztLcdBgSAc6IkfLyyXepjvK8n
+         OF0ZVk7HFuN3xJ2Opb7KniqChBqf4P83ZohNdC2dPbRsr+XweYm1NpUDZM8mVJeZnG2z
+         jt8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706254789; x=1706859589;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sIHoB0tO6UnT+9FCYFnrGjYBTfQtZYcWxPgffZVZp6I=;
+        b=cMKEy8C6OccHVcXUf7Yt+bUTuSkoQNxcvzDjr9l8ogDq1SaCveZofLNtdQ45DJwMsI
+         AFnI6OhFyxk2vv5KuvhAdafGdWXxBUDtkETF/v5lXcbD35ITGFmmgyscwW9Wa32WuvhJ
+         qKOx8EJKMac2TXMtWh5PuD2bIYxX+o1MZVFfkACsTeWOhT4BKBl49ZB/EBghR/E5pDCg
+         QFkoKXrOguRTRJHWU10LTwOrC1D3d/JfWduSkiLc/B/9dIgSsV3Y6j2WJ3+DLfr7E+cN
+         zv/fSGgzK9U3IG4tEXg79LjCVziIuh6Jl9EadS1np7AVSocNj8XJrx8HfmljuRYy+smF
+         hROQ==
+X-Gm-Message-State: AOJu0YxOCd2764EFbKIzfrulXdI1Qr9UtVDlecokpG4dkzlhyYVSUK6E
+	dH8c5jtxB71gLyOtGnhkkHWUbJp3tbyuRbiNGq5dWwYrGZY9dWa7
+X-Google-Smtp-Source: AGHT+IHjlEqKGmmtT+3QzRgVac/hlL+gl23FhxzHcH0blJDYziwkYlCGKfkVtNCBJe2PhOWcClN/lw==
+X-Received: by 2002:a05:6a20:1594:b0:19c:7690:12ec with SMTP id h20-20020a056a20159400b0019c769012ecmr885727pzj.5.1706254789065;
+        Thu, 25 Jan 2024 23:39:49 -0800 (PST)
+Received: from localhost.localdomain ([129.146.253.192])
+        by smtp.googlemail.com with ESMTPSA id sw12-20020a17090b2c8c00b0029105d49b2dsm605619pjb.20.2024.01.25.23.39.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 23:39:48 -0800 (PST)
+From: Furong Xu <0x1207@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Joao Pinto <jpinto@synopsys.com>,
+	Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	xfr@outlook.com,
+	rock.xu@nio.com,
+	Furong Xu <0x1207@gmail.com>
+Subject: [PATCH net v2] net: stmmac: xgmac: fix handling of DPP safety error for DMA channels
+Date: Fri, 26 Jan 2024 15:39:28 +0800
+Message-Id: <20240126073928.1070729-1-0x1207@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbFfVxp76qoBstul@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 11:04:55AM -0800, Sean Christopherson wrote:
-> On Sat, Jan 20, 2024, Xu Yilun wrote:
-> > On Tue, Jan 09, 2024 at 05:15:30PM -0800, Sean Christopherson wrote:
-> > > Always flush the per-vCPU async #PF workqueue when a vCPU is clearing its
-> > > completion queue, e.g. when a VM and all its vCPUs is being destroyed.
-> > > KVM must ensure that none of its workqueue callbacks is running when the
-> > > last reference to the KVM _module_ is put.  Gifting a reference to the
-> > > associated VM prevents the workqueue callback from dereferencing freed
-> > > vCPU/VM memory, but does not prevent the KVM module from being unloaded
-> > > before the callback completes.
-> > > 
-> > > Drop the misguided VM refcount gifting, as calling kvm_put_kvm() from
-> > > async_pf_execute() if kvm_put_kvm() flushes the async #PF workqueue will
-> > > result in deadlock.  async_pf_execute() can't return until kvm_put_kvm()
-> > > finishes, and kvm_put_kvm() can't return until async_pf_execute() finishes:
-> > > 
-> > >  WARNING: CPU: 8 PID: 251 at virt/kvm/kvm_main.c:1435 kvm_put_kvm+0x2d/0x320 [kvm]
-> > >  Modules linked in: vhost_net vhost vhost_iotlb tap kvm_intel kvm irqbypass
-> > >  CPU: 8 PID: 251 Comm: kworker/8:1 Tainted: G        W          6.6.0-rc1-e7af8d17224a-x86/gmem-vm #119
-> > >  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-> > >  Workqueue: events async_pf_execute [kvm]
-> > >  RIP: 0010:kvm_put_kvm+0x2d/0x320 [kvm]
-> > >  Call Trace:
-> > >   <TASK>
-> > >   async_pf_execute+0x198/0x260 [kvm]
-> > >   process_one_work+0x145/0x2d0
-> > >   worker_thread+0x27e/0x3a0
-> > >   kthread+0xba/0xe0
-> > >   ret_from_fork+0x2d/0x50
-> > >   ret_from_fork_asm+0x11/0x20
-> > >   </TASK>
-> > >  ---[ end trace 0000000000000000 ]---
-> > >  INFO: task kworker/8:1:251 blocked for more than 120 seconds.
-> > >        Tainted: G        W          6.6.0-rc1-e7af8d17224a-x86/gmem-vm #119
-> > >  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > >  task:kworker/8:1     state:D stack:0     pid:251   ppid:2      flags:0x00004000
-> > >  Workqueue: events async_pf_execute [kvm]
-> > >  Call Trace:
-> > >   <TASK>
-> > >   __schedule+0x33f/0xa40
-> > >   schedule+0x53/0xc0
-> > >   schedule_timeout+0x12a/0x140
-> > >   __wait_for_common+0x8d/0x1d0
-> > >   __flush_work.isra.0+0x19f/0x2c0
-> > >   kvm_clear_async_pf_completion_queue+0x129/0x190 [kvm]
-> > >   kvm_arch_destroy_vm+0x78/0x1b0 [kvm]
-> > >   kvm_put_kvm+0x1c1/0x320 [kvm]
-> > >   async_pf_execute+0x198/0x260 [kvm]
-> > >   process_one_work+0x145/0x2d0
-> > >   worker_thread+0x27e/0x3a0
-> > >   kthread+0xba/0xe0
-> > >   ret_from_fork+0x2d/0x50
-> > >   ret_from_fork_asm+0x11/0x20
-> > >   </TASK>
-> > > 
-> > > If kvm_clear_async_pf_completion_queue() actually flushes the workqueue,
-> > > then there's no need to gift async_pf_execute() a reference because all
-> > > invocations of async_pf_execute() will be forced to complete before the
-> > > vCPU and its VM are destroyed/freed.  And that in turn fixes the module
-> > > unloading bug as __fput() won't do module_put() on the last vCPU reference
-> > > until the vCPU has been freed, e.g. if closing the vCPU file also puts the
-> > 
-> > I'm not sure why __fput() of vCPU fd should be mentioned here. I assume
-> > we just need to say that vCPUs are freed before module_put(KVM the module)
-> > in kvm_destroy_vm(), then the whole logic for module unloading fix is:
-> > 
-> >   1. All workqueue callbacks complete when kvm_clear_async_pf_completion_queue(vcpu)
-> >   2. kvm_clear_async_pf_completion_queue(vcpu) must be executed before vCPU free.
-> >   3. vCPUs must be freed before module_put(KVM the module).
-> > 
-> >   So all workqueue callbacks complete before module_put(KVM the module).
-> > 
-> > 
-> > __fput() of vCPU fd is not the only trigger of kvm_destroy_vm(), that
-> > makes me distracted from reason of the fix.
-> 
-> My goal was to call out that (a) the vCPU file descriptor is what ensures kvm.ko
-> is alive at this point and (b) that __fput() very deliberately ensures module_put()
-> is called after all module function callbacks/hooks complete, as there was quite
+Commit 56e58d6c8a56 ("net: stmmac: Implement Safety Features in
+XGMAC core") checks and reports safety errors, but leaves the
+Data Path Parity Errors for each channel in DMA unhandled at all, lead to
+a storm of interrupt.
+Fix it by checking and clearing the DMA_DPP_Interrupt_Status register.
 
-Ah, I understood. These are ensured by your previous fix which grants
-kvm_vcpu_fops the module owner. LGTM now.
+Fixes: 56e58d6c8a56 ("net: stmmac: Implement Safety Features in XGMAC core")
+Signed-off-by: Furong Xu <0x1207@gmail.com>
+---
+Changes in v2:
+  - explicit enable Data Path Parity Protection
+  - add new counters to stmmac_safety_stats
+  - add detailed log
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
+ .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  3 +
+ .../ethernet/stmicro/stmmac/dwxgmac2_core.c   | 58 ++++++++++++++++++-
+ 3 files changed, 61 insertions(+), 1 deletion(-)
 
-Thanks,
-Yilun
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 721c1f8e892f..b4f60ab078d6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -216,6 +216,7 @@ struct stmmac_safety_stats {
+ 	unsigned long mac_errors[32];
+ 	unsigned long mtl_errors[32];
+ 	unsigned long dma_errors[32];
++	unsigned long dma_dpp_errors[32];
+ };
+ 
+ /* Number of fields in Safety Stats */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 207ff1799f2c..5c67a3f89f08 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -303,6 +303,8 @@
+ #define XGMAC_RXCEIE			BIT(4)
+ #define XGMAC_TXCEIE			BIT(0)
+ #define XGMAC_MTL_ECC_INT_STATUS	0x000010cc
++#define XGMAC_MTL_DPP_CONTROL		0x000010e0
++#define XGMAC_DDPP_DISABLE		BIT(0)
+ #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
+ #define XGMAC_TQS			GENMASK(25, 16)
+ #define XGMAC_TQS_SHIFT			16
+@@ -385,6 +387,7 @@
+ #define XGMAC_DCEIE			BIT(1)
+ #define XGMAC_TCEIE			BIT(0)
+ #define XGMAC_DMA_ECC_INT_STATUS	0x0000306c
++#define XGMAC_DMA_DPP_INT_STATUS	0x00003074
+ #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
+ #define XGMAC_SPH			BIT(24)
+ #define XGMAC_PBLx8			BIT(16)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index eb48211d9b0e..bcd7daba53af 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -830,6 +830,43 @@ static const struct dwxgmac3_error_desc dwxgmac3_dma_errors[32]= {
+ 	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
+ };
+ 
++static const char * const dpp_rx_err = "Read Rx Descriptor Parity checker Error";
++static const char * const dpp_tx_err = "Read Tx Descriptor Parity checker Error";
++static const struct dwxgmac3_error_desc dwxgmac3_dma_dpp_errors[32] = {
++	{ true, "TDPES0", dpp_tx_err },
++	{ true, "TDPES1", dpp_tx_err },
++	{ true, "TDPES2", dpp_tx_err },
++	{ true, "TDPES3", dpp_tx_err },
++	{ true, "TDPES4", dpp_tx_err },
++	{ true, "TDPES5", dpp_tx_err },
++	{ true, "TDPES6", dpp_tx_err },
++	{ true, "TDPES7", dpp_tx_err },
++	{ true, "TDPES8", dpp_tx_err },
++	{ true, "TDPES9", dpp_tx_err },
++	{ true, "TDPES10", dpp_tx_err },
++	{ true, "TDPES11", dpp_tx_err },
++	{ true, "TDPES12", dpp_tx_err },
++	{ true, "TDPES13", dpp_tx_err },
++	{ true, "TDPES14", dpp_tx_err },
++	{ true, "TDPES15", dpp_tx_err },
++	{ true, "RDPES0", dpp_rx_err },
++	{ true, "RDPES1", dpp_rx_err },
++	{ true, "RDPES2", dpp_rx_err },
++	{ true, "RDPES3", dpp_rx_err },
++	{ true, "RDPES4", dpp_rx_err },
++	{ true, "RDPES5", dpp_rx_err },
++	{ true, "RDPES6", dpp_rx_err },
++	{ true, "RDPES7", dpp_rx_err },
++	{ true, "RDPES8", dpp_rx_err },
++	{ true, "RDPES9", dpp_rx_err },
++	{ true, "RDPES10", dpp_rx_err },
++	{ true, "RDPES11", dpp_rx_err },
++	{ true, "RDPES12", dpp_rx_err },
++	{ true, "RDPES13", dpp_rx_err },
++	{ true, "RDPES14", dpp_rx_err },
++	{ true, "RDPES15", dpp_rx_err },
++};
++
+ static void dwxgmac3_handle_dma_err(struct net_device *ndev,
+ 				    void __iomem *ioaddr, bool correctable,
+ 				    struct stmmac_safety_stats *stats)
+@@ -841,6 +878,13 @@ static void dwxgmac3_handle_dma_err(struct net_device *ndev,
+ 
+ 	dwxgmac3_log_error(ndev, value, correctable, "DMA",
+ 			   dwxgmac3_dma_errors, STAT_OFF(dma_errors), stats);
++
++	value = readl(ioaddr + XGMAC_DMA_DPP_INT_STATUS);
++	writel(value, ioaddr + XGMAC_DMA_DPP_INT_STATUS);
++
++	dwxgmac3_log_error(ndev, value, false, "DMA_DPP",
++			   dwxgmac3_dma_dpp_errors,
++			   STAT_OFF(dma_dpp_errors), stats);
+ }
+ 
+ static int
+@@ -881,6 +925,12 @@ dwxgmac3_safety_feat_config(void __iomem *ioaddr, unsigned int asp,
+ 	value |= XGMAC_TMOUTEN; /* FSM Timeout Feature */
+ 	writel(value, ioaddr + XGMAC_MAC_FSM_CONTROL);
+ 
++	/* 5. Enable Data Path Parity Protection */
++	value = readl(ioaddr + XGMAC_MTL_DPP_CONTROL);
++	/* already enabled by default, explicit enable it again */
++	value &= ~XGMAC_DDPP_DISABLE;
++	writel(value, ioaddr + XGMAC_MTL_DPP_CONTROL);
++
+ 	return 0;
+ }
+ 
+@@ -914,7 +964,12 @@ static int dwxgmac3_safety_feat_irq_status(struct net_device *ndev,
+ 		ret |= !corr;
+ 	}
+ 
+-	err = dma & (XGMAC_DEUIS | XGMAC_DECIS);
++	/* DMA_DPP_Interrupt_Status is indicated by MCSIS bit in
++	 * DMA_Safety_Interrupt_Status, so we handle DMA Data Path
++	 * Parity Errors here
++	 */
++	err = (dma & (XGMAC_DEUIS | XGMAC_DECIS)) ||
++	      (dma & XGMAC_MCSIS);
+ 	corr = dma & XGMAC_DECIS;
+ 	if (err) {
+ 		dwxgmac3_handle_dma_err(ndev, ioaddr, corr, stats);
+@@ -930,6 +985,7 @@ static const struct dwxgmac3_error {
+ 	{ dwxgmac3_mac_errors },
+ 	{ dwxgmac3_mtl_errors },
+ 	{ dwxgmac3_dma_errors },
++	{ dwxgmac3_dma_dpp_errors },
+ };
+ 
+ static int dwxgmac3_safety_feat_dump(struct stmmac_safety_stats *stats,
+-- 
+2.34.1
+
