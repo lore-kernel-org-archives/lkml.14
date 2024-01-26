@@ -1,123 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A43629CFD;
-	Fri, 26 Jan 2024 08:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F47041A91
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259459; cv=none; b=n5FYbxXZAZT/jgWdTdn4Tc9hktB/IVyqU+6VjLrsLg8Tw2sAWoS0z0o6fKvP1YwNXHL8Qz69txl//cKGRtnbofQNk4IuE34Jjzu5y+w440RnqjLf+6T0U0HKFO5ddxfdo2fxma/2Ie7DWIfQncoNEUAJlTPVh3GRA4BsegzOjlU=
+	t=1706259461; cv=none; b=X7QTP6yMllGTHQ7lF0454gmpIw+qE24ZHdYJ3ogveLDFSFpEUR8x2q5N39eK/hsNrIRlLH54A5vd+yPwTZluquvmQ19FphcHJMglTEi6KF+6sqie3KSe3IRwvTuGUBsuKZHhrAURKRaBiTUSBV1UJkEGilsZdUB2Tb1Zsq1O1Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259459; c=relaxed/simple;
-	bh=3WCeEYGAFPAkAns129DOzz7S7gPlPsPln4IPxq3aqXs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=avKoSh3s0ksM3hSa1pLxIUpd/kVGQndbrP61KzV07FX1Tzcwl5v7a6/Z4gQO/Ebo0iqXI/r6rM4MmzqLNhNwyPY4Mb5djTsJR4Q8oWyCWihMvUOPt5XBg1PeOeghjSUB/2KgzIqXLeQaJ4MdXFctKZBUCySfxffofuVcYRrWQDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xwf7SOLT; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706259461; c=relaxed/simple;
+	bh=cUQFchkQM75amrfr5RR7F6EnZDqjTOiCu1EFoQmt1uM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=J8hFbMRfFvMvq+tFG7mvYJhUnOexKTDL8FNdPc0LLecqm36Jl3Ahv9jjHI9vjI+74EhbWBI7LTyecfbdHwqF7Y1pVpqUBMYKROrTHXj0Jd1hwDfr5c/cpT2d/MDy2gVIIkQRy4f+6aLQrIHDjH1LVXMXj+X/WDsnD3U6SThJj9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=E96oKaQ/; arc=none smtp.client-ip=91.26.50.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xwf7SOLT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706259458; x=1737795458;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3WCeEYGAFPAkAns129DOzz7S7gPlPsPln4IPxq3aqXs=;
-  b=Xwf7SOLTwuKzfiNSCT8L9syxt/Q/DhttC51thRDpVFoYuwmkNvms58Hd
-   gEj/S1RLjbF7VO26KDVjY9p4X70x0VM/1MnJzrMnjt4dGZNqToNZzW+yr
-   bslXLjV0noSt7c6H2Z9FnfoW0hQ9Ss2YHeVSruP98wxtRSooGqExgvIpy
-   Cu+Nwk8G/+YdkGYssskmloyk3X+AIhKTaI0aGQ0aaBHtMHDYVTSh6A/bi
-   +wVL/opcj2msjp/3O+LVEJ+jKSL0FB8YyLVbivY37LcM+SfTd6oEEyCO2
-   rRZjRwOQhVogVKoxP3jApwYyQ8dx8SCqhC7b+UVZxWA6njmw1rLX/8Xrx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9792686"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9792686"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:57:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930310204"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="930310204"
-Received: from yanli3-mobl.ccr.corp.intel.com (HELO xiongzha-desk1.ccr.corp.intel.com) ([10.254.213.178])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:57:32 -0800
-From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-To: seanjc@google.com,
-	pbonzini@redhat.com,
-	peterz@infradead.org,
-	mizhang@google.com,
-	kan.liang@intel.com,
-	zhenyuw@linux.intel.com,
-	dapeng1.mi@linux.intel.com,
-	jmattson@google.com
-Cc: kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhiyuan.lv@intel.com,
-	eranian@google.com,
-	irogers@google.com,
-	samantha.alt@intel.com,
-	like.xu.linux@gmail.com,
-	chao.gao@intel.com,
-	xiong.y.zhang@linux.intel.com
-Subject: [RFC PATCH 24/41] KVM: x86/pmu: Zero out unexposed Counters/Selectors to avoid information leakage
-Date: Fri, 26 Jan 2024 16:54:27 +0800
-Message-Id: <20240126085444.324918-25-xiong.y.zhang@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="E96oKaQ/"
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
+	q=dns/txt; i=@phytec.de; t=1706259456; x=1708851456;
+	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cUQFchkQM75amrfr5RR7F6EnZDqjTOiCu1EFoQmt1uM=;
+	b=E96oKaQ/CIBfPU8Vo+MFDo6ftFshz4A7NQJbvc3zLupR6odqc/dFfjylej0nqYo6
+	RjmrWfcwXfLFDpJ/C0VTCiHGWiGhdzKUz+MkbMFxzGsczmXyc5LVgD6tTIep1THx
+	8mF2VDxPL+IbJ71iglyAKj58AEJ5cTtYD649CMkF0OU=;
+X-AuditID: ac14000a-fbefe7000000290d-ba-65b37400e067
+Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
+	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 42.F9.10509.00473B56; Fri, 26 Jan 2024 09:57:36 +0100 (CET)
+Received: from lws-moog.phytec.de (172.25.0.11) by Berlix.phytec.de
+ (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Fri, 26 Jan
+ 2024 09:57:36 +0100
+From: Yannic Moog <y.moog@phytec.de>
+Date: Fri, 26 Jan 2024 09:57:23 +0100
+Subject: [PATCH RFC for upstream 1/4] dt-bindings: display: panel-simple:
+ add ETML1010G3DRA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240126-wip-y-moog-phytec-de-upstream-pollux-lvds-v1-1-8ec5b48eec05@phytec.de>
+References: <20240126-wip-y-moog-phytec-de-upstream-pollux-lvds-v1-0-8ec5b48eec05@phytec.de>
+In-Reply-To: <20240126-wip-y-moog-phytec-de-upstream-pollux-lvds-v1-0-8ec5b48eec05@phytec.de>
+To: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+	<quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Shawn Guo
+	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP
+ Linux Team <linux-imx@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+CC: Primoz Fiser <primoz.fiser@norik.com>, <dri-devel@lists.freedesktop.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <upstream@lists.phytec.de>, Yannic
+ Moog <y.moog@phytec.de>
+X-Mailer: b4 0.12.3
+X-ClientProxiedBy: Berlix.phytec.de (172.25.0.12) To Berlix.phytec.de
+ (172.25.0.12)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUhUURiGPXfzOjR5Gyc8GikMWim4gcIhKiKCTvVDWySSTAe9qWg2jKZp
+	VK6l19yCLCcxG0XMBspxGUdcSpTUcCHTwEwbNdxyiVxSMPM6RP57vvdb3vfHx5KyScqejYiO
+	5dXRyigFI6F0dha73Cxiq3nPrDEF6visJdBC+UOAdE09BNqsyyfR87YeGn1aXmCQacAXVT42
+	UihnykQi/fggjYT1lyTqbyhi0IuftRS6n1lOowXjEEAdgolGKY+ekCi9qc0SbRj0FKpYqwVo
+	qsYWrTUUU6jmRz6NsuYPorRhn+N2WFesA7hppYTCRs1XS6yvzGTw8GAjg4s7z+HRrPcEri67
+	h3Oz0mi8uvyGxlXz9QTO3fDE+Y13cVnBAIOrP9zGv/QOflyA5EgoHxURx6s9jgVLwlMMfYyq
+	kL3Vkd8FksA3RgAsCzlv2KWLF4CElXGlBMxbbKbNhQnAlpZpIAArluGc4PjUCC0yxTnDyXEt
+	IbINFwhzhTxKZCm3B3YWTlDiUZJzga8bPESZ5ByhYa6INI9cgd1137d9ZVssjAeJaLV1JTnV
+	TXSVcwIDZ/XdjHl1CUCtwVlkyNnAB9qhbVcZtx9O9WZbmnVHWNAzS5rZH9YuGYg8INPsCKT5
+	H0izI1AJICuB7HpESCSvjoh0V4UnxPIh7qG8HojPILeQ1IOcItwKCBa0AsiSCrnU26eKl0lD
+	lQmJvPpGkPpmFB/TCvaxlMJW+irjAi/jwpSxfCTPq3j1vy7BWtknAdWZDGEw6qpXTfDZlXfT
+	lR7h/U8NWjmVBPvGGvyDv8A/tZu/k06vppeXBs+v75VfHpWOHkh1iN89M3E08861SJ8N+u1h
+	bE20Z190PTn3UbJ0wsHePzk3MPTQM796VYXbTJy0t8ZIjKo1i4UB1gu6Ed/2S+ebBCe5S6I+
+	rPmUaUZBxYQrvVxJdYzyL6ZfVfD6AgAA
 
-From: Mingwei Zhang <mizhang@google.com>
+Add Emerging Display Technology Corp. etml1010g3dra 10.1" LCD-TFT LVDS
+panel compatible string.
 
-Zero out unexposed counters/selectors because even though KVM intercepts
-all accesses to unexposed PMU MSRs, it does pass through RDPMC instruction
-which allows guest to read all GP counters and fixed counters. So, zero out
-unexposed counter values which might contain critical information for the
-host.
-
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Yannic Moog <y.moog@phytec.de>
 ---
- arch/x86/kvm/vmx/pmu_intel.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ Documentation/devicetree/bindings/display/panel/panel-simple.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index f79bebe7093d..4b4da7f17895 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -895,11 +895,27 @@ static void intel_restore_pmu_context(struct kvm_vcpu *vcpu)
- 		wrmsrl(MSR_ARCH_PERFMON_EVENTSEL0 + i, pmc->eventsel);
- 	}
- 
-+	/*
-+	 * Zero out unexposed GP counters/selectors to avoid information leakage
-+	 * since passthrough PMU does not intercept RDPMC.
-+	 */
-+	for (i = pmu->nr_arch_gp_counters; i < kvm_pmu_cap.num_counters_gp; i++) {
-+		wrmsrl(MSR_IA32_PMC0 + i, 0);
-+		wrmsrl(MSR_ARCH_PERFMON_EVENTSEL0 + i, 0);
-+	}
-+
- 	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
- 	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
- 		pmc = &pmu->fixed_counters[i];
- 		wrmsrl(MSR_CORE_PERF_FIXED_CTR0 + i, pmc->counter);
- 	}
-+
-+	/*
-+	 * Zero out unexposed fixed counters to avoid information leakage
-+	 * since passthrough PMU does not intercept RDPMC.
-+	 */
-+	for (i = pmu->nr_arch_fixed_counters; i < kvm_pmu_cap.num_counters_fixed; i++)
-+		wrmsrl(MSR_CORE_PERF_FIXED_CTR0 + i, 0);
- }
- 
- struct kvm_pmu_ops intel_pmu_ops __initdata = {
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 11422af3477e..b6bbdb3dd2b2 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -139,6 +139,8 @@ properties:
+       - edt,etm0700g0edh6
+         # Emerging Display Technology Corp. LVDS WSVGA TFT Display with capacitive touch
+       - edt,etml0700y5dha
++        # Emerging Display Technology Corp. 10.1" LVDS WXGA TFT Display with capacitive touch
++      - edt,etml1010g3dra
+         # Emerging Display Technology Corp. 5.7" VGA TFT LCD panel with
+         # capacitive touch
+       - edt,etmv570g2dhu
+
 -- 
 2.34.1
 
