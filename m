@@ -1,230 +1,349 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9044683
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 02:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860704687;
+	Fri, 26 Jan 2024 02:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706234968; cv=none; b=kwxt8EGKHrNRZjEY+mFtKOk0unfnFeXIGkZvhUlnock9sPQpmrkMsfKjSKW7bZjcc1abO8P1ibdBIiOnH1U3i1Posnddm31nIesdJSbb2k3mbIMAeFzRs4DMnrddTawx6sciERdMsjpVV9Z9up7tawka9avmSjBzvgmfRusiLoY=
+	t=1706235020; cv=none; b=oyZ/Ep1s5qcBWNXSGIrEF+B2jy0ukso+5MAExzXs0OhGQ+ALEIJ4kMiPTgJpCDHYfhKPKm6azWX2h7yQ3EJQ/1Z2Wg1vhhxIcM7iixzJYNe75I8KTo0aWXblJIkfS/KfYX0l6brLd8LvpFgj6pDPfpZ/8BTajNaAJ8omC+gBMKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706234968; c=relaxed/simple;
-	bh=gKSsN1jIW1mdBnpWSvKhtasAeERdX0dQlnV/an3+1fA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ktwkV+GP4fz+VSM8lIKTdvvLFgc0ibtPCmP1NVS4vCSg5BoXmisVojrnedADZYOeIQpzmQmKyHVeNwz0GIGP4KRGd0PiD2y66XPT3cjWXqTmZQSQkJAVPV2UIryspm1uzkRQtukbvGMgbr+bXFCawW5ygf4AXbyjvjEx4BIS++c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SpAOtV/x; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706235020; c=relaxed/simple;
+	bh=6v2FN2p81kidGMFBYwnq5KT+TLDFlAZQmj4CY+00aGQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m/NYumyNUI8cmt425lRYFIAAySCMbGNAqos2T7PDygFCOFIaxavrR0UMEgO8hZPsyPSnIRqKFg5YpfHhKkYD6erYO6UYFzl92KsBA9npxLUlwAlRd/zJStsgbn0cz4K52IdIcYAO/slPzAtaFYsYRCgHjoviyIdshGu/1RjGmK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFcBfBg2; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SpAOtV/x"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42a7765511bso57081cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 18:09:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFcBfBg2"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d731314e67so31104495ad.1;
+        Thu, 25 Jan 2024 18:10:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706234965; x=1706839765; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5amz6Dx9uklFZzeQD+cVMfgm94Iu/oKxh8ZpkE1jLY=;
-        b=SpAOtV/xOdNxD62v4vVWdHT0agAiNJ3uviHtBniaPldIvpCNdJzK7HJUfYL56UDGnQ
-         WBolz3K0MXv65cnWbQVbN/8fmdQnFm2KZJRlEP3YOkNOE0wRpo5JSxH5dskFAULAjB9i
-         HZE7ICaj90L8dyHdKtTtKk/pRT6k5BSiDFnxK85mDILtT5FB3zAiidiXS4YC7wY8Wo8p
-         6VhkInjWWSZm6nlb3Wi1d0l9Sb6OBY4i5N7YIVqU3SE6G/OKN8K4jGQVLoC3Drh8pDOk
-         BbnoSRdyVPILk9QFu3bvQcZqbCVODUnklV3O1Iv60AxCLUJ5HOhtEcCKTtQ/wi31u5dF
-         l9EQ==
+        d=gmail.com; s=20230601; t=1706235018; x=1706839818; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r8B1O00SdeuKEg/sH/EZDUoyazytZxHGS8kZbS7zUUA=;
+        b=CFcBfBg2RHXUQ24Ha+IBIj2b40/u4XexcChNshKdX1/CnPF0f/DbJoPtgcZjT6Kb3C
+         oXTOBBjRc7XbbIJpI5xY8Uux6ZM9MGE6r2DzROEj6e8z6WTSYJ5hTmiQBIxQO3KjuQja
+         PjLgiJGMVmLji4jqOZ2HUUTRRGGbJK6vtNZwOQgwpXgr+z5GkxZswF/P+1EEvFWKbGDd
+         klSaISDzwWkiDuGBY7SpwDooQMXks0OOpLlzVAKZnbv/Q0U/iK+ROd/noCSXnWKIyxG+
+         /rKNQ7LtQiEFM6UJHnxkAZuOueZ6S1Q05BW4jOIexCm4cIeOAMHsRx6U+r13XK6LFvET
+         KMTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706234965; x=1706839765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/5amz6Dx9uklFZzeQD+cVMfgm94Iu/oKxh8ZpkE1jLY=;
-        b=MnZIZWISJ9iYyJ5tZ+DYZi7ghpMwWBc0p22RZZ699XshPArbdIxhbkORsUz6Vk/rqL
-         1sV43+KSvYKdpCe5ahb+onB2i/3T+JUZubjKBnFE3TZkD+rBLbSCXIdu/tkj8V2EY+Ce
-         5XILaAloICEUNEUNxL/DvGWGOo+aYtjw7gu4mJHjCuX1yi53xPadVL5oELiQJpWpJZV9
-         PcJhL9t4O5xeU64EUwn/0aa+xBNbJDgvSyiXgde63tKcFXO1s7WBrCzbgdsXrrEH0SXr
-         5xcIOtS7LaxfgR6X8JRtWgUar0MyIXbBOtJGISm1m0JtbtvWspuhs1SvzN+KhlR0fQ+v
-         32Yw==
-X-Gm-Message-State: AOJu0YyAE7ZAsb5AH65iIIFTz50Vb3B/kdkJrxE/n46dg3onGcAX0pKJ
-	9yqpR84F+xjyb14XUXkZtAJXil4hs1V+nmKW83nXOmdi01sco7txOF5X+76jhDBba64+oUVYLq3
-	GQuwEIelWvqP2CuHjaxzd36+Ep8lkCSIhGbzRTIZZy9Zvp8CI4+TXw8o=
-X-Google-Smtp-Source: AGHT+IHCJHF25X2TEl/aPytP4xDfa74efG9D09U3G7tYM1h+/qwluhQ9njKJ7jvXENSBw9FeP3k9Uly/jb09iOo9nTw=
-X-Received: by 2002:a05:622a:1dc9:b0:42a:31d1:e4d5 with SMTP id
- bn9-20020a05622a1dc900b0042a31d1e4d5mr79311qtb.7.1706234964614; Thu, 25 Jan
- 2024 18:09:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706235018; x=1706839818;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r8B1O00SdeuKEg/sH/EZDUoyazytZxHGS8kZbS7zUUA=;
+        b=qVyZqVXxqp0ug5nb02q3r+BmxywLB9bNKCuAIDTMH2VCzOEYsr9S+mtgfmvBdrrCmi
+         Dz3vq6a1ULqInh0Ra3hyQnVj7S8npRKEa2ym+h0mjJJ2CSGLBUo6BvoYA6LJgfE6uZAG
+         TG5zk6ekPI30Ytgp8ghGF3MXLsizkCoCyi6dYucPs1z8XqirkbaeznnwO9a/cQBO0SeS
+         n5eXvjsos+AZG/77XzbTieErOy3fTniajiwwaGpBjij2NIRD4IhVsmD9u12LvP56XNqb
+         uJp3t+nGaSVuAqOwHoeKeJuNhHCsYxGt0mQS9KEoQ4l25aNomg2Aam2BHZxEBiwyl1Ke
+         7lzQ==
+X-Gm-Message-State: AOJu0YzMUCC9SHABqHlqH+U4O0st8d+QvSUVZn1AfNSIvxfSu4yzdrYl
+	f3kZX1IwiWUeGUY0z+v55zpKlY3QKHi721ibrSY3lndBu4dhkjpq
+X-Google-Smtp-Source: AGHT+IEnfqve9u7cQMYFpRFk7ZdEbzNkrVyrNDi2hpBieIyDeV3JIlXOErueU5u3CfvIRuzgiFmCzA==
+X-Received: by 2002:a17:903:191:b0:1d4:e084:571e with SMTP id z17-20020a170903019100b001d4e084571emr713097plg.129.1706235017658;
+        Thu, 25 Jan 2024 18:10:17 -0800 (PST)
+Received: from ocxma-dut.. ([153.126.233.62])
+        by smtp.gmail.com with ESMTPSA id j3-20020a170902f24300b001d6f584ee1esm157288plc.34.2024.01.25.18.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 18:10:17 -0800 (PST)
+From: Takeru Hayasaka <hayatake396@gmail.com>
+To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mailhol.vincent@wanadoo.fr,
+	vladimir.oltean@nxp.com,
+	laforge@gnumonks.org,
+	Takeru Hayasaka <hayatake396@gmail.com>
+Subject: [PATCH net-next v3] ethtool: ice: Support for RSS settings to GTP from ethtool
+Date: Fri, 26 Jan 2024 02:09:49 +0000
+Message-Id: <20240126020949.758175-1-hayatake396@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124084636.1415652-1-xu.yang_2@nxp.com> <CAGETcx9h8gA8EenyR0B0OPa23uw_8dk-Kft8c8+F3StfpyMtaw@mail.gmail.com>
- <DU2PR04MB8822047A07680596415A61358C7A2@DU2PR04MB8822.eurprd04.prod.outlook.com>
-In-Reply-To: <DU2PR04MB8822047A07680596415A61358C7A2@DU2PR04MB8822.eurprd04.prod.outlook.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Thu, 25 Jan 2024 18:08:47 -0800
-Message-ID: <CAGETcx8HeseChCoOzOkUNf_LyXbVqgyisuHy_9U=PcP74NwV4A@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH] driver core: improve cycle detection on fwnode graph
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "rafael@kernel.org" <rafael@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 8:21=E2=80=AFPM Xu Yang <xu.yang_2@nxp.com> wrote:
->
-> Hi Saravana,
->
-> >
-> > On Wed, Jan 24, 2024 at 12:40=E2=80=AFAM Xu Yang <xu.yang_2@nxp.com> wr=
-ote:
-> > >
-> > > Currently, cycle detection on fwnode graph is still defective.
-> > > Such as fwnode link A.EP->B is not marked as cycle in below case:
-> > >
-> > >                  +-----+
-> > >                  |     |
-> > >  +-----+         |  +--|
-> > >  |     |<-----------|EP|
-> > >  |--+  |         |  +--|
-> > >  |EP|----------->|     |
-> > >  |--+  |         |  B  |
-> > >  |     |         +-----+
-> > >  |  A  |            ^
-> > >  +-----+   +-----+  |
-> > >     |      |     |  |
-> > >     +----->|  C  |--+
-> > >            |     |
-> > >            +-----+
-> > >
-> > > 1. Node C is populated as device C. But nodes A and B are still not
-> > >    populated. When do cycle detection with device C, no cycle is foun=
-d.
-> > > 2. Node B is populated as device B. When do cycle detection with devi=
-ce
-> > >    B, it found a link cycle B.EP->A->C->B. Then, fwnode link B.EP->A,
-> > >    A->C and C->B are marked as cycle. The fwnode link C->B is convert=
-ed
-> > >    to device link too.
-> > > 3. Node A is populated as device A. When do cycle detection with devi=
-ce
-> > >    A, it find A->C is marked as cycle and convert it to device link. =
-It
-> > >    also find B.EP->A is marked as cycle but will not convert it to de=
-vice
-> > >    link since node B.EP is not a device.
-> >
-> > Your example doesn't sound correct (I'l explain further down) and it
-> > is vague. Need a couple of clarifications first.
-> >
-> > 1. What is the ---> representing? Is it references in DT or fwnode
-> > links? Which end of the arrow is the consumer? The tail or the pointy
-> > end? I typically use the format consumer --> supplier.
->
-> Sorry, I represent "-->" as "supplier --> consumer" and it's a fwnode lin=
-k.
->
-> >
-> > 2. You say "link" sometimes but it's not clear if you mean fwnode
-> > links or device links. So please be explicit about it.
->
-> It=E2=80=99s fwnode link by default.
->
-> >
-> > 3. Your statement "Such as fwnode link A.EP->B is not marked as cycle"
-> > doesn't sound correct. When remote-endpoint properties are parsed, the
-> > fwnode is created from the device node with compatible property to the
-> > destination. So A.EP ----> B can't exist if I assume the consumer -->
-> > supplier format.
->
-> The fwnode is not created from the device node with compatible property
-> since below commit. The endpoint node is the supplier. No, you can see my
-> case later.
->
-> 4a032827daa8 (of: property: Simplify of_link_to_phandle(), 2023-02-06)
+This is a patch that enables RSS functionality for GTP packets using
+ethtool.
+A user can include her TEID and make RSS work for GTP-U over IPv4 by
+doing the following:
+`ethtool -N ens3 rx-flow-hash gtpu4 sde`
+In addition to gtpu(4|6), we now support gtpc(4|6),gtpc(4|6)t,gtpu(4|6)e,
+gtpu(4|6)u, and gtpu(4|6)d.
 
-I think my confusion was because you use ----> in the opposite way to
-what I have used for all my fw_devlink and cycle detection patches.
+gtpc(4|6): Used for GTP-C in IPv4 and IPv6, where the GTP header format does not include a TEID (Tunnel Endpoint Identifier).
+gtpc(4|6)t: Used for GTP-C in IPv4 and IPv6, with a GTP header format that includes a TEID.
+gtpu(4|6): Used for GTP-U in both IPv4 and IPv6 scenarios.
+gtpu(4|6)e: Used for GTP-U with extended headers in both IPv4 and IPv6.
+gtpu(4|6)u: Used when the PSC (Packet Service Charge) in the GTP-U extended header includes Uplink, applicable to both IPv4 and IPv6.
+gtpu(4|6)d: Used when the PSC in the GTP-U extended header includes Downlink, for both IPv4 and IPv6.
 
-The part I was referring to is related to how driver/of/property.c has
-node_not_dev set to true for pasrse_remote_endpoint.
+GTP generates a flow that includes an ID called TEID to identify the
+tunnel. This tunnel is created for each UE (User Equipment).
+By performing RSS based on this flow, it is possible to apply RSS for
+each communication unit from the UE.
+Without this, RSS would only be effective within the range of IP
+addresses.
+For instance, the PGW can only perform RSS within the IP range of the
+SGW.
+problematic from a load distribution perspective, especially if there's
+a bias in the terminals connected to a particular base station.
+This case can be solved by using this patch
 
-> >
-> > 4. Has this actually caused an issue? If so, what is it? And give me
-> > an example in an upstream DT.
->
-> Yes, there are two cycles (B.EP->A->C->B and B.EP->A/A.EP->B) in above
-> example. But only one cycle (B.EP->A->C->B) is recognized.
->
-> My real case as below:
+Signed-off-by: Takeru Hayasaka <hayatake396@gmail.com>
+---
+Sorry for the delay; I've been swamped with other work and fell behind. Since Harald has been supportive of the basic structure in the previous patch review, I've kept it largely unchanged but added some comments and documentation. I would appreciate it if you could review it again.
 
-I think you still missed some details because usb3_phy0 seems
-irrelevant here. Can you just point me to the dts (not dtsi) file for
-this platform in the kernel tree?
-Also, can you change all the pr_debug and dev_dbg in
-drivers/base/core.c to their info equivalent and boot up the system
-and give me the logs? That'll be a lot easier for me to understand
-your case.
+ .../device_drivers/ethernet/intel/ice.rst     | 23 +++++++---
+ drivers/net/ethernet/intel/ice/ice_ethtool.c  | 42 +++++++++++++++++++
+ drivers/net/ethernet/intel/ice/ice_lib.c      | 20 +++++++--
+ include/uapi/linux/ethtool.h                  | 37 +++++++++++++---
+ 4 files changed, 108 insertions(+), 14 deletions(-)
 
-> ---
-> tcpc@50 {
->     compatible =3D "nxp,ptn5110";
->     ...
->
->     port {
->         typec_dr_sw: endpoint {
->             remote-endpoint =3D <&usb3_drd_sw>;
->         };
->     };
-> };
->
-> usb@38100000 {
->     compatible =3D "snps,dwc3";
->     phys =3D <&usb3_phy0>, <&usb3_phy0>;
->     ...
->
->     port {
->         usb3_drd_sw: endpoint {
->             remote-endpoint =3D <&typec_dr_sw>;
->         };
->     };
-> };
->
-> usb3_phy0: usb-phy@381f0040 {
->     compatible =3D "fsl,imx8mp-usb-phy";
->
->     ...
-> };
->
-> And fwnode links are created as below:
-> ---
-> [    0.059553] /soc@0/bus@30800000/i2c@30a30000/tcpc@50 Linked as a fwnod=
-e consumer to /soc@0/usb@32f10100/usb@38100000/port/endpoint
-> [    0.066365] /soc@0/usb-phy@381f0040 Linked as a fwnode consumer to /so=
-c@0/bus@30800000/i2c@30a30000/tcpc@50
-> [    0.066624] /soc@0/usb@32f10100/usb@38100000 Linked as a fwnode consum=
-er to /soc@0/usb-phy@381f0040
-> [    0.066702] /soc@0/usb@32f10100/usb@38100000 Linked as a fwnode consum=
-er to /soc@0/bus@30800000/i2c@30a30000/tcpc@50/port/endpoint
->
+diff --git a/Documentation/networking/device_drivers/ethernet/intel/ice.rst b/Documentation/networking/device_drivers/ethernet/intel/ice.rst
+index e4d065c55ea8..4b32e510ecdb 100644
+--- a/Documentation/networking/device_drivers/ethernet/intel/ice.rst
++++ b/Documentation/networking/device_drivers/ethernet/intel/ice.rst
+@@ -368,16 +368,29 @@ more options for Receive Side Scaling (RSS) hash byte configuration.
+   # ethtool -N <ethX> rx-flow-hash <type> <option>
+ 
+   Where <type> is:
+-    tcp4  signifying TCP over IPv4
+-    udp4  signifying UDP over IPv4
+-    tcp6  signifying TCP over IPv6
+-    udp6  signifying UDP over IPv6
++    tcp4    signifying TCP over IPv4
++    udp4    signifying UDP over IPv4
++    gtpc4   signifying GTP-C over IPv4
++    gtpc4t  signifying GTP-C (include TEID) over IPv4
++    gtpu4   signifying GTP-U over IPV4
++    gtpu4e  signifying GTP-U and Extension Header over IPV4
++    gtpu4u  signifying GTP-U PSC Uplink over IPV4
++    gtpu4d  signifying GTP-U PSC Downlink over IPV4
++    tcp6    signifying TCP over IPv6
++    udp6    signifying UDP over IPv6
++    gtpc6   signifying GTP-C over IPv6
++    gtpc6t  signifying GTP-C (include TEID) over IPv6
++    gtpu6   signifying GTP-U over IPV6
++    gtpu6e  signifying GTP-U and Extension Header over IPV6
++    gtpu6u  signifying GTP-U PSC Uplink over IPV6
++    gtpu6d  signifying GTP-U PSC Downlink over IPV6
++
+   And <option> is one or more of:
+     s     Hash on the IP source address of the Rx packet.
+     d     Hash on the IP destination address of the Rx packet.
+     f     Hash on bytes 0 and 1 of the Layer 4 header of the Rx packet.
+     n     Hash on bytes 2 and 3 of the Layer 4 header of the Rx packet.
+-
++    e     Hash on GTP Packet on TEID(4byte) of the Rx packet.
+ 
+ Accelerated Receive Flow Steering (aRFS)
+ ----------------------------------------
+diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+index eaa2b993cb48..a9ba300570b9 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
++++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+@@ -2494,6 +2494,9 @@ static u32 ice_parse_hdrs(struct ethtool_rxnfc *nfc)
+ 		hdrs |= ICE_FLOW_SEG_HDR_GTPU_IP | ICE_FLOW_SEG_HDR_IPV4;
+ 		break;
+ 	case GTPC_V4_FLOW:
++		hdrs |= ICE_FLOW_SEG_HDR_GTPC | ICE_FLOW_SEG_HDR_IPV4;
++		break;
++	case GTPC_TEID_V4_FLOW:
+ 		hdrs |= ICE_FLOW_SEG_HDR_GTPC_TEID | ICE_FLOW_SEG_HDR_IPV4;
+ 		break;
+ 	case GTPU_EH_V4_FLOW:
+@@ -2518,6 +2521,9 @@ static u32 ice_parse_hdrs(struct ethtool_rxnfc *nfc)
+ 		hdrs |= ICE_FLOW_SEG_HDR_GTPU_IP | ICE_FLOW_SEG_HDR_IPV6;
+ 		break;
+ 	case GTPC_V6_FLOW:
++		hdrs |= ICE_FLOW_SEG_HDR_GTPC | ICE_FLOW_SEG_HDR_IPV6;
++		break;
++	case GTPC_TEID_V6_FLOW:
+ 		hdrs |= ICE_FLOW_SEG_HDR_GTPC_TEID | ICE_FLOW_SEG_HDR_IPV6;
+ 		break;
+ 	case GTPU_EH_V6_FLOW:
+@@ -2573,6 +2579,7 @@ static u64 ice_parse_hash_flds(struct ethtool_rxnfc *nfc)
+ 		case SCTP_V4_FLOW:
+ 		case GTPU_V4_FLOW:
+ 		case GTPC_V4_FLOW:
++		case GTPC_TEID_V4_FLOW:
+ 		case GTPU_EH_V4_FLOW:
+ 		case GTPU_UL_V4_FLOW:
+ 		case GTPU_DL_V4_FLOW:
+@@ -2586,6 +2593,7 @@ static u64 ice_parse_hash_flds(struct ethtool_rxnfc *nfc)
+ 		case SCTP_V6_FLOW:
+ 		case GTPU_V6_FLOW:
+ 		case GTPC_V6_FLOW:
++		case GTPC_TEID_V6_FLOW:
+ 		case GTPU_EH_V6_FLOW:
+ 		case GTPU_UL_V6_FLOW:
+ 		case GTPU_DL_V6_FLOW:
+@@ -2642,6 +2650,33 @@ static u64 ice_parse_hash_flds(struct ethtool_rxnfc *nfc)
+ 		}
+ 	}
+ 
++	if (nfc->data & RXH_GTP_TEID) {
++		switch (nfc->flow_type) {
++		case GTPC_TEID_V4_FLOW:
++		case GTPC_TEID_V6_FLOW:
++			hfld |= ICE_FLOW_HASH_FLD_GTPC_TEID;
++			break;
++		case GTPU_V4_FLOW:
++		case GTPU_V6_FLOW:
++			hfld |= ICE_FLOW_HASH_FLD_GTPU_IP_TEID;
++			break;
++		case GTPU_EH_V4_FLOW:
++		case GTPU_EH_V6_FLOW:
++			hfld |= ICE_FLOW_HASH_FLD_GTPU_EH_TEID;
++			break;
++		case GTPU_UL_V4_FLOW:
++		case GTPU_UL_V6_FLOW:
++			hfld |= ICE_FLOW_HASH_FLD_GTPU_UP_TEID;
++			break;
++		case GTPU_DL_V4_FLOW:
++		case GTPU_DL_V6_FLOW:
++			hfld |= ICE_FLOW_HASH_FLD_GTPU_DWN_TEID;
++			break;
++		default:
++			break;
++		}
++	}
++
+ 	switch (nfc->flow_type) {
+ 	case GTPC_V4_FLOW:
+ 	case GTPC_V6_FLOW:
+@@ -2777,6 +2812,13 @@ ice_get_rss_hash_opt(struct ice_vsi *vsi, struct ethtool_rxnfc *nfc)
+ 		hash_flds & ICE_FLOW_HASH_FLD_GTPU_UP_TEID ||
+ 		hash_flds & ICE_FLOW_HASH_FLD_GTPU_DWN_TEID)
+ 		nfc->data |= (u64)RXH_L4_B_2_3;
++
++	if (hash_flds & ICE_FLOW_HASH_FLD_GTPC_TEID ||
++		hash_flds & ICE_FLOW_HASH_FLD_GTPU_IP_TEID ||
++		hash_flds & ICE_FLOW_HASH_FLD_GTPU_EH_TEID ||
++		hash_flds & ICE_FLOW_HASH_FLD_GTPU_UP_TEID ||
++		hash_flds & ICE_FLOW_HASH_FLD_GTPU_DWN_TEID)
++		nfc->data |= (u64)RXH_GTP_TEID;
+ }
+ 
+ /**
+diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
+index 6253d8a3fea4..d9b111e09fc7 100644
+--- a/drivers/net/ethernet/intel/ice/ice_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_lib.c
+@@ -1667,10 +1667,17 @@ static void ice_vsi_set_rss_flow_fld(struct ice_vsi *vsi)
+ 			vsi_num, status);
+ 
+ 	/* configure RSS for gtpc4 with input set IPv4 src/dst */
++	status = ice_add_rss_cfg(hw, vsi_handle, ICE_FLOW_HASH_IPV4,
++				 ICE_FLOW_SEG_HDR_GTPC | ICE_FLOW_SEG_HDR_IPV4);
++	if (status)
++		dev_dbg(dev, "ice_add_rss_cfg failed for gtpc4 flow, vsi = %d, error = %d\n",
++			vsi_num, status);
++
++	/* configure RSS for gtpc4t with input set IPv4 src/dst */
+ 	status = ice_add_rss_cfg(hw, vsi_handle, ICE_FLOW_HASH_GTP_IPV4_TEID,
+ 				 ICE_FLOW_SEG_HDR_GTPC_TEID | ICE_FLOW_SEG_HDR_IPV4);
+ 	if (status)
+-		dev_dbg(dev, "ice_add_rss_cfg failed for gtpc4 flow, vsi = %d, error = %d\n",
++		dev_dbg(dev, "ice_add_rss_cfg failed for gtpc4t flow, vsi = %d, error = %d\n",
+ 			vsi_num, status);
+ 
+ 	/* configure RSS for gtpu4 with input set IPv4 src/dst */
+@@ -1722,11 +1729,18 @@ static void ice_vsi_set_rss_flow_fld(struct ice_vsi *vsi)
+ 		dev_dbg(dev, "ice_add_rss_cfg failed for sctp6 flow, vsi = %d, error = %d\n",
+ 			vsi_num, status);
+ 
+-	/* configure RSS for gtpc6 with input set IPv6 src/dst */
++	/* configure RSS for gtpc6 with input set IPv4 src/dst */
++	status = ice_add_rss_cfg(hw, vsi_handle, ICE_FLOW_HASH_IPV6,
++				 ICE_FLOW_SEG_HDR_GTPC | ICE_FLOW_SEG_HDR_IPV6);
++	if (status)
++		dev_dbg(dev, "ice_add_rss_cfg failed for gtpc4 flow, vsi = %d, error = %d\n",
++			vsi_num, status);
++
++	/* configure RSS for gtpc6t with input set IPv6 src/dst */
+ 	status = ice_add_rss_cfg(hw, vsi_handle, ICE_FLOW_HASH_GTP_IPV6_TEID,
+ 				 ICE_FLOW_SEG_HDR_GTPC_TEID | ICE_FLOW_SEG_HDR_IPV6);
+ 	if (status)
+-		dev_dbg(dev, "ice_add_rss_cfg failed for gtpc6 flow, vsi = %d, error = %d\n",
++		dev_dbg(dev, "ice_add_rss_cfg failed for gtpc6t flow, vsi = %d, error = %d\n",
+ 			vsi_num, status);
+ 
+ 	/* configure RSS for gtpu6 with input set IPv6 src/dst */
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index f3af2a78f7dd..e79ad8faada3 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -2011,16 +2011,40 @@ static inline int ethtool_validate_duplex(__u8 duplex)
+ #define	IPV4_FLOW	0x10	/* hash only */
+ #define	IPV6_FLOW	0x11	/* hash only */
+ #define	ETHER_FLOW	0x12	/* spec only (ether_spec) */
++
++// Used for GTP-U IPv4 and IPv6.
++// The format of GTP packets only includes elements such as TEID and GTP version.
++// It is primarily intended for data communication of the User Equipment (UE).
+ #define GTPU_V4_FLOW 0x13	/* hash only */
+ #define GTPU_V6_FLOW 0x14	/* hash only */
++// Use for GTP-C IPv4 and v6.
++// The format of these GTP packets does not include TEID.
++// Primarily expected to be used for communication to create sessions for UE data communication,
++// commonly referred to as CSR (Create Session Request).
+ #define GTPC_V4_FLOW 0x15	/* hash only */
+ #define GTPC_V6_FLOW 0x16	/* hash only */
+-#define GTPU_EH_V4_FLOW 0x17	/* hash only */
+-#define GTPU_EH_V6_FLOW 0x18	/* hash only */
+-#define GTPU_UL_V4_FLOW 0x19	/* hash only */
+-#define GTPU_UL_V6_FLOW 0x20	/* hash only */
+-#define GTPU_DL_V4_FLOW 0x21	/* hash only */
+-#define GTPU_DL_V6_FLOW 0x22	/* hash only */
++// Use for GTP-C IPv4 and v6.
++// Unlike GTPC_V4_FLOW, the format of these GTP packets includes TEID.
++// After session creation, it becomes this packet.
++// This is mainly used for requests to realize UE handover.
++#define GTPC_TEID_V4_FLOW 0x17	/* hash only */
++#define GTPC_TEID_V6_FLOW 0x18	/* hash only */
++// Use for GTP-U and extended headers for the PDU session container.
++// The format of these GTP packets includes TEID and QFI.
++// In 5G communication using UPF (User Plane Function),
++// data communication with this extended header is performed.
++#define GTPU_EH_V4_FLOW 0x19	/* hash only */
++#define GTPU_EH_V6_FLOW 0x1a	/* hash only */
++// Use for GTP-U IPv4 and v6 PDU session container extended headers.
++// The difference from before is distinguishing based on the PDU session container.
++// There are differences in the data included based on DL (Downlink)/UL (Uplink),
++// and can be used to distinguish packets.
++// The functions described so far are useful when you want to handle data communication
++// from the mobile network in UPF, PGW, etc.
++#define GTPU_UL_V4_FLOW 0x1b	/* hash only */
++#define GTPU_UL_V6_FLOW 0x1c	/* hash only */
++#define GTPU_DL_V4_FLOW 0x1d	/* hash only */
++#define GTPU_DL_V6_FLOW 0x1e	/* hash only */
+ /* Flag to enable additional fields in struct ethtool_rx_flow_spec */
+ #define	FLOW_EXT	0x80000000
+ #define	FLOW_MAC_EXT	0x40000000
+@@ -2035,6 +2059,7 @@ static inline int ethtool_validate_duplex(__u8 duplex)
+ #define	RXH_IP_DST	(1 << 5)
+ #define	RXH_L4_B_0_1	(1 << 6) /* src port in case of TCP/UDP/SCTP */
+ #define	RXH_L4_B_2_3	(1 << 7) /* dst port in case of TCP/UDP/SCTP */
++#define	RXH_GTP_TEID	(1 << 8) /* teid in case of GTP */
+ #define	RXH_DISCARD	(1 << 31)
+ 
+ #define	RX_CLS_FLOW_DISC	0xffffffffffffffffULL
+-- 
+2.34.1
 
-So let's say I see your logs and what you say is true, but you still
-aren't telling me what's the problem you have because of this
-incorrect cycle detection. What's breaking? Is something not allowed
-to probe? If so, which one? What's supposed to be the right order of
-probes?
-
-> >
-> > Btw, I definitely don't anticipate ACKing this patch because the cycle
-> > detection code shouldn't be having property specific logic. It's not
-> > even DT specific in this place. If there is an issue and it needs
-> > fixing, it should be where the fwnode links are created. But then
-> > again I'm not sure what the actual symptom we are trying to solve is.
->
-> Sorry for the inconvenience. I saw that you push some patches about fwnod=
-e
-> link and device link handling, so I think you may understand this issue
-> well and give some suggestions.
-
-No worries at all. Thanks for reporting the issue and thanks for
-trying to fix it.
-
--Saravana
