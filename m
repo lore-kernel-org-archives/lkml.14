@@ -1,167 +1,110 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2371E87E;
-	Fri, 26 Jan 2024 16:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7047A1DDF2
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706286342; cv=none; b=LTRMlcMZK/4PCsUZug+D/lLmFcfqL0t+GLrEb+L621oedWJR1bN7EJfDfzXtLfWD4X7x2IZnl+HlmU1RuWiCUW17Y39pnuUfmLrHSbu0/iAaBXXlrSDLW2Idgstz/W7/AMYs5OrmFr35j0P1u82hBizsLgrvEWcUuwksLM+8o/8=
+	t=1706286350; cv=none; b=jzOU4U0DQ3gVV4EJatwTgiLZXpkfYUvsLU2me1K4u7px49fkbwBH3KLv6c64ETYaurY7hGO++LmyOHEpIf4ScWHERKrFcLGWgUIganuHGDd5tNDZH2GnzbxGyLsY0l+Og/q7b+CT2x7Mf44hFEJkgyYreX7Q7T6JPvwCYL+92a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706286342; c=relaxed/simple;
-	bh=6z0ByeYL+pkh95bC+3RgBUcMtnqLYolkJqdVY7JSZco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X4hEwgwYfcmicWue9ZDNJlB6qU/pjbCqB7+YjFPFQFu68s6nkSrm/0xuLhEH+p6l64xLdtZKARBWeo8BDO3CnYxxfXAuTTORpTrG/KOU2+eKU2XTieptnw4M3+rgrPzrjAlW897aFpBvqZaNbJ/MWVRw21gcF7ouxQRi9OQabPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b=NcZxPcD9; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b="NcZxPcD9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1706286328; x=1706891128; i=timschumi@gmx.de;
-	bh=6z0ByeYL+pkh95bC+3RgBUcMtnqLYolkJqdVY7JSZco=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=NcZxPcD9lq45zJ7UxyHXRUGo3lEWgZuTCtILpfysjpanLsW8jCNfcN92N8Z9EkM4
-	 UsiIBqmLZ48gCx7AoOekCLm7HEi324GNc56qdQbnFLOPgPCjMzzU9l5Dg9TrcrZ5D
-	 xm/5FOitxD0XibtQpSeIzGZbTcS0R16q47kaHvtcBq0bh2ErLLTOBw0wXWxWUt0RP
-	 tquFo2bz5sWVKLRhE2lOIi5PDoxZeeodQYKKhb32QDBiB6klpHa3FZHfT+OeBMMzQ
-	 Q87dMo1biDPcTPq9aS2QcFRCs1u1a5qKS5OGdJZQMTiojg7GfC2Wavl6jSf+RZ8Ui
-	 B0AGAiiSeo0umJCnGQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([93.218.111.23]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1Mv31c-1rBb3H3LdI-00r3ow; Fri, 26 Jan 2024 17:25:27 +0100
-From: Tim Schumacher <timschumi@gmx.de>
-To: linux-efi@vger.kernel.org
-Cc: Tim Schumacher <timschumi@gmx.de>,
-	jk@ozlabs.org,
-	ardb@kernel.org,
-	mjg59@srcf.ucam.org,
-	pjones@redhat.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] efivarfs: Request at most 512 bytes for variable names
-Date: Fri, 26 Jan 2024 17:25:23 +0100
-Message-ID: <20240126162524.52051-1-timschumi@gmx.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123202743.1591165-1-timschumi@gmx.de>
-References: <20240123202743.1591165-1-timschumi@gmx.de>
+	s=arc-20240116; t=1706286350; c=relaxed/simple;
+	bh=usYo1qWpfr98O2uM2CcTxhxgQ9wwoLK07IN3DcRfu0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lBQ1lR9mtoSnwM113MEIC029f9/ZgLlguXBWKJu9E+Sp/xfgqlzbRL0SvusCmTPf06L4L4y8JH4vIQM7H7C4qScPEdW8KBrFj8Pvi+4N8biecpkKTj5GaKbh+/HRvZY6tmq6j+KY6PU2dVhX7KtB5hDPGBnPKtptSP3wm1Wfa4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7748C433F1;
+	Fri, 26 Jan 2024 16:25:48 +0000 (UTC)
+Date: Fri, 26 Jan 2024 11:25:51 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Kees Cook <keescook@chromium.org>,
+ linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
+ <ajay.kaher@broadcom.com>
+Subject: Re: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files
+ and directories all be the same
+Message-ID: <20240126112551.6b8c0450@gandalf.local.home>
+In-Reply-To: <20240126-wirksam-wenngleich-cd9573d8cb28@brauner>
+References: <CAMuHMdXD0weO4oku8g2du6fj-EzxGaF+0i=zrPScSXwphFAZgg@mail.gmail.com>
+	<20240122114743.7e46b7cb@gandalf.local.home>
+	<CAHk-=wiq5mr+wSb6pmtt7QqBhQo_xr7ip=yMwQ5ryWVwCyMhfg@mail.gmail.com>
+	<CAHk-=wjGxVVKvxVf=NDnMhB3=eQ_NMiEY3onG1wRAjJepig=aw@mail.gmail.com>
+	<CAHk-=wiLqJYT2GGSBhKuJS-Uq1DVq3S32oP0SwqQiATuBivxcg@mail.gmail.com>
+	<20240122144443.0f9cf5b9@gandalf.local.home>
+	<20240125-deportation-sogenannten-2d57a7ce8f81@brauner>
+	<20240125130731.3b0e2a42@gandalf.local.home>
+	<20240125130821.0a1cd3a7@gandalf.local.home>
+	<CAMuHMdU-+RmngWJwpHYPjVcaOe3NO37Cu8msLvqePdbyk8qmZA@mail.gmail.com>
+	<20240126-wirksam-wenngleich-cd9573d8cb28@brauner>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+aDdGtIfgG90q+Bt2+L0eHwS9QyS6tkSZK4Yxy7mc21bnBmtWSM
- wcCJzAzhxzpqY+C7vM7wlX+nIoeX51bx9k8VBagLN9xKUpRgPXL7mAmkEkepML9U4Xa+p1S
- lPDoNMziSXxccQ1RaG376qWx0n0KVGC37FqKPoV+hCk6Ytf02Dn00y6iy4AS5Ij0ugrlH1x
- Oxg52Ch4j+2wu+h4TkJ7A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:exu9ofekbfU=;NkVT69E2thuvsZqDmqQowaaz6co
- fZIJYQgv36qfAakhvYI10R8Gd6L/uw4eMvp3mWfupiq3eZDdg9myJ4efttIRAAF9Vg8eat808
- 2ptObyHqFQzP2GsYYNK71kGL+ppg5EeaY8VxRTtjEOpQdG1ADWmQPrExdWrn6wqaTA/1BNbdw
- dGL5miY3GLZp0ankMP6Af8no0IEUEDiNK0NxfD156GoOOnH6BUrRvi3UmZJL+KXcJCdGeLHtN
- G3hZRXnCvdid1jUUbdLupagJTHkWtSOyb4ynQ4hq2X0lshUjV5VHRZv1XeLzvS0gec2O27ZP4
- u1hG5JqLVGQ9ZZDr7Ojuq5pldDZ8i/yTG1FiFMqxDC5/vqPWEnRmCXwYaebR+7Uuy0wbj/OJb
- RhWSAA+qJtHog26hICgmZLxVX1G3Ws/Z+0+qWue/6SjUYGFfW0nF6S/MFdKonP9EI+S72fJkk
- VS6lQXV/QJBRYDBqn/CT91aHbkVdFlidPH7/x1xShq6sQ0SrtwEw3QyOLeLp66xDesvFtCHLs
- QRlWm4z57mEPDLt/ukf/oILC+lSVndhvIQLgh68WYutaAe+H7Gf584bX9SfnfBVFIfh7+X3ON
- 6UT4xg3SmVg8ChO/1SY1fyt9LACN8aN0wT90GSH07u4FgacM1R1NXEaiRaehrxyemp2sBTwyR
- pRrxa882owIbq12iJykwD9UbcJL2Swr5/PyLpmDzv58cQYI/APiNDIMoI+Ecj4UJlV1jFfi3O
- 3kBfhadWL/sY/WuJfyMec4Zoj1qgpfpHrSv+TCyO1OAdt4Z6D9B2uxkcAg38MaahZCtzyO3OF
- 3pENs4iDt8RqmbfeNJG92heOUVmKnapxQXK26/SH5kFT1UHAQ8GEMBw6frSJfVVlE+wzpn8Tk
- 97sED7aBcuTdeRTc/v6C3uFp0ePKao6WuNSBV3B6vDiYjvR9vdrFgnxsZ+HBsKtg/pnw1Q3Bl
- bsONC42BlNNJps2f6RyLXL1h9TQ=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This sidesteps a quirk in a few old (2011-ish) UEFI implementations,
-where a call to `GetNextVariableName` with a buffer size larger than 512
-bytes will always return `EFI_INVALID_PARAMETER`.
+On Fri, 26 Jan 2024 11:11:39 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-Cc: stable@vger.kernel.org # 6.1+
-Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-=2D--
-Made a patch with just the size change (and a comment / error message
-for good measure) as requested. I just hope that I don't have to come
-back in a month to find out that there is a machine that only accepts up
-to (e.g.) 256 bytes.
+> The size would be one thing. The other is that tar requires unique inode
+> numbers for all files iirc (That's why we have this whole btrfs problem
+> - let's not get into this here -  where inode numbers aren't unique and
+> are duplicated per subvolume.).
 
-One thing that I just recently noticed is that properly processing
-variables above 512 bytes in size is currently meaningless anyways,
-since the VFS layer only allows file name sizes of up to 255 bytes,
-and 512 bytes of UCS2 will end up being at least 256 bytes of
-UTF-8.
+Well, I guess that answers Linus's question about wondering if there's any
+user space program that actually cares what the inodes are for files. The
+answer is "yes" and the program is "tar".
 
-If path creation errors are decoupled from the iteration process then
-one could at least skip those entries, but the efivarfs implementation
-seems to be in no shape to handle that currently.
-=2D--
-Changes since v1 ("efivarfs: Iterate variables with increasing name buffer=
- sizes"):
+And because tar cares, I think I should fix it for tracefs even if it
+doesn't work because of size. But the size issue is a trivial fix if I just
+default it to 1 page.
 
-- Redid the logic to start with the current limit of 1024 and continuously
-  halve it until we get a successful result.
-- Added a warning line in case we find anything that is bigger than the li=
-mit.
-- Removed an outdated (or never accurate?) comment about a specification-i=
-mposed
-  length limit.
+I currently use get_next_ino(), but I can use my own version of that, and
+because each directory has a fixed number of files, I could have it be:
 
-Changes since v2 ("efivarfs: Halve name buffer size until first successful=
- response"):
+/* Copied from get_next_ino but adds allocation for multiple inodes */
+#define LAST_INO_BATCH 1024
+#define LAST_INO_MASK (~(LAST_INO_BATCH - 1))
+static DEFINE_PER_CPU(unsigned int, last_ino);
 
-- Removed all the complicated logic, only keeping the new limit, the
-  comment change, and the error message in case a big variable is found.
-=2D--
- fs/efivarfs/vars.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+unsigned int tracefs_get_next_ino(int files)
+{
+	unsigned int *p = &get_cpu_var(last_ino);
+	unsigned int res = *p;
 
-diff --git a/fs/efivarfs/vars.c b/fs/efivarfs/vars.c
-index 9e4f47808bd5..3f6385f2a4e5 100644
-=2D-- a/fs/efivarfs/vars.c
-+++ b/fs/efivarfs/vars.c
-@@ -372,7 +372,7 @@ static void dup_variable_bug(efi_char16_t *str16, efi_=
-guid_t *vendor_guid,
- int efivar_init(int (*func)(efi_char16_t *, efi_guid_t, unsigned long, vo=
-id *),
- 		void *data, bool duplicates, struct list_head *head)
- {
--	unsigned long variable_name_size =3D 1024;
-+	unsigned long variable_name_size =3D 512;
- 	efi_char16_t *variable_name;
- 	efi_status_t status;
- 	efi_guid_t vendor_guid;
-@@ -389,12 +389,13 @@ int efivar_init(int (*func)(efi_char16_t *, efi_guid=
-_t, unsigned long, void *),
- 		goto free;
+#ifdef CONFIG_SMP
+	/* Check if adding files+1 overflows */
+	if (unlikely(!res || (res & LAST_INO_MASK) != ((res + files + 1) & LAST_INO_MASK))) {
+		static atomic_t shared_last_ino;
+		int next = atomic_add_return(LAST_INO_BATCH, &shared_last_ino);
 
- 	/*
--	 * Per EFI spec, the maximum storage allocated for both
--	 * the variable name and variable data is 1024 bytes.
-+	 * A small set of old UEFI implementations reject sizes
-+	 * above a certain threshold, the lowest seen in the wild
-+	 * is 512.
- 	 */
+		res = next - LAST_INO_BATCH;
+	}
+#endif
 
- 	do {
--		variable_name_size =3D 1024;
-+		variable_name_size =3D 512;
+	res++;
+	/* get_next_ino should not provide a 0 inode number */
+	if (unlikely(!res))
+		res++;
+	*p = res + files;
+	put_cpu_var(last_ino);
+	return res;
+}
 
- 		status =3D efivar_get_next_variable(&variable_name_size,
- 						  variable_name,
-@@ -431,6 +432,11 @@ int efivar_init(int (*func)(efi_char16_t *, efi_guid_=
-t, unsigned long, void *),
- 			break;
- 		case EFI_NOT_FOUND:
- 			break;
-+		case EFI_BUFFER_TOO_SMALL:
-+			printk(KERN_WARNING "efivars: Assumed maximum name size to be 512, got=
- name of size %lu\n",
-+			       variable_name_size);
-+			status =3D EFI_NOT_FOUND;
-+			break;
- 		default:
- 			printk(KERN_WARNING "efivars: get_next_variable: status=3D%lx\n",
- 				status);
-=2D-
-2.43.0
 
+This way the eventfs inode would tell tracefs_get_next_ino() how many inode
+numbers it needs for its files and then when it creates the file inode, it
+can use:
+
+	inode->i_ino = ei->ino + idx;
+
+Where idx is the index into the d_children array of the directory's
+eventfs_inode.
+
+-- Steve
