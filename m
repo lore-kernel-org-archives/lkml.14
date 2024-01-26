@@ -1,46 +1,46 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2086.outbound.protection.outlook.com [40.107.100.86])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CD8208BD;
-	Fri, 26 Jan 2024 17:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F8B20B3D;
+	Fri, 26 Jan 2024 17:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706290996; cv=fail; b=e8Poy03pIiDblsnKcuL+XFXNNFeGic2+avxAKi//f75GG1/jmoJkq2o4B4gN/NLGFn2A5Hob/M1II4mynt7bVLdsxnYUy8L/5heftNkWkWMXZQk416v0nfNY0LKHJw1OvZPVlEX6BDyBhKGg87NskhB5SZV2Fq9xMWZcAV6Io4g=
+	t=1706290997; cv=fail; b=j+79zkI5YttEwkwkhejxLX37TGj9gVFqAYzTRTfOAGRRJ0VF/PNHysFA/AwKEE50lZy1yGxcKnUUdAAp0hyxFCbeUtffZfPi1j/IQSKC0A2r7LLVFGrT0ylWGynT+rmYbJDHUG5N81SqpSykoPQXgLdhoH+SdunuB4JxDEU1kG4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706290996; c=relaxed/simple;
-	bh=nbXDOebMxEMoAvk/jKfMqXGFruDw5Uh7NJQ7ZmUvQw8=;
+	s=arc-20240116; t=1706290997; c=relaxed/simple;
+	bh=OcihoKLnFzEjF+DoPWaTm2RPO77zkUL8IQBfQ3SxmA4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JPigCTNrfVppF47NEB82ypjq9WdIKO/eidcxyzohNUTMMk+PKNtY7DORbe3MgS7N2QfJpSzeWQ4aJwoaJxO/131i00bk/HLRQt5FwdRe+YfSKyYcxXaSXu43EyySD3UG6ja68T0LZUnqGuJsN8KsAkAtGdWuLFpaQOqvIyYHqis=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Zrh6AGUl; arc=fail smtp.client-ip=40.107.100.86
+	 MIME-Version:Content-Type; b=LM3rF7qrkbMm4y9O6fy4efM/FQAfhHMfBEyTXrGXwqV2o0TYNvbvxBO+ye6PhuCPcKw5vJwUKelecgNkMv+pjnmA6mqiJqjL7iRIcmbGG08RlqyYg9INDBfaGP2fRYOY3ScxsMiq2YZZNJ3PwOEK+jUFaejiTJYAtR1dZQj2XcU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AYnhay2l; arc=fail smtp.client-ip=40.107.223.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Zrh6AGUl"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AYnhay2l"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ArEUWOLBIzai38G/NN1dG8JbBa2FTRhZ6b2BZ1ZbEjB2foPpCEPrvnK0Zw24zGLPofCUoVAYCpyvxbOBd82spnuLwqz7qs81kXB+M+O6EDMKu38G/Be1mvJiOg5u3E2MM0dBdJ/8clriN0xr6NABtRLI4kVkNBixmoijtjhSSILGZfXN9frTqoDc5YXcPbj81B4wA9JV4mxfgPcvZ9jntspmBnfN1r2Rlk3Z4iAAb68X53T6gXYDBzW2AJ3GfufIdhpTqsqbNOksQ02s4JdUUlPPvhaUTO3NnqY/Fw+3bs5T1yKzyvDfGIk5hATm+6TPuyUh4oaMH3XW1DCwYvi9qg==
+ b=b5zcb1rurCvoSGKrN4vVnRh0aqX0gYOGkFPxvANblbcHPtNGSThIGQzXgI7t4YGHHbNdn9z2B8YfoAwVNyGT+gsUM4E3l5qVeQ9aKyNgTm7ndeAhyvVGzfd97e22UDBld1QNKiUf059M6D9lDYJdp03HSePihfwqOoboDhoGPIR7IijkzMvODOXdAbOblnzVVxXvzs45EGdFjMpSGsr4AKa+43yPBbBQucnq98EqDs0133RsRTjQ4wV7wzVh/3j5W95oGHoNEoOXdodxnLz1inNA1fr8pMIPu2RdQgqmJCfCIG36OBA/+8MEkN6t0iEwUtBarljoCnoQT7DNobU+3w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CKoOIUEnMgqqw4s8GRzKeUTAwwzf8cGWK8hq0P6QnZk=;
- b=P98Km5cjMGn4UvMeTbTnTnCGEwLXHaMNmFCPP+O+FcjdXaKlLHc2DuvvhicN3hMT4UmL1sCZD5umc7jsptuwXl9234SI6g1NZHyMUeWzBFnuwPI/u2W7LIrwvS/9QZJzX8XfxU9HSF76izIq38VQ2D92qO+UBBOOz/EhOmWuMZ9ezzYkHSQqdA+RHVAso76GDSGEHrh7wIpKbZTIVlpdI2D5NExctQJ6C0zONvV/nSaIGqGItL1JHrjzUoAg0qWVrYKFRicFlKPVMxVnYHAXNhakZSmAL2W99WmwqdNuuv2ow7LQH2J3rrw/BOxb1Wdtm0StthcoZTw1LxU3P868cw==
+ bh=hT2A6oQ43hhRBwlGJPnzjjs8HzMfRfhrNXe8X+thyTw=;
+ b=MNlEIouPNLnMfCy25scW/l5AD/OuG2zfcQRVDJddG/LlJt3xkfoSyD+XAMPBpi+E8qAkoTmgFQnQ1F6DnZYrBy4o/zDuxzVl19Xw2QKgm13EVPckVDf8if+WQdYQxqiX4iF2BQsgcsmXxkGBeEjnoR12P4Eozt/49xXaLBBgWK/FRkweyERIa/TlZ/O2L+XrlMsntzNw8tuNONqyPpOtJFz0qVomM/U6BVi7VnuTFqWSp6gDre9bJ+K+t2+CVyCIGmGfkOR2zNRaEwsrdPbct7y1qsBE9ZDEJBg0FufNav/sH9FuUDEX8pvuLEvQTjlE6HJtG0H14XAiPoCC1E1XdA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=davemloft.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CKoOIUEnMgqqw4s8GRzKeUTAwwzf8cGWK8hq0P6QnZk=;
- b=Zrh6AGUlrUdsaqZICGDnuxzJ3/jkvHPW33WBauWEOyEQXMV01KBFMN90HnI9iXagAHywSp5socz3eTEZISTN/hTvJNg/xdpnLVH4EYgu9Gmm9oxEoL0wN3QKWqN2ypQB2P3IJnJNywWiYILXPolmwoPvIcOTtbtiSlIiIppcQAQ=
-Received: from BN9PR03CA0637.namprd03.prod.outlook.com (2603:10b6:408:13b::12)
- by DM6PR12MB4466.namprd12.prod.outlook.com (2603:10b6:5:2ae::10) with
+ bh=hT2A6oQ43hhRBwlGJPnzjjs8HzMfRfhrNXe8X+thyTw=;
+ b=AYnhay2lnJ46FMP2AAbUvcYmn8ZCPF/A2W0EY4Xs0Nts4GwC0Okgc/ez+HnzqR4l3j/gi25THOtzw7yr17MOInFZLxpOD0OM4MVkqeq68VKJ6JcC4Eleevw1yvIApbLImLf0OiJaQvyWhIApRYKUSuRkFyfrA3TatRzPjzaR6TI=
+Received: from BN9PR03CA0658.namprd03.prod.outlook.com (2603:10b6:408:13b::33)
+ by PH7PR12MB7427.namprd12.prod.outlook.com (2603:10b6:510:202::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
- 2024 17:43:12 +0000
+ 2024 17:43:13 +0000
 Received: from BN3PEPF0000B06B.namprd21.prod.outlook.com
- (2603:10b6:408:13b:cafe::31) by BN9PR03CA0637.outlook.office365.com
- (2603:10b6:408:13b::12) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:408:13b:cafe::92) by BN9PR03CA0658.outlook.office365.com
+ (2603:10b6:408:13b::33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22 via Frontend
- Transport; Fri, 26 Jan 2024 17:43:11 +0000
+ Transport; Fri, 26 Jan 2024 17:43:13 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,18 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  BN3PEPF0000B06B.mail.protection.outlook.com (10.167.243.70) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.0 via Frontend Transport; Fri, 26 Jan 2024 17:43:11 +0000
+ 15.20.7249.0 via Frontend Transport; Fri, 26 Jan 2024 17:43:13 +0000
 Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 26 Jan
- 2024 11:43:09 -0600
+ 2024 11:43:12 -0600
 From: Brett Creeley <brett.creeley@amd.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <shannon.nelson@amd.com>, <brett.creeley@amd.com>
-Subject: [PATCH v2 net-next 03/10] pds_core: Use struct pdsc for the pdsc_adminq_isr private data
-Date: Fri, 26 Jan 2024 09:42:48 -0800
-Message-ID: <20240126174255.17052-4-brett.creeley@amd.com>
+Subject: [PATCH v2 net-next 06/10] pds_core: Don't assign interrupt index/bound_intr to notifyq
+Date: Fri, 26 Jan 2024 09:42:51 -0800
+Message-ID: <20240126174255.17052-7-brett.creeley@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240126174255.17052-1-brett.creeley@amd.com>
 References: <20240126174255.17052-1-brett.creeley@amd.com>
@@ -76,83 +76,94 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06B:EE_|DM6PR12MB4466:EE_
-X-MS-Office365-Filtering-Correlation-Id: d26ebde7-1caa-48b8-1507-08dc1e964449
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06B:EE_|PH7PR12MB7427:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6ed66b8-ae34-422d-a71e-08dc1e96453e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	6XxT2zWjzeJnTltDBAuFlJQiks+8VypwEaxOUevwrtM7ETheZGVZ0Wvtn9iRC5BCq1/zU80sAlJhfjyxAdr7wjEjEkzJcRkDsE6TOuxodg7+VX8WMxbDUvV9FZLJQWQ8aFG7zQVGgREkK+k5iw77RhsxmYEOY1q3Obbx7CWFoufQdjEyu0VrRqsf2x+uRRS3O+GtfQTmi7/CD5s+OF097nS0ZzQCaDykhvcxj0wQL99pzpc7atZ0eBFkSuMUsD/ffES00ld1td+/PYGEVmYn/SXyWaMgnYXhPzhyBheVW3SlmfFEBY2XSqJIgTRYtk+yU163K4PHb0CbQ1T0WwxkDUmNqNVMrnsDVxHXsCGlMi6yvjwF02XqwkYsMNGiYNiEsvN1ep7aytHK3Uqx/gfggSq62s6uv4BRLP4eIVL/Udanupe9pGJZB2DmGfRmsuVYz/kxLsKpWhgKh2wnmqFBtNc5CZi8P40TeCK8yT4+Wc/J0IQFD2/A1WirZ6L+y5Ov472y1mY02h5PS+E8qA/F6CL25KM6B6PuKajtWm4wopXa4i3LHXbCu2UPSoy6aX1KIMKiMIfwOr8qy83zh50m11MzTQkXDbnpT7T/Lf77uJwvQooY4eR2K2z3maqSWpLED4s2DSzctaZ+yx8sAulXY9sGh45iGlHJMfoO/3zbzMNYZUXzBWvlDo5ikLy3jT8Exdk+cnb360RJIaYtHbundBGuB1FDmJkFiTAOlWYNKQIhdjnFzphT54MPpARUPMxUYJsAqUY/0jYToXlc9dEKkg==
+	WH+QADN86ZErcIwgVEC7gRQW8cOP8DK03l6+MMNlnGzKKjS5VdD28FCoeQq6mdD8oyggKnmUGAaPUqlEaXREOLZMYmPF82fTLoWczh7o1uGx1eYesZwyGUXjQa1E6AQTUe/sT7y6yRBZd18xHUjiBQIkeBiQwJzf+/qjvsrx9zHLnJBfSF/5y6vjtchFLtYXZbx4egPhI3K1M8Dipwv2DaahjOBqKSUddlbIm8jwHGYCAW5PDs9QhVjiUwDGBdVZhl2I/EVDK91wwWwH2vDujB7H+9Tue4xLeN+DBz2Zx0zLNUsyGYPxzhGeUUWhLNcz9ZhyRAqzNstHQJYEki55bP/AhuTlqLxYxOx3oBhmOZNWZ+7OdlQpxgchdF0SddR9Y36F6UWzLaz8Igq0UZj31rjS7ZwszPkyTBgs/RDgoUDYQ7op+zD0YyaKE3eayNbrMUrI8SdeCKeEmb/kFDFqFId34aNKqo5PPlDJOP9Sk75ljQSxto0paR//uknM6fob6RBi2M9IuSLy2M4R8Ei6ga4OO2EgETW0ZdiTles6NndinKfYL1lnOWP3RYNm6zAr3KhTHMG27ufhy58mv1Nvz28xAODv2zpMJTsWUR6VWE/myptH9La2LAph1utKyI+rQwJH3CDHcbu6kpg/2pNrbJ+/MuQH6T4bvdWoE/+4WALd0mdeqtaQtGW2u3LDreFdwWLPrHj/7O+krBetfCOwxvsrjA0ZzYhIgZM7BBQNrqFzgQR2np8Q0YepPQHREfY4nNG0N/Hdf069DXblLLeVLA==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(136003)(396003)(346002)(230922051799003)(1800799012)(451199024)(82310400011)(186009)(64100799003)(40470700004)(46966006)(36840700001)(83380400001)(47076005)(2616005)(16526019)(426003)(336012)(1076003)(26005)(44832011)(81166007)(36860700001)(4326008)(5660300002)(8936002)(8676002)(478600001)(54906003)(2906002)(70206006)(82740400003)(70586007)(316002)(6666004)(110136005)(41300700001)(86362001)(36756003)(356005)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(376002)(136003)(396003)(230922051799003)(1800799012)(451199024)(82310400011)(64100799003)(186009)(46966006)(36840700001)(40470700004)(5660300002)(2906002)(41300700001)(356005)(81166007)(82740400003)(86362001)(36756003)(478600001)(16526019)(2616005)(1076003)(426003)(26005)(336012)(6666004)(36860700001)(47076005)(83380400001)(4326008)(8676002)(8936002)(44832011)(70206006)(70586007)(110136005)(316002)(54906003)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 17:43:11.8866
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 17:43:13.4960
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d26ebde7-1caa-48b8-1507-08dc1e964449
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6ed66b8-ae34-422d-a71e-08dc1e96453e
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BN3PEPF0000B06B.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4466
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7427
 
-The initial design for the adminq interrupt was done based
-on client drivers having their own adminq and adminq
-interrupt. So, each client driver's adminq isr would use
-their specific adminqcq for the private data struct. For the
-time being the design has changed to only use a single
-adminq for all clients. So, instead use the struct pdsc for
-the private data to simplify things a bit.
-
-This also has the benefit of not dereferencing the adminqcq
-to access the pdsc struct when the PDSC_S_STOPPING_DRIVER bit
-is set and the adminqcq has actually been cleared/freed.
+The notifyq rides on the adminq's interrupt, so there's
+no need to setup and/or access the notifyq's interrupt
+index or bound_intr. The driver sets the bound_intr
+using  qcq->intx = -1 for the notifyq, but luckily
+nothing accesses that field for notifyq. Instead of
+expecting that remains the case, just clean up
+the notifyq's interrupt index and bound_intr fields.
 
 Signed-off-by: Brett Creeley <brett.creeley@amd.com>
 Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
 Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 ---
- drivers/net/ethernet/amd/pds_core/adminq.c | 5 +++--
- drivers/net/ethernet/amd/pds_core/core.c   | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/amd/pds_core/core.c    | 5 +----
+ drivers/net/ethernet/amd/pds_core/debugfs.c | 3 ++-
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/amd/pds_core/adminq.c b/drivers/net/ethernet/amd/pds_core/adminq.c
-index 5beadabc2136..68be5ea251fc 100644
---- a/drivers/net/ethernet/amd/pds_core/adminq.c
-+++ b/drivers/net/ethernet/amd/pds_core/adminq.c
-@@ -135,8 +135,8 @@ void pdsc_work_thread(struct work_struct *work)
- 
- irqreturn_t pdsc_adminq_isr(int irq, void *data)
- {
--	struct pdsc_qcq *qcq = data;
--	struct pdsc *pdsc = qcq->pdsc;
-+	struct pdsc *pdsc = data;
-+	struct pdsc_qcq *qcq;
- 
- 	/* Don't process AdminQ when shutting down */
- 	if (pdsc->state & BIT_ULL(PDSC_S_STOPPING_DRIVER)) {
-@@ -145,6 +145,7 @@ irqreturn_t pdsc_adminq_isr(int irq, void *data)
- 		return IRQ_HANDLED;
- 	}
- 
-+	qcq = &pdsc->adminqcq;
- 	queue_work(pdsc->wq, &qcq->work);
- 	pds_core_intr_mask(&pdsc->intr_ctrl[qcq->intx], PDS_CORE_INTR_MASK_CLEAR);
- 
 diff --git a/drivers/net/ethernet/amd/pds_core/core.c b/drivers/net/ethernet/amd/pds_core/core.c
-index b582729331eb..0356e56a6e99 100644
+index 65c8a7072e35..fe7e1d10224c 100644
 --- a/drivers/net/ethernet/amd/pds_core/core.c
 +++ b/drivers/net/ethernet/amd/pds_core/core.c
-@@ -125,7 +125,7 @@ static int pdsc_qcq_intr_alloc(struct pdsc *pdsc, struct pdsc_qcq *qcq)
- 
- 	snprintf(name, sizeof(name), "%s-%d-%s",
- 		 PDS_CORE_DRV_NAME, pdsc->pdev->bus->number, qcq->q.name);
--	index = pdsc_intr_alloc(pdsc, name, pdsc_adminq_isr, qcq);
-+	index = pdsc_intr_alloc(pdsc, name, pdsc_adminq_isr, pdsc);
+@@ -129,6 +129,7 @@ static int pdsc_qcq_intr_alloc(struct pdsc *pdsc, struct pdsc_qcq *qcq)
  	if (index < 0)
  		return index;
  	qcq->intx = index;
++	qcq->cq.bound_intr = &pdsc->intr_info[index];
+ 
+ 	return 0;
+ }
+@@ -222,7 +223,6 @@ int pdsc_qcq_alloc(struct pdsc *pdsc, unsigned int type, unsigned int index,
+ 		goto err_out_free_irq;
+ 	}
+ 
+-	qcq->cq.bound_intr = &pdsc->intr_info[qcq->intx];
+ 	qcq->cq.num_descs = num_descs;
+ 	qcq->cq.desc_size = cq_desc_size;
+ 	qcq->cq.tail_idx = 0;
+@@ -433,9 +433,6 @@ int pdsc_setup(struct pdsc *pdsc, bool init)
+ 	if (err)
+ 		goto err_out_teardown;
+ 
+-	/* NotifyQ rides on the AdminQ interrupt */
+-	pdsc->notifyqcq.intx = pdsc->adminqcq.intx;
+-
+ 	/* Set up the Core with the AdminQ and NotifyQ info */
+ 	err = pdsc_core_init(pdsc);
+ 	if (err)
+diff --git a/drivers/net/ethernet/amd/pds_core/debugfs.c b/drivers/net/ethernet/amd/pds_core/debugfs.c
+index 8ec392299b7d..dd6aaeecfe0a 100644
+--- a/drivers/net/ethernet/amd/pds_core/debugfs.c
++++ b/drivers/net/ethernet/amd/pds_core/debugfs.c
+@@ -105,7 +105,6 @@ void pdsc_debugfs_add_qcq(struct pdsc *pdsc, struct pdsc_qcq *qcq)
+ 	struct dentry *qcq_dentry, *q_dentry, *cq_dentry;
+ 	struct dentry *intr_dentry;
+ 	struct debugfs_regset32 *intr_ctrl_regset;
+-	struct pdsc_intr_info *intr = &pdsc->intr_info[qcq->intx];
+ 	struct pdsc_queue *q = &qcq->q;
+ 	struct pdsc_cq *cq = &qcq->cq;
+ 
+@@ -143,6 +142,8 @@ void pdsc_debugfs_add_qcq(struct pdsc *pdsc, struct pdsc_qcq *qcq)
+ 	debugfs_create_u16("tail", 0400, cq_dentry, &cq->tail_idx);
+ 
+ 	if (qcq->flags & PDS_CORE_QCQ_F_INTR) {
++		struct pdsc_intr_info *intr = &pdsc->intr_info[qcq->intx];
++
+ 		intr_dentry = debugfs_create_dir("intr", qcq->dentry);
+ 		if (IS_ERR_OR_NULL(intr_dentry))
+ 			return;
 -- 
 2.17.1
 
