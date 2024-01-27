@@ -1,184 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C2A210EC;
-	Sat, 27 Jan 2024 11:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81690200BF;
+	Sat, 27 Jan 2024 11:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.239.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706356318; cv=none; b=NaHK+KSvwrr6q8cQGd3eHQsGriuwMGavp0d1s+STu3W+sOcXLKLMk39aoqC9XjYCQQifqK5P0OBkpbC8YPsy1tjKdlkvWroLuQylxerqYE0WVVpLhBC2HaKRMjL7fT4Fd42Jkx2AH+7dDoBMQ1LIT6ZXjf1nqcugiju8H5pjd0I=
+	t=1706356355; cv=none; b=hzU7c4PW3FRYqkj7UpZKFQf9Pju+hJ5tY5BkCUVBvRw+q5Vj1WhMKKoK63jBYe7BPPwhI31RNaJ7Yd2v94fFLVZ513k2BP2N510qeanJRODlnSZwLLLiZhb1QLLJ7cZlBJksF7VGjaS0VCS+QXlZv0cXme6RUi3+90mIzLtTdww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706356318; c=relaxed/simple;
-	bh=jnRrxh/V+RN3sG5q2rcPRKXGLcZ1nvL8YBZ6HRmzutg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=okLADENkQRrebdI6iq9H9B/ayAtm8Xw8BaVsac/BKAOwl8i+w8FSt6Fe3qynQPaJpQ7FurcGyDVyF7JAbkYe2CK5rriLZ9da1XydPcLd1kXEVRunyKZSvdsB40am7Qz7X4ia15fSb3UJjXwp0C8XKeRru2nRNUvmke3XBO9klOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kKjJvqJo; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kKjJvqJo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706356316; x=1737892316;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jnRrxh/V+RN3sG5q2rcPRKXGLcZ1nvL8YBZ6HRmzutg=;
-  b=kKjJvqJopo4hqf3Uabeo/RcCZtXKRZQym63+ab+lxAT/C9Gt+dRlXqNS
-   ABO0la27n9hTVWnF7poeBM68QQYNz45aEU5KEYySsyfGwvBq33VLbqUA/
-   ek0KZ68jrtkvpR5uq7JeB46xEYgWWZbw4rixZpMSabqgqpPTxOaGqSs+z
-   pwSOPSnIzbhUtLOmnOkeYyRL/BxCCxN8k5U1ZuUGusddtlLiNBH8XUdvA
-   Y+hLk1ncbQs4FPAiaK3I6QAjwGxB6MBw+l5YJigQhtfNfRMtsJWH6b0+Z
-   AuWfX3dBfAmzpZUbnoz5CqMIvSU/reA4je0KqaIM5zYmgjT1lvEGDnYgq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9788321"
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="9788321"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2024 03:51:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="21626178"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Jan 2024 03:51:50 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rThDx-0002HM-0h;
-	Sat, 27 Jan 2024 11:51:49 +0000
-Date: Sat, 27 Jan 2024 19:51:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yunjian Wang <wangyunjian@huawei.com>, mst@redhat.com,
-	willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
-	kuba@kernel.org, davem@davemloft.net, magnus.karlsson@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev,
-	xudingke@huawei.com, Yunjian Wang <wangyunjian@huawei.com>
-Subject: Re: [PATCH net-next 2/2] tun: AF_XDP Rx zero-copy support
-Message-ID: <202401271943.bs1GPeEU-lkp@intel.com>
-References: <1706089075-16084-1-git-send-email-wangyunjian@huawei.com>
+	s=arc-20240116; t=1706356355; c=relaxed/simple;
+	bh=smEVPDJ1TMvwMUm2x05BLrsaQnBayyX2ir3dtq9gJF0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NXQKRu9nXnHjnIzxDVbBMH10t0ATFhRb7se/M0R8JNqVlBB5cUSsaKWTpIA9Hb9odsXjCwg+vKTZQsIESVfcEWxDMO3ffDrALgruHT9TFr06lRfbl1ldTTrNbnyYYMNlJJ0ExulCMJRBFGnRJaiI/n4CE+H9f8YXBYMRRggRKIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org; spf=pass smtp.mailfrom=enpas.org; arc=none smtp.client-ip=46.38.239.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.enpas.org (Postfix) with ESMTPSA id 2EE881015FD;
+	Sat, 27 Jan 2024 11:52:27 +0000 (UTC)
+Message-ID: <88df213a-5a12-4571-9f29-6311b82a8f25@enpas.org>
+Date: Sat, 27 Jan 2024 20:52:25 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1706089075-16084-1-git-send-email-wangyunjian@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/7] HID: playstation: DS4: LED bugfix, third-party
+ gamepad support
+Content-Language: en-US
+To: Roderick Colenbrander <thunderbird2k@gmail.com>,
+ Jiri Kosina <jikos@kernel.org>
+Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240115144538.12018-1-max@enpas.org>
+ <nycvar.YFH.7.76.2401231047140.29548@cbobk.fhfr.pm>
+ <CAEc3jaATA-Z86jh=njR6yctguQBRp1BQEFcBQhYT0rYKcA4f2w@mail.gmail.com>
+From: Max Staudt <max@enpas.org>
+Autocrypt: addr=max@enpas.org; keydata=
+ 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
+ PsRBqTJGs7jw5gOWMMchFaemEnEJtg==
+In-Reply-To: <CAEc3jaATA-Z86jh=njR6yctguQBRp1BQEFcBQhYT0rYKcA4f2w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Yunjian,
+On 1/25/24 07:24, Roderick Colenbrander wrote:
+> Sorry for the late reply. I had glanced over them, but didn't have an
+> opportunity for a detailed review yet.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on net-next/main]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Yunjian-Wang/xsk-Remove-non-zero-dma_page-check-in-xp_assign_dev/20240124-174011
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/1706089075-16084-1-git-send-email-wangyunjian%40huawei.com
-patch subject: [PATCH net-next 2/2] tun: AF_XDP Rx zero-copy support
-config: um-allmodconfig (https://download.01.org/0day-ci/archive/20240127/202401271943.bs1GPeEU-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project a31a60074717fc40887cfe132b77eec93bedd307)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240127/202401271943.bs1GPeEU-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401271943.bs1GPeEU-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/net/tun.c:44:
-   In file included from include/linux/skbuff.h:17:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/net/tun.c:44:
-   In file included from include/linux/skbuff.h:17:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/net/tun.c:44:
-   In file included from include/linux/skbuff.h:17:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from arch/um/include/asm/hardirq.h:5:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     692 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     700 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     708 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     717 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     726 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     735 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> drivers/net/tun.c:1298:5: warning: no previous prototype for function 'tun_xsk_pool_setup' [-Wmissing-prototypes]
-    1298 | int tun_xsk_pool_setup(struct net_device *dev, struct xsk_buff_pool *pool,
-         |     ^
-   drivers/net/tun.c:1298:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-    1298 | int tun_xsk_pool_setup(struct net_device *dev, struct xsk_buff_pool *pool,
-         | ^
-         | static 
-   13 warnings generated.
+No worries, thank you for giving the patches a chance.
 
 
-vim +/tun_xsk_pool_setup +1298 drivers/net/tun.c
+> My general fear is a balance between supporting clone devices vs
+> reliability. This driver is heavily used in devices (phones, tablets,
+> TVs, cars). There have been bug reports in the past and just getting
+> the fixes downstream takes a lot of time (e.g. Android devices).
 
-  1297	
-> 1298	int tun_xsk_pool_setup(struct net_device *dev, struct xsk_buff_pool *pool,
-  1299			       u16 qid)
-  1300	{
-  1301		return pool ? tun_xsk_pool_enable(dev, pool, qid) :
-  1302			tun_xsk_pool_disable(dev, qid);
-  1303	}
-  1304	
+I understand this very well, which is why I hope I've kept the patches small enough to be alright to follow. If you have a bad feeling about something in particular, please let me know, and maybe we can find a better solution or alleviate concerns.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On my end, I am working (currently as a hobby) on an appliance that aims to support as many controllers as possible, hence I know the choices you face in order to keep user expectations in check, and user experience consistent. See my comment on patch 7/7 - what if someone uses a third-party controller that happens to work by chance, and a kernel update breaks stuff?
+
+So I am with you on focusing on the original devices, which have predictable behaviour and quality. That said, hopefully some or all of these patches are trivial enough to be included upstream. I feel that it's beautiful to plug random stuff into a Linux box and to find that it just works :)
+
+
+> One of the key things I really would like to see enhanced are the unit
+> tests (hid-tools / kernel side now). To really make sure we emulate
+> behavior of these other devices well. The tricky part is that they
+> don't always support all the HID requests of the real device (which is
+> weird as the game console does use those HID reports and others and I
+> don't know how it would have worked there).
+
+I've been wondering the same, but without a PS4 of my own, I didn't try such controllers on a real console. That would be interesting indeed!
+
+
+> That's in general the key feedback about the tests. A question for
+> Max: do you have access to all the devices being added?
+
+I don't have all devices I've ever tested, but I do have at least one reproducer for each patch in this series.
+
+
+
+Thanks,
+
+Max
+
