@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9B61E516;
-	Sat, 27 Jan 2024 09:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947F31EA72;
+	Sat, 27 Jan 2024 09:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706347286; cv=none; b=d0bZF00mB+5yBADknJagi0yRG2QYVRSbo2tpgX6gWW3jJTQ9DPI/lbb4aLjk8t0leOhelqgGjjG2BYSvHPapYSp656UWfC7vc7ySnbJEfup4+RFEoQIkNZoImDX0JIyFR6t0ursYb6eoc97COQvWed3CkUlSmzloyZ00yJtGy0k=
+	t=1706347289; cv=none; b=ugdJRTbMIeIlm7r+iEIDVr4L2jTXNicEV+wo9wQTKYmP9T6T6K+BS7EMe7Et7f1KpQnIzd7mTOr2fxUOzTVuzSbHhEOYVY4bLBFj+Bkais+TQhRFr5VqNLLlUyc0lg7c10NGXCOuU0U5YpPABJQRupf9Zqh5rYmSbfcnRPEXVY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706347286; c=relaxed/simple;
-	bh=KEhFIjcnHD4A22X7uQT1+3J1ulhltLTzb67Z0RlJXUg=;
+	s=arc-20240116; t=1706347289; c=relaxed/simple;
+	bh=welrbF5b84YUkjaFUG7wG+43+a7QFVGtWYu/cqswM3A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e+bL5A2FvH6yV47zOGBFasATgHep5rvtnR7gaDP/C8SUnnG0ZReAPrB/nyhoIR3UlSh9d232QgdzK5i02CUsjFnwCmpmg61ZRe3cbWipDO5pZbEWgBx8GV1NZl9rFeyKgNWjz5C7C0NtPZ1dPEHX+6GpMybYIpk9TE2tdN4cUwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aCwvVHfd; arc=none smtp.client-ip=220.197.31.4
+	 MIME-Version; b=NNgmeRS/bud4PcluKIZbQewgTAd78LcGom9/wZt2c6sVDvYzsAKfKxu2ip9sd7wOpCNoCjXI2Ei21tM8wY9haIxJOHnzzXKDp8t+el6AX9pc3nZ8MOjt6OkyB9JElWO5qgJdeqG79AX+u6MOVDVy0xFVyYTxEcvpLjBFIVHUiN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Sc4R8pCU; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aCwvVHfd"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Sc4R8pCU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ke7aq
-	YeO3SgKHFFAXZGTQJgNGC9RklM/X8fmVFmJVMo=; b=aCwvVHfdF6SFbE39ZmYnE
-	wO4GcXjp/JfyvcAcUUnppJKIVxs5z27NtpebTolZSvusoMlVXQc2ra2ob+8bUA1I
-	hMjz+/a0hzR8k6twsUngb0Yb9l6lWyTn8Z5T7fZ8vRCSZWv3+S+An0h8LLHLMn11
-	MhUNKWSqRuRboG5g/gEUow=
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qXKs7
+	77YlJXMt8Y4vLlzfp04iXltM/VO9c7EPLhu6nw=; b=Sc4R8pCUrKIpDXgH3nint
+	QC5KH+JKw6vI94XXIkW//286CO9ZTOUkcFsLwmlBDvcVk5bxUJleGtsoX8I/aYnv
+	JSGpg+I9AbMnltWh0OLFam33344uQSgctM8Ccex0Nwi0vqkNuENx0352saCzvFnV
+	B2gcMad4UevhPPCW9OaDe4=
 Received: from ProDesk.. (unknown [58.22.7.114])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3rzHkyrRl5GopBA--.2976S4;
-	Sat, 27 Jan 2024 17:20:41 +0800 (CST)
+	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3rzHkyrRl5GopBA--.2976S3;
+	Sat, 27 Jan 2024 17:20:40 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: heiko@sntech.de
 Cc: krzysztof.kozlowski+dt@linaro.org,
@@ -32,9 +32,9 @@ Cc: krzysztof.kozlowski+dt@linaro.org,
 	linux-kernel@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	Andy Yan <andyshrk@163.com>
-Subject: [PATCH 3/4] arm64: dts: rockchip: rename vcc5v0_usb30_host regulator for Cool Pi CM5 EVB
-Date: Sat, 27 Jan 2024 17:20:33 +0800
-Message-Id: <20240127092034.887085-3-andyshrk@163.com>
+Subject: [PATCH 2/4] arm64: dts: rockchip: aliase sdmmc as mmc1 for Cool Pi CM5 EVB
+Date: Sat, 27 Jan 2024 17:20:32 +0800
+Message-Id: <20240127092034.887085-2-andyshrk@163.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240127092034.887085-1-andyshrk@163.com>
 References: <20240127092034.887085-1-andyshrk@163.com>
@@ -45,50 +45,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3rzHkyrRl5GopBA--.2976S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AFyDZryfuFyrCF45Cw1Dtrb_yoW8JF4fpw
-	nxCrZrJr1fuFWUt3yqg3Z7Krs5C395t3Z3ur95Jw1rKw1Iq3ZrtFn3u3WrAFW5twn7Aa1q
-	kFs5ury7JF1qvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_1v3UUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBEAxyXmVOB+LqkAABsF
+X-CM-TRANSID:_____wD3rzHkyrRl5GopBA--.2976S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZryDuFyDGr4kXF1fWF1kuFg_yoW3tFg_ta
+	42ga1kJayrWr98W34Dtay8G343C34DCw1fJayYvF4kAFW3X39rJayrKa9FvF1jyF429r1f
+	JrZ3ZF18Jw15CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRN-BM7UUUUU==
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqApyXmVOB+QgpgAAsA
 
-According to the schematic, this regulator is used both for USB30 and
-USB20, so give it a more appropriate name.
+Follow others rk3588 based boards, and u-boot only use mmc0/1
+as mmc boot targets, so aliase sdmmc as mmc1.
 
 Fixes: 791c154c3982 ("arm64: dts: rockchip: Add support for rk3588 based board Cool Pi CM5 EVB")
 Signed-off-by: Andy Yan <andyshrk@163.com>
 ---
 
- arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
-index 1b5681fe0471..5f42f1065d73 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
-@@ -84,7 +84,7 @@ vcc3v3_lcd: vcc3v3-lcd-regulator {
- 		vin-supply = <&vcc3v3_sys>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi
+index 0b02f4d6e003..cce1c8e83587 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5.dtsi
+@@ -16,8 +16,8 @@ / {
+ 
+ 	aliases {
+ 		mmc0 = &sdhci;
+-		mmc1 = &sdio;
+-		mmc2 = &sdmmc;
++		mmc1 = &sdmmc;
++		mmc2 = &sdio;
+ 		serial2 = &uart2;
  	};
- 
--	vcc5v0_usb30_host: vcc5v0-usb30-host-regulator {
-+	vcc5v0_usb_host: vcc5v0-usb-host-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc5v0_host";
- 		regulator-boot-on;
-@@ -200,12 +200,12 @@ &u2phy3 {
- };
- 
- &u2phy2_host {
--	phy-supply = <&vcc5v0_usb30_host>;
-+	phy-supply = <&vcc5v0_usb_host>;
- 	status = "okay";
- };
- 
- &u2phy3_host {
--	phy-supply = <&vcc5v0_usb30_host>;
-+	phy-supply = <&vcc5v0_usb_host>;
- 	status = "okay";
- };
  
 -- 
 2.34.1
