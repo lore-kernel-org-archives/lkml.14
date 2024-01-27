@@ -1,117 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8EE17744
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 06:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E18134BC;
+	Sat, 27 Jan 2024 07:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706338247; cv=none; b=hA3BP/l/px5PUqVzWTmvYYPJUSUk/qrNtjnqeiWCiROBwirkV7JsKmmxvOnU5YoLJ2zm0mfLIaKyPpE6c79tKvPJF6PJzClqGKod3Eg1GmtxaJ72rPA6LkFF3/Q61mof54NqmpQLuhSI7dGecvUsud5ac7z+PEwY7Ce3zOTVCqc=
+	t=1706339109; cv=none; b=c9i3twCoDVrwxAOowSw3TWfYcODXVFx9V6637h39urlJWT+xmdlTcqNTdWT0EOu5aoPIq1ZxYSbLCYK+suR2afDVee+nolInVq6gm7HlIBydhmpFGAbB7psWLc4AfsXX1GldNbMjsRESBqHX1kw+EspaUaKFHEklsG+s5c4V4cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706338247; c=relaxed/simple;
-	bh=baNrkmKkIf2EbMQeJAh+ylYFxPSnzWuHm7wIxFgXO2A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uqf/6ORupk2GY0LVmR6xQTjuBIm2OPB3nGjuXaeKCkZPFHMpz0MLbnVjTCzrAEkF5ZyRUijI1r4av6O+TopMhoPzivh8wnPG9VrVHiSZs4zTnsN4nt8Pw42yoE3n6nMM6LUXX0Jd6DPuo8NPxzb6U9r0Qc0VcmIK1Bv5lGCxsx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPHoHJPH; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706339109; c=relaxed/simple;
+	bh=ForPykU7IwFx2c1CLmNnFixuMgi+ep01OHJkD8/dsQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFvW0vq4Hh5Ub0xbuYLCH2BW6tILql+lt+VwWRRkHi0uslW1zgfOna3QyiAkfg1UWShhM01OsG1RMS6FCC3Ghdn27hqsJNJ+yPmEnruUbarI+oY2IqekGrXj5Hf3Y6BkGJMcxCVDQxT+LV8xOB+guNAv0Y4GK4hr8W4x7eu6yfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMIGHA/j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPHoHJPH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706338246; x=1737874246;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=baNrkmKkIf2EbMQeJAh+ylYFxPSnzWuHm7wIxFgXO2A=;
-  b=HPHoHJPHYwMso5g+MoFxajFpwyozfGLxLRmZRC302Y9voicTN5EK9C1R
-   1J6WleRnorUJWuHBTPQJZDkrWgrL2NwlPB0Sq9m8QlOIlyiIzIUcsVXVC
-   WYD8vjAZUTYYjupuQK0Ci5zRZZbJaV7Oz1xRjc2QCu/ndd2LF38FyvYYF
-   1WaAPL8XEvmHw9dDVRFEOqcR8cnvfbVX3oDt1tl4kMQvgDkg5hfHUDECj
-   SSC0rR98eup4hjRqsVs+O3XsUzNBRBJ/xl+zqR56vg4hmHAXUZ7QVJCnq
-   5iae/EVDDnCVEqdezyXeTKvaXXA2OqYUvNZSzG9pgDQ/dlLW7axzqmJfz
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9769105"
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="9769105"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 22:50:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="2894508"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by fmviesa003.fm.intel.com with ESMTP; 26 Jan 2024 22:50:42 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 1/1] iommu/vt-d: Remove INTEL_IOMMU_BROKEN_GFX_WA
-Date: Sat, 27 Jan 2024 14:45:12 +0800
-Message-Id: <20240127064512.16744-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMIGHA/j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C19C433C7;
+	Sat, 27 Jan 2024 07:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706339108;
+	bh=ForPykU7IwFx2c1CLmNnFixuMgi+ep01OHJkD8/dsQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZMIGHA/jRSUgkbd3OAZWX3lax3BmYcyT1+dqFBKGmWyJ3k79Zl7yA74B8UwxNbDC3
+	 VoQvGbhhzKfhyPh5i+IqL0LUFCFVSiHIGlK+9MvFcps05gPX9KnhhpqX+jadG9Sgz0
+	 +Hjbwv7JhuqRmsFgIYxdWvkb4QNAkrKQa6F3nRj8nAm8WABWS/yS41Vho3Y0VBWAmf
+	 r0L1J6LnOsN2lhW0PTYfi/X3T5cWc+M1utSPGC03PJAa9FNL6wl59gxWWPrq6j4kQD
+	 5zlB91Qwa/RRdv7WqEX5damNjqiaznV9ii9d/wbBFtHBhXXQSENVdWtDS+7CKmWo2O
+	 9Qk3l5TBid1aw==
+Date: Fri, 26 Jan 2024 23:05:06 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Yangtao Li <frank.li@vivo.com>, linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net, vishal.moola@gmail.com,
+	linux-mm@kvack.org, Adam Manzanares <a.manzanares@samsung.com>,
+	Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier.gonz@samsung.com>,
+	linux-fsdevel@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: Re: [PATCH] f2fs: Support enhanced hot/cold data separation for f2fs
+Message-ID: <20240127070506.GC11935@sol.localdomain>
+References: <Y4ZaBd1r45waieQs@casper.infradead.org>
+ <20221130124804.79845-1-frank.li@vivo.com>
+ <Y4d0UReDb+EmUJOz@casper.infradead.org>
+ <Y5D8wYGpp/95ShTV@bombadil.infradead.org>
+ <ZbLI63UHBErD6_L2@casper.infradead.org>
+ <ZbLKl25vxw0eTzGE@bombadil.infradead.org>
+ <ZbQdkiwEs8o4h807@casper.infradead.org>
+ <ZbQk1WqGgwgoMbg3@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbQk1WqGgwgoMbg3@bombadil.infradead.org>
 
-Commit 62edf5dc4a524 ("intel-iommu: Restore DMAR_BROKEN_GFX_WA option for
-broken graphics drivers") was introduced 24 years ago as a temporary
-workaround for graphics drivers that used physical addresses for DMA and
-avoided DMA APIs. This workaround was disabled by default.
+On Fri, Jan 26, 2024 at 01:32:05PM -0800, Luis Chamberlain wrote:
+> On Fri, Jan 26, 2024 at 09:01:06PM +0000, Matthew Wilcox wrote:
+> > On Thu, Jan 25, 2024 at 12:54:47PM -0800, Luis Chamberlain wrote:
+> > > On Thu, Jan 25, 2024 at 08:47:39PM +0000, Matthew Wilcox wrote:
+> > > > On Wed, Dec 07, 2022 at 12:51:13PM -0800, Luis Chamberlain wrote:
+> > > > > Me and Pankaj are very interested in helping on this front. And so we'll
+> > > > > start to organize and talk every week about this to see what is missing.
+> > > > > First order of business however will be testing so we'll have to
+> > > > > establish a public baseline to ensure we don't regress. For this we intend
+> > > > > on using kdevops so that'll be done first.
+> > > > > 
+> > > > > If folks have patches they want to test in consideration for folio /
+> > > > > iomap enhancements feel free to Cc us :)
+> > > > > 
+> > > > > After we establish a baseline we can move forward with taking on tasks
+> > > > > which will help with this conversion.
+> > > > 
+> > > > So ... it's been a year.  How is this project coming along?  There
+> > > > weren't a lot of commits to f2fs in 2023 that were folio related.
+> > > 
+> > > The review at LSFMM revealed iomap based filesystems were the priority
+> > > and so that has been the priority. Once we tackle that and get XFS
+> > > support we can revisit which next fs to help out with. Testing has been
+> > > a *huge* part of our endeavor, and naturally getting XFS patches up to
+> > > what is required has just taken a bit more time. But you can expect
+> > > patches for that within a month or so.
+> > 
+> > Is anyone working on the iomap conversion for f2fs?
+> 
+> It already has been done for direct IO by Eric as per commit a1e09b03e6f5
+> ("f2fs: use iomap for direct I/O"), not clear to me if anyone is working
+> on buffered-io. Then f2fs_commit_super() seems to be the last buffer-head
+> user, and its not clear what the replacement could be yet.
+> 
+> Jaegeuk, Eric, have you guys considered this?
+> 
 
-As 24 years have passed, it is expected that graphics driver developers
-have migrated their drivers to use kernel DMA APIs. Therefore, this
-workaround is no longer required and could been removed.
+Sure, I've *considered* that, along with other requested filesystem
+modernization projects such as converting f2fs to use the new mount API and
+finishing ext4's conversion to iomap.  But, I haven't had time to work on these
+projects, nor to get very involved in f2fs beyond what's needed to maintain the
+fscrypt and fsverity support.  I'm not anywhere close to a full-time filesystem
+developer.  I did implement the f2fs iomap direct I/O support two years ago
+because it made the fscrypt direct I/O support easier.  Note that these types of
+changes are fairly disruptive, and there were bugs that resulted from my
+patches, despite my best efforts.  It's necessary for someone to get deeply
+involved in these types of changes and follow them all the way through.
 
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel/iommu.c |  4 ----
- drivers/iommu/intel/Kconfig | 11 -----------
- 2 files changed, 15 deletions(-)
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 6fb5f6fceea1..fc52fcd786aa 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2660,10 +2660,6 @@ static int __init init_dmars(void)
- 		iommu_set_root_entry(iommu);
- 	}
- 
--#ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
--	dmar_map_gfx = 0;
--#endif
--
- 	if (!dmar_map_gfx)
- 		iommu_identity_mapping |= IDENTMAP_GFX;
- 
-diff --git a/drivers/iommu/intel/Kconfig b/drivers/iommu/intel/Kconfig
-index 012cd2541a68..d2d34eb28d94 100644
---- a/drivers/iommu/intel/Kconfig
-+++ b/drivers/iommu/intel/Kconfig
-@@ -64,17 +64,6 @@ config INTEL_IOMMU_DEFAULT_ON
- 	  one is found. If this option is not selected, DMAR support can
- 	  be enabled by passing intel_iommu=on to the kernel.
- 
--config INTEL_IOMMU_BROKEN_GFX_WA
--	bool "Workaround broken graphics drivers (going away soon)"
--	depends on BROKEN && X86
--	help
--	  Current Graphics drivers tend to use physical address
--	  for DMA and avoid using DMA APIs. Setting this config
--	  option permits the IOMMU driver to set a unity map for
--	  all the OS-visible memory. Hence the driver can continue
--	  to use physical addresses for DMA, at least until this
--	  option is removed in the 2.6.32 kernel.
--
- config INTEL_IOMMU_FLOPPY_WA
- 	def_bool y
- 	depends on X86
--- 
-2.34.1
-
+- Eric
