@@ -1,101 +1,100 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B722C85A
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 17:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706376159; cv=none; b=dTiQ9caDKWEHppKwMfz1hq9Dw4UeZjPmaM5P+NZch9jn2z/9lYNNqTur+3Y8aIj382w5tzPxR98IbxcZRwMcY+/Iov7+uNZwF76DqoEjn+sS3/h2WwE/TDze/W7uELnMqWsRE25gQyCL11pm2TCyYRB07/1Rz7wgsr8BKNVlIog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706376159; c=relaxed/simple;
-	bh=GLpeF7tKBkJQpK/HoDJhmJ33WffFzG6KRYtzM+zQ1Fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s/iuxCyRDO/FiFl9AIwWjtGY1ss05F2xVdrMcfB0+eg/ood418y0/5bDywgZ9mA8YiKtREOUdSpZvwQ5QBAPj3vvn3VOvLI1Ymar4WkcqMtaACC/fRRFCMJWzi+F4Ha4aGVHaE0BA9dyUNjli+Ib1U+BbA4lZo3PfTUOZFlqwXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=YiI/KIK2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IK+hT4KW; arc=none smtp.client-ip=66.111.4.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E28E2D022;
+	Sat, 27 Jan 2024 17:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706376195; cv=pass; b=LwyfmHa8KFyjoQ81R6gb2tVHbZO4uI0XJs6/6PhHWI7RaXrS9IMGD8KOnxwL3bSEUdlr4p0PWNO2OTNMXnDwUfRjqNhVtw2G087AioHoCzu+5+aRvqvdK2k9XoHI0xZJwLl8uCUjp994WW0b4dT71G2cUvavn7CmdAphUICV92o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706376195; c=relaxed/simple;
+	bh=nSUTtW7W3uVu6B4nU911N4Xf4JPfuRfgtoDUyJidACk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cJpmPX3wIhCfS5WykYCJc+CbwySMuVB1dVxR1B/Mzx1iz/gIzF3R/v1e2ue+mnMblGsCOT4Vablbo6A39ogo7Abd8KIB4FsEGpHPgbJxWfkgmt4Qy3pIXssjl7y7s51ptxOh/1XriUl2Zbiy+JiXNhaWMJCL+qt434Y3U3ORH6Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=zQNJPPra; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="YiI/KIK2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IK+hT4KW"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 68D505C00A1;
-	Sat, 27 Jan 2024 12:22:37 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Sat, 27 Jan 2024 12:22:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1706376157; x=1706462557; bh=TGCzW0dxep
-	QwwblJTJF2TdlDPBbGBPOjAiGMUcsUm+s=; b=YiI/KIK2FtTk/D2Mh1aZjOAuSe
-	GFY9xhHTx0MGi7R3bjO6z0udu3UqQ2U4OBg/8VtC4qls4+KkPIzCrxatGRU0fmLW
-	KKkfAdBEk4bzN/59SDHCq5kJYWxq+dU61r82L3ePUD8AOX/KAv7BiV3d5sQ3FXhq
-	WEbx0iChkStC9CPXauNjso7YPZzD3b6dgNmDHCLWdUUNyuOAC2lGYkL4IFt9JXjt
-	wcNCA7F85hZlDGNXKcUBXKbUOFqke5rOX0V40+oOTYcdEDWNwnw22sPg2JCP3LiA
-	+8XwbjBLDsb6u4MLd6mejzwJalEIDLA85xgHlS6cz0kgECmfHGk0FURNP5yw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706376157; x=1706462557; bh=TGCzW0dxepQwwblJTJF2TdlDPBbG
-	BPOjAiGMUcsUm+s=; b=IK+hT4KWdAXc7moYqsU18vYlDNDvDiyrp7j45Yh4kY4E
-	W+lTbfYnf13AWiIYYIO9lFG3BO/63bU7z7LLuI4OrqwsYc16FtuoAtvOzY39iwp7
-	Y0zIljQKVM011mZYn4V4FbZyqTTMPgfQvr9ES00CFnDWVuOCBQXb87YZ+0viy1ny
-	Z+PtFGezHSR3+i6T7Am0tlXEucJxp/ReZ+GMwATXDgaYmsgy6wegrTJc+kVfT2C/
-	7P/v8Ic/kfVwMAxI5RQqHSJVelMFQcK7iL5QqpHYkQ6yGy9aiOqxRDv5ouJLIrTp
-	VzIlkBI7kMUjJmig8BVLva3+IrPRzT9genjhs9t/2w==
-X-ME-Sender: <xms:3Tu1ZdBf3LD-5wHjkFZY-WS8mh9kLYdFALi7vlm-p2f3x-heMT5weA>
-    <xme:3Tu1ZbjHn0fm4A4gq2w2p3URQa3iMI9t2cNpy2H_qQvY03pj1c_Xia5mHxgjdvhFj
-    ThE4QO6mLTeUfaTTEs>
-X-ME-Received: <xmr:3Tu1ZYmxd7EYUbZsbtINVs87EdNrHwLHjKmzXN-A98QLQuFK2r_H9hZsNm4tnt2P7KtJe1KY-zMQEBzeSQ0SWWNCHzno>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdelledgleelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
-    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
-    grthhtvghrnhepueettdetgfejfeffheffffekjeeuveeifeduleegjedutdefffetkeel
-    hfelleetnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomh
-    epthihtghhohesthihtghhohdrphhiiiiirg
-X-ME-Proxy: <xmx:3Tu1ZXwZp9ZE37bn8fKV5dA61Hy02MM406sxqaG9T0i_TqrhnBkvZA>
-    <xmx:3Tu1ZSQGn8hj-VitulyFUjfX7DUcJnmxCH-j6ggtlFHjV0GEOEWFeQ>
-    <xmx:3Tu1ZaaRUK0e5NaEvAKg0Hqalox-MRrcTvnxxZpbTEQbdosrrJomlQ>
-    <xmx:3Tu1ZYO6It51LcxBjXJPe1YDEBirAs1eo3XEQE5jH6XetIfWvPGUmg>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 27 Jan 2024 12:22:36 -0500 (EST)
-Date: Sat, 27 Jan 2024 10:22:35 -0700
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] pidfd: don't do_notify_pidfd() if
- !thread_group_empty()
-Message-ID: <ZbU72/83nv2UdcCK@tycho.pizza>
-References: <20240127132043.GA29080@redhat.com>
- <20240127132105.GA29091@redhat.com>
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="zQNJPPra"
+ARC-Seal: i=1; a=rsa-sha256; t=1706376188; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Oc8x+3fKbXxTX1gTypBGckToinAKA4gjm5G1BrV9wJSD78vZf98CTkksggl09LZvbRacXaS085TzjAWEA9/zIpbTeZ0zHK8Z0AOojFYZKCHhOJUJJlBky1JuoUzp4cAw9emz9H+KUgWe5Q29o7cfZXAeJEm5nBhCsvFuRN+sSM0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1706376188; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YULYF2qWSm5w8MjN71TNrGtiU1ZfqFBbzCJSsRbJmQ4=; 
+	b=FJ3qHaJ0Fx1Oz7rf4fFKOYQSeTedIBQGt1VsigZUu7LnOMBAZPsVldqYPywg5xafhJrJAzTfajaIe9G+grlgcU2iAX9krDsuA8pKv4wtNpE2MREqwCB8wVZflmNu6CyXQ8+KWWPMP9mGEOUYK+edf+Lm60ISHvfR9c0A03mn+5M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1706376188;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=YULYF2qWSm5w8MjN71TNrGtiU1ZfqFBbzCJSsRbJmQ4=;
+	b=zQNJPPrayCfd8G21/nbfE/bFM2MZCkWP0AYQiblaip5k6LSqUAbnGQ8RMRDIdam+
+	CTidq4Svf8N3b2ozeSIAWpopyY6JnAQsgtupC62AzwhzimDAicJNTR4AozQKuMiLdbx
+	8LYxSh1zxjOWSXwUYGHT2iRILsA342bPLy6EANG0=
+Received: from tb.lan (182.118.239.249 [182.118.239.249]) by mx.zohomail.com
+	with SMTPS id 170637618610421.554837416501073; Sat, 27 Jan 2024 09:23:06 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Rong Zhang <i@rong.moe>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH v2 0/4] ARM: dts: qcom: msm8974: Add Samsung Galaxy S5 China support
+Date: Sun, 28 Jan 2024 01:21:49 +0800
+Message-ID: <20240127172155.63624-1-i@rong.moe>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240127132105.GA29091@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Sat, Jan 27, 2024 at 02:21:05PM +0100, Oleg Nesterov wrote:
-> do_notify_pidfd() makes no sense until the whole thread group exits, change
-> do_notify_parent() to check thread_group_empty().
-> 
-> This avoids the unnecessary do_notify_pidfd() when tsk is not a leader, or
-> it exits before other threads, or it has a ptraced EXIT_ZOMBIE sub-thread.
-> 
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Samsung Galaxy S5 has many variants. Currently, the only supported one
+is klte. Samsung Galaxy S5 China (kltechn) is the China edition of
+klte, and it can mostly work with the klte DTB, with only LEDs and WiFi
+missing.
 
-Looks good to me, thanks.
+This patchset splits out the common part of klte DTS into klte-common
+DTSI, and adds DTS for kltechn by fixing up the GPIO pins for the LEDs
+and GPIO expander connected by the WiFi module. A "brcm,board-type"
+property is added into the wifi@1 node of the common DTSI to allow all
+klte* variants to load the same NVRAM file.
 
-Reviewed-by: Tycho Andersen <tandersen@netflix.com>
+Signed-off-by: Rong Zhang <i@rong.moe>
+---
+Changes in v2:
+- Split out the common part of klte DTS into klte-common DTSI.
+- Fix dt-binding to make it consistent with kltechn compatible.
+- Link to v1: https://lore.kernel.org/r/20240121154010.168440-1-i@rong.moe/
 
-Tycho
+---
+Rong Zhang (4):
+  ARM: dts: qcom: msm8974: Split out common part of samsung-klte
+  ARM: dts: qcom: msm8974-klte-common: Pin WiFi board type
+  dt-bindings: arm: qcom: Add Samsung Galaxy S5 China (kltechn)
+  ARM: dts: qcom: msm8974: Add DTS for Samsung Galaxy S5 China (kltechn)
+
+ .../devicetree/bindings/arm/qcom.yaml         |   7 +
+ arch/arm/boot/dts/qcom/Makefile               |   1 +
+ .../qcom-msm8974pro-samsung-klte-common.dtsi  | 818 ++++++++++++++++++
+ .../dts/qcom/qcom-msm8974pro-samsung-klte.dts | 813 +----------------
+ .../qcom/qcom-msm8974pro-samsung-kltechn.dts  |  16 +
+ 5 files changed, 848 insertions(+), 807 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte-common.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-kltechn.dts
+
+
+base-commit: 3a5879d495b226d0404098e3564462d5f1daa33b
+-- 
+2.43.0
+
