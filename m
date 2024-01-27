@@ -1,75 +1,87 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D85C7F
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 09:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9861DFE8;
+	Sat, 27 Jan 2024 09:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706346309; cv=none; b=LBd5BFeNdDCSQSx+BRYX0R81hy56QNlxfBOgAqCiw0ujxdM7gTYtCceW2g9Ha/Dqi1A+NUAVlhiPFuRmwcLJbeabWdkNEYSwMihcgjpApDFPYcHj613PL7ZStVCl7FTIpThPo0xI1j62vxOWQSgGmwjA5arjluG/knBDn8nPxzc=
+	t=1706347286; cv=none; b=gxLpowdfscs7A8M/Mf9cN94cJ9Al0onxSxdizs9Tq++7zj075J6nwlIJcUiXJD1Kaa/wDDa4/3zQgEVjJP1XXVtEf1RxyMS3riHsfLTLg6eP8zvBsLLKmqVNpCG49jpwnh7au+ubEOTnE/oWB9Q1ia/s0rR5wDLdQbFw0vik/TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706346309; c=relaxed/simple;
-	bh=ns7XcGUGA6EXzw9WjRju1sbQES5lkWOliR3cZs0XBLM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WnnhKRoiKzgwVxatrsQDCxB1+PYn6B9g6UBBT/VBrJ5PDTtQ2ye3ufbHs9Z7zZeBNd7mtmEMKCULd06MfH2gekY9VNnLqqf51d/zwHfT3zR6u6xoaxBHRuLsqHK0h/rSOL/WK5OESbOdoqjeriUS1HFaWRwC3+gW8INInABufzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7baa6cc3af2so87988339f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 01:05:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706346307; x=1706951107;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r07qcjZtk/1Kh0i0MS4Bc56d9Yw9HmQpMjUB3qESI2w=;
-        b=lIEAWzEOnhLA+s3JgRTPUBX871n+mFKFejNh+wBZecwvm1BSBmsiAlgmsL0BtvuGR6
-         uwJvvL1ogABj/WUUU+QgTcBqkN6a3UCuMm9e4RVcSNrtoi1dvrQl3f/R1WGGP1dK2HYh
-         PE/NSce/dJXHtYxTVIKHqxmew5relcwtOZm13RT378E/9J/fPW05/6x8SOkQ/ss1woXg
-         ccdQi/DG+kAlUp0MoUxZqAi42sJaw0x8XRgdbtXcB85WNt2RlIfkrIhXClc3K10BTkgG
-         ng4lPKR/Enu/zZi8FtSqqTieZBQSgr4buL5rAbNx7uHmNcJvma3sP2FZjnDMW7DgW+kI
-         YgAw==
-X-Gm-Message-State: AOJu0YzPHMEcPZzp/De73I1XR+OciQLdPkuvHuBo4059HaH0+NORLZ+O
-	mQPrqRaCFXoDvBWahC9mj2aOTGYStuCbF9M9tWjhE0NUPIvknElmRkJaKqGwUKpsk8rOrW1KBbt
-	rddteyeVFqct1D9q2D+aIRRm76Qu80CTzplG3Qv46gDXOuL+pfC5k5Qc=
-X-Google-Smtp-Source: AGHT+IHvq6oghf9D1tVy/Q1TIUTPUfvvY/I50fF3yj9XD1Ne0UfhLLjH39DdxYrYMn9IskGwwMbQzZhGEjiao+RdXb3YIM3mTPfH
+	s=arc-20240116; t=1706347286; c=relaxed/simple;
+	bh=UOxD5C37dYkQwJfR2+WR1Axl/c9z0AvtCPGa2cvizAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cEOjGbZQNYyu2XcLJ5m+iOHKGhu0WTd2cO5X297We0RGNMIcGEQ0BCRWZYf9P6MSXRnlzo+VYZ17VAaZ3soN9EB072P8/AQwQ8puzpRqhqQ0+ZDtruTuE6qj1b2AgS8Ae6kFAJUm7wRz32KFFFdQboEzvu66+WC4p6rVGUNtBE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=K8nyT+Z5; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="K8nyT+Z5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=a/VjS
+	8XMkdiNaejedJEj7VqbTBOy9aX70K9qWnPW79Y=; b=K8nyT+Z58mrUAFpNviP9Z
+	b48JmtTNY//qVDuM+J5t0K4TtsY6DMtLDNd+mqQkoPbHDbtGSHNBBNTFaYjarPHy
+	EVh/6F/v76SjPpaFq/f3bOzphtxVN0Zcl6d+M6qOoOihPMrBNzyAssUynJgr6DlS
+	useRmwyIrZm5kAfR3awejM=
+Received: from ProDesk.. (unknown [58.22.7.114])
+	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3rzHkyrRl5GopBA--.2976S5;
+	Sat, 27 Jan 2024 17:20:41 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: krzysztof.kozlowski+dt@linaro.org,
+	robh+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Andy Yan <andyshrk@163.com>
+Subject: [PATCH 4/4] arm64: dts: rockchip: Fix the num-lanes of pcie3x4 on Cool Pi CM5 EVB
+Date: Sat, 27 Jan 2024 17:20:34 +0800
+Message-Id: <20240127092034.887085-4-andyshrk@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240127092034.887085-1-andyshrk@163.com>
+References: <20240127092034.887085-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d99:b0:361:aae3:4ee0 with SMTP id
- h25-20020a056e021d9900b00361aae34ee0mr142037ila.1.1706346305289; Sat, 27 Jan
- 2024 01:05:05 -0800 (PST)
-Date: Sat, 27 Jan 2024 01:05:05 -0800
-In-Reply-To: <000000000000c7970f05ff1ecb4d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000064064a060fe9b55a@google.com>
-Subject: Re: [syzbot] [ext4?] KASAN: use-after-free Read in ext4_find_extent (3)
-From: syzbot <syzbot+7ec4ebe875a7076ebb31@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, axboe@kernel.dk, brauner@kernel.org, 
-	jack@suse.cz, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3rzHkyrRl5GopBA--.2976S5
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Gw4DuryfJF17JrWDJFW5Wrg_yoWDZFb_ta
+	4xW3W8Xa1rGrn0g3s0yay3G3ySk39F9FW7Ga1UZFWDAF9xta1DJFyrtFW2q34UKr429w4f
+	Aa9xJF18C3Z8CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_LvttUUUUU==
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gxyXmWXvvkQhAAAsT
 
-syzbot suspects this issue was fixed by commit:
+The 4 lane pcie30 phy is shared by pcie3x4 and pcie3x2, so
+the num-lanes of pcie3x4 should be 2.
 
-commit 6f861765464f43a71462d52026fbddfc858239a5
-Author: Jan Kara <jack@suse.cz>
-Date:   Wed Nov 1 17:43:10 2023 +0000
+Fixes: 791c154c3982 ("arm64: dts: rockchip: Add support for rk3588 based board Cool Pi CM5 EVB")
+Signed-off-by: Andy Yan <andyshrk@163.com>
+---
 
-    fs: Block writes to mounted block devices
+ arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17b36eefe80000
-start commit:   c42d9eeef8e5 Merge tag 'hardening-v6.7-rc2' of git://git.k..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d05dd66e2eb2c872
-dashboard link: https://syzkaller.appspot.com/bug?extid=7ec4ebe875a7076ebb31
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1585ea50e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=157ef53f680000
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
+index 5f42f1065d73..9bff04fc7e43 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
+@@ -126,6 +126,7 @@ &pcie30phy {
+ 	status = "okay";
+ };
+ 
++/* Standard pcie */
+ &pcie3x2 {
+ 	reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_HIGH>;
+ 	vpcie3v3-supply = <&vcc3v3_sys>;
+@@ -134,6 +135,7 @@ &pcie3x2 {
+ 
+ /* M.2 M-Key ssd */
+ &pcie3x4 {
++	num-lanes = <2>;
+ 	reset-gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
+ 	vpcie3v3-supply = <&vcc3v3_sys>;
+ 	status = "okay";
+-- 
+2.34.1
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: fs: Block writes to mounted block devices
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
