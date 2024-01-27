@@ -1,89 +1,81 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2FA1EA72;
-	Sat, 27 Jan 2024 10:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DDA7F
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 10:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706350082; cv=none; b=nAq5XnB07pblssRw3iJiIoYmHquSsU9HK8QxYfWb1V3l621XRk6+WcRgnP0iL62mxqelK8xiBC2DnvaUbEYW+5WxmU4FUmNu+QkHU0OnUozpJ+3TsuxlIN4lnQGgA1Da2iza/rBm8jW3OtY1JhFr/dXufh6Nz3VZJYPzkVCLLsI=
+	t=1706350135; cv=none; b=MIIoENzUHfIP7sOaO8OUxYMkMURYUcq90WehcaECk8IzudLKaidxx1kaupiKpYTdSwVSfOAJ+QdBURRBlcqQyHKpWSM9YbsHTp4ltTBiu7dvUeia1xBwtJV/w2Yk8+dFmo6Eoxvon5inyj69/L60lyv2Uu0z4URNchDSDHb1VC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706350082; c=relaxed/simple;
-	bh=bBw75j9IqFgnIbLcow/2PLqrMy0+1Vb6FnaPfM8nBGU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=WUlzwYAb3RPecZHo5a5OVwB9wvyMl8h0DBpCoDK1NOG4sPtjy3dNhK2eVYHHOQi2d/KVxbsfeOgBzEUWTo5+ck4J/lfh2sZCQNB7LiEFx86oyIWca5QAHKsVzboj15ui9kCoSNZ5rKQKLIOx4vfa5pEIwI4ekT0UpWPdtU589wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=KfOkAHNx; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1706350135; c=relaxed/simple;
+	bh=1VxgF4ABxRMuz9+GUjkRK1OHy17du72n2fD1tWMTxtc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ULFmg47TORfm3XIAvELL2xE7ec5WTGBKWA7LdJM44TLDr1Lzq4e50D8JdnqMxpvtgYHyShP3EqFz1rSMOkbtswyMG+tPC2KMGaB2AkxCxMg3H4pZa0Fsg6BEMG65+QOhvBPWJrjLsPGG/LL8BhEbaXr3KYit8BDr7hbplsw9ugQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dVGounnX; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="KfOkAHNx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1706350033; x=1706954833; i=markus.elfring@web.de;
-	bh=bBw75j9IqFgnIbLcow/2PLqrMy0+1Vb6FnaPfM8nBGU=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=KfOkAHNxxuZ9iWWuu+OUG97AQblwOQIOaoSk0kAFqNoachBFbxkHhAWpe741trbC
-	 7ZeSrwEs12mqXojMfgmzlJDyepSfgfymzq097IoLeDo+Eqzr0z/YUxKY6EciKWWTy
-	 Afs+LR6NI8Rf/bLQdDuwUt+xFMy1vFnZoHaGeGM6OCS6aJTHifmJJl5HICl4ldxDL
-	 yC4wajXcBefUxC98ILQbVrWt2wbwPcuH/+Xyp+lWCLpX4sggo8DNI22pVXfs+absA
-	 cEz9t/gbQk5ccWPn2tanbMUC1rMAJEaEOPNByaoF57og78LIzdeNe9XmL7MZzx88s
-	 +NR/eUguEMFY5N9PIg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MlLE9-1qmwnM0rK1-00lTfE; Sat, 27
- Jan 2024 11:07:13 +0100
-Message-ID: <60e674ca-6018-4f4e-a0b1-d8e27f4cee3a@web.de>
-Date: Sat, 27 Jan 2024 11:07:00 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dVGounnX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706350133; x=1737886133;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1VxgF4ABxRMuz9+GUjkRK1OHy17du72n2fD1tWMTxtc=;
+  b=dVGounnXXb2yoafnYMsTg/e6jfPc30wTZw1d3mW6qRZFRiqaJK5UBkM7
+   4oe7ykukuO5i4/AKk4Rf19SRi8WeTAvDOBIcDONtCwHA1po6eVtHutpNf
+   XSS52c2FXLhRmPf0e3euWl2GMAgQnuiWP6aKSmeSezEiiYA3YGvijJoDM
+   du3Mt2ovJPp50whhsgwv4Og4WXvporR6HveM2ZwLcwJROry2xul6NGfnw
+   SbACAnqiaHvKrEsXDbM2w8wz1WmiN4mIFKMgrv5A0ACxayfzfrfRodh+f
+   Eu7CbCEcgadGQf3KY8D5U6CbzGApJDlt6zfr4xfWFOeL7m8JN8nE/Xnxp
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="16190964"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="16190964"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2024 02:08:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="736923486"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="736923486"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by orsmga003.jf.intel.com with ESMTP; 27 Jan 2024 02:08:51 -0800
+From: Xin Li <xin3.li@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	luto@kernel.org,
+	ravi.v.shankar@intel.com,
+	andrew.cooper3@citrix.com
+Subject: [PATCH 0/2] x86/fred: Fix two build issues
+Date: Sat, 27 Jan 2024 01:37:26 -0800
+Message-ID: <20240127093728.1323-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Kunwu Chan <chentao@kylinos.cn>, netdev@vger.kernel.org,
- kernel-janitors@vger.kernel.org, David Ahern <dsahern@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Steffen Klassert <steffen.klassert@secunet.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240124063150.466037-1-chentao@kylinos.cn>
-Subject: Re: [PATCH ipsec-next] xfrm6_tunnel: Use KMEM_CACHE() instead of
- kmem_cache_create()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240124063150.466037-1-chentao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dNrUMlzmaXK4pxFerqVzZOWEGdnTq3ZTolScq2NlNQzW2IO/0dD
- 3SLOvXI1IA+tCzdYJam16bg2Q77VFIIfFQlBE0yHdpME9HAt0EYNpuYWl4yH2Zy/a+TTs/8
- DCYc+EnSYfvQanO2BK+X7wm+Ay39k4LjeaUTS3CHpl7rtMtXg9rqpJvMwHICFeBg43sIn+/
- g/vZhVVN0KN7/TX1mcSzg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WrYeNNe5XXo=;vPbqom3K9Tel6t4CdK2X0uZEsAf
- hPYbceZrOiTyMrlMTFsWtcNz3ONXBCFw2MyT99DC5d/9uTA1B2FXV/qTZYzQ1Zw+JgqF94SLw
- 624O4Cced59N9+KcLFFbY29q91vdsbsMlOT0Bc4JEDKT7VHylQ2lk4T4COY54jiypwLxN7/aL
- RZrbHNUevZva/MmQVAQSE1Gx+qfkfM2Yn9hEk4w9lnP01VKYCy49HqRfrcDjxbvVIn/l5cfg/
- G1Af8GMVPlElsQ7FN1frclZz4jUsRQ0ADIJtcM/k7iw+CS/Ez5mho4/2ztiZqUwnaRfvjU8oz
- ff5nSTR/KoE9L7fgATvhxTupMlsYR7m8t6gyKVreVkoUV01SuCdNs4/RL12CIVfbco0B+CM4I
- yggYX2SWipBb737abxfvQqB4sWffSouTDwQojeqMvlgiw6zj4jMNkEkXNErTMYOzlWYbD2bio
- GxuPRw4AhPo3lcSAn9DF1k8eGgoRnM8kvrCTYA8IFqeXhEn1trzlgML7gYorLP09BA6jGwjAI
- LjpNPqSQQsebmYTtjypxxPEZQES5RvsgeBVkTzZguTtqpKpsCyQoLAPCOTd1d5tugi5/ibUB3
- XEWvhKSslPPXuJqgy4dLFpX58EegQt+eC/Mx3luTpLsTL0K5P28NB0I262ZPU+3/q4qCeN/24
- i+CbjNW1ixiSuWab0wzGuMwLjsf2bDqnhPbihhxzUnqXng1yeMzHsQqN7/Zv1vItB14cZjmNR
- voiuupNor9Kvc+q43Qh4qy1JHUWbIc+QgQwImQyQ7kgBGOrymDitR2vxdL6+jXthQ6/vYAw8y
- Xh+UhftlB+mcFKr1RRt9uPUL8x2a3rHph9xSmc0flQ+sYrGw5mLmfI9hAXXk/tcqHfOU9jIFK
- 1N+2O3uHqNfZFu57KQO9M3ULGwDgpC2grY85cuH3D989fJXmeLrDgu2NAQtPtcHYL8PPnH5UB
- 6AHzbQ==
+Content-Transfer-Encoding: 8bit
 
-> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
-> to simplify the creation of SLAB caches.
+Boris reported two build issues immediately after the FRED native patches
+landed in the tip x86/fred branch, fix them.
 
-I suggest to replace the word =E2=80=9Cnew=E2=80=9D by a reference to the =
-commit 8eb8284b412906181357c2b0110d879d5af95e52
-("usercopy: Prepare for usercopy whitelisting").
+Xin Li (2):
+  x86/fred: Fix build with clang
+  x86/fred: Fix build with CONFIG_IA32_EMULATION=n
 
-See also related background information from 2017-06-10.
+ arch/x86/entry/entry_64_fred.S | 3 +--
+ arch/x86/entry/entry_fred.c    | 2 ++
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Regards,
-Markus
+
+base-commit: a9f26154bf5478fc155309fc69128415f3a1be08
+prerequisite-patch-id: 4dc72e7440d5412bf200dbccb9a41128ed30baec
+-- 
+2.43.0
+
