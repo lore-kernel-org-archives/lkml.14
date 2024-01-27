@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACD212B6B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED6E13FE7;
 	Sat, 27 Jan 2024 05:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706332230; cv=none; b=PnF6BTQ6ZhhfB1Yuwj9lNB/h9fdL/KNCmQc9Zc9crI8J+EtpYtAaIWWPEkhKpXS+0rdgwoHwIDrVwyW3wqRmIkaP5hNz/wiFSlBQEYhIwkgEpnO+Zl8nlNqsPAnH+J92sr+F5vYMHrGb4eFAYdWP+8k6G+5vd2VXzs1J70MLX90=
+	t=1706332230; cv=none; b=FI3YGhH/1K0ROKaQTILM/Xz0V+MDzrOjt/kMiFTz2zLVZn3I/hOPuHhzqfGkkdxQCEfK47qeTenY35mJtvy75v5i7c0rOA6j/f/yAuGUwa6gcuiCphMhP9LAOkIXe7TDm/v44Jk1BGueOKo/4Ba4qoL5CWVhSP4GHeWhxxHSIq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706332230; c=relaxed/simple;
-	bh=c8OkF864VgYeRw7woWIVPNPvS2Vc3lcwaCYuza37+p4=;
+	bh=5j7c9OaIp+03FfKkYS4vICqk3KUP5hKpHsHO6ntv9wo=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=WYkAowAYBdJDyP0ux3wTTxNKUuJ4tvT+2ndZFHY7LFUgRTTmg8+7tMiBC3j9vuwMGJ5t7jdv+H0C4EQm3+dqefuDNy6aCqZ8+k2f6GwSomlY4LbyGmKANbY7pkkwrUPd99QmKAKgIN9PMkK7GkNjAx9xaMd2FQIKqlZ0EJTdCds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WG1HZCq1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=h3A5Ne02GNMwWPUnQppH4GpCk0VXeodWmOxWoKsC/REhccsMir1iN+dVohBXYrB/nXsJLxx84qU3MiHOXEs6cx5DxjVCllziBWn4igpHtj3p1HyNd7il94TY0U5nv27zuXPxAJxrIpq/yVbYh4gBzybtlLX5xN9CTyY5f34jqO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zb+MyNje; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WG1HZCq1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B0ECBC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zb+MyNje"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8F742C43390;
 	Sat, 27 Jan 2024 05:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706332229;
-	bh=c8OkF864VgYeRw7woWIVPNPvS2Vc3lcwaCYuza37+p4=;
+	bh=5j7c9OaIp+03FfKkYS4vICqk3KUP5hKpHsHO6ntv9wo=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=WG1HZCq1oG/F3L2KKL7tao9SUb16qJs9lwaLs1tt8NXZIew3RCW3tw9wp2chAHE47
-	 MJ4fYs+saBtS/pOsjSvJCBsnP7oFdDRCF3vA9k+HOBuuIEMceevgRZ+RR0bWBwfG7p
-	 pAzg1JuBZxwz7whiA0TRZSSOjwAVlhxI0T1KF2VxcZPp+xn1IB+YZYQRW18COIGkUm
-	 HgRzvvfesaUMaTrMgm2PIlveAHDEDS6g7vdakI3S9w7EHoyyDY87yn3GJj/LMlUts0
-	 tIeblo0ltYqt2YiG0+L7BWnxNpF3taN0ADoIS17LwaU/RIcRmZxQuMpDL/DfMxJsNV
-	 XGHzfnvfqRV9w==
+	b=Zb+MyNjekpdoArtUyTBf6dt3H7fIOZEIrPrmuq6uinpc5fUHv/JXnUTlS0CvlC8eE
+	 GPZpMaz/Iz8mphPkILP/jWEsTjvSQ0OFYIQQhcePuEpf0aYpfrRpp7IuQrmbOSaZVt
+	 xvdxrdTD2JFmr2W4OugM/PI22iVhAl/YhYWDIvugQgSplB5UfRJnoAERNybK15aRSm
+	 x5/us7qCyIcB1jYo2oGuxnUX1WIzrhXrmCMcLKKpdWxoDq5oBD47YQZGPxsF+8MEcI
+	 obNNj9oGs5zPHcdBEz8pV9KrWlWvcEvWyvfQj5r/fd4mOTr5o/0eYb71gWmBWBJ4zN
+	 DYbf4tkD/mi6A==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 94504D8C97E;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7546ED8C962;
 	Sat, 27 Jan 2024 05:10:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] drivers/ptp: Convert snprintf to sysfs_emit
+Subject: Re: [PATCH] bnx2x: Fix firmware version string character counts
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170633222960.22327.6975138327319151209.git-patchwork-notify@kernel.org>
+ <170633222947.22327.17115220484623160383.git-patchwork-notify@kernel.org>
 Date: Sat, 27 Jan 2024 05:10:29 +0000
-References: <20240125015329.123023-1-lizhijian@fujitsu.com>
-In-Reply-To: <20240125015329.123023-1-lizhijian@fujitsu.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-kernel@vger.kernel.org, kuba@kernel.org, richardcochran@gmail.com,
- netdev@vger.kernel.org
+References: <20240126041044.work.220-kees@kernel.org>
+In-Reply-To: <20240126041044.work.220-kees@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: aelior@marvell.com, lkp@intel.com, skalluru@marvell.com,
+ manishc@marvell.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 25 Jan 2024 09:53:29 +0800 you wrote:
-> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-> or sysfs_emit_at() when formatting the value to be returned to user space.
+On Thu, 25 Jan 2024 20:10:48 -0800 you wrote:
+> A potential string truncation was reported in bnx2x_fill_fw_str(),
+> when a long bp->fw_ver and a long phy_fw_ver might coexist, but seems
+> unlikely with real-world hardware.
 > 
-> coccinelle complains that there are still a couple of functions that use
-> snprintf(). Convert them to sysfs_emit().
+> Use scnprintf() to indicate the intent that truncations are tolerated.
 > 
-> > ./drivers/ptp/ptp_sysfs.c:27:8-16: WARNING: please use sysfs_emit
+> While reading this code, I found a collection of various buffer size
+> counting issues. None looked like they might lead to a buffer overflow
+> with current code (the small buffers are 20 bytes and might only ever
+> consume 10 bytes twice with a trailing %NUL). However, early truncation
+> (due to a %NUL in the middle of the string) might be happening under
+> likely rare conditions. Regardless fix the formatters and related
+> functions:
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2] drivers/ptp: Convert snprintf to sysfs_emit
-    https://git.kernel.org/netdev/net-next/c/8d0293302dfb
+  - bnx2x: Fix firmware version string character counts
+    https://git.kernel.org/netdev/net-next/c/5642c82b9463
 
 You are awesome, thank you!
 -- 
