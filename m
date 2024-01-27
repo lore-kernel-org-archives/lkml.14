@@ -1,94 +1,70 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D3CBA2B
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 03:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC76BA2B;
+	Sat, 27 Jan 2024 03:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706324520; cv=none; b=sqB5rk5D00PXokfQS1cHVizdQ2Oz0wXAkzJNMEQD71mS+8JZZSHagBexqYIoWW1TtsM70d63QpVMr8dDiik59Ccix00xvKtkqN0gyH8FSAZKaQuqhdrNPubaMgBkP8NRn2za8zgHnr680cX0Z1L65keb5k1X0DWh8Yk4fPL62es=
+	t=1706324563; cv=none; b=I3TLSvAwsaIIAO8jhdATWFUhUmKD+Z7IL6vHGRjk4tJjqm5cAKI89n1XJ3P/Q0SgybYSG42gKQvdzoxaa0uIYnImp5cjI0cQOeghPMhTU6XzoY9x6Ey+YL0Sujp4aDlv5JIWpmn1zPVjaTLWji9y+9nSmYh5t9bMo9nhWp+YBKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706324520; c=relaxed/simple;
-	bh=dpCL270UQPI5eSppcdrsOlocVyO13KcXBRgxFoQDaO4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dnCcgMwrLuEBws2SG/rp/tGabsVNJR9bTzrhZk5th6xCn8gO5c3eoD4/Py8rgPj/MjfT6Ew0LSxIbA6Yp6EW/1SGbVaRbhSXoAFZiDewkvsC76C8M21wIZUvk0USLtt+4x2AxYmVc0mcTK4L/wIkFWJpLj5wbbFLzN/xAqmTkdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QCx9qNXA; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QCx9qNXA"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-686980d9a9bso7137406d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 19:01:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706324518; x=1706929318; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pmcMqTe74whx9rEKa8Rswz2LGLtHny0L7TpbU7oKD6Q=;
-        b=QCx9qNXANqe731od4L38foRK7cROElujdSNFMkLjImuR7ZqyotI9VxZw3lkwi30FTT
-         oSm0nb74P9XNioiaVbOmXuUA/v0cIN7PK840W0ExL89sJxpxufxnnh24IHlkqZ9M8IWF
-         mCnQypVvqsETmo+VX3/70ATm0irb9+FxNV67dMigbo2lpaXryIp70CevzUPp+tG4AJml
-         uEbK03W/j5wfPOc0h+L3xgrOXQKy4jb8cFH2BgzntstW+k8CoPbqUTVWi2hpIk+s2kdW
-         bl9970qK6FnLkpev6ERmzVvS4s4CRvya5etuwwAcgC/mV+DPoBIeNZAMLiwXrT4ntC9S
-         F7dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706324518; x=1706929318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pmcMqTe74whx9rEKa8Rswz2LGLtHny0L7TpbU7oKD6Q=;
-        b=UBfGFBVTJC6R7B5XTgdq+H7L9lLFzTa8QccZaZA7Qfr9Q0gtKId5Wv1Ef+dyA3Sj5t
-         s2iIE06UEq6XrdiSo65zROo1qFOf+XM9smg91dJyKGPArBkE/LzE7WE+Yefrr0HAtf/3
-         qDaMVrlOJlQaBZyn4xd6AWtgrsqk6E4ZLgh3ix6oKX/6MXQ0OLR7uoe3Pe3DmCgLLNdb
-         JRFxoTPDv86UWi5JeYtJB2OxIcmGxcWawpb+OYWtH680+moml5wbP+x5VCQOOPle4gPi
-         NApFz+Uppg7D2KcRiwIm8v9qAm2uH5PpCtrIgr8L91Erhgt5fQiovhNlfmbeCS8ky9Ov
-         QJlg==
-X-Gm-Message-State: AOJu0YyRn7mGRbG3Pa5LZNuGwrwY8iIBGXANSUETJWbbJBbJ3JVaL0eD
-	xr1mtibCG1e/CqcA039AWI5lLATq/xJQ0xt0QVySmS/Fy33yX0/gqm5/YJoxt9EiUMfdf8QntUc
-	wfG3bls0FkluAgnr/pGkyHXumLwbixIkVGSP08g==
-X-Google-Smtp-Source: AGHT+IFl0pTq8D+qlRGElaXOH+Jp+6F2IhaN1xuPOVWBs/rLWvnBMzTHzpUbTXgaCK5ievjh3HGeFhyktkjJY70TJoU=
-X-Received: by 2002:ad4:4ee8:0:b0:686:aafb:2696 with SMTP id
- dv8-20020ad44ee8000000b00686aafb2696mr1130335qvb.29.1706324518010; Fri, 26
- Jan 2024 19:01:58 -0800 (PST)
+	s=arc-20240116; t=1706324563; c=relaxed/simple;
+	bh=cxcqoOkkMX0SfjL+gJhhX+vXkdzYwwz4tm4/8tFtwwQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WpGa/n3M1poxI+BRz6o5LJzlhhKcMt52Iooq76JU9yQr7G14eWkmlt23V7KfyzTjjqeguxjQGRyEuljI5cZjwLhdzLyaTucxczA94GG/a4CF0xstyj4iVWZLRYPkZnyyZ6YUa+rUdcXGTjCphFRJX29ufTfgaryDWu5gzqKG6PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TMK7y5bX2zvVNk;
+	Sat, 27 Jan 2024 11:01:02 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id DA5F11404FC;
+	Sat, 27 Jan 2024 11:02:37 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sat, 27 Jan 2024 11:02:37 +0800
+From: Yang Jihong <yangjihong1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <yangjihong1@huawei.com>
+Subject: [PATCH] perf evsel: Fix duplicate initialization of data->id in evsel__parse_sample()
+Date: Sat, 27 Jan 2024 02:57:56 +0000
+Message-ID: <20240127025756.4041808-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240127003607.501086-1-andre.draszik@linaro.org>
-In-Reply-To: <20240127003607.501086-1-andre.draszik@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Fri, 26 Jan 2024 21:01:46 -0600
-Message-ID: <CAPLW+4mLuisoxQqOagFjjQ3n9yRYEDQTbGYz21_kO0zDMoRYkA@mail.gmail.com>
-Subject: Re: gs101 oriole: peripheral block 0 (peric0) fixes
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: peter.griffin@linaro.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com, alim.akhtar@samsung.com, 
-	s.nawrocki@samsung.com, tomasz.figa@gmail.com, cw00.choi@samsung.com, 
-	mturquette@baylibre.com, sboyd@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-On Fri, Jan 26, 2024 at 6:37=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik@l=
-inaro.org> wrote:
->
-> Hi,
->
-> While working on peric1, I've noticed a few issues in the peric0 area
-> and these patches are the result. They should all be pretty
-> self-explanatory.
->
+data->id has been initialized at line 2362, remove duplicate initialization.
 
-Looks like "PATCH [00/xx]" is missing in the title.
+Fixes: 3ad31d8a0df2 ("perf evsel: Centralize perf_sample initialization")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/util/evsel.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> Cheers,
-> Andre'
->
->  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 9 +++++----
->  drivers/clk/samsung/clk-gs101.c              | 8 +++-----
->  2 files changed, 8 insertions(+), 9 deletions(-)
->
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4d14f14f2506..a0f36a6b8a2d 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2363,7 +2363,6 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	data->period = evsel->core.attr.sample_period;
+ 	data->cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
+ 	data->misc    = event->header.misc;
+-	data->id = -1ULL;
+ 	data->data_src = PERF_MEM_DATA_SRC_NONE;
+ 	data->vcpu = -1;
+ 
+-- 
+2.34.1
+
