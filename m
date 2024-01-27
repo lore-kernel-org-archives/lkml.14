@@ -1,231 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631FC2E62F;
-	Sat, 27 Jan 2024 16:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7614256756
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706373177; cv=none; b=ROPxVFU7/+ZSBAdJXmG2Zmbxb31HSbXnroP8/CsWLXFgpgkcJdErxMJCPGRTi54BOX1adzZQhWjbMA/oM18a31JzsKgYB/buvcAog8sglNWXDTlWRFQ9MD0X+A5XBhay54uFCx2vOQNUy6hRHPY/TVGtIkU3Uq2Ll7S1Pzu63kg=
+	t=1706373184; cv=none; b=eDDe7WcsoQQKQRrIan0JzHynVvAcq+kbec3X990paWaR1IeQYjyzCIDp6Rpg1sLJh6RznIyFEiiatXJGZkjT4uzpFtnLUKwYWV/Kknf33pG6OD69fNsbAiNly8436k0YH/Iz+e5UG4S9Y++9kIT30V2kJgcO0S4mS1lt3RRTe4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706373177; c=relaxed/simple;
-	bh=zQfoZw8TAHIXjSz0P9ay/fYjypHtOoMzHr8C8vMyAuw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YVJxBA+7Hj81kdrBp0l6K1Y54KnkopxOdi7xpQ9POZyH9CNSRAS3WbcGhHTis3qBwKKpy2JltUcXaO92U3oQacArsy7VSinNlIuyAQh/rV4ni8QgnVVlzSoI3GP0bAHn3SAd75k4QSFPCbJoH6kh1F7LaBkez+hjYhAq+/+V1ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNrGbLX7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706373184; c=relaxed/simple;
+	bh=kCA9TsgWAj9jn5vlEBGgkwF7celX9k9TNJISTn56xmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ocaThquUR3ty1nOCyhU8hiDYQcER2C7/JpV2YErteVLFZj4OYoOX3PDNG06zF2XPgrVWBuNSz+mpwFrQrJcbIhlDBqLLImggszvOZz3jAPtZqn89R9BAadqAvsQnn1X3n0J+/iehh8xDO1iU6YbHSQy8q63SN9vS0dt8+piOkLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DdFS4rez; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNrGbLX7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6EA4C4166D;
-	Sat, 27 Jan 2024 16:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706373177;
-	bh=zQfoZw8TAHIXjSz0P9ay/fYjypHtOoMzHr8C8vMyAuw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DNrGbLX7VsycQLHZKhmkPyj+vrvcC0UogDZv0KRWqDXAWmjK7oRdOwxiZAZT7oVUk
-	 0D6r/bDML/Qz2U1pevBmozEb34cueyQtPa2AhS+mtfFq/803/9jqIALT3qHYuNArd6
-	 aJJerssO39mcF9i1uBRGPhxqXydfQ3Y7Tu0+tLU9lqWIMvYOgw41lcsEfYkcqzHrDe
-	 JaEGxxlS+Ux1m1spm3v78yIL+WAUnCcRj7DbbYS5VGctynuvhYMYaueWKU6kZyJQVa
-	 YwGYFOcX1bInx7ss6wnt8Yrbci22rvQONZ8jXClQx4Kp/9gzWbfHOn4mVoDtzqsv3r
-	 Re/ogS+EAvXnw==
-Received: by wens.tw (Postfix, from userid 1000)
-	id 85B4F5FF9C; Sun, 28 Jan 2024 00:32:52 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-sound@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/7] arm64: dts: allwinner: h616: Add DMA controller and DMA channels
-Date: Sun, 28 Jan 2024 00:32:46 +0800
-Message-Id: <20240127163247.384439-7-wens@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240127163247.384439-1-wens@kernel.org>
-References: <20240127163247.384439-1-wens@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DdFS4rez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706373181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kCA9TsgWAj9jn5vlEBGgkwF7celX9k9TNJISTn56xmI=;
+	b=DdFS4rez6b1FpM7VDRDPe9I/S/64LdhV4mdmdQICFscCFQJ0SeQh01D3U/JzhWycxb8DyO
+	zhZBASOAV5/AXicUiFd1palTkxlf1cBHmSKhN0Lz5g8dQg+xUu4amKudacOqHd4APNJR6p
+	5AaNaLIxfe/i0A/Sh+saF+egaovdiaw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-614-Fc0-O_u7Mjaip4MGg-JMYQ-1; Sat, 27 Jan 2024 11:32:55 -0500
+X-MC-Unique: Fc0-O_u7Mjaip4MGg-JMYQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 65637835381;
+	Sat, 27 Jan 2024 16:32:55 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.4])
+	by smtp.corp.redhat.com (Postfix) with SMTP id D52E42166B32;
+	Sat, 27 Jan 2024 16:32:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat, 27 Jan 2024 17:31:41 +0100 (CET)
+Date: Sat, 27 Jan 2024 17:31:39 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 1/3] pidfd: allow pidfd_open() on non-thread-group
+ leaders
+Message-ID: <20240127163117.GB13787@redhat.com>
+References: <20240123153452.170866-1-tycho@tycho.pizza>
+ <20240123153452.170866-2-tycho@tycho.pizza>
+ <20240123195608.GB9978@redhat.com>
+ <ZbArN3EYRfhrNs3o@tycho.pizza>
+ <20240125140830.GA5513@redhat.com>
+ <ZbQpPknTTCyiyxrP@tycho.pizza>
+ <20240127105410.GA13787@redhat.com>
+ <ZbUngjQMg+YUBAME@tycho.pizza>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbUngjQMg+YUBAME@tycho.pizza>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-From: Chen-Yu Tsai <wens@csie.org>
+On 01/27, Tycho Andersen wrote:
+>
+> It seems like (and the current pidfd_test enforces for some cases)
 
-The DMA controllers found on the H616 and H618 are the same as the one
-found on the A100. The only difference is the DMA endpoint (DRQ) layout.
+Which pidfd_test ?
 
-Add a device node for it, and add DMA channels for existing peripherals.
+> we
+> want exactly one notification for a task dying.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
-Changes since v1:
-- Fall back to A100 instead of H6
-- Add DMA channels for r_i2c
+This can't be right. EVERY user of poll_wait() or wait_event/etc
+must handle/tolerate the false wakeups.
 
- .../arm64/boot/dts/allwinner/sun50i-h616.dtsi | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+> I don't understand
+> how we guarantee this now, with all of these calls.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-index d549d277d972..885809137b9d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-@@ -133,6 +133,19 @@ ccu: clock@3001000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		dma: dma-controller@3002000 {
-+			compatible = "allwinner,sun50i-h616-dma",
-+				     "allwinner,sun50i-a100-dma";
-+			reg = <0x03002000 0x1000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
-+			clock-names = "bus", "mbus";
-+			dma-channels = <16>;
-+			dma-requests = <49>;
-+			resets = <&ccu RST_BUS_DMA>;
-+			#dma-cells = <1>;
-+		};
-+
- 		sid: efuse@3006000 {
- 			compatible = "allwinner,sun50i-h616-sid", "allwinner,sun50i-a64-sid";
- 			reg = <0x03006000 0x1000>;
-@@ -339,6 +352,8 @@ uart0: serial@5000000 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART0>;
-+			dmas = <&dma 14>, <&dma 14>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART0>;
- 			status = "disabled";
- 		};
-@@ -350,6 +365,8 @@ uart1: serial@5000400 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART1>;
-+			dmas = <&dma 15>, <&dma 15>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART1>;
- 			status = "disabled";
- 		};
-@@ -361,6 +378,8 @@ uart2: serial@5000800 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART2>;
-+			dmas = <&dma 16>, <&dma 16>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART2>;
- 			status = "disabled";
- 		};
-@@ -372,6 +391,8 @@ uart3: serial@5000c00 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART3>;
-+			dmas = <&dma 17>, <&dma 17>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART3>;
- 			status = "disabled";
- 		};
-@@ -383,6 +404,8 @@ uart4: serial@5001000 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART4>;
-+			dmas = <&dma 18>, <&dma 18>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART4>;
- 			status = "disabled";
- 		};
-@@ -394,6 +417,8 @@ uart5: serial@5001400 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART5>;
-+			dmas = <&dma 19>, <&dma 19>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART5>;
- 			status = "disabled";
- 		};
-@@ -405,6 +430,8 @@ i2c0: i2c@5002000 {
- 			reg = <0x05002000 0x400>;
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C0>;
-+			dmas = <&dma 43>, <&dma 43>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C0>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&i2c0_pins>;
-@@ -420,6 +447,8 @@ i2c1: i2c@5002400 {
- 			reg = <0x05002400 0x400>;
- 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C1>;
-+			dmas = <&dma 44>, <&dma 44>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C1>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -433,6 +462,8 @@ i2c2: i2c@5002800 {
- 			reg = <0x05002800 0x400>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C2>;
-+			dmas = <&dma 45>, <&dma 45>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C2>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -446,6 +477,8 @@ i2c3: i2c@5002c00 {
- 			reg = <0x05002c00 0x400>;
- 			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C3>;
-+			dmas = <&dma 46>, <&dma 46>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C3>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -459,6 +492,8 @@ i2c4: i2c@5003000 {
- 			reg = <0x05003000 0x400>;
- 			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C4>;
-+			dmas = <&dma 47>, <&dma 47>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C4>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -472,6 +507,8 @@ spi0: spi@5010000 {
- 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 22>, <&dma 22>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_SPI0>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -485,6 +522,8 @@ spi1: spi@5011000 {
- 			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 23>, <&dma 23>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_SPI1>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -734,6 +773,8 @@ r_i2c: i2c@7081400 {
- 			reg = <0x07081400 0x400>;
- 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&r_ccu CLK_R_APB2_I2C>;
-+			dmas = <&dma 48>, <&dma 48>;
-+			dma-names = "rx", "tx";
- 			resets = <&r_ccu RST_R_APB2_I2C>;
- 			status = "disabled";
- 			#address-cells = <1>;
--- 
-2.39.2
+I don't understand why do we need or even want to guarantee this.
+
+The extra wakeup must be always fine correctness-wise. Sure, it
+would be nice to avoid the unnecessary wakeups, and perhaps we
+can change wake_up_all() to pass a key to, say, only wake_up the
+PIDFD_THREAD waiters from exit_notify(). But certainly this is
+outside the scope of PIDFD_THREAD change we discuss.
+
+The changes in do_notify_parent() (I have already sent the patch) and
+in exit_notify() (proposed in my previous email) just ensure that,
+with the minimal changes, we avoid 2 do_notify_pidfd's from the same
+exit_notify() path.
+
+> > exit_notify() is called after exit_files(). pidfd_getfd() returns
+> > ESRCH if the exiting thread completes release_task(), otherwise it
+> > returns EBADF because ->files == NULL. This too doesn't really
+> > depend on PIDFD_THREAD.
+>
+> Yup, understood. It just seems like an inconsistency we might want to
+> fix.
+
+Not sure this worth "fixing"...
+
+Oleg.
 
