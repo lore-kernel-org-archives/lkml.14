@@ -1,123 +1,160 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD44B60BA1
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4589060DC9;
+	Sat, 27 Jan 2024 16:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706372443; cv=none; b=W4N3i4MquBqj4AtcVPcbKpnDD9Tufz1Rq3KoH3Ift0V0RQK9hPJmAs8jiGjMJt95xB+BEtmk7BLj8g5/b/r+Ss3H7CCBpnWM1CgkFWY0e/tJD7nY+8xdEDEOve0HYYKRzWKUagKpg5QAZYx9QjCBQBioSc7Rt6vryrXQm36V9zI=
+	t=1706372456; cv=none; b=PY+KhNjxBkJyXQwJaEiHMoOE6HoxG+DZUGYnS0Y2ZNzWVGfhablMNLHAKsdvlp84bXpuLoO0566ZWxkD/brWyJFCO2jNGHz+lOubJiwzWAd5+0y9OBRbuADo0CwmyBfMgoc/KYN/C2aZCs5JeCbytX/dMfQN9FHgosaDV9MWBa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706372443; c=relaxed/simple;
-	bh=+vDB89SzfaGeLw+TC2EaAQbpjiB5TaXXYi4Ec04MFkg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oCqitnVvdfrHFAWM5RgUmwbo68Y3aM4r3IrVXQmOQ1ShWYYh008ohCSxRbRjwJ91Xf0tkNFJHQRAhd/YXZCs1JVncAtmDqtbHqPdlu82a6ZH1cPINHdGmkFvqo4btxv1hpGNKQLzUiqbELqufVVz9AJaamZpU2My3ColDjP2tj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=DDRLWHGD; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1706372456; c=relaxed/simple;
+	bh=vuJqFnZtTpTssMFoMa9G7Fw9QNg4vClPrMPI4Vl+fQo=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=fafJxih7yCJwLVqGxaNM4DGQWx80i4IBNBWBGI3YjxUljNFdb+Ajn6UyfUoFh/pYQW1qvWtk7VOLERAZEMIPMI0hSdH9i2zcPtaDbobR1FO4g2PEH1ZIceyyRpz1WphrNYGgkwaHCckgfUX40bAIML/9vFBOUCYoTXvzTWotA0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jF3MusBl; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="DDRLWHGD"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29041f26e28so776860a91.0
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 08:20:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jF3MusBl"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-68c37bf73aaso9925036d6.2;
+        Sat, 27 Jan 2024 08:20:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1706372441; x=1706977241; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1706372452; x=1706977252; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HC6ciBL1O4iGBio2d1au61PVhJtzF6Er8tF32HGbqHI=;
-        b=DDRLWHGDoabF/ZxbxECgcg3k7qjvjUydILCbG8qVqzY+qdOUxMCerb0dAEX3MQ0YJ0
-         TUmEQTBXtpAvNAsrDQqdqBBu6NHAV9zvk3sFSS3/6/uUObMv3/Ox3mYcvlZCzWgxX5bf
-         I4myZFovHfl6n7yJ2wmom+cxOIdTwwa+kRqGGNOuwHaJNne+Fyl5S0kay23HE2Rd1Ecm
-         rdVBw+ld5DdiirdTxPy0sGNMGrwr6T0KW2zjAEWsNynjiUGhkT83I1ZOR8d0qRNqsCuY
-         iVxvAw3NKHds+xvClzWoBx2Id191FtQXNqU5E3Q7joHLVd8CUUVdZKEiKxKVGgmMSZWK
-         rBwA==
+        bh=khozqR2J5qyGoQPqSuwAokWTqr1QO39YPwi2HTUl2g4=;
+        b=jF3MusBlQFXatW7qXIZGK2UaaN+1M9baONpaP/BIfrGdix5COoJp+mc1fQNsL24Qjw
+         xV+ASIUQhjc27doTnXRWVUUDo4UTFylG1IvsrJO87Q5dHCG+n8AGEfLocqIv2cy52a3J
+         s+7KIxvm54f+DLC5SlDlbOOf0qtfQyGqG+bFxFjpMSFO59AVQamlcSxC5v/XesvaS8m1
+         qA2uPtTbqdRtSE5Ks3IByQb1GLaKmd/lHk/e+S0DIiGj3VDirSN3oMv1bz9mOZTIOY7T
+         x5f++Yx5wtyqyyC0QpTHvTDnbBZpJsX3VKqkVbfyu3kpyHXXiVyN7c3saEkOT0i75cXN
+         /Xlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706372441; x=1706977241;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HC6ciBL1O4iGBio2d1au61PVhJtzF6Er8tF32HGbqHI=;
-        b=t8Cr/BLFl0Gr+L7PiO5rv3jbqO8wvICO5knf6n8CBMf53XPUWwHOJlF2I0htviiYKN
-         /yYU6vZ2VkrrAP7pFCjMRVeBrPypg2NdNadkB8FoGXYdxLEjFohOrQyZ9dZ+jj/nacQ6
-         qvq1vjM+wlCqvDnxhSWBgjIPvVGQ4EkVhqcGB4kebe9ApXEvDoz3GrY486d1qz4pRPPC
-         qJBb8FEmgI4A3hPKPfA3ObWWQX6q6ExOLlgvqoGSn5u54f+IDG8N5mBntFuJjHVnFIWZ
-         8sZZDV1lPBlVSZtGgX/DpQ13gwghyxYTFBk0GLQ7IVj9dtJWGkIxRETTdt3EBNHWwk0y
-         zTtQ==
-X-Gm-Message-State: AOJu0YwcHVK/+5x+DJ622zGqj2nir5VobBDRfaal7gkDaoPsooMZ1vx9
-	Qy9FnhoeCKp22jOnAaEJTkkFFUmb4RjaqQur29mIAbxQMWo5k0bA+ZJRi37muoU=
-X-Google-Smtp-Source: AGHT+IFSOUWlua21LZ+ZlYrE47zhwA4hUbK2IiPKJDlMaTp5UgCAuO4/WnvSs3iZZMJltrIhvxlurg==
-X-Received: by 2002:a17:90b:184:b0:28f:ef30:804a with SMTP id t4-20020a17090b018400b0028fef30804amr795532pjs.35.1706372440990;
-        Sat, 27 Jan 2024 08:20:40 -0800 (PST)
-Received: from anup-ubuntu-vm.localdomain ([171.76.86.17])
-        by smtp.gmail.com with ESMTPSA id d11-20020a17090ac24b00b00290f8c708d0sm5091620pjx.57.2024.01.27.08.20.35
+        d=1e100.net; s=20230601; t=1706372452; x=1706977252;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=khozqR2J5qyGoQPqSuwAokWTqr1QO39YPwi2HTUl2g4=;
+        b=JoNYKuC6NP42vw6qW6PekBOYr5OEQbp4p+HS0HreG7Db5PElSjZROKze6RSFhL5q6W
+         TfvNNzGD7nRKjG6D20runw8xszcZSZrspayeOzp3oaGUO7qL6HYOD5PU+H5375hItqQs
+         TPd14NmdavbSl0xbYv2z4pbfUUBina1hbeSraKuiMEzfuG7P5VYmLrth1xtm4nsHQdUp
+         HjxVz2z3YnwpDCbKFq/Y16aW/x1zYIuK5lJEsL/3+6HMbmF/Sf0cPbDoKpLpVdYaJn3d
+         kddguNUGcdQWG+XKp7Dep/kd9SxjIzBJFqvKsv4Pq1NSRIxsRB52QmD/iB+j1+8kRpSk
+         P5eg==
+X-Gm-Message-State: AOJu0YxRSBZsHQPEy47QB6CyuzKn62Pd1gU3QdKYJ+vplNj4V0XFbe8B
+	QvAxxjAtoEfyFVUbLRpxBAid54PtCbXKRLnJ0axAVBajaxPl/cPz
+X-Google-Smtp-Source: AGHT+IEtYpnrWB7Pm3yuX4jPsKtMVMAT7CxIrt/thqrPJmnt6o0+3z1I+ItZujRzlRejHx8eF/YXDg==
+X-Received: by 2002:a05:6214:d4b:b0:67f:c133:3922 with SMTP id 11-20020a0562140d4b00b0067fc1333922mr2597732qvr.129.1706372452055;
+        Sat, 27 Jan 2024 08:20:52 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCU3+LBrHc5Zp2e/HJFvVOcowk2itTDRWVCeBu9FGgIoLhx1ERum609+VtwSXCmHZuqS5yjQCmPIOTKaPjOQe/dQTVYgq22FobAr2B/krJF/ABfPP6m7x4EnV1WSKu3Favw3R/CbLgjf5/KoV1SK7vMijxAF6bl7l3CjFbqXYhiVyfr3NdcT1IalWJrnDIDvwQXAH+8vMcCn58UmXIbIdpGi+QIRmYUiAKDZeK8dweFrlaJHhu4odqc7bkwALp38FVz8uctVXmeUDwB2/lw9r84h8fC5wfZhacmiPwbaeYB3uK3FMUsy8WMyqwZXvQ662JodMK+Ckz8Vlrh7uJX+WpaEhUDH4HWu9luhqqgzcCnUIez7adveWXYigeEOT6Zs2Evn+zFaqWUOPBcTgbt4mcOuWRmZGrpy3P4iXeTwtZWOD0UK0KTMIWxIPwu4cEAA2yoetHwyrCqg1YG4B4J6RX3Q7rnAuGmWy0F4Gy6JaivBNAUqAkkiQZgBXJpME8ViDxeKurO8zLRLDOGIuFJPQ88yzzDp/OTK3y5gqH5eSq8NpgoEKKTj1WZFsCugbWRMRWNXvOegG169A2OY8YlYSBY4PUT5sbUgfxPMVKXw9UCzIkqmEqs1SBrOvjAuDw1VaUfY1RD1QerhxTAoKJLFboH6DAaoR5tB7H6C1ZgOQC0MGvtl5XP66jVYbk3z4nIo7ssbaJuvZFei+ixltrx+QSNWmB6p9dDBN4po1+Vyn1pRQo8ZgWv/HC+BAFi/v8Gywoc8ablY6S2+UpeRQTwJHYvapimI5O/v3A//4++ejuPmhlC+hAFzmidM7s5mCcyBZchB8mGo1SGwUnUTcXnlopGASubLZKb11JA4GUSgJYN7obbCcauHOF5YwR9g7BW1x1AfpwyR0pDLQzI6wG4HgQG9mxfQlJ0QswjplomeljUhaHVAE0x1mVra5t3f
+Received: from localhost (131.65.194.35.bc.googleusercontent.com. [35.194.65.131])
+        by smtp.gmail.com with ESMTPSA id ly9-20020a0562145c0900b0068509353fb6sm991500qvb.133.2024.01.27.08.20.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jan 2024 08:20:40 -0800 (PST)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v12 25/25] MAINTAINERS: Add entry for RISC-V AIA drivers
-Date: Sat, 27 Jan 2024 21:47:53 +0530
-Message-Id: <20240127161753.114685-26-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240127161753.114685-1-apatel@ventanamicro.com>
-References: <20240127161753.114685-1-apatel@ventanamicro.com>
+        Sat, 27 Jan 2024 08:20:51 -0800 (PST)
+Date: Sat, 27 Jan 2024 11:20:51 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Joe Damato <jdamato@fastly.com>, 
+ linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org
+Cc: chuck.lever@oracle.com, 
+ jlayton@kernel.org, 
+ linux-api@vger.kernel.org, 
+ brauner@kernel.org, 
+ edumazet@google.com, 
+ davem@davemloft.net, 
+ alexander.duyck@gmail.com, 
+ sridhar.samudrala@intel.com, 
+ kuba@kernel.org, 
+ willemdebruijn.kernel@gmail.com, 
+ weiwan@google.com, 
+ Joe Damato <jdamato@fastly.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Andrew Waterman <waterman@eecs.berkeley.edu>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Dominik Brodowski <linux@dominikbrodowski.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jan Kara <jack@suse.cz>, 
+ Jiri Slaby <jirislaby@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Julien Panis <jpanis@baylibre.com>, 
+ linux-doc@vger.kernel.org (open list:DOCUMENTATION), 
+ "(open list:FILESYSTEMS \\(VFS and infrastructure\\))" <linux-fsdevel@vger.kernel.org>, 
+ Michael Ellerman <mpe@ellerman.id.au>, 
+ Nathan Lynch <nathanl@linux.ibm.com> (open list:FILESYSTEMS \(VFS and infrastructure\)), 
+ Palmer Dabbelt <palmer@dabbelt.com>, 
+ Steve French <stfrench@microsoft.com>, 
+ Thomas Huth <thuth@redhat.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <65b52d6381de7_3a9e0b2943d@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240125225704.12781-1-jdamato@fastly.com>
+References: <20240125225704.12781-1-jdamato@fastly.com>
+Subject: Re: [PATCH net-next v3 0/3] Per epoll context busy poll support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Add myself as maintainer for RISC-V AIA drivers including the
-RISC-V INTC driver which supports both AIA and non-AIA platforms.
+Joe Damato wrote:
+> Greetings:
+> 
+> Welcome to v3. Cover letter updated from v2 to explain why ioctl and
+> adjusted my cc_cmd to try to get the correct people in addition to folks
+> who were added in v1 & v2. Labeled as net-next because it seems networking
+> related to me even though it is fs code.
+> 
+> TL;DR This builds on commit bf3b9f6372c4 ("epoll: Add busy poll support to
+> epoll with socket fds.") by allowing user applications to enable
+> epoll-based busy polling and set a busy poll packet budget on a per epoll
+> context basis.
+> 
+> This makes epoll-based busy polling much more usable for user
+> applications than the current system-wide sysctl and hardcoded budget.
+> 
+> To allow for this, two ioctls have been added for epoll contexts for
+> getting and setting a new struct, struct epoll_params.
+> 
+> ioctl was chosen vs a new syscall after reviewing a suggestion by Willem
+> de Bruijn [1]. I am open to using a new syscall instead of an ioctl, but it
+> seemed that: 
+>   - Busy poll affects all existing epoll_wait and epoll_pwait variants in
+>     the same way, so new verions of many syscalls might be needed. It
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+There is no need to support a new feature on legacy calls. Applications have
+to be upgraded to the new ioctl, so they can also be upgraded to the latest
+epoll_wait variant.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d1052fa6a69..49dd12e90609 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18792,6 +18792,20 @@ S:	Maintained
- F:	drivers/mtd/nand/raw/r852.c
- F:	drivers/mtd/nand/raw/r852.h
- 
-+RISC-V AIA DRIVERS
-+M:	Anup Patel <anup@brainfault.org>
-+L:	linux-riscv@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
-+F:	drivers/irqchip/irq-riscv-aplic-*.c
-+F:	drivers/irqchip/irq-riscv-aplic-*.h
-+F:	drivers/irqchip/irq-riscv-imsic-*.c
-+F:	drivers/irqchip/irq-riscv-imsic-*.h
-+F:	drivers/irqchip/irq-riscv-intc.c
-+F:	include/linux/irqchip/riscv-aplic.h
-+F:	include/linux/irqchip/riscv-imsic.h
-+
- RISC-V ARCHITECTURE
- M:	Paul Walmsley <paul.walmsley@sifive.com>
- M:	Palmer Dabbelt <palmer@dabbelt.com>
--- 
-2.34.1
+epoll_pwait extends epoll_wait with a sigmask.
+epoll_pwait2 extends extends epoll_pwait with nsec resolution timespec.
+Since they are supersets, nothing is lots by limiting to the most recent API.
+
+In the discussion of epoll_pwait2 the addition of a forward looking flags
+argument was discussed, but eventually dropped. Based on the argument that
+adding a syscall is not a big task and does not warrant preemptive code.
+This decision did receive a suitably snarky comment from Jonathan Corbet [1].
+
+It is definitely more boilerplate, but essentially it is as feasible to add an
+epoll_pwait3 that takes an optional busy poll argument. In which case, I also
+believe that it makes more sense to configure the behavior of the syscall
+directly, than through another syscall and state stored in the kernel.
+
+I don't think that the usec fine grain busy poll argument is all that useful.
+Documentation always suggests setting it to 50us or 100us, based on limited
+data. Main point is to set it to exceed the round-trip delay of whatever the
+process is trying to wait on. Overestimating is not costly, as the call
+returns as soon as the condition is met. An epoll_pwait3 flag EPOLL_BUSY_POLL
+with default 100us might be sufficient.
+
+[1] https://lwn.net/Articles/837816/
+
+
+>     seems much simpler for users to use the correct
+>     epoll_wait/epoll_pwait for their app and add a call to ioctl to enable
+>     or disable busy poll as needed. This also probably means less work to
+>     get an existing epoll app using busy poll.
 
