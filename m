@@ -1,221 +1,121 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3A533EA;
-	Sat, 27 Jan 2024 02:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F50BA22
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 02:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706324221; cv=none; b=G05Afz5cl0Lo4Rakh6vSAUbEv9w/JBAKZYvAUTaJOdUzqsdG5QVjykmGluccp7TP/Hsavachpx72Jzzc7iMRibwwM0eQHp0Tcj/JqRBEo4c4ekNDUnHunXMpcyRFN9ojge1e7PjHEzTe33VLotCnotChDHkQs3uw8TmgnnwEzrw=
+	t=1706324346; cv=none; b=QNCrENhGbrj4pYgkjDDKYIR2LCD7SYGrK2P+INbreAKFT4BEYxH5a2Wg5MLR6nIh0iNBgT8f/vZ8DyNUeGblN2JZMpYj7cP1JNWKQxWmGIQ+e4RcjcOS/+yizvwN3WUR+jIMQuIwBpzU5hsXzMJa8WIxNggbpLhSfjAx6d+BBkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706324221; c=relaxed/simple;
-	bh=nv4jbf87zShxyCZ68qQ++LPvHiIlHAI2ut+lzPqW47Q=;
+	s=arc-20240116; t=1706324346; c=relaxed/simple;
+	bh=cqz6h8qybg8zqeHMlgnFpj2fAVvyFuBzRiCjORdpKIU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EwqWHovANZVzoF9Fa96E0u5LboJKL6Bm4FfjkEgwZ9UDCpE6iSP2I7Bxz7NBM5RKvfwtFuFrBuL8qsT4AAUBmQvbqtgK3XHAtuAiDnETupwkmdhQhaJp481xFK2xuiED8+n473J3U/VLmKa/k7+ZFqW+2QxqsS0YQKvcEL9UvJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bkdfDy4e; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=qM9uRAjpksNwBdBd/anXzS8efisualzIgV4movxeMDdg9TQ5Kn8Vif/mH4V96t7LQsCwiyn4r5p0wLaiJh3wbLnzPnhr/6GvxyRHwOmPpI+dWMT+OMKAq0HCmjjKIFnCPO3cQ2uaqFYMT1tozKfGosr6BmCfHQ2cIQzc96PVckQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KM9P8Ffj; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkdfDy4e"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ddc1b30458so1284752b3a.1;
-        Fri, 26 Jan 2024 18:56:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KM9P8Ffj"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59a1f4b8d94so68009eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 18:59:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706324219; x=1706929019; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706324343; x=1706929143; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AL25Cgmp65Z4nugzUiRaGUI1/k9OMV61U5cI0oX2Yhc=;
-        b=bkdfDy4eMGJR/rQvF7BTXJhJi9inMuYGBtTMbVoLIGMf13xgwLW5TvznoQ9MiHZDSg
-         h9Cbg4Kc+HRSrHIqZU2kFf2KuzkI2S28QsUS7dnPL4B9WQ6pVmjRMQjwp4UV2FqJilR6
-         8s9lsrr1Ljfx+s72xlFeG/Z/EwAM0TmXLOKPpmARVEHIz1sZMbjKnPNmsucyGKZ5CK70
-         nX6a1fwGW7EAxZopGi04bEdT3E4S3qNTULN52578Gd5cCiBWRKpvS4rDIF+spSVBO2X3
-         Twn9jEw8dib0HZKHezmg7ckuEaPrAEem6gqsWixsLEMaf/DpG4JfvZaiYAXy33fsacR7
-         tXxA==
+        bh=qgh8HDwSDPm2J03EDVHmibPYOLvv4r06hCadDQb19fQ=;
+        b=KM9P8FfjDICBG8gPKPT5T4TbLmSo6cKuT8NhYiYAH8m8dX30rzTMcxHt4TfH7s38vZ
+         o0E+K5Mfzw2yeChgvCe/B+Q2bEHGCDFCsc/tjgKY4rvo0NhYDcr/xYcNQhFcIhaG/aMo
+         pYVeoaYo6bwUTiB6B7udeSkoDFgcqdCGPJcvxmRPyswHf7R1X1UYfX0PCQ/2RGGYDNiz
+         7rIk7OOR1Lu5pIqZMDnJh0ehTCvnSq429KSv4CoUrFbz9ffTYvVYYeMkhM33kqPoXHxF
+         nHTkGLVnwwHV18JPceizYHvwzN0YhH3+mtCi1H/v1tWCuIs/Eq/L2azyw1ZhyDTlhz7E
+         Gs/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706324219; x=1706929019;
+        d=1e100.net; s=20230601; t=1706324343; x=1706929143;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AL25Cgmp65Z4nugzUiRaGUI1/k9OMV61U5cI0oX2Yhc=;
-        b=GvLGO6M81REqlbkxOQ8gd2wXv6FxGvNB4VXaeYMygaZqD4mR1IozvlFLBI/k3wQKwQ
-         Tw6NuPy74W4wthY6d00HUTWUoKfAyrizpkml6w+gUDBoh3W7xdJBNlglwLbd+v9hyn27
-         P9nW8i5pmduXPhgtjNz6mOUvglGLQOCAqOdi6pMDIgY4sInmuPaf73qyRQNcVAf+dTcu
-         /iAbPGt4pXI/sr3UmtzFmSDQZm+fZnl4ojGEV0Cw7zA04n0nNzjn7frhRo8rptCWOXPi
-         OnHRynYXxqvVwwRGwqfrZI1nIXZ/QqpsWc51d64f6XViY4ZhRTRMbYdps1wvpSMG3Gtb
-         I/aA==
-X-Gm-Message-State: AOJu0YzfsjIPSLYV/Q9J6oHvzOKNzVuQN3JXFk0bs+M9EQy4DCoiHm87
-	LsAdBdIaWRqaXpTg6SU1kfnjendCYZvNyi9bhxzXGSqgw895kCEvbL8mRWBCU8oALly+3lisdob
-	THWBDCphZuT2NfzOoqgM+Lu7IIuH/Qpbskmo=
-X-Google-Smtp-Source: AGHT+IEF1Zw4IcNrJv2meCpYlZEjakZVYWQiEvWlydUinf+M6VOyFuJ4RxjJJUPz5t8zNR7LHtVIVj8g/ogXTl9F+Ag=
-X-Received: by 2002:a05:6a20:7f92:b0:19c:6ec0:33d0 with SMTP id
- d18-20020a056a207f9200b0019c6ec033d0mr972394pzj.37.1706324218699; Fri, 26 Jan
- 2024 18:56:58 -0800 (PST)
+        bh=qgh8HDwSDPm2J03EDVHmibPYOLvv4r06hCadDQb19fQ=;
+        b=Bk4hNibWredE/JK6rYBqZP1Fml0cDPPAgh+UDYTxKEN+4Axyr5+firGQFsg2j9JUwU
+         D/GmjgX3OYfioCW5hL2H9S/2MAGP5T5AKY0LLqs142kjRHPMNDbMPBSL66G8WCUkJNjO
+         yM2NYkMXIDKLSt6Bm7Hr7s8AT70v6Z7GPC0+5Y9hEcy2OgzmpCxSOV5iZXkjVZ76Al7y
+         xiO4FsJUpiumui4cf014P8SURJqS6X8W8A5W5ll+31Z4IP0xXR5iAMEAcWilDjOf+ycz
+         fBif7xGsInhTvmoaOXyu4se3b06SdPhYHymuly3/ionrgx9Q9aESnhMYBdTPGQDWOS3S
+         Z8rw==
+X-Gm-Message-State: AOJu0YymMPD4O6NFQ/X0nRqP1i6fj0/0aHQDSlDci7WlPVcMmU9QKsSH
+	XrvTpK0TPUbboGd7pVPlNEpN6OocjneqKhVN9iOKmZpdDhT+G3fs9o6ir2eyi/4tW694Kb/JJnR
+	Gc55B16S0le+rU02qnQ2RXJkqgu39U7B9g8V6yw==
+X-Google-Smtp-Source: AGHT+IEq0snClZUeq4rcjxQ00Gum27FvXapuVAnu/X2sIV8nk4Gb0dv6sVWx7czBtCSzZQnsoZAeAd5esWgduMRyUi0=
+X-Received: by 2002:a05:6359:428a:b0:176:67f3:4159 with SMTP id
+ kp10-20020a056359428a00b0017667f34159mr828828rwb.20.1706324343213; Fri, 26
+ Jan 2024 18:59:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240106221907.325127-1-aford173@gmail.com> <20240106221907.325127-2-aford173@gmail.com>
- <13783659.uLZWGnKmhe@steina-w>
-In-Reply-To: <13783659.uLZWGnKmhe@steina-w>
-From: Adam Ford <aford173@gmail.com>
-Date: Fri, 26 Jan 2024 20:56:47 -0600
-Message-ID: <CAHCN7xLJ7fXePrjuXOo4WJovAG1vZm1LjJGJP29aEfPO8oJL+g@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] phy: freescale: add Samsung HDMI PHY
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: dri-devel@lists.freedesktop.org, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, devicetree@vger.kernel.org, 
-	Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, 
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	NXP Linux Team <linux-imx@nxp.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+References: <20240127001926.495769-1-andre.draszik@linaro.org> <20240127001926.495769-7-andre.draszik@linaro.org>
+In-Reply-To: <20240127001926.495769-7-andre.draszik@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Fri, 26 Jan 2024 20:58:52 -0600
+Message-ID: <CAPLW+4m4G+-zFLGr6Bp-73-mERCofxDiD7F=2fd_Wq+18iTs9g@mail.gmail.com>
+Subject: Re: [PATCH 6/9] arm64: dts: exynos: gs101: enable i2c bus 12 on gs101-oriole
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	tudor.ambarus@linaro.org, willmcvicker@google.com, alim.akhtar@samsung.com, 
+	s.nawrocki@samsung.com, tomasz.figa@gmail.com, cw00.choi@samsung.com, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 8, 2024 at 9:03=E2=80=AFAM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
+On Fri, Jan 26, 2024 at 6:19=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik@l=
+inaro.org> wrote:
 >
-> Hi Adam,
+> This bus has various USB-related devices attached to it.
 >
-> thanks for pushing this forward.
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> ---
+>  arch/arm64/boot/dts/exynos/google/gs101-oriole.dts | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> Am Samstag, 6. Januar 2024, 23:19:05 CET schrieb Adam Ford:
-> > From: Lucas Stach <l.stach@pengutronix.de>
-> >
-> > This adds the driver for the Samsung HDMI PHY found on the
-> > i.MX8MP SoC.
-> >
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > V2:  Fixed some whitespace found from checkpatch
-> >      Change error handling when enabling apbclk to use dev_err_probe
-> >      Rebase on Linux-Next
-> >
-> >      I (Adam) tried to help move this along, so I took Lucas' patch and
-> >      attempted to apply fixes based on feedback.  I don't have
-> >      all the history, so apologies for that.
-> >
-> > diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kcon=
-fig
-> > index 853958fb2c06..5c2b73042dfc 100644
-> > --- a/drivers/phy/freescale/Kconfig
-> > +++ b/drivers/phy/freescale/Kconfig
-> > @@ -35,6 +35,12 @@ config PHY_FSL_IMX8M_PCIE
-> >         Enable this to add support for the PCIE PHY as found on
-> >         i.MX8M family of SOCs.
-> >
-> > +config PHY_FSL_SAMSUNG_HDMI_PHY
-> > +     tristate "Samsung HDMI PHY support"
-> > +     depends on OF && HAS_IOMEM
-> > +     help
-> > +       Enable this to add support for the Samsung HDMI PHY in i.MX8MP.
-> > +
-> >  endif
-> >
-> >  config PHY_FSL_LYNX_28G
-> > diff --git a/drivers/phy/freescale/Makefile b/drivers/phy/freescale/Mak=
-efile
-> > index cedb328bc4d2..dbcafdcc8751 100644
-> > --- a/drivers/phy/freescale/Makefile
-> > +++ b/drivers/phy/freescale/Makefile
-> > @@ -3,4 +3,5 @@ obj-$(CONFIG_PHY_FSL_IMX8MQ_USB)      +=3D phy-fsl-imx8=
-mq-usb.o
-> >  obj-$(CONFIG_PHY_MIXEL_LVDS_PHY)     +=3D phy-fsl-imx8qm-lvds-phy.o
-> >  obj-$(CONFIG_PHY_MIXEL_MIPI_DPHY)    +=3D phy-fsl-imx8-mipi-dphy.o
-> >  obj-$(CONFIG_PHY_FSL_IMX8M_PCIE)     +=3D phy-fsl-imx8m-pcie.o
-> > +obj-$(CONFIG_PHY_FSL_SAMSUNG_HDMI_PHY)  +=3D phy-fsl-samsung-hdmi.o
-> >  obj-$(CONFIG_PHY_FSL_LYNX_28G)               +=3D phy-fsl-lynx-28g.o
+> diff --git a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts b/arch/ar=
+m64/boot/dts/exynos/google/gs101-oriole.dts
+> index cb4d17339b6b..c8f6b955cd4e 100644
+> --- a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> +++ b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> @@ -72,6 +72,10 @@ eeprom: eeprom@50 {
+>         };
+>  };
 >
-> I don't know if there was different feedback already. But I would have ad=
-ded
-> the entry sorted alphabetically, thus after CONFIG_PHY_FSL_LYNX_28G. Same=
- goes,
-> for Kconfig as well.
+> +&hsi2c_12 {
+> +       status =3D "okay";
 
-The Makefile is easy to rearrange, but Kconfig is already out of
-alphabetical order, and PHY_FSL_SAMSUNG_HDMI_PHY is encapsulated in an
-if statement, so it cannot go after PHY_FSL_LYNX_28G.  It is
-alphabetical after PHY_FSL_IMX8M.
+But there are no bus clients declared here? A bit of explanation about
+how this bus is being currently used would be nice to have (in commit
+message); e.g. maybe it's used in user space somehow, etc. Because
+otherwise it doesn't have much sense to enable the bus with no users.
 
+> +};
+> +
+>  &pinctrl_far_alive {
+>         key_voldown: key-voldown-pins {
+>                 samsung,pins =3D "gpa7-3";
+> @@ -113,6 +117,11 @@ &usi8 {
+>         status =3D "okay";
+>  };
 >
-> > diff --git a/drivers/phy/freescale/phy-fsl-samsung-hdmi.c
-> > b/drivers/phy/freescale/phy-fsl-samsung-hdmi.c new file mode 100644
-> > index 000000000000..54e93ea898f7
-> > --- /dev/null
-> > +++ b/drivers/phy/freescale/phy-fsl-samsung-hdmi.c
-> > @@ -0,0 +1,1078 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2020 NXP
-> > + * Copyright 2022 Pengutronix, Lucas Stach <kernel@pengutronix.de>
-> > + */
-> > +
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/io.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +
-> > +#define HDMI_TX_CONTROL0             0x200
-> > +#define  HDMI_TX_CONTROL_PHY_PWRDWN  BIT(3)
->
-> These defines are unused here.
-
-I can drop these.
->
-> > +
-> > +#define PHY_REG_33           0x84
-> > +#define  REG33_MODE_SET_DONE BIT(7)
-> > +#define  REG33_FIX_DA                BIT(1)
-> > +
-> > +#define PHY_REG_34           0x88
-> > +#define  REG34_PHY_READY     BIT(7)
-> > +#define  REG34_PLL_LOCK              BIT(6)
-> > +#define  REG34_PHY_CLK_READY BIT(5)
-> > +
-> > +
-> > +#define PHY_PLL_REGS_NUM 48
-> > +
-> > +struct phy_config {
-> > +     u32     clk_rate;
-> > +     u8 regs[PHY_PLL_REGS_NUM];
->
-> Shouldn't reg be aligned along clk_rate?
-
-Why so?  They appear to just be structures where individual parts are
-read/written individually.  Looking at another HDMI phy driver, it's
-not really any different.
-
->
-> Despite that. Tested on TQMa8MPQL/MBa8MPxL + Full-HD HDMI monitor.
->
-> Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
->
-
-Thanks for testing.
-
-adam
-> Best regards,
-> Alexander
->
-<snip>
-
->
->
+> +&usi12 {
+> +       samsung,mode =3D <USI_V2_I2C>;
+> +       status =3D "okay";
+> +};
+> +
+>  &watchdog_cl0 {
+>         timeout-sec =3D <30>;
+>         status =3D "okay";
 > --
-> TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Ge=
-rmany
-> Amtsgericht M=C3=BCnchen, HRB 105018
-> Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan S=
-chneider
-> http://www.tq-group.com/
->
+> 2.43.0.429.g432eaa2c6b-goog
 >
