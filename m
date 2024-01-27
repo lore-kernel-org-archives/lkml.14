@@ -1,97 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471941EF1F;
-	Sat, 27 Jan 2024 16:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C1B1E531;
+	Sat, 27 Jan 2024 16:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706372905; cv=none; b=e3GhjydAij1J6lkqx+ql9Sxege5zxyJ2IPUBk7/1nVpNfZcPf7DCz9wbFYVwIlmOvtApavw1Jr2v5D1WqpulYTSvXUXlXkQvV4PK14EO/AjOqiTHg9d+oOOpBHEgNRydqY7ZgOXv7ud0Ck8PVR3gRjbMGLKy9pkkBEPF043WyHI=
+	t=1706373175; cv=none; b=l6O+yyFpEe5rPcCTTOrKYoRYpctBJcrQ2HvMp43yQEYW9QfwbjKgDCTYRsxqC6G4eBSbyHxHU/gejxLGM84+aViai5X3eTUew5zk9GQ5xbQG6AXkErvSStj9CcwaPoakJTLVsZZAJqyytzaVw3/f0hiaHfdEHmKFrlW3pxm2yGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706372905; c=relaxed/simple;
-	bh=SIsFgkfEIry3mn75jIrd3xxoyIlXqfXCtitggYePuF0=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=NNagCymWfiWSZS2nUwu8SLEk5/SWKv2Jlxg4ts6j60HjndoE5rGNw+UhOgrU19tI/JknNPvoiTQV0HtFvG3snwQ3YQcf2m6XGCgj0NJhFI2wHACHxqFJeCJuJnJRe9QMUHYbd4S1N4dpejCeieG1VFP2Ajgt/C2qIw5qSU9U+Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8DDCw1J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706373175; c=relaxed/simple;
+	bh=Kh4LgU41ucmqLDiWgVW2g3izu0jN4Zn5A+1gSaj5/7Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=X0EDAh4oEORhBeX9nD4VdwM/NSRwDrXDtcoVDMgbgWW20K6tDBqx7gJKJ1yHzc+waG+Zos9u16zZPUut+hIyoaYVprs1zYxY0hVE50pbIzdNcVICbdNABneE7OVwI5Axd5Thdl+POHYL2lYIE2PYpCWutNHvLNcxU2cAhLuJrkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ECaen3DG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8DDCw1J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67076C433F1;
-	Sat, 27 Jan 2024 16:28:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ECaen3DG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0953FC433B1;
+	Sat, 27 Jan 2024 16:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706372904;
-	bh=SIsFgkfEIry3mn75jIrd3xxoyIlXqfXCtitggYePuF0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=B8DDCw1JNLS+bpMz0I4/2w1PkfISe5Itd5hKJQKPdB2fXa7ymg4AgUHJsGrUlbhHr
-	 Yr46b+0VmuRX7rDLSNi8efgXcYN7YcjDA1pnpKANLX8Qth40tXUHV5h/Fq6pMsCAn3
-	 q+Q4QY20QglJPtQpHyTUylSsvc9DqFIVWDEbne4hgAOicEkT+0ibfiQ9T4DolAp2Q7
-	 vI0rLu4TkZseVX+w/QrzNcPKDjM6qzm0QntfoAzmZzzCYf99uCVLrkErzoO7FJj+5h
-	 oVCqABvy+WYdo5HItWkWOiV/bZm5m6xF9CWEck1A/52JcRDhx8vrXmyvQ1Zi67Aq4/
-	 d37tICFoD6orw==
-Date: Sat, 27 Jan 2024 10:28:22 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1706373175;
+	bh=Kh4LgU41ucmqLDiWgVW2g3izu0jN4Zn5A+1gSaj5/7Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ECaen3DGTCwiDfEdSEhDXDOCJGuemFmKJspx8UTpp6bKZdHf7jLXsocEl551KtgbN
+	 TdRlg/y15p9f6mBBkiZi+h1v/vXCbHAxBro51mI9TSz7O/ckhcdckFWlR1tEZgVKJ/
+	 0LogHQQp+/FBvRMYMHLPiVGWzWoPMdMPawwNcn5weK4p781dCdisDFikAQlor2IVQL
+	 MEPYpXV6VA2PwnNDUfzSp0qo9dZPMTzOBqPSxf/vypMyjBazHnyzotGGnoNbRM6jW5
+	 /ZHZCwffvyIWgNjRiOkPk1m22SuyU1PB2unZUJZ/kacpLhuzRfsGWdUISq5QJQF0Xa
+	 SX8C1PnHBao/g==
+Received: by wens.tw (Postfix, from userid 1000)
+	id 611C55FBBD; Sun, 28 Jan 2024 00:32:52 +0800 (CST)
+From: Chen-Yu Tsai <wens@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-sound@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH v2 3/7] ASoC: sunxi: sun4i-spdif: Add support for Allwinner H616
+Date: Sun, 28 Jan 2024 00:32:43 +0800
+Message-Id: <20240127163247.384439-4-wens@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240127163247.384439-1-wens@kernel.org>
+References: <20240127163247.384439-1-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
- David Airlie <airlied@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Daniel Vetter <daniel@ffwll.ch>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- dri-devel@lists.freedesktop.org, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
- devicetree@vger.kernel.org, Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Conor Dooley <conor+dt@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Sam Ravnborg <sam@ravnborg.org>
-In-Reply-To: <20240127152821.65744-1-dario.binacchi@amarulasolutions.com>
-References: <20240127152821.65744-1-dario.binacchi@amarulasolutions.com>
-Message-Id: <170637290174.2797231.1548285445759438647.robh@kernel.org>
-Subject: Re: [drm-drm-misc:drm-misc-next] dt-bindings: nt35510: document
- 'port' property
+Content-Transfer-Encoding: 8bit
 
+From: Chen-Yu Tsai <wens@csie.org>
 
-On Sat, 27 Jan 2024 16:28:08 +0100, Dario Binacchi wrote:
-> Allow 'port' property (coming from panel-common.yaml) to be used in DTS:
-> 
->   st/stm32f769-disco-mb1166-reva09.dtb: panel@0: 'port' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> 
-> ---
-> 
->  .../display/panel/novatek,nt35510.yaml        | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
+The SPDIF hardware block found in the H616 SoC has the same layout as
+the one found in the H6 SoC, except that it is missing the receiver
+side.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Since the driver currently only supports the transmit function, support
+for the H616 is identical to what is currently done for the H6.
 
-yamllint warnings/errors:
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+---
+ sound/soc/sunxi/sun4i-spdif.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/panel/novatek,nt35510.example.dtb: panel@0: compatible:0: 'hydis,hva40wv1' was expected
-	from schema $id: http://devicetree.org/schemas/display/panel/novatek,nt35510.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240127152821.65744-1-dario.binacchi@amarulasolutions.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdif.c
+index 702386823d17..f41c30955857 100644
+--- a/sound/soc/sunxi/sun4i-spdif.c
++++ b/sound/soc/sunxi/sun4i-spdif.c
+@@ -577,6 +577,11 @@ static const struct of_device_id sun4i_spdif_of_match[] = {
+ 		.compatible = "allwinner,sun50i-h6-spdif",
+ 		.data = &sun50i_h6_spdif_quirks,
+ 	},
++	{
++		.compatible = "allwinner,sun50i-h616-spdif",
++		/* Essentially the same as the H6, but without RX */
++		.data = &sun50i_h6_spdif_quirks,
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_spdif_of_match);
+-- 
+2.39.2
 
