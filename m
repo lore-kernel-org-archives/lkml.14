@@ -1,276 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.aperture-lab.de (mail.aperture-lab.de [116.203.183.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B121E860;
-	Sat, 27 Jan 2024 17:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96022D043;
+	Sat, 27 Jan 2024 17:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.183.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706377545; cv=none; b=OLmFDTr/SrIVto8LMpuR7OgJwuwB1DSOvY4Oia3ueUVKxJIKGdMC71uiUAfD5x8OkeFE6WjZq0YqxgP9hkxkZyoCpE8nxeZX3bK8kkKmuiqTYNbmbQdySvZpsdr9glYaVWRd/qPU8f8hWnIsr5Ec0kDq9bM+OwlRRnznpsOhgng=
+	t=1706377849; cv=none; b=s/MPSi6aW+rvhgXhkXKvVehSAF1Yxe5ZNJYkRKIV2A5K2PguzmRMhl5fNwyAy2VMDBrbooGnJlbO7y4y0wl30muxLnRM3jKpWCp1HPAQT/0JclBb5T+W/3G9CySjR3hDKi8j335OLY8Hr9Gl9Gl+JE8HI5ZyFxABox097QiB2WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706377545; c=relaxed/simple;
-	bh=CfTEgkFRXJec6DJgIyvZR86BWX77LAPIfK7gZooiXvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fh0RwdHnNxa3yCTenyMEj1FkRxSc+yIRCx8hrvMRCJ8rZV6CfmtKginR+r8ecjl0HGl+KaT+16Kmk20yed+BdGt7nMbShG00wAwcnurJezpLZUKooY3fQvxwGmlsFtW/b0h0eKikWrUBVvOn2rJnpL13/cE1tWM2LkcP56V8wrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBmN5a1F; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBmN5a1F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABBEC433F1;
-	Sat, 27 Jan 2024 17:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706377544;
-	bh=CfTEgkFRXJec6DJgIyvZR86BWX77LAPIfK7gZooiXvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nBmN5a1FhlhfVRsvU8rMlhDFPilBUXvOzN2+vn+jweNZ+pRAEzDtfWxISvdD6+VWB
-	 0a8zduKgnsHf6/7sXlskSoRSV/AiLI8s4Ku3vEXvYfYwiRn3d2bg3JMcYMB5i8++Zz
-	 kQSi50H62V/UDN4kJZSG+KJhnkPan1a6JnChMojeROF5+hPVFGDyV+wise3nEM6/BR
-	 dErjpmyCABm8O3qZAK8Gr56ASjN0pdreOanNWF1hlfPp76Iq1JhDtQkPwdI4vq5+cp
-	 59xm3S1IdOFEztSQC6VkOrfQNHZVmgpi4mj8ZKX/3Q5lM/in56fPmmy7EdYzIVCHAV
-	 uPCoetNJqhDfw==
-Date: Sat, 27 Jan 2024 09:45:43 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Joshua Ashton <joshua@froggi.es>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-bcache@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org
-Subject: Re: [PATCH 3/5] bcachefs: bch2_time_stats_to_seq_buf()
-Message-ID: <20240127174543.GD6184@frogsfrogsfrogs>
-References: <20240126220655.395093-1-kent.overstreet@linux.dev>
- <20240126220655.395093-3-kent.overstreet@linux.dev>
- <DA69BC9C-D7FF-48F7-9F6D-EF96DC4C5C7B@froggi.es>
- <5efhxgruvtlrjiqe52kgmnduguw3tmg2jjugfzi7dhbywljrwi@zu2ndkvzunzs>
+	s=arc-20240116; t=1706377849; c=relaxed/simple;
+	bh=gH9nNY+9TpVvPc6avD4dvJHTd9c7E4jxuwHISjX5lNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZMe+sLnKJm17KWGxwybWlXkoQiINNP1OT2AbBt+pu+90ec4Cl0I9nv26m05tPOHK5cVq8wk6dCqsE87dlIypN9pCPYSjYsihSCgoVFwUwRelG+6HCk/cyVrD5cP90WOSGBkowo+H3tsND3t5juxqrOnnaiRRrWET+vxvmL6R3W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue; spf=pass smtp.mailfrom=c0d3.blue; arc=none smtp.client-ip=116.203.183.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c0d3.blue
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7F18A40D6C;
+	Sat, 27 Jan 2024 18:50:35 +0100 (CET)
+From: =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
+To: netdev@vger.kernel.org
+Cc: bridge@lists.linux.dev,
+	b.a.t.m.a.n@lists.open-mesh.org,
+	linux-kernel@vger.kernel.org,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
+Subject: [PATCH net v2] bridge: mcast: fix disabled snooping after long uptime
+Date: Sat, 27 Jan 2024 18:50:32 +0100
+Message-ID: <20240127175033.9640-1-linus.luessing@c0d3.blue>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5efhxgruvtlrjiqe52kgmnduguw3tmg2jjugfzi7dhbywljrwi@zu2ndkvzunzs>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sat, Jan 27, 2024 at 10:20:48AM -0500, Kent Overstreet wrote:
-> On Sat, Jan 27, 2024 at 03:49:29AM +0000, Joshua Ashton wrote:
-> > Kernel patches need descriptions.
-> 
-> I think this one was pretty clear from the name and type signature :)
+The original idea of the delay_time check was to not apply multicast
+snooping too early when an MLD querier appears. And to instead wait at
+least for MLD reports to arrive before switching from flooding to group
+based, MLD snooped forwarding, to avoid temporary packet loss.
 
-I was mildly confused by this patch until I read the /next/ patch and
-realized "Oh, patch 3 ports the timestats rendering code to seq_buf so
-that patch 4 can lift it to lib/."
+However in a batman-adv mesh network it was noticed that after 248 days of
+uptime 32bit MIPS based devices would start to signal that they had
+stopped applying multicast snooping due to missing queriers - even though
+they were the elected querier and still sending MLD queries themselves.
 
-But I also thought the purpose of all this was kinda obvious from the
-cover letter, which was why I didn't say anything yesterday afternoon.
+While time_is_before_jiffies() generally is safe against jiffies
+wrap-arounds, like the code comments in jiffies.h explain, it won't
+be able to track a difference larger than ULONG_MAX/2. With a 32bit
+large jiffies and one jiffies tick every 10ms (CONFIG_HZ=100) on these MIPS
+devices running OpenWrt this would result in a difference larger than
+ULONG_MAX/2 after 248 (= 2^32/100/60/60/24/2) days and
+time_is_before_jiffies() would then start to return false instead of
+true. Leading to multicast snooping not being applied to multicast
+packets anymore.
 
-I really don't care about these sorts of things.  IMO the obviously
-interesting meat of the patchset is the patch that hoisted this to lib/
-and the critical review is brainstorming how I'd use this new piece of
-functionality, deciding if the api was ergonomic enough to start
-prototyping upon, and sending a conditional RVB if I demonstrated enough
-understanding of the problem being solved.
+Fix this issue by using a proper timer_list object which won't have this
+ULONG_MAX/2 difference limitation.
 
-As for rearranging deck chairs inside fs/bcachefs, that's Kent's thing.
+Fixes: b00589af3b04 ("bridge: disable snooping if there is no querier")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+---
+Changelog v2:
+* removed "inline" from br_multicast_query_delay_expired()
 
---D
+ net/bridge/br_multicast.c | 20 +++++++++++++++-----
+ net/bridge/br_private.h   |  4 ++--
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-> > 
-> > On January 26, 2024 10:06:53 PM GMT, Kent Overstreet <kent.overstreet@linux.dev> wrote:
-> > >Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > >---
-> > > fs/bcachefs/super.c |   2 +
-> > > fs/bcachefs/util.c  | 129 +++++++++++++++++++++++++++++++++++++++-----
-> > > fs/bcachefs/util.h  |   4 ++
-> > > 3 files changed, 121 insertions(+), 14 deletions(-)
-> > >
-> > >diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
-> > >index da8697c79a97..e74534096cb5 100644
-> > >--- a/fs/bcachefs/super.c
-> > >+++ b/fs/bcachefs/super.c
-> > >@@ -1262,6 +1262,8 @@ static struct bch_dev *__bch2_dev_alloc(struct bch_fs *c,
-> > > 
-> > > 	bch2_time_stats_init(&ca->io_latency[READ]);
-> > > 	bch2_time_stats_init(&ca->io_latency[WRITE]);
-> > >+	ca->io_latency[READ].quantiles_enabled = true;
-> > >+	ca->io_latency[WRITE].quantiles_enabled = true;
-> > > 
-> > > 	ca->mi = bch2_mi_to_cpu(member);
-> > > 
-> > >diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
-> > >index c7cf9c6fcf9a..f2c8550c1331 100644
-> > >--- a/fs/bcachefs/util.c
-> > >+++ b/fs/bcachefs/util.c
-> > >@@ -505,10 +505,8 @@ static inline void pr_name_and_units(struct printbuf *out, const char *name, u64
-> > > 
-> > > void bch2_time_stats_to_text(struct printbuf *out, struct bch2_time_stats *stats)
-> > > {
-> > >-	const struct time_unit *u;
-> > > 	s64 f_mean = 0, d_mean = 0;
-> > >-	u64 q, last_q = 0, f_stddev = 0, d_stddev = 0;
-> > >-	int i;
-> > >+	u64 f_stddev = 0, d_stddev = 0;
-> > > 
-> > > 	if (stats->buffer) {
-> > > 		int cpu;
-> > >@@ -607,19 +605,122 @@ void bch2_time_stats_to_text(struct printbuf *out, struct bch2_time_stats *stats
-> > > 
-> > > 	printbuf_tabstops_reset(out);
-> > > 
-> > >-	i = eytzinger0_first(NR_QUANTILES);
-> > >-	u = pick_time_units(stats->quantiles.entries[i].m);
-> > >+	if (stats->quantiles_enabled) {
-> > >+		int i = eytzinger0_first(NR_QUANTILES);
-> > >+		const struct time_unit *u =
-> > >+			pick_time_units(stats->quantiles.entries[i].m);
-> > >+		u64 last_q = 0;
-> > >+
-> > >+		prt_printf(out, "quantiles (%s):\t", u->name);
-> > >+		eytzinger0_for_each(i, NR_QUANTILES) {
-> > >+			bool is_last = eytzinger0_next(i, NR_QUANTILES) == -1;
-> > >+
-> > >+			u64 q = max(stats->quantiles.entries[i].m, last_q);
-> > >+			prt_printf(out, "%llu ", div_u64(q, u->nsecs));
-> > >+			if (is_last)
-> > >+				prt_newline(out);
-> > >+			last_q = q;
-> > >+		}
-> > >+	}
-> > >+}
-> > >+
-> > >+#include <linux/seq_buf.h>
-> > >+
-> > >+static void seq_buf_time_units_aligned(struct seq_buf *out, u64 ns)
-> > >+{
-> > >+	const struct time_unit *u = pick_time_units(ns);
-> > >+
-> > >+	seq_buf_printf(out, "%8llu %s", div64_u64(ns, u->nsecs), u->name);
-> > >+}
-> > >+
-> > >+void bch2_time_stats_to_seq_buf(struct seq_buf *out, struct bch2_time_stats *stats)
-> > >+{
-> > >+	s64 f_mean = 0, d_mean = 0;
-> > >+	u64 f_stddev = 0, d_stddev = 0;
-> > >+
-> > >+	if (stats->buffer) {
-> > >+		int cpu;
-> > > 
-> > >-	prt_printf(out, "quantiles (%s):\t", u->name);
-> > >-	eytzinger0_for_each(i, NR_QUANTILES) {
-> > >-		bool is_last = eytzinger0_next(i, NR_QUANTILES) == -1;
-> > >+		spin_lock_irq(&stats->lock);
-> > >+		for_each_possible_cpu(cpu)
-> > >+			__bch2_time_stats_clear_buffer(stats, per_cpu_ptr(stats->buffer, cpu));
-> > >+		spin_unlock_irq(&stats->lock);
-> > >+	}
-> > > 
-> > >-		q = max(stats->quantiles.entries[i].m, last_q);
-> > >-		prt_printf(out, "%llu ",
-> > >-		       div_u64(q, u->nsecs));
-> > >-		if (is_last)
-> > >-			prt_newline(out);
-> > >-		last_q = q;
-> > >+	/*
-> > >+	 * avoid divide by zero
-> > >+	 */
-> > >+	if (stats->freq_stats.n) {
-> > >+		f_mean = mean_and_variance_get_mean(stats->freq_stats);
-> > >+		f_stddev = mean_and_variance_get_stddev(stats->freq_stats);
-> > >+		d_mean = mean_and_variance_get_mean(stats->duration_stats);
-> > >+		d_stddev = mean_and_variance_get_stddev(stats->duration_stats);
-> > >+	}
-> > >+
-> > >+	seq_buf_printf(out, "count: %llu\n", stats->duration_stats.n);
-> > >+
-> > >+	seq_buf_printf(out, "                       since mount        recent\n");
-> > >+
-> > >+	seq_buf_printf(out, "duration of events\n");
-> > >+
-> > >+	seq_buf_printf(out, "  min:                     ");
-> > >+	seq_buf_time_units_aligned(out, stats->min_duration);
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "  max:                     ");
-> > >+	seq_buf_time_units_aligned(out, stats->max_duration);
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "  total:                   ");
-> > >+	seq_buf_time_units_aligned(out, stats->total_duration);
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "  mean:                    ");
-> > >+	seq_buf_time_units_aligned(out, d_mean);
-> > >+	seq_buf_time_units_aligned(out, mean_and_variance_weighted_get_mean(stats->duration_stats_weighted));
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "  stddev:                  ");
-> > >+	seq_buf_time_units_aligned(out, d_stddev);
-> > >+	seq_buf_time_units_aligned(out, mean_and_variance_weighted_get_stddev(stats->duration_stats_weighted));
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "time between events\n");
-> > >+
-> > >+	seq_buf_printf(out, "  min:                     ");
-> > >+	seq_buf_time_units_aligned(out, stats->min_freq);
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "  max:                     ");
-> > >+	seq_buf_time_units_aligned(out, stats->max_freq);
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "  mean:                    ");
-> > >+	seq_buf_time_units_aligned(out, f_mean);
-> > >+	seq_buf_time_units_aligned(out, mean_and_variance_weighted_get_mean(stats->freq_stats_weighted));
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	seq_buf_printf(out, "  stddev:                  ");
-> > >+	seq_buf_time_units_aligned(out, f_stddev);
-> > >+	seq_buf_time_units_aligned(out, mean_and_variance_weighted_get_stddev(stats->freq_stats_weighted));
-> > >+	seq_buf_printf(out, "\n");
-> > >+
-> > >+	if (stats->quantiles_enabled) {
-> > >+		int i = eytzinger0_first(NR_QUANTILES);
-> > >+		const struct time_unit *u =
-> > >+			pick_time_units(stats->quantiles.entries[i].m);
-> > >+		u64 last_q = 0;
-> > >+
-> > >+		prt_printf(out, "quantiles (%s):\t", u->name);
-> > >+		eytzinger0_for_each(i, NR_QUANTILES) {
-> > >+			bool is_last = eytzinger0_next(i, NR_QUANTILES) == -1;
-> > >+
-> > >+			u64 q = max(stats->quantiles.entries[i].m, last_q);
-> > >+			seq_buf_printf(out, "%llu ", div_u64(q, u->nsecs));
-> > >+			if (is_last)
-> > >+				seq_buf_printf(out, "\n");
-> > >+			last_q = q;
-> > >+		}
-> > > 	}
-> > > }
-> > > #else
-> > >diff --git a/fs/bcachefs/util.h b/fs/bcachefs/util.h
-> > >index c3b11c3d24ea..7ff2d4fe26f6 100644
-> > >--- a/fs/bcachefs/util.h
-> > >+++ b/fs/bcachefs/util.h
-> > >@@ -382,6 +382,7 @@ struct bch2_time_stat_buffer {
-> > > 
-> > > struct bch2_time_stats {
-> > > 	spinlock_t	lock;
-> > >+	bool		quantiles_enabled;
-> > > 	/* all fields are in nanoseconds */
-> > > 	u64             min_duration;
-> > > 	u64		max_duration;
-> > >@@ -435,6 +436,9 @@ static inline bool track_event_change(struct bch2_time_stats *stats,
-> > > 
-> > > void bch2_time_stats_to_text(struct printbuf *, struct bch2_time_stats *);
-> > > 
-> > >+struct seq_buf;
-> > >+void bch2_time_stats_to_seq_buf(struct seq_buf *, struct bch2_time_stats *);
-> > >+
-> > > void bch2_time_stats_exit(struct bch2_time_stats *);
-> > > void bch2_time_stats_init(struct bch2_time_stats *);
-> > > 
-> > >-- 
-> > >2.43.0
-> > >
-> > >
-> > 
-> > - Joshie 🐸✨
-> 
+diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
+index d7d021af1029..2d7b73242958 100644
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1762,6 +1762,10 @@ static void br_ip6_multicast_querier_expired(struct timer_list *t)
+ }
+ #endif
+ 
++static void br_multicast_query_delay_expired(struct timer_list *t)
++{
++}
++
+ static void br_multicast_select_own_querier(struct net_bridge_mcast *brmctx,
+ 					    struct br_ip *ip,
+ 					    struct sk_buff *skb)
+@@ -3198,7 +3202,7 @@ br_multicast_update_query_timer(struct net_bridge_mcast *brmctx,
+ 				unsigned long max_delay)
+ {
+ 	if (!timer_pending(&query->timer))
+-		query->delay_time = jiffies + max_delay;
++		mod_timer(&query->delay_timer, jiffies + max_delay);
+ 
+ 	mod_timer(&query->timer, jiffies + brmctx->multicast_querier_interval);
+ }
+@@ -4041,13 +4045,11 @@ void br_multicast_ctx_init(struct net_bridge *br,
+ 	brmctx->multicast_querier_interval = 255 * HZ;
+ 	brmctx->multicast_membership_interval = 260 * HZ;
+ 
+-	brmctx->ip4_other_query.delay_time = 0;
+ 	brmctx->ip4_querier.port_ifidx = 0;
+ 	seqcount_spinlock_init(&brmctx->ip4_querier.seq, &br->multicast_lock);
+ 	brmctx->multicast_igmp_version = 2;
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	brmctx->multicast_mld_version = 1;
+-	brmctx->ip6_other_query.delay_time = 0;
+ 	brmctx->ip6_querier.port_ifidx = 0;
+ 	seqcount_spinlock_init(&brmctx->ip6_querier.seq, &br->multicast_lock);
+ #endif
+@@ -4056,6 +4058,8 @@ void br_multicast_ctx_init(struct net_bridge *br,
+ 		    br_ip4_multicast_local_router_expired, 0);
+ 	timer_setup(&brmctx->ip4_other_query.timer,
+ 		    br_ip4_multicast_querier_expired, 0);
++	timer_setup(&brmctx->ip4_other_query.delay_timer,
++		    br_multicast_query_delay_expired, 0);
+ 	timer_setup(&brmctx->ip4_own_query.timer,
+ 		    br_ip4_multicast_query_expired, 0);
+ #if IS_ENABLED(CONFIG_IPV6)
+@@ -4063,6 +4067,8 @@ void br_multicast_ctx_init(struct net_bridge *br,
+ 		    br_ip6_multicast_local_router_expired, 0);
+ 	timer_setup(&brmctx->ip6_other_query.timer,
+ 		    br_ip6_multicast_querier_expired, 0);
++	timer_setup(&brmctx->ip6_other_query.delay_timer,
++		    br_multicast_query_delay_expired, 0);
+ 	timer_setup(&brmctx->ip6_own_query.timer,
+ 		    br_ip6_multicast_query_expired, 0);
+ #endif
+@@ -4197,10 +4203,12 @@ static void __br_multicast_stop(struct net_bridge_mcast *brmctx)
+ {
+ 	del_timer_sync(&brmctx->ip4_mc_router_timer);
+ 	del_timer_sync(&brmctx->ip4_other_query.timer);
++	del_timer_sync(&brmctx->ip4_other_query.delay_timer);
+ 	del_timer_sync(&brmctx->ip4_own_query.timer);
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	del_timer_sync(&brmctx->ip6_mc_router_timer);
+ 	del_timer_sync(&brmctx->ip6_other_query.timer);
++	del_timer_sync(&brmctx->ip6_other_query.delay_timer);
+ 	del_timer_sync(&brmctx->ip6_own_query.timer);
+ #endif
+ }
+@@ -4643,13 +4651,15 @@ int br_multicast_set_querier(struct net_bridge_mcast *brmctx, unsigned long val)
+ 	max_delay = brmctx->multicast_query_response_interval;
+ 
+ 	if (!timer_pending(&brmctx->ip4_other_query.timer))
+-		brmctx->ip4_other_query.delay_time = jiffies + max_delay;
++		mod_timer(&brmctx->ip4_other_query.delay_timer,
++			  jiffies + max_delay);
+ 
+ 	br_multicast_start_querier(brmctx, &brmctx->ip4_own_query);
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (!timer_pending(&brmctx->ip6_other_query.timer))
+-		brmctx->ip6_other_query.delay_time = jiffies + max_delay;
++		mod_timer(&brmctx->ip6_other_query.delay_timer,
++			  jiffies + max_delay);
+ 
+ 	br_multicast_start_querier(brmctx, &brmctx->ip6_own_query);
+ #endif
+diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+index b0a92c344722..86ea5e6689b5 100644
+--- a/net/bridge/br_private.h
++++ b/net/bridge/br_private.h
+@@ -78,7 +78,7 @@ struct bridge_mcast_own_query {
+ /* other querier */
+ struct bridge_mcast_other_query {
+ 	struct timer_list		timer;
+-	unsigned long			delay_time;
++	struct timer_list		delay_timer;
+ };
+ 
+ /* selected querier */
+@@ -1159,7 +1159,7 @@ __br_multicast_querier_exists(struct net_bridge_mcast *brmctx,
+ 		own_querier_enabled = false;
+ 	}
+ 
+-	return time_is_before_jiffies(querier->delay_time) &&
++	return !timer_pending(&querier->delay_timer) &&
+ 	       (own_querier_enabled || timer_pending(&querier->timer));
+ }
+ 
+-- 
+2.43.0
+
