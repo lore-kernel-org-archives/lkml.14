@@ -1,44 +1,52 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794FABA45
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 02:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103B0B669;
+	Sat, 27 Jan 2024 02:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706320887; cv=none; b=FP9ZkjyCNN5tojYs6TP1oqvOvMVgB9jn9vsdRI6/zNBjcAYeCcB8IKwL6AhA5PcPUcyO91LOfuA+xZzrR7/4i2JGGwnTrKKYIPCoIRArsI7PfkyvwV9lTOmb1URz+6Z5rIjZ43wDGU6AdVTSYpwf1daCyZMXiZMImSuemIA2izU=
+	t=1706320965; cv=none; b=SocxD92mAofSS5iZYTQMCHmr+Ych8eKd7wPbkZFYRxMryYAsQF87G8HbZ72fQuT2kVwaqVb+9V9XYrFe/uL/80VopjxGK/gZ0OBA6WdifMRMvAwUjW73XoecyMLCobk4eB7kSXQl2mz1IGEzVY+eYs7uXI6UKvkf0gEOK3unXuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706320887; c=relaxed/simple;
-	bh=WEGpc0xxaxj2AY+Xn8ROwEZelU+zXk/EivX8ekFZmeA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O7h7d7wuo2dlOMnukS5b+eCSV5YDbmJsRGQneniTBkHw9LnJv04VFDPdzAkA9G8t5iMwpi3H+NkKg8bQXPY3Sk7utp5lDM6T7+/VBOokQIQao03h0gGeqw9ugyIRbqcMUelXAeYx8SaznBozT1JjXlue4+gY/TH+KFSJuyrb4EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cJsdlIWY; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cJsdlIWY"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706320883;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uLB5skfy3BEv0JbsXyQzZFD+57i+sZEpeM1MJI3SUiw=;
-	b=cJsdlIWYIbH3uvx9fpJeoELDRif4ZO6HQhkaqt/fjfF51RPc2TxcvlavZ2oegJqg0odAmV
-	PB5Gpc3EYMzJCvBjElu/YDmgzpSL/D4M7eNj1ZL+ocQSL2k5AZf4AWyjdDoShDumlUzx5J
-	TRyWFsQ76zG0xGqPFwUYks0nwemHdTk=
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-fsdevel@vgerkernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	peterz@infradead.org,
-	boqun.feng@gmail.com
-Subject: [PATCH 4/4] af_unix: convert to lock_cmp_fn
-Date: Fri, 26 Jan 2024 21:01:08 -0500
-Message-ID: <20240127020111.487218-5-kent.overstreet@linux.dev>
-In-Reply-To: <20240127020111.487218-1-kent.overstreet@linux.dev>
-References: <20240127020111.487218-1-kent.overstreet@linux.dev>
+	s=arc-20240116; t=1706320965; c=relaxed/simple;
+	bh=24h+WuRGoN7wqwm49NhRNdDYEjBE64ZbJQubfRhaAQk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sSZjQ62crEOSG8OhVDfa06fWxW/0kZq00VcpuF9DWpWXQp7X/7QtICD1OgA7UxHQeK6KrHK85/7R5f+UEpgjRNcZafo1KjpSgSVVktDfmeh46ZMvGcAJP/EoA371mdIgZW0EUHHSqcUjiWTchFTBbyrTWnqywaLacdKNmxYmajs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TMHrY4XFVz4f3jqF;
+	Sat, 27 Jan 2024 10:02:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 0F0BE1A0272;
+	Sat, 27 Jan 2024 10:02:40 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g40ZLRlGJtmCA--.7377S5;
+	Sat, 27 Jan 2024 10:02:39 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	ritesh.list@gmail.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	willy@infradead.org,
+	zokeefe@google.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	wangkefeng.wang@huawei.com
+Subject: [PATCH v3 01/26] ext4: refactor ext4_da_map_blocks()
+Date: Sat, 27 Jan 2024 09:58:00 +0800
+Message-Id: <20240127015825.1608160-2-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
+References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,112 +54,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:cCh0CgAX5g40ZLRlGJtmCA--.7377S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr17JF15uw4DuryfZr4rAFb_yoW8uFy7pr
+	9IkF93Wr1UXwnYgF4Iqr1UXF1fKa4YqrWDGrZ3Ww18Ary8AwnagFn8tF1fKa4rtrZ7ZF1Y
+	qF4rKry5uw15GrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
+	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUszV8UUUUU
+	=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Kill
- - unix_state_lock_nested
- - _nested usage for net->unx.table.locks[].
+From: Zhang Yi <yi.zhang@huawei.com>
 
-replace both with lock_set_cmp_fn_ptr_order(&u->lock).
+Refactor and cleanup ext4_da_map_blocks(), reduce some unnecessary
+parameters and branches, no logic changes.
 
-The lock ordering in sk_diag_dump_icons() looks suspicious; this may
-turn up a real issue.
-
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 ---
- include/net/af_unix.h |  3 ---
- net/unix/af_unix.c    | 20 ++++++++------------
- net/unix/diag.c       |  2 +-
- 3 files changed, 9 insertions(+), 16 deletions(-)
+ fs/ext4/inode.c | 39 +++++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
 
-diff --git a/include/net/af_unix.h b/include/net/af_unix.h
-index 49c4640027d8..4eff0a089640 100644
---- a/include/net/af_unix.h
-+++ b/include/net/af_unix.h
-@@ -48,9 +48,6 @@ struct scm_stat {
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 61277f7f8722..5b0d3075be12 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -1704,7 +1704,6 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+ 	/* Lookup extent status tree firstly */
+ 	if (ext4_es_lookup_extent(inode, iblock, NULL, &es)) {
+ 		if (ext4_es_is_hole(&es)) {
+-			retval = 0;
+ 			down_read(&EXT4_I(inode)->i_data_sem);
+ 			goto add_delayed;
+ 		}
+@@ -1749,26 +1748,9 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+ 		retval = ext4_ext_map_blocks(NULL, inode, map, 0);
+ 	else
+ 		retval = ext4_ind_map_blocks(NULL, inode, map, 0);
+-
+-add_delayed:
+-	if (retval == 0) {
+-		int ret;
+-
+-		/*
+-		 * XXX: __block_prepare_write() unmaps passed block,
+-		 * is it OK?
+-		 */
+-
+-		ret = ext4_insert_delayed_block(inode, map->m_lblk);
+-		if (ret != 0) {
+-			retval = ret;
+-			goto out_unlock;
+-		}
+-
+-		map_bh(bh, inode->i_sb, invalid_block);
+-		set_buffer_new(bh);
+-		set_buffer_delay(bh);
+-	} else if (retval > 0) {
++	if (retval < 0)
++		goto out_unlock;
++	if (retval > 0) {
+ 		unsigned int status;
  
- #define unix_state_lock(s)	spin_lock(&unix_sk(s)->lock)
- #define unix_state_unlock(s)	spin_unlock(&unix_sk(s)->lock)
--#define unix_state_lock_nested(s) \
--				spin_lock_nested(&unix_sk(s)->lock, \
--				SINGLE_DEPTH_NESTING)
- 
- /* The AF_UNIX socket */
- struct unix_sock {
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index d013de3c5490..1a0d273799c1 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -170,7 +170,7 @@ static void unix_table_double_lock(struct net *net,
- 		swap(hash1, hash2);
- 
- 	spin_lock(&net->unx.table.locks[hash1]);
--	spin_lock_nested(&net->unx.table.locks[hash2], SINGLE_DEPTH_NESTING);
-+	spin_lock(&net->unx.table.locks[hash2]);
- }
- 
- static void unix_table_double_unlock(struct net *net,
-@@ -997,6 +997,7 @@ static struct sock *unix_create1(struct net *net, struct socket *sock, int kern,
- 	u->path.dentry = NULL;
- 	u->path.mnt = NULL;
- 	spin_lock_init(&u->lock);
-+	lock_set_cmp_fn_ptr_order(&u->lock);
- 	atomic_long_set(&u->inflight, 0);
- 	INIT_LIST_HEAD(&u->link);
- 	mutex_init(&u->iolock); /* single task reading lock */
-@@ -1340,17 +1341,11 @@ static int unix_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
- 
- static void unix_state_double_lock(struct sock *sk1, struct sock *sk2)
- {
--	if (unlikely(sk1 == sk2) || !sk2) {
--		unix_state_lock(sk1);
--		return;
--	}
--	if (sk1 < sk2) {
-+	if (sk1 > sk2)
-+		swap(sk1, sk2);
-+	if (sk1 && sk1 != sk2)
- 		unix_state_lock(sk1);
--		unix_state_lock_nested(sk2);
--	} else {
--		unix_state_lock(sk2);
--		unix_state_lock_nested(sk1);
--	}
-+	unix_state_lock(sk2);
- }
- 
- static void unix_state_double_unlock(struct sock *sk1, struct sock *sk2)
-@@ -1591,7 +1586,7 @@ static int unix_stream_connect(struct socket *sock, struct sockaddr *uaddr,
- 		goto out_unlock;
+ 		if (unlikely(retval != map->m_len)) {
+@@ -1783,11 +1765,24 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
+ 				EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
+ 		ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
+ 				      map->m_pblk, status);
++		goto out_unlock;
  	}
  
--	unix_state_lock_nested(sk);
-+	unix_state_lock(sk);
++add_delayed:
++	/*
++	 * XXX: __block_prepare_write() unmaps passed block,
++	 * is it OK?
++	 */
++	retval = ext4_insert_delayed_block(inode, map->m_lblk);
++	if (retval)
++		goto out_unlock;
++
++	map_bh(bh, inode->i_sb, invalid_block);
++	set_buffer_new(bh);
++	set_buffer_delay(bh);
++
+ out_unlock:
+ 	up_read((&EXT4_I(inode)->i_data_sem));
+-
+ 	return retval;
+ }
  
- 	if (sk->sk_state != st) {
- 		unix_state_unlock(sk);
-@@ -3575,6 +3570,7 @@ static int __net_init unix_net_init(struct net *net)
- 
- 	for (i = 0; i < UNIX_HASH_SIZE; i++) {
- 		spin_lock_init(&net->unx.table.locks[i]);
-+		lock_set_cmp_fn_ptr_order(&net->unx.table.locks[i]);
- 		INIT_HLIST_HEAD(&net->unx.table.buckets[i]);
- 	}
- 
-diff --git a/net/unix/diag.c b/net/unix/diag.c
-index bec09a3a1d44..8ab5e2217e4c 100644
---- a/net/unix/diag.c
-+++ b/net/unix/diag.c
-@@ -84,7 +84,7 @@ static int sk_diag_dump_icons(struct sock *sk, struct sk_buff *nlskb)
- 			 * queue lock. With the other's queue locked it's
- 			 * OK to lock the state.
- 			 */
--			unix_state_lock_nested(req);
-+			unix_state_lock(req);
- 			peer = unix_sk(req)->peer;
- 			buf[i++] = (peer ? sock_i_ino(peer) : 0);
- 			unix_state_unlock(req);
 -- 
-2.43.0
+2.39.2
 
