@@ -1,150 +1,92 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCE305A78A
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2DA25571
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706373256; cv=none; b=uqRQZ4ZAmXQKQ1bmga8T/7ioBYuv6ZbARZD6n57durMyfpEUNjEh6+bpcxfM7AOMOy4mMP/Z0e2TT260Ax6w6opXtBxhMsCRf8VMKX95582AQZ9BysCgO+Kw3cJxU17NdDoMgy4uDLypcq6o6B8f3cJMvAimYcO4QVBOAPZu7Qs=
+	t=1706373475; cv=none; b=W3zU9ZQw4gbtJxU0d34FYoniC315p67eBUQgCZtRwASCQ2uZ3Bc4CYVQs4TmWDwkUIHc7P44zKhuasDUHoWefcDMCameR0wAvZwOXJxYw/rJX+urzr2XuO/66zYWNX5VGpMRaL1Zil0V2lkhCsc2Zt8h5aDPgJ6HnKdeeznL0JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706373256; c=relaxed/simple;
-	bh=wJADJvLZue8yr22f+aPkZezJA08hOu6ptWGYj6x7LUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wie9eHFgNt2cN9zDbhQsDHUe2o11kQzKP2NB3PUKZlTr/BVGk6M7y7Ls50Yam5305tuyks85ETIIx2hw27ZNBC6dxGAKUY5sY+A7X981GtCgcNmwLiYVlM2jgOxr5SL1sOAkcRndd7iHPIfuleKxGx0rWyBIUXDRuApCX53kcoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 40RGO0KR014271;
-	Sat, 27 Jan 2024 17:24:00 +0100
-Date: Sat, 27 Jan 2024 17:24:00 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Rodrigo Campos <rodrigo@sdfg.com.ar>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] tools/nolibc/string: export strlen()
-Message-ID: <20240127162400.GA14079@1wt.eu>
-References: <20240126142411.22972-1-rodrigo@sdfg.com.ar>
- <9abed5e3-cd61-474e-bb16-13243709f5c5@t-8ch.de>
+	s=arc-20240116; t=1706373475; c=relaxed/simple;
+	bh=52EY/SemdzO86LZW+X24P5o9GxO2ePPo7tueqcrByxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hddcifbUfw6kNQRNGRqE29Yis1xyZxCWU39r4R7A1HnMbLUSAypXvfUUJm/TefwHpZz5DN9k9LM8gNY8j7dwF+4/HZQScprz1tGPp8SjmuYqa9nfgB1L6IL9w6+vZC341+Z2f9hziVRO7SPGNdshL/hxgEi4QfHW//1VBYtci18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vKlss4he; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vKlss4he"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc6432ee799so1670798276.0
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 08:37:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706373473; x=1706978273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=52EY/SemdzO86LZW+X24P5o9GxO2ePPo7tueqcrByxo=;
+        b=vKlss4he7FarMg/PdNMJ5UXiiR9iT4LtdMH2jlHxI4bQx3PApbu0nXjCCgyo8RK1uA
+         MZADbYTMSOgm/JzSRIoMFLO9LT7iHdDjCOaySeugXJyjTUaLRIUpqlbRTTdA0IsaLI1i
+         owU1CG0cqi+lZOmCaGGV5TL0wNv9flW2URzsuZwvvb9f7VutX4FYnJRn1rlyPAMGw/NY
+         z+aBE8X2qyNx1AcapLR4mBIp0X5FwmqVXYIyQr4VIN5vgeL0YCX5AELBVOAS4mLvcMSZ
+         9KGqm9M/sqviyEO5gR0TE3q7/EJjko4qvL8xdTO1FXyCH9FPZE0LCTrLgryRAv+VtLdk
+         wPHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706373473; x=1706978273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=52EY/SemdzO86LZW+X24P5o9GxO2ePPo7tueqcrByxo=;
+        b=V+EiIHj9DABqFQlGXdGz6FJhsCUB8zlJ7MqsQTW4na40KEtLwbKNWatslVC2pBkxDb
+         V8Fq+51esPS89gSMqYVtBzg6FqxLy+cutONEqSVYaJE7C+w8Lz865auO/gt2kDe2zJNs
+         P3sNhInRJWXCCE5kYhpXsQHRyCAQIrfp9fgCng5NHNkkXwBWo8c38Ts0t+Z3Hb2vnuvk
+         n8yaqv9RNBgBaWlQMaA3hYfu9114ug2HOJaLOD9pwDwrlTp00ZGge4amZCejVNCA8Mld
+         ajSSr7naBsz9HipmWUdg6wQYyscSiDJ4R248wV5IfZiKuSSNbTV4ewAB/33I1TelSh/P
+         fg5A==
+X-Gm-Message-State: AOJu0YxK/FM47fVj48hEKgalNPbcStGMZ7N17EIQTP3N4vsaKS6P5ria
+	RU6Xlgrf/DYoqDRoiC2J+QB3xsuFbt20JrkeE3EFpA4M1acxl+BgWaomajnW/d4WOXoyrf3mwDd
+	y0IZnWid46CMLHk4+FN3r2g6jmfzISneXvK0g0g==
+X-Google-Smtp-Source: AGHT+IH6HdQ44ye/NMuXOgVUS/M7BGq7rU9eYNVXXNby5gNVSNwzfvRR0haZYsZfH2tla5inOMuU4vBcMP+4+MEWckk=
+X-Received: by 2002:a25:848d:0:b0:dc5:f51e:6a60 with SMTP id
+ v13-20020a25848d000000b00dc5f51e6a60mr1838267ybk.6.1706373456517; Sat, 27 Jan
+ 2024 08:37:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9abed5e3-cd61-474e-bb16-13243709f5c5@t-8ch.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20240126223150.work.548-kees@kernel.org>
+In-Reply-To: <20240126223150.work.548-kees@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 27 Jan 2024 17:37:25 +0100
+Message-ID: <CACRpkdbpQNoh_ESB=CcUcP0_pcvDYCs9FeJ_wY74a7WJ77sLBg@mail.gmail.com>
+Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+To: Kees Cook <keescook@chromium.org>
+Cc: Arend van Spriel <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>, 
+	Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>, 
+	Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>, 
+	Johannes Berg <johannes.berg@intel.com>, Wright Feng <wright.feng@cypress.com>, 
+	Hector Martin <marcan@marcan.st>, linux-wireless@vger.kernel.org, 
+	brcm80211-dev-list.pdl@broadcom.com, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jisoo Jang <jisoo.jang@yonsei.ac.kr>, 
+	Hans de Goede <hdegoede@redhat.com>, Aloka Dixit <quic_alokad@quicinc.com>, 
+	John Keeping <john@keeping.me.uk>, Jeff Johnson <quic_jjohnson@quicinc.com>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Fri, Jan 26, 2024 at 11:31=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
 
-On Sat, Jan 27, 2024 at 03:53:32PM +0100, Thomas Weißschuh wrote:
-> Hi!
-> 
-> On 2024-01-26 15:24:10+0100, Rodrigo Campos wrote:
-> > Hi, while using nolibc on debian testing, I found that compilation fails when using strlcat().
-> > 
-> > The compilation fails with:
-> > 
-> >             cc -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib -lgcc  -static -o test test.c
-> >             /usr/bin/ld: /tmp/cccIasKL.o: in function `main':
-> >             test.c:(.text.startup+0x1e): undefined reference to `strlen'
-> >             collect2: error: ld returned 1 exit status
-> > 
-> > This is using debian testing, with gcc 13.2.0.
-> 
-> I can reproduce the issue with gcc 13.2.1 on Arch.
-> 
-> > A small repro case that fails with this error on debian is:
-> > 
-> > 	int main(void) {
-> > 		char dst[6] = "12";
-> > 		char *src = "abc";
-> > 		strlcat(dst, src, 6);
-> > 	
-> > 		printf("dst is: %s\n", dst);
-> > 	
-> > 		return 0;
-> > 	}
-> > 
-> > Please note that this code is not using strlen() and strlcat() doesn't seems to use it either.
-> 
-> I think the comment in strlen() explains it:
-> 
->     Note that gcc12 recognizes an strlen() pattern and replaces it with a
->     jump to strlen().
-> 
-> strlcat() indeed contains this pattern.
-> 
-> I was able to fix the issue by replacing the open-coded strlen() in
-> strlcat() with a call to the function and that also fixed the issue.
-> 
-> It seems nicer to me as a fix, on the other hand the change to a weak
-> definition will also catch other instances of the issue.
-> Maybe we do both.
+> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+> cfg80211_scan_request with __counted_by"), the compiler may enforce
+> dynamic array indexing of req->channels to stay below n_channels. As a
+> result, n_channels needs to be increased _before_ accessing the newly
+> added array index. Increment it first, then use "i" for the prior index.
+> Solves this warning in the coming GCC that has __counted_by support:
 
-Yes, once we have the proof that the compiler may produce such a call, it
-can also happen in whatever user code so we need to export the function,
-there's no other solution.
+Makes perfect sense.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > First I noted that removing the attribute unused in strlen(), the compilation worked fine. And then
-> > I noticied that other functions had the attribute weak, a custom section and export the function.
-> > 
-> > In particular, what happens here seems to be the same as in commit "tools/nolibc/string: export memset() and
-> > memmove()" (8d304a374023), as removing the -Os or adding the -ffreestanding seem to fix the issue.
-> > So, I did the same as that commit, for strlen().
-> > 
-> > However, I'm not 100% confident on how to check that this is done by the compiler to later replace
-> > it and provide a builtin. I'm not sure how that was verified for commit 8d304a374023, but if you let
-> > me know, I can verify it too.
-> > 
-> > What do you think?
-> 
-> Personally I don't know how it was verified, we'll have to wait for
-> Willy on that.
-
-Oh it's very simple, just build a small code that doesn't contain any
-such explicit nor implicit call and check that it doesn't contain the
-function.
-
-E.g.:
-
-  $ printf "int main(void) { }\n" | gcc -nostdlib -static -Isysroot/x86/include -include nolibc.h -Os -Wl,--gc-sections -xc -
-  $ nm --size a.out 
-  0000000000000003 T main
-  0000000000000004 V errno
-  0000000000000008 V _auxv
-  0000000000000008 V environ
-  000000000000000f W _start
-  0000000000000042 W _start_c
-
-and:
-
-  $ printf "int main(void) { return (long)&strlen;}\n" | gcc -nostdlib -static -Isysroot/x86/include -include nolibc.h -Os -Wl,--gc-sections -xc -
-  $ nm --size a.out 
-  0000000000000004 V errno
-  0000000000000006 T main
-  0000000000000008 V _auxv
-  0000000000000008 V environ
-  000000000000000e t strlen
-  000000000000000f W _start
-  0000000000000042 W _start_c
-
-> > As a side note, it seems strlcat()/strlcpy() fail to set the terminating null byte on some cases,
-
-Indeed I've just checked and you're right, that defeats their purpose!
-
-> > and the return code is not always the same as when using libbsd. It seems to be only on "error"
-> > cases, and not sure if it's worth fixing all/some of those cases.
-
-OK.
-
-> > Let me know if you think it is worth adding some _simple_ patches (I don't think it is worth fixing
-> > all the cases, the code is to fix all of the cases is probably not nice and not worth it).
-> 
-> Souns reasonable to me to fix the return values.
-> And get some tests for it.
-
-Seconded!
-
-Thanks!
-Willy
+Yours,
+Linus Walleij
