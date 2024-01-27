@@ -1,161 +1,75 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88C3224DD;
-	Sat, 27 Jan 2024 16:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D791224DD
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706371856; cv=none; b=qZl7ASHInW/uVOVYPo+PYiv1sC9K0QJcum57Fmh8rfsRV4BE42oFMjm+SUQvYljqNFYNn15mY5er60i+jKlWoyZvzs+sTGI2jesn1sUdddO9rs918is7hsWZl9IMNz7WK9BiPoV9T9WpUPyzcyvBzVnCmYaf+V3ThzU7OpYU6/U=
+	t=1706371925; cv=none; b=XJvwD/NTS6yVrwE7B8adj4dfkpTc75bY+tKJYO2N/+vcCtKVRWL69uZswnkisAlMD0UQRdR9i9FIoMAmI6xgCHaJkqYCivZ3LryhUYHzQSUpDn/VT9kGuM02OU6Sek8NGgdu9GricbYEmVEJUbPxNCFwudG8HjAXVufLe6pQ9cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706371856; c=relaxed/simple;
-	bh=GC4fVdRsHNvUDt/q1fyQJYqojn4dlLXr9MCgr6ezbYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltMmHwmfInfnWR1njZU35H7qniPUiabCAESEKKhLH11GMRPGfq+iGMjS9OPV0tov579HHKtVG7O83IWGXAPxSm+ArKiLRxXxBPi7mrRyGSxadx+6e4QybmGJ6EA2AGwoT6tfnPT1ftlBYvjZujvOKlFk2xQDqMyPpPNSuyON8Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=R8rDkWRY; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="R8rDkWRY"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 54F6740E01A9;
-	Sat, 27 Jan 2024 16:03:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id lu71nTCNoEp9; Sat, 27 Jan 2024 16:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706371414; bh=zJjvOvg09j/JxgCLQEW8hFY2bFZEzCn3tUUE3IeXvDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R8rDkWRY9JApzGfMhoO/ltUpWhxXsJorl0xs3AW2oEMUGgqBJJ7et23aCsX/6rSk7
-	 L1JZYSWGKq7guE8YqyGaMRXJrgA5qVJ9suCJL5LaRAjq9FgHLzJdkEZMxnSFMc2dtO
-	 gI4C12ZpMQGXlnS6ee8Hmd71QGrLYIjVdKj4p1Ryh0bmpobnRyMq49pcLhPYQikihj
-	 ue5l4fe7Nu2OCWJjYUTML+jOR/Z+9YoxQUnqYVWHEPdCUjY9UuUpJc4g+VS02kKWIW
-	 m6wXthg1Rtf8TnMSi5t1h7SkVGOiOlGC4YOldUaHQHzwLVqUUOuKrYZ3JBzjl4bi04
-	 rs90xV6Ajdo+l1b0MRawQxxeu/ulhLAeopq07RMbJff6rXn1FQFYWl397VI847fDKM
-	 ETxBr43+USwVBUxwmJYsP0SHnk4yZUfN6etUbxgZlUqlH9uzKgyIY95J0r5YXAXZl6
-	 iLYItOwjknaULfEgslHWFl6kTpSlysbnoqnWLxZeb/icAB9I6CmJ7keyRbjk7M3QFB
-	 liy7SwZp6fLivc4G3qmFGJ/LpDY3kVBGUC1ykFRxaYnoSobjO181UN8BzgedLbuQFB
-	 1MtGE0JiOZbMIg+4bbG09P2gpteSN1AQ0jQW/wgSXWwaEcucT55dtP6lvCMlfx8Ozk
-	 GL8HCR0ME/5W6ZUstLeOYxkE=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 64B8D40E016C;
-	Sat, 27 Jan 2024 16:02:58 +0000 (UTC)
-Date: Sat, 27 Jan 2024 17:02:49 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
-	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com
-Subject: Re: [PATCH v2 11/25] x86/sev: Adjust directmap to avoid inadvertant
- RMP faults
-Message-ID: <20240127160249.GDZbUpKW_cqRzdYn7Z@fat_crate.local>
-References: <20240126041126.1927228-1-michael.roth@amd.com>
- <20240126041126.1927228-12-michael.roth@amd.com>
- <20240126153451.GDZbPRG3KxaQik-0aY@fat_crate.local>
- <20240126170415.f7r4nvsrzgpzcrzv@amd.com>
- <20240126184340.GEZbP9XA13X91-eybA@fat_crate.local>
- <20240126235420.mu644waj2eyoxqx6@amd.com>
- <20240127114207.GBZbTsDyC3hFq8pQ3D@fat_crate.local>
- <20240127154506.v3wdio25zs6i2lc3@amd.com>
+	s=arc-20240116; t=1706371925; c=relaxed/simple;
+	bh=Mbh52BZbCdx3tCagUL0smHoHhUomsD+AcDYk4SE06CA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=EXXWTFcbJlrVhviyYB1LMim5IuYEjP9fWD+jHNi5bc110UIdA1NiXL/3RYVK+SMDKsXMJxk7CEtoWmRWdQ1knyozL3riEC6zkzzDF1bvEVRXTEHksD6pFpOSyP+0LRubgl4yiJOixXlT+ewJGJseA/flJZWhMmjSclLMk+ie7HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3627d99cbe5so5920345ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 08:12:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706371923; x=1706976723;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CobbQsqvBTFHX4fAZc4WxCoKNf7Qym9tUoc5Rg1pYJo=;
+        b=MxUVItXddsBCWYNZruIg+QC92L3HN+7fp9MlZeGdEvvbiAahJI4Ly+r1L/AMMzx26Y
+         HkkKciU/jZORCg+rjUh9NCd1UMZFx4YWW4fOqc+nqagOZ7Pz8A7asOnXUJ51jVR/Q5ds
+         bBysylofhWjzQwXXCD+MT8yxlRoi5Ee2+/wwTp39lCXs6GcbJXV4wlZJ5FjOWhG+LdSh
+         y/X5+csMg3C+z/b7JAxeoIm66ULxciaZI1cUYrNLT2wi1eLezIwUST/MRq4jVf7+25yR
+         hT5dJLUinUDVGPCchy5wMfbN4uqzo7rWX97UzT/9tY+CcZABy/9VXHLZR1knwfTQ30bi
+         aq+g==
+X-Gm-Message-State: AOJu0YxwJuTPQiG13tkRSVynA2ko7rVSe5jQyUAyCdmam77Wh+3QsP5U
+	HsvExhumRnKBNCBDBQImRaedUiDRLNT1FDk2Kk7Q9JoRGeLi3ArUVnQbmAwy/bbg2JpctC+Fdd1
+	0yss8gDWEfkrFP7tiLcxdAec4xY1K2hYEyyrUNNCmEmhM1PoyTumSZgE=
+X-Google-Smtp-Source: AGHT+IH20cR57PeOLe4lJa5m7Tyz2Wi4IuB5L9esa9+3ULbsHM3Ko4jBOeX9JWSudWdn9mqm9O9++1mU2FyboUkmpzO4cHV3jntD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240127154506.v3wdio25zs6i2lc3@amd.com>
+X-Received: by 2002:a92:cda4:0:b0:362:910b:2345 with SMTP id
+ g4-20020a92cda4000000b00362910b2345mr189662ild.4.1706371923321; Sat, 27 Jan
+ 2024 08:12:03 -0800 (PST)
+Date: Sat, 27 Jan 2024 08:12:03 -0800
+In-Reply-To: <000000000000a213d505f1472cbe@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000582e37060fefac1a@google.com>
+Subject: Re: [syzbot] [ntfs?] kernel BUG in ntfs_truncate
+From: syzbot <syzbot+22e381af27f7921a2642@syzkaller.appspotmail.com>
+To: anton@tuxera.com, axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-ntfs-dev@lists.sourceforge.net, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Jan 27, 2024 at 09:45:06AM -0600, Michael Roth wrote:
-> directmap maps all physical memory accessible by kernel, including text
-> pages, so those are valid PFNs as far as this function is concerned.
+syzbot suspects this issue was fixed by commit:
 
-Why don't you have a look at
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-Documentation/arch/x86/x86_64/mm.rst
+    fs: Block writes to mounted block devices
 
-to sync up on the nomenclature first?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=179a855fe80000
+start commit:   bff687b3dad6 Merge tag 'block-6.2-2022-12-29' of git://git..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=68e0be42c8ee4bb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=22e381af27f7921a2642
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175a9dbc480000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1542c884480000
 
-   ffff888000000000 | -119.5  TB | ffffc87fffffffff |   64 TB | direct mapping of all physical memory (page_offset_base)
+If the result looks correct, please mark the issue as fixed by replying with:
 
-   ...
+#syz fix: fs: Block writes to mounted block devices
 
-   ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0
-
-and so on.
-
-> The expectation is that the caller is aware of what PFNs it is passing in,
-
-There are no expectations. Have you written them down somewhere?
-
-> This function only splits mappings in the 0xffff888000000000 directmap
-> range.
-
-This function takes any PFN it gets passed in as it is. I don't care
-who its users are now or in the future and whether they pay attention
-what they pass into - it needs to be properly defined.
-
-Mike, please get on with the program. Use the right naming for the
-function and basta.
-
-IOW, this:
-
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index 0a8f9334ec6e..652ee63e87fd 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -394,7 +394,7 @@ EXPORT_SYMBOL_GPL(psmash);
-  * More specifics on how these checks are carried out can be found in APM
-  * Volume 2, "RMP and VMPL Access Checks".
-  */
--static int adjust_direct_map(u64 pfn, int rmp_level)
-+static int split_pfn(u64 pfn, int rmp_level)
- {
- 	unsigned long vaddr = (unsigned long)pfn_to_kaddr(pfn);
- 	unsigned int level;
-@@ -405,7 +405,12 @@ static int adjust_direct_map(u64 pfn, int rmp_level)
- 	if (WARN_ON_ONCE(rmp_level > PG_LEVEL_2M))
- 		return -EINVAL;
- 
--	if (WARN_ON_ONCE(rmp_level == PG_LEVEL_2M && !IS_ALIGNED(pfn, PTRS_PER_PMD)))
-+       if (!pfn_valid(pfn))
-+               return -EINVAL;
-+
-+       if (rmp_level == PG_LEVEL_2M &&
-+           (!IS_ALIGNED(pfn, PTRS_PER_PMD) ||
-+            !pfn_valid(pfn + PTRS_PER_PMD - 1)))
- 		return -EINVAL;
- 
- 	/*
-@@ -456,7 +461,7 @@ static int rmpupdate(u64 pfn, struct rmp_state *state)
- 
- 	level = RMP_TO_PG_LEVEL(state->pagesize);
- 
--	if (adjust_direct_map(pfn, level))
-+	if (split_pfn(pfn, level))
- 		return -EFAULT;
- 
- 	do {
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
