@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86730241E9;
-	Sat, 27 Jan 2024 02:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF3125560;
+	Sat, 27 Jan 2024 02:02:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706320973; cv=none; b=f3OBMjeQua+AqlccEzx7DCGPMcr9mkPO+KJQZUgB4a0UtcI4H7l89vtUZt4BmHBsF08RctRU1iuLW7plA4qYlzgtG0Gqr6dZ1Au/VBeVGoq5slpRg9xhLdZXO0tiPuN/mSaOYRoIP4KJ+sP14twzCPykMXkixMjnqiasNP1IxrI=
+	t=1706320975; cv=none; b=eOBH3kQoVd4nDyXX/wJk3aDC3cKNZMqrWCTQoBOCMI45jPVa7Pzr9GXAnxZNou+II4b6BD21GXgUVZEWr+I7eggWBZ0V4S+iujOI0QpMKGJBnhR/L91zhXDaoXid4fA19I66773GbcP1cDWqYCp/05z4EcgN9MlAR0PJLbEwZPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706320973; c=relaxed/simple;
-	bh=ZKdDv4R8uWIs6s3wtT9F/mW+HgAhM2urWeM8jMNgWRA=;
+	s=arc-20240116; t=1706320975; c=relaxed/simple;
+	bh=Dpj19GRto2dLQ9n4zCk2WfsXCNrH05/hq6u6MPOOItE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GWhsX132BvNzg5J8xHjoObSh/Hiaufu70JvAzzxvWz5yk5sW6LSQk+xuokeL4MfusjCdRQLh4AE/ixyIn1y5i06OqBCS9JSxQVmCvxCEIsJADpBY5v2UkWOk47nC8M5LKUdZDQal8Cw2KcbSs2moscP4xWRJ1S0DqVaPmOr81oU=
+	 MIME-Version; b=EUhBdLZKY/ujmuN+3p/riqQyn1pL5NT27lrqtXuLVC2/sQ7kSl8e/OcNe8+bhAUvCgPgx2fGYAPHv0Ye8IxA4s2vooNIR2SyqPsFlJWdJrsR5eL/MiJKn1tTHGSGbQOEkLyv3rRW66SaryW3tehDGCO6SEY8F7wBVQElYP9ACu0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TMHrf2D39z4f3lfx;
-	Sat, 27 Jan 2024 10:02:42 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TMHrm1mLmz4f3jqN;
+	Sat, 27 Jan 2024 10:02:48 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id A544D1A016E;
-	Sat, 27 Jan 2024 10:02:48 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id A3CEE1A0272;
+	Sat, 27 Jan 2024 10:02:50 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g40ZLRlGJtmCA--.7377S18;
-	Sat, 27 Jan 2024 10:02:48 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g40ZLRlGJtmCA--.7377S21;
+	Sat, 27 Jan 2024 10:02:50 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-ext4@vger.kernel.org
 Cc: linux-fsdevel@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com,
 	wangkefeng.wang@huawei.com
-Subject: [RFC PATCH v3 14/26] ext4: factor out ext4_map_{create|query}_blocks()
-Date: Sat, 27 Jan 2024 09:58:13 +0800
-Message-Id: <20240127015825.1608160-15-yi.zhang@huaweicloud.com>
+Subject: [RFC PATCH v3 17/26] ext4: implement buffered read iomap path
+Date: Sat, 27 Jan 2024 09:58:16 +0800
+Message-Id: <20240127015825.1608160-18-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
 References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
@@ -54,10 +54,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g40ZLRlGJtmCA--.7377S18
-X-Coremail-Antispam: 1UD129KBjvJXoW3XF17urW8uF4fCrW7AFW3trb_yoW3uF1Upr
-	W3AF1rGr4UGwn0gaySyr48XF1Yk3WYkrWDC393Wry5Z345CrySyF15AFy3JF9rKrWxZw1Y
-	qFWFk348Ca95GFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgAX5g40ZLRlGJtmCA--.7377S21
+X-Coremail-Antispam: 1UD129KBjvJXoW7urW7uFW8uw17ZF1kWF13CFg_yoW8uFW7pF
+	98KFy5GF47XrnI9F4SqFZrJr1Yk3WxtF4UurW3WasxGFyYkrW2gayUWFyYyF15X3y7Ary0
+	qF4jkr18GF1UArDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -76,266 +76,68 @@ X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-Factor out two new helpers, ext4_map_query_blocks() query blocks
-mapping, and ext4_map_create_blocks() allocate new blocks and map a new
-extent, no logic changes.
+Add ext4_iomap_buffered_io_begin() to query map blocks, and use
+ext4_set_iomap() to convert ext4 map to iomap, after that we can
+convert buffered read path to iomap simply.
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/ext4/inode.c | 219 ++++++++++++++++++++++++++----------------------
- 1 file changed, 117 insertions(+), 102 deletions(-)
+ fs/ext4/inode.c | 36 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
 diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 9f9b1fce8da8..125d0665fa10 100644
+index eca9bf5dd255..5d542ce13d2a 100644
 --- a/fs/ext4/inode.c
 +++ b/fs/ext4/inode.c
-@@ -453,6 +453,121 @@ static void ext4_map_blocks_es_recheck(handle_t *handle,
+@@ -3507,14 +3507,46 @@ const struct iomap_ops ext4_iomap_report_ops = {
+ 	.iomap_begin = ext4_iomap_begin_report,
+ };
+ 
+-static int ext4_iomap_read_folio(struct file *file, struct folio *folio)
++static int ext4_iomap_buffered_io_begin(struct inode *inode, loff_t offset,
++				loff_t length, unsigned int iomap_flags,
++				struct iomap *iomap, struct iomap *srcmap)
+ {
++	int ret;
++	struct ext4_map_blocks map;
++	u8 blkbits = inode->i_blkbits;
++
++	if (unlikely(ext4_forced_shutdown(inode->i_sb)))
++		return -EIO;
++	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
++		return -EINVAL;
++	if (WARN_ON_ONCE(ext4_has_inline_data(inode)))
++		return -ERANGE;
++
++	/* Calculate the first and last logical blocks respectively. */
++	map.m_lblk = offset >> blkbits;
++	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
++			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
++
++	ret = ext4_map_blocks(NULL, inode, &map, 0);
++	if (ret < 0)
++		return ret;
++
++	ext4_set_iomap(inode, iomap, &map, offset, length, iomap_flags);
+ 	return 0;
  }
- #endif /* ES_AGGRESSIVE_TEST */
  
-+static int ext4_map_query_blocks(handle_t *handle, struct inode *inode,
-+				 struct ext4_map_blocks *map, int flags)
-+{
-+	unsigned int status;
-+	int retval;
+-static void ext4_iomap_readahead(struct readahead_control *rac)
++const struct iomap_ops ext4_iomap_buffered_read_ops = {
++	.iomap_begin = ext4_iomap_buffered_io_begin,
++};
 +
-+	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
-+		retval = ext4_ext_map_blocks(handle, inode, map, 0);
-+	else
-+		retval = ext4_ind_map_blocks(handle, inode, map, 0);
-+
-+	if (retval <= 0)
-+		return retval;
-+
-+	if (unlikely(retval != map->m_len)) {
-+		ext4_warning(inode->i_sb,
-+			     "ES len assertion failed for inode "
-+			     "%lu: retval %d != map->m_len %d",
-+			     inode->i_ino, retval, map->m_len);
-+		WARN_ON(1);
-+	}
-+
-+	status = map->m_flags & EXT4_MAP_UNWRITTEN ?
-+			EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
-+	if (!(flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE) &&
-+	    !(status & EXTENT_STATUS_WRITTEN) &&
-+	    ext4_es_scan_range(inode, &ext4_es_is_delayed, map->m_lblk,
-+			       map->m_lblk + map->m_len - 1))
-+		status |= EXTENT_STATUS_DELAYED;
-+	ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
-+			      map->m_pblk, status);
-+
-+	return retval;
++static int ext4_iomap_read_folio(struct file *file, struct folio *folio)
+ {
++	return iomap_read_folio(folio, &ext4_iomap_buffered_read_ops);
 +}
-+
-+static int ext4_map_create_blocks(handle_t *handle, struct inode *inode,
-+				  struct ext4_map_blocks *map, int flags)
+ 
++static void ext4_iomap_readahead(struct readahead_control *rac)
 +{
-+	struct extent_status es;
-+	unsigned int status;
-+	int err, retval = 0;
-+
-+	/*
-+	 * Here we clear m_flags because after allocating an new extent,
-+	 * it will be set again.
-+	 */
-+	map->m_flags &= ~EXT4_MAP_FLAGS;
-+
-+	/*
-+	 * We need to check for EXT4 here because migrate could have
-+	 * changed the inode type in between.
-+	 */
-+	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)) {
-+		retval = ext4_ext_map_blocks(handle, inode, map, flags);
-+	} else {
-+		retval = ext4_ind_map_blocks(handle, inode, map, flags);
-+
-+		/*
-+		 * We allocated new blocks which will result in i_data's
-+		 * format changing. Force the migrate to fail by clearing
-+		 * migrate flags.
-+		 */
-+		if (retval > 0 && map->m_flags & EXT4_MAP_NEW)
-+			ext4_clear_inode_state(inode, EXT4_STATE_EXT_MIGRATE);
-+	}
-+	if (retval <= 0)
-+		return retval;
-+
-+	if (unlikely(retval != map->m_len)) {
-+		ext4_warning(inode->i_sb,
-+			     "ES len assertion failed for inode %lu: "
-+			     "retval %d != map->m_len %d",
-+			     inode->i_ino, retval, map->m_len);
-+		WARN_ON(1);
-+	}
-+
-+	/*
-+	 * We have to zeroout blocks before inserting them into extent
-+	 * status tree. Otherwise someone could look them up there and
-+	 * use them before they are really zeroed. We also have to
-+	 * unmap metadata before zeroing as otherwise writeback can
-+	 * overwrite zeros with stale data from block device.
-+	 */
-+	if (flags & EXT4_GET_BLOCKS_ZERO &&
-+	    map->m_flags & EXT4_MAP_MAPPED && map->m_flags & EXT4_MAP_NEW) {
-+		err = ext4_issue_zeroout(inode, map->m_lblk, map->m_pblk,
-+					 map->m_len);
-+		if (err)
-+			return err;
-+	}
-+
-+	/*
-+	 * If the extent has been zeroed out, we don't need to update
-+	 * extent status tree.
-+	 */
-+	if (flags & EXT4_GET_BLOCKS_PRE_IO &&
-+	    ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
-+		if (ext4_es_is_written(&es))
-+			return retval;
-+	}
-+
-+	status = map->m_flags & EXT4_MAP_UNWRITTEN ?
-+			EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
-+	if (!(flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE) &&
-+	    !(status & EXTENT_STATUS_WRITTEN) &&
-+	    ext4_es_scan_range(inode, &ext4_es_is_delayed, map->m_lblk,
-+			       map->m_lblk + map->m_len - 1))
-+		status |= EXTENT_STATUS_DELAYED;
-+
-+	ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
-+			      map->m_pblk, status);
-+
-+	return retval;
-+}
-+
- /*
-  * The ext4_map_blocks() function tries to look up the requested blocks,
-  * and returns if the blocks are already mapped.
-@@ -546,32 +661,7 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
- 	 * file system block.
- 	 */
- 	down_read(&EXT4_I(inode)->i_data_sem);
--	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)) {
--		retval = ext4_ext_map_blocks(handle, inode, map, 0);
--	} else {
--		retval = ext4_ind_map_blocks(handle, inode, map, 0);
--	}
--	if (retval > 0) {
--		unsigned int status;
--
--		if (unlikely(retval != map->m_len)) {
--			ext4_warning(inode->i_sb,
--				     "ES len assertion failed for inode "
--				     "%lu: retval %d != map->m_len %d",
--				     inode->i_ino, retval, map->m_len);
--			WARN_ON(1);
--		}
--
--		status = map->m_flags & EXT4_MAP_UNWRITTEN ?
--				EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
--		if (!(flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE) &&
--		    !(status & EXTENT_STATUS_WRITTEN) &&
--		    ext4_es_scan_range(inode, &ext4_es_is_delayed, map->m_lblk,
--				       map->m_lblk + map->m_len - 1))
--			status |= EXTENT_STATUS_DELAYED;
--		ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
--				      map->m_pblk, status);
--	}
-+	retval = ext4_map_query_blocks(handle, inode, map, 0);
- 	up_read((&EXT4_I(inode)->i_data_sem));
++	iomap_readahead(rac, &ext4_iomap_buffered_read_ops);
+ }
  
- found:
-@@ -601,12 +691,6 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
- 		if (!(flags & EXT4_GET_BLOCKS_CONVERT_UNWRITTEN))
- 			return retval;
- 
--	/*
--	 * Here we clear m_flags because after allocating an new extent,
--	 * it will be set again.
--	 */
--	map->m_flags &= ~EXT4_MAP_FLAGS;
--
- 	/*
- 	 * New blocks allocate and/or writing to unwritten extent
- 	 * will possibly result in updating i_data, so we take
-@@ -614,76 +698,7 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
- 	 * with create == 1 flag.
- 	 */
- 	down_write(&EXT4_I(inode)->i_data_sem);
--
--	/*
--	 * We need to check for EXT4 here because migrate
--	 * could have changed the inode type in between
--	 */
--	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS)) {
--		retval = ext4_ext_map_blocks(handle, inode, map, flags);
--	} else {
--		retval = ext4_ind_map_blocks(handle, inode, map, flags);
--
--		if (retval > 0 && map->m_flags & EXT4_MAP_NEW) {
--			/*
--			 * We allocated new blocks which will result in
--			 * i_data's format changing.  Force the migrate
--			 * to fail by clearing migrate flags
--			 */
--			ext4_clear_inode_state(inode, EXT4_STATE_EXT_MIGRATE);
--		}
--	}
--
--	if (retval > 0) {
--		unsigned int status;
--
--		if (unlikely(retval != map->m_len)) {
--			ext4_warning(inode->i_sb,
--				     "ES len assertion failed for inode "
--				     "%lu: retval %d != map->m_len %d",
--				     inode->i_ino, retval, map->m_len);
--			WARN_ON(1);
--		}
--
--		/*
--		 * We have to zeroout blocks before inserting them into extent
--		 * status tree. Otherwise someone could look them up there and
--		 * use them before they are really zeroed. We also have to
--		 * unmap metadata before zeroing as otherwise writeback can
--		 * overwrite zeros with stale data from block device.
--		 */
--		if (flags & EXT4_GET_BLOCKS_ZERO &&
--		    map->m_flags & EXT4_MAP_MAPPED &&
--		    map->m_flags & EXT4_MAP_NEW) {
--			ret = ext4_issue_zeroout(inode, map->m_lblk,
--						 map->m_pblk, map->m_len);
--			if (ret) {
--				retval = ret;
--				goto out_sem;
--			}
--		}
--
--		/*
--		 * If the extent has been zeroed out, we don't need to update
--		 * extent status tree.
--		 */
--		if ((flags & EXT4_GET_BLOCKS_PRE_IO) &&
--		    ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
--			if (ext4_es_is_written(&es))
--				goto out_sem;
--		}
--		status = map->m_flags & EXT4_MAP_UNWRITTEN ?
--				EXTENT_STATUS_UNWRITTEN : EXTENT_STATUS_WRITTEN;
--		if (!(flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE) &&
--		    !(status & EXTENT_STATUS_WRITTEN) &&
--		    ext4_es_scan_range(inode, &ext4_es_is_delayed, map->m_lblk,
--				       map->m_lblk + map->m_len - 1))
--			status |= EXTENT_STATUS_DELAYED;
--		ext4_es_insert_extent(inode, map->m_lblk, map->m_len,
--				      map->m_pblk, status);
--	}
--
--out_sem:
-+	retval = ext4_map_create_blocks(handle, inode, map, flags);
- 	up_write((&EXT4_I(inode)->i_data_sem));
- 	if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
- 		ret = check_block_validity(inode, map);
+ static int ext4_iomap_writepages(struct address_space *mapping,
 -- 
 2.39.2
 
