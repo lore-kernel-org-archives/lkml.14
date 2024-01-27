@@ -1,150 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDE32557F
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 13:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515992557F;
+	Sat, 27 Jan 2024 13:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706361318; cv=none; b=FBmtcEGBimYbXC3UtJOgPhrIS8Ko913R2S4dTLIZ29BFt0djoF7aXo9O/MUZ1oIJ6tsqXELhFxsFaUvTKIWQ6hl4J8JKG/m9VZeLzX6XjB1F71qVnX9BLuYOciTIyLFYtys9k3mS9z4+pngVHaq1hIUQQfj/pnBU4xj3hWMGMiA=
+	t=1706361359; cv=none; b=Y1UGK5re3ac34IOZPHCXCAiNo9J97TainNFE5d+WXVhj/OJHgDgQOkkYG21udjHwNK1kki20/BQOmrjw+1LKe67XUC3UG3IzOxCpUgW60oX36kvkBFEYg2AEJIKS0Y70J8+ZO0XJ8joUmlbF7EbcT7DACjIneG9HaHRLSRb7GQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706361318; c=relaxed/simple;
-	bh=Dqdc0+GiMMU9oBgocmuzdAz+2RL5EmpPsPfk0dVDRO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AXvmDUU2gr6Z0VslIkK0Et0mfEupzyW2OXt1Z8H5pGhZbsBUC7NsmNT1hhOJbUZ4Kv87PfW5PW2s8omcAxkQluWRdvLbEh30wW8NNqJLjB1RTBYV8+8Ik4rc/RvFDmW9aOO6CCBIHkJAe4BKQsd9jEu4P1xyD0zjA5FzCrhBYUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U79BX+bO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706361359; c=relaxed/simple;
+	bh=E4mMh2ShPetQT/YuLHaTdv2SJvBmf/1otD9A5JgabtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZzFyjR7/sC++D4IDYHNWGKF4ZxDiYwCP+FPzJ6Jukiq059bsUehiPwNnrcXDVzj1krSoNqMQ21sQPnwVIT/wESHWfjc04yAJuUalR2laOGK0tOWLCyn2bnO22QyTmqDye7Yb2hCfq/yg9UH3V5O30DZisQgGspjuMrD8sUbLLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TPpdFgeE; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U79BX+bO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706361315;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZrazDqdbD6oanZQGLU+I+Chea6nbXarN1I/pTzbmfG4=;
-	b=U79BX+bOtnw4mpLk47nGVj9Qnk56vKB2pU6qwHQd1nR45/XflIH/PWkg8I/hv5fEp5rtbl
-	GOCZHSgTIDRSJALGEUthsNUllBXiwubQLaQHXzeQhN2zFv9dUaHMG7Zq4MrzG5Fwmdq60+
-	rx2fvhmPyfvlHMoyD+OdhKtSDQCud5g=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-383-_xQ5oH9fPR6kh_SAAIO65g-1; Sat, 27 Jan 2024 08:15:13 -0500
-X-MC-Unique: _xQ5oH9fPR6kh_SAAIO65g-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-51032b2fb9fso140120e87.1
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 05:15:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706361312; x=1706966112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrazDqdbD6oanZQGLU+I+Chea6nbXarN1I/pTzbmfG4=;
-        b=lDSrogb/kQJS2sH4HhxZ/dxxZ4/smYJuIm24UBpe+nz2MbBl3QQd2Y/hwnwJJUvnvt
-         1/n6YYHsy6QOgLgUMMhkiGrx8ZSgum3yMP20CyhLJbtLCPMlSxKp5w3ecTOpQPHwjUNb
-         0lUmtE+fWOz956JHdY4OPRDig70wCbdbOuYRXKTF0ceQ/MGoO/8ieC1FEACijH/LqDdA
-         nomUrufpNsAaoKC0OJWU78eM5uvLDFT/wX8XAvLfHHNtM784MWTP+EiO9U1/xVKOUl7E
-         RltYXMJ4zQyWN3dzGwvFugrOeoZHZzHMMoM0PPomu0WuDZguZJQfsZ049v0ovi5t1ifB
-         LUpA==
-X-Gm-Message-State: AOJu0YzHNBo/J3+hX8UBXRbLgXXtS5/ZKci7r0e62GmwRM4qGGaJTavd
-	6r2OBNBQDYuFN34Q+P0UOyS4/hohKJ5GllIb60+NoBYJEOsRw/CZRfa+1TXle2eMOnY7cIKvY8C
-	Fvpb9jlT49riIWv4uwGKUS0lG9mG4O9ZUrBDeIaG/RS7zr9mZ3M8MrgjLf9Aq/A==
-X-Received: by 2002:ac2:4651:0:b0:50e:6a19:7a38 with SMTP id s17-20020ac24651000000b0050e6a197a38mr840744lfo.20.1706361312461;
-        Sat, 27 Jan 2024 05:15:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF/8eFrsRRCO0DBjR/ei2z8ocfhn93MBtESzm9v5YMp5FsQgPdgqxDov+zEfayAXv6aGPZLtw==
-X-Received: by 2002:ac2:4651:0:b0:50e:6a19:7a38 with SMTP id s17-20020ac24651000000b0050e6a197a38mr840727lfo.20.1706361312120;
-        Sat, 27 Jan 2024 05:15:12 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id hd11-20020a170907968b00b00a31906f280asm1738295ejc.193.2024.01.27.05.15.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Jan 2024 05:15:11 -0800 (PST)
-Message-ID: <8f225be1-647b-4421-b6b5-a2098f807d05@redhat.com>
-Date: Sat, 27 Jan 2024 14:15:10 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TPpdFgeE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706361358; x=1737897358;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E4mMh2ShPetQT/YuLHaTdv2SJvBmf/1otD9A5JgabtI=;
+  b=TPpdFgeEJRBsOZOHWYlFUEqis9Uw54xF/4NVrQXSPV3KwFGppV//IJo6
+   ly0C5XFAEeFR6AdQ4zDOmKe26ouG9w2Iu8mLTNkiJEX/fTtnBa4BiseHX
+   0z3mdQiOBuzGRxC5grwMupNFdntTL0OJc/8bd6NIPjaIfSDNLX9bERzbk
+   TQR2PbGnz3G2bUy6KT63tvBBKi9gJIRBTmqzjpWpHeZMFVZf16qdefk/n
+   pwRGl6TypDnjyodZQj7WTeWV3XqpvhanVaf0hxC8q4T1wQJMy/FLZ/T5F
+   um6FH8/DlQrtFbRcmPGzwUvX9RC7OvqlgPJ4e0C3z5JRe/4XDSBMNB07I
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9428494"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="9428494"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2024 05:15:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="35709003"
+Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 27 Jan 2024 05:15:54 -0800
+Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rTiXH-0002LF-38;
+	Sat, 27 Jan 2024 13:15:51 +0000
+Date: Sat, 27 Jan 2024 21:15:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthew Wood <thepacketgeek@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	leitao@debian.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 6/8] net: netconsole: cache userdata
+ formatted string in netconsole_target
+Message-ID: <202401272022.r5Z4OtUg-lkp@intel.com>
+References: <20240126231348.281600-7-thepacketgeek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
-Content-Language: en-US, nl
-To: Kees Cook <keescook@chromium.org>, Arend van Spriel <aspriel@gmail.com>
-Cc: Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>,
- Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
- Johannes Berg <johannes.berg@intel.com>,
- Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Aloka Dixit <quic_alokad@quicinc.com>,
- John Keeping <john@keeping.me.uk>, Jeff Johnson <quic_jjohnson@quicinc.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240126223150.work.548-kees@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240126223150.work.548-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126231348.281600-7-thepacketgeek@gmail.com>
 
-Hi,
+Hi Matthew,
 
-On 1/26/24 23:31, Kees Cook wrote:
-> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
-> cfg80211_scan_request with __counted_by"), the compiler may enforce
-> dynamic array indexing of req->channels to stay below n_channels. As a
-> result, n_channels needs to be increased _before_ accessing the newly
-> added array index. Increment it first, then use "i" for the prior index.
-> Solves this warning in the coming GCC that has __counted_by support:
-> 
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
-> n_channels' may be undefined [-Wsequence-point]
->  3783 |                 req->channels[req->n_channels++] = chan;
->       |                               ~~~~~~~~~~~~~~~^~
-> 
-> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
-> Cc: Arend van Spriel <aspriel@gmail.com>
-> Cc: Franky Lin <franky.lin@broadcom.com>
-> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
-> Cc: Ian Lin <ian.lin@infineon.com>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Wright Feng <wright.feng@cypress.com>
-> Cc: Hector Martin <marcan@marcan.st>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: brcm80211-dev-list.pdl@broadcom.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+kernel test robot noticed the following build warnings:
 
-Thanks, patch looks good to me:
+[auto build test WARNING on net-next/main]
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/Matthew-Wood/net-netconsole-cleanup-formatting-lints/20240127-072017
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240126231348.281600-7-thepacketgeek%40gmail.com
+patch subject: [PATCH net-next v2 6/8] net: netconsole: cache userdata formatted string in netconsole_target
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20240127/202401272022.r5Z4OtUg-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240127/202401272022.r5Z4OtUg-lkp@intel.com/reproduce)
 
-Regards,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401272022.r5Z4OtUg-lkp@intel.com/
 
-Hans
+All warnings (new ones prefixed by >>):
+
+   drivers/net/netconsole.c: In function 'update_userdata':
+>> drivers/net/netconsole.c:649:26: warning: variable 'ud' set but not used [-Wunused-but-set-variable]
+     649 |         struct userdata *ud;
+         |                          ^~
 
 
+vim +/ud +649 drivers/net/netconsole.c
 
-> ---
->  drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> index 133c5ea6429c..28d6a30cc010 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> @@ -3779,8 +3779,10 @@ static int brcmf_internal_escan_add_info(struct cfg80211_scan_request *req,
->  		if (req->channels[i] == chan)
->  			break;
->  	}
-> -	if (i == req->n_channels)
-> -		req->channels[req->n_channels++] = chan;
-> +	if (i == req->n_channels) {
-> +		req->n_channels++;
-> +		req->channels[i] = chan;
-> +	}
->  
->  	for (i = 0; i < req->n_ssids; i++) {
->  		if (req->ssids[i].ssid_len == ssid_len &&
+   644	
+   645	static void update_userdata(struct netconsole_target *nt)
+   646	{
+   647		int complete_idx = 0, child_count = 0;
+   648		struct list_head *entry;
+ > 649		struct userdata *ud;
+   650	
+   651		/* Clear the current string in case the last userdatum was deleted */
+   652		nt->userdata_length = 0;
+   653		nt->userdata_complete[0] = 0;
+   654	
+   655		ud = to_userdata(&nt->userdata_group.cg_item);
+   656		list_for_each(entry, &nt->userdata_group.cg_children) {
+   657			struct userdatum *udm_item;
+   658			struct config_item *item;
+   659	
+   660			if (child_count >= MAX_USERDATA_ITEMS)
+   661				break;
+   662			child_count++;
+   663	
+   664			item = container_of(entry, struct config_item, ci_entry);
+   665			udm_item = to_userdatum(item);
+   666	
+   667			/* Skip userdata with no value set */
+   668			if (strnlen(udm_item->value, MAX_USERDATA_VALUE_LENGTH) == 0)
+   669				continue;
+   670	
+   671			/* This doesn't overflow userdata_complete since it will write
+   672			 * one entry length (1/MAX_USERDATA_ITEMS long), entry count is
+   673			 * checked to not exceed MAX items with child_count above
+   674			 */
+   675			complete_idx += scnprintf(&nt->userdata_complete[complete_idx],
+   676						  MAX_USERDATA_ENTRY_LENGTH, "%s=%s\n",
+   677						  item->ci_name, udm_item->value);
+   678		}
+   679		nt->userdata_length = strnlen(nt->userdata_complete,
+   680					      sizeof(nt->userdata_complete));
+   681	}
+   682	
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
