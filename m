@@ -1,141 +1,102 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94D11429C;
-	Sat, 27 Jan 2024 07:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69791D524;
+	Sat, 27 Jan 2024 07:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706339110; cv=none; b=GmKhLnfuv+2jdEXyrU0prPF829TgdzTmb/QiZpg5x7uI0FeaW9gkCDgUGKGbMM7pYEBca+MpNtHjPB8vaAO/qI8Znq5INT6C2BfetH0orAtySuhLsz6BQ5jJXyKsqMXPur31+G7YwjixlEdlkYISE7Xowk+0ji3rFPQLtDPaUpY=
+	t=1706339239; cv=none; b=PZT+TPdPVFhJHXz6VVTZessR2xb6V6DakyOee9uq7xiqT7/YSIpmDhsK1pXDL2UrZYaNihdA/qTZKWj2N01wf20rR7/XlHMWK9KpHTIJSKhfn+1tqht4x8qD45PL9EtOYGMezN36SfhhqCW2ZH/f7wTa8mpGaBfs4WtXiOQoHcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706339110; c=relaxed/simple;
-	bh=0y5myr6aRHgZi0oZL3kW0LCbHr9GKeNw5wu5sr2tcKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cFd7OSY7jwXlaBhw3bVoI57Rmem0Au7USZ5KeCsaRn/f451xKbxj2++QkkK1Y5XMmcaEz2UDcSCUGN11LikgqVNiDyeIOmOLDS/TDo19zJUe5IMDAmCATZ7oqPYmrR5A+pGoqPb+wJ/CK2huO7RtwutdtNjc/mnsseQM09zcdQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav415.sakura.ne.jp (fsav415.sakura.ne.jp [133.242.250.114])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 40R741nS081315;
-	Sat, 27 Jan 2024 16:04:02 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav415.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav415.sakura.ne.jp);
- Sat, 27 Jan 2024 16:04:01 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav415.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 40R741hA081308
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 27 Jan 2024 16:04:01 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <b5a12ecd-468d-4b50-9f8c-17ae2a2560b4@I-love.SAKURA.ne.jp>
-Date: Sat, 27 Jan 2024 16:04:01 +0900
+	s=arc-20240116; t=1706339239; c=relaxed/simple;
+	bh=cowBM1wENyFzXVov+SQtnhDqzYj/i8BhLeInL+6Gn8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwFp72+Y8jrrWmJ7aOoNffrmc4e/EDlO0zoleab/3f7wRT44hG4XvXXSiSvJd4b1LB2fCPOgeiQeDlRPWp6QIfjFyO6lyXs0sYq0IUkOpMKsFtpbwoM5rj25d2bclukQ/x6pzLYYeQti++j/fUFas02O9lemR/UkGad681K/8Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUWMxGFM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUWMxGFM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C78CC433F1;
+	Sat, 27 Jan 2024 07:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706339239;
+	bh=cowBM1wENyFzXVov+SQtnhDqzYj/i8BhLeInL+6Gn8s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=OUWMxGFM+DD4G4kelhTUbMh1SlPs/EhWz5qNrMt+vsyM4FckdL5p7j1XACWih0FWl
+	 ZYbI0uNwRakxDwW4hR3Vh3L/ZETHfiO++EOGM6pFPlxU/DO4tjvkllwSrQdcKfsP0z
+	 orsy4Hc7Qpwpy2uwY2ZtNAqpqCmgZhFzWf1u5zNF9rwI9Y/j1FN8wuTTR5vngIHz9J
+	 wdiIfXBkgrIupwb2dXTzLoXPaFFrjnqYI51guo1fjpVWgtuoTR8KBgHuxRm/JNQMZ/
+	 q4OtiPD+wFGQoOKgnVYIqB0KXuLtO8wzZzRxjABZ5n0L85iolqKFMIGYxN9FTxO63r
+	 LtIF9PfNjyz6A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id C627DCE190D; Fri, 26 Jan 2024 23:07:18 -0800 (PST)
+Date: Fri, 26 Jan 2024 23:07:18 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: RCU <rcu@vger.kernel.org>, Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH v4 0/4] Reduce synchronize_rcu() latency(v4)
+Message-ID: <620b475d-eef8-4396-9d3a-d3dcf1d70f9a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240104162510.72773-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [6.8-rc1 Regression] Unable to exec apparmor_parser from
- virt-aa-helper
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kees Cook <keescook@chromium.org>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore
- <paul@paul-moore.com>, Kevin Locke <kevin@kevinlocke.name>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mateusz Guzik <mjguzik@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Kentaro Takeda <takedakn@nttdata.co.jp>
-References: <ZbE4qn9_h14OqADK@kevinlocke.name>
- <202401240832.02940B1A@keescook>
- <CAHk-=wgJmDuYOQ+m_urRzrTTrQoobCJXnSYMovpwKckGgTyMxA@mail.gmail.com>
- <CAHk-=wijSFE6+vjv7vCrhFJw=y36RY6zApCA07uD1jMpmmFBfA@mail.gmail.com>
- <CAHk-=wiZj-C-ZjiJdhyCDGK07WXfeROj1ACaSy7OrxtpqQVe-g@mail.gmail.com>
- <202401240916.044E6A6A7A@keescook>
- <CAHk-=whq+Kn-_LTvu8naGqtN5iK0c48L1mroyoGYuq_DgFEC7g@mail.gmail.com>
- <CAHk-=whDAUMSPhDhMUeHNKGd-ZX8ixNeEz7FLfQasAGvi_knDg@mail.gmail.com>
- <a9210754-2f94-4075-872f-8f6a18f4af07@I-love.SAKURA.ne.jp>
- <CAHk-=wjF=zwZ88vRZe-AvexnmP1OCpKZSp_2aCfTpGeH1vLMkA@mail.gmail.com>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <CAHk-=wjF=zwZ88vRZe-AvexnmP1OCpKZSp_2aCfTpGeH1vLMkA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104162510.72773-1-urezki@gmail.com>
 
-On 2024/01/26 2:17, Linus Torvalds wrote:
-> On Thu, 25 Jan 2024 at 06:17, Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> On 2024/01/25 3:27, Linus Torvalds wrote:
->>> The whole cred use of current->in_execve in tomoyo should
->>> *also* be fixed, but I didn't even try to follow what it actually
->>> wanted.
->>
->> Due to TOMOYO's unique domain transition (transits to new domain before
->> execve() succeeds and returns to old domain if execve() failed), TOMOYO
->> depends on a tricky ordering shown below.
+On Thu, Jan 04, 2024 at 05:25:06PM +0100, Uladzislau Rezki (Sony) wrote:
+> This is a v4 that tends to improve synchronize_rcu() call. To be more
+> specific it is about reducing a waiting time(especially worst cases)
+> of caller that blocks until a grace period is elapsed. 
 > 
-> Ok, that doesn't really clarify anything for me.
+> In general, this series separates synchronize_rcu() callers from other
+> callbacks. We keep a dedicated an independent queue, thus the processing
+> of it starts as soon as grace period is over, so there is no need to wait
+> until other callbacks are processed one by one. Please note, a number of
+> callbacks can be 10K, 20K, 60K and so on. That is why this series maintain
+> a separate track for this call that blocks a context.
+
+And before I forget (again), a possible follow-on to this work is to
+reduce cond_synchronize_rcu() and cond_synchronize_rcu_full() latency.
+Right now, these wait for a full additional grace period (and maybe
+more) when the required grace period has not elapsed.  In contrast,
+this work might enable waiting only for the needed portion of a grace
+period to elapse.
+
+							Thanx, Paul
+
+> v3 -> v4:
+>  - Squash patches;
+>  - Add more description;
+>  - Fix comments based on v3 feedback.
 > 
-> I'm less interested in what the call paths are, and more like "_Why_
-> is all this needed for tomoyo?"
+> v3: https://lore.kernel.org/lkml/cd45b0b5-f86b-43fb-a5f3-47d340cd4f9f@paulmck-laptop/T/
+> v2: https://lore.kernel.org/all/20231030131254.488186-1-urezki@gmail.com/T/
+> v1: https://lore.kernel.org/lkml/20231025140915.590390-1-urezki@gmail.com/T/
 > 
-> Why doesn't tomoyo just install the new cred at "commit_creds()" time?
+> Neeraj Upadhyay (1):
+>   rcu: Improve handling of synchronize_rcu() users
 > 
-> (The security hooks that surround that  are
-> "->bprm_committing_creds()" and "->bprm_committed_creds()")
-
-DAC checks permission for any files accessed by a new program passed to execve()
-until the point of no return of execve() using the credentials of current program.
-But TOMOYO checks permission for any files accessed by a new program passed to execve()
-using a domain for that new program than a domain for current program.
-
-This is because TOMOYO considers that if a new program passed to execve() requires some
-file, permissions for accessing that file should be checked using the security context
-for that new program.
-
-Let's consider executing a shell script named /tmp/foo.sh from /bin/bash .
-
-  [user@host ~]$ cat /tmp/foo.sh
-  #!/bin/sh
-  echo hello
-  [user@host ~]$ chmod 755 /tmp/foo.sh
-  [user@host ~]$ exec /tmp/foo.sh
-
-DAC checks permissions for /tmp/foo.sh and /bin/sh using the credentials of /bin/bash
-process, and checks permissions for shared libraries needed by /bin/sh using the new
-credentials of /tmp/foo.sh process.
-
-TOMOYO checks permissions for /tmp/foo.sh using the domain for /bin/bash process, and
-checks permissions for /bin/sh and permissions for shared libraries needed by /bin/sh
-using the domain for /tmp/foo.sh process. TOMOYO treats "/tmp/foo.sh needs to load /bin/sh"
-and "/tmp/foo.sh needs to load shared libraries needed by /bin/sh" in the same manner, by
-checking "open for read" permission.
-
-Since the COW cred mechanism introduced in Linux 2.6.29 cannot support such model,
-TOMOYO uses "struct task_struct"->security and does not use "struct cred"->security.
-
+> Uladzislau Rezki (Sony) (3):
+>   rcu: Reduce synchronize_rcu() latency
+>   rcu: Add a trace event for synchronize_rcu_normal()
+>   rcu: Support direct wake-up of synchronize_rcu() users
 > 
-> IOW, the whole "save things across two *independent* execve() calls"
-> seems crazy.
+>  .../admin-guide/kernel-parameters.txt         |  14 +
+>  include/trace/events/rcu.h                    |  27 ++
+>  kernel/rcu/Kconfig.debug                      |  12 +
+>  kernel/rcu/tree.c                             | 361 +++++++++++++++++-
+>  kernel/rcu/tree.h                             |  19 +
+>  kernel/rcu/tree_exp.h                         |   2 +-
+>  6 files changed, 433 insertions(+), 2 deletions(-)
 > 
-> Very strange and confusing.
+> -- 
+> 2.39.2
 > 
->                     Linus
-
-Since curity_bprm_free() callback was removed in Linux 2.6.29 because COW cred mechanism
-does not need it, currently I have to use such a crazy hack.
-
-Revival of security_task_alloc()/security_task_free()/security_bprm_free() was proposed
-in 2011 at https://lkml.kernel.org/r/201104202119.FAI21341.HtOJFSOVLFMOFQ@I-love.SAKURA.ne.jp
-and https://lkml.kernel.org/r/201104202120.FEJ57865.MFSOFFHVOOJLQt@I-love.SAKURA.ne.jp .
-
-security_task_alloc()/security_task_free() has been revived, but security_bprm_free() is not
-revived yet.
-
-If we can accept revival of security_bprm_free(), we can "get rid of current->in_execve flag"
-and "stop saving things across two *independent* execve() calls".
-
