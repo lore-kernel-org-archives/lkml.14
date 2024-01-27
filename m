@@ -1,59 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51752E834
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 19:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428E4B665
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 19:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706384010; cv=none; b=X4OY9XXRZmz37jOGGYDa4WzB8n7+C764X+j/ZmBBhZJT/3uSKrxb7/FLFDRZED/hGDt9Q+u3FV5nHDWpcoz1FK8MjapXePQ+yzFKT/bO66aKuiCGwY2QrZMC+jOH5jDrPCzcmTyvObwVv2lvesfjs394i0e86qB9lAXPdMcLOGc=
+	t=1706384149; cv=none; b=kc3uy8bwc5gd9XPRIgx75lC4VA1j3Gq46frUEh4nIcvF8ToP8Yu2m6Kx7Rihpfhu0OHIH3Nqxkuxdd1HK0Amimwh3kpn1nQg/K4bsBmHnsIKfocYuzh5dj+4gGxN0kCLAWfHG1i7O+4gG+zj6/Z7gQ4GBNIxKJQfRnp0OWHZYwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706384010; c=relaxed/simple;
-	bh=tspagdP0rzK+AQCZ0dOlmKPm6GSncitJWM+JedleeQk=;
+	s=arc-20240116; t=1706384149; c=relaxed/simple;
+	bh=JsNjDeEosD68W82IVuf9LcDq0mJQmIvRYnUGnYlOl5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e0bKfESGu6l2ICnSFx+RY+hXSnHsyj+r+QDqNvOJv8Pv5Rh6IbXZsE1xIOXinywE8rz4VvnhY6e1IimnEC4QSIdxY3eGQH1vO1NPFlhrJbKMqhiK+aGcMU7ddADVcfBlQ/iMHNJgtIUNsZHBE1Y0clEXzqsyoUeYpuFcKccN5tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RxNyqPLv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uDkuKLjHKS/J4VcjRvBWzkX+bFC16/Iza6BHGRASQqDl4o/DMtQ8GgdXVVbFRwVIubv5cWV3yukwKOufkFVDo3J3GHtg1c6drePNKk/0hnw3ss+LXGz47rp2zoEZZyKUloTejyvSdS0awQeTmfY+EgVyouWsSSGubAV9u+wcYDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KY1n42pR; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RxNyqPLv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706384008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tspagdP0rzK+AQCZ0dOlmKPm6GSncitJWM+JedleeQk=;
-	b=RxNyqPLvWOFOyjid8yKyAA/sj9xS35JTJSpV5cbFQFDZYj8TaJ4tJdkHR2frMLQqOmQKWW
-	aQf+J03ACEsqsevx7Jfp3MOBnPPFpmg1oMsuLX7OaaAwUFG7KO9JmlBbM83xJwDF3/fU1N
-	d38o95RqP2xogNHEGl/EApL/77O0MVg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-213-t_1FSmKlMQmL8ucdYDk2cg-1; Sat, 27 Jan 2024 14:33:21 -0500
-X-MC-Unique: t_1FSmKlMQmL8ucdYDk2cg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15B81185A780;
-	Sat, 27 Jan 2024 19:33:21 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.4])
-	by smtp.corp.redhat.com (Postfix) with SMTP id B10E6C15587;
-	Sat, 27 Jan 2024 19:33:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat, 27 Jan 2024 20:32:07 +0100 (CET)
-Date: Sat, 27 Jan 2024 20:32:05 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] pidfd: don't do_notify_pidfd() if
- !thread_group_empty()
-Message-ID: <20240127193204.GD13787@redhat.com>
-References: <20240127132043.GA29080@redhat.com>
- <20240127132105.GA29091@redhat.com>
- <ZbU72/83nv2UdcCK@tycho.pizza>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KY1n42pR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706384148; x=1737920148;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JsNjDeEosD68W82IVuf9LcDq0mJQmIvRYnUGnYlOl5o=;
+  b=KY1n42pRnqWZGCl3hAfgZS8po/RzROOdaOBw/VNiRu+JC57iG4rkuzB+
+   CRtdEwQMfXIpD60dq/jzauNYrvJCSTBjDQQ0a24xYsic+1QADHG8gHD0M
+   E69ieG47upBoZMJDHtWdkWuSjTm3v/2kSvXspQwbCaQnL7CMJj0S8Hw+N
+   9LidgCWXVHmfYlhU2RBmp3//LxSbMSLijGXQcZ6COWuBLUx9gaylZWN45
+   lx0lF9PvfW2i7g1X0rPplTn7UZvtQjy0HDZvnrZ9r2Aa8YO7CvI5iUbx1
+   ilh3Yx5c21734Z5U+hG6WXJNQuQjOY9IOCEYJrr2fNTPRIJnxWt+16FOI
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="16071603"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="16071603"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2024 11:35:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="787430462"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="787430462"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 27 Jan 2024 11:35:42 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 21D451F1; Sat, 27 Jan 2024 21:35:41 +0200 (EET)
+Date: Sat, 27 Jan 2024 21:35:41 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv6 16/16] x86/acpi: Add support for CPU offlining for ACPI
+ MADT wakeup method
+Message-ID: <vfk7v6ywaclyydshucnnuvsyg6e6sntyzimgqgjc7ye77z2ukr@lk4e3wz4ap3y>
+References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
+ <20240124125557.493675-17-kirill.shutemov@linux.intel.com>
+ <4aa2c961-a0dc-45dc-b996-57c8468660df@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,26 +68,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZbU72/83nv2UdcCK@tycho.pizza>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <4aa2c961-a0dc-45dc-b996-57c8468660df@linux.intel.com>
 
-On 01/27, Tycho Andersen wrote:
->
-> On Sat, Jan 27, 2024 at 02:21:05PM +0100, Oleg Nesterov wrote:
-> > do_notify_pidfd() makes no sense until the whole thread group exits, change
-> > do_notify_parent() to check thread_group_empty().
-> >
-> > This avoids the unnecessary do_notify_pidfd() when tsk is not a leader, or
-> > it exits before other threads, or it has a ptraced EXIT_ZOMBIE sub-thread.
-> >
-> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
->
-> Looks good to me, thanks.
->
-> Reviewed-by: Tycho Andersen <tandersen@netflix.com>
+On Fri, Jan 26, 2024 at 12:03:14PM -0800, Kuppuswamy Sathyanarayanan wrote:
+> > +	/* Don't wait longer than a second. */
+> > +	timeout = USEC_PER_SEC;
+> > +	while (READ_ONCE(acpi_mp_wake_mailbox->command) && --timeout)
+> > +		udelay(1);
+> > +
+> > +	if (!timeout)
+> Nit: IMO, since you are dumping failure error message (not timeout
+> message), you can use non zero acpi_mp_wake_mailbox->command
+> check. But it is up to you.
 
-Thanks Tycho,
-
-Oleg.
-
+I think my version is pretty idiomatic. The same pattern used in other
+places. For instance, test_nmi_ipi().
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
