@@ -1,209 +1,162 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A011945A;
-	Sat, 27 Jan 2024 13:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66551E51D;
+	Sat, 27 Jan 2024 13:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706362616; cv=none; b=V/HNs142Ir0FB78ccYatSczjjkrhpZa89/32iMLV+3bQJ1qxhFkxw3gyIJclM82Qxwnzp3tYLgUVDlVWiVX84qePtvroQgy8NOyoCpDC1P+HlpE447rec3w5JCcvVpbpldpTh+qTYAPBvW1bHEuDgSK0eqlCbwg25FbgtWqAtXM=
+	t=1706362911; cv=none; b=Hx60CBMJ03bh80jjjPgs3Azl7w7MPHigJvWnSJ1SZ42tdYY2hYRokRg2jm9oHeQfH4XFwv5zNykfeW7RjCzeLNNiYW3wZiUnldeziOzrXJZK3eDjzwyH1AqPzCEwreJKicaiuDyOehcauKgI49PW2qSpwLEAZcyt8oxcA9Hw704=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706362616; c=relaxed/simple;
-	bh=y1nG8drrUsZJdEsvAYtR8Vr5royN3KMjz1CxhfrSuik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nN7bcaoHd4jhwVIss2wXlXmZU+o28PTShSqR/AbFjIEKrEqZmPNwACDX1gI83OAzThIVtBI6HjXKt3alFz8TTaWFUyFpBi2yWa/AMJMm5H68fcV935shyrIdqLnN7vn/kXGEodhOBK3JprVP4ZdQaTSD/5spzj5CJbI0iuQi5UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=uVHZlZhC; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1706362911; c=relaxed/simple;
+	bh=hosPsHG0ZyfR8sKG0hSNgK2DCihwOOAQrKZoFmzPQUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Eg8uU/orT4o8EYhsN+dYqTQe29wyv9n/Pud7flQGveQuTc7morVG08DODBqr17/79W40XFEySBlrl/s4T+Ge5icbSp0dG8VRWTelrVsht7wryRKqy8nVFSHyvx5nGDNTq51Cn85iiI5aTOJiVJDOwX9OjpUTD0UGqt45PUXZ7jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DgYYQTU0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="uVHZlZhC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=j460abbTum7jLNtngWFF5CRs5bwdXXz1lvyWrkSYPzk=; b=uVHZlZhCfQdnSp6dsj9Nlhtchc
-	DSGCEUCM+wrgBIMiOn73gCyvtSXb2NqDVbVW0L44Vh3ZSXasjRSErRiaI7Anunli/KfisUGZBLm++
-	WiNd90gsZR3XcnCRyxmwaGOLirL8e7LzIf4ePDs2QaiLNbVuVz1hfJ7mlV+OZ/ai67267yUZNO0uK
-	VouoyYcEB8qA1vMHcigst7M+yLlqMISPUGjNY+N4M+KBwzzRawHTKvTFBjL8zQ/q9aFaznovTZFoh
-	IkKgUbEbhLKOifYRhAgrBU6kTJzBYfctYsqG224B1KbRT8ryaw4FeXSiYk/2NJGPDsPAh2EInpC4F
-	oaL87Dog==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1rTiWQ-003UJH-4O; Sat, 27 Jan 2024 13:14:58 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 195E9BE2DE0; Sat, 27 Jan 2024 14:14:57 +0100 (CET)
-Date: Sat, 27 Jan 2024 14:14:57 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Patrice Duroux <patrice.duroux@gmail.com>, 1061449@bugs.debian.org,
-	Lewis Huang <lewis.huang@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Phil Hsieh <phil.hsieh@amd.com>,
-	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Cc: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Bug#1061449: linux-image-6.7-amd64: a boot message from amdgpu
-Message-ID: <ZbUB0YWxEET3Y0xA@eldamar.lan>
-References: <170612149675.7169.757906919183146487.reportbug@kos-moceratops.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DgYYQTU0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 621A1C433F1;
+	Sat, 27 Jan 2024 13:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706362910;
+	bh=hosPsHG0ZyfR8sKG0hSNgK2DCihwOOAQrKZoFmzPQUc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DgYYQTU0Q3ngEJGlfrBXOXCFHFtvdeK7RLdORupoijhaDQERHTWp1j+KYsPCpHQcO
+	 pj6cSuHdtW55VVZD57WqW73TdqcLKeS6kih2WuRErRhFIUMoj9muauQgzT1INqDTgy
+	 KYwJQu9w8EHS9RtgZwuxT3bbrhOwyHV/Jbw3LMOP28BLxDOpZxC/0aLzyOa04/HydS
+	 Ws6gBGevTJjGeO1OYVcrtvY8xNCrMJ7gtTbFyxpvK5FWSUq/rUYsaEx07/8SDRCuyL
+	 rXwlV9jW9TbybpvXttdGQ6Lj4ABARD2tSWGMiIC/zFv3vA5DgMjZk4zqGC5BugLIlR
+	 t7kHPp7jUgfmg==
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-595b3644acbso1225358eaf.1;
+        Sat, 27 Jan 2024 05:41:50 -0800 (PST)
+X-Gm-Message-State: AOJu0YzmUk8cLBx2eCekE/2EKTwpzm+e6gznvpLFW8DZ1gc171vNJKAU
+	jTZ/Pq7cFkT10h2baMSAQi/1MXEu1p6PcAeG67V+dC8Bx8m8s3g4GQmKj0NsVFdgkZjkmGqUuKu
+	zEHZlQZ1A5NntryDmYlcevv7X26w=
+X-Google-Smtp-Source: AGHT+IG3fUb8Ad4+sr7qrvoyt+C0ZtD2RWS3ld+lIM4h3epDbz8xcPsi5sdfx66Hm5aKT7X+rx/K9BDQfWP1ePI0OME=
+X-Received: by 2002:a05:6870:709e:b0:215:30c3:a2c1 with SMTP id
+ v30-20020a056870709e00b0021530c3a2c1mr1046686oae.48.1706362909773; Sat, 27
+ Jan 2024 05:41:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170612149675.7169.757906919183146487.reportbug@kos-moceratops.home>
-X-Debian-User: carnil
+References: <d9ac2960-6644-4a87-b5e4-4bfb6e0364a8@aibsd.com>
+ <CAK7LNATDD2gC53T5n7vCUH6O6mdAm801fTWyKi9fji+5Kb+0ng@mail.gmail.com> <20240122230255.GD141255@dev-fedora.aadp>
+In-Reply-To: <20240122230255.GD141255@dev-fedora.aadp>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 27 Jan 2024 22:41:13 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARa4YPu_+KW1_E4RKO95JqUxS+DM8X6fmjr4SmV-Sgk4Q@mail.gmail.com>
+Message-ID: <CAK7LNARa4YPu_+KW1_E4RKO95JqUxS+DM8X6fmjr4SmV-Sgk4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] modpost: inform compilers that fatal() never returns
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Aiden Leong <aiden.leong@aibsd.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ndesaulniers@google.com, nicolas@fjasle.eu, 
+	clang-built-linux <llvm@lists.linux.dev>, 
+	=?UTF-8?B?Ru+/ve+/ve+/vW5nLXJ177+977+977+9IFPvv73vv73vv71uZw==?= <maskray@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+On Tue, Jan 23, 2024 at 8:02=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+>
+> On Mon, Jan 22, 2024 at 10:29:32PM +0900, Masahiro Yamada wrote:
+> > +CC: clang-built-linux list, Fangrui
+> >
+> > On Mon, Jan 22, 2024 at 1:04=E2=80=AFPM Aiden Leong <aiden.leong@aibsd.=
+com> wrote:
+> > >
+> > >
+> > >  > The function fatal() never returns because modpost_log() calls exi=
+t(1)
+> > >
+> > >  > when LOG_FATAL is passed.
+> > >  >
+> > >  > Inform compilers of this fact so that unreachable code flow can be
+> > >  > identified at compile time.
+> > >  >
+> > >  > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > >  > Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> > >  > ---
+> > >  >
+> > >  > Changes in v2:
+> > >  >   - Use noreturn attribute together with alias
+> > >  >
+> > >  >  scripts/mod/modpost.c | 3 +++
+> > >  >  scripts/mod/modpost.h | 5 ++++-
+> > >  >  2 files changed, 7 insertions(+), 1 deletion(-)
+> > >  >
+> > >  > diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> > >  > index ca0a90158f85..c13bc9095df3 100644
+> > >  > --- a/scripts/mod/modpost.c
+> > >  > +++ b/scripts/mod/modpost.c
+> > >  > @@ -90,6 +90,9 @@ void modpost_log(enum loglevel loglevel, const c=
+har
+> > > *fmt, ...)
+> > >  >          error_occurred =3D true;
+> > >  >  }
+> > >  >
+> > >  > +void __attribute__((alias("modpost_log")))
+> > >
+> > > Hi Masahiro,
+> > > I cross-compile kernel on Apple Silicon MacBook Pro
+> > > and every thing works well until this patch.
+> > >
+> > > My build command:
+> > > make ARCH=3Darm CROSS_COMPILE=3Darm-none-eabi- \
+> > > HOSTCFLAGS=3D"-I/opt/homebrew/opt/openssl/include" \
+> > > HOSTLDFLAGS=3D"-L/opt/homebrew/opt/openssl/lib"
+> > >
+> > > Error message:
+> > > scripts/mod/modpost.c:93:21: error: aliases are not supported on darw=
+in
+> >
+> >
+> > It is unfortunate.  Indeed, I see this message in:
+> >
+> > clang/include/clang/Basic/DiagnosticSemaKinds.td
+> >
+> >
+> > Is this limitation due to macOS executable (PEF),
+> > or is it Clang-specific?
+>
+> Based on my admittedly brief research, this seems related to the Mach-O
+> format. That message was added by [1] in response to [2] but the message
+> mentioned weak aliases being supported. A further clarification was made
+> in [3] to state that all aliases are unsupported as a result of some
+> internal Apple bug it seems but I do see a couple of bug reports stating
+> that may not be true [4][5] (although that does not seem relevant for
+> this report).
+>
+> [1]: https://github.com/llvm/llvm-project/commit/0017c5fa92ad3b10e15fd34f=
+3865e8e5b850a5ed
+> [2]: https://llvm.org/bz8720
+> [3]: https://github.com/llvm/llvm-project/commit/4e30b96834cea5682a8e9e02=
+4dda06319825000a
+> [4]: https://github.com/llvm/llvm-project/issues/11488
+> [5]: https://github.com/llvm/llvm-project/issues/71001
 
-In Debian (https://bugs.debian.org/1061449) we got the following
-quotred report:
 
-On Wed, Jan 24, 2024 at 07:38:16PM +0100, Patrice Duroux wrote:
-> Package: src:linux
-> Version: 6.7.1-1~exp1
-> Severity: normal
-> 
-> Dear Maintainer,
-> 
-> Giving a try to 6.7, here is a message extracted from dmesg:
-> 
-> [    4.177226] ------------[ cut here ]------------
-> [    4.177227] WARNING: CPU: 6 PID: 248 at
-> drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_factory.c:387
-> construct_phy+0xb26/0xd60 [amdgpu]
-> [    4.177658] Modules linked in: amdgpu(+) i915(+) sd_mod drm_exec amdxcp
-> gpu_sched drm_buddy nvme i2c_algo_bit drm_suballoc_helper drm_display_helper
-> ahci nvme_core hid_generic crc32_pclmul libahci crc32c_intel t10_pi cec libata
-> crc64_rocksoft_generic ghash_clmulni_intel rc_core drm_ttm_helper
-> crc64_rocksoft sha512_ssse3 i2c_hid_acpi ttm rtsx_pci_sdmmc i2c_hid xhci_pci
-> crc_t10dif sha512_generic mmc_core scsi_mod xhci_hcd drm_kms_helper video hid
-> crct10dif_generic intel_lpss_pci crct10dif_pclmul i2c_i801 sha256_ssse3
-> intel_lpss crc64 thunderbolt drm e1000e usbcore sha1_ssse3 rtsx_pci i2c_smbus
-> scsi_common crct10dif_common idma64 usb_common battery wmi button aesni_intel
-> crypto_simd cryptd
-> [    4.177689] CPU: 6 PID: 248 Comm: (udev-worker) Not tainted 6.7-amd64 #1
-> Debian 6.7.1-1~exp1
-> [    4.177691] Hardware name: Dell Inc. Precision 7540/0T2FXT, BIOS 1.29.0
-> 11/03/2023
-> [    4.177692] RIP: 0010:construct_phy+0xb26/0xd60 [amdgpu]
-> [    4.178050] Code: b9 01 00 00 00 83 fe 01 74 40 48 8b 82 f8 03 00 00 89 f2
-> 48 c7 c6 00 35 a7 c1 48 8b 40 10 48 8b 00 48 8b 78 08 e8 ba b7 5b fb <0f> 0b 49
-> 8b 87 d0 01 00 00 b9 0f 00 00 00 48 8b 80 e8 04 00 00 48
-> [    4.178052] RSP: 0018:ffffaad300857408 EFLAGS: 00010246
-> [    4.178053] RAX: 0000000000000000 RBX: ffff96df636a1700 RCX:
-> c0000000ffffefff
-> [    4.178054] RDX: 0000000000000000 RSI: 00000000ffffefff RDI:
-> 0000000000000001
-> [    4.178055] RBP: ffff96df4d379c00 R08: 0000000000000000 R09:
-> ffffaad3008571d0
-> [    4.178056] R10: 0000000000000003 R11: ffffffffbded2428 R12:
-> ffffaad300857474
-> [    4.178057] R13: ffffffffc1933140 R14: ffffaad3008577d0 R15:
-> ffff96df43e82000
-> [    4.178058] FS:  00007fcd5d9648c0(0000) GS:ffff96e2cc380000(0000)
-> knlGS:0000000000000000
-> [    4.178060] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    4.178061] CR2: 00007fcd5d932a6d CR3: 0000000103e9a004 CR4:
-> 00000000003706f0
-> [    4.178062] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [    4.178063] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [    4.178063] Call Trace:
-> [    4.178066]  <TASK>
-> [    4.178067]  ? construct_phy+0xb26/0xd60 [amdgpu]
-> [    4.178422]  ? __warn+0x81/0x130
-> [    4.178426]  ? construct_phy+0xb26/0xd60 [amdgpu]
-> [    4.178784]  ? report_bug+0x171/0x1a0
-> [    4.178787]  ? handle_bug+0x3c/0x80
-> [    4.178789]  ? exc_invalid_op+0x17/0x70
-> [    4.178790]  ? asm_exc_invalid_op+0x1a/0x20
-> [    4.178793]  ? construct_phy+0xb26/0xd60 [amdgpu]
-> [    4.179149]  ? construct_phy+0xb26/0xd60 [amdgpu]
-> [    4.179507]  link_create+0x1b2/0x200 [amdgpu]
-> [    4.179865]  create_links+0x135/0x420 [amdgpu]
-> [    4.180196]  dc_create+0x321/0x640 [amdgpu]
-> [    4.180529]  amdgpu_dm_init.isra.0+0x2a0/0x1ed0 [amdgpu]
-> [    4.180881]  ? sysvec_apic_timer_interrupt+0xe/0x90
-> [    4.180883]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
-> [    4.180885]  ? delay_tsc+0x37/0xa0
-> [    4.180889]  dm_hw_init+0x12/0x30 [amdgpu]
-> [    4.181240]  amdgpu_device_init+0x1e42/0x24a0 [amdgpu]
-> [    4.181517]  amdgpu_driver_load_kms+0x19/0x190 [amdgpu]
-> [    4.181793]  amdgpu_pci_probe+0x165/0x4c0 [amdgpu]
-> [    4.182067]  local_pci_probe+0x42/0xa0
-> [    4.182070]  pci_device_probe+0xc7/0x240
-> [    4.182072]  really_probe+0x19b/0x3e0
-> [    4.182075]  ? __pfx___driver_attach+0x10/0x10
-> [    4.182076]  __driver_probe_device+0x78/0x160
-> [    4.182078]  driver_probe_device+0x1f/0x90
-> [    4.182079]  __driver_attach+0xd2/0x1c0
-> [    4.182081]  bus_for_each_dev+0x85/0xd0
-> [    4.182083]  bus_add_driver+0x116/0x220
-> [    4.182085]  driver_register+0x59/0x100
-> [    4.182087]  ? __pfx_amdgpu_init+0x10/0x10 [amdgpu]
-> [    4.182356]  do_one_initcall+0x58/0x320
-> [    4.182359]  do_init_module+0x60/0x240
-> [    4.182361]  init_module_from_file+0x89/0xe0
-> [    4.182364]  idempotent_init_module+0x120/0x2b0
-> [    4.182366]  __x64_sys_finit_module+0x5e/0xb0
-> [    4.182367]  do_syscall_64+0x61/0x120
-> [    4.182370]  ? do_syscall_64+0x70/0x120
-> [    4.182372]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> [    4.182375] RIP: 0033:0x7fcd5e130f19
-> [    4.182376] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89
-> f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01
-> f0 ff ff 73 01 c3 48 8b 0d cf 1e 0d 00 f7 d8 64 89 01 48
-> [    4.182378] RSP: 002b:00007ffd314afa38 EFLAGS: 00000246 ORIG_RAX:
-> 0000000000000139
-> [    4.182379] RAX: ffffffffffffffda RBX: 00005611ee7f84d0 RCX:
-> 00007fcd5e130f19
-> [    4.182380] RDX: 0000000000000000 RSI: 00007fcd5e2644f5 RDI:
-> 0000000000000024
-> [    4.182381] RBP: 0000000000000000 R08: 0000000000000040 R09:
-> 00005611ee7d3140
-> [    4.182382] R10: 0000000000000038 R11: 0000000000000246 R12:
-> 00007fcd5e2644f5
-> [    4.182383] R13: 0000000000020000 R14: 00005611ee7f0670 R15:
-> 0000000000000000
-> [    4.182385]  </TASK>
-> [    4.182385] ---[ end trace 0000000000000000 ]---
-> 
-> 
-> I do not know if this is something interesting and just a warning.
-> Otherwise this amdgpu is a second device on my laptop system:
-> 
-> $ inxi -G
-> Graphics:
->   Device-1: Intel CoffeeLake-H GT2 [UHD Graphics 630] driver: i915 v: kernel
->   Device-2: AMD Lexa XT [Radeon PRO WX 3200] driver: amdgpu v: kernel
->   Device-3: Sunplus Innovation Integrated_Webcam_HD driver: uvcvideo
->     type: USB
->   Display: wayland server: X.Org v: 23.2.4 with: Xwayland v: 23.2.4
->     compositor: gnome-shell v: 45.3 driver: X: loaded: amdgpu,modesetting
->     unloaded: fbdev,radeon,vesa dri: iris gpu: i915 resolution: 1920x1080~60Hz
->   API: EGL v: 1.5 drivers: iris,radeonsi,swrast
->     platforms: gbm,wayland,x11,surfaceless,device
->   API: OpenGL v: 4.6 vendor: intel mesa v: 23.3.3-3 renderer: Mesa Intel
->     UHD Graphics 630 (CFL GT2)
->   API: Vulkan v: 1.3.268 drivers: intel,radv,llvmpipe
->     surfaces: xcb,xlib,wayland
 
-Analysis showed that this appears to be a regression from b17ef04bf3a4
-("drm/amd/display: Pass pwrseq inst for backlight and ABM"). Does that
-ring some bells?
+Thank you.
+As far as I understood, macOS seems to support weak aliases.
 
-See: https://bugs.debian.org/1061449#27
+With [5] fixed, perhaps we could do the following:
 
-#regzbot introduced: b17ef04bf3a4
-#regzbot link: https://bugs.debian.org/1061449
-#regzbot title: Regression by b17ef04bf3a4 ("drm/amd/display: Pass pwrseq inst for backlight and ABM")
+-void __attribute__((alias("modpost_log")))
++void __attribute__((weak, alias("modpost_log")))
 
-Regards,
-Salvatore
+
+But, we do not need to wait for it.
+We can do similar without aliases at all.
+
+fix submitted:
+https://lore.kernel.org/all/20240127132811.726504-1-masahiroy@kernel.org/T/=
+#u
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
