@@ -1,112 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7614256756
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCE305A78A
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706373184; cv=none; b=eDDe7WcsoQQKQRrIan0JzHynVvAcq+kbec3X990paWaR1IeQYjyzCIDp6Rpg1sLJh6RznIyFEiiatXJGZkjT4uzpFtnLUKwYWV/Kknf33pG6OD69fNsbAiNly8436k0YH/Iz+e5UG4S9Y++9kIT30V2kJgcO0S4mS1lt3RRTe4g=
+	t=1706373256; cv=none; b=uqRQZ4ZAmXQKQ1bmga8T/7ioBYuv6ZbARZD6n57durMyfpEUNjEh6+bpcxfM7AOMOy4mMP/Z0e2TT260Ax6w6opXtBxhMsCRf8VMKX95582AQZ9BysCgO+Kw3cJxU17NdDoMgy4uDLypcq6o6B8f3cJMvAimYcO4QVBOAPZu7Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706373184; c=relaxed/simple;
-	bh=kCA9TsgWAj9jn5vlEBGgkwF7celX9k9TNJISTn56xmI=;
+	s=arc-20240116; t=1706373256; c=relaxed/simple;
+	bh=wJADJvLZue8yr22f+aPkZezJA08hOu6ptWGYj6x7LUM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ocaThquUR3ty1nOCyhU8hiDYQcER2C7/JpV2YErteVLFZj4OYoOX3PDNG06zF2XPgrVWBuNSz+mpwFrQrJcbIhlDBqLLImggszvOZz3jAPtZqn89R9BAadqAvsQnn1X3n0J+/iehh8xDO1iU6YbHSQy8q63SN9vS0dt8+piOkLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DdFS4rez; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DdFS4rez"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706373181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kCA9TsgWAj9jn5vlEBGgkwF7celX9k9TNJISTn56xmI=;
-	b=DdFS4rez6b1FpM7VDRDPe9I/S/64LdhV4mdmdQICFscCFQJ0SeQh01D3U/JzhWycxb8DyO
-	zhZBASOAV5/AXicUiFd1palTkxlf1cBHmSKhN0Lz5g8dQg+xUu4amKudacOqHd4APNJR6p
-	5AaNaLIxfe/i0A/Sh+saF+egaovdiaw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-Fc0-O_u7Mjaip4MGg-JMYQ-1; Sat, 27 Jan 2024 11:32:55 -0500
-X-MC-Unique: Fc0-O_u7Mjaip4MGg-JMYQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 65637835381;
-	Sat, 27 Jan 2024 16:32:55 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.4])
-	by smtp.corp.redhat.com (Postfix) with SMTP id D52E42166B32;
-	Sat, 27 Jan 2024 16:32:53 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat, 27 Jan 2024 17:31:41 +0100 (CET)
-Date: Sat, 27 Jan 2024 17:31:39 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 1/3] pidfd: allow pidfd_open() on non-thread-group
- leaders
-Message-ID: <20240127163117.GB13787@redhat.com>
-References: <20240123153452.170866-1-tycho@tycho.pizza>
- <20240123153452.170866-2-tycho@tycho.pizza>
- <20240123195608.GB9978@redhat.com>
- <ZbArN3EYRfhrNs3o@tycho.pizza>
- <20240125140830.GA5513@redhat.com>
- <ZbQpPknTTCyiyxrP@tycho.pizza>
- <20240127105410.GA13787@redhat.com>
- <ZbUngjQMg+YUBAME@tycho.pizza>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wie9eHFgNt2cN9zDbhQsDHUe2o11kQzKP2NB3PUKZlTr/BVGk6M7y7Ls50Yam5305tuyks85ETIIx2hw27ZNBC6dxGAKUY5sY+A7X981GtCgcNmwLiYVlM2jgOxr5SL1sOAkcRndd7iHPIfuleKxGx0rWyBIUXDRuApCX53kcoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 40RGO0KR014271;
+	Sat, 27 Jan 2024 17:24:00 +0100
+Date: Sat, 27 Jan 2024 17:24:00 +0100
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Rodrigo Campos <rodrigo@sdfg.com.ar>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] tools/nolibc/string: export strlen()
+Message-ID: <20240127162400.GA14079@1wt.eu>
+References: <20240126142411.22972-1-rodrigo@sdfg.com.ar>
+ <9abed5e3-cd61-474e-bb16-13243709f5c5@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZbUngjQMg+YUBAME@tycho.pizza>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9abed5e3-cd61-474e-bb16-13243709f5c5@t-8ch.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 01/27, Tycho Andersen wrote:
->
-> It seems like (and the current pidfd_test enforces for some cases)
+Hi!
 
-Which pidfd_test ?
+On Sat, Jan 27, 2024 at 03:53:32PM +0100, Thomas Weißschuh wrote:
+> Hi!
+> 
+> On 2024-01-26 15:24:10+0100, Rodrigo Campos wrote:
+> > Hi, while using nolibc on debian testing, I found that compilation fails when using strlcat().
+> > 
+> > The compilation fails with:
+> > 
+> >             cc -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib -lgcc  -static -o test test.c
+> >             /usr/bin/ld: /tmp/cccIasKL.o: in function `main':
+> >             test.c:(.text.startup+0x1e): undefined reference to `strlen'
+> >             collect2: error: ld returned 1 exit status
+> > 
+> > This is using debian testing, with gcc 13.2.0.
+> 
+> I can reproduce the issue with gcc 13.2.1 on Arch.
+> 
+> > A small repro case that fails with this error on debian is:
+> > 
+> > 	int main(void) {
+> > 		char dst[6] = "12";
+> > 		char *src = "abc";
+> > 		strlcat(dst, src, 6);
+> > 	
+> > 		printf("dst is: %s\n", dst);
+> > 	
+> > 		return 0;
+> > 	}
+> > 
+> > Please note that this code is not using strlen() and strlcat() doesn't seems to use it either.
+> 
+> I think the comment in strlen() explains it:
+> 
+>     Note that gcc12 recognizes an strlen() pattern and replaces it with a
+>     jump to strlen().
+> 
+> strlcat() indeed contains this pattern.
+> 
+> I was able to fix the issue by replacing the open-coded strlen() in
+> strlcat() with a call to the function and that also fixed the issue.
+> 
+> It seems nicer to me as a fix, on the other hand the change to a weak
+> definition will also catch other instances of the issue.
+> Maybe we do both.
 
-> we
-> want exactly one notification for a task dying.
+Yes, once we have the proof that the compiler may produce such a call, it
+can also happen in whatever user code so we need to export the function,
+there's no other solution.
 
-This can't be right. EVERY user of poll_wait() or wait_event/etc
-must handle/tolerate the false wakeups.
+> > First I noted that removing the attribute unused in strlen(), the compilation worked fine. And then
+> > I noticied that other functions had the attribute weak, a custom section and export the function.
+> > 
+> > In particular, what happens here seems to be the same as in commit "tools/nolibc/string: export memset() and
+> > memmove()" (8d304a374023), as removing the -Os or adding the -ffreestanding seem to fix the issue.
+> > So, I did the same as that commit, for strlen().
+> > 
+> > However, I'm not 100% confident on how to check that this is done by the compiler to later replace
+> > it and provide a builtin. I'm not sure how that was verified for commit 8d304a374023, but if you let
+> > me know, I can verify it too.
+> > 
+> > What do you think?
+> 
+> Personally I don't know how it was verified, we'll have to wait for
+> Willy on that.
 
-> I don't understand
-> how we guarantee this now, with all of these calls.
+Oh it's very simple, just build a small code that doesn't contain any
+such explicit nor implicit call and check that it doesn't contain the
+function.
 
-I don't understand why do we need or even want to guarantee this.
+E.g.:
 
-The extra wakeup must be always fine correctness-wise. Sure, it
-would be nice to avoid the unnecessary wakeups, and perhaps we
-can change wake_up_all() to pass a key to, say, only wake_up the
-PIDFD_THREAD waiters from exit_notify(). But certainly this is
-outside the scope of PIDFD_THREAD change we discuss.
+  $ printf "int main(void) { }\n" | gcc -nostdlib -static -Isysroot/x86/include -include nolibc.h -Os -Wl,--gc-sections -xc -
+  $ nm --size a.out 
+  0000000000000003 T main
+  0000000000000004 V errno
+  0000000000000008 V _auxv
+  0000000000000008 V environ
+  000000000000000f W _start
+  0000000000000042 W _start_c
 
-The changes in do_notify_parent() (I have already sent the patch) and
-in exit_notify() (proposed in my previous email) just ensure that,
-with the minimal changes, we avoid 2 do_notify_pidfd's from the same
-exit_notify() path.
+and:
 
-> > exit_notify() is called after exit_files(). pidfd_getfd() returns
-> > ESRCH if the exiting thread completes release_task(), otherwise it
-> > returns EBADF because ->files == NULL. This too doesn't really
-> > depend on PIDFD_THREAD.
->
-> Yup, understood. It just seems like an inconsistency we might want to
-> fix.
+  $ printf "int main(void) { return (long)&strlen;}\n" | gcc -nostdlib -static -Isysroot/x86/include -include nolibc.h -Os -Wl,--gc-sections -xc -
+  $ nm --size a.out 
+  0000000000000004 V errno
+  0000000000000006 T main
+  0000000000000008 V _auxv
+  0000000000000008 V environ
+  000000000000000e t strlen
+  000000000000000f W _start
+  0000000000000042 W _start_c
 
-Not sure this worth "fixing"...
+> > As a side note, it seems strlcat()/strlcpy() fail to set the terminating null byte on some cases,
 
-Oleg.
+Indeed I've just checked and you're right, that defeats their purpose!
 
+> > and the return code is not always the same as when using libbsd. It seems to be only on "error"
+> > cases, and not sure if it's worth fixing all/some of those cases.
+
+OK.
+
+> > Let me know if you think it is worth adding some _simple_ patches (I don't think it is worth fixing
+> > all the cases, the code is to fix all of the cases is probably not nice and not worth it).
+> 
+> Souns reasonable to me to fix the return values.
+> And get some tests for it.
+
+Seconded!
+
+Thanks!
+Willy
