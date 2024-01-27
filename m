@@ -1,119 +1,150 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A48C25576;
-	Sat, 27 Jan 2024 13:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDE32557F
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 13:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706360991; cv=none; b=ZqfQQ8SQCXMtBMXug2pVYExBrzRLcwY5OvE8u60CxFV07Jk6lqcT7Uu0YgDApaq0PufdGLF2ssck2ZkCnRkjg0uDbqooUAJAGrWtTZkndPzpJgGYYkkrba2NQ2163cqnIGFfSH9na6rdQJSS3MSbU5doAxhpbnKrha/yHTDIhk4=
+	t=1706361318; cv=none; b=FBmtcEGBimYbXC3UtJOgPhrIS8Ko913R2S4dTLIZ29BFt0djoF7aXo9O/MUZ1oIJ6tsqXELhFxsFaUvTKIWQ6hl4J8JKG/m9VZeLzX6XjB1F71qVnX9BLuYOciTIyLFYtys9k3mS9z4+pngVHaq1hIUQQfj/pnBU4xj3hWMGMiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706360991; c=relaxed/simple;
-	bh=VFVfwxL5If4aGv728WKPlLe407XHd9wmAkDP5L/+P4g=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Krqt9q+gnzHhJt21dLkJITx0ZLmeYQYqVt5E7dDKDTIkqe5+cDBN1LKgZvnczaJDhoH1hXjyw2CPmD2boXmj7CxJLksi1vJH7XPKjARj2hwxuyAss7FGUdXIUGLjaydcaAGICtKWZbRVhAHUvLLMQozhKIzb70Iqc8Fqdw7/CEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=wAcJWRdL; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1706361318; c=relaxed/simple;
+	bh=Dqdc0+GiMMU9oBgocmuzdAz+2RL5EmpPsPfk0dVDRO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AXvmDUU2gr6Z0VslIkK0Et0mfEupzyW2OXt1Z8H5pGhZbsBUC7NsmNT1hhOJbUZ4Kv87PfW5PW2s8omcAxkQluWRdvLbEh30wW8NNqJLjB1RTBYV8+8Ik4rc/RvFDmW9aOO6CCBIHkJAe4BKQsd9jEu4P1xyD0zjA5FzCrhBYUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U79BX+bO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="wAcJWRdL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U79BX+bO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706361315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZrazDqdbD6oanZQGLU+I+Chea6nbXarN1I/pTzbmfG4=;
+	b=U79BX+bOtnw4mpLk47nGVj9Qnk56vKB2pU6qwHQd1nR45/XflIH/PWkg8I/hv5fEp5rtbl
+	GOCZHSgTIDRSJALGEUthsNUllBXiwubQLaQHXzeQhN2zFv9dUaHMG7Zq4MrzG5Fwmdq60+
+	rx2fvhmPyfvlHMoyD+OdhKtSDQCud5g=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-383-_xQ5oH9fPR6kh_SAAIO65g-1; Sat, 27 Jan 2024 08:15:13 -0500
+X-MC-Unique: _xQ5oH9fPR6kh_SAAIO65g-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-51032b2fb9fso140120e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 05:15:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706361312; x=1706966112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZrazDqdbD6oanZQGLU+I+Chea6nbXarN1I/pTzbmfG4=;
+        b=lDSrogb/kQJS2sH4HhxZ/dxxZ4/smYJuIm24UBpe+nz2MbBl3QQd2Y/hwnwJJUvnvt
+         1/n6YYHsy6QOgLgUMMhkiGrx8ZSgum3yMP20CyhLJbtLCPMlSxKp5w3ecTOpQPHwjUNb
+         0lUmtE+fWOz956JHdY4OPRDig70wCbdbOuYRXKTF0ceQ/MGoO/8ieC1FEACijH/LqDdA
+         nomUrufpNsAaoKC0OJWU78eM5uvLDFT/wX8XAvLfHHNtM784MWTP+EiO9U1/xVKOUl7E
+         RltYXMJ4zQyWN3dzGwvFugrOeoZHZzHMMoM0PPomu0WuDZguZJQfsZ049v0ovi5t1ifB
+         LUpA==
+X-Gm-Message-State: AOJu0YzHNBo/J3+hX8UBXRbLgXXtS5/ZKci7r0e62GmwRM4qGGaJTavd
+	6r2OBNBQDYuFN34Q+P0UOyS4/hohKJ5GllIb60+NoBYJEOsRw/CZRfa+1TXle2eMOnY7cIKvY8C
+	Fvpb9jlT49riIWv4uwGKUS0lG9mG4O9ZUrBDeIaG/RS7zr9mZ3M8MrgjLf9Aq/A==
+X-Received: by 2002:ac2:4651:0:b0:50e:6a19:7a38 with SMTP id s17-20020ac24651000000b0050e6a197a38mr840744lfo.20.1706361312461;
+        Sat, 27 Jan 2024 05:15:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF/8eFrsRRCO0DBjR/ei2z8ocfhn93MBtESzm9v5YMp5FsQgPdgqxDov+zEfayAXv6aGPZLtw==
+X-Received: by 2002:ac2:4651:0:b0:50e:6a19:7a38 with SMTP id s17-20020ac24651000000b0050e6a197a38mr840727lfo.20.1706361312120;
+        Sat, 27 Jan 2024 05:15:12 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id hd11-20020a170907968b00b00a31906f280asm1738295ejc.193.2024.01.27.05.15.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 27 Jan 2024 05:15:11 -0800 (PST)
+Message-ID: <8f225be1-647b-4421-b6b5-a2098f807d05@redhat.com>
+Date: Sat, 27 Jan 2024 14:15:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1706360987;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cufdQqnYjHFq8zPvbdj8xB6WnLzWkarMVmEXqUgJEsk=;
-	b=wAcJWRdLS11R2tadF3UO4hLBBCd39YvSBm6DEIpEcuOR/3Vxada9/LOeX1Lgf1VD0vNZSG
-	cmYOn+wfNi7YhyVF6O0mJ4DYPb2wixfyH4lGvHqGZ8epGpszahlWZuIMQD6U9Dd5PHE9LA
-	JK0IhnWMwhtjGBDcJrBN/uzTnM/iV38MrcGljkxKVwCUtNMo9u2spphCo+y134OQLZhiYq
-	0Fo+SoMSypi+FZqv6xA/Y7yga3zZqe9vH3/u+KBK8yhseTrQGfDVzstGZ2YObDQE1xPM2t
-	jW/MIjHmUFo4F+rjgdS5uPSOwqxeWNezC+K+RilUauIIsMsrPY7iujUCEkBsFA==
-Date: Sat, 27 Jan 2024 14:09:46 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Andy Yan <andyshrk@163.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 3/4] arm64: dts: rockchip: rename vcc5v0_usb30_host
- regulator for Cool Pi CM5 EVB
-In-Reply-To: <23650d42.ecb.18d4ad89c0c.Coremail.andyshrk@163.com>
-References: <20240127092034.887085-1-andyshrk@163.com>
- <20240127092034.887085-3-andyshrk@163.com> <2798389.3c9HiEOlIg@diego>
- <23650d42.ecb.18d4ad89c0c.Coremail.andyshrk@163.com>
-Message-ID: <00ed78ea06aecde202a11a23c80f80af@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+Content-Language: en-US, nl
+To: Kees Cook <keescook@chromium.org>, Arend van Spriel <aspriel@gmail.com>
+Cc: Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>,
+ Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
+ linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Aloka Dixit <quic_alokad@quicinc.com>,
+ John Keeping <john@keeping.me.uk>, Jeff Johnson <quic_jjohnson@quicinc.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240126223150.work.548-kees@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240126223150.work.548-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2024-01-27 13:15, Andy Yan wrote:
-> At 2024-01-27 18:36:40, "Heiko Stübner" <heiko@sntech.de> wrote:
->> Am Samstag, 27. Januar 2024, 10:20:33 CET schrieb Andy Yan:
->>> According to the schematic, this regulator is used both for USB30 and
->>> USB20, so give it a more appropriate name.
->> 
->> I don't have the schematics, so I'll need you to answer this, but what
->> is the regulator called _in_ the schematics?
+Hi,
+
+On 1/26/24 23:31, Kees Cook wrote:
+> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+> cfg80211_scan_request with __counted_by"), the compiler may enforce
+> dynamic array indexing of req->channels to stay below n_channels. As a
+> result, n_channels needs to be increased _before_ accessing the newly
+> added array index. Increment it first, then use "i" for the prior index.
+> Solves this warning in the coming GCC that has __counted_by support:
 > 
-> There are two regulators called VCC50_USB_HOST1 and VCC50_USB_HOST2,
-> and they are both controlled by GPIO1_D5
-> They both for two usb 2.0 hosts,  not usb 30, the schematics make
-> me a bit confused.
+> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
+> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
+> n_channels' may be undefined [-Wsequence-point]
+>  3783 |                 req->channels[req->n_channels++] = chan;
+>       |                               ~~~~~~~~~~~~~~~^~
+> 
+> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
+> Cc: Arend van Spriel <aspriel@gmail.com>
+> Cc: Franky Lin <franky.lin@broadcom.com>
+> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
+> Cc: Ian Lin <ian.lin@infineon.com>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Wright Feng <wright.feng@cypress.com>
+> Cc: Hector Martin <marcan@marcan.st>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: brcm80211-dev-list.pdl@broadcom.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-In that case, I'd say that renaming the regulator to vcc5v0_usb_host is
-fine, but there should also be a comment in the board dts file that it's
-actually two separate regulators.
+Thanks, patch looks good to me:
 
->> I.e. we want regulators to really be named the same as in the 
->> schematic
->> so people can look up thing from the dts in the schematics and the 
->> other
->> way around too.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Ah, that's very helpful.
+Regards,
 
->>> Fixes: 791c154c3982 ("arm64: dts: rockchip: Add support for rk3588 
->>> based board Cool Pi CM5 EVB")
->>> Signed-off-by: Andy Yan <andyshrk@163.com>
->>> ---
->>> 
->>>  arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts | 6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>> 
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts 
->>> b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
->>> index 1b5681fe0471..5f42f1065d73 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts
->>> @@ -84,7 +84,7 @@ vcc3v3_lcd: vcc3v3-lcd-regulator {
->>>  		vin-supply = <&vcc3v3_sys>;
->>>  	};
->>> 
->>> -	vcc5v0_usb30_host: vcc5v0-usb30-host-regulator {
->>> +	vcc5v0_usb_host: vcc5v0-usb-host-regulator {
->>>  		compatible = "regulator-fixed";
->>>  		regulator-name = "vcc5v0_host";
->>>  		regulator-boot-on;
->>> @@ -200,12 +200,12 @@ &u2phy3 {
->>>  };
->>> 
->>>  &u2phy2_host {
->>> -	phy-supply = <&vcc5v0_usb30_host>;
->>> +	phy-supply = <&vcc5v0_usb_host>;
->>>  	status = "okay";
->>>  };
->>> 
->>>  &u2phy3_host {
->>> -	phy-supply = <&vcc5v0_usb30_host>;
->>> +	phy-supply = <&vcc5v0_usb_host>;
->>>  	status = "okay";
->>>  };
+Hans
+
+
+
+> ---
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> index 133c5ea6429c..28d6a30cc010 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+> @@ -3779,8 +3779,10 @@ static int brcmf_internal_escan_add_info(struct cfg80211_scan_request *req,
+>  		if (req->channels[i] == chan)
+>  			break;
+>  	}
+> -	if (i == req->n_channels)
+> -		req->channels[req->n_channels++] = chan;
+> +	if (i == req->n_channels) {
+> +		req->n_channels++;
+> +		req->channels[i] = chan;
+> +	}
+>  
+>  	for (i = 0; i < req->n_ssids; i++) {
+>  		if (req->ssids[i].ssid_len == ssid_len &&
+
