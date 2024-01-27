@@ -1,45 +1,46 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2E72032F;
-	Sat, 27 Jan 2024 23:29:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E589E200BC;
+	Sat, 27 Jan 2024 23:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706398184; cv=none; b=ckiEhHEKdFuIlhbOkcEltt8Ub/z9YMqSnTYm47pWL2TpI54bJpCBNYdrHArIN5hWjlWNDY4rjidBPf/Hn0Sy5ar6Cx8VSzTXkUS8tu0Mvb722p4slfujafUMlP2fmT+hZt/EDAd95GCAGRMnxxUv2yD7PBH7K2Y/Hu3XS48elr4=
+	t=1706398272; cv=none; b=na4FmfnBpI8n6gNde51KtFyy2tF0zWnUrDDF30cvI0E5vt514+RrNDEqYttQjgH1fth5FBMhyLejwp/GPzaePie7yPcLzAFsrYc+6VftYHxg6yaZpVR6TQYspnS3jIN5GEHwLU0sqFcZDI9diZN8SGj8OyhTkGdlCFNILxfEK1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706398184; c=relaxed/simple;
-	bh=+7sGisfjBDLw3/+65hJ8oE5P46X3obGEXGgOIuz9ZDM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WN4xbYs5aEHyutr32vx6/LRaNluha9nlIAI5O6800j5n/8eftWYQWKAE5pnlBJIYOG+TZmf3t6Sfgu1nj3q3CDxafz6ZsLmFPkSbJZv0sfS5CniqbOTNC1P5L+CnHHnjebDH+4OA6TYsLCcodh0jl8ZSxqbwijOtgqZgHPu1epo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cfl0SUTN; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1706398272; c=relaxed/simple;
+	bh=ldK6oqUQ28CX5uMRauHa7hCM3n0XuTSUAEscaZabQdY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fk2ITNHkT7COmxcj3ZuoPb3vcGZ06iYvJx0hYW7xFCbnl6CtjwtLx8HwKqsw3rdH0yDAP+n+cXltMbH5vteyDKV3kb3JTcltEpFiuhESpbeOcP1qB1hD4Q3tJI48p8krNCLl+bWYsY9DlaP974SPK/79jNM0KK2NfYB2ZGFcNb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gfYsJKf1; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cfl0SUTN"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40RNQLfd032284;
-	Sat, 27 Jan 2024 23:26:21 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gfYsJKf1"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40RMwGP3000495;
+	Sat, 27 Jan 2024 23:26:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=ZtabC2d
-	xcshri/iz1qUsrq8UwR1bNPdOel6KB0APenU=; b=cfl0SUTNFei8oB1OgxmCymf
-	Fd55UL9id5JYRDZW/RGhR6frlnO5M4c9WyeooGnVmN44ewHfS+SBBy5BaBrtoYhW
-	Zoc3/Mx9VoRkEKrplwzxpvn8xMUq9QwRzcrS1M86vysyOd/gYPDwszboc/mDRHMl
-	KDqrt1t1ImzXvdsC47RhN/waFn/Q9zpP3I0kVF02XBBZP6nw+DC+vpSYSBB7Htev
-	5SZVPfrRB0/rthcWsh8Sn/Fpnexmd+dmvgzfDQRWS/OGdtjsLqabiQXCi0I7mT2p
-	ipBFHj6Gx4u0dY0T2HevnRU9cFNCxDmURn7RVc6Vb0b88ws1MQypmRCQx90GksA=
-	=
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvq6shb8t-1
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=x8zOWHcb+T0b3e9xAM384D0NK7lkOgBM7D2JbGMMqGA=; b=gf
+	YsJKf1l4e3f/p2r6ABEa5pMXF34n+I+aSHPZPmGp8hFFhi7UFNCpDyuo4psUwPGu
+	L2OV56+R2DdmJiXymkw17XPiOXTetiJvINPKMMh81P2vFyqniKIaUjqOGUFRsLEC
+	ZXhbZPuIpp9h/oaArIU2a/sgkn+B0QDfhYRZYaKaRo1ysuIT+rV71VhSlZArHoU0
+	BTc7xHwaL6lTHaRTqjv7WLtPrtpiCwEkPAb8SbquP3u+EXh4/0GENgiInNDz0cVW
+	0Utq4nWGmc44nxmP/rhYS8mp+d50YWv0QKAcvUfsjstkbLfSQ4uiHOFjQ0q6wyst
+	str4Snluu6R2F8KyqK6A==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvse4s541-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 27 Jan 2024 23:26:20 +0000 (GMT)
+	Sat, 27 Jan 2024 23:26:23 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40RNQJmV031151
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40RNQMIp010246
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 27 Jan 2024 23:26:19 GMT
+	Sat, 27 Jan 2024 23:26:22 GMT
 Received: from hu-gaurkash-lv.qualcomm.com (10.49.16.6) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sat, 27 Jan 2024 15:26:16 -0800
+ 15.2.1118.40; Sat, 27 Jan 2024 15:26:17 -0800
 From: Gaurav Kashyap <quic_gaurkash@quicinc.com>
 To: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
         <andersson@kernel.org>, <ebiggers@google.com>,
@@ -54,10 +55,12 @@ CC: <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
         <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <mani@kernel.org>,
         <davem@davemloft.net>, <herbert@gondor.apana.org.au>,
         Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Subject: [PATCH v4 00/15] Hardware wrapped key support for qcom ice and ufs
-Date: Sat, 27 Jan 2024 15:13:58 -0800
-Message-ID: <20240127232436.2632187-1-quic_gaurkash@quicinc.com>
+Subject: [PATCH v4 06/15] soc: qcom: ice: support for generate, import and prepare key
+Date: Sat, 27 Jan 2024 15:14:04 -0800
+Message-ID: <20240127232436.2632187-7-quic_gaurkash@quicinc.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240127232436.2632187-1-quic_gaurkash@quicinc.com>
+References: <20240127232436.2632187-1-quic_gaurkash@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,119 +73,136 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KjY5zR7Wb7Z5kNM7GdqgFixxWWs-mXHx
-X-Proofpoint-ORIG-GUID: KjY5zR7Wb7Z5kNM7GdqgFixxWWs-mXHx
+X-Proofpoint-ORIG-GUID: XeEYhY4UNI_dQ5JOMwQzMG-J_6pl8Cxk
+X-Proofpoint-GUID: XeEYhY4UNI_dQ5JOMwQzMG-J_6pl8Cxk
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- phishscore=0 adultscore=0 clxscore=1015 malwarescore=0 priorityscore=1501
- suspectscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=999
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401190000 definitions=main-2401270178
 
-The fourth iteration of patches that add support to Qualcomm ICE (Inline Crypto Engine) for hardware wrapped keys using Qualcomm Hardware Key Manager (HWKM)
+Wrapped key creation and management using HWKM is currently
+supported only through Qualcomm's Trustzone.
+Three new SCM calls have already been added in the scm layer
+for this purpose.
 
-These patches do the following:
-- Address comments from previous versions (https://lore.kernel.org/linux-arm-msm/20231122053817.3401748-1-quic_gaurkash@quicinc.com/)
-- Tested on top of Eric's latest fscrypt and block set: https://lore.kernel.org/all/20231104211259.17448-1-ebiggers@kernel.org/
-- Rebased and tested on top of Linaro's SHMBridge patches: (https://lkml.org/lkml/2023/11/20/555)
+This patch adds support for generate, prepare and import key
+apis in ICE module and hooks it up the scm calls defined for them.
+This will eventually plug into the new IOCTLS added for this
+usecase in the block layer.
 
-Explanation and use of hardware-wrapped-keys can be found here:
-Documentation/block/inline-encryption.rst (https://lore.kernel.org/all/20231104211259.17448-1-ebiggers@kernel.org/)
+Signed-off-by: Gaurav Kashyap <quic_gaurkash@quicinc.com>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ drivers/soc/qcom/ice.c | 66 ++++++++++++++++++++++++++++++++++++++++++
+ include/soc/qcom/ice.h |  8 +++++
+ 2 files changed, 74 insertions(+)
 
-Testing: 
-Test platform: SM8650 MTP
-
-The changes were tested by mounting initramfs and running the fscryptctl
-tool (Ref: https://github.com/ebiggers/fscryptctl/tree/wip-wrapped-keys) to
-generate and prepare keys, as well as to set policies on folders, which
-consequently invokes disk encryption flows through UFS.
-
-Tested both standard and wrapped keys (Removing qcom,ice-use-hwkm from dtsi will support using standard keys)
-
-Steps to test:
-
-The following configs were enabled:
-CONFIG_BLK_INLINE_ENCRYPTION=y
-CONFIG_QCOM_INLINE_CRYPTO_ENGINE=m
-CONFIG_FS_ENCRYPTION_INLINE_CRYPT=y
-CONFIG_SCSI_UFS_CRYPTO=y
-
-Flash boot image to shell and run the following commands
-
-Creating and preparing keys
-- mkfs.ext4 -F -O encrypt,stable_inodes /dev/disk/by-partlabel/userdata
-- mount /dev/disk/by-partlabel/userdata -o inlinecrypt /mnt
-- ./fscryptctl generate_hw_wrapped_key /dev/disk/by-partlabel/userdata > /mnt/key.longterm  OR
-   dd if=/dev/zero bs=32 count=1 | tr '\0' 'X' \ | fscryptctl import_hw_wrapped_key /dev/disk/by-partlabel/userdata > /mnt/key.longterm
-- ./fscryptctl prepare_hw_wrapped_key /dev/disk/by-partlabel/userdata < /mnt/key.longterm > /tmp/key.ephemeral
-- ./fscryptctl add_key --hw-wrapped-key < /tmp/key.ephemeral /mnt
-
-Create a folder and associate created keys with the folder
-- rm -rf /mnt/dir
-- mkdir /mnt/dir
-- ./fscryptctl set_policy --hw-wrapped-key --iv-ino-lblk-64 "$keyid" /mnt/dir
-- dmesg > /mnt/dir/test.txt
-- sync
-
-- Reboot
-- mount /dev/disk/by-partlabel/userdata -o inlinecrypt /mnt
-- ls /mnt/dir (You should see an encrypted file)
-- ./fscryptctl prepare_hw_wrapped_key /dev/disk/by-partlabel/userdata < /mnt/key.longterm > /tmp/key.ephemeral
-- ./fscryptctl add_key --hw-wrapped-key < /tmp/key.ephemeral /mnt
-- cat /mnt/dir/test.txt
-
-NOTE: Evicting a key with HWKM is not supported in the current SCM call for HWKM v2 chipsets, TZ already supports a different call for this.
-Changes will be added separately for these after further internal discussions. But this should not stop merging the existing patches.
-
-Merge Strategy:
-
-This is an open-ended question to the community and the respective component maintainers.
-The changes have the following components.
-
-- Fscrypt and block patches (From Eric Biggers)
-- SHMBridge patches (Bartosz Golaszewski)
-- Qualcomm SCM (This patchset)
-- Qualcomm ICE (This patchset)
-- UFS Core ((This patchset))
-- Qualcomm UFS Host (This patchset)
-
-It would be ideal if one maintainer can take in all the changes together since working with many immutable branches shared with each other might get tricky.
-
-Gaurav Kashyap (15):
-  ice, ufs, mmc: use blk_crypto_key for program_key
-  qcom_scm: scm call for deriving a software secret
-  qcom_scm: scm call for create, prepare and import keys
-  soc: qcom: ice: add hwkm support in ice
-  soc: qcom: ice: support for hardware wrapped keys
-  soc: qcom: ice: support for generate, import and prepare key
-  ufs: core: support wrapped keys in ufs core
-  ufs: core: add support to derive software secret
-  ufs: core: add support for generate, import and prepare keys
-  ufs: host: wrapped keys support in ufs qcom
-  ufs: host: implement derive sw secret vop in ufs qcom
-  ufs: host: support for generate, import and prepare key
-  dt-bindings: crypto: ice: document the hwkm property
-  arm64: dts: qcom: sm8650: add hwkm support to ufs ice
-  arm64: dts: qcom: sm8550: add hwkm support to ufs ice
-
- .../crypto/qcom,inline-crypto-engine.yaml     |  10 +
- arch/arm64/boot/dts/qcom/sm8550.dtsi          |   3 +-
- arch/arm64/boot/dts/qcom/sm8650.dtsi          |   3 +-
- drivers/firmware/qcom/qcom_scm.c              | 247 ++++++++++++++
- drivers/firmware/qcom/qcom_scm.h              |   4 +
- drivers/mmc/host/cqhci-crypto.c               |   7 +-
- drivers/mmc/host/cqhci.h                      |   2 +
- drivers/mmc/host/sdhci-msm.c                  |   6 +-
- drivers/soc/qcom/ice.c                        | 315 +++++++++++++++++-
- drivers/ufs/core/ufshcd-crypto.c              |  87 ++++-
- drivers/ufs/host/ufs-qcom.c                   |  61 +++-
- include/linux/firmware/qcom/qcom_scm.h        |   7 +
- include/soc/qcom/ice.h                        |  18 +-
- include/ufs/ufshcd.h                          |  22 ++
- 14 files changed, 754 insertions(+), 38 deletions(-)
-
+diff --git a/drivers/soc/qcom/ice.c b/drivers/soc/qcom/ice.c
+index c3b852269dca..93654ae704bf 100644
+--- a/drivers/soc/qcom/ice.c
++++ b/drivers/soc/qcom/ice.c
+@@ -21,6 +21,13 @@
+ 
+ #define AES_256_XTS_KEY_SIZE			64
+ 
++/*
++ * Wrapped key sizes that HWKM expects and manages is different for different
++ * versions of the hardware.
++ */
++#define QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(v)	\
++	((v) == 1 ? 68 : 100)
++
+ /* QCOM ICE registers */
+ #define QCOM_ICE_REG_VERSION			0x0008
+ #define QCOM_ICE_REG_FUSE_SETTING		0x0010
+@@ -420,6 +427,65 @@ int qcom_ice_derive_sw_secret(struct qcom_ice *ice, const u8 wkey[],
+ }
+ EXPORT_SYMBOL_GPL(qcom_ice_derive_sw_secret);
+ 
++/**
++ * qcom_ice_generate_key() - Generate a wrapped key for inline encryption
++ * @lt_key: longterm wrapped key that is generated, which is
++ *          BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE in size.
++ *
++ * Make a scm call into trustzone to generate a wrapped key for storage
++ * encryption using hwkm.
++ *
++ * Return: lt wrapped key size on success; err on failure.
++ */
++int qcom_ice_generate_key(struct qcom_ice *ice,
++			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	return qcom_scm_generate_ice_key(lt_key,
++					 QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(ice->hwkm_version));
++}
++EXPORT_SYMBOL_GPL(qcom_ice_generate_key);
++
++/**
++ * qcom_ice_prepare_key() - Prepare a longterm wrapped key for inline encryption
++ * @lt_key: longterm wrapped key that is generated or imported.
++ * @lt_key_size: size of the longterm wrapped_key
++ * @eph_key: wrapped key returned which has been wrapped with a per-boot ephemeral key,
++ *           size of which is BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE in size.
++ *
++ * Make a scm call into trustzone to prepare a wrapped key for storage
++ * encryption by rewrapping the longterm wrapped key with a per boot ephemeral
++ * key using hwkm.
++ *
++ * Return: eph wrapped key size on success; err on failure.
++ */
++int qcom_ice_prepare_key(struct qcom_ice *ice, const u8 *lt_key, size_t lt_key_size,
++			 u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	return qcom_scm_prepare_ice_key(lt_key, lt_key_size, eph_key,
++					QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(ice->hwkm_version));
++}
++EXPORT_SYMBOL_GPL(qcom_ice_prepare_key);
++
++/**
++ * qcom_ice_import_key() - Import a raw key for inline encryption
++ * @imp_key: raw key that has to be imported
++ * @imp_key_size: size of the imported key
++ * @lt_key: longterm wrapped key that is imported, which is
++ *          BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE in size.
++ *
++ * Make a scm call into trustzone to import a raw key for storage encryption
++ * and generate a longterm wrapped key using hwkm.
++ *
++ * Return: lt wrapped key size on success; err on failure.
++ */
++int qcom_ice_import_key(struct qcom_ice *ice, const u8 *imp_key, size_t imp_key_size,
++			u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	return qcom_scm_import_ice_key(imp_key, imp_key_size, lt_key,
++				       QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(ice->hwkm_version));
++}
++EXPORT_SYMBOL_GPL(qcom_ice_import_key);
++
+ static struct qcom_ice *qcom_ice_create(struct device *dev,
+ 					void __iomem *base)
+ {
+diff --git a/include/soc/qcom/ice.h b/include/soc/qcom/ice.h
+index dabe0d3a1fd0..dcf277d196ff 100644
+--- a/include/soc/qcom/ice.h
++++ b/include/soc/qcom/ice.h
+@@ -39,5 +39,13 @@ bool qcom_ice_hwkm_supported(struct qcom_ice *ice);
+ int qcom_ice_derive_sw_secret(struct qcom_ice *ice, const u8 wkey[],
+ 			      unsigned int wkey_size,
+ 			      u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE]);
++int qcom_ice_generate_key(struct qcom_ice *ice,
++			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
++int qcom_ice_prepare_key(struct qcom_ice *ice,
++			 const u8 *lt_key, size_t lt_key_size,
++			 u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
++int qcom_ice_import_key(struct qcom_ice *ice,
++			const u8 *imp_key, size_t imp_key_size,
++			u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
+ struct qcom_ice *of_qcom_ice_get(struct device *dev);
+ #endif /* __QCOM_ICE_H__ */
 -- 
 2.43.0
 
