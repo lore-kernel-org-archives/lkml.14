@@ -1,169 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D864F2C6B5;
-	Sat, 27 Jan 2024 16:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471941EF1F;
+	Sat, 27 Jan 2024 16:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706372596; cv=none; b=GZJDHAD/RgxyqAoDlTh4JjUKSEodlnwOiDG/RMm2577DJrorc91rsUBcZ+qwEGls2B2RXacssjeEEPbIv/spPR4bC2OJr3qLlW7gPjSzS4xPDctsUDJlVDMPOR+l4mFCDzYvoiIG4QTRyJ4skRddZ8GNFQf1gTQT2idB3L94klc=
+	t=1706372905; cv=none; b=e3GhjydAij1J6lkqx+ql9Sxege5zxyJ2IPUBk7/1nVpNfZcPf7DCz9wbFYVwIlmOvtApavw1Jr2v5D1WqpulYTSvXUXlXkQvV4PK14EO/AjOqiTHg9d+oOOpBHEgNRydqY7ZgOXv7ud0Ck8PVR3gRjbMGLKy9pkkBEPF043WyHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706372596; c=relaxed/simple;
-	bh=LL0wBLOxkDJ09V/gVtHGKu62BG3p0Qji1U4rZgktsiw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IRJQEnkQK/oYu7gdXiPbs5ntJ2KuE0NveDt5TE7JdFUT6hh9R3E09ZGnm5kV+uZMsZvDkTYYXjHX3b2Ocdwix7hm8saZSRdili6ErETntrO6U1Mjp1QVrdFCMYg3OkbJ2dhqiP57mrpIzXMtU6yTYv7ryo5gfDvRlthvoldwxtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQJs70qq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706372905; c=relaxed/simple;
+	bh=SIsFgkfEIry3mn75jIrd3xxoyIlXqfXCtitggYePuF0=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=NNagCymWfiWSZS2nUwu8SLEk5/SWKv2Jlxg4ts6j60HjndoE5rGNw+UhOgrU19tI/JknNPvoiTQV0HtFvG3snwQ3YQcf2m6XGCgj0NJhFI2wHACHxqFJeCJuJnJRe9QMUHYbd4S1N4dpejCeieG1VFP2Ajgt/C2qIw5qSU9U+Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8DDCw1J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQJs70qq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74337C433A6;
-	Sat, 27 Jan 2024 16:23:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8DDCw1J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67076C433F1;
+	Sat, 27 Jan 2024 16:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706372595;
-	bh=LL0wBLOxkDJ09V/gVtHGKu62BG3p0Qji1U4rZgktsiw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZQJs70qql0qNS3q2jj6oJm8gFS7W/0mQhIgzYPaBJH/r/5BuB23iDHlI00b/KI5Wr
-	 9Q76uURY/FQsTE7JC6RdU5nZVuCJtffhqp5645iSL2P+/uIzSXruXESv+Nuq07sOzc
-	 iJVDpPJVz90Ln61TLXXPux3lTFmii94VfXqFGM4b1bB1aheT4RW8L/8FjRjUFPk7j8
-	 3BnA+/QiJ0lapHksEEpQEkL0JrTKGNDWvaftwzAYMCUPu6odlg7yEdojG/5j7yj7hX
-	 6BbvpztbB+sAIx7IQ+/Ob54kKQBPMGS4ZyohO0UtaYsszy1F4KudjPJ4cykp9LPFDO
-	 tWa5uW87zpOxw==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] MIPS: move unselectable entries out of the "CPU type" choice
-Date: Sun, 28 Jan 2024 01:23:09 +0900
-Message-Id: <20240127162309.1026549-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240127162309.1026549-1-masahiroy@kernel.org>
-References: <20240127162309.1026549-1-masahiroy@kernel.org>
+	s=k20201202; t=1706372904;
+	bh=SIsFgkfEIry3mn75jIrd3xxoyIlXqfXCtitggYePuF0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=B8DDCw1JNLS+bpMz0I4/2w1PkfISe5Itd5hKJQKPdB2fXa7ymg4AgUHJsGrUlbhHr
+	 Yr46b+0VmuRX7rDLSNi8efgXcYN7YcjDA1pnpKANLX8Qth40tXUHV5h/Fq6pMsCAn3
+	 q+Q4QY20QglJPtQpHyTUylSsvc9DqFIVWDEbne4hgAOicEkT+0ibfiQ9T4DolAp2Q7
+	 vI0rLu4TkZseVX+w/QrzNcPKDjM6qzm0QntfoAzmZzzCYf99uCVLrkErzoO7FJj+5h
+	 oVCqABvy+WYdo5HItWkWOiV/bZm5m6xF9CWEck1A/52JcRDhx8vrXmyvQ1Zi67Aq4/
+	 d37tICFoD6orw==
+Date: Sat, 27 Jan 2024 10:28:22 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+ David Airlie <airlied@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Daniel Vetter <daniel@ffwll.ch>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ dri-devel@lists.freedesktop.org, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
+ devicetree@vger.kernel.org, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Conor Dooley <conor+dt@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Sam Ravnborg <sam@ravnborg.org>
+In-Reply-To: <20240127152821.65744-1-dario.binacchi@amarulasolutions.com>
+References: <20240127152821.65744-1-dario.binacchi@amarulasolutions.com>
+Message-Id: <170637290174.2797231.1548285445759438647.robh@kernel.org>
+Subject: Re: [drm-drm-misc:drm-misc-next] dt-bindings: nt35510: document
+ 'port' property
 
-Move the following entries out of the "CPU type" choice:
 
- - LOONGSON3_ENHANCEMENT
- - CPU_LOONGSON3_WORKAROUNDS
- - CPU_LOONGSON3_CPUCFG_EMULATION
+On Sat, 27 Jan 2024 16:28:08 +0100, Dario Binacchi wrote:
+> Allow 'port' property (coming from panel-common.yaml) to be used in DTS:
+> 
+>   st/stm32f769-disco-mb1166-reva09.dtb: panel@0: 'port' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> 
+> ---
+> 
+>  .../display/panel/novatek,nt35510.yaml        | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
 
-These entries cannot be selected from the choice because they depend on
-CPU_LOONGSON64, which is also located in the same choice.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-In fact, Kconfig does not consider them as choice values because they
-become children of CPU_LOOONGSON64 due to the automatic submenu creation
-in menu_finalize().
+yamllint warnings/errors:
 
-However, it is hard to understand this behavior unless you are familiar
-with the Kconfig internals.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/panel/novatek,nt35510.example.dtb: panel@0: compatible:0: 'hydis,hva40wv1' was expected
+	from schema $id: http://devicetree.org/schemas/display/panel/novatek,nt35510.yaml#
 
-"choice" should contain only selectable entries.
+doc reference errors (make refcheckdocs):
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240127152821.65744-1-dario.binacchi@amarulasolutions.com
 
- arch/mips/Kconfig | 76 +++++++++++++++++++++++------------------------
- 1 file changed, 38 insertions(+), 38 deletions(-)
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797ae590ebdb..a70b4f959fb1 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1269,44 +1269,6 @@ config CPU_LOONGSON64
- 	  3B1000, 3B1500, 3A2000, 3A3000 and 3A4000) processors. However, old
- 	  Loongson-2E/2F is not covered here and will be removed in future.
- 
--config LOONGSON3_ENHANCEMENT
--	bool "New Loongson-3 CPU Enhancements"
--	default n
--	depends on CPU_LOONGSON64
--	help
--	  New Loongson-3 cores (since Loongson-3A R2, as opposed to Loongson-3A
--	  R1, Loongson-3B R1 and Loongson-3B R2) has many enhancements, such as
--	  FTLB, L1-VCache, EI/DI/Wait/Prefetch instruction, DSP/DSPr2 ASE, User
--	  Local register, Read-Inhibit/Execute-Inhibit, SFB (Store Fill Buffer),
--	  Fast TLB refill support, etc.
--
--	  This option enable those enhancements which are not probed at run
--	  time. If you want a generic kernel to run on all Loongson 3 machines,
--	  please say 'N' here. If you want a high-performance kernel to run on
--	  new Loongson-3 machines only, please say 'Y' here.
--
--config CPU_LOONGSON3_WORKAROUNDS
--	bool "Loongson-3 LLSC Workarounds"
--	default y if SMP
--	depends on CPU_LOONGSON64
--	help
--	  Loongson-3 processors have the llsc issues which require workarounds.
--	  Without workarounds the system may hang unexpectedly.
--
--	  Say Y, unless you know what you are doing.
--
--config CPU_LOONGSON3_CPUCFG_EMULATION
--	bool "Emulate the CPUCFG instruction on older Loongson cores"
--	default y
--	depends on CPU_LOONGSON64
--	help
--	  Loongson-3A R4 and newer have the CPUCFG instruction available for
--	  userland to query CPU capabilities, much like CPUID on x86. This
--	  option provides emulation of the instruction on older Loongson
--	  cores, back to Loongson-3A1000.
--
--	  If unsure, please say Y.
--
- config CPU_LOONGSON2E
- 	bool "Loongson 2E"
- 	depends on SYS_HAS_CPU_LOONGSON2E
-@@ -1644,6 +1606,44 @@ config CPU_BMIPS
- 
- endchoice
- 
-+config LOONGSON3_ENHANCEMENT
-+	bool "New Loongson-3 CPU Enhancements"
-+	default n
-+	depends on CPU_LOONGSON64
-+	help
-+	  New Loongson-3 cores (since Loongson-3A R2, as opposed to Loongson-3A
-+	  R1, Loongson-3B R1 and Loongson-3B R2) has many enhancements, such as
-+	  FTLB, L1-VCache, EI/DI/Wait/Prefetch instruction, DSP/DSPr2 ASE, User
-+	  Local register, Read-Inhibit/Execute-Inhibit, SFB (Store Fill Buffer),
-+	  Fast TLB refill support, etc.
-+
-+	  This option enable those enhancements which are not probed at run
-+	  time. If you want a generic kernel to run on all Loongson 3 machines,
-+	  please say 'N' here. If you want a high-performance kernel to run on
-+	  new Loongson-3 machines only, please say 'Y' here.
-+
-+config CPU_LOONGSON3_WORKAROUNDS
-+	bool "Loongson-3 LLSC Workarounds"
-+	default y if SMP
-+	depends on CPU_LOONGSON64
-+	help
-+	  Loongson-3 processors have the llsc issues which require workarounds.
-+	  Without workarounds the system may hang unexpectedly.
-+
-+	  Say Y, unless you know what you are doing.
-+
-+config CPU_LOONGSON3_CPUCFG_EMULATION
-+	bool "Emulate the CPUCFG instruction on older Loongson cores"
-+	default y
-+	depends on CPU_LOONGSON64
-+	help
-+	  Loongson-3A R4 and newer have the CPUCFG instruction available for
-+	  userland to query CPU capabilities, much like CPUID on x86. This
-+	  option provides emulation of the instruction on older Loongson
-+	  cores, back to Loongson-3A1000.
-+
-+	  If unsure, please say Y.
-+
- config CPU_MIPS32_3_5_FEATURES
- 	bool "MIPS32 Release 3.5 Features"
- 	depends on SYS_HAS_CPU_MIPS32_R3_5
--- 
-2.40.1
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
