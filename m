@@ -1,97 +1,111 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1264200BF
-	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 11:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514281E869;
+	Sat, 27 Jan 2024 11:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706354999; cv=none; b=VHOd2p8DHiU751GF4ehm6IFrPuKMVdTyRYiFigtC3B1VLt+nXLi3Pu4z+niQfbxPmLnH7Kbu3dIHwTFFknJrW1QsqNa2UMx7Zx8A07LHVmCTARJ5HpNbQfsq8S55SmE9xXm/C3rZPeT0UDLL1MP7Ztbg3fCS6Ev/jDU6Ct3sIII=
+	t=1706355776; cv=none; b=m4CoccuxWjVdLMxYfnsDDPUS0uUGa1QUeIbits8BRvLzRJ0+mjmwMnkR2cUZ1n9tlzxQyVPLS1xG0/p9U6CzAdCoHnTBMnBja7zl0aF7+s8p+tJ/bSum4DvteQAlNI9uSVVA/btKWzWgm42khLxV4q34xFaI4Q48mrtgDwnYCz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706354999; c=relaxed/simple;
-	bh=2vC309A8q1QlZwagjlPpO0d57cgiqhamWWBsCy4DApE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tJAURs0NnePV1UInEliu+o04taB+b+xg2qUiqW9px4tiw7YqKVs3mpjrUlBGwLPRs3oeQbZKZAvL4SNPo6lFItxNtK2rpSQCJo99elDEqQY9KNbkyxZN5Tcp/syLrzlWfop+L/FB2nywfyJF5BdXeolQKI9NREbl8b8kUt4742U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f5VHDGY1; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706355776; c=relaxed/simple;
+	bh=nAOcTFP3pwvvDUbQsgTedOGhxngX6Aj/2e6lzNcC4KI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZF4ed+98TDlcxjkWGRzP7FySZe2CdD2z7wlvQj/7+DdrU1iodYtvjXZNSIvQRB9LsLwewVThAO0+m4pzoEZ9ILjH3fnRnYFQcA433UnNmCUe76Gs6YWqWyiLnM7XF+/bpUEOrtwc48bwV9RD3nzu6wyLA39E2emgVoekbN/4cN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eC4rs6Wd; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f5VHDGY1"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40e8fec0968so21166625e9.1
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 03:29:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706354996; x=1706959796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2GZIIhmY4ewuA9KgJhwUUlqVtGcUt+YTA3IGIjyGp5g=;
-        b=f5VHDGY1Q2EsAHdp02nCclfkMHJqYk/afKePmm9Krib/aaD7oPg+r1ZT2jQemhG3uU
-         QdvGoDSc/m0Q5XKu6ENOjwzdO5aHL7cyqUhWsAs5vVpSozkW3O+WN33jUIiOkyvsE7Gp
-         /TgW/iW5TBI/MwCGoTd1XNyktSEAGxzpbJO6i+q3LZl1Gg8HeiZ5T2NnjRyLP0K/dRqY
-         fg4O4BmH+7QtzM8DS7/w6g/0K71ojap45Xq8+CutUUtX4PDxKXBkxkHR+yuqvWWQptjJ
-         z/8CzmLtzO/HkJ0xhvjccku3eEgXb3pZzmw/NNUwx0AscZDFuwz76X8C9IOHsVgU+l9h
-         p7hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706354996; x=1706959796;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2GZIIhmY4ewuA9KgJhwUUlqVtGcUt+YTA3IGIjyGp5g=;
-        b=JoEgQ8huacSG0//gAlXEQA8ktM/9Pfsxk+OhFzQqiS1owk+AAzqp+s8IQ30/3Mtfdj
-         /BoENOJ2XMB5UkwjG0n2+jLUC4drFJoZtYgRX8jNqsa8JDUv3gTGkVH0c63UCJyov2LN
-         IsUJ/XU3uvEuq0nA5qa9vj92vyAHokeVS5GI3QwvuX+iEDR3wsAOlg4bQ7OOUJQsWJJe
-         Xxv8SL961cvMy3gVDTdmNvQKaFerUwB0DuqLzrZ1WnKthKMcUr40ezo+TYRJCdewI+0H
-         sqNgpkU4kpSYkGzt+CVsFk5b1Y/S+qKUAPA+7d9hR2HCFPkarvcYWguW2LtXThLYBvdw
-         SEJA==
-X-Gm-Message-State: AOJu0Yz5XpiUVSlLxNryutiFuGhmrR7j1RnzjAmg1Yo6WhylKCa+9F1l
-	ntAj4F9Iw3bfojMizd39Pbyd2+L6bf2cJ1AvM2jjK4OIlke8Vvik9URUXEPsXYw=
-X-Google-Smtp-Source: AGHT+IGK1wNu7ZSIsgbkTjQOCpa8D/ABpMbe7tI4xca9X8OXpOP9r4Fup/x/E/gFt/JZ9Szz1a9l0A==
-X-Received: by 2002:a05:600c:4f8e:b0:40e:b313:b8db with SMTP id n14-20020a05600c4f8e00b0040eb313b8dbmr1167208wmq.28.1706354996117;
-        Sat, 27 Jan 2024 03:29:56 -0800 (PST)
-Received: from [172.20.10.4] (82-132-215-85.dab.02.net. [82.132.215.85])
-        by smtp.gmail.com with ESMTPSA id h17-20020a05600c315100b0040d62f89381sm4427724wmo.35.2024.01.27.03.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jan 2024 03:29:55 -0800 (PST)
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- William-tw Lin <william-tw.lin@mediatek.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-In-Reply-To: <20231222080739.21706-1-william-tw.lin@mediatek.com>
-References: <20231222080739.21706-1-william-tw.lin@mediatek.com>
-Subject: Re: (subset) [PATCH v4 0/3] mtk-socinfo driver implementation
-Message-Id: <170635499406.41064.12411935787824963879.b4-ty@linaro.org>
-Date: Sat, 27 Jan 2024 11:29:54 +0000
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eC4rs6Wd"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4F3AA40E0196;
+	Sat, 27 Jan 2024 11:42:51 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id CIObjHhXZrUT; Sat, 27 Jan 2024 11:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706355768; bh=Z+24pU73zrvlVW/zZsFzlGVxb2gSvEeHL9ZKSaOfvm8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eC4rs6WdjoEAKl2hlM4DT8Ngyn7hIzO1XtLqEGVdcosggtPTaawBo0zgWCPYL0fp0
+	 tXHcSXmV9rsQa1LznoqFpESHm5PRtL6p7P9t91N+pCjdpT1nUmTFRfqvLzPi4yPncD
+	 AbFcv6pi0dgWN3pzy7KBBMK5uYvXEf1+cCbxD3wogXe/gdKmqYtCs1R723GFv2uqTF
+	 r9qdDIguH8bY6RrAQRDKIbyGKezDOrtTmgibvnjyMAPZ/mcYg+iNHpb6Qbq+lpoYaG
+	 h/H3Xzhi5LwTQxppVDMluSTI+kUEINJjQkBkOVUlhk/xseeqzpv8bH0wc7bp0u2Sbc
+	 bPelKuYVSeN74fAIy+GORMmBwW3Q0wjtRqCjXPfImX6pM3GEF6+1w8uetPJmV2MDsf
+	 gmF1XSHCxkf1VTEMBYkknctBJfZrPSlBy5xIfAzqUf83N3nAJlCBEZg0vtyhS/2XwG
+	 Mx6ApzoIcVSR17zE4NkrPPRoHVJ1e46DR3F24AYYrzcEQo2JQvwE3NNP3BXz/wY4Eh
+	 f+j7/Rox/xWnB99wp6N7L8V+buOHpbNVVEAC2hNWsfizH9XIRtc1rFJXd6yXzU2VqM
+	 9bGD1cD5mLnomB2H9Xxv5PJslPh068zLfH20RKayB50XALaa6PGfV1mhv1/y6bhKqu
+	 pKzTDG5kVuhAuqJOMmtPjZy0=
+Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7310540E016C;
+	Sat, 27 Jan 2024 11:42:12 +0000 (UTC)
+Date: Sat, 27 Jan 2024 12:42:07 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Michael Roth <michael.roth@amd.com>
+Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
+	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
+	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
+	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
+	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
+	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
+	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
+	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
+	pankaj.gupta@amd.com, liam.merwick@oracle.com
+Subject: Re: [PATCH v2 11/25] x86/sev: Adjust directmap to avoid inadvertant
+ RMP faults
+Message-ID: <20240127114207.GBZbTsDyC3hFq8pQ3D@fat_crate.local>
+References: <20240126041126.1927228-1-michael.roth@amd.com>
+ <20240126041126.1927228-12-michael.roth@amd.com>
+ <20240126153451.GDZbPRG3KxaQik-0aY@fat_crate.local>
+ <20240126170415.f7r4nvsrzgpzcrzv@amd.com>
+ <20240126184340.GEZbP9XA13X91-eybA@fat_crate.local>
+ <20240126235420.mu644waj2eyoxqx6@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240126235420.mu644waj2eyoxqx6@amd.com>
 
-
-On Fri, 22 Dec 2023 16:07:36 +0800, William-tw Lin wrote:
-> v4 changes:
-> dts:
-> 1. remove phandle from socinfo-data for all platforms
+On Fri, Jan 26, 2024 at 05:54:20PM -0600, Michael Roth wrote:
+> Is something like this close to what you're thinking? I've re-tested with
+> SNP guests and it seems to work as expected.
 > 
-> mtk-socinfo.c:
-> 1. use module_platform_driver instead of builtin_platform_driver
+> diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
+> index 846e9e53dff0..c09497487c08 100644
+> --- a/arch/x86/virt/svm/sev.c
+> +++ b/arch/x86/virt/svm/sev.c
+> @@ -421,7 +421,12 @@ static int adjust_direct_map(u64 pfn, int rmp_level)
+>         if (WARN_ON_ONCE(rmp_level > PG_LEVEL_2M))
+>                 return -EINVAL;
 > 
-> [...]
+> -       if (WARN_ON_ONCE(rmp_level == PG_LEVEL_2M && !IS_ALIGNED(pfn, PTRS_PER_PMD)))
+> +       if (!pfn_valid(pfn))
 
-Applied, thanks!
+_text at VA 0xffffffff81000000 is also a valid pfn so no, this is not
+enough.
 
-[3/3] nvmem: mtk-efuse: Register MediaTek socinfo driver from efuse
-      commit: 4e6102d60d88975bc65a0dde05a8ba096c450249
+Either this function should not have "direct map" in the name as it
+converts *any* valid pfn not just the direct map ones or it should check
+whether the pfn belongs to the direct map range.
 
-Best regards,
+Thx.
+
 -- 
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
