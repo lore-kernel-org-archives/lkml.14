@@ -1,35 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00007101.pphosted.com (mx0b-00007101.pphosted.com [148.163.139.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166227F;
-	Sat, 27 Jan 2024 05:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5FD7F;
+	Sat, 27 Jan 2024 05:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706334028; cv=none; b=nEzqt0WocrFMo2+B4JfR6kGefbEaTUGHtzILD1sVdLC8NNle6QGIHXAYCwi/NBBxvr2/AwW4xCVipMHbZMwZx6BHHv5pJV8V4l8k2vvOcPbshDJ64xJP4HVzIFmDLkJODaGr/ODuaMoYX0o/DqX8epFg/jvPbHS5d0Qnf8FWMws=
+	t=1706335002; cv=none; b=D0FGZcUtBEKtQfPdizDcPQXAjdPaQy/O5ic9TvNZrn93TiqDvJmm/66/yGB7iOrvTPQeV61YBBmFWax890QjrF3QcDWJ68AVsThwkHrNQq9gml0uNOcZqaVEwh5Xs9LWhg9VMqUv8j9zY/W95ziTLhX1L2FmF8mk9BfygFwFb7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706334028; c=relaxed/simple;
-	bh=9ZTfUtMn1a338N0HPReMh7C0UyVheHoUSbQsZXZyiG8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=NPpf5VKJXwzjqQ1k1JrF164+nOtXRgOACh418bJi1ampDmMU8cmtbGTq+ArVU/l7BXSA9tGPEOBxfUsy3F6oqmjn9Xp1mq+5yhZoQf+IiSkb+YSTa1/ji7fa1NUbpssvY8z1tcyUBbptzSyAxFS+vAhF+X04EBUoWEKdfaesuqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCiAbR+t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706335002; c=relaxed/simple;
+	bh=QmTDRUbNHgrq5t9JI5UYewOWGURNdPHH08srd4UcjQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I4b9SBFTmLliRO3P7DggrM/u0zMjrZOvURkfiM6xYnqHSYHHX/cFaAGiUV9lwQCFIdDD7RfNI8TYVs/OXPSEXxw0NGW4y1RBQDu8nGnntIUaO6fiZ7wqq/AU6IZ39c1rAuN+lI6gTAv/y7lNeNJ6N4dckCUXfPjK8/jRMXgOA4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=bGsxg2TZ; arc=none smtp.client-ip=148.163.139.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCiAbR+t"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 699E0C43390;
-	Sat, 27 Jan 2024 05:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706334027;
-	bh=9ZTfUtMn1a338N0HPReMh7C0UyVheHoUSbQsZXZyiG8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=sCiAbR+thSAuApUEJKyoQCHu1r9hIzgVvJGE4EF0434TCeco2LtGfIbx2476vPudE
-	 NNu/2sD8/CTsQSTHNGmpJOFLF9xU7tsQ+W1r+dpm8O5N3pg0LPhreE7F0l2ksHWZI1
-	 qeWVSKYf4T38wwqo6HJ5jwx2pnS0lXvcVKA8k6lzDMlSW7p5geybMhWRIYDVnBm6V9
-	 eSBBF2gbhWpY+/AhnPMIbU7D9fGxQBFdvg8gH5xa4FNmK5jWRMwegCayKSrf1kPuJA
-	 nyksAWWNQ5KGxiNsJuza2cwSxkOk4lIxy0Q6WLgJDFeTz+RfLDT/iDwqlPft0nPjmQ
-	 kaopvDt+Qlp2Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4F132DFF762;
-	Sat, 27 Jan 2024 05:40:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="bGsxg2TZ"
+Received: from pps.filterd (m0166258.ppops.net [127.0.0.1])
+	by mx0b-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40R48jDX026485;
+	Sat, 27 Jan 2024 04:41:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=campusrelays; bh=Jaf7dwKCpzOam5AxGVkQC1zxu44hKX42z/tivO06WcI=;
+ b=bGsxg2TZ2xE8ej0BpJ/gSoVrfxGnS5ugqZwGMh93/llF/eNRRRea/irYHs3FfIDUZlJX
+ ibkixVycodjAcYTV5aGXRD7jEsi7VlED3Z92hVyjV9noUAZUxj3AxO02rPqBAUIae1ni
+ cvCDspJe/mXcTJzbaCco3J3bOjCb0IuCuc/ew+DBeN7lA2eGRPDmkwBL6x6EX7llFVt4
+ EmpmsoM6ZCgqRjS8ABGsiPVcl7cuW3JWV2AliiU6Qbc6a6zgApV1fXJHLdVZ7OI+ObqQ
+ J73LBn9KHqpF/JLBuC6MFL9eh8wnCKEsASBzHFdgxhSkCJtHGjXK7l1NBeeJuOu8GSiJ sQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0b-00007101.pphosted.com (PPS) with ESMTPS id 3vvr6sgk29-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 27 Jan 2024 04:41:36 +0000
+Received: from m0166258.ppops.net (m0166258.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40R4fZW7019561;
+	Sat, 27 Jan 2024 04:41:36 GMT
+Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
+	by mx0b-00007101.pphosted.com (PPS) with ESMTP id 3vvr6sgk26-1;
+	Sat, 27 Jan 2024 04:41:35 +0000
+From: Jinghao Jia <jinghao7@illinois.edu>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jinghao Jia <jinghao7@illinois.edu>
+Subject: [RFC PATCH 0/2] x86/kprobes: add exception opcode detector and boost more opcodes
+Date: Fri, 26 Jan 2024 22:41:22 -0600
+Message-ID: <20240127044124.57594-1-jinghao7@illinois.edu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,48 +56,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v4 0/3] net: dsa: microchip: implement PHY loopback 
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170633402732.3753.3039393822972314797.git-patchwork-notify@kernel.org>
-Date: Sat, 27 Jan 2024 05:40:27 +0000
-References: <20240124123314.734815-1-o.rempel@pengutronix.de>
-In-Reply-To: <20240124123314.734815-1-o.rempel@pengutronix.de>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: davem@davemloft.net, andrew@lunn.ch, edumazet@google.com,
- f.fainelli@gmail.com, kuba@kernel.org, pabeni@redhat.com, olteanv@gmail.com,
- woojung.huh@microchip.com, arun.ramadoss@microchip.com,
- kernel@pengutronix.de, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- UNGLinuxDriver@microchip.com, san@skov.dk
+X-Proofpoint-GUID: kVJuc-U0v0AAMI2LBDzzUlJWS0ZpTZDO
+X-Proofpoint-ORIG-GUID: 6YLeFrF7svbWsgXIk0n3OeKrq3OypKIi
+X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
+ impostorscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1011 mlxlogscore=899 phishscore=0 suspectscore=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 adultscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401270033
+X-Spam-Score: 0
+X-Spam-OrigSender: jinghao7@illinois.edu
+X-Spam-Bar: 
 
-Hello:
+Hi everyone,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+This patch set makes the following 2 changes:
 
-On Wed, 24 Jan 2024 13:33:11 +0100 you wrote:
-> changes v4:
-> - add Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com> to patch 3
-> - add Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com> to patch 3
-> 
-> changes v3:
-> - add Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com> to first 2
->   patches
-> - move ksz879x specific loopback handling to separate functions
-> 
-> [...]
+- It adds an exception opcode detector to prevent kprobing on INTs and UDs.
+  These opcodes serves special purposes in the kernel and kprobing them
+  will also cause the stack trace to be polluted by the copy buffer
+  address. This is suggested by Masami.
 
-Here is the summary with links:
-  - [net-next,v4,1/3] net: dsa: microchip: ksz8: move BMCR specific code to separate function
-    https://git.kernel.org/netdev/net-next/c/0c657f860e67
-  - [net-next,v4,2/3] net: dsa: microchip: Remove redundant optimization in ksz8_w_phy_bmcr
-    https://git.kernel.org/netdev/net-next/c/d1b7d0d85d59
-  - [net-next,v4,3/3] net: dsa: microchip: implement PHY loopback configuration for KSZ8794 and KSZ8873
-    https://git.kernel.org/netdev/net-next/c/9e62bed6e105
+- At the same time, this patch set also boosts more opcodes from the group
+  2/3/4/5. The newly boosted opcodes are all arithmetic instructions with
+  semantics that are easy to reason about, and therefore, they are able to
+  be boosted and executed out-of-line. These instructions were not boosted
+  previously because they use opcode extensions that are not handled by the
+  kernel. But now with the instruction decoder they can be easily handled.
+  Boosting (and further jump optimizing) these instructions leads to a 10x
+  performance gain for a single probe on QEMU.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Jinghao Jia (2):
+  x86/kprobes: Prohibit kprobing on INT and UD
+  x86/kprobes: boost more instructions from grp2/3/4/5
 
+ arch/x86/kernel/kprobes/core.c | 54 ++++++++++++++++++++++++++--------
+ 1 file changed, 41 insertions(+), 13 deletions(-)
+
+--
+2.43.0
 
