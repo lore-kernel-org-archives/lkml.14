@@ -1,208 +1,190 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E589E200BC;
-	Sat, 27 Jan 2024 23:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998D72031F
+	for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 23:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706398272; cv=none; b=na4FmfnBpI8n6gNde51KtFyy2tF0zWnUrDDF30cvI0E5vt514+RrNDEqYttQjgH1fth5FBMhyLejwp/GPzaePie7yPcLzAFsrYc+6VftYHxg6yaZpVR6TQYspnS3jIN5GEHwLU0sqFcZDI9diZN8SGj8OyhTkGdlCFNILxfEK1I=
+	t=1706398420; cv=none; b=apUmkVwEZVpmE4G2mP9keS39DceY+U979ctUJG5DIMXUsbLj2b+0IAWsM3objcUKFlN5Nkaj8zoy+ubm1KdE5UJ8ipsHhJJIxdN9cKxYsptgPeDMW3EHhBX59/7w253F42I4pqvCJaYGWe9y7jvD2zg+Zz4spnCK8rSHh9hNa54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706398272; c=relaxed/simple;
-	bh=ldK6oqUQ28CX5uMRauHa7hCM3n0XuTSUAEscaZabQdY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fk2ITNHkT7COmxcj3ZuoPb3vcGZ06iYvJx0hYW7xFCbnl6CtjwtLx8HwKqsw3rdH0yDAP+n+cXltMbH5vteyDKV3kb3JTcltEpFiuhESpbeOcP1qB1hD4Q3tJI48p8krNCLl+bWYsY9DlaP974SPK/79jNM0KK2NfYB2ZGFcNb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gfYsJKf1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706398420; c=relaxed/simple;
+	bh=AKmQOSDJUHVCp8enLhSmqwwWGGlHRO2KUcSOqhEATEM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V9iumgfCTHrymvvOFKY+W07x5AMy/dRAEJx2N1/QeBoG/V8CxAi4ytzWivM94lclmIp2wqG8lNm7pAI4va84c7ZB3fPxJ4yU/BRDm0jRtecmPLkCltIwh1dzEC5jPtC28JSgl1ElVxealr3uVLtM08KKL+N9L5WqXSPYypS0388=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tRrxnhHt; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gfYsJKf1"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40RMwGP3000495;
-	Sat, 27 Jan 2024 23:26:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=x8zOWHcb+T0b3e9xAM384D0NK7lkOgBM7D2JbGMMqGA=; b=gf
-	YsJKf1l4e3f/p2r6ABEa5pMXF34n+I+aSHPZPmGp8hFFhi7UFNCpDyuo4psUwPGu
-	L2OV56+R2DdmJiXymkw17XPiOXTetiJvINPKMMh81P2vFyqniKIaUjqOGUFRsLEC
-	ZXhbZPuIpp9h/oaArIU2a/sgkn+B0QDfhYRZYaKaRo1ysuIT+rV71VhSlZArHoU0
-	BTc7xHwaL6lTHaRTqjv7WLtPrtpiCwEkPAb8SbquP3u+EXh4/0GENgiInNDz0cVW
-	0Utq4nWGmc44nxmP/rhYS8mp+d50YWv0QKAcvUfsjstkbLfSQ4uiHOFjQ0q6wyst
-	str4Snluu6R2F8KyqK6A==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvse4s541-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 27 Jan 2024 23:26:23 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40RNQMIp010246
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 27 Jan 2024 23:26:22 GMT
-Received: from hu-gaurkash-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sat, 27 Jan 2024 15:26:17 -0800
-From: Gaurav Kashyap <quic_gaurkash@quicinc.com>
-To: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <andersson@kernel.org>, <ebiggers@google.com>,
-        <neil.armstrong@linaro.org>, <srinivas.kandagatla@linaro.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <robh+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <kernel@quicinc.com>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <quic_omprsing@quicinc.com>,
-        <quic_nguyenb@quicinc.com>, <bartosz.golaszewski@linaro.org>,
-        <konrad.dybcio@linaro.org>, <ulf.hansson@linaro.org>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <mani@kernel.org>,
-        <davem@davemloft.net>, <herbert@gondor.apana.org.au>,
-        Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Subject: [PATCH v4 06/15] soc: qcom: ice: support for generate, import and prepare key
-Date: Sat, 27 Jan 2024 15:14:04 -0800
-Message-ID: <20240127232436.2632187-7-quic_gaurkash@quicinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240127232436.2632187-1-quic_gaurkash@quicinc.com>
-References: <20240127232436.2632187-1-quic_gaurkash@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tRrxnhHt"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dc223463ee4so1879207276.2
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 15:33:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706398417; x=1707003217; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tjk5TjN3e4CujJkcyDdIuVVrZ16DzmScuHfifhjJf3w=;
+        b=tRrxnhHt3e2004OJXDWN4ppYlPH3+1ESQtA6Z1lPnwRWyb756QnKion0/JYa10I8Kd
+         KSkUvWIuN9ImKzQxAEClhJAFA/aCcWix4KLUcLsd3B7DtV8q3o4+vGK66Vhv+Oxq5vPO
+         bdKEGV5B/sdj4YYd8B8RM1B3T/LufIbI9hFXxsWgXCovUZKFrlUtZb8KufWRNG0h34OE
+         DtWM92wIaf4eUigWGhSFXpG9Obw7AYiJTd2NYbNFtjUngHimAelGgEIXHCo5tq9HomVv
+         SIEYuKAhwxf9xida32MK9YIE4vA9nouqXypA3PIl+EJiLfNe83GrJElN6abH4LJ9OJqj
+         cdVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706398417; x=1707003217;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tjk5TjN3e4CujJkcyDdIuVVrZ16DzmScuHfifhjJf3w=;
+        b=NNhxhJEK81T9vJZEwwMr+rQnq219IOqbkMqymPWWpfHfzZFjZh6Cf9nVtD6xjRrRcW
+         vGWfzi9iHWlNhAic24X+CzyS9n6wnpEXVcZSnOntNjoNIi4rqcY5Ppw1evsYmANKLmEF
+         Cr23Vy/umGB6coMIA/yTedok0vH7Upg2QshvPRF7rI/xM8R1AZ9YKZEr6yx+px36SJeH
+         jvZMSyxMUBfjZW8PLJxPty7U56QKsbqMwOyBJ6q6J2laVepkFld/1usROS4ss06zJTN9
+         K009f21yDRIpg+CcvY6sppMkpxrzHpKxRtPnYdyvawt/zZfA/otLNutwJwA0RWYX+3KM
+         Ea7Q==
+X-Gm-Message-State: AOJu0Yw9A0QmM0s6G+mrezfw0Y+FQpZ/ZnQzNBazdcEQAVmggDAtyGJF
+	p01TX7dw3GxYiNLOzPEpku3zaM858bULQE1NglKDA1BIgQt9QcX6mKx9mmf/i3nAhwO1rEaps56
+	crFgZSCNBfHbL6Cg5tdZE6B8PNrwgTSBPBifxAQ==
+X-Google-Smtp-Source: AGHT+IE4dcccCEbQeihI3WL932A84/O0oOrLVoFknlXg47wcDttREAsCbLva8RomwckZu+AizukRocf64P6phpkxwtk=
+X-Received: by 2002:a81:b666:0:b0:603:414b:d357 with SMTP id
+ h38-20020a81b666000000b00603414bd357mr1755803ywk.52.1706398417533; Sat, 27
+ Jan 2024 15:33:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: XeEYhY4UNI_dQ5JOMwQzMG-J_6pl8Cxk
-X-Proofpoint-GUID: XeEYhY4UNI_dQ5JOMwQzMG-J_6pl8Cxk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- malwarescore=0 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401270178
+References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com> <20231221083622.3445726-3-yuklin.soo@starfivetech.com>
+In-Reply-To: <20231221083622.3445726-3-yuklin.soo@starfivetech.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 28 Jan 2024 00:33:26 +0100
+Message-ID: <CACRpkdagPYfSq91dXOTJ9d8VjCMMG2AN3L9-Qxdw3C8tki09EQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/6] pinctrl: starfive: jh8100: add pinctrl driver for
+ sys_east domain
+To: Alex Soo <yuklin.soo@starfivetech.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng <hal.feng@starfivetech.com>, 
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
+	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing <kernel@esmil.dk>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Wrapped key creation and management using HWKM is currently
-supported only through Qualcomm's Trustzone.
-Three new SCM calls have already been added in the scm layer
-for this purpose.
+Hi Alex,
 
-This patch adds support for generate, prepare and import key
-apis in ICE module and hooks it up the scm calls defined for them.
-This will eventually plug into the new IOCTLS added for this
-usecase in the block layer.
+thanks for your patch!
 
-Signed-off-by: Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- drivers/soc/qcom/ice.c | 66 ++++++++++++++++++++++++++++++++++++++++++
- include/soc/qcom/ice.h |  8 +++++
- 2 files changed, 74 insertions(+)
+On Thu, Dec 21, 2023 at 9:36=E2=80=AFAM Alex Soo <yuklin.soo@starfivetech.c=
+om> wrote:
 
-diff --git a/drivers/soc/qcom/ice.c b/drivers/soc/qcom/ice.c
-index c3b852269dca..93654ae704bf 100644
---- a/drivers/soc/qcom/ice.c
-+++ b/drivers/soc/qcom/ice.c
-@@ -21,6 +21,13 @@
- 
- #define AES_256_XTS_KEY_SIZE			64
- 
-+/*
-+ * Wrapped key sizes that HWKM expects and manages is different for different
-+ * versions of the hardware.
-+ */
-+#define QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(v)	\
-+	((v) == 1 ? 68 : 100)
-+
- /* QCOM ICE registers */
- #define QCOM_ICE_REG_VERSION			0x0008
- #define QCOM_ICE_REG_FUSE_SETTING		0x0010
-@@ -420,6 +427,65 @@ int qcom_ice_derive_sw_secret(struct qcom_ice *ice, const u8 wkey[],
- }
- EXPORT_SYMBOL_GPL(qcom_ice_derive_sw_secret);
- 
-+/**
-+ * qcom_ice_generate_key() - Generate a wrapped key for inline encryption
-+ * @lt_key: longterm wrapped key that is generated, which is
-+ *          BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE in size.
-+ *
-+ * Make a scm call into trustzone to generate a wrapped key for storage
-+ * encryption using hwkm.
-+ *
-+ * Return: lt wrapped key size on success; err on failure.
-+ */
-+int qcom_ice_generate_key(struct qcom_ice *ice,
-+			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	return qcom_scm_generate_ice_key(lt_key,
-+					 QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(ice->hwkm_version));
-+}
-+EXPORT_SYMBOL_GPL(qcom_ice_generate_key);
-+
-+/**
-+ * qcom_ice_prepare_key() - Prepare a longterm wrapped key for inline encryption
-+ * @lt_key: longterm wrapped key that is generated or imported.
-+ * @lt_key_size: size of the longterm wrapped_key
-+ * @eph_key: wrapped key returned which has been wrapped with a per-boot ephemeral key,
-+ *           size of which is BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE in size.
-+ *
-+ * Make a scm call into trustzone to prepare a wrapped key for storage
-+ * encryption by rewrapping the longterm wrapped key with a per boot ephemeral
-+ * key using hwkm.
-+ *
-+ * Return: eph wrapped key size on success; err on failure.
-+ */
-+int qcom_ice_prepare_key(struct qcom_ice *ice, const u8 *lt_key, size_t lt_key_size,
-+			 u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	return qcom_scm_prepare_ice_key(lt_key, lt_key_size, eph_key,
-+					QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(ice->hwkm_version));
-+}
-+EXPORT_SYMBOL_GPL(qcom_ice_prepare_key);
-+
-+/**
-+ * qcom_ice_import_key() - Import a raw key for inline encryption
-+ * @imp_key: raw key that has to be imported
-+ * @imp_key_size: size of the imported key
-+ * @lt_key: longterm wrapped key that is imported, which is
-+ *          BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE in size.
-+ *
-+ * Make a scm call into trustzone to import a raw key for storage encryption
-+ * and generate a longterm wrapped key using hwkm.
-+ *
-+ * Return: lt wrapped key size on success; err on failure.
-+ */
-+int qcom_ice_import_key(struct qcom_ice *ice, const u8 *imp_key, size_t imp_key_size,
-+			u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	return qcom_scm_import_ice_key(imp_key, imp_key_size, lt_key,
-+				       QCOM_ICE_HWKM_WRAPPED_KEY_SIZE(ice->hwkm_version));
-+}
-+EXPORT_SYMBOL_GPL(qcom_ice_import_key);
-+
- static struct qcom_ice *qcom_ice_create(struct device *dev,
- 					void __iomem *base)
- {
-diff --git a/include/soc/qcom/ice.h b/include/soc/qcom/ice.h
-index dabe0d3a1fd0..dcf277d196ff 100644
---- a/include/soc/qcom/ice.h
-+++ b/include/soc/qcom/ice.h
-@@ -39,5 +39,13 @@ bool qcom_ice_hwkm_supported(struct qcom_ice *ice);
- int qcom_ice_derive_sw_secret(struct qcom_ice *ice, const u8 wkey[],
- 			      unsigned int wkey_size,
- 			      u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE]);
-+int qcom_ice_generate_key(struct qcom_ice *ice,
-+			  u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
-+int qcom_ice_prepare_key(struct qcom_ice *ice,
-+			 const u8 *lt_key, size_t lt_key_size,
-+			 u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
-+int qcom_ice_import_key(struct qcom_ice *ice,
-+			const u8 *imp_key, size_t imp_key_size,
-+			u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE]);
- struct qcom_ice *of_qcom_ice_get(struct device *dev);
- #endif /* __QCOM_ICE_H__ */
--- 
-2.43.0
+> Add pinctrl driver for sys_east domain.
 
+This commit message is wrong, it also contains the main driver for jh8100.
+Please add some proper subject and commit message.
+
+> Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
+> Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
+(...)
+> +#define pin_to_hwirq(sfp) (((sfp)->wakeup_gpio) - ((sfp)->gc.base))
+
+Please do not reference gc.base like this, it is a gpio internal detail.
+
+Also, turn this into a static inline function, the macro is hard to read.
+
+> +/* pad control bits */
+> +#define JH8100_PADCFG_POS      BIT(7)
+> +#define JH8100_PADCFG_SMT      BIT(6)
+> +#define JH8100_PADCFG_SLEW     BIT(5)
+> +#define JH8100_PADCFG_PD       BIT(4)
+> +#define JH8100_PADCFG_PU       BIT(3)
+> +#define JH8100_PADCFG_BIAS     (JH8100_PADCFG_PD | JH8100_PADCFG_PU)
+
+JH8100_PADCFG_BIAS_MASK
+
+> +#define JH8100_PADCFG_DS_MASK  GENMASK(2, 1)
+> +#define JH8100_PADCFG_DS_2MA   (0U << 1)
+> +#define JH8100_PADCFG_DS_4MA   BIT(1)
+> +#define JH8100_PADCFG_DS_8MA   (2U << 1)
+> +#define JH8100_PADCFG_DS_12MA  (3U << 1)
+
+Please use (1U << 1) for 4MA, this looks weird otherwise.
+
+> +static const struct pinconf_ops jh8100_pinconf_ops =3D {
+> +       .pin_config_get         =3D jh8100_pinconf_get,
+> +       .pin_config_group_get   =3D jh8100_pinconf_group_get,
+> +       .pin_config_group_set   =3D jh8100_pinconf_group_set,
+> +       .pin_config_dbg_show    =3D jh8100_pinconf_dbg_show,
+> +       .is_generic             =3D true,
+> +};
+> +
+> +static int jh8100_gpio_request(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +       return pinctrl_gpio_request(gc, gpio);
+> +}
+> +
+> +static void jh8100_gpio_free(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +       pinctrl_gpio_free(gc, gpio);
+> +}
+
+Skip one level of indirection, just add pinctrl_gpio_request/free directly
+into the vtable.
+
+> +static int jh8100_gpio_set_config(struct gpio_chip *gc,
+> +                                 unsigned int gpio, unsigned long config=
+)
+> +{
+> +       struct jh8100_pinctrl *sfp =3D container_of(gc,
+> +                       struct jh8100_pinctrl, gc);
+> +       u32 arg =3D pinconf_to_config_argument(config);
+
+Please don't reimplement .set_config, just call into the pinctrl
+backend using
+
+.set_config =3D gpiochip_generic_config
+
+> +static int jh8100_gpio_add_pin_ranges(struct gpio_chip *gc)
+> +{
+> +       struct jh8100_pinctrl *sfp =3D container_of(gc,
+> +                       struct jh8100_pinctrl, gc);
+> +
+> +       sfp->gpios.name =3D sfp->gc.label;
+> +       sfp->gpios.base =3D sfp->gc.base;
+> +       sfp->gpios.pin_base =3D 0;
+> +       sfp->gpios.npins =3D sfp->gc.ngpio;
+> +       sfp->gpios.gc =3D &sfp->gc;
+> +       pinctrl_add_gpio_range(sfp->pctl, &sfp->gpios);
+> +       return 0;
+> +}
+
+Why are you not putting the ranges into the device tree where the
+GPIO core will add them for you?
+
+> +       if (info->irq_reg) {
+> +               jh8100_irq_chip.name =3D sfp->gc.label;
+
+That's not immutable. The struct should be const.
+You have to use .irq_print_chip in the irq_chip.
+
+> +               gpio_irq_chip_set_chip(&sfp->gc.irq, &jh8100_irq_chip);
+
+Use the convention:
+
+struct gpio_irq_chip *girq;
+
+girq =3D &chip->irq;
+gpio_irq_chip_set_chip(girq, &nmk_irq_chip);
+
+... and use girq-> in the rest of the assignments.
+
+> +               dev_info(dev, "StarFive GPIO chip registered %d GPIOs\n",=
+ sfp->gc.ngpio);
+
+StarFive JH8100 (be precise)
+
+Yours,
+Linus Walleij
