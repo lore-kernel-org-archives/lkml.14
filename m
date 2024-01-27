@@ -1,35 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00007101.pphosted.com (mx0b-00007101.pphosted.com [148.163.139.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECFC13AF9;
-	Sat, 27 Jan 2024 05:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE5C7F;
+	Sat, 27 Jan 2024 05:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706332230; cv=none; b=XBuWWT2H8Rl/Wm6GB8SkcIUaq3D1mErCDGk+HvUCF7OYjAP9cyG7yHCwHKrNW6V8y0PUe5KFD2kxi8jOcsIbFcxoPK4TMODebvztX+I6k+XV5ku9IEkSQCupwS0agmKjN2gm5k2V1MhJTJeF/U2XCFz9v1+EfzTb22g1auDD9rQ=
+	t=1706332621; cv=none; b=A3LQX9NADomKeEjvakIGt1PzX3MsgZyjvy3yKJwCyq2CuE3rqzEDjZP11yfy6j86njTXEQ5G0PQ5GKO6DJat+i+4reT+n6ewZoNx+ZYqyY/zJSHBkoy87VpZQm4+Bp+0h/YQAdvzh29+Z1bxSMip2on6aOep3Xqg6F9BT+gD88A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706332230; c=relaxed/simple;
-	bh=wUmUAKvbwlQsmbXWrLM1GAtgXCgeiPGESIUk3Gb490s=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=L+KpCrnkdNzFB1P7E+/+bVY0wgT6U7CYVOTJ2pliKhi8hJaKLjpMjzTHsxtmX/99j1W+pBtN2r7JFE4n+qKzpKyEtqXbmgZduXQBZ13CuW0GPmCdXqX2PNbmLqoFhkaq9KNqdiDzEsnpiRjQZXFUjNlxPANFQki2LB1fqSOruLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3zx9WhK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706332621; c=relaxed/simple;
+	bh=2oy7FXJoc1dYh+Zik8b/XfAW1rAHXWBj27ZopQY1g/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EX2g2DFqCyc8nFLyG+LpUW8eGxR80J0DTSDHGn8HQZSpEGeNLMJvRAN6KqR8mhmOg4rVBa6juO4yfMXaAusH3yOvqEhBM8eIPGVlnzn0NFuvq3lqAA0peamKap3w4G/H4R/ByL5rjlWhE6WGwLRC3uv2sr4QNQa0esJ1eQzhr54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=K23S8VkV; arc=none smtp.client-ip=148.163.139.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3zx9WhK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AA0E6C43394;
-	Sat, 27 Jan 2024 05:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706332229;
-	bh=wUmUAKvbwlQsmbXWrLM1GAtgXCgeiPGESIUk3Gb490s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=s3zx9WhKs34Tvi7pZjHVF05k5goKTZuVJpH+1ZZ05yBuBsrn3ZuBKc5KkFwg7wXUE
-	 BHDUTilhbpHzSGrGfspjF5wiQDh9OV3ut6gkSk/cAmKshWfXZvM5AXkKYDBt8MOfvB
-	 iPRlgIUDVwDbrMTTuYiRT4ATrKnE34A8yuuLCfI3kQiVALqn7W6VCSFPkrzaNln/tO
-	 F88qBWkIXfIACaG7Ws7hk7VJHJH0mWjD+fyReIZYJiJQt1r2uhK3xcczxNnmnFWM3P
-	 ZBXxzul8hjbwKJqIRrGhxxY+s7yAn9Y+cvnk2W83vDgs33znTg65TfFeAxUiNEG0BD
-	 qCPtZGxhRqXcA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 890FAD8C9C3;
-	Sat, 27 Jan 2024 05:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="K23S8VkV"
+Received: from pps.filterd (m0166258.ppops.net [127.0.0.1])
+	by mx0b-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40R4DcXU003200;
+	Sat, 27 Jan 2024 04:41:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=campusrelays;
+ bh=LfUQSwHCxqCuC+PAruuCClPENWlIgNi29wcXxn4Mv64=;
+ b=K23S8VkVEdyFCCxuhO5+cp457qW1pUtxhAVhXYi8gPmbUu1xtMhyiN0TyUpQT3BiE1AF
+ LFvsSi3FkWNDmQmvLobHEInf7UXmhbIe2jNj4gMNkIc6Z/5LcQxTrCmfdkeRER1vEpHs
+ 3dTA2T0MDzs8GqAtNRkKkZ8UztimTaxNePA+kzDPny9nQgNZzPheMdGGce1Enc4Q4qKE
+ 23fNmhSBR8HSWfFUrBtxW/BNu7VMDidRSzOizP7uc1e8bNu+pV5SJp02I3OoFHlyN25v
+ /99odRmHw3OTJPQwc3j99/0VGRjVXUNhhF1TzNkrvH6jQ5Ro0psHpW/rZwSBodYzo8rK ug== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0b-00007101.pphosted.com (PPS) with ESMTPS id 3vvr6sgk2q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 27 Jan 2024 04:41:43 +0000
+Received: from m0166258.ppops.net (m0166258.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40R4fZW9019561;
+	Sat, 27 Jan 2024 04:41:43 GMT
+Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
+	by mx0b-00007101.pphosted.com (PPS) with ESMTP id 3vvr6sgk26-2;
+	Sat, 27 Jan 2024 04:41:43 +0000
+From: Jinghao Jia <jinghao7@illinois.edu>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jinghao Jia <jinghao7@illinois.edu>
+Subject: [RFC PATCH 1/2] x86/kprobes: Prohibit kprobing on INT and UD
+Date: Fri, 26 Jan 2024 22:41:23 -0600
+Message-ID: <20240127044124.57594-2-jinghao7@illinois.edu>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240127044124.57594-1-jinghao7@illinois.edu>
+References: <20240127044124.57594-1-jinghao7@illinois.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,59 +60,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next PATCH v10 0/5] net: phy: generic polarity + LED support for
- qca808x
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170633222955.22327.17810717334139226034.git-patchwork-notify@kernel.org>
-Date: Sat, 27 Jan 2024 05:10:29 +0000
-References: <20240125203702.4552-1-ansuelsmth@gmail.com>
-In-Reply-To: <20240125203702.4552-1-ansuelsmth@gmail.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: pavel@ucw.cz, lee@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- william.zhang@broadcom.com, anand.gore@broadcom.com,
- kursad.oney@broadcom.com, florian.fainelli@broadcom.com, rafal@milecki.pl,
- bcm-kernel-feedback-list@broadcom.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, andrew@lunn.ch,
- hkallweit1@gmail.com, linux@armlinux.org.uk, jacek.anaszewski@gmail.com,
- noltari@gmail.com, sven.schwermer@disruptive-technologies.com,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- netdev@vger.kernel.org
+X-Proofpoint-GUID: 6AcGzVALhN6jMOtlsY4LV4ujrRjLfrRA
+X-Proofpoint-ORIG-GUID: ZskEOsMGNoEg_vC6oFkBJuWgxorMRFdc
+X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
+ impostorscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1015 mlxlogscore=789 phishscore=0 suspectscore=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 adultscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401270033
+X-Spam-Score: 0
+X-Spam-OrigSender: jinghao7@illinois.edu
+X-Spam-Bar: 
 
-Hello:
+Both INTs (INT n, INT1, INT3, INTO) and UDs (UD0, UD1, UD2) serve
+special purposes in the kernel, e.g., INT3 is used by KGDB and UD2 is
+involved in LLVM-KCFI instrumentation. At the same time, attaching
+kprobes on these instructions (particularly UDs) will pollute the stack
+trace dumped in the kernel ring buffer, since the exception is triggered
+in the copy buffer rather than the original location.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Check for INTs and UDs in can_probe and reject any kprobes trying to
+attach to these instructions.
 
-On Thu, 25 Jan 2024 21:36:56 +0100 you wrote:
-> This small series add LEDs support for qca808x.
-> 
-> QCA808x apply on PHY reset a strange polarity settings and require
-> some tweak to apply a more common configuration found on devices.
-> On adding support for it, it was pointed out that a similar
-> feature is also being implemented for a marvell PHY where
-> LED polarity is set per LED (and not global) and also have
-> a special mode where the LED is tristated.
-> 
-> [...]
+Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
+---
+ arch/x86/kernel/kprobes/core.c | 33 ++++++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
 
-Here is the summary with links:
-  - [net-next,v10,1/5] dt-bindings: net: phy: Make LED active-low property common
-    https://git.kernel.org/netdev/net-next/c/c94d1783136e
-  - [net-next,v10,2/5] dt-bindings: net: phy: Document LED inactive high impedance mode
-    https://git.kernel.org/netdev/net-next/c/355c6dc37efa
-  - [net-next,v10,3/5] net: phy: add support for PHY LEDs polarity modes
-    https://git.kernel.org/netdev/net-next/c/7ae215ee7bb8
-  - [net-next,v10,4/5] dt-bindings: net: Document QCA808x PHYs
-    https://git.kernel.org/netdev/net-next/c/91e893b43d1c
-  - [net-next,v10,5/5] net: phy: at803x: add LED support for qca808x
-    https://git.kernel.org/netdev/net-next/c/7196062b64ee
-
-You are awesome, thank you!
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index e8babebad7b8..792b38d22126 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -252,6 +252,22 @@ unsigned long recover_probed_instruction(kprobe_opcode_t *buf, unsigned long add
+ 	return __recover_probed_insn(buf, addr);
+ }
+ 
++static inline int is_exception_insn(struct insn *insn)
++{
++	if (insn->opcode.bytes[0] == 0x0f) {
++		/* UD0 / UD1 / UD2 */
++		return insn->opcode.bytes[1] == 0xff ||
++		       insn->opcode.bytes[1] == 0xb9 ||
++		       insn->opcode.bytes[1] == 0x0b;
++	} else {
++		/* INT3 / INT n / INTO / INT1 */
++		return insn->opcode.bytes[0] == 0xcc ||
++		       insn->opcode.bytes[0] == 0xcd ||
++		       insn->opcode.bytes[0] == 0xce ||
++		       insn->opcode.bytes[0] == 0xf1;
++	}
++}
++
+ /* Check if paddr is at an instruction boundary */
+ static int can_probe(unsigned long paddr)
+ {
+@@ -294,6 +310,16 @@ static int can_probe(unsigned long paddr)
+ #endif
+ 		addr += insn.length;
+ 	}
++	__addr = recover_probed_instruction(buf, addr);
++	if (!__addr)
++		return 0;
++
++	if (insn_decode_kernel(&insn, (void *)__addr) < 0)
++		return 0;
++
++	if (is_exception_insn(&insn))
++		return 0;
++
+ 	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
+ 		/*
+ 		 * The compiler generates the following instruction sequence
+@@ -308,13 +334,6 @@ static int can_probe(unsigned long paddr)
+ 		 * Also, these movl and addl are used for showing expected
+ 		 * type. So those must not be touched.
+ 		 */
+-		__addr = recover_probed_instruction(buf, addr);
+-		if (!__addr)
+-			return 0;
+-
+-		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
+-			return 0;
+-
+ 		if (insn.opcode.value == 0xBA)
+ 			offset = 12;
+ 		else if (insn.opcode.value == 0x3)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
