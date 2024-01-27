@@ -1,33 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FE92206B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F901E860;
 	Sat, 27 Jan 2024 16:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706373175; cv=none; b=eBpl5wvmti5xO1ufbWjRpHyo1GASdedEciicElP+kHg744zzZbjZHnAg7+7klgorL+EAXXqaGDeVfyZosS6STYzTmpsRoxzGT73Pzd2lymIa+D6/iNOVjD7d3DhiKakhxXOyEeOXSE/Zr4UdGhLMYp6EG4RsWcGHQA0ijNyzCe0=
+	t=1706373175; cv=none; b=iFws1Wy9ZWkXI5Jkl02ECxinOxMgVHu4GbecFaFEvoXGeya+naIUeICyxShakMmaUV1qlNk01y7sOsEkfumLFz2Cf7GrxnnM9lslFE1jzaHCQ7neDhXtsznsVEnAFtQMk1hfomyOWG3xl+jzP/z0wTIwQ5qAs00KNORminI1ZKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706373175; c=relaxed/simple;
-	bh=8BAcimB2vVPlYBPHFOIgIFLTY9STdBweYW7HvMTKlig=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KObxB3yqkIA/tbWZ0PMmdVdOEXoKJkCmEodp7Rc3iPwPFLRp5yRQ7HQOSrjbaRJGp7eUGwSR8dHAFKnUVQa8i8EYytm5BV0xz6vkdJf7ikFL13AZzQcrmw3O7zSzkhYl1gx9G2hJnliHfgm6NikcSNb3H4OCJhzYtuZxCvSvIuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQsh7erl; arc=none smtp.client-ip=10.30.226.201
+	bh=KAfVWbrl2OKLT7q1byYXuM4lIKN7zYfbYPsqezgJCYI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oyVUaEuuS41eNNJxJgveIp/Iz2sLonGr7UlUmMKBACy4Fgd2byDpRp75Q5nXp30xc3wr6oeZA6H1r0xR8sS56emZgfW8GZZOT8SSguQ/g3KSLfF6I6UTNtI9Q4BYvYWv3/20dHDqgfTk+klIHqTQwXwJ2KFGtX+Kbtp8yZ4JGLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JK7PSKCY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQsh7erl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF956C43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JK7PSKCY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DC0C43394;
 	Sat, 27 Jan 2024 16:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706373175;
-	bh=8BAcimB2vVPlYBPHFOIgIFLTY9STdBweYW7HvMTKlig=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CQsh7erls6X9hzFBwfJisBWdG+uNFUXpVtcq3aeOAr4bonKNh7KrKqcVTYS/H33nR
-	 GbbNia0jpKlDaTHaEPPGPkAISjY1KySI7lOdBnhGKQXDXJReWiA0R+e0N1Eq2lJiGY
-	 9eBCg6CYKVzqKBXvs26LWpGaGZwkV3Z6s5mJXVGh+pYDLb1P4YrT336qn94G1fvVba
-	 h4jPrd38Og0jAI4w2gA1G3BaMY38cL38ikhWpPBNOZEN1tL0azvpqjIT4w2O/YcdY7
-	 pDAdu/BUoRF4vJpfC1ctDao4+veLTtduKXKUjO7XNccNBAz1AIj0tAU/+Esj2+Jkbv
-	 GBjpRjUTblf2A==
+	bh=KAfVWbrl2OKLT7q1byYXuM4lIKN7zYfbYPsqezgJCYI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JK7PSKCY+LB8W5oAPOptM9zT+5K7HyUnEY5aYJDIP/p0/w6jz1IFHPJ+KBIZZnntC
+	 MG/FszS/kR3teA2mSIXCOkMcE/MiyK4TenSc0hlrwB6QrJq+KgDlWtYVnzazFlBq0C
+	 HveOSMmwec9DYR7aomCTOroIAKcOc+gKXhrgRBwPnufZg/FzojXFnwMz0f8O67jZhQ
+	 Ao+KnuY86B7WkjG8KtqIBSp77OlaehPHkemIbsi72By3nVzwpB0qbdiueZUKg0tizu
+	 RztEevpslTMUc2S1r8UnyeM2afCO85LUdAhlM2Cx4wDuazY7wgZuN/GMOYtvOOeO3u
+	 dWmWGoImzg+TA==
 Received: by wens.tw (Postfix, from userid 1000)
-	id 712EF5FDC7; Sun, 28 Jan 2024 00:32:52 +0800 (CST)
+	id 3CAC35FB4D; Sun, 28 Jan 2024 00:32:52 +0800 (CST)
 From: Chen-Yu Tsai <wens@kernel.org>
 To: Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -46,12 +45,10 @@ Cc: Chen-Yu Tsai <wens@csie.org>,
 	linux-sound@vger.kernel.org,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/7] dt-bindings: dma: allwinner,sun50i-a64-dma: Add compatible for H616
-Date: Sun, 28 Jan 2024 00:32:44 +0800
-Message-Id: <20240127163247.384439-5-wens@kernel.org>
+Subject: [PATCH v2 0/7] arm64: sun50i-h616: Add DMA and SPDIF controllers
+Date: Sun, 28 Jan 2024 00:32:40 +0800
+Message-Id: <20240127163247.384439-1-wens@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240127163247.384439-1-wens@kernel.org>
-References: <20240127163247.384439-1-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,52 +59,69 @@ Content-Transfer-Encoding: 8bit
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The DMA controllers found on the H616 and H618 are the same as the one
-found on the A100. The only difference is the DMA endpoint (DRQ) layout.
+Hi everyone,
 
-Since the number of channels and endpoints are described with additional
-generic properties, just add a new H616-specific compatible string and
-fallback to the A100 one.
+This is v2 of my H616/H618 DMA and SPDIF controller series.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
 Changes since v1:
 - Switch to "contains" for if-properties statement
 - Fall back to A100 instead of H6
+- Add DMA channels for r_i2c
 
- .../bindings/dma/allwinner,sun50i-a64-dma.yaml       | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+This series adds DMA and SPDIF controllers for the H616 and H618.
+There's also a fix for SPDIF on H6: the controller also has a
+receiver that was not correctly modeled.
 
-diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-index ec2d7a789ffe..0f2501f72cca 100644
---- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-@@ -28,6 +28,9 @@ properties:
-       - items:
-           - const: allwinner,sun8i-r40-dma
-           - const: allwinner,sun50i-a64-dma
-+      - items:
-+          - const: allwinner,sun50i-h616-dma
-+          - const: allwinner,sun50i-a100-dma
- 
-   reg:
-     maxItems: 1
-@@ -59,10 +62,11 @@ required:
- if:
-   properties:
-     compatible:
--      enum:
--        - allwinner,sun20i-d1-dma
--        - allwinner,sun50i-a100-dma
--        - allwinner,sun50i-h6-dma
-+      contains:
-+        enum:
-+          - allwinner,sun20i-d1-dma
-+          - allwinner,sun50i-a100-dma
-+          - allwinner,sun50i-h6-dma
- 
- then:
-   properties:
+Patch 1 fixes the binding for the SPDIF controller on the H6 by adding
+the RX DMA channel.
+
+Patch 2 adds a compatible string for the H616's SPDIF transmitter to the
+binding.
+
+Patch 3 adds a compatible string for the H616's SPDIF transmitter to the
+driver.
+
+Patch 4 adds a compatible string for the H616's DMA controller.
+
+Patch 5 adds the RX DMA channel to the SPDIF controller on the H6.
+
+Patch 6 adds a device node for the H616's DMA controller.
+
+Patch 7 adds a device node for the H616's SPDIF controller.
+
+
+This was tested on the Orange Pi Zero 3 with SPI flash transfers and
+SPDIF audio output. The H6 SPDIF change is superficial as the driver
+does not support receiving / capturing an audio stream.
+
+Please have a look. I expect the first three patches to go through the
+ASoC tree, the fourth patch to either go through the DMA tree, or
+through the sunxi tree with an Ack, and the last three through the sunxi
+tree.
+
+
+Thanks
+ChenYu
+
+
+Chen-Yu Tsai (7):
+  dt-bindings: sound: sun4i-spdif: Fix requirements for H6
+  dt-bindings: sound: sun4i-spdif: Add Allwinner H616 compatible
+  ASoC: sunxi: sun4i-spdif: Add support for Allwinner H616
+  dt-bindings: dma: allwinner,sun50i-a64-dma: Add compatible for H616
+  arm64: dts: allwinner: h6: Add RX DMA channel for SPDIF
+  arm64: dts: allwinner: h616: Add DMA controller and DMA channels
+  arm64: dts: allwinner: h616: Add SPDIF device node
+
+ .../dma/allwinner,sun50i-a64-dma.yaml         | 12 ++--
+ .../sound/allwinner,sun4i-a10-spdif.yaml      |  5 +-
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  2 +
+ .../boot/dts/allwinner/sun50i-h6-tanix.dtsi   |  2 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  7 +--
+ .../arm64/boot/dts/allwinner/sun50i-h616.dtsi | 61 +++++++++++++++++++
+ sound/soc/sunxi/sun4i-spdif.c                 |  5 ++
+ 7 files changed, 85 insertions(+), 9 deletions(-)
+
 -- 
 2.39.2
 
