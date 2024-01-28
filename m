@@ -1,137 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE8C66B25;
-	Sun, 28 Jan 2024 16:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FC9664AA
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 16:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706458445; cv=none; b=upebztMDOuMnEYjtQk2mm5jN/20GajPwr5GP2L0Mn8JkwZJ5ZjWVwn3Es0shuwhLAgOLt2/nxcL1flbchREgkMrJIMwUgSqeq4DI4YCt3anGhK2Hl2nV9oeTs/fchFTTxWSyJGzqU9aha5Q+kdSAjfL9zUAs2EOqio3lj/s+JZM=
+	t=1706458446; cv=none; b=BznbUERlmnMlgsDE1FcZwmpSnE8aWaf1y0x1D4RWye0JMD1klfMLf8Q2CB+HiXbCw99zhMu/JAtLxHCfU7eXoI35C8S7xPo3M3ODg+VkovR6hOzjBjg7jIbnYqhNm4vlKen9CAPyMu+wwWZo2G9ayeYCwVszWDH/qLUZV9jibSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706458445; c=relaxed/simple;
-	bh=eshXjJ2KbJhZ73e5khc8Rpg/K4834h8pZv6O+OOTfP0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EEL11dE/IXAvJhMr4kLfb4kXaBJ4aw3LSPCpoY6X3gX9z3dBCR7TkDOIxYldICapJYgWj9ksEDJ5u6RV8wc5/OnVGLMgOTkbaBrXPdd3FzCVFsCw8RX7+sJRsd7PLrCuzFmOkz4J9PFRYbgkUw8tDjlLawt0vLFjKgMBBGWib04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwXzjTTM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706458446; c=relaxed/simple;
+	bh=SvazET5cvoizwnCav2UmC+F26NoJafLS2DPv3VLtt5g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VfMTHjaWsyrCsLHganEhun9RNNtYvE4A3XCb4KUJ1YdtSj8BJpIWGKVuzF3difoOkwTJOeM/3L26QkKNxt+IIxxJiAOGhbvmhOMy6YOt+jx7z/qTZbV+12S5u34fMlrwimJgvGbLpjCc5x3nM3OoeZIOeWd3iqbpOZCvaqnEzlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=O64EN5E0; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwXzjTTM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F412EC43390;
-	Sun, 28 Jan 2024 16:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706458445;
-	bh=eshXjJ2KbJhZ73e5khc8Rpg/K4834h8pZv6O+OOTfP0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TwXzjTTMCKt6xLMtnQgeehAo2nz5WzhrLRd92X1XlMNa6BTRd9DFpbrtXpJvrAkOW
-	 Aug1O7qFnd12UflyQ5VGWKUBSu0cmeHpEZf7WxDHOo8r7ZOggLJ7zA6D4h6Zc+Jblm
-	 eBZS5mbBVL0aoLBbT063Zi83Xm1Rhi5bUo5Q4jPoeVyKL0VDBEiisyq63Po1frn5mc
-	 4hLYttuLJgc5lcGdviCTlEk44LYIe0Eo4V6BAR8thB+/RPwq+0N7N3Gz+628nmltlp
-	 om1UA4/Qzp5J6p8nE3JcyPpF0j+zcPdOsyjQK4IPH6cCV1JMKmm6nAdxp3j9fjt6VA
-	 msorE4nYwuToA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Xiaojian Du <Xiaojian.Du@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	Hawking.Zhang@amd.com,
-	Felix.Kuehling@amd.com,
-	tao.zhou1@amd.com,
-	ikshwaku.chauhan@amd.com,
-	mukul.joshi@amd.com,
-	shiwu.zhang@amd.com,
-	mario.limonciello@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 28/31] drm/amdgpu: Fix with right return code '-EIO' in 'amdgpu_gmc_vram_checking()'
-Date: Sun, 28 Jan 2024 11:12:58 -0500
-Message-ID: <20240128161315.201999-28-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240128161315.201999-1-sashal@kernel.org>
-References: <20240128161315.201999-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O64EN5E0"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6860ff3951aso15906136d6.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 08:14:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706458443; x=1707063243; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4bSToxy5CAGcJZTlMmZs/1RykWirU/TWtFNPtD7p0tY=;
+        b=O64EN5E0rBu5u4XKgHNHHAbLjI0PydCqWCdlY+Ny7MjoSSNRA9M4mwWWTNgtUABPe0
+         eUNOmuXrxg/Lkk2WCkI9KnV8kPS8YlaY4seik0pRlu2ejGEj++T8DKKWP7rl5bGBE6e7
+         QulReKcKmtGSBgMG7fCMGvrIxfLo2VVXxsrDY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706458443; x=1707063243;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4bSToxy5CAGcJZTlMmZs/1RykWirU/TWtFNPtD7p0tY=;
+        b=samOPZBPuZiPzw9PVhTNRE9P6aB2Xug7Gdb+o/qLBqDoYmO2HomorxhwUDxPv+GaxO
+         eI567uW17qv808XuSTtHrnAUHo2/6acRwh9v2M894GNmePOG6U9XpuFA1vETImMPNu81
+         0WFtRTQxxJmMa5JOFrhWAB6GN2v6pDDj/eUv+eSVqik+KVCmZxdZn9G3VA2em/+mid42
+         JaeHXvC6pN9zsnDYFsnxh8Z8joIir88s+K2NJBcP0W3Rki87tN5/KxfFeiUwfNyxI8NR
+         EdVvJ0foVgR/iKmULAnw3KOgW0igquR5awWyc3KoMywcWwhFAB2h+N0abdAOYVPMoUTK
+         HPbQ==
+X-Gm-Message-State: AOJu0YwFYZqbHrDFfZnk+UhgCjBFPY97OofM+DbCcgyKgfbwFid8CIJ7
+	pXQfQXrdgpxtNKH/V97YXD8OQjL2cbdLMkcYSxNhFGSDFvXmWdjY8NXtxZ0zyA==
+X-Google-Smtp-Source: AGHT+IGPj/bWw10peow8+ThqZ4AksGoB8+fhu6FGjZno0b2aG69izlBUsWRzjFmhWV39AxgNwh/u1Q==
+X-Received: by 2002:a05:6214:301e:b0:685:f795:dfc2 with SMTP id ke30-20020a056214301e00b00685f795dfc2mr4607832qvb.86.1706458442616;
+        Sun, 28 Jan 2024 08:14:02 -0800 (PST)
+Received: from denia.c.googlers.com (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
+        by smtp.gmail.com with ESMTPSA id dz11-20020ad4588b000000b0068c493426edsm566640qvb.104.2024.01.28.08.14.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jan 2024 08:14:02 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Subject: [PATCH 0/2] media: Fix build warnings with gcc-11
+Date: Sun, 28 Jan 2024 16:13:55 +0000
+Message-Id: <20240128-gcc-11-warnings-v1-0-52bbdf492049@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.14
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEN9tmUC/x3MQQqAIBBA0avErBtwJMG6SrQQHW02FgoVhHdPW
+ r7F/y9ULsIVluGFwpdUOXIHjQP43eXEKKEbtNKTIm0xeY9EeLuSJaeKZIIzUc/Wmgi9OgtHef7
+ jurX2AWVPfVxhAAAA
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.3
 
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+gcc-11 throws some warnings, most of them are false positive... but with
+a simple refactor the code looks nicer and the warnings are gone.
 
-[ Upstream commit fac4ebd79fed60e79cccafdad45a2bb8d3795044 ]
-
-The amdgpu_gmc_vram_checking() function in emulation checks whether
-all of the memory range of shared system memory could be accessed by
-GPU, from this aspect, -EIO is returned for error scenarios.
-
-Fixes the below:
-drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c:919 gmc_v6_0_hw_init() warn: missing error code? 'r'
-drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c:1103 gmc_v7_0_hw_init() warn: missing error code? 'r'
-drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c:1223 gmc_v8_0_hw_init() warn: missing error code? 'r'
-drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c:2344 gmc_v9_0_hw_init() warn: missing error code? 'r'
-
-Cc: Xiaojian Du <Xiaojian.Du@amd.com>
-Cc: Lijo Lazar <lijo.lazar@amd.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Suggested-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+Ricardo Ribalda (2):
+      media: nxp: imx8-isi: Factor out a variable
+      media: usb: s2255: Refactor s2255_get_fx2fw
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
-index d78bd9732543..bc0eda1a729c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
-@@ -876,21 +876,28 @@ int amdgpu_gmc_vram_checking(struct amdgpu_device *adev)
- 	 * seconds, so here, we just pick up three parts for emulation.
- 	 */
- 	ret = memcmp(vram_ptr, cptr, 10);
--	if (ret)
--		return ret;
-+	if (ret) {
-+		ret = -EIO;
-+		goto release_buffer;
-+	}
- 
- 	ret = memcmp(vram_ptr + (size / 2), cptr, 10);
--	if (ret)
--		return ret;
-+	if (ret) {
-+		ret = -EIO;
-+		goto release_buffer;
-+	}
- 
- 	ret = memcmp(vram_ptr + size - 10, cptr, 10);
--	if (ret)
--		return ret;
-+	if (ret) {
-+		ret = -EIO;
-+		goto release_buffer;
-+	}
- 
-+release_buffer:
- 	amdgpu_bo_free_kernel(&vram_bo, &vram_gpu,
- 			&vram_ptr);
- 
--	return 0;
-+	return ret;
- }
- 
- static ssize_t current_memory_partition_show(
+ drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c | 8 +++-----
+ drivers/media/usb/s2255/s2255drv.c                | 7 ++++---
+ 2 files changed, 7 insertions(+), 8 deletions(-)
+---
+base-commit: 615d300648869c774bd1fe54b4627bb0c20faed4
+change-id: 20240128-gcc-11-warnings-15da5f29885f
+
+Best regards,
 -- 
-2.43.0
+Ricardo Ribalda <ribalda@chromium.org>
 
