@@ -1,35 +1,43 @@
 Received: from a.peacevolution.org (a.peacevolution.org [206.189.193.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3BC2E62B;
-	Sun, 28 Jan 2024 20:48:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473252E832;
+	Sun, 28 Jan 2024 20:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.193.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706474925; cv=none; b=pMpOLPp22r9kW7iidKxC+DSDDMKOq5DyfG72a9srPMStad8E/P+bK3Lk6IAxiCwN0sGLR1BnLXezDdrI/o7fwOYitBp0KMFWnu1zFae7T0jwV6xSbCYYMAZWZZkbEbiwRXPbkF8CA+r7kExGgE6ChplFKhxMsicO9dtGTZu0vmI=
+	t=1706474926; cv=none; b=aoyJQ7kZ64KPauof89tLXAZvdXwq8JqvHihMdFG4Wuw1L2dFlLQLL0cmZn3v5YkGRPn3xH+F/tGfX8wLsQTAw3LRCly0msb3FShPhoD8YyKM3nv+4AilkSFpbZcKmNTwo0UpMeA1VI99KrY3p+4Bmuqp+EgiTktSgdl6a4P/8tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706474925; c=relaxed/simple;
-	bh=DKGeUasBS6xTyhYqe+UExGr24G9PuFPZv+fUiAffDj4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oWAqEMi8WW6rfSWVRxKzLSIJuuvb+lm69zj7EVEwla80TdItQHq8Zc0tu1bSs8g4RS45rS5jHauSrVdCK+Ft+WJTZkjmVmzhpbOrykVP97Xn96lbD7ck8TTjdJQ8VafEq2WK/lQWX16dLPH4kpsZZluU7/LM9plaezLMWQChNcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=Q7uXlMIy; arc=none smtp.client-ip=206.189.193.133
+	s=arc-20240116; t=1706474926; c=relaxed/simple;
+	bh=ag9tr2tiU3unZXuvPUm4zcESACgalTxlviYKmkloah4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nxIMx0TR3bZVBwcdG5Z/rBrBzHFz1UYForxoh8XoH8fiVZsnzgXPz6ipZ43jrpwvKTjsVT9E7R1MkW/L9uQGo2Frus43hwBTwhvqmCC/55KSLdIbuug8E1JmPiIH6JXyb6/RsqtPsG+TH+kh0JCdloTfGE4e9dQ1LiO9W3mzbSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=bFmkZPm/; arc=none smtp.client-ip=206.189.193.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peacevolution.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="Q7uXlMIy"
+	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="bFmkZPm/"
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-	by a.peacevolution.org (Postfix) with ESMTPA id B11E846366;
-	Sun, 28 Jan 2024 20:48:35 +0000 (UTC)
+	by a.peacevolution.org (Postfix) with ESMTPA id 414794653B;
+	Sun, 28 Jan 2024 20:48:42 +0000 (UTC)
 From: Aren Moynihan <aren@peacevolution.org>
 To: linux-kernel@vger.kernel.org
 Cc: Miles Alan <m@milesalan.com>,
 	Ondrej Jirman <megi@xff.cz>,
 	Aren Moynihan <aren@peacevolution.org>,
-	Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
-	Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	linux-leds@vger.kernel.org
-Subject: [PATCH 1/4] leds: rgb: leds-group-multicolor: allow leds to stay on in suspend
-Date: Sun, 28 Jan 2024 15:45:07 -0500
-Message-ID: <20240128204740.2355092-1-aren@peacevolution.org>
+	Chen-Yu Tsai <wens@csie.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Subject: [PATCH 3/4] arm64: dts: sun50i-a64-pinephone: add multicolor led node
+Date: Sun, 28 Jan 2024 15:45:09 -0500
+Message-ID: <20240128204740.2355092-3-aren@peacevolution.org>
+In-Reply-To: <20240128204740.2355092-1-aren@peacevolution.org>
+References: <20240128204740.2355092-1-aren@peacevolution.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,65 +46,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Authentication-Results: auth=pass smtp.auth=aren@peacevolution.org smtp.mailfrom=aren@peacevolution.org
-X-Spam-Level: ****
-X-Spamd-Bar: ++++
+X-Spam-Level: **
+X-Spamd-Bar: ++
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=peacevolution.org;
-	s=dkim; t=1706474916;
-	h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding;
-	bh=lb0m4VN+fLcRwTMjHhUiN4pOHzBM3BNlNUXpNwfCjmE=;
-	b=Q7uXlMIygUiuEL02z/PKkAuY3qqvE7csYD6Ap3VSRKMhAcg9XvsTxqUCfzt1iXgwsFM/dA
-	OjBDHPlh47mATnlAVVPe8P9+k/GJS+gEBeeDeytbBimKfDq+phqSniMkY4TWN7GlpCfmcI
-	uWHqkBDSAjOl2f0CL/XYL7DgnPb4WCk=
+	s=dkim; t=1706474923;
+	h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding:in-reply-to:references;
+	bh=LF65+XU8LGrrA9Zpn4EYhMkrdltaZDZoBBCOReuYI8w=;
+	b=bFmkZPm/+Yyttzt/b7BF92FqLnBgnS1PONw3BdS3t253B/ffa43+54TaQ8sg3Rb4Ig/Wzo
+	Paho7iUNgddGj8+9a/Thzyj9W38GTjreOru4TPAdIPqVdQGr8aeSPsNbTA5wIMUqVQiH0F
+	fn/n6G+oE80ZW9yQmoCUfHCDouUFUd8=
 
-If none of the managed leds enable LED_CORE_SUSPENDRESUME, then we
-shouldn't need to set it here. This makes it possible to use multicolor
-groups with gpio leds that enable retain-state-suspended in the device
-tree.
+The red, green, and blue leds currently in the device tree represent a
+single rgb led on the front of the PinePhone.
 
 Signed-off-by: Aren Moynihan <aren@peacevolution.org>
 ---
 
- drivers/leds/rgb/leds-group-multicolor.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi    | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/leds/rgb/leds-group-multicolor.c b/drivers/leds/rgb/leds-group-multicolor.c
-index 39f58be32af5..194c6a33640b 100644
---- a/drivers/leds/rgb/leds-group-multicolor.c
-+++ b/drivers/leds/rgb/leds-group-multicolor.c
-@@ -69,7 +69,7 @@ static int leds_gmc_probe(struct platform_device *pdev)
- 	struct mc_subled *subled;
- 	struct leds_multicolor *priv;
- 	unsigned int max_brightness = 0;
--	int i, ret, count = 0;
-+	int i, ret, count, common_flags = 0;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index ad2476ee01e4..6eab61a12cd8 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -39,21 +39,21 @@ chosen {
+ 	leds {
+ 		compatible = "gpio-leds";
  
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -91,6 +91,7 @@ static int leds_gmc_probe(struct platform_device *pdev)
- 		if (!priv->monochromatics)
- 			return -ENOMEM;
+-		led-0 {
++		led0: led-0 {
+ 			function = LED_FUNCTION_INDICATOR;
+ 			color = <LED_COLOR_ID_BLUE>;
+ 			gpios = <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 */
+ 			retain-state-suspended;
+ 		};
  
-+		common_flags |= led_cdev->flags;
- 		priv->monochromatics[count] = led_cdev;
+-		led-1 {
++		led1: led-1 {
+ 			function = LED_FUNCTION_INDICATOR;
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			gpios = <&pio 3 18 GPIO_ACTIVE_HIGH>; /* PD18 */
+ 			retain-state-suspended;
+ 		};
  
- 		max_brightness = max(max_brightness, led_cdev->max_brightness);
-@@ -114,12 +115,15 @@ static int leds_gmc_probe(struct platform_device *pdev)
+-		led-2 {
++		led2: led-2 {
+ 			function = LED_FUNCTION_INDICATOR;
+ 			color = <LED_COLOR_ID_RED>;
+ 			gpios = <&pio 3 19 GPIO_ACTIVE_HIGH>; /* PD19 */
+@@ -61,6 +61,13 @@ led-2 {
+ 		};
+ 	};
  
- 	/* Initialise the multicolor's LED class device */
- 	cdev = &priv->mc_cdev.led_cdev;
--	cdev->flags = LED_CORE_SUSPENDRESUME;
- 	cdev->brightness_set_blocking = leds_gmc_set;
- 	cdev->max_brightness = max_brightness;
- 	cdev->color = LED_COLOR_ID_MULTI;
- 	priv->mc_cdev.num_colors = count;
- 
-+	/* we only need suspend/resume if a sub-led requests it */
-+	if (common_flags & LED_CORE_SUSPENDRESUME)
-+		cdev->flags = LED_CORE_SUSPENDRESUME;
++	multi-led {
++		compatible = "leds-group-multicolor";
++		color = <LED_COLOR_ID_RGB>;
++		function = LED_FUNCTION_INDICATOR;
++		leds = <&led0>, <&led1>, <&led2>;
++	};
 +
- 	init_data.fwnode = dev_fwnode(dev);
- 	ret = devm_led_classdev_multicolor_register_ext(dev, &priv->mc_cdev, &init_data);
- 	if (ret)
+ 	reg_ps: ps-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "ps";
 -- 
 2.43.0
 
