@@ -1,118 +1,77 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8535B647
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 06:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D5EC144
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 07:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706425045; cv=none; b=uM4hq5DJG40eXqANjc1bvLICASPhDHJoBkiAZleuw2/LePHu0VkqE13R80gd/Nn1hbiNH8PaY7hTeYy6LyFTZyv+nQXRHzebmrisaRK5ey0/rwFfIHVka1V3PD0h4V6dfBBRv4R/M9stt/0ONY0h7AFOorSaTLWEKN93HAnBb1s=
+	t=1706426285; cv=none; b=YWBUFpF/Cjxqxu3U/VR8vNjch7xl4IYFQZWlPfRPJrvSPDd11FEdMCevihhaNxJ+MTWqKu/iNfjA0vW4Uo2+j0hahBn3bPTH2gp8TqGqTiTMALB5b9l7huI7m2PvrI8cWkAzlaFgjJx5FUPWYvshFnCnYdJewsM/htxOV4ZLZrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706425045; c=relaxed/simple;
-	bh=jlspB79IvwxTucUZBcNzO6WFxpeixd1p/ZveQ6ovbdk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q0Av8ptgTxvLYZSbxmu9uy3VJPf9WH3zDQnolDhODi3WwZSv7XslDSwrEarNWXzfbAWE04BnX7QrNYD6dhdRYenBNfg5Y679T0+alUcXtH7Z5UXYFopN9avMScMpCrDdnbGmmdPy5sv3IZqarzIKlmqiREy/ZkTf1Qiey6SE4N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Irg0zpC+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Irg0zpC+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=NUnz1RMN/0D0LFDxgrSiED0Vho/TqpFn9Fpqyv+1XrU=; b=Irg0zpC+YpxRLe0gWjljAgl3wQ
-	UiqYDmGyFeTAAIq1XcLQ4W9GjJ08UbUGUqUDqETWgrhvvEtFrtHxLfGsQsNNuFYWQhiAFN1GyhzD3
-	8XbbzRqZLqD6YNYqW3wfeq5jYt0tPfHp+RMgq6d5Nf33saLXCjjL1oxhqp9PcYdS3fevfHo+/Lbp/
-	4RZI1BQ/IOqv0Lq1zZrcOz8+LXLy0cVC7T4DGamwC/U4fERd6f5h25AdTod3ak/mamiQZ0hk4zrVR
-	tybEHAz0YtTZtsqXBxcKLzFZshgoSKaWF3h3O3JTCGMyotQyHFhujZquictNbxvnRg60EsQX+UkHp
-	6diIo4Jg==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rTylU-00000002HtH-3YLR;
-	Sun, 28 Jan 2024 06:35:36 +0000
-Date: Sun, 28 Jan 2024 06:35:36 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: zhiguojiang <justinjiang@vivo.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH] mm:vmscan: shrink skip folios in the exiting task
-Message-ID: <ZbX1uEbrN-lwnnaW@casper.infradead.org>
-References: <20240124124308.461-1-justinjiang@vivo.com>
- <ZbEOrim8tjMXB5os@casper.infradead.org>
- <726d018c-01d0-48b3-870b-c63fb06eb0d0@vivo.com>
+	s=arc-20240116; t=1706426285; c=relaxed/simple;
+	bh=D6ZyoKTF6L3wn7H4QjFvGhyvGvKbYTYFoHnQj51K7pA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=eHdH5n94EWoB0DFQ6OtSN60mUdZmbQpzitFILhicYhYQhutKHckZ8hAtdMwEZa7jiZF5V/8McRW48KOd0Wc1DJZe8vDSYT3NlbIOf/pRTJFPxYAM2kT2NHno97XXRafnxPP4UViOs45C6HzxyPxRMvaXL3AUnkG5rxGFjEtDEz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3618c6a1cceso14980455ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 23:18:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706426283; x=1707031083;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ul8wmNFSCMVhgffO/ITwaHvUKPduHDAXYkg9gcF38LQ=;
+        b=WIFlKp3EJbslXdpoTYrz3XmShW2UhF82j9VsfvlEevNuZQE3zA60iHfCf/mbVQ/YxQ
+         jF2ahcZn8M711kFFp1EpFeOXsgQHIhBYWb79a0Ikob0HgRYj5klukOhCTNHFa8JTCXhv
+         62QJp9ZywoJNyINNL8JMV1m8EHLOZN4+hHJ2BtzsFuN8w9zuoozw+NNSfIJRa+FF1Brk
+         sZOYNdrKwgztdxfHHc6Z72pJUwT7biH0yKSFGMtJVRXEt++D3DyjOqu4m2q7j1qjCcAa
+         giRP8nF+/DzXXp9NbfVKoM2r898mETbzVI5g9g6bd18EEP1L/XK31F5sFpZkGPUeQDuk
+         m6kw==
+X-Gm-Message-State: AOJu0YwjwOKOUky62vYs2euVrSWhW98C1jLQZIcpt5SUFetWk7pAD3eA
+	K1uGOnJdZn7pdbZEXpO8TwhRwkegKtvWWnEKklQizGL4XcpsMJj6wy66UIL1Kbnk5Jou677+GeL
+	LFzVn4TRRkiEcSjvNyu4+byTUMyZoDoyCS5dY9kltqG1tLsA3HWYBxYQ=
+X-Google-Smtp-Source: AGHT+IE87ax8hL/iicqYU4HAN2acMDSk8ljjHL8DXHbMp3/VT5KWOCFtGyYxsWaFr43s1p6HNGKprBlfxx1Usk9EN270xb77Heb0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <726d018c-01d0-48b3-870b-c63fb06eb0d0@vivo.com>
+X-Received: by 2002:a05:6e02:1808:b0:361:9a68:4891 with SMTP id
+ a8-20020a056e02180800b003619a684891mr353817ilv.3.1706426283208; Sat, 27 Jan
+ 2024 23:18:03 -0800 (PST)
+Date: Sat, 27 Jan 2024 23:18:03 -0800
+In-Reply-To: <000000000000c6ec640601d95e6c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000072355b060ffc546e@google.com>
+Subject: Re: [syzbot] [kernel?] general protection fault in timerqueue_del (2)
+From: syzbot <syzbot+500a5eabc2495aaeb60e@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, luto@kernel.org, 
+	peterz@infradead.org, reiserfs-devel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, yukuai3@huawei.com, 
+	yuran.pereira@hotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 25, 2024 at 09:34:53AM +0800, zhiguojiang wrote:
-> > > In the scenarios of the low memory system and mutil backed-applications,
-> > > the time-consuming problem caused by shrinking the exiting task's folios
-> > > will be more severe.
-> > What testing have you done of this patch?  How often does it happen?
-> > Are there particular workloads that benefit from this?  (I'm not sure
-> > what "mutil backed-applications" are?)
-> 1 Yes, this patch has been tested.
-> 
-> 2 When the exiting tasks and shrink_inactive_list occur at the same time,
->    the folios which shrink_inactive_list reclaims may be the exiting tasks's
-> folios
->    in lruvecs. And when system is low memory, it more likely to occur,
-> because
->    more backend applidatuions will be killed.
->    The shrink_inactive_list reclaims the exiting tasks's folios in lruvecs
-> and
->    transforms the exiting tasks's anon folios into swap memory, which leads
->    to the increasing load of the current exiting tasks.
+syzbot suspects this issue was fixed by commit:
 
-Ah, we're talking about an OOM scenario.  OK, that makes some sense.
-You should have mentioned that in the patch description.
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-> 3 This patch can alleviate the load of the tasks exiting process. This patch
->    can make that the exiting tasks release its anon folios faster instead of
->    releasing its swap memory from its anon folios swap-in in
-> shrink_inactive_list.
-> 
-> 4 "mutil backed-applications" means that there are a large number of
->     the backend applications in the system.
-> 
-> Thanks
-> > 
-> > And I do mean specifically of this patch, because to my eyes it
-> > shouldn't even compile.
-> Has been tested.
+    fs: Block writes to mounted block devices
 
-That's odd.  I thought GCC used to complain about
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=172204dfe80000
+start commit:   4b954598a47b Merge tag 'exfat-for-6.5-rc5' of git://git.ke..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fa5bd4cd5ab6259d
+dashboard link: https://syzkaller.appspot.com/bug?extid=500a5eabc2495aaeb60e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169efdf6a80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13733f31a80000
 
-	long x = 0x100000000;
+If the result looks correct, please mark the issue as fixed by replying with:
 
-but it does the right thing.  Except on 32-bit where it'll say
-"warning: integer constant out of range".
+#syz fix: fs: Block writes to mounted block devices
 
-In any case, the number you chose is not going to work on 32-bit systems
-or on ARM or x86.  It conflicts with protection keys on x86 and MTE on
-ARM.
-
-We can do it without any new magic numbers.  I'm not sure this is a
-great approach, but this should work:
-
-+++ b/mm/rmap.c
-@@ -840,6 +840,12 @@ static bool folio_referenced_one(struct folio *folio,
-        int referenced = 0;
-        unsigned long start = address, ptes = 0;
-
-+       /* Skip this folio if it's mapped by an exiting task */
-+       if (test_bit(MMF_OOM_SKIP, &vma->vm_mm->flags)) {
-+               pra->referenced = -1;
-+               return false;
-+       }
-+
-        while (page_vma_mapped_walk(&pvmw)) {
-                address = pvmw.address;
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
