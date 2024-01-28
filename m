@@ -1,107 +1,90 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D842838D
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 00:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88E51362
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 00:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706400783; cv=none; b=adedFFDg7Kf2WErz8afqfbx7UrKhd9bUYbtoxlSm46pPyrUH32jf1c2wRVkOHmo4x2IHJCT6Xvb9Vzg0VmNse0XveJeU4Q6BsV4eNDb5U4IBj19lYPA/zpaEhYlL+6z8UUFJgLK5aQNhDEp4tKeRzuTISjpO14h9o31ZEgLuiK8=
+	t=1706400980; cv=none; b=FTyy2qlCaZrzLShUNxHu5dvgUw+FUjLKVO5PSFQOWa6I8DiG1rF3UJqCm2a5juEVyJTWAAytnH/UJW3+RqdAFlOtB3QWWUXTVIy2yRPOHMmlmGHnOqTXbMNds+kGmQv6V2RMzsWEPZWZFPpheEQyG/VkudhdqGD6/hB/tX5m7so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706400783; c=relaxed/simple;
-	bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
+	s=arc-20240116; t=1706400980; c=relaxed/simple;
+	bh=j+JxCkxm7sKq7EUWqxAMAVKkQ0zzFi+vxNp56Qbb27o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=inUxsmIKKnpgGrXM2rpSbarASeCRHWamtFmYn14NZgRhelD4vdbmxnehCsVQ5GOMuy0NFToquRpXKyXDOp01FoUbwvAgsoYQFeLqdWjHgi+4vnp7lVB7/yU83dcwrj2mLTw0TV+TO3asviawYzhJmNeYTRCcTFiRl9fWGLm/cIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Knd4iKg1; arc=none smtp.client-ip=209.85.128.178
+	 To:Cc:Content-Type; b=n3XUxnEXOf3TtsL2uN2guGjkK8PBGdBZF35CIT/gEA055f9E4MPMIMetGulogddlketiK4Gf8o97/+E5Erxnj5DJohKcaImwppoa+gShn89dL9qGV/scuO9ElqGjSKzNInWuXqPV1YxTOXAdOxFwn7MEM2OmUIeioEEXGZx4qNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AFL0NTA1; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Knd4iKg1"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ff7a8b5e61so15216057b3.2
-        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:13:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AFL0NTA1"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5ff7a098ab8so16499957b3.3
+        for <linux-kernel@vger.kernel.org>; Sat, 27 Jan 2024 16:16:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706400781; x=1707005581; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706400977; x=1707005777; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
-        b=Knd4iKg18Z4f0c8GB15trf0zkYf10XvmbfR5oXYzrrhmQUjpmU9uoDvHZvi3hWtwUy
-         pallI8zTdUyh0weWLu1Gfuer47d+3tUawW4tJjSrfmOBJ4asFkkNwGp1Gz2EAPtcS1LL
-         x5goR1nqRi6Ib+VCLFygbtkPW3Tqao/24HSqOOrLerpHgX9LrebCCLT3IzfntwHLSf/l
-         5OaJ+ZMj6QUT8rjl4XuTnEX9B3oe9trxxKOzpFCejA/2s/x3+TNkpjvDiS5kjl0PQt9y
-         d8nCeUyjIPsnwz5gh5leGsrloqmj4Uhpfy16wAUhrvrdWelLB9/4ua7VfTzuB/2tYMoJ
-         5CIg==
+        bh=Okg1vO1j4FYoqrEXhHbzMFKSp7IGpxrooy4PaFetwPE=;
+        b=AFL0NTA1DcxII6tzf8OKwD8eQuaqZOXbqNBkeFpjC94ELa3nmLoaatR15sI/Mzr2eb
+         b5MMlQfpa4wpMrR/8AOFnIRUfnBSIPZNM3HkLXAuXELy4O34rwotfvCPjvVRIIy98dHk
+         vV9k+Whu1pOIO+vzTmcRYscG7UdswUfT2B8ZZ7aC3gwYvDX6AYQWGvAeGkRt7UXngvw/
+         9rhaH++3FWa66SvYq7dkd4SGwvnsHvebrM7ecRjuryQV3vY6+7G9N7NEzy+uGZJNZ2QS
+         BkmHvorTcAxKoK/1FKDnISHrYQXMSJZgiB/sTKxR1NF8EF8+PFuCAc7jeZSO8SNJgiQM
+         ME4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706400781; x=1707005581;
+        d=1e100.net; s=20230601; t=1706400977; x=1707005777;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
-        b=juElmZNWJJbv0mpk8JTLWBPdU2GgV3v9onx5jWym3YbhfVmX0J1g3cvWryTiJrJMD1
-         2ECRsKw66po+2tce1EZOSjnSsLhNUth/WJYWb2nSwuuA2XeC6+t2M1MZOlm+/khBTw1T
-         skvOAzZgycOp3eU5rkwgYnwsX9QD9Sp6DIoTkLo99LHPJDDjJSycn8cwSLN3ifNdmRVH
-         H/loaHXBYSEaTRZl7c7wgI+/c7nApNK1/3plYsWnOKv0lPJCt+eLDkivagStqUxCxcyQ
-         lYuu9QxnCcQgFy192Ybm6nDxvv1aqFPdn1hjzrxt4pKVWZgnbG/7uHSrxL2MfbcC2N1b
-         AUGQ==
-X-Gm-Message-State: AOJu0Yyur8ME4ykmOSWbZbRatIEmadDUEpzl0Ol6DwdBc3cYoc6otKQI
-	YQbbcombmnTS0SpBua25v6mbP6fgTszQy9tjkTVmo8WuyIUGw8c4jOy/LmEDLnSNQ4LjTfMtl3A
-	6WGv1qhoF16dLbT+UezReHlnXDsa8+acpy8ItjQ==
-X-Google-Smtp-Source: AGHT+IEZVSZUzzjxzZn0Av2/7INObuTua3Mia5HKhwhoo7tJ2m/wqcv1w98aBP4XbcXGiLtyHqQ0OWN/g5UmL4382Eg=
-X-Received: by 2002:a81:4426:0:b0:602:c9ad:f979 with SMTP id
- r38-20020a814426000000b00602c9adf979mr1944880ywa.75.1706400780839; Sat, 27
- Jan 2024 16:13:00 -0800 (PST)
+        bh=Okg1vO1j4FYoqrEXhHbzMFKSp7IGpxrooy4PaFetwPE=;
+        b=OejI3J5EliCgLq/+IvD3rFa2Dj7sj33qIX/URHLqBjEBHmmmY2HdjfwgA4S4C6zWQv
+         gMsxuw6u5kr+8pXI1ZrZ7tklaPkGWv9pYqyKsjEbnZNq2AJOHFjfxFQvUq1rAxENva7m
+         Sam47dayYr3huQ1dfRe5YB4kcyU9NvQSFqHnNW/T1rTDdPqfw3iGPtVKvTzzk03c1L50
+         LDsJL2pRWiXdOrkbk5ztJOqh1ahkUteA10kKzMWAfUsK/dXj/6MjPblpU70Hxj5920Fv
+         4TGo5LmXPnThe3ulWv1ulW3IuZ3S2AWlQyotYh7JNd+V+uGOrxsrM5wj35xmgt4fkjUY
+         Zupg==
+X-Gm-Message-State: AOJu0Yx4SMJmZ2ZGlnvmst3J69pWhC65xFZqrbHESwbSSl+qyE7txLUm
+	tTUUaRB2IzJKCdaL0v6I7qxWtyINm0ot8gxJaflvH6wlemeboTe0c1iLFIAa7LNuU08GMs759MD
+	OcLP3sEWVqK/NNBpCFHS8rgR5/u+EKjkM8H3eJA==
+X-Google-Smtp-Source: AGHT+IGwmGgY1ob0uH5QlnJBFG56d3EExCZTVCMfztOEBi1dd1S0zZOOU4ZeO4Sz3B1u3wcOKCmKCWeNC8YM5Hl5v7c=
+X-Received: by 2002:a0d:f4c3:0:b0:5d7:2c6b:623 with SMTP id
+ d186-20020a0df4c3000000b005d72c6b0623mr2487594ywf.39.1706400976785; Sat, 27
+ Jan 2024 16:16:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com> <20240116074333.GO5185@atomide.com>
- <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
-In-Reply-To: <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
+References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com> <20240121-pinctrl-scmi-v3-6-8d94ba79dca8@nxp.com>
+In-Reply-To: <20240121-pinctrl-scmi-v3-6-8d94ba79dca8@nxp.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 28 Jan 2024 01:12:50 +0100
-Message-ID: <CACRpkdYUVbFoDq91uLbUy8twtG_AiD+CY2+nqzCyHV7ZyBC3sA@mail.gmail.com>
-Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to suspend_noirq/resume_noirq
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Tony Lindgren <tony@atomide.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
-	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
-	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Date: Sun, 28 Jan 2024 01:16:05 +0100
+Message-ID: <CACRpkdaoBgcYToh2Za9k6gek=MX5Q1YZEoy+MrE-oL3t0UhJpg@mail.gmail.com>
+Subject: Re: [PATCH NOT APPLY v3 6/6] pinctrl: scmi: implement pinctrl_scmi_imx_dt_node_to_map
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	AKASHI Takahiro <takahiro.akashi@linaro.org>, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 19, 2024 at 6:01=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> On 1/16/24 08:43, Tony Lindgren wrote:
-> > * Thomas Richard <thomas.richard@bootlin.com> [240115 16:16]:
-> >> Some IOs can be needed during suspend_noirq/resume_noirq.
-> >> So move suspend/resume callbacks to noirq.
-> >
-> > So have you checked that the pca953x_save_context() and restore works
-> > this way? There's i2c traffic and regulators may sleep.. I wonder if
-> > you instead just need to leave gpio-pca953x enabled in some cases
-> > instead?
-> >
->
-> Yes I tested it, and it works (with my setup).
-> But this patch may have an impact for other people.
-> How could I leave it enabled in some cases ?
+Hi Peng,
 
-I guess you could define both pca953x_suspend() and
-pca953x_suspend_noirq() and selectively bail out on one
-path on some systems?
+thanks for your patch!
 
-Worst case using if (of_machine_is_compatible("my,machine"))...
+On Sun, Jan 21, 2024 at 11:18=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
+
+> -obj-$(CONFIG_PINCTRL_SCMI)     +=3D pinctrl-scmi.o
+> +obj-$(CONFIG_PINCTRL_SCMI)     +=3D pinctrl-scmi.o pinctrl-scmi-imx.o
+
+I think you should probably create a sub-Kconfig option for this file.
 
 Yours,
 Linus Walleij
