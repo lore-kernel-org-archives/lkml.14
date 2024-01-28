@@ -1,36 +1,36 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105F23C699;
-	Sun, 28 Jan 2024 20:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B4B41C73;
+	Sun, 28 Jan 2024 20:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706472697; cv=none; b=P6lFeD5g+e60jSkOpo0SBaK2cYQgrn5K6xTg99AEHDvLb5cGiyH5o0ExNv92JTa4Yg9gjWVTBujO38DjufDOXUux6Yb628AtXtVlVkDrYIZ2yix88aDTRyGLmG/DdWwXtufT6RJ46K3yYbvE/Nj4xs5JkurWLI93dtCjUhbIhd8=
+	t=1706472698; cv=none; b=ZsQ42ECIfQSJ9JB6Y0kXM6iOyBZFTgeeD8f987SGpIdsxTN0/V8lEOZVupXaBk7tFCX657bs1JnCKyne/CJkNVwnRPxHNs4a1YHitFbrKkj+iSCWvZyMM0ba7rSqo66PJ/S8YJuZX9TdV/Ru+xEVixe6ZpYE5bUoSxWyCFvolCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706472697; c=relaxed/simple;
-	bh=s+C5yRBMXtAg248/XAUH77adEcGlMjvS8LegdnUr0Qo=;
+	s=arc-20240116; t=1706472698; c=relaxed/simple;
+	bh=brs+KzeuIYeo/VPn51BkrIoo6mMzcYsP95CaSI8Cyqs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dOm5hMuo+dm2I8Uq92uwNsfcCJCibyPvLwmE0KO+d1L2NNd19ZXfMz1FS2zwljN3fk6QUOWd/RQSngn6SAtIK2HwRPCM962aOjY7+B2Y7gVDLCxqoauc7Fc2DXnRB0ytwFK8ZRbtK2oh2fa8etsrsqkRpQpzFhex8hLPXAvA2kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=pLkrkDb8; arc=none smtp.client-ip=212.227.17.22
+	 MIME-Version; b=evbzMxYPzXgnlnDANEEC4rGHPWem5V8zQCDtn0NtpHZmw3wVZdrHOeampCwGXjRhC8y+IlcaUgonKmx51ssvnKNQqQ+40QPw/VOTNDGF+TtMp8BH10X5JC9+6OD7sGCkFwmoqs+pn3YSECqL9CMfxNlIptp92OIjBme8iu4hoy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=p9N4VS6T; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="pLkrkDb8"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="p9N4VS6T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706472681; x=1707077481; i=wahrenst@gmx.net;
-	bh=s+C5yRBMXtAg248/XAUH77adEcGlMjvS8LegdnUr0Qo=;
+	s=s31663417; t=1706472682; x=1707077482; i=wahrenst@gmx.net;
+	bh=brs+KzeuIYeo/VPn51BkrIoo6mMzcYsP95CaSI8Cyqs=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=pLkrkDb8Jc0oAEY/WseIA4TLBNGf30xJw/u4CC+fRPlzt1/fJzD2c4y6+ZMplQ25
-	 vBOUqsMtmlqBIcdMGU1y6SURcI5UjkS8BS2D442A0CKluurpfjQbmwxvrX91DDBm4
-	 xjXV+YgNwQmJzsb1kZnZShoajGiBDSx1VdZQld9QB+t/ATDD6C/yadGZSVNanf9Gt
-	 Jitwoo6HvNiye8+awaRen+bLnm88m/v49ex0We912fyhbyjirzJQaw3MO5Ou4vamu
-	 xEVS6y2YIW3jvRzpq9LL991qDmBGhQfn0CjykBvk7pWD/oYGttDd5UXhpEbjinrXZ
-	 dD6/+CFbMS0zTTxU+g==
+	b=p9N4VS6T8VrwoDIQhyxjJFS1gIQDqmoWbKFzaXJ7FSpjkgbfKTGM3/ewnE1xxlOO
+	 52CGUGrGckxainniGgIjWI9pIC9TOsr6VbNikZBQkqTAdBAt44Kf85k7lGAXPpCiw
+	 BPt9xO8hfEJ00y6J7+c/C5cRYMXKeT6FdNqFN+V183yTE85yC/jFNWEZZTQoBIutL
+	 iVjvxPGTyhyfrfUGJZDhBM9mLLLuAWsTai5EPfxyCirZqukHabXaBlgK3BL9eTtb4
+	 064dchEUQEtCX8YULq5Dj4C7ZQTaBzxMJlVtdejq/NS36HsxTaTI7gDHAHM7Cb3NP
+	 GNliornm0xFaz8e/KQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MwfWU-1r9lAZ2Vxa-00y9Dk; Sun, 28
- Jan 2024 21:11:21 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1My36N-1r8vp72Eyl-00zWGb; Sun, 28
+ Jan 2024 21:11:22 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -42,9 +42,9 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	linux-kernel@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V4 06/15 net-next] qca_7k_common: Drop unused len from qcafrm_handle
-Date: Sun, 28 Jan 2024 21:10:50 +0100
-Message-Id: <20240128201059.6259-7-wahrenst@gmx.net>
+Subject: [PATCH V4 08/15 net-next] qca_spi: Introduce QCASPI_RX_MAX_FRAMES
+Date: Sun, 28 Jan 2024 21:10:52 +0100
+Message-Id: <20240128201059.6259-9-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240128201059.6259-1-wahrenst@gmx.net>
 References: <20240128201059.6259-1-wahrenst@gmx.net>
@@ -55,50 +55,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:E/sFtk9/uq2rtDnmVUG7YxQ1S/BpIZ31n091PvTo2DhEWfYuLie
- ThSN5Ix4JmtqDH9NtKKFZYeqY4ONhhmzWfT/C+XB1zmQsbXDlXRLRAQ6XoYi6PcMLO/vvXT
- EEG1wMdvopt3/z3l81wj7qqyf1Eeo6SqdIMCRgTCKFX2kv7iWB2IhPM1mIMdRd1Ya+cQ3a2
- mfW6J8YVhSSyO7mqQ+ihA==
+X-Provags-ID: V03:K1:1aI6hyxVWayTcrdbOb7yY/nFyOSxa78d9MrfQ4Geyxrmfm4OOl0
+ jo+mGZ4R51wU/lbC3R5LiCTVMia9PuXtdvG9EFCIauNbVwYh6q5UfMRKw9y6mLd/DzpGVQ4
+ LbRXGfNU63njrIvI/c+cIDtizFtSflCgdRgE1B8WMN46vpQktF5C97h2MQ/NkzXV2WXfvIE
+ TI4F3K6SGL0p8fshRmIsg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:AWUveRcSymQ=;oKLwGwV5/z4+29d4ar82OFldb8K
- IalBExTsPAA7TFEwSPRWrTzUj8Gnqqbh5pt6eo+qh54LGKPCTg7VHte3/1Fo3ERH1faXjAxx6
- JVR5kiOsWxgiFEH28UitDjiC7UcbdSnfKVCwJswv53qw+oFJPekriRz4UJwxOJId8vXI6dtye
- OiBEkG5DgraAeMpCLkjMFdZq8JfQJBHP0U/cDCEGSNlt7prXU/5LTM2snLPrQ2KmUsOIl5NfN
- Sd2I9iVv5rUhVE1uIaGszPJk+gOxm/ojq+aq0OYta1uYZ8NIHmJfysBFLrhjf4q5rBNTRXgre
- SdviqLOBOi+oNiqAhsCZIAzqJccJBTL/HNiKvNCviZtuNbt7a6JpJRIn9D2vAHfhvMqhBS+oO
- WHvsjillpmt2n4DKjt8h/8xUVL1q4gDt6bqMg+Q/ovHkPu1zAosG4kwYEiJDEzIEjZ1ouZt2Q
- qAfv24zKxYUGVr3/dGdDgGffzXI3L/dSxHKS4V4iiO11e7+fXE3u3bu+TCMO2WKLbGC3ZWkRd
- c865q/yvk/iAn/xRTIrGUM26DSdV0VBvWgG9jVfbsZ5LIuwKqBHUrT4QUj19EkMRSNWuh2AkE
- 1SyN+75YjdvNZYf9C0BGv/RKQAx4pJUWTTEe3JM7vfW7bjW6kuAESfeiJuv8eTRsp60L0Pgop
- t+lo7wFaz8qsFksY542Go48mfEbL2rFG573Xc2aOV3zJtKZtp8fkhk+iO6Pjti9HoQYTAtY44
- j5KvGO+7CHg0/Tn8G05P4Xd21imSxJDqSBot5ojMENZfRzSEa8cYBF47nECKFXBOsAiL3iCIK
- v3LeoNy5oFify3A1URfK8A43UXhIjQRVKyY3fX7Dcl6C8HDduU9tD0ud34hIhk9TmeEBflp43
- YH+u0mbNUZzOVpyQc1h8QS/aHPcPc/ThIkTxwrsaP58GPnes9v5t2qanXubWcE2JbIc2SwVB8
- hYlxVw==
+UI-OutboundReport: notjunk:1;M01:P0:Xbs6vihAokg=;TwnCR9Wkj9Yf9wWnXU7JTQFfjuN
+ j4lLumrIOJdvJ+UDLcQFSjoUwAULG0VuUfqo1qCiqlJxN223c/U4nATZUJEpvSsvDAowQI/IE
+ tMux6eDwbIlnmt65anhHRuuXW+bbSKH4DxYZaf1c8nccAtFug6e3916Hogt7Q9C6+5uaJ7BOV
+ +Lr4WEoDe4C9vSrCvk3n6mJxLlnXayaiOQc5HAEn2Y+iF0fsuN5UcsBNIs0rTxWfSFNZF4NPv
+ QzFsllIFZpzmyG6/7LeDuCjuyQ8ZuxL8qzykHJzBnWVmGCnbzsruvApOJ8bkEyDqv8ukvuiVJ
+ gxJut0S2i2QKp0Mk+KKHe7Nllj/eWMLM3CgMf8c5v0Am+I9hCinLGDUpvyAuwrYrG7/18KB56
+ kc+LmjkBHWWhpVUPRFns3M6993kGPDAwFbNxYMwuQ6QOWcg2Sh3TflrXrGZ6/mwjZCNRcmB2V
+ dcWxUkgG9tdfH1ucQMQ0e9kYXTrzxc7PkMcbet1ZmmehfRXzvU/7i5i1O6VUxAG2NmSF3Ko/u
+ yyQwdvfIrOaN6J7kVbvk5gglnmXojj/wjMALLob9m0H2SqAA6vlmf8COchMFvk4DwbotLyM1w
+ ED5OpaGW3csS3rx3JoW/VFv82Mv3Txb8IWs0Tl34X/0wnG3SrYnXe3Qf4ZfsooEluxYXGUXF6
+ hydq5scQkB+ntcYq6HLZFqXC3iIiiNI4hKGVEAbqdPjFciphhraRn77xEG1S+LKEcQAolhicu
+ +yw1eh94o05v70zGA8VkUiDZdVNMI/Ek6tqkxYssb4u+08bTdoqkw7E1Teup1vE56042JYESw
+ Dxvv8uEPxk+GfB3D12iep02XDvZcER3wCWR/7vkCW9S9/LuvFx3MCVCarrEvRJ+VBAH/fHd5B
+ vnKRiV2f6nvsRcmrbeg/29spD0cCzpF/qh0JjhY1up2XAr6igWOtwNPczbHBt4msdatq5ovLx
+ 0Vi20A==
 
-This member is never used. So drop it.
+Currently qca_spi reserves enough space for 4 complete Ethernet over SPI
+frames in the receive buffer. Unfortunately this is hidden under a magic
+number. So replace it with a more self explaining define.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_7k_common.h | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 2 +-
+ drivers/net/ethernet/qualcomm/qca_spi.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_7k_common.h b/drivers/net/e=
-thernet/qualcomm/qca_7k_common.h
-index 71bdf5d9f8d7..088cca7f61db 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_7k_common.h
-+++ b/drivers/net/ethernet/qualcomm/qca_7k_common.h
-@@ -107,9 +107,6 @@ struct qcafrm_handle {
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
+t/qualcomm/qca_spi.c
+index f53438c4aea2..c0f6bd3d331a 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -829,7 +829,7 @@ qcaspi_netdev_init(struct net_device *dev)
+ 	qca->burst_len =3D qcaspi_burst_len;
+ 	qca->spi_thread =3D NULL;
+ 	qca->buffer_size =3D (dev->mtu + VLAN_ETH_HLEN + QCAFRM_HEADER_LEN +
+-		QCAFRM_FOOTER_LEN + 4) * 4;
++		QCAFRM_FOOTER_LEN + 4) * QCASPI_RX_MAX_FRAMES;
 
- 	/* Offset in buffer (borrowed for length too) */
- 	u16 offset;
--
--	/* Frame length as kept by this module */
--	u16 len;
- };
+ 	memset(&qca->stats, 0, sizeof(struct qcaspi_stats));
 
- u16 qcafrm_create_header(u8 *buf, u16 len);
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.h b/drivers/net/etherne=
+t/qualcomm/qca_spi.h
+index dcecb072b8eb..f735ad77402f 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.h
++++ b/drivers/net/ethernet/qualcomm/qca_spi.h
+@@ -41,6 +41,7 @@
+
+ #define QCASPI_TX_RING_MAX_LEN 10
+ #define QCASPI_TX_RING_MIN_LEN 2
++#define QCASPI_RX_MAX_FRAMES 4
+
+ /* sync related constants */
+ #define QCASPI_SYNC_UNKNOWN 0
 =2D-
 2.34.1
 
