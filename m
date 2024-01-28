@@ -1,84 +1,76 @@
-Received: from mail.mutex.one (mail.mutex.one [62.77.152.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7878225635;
-	Sun, 28 Jan 2024 17:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.77.152.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACE023745;
+	Sun, 28 Jan 2024 17:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706463781; cv=none; b=UKdoz0WuL/EAFd/p3TqlQg2Cp2TxxnSRJjIt8Z0ofxqvsodvmBYy+fipWxrwPA3V8ISZxyPWndZyhhs9x8X1+S2jidS0Lm14kaY0jVRu6L/0kJcXbUMn5bOs4Od6J2fhXXi/fPJNlgKhey1o7zPwpGowdlYEydsM7kY0S6xCQU0=
+	t=1706463960; cv=none; b=b3bLAjr1kmNVEY5pa9JY53n5P4+LNuRWmT06N0nfq0KovrGmStXZxEM6XGOfTD08/g1r6O0x7HtI778tYMNzU4qkPzhbw11C7XZ3KPcqGGGu2EhOJqfWq4PZ05MhdGEamdV8CsCy5qKX/e+8S3ZtUCRmlKeKaYJD3/QdSyafqpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706463781; c=relaxed/simple;
-	bh=B5WmwXGS0N9URrRmpETD90ykLr9gtHFmbUouXkfqDD0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UNJlYHDI36yjxsGHfMEy5BTWAc6s+ldaGgszbxPjHS7RiKbuKYXTWYDWtWivIihCEbCgl2UnL1Vg+vZAGAb2BFwoa0SSjLbzB2nkzM6NIQeDEAVsaf1c6d01EkDO3Sfqy5QWEgZ7E/qyFcLmUpZpA+dA4QjJ+/gArg+o5qgl9QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mutex.one; spf=pass smtp.mailfrom=mutex.one; dkim=pass (1024-bit key) header.d=mutex.one header.i=@mutex.one header.b=ALLGWWgI; arc=none smtp.client-ip=62.77.152.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mutex.one
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mutex.one
+	s=arc-20240116; t=1706463960; c=relaxed/simple;
+	bh=T2gZhT7bqNZFPeyBjwatwdiknnzawEsBDJAHm1MVP24=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dCx9PO21HQ8uPC5Wo1I4JsvkR/kuWqLjmoNFx5tHU4gc8kQl1osfDPFT+/9BewyiREukL/6+fzBjKCehiSJPE7q1Y7WhS2hq0WGn+iqYll/b9HLjeQQC9cGfm9vikDK3uvj5+SgygrtgVwvTRhyMLO4YQSkCPnej0wBD/3HhgEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOaRa1Y/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mutex.one header.i=@mutex.one header.b="ALLGWWgI"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.mutex.one (Postfix) with ESMTP id DC96116C0056;
-	Sun, 28 Jan 2024 19:22:32 +0200 (EET)
-X-Virus-Scanned: Debian amavisd-new at mail.mutex.one
-Received: from mail.mutex.one ([127.0.0.1])
-	by localhost (mail.mutex.one [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id gUyIbahRNE3o; Sun, 28 Jan 2024 19:22:31 +0200 (EET)
-From: Marian Postevca <posteuca@mutex.one>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mutex.one; s=default;
-	t=1706462551; bh=B5WmwXGS0N9URrRmpETD90ykLr9gtHFmbUouXkfqDD0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ALLGWWgIktmmIygr/yLFeHHgtNsZKDutoRH4IZiya3xyk0AgGh8ybUToCn2Jzz3y3
-	 XT/mWJeii2r2J0hVH3bXvwtNO2/0isOZ2FCpg7CxWUfQ6KJ2eFFNVpyBbtrZs59P85
-	 O1Kqt4dqvplBAtoGUwWVStzoWwm6naPQ1bcZHuWY=
-To: Mark Brown <broonie@kernel.org>,
-	alsa-devel@alsa-project.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Marian Postevca <posteuca@mutex.one>
-Subject: [PATCH] ASoC: amd: acp: Fix support for a Huawei Matebook laptop
-Date: Sun, 28 Jan 2024 19:22:29 +0200
-Message-ID: <20240128172229.657142-1-posteuca@mutex.one>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOaRa1Y/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A70B6C433F1;
+	Sun, 28 Jan 2024 17:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706463958;
+	bh=T2gZhT7bqNZFPeyBjwatwdiknnzawEsBDJAHm1MVP24=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cOaRa1Y/EgshGHzRHC0ynwxoJKymgNDEyUFur8wxgkijU5LwlgwvX/B5jmh1aIReo
+	 xeh3q2nQn8hD/M7HWq3tAV1e/9RzbuARt16G4STsi9L/d+mMsSZTcdiCxybN/JQOB3
+	 KeUKyjWKe41xpt3p65Ce2bm3dBPt0K5hF71vCeKflYa7N5TWlAq1mwb5aFODkRuGVc
+	 SqHgw7h5bYT1MspBANpNQ6toVg7pWPUpGsBquD+nxyTYUfNxUCZ4wsaCfm9LcDLE21
+	 1OT7FvgTgcraZO0rok6ugSa2QY6U44fGd8FKaqPG7kLlxjR5zR426M7NmsjwseN1L0
+	 bidGv691kjhlw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	Dylan Van Assche <me@dylanvanassche.be>,
+	David Heidelberg <david@ixit.cz>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-oneplus-common: improve DAI node naming
+Date: Sun, 28 Jan 2024 11:45:41 -0600
+Message-ID: <170646395043.64610.5068987727804354474.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231229200245.259689-1-david@ixit.cz>
+References: <20231229200245.259689-1-david@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Previous commit that added support for Huawei MateBook D16 2021
-with Ryzen 4600H (HVY-WXX9 M1010) was incomplete.
 
-To activate support for this laptop, the DMI table in
-acp3x-es83xx machine driver must also be updated.
+On Fri, 29 Dec 2023 21:02:33 +0100, David Heidelberg wrote:
+> Make it easier to understand what the reg in those nodes is by using the
+> constants provided by qcom,q6dsp-lpass-ports.h.
+> 
+> Name nodes according to dt-binding expectations.
+> 
+> Fix for
+> ```
+> arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dtb: service@4: dais: Unevaluated properties are not allowed ('qi2s@22', 'qi2s@23' were unexpected)
+> ```
+> 
+> [...]
 
-Fixes: b5338b1b901e ("ASoC: amd: acp: Add support for a new Huawei Matebook laptop")
-Signed-off-by: Marian Postevca <posteuca@mutex.one>
----
- sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Applied, thanks!
 
-diff --git a/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c b/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c
-index f85b85ea4be9..2b0aa270a3e9 100644
---- a/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c
-+++ b/sound/soc/amd/acp/acp3x-es83xx/acp3x-es83xx.c
-@@ -354,6 +354,14 @@ static const struct dmi_system_id acp3x_es83xx_dmi_table[] = {
- 		},
- 		.driver_data = (void *)(ES83XX_ENABLE_DMIC|ES83XX_48_MHZ_MCLK),
- 	},
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "HUAWEI"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "HVY-WXX9"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "M1010"),
-+		},
-+		.driver_data = (void *)(ES83XX_ENABLE_DMIC),
-+	},
- 	{
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "HUAWEI"),
+[1/1] arm64: dts: qcom: sdm845-oneplus-common: improve DAI node naming
+      commit: 278d3807d304c90e59edb61aa7ed8a05e1e836bf
+
+Best regards,
 -- 
-2.43.0
-
+Bjorn Andersson <andersson@kernel.org>
