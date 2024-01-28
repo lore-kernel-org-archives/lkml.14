@@ -1,53 +1,49 @@
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0579ADDAE
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 08:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
+Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE6ADDA2
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 08:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706431170; cv=none; b=hd4kRbK5Pmkq+EQaohHwuDi+3+TjxUZw3bquPzi5D963x45rKuwi+uX8zV3U+wbVX8XiRbIeVUlP9VhVcJ2YuffoR5osJ04sW+uxp73f5c+LeM5MM0gLv37xUR+0chpDW1tRbPM1pey2w7PLCUawhdgut2QQ9t5yw4FQXumXLdU=
+	t=1706431677; cv=none; b=j6pjNvthzkio7EDAOA1JrskrSt9SsvnABST5T0CUKBcoJ4WT+wLQRNSLC0cHUtWjwOFVn7ZDYEUWf0SGqEpamgYDdZEgzXj2XnXY/7tH50Xclu9v/ctuK9Qv6h7R1pKZx88PMzWOfTVWiDiCY0vxDCsC5Bt+zBsqRzTHJUp1dZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706431170; c=relaxed/simple;
-	bh=8r1VLIdtrkxcint45jps0p80JK8DBAEYsVjKQfZTKcA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BN+qPrcX+vOe3u04sH0svyCQYzGiNJ/wR0D7qum3rzQcQXv8yRT55kXPEN1UxAh2hMFoN49fRzYezAQdWb3w01rE6jFLJrmxMQr8WriWPplL5KQji6GthP/W6/Y+6HrirSZtN9PK+J0zEQ7jEo8MCw4+DO/xx4PCLTi2R9VHZTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=KkY1L1xm; arc=none smtp.client-ip=80.12.242.26
+	s=arc-20240116; t=1706431677; c=relaxed/simple;
+	bh=aJw6AqhVkV5H+6qkrHrVvQkMiGIYDaRTkcVg98CSjFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DRpe0ssOpaIEO/qkMIEA2/VCSAeHrTO6X7aySzUhwWBc4vrW6dJ6wlnB48H90r7Fkc0Boejv+x6LQWK82OYDpSsshsSkm7pKRIMLpdcRg/PVKoZY8ZuDubZnddheZolbNI2V3ysVaL1Rtqjtft/7+rkfSJNmGiorkzRuThyou6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=W+py6fgA; arc=none smtp.client-ip=80.12.242.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="KkY1L1xm"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="W+py6fgA"
 Received: from fedora.home ([92.140.202.140])
 	by smtp.orange.fr with ESMTPA
-	id U0gBr3CH8wnxGU0gCrvtYv; Sun, 28 Jan 2024 09:38:20 +0100
+	id U0pVr3FypwnxGU0pVrvuNg; Sun, 28 Jan 2024 09:47:54 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1706431100;
-	bh=RvZ5Io0RuJBaQqGXuTB/cV5lrPQkLLFNN0oKaea8T94=;
+	s=t20230301; t=1706431674;
+	bh=PvDm6o18p5eO0SWxCbyfOmNYdKnWHShtEZV/Rr+hpA0=;
 	h=From:To:Cc:Subject:Date;
-	b=KkY1L1xm+CslAfCnBetSSorAkB+OaeXBaDHr4YV0PRu1JZB5Sy18yYAWI0OuvejoE
-	 3yheer7k0bQlVvFFjbEDuXIbmoRotWyrxMNWW7Ec601FRIW8wTVOdGABkn69BH9iCh
-	 7HyNoeovoBD7ul9yGBW3W9Tp2IRShtHCquEJOZNo4M/AiKlyOol1dh8MRF+wHc32Ib
-	 YTc2anfLqXfHzeU3Kr38LtT2sWYHe1fJPDAL04XrgyX6GKl1mAzSIKCN6RkfcTrmST
-	 fePLWsovz0bloH1y8a84RQHIPdcyjTj7Bs4/pGsc8bMJNvvsKQgbWOKqpy4q23lwnm
-	 iTzRs1HT1NB+g==
+	b=W+py6fgAl++QyAGnzSJQDzXdfdUMFcFYkCcv8rH5F4Eg4+VXXpMT3kYKQ3mfhJEjS
+	 TaOSsATcd+8sYIuP+u+qulReV4NmA9genmKpQUU9DFEHDCk7mmr5gppFKDyRLZwOmB
+	 Jww+7z0j3FpXmbKGfgZ8Uy/oibBSwsoydYaL1OlRm0E13wUo1EoG3ApS5Iq4a9fR+T
+	 3ff52tj4Liw18qCZqo1o5pweEvls3R8mJNcF3rOc4Vt43YpDHmFIx3QFhTx0r3nuQC
+	 IVRNADMv7qp6c0F2ANawb1j1jeNXC/+noCFxYTHTyhZ9zBzNvLv01BPFETpMiUgo7G
+	 nmBceHbN0Ez6g==
 X-ME-Helo: fedora.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 28 Jan 2024 09:38:20 +0100
+X-ME-Date: Sun, 28 Jan 2024 09:47:54 +0100
 X-ME-IP: 92.140.202.140
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Balsam CHIHI <bchihi@baylibre.com>
+To: Vincent Shih <vincent.sunplus@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] thermal/drivers/mediatek/lvts_thermal: Fix a memory leak in an error handling path
-Date: Sun, 28 Jan 2024 09:38:10 +0100
-Message-ID: <481d345233862d58c3c305855a93d0dbc2bbae7e.1706431063.git.christophe.jaillet@wanadoo.fr>
+	linux-usb@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: [PATCH] phy: sunplus: Fix a memory leak in update_disc_vol()
+Date: Sun, 28 Jan 2024 09:47:50 +0100
+Message-ID: <451016052782f18c8b52ed0f836d7ab5c69bac3d.1706431643.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,30 +53,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If devm_krealloc() fails, then 'efuse' is leaking.
-So free it to avoid a leak.
+'otp_v', allocated by nvmem_cell_read(), is leaking.
+It must be freed before leaving the function to avoid a leak.
 
-Fixes: f5f633b18234 ("thermal/drivers/mediatek: Add the Low Voltage Thermal Sensor driver")
+Fixes: 99d9ccd97385 ("phy: usb: Add USB2.0 phy driver for Sunplus SP7021")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/thermal/mediatek/lvts_thermal.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This patch is speculative and based on comparison on the usage of
+nvmem_cell_read() in other driver.
 
-diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
-index 98d9c80bd4c6..fd4bd650c77a 100644
---- a/drivers/thermal/mediatek/lvts_thermal.c
-+++ b/drivers/thermal/mediatek/lvts_thermal.c
-@@ -719,8 +719,10 @@ static int lvts_calibration_read(struct device *dev, struct lvts_domain *lvts_td
+Review with care.
+---
+ drivers/phy/sunplus/phy-sunplus-usb2.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/phy/sunplus/phy-sunplus-usb2.c b/drivers/phy/sunplus/phy-sunplus-usb2.c
+index 637a5fbae6d9..50f1f91ac052 100644
+--- a/drivers/phy/sunplus/phy-sunplus-usb2.c
++++ b/drivers/phy/sunplus/phy-sunplus-usb2.c
+@@ -105,6 +105,8 @@ static int update_disc_vol(struct sp_usbphy *usbphy)
+ 	val = (val & ~J_DISC) | set;
+ 	writel(val, usbphy->phy_regs + CONFIG7);
  
- 		lvts_td->calib = devm_krealloc(dev, lvts_td->calib,
- 					       lvts_td->calib_len + len, GFP_KERNEL);
--		if (!lvts_td->calib)
-+		if (!lvts_td->calib) {
-+			kfree(efuse);
- 			return -ENOMEM;
-+		}
- 
- 		memcpy(lvts_td->calib + lvts_td->calib_len, efuse, len);
++	kfree(otp_v);
++
+ 	return 0;
+ }
  
 -- 
 2.43.0
