@@ -1,126 +1,94 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3125F3CF44;
-	Sun, 28 Jan 2024 19:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD844C3A9
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 19:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706471955; cv=none; b=h7Bhvkf/cN7FqT3McNRiBUS66YPvU0BDse+yZOQnkS6icXESTkdTChSnrXS3YDB30+WR/XsazO6wl2e+Zd/0Pv7ZnX06U9N8j9p4j6+ccIs8u9r/fl2F+CQqsON8WMeqoGZhUNuGeYKuBUADU2qrRJUqBmgChavYp0FopBu4rUQ=
+	t=1706471991; cv=none; b=SLMcgqhzb7Eq7aytSYcEty9SsRlj8l2Mvi9Uj5H9zwauHwV16PkXuUrX3lEcIfuZnra0b3NL61iWuS5DBGnJWXy+OHTO6ZsYCOXyX/4p6o4bENe9mqkda/vTxV9lFrWvcpqGkXFu87jlhTFG+9RGdIiBEe202YbsAFtoyIaSZcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706471955; c=relaxed/simple;
-	bh=JSOh7uJNDrp6PVMXwFFyTSGlmh4q/M6AINvsVmt+3oo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ukDd6tAdnBQb2xTeT7FSq8XZBmLyDuPSb/XPCjg/YWMN1z47M635xuopMxW+Y1HlDyFvCWqhQ2vYL85BRygAY6BKodTSsAPOQQqrUstlWKdxg/pXjRYgwzj6TVt+nHZiTQmWuCRlYArD0Z3nPn9rntG5coXV7/fHCPIP3fU80wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EmD8AmkF; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1706471991; c=relaxed/simple;
+	bh=RQPBgjqLxVYa9z7DAN4AMZv6aMuk7G/qW9fdGyDL5MM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nP97WNbhafldrAV6zFf6XkgmEsKJUo0zXFIKG2iUvexYR2MNuaaQOWgFLhccgC74GVhz3MZ8rw8WXy42edESQ52B3QzDPcGkFfWqc67iUQdY0kXCN3Nqmv8nxSKD8Y3X5MvQORfzbc/4INJW1jI34J1r+MnDLNF9irCWTfmqhgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=HLbacQqc; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EmD8AmkF"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40SIOZ3Q026214;
-	Sun, 28 Jan 2024 19:58:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=vWUzhYOc7X86FwVTZQTxEXaT99ntUXq8iH3H0R74AWw=;
- b=EmD8AmkFsVGQwvl4g6lRfMoW3XzaaAVg3MA9Y3UHc4V3u5VvkmqNhrwUoSz+MQ7khwF/
- I+UMBrplraS1a9WWSWkHJMbgnwhGf87JipichHMUgxHlfbwQdoZ0SfgckN7N6zzPHZCA
- sFK/2C6OnLIutHmT6vn4IFp7X78OGBkTooQjA6MTAWixUIofymTCdSDynivAE4dcgv7m
- wAlyUpATNdKnZPRYP0/9hKzfQxxdkytDCyiZ43KTJZtmBKZVNfbhOaY/HkQplJlkCART
- g5VThWXWjbFUSuVdeXdyqixL9JRStfP+qlkCpIr1eflRdmiDCqOB32VCO3V77yV9yii0 fQ== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vwu6qhrwa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 28 Jan 2024 19:58:59 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40SIHe7v010887;
-	Sun, 28 Jan 2024 19:58:58 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vweck3ve4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 28 Jan 2024 19:58:58 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40SJwtfG12190304
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 28 Jan 2024 19:58:55 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 029C22004B;
-	Sun, 28 Jan 2024 19:58:55 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E5BFA20040;
-	Sun, 28 Jan 2024 19:58:54 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Sun, 28 Jan 2024 19:58:54 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id B0A4CE0827; Sun, 28 Jan 2024 20:58:54 +0100 (CET)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 4/5] s390/irq,nmi: do not include <linux/vtime.h> header
-Date: Sun, 28 Jan 2024 20:58:53 +0100
-Message-Id: <966148629217b56139f40c38ffbb45ca229bd489.1706470223.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1706470223.git.agordeev@linux.ibm.com>
-References: <cover.1706470223.git.agordeev@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="HLbacQqc"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-510f37d673aso819725e87.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 11:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706471987; x=1707076787; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jvgl07qLmO97AnDOonOYaDY55AuzJRLfRUuCExUHbJw=;
+        b=HLbacQqcZ10CSzcNoAQ72MHpzZ8XS+RKCzZCY0k1uvjX4dMlOAAtiq8bBaGjJ3myvZ
+         Ae7OoytbX0x9shmBgYS0M0+eUvd5VhZwS+Y6nJeh0UE35ciQiouWptiORbIJ4b3JE+fM
+         tceLZ7v3lg3u3vDzHODtdrEJz5lZ0d+BqpZd4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706471987; x=1707076787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jvgl07qLmO97AnDOonOYaDY55AuzJRLfRUuCExUHbJw=;
+        b=pJ7GIV1l3RKLrJUSKdmRcigsqbQp73mHv6euRislNxclBunNCvAEFoG+OnsyBtf0Fv
+         IU+N3V4WEpgmvontIVd1P+UvHcER64caqNX7FuHYkABYo53Qd/RL8xTMYTXOH+jFKW8N
+         EzogX8uaJEYE5qS19wh8Umlp4neTD1LShzgpST9WSgi0NTgtU6P7LncUPJW7YQwJeCud
+         Y6X3jk46n8tjO1ugVj1QafxhgoYu2XYlyfY2DKGY6hyTl/nBjnJF9nOWkm1+dspi6apt
+         bZGG3kY6dlFouDsCx7ZsHETndjZggTKWzpRjjHoanNo4SCbtJYqRatvF+aOi7lHvqjM9
+         1dfg==
+X-Gm-Message-State: AOJu0Yxk16V40cohd6ycZzDPtApnMUNSr+c9/xnNK+z/g4bw8NWeQGut
+	ujNBhMIfxsbwnxqFi2arvepG3q/Q/pMcI7EJSpj+xqAxdQa0hM0I473LGRD1hJj4SK6V1kVOd1f
+	JSAk=
+X-Google-Smtp-Source: AGHT+IHd1t7cl2RpN8+D99HFK+NcCSdRAcR5tAEEBCH/USRr77K8SjzTKizTr6e32bwvgw9704Rnfg==
+X-Received: by 2002:a19:7003:0:b0:510:c63:5621 with SMTP id h3-20020a197003000000b005100c635621mr3297572lfc.17.1706471986939;
+        Sun, 28 Jan 2024 11:59:46 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id m12-20020a056512114c00b005101bd871e9sm887599lfg.154.2024.01.28.11.59.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Jan 2024 11:59:46 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cf588c4dbcso12617231fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 11:59:45 -0800 (PST)
+X-Received: by 2002:a2e:994e:0:b0:2cf:1a11:ea87 with SMTP id
+ r14-20020a2e994e000000b002cf1a11ea87mr3234050ljj.39.1706471985664; Sun, 28
+ Jan 2024 11:59:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ZuVfL-7qioT-9fAqTgVQFx1el86fRp9S
-X-Proofpoint-GUID: ZuVfL-7qioT-9fAqTgVQFx1el86fRp9S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0
- mlxscore=0 mlxlogscore=726 malwarescore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401280151
+References: <0ca26166dd2a4ff5a674b84704ff1517@AcuMS.aculab.com> <b564df3f987e4371a445840df1f70561@AcuMS.aculab.com>
+In-Reply-To: <b564df3f987e4371a445840df1f70561@AcuMS.aculab.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 28 Jan 2024 11:59:29 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whxYjLFhjov39N67ePb3qmCmxrhbVXEtydeadfao53P+A@mail.gmail.com>
+Message-ID: <CAHk-=whxYjLFhjov39N67ePb3qmCmxrhbVXEtydeadfao53P+A@mail.gmail.com>
+Subject: Re: [PATCH next 10/11] block: Use a boolean expression instead of
+ max() on booleans
+To: David Laight <David.Laight@aculab.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Christoph Hellwig <hch@infradead.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, "David S . Miller" <davem@davemloft.net>, 
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-update_timer_sys() and update_timer_mcck() are inlines used for
-CPU time accounting from the interrupt and machine-check handlers.
-These routines are specific to s390 architecture, but declared
-via <linux/vtime.h> header, which in turn inludes <asm/vtime.h>.
-Avoid the extra loop and include <asm/vtime.h> header directly.
+On Sun, 28 Jan 2024 at 11:36, David Laight <David.Laight@aculab.com> wrote:
+>
+> However it generates:
+> error: comparison of constant =C3=A2=E2=82=AC=CB=9C0=C3=A2=E2=82=AC=E2=84=
+=A2 with boolean expression is always true [-Werror=3Dbool-compare]
+> inside the signedness check that max() does unless a '+ 0' is added.
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- arch/s390/kernel/irq.c | 1 +
- arch/s390/kernel/nmi.c | 1 +
- 2 files changed, 2 insertions(+)
+Please fix your locale. You have random garbage characters there,
+presumably because you have some incorrect locale setting somewhere in
+your toolchain.
 
-diff --git a/arch/s390/kernel/irq.c b/arch/s390/kernel/irq.c
-index 6f71b0ce1068..259496fe0ef9 100644
---- a/arch/s390/kernel/irq.c
-+++ b/arch/s390/kernel/irq.c
-@@ -29,6 +29,7 @@
- #include <asm/hw_irq.h>
- #include <asm/stacktrace.h>
- #include <asm/softirq_stack.h>
-+#include <asm/vtime.h>
- #include "entry.h"
- 
- DEFINE_PER_CPU_SHARED_ALIGNED(struct irq_stat, irq_stat);
-diff --git a/arch/s390/kernel/nmi.c b/arch/s390/kernel/nmi.c
-index 9ad44c26d1a2..4422a27faace 100644
---- a/arch/s390/kernel/nmi.c
-+++ b/arch/s390/kernel/nmi.c
-@@ -32,6 +32,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/pai.h>
- #include <asm/vx-insn.h>
-+#include <asm/vtime.h>
- #include <asm/fpu/api.h>
- 
- struct mcck_struct {
--- 
-2.40.1
-
+           Linus
