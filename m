@@ -1,107 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67A42E631;
-	Sun, 28 Jan 2024 18:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F882E62A;
+	Sun, 28 Jan 2024 18:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706466050; cv=none; b=hlcJV+LXw0h2bS2wyjldMclu0Wk2Ypls6b5Y2FDLJOCJ/ZBivU8N7SiDpG5HtdlFUAPW0NkkdC3wdtZomz+nVs5iym/9ExsthmZvwgISt17tDNLyvotKvtjDpeXZBBsywtkS6oIkFOPMbwXSt4UC0+X6bJQOQfJ4G+esthmSs8U=
+	t=1706466184; cv=none; b=N92MWvtwBVEWu6T8lrDSqFT11cwV3W4fLBXFnN4iOXtIK0qrUTfUYqCO67wTwVRrampYTgoQXEkGOcHuH61ussGCkStUwt4vXYr4A/84gDKkTnM7qtZZx1PLM+pfTgnRHCAoLgzj7GOtHSBI9Yd3fP5PyBpEXWFYGwFdgLEGrjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706466050; c=relaxed/simple;
-	bh=/EDJ9bPZKL6/KP5P7C3TliaYe+1owN1nZgWeE1J7WBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liH6EDj17gNzVbsZVNZ5ZI53RcW9d/Mz+SlEDG/AdB/r5JN8lWFKCDRrZWVdTzhzM1akITpssVD2Po9ATPKUcN84QZedpWjsSYIY7et5xQmoeso+GWVunDd75gJ02swiIuYvjON8sN7cPwqqqcLxCYj8veDk6+7lBb+CD2sXL8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dAsPL0lA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dAsPL0lA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E69EC433F1;
-	Sun, 28 Jan 2024 18:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706466050;
-	bh=/EDJ9bPZKL6/KP5P7C3TliaYe+1owN1nZgWeE1J7WBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dAsPL0lAQCw74SQy+jYwS6G5zWkRkNkYsGE5/qlePSLZMp6mJCJGd4klmM3QCx/gW
-	 nz3nDvPAvxhP2u6qsZPq5XdOAX6krXiZaQCecF/NbA+NkgMiGOo86gF1GHPCLKc7S6
-	 Z73hl2Ku4eC5w1uyJBMofScDirpuaetbM1ZTJ1r8O5uHArG6ZEfTw5NnXqu7BY7R4P
-	 dMEZueYdG5srJjtd5J2wht/7PIYg/04LGo8XWxqCschJxvw02kfh9CyIEjyTyaHwRg
-	 l6s+03XlLCYvKlnZvvnhCJcM0v/Z/Wc6UUP22E3JJ8AYFCz5I/M+T0GN6bjSpeNeUc
-	 GaUtE7ozOVldg==
-Date: Sun, 28 Jan 2024 18:20:46 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] dt-bindings: riscv: cpus: reg matches hart ID
-Message-ID: <20240128-simile-endocrine-9e8af979d361@spud>
-References: <20240128180621.85686-1-heinrich.schuchardt@canonical.com>
+	s=arc-20240116; t=1706466184; c=relaxed/simple;
+	bh=DL5F0XhWSnvym7igGq+JON7qhqyaG1m3r7mQifBsK9Y=;
+	h=Subject:From:To:CC:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JaQFmtHVT9o4ghLPE8gyEIR2Pd6/6NhQdZ8buP6TOVVPhuPWXPeEuelyJ7b5jMrMFBUXLW4vTjLNfKkPNZ3fWDeq3p15z+8Hv2kxXq6agTrQ3XjCNOn5cVWGcX+uxGT0qjzbpl3Zbu0Ww9wKBnvP7NInxi++Tw0eSAhZHjk3vTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.74.225) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sun, 28 Jan
+ 2024 21:22:51 +0300
+Subject: Re: [PATCH net-next v4 08/15] net: ravb: Move the IRQs get and
+ request in the probe function
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<richardcochran@gmail.com>, <p.zabel@pengutronix.de>,
+	<geert+renesas@glider.be>
+CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>
+References: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240123125829.3970325-9-claudiu.beznea.uj@bp.renesas.com>
+ <bb26b1a9-a848-7b5a-26fd-192f004184d8@omp.ru>
+ <ada0e1ac-dd33-aad2-52f9-0448b819bc94@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <51698293-0e51-8d9b-0957-79ca5ebfb844@omp.ru>
+Date: Sun, 28 Jan 2024 21:22:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NKcSv7G0/mXgkSng"
-Content-Disposition: inline
-In-Reply-To: <20240128180621.85686-1-heinrich.schuchardt@canonical.com>
+In-Reply-To: <ada0e1ac-dd33-aad2-52f9-0448b819bc94@omp.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/28/2024 18:08:14
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 182981 [Jan 28 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Int_BEC_cat_st_0}
+X-KSE-AntiSpam-Info: {Tracking_arrow_text}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.225 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.225 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.176.74.225:7.4.1,7.1.2,7.7.3
+X-KSE-AntiSpam-Info: {cloud_iprep_silent}
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.74.225
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 01/28/2024 18:13:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 1/28/2024 3:09:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
+On 1/28/24 9:03 PM, Sergey Shtylyov wrote:
+[...]
 
---NKcSv7G0/mXgkSng
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>    I suggest the following subject "net: ravb: Move getting/requesting IRQs in
+>> the probe() method".
 
-On Sun, Jan 28, 2024 at 07:06:21PM +0100, Heinrich Schuchardt wrote:
-> Add a description to the CPU reg property to clarify that
-> the reg property must match the hart ID.
+    Or the probe() API, if you prefer this naming...
 
-That is the expected usage alright. Did you come across something where
-it was not being used in that way?
+>    Oops, s/in/to/. :-)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+   Well, we don't move getting IRQs to the probe() method, but
+we move the platfrom_get_irq[_byname]() calls to a sperate function.
+So, pperhaps "in" was good... :-) 
 
-Cheers,
-Conor.
+[...]
 
->=20
-> Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-> ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Document=
-ation/devicetree/bindings/riscv/cpus.yaml
-> index f392e367d673..fa9da59d9316 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -74,6 +74,10 @@ properties:
->        - riscv,sv57
->        - riscv,none
-> =20
-> +  reg:
-> +    description:
-> +      The hart ID of this CPU node.
-> +
->    riscv,cbom-block-size:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description:
-> --=20
-> 2.43.0
->=20
-
---NKcSv7G0/mXgkSng
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbaa/gAKCRB4tDGHoIJi
-0oSVAP9orjnFbFNcVF/CMAf/Z7LSEnENkf2VgiqS+fQSrBNA2AEAuYDxybBQO7rx
-W1n4LVgR0qVah3M+242qdzT9vbg9RgM=
-=t3Zf
------END PGP SIGNATURE-----
-
---NKcSv7G0/mXgkSng--
+MBR, Sergey
