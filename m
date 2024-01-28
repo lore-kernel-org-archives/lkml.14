@@ -1,226 +1,70 @@
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C017CA4E;
-	Sun, 28 Jan 2024 08:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A5DD527
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 08:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706428863; cv=none; b=XrQIzevBG1ZHyE1PaTwn5ziXppSki7QX74EUkzGzGLTnEmIU7M28TfDxPC11IaGoPH12wofmvUNABYQG/b5vxc2sW/c9hOGMSbNuOJ3qSS3eBE+jufPf7EwLeVZyX79CVUYvHPTVy6aIfjO226plau66xWs5ir19nx0bzpWlL0o=
+	t=1706430245; cv=none; b=Lc8reKgIRUUrKYdgtrSAi0tKnJT0F6fCfnRJXm5p5WY5p+HrhQiSICMHFqP6mR5tCvi+eBhCvTFZx60MOVxjLFsZsGOX4CiZG0YWn1Bo/+5WaPlXNKzVovjGwzbZKEBnJb5ZlhMblZPtJAX2HHFuJbX1kb2ke+l5q4gQpsFbeAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706428863; c=relaxed/simple;
-	bh=T4METYcAZkjFh/mJCuNuZBxdEgskEbxwtwRQLMK6uFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hY3uuD4eCD+MtUY97u4pqrZ4l/bYDf8mFTF9ZIa5gy05AtIEscS0ZHFoDi0DM0dhj6LODrBtHEpPWu8upRZiVoP1+UGAsjboH8FiwGqz1K/k6kGCn2Kzw203B4nIb/3lU0UNDNOkAZxGFYqbn4S+spmv0ZAZ0Bzdbz2oRPzvXgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lNPnO8Lt; arc=none smtp.client-ip=80.12.242.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lNPnO8Lt"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id Tzxcr9tOf3ZDyTzxdrCxUn; Sun, 28 Jan 2024 08:52:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1706428336;
-	bh=r+0qjH378TiTSwFjUyd4p9CMqmeCRqj1m8DnL6D02Fs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lNPnO8LtOmgaPHv4YuPvMIR0GrxSE48lTBQQSDoz7FLOHLvq3xLiGRKieIOmpIGKg
-	 XHXaam8yx0Ntn7h+n88ShlromrAwk/8cDOjL98Ax6KYHvTQJ9iC9v4635Pfi8YHeg/
-	 qT6rhXRHgKrXft1n4EZPzgG8O55pV5Jpe9i0y8hiHOnJXLhx6d3L0scFjtpxEEjin2
-	 xMyfBYEXCKdtGb1+YRv+LbHgGZuljCaq+Mj1/54MeafM3Fnl5rDOeHMoRIq34m9ZgY
-	 0A/oqX/qU65fhqRmIyKOAIM1epM1LcRTKi/XN6S1USI+p9rWmJBN8N2GUsgDaGyeD8
-	 trwTNqmSUcw7g==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 28 Jan 2024 08:52:16 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <a2a4bb76-0e6a-425d-bfb8-e1a844b44274@wanadoo.fr>
-Date: Sun, 28 Jan 2024 08:52:12 +0100
+	s=arc-20240116; t=1706430245; c=relaxed/simple;
+	bh=djVxdPh6n+qvnaL858ysLJDEfmAO6wdLChSO/yDb3PA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=O3HSKkdhWGsO+iXNGvZSzLV6shzfIV4uv68ABW9bj+G15kPgpFKQp3PVwDzy3RbZsfjLQF/ufAmAvV5fevIQ7S2PtS8bt+DFc1Y5dgbT8KrZtknttpHMq0UNXB/ygdrNjv0h/zrnTD5w1LGg8sO0EoMex5DuI5SYheMKbMF3Ue0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7bf81e2e5d4so111478739f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 00:24:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706430243; x=1707035043;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tixAC/dBvIqFOvEhGo9DK9KceemeQG3mheOFlZWOP6Q=;
+        b=gbDFGfDRyDsQbmXRfXE5YGgoqszh8248Ldvoxm4XTuWuEB/MizToouWTPRa9flaNSe
+         9/tceYe6042EuJkDdw7641Wcx8P04DUVc6uRVztZ3joALmJcHKQKZxsGJgZVHs7Ol+Ar
+         yM9PfRGBxcPG2Ja82PlIQgRlq+tzF361dXbCZzNmiM+kfQtu5Y9OnjPTG9Kgs56MZSXb
+         e+cwTg0M8vSDhaOuxFYxHQS0jNt1GaSCeNoPnWG3Sg73kkFXa6Jf7nhVtVW6hRZ2AvwE
+         h3/UADZ18OFNVjeaEt+mz6bciaHYUclaXR9/w7ISZEH2tTjqqTa3GgYUFE/50bWA7HE2
+         H8MA==
+X-Gm-Message-State: AOJu0YyhSmysECpa89EG26xTCq1yOpX6iSG3xm2A/+dwh8KQNV6R6x0w
+	x+FXwmpBEWYhVFxm32YSOJfiu/jHolUXaA0z48LQxfWpnn/KzsRtbSceivIsbHTP8TuqzpgTsFI
+	E+nA0mT3oCXAn62dgTGogX++JVWWiAHrRFFVwZfFwOWththd/bdTx2uw=
+X-Google-Smtp-Source: AGHT+IF67pR3VNWWo1SuW87LsplqdcqKzYshdZhqNyNpYPrAkaag/WWqxGgefTZev3CRKnV6c6YLRcmM89oW82EfwPk9gGUKv0FK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
- driver
-To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20240123080637.1902578-1-ychuang570808@gmail.com>
- <20240123080637.1902578-5-ychuang570808@gmail.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240123080637.1902578-5-ychuang570808@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:12e3:b0:363:7aed:f073 with SMTP id
+ l3-20020a056e0212e300b003637aedf073mr106632iln.0.1706430243219; Sun, 28 Jan
+ 2024 00:24:03 -0800 (PST)
+Date: Sun, 28 Jan 2024 00:24:03 -0800
+In-Reply-To: <20240128075340.1015-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007b3188060ffd4061@google.com>
+Subject: Re: [syzbot] [overlayfs?] possible deadlock in seq_read_iter (2)
+From: syzbot <syzbot+da4f9f61f96525c62cc7@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Le 23/01/2024 à 09:06, Jacky Huang a écrit :
-> From: Jacky Huang <ychuang3@nuvoton.com>
-> 
-> Add common pinctrl and GPIO driver for Nuvoton MA35 series SoC, and
-> add support for ma35d1 pinctrl.
-> 
-> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
-> ---
+Hello,
 
-Hi,
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Should there be a v4, a few nits below.
+Reported-and-tested-by: syzbot+da4f9f61f96525c62cc7@syzkaller.appspotmail.com
 
-CJ
+Tested on:
 
-> +static int ma35_pinctrl_dt_node_to_map_func(struct pinctrl_dev *pctldev,
-> +					    struct device_node *np,
-> +					    struct pinctrl_map **map,
-> +					    unsigned int *num_maps)
-> +{
-> +	struct ma35_pinctrl *npctl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct ma35_pin_group *grp;
-> +	struct pinctrl_map *new_map;
-> +	struct device_node *parent;
-> +	int map_num = 1;
-> +	int i;
-> +
-> +	/*
-> +	 * first find the group of this node and check if we need create
-> +	 * config maps for pins
-> +	 */
-> +	grp = ma35_pinctrl_find_group_by_name(npctl, np->name);
-> +	if (!grp) {
-> +		dev_err(npctl->dev, "unable to find group for node %s\n", np->name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	map_num += grp->npins;
-> +	new_map = devm_kzalloc(pctldev->dev, sizeof(*new_map) * map_num, GFP_KERNEL);
+commit:         8a696a29 Merge tag 'platform-drivers-x86-v6.8-2' of gi..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=1516855fe80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5057c9bffe24fc70
+dashboard link: https://syzkaller.appspot.com/bug?extid=da4f9f61f96525c62cc7
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-devm_kcalloc()?
-
-> +	if (!new_map)
-> +		return -ENOMEM;
-> +
-> +	*map = new_map;
-> +	*num_maps = map_num;
-> +	/* create mux map */
-> +	parent = of_get_parent(np);
-> +	if (!parent) {
-> +		devm_kfree(pctldev->dev, new_map);
-> +		return -EINVAL;
-> +	}
-> +
-> +	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
-> +	new_map[0].data.mux.function = parent->name;
-> +	new_map[0].data.mux.group = np->name;
-> +	of_node_put(parent);
-> +
-> +	new_map++;
-> +	for (i = 0; i < grp->npins; i++) {
-> +		new_map[i].type = PIN_MAP_TYPE_CONFIGS_PIN;
-> +		new_map[i].data.configs.group_or_pin = pin_get_name(pctldev, grp->pins[i]);
-> +		new_map[i].data.configs.configs = grp->settings[i].configs;
-> +		new_map[i].data.configs.num_configs = grp->settings[i].nconfigs;
-> +	}
-> +	dev_dbg(pctldev->dev, "maps: function %s group %s num %d\n",
-> +		(*map)->data.mux.function, (*map)->data.mux.group, map_num);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int ma35_pinctrl_parse_groups(struct device_node *np, struct ma35_pin_group *grp,
-> +				     struct ma35_pinctrl *npctl, u32 index)
-> +{
-> +	unsigned long *configs;
-> +	unsigned int nconfigs;
-> +	struct ma35_pin_setting *pin;
-> +	const __be32 *list;
-> +	int i, j, size, ret;
-> +
-> +	dev_dbg(npctl->dev, "group(%d): %s\n", index, np->name);
-> +
-> +	grp->name = np->name;
-> +
-> +	ret = pinconf_generic_parse_dt_config(np, NULL, &configs, &nconfigs);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * the binding format is nuvoton,pins = <bank pin-mfp pin-function>,
-> +	 * do sanity check and calculate pins number
-> +	 */
-> +	list = of_get_property(np, "nuvoton,pins", &size);
-> +	size /= sizeof(*list);
-> +	if (!size || size % 3) {
-> +		dev_err(npctl->dev, "wrong setting!\n");
-> +		return -EINVAL;
-> +	}
-> +	grp->npins = size / 3;
-> +
-> +	grp->pins = devm_kzalloc(npctl->dev, grp->npins * sizeof(*grp->pins), GFP_KERNEL);
-
-devm_kcalloc()?
-
-> +	if (!grp->pins)
-> +		return -ENOMEM;
-> +
-> +	grp->settings = devm_kzalloc(npctl->dev, grp->npins * sizeof(*grp->settings), GFP_KERNEL);
-
-devm_kcalloc()?
-
-> +	if (!grp->settings)
-> +		return -ENOMEM;
-> +
-> +	pin = grp->settings;
-> +
-> +	for (i = 0, j = 0; i < size; i += 3, j++) {
-> +		pin->offset = be32_to_cpu(*list++) * MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE;
-> +		pin->shift = (be32_to_cpu(*list++) * MA35_MFP_BITS_PER_PORT) % 32;
-> +		pin->muxval = be32_to_cpu(*list++);
-> +		pin->configs = configs;
-> +		pin->nconfigs = nconfigs;
-> +		grp->pins[j] = npctl->info->get_pin_num(pin->offset, pin->shift);
-> +		pin++;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int ma35_pinctrl_parse_functions(struct device_node *np, struct ma35_pinctrl *npctl,
-> +					u32 index)
-> +{
-> +	struct device_node *child;
-> +	struct ma35_pin_func *func;
-> +	struct ma35_pin_group *grp;
-> +	static u32 grp_index;
-> +	u32 ret, i = 0;
-> +
-> +	dev_dbg(npctl->dev, "parse function(%d): %s\n", index, np->name);
-> +
-> +	func = &npctl->functions[index];
-> +	func->name = np->name;
-> +	func->ngroups = of_get_child_count(np);
-> +
-> +	if (func->ngroups <= 0)
-> +		return 0;
-> +
-> +	func->groups = devm_kzalloc(npctl->dev, func->ngroups * sizeof(char *), GFP_KERNEL);
-
-devm_kcalloc()?
-
-> +	if (!func->groups)
-> +		return -ENOMEM;
-> +
-> +	for_each_child_of_node(np, child) {
-> +		func->groups[i] = child->name;
-> +		grp = &npctl->groups[grp_index++];
-> +		ret = ma35_pinctrl_parse_groups(child, grp, npctl, i++);
-> +		if (ret) {
-> +			of_node_put(child);
-> +			return ret;
-> +		}
-> +	}
-> +	return 0;
-> +}
-
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
