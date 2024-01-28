@@ -1,127 +1,107 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0A6664D8
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 16:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD35D6774F;
+	Sun, 28 Jan 2024 16:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706458447; cv=none; b=SZB7iNVTNDO9m+5meIAfNwXRCtBj25s9BJmSOEzQeNRW8umLNX8O4hmpx+7cS3qpbtFPrjcMhkjvZvKYYQF+FM1L58jFWni8fYMTVPik1FtiU5W4zjtBp5vWDAU/30bAiU7IrrvkDOi0KViZAUzGHIV/Fexqibu3snPriTKYYxI=
+	t=1706458448; cv=none; b=kOf+jZuoDvjBRa7NRLOVuPOq6DmW4lhki1Fttc7lDTz5glLTkmIFNJ6rRmJeFIbkhDPyai6dL0YUxn/UZAQkqlTkAatPbSumK53jz4kctfWQxZ49YlA/NBDjMhn9AHlaQpREy9ZW3OIHVtCBV9blplg0eZOHdB42l6mKx8voj1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706458447; c=relaxed/simple;
-	bh=/xWOilo4Hud6QzZM3cj00D+5v080/58h43sQggsHgHg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qph3M8QqODVMnOO5+1QprWQ04ADKAGSZgq7+/s7yN6jSDkLkCpaZ0B0HU3nXuDhfmMXOa0T4K/1K89nVo9uzpbemI159WpSrtzj72WdE/9T+JR27ACNOHVjCFlOLlO2z40qrcBTMpo0IFE2xYK8b2QdlshwaHSnaUekFdLKDr2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FzWuLFMx; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706458448; c=relaxed/simple;
+	bh=ndyF0NYfl+R+hLw0n6zDHkkOWpG+6FQY/3DxH0reCm8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EC0YTvlMVemsiu7sarqG13G6HNOq7Mt1ZNnvMUcH5u6ZfTI4U63Hi/SRHPoKx1fOYoSk7HYIEEyGgWk8FleJ9NCJUEiSbqgvGX0hzH9ydZBGat6gJskUMnl/h7E/FCLrzPAh9UtgRQCwkwB3IzLDW4A4qcasRudCL9S2VEzRQhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZfGm36r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FzWuLFMx"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-68c3b845643so12535046d6.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 08:14:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706458443; x=1707063243; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gyrr36Rbe8AgWubab7y8Kw9tDT0keELEe6KuPO/35LY=;
-        b=FzWuLFMxaZaLG5NdsCCqSV2MCwNpFUQJkrzYErKrXyacRrj9MIM0G9DgtGnGcBKTrZ
-         Km9+MW6IxrEpblm/gMQ0NKe9+SN+8Uh0AU5zwKL73erSXSVS1R8m9id2TihS+sbvcBk+
-         s8B1xvVtdglp9AHNKjfV6UujEbzsd+CzrzOfo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706458443; x=1707063243;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gyrr36Rbe8AgWubab7y8Kw9tDT0keELEe6KuPO/35LY=;
-        b=rFFBAGE51kZCzV4jbih+hUa+7Q30T05HHNHuzEIzKY0kKeKHXLN7RDwRLkJFxYuRKO
-         VGeJqTz7RBEn22AQM46R5KSgDJ84xF9nClUk1FStCsJ6iO0lnAJXcFCml0mpUl8Mfg63
-         GvmceoxiivtG69HX9Ib+AdhEyHh8SrBlLQrpPVvXevsDB28Wccj4ipRIc4FK50cKEYal
-         s5BKTOV0sHlmLry5N2EKwpAzNvP32whZZXBLz41ckYT93KXzItQ3E38yAQDW0I2lNnDZ
-         nTw9CeojLdNc5xLvmhFqPJAkZxt7j35fK6iRPXL7BBR6CAHnC4Hsdzc4a8c6vz/ZUZ7V
-         LL3w==
-X-Gm-Message-State: AOJu0YzQqSKgIkyXAdfBSWIE7RvN3Xg1Cq+/OwHbOHjq8IOxTYOmFbZH
-	CpRcvBGxfRuVm3F5i+Ii9i+9UJPBGJUf7Ex37Afn5kevmVjiTgK+ZnG1Onjpkw==
-X-Google-Smtp-Source: AGHT+IEi91bgjGpdxd6b1KVJteAO32/e7rfk2MgI0un8dbL/yrThhpzpxRXTFzO5dYTWX+Rat0dJbg==
-X-Received: by 2002:a05:6214:2483:b0:68c:46ab:c8df with SMTP id gi3-20020a056214248300b0068c46abc8dfmr1995323qvb.128.1706458443430;
-        Sun, 28 Jan 2024 08:14:03 -0800 (PST)
-Received: from denia.c.googlers.com (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
-        by smtp.gmail.com with ESMTPSA id dz11-20020ad4588b000000b0068c493426edsm566640qvb.104.2024.01.28.08.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jan 2024 08:14:03 -0800 (PST)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Sun, 28 Jan 2024 16:13:56 +0000
-Subject: [PATCH 1/2] media: nxp: imx8-isi: Factor out a variable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZfGm36r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B7CC433C7;
+	Sun, 28 Jan 2024 16:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706458448;
+	bh=ndyF0NYfl+R+hLw0n6zDHkkOWpG+6FQY/3DxH0reCm8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SZfGm36r/8nyDXNCPT/vmM1aVzwAtqo/q+rUYitEGMHUH6Tad1yRh2iESeh3QzaTD
+	 khwy3PnCmM8DA3i4nin79bElUykUxb5x2DS/1/kDbLXkW/rbE4MjVltWYm/4YEcbYI
+	 98AWb9aXC1znhFHZikTQpAFBMs2wnp7apoXB4DzFiDodd9p8NlpmLhCQ0PlSbigfzH
+	 UoXrwu/0tC1RmBWUFJqZav+nm08x9jw/nE4+hv/b0bSxmrYlFvmadiK7APTpURBLlY
+	 Bd54XombxwJo2PWHwJC7Q5GYZQBltrhlu+OtGY4yztvKGfeIQYM/J9qCV16OGRvL5p
+	 AAdLRZWjBtU2A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Monk Liu <Monk.Liu@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	mario.limonciello@amd.com,
+	Hawking.Zhang@amd.com,
+	candice.li@amd.com,
+	le.ma@amd.com,
+	victorchengchi.lu@amd.com,
+	shashank.sharma@amd.com,
+	andrealmeid@igalia.com,
+	hamza.mahfooz@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 29/31] drm/amdgpu: Release 'adev->pm.fw' before return in 'amdgpu_device_need_post()'
+Date: Sun, 28 Jan 2024 11:12:59 -0500
+Message-ID: <20240128161315.201999-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240128161315.201999-1-sashal@kernel.org>
+References: <20240128161315.201999-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240128-gcc-11-warnings-v1-1-52bbdf492049@chromium.org>
-References: <20240128-gcc-11-warnings-v1-0-52bbdf492049@chromium.org>
-In-Reply-To: <20240128-gcc-11-warnings-v1-0-52bbdf492049@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.14
+Content-Transfer-Encoding: 8bit
 
-gcc-11 seems to believe that coffs can be used uninitialized. Refactor
-the code and remove the csen variable to convince gcc that we are doing
-a good job.
+From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
 
-drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c:218:20: warning: 'coeffs' may be used uninitialized in this function [-Wmaybe-uninitialized]
+[ Upstream commit 8a44fdd3cf91debbd09b43bd2519ad2b2486ccf4 ]
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+In function 'amdgpu_device_need_post(struct amdgpu_device *adev)' -
+'adev->pm.fw' may not be released before return.
+
+Using the function release_firmware() to release adev->pm.fw.
+
+Thus fixing the below:
+drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:1571 amdgpu_device_need_post() warn: 'adev->pm.fw' from request_firmware() not released on lines: 1554.
+
+Cc: Monk Liu <Monk.Liu@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
+Suggested-by: Lijo Lazar <lijo.lazar@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c
-index 19e80b95ffea..5623914f95e6 100644
---- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c
-+++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c
-@@ -215,8 +215,7 @@ static void mxc_isi_channel_set_csc(struct mxc_isi_pipe *pipe,
- 		[MXC_ISI_ENC_RGB] = "RGB",
- 		[MXC_ISI_ENC_YUV] = "YUV",
- 	};
--	const u32 *coeffs;
--	bool cscen = true;
-+	const u32 *coeffs = NULL;
- 	u32 val;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 56d99ffbba2e..7791367e7c02 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -1218,6 +1218,7 @@ bool amdgpu_device_need_post(struct amdgpu_device *adev)
+ 				return true;
  
- 	val = mxc_isi_read(pipe, CHNL_IMG_CTRL);
-@@ -235,14 +234,13 @@ static void mxc_isi_channel_set_csc(struct mxc_isi_pipe *pipe,
- 		val |= CHNL_IMG_CTRL_CSC_MODE(CHNL_IMG_CTRL_CSC_MODE_RGB2YCBCR);
- 	} else {
- 		/* Bypass CSC */
--		cscen = false;
- 		val |= CHNL_IMG_CTRL_CSC_BYPASS;
- 	}
- 
- 	dev_dbg(pipe->isi->dev, "CSC: %s -> %s\n",
- 		encodings[in_encoding], encodings[out_encoding]);
- 
--	if (cscen) {
-+	if (coeffs) {
- 		mxc_isi_write(pipe, CHNL_CSC_COEFF0, coeffs[0]);
- 		mxc_isi_write(pipe, CHNL_CSC_COEFF1, coeffs[1]);
- 		mxc_isi_write(pipe, CHNL_CSC_COEFF2, coeffs[2]);
-@@ -253,7 +251,7 @@ static void mxc_isi_channel_set_csc(struct mxc_isi_pipe *pipe,
- 
- 	mxc_isi_write(pipe, CHNL_IMG_CTRL, val);
- 
--	*bypass = !cscen;
-+	*bypass = !coeffs;
- }
- 
- void mxc_isi_channel_set_alpha(struct mxc_isi_pipe *pipe, u8 alpha)
-
+ 			fw_ver = *((uint32_t *)adev->pm.fw->data + 69);
++			release_firmware(adev->pm.fw);
+ 			if (fw_ver < 0x00160e00)
+ 				return true;
+ 		}
 -- 
-2.43.0.429.g432eaa2c6b-goog
+2.43.0
 
