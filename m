@@ -1,85 +1,99 @@
-Received: from mailout08.t-online.de (mailout08.t-online.de [194.25.134.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF9423761
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 12:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.25.134.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B121720B04;
+	Sun, 28 Jan 2024 12:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706445390; cv=none; b=OX3j9ulMB8G+1L0s09NS37uUY4VHoL0LkZBe11sZnc8N/NnEPqaTtClNZSQgkOr/4WS7YTokVDCxypJjcoQY4Z+Q3SOudqWA0r755K2b87xFnBsG1sQ0MQH4AaCdziyaf4GhDlCHgdqgkDtsFs9FrFPRz2rSb4OhA1YxS5rIPnY=
+	t=1706445521; cv=none; b=LHjFMkv5kxQJLdJwdbBuD8PB7q1tbTMl8/x3O1Ttdgy2h7eeOMznzvLL7iZKWOIzuchsXCFWxqhoPvaN/gjuE+EFLFS03CEH7wEaHjJfhhi2IAbupsqpO+tGCN+dqp5rSlHg4btO/PZUhJSvaV7jDHi3mcBraWnkQt2R7oetBro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706445390; c=relaxed/simple;
-	bh=c1+LDDtW52Mdi+O0WFO7kYLUFHSb/KiaVRBVuzuOfhc=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=rfasQ6/BDBWKKIPxV+dJp0lmJM/iTRYp9OrPAR9+QGyeJit73E1S1foRz7NOfdCzCf4rKwvJa2pzHIFZz5ny0+3Lg2FphvhlJcNUMQNVngVG97eBdwZEW6Blp9MiCARe64F8qoUdUS7c1Ox6kh+Jiu6T+TjZixE/XyjINkfWjDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de; spf=pass smtp.mailfrom=t-online.de; arc=none smtp.client-ip=194.25.134.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-online.de
-Received: from fwd77.aul.t-online.de (fwd77.aul.t-online.de [10.223.144.103])
-	by mailout08.t-online.de (Postfix) with SMTP id DEFACD830
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 13:26:30 +0100 (CET)
-Received: from [10.2.3.136] ([80.145.193.127]) by fwd77.t-online.de
-	with (TLSv1.3:TLS_AES_256_GCM_SHA384 encrypted)
-	esmtp id 1rU4F3-222Ang0; Sun, 28 Jan 2024 13:26:29 +0100
-Message-ID: <dfe9213bb86939ca4502b5b3fdd3ab77ef1b6f1b.camel@t-online.de>
-Subject: Western Digital SSD freezes on power saving
-From: Frank Tornack <f-tornack@t-online.de>
-Reply-To: f-tornack@t-online.de
-To: linux-kernel@vger.kernel.org
-Cc: f-tornack@t-online.de
-Date: Sun, 28 Jan 2024 13:26:23 +0100
-Autocrypt: addr=f-tornack@t-online.de; prefer-encrypt=mutual;
- keydata=mDMEYPp0PBYJKwYBBAHaRw8BAQdA9MoQWxT+PljXoionhEHpIAuLlhUME07Jht42EmJS9/K0f0ZyYW5rIEVja2hhcmQgVG9ybmFjayAodGhpcyBrZXkgaXMgdXNlZCBhZnRlciAyMy4wNy4yMDIxLiBBbiBhdHRlbXB0IHdhcyBtYWRlIHRvIGludmFsaWRhdGUgb3RoZXIga2V5cykgPGYtdG9ybmFja0B0LW9ubGluZS5kZT6JAoYEExYIAi4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4ACGQFEFIAAAAAAEAArcHJvb2ZAYXJpYWRuZS5pZGh0dHBzOi8vdHViZS50Y2huY3MuZGUvYS9ib2xsZXJ3YWdlbnBpY2FyZC9iFIAAAAAAEgBHcHJvb2ZAbWV0YWNvZGUuYml6aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZnJhbmtlbnN0ZWluOTEvOGE2ZmEwNmMxM2ZiY2VlZjhhMjRmZDFiNmRlNzIyYmFFFIAAAAAAEgAqcHJvb2ZAbWV0YWNvZGUuYml6aHR0cHM6Ly9tYXN0b2RvbnRlY2guZGUvQEJvbGxlcndhZ2VuUGljYXJkqhSAAAAAABIAj3Byb29mQG1ldGFjb2RlLmJpem1hdHJpeDp1L0Bib2xsZXJ3YWdlbnBpY2FyZDp0Y2huY3MuZGU/b3JnLmtleW94aWRlLnI9IWRCZlFaeENvR1ZtU1R1amZpdjptYXRyaXgub3JnJm9yZy5rZXlveGlkZS5lPSRjWGVqcnQ3dWJ1RUF5aTNsaFVDeWFEUUlBa0lnRktHMnF3TF8yTXl6MDY0UxSAAAAAABIAOHByb29mQG1ldGFjb2RlLmJpemh0dHBzOi8vZ2l0LmdnYy1wcm9qZWN0LmRlL0JvbGxlcndhZ2VuUGljYXJkL2dpdGVhX3Byb29mFiEEirOWSf3d6fB6q3EmVa3qmdMF6s0FAmR3n
-	hEFCQWlCuQACgkQVa3qmdMF6s3KvgD+O46flI8ye2GWKixgtdQz4aDS78b+LES2ROInCv7N9IwA/ihgH1BlnCypJ4oXSb4KoPmC2M/HLfjtN/kG8x9B6VAPtFBGcmFua2Vuc3RlaW45MSAoRGllcyBpc3QgbWVpbmUgU3BhbSBFLU1haWwpIDxmcmFua2Vuc3RlaW45MS5pbmZvQGdvb2dsZW1haWwuY29tPojQBBMWCAB4AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAORSAAAAAABIAHnByb29mQG1ldGFjb2RlLmJpemh0dHBzOi8vbGljaGVzcy5vcmcvQC9NVExGcmFuaxYhBIqzlkn93enweqtxJlWt6pnTBerNBQJkd54XBQkFpQrkAAoJEFWt6pnTBerNBPYBAPQqJRcB3bXZBZMBkWvYRPf44BZeYZPikE0jWpzmvil7AP4372uJBCKvTDX/v3ONDVBxK5kDn96yKTMVmm1PsJZVCrRMRnJhbmtlbnN0ZWluOTEgPGZyYW5rZW5zdGVpbjkxLmluZm9AZ21haWwuY29tPiAoc2hvcnQgdmVyc2lvbiBvZiBHb29nbGVtYWlsKYiWBBMWCAA+AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEirOWSf3d6fB6q3EmVa3qmdMF6s0FAmR3nhcFCQWlCuQACgkQVa3qmdMF6s3FegD9EF0ViEKoXrUtjeyxTNr7TZybm0C72s73E0cVLZnjfXYA/3XPhEYxgcKxLQ8Ee9vg20C7QwtumLf4dewXSjE+3jEJ
-Organization: Privat
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1706445521; c=relaxed/simple;
+	bh=tKwUFnxuzYj62IcC9B9LprzswbdAqj5/rvK4x50IGoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WVqwMVS4/iWky1KMaukttHJnn1F5/jijBMeaVRH9eIB/PBVSVSU0Qabm3pP68I83RleF5eqzA+yz7kHJxQxDr5zPJH+CGCXUZrAG+cMkdlF+NgNkpJMkVmKq96YHsWEIR+1FYVV1jQSUIA0IY4AdHEHxqDWtpfdZ/ysWsowiFcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A+mGpzcd; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+mGpzcd"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cf3a095ba6so19409831fa.2;
+        Sun, 28 Jan 2024 04:38:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706445518; x=1707050318; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XMoR8tdddP7YkCO+TVLJDCihWfN9qzXvX9tzIymJSa8=;
+        b=A+mGpzcdNDVwsvPVG9QgWd6j+TQ7ftTwOUb0t5kkpj1zgsQJjFJ4imOL5fraOExJ+T
+         Ch3UJFcR+bpEwykmO8X/w1QiQWG8xXAMNHW5X5yi+EJ4eQ5Bdnto0ORvTzPzeaJCLH6b
+         xz2noknO1hrm5GvXSqaVKue/f8Py8nLLH8vXiu426y5Ku0nJ6nNCKgfa29eORWd/j9uv
+         3RxJm62lEStwYKtn+BFHhmcV/lPOKqqZO6Ni46/tQf9wxEgluXpbVOxustyJQsqkkTL8
+         qLeZR5xmxhCSOnAVn5ir0upWw89Xi5MduotzpalSpnSEtp5JMEFD2YRYyndq5P+PZv5y
+         OmZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706445518; x=1707050318;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XMoR8tdddP7YkCO+TVLJDCihWfN9qzXvX9tzIymJSa8=;
+        b=A7aVxSpuRbZkGVMW0iXnrjMYrEbTuQLAxtLG6KaQfYnbC4erA+pI9Fb4OLADnP4MEu
+         DrQXNfTmrgV6ITp3K4x+w4cWb8CgZQfEbnZ66fay3Fe5euSCEMAbkgPTTDBw2QW0ZFto
+         bD2X05bhgSGzv3FobnKixVG2HHtHjfiohPJI0vCJc/9QxEuccvhfKh/IDW5kGDkDjl8i
+         6zI6KCsyFYCA4r27Sor3BSdiJ/jPZVNTbrQ8XVLavwq6OBlrBfE55llr1F3DaXH/Uugs
+         dsweBoy+mENiQB0aOTiVGiqoq1imzvV4MKWSa/BtdMFtfsu8mLQ49jee+JEMt8a1tqMm
+         r70w==
+X-Gm-Message-State: AOJu0YxLgze9QGq8kWSyn25Acb9+7agKVzcMV2JbLmLjs5nuQPlwQRcz
+	7jnXaE2Vt/2yNB4ATP8BLgTFcxtIZIj7rRQtLC6U8ILvreP1dpHnfpTqQtjhyunS9l7RPwg+PIm
+	X9kwKWuVU5d9mflA32g8wSrZVwtE=
+X-Google-Smtp-Source: AGHT+IF+0nTXIboXcRryDkc5o2FJVgoAz88gONQuhrs/mEmLyEYrwuchszSkeAgN9zqOGUjOxCiAY3AmkAoImw9Iwa4=
+X-Received: by 2002:a05:651c:1505:b0:2cd:f093:7939 with SMTP id
+ e5-20020a05651c150500b002cdf0937939mr2414049ljf.32.1706445517369; Sun, 28 Jan
+ 2024 04:38:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TOI-EXPURGATEID: 150726::1706444789-3F7FD877-70A9FF13/0/0 CLEAN NORMAL
-X-TOI-MSGID: e8d36ad7-195c-4e13-abc3-6231d56fac44
+References: <20240128145626.53e7a0d3@canb.auug.org.au>
+In-Reply-To: <20240128145626.53e7a0d3@canb.auug.org.au>
+From: Steve French <smfrench@gmail.com>
+Date: Sun, 28 Jan 2024 06:38:26 -0600
+Message-ID: <CAH2r5mt5UJjP0nwE6k4uoN8UHdgs2xHTnP4-o0Z-jidX4=9umA@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: CIFS <linux-cifs@vger.kernel.org>, Steve French <stfrench@microsoft.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+fixed
 
-Hello Linux kernel developers and experts,
+On Sat, Jan 27, 2024 at 9:56=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> Hi all,
+>
+> Commits
+>
+>   60c2fcda9c84 ("smb: client: add support for WSL reparse points")
+>   f6819b9b72b5 ("smb: client: reduce number of parameters in smb2_compoun=
+d_op()")
+>   c08113706498 ("smb: client: fix potential broken compound request")
+>   35f88f006a3f ("smb: client: move most of reparse point handling code to=
+ common file")
+>   985f1bce45c4 ("smb: client: introduce reparse mount option")
+>
+> are missing a Signed-off-by from their committer.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-I have a question that I think is not tied to a specific distribution
-and goes pretty deep into the Linux kernel. I hope you can help me
-without subscribing to the mailing list and remember to include me in
-the answer discussion.=20
 
-In my old notebook I used an nvme-ssd from WD (wds500g1b0c-00s6u0),
-which is affected by a well-known bug. I currently use the parameter
-`nvme_core.default_ps_max_latency_us=3D0` to prevent the system from
-freezing.=20
 
-I would like to use a new SSD in my new notebook. However, as it is
-difficult to sell used SSDs, I would like to continue using the old SSD
-affected by the bug. I plan to move the SSD to a Thunderbolt enclosure
-for this purpose. I think since Thunderbolt is based on PCIe, the same
-energy saving measures and the associated bugs will probably apply.
+--=20
+Thanks,
 
-In the hope that my new SSD doesn't have the same bug, I would prefer
-not to disable the Powersafe in the laptop. Is there a way to set this
-flag only for a specific SSD? By identifying it by name or serial
-number?=20
-
-I apologise prophylactically if my question is completely out of place
-and thank you for your help. As a long-time Linux user, I would also
-like to thank you in general. If you have any follow-up questions,
-please do not hesitate to contact me.
-
-- --=20
-Frank Tornack <f-tornack@t-online.de>
-Privat
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSKs5ZJ/d3p8HqrcSZVreqZ0wXqzQUCZbZH7wAKCRBVreqZ0wXq
-zcQkAPwMA+J3eO/S6T92Gsz9YBamYVHhwLlcUAG3qsYM2g8sRAD/UY+If8RlsT5V
-uKg89rhH2bnWrVF9PKGU4ZamfHo8eQ0=3D
-=3Dgfie
------END PGP SIGNATURE-----
+Steve
