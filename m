@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8E345BEA;
-	Sun, 28 Jan 2024 20:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2551A44C96;
+	Sun, 28 Jan 2024 20:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706472701; cv=none; b=qw48/o06MEPv8Dn31wIdukX8ESYCgkpchZ5oyP2/auhCSgMVnxpHyc3j22Vdo9srqnNhNMSyGTgcShgrNTR+qgH550p6QXsf46hd6VWvWGOqRuU78wptoA16abhn4WaJ01nd9chpMT9V8HT3BiJ0uSoNrCCGoRYPjT77iuzpGFQ=
+	t=1706472700; cv=none; b=lllsnzAHnUE9say4jh2ROErCkT7/+jQdSOrXY2cY+5Ff6TZIfaRjzpfTMky3CmSv9z5NlaRMtvGZxoGYIERFu8tAwfSN6W1XMc1VAe2S1HpFs883JA9RcpRYk9f9e8sZhSiG7V8dyuhYpK9AR3uBJwDejp1fH4G85oou3wVfYhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706472701; c=relaxed/simple;
-	bh=qomwzeZ0+VdI6mZ2yu+WT993r+YiIAfvdX9TkSDmq08=;
+	s=arc-20240116; t=1706472700; c=relaxed/simple;
+	bh=uST46aVMcO0oxyeJtONHXSQTVv+FoojlsknYZY7TYrs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ypl4v4tkw+h65b0dcb1ZtXJpuT6oy1zORVQuxyhh6kv4vfs/jsJD8dupUn90u0TFzObVJZYzmYaVzKwDWuf0ngLzlgMCjWXOcXcxwsYNMbqTKXtnF4ac7XKKMR0giVcI9mVA2hpfr5Aq7II8yhr8DdMm+SZ6mwJgk7+16C1CZU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=E5w0/h86; arc=none smtp.client-ip=212.227.17.22
+	 MIME-Version; b=jWrP34QEaZYg1GU3IgblH3hy+ruTRrUzVaVTg/ujPPKw+8SdTKyFOelN2ZP+ZHMmDn8My2UAvjyfPlcX4GkVrSDdIg0M2HaDRzDhHWnrCisr2dB+iFYpSVdhR4gAMAdjhGI+szvxzdCg/J8YDF7OZbcKbv+mAiRLeaH2+e3oHjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Rkr4vVE/; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="E5w0/h86"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Rkr4vVE/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706472685; x=1707077485; i=wahrenst@gmx.net;
-	bh=qomwzeZ0+VdI6mZ2yu+WT993r+YiIAfvdX9TkSDmq08=;
+	s=s31663417; t=1706472684; x=1707077484; i=wahrenst@gmx.net;
+	bh=uST46aVMcO0oxyeJtONHXSQTVv+FoojlsknYZY7TYrs=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=E5w0/h86kgKM+pPZP60JZkKNqdUVjJj8gvX+i37JI+u/d0CVWVh/ohcbOC8IWPwp
-	 ujD3buEPmemNz79K11vLkwH9A7oWFMwEj4zh1DzPYpjiNt3rs9m9yJavdTPhvlBvF
-	 nt/lK3od5c9kShy7ECSlzDtzlT1u94dacZokaL3UoEjEWT/2zN3jFmGlL0sJFLHG/
-	 z+Bwe0rFWxYVpXTmhfUneUc/lJZ3L3RSCZ2oxurNaVAwFGuPszzn2Xbha2GJHJLEm
-	 h500/jgvChpINTAROrYJaWXmBAepi8IOxuIEIX0c+ZjPuMLO1HkYOZE6R8vUui3n9
-	 I/cmChHDy/xqV0BrcQ==
+	b=Rkr4vVE/iVXJPyyEUuFCsm5viHcodBnVccQwHRv8uSbBxjQfwcneAc6gIv4Zo8kM
+	 bc0RRa5YbKagFZn1wLdtLTtRwKeKiZU74UcaXd5bX+dzOO8ygVFjMxdvwa4yGqeFe
+	 AevJnB7O3VvSJwyf0tS/iBRKmc9swVy5NFzndVtT5AUUkimNq9lKV+1qZ07BCbvIL
+	 EjT3X6CuHeC5rWVBzeX8Co4EwE6AEPADkYh6uGUxfwDgtcuYAM0s0KIdol/s7/ABk
+	 Nkrqan06+28l5EOhEk1VZLdoaqRc2rM5lGpr4fcnJQs50FlUw+9oKyJeY5m3mIK78
+	 55qAhwHayAXcNkNHzA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBDj4-1rLuHz1BT4-00Cj4W; Sun, 28
- Jan 2024 21:11:25 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MYeR1-1rYKTY3mWB-00Ve2D; Sun, 28
+ Jan 2024 21:11:24 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -40,10 +40,11 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	Florian Fainelli <f.fainelli@gmail.com>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V4 14/15 net-next] mailmap: add entry for Stefan Wahren
-Date: Sun, 28 Jan 2024 21:10:58 +0100
-Message-Id: <20240128201059.6259-15-wahrenst@gmx.net>
+	Stefan Wahren <wahrenst@gmx.net>,
+	Jacob Keller <jacob.e.keller@intel.com>
+Subject: [PATCH V4 11/15 net-next] qca_spi: Adjust log of SPI_REG_RDBUF_BYTE_AVA
+Date: Sun, 28 Jan 2024 21:10:55 +0100
+Message-Id: <20240128201059.6259-12-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240128201059.6259-1-wahrenst@gmx.net>
 References: <20240128201059.6259-1-wahrenst@gmx.net>
@@ -53,51 +54,53 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6f7TV1aAKo0U0E1wOpDbkUEDEgpYbTr0D+yMFV6k4LWK/x1cpT6
- 9rQb70QUJWxdrreJ/ScTIauS6tOWB4w2bPTYW9Awkw6Uhxqx4KxSZ9hn3LV8mJ5WKMbw2v0
- 9wtl17zw/G60UHcnDN1BbaTc2TwSPRaek3rNkvXDxdSWjFpphyoI5kiIpruJkAIcMZHVwh1
- nB1uNUKtJ/iiX3XgfrdGQ==
+X-Provags-ID: V03:K1:9bSTfWo2H7bN9GNATqokZKzrpAXj8qGdG0JIg7kD+UeFZ7XESL2
+ DYOotE9tBV19InmYeRqOQkBsUSO7taaThvh4grA3yzUCyju3tcAfwc+faXk+ljC7ToqXk4l
+ l5XMf7fcisL8XerUPKFc3cEVQ0HP6j5g+Us6QHRCCXFQtU+YwnkatORDAwP5tjXc8pM/OY1
+ LxrvpYPyn73nLPksGqlHQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3P9hcsEIbjA=;k7vNDQcKfYHjKoxTtuU0wI5t1ms
- ejdxHLh5JflPbTAdKJghHs3gKnB/4tM2qZOKJ0b7Nw9UPF5IbUkcqr1s/ZN6V5FS3BnWxQb7u
- 6akH+8SUBL3oVdHjZx+Pi4K/gRGrpth3bgT+xPWBSugbKjdsgjR0QKiQfOGpvjv1cxKHvtIpc
- HVrnCws2Ifsc7mbXFlhodBSlGGw3RKwZCfQJJ0fe0BlkGWFcSMMJBB8On0o5fVmCTkZwOD+ef
- MnryCPQKDLsv8iNC6mtg1MMKQQjtIPwDC1TETD4TwH2Z4l1fRrloX2CSMcvFGXBumb3QuFZxO
- txA5fRS0pjTq3mMxI9G94lT8xmwv8BbYKQFBcaDQJKcKy9Z67PB5Gvm8/8RZmEd3IauzT1blA
- jM5PcSDkv9hsdl1eNeksjcCgCp7eenzyVXNHGLHuhouKYeqvWdrm83SxHIpFV9v2mGPMXC9dV
- 7ab9nnIXMQCgDtMgpop609Jl0rddOfK1GWGIi/6/1OKqJX63QWDqna3J5EsNvA8VZGGLvFQ55
- SzpC0wku6aD6XIr77Dzq3+MmHJ7hTr2bQktOVrcYe11Le9H+SWA2PY3pC2l/PA8/9URF5yevU
- kRSf4Sz7VSbyUlgkPgulA3RfZZbXw4ABO4PxFpBhXAq/fIMMc4D9/wGb9bWsHSJAnXSph53jJ
- k5Bdy/ExrT7b4r1CHT0UvdfrwZaSqmxKMHx4vxJpXLrWAY1ZgMuv4U1L3Hbh4hCpLEKqu2LDJ
- cMjvtLnIWPS3qHfpYFNUM/qBBXwbdyuuislFfLwjIMe1ngEqirlIrlX1FAgVJyIFQt8cURmVP
- qc7tyOh8kAKPFNzQmolvH5zhBBpAhqDSlswnXRNJ1Eei12QqFe/a88dF2AnOsRURGlnjzd1jb
- Q88QKoUzHh+yn+DDJolZs0NtOxKuRFziQP4q8n4dmX8Gw8+QefrRyKRecH61863P8N4hzo7Oc
- pUMG4w==
+UI-OutboundReport: notjunk:1;M01:P0:k+PyFEjTasg=;ZZNtwmw/ebZFR1tBph1IF7AV9zW
+ su3Wah4RuT3qktXo6mNIYHwxJXecSAZSnKpYs+rWzWyOVTdhAaXH/8BOgyeTJ0ZBeBJZPA56D
+ 62t/gIVuf86CpP51jnBM/kebi3+lXu75j4pwcw6/QiI1DAJu/5lFNS08O1EI0b4xNTeomOPDG
+ soueA7KU3XdeOULGNT8mH9BNWbW9l7C0ouFUxa+MDv1nP4LqlqVyAI2naumEu9fee4nLRoWa6
+ hlN+l4PzFFgc02NT/Sr4bZzG8T1i7iOEe1hXcOayGgIb8+1PpW2kck1ryKmzD9qFafeweKbol
+ RfNjq1SZ4A/WZeGqTVGYMsF5j5OktiBCMFmGbolBWh0Jpaf1GYwjt4BkRa2v07VRGadJkOtCV
+ zUibMHr72SMlOS9Fo+r35hI/ZzkYeiQODTGuC4Y6R7AiDO4Z9l55AdsoNihJfMSKkaSulgh63
+ lu6vG8z8+K+tK0gR9K0BloH3+Zj3oC/mgevXPIAjF6IhuDXrRvR7BHL730FlcsMiGBeldbkRj
+ e+w92kAVaAZNC5yBjsNhu+RnIKV2q7xvmX4DsDagPOWnvAXCfi4bVvaB8R83Y+7AmUZ223coF
+ dGn01PDHabqUC/YiY3sL11JD+yeNk2UMLqyxIG7Tuq0hM2+YnMp6sPW3rg7rwNmOF9vjoM+LX
+ v8ZBrNZRbidJfREFGFReKCx9nrp2q46evypZOLVAx65prm3wDsjwjQS9KneRAij7CT7E1En46
+ OMu8yt6IxVy4XjPP6+0P7BIgDtP4SE8KRofZIwdJ2XN0ytQ5sQRbk0oN+xPbfoAP7+3vYeQ1u
+ 7siQnsEHg4GlyrB17whn5lEM1G5etZHpg2dChlmQnlwwHi5pJK/onr/57iWZv3914qBUBSI71
+ +kyNhkQRDSQfTKHVkOTGsR4hGC/TzFt0NerzIGBQeMEGTlJRmhl2wMJa2BNHhlVxsRd6VddEX
+ HvOsbA==
 
-Add a .mailmap entry because my old i2se.com address will be
-deactivated in the near future.
+All known SPI registers of the QCA700x are 16 bit long. So adjust
+the formater width accordingly.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- .mailmap | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/.mailmap b/.mailmap
-index 04998f7bda81..95b4fe465cc6 100644
-=2D-- a/.mailmap
-+++ b/.mailmap
-@@ -568,6 +568,7 @@ Simon Kelley <simon@thekelleys.org.uk>
- Sricharan Ramabadhran <quic_srichara@quicinc.com> <sricharan@codeaurora.o=
-rg>
- Srinivas Ramana <quic_sramana@quicinc.com> <sramana@codeaurora.org>
- Sriram R <quic_srirrama@quicinc.com> <srirrama@codeaurora.org>
-+Stefan Wahren <wahrenst@gmx.net> <stefan.wahren@i2se.com>
- St=C3=A9phane Witzmann <stephane.witzmann@ubpmes.univ-bpclermont.fr>
- Stephen Hemminger <stephen@networkplumber.org> <shemminger@linux-foundati=
-on.org>
- Stephen Hemminger <stephen@networkplumber.org> <shemminger@osdl.org>
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
+t/qualcomm/qca_spi.c
+index d2d68c20b32c..ca8c0596a992 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -359,7 +359,7 @@ qcaspi_receive(struct qcaspi *qca)
+ 	/* Read the packet size. */
+ 	qcaspi_read_register(qca, SPI_REG_RDBUF_BYTE_AVA, &available);
+
+-	netdev_dbg(net_dev, "qcaspi_receive: SPI_REG_RDBUF_BYTE_AVA: Value: %08x=
+\n",
++	netdev_dbg(net_dev, "qcaspi_receive: SPI_REG_RDBUF_BYTE_AVA: Value: %04x=
+\n",
+ 		   available);
+
+ 	if (available > QCASPI_HW_BUF_LEN + QCASPI_HW_PKT_LEN) {
 =2D-
 2.34.1
 
