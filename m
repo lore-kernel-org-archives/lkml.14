@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E830E51C2C;
-	Sun, 28 Jan 2024 16:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDE2524CC;
+	Sun, 28 Jan 2024 16:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706458324; cv=none; b=EhyHzDIDtDVrmpPgNtfM9C3EKeqCPmz+zJSJqcb6AlDNgwDugx51l8S2AogGta3ruBjBkMKrT5HOi8/D/D+o48rjQpWIT35+VIw7ehdaK06ahVixIU36j4QIT+/Kfxi4Ew5IjKfhKJBkfaZ7ZEQincADZorbUE2CtzaL/mqdMTA=
+	t=1706458327; cv=none; b=m5qKnB4VeAde83Zk+g5VFuQ09MvDHvMYSBU2VTU5k1fPtn1SzXYckwgbA93yffzB2zuE1pl1WAXy0IMdTDCVLPreBVxpSUb9KoRERxWVRiOv7Nmy0o5ifJms+5LShOuA0HAiQYo3f1VrNE+6ao2ZyZZq+UEjgNJrQgCbB9xn8rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706458324; c=relaxed/simple;
-	bh=lMQxen8ayWc8dQIzI8+sWw3n7L1wyUX4yT5wSLxfHNU=;
+	s=arc-20240116; t=1706458327; c=relaxed/simple;
+	bh=ix8XBCGUm23P7dIAwb+lQE/fHDfnA07Y2g69GvMJYpU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mYdou8hCZA5pDiWqYNv7qd0H9BK4nUS5XGb2g4vwQ3QlH22dPYZfhv89IxaEdytOOeBSe31xKBvG2vSFZgkmFkQ/EZI+OHWO6sY1ioIVMQvMf0LpDH/LBJXH3160gyvzx1B1U8Sh6W8WCYJ3rO8XenoBpzLysOMYCoLIuEogdm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbpsERd0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mo2CzbuMlH8DolGafKijQRcMl0XIf83aVVFsOCvfiHgmir6O9zvVsTpdDJ1YB9XbGpBB4JNmafOx3eSUH0esMGa5JbwmLwEasZAd7zpj5wImnwMJBa5ZGNdwSdbRpwXHOw/aN7g3DPzSaZd1HLKUBNQCwtiwdLcZOp7bz35K/FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzDFgHKp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbpsERd0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39414C43399;
-	Sun, 28 Jan 2024 16:12:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzDFgHKp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2541C433B2;
+	Sun, 28 Jan 2024 16:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706458323;
-	bh=lMQxen8ayWc8dQIzI8+sWw3n7L1wyUX4yT5wSLxfHNU=;
+	s=k20201202; t=1706458326;
+	bh=ix8XBCGUm23P7dIAwb+lQE/fHDfnA07Y2g69GvMJYpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AbpsERd0/LH4S77meQzAx6iv6SGjZ83XwiTuOZZ34T7DJbOs9JdZg8Xy46cBhVSpi
-	 0go1dC14ysKK19miulLWL5VLN0Oinnvc1t6dnSILA/UEeadYvX+raNSqGnC6SbJAIX
-	 op5UJmS7eVyRcNzgbknz9zGA3LSyAOA5PUZLUXe2IpixvZSNzVqOXQcFYoGQ9eHf8O
-	 LR18aLAdQ6b59l3MXmuZLdpMP6OkLJq3MAChBfep6q4uE6FGz/OABDoDTsxtsFVbbI
-	 TCJu/fpWs4DY1FYyyuRuXg+lXP0WRztZbDJ8ymrwF2E3lShGkikbfp0HajnvkLVnVK
-	 5AdlTeZdsa8Rw==
+	b=jzDFgHKpoBhdxNKBHijKbQPj/rtRnky77mXtQGkBiWkS/rG/vdff2FlXmdhHiTBZm
+	 13k1PPCdjW8x69XQThZ7RBmigLeo8w6Fx2IrlnVe2AorM9B8JT+6v6IKAYBZEX31N0
+	 ayPPw9JUHMJA9YTttu80FEuUhNvVkFqiGzm3gvnprmkiOdK8fF3zYVi0iFAogA0B0g
+	 Wti4IAZiNk6OIoiam1OEVIagSDMP/tbFKCNi0fJHDPjbHQ/f2fSyJ7QiDN0YOua73F
+	 ZImn9+VRi7x3rNTd7Bkx9RoBBM4BIvkHfp1qR9UrAGT4cBdacE+LKO02IHs+ZyFVqB
+	 a+6a52K074yxw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	v9fs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-fsdevel@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.7 18/39] 9p: Fix initialisation of netfs_inode for 9p
-Date: Sun, 28 Jan 2024 11:10:38 -0500
-Message-ID: <20240128161130.200783-18-sashal@kernel.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mathias.nyman@intel.com,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 20/39] usb: xhci-plat: fix usb disconnect issue after s4
+Date: Sun, 28 Jan 2024 11:10:40 -0500
+Message-ID: <20240128161130.200783-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240128161130.200783-1-sashal@kernel.org>
 References: <20240128161130.200783-1-sashal@kernel.org>
@@ -56,96 +51,87 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.7.2
 Content-Transfer-Encoding: 8bit
 
-From: David Howells <dhowells@redhat.com>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
 
-[ Upstream commit 9546ac78b232bac56ff975072b1965e0e755ebd4 ]
+[ Upstream commit 6d6887c42e946f43bed2e64571a40c8476a1e4a9 ]
 
-The 9p filesystem is calling netfs_inode_init() in v9fs_init_inode() -
-before the struct inode fields have been initialised from the obtained file
-stats (ie. after v9fs_stat2inode*() has been called), but netfslib wants to
-set a couple of its fields from i_size.
+The xhci retaining bogus hardware states cause usb disconnect devices
+connected before hibernation(s4) and refer to the commit 'f3d478858be
+("usb: ohci-platform: fix usb disconnect issue after s4")' which set
+flag "hibernated" as true when resume-from-hibernation and that the
+drivers will reset the hardware to get rid of any existing state and
+make sure resume from hibernation re-enumerates everything for xhci.
 
-Reported-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Marc Dionne <marc.dionne@auristor.com>
-Tested-by: Dominique Martinet <asmadeus@codewreck.org>
-Acked-by: Dominique Martinet <asmadeus@codewreck.org>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Link: https://lore.kernel.org/r/20231228071113.1719-1-zhuyinbo@loongson.cn
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/v9fs_vfs.h       | 1 +
- fs/9p/vfs_inode.c      | 6 +++---
- fs/9p/vfs_inode_dotl.c | 1 +
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-plat.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/fs/9p/v9fs_vfs.h b/fs/9p/v9fs_vfs.h
-index 731e3d14b67d..0e8418066a48 100644
---- a/fs/9p/v9fs_vfs.h
-+++ b/fs/9p/v9fs_vfs.h
-@@ -42,6 +42,7 @@ struct inode *v9fs_alloc_inode(struct super_block *sb);
- void v9fs_free_inode(struct inode *inode);
- struct inode *v9fs_get_inode(struct super_block *sb, umode_t mode,
- 			     dev_t rdev);
-+void v9fs_set_netfs_context(struct inode *inode);
- int v9fs_init_inode(struct v9fs_session_info *v9ses,
- 		    struct inode *inode, umode_t mode, dev_t rdev);
- void v9fs_evict_inode(struct inode *inode);
-diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-index b845ee18a80b..90dc5ef75516 100644
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -246,7 +246,7 @@ void v9fs_free_inode(struct inode *inode)
- /*
-  * Set parameters for the netfs library
-  */
--static void v9fs_set_netfs_context(struct inode *inode)
-+void v9fs_set_netfs_context(struct inode *inode)
- {
- 	struct v9fs_inode *v9inode = V9FS_I(inode);
- 	netfs_inode_init(&v9inode->netfs, &v9fs_req_ops);
-@@ -326,8 +326,6 @@ int v9fs_init_inode(struct v9fs_session_info *v9ses,
- 		err = -EINVAL;
- 		goto error;
- 	}
--
--	v9fs_set_netfs_context(inode);
- error:
- 	return err;
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 732cdeb73920..f0853c4478f5 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -433,7 +433,7 @@ void xhci_plat_remove(struct platform_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(xhci_plat_remove);
  
-@@ -359,6 +357,7 @@ struct inode *v9fs_get_inode(struct super_block *sb, umode_t mode, dev_t rdev)
- 		iput(inode);
- 		return ERR_PTR(err);
- 	}
-+	v9fs_set_netfs_context(inode);
- 	return inode;
+-static int __maybe_unused xhci_plat_suspend(struct device *dev)
++static int xhci_plat_suspend(struct device *dev)
+ {
+ 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+@@ -461,7 +461,7 @@ static int __maybe_unused xhci_plat_suspend(struct device *dev)
+ 	return 0;
  }
  
-@@ -464,6 +463,7 @@ static struct inode *v9fs_qid_iget(struct super_block *sb,
- 		goto error;
+-static int __maybe_unused xhci_plat_resume(struct device *dev)
++static int xhci_plat_resume_common(struct device *dev, struct pm_message pmsg)
+ {
+ 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+@@ -483,7 +483,7 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
+ 	if (ret)
+ 		goto disable_clks;
  
- 	v9fs_stat2inode(st, inode, sb, 0);
-+	v9fs_set_netfs_context(inode);
- 	v9fs_cache_inode_get_cookie(inode);
- 	unlock_new_inode(inode);
- 	return inode;
-diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
-index c7319af2f471..d0636b99f05b 100644
---- a/fs/9p/vfs_inode_dotl.c
-+++ b/fs/9p/vfs_inode_dotl.c
-@@ -128,6 +128,7 @@ static struct inode *v9fs_qid_iget_dotl(struct super_block *sb,
- 		goto error;
+-	ret = xhci_resume(xhci, PMSG_RESUME);
++	ret = xhci_resume(xhci, pmsg);
+ 	if (ret)
+ 		goto disable_clks;
  
- 	v9fs_stat2inode_dotl(st, inode, 0);
-+	v9fs_set_netfs_context(inode);
- 	v9fs_cache_inode_get_cookie(inode);
- 	retval = v9fs_get_acl(inode, fid);
- 	if (retval)
+@@ -502,6 +502,16 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
+ 	return ret;
+ }
+ 
++static int xhci_plat_resume(struct device *dev)
++{
++	return xhci_plat_resume_common(dev, PMSG_RESUME);
++}
++
++static int xhci_plat_restore(struct device *dev)
++{
++	return xhci_plat_resume_common(dev, PMSG_RESTORE);
++}
++
+ static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
+ {
+ 	struct usb_hcd  *hcd = dev_get_drvdata(dev);
+@@ -524,7 +534,12 @@ static int __maybe_unused xhci_plat_runtime_resume(struct device *dev)
+ }
+ 
+ const struct dev_pm_ops xhci_plat_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(xhci_plat_suspend, xhci_plat_resume)
++	.suspend = pm_sleep_ptr(xhci_plat_suspend),
++	.resume = pm_sleep_ptr(xhci_plat_resume),
++	.freeze = pm_sleep_ptr(xhci_plat_suspend),
++	.thaw = pm_sleep_ptr(xhci_plat_resume),
++	.poweroff = pm_sleep_ptr(xhci_plat_suspend),
++	.restore = pm_sleep_ptr(xhci_plat_restore),
+ 
+ 	SET_RUNTIME_PM_OPS(xhci_plat_runtime_suspend,
+ 			   xhci_plat_runtime_resume,
 -- 
 2.43.0
 
