@@ -1,132 +1,85 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from mailout08.t-online.de (mailout08.t-online.de [194.25.134.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E5A208AD
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 12:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF9423761
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 12:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.25.134.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706445382; cv=none; b=WAMXVNy7psDx1mdDNtDLQH32v7wEAUHNFp3ZXek7brWZFXPWe3PQt6qfVQ6jBEReE/mrxAtcJNyr0LhJ36zT1tcAlIopdJJ28lqRyDc9s7wYex8vbdxKQHzXnC/PWOGfUqIs3Latta6zN++v88ywK0qoT5DQJjEc43hA5Md5Ne8=
+	t=1706445390; cv=none; b=OX3j9ulMB8G+1L0s09NS37uUY4VHoL0LkZBe11sZnc8N/NnEPqaTtClNZSQgkOr/4WS7YTokVDCxypJjcoQY4Z+Q3SOudqWA0r755K2b87xFnBsG1sQ0MQH4AaCdziyaf4GhDlCHgdqgkDtsFs9FrFPRz2rSb4OhA1YxS5rIPnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706445382; c=relaxed/simple;
-	bh=AO5e8HxcukgmlxCKaaT+Yy3hUdVZUwg2ySjru/JA0HM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=E2twj/pH7eENoA04x5bxj+Qm0nLTnh3bVeiCfIFQgVEjuzF90mbolLVml9hA4F9Ioam01ISaRz654EDQMTCegya24jE86qFMQ+sPbCxujV6obk7y3dGI0hEzxEQTxAmvi6rIcvy/sozwWDyY4kmEYj2j76liL8MSkJ8b3RpVvEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-317-Eq0wpz7mO1e21GBJ1oOirA-1; Sun, 28 Jan 2024 12:36:16 +0000
-X-MC-Unique: Eq0wpz7mO1e21GBJ1oOirA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 28 Jan
- 2024 12:35:53 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 28 Jan 2024 12:35:53 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Jisheng Zhang' <jszhang@kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>
-CC: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matteo Croce
-	<mcroce@microsoft.com>, kernel test robot <lkp@intel.com>
-Subject: RE: [PATCH 1/3] riscv: optimized memcpy
-Thread-Topic: [PATCH 1/3] riscv: optimized memcpy
-Thread-Index: AQHaUdxgc9Zy837AxkOiZhjgW4/PA7DvJZjg
-Date: Sun, 28 Jan 2024 12:35:53 +0000
-Message-ID: <dc1f54f90642401ca6135c75e399c06d@AcuMS.aculab.com>
-References: <20240128111013.2450-1-jszhang@kernel.org>
- <20240128111013.2450-2-jszhang@kernel.org>
-In-Reply-To: <20240128111013.2450-2-jszhang@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1706445390; c=relaxed/simple;
+	bh=c1+LDDtW52Mdi+O0WFO7kYLUFHSb/KiaVRBVuzuOfhc=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=rfasQ6/BDBWKKIPxV+dJp0lmJM/iTRYp9OrPAR9+QGyeJit73E1S1foRz7NOfdCzCf4rKwvJa2pzHIFZz5ny0+3Lg2FphvhlJcNUMQNVngVG97eBdwZEW6Blp9MiCARe64F8qoUdUS7c1Ox6kh+Jiu6T+TjZixE/XyjINkfWjDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de; spf=pass smtp.mailfrom=t-online.de; arc=none smtp.client-ip=194.25.134.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-online.de
+Received: from fwd77.aul.t-online.de (fwd77.aul.t-online.de [10.223.144.103])
+	by mailout08.t-online.de (Postfix) with SMTP id DEFACD830
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 13:26:30 +0100 (CET)
+Received: from [10.2.3.136] ([80.145.193.127]) by fwd77.t-online.de
+	with (TLSv1.3:TLS_AES_256_GCM_SHA384 encrypted)
+	esmtp id 1rU4F3-222Ang0; Sun, 28 Jan 2024 13:26:29 +0100
+Message-ID: <dfe9213bb86939ca4502b5b3fdd3ab77ef1b6f1b.camel@t-online.de>
+Subject: Western Digital SSD freezes on power saving
+From: Frank Tornack <f-tornack@t-online.de>
+Reply-To: f-tornack@t-online.de
+To: linux-kernel@vger.kernel.org
+Cc: f-tornack@t-online.de
+Date: Sun, 28 Jan 2024 13:26:23 +0100
+Autocrypt: addr=f-tornack@t-online.de; prefer-encrypt=mutual;
+ keydata=mDMEYPp0PBYJKwYBBAHaRw8BAQdA9MoQWxT+PljXoionhEHpIAuLlhUME07Jht42EmJS9/K0f0ZyYW5rIEVja2hhcmQgVG9ybmFjayAodGhpcyBrZXkgaXMgdXNlZCBhZnRlciAyMy4wNy4yMDIxLiBBbiBhdHRlbXB0IHdhcyBtYWRlIHRvIGludmFsaWRhdGUgb3RoZXIga2V5cykgPGYtdG9ybmFja0B0LW9ubGluZS5kZT6JAoYEExYIAi4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4ACGQFEFIAAAAAAEAArcHJvb2ZAYXJpYWRuZS5pZGh0dHBzOi8vdHViZS50Y2huY3MuZGUvYS9ib2xsZXJ3YWdlbnBpY2FyZC9iFIAAAAAAEgBHcHJvb2ZAbWV0YWNvZGUuYml6aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vZnJhbmtlbnN0ZWluOTEvOGE2ZmEwNmMxM2ZiY2VlZjhhMjRmZDFiNmRlNzIyYmFFFIAAAAAAEgAqcHJvb2ZAbWV0YWNvZGUuYml6aHR0cHM6Ly9tYXN0b2RvbnRlY2guZGUvQEJvbGxlcndhZ2VuUGljYXJkqhSAAAAAABIAj3Byb29mQG1ldGFjb2RlLmJpem1hdHJpeDp1L0Bib2xsZXJ3YWdlbnBpY2FyZDp0Y2huY3MuZGU/b3JnLmtleW94aWRlLnI9IWRCZlFaeENvR1ZtU1R1amZpdjptYXRyaXgub3JnJm9yZy5rZXlveGlkZS5lPSRjWGVqcnQ3dWJ1RUF5aTNsaFVDeWFEUUlBa0lnRktHMnF3TF8yTXl6MDY0UxSAAAAAABIAOHByb29mQG1ldGFjb2RlLmJpemh0dHBzOi8vZ2l0LmdnYy1wcm9qZWN0LmRlL0JvbGxlcndhZ2VuUGljYXJkL2dpdGVhX3Byb29mFiEEirOWSf3d6fB6q3EmVa3qmdMF6s0FAmR3n
+	hEFCQWlCuQACgkQVa3qmdMF6s3KvgD+O46flI8ye2GWKixgtdQz4aDS78b+LES2ROInCv7N9IwA/ihgH1BlnCypJ4oXSb4KoPmC2M/HLfjtN/kG8x9B6VAPtFBGcmFua2Vuc3RlaW45MSAoRGllcyBpc3QgbWVpbmUgU3BhbSBFLU1haWwpIDxmcmFua2Vuc3RlaW45MS5pbmZvQGdvb2dsZW1haWwuY29tPojQBBMWCAB4AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAORSAAAAAABIAHnByb29mQG1ldGFjb2RlLmJpemh0dHBzOi8vbGljaGVzcy5vcmcvQC9NVExGcmFuaxYhBIqzlkn93enweqtxJlWt6pnTBerNBQJkd54XBQkFpQrkAAoJEFWt6pnTBerNBPYBAPQqJRcB3bXZBZMBkWvYRPf44BZeYZPikE0jWpzmvil7AP4372uJBCKvTDX/v3ONDVBxK5kDn96yKTMVmm1PsJZVCrRMRnJhbmtlbnN0ZWluOTEgPGZyYW5rZW5zdGVpbjkxLmluZm9AZ21haWwuY29tPiAoc2hvcnQgdmVyc2lvbiBvZiBHb29nbGVtYWlsKYiWBBMWCAA+AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEirOWSf3d6fB6q3EmVa3qmdMF6s0FAmR3nhcFCQWlCuQACgkQVa3qmdMF6s3FegD9EF0ViEKoXrUtjeyxTNr7TZybm0C72s73E0cVLZnjfXYA/3XPhEYxgcKxLQ8Ee9vg20C7QwtumLf4dewXSjE+3jEJ
+Organization: Privat
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-TOI-EXPURGATEID: 150726::1706444789-3F7FD877-70A9FF13/0/0 CLEAN NORMAL
+X-TOI-MSGID: e8d36ad7-195c-4e13-abc3-6231d56fac44
 
-From: Jisheng Zhang
-> Sent: 28 January 2024 11:10
->=20
-> From: Matteo Croce <mcroce@microsoft.com>
->=20
-> Write a C version of memcpy() which uses the biggest data size allowed,
-> without generating unaligned accesses.
->=20
-> The procedure is made of three steps:
-> First copy data one byte at time until the destination buffer is aligned
-> to a long boundary.
-> Then copy the data one long at time shifting the current and the next u8
-> to compose a long at every cycle.
-> Finally, copy the remainder one byte at time.
->=20
-> On a BeagleV, the TCP RX throughput increased by 45%:
-...
-> +static void __memcpy_aligned(unsigned long *dest, const unsigned long *s=
-rc, size_t count)
-> +{
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
-You should be able to remove an instruction from the loop by using:
-=09const unsigned long *src_lim =3D src + count;
-=09for (; src < src_lim; ) {
+Hello Linux kernel developers and experts,
 
-> +=09for (; count > 0; count -=3D BYTES_LONG * 8) {
-> +=09=09register unsigned long d0, d1, d2, d3, d4, d5, d6, d7;
+I have a question that I think is not tied to a specific distribution
+and goes pretty deep into the Linux kernel. I hope you can help me
+without subscribing to the mailing list and remember to include me in
+the answer discussion.=20
 
-register is completely ignored and pointless.
-(More annoyingly auto is also ignored.)
+In my old notebook I used an nvme-ssd from WD (wds500g1b0c-00s6u0),
+which is affected by a well-known bug. I currently use the parameter
+`nvme_core.default_ps_max_latency_us=3D0` to prevent the system from
+freezing.=20
 
-> +=09=09d0 =3D src[0];
-> +=09=09d1 =3D src[1];
-> +=09=09d2 =3D src[2];
-> +=09=09d3 =3D src[3];
-> +=09=09d4 =3D src[4];
-> +=09=09d5 =3D src[5];
-> +=09=09d6 =3D src[6];
-> +=09=09d7 =3D src[7];
-> +=09=09dest[0] =3D d0;
-> +=09=09dest[1] =3D d1;
-> +=09=09dest[2] =3D d2;
-> +=09=09dest[3] =3D d3;
-> +=09=09dest[4] =3D d4;
-> +=09=09dest[5] =3D d5;
-> +=09=09dest[6] =3D d6;
-> +=09=09dest[7] =3D d7;
-> +=09=09dest +=3D 8;
-> +=09=09src +=3D 8;
+I would like to use a new SSD in my new notebook. However, as it is
+difficult to sell used SSDs, I would like to continue using the old SSD
+affected by the bug. I plan to move the SSD to a Thunderbolt enclosure
+for this purpose. I think since Thunderbolt is based on PCIe, the same
+energy saving measures and the associated bugs will probably apply.
 
-There two lines belong in the for (...) statement.
+In the hope that my new SSD doesn't have the same bug, I would prefer
+not to disable the Powersafe in the laptop. Is there a way to set this
+flag only for a specific SSD? By identifying it by name or serial
+number?=20
 
-> +=09}
-> +}
+I apologise prophylactically if my question is completely out of place
+and thank you for your help. As a long-time Linux user, I would also
+like to thank you in general. If you have any follow-up questions,
+please do not hesitate to contact me.
 
-If you __always_inline the function you can pass &src and &dest
-and use the updated pointers following the loop.
+- --=20
+Frank Tornack <f-tornack@t-online.de>
+Privat
+-----BEGIN PGP SIGNATURE-----
 
-I don't believe that risc-v supports 'reg+reg+(imm5<<3)' addressing
-(although there is probably space in the instruction for it.
-Actually 'reg+reg' addressing could be supported for loads but
-not stores - since the latter would require 3 registers be read.
-
-We use the Nios-II cpu in some fpgas. Intel are removing support
-in favour of Risc-V - we are thinking of re-implementing Nios-II
-ourselves!
-I don't think they understand what the cpu get used for!
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+iHUEARYKAB0WIQSKs5ZJ/d3p8HqrcSZVreqZ0wXqzQUCZbZH7wAKCRBVreqZ0wXq
+zcQkAPwMA+J3eO/S6T92Gsz9YBamYVHhwLlcUAG3qsYM2g8sRAD/UY+If8RlsT5V
+uKg89rhH2bnWrVF9PKGU4ZamfHo8eQ0=3D
+=3Dgfie
+-----END PGP SIGNATURE-----
