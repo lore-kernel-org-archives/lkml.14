@@ -1,95 +1,186 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9601F28DD2
-	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 15:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBFD2576A
+	for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 15:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706457447; cv=none; b=TnB3VAguAee3LuYhsje13DBfrquyEe2jrBwOqLsQ6fK/AW9KjyPKLydH5hHmQLAppv+4N342z+kylPwvwWRXE343bHRw9AaItw8JUBfkFGlcZW1ITnXVbbBM1aTVp9Q2NN1iZWJ//K9qpI6k2vMZUlKkVSpxiBm1u1ju+czjWqQ=
+	t=1706457547; cv=none; b=srMkL2yV4YuG7XYOGaFqp7NcBwPBZzAdXaZnWPBfQV0M3+wn2zntDTRQ0ipTC3TNeS3xnVp+N+fm4jhRtg5eTM4FcyT+WtY0EUsv21GuOGa86lntWUguDemYBQZjYnNocIeEX+7v14vE+nfla7ynIYeDO0nCh3keRHJG/yQyTAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706457447; c=relaxed/simple;
-	bh=GFS4F0OefxoOXjJnNopMDwR/bp9rgwp1BO9HRQFGLes=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MY5nqE2yLHlJ6P1DncI7ASH8gqiy1ZrgPRdSSoTKioj5PZQ/O3h4Hc+cMaj1X278ZVUS3bHofjJdFHYETgmOWeUD40bVzd8ENuLLPaGCiz55gZNdvRTl/GeU+u63p9ah9NysKNXlmI7CAnk29W2ITWjRWSIeT4+Wht+8uSqOEVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=l.guzenko@web.de header.b=oGFND3vc; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1706457547; c=relaxed/simple;
+	bh=VTeZgFaMux19J+AtoCTwq05Gg9e6XRPAjIoJPK6y9X4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NebpBLTqNeiu/0eHBhArU/scfZ70fh5xX31NFjm/hyiLAcoMSZ5ReXEFmbyl9Z0AITEASNYPfAizU2cB9ClvEaqP4mNntELFRrfc+aaUsvMwvtmxFznGir8MlZovyzziJJw+nEIcLUaa7cjD64WlG8EP6DqltB8sXbsSPFbe0nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GfADKsh3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D/DG3E+o; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=l.guzenko@web.de header.b="oGFND3vc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1706457436; x=1707062236; i=l.guzenko@web.de;
-	bh=GFS4F0OefxoOXjJnNopMDwR/bp9rgwp1BO9HRQFGLes=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=oGFND3vc5jt5BFEIX0PsPmoVix1E06UYyOfec8U87k+8eq1djVxi2EoNryq3tBhr
-	 1AYRLV4lk4wksHZ/4tgnm9OdhKmzUvDiw8n+3likow42+/8yzqVcRlMZM/eXxXFAr
-	 QYvULxIQC0sjhGyJMUdGvkMNgzBSCSCpCWToyBL+wSx8lnnk3Z5ETZvBhPzeeWjWW
-	 AqPKk/+zLnOzxO1Fo97hDr4k/yENcE+JzuUCNh301hnsavAOrhp6eykEzX2P4sS8r
-	 zhUopN7OmPxoSFY/3huG3qzbVg/PqeDOib/QJNFin7NcpLdHcMEmFAjhyy8mnwJQN
-	 mQA0Lvo7McyaCKhFuQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from luka-spectre.fritz.box ([78.51.251.250]) by smtp.web.de
- (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 1MRk4e-1reSaU0aaY-00TNem; Sun, 28 Jan 2024 16:57:16 +0100
-From: Luka Guzenko <l.guzenko@web.de>
-To: tiwai@suse.com
-Cc: alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org,
-	Luka Guzenko <l.guzenko@web.de>
-Subject: [PATCH] ALSA: hda/realtek: Enable Mute LED on HP Laptop 14-fq0xxx
-Date: Sun, 28 Jan 2024 16:57:04 +0100
-Message-ID: <20240128155704.2333812-1-l.guzenko@web.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GfADKsh3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D/DG3E+o"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706457537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZdjxWpAbY/+ezO/HaP8FaCbSVbjWXPTuvNNbDLxVHhQ=;
+	b=GfADKsh3ZkH4V4ZbE80lqE5He2TE382wUqT/wqbO7UzAh0Vz2lQGJW8mhd52FtJwdZpOoy
+	/Zlk6gFsTmYD7P6jq1MQei/f2jJSMP7LmZ1CpknbFQy8OflpZ8wkpcysoW0/iwckiGm9m9
+	DgT3l2bgFoUV56Ka37+HSjoVk+0QvVNWaYU3Ikk2+Mup7PcdoXxMIMeMyBWoY0Pusj+dB/
+	pAErnEWKk3me3pSjZwQRiRFQ8OMGjwcW1SL+8lZPn46ruLATa5NdxArWg2NYf4B5m0j35f
+	2NNxuBU4nabNny+CdwL8mQU9YRx7DVFXU4M/to152ZGlkifzR9p5msluXJujpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706457537;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZdjxWpAbY/+ezO/HaP8FaCbSVbjWXPTuvNNbDLxVHhQ=;
+	b=D/DG3E+og+KHIJvEbZLhzLn8mNfynDfz5OT11W3v/j8VrBziYzFuZnY3Cxv5B1ku1yWYav
+	5kPGThpV5LxIuOCw==
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Eric Dumazet <edumazet@google.com>, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, Arjan van de Ven <arjan@infradead.org>,
+ "Paul E . McKenney" <paulmck@kernel.org>, Rik van Riel <riel@surriel.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Sebastian Siewior
+ <bigeasy@linutronix.de>, Giovanni Gherdovich <ggherdovich@suse.cz>, Lukasz
+ Luba <lukasz.luba@arm.com>, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@intel.com>, K Prateek Nayak
+ <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v10 18/20] timers: Implement the hierarchical pull model
+In-Reply-To: <ZbJwol4QoSgz0QlH@lothringen>
+References: <20240115143743.27827-1-anna-maria@linutronix.de>
+ <20240115143743.27827-19-anna-maria@linutronix.de>
+ <ZbJwol4QoSgz0QlH@lothringen>
+Date: Sun, 28 Jan 2024 16:58:55 +0100
+Message-ID: <877cjtcuv4.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:I8Fom4DyIjORlkYYIjOgd3x3ac0zGP5cFmWQ1/kwnbPjVWpPew5
- hg+Gy7hpKpHkjoFw8zCAbvXVQjy9+RZIhZWqIxWdmu/LxBdTWrOGPtckt7mEwVoubaOR3oW
- 4usUuEgZGPYu+7zPwFCb4udKsmHQHPf0UcLvNiFOkho6DkmzT820blsrNXjuGomYBdoXIme
- T6vqazPYITvaI2byUjwKQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HTLPyXCyhFs=;cPQ3PlqVxSG6pIMGL/NTeirKysV
- EWvM4gq+Ac5F6a5AAas5JG4jMbZZMkpcg9yvL+oKnBaNM9huN8cdSsChr/jYK7rkyVYpOQkfH
- QFXaHKjVgR2I+K30UP3XJFLPuo55OFVhOiNkd0mJ/Q3FuVz7Ol6y6Ec7vnD6YbQVvf3jsxqP3
- m+TVrPpWBMCAoC19oLBaLeu/yoen1vrcLphEmRuCJ378nRgsi2yP+HncAn4OHP+1xI0VCylQp
- pXBMvyn/BsnaAid1g5eApBw9T5g/Ol1TwpsndnzZ5t0U/UJIQohiffwDoJVy1qcq/Cu7xFnJn
- 0rWD+KfyTyln+82rjbOAnhxB/mvEEL/wB/Dk6EyJjfpJE37yQksbFDzg4rBImL7TUX33SIa8G
- MMZGh73HrJ+UDo3Oggeb53bgaL78+fuQEjY/Z3UTX0gcjlrsVOnTGXIOGUYvyGIoQOgAT5mD/
- gKCfi9Bou2QjU70YlBMU3HMv2ih515BldnkQEXmZwxtWx8xJ6EqU2x6uG1e0XZxX+ZRkMop02
- s/zW7TcOFmAVgZqDqidE2w6XZ9mkuntMn13CYHS/Ml4ECo19AARSOLIJLph0WVXFAbdfUsmRK
- 4S11B5ROS4EeUzSD14nULp+TToafR5NymijBF+0Vxcf+LCKgCvqdGNNx2NYZbhZLoAWGHu8/G
- g1SdLmhp2Ni73KI+KlBbizQkicso+5BtEyU6ktHt4p5i/D5v93Dc860z3rjaOpXQJlzobx5bc
- 5Ea14zGbMPtXNkCtSBhCPfzb3ZrDeLFZ/FOTsmbLgwdNLwclYuSNp4ZxDWzN6BJgRBEuZYequ
- oSTd4x8BKfsVx9xa9A/sjr+JS8MOoqXRn+T5+8Gb+Bs2Z+X8lZoD9y/sLGFgesld5hk4vJilq
- +S+i3CsD3SNIg76C26VqHDc4fd7MLDyuaj01q7l1wjfABQNMNh1bZEt3atqQaS5+5gRMQEL9A
- TCSnLXHmktQlzfO1/akmBcg6VTw=
+Content-Type: text/plain
 
-This HP Laptop uses ALC236 codec with COEF 0x07 controlling the
-mute LED. Enable existing quirk for this device.
+Frederic Weisbecker <frederic@kernel.org> writes:
 
-Signed-off-by: Luka Guzenko <l.guzenko@web.de>
-=2D--
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+> On Mon, Jan 15, 2024 at 03:37:41PM +0100, Anna-Maria Behnsen wrote:
+>> +/**
+>> + * tmigr_quick_check() - Quick forecast of next tmigr event when CPU wants to
+>> + *			 go idle
+>> + *
+>> + * Returns KTIME_MAX, when it is probable that nothing has to be done (not the
+>> + * only one in the level 0 group; and if it is the only one in level 0 group,
+>> + * but there are more than a single group active in top level)
+>> + *
+>> + * Returns first expiry of the top level group, when it is the only one in level
+>> + * 0 and top level also only has a single active child.
+>> + */
+>> +u64 tmigr_quick_check(void)
+>> +{
+>> +	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+>> +	struct tmigr_group *topgroup;
+>> +	struct list_head lvllist;
+>> +
+>> +	if (tmigr_is_not_available(tmc))
+>> +		return KTIME_MAX;
+>
+> Offline CPUs are supposed to handle their own global timers.
+>
+> So instead of returning KTIME_MAX here, shouldn't we pass instead
+> tevt->global as a parameter and return that value?
+>
+> Otherwise the quick check will simply ignore the next global event of this CPU
+> if it's before the next local event.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index f6f16622f9cc..0d2fbb8b24b3 100644
-=2D-- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -9852,6 +9852,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[]=
- =3D {
- 	SND_PCI_QUIRK(0x103c, 0x8786, "HP OMEN 15", ALC285_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8787, "HP OMEN 15", ALC285_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8788, "HP OMEN 15", ALC285_FIXUP_HP_MUTE_LED),
-+	SND_PCI_QUIRK(0x103c, 0x87b7, "HP Laptop 14-fq0xxx", ALC236_FIXUP_HP_MUT=
-E_LED_COEFBIT2),
- 	SND_PCI_QUIRK(0x103c, 0x87c8, "HP", ALC287_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x87e5, "HP ProBook 440 G8 Notebook PC", ALC236_FI=
-XUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x87e7, "HP ProBook 450 G8 Notebook PC", ALC236_FI=
-XUP_HP_GPIO_LED),
-=2D-
-2.43.0
+I thought about this as well. I skipped it to keep it as simple as
+possible - as this is only a forecast and might change (CPUs will come
+online/go offline/deletion of timers...). But I can integrate it to keep
+it more precise.
+
+>> +
+>> +	if (WARN_ON_ONCE(tmc->idle))
+>> +		return KTIME_MAX;
+>
+> Same here I guess...
+
+Yes.
+
+>> +
+>> +	if (!tmigr_check_migrator_and_lonely(tmc->tmgroup, tmc->childmask))
+>> +		return KTIME_MAX;
+>
+> This one makes sense.
+>
+>> +
+>> +	for (int i = tmigr_hierarchy_levels; i > 0 ; i--) {
+>> +		lvllist = tmigr_level_list[i - 1];
+>> +		if (list_is_singular(&lvllist)) {
+>> +			topgroup = list_first_entry(&lvllist, struct
+>> tmigr_group, list);
+>
+> Is it safe against concurrent allocation failure in hotplug?
+
+As you pointed out, it isn't!
+
+> If the list is seen singular, then concurrently a CPU comes up and creates/add
+> a new group. The current CPU actually fetches it instead of the current group
+> because it's not singular anymore. But then some higher level group
+> allocation fails and the newly added first entry is removed.
+>
+> list_is_singular() looks safe. But list_first_entry isn't. You can create
+> list_first_entry_rcu:
+>
+> #define list_first_entry_rcu(ptr, type, member) \
+> 	list_entry_rcu((ptr)->next, type, member)
+>
+> Protected inside rcu_read_lock() until the below READ_ONCE().
+>
+> And then use list_del_rcu/list_add_rcu/kfree_rcu on the update side.
+>
+> Isn't it possible to walk through group->parent instead?
+
+Yes. Sure! This is possible and maybe also easier. I cannot remember why
+I implemented it this way...
+
+>> +
+>> +			if (tmigr_check_lonely(topgroup))
+>> +				return READ_ONCE(topgroup->next_expiry);
+
+When I hand in tevt->global as a parameter, I'll need to compare the
+first expiry of the toplevel group and the tevt->global value and return
+the earlier expiry. Only a single child is active in top level, so it
+might be that this CPU is the last active CPU in hierarchy.
+
+I didn't check all the way to the top whether all groups are
+'lonely'. So when the top level group has only a single active child, it
+is also possible that the child of the top level group has two active
+children... Then a return of KTIME_MAX would be also a more precise
+forecast.
+
+This quick check is there to keep the overhead minimal when checking
+whether it might be possible to go idle. So I don't know, if we should
+add this additional check per level (which is pretty simple when using
+group->parent for walking the hierarchy). What do you think?
+
+>> +		} else {
+>> +			continue;
+>> +		}
+>> +	}
+>> +
+>> +	return KTIME_MAX;
+>
+> I'm less sure about that return value.
+
+
+This is ok, because there is not only a single child active in top
+level. This CPU is definitely not the last active CPU in hierarchy. So
+it is likely that some other CPU will handle tevt->global of this CPU.
+
+I'll add a comment :)
+
+Thanks,
+
+	Anna-Maria
 
