@@ -1,66 +1,71 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD1C2D61A;
-	Sun, 28 Jan 2024 19:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C841533CD6;
+	Sun, 28 Jan 2024 19:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706471863; cv=none; b=bTMuPxgWaJrF+tjXWg3v/yAuku8FveUSvR+54Ug1/rN3CKw/jcHj+l3U60DZ8bcml9sGKTNlZSGNw1udXr2xdqDw/NVFcJ/wjP568VESUz2NUAuJD2BLN5AwzoYq5DQGdVCl5L9UmjRNdxL/kVYSHnDb9lGrp/Wo5tP+C9AVgPc=
+	t=1706471951; cv=none; b=D+dAZJK5ymgn/3ROsdDi1+LaHwxGRN0tthpbVYEu3t98Dg4DSfVjDHpXqsb7Mg560CczCYnEW3Znh7DurpqO4CUOW+w69IuJgSr85ZrEuK+K5eLB4bLpvMMiqq8y51cgmRCeOxH2FuY7w9A+knMhxLwVVoeYAclT6zA1pnr2/lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706471863; c=relaxed/simple;
-	bh=/QPR/qDfKOcrRm87Xiko56xF+rk8CX4zS8nZ1M+uiRQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DueldzJyyUsRzLoZMK0PoKXdtvh2YrUZzK9dnN/jQP7PTi8xRi2ugujJPafPBscCLPqUoVHEJ5GDd4U2BzVwklJueFIrNJcuNXMEBrexc6uVHlTscbvBLtycigvb1/gLSHwPGCVfA5oNfBdRa618CYQcGbGwbFDauO9qbIWexVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXG8zA/D; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706471951; c=relaxed/simple;
+	bh=AvzOX+YLvgoEfFY+O1q34caaqKaHWvjS5dkviD8ygF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oELiCO+Pllu1lJVqIHltsJ7bcspszcrX6pYd9PoDKo2g0BQyncSz/NkyCSr/5jQs1SGoEH4DLnRpwBnJmukzKCP/i9Epr6kAV7m/5vh2lMs2KBbVmm4wt5OA2wl2tnzTKtjmVOMwWD/WXRecpKokKhsT9pMAN5Ava78QMUwvXbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Rt5FgHJf; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXG8zA/D"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d76671e5a4so15934305ad.0;
-        Sun, 28 Jan 2024 11:57:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706471861; x=1707076661; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W5rvBIjZB6f/l7eWENYMQezAWoxVgyOQwzg5bdH8Pi0=;
-        b=BXG8zA/DhJLW5CZCfCm+gs3W6vs+2j7OAZhAaS4ZKmHSCfAoqGjppCiQhv6meS3Aqy
-         c7DjeP6Js7AEMr54rzi5FMforfWNTB7bV2wVJHBu3BP4k7kcDuTRuqpNFH0OaWzPjylG
-         wYrE4KAu+hEh5ykJdf5haVqJFRRRPQGN8EzfkjgGn3xhvVSGyLlY81oNJ7Bf0b+oWF4S
-         kXgutm7PRZ9q21JL1rRQLvJyPlx0FwcUmTxyefbhrNwUYFq1TYWzYQgCcW9P5m+aVfy6
-         qFdRSD1iMWDZudLKdlHMt7k2/hYMe4S8wN4qYNmCQd+i0Iv2FPeXcMDEUjwCfFsrcqQE
-         hEAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706471861; x=1707076661;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W5rvBIjZB6f/l7eWENYMQezAWoxVgyOQwzg5bdH8Pi0=;
-        b=qEXigE0DOqaOvAxTU8+dUnCltn//2hnRxoK1mi+gq5ggl3H5qOkHIVP20qkUG18p+d
-         X3srX4xvatVw9A8MosX6U/xXe9rYEBPeOlb+KvK+L7u39zW7Une8W6e2dPeAwhXRxKyZ
-         TzOHOvO34GpEQgC/QWKiApr8oanGCEvVVCQYXTP+CPkdveDfDAeMIVTbm+UFGQ9ELtxD
-         gOTVV4m1SYfuG+LQrRJphv2ChTMJU+NtSpZ0N/OHCb3K3RAj+a1F2gyG/n3sLPVhyA/D
-         onFDCPlD1tP3312gXkvMukQDfUgX4PwoWeqxk5985qJ6KLDad5QktqK7OFi7pQzrvQcz
-         2xTQ==
-X-Gm-Message-State: AOJu0YzOLjza6ONDZvy9YVTn0K/5+D8gq7vjRQ5e4RVjUklAlseZQ9YD
-	N/GHakGWW0EP2ndfBNaDV8IIrxr40jwubpkzp0cFdrwiuGaxNMT2
-X-Google-Smtp-Source: AGHT+IF8LNP683ZdD/msPWljI3oDdXkEgvLJE+R0BVknqxo0xfx6cWTXK7UsQFjH7TI9GBziHWtryQ==
-X-Received: by 2002:a17:902:7845:b0:1d8:ca24:d654 with SMTP id e5-20020a170902784500b001d8ca24d654mr2260474pln.100.1706471860894;
-        Sun, 28 Jan 2024 11:57:40 -0800 (PST)
-Received: from kohshi54-ThinkCentre-M715q.. ([2404:7a80:c880:6500:7f79:d78c:e8ac:f086])
-        by smtp.gmail.com with ESMTPSA id g10-20020a170902c98a00b001d5e340d979sm1113365plc.6.2024.01.28.11.57.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jan 2024 11:57:40 -0800 (PST)
-From: Kohshi Yamaguchi <kohshi54.yam@gmail.com>
-To: gregkh@linuxfoundation.org,
-	corbet@lwn.net
-Cc: Kohshi Yamaguchi <kohshi54.yam@gmail.com>,
-	linux-usb@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org
-Subject: [PATCH] doc: Fix malformed table in gadget-testing.rst
-Date: Mon, 29 Jan 2024 04:57:31 +0900
-Message-Id: <20240128195731.40003-1-kohshi54.yam@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Rt5FgHJf"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40SHskIM017315;
+	Sun, 28 Jan 2024 19:58:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=HqWJnNirYD2mZc4aShg2yzFvukCr30wCusQwz3eGeQw=;
+ b=Rt5FgHJf79Sz6qvHnfL0WMT6E1GZVRsEFUcwgKXZHENG1yTjO82kFu7NysqUYTL07P+4
+ D6GzR8AB6//RCtCGhQfbnIbS9toGUxEczyBRVsAw1db7AOREBy95tXGi3j6EOkOBzJ0D
+ KdUMP+O7PbDAoX3hL8loG4W1T+uwIoxld6h4k/XDrxFk0jBR/yqoAvJkkEajULvXdm7i
+ VkhAiHS26g1XWTkdOWTjGz+E8jKoS5gWnZ1mU1afWWGQHOeml+kFiL5wYFoqXG4wki9n
+ j7D37piEa7ZxK6Q2gNBW+t6TZNrZUnS74OVL8v1LLwDXyd8GB+IQ6428ZA1JoP34r322 gw== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vwr6m4a94-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 28 Jan 2024 19:58:59 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40SHKPFI008234;
+	Sun, 28 Jan 2024 19:58:58 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vwdnkm49g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 28 Jan 2024 19:58:58 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40SJwtkx13042222
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 28 Jan 2024 19:58:55 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0CCFA2004D;
+	Sun, 28 Jan 2024 19:58:55 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EEF9B20043;
+	Sun, 28 Jan 2024 19:58:54 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sun, 28 Jan 2024 19:58:54 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id AE3A5E079D; Sun, 28 Jan 2024 20:58:54 +0100 (CET)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 3/5] s390/vtime: remove unused __ARCH_HAS_VTIME_TASK_SWITCH leftover
+Date: Sun, 28 Jan 2024 20:58:52 +0100
+Message-Id: <b3623605ba5c1d386d8f59e17c930ca2c3cca07c.1706470223.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1706470223.git.agordeev@linux.ibm.com>
+References: <cover.1706470223.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,53 +73,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Xt6cwiIK9tVwUe-fhmMhvVLPErmDmlky
+X-Proofpoint-ORIG-GUID: Xt6cwiIK9tVwUe-fhmMhvVLPErmDmlky
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=656 phishscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401280151
 
-The table describing the NCM function attributes in gadget-testing.rst
-was malformed, causing Sphinx build warnings. This patch fixes the table
-format to align with the reStructuredText specifications.
+__ARCH_HAS_VTIME_TASK_SWITCH macro is not used anymore.
 
-The border lines of the table were not properly aligned with the column
-headers, which was corrected by adjusting the border line lengths to
-match the headers.
-
-Signed-off-by: Kohshi Yamaguchi <kohshi54.yam@gmail.com>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
 ---
- Documentation/usb/gadget-testing.rst | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/s390/include/asm/vtime.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/usb/gadget-testing.rst b/Documentation/usb/gadget-testing.rst
-index 8cd62c466d20..1d1737f246df 100644
---- a/Documentation/usb/gadget-testing.rst
-+++ b/Documentation/usb/gadget-testing.rst
-@@ -448,17 +448,17 @@ Function-specific configfs interface
- The function name to use when creating the function directory is "ncm".
- The NCM function provides these attributes in its function directory:
+diff --git a/arch/s390/include/asm/vtime.h b/arch/s390/include/asm/vtime.h
+index fe17e448c0c5..561c91c1a87c 100644
+--- a/arch/s390/include/asm/vtime.h
++++ b/arch/s390/include/asm/vtime.h
+@@ -2,8 +2,6 @@
+ #ifndef _S390_VTIME_H
+ #define _S390_VTIME_H
  
--	===============   ==================================================
--	ifname		  network device interface name associated with this
--			  function instance
--	qmult		  queue length multiplier for high and super speed
--	host_addr	  MAC address of host's end of this
--			  Ethernet over USB link
--	dev_addr	  MAC address of device's end of this
--			  Ethernet over USB link
--	max_segment_size  Segment size required for P2P connections. This
--			  will set MTU to (max_segment_size - 14 bytes)
--	===============   ==================================================
-+	================   ==================================================
-+	ifname		   network device interface name associated with this
-+			   function instance
-+	qmult		   queue length multiplier for high and super speed
-+	host_addr	   MAC address of host's end of this
-+			   Ethernet over USB link
-+	dev_addr	   MAC address of device's end of this
-+			   Ethernet over USB link
-+	max_segment_size   Segment size required for P2P connections. This
-+			   will set MTU to (max_segment_size - 14 bytes)
-+	================   ==================================================
- 
- and after creating the functions/ncm.<instance name> they contain default
- values: qmult is 5, dev_addr and host_addr are randomly selected.
+-#define __ARCH_HAS_VTIME_TASK_SWITCH
+-
+ static inline void update_timer_sys(void)
+ {
+ 	S390_lowcore.system_timer += S390_lowcore.last_update_timer - S390_lowcore.exit_timer;
 -- 
-2.34.1
+2.40.1
 
