@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21033C684;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105F23C699;
 	Sun, 28 Jan 2024 20:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706472697; cv=none; b=GmEiQR4wM/Sp96It4zVSPinEBOxdehnuhiNB4wtdJCKXP1bvhSRbpIs704mKa0y00I0SQ0j3ZsNYwCSuJ0Addx13qH+SRiPIBBidrf/VOpTvkoReP3mTxtDx3WeSWBtfmVsax6DaGOtCJdtrc/iYnUdTzcW0s727zA8CsNoVT5c=
+	t=1706472697; cv=none; b=P6lFeD5g+e60jSkOpo0SBaK2cYQgrn5K6xTg99AEHDvLb5cGiyH5o0ExNv92JTa4Yg9gjWVTBujO38DjufDOXUux6Yb628AtXtVlVkDrYIZ2yix88aDTRyGLmG/DdWwXtufT6RJ46K3yYbvE/Nj4xs5JkurWLI93dtCjUhbIhd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706472697; c=relaxed/simple;
-	bh=JpsH264rChdlD49OAGFAPCLKSi7oz0Y/8/+8WGun5XU=;
+	bh=s+C5yRBMXtAg248/XAUH77adEcGlMjvS8LegdnUr0Qo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k0BzibXnKM1m8fLh1ChOnKo8UVtMESFmFGBCmZZF9AnTNzfUfvpn/+uchngCVzESU2hQ5XqjlVGzYztRXH4XzQg3Z2S6xzfwJClOUzm3N330ufszEM9VCgGzVLjBxntIhlaewav9bXCIO9ze9L3fa/7bSsK6aI+l7kBdpaSzUmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=K8HEBIe3; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=dOm5hMuo+dm2I8Uq92uwNsfcCJCibyPvLwmE0KO+d1L2NNd19ZXfMz1FS2zwljN3fk6QUOWd/RQSngn6SAtIK2HwRPCM962aOjY7+B2Y7gVDLCxqoauc7Fc2DXnRB0ytwFK8ZRbtK2oh2fa8etsrsqkRpQpzFhex8hLPXAvA2kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=pLkrkDb8; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="K8HEBIe3"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="pLkrkDb8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706472680; x=1707077480; i=wahrenst@gmx.net;
-	bh=JpsH264rChdlD49OAGFAPCLKSi7oz0Y/8/+8WGun5XU=;
+	s=s31663417; t=1706472681; x=1707077481; i=wahrenst@gmx.net;
+	bh=s+C5yRBMXtAg248/XAUH77adEcGlMjvS8LegdnUr0Qo=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=K8HEBIe300lnhZp+w9MtRCT/QwnURiPXWa5au52TH6EDnVLrPjK+2cWAxAFFkjGd
-	 gauuozhTYMUgrIO7KizXk0qPIrS4hyf5RewzwE4U7NjihsnZGlf5hVW893TdeXiF9
-	 f4W5E6UiPQ39SpfP480cyoA5hSmIWEHUBW3LdQNngN9mQTyE1XqgjykuvfgmZNzpB
-	 ihctsY5Tgp2J0c/wxOrVDeGJRt2xY20hFw91P/8PF1h5G+prp5w7e1zgEc2bVfrsA
-	 EoK7Kbe1fgH7SgXlQ1CfYCfqEAbSb78sikcU1uOAssoTQtaq3ClM25bdBK1cj63uE
-	 tsAe3bhBP6W1PNNm2w==
+	b=pLkrkDb8Jc0oAEY/WseIA4TLBNGf30xJw/u4CC+fRPlzt1/fJzD2c4y6+ZMplQ25
+	 vBOUqsMtmlqBIcdMGU1y6SURcI5UjkS8BS2D442A0CKluurpfjQbmwxvrX91DDBm4
+	 xjXV+YgNwQmJzsb1kZnZShoajGiBDSx1VdZQld9QB+t/ATDD6C/yadGZSVNanf9Gt
+	 Jitwoo6HvNiye8+awaRen+bLnm88m/v49ex0We912fyhbyjirzJQaw3MO5Ou4vamu
+	 xEVS6y2YIW3jvRzpq9LL991qDmBGhQfn0CjykBvk7pWD/oYGttDd5UXhpEbjinrXZ
+	 dD6/+CFbMS0zTTxU+g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N7R1J-1r0e5F2yPF-017jkF; Sun, 28
- Jan 2024 21:11:20 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MwfWU-1r9lAZ2Vxa-00y9Dk; Sun, 28
+ Jan 2024 21:11:21 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -42,9 +42,9 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	linux-kernel@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V4 04/15 net-next] qca_spi: Avoid skb_copy_expand in TX path
-Date: Sun, 28 Jan 2024 21:10:48 +0100
-Message-Id: <20240128201059.6259-5-wahrenst@gmx.net>
+Subject: [PATCH V4 06/15 net-next] qca_7k_common: Drop unused len from qcafrm_handle
+Date: Sun, 28 Jan 2024 21:10:50 +0100
+Message-Id: <20240128201059.6259-7-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240128201059.6259-1-wahrenst@gmx.net>
 References: <20240128201059.6259-1-wahrenst@gmx.net>
@@ -55,51 +55,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Tfke7F+thVAsXv0rFm40+OARM7IFVXTugVggjAqduJPvzj2kySu
- 0EZjDhM6wOQ2h946AFuFWZGLE/Lzu1TyIW0nzXPhIAFot2cLglm/uXEM03Izi3zVMvd71xJ
- eQPkPN5CJyNv2UQd8kllxwCs53YwdpXo0xMuqo3lf0OVS5VkAX0s4ieUsjuKrH0XIk2XwqC
- fK8u1L5kkcq4dFU/NHulw==
+X-Provags-ID: V03:K1:E/sFtk9/uq2rtDnmVUG7YxQ1S/BpIZ31n091PvTo2DhEWfYuLie
+ ThSN5Ix4JmtqDH9NtKKFZYeqY4ONhhmzWfT/C+XB1zmQsbXDlXRLRAQ6XoYi6PcMLO/vvXT
+ EEG1wMdvopt3/z3l81wj7qqyf1Eeo6SqdIMCRgTCKFX2kv7iWB2IhPM1mIMdRd1Ya+cQ3a2
+ mfW6J8YVhSSyO7mqQ+ihA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3o1O60aU1+A=;eV2YbaWMVAVEQyv/yT1ngGE1N+/
- p30oBDsIlTsRgnYLifM8q9N+/7BNcmGQeavvqz5PLtr0LWC8oQFDClIU+CJ8pbGhUUU0BBgKp
- 9eqja3GHLLHxedltoJSsHd8LnNu8H2ZRv/i1lb8TCbQCbibgbk3Lhaq9TVqwd8Ngs+WIDLM4u
- PArchYfmOdOhK2NeQe85+U/VSYpbdaW9IpLbBAxD9mVEC6Dgfbe6QJdrW3PT1/2mU+dFz5ARV
- +GxuAPBcFHgPYKVHgFKMvXwSxUMUApcEUDuoEI4VxPtyI41IIeBxBr59UkePr6UjKB360tyug
- 2G1TGnCF9usQeGWWzJoiy1GBF/6uoFj+1M9CmHolvedQR7c+340Nfbqovu8pWbDCtfIoxRLWv
- x57njfk6AV80DCejePiU3pa4xHFy0u4F+BjTbjDrApNFJQy0ZTn0r5ueL4/roSxP12EtYLmgB
- ktThIWKmrRrJhtYP3ATBxGAO/fBW1oiNgIEmDnaFRBAD10XOWuryzy9yM/rNU1AWN4IPJeqkH
- 5ThB14OuSKTnMCgQozQQhIb0YiGzRjkfHCEk5SZrsvQhOMkKTZzgWylS6EYh3wBzee+/SiG48
- mamEwtUosHbtMW7NmGWsLy7wd0WTAfWXGZlWtlTTkX2gtWnAkxZYncne4xfjz6BgBLZTBGozI
- 2HMs1AfVthhQjVGHfj23m71P7sHcvIMO7DQl+VTeLfFJ0uWg54kbJytEiV6Nl8qYDDKnwlK2N
- +stCPSUOKlTmD8hHroVMANWVIwyezjB6ybPNONXxJHT+iYUqiDktvLe5ckZeGTWcns9qyUPo3
- jPVE2WQ9ZQRwhHjJq+BFfofiO1oWwkseCDNxIjT2eG1r8xHcT6fALOIbRfhMNeYmotZZ9bqgs
- K0GXJKhDfpfCQcNzpb0a3sSXdtov7FqSVtk3EH229/WCCsvI7nuiCRAmf3PGP9qv2BySDAXBe
- eYJ22g7Mwk+IpX0bKlc5ICeE25M=
+UI-OutboundReport: notjunk:1;M01:P0:AWUveRcSymQ=;oKLwGwV5/z4+29d4ar82OFldb8K
+ IalBExTsPAA7TFEwSPRWrTzUj8Gnqqbh5pt6eo+qh54LGKPCTg7VHte3/1Fo3ERH1faXjAxx6
+ JVR5kiOsWxgiFEH28UitDjiC7UcbdSnfKVCwJswv53qw+oFJPekriRz4UJwxOJId8vXI6dtye
+ OiBEkG5DgraAeMpCLkjMFdZq8JfQJBHP0U/cDCEGSNlt7prXU/5LTM2snLPrQ2KmUsOIl5NfN
+ Sd2I9iVv5rUhVE1uIaGszPJk+gOxm/ojq+aq0OYta1uYZ8NIHmJfysBFLrhjf4q5rBNTRXgre
+ SdviqLOBOi+oNiqAhsCZIAzqJccJBTL/HNiKvNCviZtuNbt7a6JpJRIn9D2vAHfhvMqhBS+oO
+ WHvsjillpmt2n4DKjt8h/8xUVL1q4gDt6bqMg+Q/ovHkPu1zAosG4kwYEiJDEzIEjZ1ouZt2Q
+ qAfv24zKxYUGVr3/dGdDgGffzXI3L/dSxHKS4V4iiO11e7+fXE3u3bu+TCMO2WKLbGC3ZWkRd
+ c865q/yvk/iAn/xRTIrGUM26DSdV0VBvWgG9jVfbsZ5LIuwKqBHUrT4QUj19EkMRSNWuh2AkE
+ 1SyN+75YjdvNZYf9C0BGv/RKQAx4pJUWTTEe3JM7vfW7bjW6kuAESfeiJuv8eTRsp60L0Pgop
+ t+lo7wFaz8qsFksY542Go48mfEbL2rFG573Xc2aOV3zJtKZtp8fkhk+iO6Pjti9HoQYTAtY44
+ j5KvGO+7CHg0/Tn8G05P4Xd21imSxJDqSBot5ojMENZfRzSEa8cYBF47nECKFXBOsAiL3iCIK
+ v3LeoNy5oFify3A1URfK8A43UXhIjQRVKyY3fX7Dcl6C8HDduU9tD0ud34hIhk9TmeEBflp43
+ YH+u0mbNUZzOVpyQc1h8QS/aHPcPc/ThIkTxwrsaP58GPnes9v5t2qanXubWcE2JbIc2SwVB8
+ hYlxVw==
 
-The skb spare room needs to be expanded for SPI header, footer
-and possible padding within the TX path. So announce the necessary
-space in order to avoid expensive skb_copy_expand calls.
+This member is never used. So drop it.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_spi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/qualcomm/qca_7k_common.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
-t/qualcomm/qca_spi.c
-index 3f7e38a11ba0..5fabb40cca05 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
-+++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -878,6 +878,8 @@ qcaspi_netdev_setup(struct net_device *dev)
- 	qcaspi_set_ethtool_ops(dev);
- 	dev->watchdog_timeo =3D QCASPI_TX_TIMEOUT;
- 	dev->priv_flags &=3D ~IFF_TX_SKB_SHARING;
-+	dev->needed_tailroom =3D ALIGN(QCAFRM_FOOTER_LEN + QCAFRM_MIN_LEN, 4);
-+	dev->needed_headroom =3D ALIGN(QCAFRM_HEADER_LEN, 4);
- 	dev->tx_queue_len =3D 100;
+diff --git a/drivers/net/ethernet/qualcomm/qca_7k_common.h b/drivers/net/e=
+thernet/qualcomm/qca_7k_common.h
+index 71bdf5d9f8d7..088cca7f61db 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_7k_common.h
++++ b/drivers/net/ethernet/qualcomm/qca_7k_common.h
+@@ -107,9 +107,6 @@ struct qcafrm_handle {
 
- 	/* MTU range: 46 - 1500 */
+ 	/* Offset in buffer (borrowed for length too) */
+ 	u16 offset;
+-
+-	/* Frame length as kept by this module */
+-	u16 len;
+ };
+
+ u16 qcafrm_create_header(u8 *buf, u16 len);
 =2D-
 2.34.1
 
