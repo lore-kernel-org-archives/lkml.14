@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE33D41C85;
-	Sun, 28 Jan 2024 20:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFA7446D2;
+	Sun, 28 Jan 2024 20:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706472699; cv=none; b=CchqvnBiwD5LF3wGcypPUR8huEdtYO4wy66ez0XmCNbtjtobLAzn9uGMqSWcWbUaBj5tF4laweanEE6dgTnCyfE6pIVV2VaP78G2B0oLf7IsmzDgVMhvDy99VDuHUoB91gdvo7m+F+vgtBzzaMh2AGOArCAoklkyM+gkW7VSk3g=
+	t=1706472700; cv=none; b=fdnzFrJf61UY7BSpIl/LmJXZnEhkTr4Ctgxvv7voLXzYkDrnfAWugV/QiZ53iyRxOCRiLNGGQjBRn3KMa28ZqtTNkAXHbfkZiAlb5ozxYKWPKG8QTOFcrIVKfv2LCKe2KZ/tqVFPKGD9Qr/VUl+dWuj9MwcifPVLDFQI0r+ZDfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706472699; c=relaxed/simple;
-	bh=qrDaTsk7HTfc8TrmJHba7pRVGRstI4yMYwXgF2rjUlY=;
+	s=arc-20240116; t=1706472700; c=relaxed/simple;
+	bh=ckHhRGX1uFe4zXOay/HZNXKKKQjSfzNMM+9KeqUPzlk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=krW1Aj94fMgfI6rOMWLIdFh+akoZOleLbwE5CuT6kHwEYI1jllTvinAfwcRnE3fR0AxxQ/G9xXMQzdOtn0yHERSRmRWLQ25ZkSRgYPVJWmsp8ge7ejScR9OZH9hf2MsRq8Num6xRcEH4gh8tpzbfdkjY+FeXb0wMR9uwoA0Uxnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=tTcF6HLp; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=mX00Q+vF/6qnbWGtdVLrBzGpEoklahs9LU0B4b9aU1KfwbnNIw+R0ix8fVvzAntGvfiU/EQF+v/EWC6V0QJEI6fk+cu+BSXX1nTKJkS5W9PWgAN+y2bpSpmDFPk9OUMJ4QoAcLNPm7qPrIYZ7Ww37nI8iqJJ0izIrrQ2ucy4pZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=k4Hgpt9z; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tTcF6HLp"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="k4Hgpt9z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706472681; x=1707077481; i=wahrenst@gmx.net;
-	bh=qrDaTsk7HTfc8TrmJHba7pRVGRstI4yMYwXgF2rjUlY=;
+	s=s31663417; t=1706472683; x=1707077483; i=wahrenst@gmx.net;
+	bh=ckHhRGX1uFe4zXOay/HZNXKKKQjSfzNMM+9KeqUPzlk=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=tTcF6HLprL22VAD0O+Ir7RABGx40LNO5i7fDqumLJFRm3GwodUul70mmVT02+8T8
-	 I0PFEOrBeXcwh6K150d45gcSPZM8sq9wTD3j++nCmeh62PUS8YjBYszFoVbwnwu5n
-	 gyHNK/BGj/fYqaHdD3NnjJR6sS5b0guuB7nAO2iCRQWeogz3b5pkXBSzNDAC78QzH
-	 SAlFloTVfs0OoOPJ1Ap8ZWE8evP0hfkN0KeaWNfeJ5bHFCV+wNC4Tzbe+IaicOdMn
-	 rRPzJQTkdp81lUS+iX3zjJqpvyb81Dz1cUL5pASqIUOnh8rlwNhiTNN0IuiZx+egi
-	 F5fmIU0oQK6xl6WpJg==
+	b=k4Hgpt9zRKMhtZsO6/LMZQGfK083sOv5ylNGnl6sclCUToWpCKsdpF63FJKfYeeL
+	 9FgjSY981h4eRnyiqWfJER/bccMmd5HMRBgLSrXfHav9yVnz2waJ6tmM/ubifzllW
+	 qCvvtHM9bM5F43GMGxF5RP8IEwTxX3h39uI0Vacp0kBFEsbpIqcvzOh6coTxIWkE7
+	 NSizIiJq5rpj83axkuvDg4PD0tb3EaY38Iu7LxBB1whp7N3POuFdYH/XnESOM7mGM
+	 431IG6ZLCvZ72kV+DTF5GOnOSIv3JOZkp/DjRZPmHJ5YCOpbBqGqoBnxzXPV4bdCU
+	 /ui+fGKcrVMhHMN0Fw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MUGiJ-1rckJu0dFb-00REBN; Sun, 28
- Jan 2024 21:11:21 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1McpJq-1quIiP1lS6-00Zzai; Sun, 28
+ Jan 2024 21:11:23 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -42,9 +42,9 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	linux-kernel@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V4 05/15 net-next] qca_7k_common: Drop unnecessary function description
-Date: Sun, 28 Jan 2024 21:10:49 +0100
-Message-Id: <20240128201059.6259-6-wahrenst@gmx.net>
+Subject: [PATCH V4 10/15 net-next] qca_spi: Log expected signature in error case
+Date: Sun, 28 Jan 2024 21:10:54 +0100
+Message-Id: <20240128201059.6259-11-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240128201059.6259-1-wahrenst@gmx.net>
 References: <20240128201059.6259-1-wahrenst@gmx.net>
@@ -55,61 +55,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+Qu2GViOiUfHEkQicjzPEyIBrIAa1MFYCLZ5ZvBNpPxXfLIdsG6
- Di4QCjyU7rsdzl7sXQVNqn0EZ8EU77Tctz+dbYzAMhZsuEtES+TBJxhCUctdl5axdFJ1cuE
- mXRKDn+0/b2HiMrqYKjYQSaLmAiNK5CMxg7nVZlgbZIbhZWtWieZfrUo3yO8Nr8XSzUL75k
- kU33VH9SpVGZD2Jg6c65g==
+X-Provags-ID: V03:K1:9dHEZTQTt3oQtnOq7nBtaz/TRLP2O8x1r4rxHiNaBMx8eoTD0A4
+ rbFq4f+RzEGZSs1gH3+T2CRDwl5lhwdufkw/mBOS3fya7QarNTtTxKYdOz9BgCmiEOHrdHc
+ pQULQ2eYPd3bgJnrDouTYMcNTRoYxrR4WdJsVLIO7N2AiORxCDXqnPFK+Ph5HtX24MnMRTt
+ 4/HnV414RDx4j1qtWdqiw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:kAoRPM2GeSk=;7JUgHRIaySRwE7vGkfoM01Y1e9c
- KLYMwhjzBqttNp81J116rMohewK2pEuFZTUIXvSPDtHVvbH79oTIwZ5YINJcIy4VtGMC+3/dt
- 5h/punMBQvGgFhHux4pRFOA5rUiQRaF2IPcppB6GpKtxHWCxBnZYqKTrdv2GpAXRo0ViVJVIx
- 1LV4MXMplqlDTn6ojUGeC2LIZWTIVrb4Q/6Xg19hFK6Xx8LG0TWxBYTbbatPHWnlKa34r+3xu
- 8c3WKTzN+A3V+XJyutnpHMapUz7k+JOxyp4v+XTBoFudI40h0clHaKq5UPzpe+YSiZp6ugYT8
- LQ5/8VLg8f53ptVcTrorTiC+Nl0UeVoXlZycazjJDmD51+sSHB44qq1EqCDolxtxr7XR6IzUs
- k3zpLIZXD719r81F7J6qcJUtcrfyEEeAuVM2daIHH8UpV29X5qZ5G1E6SQfo25QMTRUM4XU5T
- BQrevwBtRlBb2VyiFdVHVOanQJ/ELq15AcTjSt53AReg9iLKDkA5wkwBIgR7Gprp34myB5Uxf
- QtpxJIhqPBKj6IJQBkF238uVlv6SA+sjrYgKEVC8GHCrrB32yJCgNFvbfKsMJuiJQIuJ9j5co
- e1ltAIredbWyE/i/EbLXU3GfN3fXgh9+Wcw/rxUYsonXyMnE3heaDhHZ2Z0B438lbG3bQjfra
- uIFz/RctPu5m6M/ysEQdX79SOfVXaqllNs0KzbPSr4b9L/Qw3nRyvQ7iLz5f9xnz8liweLeNn
- i8e3NFbB2cIEZXlUNtfVC3FYKSiKhDTlAjoIBVdQmh2G3jlZbWqHo0GgDiEhFm5Uy/78Nn1Gz
- gobbgHlH3em83Kj4cemsdINZTfEhgPJns6XXogbAwaqwnZurwhisnoXw6F/FkdxBiJnXVKUO2
- mQ+Hf82rYt2kgEkNLZTyeJOf6kSe93mSoU1McEJvLua2wOx8N4JzqlPtGMXcjMgetWgA1rMtO
- Sqvs6bJDi/oRI+Vz3FoH5OSsE54=
+UI-OutboundReport: notjunk:1;M01:P0:R9CMuJyLgoQ=;34SKGDBlBplOqnPuEy9NEznJpAy
+ PD2abgE73JEFTVPZj58zRHAgGKp9cY8X6zkRmYvoXx566PlgCH4Yi9w6moj46hxDyTxe4c/Nt
+ qR9NisDCwllxtR76/dYQs12hVMIcc3FpKq1r/BS4NOZa13EfHortGf5RZpNk4pwnheZl6+W5r
+ 15Gxb8EPZB7TwTI3auh5+SjfEeYWLCqzo4KgMjjrfeTqVp3rdJeL4WeVTckdgnq+DdvFv1kSl
+ qSWREEeRNQvXyn/57Mj4gsdw5Na/2OIbKydi9aDMSpCdBBjLxuIHGEVTiOkMVK1xBRCfItFLV
+ B3a+dOa0YXUH3bq+o1cxuCE9kkufiEyF7JhLFPPo91RUnl+lNS4abwwOqPiGSXuOyfXvecMla
+ 5aAZjWc8eyFigywhRkqRNOa2q7HGibMHpRWPaLFoCWgu1vjT8dIuV8ckklCVjU2cUfHNNOT/+
+ Fj3+BS0J06yQa0f6cxSpccH20bbzcxeAl4Uwdk9e5oBJlh/RzCLh1QsgvLBm47m1k1/he2aHH
+ hnbKJ90175CecMwdIFjVJKRFoK8addabPRiThYdFxAmXawOm0PoneIFhfKXhWJra6jOPbxVEx
+ YI/RKz9C42OgFMlPq6QYiCW7+9j14QXleMHJmQuIVvrVmQ8xQ79TsNmmznSsf1LDKThgETLgg
+ Tl9BVbfa5MQtz9/s3/NLR6kR388llSM06+Uchc/QT4eKeRmNplEIoXT2E7mOCPva1ZfHPYyTo
+ Ovm2Xlf9qucKrSl45FLFpcwOTgJQzV2fhzdVqn6MC0FQvzSB/EliuRpYS/OoxGqxW08pHyHiM
+ 3H6GgV4H9tv+xu/9x41JkQJUjS8TWW6CpoMOgsY5yI11Kb/xlOzzsvtdIOhQdKX1CURk+yOMA
+ WE0Y1aBiHRo92pKxAakGqXzdaDCFeLmITWM82uCjT3pgunflGAZ7DYI4YvaUAFHZQOs14A4Un
+ 0KYcyOdP1CLxrBMKqjX9BdC+xfo=
 
-qcafrm_fsm_decode has the almost the same function description in
-qca_7k_common.c. So drop the comment here.
+Most of the users doesn't know the expected signature of the QCA700x.
+So provide it within the error message. Btw use lowercase for hex as
+in the rest of the driver.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_7k_common.h | 11 -----------
- 1 file changed, 11 deletions(-)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_7k_common.h b/drivers/net/e=
-thernet/qualcomm/qca_7k_common.h
-index 928554f11e35..71bdf5d9f8d7 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_7k_common.h
-+++ b/drivers/net/ethernet/qualcomm/qca_7k_common.h
-@@ -128,17 +128,6 @@ static inline void qcafrm_fsm_init_uart(struct qcafrm=
-_handle *handle)
- 	handle->state =3D handle->init;
- }
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
+t/qualcomm/qca_spi.c
+index b35fabcd488b..d2d68c20b32c 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -1006,8 +1006,8 @@ qca_spi_probe(struct spi_device *spi)
+ 		qcaspi_read_register(qca, SPI_REG_SIGNATURE, &signature);
 
--/*   Gather received bytes and try to extract a full Ethernet frame
-- *   by following a simple state machine.
-- *
-- * Return:   QCAFRM_GATHER       No Ethernet frame fully received yet.
-- *           QCAFRM_NOHEAD       Header expected but not found.
-- *           QCAFRM_INVLEN       QCA7K frame length is invalid
-- *           QCAFRM_NOTAIL       Footer expected but not found.
-- *           > 0                 Number of byte in the fully received
-- *                               Ethernet frame
-- */
--
- s32 qcafrm_fsm_decode(struct qcafrm_handle *handle, u8 *buf, u16 buf_len,=
- u8 recv_byte);
-
- #endif /* _QCA_FRAMING_H */
+ 		if (signature !=3D QCASPI_GOOD_SIGNATURE) {
+-			dev_err(&spi->dev, "Invalid signature (0x%04X)\n",
+-				signature);
++			dev_err(&spi->dev, "Invalid signature (expected 0x%04x, read 0x%04x)\n=
+",
++				QCASPI_GOOD_SIGNATURE, signature);
+ 			free_netdev(qcaspi_devs);
+ 			return -EFAULT;
+ 		}
 =2D-
 2.34.1
 
