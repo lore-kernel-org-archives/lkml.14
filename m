@@ -1,59 +1,65 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8AC208A5;
-	Sun, 28 Jan 2024 15:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAB025776;
+	Sun, 28 Jan 2024 15:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706454184; cv=none; b=dUMuXTELDeWqzJiey72gshc1QY6yBe5RC6z6MiwhHkN6dK9oKvET36EbXMXlJ/rLtHdGR8O1CGf8iZfmOzUJwy27cwXhhPXohXp+MxjBjH/nsu7BAsoyH2xX89S1DfENfzot+Mn31lgWhuKcUFTNWdUyGpTfqa+daCh4viDdk5c=
+	t=1706454203; cv=none; b=Rn1cjpDk3T68WGVpcWv9ziNMeY1s2kJeEF+swdXyVY8T9tajC+Hd11rKndKZ1/e7lnY+1mL/xtoNneApewCBQNfn5cFHpEDBH+BNAC11RLxNPGm8rlpbAiafp12UcqU87tcfwFGPaakH3d15hcn28BLlQaAkuWxXazFrrC8VWKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706454184; c=relaxed/simple;
-	bh=kx6bsX0OE3XS8U8hsFaidy9FE0hwsYAbgmFip0JKzNY=;
+	s=arc-20240116; t=1706454203; c=relaxed/simple;
+	bh=LxgPwOi6s8cRdAp/UoLC3e2ubN/oaoC82iDhatG/9BY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZulVKOCy0+9VUxDeivBlP6sVnG3ecaI8iKyOzWkc2XdckXS4O6wts7JqgxPJBaSCPQiBR8dLlPOizfaY1z0cQJed7rOduoHZYwo7HveQCxNLOt6KxuLg9aTSh9iMOkKfAHO1PK1zGdZIk5wBMPTKr1HOT/81ClqvrH1xjLW9exE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SCHu8FHX; arc=none smtp.client-ip=192.55.52.88
+	 Content-Type:Content-Disposition:In-Reply-To; b=JdIVcnSdowotWYmNvufcsAWAC5EwXqKjrQvy9M3yM8jV7sFiZThfrnIu/TPy4xJs9qT9iSsyiqE681105w/sXZEaaK8q2yKHzqqWZQSv/TA85l9ASDGRr635KuyzBbroCuHk+jW5MQhItYORxzSfx4QuysHzK8eEL4qqvO0HV6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LAd5oT8h; arc=none smtp.client-ip=192.55.52.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SCHu8FHX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LAd5oT8h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706454183; x=1737990183;
+  t=1706454202; x=1737990202;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=kx6bsX0OE3XS8U8hsFaidy9FE0hwsYAbgmFip0JKzNY=;
-  b=SCHu8FHXfJlp7BeZdXkIkaeObPUTxE0RqeLfC079MJHRJV+uc1R0nzUL
-   kdzTLZOacsnD/4E2oFdr6/DNqgsYKSZwuQhXFCIYsPuxlBeGnri6NaZaJ
-   CNEiRTEljxhH/+AFl74K60Im3O4APVYPd4leP7wZt/lXOS5Me6xbbbhLC
-   B5U9UfWEGG0plU5PaAGZ0OYmoTZAhOYWucSC+bzVeEEETOAK9RRXqrYkN
-   LJ9zD89zfGUIa+3WYw/Q0TBUtmwv+QigxBT1ab0ImRICPb3/jxI/aX71I
-   A5XcZyhXN5aDMnNbX5DxqEOyDHAvHdTlFn0nDGDQjKeHA/Cj6YHplYNO5
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="433942732"
+  bh=LxgPwOi6s8cRdAp/UoLC3e2ubN/oaoC82iDhatG/9BY=;
+  b=LAd5oT8hWH84nsdFxGDS8bJn5hUvgu4D9kuEtg9Nlyn/x+aXnROM3ZPX
+   HQVHrsOCY9ChaI95TZDmHcYLxpTV4shLhtJDdgICNGI2TlW2hQR78TWE7
+   hVMqnjbLssW1u2ahmC+WRNr/k3VbkR7NkvrLXYTbGz1tN/PwBMnspQdXb
+   tW4MTcWnpFl3QYwlrpUiiq/+8XmxHsKDmC+2SIrtydyeuNMwM1/P7lXom
+   FVijGo8cJURcEN3eBI6J52y9zoPAWZ2eDJiuDAh9Bo6KcS99SIBfpZ7u3
+   +cekvVs10s77X1YGU3mwgh5HFVRj83iUJ1TUGdvs3gZ63kZgomsIheTSt
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="433942752"
 X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="433942732"
+   d="scan'208";a="433942752"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 07:03:02 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 07:03:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="960672159"
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="960672167"
 X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="960672159"
+   d="scan'208";a="960672167"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 07:03:00 -0800
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 07:03:03 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rU6Qq-0000000HTxG-3LXC;
-	Sun, 28 Jan 2024 16:46:48 +0200
-Date: Sun, 28 Jan 2024 16:46:48 +0200
+	id 1rU6bh-0000000HU6J-3HOx;
+	Sun, 28 Jan 2024 16:58:01 +0200
+Date: Sun, 28 Jan 2024 16:58:01 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] pwm: dwc: use to_pci_dev() helper
-Message-ID: <ZbZo2A3qU9RIz568@smile.fi.intel.com>
-References: <20240122030238.29437-1-raag.jadav@intel.com>
- <20240122030238.29437-4-raag.jadav@intel.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, davem@davemloft.net, abeni@redhat.com,
+	edumazet@google.com, Nicolas Pitre <nico@fluxnic.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Steve Glendinning <steve.glendinning@shawell.net>,
+	dsahern@kernel.org, weiwan@google.com,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 15/22] net: fill in MODULE_DESCRIPTION()s for
+ SMSC drivers
+Message-ID: <ZbZrebRxvLmpamkM@smile.fi.intel.com>
+References: <20240122184543.2501493-1-leitao@debian.org>
+ <20240122184543.2501493-16-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,34 +68,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240122030238.29437-4-raag.jadav@intel.com>
+In-Reply-To: <20240122184543.2501493-16-leitao@debian.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Jan 22, 2024 at 08:32:38AM +0530, Raag Jadav wrote:
-> Use to_pci_dev() helper to get pci device reference.
+On Mon, Jan 22, 2024 at 10:45:36AM -0800, Breno Leitao wrote:
+> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> Add descriptions to the SMSC 91x/911x/9420 Ethernet drivers.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-PCI
+> Please enter the commit message for your changes. Lines starting
 
-...
-
->  static int dwc_pwm_suspend(struct device *dev)
->  {
-> -	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
->  	int i;
->  
-> @@ -120,7 +120,7 @@ static int dwc_pwm_suspend(struct device *dev)
->  
->  static int dwc_pwm_resume(struct device *dev)
->  {
-> -	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
->  	int i;
-
-I don't see how pdev is being used. That said, why dev_get_drvdata() is not
-suffice?
+Misplaced line.
 
 -- 
 With Best Regards,
