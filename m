@@ -1,105 +1,79 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wxsgout04.xfusion.com (wxsgout03.xfusion.com [36.139.52.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AFE55E74
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4705645F
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=36.139.52.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706524006; cv=none; b=Sg+CWaBy8VGgsAlX/XQ4M86PSBE49M5BUebbj9M2smL+mQ0qdXMuT5CedRCtPaccCg/6K9X79VvnonOy+5yG8kj5ayGAsJVKsWrH5eSYUqB8WXPbUvgAYOshWDhOdBGc/yVUiFvlkPiQPg5hDiGuGX/hEKTimbeTW9aY/HEzT1c=
+	t=1706524027; cv=none; b=DFHe4gK2KjjDogJKogaeRQC7bh5Syw/6TZfj7f9GMWEVNKXRMvUjCm9W5QDw6KbTw7OBPtqXWsbRj3M7TYqkWCXLnf4zRsKTZid+rWE+1OiDMjA5XfEtpHDPXtjpt0iJIGFZ/Nww/r4p4S49R7TG8vyTuRSzmfUEV8eMwAyadRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706524006; c=relaxed/simple;
-	bh=qQPDYqNFKTtJZgfPLIqstPXY62WbL9F9fpeNM+BxM0g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VVB41h8bLD9Rma416M6gWOhamHQ0/20EFnfLtU2u4/C1YsEY/OI9l9cIfeXN7NNBGFusL7uuylptLN7COGmvJ/riK2tk0xlp3RtSLc6RNzog+XifZDSFnPmWYs4M1ishV4tGbONspk4zWTqe8DgPSWILYJtdvedlq2KDTMUabSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nHNOHhg9; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nHNOHhg9"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e775695c6so22337685e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 02:26:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706524003; x=1707128803; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qQPDYqNFKTtJZgfPLIqstPXY62WbL9F9fpeNM+BxM0g=;
-        b=nHNOHhg94m3yiLzXs2rIXxnZcSnocxktoAOz2Tp2yl4c+Z3wqkBAx7lJO/uXSe+qsl
-         uZY9v5y76FlHQ/7tA84hnhOfU4kYPpU2tSJEonYuc4/MYSHe91egm1DHwflkZp4HOE0H
-         MhhEi+lyp4v2L7gnnVeJi9FPBogbX38viV4KIy5BrnVW2C2pvFNn8FCISNhSrFUbNa9a
-         PM/shRWQj0MjQRa7HmPUj0ZsxnTHx9JIBIOANEKHBpW924EGw4ZOsThvNlqbYyBa0r3e
-         yYl5lzdbzMrstORifJO5UFilAw7IrI4JUjX0J4HhUaHlT9nfnJbU8Lh8h0qbGsQ9IMfv
-         sPNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706524003; x=1707128803;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qQPDYqNFKTtJZgfPLIqstPXY62WbL9F9fpeNM+BxM0g=;
-        b=GeC3fIQFloYnh8hDhJcxgHMtPBSTwNJspyCdEYSiw+sibwKVcSC9XvoYsaLI1ra4Ol
-         CDZQQPaDeCy0TGGHRyRS5NYXj0ODlSDzRyA+2tIQhwmmGm6246mYXpzIZvogVRyYI6UI
-         PMAhhc90sPoqoeMDY8xl4csJQaCwRqk+OAtJNZjcLkDYnVTjENS8R5Qe6uvR42vYNix/
-         PtfLvJWbXQIRwJ7DlsECMVibmYIhx5nPhqHOrDIgyKYmrDgu+OE2EkFxb5pFIozmhOuf
-         rKtApc4PXdaA7vYD6ED309oerIHv1z36ZGR+omkgTNYptnp19rQ5ij3ASmUuaw/w0Qa+
-         ca5w==
-X-Gm-Message-State: AOJu0Yww9L3y+TDGKIaj+syES7RtedmTlmz1a7uMlwxB5AehPZrqnyKN
-	VydnkOkcXF0o7UNPmHOmHnN56mgIWbHVigAzGzi+SzvUkcD5nXKLa0ei2W39ugM=
-X-Google-Smtp-Source: AGHT+IFrkgMwW5JA9XnEb8dITynYGKtz4f0avtoo0nrhCnXSt34jRsApPKKQBpw0u3HwgGnZ6lbeXA==
-X-Received: by 2002:a05:600c:4f92:b0:40e:397e:16e7 with SMTP id n18-20020a05600c4f9200b0040e397e16e7mr5488679wmq.3.1706524003124;
-        Mon, 29 Jan 2024 02:26:43 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id bd19-20020a05600c1f1300b0040ed1d6ce7csm9783469wmb.46.2024.01.29.02.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 02:26:42 -0800 (PST)
-Message-ID: <219a57cc21d670c19745a4861e83dd79d4ea2b68.camel@linaro.org>
-Subject: Re: [PATCH 5/9] arm64: dts: exynos: gs101: define USI12 with I2C
- configuration
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-  linux-kernel@vger.kernel.org, kernel-team@android.com,
- tudor.ambarus@linaro.org,  willmcvicker@google.com,
- alim.akhtar@samsung.com, s.nawrocki@samsung.com,  tomasz.figa@gmail.com,
- cw00.choi@samsung.com,  linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org,  linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org
-Date: Mon, 29 Jan 2024 10:26:40 +0000
-In-Reply-To: <CAPLW+4=rgcftDjd-KDg0G8_JYa9XEBdFB+B42o5JSjEXkr7VNw@mail.gmail.com>
-References: <20240127001926.495769-1-andre.draszik@linaro.org>
-	 <20240127001926.495769-6-andre.draszik@linaro.org>
-	 <CAPLW+4=rgcftDjd-KDg0G8_JYa9XEBdFB+B42o5JSjEXkr7VNw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.50.1-1 
+	s=arc-20240116; t=1706524027; c=relaxed/simple;
+	bh=0pbNMZwQGIU61mp3Riq86bwoqCEQr3qg2nODWQqlvcU=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pmevj28Gc/7Hj3L+1Tkh5VRfhrF7KyKkPz0DX3/NozSdgystWCWo1TnAt6GNMjLZJKb6sp8t7TuZkfjLx1JwjPgP9su5RWqfsll/sENhwQ0UF5kkiP/WL40oT/4VZogRAmKv2fjw2p8cOOJ/8i+BAGFfPW8f3x6xEyQHt5IcuPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xfusion.com; spf=pass smtp.mailfrom=xfusion.com; arc=none smtp.client-ip=36.139.52.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xfusion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xfusion.com
+Received: from wuxshcsitd00600.xfusion.com (unknown [10.32.133.213])
+	by wxsgout04.xfusion.com (SkyGuard) with ESMTPS id 4TNkTb0bxXzB0228;
+	Mon, 29 Jan 2024 18:06:11 +0800 (CST)
+Received: from localhost (10.82.147.3) by wuxshcsitd00600.xfusion.com
+ (10.32.133.213) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 29 Jan
+ 2024 18:06:34 +0800
+Date: Mon, 29 Jan 2024 18:06:33 +0800
+From: Wang Jinchao <wangjinchao@xfusion.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <stone.xulei@xfusion.com>, <wangjinchao@xfusion.com>
+Subject: [PATCH] sched/core: Fix prio for fair in __task_prio
+Message-ID: <202401291802+0800-wangjinchao@xfusion.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: wuxshcsitd00600.xfusion.com (10.32.133.213) To
+ wuxshcsitd00600.xfusion.com (10.32.133.213)
 
-T24gRnJpLCAyMDI0LTAxLTI2IGF0IDIwOjU1IC0wNjAwLCBTYW0gUHJvdHNlbmtvIHdyb3RlOgo+
-IE9uIEZyaSwgSmFuIDI2LCAyMDI0IGF0IDY6MTnigK9QTSBBbmRyw6kgRHJhc3ppayA8YW5kcmUu
-ZHJhc3ppa0BsaW5hcm8ub3JnPiB3cm90ZToKPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZXh5bm9zL2dvb2dsZS9nczEwMS5kdHNpCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4
-eW5vcy9nb29nbGUvZ3MxMDEuZHRzaQo+ID4gQEAgLTQ1MCw2ICs0NTAsMzYgQEAgcGluY3RybF9w
-ZXJpYzE6IHBpbmN0cmxAMTBjNDAwMDAgewo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNjQ0IElSUV9UWVBFX0xF
-VkVMX0hJR0ggMD47Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsKPiA+IAo+
-ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdXNpMTI6IHVzaUAxMGQ1MDBjMCB7Cj4g
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJs
-ZSA9ICJnb29nbGUsZ3MxMDEtdXNpIiwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJzYW1zdW5nLGV4eW5v
-czg1MC11c2kiOwo+IAo+IEl0IGRvZXNuJ3QgZml0IG9uIG9uZSBsaW5lPwoKTm8sIGl0J3MgODEg
-Y2hhcmFjdGVycy4gV2hpbGXCoEkga25vdyBpdCdzIG5vdCBhIGhhcmQgcnVsZSBpbiB0aGlzIGNh
-c2UsCnRoZXJlIGFyZSBvdGhlciBjYXNlcyBpbiB0aGlzIGZpbGUgd2hlcmUgdGhlIGxpbmUgd2Fz
-IHNwbGl0IGluIHRoZSBzYW1lCndheSwgc28gSSBmb2xsb3dlZCB0aGF0LgoKPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGlu
-Y3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGluY3RybC0wID0gPCZoc2kyYzEyX2J1
-cz47Cj4gCj4gSSByZW1lbWJlciBLcnp5c3p0b2YgYXNrZWQgbWUgdG8gcHV0IHBpbmN0cmwtMCBm
-aXJzdCBpbiBteSByZWNlbnQKPiBwYXRjaGVzLiBOb3Qgc3VyZSBob3cgaW1wb3J0YW50IGl0IGlz
-LCBqdXN0IHNheWluZy4gT3RoZXIgdGhhbiB0aGF0LAoKTWFrZXMgc2Vuc2UsIHRoaXMgY2FtZSBm
-cm9tIGEgY29weS9wYXN0ZSBhbmQgSSBoYXZlIGZpeGVkIGl0LgoKQ2hlZXJzLApBbmRyZScKCg==
+It is said "120" in the comment, but MAX_RT_PRIO + MAX_NICE equals 119.
+DEFAULT_PRIO should be the right prio.
+Fix it and imodify the corresponding prio in prio_less.
+
+Signed-off-by: Wang Jinchao <wangjinchao@xfusion.com>
+---
+ kernel/sched/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9116bcc90346..13484ee71e5b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -168,7 +168,7 @@ static inline int __task_prio(const struct task_struct *p)
+ 	if (p->sched_class == &idle_sched_class)
+ 		return MAX_RT_PRIO + NICE_WIDTH; /* 140 */
+ 
+-	return MAX_RT_PRIO + MAX_NICE; /* 120, squash fair */
++	return DEFAULT_PRIO; /* 120, squash fair */
+ }
+ 
+ /*
+@@ -194,7 +194,7 @@ static inline bool prio_less(const struct task_struct *a,
+ 	if (pa == -1) /* dl_prio() doesn't work because of stop_class above */
+ 		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+ 
+-	if (pa == MAX_RT_PRIO + MAX_NICE)	/* fair */
++	if (pa == DEFAULT_PRIO)	/* fair */
+ 		return cfs_prio_less(a, b, in_fi);
+ 
+ 	return false;
+-- 
+2.40.0
 
