@@ -1,229 +1,141 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9163D155A2D;
-	Mon, 29 Jan 2024 16:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706544740; cv=fail; b=ERslQDXvsk5Qg56AwpFnTE7eS08uFlYl3SwdKqzJYhq3dpqwN9M5kspu8Vagg5e8WaSpuLd6RhdVeFs6lSh2+WvWdDwUniIKVCe255lT6JaT9GDM0nXD9GHLQ2XvgpOIiAvDCHMLbFkvLuV/vr8ckwZVwLEW/wINiMDMsGkguLg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706544740; c=relaxed/simple;
-	bh=FKcylZbK6hfbi6V626vAb/bUbeCovYhcj9cmz9vFnO0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=l+9dCZBWzvxNFYwduTxLQellIKS64a+bM5+QRta+szp1T5HWsTCwKCD5uBZ36Ey6ycHXq1Fi12rXnPiM09KX037nFsdw+6M4TURY+SKel8j7ouh8dUEa+O78O2aLVZvguy3jlvhRhxPOLDjK6NTyyv4le4RBizNW0Gi7pfkbhQU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JbqbEQLv; arc=fail smtp.client-ip=40.107.236.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F8D155A22;
+	Mon, 29 Jan 2024 16:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706544799; cv=none; b=RTi38lYErZum4Cxmvr6jzas6OhSIbpqO4tO3zgtjJ5W6V2UPMd6E1LdBCFxhoBVqQe9bZ4nfMZg3z7aqJFkXarPWsIUkhjVf7EHzaZYV2g//K+Y32eQClJ1V9gTpiPOWpigrrQKbuTUOD4dCNHmheikZHLo2b7Bf9lSfyrzYrdI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706544799; c=relaxed/simple;
+	bh=U5knNVeSUC02Kp52IYtCJFDsNCRfi5Zfl/yaznZobHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EniYrJKwrSJHV/07F5bkY1c/YPly0d22vzfV2g6BqcDMqXJTVnpLafq4sr4JtE+LRHiiwfcNmBfc5bYvHGneKHlP6B7j7Ta0YuVCwDha3GzNiXBHz7rlxB6zD6651I4dVHoyBq812nLydTtA2LTP3rdhDiAKdLeEQX8W/9el0WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=VOm+VMpz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=yb9+nKKm; arc=none smtp.client-ip=66.111.4.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JbqbEQLv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eHasazw7GnZA4Fq9hb1UB8qU1ozZxGAQ0COesDc1LAG6zbzkCGkIrB4iodVIAhtkCMKTttZjvkI7dHyFfm8k1Nd92JcEChVM4pC7Ge1eDLvYWZ1gg9N7Mo/z/Yp0xb2wLYehIE48t7SiHL5mMFTrDSel0gJTcLR9avwObCChP+peebtoZmaDsLnfU9t6DYoBeFQSjip1SRXDyss8MWmg9qOhy9VM7pA1+u4V1PRfPtx7DqZNayRuxnW98eBfS/CIEjXINAr+4Yd6MXklC2MwrUtrHJ+aP5Tc3eBUokPWQDAYyKWQFMOwEpzpozDuKWHpTik5MqYvfvIQ+DEPDbpb5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QwHTv7HzK2Ar2lLGcyA76rXtUaFVV5ulwcsDMDkI0v8=;
- b=Sgnh0qGg+vVB2XTXWeLr+4YxlZRJTRok58Dbd2U0Tf963qrnM99LGcjpjC9n3GEJc9KD4gTYm/AX/lw5qB6Omz/eN6rWSSPSa1oqxHlOLADXqAqBcqm3v68vqkxfeA+Nt0xrClI0tFPTXQq3ZVEEB2fM0YbnZHZ+MP/ffRg77ynJKq7rW04X0kYsKmuhUg/xz7rcJFT7sPYfRUDhw/nf/oRS5A9Xc5YpxjNk76KeIxz48fGkKI2fyEGpZRkK8i7LCTA5IhdgA7SZJQhltIh715rAVMTmphFyfYgZ8hnkkCWO6NDiJ/QlaS9TxQ4qhnW6pcOdm+Sg1577dsBuOTOnbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QwHTv7HzK2Ar2lLGcyA76rXtUaFVV5ulwcsDMDkI0v8=;
- b=JbqbEQLv2BqYxgglR8K4jDF8UMOo+uiISY86Objp3djs92FGQOjvBayRHeo1wLDN+FYLVF4UPy0nqI1vPydpIUur0Xq5rbggk0XOzxXBaHnZ1uJmwXmG/FyecN8PvgSiazJdeuPTSvJC5OgtZqNj/e8jSiuskJgyYsReP574zfU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SN7PR12MB6789.namprd12.prod.outlook.com (2603:10b6:806:26b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
- 2024 16:12:14 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64%4]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 16:12:14 +0000
-Message-ID: <ad625d5f-6b4b-41bb-a9c0-edb513697802@amd.com>
-Date: Mon, 29 Jan 2024 10:12:13 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] ACPI: video: Handle fetching EDID that is longer than
- 256 bytes
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
- Harry Wentland <harry.wentland@amd.com>, Hans de Goede
- <hdegoede@redhat.com>, "open list:ACPI" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- Melissa Wen <mwen@igalia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>
-References: <20240126184639.8187-1-mario.limonciello@amd.com>
- <20240126184639.8187-2-mario.limonciello@amd.com>
- <CAJZ5v0iX5=u5y0JS2OzYMvYNnjZBCM2YfSTsSdg3CtH4rBMyUw@mail.gmail.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAJZ5v0iX5=u5y0JS2OzYMvYNnjZBCM2YfSTsSdg3CtH4rBMyUw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR03CA0007.namprd03.prod.outlook.com
- (2603:10b6:806:20::12) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="VOm+VMpz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yb9+nKKm"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 83E815C015C;
+	Mon, 29 Jan 2024 11:13:16 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 29 Jan 2024 11:13:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1706544796; x=1706631196; bh=NWhpZ4Anx6
+	A8C8PAGZ4L9Hr5r5a+wvYAeeIbNmcd0qU=; b=VOm+VMpzkv3+IsNZJ4sSO3Rhkm
+	1+Se7H6xOwopyi+D+1iV2XGPZNUXXk2219B5xWo8eRFBD0jEfx/w+xXYlRBp7sHw
+	HPA/Nbyfr80uufvyxzxpihct1FuYHvf6jz9PILZvgHDOMKj2Yt/OsDwJE6sct6NN
+	no3YxTYXrL8z0z2C9Hb3se69ZWKg6VduZsQgKD2HXmz2yeTJnwqn6uwv5T3JyvnX
+	FFzMVIbsTR4d3y9wS0YSYQH5lfdhgpoUQb9Vc8l0sqCyuocygVZHoZGp8JN01R1p
+	USaxulmlmJ9f6TZ72iWh5C+jUcWB9DqNjU9QX6LmUBzb6rsdUo5fe/JhDo8g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706544796; x=1706631196; bh=NWhpZ4Anx6A8C8PAGZ4L9Hr5r5a+
+	wvYAeeIbNmcd0qU=; b=yb9+nKKmeF6edNDEM1qJkq8963omb38gnHL78bXBIEgJ
+	mkzw3Hcu5Uq0tFTI4c5f0P7/iPZnZRrr6niOi7Au+80HNFi7MVBg0RkQ59cscuVx
+	YGi7tsjXOUVlL/2c76E06Og6kWLeR7mN3SEutmJpG452DgD+Aiy3ggvSyQu7kExD
+	gPTgk56208mjASRYNmmpg4FF1QwcygRQSdaHGBx4ti2DAnLPcKw3IsYd0GB3h2AA
+	Nmaq/Jvou7wny6YubLw8dKkRpGfzhcRpnwhwZebVPVQxkyDkPkHWy6481WcY3K83
+	WghA6RY9gaFz7c1d03lKcbWZ1BrPBbRwUUQSTz7oIA==
+X-ME-Sender: <xms:nM63ZTAPoFX3KNffT1rBQ3rx_K3AD6BBPKK508KUr0OHFxySHAGTQA>
+    <xme:nM63ZZizASsqB3pGgiMra1uurC9WOcN5ygDyO_Z7Kx8TtLZhCWUhMz0QeXj9ZlUj0
+    aBahjpvdXRfBC5Fxw>
+X-ME-Received: <xmr:nM63ZelflC7YE6_uhoOjA22N6xiwymfb2EgcdG1Grt9XYuSvaaRu4Hx-Y6w0qOsKWqArwaCI7V9lRJuXkiD6hERdDayzrylhq9Mh58Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtgedgjeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdljedtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdfstddt
+    tddvnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguhesugiguhhuuhdrgiihiieqne
+    cuggftrfgrthhtvghrnhepvdefkeetuddufeeigedtheefffekuedukeehudffudfffffg
+    geeitdetgfdvhfdvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepugiguhesugiguhhuuhdrgiihii
+X-ME-Proxy: <xmx:nM63ZVyYB-Grv--dv8mYLQrpsJULhNM6ywbwmXama-kK9jn1cvPbBg>
+    <xmx:nM63ZYRLMhw5PJmUgH1X9qOfKiF7uOi04LAm0aIx-YYAUzxRKlq6Hw>
+    <xmx:nM63ZYZb2ccjU8IwfwIxUnY-0L3SaROyc9mf9fOK99k_ZwEp9RgGcw>
+    <xmx:nM63ZRAEp0tooN094oLEfrN1wuFgTtfBiSikXjMDlxz33Ogid7uyQw>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Jan 2024 11:13:14 -0500 (EST)
+Date: Mon, 29 Jan 2024 09:13:13 -0700
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: quentin@isovalent.com, daniel@iogearbox.net, ast@kernel.org, 
+	andrii@kernel.org, alexei.starovoitov@gmail.com, alan.maguire@oracle.com, 
+	memxor@gmail.com, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com, 
+	haoluo@google.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next] bpftool: Support dumping kfunc prototypes from
+ BTF
+Message-ID: <spuzs32tv6v5czb76gstpvisv2xkfzz2scqw4hmqncflhxoj66@hie6m7pctfdo>
+References: <373d86f4c26c0ebf5046b6627c8988fa75ea7a1d.1706492080.git.dxu@dxuuu.xyz>
+ <ZbeV5adWhiNZu5xj@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SN7PR12MB6789:EE_
-X-MS-Office365-Filtering-Correlation-Id: 711d9a4b-14a7-485c-fde9-08dc20e50e99
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Y2MCyB4jQM1fTlL6Fa6O9O2MHDnv8FFMTtWLnzRLYryZWJfVMXUSex74POZYYf5wTnX5ZT9iQeQAralwq+50WBNMHZ0En/WKaCEt3LmPQKb2mnzrniDQ/ysn8srU1j9QSa/mJUT+HJE9yLLXOJvVxe0jLIwjpBycLGEFV+lc1mY/NrdrBbCXD32ETfCmXE3X7TCfoRMQEWBUjgGQoA8RXM3OtBKC0dnhuPsPv4pkQ+SkE92EIsrkFsaxROeGlflhgTWWKzM7WkK2ejXLW7juCVnYTiLT0QaDBjMt/rx0pq8FSNa35XuIkRhpWu8QMt/e4OiATwSjHXAvifBlr5jnzVv/BRzFZAvnCO07+bHmXkFeZd4hWrQxJgA0cdvg5iV6IY6BLieyzOmP3Risk/f544bis1X6/0tTsXlcbOo9kIWHRwoJLklep7HOm/nhPhCV9N+2kaX2ODkH3I8iN3c8+ezf+zpABgeYNtVhW/VjblCvLKVPTZNlktWQRMuiuEJw2Nap8+u7r8/0Tys0A0wV74iFXU/ssjZ4FhYKVSCv2LbPFz5jW/Dzc5ejJiq/ptMjlhh2/mYgkafUa78gppKLn0C/LuwtjqmUfODRiGVhJa0FGSe+zGCDmPh5H4yWU9DFrHiYZPIWqTaWaS6yMI7h34dZIrWrvRib98V0Z393B3I=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(376002)(39860400002)(136003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(41300700001)(31686004)(38100700002)(66556008)(6506007)(86362001)(316002)(54906003)(53546011)(6916009)(66946007)(66476007)(6486002)(966005)(8676002)(8936002)(44832011)(2616005)(5660300002)(6512007)(26005)(478600001)(2906002)(4326008)(31696002)(83380400001)(36756003)(148743002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TjhiM0hBcTJ0ZnhYcXgrbnhBaXl2M3owbTNLSHgxUEwybzNQRmFzeHk5SHps?=
- =?utf-8?B?WG5KTms5WU8wMFN6WjR3Z21Eb1dhZWFjM1lGcHZ0ZEZHV1dRY2x4RDlSaVU2?=
- =?utf-8?B?NWVFUkpaOUFTMkZsSEJ5eGhyQllIYVI4TlpTd1FybEhpNFpvRkFoNkhjZlZw?=
- =?utf-8?B?QWpQSlFETEVxMUFJUWZrcVlHc21ydmRlbXFlQkF0S2ZPaDN0K0JkTWc1SGlL?=
- =?utf-8?B?VHhuSUFkV0o1a3lXRHhyUTBJTEZnYmV3bkY5NTFsUFBLMmUzRGgwUnk3d1Nr?=
- =?utf-8?B?MFpwSDlDS3JuNnM0K3RXeHpOMnl1OVhodlc2Tytyb2h3WEl2V0xlVnFPbndw?=
- =?utf-8?B?bEdMNUZDK083L2V1L0xCdE5UN0FLZFJFMjducEVZWUxqMVVBWVJCYlhKMGQ0?=
- =?utf-8?B?OEpWa0JJN29uY2VKNjRQM05GZ3l2eW93MlBRNlFZWnZqcXdPcE5vckR5WGg0?=
- =?utf-8?B?QzczRmF5UmhsZVVNUHVmb0g1ekJjbXRBV3hWVm4rOFR5blgvbC9HWjQ0cDJO?=
- =?utf-8?B?azhLQktFY0RRYmk4NFNEaC9Ed2piVlg4WTUvVnN1aHRtS1FXZ0RBM3JnQ1pt?=
- =?utf-8?B?bG5qalR3TlNFMXE1cU1LbzluRmVaWDJnTnRrQk9oeWM1ZXhaRTd0S3B3cHc3?=
- =?utf-8?B?V3lhdTFVbFZRblhYZG9FNHlPclRWMFUwVGJsZjhoVmJXeGVqRjV0M1lHM21O?=
- =?utf-8?B?YjUrNFFZT3NBQVlsRmV4UnhIUlR3dWh6MHVCR0lWSjBlN0RhSHAwMHNaN0tx?=
- =?utf-8?B?ZC9rMGxxUW1OVCtYbDBBUEordHhhMENtanlIV0xnT0RpdFdrMFNhRFNaUVFu?=
- =?utf-8?B?VlRvMThjbUZmdTh5ZXhyNXNrNHF0SURMTXVYZlptSVl5eHZHOXZJWGxDV3p3?=
- =?utf-8?B?Y2pIV2FENm9aUm9ETENwZWhrQWFCZHpSRTg3WGpPTzVPVXJ4RWMzNlFvY25J?=
- =?utf-8?B?WHhCd2duVU0yZmp1UTAxWmFDQ2pvZVE1aUhSaXVsNnJLVUQvUVkzTjVRRVd1?=
- =?utf-8?B?RVNPSUtrYTM4QTZrd0NvL0pGd2V5VXAydjdMN09lK1I4cUhSbWRPZE9FK2xj?=
- =?utf-8?B?Y1lUUjdva2x3NDU1TWFiYzJwUS9ZOUZzZHNpc0kyVlBOclhvWDNjMGttSEtV?=
- =?utf-8?B?dXdxZE5aZlQ3eTZ2NHRQRi9qcEZGVm9zSWNPRUkrVk9RVGxlQmFDZ0JZUGJm?=
- =?utf-8?B?OFBCb29mRnlqMmxxQS9sdjlRZTR4OWRwWDhCU25LL1dOL3JrS3g1eGpXQUJV?=
- =?utf-8?B?SDUzd1lyaDRDcDNIZXZiNFk3bGVPT0VxZ0dLN3FYdmEwVVJ3SjRNbHM3aVJw?=
- =?utf-8?B?SHRqdjFnZE92Y3ZXbVpoVGpaSC83V05XemhvRGhmanZBaU1scTlydmZ4QzUz?=
- =?utf-8?B?aSszTGN3Sjd3Z3F4S2Y0VXFSdTNCcWpCRk0vUzBSUmdTeTM4ekg4alRoZ0Vs?=
- =?utf-8?B?VHZZSUxvNGRVVndqTmphd0JHRCtORi9Ga1YvU29kSjgzRkZzOGVjWmpTVGgx?=
- =?utf-8?B?U3JvRVUxOWxVRkJkUzZlZzdpOGVPaVlUWEo4ZGxsMVVnVWpJQm1LaStDYjdh?=
- =?utf-8?B?VGpOSWh6Q0RLTFdEVTRtT0xManhqRkFSL1N3aE9hRWpiK2ttNG9uRCtwZFlI?=
- =?utf-8?B?dk5OV3VESzF5TSs2UVYyeWdhMDJEcXhnZWczbGNlRytUWnRDZmh1YnlsUGNN?=
- =?utf-8?B?RW5jU1cxM25BbHhqR3hVS2xKQW9NZUVUb2paNDg1WFlJTmE4R3BKWnl1WGFE?=
- =?utf-8?B?dis4WUVseU1zZ1E4bDNLbEU2UDliYm1KdUx4aFlCQ0dnL29leXM0UWJnS1pF?=
- =?utf-8?B?cXE3NENuR21jdGR6NDlEc2JUNVZkQjAxQzhxekM3L1JBZWNhSFhXQ2l6cjM1?=
- =?utf-8?B?VUtob3pEcTRNTWoyS2c5RXFMMktYQUNWSXJqOEF5Zk1hYTIzVnVaN0hUS0Ex?=
- =?utf-8?B?M2F0NlZpOWVabDhQQWRVZnR0Zm9XOHE0aThCVmx1M1JlL0Q4L0RIVGsyQ2hi?=
- =?utf-8?B?SzAySi9wTG04bzVPSjkrTjRkb3VMUGxpOU1zUGhCYlZnRkU2eXJKcVJZOWwr?=
- =?utf-8?B?aG1BUCtvMHluVFAyUWNtbjlZUURMY0V4SkF4YTltVDl2WElqTFBKMjRDdHA0?=
- =?utf-8?Q?iwuuXjqpv43BlbTHe5zIhZKDo?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 711d9a4b-14a7-485c-fde9-08dc20e50e99
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 16:12:14.5492
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b4myuZIPKU1Kcuip4bj6+eD3uAlhYGPv4GXvCSIzeDBX1taSN11iY95B39x4keeoCszQV+vnh5xKgGlSFLc3DQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6789
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbeV5adWhiNZu5xj@krava>
 
-On 1/29/2024 07:54, Rafael J. Wysocki wrote:
-> On Fri, Jan 26, 2024 at 7:55 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
->>
->> The ACPI specification allows for an EDID to be up to 512 bytes but
->> the _DDC EDID fetching code will only try up to 256 bytes.
->>
->> Modify the code to instead start at 512 bytes and work it's way
->> down instead.
->>
->> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extensions/output-device-specific-methods.html#ddc-return-the-edid-for-this-device
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/acpi/acpi_video.c | 23 ++++++++++++++++-------
->>   1 file changed, 16 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
->> index 62f4364e4460..b3b15dd4755d 100644
->> --- a/drivers/acpi/acpi_video.c
->> +++ b/drivers/acpi/acpi_video.c
->> @@ -624,6 +624,10 @@ acpi_video_device_EDID(struct acpi_video_device *device,
->>                  arg0.integer.value = 1;
->>          else if (length == 256)
->>                  arg0.integer.value = 2;
->> +       else if (length == 384)
->> +               arg0.integer.value = 3;
->> +       else if (length == 512)
->> +               arg0.integer.value = 4;
-> 
-> It looks like switch () would be somewhat better.
-> 
-> Or maybe even
-> 
-> arg0.integer.value = length / 128;
-> 
-> The validation could be added too:
-> 
-> if (arg0.integer.value > 4 || arg0.integer.value * 128 != length)
->          return -EINVAL;
-> 
-> but it is pointless, because the caller is never passing an invalid
-> number to it AFAICS.
-> 
+Hi Jiri,
 
-Thanks.  I'll swap over to one of these suggestions.
+On Mon, Jan 29, 2024 at 01:11:17PM +0100, Jiri Olsa wrote:
+> On Sun, Jan 28, 2024 at 06:35:33PM -0700, Daniel Xu wrote:
+> > This patch enables dumping kfunc prototypes from bpftool. This is useful
+> > b/c with this patch, end users will no longer have to manually define
+> > kfunc prototypes. For the kernel tree, this also means we can drop
+> > kfunc prototypes from:
+> > 
+> >         tools/testing/selftests/bpf/bpf_kfuncs.h
+> >         tools/testing/selftests/bpf/bpf_experimental.h
+> > 
+> > Example usage:
+> > 
+> >         $ make PAHOLE=/home/dxu/dev/pahole/build/pahole -j30 vmlinux
+> > 
+> >         $ ./tools/bpf/bpftool/bpftool btf dump file ./vmlinux format c | rg "__ksym;" | head -3
+> >         extern void cgroup_rstat_updated(struct cgroup * cgrp, int cpu) __ksym;
+> >         extern void cgroup_rstat_flush(struct cgroup * cgrp) __ksym;
+> >         extern struct bpf_key * bpf_lookup_user_key(u32 serial, u64 flags) __ksym;
+> 
+> hi,
+> I'm getting following declaration for bpf_rbtree_add_impl:
+> 
+> 	extern int bpf_rbtree_add_impl(struct bpf_rb_root * root, struct bpf_rb_node * node, bool (struct bpf_rb_node *, const struct bpf_rb_node *)* less, void * meta__ign, u64 off) __ksym; 
+> 
+> and it fails to compile with:
+> 
+> 	In file included from skeleton/pid_iter.bpf.c:3:
+> 	./vmlinux.h:164511:141: error: expected ')'
+> 	 164511 | extern int bpf_rbtree_add_impl(struct bpf_rb_root * root, struct bpf_rb_node * node, bool (struct bpf_rb_node *, const struct bpf_rb_node *)* less, void * meta__ign, u64 off) __ksym;
+> 		|                                                                                                                                             ^
+> 	./vmlinux.h:164511:31: note: to match this '('
+> 	 164511 | extern int bpf_rbtree_add_impl(struct bpf_rb_root * root, struct bpf_rb_node * node, bool (struct bpf_rb_node *, const struct bpf_rb_node *)* less, void * meta__ign, u64 off) __ksym;
+> 
+> looks like the btf_dumper_type_only won't dump function pointer argument
+> properly.. I guess we should fix that, but looking at the other stuff in
+> vmlinux.h like *_ops struct we can print function pointers properly, so
+> perhaps another way around is to use btf_dumper interface instead
 
-I will also split this patch separately from the other as the other will 
-take some time with refactoring necessary in DRM that will take a cycle 
-or two.
+Ah, crap, looks like between all the branch switching I didn't build
+vmlinux with kfunc annotations. Having fixed that, I can repro this
+build failure.
 
->>          else
->>                  return -EINVAL;
->>
->> @@ -1443,7 +1447,7 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
->>
->>          for (i = 0; i < video->attached_count; i++) {
->>                  video_device = video->attached_array[i].bind_info;
->> -               length = 256;
->> +               length = 512;
->>
->>                  if (!video_device)
->>                          continue;
->> @@ -1478,13 +1482,18 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
->>
->>                  if (ACPI_FAILURE(status) || !buffer ||
->>                      buffer->type != ACPI_TYPE_BUFFER) {
->> -                       length = 128;
->> -                       status = acpi_video_device_EDID(video_device, &buffer,
->> -                                                       length);
->> -                       if (ACPI_FAILURE(status) || !buffer ||
->> -                           buffer->type != ACPI_TYPE_BUFFER) {
->> -                               continue;
->> +                       while (length) {
-> 
-> I would prefer a do {} while () loop here, which could include the
-> first invocation of acpi_video_device_EDID() too (and reduce code
-> duplication a bit).
-> 
->> +                               length -= 128;
->> +                               status = acpi_video_device_EDID(video_device, &buffer,
->> +                                                               length);
-> 
-> No line break, please.
-> 
->> +                               if (ACPI_FAILURE(status) || !buffer ||
->> +                                   buffer->type != ACPI_TYPE_BUFFER) {
->> +                                       continue;
->> +                               }
->> +                               break;
->>                          }
->> +                       if (!length)
->> +                               continue;
->>                  }
->>
->>                  *edid = buffer->buffer.pointer;
->> --
+I'll take a look and see what the best way to fix this is.
 
+Given that end to end the whole flow basically works, should we start
+working on merging patches?
+
+Thanks,
+Daniel
+
+[..]
