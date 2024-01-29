@@ -1,101 +1,96 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A7055E49;
-	Mon, 29 Jan 2024 09:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAD156454
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706521765; cv=none; b=gwAKoDNm4IawnrqHXy+IqLVYC8LcploCQ6uS/qFR+VqKMkglQMJDZrbY1ru0W/B9edoOx0mfXrWkw91MGXtWlrCpwm0V3kUrNYqzYDUFAw0w4OQYl0S/i2wcETH8433TWarnOWrVkBjs0sbnuSfwkM6bz9NLvS+SKg5rDEoEfvs=
+	t=1706521776; cv=none; b=WDV9urKzFCsi5DET0vf+cwrUUvT8gqMbZcOs7iT/2nlQ8N/odNRx9z+kjVs3Ir34jIb17uhul5g5w9B0MAgpYrdDZkIexL3y6edx190d6toDTq/ga9N1xdsE2ETEXejJcCPXteYx4yb6rwOPjaDq+8TRNv1/b02JNRR8b3lOwSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706521765; c=relaxed/simple;
-	bh=BcsHhEXWi5xMJWTtz5/c5ki18Idpl9aWenNr9qUQymg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IckgAX2NK5cd/1HquhtETzj7DN1iJaKiymdhNomnlkuAkA8J0eY7cMzWPWCmo1TyiMtD6WDq1bQNLSFMPjTlX5SNjasnuF8/r0ZacK7kAu65YNDGCpEUTrnn2g406uqz4Fg+2yOC7+yoAbFmJgqqyA3iUXXK2ZQA0xUKc/paJUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jVYbEqyD; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706521776; c=relaxed/simple;
+	bh=9fwTsy09+zhtJYD5oZvv7jgCqz036BRm5TDsLVRnhYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p1mvAzNVbtz5nM/RrOfs2dWXanNV/1GD7Vcjb5wmnq8lvSMAOR8TKQbu9e+RRYBWCfu6AfmrP2ebjh5rI+ufvZbZuQxLkHFDsEeZYtyxZ5e5HzWgionKVayd1EU97jFMu8bRkb4s87uf8zWrMdugg3zbfKz9mnDRAycqgoJb4Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ElH86OJz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jVYbEqyD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706521762;
-	bh=BcsHhEXWi5xMJWTtz5/c5ki18Idpl9aWenNr9qUQymg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jVYbEqyDuZW+HE+sdCpLKAAKTpOEi8F0b29iUJ0QWx1IxYqdkztJpU1N1zHnOqtUQ
-	 xmcF2ZVfLMveGB5RbvT+pDLrpIjqKuiBuXyEWbI8NZKNN8qrendUhDEum03NJ1QAPW
-	 jSd79i5YCAy4XBVBNNcGbYQPUSJE/6l2YZ74nImp7ljO2RSpRdc+xoHViHElBzo5l4
-	 xx7L0RssUdwqXf55PCqO6cHGyIrceKkwCl9Qy8iDuSN2adxhfufQed1930I9dc87mE
-	 aGWiAgewzYzk3kvftAPR0BwGLrd+3DlBGfxc6cxOXMz2D1GTAQJYisqlGIka15by4n
-	 AXSbspLqZMO6g==
-Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ElH86OJz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706521773;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OCIW9vJhBOYMefsIUqmT/GeymZeEusUcC32sI5mr9No=;
+	b=ElH86OJzWzP6d+U32u+K/ywkO34AbhsJ3SD1b2nAODOJYWSEXnosRJmD628dD2hSZ/20ve
+	3DFQ8WsZGKNOLLFYBq56pPTgtjD9RIEZ8Sx90V+0iO6OFifYSOMyGW7Iuz9csBZcXhMMwl
+	NN+xH1kvPXCk7Yx6Eqi2aDuNS9YUSh8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-515-_Qr3tQcfP8S6khmn53WbBQ-1; Mon, 29 Jan 2024 04:49:29 -0500
+X-MC-Unique: _Qr3tQcfP8S6khmn53WbBQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 23AF13781F92;
-	Mon, 29 Jan 2024 09:49:21 +0000 (UTC)
-Message-ID: <e29ae12b-5823-4fba-8029-e8e490462138@collabora.com>
-Date: Mon, 29 Jan 2024 11:49:20 +0200
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AEBED811E81;
+	Mon, 29 Jan 2024 09:49:28 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.245])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 844B91C060AF;
+	Mon, 29 Jan 2024 09:49:26 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] netfs: Miscellaneous fixes
+Date: Mon, 29 Jan 2024 09:49:17 +0000
+Message-ID: <20240129094924.1221977-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: net: starfive,jh7110-dwmac: Add
- JH7100 SoC compatible
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
- Samin Guo <samin.guo@starfivetech.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Giuseppe Cavallaro <peppe.cavallaro@st.com>, Andrew Lunn <andrew@lunn.ch>,
- Jacob Keller <jacob.e.keller@intel.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-References: <20240126191319.1209821-1-cristian.ciocaltea@collabora.com>
- <20240126191319.1209821-2-cristian.ciocaltea@collabora.com>
- <0a6f6dcb-18b0-48d5-8955-76bce0e1295d@linaro.org>
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <0a6f6dcb-18b0-48d5-8955-76bce0e1295d@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Hi Krzysztof,
+Hi Christian,
 
-On 1/29/24 10:26, Krzysztof Kozlowski wrote:
-> On 26/01/2024 20:13, Cristian Ciocaltea wrote:
->> The Synopsys DesignWare MAC found on StarFive JH7100 SoC is mostly
->> similar to the newer JH7110, but it requires only two interrupts and a
->> single reset line, which is 'ahb' instead of the commonly used
->> 'stmmaceth'.
->>
->> Since the common binding 'snps,dwmac' allows selecting 'ahb' only in
->> conjunction with 'stmmaceth', extend the logic to also permit exclusive
->> usage of the 'ahb' reset name.  This ensures the following use cases are
->> supported:
->>
->>   JH7110: reset-names = "stmmaceth", "ahb";
->>   JH7100: reset-names = "ahb";
->>   other:  reset-names = "stmmaceth";
-> 
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Here are a couple of fixes for netfslib:
 
-Thank you for the review!
+ (1) Fix an i_dio_count leak on a DIO read starting beyond EOF.
 
-Could you please apply it to the RESEND version [1] instead, as this one 
-had an issue collecting the latest tags, as indicated in [2].
+ (2) Fix a missing zero-length check in an unbuffered write causing 9p to
+     indicate EIO.
 
-Regards,
-Cristian
+The patches can also be found here:
 
-[1] https://lore.kernel.org/lkml/20240126192128.1210579-2-cristian.ciocaltea@collabora.com/
-[2] https://lore.kernel.org/lkml/920e764c-4fa3-4298-bb49-d31416fc3dd6@collabora.com/
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+
+Thanks,
+David
+
+David Howells (1):
+  netfs: Fix missing zero-length check in unbuffered write
+
+Marc Dionne (1):
+  netfs: Fix i_dio_count leak on DIO read past i_size
+
+ fs/netfs/buffered_write.c | 3 +++
+ fs/netfs/direct_write.c   | 5 ++++-
+ fs/netfs/io.c             | 2 ++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
