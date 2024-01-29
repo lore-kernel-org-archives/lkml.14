@@ -1,66 +1,70 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922306F081
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BE53F9C4
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706550227; cv=none; b=Jyo+Fbj/jnjviWSEv3q5Pfzvo0iPSKCQNbid0pXH2ywKBGEKePH1Et3xfXeaZOoG88Wykh9CeomelHG+nG6RIg363HdQwO8t6I+MpTbnK++12166WB9WwsxNdpQjDuWPIGvJkL5i0uhTsaHV+FMCm9iTf3RR9wg6JmihBddw2n0=
+	t=1706550228; cv=none; b=EDkoqeH7nCTZx7SUGjMtFxdrjqWQP/k8ZCzQk79b11pjfKlWyinhyHx9EyTo/6z8Lda7cfLDBL3WUIqsgBQnAygDwngCBLgha4vPnfS2oAzdgvZqMLdQ2le1yZPPq/+mIyBFL5JLejuLMIRkSzrGqorRWDvIvwz25Ef4Qkaccjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706550227; c=relaxed/simple;
-	bh=AaTVe4fPYxzhknQmWU6VukxDd0S4jZmIG3xhl/sR4DQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F2N2jBrL2QtNlKd0aQ8UCsUPBbQu/QIaDzSfjWzblqSyzIIgVJbRjeAsuZK+hHFNzlv8rmlBLcTcUJzzIIXCT84Sd8592CbO2UxkXtI49ERmndvhdeayZ1q5bLsSrP/yg+iNxpC6uUGkprPHC62xHOVjBQ30wnxHLug1Gf+df9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KXAqSvKR; arc=none smtp.client-ip=209.85.210.41
+	s=arc-20240116; t=1706550228; c=relaxed/simple;
+	bh=ezxaAWnO3x5MlzXMVPde2b8Z5cmfO15kjRpRqQ8IuhY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ADXEbGuuuVjRCQphj7L1jO9Xnc1Y+jVXgXowQcAF18YuJ09/oD4R4M+aQEV1RfVmcG0gfUwdLyb6T936BWKM9Dfd7j8S5zbeHbc0ApeocT+y0eF5ApMKcwOgwBOjQyU8cITQ0tNTAaQjP9uVrG6jSbUVSVhGPfv81b1r0EUDxi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yy5o3rc5; arc=none smtp.client-ip=209.85.210.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KXAqSvKR"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e1352dd653so395256a34.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:43:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yy5o3rc5"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e117e0fee8so1167597a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:43:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1706550223; x=1707155023; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W5ulVfKbqBJAfmRxrNqOUHB1AQ0ZU6Sxi0KpMVZxhwE=;
-        b=KXAqSvKR/Sr1HYBeArPvAspzPsgutzHcVSHRglH2vcAru7NLZBbZwFzR3EPlk/n4AM
-         7tmWuKXZKHuTK2cKihmZzDZA+CP//WLS5ezDAmWWWXyE7ggF667vkqJ0u2/3RW/YE17G
-         4ZXyxbUTf+zsSZ6ho0b5+CPQVNTvpWXN8r8h3VPc1HxUQSQqpqnvw+9JdChnDk+4ZVuu
-         2Thk1PJv4Cqf2MDswYKJpRNYyUFESBbmd4W0tBnP2odUtk1eufdG02s1CQqOJ3KjusJz
-         tlPy0+U2KmpZdpblMyXkAz8Hz4Wvq+mJUpC72RAfo4IHTjDnGXP+Wz+/crsZXektdGJd
-         oC5Q==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1706550225; x=1707155025; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cn/LQOeTBFx9zDrBTCXy4pCuw6SR0x8diD/cv0ohb+c=;
+        b=yy5o3rc537NVtCklv0xRS8QgfjO+CRRC/TVNtNz7NmB3dlVBWgKx44vqYRYlp3/N/g
+         sxCiiIsX0Nel9fYWhfxEV3JqBrJOMYAcRCZtmKEXMSggpu0Dfm9SZUhcps+uhc9eZB95
+         Xj5VPBHkO0BzQQZ0eTIt6Thos54yH5I4KO5vZoZhdq9lTkmnCDxRVIpSgWvTW1Xv1494
+         taQ9xZ/9IZQlL12XZgApwYp2gE6IGqH5ZNQPAAb88BvwZWNzCsCw1AALHndUoP5It2bj
+         IoV26enEx1V/+0SBRKv/bDK1Gj1VgGN5JY6fv8X0495z5j1565/l1cRNWwSmqFMNOP+i
+         YrkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706550223; x=1707155023;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W5ulVfKbqBJAfmRxrNqOUHB1AQ0ZU6Sxi0KpMVZxhwE=;
-        b=EVPhvKpq+jPqoMimaK1Op3GrbkeNAKawSOaEj2LPsEWJ92taMVYvmzRO5tub7AG1yz
-         DomeBczmo5Cbbl6tdEuiCsGQoI/8GojTtCXKbO3w4mAYm0oijyosopTOnbaj/MApTkPQ
-         URp85MpM83hYlf89cfqtdTsACAgyPzD3CCVlM+1fof4tAL8cWSLOUN4+BEuuf4ZzYT2o
-         +e0l0G5p/w/tPGmY6SUSBuOaoPKUQ1GLZsfN4/W0th0t0iMysmN8Mt3tqRmQ4zoS8vbd
-         ZcMtWPwkK2kIbB9NTnO9jWSPG5KKfdbwEsbpbYKt/t8XvhTlQbDPNViqnYD72GCsgTTG
-         rjfQ==
-X-Gm-Message-State: AOJu0YwglrGpG+EGL5D8mxicfhh+Ig6l+iSZqdOXUpAeEO3hQTluJnYI
-	ILXhQC/PoRt8JGO1DA7xsvO15v//rCqeb4MvUEAj9+tq7D/I1Nu2Yk2NIrOUosJ0X5cALWaZSdQ
-	Y
-X-Google-Smtp-Source: AGHT+IGd7td5McqP8pDdiV/7+x8HZlsSEOiTmLx+F37kcBYKvjMVsWnMmdpVi+HEutXWTTjDmANuFg==
-X-Received: by 2002:a9d:7f85:0:b0:6e1:13c8:ca1 with SMTP id t5-20020a9d7f85000000b006e113c80ca1mr5005124otp.11.1706550223646;
-        Mon, 29 Jan 2024 09:43:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706550225; x=1707155025;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cn/LQOeTBFx9zDrBTCXy4pCuw6SR0x8diD/cv0ohb+c=;
+        b=OsV18HCoeApVom3FQjrW9fnpziWD25F4cIALaIKx2XG2MZcw8o3Csn6bthI43DOafP
+         WcS56aEziqOD1NvpSRZwm5rz9WiJgwAEo6JMbnwLwX6OcL+Qzsl+br/qyOwh5cznJ0Q7
+         z5aZvhdlxaA+KBxqpEZjcihPIHMLya9EdssYWP+DTAkG8WqNZpiNEfb2GQrspcuCN9ms
+         fWj6m4eNCoHw3Obj/b1Y0ug7uPdZ5gkCGzyunm8XCHa1qSyMENaVRS97SqOyqGBqkRG8
+         uLna8qqw6hNQX9wMc7Z/lPk6+vsj6otlrW6xuMuk9af67RMIX1yP4M97IdFLO8KpmhfB
+         bAAQ==
+X-Gm-Message-State: AOJu0YwpADBXOxVG47POYus43Hukp2UNL52M37pfjh+wbguUkaXQDj/k
+	+KfZtOY3z4GZY00MNpKIvTh3FHycpNLDkPPw06Ui6QykBTKPsr0ezRhFue7qfZI=
+X-Google-Smtp-Source: AGHT+IGwnhAee+dC3VpUdH+kLyGQuggTaELH+MHdmM/0AybMffHiQouOgzEPS/xrKJCH8YihXNdfyw==
+X-Received: by 2002:a05:6830:2aaa:b0:6e1:377e:c421 with SMTP id s42-20020a0568302aaa00b006e1377ec421mr1355224otu.25.1706550225195;
+        Mon, 29 Jan 2024 09:43:45 -0800 (PST)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id p16-20020a9d6950000000b006e126e4b05esm661334oto.2.2024.01.29.09.43.42
+        by smtp.gmail.com with ESMTPSA id p16-20020a9d6950000000b006e126e4b05esm661334oto.2.2024.01.29.09.43.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 09:43:43 -0800 (PST)
+        Mon, 29 Jan 2024 09:43:44 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>
 Cc: Michael Hennerich <michael.hennerich@analog.com>,
 	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	David Lechner <dlechner@baylibre.com>
-Subject: [PATCH 0/2] iio: adc: ad7380: fix sparse warnings
-Date: Mon, 29 Jan 2024 11:41:48 -0600
-Message-ID: <20240129174150.655088-1-dlechner@baylibre.com>
+	David Lechner <dlechner@baylibre.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH 2/2] iio: adc: ad7380: don't use bool in FIELD_PREP
+Date: Mon, 29 Jan 2024 11:41:50 -0600
+Message-ID: <20240129174150.655088-3-dlechner@baylibre.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240129174150.655088-1-dlechner@baylibre.com>
+References: <20240129174150.655088-1-dlechner@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,17 +73,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This fixes the sparse warnings reported in [1].
+Although this technically works, it is better to avoid using bool as
+a bit value.
 
-[1] https://lore.kernel.org/oe-kbuild-all/202401280629.5kknB57C-lkp@intel.com/
+Fixes sparse warning:
 
-David Lechner (2):
-  iio: adc: ad7380: make ad7380_regmap_config static
-  iio: adc: ad7380: don't use bool in FIELD_PREP
+     drivers/iio/adc/ad7380.c:353:34: sparse: sparse: dubious: x & !y
 
- drivers/iio/adc/ad7380.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401280629.5kknB57C-lkp@intel.com/
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+ drivers/iio/adc/ad7380.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
+index 44b8b18ab213..a4aa0db47720 100644
+--- a/drivers/iio/adc/ad7380.c
++++ b/drivers/iio/adc/ad7380.c
+@@ -350,7 +350,8 @@ static int ad7380_init(struct ad7380_state *st)
+ 	/* select internal or external reference voltage */
+ 	ret = regmap_update_bits(st->regmap, AD7380_REG_ADDR_CONFIG1,
+ 				 AD7380_CONFIG1_REFSEL,
+-				 FIELD_PREP(AD7380_CONFIG1_REFSEL, !!st->vref));
++				 FIELD_PREP(AD7380_CONFIG1_REFSEL,
++					    st->vref : 1 : 0));
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.43.0
 
