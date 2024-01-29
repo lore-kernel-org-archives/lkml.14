@@ -1,60 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA41604D3
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AA160864;
+	Mon, 29 Jan 2024 09:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520513; cv=none; b=q7QJs2FMWHx25NiJvqnblh0JbWwpyHnDgw7EfeHkuoiVGMxIh8cxqVI3w3w5iheFXlgUCDyW9jBsw3FT6wmPS1XloP4hjdpnzvptW4FESitHxYuTqprGyLYCBnTVqFNF+7a+j25KgGMMB+NmuO9cIKnKz6nraiVQYfN5u4BMbVg=
+	t=1706520516; cv=none; b=VGIi7c85zh2aZH0rHCD4yXzMZNAR66fQ76yfCNK365FMtNUqagcgxvkmkBL+Tg3oqRUN8QQ5bVT9vjqToEnfu2CCwzsHkJW+WQKKtO89C8KSmJaOLw2Z5UG3MttCPhAJp8wEUmWgMf33Y7oNsSuY2ii4kL4qbcRSlHWjdB2wXnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706520513; c=relaxed/simple;
-	bh=4IztzyQDpSR9vKi7qcyDcSfXqq+iH81i+vGEij8LCt0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WmwolqJ34Z0/bT3lI6c+qJOGsNz/TVwMQGN9VULWF+R8fAcDpAC6FkRASyQBTIu5ep3mBcs3+CIX8xVLQtC6Lr9UbfImfXMry/2C2St6TvwX5jZ6xJan5f6nM9ECkTb0NyIbvxqfPqCrKCd6lmIAH3uOr8cjC3Y/wPlFJXSTgX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FjgPOU3q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FjgPOU3q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706520510;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mVTcx88tAi/3StA98Q30OQ89NqZ41oirLrNHvjGeZeM=;
-	b=FjgPOU3qx6aHM9q3g7pgiYx0qq5cVDQwbtGCtVvtr/DSS2ZcRG6aTrotVyOuhXpBcvUwih
-	CL7rNG0DWRDDC1xU+4IBtIlbYewpgbQ9dGhnNPFQGaVxibydcXAUjsDO0jkyGl9oNrGGqC
-	nKiEa+hcAI4SpivaITgZAS6dYW0ZdDk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658-TNG6y21IM-qVpZnGY3JDyw-1; Mon, 29 Jan 2024 04:28:27 -0500
-X-MC-Unique: TNG6y21IM-qVpZnGY3JDyw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A1BA185A58E;
-	Mon, 29 Jan 2024 09:28:26 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.173])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 378502026D66;
-	Mon, 29 Jan 2024 09:28:24 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: masahiroy@kernel.org
-Cc: dcavalca@meta.com,
-	jtornosm@redhat.com,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nathan@kernel.org,
-	ndesaulniers@google.com,
-	nicolas@fjasle.eu,
-	stable@vger.kernel.org
-Subject: [PATCH v7] rpm-pkg: simplify installkernel %post
-Date: Mon, 29 Jan 2024 10:28:19 +0100
-Message-ID: <20240129092819.10088-1-jtornosm@redhat.com>
-In-Reply-To: <CAK7LNAR2xDjbn+BZqUrgbDxPJUyQBULFB51kTiN8Nc78DXVyEw@mail.gmail.com>
-References: <CAK7LNAR2xDjbn+BZqUrgbDxPJUyQBULFB51kTiN8Nc78DXVyEw@mail.gmail.com>
+	s=arc-20240116; t=1706520516; c=relaxed/simple;
+	bh=KmnQCO9L3bVBcZaB+8oklJut8FyVVW78SVUs2lJgV+8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PhWZw9deJZckeQIU7gH7gXF9GyMxBh3uZDbB7gemfOUx4u3LdwA9tcvXJDsXtD2GEYugOjIvorsNIRC5Dk8cAHf3KN9C903mlNHSFxsNV/SiicU+gRiGTfnYedx5z1sZt3GE5Vgdrha4MmIrBweXF1x+O4dXdffS7Rt6VBR3nGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
+	by Atcsqr.andestech.com with ESMTP id 40T9Qogc080373;
+	Mon, 29 Jan 2024 17:26:50 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 29 Jan 2024
+ 17:26:46 +0800
+From: Yu Chien Peter Lin <peterlin@andestech.com>
+To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
+        <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
+        <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+        <atishp@atishpatra.org>, <conor+dt@kernel.org>,
+        <conor.dooley@microchip.com>, <conor@kernel.org>,
+        <devicetree@vger.kernel.org>, <evan@rivosinc.com>,
+        <geert+renesas@glider.be>, <guoren@kernel.org>, <heiko@sntech.de>,
+        <irogers@google.com>, <jernej.skrabec@gmail.com>, <jolsa@kernel.org>,
+        <jszhang@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-sunxi@lists.linux.dev>, <locus84@andestech.com>,
+        <magnus.damm@gmail.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <n.shubin@yadro.com>, <namhyung@kernel.org>, <palmer@dabbelt.com>,
+        <paul.walmsley@sifive.com>, <peterlin@andestech.com>,
+        <peterz@infradead.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <rdunlap@infradead.org>, <robh+dt@kernel.org>, <samuel@sholland.org>,
+        <sunilvl@ventanamicro.com>, <tglx@linutronix.de>,
+        <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
+        <will@kernel.org>, <inochiama@outlook.com>, <unicorn_wang@outlook.com>,
+        <wefu@redhat.com>
+CC: Charles Ci-Jyun Wu <dminus@andestech.com>,
+        Leo Yu-Chi Liang
+	<ycliang@andestech.com>,
+        Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v8 10/10] riscv: andes: Support specifying symbolic firmware and hardware raw events
+Date: Mon, 29 Jan 2024 17:25:53 +0800
+Message-ID: <20240129092553.2058043-11-peterlin@andestech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240129092553.2058043-1-peterlin@andestech.com>
+References: <20240129092553.2058043-1-peterlin@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,124 +61,411 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Type: text/plain
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 40T9Qogc080373
 
-The new installkernel application that is now included in systemd-udev
-package allows installation although destination files are already present
-in the boot directory of the kernel package, but is failing with the
-implemented workaround for the old installkernel application from grubby
-package.
+From: Locus Wei-Han Chen <locus84@andestech.com>
 
-For the new installkernel application, as Davide says:
-<<The %post currently does a shuffling dance before calling installkernel.
-This isn't actually necessary afaict, and the current implementation
-ends up triggering downstream issues such as
-https://github.com/systemd/systemd/issues/29568
-This commit simplifies the logic to remove the shuffling. For reference,
-the original logic was added in commit 3c9c7a14b627("rpm-pkg: add %post
-section to create initramfs and grub hooks").>>
+Add the Andes AX45 JSON files that allows specifying symbolic event
+names for the raw PMU events.
 
-But we need to keep the old behavior as well, because the old installkernel
-application from grubby package, does not allow this simplification and
-we need to be backward compatible to avoid issues with the different
-packages.
-
-Mimic Fedora shipping process and store vmlinuz, config amd System.map
-in the module directory instead of the boot directory. In this way, we will
-avoid the commented problem for all the cases, because the new destination
-files are not going to exist in the boot directory of the kernel package.
-
-Replace installkernel tool with kernel-install tool, because the latter is
-more complete.
-
-Besides, after installkernel tool execution, check to complete if the
-correct package files vmlinuz, System.map and config files are present
-in /boot directory, and if necessary, copy manually for install operation.
-In this way, take into account if  files were not previously copied from
-/usr/lib/kernel/install.d/* scripts and if the suitable files for the
-requested package are present (it could be others if the rpm files were
-replace with a new pacakge with the same release and a different build).
-
-Tested with Fedora 38, Fedora 39, RHEL 9, Oracle Linux 9.3,
-openSUSE Tumbleweed and openMandrive ROME, using dnf/zypper and rpm tools.
-
-cc: stable@vger.kernel.org
-Co-Developed-by: Davide Cavalca <dcavalca@meta.com>
-Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Signed-off-by: Locus Wei-Han Chen <locus84@andestech.com>
+Reviewed-by: Yu Chien Peter Lin <peterlin@andestech.com>
+Reviewed-by: Charles Ci-Jyun Wu <dminus@andestech.com>
+Reviewed-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Acked-by: Atish Patra <atishp@rivosinc.com>
 ---
-V1 -> V2:
-- Complete to be backward compatible with the previous installkernel
-application.
-V2 -> V3:
-- Follow the suggestions from Masahiro Yamada and change the installation
-destination to avoid problems instead of checking the package.
-V3 -> V4:
-- Make the patch applicable to linux-kbuild/for-next (ia64 support was
-already removed).
-V4 -> V5:
-- Complete for other Linux distributions.
-V5 -> V6
-- Simplify and do more compatible checks when copied files wants to be
-  replaced.
-- Remove %preun because it will be better done with another patch.
-- Add indentation and quotation.
-V6 -> V7
-- Simplify check to copy (cpm --silent return error if file doesn't exist).
-- Limit indientation to modifications.
+Changes v1 -> v2:
+  - No change
+Changes v2 -> v3:
+  - No change
+Changes v3 -> v4:
+  - No change
+Changes v4 -> v5:
+  - Include Prabhakar's Tested-by
+Changes v5 -> v6:
+  - No change
+Changes v6 -> v7:
+  - No change
+Changes v7 -> v8:
+  - Include Atish's Acked-by
+---
+ .../arch/riscv/andes/ax45/firmware.json       |  68 ++++++++++
+ .../arch/riscv/andes/ax45/instructions.json   | 127 ++++++++++++++++++
+ .../arch/riscv/andes/ax45/memory.json         |  57 ++++++++
+ .../arch/riscv/andes/ax45/microarch.json      |  77 +++++++++++
+ tools/perf/pmu-events/arch/riscv/mapfile.csv  |   1 +
+ 5 files changed, 330 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
 
- scripts/package/kernel.spec | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-index 89298983a169..f58726671fb3 100644
---- a/scripts/package/kernel.spec
-+++ b/scripts/package/kernel.spec
-@@ -55,12 +55,12 @@ patch -p1 < %{SOURCE2}
- %{make} %{makeflags} KERNELRELEASE=%{KERNELRELEASE} KBUILD_BUILD_VERSION=%{release}
- 
- %install
--mkdir -p %{buildroot}/boot
--cp $(%{make} %{makeflags} -s image_name) %{buildroot}/boot/vmlinuz-%{KERNELRELEASE}
-+mkdir -p %{buildroot}/lib/modules/%{KERNELRELEASE}
-+cp $(%{make} %{makeflags} -s image_name) %{buildroot}/lib/modules/%{KERNELRELEASE}/vmlinuz
- %{make} %{makeflags} INSTALL_MOD_PATH=%{buildroot} modules_install
- %{make} %{makeflags} INSTALL_HDR_PATH=%{buildroot}/usr headers_install
--cp System.map %{buildroot}/boot/System.map-%{KERNELRELEASE}
--cp .config %{buildroot}/boot/config-%{KERNELRELEASE}
-+cp System.map %{buildroot}/lib/modules/%{KERNELRELEASE}
-+cp .config %{buildroot}/lib/modules/%{KERNELRELEASE}/config
- ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEASE}/build
- %if %{with_devel}
- %{make} %{makeflags} run-command KBUILD_RUN_COMMAND='${srctree}/scripts/package/install-extmod-build %{buildroot}/usr/src/kernels/%{KERNELRELEASE}'
-@@ -70,13 +70,14 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot}/lib/modules/%{KERNELRELEA
- rm -rf %{buildroot}
- 
- %post
--if [ -x /sbin/installkernel -a -r /boot/vmlinuz-%{KERNELRELEASE} -a -r /boot/System.map-%{KERNELRELEASE} ]; then
--cp /boot/vmlinuz-%{KERNELRELEASE} /boot/.vmlinuz-%{KERNELRELEASE}-rpm
--cp /boot/System.map-%{KERNELRELEASE} /boot/.System.map-%{KERNELRELEASE}-rpm
--rm -f /boot/vmlinuz-%{KERNELRELEASE} /boot/System.map-%{KERNELRELEASE}
--/sbin/installkernel %{KERNELRELEASE} /boot/.vmlinuz-%{KERNELRELEASE}-rpm /boot/.System.map-%{KERNELRELEASE}-rpm
--rm -f /boot/.vmlinuz-%{KERNELRELEASE}-rpm /boot/.System.map-%{KERNELRELEASE}-rpm
-+if [ -x /usr/bin/kernel-install ]; then
-+	/usr/bin/kernel-install add %{KERNELRELEASE} /lib/modules/%{KERNELRELEASE}/vmlinuz
- fi
-+for file in vmlinuz System.map config; do
-+	if ! cmp --silent "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"; then
-+		cp "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"
-+	fi
-+done
- 
- %preun
- if [ -x /sbin/new-kernel-pkg ]; then
-@@ -94,7 +95,6 @@ fi
- %defattr (-, root, root)
- /lib/modules/%{KERNELRELEASE}
- %exclude /lib/modules/%{KERNELRELEASE}/build
--/boot/*
- 
- %files headers
- %defattr (-, root, root)
+diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+new file mode 100644
+index 000000000000..9b4a032186a7
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+@@ -0,0 +1,68 @@
++[
++  {
++    "ArchStdEvent": "FW_MISALIGNED_LOAD"
++  },
++  {
++    "ArchStdEvent": "FW_MISALIGNED_STORE"
++  },
++  {
++    "ArchStdEvent": "FW_ACCESS_LOAD"
++  },
++  {
++    "ArchStdEvent": "FW_ACCESS_STORE"
++  },
++  {
++    "ArchStdEvent": "FW_ILLEGAL_INSN"
++  },
++  {
++    "ArchStdEvent": "FW_SET_TIMER"
++  },
++  {
++    "ArchStdEvent": "FW_IPI_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_IPI_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_FENCE_I_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_FENCE_I_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
++  },
++  {
++    "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
++  }
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+new file mode 100644
+index 000000000000..713a08c1a40f
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/instructions.json
+@@ -0,0 +1,127 @@
++[
++	{
++		"EventCode": "0x10",
++		"EventName": "cycle_count",
++		"BriefDescription": "Cycle count"
++	},
++	{
++		"EventCode": "0x20",
++		"EventName": "inst_count",
++		"BriefDescription": "Retired instruction count"
++	},
++	{
++		"EventCode": "0x30",
++		"EventName": "int_load_inst",
++		"BriefDescription": "Integer load instruction count"
++	},
++	{
++		"EventCode": "0x40",
++		"EventName": "int_store_inst",
++		"BriefDescription": "Integer store instruction count"
++	},
++	{
++		"EventCode": "0x50",
++		"EventName": "atomic_inst",
++		"BriefDescription": "Atomic instruction count"
++	},
++	{
++		"EventCode": "0x60",
++		"EventName": "sys_inst",
++		"BriefDescription": "System instruction count"
++	},
++	{
++		"EventCode": "0x70",
++		"EventName": "int_compute_inst",
++		"BriefDescription": "Integer computational instruction count"
++	},
++	{
++		"EventCode": "0x80",
++		"EventName": "condition_br",
++		"BriefDescription": "Conditional branch instruction count"
++	},
++	{
++		"EventCode": "0x90",
++		"EventName": "taken_condition_br",
++		"BriefDescription": "Taken conditional branch instruction count"
++	},
++	{
++		"EventCode": "0xA0",
++		"EventName": "jal_inst",
++		"BriefDescription": "JAL instruction count"
++	},
++	{
++		"EventCode": "0xB0",
++		"EventName": "jalr_inst",
++		"BriefDescription": "JALR instruction count"
++	},
++	{
++		"EventCode": "0xC0",
++		"EventName": "ret_inst",
++		"BriefDescription": "Return instruction count"
++	},
++	{
++		"EventCode": "0xD0",
++		"EventName": "control_trans_inst",
++		"BriefDescription": "Control transfer instruction count"
++	},
++	{
++		"EventCode": "0xE0",
++		"EventName": "ex9_inst",
++		"BriefDescription": "EXEC.IT instruction count"
++	},
++	{
++		"EventCode": "0xF0",
++		"EventName": "int_mul_inst",
++		"BriefDescription": "Integer multiplication instruction count"
++	},
++	{
++		"EventCode": "0x100",
++		"EventName": "int_div_rem_inst",
++		"BriefDescription": "Integer division/remainder instruction count"
++	},
++	{
++		"EventCode": "0x110",
++		"EventName": "float_load_inst",
++		"BriefDescription": "Floating-point load instruction count"
++	},
++	{
++		"EventCode": "0x120",
++		"EventName": "float_store_inst",
++		"BriefDescription": "Floating-point store instruction count"
++	},
++	{
++		"EventCode": "0x130",
++		"EventName": "float_add_sub_inst",
++		"BriefDescription": "Floating-point addition/subtraction instruction count"
++	},
++	{
++		"EventCode": "0x140",
++		"EventName": "float_mul_inst",
++		"BriefDescription": "Floating-point multiplication instruction count"
++	},
++	{
++		"EventCode": "0x150",
++		"EventName": "float_fused_muladd_inst",
++		"BriefDescription": "Floating-point fused multiply-add instruction count"
++	},
++	{
++		"EventCode": "0x160",
++		"EventName": "float_div_sqrt_inst",
++		"BriefDescription": "Floating-point division or square-root instruction count"
++	},
++	{
++		"EventCode": "0x170",
++		"EventName": "other_float_inst",
++		"BriefDescription": "Other floating-point instruction count"
++	},
++	{
++		"EventCode": "0x180",
++		"EventName": "int_mul_add_sub_inst",
++		"BriefDescription": "Integer multiplication and add/sub instruction count"
++	},
++	{
++		"EventCode": "0x190",
++		"EventName": "retired_ops",
++		"BriefDescription": "Retired operation count"
++	}
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+new file mode 100644
+index 000000000000..c7401b526c77
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/memory.json
+@@ -0,0 +1,57 @@
++[
++	{
++		"EventCode": "0x01",
++		"EventName": "ilm_access",
++		"BriefDescription": "ILM access"
++	},
++	{
++		"EventCode": "0x11",
++		"EventName": "dlm_access",
++		"BriefDescription": "DLM access"
++	},
++	{
++		"EventCode": "0x21",
++		"EventName": "icache_access",
++		"BriefDescription": "ICACHE access"
++	},
++	{
++		"EventCode": "0x31",
++		"EventName": "icache_miss",
++		"BriefDescription": "ICACHE miss"
++	},
++	{
++		"EventCode": "0x41",
++		"EventName": "dcache_access",
++		"BriefDescription": "DCACHE access"
++	},
++	{
++		"EventCode": "0x51",
++		"EventName": "dcache_miss",
++		"BriefDescription": "DCACHE miss"
++	},
++	{
++		"EventCode": "0x61",
++		"EventName": "dcache_load_access",
++		"BriefDescription": "DCACHE load access"
++	},
++	{
++		"EventCode": "0x71",
++		"EventName": "dcache_load_miss",
++		"BriefDescription": "DCACHE load miss"
++	},
++	{
++		"EventCode": "0x81",
++		"EventName": "dcache_store_access",
++		"BriefDescription": "DCACHE store access"
++	},
++	{
++		"EventCode": "0x91",
++		"EventName": "dcache_store_miss",
++		"BriefDescription": "DCACHE store miss"
++	},
++	{
++		"EventCode": "0xA1",
++		"EventName": "dcache_wb",
++		"BriefDescription": "DCACHE writeback"
++	}
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+new file mode 100644
+index 000000000000..a6d378cbaa74
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/microarch.json
+@@ -0,0 +1,77 @@
++[
++	{
++		"EventCode": "0xB1",
++		"EventName": "cycle_wait_icache_fill",
++		"BriefDescription": "Cycles waiting for ICACHE fill data"
++	},
++	{
++		"EventCode": "0xC1",
++		"EventName": "cycle_wait_dcache_fill",
++		"BriefDescription": "Cycles waiting for DCACHE fill data"
++	},
++	{
++		"EventCode": "0xD1",
++		"EventName": "uncached_ifetch_from_bus",
++		"BriefDescription": "Uncached ifetch data access from bus"
++	},
++	{
++		"EventCode": "0xE1",
++		"EventName": "uncached_load_from_bus",
++		"BriefDescription": "Uncached load data access from bus"
++	},
++	{
++		"EventCode": "0xF1",
++		"EventName": "cycle_wait_uncached_ifetch",
++		"BriefDescription": "Cycles waiting for uncached ifetch data from bus"
++	},
++	{
++		"EventCode": "0x101",
++		"EventName": "cycle_wait_uncached_load",
++		"BriefDescription": "Cycles waiting for uncached load data from bus"
++	},
++	{
++		"EventCode": "0x111",
++		"EventName": "main_itlb_access",
++		"BriefDescription": "Main ITLB access"
++	},
++	{
++		"EventCode": "0x121",
++		"EventName": "main_itlb_miss",
++		"BriefDescription": "Main ITLB miss"
++	},
++	{
++		"EventCode": "0x131",
++		"EventName": "main_dtlb_access",
++		"BriefDescription": "Main DTLB access"
++	},
++	{
++		"EventCode": "0x141",
++		"EventName": "main_dtlb_miss",
++		"BriefDescription": "Main DTLB miss"
++	},
++	{
++		"EventCode": "0x151",
++		"EventName": "cycle_wait_itlb_fill",
++		"BriefDescription": "Cycles waiting for Main ITLB fill data"
++	},
++	{
++		"EventCode": "0x161",
++		"EventName": "pipe_stall_cycle_dtlb_miss",
++		"BriefDescription": "Pipeline stall cycles caused by Main DTLB miss"
++	},
++	{
++		"EventCode": "0x02",
++		"EventName": "mispredict_condition_br",
++		"BriefDescription": "Misprediction of conditional branches"
++	},
++	{
++		"EventCode": "0x12",
++		"EventName": "mispredict_take_condition_br",
++		"BriefDescription": "Misprediction of taken conditional branches"
++	},
++	{
++		"EventCode": "0x22",
++		"EventName": "mispredict_target_ret_inst",
++		"BriefDescription": "Misprediction of targets of Return instructions"
++	}
++]
+diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+index cfc449b19810..3d3a809a5446 100644
+--- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
++++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+@@ -17,3 +17,4 @@
+ 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
+ 0x5b7-0x0-0x0,v1,thead/c900-legacy,core
+ 0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
++0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
 -- 
-2.43.0
+2.34.1
 
