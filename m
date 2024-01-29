@@ -1,58 +1,57 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BB015699A;
-	Mon, 29 Jan 2024 16:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E8E157056;
+	Mon, 29 Jan 2024 16:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545683; cv=none; b=jxnacxtqqKcea7Fo75En3OE9j/gCy0ggLhBWY0sPGyQThL1xAsabzLz5p7xXuQpB3akb/dytaHVV/f7e4IyjmIM919QhOnN9QaHh2Bl/0kp97kSMQRGy/ecGupvdHxYMrtbE+nEt/e3xuUjcp7RsapsXj6CuggTN2MsoO7BisiA=
+	t=1706545684; cv=none; b=aUFEr4rZvtzJNY8ugX+0izLya2IQxU06KxPH5qPG0GgOphJweCxKQk7YkHFss5vQmUTc3KXcC8iIKJfbV9YKYghqR48ZqiUx6h6kd/Kaefz0osdCrpSN3GvMMPKYZcOjrRWOY1lIO5nifNXOXWHBT016mWT8v1bxSbITGLsJg7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545683; c=relaxed/simple;
-	bh=Swu1L1Cn783DMdkZFh+9JpM4v2AC76QqJymHwYw/bN0=;
+	s=arc-20240116; t=1706545684; c=relaxed/simple;
+	bh=NDcG2FLGzxLiyCK7FSbgtFUBRX79qZ/fL/1LI2KhnQs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PV3zbBdPX7YajGY6RN7OPq9I/Zjn9h8H6yrovP57JfyEBbIGgSdfdvNERIZUbI+ezKLhHw01p1epVZ5JuAFMdbQtjx5s1IQndWrIgSbo5WpM9LHNN8qIsMhVW753SC3g//qGgB1t8RVL5xMfpEMlJOeVNtCzCm/zBMlpTsch10A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=T80kB7TM; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=NQypZSHmphenvUqsHoAl3GMQSiBozMhnQz07fnMruMsCIbiaMy0fFu/hIGd+xmmDYOQQFl+hW+tP+7/wlVbpTdPZ3wSJOQKCS3dLcNJc9AcOKCXuFAmaratdsw7DKH/GzRN7xxO9eo/GmyFLr9jQXKOShRzUx0zZmvC57XDHDus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=TtaNEI3x; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="T80kB7TM"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="TtaNEI3x"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0F006968;
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0G006968;
 	Mon, 29 Jan 2024 10:27:54 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=aC6ZyauHCUjrBt24NljiwgVZd+pvmCzsqS/E5+3JjT4=; b=
-	T80kB7TMsJFHkirn/tbi6oAOIe+EVvlKcS+uoRIGLVesRHysSh3uFfmzhd7nmHry
-	VgOl2fb/DnEL/KjsfSv1kcsFpXAcnLTVSDHQVMV2u4hZ9uesRRsScUHuQoJ9dhjm
-	2phU2b7aPCWtABH+9eteBmv6cdTWl4aWzV7XGtePXIWVKc/4SxnN5nW2EJjveN9y
-	V9/ELFX8BTu8MlXVYxygC0iHYX4VzXO16+u8ObZLZmkAzMCZ14gb4IvOQNnwjowT
-	veYHHAm5hIiQ1TxH+zrhNjV8z6GyrdBj6kasLgZbVmh6/lKHKyWmWM6e4lLr9gkU
-	oSYqCjkIzlExbRgaZ8RpIw==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8p-4
+	PODMain02222019; bh=75qdV8k43SbI4wq02+anfiwv9c1wTYCZBM6bd1fSHB0=; b=
+	TtaNEI3xlsa3BoPqvWwroWNZEXF5fCuIU3/JqBvQJ2XfN9RTVD5rpkUrQLa0VE6m
+	EBpfwDpWBiC5G1rnOl1WFPQwhFsIl8n22YG5Wgx/snRXJJCRr43/XBJImFQBc8k2
+	E02g+8czOlipaVMFpLL7kk8RaRGvwtORtS/AGgZPIXzaSQQvRtpRH5sIh17+mRkK
+	FRj8O9JKTEFpEfNrmAMF3CaDyrE6ORykowv0uWzNtCcJEvoxCgl12NJee3GC/pSG
+	L3VueIKkwTJ9+dHS8Wt1Gn7cyPIu9fM1GBoaWMOrH4OhFP6QrR2TQGQ+Hy93ky5v
+	DDj0qcCUVYhBxiZVR85Zsg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8n-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 29 Jan 2024 10:27:54 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 16:27:43 +0000
+ 2024 16:27:45 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:43 +0000
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:45 +0000
 Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.64.204])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 7585E820242;
-	Mon, 29 Jan 2024 16:27:43 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 37F5E820248;
+	Mon, 29 Jan 2024 16:27:45 +0000 (UTC)
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
 To: <broonie@kernel.org>, <tiwai@suse.com>
 CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
         "Richard
  Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH 06/18] ASoC: cs35l56: Remove buggy checks from cs35l56_is_fw_reload_needed()
-Date: Mon, 29 Jan 2024 16:27:25 +0000
-Message-ID: <20240129162737.497-7-rf@opensource.cirrus.com>
+Subject: [PATCH 11/18] ASoC: cs35l56: Fix misuse of wm_adsp 'part' string for silicon revision
+Date: Mon, 29 Jan 2024 16:27:30 +0000
+Message-ID: <20240129162737.497-12-rf@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240129162737.497-1-rf@opensource.cirrus.com>
 References: <20240129162737.497-1-rf@opensource.cirrus.com>
@@ -64,68 +63,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: bWtfPBqWyiJgLzXe8bT_v_QwQOJFqq0r
-X-Proofpoint-GUID: bWtfPBqWyiJgLzXe8bT_v_QwQOJFqq0r
+X-Proofpoint-ORIG-GUID: W_TlISqmvKoxFZ50ljCZ0cQp7hYaSPzi
+X-Proofpoint-GUID: W_TlISqmvKoxFZ50ljCZ0cQp7hYaSPzi
 X-Proofpoint-Spam-Reason: safe
 
-Remove the check of fw_patched from cs35l56_is_fw_reload_needed().
-Also remove the redundant check for control of the reset GPIO.
+Put the silicon revision and secured flag in the wm_adsp fwf_name
+string instead of including them in the part string.
 
-The fw_patched flag is set when cs35l56_dsp_work() has completed its
-steps to download firmware and power-up wm_adsp. There was a check in
-cs35l56_is_fw_reload_needed() to make a quick exit of 'false' if
-!fw_patched. The original idea was that the system might be suspended
-before the driver has ever made any attempt to download firmware, and
-in that case the driver doesn't need to return to a patched state
-because it was never in a patched state.
+This changes the format of the firmware name string from
 
-This check of fw_patched is buggy because it prevented ever recovering
-from a failed patch. If a previous attempt to patch and reboot the
-silicon had failed it would leave fw_patched==false. This would mean
-the driver never attempted another download even though the fault may
-have been cleared (by a hard reset, for example).
+ cs35l56[s]-rev-misc[-system_name]
 
-It is also a redundant check because the calling code already makes
-a quick exit if cs35l56_component_probe() has not been called, which
-deals with the original intent of this check but in a safer way.
+to
+ cs35l56-rev[-s]-misc[-system_name]
 
-The check for reset GPIO is redundant: if the silicon was hard-reset
-the FIRMWARE_MISSING flag will be 1. But this check created an
-expectation that the suspend/resume code toggles reset. This can't
-easily be protected against accidental code breakage. The only reason
-for the check was to skip runtime-resuming the driver to read the
-PROTECTION_STATUS register when it already knows it reset the silicon.
-But in that case the driver will have to be runtime-resumed to do
-the firmware download. So it created an assumption for no benefit.
+No firmware files have been published, so this doesn't cause a
+compatibility break.
+
+Silicon revision and secured flag are included in the firmware
+filename to pick a firmware compatible with the part. These strings
+were being added to the part string, but that is a misuse of the
+string. The correct place for these is the fwf_name string, which
+is specifically intended to select between multiple firmware files
+for the same part.
+
+Backport note:
+This won't apply to kernels older than v6.6.
 
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Fixes: 8a731fd37f8b ("ASoC: cs35l56: Move utility functions to shared file")
+Fixes: 608f1b0dbdde ("ASoC: cs35l56: Move DSP part string generation so that it is done only once")
 ---
- sound/soc/codecs/cs35l56-shared.c | 11 -----------
- 1 file changed, 11 deletions(-)
+ sound/soc/codecs/cs35l56.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
-index 953ba066bab1..0cd572de73a9 100644
---- a/sound/soc/codecs/cs35l56-shared.c
-+++ b/sound/soc/codecs/cs35l56-shared.c
-@@ -400,17 +400,6 @@ int cs35l56_is_fw_reload_needed(struct cs35l56_base *cs35l56_base)
- 	unsigned int val;
- 	int ret;
+diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
+index 1b51650a19ff..8899c02c6dea 100644
+--- a/sound/soc/codecs/cs35l56.c
++++ b/sound/soc/codecs/cs35l56.c
+@@ -907,6 +907,18 @@ static void cs35l56_dsp_work(struct work_struct *work)
  
--	/* Nothing to re-patch if we haven't done any patching yet. */
--	if (!cs35l56_base->fw_patched)
--		return false;
--
--	/*
--	 * If we have control of RESET we will have asserted it so the firmware
--	 * will need re-patching.
--	 */
--	if (cs35l56_base->reset_gpio)
--		return true;
--
+ 	pm_runtime_get_sync(cs35l56->base.dev);
+ 
++	/* Populate fw file qualifier with the revision and security state */
++	if (!cs35l56->dsp.fwf_name) {
++		cs35l56->dsp.fwf_name = kasprintf(GFP_KERNEL, "%02x%s-dsp1",
++						  cs35l56->base.rev,
++						  cs35l56->base.secured ? "-s" : "");
++		if (!cs35l56->dsp.fwf_name)
++			goto err;
++	}
++
++	dev_dbg(cs35l56->base.dev, "DSP fwf name: '%s' system name: '%s'\n",
++		cs35l56->dsp.fwf_name, cs35l56->dsp.system_name);
++
  	/*
- 	 * In secure mode FIRMWARE_MISSING is cleared by the BIOS loader so
- 	 * can't be used here to test for memory retention.
+ 	 * When the device is running in secure mode the firmware files can
+ 	 * only contain insecure tunings and therefore we do not need to
+@@ -926,7 +938,7 @@ static void cs35l56_dsp_work(struct work_struct *work)
+ 	 * on the DAPM mutex.
+ 	 */
+ 	queue_work(cs35l56->dsp_wq, &cs35l56->mux_init_work);
+-
++err:
+ 	pm_runtime_mark_last_busy(cs35l56->base.dev);
+ 	pm_runtime_put_autosuspend(cs35l56->base.dev);
+ }
+@@ -979,6 +991,9 @@ static void cs35l56_component_remove(struct snd_soc_component *component)
+ 
+ 	wm_adsp2_component_remove(&cs35l56->dsp, component);
+ 
++	kfree(cs35l56->dsp.fwf_name);
++	cs35l56->dsp.fwf_name = NULL;
++
+ 	cs35l56->component = NULL;
+ }
+ 
+@@ -1330,12 +1345,6 @@ int cs35l56_init(struct cs35l56_private *cs35l56)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Populate the DSP information with the revision and security state */
+-	cs35l56->dsp.part = devm_kasprintf(cs35l56->base.dev, GFP_KERNEL, "cs35l56%s-%02x",
+-					   cs35l56->base.secured ? "s" : "", cs35l56->base.rev);
+-	if (!cs35l56->dsp.part)
+-		return -ENOMEM;
+-
+ 	if (!cs35l56->base.reset_gpio) {
+ 		dev_dbg(cs35l56->base.dev, "No reset gpio: using soft reset\n");
+ 		cs35l56->soft_resetting = true;
 -- 
 2.39.2
 
