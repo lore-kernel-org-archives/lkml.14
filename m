@@ -1,122 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794C65BAD2;
-	Mon, 29 Jan 2024 11:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A005FEF9
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706527702; cv=none; b=O9A///ks9hxO2aRlNSiEafpWG7tkdsI4j9wwwmj9p5nN01QqwDBETrjqnoDvEK7grDn1Pb9Lz8nrIZYncKVWlZvqAqIC8VJxCqAH15fuHeKdBTeenSaHguSp88OnY0ocPetGISyr/inyQYmeNfmGOYtr9DHlqAS6lP1FdQH94LU=
+	t=1706527736; cv=none; b=HwnwCzzP6RCOdkpEnMBSDQkAcdy1mGr0JoebnKOHsN6j3XYTkmfdm8d3QFS1fds/P/LJ1sphj9CkwYccNpSBZ73LRaWy6qnuhiYn42CqrwSf1ohOYds/AgnQ4bVjQDxPVYSZlwO+7gh8Rw2wiFfnEFTTT2JQqcBzXGKkkK/pD1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706527702; c=relaxed/simple;
-	bh=vj5fBWYj/huccK5UtSPMJRYI869/VeBvWXPwIF4xpbo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lYErmWoRvuLQ8b7KgiSsxfsaihWwHQixHN8MnToJ0ka6MiCU7bjQ0WCzDXRUdFRjWGA9VVhTVou/tVTuhDF9jlbfv7JSPGJV40K3WTv9UZ02J2TmckNf5cjiq4TbfwyMpTTHInwYyMxfQxapaZclqyQU2lxhyBsPpUn8QbER07U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HvXzSg6W; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HvXzSg6W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706527700; x=1738063700;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vj5fBWYj/huccK5UtSPMJRYI869/VeBvWXPwIF4xpbo=;
-  b=HvXzSg6We+qdRerhxyjxwDP6mDeU1GO8EmlP4GocUIKNavC/a+ciyVCT
-   XtrBz54t12k1P3yo2Lol8vGN+r5HtopeA/m3mWJm9fQutvSoRZ6XF8atb
-   +cWwvlK5ZaqvRmHO7BYVXZmOsu4ZQ3+havEmVJNC1kR+1BdFcwAtqr5aP
-   tKq1bX87yiA6fU8o6mukVPS5GhhbXAy1lc04nxsbLp21ZK+jLquhTN88D
-   TyrOocQ3NZXeHSgBciMh8BwVe2LT/90Wvb2U8rx/TUA5NTaa0EbHmVhtA
-   trvfDzJ1UK0RMxSzzju2X5boxUUM/HzdVDkm2l6UBe4HQaApd1NcBHZFn
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="1857085"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="1857085"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 03:28:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="858070352"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="858070352"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.253.213])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 03:28:13 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed quirk
-Date: Mon, 29 Jan 2024 13:27:09 +0200
-Message-Id: <20240129112710.2852-2-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240129112710.2852-1-ilpo.jarvinen@linux.intel.com>
-References: <20240129112710.2852-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1706527736; c=relaxed/simple;
+	bh=SI/uKxzS8VQ4/JvIfm7PqZ1opzWLrFvAnZI93dLX+Cs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QHaKbkYwBqBhpQkh9kbFOPkJ+GaO/Y4ok81MJblmQYO/T8FWhefd3tfhcPvDUXhwC+Ah26f7JAZd1NpA5bsgU47pKhVWHbX/PnUdfSB8K1UgaOVm1et65KCrjFWn/jaePEfWU6A+Ur5uCtIIKsXgHtFvvJzHzKFo8/MQZQqI6i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav314.sakura.ne.jp (fsav314.sakura.ne.jp [153.120.85.145])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 40TBSpoX098267;
+	Mon, 29 Jan 2024 20:28:51 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav314.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp);
+ Mon, 29 Jan 2024 20:28:51 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 40TBSpWb098262
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 29 Jan 2024 20:28:51 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <afb57c55-5fd0-4f79-9653-67ef0c1e341e@I-love.SAKURA.ne.jp>
+Date: Mon, 29 Jan 2024 20:28:50 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [bluetooth?] INFO: task hung in hci_conn_failed
+Content-Language: en-US
+To: Hillf Danton <hdanton@sina.com>
+Cc: syzbot <syzbot+a984066a63e9c1e62662@syzkaller.appspotmail.com>,
+        eadavis@qq.com, Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <tencent_4A66EF6ACD6878526F542C2D6D109794E80A@qq.com>
+ <20240129044824.1218-1-hdanton@sina.com>
+ <20240129104753.1328-1-hdanton@sina.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20240129104753.1328-1-hdanton@sina.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-While a device is runtime suspended along with its PCIe hierarchy, the
-device could get disconnected. Because of the suspend, the device
-disconnection cannot be detected until portdrv/hotplug have resumed. On
-runtime resume, pcie_wait_for_link_delay() is called:
+On 2024/01/29 19:47, Hillf Danton wrote:
+> On Mon, 29 Jan 2024 14:53:20 +0900 Tetsuo Handa wrote:
+>> On 2024/01/29 13:48, Hillf Danton wrote:
+>>>> 3 locks held by kworker/1:2/779:
+>>>>  #0: ffff8880b993ccd8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x29/0x130 kernel/sched/core.c:559
+>>>>  #1: ffffc900038c7d80 ((work_completion)(&aux->work)#2){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
+>>>>  #2: ffff888052984c80 (&aux->poke_mutex){+.+.}-{3:3}, at: __fd_array_map_delete_elem+0x125/0x2f0 kernel/bpf/arraymap.c:884
+>>>
+>>> Could locking people shed any light on the failure of detecting the
+>>> poke_mutex with rq lock held?
+>>>
+>>
+>> Showing held locks (lockdep_print_held_locks()) is not a snapshot.
+>> Synchronous printk() can make #0 already released by the moment #2 is taken.
+>>
+>> Please consult printk() people for possibility of making printk() from
+>> lockdep reports (and/or hung task reports) asynchronous.
+> 
+> If printk did its work well then we have difficulty explaining why RCU
+> stalled more than two minutes.
+> 
 
-  pci_pm_runtime_resume()
-    pci_pm_bridge_power_up_actions()
-      pci_bridge_wait_for_secondary_bus()
-        pcie_wait_for_link_delay()
+The report you are talking about is https://syzkaller.appspot.com/x/report.txt?x=14300d80180000 .
 
-Because the device is already disconnected, this results in cascading
-failures:
+It says
 
-  1. pcie_wait_for_link_status() returns -ETIMEDOUT.
+INFO: task kworker/u5:2:5062 blocked for more than 143 seconds.
+      Not tainted 6.8.0-rc1-syzkaller-g8a696a29c690-dirty #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:kworker/u5:2    state:D stack:27840 pid:5062  tgid:5062  ppid:2      flags:0x00004000
+Workqueue: hci5 hci_cmd_sync_work
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5400 [inline]
+ __schedule+0xf12/0x5c00 kernel/sched/core.c:6727
+ __schedule_loop kernel/sched/core.c:6802 [inline]
+ schedule+0xe9/0x270 kernel/sched/core.c:6817
+ schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:6874
+ __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+ __mutex_lock+0x5b9/0x9d0 kernel/locking/mutex.c:752
+ hci_connect_cfm include/net/bluetooth/hci_core.h:1983 [inline]
+ hci_conn_failed+0x158/0x370 net/bluetooth/hci_conn.c:1289
+ hci_abort_conn_sync+0x7f8/0xb70 net/bluetooth/hci_sync.c:5356
+ abort_conn_sync+0x187/0x390 net/bluetooth/hci_conn.c:2988
+ hci_cmd_sync_work+0x1a4/0x410 net/bluetooth/hci_sync.c:306
+ process_one_work+0x886/0x15d0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+ kthread+0x2c6/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+ </TASK>
 
-  2. After the commit a89c82249c37 ("PCI: Work around PCIe link
-     training failures"), pcie_failed_link_retrain() spuriously detects
-     this failure as a Link Retraining failure and attempts the Target
-     Speed trick, which also fails.
+and lockdep says kworker/u5:2/5062 was blocked at
 
-  3. pci_bridge_wait_for_secondary_bus() then calls pci_dev_wait() which
-     cannot succeed (but waits ~1 minute, delaying the resume).
+5 locks held by kworker/u5:2/5062:
+ #0: ffff88802271a938 ((wq_completion)hci5){+.+.}-{0:0}, at: process_one_work+0x789/0x15d0 kernel/workqueue.c:2608
+ #1: ffffc900041cfd80 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
+ #2: ffff888019ff1060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_cmd_sync_work+0x170/0x410 net/bluetooth/hci_sync.c:305
+ #3: ffff888019ff0078 (&hdev->lock){+.+.}-{3:3}, at: hci_abort_conn_sync+0x150/0xb70 net/bluetooth/hci_sync.c:5337
+ #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_connect_cfm include/net/bluetooth/hci_core.h:1983 [inline]
+ #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_failed+0x158/0x370 net/bluetooth/hci_conn.c:1289
 
-The Target Speed trick (in step 2) is only used if LBMS bit (PCIe r6.1
-sec 7.5.3.8) is set. For links that have been operational before
-suspend, it is well possible that LBMS has been set at the bridge and
-remains on. Thus, after resume, LBMS does not indicate the link needs
-the Target Speed quirk. Clear LBMS on resume for bridges to avoid the
-issue.
+and ffffffff8ef23348 was held by kworker/u5:0/51.
 
-Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/pci-driver.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+6 locks held by kworker/u5:0/51:
+ #0: ffff88802a730d38 ((wq_completion)hci2){+.+.}-{0:0}, at: process_one_work+0x789/0x15d0 kernel/workqueue.c:2608
+ #1: ffffc90000bc7d80 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
+ #2: ffff888020989060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_cmd_sync_work+0x170/0x410 net/bluetooth/hci_sync.c:305
+ #3: ffff888020988078 (&hdev->lock){+.+.}-{3:3}, at: hci_abort_conn_sync+0x150/0xb70 net/bluetooth/hci_sync.c:5337
+ #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_connect_cfm include/net/bluetooth/hci_core.h:1983 [inline]
+ #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_failed+0x158/0x370 net/bluetooth/hci_conn.c:1289
+ #5: ffffffff8d1b83f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:324 [inline]
+ #5: ffffffff8d1b83f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x3ff/0x800 kernel/rcu/tree_exp.h:995
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 51ec9e7e784f..05a114962df3 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -574,6 +574,12 @@ static void pci_pm_bridge_power_up_actions(struct pci_dev *pci_dev)
- {
- 	int ret;
- 
-+	/*
-+	 * Clear LBMS on resume to avoid spuriously triggering Target Speed
-+	 * quirk in pcie_failed_link_retrain().
-+	 */
-+	pcie_capability_write_word(pci_dev, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA_LBMS);
-+
- 	ret = pci_bridge_wait_for_secondary_bus(pci_dev, "resume");
- 	if (ret) {
- 		/*
--- 
-2.39.2
+Since RCU reader side is not permitted to sleep, kworker/u5:0/51 should have released ffffffff8ef23348 shortly.
+
+But the thread who was blocking ffffffff8d1b83f8 is not reported (presumably one of threads that are reported as
+"X lock[s] held by Y" without stack trace), we can't know what the thread blocking ffffffff8d1b83f8 was doing.
+
+Showing all backtraces of threads (including TASK_RUNNING state) could explain.
+
+So, your question will be "Lockdep developers, can we please make it possible to report all backtraces of
+threads which are holding at least one lock, tolerating increasing possibility of UAF when trying to report
+locks held?" Although Linus does not like, maybe we need to tune hung task report using a kernel config option.
 
