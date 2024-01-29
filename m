@@ -1,225 +1,249 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF42355E7A
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706519922; cv=none; b=dyUAg6MyWoqg+eLwiL3CWH4+SOYTtsRnsE6FqGpJcrqplJoj2nH5h1qqlmudI1kE9a98OF4EuF1EUxEE8J8zKw4AAqJMLiOT6/QbVvVW4kA+Ch0UgHCOZ4TvIXPpWOo9ANP8xVfrT5N3mkdOcFGc01snVRgeNQJAc6ilSb6XTCw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706519922; c=relaxed/simple;
-	bh=sFozMJoAolAGCF8tscjr3ajpcwVLl1NfdfeFIagusCw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=esgFD6gsTezn8i7aOsFfWLJcbzMp/r3LP3lnK1Gt8a9eiYjBoCzhL1b79luJuNOV3MR4FmFuhOITpqgP/H2D9XXaalc56qOlIWPZ6IygmwyjOV+1eHyT6wO4ljYzdtiO2hXz52/JoGau2SxYGUgSWWPrL9PF8sa80ZrvhUpPGuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O+Zw8yen; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8C956449;
+	Mon, 29 Jan 2024 09:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706519928; cv=fail; b=YMYP4bZUfjwyL+Bzl5S6jBhlbwiCsXV3+55DEePizeYlTPhu0fVgdsKAmzz9Oez9RUv5QIUve4Uyr7zW0Nh3YiwqjUG2yInod13/d8n0e5o8MkDG6molYvkI5+YVxk96rsLFxGH9eU5NH8HLTUAKFOIxhuKc5SOLSH227dvUSEI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706519928; c=relaxed/simple;
+	bh=Nho6TmS8CU0+9eClbKrBc3jGPKXgGR55zO1VLrRqclI=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mlgglR2+4rcw7WfvwL9FegRzuCQpCnjNVFXNYd20wqm+vFYEeZl1OwMqe146vUWSuvABwL1V6mL+iOQI5mhznslQdOoY2y/FIrIp6Wo4xGmlKib6z26w5woON6W1Bz53O0jfwRN9IjDE2wthWumdUhzZ+Hrr6MJ/4CMnxd+86KY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PjWarIiX; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+Zw8yen"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-68c2f4c3282so21451756d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 01:18:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706519918; x=1707124718; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P8QUCC8mxaAYBk9a7j4VTD2YmBLyr7XLPrPfEMJfXSE=;
-        b=O+Zw8yenzEoPh/vaH6nKmPzzb1zsqsmaYbBFktz6RVnBM709pNz15R6Rgvr27AfR0o
-         MwO7/mLx21K8jGrMCKDJyuUSUseeMayD/QLFWdsrc+sYiEy0UxlWS6E7t0S4BsZuBLgM
-         HB4AbIL3J5FtCKzhg84o0DXq49wR1NpIQzAEy3/4RwjvXPxHsIEeFC/gcBRsVpN1UZAa
-         Po0CsTl3vBnKZxWjSs89KtSYk9WZ9XK6y6CuaqRcWYufniEVgL21lo9vy703ZfCX+kKL
-         rpLjP6jUhISNkU87OLmhnLmZPUAaAsAfMhMyGoums+jBARQj3aM3vkv55eXhSsUqDY7B
-         nTNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706519918; x=1707124718;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P8QUCC8mxaAYBk9a7j4VTD2YmBLyr7XLPrPfEMJfXSE=;
-        b=tup1wFMbvakkTjPy7KcBxSJQA6+luz2rt2P0ClLVOMHKFv6y5MkFLrpsz8JcpsmYS7
-         aUDC3FO4NrWo4BKP1VhtYGYqw0QGTfzU/RjiXqos/Wbl3kZHQeA73DGEk6DwWc2Wkz81
-         8Vei0VSmimzHmAw3kkU359ZnU6iPSzmJwiYtJvSKGgaV5iB5+/z+sIkdHT1IezFZUb1q
-         Etzf+l9HNtFeUV5LSgs5ksGuVDuCaAIy2dNiIcmHGqXnGYGWZqYofGUAzfYewtINmfV4
-         OASKUN27nBC5Ny/Mt/PLnWVsGQIunrO4Uw0Ss8lSuvCaMU0EaZEfyDJg7kjneGymOYKf
-         YRsg==
-X-Gm-Message-State: AOJu0YxmaDrApmqXn1AG/3xFeLMwitqt09/i9Gyp4g9lAVsY2O2JEiew
-	MNFWJrQCPKOHOxiUR+p5zgwM/2BZ6bhC9W92vE+j7Moo3IPpdKlte0ECM3rDlUnuh7B7ajOS+UW
-	nUyv3wpvs/fz1mqpVqSQIEOt60tDCz15xjZFQFA==
-X-Google-Smtp-Source: AGHT+IHMF9jA2tNnrgpg+GOHbhcFMUcNlosZdvmduCi5ermtTKqbkzvQ64jyco/nTt46T/fJWnSt6/5J7Zh94ctVnIA=
-X-Received: by 2002:a05:6214:2a4e:b0:685:cf86:45eb with SMTP id
- jf14-20020a0562142a4e00b00685cf8645ebmr6633834qvb.104.1706519918653; Mon, 29
- Jan 2024 01:18:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PjWarIiX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706519926; x=1738055926;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Nho6TmS8CU0+9eClbKrBc3jGPKXgGR55zO1VLrRqclI=;
+  b=PjWarIiXU4DBzEORwn4TGJSi3Da21deK4iqIbjHnJfJzhWprXIXOvjJK
+   W/8c7++Pp21Vm8LHw83Ojylk5Osdzr9L/Hr1jtYSPijiCku19t2C0XK5S
+   KAEJi3hzsC6eTN6+OJycBxhTuXKMp25y0uFBBDPKOItFl7Zqj8oOcXQm2
+   /yvEyxIoKrinlUUThQl5RKyeS97jOZp2v13CtCOFknuxoq6UKGkLOUMxl
+   Hwo4uOh22OOabeW5Z1063K9cYR/Jz738i78RisJdFpOwTIK6byCatewHP
+   BYhE/9skBNgp0UuiduooZbhr0j+F79D8YNOvo0rF0b5pzP8gHiN5myiSb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="2762449"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="2762449"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 01:18:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="911007210"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="911007210"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jan 2024 01:18:45 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Jan 2024 01:18:44 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Jan 2024 01:18:43 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 29 Jan 2024 01:18:43 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 29 Jan 2024 01:18:41 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HDdtKJAEkYn10TUEcUKVE8ZmyzVwMQ7Smb8AIYUaqCfN4Ua0q3L5D/GoGDRn1HUnzfWGJJ3V7l9QSMKcTgMs7JlIG8zs4/Yc3DVxW9iyX//nI2yNncvtgd7ID6uHSkLoyiwPVad9XnwKPO9Dy6kVhst2KrJF4U1hxyYnYbJnrIDOJVQS4ORd5Bci2BmRts9FFmNLxOgWZl+3++/W4/ThxMHThdb0ahfd2bLEEJUUnG5TaY1+px7L4jif7CpxR3vLGUQu3Esx5xEmnY9783pSc31YBBWZP9yfwD9sktSFFVKjDoY3Ka4Viikc77TE7BTVF3/h2uiuFu4Tc3B6XcUoWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3EoqTcopsBuY5eGPu85uNcFo3b1Jgdxe0dxcPB6tF6U=;
+ b=Myp3lIsm9z+GyME1wy8mi5dnSUqKb9Sra+2oOARfTs08Nk7XF+vnIg8DZNstkDW8wzvjlh6TeAwqiIyefy+fLq1q87MhApBNjgGM3tHrovDbTSZkWFFjyCatmL+N2uAgAW0CPXeq2KkN2irMZl8QlAfF1FxVKhgG5CzIVm/knX0CJRwSWqwMhkUduiJVxWfdQB4YfffzBye+wK7e4YHe0vBJ4lmLOUWq5670t1i9J4P5biHtwdndpm21nfMB8ZpY4TMoFaLl+jaHk6W5YAXFQ/vj/tedlZiPMGgssPF5M6waYfZTV1FND9Fwa8CKEqiijLK+PSIcgKNBDchdHo7HkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by SA0PR11MB4639.namprd11.prod.outlook.com (2603:10b6:806:70::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.33; Mon, 29 Jan
+ 2024 09:18:34 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::b877:93ff:2217:eb13]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::b877:93ff:2217:eb13%7]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 09:18:34 +0000
+Message-ID: <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
+Date: Mon, 29 Jan 2024 17:21:40 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
+ device isn't present
+Content-Language: en-US
+To: "Tian, Kevin" <kevin.tian@intel.com>, Ethan Zhao
+	<haifeng.zhao@linux.intel.com>, "baolu.lu@linux.intel.com"
+	<baolu.lu@linux.intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
+CC: "dwmw2@infradead.org" <dwmw2@infradead.org>, "will@kernel.org"
+	<will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
+ <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
+ <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG3P274CA0008.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::20)
+ To DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240127001926.495769-1-andre.draszik@linaro.org> <20240127001926.495769-3-andre.draszik@linaro.org>
-In-Reply-To: <20240127001926.495769-3-andre.draszik@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 29 Jan 2024 09:18:27 +0000
-Message-ID: <CADrjBPox_NDkq+-XxX5cuxAhYDubMHnqjnpwj4+76_A=izuhjw@mail.gmail.com>
-Subject: Re: [PATCH 2/9] dt-bindings: clock: google,gs101-clock: add PERIC1
- clock management unit
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com, semen.protsenko@linaro.org, 
-	alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
-	cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|SA0PR11MB4639:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99626e04-6cdc-43c6-a436-08dc20ab44cd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Z/kAMa5WFlcIPR3npI6pd6N4fUmvA2FWxwFlcifmUaxlFEVgX9ahOGaMKU4tn6n1Pp0TOWmXkM1+OHAW1p9ugGOVjYj7rQPUsvWLYlC/uuO/cLcCSYRa2GJAcxkPFwftDTQoNTdBhzRaIT8jjSgk/Z+UDuHrgRw1yhwt+sAiVtWFxJjRUO22VlWsmVJ7fbf2Dd7Lb5nVt0ueoVcGQqnAcDgtiAhwgxR/oYkfU/o9ayrlWEaG+RMZ0jo3GL9YldFOLJMEOOF/tQzW+j9+uAaO7uvPDfEWBd8DUOVqu9sEAPq4wfSQwZplPnAmVYXXkr+Ub/o0yGuq43x6C7GIWyn91iEEZM7aKxVexKIegoy9jdk6dZANm8wvy+P/HeVZL46qbpWKaGbdK4LcCLbqyqsHAO7NWDTyFoGpeQlrzGM+0rvhQksQeC6MRkSHyLtEBjDruKhK78yAt9FiFVoHpG0RiYW+6N/U7OxDb7hhgXFMUGVOxheTPwkNSDD0/oy2FzFlSnoUQiIUcStnJr4DDndycHd38bCbLxkUgxqbZ4YVwzVfJBwFOQOnJhHkYPqygueHx1Nf2Qh1N5HLeQu5X8KBIgEyjsDZ/RRBoNQHe5vyEc2SO4CkKgm5a4q91vwsQLNFngE4qeqF3r07QI8N6ieKlw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(396003)(136003)(39860400002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(41300700001)(82960400001)(31686004)(38100700002)(66556008)(53546011)(6506007)(110136005)(66946007)(54906003)(316002)(86362001)(6486002)(66476007)(8676002)(8936002)(5660300002)(2616005)(6512007)(7416002)(31696002)(478600001)(2906002)(4326008)(6666004)(26005)(83380400001)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M3ZMdDJ4STgweFpoV2pCQjBoMngrcXhHclhER2JLQkRGeWdKdCtoc0JtQnVU?=
+ =?utf-8?B?LzFZVi9INXhGa2UzZ2R5dTU0NlA2b2dwTkQrR3AxdzVmYVJIYXJwWXBRZzk3?=
+ =?utf-8?B?S2UyMkpkd0o3RWRVVWVzU0orVElNcFFoN25VZDVyenIwRjFDS09GTDdERjhR?=
+ =?utf-8?B?cDdEM0VFMnc5NmlwRnlidkFpTU52bnhTcWdxeTIrbjFhSVJtczVBdkN2RGpi?=
+ =?utf-8?B?RTk5SmRpenErM2pXd0tSeXVNZ091bjFmd0oxUWtDYlJxOTRaVFVMYk12bXZY?=
+ =?utf-8?B?b28wanZMYkc1akpKV2xiT08vYm9JMW9SWXR6Vk4xMUt6TnZ3NFMrSUNiWE53?=
+ =?utf-8?B?MG1FRFJ2ek5BSUNZNS82V2oxMkFvRnVUdWNKa2diYXlCek4zaDRDQ2hXOHFF?=
+ =?utf-8?B?YVB6dm5jSDdxZVhLWE5HaFBpUi95S1J4d3A0OGhCanVTVE42Zm5KRUI1dkZX?=
+ =?utf-8?B?WW9Ydit3UU4rR3c5b0xpQUxTMTlkTFdCa0VuZEFabzBXY05KMlBZeWRZK2cv?=
+ =?utf-8?B?b0tXRlBRR3JMMU44bjZNZUxrYzZQeXhvRU5kODV2dWsvNlRibVBPV254akxI?=
+ =?utf-8?B?eXpPWk1VWHN3NG1iR2VBNDNjUjVHek9reTdpak51ODAzL3pDV0dPVkxmbzlO?=
+ =?utf-8?B?eGY5NEdNQmVnRWZGUWE0bjVzUFVaY2l2d2dFNWc5MHVlcjA1ZjQ0RjJiTGtZ?=
+ =?utf-8?B?YUtYQVdHYkoyQ1RLVHFIdDdXM2Q3N2pHNFhGd0NFNUIvZWNvcVl2Z3RCcit5?=
+ =?utf-8?B?U3NWSnRSVmt2R3VBOE9ZTTRzUWovQ1B4ZStIc29zUHBJWFMvWnN1VWVIL1JT?=
+ =?utf-8?B?WFVueDJJMFBZMnFoZ0phM1NVVHBxdGVsQS9ETGVzWENrWW9HVDY1RE01R3Jv?=
+ =?utf-8?B?czJMb0JjWkphWWZQNGZEWXJuVFhYdFZ0bGR2M2duWXpkc0hGaGtGaWFoOUln?=
+ =?utf-8?B?eFp5Ni82a2doYys0NVVXbytidTNpTnZudUlVVTVLZFcxejQwSHp2NnVmYzEx?=
+ =?utf-8?B?OHlYMHlpUmhDbi9zajFZWm51aFIxb2pxRGVYUkZUOFRTTktiekZWMU1URTNq?=
+ =?utf-8?B?YUdXc2E3RXRjekt1MXZ2STlGK280d1A1VjdmSThpWGdXeWxGLzA3MVE5RG0x?=
+ =?utf-8?B?UzVtem5HOXUyTlFpajZPOHNzQkw2a1RSUVdQVmtKTXFzNFdHSWF6eDZ6Y3Vl?=
+ =?utf-8?B?enNyWWVTZHZLUytta0V6ODU1VmY4eEVOcmRkVVpXN2dYK2JlL2YrTGhabHds?=
+ =?utf-8?B?UEJ1V0s3S0c0SDBuSXJzV1N2YW1rL2dqdUcwVStVSWxUZlI0Zkl1RG83STR3?=
+ =?utf-8?B?dEltckRkVnBlZS9WNlpEQjI0U2d6NUxOUmhleW1VcWZjUW9OZ0JiY1VleWhU?=
+ =?utf-8?B?VFdBYnhYNVB3ZXpUbGZhS3pvQlJua0JERkhsaXV4czA3Zi9hdnBSbHlqbDBC?=
+ =?utf-8?B?UG1vYTQvWXFNaTBYc1lQWGFkeEpsS2hRYTdTc0lFYVh0TllMMWhiL25sODln?=
+ =?utf-8?B?QzVOZzFyR2tRZHlXUzJPZWN6RHpzMlpjSEFWRm45Z0FFcUhVVGk3YVNkNGJv?=
+ =?utf-8?B?NHhtVWlPR1dPQzR2TExoTTBkcE1UUG5TSWpkbVFTa1R1bUZGcEE5eGNpcFR0?=
+ =?utf-8?B?alZaQ3UwUjg5eGNQcm5iMEdPaTZJZzhJM3RUSVhUU3hYRVJPcnZBZ0VJNElM?=
+ =?utf-8?B?S21MU1NzSHVUT2dBSDVzZUlNNlREbnI4NzJlQ1VBRkd3ZjB2RmtzSGpueEly?=
+ =?utf-8?B?ZzFDczdCUCs5NTRqNGNkNmpwcEs3K0RubDJObUIvS1dDMVZQd1VWQW9sNHVS?=
+ =?utf-8?B?djQzZ0l1L0F4OXdOdTRyVmJ2dVMwNjNub0tBTFRpZDhzei90QjhLa2xyMEFZ?=
+ =?utf-8?B?MFB4a3E4YjNBRjFhSWxGbWc0bEhhcldoTGVjeXBkYStrZUxvSWljSW83Ykly?=
+ =?utf-8?B?WVViUng0S1JpcWt1SG84NXV1RHFSUTBacWJEc01KcGNGaFRaVXdIbXhZbnlr?=
+ =?utf-8?B?VURSVTB0Y0RxSnd2WFlpK2xvdDJ2YXFyc1hTdTluemxHMk9XRUpQdjVVaDdx?=
+ =?utf-8?B?bFZqS0EzdFRPWkJzRStPalFQY2QyTHMyY1QxMTdmek5Td2hEK3hreHA4a3ZF?=
+ =?utf-8?Q?Ce3mLgnFPGG4WavYeq0Lssxow?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99626e04-6cdc-43c6-a436-08dc20ab44cd
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 09:18:34.8489
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mylnPZ3kg8NXwAQL92hyiYlVd5R0z10IyC3vCYzhblJUx3WUS1iryk/sR425zSrBUXjo6s9gE/ZVRfCqjT7xqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4639
+X-OriginatorOrg: intel.com
 
-Hi Andr=C3=A9
+On 2024/1/29 17:06, Tian, Kevin wrote:
+>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>> Sent: Monday, January 29, 2024 11:49 AM
+>>
+>> Because surprise removal could happen anytime, e.g. user could request safe
+>> removal to EP(endpoint device) via sysfs and brings its link down to do
+>> surprise removal cocurrently. such aggressive cases would cause ATS
+>> invalidation request issued to non-existence target device, then deadly
+>> loop to retry that request after ITE fault triggered in interrupt context.
+>> this patch aims to optimize the ITE handling by checking the target device
+>> presence state to avoid retrying the timeout request blindly, thus avoid
+>> hard lockup or system hang.
+>>
+>> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/dmar.c | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+>> index 814134e9aa5a..2e214b43725c 100644
+>> --- a/drivers/iommu/intel/dmar.c
+>> +++ b/drivers/iommu/intel/dmar.c
+>> @@ -1272,6 +1272,7 @@ static int qi_check_fault(struct intel_iommu
+>> *iommu, int index, int wait_index,
+>>   {
+>>   	u32 fault;
+>>   	int head, tail;
+>> +	u64 iqe_err, ite_sid;
+>>   	struct q_inval *qi = iommu->qi;
+>>   	int shift = qi_shift(iommu);
+>>
+>> @@ -1316,6 +1317,13 @@ static int qi_check_fault(struct intel_iommu
+>> *iommu, int index, int wait_index,
+>>   		tail = readl(iommu->reg + DMAR_IQT_REG);
+>>   		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+>>
+>> +		/*
+>> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
+>> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
+>> +		 */
+>> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
+>> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
+>> +
+>>   		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+>>   		pr_info("Invalidation Time-out Error (ITE) cleared\n");
+>>
+>> @@ -1325,6 +1333,16 @@ static int qi_check_fault(struct intel_iommu
+>> *iommu, int index, int wait_index,
+>>   			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>>   		} while (head != tail);
+>>
+>> +		/*
+>> +		 * If got ITE, we need to check if the sid of ITE is the same as
+>> +		 * current ATS invalidation target device, if yes, don't try this
+>> +		 * request anymore if the target device isn't present.
+>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
+>> +		 */
+>> +		if (pdev && ite_sid && !pci_device_is_present(pdev) &&
+>> +			ite_sid == pci_dev_id(pci_physfn(pdev)))
+>> +			return -ETIMEDOUT;
+>> +
+> 
+> since the hardware already reports source id leading to timeout, can't we
+> just find the pci_dev according to reported ite_sid? this is a slow path (either
+> due to device in bad state or removed) hence it's not necessary to add more
+> intelligence to pass the pci_dev in, leading to only a partial fix can be backported.
+> 
+> It's also more future-proof, say if one day the driver allows batching invalidation
+> requests for multiple devices then no need to pass in a list of devices.
+> 
+> Then it's easier to backport a full fix.
 
-On Sat, 27 Jan 2024 at 00:19, Andr=C3=A9 Draszik <andre.draszik@linaro.org>=
- wrote:
->
-> Add dt-schema documentation and clock IDs for the Connectivity
-> Peripheral 1 (PERIC1) clock management unit.
->
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
->
-> ---
+May consider pci_get_domain_bus_and_slot() or
+pci_find_bus()/pci_get_slot(). But I doubt if the pci_dev is still tracked
+in the bus or a kind of dev list in the device hot removal case. So Ethan
+may need to check.
 
-Thanks for working on these regexes! That should make enabling more
-clock units and other Exynos SoCs a bit easier.
+Regards,
+Yi Liu
 
-Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
-
-> Note for future reference: To ensure consistent naming throughout this
-> file, the IDs have been derived from the data sheet using the
-> following, with the expectation for all future additions to this file
-> to use the same:
->     sed \
->         -e 's|^PLL_LOCKTIME_PLL_\([^_]\+\)|CLK_FOUT_\1_PLL|' \
->         \
->         -e 's|^PLL_CON0_MUX_CLKCMU_\([^_]\+\)_|CLK_MOUT_\1_|' \
->         -e 's|^PLL_CON0_PLL_\(.*\)|CLK_MOUT_PLL_\1|' \
->         -e 's|^CLK_CON_MUX_MUX_CLK_\(.*\)|CLK_MOUT_\1|' \
->         -e '/^PLL_CON[1-4]_[^_]\+_/d' \
->         -e '/^[^_]\+_CMU_[^_]\+_CONTROLLER_OPTION/d' \
->         -e '/^CLKOUT_CON_BLK_[^_]\+_CMU_[^_]\+_CLKOUT0/d' \
->         \
->         -e 's|_IPCLKPORT||' \
->         -e 's|_RSTNSYNC||' \
->         \
->         -e 's|^CLK_CON_DIV_DIV_CLK_\([^_]\+\)_|CLK_DOUT_\1_|' \
->         \
->         -e 's|^CLK_CON_BUF_CLKBUF_\([^_]\+\)_|CLK_GOUT_\1_|' \
->         -e 's|^CLK_CON_GAT_CLK_BLK_\([^_]\+\)_UID_|CLK_GOUT_\1_|' \
->         -e 's|^CLK_GOUT_[^_]\+_[^_]\+_CMU_\([^_]\+\)_PCLK$|CLK_GOUT_\1_PC=
-LK|' \
->         -e 's|^CLK_CON_GAT_GOUT_BLK_\([^_]\+\)_UID_|CLK_GOUT_\1_|' \
->         -e 's|^CLK_CON_GAT_CLK_\([^_]\+\)_\(.*\)|CLK_GOUT_\1_CLK_\1_\2|' =
-\
->         \
->         -e '/^\(DMYQCH\|PCH\|QCH\|QUEUE\)_/d'
-> ---
->  .../bindings/clock/google,gs101-clock.yaml    |  9 ++--
->  include/dt-bindings/clock/google,gs101.h      | 48 +++++++++++++++++++
->  2 files changed, 54 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/google,gs101-clock.y=
-aml b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
-> index 03698cdecf7a..1d2bcea41c85 100644
-> --- a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
-> +++ b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
-> @@ -31,6 +31,7 @@ properties:
->        - google,gs101-cmu-apm
->        - google,gs101-cmu-misc
->        - google,gs101-cmu-peric0
-> +      - google,gs101-cmu-peric1
->
->    clocks:
->      minItems: 1
-> @@ -93,15 +94,17 @@ allOf:
->        properties:
->          compatible:
->            contains:
-> -            const: google,gs101-cmu-peric0
-> +            enum:
-> +              - google,gs101-cmu-peric0
-> +              - google,gs101-cmu-peric1
->
->      then:
->        properties:
->          clocks:
->            items:
->              - description: External reference clock (24.576 MHz)
-> -            - description: Connectivity Peripheral 0 bus clock (from CMU=
-_TOP)
-> -            - description: Connectivity Peripheral 0 IP clock (from CMU_=
-TOP)
-> +            - description: Connectivity Peripheral 0/1 bus clock (from C=
-MU_TOP)
-> +            - description: Connectivity Peripheral 0/1 IP clock (from CM=
-U_TOP)
->
->          clock-names:
->            items:
-> diff --git a/include/dt-bindings/clock/google,gs101.h b/include/dt-bindin=
-gs/clock/google,gs101.h
-> index 64e6bdc6359c..3dac3577788a 100644
-> --- a/include/dt-bindings/clock/google,gs101.h
-> +++ b/include/dt-bindings/clock/google,gs101.h
-> @@ -470,4 +470,52 @@
->  #define CLK_GOUT_PERIC0_CLK_PERIC0_USI8_USI_CLK                78
->  #define CLK_GOUT_PERIC0_SYSREG_PERIC0_PCLK             79
->
-> +/* CMU_PERIC1 */
-> +#define CLK_MOUT_PERIC1_BUS_USER                       1
-> +#define CLK_MOUT_PERIC1_I3C_USER                       2
-> +#define CLK_MOUT_PERIC1_USI0_USI_USER                  3
-> +#define CLK_MOUT_PERIC1_USI10_USI_USER                 4
-> +#define CLK_MOUT_PERIC1_USI11_USI_USER                 5
-> +#define CLK_MOUT_PERIC1_USI12_USI_USER                 6
-> +#define CLK_MOUT_PERIC1_USI13_USI_USER                 7
-> +#define CLK_MOUT_PERIC1_USI9_USI_USER                  8
-> +#define CLK_DOUT_PERIC1_I3C                            9
-> +#define CLK_DOUT_PERIC1_USI0_USI                       10
-> +#define CLK_DOUT_PERIC1_USI10_USI                      11
-> +#define CLK_DOUT_PERIC1_USI11_USI                      12
-> +#define CLK_DOUT_PERIC1_USI12_USI                      13
-> +#define CLK_DOUT_PERIC1_USI13_USI                      14
-> +#define CLK_DOUT_PERIC1_USI9_USI                       15
-> +#define CLK_GOUT_PERIC1_IP                             16
-> +#define CLK_GOUT_PERIC1_PCLK                           17
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_I3C_CLK             18
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_OSCCLK_CLK          19
-> +#define CLK_GOUT_PERIC1_D_TZPC_PERIC1_PCLK             20
-> +#define CLK_GOUT_PERIC1_GPC_PERIC1_PCLK                        21
-> +#define CLK_GOUT_PERIC1_GPIO_PERIC1_PCLK               22
-> +#define CLK_GOUT_PERIC1_LHM_AXI_P_PERIC1_I_CLK         23
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_1            24
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_2            25
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_3            26
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_4            27
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_5            28
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_6            29
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_8            30
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_1             31
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_15            32
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_2             33
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_3             34
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_4             35
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_5             36
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_6             37
-> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_8             38
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_BUSP_CLK            39
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI0_USI_CLK                40
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI10_USI_CLK       41
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI11_USI_CLK       42
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI12_USI_CLK       43
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI13_USI_CLK       44
-> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI9_USI_CLK                45
-> +#define CLK_GOUT_PERIC1_SYSREG_PERIC1_PCLK             46
-> +
->  #endif /* _DT_BINDINGS_CLOCK_GOOGLE_GS101_H */
-> --
-> 2.43.0.429.g432eaa2c6b-goog
->
+-- 
+Regards,
+Yi Liu
