@@ -1,108 +1,107 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15C414AAA
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 19:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F8076C85;
+	Mon, 29 Jan 2024 19:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706554917; cv=none; b=KU0kL6k5qA3rBqplOG4La2dX1UsHoHyXJi6eHfi6tUrmBNOD2/jlotnc4mIwEeubCkmmM5SkAL/g72hqkBylJpt4RH5xHr9U5pRqjKnxxyAtd7/9L8Vwm6qp4MGMrbn7Et85tp30untCfDiBuihBFWsz7P8DsJUHLktYC+3zxj0=
+	t=1706554976; cv=none; b=URrXc5mLZTT2jiodzMZWSZbK20DJqJOyg2VoTHbTSTlqNqqc+ht3jLraKebbvZdYVP3EAFlF8J+qn6yAqlhavG1tnfhaBxJryya2ETOc228fZp/TdqcAwPk6gUS8hTqCyD/8mADLU3BMk7wuiD+sY7iH85kag0ITpzVFn4rezSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706554917; c=relaxed/simple;
-	bh=rXwL8ZgyJFSpC9k+Ab0i+1OiFs1s/8BDF4WGUL9Hg6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N1KxrgDxPBwPwmO37JoF9a/brIAMrIr36qdtLw+uN5IbO6u2xFbnwthhL71kpzAjplpFABfMoKgCJ57kA2jt76LPqMs0od4JbZ5pKpu84q+A7vn4xTl+LTa1oM0GJIiDfTQvxtTBQAA8i7dLUXHLfEahkK+qWoUJT4R1IKGcUYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eurxFM7V; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706554976; c=relaxed/simple;
+	bh=aSM9wPAyPVDm5b+xfCxQKgaxyvEhEsXdo6zACqRJdGA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PcgI3ZXWL+egUN+OqvrF668qRdwYrRmud0cjWKCn6+R6d4c8f2Rn9c/dZ5UBwmgyYoDyTxn2xg9Je3jcfBtyjY7GvAVtfwXeD2uL3QV0DD/sIOccTi3rZSr6XXulJYStiny4nnZY2HsGWuvrT0FRSPjL8GsupqDRMX6GY5GjDv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IkQvXPmV; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eurxFM7V"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7bf3283c18dso41513639f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:01:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1706554915; x=1707159715; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jSJF+OOAXf610xBVp3jRjdPIYKqNvKf0pGO5qcf0N64=;
-        b=eurxFM7VnQTBJ8zpsfhmcGS/aQtMga5QJZ8+lTwOelHJVP8klRaNvcY7IOSFAcauw1
-         w+d0rbXi2qIFker9Eurtzh/9PnG79zH+T02ytq5AQLlJ4GYIxK54g1WuE1Zog2amVhQG
-         nBTnPVPxCxTMYThDPWevHrGdTKC4ykFnkX2dk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706554915; x=1707159715;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jSJF+OOAXf610xBVp3jRjdPIYKqNvKf0pGO5qcf0N64=;
-        b=wpNKqyzBufe9gf7Jg1QYTKXwViM+jeFOeF+6CoYWmAUIkmHTzM6oK5KQ8774+POQWM
-         sHCoPcfVqYVD8eqtQFDMRzBUKqCUEAaYdCHWCtLXwDgOp1r79cFGcKFqlkstzz/JNR8p
-         MgMldaQQyBW1rPa/wmwZ7l0NVkZNqnJiAqUlB8AFsOf2vDzcMH2A1xOSdJUybNM8GiWO
-         KO+GjpZJfu8Ksz6AL9sNyRkQeKmjNRUeGFHPYF3aTf0JnjE92SJ+lWk4Lv5OV/Wp5GwC
-         UmxEe/BGtfAPM/5a+1csSdfHuO++e+oe9yvMoq5JBzQMX754ohIR1MW9Q7LccAQy9hFn
-         pK/w==
-X-Gm-Message-State: AOJu0YwUGFviLUn/873Nv9B9OkyDSb6sDlRgXZ7tA9zaYYWaWGr68K8h
-	pz7e0YSGi0hAHsm0bCIOo75Wyy946ZVew78CjHD5h4+nMyrSiIHDDrrFWXRNRM8=
-X-Google-Smtp-Source: AGHT+IHO4inrLZ+LmjpobsSd6xvDcDGhMatpnyJ1hPtxg7GuwS+LDjEPtsGiqtzMaR6hLvhp4a7WQA==
-X-Received: by 2002:a5e:8e0b:0:b0:7bf:dba0:7f78 with SMTP id a11-20020a5e8e0b000000b007bfdba07f78mr6571295ion.0.1706554914874;
-        Mon, 29 Jan 2024 11:01:54 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id f35-20020a0284a6000000b0046f1caefc72sm1949458jai.114.2024.01.29.11.01.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 11:01:54 -0800 (PST)
-Message-ID: <c29848d6-29ca-4338-bbdc-abdc71cdd5f4@linuxfoundation.org>
-Date: Mon, 29 Jan 2024 12:01:53 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IkQvXPmV"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40TJ2mXE058112;
+	Mon, 29 Jan 2024 13:02:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706554968;
+	bh=g68VLRGGJy5bz4tZRAxiACWi4FChD3F2OvygDt/12UY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=IkQvXPmV2HlCmeYbjTjX1f1MuGboDNchJl0arl1p1bfFga+Ig3QsCJEL5FO2oWgL2
+	 iAzMDcG3rkBLlI3aIYX3dEB2yRP4ijkg/Tv6s35kgDL82e1U/EEnhVuMomJ1hA8oMe
+	 BUjr5+aGyyDp3giL4GL6PgIHu6HCCgLoU0wdwwAM=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40TJ2mIL003157
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Jan 2024 13:02:48 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Jan 2024 13:02:48 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Jan 2024 13:02:48 -0600
+Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40TJ2ldm003658;
+	Mon, 29 Jan 2024 13:02:47 -0600
+From: Andrew Davis <afd@ti.com>
+To: Sebastian Reichel <sre@kernel.org>,
+        Support Opensource
+	<support.opensource@diasemi.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Davis
+	<afd@ti.com>
+Subject: [PATCH v2 1/4] power: supply: max14577: Use devm_power_supply_register() helper
+Date: Mon, 29 Jan 2024 13:02:43 -0600
+Message-ID: <20240129190246.73067-2-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240129190246.73067-1-afd@ti.com>
+References: <20240129190246.73067-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: manual merge of the kselftest-fixes tree with the
- mm-hotfixes tree
-Content-Language: en-US
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Shuah Khan <shuah@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Hu.Yadi" <hu.yadi@h3c.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240129085301.5458880a@canb.auug.org.au>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240129085301.5458880a@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 1/28/24 14:53, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the kselftest-fixes tree got a conflict in:
-> 
->    tools/testing/selftests/core/close_range_test.c
-> 
-> between commit:
-> 
->    27a593e3f13a ("selftests: core: include linux/close_range.h for CLOSE_RANGE_* macros")
-> 
-> from the mm-hotfixes-unstable branch of the mm-hotfixes tree and commit:
-> 
->    b5a8a6de69bc ("selftests/core: Fix build issue with CLOSE_RANGE_UNSHARE")
-> 
-> from the kselftest-fixes tree.
-> 
-> I fixed it up (basically the same patch, I used the former which kept
-> the blank line) and can carry the fix as necessary. This is now fixed
-> as far as linux-next is concerned, but any non trivial conflicts should
-> be mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
-> 
+Use the device lifecycle managed register function. This helps prevent
+mistakes like unregistering out of order in cleanup functions and
+forgetting to unregister on error paths.
 
-Thank you Stephen.
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ drivers/power/supply/max14577_charger.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Andrew, would you like me to drop this commit? I was planning to send
-pull request with this in later on today, but if you prefer, I can
-drop this commit and the send the PR.
+diff --git a/drivers/power/supply/max14577_charger.c b/drivers/power/supply/max14577_charger.c
+index 7c23fa89ea199..b28c04157709a 100644
+--- a/drivers/power/supply/max14577_charger.c
++++ b/drivers/power/supply/max14577_charger.c
+@@ -586,8 +586,9 @@ static int max14577_charger_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	psy_cfg.drv_data = chg;
+-	chg->charger = power_supply_register(&pdev->dev, &max14577_charger_desc,
+-						&psy_cfg);
++	chg->charger = devm_power_supply_register(&pdev->dev,
++						  &max14577_charger_desc,
++						  &psy_cfg);
+ 	if (IS_ERR(chg->charger)) {
+ 		dev_err(&pdev->dev, "failed: power supply register\n");
+ 		ret = PTR_ERR(chg->charger);
+@@ -608,10 +609,7 @@ static int max14577_charger_probe(struct platform_device *pdev)
+ 
+ static void max14577_charger_remove(struct platform_device *pdev)
+ {
+-	struct max14577_charger *chg = platform_get_drvdata(pdev);
+-
+ 	device_remove_file(&pdev->dev, &dev_attr_fast_charge_timer);
+-	power_supply_unregister(chg->charger);
+ }
+ 
+ static const struct platform_device_id max14577_charger_id[] = {
+-- 
+2.39.2
 
-thanks,
--- Shuah
