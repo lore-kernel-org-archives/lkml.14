@@ -1,152 +1,181 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FDF4F5ED
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 22:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF423741;
+	Mon, 29 Jan 2024 22:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706568951; cv=none; b=q/RMobOoaBdLnv/cq1icV4wbSIjzoTzPPUrbXO1UOfw/PneZdhO3KTVyKvIZ6fdKRD4Js3JdbOYpfa7A8BCLDUC0oIwIC9Zm7B1qmwTB+78BhiPTYITy5mIMbPOFaN636xFaGAJwGjTwt9ABMlNXw8qnuo5R6bjbNxib7HLtvsU=
+	t=1706568989; cv=none; b=VMxhY7VcWRGIc2t2DG2OjFqYbYcN1UpfiARyoLJigwyfqizFiTdlE2ihXTLonnfuDQdc/OmLEXNXUL8NPJKQmcmbEZVRxVi5wLzaBHKLTEW8cLglXxbC8Pf2f5ygapguzxUhyJHkAhl7rxLDsZUy29N4NxfG6iKhau5jnYGpeRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706568951; c=relaxed/simple;
-	bh=XT0W0E6gjKDCCitw6VsfN2/jaVcK7tvHD8mbI+Z/1VQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Usws+eRrWHC/bxgJUrfmy5hdpapeluoV3eeZiwWdUAC9mdnBF6VnJaJooU18NpOuVUw8ITVFs/DY7auEOUU21v09PI/kXZCOjN2/KGPO7UB8zIGdwkZuilA43cm6mxapt7WBE9uZ/FTD1jmZIpCEQY5GWFcIy5Z8LiXnwkMWXwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QyQ90tP+; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706568989; c=relaxed/simple;
+	bh=fJ6PjO/0FcZMze5mUXPpKJExQw6zsz0lRHzIhYnacJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Sa1oKiCE4ZLiXxnULaRYi6QGEGHo4pir0sMmSRe1t2W9okzxDVn7OI71987MJBj+zGC3+SIAQijoKEQOAxaefl7kMyGIYuQXZGqBPv1/XBvdY9EbTNKc9bP7Ipgj+5hYvk9LExvQuLTkCVsfemaX76rHZHfgr/n9n30YrcJ+Mf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=Ug86lLel; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyQ90tP+"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51117bfd452so803328e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:55:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="Ug86lLel"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0B8929C471E;
+	Mon, 29 Jan 2024 17:56:20 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id sfVhYJe3m3jd; Mon, 29 Jan 2024 17:56:19 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 76BAB9C4650;
+	Mon, 29 Jan 2024 17:56:19 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 76BAB9C4650
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706568947; x=1707173747; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7zLOqGjvc5zAyBHVNLXc6kpkp0iyLeGdoW01AbqVVlE=;
-        b=QyQ90tP+4VOJE0TUjL9lRhGpBioK30u8Iwc6acPCUOyIBNuGF5jJThciOFauMTm26j
-         ECbDSQ+69uW8CUycVv0zofXE7jL0jbeTIHHG/W7XlOeQgsiy1xS++cNLHzb1KG/M/+qL
-         GdYvR1avuh0/QrjHzrc6+1I2P8Iyp5gsLH3tsu4U3Enbqi/50Jcqa/efnVMbiUoSBfrj
-         BxGBmSBF5h/0VaSDJxn8uWZXDCq3G9+XTq+a3A9xSYFJyzlTzO51eV8jqO2M5OLjDnWM
-         7+KdzcmlRhicTapIGzBQV1Dteraskbzeohx9GhvtBCbM9fDw13gXba9iAzofC1P/PLWA
-         +Fwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706568947; x=1707173747;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7zLOqGjvc5zAyBHVNLXc6kpkp0iyLeGdoW01AbqVVlE=;
-        b=WRSRrk9Rvbsh3/22f8A8I7gm6wgrhKzCnz35PZn7NMKG1T5BHA+hEuh6V6xJwamhkM
-         Mx73/M3pkt/2jLLukw4iQ7FycJWFhXJLQSMCh7iYtk1hPp4b05hgbMQt0kd/XdcxkH+u
-         PzZfvp5uY9ysz2re4zZysiKCGi0zXmesonqLr0Nag1rGTPKz6Va6t4BlE02FI7Hr5D5B
-         KkvzmqskWRYxjP3rxNhy/C3oYWDGhEDfHvv2efqStTLCSUHNTutMtFkf1LRYTzImiqQ/
-         lJ4NdmwGbcM9CZg6/Co8b2QEoi87PWUdUq5J06z29jbVPkgOFj4MUVfeZ6cwfvswXaHL
-         Ar0A==
-X-Gm-Message-State: AOJu0Ywu411DpRAZkAiFW600BThAnP+igwXLHDKtUh+BR/pAfZ9fX8uz
-	ghSFIyag5cc0POsA1MqKKUvtHeo9AfN8HaCTNu5ZLTqDJlZoD4i1Ftz+YHlHOnOi7lW8GsK1e3c
-	8ziHFVXNZCGnC5rBjZ+Gf2kVcxOo=
-X-Google-Smtp-Source: AGHT+IEaEdMN5UVckkQ+sBbas72IcdioezGXU3mTD98Ir0V5njNzJD1Atr2bbQcUIW2EhZKNSU8ZYLPNKVan2Smh2Mk=
-X-Received: by 2002:a05:6512:2f9:b0:511:19c1:8e0b with SMTP id
- m25-20020a05651202f900b0051119c18e0bmr197277lfq.54.1706568947140; Mon, 29 Jan
- 2024 14:55:47 -0800 (PST)
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1706568979; bh=KDGtC4FzTZzlXlycbP8AfeeUcJA8DdDr21H9KBNnofE=;
+	h=From:To:Date:Message-ID:MIME-Version;
+	b=Ug86lLelzLWUoIl9K7HPpxaT4VCML4FzCkxfd3IeI++z7rkPgvhlcfMr8aM7OPnlJ
+	 esGRPSAYtZJrosl9+mNPPw82+pRKPe/5DML95Hz8B0NZAHA0RPktdfjrD98Wut0Grl
+	 5cZiWn4ehCos5YLnWg04Z9RIxpoWFWco6NiEtUFwF3F2+nXzFJ9/WtrDESZ5QOpHYs
+	 ke1+C0I42q0FpfDmvIWHOVT1J1eM02kS/x1mOSCFsTuonlJP/bPb24gxzChtbiHs4x
+	 1kyvsjzzLgq204jlM+unSCVoOreoO7MZ36koyrhJrMGsbAyId3mMePF5Q5ZwrMKSEX
+	 GNSM92ZQrCeLA==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id 44GFnZux4IGD; Mon, 29 Jan 2024 17:56:19 -0500 (EST)
+Received: from pcperry.mtl.sfl (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 5BA2B9C45C6;
+	Mon, 29 Jan 2024 17:56:19 -0500 (EST)
+From: Charles Perry <charles.perry@savoirfairelinux.com>
+To: mdf@kernel.org
+Cc: hao.wu@intel.com,
+	yilun.xu@intel.com,
+	trix@redhat.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	bcody@markem-imaje.com,
+	avandiver@markem-imaje.com,
+	linux-fpga@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Charles Perry <charles.perry@savoirfairelinux.com>
+Subject: [PATCH 2/3] dt-bindings: fpga: xlnx,fpga-slave-selectmap: add DT schema
+Date: Mon, 29 Jan 2024 17:56:01 -0500
+Message-ID: <20240129225602.3832449-2-charles.perry@savoirfairelinux.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240129225602.3832449-1-charles.perry@savoirfairelinux.com>
+References: <20240129225602.3832449-1-charles.perry@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124025947.2110659-1-nunes.erico@gmail.com>
- <20240124025947.2110659-6-nunes.erico@gmail.com> <CAKGbVbsjNdnoNW2JnxCiyZg-wjU0UK+jgsG18OFaHjdkdOWRQA@mail.gmail.com>
-In-Reply-To: <CAKGbVbsjNdnoNW2JnxCiyZg-wjU0UK+jgsG18OFaHjdkdOWRQA@mail.gmail.com>
-From: Erico Nunes <nunes.erico@gmail.com>
-Date: Mon, 29 Jan 2024 23:55:34 +0100
-Message-ID: <CAK4VdL1RYHc11_bP785FYWtT7pqJzJf44QXi2kzXK=uPGwjY2g@mail.gmail.com>
-Subject: Re: [PATCH v2 5/8] drm/lima: handle spurious timeouts due to high irq latency
-To: Qiang Yu <yuq825@gmail.com>
-Cc: anarsoul@gmail.com, christian.koenig@amd.com, 
-	dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 24, 2024 at 1:38=E2=80=AFPM Qiang Yu <yuq825@gmail.com> wrote:
->
-> On Wed, Jan 24, 2024 at 11:00=E2=80=AFAM Erico Nunes <nunes.erico@gmail.c=
-om> wrote:
-> >
-> > There are several unexplained and unreproduced cases of rendering
-> > timeouts with lima, for which one theory is high IRQ latency coming fro=
-m
-> > somewhere else in the system.
-> > This kind of occurrence may cause applications to trigger unnecessary
-> > resets of the GPU or even applications to hang if it hits an issue in
-> > the recovery path.
-> > Panfrost already does some special handling to account for such
-> > "spurious timeouts", it makes sense to have this in lima too to reduce
-> > the chance that it hit users.
-> >
-> > Signed-off-by: Erico Nunes <nunes.erico@gmail.com>
-> > ---
-> >  drivers/gpu/drm/lima/lima_sched.c | 31 ++++++++++++++++++++++++++++---
-> >  1 file changed, 28 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/l=
-ima_sched.c
-> > index c3bf8cda8498..814428564637 100644
-> > --- a/drivers/gpu/drm/lima/lima_sched.c
-> > +++ b/drivers/gpu/drm/lima/lima_sched.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0 OR MIT
-> >  /* Copyright 2017-2019 Qiang Yu <yuq825@gmail.com> */
-> >
-> > +#include <linux/hardirq.h>
-> >  #include <linux/iosys-map.h>
-> >  #include <linux/kthread.h>
-> >  #include <linux/slab.h>
-> > @@ -401,9 +402,35 @@ static enum drm_gpu_sched_stat lima_sched_timedout=
-_job(struct drm_sched_job *job
-> >         struct lima_sched_pipe *pipe =3D to_lima_pipe(job->sched);
-> >         struct lima_sched_task *task =3D to_lima_task(job);
-> >         struct lima_device *ldev =3D pipe->ldev;
-> > +       struct lima_ip *ip =3D pipe->processor[0];
-> > +       int i;
-> > +
-> > +       /*
-> > +        * If the GPU managed to complete this jobs fence, the timeout =
-is
-> > +        * spurious. Bail out.
-> > +        */
-> > +       if (dma_fence_is_signaled(task->fence)) {
-> > +               DRM_WARN("%s spurious timeout\n", lima_ip_name(ip));
-> > +               return DRM_GPU_SCHED_STAT_NOMINAL;
-> > +       }
-> > +
-> > +       /*
-> > +        * Lima IRQ handler may take a long time to process an interrup=
-t
-> > +        * if there is another IRQ handler hogging the processing.
-> > +        * In order to catch such cases and not report spurious Lima jo=
-b
-> > +        * timeouts, synchronize the IRQ handler and re-check the fence
-> > +        * status.
-> > +        */
-> > +       for (i =3D 0; i < pipe->num_processor; i++)
-> > +               synchronize_irq(pipe->processor[i]->irq);
-> > +
-> I have a question, this timeout handler will be called when GP/PP error I=
-RQ.
-> If we call synchronize_irq() in the IRQ handler, will we block ourselves =
-here?
+Document the slave SelectMAP interface of Xilinx 7 series FPGA.
 
-If I understand correctly, this handler is only called by drm_sched in
-a workqueue, not by gp or pp IRQ and it also does not run in any IRQ
-context.
-So I think this sort of lockup can't happen here.
+Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
+---
+ .../fpga/xlnx,fpga-slave-selectmap.yaml       | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,fpga-slav=
+e-selectmap.yaml
 
-I ran some additional tests with both timeouts and actual error IRQs
-(locally modified Mesa to produce some errored jobs) and was not able
-to cause any lockup related to this.
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-selec=
+tmap.yaml b/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-select=
+map.yaml
+new file mode 100644
+index 0000000000000..20cea24e3e39a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-selectmap.ya=
+ml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/fpga/xlnx,fpga-slave-selectmap.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx Slave SelectMAP FPGA
++
++description: |
++  Xilinx 7 Series FPGAs support a method of loading the bitstream over a
++  parallel port named the slave SelectMAP interface in the documentation=
+. Only
++  the x8 mode is supported where data is loaded at one byte per rising e=
+dge of
++  the clock, with the MSB of each byte presented to the D0 pin.
++
++  Datasheets:
++    https://www.xilinx.com/support/documentation/user_guides/ug470_7Seri=
+es_Config.pdf
++
++properties:
++  compatible:
++    enum:
++      - xlnx,fpga-slave-selectmap
++
++  reg:
++    description:
++      At least 1 byte of memory mapped IO
++    maxItems: 1
++
++  prog_b-gpios:
++    description:
++      config pin (referred to as PROGRAM_B in the manual)
++    maxItems: 1
++
++  done-gpios:
++    description:
++      config status pin (referred to as DONE in the manual)
++    maxItems: 1
++
++  init-b-gpios:
++    description:
++      initialization status and configuration error pin
++      (referred to as INIT_B in the manual)
++    maxItems: 1
++
++  csi-b-gpios:
++    description:
++      chip select pin (referred to as CSI_B in the manual)
++      Optional gpio for if the bus controller does not provide a chip se=
+lect.
++    maxItems: 1
++
++  rdwr-b-gpios:
++    description:
++      read/write select pin (referred to as RDWR_B in the manual)
++      Optional gpio for if the bus controller does not provide this pin.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - prog_b-gpios
++  - done-gpios
++  - init-b-gpios
++
++additionalProperties: true
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    &weim {
++      status =3D "okay";
++      ranges =3D <0 0 0x08000000 0x04000000>;
++
++      fpga_mgr: fpga_programmer@0,0 {
++        compatible =3D "xlnx,fpga-slave-selectmap";
++        reg =3D <0 0 0x4000000>;
++        fsl,weim-cs-timing =3D <0x00070031 0x00000142
++              0x00020000 0x00000000
++              0x0c000645 0x00000000>;
++        prog_b-gpios =3D <&gpio5 5 GPIO_ACTIVE_LOW>;
++        init-b-gpios =3D <&gpio5 8 GPIO_ACTIVE_LOW>;
++        done-gpios =3D <&gpio2 30 GPIO_ACTIVE_HIGH>;
++        csi-b-gpios =3D <&gpio3 19 GPIO_ACTIVE_LOW>;
++        rdwr-b-gpios =3D <&gpio3 10 GPIO_ACTIVE_LOW>;
++      };
++    };
++...
+--=20
+2.43.0
 
-Erico
