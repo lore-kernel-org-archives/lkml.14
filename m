@@ -1,223 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A4254BFB
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A62554BEB
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706519103; cv=none; b=eAzWbCLQfc2PlneTDK+YaM9MFPlrdZE1PKDdJkBiOFeg8Wotk9v9cToqWF+Bgfnr6z7bik5hQDmEZlGIcGBJxtLzzEjEs6NjasrezeJT7PU62YNZyPn0GxXtqB0SpQT7j4lm02oNpcsAj7jGQmEozYqlMtHIZsVUlRizElaEPqg=
+	t=1706519204; cv=none; b=RDj1xOqHehYcap3M35PKb1+4ovcljfHz/rQIlBP5djwPK1xVCO6PH6n1afQ76GIHJTm50enft+ba+bk8dfKJZXnEYZ7FoTiSLrWzi52lGBbcWP7v/v+QCplPtlzwLXybarbEVrzLPmax6zEEsmmjsoDtf9Lnt56iTG4G9zXXJrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706519103; c=relaxed/simple;
-	bh=VJvkIe/MENx6xqRVqQh2+H9rOcn9rWjIoJplPArrUq0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iSR2Tvu1jkcIN4DhS/VzSUOEKV8y/Rmfx6ND//MbID6AgD2cZmoXf25VkwhRUPmjpSiauyBRrNJ8S+cjotnNFnl+FmL/pfNpOTWixRl9tzd4McSKWB0VIPA8eccBj0WaH0qtqK4PSGbq3E+wqZGtcHgnW9Tll09Tx2Njnx180ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Teu787rA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706519204; c=relaxed/simple;
+	bh=74fi5DcNKOULYLggR4R0E2v10kwPg+UKrSWj0U7folA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nRYQ0a1ZOoDLHsZPZWFO3CgDZdrv7lgOGiFXLUea9nyujUnLTVtjxuGY6P/WRdITS+4IXue5v4D0xgldFKKMbGT4fb2bifhSJEix0mADKPRvCVTqX177uI+9DcPdnNhDdFn00E9YuxIlpiac0LarhrMB+W7JqUyF6OVjeqxIfrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=yOpAupQY; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Teu787rA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706519095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GPGwyui0Z38uDt+2tS5AdYhBJQdQKP0ZtYseGgohscg=;
-	b=Teu787rAQOv4m4QkHGJOu1bS5eVkNDa4Pl9rjVa1Xa5k2RETkltKmsjJy81qi7dUQ/TR+a
-	xVHkFsRZetOmqVKQuxE5GPXt15rZItV4wEaFTXEFHExdPKeOUAb3yOjbgcILLE6/Q+j0dx
-	YfkElH8+bE2nHsN+Y5NsMU2KXRCjtuk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-557-KE7mTPiyPdCZAXieqUZiRw-1; Mon, 29 Jan 2024 04:04:53 -0500
-X-MC-Unique: KE7mTPiyPdCZAXieqUZiRw-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-337cc89a049so1293407f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 01:04:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706519092; x=1707123892;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GPGwyui0Z38uDt+2tS5AdYhBJQdQKP0ZtYseGgohscg=;
-        b=wa9q4cisnykNutc2s6EAB5drmybZ83fRJ0Kskv0X9n8e4cKuK1PlZZKXsST9UipvZZ
-         vfVUFXSChwxU/F5Ma23bBd7yXSACwMSL0lAP3IDtPzSrP3BjI4lhcYmx9vhxAqsWsyVK
-         6UjosrZbBB7zxyU3ByQRvnvlZIJGmQ2EnnLvp0tidaw+YKVDRLKQTdK/wkGacV+bn892
-         rxS2PqAv2tHJFd3nhZw3JtsRbvkaen48HBHqL77TMIyMTrwMyZ2tcwUOnhhi2ErHWCxp
-         55a9x12sC+Af6t19xo58ss1nWNd5EpTtjbxGBR/CHgDegwdkliQyNYxQ0Yd19vKab29b
-         AlXQ==
-X-Gm-Message-State: AOJu0YxJ6ZoPVVrzs9c51RZX3xtIhZJR2l0aE+kzS7bmJL/rUa3rf+M9
-	IE3gDOpfSJ4lLEcNaVaUcfcBCUaM8RAQV0V0pQslZu0lSf9mA1u9IOzwX6li9t5jzxdCl5S7Nqv
-	mRIT3Ct8VS/J6Dj0k8OKx7s9TYOrIXshoIiTyxUKwavfKbEH8wep71pCPVok0lnN1yI4c5MpVUm
-	lnJYgcbJlPm63z7uYopkehZm8wznPvE8DvH2j9TJ3g7wLdFw==
-X-Received: by 2002:a05:6000:1a88:b0:33a:ed85:f23f with SMTP id f8-20020a0560001a8800b0033aed85f23fmr1742450wry.15.1706519092049;
-        Mon, 29 Jan 2024 01:04:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IErRlb3yWQyKsGEa8fyyMOnt7X/8Z4waSJ3/2+gAeDdD2FrMmHUIP11niiRjhVZZYgv0abJiw==
-X-Received: by 2002:a05:6000:1a88:b0:33a:ed85:f23f with SMTP id f8-20020a0560001a8800b0033aed85f23fmr1742420wry.15.1706519091690;
-        Mon, 29 Jan 2024 01:04:51 -0800 (PST)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id ce2-20020a5d5e02000000b0033af4848124sm601539wrb.109.2024.01.29.01.04.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 01:04:51 -0800 (PST)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Sean
- Christopherson <seanjc@google.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>, Jan Richter <jarichte@redhat.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: selftests: Compare wall time from xen shinfo
- against KVM_GET_CLOCK
-In-Reply-To: <20240111135901.1785096-1-vkuznets@redhat.com>
-References: <20240111135901.1785096-1-vkuznets@redhat.com>
-Date: Mon, 29 Jan 2024 10:04:50 +0100
-Message-ID: <877cjs8q8d.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="yOpAupQY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706519200;
+	bh=74fi5DcNKOULYLggR4R0E2v10kwPg+UKrSWj0U7folA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=yOpAupQYg7zJqIWP1yTDmNlzdFztr+NuKUBdtYcQwRJdgXtWJfVN+KJlrRzsD7EU/
+	 B8U/lgx9dbSxRQDliF+V4aknaivxgPtlgSDLGsWqAoDNdtW05+xDFVkylsoH6xZ2GW
+	 WNP8/4h9xNGLnM25VYxjGB3tjb91NWgyY+VIaARIE1JYh5SJJ1v9cYiWl/F4kApTth
+	 aZDkWeijXsbY0oBCWgF2Mr8myNMZlUPhtm9amIk/UuVnJ76+FnzMEak8xn84cBTW21
+	 Gwl3forDQ+rRIyxfXnA/79SCOLC8ROh8LAwFG90KpaNhv7qknkpCgTvARtYSX2ia+H
+	 9mz3xzS97xqxQ==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 52C5737814A4;
+	Mon, 29 Jan 2024 09:06:39 +0000 (UTC)
+Date: Mon, 29 Jan 2024 10:06:38 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Cc: David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Qiang Yu <yuq825@gmail.com>, Steven Price
+ <steven.price@arm.com>, Emma Anholt <emma@anholt.net>, Melissa Wen
+ <mwen@igalia.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, kernel@collabora.com,
+ virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v19 22/30] drm/shmem-helper: Add common memory shrinker
+Message-ID: <20240129100638.7d61c996@collabora.com>
+In-Reply-To: <20240129095511.31f8a2af@collabora.com>
+References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
+	<20240105184624.508603-23-dmitry.osipenko@collabora.com>
+	<20240125111946.797a1e1e@collabora.com>
+	<f4870543-e7f8-4ee6-924a-68ec7c25b293@collabora.com>
+	<20240126105537.67b1613e@collabora.com>
+	<fab38fed-635c-4dbe-aa13-dcdf8f267988@collabora.com>
+	<20240126191230.0ee6f99f@collabora.com>
+	<ea74a26d-d97f-4d09-bc24-67484ee45b76@collabora.com>
+	<20240129095511.31f8a2af@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+On Mon, 29 Jan 2024 09:55:11 +0100
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-> xen_shinfo_test is observed to be flaky failing sporadically with
-> "VM time too old". With min_ts/max_ts debug print added:
->
-> Wall clock (v 3269818) 1704906491.986255664
-> Time info 1: v 1282712 tsc 33530585736 time 14014430025 mul 3587552223 shift 4294967295 flags 1
-> Time info 2: v 1282712 tsc 33530585736 time 14014430025 mul 3587552223 shift 4294967295 flags 1
-> min_ts: 1704906491.986312153
-> max_ts: 1704906506.001006963
-> ==== Test Assertion Failure ====
->   x86_64/xen_shinfo_test.c:1003: cmp_timespec(&min_ts, &vm_ts) <= 0
->   pid=32724 tid=32724 errno=4 - Interrupted system call
->      1	0x00000000004030ad: main at xen_shinfo_test.c:1003
->      2	0x00007fca6b23feaf: ?? ??:0
->      3	0x00007fca6b23ff5f: ?? ??:0
->      4	0x0000000000405e04: _start at ??:?
->   VM time too old
->
-> The test compares wall clock data from shinfo (which is the output of
-> kvm_get_wall_clock_epoch()) against clock_gettime(CLOCK_REALTIME) in the
-> host system before the VM is created. In the example above, it compares
->
->  shinfo: 1704906491.986255664 vs min_ts: 1704906491.986312153
->
-> and fails as the later is greater than the former.  While this sounds like
-> a sane test, it doesn't pass reality check: kvm_get_wall_clock_epoch()
-> calculates guest's epoch (realtime when the guest was created) by
-> subtracting kvmclock from the current realtime and the calculation happens
-> when shinfo is setup. The problem is that kvmclock is a raw clock and
-> realtime clock is affected by NTP. This means that if realtime ticks with a
-> slightly reduced frequency, "guest's epoch" calculated by
-> kvm_get_wall_clock_epoch() will actually tick backwards! This is not a big
-> issue from guest's perspective as the guest can't really observe this but
-> this epoch can't be compared with a fixed clock_gettime() on the host.
->
-> Replace the check with comparing wall clock data from shinfo to
-> KVM_GET_CLOCK. The later gives both realtime and kvmclock so guest's epoch
-> can be calculated by subtraction. Note, the computed epoch may still differ
-> a few nanoseconds from shinfo as different TSC is used and there are
-> rounding errors but 100 nanoseconds margin should be enough to cover
-> it (famous last words).
->
-> Reported-by: Jan Richter <jarichte@redhat.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  .../selftests/kvm/x86_64/xen_shinfo_test.c    | 36 ++++++++-----------
->  1 file changed, 14 insertions(+), 22 deletions(-)
->
-> diff --git a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
-> index 9ec9ab60b63e..5e1ad243d95d 100644
-> --- a/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
-> +++ b/tools/testing/selftests/kvm/x86_64/xen_shinfo_test.c
-> @@ -375,20 +375,6 @@ static void guest_code(void)
->  	GUEST_SYNC(TEST_DONE);
->  }
->  
-> -static int cmp_timespec(struct timespec *a, struct timespec *b)
-> -{
-> -	if (a->tv_sec > b->tv_sec)
-> -		return 1;
-> -	else if (a->tv_sec < b->tv_sec)
-> -		return -1;
-> -	else if (a->tv_nsec > b->tv_nsec)
-> -		return 1;
-> -	else if (a->tv_nsec < b->tv_nsec)
-> -		return -1;
-> -	else
-> -		return 0;
-> -}
-> -
->  static struct vcpu_info *vinfo;
->  static struct kvm_vcpu *vcpu;
->  
-> @@ -425,7 +411,6 @@ static void *juggle_shinfo_state(void *arg)
->  
->  int main(int argc, char *argv[])
->  {
-> -	struct timespec min_ts, max_ts, vm_ts;
->  	struct kvm_xen_hvm_attr evt_reset;
->  	struct kvm_vm *vm;
->  	pthread_t thread;
-> @@ -443,8 +428,6 @@ int main(int argc, char *argv[])
->  	bool do_eventfd_tests = !!(xen_caps & KVM_XEN_HVM_CONFIG_EVTCHN_2LEVEL);
->  	bool do_evtchn_tests = do_eventfd_tests && !!(xen_caps & KVM_XEN_HVM_CONFIG_EVTCHN_SEND);
->  
-> -	clock_gettime(CLOCK_REALTIME, &min_ts);
-> -
->  	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
->  
->  	/* Map a region for the shared_info page */
-> @@ -969,7 +952,6 @@ int main(int argc, char *argv[])
->  	vm_ioctl(vm, KVM_XEN_HVM_SET_ATTR, &evt_reset);
->  
->  	alarm(0);
-> -	clock_gettime(CLOCK_REALTIME, &max_ts);
->  
->  	/*
->  	 * Just a *really* basic check that things are being put in the
-> @@ -978,11 +960,16 @@ int main(int argc, char *argv[])
->  	 */
->  	struct pvclock_wall_clock *wc;
->  	struct pvclock_vcpu_time_info *ti, *ti2;
-> +	struct kvm_clock_data kcdata;
-> +	long long delta;
->  
->  	wc = addr_gpa2hva(vm, SHINFO_REGION_GPA + 0xc00);
->  	ti = addr_gpa2hva(vm, SHINFO_REGION_GPA + 0x40 + 0x20);
->  	ti2 = addr_gpa2hva(vm, PVTIME_ADDR);
->  
-> +	vm_ioctl(vm, KVM_GET_CLOCK, &kcdata);
-> +	delta = (wc->sec * NSEC_PER_SEC + wc->nsec) - (kcdata.realtime - kcdata.clock);
-> +
->  	if (verbose) {
->  		printf("Wall clock (v %d) %d.%09d\n", wc->version, wc->sec, wc->nsec);
->  		printf("Time info 1: v %u tsc %" PRIu64 " time %" PRIu64 " mul %u shift %u flags %x\n",
-> @@ -991,14 +978,19 @@ int main(int argc, char *argv[])
->  		printf("Time info 2: v %u tsc %" PRIu64 " time %" PRIu64 " mul %u shift %u flags %x\n",
->  		       ti2->version, ti2->tsc_timestamp, ti2->system_time, ti2->tsc_to_system_mul,
->  		       ti2->tsc_shift, ti2->flags);
-> +		printf("KVM_GET_CLOCK realtime: %lld.%09lld\n", kcdata.realtime / NSEC_PER_SEC,
-> +		       kcdata.realtime % NSEC_PER_SEC);
-> +		printf("KVM_GET_CLOCK clock: %lld.%09lld\n", kcdata.clock / NSEC_PER_SEC,
-> +		       kcdata.clock % NSEC_PER_SEC);
->  	}
->  
-> -	vm_ts.tv_sec = wc->sec;
-> -	vm_ts.tv_nsec = wc->nsec;
->  	TEST_ASSERT(wc->version && !(wc->version & 1),
->  		    "Bad wallclock version %x", wc->version);
-> -	TEST_ASSERT(cmp_timespec(&min_ts, &vm_ts) <= 0, "VM time too old");
-> -	TEST_ASSERT(cmp_timespec(&max_ts, &vm_ts) >= 0, "VM time too new");
-> +
-> +	TEST_ASSERT(llabs(delta) < 100,
-> +		    "Guest's epoch from shinfo %d.%09d differs from KVM_GET_CLOCK %lld.%lld",
-> +		    wc->sec, wc->nsec, (kcdata.realtime - kcdata.clock) / NSEC_PER_SEC,
-> +		    (kcdata.realtime - kcdata.clock) % NSEC_PER_SEC);
->  
->  	TEST_ASSERT(ti->version && !(ti->version & 1),
->  		    "Bad time_info version %x", ti->version);
+> On Mon, 29 Jan 2024 09:16:04 +0300
+> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+> 
+> > On 1/26/24 21:12, Boris Brezillon wrote:  
+> > > On Fri, 26 Jan 2024 19:27:49 +0300
+> > > Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+> > >     
+> > >> On 1/26/24 12:55, Boris Brezillon wrote:    
+> > >>> On Fri, 26 Jan 2024 00:56:47 +0300
+> > >>> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+> > >>>       
+> > >>>> On 1/25/24 13:19, Boris Brezillon wrote:      
+> > >>>>> On Fri,  5 Jan 2024 21:46:16 +0300
+> > >>>>> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+> > >>>>>         
+> > >>>>>> +static bool drm_gem_shmem_is_evictable(struct drm_gem_shmem_object *shmem)
+> > >>>>>> +{
+> > >>>>>> +	return (shmem->madv >= 0) && shmem->base.funcs->evict &&
+> > >>>>>> +		refcount_read(&shmem->pages_use_count) &&
+> > >>>>>> +		!refcount_read(&shmem->pages_pin_count) &&
+> > >>>>>> +		!shmem->base.dma_buf && !shmem->base.import_attach &&
+> > >>>>>> +		!shmem->evicted;        
+> > >>>>>
+> > >>>>> Are we missing
+> > >>>>>
+> > >>>>>                 && dma_resv_test_signaled(shmem->base.resv,
+> > >>>>> 					  DMA_RESV_USAGE_BOOKKEEP)
+> > >>>>>
+> > >>>>> to make sure the GPU is done using the BO?
+> > >>>>> The same applies to drm_gem_shmem_is_purgeable() BTW.
+> > >>>>>
+> > >>>>> If you don't want to do this test here, we need a way to let drivers
+> > >>>>> provide a custom is_{evictable,purgeable}() test.
+> > >>>>>
+> > >>>>> I guess we should also expose drm_gem_shmem_shrinker_update_lru_locked()
+> > >>>>> to let drivers move the GEMs that were used most recently (those
+> > >>>>> referenced by a GPU job) at the end of the evictable LRU.        
+> > >>>>
+> > >>>> We have the signaled-check in the common drm_gem_evict() helper:
+> > >>>>
+> > >>>> https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/gpu/drm/drm_gem.c#L1496      
+> > >>>
+> > >>> Ah, indeed. I'll need DMA_RESV_USAGE_BOOKKEEP instead of
+> > >>> DMA_RESV_USAGE_READ in panthor, but I can add it in the driver specific      
+> > >>> ->evict() hook (though that means calling dma_resv_test_signaled()      
+> > >>> twice, which is not great, oh well).      
+> > >>
+> > >> Maybe we should change drm_gem_evict() to use BOOKKEEP. The
+> > >> test_signaled(BOOKKEEP) should be a "stronger" check than
+> > >> test_signaled(READ)?    
+> > > 
+> > > It is, just wondering if some users have a good reason to want
+> > > READ here.
+> > >     
+> > >>    
+> > >>> The problem about the evictable LRU remains though: we need a way to let
+> > >>> drivers put their BOs at the end of the list when the BO has been used
+> > >>> by the GPU, don't we?      
+> > >>
+> > >> If BO is use, then it won't be evicted, while idling BOs will be
+> > >> evicted. Hence, the used BOs will be naturally moved down the LRU list
+> > >> each time shrinker is invoked.
+> > >>    
+> > > 
+> > > That only do the trick if the BOs being used most often are busy when
+> > > the shrinker kicks in though. Let's take this scenario:
+> > > 
+> > > 
+> > > BO 1					BO 2					shinker
+> > > 
+> > > 					busy
+> > > 					idle (first-pos-in-evictable-LRU)
+> > > 
+> > > busy
+> > > idle (second-pos-in-evictable-LRU)
+> > > 
+> > > 					busy
+> > > 					idle
+> > > 
+> > > 					busy
+> > > 					idle
+> > > 
+> > > 					busy
+> > > 					idle
+> > > 
+> > > 										find a BO to evict
+> > > 										pick BO 2
+> > > 
+> > > 					busy (swapin)
+> > > 					idle
+> > > 
+> > > If the LRU had been updated at each busy event, BO 1 should have
+> > > been picked for eviction. But we evicted the BO that was first
+> > > recorded idle instead of the one that was least recently
+> > > recorded busy.    
+> > 
+> > You have to swapin(BO) every time BO goes to busy state, and swapin does drm_gem_lru_move_tail(BO). Hence, each time BO goes idle->busy, it's moved down the LRU list.  
+> 
+> Ah, that's the bit I was missing. It makes sense now. I guess that's
+> good enough for now, we can sort out the BOOKKEEP vs READ in a
+> follow-up series.
 
-Ping?
+On second look, it seems drm_gem_shmem_shrinker_update_lru_locked()
+doesn't call drm_gem_shmem_shrinker_update_lru_locked() if the BO was
+already resident? Is there something else I'm overlooking here?
 
--- 
-Vitaly
+> 
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
