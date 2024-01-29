@@ -1,86 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8641253E02;
-	Mon, 29 Jan 2024 06:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CB04C3A9
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 06:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706509328; cv=none; b=jVLfxzHh7XSnsI+krpZlY9ZYDIEtpPK1hZH4GebVR6ys/I0eJYkr1aGIhhawrCcdIg/FksOjZ4UXunSYqJOAH3Q3yZA44k2+gddLY+Yk5NpTQ9fMq1VdNJfdFHUfZh3w9pS2NkKmiY/nR1A0b6faVBEgFMExXv6VRvnreY48kKM=
+	t=1706509653; cv=none; b=camHyUiYKbBDc5At6hbb6sUSwnjL6tXX7iCNKbhu0J598N3cfgtYgJYAPEG43bw//yh8huW7eXcnbHrP2pxDoGHP7zN9zorU+OclpcLgeavlp2xbf4SX+pMkNhG5of70imGZ8yQYnH0oU2Uwhq0sMTxyfc5sdzeRtNa/fJbzpIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706509328; c=relaxed/simple;
-	bh=utYE4hLqczcpZ/LSvSwtG/51QIIizZvq86ERVo6zB2k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=XnaTq4YoZGASR+WuQYAgrNKkax9r40Cr4VJu5l+lGHl5IHhYUx48nEW1RFAXrESW06fb2BLWfey3lJ2wF1qJ6aGUlpsjViYxkIGc9CEN78ApyErOgMJJxzP+C/JQHZ/9kE0l82o6ffCBmQdszq0eqTdGGwSctGlP68v23+YZeW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LRaGXN50; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706509653; c=relaxed/simple;
+	bh=hcGmZ7/kauprUFA9fmX+rybUuwydMTeCbv3H/HMqJrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3+kD0GpvujPKwfCJnQfIv5h2NSbVe/oDYls7lxZXKPKKyLpaHQr+RAsznMmZtXZX8aWudgjMO3sW049zSk16guFbwBcpzL/anWCf+7Pj82mDt0/ZYQdhlvkY/h2/2hwxDqAsCS8B7Ds1YFTul+jj0S3LhD+J0DkuJnbrv817RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kRB61PCh; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LRaGXN50"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706509326; x=1738045326;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=utYE4hLqczcpZ/LSvSwtG/51QIIizZvq86ERVo6zB2k=;
-  b=LRaGXN50JMTxWCW77RPbHj69MQFsLDC9PLNDdSJDjpND6DD6EPzK1vCX
-   WH/advzp7V+r2vgNNDioKw01j79a76gZJZw82W9rk/jDiYYv10gcg6AIW
-   AHCU0ZOHjoOHpQ962bEHQFFtLPJLUtUpZkNPWcV0lH58NDwiyuRd8nn9e
-   dczgE1SKfaZJKohXRYMN9C0jVc4hv05+hVo/AOUtkSSLrdlNtmVnSdbUK
-   TxJtVYsM6yOHQP6UgwDS9xUezAN7hgFtfS/D9dl2sT09qpjMou6jK1vRe
-   /UU4b1T1a/kunFzCz30G1J3+L8qTytSPvBraLTQqTZTbtKL38Ldx5o7JP
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="16219269"
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="16219269"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 22:22:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="3270617"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 22:22:03 -0800
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Aristeu Rozanski <aris@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lili.li@intel.com,
-	ricardo.neri-calderon@linux.intel.com
-Subject: [PATCH 2/2] EDAC/i10nm: Add Intel Grand Ridge micro-server support
-Date: Mon, 29 Jan 2024 14:20:40 +0800
-Message-Id: <20240129062040.60809-3-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240129062040.60809-1-qiuxu.zhuo@intel.com>
-References: <20240129062040.60809-1-qiuxu.zhuo@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kRB61PCh"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6e11283948eso717211a34.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 22:27:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706509651; x=1707114451; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EDxbu0PKWqjMPM0OtvTRKUw3nFg/Z8Lcou0xHo9uBJI=;
+        b=kRB61PCh7hYyHcU3H3T9Cc2M8+gK0s5S7ysQrxdg7XtafaxO4gLJgXWEjIgrKzBC3d
+         /BbHwnovt37dPfmzlHf3t+t7rxd7gtELskay3kMcbTuaYEUvwxLx76sCS9G5exzI3g/J
+         FHnEvCjNpl7SJmQyybwJOtZO40DBPMGuJ/nQk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706509651; x=1707114451;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EDxbu0PKWqjMPM0OtvTRKUw3nFg/Z8Lcou0xHo9uBJI=;
+        b=euZFGAY4FL7JlAIsCvkg9rNQP/uedmTTyeCM0dq4ITl8C4ndpBf0+62zrVYb8VXJsI
+         8sws1xJGyP2sRKNOQ9VcNQEVCx95LN5YJiPPVtCopv+GyH6P4jSMI1sk7iH4EMsnMUvT
+         xDFVNXFqqmMTFzN0wGrLiXGegsb1iKY/fOXm7+Tyzo0pPG755t225O7T3kGYqRwkvSQL
+         PR10U4Jj5VjoUda5yKidTTtjJuqZS0GrGPzdV+ep64qlkOPuK9j/wtdsrAbnsGtTXnlF
+         gGedg2tZ4jrGEooOvT4z+SvO1lRASyVOISgBndV1dD9AWT5mxSeukvyrYdmbImWQcH5D
+         lsSg==
+X-Gm-Message-State: AOJu0YzXCjJma1SjxaoABAV8B6MkXjXEPs5eUphKxDBfbFO3qJR8XrAf
+	AFZIH8emru4ul7rPnD3XrjTChTLPJ0OruntbxmLNQCUVOx3MOZq+8evYqtIn9Q==
+X-Google-Smtp-Source: AGHT+IHR0VdJI7aAKAeSSYv8772Arwr20uBiO19FH978QHyj5alwAO2XhzCftoYqEsMh8OmLG+g4GQ==
+X-Received: by 2002:a05:6358:7581:b0:176:544a:4ffe with SMTP id x1-20020a056358758100b00176544a4ffemr1998434rwf.13.1706509651420;
+        Sun, 28 Jan 2024 22:27:31 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r20-20020aa78b94000000b006ddddc7701fsm5063741pfd.4.2024.01.28.22.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jan 2024 22:27:30 -0800 (PST)
+Date: Sun, 28 Jan 2024 22:27:29 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-hardening@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/82] overflow: Refactor open-coded arithmetic
+ wrap-around
+Message-ID: <202401282226.A4C1153769@keescook>
+References: <20240122235208.work.748-kees@kernel.org>
+ <Za-K-3aSBULf4NWE@FVFF77S0Q05N>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Za-K-3aSBULf4NWE@FVFF77S0Q05N>
 
-The Grand Ridge CPU model uses similar memory controller registers with
-Granite Rapids server. Add Grand Ridge CPU model ID for EDAC support.
+On Tue, Jan 23, 2024 at 09:46:35AM +0000, Mark Rutland wrote:
+> This also misses the include/linux/atomic/atomic-arch-fallback.h
+> implementations. Those are generated from the scripts/atomic/fallbacks/*
+> templates, and you'll need to adjust at least fetch_add_unless and
+> inc_unless_negative. As noted on other patches, my preference is to use
+> add_wrap() in those.
 
-Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
- drivers/edac/i10nm_base.c | 1 +
- 1 file changed, 1 insertion(+)
+How do I regenerate the header files using the templates? I found a
+script, but its use eluded me, and it doesn't seem wired up to the
+top-level Makefile? Maybe I missed something obvious...
 
-diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
-index 2b83d6de9352..3fd22a1eb1a9 100644
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -951,6 +951,7 @@ static const struct x86_cpu_id i10nm_cpuids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(EMERALDRAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &spr_cfg),
- 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(GRANITERAPIDS_X,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
- 	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ATOM_CRESTMONT_X,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
-+	X86_MATCH_INTEL_FAM6_MODEL_STEPPINGS(ATOM_CRESTMONT,	X86_STEPPINGS(0x0, 0xf), &gnr_cfg),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, i10nm_cpuids);
 -- 
-2.17.1
-
+Kees Cook
