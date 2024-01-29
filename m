@@ -1,57 +1,57 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9059D157E81;
-	Mon, 29 Jan 2024 16:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CA31586CD;
+	Mon, 29 Jan 2024 16:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545685; cv=none; b=aAyTHkVYs0k+30Z/j930tQaketpV2NEs3PgY8NPckxjLl8nMdeD23kelAWg+qoiNaxV71eqpbVFC97nPZ969w4+qXninneK6CKvlizJMLuvIxEyzBS4hPyvb8WerbbT2lIquo/gkbuKpqCd+6WrHZ7VGE+o83g/bMuhZ5F6i32s=
+	t=1706545686; cv=none; b=tBQJ/gYRy5mqtKItrOtPsEFl6NS/nqE2qS1a2B2PPRYXTUdRRPHRWKQgz+1KFdBs5XJXXwLtY+F7qcpPIFTkx+Fg7GoW3yTe4ZVYFN+pq/Uq1AasuZiPSR+k7oCJ326yQVaLY8vEfId8s3FlzdLGQTnUE3IFk3mTq44LbfRZ/NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545685; c=relaxed/simple;
-	bh=aNsf8rFngmr4TYBrPemJAolCtcIkgvbOTrD34WK1ofM=;
+	s=arc-20240116; t=1706545686; c=relaxed/simple;
+	bh=iSzhA3JrzRMsulGlvr7cg4RdMLMlNOjtRT6xe6yJDns=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QQYYv7ZFR3hJktMz6t7ncEHAEnBMY9bNNa3JI/ReAYqQaYjt3akMPjvN8DDa1o0RYUMBSPuLtaVO+L2KuCTYKo142Eo+ELDktewh4gByqOsX9djxLLL0bG9KO+1ivjQOFAfPctea73xhVOS9mfBc4ITJxSaBWE54HtLlUR9YXZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=g4/gtMUe; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=Agps8RH776xQOpCA0Y8m0fuA++TEFsugdt+6wDPovouO62yfzkuiiAHG7J1GjSO/ncFLnu9g+Likc3S6d7n1X8GEAO3Vx5x9R972XHVIAW9kVnxXjEXfO1DkVRfLuqNrnXXCPqmbdwGjaiZZ9yhffLypj7u+5PAMkEKhYue/72o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=IoVGstZ9; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="g4/gtMUe"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="IoVGstZ9"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0J006968;
-	Mon, 29 Jan 2024 10:27:56 -0600
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0I006968;
+	Mon, 29 Jan 2024 10:27:55 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=hWIZx3SVGmXaP46UN8UM0rv5QCRd2JlcYKJUxWaPxiw=; b=
-	g4/gtMUeCr9LbazmIhlkHShBXNV42hHdSdW2QsTwJ85mYLvYrMvjj+nyjALN5i0x
-	t0mOzbvGnCJTqUPKjr8H5CB23gXVsnnc1coY4vVromAJ1O8sRFfEJCkR9MJuOIRC
-	HXOxRwbrdoXtRwX6B/9OhdWeOEThox9UNKURdQahUfnk6qgb3O/V0CRC6Dh+nJR6
-	JCFteRbZUqBFm+WqQ0D7sfxVHHd/+3Xbg5goPC9gwVXykri260haT0KbdALa4LVl
-	T7y9jIaSThvLqIqmlS5TX9dLG95WUr/AEKjAyyRM7DEnIXf1fqHXRkoBHbi0TiZA
-	66fgSWjv6Qmx1Ox/ja+hmA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8p-6
+	PODMain02222019; bh=JOCmxyosFFenj0dlq8WFGlARIYiWw78ly3nw8gUSm9c=; b=
+	IoVGstZ9cg2+mJKWoUM/BUXndzMAilt7Ai0fnHEZsfOKXBcUV+ZFjfJiVIndF2OK
+	X67Kb2H4CP2YAMiC3GX+U5UXZawTUNQDC/B5HVgnBPr3tdJX3NRW6OAUFBemslEu
+	9JPJJbPc9SfVODOxUmyaRvNSFk3CEZf73z0rrlKpTXGeCy/zPbs12mSqCKwZMl2m
+	Y5BH5qWZv4DBw+ajZWrVPxA/c+XDJEdSiE5wehsMZYfiR7XIWKbuNTCBBQTVPkfd
+	/U0m4d5cxivuAnuDW7Khqu4QYZwgNd+bRm+626LG+cq7Mlnyaf6s5EchgTuWEbOP
+	M98BSbnr7DUkbpSURKdigQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8n-6
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 29 Jan 2024 10:27:55 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 16:27:44 +0000
+ 2024 16:27:46 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
  anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:44 +0000
+ 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:46 +0000
 Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.64.204])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 7E545820247;
-	Mon, 29 Jan 2024 16:27:44 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 432DE82024A;
+	Mon, 29 Jan 2024 16:27:46 +0000 (UTC)
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
 To: <broonie@kernel.org>, <tiwai@suse.com>
 CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
         "Richard
  Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH 09/18] ALSA: hda: cs35l56: Initialize all ASP1 registers
-Date: Mon, 29 Jan 2024 16:27:28 +0000
-Message-ID: <20240129162737.497-10-rf@opensource.cirrus.com>
+Subject: [PATCH 14/18] ASoC: cs35l56: Allow more time for firmware to boot
+Date: Mon, 29 Jan 2024 16:27:33 +0000
+Message-ID: <20240129162737.497-15-rf@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240129162737.497-1-rf@opensource.cirrus.com>
 References: <20240129162737.497-1-rf@opensource.cirrus.com>
@@ -63,78 +63,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: naKf23TEBYC8V5T512tzgCeMK3gg3Fb0
-X-Proofpoint-GUID: naKf23TEBYC8V5T512tzgCeMK3gg3Fb0
+X-Proofpoint-ORIG-GUID: iGGh7-3BJYiH3wWj9EE_jgdJchl-ROK_
+X-Proofpoint-GUID: iGGh7-3BJYiH3wWj9EE_jgdJchl-ROK_
 X-Proofpoint-Spam-Reason: safe
 
-Add ASP1_FRAME_CONTROL1, ASP1_FRAME_CONTROL5 and the ASP1_TX?_INPUT
-registers to the sequence used to initialize the ASP configuration.
-Write this sequence to the cache and directly to the registers to
-ensure that they match.
-
-A system-specific firmware can patch these registers to values that are
-not the silicon default, so that the CS35L56 boots already in the
-configuration used by Windows or by "driverless" Windows setups such
-as factory tuning.
-
-These may not match how Linux is configuring the HDA codec. And anyway
-on Linux the ALSA controls are used to configure routing options.
+The original 50ms timeout for firmware boot is not long enough for
+worst-case time to reboot after a firmware download. Increase the
+timeout to 250ms.
 
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Fixes: 73cfbfa9caea ("ALSA: hda/cs35l56: Add driver for Cirrus Logic CS35L56 amplifier")
+Fixes: e49611252900 ("ASoC: cs35l56: Add driver for Cirrus Logic CS35L56")
 ---
- sound/pci/hda/cs35l56_hda.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ include/sound/cs35l56.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
-index b61e1de8c4bf..f22bcb104a4e 100644
---- a/sound/pci/hda/cs35l56_hda.c
-+++ b/sound/pci/hda/cs35l56_hda.c
-@@ -30,14 +30,23 @@
-   *  ASP1_RX_WL = 24 bits per sample
-   *  ASP1_TX_WL = 24 bits per sample
-   *  ASP1_RXn_EN 1..3 and ASP1_TXn_EN 1..4 disabled
-+  *
-+  * Override any Windows-specific mixer settings applied by the firmware.
-   */
- static const struct reg_sequence cs35l56_hda_dai_config[] = {
- 	{ CS35L56_ASP1_CONTROL1,	0x00000021 },
- 	{ CS35L56_ASP1_CONTROL2,	0x20200200 },
- 	{ CS35L56_ASP1_CONTROL3,	0x00000003 },
-+	{ CS35L56_ASP1_FRAME_CONTROL1,	0x03020100 },
-+	{ CS35L56_ASP1_FRAME_CONTROL5,	0x00020100 },
- 	{ CS35L56_ASP1_DATA_CONTROL5,	0x00000018 },
- 	{ CS35L56_ASP1_DATA_CONTROL1,	0x00000018 },
- 	{ CS35L56_ASP1_ENABLES1,	0x00000000 },
-+	{ CS35L56_ASP1TX1_INPUT,	0x00000018 },
-+	{ CS35L56_ASP1TX2_INPUT,	0x00000019 },
-+	{ CS35L56_ASP1TX3_INPUT,	0x00000020 },
-+	{ CS35L56_ASP1TX4_INPUT,	0x00000028 },
-+
- };
+diff --git a/include/sound/cs35l56.h b/include/sound/cs35l56.h
+index 23da6298ab37..b24716ab2750 100644
+--- a/include/sound/cs35l56.h
++++ b/include/sound/cs35l56.h
+@@ -242,7 +242,7 @@
  
- static void cs35l56_hda_play(struct cs35l56_hda *cs35l56)
-@@ -133,6 +142,10 @@ static int cs35l56_hda_runtime_resume(struct device *dev)
- 		}
- 	}
+ #define CS35L56_CONTROL_PORT_READY_US			2200
+ #define CS35L56_HALO_STATE_POLL_US			1000
+-#define CS35L56_HALO_STATE_TIMEOUT_US			50000
++#define CS35L56_HALO_STATE_TIMEOUT_US			250000
+ #define CS35L56_RESET_PULSE_MIN_US			1100
+ #define CS35L56_WAKE_HOLD_TIME_US			1000
  
-+	ret = cs35l56_force_sync_asp1_registers_from_cache(&cs35l56->base);
-+	if (ret)
-+		goto err;
-+
- 	return 0;
- 
- err:
-@@ -976,6 +989,9 @@ int cs35l56_hda_common_probe(struct cs35l56_hda *cs35l56, int id)
- 
- 	regmap_multi_reg_write(cs35l56->base.regmap, cs35l56_hda_dai_config,
- 			       ARRAY_SIZE(cs35l56_hda_dai_config));
-+	ret = cs35l56_force_sync_asp1_registers_from_cache(&cs35l56->base);
-+	if (ret)
-+		goto err;
- 
- 	/*
- 	 * By default only enable one ASP1TXn, where n=amplifier index,
 -- 
 2.39.2
 
