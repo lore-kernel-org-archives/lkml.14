@@ -1,56 +1,56 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF991534E6
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D26152E03
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706540801; cv=none; b=rUT8DYtWCmQsDJpMXyoUp//ofZLtPx6bFAoQvMrROu1tsaiywKEfsFd6s6AeTxrfC3Seyjb4HUS8QPfZw0cIqpCuZduktuRs2f0wHMrR50nTdbWUak9MuhUOO+s2QqtBacMJeY9417uLqb6a+zs5ckrBQRKbV3ZivchmiE9HCjc=
+	t=1706540922; cv=none; b=ET1D+1SySxjdpThaRDhUwCGekTz5E5Z6nMgM3aWKYz8yuWG72GIbYXCcy9fzORYQjFk9G7Gvr5KFjCV33UqRvYmM5ERd+sz0xFHzOI4FeDu2OFcdpHPYsWfwd8fs22u1r3HmEV0WBU0fzgMf17h1Ojoy5Ee4DZ0woqrz6El59yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706540801; c=relaxed/simple;
-	bh=UdVE88RvKofu1niD7h9x7NM6QyJbb3bceyHPaqVCFyM=;
+	s=arc-20240116; t=1706540922; c=relaxed/simple;
+	bh=TvYc0o6580YbXidZl8mC8lUkNACoSav70Z1m/H+6tY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UBJIBKQ1kj7rnnq8ImIcG6UJC1pXjt7W9f3BrDVz3aFoioL4AsIjUQuMa2fOz0QBg1NT+zgOt3fCD7LmQ+XetiSF5wBecKsscLYbPXI6xU6Iyp+NUB8SvFxWBfZHm3zwo5NmSYWX4EJvP4WmyqXnIMIM9/HOPMwsQGqGUswFsKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VdRdT15M; arc=none smtp.client-ip=209.85.221.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=N5nNNl8a6SMzGc5TGlLBQM8Ck9UP5nmd83XYEygJ0kcRORE4WpTY3lgABddVIy/Nz6TTp5JmeCh55dTf5i6FbsvGgrfy1vYWWxiJOLc/+E+9qdQ14HvSsVCBavlz6H5YBjodzEmd9BWHyDr9R3q4MlVELXg9wEXdW1b0rYGDUk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CawMW8MK; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VdRdT15M"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33ae3be1c37so957283f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:06:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CawMW8MK"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40ef6bbb61fso9144205e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:08:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706540797; x=1707145597; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706540919; x=1707145719; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SB7k/BFApJBDg3KYf+GK3Duye99o6PLwEtImHq4bcyM=;
-        b=VdRdT15MKtBIYKo1FVDLVuBJOyolpgnhYmkvL+t+E380Q7RVpZ2Ht+Ab249wG3NQpe
-         uoX2HB5715VR2K6zWuPUWlIGodBsPjBU7yP/9z5O/krCnjGfOdKlYPtMpWVQWssFIDDA
-         916K48BGaMT4lDsiFhGZUwR6px2Fgi8O5UwzN8n4DjjOdQeOHr27Bk1APMv78a5ovSjs
-         mr7CbqjvT7/mCQehPrhEHRsGhJupHyt/YkpmJnDHke+VJdz9Yv/Kg42R3s1k33kBzx3i
-         YkV1vJUC2uDVAeHn0e0CElgn8Qv6jICrOPKKnIoiqHKpKW7TdWOgTuztNMrEj2kz60pF
-         8MSw==
+        bh=n6cwbDbWLh7v+Hr7qWbFBpGzaMo6CtewwpyzoCKYp78=;
+        b=CawMW8MKKsuTAQfSGmM+HzbrJRZxufMAkucWBYE9uxBcIKylYLc/az2f42pTwGw5q/
+         fhP8I8qjEEvLpl7X3CaiQ9wkEUZka9RpennOn33QLiaDB55Qf3/VYJfRlpwxdjsMEpba
+         fk97ftcaVRm+DXoYZzwD6Lbbzuyf6a13BC1pGhjygRXR6SNvlWgiwE5FRGhpQp5yeuuH
+         F3aX3eoksvTJmXInzGNQnrIraxXeG26CmcL+eXU6e3y/vhySm3WTzyMeCG7bMavI9U5z
+         CEGeuVIBYbjAmv7rB/PJVH2kP8e+0WrpDRXAOOhnLa9s9P4vaAkbowEMGLXSRFGpIqKn
+         7cHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706540797; x=1707145597;
+        d=1e100.net; s=20230601; t=1706540919; x=1707145719;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SB7k/BFApJBDg3KYf+GK3Duye99o6PLwEtImHq4bcyM=;
-        b=S1mW9vZgZrpi3J+WP8xCn1q6z1gTnJwrqR06HS7Evy8Iesd33q29ehi6LRMjY4E7QO
-         BLrVYYV5Nk39nLOySYYd9FIVKPJY+fdSAVy7fMjIRTgGWdaiTTs5eywVqJ5ius2YQryK
-         X7Z/1WwxOPdho765N/2DFVcNw//syJYN/UV3tqe1+yIBHYHNaFqtaWg2B/UiGG18tpdE
-         /pgaxkNmU42UDjFq1jSDg+jPxQDghfrYnFxyVtNt5MUqjX2jCNpXpPE/wWGDluvmr7pu
-         gdGo7H8SyyZ7WFXa4Pj+xsFG0NFcXSN4UCLRu1NygzHAOvdvbOx8u1WtD7Sf9+lqZt3B
-         qMXQ==
-X-Gm-Message-State: AOJu0YzapyVNeIjY178sasjyuPPLS33QckZVbkeyQo9XJTM5mQ6x+eOk
-	ftyw/Y7MWrxkqBZHuZvZorwu9LxKvOrVwJ4ZZwcKL6Emx2vaPKQFyalhZvVH7KQ=
-X-Google-Smtp-Source: AGHT+IE+uX7yUe7MwfmkZ12D1Eijb9mak9vnudqGmL2IFa7HkMwnDFRdrTBve8PDAwKPyZ2UDUlpMA==
-X-Received: by 2002:adf:ce0d:0:b0:33a:e559:5357 with SMTP id p13-20020adfce0d000000b0033ae5595357mr4148708wrn.28.1706540797491;
-        Mon, 29 Jan 2024 07:06:37 -0800 (PST)
+        bh=n6cwbDbWLh7v+Hr7qWbFBpGzaMo6CtewwpyzoCKYp78=;
+        b=YZScM0CJLmDZmHrmATuFaIOLhO2XLvR0DD//VarY86gpxov/I3DXLcpDAFUQIz5QVl
+         Igxdkijks7uecv5Dn3btvSmtLWdDuka/vzAidcmwlX4nb3Jtyoqru15LkRG5zdCbtvhd
+         MMRQ4dtCJOM5cfzYo3YCHrntVCdn6oxQU9z8D8itWfEX1RmSJJ1BUWXsjrMTypnwxX5A
+         p1BpbazZupdI2jCQX4DBO8x9uyou9m/0SjB5oQ4Q/d1rPhUpgEmwFXrvc4nnNpmfCcoT
+         BIA5xpoIbo9TuVkNDjqseIlG6uHRlnpASIiYzSavKrM9Gs0DWp03J8Lb8I4S0NW2K2V0
+         9Oig==
+X-Gm-Message-State: AOJu0YypCMfeuJ21D9n/BrTuHBxPDqx2nUuqN+AnNUPBMTOzzBTkIhUn
+	MaJ6ugii5Wvpd5eUUKHpUygaLzD5qeAEZwvG/wdKB+gKjx36bho5fqF5xOPm1ck=
+X-Google-Smtp-Source: AGHT+IHMJzhv2MnPPwPMGGUmJ06IHYBSMp+B4effQYkqj/MHj3BYszh4U8CN5g12VqY/IR2e7km/ng==
+X-Received: by 2002:adf:f884:0:b0:33a:e4da:2214 with SMTP id u4-20020adff884000000b0033ae4da2214mr3796745wrp.50.1706540919694;
+        Mon, 29 Jan 2024 07:08:39 -0800 (PST)
 Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id k7-20020a5d6e87000000b0033addeabd6fsm7642647wrz.18.2024.01.29.07.06.36
+        by smtp.gmail.com with ESMTPSA id er8-20020a056000438800b0033af0234b3esm2148627wrb.49.2024.01.29.07.08.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 07:06:37 -0800 (PST)
-Date: Mon, 29 Jan 2024 18:06:34 +0300
+        Mon, 29 Jan 2024 07:08:39 -0800 (PST)
+Date: Mon, 29 Jan 2024 18:08:36 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Meir Elisha <meir6264@gmail.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -58,10 +58,10 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Ruan Jinjie <ruanjinjie@huawei.com>,
 	Yang Yingliang <yangyingliang@huawei.com>,
 	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] Staging: rtl8723bs: Fix block comments warning
-Message-ID: <888364a5-0445-467b-9e3c-6662019852e4@moroto.mountain>
+Subject: Re: [PATCH 4/4] Staging: rtl8723bs: fix else after break warning
+Message-ID: <83d0680c-e057-4fb4-a6ee-ed7e0ba06599@moroto.mountain>
 References: <20240129141856.416532-1-meir6264@Gmail.com>
- <20240129141856.416532-4-meir6264@Gmail.com>
+ <20240129141856.416532-5-meir6264@Gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,63 +70,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240129141856.416532-4-meir6264@Gmail.com>
+In-Reply-To: <20240129141856.416532-5-meir6264@Gmail.com>
 
-On Mon, Jan 29, 2024 at 04:18:55PM +0200, Meir Elisha wrote:
->  /*
-> -struct	wlan_network *_rtw_dequeue_network(struct __queue *queue)
-> -{
-> -	_irqL irqL;
-> -
-> -	struct wlan_network *pnetwork;
-> -
-> -	spin_lock_bh(&queue->lock);
-> -
-> -	if (list_empty(&queue->queue))
-> -
-> -		pnetwork = NULL;
-> -
-> -	else
-> -	{
-> -		pnetwork = container_of(get_next(&queue->queue), struct wlan_network, list);
-> -
-> -		list_del_init(&(pnetwork->list));
-> -	}
-> -
-> -	spin_unlock_bh(&queue->lock);
-> -
-> -	return pnetwork;
-> -}
-> -*/
-> + *struct wlan_network *_rtw_dequeue_network(struct __queue *queue)
-> + *{
-> + *	_irqL irqL;
-> + *
-> + *	struct wlan_network *pnetwork;
-> + *
-> + *	spin_lock_bh(&queue->lock);
-> + *
-> + *	if (list_empty(&queue->queue))
-> + *
-> + *		pnetwork = NULL;
-> + *
-> + *	else
-> + *	{
-> + *		pnetwork = container_of(get_next(&queue->queue), struct wlan_network, list);
-> + *
-> + *		list_del_init(&(pnetwork->list));
-> + *	}
-> + *
-> + *	spin_unlock_bh(&queue->lock);
-> + *
-> + *	return pnetwork;
-> + *}
-> + */
+On Mon, Jan 29, 2024 at 04:18:56PM +0200, Meir Elisha wrote:
+> Fix checkpatch warning: else is not generally useful after a break or return
+> 
+> Signed-off-by: Meir Elisha <meir6264@Gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_mlme.c | 38 +++++++++--------------
+>  1 file changed, 14 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> index 044483f3d678..efaac84f22b4 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> @@ -1540,30 +1540,23 @@ void _rtw_join_timeout_handler(struct timer_list *t)
+>  
+>  	spin_lock_bh(&pmlmepriv->lock);
+>  
+> -	if (rtw_to_roam(adapter) > 0) { /* join timeout caused by roaming */
+> +	if (rtw_to_roam(adapter) == 0) { /* join timeout caused by roaming */
 
-
-Delete the dead code.
+The comment is wrong now.
 
 regards,
 dan carpenter
-
 
