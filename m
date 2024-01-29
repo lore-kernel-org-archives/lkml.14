@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE7F125DA;
-	Tue, 30 Jan 2024 16:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF6A38DDF;
+	Tue, 30 Jan 2024 16:35:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706632522; cv=none; b=YAazW5wNUV6IEQdyVk5Wul2dwFG1iBp71OEJKM8crfAAYC9lMtfr6PuOCClcGYLlp4bBLlsnDzNiOXQhsV1meEBMGc5MKvi4xOO3G07AoZ0QUA6lu5pG0XTQx91JB3JAFr0sAkztNJa8nOJTYkSjLrRu93IGeJSJFutznW0KDKo=
+	t=1706632531; cv=none; b=Dki85ZrnPuGXcLj4aoAm30GIyja4A6cUQ/pnsnh7vP/11u4Kki64+3HCJAISbkQKXpukvi0eSKWc7mVvZCYAj7YEH0lAR8eoePmSCirpC2E82K4wZ3v8Cy7akYU4AZeWjQZ85yZ+rfDxipR+/KPqig/kDPPiOrKr8wCGsmSl1fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706632522; c=relaxed/simple;
-	bh=LDQoCBJMt2yoZsgxzwkrnfxiZbMQ3oyQgxvBuZK6GWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fEfFppVWlM9iv6LUsxvCp8arkg9fY0yQRQTjLlp/MT3xmdCsuQ5UAARNJ8ic1gPb8CGqY3TWe3LUmyUSae6SDd2gCJnWzCkRRJmVk3+lFfDF2/wdUVKuLser4hej29C7wKh2hoC9wB6O2WLknirn/QTS8HCpt3pDzKrHRzkATns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVGcVwzg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706632531; c=relaxed/simple;
+	bh=e6WGrzfI011OwRmHVj7M53wMeTl8sRp+30pwPx8VzMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fyVwGLQZkERTJn7SBfjN93AMf2lKFcYWO7HpewdfIuiUE+DlykcogVZkCHopnNKJh+mRm0tUvdxrzXGETdPdPyYqB+a5I9S90xrbnqb3X00MJC/dcD/fkvmbGVoLjR1L1hJpldKJOGoGYq/A8S2UYYPjlJAfvNf2UFUPEsofK60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bWLCiNLR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVGcVwzg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0FAC433F1;
-	Tue, 30 Jan 2024 16:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706632521;
-	bh=LDQoCBJMt2yoZsgxzwkrnfxiZbMQ3oyQgxvBuZK6GWY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fVGcVwzg0pxo8gquIncbT0Sx/BRWRa7EPYa/RRpCWA0lwF2KGg40OQWpCKZVyawfv
-	 kKxInbOOe0MiCDSSGAS87NdnOe1apLgnjNbI4p5NjqJlOV3/13x/ThRSfxjQW6a568
-	 WHX4hlI/wDmX4yJTae4H8oqLsiBd/V9aqaRapdlX8mRusjjpEAUS0U0Z4YBX/xgB/U
-	 VhnHh29X+TFcSAiBpPq0BYS0uJ/2HtZ7ivWxDblLVDx6FaBu8SSmifuyuvKNAtMlXw
-	 /6o3o3xpthnzeY/l3//oF9UlvZawStm4m10Lc/e4vXoVKRwtXaRlHm8t2vNsq77C31
-	 qqYHWZRFFeSfQ==
-Date: Tue, 30 Jan 2024 10:35:19 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jian-Hong Pan <jhp@endlessos.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	David Box <david.e.box@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@endlessos.org
-Subject: Re: [PATCH 2/2] PCI: vmd: enable PCI PM's L1 substates of remapped
- PCIe port and NVMe
-Message-ID: <20240130163519.GA521777@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bWLCiNLR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92349C43390;
+	Tue, 30 Jan 2024 16:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706632530;
+	bh=e6WGrzfI011OwRmHVj7M53wMeTl8sRp+30pwPx8VzMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bWLCiNLRLkEK1vJUF+8N4E/8wRAIoYpJv5JKfnlv1euTtd2aimkBbVzG45XgTxB9S
+	 7f3z9D3M4dkRVuWcdgCOlFYLwxHZNbTD0aEfPf5H4ErKorWtSffFvTXtI5qB6oKzTT
+	 LglJbNnGQTgbSB3ME+1ye1rHhpzZalfIWM+aQzdE=
+Date: Mon, 29 Jan 2024 14:52:23 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Sourav Panda <souravpanda@google.com>
+Cc: corbet@lwn.net, rafael@kernel.org, akpm@linux-foundation.org,
+	mike.kravetz@oracle.com, muchun.song@linux.dev, rppt@kernel.org,
+	david@redhat.com, rdunlap@infradead.org, chenlinxuan@uniontech.com,
+	yang.yang29@zte.com.cn, tomas.mudrunka@gmail.com,
+	bhelgaas@google.com, ivan@cloudflare.com, pasha.tatashin@soleen.com,
+	yosryahmed@google.com, hannes@cmpxchg.org, shakeelb@google.com,
+	kirill.shutemov@linux.intel.com, wangkefeng.wang@huawei.com,
+	adobriyan@gmail.com, vbabka@suse.cz, Liam.Howlett@oracle.com,
+	surenb@google.com, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, willy@infradead.org, weixugc@google.com
+Subject: Re: [PATCH v7 1/1] mm: report per-page metadata information
+Message-ID: <2024012948-hungry-tibia-5345@gregkh>
+References: <20240129224204.1812062-1-souravpanda@google.com>
+ <20240129224204.1812062-2-souravpanda@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,95 +49,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130100050.14182-2-jhp@endlessos.org>
+In-Reply-To: <20240129224204.1812062-2-souravpanda@google.com>
 
-Capitalize subject line to match history ("Enable PM L1 Substates ...")
-
-On Tue, Jan 30, 2024 at 06:00:51PM +0800, Jian-Hong Pan wrote:
-> The remmapped PCIe port and NVMe have PCI PM L1 substates capability on
-> ASUS B1400CEAE, but they are disabled originally:
-
-s/remmapped/remapped/
-s/PCIe port/PCIe Root Port/ (all devices with Links have Ports, so we
-can be a little more specific here)
-
-I doubt "ASUS B1400CEAE" is relevant here.
-
-> Capabilities: [900 v1] L1 PM Substates
->         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
->                   PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
->         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->                    T_CommonMode=0us LTR1.2_Threshold=0ns
->         L1SubCtl2: T_PwrOn=10us
+On Mon, Jan 29, 2024 at 02:42:04PM -0800, Sourav Panda wrote:
+> Adds two new per-node fields, namely nr_page_metadata and
+> nr_page_metadata_boot, to /sys/devices/system/node/nodeN/vmstat
+> and a global PageMetadata field to /proc/meminfo. This information can
+> be used by users to see how much memory is being used by per-page
+> metadata, which can vary depending on build configuration, machine
+> architecture, and system use.
 > 
-> Power on all of the VMD remapped PCI devices before enable PCI-PM L1 PM
-> Substates by following "Section 5.5.4 of PCIe Base Spec Revision 5.0
-> Version 0.1". Then, PCI PM's L1 substates control are enabled
-> accordingly.
-
-Reference PCIe r6.0 or r6.1, since r5.0 is almost 5 years old now.
-
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
-> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> Per-page metadata is the amount of memory that Linux needs in order to
+> manage memory at the page granularity. The majority of such memory is
+> used by "struct page" and "page_ext" data structures. In contrast to
+> most other memory consumption statistics, per-page metadata might not
+> be included in MemTotal. For example, MemTotal does not include memblock
+> allocations but includes buddy allocations. In this patch, exported
+> field nr_page_metadata in /sys/devices/system/node/nodeN/vmstat would
+> exclusively track buddy allocations while nr_page_metadata_boot would
+> exclusively track memblock allocations. Furthermore, PageMetadata in
+> /proc/meminfo would exclusively track buddy allocations allowing it to
+> be compared against MemTotal.
+> 
+> This memory depends on build configurations, machine architectures, and
+> the way system is used:
+> 
+> Build configuration may include extra fields into "struct page",
+> and enable / disable "page_ext"
+> Machine architecture defines base page sizes. For example 4K x86,
+> 8K SPARC, 64K ARM64 (optionally), etc. The per-page metadata
+> overhead is smaller on machines with larger page sizes.
+> System use can change per-page overhead by using vmemmap
+> optimizations with hugetlb pages, and emulated pmem devdax pages.
+> Also, boot parameters can determine whether page_ext is needed
+> to be allocated. This memory can be part of MemTotal or be outside
+> MemTotal depending on whether the memory was hot-plugged, booted with,
+> or hugetlb memory was returned back to the system.
+> 
+> Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: Sourav Panda <souravpanda@google.com>
 > ---
->  drivers/pci/controller/vmd.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  Documentation/filesystems/proc.rst |  3 +++
+>  fs/proc/meminfo.c                  |  4 ++++
+>  include/linux/mmzone.h             |  4 ++++
+>  include/linux/vmstat.h             |  4 ++++
+>  mm/hugetlb_vmemmap.c               | 19 ++++++++++++++----
+>  mm/mm_init.c                       |  3 +++
+>  mm/page_alloc.c                    |  1 +
+>  mm/page_ext.c                      | 32 +++++++++++++++++++++---------
+>  mm/sparse-vmemmap.c                |  8 ++++++++
+>  mm/sparse.c                        |  7 ++++++-
+>  mm/vmstat.c                        | 26 +++++++++++++++++++++++-
+>  11 files changed, 96 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 87b7856f375a..b1bbe8e6075a 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -738,6 +738,12 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
->  	vmd_bridge->native_dpc = root_bridge->native_dpc;
->  }
->  
-> +static int vmd_power_on_pci_device(struct pci_dev *pdev, void *userdata)
-> +{
-> +	pci_set_power_state(pdev, PCI_D0);
-> +	return 0;
-> +}
-> +
->  /*
->   * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
->   */
-> @@ -928,6 +934,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	vmd_acpi_begin();
->  
->  	pci_scan_child_bus(vmd->bus);
-> +
-> +	/*
-> +	 * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
-> +	 * Section 5.5.4 of PCIe Base Spec Revision 5.0 Version 0.1
-> +	 */
-> +	pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL);
+> diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+> index 49ef12df631b..d5901d04e082 100644
+> --- a/Documentation/filesystems/proc.rst
+> +++ b/Documentation/filesystems/proc.rst
+> @@ -993,6 +993,7 @@ Example output. You may not have all of these fields.
+>      AnonPages:       4654780 kB
+>      Mapped:           266244 kB
+>      Shmem:              9976 kB
+> +    PageMetadata:     513419 kB
+>      KReclaimable:     517708 kB
+>      Slab:             660044 kB
+>      SReclaimable:     517708 kB
 
-Sec 5.5.4 indeed says "If setting either or both of the enable bits
-for PCI-PM L1 PM Substates, both ports must be configured ... while in
-D0."
+Why are you adding it to the middle of the file?  Are you sure the
+userspace tools that parse this file today can handle an unknown field
+here, and not just at the end of the file?
 
-This applies to *all* PCIe devices, not just those below a VMD bridge,
-so I'm not sure this is the right place to do this.  Is there anything
-that prevents a similar issue for non-VMD hierarchies?
+thanks,
 
-I guess the bridges (Root Ports and Switch Ports) must already be in
-D0, or we wouldn't be able to enumerate anything below them, right?
-
-It would be nice to connect this more closely with the L1 PM Substates
-configuration.  I don't quite see the connection here.  The only path
-I see for L1SS configuration is this:
-
-  pci_scan_slot
-    pcie_aspm_init_link_state
-      pcie_aspm_cap_init
-	aspm_l1ss_init
-
-which of course is inside pci_scan_child_bus(), which happens *before*
-this patch puts the devices in D0.  Where does the L1SS configuration
-happen after this vmd_power_on_pci_device()?
-
->  	vmd_domain_reset(vmd);
->  
->  	/* When Intel VMD is enabled, the OS does not discover the Root Ports
-> -- 
-> 2.43.0
-> 
+greg k-h
