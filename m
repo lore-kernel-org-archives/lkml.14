@@ -1,171 +1,146 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650DF153BD7;
-	Mon, 29 Jan 2024 15:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B0115444F
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706541422; cv=none; b=P2BQGLDVqUNHFQVBdoXQEPYXy5WPFgkSc3xLt3RXSQ4jBBb4FvRpqFMamrIIFE4p3QaoIq+9Dqslatde3Fx9//YVg9nvPqlMSueN2OWcJoEA06qZTx7QqXdM8JbuERqGJ+BcONs0jkxfVM04/YSYoOjphygHFJbDjjUhgBm710w=
+	t=1706541463; cv=none; b=N+6q/DRGaLhckaohZerdpcBIw8u0BuqFc6S28bM+zclwneeCK1pKIESpJOEpmJNkz4IWCEZ0zIKGahZNop7RotSjJUmahsEifcq/ThtrR9TUCtatYb1eQYDw9EZd0y+qAPYEOgD2aBkqEiqmKzmjA0zAhIBHmmxeYKZBRlioHao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706541422; c=relaxed/simple;
-	bh=3Nso3RAPlpi4tQMZv/DRHSv/5C/+syfOdDGfCD8LWEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NEym8esRkjPZ5M3pRm0VVNLC4SnHoyH8d/tbcgQXhaMqdHbngRv6rtHgWNdLGtVSFNdeQeAIYq3/0ysyOWLagqNv1vBsS6ffWts/77Wi1uWnICd8aMszTyEzhV3/Jt+v5WGi5BBA8HKwTwW4geayBp4gyiWUgn5ofkeeYoL+mwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=XPirihBl; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1706541463; c=relaxed/simple;
+	bh=VYk2kDys0glDWMk0P7roTgZucENZXxmFY1OUmtkVmJY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j9vzB0BwqybBYaciqtAMqEpRuFTCA+hxLZ1mr0mhlau0Uts6tkR2XLOy1CZYYj0Zrxwx3yWV8U4dowSF2AgrIkJcET83m7nxcccRoAMxn/6I5l9WRCVOhb0wiv7+es8toyQ+IgMh2YodmrBFOIZpR2GOpqIWi43TBNAs+8+vwYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kiD6PFLb; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XPirihBl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=98Gr9ITR366GR6pU9VeYRdKpJCJHm8fElGj3k6A8yhQ=; b=XPirihBlNGWgXcIxNottRzcHGS
-	NoDXCharW/9OS/EVteV5i5UEkYdapJIGEis1ZIPLbbJarGR3tDTlk9DQdykevMyYiBM22zXTWlJtv
-	l/ASau/dV30a1KcQZ1PRAwizv1rWCgTgTUcsZJ4f0+s5kR0GnJU+5Yuxt2ixt4dEPcNY4EZkharl1
-	Kkb9pv1otyt7lkLicWQlhfAq564HCDlX/tSE6QnXWmCmGTk2trVwgwSQDZwC+fua5mF5NmHYGrn0Z
-	Si8uI1ArLvDovc9gHZ10bH1dfhdlYxx95pVaY4Z9Co+XhQ8IpJaUv453QExZXwxFeqqZ34/TVR5YZ
-	z0Az2T1Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48498)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rUTNV-0000Zx-1f;
-	Mon, 29 Jan 2024 15:16:53 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rUTNS-0004ei-Ql; Mon, 29 Jan 2024 15:16:50 +0000
-Date: Mon, 29 Jan 2024 15:16:50 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 01/21] ACPI: Only enumerate enabled (or
- functional) devices
-Message-ID: <ZbfBYgdLzvEX/VjN@shell.armlinux.org.uk>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
- <ZXxxa+XZjPZtNfJ+@shell.armlinux.org.uk>
- <20231215161539.00000940@Huawei.com>
- <5760569.DvuYhMxLoT@kreacher>
- <20240102143925.00004361@Huawei.com>
- <20240111101949.000075dc@Huawei.com>
- <ZZ/CR/6Voec066DR@shell.armlinux.org.uk>
- <20240112115205.000043b0@Huawei.com>
- <Zbe8WQRASx6D6RaG@shell.armlinux.org.uk>
- <CAJZ5v0iba93EhQB2k3LMdb2YczndbRmF5WGRYHhnqCHq6TQJ0A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kiD6PFLb"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ff821b9acfso26821487b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:17:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706541459; x=1707146259; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5MB7A9ATBDbqpsaX+ySSekE4FzWm5nmsG8f0biE3UZk=;
+        b=kiD6PFLbpoidhxUJoTiebE9iECJ54bl15yaI4ZqYjNNDKYJM3NdyhqHrX16l08Qsx7
+         kjfzLk3SXatBf+9VaxrAXLIFkbr3G3uTHIHV5V42hHrJydKnyzjulN2GXJFbbL7lcP7y
+         TOtUBzDfZHMthauxB5eSJsWAvzVuRSyL00omSrTaGPRv3b80bRDuokySymWmaBRfgbfK
+         FP16mB6CczBflP6VqZVY8XrNocGFKLKXKirhg/K0LwPwvE/6cfp/Hx/DZvSROb/RFEyj
+         WnxrcXU+b6CSUHYYWHk+S15pJyKGGykEHbvdHACc4EaFi4e8qb1GGXrDGGdrvhi52t6v
+         Taxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706541459; x=1707146259;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5MB7A9ATBDbqpsaX+ySSekE4FzWm5nmsG8f0biE3UZk=;
+        b=wyfw8TtakfEdDTW0NffqKbwXXfJ8E4kyJ+PYvKC4FfH15cZmaaJMhwQWi+FVSuoiWI
+         JagIy6a5+ewKmgEOQw59l7MKCZVwjPuiYeYCyWpo3AXDTYrgnzCs3nE7osp8XoBjmMfu
+         XVEXHh/pOsRkhaMNSFc3sX+JfDZel8Mi/ncFjgPNKcezadrwpY2LGVJifE0E/5EGGbyz
+         zkjYFBJ+iuevU7nxGZiL2qCM8CGv/rUY9Y7I/7aOL/qKuWeEaIwh5S3BUYhcB6wKQS7s
+         uWNNYARrC2KX0KPYWCHT0FY43n4f6VWaeQYLfOaLc+OS77pgxzaMgS+MwES+QykE/qx2
+         RWHg==
+X-Gm-Message-State: AOJu0Ywj4W0HC3dHkoPgdlMXkydPS1awCaoz7nzBuN3f8PDG7PeOCVcC
+	4qPUbDzrWKxPCCXk/ry2ih4/+E3GB4ygY5eX2EZ6fvjI92sOiWfqyRhyb5ZvWdgB2ezgeP2nvx9
+	3yOW6ui3vZSLTtaCjmZU85+jn+hRODT3YTyg8LQ==
+X-Google-Smtp-Source: AGHT+IH78q1nwygFDkOrWIMmiiOqu+94WGhjny51UtK7G2os6l1B4sEyC0mrhtNYMT1u+/g+5VZmFHg8vWtcGyCh4iE=
+X-Received: by 2002:a81:99d5:0:b0:602:b375:380d with SMTP id
+ q204-20020a8199d5000000b00602b375380dmr3586667ywg.80.1706541459045; Mon, 29
+ Jan 2024 07:17:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0iba93EhQB2k3LMdb2YczndbRmF5WGRYHhnqCHq6TQJ0A@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20240129-x1e80100-remoteproc-v1-0-15d21ef58a4b@linaro.org> <20240129-x1e80100-remoteproc-v1-3-15d21ef58a4b@linaro.org>
+In-Reply-To: <20240129-x1e80100-remoteproc-v1-3-15d21ef58a4b@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 29 Jan 2024 17:17:28 +0200
+Message-ID: <CAA8EJporoBQQtrRWL5SS4qwpmu0rF6UMpaZXQ5t-qdvoW53XOA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] remoteproc: qcom_q6v5_pas: Unload lite firmware on ADSP
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Sibi Sankar <quic_sibis@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 29, 2024 at 04:05:42PM +0100, Rafael J. Wysocki wrote:
-> On Mon, Jan 29, 2024 at 3:55 PM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> >
-> > Hi Jonathan,
-> >
-> > On Fri, Jan 12, 2024 at 11:52:05AM +0000, Jonathan Cameron wrote:
-> > > On Thu, 11 Jan 2024 10:26:15 +0000
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > > > @@ -2381,16 +2388,38 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
-> > > >   * acpi_dev_ready_for_enumeration - Check if the ACPI device is ready for enumeration
-> > > >   * @device: Pointer to the &struct acpi_device to check
-> > > >   *
-> > > > - * Check if the device is present and has no unmet dependencies.
-> > > > + * Check if the device is functional or enabled and has no unmet dependencies.
-> > > >   *
-> > > > - * Return true if the device is ready for enumeratino. Otherwise, return false.
-> > > > + * Return true if the device is ready for enumeration. Otherwise, return false.
-> > > >   */
-> > > >  bool acpi_dev_ready_for_enumeration(const struct acpi_device *device)
-> > > >  {
-> > > >     if (device->flags.honor_deps && device->dep_unmet)
-> > > >             return false;
-> > > >
-> > > > -   return acpi_device_is_present(device);
-> > > > +   /*
-> > > > +    * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to return
-> > > > +    * (!present && functional) for certain types of devices that should be
-> > > > +    * enumerated. Note that the enabled bit should not be set unless the
-> > > > +    * present bit is set.
-> > > > +    *
-> > > > +    * However, limit this only to processor devices to reduce possible
-> > > > +    * regressions with firmware.
-> > > > +    */
-> > > > +   if (device->status.functional)
-> > > > +           return true;
-> >
-> > I have a report from within Oracle that this causes testing failures
-> > with QEMU using -smp cpus=2,maxcpus=4. I think it needs to be:
-> >
-> >         if (!device->status.present)
-> >                 return device->status.functional;
-> >
-> >         if (device->status.enabled)
-> >                 return true;
-> >
-> >         return !acpi_device_is_processor(device);
-> 
-> The above is fine by me.
-> 
-> > So we can better understand the history here, let's list it as a
-> > truth table. P=present, F=functional, E=enabled, Orig=how the code
-> > is in mainline, James=James' original proposal, Rafael=the proposed
-> > replacement but seems to be buggy, Rmk=the fixed version that passes
-> > tests:
-> >
-> > P F E   Orig    James   Rafael          Rmk
-> > 0 0 0   0       0       0               0
-> > 0 0 1   0       0       0               0
-> > 0 1 0   1       1       1               1
-> > 0 1 1   1       0       1               1
-> > 1 0 0   1       0       !processor      !processor
-> > 1 0 1   1       1       1               1
-> > 1 1 0   1       0       1               !processor
-> > 1 1 1   1       1       1               1
-> >
-> > Any objections to this?
-> 
-> So AFAIAC it can return false if not enabled, but present and
-> functional.  [Side note: I'm wondering what "functional" means then,
-> but whatever.]
+On Mon, 29 Jan 2024 at 15:35, Abel Vesa <abel.vesa@linaro.org> wrote:
+>
+> From: Sibi Sankar <quic_sibis@quicinc.com>
+>
+> The UEFI loads a lite variant of the ADSP firmware to support charging
+> use cases. The kernel needs to unload and reload it with the firmware
+> that has full feature support for audio. This patch arbitarily shutsdown
+> the lite firmware before loading the full firmware.
+>
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  drivers/remoteproc/qcom_q6v5_pas.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index 083d71f80e5c..4f6940368eb4 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -39,6 +39,7 @@ struct adsp_data {
+>         const char *dtb_firmware_name;
+>         int pas_id;
+>         int dtb_pas_id;
+> +       int lite_pas_id;
+>         unsigned int minidump_id;
+>         bool auto_boot;
+>         bool decrypt_shutdown;
+> @@ -72,6 +73,7 @@ struct qcom_adsp {
+>         const char *dtb_firmware_name;
+>         int pas_id;
+>         int dtb_pas_id;
+> +       int lite_pas_id;
+>         unsigned int minidump_id;
+>         int crash_reason_smem;
+>         bool decrypt_shutdown;
+> @@ -210,6 +212,10 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>         /* Store firmware handle to be used in adsp_start() */
+>         adsp->firmware = fw;
+>
+> +       /* WIP: Shutdown the ADSP if it's running a lite version of the firmware*/
 
-From ACPI v6.5 (bit 3 is our "status.functional":
+Why is it still marked as WIP?
 
- _STA may return bit 0 clear (not present) with bit [3] set (device is
- functional). This case is used to indicate a valid device for which no
- device driver should be loaded (for example, a bridge device.) Children
- of this device may be present and valid. OSPM should continue
- enumeration below a device whose _STA returns this bit combination.
+> +       if (adsp->lite_pas_id)
+> +               ret = qcom_scm_pas_shutdown(adsp->lite_pas_id);
+> +
+>         if (adsp->dtb_pas_id) {
+>                 ret = request_firmware(&adsp->dtb_firmware, adsp->dtb_firmware_name, adsp->dev);
+>                 if (ret) {
+> @@ -693,6 +699,7 @@ static int adsp_probe(struct platform_device *pdev)
+>         adsp->rproc = rproc;
+>         adsp->minidump_id = desc->minidump_id;
+>         adsp->pas_id = desc->pas_id;
+> +       adsp->lite_pas_id = desc->lite_pas_id;
+>         adsp->info_name = desc->sysmon_name;
+>         adsp->decrypt_shutdown = desc->decrypt_shutdown;
+>         adsp->region_assign_idx = desc->region_assign_idx;
+> @@ -990,6 +997,7 @@ static const struct adsp_data x1e80100_adsp_resource = {
+>         .dtb_firmware_name = "adsp_dtb.mdt",
+>         .pas_id = 1,
+>         .dtb_pas_id = 0x24,
+> +       .lite_pas_id = 0x1f,
+>         .minidump_id = 5,
+>         .auto_boot = true,
+>         .proxy_pd_names = (char*[]){
+>
+> --
+> 2.34.1
+>
+>
 
-So, for this case, acpi_dev_ready_for_enumeration() returning true for
-this case is correct, since we're supposed to enumerate it and child
-devices.
-
-It's probably also worth pointing out that in the above table, the two
-combinations with P=0 E=1 goes against the spec, but are included for
-completness.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+With best wishes
+Dmitry
