@@ -1,152 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 404166166D
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4243B15AAD5
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706548072; cv=none; b=u4Vo0nLI+Die/w/fQFSDI0v1tdjJ2MAAGry1JXIZ+6eUJjLhCvLccF5/g3nKG/RbykJcJXb5ZLbo6eqfP7fYaPOHHx8AA6EUWw1pE35mNSsB/jSj66UQAJKriNNANql3FqrSKZlwfcRMMTrOZS2IS2Lq7G2pJ8IVOqgKpCSZxcY=
+	t=1706548083; cv=none; b=ERlcLpCAV9YcDHOJY1uZOnZipsGSSh1EJr04vya8oeq/9jyOXZf8dyu8WVzf/5MGf2u+xnU2jY5FtzVEHYvTA/BVfScwt+usFAn5PcwSO9m2AKp06zEnGAB8p+s/4h/n5jcXnQss+YkNETu5Uhw9IvElCD8pA7nxsKuqPG7y3Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706548072; c=relaxed/simple;
-	bh=ztUZhYu4cJ+2Ais77SXBMRY7jNrgEZe37F6IuGLKA14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mg08vNf4Z8N0p+MEnM41gqXUnuNMEJcakuTpE0TCzDYxvzoJlOxNf5B4PqV1HrO42nIf0WdPAjZD0UokZVGbMPbEXRJk/iXiPHxu8DlRpQq8HjHB7wQyUqCqKRpbAR83mEhL5DqsTj3b9uuppfgmc8FKhdXMhryKiFeoVJyuUgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E1B8DA7;
-	Mon, 29 Jan 2024 09:08:33 -0800 (PST)
-Received: from [10.57.77.253] (unknown [10.57.77.253])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 330813F738;
-	Mon, 29 Jan 2024 09:07:48 -0800 (PST)
-Message-ID: <154b01c4-2ce3-4b85-abb6-b3baffe4f272@arm.com>
-Date: Mon, 29 Jan 2024 17:07:46 +0000
+	s=arc-20240116; t=1706548083; c=relaxed/simple;
+	bh=0LKrBNn/tdgYxQG5tXJjBvRgb8P6qEb0b3d3tmgiVL4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=B09sCF6u9g+SnJzCm09nYmxOamh9uXjuNK77ovUd2xiINilQcit0Hilr47Hwy7tNjboLfN7tBaITwADedNbp4OS3DYJV4EkxJ6JARTivm/ziSlQjV1xuQ3Ebwosq4Qs7N2ZSimBl1MsxVT06AwFTZqpVJc1Zfx9y9NaUQdJbTqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=fail (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZyG41W4t reason="signature verification failed"; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZyG41W4t"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 40TH7GOG2246529
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 29 Jan 2024 09:07:17 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 40TH7GOG2246529
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024011201; t=1706548038;
+	bh=5MgQaeiM+/jYwFflXcmFfBk4nscCJV22lLY8J+jZeMM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ZyG41W4tgHSLobFqHKGEupEcCs6PB4mbtcLDIHcTPTTwHOWrC6KexJsTVE/ff1ndU
+	 5OhAYNEdR0F9PJ8N9QmcyiE/p4a/BsVtg9A3vkhIFlKrmuEPMfzdrOH+WrRUL5ZNAZ
+	 XaSakUAOVmfiYPxnQA88cpcdKcvql9+I9IkyajGURzbsa2dFSlvldE7easV1Fr5a28
+	 jPTOcYZ+w3RbBq3V9aYJ+pnfqIn+S8o50V4owFWZG/QUB9amNec8PPwVbpGZUlgk4u
+	 eDWwBPjI0gtp3sv2rA0YBljxZi6YdWSs9/lDJYj2hjpzoTQZ/caRio78l6o8JJnVGY
+	 oEyTNk0vyAYkg==
+Date: Mon, 29 Jan 2024 09:07:13 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>, linux-coco@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Randomness on confidential computing platforms
+User-Agent: K-9 Mail for Android
+In-Reply-To: <dqiaimv3qqh77cfm2huzja4vsho3jls7vjmnwgda7enw633ke2@qiqrdnno75a7>
+References: <20240126134230.1166943-1-kirill.shutemov@linux.intel.com> <276aaeee-cb01-47d3-a3bf-f8fa2e59016c@intel.com> <dqiaimv3qqh77cfm2huzja4vsho3jls7vjmnwgda7enw633ke2@qiqrdnno75a7>
+Message-ID: <B5BF8A36-DB2C-4CEA-8011-1708F84827D9@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] perf/arm-cmn: Enable support for tertiary match group
-Content-Language: en-GB
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240126221215.1537377-1-ilkka@os.amperecomputing.com>
- <20240126221215.1537377-4-ilkka@os.amperecomputing.com>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20240126221215.1537377-4-ilkka@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-01-26 10:12 pm, Ilkka Koskinen wrote:
-> Add support for tertiary match group.
- >
-> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> ---
->   drivers/perf/arm-cmn.c | 23 +++++++++++++++++++----
->   1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index dc6370396ad0..ce9fbdcf6144 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -91,10 +91,13 @@
->   #define CMN600_WPn_CONFIG_WP_COMBINE	BIT(6)
->   #define CMN600_WPn_CONFIG_WP_EXCLUSIVE	BIT(5)
->   #define CMN_DTM_WPn_CONFIG_WP_GRP	GENMASK_ULL(5, 4)
-> +#define CMN600_WPn_CONFIG_WP_GRP	BIT(4)
->   #define CMN_DTM_WPn_CONFIG_WP_CHN_SEL	GENMASK_ULL(3, 1)
->   #define CMN_DTM_WPn_CONFIG_WP_DEV_SEL	BIT(0)
->   #define CMN_DTM_WPn_VAL(n)		(CMN_DTM_WPn(n) + 0x08)
->   #define CMN_DTM_WPn_MASK(n)		(CMN_DTM_WPn(n) + 0x10)
-> +#define CMN_DTM_WP_CHN_SEL_REQ_VC	0
-> +#define CMN_DTM_WP_GRP_TERTIARY		0x2
->   
->   #define CMN_DTM_PMU_CONFIG		0x210
->   #define CMN__PMEVCNT0_INPUT_SEL		GENMASK_ULL(37, 32)
-> @@ -175,8 +178,8 @@
->   #define CMN_CONFIG_WP_DEV_SEL		GENMASK_ULL(50, 48)
->   #define CMN_CONFIG_WP_CHN_SEL		GENMASK_ULL(55, 51)
->   /* Note that we don't yet support the tertiary match group on newer IPs */
-> -#define CMN_CONFIG_WP_GRP		BIT_ULL(56)
-> -#define CMN_CONFIG_WP_EXCLUSIVE		BIT_ULL(57)
-> +#define CMN_CONFIG_WP_GRP		GENMASK_ULL(57, 56)
-> +#define CMN_CONFIG_WP_EXCLUSIVE		BIT_ULL(58)
->   #define CMN_CONFIG1_WP_VAL		GENMASK_ULL(63, 0)
->   #define CMN_CONFIG2_WP_MASK		GENMASK_ULL(63, 0)
->   
-> @@ -1298,7 +1301,9 @@ static struct attribute *arm_cmn_format_attrs[] = {
->   
->   	CMN_FORMAT_ATTR(CMN_ANY, wp_dev_sel, CMN_CONFIG_WP_DEV_SEL),
->   	CMN_FORMAT_ATTR(CMN_ANY, wp_chn_sel, CMN_CONFIG_WP_CHN_SEL),
-> -	CMN_FORMAT_ATTR(CMN_ANY, wp_grp, CMN_CONFIG_WP_GRP),
-> +	CMN_FORMAT_ATTR(CMN600, wp_grp, CMN600_WPn_CONFIG_WP_GRP),
+On January 29, 2024 8:41:49 AM PST, "Kirill A=2E Shutemov" <kirill=2Eshutem=
+ov@linux=2Eintel=2Ecom> wrote:
+>On Mon, Jan 29, 2024 at 08:30:11AM -0800, Dave Hansen wrote:
+>> On 1/26/24 05:42, Kirill A=2E Shutemov wrote:
+>> > 3=2E Panic after enough re-tries of RDRAND/RDSEED instructions fail=
+=2E
+>> >    Another DoS variant against the Guest=2E
+>>=20
+>> I think Sean was going down the same path, but I really dislike the ide=
+a
+>> of having TDX-specific (or CoCo-specific) policy here=2E
+>>=20
+>> How about we WARN_ON() RDRAND/RDSEED going bonkers?  The paranoid folks
+>> can turn on panic_on_warn, if they haven't already=2E
+>
+>Sure, we can do it for kernel, but we have no control on what userspace
+>does=2E
+>
+>Sensible userspace on RDRAND/RDSEED failure should fallback to kernel
+>asking for random bytes, but who knows if it happens in practice
+>everywhere=2E
+>
+>Do we care?
+>
 
-Perhaps an easy confusion, but 4 != 56: CMN_CONFIG_WP_* represent 
-perf_event->config{,1,2} attribute fields per the CMN_CONFIG_* pattern, 
-whereas CMN*_WPn_CONFIG_* are hardware register fields where "config" is 
-just annoygingly part of the register name.
-
-> +	CMN_FORMAT_ATTR(NOT_CMN600, wp_grp, CMN_CONFIG_WP_GRP),
-
-Hmm, I'm sure last time I tried something like this, sysfs wouldn't let 
-two attributes with the same name exist, regardless of whether one was 
-meant to be hidden :/
-
-TBH I think that either we change ABI for everyone consistently, or we 
-extend the field in a backwards-compatible way. If you think an ABI 
-break would affect existing CMN-600 users, then surely at stands to 
-affect existing CMN-650 and CMN-700 users just as much?
-
-> +
->   	CMN_FORMAT_ATTR(CMN_ANY, wp_exclusive, CMN_CONFIG_WP_EXCLUSIVE),
->   	CMN_FORMAT_ATTR(CMN_ANY, wp_combine, CMN_CONFIG_WP_COMBINE),
->   
-> @@ -1398,8 +1403,11 @@ static u32 arm_cmn_wp_config(struct perf_event *event)
->   
->   	config = FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_DEV_SEL, dev) |
->   		 FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_CHN_SEL, chn) |
-> -		 FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_GRP, grp) |
->   		 FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_DEV_SEL2, dev >> 1);
-> +
-> +	if (grp)
-> +		config |= is_cmn600 ? CMN600_WPn_CONFIG_WP_GRP :
-> +				      FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_GRP, grp);
-
-FWIW I think something more like "if (is_cmn600) grp &= 1;" before the 
-existing assignent might be clearer. Note that that *is* effectively how 
-this works already since CMN_DTM_WPn_CONFIG_WP_GRP was updated, it's 
-just currently implicit in CMN_EVENT_WP_GRP().
-
->   	if (exc)
->   		config |= is_cmn600 ? CMN600_WPn_CONFIG_WP_EXCLUSIVE :
->   				      CMN_DTM_WPn_CONFIG_WP_EXCLUSIVE;
-
-You've missed the "(combine && !grp)" logic below this point, which also 
-needs to get rather more involved if a combined match across groups 1 
-and 2 is going to work correctly.
-
-> @@ -1764,6 +1772,13 @@ static int arm_cmn_event_init(struct perf_event *event)
->   		/* ...and we need a "real" direction */
->   		if (eventid != CMN_WP_UP && eventid != CMN_WP_DOWN)
->   			return -EINVAL;
-> +
-> +		if (cmn->part != PART_CMN600)
-> +			if (CMN_EVENT_WP_GRP(event) > CMN_DTM_WP_GRP_TERTIARY ||
-> +			    (CMN_EVENT_WP_GRP(event) == CMN_DTM_WP_GRP_TERTIARY &&
-> +			     CMN_EVENT_WP_CHN_SEL(event) != CMN_DTM_WP_CHN_SEL_REQ_VC))
-> +				return -EINVAL;
-> +
-
-We already don't attempt to sanity-check watchpoint arguments (e.g. 
-chn>3 or chn=1,grp=1), so I'm not really inclined to start. The aim here 
-has always been not to try to understand watchpoints at all, and 
-effectively just pass through the register interface to the user.
-
-Thanks,
-Robin.
-
->   		/* ...but the DTM may depend on which port we're watching */
->   		if (cmn->multi_dtm)
->   			hw->dtm_offset = CMN_EVENT_WP_DEV_SEL(event) / 2;
+You can't fix what you can't touch=2E
