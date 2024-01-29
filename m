@@ -1,101 +1,140 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FE8155A59;
-	Mon, 29 Jan 2024 15:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894EC153502;
+	Mon, 29 Jan 2024 15:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706541976; cv=none; b=aShp6LT3i5O2IXtkxT613qgzyP6SQ8+wwe7EICwdBTrQ1L5TLf4trR8o3i2SoT46hjUocUOQ4CJdL7PNNmdrdtyQwqWYyAxU6TcK9w8RwQNSR9fq87nwUl4bXMr8ktjJf9xXvizaGiju3xA4QtoIDPcq/Qeh7GMdJ4IuW4rEJow=
+	t=1706542167; cv=none; b=hCl8aoGKykAnc8wIFsGxWDNhCWUzBOBYUguasIxqXrzhwT/e+kTZ/Kmp09jocavdP23wUy+37qvRkvj/aHK7hZxnSzC06ZJvW1SQl71ug1RLK5FFKFRyNiAdUoG/3I4EVkfDQ3++Cd/DztVfVnKzuxEDm/bDO8311cc0Ij7fNh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706541976; c=relaxed/simple;
-	bh=68yJ9U7yDOQN/tmXLFDBJ2RA3Jr4KUc5Ol0WN9miz6k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uskceqwgZAvQ1qjaP9bAvwuUE/RjBtypk31pC28nXleRIq03ZYsEsNKlwqsG9j/2XUxEi41j36v3M0LOcFSV8lXRH7duQXMymq2FpzJq3O+ihZwvs7BWwE2wDJj+aWa+4oka+bO1i6p5JUzxggNyr/Maiuq16ow594uq19lYG+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=BgFpVD/z; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1706542167; c=relaxed/simple;
+	bh=temvw+fKuDYFx07W/PqfCRAulSyTIn2NnJqhzpa3B60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GDtdKdVkDDYZXyf4QehpGk2zwB91dpWMiqDwMZsc47tCCVB/U4xjAhmMrqZ7X9Auw6pulyeK5nb+O3PwbyhVjRPBy3grQ7PzNUjk57jfkBjfOEjosMFIOI14Vy8goUAkmJ/nwXR9qHZtfMXNwmjCG3twps8MjAN/S3OIphfqCtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=n/FsBQcO; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="BgFpVD/z"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5ga4N008621;
-	Mon, 29 Jan 2024 09:26:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=zml9ilUhvsqCAh5cH8JndKwXXuBxD+atI54RnGVm2Bk=; b=
-	BgFpVD/z66u1pteeL5S3eYNSF7D+gSSj6+O4JgJJYoiZma7MKBdVc74pjdJVGp56
-	dvYrgAMLGOazp/CEpmioDsjg7GNWtYfeu7+QXz5rF0JscNmhSYzUQdlVWjnihb27
-	gclt8jepTECtGu2gMwSqCv3hdi0SUu7Lty/DIN/Xtigq+/MjX3++nXBoDz3xh3Xm
-	MlUSFL5eyIDGZ56XGDrZGaOUSzo9E3P3Vp4it4NEn6xqDKoDCa6bgKsfFbDI9Zsc
-	/KMy4cLoY5po4Z5AHR83Lztm8YZCnEGdTCdiaPPBI4WltjRIe6hGkEY3z9Jp3JhA
-	Tz3xIqNadm6i1kQukRvE4g==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nt7ne-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 09:25:59 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 15:25:58 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 15:25:58 +0000
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id C66A4820248;
-	Mon, 29 Jan 2024 15:25:57 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <lee@kernel.org>, <broonie@kernel.org>
-CC: <andy.shevchenko@gmail.com>, <patches@opensource.cirrus.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>
-Subject: [PATCH v4 3/6] mfd: cs42l43: Use __u8 type rather than u8 for firmware interface
-Date: Mon, 29 Jan 2024 15:25:54 +0000
-Message-ID: <20240129152557.3221212-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240129152557.3221212-1-ckeepax@opensource.cirrus.com>
-References: <20240129152557.3221212-1-ckeepax@opensource.cirrus.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="n/FsBQcO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=byNfiL/pkoggyG/+oatuw7eueKrFjxfS3K9FZq27IAg=; b=n/FsBQcOafh31HIhCxKunlMYhY
+	BINs0xUg+zirDh74DZomBMBrgPTUg6s+YKFk/eyPkCDp/foDwi2JN6quuX1kkblEZiSbOzXZpnlhP
+	4ghCJVX3y19TyJLpl+W3QY5JDnD9jcKr+o01DYgJzsz6Qek3YsJcsL41l1McDcFMbpBY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rUTZP-006OKZ-UE; Mon, 29 Jan 2024 16:29:11 +0100
+Date: Mon, 29 Jan 2024 16:29:11 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Jie Luo <quic_luoj@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Robert Marko <robert.marko@sartura.hr>,
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>
+Subject: Re: [net-next PATCH 0/3] net: mdio-ipq4019: fix wrong default MDC
+ rate
+Message-ID: <df0e0ddc-4134-41d0-94f4-aba1186f0ede@lunn.ch>
+References: <20240124213640.7582-1-ansuelsmth@gmail.com>
+ <53445feb-a02c-4859-a993-ccf957208115@quicinc.com>
+ <f8a9e328-5284-4f24-be5d-7e9804869ecd@lunn.ch>
+ <5d778fc0-864c-4e91-9722-1e39551ffc45@quicinc.com>
+ <CAA8EJppUGH1pMg579nJmG2iTHGsOJdgDL93kfOvKofANTGGdHw@mail.gmail.com>
+ <65b3ecd7.050a0220.9e26c.0d9e@mx.google.com>
+ <cdd0e481-2738-465b-9ef8-b7ab79981fbe@quicinc.com>
+ <65b7b565.170a0220.2666a.0d2b@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: gdghCE4TGgvasgVyNJlJSWeJmIiytLmo
-X-Proofpoint-GUID: gdghCE4TGgvasgVyNJlJSWeJmIiytLmo
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65b7b565.170a0220.2666a.0d2b@mx.google.com>
 
-__xxx is the preferred type for firmware interfaces.
+On Mon, Jan 29, 2024 at 03:25:09PM +0100, Christian Marangi wrote:
+> On Mon, Jan 29, 2024 at 09:59:03PM +0800, Jie Luo wrote:
+> > 
+> > 
+> > On 1/27/2024 1:33 AM, Christian Marangi wrote:
+> > > On Fri, Jan 26, 2024 at 07:20:03PM +0200, Dmitry Baryshkov wrote:
+> > > > On Fri, 26 Jan 2024 at 18:03, Jie Luo <quic_luoj@quicinc.com> wrote:
+> > > > > 
+> > > > > 
+> > > > > 
+> > > > > On 1/26/2024 1:18 AM, Andrew Lunn wrote:
+> > > > > > > Hi Christian,
+> > > > > > > Just a gentle reminder.
+> > > > > > > 
+> > > > > > > The MDIO frequency config is already added by the following patch series.
+> > > > > > > https://lore.kernel.org/netdev/28c8b31c-8dcb-4a19-9084-22c77a74b9a1@linaro.org/T/#m840cb8d269dca133c3ad3da3d112c63382ec2058
+> > > > > > 
+> > > > > > I admit this version was posted first. However, its embedded in a
+> > > > > > patch series which is not making much progress, and i doubt will make
+> > > > > > progress any time soon.
+> > > > > > 
+> > > > > > If you really want your version to be used, please split it out into a
+> > > > > > standalone patch series adding just MDIO clock-frequency support, with
+> > > > > > its binding, and nothing else.
+> > > > > > 
+> > > > > >       Andrew
+> > > > > 
+> > > > > Hi Andrew,
+> > > > > We will rework the patch series to include only MDIO frequency related
+> > > > > function and frequency dt binding, and post the updated patch series
+> > > > > on th/Tuesdae Mondayy of next week. We will work with Christian to
+> > > > > ensure he can re-use this patch as well.
+> > > > 
+> > > > Can you do the other way around: rebase your patches on top of Chritian's work?
+> > 
+> > Hi Dmitry,
+> > Sure, we can take this approach if fine by Andrew as well.
+> > 
+> > > > 
+> > > 
+> > > Would be ideal, also I have to send v2 that handle the 802.3 suggested
+> > > MDC rate (ready I just need to send after this has been handled).
+> > > 
+> > > Also I can see some problem with Lui patch where thse divior
+> > > value is not reapplied after MDIO reset effectively reverting to the
+> > > default value.
+> > 
+> > Hi Christian,
+> > In my version, the divisor is programmed in every MDIO operation and hence I
+> > did not add the code to revert to configured value in reset function. But
+> > sure. we can program it once during the probe/reset and avoid doing it
+> > during read/write ops.
+> > 
+> > In addition, the MDIO divisor 1, 2 and 4 are not supported by the MDIO
+> > hardware block, maybe we can remove these macros to avoid confusion, or add
+> > a comment mentioning that these are not supported.
+> >
+> 
+> Hi, thanks for confirming it! In v2 I already changed the logic to start
+> looping from divisor 8 and added comments in DT and driver about not
+> assuring correct funcionality with those divisor.
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+Hi Christian
 
-No change since v3.
+Lets go with your version. Please post V2 whenever you are ready.
 
-Thanks,
-Charles
+Jie, please spend some time reviewing to patches, make any comments
+you have, and if everything is O.K, you can add a Reviewed-by:
 
- drivers/mfd/cs42l43.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
-index 4e2bc5ad244a..65a331481d97 100644
---- a/drivers/mfd/cs42l43.c
-+++ b/drivers/mfd/cs42l43.c
-@@ -55,8 +55,8 @@
- struct cs42l43_patch_header {
- 	__le16 version;
- 	__le16 size;
--	u8 reserved;
--	u8 secure;
-+	__u8 reserved;
-+	__u8 secure;
- 	__le16 bss_size;
- 	__le32 apply_addr;
- 	__le32 checksum;
--- 
-2.30.2
-
+    Andrew
