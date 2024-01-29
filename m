@@ -1,178 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA3F4E1C8
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 06:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337DC4CDE0;
+	Mon, 29 Jan 2024 06:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706510389; cv=none; b=pLN0iF7PqU35QLgyS+ps9blBFrW6Vug1a8/oLS+pMxbnxsqJ+y4Nf2/LCcr81rpLpuTj9OGYnMA3ssxJGpoTLSi/uxTyYVIG7cz5ZKh8MVtZgMYrS5KLWZHVZ5J1ZQf9tl57anNCh9enyTeOEWqRohY3k9AA2dpYATBtMfKqbuw=
+	t=1706510683; cv=none; b=aA/ZLsHtK/Jxb8ojZkt9xjvynyhivdM6Gqq4Vc1EJ60oLKHOviktFcDbdXpKfgjdvFgzqgAXZx01+ch4bFQHMhqJpxyXv/o/n9M4bH0XRLPEo9/Hp3Wz2qSxG8OCMlb/igeRP6JRtPn4hpKopZHckmZtbsdx5wc6LtDNU5ao6q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706510389; c=relaxed/simple;
-	bh=B5ADz3m5i2u2lMzDcjGq4jF37gAxqS/1AYz26oq+fNc=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=tvFMhAa8FWUzEVEb2Vk6P7voiHFriHWM2Ifx6avZtjP64mjFngNxyeccRc9wGMwxfGkyP+jKou0eUpD3FdpOL2E2EgZycwi0uxeY+Xg6+F6xEommEYPqdNWpJNg3w0oqr7Xgcr2LB2nQpjfPcnhZ2uBDJgDf4jhjSVskB/iqP4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S4t98/Zu; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706510683; c=relaxed/simple;
+	bh=OxoRCOkmkae41vCfWm0QMR2mN2otuI42kdEjLO9tyNk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mtfRhtZ90dJTrc0xV3MsGAmXCVGDAM2s0lAZoPjVKK/KUWyU/GR5AsvsTZl7USnTSQgtAuOAn4p4PbO16UzFLRlpkGEIEjER1VzLwYIKjppw9tU8G6tVFvMdazfyjZH2j9eOovDvka8m+GO+Hkmt8SpQvdFBBids5skBFR0xOVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PWFgdv3Z; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S4t98/Zu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706510388; x=1738046388;
-  h=from:to:cc:subject:date:message-id;
-  bh=B5ADz3m5i2u2lMzDcjGq4jF37gAxqS/1AYz26oq+fNc=;
-  b=S4t98/ZuE52IeIp5JZTG8ZZWLWsfLmh8FyKkTYExIO9wORZNlrVs5q+4
-   rt3sIqGCJNk8C3fWcFXcxKOm14Uwil+nEfhwA1jPvcgKrOTsvxrOdMxyu
-   BC7dM697HFfjJ3KS2Q9vF98CJU+0QMYULtEaBstfN5OIzlwiwiNp+Z4Yg
-   8DisZATJp2j0nLndDlUVPhrPe/c+5xwuPxUM/bkeD9NKefk5r1qmzdOUv
-   uGituuNNFKubdug1nOEGZdneKbjlj5IopQOtESSDlo6fT6K9Ef4lSSLN/
-   wFzXAPFXZ+ttP5maDY1JMt3TRFUu3Yp5pmw/E/BKD1Aojg574RO9leQsY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="9977257"
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="9977257"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 22:39:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="36028748"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 22:39:26 -0800
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: tglx@linutronix.de,
-	dave.hansen@linux.intel.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	kirill.shutemov@linux.intel.com,
-	peterz@infradead.org,
-	mingo@redhat.com
-Cc: x86@kernel.org,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	qiuxu.zhuo@intel.com
-Subject: [PATCH 1/1] x86/lib: Revert to _ASM_EXTABLE_UA() for {get,put}_user() fixups
-Date: Mon, 29 Jan 2024 14:38:42 +0800
-Message-Id: <20240129063842.61584-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWFgdv3Z"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-68c3ac1fdb9so14734196d6.2;
+        Sun, 28 Jan 2024 22:44:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706510681; x=1707115481; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3sIeOV9vvB6C8MqwdJNXvnHEjm5BSZtIFxk4IlFlbAE=;
+        b=PWFgdv3ZLyYn0BUBuz5b/IehZZKk7sUjSbMY2mQIt1axObMEUnzxY9oaskcv4hWZ+5
+         17GgHrWcDyWynFGpKUk0qaQmWK0aY7Nxdkp0ljZdFB6qa0TpyJoXEz5VvHIaRT5fPNbK
+         EXTWlZntxMgiPnX9YRh37VKMxcdW8fs1imj1q1nqXg0q7sqszG9p4S2ipY+ThhRvN0h1
+         bqiSHD0LP73BZxLrgS6u5s1Eu+sM/ueShLHbtw7ZOHfMwTZbKuGrQLnK/p+J3786m77l
+         uFRyR3qkqu537hPFwFcAP4Nkj020IX2yhrqIHNlwpN9V0bBC5ZxwQmnMxGbYkhxo7yD9
+         WxOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706510681; x=1707115481;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3sIeOV9vvB6C8MqwdJNXvnHEjm5BSZtIFxk4IlFlbAE=;
+        b=AaCbTj07hVV+r1HfJ6byHHyh79y07TsWzhLI/Mffjb0sAqdf3OOPQgaukXSTT/4kUx
+         jFotg2j/t9f3t4jXwmAYsX2RSHH/xIVGI0U1HFhrmMAdZ7N3VB5iegppT00TJGVdpAhC
+         zvsT+8hSyE4Mlp0zbnSz8X8YfMnRdZ83h3iKOVxugv4uVpC4jg7rKU+dy0Sfi9DpRZ5E
+         VE+cHIgdz8SQzQcMU14fqnGKcDZ6EzEonSRnaEza6f41y0nTaqQ5a8foKpDvuwnpfPPy
+         wkv2miLyGfw1gKn7NFn4Idf9mkJ/2gTOKGG6xvMktvp3ue2cqhayCvqVJnjzCVuOq6uB
+         eTrQ==
+X-Gm-Message-State: AOJu0YwLo1LJX5tC4I2DZQOQP7mhGlqUSwMenwYbBfFd6QV9j1lg8CtE
+	V6pfQqHEQl1RXiy6B9VIciDNY/j47fOi2oziZhNgQWR1rlwkGSFhoxcJ5h5gbqgKCNl6ER7N84U
+	4/dQaf0J4JRakfrjE1ul6QZ3417Q=
+X-Google-Smtp-Source: AGHT+IFfnDR1hP2vNcK5/+uNBDfC+cRSdRdOBWtG/DpVWbvO1oPjEMoTq+dNVq51e1c6V3N7S06sP6xZmzYAK3sGg6M=
+X-Received: by 2002:ad4:576f:0:b0:681:7c2b:d86e with SMTP id
+ r15-20020ad4576f000000b006817c2bd86emr5735432qvx.114.1706510681049; Sun, 28
+ Jan 2024 22:44:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240126150209.367ff402@gandalf.local.home> <CAHk-=wgZEHwFRgp2Q8_-OtpCtobbuFPBmPTZ68qN3MitU-ub=Q@mail.gmail.com>
+ <20240126162626.31d90da9@gandalf.local.home> <CAHk-=wj8WygQNgoHerp-aKyCwFxHeyKMguQszVKyJfi-=Yfadw@mail.gmail.com>
+ <CAHk-=whNfNti-mn6vhL-v-WZnn0i7ZAbwSf_wNULJeyanhPOgg@mail.gmail.com>
+ <CAHk-=wj+DsZZ=2iTUkJ-Nojs9fjYMvPs1NuoM3yK7aTDtJfPYQ@mail.gmail.com>
+ <20240128175111.69f8b973@rorschach.local.home> <CAHk-=wjHc48QSGWtgBekej7F+Ln3b0j1tStcqyEf3S-Pj_MHHw@mail.gmail.com>
+ <20240128185943.6920388b@rorschach.local.home> <20240128192108.6875ecf4@rorschach.local.home>
+ <CAHk-=wg7tML8L+27j=7fh8Etk4Wvo0Ay3mS5U7JOTEGxjy1viA@mail.gmail.com> <20240128210938.436fc3b4@rorschach.local.home>
+In-Reply-To: <20240128210938.436fc3b4@rorschach.local.home>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 29 Jan 2024 08:44:29 +0200
+Message-ID: <CAOQ4uxikMN9EapL5+6jtMn5Ahe4h7wGZOgEsdsjy87v72FxJDw@mail.gmail.com>
+Subject: Re: [PATCH] eventfs: Have inodes have unique inode numbers
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Devel <linux-trace-devel@vger.kernel.org>, Christian Brauner <brauner@kernel.org>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 
-During the memory error injection test on kernels >= v6.4, kernel
-panics occurred like below. However, this issue couldn't be
-reproduced on kernels <= v6.3.
+> >
+> > You need to deal with the realities of having made a filesystem. And
+> > one of those realities is that you don't control the dentries, and you
+> > can't randomly cache dentry state and then do things behind the VFS
+> > layer's back.
+>
+> I'm not. I'm trying to let VFS know a directory is deleted. Because
+> when you delete a kprobe, the directory that has the control files for
+> that kprobe (like enabling it) go away too. I have to let VFS know that
+> the directory is deleted, just like procfs has to tell it when a
+> directory for a process id is no more.
+>
+> You don't kill tasks with: rmdir /proc/1234
+>
+> And you don't delete kprobes with: rmdir events/kprobe/sched
+>
+> >
+> > So remove that broken function. Really.  You did a filesystem, and
+> > that means that you had better play by the VFS rules.
+> >
+> > End of discussion.
+>
+> And I do it just like debugfs when it deletes files outside of VFS or
+> procfs, and pretty much most virtual file systems.
+>
 
-  mce: [Hardware Error]: CPU 296: Machine Check Exception: f Bank 1: bd80000000100134
-  mce: [Hardware Error]: RIP 10:<ffffffff821b9776> {__get_user_nocheck_4+0x6/0x20}
-  mce: [Hardware Error]: TSC 411a93533ed ADDR 346a8730040 MISC 86
-  mce: [Hardware Error]: PROCESSOR 0:a06d0 TIME 1706000767 SOCKET 1 APIC 211 microcode 80001490
-  mce: [Hardware Error]: Run the above through 'mcelog --ascii'
-  mce: [Hardware Error]: Machine check: Data load in unrecoverable area of kernel
-  Kernel panic - not syncing: Fatal local machine check
+I think it is better if we used the term "pseudo" file systems, because
+to me VFS already stands for "virtual file system".
 
-MCE can recover from an in-kernel #MC if the fixup type is EX_TYPE_UACCESS,
-explicitly indicating that the kernel is attempting to access userspace
-memory. However, MCE can only panic the kernel for an in-kernel #MC if the
-fixup type is EX_TYPE_DEFAULT as it includes various fixup types that MCE
-may not recover from.
+> >
+> > Now, you can then make your own "read" and "lookup" etc functions say
+> > "if the backing store data has been marked dead, I'll not do this".
+> > That's *YOUR* data structures, and that's your choice.
+> >
+> > But you need to STOP thinking you can play games with dentries.  And
+> > you need to stop making up BS arguments for why  you should be able
+> > to.
+> >
+> > So if you are thinking of a "Here's how to do a virtual filesystem"
+> > talk, I would suggest you start with one single word: "Don't".
+> >
+> > I'm convinced that we have made it much too easy to do a half-arsed
+> > virtual filesystem. And eventfs is way beyond half-arsed.
+> >
+> > It's now gone from half-arsed to "I told you how to do this right, and
+> > you are still arguing". That makes it full-arsed.
+> >
+> > So just stop the arsing around, and just get rid of those _broken_ dentry games.
+>
+> Sorry, but you didn't prove your point. The example you gave me is
+> already covered. Please tell me when a kprobe goes away, how do I let
+> VFS know? Currently the tracing code (like kprobes and synthetic
+> events) calls eventfs_remove_dir() with just a reference to that ei
+> eventfs_inode structure. I currently use the ei->dentry to tell VFS
+> "this directory is being deleted". What other means do I have to
+> accomplish the same thing?
+>
 
-ex_handler_uaccess() would throw a #GP WARN_ONCE() if users gave
-non-canonical addresses (with bit 63 clear) to {get, put}_user(), which was
-unexpected. Therefore, the previous commit 'b19b74bc99b1' replaced
-_ASM_EXTABLE_UA() with _ASM_EXTABLE() for {get, put}_user() fixups where
-the corresponding exception handler ex_handler_default() does not have
-a #GP WARN_ONCE(). However, the new fixup type EX_TYPE_DEFAULT resulted
-in the mentioned kernel panic.
+Would kernfs_node_dentry() have been useful in that case?
+Just looking at kernfs_node and eventfs_inode gives a very strong
+smell of reinventing.
 
-The subsequent commit '6014bc27561f2' (merged in v6.4) added the check
-gp_fault_address_ok() right before #GP WARN_ONCE() in ex_handler_uaccess().
-This check can avoid the #GP WARN_ONCE() for a non-canonical address (with
-bit63 clear) in ex_handler_uaccess().
+Note that the fact that eventfs has no rename makes the whole dentry
+business a lot less complicated than it is in the general VFS case -
+IIUC, an eventfs path either exists or it does not exist, but if it exists,
+it conceptually always refers to the same underlying object (kprobe).
 
-So with the subsequent commit '6014bc27561f2', now it's OK to revert to
-_ASM_EXTABLE_UA() for {get,put}_user() exception fixups as it can both
-avoid the #GP WARN_ONCE() in ex_handler_uaccess() and fix the panic
-mentioned above.
+I am not claiming that kernfs can do everything that eventfs needs  -
+I don't know, because I did not look into it.
 
-Fixes: b19b74bc99b1 ("x86/mm: Rework address range check in get_user() and put_user()")
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/lib/getuser.S | 24 ++++++++++++------------
- arch/x86/lib/putuser.S | 20 ++++++++++----------
- 2 files changed, 22 insertions(+), 22 deletions(-)
+But the concept of detaching the pseudo filesystem backing objects
+from the vfs objects was already invented once and Greg has also
+said the same thing.
 
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index 20ef350a60fb..10d5ed8b5990 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -163,23 +163,23 @@ SYM_CODE_END(__get_user_8_handle_exception)
- #endif
- 
- /* get_user */
--	_ASM_EXTABLE(1b, __get_user_handle_exception)
--	_ASM_EXTABLE(2b, __get_user_handle_exception)
--	_ASM_EXTABLE(3b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(1b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(2b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(3b, __get_user_handle_exception)
- #ifdef CONFIG_X86_64
--	_ASM_EXTABLE(4b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(4b, __get_user_handle_exception)
- #else
--	_ASM_EXTABLE(4b, __get_user_8_handle_exception)
--	_ASM_EXTABLE(5b, __get_user_8_handle_exception)
-+	_ASM_EXTABLE_UA(4b, __get_user_8_handle_exception)
-+	_ASM_EXTABLE_UA(5b, __get_user_8_handle_exception)
- #endif
- 
- /* __get_user */
--	_ASM_EXTABLE(6b, __get_user_handle_exception)
--	_ASM_EXTABLE(7b, __get_user_handle_exception)
--	_ASM_EXTABLE(8b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(6b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(7b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(8b, __get_user_handle_exception)
- #ifdef CONFIG_X86_64
--	_ASM_EXTABLE(9b, __get_user_handle_exception)
-+	_ASM_EXTABLE_UA(9b, __get_user_handle_exception)
- #else
--	_ASM_EXTABLE(9b, __get_user_8_handle_exception)
--	_ASM_EXTABLE(10b, __get_user_8_handle_exception)
-+	_ASM_EXTABLE_UA(9b, __get_user_8_handle_exception)
-+	_ASM_EXTABLE_UA(10b, __get_user_8_handle_exception)
- #endif
-diff --git a/arch/x86/lib/putuser.S b/arch/x86/lib/putuser.S
-index 2877f5934177..975c9c18263d 100644
---- a/arch/x86/lib/putuser.S
-+++ b/arch/x86/lib/putuser.S
-@@ -133,15 +133,15 @@ SYM_CODE_START_LOCAL(__put_user_handle_exception)
- 	RET
- SYM_CODE_END(__put_user_handle_exception)
- 
--	_ASM_EXTABLE(1b, __put_user_handle_exception)
--	_ASM_EXTABLE(2b, __put_user_handle_exception)
--	_ASM_EXTABLE(3b, __put_user_handle_exception)
--	_ASM_EXTABLE(4b, __put_user_handle_exception)
--	_ASM_EXTABLE(5b, __put_user_handle_exception)
--	_ASM_EXTABLE(6b, __put_user_handle_exception)
--	_ASM_EXTABLE(7b, __put_user_handle_exception)
--	_ASM_EXTABLE(9b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(1b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(2b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(3b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(4b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(5b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(6b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(7b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(9b, __put_user_handle_exception)
- #ifdef CONFIG_X86_32
--	_ASM_EXTABLE(8b, __put_user_handle_exception)
--	_ASM_EXTABLE(10b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(8b, __put_user_handle_exception)
-+	_ASM_EXTABLE_UA(10b, __put_user_handle_exception)
- #endif
--- 
-2.17.1
+My *feeling* at this point is that the best course of action is to use
+kernfs and to improve kernfs to meet eventfs needs, if anything needs
+improving at all.
 
+IMO, the length and content of this correspondence in itself
+is proof that virtual file systems should use an abstraction that
+is much less flexible than the VFS.
+
+Think of it this way - kernefs and VFS are both under-documented,
+but the chances of getting kernfs well documented are far better
+than ever being able to document all the subtleties of VFS for mortals.
+
+IOW, I would be happy if instead of the LSFMM topic
+"Making pseudo file systems inodes/dentries more like normal file systems"
+We would be talking about
+"Best practices for writing a pseudo filesystem" and/or
+"Missing kernfs functionality for writing pseudo filesystems"
+
+Thanks,
+Amir.
