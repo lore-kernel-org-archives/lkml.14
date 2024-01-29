@@ -1,501 +1,147 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD15E65BD4
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC273657A9
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706536032; cv=none; b=PfoGOUYjgMdCxLjeBNGSKaVlfJSwCf5ftoKPwIh1ymTq5cvR8phwKbonnkZrEeRQx0R2G4DNIjP6XPSIOomjtGxe7XjDI6goChY6iM0L9px6j32ybxqr1C0lywBru0Wh2KnlIaFrQMmMoG+72U1+nBjCKFzjIE9w39LgPbNH0qU=
+	t=1706536077; cv=none; b=Rro9aQXTqcdYYw8LaKJG99h2hazpXMmnbWYJSrQGyOqkXVM9UXGH+9ymuGK3ydGFn9QDGkvGkR99I2njRsPiUnU6kQsKwzLEVy/tjKmRSpfczhUOlP/TUfeMJyJVHQb/UV6yLKKP6MOUgKMtAf1ANp+BblfaBevaI9eW65L9E8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706536032; c=relaxed/simple;
-	bh=wmCtQ4GIveToA/t4CEvBL4qVJ0g7rHwjvfwiFaysG50=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=acqCF8HD7r0Zm1Hk5CrkZb9OLhOtajy3fG3CXOE1diNeJY2sxupXPy/ynueflVldVe2UJ9+bcKE1RSpK2eMdDm/YJCQNO291/KA84Ho0X3wdbUCnazd55jxbqW0O4R8bJYeFrQhE5MqztYbGIFcY6h+yY0HABml65Dw2/J37SKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TNqN02YmzzbcRg;
-	Mon, 29 Jan 2024 21:46:40 +0800 (CST)
-Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
-	by mail.maildlp.com (Postfix) with ESMTPS id B5DC218007A;
-	Mon, 29 Jan 2024 21:47:05 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 29 Jan 2024 21:47:03 +0800
-From: Tong Tiangen <tongtiangen@huawei.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, Robin
- Murphy <robin.murphy@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
- Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Michael Ellerman
-	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
-	<christophe.leroy@csgroup.eu>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<kasan-dev@googlegroups.com>, Tong Tiangen <tongtiangen@huawei.com>,
-	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
-Subject: [PATCH v10 5/6] arm64: support copy_mc_[user]_highpage()
-Date: Mon, 29 Jan 2024 21:46:51 +0800
-Message-ID: <20240129134652.4004931-6-tongtiangen@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240129134652.4004931-1-tongtiangen@huawei.com>
-References: <20240129134652.4004931-1-tongtiangen@huawei.com>
+	s=arc-20240116; t=1706536077; c=relaxed/simple;
+	bh=21jznJn2yyDb6oC/magzEzz9zV3F+RCWlsRUoVdYgTA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D/4mDT3h2jnOE6EHnnzqyD/sSVCb+cs7HggifMblLSS4q1/yvMOf3j6KNZSQ5ABJ7zoSvRiCtdCUmNt8kxbSUXbMJ+y4THNMzoM9fzo1EbZukVy7QWmvo7+7I8gJQzOCM/lVAkbITSGvhBe3V0uGgqx0ehoCfW/D1d4nC6loERE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xLt8otU/; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xLt8otU/"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40ef6da20feso5417735e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:47:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706536072; x=1707140872; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=byhnXqD/Gkvhb9bjZRgQdgbOondAaOF5MjikPjTLXrc=;
+        b=xLt8otU/sk3R2wcsfa0GTVQlpr2h5oCA3g11Ji2RX7yVMZ+Jy2LeC6AGiF9dS/Hqd2
+         ZlZLkF4Qj2f1R1zbe/7pgMhZ5m5lAAH10Jw/6Lo04ooBUsBjDEgnnKvJO/nhY8hOF5+I
+         T/8SCE3GQlpR5ssnq6udr8Rts3+8HZDhGONVzkS11fZglpO+BMfQGdKEShX7DbxeqD5E
+         FgaY4LHXeyORAgGhI4NsGnIEFiI8ToBPghPQtW8n6qSODEBy2ws1uiVYWtzOVXQC6WjD
+         VWyWGY+Qxh0Xct3TAlxklVlCGy16hFrEDsvsQPHepVKBdKGxHVjaOFECmNpVWoq79ILW
+         25pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706536072; x=1707140872;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=byhnXqD/Gkvhb9bjZRgQdgbOondAaOF5MjikPjTLXrc=;
+        b=JkFqClwTQrX0T9nkDu5wovGaEkPJYsBdDkMuA6OCaFu5ZfywqM0tXN9FKFFUCuZHfu
+         Pr4ZqVuGhcp5QsDKwVRtVs7PP3/WFpSqSlRmewjLATLBXQk0dW+l8Bk5GKw/lU2raVCq
+         mlXmLtdsCEe9R0X3kfleUu60lB0BRRiNurGpbI/YD/SlDb+/DnrxlFyDILJcslX/3n/k
+         yyrwGR5cwn8J96eQWFaDD/a3n0QKDlGYJs53dbgyrILwO2WMfXL15L2VXzC1naiuIFF2
+         0eA3DJBfqYoEL34zezHvOw9GVwpN6XLV+iTEFLWD+Xu4010E4VqgtsbbWhueeiYe+YL3
+         /4GQ==
+X-Gm-Message-State: AOJu0YyUa+WmzygbK6bLoW5/P7k+34Lz5fu5yxw9cHiHCmIes3u4c/cS
+	2yjFFjZHLap0i/i2rz7/pGZdcmKWFgK+JpMHAJ6E2wQgb52lom3o1CplNDpDnSQ=
+X-Google-Smtp-Source: AGHT+IGqogLrgYhcgplVsYkT3hYqcyoHgLEBbbw8STFX++f8EIwc2vbsjJ9GItKiK5AqTowVfrMSCQ==
+X-Received: by 2002:a05:600c:1c26:b0:40e:e8e3:40c2 with SMTP id j38-20020a05600c1c2600b0040ee8e340c2mr4715714wms.12.1706536072116;
+        Mon, 29 Jan 2024 05:47:52 -0800 (PST)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id h13-20020a05600c314d00b0040efb445698sm1340224wmo.5.2024.01.29.05.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 05:47:51 -0800 (PST)
+Message-ID: <7d42f80acf7c8bd3882f5ac253a761c71de2034c.camel@linaro.org>
+Subject: Re: [PATCH 9/9] clk: samsung: gs101: don't CLK_IGNORE_UNUSED
+ peric1_sysreg clock
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
+ tudor.ambarus@linaro.org, willmcvicker@google.com,
+ semen.protsenko@linaro.org,  alim.akhtar@samsung.com,
+ s.nawrocki@samsung.com, tomasz.figa@gmail.com,  cw00.choi@samsung.com,
+ linux-arm-kernel@lists.infradead.org,  linux-samsung-soc@vger.kernel.org,
+ linux-clk@vger.kernel.org,  devicetree@vger.kernel.org
+Date: Mon, 29 Jan 2024 13:47:49 +0000
+In-Reply-To: <74b63fd9-bf7a-4a88-bfa9-a975a4f12bca@linaro.org>
+References: <20240127001926.495769-1-andre.draszik@linaro.org>
+	 <20240127001926.495769-10-andre.draszik@linaro.org>
+	 <74b63fd9-bf7a-4a88-bfa9-a975a4f12bca@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600017.china.huawei.com (7.193.23.234)
 
-Currently, many scenarios that can tolerate memory errors when copying page
-have been supported in the kernel[1][2][3], all of which are implemented by
-copy_mc_[user]_highpage(). arm64 should also support this mechanism.
+Hi=C2=A0Krzysztof,
 
-Due to mte, arm64 needs to have its own copy_mc_[user]_highpage()
-architecture implementation, macros __HAVE_ARCH_COPY_MC_HIGHPAGE and
-__HAVE_ARCH_COPY_MC_USER_HIGHPAGE have been added to control it.
+On Mon, 2024-01-29 at 12:03 +0100, Krzysztof Kozlowski wrote:
+> On 27/01/2024 01:19, Andr=C3=A9 Draszik wrote:
+> > Now that we have hooked it up in the DTS, we can drop the
+>=20
+> Your driver patch cannot depend on DTS. Not for a new platform. I am
+> repeating this all the time last days...
+>=20
+> > CLK_IGNORE_UNUSED from here.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > ---
+> > =C2=A0drivers/clk/samsung/clk-gs101.c | 2 +-
+> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-=
+gs101.c
+> > index 7f6c3b52d9ff..d55ed64d0e29 100644
+> > --- a/drivers/clk/samsung/clk-gs101.c
+> > +++ b/drivers/clk/samsung/clk-gs101.c
+> > @@ -3393,7 +3393,7 @@ static const struct samsung_gate_clock peric1_gat=
+e_clks[] __initconst =3D {
+> > =C2=A0	GATE(CLK_GOUT_PERIC1_SYSREG_PERIC1_PCLK,
+> > =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 "gout_peric1_sysreg_peric1_pclk", "mout=
+_peric1_bus_user",
+> > =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0 CLK_CON_GAT_GOUT_BLK_PERIC1_UID_SYSREG_=
+PERIC1_IPCLKPORT_PCLK,
+> > -	=C2=A0=C2=A0=C2=A0=C2=A0 21, CLK_IGNORE_UNUSED, 0),
+>=20
+> I don't understand. You just added this clock in this patchset. This
+> means that your patch #3 is incorrect.
 
-Add new helper copy_mc_page() which provide a page copy implementation with
-machine check safe. The copy_mc_page() in copy_mc_page.S is largely borrows
-from copy_page() in copy_page.S and the main difference is copy_mc_page()
-add extable entry to every load/store insn to support machine check safe.
+In patch #3 I'm hooking up all the clocks to Linux. If I don't CLK_IGNORE_U=
+NUSED
+for the 'sysreg' pclk in patch #3, then it'll hang on loading drivers that
+require sysreg access (because Linux disabled the clock).
 
-Add new extable type EX_TYPE_COPY_MC_PAGE_ERR_ZERO which used in
-copy_mc_page().
+I can not change patch #8 to come between 2 and 3 either, because at that s=
+tage
+neither the clock nor the DT node reference &cmu_peric1 actually exist, and=
+ the
+clock and can't be claimed by sysreg.
 
-[1]a873dfe1032a ("mm, hwpoison: try to recover from copy-on write faults")
-[2]5f2500b93cc9 ("mm/khugepaged: recover from poisoned anonymous memory")
-[3]6b970599e807 ("mm: hwpoison: support recovery from ksm_might_need_to_copy()")
+Since we can not mix DT and driver changes in the same commit, I can not me=
+rge
+patches #3 and #4 and #8 either.
 
-Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
----
- arch/arm64/include/asm/asm-extable.h | 15 ++++++
- arch/arm64/include/asm/assembler.h   |  4 ++
- arch/arm64/include/asm/mte.h         |  5 ++
- arch/arm64/include/asm/page.h        | 10 ++++
- arch/arm64/lib/Makefile              |  2 +
- arch/arm64/lib/copy_mc_page.S        | 78 ++++++++++++++++++++++++++++
- arch/arm64/lib/mte.S                 | 27 ++++++++++
- arch/arm64/mm/copypage.c             | 66 ++++++++++++++++++++---
- arch/arm64/mm/extable.c              |  7 +--
- include/linux/highmem.h              |  8 +++
- 10 files changed, 213 insertions(+), 9 deletions(-)
- create mode 100644 arch/arm64/lib/copy_mc_page.S
+I had to do it this way so that the platform always boots for every commit =
+to keep
+things bisectable.
 
-diff --git a/arch/arm64/include/asm/asm-extable.h b/arch/arm64/include/asm/asm-extable.h
-index 980d1dd8e1a3..819044fefbe7 100644
---- a/arch/arm64/include/asm/asm-extable.h
-+++ b/arch/arm64/include/asm/asm-extable.h
-@@ -10,6 +10,7 @@
- #define EX_TYPE_UACCESS_ERR_ZERO	2
- #define EX_TYPE_KACCESS_ERR_ZERO	3
- #define EX_TYPE_LOAD_UNALIGNED_ZEROPAD	4
-+#define EX_TYPE_COPY_MC_PAGE_ERR_ZERO	5
- 
- /* Data fields for EX_TYPE_UACCESS_ERR_ZERO */
- #define EX_DATA_REG_ERR_SHIFT	0
-@@ -51,6 +52,16 @@
- #define _ASM_EXTABLE_UACCESS(insn, fixup)				\
- 	_ASM_EXTABLE_UACCESS_ERR_ZERO(insn, fixup, wzr, wzr)
- 
-+#define _ASM_EXTABLE_COPY_MC_PAGE_ERR_ZERO(insn, fixup, err, zero)	\
-+	__ASM_EXTABLE_RAW(insn, fixup, 					\
-+			  EX_TYPE_COPY_MC_PAGE_ERR_ZERO,		\
-+			  (						\
-+			    EX_DATA_REG(ERR, err) |			\
-+			    EX_DATA_REG(ZERO, zero)			\
-+			  ))
-+
-+#define _ASM_EXTABLE_COPY_MC_PAGE(insn, fixup)				\
-+	_ASM_EXTABLE_COPY_MC_PAGE_ERR_ZERO(insn, fixup, wzr, wzr)
- /*
-  * Create an exception table entry for uaccess `insn`, which will branch to `fixup`
-  * when an unhandled fault is taken.
-@@ -59,6 +70,10 @@
- 	_ASM_EXTABLE_UACCESS(\insn, \fixup)
- 	.endm
- 
-+	.macro          _asm_extable_copy_mc_page, insn, fixup
-+	_ASM_EXTABLE_COPY_MC_PAGE(\insn, \fixup)
-+	.endm
-+
- /*
-  * Create an exception table entry for `insn` if `fixup` is provided. Otherwise
-  * do nothing.
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 513787e43329..e1d8ce155878 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -154,6 +154,10 @@ lr	.req	x30		// link register
- #define CPU_LE(code...) code
- #endif
- 
-+#define CPY_MC(l, x...)		\
-+9999:   x;			\
-+	_asm_extable_copy_mc_page    9999b, l
-+
- /*
-  * Define a macro that constructs a 64-bit value by concatenating two
-  * 32-bit registers. Note that on big endian systems the order of the
-diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
-index 91fbd5c8a391..9cdded082dd4 100644
---- a/arch/arm64/include/asm/mte.h
-+++ b/arch/arm64/include/asm/mte.h
-@@ -92,6 +92,7 @@ static inline bool try_page_mte_tagging(struct page *page)
- void mte_zero_clear_page_tags(void *addr);
- void mte_sync_tags(pte_t pte, unsigned int nr_pages);
- void mte_copy_page_tags(void *kto, const void *kfrom);
-+int mte_copy_mc_page_tags(void *kto, const void *kfrom);
- void mte_thread_init_user(void);
- void mte_thread_switch(struct task_struct *next);
- void mte_cpu_setup(void);
-@@ -128,6 +129,10 @@ static inline void mte_sync_tags(pte_t pte, unsigned int nr_pages)
- static inline void mte_copy_page_tags(void *kto, const void *kfrom)
- {
- }
-+static inline int mte_copy_mc_page_tags(void *kto, const void *kfrom)
-+{
-+	return 0;
-+}
- static inline void mte_thread_init_user(void)
- {
- }
-diff --git a/arch/arm64/include/asm/page.h b/arch/arm64/include/asm/page.h
-index 2312e6ee595f..304cc86b8a10 100644
---- a/arch/arm64/include/asm/page.h
-+++ b/arch/arm64/include/asm/page.h
-@@ -29,6 +29,16 @@ void copy_user_highpage(struct page *to, struct page *from,
- void copy_highpage(struct page *to, struct page *from);
- #define __HAVE_ARCH_COPY_HIGHPAGE
- 
-+#ifdef CONFIG_ARCH_HAS_COPY_MC
-+int copy_mc_page(void *to, const void *from);
-+int copy_mc_highpage(struct page *to, struct page *from);
-+#define __HAVE_ARCH_COPY_MC_HIGHPAGE
-+
-+int copy_mc_user_highpage(struct page *to, struct page *from,
-+		unsigned long vaddr, struct vm_area_struct *vma);
-+#define __HAVE_ARCH_COPY_MC_USER_HIGHPAGE
-+#endif
-+
- struct folio *vma_alloc_zeroed_movable_folio(struct vm_area_struct *vma,
- 						unsigned long vaddr);
- #define vma_alloc_zeroed_movable_folio vma_alloc_zeroed_movable_folio
-diff --git a/arch/arm64/lib/Makefile b/arch/arm64/lib/Makefile
-index 29490be2546b..a2fd865b816d 100644
---- a/arch/arm64/lib/Makefile
-+++ b/arch/arm64/lib/Makefile
-@@ -15,6 +15,8 @@ endif
- 
- lib-$(CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE) += uaccess_flushcache.o
- 
-+lib-$(CONFIG_ARCH_HAS_COPY_MC) += copy_mc_page.o
-+
- obj-$(CONFIG_CRC32) += crc32.o
- 
- obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
-diff --git a/arch/arm64/lib/copy_mc_page.S b/arch/arm64/lib/copy_mc_page.S
-new file mode 100644
-index 000000000000..524534d26d86
---- /dev/null
-+++ b/arch/arm64/lib/copy_mc_page.S
-@@ -0,0 +1,78 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ */
-+
-+#include <linux/linkage.h>
-+#include <linux/const.h>
-+#include <asm/assembler.h>
-+#include <asm/page.h>
-+#include <asm/cpufeature.h>
-+#include <asm/alternative.h>
-+#include <asm/asm-extable.h>
-+
-+/*
-+ * Copy a page from src to dest (both are page aligned) with machine check
-+ *
-+ * Parameters:
-+ *	x0 - dest
-+ *	x1 - src
-+ * Returns:
-+ * 	x0 - Return 0 if copy success, or -EFAULT if anything goes wrong
-+ *	     while copying.
-+ */
-+SYM_FUNC_START(__pi_copy_mc_page)
-+CPY_MC(9998f, ldp	x2, x3, [x1])
-+CPY_MC(9998f, ldp	x4, x5, [x1, #16])
-+CPY_MC(9998f, ldp	x6, x7, [x1, #32])
-+CPY_MC(9998f, ldp	x8, x9, [x1, #48])
-+CPY_MC(9998f, ldp	x10, x11, [x1, #64])
-+CPY_MC(9998f, ldp	x12, x13, [x1, #80])
-+CPY_MC(9998f, ldp	x14, x15, [x1, #96])
-+CPY_MC(9998f, ldp	x16, x17, [x1, #112])
-+
-+	add	x0, x0, #256
-+	add	x1, x1, #128
-+1:
-+	tst	x0, #(PAGE_SIZE - 1)
-+
-+CPY_MC(9998f, stnp	x2, x3, [x0, #-256])
-+CPY_MC(9998f, ldp	x2, x3, [x1])
-+CPY_MC(9998f, stnp	x4, x5, [x0, #16 - 256])
-+CPY_MC(9998f, ldp	x4, x5, [x1, #16])
-+CPY_MC(9998f, stnp	x6, x7, [x0, #32 - 256])
-+CPY_MC(9998f, ldp	x6, x7, [x1, #32])
-+CPY_MC(9998f, stnp	x8, x9, [x0, #48 - 256])
-+CPY_MC(9998f, ldp	x8, x9, [x1, #48])
-+CPY_MC(9998f, stnp	x10, x11, [x0, #64 - 256])
-+CPY_MC(9998f, ldp	x10, x11, [x1, #64])
-+CPY_MC(9998f, stnp	x12, x13, [x0, #80 - 256])
-+CPY_MC(9998f, ldp	x12, x13, [x1, #80])
-+CPY_MC(9998f, stnp	x14, x15, [x0, #96 - 256])
-+CPY_MC(9998f, ldp	x14, x15, [x1, #96])
-+CPY_MC(9998f, stnp	x16, x17, [x0, #112 - 256])
-+CPY_MC(9998f, ldp	x16, x17, [x1, #112])
-+
-+	add	x0, x0, #128
-+	add	x1, x1, #128
-+
-+	b.ne	1b
-+
-+CPY_MC(9998f, stnp	x2, x3, [x0, #-256])
-+CPY_MC(9998f, stnp	x4, x5, [x0, #16 - 256])
-+CPY_MC(9998f, stnp	x6, x7, [x0, #32 - 256])
-+CPY_MC(9998f, stnp	x8, x9, [x0, #48 - 256])
-+CPY_MC(9998f, stnp	x10, x11, [x0, #64 - 256])
-+CPY_MC(9998f, stnp	x12, x13, [x0, #80 - 256])
-+CPY_MC(9998f, stnp	x14, x15, [x0, #96 - 256])
-+CPY_MC(9998f, stnp	x16, x17, [x0, #112 - 256])
-+
-+	mov x0, #0
-+	ret
-+
-+9998:	mov x0, #-EFAULT
-+	ret
-+
-+SYM_FUNC_END(__pi_copy_mc_page)
-+SYM_FUNC_ALIAS(copy_mc_page, __pi_copy_mc_page)
-+EXPORT_SYMBOL(copy_mc_page)
-diff --git a/arch/arm64/lib/mte.S b/arch/arm64/lib/mte.S
-index 5018ac03b6bf..2b748e83f6cf 100644
---- a/arch/arm64/lib/mte.S
-+++ b/arch/arm64/lib/mte.S
-@@ -80,6 +80,33 @@ SYM_FUNC_START(mte_copy_page_tags)
- 	ret
- SYM_FUNC_END(mte_copy_page_tags)
- 
-+/*
-+ * Copy the tags from the source page to the destination one wiht machine check safe
-+ *   x0 - address of the destination page
-+ *   x1 - address of the source page
-+ * Returns:
-+ *   x0 - Return 0 if copy success, or
-+ *        -EFAULT if anything goes wrong while copying.
-+ */
-+SYM_FUNC_START(mte_copy_mc_page_tags)
-+	mov	x2, x0
-+	mov	x3, x1
-+	multitag_transfer_size x5, x6
-+1:
-+CPY_MC(2f, ldgm	x4, [x3])
-+CPY_MC(2f, stgm	x4, [x2])
-+	add	x2, x2, x5
-+	add	x3, x3, x5
-+	tst	x2, #(PAGE_SIZE - 1)
-+	b.ne	1b
-+
-+	mov x0, #0
-+	ret
-+
-+2:	mov x0, #-EFAULT
-+	ret
-+SYM_FUNC_END(mte_copy_mc_page_tags)
-+
- /*
-  * Read tags from a user buffer (one tag per byte) and set the corresponding
-  * tags at the given kernel address. Used by PTRACE_POKEMTETAGS.
-diff --git a/arch/arm64/mm/copypage.c b/arch/arm64/mm/copypage.c
-index a7bb20055ce0..9765e40cde6c 100644
---- a/arch/arm64/mm/copypage.c
-+++ b/arch/arm64/mm/copypage.c
-@@ -14,6 +14,25 @@
- #include <asm/cpufeature.h>
- #include <asm/mte.h>
- 
-+static int do_mte(struct page *to, struct page *from, void *kto, void *kfrom, bool mc)
-+{
-+	int ret = 0;
-+
-+	if (system_supports_mte() && page_mte_tagged(from)) {
-+		/* It's a new page, shouldn't have been tagged yet */
-+		WARN_ON_ONCE(!try_page_mte_tagging(to));
-+		if (mc)
-+			ret = mte_copy_mc_page_tags(kto, kfrom);
-+		else
-+			mte_copy_page_tags(kto, kfrom);
-+
-+		if (!ret)
-+			set_page_mte_tagged(to);
-+	}
-+
-+	return ret;
-+}
-+
- void copy_highpage(struct page *to, struct page *from)
- {
- 	void *kto = page_address(to);
-@@ -24,12 +43,7 @@ void copy_highpage(struct page *to, struct page *from)
- 	if (kasan_hw_tags_enabled())
- 		page_kasan_tag_reset(to);
- 
--	if (system_supports_mte() && page_mte_tagged(from)) {
--		/* It's a new page, shouldn't have been tagged yet */
--		WARN_ON_ONCE(!try_page_mte_tagging(to));
--		mte_copy_page_tags(kto, kfrom);
--		set_page_mte_tagged(to);
--	}
-+	do_mte(to, from, kto, kfrom, false);
- }
- EXPORT_SYMBOL(copy_highpage);
- 
-@@ -40,3 +54,43 @@ void copy_user_highpage(struct page *to, struct page *from,
- 	flush_dcache_page(to);
- }
- EXPORT_SYMBOL_GPL(copy_user_highpage);
-+
-+#ifdef CONFIG_ARCH_HAS_COPY_MC
-+/*
-+ * Return -EFAULT if anything goes wrong while copying page or mte.
-+ */
-+int copy_mc_highpage(struct page *to, struct page *from)
-+{
-+	void *kto = page_address(to);
-+	void *kfrom = page_address(from);
-+	int ret;
-+
-+	ret = copy_mc_page(kto, kfrom);
-+	if (ret)
-+		return -EFAULT;
-+
-+	if (kasan_hw_tags_enabled())
-+		page_kasan_tag_reset(to);
-+
-+	ret = do_mte(to, from, kto, kfrom, true);
-+	if (ret)
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(copy_mc_highpage);
-+
-+int copy_mc_user_highpage(struct page *to, struct page *from,
-+			unsigned long vaddr, struct vm_area_struct *vma)
-+{
-+	int ret;
-+
-+	ret = copy_mc_highpage(to, from);
-+
-+	if (!ret)
-+		flush_dcache_page(to);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(copy_mc_user_highpage);
-+#endif
-diff --git a/arch/arm64/mm/extable.c b/arch/arm64/mm/extable.c
-index 28ec35e3d210..bdc81518d207 100644
---- a/arch/arm64/mm/extable.c
-+++ b/arch/arm64/mm/extable.c
-@@ -16,7 +16,7 @@ get_ex_fixup(const struct exception_table_entry *ex)
- 	return ((unsigned long)&ex->fixup + ex->fixup);
- }
- 
--static bool ex_handler_uaccess_err_zero(const struct exception_table_entry *ex,
-+static bool ex_handler_fixup_err_zero(const struct exception_table_entry *ex,
- 					struct pt_regs *regs)
- {
- 	int reg_err = FIELD_GET(EX_DATA_REG_ERR, ex->data);
-@@ -69,7 +69,7 @@ bool fixup_exception(struct pt_regs *regs)
- 		return ex_handler_bpf(ex, regs);
- 	case EX_TYPE_UACCESS_ERR_ZERO:
- 	case EX_TYPE_KACCESS_ERR_ZERO:
--		return ex_handler_uaccess_err_zero(ex, regs);
-+		return ex_handler_fixup_err_zero(ex, regs);
- 	case EX_TYPE_LOAD_UNALIGNED_ZEROPAD:
- 		return ex_handler_load_unaligned_zeropad(ex, regs);
- 	}
-@@ -87,7 +87,8 @@ bool fixup_exception_mc(struct pt_regs *regs)
- 
- 	switch (ex->type) {
- 	case EX_TYPE_UACCESS_ERR_ZERO:
--		return ex_handler_uaccess_err_zero(ex, regs);
-+	case EX_TYPE_COPY_MC_PAGE_ERR_ZERO:
-+		return ex_handler_fixup_err_zero(ex, regs);
- 	}
- 
- 	return false;
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index c5ca1a1fc4f5..a42470ca42f2 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -332,6 +332,7 @@ static inline void copy_highpage(struct page *to, struct page *from)
- #endif
- 
- #ifdef copy_mc_to_kernel
-+#ifndef __HAVE_ARCH_COPY_MC_USER_HIGHPAGE
- /*
-  * If architecture supports machine check exception handling, define the
-  * #MC versions of copy_user_highpage and copy_highpage. They copy a memory
-@@ -354,7 +355,9 @@ static inline int copy_mc_user_highpage(struct page *to, struct page *from,
- 
- 	return ret ? -EFAULT : 0;
- }
-+#endif
- 
-+#ifndef __HAVE_ARCH_COPY_MC_HIGHPAGE
- static inline int copy_mc_highpage(struct page *to, struct page *from)
- {
- 	unsigned long ret;
-@@ -370,20 +373,25 @@ static inline int copy_mc_highpage(struct page *to, struct page *from)
- 
- 	return ret ? -EFAULT : 0;
- }
-+#endif
- #else
-+#ifndef __HAVE_ARCH_COPY_MC_USER_HIGHPAGE
- static inline int copy_mc_user_highpage(struct page *to, struct page *from,
- 					unsigned long vaddr, struct vm_area_struct *vma)
- {
- 	copy_user_highpage(to, from, vaddr, vma);
- 	return 0;
- }
-+#endif
- 
-+#ifndef __HAVE_ARCH_COPY_MC_HIGHPAGE
- static inline int copy_mc_highpage(struct page *to, struct page *from)
- {
- 	copy_highpage(to, from);
- 	return 0;
- }
- #endif
-+#endif
- 
- static inline void memcpy_page(struct page *dst_page, size_t dst_off,
- 			       struct page *src_page, size_t src_off,
--- 
-2.25.1
+Alternatively, I could merge patches #4 and #8 (but that seems wrong to me)=
+, or
+drop patches #7, #8 and #9 from this series and apply it later in the -rc p=
+hase?
+
+
+Is there a better way that you have in mind that we're missing, that keeps =
+things
+atomic and bootable/bisectable?=20
+
+
+Cheers,
+Andre'
 
