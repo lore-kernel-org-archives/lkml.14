@@ -1,81 +1,109 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13974153BD9;
-	Mon, 29 Jan 2024 15:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCAD153BC1;
+	Mon, 29 Jan 2024 15:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706541465; cv=none; b=Kvh5439OV1CkxPO6rBmSb8mDrY+0vW6t3DfsbE2J+20GNAP7M5U65d458urUPCxYJ7kMMvlRs9RNobqdkbCs4HBh83QkeKtdeXtJg2t5OaXml0OW/T0I8FJLzPhzvUb/8L8D2veqJHjkOrtDa3eb1LQ9O7un1IpbcfnCXckuQnI=
+	t=1706541496; cv=none; b=Gg9kVicy71HEIjl5yT45gk64Z71a+YCns4I9NIpdIlCnbUqfWg/lalYFE1kHQN1S2QcrQEsUIOPxmD1Rd7Q9devjH32dHj+HdN5lsEn2yyZOZsTy6aHMy9bev+8hyUXJIz+3vI3ZBVzKtfcfMt0YdcD1ajrXj1slSqoBXSEhJ0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706541465; c=relaxed/simple;
-	bh=+e4MeMpVtatRr9w5a834UwxLCgYT7m+gxxbS5zk3y0M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=gOZuWGajQBoNU1NNqU4+VAkbRgtJH9ZHV9f2mJtfTykAVsknkgXsOwcRB06JoOwuYGoq3F98/5eoh6S50bYaRbPqmfMS5zp4uDXfkcTumyepShphtkzPEE3EQLoP79nXRClYuDegY54Z3KjeRYsBMNhYr6vULQdtMiE1JIaVgzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=20.231.56.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from alexious$zju.edu.cn ( [10.190.77.58] ) by
- ajax-webmail-mail-app4 (Coremail) ; Mon, 29 Jan 2024 23:17:28 +0800
- (GMT+08:00)
-Date: Mon, 29 Jan 2024 23:17:28 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: alexious@zju.edu.cn
-To: "Viacheslav Dubeyko" <slava@dubeyko.com>
-Cc: "Andrew Morton" <akpm@linux-foundation.org>,
-	"Desmond Cheong Zhi Xi" <desmondcheongzx@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hfs: fix a memleak in hfs_find_init
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT5 build
- 20231205(37e20f0e) Copyright (c) 2002-2024 www.mailtech.cn
- mispb-4df6dc2c-e274-4d1c-b502-72c5c3dfa9ce-zj.edu.cn
-In-Reply-To: <DCBF7671-E982-49F2-8687-DF030D2A99C7@dubeyko.com>
-References: <20240122172719.3843098-1-alexious@zju.edu.cn>
- <F36C0C80-DAF3-4D8F-8EA3-5209E8FB5BE3@dubeyko.com>
- <38fd9f3.214a.18d5548ac0c.Coremail.alexious@zju.edu.cn>
- <DCBF7671-E982-49F2-8687-DF030D2A99C7@dubeyko.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1706541496; c=relaxed/simple;
+	bh=mbj/GubrUM5ol2t9pipY347bjtlgBP1tVcH6RRQE3wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=We5HOxRbh3NqqwOt2IVEO1qJDfa1veYVXGoI2olFQ4HCvhNltsDUYxl+460aa2ZGEqBPemQmVbFm8gndmqfIfnChOv+6/0yr8MekJNlbq/xCL0/fp35W8yoWA+hoF8fB+vySCll56//+cGjJ8w3aWUQDh6/Aqy+wgbqkq9iDmv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2148d3d7334so62345fac.1;
+        Mon, 29 Jan 2024 07:18:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706541494; x=1707146294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mbj/GubrUM5ol2t9pipY347bjtlgBP1tVcH6RRQE3wc=;
+        b=N3r+DzYqf0KluXXRVYrFWxGv8GEArMqPYH6GK1YDw49OIvFbTagOuKI4h4i+L+okh7
+         BP2zrVCEZEe/LpWVn1LxxqGd5haYDvl+rjjKjOCDBWTax4+qvXhX5meJpNHGklTaJp/p
+         dyKvRnbHDUMwCrlmH/WjjJy3wIaD1uc4TB6hl0t8zko7zpbYusLJTva0+bog8I1JDGsW
+         TwZQ9MMbDZ2KJc4DQimHEbZzSct4qsMv7NJ1U+YO3L/StyVrXEq2wIvCHMINCqZRWkDT
+         +JL/MJVP0v4LM8yiCs2exAhNJN1M6Bv7rYorZ1ZQ/EG5DsawIJqO74ze4+mzvbfFQheB
+         1K9w==
+X-Gm-Message-State: AOJu0YzQIYjIJR9JMqJyW0vLP4CX4/+DVXy0KuRypVkyEXzsiQ2kNlB7
+	F0dhUuoEi/+ni2tlJCVEUfkTKCpcMMVHyJg2Dr5CyqItpLRkBq7frc8mNmJuDQX1i83IPcIozV4
+	NnVVqQveXbfA4Py1XqJk3n4g2wJk=
+X-Google-Smtp-Source: AGHT+IF4EQ5CmMMdAEPRwd5BhiwlO/wr9Z43o2bbICKJbvBtQl8/eSjsNtzW7mM8AUn1ZTuLaLkOrdQrq9+8mpchb8c=
+X-Received: by 2002:a05:6870:a927:b0:204:5ad3:e6ec with SMTP id
+ eq39-20020a056870a92700b002045ad3e6ecmr7295673oab.4.1706541493935; Mon, 29
+ Jan 2024 07:18:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <44665a1c.22c9.18d55cbff19.Coremail.alexious@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:cS_KCgB3k4KJwbdl8s7EAA--.15305W
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/1tbiAg4PAGW2oGMdygABsF
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+References: <20240119090502.3869695-1-li.meng@amd.com>
+In-Reply-To: <20240119090502.3869695-1-li.meng@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 29 Jan 2024 16:18:02 +0100
+Message-ID: <CAJZ5v0gzKdjZJBypEw1+czGN-SHbx0s0-h=Lq96+MDVAO11PYQ@mail.gmail.com>
+Subject: Re: [PATCH V14 0/7] amd-pstate preferred core
+To: Meng Li <li.meng@amd.com>, Borislav Petkov <bpetkov@amd.com>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Huang Rui <ray.huang@amd.com>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-acpi@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>, 
+	linux-kselftest@vger.kernel.org, Nathan Fontenot <nathan.fontenot@amd.com>, 
+	Deepak Sharma <deepak.sharma@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Shimmer Huang <shimmer.huang@amd.com>, 
+	Perry Yuan <Perry.Yuan@amd.com>, Xiaojian Du <Xiaojian.Du@amd.com>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Borislav Petkov <bp@alien8.de>, 
+	Oleksandr Natalenko <oleksandr@natalenko.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiA+IE9uIDI5IEphbiAyMDI0LCBhdCAxNTo1NCwgYWxleGlvdXNAemp1LmVkdS5jbiB3cm90ZToK
-PiA+IAo+ID4+PiBPbiAyMiBKYW4gMjAyNCwgYXQgMjA6MjcsIFpoaXBlbmcgTHUgPGFsZXhpb3Vz
-QHpqdS5lZHUuY24+IHdyb3RlOgo+ID4+PiAKPiA+Pj4gV2hlbiB0aGUgc3dpdGNoIHN0YXRtZW50
-IGdvZXMgdG8gZGVmYXVsdCBhbmQgcmV0dXJuIGFuIGVycm9yLCBwdHIgc2hvdWxkCj4gPj4+IGJl
-IGZyZWVkIHNpbmNlIGl0IGlzIGFsbG9jYXRlZCBpbiBoZnNfZmluZF9pbml0Lgo+ID4+PiAKPiA+
-PiAKPiA+PiBEbyB5b3UgaGF2ZSBhbnkgbWVtb3J5IGxlYWtzIHJlcG9ydD8gQ291bGQgeW91IHNo
-YXJlIGl0IGluIHRoZSBjb21tZW50cz8KPiA+PiBXaGljaCB1c2UtY2FzZSByZXByb2R1Y2VzIHRo
-ZSBpc3N1ZT8gSXQgd2lsbCBiZSBlYXNpZXIgdG8gcmV2aWV3IHRoZSBmaXgKPiA+PiBJZiB5b3Ug
-Y2FuIHNoYXJlIHRoZSBwYXRoIG9mIHJlcHJvZHVjdGlvbi4KPiA+PiAKPiA+PiBUaGFua3MsCj4g
-Pj4gU2xhdmEuCj4gPiAKPiA+IFdlbGwsIHdlIGZvdW5kIHRoaXMgcG90ZW50aWFsIG1lbW9yeSBs
-ZWFrIGJ5IHN0YXRpYyBhbmFseXNpcy4KPiA+IAo+ID4gV2UgZm91bmQgdGhhdCBhbGwgb2YgaGZz
-X2ZpbmRfaW5pdCdzIGNhbGxlcnMgd29uJ3QgcmVsZWFzZSBgcHRyYCB3aGVuIAo+ID4gaGZzX2Zp
-bmRfaW5pdCBmYWlscywgd2hpbGUgdGhleSB3aWxsIGRvIHJlbGVhc2UgYHB0cmAgd2hlbiBmdW5j
-dGlvbnMgCj4gPiB0aGF0IGFmdGVyIGhmc19maW5kX2luaXQgZmFpbHMuIFRoaXMgdGFjdGljIG9i
-c2VydmF0aW9uIHN1Z2dlc3RzIHRoYXQKPiA+IGhmc19maW5kX2luaXQgcHJvYmVybHkgc2hvdWxk
-IHJlbGVhc2UgYHB0cmAgd2hlbiBpdCBmYWlscywgaS5lLiBpbiB0aGUKPiA+IGRlZmF1bHQgYnJh
-bmNoIG9mIHN3aXRjaCBpbiB0aGlzIHBhdGNoLgo+ID4gCj4gPiBCZXNpZGVzLCB3ZSBub3RpY2Vk
-IGFub3RoZXIgaW1wbGVtZW50YXRpb24gb2YgaGZzX2ZpbmRfaW5pdCBpbiAKPiA+IGZzL2hmc3Bs
-dXMvYmZpbmQuYywgd2hpY2ggaXMgZXNzZW50aWFsbHkgaWRlbnRpY2FsIHRvIHRoZSBvbmUgaW4g
-Cj4gPiB0aGlzIHBhdGNoIChpbiBmcy9oZnMvYmZpbmQuYykgYnV0IGNhbGxpbmcgYEJVRygpO2Ag
-aW4gZGVmYXVsdCBicmFuY2gKPiA+IHRvIHRyaWdnZXIgYW4gZXJyb3ItaGFuZGxpbmcuCj4gPiAK
-PiAKPiBJIHNlZS4gSSBiZWxpZXZlIGl0IG1ha2VzIHNlbnNlIHRvIGFkZCBhbGwgb2YgdGhpcyBl
-eHBsYW5hdGlvbgo+IGludG8gY29tbWVudCBzZWN0aW9uLiBNb2RpZmljYXRpb24gbG9va3MgZ29v
-ZC4gTW9zdGx5LCBoZnNfZmluZF9leGl0KCkKPiBkb2VzIGZyZWVpbmcgcmVzb3VyY2VzIGFuZCBp
-ZiBoZnNfZmluZF9pbml0KCkgZmFpbHMsIHRoZW4gaGZzX2ZpbmRfZXhpdCgpCj4gaXMgbmV2ZXIg
-Y2FsbGVkLiBNYXliZSwgaXQgbWFrZXMgc2Vuc2UgdG8gc2V0IGZkLT50cmVlID0gTlVMTCB0b28g
-YnV0Cj4gaXQgaXMgbm90IGNyaXRpY2FsLCBhcyBmYXIgYXMgSSBjYW4gc2VlLgo+IAo+IENvdWxk
-IHlvdSBwbGVhc2UgcmV3b3JrIHRoZSBjb21tZW50IHNlY3Rpb24gb2YgdGhlIHBhdGNoPyAKClN1
-cmUsIEknbGwgaW5jbHVkaW5nIHN1Y2ggaWRlYSBpbiB0aGlzIHBhdGNoIGFuZCBzZW5kIGEgdjIg
-dmVyc2lvbiBvZiAKdGhpcyBwYXRjaC4KClRoYW5rcywKWmhpcGVuZy4KCj4gVGhhbmtzLAo+IFNs
-YXZhLgo=
+On Fri, Jan 19, 2024 at 10:05=E2=80=AFAM Meng Li <li.meng@amd.com> wrote:
+>
+> Hi all:
+>
+> The core frequency is subjected to the process variation in semiconductor=
+s.
+> Not all cores are able to reach the maximum frequency respecting the
+> infrastructure limits. Consequently, AMD has redefined the concept of
+> maximum frequency of a part. This means that a fraction of cores can reac=
+h
+> maximum frequency. To find the best process scheduling policy for a given
+> scenario, OS needs to know the core ordering informed by the platform thr=
+ough
+> highest performance capability register of the CPPC interface.
+>
+> Earlier implementations of amd-pstate preferred core only support a stati=
+c
+> core ranking and targeted performance. Now it has the ability to dynamica=
+lly
+> change the preferred core based on the workload and platform conditions a=
+nd
+> accounting for thermals and aging.
+>
+> Amd-pstate driver utilizes the functions and data structures provided by
+> the ITMT architecture to enable the scheduler to favor scheduling on core=
+s
+> which can be get a higher frequency with lower voltage.
+> We call it amd-pstate preferred core.
+>
+> Here sched_set_itmt_core_prio() is called to set priorities and
+> sched_set_itmt_support() is called to enable ITMT feature.
+> Amd-pstate driver uses the highest performance value to indicate
+> the priority of CPU. The higher value has a higher priority.
+>
+> Amd-pstate driver will provide an initial core ordering at boot time.
+> It relies on the CPPC interface to communicate the core ranking to the
+> operating system and scheduler to make sure that OS is choosing the cores
+> with highest performance firstly for scheduling the process. When amd-pst=
+ate
+> driver receives a message with the highest performance change, it will
+> update the core ranking.
+
+Hi Boris,
+
+You've had comments on the previous version of this.
+
+Have they all been addressed?
