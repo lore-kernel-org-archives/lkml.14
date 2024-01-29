@@ -1,358 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4435464CE4
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3738754729
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706517217; cv=none; b=OrRnfmPA7w9M12lQn9p2wW7pAYoQqkMvZwuk0MPtXgILZDMayyZmksdnqhbE8qauX/xL9BsP4AoFby3KUTfYHixcTZA5prIyi75RZWC1XWaodlpVZXgEMnEgNVxFpCjCAtf1WE7opYaaAvS1H0hOnpzBS37dVdqHeVDenmm/6fI=
+	t=1706517587; cv=none; b=dejy7ODFPdXBBobw47jAd9r1/dzJGkiP8sRwfg6E8qZeU2r9YV2Hv5ImyAi4cWsY1le+sNHvPioM8vpyHct6BXhPAImCPBIfBEBEp8D/u+Nx+lN+XpuFWoMEFL57NYdamaB6hcwml4k0YX2R1WIsR5SEMw7+ky7FUUxzDZJV5B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706517217; c=relaxed/simple;
-	bh=quDJBtGMskkOzAFBybwik7Xm3lNXd+swA24XA0pp4cg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oESV2AvRsakNxe18G1C3RiWo+qXrWEdKlakzrnZvvfeX1tEz36A7eQwjA40Xlw6nw4Ipo6kVqUvfkqY80i4XEAiuFVkes2VMKk8+heorAu2QFjnIZcmyBvepDHKltQKvVTTQpIITEVNW5bhl2tQM4RAE2pXYToQCfMX6JxXwYkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=brsFKU7b; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706517587; c=relaxed/simple;
+	bh=4yZ89r1Hsazz2TJ5Dgl6xuBfA2vUUCpLWcqAGNhN1M0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XbZR2LOUPBDYgs75SwiAXX7BFvbNIeA5sd31OhGasHldmCGdBvMc3WV9kFAOTF4AuEKjcT2h6CarBGb5YV0NThAnTS6zAMbYj2yCxIpA+WH8Qgl2FtD3OhSzRZQ81izlthgscKoYXe4BI2WR+XXhIqMboklHYM3m0sr8daELISY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cN1NeFKr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="brsFKU7b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706517215; x=1738053215;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=quDJBtGMskkOzAFBybwik7Xm3lNXd+swA24XA0pp4cg=;
-  b=brsFKU7bwgG+ipp0uyddRgvS7h8Oc8DbKhK0TVb0pMf1oqF7zsljbKj2
-   2XTPQNV1bMJWleilwRnLUcJt4kYUz2G1cOUo/+8XI18MjiQkvqiXbJgst
-   7Nbd7d+ycv02P2wZmAVlllxj836MlikSmYwE7CAkYUExt86eT5LNQVwCR
-   G+lXtGUaKmsztWSoHTP+4a1Y+0sVuTg3Hudt2K0EbXJDChzsopOn7dstM
-   vHzFOpzGDU1b88OZyKq/mhuKVGaPd12Il6mRDplpRX8KL1dEoqzpT84dR
-   MLGhm+LZEoqHOI3anv8dZZczortHcpxfM5WLqVivWXixgDnL3PLgYDrpW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="401756526"
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="401756526"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 00:31:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="1118868146"
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="1118868146"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Jan 2024 00:31:12 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rUN2r-0004AM-2p;
-	Mon, 29 Jan 2024 08:31:09 +0000
-Date: Mon, 29 Jan 2024 16:30:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: drivers/misc/eeprom/idt_89hpesx.c:599:31: sparse: sparse: incorrect
- type in assignment (different base types)
-Message-ID: <202401291611.5rIik5iD-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cN1NeFKr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706517583;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SO879PgboMkQ1Vjya3+F+gDiRM6F/d/6qw5VF+2GLTI=;
+	b=cN1NeFKrnorQ3BDDZNteTISgdb3SikYnIOA1AcIvoh1UjGuaEO0t4WLQRtqGFzT/cgDr5H
+	6S84g7Zd1eTYSwb1BRxA+Bu/lcxdJevbWSTwaOzm9mdL9wYzRR9ZAwWRXMMNoFDKrYU/7u
+	fFfQ19gI8JkMHY+O7JWc8L6trWI/j6w=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-281-JIdX7gafN36SFlziAENPaw-1; Mon, 29 Jan 2024 03:39:41 -0500
+X-MC-Unique: JIdX7gafN36SFlziAENPaw-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a2fba67ec20so125366866b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 00:39:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706517580; x=1707122380;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SO879PgboMkQ1Vjya3+F+gDiRM6F/d/6qw5VF+2GLTI=;
+        b=DrvPLqfKvPdSGW5aStP5sE4oER9KgrzTyciBrcp3+74SxTDa5/gsyHYqh9aPH4qnYt
+         THEehHVqPPb8kjW770KkDJoHO8NW1KTeksIwJypVX3rqpPysdtFV9aS+GaiLJJojUULm
+         6HYsNMM1qxtzU+Cgqn9TWqd+m0C7SQLE1DqPvB8JgT4mYoIjsTUSZAUvMSf89EvZTG9x
+         IkTMSxniYalZ+abVfv7KXPTdO1c0Xc1dkiv3FXd+7hePehV04nAvMZu/Wy908SaRwRu1
+         RpweLGaI6mlMmwGGfSGHnPZOOXx0pfbUBx7Cc8uKwrcnHoXPwyOD0Z/gYik6nEU4ol5I
+         cW4w==
+X-Gm-Message-State: AOJu0YxPcy1BJMgyHxq8sPFz8CG65XBzM1VF9xmHaHNLIr4Os6ia+LnK
+	weCp73TD/IzsQ1HxQcuDOiypv91Yy3eStp4UVh6jR6tVWWIxL51aSnzArJGAX9aAKn002Y83deG
+	S1Rj377dtViL7Yn711lw6l+EBBaGKYTbV0nyh3u+2sta2tEKn7ZcsNQb60Z6Pyg==
+X-Received: by 2002:a17:906:398c:b0:a31:805b:4172 with SMTP id h12-20020a170906398c00b00a31805b4172mr3644570eje.9.1706517580468;
+        Mon, 29 Jan 2024 00:39:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGr/OOLnIBJUikDcSEfxL6gQVOu//FnOkvwdqEx58htCO3kPCq7MVbE3yW/Y7UO2B5jcyOQAw==
+X-Received: by 2002:a17:906:398c:b0:a31:805b:4172 with SMTP id h12-20020a170906398c00b00a31805b4172mr3644554eje.9.1706517580175;
+        Mon, 29 Jan 2024 00:39:40 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l26-20020a170906415a00b00a3590fb191csm1447881ejk.150.2024.01.29.00.39.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 00:39:38 -0800 (PST)
+Message-ID: <846463ed-e43e-406d-ac5a-c2fbe79b348a@redhat.com>
+Date: Mon, 29 Jan 2024 09:39:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] platform/x86/intel/ifs: Call release_firmware() when
+ handling errors.
+To: Pengfei Xu <pengfei.xu@intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, markgross@kernel.org,
+ Jithu Joseph <jithu.joseph@intel.com>, rostedt@goodmis.org,
+ tony.luck@intel.com, LKML <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+ stable@vger.kernel.org, gregkh@linuxfoundation.org, heng.su@intel.com
+References: <20240125082254.424859-1-ashok.raj@intel.com>
+ <20240125082254.424859-2-ashok.raj@intel.com>
+ <4e360838-36a9-41c0-a1d5-f369ed78cf04@redhat.com>
+ <ZbchziXFXPvIWP4s@xpf.sh.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZbchziXFXPvIWP4s@xpf.sh.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   41bccc98fb7931d63d03f326a746ac4d429c1dd3
-commit: cfad6425382ec81acd073fdf24361e1c30b4cb36 eeprom: Add IDT 89HPESx EEPROM/CSR driver
-date:   7 years ago
-config: openrisc-randconfig-s041-20230115 (https://download.01.org/0day-ci/archive/20240129/202401291611.5rIik5iD-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20240129/202401291611.5rIik5iD-lkp@intel.com/reproduce)
+Hi,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401291611.5rIik5iD-lkp@intel.com/
+On 1/29/24 04:55, Pengfei Xu wrote:
+> On 2024-01-26 at 20:15:46 +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 1/25/24 09:22, Ashok Raj wrote:
+>>> From: Jithu Joseph <jithu.joseph@intel.com>
+>>>
+>>> Missing release_firmware() due to error handling blocked any future image
+>>> loading.
+>>>
+>>> Fix the return code and release_fiwmare() to release the bad image.
+>>>
+>>> Fixes: 25a76dbb36dd ("platform/x86/intel/ifs: Validate image size")
+>>> Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+>>> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+>>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>>> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
+>>> Reviewed-by: Tony Luck <tony.luck@intel.com>
+>>
+>> Thank you for your patch/series, I've applied this patch
+>> (series) to my review-hans branch:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>>
+>> Note it will show up in the pdx86 review-hans branch once I've
+>> pushed my local branch there, which might take a while.
+>>
+>> I will include this patch in my next fixes pull-req to Linus
+>> for the current kernel development cycle.
+>>
+> 
+> FYR.
+> 
+> [ CC stable@vger.kernel.org ]
+> Missed CC: Stable Tag.
+> 
+> This (follow-up) patch is now upstream into v6.7-rc1:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=25a76dbb36dd
+> 
+> Looks like linux-6.7.y needs the above fixed patch too.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/misc/eeprom/idt_89hpesx.c:599:31: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [addressable] [assigned] [usertype] memaddr @@     got restricted __le16 [usertype] @@
-   drivers/misc/eeprom/idt_89hpesx.c:599:31: sparse:     expected unsigned short [addressable] [assigned] [usertype] memaddr
-   drivers/misc/eeprom/idt_89hpesx.c:599:31: sparse:     got restricted __le16 [usertype]
-   drivers/misc/eeprom/idt_89hpesx.c:671:31: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [addressable] [assigned] [usertype] memaddr @@     got restricted __le16 [usertype] @@
-   drivers/misc/eeprom/idt_89hpesx.c:671:31: sparse:     expected unsigned short [addressable] [assigned] [usertype] memaddr
-   drivers/misc/eeprom/idt_89hpesx.c:671:31: sparse:     got restricted __le16 [usertype]
->> drivers/misc/eeprom/idt_89hpesx.c:769:24: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [addressable] [assigned] [usertype] csraddr @@     got restricted __le16 [usertype] @@
-   drivers/misc/eeprom/idt_89hpesx.c:769:24: sparse:     expected unsigned short [addressable] [assigned] [usertype] csraddr
-   drivers/misc/eeprom/idt_89hpesx.c:769:24: sparse:     got restricted __le16 [usertype]
->> drivers/misc/eeprom/idt_89hpesx.c:770:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [addressable] [assigned] [usertype] data @@     got restricted __le32 [usertype] @@
-   drivers/misc/eeprom/idt_89hpesx.c:770:21: sparse:     expected unsigned int [addressable] [assigned] [usertype] data
-   drivers/misc/eeprom/idt_89hpesx.c:770:21: sparse:     got restricted __le32 [usertype]
-   drivers/misc/eeprom/idt_89hpesx.c:834:24: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [addressable] [assigned] [usertype] csraddr @@     got restricted __le16 [usertype] @@
-   drivers/misc/eeprom/idt_89hpesx.c:834:24: sparse:     expected unsigned short [addressable] [assigned] [usertype] csraddr
-   drivers/misc/eeprom/idt_89hpesx.c:834:24: sparse:     got restricted __le16 [usertype]
->> drivers/misc/eeprom/idt_89hpesx.c:859:17: sparse: sparse: cast to restricted __le32
->> drivers/misc/eeprom/idt_89hpesx.c:859:17: sparse: sparse: cast to restricted __le32
->> drivers/misc/eeprom/idt_89hpesx.c:859:17: sparse: sparse: cast to restricted __le32
->> drivers/misc/eeprom/idt_89hpesx.c:859:17: sparse: sparse: cast to restricted __le32
->> drivers/misc/eeprom/idt_89hpesx.c:859:17: sparse: sparse: cast to restricted __le32
->> drivers/misc/eeprom/idt_89hpesx.c:859:17: sparse: sparse: cast to restricted __le32
-   In file included from include/linux/kernel.h:11,
-                    from drivers/misc/eeprom/idt_89hpesx.c:70:
-   include/linux/log2.h:22:1: warning: ignoring attribute 'noreturn' because it conflicts with attribute 'const' [-Wattributes]
-      22 | int ____ilog2_NaN(void);
-         | ^~~
-   drivers/misc/eeprom/idt_89hpesx.c: In function 'idt_dbgfs_csr_write':
-   drivers/misc/eeprom/idt_89hpesx.c:941:31: warning: variable 'csrval_len' set but not used [-Wunused-but-set-variable]
-     941 |         int ret, csraddr_len, csrval_len;
-         |                               ^~~~~~~~~~
+If you want to see this patch in the stable series please
+submit it, with a reference to the upstream commit, to
+stable@vger.kernel.org yourself.
 
-vim +599 drivers/misc/eeprom/idt_89hpesx.c
+Regards,
 
-   565	
-   566	/*===========================================================================
-   567	 *                          EEPROM IO-operations
-   568	 *===========================================================================
-   569	 */
-   570	
-   571	/*
-   572	 * idt_eeprom_read_byte() - read just one byte from EEPROM
-   573	 * @pdev:	Pointer to the driver data
-   574	 * @memaddr:	Start EEPROM memory address
-   575	 * @data:	Data to be written to EEPROM
-   576	 */
-   577	static int idt_eeprom_read_byte(struct idt_89hpesx_dev *pdev, u16 memaddr,
-   578					u8 *data)
-   579	{
-   580		struct device *dev = &pdev->client->dev;
-   581		struct idt_eeprom_seq eeseq;
-   582		struct idt_smb_seq smbseq;
-   583		int ret, retry;
-   584	
-   585		/* Initialize SMBus sequence fields */
-   586		smbseq.ccode = pdev->iniccode | CCODE_EEPROM;
-   587		smbseq.data = (u8 *)&eeseq;
-   588	
-   589		/*
-   590		 * Sometimes EEPROM may respond with NACK if it's busy with previous
-   591		 * operation, so we need to perform a few attempts of read cycle
-   592		 */
-   593		retry = RETRY_CNT;
-   594		do {
-   595			/* Send EEPROM memory address to read data from */
-   596			smbseq.bytecnt = EEPROM_WRRD_CNT;
-   597			eeseq.cmd = pdev->inieecmd | EEPROM_OP_READ;
-   598			eeseq.eeaddr = pdev->eeaddr;
- > 599			eeseq.memaddr = cpu_to_le16(memaddr);
-   600			ret = pdev->smb_write(pdev, &smbseq);
-   601			if (ret != 0) {
-   602				dev_err(dev, "Failed to init eeprom addr 0x%02hhx",
-   603					memaddr);
-   604				break;
-   605			}
-   606	
-   607			/* Perform read operation */
-   608			smbseq.bytecnt = EEPROM_RD_CNT;
-   609			ret = pdev->smb_read(pdev, &smbseq);
-   610			if (ret != 0) {
-   611				dev_err(dev, "Failed to read eeprom data 0x%02hhx",
-   612					memaddr);
-   613				break;
-   614			}
-   615	
-   616			/* Restart read operation if the device is busy */
-   617			if (retry && (eeseq.cmd & EEPROM_NAERR)) {
-   618				dev_dbg(dev, "EEPROM busy, retry reading after %d ms",
-   619					EEPROM_TOUT);
-   620				msleep(EEPROM_TOUT);
-   621				continue;
-   622			}
-   623	
-   624			/* Check whether IDT successfully read data from EEPROM */
-   625			if (eeseq.cmd & (EEPROM_NAERR | EEPROM_LAERR | EEPROM_MSS)) {
-   626				dev_err(dev,
-   627					"Communication with eeprom failed, cmd 0x%hhx",
-   628					eeseq.cmd);
-   629				ret = -EREMOTEIO;
-   630				break;
-   631			}
-   632	
-   633			/* Save retrieved data and exit the loop */
-   634			*data = eeseq.data;
-   635			break;
-   636		} while (retry--);
-   637	
-   638		/* Return the status of operation */
-   639		return ret;
-   640	}
-   641	
-   642	/*
-   643	 * idt_eeprom_write() - EEPROM write operation
-   644	 * @pdev:	Pointer to the driver data
-   645	 * @memaddr:	Start EEPROM memory address
-   646	 * @len:	Length of data to be written
-   647	 * @data:	Data to be written to EEPROM
-   648	 */
-   649	static int idt_eeprom_write(struct idt_89hpesx_dev *pdev, u16 memaddr, u16 len,
-   650				    const u8 *data)
-   651	{
-   652		struct device *dev = &pdev->client->dev;
-   653		struct idt_eeprom_seq eeseq;
-   654		struct idt_smb_seq smbseq;
-   655		int ret;
-   656		u16 idx;
-   657	
-   658		/* Initialize SMBus sequence fields */
-   659		smbseq.ccode = pdev->iniccode | CCODE_EEPROM;
-   660		smbseq.data = (u8 *)&eeseq;
-   661	
-   662		/* Send data byte-by-byte, checking if it is successfully written */
-   663		for (idx = 0; idx < len; idx++, memaddr++) {
-   664			/* Lock IDT SMBus device */
-   665			mutex_lock(&pdev->smb_mtx);
-   666	
-   667			/* Perform write operation */
-   668			smbseq.bytecnt = EEPROM_WR_CNT;
-   669			eeseq.cmd = pdev->inieecmd | EEPROM_OP_WRITE;
-   670			eeseq.eeaddr = pdev->eeaddr;
-   671			eeseq.memaddr = cpu_to_le16(memaddr);
-   672			eeseq.data = data[idx];
-   673			ret = pdev->smb_write(pdev, &smbseq);
-   674			if (ret != 0) {
-   675				dev_err(dev,
-   676					"Failed to write 0x%04hx:0x%02hhx to eeprom",
-   677					memaddr, data[idx]);
-   678				goto err_mutex_unlock;
-   679			}
-   680	
-   681			/*
-   682			 * Check whether the data is successfully written by reading
-   683			 * from the same EEPROM memory address.
-   684			 */
-   685			eeseq.data = ~data[idx];
-   686			ret = idt_eeprom_read_byte(pdev, memaddr, &eeseq.data);
-   687			if (ret != 0)
-   688				goto err_mutex_unlock;
-   689	
-   690			/* Check whether the read byte is the same as written one */
-   691			if (eeseq.data != data[idx]) {
-   692				dev_err(dev, "Values don't match 0x%02hhx != 0x%02hhx",
-   693					eeseq.data, data[idx]);
-   694				ret = -EREMOTEIO;
-   695				goto err_mutex_unlock;
-   696			}
-   697	
-   698			/* Unlock IDT SMBus device */
-   699	err_mutex_unlock:
-   700			mutex_unlock(&pdev->smb_mtx);
-   701			if (ret != 0)
-   702				return ret;
-   703		}
-   704	
-   705		return 0;
-   706	}
-   707	
-   708	/*
-   709	 * idt_eeprom_read() - EEPROM read operation
-   710	 * @pdev:	Pointer to the driver data
-   711	 * @memaddr:	Start EEPROM memory address
-   712	 * @len:	Length of data to read
-   713	 * @buf:	Buffer to read data to
-   714	 */
-   715	static int idt_eeprom_read(struct idt_89hpesx_dev *pdev, u16 memaddr, u16 len,
-   716				   u8 *buf)
-   717	{
-   718		int ret;
-   719		u16 idx;
-   720	
-   721		/* Read data byte-by-byte, retrying if it wasn't successful */
-   722		for (idx = 0; idx < len; idx++, memaddr++) {
-   723			/* Lock IDT SMBus device */
-   724			mutex_lock(&pdev->smb_mtx);
-   725	
-   726			/* Just read the byte to the buffer */
-   727			ret = idt_eeprom_read_byte(pdev, memaddr, &buf[idx]);
-   728	
-   729			/* Unlock IDT SMBus device */
-   730			mutex_unlock(&pdev->smb_mtx);
-   731	
-   732			/* Return error if read operation failed */
-   733			if (ret != 0)
-   734				return ret;
-   735		}
-   736	
-   737		return 0;
-   738	}
-   739	
-   740	/*===========================================================================
-   741	 *                          CSR IO-operations
-   742	 *===========================================================================
-   743	 */
-   744	
-   745	/*
-   746	 * idt_csr_write() - CSR write operation
-   747	 * @pdev:	Pointer to the driver data
-   748	 * @csraddr:	CSR address (with no two LS bits)
-   749	 * @data:	Data to be written to CSR
-   750	 */
-   751	static int idt_csr_write(struct idt_89hpesx_dev *pdev, u16 csraddr,
-   752				 const u32 data)
-   753	{
-   754		struct device *dev = &pdev->client->dev;
-   755		struct idt_csr_seq csrseq;
-   756		struct idt_smb_seq smbseq;
-   757		int ret;
-   758	
-   759		/* Initialize SMBus sequence fields */
-   760		smbseq.ccode = pdev->iniccode | CCODE_CSR;
-   761		smbseq.data = (u8 *)&csrseq;
-   762	
-   763		/* Lock IDT SMBus device */
-   764		mutex_lock(&pdev->smb_mtx);
-   765	
-   766		/* Perform write operation */
-   767		smbseq.bytecnt = CSR_WR_CNT;
-   768		csrseq.cmd = pdev->inicsrcmd | CSR_OP_WRITE;
- > 769		csrseq.csraddr = cpu_to_le16(csraddr);
- > 770		csrseq.data = cpu_to_le32(data);
-   771		ret = pdev->smb_write(pdev, &smbseq);
-   772		if (ret != 0) {
-   773			dev_err(dev, "Failed to write 0x%04x: 0x%04x to csr",
-   774				CSR_REAL_ADDR(csraddr), data);
-   775			goto err_mutex_unlock;
-   776		}
-   777	
-   778		/* Send CSR address to read data from */
-   779		smbseq.bytecnt = CSR_WRRD_CNT;
-   780		csrseq.cmd = pdev->inicsrcmd | CSR_OP_READ;
-   781		ret = pdev->smb_write(pdev, &smbseq);
-   782		if (ret != 0) {
-   783			dev_err(dev, "Failed to init csr address 0x%04x",
-   784				CSR_REAL_ADDR(csraddr));
-   785			goto err_mutex_unlock;
-   786		}
-   787	
-   788		/* Perform read operation */
-   789		smbseq.bytecnt = CSR_RD_CNT;
-   790		ret = pdev->smb_read(pdev, &smbseq);
-   791		if (ret != 0) {
-   792			dev_err(dev, "Failed to read csr 0x%04x",
-   793				CSR_REAL_ADDR(csraddr));
-   794			goto err_mutex_unlock;
-   795		}
-   796	
-   797		/* Check whether IDT successfully retrieved CSR data */
-   798		if (csrseq.cmd & (CSR_RERR | CSR_WERR)) {
-   799			dev_err(dev, "IDT failed to perform CSR r/w");
-   800			ret = -EREMOTEIO;
-   801			goto err_mutex_unlock;
-   802		}
-   803	
-   804		/* Unlock IDT SMBus device */
-   805	err_mutex_unlock:
-   806		mutex_unlock(&pdev->smb_mtx);
-   807	
-   808		return ret;
-   809	}
-   810	
+Hans
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+
+>>> ---
+>>>  drivers/platform/x86/intel/ifs/load.c | 3 ++-
+>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+>>> index a1ee1a74fc3c..2cf3b4a8813f 100644
+>>> --- a/drivers/platform/x86/intel/ifs/load.c
+>>> +++ b/drivers/platform/x86/intel/ifs/load.c
+>>> @@ -399,7 +399,8 @@ int ifs_load_firmware(struct device *dev)
+>>>  	if (fw->size != expected_size) {
+>>>  		dev_err(dev, "File size mismatch (expected %u, actual %zu). Corrupted IFS image.\n",
+>>>  			expected_size, fw->size);
+>>> -		return -EINVAL;
+>>> +		ret = -EINVAL;
+>>> +		goto release;
+>>>  	}
+>>>  
+>>>  	ret = image_sanity_check(dev, (struct microcode_header_intel *)fw->data);
+>>
+> 
+
