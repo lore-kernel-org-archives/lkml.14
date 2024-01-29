@@ -1,157 +1,126 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE05E15AAAF;
-	Mon, 29 Jan 2024 17:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C83157031;
+	Mon, 29 Jan 2024 17:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706547789; cv=none; b=orjqPGhqEh/2lVXlx1AfGXGF2iklxejE25phoBnmskr9snv6i3rXvTJCwjNX5saVBK87Zpgale5/dKAlzge6GJO7xFcPzbBgd6s17gnnlKygceC9DEAjjJZQcyZrMY3/BZqoSkdWflXj4a4dvMAyHUT9VJSLW3DNqDNXWWQpCMI=
+	t=1706547940; cv=none; b=h57nyKQXn2nX1nSD6W60WT02wuVVH+uoGB5mc1lOkGvmOJYvhxNvSvU47cdBS0oZlAxJoCMTnzUGVm040e0XBAInnoBpPlZEolbcpMFyyr+bIWX31iytbE6MslLsHQZOkSOdZ6IKBojNBay8EtUetAOQ8+ykdH3WzkRfFreVNKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706547789; c=relaxed/simple;
-	bh=wHWg4LZRwCfhResqeH0XOYfyJt+0f2JWYpJlo3R3dtA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rp2Onbvusjs830PS7Va0/UJ9zo+zfjboyQVxb49f5ebChjPapgTpAQ8zb8uSa8yhBTYfHVfkJRN9Ck5OD0GZljRq5k7NMXYor2+bxyC3Q/OqWPiNo/aqO7KJTQQEUtSFazTiJwThK7DOvA8FhwS/LKA0eY3WkqZ+LsI6NjhO30g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=Hz5iSkzr; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1706547940; c=relaxed/simple;
+	bh=rERO+/yQtl/nHDrfNQnEmcHb7JpBOTk2E72PamhWOk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uZ2ANeNDM3fckmcSDbNsWJAMuouxziSUGoBpKqYO5MAY9R85gnI6UpwRFcct2luwRS0HHmrPrQome7gPRewqAKb4tmz2zD+1XQQNV+vvFdk14sgKQAeMkKxs+5dnJjxryxI5/kjAhtgRcH4oixUCVUCHWTTE8lBlj75cxGJggb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=tPqtB3iJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5RNfrBnJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=tPqtB3iJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5RNfrBnJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Hz5iSkzr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1706547741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tPqtB3iJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5RNfrBnJ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tPqtB3iJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5RNfrBnJ"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6F3E421DD4;
+	Mon, 29 Jan 2024 17:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706547936;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6SosLHUfbvBusyQrjhEdH6qlujZTce4ql106/+fLWzw=;
-	b=Hz5iSkzreG374dszhrBcWBdOw/8E9kBUgkLUyYVVOzM0dIA3qjeGkDueAhT1yesWaD3R/J
-	CU0Dav7pa+LPws6gK3o25zLvdwVZOMMblQ+ZLMEMbNg+y0SSabHObT9U9BAeFIJSWcS+Ht
-	4Mel07g7k6sXDOVHXLU9KIMPE1H9a9U=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>,
-	Nuno Sa <nuno.sa@analog.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 6/6] Documentation: iio: Document high-speed DMABUF based API
-Date: Mon, 29 Jan 2024 18:02:01 +0100
-Message-ID: <20240129170201.133785-7-paul@crapouillou.net>
-In-Reply-To: <20240129170201.133785-1-paul@crapouillou.net>
-References: <20240129170201.133785-1-paul@crapouillou.net>
+	bh=efB/d60MkyHxkJEqZjgD4eKY0KSSrNZEfVPlBctpJKo=;
+	b=tPqtB3iJZ9dNRYyl7maxX+1ckEGxLv5yepNr4i3ZShE91Cv8EkH6IEI7rEXR/6mVV4yJSC
+	4QvbqYlCRHHEM63nNv5oN5CgQzEBmwVJne2iVwMzvcW4xgwIbvsFXjSEMl9lWBgiFAGcA5
+	XF+/AgG3Y8YFlBjjQ21PEA+PWOC6nvs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706547936;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=efB/d60MkyHxkJEqZjgD4eKY0KSSrNZEfVPlBctpJKo=;
+	b=5RNfrBnJ6PwpIDBd1EFUEyKGdAKFm1+3IL8aj/JXrFhHLr6G0R0+ynCVk45cYafwvrno+P
+	SF882JaACtjiafCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706547936;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=efB/d60MkyHxkJEqZjgD4eKY0KSSrNZEfVPlBctpJKo=;
+	b=tPqtB3iJZ9dNRYyl7maxX+1ckEGxLv5yepNr4i3ZShE91Cv8EkH6IEI7rEXR/6mVV4yJSC
+	4QvbqYlCRHHEM63nNv5oN5CgQzEBmwVJne2iVwMzvcW4xgwIbvsFXjSEMl9lWBgiFAGcA5
+	XF+/AgG3Y8YFlBjjQ21PEA+PWOC6nvs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706547936;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=efB/d60MkyHxkJEqZjgD4eKY0KSSrNZEfVPlBctpJKo=;
+	b=5RNfrBnJ6PwpIDBd1EFUEyKGdAKFm1+3IL8aj/JXrFhHLr6G0R0+ynCVk45cYafwvrno+P
+	SF882JaACtjiafCw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 40B0D13911;
+	Mon, 29 Jan 2024 17:05:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id oEThDuDat2UNMgAAn2gu4w
+	(envelope-from <dsterba@suse.cz>); Mon, 29 Jan 2024 17:05:36 +0000
+Date: Mon, 29 Jan 2024 18:05:07 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] btrfs: zlib: Fix spelling mistake "infalte" ->
+ "inflate"
+Message-ID: <20240129170507.GB31555@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20240122130102.3157773-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122130102.3157773-1-colin.i.king@gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.29
+X-Spamd-Result: default: False [-1.29 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-1.79)[93.74%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-Document the new DMABUF based API.
+On Mon, Jan 22, 2024 at 01:01:02PM +0000, Colin Ian King wrote:
+> There is a spelling mistake in a warning message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-
----
-v2: - Explicitly state that the new interface is optional and is
-      not implemented by all drivers.
-    - The IOCTLs can now only be called on the buffer FD returned by
-      IIO_BUFFER_GET_FD_IOCTL.
-    - Move the page up a bit in the index since it is core stuff and not
-      driver-specific.
-
-v3: Update the documentation to reflect the new API.
-
-v5: Use description lists for the documentation of the three new IOCTLs
-    instead of abusing subsections.
----
- Documentation/iio/dmabuf_api.rst | 54 ++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst      |  2 ++
- 2 files changed, 56 insertions(+)
- create mode 100644 Documentation/iio/dmabuf_api.rst
-
-diff --git a/Documentation/iio/dmabuf_api.rst b/Documentation/iio/dmabuf_api.rst
-new file mode 100644
-index 000000000000..1cd6cd51a582
---- /dev/null
-+++ b/Documentation/iio/dmabuf_api.rst
-@@ -0,0 +1,54 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+High-speed DMABUF interface for IIO
-+===================================
-+
-+1. Overview
-+===========
-+
-+The Industrial I/O subsystem supports access to buffers through a
-+file-based interface, with read() and write() access calls through the
-+IIO device's dev node.
-+
-+It additionally supports a DMABUF based interface, where the userspace
-+can attach DMABUF objects (externally created) to a IIO buffer, and
-+subsequently use them for data transfers.
-+
-+A userspace application can then use this interface to share DMABUF
-+objects between several interfaces, allowing it to transfer data in a
-+zero-copy fashion, for instance between IIO and the USB stack.
-+
-+The userspace application can also memory-map the DMABUF objects, and
-+access the sample data directly. The advantage of doing this vs. the
-+read() interface is that it avoids an extra copy of the data between the
-+kernel and userspace. This is particularly useful for high-speed devices
-+which produce several megabytes or even gigabytes of data per second.
-+It does however increase the userspace-kernelspace synchronization
-+overhead, as the DMA_BUF_SYNC_START and DMA_BUF_SYNC_END IOCTLs have to
-+be used for data integrity.
-+
-+2. User API
-+===========
-+
-+As part of this interface, three new IOCTLs have been added. These three
-+IOCTLs have to be performed on the IIO buffer's file descriptor,
-+obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-+
-+  ``IIO_BUFFER_DMABUF_ATTACH_IOCTL(int)``
-+    Attach the DMABUF object, identified by its file descriptor, to the
-+    IIO buffer. Returns zero on success, and a negative errno value on
-+    error.
-+
-+  ``IIO_BUFFER_DMABUF_DETACH_IOCTL(int)``
-+    Detach the given DMABUF object, identified by its file descriptor,
-+    from the IIO buffer. Returns zero on success, and a negative errno
-+    value on error.
-+
-+    Note that closing the IIO buffer's file descriptor will
-+    automatically detach all previously attached DMABUF objects.
-+
-+  ``IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *iio_dmabuf)``
-+    Enqueue a previously attached DMABUF object to the buffer queue.
-+    Enqueued DMABUFs will be read from (if output buffer) or written to
-+    (if input buffer) as long as the buffer is enabled.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 1b7292c58cd0..3eae8fcb1938 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -9,6 +9,8 @@ Industrial I/O
- 
-    iio_configfs
- 
-+   dmabuf_api
-+
-    ep93xx_adc
- 
-    bno055
--- 
-2.43.0
-
+Added to for-next, thanks.
