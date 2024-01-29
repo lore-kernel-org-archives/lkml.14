@@ -1,107 +1,135 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F8685EE7C;
-	Mon, 29 Jan 2024 11:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A425EE60;
+	Mon, 29 Jan 2024 11:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706528814; cv=none; b=H5lzNEHynxF+RD3IV40BftfqtUygCiJIY8SsI44Lv3iXmeagQQDm57znPWrYTvzOiu2SOoLfMrdY7TPv50bsFNBCEU7dGppp1zJYOLT6YFVDxYRd1+8iTeKeB9sG4dvoSxTcQtkg5aMQYWXvzkRVR4Ic04PRMB4QMkgBsmOpdGA=
+	t=1706528891; cv=none; b=eqQ0bLE8PyOy5CJr/LqhzEemOQgB3j0u5qubxgHB+4izW+m3bOcyC05xTq3kQCBGnXKcLhXIGzJm/G812/Y3OQeKZ85Ay1blGIay++XX7a8fc8M9mPSfhlHrKdRHGBUsW8c0UdqANeK87PbQ4SB4CzSXkqDSd4QEasDiLz50Jb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706528814; c=relaxed/simple;
-	bh=UHoui6zpUi+y4RxzG3lPZBjUPZGN2V5L8s82iND4ksY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWDnxv4H4SIN0uovPDQP/Ucvqp2xOOET8opxoO51IfoxwDSNYex00zYHInoPb3XzedgmwC3limruSJtd47QJ0qAHahRbcAHXjGbl+A9Lcy6dyBj7c8p0gJX3I6WcL52jyoDQyAyO3zQRptcbhg5oY5WqheBHwAPRI/+RxCeYwok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 824181FB;
-	Mon, 29 Jan 2024 03:47:35 -0800 (PST)
-Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F77E3F5A1;
-	Mon, 29 Jan 2024 03:46:46 -0800 (PST)
-Date: Mon, 29 Jan 2024 11:46:43 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, pcc@google.com,
-	steven.price@arm.com, vincenzo.frascino@arm.com, david@redhat.com,
-	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 05/35] mm: cma: Don't append newline when
- generating CMA area name
-Message-ID: <ZbeQI-sMvJMLw7g7@raptor>
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-6-alexandru.elisei@arm.com>
- <8b5dfed3-f881-4f0a-be81-d7fcf3be0deb@arm.com>
+	s=arc-20240116; t=1706528891; c=relaxed/simple;
+	bh=O8AZC10zY7ggCIyUWjiwyicHtrvf5ln0+sqPnY3/pGc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z62l2BOijLi6JhMXxTpKsgyhZG6llL61vUHEjThlMe38JMRw6U4vnGhkMlQUeJi8LjxkSU9boJkF8qkTXoQNL4m2jNUb8ad8pcaZA7JlpB+yevJu+m7AklL3vNAS4oidurZYtbJ6gpeholmH3yWxBRNZr2cREpHzsfAXrPXf5vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MYKkUPFY; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MYKkUPFY"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40TBm1ll107261;
+	Mon, 29 Jan 2024 05:48:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706528881;
+	bh=MoCRQYVZEX+Mr8OkesIHLNljp9ihpwaEzEO3zAB3r08=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=MYKkUPFYdGGGVY+DOiIV10jYF1/i9KCFULKXZokh5EFGNf1UpUbXalk3jH4IMFkdP
+	 5kI2IN9t/sj2jUvsGRlRFOdCRrdt57o+wDHhgC0R9QZtjyV0DBgLJ/yszRO0lOuiaF
+	 NvoTTZJakw2n2I6q/lIYZDh3K87wVRiXVEWIj+s8=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40TBm1Ta023321
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Jan 2024 05:48:01 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Jan 2024 05:48:00 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Jan 2024 05:48:00 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40TBloqR029678;
+	Mon, 29 Jan 2024 05:47:57 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH 2/3] arm64: dts: ti: k3-j784s4-evm: Enable PCIe0 and PCIe1 in RC Mode
+Date: Mon, 29 Jan 2024 17:17:48 +0530
+Message-ID: <20240129114749.1197579-3-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240129114749.1197579-1-s-vadapalli@ti.com>
+References: <20240129114749.1197579-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b5dfed3-f881-4f0a-be81-d7fcf3be0deb@arm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi,
+Enable PCIe0 and PCIe1 instances of PCIe in Root Complex mode of
+operation on J784S4 EVM. The lanes of PCIe0 are connected to Serdes1
+instance of Serdes while the lanes of PCIe1 are connected to Serdes0
+instance of Serdes in J784S4 SoC. Despite both PCIe instances supporting
+up to 4 Lanes, since the physical connections to the PCIe connector
+corresponding to the PCIe1 instance of PCIe are limited to 2 Lanes on
+the J784S4 EVM, update the "num-lanes" property of PCIe1 accordingly.
 
-On Mon, Jan 29, 2024 at 02:43:08PM +0530, Anshuman Khandual wrote:
-> 
-> On 1/25/24 22:12, Alexandru Elisei wrote:
-> > cma->name is displayed in several CMA messages. When the name is generated
-> > by the CMA code, don't append a newline to avoid breaking the text across
-> > two lines.
-> 
-> An example of such mis-formatted CMA output from dmesg could be added
-> here in the commit message to demonstrate the problem better.
-> 
-> > 
-> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > ---
-> 
-> Regardless, LGTM.
-> 
-> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 46 ++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-Thanks!
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+index f34b92acc56d..4b94fa348869 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+@@ -1081,3 +1081,49 @@ dp0_out: endpoint {
+ 		};
+ 	};
+ };
++
++&serdes0 {
++	status = "okay";
++	serdes0_pcie1_link: phy@0 {
++		reg = <0>;
++		cdns,num-lanes = <4>;
++		#phy-cells = <0>;
++		cdns,phy-type = <PHY_TYPE_PCIE>;
++		resets = <&serdes_wiz0 1>, <&serdes_wiz0 2>,
++			 <&serdes_wiz0 3>, <&serdes_wiz0 4>;
++	};
++};
++
++&serdes_wiz0 {
++	status = "okay";
++};
++
++&pcie1_rc {
++	status = "okay";
++	num-lanes = <2>;
++	reset-gpios = <&exp1 2 GPIO_ACTIVE_HIGH>;
++	phys = <&serdes0_pcie1_link>;
++	phy-names = "pcie-phy";
++};
++
++&serdes1 {
++	status = "okay";
++	serdes1_pcie0_link: phy@0 {
++		reg = <0>;
++		cdns,num-lanes = <2>;
++		#phy-cells = <0>;
++		cdns,phy-type = <PHY_TYPE_PCIE>;
++		resets = <&serdes_wiz1 1>, <&serdes_wiz1 2>;
++	};
++};
++
++&serdes_wiz1 {
++	status = "okay";
++};
++
++&pcie0_rc {
++	status = "okay";
++	reset-gpios = <&exp1 6 GPIO_ACTIVE_HIGH>;
++	phys = <&serdes1_pcie0_link>;
++	phy-names = "pcie-phy";
++};
+-- 
+2.34.1
 
-> 
-> > 
-> > Changes since rfc v2:
-> > 
-> > * New patch. This is a fix, and can be merged independently of the other
-> > patches.
-> 
-> Right, need not be part of this series. Hence please send it separately to
-> the MM list.
-
-Will do!
-
-Alex
-
-> 
-> > 
-> >  mm/cma.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/cma.c b/mm/cma.c
-> > index 7c09c47e530b..f49c95f8ee37 100644
-> > --- a/mm/cma.c
-> > +++ b/mm/cma.c
-> > @@ -204,7 +204,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
-> >  	if (name)
-> >  		snprintf(cma->name, CMA_MAX_NAME, name);
-> >  	else
-> > -		snprintf(cma->name, CMA_MAX_NAME,  "cma%d\n", cma_area_count);
-> > +		snprintf(cma->name, CMA_MAX_NAME,  "cma%d", cma_area_count);
-> >  
-> >  	cma->base_pfn = PFN_DOWN(base);
-> >  	cma->count = size >> PAGE_SHIFT;
