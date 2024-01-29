@@ -1,95 +1,65 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD764155A28;
-	Mon, 29 Jan 2024 16:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5C8155316;
+	Mon, 29 Jan 2024 16:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706544586; cv=none; b=ZQWSodWlVuwPIjs1DnpOoDuKdALpB09Y7bgGwhqpCEt5ErGb+eWL4u85ooZhIuImqDJMPIBXDrJ1vD9kfxIQp/vJP4Kj2aoRmo7jYlzV9K35ivJ7uzUzMuRy1qfq28iocVsoiRY07h0sxsz0PWEKRGsg95DpqBbFKFykdXSX1Sw=
+	t=1706544719; cv=none; b=DSvHah43ICESVSxnnFce5yntactFraCyt4yC/RAXhSFqqTtQ5HYsRQwCW2pONsO3uObZpEiVzCw2Y4dknOIevIEj8PhLBH5Y1DaQ4Y/RU49KQ56EwFOoB+IUqCBfKf2ECCC6liu/q3Ut1R9g06CJYu1plLS72iRdgwLLKYUZpPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706544586; c=relaxed/simple;
-	bh=hNsaj1rxxwQWYa7Z7f8gZ5X4GBVhrlEGD+oqwl6NJL8=;
+	s=arc-20240116; t=1706544719; c=relaxed/simple;
+	bh=EJuKz+rDfnnrgz4jtF7KK8M8+lKo37WzgpZ8fWKe+go=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDDnbf61n0w46pMCWsNAhngSgrKuqoxhJtEEZXsS1hfL1dQlNrNZgOehLZsGP5NBc1Xytr0TnGYFV+XhsSnh8FmtoFTfx8LxAfFPpLaAtlwadR4ubQQLHXWEDVr3oyrWzVcNxaYTLg7Lj3nlx/HoGm96YyuoGkcKfWULgTHYgJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XEmM3qYl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pHOAXzVZ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=v0bghz1e; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o2TK9+Jj; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZB+GO7gWznVf1uLUo7DDZhMlCsWOew2DnJD823kDZZqLuhIsD4Z+e6j9AHZf69vhtpei0uO7giXMeQDt1H8coK1LAQRYajRcA/wcF0e1iVz/mo9APHBx0Bg8oioTzX80JOcYExzB7hD6fAckJi0gxa2p1WDOWJSbp7DcmE6X7Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jmZTr9+s; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XEmM3qYl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pHOAXzVZ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="v0bghz1e";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o2TK9+Jj"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BD34C1F7F6;
-	Mon, 29 Jan 2024 16:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706544582; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0q2MLUrv1k7d9D5+/BdCoPmlbiZZ17Ok8bpHpkSmRSY=;
-	b=XEmM3qYlI0CUrEqb7kPUhszOWOQHrlokbHhrZc7EGwa2SHsGXXDHs28Y1liMhb8eVSRDeO
-	zatQeIr5WQa7C018hiHg56nH3gGKBWdULRUkIytPR2X8MllN8+cuqIC1jlmM9H7jAE4AEK
-	FizcKVhqgW1iD6E/ABYBy/eaXsx6HxA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706544582;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0q2MLUrv1k7d9D5+/BdCoPmlbiZZ17Ok8bpHpkSmRSY=;
-	b=pHOAXzVZkyeIJmcfgNypcReo3Jf9iwdmiAJjbf9PZXcOsFH1rsl1yy9JI5Ch2qME7PBVfo
-	x7CM5qd5SElWPxDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706544580; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0q2MLUrv1k7d9D5+/BdCoPmlbiZZ17Ok8bpHpkSmRSY=;
-	b=v0bghz1eqSg+/3eBpgiT5psyrda9f5aC+lV5JzdkYb2pQcpf8whF4MwtOFF1+nwpPoZfYI
-	KbB9mB8y4ZcLBV2pgYTRKbwoZe9O2ilikNY2Mtihm1Zz592TvhQ+xEEVq0S1ExdH7wUPkL
-	uuMBhbM3mblZ9tOrhFRxTnLP+JkzkKU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706544580;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0q2MLUrv1k7d9D5+/BdCoPmlbiZZ17Ok8bpHpkSmRSY=;
-	b=o2TK9+JjZ+NMF9RV1bTujh4tyCF2Ql59qLB7eN/Mzp3OOKiLYgY59GiPARiAgNiFdm1hIV
-	MtBKvHGUbHtJZeBA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id ACF4D132FA;
-	Mon, 29 Jan 2024 16:09:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id v5ItKsTNt2V/JAAAn2gu4w
-	(envelope-from <jack@suse.cz>); Mon, 29 Jan 2024 16:09:40 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 1B926A0807; Mon, 29 Jan 2024 17:09:39 +0100 (CET)
-Date: Mon, 29 Jan 2024 17:09:39 +0100
-From: Jan Kara <jack@suse.cz>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Jan Kara <jack@suse.cz>, Roman Smirnov <r.smirnov@omp.ru>,
-	stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Karina Yankevich <k.yankevich@omp.ru>, lvc-project@linuxtesting.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-ext4@vger.kernel.org,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>
-Subject: Re: [PATCH 5.10/5.15 v2 0/1 RFC] mm/truncate: fix WARNING in
- ext4_set_page_dirty()
-Message-ID: <20240129160939.jgrhzrh5l2paezvp@quack3>
-References: <20240125130947.600632-1-r.smirnov@omp.ru>
- <ZbJrAvCIufx1K2PU@casper.infradead.org>
- <20240129091124.vbyohvklcfkrpbyp@quack3>
- <Zbe5NBKrugBpRpM-@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jmZTr9+s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706544717; x=1738080717;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EJuKz+rDfnnrgz4jtF7KK8M8+lKo37WzgpZ8fWKe+go=;
+  b=jmZTr9+s0BH0yotyOal0q9jxcJoA62wy25l1FbdVyMSYrG8n8/5I5iXX
+   j6f1Uam6LcnTvGo2QtuQdybq/982+bOjOmiro8aVgfeC/za03w88C5U5F
+   0MGWVmSus8W51EfUIEjZVSDBYPoL8e/2N5o60F5D710ImRdsL38rx5RIQ
+   zqrV4PPN/KiyHIRtvMwhY9U+wL+Ksvj18xrmdcZN/pmKjqluICEowsKVw
+   gjIiuQJbyWMUQsUy0e+m1ye3rkP1aVqCbJwhlC0ZrVeDObPRNslWn3LnY
+   PKaaucS09jcnGyHHffyopgrqE/81eywmV6W0Wm1vy1AUk6AlNf/trU4v0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16359739"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="16359739"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 08:02:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="3342415"
+Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 29 Jan 2024 08:02:44 -0800
+Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rUU5q-0004Oq-0h;
+	Mon, 29 Jan 2024 16:02:42 +0000
+Date: Tue, 30 Jan 2024 00:02:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
+	linux@roeck-us.net, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au, corbet@lwn.net,
+	u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
+	naresh.solanki@9elements.com, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+	BMC-SW@aspeedtech.com, patrick@stwcx.xyz
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v13 3/3] hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED
+ g6 PWM/Fan tach
+Message-ID: <202401292303.6SVAncvn-lkp@intel.com>
+References: <20240124060705.1342461-4-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -98,119 +68,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zbe5NBKrugBpRpM-@casper.infradead.org>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=v0bghz1e;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=o2TK9+Jj
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[17];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,syzkaller.appspot.com:url,bootlin.com:url];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Score: -4.01
-X-Rspamd-Queue-Id: BD34C1F7F6
-X-Spam-Flag: NO
+In-Reply-To: <20240124060705.1342461-4-billy_tsai@aspeedtech.com>
 
-On Mon 29-01-24 14:41:56, Matthew Wilcox wrote:
-> On Mon, Jan 29, 2024 at 10:11:24AM +0100, Jan Kara wrote:
-> > On Thu 25-01-24 14:06:58, Matthew Wilcox wrote:
-> > > On Thu, Jan 25, 2024 at 01:09:46PM +0000, Roman Smirnov wrote:
-> > > > Syzkaller reports warning in ext4_set_page_dirty() in 5.10 and 5.15
-> > > > stable releases. It happens because invalidate_inode_page() frees pages
-> > > > that are needed for the system. To fix this we need to add additional
-> > > > checks to the function. page_mapped() checks if a page exists in the 
-> > > > page tables, but this is not enough. The page can be used in other places:
-> > > > https://elixir.bootlin.com/linux/v6.8-rc1/source/include/linux/page_ref.h#L71
-> > > > 
-> > > > Kernel outputs an error line related to direct I/O:
-> > > > https://syzkaller.appspot.com/text?tag=CrashLog&x=14ab52dac80000
-> > > 
-> > > OK, this is making a lot more sense.
-> > > 
-> > > The invalidate_inode_page() path (after the page_mapped check) calls
-> > > try_to_release_page() which strips the buffers from the page.
-> > > __remove_mapping() tries to freeze the page and presuambly fails.
-> > 
-> > Yep, likely.
-> > 
-> > > ext4 is checking there are still buffer heads attached to the page.
-> > > I'm not sure why it's doing that; it's legitimate to strip the
-> > > bufferheads from a page and then reattach them later (if they're
-> > > attached to a dirty page, they are created dirty).
-> > 
-> > Well, we really need to track dirtiness on per fs-block basis in ext4
-> > (which makes a difference when blocksize < page size). For example for
-> > delayed block allocation we reserve exactly as many blocks as we need
-> > (which need not be all the blocks in the page e.g. when writing just one
-> > block in the middle of a large hole). So when all buffers would be marked
-> > as dirty we would overrun our reservation. Hence at the moment of dirtying
-> > we really need buffers to be attached to the page and stay there until the
-> > page is written back.
-> 
-> Thanks for the clear explanation!
-> 
-> Isn't the correct place to ensure that this is true in
-> ext4_release_folio()?  I think all paths to remove buffer_heads from a
-> folio go through ext4_release_folio() and so it can be prohibited here
-> if the folio is part of a delalloc extent?
+Hi Billy,
 
-OK, I tried to keep it simple but now I have to go into more intricate
-details of GUP and the IO path so please bear with me. Normally, how things
-happen on write or page_mkwrite time is:
+kernel test robot noticed the following build errors:
 
-lock_page(page)
-check we have buffers, create if not
-do stuff with page
-mark appropriate buffers (and thus the page) dirty
-unlock_page(page)
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on linus/master v6.8-rc2 next-20240129]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Now the page and buffers are dirty so nothing can be freed as reclaim
-doesn't touch such pages (and neither does try_to_free_buffers()). So we
-are safe until page writeback time.
+url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-hwmon-fan-Add-fan-binding-to-schema/20240124-141405
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20240124060705.1342461-4-billy_tsai%40aspeedtech.com
+patch subject: [PATCH v13 3/3] hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED g6 PWM/Fan tach
+config: riscv-randconfig-r071-20240129 (https://download.01.org/0day-ci/archive/20240129/202401292303.6SVAncvn-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240129/202401292303.6SVAncvn-lkp@intel.com/reproduce)
 
-But GUP users such as direct IO are different. They do the page_mkwrite()
-dance at GUP time so we are fine at that moment. But on direct IO
-completion they recheck page dirty bits and call set_page_dirty() *again*
-if they find the page has been cleaned in the mean time. And this is where
-the problem really happens. If writeback of the pages serving as direct IO
-buffer happen while the IO is running, buffers get cleaned, and can be
-reclaimed, and we then hit the warning in ext4_set_page_dirty().
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401292303.6SVAncvn-lkp@intel.com/
 
-So what we really need is "don't reclaim page buffers if the page is pinned
-by GUP". This is what MM checks in recent kernels (since d824ec2a15467 "mm:
-do not reclaim private data from pinned page") and the patch discussed here
-is effectively an equivalent of it for stable. So AFAICT it really closes
-all the problematic paths. Sure we could implement that check in
-ext4_release_folio() but I don't think there's a great reason for that.
+All errors (new ones prefixed by >>):
 
-And yes, technically I assume we could reconstruct the buffer state from
-other data structures if we find the buffers are missing. But in
-ext4_set_page_dirty() that is not easily possible as it may be called in
-softirq context. And elsewhere it is prone to hiding other bugs we may
-introduce. So just not stripping the buffer heads when the page is pinned
-is by far the easiest solution for ext4, in particular for stable...
+>> drivers/hwmon/aspeed-g6-pwm-tach.c:496:2: error: implicit declaration of function 'of_platform_populate' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+           of_platform_populate(dev->of_node, NULL, NULL, dev);
+           ^
+   1 error generated.
 
-								Honza
+
+vim +/of_platform_populate +496 drivers/hwmon/aspeed-g6-pwm-tach.c
+
+   446	
+   447	static int aspeed_pwm_tach_probe(struct platform_device *pdev)
+   448	{
+   449		struct device *dev = &pdev->dev, *hwmon;
+   450		int ret;
+   451		struct device_node *child;
+   452		struct aspeed_pwm_tach_data *priv;
+   453	
+   454		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+   455		if (!priv)
+   456			return -ENOMEM;
+   457		priv->dev = dev;
+   458		priv->base = devm_platform_ioremap_resource(pdev, 0);
+   459		if (IS_ERR(priv->base))
+   460			return PTR_ERR(priv->base);
+   461	
+   462		priv->clk = devm_clk_get_enabled(dev, NULL);
+   463		if (IS_ERR(priv->clk))
+   464			return dev_err_probe(dev, PTR_ERR(priv->clk),
+   465					     "Couldn't get clock\n");
+   466		priv->clk_rate = clk_get_rate(priv->clk);
+   467		priv->reset = devm_reset_control_get_exclusive(dev, NULL);
+   468		if (IS_ERR(priv->reset))
+   469			return dev_err_probe(dev, PTR_ERR(priv->reset),
+   470					     "Couldn't get reset control\n");
+   471	
+   472		ret = reset_control_deassert(priv->reset);
+   473		if (ret)
+   474			return dev_err_probe(dev, ret,
+   475					     "Couldn't deassert reset control\n");
+   476	
+   477		priv->chip.dev = dev;
+   478		priv->chip.ops = &aspeed_pwm_ops;
+   479		priv->chip.npwm = PWM_ASPEED_NR_PWMS;
+   480	
+   481		ret = devm_pwmchip_add(dev, &priv->chip);
+   482		if (ret < 0) {
+   483			reset_control_assert(priv->reset);
+   484			return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
+   485		}
+   486	
+   487		for_each_child_of_node(dev->of_node, child) {
+   488			ret = aspeed_tach_create_fan(dev, child, priv);
+   489			if (ret < 0) {
+   490				of_node_put(child);
+   491				dev_warn(dev, "Failed to create fan %d", ret);
+   492				return 0;
+   493			}
+   494		}
+   495	
+ > 496		of_platform_populate(dev->of_node, NULL, NULL, dev);
+   497	
+   498		hwmon = devm_hwmon_device_register_with_info(dev, "aspeed_tach", priv,
+   499							     &aspeed_tach_chip_info, NULL);
+   500		ret = PTR_ERR_OR_ZERO(hwmon);
+   501		if (ret) {
+   502			reset_control_assert(priv->reset);
+   503			return dev_err_probe(dev, ret,
+   504					     "Failed to register hwmon device\n");
+   505		}
+   506	
+   507		return 0;
+   508	}
+   509	
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
