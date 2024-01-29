@@ -1,58 +1,60 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92AC62A02
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF22663132
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706534351; cv=none; b=uu+GD2ZQWGO8TF22MU6HvPPT9XxAzgXg0+7ICAGXSwwqczs0939lA7Ofa5GH2ReqV8n3MrhPfagIG3E+azr0u76c39uhd7p1kCfCayA0sl6+b6752AVyMBzPhJYDJejrcBCgoNJU75Xf7BuEAztxAcD/V7KE2KtmqAu3zVz4Ri0=
+	t=1706534354; cv=none; b=D8WqSGdPiy/+U62GElT0YDbt2GSKkyi8GEGUoreOEZcNfCmwiwqKtCJm0oLYplbqSbchOossBvWSPOhl11N7H1+l2bM0JzMnL092tcByIthhTPSKd8tbnDDsAmLqk4ucg11D3pRxhj6OPWo05SU3Go6gxiaOsWx8omOw4piAgMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706534351; c=relaxed/simple;
-	bh=WXwCrF1iMEcXk395vZUIozuTjV7W1KezDJ0wK+pB1dM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BKP27W52Utfj7LjLIM044a41EF2w0zTrQEhKvrKF87FgLsUCNMkCsLbBBwJOihBP1g188o0SXRkR5YoZEA/ps+Ss7LgaPIlZ/YsuDlczN9lKhPUZMV6JxrkcErDUSCW6t/E++iKxQJ8yNZv9wIoZFiVdV3EMXcms0lXBSb4UwII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=efKHsVA0; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1706534354; c=relaxed/simple;
+	bh=obEEQfmkAfxnjBW+PweeqoESi7fBuQn5BZP9Fnf2iR4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uoyHrvaIUkHT5uaeEAN1QByqVNV4gJXlxeil1aTmiqzrigIE0gyXFIowMyxCxAX2NA1n6A3PxCLLsYzFAz3jVt8QFtDv7yahg1qi4W3t3Q1/EwDRdveJtnO1/0e/2uhJdEJmi4MmkeW2NorKRkg8T60hiZACLJLApBQa0nqo9Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UwmQdUAB; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="efKHsVA0"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a357cba4a32so161633666b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:19:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UwmQdUAB"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a293f2280c7so275563566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:19:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706534348; x=1707139148; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5eVpbB25HXQxgWJrqti9OANlwnBf9Ih23lyrFGGtAA=;
-        b=efKHsVA0KSa/VpwFcjm5zRJ5GLZmFXZicAgjLElAZ2UO/s4J3+1iycBq039fumld/w
-         uXGhVc1IzXspjtVRiYstkOTvTLYl2ugegHto1nSYJlt5JvkUp+mGOQPCFIsKV04v+Pe7
-         2C/h12Do7fAQQjG0QjfTiWJHgRnBuVQtCtej/SFqT/gL75fVEVV1RmLvi+KgG3AAX0a8
-         5C+2Trwhj/N4MJT3ZNw4KwLph0BDCr9E7hv2Sef/cM8wDxkqZLZaErBCVRJmEBlHGDfm
-         epa2N+U0LPYmuL+YhlaBVslUYiIpTWP9VnQ9/TNx6v6d/c+dookwYGieTu/SNclJOg12
-         hwWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706534348; x=1707139148;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1706534351; x=1707139151; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=I5eVpbB25HXQxgWJrqti9OANlwnBf9Ih23lyrFGGtAA=;
-        b=dZPqdcYJWZUpn+WORVX03RTzxPl0bMzHgl41q6Tt3478ipxKikMYUjZNOUdB9ZNkqn
-         1r6I+ql5PrjjPp3gmtXsFyDFrmZX1WtgZBACuMFEwX3OW35zbfqB0HVvum+iUtSwIlNg
-         1F55xcT4OIB8jM189Me8uhwuW+4iNxyziiZqw2G71iIolM8aAa8bH3idwpSqmPEjgzl4
-         6JrD/uJ9Kq7DrGms4zhe2z1KJybUA/rOfprPtXB0qHk0+53aCsyuhzWdv/oNXJ4d5tgu
-         HvJlsDDAVkUmZoxX444v1piqWMjtuo1Q/19zihrSHiN2pTKCLp/UCZAw+YxqH4Iwk3tZ
-         ngiQ==
-X-Gm-Message-State: AOJu0YxZwP5IhzeOV6TnndYFNyCauzgHiFExtL5HuiJAdoynXhJ4LJl2
-	AFyLbMtsbaW6G7bIhh+CzzPzBhaRgboG6TNybTP0/fKARc4ICJfe3DI/PkIcYlw=
-X-Google-Smtp-Source: AGHT+IHqRqczW+spX0XIhFaQfcphzdcZCldgLjhlKdkZECtdAxveG++qjRbAtDQfSWy/ooYRG6xNIA==
-X-Received: by 2002:a17:906:bc49:b0:a35:69c3:8af5 with SMTP id s9-20020a170906bc4900b00a3569c38af5mr3225051ejv.36.1706534347903;
-        Mon, 29 Jan 2024 05:19:07 -0800 (PST)
+        bh=GG0GBWYmR303lhQbjP/lih7U/nLsvQ1GRwuqyhVa6N8=;
+        b=UwmQdUAByTQvsZ8UckIo6hB9ORoV3rlmhrEL3OD5qt/IM5i3wU6jThDeXvZ3up9rMy
+         e/VRaOH55a5dreCXSONF1Bdx2gtuCqSgWJ++uoxNyNIWE6MHsGHQCgmLwPvGFAoaVI+l
+         +RSRiWpR4NLQLATee3+avimjXIvjd746YhWHum+RAW/3Wxq8ao/BC7PBJpM8wgx6KgQD
+         rVdq1343zTIfjsNxyIfKXd/6ihiOB347PWcoJic8Zgvt03onJqZ1WC1wXEsSejPFXa+H
+         8YLkMRX4ZqiS+4SRn3z2UDn14svrFxKlsgfMF3Xf4R3IgT34zy1Vlj2oTvOAE3QKDCBc
+         9NNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706534351; x=1707139151;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GG0GBWYmR303lhQbjP/lih7U/nLsvQ1GRwuqyhVa6N8=;
+        b=cUPK4NVairu9HAPs1yQuuZn72U12u+JdyFhNOHz81FuNmwasRJnupFU2x3z32FAHEq
+         ho2HTE2EyzzBHuO7xbO3tzZ5+4VKuXpocujCthNOndXc0Q19THUqlp1SZ27E/pnoA+yF
+         ARXgfP5Z8XslfD/Dr0Qi3RBP2hu5Xjgrfx6c0Y50G+2ybIl+XZuzaUU+S2Qp8Voj4JqW
+         JrgBDRpZTOqf1VDxntkK1G2+hWnbBHfBHSvziq1VGXQkhDBDG9sJ32t0PMroi31KbZ96
+         MMbmnNWRlmEKW40IgS2xHJYHp6MiagEYpNVM3RsNScNU4ryF2OyyntQAv9IGKuSGJYPO
+         wIWQ==
+X-Gm-Message-State: AOJu0YxxdMV43cjyt6ePjEPPDOgDHNxFm6zshY5btBF7Cm4FSKne8KXo
+	CRP8VQ/k9iq7WQ1LTsTjO3LfJ7/7WyBY/lWC/WUR7V+SPGT3lXZeVcZDeWd8nLU=
+X-Google-Smtp-Source: AGHT+IEJy4JQltR8i3WL7nnCfTH9WoA8KA83+7OvtRrL8fcRTBSUgiIoyZaw31At50+47iq+vfBl/w==
+X-Received: by 2002:a17:906:c097:b0:a2d:2121:2a93 with SMTP id f23-20020a170906c09700b00a2d21212a93mr4511029ejz.70.1706534351183;
+        Mon, 29 Jan 2024 05:19:11 -0800 (PST)
 Received: from [127.0.1.1] ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id q15-20020a17090622cf00b00a359afad88dsm1591658eja.10.2024.01.29.05.19.06
+        by smtp.gmail.com with ESMTPSA id q15-20020a17090622cf00b00a359afad88dsm1591658eja.10.2024.01.29.05.19.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 05:19:07 -0800 (PST)
+        Mon, 29 Jan 2024 05:19:10 -0800 (PST)
 From: Abel Vesa <abel.vesa@linaro.org>
-Subject: [PATCH 0/5] drm/msm: Add display support for X1E80100
-Date: Mon, 29 Jan 2024 15:18:53 +0200
-Message-Id: <20240129-x1e80100-display-v1-0-0d9eb8254df0@linaro.org>
+Date: Mon, 29 Jan 2024 15:18:55 +0200
+Subject: [PATCH 2/5] dt-bindings: display/msm: Document the DPU for
+ X1E80100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,9 +63,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL2lt2UC/x2N0QqDMAwAf0XyvEBSi4z9ythDqlEDpZOGDUX89
- 5U93sFxJ7hWU4dHd0LVr7m9SwO+dTCuUhZFmxpDoNBzIMad9U5MhJP5luVAiUMfYiRKMkPLkrh
- iqlLGtYXlk3OTW9XZ9v/n+bquHx8AJ2B3AAAA
+Message-Id: <20240129-x1e80100-display-v1-2-0d9eb8254df0@linaro.org>
+References: <20240129-x1e80100-display-v1-0-0d9eb8254df0@linaro.org>
+In-Reply-To: <20240129-x1e80100-display-v1-0-0d9eb8254df0@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
  Abhinav Kumar <quic_abhinavk@quicinc.com>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
@@ -79,54 +81,48 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1409; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=WXwCrF1iMEcXk395vZUIozuTjV7W1KezDJ0wK+pB1dM=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlt6XAyyrUHNMZ7tZaQaVkKEhqXAPQYD297pt77
- cVz/Nvo4dCJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbelwAAKCRAbX0TJAJUV
- Vv61D/9bBdHXS2wO6uKyfd7rbe1VW/qu+1zH6S6JWIsPFoU1rpxKaN3xBeA24PvB/qvt4AD1PYz
- xZNQMdJA1PAC8MDqz4/NanHfBFVySXwo/7+Xu31ocVupozgKfbIevnAJxbMh7YvSaVgiru0UcrC
- p6VigFeydgfKVqWm192f9K2K+GaRC92TfFx7FeHU/ptzu1UbaxxRf6hmn+C/E6nw0SfS20GMkKq
- +QA65vuln5dQ5roWvWsFlj3XCrr9clS8U6nqTlVpC1d1pt81tOERCP1ithcJGeGHqxHHbJFURh9
- 7cNwkRfZzVxGPXKREvwbvZxVYxZ/doljclG5U+YWAHR7xWGdygTn0pg3pER3yS6jaD/kqQ2Voc2
- 5FPVl3W0u3sBbjP/KGLbQQE+bIYesaqBdnEKcH2p+zMTq7yHgpOA1rOCKZelbIGLCXlAR6pmSgC
- KUO/wHRQDPwh9GIzmVkJnnspHDXEj5sHO1o+tG/PqVP9dvCAQonRXUzKtjtJGRiQpjdbp4JtsnT
- MeiNuutD5Cho2eapVCv1ukETcJA/SfQ3F/MrZn7NMz/RoHjisv0T8mL0Pb4aCdEmilm0Ejisd83
- fMnNXZdfIYU81HG1QH/BkPSAUQjKsLC8yAxa2YNRppJgv7cPkrjW+ITRpI/HITT84XTIv7j03Bm
- F5w42EbmwAIFGmw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=875; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=obEEQfmkAfxnjBW+PweeqoESi7fBuQn5BZP9Fnf2iR4=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlt6XFMvqsCn2GbXA3hKh3+PdT5dkoMZI1KJEt9
+ 0ujMq6Z04iJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbelxQAKCRAbX0TJAJUV
+ Vo80D/96RIySVK8vNVIn96hqrcM85c5tCYu+ZCsjzpyfM13gPfwrzZ/DHNk0Ll0jIod8CkAp3fW
+ dLmw4QLlALVFosIdJ2txSld1VcQiNKbLuJ9GvnCsgbcQ6dPj07BYklYMrde8tuMYoYm4E0HO2lW
+ L8mmfw8j1FyuBWB1ETbnncINvDXJHRgQfUJYjGsAAzkQS+ocXYeIc9ZuSx2hPBE4EkFMF4v+QR0
+ kUu6KApyJS2Y/7BSZMImkuJotbmQqkmkoRdiPp3g04ujhE/SycbyCI/MHbBNK9P8sKKfQoPNqBD
+ KgA1CNa4D4HU53rCeqf9Ruwe9hwizLy9nOEOUStWBh78MNNQ6kQ2X+v9YCJTGsGlPYgxXfsxujv
+ 0UI8vGUm5CY3ccQq2UR5mxrAPcqWa4WiMW+2ektPPnCmS6ONS2wMYMuCx2rS2q0Dd8WHYjUYDbA
+ +drBWk2Rs03ks3T/IoYSy75lGsIYLL+UnzlJSUs8z6sRLCGg+J+h70brlXfl3db2PjNhaH11TCm
+ 2An/Wlvs/excz7GL1PsXjYtQhEOkyjmr4Wu87hlNvFJXnvMHk2xX1RBC/uRfk/ANBL42w81ArWk
+ 4h69JC4e6ROgyx3KDy8RZkAp4rkVd1bIIIZ1aZ5Y21rVxjazjwKhr+ZfAONiBY6ktSVLWRBjn+x
+ wFVzNOCvqkNnP5w==
 X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
  fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-This patchset adds support for display for X1E80100.
-The support for embedded DisplayPort on this platform will not
-be enabled using the connetor type from driver match data,
-but through some 'is-edp' property via DT. This subsequent work
-will be part of a separate patchset.
+Document the DPU for Qualcomm X1E80100 platform in the SM8650 schema, as
+they are similar.
 
 Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
-Abel Vesa (4):
-      dt-bindings: display/msm: document MDSS on X1E80100
-      dt-bindings: display/msm: Document the DPU for X1E80100
-      drm/msm: mdss: Add X1E80100 support
-      drm/msm/dpu: Add X1E80100 support
+ Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Abhinav Kumar (1):
-      drm/msm/dp: Try looking for link-frequencies into the port@0's endpoint first
+diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
+index a01d15a03317..f84fa6d5e6a2 100644
+--- a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
++++ b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
+@@ -13,7 +13,10 @@ $ref: /schemas/display/msm/dpu-common.yaml#
+ 
+ properties:
+   compatible:
+-    const: qcom,sm8650-dpu
++    items:
++      - enum:
++          - qcom,sm8650-dpu
++          - qcom,x1e80100-dpu
+ 
+   reg:
+     items:
 
- .../bindings/display/msm/qcom,sm8650-dpu.yaml      |   5 +-
- .../bindings/display/msm/qcom,x1e80100-mdss.yaml   | 249 ++++++++++++
- .../drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h   | 449 +++++++++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |   2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     |   1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 +
- drivers/gpu/drm/msm/dp/dp_parser.c                 |   6 +-
- drivers/gpu/drm/msm/msm_mdss.c                     |  10 +
- 8 files changed, 721 insertions(+), 2 deletions(-)
----
-base-commit: 6776c8d0924953c6bbd4920d8408f4c1d898af71
-change-id: 20231201-x1e80100-display-a46324400baf
-
-Best regards,
 -- 
-Abel Vesa <abel.vesa@linaro.org>
+2.34.1
 
