@@ -1,105 +1,118 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65A9155A22;
-	Mon, 29 Jan 2024 16:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038EB155A5D;
+	Mon, 29 Jan 2024 16:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545388; cv=none; b=oXyLu1uR8WXKBiuS2OD6buFUspPW8warOlr7sUYn4ARW3RkPWCBUu0FhDLxueSAghpc7KqShFwPbO/9+8xa/9/mc448tCq/IMHzzTajkrRpwD5eCntu4UdmaCHlx5yyCQKCCkupFjGoou7ocbxLSsx1C427ikkvNpOwRpt9/bUk=
+	t=1706545570; cv=none; b=LkUkhrYn0sl6iOfCs2syUkove7ZBLCQutOOmmT7l/kcMZjSJXRg4GiBgk2kSB9sYpTWIfVW2rufmuaDDq4naB8Q1ZzM7f/7+kFH0Mvy8POQeE/nABT4qYuNt/WcA9TnOV8N5vqHV7PNQuMFZOrFFqP2lMrAmq/BHdObIM3y+Y8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545388; c=relaxed/simple;
-	bh=OMqVP6ph42lDf1Ky7eApI1rvSIdCU1Rk3uR4ghXPe7s=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZv5OrEK1IyQwCPY6Pb0GmDFD4Ani7O87gV5phJQXKgEd+pDSIpvf27xqL33KJV6zHgMB+YmXqTVIj5fx2G+FLXCPdO8PPKxMtpEV3Z0UFkSKdzd2wQXWHIZjYfIejmxkeaVsK59QReZbmC1GEEwFmxhO/Ax0cM1dn/7f+J7dbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HKAyNdTb; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706545570; c=relaxed/simple;
+	bh=C4sO6yQ/bq+76ak3Oo81L+OU1zOyCbXoSaUNduyzz0w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UujnTPFLlWYYoaQagXbymBN33+nU7O7QmEQRfm5qIR5lVh+L4AiydmM79qcmSjp4EwJi+bBNv5PbOpShI8V9CVgKZB3SR8L7Uy0hF0T/2+Lbq5OBUdSk2InNI8J9/N5g9KYg91lLqNEYZ8WiyPYlze/5VJRmah5d1egjx2VAqvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eaCrbU3p; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKAyNdTb"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-510322d5275so2844909e87.1;
-        Mon, 29 Jan 2024 08:23:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706545385; x=1707150185; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=boQI9oYiK4uW55M3uxYeL65Mv+jSVBAg7WNoRgTbhwA=;
-        b=HKAyNdTbWgKsrVO1i5IwD/oEwiH5tvNi0SPGcQWdOGwZ0ZL91O25EcPLGms4faYZWQ
-         VJKv28JWFcdeCqxFXO/iHTi5CXR+LuRefwGE1iELbhHQva5Agg6N6NNiJjvKXlTaIjmm
-         ywxmAEGyxNqU789x+cYL7Y0wiTP96eFqgGOSJMJ+QiOFon5lsKEztU6QfszG627eIFWS
-         jkKxtMY8LI5bpFGhQ/1W3GyJvCuw5hrwCLkpV4ud0zOTsCuA45BR5OScfcndNrGmx1Pp
-         WaiTUnSQhabf7Wbnrih8IePaONNtvTiQ0/ZlGx0ol3y+hhJfx/lrM5uz08UCSmUfSO/2
-         cihw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706545385; x=1707150185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=boQI9oYiK4uW55M3uxYeL65Mv+jSVBAg7WNoRgTbhwA=;
-        b=SKzPPGUHF6eQoIUEiJdq6pBV9bdCyR9NTeUjjlMvAX0UYjtfmxZYFsksN3P6W7ipmt
-         ORTx3Ma1A6fz/i0RiphtiuH8QTpGVfrL8k9ja6g/FFhYzKugPA94+64K00o3snLM7JBc
-         8KUvuNTjbr57sS7wDsbRuNfpV6YVYdZ8sMUTHVyYdAPbH7AN7rG1ymQlxaXfsqI/b13h
-         JvoFPq5cjQkx1RYRsywn5T2C1VHRjJl6TMQMnmdtESQeF8j8jUr04XzlsCaO2aFDiJa+
-         vQovs4wh8XtSyprrygKtQf5abdArVBFwJHQknq8kUWtFDrZ0gBROvvnsAKK5wP9LSx81
-         JElw==
-X-Gm-Message-State: AOJu0YxyXIXEuKKBnLjBJ1iUn3L4m3e15HUKP5wUnrRiGKHzMtsuSsyA
-	tAWTdb435hB5LYgzpFTneYk4TJw175e41yOtYvtqpegqGVztIT3F
-X-Google-Smtp-Source: AGHT+IHMb/abY1Egka+gDUQktv39XD/3oc+K/jwDOtSEICdJqJJJ+HlM+QesxWLQLb5dtoB1kU12rw==
-X-Received: by 2002:a05:6512:3da8:b0:511:f33:4e4c with SMTP id k40-20020a0565123da800b005110f334e4cmr2859516lfv.40.1706545384364;
-        Mon, 29 Jan 2024 08:23:04 -0800 (PST)
-Received: from pc636 (host-90-233-198-33.mobileonline.telia.com. [90.233.198.33])
-        by smtp.gmail.com with ESMTPSA id 9-20020ac25f09000000b0050eacc0c80bsm1141544lfq.131.2024.01.29.08.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 08:23:03 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 29 Jan 2024 17:23:01 +0100
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v4 0/4] Reduce synchronize_rcu() latency(v4)
-Message-ID: <ZbfQ5cOkeReti7J0@pc636>
-References: <20240104162510.72773-1-urezki@gmail.com>
- <620b475d-eef8-4396-9d3a-d3dcf1d70f9a@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eaCrbU3p"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CE5D6E000B;
+	Mon, 29 Jan 2024 16:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706545566;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MG/EpR8bVcQceln2f1UmgAvAjO7ip8LLXAJEWchyMuQ=;
+	b=eaCrbU3p0Ll8pLp5KtMk2BFOFJrF8vRmqnxFUveVuzaMIo98Vc8yFYPvXEP45wVKgDA5t0
+	GMJpqeW+mAXtNOjM0kB5EgoMyKt25qIgy/iEVcZOubQT+xYj+ncWFTea7HVNNLsODqe4fQ
+	ucA8h6kEvzxQXb5VP7SqmxaTAWO5qJCl3PecS/FQknYgIN7PZ/0irfiWYjhkYOBWMj/JDW
+	hX3CF8BSjYDoWPGjyYNH7DU3nlx4kQl3rJF0GUArrJs/yVRXz+NJtlwBP+eTLbPrIS5Rys
+	rwhH72vGdvY09mhERXcs3Z3b3y6wZ5ZoFeY49QkP9SlEvw1EfXVNiacg0VbhHQ==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Mon, 29 Jan 2024 17:25:57 +0100
+Subject: [PATCH v7 1/6] dmaengine: dw-edma: Fix the ch_count hdma callback
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <620b475d-eef8-4396-9d3a-d3dcf1d70f9a@paulmck-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240129-b4-feature_hdma_mainline-v7-1-8e8c1acb7a46@bootlin.com>
+References: <20240129-b4-feature_hdma_mainline-v7-0-8e8c1acb7a46@bootlin.com>
+In-Reply-To: <20240129-b4-feature_hdma_mainline-v7-0-8e8c1acb7a46@bootlin.com>
+To: Manivannan Sadhasivam <mani@kernel.org>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Serge Semin <fancer.lancer@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Cai Huoqing <cai.huoqing@linux.dev>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Herve Codina <herve.codina@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Fri, Jan 26, 2024 at 11:07:18PM -0800, Paul E. McKenney wrote:
-> On Thu, Jan 04, 2024 at 05:25:06PM +0100, Uladzislau Rezki (Sony) wrote:
-> > This is a v4 that tends to improve synchronize_rcu() call. To be more
-> > specific it is about reducing a waiting time(especially worst cases)
-> > of caller that blocks until a grace period is elapsed. 
-> > 
-> > In general, this series separates synchronize_rcu() callers from other
-> > callbacks. We keep a dedicated an independent queue, thus the processing
-> > of it starts as soon as grace period is over, so there is no need to wait
-> > until other callbacks are processed one by one. Please note, a number of
-> > callbacks can be 10K, 20K, 60K and so on. That is why this series maintain
-> > a separate track for this call that blocks a context.
-> 
-> And before I forget (again), a possible follow-on to this work is to
-> reduce cond_synchronize_rcu() and cond_synchronize_rcu_full() latency.
-> Right now, these wait for a full additional grace period (and maybe
-> more) when the required grace period has not elapsed.  In contrast,
-> this work might enable waiting only for the needed portion of a grace
-> period to elapse.
-> 
-Thanks. I see it. Probably we also need to move "sync" related
-functionality out of tree.c file to the sync.c or something similar
-to that name. IMO. 
+The current check of ch_en enabled to know the maximum number of available
+hardware channels is wrong as it check the number of ch_en register set
+but all of them are unset at probe. This register is set at the
+dw_hdma_v0_core_start function which is run lately before a DMA transfer.
 
-Thanks!
+The HDMA IP have no way to know the number of hardware channels available
+like the eDMA IP, then let set it to maximum channels and let the platform
+set the right number of channels.
 
---
-Uladzislau Rezki
+Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+
+See the following thread mail that talk about this issue:
+https://lore.kernel.org/lkml/20230607095832.6d6b1a73@kmaincent-XPS-13-7390/
+
+Changes in v2:
+- Add comment
+
+Changes in v3:
+- Fix comment style.
+---
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index 00b735a0202a..1f4cb7db5475 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -65,18 +65,12 @@ static void dw_hdma_v0_core_off(struct dw_edma *dw)
+ 
+ static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+ {
+-	u32 num_ch = 0;
+-	int id;
+-
+-	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+-		if (GET_CH_32(dw, id, dir, ch_en) & BIT(0))
+-			num_ch++;
+-	}
+-
+-	if (num_ch > HDMA_V0_MAX_NR_CH)
+-		num_ch = HDMA_V0_MAX_NR_CH;
+-
+-	return (u16)num_ch;
++	/*
++	 * The HDMA IP have no way to know the number of hardware channels
++	 * available, we set it to maximum channels and let the platform
++	 * set the right number of channels.
++	 */
++	return HDMA_V0_MAX_NR_CH;
+ }
+ 
+ static enum dma_status dw_hdma_v0_core_ch_status(struct dw_edma_chan *chan)
+
+-- 
+2.25.1
+
