@@ -1,155 +1,102 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AB1657A7;
-	Mon, 29 Jan 2024 13:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A99E657AF;
+	Mon, 29 Jan 2024 13:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706536497; cv=none; b=QCK6cY7DSp1dMqg/HjpeQgO9lk2MNq2GmRiB/eCj8gqICvjZAPd9dGv/meQRn1UX50GnK7/ZHGUcgpdvf/fK3r4m+9rPZzrLGSfphPaIqP2G84Qa2n6JDA9E04JHNKUfxR2aqEllyilPZ640xWhqwf6KY6g4avlm/gwkwJZE3kY=
+	t=1706536546; cv=none; b=juE+fWcNutrywctvm2cEo7qIOeHQtDRZJ9Iko5XzILNqH8po+iH7ISNauydPPom4vh+gg/jcoy/vfWFMXPVu57ONM4Kj+K3RmTvSe7b9kR+aptyFf9+D/bhokVNn6jo3rJhp/XoTHRmtCCTDtqFPTA9mUqg57bLJTB8FgTSohbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706536497; c=relaxed/simple;
-	bh=xqyH7fWtScx2nNLslYqwOBDLNXoNvQklWykA+ObA5N4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XzjBgiGODczpIMsyUGnxuCSgqQwud2NkdhiqePNbqx0MsFCZDC/ID2tg8W6nt2ZLSlk3U4N0z8EtEXRotMrsfruk69saubHfS3LbSE6sio8CZsqN/jRbSiFzNw2hPNUMeLebQ03f24ChiLvFcNRm3QF7ucT5UY4KCnfI5RTS+mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-59a47232667so13989eaf.0;
-        Mon, 29 Jan 2024 05:54:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706536494; x=1707141294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pYlBZ5W/rq3MF6m5qquOJIF/ojrZUdhYO+OW6wTYHOk=;
-        b=fD5voDBR+P4ht59ly23fPuN+Bu+Q8Eo9fVZIoX81GzfQJiMoAsLNOEWjvFeHb5QW/A
-         BXFcEEWxCw5OUVlWJ7++jYSrotgkIX3oWcZAbrPwYkyjpZeEAy4U3X60iZGCmpscfsGd
-         RDCykIG6fsd/cPQK25de751AXxa3X7tZpCPuCubEzaBRB3ZC7sZGE+QwHN+1tPj9AzK9
-         WYBZ/7+m1qrum5jNHNsD1u2q0ks8LMvqcgGhB5u/59YNB6BHgcNgTnUWlIiRidDw+jUF
-         R2Pd7DfZd5nux7MaMmqHMmavyap3aSNeHbdXn2cR1f9r0geNCPpmMWB4E0FiH2IQxLpJ
-         OlGQ==
-X-Forwarded-Encrypted: i=0; AJvYcCVxjzDjJsx90tsTA+MV1SjqYCJbTMuOS79h6X6164zvSAaU/MmJtd+zShbb4IhLTznlLL+w+QHFFWpgaYRjbTMOjXY88lDt2rfxHgRT//Dz0R1TmbgylNODFvi7rMmij6hmINkBaO5Q/w==
-X-Gm-Message-State: AOJu0YwuTgQGfjxAL6uStFnm53x3DbIx7oxglTLZOKFDZhhDeBxlaY0z
-	Ytk+HiolZ5HOGBuMw0xtTQz91oTbbcoZMLmaCSi36EAPrTU31VgOeRx0f4zCqdEx67Twa9mhonZ
-	AQTVyK4icueNv3AbhzpDHPbSPuIU=
-X-Google-Smtp-Source: AGHT+IGYDlwxaaseY0LM9XvqXJBdwuD8nvxYIF014j7kc1xHNle26/I11S8aooxI2NqU4SudQWrClPjl81PcCR1+t0A=
-X-Received: by 2002:a05:6870:230d:b0:214:fddf:99f7 with SMTP id
- w13-20020a056870230d00b00214fddf99f7mr7112645oao.5.1706536494486; Mon, 29 Jan
- 2024 05:54:54 -0800 (PST)
+	s=arc-20240116; t=1706536546; c=relaxed/simple;
+	bh=Mu1POmJQZVm0NHymvBVIB8/NOZC6MGmOcANeEI54nU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q/NUF8bLjUc4BgUsn/mnQl9g2lFQZZcUbZdTslrpSIsi8A3hmYXOZCxZx3idjMtoS29HfHUU2KwQk0rY+o6iI6rrKolX0S6Qlvi4KSSBwt1pDoMvxKx0oy+5oyLThGaSLabBcQjgrh4WBCqKIw2ZSvS/XP+d7kEmQITaaPq/hbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TNqZK2CD5z4f3jHm;
+	Mon, 29 Jan 2024 21:55:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id C99491A0232;
+	Mon, 29 Jan 2024 21:55:39 +0800 (CST)
+Received: from [10.174.179.155] (unknown [10.174.179.155])
+	by APP1 (Coremail) with SMTP id cCh0CgBnOBFbrrdlZHhrCQ--.18903S3;
+	Mon, 29 Jan 2024 21:55:39 +0800 (CST)
+Message-ID: <c47a4ff6-43a0-a536-29ff-db2d1a931181@huaweicloud.com>
+Date: Mon, 29 Jan 2024 21:55:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126184639.8187-1-mario.limonciello@amd.com> <20240126184639.8187-2-mario.limonciello@amd.com>
-In-Reply-To: <20240126184639.8187-2-mario.limonciello@amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 29 Jan 2024 14:54:43 +0100
-Message-ID: <CAJZ5v0iX5=u5y0JS2OzYMvYNnjZBCM2YfSTsSdg3CtH4rBMyUw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ACPI: video: Handle fetching EDID that is longer than
- 256 bytes
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>, 
-	Harry Wentland <harry.wentland@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Hans de Goede <hdegoede@redhat.com>, "open list:ACPI" <linux-acpi@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, Melissa Wen <mwen@igalia.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101
+ Thunderbird/104.0
+Subject: Re: [PATCH] md: get rdev->mddev with READ_ONCE()
+To: song@kernel.org
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yukuai3@huawei.com, linan122@huawei.com, yi.zhang@huawei.com,
+ yangerkun@huawei.com, lilingfeng3@huawei.com
+References: <20231229070500.3602712-1-lilingfeng@huaweicloud.com>
+From: Li Lingfeng <lilingfeng@huaweicloud.com>
+In-Reply-To: <20231229070500.3602712-1-lilingfeng@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBnOBFbrrdlZHhrCQ--.18903S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1Uuw43uF1xCF1xXr1rXrb_yoW8JFWrp3
+	yrXFy5Wr1Yv3y5Cw4UZFWkua4Fqwn3KrZFkry3u34rZ3WjqwnxKF1UWa4DJFyrZanrur4x
+	Xa17Xan8Z3sIgrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
+	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UGYL9UUUUU=
+X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-On Fri, Jan 26, 2024 at 7:55=E2=80=AFPM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+Friendly ping ...
+
+Thanks
+
+在 2023/12/29 15:05, Li Lingfeng 写道:
+> From: Li Lingfeng <lilingfeng3@huawei.com>
 >
-> The ACPI specification allows for an EDID to be up to 512 bytes but
-> the _DDC EDID fetching code will only try up to 256 bytes.
+> Users may get rdev->mddev by sysfs while rdev is releasing.
+> So use both READ_ONCE() and WRITE_ONCE() to prevent load/store tearing
+> and to read/write mddev atomically.
 >
-> Modify the code to instead start at 512 bytes and work it's way
-> down instead.
->
-> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/Apx_B_Video_Extension=
-s/output-device-specific-methods.html#ddc-return-the-edid-for-this-device
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
 > ---
->  drivers/acpi/acpi_video.c | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
+>   drivers/md/md.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-> index 62f4364e4460..b3b15dd4755d 100644
-> --- a/drivers/acpi/acpi_video.c
-> +++ b/drivers/acpi/acpi_video.c
-> @@ -624,6 +624,10 @@ acpi_video_device_EDID(struct acpi_video_device *dev=
-ice,
->                 arg0.integer.value =3D 1;
->         else if (length =3D=3D 256)
->                 arg0.integer.value =3D 2;
-> +       else if (length =3D=3D 384)
-> +               arg0.integer.value =3D 3;
-> +       else if (length =3D=3D 512)
-> +               arg0.integer.value =3D 4;
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 9bdd57324c37..3b38a565bffa 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -2562,7 +2562,7 @@ static void md_kick_rdev_from_array(struct md_rdev *rdev)
+>   	list_del_rcu(&rdev->same_set);
+>   	pr_debug("md: unbind<%pg>\n", rdev->bdev);
+>   	mddev_destroy_serial_pool(rdev->mddev, rdev);
+> -	rdev->mddev = NULL;
+> +	WRITE_ONCE(rdev->mddev, NULL);
+>   	sysfs_remove_link(&rdev->kobj, "block");
+>   	sysfs_put(rdev->sysfs_state);
+>   	sysfs_put(rdev->sysfs_unack_badblocks);
+> @@ -3646,7 +3646,7 @@ rdev_attr_store(struct kobject *kobj, struct attribute *attr,
+>   	struct kernfs_node *kn = NULL;
+>   	bool suspend = false;
+>   	ssize_t rv;
+> -	struct mddev *mddev = rdev->mddev;
+> +	struct mddev *mddev = READ_ONCE(rdev->mddev);
+>   
+>   	if (!entry->store)
+>   		return -EIO;
 
-It looks like switch () would be somewhat better.
-
-Or maybe even
-
-arg0.integer.value =3D length / 128;
-
-The validation could be added too:
-
-if (arg0.integer.value > 4 || arg0.integer.value * 128 !=3D length)
-        return -EINVAL;
-
-but it is pointless, because the caller is never passing an invalid
-number to it AFAICS.
-
->         else
->                 return -EINVAL;
->
-> @@ -1443,7 +1447,7 @@ int acpi_video_get_edid(struct acpi_device *device,=
- int type, int device_id,
->
->         for (i =3D 0; i < video->attached_count; i++) {
->                 video_device =3D video->attached_array[i].bind_info;
-> -               length =3D 256;
-> +               length =3D 512;
->
->                 if (!video_device)
->                         continue;
-> @@ -1478,13 +1482,18 @@ int acpi_video_get_edid(struct acpi_device *devic=
-e, int type, int device_id,
->
->                 if (ACPI_FAILURE(status) || !buffer ||
->                     buffer->type !=3D ACPI_TYPE_BUFFER) {
-> -                       length =3D 128;
-> -                       status =3D acpi_video_device_EDID(video_device, &=
-buffer,
-> -                                                       length);
-> -                       if (ACPI_FAILURE(status) || !buffer ||
-> -                           buffer->type !=3D ACPI_TYPE_BUFFER) {
-> -                               continue;
-> +                       while (length) {
-
-I would prefer a do {} while () loop here, which could include the
-first invocation of acpi_video_device_EDID() too (and reduce code
-duplication a bit).
-
-> +                               length -=3D 128;
-> +                               status =3D acpi_video_device_EDID(video_d=
-evice, &buffer,
-> +                                                               length);
-
-No line break, please.
-
-> +                               if (ACPI_FAILURE(status) || !buffer ||
-> +                                   buffer->type !=3D ACPI_TYPE_BUFFER) {
-> +                                       continue;
-> +                               }
-> +                               break;
->                         }
-> +                       if (!length)
-> +                               continue;
->                 }
->
->                 *edid =3D buffer->buffer.pointer;
-> --
