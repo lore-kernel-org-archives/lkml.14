@@ -1,131 +1,330 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B061D6A008;
-	Mon, 29 Jan 2024 19:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0366F07F;
+	Mon, 29 Jan 2024 19:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706557941; cv=none; b=QRvDtcY6Qxj18kbfPFqfF/WB0YKVx86f7S7kWf/wwyjnh/4mtYQojT45WwwyQ1z2dGLLnzEF3aQwoF9FyCdtNUXvjjoKxnIGbK/Tz9pOBxelQIyfQsXlUxsTr/Z5Nz6WMtyU5Az8rDh/q7UKKsN3fD3SjKSEDpNjhPQpLJvga2w=
+	t=1706557961; cv=none; b=Z/W74ItypzJmj1I8Zm8Q+ig8Nxf8aRFLlJObgz78qKXVJJtaVM2cUKYs9OZjJf5U0pAFPdDGy/Nunoz+kV76A5JjgijqTpvk1Fi/Do82h6QI8TWcKeVLXJkTxBHVIY357EC6XnVS1hUpU9lbJjL2G9S9Qock7lxUsmClOjFlY6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706557941; c=relaxed/simple;
-	bh=AkBpWCt8Yn5W3lR5XfqNrLHf+HDLn89jCMBMA0LnBBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHwPtFNIxhbxc+Mfvq0BYrBumOvbfGm0T6ktYc62ghNf6CAvu0oVOrDVRjjJVgYtvxPZbI+CzDIHMhijTNfKxsP4BdVxYrsGNAgrP3zNmSORDlARARZZT35Z1Qk1srO3MEP1QD9g44RIlR/XevhKA+CX0KpWi/3QVCNM8t8WtKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FXli1qFn; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706557961; c=relaxed/simple;
+	bh=sHc0fmgS2jXh98pYRazZPVZPqNnFkF0YYo3nUqXRrNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dfu0un4qT73+B/1XRL5o2v2m6bV0fhsPxguEoV/6uoEqhlvUoQ2KMhWQSeizTFJ7vv6tb5wlDJKXZ1MtUA8K5//Q15LjssEsb77IVat4UQiVgBxUmraUAJM/67Q7HHaAl9l8Gf0Gw2NbVh6wKyP3e34+HX+5bO+wGscpCEdzR7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRpE21nF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FXli1qFn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706557940; x=1738093940;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AkBpWCt8Yn5W3lR5XfqNrLHf+HDLn89jCMBMA0LnBBE=;
-  b=FXli1qFn5rtHdMiLjYOTCvTrdNQppYdukJ5O2ALII639G2tMVhbKFIM2
-   NMxd0CGnV9FJKkc59YpdYPblGrJ491KUlGou95OEDY8y9s+TYyGOhCA40
-   SkYw34jg4dLUhbu98ghBcSJjLxFYTc2IMfQFdOWhpIXlCdnwsdobOZhC9
-   m49px8Cb5VQq6Zg2P/brZcaFtvXPjuySu6FqUl9McwtjZhTJrYhJiGv0a
-   xr8Wq5Xmm9TnsXMxiq0q+2L3ICkZWQ6Pwt6HOJtdOXSDvDOr6KAW9ipvG
-   bITidKIwMweqOhiCLo+FcRR3G3JF2cKlBZ7VFAjIW1ujM1eOM2kpXxB2q
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16450390"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="16450390"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 11:52:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="29905599"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 29 Jan 2024 11:52:13 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rUXfv-0004bQ-0f;
-	Mon, 29 Jan 2024 19:52:11 +0000
-Date: Tue, 30 Jan 2024 03:51:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-can@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Rob Herring <robh+dt@kernel.org>,
-	Wolfgang Grandegger <wg@grandegger.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	William Qiu <william.qiu@starfivetech.com>
-Subject: Re: [PATCH v1 3/4] can: cast: add driver for CAST CAN controller
-Message-ID: <202401300313.9DPa2nuW-lkp@intel.com>
-References: <20240129031239.17037-4-william.qiu@starfivetech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRpE21nF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87B6C433F1;
+	Mon, 29 Jan 2024 19:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706557960;
+	bh=sHc0fmgS2jXh98pYRazZPVZPqNnFkF0YYo3nUqXRrNY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KRpE21nFawx2gBcry94NPa8aUSsaRT9nqRTIKg+/gZvJtL16A9Nfy3O74ANgqaYaO
+	 ox98JUR9z/aPLDTMpdBjDmhbpyL7W81u0dMb7GGvQq8PFQ1RgP+khxWd2Sx4+nHYMB
+	 /ui6YW044dVvM7No36ftDT/hDc9/QF42PgvUd+/OKgEiPPKd3sjDnmVGNgUc8OZeyc
+	 2ON8ECRKkLuZWT50VmJKCrnOLmJ7hbTYzotgZmCJVrHm1x0gqfyfoMc1rzwX2/BCww
+	 AESkyT8tFW70m1RJt2+jfhX3y/cZvOaOrU6mbxzMxyLysCuVMTRHl3CZSBADMhFDzh
+	 wtqzAvBHIfDKQ==
+Date: Mon, 29 Jan 2024 19:52:27 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+ linux-iio@vger.kernel.org, Rob Herring <robh@kernel.org>, Frank Rowand
+ <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Nicolas Palix
+ <nicolas.palix@imag.fr>, Sumera Priyadarsini <sylphrenadin@gmail.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ linux-acpi@vger.kernel.org, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
+Subject: Re: [RFC PATCH 0/5] of: automate of_node_put() - new approach to
+ loops.
+Message-ID: <20240129195227.3c3adae1@jic23-huawei>
+In-Reply-To: <alpine.DEB.2.22.394.2401291455430.8649@hadrien>
+References: <20240128160542.178315-1-jic23@kernel.org>
+	<alpine.DEB.2.22.394.2401281903550.3119@hadrien>
+	<20240129114218.00003c34@Huawei.com>
+	<alpine.DEB.2.22.394.2401291455430.8649@hadrien>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129031239.17037-4-william.qiu@starfivetech.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi William,
+On Mon, 29 Jan 2024 15:02:19 +0100 (CET)
+Julia Lawall <julia.lawall@inria.fr> wrote:
 
-kernel test robot noticed the following build warnings:
+> On Mon, 29 Jan 2024, Jonathan Cameron wrote:
+> 
+> > On Sun, 28 Jan 2024 19:06:53 +0100 (CET)
+> > Julia Lawall <julia.lawall@inria.fr> wrote:
+> >  
+> > > On Sun, 28 Jan 2024, Jonathan Cameron wrote:
+> > >  
+> > > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > >
+> > > > +CC includes peopleinterested in property.h equivalents to minimize
+> > > > duplication of discussion.  Outcome of this discussion will affect:
+> > > > https://lore.kernel.org/all/20240114172009.179893-1-jic23@kernel.org/
+> > > > [PATCH 00/13] device property / IIO: Use cleanup.h magic for fwnode_handle_put() handling.
+> > > >
+> > > > In discussion of previous approach with Rob Herring we talked about various
+> > > > ways to avoid a disconnect between the declaration of the __free(device_node)
+> > > > and the first non NULL assignment. Making this connection clear is useful for 2
+> > > > reasons:
+> > > > 1) Avoids out of order cleanup with respect to other cleanup.h usage.
+> > > > 2) Avoids disconnect between how cleanup is to be done and how the reference
+> > > >    was acquired in the first place.
+> > > >
+> > > > https://lore.kernel.org/all/20240117194743.GA2888190-robh@kernel.org/
+> > > >
+> > > > The options we discussed are:
+> > > >
+> > > > 1) Ignore this issue and merge original set.
+> > > >
+> > > > 2) Always put the declaration just before the for loop and don't set it NULL.
+> > > >
+> > > > {
+> > > > 	int ret;
+> > > >
+> > > > 	ret = ... and other fun code.
+> > > >
+> > > > 	struct device_node *child __free(device_node);
+> > > > 	for_each_child_of_node(np, child) {
+> > > > 	}
+> > > > }
+> > > >
+> > > > This works but careful review is needed to ensure that this unusual pattern is
+> > > > followed.  We don't set it to NULL as the loop will do that anyway if there are
+> > > > no child nodes, or the loop finishes without an early break or return.
+> > > >
+> > > > 3) Introduced the pointer to auto put device_node only within the
+> > > >    for loop scope.
+> > > >
+> > > > +#define for_each_child_of_node_scoped(parent, child) \
+> > > > +	for (struct device_node *child __free(device_node) =		\
+> > > > +	     of_get_next_child(parent, NULL);				\
+> > > > +	     child != NULL;						\
+> > > > +	     child = of_get_next_available_child(parent, child))
+> > > > +
+> > > >
+> > > > This series is presenting option 3.  I only implemented this loop out of
+> > > > all the similar ones and it is only compile tested.
+> > > >
+> > > > Disadvantage Rob raised is that it isn't obvious this macro will instantiate
+> > > > a struct device_node *child.  I can't see a way around that other than option 2
+> > > > above, but all suggestions welcome.  Note that if a conversion leaves an
+> > > > 'external' struct device_node *child variable, in many cases the compiler
+> > > > will catch that as an unused variable. We don't currently run shaddow
+> > > > variable detection in normal kernel builds, but that could also be used
+> > > > to catch such bugs.
+> > > >
+> > > > All comments welcome.  
+> > >
+> > > It looks promising to get rid of a lot of clunky and error-prone
+> > > error-handling code.  
+> >
+> > Absolutely. I think I spotted 2 bugs whilst just looking for places this pattern
+> > doesn't apply.  Will circle back to those once this discussion is resolved.
+> > I think I've taken dozen's of fixes for cases where these were missed over the years
+> > so hoping this means I'll never see another one!
+> >  
+> > >
+> > > I guess that
+> > >
+> > > for_each_child_of_node_scoped(parent, struct device_node *, child)
+> > >
+> > > would seem too verbose?  
+> >
+> > Intent just to make the allocated internal type clear?  Sure we can do that if
+> > it helps with making it clear something is being allocated.
+> > I can't think of a way this could be used with anything other than
+> > a struct device_node * as the second parameter but I guess it still helps
+> > 'hint' at what is going on..
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master mkl-can-next/testing v6.8-rc2 next-20240129]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+To touch back on this, I'm still not sure what your intent was in suggesting
+having the explicit struct device_node *
 
-url:    https://github.com/intel-lab-lkp/linux/commits/William-Qiu/dt-bindings-vendor-prefixes-Add-cast-vendor-prefix/20240129-114752
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240129031239.17037-4-william.qiu%40starfivetech.com
-patch subject: [PATCH v1 3/4] can: cast: add driver for CAST CAN controller
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20240130/202401300313.9DPa2nuW-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 4a39d08908942b2d415db405844cbe4af73e75d4)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240130/202401300313.9DPa2nuW-lkp@intel.com/reproduce)
+> >  
+> > >
+> > > There are a lot of opportunities for device_node loops, but also for some
+> > > more obscure loops over other types.  
+> >  
+> > > And there are a lot of of_node_puts
+> > > that could be eliminated independent of loops.  
+> >
+> > The non loop cases should be handled via the __free(device_node) as provided
+> > by patch 1.  We'll need to keep the declaration local and initial assignment
+> > together but that is easy enough to do and similar to the many other cleanup.h
+> > usecases that are surfacing.  
+> 
+> I tried the following semantic patch:
+> 
+> @@
+> identifier x,f;
+> attribute name __free;
+> expression list es;
+> expression e;
+> statement S;
+> @@
+> 
+> {
+> ... when != S
+> struct device_node *x
+> + __free(device_node)
+> ;
+> ... when strict
+> x = f(es);
+> <... when any
+>      when != x = e
+> -of_node_put(x);
+> ...>  
+> -of_node_put(x);
+> }
+> 
+Nice.  
+> It is written defensively in various ways:
+> 
+> when != S means tha tthe device_node declaration has t be at the top of
+> the block, perhaps with other declarations before it.
+> 
+> when strict means that all paths must lead from the declaration to the
+> initialization.  So there is no need to intiialize the variable to NULL,
+> as far as I understand.
+> 
+> when != x = e means that the declared variable is not reinitialized, which
+> would require keeping the previous of_node_put.
+> 
+> There is an of_node_put at the end of the block, so the use of __free
+> doesn't change the lifetime.
+> 
+> An unfortunate aspect of the last constraint is that some functions may
+> declare multiple device_node variables, and only one of the of_not_puts
+> can come at the very end of the block.  This can be solved by just running
+> the semantic patch again.
+> 
+> An alternative would be to move the initialization up to the declaration,
+> but the result was often a bit ugly, due to the various initialization
+> function calls having long names and argument lists.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401300313.9DPa2nuW-lkp@intel.com/
+You have to do that in order to ensure there is no window for someone to
+easily insert code that leaves them uninitialized.
 
-All warnings (new ones prefixed by >>):
+Linus had some rather specific comments on that being the only right way to
+do it.
 
->> drivers/net/can/cast_can.c:352:5: warning: no previous prototype for function 'ccan_get_freebuffer' [-Wmissing-prototypes]
-     352 | int ccan_get_freebuffer(struct ccan_priv *priv)
-         |     ^
-   drivers/net/can/cast_can.c:352:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     352 | int ccan_get_freebuffer(struct ccan_priv *priv)
-         | ^
-         | static 
-   1 warning generated.
+> 
+> The output is below.  I have looked quickly through all of the changes and
+> they all look reasonable, but have not tried compiling anything (which I
+> guess wouldn't currently work anyway).
+> 
+> julia
+> 
 
+I picked a couple from the end.  They show the sort of things that
+would want cleaning up.  The script is great for finding low hanging
+fruit but as you've identified there is often some stuff that isn't
+easy to automate.
 
-vim +/ccan_get_freebuffer +352 drivers/net/can/cast_can.c
+> diff -u -p a/drivers/clk/clk-nomadik.c b/drivers/clk/clk-nomadik.c
+> --- a/drivers/clk/clk-nomadik.c
+> +++ b/drivers/clk/clk-nomadik.c
+> @@ -87,7 +87,7 @@ static const struct of_device_id nomadik
+> 
+>  static void __init nomadik_src_init(void)
+>  {
+> -	struct device_node *np;
+> +	struct device_node *np __free(device_node);
+>  	u32 val;
+> 
+>  	np = of_find_matching_node(NULL, nomadik_src_match);
+> @@ -134,7 +134,6 @@ static void __init nomadik_src_init(void
+>  	register_reboot_notifier(&nomadik_clk_reboot_notifier);
+> 
+>  out_put:
+Can avoid the label given nothing to do any more. 
+> -	of_node_put(np);
+>  }
+> 
+>  /**
+> diff -u -p a/arch/powerpc/platforms/chrp/setup.c b/arch/powerpc/platforms/chrp/setup.c
+> --- a/arch/powerpc/platforms/chrp/setup.c
+> +++ b/arch/powerpc/platforms/chrp/setup.c
+> @@ -99,7 +99,7 @@ static void chrp_show_cpuinfo(struct seq
+>  {
+>  	int i, sdramen;
+>  	unsigned int t;
+> -	struct device_node *root;
+> +	struct device_node *root __free(device_node);
 
-   351	
- > 352	int ccan_get_freebuffer(struct ccan_priv *priv)
-   353	{
-   354		/* Get next transmit buffer */
-   355		ccan_reigister_set_bit(priv, CCAN_TCTRL_OFFSET, CCAN_SET_TENEXT_MASK);
-   356	
-   357		if (ccan_ioread8(priv->reg_base + CCAN_TCTRL_OFFSET) & CCAN_SET_TENEXT_MASK)
-   358			return -EPERM;
-   359	
-   360		return 0;
-   361	}
-   362	
+Same as next 2.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  	const char *model = "";
+> 
+>  	root = of_find_node_by_path("/");
+> @@ -152,7 +152,6 @@ static void chrp_show_cpuinfo(struct seq
+>  			   gg2_cachetypes[(t>>2) & 3],  
+>  			   gg2_cachemodes[t & 3]);
+>  	}
+> -	of_node_put(root);
+>  }
+> 
+>  /*
+> @@ -195,7 +194,7 @@ static void __init sio_fixup_irq(const c
+> 
+>  static void __init sio_init(void)
+>  {
+> -	struct device_node *root;
+> +	struct device_node *root __free(device_node);
+
+As below needs to be 
+	struct device_node *root __free(device_node) = of_find_node_by_path("/");
+so there is no space for code to be added inbetween that might return before
+this is set.
+
+>  	const char *model;
+> 
+>  	root = of_find_node_by_path("/");
+> @@ -209,8 +208,6 @@ static void __init sio_init(void)
+>  		/* select logical device 1 (KBC/Mouse) */
+>  		sio_fixup_irq("mouse", 1, 12, 2);
+>  	}
+> -
+> -	of_node_put(root);
+>  }
+> 
+> 
+> @@ -364,7 +361,7 @@ static void chrp_8259_cascade(struct irq
+>   */
+>  static void __init chrp_find_openpic(void)
+>  {
+> -	struct device_node *np, *root;
+> +	struct device_node *np __free(device_node), *root;
+
+This one looks dangerous because of the chance of other code
+getting added between here and the point where it is set.
+
+Better to move that down so we have
+
+struct device_node *np __free(device_node) = of_find_node_by_type(NULL, "open-pic");
+
+Also there is a nicer use in:
+https://elixir.bootlin.com/linux/v6.8-rc2/source/arch/powerpc/platforms/chrp/setup.c#L217
+
+>  	int len, i, j;
+>  	int isu_size;
+>  	const unsigned int *iranges, *opprop = NULL;
+> @@ -438,7 +435,6 @@ static void __init chrp_find_openpic(voi
+>  	ppc_md.get_irq = mpic_get_irq;
+>   bail:
+>  	of_node_put(root);
+With root covered this can return early.
+
+> -	of_node_put(np);
+>  }
+> 
+
