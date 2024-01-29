@@ -1,113 +1,112 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B4E2E834
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 20:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0EC157E66;
+	Mon, 29 Jan 2024 20:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706560587; cv=none; b=No5n4iDxQcxMCLd0YrUKb8qUrAyCn6wiRF9J5hNFUHxHjtt4YHaG8O5lMzWJdXYMDWKFVcbg3c+chPt7Jo37sfx64W79Zwk/9YISYrcxepOW6/hniS7GAWJEnsNr6TpzrFTD6dBSMCKQva1dKjDfxjUwFldutyJDDYJ7n6MagCg=
+	t=1706560607; cv=none; b=sQ4b1twM0A6SH1OqrxVLqhVZ7kLfqoo5LQAvzYFcM6EwfW1HZm+CWO9B/V9QnHQvySkFWp9nBJnFMXUGhmOD8vCmGZnTT4/OtCuwN6clW/ibl52K+rCVx/ELWH2VZCzZeEG2ph1mApqAcJ4Ks0V0TwpwTtEC+CdGM7lTfGaLAqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706560587; c=relaxed/simple;
-	bh=jmfLZ2+7pN7JofKmXg1xYnNEo44gbiC1PDeMaQAIhS0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dGyiq0ogxxyz4gdRht/1xJJ5p7brf/bTuCRsWCd88TDtteZriDXSfF/zpZH0X4EkwiZzI09KsPmijaNF9vRHqroHutcJSIHo/87TZ1mZkPsO7uahtSLVWXv+VbbZWCqEQMcCad/rLOaTIxGOm28QAW3eiB6dgdfbBQBZfAvdrfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dmfJNimf; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706560607; c=relaxed/simple;
+	bh=GMLHhzeeoMbsVJnO8eUGF9Kg4igfMzZgqAvzXEAYxTo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E9HJWKfRvPrjwEaWo5Nl9XHmuPUzvyNcvgafXMshq89B0gDlaA2ZDyeptQjcDrAaor9TJyEggDsJZXrk0ucMd00oW3g5n5TNcmcUIMGdeE64Rnv6s3GqTlHxEfH5wglOdTKR2DX7TY5eiskUy5R1zm8EEh6qo3C8FvnN9LGSJYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ahyxeyn2; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dmfJNimf"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d5ce88b51cso45035ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 12:36:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ahyxeyn2"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-510221ab3ebso4277965e87.1;
+        Mon, 29 Jan 2024 12:36:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706560584; x=1707165384; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZxWgZjR7stXfQ+YDnMHNeKFVDof3/JXTOW+q6qvfTSY=;
-        b=dmfJNimflQdk/0YNE1YOgmYHWsKEs5X1YC5JrL1Ul48bSyzT9kr6rjhxMF6mu2BOvt
-         8GHPdwAD2ypMh1+tyEDSvltkaL/i+6EKZ9dUtGRNlSU4sQiaDaAYEg0ll47Q/mdMMvLL
-         sqb4UEJFaEc8xP0tp4w29aVlmqO6mx47bWOf/BydZbHFXMkFYnxa1grADwyEpyISMzTm
-         a0jXzfZv57NuKSg1O0HyawsKC8UaTPD0MaAX5NNPrGjjqIXsYvZCcGySgPeSUfRqgesd
-         VTtW6bl8kBemr/hAtGiJ4tIJ0DS7rdYAgf56/Pb8ooYkGsk9WdBEotk+J+0NrH1oci7T
-         LvSA==
+        d=gmail.com; s=20230601; t=1706560603; x=1707165403; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FmpumCLh7uX/HdOlHuODXjs5jYDB27UWUUlcEeNU+sM=;
+        b=Ahyxeyn2uyH9mLt5t6Pe/hhTnyJDUbxDMfcefIE942SNKE6hkrycQt6dLkRZTtm/4X
+         HxCwLoHnbvxu4inWFgFGRE6o9Su4VqnfqjUmjGXsbkua1gMX6NTeKVXu2PT7jaia1/TL
+         B4pC9gEkVy/jmznMnErVxelPkyqydYxPxfr0AR6IvgpNBmEFdtIJi/XWlLnQqgO52GMg
+         zjbEsbZN7zxjv1nMT/w/uwBcPQaWc9fL+mFrtUQNpOJAtFR9U8jjJC/V4Beo35zGfx9P
+         mBGs9AVCyBR7OJPjo1QZEYv+QWt055NyW7dHMqYqu+mn4FYMQeY0+9E9zxYRx3b1PXmG
+         A+ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706560584; x=1707165384;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1706560603; x=1707165403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZxWgZjR7stXfQ+YDnMHNeKFVDof3/JXTOW+q6qvfTSY=;
-        b=r9+475sCdrgQepLC9lgNErSKC82PyOc9k5DphFxGRVK0nJew1WbFLX/T2nMqOVQSpx
-         TQtTj8t3pzf8hrQAnjSRayVGowtLnV1j1tSyYZ1Na8KutcshV0MZ1j5lhi7tvgr23WST
-         +06aKBDZ07WLbojpLU56T6/vU6QHZ3qOUl/+4v0yOnsjeOPU8+cNydjGNQ/bA/TU0Gd9
-         IwNnEU7HPFneDPP5nd4F2PDBhKvuDeVv4ALfcoUEsTanSvlc4mxk27pRNSE+CZtGnUiF
-         UjTZit25zw0CR3tn8bPE9AtiTN64/UYLBFB9LeHBXPdvQoPFWny6YLrxtYWRqWR+bUN5
-         QOCQ==
-X-Gm-Message-State: AOJu0YxZtgJWhc5IiNutKWE8GsitSY5vrUhv/Ky2X1xvdRezgpvnOEUj
-	iXR2EexNCU/FNkiBaRO9RmAhhhhWcX5q4mUfhObKifYsb7GO7GQW9IdcBlJMs+8R7m5fWE7HRxF
-	KGw==
-X-Google-Smtp-Source: AGHT+IFYoSEdwRBnKk4ZFEQZtXte9ans7MKYcm6dZiU1nm5l+23BeLVQ+oGKofdTxe/FZVgZazUwUw==
-X-Received: by 2002:a17:902:684f:b0:1d8:b0bf:3e3f with SMTP id f15-20020a170902684f00b001d8b0bf3e3fmr46602pln.26.1706560583515;
-        Mon, 29 Jan 2024 12:36:23 -0800 (PST)
-Received: from bsegall-glaptop.localhost (c-73-202-176-14.hsd1.ca.comcast.net. [73.202.176.14])
-        by smtp.gmail.com with ESMTPSA id f12-20020a17090274cc00b001d72358de29sm2315356plt.287.2024.01.29.12.36.21
+        bh=FmpumCLh7uX/HdOlHuODXjs5jYDB27UWUUlcEeNU+sM=;
+        b=YzhIGz147poaLKU4PmQsG6279rdMS4J1gw+YepcFLo8oHj9tgSmwxvlxZzi6cd4puh
+         zcIcYBViLAA9VG2G0SLWTxS5be661xjRGyIuvB2c/uQ/KzqFKYbH7UupZRumwLD8gaJy
+         T2qDMqfxFAQaW519LltnWPd/NKaePQ2Eq/OROqRtjwDtsIJYVnmvyTKDQ67C8wHJ9+Um
+         7ja3cSJU2UL9fngonF6wexYQChVQarMTqak7s5FA5ERAUXsUqRQpJOEieLoFZ5UFyyy1
+         MvbZCGPmY/8nhX3pkhrbjn9icCm4YlCVmtHdzUsUWergwfhdxf7ohyeEgEsEI2KEPm2d
+         n0Cg==
+X-Gm-Message-State: AOJu0YxQjrrWiaZxyUWIpHrjjzW7fTecqHUPXyc0pKHb4AsCIC6kOE6x
+	bI9RySlkE2msRVM9FWzQSh8xxFuX1cuSreh0uRnCB+APyGd2/Whb
+X-Google-Smtp-Source: AGHT+IG92gsE08T9oz1FCAOmq5Cjrq8PKd6HOERnTK2/QfqSyC36jCzgLEOzGKCmP89mOdD44GJz+A==
+X-Received: by 2002:a19:5f12:0:b0:50e:d3dc:2245 with SMTP id t18-20020a195f12000000b0050ed3dc2245mr4383104lfb.58.1706560603115;
+        Mon, 29 Jan 2024 12:36:43 -0800 (PST)
+Received: from pc636 (host-185-121-47-193.sydskane.nu. [185.121.47.193])
+        by smtp.gmail.com with ESMTPSA id s15-20020a19770f000000b005102473541asm1227797lfc.301.2024.01.29.12.36.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 12:36:21 -0800 (PST)
-From: Benjamin Segall <bsegall@google.com>
-To: Hillf Danton <hdanton@sina.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,
-  Will Deacon <will@kernel.org>,  Waiman Long <longman@redhat.com>,  Boqun
- Feng <boqun.feng@gmail.com>,  linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] locking/percpu-rwsem: do not do lock handoff in
- percpu_up_write
-In-Reply-To: <20240127112039.896-1-hdanton@sina.com> (Hillf Danton's message
-	of "Sat, 27 Jan 2024 19:20:39 +0800")
-References: <xm26zfwx7z5p.fsf@google.com>
-	<20240123150541.1508-1-hdanton@sina.com>
-	<20240125110456.783-1-hdanton@sina.com>
-	<20240126122230.838-1-hdanton@sina.com>
-	<20240127112039.896-1-hdanton@sina.com>
-Date: Mon, 29 Jan 2024 12:36:20 -0800
-Message-ID: <xm26o7d33mij.fsf@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        Mon, 29 Jan 2024 12:36:42 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 29 Jan 2024 21:36:40 +0100
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH v4 0/4] Reduce synchronize_rcu() latency(v4)
+Message-ID: <ZbgMWGmG3g-IvOw6@pc636>
+References: <20240104162510.72773-1-urezki@gmail.com>
+ <620b475d-eef8-4396-9d3a-d3dcf1d70f9a@paulmck-laptop>
+ <ZbfQ5cOkeReti7J0@pc636>
+ <adb813a3-e24e-4fb3-b1cf-fad5a571fe9a@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adb813a3-e24e-4fb3-b1cf-fad5a571fe9a@paulmck-laptop>
 
-Hillf Danton <hdanton@sina.com> writes:
+On Mon, Jan 29, 2024 at 11:43:43AM -0800, Paul E. McKenney wrote:
+> On Mon, Jan 29, 2024 at 05:23:01PM +0100, Uladzislau Rezki wrote:
+> > On Fri, Jan 26, 2024 at 11:07:18PM -0800, Paul E. McKenney wrote:
+> > > On Thu, Jan 04, 2024 at 05:25:06PM +0100, Uladzislau Rezki (Sony) wrote:
+> > > > This is a v4 that tends to improve synchronize_rcu() call. To be more
+> > > > specific it is about reducing a waiting time(especially worst cases)
+> > > > of caller that blocks until a grace period is elapsed. 
+> > > > 
+> > > > In general, this series separates synchronize_rcu() callers from other
+> > > > callbacks. We keep a dedicated an independent queue, thus the processing
+> > > > of it starts as soon as grace period is over, so there is no need to wait
+> > > > until other callbacks are processed one by one. Please note, a number of
+> > > > callbacks can be 10K, 20K, 60K and so on. That is why this series maintain
+> > > > a separate track for this call that blocks a context.
+> > > 
+> > > And before I forget (again), a possible follow-on to this work is to
+> > > reduce cond_synchronize_rcu() and cond_synchronize_rcu_full() latency.
+> > > Right now, these wait for a full additional grace period (and maybe
+> > > more) when the required grace period has not elapsed.  In contrast,
+> > > this work might enable waiting only for the needed portion of a grace
+> > > period to elapse.
+> > > 
+> > Thanks. I see it. Probably we also need to move "sync" related
+> > functionality out of tree.c file to the sync.c or something similar
+> > to that name. IMO. 
+> 
+> I would prioritize moving the kfree_rcu() code out of tree.c quite
+> a ways over moving out the synchronous-wait code.  ;-)
+> 
+Indeed. But i am not about priority :)
 
-> On Fri, 26 Jan 2024 12:40:43 -0800 Benjamin Segall <bsegall@google.com>
->> 
->> I'm fine with "no, fairness is more important than these performance
->> numbers or mitigating already-sorta-broken situations", but it's not
->
-> Fine too because your patch is never able to escape standing ovation.
->
-> And feel free to specify the broken situations you saw.
-
-The basic locking issue was due to userspace rapidly spawning threads
-(or processes) more rapidly than the cpus they are running on can
-support, and this causing issues for unrelated threads doing cgroup
-operations on other cpus.
-
-The contention can be due to a combination of just straight up spawning
-way too many, userspace misconfiguration of cpus allowed, or load
-balancer weaknesses. (If you pick minimum cpu.shares values and have
-large machines, SCHED_LOAD_RESOLUTION isn't really enough for load
-balance to do a good job, and what you're telling the load balancer you
-want isn't really a good idea in the first place).
-
->
->> clear to me you've even understood the patch, because you keep only
->> talking about completely different forms of starvation, and suggesting
->
-> Given woken writer in your reply and sem->ww is write waiters, there is
-> only one starvation in this thread.
-
-The problem is *not* new readers/writers coming in and taking the lock
-before the waiting ones, which is what your patch would solve. The
-problem is that some of the woken readers do not get scheduled for a
-long time, and nothing can take the lock until they do.
-
+--
+Uladzislau Rezki
