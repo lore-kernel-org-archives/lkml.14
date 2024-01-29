@@ -1,99 +1,257 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C0455E59
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536F356441
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520333; cv=none; b=d56/yPv/wW0QxaLgd8oRsjsWOChUcoAY0LgdqbK1CMy+eI60Xh1MYUJwIKb8Q24F8OBnn82BmySlJKm8b3CzOtbYAnlDeoH3pRl+ScYFXEf294PLf0IMOCS1lYCEySl7hnuNecRb2gwxCaHshpME3LfzO2NElbYM2qTaPwrkJx0=
+	t=1706520343; cv=none; b=AE0UFi13MGYae1RmiMBaj3MVaW+qLXKlV8OTOrNqRXgVZIhm5fK294L8rCZHXlh01gfpwvgST8Y6fg5bmrjpfv/17IOEg/gT/QdR6EZpZKQsCKU8D44B4lW6OIyLIy27y9y+XLyNPS3DmbRRxJ4IO+yLwcydxXxM2rVNzsYaA10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706520333; c=relaxed/simple;
-	bh=ZeASRK9OQU0zk9iDytgg8kPkaNP8KWri+NPgrypJ/KY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MnQBtUIn6hCKP8Ud5hqPMiPCpSGLtSQbR92KzHZR4HLGbeEvIuraidsg4jMtI7afjNmk+krMicJbpPRNCMROEmFOO66lqD+ny9hWBJ61E5Nlg+DAAdP6RlE49b4zozM65PoHll8ONONryrUdEyNa7ACKtoDF7eme0LlQONIT4vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=3dWWHEru; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706520343; c=relaxed/simple;
+	bh=A7zhmYqSGF3f91x5Sfj8wc2+BL0d/H7Pomw5rky9/34=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bgb7pM71N20oupOZPLK7TQwmN6ErcE4kvNfAHRzMGnUgIxGZCBpsFkJbJmu0X1icHJhxJB2Ty5UHMPCRIdQZ+ZrwB3a9Fh/TsMaPYiI39XYJGbjPLDsMofPcFk5ZGnogZm/sGpBZ87qYjn9EBBi0RlbUHrmmvAWRUAJUKfPOrWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Cdy394qw; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="3dWWHEru"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706520330;
-	bh=ZeASRK9OQU0zk9iDytgg8kPkaNP8KWri+NPgrypJ/KY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=3dWWHEruMWT62ux6ztq3I+1FA3TnZsmeUjbKb2HiRI0njatR9x1yAbwn/KxQWFt7k
-	 /AeGxYmbZrVqoJiIe1vjWJsqLE/JlGMVOFYf/OSHvPss28vYYzXZnZolLhO9FvOcMB
-	 KBXvUakaOBVZrsKRDNOwnEdLuparFW0i/sY/VunFzjieWBUS2yYeCo+uJRDH+wDi1l
-	 FiK5M/UfeAPPF9xxbZSbdLfzq8Lh8PcePRQzUA52HHrpyxOGlmj/0eB09+0IDod8tl
-	 bY0hZJ11+DMmefPVR1vuuh/iBfz6iFtvkUrGDUx2u8gdJBrYl+e8dK9zK2upo24F+P
-	 yUJ5U4Oll2QOA==
-Received: from [100.109.49.129] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dmitry.osipenko)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C647F37814B0;
-	Mon, 29 Jan 2024 09:25:28 +0000 (UTC)
-Message-ID: <e062b0dc-6630-42f9-b3ca-ac4bc0597190@collabora.com>
-Date: Mon, 29 Jan 2024 12:25:26 +0300
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Cdy394qw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706520341; x=1738056341;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=A7zhmYqSGF3f91x5Sfj8wc2+BL0d/H7Pomw5rky9/34=;
+  b=Cdy394qwkfYABnZsOWywKivFaQK9VrfvWbF8r7Xwc0jy20/CRDwepb02
+   TQ+1lxPW6TvxhYY0H1K4egMGUM9UX85JuixIMNzD7MrXwD+wfIhsO5r/l
+   U8gMxUbj0jmOFk6ametbJpO3GYdJ/zNrEqGgNsMPfKi3/R+YZ1YKLJ0N9
+   JmvyynRMZ+RFA+W6fRal1TIBOV37WFC5KSE5X4P3wlwMXtVpGvTJX1dFe
+   +NYRJstI/jvYL4PCgqF8QlYIYBR74ydpb5GfS6lNu+b+2RUChQimnCPG5
+   dSrdtnKofXu92gTocRrt0E4jQbozd7dig1g9Euk373TNfOhibEHIoblZB
+   w==;
+X-CSE-ConnectionGUID: JMZNa0W0TwelpxkBzp+3Tg==
+X-CSE-MsgGUID: OO2i0OZfQBG2uogTKO6FKA==
+X-IronPort-AV: E=Sophos;i="6.05,226,1701154800"; 
+   d="scan'208";a="182680029"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Jan 2024 02:25:40 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Jan 2024 02:25:20 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 29 Jan 2024 02:25:13 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<lee@kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
+	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
+	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
+	<Balakrishnan.S@microchip.com>, Manikandan Muralidharan
+	<manikandan.m@microchip.com>, Durai Manickam KR
+	<durai.manickamkr@microchip.com>
+Subject: [PATCH RESEND v7 7/7] drm: atmel-hlcdc: add support for DSI output formats
+Date: Mon, 29 Jan 2024 14:53:19 +0530
+Message-ID: <20240129092319.199365-8-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240129092319.199365-1-manikandan.m@microchip.com>
+References: <20240129092319.199365-1-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 22/30] drm/shmem-helper: Add common memory shrinker
-Content-Language: en-US
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Qiang Yu <yuq825@gmail.com>, Steven Price <steven.price@arm.com>,
- Emma Anholt <emma@anholt.net>, Melissa Wen <mwen@igalia.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, virtualization@lists.linux-foundation.org
-References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
- <20240105184624.508603-23-dmitry.osipenko@collabora.com>
- <20240129100112.35c73f18@collabora.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20240129100112.35c73f18@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 1/29/24 12:01, Boris Brezillon wrote:
-> On Fri,  5 Jan 2024 21:46:16 +0300
-> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
-> 
->> +/**
->> + * drm_gem_shmem_swapin_locked() - Moves shmem GEM back to memory and enables
->> + *                                 hardware access to the memory.
->> + * @shmem: shmem GEM object
->> + *
->> + * This function moves shmem GEM back to memory if it was previously evicted
->> + * by the memory shrinker. The GEM is ready to use on success.
->> + *
->> + * Returns:
->> + * 0 on success or a negative error code on failure.
->> + */
->> +int drm_gem_shmem_swapin_locked(struct drm_gem_shmem_object *shmem)
->> +{
->> +	int err;
->> +
->> +	dma_resv_assert_held(shmem->base.resv);
->> +
->> +	if (!shmem->evicted)
->> +		return 0;
-> 
-> Shouldn't we have a drm_gem_shmem_shrinker_update_lru_locked() even if
-> the object wasn't evicted, such that idle->busy transition moves the BO
-> to the list tail?
+Add support for the following DPI mode if the encoder type
+is DSI as per the XLCDC IP datasheet:
+- 16BPPCFG1
+- 16BPPCFG2
+- 16BPPCFG3
+- 18BPPCFG1
+- 18BPPCFG2
+- 24BPP
 
-Seems so, good catch. I'll double-check and remove it in the next version.
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+[durai.manickamkr@microchip.com: update output format using is_xlcdc flag]
+Signed-off-by: Durai Manickam KR <durai.manickamkr@microchip.com>
+---
+ .../gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c    | 123 +++++++++++++-----
+ 1 file changed, 88 insertions(+), 35 deletions(-)
 
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+index 1899be2eb6a3..6f529769b036 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+@@ -295,11 +295,18 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
+ 
+ }
+ 
+-#define ATMEL_HLCDC_RGB444_OUTPUT	BIT(0)
+-#define ATMEL_HLCDC_RGB565_OUTPUT	BIT(1)
+-#define ATMEL_HLCDC_RGB666_OUTPUT	BIT(2)
+-#define ATMEL_HLCDC_RGB888_OUTPUT	BIT(3)
+-#define ATMEL_HLCDC_OUTPUT_MODE_MASK	GENMASK(3, 0)
++#define ATMEL_HLCDC_RGB444_OUTPUT		BIT(0)
++#define ATMEL_HLCDC_RGB565_OUTPUT		BIT(1)
++#define ATMEL_HLCDC_RGB666_OUTPUT		BIT(2)
++#define ATMEL_HLCDC_RGB888_OUTPUT		BIT(3)
++#define ATMEL_HLCDC_DPI_RGB565C1_OUTPUT		BIT(4)
++#define ATMEL_HLCDC_DPI_RGB565C2_OUTPUT		BIT(5)
++#define ATMEL_HLCDC_DPI_RGB565C3_OUTPUT		BIT(6)
++#define ATMEL_HLCDC_DPI_RGB666C1_OUTPUT		BIT(7)
++#define ATMEL_HLCDC_DPI_RGB666C2_OUTPUT		BIT(8)
++#define ATMEL_HLCDC_DPI_RGB888_OUTPUT		BIT(9)
++#define ATMEL_HLCDC_OUTPUT_MODE_MASK		GENMASK(3, 0)
++#define ATMEL_XLCDC_OUTPUT_MODE_MASK		GENMASK(9, 0)
+ 
+ static int atmel_hlcdc_connector_output_mode(struct drm_connector_state *state)
+ {
+@@ -313,53 +320,99 @@ static int atmel_hlcdc_connector_output_mode(struct drm_connector_state *state)
+ 	if (!encoder)
+ 		encoder = connector->encoder;
+ 
+-	switch (atmel_hlcdc_encoder_get_bus_fmt(encoder)) {
+-	case 0:
+-		break;
+-	case MEDIA_BUS_FMT_RGB444_1X12:
+-		return ATMEL_HLCDC_RGB444_OUTPUT;
+-	case MEDIA_BUS_FMT_RGB565_1X16:
+-		return ATMEL_HLCDC_RGB565_OUTPUT;
+-	case MEDIA_BUS_FMT_RGB666_1X18:
+-		return ATMEL_HLCDC_RGB666_OUTPUT;
+-	case MEDIA_BUS_FMT_RGB888_1X24:
+-		return ATMEL_HLCDC_RGB888_OUTPUT;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	for (j = 0; j < info->num_bus_formats; j++) {
+-		switch (info->bus_formats[j]) {
+-		case MEDIA_BUS_FMT_RGB444_1X12:
+-			supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
++	if (encoder->encoder_type == DRM_MODE_ENCODER_DSI) {
++		/*
++		 * atmel-hlcdc to support DSI formats with DSI video pipeline
++		 * when DRM_MODE_ENCODER_DSI type is set by
++		 * connector driver component.
++		 */
++		switch (atmel_hlcdc_encoder_get_bus_fmt(encoder)) {
++		case 0:
+ 			break;
+ 		case MEDIA_BUS_FMT_RGB565_1X16:
+-			supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
+-			break;
++			return ATMEL_HLCDC_DPI_RGB565C1_OUTPUT;
+ 		case MEDIA_BUS_FMT_RGB666_1X18:
+-			supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
+-			break;
++			return ATMEL_HLCDC_DPI_RGB666C1_OUTPUT;
++		case MEDIA_BUS_FMT_RGB666_1X24_CPADHI:
++			return ATMEL_HLCDC_DPI_RGB666C2_OUTPUT;
+ 		case MEDIA_BUS_FMT_RGB888_1X24:
+-			supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
+-			break;
++			return ATMEL_HLCDC_DPI_RGB888_OUTPUT;
+ 		default:
++			return -EINVAL;
++		}
++
++		for (j = 0; j < info->num_bus_formats; j++) {
++			switch (info->bus_formats[j]) {
++			case MEDIA_BUS_FMT_RGB565_1X16:
++				supported_fmts |=
++					ATMEL_HLCDC_DPI_RGB565C1_OUTPUT;
++				break;
++			case MEDIA_BUS_FMT_RGB666_1X18:
++				supported_fmts |=
++					ATMEL_HLCDC_DPI_RGB666C1_OUTPUT;
++				break;
++			case MEDIA_BUS_FMT_RGB666_1X24_CPADHI:
++				supported_fmts |=
++					ATMEL_HLCDC_DPI_RGB666C2_OUTPUT;
++				break;
++			case MEDIA_BUS_FMT_RGB888_1X24:
++				supported_fmts |=
++					ATMEL_HLCDC_DPI_RGB888_OUTPUT;
++				break;
++			default:
++				break;
++			}
++		}
++	} else {
++		switch (atmel_hlcdc_encoder_get_bus_fmt(encoder)) {
++		case 0:
+ 			break;
++		case MEDIA_BUS_FMT_RGB444_1X12:
++			return ATMEL_HLCDC_RGB444_OUTPUT;
++		case MEDIA_BUS_FMT_RGB565_1X16:
++			return ATMEL_HLCDC_RGB565_OUTPUT;
++		case MEDIA_BUS_FMT_RGB666_1X18:
++			return ATMEL_HLCDC_RGB666_OUTPUT;
++		case MEDIA_BUS_FMT_RGB888_1X24:
++			return ATMEL_HLCDC_RGB888_OUTPUT;
++		default:
++			return -EINVAL;
+ 		}
+-	}
+ 
++		for (j = 0; j < info->num_bus_formats; j++) {
++			switch (info->bus_formats[j]) {
++			case MEDIA_BUS_FMT_RGB444_1X12:
++				supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
++				break;
++			case MEDIA_BUS_FMT_RGB565_1X16:
++				supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
++				break;
++			case MEDIA_BUS_FMT_RGB666_1X18:
++				supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
++				break;
++			case MEDIA_BUS_FMT_RGB888_1X24:
++				supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
++				break;
++			default:
++				break;
++			}
++		}
++	}
+ 	return supported_fmts;
+ }
+ 
+ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
+ {
+-	unsigned int output_fmts = ATMEL_HLCDC_OUTPUT_MODE_MASK;
++	unsigned int output_fmts;
+ 	struct atmel_hlcdc_crtc_state *hstate;
+ 	struct drm_connector_state *cstate;
+ 	struct drm_connector *connector;
+-	struct atmel_hlcdc_crtc *crtc;
++	struct atmel_hlcdc_crtc *crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
+ 	int i;
++	bool is_xlcdc = crtc->dc->desc->is_xlcdc;
+ 
+-	crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
++	output_fmts = is_xlcdc ? ATMEL_XLCDC_OUTPUT_MODE_MASK :
++		      ATMEL_HLCDC_OUTPUT_MODE_MASK;
+ 
+ 	for_each_new_connector_in_state(state->state, connector, cstate, i) {
+ 		unsigned int supported_fmts = 0;
+@@ -380,7 +433,7 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
+ 
+ 	hstate = drm_crtc_state_to_atmel_hlcdc_crtc_state(state);
+ 	hstate->output_mode = fls(output_fmts) - 1;
+-	if (crtc->dc->desc->is_xlcdc) {
++	if (is_xlcdc) {
+ 		/* check if MIPI DPI bit needs to be set */
+ 		if (fls(output_fmts) > 3) {
+ 			hstate->output_mode -= 4;
 -- 
-Best regards,
-Dmitry
+2.25.1
 
