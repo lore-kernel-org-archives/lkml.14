@@ -1,304 +1,133 @@
-Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A4655C2C
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2F455792
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520290; cv=none; b=IUSfcq5aejLitcL2X3w03Ye9Q7fzhiwgaGvdX7g6tSJuErNZG6Bw6hP55HaKtl5Vz/Cz6+pajUbUO8IawDq8kkAX4wnDW4G6xFN+DXyRC7uJHBa6Qs9Kh4BfSa2fawE4FTdvWonYUTkQ3tlsp5ei7r45H7YaVoj/SXGT3d/SdNs=
+	t=1706520290; cv=none; b=AhvX1V7No7pgX/7aAQuBBe7gGb3ux/ORm7aKzDajDSRPe6XE1iiGQ20FzaUPDw+wUuxT7ct3uzYDq1ixnws2Kc9754jBvJ/xK5jqaE2nLNlHrlVzs9OWhO3C/+UfdneObJTK+Gl1bbif5pqTwIq62XcYAt31IQzMrSt+NZh2qVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706520290; c=relaxed/simple;
-	bh=NV0zhuJqettYgn4ZY1m7COgAL77d42NIPCPxUlnUrxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=byvAYGF3NDK/oHSG2a5UDljXpzpiJfz++LevTaNDp3MbCwTx9h7v0t5lqJH/uknq95s8vDces74pygriegoYKxqDgrwTjeF1VVMH1X8c58JHHYWjvGRylkoXMd2SpjO+ww88AKQY9SN2V7iNZI73iE/qu/jQINWlNkgVY9HBim0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; arc=none smtp.client-ip=77.240.19.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
-Received: from [194.136.85.206] (port=46446 helo=eldfell)
-	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <pekka.paalanen@haloniitty.fi>)
-	id 1rUNKy-0007D5-0Q;
-	Mon, 29 Jan 2024 10:49:52 +0200
-Date: Mon, 29 Jan 2024 10:49:34 +0200
-From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
-To: =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel-dev@igalia.com,
- alexander.deucher@amd.com, christian.koenig@amd.com, Simon Ser
- <contact@emersion.fr>, daniel@ffwll.ch, Daniel Stone
- <daniel@fooishbar.org>, 'Marek =?UTF-8?B?T2zFocOhayc=?= <maraeo@gmail.com>,
- Dave Airlie <airlied@gmail.com>, ville.syrjala@linux.intel.com, Xaver Hugl
- <xaver.hugl@gmail.com>, Joshua Ashton <joshua@froggi.es>, Michel
- =?UTF-8?B?RMOkbnplcg==?= <michel.daenzer@mailbox.org>
-Subject: Re: [PATCH v3 1/3] drm/atomic: Allow drivers to write their own
- plane check for async flips
-Message-ID: <20240129104934.0b887ec7@eldfell>
-In-Reply-To: <20240128212515.630345-2-andrealmeid@igalia.com>
-References: <20240128212515.630345-1-andrealmeid@igalia.com>
-	<20240128212515.630345-2-andrealmeid@igalia.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	bh=uPW5WaZeYCNjpAiQXQ6dsyN5lBlDGiOxHHcb3Werqlg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HHovXghBMXlatTvQmzsFkLECu5srLj7SzZGk6+hVkZ0kORw/5ewuhjbBoGhUiZutU6733aVYjjC35G5wL76lKILmkcMoqNuPXWpFUSaco5hHDbxURpfXyn6CnXfCUYPJrn5TUnv8BcK5/Xf0GZJT9HqrwY35xIJd7mWoNLA+cRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=fIsGsqOa; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fIsGsqOa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706520287; x=1738056287;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uPW5WaZeYCNjpAiQXQ6dsyN5lBlDGiOxHHcb3Werqlg=;
+  b=fIsGsqOaX9wCjPkwCBYnhRB7lggxgM8kJ51oTFZ/EtMqo8eFDpY3yTzU
+   asKC5fitFJwnypsas/IZD1CdvqC+XEa+3P97QgKiZE3lk/FKOsh48EWZt
+   c9uxSkCd2ZXdtnE5u+NnKM70u0DNjuMWt5Fib2YY1uVEf5PIK223vp1/L
+   2fLe6bNwI0KJy98IWkezIWiV+7erNjaLzlIBcjba8IRlKag048/HH44dz
+   xoKxuNCL5o1EGqI1tXlu8Smx1lZLPx/pCyTq2zCHyy02bFp9JBfBQ42JG
+   7DsiAAVCW5SGclQOZ7ANl7jR/bLrPFnhDNqk5z7eMESIHW6yZCpm9Gb/h
+   w==;
+X-CSE-ConnectionGUID: yiykArgaTK2rjSxwUhiB8w==
+X-CSE-MsgGUID: eTsSxssXSN2wWUTre263AA==
+X-IronPort-AV: E=Sophos;i="6.05,226,1701154800"; 
+   d="scan'208";a="15433321"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Jan 2024 02:24:46 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Jan 2024 02:24:11 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 29 Jan 2024 02:24:04 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<lee@kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
+	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
+	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
+	<Balakrishnan.S@microchip.com>, Manikandan Muralidharan
+	<manikandan.m@microchip.com>
+Subject: [PATCH RESEND v7 0/7] Add support for XLCDC to sam9x7 SoC family.
+Date: Mon, 29 Jan 2024 14:53:12 +0530
+Message-ID: <20240129092319.199365-1-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CyNE1g.rxLQR/tPHNy8jH2s";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - whm50.louhi.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - haloniitty.fi
-X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
-X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
---Sig_/CyNE1g.rxLQR/tPHNy8jH2s
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This patch series aims to add support for XLCDC IP of sam9x7 SoC family
+to the DRM subsystem.XLCDC IP has additional registers and new
+configuration bits compared to the existing register set of HLCDC IP.
+The new compatible string "microchip,sam9x75-xlcdc" is defined for sam9x75
+variant of the sam9x7 SoC family.The is_xlcdc flag under driver data and
+IP specific driver ops helps to differentiate the XLCDC and existing HLCDC
+code within the same driver.
 
-On Sun, 28 Jan 2024 18:25:13 -0300
-Andr=C3=A9 Almeida <andrealmeid@igalia.com> wrote:
+changes in v7:
+* LCDC IP driver ops functions are declared static and its 
+declaration are removed.
 
-> Some hardware are more flexible on what they can flip asynchronously, so
-> rework the plane check so drivers can implement their own check, lifting
-> up some of the restrictions.
->=20
-> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
-> ---
-> v3: no changes
->=20
->  drivers/gpu/drm/drm_atomic_uapi.c | 62 ++++++++++++++++++++++---------
->  include/drm/drm_atomic_uapi.h     | 12 ++++++
->  include/drm/drm_plane.h           |  5 +++
->  3 files changed, 62 insertions(+), 17 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atom=
-ic_uapi.c
-> index aee4a65d4959..6d5b9fec90c7 100644
-> --- a/drivers/gpu/drm/drm_atomic_uapi.c
-> +++ b/drivers/gpu/drm/drm_atomic_uapi.c
-> @@ -620,7 +620,7 @@ static int drm_atomic_plane_set_property(struct drm_p=
-lane *plane,
->  	return 0;
->  }
-> =20
-> -static int
-> +int
->  drm_atomic_plane_get_property(struct drm_plane *plane,
->  		const struct drm_plane_state *state,
->  		struct drm_property *property, uint64_t *val)
-> @@ -683,6 +683,7 @@ drm_atomic_plane_get_property(struct drm_plane *plane,
-> =20
->  	return 0;
->  }
-> +EXPORT_SYMBOL(drm_atomic_plane_get_property);
-> =20
->  static int drm_atomic_set_writeback_fb_for_connector(
->  		struct drm_connector_state *conn_state,
-> @@ -1026,18 +1027,54 @@ int drm_atomic_connector_commit_dpms(struct drm_a=
-tomic_state *state,
->  	return ret;
->  }
-> =20
-> -static int drm_atomic_check_prop_changes(int ret, uint64_t old_val, uint=
-64_t prop_value,
-> +int drm_atomic_check_prop_changes(int ret, uint64_t old_val, uint64_t pr=
-op_value,
+changes in v6:
+* Fixed Cosmetic defects.
+* Added comments for readability.
 
-Hi,
+changes in v5:
+* return value of regmap_read_poll_timeout is checked in failure
+case.
+* HLCDC and XLCDC specific driver functions are now invoked
+using its IP specific driver ops w/o the need of checking is_xlcdc flag.
+* Removed empty spaces and blank lines.
 
-should the word "async" be somewhere in the function name?
+changes in v4:
+* fixed kernel warnings reported by kernel test robot.
 
->  					 struct drm_property *prop)
->  {
->  	if (ret !=3D 0 || old_val !=3D prop_value) {
->  		drm_dbg_atomic(prop->dev,
-> -			       "[PROP:%d:%s] No prop can be changed during async flip\n",
-> +			       "[PROP:%d:%s] This prop cannot be changed during async flip\n",
->  			       prop->base.id, prop->name);
->  		return -EINVAL;
->  	}
-> =20
->  	return 0;
->  }
-> +EXPORT_SYMBOL(drm_atomic_check_prop_changes);
-> +
-> +/* plane changes may have exceptions, so we have a special function for =
-them */
-> +static int drm_atomic_check_plane_changes(struct drm_property *prop,
-> +					  struct drm_plane *plane,
-> +					  struct drm_plane_state *plane_state,
-> +					  struct drm_mode_object *obj,
-> +					  u64 prop_value, u64 old_val)
-> +{
-> +	struct drm_mode_config *config =3D &plane->dev->mode_config;
-> +	int ret;
-> +
-> +	if (plane->funcs->check_async_props)
-> +		return plane->funcs->check_async_props(prop, plane, plane_state,
-> +							     obj, prop_value, old_val);
+changes in v3:
+* Removed de-referencing the value of is_xlcdc flag multiple times in
+a single function.
+* Removed cpu_relax() call when using regmap_read_poll_timeout.
+* Updated xfactor and yfactor equations using shift operators
+* Defined CSC co-efficients in an array for code readability.
 
-Is it really ok to allow drivers to opt-in to also *reject* the FB_ID
-and IN_FENCE_FD props on async commits?
+changes in v2:
+* Change the driver compatible name from "microchip,sam9x7-xlcdc" to
+"microchip,sam9x75-xlcdc".
+* Move is_xlcdc flag to driver data.
+* Remove unsed Macro definitions.
+* Add co-developed-bys tags
+* Replace regmap_read() with regmap_read_poll_timeout() call
+* Split code into two helpers for code readablitity.
 
-Either intentionally or by accident.
+Durai Manickam KR (1):
+  drm: atmel-hlcdc: Define SAM9X7 SoC XLCDC specific registers
 
-> +
-> +	/*
-> +	 * if you are trying to change something other than the FB ID, your
-> +	 * change will be either rejected or ignored, so we can stop the check
-> +	 * here
-> +	 */
-> +	if (prop !=3D config->prop_fb_id) {
-> +		ret =3D drm_atomic_plane_get_property(plane, plane_state,
-> +						    prop, &old_val);
-> +		return drm_atomic_check_prop_changes(ret, old_val, prop_value, prop);
+Manikandan Muralidharan (6):
+  drm: atmel-hlcdc: add flag and driver ops to differentiate XLCDC and
+    HLCDC IP
+  drm: atmel-hlcdc: add LCD controller layer definition for sam9x75
+  drm: atmel_hlcdc: Add support for XLCDC in atmel LCD driver
+  drm: atmel-hlcdc: add DPI mode support for XLCDC
+  drm: atmel-hlcdc: add vertical and horizontal scaling support for
+    XLCDC
+  drm: atmel-hlcdc: add support for DSI output formats
 
-When I first read this code, it seemed to say: "If the prop is not
-FB_ID, then do the usual prop change checking that happens on all
-changes, not only async.". Reading this patch a few more times over, I
-finally realized drm_atomic_check_prop_changes() is about async
-specifically.
+ .../gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c    | 175 +++++++--
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c  | 105 +++++
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h  |  86 ++++
+ .../gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c   | 369 +++++++++++++++---
+ include/linux/mfd/atmel-hlcdc.h               |  10 +
+ 5 files changed, 647 insertions(+), 98 deletions(-)
 
-> +	}
-> +
-> +	if (plane_state->plane->type !=3D DRM_PLANE_TYPE_PRIMARY) {
-> +		drm_dbg_atomic(prop->dev,
-> +			       "[OBJECT:%d] Only primary planes can be changed during async f=
-lip\n",
-> +			       obj->id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> =20
->  int drm_atomic_set_property(struct drm_atomic_state *state,
->  			    struct drm_file *file_priv,
-> @@ -1100,7 +1137,6 @@ int drm_atomic_set_property(struct drm_atomic_state=
- *state,
->  	case DRM_MODE_OBJECT_PLANE: {
->  		struct drm_plane *plane =3D obj_to_plane(obj);
->  		struct drm_plane_state *plane_state;
-> -		struct drm_mode_config *config =3D &plane->dev->mode_config;
-> =20
->  		plane_state =3D drm_atomic_get_plane_state(state, plane);
->  		if (IS_ERR(plane_state)) {
-> @@ -1108,19 +1144,11 @@ int drm_atomic_set_property(struct drm_atomic_sta=
-te *state,
->  			break;
->  		}
-> =20
-> -		if (async_flip && prop !=3D config->prop_fb_id) {
-> -			ret =3D drm_atomic_plane_get_property(plane, plane_state,
-> -							    prop, &old_val);
-> -			ret =3D drm_atomic_check_prop_changes(ret, old_val, prop_value, prop);
-> -			break;
-> -		}
-> -
-> -		if (async_flip && plane_state->plane->type !=3D DRM_PLANE_TYPE_PRIMARY=
-) {
-> -			drm_dbg_atomic(prop->dev,
-> -				       "[OBJECT:%d] Only primary planes can be changed during async =
-flip\n",
-> -				       obj->id);
-> -			ret =3D -EINVAL;
-> -			break;
-> +		if (async_flip) {
-> +			ret =3D drm_atomic_check_plane_changes(prop, plane, plane_state,
+-- 
+2.25.1
 
-Should there be "async" somewhere in the name of
-drm_atomic_check_plane_changes()?
-
-
-Thanks,
-pq
-
-> +							     obj, prop_value, old_val);
-> +			if (ret)
-> +				break;
->  		}
-> =20
->  		ret =3D drm_atomic_plane_set_property(plane,
-> diff --git a/include/drm/drm_atomic_uapi.h b/include/drm/drm_atomic_uapi.h
-> index 4c6d39d7bdb2..d65fa8fbbca0 100644
-> --- a/include/drm/drm_atomic_uapi.h
-> +++ b/include/drm/drm_atomic_uapi.h
-> @@ -29,6 +29,8 @@
->  #ifndef DRM_ATOMIC_UAPI_H_
->  #define DRM_ATOMIC_UAPI_H_
-> =20
-> +#include <linux/types.h>
-> +
->  struct drm_crtc_state;
->  struct drm_display_mode;
->  struct drm_property_blob;
-> @@ -37,6 +39,9 @@ struct drm_crtc;
->  struct drm_connector_state;
->  struct dma_fence;
->  struct drm_framebuffer;
-> +struct drm_mode_object;
-> +struct drm_property;
-> +struct drm_plane;
-> =20
->  int __must_check
->  drm_atomic_set_mode_for_crtc(struct drm_crtc_state *state,
-> @@ -53,4 +58,11 @@ int __must_check
->  drm_atomic_set_crtc_for_connector(struct drm_connector_state *conn_state,
->  				  struct drm_crtc *crtc);
-> =20
-> +int drm_atomic_plane_get_property(struct drm_plane *plane,
-> +				  const struct drm_plane_state *state,
-> +				  struct drm_property *property, uint64_t *val);
-> +
-> +int drm_atomic_check_prop_changes(int ret, uint64_t old_val, uint64_t pr=
-op_value,
-> +				  struct drm_property *prop);
-> +
->  #endif
-> diff --git a/include/drm/drm_plane.h b/include/drm/drm_plane.h
-> index c6565a6f9324..73dac8d76831 100644
-> --- a/include/drm/drm_plane.h
-> +++ b/include/drm/drm_plane.h
-> @@ -540,6 +540,11 @@ struct drm_plane_funcs {
->  	 */
->  	bool (*format_mod_supported)(struct drm_plane *plane, uint32_t format,
->  				     uint64_t modifier);
-> +
-> +	int (*check_async_props)(struct drm_property *prop, struct drm_plane *p=
-lane,
-> +				 struct drm_plane_state *plane_state,
-> +				 struct drm_mode_object *obj,
-> +				 u64 prop_value, u64 old_val);
->  };
-> =20
->  /**
-
-
---Sig_/CyNE1g.rxLQR/tPHNy8jH2s
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmW3Zp4ACgkQI1/ltBGq
-qqc8ehAAooc9fYyi2pAyuNuCwLMhuUV+A791NMTj40g1r5gP0brsb6TlW+iX8+Ge
-rNYw4wHQRPKqAhhd/JywuMR1YP/tRHLrOZiG2381ZWk8QJmhW6aT1Q3RtojeraxK
-ubNMvzadC7Di6VmkKVvH/9rLgCs79Brz2nAEAPCdEWJ/Q4fiXhajk8maKM4Zf21l
-q3+AVBpIbP0OFpvw+HKu1EkDV8TdlWHRJYebWR+ju5L7LxDStSL5PuUFNA2TFWbG
-kQfpoS4TLmeM2BA4GjaADB32mo5a6y6GEAHolGsp9AHxRrCaN0+wCLObNmCgz/Xs
-EcylMgMUvHWJuL9Nhr2UzDwb668fJa2Drirmx62bXubjsmqTEMACvmdiLtYNPFHd
-tmrskOq2jquNsYdSOO1lyNsrU5wL27mOR2qkY/L/niMKtKOxD+e7SNzYe8YiJDAT
-gup/t+jSEVj5uEP9Fh5KWQLjGpv5M7ZOx4El3BZ5OfmD48lEkUWm4Ol4Cvwgn79d
-7+x62h69VWFskO05OLt/c7rkCiPxMwl6JDQA7GXSS5lAkjFVfrlIPDlT62E7xWTm
-TH0gdwCKbZNh81QuZ7hxKX6GLyk5Z9Ir5SzX8kHRdnMENiyKWLtW9rIvj7nCCgli
-PMckBk7wycSe6xUZkDBsDsJpreMhNDu/oXn1Tl+unqMWmfStaUk=
-=19nM
------END PGP SIGNATURE-----
-
---Sig_/CyNE1g.rxLQR/tPHNy8jH2s--
