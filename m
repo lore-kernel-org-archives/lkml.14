@@ -1,186 +1,194 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2046.outbound.protection.outlook.com [40.107.93.46])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2130F5BAD2;
-	Mon, 29 Jan 2024 13:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706534255; cv=fail; b=lRjZRmgoKNK868vcVfhmiKu6GSUtFujMzvcvd94pexuyPpRS1LmcXE04RsGsXr9S8VBU1P6UwNMHsWtjMn9cjHEIEl2fo3Nux7Xsp88H8Fx9TX7yq9Xt3crLmkqURuRvTPftWs4O/WKl668Ffa3fmyInpGiPMIShnrJnY5Uz81o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706534255; c=relaxed/simple;
-	bh=0gtN9VALRvJvx/I9xj4xdl6kKVCfOD87CA4doYg7Nm0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=R2BV5Ir2+h6a8oBTmpZs7z41Qc/ixuC48e3g6fUUJHV98MSqWxbI68bDOom9d/EnmF43PFmHj4CeVJ+NSoESTICNsIxQeQKOkGc/1gnsDFs45GlOcVjSfg8ISjSzNErYCw4T1L/OrPeM5q9+oVI6Ez+vPgCs3adah7ZMjV1SVEY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MnhAVwCi; arc=fail smtp.client-ip=40.107.93.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15896604C6;
+	Mon, 29 Jan 2024 13:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706534328; cv=none; b=juv/JakzGan+VkvCAJUanzznE5y0LdMegdQa0lwEXUvaXYrA3wB+wA3n1H2JhRuv37vxmV3QRnERZCDToIOhW9BZpma1kY8VjM8i2iR/86Auf+XDtBBxyorLyLMPQ20EnObY+aL1WX4SxJOWTJ8zbLoVBcb3YON5ppF/DJ/MGsE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706534328; c=relaxed/simple;
+	bh=JpFZYsNzV1BEiQaBqprQnIqEqg0c3XqDOiJt3LcQ2KU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IJrlppYuDEUnvTPrS9DXba/4CCW5ZQ7hrhuhwcNCFvJgTJ7spuiwlpgA5lZO9jd7FKh2YoUD2Vko/DKY54aB20JLBklN78RT6yGuDk5Kj1joOMNlBjok0lvcQh4VaKLB3lhKUcOGi9FB+mKQiquSg5+BEhfvcASXNtBnp/o6J/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKmA4peO; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MnhAVwCi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PZ0zFnLD9jxYRW3nnRlAOj5mYFiHPOTW3MvPyV3FVJvzyXcSPGbzualEw74HcIztYUmkTESekwAvm6qlEIgd/5vWQXwnZYChATnaGWgUJaAIwrGfnZlTy6EFSWyJQgjhLNYNmy7VIKaQ/4ADpzMXvbbfGHgkUTOqkNG0q+4uoOLtDy7Wuy5RhFkwg4rHqbudkIK0V9IoP0fE8JZ+QO1kUbYGXv7n4s1MgqDspRUkg5o25EsE77QX+YW7K2xw1pqgg8RYgbKrKbDF8rzHQdB5vowNy1B6SZST8TzwgK/VqMyEDbRy1S0Tr3BLGg1YE0JaJ2nmBobhJj1LMlUE6sS50g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TziM/MC4a+7rQVfajuIG3rpuBRK6MBZi4HF8k3308O8=;
- b=Dpt6U1mGGy2sfgw2r9JrdWo9c2APj+XNct7Xizq8bX9TWulVyrxZ86XiF0JVY2uU/f2UALctmZAGT9oCk2evUzKdTxdak5Ns6QZsG16Q4NdwVJw/nJayD5apnKVHhgBNXPM1WdELgiljnbXH8wCM+bV5ond+piqYQSZVtBzQpDZu4BDJlg1k5K6RItvzj+RwgX1Ftv1EZSJC1tcQeBgoq5QaSsYjP46pUoS+fWprTpZ0hFNUqmPfWtqYJOCUAGG9beFzZ+r3eQ2viRyf9TayxJqg0RGmypxVR3SVAm0zNAvnMw/5yytBpCstNgABrBOwRWArnqsJd3dO8+xRwjJXOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TziM/MC4a+7rQVfajuIG3rpuBRK6MBZi4HF8k3308O8=;
- b=MnhAVwCiZpTZ9qD28NLHTwxl5Wd9RXx2HonTwAZWkrtRG6Yze7hvGKwANUUWJhBfoYKhO0UCtG0tYlGStSEoDcxInpI8y4cMBVoLIOm2mbcb5jenmZwYB/wrGif2w8/OtxyrsxvD64RyVcBBQaVlOogTcftwxCy4jlcKK4LyR1g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by BL0PR12MB4929.namprd12.prod.outlook.com (2603:10b6:208:1c4::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Mon, 29 Jan
- 2024 13:17:30 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 13:17:30 +0000
-Message-ID: <8fc55451-dfd7-4d09-8051-8b39048f85e2@amd.com>
-Date: Mon, 29 Jan 2024 14:17:22 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/8] iio: core: Add new DMABUF interface infrastructure
-Content-Language: en-US
-To: Paul Cercueil <paul@crapouillou.net>, Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Sumit Semwal <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Michael Hennerich <Michael.Hennerich@analog.com>
-References: <20231219175009.65482-1-paul@crapouillou.net>
- <20231219175009.65482-6-paul@crapouillou.net>
- <20231221120624.7bcdc302@jic23-huawei>
- <ee5d7bb2fb3e74e8fc621d745b23d1858e1f0c3c.camel@crapouillou.net>
- <20240127165044.22f1b329@jic23-huawei>
- <d6bef39c-f940-4097-8ca3-0cf4ef89a743@amd.com>
- <aac82ce15a49c5e4b939a69229b9a8a51ca00f5d.camel@crapouillou.net>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <aac82ce15a49c5e4b939a69229b9a8a51ca00f5d.camel@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0181.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ab::8) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKmA4peO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706534327; x=1738070327;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JpFZYsNzV1BEiQaBqprQnIqEqg0c3XqDOiJt3LcQ2KU=;
+  b=aKmA4peOILY/X5XC9dL826/Fu8lo61brUGqZxBiOBAWzN7nAqoObHntU
+   pziwvZtWF2JWfa5fDIZI2esECZYTy5/NJShPO0GMN7TcZ53T+Bo7Xytkg
+   axefPyEGDA4VcACwLapuFzLSxCidn/4S/rMM62lPdz0ZArDSWX+iF7Rj3
+   VFZ2syf2DMr1I8gCqa+yu90p5fMb46TVwRIUC2UNzru93KR3iJi32fRxm
+   9QKM+CHptmlo7gY1LqUe/Z7xivzoGO3OEdmOy5s5t1qJHXjfxiXYp2Y90
+   VQM0FSrddiJb9oc4Q5xH83TtjOG/Q6L97i+X46/hdtqHsiAgYShFvO/hz
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="400092653"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="400092653"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:18:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="787828961"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="787828961"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.122.111]) ([10.247.122.111])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:18:33 -0800
+Message-ID: <d1e28a1e-5d82-40bd-99d5-ca30a1744ccc@linux.intel.com>
+Date: Mon, 29 Jan 2024 21:18:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|BL0PR12MB4929:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65f51ebd-7e7e-44bf-b98a-08dc20cca552
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	jthF+GGY5TWMfceu2Yvm06OP/1R7d0ggj8QmOeQta+12IqHw0inAHicHIn5Mbh2BMk9Ug8gaxc392uQJ7Si7oFyGM79R0cur4sWf1/i1/1QQEFUbR12NwfkL/f8OS50Mvlf68yJkFslgM/YVRcVWknH8EYTzjjqJdTRYyRJivYVtMydFQdAu2FXfY3IbyuI7QmMA2iS2D/OGUiIA3hE2DSdsuA9igHdnmeu+O4qtxb9z1wyjRI73MEt5sOm1FHC29+oHf3GwNPOIKE/oqS4YMRqHzIb0Cgj8QTvnB9odNjQt3gO1OqJ4HHUgyCpexI5UsQ2T0Zo4e2JFOdSj2loCzJHHZcz2p/CtJBJprHVywEmmKtYCSGIuTXnBji3npizxoc0qJc0dM3CXZ9Vh1Xr+G5mYCSGr9VdibeMMkaUBswPT8Otabj20AOpQqLu31oMUtu3VK6OzeLMjwWOnU4Ee4zbfwm2/0SDBJmdHlFac5tHe1IlVmDHzy90Bhq4qXnhnrPp6//el7KhroYyrLcddyeCJUsayVt9YAgFIjHWhPLJyT2FycsDOFp+/zffDJqEl8+HueD5V3N+zCVV5SIA7m4gnGm2Sv0rguX/+dRUMM+WCpHCf4JkDQ3fxvVrc/LUW/D08p1qZ+Y3l4zfnJSTu2g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(376002)(366004)(39850400004)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(86362001)(31696002)(36756003)(38100700002)(6486002)(478600001)(41300700001)(8676002)(8936002)(4326008)(66946007)(26005)(66556008)(316002)(66476007)(54906003)(110136005)(2616005)(2906002)(7416002)(66574015)(6666004)(6512007)(5660300002)(6506007)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UUZUVFdOcjk1QzJlYmZFV2NlNkplbURLNHliTVFKa25teEROTi9BSUhpSG9Q?=
- =?utf-8?B?WkZRRU1tWDJ3NVYra1ZBaC8vcjk5azZFV3h4UFVXQVFCTGhROFdGQlYyc0Nt?=
- =?utf-8?B?MlJtMGVXTHozaVlweGZmN2gvcTlyejRqUGtuWHI1NTkrYURxenk1Z29HOUtI?=
- =?utf-8?B?ZzcvTmtXWnNQTWdxc1ZycWNlcFJvK2pxc3V4cjlZQWsxUXFvZ0wrSXNEazRX?=
- =?utf-8?B?QjQ0cGRWRmg3ZGdSNzBPU2ZKWkloSUk1cG1iaXdXZlNJSUtkekpZUzgxM1BS?=
- =?utf-8?B?UEJ3MlcwQlpDYXltWWoxK3BtWEE2eXNrNnU2ZzBkTXBXNDZwbGExNU1oMUdi?=
- =?utf-8?B?anJYVFFkaU9VWWpIVFNiUVZXK25ydEdrSjlmOVN0ZWluL0E3NFdxZXI3eHNq?=
- =?utf-8?B?U2E0VDJVbDRBRnF3akxhS3p0WjFJVWdwU0N2bFh3WjIxNWFEbEJnenliUGFX?=
- =?utf-8?B?d1c3T3dXN1BWengyNnpwbXdYaUtDdWhCTDFTNkZSNkVBSEsyRmJtR3d1RUsw?=
- =?utf-8?B?cmF6eGJvTmZHL1pGZ1FwL1FVd1hpRkhQVE1MeVdlM3pnMkI2bmorNlgwelZK?=
- =?utf-8?B?cmJXRW5KS3lEMlladEVnZHkreDNzNzkxTjEraW96cHg0RUtrRG1yVDI4Qlda?=
- =?utf-8?B?QWw0bExwdm5xZENJTnhjRlRQUDU3NXVhOUhYT3kyNnk0UlRnNWpHWTJFbDF1?=
- =?utf-8?B?RlozalpZVzlITU5pblFUQXRCNlI2dTZMU2E5QmczWlBRSS9XUFEzYnFIVW1L?=
- =?utf-8?B?OHRaek5OMitKTjV5RCs0SkxTS2N5aVNSSXQydXljZFJnM2hnamQ5U2RnMW14?=
- =?utf-8?B?QjVrWnc3ekZXUVJJVFlkdnp3U1QrdERodm1DOGdEbk9RTFFZeWpRenlCU2Zo?=
- =?utf-8?B?UENlL2JWbWhnOEwvanpLQmd6YUxLbWZqcmNJRXRYMzE2U0pEeCtFMzh3WnBw?=
- =?utf-8?B?Vkd5dmxsbGtzM2VQWWNCekIzdnVsczgyMzRacWpsMkxPNDhRazdDc0g3ZCtC?=
- =?utf-8?B?NTVGY0RuR2MyNGdhWjQvSFhFSGFBZ05DeGpBUEljYXlScE5SM0ROeHNZbHZS?=
- =?utf-8?B?NFUzVnoxS0NzSmFweEw1NGtzd0d5MGUwQmxjTVZVSk82azMyekd3eXZXTDRP?=
- =?utf-8?B?OHBaNkRoZWhMOW5VQzBzQkszcEt6a1JDRGYvTlBMR2YwN21FVGcvd0RjNmh6?=
- =?utf-8?B?b0J5dXpYbU9CMkdua2paUWhUSzhsNzYwVGg2UlZVSDdud0t6eWkvSUhzNjVq?=
- =?utf-8?B?S3MyaVBWNTVHSVQrQzU4YXRPczhBOEZLOW0zNmF6RmpIczFpNUpONWdCR1RI?=
- =?utf-8?B?RkFZOXVOUmIySWFWT2hYcFJJSWFlVng2bFVmVWJTZXY3WklUcnJ0eVM0RUtp?=
- =?utf-8?B?UTJUZEdkVjFiQW1EeUlSMElsTW84NTk0Zk1yNml0SXZaZHU0UE5sSE9qRkR2?=
- =?utf-8?B?N05MWk12MDhMMFhwS0JmWWcvMkRUOGdVeW1kU3ZNc1F0WU44Sk16ZzlDaS95?=
- =?utf-8?B?b0FmanNvUTBZdHE4ZHRkWjVsUVBXUXgwdGd5NE1yWkI2dmEzelc1eVVnS3NM?=
- =?utf-8?B?RVBYeVF5MDAvU2hTd0RFVWRsK1p3OFJRczdISEZRQ3NXWjRuVWR3Q1ZIeXd5?=
- =?utf-8?B?cnBMMEF5VHdGcnVRNWpjUTF5eVVEdHVVVnJXWmphZHMrckowOEd6N0JSdDUv?=
- =?utf-8?B?VFZoOGo5KzNpeFVkaDVRWlh5TmMyRytrNzA2WTB1Z1Bna2JzNGNQK0Z1c283?=
- =?utf-8?B?SEZ5eU5YaWM2bzhzTnZySkQrYmhTUXRHTk0wUkxMWHYveCtrUEVON0RlUHhy?=
- =?utf-8?B?ZVRzNFFTRnFYWjVOYThrTEdNZHlCMjYrcC8wMWNiNW5nVkVMeVFRc3ROYnVN?=
- =?utf-8?B?VzQwQkp2b1pJTXQ5S1pKT3hlZkZjWEpOZWFaVG5GVkU3d2lIS0k2TzhoTndO?=
- =?utf-8?B?UDduQUE1amszYzlUVXdqMDNsdmcrcW01d3NEZStsZnA5ZTlvL0hxelpEdkll?=
- =?utf-8?B?U0Zqb2VXZ2p3eEhYbjJ3OHdZengrL3huQlhTM1NZa3lxdXFGRkhjcDdFUGJO?=
- =?utf-8?B?NFlxR2F2WWY2Y3B6SFJISjI1S3hpRDJxWFhmNU80WmJidjhmcVRpSUcza0VT?=
- =?utf-8?Q?UrDJfYroSoIvRCEnnHNp7jHOS?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65f51ebd-7e7e-44bf-b98a-08dc20cca552
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 13:17:29.9931
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s9ERICCRppoDrgUG8pZry0OgcfxpOQjLkvHmWUtTQQcUdVLBZ2mgT8S6HvR1TdLF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4929
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 3/5] net: phy: update in-band AN mode when
+ changing interface by PHY driver
+Content-Language: en-US
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
+ Jose Abreu <Jose.Abreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, =?UTF-8?Q?Marek_Beh=C3=BAn?=
+ <kabel@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>,
+ Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Wong Vee Khee
+ <veekhee@apple.com>, Jon Hunter <jonathanh@nvidia.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Revanth Kumar Uppala <ruppala@nvidia.com>,
+ Shenwei Wang <shenwei.wang@nxp.com>,
+ Andrey Konovalov <andrey.konovalov@linaro.org>,
+ Jochen Henneberg <jh@henneberg-systemdesign.com>,
+ David E Box <david.e.box@intel.com>, Andrew Halaney <ahalaney@redhat.com>,
+ Simon Horman <simon.horman@corigine.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, bpf@vger.kernel.org,
+ Voon Wei Feng <weifeng.voon@intel.com>,
+ Tan Tee Min <tee.min.tan@linux.intel.com>,
+ Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+ Lai Peter Jun Ann <jun.ann.lai@intel.com>
+References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
+ <20230921121946.3025771-4-yong.liang.choong@linux.intel.com>
+ <ZQxNhYcusHfrJvxM@shell.armlinux.org.uk>
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <ZQxNhYcusHfrJvxM@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Am 29.01.24 um 14:06 schrieb Paul Cercueil:
-> Hi Christian,
->
-> Le lundi 29 janvier 2024 à 13:52 +0100, Christian König a écrit :
->> Am 27.01.24 um 17:50 schrieb Jonathan Cameron:
->>>>>> +	iio_buffer_dmabuf_put(attach);
->>>>>> +
->>>>>> +out_dmabuf_put:
->>>>>> +	dma_buf_put(dmabuf);
->>>>> As below. Feels like a __free(dma_buf_put) bit of magic would
->>>>> be a
->>>>> nice to have.
->>>> I'm working on the patches right now, just one quick question.
->>>>
->>>> Having a __free(dma_buf_put) requires that dma_buf_put is first
->>>> "registered" as a freeing function using DEFINE_FREE() in
->>>> <linux/dma-
->>>> buf.h>, which has not been done yet.
->>>>
->>>> That would mean carrying a dma-buf specific patch in your tree,
->>>> are you
->>>> OK with that?
->>> Needs an ACK from appropriate maintainer, but otherwise I'm fine
->>> doing
->>> so.  Alternative is to circle back to this later after this code is
->>> upstream.
->> Separate patches for that please, the autocleanup feature is so new
->> that
->> I'm not 100% convinced that everything works out smoothly from the
->> start.
-> Separate patches is a given, did you mean outside this patchset?
-> Because I can send a separate patchset that introduces scope-based
-> management for dma_fence and dma_buf, but then it won't have users.
 
-Outside of the patchset, this is essentially brand new stuff.
 
-IIRC we have quite a number of dma_fence selftests and sw_sync which is 
-basically code inside the drivers/dma-buf directory only there for 
-testing DMA-buf functionality.
+On 21/9/2023 10:04 pm, Russell King (Oracle) wrote:
+> On Thu, Sep 21, 2023 at 08:19:44PM +0800, Choong Yong Liang wrote:
+>> As there is a mechanism in PHY drivers to switch the PHY interface
+>> between SGMII and 2500BaseX according to link speed. In this case,
+>> the in-band AN mode should be switching based on the PHY interface
+>> as well, if the PHY interface has been changed/updated by PHY driver.
+>>
+>> For e.g., disable in-band AN in 2500BaseX mode, or enable in-band AN
+>> back for SGMII mode (10/100/1000Mbps).
+>>
+>> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> 
+> This approach is *going* to break existing setups, sorry.
+> 
+>> +/**
+>> + * phylink_interface_change() - update both cfg_link_an_mode and
+>> + * cur_link_an_mode when there is a change in the interface.
+>> + * @phydev: pointer to &struct phy_device
+>> + *
+>> + * When the PHY interface switches between SGMII and 2500BaseX in
+>> + * accordance with the link speed, the in-band AN mode should also switch
+>> + * based on the PHY interface
+>> + */
+>> +static void phylink_interface_change(struct phy_device *phydev)
+>> +{
+>> +	struct phylink *pl = phydev->phylink;
+>> +
+>> +	if (pl->phy_state.interface != phydev->interface) {
+>> +		/* Fallback to the correct AN mode. */
+>> +		if (phy_interface_mode_is_8023z(phydev->interface) &&
+>> +		    pl->cfg_link_an_mode == MLO_AN_INBAND) {
+>> +			pl->cfg_link_an_mode = MLO_AN_PHY;
+>> +			pl->cur_link_an_mode = MLO_AN_PHY;
+> 
+> 1. Why are you changing both cfg_link_an_mode (configured link AN mode)
+> and cur_link_an_mode (current link AN mode) ?
+> 
+> The "configured" link AN mode is supposed to be whatever was configured
+> at phylink creation time, and it's never supposed to change. The
+> "current" link AN mode can change, but changing that must be followed
+> by a major reconfiguration to ensure everything is correctly setup.
+> That will happen only because the change to the current link AN mode
+> can only happen when pl->phy_state.interface has changed, and the
+> change of pl->phy_state.interface triggers the reconfiguration.
+> 
+During the phylink_create, the cfg_link_an_mode will be set to MLO_AN_INBAND.
 
-Convert those over as well and I'm more than happy to upstream this change.
+Then we switch from the SGMII interface to 2500BASEX interface. When we 
+perform 'ifconfig eth0 down' and 'ifconfig eth0 up' then we will not able 
+to bring up the PHY due to the phylink_attach_phy function. It is not 
+expect to have MLO_AN_INBAND with PHY_INTERFACE_MODE_2500BASEX interface.
 
-Thanks,
-Christian.
+static int phylink_attach_phy(struct phylink *pl, struct phy_device *phy,
+			      phy_interface_t interface)
+{
+	if (WARN_ON(pl->cfg_link_an_mode == MLO_AN_FIXED ||
+		    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
+		     phy_interface_mode_is_8023z(interface) && !pl->sfp_bus)))
+		return -EINVAL;
 
->
-> Cheers,
-> -Paul
+	if (pl->phydev)
+		return -EBUSY;
 
+	return phy_attach_direct(pl->netdev, phy, 0, interface);
+}
+
+I did change different ways to handle it in the new patch series.
+So it should not impact much on the existing phylink framework.
+
+> 2. You force this behaviour on everyone, so now everyone with a SFP
+> module that operates in 802.3z mode will be switched out of inband mode
+> whether they want that or not. This is likely to cause some breakage.
+> 
+>> +		} else if (pl->config->ovr_an_inband) {
+>> +			pl->cfg_link_an_mode = MLO_AN_INBAND;
+>> +			pl->cur_link_an_mode = MLO_AN_INBAND;
+> 
+> Here you force inband when not 802.3z mode and ovr_an_inband is set.
+> There are SFP modules that do *not* support in-band at all, and this
+> will break these modules when combined with a driver that sets
+> ovr_an_inband. So more breakage.
+> 
+> Please enumerate the PHY interface modes that you are trying to support
+> with this patch set, and indicate whether you want in-band for that
+> mode or not, and where the restriction for whether in-band can be used
+> comes from (PHY, PCS or MAC) so that it's possible to better understand
+> what you're trying to achieve.
+> 
+> Thanks.
+> 
+Thank you for pointing out the bug that will impact everyone. Actually 
+cur_link_an_mode is just required for PCS, I did handle it that only intel 
+platforms will get the PCS negotiation mode for the PCS.
