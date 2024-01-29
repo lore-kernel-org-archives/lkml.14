@@ -1,160 +1,139 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEECE4D5AC
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE664E1CE;
+	Mon, 29 Jan 2024 07:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706513240; cv=none; b=l7Hn2RE6QhwRjbsaCZ+tmmj28ln6M8lzmX8dMao62w14E//CxHi80eup87lahBxkk/Gn6eRrEVHNMYIc2/GyzvFB/nbqViMZ0AT+ve7QuV9hkYW/uXZT9NIEXCtplhZRWnWgZSEO4kfB6E3U4Z95aPgLBCU/3Er4gUosopMcTaM=
+	t=1706513284; cv=none; b=rIsUtIKMJT9ow2EqPBCN9NqGTSzK2yPVsETFudYX26T+CxoOsRIM1E41LjEVRY4sy76Aqmz0mIerhvr51l4v4aI8RGHfMHpYKNWQJmXOS+m5VsC5lGfyS3VWQnPTwiE/fLXwzn0bPFvoURNr6332NXvPWUz9txOFaoooRRiF2oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706513240; c=relaxed/simple;
-	bh=UQg/5njUp9OZkRWZYCC4RzpOoedARfKxs5rcJ9UqsdE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=EhBs3UatUGWeHVZwWhhrnl2KcxMfz84prHMeKoy3x4wGjbzGFIwVGkWuSIHqVUaBqdFpceD+Il3L7ZcZYU7N7vptTfj1vMhNQYn6kBxAkJ205OAYKcbF7T+c/hvr1l4Z1AtFM/KaY102fkYemdyZm1e70eItLSS0ZbH84YzEc3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=E9vIl4BU; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1706513284; c=relaxed/simple;
+	bh=Z2oS6BBjVYPhT+NnSiP9NynFvHR/xA4KdnP+bGoWRRo=;
+	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=eN4dgTlaNsEm75iTGOnYt/OseIVBcUZUU4NoNljcVDbA6HSQeM+r7hzrLjAOyE+PS2YiIYqabsQYeEQiDjGRsQSU8v9c/F1SdQDQevOeGKNYNa2ccTXBua0HhENIzj3a9F0lSSKIWTkT/9tY5OGMxrUp2XHxTK2ZkQH4fhuuxo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=buEMxP6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E9vIl4BU"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240129072709epoutp04367ef4ec9318bc22502dab49212fe3b2~uwL2S2Vj11997119971epoutp04A
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:27:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240129072709epoutp04367ef4ec9318bc22502dab49212fe3b2~uwL2S2Vj11997119971epoutp04A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1706513229;
-	bh=SlQ1IskImIa1p6m1vQ2rqgCrN2OhcIVK0Fav7DA6fWY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E9vIl4BU/B0LE37zwdoxwMvznp5XhTPdEtVvBHEhQa/M9HzTprBRXnbP/gH3PAvpr
-	 bFnnJtaMfGQIlVpWAyJ6OMMDCkYFlE0dwOkIUal3VV7WmQ7PgR9lTkOhjvQ2sEwQ44
-	 UTEIIILDLAibQIxJpmea+bAgIIGOqS6ZdJoh5smU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240129072708epcas5p22bcc24d03a515c53b530109181280576~uwL15IV6v1618316183epcas5p2c;
-	Mon, 29 Jan 2024 07:27:08 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4TNfy252S4z4x9Q9; Mon, 29 Jan
-	2024 07:27:06 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	75.11.09672.94357B56; Mon, 29 Jan 2024 16:27:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240129072655epcas5p35d140dba2234e1658b7aa40770b93314~uwLpaXhW72948229482epcas5p3J;
-	Mon, 29 Jan 2024 07:26:55 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240129072655epsmtrp2f78420a682b8202b3027a39fbfefe833~uwLpZjuDb0907209072epsmtrp2E;
-	Mon, 29 Jan 2024 07:26:55 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff700000025c8-01-65b75349d03c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8C.E4.18939.F3357B56; Mon, 29 Jan 2024 16:26:55 +0900 (KST)
-Received: from AHRE124.. (unknown [109.105.118.124]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240129072654epsmtip2bb7a2b9f5aa86d3d4f891e5c5ecf9a1c~uwLoH6Q1u0936709367epsmtip2_;
-	Mon, 29 Jan 2024 07:26:53 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
-	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
-	ruyi.zhang@samsung.com, xiaobing.li@samsung.com
-Subject: Re: Re: [PATCH v7] io_uring: Statistics of the true utilization of
- sq threads.
-Date: Mon, 29 Jan 2024 15:18:44 +0800
-Message-Id: <20240129071844.317225-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <8e104175-7388-4930-b6a2-405fb9143a2d@kernel.dk>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="buEMxP6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A52AC433F1;
+	Mon, 29 Jan 2024 07:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1706513283;
+	bh=Z2oS6BBjVYPhT+NnSiP9NynFvHR/xA4KdnP+bGoWRRo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=buEMxP6W6BhKvQwuvcK1MGGd7DTo1kyWkYH3sgMXDlQ1xajRLF4LKqMmWWEbqyUXK
+	 2hrE3EcfINuB3hMibYIxS+4N2z+RUIhjBoL/5cv9ceHj+HGj02qHsV9m6l3Y9IVEEi
+	 laBZXuskqnU57nRLZNpc4aiten2giUAeofokKVIU=
+Date: Sun, 28 Jan 2024 23:27:59 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ mm-commits@vger.kernel.org
+Subject: [GIT PULL]  hotfixes for 6.8-rc3
+Message-Id: <20240128232759.7535e6774bec152556fb9730@linux-foundation.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKJsWRmVeSWpSXmKPExsWy7bCmpq5n8PZUgyX75S3mrNrGaLH6bj+b
-	xbvWcywWR/+/ZbP41X2X0WLrl6+sFpd3zWGzeLaX0+LL4e/sFmcnfGC1mLplB5NFR8tlRgce
-	j52z7rJ7XD5b6tG3ZRWjx+dNcgEsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
-	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKTAr0
-	ihNzi0vz0vXyUkusDA0MjEyBChOyM84tusxc0Mhbcaj5M1MD4xvOLkZODgkBE4lnv7tZuxi5
-	OIQEdjNKTJ/+FMr5xCjROP0VgjOx5z8TTEvb9H4miMRORonm+6/ZIZyXjBI/GvewglSxCWhL
-	XF/XBWaLCAhL7O9oZQEpYhb4yygx4eVvZpCEsECkxIKPM9hAbBYBVYkd59+ygNi8ArYSh/tO
-	s0Ksk5fYf/AsWD0nUPzojelsEDWCEidnPgGrZwaqad46mxlkgYTAX3aJtpOr2SCaXSSuL1/L
-	DmELS7w6vgXKlpL4/G4vVE2xxJGe76wQzQ3AILh9FarIWuLflT1AGziANmhKrN+lDxGWlZh6
-	ah0TxGI+id7fT6DhwiuxYx6MrSqx+tJDFghbWuJ1w2+ouIfEudYbzJDgmgAMrtZ1jBMYFWYh
-	eWgWkodmIaxewMi8ilEytaA4Nz212LTAOC+1HB7Ryfm5mxjB6VXLewfjowcf9A4xMnEwHmKU
-	4GBWEuH9qbk1VYg3JbGyKrUoP76oNCe1+BCjKTDEJzJLiSbnAxN8Xkm8oYmlgYmZmZmJpbGZ
-	oZI47+vWuSlCAumJJanZqakFqUUwfUwcnFINTMpX1Zb3TeCY9nU/i8iCl02/q4/vW/u+5bDB
-	VbNVjBf/XeNb2OzuYWM6VbHYY9YHkR31hl+N0uZ4vzU+3/p138bWMm9zL7Upx7O/mqcrN615
-	vkQrZVZE0lcpjYezivwWybaEzXv75u0VpUWvxIK9V+//cmQpbyXrY/tHkbLbptlk3a0xW5zN
-	2uN7cktHUlJYrPSZzLsnSxdMcf++0d5/810Bzjub2FibWJNu5xhcTmp0jlz8Mrsib+vnJf1+
-	+VppEev9SgIPXrwnvvRYwfIj/Samp+UPSh9PE2GaP0fF4PODeaG2e+NZdkukXXrEevXYDtm/
-	rzxYt0/YZ7fmhHPbz5oz77JO7dLby7iHfXPz9hNKLMUZiYZazEXFiQBrkeYdOAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsWy7bCSvK598PZUgwkTRC3mrNrGaLH6bj+b
-	xbvWcywWR/+/ZbP41X2X0WLrl6+sFpd3zWGzeLaX0+LL4e/sFmcnfGC1mLplB5NFR8tlRgce
-	j52z7rJ7XD5b6tG3ZRWjx+dNcgEsUVw2Kak5mWWpRfp2CVwZ5xZdZi5o5K041PyZqYHxDWcX
-	IyeHhICJRNv0fqYuRi4OIYHtjBIXHq4GcjiAEtISf/6UQ9QIS6z895wdouY5o8SXiUuZQBJs
-	AtoS19d1sYLYIkBF+ztaWUBsZoFOJonXn/VAbGGBcImVB3+A1bMIqErsOP8WrIZXwFbicN9p
-	VogF8hL7D55lBrE5geJHb0xnA7GFBGwkPj3+ygRRLyhxcuYTqPnyEs1bZzNPYBSYhSQ1C0lq
-	ASPTKkbR1ILi3PTc5AJDveLE3OLSvHS95PzcTYzggNcK2sG4bP1fvUOMTByMhxglOJiVRHh/
-	am5NFeJNSaysSi3Kjy8qzUktPsQozcGiJM6rnNOZIiSQnliSmp2aWpBaBJNl4uCUamAKKzUr
-	2LxG877Lba/myD2qyTbvJ83idzdoCZherJC/9P26I2/ZuniLC9ctNdv72Ku5NODrhMC1/zQd
-	diw5w+/mxZvRN0d7tqbV7VNrWW6He+effVIVaX5Z6VGYV+XGY9oJHw5x3n2twrZb+E4rg+Sk
-	XW6bWcLWffJV+Lai0s/1l0HLn+1Nd1+EZWZLvqg9qXZo3sSJW4QnRiRf0e9I+Xms48XepXVi
-	uzkFi6Ny37hN/Px3fXTb1c1x29vNJ1atOKTuMWmROGv/vspF/w0s2n/t/Rxte2LCFtauK1sF
-	DogwCmkvS5HnfHekLCNsDcuGmovxrvPWCIfsjax/5e2b7/PpOMdFxoi592dsuOxuErNTiaU4
-	I9FQi7moOBEA8AX/zecCAAA=
-X-CMS-MailID: 20240129072655epcas5p35d140dba2234e1658b7aa40770b93314
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240129072655epcas5p35d140dba2234e1658b7aa40770b93314
-References: <8e104175-7388-4930-b6a2-405fb9143a2d@kernel.dk>
-	<CGME20240129072655epcas5p35d140dba2234e1658b7aa40770b93314@epcas5p3.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 1/18/24 19:34, Jens Axboe wrote:
->> diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
->> index 8df37e8c9149..c14c00240443 100644
->> --- a/io_uring/sqpoll.h
->> +++ b/io_uring/sqpoll.h
->> @@ -16,6 +16,7 @@ struct io_sq_data {
->>  	pid_t			task_pid;
->>  	pid_t			task_tgid;
->>  
->> +	long long			work_time;
->>  	unsigned long		state;
->>  	struct completion	exited;
->>  };
->
->Probably just make that an u64.
->
->As Pavel mentioned, I think we really need to consider if fdinfo is the
->appropriate API for this. It's fine if you're running stuff directly and
->you're just curious, but it's a very cumbersome API in general as you
->need to know the pid of the task holding the ring, the fd of the ring,
->and then you can get it as a textual description. If this is something
->that is deemed useful, would it not make more sense to make it
->programatically available in addition, or even exclusively?
 
-Hi, Jens and Pavel
-sorry for the late reply.
+Linus, please merge this batch of MM and non-MM hotfixes, thanks.
 
-I've tried some other methods, but overall, I haven't found a more suitable 
-method than fdinfo.
-If you think it is troublesome to obtain the PID,  then I can provide
- a shell script to output the total_time and work_time of all sqpoll threads 
- to the terminal, so that we do not have to manually obtain the PID of each 
- thread (the script can be placed in tools/ include/io_uring).
 
-eg:
+The following changes since commit f0b7a0d1d46625db5b0e631c05ae96d78eda6c70:
 
-PID    WorkTime(us)   TotalTime(us)   COMMAND
-9330   1106578        2215321         iou-sqp-9329
-9454   1510658        1715321         iou-sqp-9453
-9478   165785         223219          iou-sqp-9477
-9587   106578         153217          iou-sqp-9586
+  Merge branch 'master' into mm-hotfixes-stable (2024-01-22 19:23:56 -0800)
 
-What do you think of this solution?
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2024-01-28-23-21
+
+for you to fetch changes up to 96204e15310c218fd9355bdcacd02fed1d18070e:
+
+  mm: thp_get_unmapped_area must honour topdown preference (2024-01-26 01:23:44 -0800)
+
+----------------------------------------------------------------
+22 hotfixes.  11 are cc:stable and the remainder address post-6.7 issues
+or aren't considered appropriate for backporting.
+
+----------------------------------------------------------------
+Audra Mitchell (1):
+      selftests/mm: Update va_high_addr_switch.sh to check CPU for la57 flag
+
+David Hildenbrand (3):
+      uprobes: use pagesize-aligned virtual address when replacing pages
+      mm/huge_memory: fix folio_set_dirty() vs. folio_mark_dirty()
+      mm/memory: fix folio_set_dirty() vs. folio_mark_dirty() in zap_pte_range()
+
+Jan Kara (1):
+      readahead: avoid multiple marked readahead pages
+
+Johannes Weiner (1):
+      mm: memcontrol: don't throttle dying tasks on memory.high
+
+Lokesh Gidra (1):
+      userfaultfd: fix mmap_changing checking in mfill_atomic_hugetlb
+
+Marco Elver (3):
+      mm, kmsan: fix infinite recursion due to RCU critical section
+      stackdepot: add stats counters exported via debugfs
+      stackdepot: make fast paths lock-less again
+
+Muhammad Usama Anjum (2):
+      selftests/mm: mremap_test: fix build warning
+      selftests/mm: switch to bash from sh
+
+Nico Pache (1):
+      selftests: mm: fix map_hugetlb failure on 64K page size systems
+
+Petr Vorel (1):
+      MAINTAINERS: add man-pages git trees
+
+Ryan Roberts (2):
+      selftests/mm: ksm_tests should only MADV_HUGEPAGE valid memory
+      mm: thp_get_unmapped_area must honour topdown preference
+
+Samuel Holland (1):
+      scs: add CONFIG_MMU dependency for vfree_atomic()
+
+Sidhartha Kumar (1):
+      fs/hugetlbfs/inode.c: mm/memory-failure.c: fix hugetlbfs hwpoison handling
+
+Yang Shi (2):
+      mm: mmap: map MAP_STACK to VM_NOHUGEPAGE
+      mm: huge_memory: don't force huge page alignment on 32 bit
+
+Yosry Ahmed (1):
+      MAINTAINERS: supplement of zswap maintainers update
+
+Zach O'Keefe (1):
+      mm/writeback: fix possible divide-by-zero in wb_dirty_limits(), again
+
+ CREDITS                                            |  13 +
+ MAINTAINERS                                        |  11 +-
+ arch/Kconfig                                       |   1 +
+ arch/x86/include/asm/kmsan.h                       |  17 +-
+ fs/hugetlbfs/inode.c                               |   2 +-
+ include/linux/mman.h                               |   1 +
+ include/linux/mmzone.h                             |   6 +-
+ kernel/events/uprobes.c                            |   2 +-
+ lib/stackdepot.c                                   | 373 +++++++++++++++------
+ mm/huge_memory.c                                   |  18 +-
+ mm/memcontrol.c                                    |  29 +-
+ mm/memory-failure.c                                |   2 +-
+ mm/memory.c                                        |   2 +-
+ mm/mmap.c                                          |   6 +-
+ mm/page-writeback.c                                |   2 +-
+ mm/readahead.c                                     |   4 +-
+ mm/userfaultfd.c                                   |  15 +-
+ .../selftests/mm/charge_reserved_hugetlb.sh        |   2 +-
+ tools/testing/selftests/mm/ksm_tests.c             |   2 +-
+ tools/testing/selftests/mm/map_hugetlb.c           |   7 +
+ tools/testing/selftests/mm/mremap_test.c           |  27 +-
+ tools/testing/selftests/mm/va_high_addr_switch.sh  |   6 +
+ tools/testing/selftests/mm/write_hugetlb_memory.sh |   2 +-
+ 23 files changed, 394 insertions(+), 156 deletions(-)
+
