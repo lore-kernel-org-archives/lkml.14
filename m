@@ -1,53 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCD37603D;
-	Mon, 29 Jan 2024 20:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69557602D;
+	Mon, 29 Jan 2024 20:25:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706559860; cv=none; b=rxOEK0bGBr/Pc6BmTFYwyas0BkBthfBRLAiuitbjNC8N4nMAp1FRiGXewZLCeV/0WdySQ4mSocM4u9r9kkBrpQoCb8AZomjZXGhc8YJ25FZ77odXsg0O/4II0h0NECSRHFf6JhsOEqIvzj4OeDbXO52bDp3B4nJx5PhOsjO2Pyw=
+	t=1706559952; cv=none; b=JDm+uLuBHRTIVKj886F2TYkAjctwEdvkWpkTeKAsKedW1vcuu70of/56klmTO/K7ipMz+EZE2++4KwWno9aXFLdW5QoAtgDi1QIXZrlk0hPG0enMGN1ee/wvVEUYUV7ToQj/lV6YwUiIwpFWlHQZx1euWHo+orWYNzdBPLiLqiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706559860; c=relaxed/simple;
-	bh=rAnCgDX130n4Pu5xvGz9+ytgomDscbf8iqQYRZN9m/w=;
+	s=arc-20240116; t=1706559952; c=relaxed/simple;
+	bh=o9GlGvU+XorjS2WWxQTCkke0/L8lAaSfWR3HPgKbdVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ze5G/Hh2K4m0/5ynRbAQe2wehOe4Lm9Lmr4R/RVvK4QO2kpPuab499hdK1UZxBPEINDZxhyZfssF/RLIeQb3DBikWDmx6LqeVhrGil0E/ZyByfQcIcWmTo7ZHTq4wjQipCy4rC0vRlg+ht2FEZ5fn0SobrlTn22ZOc4Po+pkQHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnQ7uZ34; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnQ7uZ34"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB3DC433C7;
-	Mon, 29 Jan 2024 20:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706559859;
-	bh=rAnCgDX130n4Pu5xvGz9+ytgomDscbf8iqQYRZN9m/w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EnQ7uZ34Ob53zG2/8P4qFAZnQWAPouiVzki80qVjA3PDp+Kad4GQq8qJxCOT2sZG7
-	 lfO/tIzu4Xz+mxMVoOR8Cz2oZzLI6m0bWhNjxKoCXayZS1yREWDp8O0Y4De/BX17C0
-	 ybrbHX0tZk5IWnd7jUrgdWVbKLa9SJK5IStnOIh3Fba8Sqab6Sty1L2GQ1xqeKygSL
-	 YOinnmVlw9QitytUiQ6Q1MccwF2tPYhUncXmaTLjK8gZ4kfiYucbE32dfJBzX2bT9l
-	 1CsUmVX0nsSXgTZV2rN/uyeJR55C21tHp/yrQ8C6YR0uiPqBJjbkpjNabQ7dpv5GCM
-	 sTJn7jatBtHUA==
-Date: Mon, 29 Jan 2024 12:24:18 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Emil Renner Berthing <kernel@esmil.dk>, Samin Guo
- <samin.guo@starfivetech.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro
- <peppe.cavallaro@st.com>, Andrew Lunn <andrew@lunn.ch>, Jacob Keller
- <jacob.e.keller@intel.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: net: starfive,jh7110-dwmac:
- Add JH7100 SoC compatible
-Message-ID: <20240129122418.173133d7@kernel.org>
-In-Reply-To: <20240126192128.1210579-2-cristian.ciocaltea@collabora.com>
-References: <20240126192128.1210579-1-cristian.ciocaltea@collabora.com>
-	<20240126192128.1210579-2-cristian.ciocaltea@collabora.com>
+	 MIME-Version:Content-Type; b=M6EMXz0lkX3ouvC8279/uZ9cH/AWS9xNFeIsbbtRQuvefKGYxMVGxyUiF4GRta1k1ok0URgQXeOVYHDnqahsJTGydZ7lybkgzS9dNcSRWbwUxcTqVUOA5kpZcnCr6jDpZj9jzOma/WZuAIMfTMfO2RTSVO4tUdq8uk3K/twkN2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20004C433A6;
+	Mon, 29 Jan 2024 20:25:51 +0000 (UTC)
+Date: Mon, 29 Jan 2024 15:26:00 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
+ <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [linus:master] [eventfs] 852e46e239:
+ BUG:unable_to_handle_page_fault_for_address
+Message-ID: <20240129152600.7587d1aa@gandalf.local.home>
+In-Reply-To: <CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
+References: <202401291043.e62e89dc-oliver.sang@intel.com>
+	<CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
+	<20240129120125.605e97af@gandalf.local.home>
+	<CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
+	<CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
+	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,28 +43,86 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 26 Jan 2024 21:21:25 +0200 Cristian Ciocaltea wrote:
-> The Synopsys DesignWare MAC found on StarFive JH7100 SoC is mostly
-> similar to the newer JH7110, but it requires only two interrupts and a
-> single reset line, which is 'ahb' instead of the commonly used
-> 'stmmaceth'.
-> 
-> Since the common binding 'snps,dwmac' allows selecting 'ahb' only in
-> conjunction with 'stmmaceth', extend the logic to also permit exclusive
-> usage of the 'ahb' reset name.  This ensures the following use cases are
-> supported:
-> 
->   JH7110: reset-names = "stmmaceth", "ahb";
->   JH7100: reset-names = "ahb";
->   other:  reset-names = "stmmaceth";
-> 
-> Also note the need to use a different dwmac fallback, as v5.20 applies
-> to JH7110 only, while JH7100 relies on v3.7x.
-> 
-> Additionally, drop the reset description items from top-level binding as
-> they are already provided by the included snps,dwmac schema.
+On Mon, 29 Jan 2024 11:51:52 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Reposting review tag from:
-https://lore.kernel.org/all/0a6f6dcb-18b0-48d5-8955-76bce0e1295d@linaro.org/
+> On Mon, 29 Jan 2024 at 11:24, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > So the patch was completely broken. Here's the one that should
+> > actually compile (although still not actually *tested*).  
+> 
+> Note that this fixes the d_instantiate() ordering wrt initializing the inode.
+> 
+> But as I look up the call chain, I see many more fundamental mistakes.
+> 
+> Steven - the reason you think that the VFS doesn't have documentation
+> is that we *do* have tons of documentation, but it's of the kind "Here
+> is what you should do".
+> 
+> It is *not* of the kind that says "You messed up and did something
+> else, and how do you recover from it?".
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+When I first worked on this, I did read all the VFS documentation, and it
+was difficult to understand what I needed and what I didn't. It is focused
+on a real file system and not a pseudo ones. Another mistake I made was
+thinking that debugfs was doing things the "right" way as well. And having
+a good idea of how debugfs worked, and thinking it was correct, just made
+reading VFS documentation even more difficult as I couldn't relate what I
+knew (about debugfs) with what was being explained. I thought it was
+perfectly fine to use dentry as a handle for the file system. I did until
+you told me it wasn't. That made a profound change in my understanding of
+how things are supposed to work.
+
+> 
+> So the fundamental bug I now find is that eventfs_root_lookup() gets a
+> target dentry, and for some unfathomable reason it then does
+> 
+>         ret = simple_lookup(dir, dentry, flags);
+> 
+> on it. Which is *completely* broken, because what "simple_lookup()"
+> does is just say "oh, you didn't have a dentry of this kind before, so
+> clearly a lookup must be a non-existent file". Remember: this is for
+> 'tmpfs' kinds of filesystems where the dentry cache cotnains *ALL*
+> files.
+
+Sorry, I don't really understand what you mean by "ALL files"? You mean
+that all files in the pseudo file system has a dentry to it (like debugfs,
+and the rest of tracefs)?
+
+> 
+> For the tracefs kind of filesystem, it's TOTALLY BOGUS. What the
+> "simple_lookup()" will do is just a plain
+> 
+>         d_add(dentry, NULL);
+> 
+> and nothing else. And guess what *that* does? It basically
+> instantiates a negative dentry, telling all other lookups that the
+> path does not exist.
+> 
+> So if you have two concurrent lookups, one will do that
+> simple_lookup(), and the other will then - depending on timing -
+> either see the negative dentry and return -ENOENT, or - if it comes in
+> a bit later - see the new inode that then later gets added by the
+> first lookup with d_instantiate().
+> 
+> See? That simple_lookup() is not just unnecessary, but it's also
+> actively completely WRONG. Because it instantiates a NULL pointer,
+> other processes that race with the lookup may now end up saying "that
+> file doesn't exist", even though it should.
+> 
+> Basically, you can't use *any* of the "simple" filesystem helpers.
+> Because they are all designed for that "the dentry tree is all there
+> is" case.
+
+Yeah, the above code did come about with me not fully understanding the
+above. It's not that it wasn't documented, but I admit, when I read the VFS
+documentation, I had a lot of trouble trying to make sense of things like
+negative dentries and how they relate.
+
+I now have a much better understanding of most of this, thanks to our
+discussion here, and also knowing that using dentry as the main handle to a
+file is *not* how to do it. When thinking it was, it made things much more
+difficult to comprehend.
+
+-- Steve
