@@ -1,141 +1,147 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FADC153511;
-	Mon, 29 Jan 2024 15:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C461534FA;
+	Mon, 29 Jan 2024 15:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706540719; cv=none; b=qnJO7QsOT9vRtRHURhWe6Gk0WPaGvvhHuPXh4C1vN86bXmAUE9e3R7IK045QyY8yFzUuWQFVtlzm6jlM4CbEmNICZBKX/M+mFxhihVZmmkt3lnbOMoqDAskcWFmHWKg3rHsndRpw4XtaT3Ux8Gmdrw8e9mVnU/QeF9+jXWdl15k=
+	t=1706540756; cv=none; b=BlTqYCNVkxatawn0jsvXkH0NOKXRJVJQUru+vHACrFOYlw3VKycmxn41v8TLVyZy80nK27VMYGCrK35PxToAgSd0dsVsWKPE6YgsLvuHNdPsiKS7fEsDggGbCcRr+5FVPsB/T0xXKynTOBk8J6nhUthTwOXYHYsIveqlOCmtmBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706540719; c=relaxed/simple;
-	bh=sahI5XjE7lWXzvKerXYEtEDtCcFMfvCcQmTm4D/LJMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QbYA8Cm1JmsTT5MuwtO0hEMtxu62lHAAnnwmwiuBy/nwXrtO7/j6auT9fb3YNAGnmCVDtE1QquETyDt1YUg10xFJ7ZTBE3l/FiE8oCo3OvwNXrABIXykVbKmnfRSmfZShNp0FtT6aEL42zXxhiuLCrrd+3mkcpPd82ck3Omu0/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CscN1g84; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CscN1g84"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AFA5A40E01B3;
-	Mon, 29 Jan 2024 15:05:12 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id AeIofEyGjJAP; Mon, 29 Jan 2024 15:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706540710; bh=NCl5u2FekjETRT5G3FwgEZxEDuY5V1BwprwchryS7pY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CscN1g84Lfzvg/ZWyKLJuDdOFkStLxTKQHBb1MMVPjZqy4KxBdN9ZvjC43Q69JeSA
-	 3oYoodsgMhia18fCuIoESMY/o/ZsrmtCtfHCjMNXWURim7qXAYDVWlvB2lbPJ2ug2Z
-	 onpxo2BfJiQKdDhZ+VCP6QaSOR6dkYt6GSM+OOxjKQ4UoJNKfevCQnWSVt2HfGD7ew
-	 /snFshyQRle9DmawuzURsgfAywzfhqaD3Wc8SJQQf2eEpQzEIbxeoFvdWKjZEVlRKB
-	 ef60bRFEKOLE4CJb8OFe4Gcg2s1uELNkDhx3INgCJmCWvnRxQzBLnUotzUBXggxc2b
-	 rElueYi3cuSNsCcmFo/3uudn2n3WLSQSxUZlfv6+gkv23/HkvhsTHhAk9aTgF7rI07
-	 obj/Qh4SOcn0LphecJYVAFZg4jv7j4DVd7aVTk+LicBg3PbHRqEE9pxNLqvrw1Lidv
-	 tfneaRkKpfosz6bOu5WYHFf0KrunrtJD53z16LzWUO9WIbY03sHw8wA/AXLFU+sf4h
-	 naQ4m1mFdnvWiigZDcbzgKbWcNOT41dCBNWWIrY7V6/EgUTFDlE+wUy64PLhpk1uCw
-	 z8IKfXSmxdp7bVjuV8ZReog4XY646Zo7splvX460RWro5J4OngMiTHglrGQCn266eY
-	 pqvB7cVnZN9Zjn+Rofg8dBlA=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1888B40E016C;
-	Mon, 29 Jan 2024 15:04:33 +0000 (UTC)
-Date: Mon, 29 Jan 2024 16:04:28 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
-	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com,
-	Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v2 16/25] crypto: ccp: Handle the legacy TMR allocation
- when SNP is enabled
-Message-ID: <20240129150428.GZZbe-fMDSu-dy0cPy@fat_crate.local>
-References: <20240126041126.1927228-1-michael.roth@amd.com>
- <20240126041126.1927228-17-michael.roth@amd.com>
+	s=arc-20240116; t=1706540756; c=relaxed/simple;
+	bh=q6I0vmpSP+EMAN7W7TMgr8TqOcKWKp2AWgbxZCoyOoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jshDNDuXyMa6IjBPRyZsbT5mW1WKGMJa5plJtQW1BQf4/9dSsAbrxH1ciqcJzZwl1+Kom0Kqor3+7S3V+yNJkugESGDile7P/tqhHaZed/qyp2bK1JqHM/GPxE0hNHZPgUJFhvTQsviiatpFtx+yDia5dywNbrieETJvoWx42qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5958d3f2d8aso366388eaf.1;
+        Mon, 29 Jan 2024 07:05:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706540754; x=1707145554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EkpAjVvacpcOYBIZJzTULHFzBo21BcPnaUhokGVxGPM=;
+        b=PMHpL80aiNTB4ZvOmet2EYAuO6Flfy9141JhM5N3Ummz/dDXwURf4bASPc1qeR2yJE
+         a4NhOIuROgiJ4gA6IA8RrynZYdKxL8LCvvFTQbliG3aXiI+uyJYBc1Cyq33+pAQ/z9Bj
+         dpBwiLH8fQZLe35za1edbynpQ+Qhv4524XM8S1w3AgKLEubxIbLakMZPw6vT/ydt+DK8
+         QtSkS77Td4qdfKCcuEfxz3hS02YbmpvGPizkAQwfegs4GtDgPdg1m0MYesRfvA3A/QCC
+         JiBmHSLFIi1GdjN7ABmy5tAdNxkftNge1xmGSUfzSE0rNNcMAq39rdQDnSStA7K6+kW8
+         DXLQ==
+X-Gm-Message-State: AOJu0Yxuk9ZpxzMuQXKzTXox41y8h4cz6jObDkWB14/QcJnxSKpEw4VZ
+	yYjUCv1YlapoMsaRph1JlGyJPMAX5WRRe7HxrJtry2iiAVpegOdDaLcsb0NGuPpzUG91n/ZpKKP
+	Njqg03uSDVtJz5BtSwE29ksegdlE=
+X-Google-Smtp-Source: AGHT+IEoV4wd4p7kTQOJWXxXpqTUH+qihI2/dlN0Po7tPQqbaCmtMIoU00Uv7+V2Gh58aCyndi1c4Fekk9NhHFrJKEg=
+X-Received: by 2002:a4a:c48a:0:b0:599:fbcc:1c75 with SMTP id
+ f10-20020a4ac48a000000b00599fbcc1c75mr6541388ooq.0.1706540754026; Mon, 29 Jan
+ 2024 07:05:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240126041126.1927228-17-michael.roth@amd.com>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk> <ZXxxa+XZjPZtNfJ+@shell.armlinux.org.uk>
+ <20231215161539.00000940@Huawei.com> <5760569.DvuYhMxLoT@kreacher>
+ <20240102143925.00004361@Huawei.com> <20240111101949.000075dc@Huawei.com>
+ <ZZ/CR/6Voec066DR@shell.armlinux.org.uk> <20240112115205.000043b0@Huawei.com> <Zbe8WQRASx6D6RaG@shell.armlinux.org.uk>
+In-Reply-To: <Zbe8WQRASx6D6RaG@shell.armlinux.org.uk>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 29 Jan 2024 16:05:42 +0100
+Message-ID: <CAJZ5v0iba93EhQB2k3LMdb2YczndbRmF5WGRYHhnqCHq6TQJ0A@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 01/21] ACPI: Only enumerate enabled (or functional) devices
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
+	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
+	James Morse <james.morse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 10:11:16PM -0600, Michael Roth wrote:
-> @@ -641,14 +774,16 @@ static int __sev_platform_init_locked(int *error)
+On Mon, Jan 29, 2024 at 3:55=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+>
+> Hi Jonathan,
+>
+> On Fri, Jan 12, 2024 at 11:52:05AM +0000, Jonathan Cameron wrote:
+> > On Thu, 11 Jan 2024 10:26:15 +0000
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > > @@ -2381,16 +2388,38 @@ EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies=
+);
+> > >   * acpi_dev_ready_for_enumeration - Check if the ACPI device is read=
+y for enumeration
+> > >   * @device: Pointer to the &struct acpi_device to check
+> > >   *
+> > > - * Check if the device is present and has no unmet dependencies.
+> > > + * Check if the device is functional or enabled and has no unmet dep=
+endencies.
+> > >   *
+> > > - * Return true if the device is ready for enumeratino. Otherwise, re=
+turn false.
+> > > + * Return true if the device is ready for enumeration. Otherwise, re=
+turn false.
+> > >   */
+> > >  bool acpi_dev_ready_for_enumeration(const struct acpi_device *device=
+)
+> > >  {
+> > >     if (device->flags.honor_deps && device->dep_unmet)
+> > >             return false;
+> > >
+> > > -   return acpi_device_is_present(device);
+> > > +   /*
+> > > +    * ACPI 6.5's 6.3.7 "_STA (Device Status)" allows firmware to ret=
+urn
+> > > +    * (!present && functional) for certain types of devices that sho=
+uld be
+> > > +    * enumerated. Note that the enabled bit should not be set unless=
+ the
+> > > +    * present bit is set.
+> > > +    *
+> > > +    * However, limit this only to processor devices to reduce possib=
+le
+> > > +    * regressions with firmware.
+> > > +    */
+> > > +   if (device->status.functional)
+> > > +           return true;
+>
+> I have a report from within Oracle that this causes testing failures
+> with QEMU using -smp cpus=3D2,maxcpus=3D4. I think it needs to be:
+>
+>         if (!device->status.present)
+>                 return device->status.functional;
+>
+>         if (device->status.enabled)
+>                 return true;
+>
+>         return !acpi_device_is_processor(device);
 
-That function - especially when looking at the next patch - becomes too
-big and hard to follow.
+The above is fine by me.
 
-Let's add subfunctions for each thing, diff ontop:
+> So we can better understand the history here, let's list it as a
+> truth table. P=3Dpresent, F=3Dfunctional, E=3Denabled, Orig=3Dhow the cod=
+e
+> is in mainline, James=3DJames' original proposal, Rafael=3Dthe proposed
+> replacement but seems to be buggy, Rmk=3Dthe fixed version that passes
+> tests:
+>
+> P F E   Orig    James   Rafael          Rmk
+> 0 0 0   0       0       0               0
+> 0 0 1   0       0       0               0
+> 0 1 0   1       1       1               1
+> 0 1 1   1       0       1               1
+> 1 0 0   1       0       !processor      !processor
+> 1 0 1   1       1       1               1
+> 1 1 0   1       0       1               !processor
+> 1 1 1   1       1       1               1
+>
+> Any objections to this?
 
----
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index fa992ce57ffe..70aabd1d3d5f 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -759,6 +759,22 @@ static int __sev_snp_init_locked(int *error)
- 	return rc;
- }
- 
-+static void __sev_platform_init_handle_tmr(struct sev_device *sev)
-+{
-+	if (sev_es_tmr)
-+		return;
-+
-+	/* Obtain the TMR memory area for SEV-ES use */
-+	sev_es_tmr = sev_fw_alloc(sev_es_tmr_size);
-+	if (sev_es_tmr) {
-+		/* Must flush the cache before giving it to the firmware */
-+		if (!sev->snp_initialized)
-+			clflush_cache_range(sev_es_tmr, sev_es_tmr_size);
-+	} else {
-+			dev_warn(sev->dev, "SEV: TMR allocation failed, SEV-ES support unavailable\n");
-+	}
-+}
-+
- static int __sev_platform_init_locked(int *error)
- {
- 	int rc, psp_ret = SEV_RET_NO_FW_CALL;
-@@ -772,18 +788,7 @@ static int __sev_platform_init_locked(int *error)
- 	if (sev->state == SEV_STATE_INIT)
- 		return 0;
- 
--	if (!sev_es_tmr) {
--		/* Obtain the TMR memory area for SEV-ES use */
--		sev_es_tmr = sev_fw_alloc(sev_es_tmr_size);
--		if (sev_es_tmr) {
--			/* Must flush the cache before giving it to the firmware */
--			if (!sev->snp_initialized)
--				clflush_cache_range(sev_es_tmr, sev_es_tmr_size);
--		} else {
--			dev_warn(sev->dev,
--				 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
--		}
--	}
-+	__sev_platform_init_handle_tmr(sev);
- 
- 	if (sev_init_ex_buffer) {
- 		rc = sev_read_init_ex_file();
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+So AFAIAC it can return false if not enabled, but present and
+functional.  [Side note: I'm wondering what "functional" means then,
+but whatever.]
