@@ -1,35 +1,37 @@
-Received: from alerce.blitiri.com.ar (alerce.blitiri.com.ar [49.12.208.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A819965BA4
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.208.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A07565BA7;
+	Mon, 29 Jan 2024 14:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706537747; cv=none; b=sP6oWoAtIgGVBQveYJuTRiIQq4y/l9d5M71CLVcBYtBiOJfNB8/B1EG93UAUUsxMtaCXTzhSueemVNvzFBbys4M3ZfSkUr4aotKDYd+/nBf2EIvY5OLz7U/e3vIXXHuEA7hvb7UbrMEdT4H+tnEyhNnzNIoHzNx5fWxulto5444=
+	t=1706537775; cv=none; b=szYmyWjnoX6mnH66i78LPa270Z6hho4t2nHRDyyJAQvqUBwwhJTqfrfVhZ5Ux794HmuYQKdwsOWxbGPyskgUKmsaDROCxGMjms3NrnjQS6lT8xlNwEO2yXLweK3w/+wN8NByeZuaEkDM+fpK+GoVvM+pYkXem+vrvCIBucsC53A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706537747; c=relaxed/simple;
-	bh=jJmfIz4w556Ptcd31JHp/E5FbsAW+xG8mxPMPAJNtj8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u2/7FTuF6kEBELnYLRb+cmnwQY/vNEh2uMOqd4U+1QpYyAgSvaDZIodx+/zobhe+IZA9alRz9SFtBA6AoRkbIyF3Wstms/pPOpEqVsLus7PX7r3Wb6dpCcUqLo6zj3b5b9iu44/LdTdmqyHDFcr3cqFlr8ou2badJr+hKe6zUy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sdfg.com.ar; spf=pass smtp.mailfrom=sdfg.com.ar; arc=none smtp.client-ip=49.12.208.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sdfg.com.ar
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sdfg.com.ar
-Received: from localhost.localdomain
-	by sdfg.com.ar (chasquid) with ESMTPSA
-	tls TLS_AES_128_GCM_SHA256
-	(over submission, TLS-1.3, envelope from "rodrigo@sdfg.com.ar")
-	; Mon, 29 Jan 2024 14:15:36 +0000
-From: Rodrigo Campos <rodrigo@sdfg.com.ar>
-To: Willy Tarreau <w@1wt.eu>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: linux-kernel@vger.kernel.org,
-	Rodrigo Campos <rodrigo@sdfg.com.ar>
-Subject: [PATCH 3/4] tools/nolibc: Fix strlcpy() return code and size usage
-Date: Mon, 29 Jan 2024 15:15:15 +0100
-Message-ID: <20240129141516.198636-4-rodrigo@sdfg.com.ar>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240129141516.198636-1-rodrigo@sdfg.com.ar>
-References: <20240129141516.198636-1-rodrigo@sdfg.com.ar>
+	s=arc-20240116; t=1706537775; c=relaxed/simple;
+	bh=GrmuLwJa+BiBDhS1HgVuwxQ+fKStrHIgXIe12Tm1gcU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IGUz6Yzcx117YTMmdGY/zDTUkqhjqPzkuKE6eYJ0phg6x1Om/EXdc8MMy2FEg7WF/wyMYalOZ5Fv0ShC8Qdvn9R2Qypo01DWsNY0odWPfJ8wSkUAEO2axwBtVwF0c+85skKE/6TfjI4haiWsTSzDQi9IOIt9xCseL3MJBruYbGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42891C433C7;
+	Mon, 29 Jan 2024 14:16:11 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>
+Cc: loongarch@lists.linux.dev,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Qing Zhang <diasyzhang@tencent.com>,
+	kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix earlycon parameter if KASAN enabled
+Date: Mon, 29 Jan 2024 22:15:50 +0800
+Message-Id: <20240129141550.3284498-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,41 +40,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The return code should always be strlen(src), and we should copy at most
-size-1 bytes.
+The earlycon parameter is based on fixmap, and fixmap addresses are not
+supposed to be shadowed by KASAN. So return the kasan_early_shadow_page
+in kasan_mem_to_shadow() if the input address is above FIXADDR_START.
+Otherwise earlycon cannot work after kasan_init().
 
-While we are there, make sure to null-terminate the dst buffer.
-
-Signed-off-by: Rodrigo Campos <rodrigo@sdfg.com.ar>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- tools/include/nolibc/string.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/loongarch/mm/kasan_init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/include/nolibc/string.h b/tools/include/nolibc/string.h
-index b2149e1342a8..e4bc0302967d 100644
---- a/tools/include/nolibc/string.h
-+++ b/tools/include/nolibc/string.h
-@@ -212,15 +212,16 @@ size_t strlcpy(char *dst, const char *src, size_t size)
- 	size_t len;
- 	char c;
+diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
+index cc3e81fe0186..c608adc99845 100644
+--- a/arch/loongarch/mm/kasan_init.c
++++ b/arch/loongarch/mm/kasan_init.c
+@@ -44,6 +44,9 @@ void *kasan_mem_to_shadow(const void *addr)
+ 		unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
+ 		unsigned long offset = 0;
  
--	for (len = 0;;) {
-+	for (len = 0; len < size; len++) {
- 		c = src[len];
--		if (len < size)
-+		if (len < size - 1)
- 			dst[len] = c;
-+		if (len == size - 1)
-+			dst[len] = '\0';
- 		if (!c)
- 			break;
--		len++;
- 	}
--	return len;
-+	return strlen(src);
- }
- 
- static __attribute__((unused))
++		if (maddr >= FIXADDR_START)
++			return (void *)(kasan_early_shadow_page);
++
+ 		maddr &= XRANGE_SHADOW_MASK;
+ 		switch (xrange) {
+ 		case XKPRANGE_CC_SEG:
 -- 
-2.43.0
+2.39.3
 
