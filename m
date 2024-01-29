@@ -1,163 +1,113 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B1362A04;
-	Mon, 29 Jan 2024 12:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706532766; cv=fail; b=Ljs3LbUOKXHp9EzNV7RbietQpEJ4rZA2WTOn/AU9yJ6HNtNuoDFg8yxiVK0HIqavmxhtTluM+MSQW6vucX+I+Rd0N2TrgMNtDeh+lmkE7qP3wuEzuFmhYwumQ5JFOAa1gqmj9yWq3DU6bKIDgAGdH9MLBoxp5Cv1xP/ZyorWc4M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706532766; c=relaxed/simple;
-	bh=Ln6DC6rzrndetma+XGZS7+bE1/sNNMaHj84oOB4R/XU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=o9L9GCiHba47rJ8TV6gXZQWCBhTPIcQNvgV1LCD9TIxnPlDdalmcBuMO29iYYZgIp8qjFpGNU2KhAeFVTmUZFl/SJQGV/oKEaTPbjesJJ13/ADHvy1OYfLdoj2vZ1WAu2BKd+zd8ikG8CBK2OB6DZa17ls29B8JD17QHim35Xqk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TBjnTcLN; arc=fail smtp.client-ip=40.107.237.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE3764CCC
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 12:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706532794; cv=none; b=exa8jAMsBKgOlIv63bO7DDGr5e/kOU4Ay5zrYrvSQFgpCg6oj8/UOxbhkjrRNtHcXDMLeNojDuRsQ7qhfRsKqgumPK72i3L6IhBftdGBiqbDnYMbMRjZCwiLj+uj1Bg8+QnV49iGZ11JwvrHABFHT36HqSClSxxLAS6nq0BRkhM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706532794; c=relaxed/simple;
+	bh=KroOacCdu2ZA86CNRDamGPo4cG4+JEigTyyM8PMovL4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qNg4a6e5PV/dv3JeDS1yiKLNkzVVEs7ZTGZC+qa63zcOiBt7oghWUhWtzNOpOVSKSYzA06dz6oAyEBKdcCT/9JzQfe36cQwl1oWf8WdT4dqc9du9+nuhhL5sJr3jtSH/SOXzyyAkb/sEMsxqY4p5iwc3gq3wJ/xZrHfjxdVqt78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lZNpLXw/; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TBjnTcLN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bZhLpGUobQ0iVkbxkCKOyCbM4OnU4Gjo2ybhtJYhL9Yj2B6B4tqSaSXVhsnPWfXXTVHsw6Ct16qp40rcUxz9hUTWpgQibiamIjdfxqo4gB0fb8j3ZmQm6lqYuPGrawc7djQaO62MUgJxqdgngtsIeno9i+ZnuevrzfWdYayWnQ4Aqy8Wv1OcSVv20MVvFy3UJD5m49Ho/B8Go/GBUk9C6Tt0Rh7vhDdjHoUxj+s3j79leuTTNViVbP9U15YBenfWShSUg3rT7CqrSu4EU0Rh2MLl9UUz++rVA1HhteHreSeB1DDGWFERGv5O2xTndmSC+ZV49wkueltBUPQHaAc+qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5fYIetDL1jttk+LQ8Bsj/fol0+RxPpSbCxCApVQDM4E=;
- b=EvrFNN4dIhmN6GXCIgsuTPrOYHJ/Yc9QJUiGx9aXp40eZHZte6CkUAwgJEv7fnSWNdW+Vrf5laZBirxyJi9ckKSIXn9mbHwhBx0PaPdJGYFzMrA3GfcWmIZG5gQfuJ4SUlc6kGktr4wRs00c0r+zNq3JjrYrGArG9zPRIMA1j4J7MfIChM604GJbcPv7u0dmPCQUP7Xwgy9eQR8UjtgcmlImN95w1cZVSmCy3OkgMva0yMG4vR1RE3YXWJtRCj5xpr+Qvbihp5BJTAFG0tJL/csHNCg9Z+catJNFZa8Sn2o7kl6ypwJV8jEDFysLTTGWcj7Um6ZyZ7IKkXekKt5ilA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5fYIetDL1jttk+LQ8Bsj/fol0+RxPpSbCxCApVQDM4E=;
- b=TBjnTcLNkMT29BtGmewHc2/DHACs9sXdGlrR/NOxZ+2D0G6u/FeifrJxjuAYKXaB7dtCvdTwQCmYYhFPrGqWCz9FgNkSIyGsWb/0iv9eFRCRmUPsj0sBr5CAHluZ7n/a+To6woyzAr7XqwyvL4inPqKgFEzeqEafL+04dHD9pjg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CH2PR12MB5515.namprd12.prod.outlook.com (2603:10b6:610:34::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
- 2024 12:52:41 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 12:52:41 +0000
-Message-ID: <d6bef39c-f940-4097-8ca3-0cf4ef89a743@amd.com>
-Date: Mon, 29 Jan 2024 13:52:33 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/8] iio: core: Add new DMABUF interface infrastructure
-Content-Language: en-US
-To: Jonathan Cameron <jic23@kernel.org>, Paul Cercueil <paul@crapouillou.net>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Sumit Semwal <sumit.semwal@linaro.org>, Vinod Koul <vkoul@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Michael Hennerich <Michael.Hennerich@analog.com>
-References: <20231219175009.65482-1-paul@crapouillou.net>
- <20231219175009.65482-6-paul@crapouillou.net>
- <20231221120624.7bcdc302@jic23-huawei>
- <ee5d7bb2fb3e74e8fc621d745b23d1858e1f0c3c.camel@crapouillou.net>
- <20240127165044.22f1b329@jic23-huawei>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20240127165044.22f1b329@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR0P278CA0158.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:41::17) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lZNpLXw/"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-68c438fde8eso16317706d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 04:53:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706532792; x=1707137592; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y6yW26oSt7/NM1Cy4RXMzke9upnPad+ksE3lOYBG0Qc=;
+        b=lZNpLXw/LwyqnL8SowEvzusml8Ezml7alSpcgIxA6PeU/qZ7uSIiT4IYt8XyHNZAv3
+         c+2rGE/pTikIyE/x9f2bygzproSWzPPc9DAESJsH9Mv4ja3jMfpn4vX5ZLSkO2zJMBYo
+         aGEgNT6cjXfHfpydeDD1Y4c1ohJRFDsE5QzNQu99JQfKurakDR9Jwki1AH4FRvFM92NU
+         5xbnHLtGeF58xopMGB2tm9y8kIJtQwR2wi5POdmYp4iGJcbpfNj0LB/njb8mdaXoFdbB
+         rl5d7n1eTh7REfQbXCr2cnpew75kp/VU1ZFuGyDnf0jWDR4fwqkqy2SREIICS3VUXaSg
+         FazA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706532792; x=1707137592;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y6yW26oSt7/NM1Cy4RXMzke9upnPad+ksE3lOYBG0Qc=;
+        b=W7QsvPKKAyFzl6IPFBj2BmeMQry6k/Va4KUiH2u7hPKRKnImw7qZ1j+SMKJ/zuvEL7
+         DrDaoLfTPuRmCSgzBF40Flks6olNnM6eAYN8oh1Yv0gUT+tiOy4MiA1nkLdbXxEaybkx
+         l5Nqi3f+FXIGrc4rHSceF5ku1vv/EiKM/DzhSgUyqaWAjNqRdF+lO2/c0CnO9bXpKpoq
+         n2aOnvL3yusIP8FP9CAAUy95uwEvjfLS36FRB8pvKmU1rKAt0f5UdT7u1Xs/CKx6hydf
+         XIuw7ZCG51Qj1pOpDmiianIpLG7UzktLO5hTxFCyUwyLOtWJ9OJuoMgE7mLjg8t+ZXWp
+         H31A==
+X-Gm-Message-State: AOJu0Yw7OOS6Hv+tXueZTKSwmoBeyFVuwK9FDJ1dD8ieCZ3E/zdXdR6h
+	23hS4h5cyE6ISUx9jbx+mXiFHdSufZTbtsOtZcwJUX4j+7L9PedsX4cbSXiXstMwTOls44lD1Ee
+	4AHjJEUPN9SpUr0ErIfZXXKVCoKg5miLId0cmDw==
+X-Google-Smtp-Source: AGHT+IHaTbedJRWq3pLve5Uwkk1A3p87XLbvR2SU1L7KPzQbeRRz4TTsTCOmsE1SzDacGL8OW16099YRwNP2A8GD5NY=
+X-Received: by 2002:ad4:5aa8:0:b0:682:d676:e971 with SMTP id
+ u8-20020ad45aa8000000b00682d676e971mr6470001qvg.110.1706532791889; Mon, 29
+ Jan 2024 04:53:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH2PR12MB5515:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8a38a3a-476e-4675-56a4-08dc20c92da9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	DUF7/wJm0GfrNJ/SnEIkfEpCjhO2a+rf9VOCGJzr9hcHduQaSo4TpKUZIJ1JjbC2ti32zqKnG3A6PbVaa+1rBayHwWGW4RMKTVQcGL6TCWiVmte/tJJg3mPyw2PpK3QpIAz+NsWV5AhTfCo2bulBV0KtfSguHVBLYpp3lUmbU0SjN4CNPxiTDIProlJkVBrxEvNzOQKWyKvpyoyczz8hZTq1CpsXpLWJMxg8GyZCVsCqBdPSUry9EFmzy64Zcb7CAoB8qaEfQYRcAIWNT4RqOkOI9Z4wQ/i5S/iVcCxP5N/GPgh2Y89hzkwFtI1R61f87VsKFhHrP8eRwqmNZaPk6Z0gBoQtTsnBjXqCmhM2FvyeP4cJSFO7ATVUU97M0tubwoxxkZPVnzFkhG/IZ4abPeRCPlrmO6Tgq09Hy07JYcRIGA7KnlA5PlsZ4tay+tYizHoAhOUrCi096iXaUnxgNAp+d/Ge5KbDvaJ90LUjd7k67oEkypU5Hzv7ECVPdtGDkfO69ZesRgyDDetWeQ6U6PBXT35pGzZd9zmpnW14czX5YanDd24WtS9G5Esmaj7fevKbUeTz4q1Uw6IenDKauFaaqAdQldbBOQ1oNmsbf1MJ2koe/LxIEH9eyE3l9hm/ErROwl5GnskqB5t8Ha/Bng==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(396003)(366004)(346002)(376002)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(31696002)(36756003)(54906003)(66946007)(316002)(66556008)(86362001)(6506007)(110136005)(8676002)(8936002)(66476007)(6486002)(478600001)(26005)(4326008)(4744005)(6666004)(2906002)(7416002)(5660300002)(2616005)(6512007)(41300700001)(38100700002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OTlXWEpqbGhlTXp5Q3BZQmNNZlVLc0syYVJiemJGRERkY3NuN2tpQmF6b0RY?=
- =?utf-8?B?WnBDdUJKTmRwWnlBZHJSZjJvUEVqSEo1VXdwRHYxVmJtaXl6RGFCeHJMeHNm?=
- =?utf-8?B?aGFIdDRRN29oMCtzNnl6ai9QZStBZmVvdFJrRDI1MG0wUGR4UlkySGFiQUpq?=
- =?utf-8?B?ck5kQUR4cFNxdk9KeEViekpjZzhxV0dTUTJ1VVFRQTUxWXdxMUt0UGhIRFlj?=
- =?utf-8?B?VXQ4b2VwdGJWYnduQXFLYWp0SlBJc040Q2hUbldWWXhVT2taaGJsMjhXc1o3?=
- =?utf-8?B?Qk9RdGx4cktwTTEvcWErOTFIOFZ2cnlJK1czeDZMb2crSWNWcUVJeGM5Y1F6?=
- =?utf-8?B?cmg1bFE0TURNRGN1QlZsbzl3SDFsYi9pVHlqUExISEN1Y2t1dm5hZnd4d3Vv?=
- =?utf-8?B?ZFhsMW43ZVlQWG9iNExnMlhjbldHT09nSmZWN290eW1PTFBBeXdhTUVkbDRy?=
- =?utf-8?B?eUZlL0NtVVRTNUNBYnd6cjVXSWFscWl6eS9CMUdRbWdGRTcrbmpCaFVRY2JT?=
- =?utf-8?B?MjJQRnovSHhMTTl5MXhDb0lKY2tOQUM3Qzh5OFZBck53UnRiQXQzdEJkeU1v?=
- =?utf-8?B?dFQ5SHV1MXREeU50RGJuanpBZmowN1psUW45TWZnMGMxb2JEV0o5WWVtVkhn?=
- =?utf-8?B?SmFSTDFYM3BZaHp4d245ZzNnWkZwMExxRk9IVXRWb3NhZTRYMFZjVVJtQkx5?=
- =?utf-8?B?R3ZUbWUzZ2t4NytZRWovTCtpcGhJQ3gvR3RTcjF4eXlGeVRhcEtrajVidXU2?=
- =?utf-8?B?VUdXZzdsYWpqM2pIU0JEL1B0VUJIQnEvMWswUW12UFR0a0MzWlQyVXZxdnVN?=
- =?utf-8?B?THl5STJmdzQ2TmJrYmYyQlVwcEthVDg4VWRUa3RQL3dMa1lPOEI0UEd0UG5G?=
- =?utf-8?B?S2ZjRERLODFSQWYvaEQ5MGY2YXhrNHJ0S3ErWk5PVk1ZWTdKZmRIbW9jWTda?=
- =?utf-8?B?RUJxRHdXUWZxN2Y5ZXBQL0xLTDkwRWNBSyt2NGNpMUhBQll2QmlsWDhlN0ND?=
- =?utf-8?B?bElOVDZZR0g0L3lOak1YL2NJV3V6eGFBa040MytMVVBEbzdDdDlhNDVaU3dT?=
- =?utf-8?B?dGJydG1YZ1BQMHFIUGpIbFVNenNsOGk2UWlMbEFSVU5QQ3RJUjgxZ25CWnZ2?=
- =?utf-8?B?djdpTllSQ2pORWRoRmlCVmV1K253dVZvZlFvNXNWcG85MUdMWGtlKzRkZDZY?=
- =?utf-8?B?Tm5ycFc2dDk3WXczSlJBTW5reDZyN0I3dlRxUlRCSkZkeXd1ZFZiQ09hcHVR?=
- =?utf-8?B?bkM1TmtxMUV6Q0w1STJndTEvYlBkOTIyMGdTSjJKQ013SE54VklwbzZhN2dT?=
- =?utf-8?B?WEFyRisrRWl0WExWbE5Ua1h3bEpmZHIwQ2NvYXZIdTNUdVAzUVpqQ2JWNVlm?=
- =?utf-8?B?MGg1Z2dobWR1NWdHNnh1eC9pNHJjemJNV0NNdk9SZUJXU2hpOEo4MGpqc2dS?=
- =?utf-8?B?c0FPVVcrekZma2ZHOXRRdEMrRVNpdlRqTENLYjZsTTBwOVBtQ3RIclFqZEpr?=
- =?utf-8?B?azVTRk8waUtZdkZnU00zZ1RxOTZhaWM5MWkwajFVZ2hTVU1CeTdhSDJteWU2?=
- =?utf-8?B?NjJYYmV6OUkrRWw5Z2VPcGZ3TUJTM0lvakxHUmtodTJ6aXBMTDRrTFhYdjIz?=
- =?utf-8?B?ZDJLb0dtZEE1YjhOaE5SWWFZemZDT1I2YVpwUEhwamNiS1VGb3p5Z2lSQ2h4?=
- =?utf-8?B?dFlEQlk2allCZ21rMkV4TFNURklxVzlnS0VJNjNqUFhpWmNmNFo3TXBIUWhW?=
- =?utf-8?B?cjFTSzNDWUl5K203aWdhNHZwbVBwQ1daZ3dQQ2dlWjV0RnpKYytnc1lYWjlN?=
- =?utf-8?B?eUZFMzR5MWlsQ3RuRWVZQTdxVTl2L296OWpqV1dkckxwNkl6ZElLTUs2TlBP?=
- =?utf-8?B?U3NYbGZybFUvRWpLNWErSXpHbTlDTjAzVzJGTjMwV0NXblFZc2NMQlV2clh2?=
- =?utf-8?B?Z3Z4b0daRG5aeDBzc0dqUklwTmRVOTE1enFMUG9tNG0rT1JqMWlmT2RINUov?=
- =?utf-8?B?djV1NGVJalh4dC9IMWdwcU9qR0VsRzkzMjJQaEY5N29yVkpDQjZ6T2tlTDho?=
- =?utf-8?B?czhTK294OVlDK2N1cjNaRHgrNm9DbmdGYWV5dEluWHY1NTYyeTFMSzZqYVNN?=
- =?utf-8?Q?ERZmOhw0x03hSZeh+OY9JMgFv?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8a38a3a-476e-4675-56a4-08dc20c92da9
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 12:52:40.9135
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bZGa8s5yG7LOLlWGwtAGcrvr9+q1im6/XZZPYGmED7fcCr2V2FEY4qUQ+wnnPiTu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB5515
+References: <20240127001926.495769-1-andre.draszik@linaro.org> <20240127001926.495769-4-andre.draszik@linaro.org>
+In-Reply-To: <20240127001926.495769-4-andre.draszik@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 29 Jan 2024 12:53:00 +0000
+Message-ID: <CADrjBPqbVei7jMwjJxiXk=b-OwDHpxduM0zJdXSM0Dg8kvKXUA@mail.gmail.com>
+Subject: Re: [PATCH 3/9] clk: samsung: gs101: add support for cmu_peric1
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	tudor.ambarus@linaro.org, willmcvicker@google.com, semen.protsenko@linaro.org, 
+	alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
+	cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 27.01.24 um 17:50 schrieb Jonathan Cameron:
->>>> +	iio_buffer_dmabuf_put(attach);
->>>> +
->>>> +out_dmabuf_put:
->>>> +	dma_buf_put(dmabuf);
->>> As below. Feels like a __free(dma_buf_put) bit of magic would be a
->>> nice to have.
->> I'm working on the patches right now, just one quick question.
->>
->> Having a __free(dma_buf_put) requires that dma_buf_put is first
->> "registered" as a freeing function using DEFINE_FREE() in <linux/dma-
->> buf.h>, which has not been done yet.
->>
->> That would mean carrying a dma-buf specific patch in your tree, are you
->> OK with that?
-> Needs an ACK from appropriate maintainer, but otherwise I'm fine doing
-> so.  Alternative is to circle back to this later after this code is upstream.
-
-Separate patches for that please, the autocleanup feature is so new that 
-I'm not 100% convinced that everything works out smoothly from the start.
-
-Regards,
-Christian.
-
+On Sat, 27 Jan 2024 at 00:19, Andr=C3=A9 Draszik <andre.draszik@linaro.org>=
+ wrote:
 >
->> Cheers,
->> -Paul
+> CMU_PERIC1 is the clock management unit used for the peric1 block which
+> is used for additional USI, I3C and PWM interfaces/busses. Add support
+> for muxes, dividers and gates of cmu_peric1, except for
+> CLK_GOUT_PERIC1_IP which isn't well described in the datasheet and
+> which downstream also ignores (similar to cmu_peric0).
+>
+> Two clocks have been marked as CLK_IS_CRITICAL for the following
+> reason:
+>     * disabling them makes it impossible to access any peric1
+>       registers, (including those two registers).
+>     * disabling gout_peric1_lhm_axi_p_peric1_i_clk sometimes has the
+>       additional effect of making the whole system unresponsive.
+>
+> The clocks marked as CLK_IGNORE_UNUSED need to be kept on until we have
+> updated the respective drivers for the following reasons:
+>     * gout_peric1_gpio_peric1_pclk is required by the pinctrl
+>       configuration. With this clock disabled, reconfiguring the pins
+>       (for USI/I2C, USI/UART) will hang during register access.
+>       Since pingctrl-samsung doesn't support a clock at the moment, we
+>       just keep the kernel from disabling it at boot, until we have an
+>       update for samsung-pinctrl, at which point we'll drop the flag.
+>     * gout_peric1_sysreg_peric1_pclk needs to be hooked up to
+>       sysreg_peric1 in DT which will be done in a followup-patch, at
+>       which point we'll drop the special treatment from here. We're
+>       adding the flag temporarily here so as to not break the boot (due
+>       to pclk otherwise getting disabled).
+>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+>
+> ---
 
+Thankyou for being verbose on this reasoning behind CLK_IGNORE_UNUSED
+and CLK_IS_CRITICAL flags
+
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
