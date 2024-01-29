@@ -1,194 +1,122 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA6276C83
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0FC3F9C4
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706550029; cv=none; b=UXgk/Hm9QZZcyVLwFwaKrsYWEIxD99Dmt/wun09zucdJH3QNLYfiOeYKL8OCEZxPt1eKGMHYr9vp6aP37OLyIXG5ko9P3VeVCsJFyPJGHo/VyLYrP1Bo3XqngtCjRcF7J4IvW7xRN4W4wv4mrbKjYHbhOx3jeO5XhaseJzs2xdA=
+	t=1706550124; cv=none; b=g6+iI/Zgg/iXUiRieDO1VTlgPaYN1EYmuVKPdW0xlmDSjH6od3DVX5iEYUXRBzGCZpPyjemAnqW7mLGnLxzeZz3AJs9VcxqLV1nxlPhqvELt8p9EIPMx+E49RihO3J4ecwU66PP5mThtSTYKwtYvIf1kU0Uy3lPC4EuKG1GRCso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706550029; c=relaxed/simple;
-	bh=kkIzpH18wDHfYouguHhG1jnDHVScQ73RnQm28C2mofo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RELdMQ53oe9p2RxJxEF7uqdx/Y5mTiYU9wpqIKngXSyvtjizf5fVghNHw/yO9BsV/MuHMs7y35oPEEA0j+vFvsRVVdS10K5pYcTmXNFYTvPWfUuZId2vfDotCPeQxFYoAyXq3fIbArxPREGQ6h4WtD+IGqdbW4bqxZ1O0aGbFUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eM40Jqqp; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706550124; c=relaxed/simple;
+	bh=9Zx3aXA18R94SWzrgSUtc4EnGCzDqdY9//c/8FHjsGo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b3ldmzGV7OeukEeOn42dL0csmRnae9esvZBqZjoa+gONmXdE5++wWI/Ox+/gSRyNwqnIecc0Sz9KJwW56T9Cp4sD9f5cV/j5tc4mMEnbxsDFvBL1WYuy9YUaEr++WqfbW+IpukB4RvKcph+SmOSEadLeYCboIwoMLSU82HZIrRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WnYZn8QK; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eM40Jqqp"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51031ae95a1so2372594e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:40:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WnYZn8QK"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a35e0532900so117315966b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:42:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706550025; x=1707154825; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XMTUvx/6SM2X/X8eIaLRq0dCrVO/7O0bBhRFSLcgZrI=;
-        b=eM40Jqqpth7AaTOlekds2v29GqXn+THHGLemssEnUNZ7n/kecprb+HO1ISZXwNAoMT
-         LIC1NLbKTqCevbSlaQC1PuK2vnXQR3XEYEJ8lAWisQe9kQfjCqfOrlLNVXwzyXlVI5fH
-         xytD2ZtnT9JWihwd2j/uXzQq/woLe+Mq0/EzI=
+        d=linaro.org; s=google; t=1706550120; x=1707154920; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pRPrglOzwRqa+H7Y4VRUrVxomNsbjEqwuGbyydOpG0o=;
+        b=WnYZn8QK5RDqk0hn/Hkems0BFoTduw2sY23Ylk5SnxSDWXHYswQ+XMTplV7mwwJQPr
+         kBKyDTO14vNJrglbZcWP1kIQXwnjygmwIisQ47eFJ0xeC8y/VCe0q6ba/2Yu/gecgJRI
+         otTZRdKusVquMIGMIQoa6H3Z8ICa5spflBmXjo0Jj7D1kVwjOzTAX/TFkFIVPhGtPfZ0
+         tkbkql9hro4emtiJ0Zlir0/TwA//cAkfWAQjw56Fe0HpJhQL0D0eDMF+CRjxlFzH/8CE
+         674hP5Ja5raVspH99TvnujEdP4nTuXrNnz8d2iTGe8yWO2slpLB2+8QzciZNF/0iyd37
+         SUeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706550025; x=1707154825;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1706550120; x=1707154920;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XMTUvx/6SM2X/X8eIaLRq0dCrVO/7O0bBhRFSLcgZrI=;
-        b=mL+Sa0yhWN/tTN5T/YfwOTgLPvQRqk5RpH6vsI1FqoMtWn8mJVhdllMOffpRsw5mua
-         NAt7begNnfBHECbZ2sHukX2Sozmrpxq4MDbydeCofMO9I6avzfCUdTciD3MaMNXmvpNK
-         VvE77LS+ft/oKfJgleVF0M43Ar60DgtoYZ2f338mO/qlvdwYVgH0I+gpWP7oF+zbwDi4
-         qJbMou4D1UJwwte50WH7ESujp9pfVP2NaifiT46mM5uYVMZHUr5n7ELw08aSs0taBVvY
-         RjKI2BFPAowL3cGYk71XwOp1HO516iVxTN/Aw3mQbLgBgDjT3AjtoYdlJpb+bD9r5RTH
-         0C1A==
-X-Gm-Message-State: AOJu0YyNM166TxteiP8M+OZnz5S4D76DzfaNYJB91Pruw7fow+J14gG7
-	Q3ph9czTVh7s71ia1Qiso7zF+FcpSFkBwa5hIz4arT5t1MOpcd9tXmng3RynwDKNyy0s+qfuYbr
-	ZFAMOEA==
-X-Google-Smtp-Source: AGHT+IGCny5/qcrpiljQaqNKZb7/BGi4zPlHKFxtzbCQ4kWYi3jp4E5OFDCdNVzyoZ0WQIGRUwbEsw==
-X-Received: by 2002:a05:6512:6d0:b0:511:17d2:8bc0 with SMTP id u16-20020a05651206d000b0051117d28bc0mr263662lff.41.1706550025550;
-        Mon, 29 Jan 2024 09:40:25 -0800 (PST)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id b6-20020ac25626000000b005110e785a14sm497832lff.64.2024.01.29.09.40.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 09:40:24 -0800 (PST)
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2cf4d2175b2so27251541fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:40:24 -0800 (PST)
-X-Received: by 2002:a2e:bc83:0:b0:2cf:48c9:1554 with SMTP id
- h3-20020a2ebc83000000b002cf48c91554mr5355393ljf.0.1706550024205; Mon, 29 Jan
- 2024 09:40:24 -0800 (PST)
+        bh=pRPrglOzwRqa+H7Y4VRUrVxomNsbjEqwuGbyydOpG0o=;
+        b=LIjNgaBigslYcR2ieOcsBpy+U7QNRuRuyD8O/cNwrHA/GOe2GeYXYyKJNx5ioeGx3f
+         2HHU5OQJ4CunVhNFfS+7kcK6fTRxHYcewp93uCHf/xpvRp2hxNRl+unUdgY8jlOjGYny
+         oxCWZt4oipUrx+HmDQqwTeyYuWFE3BCICFk8ueT+ZeTsaze+JireWe9hBa1lVe1kVYxj
+         O0ZZez+h26M6j2KIxuxCHkHgROpvOil3sgT1BrgOC3YPADU6PN7c4pkIM29BANlQE2fs
+         0/PEBBhF5lVlHr/oRgRMryIjrCl97OC1suQYE0f11LNngSVUf1cPy103y03eF0lAA2KZ
+         5RpQ==
+X-Gm-Message-State: AOJu0Yw7ou4LmzbVvZHCDi1oxQ+aLDifn2J3oKHeWu4LUIPTgSf+FjKc
+	MQNm7pUymvmDBvpZXAJY88b7Cm5EcScwov/Wj11aBRFpTv+tPp3NYGBziofG3i/x3QwuxIXD8pu
+	/CTB8Lg==
+X-Google-Smtp-Source: AGHT+IH7SnCVkKpDcbSdNp0DbMhNvvyF+vX+c9HHkogBjefDuaYJ7t+c82tOi7AZ9KE+TzdqrxqPSA==
+X-Received: by 2002:a17:906:450:b0:a35:ad38:35e with SMTP id e16-20020a170906045000b00a35ad38035emr2735029eja.69.1706550119715;
+        Mon, 29 Jan 2024 09:41:59 -0800 (PST)
+Received: from puffmais.c.googlers.com.com (94.189.141.34.bc.googleusercontent.com. [34.141.189.94])
+        by smtp.gmail.com with ESMTPSA id qx25-20020a170906fcd900b00a311a360433sm4237765ejb.143.2024.01.29.09.41.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 09:41:59 -0800 (PST)
+From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <andre.draszik@linaro.org>
+To: peter.griffin@linaro.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@android.com,
+	tudor.ambarus@linaro.org,
+	willmcvicker@google.com,
+	semen.protsenko@linaro.org,
+	inux-kernel@vger.kernel.org,
+	alim.akhtar@samsung.com,
+	s.nawrocki@samsung.com,
+	tomasz.figa@gmail.com,
+	cw00.choi@samsung.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 0/7] gs101 oriole: peripheral block 1 (peric1) and i2c12 support
+Date: Mon, 29 Jan 2024 17:40:03 +0000
+Message-ID: <20240129174151.1174248-1-andre.draszik@linaro.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202401291043.e62e89dc-oliver.sang@intel.com> <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
- <20240129120125.605e97af@gandalf.local.home>
-In-Reply-To: <20240129120125.605e97af@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 29 Jan 2024 09:40:06 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
-Message-ID: <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
-Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 29 Jan 2024 at 09:01, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Thanks for the analysis. I have a patch that removes the dropping of the
-> mutex over the create_dir/file() calls, and lockdep hasn't complained about
-> it.
->
-> I was going to add that to my queue for the next merge window along with
-> other clean ups but this looks like it actually fixes a real bug. I'll move
-> that over to my urgent queue and start testing it.
+Hi,
 
-Note that it is *not* enough to just keep the mutex.
+This patch series implements support for the 2nd connectivity
+peripheral block on gs101.
+This block contains an additional 6 USI, 1 I3C and 1 PWM
+interfaces/busses.
 
-All the *users* need to get the mutex too.
+i2cdetect shows all expected devices on the one i2c bus that this patch
+series enables.
+Everything that's in scope in this series works also without the
+clk_ignore_unused kernel command line argument.
 
-Otherwise you have this:
+While working on this, I noticed the existing peric0 support for gs101
+has a couple issues. That explains why there are differences compared
+to it and a separate patch series has been sent to fix up peric0
+support.
 
-CPU1:
+Cheers,
+Andre'
 
-   create_dir_dentry():
-      mutex locked the whole time..
-        dentry = create_dir(ei, parent);
-           does d_instantiate(dentry, inode);
-        eventfs_post_create_dir(ei);
-           dentry->d_fsdata = ei;
-        mutex dropped;
+Changes in v2:
+- squash original patches #3+#9 (Krzysztof)
+- move original patch #7 to new #4
+- squash original patches #4+#8 and make it #5 (Krzysztof)
+- add short summary of devices attached to i2c bus 12 & add TODO (Sam & Peter)
+- collect Reviewed-by: tags
+- I kept Reviewed-by: tags for the squashed patches. Please shout if
+  that wasn't expected
 
-but CPU2 can still come in, see the dentry immediately after the
-"d_instantiate()", and do an "open()" or "stat()" on the dentry (which
-will *not* cause a 'lookup()', since it's in the dentry cache), and
-that will then cause either
+ .../bindings/clock/google,gs101-clock.yaml    |   9 +-
+ .../soc/samsung/samsung,exynos-sysreg.yaml    |   1 +
+ .../boot/dts/exynos/google/gs101-oriole.dts   |  10 +
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi  |  41 ++
+ drivers/clk/samsung/clk-gs101.c               | 347 ++++++++++++++++-
+ include/dt-bindings/clock/google,gs101.h      |  48 +++
+ 6 files changed, 452 insertions(+), 4 deletions(-)
 
- ->permission() -> eventfs_permission() -> set_top_events_ownership()
-
-or
-
- ->get_attr() -> eventfs_get_attr() -> set_top_events_ownership()
-
-and both of those will now do the dentry->inode->ei lookup. And
-neither of them takes the mutex.
-
-So then it doesn't even matter that you didn't drop the mutex in the
-middle, because the users simply won't be serializing with it anyway.
-
-So you'd have to make set_top_events_ownership() take the mutex around
-it all too.
-
-In fact, pretty much *any* use of "ti->private" needs the mutex.
-
-Which is obviously a bit painful.
-
-Honestly, I think the right model is to just make sure that the inode
-is fully initialized when you do 'd_instantiate()'
-
-The patch looks obvious, and I think this actually fixes *another*
-bug, namely that the old
-
-        ti = get_tracefs(inode);
-        ti->flags |= TRACEFS_EVENT_INODE;
-
-was buggy, because 'ti->flags' was uninitialized before.
-
-eventfs_create_events_dir() seems to have the same bug with ti->flags,
-btw, but got the ti->private initialization right.
-
-Funnily enough, create_file() got this right. I don't even understand
-why create_dir() did what it did.
-
-IOW, I think the right fix is really just this:
-
-  --- a/fs/tracefs/event_inode.c
-  +++ b/fs/tracefs/event_inode.c
-  @@ -328,7 +328,8 @@
-        inode->i_ino = EVENTFS_FILE_INODE_INO;
-
-        ti = get_tracefs(inode);
-  -     ti->flags |= TRACEFS_EVENT_INODE;
-  +     ti->flags = TRACEFS_EVENT_INODE;
-  +     ti->private = ei;
-        d_instantiate(dentry, inode);
-        fsnotify_create(dentry->d_parent->d_inode, dentry);
-        return eventfs_end_creating(dentry);
-  @@ -513,7 +514,6 @@
-   static void eventfs_post_create_dir(struct eventfs_inode *ei)
-   {
-        struct eventfs_inode *ei_child;
-  -     struct tracefs_inode *ti;
-
-        lockdep_assert_held(&eventfs_mutex);
-
-  @@ -523,9 +523,6 @@
-                                 srcu_read_lock_held(&eventfs_srcu)) {
-                ei_child->d_parent = ei->dentry;
-        }
-  -
-  -     ti = get_tracefs(ei->dentry->d_inode);
-  -     ti->private = ei;
-   }
-
-   /**
-  @@ -943,7 +940,7 @@
-        INIT_LIST_HEAD(&ei->list);
-
-        ti = get_tracefs(inode);
-  -     ti->flags |= TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
-  +     ti->flags = TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
-        ti->private = ei;
-
-        inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
-
-which fixes the initialization errors with the 'ti' fields.
-
-Now, I do agree that your locking is strange, and that should be fixed
-*too*, but I think the above is the "right" fix for this particular
-issue.
-
-                Linus
