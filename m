@@ -1,104 +1,112 @@
-Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D084664DE;
-	Mon, 29 Jan 2024 14:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92473152DE4;
+	Mon, 29 Jan 2024 14:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706539910; cv=none; b=fihlmBxuzFmANTA15DAcKW/WR0CO4oUSfk66OF7ITsZw48QtZ5l1hB8RHbo3DmZ454XyW3fDL7X7ZDFDidGL8mnJByRozok3yqjPWWpnxiWVEkfPhqIvcTyYZIlaxLGMshZAWdF00KCj56B/qrISDc8UE0HtOOyPKwsVSL022cU=
+	t=1706539953; cv=none; b=X2Zau/KCM1yNFrhZUkbxarpgNHYyiAL6jyrBA9PsrYFBktbzGcFpE4oqeqsDKH4QdMvMY+PAZU6qSv1/sThSdb4ELi2JwQVOlSWjTPQhM0VPcVTz5JYQug+cXr7m/gViUtA75CBwWhUXCltzRwjg49YXnDyWTV3eJc8UJfuwi3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706539910; c=relaxed/simple;
-	bh=eQAgMHUu2TPgI3CFnF+f0gE8JUhEUD68C/EhB1GXcPk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GTr8SheqFeK+G9INY8nS6M1OBEYajDZp86LzlOP6B2kD1F7tRO4xD6ee1ej32NYmtvrVpdb3WPCrwnU4CkX3VuKmKigI/SSC0Fr4KfVnzE6v+Yp0DNLGtpdn/M+u7uX7MdMaZ4q1xZGIgHgPlaJS205xHctAZ6X9jtlCwEX2foA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=PcJCFGk4; arc=none smtp.client-ip=5.189.157.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="PcJCFGk4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Content-ID:Content-Description;
-	bh=GS1g13cvmu/J8tisETDybWHkXTlbk7TLNosWxc0MwC8=; b=PcJCFGk4ksa/E0mFLnU2TIQ69u
-	DEwjeE6DLNvO/6lOUc9fbyBzZPNxiitP8wh4JhB8mE13z/w3qthxXsUDhYtmznoHAdQHeZZIefQ4d
-	POpA9v3dBfgfuI7IrKUhRWMnfIqd4wx9wP2GYOeToJItX1j/iDc/fI29P8I241mTd1l9CAaGfRyD7
-	dRZILfLCwR1b9QqdVZv26G4BryfvBgYyA0h/npKmj2dvjG2u8OUDm4Fd7WKA7pBq3B53hE9opDNZK
-	pXb6g16BY9m0RDXZ7vg2wM9u96viDrJjBXxt7My/frzziBhDdGjN3qdMJtrtdnfi08JkClo9DA0yu
-	DgPpHTqpCQz9uuTACPL0LtSpf7SQXGSCUX9/nov5OdcWWmvyQje1RaUOlUWEajUZbqHShEQXR5std
-	bvL4oqHJehdCppCRKbnfFA7q3bhWfJVZvvsJZjepZ+W2K3Dpbc6Ikzsg2a7tA+SzOe3ETDOLJCbTH
-	JbjZvyq7ZTIas3UsVRxXzBSkX+jUw3eAbrDybDYuv8BOB9U4/VgCZlNSKl+8LlvI4fRFY8xW3VqUz
-	2M9w8JwTxDab+D9GHCH+bYwvAVYCTNkgiIVl4AMRDuzoB9VtYZfMgmc0q3RM6yCRLi3NHn+72sGpO
-	JqxcKYsVP71/mVG3h/1ptI/UoFkfe0VBZYmkWO6V8=;
-From: Christian Schoenebeck <linux_oss@crudebyte.com>
-To: Eric Van Hensbergen <ericvh@kernel.org>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Latchesar Ionkov <lucho@ionkov.net>, David Howells <dhowells@redhat.com>,
- Matthew Wilcox <willy@infradead.org>
-Cc: Jeff Layton <jlayton@kernel.org>,
- Christian Brauner <christian@brauner.io>, netfs@lists.linux.dev,
- v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] 9p: Further netfslib-related changes
-Date: Mon, 29 Jan 2024 15:14:28 +0100
-Message-ID: <1726980.McBZPkGeyK@silver>
-In-Reply-To: <20240129115512.1281624-1-dhowells@redhat.com>
-References: <20240129115512.1281624-1-dhowells@redhat.com>
+	s=arc-20240116; t=1706539953; c=relaxed/simple;
+	bh=er4E+kldT3HkIVkFzlNFfVMjlPZ/OUYJTRvYzqmxZuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PLeGecbpIJN1AewU7NtNR1V7O/haIgsbVi7XJe/J5YKd6ESO+I3rSFzBo8j5P89SGrpfrqolZ+PygqEbupxZ8UuXiygqWA6JnEvfNbTM4AKFhhO+fEaReGGYoZoVYfctQH+zh+YysfpvIDMdyTC0d5lszIcdHeg1OzqASAV4K+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3be6b6a79daso30124b6e.0;
+        Mon, 29 Jan 2024 06:52:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706539950; x=1707144750;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OOtU9g2kX1yF7rEI6xIgR7yMtelVCGrmiEAuIJRD/fM=;
+        b=ZybFedP6x49l3L8t/okk/2Z5WghPsS4OFLsyyMI+EZtbM3FulzMrYNzvZEZADm6PXM
+         /DnpaakjWvc5Zos7IrfgEkvo/m7fujijbJ3zOv4OzI9LN5uol0mZsm/a4TyNGW17a2Cf
+         B1U1cDSliQ+EQe92w50+aBAdu3VtTJZvlHoC8mJQhjr8WYa6fMg9wuJSrJvsrz38njiD
+         SLsa44iYvjLi29UZxJ6FUG2P3eYTUMJlaKkrQSg5ws6MjL6Cbaz2uBa/eFPsbpRYrpct
+         KxdhnjcuT918NuONbHJHfTOCiREzvrzu/4wGDCmYHb7DafcBnYEni1sAJiDJDBnX6XTy
+         mF0Q==
+X-Gm-Message-State: AOJu0Yzr3khFVPvdYRZtZvKgknFzV8huybsEJlhupEuaX85/hMmXVUV+
+	vzrB9ZfmpgUIEIiDEWtuz8L9SGLlhlOwRBvlAyEbobqDJMpv4BsI0GXaHzs0e2HQJuoXIrU8xSE
+	iVbeOdQ5tzVr2ruYRhFjtCpvoCRQ=
+X-Google-Smtp-Source: AGHT+IG+RO709vmRT5Tc/RSOuavk4HPIQsze3s5xQRhfbWgFCfetxNKZGq70dGVm918oH/ppUElCzdRv4rANW3dsi80=
+X-Received: by 2002:a05:6870:9a02:b0:218:75ee:4b49 with SMTP id
+ fo2-20020a0568709a0200b0021875ee4b49mr3910317oab.5.1706539950665; Mon, 29 Jan
+ 2024 06:52:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <1706524834-11275-1-git-send-email-mihai.carabas@oracle.com> <1706524834-11275-8-git-send-email-mihai.carabas@oracle.com>
+In-Reply-To: <1706524834-11275-8-git-send-email-mihai.carabas@oracle.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 29 Jan 2024 15:52:19 +0100
+Message-ID: <CAJZ5v0gPoLan0M2A-x5V=ZNCxbYdv5e5DvNZTyo6Bd3e9HThYQ@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] cpuidle/poll_state: replace cpu_relax with smp_cond_load_relaxed
+To: Mihai Carabas <mihai.carabas@oracle.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, 
+	pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com, 
+	rafael@kernel.org, daniel.lezcano@linaro.org, akpm@linux-foundation.org, 
+	pmladek@suse.com, peterz@infradead.org, dianders@chromium.org, 
+	npiggin@gmail.com, rick.p.edgecombe@intel.com, joao.m.martins@oracle.com, 
+	juerg.haefliger@canonical.com, mic@digikod.net, arnd@arndb.de, 
+	ankur.a.arora@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Monday, January 29, 2024 12:54:34 PM CET David Howells wrote:
-> Hi Eric, Dominique,
-> 
-> Here are some netfslib-related changes we might want to consider applying
-> to 9p:
-> 
->  (1) Enable large folio support for 9p.  This is handled entirely by
->      netfslib and is already supported in afs.  I wonder if we should limit
->      the maximum folio size to 1MiB to match the maximum I/O size in the 9p
->      protocol.
+On Mon, Jan 29, 2024 at 12:56=E2=80=AFPM Mihai Carabas <mihai.carabas@oracl=
+e.com> wrote:
+>
+> cpu_relax on ARM64 does a simple "yield". Thus we replace it with
+> smp_cond_load_relaxed which basically does a "wfe".
+>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
+> ---
+>  drivers/cpuidle/poll_state.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/cpuidle/poll_state.c b/drivers/cpuidle/poll_state.c
+> index 9b6d90a72601..440cd713e39a 100644
+> --- a/drivers/cpuidle/poll_state.c
+> +++ b/drivers/cpuidle/poll_state.c
+> @@ -26,12 +26,16 @@ static int __cpuidle poll_idle(struct cpuidle_device =
+*dev,
+>
+>                 limit =3D cpuidle_poll_time(drv, dev);
+>
+> -               while (!need_resched()) {
+> -                       cpu_relax();
+> -                       if (loop_count++ < POLL_IDLE_RELAX_COUNT)
+> -                               continue;
+> -
+> +               for (;;) {
+>                         loop_count =3D 0;
+> +
+> +                       smp_cond_load_relaxed(&current_thread_info()->fla=
+gs,
+> +                                             (VAL & _TIF_NEED_RESCHED) |=
+|
+> +                                             (loop_count++ >=3D POLL_IDL=
+E_RELAX_COUNT));
 
-The limit depends on user's 'msize' 9p client option and on the 9p transport
-implementation. The hard limit with virtio transport for instance is currently
-just 500k (patches for virtio 4MB limit fetching dust unfortunately).
+The inner parens are not necessary AFAICS.
 
-Would you see an advantage to limit folio size? I mean p9_client_read() etc.
-are automatically limiting the read/write chunk size accordingly.
+Also, doesn't this return a value which can be used for checking if
+_TIF_NEED_RESCHED is set instead of the condition below?
 
->  (2) Make better use of netfslib's writethrough caching support by not
->      disabling caching for O_DSYNC.  netfs_perform_write() will set up
->      and dispatch write requests as it copies data into the pagecache.
-> 
->  (3) Always update netfs_inode::remote_size to reflect what we think the
->      server's idea of the file size is.  This is separate from
->      inode::i_size which is our idea of what it should be if all of our
->      outstanding dirty data is committed.
-> 
-> The patches can also be found here:
-> 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-9p
-> 
-> Thanks,
-> David
-> 
-> David Howells (2):
->   9p: Make better use of netfslib's writethrough caching
->   9p: Always update remote_i_size in stat2inode
-> 
-> Dominique Martinet (1):
->   9p: Enable large folio support
-> 
->  fs/9p/fid.h            | 3 +--
->  fs/9p/vfs_inode.c      | 1 +
->  fs/9p/vfs_inode_dotl.c | 6 +++---
->  3 files changed, 5 insertions(+), 5 deletions(-)
-
-
-
-
+> +
+> +                       if (loop_count < POLL_IDLE_RELAX_COUNT)
+> +                               break;
+> +
+>                         if (local_clock_noinstr() - time_start > limit) {
+>                                 dev->poll_time_limit =3D true;
+>                                 break;
+> --
