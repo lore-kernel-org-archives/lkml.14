@@ -1,48 +1,33 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5A815443F;
-	Mon, 29 Jan 2024 15:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FD715350B
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706541595; cv=none; b=qpLZ9/8yoqoq1QL64c0MscwGETwYvPtDhCOl//r2eHn1lLK2ogQEEbQbhVQuiXNh6w5ye8/Tnsbg+bjqcacOac0IIcrEkPZDm+QwkPs91tATe6XTkJsW1PGpcfREw1JfcV8hmkEFFg/ggtXo6/EQcXAj271RDsUKeNwNrY3fdDo=
+	t=1706541615; cv=none; b=pwJHuqLa+V+xH444p7s2lOFpbtrve88Rwl38z9jByk83NbCsht/J6NeyojTAw5OzyhSt7UAWSZ6PWG4YtC6Kmfbj4slaSmXBUj/tg24Em0UUsZ0uRWsklNlFoMD21jKW2NZUNyoClgb8VJpN84p7imq3X9w3VUwEwqe+AtD4GKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706541595; c=relaxed/simple;
-	bh=ZP/y7rwTNXQRRS57Mj+sf0zKJdTCjZmzL7LSP32iLCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nn/HaWDky8/AVw6/U9zRQVEMpBpDot1i6FxU4qqxNGl3k1Gi8nuNQAPwDX/jZhENs1hu2oCrHACHss1v3ablWSMLHIyLRNEyWgi+o29OPv9Rsmq1mYkn7+3XuqIhRwjJWfbmMG/jJGTcmJwZ7r4c68aJ9abycnqbwCbTzC8gAtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tA9L37g+; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706541615; c=relaxed/simple;
+	bh=rSQ5Ozfvvks5f1lprdG2cvcaMV3KDqcqIJHW/p30O34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q7iEBLdYD0mvl8D3dcNcPi+JirAqD7fztjKKSHZ84G60MOSU+maZf1zhafIitZfb133FtH1aZjWxxLt7qIbqLg5UB0spfdukh2NqFyHFw8amQ1TfIDnKlYur82LgSbJmvdHJvBjbhg3HoNzU7rbVVChaNGgLTm0aOm1KwW2wEm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtApCco8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tA9L37g+"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40TFJfSl091902;
-	Mon, 29 Jan 2024 09:19:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706541581;
-	bh=LfcJ9zlfwzsGfl0+LgvF4CNibbNNKcmZOBPqSOAfWHE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=tA9L37g+pjnQgFLbIPV3hITGSdJ5U6xepE4CRSItBY+A36zluNNw7cm4dr5JK0CZd
-	 WBvwQzXPQ3dCgBacqCSN4krPJsnsWEz93fTeCl6LlLL48TSbNcGD2/m3NE6graaNxK
-	 BQ9BRJEIsi3kP5axXUsMYQEMjw/6laK+Kv07SDnE=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40TFJfMj019376
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 29 Jan 2024 09:19:41 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
- Jan 2024 09:19:40 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 29 Jan 2024 09:19:40 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40TFJew2086755;
-	Mon, 29 Jan 2024 09:19:40 -0600
-Message-ID: <077682de-7789-4f1f-8dcc-aa47f4fb2dff@ti.com>
-Date: Mon, 29 Jan 2024 09:19:40 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtApCco8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B20C43399;
+	Mon, 29 Jan 2024 15:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706541614;
+	bh=rSQ5Ozfvvks5f1lprdG2cvcaMV3KDqcqIJHW/p30O34=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dtApCco8RMVWNSQYL4y5ec1MFNYVs182lX1Q6eosjmDTIQwFZ5E+zfvHVcAL99lnG
+	 MIS5R8D/RtLo7IREt69kqtbcJPxYjsXqlnlJ0VT5b78Fr/gW2bm85AgGYeWe0Xhlll
+	 32JVdG7DuD3aGUYA0IzVapHZpS7T8QWZCxBFJltethSu6zoMZc56SUuBMNpuroOXWn
+	 LT//jubljZv526382pl43BQU9QsUGSj9+esHAXfSN6T0IiVzhS8Bjvjf1lnRF2GJly
+	 myRgLNScHiAshHuDZkv294Sekce71ALoi1WG1PT8RAXLVEk178sRYZO0DyEttEcAXY
+	 nQ+3jbWlHEYHQ==
+Message-ID: <d905f921-927d-4978-acef-6b2822bf9b64@kernel.org>
+Date: Mon, 29 Jan 2024 16:20:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,94 +35,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: j721e: Extend j721e_pcie_ctrl_init() for non syscon
- nodes
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, <bhelgaas@google.com>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <vigneshr@ti.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-References: <20240129104958.1139787-1-s-vadapalli@ti.com>
+Subject: Re: [PATCH 0/3] arm64: Add support for airoha en7581 Soc
 Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240129104958.1139787-1-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To: Daniel Danzberger <dd@embedd.com>, catalin.marinas@arm.com,
+ will@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20231001122418.2688120-1-dd@embedd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20231001122418.2688120-1-dd@embedd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 1/29/24 4:49 AM, Siddharth Vadapalli wrote:
-> The "ti,syscon-pcie-ctrl" device-tree property is used to obtain
-> reference to the "pcie_ctrl" register within the System Controller Module
-> in order to configure the link speed, number of lanes and the mode of
-> operation of the PCIe controller. The existing implementation of the
-> "j721e_pcie_ctrl_init()" function handles the case where the compatible for
-> the System Controller Module node specified using the "ti,syscon-pcie-ctrl"
-> property is "syscon". Since the System Controller Module can be modelled as
-> a "simple-bus" as well, extend the implementation of the
-> "j721e_pcie_ctrl_init()" function to handle the "simple-bus" case.
+On 01/10/2023 14:24, Daniel Danzberger wrote:
+> Hi,
 > 
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
+> I would like to add linux support for this new platform.
+> These 3 patches only add very basic support for the platform and
+> it's evaluation board.
 > 
-> Hello,
-> 
-> This patch is based on linux-next tagged next-20240129.
-> 
-> The System Controller Module is modelled as a "simple-bus" in J784S4 SoC at
-> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi#L45
-> The existing SoCs such as J721E and J7200 which currently model the node as
-> a Syscon node will also be updated to model it as a "simple-bus".
-> Therefore this patch aims to update the driver in order to handle the
-> migration of the System Controller Module to the "simple-bus" compatible
-> without breaking PCIe functionality on existing TI SoCs which make use
-> of the pci-j721e.c driver.
-> 
-> Regards,
-> Siddharth.
-> 
->   drivers/pci/controller/cadence/pci-j721e.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index 85718246016b..2ace7e78a880 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -224,12 +224,20 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
->   {
->   	struct device *dev = pcie->cdns_pcie->dev;
->   	struct device_node *node = dev->of_node;
-> +	struct device_node *scm_conf;
->   	struct of_phandle_args args;
->   	unsigned int offset = 0;
->   	struct regmap *syscon;
->   	int ret;
->   
-> -	syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-ctrl");
-> +	scm_conf = of_parse_phandle(node, "ti,syscon-pcie-ctrl", 0);
-> +	if (!scm_conf) {
-> +		dev_err(dev, "unable to get System Controller node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	syscon = device_node_to_regmap(scm_conf);
+> The changes contain just some additions to the existing Kconfig and 2 dts files.
 
-Turning the entire "simple-bus" region into a regmap using this
-function is just as broken as having it as a "syscon". The core
-problem we are solving by getting rid of the blanket syscon nodes
-is that it causes multiple mappings of the same register. This
-can cause issues with regmap caching, read–modify–write, etc..
+You did not get any responses... because of few issues. First, you did
+not Cc SoC maintainers, literally no one, so this will be totally
+ignored. Second, you missed some lists explicitly asked by
+get_maintainers.pl, so this should not be merged anyway. Also, I don't
+see checkpatch run on it... so standard disclaimers:
 
-What you want to do is add a subnode to the simple-bus, have that
-encapsulate just the registers used for PCIe, and have the PCIe
-node point to that. Then this patch isn't needed.
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC (and consider --no-git-fallback argument). It might
+happen, that command when run on an older kernel, gives you outdated
+entries. Therefore please be sure you base your patches on recent Linux
+kernel.
 
-For an example, see how it's done for DSS[0].
+Tools like b4 or scripts_getmaintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, use mainline), work on fork of kernel (don't, use
+mainline) or you ignore some maintainers (really don't). Just use b4 and
+everything should be fine, although remember about `b4 prep
+--auto-to-cc` if you added new patches to the patchset.
 
-Andrew
+Please run scripts/checkpatch.pl and fix reported warnings. Some
+warnings can be ignored, but the code here looks like it needs a fix.
+Feel free to get in touch if the warning is not clear.
 
-[0] https://github.com/torvalds/linux/blob/41bccc98fb7931d63d03f326a746ac4d429c1dd3/arch/arm64/boot/dts/ti/k3-am65-main.dtsi#L502
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
 
-> +	of_node_put(scm_conf);
->   	if (IS_ERR(syscon)) {
->   		dev_err(dev, "Unable to get ti,syscon-pcie-ctrl regmap\n");
->   		return PTR_ERR(syscon);
+Also, please provide proper maintainers entry. If you do not intend to
+be maintainer of it, Cc some of SoC maintainers to get it merged through
+them.
+
+Best regards,
+Krzysztof
+
