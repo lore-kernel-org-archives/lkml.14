@@ -1,296 +1,183 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64F19154C0C
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE07D154C07;
+	Mon, 29 Jan 2024 15:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706542981; cv=none; b=fphoqa3EdyA/X7nXULgtwjUxcOS/OhfkvDZpLB9pws996teb3ZoMeom6u1gbIGPoY+IiyVfblHkqR313E+JMQuiP4rzz48raO6QlCyLsFY83UGYIQwoyoUNP+atPhlz+TDVxizlfDDeigzMS5YiJ98w970p4+9YqmoiKhFOH8ZE=
+	t=1706543019; cv=none; b=hyraUHWUxhktfGnycxuRz4DV1wOFC/ktVhEKTtMAExRhG7VqP+CIYZBOXE7hKAkMsVanxbi+VX3O9+Gkp5tGy4wfFpSi+b4VHvlhTXvkgiM8vjCPDYixfXOA4fzEKfLAEXdk0B0PP0YP77nkTq3+YPnn0HyVv+TE6rQYnV0zj+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706542981; c=relaxed/simple;
-	bh=V6gPdvWvE/f94nSb01JEWy7RqqLCh2EpZV9yIXNqpc0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O/2mo4B1uiyMRJ5gRpWpjWG9frxZtS5johUtYeLJlLAnKELcecPj37V2IfL7dCL6ndj5jtZUi7vgk4XL+6W0kkCkp22gSAAXz24jY8TDZ5GqVvSU+Is5NjT4uB95sEyp3rD1Iitx/G48K5eADO2njLtdBp2eNRxW4HmyobY3CXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0DF1DA7;
-	Mon, 29 Jan 2024 07:43:42 -0800 (PST)
-Received: from e127643.lan (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 27FA63F738;
-	Mon, 29 Jan 2024 07:42:55 -0800 (PST)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v2 12/12] coresight: Add helper for setting csdev->mode
-Date: Mon, 29 Jan 2024 15:40:43 +0000
-Message-Id: <20240129154050.569566-13-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129154050.569566-1-james.clark@arm.com>
-References: <20240129154050.569566-1-james.clark@arm.com>
+	s=arc-20240116; t=1706543019; c=relaxed/simple;
+	bh=n8a6DcN34MCg2EL+T3oLmFAy3UeopUFYPMC/oHMiox8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=tJQHLkf0+wz6VVFlXlwMntx6130f1IylE8swOY1yh5kUjQiTAH5pk/o3F80r8qt6406yDLk9jQx2gxyCYoo3SApbE3hyyDk7aPIkspzldu1cJYAo//O+WsWFrnf4VceKLfFWd03AUnZ9EIfENrGaAnhXrptPdnWzyaOnCuHsmw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A6BQG4Rw; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A6BQG4Rw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706543016; x=1738079016;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=n8a6DcN34MCg2EL+T3oLmFAy3UeopUFYPMC/oHMiox8=;
+  b=A6BQG4RwneBFN8Q4gWtiXBLKGTsuaebuepLrO3TglQ93JZ3mevmg9oRm
+   EmgU5AwqtyssKKIAXrEnmIio4ghC5e0mXkmJ4YzujE5ba2Q+VCBLJSvZF
+   iFryVKhwFL1kI+5LXp5HwJKPTQfMNtPmku4NTHlr5Ups+6oSNmw34JnUM
+   W8yNIZvOVq5I7kjyOA/tVr8lsU/9lMPF06KTYAeHc5cFTB8Mlt3bPwr4l
+   yUJf7JAHD0G+CB+fm1zd+U6/QRVOUEf6AmsLb9Mn9unh8datVb41pH7tI
+   FrfDoUu/EgyH9tjl/YL+sCIQWKnlgneyF5dCUULtRK1A1YSfgMOdfGxeU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="434159615"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="434159615"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 07:43:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="960921358"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="960921358"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by orsmga005.jf.intel.com with ESMTP; 29 Jan 2024 07:43:25 -0800
+Message-ID: <44a3d4db-7759-dd93-782a-1efbebfdb22c@linux.intel.com>
+Date: Mon, 29 Jan 2024 17:44:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Content-Language: en-US
+To: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
+ mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
+ corbet@lwn.net, gregkh@linuxfoundation.org, lgirdwood@gmail.com,
+ andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ konrad.dybcio@linaro.org, Thinh.Nguyen@synopsys.com, broonie@kernel.org,
+ bgoswami@quicinc.com, tiwai@suse.com, robh+dt@kernel.org, agross@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
+ alsa-devel@alsa-project.org, "Neronin, Niklas" <niklas.neronin@intel.com>
+References: <20240102214549.22498-1-quic_wcheng@quicinc.com>
+ <20240102214549.22498-5-quic_wcheng@quicinc.com>
+ <734591a1-50b4-6dc7-0b93-077355ec12e4@linux.intel.com>
+ <7b2ec96b-b72f-c848-7c35-36e61a4072ac@quicinc.com>
+ <b254f73b-a1bc-3dd4-f485-a3acf556835d@quicinc.com>
+ <2178e799-2068-7443-59b2-310dfdd1ddee@linux.intel.com>
+ <ae64ce69-dc1b-1534-7950-0a35c4a56f58@quicinc.com>
+ <ff0bff8b-f26a-87bd-9762-9f2af98abcca@quicinc.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v12 04/41] usb: host: xhci-mem: Cleanup pending secondary
+ event ring events
+In-Reply-To: <ff0bff8b-f26a-87bd-9762-9f2af98abcca@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Now that mode is in struct coresight_device, sets can be wrapped. This
-also allows us to add a sanity check that there have been no concurrent
-modifications of mode. Currently all usages of local_set() were inside
-the device's spin locks so this new warning shouldn't be triggered.
+On 26.1.2024 23.13, Wesley Cheng wrote:
+> Hi Mathias,
+> 
+> On 1/16/2024 12:24 PM, Wesley Cheng wrote:
+>> Hi Mathias,
+>>
+>> On 1/15/2024 6:01 AM, Mathias Nyman wrote:
+>>> On 10.1.2024 1.42, Wesley Cheng wrote:
+>>>> Hi Mathias,
+>>>>
+>>>> On 1/8/2024 12:51 PM, Wesley Cheng wrote:
+>>>>> Hi Mathias,
+>>>>>
+>>>>> On 1/4/2024 6:48 AM, Mathias Nyman wrote:
+>>>>>> On 2.1.2024 23.45, Wesley Cheng wrote:
+>>>>>>> As part of xHCI bus suspend, the XHCI is halted.  However, if there are
+>>>>>>> pending events in the secondary event ring, it is observed that the xHCI
+>>>>>>> controller stops responding to further commands upon host or device
+>>>>>>> initiated bus resume.  Iterate through all pending events and update the
+>>>>>>> dequeue pointer to the beginning of the event ring.
+>>>>>>>
+>>>>>>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+>>>>>> ...
+>>>>>>> +/*
+>>>>>>> + * Move the event ring dequeue pointer to skip events kept in the secondary
+>>>>>>> + * event ring.  This is used to ensure that pending events in the ring are
+>>>>>>> + * acknowledged, so the XHCI HCD can properly enter suspend/resume. The
+>>>>>>> + * secondary ring is typically maintained by an external component.
+>>>>>>> + */
+>>>>>>> +void xhci_skip_sec_intr_events(struct xhci_hcd *xhci,
+>>>>>>> +    struct xhci_ring *ring,    struct xhci_interrupter *ir)
+>>>>>>> +{
+>>>>>>> +    union xhci_trb *erdp_trb, *current_trb;
+>>>>>>> +    u64 erdp_reg;
+>>>>>>> +    u32 iman_reg;
+>>>>>>> +    dma_addr_t deq;
+>>>>>>> +
+>>>>>>> +    /* disable irq, ack pending interrupt and ack all pending events */
+>>>>>>> +    xhci_disable_interrupter(ir);
+>>>>>>> +    iman_reg = readl_relaxed(&ir->ir_set->irq_pending);
+>>>>>>> +    if (iman_reg & IMAN_IP)
+>>>>>>> +        writel_relaxed(iman_reg, &ir->ir_set->irq_pending);
+>>>>>>> +
+>>>>>>> +    /* last acked event trb is in erdp reg  */
+>>>>>>> +    erdp_reg = xhci_read_64(xhci, &ir->ir_set->erst_dequeue);
+>>>>>>> +    deq = (dma_addr_t)(erdp_reg & ERST_PTR_MASK);
+>>>>>>> +    if (!deq) {
+>>>>>>> +        xhci_err(xhci, "event ring handling not required\n");
+>>>>>>> +        return;
+>>>>>>> +    }
+>>>>>>> +
+>>>>>>> +    erdp_trb = current_trb = ir->event_ring->dequeue;
+>>>>>>> +    /* read cycle state of the last acked trb to find out CCS */
+>>>>>>> +    ring->cycle_state = le32_to_cpu(current_trb->event_cmd.flags) & TRB_CYCLE;
+>>>>>>> +
+>>>>>>> +    while (1) {
+>>>>>>> +        inc_deq(xhci, ir->event_ring);
+>>>>>>> +        erdp_trb = ir->event_ring->dequeue;
+>>>>>>> +        /* cycle state transition */
+>>>>>>> +        if ((le32_to_cpu(erdp_trb->event_cmd.flags) & TRB_CYCLE) !=
+>>>>>>> +            ring->cycle_state)
+>>>>>>> +            break;
+>>>>>>> +    }
+>>>>>>> +
+>>>>>>> +    xhci_update_erst_dequeue(xhci, ir, current_trb, true);
+>>>>>>> +}
+>>>>>>
+>>>>>> Code above is very similar to the existing event ring processing parts of xhci_irq()
+>>>>>> and xhci_handle_event()
+>>>>>>
+>>>>>> I'll see if I can refactor the existing event ring processing, decouple it from
+>>>>>> event handling so that it could be used by primary and secondary interrupters with
+>>>>>> handlers, and this case where we just want to clear the event ring.
+>>>>>>
+>>>>>
+>>>>> Thanks, that makes sense.  Will take a look as well.
+>>>>>
+>>>>
+>>>> How about something like the below?  Tested this on my set up and everything looks to be working fine.  Had to add another param to struct xhci_interrupters to tell the XHCI interrupt handler to say if that particular interrupter wants to skip_events (handling).  This way, its something that the class driver utilizing the interrupter will have to tell XHCI sideband.  It would allow the user to determine if they want to use the interrupter to actually handle events or not on the proc running Linux.
+>>>>
+>>>
+>>> Yes, I have something similar.
+>>> I'll share it soon, just need to
+>>> clean it up a bit fist.
+>>>
+>>
+>> Sure, no worries.  Will test it when its available.  Thanks!
+>>
+> 
+> Was just wondering if you had the time to clean up the changes?  If not, maybe you can provide a patch with whatever you have, and I can try my best to clean it up to your liking?  Thanks!
 
-coresight_take_mode() could maybe have been used in place of adding
-the warning, but there may be use cases which set the mode to the same
-mode which are valid but would fail in coresight_take_mode() because
-it requires the device to only be in the disabled state.
+Sure, got stuck fixing other issues.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- drivers/hwtracing/coresight/coresight-etb10.c    |  6 +++---
- .../hwtracing/coresight/coresight-etm3x-core.c   |  4 ++--
- .../hwtracing/coresight/coresight-etm4x-core.c   |  4 ++--
- drivers/hwtracing/coresight/coresight-stm.c      |  2 +-
- drivers/hwtracing/coresight/coresight-tmc-etf.c  | 10 +++++-----
- drivers/hwtracing/coresight/coresight-tmc-etr.c  |  6 +++---
- drivers/hwtracing/coresight/ultrasoc-smb.c       |  6 +++---
- include/linux/coresight.h                        | 16 ++++++++++++++++
- 8 files changed, 35 insertions(+), 19 deletions(-)
+Code is not yet cleaned up, commit messages are not ready etc, but current work is in
+a fix_eventhandling branch:
 
-diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-index 4e82d9c20d36..aea4ce6fb0b6 100644
---- a/drivers/hwtracing/coresight/coresight-etb10.c
-+++ b/drivers/hwtracing/coresight/coresight-etb10.c
-@@ -158,7 +158,7 @@ static int etb_enable_sysfs(struct coresight_device *csdev)
- 		if (ret)
- 			goto out;
- 
--		local_set(&csdev->mode, CS_MODE_SYSFS);
-+		coresight_set_mode(csdev, CS_MODE_SYSFS);
- 	}
- 
- 	csdev->refcnt++;
-@@ -214,7 +214,7 @@ static int etb_enable_perf(struct coresight_device *csdev, void *data)
- 	if (!ret) {
- 		/* Associate with monitored process. */
- 		drvdata->pid = pid;
--		local_set(&drvdata->csdev->mode, CS_MODE_PERF);
-+		coresight_set_mode(drvdata->csdev, CS_MODE_PERF);
- 		csdev->refcnt++;
- 	}
- 
-@@ -365,7 +365,7 @@ static int etb_disable(struct coresight_device *csdev)
- 	etb_disable_hw(drvdata);
- 	/* Dissociate from monitored process. */
- 	drvdata->pid = -1;
--	local_set(&csdev->mode, CS_MODE_DISABLED);
-+	coresight_set_mode(csdev, CS_MODE_DISABLED);
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
- 
- 	dev_dbg(&csdev->dev, "ETB disabled\n");
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-index 63991029cda0..bda9fb61559c 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-@@ -576,7 +576,7 @@ static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
- 
- 	/* The tracer didn't start */
- 	if (ret)
--		local_set(&drvdata->csdev->mode, CS_MODE_DISABLED);
-+		coresight_set_mode(drvdata->csdev, CS_MODE_DISABLED);
- 
- 	return ret;
- }
-@@ -693,7 +693,7 @@ static void etm_disable(struct coresight_device *csdev,
- 	}
- 
- 	if (mode)
--		local_set(&csdev->mode, CS_MODE_DISABLED);
-+		coresight_set_mode(csdev, CS_MODE_DISABLED);
- }
- 
- static const struct coresight_ops_source etm_source_ops = {
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index 08451b3f8eaa..2d0a9da610c3 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -859,7 +859,7 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
- 
- 	/* The tracer didn't start */
- 	if (ret)
--		local_set(&csdev->mode, CS_MODE_DISABLED);
-+		coresight_set_mode(csdev, CS_MODE_DISABLED);
- 
- 	return ret;
- }
-@@ -1021,7 +1021,7 @@ static void etm4_disable(struct coresight_device *csdev,
- 	}
- 
- 	if (mode)
--		local_set(&csdev->mode, CS_MODE_DISABLED);
-+		coresight_set_mode(csdev, CS_MODE_DISABLED);
- }
- 
- static const struct coresight_ops_source etm4_source_ops = {
-diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-index 53a07a536968..6e801191d1db 100644
---- a/drivers/hwtracing/coresight/coresight-stm.c
-+++ b/drivers/hwtracing/coresight/coresight-stm.c
-@@ -272,7 +272,7 @@ static void stm_disable(struct coresight_device *csdev,
- 
- 		pm_runtime_put(csdev->dev.parent);
- 
--		local_set(&csdev->mode, CS_MODE_DISABLED);
-+		coresight_set_mode(csdev, CS_MODE_DISABLED);
- 		dev_dbg(&csdev->dev, "STM tracing disabled\n");
- 	}
- }
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index 77ef67c976e9..d4f641cd9de6 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -228,7 +228,7 @@ static int tmc_enable_etf_sink_sysfs(struct coresight_device *csdev)
- 
- 	ret = tmc_etb_enable_hw(drvdata);
- 	if (!ret) {
--		local_set(&csdev->mode, CS_MODE_SYSFS);
-+		coresight_set_mode(csdev, CS_MODE_SYSFS);
- 		csdev->refcnt++;
- 	} else {
- 		/* Free up the buffer if we failed to enable */
-@@ -292,7 +292,7 @@ static int tmc_enable_etf_sink_perf(struct coresight_device *csdev, void *data)
- 		if (!ret) {
- 			/* Associate with monitored process. */
- 			drvdata->pid = pid;
--			local_set(&csdev->mode, CS_MODE_PERF);
-+			coresight_set_mode(csdev, CS_MODE_PERF);
- 			csdev->refcnt++;
- 		}
- 	} while (0);
-@@ -349,7 +349,7 @@ static int tmc_disable_etf_sink(struct coresight_device *csdev)
- 	tmc_etb_disable_hw(drvdata);
- 	/* Dissociate from monitored process. */
- 	drvdata->pid = -1;
--	local_set(&csdev->mode, CS_MODE_DISABLED);
-+	coresight_set_mode(csdev, CS_MODE_DISABLED);
- 
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
- 
-@@ -375,7 +375,7 @@ static int tmc_enable_etf_link(struct coresight_device *csdev,
- 	if (csdev->refcnt == 0) {
- 		ret = tmc_etf_enable_hw(drvdata);
- 		if (!ret) {
--			local_set(&csdev->mode, CS_MODE_SYSFS);
-+			coresight_set_mode(csdev, CS_MODE_SYSFS);
- 			first_enable = true;
- 		}
- 	}
-@@ -405,7 +405,7 @@ static void tmc_disable_etf_link(struct coresight_device *csdev,
- 	csdev->refcnt--;
- 	if (csdev->refcnt == 0) {
- 		tmc_etf_disable_hw(drvdata);
--		local_set(&csdev->mode, CS_MODE_DISABLED);
-+		coresight_set_mode(csdev, CS_MODE_DISABLED);
- 		last_disable = true;
- 	}
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index 383cb8647589..e75428fa1592 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -1237,7 +1237,7 @@ static int tmc_enable_etr_sink_sysfs(struct coresight_device *csdev)
- 
- 	ret = tmc_etr_enable_hw(drvdata, sysfs_buf);
- 	if (!ret) {
--		local_set(&csdev->mode, CS_MODE_SYSFS);
-+		coresight_set_mode(csdev, CS_MODE_SYSFS);
- 		csdev->refcnt++;
- 	}
- 
-@@ -1684,7 +1684,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
- 	if (!rc) {
- 		/* Associate with monitored process. */
- 		drvdata->pid = pid;
--		local_set(&csdev->mode, CS_MODE_PERF);
-+		coresight_set_mode(csdev, CS_MODE_PERF);
- 		drvdata->perf_buf = etr_perf->etr_buf;
- 		csdev->refcnt++;
- 	}
-@@ -1730,7 +1730,7 @@ static int tmc_disable_etr_sink(struct coresight_device *csdev)
- 	tmc_etr_disable_hw(drvdata);
- 	/* Dissociate from monitored process. */
- 	drvdata->pid = -1;
--	local_set(&csdev->mode, CS_MODE_DISABLED);
-+	coresight_set_mode(csdev, CS_MODE_DISABLED);
- 	/* Reset perf specific data */
- 	drvdata->perf_buf = NULL;
- 
-diff --git a/drivers/hwtracing/coresight/ultrasoc-smb.c b/drivers/hwtracing/coresight/ultrasoc-smb.c
-index ad533aeb6786..1ad6f319a096 100644
---- a/drivers/hwtracing/coresight/ultrasoc-smb.c
-+++ b/drivers/hwtracing/coresight/ultrasoc-smb.c
-@@ -211,7 +211,7 @@ static void smb_enable_sysfs(struct coresight_device *csdev)
- 		return;
- 
- 	smb_enable_hw(drvdata);
--	local_set(&csdev->mode, CS_MODE_SYSFS);
-+	coresight_set_mode(csdev, CS_MODE_SYSFS);
- }
- 
- static int smb_enable_perf(struct coresight_device *csdev, void *data)
-@@ -234,7 +234,7 @@ static int smb_enable_perf(struct coresight_device *csdev, void *data)
- 	if (drvdata->pid == -1) {
- 		smb_enable_hw(drvdata);
- 		drvdata->pid = pid;
--		local_set(&csdev->mode, CS_MODE_PERF);
-+		coresight_set_mode(csdev, CS_MODE_PERF);
- 	}
- 
- 	return 0;
-@@ -297,7 +297,7 @@ static int smb_disable(struct coresight_device *csdev)
- 
- 	/* Dissociate from the target process. */
- 	drvdata->pid = -1;
--	local_set(&csdev->mode, CS_MODE_DISABLED);
-+	coresight_set_mode(csdev, CS_MODE_DISABLED);
- 	dev_dbg(&csdev->dev, "Ultrasoc SMB disabled\n");
- 
- 	return 0;
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 4a728dd9338a..281b1b2603d8 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -596,6 +596,22 @@ static inline enum cs_mode coresight_get_mode(struct coresight_device *csdev)
- 	return local_read(&csdev->mode);
- }
- 
-+static inline void coresight_set_mode(struct coresight_device *csdev,
-+				      enum cs_mode new_mode)
-+{
-+	enum cs_mode current_mode = coresight_get_mode(csdev);
-+
-+	/*
-+	 * Changing to a new mode must be done from an already disabled state
-+	 * unless it's synchronized with coresight_take_mode(). Otherwise the
-+	 * device is already in use and signifies a locking issue.
-+	 */
-+	WARN(new_mode != CS_MODE_DISABLED && current_mode != CS_MODE_DISABLED &&
-+	     current_mode != new_mode, "Device already in use\n");
-+
-+	local_set(&csdev->mode, new_mode);
-+}
-+
- extern struct coresight_device *
- coresight_register(struct coresight_desc *desc);
- extern void coresight_unregister(struct coresight_device *csdev);
--- 
-2.34.1
+git://git.kernel.org/pub/scm/linux/kernel/git/mnyman/xhci.git  fix_eventhandling
+https://git.kernel.org/pub/scm/linux/kernel/git/mnyman/xhci.git/log/?h=fix_eventhandling
+
+I was in the middle of figuring out when and where the ip_autoclear and interrupt
+moderation values should be set for secondary interrupters
+
+Thanks
+Mathias
 
