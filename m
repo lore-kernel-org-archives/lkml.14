@@ -1,201 +1,105 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2088.outbound.protection.partner.outlook.cn [139.219.146.88])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB730D27E;
-	Mon, 29 Jan 2024 01:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706492016; cv=fail; b=KOIFI5pU0iyo9n88bbSUKXD7giHwfyETg37c1x3wDoGpzSxvqSw4sv0WzRPTo4jmrrKgiTk1aKIr5X11bMOLQ09uaj0tZpx0Gd7p7LelSmCBCRunjbt/qyaMwdPXNyn24KSpnCQaZB0sbi6CAzzO7aFEjLR3Gm6PRbuAZGshTcI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706492016; c=relaxed/simple;
-	bh=Wq4Z/mmbsWDKhaXfuZB64deZXyVlxQgOmWnGhLzld0w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MfGDhW6sGa4KbT+XQX7GgrQzkSePEE2lyWvn/Ri75fBKfEnaaMhNLNTmqfm5p7nobn27AQaFA4bVJFkELA4MRImRMZ4OaR9sur5KjRZcH+UriLGfPnW8H7qbE/1SwqZtSET6+cTOkN6OpT8mOgzjKXOQcPevKWu9V/RHip+0ZfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=km9KOjXi8bxbfJEwpus3ek/h2j1tPxOqCYbR8QOU8mh4hOaGMKFfVc6kqrPry4Ag3h19OP/V2NzNQAkyM9u+Qsm246GN13IZxZauEYHuu7CUV/jw+Sk1UtHn8FF6QK6sE6lTWKlxuZo7ha23DMrUNWy36+FpaxtLxgVGDW2rYeJ7gHsaUEjgfLMVA0FS5hFqodKgQFKCg2GQ+za+V4hSFhm7+We/KNn1yr9gvrtSXXhGbm99PzpFksncTo8ouQMAsUNSSH5YzeP9PCi+0COqwkM0dxl7yc/m1R4q6ilC4yUZY8BcyZiiUJZWVgGqi388Z6yTOiVQqGdV++m0RHDfzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Pc2T6SbVvFNGAc7jANlqkHZ/EYw1YXpAsFWAuojjcfk=;
- b=Piibm6atR1mK/iTBUgK2rV5tUSkwu4la2ImA9dz84AZ3Z8cAmQ1pbfrJYJLgo8MJNBGyjWt2bluXC7c2OAxVXOE42+OuabLMJVY8ZVCZ1Cyuv2gwmXBH6RKiaD62GIwH/2Bpk+wT+v5RrAaIxLGB0Hmpai2eHM6VdUpLb94kRSZ8TndnGfef94GHHUH5mWRx0RFVqGDNN2osUW9gbFgmi/l/RXn3mYqT6Zkmh7amQIuUz5+7ZnR68zJikQxoTA1H1smkH8P8iZee4woGV6wm7DPIYwl/wPj6i09CL35SY8UW1tMPivC5an82moyQ5EiS1ISbLlHBtns2DbKX8L3C1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:18::12) by BJXPR01MB0630.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:14::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.28; Mon, 29 Jan
- 2024 01:00:13 +0000
-Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
- ([fe80::1ea1:19d5:efef:6fc6]) by
- BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn ([fe80::1ea1:19d5:efef:6fc6%4])
- with mapi id 15.20.7228.029; Mon, 29 Jan 2024 01:00:13 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v14,RESEND 07/22] PCI: microchip: Rename two setup functions
-Date: Mon, 29 Jan 2024 08:59:52 +0800
-Message-Id: <20240129005958.3613-6-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240129005958.3613-1-minda.chen@starfivetech.com>
-References: <20240129005958.3613-1-minda.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SHXPR01CA0010.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1b::19) To BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:18::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08579F9EA
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 01:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706492055; cv=none; b=a9s2+xOzbY/xphg4CscfnWJJg8fBPLfBHiUS/DjU0ofY3Uan0aNIJLUDVJCNnFfz9/Bs3G+x1zUKlpvuu4HQjPfM8nc2NoziEDpFIC6rqo08aDsJ/cmGSr8YhELdGMz6vNYyvpZ1WDAxYEiTHH/06gAtPjrDev/zle7p/oI9bIY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706492055; c=relaxed/simple;
+	bh=Sn3+afSObecsLwVspCGlRr2u/eqvfC8YAyQ9sYvfkw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s/abfyGIkRAdI3z5gbt2sfVXzIlP0azLEZ2n9dsdsQZd/USGP2+YuCoQTnz1spHtxxwhAvCAC1tjdy2GHFaPaWa96+ymLHuUJn8f85E1lhYBMp/pYNjw2pIj0A0mTmHQyfVs0FwrGRLRakASn4zvHItlVSJAIW7TW+8OJmE8k2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gWZNODXq; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gWZNODXq"
+Date: Sun, 28 Jan 2024 20:34:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1706492051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qN1FxCPOJ5H4DfTAIjDzCCL68C4YSsHpS9Bz1bmn1k0=;
+	b=gWZNODXqBwsyFdMkaap/3eI4ToaTkSkd2jmZCRqH68A4L/qscT0n11KdUHXc5vOwx69PoY
+	zs+xKjY9vH52zOsb/4b+ZYKwL+JSWIDxGKNoASizHgo/AC7LnisSe6CHKVNBtCIyRE3JsO
+	Gs/1pjjvKfQqQkF20NpSI01rtZ6LL4I=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: boqun.feng@gmail.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, peterz@infradead.org
+Subject: Re: [PATCH 4/4] af_unix: convert to lock_cmp_fn
+Message-ID: <x7ido6w436gbs5ibdunezldhi6hisjck6rtxtag5g7lo6zt2o2@752ok7ean62y>
+References: <suyvonwf55vfeumeujeats2mtozs2q4wcx6ijz4hqfd54mibjj@6dt26flhrfdh>
+ <20240128205632.93670-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BJXPR01MB0855:EE_|BJXPR01MB0630:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1fe42758-e9f6-4055-da68-08dc2065a644
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rzPzAp0Vkssk5U6gcw6bK5awj4fpOPMIO/SheX+6E4eHhwQ2XyVBHkdPhJ2yGSCpnzJKS84W38hNYi6cpC97x3Hy3Ail1YUBPMo0EKhIGdJoz7azszeSQuzzKK2LXVT4Ienq8Y9/CrZn3RLiop/6eUDAkS8WpIj//W+o1Wk2glf0/WZtGMuxCteLTPEXWX6SDtW5LwMbZlviZKSPqksr5mVnIOSnhxVeE1tEcR7nHQzhYdx5ZWT1NkAzNnf5VoVMKtOzIKRMazcmWeg4ERJb7D9pRvOGs9cEcMqp1KPvWR05i9bseXStH5jEzBDQGGMUxSIPujNwGqyrXQlNjqpTM3FnOj4X3oR4xpSFq5m4O4FhKUe1ivJo7ux2U7vN59wTQORrp8Hc3oLowh+fdzO6+SvMm44XEJDCLYl0iPFIbvkDAWX6+iWEuYGglfhSHWI2+d6JjznTd+bo2zwrSTz9f8WAiyql54SBoSF1tLQo7bIYvZoPRcRp5nlnRlcEXh5vEqCN2Tx8Puaahc/OjX7i+JWiy8ll5h8lOrG8xVc534Hd2uYbl6SyNO/49EsSSJQz
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(136003)(39830400003)(396003)(346002)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(83380400001)(41320700001)(40180700001)(86362001)(40160700002)(36756003)(38350700005)(1076003)(38100700002)(2616005)(26005)(107886003)(2906002)(52116002)(508600001)(6666004)(41300700001)(110136005)(66946007)(66556008)(66476007)(54906003)(5660300002)(8936002)(4326008)(44832011)(8676002)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?t8paODpAQc+EwPIIz/znKVLyqCyAz9cguEd280gP3PYmaWhYANdR7ZoTuwPB?=
- =?us-ascii?Q?XcLIpG5xKoxTOsHTIpbHgnclGPF9mQtXrV7VbfyY7eXeQCHIDDET1wvv2AVe?=
- =?us-ascii?Q?EvHHOtxtPhcVacWhkEnYTtSBSvG1/TAy3IbFc7G0A8g7FWqmDNXWvJG3oXk3?=
- =?us-ascii?Q?Gmf6SIXBXOwMQninlIVbBr0Ql7/frBblqIi40tarkVxy7/eEho3f3wbO5C/V?=
- =?us-ascii?Q?4zeTthsd7SiYSfsTnL/SeUeNbPhQzHe3fE4g9UYezYbjwyYd7cUK1AZHQgfM?=
- =?us-ascii?Q?vkEayh+CcuvRridXzHbmj41uWQWoCYZToQbIeX2nsWwn6XEgJvkWiLwQCLZK?=
- =?us-ascii?Q?+U17H4wEuIfxSv0W/XVUoSIilngQRmvo3FHpWySbwR1BE7RwfP3D/G9SOyhA?=
- =?us-ascii?Q?j8oXDi+BH+7Q2rqpa2PAdlXmjEL/Y7VOJUmLj+IgE0KS2m1YJGvzS7hDwnPM?=
- =?us-ascii?Q?ashYGWD5vG1b3Ec8j0viTqf+/XTYEdTItXCYwWU/LtUcoOukl+JrPGVZiZ0/?=
- =?us-ascii?Q?aEEWticVjXkWJQ15eCfbmDeIOWBlPH38btO3nx3FzWH+6PcdEc1XyZ8ILKfA?=
- =?us-ascii?Q?nRndjN5Zvi6e59Buprh3z8Hsgcugq6ScRcO5qms5d1Yjh83g4cP+UsZXQNi1?=
- =?us-ascii?Q?iir5kLl0ylbI0weFlCnM0E5dZOku6J1aj1uYUjX56mEip224BcQ0RXMFa9l/?=
- =?us-ascii?Q?+vekD0hYK4VgLEGoC+J0z5fqowoJFHFVa88v/62sBwuaVqqP6jqDuired1F/?=
- =?us-ascii?Q?Gpj9h3nyX1LQFhheEbQsq/p9pFlPXYo2SygTiDO7rNhw5428DgADdXryPihQ?=
- =?us-ascii?Q?0XCFr09jXAHXMJIzyrSYC+Nzgt9JFmAOtlq5fUd0JZRXT0z0oUzRzsjXZqLZ?=
- =?us-ascii?Q?ARMe20HPziqxPz/Kzp7gbK4o6npyISO7yXV/Vw0bzYvUgdxj552YUkP97Tul?=
- =?us-ascii?Q?rZ50XNWClvfpKyn/K8Fpkz6APXQqrfs/+vKAoh1LBRn6LFpNPwl2HBr/+Xyg?=
- =?us-ascii?Q?Sb/O5wT6vZzjWy0owp66Q8erob8psjjWsNkLWjynRhzVxE/BPIohf0RF1RVF?=
- =?us-ascii?Q?D8we8B4dCWQlQmTR0tgF9mNnjWhDAPFsfi3E4AihiAlmH4059RVCKhTsJ6Ch?=
- =?us-ascii?Q?lw9YHtwjyAd4nz0yXusFQzPDmuZwJRgmuBuSdEI6XQWGaY1O4/ewvVDPb1+b?=
- =?us-ascii?Q?2FLntVvfd5l/NDUr1FYpKKosv5Id6VmZpaYz+JSMSZH2acvGyteCluNRVO/7?=
- =?us-ascii?Q?jiVIEpZxKJ3BQaTmjjJusbYTKyQvRJgBUfdbTC5nW1m9BH5gDgI6Zs8jRkah?=
- =?us-ascii?Q?MIgXaxHfRxbbXd11by0wpi43/kNnXeFDxZ3dz+GtfNdFcchwNGiasp+J43VD?=
- =?us-ascii?Q?QW1ZDD4On0nRFQgzFTgCK3t2zZLu2V0cU+7SRctgsQQDczUZ9U5Qb8CiNy7Z?=
- =?us-ascii?Q?g+P8lA7uy6W261TdD5HNtwed7hc5+utXJCkceANmrulEYQ+Pawqo7q2DI8qO?=
- =?us-ascii?Q?wF6Nf4i7TxrZvIdnwVlXoGOwKhvQQMTcLVWDcXG7uIU7bkux5yR1icHlvBar?=
- =?us-ascii?Q?a7diCvPWOuXjC1Eu5mUDv8AqVQ9zgPkwnHCpYtX+d1tGYcZbv66+U21Uj6TV?=
- =?us-ascii?Q?XA=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fe42758-e9f6-4055-da68-08dc2065a644
-X-MS-Exchange-CrossTenant-AuthSource: BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 01:00:13.4600
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gWlhorAeZ4naVaqpSI1mUQMqleuSMMOcs5n9EA+lPFklrv+9XXnOok8vkawACcakXFb1h3wZjyAdcNxofA69dh3kRjZ3OVUQQsFzpMZievk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJXPR01MB0630
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240128205632.93670-1-kuniyu@amazon.com>
+X-Migadu-Flow: FLOW_OUT
 
-Rename two setup functions to plda prefix. Prepare to re-use these two
-setup function.
+On Sun, Jan 28, 2024 at 12:56:32PM -0800, Kuniyuki Iwashima wrote:
+> From: Kent Overstreet <kent.overstreet@linux.dev>
+> Date: Sun, 28 Jan 2024 14:38:02 -0500
+> > On Sun, Jan 28, 2024 at 12:28:38AM -0800, Kuniyuki Iwashima wrote:
+> > > From: Kent Overstreet <kent.overstreet@linux.dev>
+> > > Date: Fri, 26 Jan 2024 21:08:31 -0500
+> > > > Kill
+> > > >  - unix_state_lock_nested
+> > > >  - _nested usage for net->unx.table.locks[].
+> > > > 
+> > > > replace both with lock_set_cmp_fn_ptr_order(&u->lock).
+> > > > 
+> > > > The lock ordering in sk_diag_dump_icons() looks suspicious; this may
+> > > > turn up a real issue.
+> > > 
+> > > Yes, you cannot use lock_cmp_fn() for unix_state_lock_nested().
+> > > 
+> > > The lock order in sk_diag_dump_icons() is
+> > > 
+> > >   listening socket -> child socket in the listener's queue
+> > > 
+> > > , and the inverse order never happens.  ptr comparison does not make
+> > > sense in this case, and lockdep will complain about false positive.
+> > 
+> > Is that a real lock ordering? Is this parent -> child relationship well
+> > defined?
+> > 
+> > If it is, we should be able to write a lock_cmp_fn for it, as long as
+> > it's not some handwavy "this will never happen but _nested won't check
+> > for it" like I saw elsewhere in the net code... :)
+> 
+> The problem would be there's no handy way to detect the relationship
+> except for iterating the queue again.
+> 
+> ---8<---
+> static int unix_state_lock_cmp_fn(const struct lockdep_map *_a,
+> 				  const struct lockdep_map *_b)
+> {
+> 	const struct unix_sock *a = container_of(_a, struct unix_sock, lock.dep_map);
+> 	const struct unix_sock *b = container_of(_b, struct unix_sock, lock.dep_map);
+> 
+> 	if (a->sk.sk_state == TCP_LISTEN && b->sk.sk_state == TCP_ESTABLISHED) {
+> 		/* check if b is a's cihld */
+> 	}
+> 
+> 	/* otherwise, ptr comparison here. */
+> }
+> ---8<---
+> 
+> 
+> This can be resolved by a patch like this, which is in my local tree
+> for another series.
+> 
+> So, after posting the series, I can revisit this and write lock_cmp_fn
+> for u->lock.
 
-For two setup functions names are similar, rename mc_pcie_setup_windows()
-to plda_pcie_setup_iomems().
-
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
- .../pci/controller/plda/pcie-microchip-host.c | 24 +++++++++----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index a554a56cc0e8..9b367927cd32 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -838,9 +838,9 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
- 	return mc_allocate_msi_domains(port);
- }
- 
--static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
--				 phys_addr_t axi_addr, phys_addr_t pci_addr,
--				 size_t size)
-+static void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
-+				   phys_addr_t axi_addr, phys_addr_t pci_addr,
-+				   size_t size)
- {
- 	u32 atr_sz = ilog2(size) - 1;
- 	u32 val;
-@@ -876,8 +876,8 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
- }
- 
--static int mc_pcie_setup_windows(struct platform_device *pdev,
--				 struct plda_pcie_rp *port)
-+static int plda_pcie_setup_iomems(struct platform_device *pdev,
-+				  struct plda_pcie_rp *port)
- {
- 	void __iomem *bridge_base_addr = port->bridge_addr;
- 	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
-@@ -888,9 +888,9 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
- 	resource_list_for_each_entry(entry, &bridge->windows) {
- 		if (resource_type(entry->res) == IORESOURCE_MEM) {
- 			pci_addr = entry->res->start - entry->offset;
--			mc_pcie_setup_window(bridge_base_addr, index,
--					     entry->res->start, pci_addr,
--					     resource_size(entry->res));
-+			plda_pcie_setup_window(bridge_base_addr, index,
-+					       entry->res->start, pci_addr,
-+					       resource_size(entry->res));
- 			index++;
- 		}
- 	}
-@@ -1023,15 +1023,15 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	int ret;
- 
- 	/* Configure address translation table 0 for PCIe config space */
--	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
--			     cfg->res.start,
--			     resource_size(&cfg->res));
-+	plda_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
-+			       cfg->res.start,
-+			       resource_size(&cfg->res));
- 
- 	/* Need some fixups in config space */
- 	mc_pcie_enable_msi(port, cfg->win);
- 
- 	/* Configure non-config space outbound ranges */
--	ret = mc_pcie_setup_windows(pdev, &port->plda);
-+	ret = plda_pcie_setup_iomems(pdev, &port->plda);
- 	if (ret)
- 		return ret;
- 
--- 
-2.17.1
-
+Sounds good! Please CC me when you do.
