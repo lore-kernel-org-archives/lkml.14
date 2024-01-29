@@ -1,95 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D85158D64;
-	Mon, 29 Jan 2024 21:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741DA157E72;
+	Mon, 29 Jan 2024 21:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706562271; cv=none; b=Xx2NQuB3TmvY4Q54xBR9nsWEBOIWDIabkFHwcW+Isv9SZrXm20FmDtS6ZniwYgo/v/GgMoyL2TU1T3VPReKmJXZvEgXAk0EfuddQ3pEtwoocSMQrHNzUkEMsFDATwHL45dc4DTBjMd7OIl8z8GZeWnT7B9KEOB2XjnnBwzauAW4=
+	t=1706562413; cv=none; b=YirjOv4koDJYCbaNhyahLl5OyNVwpE0JxG59e/nGE7NYIspQdxR5pPCMbGhf7BLpeEXxNSWgQ2uJ2SF4GvkrX3sq7s9fkaLl3XxToDEAz0Jrbau0Aquyrc2ulSPspWo4MKLC9rcqY//skr9db9ccrjIrgXhaJ8xSRAJypwW0t9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706562271; c=relaxed/simple;
-	bh=XDN/zIhlQxTNPGPKvJfrKfrDPmIin/uSBcSP0Tsu0yY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cwuyGlZ7hW70sil5xWp9Tqa6sxprEqGS8kI8p0RRk2qlwk8LTCwRXGLQxzqnNS9tY7FrAhKr3n2F5CApbA0FrxwH7uI/7H8l5WxNtylHvuwKRgfFHUpPF2rYmWZt2ZVBMVUk6qBVl3A6gu0pJ08zy3ItZkXyEYF9FIYLTet+Kto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YblNVKav; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706562413; c=relaxed/simple;
+	bh=huTRzi08F0C7MipcdwWe4Ussu/u99HDe6usjofLClk8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pdH8ZxBjF459CKT+NL7owV6R+YPjRHYFgdT8WO2mtfqEfDccKE36H44qqCmfxDtCyCmZA+Y5UjJ2FL1hsm9yKYG+IVnnSPtZkv3Exlb0L/xEzIfxfHihj+xNUgc1YqDbNYc9hGvIJiG8GBezDnHSNIG3zkB5IdgvhOa0mmccfBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=ZWoyjvOU; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YblNVKav"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A83FC43399;
-	Mon, 29 Jan 2024 21:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706562271;
-	bh=XDN/zIhlQxTNPGPKvJfrKfrDPmIin/uSBcSP0Tsu0yY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YblNVKavSXi8rgGT1xsktmVVJKTR+Z6woc4IBj6FaYb8zhPGwCSHXipE1+a2dZO91
-	 RNBou8glk8TSuv/Z+FHplscPy4MHwIgb6O8nGQGGdOOXbQQig362CBEriQMatrrHbK
-	 /662rwz80lYbn99z6PM/lV2/W0InWNzZ8Zvu7a/5SWdRt4Q8g4Wk21lHFEx2rFuDdJ
-	 ojNmXpBBBmtjAS74X4/PJlU14Ybn/eR84VLpXliR0gCTXiRIEsYY3F6+ddKkymn8PY
-	 efTxrtQkXL+wFM9iTnqJ3NzyiRl1zP8c1W76cBeQvPDxVVUIf61rGUpCdm/ZNHAXQR
-	 LMfccwKmRHKbw==
-Date: Mon, 29 Jan 2024 13:04:29 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Emil Renner Berthing <kernel@esmil.dk>, Samin Guo
- <samin.guo@starfivetech.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro
- <peppe.cavallaro@st.com>, Jacob Keller <jacob.e.keller@intel.com>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: net: starfive,jh7110-dwmac: Add
- JH7100 SoC compatible
-Message-ID: <20240129130429.34094446@kernel.org>
-In-Reply-To: <1fa5aeee-a205-438a-a0fa-54643ffa41d0@collabora.com>
-References: <20240126191319.1209821-1-cristian.ciocaltea@collabora.com>
-	<20240126191319.1209821-2-cristian.ciocaltea@collabora.com>
-	<0a6f6dcb-18b0-48d5-8955-76bce0e1295d@linaro.org>
-	<e29ae12b-5823-4fba-8029-e8e490462138@collabora.com>
-	<56f3bd3c-c099-405b-837b-16d8aeb4cc4b@lunn.ch>
-	<8c4cfc54-bd23-4d56-a4ae-9f3dd5cedb59@collabora.com>
-	<e99e72b3-e0f6-4a80-82c8-bd60c36d180a@lunn.ch>
-	<f113c4b6-a074-4566-b69b-f25c9590d23f@collabora.com>
-	<20240129122651.4b3c7b8e@kernel.org>
-	<1fa5aeee-a205-438a-a0fa-54643ffa41d0@collabora.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZWoyjvOU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1706562410;
+	bh=huTRzi08F0C7MipcdwWe4Ussu/u99HDe6usjofLClk8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZWoyjvOUAKRorOkBf1VRCuUe3muZT9Jazkxz9NgPX6vA5tHzdv9fZAMvOwYQUQFS/
+	 ykyGlVWSZVdQ0AmTeMSrDjJkEHWdN1z2Rkg+mdr/4zNt3mUu8G59Y1UA3dQ176ZmpR
+	 XNnmvuPAdpd+gxgklREaTW4KM1V+5TYa9+K78amLQzWaxBqWfXKQpPUZi200cIw2Ld
+	 Z3msxyPrO6jmtz8APzkLg3rQ9tiibW5MVa2+hL9owNVSrTbGjPvM2VkNg7OI3Jte1b
+	 FXwljb10nWNnW/XdQvOwCcgvrIynWSjuNs5CGDe0uL9fagDqdafBZW/LVhSU2RA7Ha
+	 tXwBGOdG23nsA==
+Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TP17t2bfzzVJ6;
+	Mon, 29 Jan 2024 16:06:50 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jan Kara <jack@suse.com>,
+	linux-ext4@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	Matthew Wilcox <willy@infradead.org>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: [RFC PATCH 4/7] ext2: Use dax_is_supported()
+Date: Mon, 29 Jan 2024 16:06:28 -0500
+Message-Id: <20240129210631.193493-5-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240129210631.193493-1-mathieu.desnoyers@efficios.com>
+References: <20240129210631.193493-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 29 Jan 2024 22:57:11 +0200 Cristian Ciocaltea wrote:
-> > First off, have another read of our rules:
-> > https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#tl-dr
-> > :)  
-> 
-> Oh, net/net-next suffix is required, will make sure to add it next time!
-> 
-> The 24h period restriction is still applicable for a RESEND that is
-> meant to quickly fix a previous submission issue?
+Use dax_is_supported() to validate whether the architecture has
+virtually aliased caches at mount time.
 
-Yes, reposting too quickly often leads to reviewers looking at 
-the wrong version.
+This is relevant for architectures which require a dynamic check
+to validate whether they have virtually aliased data caches
+(ARCH_HAS_CACHE_ALIASING_DYNAMIC=y).
 
-> > IMHO forwarding the review tag to a newer version of the set yourself
-> > (like I just did) is fine. None of the tooling I know checks if that
-> > the person posting the tag matches the From:  
-> 
-> Hmm, I didn't actually test, but according to the link Andrew posted
-> above, for b4 it might be necessary to make use of the
-> `--sloppy-trailers` flag:
-> 
-> "Accept trailers where the email address of the sender differs from the
-> email address found in the trailer itself."
+Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Jan Kara <jack@suse.com>
+Cc: linux-ext4@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-arch@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+---
+ fs/ext2/super.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Hah, interesting. Using a corporate address for the tag but ML-friendly
-account for sending the email is quite common. I'm surprised. In any
-case, our tools don't do this. I think it's kinda pointless unless the
-tool can also prove provenance of the tags already in the patch...
+diff --git a/fs/ext2/super.c b/fs/ext2/super.c
+index 01f9addc8b1f..0398e7a90eb6 100644
+--- a/fs/ext2/super.c
++++ b/fs/ext2/super.c
+@@ -585,13 +585,13 @@ static int parse_options(char *options, struct super_block *sb,
+ 			set_opt(opts->s_mount_opt, XIP);
+ 			fallthrough;
+ 		case Opt_dax:
+-#ifdef CONFIG_FS_DAX
+-			ext2_msg(sb, KERN_WARNING,
+-		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+-			set_opt(opts->s_mount_opt, DAX);
+-#else
+-			ext2_msg(sb, KERN_INFO, "dax option not supported");
+-#endif
++			if (dax_is_supported()) {
++				ext2_msg(sb, KERN_WARNING,
++					 "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
++				set_opt(opts->s_mount_opt, DAX);
++			} else {
++				ext2_msg(sb, KERN_INFO, "dax option not supported");
++			}
+ 			break;
+ 
+ #if defined(CONFIG_QUOTA)
+-- 
+2.39.2
+
