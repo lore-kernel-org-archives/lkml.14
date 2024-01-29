@@ -1,59 +1,59 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674D362A04
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C7E63502
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706534353; cv=none; b=NvYKd7/6n7dYuU88GnWzqwNMQ+H1/OzeqPzS27SBeI4snyRjkqCZxXYfx4ztjc89PoEG5zCmdeWwkUXhK2oGQMEt23czOHEOFPJPy9FfKlJldGsec7XQpl8o/wOx2hT2nNrsk0IpqrToyhGqdccNM5Pjix2P4XtaVEpwxheBnhQ=
+	t=1706534356; cv=none; b=dOnshJ2UWDa053b4c5aPr955Kl2bZuQs7R4tvaG8ykLhUKpqamwWwcmssG1QjS+pjeCUt7SdM9xbsBW3x+am3scUmghrkl/NN56uUhxHSPRJD9HDutMZHZOQ1X2Grk7qBkYFP6dr8ips3lFOhYnjGgah4Xrl+AfENn3jnwTWG/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706534353; c=relaxed/simple;
-	bh=I5PGhsrEZKj3ZMDpnONsJnotEiBo2BLGM1Eha6wla9A=;
+	s=arc-20240116; t=1706534356; c=relaxed/simple;
+	bh=rfGkK17/i+BleU3qzcJWNOMRKGI09BZOvobQeTG7kY0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g5Hi+LCwzAvFHBEdVoT+8nKnQSGzpooglAUJViKNpJRZ1DVTgOK79aEQVsxUrVc96wHwVeJVn0d4xVbMVdRVBhJnkxyYsB1hJyLbXGb/uOzJdSQH3oamYWzMBgeP5qZRRIN5DCTDzYQq80x1b9YBrr7FP6/yG+5dJ/NvIpq8NRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Oi5Lm1f7; arc=none smtp.client-ip=209.85.218.43
+	 In-Reply-To:To:Cc; b=LEiarKB41IqckReyCPDw7AgHHM5SBp6ab7C5TzPo/9eCOJazOtGrqs57xe3xKXzT2XJU8gVH9aDzKdrFbuMqYEsjCJj8Ke842As098UYDEvlYnyPkDZ23vNVfNzAiMpw233H17Aehg5+MRxhEZzfXa0qR+9pZ32h2T1kgUopHu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ouw+WIwx; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oi5Lm1f7"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a30e445602cso782971866b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:19:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ouw+WIwx"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a35e9161b8cso66211066b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:19:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706534349; x=1707139149; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706534353; x=1707139153; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=l/n0pLt0vces2tTuUUWLXoG//HgBuOzntBxfu0L+6g8=;
-        b=Oi5Lm1f7V4DS/mtKtqCLQykaAyMxfZzF0IAJ5AX8s5rh/IKYf19rKyMHRF19m09He4
-         Tm2URMEPB2mLUnkT+CY5LVsA4Yni7wFQIa/URPRK/9NaxvI+z56s2mvVKujkOawNM4bJ
-         7Kr3KiEWsqnSYoq5B44Hqyfp6amxqQni/A0szjhV6mICdf2QuBUHI5ElG3UYPedUX0ps
-         PtqF8HJTkUXTK2YoW+c1O90ls/8blcfPAGVWDT8+qm+nmfR8uq4e8MTlddlSS6+bu6nk
-         eQrdAts8GHvdX1YEOGJcLLWtlrBkOFzEOAMFgADlX+srQH1hBR0qtPrhezqG4ir9W/xR
-         N9dA==
+        bh=avsFIxhX/jtxHDt6bjDOfQ40vEVTMaWnxh/VVgqRP8I=;
+        b=ouw+WIwxnyJfgu6SCswE/ld+7995sLIxC2wVkXUm1cP9b5AtMRt03KWRCGxD1HwXFU
+         Rt1jgv4EGMp2vEjnAE/m+It6xFoNZKmlMOVR/NhO4SK8BQj7SB26AKn64uUt1n0txgzR
+         Eo//CMGZ20eP7PDwhsczRFxRzwtpoMdC0KPrexenpXWZWvAQl+jTdQdtEJ3ILlg5cOw3
+         K7ZoSDPaLfYWE2v7+S9W9YT8RD2lhKe432Py3j+OIYPhYk9GMQ06s+BNwLMXE7foOC8X
+         KxzKOR5Wv+8UP2P5zh76ZV/caBQdOe559ThnOqihFkJMixw0ycR/yUlUatkm0+p5QMri
+         Hoog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706534349; x=1707139149;
+        d=1e100.net; s=20230601; t=1706534353; x=1707139153;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l/n0pLt0vces2tTuUUWLXoG//HgBuOzntBxfu0L+6g8=;
-        b=bIUETAzHdEsVIN4m68G/5GZ5L+Pe+Jmzj+GTXWNMwr8MwzDtol8VMe7gPrUjaCYTp4
-         xQYdGHUw2H35g3HFAz5JmIIDfeHS2m2z0P79M8/QGo4gX1p40K/9/7H/41ehsMeVdqPH
-         IvbI+eUPH+HmqIcJhzi+50o44yYbQhe2BSTs4coDwL3ctloW4KioVne+cy52PMUTbCC8
-         g296eBKFv/3F0Unplu8oBoeCeSFf6pHDQvhXiOSpL/gfWLKMV4ISvHvxISsqEckZ0UBg
-         da1J/wqbrAbg7/RQ67awf3dozDbdr+jsO6e7zZMXsptjptdsWcuSdnSAtWHJmj/XyijY
-         V2fg==
-X-Gm-Message-State: AOJu0Yxk2RHBsaA6ZY5yvvxspPCMWt/j6NlNztNfV0Ztlcx+IXGeMOVs
-	ao0YxZsiMBX/9kjAmEO+BLDed73iEHolEM5aWVm7/nFn2AqPM+lFoQ70KW+J+QI=
-X-Google-Smtp-Source: AGHT+IGQjYEDurZIJYcn/CmN4h83k7vAEz5RPdYh5gLbgj+3Ql604ZBByq+94bPWPyclsMK0GK0ouw==
-X-Received: by 2002:a17:906:d92:b0:a30:d35f:d3a5 with SMTP id m18-20020a1709060d9200b00a30d35fd3a5mr6254077eji.21.1706534349537;
-        Mon, 29 Jan 2024 05:19:09 -0800 (PST)
+        bh=avsFIxhX/jtxHDt6bjDOfQ40vEVTMaWnxh/VVgqRP8I=;
+        b=HW7l1FBi5mCvgjdl/ldLjsTFZ2U2wgYwB53HZL75yoDmODRljGJB7nR/+N2B9coRrq
+         74e3d9Z9wg57SYXGNew6z0VZt+zC6bm5Nb5aNPb1VF57Dkp2Pal5N5lecZCovbtJZe16
+         jlX9BGx1Ldwt6YKcZhIIY/2QUwJ9CzWSdrwl/JjVHdZ5IugSsTbsZ5tWsfptbruSZaSk
+         XbJlZPYacS+lFa2cLOPMjLwYoICYVgZlAb3WoiuRggHX0V4aGdybdATt3WqXqPCn7nCr
+         RDlnJEiqu6x7l2Ie4ir8Xq1RJkPXQ7u/EC2mOezk5QFSOyJ2HFqM6sq3vvtCNzpxuq9e
+         t36Q==
+X-Gm-Message-State: AOJu0Ywaz/v54w1ym6hnk4BbKesFpxX0y76VkpDQM9AqwFA4Ky3uoDtK
+	eJv+yeOuuHajhFtRPL6OxidcOHds4YlWU+MsRl+lXKJ+zSeNr2JgdwOkk+q2xuQ=
+X-Google-Smtp-Source: AGHT+IHeG6mDUl+ksN0m3/oS9noMoULpS/ssljn6bdDUjLBizSFE1Oo68zXcRckMajlrJwPoI0Hwag==
+X-Received: by 2002:a17:906:c343:b0:a30:fba8:8fe1 with SMTP id ci3-20020a170906c34300b00a30fba88fe1mr4296187ejb.21.1706534352761;
+        Mon, 29 Jan 2024 05:19:12 -0800 (PST)
 Received: from [127.0.1.1] ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id q15-20020a17090622cf00b00a359afad88dsm1591658eja.10.2024.01.29.05.19.08
+        by smtp.gmail.com with ESMTPSA id q15-20020a17090622cf00b00a359afad88dsm1591658eja.10.2024.01.29.05.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 05:19:09 -0800 (PST)
+        Mon, 29 Jan 2024 05:19:12 -0800 (PST)
 From: Abel Vesa <abel.vesa@linaro.org>
-Date: Mon, 29 Jan 2024 15:18:54 +0200
-Subject: [PATCH 1/5] dt-bindings: display/msm: document MDSS on X1E80100
+Date: Mon, 29 Jan 2024 15:18:56 +0200
+Subject: [PATCH 3/5] drm/msm: mdss: Add X1E80100 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240129-x1e80100-display-v1-1-0d9eb8254df0@linaro.org>
+Message-Id: <20240129-x1e80100-display-v1-3-0d9eb8254df0@linaro.org>
 References: <20240129-x1e80100-display-v1-0-0d9eb8254df0@linaro.org>
 In-Reply-To: <20240129-x1e80100-display-v1-0-0d9eb8254df0@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -80,285 +80,58 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8078; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=I5PGhsrEZKj3ZMDpnONsJnotEiBo2BLGM1Eha6wla9A=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlt6XE6aWFknD1XKeICqeAKXYuCJif4uMi7ZK37
- KzU50TGXXOJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbelxAAKCRAbX0TJAJUV
- VjIHD/93fJcp068eeFWAI0TFwOqYqfRAej176O7iaRKv7tieDoB9yrbFvvZLyFSeF0FT8LktV1o
- kp7cJdXMPZXzd1W0I0Maj8gzW8fdtLYOGxFNUorv0ynYeLbDkIzL3W7GQTUntEDPzBf9G1iin0r
- pO8RhpmtIWl8f+8CsReX4/xa58wh0vMh8Iz2ptTP3Fk/327mzU7fpXE7kwk+0bFNWUDqkQyxCy6
- VGVKBZ+axKFfKiR1bAxc75Z3Gtpyn+Is7cjVoSIo0WUQr4y0+QAmtoOhi37CAF6EHBMfjMF9LnI
- g3/ryT+oRv8Ea7cH+Le3RTMOkp495RUaqMDtIJ650dIhL5nUFJwCeXq6NtEL/D7WNrZSKtHd/d/
- YahIjrJIQxVOVNfUPjuKDvSKAvMNgbsIojyC+tpkkkRhDB1IuO64yWjyE7FF5lQVhc6H0mf1YQr
- ZU4zyk3/2APgZjXJ97eUFI28sfqLyfg0Q9kysc6VzJ+35+KBLmgvdRYx1KdYm+Ow39zFVrXve8M
- zbJ5Ywb7JKj4Ic+fDgdQwBEHA12kJUr3vuFWm/8llO87cIrNrWR23f7xotNuGCTVLSpWwlksn6c
- HtaofPfGbbdL6y1abVeqK8D5IHJCm6OBlL4BAkaser2ide5vQS6j6i8jDncRKmHpWGhN2RE7qV4
- mB5kbBY3gimEsdQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1213; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=rfGkK17/i+BleU3qzcJWNOMRKGI09BZOvobQeTG7kY0=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlt6XH99bhpkCbAVQ3v7T0Zu5dazEjO8JPZDEyT
+ B5uByWz/JaJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbelxwAKCRAbX0TJAJUV
+ Vvy1D/9B9s4n/T4FadLNi76W26+2YKGm3mcG+yf6nOSpCieYzh7MBGwlQQfu6eFB2+RUss76VeV
+ Mc5xb1pQZULcW9U1M72fJfZ6kKPsDG4xbKHrtJ3PvR0waNTrRv0jAcGU4MW1/2rdvInN7LDBVS+
+ u6BG0JXGh3dZ0wmOnYzke6YIzL16URZv83iNgJTR+QKUObkbW9zNqWNU1WdQrgEJNO9XZFBcH5h
+ Ls26Q7amA6HuoaCqGsAwPjtTQwm1DsHzoYoXIXWLxueQ9efGJBlboHsatloAHFEXdonSzZLF0nY
+ xjT7x8U6VW9UkI4w1f+1uY5uteZLjJgtT/2ULqRlzkIlJ1WOTVCtXy4CsEGvrC+wSrMGGQdcpJ6
+ Hh6L7ZqW6Qwc6xfl6J/LGHgZVQFU6nMOMa3jvGxDTia533+4CSC85WiYHUab0SbtIy0Wwg98IYk
+ eeMWF7kcv1qPfsvI+gbLSxzlYB1rmalHi0AKBbk7UYyIndqoyHvn5Z0V1J/ztjB7zMq2kzew8id
+ Rtuc3MmHsxerYq3SJNicAypaC4NObHpVqHYRuEVCmgOe8WWSB4QYyj2NiKozrzTx2NgrM90Oi82
+ cLQpit73LcVtcimvIiOB33tT1fBlXAMVqgHIFpmFxK6Bnscz7d5pTipYewQURemNMR+oASgC2/C
+ x6PXzS1yvt4z8Dw==
 X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
  fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Document the MDSS hardware found on the Qualcomm X1E80100 platform.
+Add support for MDSS on X1E80100.
 
 Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- .../bindings/display/msm/qcom,x1e80100-mdss.yaml   | 249 +++++++++++++++++++++
- 1 file changed, 249 insertions(+)
+ drivers/gpu/drm/msm/msm_mdss.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.yaml
-new file mode 100644
-index 000000000000..eaa91f7d61ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/msm/qcom,x1e80100-mdss.yaml
-@@ -0,0 +1,249 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/msm/qcom,x1e80100-mdss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
+index 455b2e3a0cdd..eddf7fdbb60a 100644
+--- a/drivers/gpu/drm/msm/msm_mdss.c
++++ b/drivers/gpu/drm/msm/msm_mdss.c
+@@ -564,6 +564,15 @@ static const struct msm_mdss_data sdm670_data = {
+ 	.highest_bank_bit = 1,
+ };
+ 
++static const struct msm_mdss_data x1e80100_data = {
++	.ubwc_enc_version = UBWC_4_0,
++	.ubwc_dec_version = UBWC_4_3,
++	.ubwc_swizzle = 6,
++	.ubwc_static = 1,
++	.highest_bank_bit = 2,
++	.macrotile_mode = 1,
++};
 +
-+title: Qualcomm X1E80100 Display MDSS
-+
-+maintainers:
-+  - Abel Vesa <abel.vesa@linaro.org>
-+
-+description:
-+  X1E80100 MSM Mobile Display Subsystem(MDSS), which encapsulates sub-blocks like
-+  DPU display controller, DP interfaces, etc.
-+
-+$ref: /schemas/display/msm/mdss-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: qcom,x1e80100-mdss
-+
-+  clocks:
-+    items:
-+      - description: Display AHB
-+      - description: Display hf AXI
-+      - description: Display core
-+
-+  iommus:
-+    maxItems: 1
-+
-+  interconnects:
-+    maxItems: 3
-+
-+  interconnect-names:
-+    maxItems: 3
-+
-+patternProperties:
-+  "^display-controller@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      compatible:
-+        const: qcom,x1e80100-dpu
-+
-+  "^displayport-controller@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      compatible:
-+        const: qcom,x1e80100-dp
-+
-+  "^phy@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      compatible:
-+        const: qcom,x1e80100-dp-phy
-+
-+required:
-+  - compatible
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/qcom,rpmhpd.h>
-+
-+    display-subsystem@ae00000 {
-+        compatible = "qcom,x1e80100-mdss";
-+        reg = <0x0ae00000 0x1000>;
-+        reg-names = "mdss";
-+
-+        interconnects = <&mmss_noc MASTER_MDP 0 &gem_noc SLAVE_LLCC 0>,
-+                        <&mc_virt MASTER_LLCC 0 &mc_virt SLAVE_EBI1 0>;
-+                        <&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_DISPLAY_CFG 0>;
-+        interconnect-names = "mdp0-mem", "mdp1-mem", "cpu-cfg";
-+
-+        resets = <&dispcc_core_bcr>;
-+
-+        power-domains = <&dispcc_gdsc>;
-+
-+        clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+                 <&gcc GCC_DISP_AHB_CLK>,
-+                 <&gcc GCC_DISP_HF_AXI_CLK>,
-+                 <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+        clock-names = "iface", "bus", "nrt_bus", "core";
-+
-+        interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+
-+        iommus = <&apps_smmu 0x1c00 0x2>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        display-controller@ae01000 {
-+            compatible = "qcom,x1e80100-dpu";
-+            reg = <0x0ae01000 0x8f000>,
-+                  <0x0aeb0000 0x2008>;
-+            reg-names = "mdp", "vbif";
-+
-+            clocks = <&gcc_axi_clk>,
-+                     <&dispcc_ahb_clk>,
-+                     <&dispcc_mdp_lut_clk>,
-+                     <&dispcc_mdp_clk>,
-+                     <&dispcc_mdp_vsync_clk>;
-+            clock-names = "nrt_bus",
-+                          "iface",
-+                          "lut",
-+                          "core",
-+                          "vsync";
-+
-+            assigned-clocks = <&dispcc_mdp_vsync_clk>;
-+            assigned-clock-rates = <19200000>;
-+
-+            operating-points-v2 = <&mdp_opp_table>;
-+            power-domains = <&rpmhpd RPMHPD_MMCX>;
-+
-+            interrupt-parent = <&mdss>;
-+            interrupts = <0>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    dpu_intf1_out: endpoint {
-+                        remote-endpoint = <&dsi0_in>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    dpu_intf2_out: endpoint {
-+                        remote-endpoint = <&dsi1_in>;
-+                    };
-+                };
-+            };
-+
-+            mdp_opp_table: opp-table {
-+                compatible = "operating-points-v2";
-+
-+                opp-200000000 {
-+                    opp-hz = /bits/ 64 <200000000>;
-+                    required-opps = <&rpmhpd_opp_low_svs>;
-+                };
-+
-+                opp-325000000 {
-+                    opp-hz = /bits/ 64 <325000000>;
-+                    required-opps = <&rpmhpd_opp_svs>;
-+                };
-+
-+                opp-375000000 {
-+                    opp-hz = /bits/ 64 <375000000>;
-+                    required-opps = <&rpmhpd_opp_svs_l1>;
-+                };
-+
-+                opp-514000000 {
-+                    opp-hz = /bits/ 64 <514000000>;
-+                    required-opps = <&rpmhpd_opp_nom>;
-+                };
-+            };
-+        };
-+
-+        displayport-controller@ae90000 {
-+            compatible = "qcom,x1e80100-dp";
-+            reg = <0 0xae90000 0 0x200>,
-+                  <0 0xae90200 0 0x200>,
-+                  <0 0xae90400 0 0x600>,
-+                  <0 0xae91000 0 0x400>,
-+                  <0 0xae91400 0 0x400>;
-+
-+            interrupt-parent = <&mdss>;
-+            interrupts = <12>;
-+
-+            clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_AUX_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_LINK_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_LINK_INTF_CLK>,
-+               <&dispcc DISP_CC_MDSS_DPTX0_PIXEL0_CLK>;
-+            clock-names = "core_iface", "core_aux",
-+                    "ctrl_link",
-+                    "ctrl_link_iface",
-+                    "stream_pixel";
-+
-+            assigned-clocks = <&dispcc DISP_CC_MDSS_DPTX0_LINK_CLK_SRC>,
-+                  <&dispcc DISP_CC_MDSS_DPTX0_PIXEL0_CLK_SRC>;
-+            assigned-clock-parents = <&usb_1_ss0_qmpphy QMP_USB43DP_DP_LINK_CLK>,
-+                  <&usb_1_ss0_qmpphy QMP_USB43DP_DP_VCO_DIV_CLK>;
-+
-+            operating-points-v2 = <&mdss_dp0_opp_table>;
-+
-+            power-domains = <&rpmhpd RPMHPD_MMCX>;
-+
-+            phys = <&usb_1_ss0_qmpphy QMP_USB43DP_DP_PHY>;
-+            phy-names = "dp";
-+
-+            #sound-dai-cells = <0>;
-+
-+            status = "disabled";
-+
-+            ports {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+
-+              port@0 {
-+                  reg = <0>;
-+
-+                  mdss_dp0_in: endpoint {
-+                    remote-endpoint = <&mdss_intf0_out>;
-+                  };
-+              };
-+
-+              port@1 {
-+                  reg = <1>;
-+
-+                  mdss_dp0_out: endpoint {
-+                  };
-+              };
-+            };
-+
-+            mdss_dp0_opp_table: opp-table {
-+              compatible = "operating-points-v2";
-+
-+              opp-160000000 {
-+                 opp-hz = /bits/ 64 <160000000>;
-+                 required-opps = <&rpmhpd_opp_low_svs>;
-+              };
-+
-+              opp-270000000 {
-+                 opp-hz = /bits/ 64 <270000000>;
-+                 required-opps = <&rpmhpd_opp_svs>;
-+              };
-+
-+              opp-540000000 {
-+                 opp-hz = /bits/ 64 <540000000>;
-+                 required-opps = <&rpmhpd_opp_svs_l1>;
-+              };
-+
-+              opp-810000000 {
-+                 opp-hz = /bits/ 64 <810000000>;
-+                 required-opps = <&rpmhpd_opp_nom>;
-+              };
-+            };
-+        };
-+    };
-+...
+ static const struct msm_mdss_data sdm845_data = {
+ 	.ubwc_enc_version = UBWC_2_0,
+ 	.ubwc_dec_version = UBWC_2_0,
+@@ -655,6 +664,7 @@ static const struct of_device_id mdss_dt_match[] = {
+ 	{ .compatible = "qcom,sm8450-mdss", .data = &sm8350_data },
+ 	{ .compatible = "qcom,sm8550-mdss", .data = &sm8550_data },
+ 	{ .compatible = "qcom,sm8650-mdss", .data = &sm8550_data},
++	{ .compatible = "qcom,x1e80100-mdss", .data = &x1e80100_data},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, mdss_dt_match);
 
 -- 
 2.34.1
