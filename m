@@ -1,56 +1,56 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CBF651B1;
-	Mon, 29 Jan 2024 15:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E969153BCD;
+	Mon, 29 Jan 2024 15:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706541391; cv=none; b=puw7Sxqsel6HkK0U2jZ4W7wZS32evDwBlbwzbFKRBIWcBmrgyRqaNp2a8MLvG+c2uAD2DGej41h6atyktEGUx7oJ2d+C9205dafTmVsqwQ+B3VN0Ja+TYu18s5xn6MT8uwMIZ1xGFdRGLY3N/4i30M6vM4dCfD0aPNQCKusjYkU=
+	t=1706541393; cv=none; b=nSlV1W5NDzcJdxdDtIvFmh8DRdHzONrjbdzVfs1cLooFlJ+Iq65zzTxjqF8P8yp8zlIrEGxKibok6aE0BeOKyjv2CPiAD9+7jYF1zcmv3kJRjC2MU6wahiXP+eoIrFs+eOL3Fff1TuCzp1w495Ykp1SFAYlbYZ+8MG+dZkXIk7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706541391; c=relaxed/simple;
-	bh=0jM5ujZYP8nmek8AaX67k0KsUzxSJfaOyNJpRc3Bbrc=;
+	s=arc-20240116; t=1706541393; c=relaxed/simple;
+	bh=mwJf1pU/qZI7QI5NMKPHuzWffIjwRLvEXG6vOQEeM04=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p05yvMSK52pVxXvQNRErb6ZDG3UzRO4ZQlF1LBRn9R+EfBaTEdH/YIOVuqJqJ5k4hD/quS16k3uTChGkC0SV2k8JqMbkQk5AGkPOxjvGr83r1g5C0sJx8fd6z7U/lUSHS0aPrMlFFRWWfRAAtGU/ztfwB+L68jgLO0caqrWPFz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mvq9mydU; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=nAFhVkw6wYgQpomFx82n17hZ3THiYMSa+DMGry0P3ppbaTp5KSgYg0wTrZ65VXMJsi2B+L0LshrrjEptQgBOc1GufOCEl8UaJloHekdkTMBTIoq5zQCJj/Z6zS2JrrCbWyx+nBpZU7+xwKXkBTqnfY2fGztL08SZ4XaD2XA/HGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cYZDRoJe; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mvq9mydU"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso43789215e9.1;
-        Mon, 29 Jan 2024 07:16:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYZDRoJe"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33ae5e7d787so1588058f8f.1;
+        Mon, 29 Jan 2024 07:16:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706541388; x=1707146188; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706541390; x=1707146190; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gGa8xFRwP8zLCWj6u5lZzVVx+K8OLPxZ4f43XzHIoys=;
-        b=Mvq9mydUuvnCqMK4O2Qhow19SZyyh8v2svPOxtOWYGwu/e7ib77NuRYhZ7C9cSCFL4
-         whVqNxUvI852wj+WoRmOthWDl9Hbty/wXmMXs64zR9itLSZS9y79GQZ6CPlhY3fmfwHp
-         CE85fSUQXk6JkTE2ow3QWmRkiK6UkGER4/NioO8gxE3BXuLqlqHrFrc33z/ZZJesxDi+
-         PiUnWhk88o+yBe7Dz4LSQP4YMCWxhsRAl8bvVqKit/Wx+VG1nM9YBH4IeAuMzzMqsRqH
-         gDFt0vOsi1G1u43hDljeznd0LpXr7aAE+ru1yrt0xomT89ck9koyMe0/mka/gdpsf/kn
-         lOGg==
+        bh=nRPYmXZnIT01poufmeMRGZaKCj5tsIcmA7FhqBODKic=;
+        b=cYZDRoJeq6Z3oqCZL2jlvejH9Ob+4GUl2tPr9dj+18xulJ7YWpQVbQcDKMyWRvczgX
+         h2nUyfctCkKqpIIfl+/9bKloLecSfRT2mu2T175CfqlcBVuKrpCuGK7LEdbM9Ob1kObl
+         CY2pQJDhl/jueZecuP3BKACYLIQKQD3Pn0yzK5/LKO6IoEptLagKxKaXXtBh2R2C0XmT
+         D9v5NkO4/cr7aACJBkg2/ZmEWG8T/5MqxmR6wxFJWQcG6vYKcOwXVJ2W48itirUtezIw
+         P0y+bxYJMxmHj7W99TtcGtYN6xelaKcvAQXgihfIiPKnxWXEIdnxWK00ORApAtuoARa1
+         vwTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706541388; x=1707146188;
+        d=1e100.net; s=20230601; t=1706541390; x=1707146190;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gGa8xFRwP8zLCWj6u5lZzVVx+K8OLPxZ4f43XzHIoys=;
-        b=qNNGEoCZPxJOM/LtVcNf4L6pbjHtR5Eh0Fm0XhcE8zEMiGa8Za79j1YLFWDMl643pg
-         /S6WEKHAoDUlEl5Gy7o1XQz2HFyNa520s0fw3O4tuqRsjDlzQTRDQS6llV7l++JSaLJl
-         Pj0q3za/hEmQkFBDxqu+ECNrBPHK0LvDL70jyerhlsGHaYb3mrH4GtD3OY1k0qCDaxq8
-         tYAqhY03LSudFVzoYN7X4xlDSzaIaL0omVV6AqctoRHLmjbo2enF1Ak4PMSlKWn+iRGh
-         8u6BAH05FpexjIbsPxTjr/WkP0400Q+vDshqgKVHnf9f+ICW8A+4cEUb+hFOs6No09H3
-         x5Bw==
-X-Gm-Message-State: AOJu0YypVr73HoVxVaFbsKisFVUC3s9J/c7RD2Z9Tllkr08/U0tLcUvF
-	Q6/Y7ZhBHJvmMOAtIEX8yG2nD8IkZ2WJi4WacwpVAhOAOwFRrywF
-X-Google-Smtp-Source: AGHT+IG3HsuD9SaUwYrvX4rmWSShZVOxOyMaqp6KeQVa+qLdgqFTIv45DCNzraZDMw6ntN1GjVYCWg==
-X-Received: by 2002:adf:e105:0:b0:337:c176:6549 with SMTP id t5-20020adfe105000000b00337c1766549mr4168842wrz.65.1706541388215;
-        Mon, 29 Jan 2024 07:16:28 -0800 (PST)
+        bh=nRPYmXZnIT01poufmeMRGZaKCj5tsIcmA7FhqBODKic=;
+        b=fx2frIUzno7r3KbE1Rr7EPgD0VYkHcgo/mJEZJ0+xmhYav/nZnUjxfoibVseh4pvrZ
+         Yqlxu5Xu01JSTmTNJ5p7gUwVdlmfopmkVFcCq2oSyTzh76NY+3XWZmvyvYJKhOm6T65u
+         EoktKWgRq0WGSryNg2qadKFxQ8nKixij09aV1r8U7QoWsBD5Y0RMxzcqWdLID7ScZ1Rm
+         pGNTdroxCpiffwcRYKv06JDpNbc707V7g3BE2QmAhXmFCVeotEuHrMUvt5CoLNWMYv8y
+         lKePRuTXz1qdLNdcIk8vFppVN6WUV/WIppPnzqmFBVvwrJwV5hvJ+1UZt4WzJTQ8LtWJ
+         SAPg==
+X-Gm-Message-State: AOJu0YwMAD7+jzNHTldnC4VwFk0an+V7lDi17t72ktmEvNwg+kskkMn6
+	aclmhegI5OGATe00eylRICMN4AfkD+giQaMUwo03HUSPTrASnwEk
+X-Google-Smtp-Source: AGHT+IEnu42aSb7Ky9qC9wvEJ1nW8oN4/7POsNlm7cXhpfdpi1cTjbNoRtxNqJjKC4KUjxXGypeXbQ==
+X-Received: by 2002:a5d:4ad2:0:b0:33a:e791:d8ac with SMTP id y18-20020a5d4ad2000000b0033ae791d8acmr3430590wrs.12.1706541390428;
+        Mon, 29 Jan 2024 07:16:30 -0800 (PST)
 Received: from prasmi.home ([2a00:23c8:2500:a01:5616:a18c:ea50:2995])
-        by smtp.gmail.com with ESMTPSA id h4-20020adfa4c4000000b00337d4eed87asm8397774wrb.115.2024.01.29.07.16.26
+        by smtp.gmail.com with ESMTPSA id h4-20020adfa4c4000000b00337d4eed87asm8397774wrb.115.2024.01.29.07.16.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 07:16:27 -0800 (PST)
+        Mon, 29 Jan 2024 07:16:29 -0800 (PST)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -67,9 +67,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 1/5] dt-bindings: interrupt-controller: renesas,rzg2l-irqc: Document RZ/Five SoC
-Date: Mon, 29 Jan 2024 15:16:14 +0000
-Message-Id: <20240129151618.90922-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/5] riscv: dts: renesas: r9a07g043f: Add IRQC node to RZ/Five SoC DTSI
+Date: Mon, 29 Jan 2024 15:16:16 +0000
+Message-Id: <20240129151618.90922-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240129151618.90922-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20240129151618.90922-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -83,79 +83,100 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Document RZ/Five (R9A07G043F) IRQC bindings. The IRQC block on RZ/Five SoC
-is almost identical to one found on the RZ/G2L SoC with below differences,
-* Additional BUS error interrupt
-* Additional ECCRAM error interrupt
-* Has additional mask control registers for NMI/IRQ/TINT
-
-Hence new compatible string "renesas,r9a07g043f-irqc" is added for RZ/Five
-SoC.
+Add the IRQC node to RZ/Five (R9A07G043F) SoC DTSI.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- .../renesas,rzg2l-irqc.yaml                   | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 76 +++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-index d3b5aec0a3f7..3abc01e48934 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-@@ -23,6 +23,7 @@ properties:
-   compatible:
-     items:
-       - enum:
-+          - renesas,r9a07g043f-irqc   # RZ/Five
-           - renesas,r9a07g043u-irqc   # RZ/G2UL
-           - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
-           - renesas,r9a07g054-irqc    # RZ/V2L
-@@ -88,6 +89,12 @@ properties:
-       - description: GPIO interrupt, TINT30
-       - description: GPIO interrupt, TINT31
-       - description: Bus error interrupt
-+      - description: ECCRAM0 TIE1 interrupt
-+      - description: ECCRAM0 TIE2 interrupt
-+      - description: ECCRAM0 overflow interrupt
-+      - description: ECCRAM1 TIE1 interrupt
-+      - description: ECCRAM1 TIE2 interrupt
-+      - description: ECCRAM1 overflow interrupt
+diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+index d7a66043f13b..d2272a0bfb61 100644
+--- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
++++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+@@ -50,6 +50,82 @@ &soc {
+ 	dma-noncoherent;
+ 	interrupt-parent = <&plic>;
  
-   interrupt-names:
-     minItems: 41
-@@ -134,6 +141,12 @@ properties:
-       - const: tint30
-       - const: tint31
-       - const: bus-err
-+      - const: eccram0-tie1
-+      - const: eccram0-tie2
-+      - const: eccram0-ovf
-+      - const: eccram1-tie1
-+      - const: eccram1-tie2
-+      - const: eccram1-ovf
- 
-   clocks:
-     maxItems: 2
-@@ -180,6 +193,20 @@ allOf:
-       required:
-         - interrupt-names
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,r9a07g043f-irqc
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 48
-+        interrupt-names:
-+          minItems: 48
-+      required:
-+        - interrupt-names
++	irqc: interrupt-controller@110a0000 {
++		compatible = "renesas,r9a07g043f-irqc",
++			     "renesas,rzg2l-irqc";
++		reg = <0 0x110a0000 0 0x20000>;
++		#interrupt-cells = <2>;
++		#address-cells = <0>;
++		interrupt-controller;
++		interrupts = <SOC_PERIPHERAL_IRQ(0) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(1) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(2) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(3) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(4) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(5) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(6) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(7) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(8) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(444) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(445) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(446) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(447) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(448) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(449) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(450) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(451) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(452) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(453) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(454) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(455) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(456) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(457) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(458) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(459) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(460) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(461) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(462) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(463) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(464) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(465) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(466) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(467) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(468) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(469) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(470) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(471) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(472) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(473) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(474) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(475) IRQ_TYPE_LEVEL_HIGH>,
++			     <SOC_PERIPHERAL_IRQ(25) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(34) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(35) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(36) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(37) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(38) IRQ_TYPE_EDGE_RISING>,
++			     <SOC_PERIPHERAL_IRQ(39) IRQ_TYPE_EDGE_RISING>;
++		interrupt-names = "nmi",
++				  "irq0", "irq1", "irq2", "irq3",
++				  "irq4", "irq5", "irq6", "irq7",
++				  "tint0", "tint1", "tint2", "tint3",
++				  "tint4", "tint5", "tint6", "tint7",
++				  "tint8", "tint9", "tint10", "tint11",
++				  "tint12", "tint13", "tint14", "tint15",
++				  "tint16", "tint17", "tint18", "tint19",
++				  "tint20", "tint21", "tint22", "tint23",
++				  "tint24", "tint25", "tint26", "tint27",
++				  "tint28", "tint29", "tint30", "tint31",
++				  "bus-err", "eccram0-tie1", "eccram0-tie2",
++				  "eccram0-ovf", "eccram1-tie1", "eccram1-tie2",
++				  "eccram1-ovf";
++		clocks = <&cpg CPG_MOD R9A07G043_IAX45_CLK>,
++			 <&cpg CPG_MOD R9A07G043_IAX45_PCLK>;
++		clock-names = "clk", "pclk";
++		power-domains = <&cpg>;
++		resets = <&cpg R9A07G043_IAX45_RESETN>;
++	};
 +
- unevaluatedProperties: false
- 
- examples:
+ 	plic: interrupt-controller@12c00000 {
+ 		compatible = "renesas,r9a07g043-plic", "andestech,nceplic100";
+ 		#interrupt-cells = <2>;
 -- 
 2.34.1
 
