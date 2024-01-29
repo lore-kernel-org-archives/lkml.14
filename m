@@ -1,225 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32BD1552FE;
-	Mon, 29 Jan 2024 16:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736051552FE;
+	Mon, 29 Jan 2024 16:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706544025; cv=none; b=MukbeoP4L0oeXZg1VeLzoVDvHkT6MRvrDbLpk2ximvohRlZik8A8ClISaPjtyomFRYvTFE0Ci8zKOo+WMDLtdcWMG6uiLnJPSIrHxmdaj3QbL4etUyDm5KWTox/Ys/3BCCgkzPrwNDbGMYx/viCBmAb7JgPGOXyecCMmePieQHc=
+	t=1706544034; cv=none; b=jvhxvE4/b+KZXKOrEX6yPqaqJ2jLqwCAv9zlNVKHNU6iCp/F3XP+RHYroshp/Jhrhj0v7TglAYs/AH53h/5hM2R33EOkDSHDmNXFEJT156voO8oxYrMt272HG6pUfl40MtCBxIZxPR1L/ku20JGBVUx0Fcx+Qi2uJgZRVUVeQr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706544025; c=relaxed/simple;
-	bh=d7kTJL5yA5KYsTfmmiVBkb+irsEYdcGncOobIUTBvxE=;
+	s=arc-20240116; t=1706544034; c=relaxed/simple;
+	bh=FX/3JZsgoeRJk8/gT/ahewzSdOBqCFPARvgcZJkGxSA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxzXNoEifFBtMvUVLRJIlL7lV1YwVCwZoz8Heorpi58/xn6k9js5C/CTfsjNst6nrMJvn+oopRkJY1VF6NpKl+To0cytj0NyEQQQlO7UOKJFJ+zZ7Whx8JpqzWPscRmvXszu6fSNdQbuc3Yh4Ba/te35qpTbvlB7b8Xv4isr/tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkR+Sn31; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaz7dDcoCCNdojhomeQBjIiyNtRlwFa6pl1T0y7/bc72YyBCdzJt2C6vgrFfgtSmaM2IJuNQMlQ3INtzbfHuvNaRiLY6Ybc2vbpfZStKHL1wsDEOCwxYfVnSUBewFRPv6xJ4QxJQyIb57H6MBZRpJK55dD7qjpchFhfXWFAiKxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=REb131pB; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkR+Sn31"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB10C43390;
-	Mon, 29 Jan 2024 16:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706544024;
-	bh=d7kTJL5yA5KYsTfmmiVBkb+irsEYdcGncOobIUTBvxE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DkR+Sn31qxVYwJj06PpjCcnkbakbuOXyswHUgHAnUQxfxXuPYNH9/AdJPIr9DFudP
-	 7LD2UJC56+6JehOKTitGXlPtwrjbpzXsQhY19AOlKRn4t9RNs42NrunwuYV9vv6lA1
-	 SiSCglNYWNiqIQw5ttetpifKZ3RfoiXarniIMKQ5NUSMMT08dXxutjpUURWMjl+tGQ
-	 2wio/1VoLqIPLC8pvOO0mJhnQGWhgY6K24EazISnuG88jFNx2Dzo5N7gn9LTFOPEV1
-	 sUa4FhHgfBDMvX+gGwGd0/ozZQvf3lOKBqq9Q1PK0pmooqSXJSRJDNUc1GWYpPuaGl
-	 /uJICIXalHPaw==
-Date: Mon, 29 Jan 2024 21:30:00 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	vireshk@kernel.org, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20240129160000.GF22617@thinkpad>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-6-77bbf7d0cc37@quicinc.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="REb131pB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pBVtJRmqf+crBbobrGzBK2lFMDtFqvFaWK9LtbdMiw0=; b=REb131pBQOlURPlaqY/BWYJkYn
+	6XiNQWL5ysnJDjT2Q/knsZymoxmJ9qg3ZTfjxAzf6s28tQ2qC1Ej9fGitEUS0C5NtE8hqJL7EnBxD
+	C/JZrsLTBbNkc1ACH0HcmRUwZOBoMDQ2lO5CbUnkpj5e3WtB+EImTFJ71cHYj126vSqqUID5tbF1z
+	pbQ5vbvK7Xy0+YFlr0gSMvXuWxBk9IpWXiUtwGPHQgFsV8nF2BPawr+OO5aM6hwKcaZFTE63IkmdY
+	d2w1qigl2szKcAIB8iDyKjNn+GVTOJr78eGOyl+6Zny6+WsIjo3bFpaYg1BK6O65xAHu46yrE1pTR
+	+ZBF5jNQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rUU3b-0000000DPH0-3JRj;
+	Mon, 29 Jan 2024 16:00:23 +0000
+Date: Mon, 29 Jan 2024 08:00:23 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Yoann Congal <yoann.congal@smile.fr>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v2] printk: Remove redundant CONFIG_BASE_SMALL
+Message-ID: <ZbfLl6PR_qxxreeX@bombadil.infradead.org>
+References: <20240127220026.1722399-1-yoann.congal@smile.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240112-opp_support-v6-6-77bbf7d0cc37@quicinc.com>
+In-Reply-To: <20240127220026.1722399-1-yoann.congal@smile.fr>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Fri, Jan 12, 2024 at 07:52:05PM +0530, Krishna chaitanya chundru wrote:
-> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> maintains hardware state of a regulator by performing max aggregation of
-> the requests made by all of the processors.
+You wanna address the printk maintainers, which I've added now.
+And Josh as he's interested in tiny linux.
+
+On Sat, Jan 27, 2024 at 11:00:26PM +0100, Yoann Congal wrote:
+> CONFIG_BASE_SMALL is currently a type int but is only used as a boolean
+> equivalent to !CONFIG_BASE_FULL.
 > 
+> So, remove it entirely and move every usage to !CONFIG_BASE_FULL.
 
-s/processors/clients
+Thanks for doing this.
 
-> PCIe controller can operate on different RPMh performance state of power
-> domain based up on the speed of the link. And this performance state varies
-> from target to target.
-> 
-> It is manadate to scale the performance state based up on the PCIe speed
-> link operates so that SoC can run under optimum power conditions.
-> 
-> Add Operating Performance Points(OPP) support to vote for RPMh state based
-> upon GEN speed link is operating.
-> 
-> OPP can handle ICC bw voting also, so move icc bw voting through opp
-> framework if opp entries are present.
-> 
-> In PCIe certain gen speeds like GEN1x2 & GEN2X1 or GEN3x2 & GEN4x1 use
-> same icc bw and has frequency, so use frequency based search to reduce
-> number of entries in the opp table.
-> 
-> Don't initialize icc if opp is supported.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 83 ++++++++++++++++++++++++++++------
->  1 file changed, 70 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 035953f0b6d8..31512dc9d6ff 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/pcie.h>
-> @@ -244,6 +245,7 @@ struct qcom_pcie {
->  	const struct qcom_pcie_cfg *cfg;
->  	struct dentry *debugfs;
->  	bool suspended;
-> +	bool opp_supported;
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -1404,16 +1406,14 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	return 0;
->  }
->  
-> -static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
-> +static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  {
->  	struct dw_pcie *pci = pcie->pci;
-> -	u32 offset, status;
-> +	u32 offset, status, freq;
-> +	struct dev_pm_opp *opp;
->  	int speed, width;
->  	int ret;
->  
-> -	if (!pcie->icc_mem)
-> -		return;
-> -
->  	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
->  
-> @@ -1424,11 +1424,42 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
->  	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
->  	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
->  
-> -	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-> -	if (ret) {
-> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> -			ret);
-> +	if (pcie->opp_supported) {
-> +		switch (speed) {
-> +		case 1:
-> +			freq = 2500000;
-> +			break;
-> +		case 2:
-> +			freq = 5000000;
-> +			break;
-> +		case 3:
-> +			freq = 8000000;
-> +			break;
-> +		default:
-> +			WARN_ON_ONCE(1);
-> +			fallthrough;
-> +		case 4:
-> +			freq = 16000000;
-> +			break;
-> +		}
+> In addition, recent kconfig changes (see the discussion in Closes: tag)
+> revealed that using:
+>   config SOMETHING
+>      default "some value" if X
+> does not work as expected if X is not of type bool.
 
-This switch case is PCIe generic, so need to be moved to drivers/pci/pci.c.
-There is already an API, pcie_link_speed_mbps() that returns the frequency in
-MBps but uses the pcie_capability_read_word() API to read LNKSTA of the device.
+We should see if we can get kconfig to warn on this type of use.
+Also note that this was reported long ago by Vegard Nossum but he
+never really sent a fix [0] as I suggested, so thanks for doing this
+work.
 
-But you can move the switch case inside that API to a separate function and
-reuse that here.
+[0] https://lkml.iu.edu/hypermail/linux/kernel/2110.2/02402.html
 
-> +
-> +		opp = dev_pm_opp_find_freq_exact(pci->dev, freq * width, true);
-> +		if (!IS_ERR(opp)) {
-> +			ret = dev_pm_opp_set_opp(pci->dev, opp);
-> +			if (ret)
-> +				dev_err(pci->dev, "Failed to set opp: freq %ld ret %d\n",
-> +					dev_pm_opp_get_freq(opp), ret);
-> +			dev_pm_opp_put(opp);
-> +		}
-> +	} else {
-> +		ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-> +		if (ret) {
-> +			dev_err(pci->dev, "failed to set interconnect bandwidth for pcie-mem: %d\n",
-> +				ret);
-> +		}
->  	}
-> +
-> +	return;
->  }
->  
->  static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
-> @@ -1471,8 +1502,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
->  static int qcom_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct qcom_pcie_cfg *pcie_cfg;
-> +	unsigned long max_freq = INT_MAX;
->  	struct device *dev = &pdev->dev;
->  	struct qcom_pcie *pcie;
-> +	struct dev_pm_opp *opp;
->  	struct dw_pcie_rp *pp;
->  	struct resource *res;
->  	struct dw_pcie *pci;
-> @@ -1539,9 +1572,33 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> -	ret = qcom_pcie_icc_init(pcie);
-> -	if (ret)
-> +	 /* OPP table is optional */
-> +	ret = devm_pm_opp_of_add_table(dev);
-> +	if (ret && ret != -ENODEV) {
-> +		dev_err_probe(dev, ret, "Failed to add OPP table\n");
->  		goto err_pm_runtime_put;
-> +	}
-> +
-> +	/* vote for max freq in the opp table if opp table is present */
+You should mention the one case which this patch fixes is:
 
-/*
- * Use highest OPP here if the OPP table is present. At the end of the probe(),
- * OPP will be updated using qcom_pcie_icc_opp_update().
- */
+> CONFIG_BASE_SMALL was used that way in init/Kconfig:
+>   config LOG_CPU_MAX_BUF_SHIFT
+>   	default 12 if !BASE_SMALL
+>   	default 0 if BASE_SMALL
 
-- Mani
+You should then mention this has been using 12 for a long time now
+for BASE_SMALL, and so this patch is a functional fix for those
+who used BASE_SMALL and wanted a smaller printk buffer contribtion per
+cpu. The contribution was only per CPU, and since BASE_SMALL systems
+likely don't have many CPUs the impact of this was relatively small,
+4 KiB per CPU.  This patch fixes that back down to 0 KiB per CPU.
 
--- 
-மணிவண்ணன் சதாசிவம்
+So in practice I'd imagine this fix is not critical to stable. However
+if folks do want it backported I'll note BAS_FULL has been around since
+we started with git on Linux so it should backport just fine.
+
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 8d4e836e1b6b1..877b3f6f0e605 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -734,8 +734,8 @@ config LOG_CPU_MAX_BUF_SHIFT
+>  	int "CPU kernel log buffer size contribution (13 => 8 KB, 17 => 128KB)"
+>  	depends on SMP
+>  	range 0 21
+> -	default 12 if !BASE_SMALL
+> -	default 0 if BASE_SMALL
+> +	default 12 if BASE_FULL
+> +	default 0
+>  	depends on PRINTK
+>  	help
+>  	  This option allows to increase the default ring buffer size
+
+This is the only functional change, it is a fix, so please address
+this in a separate small patch where you can go into all the above
+details about its issue and implications of fixing this as per my
+note above.
+
+Then you can address a separate patch which addresses the move of
+BASE_SMALL users to BASE_FULL so to remove BASE_SMALL, that is
+because that commit would have no functional changes and it makes
+it easier to review.
+
+  Luis
