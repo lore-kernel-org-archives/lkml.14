@@ -1,91 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AAF5579D
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD9D55E57;
+	Mon, 29 Jan 2024 09:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706521904; cv=none; b=LptdzPsBG3MUiewf37KyLOFg8IU+GwlFqewzZKja3zH8SRikeglDESddiPNwkWJIL4/qawSkkoD3Ns0R1Bgf3fKBIR52YDL0rhxvjh6QuABeMwOE9ZkxNm4JWg+ofMBfCseBDxvOFol+3z+iEwl0VjxA4C+X8EgMqfoQT9CII7g=
+	t=1706521920; cv=none; b=cJ9FmQcD2m0BDoPKsOhXnUuT/MOL1dr46QnrHLkA5UiMLPKQDek0TkdrvzfPfcxzBwGuLlNpu9Vc7/ilv35VID3tR0doX5qvRr+B4EqaVR1HhZX6BuL7iegCnlsse1HjkqTb/t2Qh3eUaxklOLSVBkE5zPRV5jOMICopSlPqaqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706521904; c=relaxed/simple;
-	bh=pPcqsz1uE3yIcm/qTdgdW4qxwK1Hx8R1HyPonk2uprY=;
+	s=arc-20240116; t=1706521920; c=relaxed/simple;
+	bh=BFbyfdiKFqxDFQ5/HrCwZaeLqbvvSo3t/+qb4kmca60=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T0hShGNk/hxf6QFWrcP3MyBH2740PRBks0zdRcnS077MTXtfTrgTB+6qh+El72aM+w3bzzhMa5H3zqzIpViuwLq5Xsa0cOR+cNvbXyw13cdH+V/LT+QJW4C+kKc8fDLM+c+OkrAWqP4u+w86Yiqhe+2NQOAbn6xqAonrftjz9IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oaqej0ZZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=axqF0sVbq8lQVWsweRfNVIwFv/KazR7cZDUInczmzu0ChrTSMtUruChunSeSzVIgX76r+0nQVeB9hPxD554wxxEyA3Dy2T2YgQ5NSaNYuYkVrbhmULmv2rfT6SoXwHd/hwzxdzeM8n2k6U8CB/791OSfhffIvPUWbvHFYxEVTKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=amJ79dXt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dMKqoTVk; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=amJ79dXt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dMKqoTVk; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oaqej0ZZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEA8C43609;
-	Mon, 29 Jan 2024 09:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706521904;
-	bh=pPcqsz1uE3yIcm/qTdgdW4qxwK1Hx8R1HyPonk2uprY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Oaqej0ZZ+tvwKJxMIRiPCQLm/V6l8p1aL0VAtqTi0s8D9hH7dH8niv1rBxXPTD78k
-	 sn+ZxKcQ/phWalG8E0pi1o6nicXKbjsyVyK3ofnNJJFAXF1I0kdS4II2+Obj1hs5dh
-	 Gc5ATdyDlG97DC13v2EpHxVVkrU2/7JH8UfAcdYX+8UKZsQEdbHyDxPgvyxNVHVbIr
-	 9+8GIFKQL+23YlvYTwlB8VUsjEbAvQwWELbyrVHXAdOXYYNTS2fGj5EGnyETldEBBC
-	 o9JYsU/52KZuWTGX7wFgmOAP3nAzL9lbAUgEa3AWcGqKywZsVVx/i2byqWZC8DPHdw
-	 b4Uejvm5Pu5MQ==
-Date: Mon, 29 Jan 2024 17:38:52 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alexghiti@rivosinc.com, samuel.holland@sifive.com,
-	ajones@ventanamicro.com, mchitale@ventanamicro.com,
-	dylan@andestech.com, sergey.matyukevich@syntacore.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, apatel@ventanamicro.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] RISC-V: add uniprocessor
- flush_tlb_range() support
-Message-ID: <ZbdyLJ24I2fa6oNb@xhacker>
-References: <20240125062044.63344-1-cuiyunhui@bytedance.com>
- <ZbdYijWK1PnHXn47@xhacker>
- <CAEEQ3wnSN8dLh3FcmHq5yPwQRdjLQa_VjcuTH+7YYZLOqCzaCQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="amJ79dXt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dMKqoTVk";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="amJ79dXt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dMKqoTVk"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1ADBE1F7D8;
+	Mon, 29 Jan 2024 09:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706521915; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M7o+LwWp1PDCgbUnQrD7nsD1am1jFJ+W2Mw249hS9eM=;
+	b=amJ79dXtv7Rg4hoSfnbdVZC8fRYeg5t6ODeSH0hBaLV0j0haqkEvmBWUNZW3vdqQqJWq5L
+	MOx3YY4ppLZi5kf7A8q0W8YgCTMfb/xcUcNhAk58Vkk3jlvK/Qb4lvsO1YrjB/Fu52exuE
+	XdO7hFcMGzvMkIPtMRXQSDO8xYrFctE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706521915;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M7o+LwWp1PDCgbUnQrD7nsD1am1jFJ+W2Mw249hS9eM=;
+	b=dMKqoTVkI2eBs0X3OdW5ulxXAcqeOdb4RSkJ6Hd4Cia6iy8bbyjeNMgmOHy5IQUl8hGZBY
+	/qYYKImszeU46SCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706521915; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M7o+LwWp1PDCgbUnQrD7nsD1am1jFJ+W2Mw249hS9eM=;
+	b=amJ79dXtv7Rg4hoSfnbdVZC8fRYeg5t6ODeSH0hBaLV0j0haqkEvmBWUNZW3vdqQqJWq5L
+	MOx3YY4ppLZi5kf7A8q0W8YgCTMfb/xcUcNhAk58Vkk3jlvK/Qb4lvsO1YrjB/Fu52exuE
+	XdO7hFcMGzvMkIPtMRXQSDO8xYrFctE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706521915;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M7o+LwWp1PDCgbUnQrD7nsD1am1jFJ+W2Mw249hS9eM=;
+	b=dMKqoTVkI2eBs0X3OdW5ulxXAcqeOdb4RSkJ6Hd4Cia6iy8bbyjeNMgmOHy5IQUl8hGZBY
+	/qYYKImszeU46SCQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0CE37132FA;
+	Mon, 29 Jan 2024 09:51:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 6iUkAzt1t2VOSQAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 29 Jan 2024 09:51:55 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id BE983A0807; Mon, 29 Jan 2024 10:51:54 +0100 (CET)
+Date: Mon, 29 Jan 2024 10:51:54 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+a0767f147b6b55daede8@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hfs?] INFO: task hung in hfsplus_find_init
+Message-ID: <20240129095154.snaura4su4wrci3u@quack3>
+References: <0000000000009947800605891611@google.com>
+ <000000000000152c13060fe84ca5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3wnSN8dLh3FcmHq5yPwQRdjLQa_VjcuTH+7YYZLOqCzaCQ@mail.gmail.com>
+In-Reply-To: <000000000000152c13060fe84ca5@google.com>
+X-Spam-Level: 
+X-Spamd-Bar: /
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=amJ79dXt;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=dMKqoTVk
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.50 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=df91a3034fe3f122];
+	 TAGGED_RCPT(0.00)[a0767f147b6b55daede8];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-1.99)[95.01%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Score: -0.50
+X-Rspamd-Queue-Id: 1ADBE1F7D8
+X-Spam-Flag: NO
 
-On Mon, Jan 29, 2024 at 04:26:57PM +0800, yunhui cui wrote:
-> Hi Jisheng,
+On Fri 26-01-24 23:24:03, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
 > 
-> On Mon, Jan 29, 2024 at 4:02 PM Jisheng Zhang <jszhang@kernel.org> wrote:
-> >
-> > On Thu, Jan 25, 2024 at 02:20:44PM +0800, Yunhui Cui wrote:
-> > > Add support for flush_tlb_range() to improve TLB performance for
-> > > UP systems. In order to avoid the mutual inclusion of tlbflush.h
-> > > and hugetlb.h, the UP part is also implemented in tlbflush.c.
-> >
-> > Hi Yunhui,
-> >
-> > IIRC, Samuel sent similar patch series a few weeks ago.
-> >
-> > https://lore.kernel.org/linux-riscv/20240102220134.3229156-1-samuel.holland@sifive.com/
-> >
-> > After that series, do you still need this patch?
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
 > 
-> Thank you for your reminder. I didn't find it before I mailed my
-> patch. I just looked at the content of this patch. I understand that
-> my patch is needed. For a single core, a more concise TLB flush logic
-> is needed, and it is helpful to improve performance.
-
-Currently, riscv UP flush_tlb_range still use flush all TLB entries,
-obviously it's is a big hammer, this is what your patch is trying to
-optimize. I'm not sure whether I understand your code correctly or not.
-Let me know if I misunderstand your code.
-
-After patch5 of the Samuel's series, __flush_tlb_range is unified for
-SMP and UP, so that UP can also benefit from recent improvements, such
-as range flush rather than all.
-
-Thanks
-
+>     fs: Block writes to mounted block devices
 > 
-> Thanks,
-> Yunhui
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11dd6ea0180000
+> start commit:   a747acc0b752 Merge tag 'linux-kselftest-next-6.6-rc2' of g..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=df91a3034fe3f122
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a0767f147b6b55daede8
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16fb6508680000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16473130680000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
+
+Makes sense:
+ 
+#syz fix: fs: Block writes to mounted block devices
+
+									Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
