@@ -1,115 +1,122 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6339D4EB23
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4404251C2C;
+	Mon, 29 Jan 2024 07:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706514543; cv=none; b=K8ZQkxZEH3oaYQOVcNv6r/SpvpYGD+znuVnIyAH6//dsKZuOYr6tbcNGMKTZphzmpzvLX+qy0XxRcSvU3TzGzDgyXl7RsXdErZmNGCNaLLS2Lu3/ivkmQsv5BXZyWgabRhqj7HvznX7OfvWXSAO7crWO8ZsaOQ50ognsnRFOxt8=
+	t=1706514614; cv=none; b=Aw/FTvrhw4z3UnqmVATzKsqQF02GUPuy0yFsHKA049y0iqLu7ZIVFYZ9PjsPxjM1elhSt8EwcV75LmSoGr55EAi4g3XZZCgaeIftCC2ugD7odRi3qAlnnl0XQ4KQOzeMzt40coD3I7snEBKq36MgMjicA32vHfiMK/5nXLmr/cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706514543; c=relaxed/simple;
-	bh=BKP83D9yJgO7dHlibnyMa09vHevxppr0G+06k+2XFWc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jF7eEBpU6ZpHQkEgUg2NhMbDQi5DBvytOarDXZOFc/xo4yDOO5urRM9NILn5aySm+UTBvKfI8B0VTFNrrjZV00yZ5XBaPHOcmUHC2VHiGZv+dc/tnBu0dkgIeivR/SpylD4jq+FC03fs5ljvTZST89TviqMyzLuhYm8dgY1FPx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=zD0JfOPJ; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1706514614; c=relaxed/simple;
+	bh=8E9fzWhF/4hAclcZkGyOSv5khN2S6oOJKz86E4S1Cx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tiuZLI1q+mQ8G5lR5z7DXVUv85NllOiM8e3wHocEKzLoW1ug3ym7ja4dOgMs/VtkXioEWt+Pn579lyL4GnXeuIkVXpfGivsrC4QOAC6PQmeABNvl1QpqQy+t9t8nWwGQzXhrKFYoRyW97bDJhayg+Wu8iokG6OutHmNfIZTuF7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/TQ23FN; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="zD0JfOPJ"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a35d0764076so37684966b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 23:49:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1706514539; x=1707119339; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hi3wdBPHy9dOJfUItOIZktdrEsNa9te/nL1WfaDI3y0=;
-        b=zD0JfOPJHHPGaXfIawDeUuiT7Jl4xsIl3OqLLbJjuY0pY0GjUKidfiElXlN8PB/2tj
-         eSvjXBE/bHQEHKrpvrjTC4OkUif2mFkmV2t/t6xwwedWejM0f8Cfu+TuUHzuPRKr9/9n
-         uOC3185PWvH0pPa8z4NyTF/x1SRhc9e8Ayad204t8CfbvKl/9aSz9rynbDiBsOn6gl+X
-         9UP3kMwoTrXzFZcPUAu5GH1cxN7ZrbfQHy0N+2j5rx27q5VtrXQokpXf3uCWA0O3I3Xg
-         I3Bi5K1Bm7gF/K5muQ2K5tne61BftSTAqGyJQ+VTCBz9WGduSNkH7XqGXb1w73rsXUb7
-         x/ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706514539; x=1707119339;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hi3wdBPHy9dOJfUItOIZktdrEsNa9te/nL1WfaDI3y0=;
-        b=iUXIWS5GltVgv3+uBLYk5N0xs2pudIM0laY6Z7gjG4aTMOG25xgZXAmj0peKTlrvhL
-         bSPSQSffuTzeqaErjeaAplVuNIPZ5iTsldLaVsTDePnQOJyF5ew05EBtABAakAnl38qX
-         n6E3D63QbFRCYBS563IYEGL4fNS/RW7XFKFfNhFphW2X94Dmv6MU2bh2VzOezi1BJZv7
-         FCQIv1JzG+zc0lgXTdxXY+3DMgT+NOFMOgJbqpL/vCXYQElPkZbzD8XR7z3/ZBVMy5F1
-         wp8EBapkXWdFJsUByzr7LkJ7WrknrO9ccQTT1VPqH8Ugku07L5enCAKoHM3TyhkgLui4
-         JWwg==
-X-Gm-Message-State: AOJu0Yy09e5o4x18N/7N7ixUE1q3lIm30rbWQeoCEqsZDNiDiQSnczlY
-	7/hFQMZVfHdnP/LD561hCObLUJNhRXvYugDlhnMxYWg2SBHGO/n0AxsGwgFg9GQ=
-X-Google-Smtp-Source: AGHT+IHk+mC/fG7pO9q79H3dEN8aAlJyGvqAHmPJhChitf/sDZtgl4y8tPnRH+IhsiPE5Sa2TKqS2g==
-X-Received: by 2002:a17:906:a14c:b0:a35:d2f8:4927 with SMTP id bu12-20020a170906a14c00b00a35d2f84927mr590202ejb.70.1706514539677;
-        Sun, 28 Jan 2024 23:48:59 -0800 (PST)
-Received: from otso.luca.vpn.lucaweiss.eu (dhcp-089-099-055-216.chello.nl. [89.99.55.216])
-        by smtp.gmail.com with ESMTPSA id l13-20020a1709066b8d00b00a32429e455asm3679881ejr.175.2024.01.28.23.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jan 2024 23:48:59 -0800 (PST)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Mon, 29 Jan 2024 08:48:54 +0100
-Subject: [PATCH] media: dt-bindings: qcom,sc7280-venus: Allow one IOMMU
- entry
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/TQ23FN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706514612; x=1738050612;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8E9fzWhF/4hAclcZkGyOSv5khN2S6oOJKz86E4S1Cx4=;
+  b=O/TQ23FNFbNY57d6ag2HJixL50p1b+ZQ+UDLotiCYtz1wqS+9jqiwAD1
+   PE1JtGj75wYbTl6a/QXXxrieWunLKoukNSYGRo5mV3TtHtletwwfnQk/Z
+   RjreExzUFxZO26DMJ64ihs7Y5rl82MuXOUigxXCwnAQS+xXnAj6MU8WIj
+   derLTIJAyhHBcG58EJfOOPaPcOM9gxCu3TyqdMY6sPZ145OBQbeDcb8tP
+   sqWLws38jdW7DwiBmLyp8Db9YRg8wC8MJmcoJb2g4XAY3P1suI40l6sXP
+   mcr9EHoqNcS1JNdoYIVupwjYs+x0St9KVpUlBCG47UijZlSwonjaKrOoK
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="21406802"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="21406802"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 23:50:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="910971389"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="910971389"
+Received: from yy-desk-7060.sh.intel.com (HELO localhost) ([10.239.159.76])
+  by orsmga004.jf.intel.com with ESMTP; 28 Jan 2024 23:50:08 -0800
+Date: Mon, 29 Jan 2024 15:50:07 +0800
+From: Yuan Yao <yuan.yao@linux.intel.com>
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+	erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+Subject: Re: [PATCH v18 005/121] KVM: x86/vmx: initialize loaded_vmcss_on_cpu
+ in vmx_hardware_setup()
+Message-ID: <20240129075007.kvlj6gykk6aom75s@yy-desk-7060>
+References: <cover.1705965634.git.isaku.yamahata@intel.com>
+ <51c5466c541e1eddad928af602bd889721524d34.1705965634.git.isaku.yamahata@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240129-sc7280-venus-bindings-v1-1-20a9ba194c60@fairphone.com>
-X-B4-Tracking: v=1; b=H4sIAGVYt2UC/x3MMQqAMAxA0atIZgM1SLVeRRzURs0SpUERxLtbH
- N/w/wPGSdigKx5IfInJrhlVWcC8jboySswGclS7igLa3FDr8GI9DSfRKLoaevY0huDJRYbcHok
- Xuf9vP7zvBwnbDmZnAAAA
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
- Vikash Garodia <quic_vgarodia@quicinc.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Stanimir Varbanov <stanimir.varbanov@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51c5466c541e1eddad928af602bd889721524d34.1705965634.git.isaku.yamahata@intel.com>
+User-Agent: NeoMutt/20171215
 
-Some SC7280-based boards crash when providing the "secure_non_pixel"
-context bank, so allow only one iommu in the bindings also.
+On Mon, Jan 22, 2024 at 03:52:41PM -0800, isaku.yamahata@intel.com wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> vmx_hardware_disable() accesses loaded_vmcss_on_cpu via
+> hardware_disable_all().  To allow hardware_enable/disable_all() before
+> kvm_init(), initialize it in before kvm_x86_vendor_init() in vmx_init()
+> so that tdx module initialization, hardware_setup method, can reference
+> the variable.
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+> v18:
+> - Move the vmcss_on_cpu initialization from vmx_hardware_setup() to
+>   early point of vmx_init() by Binbin
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 55597b3bdc55..77011799b1f4 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -8539,6 +8539,10 @@ static int __init vmx_init(void)
+>  	 */
+>  	hv_init_evmcs();
+>
+> +	/* vmx_hardware_disable() accesses loaded_vmcss_on_cpu. */
+> +	for_each_possible_cpu(cpu)
+> +		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+> +
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
-Reference:
-https://lore.kernel.org/linux-arm-msm/20231201-sc7280-venus-pas-v3-2-bc132dc5fc30@fairphone.com/
----
- Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml | 1 +
- 1 file changed, 1 insertion(+)
+The subject "KVM: x86/vmx: initialize loaded_vmcss_on_cpu in vmx_hardware_setup()"
+should match the change here.
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
-index 8f9b6433aeb8..10c334e6b3dc 100644
---- a/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
-+++ b/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
-@@ -43,6 +43,7 @@ properties:
-       - const: vcodec_bus
- 
-   iommus:
-+    minItems: 1
-     maxItems: 2
- 
-   interconnects:
+Reviewed-by: Yuan Yao <yuan.yao@intel.com>
 
----
-base-commit: 596764183be8ebb13352b281a442a1f1151c9b06
-change-id: 20240129-sc7280-venus-bindings-6e62a99620de
-
-Best regards,
--- 
-Luca Weiss <luca.weiss@fairphone.com>
-
+>  	r = kvm_x86_vendor_init(&vt_init_ops);
+>  	if (r)
+>  		return r;
+> @@ -8554,11 +8558,8 @@ static int __init vmx_init(void)
+>  	if (r)
+>  		goto err_l1d_flush;
+>
+> -	for_each_possible_cpu(cpu) {
+> -		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+> -
+> +	for_each_possible_cpu(cpu)
+>  		pi_init_cpu(cpu);
+> -	}
+>
+>  	cpu_emergency_register_virt_callback(vmx_emergency_disable);
+>
+> --
+> 2.25.1
+>
+>
