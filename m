@@ -1,84 +1,105 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3417E62A03
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E9B62A03
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706534590; cv=none; b=TJ/ODFWvmev2r//Oh4rLla1NqNvX6gsVm8armycNWSvV7zg4dl31M/yr/GZvpHKWhiht6Bbs548YiJ+W5LHFstBzGPZ6Oe3Cb6ITPS2NpnmEuLeq7NFMGMdF30GQ9pytmiP8QnJlNyQMmxpPk4vf2p/qiu+z6/Ek9VbKCBbGjgw=
+	t=1706534662; cv=none; b=ks/KJt5dnzhFPSo2Fvscn2TvEBF4UXVsbzfN8/FWQzr10P6vSrIcnARwybAHn4LS/TCql10H48oeWAZE5jP9MmkN0Bdr2Hf+QhZeGFfSC2Gob1NkbZ8mVb3HUqhWD6G89KEYDWUZPdxL97NWILIuudedePr/zk8uCxnUUFTmnQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706534590; c=relaxed/simple;
-	bh=GOL4CLf7NJSi1+Yl6Eux39JaESbVEoPmfBFe2dFCDvc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JMVP6gVwCvAlc1uSnK4/EOpw9MpcLLmXGx2SX4op+ISAdVXU+wkX9410rbAQJGYX+A81zQwNc8eGgbzCq2ETNK2rgK9o6mez6kFc673452E63sfWUa/7DUWEW8qkiAeZm9Hs5MowPhfgLf34e53+NudAjfzIAKRg/Vs74WZKezU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NchS+6Nw; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706534662; c=relaxed/simple;
+	bh=6i2dbAfD9PBonlVoQuQ5LLhHF3/c2cTgJ1Up88UEt/Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XcU8Nepw3dBVJuX9Hz85RQx17PD0kNZdC/bihXfSztse3BHkSAimg9+cQcPEnelmkSzzQuY3fuwhCIKrvpL5BEwzZCoqb4H4wJn+QC+EvrqvSqGOfAoQxa4gCEG/S6EeW3aK2fe538kgiGrijel5u2V2WW2OvJpz4cHop7g9F+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUQSmhLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NchS+6Nw"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55eda7c5bffso8495a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:23:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706534586; x=1707139386; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GOL4CLf7NJSi1+Yl6Eux39JaESbVEoPmfBFe2dFCDvc=;
-        b=NchS+6NwDS6r4IRefpKVS2LqB+DEKBdMPk/o6EJzgCS5qiU5GJ/+2zpUFUvTs366Bp
-         K6Fd/27iPgaSvVbZZQdOlswH8tZ2/tKeasamnTFwcpFXemiQLl2+bMv/4H/XoQE9v5MF
-         +LQQdUcZNWgfKBeI7t1fSLD3aHMl6kafZtlti8eS7UKBiuFYPLciO8wTPrnfHRTSHzzw
-         xE082tsC+J+e6GpUtI0Fs/7KSFG6zno3nF8EWrhnymU/r87FSTdh1RA58ezb4Jci8/Ww
-         IWjcfjToVuhAYCLLNEfb5ZFtXncb5/MwbooDB9LKorUgSXzbGsmAi3mpHMGZN7JglTxn
-         jJVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706534586; x=1707139386;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GOL4CLf7NJSi1+Yl6Eux39JaESbVEoPmfBFe2dFCDvc=;
-        b=vBm50A1WUi5jdMVGxfsjZUQ2hOyIUlyxcwqgE+rvMH2hEkepLHvMNe+/uvT3H+IkDQ
-         xZliN64QRvp25aWBhja3Rqpn5219ZsZGKTY6ZtWnH3kPx5Blpv//00tfWEMKVyUTkXon
-         qOcHcXrokmF7HxAhie0pIgrqbjvsdn6UiUWmzQqGWx9QovAkfNrXRDqeSEne6VysCCxy
-         1YHEJFl25Rv9g2CAVlvbTABqd+hVqQGuAi9nXf1OJN0/akaocrmUTWsBjhX7UvjYzsXl
-         YkwXIeGGRPrzr5eGIQAyukzdVlbbprnc/HnYfdpyuRvTftpn4RbDqqH233r+VAPU75CR
-         s32A==
-X-Gm-Message-State: AOJu0Yya5qJhMSB/M/Q16SCRhJpHjeFGTWMM1hdIgmv2bCBktK37Jrkq
-	86+SuKOqNJsPjyTX5akkbAtpcMTOEiJYG6w7agDU+aAUbu4BMoAYdbHr9eebxZWY8rRGenYIClG
-	6Pj89R+j+oQrtCC7hWBUMhz1eGBAjuZ1xrazqPFKlojRFFn7msA==
-X-Google-Smtp-Source: AGHT+IG1astNKH1/HDc0wBTVk6TC8yGv+pvI7UwKY5UN/sQS0hwFaBZIZw8cIgMPOsBKIZYZeMT8luqWWhKHlR6S/3c=
-X-Received: by 2002:a05:6402:b9d:b0:55c:ebca:e69e with SMTP id
- cf29-20020a0564020b9d00b0055cebcae69emr482056edb.5.1706534586055; Mon, 29 Jan
- 2024 05:23:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUQSmhLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D84AAC433F1;
+	Mon, 29 Jan 2024 13:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706534662;
+	bh=6i2dbAfD9PBonlVoQuQ5LLhHF3/c2cTgJ1Up88UEt/Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iUQSmhLpkiefjqCXgafJuu+YYxz/VQxDFLDMiPR1ntBW61Ta/jCTlsnHJd6uRuuLd
+	 OuD6nAH0EIIn/I1JGCP8IWv+Z2fqz4MIF4GKoD+TeTDoJGMAFGQbadnoCM1dQFDQAn
+	 LQAFaIWZOVhY7BXqg5lSVIgaFy07Ue6u+KefD1opnTjdXWW5R8NIRIRh62ZwZcPHth
+	 UlhiMyQJE2MStmnl8CGvTWymAchrFDE0WVp29necz7HXuyIMBc5wDoyr9VuYXLxYs/
+	 +Y0Aa3IXzGnYxWKBrKVSn7+IQtxxbI3yCs7VQMEh1j1W5RGAhg0V+ENg1SG7EYoHBs
+	 BR9KqbrVmzZFw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: pratyush@kernel.org,  michael@walle.cc,  miquel.raynal@bootlin.com,
+  richard@nod.at,  jaimeliao@mxic.com.tw,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] mtd: spi-nor: sysfs: hide the flash name if not set
+In-Reply-To: <20231215082138.16063-4-tudor.ambarus@linaro.org> (Tudor
+	Ambarus's message of "Fri, 15 Dec 2023 10:21:37 +0200")
+References: <20231215082138.16063-1-tudor.ambarus@linaro.org>
+	<20231215082138.16063-4-tudor.ambarus@linaro.org>
+Date: Mon, 29 Jan 2024 14:24:19 +0100
+Message-ID: <mafs034ugtgqk.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129091017.2938835-1-alexious@zju.edu.cn>
-In-Reply-To: <20240129091017.2938835-1-alexious@zju.edu.cn>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 29 Jan 2024 14:22:55 +0100
-Message-ID: <CANn89i+eR_WHdndbCWCgZymB=QnmMaURKeVj-by-+=fXJNgDxg@mail.gmail.com>
-Subject: Re: [PATCH] [v2] net: ipv4: fix a memleak in ip_setup_cork
-To: Zhipeng Lu <alexious@zju.edu.cn>
-Cc: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, Jan 29, 2024 at 10:23=E2=80=AFAM Zhipeng Lu <alexious@zju.edu.cn> w=
-rote:
+On Fri, Dec 15 2023, Tudor Ambarus wrote:
+
+> From: JaimeLiao <jaimeliao@mxic.com.tw>
 >
-> When inetdev_valid_mtu fails, cork->opt should be freed if it is
-> allocated in ip_setup_cork. Otherwise there could be a memleak.
+> The flash name is not reliable as we saw flash ID collisions.
+> Hide the flash name if not set.
 >
-> Fixes: 501a90c94510 ("inet: protect against too small mtu values.")
-> Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+> Signed-off-by: JaimeLiao <jaimeliao@mxic.com.tw>
+> [ta: update commit subject and description]
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 > ---
+>  Documentation/ABI/testing/sysfs-bus-spi-devices-spi-nor | 3 +++
+>  drivers/mtd/spi-nor/sysfs.c                             | 2 ++
+>  2 files changed, 5 insertions(+)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-spi-devices-spi-nor b/Documentation/ABI/testing/sysfs-bus-spi-devices-spi-nor
+> index c800621eff95..6d7be97bf7d1 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-spi-devices-spi-nor
+> +++ b/Documentation/ABI/testing/sysfs-bus-spi-devices-spi-nor
+> @@ -25,6 +25,9 @@ KernelVersion:	5.14
+>  Contact:	linux-mtd@lists.infradead.org
+>  Description:	(RO) Part name of the SPI NOR flash.
+>  
+> +		The attribute is not present if the jedec_id founded in
+> +		ID table but flash name didn't include in it.
 
-Okay, although the changelog is a bit confusing, since we do not free
-cork->opt anymore in V2...
+Nitpick: strange sentence construction makes it a bit confusing.
+Perhaps:
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+    The attribute is not present if the JEDEC ID table for the flash
+    does not include its name.
+
+> +
+>  
+>  What:		/sys/bus/spi/devices/.../spi-nor/sfdp
+>  Date:		April 2021
+> diff --git a/drivers/mtd/spi-nor/sysfs.c b/drivers/mtd/spi-nor/sysfs.c
+> index 2dfdc555a69f..96064e4babf0 100644
+> --- a/drivers/mtd/spi-nor/sysfs.c
+> +++ b/drivers/mtd/spi-nor/sysfs.c
+> @@ -78,6 +78,8 @@ static umode_t spi_nor_sysfs_is_visible(struct kobject *kobj,
+>  
+>  	if (attr == &dev_attr_manufacturer.attr && !nor->manufacturer)
+>  		return 0;
+> +	if (attr == &dev_attr_partname.attr && !nor->info->name)
+> +		return 0;
+
+Do you want to show the name for the "spi-nor-generic" flash? If not
+then perhaps drop its name as well?
+
+>  	if (attr == &dev_attr_jedec_id.attr && !nor->info->id && !nor->id)
+>  		return 0;
+
+-- 
+Regards,
+Pratyush Yadav
