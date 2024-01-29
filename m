@@ -1,173 +1,176 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2066.outbound.protection.outlook.com [40.107.104.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4701754F82
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706518516; cv=none; b=CTCMrYoFq55Qcn1WyY4MMKADLHn+hsPU1mMfAImIUiwq67A0OOnQcjZOz1Uk0E8+gKhuAUPLn8OKEFOau3xw8FZWxogbBlfFRU2QT0xCH81xMJ6TTxGKNwEW1+W29yv8S+GB/XAE4kMngTYu2x1lW8KFUrV7PJYC3NjwJHystfI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706518516; c=relaxed/simple;
-	bh=xLQlDgS8uevy1Wf+yRGr1xMGsI9r43Mqvjl7x16vqyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D2aWR/ITMKPE7iQwIEwPf4UfDfFY+8oYl+JA20jawvITScEzMvpPzngVIC+ax97Cxt7X0jMDpTaJdFfk0ah3Pn3j6dKBf1Z+JoXcjP9oCiHK78bQHQ5wm46WUAnlNyVPrIQGz15tLzUaiJxwKTT7VcUB5xat73/njaSsS+ePgZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Rg2U//TU; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A8954BCF;
+	Mon, 29 Jan 2024 08:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706518640; cv=fail; b=QCnUCDWh0iLfM2OJQ7X3SLDPTe7LquyPmaTMVO6jLkBqdNhEquVbIA4UEs2RuTe7VA+84OWraflv3cCH4BmULVSnsaCH8mzDcMHE66bqV2xI0r8wRWW0ptuvwU8kGp0KjdDJwxRtaJlm6pGpYZ0S5fafwq+RQrpxmI0vf4dMmis=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706518640; c=relaxed/simple;
+	bh=KiTY6AAwokQQ/Las4PrqmRLJHTiHfOMeoDDkQdaw5/E=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cpPzcL1zGr1UtQjTyv5unU4HpvrkAehbb0L90+UH//tcD6XtRV0km13apZALXTVusL6LGlOPqWNNysrNBV4GDmV1PPhv5RorhfFzmx+44ti7F4SiXsPhh40q5C+bg8kp487idsCZmHp6bq8TZUW2u+VBrkVL0zRxO78e99Y3Hv0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com; spf=pass smtp.mailfrom=theobroma-systems.com; dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b=NoggrED6; arc=fail smtp.client-ip=40.107.104.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theobroma-systems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Rg2U//TU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706518513;
-	bh=xLQlDgS8uevy1Wf+yRGr1xMGsI9r43Mqvjl7x16vqyo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Rg2U//TUJ3KYyQnPpd0pX3z282Bd+kOxagTa1g28OSE2xZmI3hsWAO0++Hw6tijwz
-	 Kscj43fTyD2ichBFYZ7+n/xM+Ll9y8DPK448ldrhJff8dTwHNpBsQmPioq9kE+jgA+
-	 finmVnHCc/TnyoO/gYWhgHUP4PdiwNlj+olAehCax+lhdvCpTp9PdkapQhiP5KzrJ/
-	 IMMdFF/nJ9xZJ+XVqk8VAw+cbAxoq7+SGHSUx6HpcMmYk7JK04RzGBNIRtzSiyWTtm
-	 2eXBpgt4ciX/JkvXx06mq+j/E0NOyPsCg3zGOc6IURqd5IprR9GABjGlh3VHiajFoa
-	 ty3alJCXPlg5A==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 42CE337814A4;
-	Mon, 29 Jan 2024 08:55:12 +0000 (UTC)
-Date: Mon, 29 Jan 2024 09:55:11 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc: David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, Qiang Yu <yuq825@gmail.com>, Steven Price
- <steven.price@arm.com>, Emma Anholt <emma@anholt.net>, Melissa Wen
- <mwen@igalia.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com,
- virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v19 22/30] drm/shmem-helper: Add common memory shrinker
-Message-ID: <20240129095511.31f8a2af@collabora.com>
-In-Reply-To: <ea74a26d-d97f-4d09-bc24-67484ee45b76@collabora.com>
-References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
-	<20240105184624.508603-23-dmitry.osipenko@collabora.com>
-	<20240125111946.797a1e1e@collabora.com>
-	<f4870543-e7f8-4ee6-924a-68ec7c25b293@collabora.com>
-	<20240126105537.67b1613e@collabora.com>
-	<fab38fed-635c-4dbe-aa13-dcdf8f267988@collabora.com>
-	<20240126191230.0ee6f99f@collabora.com>
-	<ea74a26d-d97f-4d09-bc24-67484ee45b76@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b="NoggrED6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bZQOHf2QRMgZf4SY8QdSG8fyG+GrklQvX6G/wIr3V5IcthrW2Hfo0Lv6Z9QQoDH7pcU5XJxm28CHTeHmM+20iADhUiSZPs8BocEl3hvqFfpffd/wA0oAeDxoauJzbpHUZvP9Zml4q9no+7CuJ8uVvXYH756APJVwF1i4E5vsGCYJscFtMfDPi60i9JhN2M0ZOUQ7Ksnoe7GvOF1d9hc69H+srPUZ1wrwK51hGUQp4nIWl9t11+yYko1/kufd7XF2xx8oFh3fUPk9VgM2Mymob8NEfnWBSQlZLNng6BH3xoXF8Sn3XiTjSi89qMMAFNJ+uzVUhqSd9gq0ba2XFkpYsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q46nCmTFHjWwJBg0J/4G6n55uo6ypLPpWnEJs7WYOd0=;
+ b=gPsfh8O3SfVG5SUtPTPJ2lUDkBae6PGAcS3HJfC3GSpGXJmrqxRSln1t/js1PEIOP9zfkjK497Ein0id4v1yhYSdc0qeH3c3VcX/sk+1Tgy+00g6F/fk1koJAM4gTvTIsQohzae6kseasBImhNjB0oNRxmI699m/YQcZp48HZMo4IqbQK+GYcQlMluRygcPXO6Ie1T5zyUr5m7JEZPBJXREaHF9TnsQLXIp/YGwaA53H1nFXzUjkpIno0/faydRxon011BMKIQpUKFJJ772Rz6gKn6LtPCFJYGvr+y+gj89stndMP8xIY6gCI6CHIHDeQY5catFJVCfXh2Ub8VRRNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theobroma-systems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q46nCmTFHjWwJBg0J/4G6n55uo6ypLPpWnEJs7WYOd0=;
+ b=NoggrED6y3E2on3aknVI1/dHd6Mu8a6U4ZchiOTv56jsLhLCoWEJiet2tbnsFKqY4mG2D5yiPZzP4qzTmpS5aHZpLaQLtk0Axzq6C3ngSmP1KTBCuPzXHN/2Z1t57AxHk5XiwGHao7JeraRLUEjUtdKURzt3wc3trpc1B5udVl04yq1+0XJF4m2PMP8PrWkfQauoNwGBxCGjr3Nqp23rRJHX5qGxxhtEmXX+p8R5fYwSe99azpfqu8f13WkU/DvIXxX9fbAg0kIuqJtboHNWw3xQ/zGCDzriKWLqAjHbqV5wouqFmrO5xXIj+21ZqgOtB1V0bipA/dIVA3Fr74JYQw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com (2603:10a6:803:122::31)
+ by DBBPR04MB7561.eurprd04.prod.outlook.com (2603:10a6:10:209::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
+ 2024 08:57:14 +0000
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::d4b1:cea8:7085:ec50]) by VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::d4b1:cea8:7085:ec50%4]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 08:57:13 +0000
+Message-ID: <37522087-d3ac-4cc7-b11b-c844d36206ba@theobroma-systems.com>
+Date: Mon, 29 Jan 2024 09:57:11 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/6] serial: 8250: Support separate rs485 rx-enable
+ GPIO
+To: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ quentin.schulz@theobroma-systems.com,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+References: <20240126-dev-rx-enable-v5-0-5d934eda05ca@theobroma-systems.com>
+ <20240126-dev-rx-enable-v5-2-5d934eda05ca@theobroma-systems.com>
+ <098216ce-50b3-43e4-ad1a-42228c58b761@gmx.de>
+Content-Language: en-US
+From: Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
+In-Reply-To: <098216ce-50b3-43e4-ad1a-42228c58b761@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0222.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e4::8) To VE1PR04MB6382.eurprd04.prod.outlook.com
+ (2603:10a6:803:122::31)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6382:EE_|DBBPR04MB7561:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3518b05-c824-431f-50b2-08dc20a84937
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	FOCT+6hKvLZ9KENFi5F0ocEHfbd1wo7VEwgVxtbJPdYPzWPim7rOayph2RSedDKwbF8DriHwYSuQmWiIfj2bg6wYCz7DX9KRWdX7b/7ZiX/sGh23VdjPnLRC+gUCjx0UfMPZ82jAnW05ontD+KsLavGVGYoJOp4rHGkZWM/25OCPIcK9JxS9KEVvtA+CFY0ONgqMu7/fn/4pG4sRH3j12AZZd/caYbGs3LDgQKCpYFI346DQEuKztnxuXKhqU/xDK2gZc7Go5suii/N5xrIQ+6FUrldsS4A6qNMFtJGXTxZymANTMtxAc7VFq1x6600j6hWvTGszy21bDYquc78CL+0jXMD9JqenLJ2FgXNVRg5qOZ3LM5LnGBiaqj7hOH15Qo3RMK3chFeag9WKyZn3s8oUMtxcs8NNYmydtEByaStvJ1ki2H6F6FiO5crJdmK5J9AsTxUrbSiqS+yCyx5qM8O6rGCraWmijiEauOfPlQOWM5UFzXiBYQy+DAHBdph8e6uN13Xx+63SwArU7SUTPj5DawuV74eSh0JkhlOWIO7ENvs/qCdOTSVBBSJFAMF8VaU5CyiAX2+AD+W12RUHTg6wovfeD9vmkmjE4oKtIRytZkZWUzHOpw/IcIAeKFCK/xsvz1bLc5rOXcm09/4iuQrMTm9DKG/RbOGZH01VOK6Nekul0YYPywj20s4I6Hzc
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6382.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(376002)(396003)(136003)(366004)(346002)(230922051799003)(230173577357003)(230273577357003)(451199024)(1800799012)(64100799003)(186009)(26005)(83380400001)(53546011)(6506007)(6512007)(2616005)(107886003)(38100700002)(5660300002)(7416002)(8936002)(8676002)(4326008)(44832011)(41300700001)(2906002)(478600001)(966005)(6486002)(316002)(54906003)(110136005)(66476007)(66946007)(66556008)(36756003)(86362001)(31696002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cGpuK2tMV0dmRXZwZFYxNkRvMmtGYXFCS0czdGZJR1RsdU50TmpYZFE0RzRz?=
+ =?utf-8?B?QkJqNnRObmgwdmxIUnJsT0pzUUNUZ2tqeWZkcUJsQmg0bmdEZTJUS0hWOFZy?=
+ =?utf-8?B?RTRQRFlWK2tvb2pKdjZtUFlFTS8wVjZGTGZIY29MaUUwakZyczcvUmw1bDFV?=
+ =?utf-8?B?cXVuTFJqKzR3bDRrSTlRejJKY1MrZ0VVWHM4My81Mlk4SWhHYkc3RHR6dklU?=
+ =?utf-8?B?ZWpaeVBJLzNqaEE3dlI4Yk96TGhzWTVmelgweUNldkF1TkFjV2c2blh3Ni9h?=
+ =?utf-8?B?QVE1anYrNzE0V3g4ak4vUEU1aStrVmNaNitqWkpsc1BUaXFkMGl2VG0xdnpw?=
+ =?utf-8?B?Kys5YjRjWWtqOEhodzFIRzNyK0R3ME1nVlVOMU5yQWFVZStJeXVKMEYyQngv?=
+ =?utf-8?B?SzNKTVU1OGVLNWhkeVJBb0dRazl3K2FtblFwZkNUSEFkUXZneFREaGRkbWhq?=
+ =?utf-8?B?T1JNTTh1MEtaYTR3MkVrNmRPRFFLZjRkekM5bUVkM3hTU0c3ZC8weXY5c1NF?=
+ =?utf-8?B?M1dtN1ZuUFpOUjVqTFMrdmxlYW9EWFBBdk90U045NHAyS1JlUnVFSnM1UTIx?=
+ =?utf-8?B?Z3RWU0wwMHBnejBoWERucW13VGUrNnBaS2sxb0V5anV3UFhIODY1dm92c04r?=
+ =?utf-8?B?NERXWlBxZkU2a3h2bzR2U1JqRjk5TS9VekNZTHlyREV0Qy9tSHppanZZUFF2?=
+ =?utf-8?B?WUgzTE5LNCtYQ3ZMenlJNEp5VlA2enlSdVdWWlpoRERDNklHWkVSaVAxbzMv?=
+ =?utf-8?B?Vkxtb0hacXp6T0Q2MldFMXI2dnQrY1R2NFZndzFnM2RaT053bTdicE9wMGFI?=
+ =?utf-8?B?b0JpQnp1VW5GM2hNMGxNN1R3OEY4OUppVVhEeHU2elBYVzFVWWZ6MVJrY1Fu?=
+ =?utf-8?B?RUs0Y3l2T3V4V1AwYzljc093bW1wZGV1aVVyT0tOM0JkajZ1clpvaUVkRm9z?=
+ =?utf-8?B?aDc4MzRhcTlpLzdQd1VwaUp5R1Z6emRFaXZjMXZ3NFlHTmt5TlhBbVdWdEJR?=
+ =?utf-8?B?aGF4dDJKem04WUY2MmtOMng4a1EvVW5Qei9uNVRRTlJEUFFkTEZPL0g0NE53?=
+ =?utf-8?B?ZDlTN0JiL1BLeFREL1MydHkzQUZzWnBWU0ZtbHNwZFFTL3l5N291Q2phNXdl?=
+ =?utf-8?B?VVJjdE1UNDBzbmZtK005b3k2bTlKeUdEdEkwWndIZk41N3FJUStlbG91Tkh3?=
+ =?utf-8?B?VzM3RzI4ZkdSQzg1SG5nV1JMWVovYzQ0NkJ3dUs5VnZFLzdvdUh5ODJ2K0Mx?=
+ =?utf-8?B?citaTWJpWEtLT2ZjWFBXWW5rRWhNSWc0NUszK0NJVDhYZ3haMkVLVmFtcy8z?=
+ =?utf-8?B?dzZQNkhiVjg5SkpxWDAwamgyVmE3cEJuaVk4MTZ0K1FrNlVuWlNEY2t6SmRr?=
+ =?utf-8?B?NjIzbmpNOXJXbENEbCtObFlhNkxEbFJlWGNxdEJwN1lhMUxSek8zMXo5MHNr?=
+ =?utf-8?B?MklXUis2d2VFK2JGYldhSEorN0psOC84SnMzVTN4dllUTndnRXhtT2lvY1Fq?=
+ =?utf-8?B?QWFJR1hzZGVJWWN2RmJ4bHBCc3dSQjkyQkYzZTVyTXl0VStHbllnTnZnQU1F?=
+ =?utf-8?B?dVk5ZGNrVTREZEM1VDNqWXhlWTFtZThvcmRJSVdSTWt0N1ltdXc0RmhldkYy?=
+ =?utf-8?B?RE1yYjk5SnR4Q21YVUlXQ3hKSXlSK1hLUkNFRUhhVkV6QS9CYmVkNFZvWnND?=
+ =?utf-8?B?RHJZM3orS3NtcEVZUis1eWJoWmlPMDY4cVN4MmQ4dTl5WFB2d09QVlNDWkxv?=
+ =?utf-8?B?cXJpSGxyNXRYMlFCRmI1dTRnemZzVzhnZDY5RFpZWHFaSW4zd2xtTkJUbGdB?=
+ =?utf-8?B?Nm9NT3ZXd21PcGJpS3FPRkFWeTVIQUFTVkJxTWI3cmNEaWt0cFpqcXhrcWVD?=
+ =?utf-8?B?cnRFenZyT0szLytOWFVJWFZvK3pvVVlmbjdJaTNROUZsbEpib1NFdDU0Q1hF?=
+ =?utf-8?B?aXFmSTZhSWZtSVhFSjd0eHVKbUZZUFFKU2EzcEhWbFh2V3Z6TDRCOENuZWt2?=
+ =?utf-8?B?L1BBc1NlMlNORm5uM1Y3LzR0dTZTMS93U0lPeENrQnZiNzloYXJZalFENUZa?=
+ =?utf-8?B?NHpLU0JMV0c3cFdRUkducTAvT3hiTk5heGI0WkYvdVlKQzdBTjdjM09HWVBQ?=
+ =?utf-8?B?WVhKcGpwM0RaLy84U0J5NlgzekwvYVd3K216ZUEyK05HTjhPYnRpM2J1R21P?=
+ =?utf-8?Q?4zeAboY5y+36FFwB+EN+6Kk=3D?=
+X-OriginatorOrg: theobroma-systems.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3518b05-c824-431f-50b2-08dc20a84937
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6382.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 08:57:13.6044
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TuMuNEpJ9OhmH8OmExjhsE+Aw0xKuMR2dC1aq2WD0AZKoDHsbrPsk7l39X1A2QH5ZT7bPBas/mpdH0nRbcthrjGLXiiOLYPRa3qMEf1DQtmaImTdf4WA+Pvg4Z+sirGK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7561
 
-On Mon, 29 Jan 2024 09:16:04 +0300
-Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+Hi,
 
-> On 1/26/24 21:12, Boris Brezillon wrote:
-> > On Fri, 26 Jan 2024 19:27:49 +0300
-> > Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
-> >   
-> >> On 1/26/24 12:55, Boris Brezillon wrote:  
-> >>> On Fri, 26 Jan 2024 00:56:47 +0300
-> >>> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
-> >>>     
-> >>>> On 1/25/24 13:19, Boris Brezillon wrote:    
-> >>>>> On Fri,  5 Jan 2024 21:46:16 +0300
-> >>>>> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
-> >>>>>       
-> >>>>>> +static bool drm_gem_shmem_is_evictable(struct drm_gem_shmem_object *shmem)
-> >>>>>> +{
-> >>>>>> +	return (shmem->madv >= 0) && shmem->base.funcs->evict &&
-> >>>>>> +		refcount_read(&shmem->pages_use_count) &&
-> >>>>>> +		!refcount_read(&shmem->pages_pin_count) &&
-> >>>>>> +		!shmem->base.dma_buf && !shmem->base.import_attach &&
-> >>>>>> +		!shmem->evicted;      
-> >>>>>
-> >>>>> Are we missing
-> >>>>>
-> >>>>>                 && dma_resv_test_signaled(shmem->base.resv,
-> >>>>> 					  DMA_RESV_USAGE_BOOKKEEP)
-> >>>>>
-> >>>>> to make sure the GPU is done using the BO?
-> >>>>> The same applies to drm_gem_shmem_is_purgeable() BTW.
-> >>>>>
-> >>>>> If you don't want to do this test here, we need a way to let drivers
-> >>>>> provide a custom is_{evictable,purgeable}() test.
-> >>>>>
-> >>>>> I guess we should also expose drm_gem_shmem_shrinker_update_lru_locked()
-> >>>>> to let drivers move the GEMs that were used most recently (those
-> >>>>> referenced by a GPU job) at the end of the evictable LRU.      
-> >>>>
-> >>>> We have the signaled-check in the common drm_gem_evict() helper:
-> >>>>
-> >>>> https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/gpu/drm/drm_gem.c#L1496    
-> >>>
-> >>> Ah, indeed. I'll need DMA_RESV_USAGE_BOOKKEEP instead of
-> >>> DMA_RESV_USAGE_READ in panthor, but I can add it in the driver specific    
-> >>> ->evict() hook (though that means calling dma_resv_test_signaled()    
-> >>> twice, which is not great, oh well).    
-> >>
-> >> Maybe we should change drm_gem_evict() to use BOOKKEEP. The
-> >> test_signaled(BOOKKEEP) should be a "stronger" check than
-> >> test_signaled(READ)?  
-> > 
-> > It is, just wondering if some users have a good reason to want
-> > READ here.
-> >   
-> >>  
-> >>> The problem about the evictable LRU remains though: we need a way to let
-> >>> drivers put their BOs at the end of the list when the BO has been used
-> >>> by the GPU, don't we?    
-> >>
-> >> If BO is use, then it won't be evicted, while idling BOs will be
-> >> evicted. Hence, the used BOs will be naturally moved down the LRU list
-> >> each time shrinker is invoked.
-> >>  
-> > 
-> > That only do the trick if the BOs being used most often are busy when
-> > the shrinker kicks in though. Let's take this scenario:
-> > 
-> > 
-> > BO 1					BO 2					shinker
-> > 
-> > 					busy
-> > 					idle (first-pos-in-evictable-LRU)
-> > 
-> > busy
-> > idle (second-pos-in-evictable-LRU)
-> > 
-> > 					busy
-> > 					idle
-> > 
-> > 					busy
-> > 					idle
-> > 
-> > 					busy
-> > 					idle
-> > 
-> > 										find a BO to evict
-> > 										pick BO 2
-> > 
-> > 					busy (swapin)
-> > 					idle
-> > 
-> > If the LRU had been updated at each busy event, BO 1 should have
-> > been picked for eviction. But we evicted the BO that was first
-> > recorded idle instead of the one that was least recently
-> > recorded busy.  
-> 
-> You have to swapin(BO) every time BO goes to busy state, and swapin does drm_gem_lru_move_tail(BO). Hence, each time BO goes idle->busy, it's moved down the LRU list.
+On 26.01.24 20:58, Lino Sanfilippo wrote:
+> [Some people who received this message don't often get email from linosanfilippo@gmx.de. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+>
+> Hi,
+>
+> On 26.01.24 18:27, Farouk Bouabid wrote:
+>> From: Heiko Stuebner <heiko.stuebner@cherry.de>
+>>
+>> The RE signal is used to control the duplex mode of transmissions,
+>> aka receiving data while sending in full duplex mode, while stopping
+>> receiving data in half-duplex mode.
+>>
+>> On a number of boards the !RE signal is tied to ground so reception
+>> is always enabled except if the UART allows disabling the receiver.
+>> This can be taken advantage of to implement half-duplex mode - like
+>> done on 8250_bcm2835aux.
+>>
+>> Another solution is to tie !RE to RTS always forcing half-duplex mode.
+>>
+>> And finally there is the option to control the RE signal separately,
+>> like done here by introducing a new rs485-specific gpio that can be
+>> set depending on the RX_DURING_TX setting in the common em485 callbacks.
+>>
+> we just added the rx_during_tx_gpio to the serial core.
+> Why cant you use this GPIO for your purpose?
+>
+> Regards,
+> Lino.
+What we are trying to implement is a gpio that emulates the RTS signal 
+itself as we do not have a dedicated RTS signal that can be controlled 
+through MCR. The rx during tx state in our case is a fixed state of 
+"NO_RX_WHILE_TX"
 
-Ah, that's the bit I was missing. It makes sense now. I guess that's
-good enough for now, we can sort out the BOOKKEEP vs READ in a
-follow-up series.
+Regards,
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+>
