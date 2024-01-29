@@ -1,113 +1,121 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44B463105
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66B4634F8;
+	Mon, 29 Jan 2024 13:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706534875; cv=none; b=gIufcBqyzyf/4xkB9Fx4R6eeX3+ePDKdSfB5d9Drk5GeWKWEK1/cmarHwLtqjAXv9wx4RmBWfQvO4JRP4AgiqQcoqwbh32MwZDsEGnrkUEwBOkYzERxFYXy8A7PAYm+Ynd0hq9mIx2y/Sm5z9M2cvsI1TGmWaSwFYGWUbyIWKZY=
+	t=1706534881; cv=none; b=UNw5Z7NslysRNjY53quXm4wadeHN8iVrEQfmk9+JRdWAwSf5UQUGqtYbOJGF10YabUa7WDaWE/2wOCwUEz/vTHagQoKNAVt//Qdw+4YBy+Pl5bCNf94opCJNcmliSFBtlS0Y2+SOTa5f6RiXR707BZrh3Nz3CjbF3btcf0JWK2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706534875; c=relaxed/simple;
-	bh=X3kl8N2vafBkloeoPe9c+Hpl2cjCFdlalloXzGtwppE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0awJ2J4f6KyH5KK+Yi3SeKz0zbUDXNFYnsSFgjDgPCUQeSFJw7YfR1w63EU9T7BvYvzP520NMEeMjo5L/2XaUnF4VqEFf3Hib8XOQuQ6QD9zQXS3NfMYNI2mAoxHarxenjr4Cf1qHyZCjNAtb9CdCPlKhRpdUpT1DlkIIZlOac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GA9qMj1z; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706534881; c=relaxed/simple;
+	bh=vducFJeFkLdtwA38Jvbd3L1iibUB5ilE2u9MWdmjSoI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l21PQMxuW4p4a14xeckS6EfbYgHVtL5nPm/4nVbqieDnYfKruZvGkNQzXYDtOlAxDNdWg1Qd35zm1JJuwxeaVQI89SmUw8ty2FBoDaWBr3Hfqk7C48DK0DFYQjWiGTMbP+hkp4X1Jh/bEJSwYZ/yzITGg9wmfcooNBwwNpw6iME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NFllUqx9; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GA9qMj1z"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55790581457so2961104a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:27:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706534872; x=1707139672; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SvkwZXsYxPu3g0WrMtrLcpdJEvY5sTv7TKTF9i+RZnU=;
-        b=GA9qMj1zKWFD+F6GmflzE6D61yGfApthHosbY2qFGas3qKTSgKMqZlynD6IVkT6Chx
-         MlpnJtkQ080v31cdxGiqym285B0XwLwdGUjs46Dob2NYV5zJD+13eBGwoSL7+kyhordM
-         gXMvRHs2aDoIy+jButX9PvXbyKWyB35YANFg2bcvmmgHnQkKpi6liNurl6LRqEUj+jdT
-         pkMTmSDDbZgpsvmlMEA7TAbXUWpLYFxzQIKMvlWOuD2Lf7U2XfKJvkp/go74PfftQnDT
-         ZI65u/923k7v443tw12R7p/boODWMQ1rzSrei8kXsa+IC7cTQdPvYw7yrkQn69Sn7+zm
-         V3cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706534872; x=1707139672;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SvkwZXsYxPu3g0WrMtrLcpdJEvY5sTv7TKTF9i+RZnU=;
-        b=GOS8zJL7AGBUS5ZXIbrChG23UOD2ZNQftmIdl4tuCns6tzR9xLsFsnlCrUgj/DgXRC
-         6wZMAvbN7h4jGClhdqVQHyYRYYSi6nni3cYqbvO/u7KdTf5lpaXMuru88hgO8VwNv/Vj
-         wEW3eAPXoZ6nV2Lw4fzNt2g1u8nTn10FHTngfpOYfN7jxqmf63si6WoFGs7WQ3QSqjiH
-         vIqIUsoE+9SUChSFQ8lJ7rvX5c3jYOywt/5HYKn2uVvbCejcU6sJWphGnsUDFOSVD5fo
-         grkAWZU3Li+v8NpmjL5j9Wx1kkyQiM7ZBehQ8CD70ROqBUBcqR9WTo6fJpybfFOab+BX
-         g4Gg==
-X-Gm-Message-State: AOJu0YxT7T07PkCvq0qoKboyROS64t3WUJx0Grk2l8b2+hQCIucMxkLN
-	YFbWWwwygQD6XCm8VgGNE4I06n2szaGK5PLVUc83xyAwskGSZQobY7RUtxl3IUE=
-X-Google-Smtp-Source: AGHT+IFnx1q5hL4nHDdmXKFiDszwxY6FzyveSXwDW9rfgUz0h6+gSYZlzeffKj30ObxZrGj6146rIg==
-X-Received: by 2002:a05:6402:1285:b0:55e:f71c:c47d with SMTP id w5-20020a056402128500b0055ef71cc47dmr1944387edv.25.1706534872147;
-        Mon, 29 Jan 2024 05:27:52 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id es19-20020a056402381300b0055cffd3fd32sm3773362edb.68.2024.01.29.05.27.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 05:27:51 -0800 (PST)
-Message-ID: <99babcb3-770d-487c-a297-beea2f6f8e9e@linaro.org>
-Date: Mon, 29 Jan 2024 13:27:50 +0000
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NFllUqx9"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40TDRpsS128833;
+	Mon, 29 Jan 2024 07:27:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706534871;
+	bh=/ql4DV3w2pKY7iVs419kuEdwMG95w7SUYZxvgOJ1+5I=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=NFllUqx9BtkI/F6/OPo9P2N7k/ymTtHQfzu+mQFHTy8dQsEQEdhT3z0/O49uWU1y6
+	 4RICnI0JXitvCiApIn9pPqQv1PjKQywSxKhM//paCViP3AsmffF++1W4P63OCSyuXq
+	 ykGop3digGs8VYSSV1LUpj2EFI8HapDlAPtvFO9A=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40TDRp4T030321
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Jan 2024 07:27:51 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Jan 2024 07:27:50 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Jan 2024 07:27:50 -0600
+Received: from uda0490681.dhcp.ti.com ([10.24.69.142])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40TDRg9B036720;
+	Mon, 29 Jan 2024 07:27:47 -0600
+From: Vaishnav Achath <vaishnav.a@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <kernel@pengutronix.de>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <vaishnav.a@ti.com>, <u-kumar1@ti.com>, <j-choudhary@ti.com>,
+        <j-luthra@ti.com>
+Subject: [PATCH 1/9] arm64: dts: ti: k3-j721s2-common-proc-board: Enable camera peripherals
+Date: Mon, 29 Jan 2024 18:57:34 +0530
+Message-ID: <20240129132742.1189783-2-vaishnav.a@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240129132742.1189783-1-vaishnav.a@ti.com>
+References: <20240129132742.1189783-1-vaishnav.a@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] mtd: spi-nor: drop superfluous debug prints
-Content-Language: en-US
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: michael@walle.cc, miquel.raynal@bootlin.com, richard@nod.at,
- jaimeliao@mxic.com.tw, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20231215082138.16063-1-tudor.ambarus@linaro.org>
- <20231215082138.16063-5-tudor.ambarus@linaro.org>
- <120bf090-0c07-4971-a18a-a1b326f1b139@linaro.org>
- <mafs0v87cs238.fsf@kernel.org>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <mafs0v87cs238.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+CSI cameras are controlled using I2C. On J721S2 Common Processor Board,
+this is routed to I2C-5, so enable the instance and the TCA6408
+GPIO expander on the bus.
 
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+---
+ .../dts/ti/k3-j721s2-common-proc-board.dts    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-On 1/29/24 13:26, Pratyush Yadav wrote:
-> On Fri, Dec 15 2023, Tudor Ambarus wrote:
-> 
->> I missed to drop some unused variables. Will drop them if everything
->> else is fine.
->>
->> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
->> index a708c3448809..92c992eb73d5 100644
->> --- a/drivers/mtd/spi-nor/core.c
->> +++ b/drivers/mtd/spi-nor/core.c
->> @@ -3492,9 +3492,7 @@ int spi_nor_scan(struct spi_nor *nor, const char
->> *name,
->>  {
->>         const struct flash_info *info;
->>         struct device *dev = nor->dev;
->> -       struct mtd_info *mtd = &nor->mtd;
->>         int ret;
->> -       int i;
->>
->>         ret = spi_nor_check(nor);
->>         if (ret)
-> 
-> 
-> With these, 
-> 
-> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-> 
-Hi, Pratyush,
+diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+index c6b85bbf9a17..3667aa179306 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+@@ -147,6 +147,13 @@ J721S2_IOPAD(0x060, PIN_INPUT_PULLUP, 13) /* (AC27) MCASP2_AXR1.I2C3_SDA */
+ 		>;
+ 	};
+ 
++	main_i2c5_pins_default: main-i2c5-default-pins {
++		pinctrl-single,pins = <
++			J721S2_IOPAD(0x01c, PIN_INPUT, 8) /* (Y24) MCAN15_TX.I2C5_SCL */
++			J721S2_IOPAD(0x018, PIN_INPUT, 8) /* (W23) MCAN14_RX.I2C5_SDA */
++		>;
++	};
++
+ 	main_mmc1_pins_default: main-mmc1-default-pins {
+ 		pinctrl-single,pins = <
+ 			J721S2_IOPAD(0x104, PIN_INPUT, 0) /* (P23) MMC1_CLK */
+@@ -356,6 +363,24 @@ exp2: gpio@22 {
+ 	};
+ };
+ 
++&main_i2c5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_i2c5_pins_default>;
++	clock-frequency = <400000>;
++	status = "okay";
++
++	exp5: gpio@20 {
++		compatible = "ti,tca6408";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "CSI2_EXP_RSTZ", "CSI2_EXP_A_GPIO0",
++				  "CSI2_EXP_A_GPIO1", "CSI2_EXP_A_GPIO2",
++				  "CSI2_EXP_B_GPIO1", "CSI2_EXP_B_GPIO2",
++				  "CSI2_EXP_B_GPIO3", "CSI2_EXP_B_GPIO4";
++	};
++};
++
+ &main_sdhci0 {
+ 	/* eMMC */
+ 	status = "okay";
+-- 
+2.34.1
 
-All in these series were already applied, as I specified in a reply.
-Please check patchwork for patches that are not yet handled.
-
-Cheers,
-ta
