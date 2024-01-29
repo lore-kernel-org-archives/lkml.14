@@ -1,155 +1,237 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B801C55765;
-	Mon, 29 Jan 2024 09:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E9F55E63;
+	Mon, 29 Jan 2024 09:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706521166; cv=none; b=ght2K2Bw6r7nGFgNuzfYWBoPMIbfPuW3sRyaQy9/cO9sdCdet+Ps9WC+pn2Q2mNEjmuxzES0esH38VVyqFl3x3sdcMf/EfL4xSxBrt8bKRJHiQjG3F9pioUX1mQ/YykpJPX/w6cMsVSvSUrshq2cCtubGrePOEL3yDNkAUAn9kY=
+	t=1706521182; cv=none; b=qClwbzzcFPFlJI9+L0xg7Z5hJBUbbdFuBUMnVAwSposkrVfbhn2xlBrt7KczDEevbf8p+nqukuzPYQzmwYkvJFgdWC6ts+92sqBVd4tNrZ7m/dH+5e67/7btF8K2S8CByC6FYOPxSmsoFlU+Rvtjj8x2U/iX7SmSWck2X2oAE5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706521166; c=relaxed/simple;
-	bh=aWQKANCB/jJlxRlIU3TNvJO3vbpQJA7QbcB8gMmUMn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKFfxoPpw9ngggyZuYlkNNoOwYks6ox3yDg+W4I8nYl+KkFcsPwXMRQC8rovMBqt5zqlE+zm3w1Bztlrfrl4pjOrMY+TNKuOLOVWQ5YG8TW4kSI6cWihBBLCYitij1iGvMRB/sftXngQdPy9hyRmg0eHBcm5AyhteRxsMg38oWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QqwMqmKw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=OCJJC7if; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=v2txEFOd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NfJqAgE9; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1706521182; c=relaxed/simple;
+	bh=vUokWzEw5+VC5jpC2OPRStu+GWoiZ2lrs+sppMiHM5k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HV6Udwh272czUxQz686S+rvBw8jUj3iyyWi6j6b5spvLHC8lOjTIAPKRHGAFAoDdA4fiSvRF4FgM5A1S1TaAGqG05g/IL1V+7nLIDvyy0pUcMeUFvf2RU5ibtJ7p+cwEbkovQj1UnpJTy+/XqfuoW4NSHNKzT5VVb8101JOApEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DiK3P93Z; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QqwMqmKw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="OCJJC7if";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="v2txEFOd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NfJqAgE9"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F0EB01F7D9;
-	Mon, 29 Jan 2024 09:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706521163; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
-	b=QqwMqmKwn8G+sV4alb5J5Zb6QNYpHkBtse++XJGocEIXkwAQQR6VBMUFkrwIenXSWeenRy
-	3EvYzQZ2omC1XO3k8b/2TLJGa5zrgnD44aEd3c1zld8/CCxSKrxhSvUINEDViYXaKSALNf
-	yocKEbGJSGRnkqT+YOH/zen44ioq7N0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706521163;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
-	b=OCJJC7ifMExXqfg03eA10zHyBgtoOnmuHsTgr60bTaUC87QvCt1IJrkpCzPrmKGgIicDp/
-	0QFU9yihX6SSmKDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706521161; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
-	b=v2txEFOdGNP2le+AkjHqbQhAGL2WIIj9h42Q6mMdqF1Mhpu8eUpn5/Z7p6KlO6Qjksdzt7
-	P7t9OTFNGs+alMjFO8u2+3z87x31/K7X1ZKez9L1tsAds7BTfg1Nhttc9NdvZN3R9nRjjJ
-	eBK9zg0ouhwoaHOOG+jXpOC4OuohzLE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706521161;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
-	b=NfJqAgE9a+kXY3BwphnUzsA8n9tWXWviIQIYbzIRjq/UApjtkBQiEJhXXM09ek3NlFWcQG
-	672vsJO1sGiwwMAA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DD2C613911;
-	Mon, 29 Jan 2024 09:39:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id EezyNUhyt2UgRgAAn2gu4w
-	(envelope-from <jack@suse.cz>); Mon, 29 Jan 2024 09:39:20 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 74B6EA0807; Mon, 29 Jan 2024 10:39:20 +0100 (CET)
-Date: Mon, 29 Jan 2024 10:39:20 +0100
-From: Jan Kara <jack@suse.cz>
-To: syzbot <syzbot+500a5eabc2495aaeb60e@syzkaller.appspotmail.com>
-Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	luto@kernel.org, peterz@infradead.org,
-	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	tglx@linutronix.de, yukuai3@huawei.com, yuran.pereira@hotmail.com
-Subject: Re: [syzbot] [kernel?] general protection fault in timerqueue_del (2)
-Message-ID: <20240129093920.tame7kmz46zmjpjf@quack3>
-References: <000000000000c6ec640601d95e6c@google.com>
- <00000000000072355b060ffc546e@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DiK3P93Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706521180; x=1738057180;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=vUokWzEw5+VC5jpC2OPRStu+GWoiZ2lrs+sppMiHM5k=;
+  b=DiK3P93Zk8DZxJKkBJbtJAt8nTd9VgOgq7WddB1boej3/y6zu/jB2mje
+   6JDWppiqXnjdTecPIZXMGZo9ZhuFFQlM94aJXZSKA1Beqv0VJauX4SISr
+   JR2qFdiFacmO7UEoCE3+kkoCS/X4ftQ9jehGMpnw4NlsLFdy+bzRWOU2X
+   LERX/xLMjhEHsWg6TJEvcOJkPD/wQz/0spT3pQg1Ukw/utktXB/hTYI5O
+   y7kt6rHEYJp51yL8q7RpnWAjT0tehKjfSPXwk8Sw0mke1JwHqWz1U9fmq
+   AxqX1vv6/GoyRh+8IoIRnfjpBeV2aKqkveLhYG8x6PClWmjVU1+u8nhj6
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="9650774"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="9650774"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 01:39:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="3246388"
+Received: from hbrandbe-mobl.ger.corp.intel.com (HELO localhost) ([10.252.59.53])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 01:39:34 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
+ Harry Wentland <harry.wentland@amd.com>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVERS"
+ <dri-devel@lists.freedesktop.org>, Melissa Wen <mwen@igalia.com>, "open
+ list:ACPI" <linux-acpi@vger.kernel.org>, Mario Limonciello
+ <mario.limonciello@amd.com>, Mark
+ Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH 2/2] drm/amd: Fetch the EDID from _DDC if available for eDP
+In-Reply-To: <20240126184639.8187-3-mario.limonciello@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240126184639.8187-1-mario.limonciello@amd.com>
+ <20240126184639.8187-3-mario.limonciello@amd.com>
+Date: Mon, 29 Jan 2024 11:39:32 +0200
+Message-ID: <87le88jx63.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000072355b060ffc546e@google.com>
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=v2txEFOd;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=NfJqAgE9
-X-Spamd-Result: default: False [1.37 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[hotmail.com];
-	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=fa5bd4cd5ab6259d];
-	 TAGGED_RCPT(0.00)[500a5eabc2495aaeb60e];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_HAM(-1.32)[90.27%];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[kernel.dk,kernel.org,suse.cz,vger.kernel.org,infradead.org,googlegroups.com,linutronix.de,huawei.com,hotmail.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 1.37
-X-Rspamd-Queue-Id: F0EB01F7D9
-X-Spam-Level: *
-X-Spam-Flag: NO
-X-Spamd-Bar: +
+Content-Type: text/plain
 
-On Sat 27-01-24 23:18:03, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
-> 
-> commit 6f861765464f43a71462d52026fbddfc858239a5
-> Author: Jan Kara <jack@suse.cz>
-> Date:   Wed Nov 1 17:43:10 2023 +0000
-> 
->     fs: Block writes to mounted block devices
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=172204dfe80000
-> start commit:   4b954598a47b Merge tag 'exfat-for-6.5-rc5' of git://git.ke..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa5bd4cd5ab6259d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=500a5eabc2495aaeb60e
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169efdf6a80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13733f31a80000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
+On Fri, 26 Jan 2024, Mario Limonciello <mario.limonciello@amd.com> wrote:
+> Some manufacturers have intentionally put an EDID that differs from
+> the EDID on the internal panel on laptops.
+>
+> Attempt to fetch this EDID if it exists and prefer it over the EDID
+> that is provided by the panel.
+>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |  2 ++
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c      | 30 +++++++++++++++++++
+>  .../gpu/drm/amd/amdgpu/amdgpu_connectors.c    |  5 ++++
+>  .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  8 ++++-
+>  .../amd/display/amdgpu_dm/amdgpu_dm_helpers.c |  7 +++--
+>  5 files changed, 49 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> index c5f3859fd682..99abe12567a4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> @@ -1520,6 +1520,7 @@ int amdgpu_acpi_get_mem_info(struct amdgpu_device *adev, int xcc_id,
+>  
+>  void amdgpu_acpi_get_backlight_caps(struct amdgpu_dm_backlight_caps *caps);
+>  bool amdgpu_acpi_should_gpu_reset(struct amdgpu_device *adev);
+> +void *amdgpu_acpi_edid(struct amdgpu_device *adev, struct drm_connector *connector);
+>  void amdgpu_acpi_detect(void);
+>  void amdgpu_acpi_release(void);
+>  #else
+> @@ -1537,6 +1538,7 @@ static inline int amdgpu_acpi_get_mem_info(struct amdgpu_device *adev,
+>  }
+>  static inline void amdgpu_acpi_fini(struct amdgpu_device *adev) { }
+>  static inline bool amdgpu_acpi_should_gpu_reset(struct amdgpu_device *adev) { return false; }
+> +static inline void *amdgpu_acpi_edid(struct amdgpu_device *adev, struct drm_connector *connector) { return NULL; }
+>  static inline void amdgpu_acpi_detect(void) { }
+>  static inline void amdgpu_acpi_release(void) { }
+>  static inline bool amdgpu_acpi_is_power_shift_control_supported(void) { return false; }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
+> index e550067e5c5d..c106335f1f22 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
+> @@ -1380,6 +1380,36 @@ bool amdgpu_acpi_should_gpu_reset(struct amdgpu_device *adev)
+>  #endif
+>  }
+>  
+> +/**
+> + * amdgpu_acpi_edid
+> + * @adev: amdgpu_device pointer
+> + * @connector: drm_connector pointer
+> + *
+> + * Returns the EDID used for the internal panel if present, NULL otherwise.
+> + */
+> +void *
+> +amdgpu_acpi_edid(struct amdgpu_device *adev, struct drm_connector *connector)
+> +{
+> +	struct drm_device *ddev = adev_to_drm(adev);
+> +	struct acpi_device *acpidev = ACPI_COMPANION(ddev->dev);
+> +	void *edid;
+> +	int r;
+> +
+> +	if (!acpidev)
+> +		return NULL;
+> +
+> +	if (connector->connector_type != DRM_MODE_CONNECTOR_eDP)
+> +		return NULL;
+> +
+> +	r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, &edid);
+> +	if (r < 0) {
+> +		DRM_DEBUG_DRIVER("Failed to get EDID from ACPI: %d\n", r);
+> +		return NULL;
+> +	}
+> +
+> +	return kmemdup(edid, r, GFP_KERNEL);
+> +}
+> +
+>  /*
+>   * amdgpu_acpi_detect - detect ACPI ATIF/ATCS methods
+>   *
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+> index 9caba10315a8..c7e1563a46d3 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+> @@ -278,6 +278,11 @@ static void amdgpu_connector_get_edid(struct drm_connector *connector)
+>  	struct amdgpu_device *adev = drm_to_adev(dev);
+>  	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
+>  
+> +	if (amdgpu_connector->edid)
+> +		return;
+> +
+> +	/* if the BIOS specifies the EDID via _DDC, prefer this */
+> +	amdgpu_connector->edid = amdgpu_acpi_edid(adev, connector);
 
-Makes sense:
- 
-#syz fix: fs: Block writes to mounted block devices
+Imagine the EDID returned by acpi_video_get_edid() has edid->extensions
+bigger than 4. Of course it should not, but you have no guarantees, and
+it originates outside of the kernel.
 
-								Honza
+The real fix is to have the function return a struct drm_edid which
+tracks the allocation size separately. Unfortunately, it requires a
+bunch of changes along the way. We've mostly done it in i915, and I've
+sent a series to do this in drm/bridge [1].
+
+Bottom line, we should stop using struct edid in drivers. They'll all
+parse the info differently, and from what I've seen, often wrong.
+
+
+BR,
+Jani.
+
+
+[1] https://patchwork.freedesktop.org/series/128149/
+
+
+>  	if (amdgpu_connector->edid)
+>  		return;
+>  
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index cd98b3565178..1faa21f542bd 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -6562,17 +6562,23 @@ static void amdgpu_dm_connector_funcs_force(struct drm_connector *connector)
+>  {
+>  	struct amdgpu_dm_connector *aconnector = to_amdgpu_dm_connector(connector);
+>  	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
+> +	struct amdgpu_device *adev = drm_to_adev(connector->dev);
+>  	struct dc_link *dc_link = aconnector->dc_link;
+>  	struct dc_sink *dc_em_sink = aconnector->dc_em_sink;
+>  	struct edid *edid;
+>  
+> +	/* prefer ACPI over panel for eDP */
+> +	edid = amdgpu_acpi_edid(adev, connector);
+> +
+>  	/*
+>  	 * Note: drm_get_edid gets edid in the following order:
+>  	 * 1) override EDID if set via edid_override debugfs,
+>  	 * 2) firmware EDID if set via edid_firmware module parameter
+>  	 * 3) regular DDC read.
+>  	 */
+> -	edid = drm_get_edid(connector, &amdgpu_connector->ddc_bus->aux.ddc);
+> +	if (!edid)
+> +		edid = drm_get_edid(connector, &amdgpu_connector->ddc_bus->aux.ddc);
+> +
+>  	if (!edid) {
+>  		DRM_ERROR("No EDID found on connector: %s.\n", connector->name);
+>  		return;
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> index e3915c4f8566..6bf2a8867e76 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+> @@ -895,6 +895,7 @@ enum dc_edid_status dm_helpers_read_local_edid(
+>  {
+>  	struct amdgpu_dm_connector *aconnector = link->priv;
+>  	struct drm_connector *connector = &aconnector->base;
+> +	struct amdgpu_device *adev = drm_to_adev(connector->dev);
+>  	struct i2c_adapter *ddc;
+>  	int retry = 3;
+>  	enum dc_edid_status edid_status;
+> @@ -909,8 +910,10 @@ enum dc_edid_status dm_helpers_read_local_edid(
+>  	 * do check sum and retry to make sure read correct edid.
+>  	 */
+>  	do {
+> -
+> -		edid = drm_get_edid(&aconnector->base, ddc);
+> +		/* prefer ACPI over panel for eDP */
+> +		edid = amdgpu_acpi_edid(adev, connector);
+> +		if (!edid)
+> +			edid = drm_get_edid(&aconnector->base, ddc);
+>  
+>  		/* DP Compliance Test 4.2.2.6 */
+>  		if (link->aux_mode && connector->edid_corrupt)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Jani Nikula, Intel
