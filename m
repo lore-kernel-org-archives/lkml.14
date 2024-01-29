@@ -1,217 +1,220 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2078.outbound.protection.partner.outlook.cn [139.219.17.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D01655E52;
-	Mon, 29 Jan 2024 10:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706522825; cv=fail; b=RNWt+OP1ptiAslPVRFzeruipIMp+EgrTrb884JBg8rG9zx+5ZMuSG4jwq6j5n8BHITKHzhBP7sS4IjzfJPWmirLGwgACpH8Xv9HlXFrYSxqL+DzpCwjkIlhepHy5YfOnC/syK5nkAjrQ0G7+h4Qx67s5/HXwxRvu1BJ11wws3yQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706522825; c=relaxed/simple;
-	bh=qHZ4k68QwDxbeugZFjfXcaJZ8QbjqmvVRqfUOf02drs=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OwA9XP6oDI3MaqtUP3qYw9Tt0YOCDAqQtgOB3OmdxOraCnT7//5ScJ51vbRNa417wrO7Zpy+ttjr1hHeueh0Y6BBZUcjMVIxh007eEqAiH85UvpxSnCN8L7pqJCBwVqOhJ5FiB+6RMaWnCgFjzkW/HQXYJ0smUX5nBHGSAp9xnk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y/04ABzUJp4RyGEBf7R/Iehxqt1tDSEV8gaCcEgre9kXQm+8ne94Z4lLibBW/WJjV0vEGzas37DCzEZlldjNRuIIBHH2plv1dChkODwuVd4SelDOtglejJrL1JLq7nfdIZ/YPE4gSECe9BF4dGwpyQF8VnaG/U7pe1/Q5sbkyHtM5XwYuFhN6ssWcJK+2gYXmZVFsM54GmS9qcwlQaFfxghWEIT9Zfp75keoBmCBUMsxC9RjqJSOxBpijB16XX6WFVFN2sE0nIRAWTZNSkbIEZOEcvrXROkbI1dxsiX6Jj80z5pnSTrSXk3kksb7fA/fT2t05AlXL6rovPg2BDagjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7gsq/fTh85hPUpqQokgxn7fOGa6u54SKDSjz6iKGcGI=;
- b=l9Zp6xJlLF/owYq2gRAiKnpU7i+FivEY41vD9kDrfPLwIIopsId8vrQySPhZ8tkKGe8ra9/D00ch65gDtX4OluTDoZVyfUElBBEwIeefUaTdUZr6g5I4r/Rd8u7TqYzax/gDiY4iy7f4K7+zjSslPHSWMY56LkojavWeYXEJDVdizs2xy8yPqG+hEyBopa97K1tInUsHaUe2jGK1Fk0CAbh0Ki74N6DN5C5rsdGACoiZF7p93ownk4S6TgkXRL7Jmf+2gU2LXTAyXh/AL8J1ppIG46qMyvSTs6DLUmN0tLpxISBs0IwcEDqxrFpy9yiybpc1mEDDeARa6SUs1J/g5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6) by ZQ0PR01MB1016.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:c::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.28; Mon, 29 Jan
- 2024 09:52:20 +0000
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- ([fe80::1dbb:b090:7d89:4e22]) by
- ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::1dbb:b090:7d89:4e22%4])
- with mapi id 15.20.7228.028; Mon, 29 Jan 2024 09:52:20 +0000
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v6 0/4] StarFive's StarLink PMU Support
-Date: Mon, 29 Jan 2024 17:51:37 +0800
-Message-ID: <20240129095141.3262366-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SH0PR01CA0003.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:5::15) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C57555E50
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706522824; cv=none; b=u+3l3LVcYGtiGaIdIlfSBUGPVhyzW/c8pToigldIB/6G0lp2sIQCP4wna9f3A03q0NeufEpt3vJmMsxHoEifAt+5o2kcwVt4Sn44iGBkw1Om0JCymvQVgIYsDOsQSbdDLsGyQqXvH9avij7esUedNIQwVoFRiYi4GGeRC8HfEq8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706522824; c=relaxed/simple;
+	bh=4CXMVwWXnc4I6ck1HFy4YdbM3B5NfAW+ukFCId2lGmU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TBTaiswN8ujcbErV2nH6MBrWHCx3/sSJfb1OmsAnoZcMNZadvPKKCVKoB632MxTriMsX3+g671UZ+7oPCeR2+toz863nLrCxLVdg1/OgDn/doNwv/YoPi69Lg7/l9eZXoqh79z631txfTi1sseS9eUvpDE4en04biY3jSsAW4Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XqWo8xSZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XqWo8xSZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706522822;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TJ+kpLO8S2nJ/FNOmYT0qOoCSDg7N4DFgt/5cBfrEsI=;
+	b=XqWo8xSZ/4L5OoYUy3KJqXoXOz9+iUSPUBlsCV5pAk+U5OmYUIdN+xdZ6GELb4qnCf/7M0
+	QaChV61R+PSvq2IDpPOlZFb5D7sBa2yxubSj2E/EIvAw+n9pm1aehqPuRA7gS2gJFUreCF
+	sIb6LHPuvVUR0ev997iqThK3bd6hESM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-399-UQ_B8U3QOk6SY83w13AnPw-1; Mon, 29 Jan 2024 05:06:59 -0500
+X-MC-Unique: UQ_B8U3QOk6SY83w13AnPw-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40d62d3ae0cso22283445e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 02:06:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706522818; x=1707127618;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TJ+kpLO8S2nJ/FNOmYT0qOoCSDg7N4DFgt/5cBfrEsI=;
+        b=LvRJa6PcYW1EoPd2Nuh1auCYgmOcULFOk6eMMFfezN/+7p4h5uGdrXnNlLkW7iOTq4
+         6FPNdGS1vPW73NhZY5qqv4dF1t7ZuJwUa3lp0yVbZkxxvmeCsI2Sn05/WnrynU2WrkpD
+         bpjbGxHYlGEnKVDYHYhU/L4XTEjl4Zfo9dlzVEYZTGKYxiLs7kpR9RK3XKxr6cU6lTvv
+         oOcthmrFOrH4+bFN9r869YDZt9vxKkPaiPFy3vGOWJc9bv6k4xABZHljo+kyJTzAkyYQ
+         SOVCQVgoXeDuqdnG8Ekc1SU3Q1FTC7di3roV6o9+Pok9KRGwIF5nmOdfdFWe3kvc9FGK
+         e55g==
+X-Gm-Message-State: AOJu0YySCh04oeCOnR8wt8SgoF/QwA/RnTXPOEpAg6pFTpvwLwkiv8Zj
+	LLz8sgEutAT7Wyp7ftM6W0trFvZ1uUMvUqJd66FApNg8jX2ruE5gSeBIT89j9geCMIYfRj3dKhL
+	JdpJ3unqVe1zZVdarlRyzyu17slxI4SQfTFwKPxc3W2Tf+sENySR106Ryi6/wJg==
+X-Received: by 2002:a05:600c:3b28:b0:40d:92c4:c2da with SMTP id m40-20020a05600c3b2800b0040d92c4c2damr4130085wms.31.1706522818646;
+        Mon, 29 Jan 2024 02:06:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH+1pe4fgzt0UKvDoFCiJ1bx3S/bnNig5L+BMeoboh/4aautE6eZ1WeKq1IVcZ790bv9NoWbA==
+X-Received: by 2002:a05:600c:3b28:b0:40d:92c4:c2da with SMTP id m40-20020a05600c3b2800b0040d92c4c2damr4130056wms.31.1706522818269;
+        Mon, 29 Jan 2024 02:06:58 -0800 (PST)
+Received: from ?IPV6:2003:cb:c721:aa00:3221:f685:1200:6d03? (p200300cbc721aa003221f68512006d03.dip0.t-ipconnect.de. [2003:cb:c721:aa00:3221:f685:1200:6d03])
+        by smtp.gmail.com with ESMTPSA id je16-20020a05600c1f9000b0040ec66021a7sm9738537wmb.1.2024.01.29.02.06.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 02:06:57 -0800 (PST)
+Message-ID: <c11d73d5-105e-4ae1-837a-b9da392d2dad@redhat.com>
+Date: Mon, 29 Jan 2024 11:06:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1016:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1d970747-1289-4ba1-5177-08dc20affc14
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	EohCljLX9xXSZmHwbi916HV1UYwCv/Q/hu7zQXPOqPm4jqdXvdormCavnF1leWxWoUxEaMJmrwyfx/RxIuVjNXhs8AjaOk4VitVYy0xqqoP1ziaFfUVSd9om148b413wwe+4KjfmSoemrTcvvONhCnlLqxPTfG9HtgkATVo8GsrUkBAZ0Z2KsSXqSEPMkW6J8aRLKxHOZbcEypgmZ364LJjeEavQ0PS+hyEU1wBUQNDMSiG+/jMifS9Uq1opRd2Nn9qM+aK97lvoaR3KyZCHEdkN5R5tZjmhqsRnoSSTMiLJ+klyyOJ3Iu7Kw+7e2FkUYX6VYYEsrRAia7P7/h303dM+hqzFzlSTOukdLAHcfA5FRak+jszCtozQBnGE3GPn5qj4CKkJsk52IqmONoVeOdcnlKIexC2Hu46ws2yoDv0y3iG65k3P6vcFhaoUo/zL1yEb0C74pYM0cCHVYhYpERnMN0RvCZWMUmN+lcsRT9vFD0nKEGOcYq1lUcnZ3LP7rbE02NxP3/7xGOXZvakYciT3QZG75k8XROHVo3TrtOJta3EyZUaFY3zIwYG3edaoxKAzUhuVFkPoBK+yq/jiZLLFAxxd/0PyCsN9VfKX3qT9H20VMIKY+25L7DmYdegZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(136003)(366004)(346002)(396003)(230173577357003)(230922051799003)(230273577357003)(186009)(64100799003)(451199024)(1800799012)(36756003)(41320700001)(8676002)(8936002)(4326008)(2906002)(7416002)(5660300002)(66556008)(110136005)(86362001)(66946007)(66476007)(54906003)(38350700005)(40160700002)(40180700001)(38100700002)(52116002)(508600001)(6666004)(83380400001)(2616005)(1076003)(26005)(41300700001)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?WsmeOPTWdTbAmU+EWEp3SbLEpJwfLT4ZY8qj++nSWBoFvKB4Fhixt+7MkXaO?=
- =?us-ascii?Q?thCy0LXWPLVQ6nJxTfcpKBfKbJ04m707+mUq8C8by7lIikBfPVcCUkpRv/iP?=
- =?us-ascii?Q?CQV8pxvahU6DWvBesXwDEh1zifrmrO49wxQs8sypSnco5ZiWLS9wm0itsd3P?=
- =?us-ascii?Q?K16DICN0Q3wyjBD+AjgFA3rA2nY1xkQ91EUAEf3OUTRo27nS5N9T67ngYoCp?=
- =?us-ascii?Q?3m0YRPY0VL6UUTnMM4iRA00ueIYhY4pASC1Nt2pgYiHlAUGMwI0Kt6YE/D7V?=
- =?us-ascii?Q?FG3boPgeZyfaUXhtfoaINP+dsSO+mFrj99BDrXK7ivp47/5zCIdkcb6u4s8Y?=
- =?us-ascii?Q?/wek9Hx5UcDu+GeB/ASMRGC3ZLQH+oVPUyystDZ18khh54bfeySQCnlzDTDD?=
- =?us-ascii?Q?b1uxyWQLOiW63JslG89jAJ6Yq4e+mrr2/4cFwhs98AshrlAQoAV3JEnXVbnw?=
- =?us-ascii?Q?JuoBoNJeFZplMYWMpbF6OS4ShIXoz4p1fMEDiArUBztdAyb0FUM5m0Ni1sFu?=
- =?us-ascii?Q?6Ou0TBvWEJEEkMWvO4JZFiRW1Qx2kySd2YCOgMpccIRWNoc7jrMUtL9UL6dc?=
- =?us-ascii?Q?W08kJ2Pdia6zx9VRqvHoSmgFt6rZh8428JbD60E13GySEOi+M8NStto3sMuE?=
- =?us-ascii?Q?4QZJzhtzinhyfMfMMfthTswZuBHP7vqsl/sAsMOcZbdu6Jgte++GuDXnf+pi?=
- =?us-ascii?Q?GtXGPUc6kfRd2Vl2k5KLkZMKAwSKITNwTLUJyuDEMpwMMAa7B+XnYTY8DQvj?=
- =?us-ascii?Q?qNQntM8zu99tnW3gB9I3gejqiX54D2iRxJgFfEkVDJJzFK/Hw8YhgCNYBGR4?=
- =?us-ascii?Q?IiLLe/8TCp03xr/VdkBEOD4Ud6MTYn4jC1fS1ZHY/zwKiDs3xh8SHFdMWjPP?=
- =?us-ascii?Q?JimiDt8u2cKXaqsFVETPxIFX0lgEiBL81Jp2/vB4nzTho78Pj1eQ84xKzpTj?=
- =?us-ascii?Q?qzsF4LuMR4BRN0rRGww5vxdlWXopFmZ3a+xf8l/xsctOe0S7/Kqcjsh+FPAm?=
- =?us-ascii?Q?EDJ04PQJHrfnzxODnUB2twUssySgY6x6xTvi5e06qqGX3sPl+p7m+65pmQ1D?=
- =?us-ascii?Q?UBR1ZSaNHv5CQLCpo+yNJ+a+S1jh1kT8PYhmydAaUvwpEP1ctxInObt+vYUN?=
- =?us-ascii?Q?xABsu6Zli6NtuYuaMTRzIXhoPwPRSe+7m27ZRydOeJPWhha4xqnb/an2PWek?=
- =?us-ascii?Q?chPL3tBzbeFpOg94ZRSPCJPo8JqmJUSO2Bkkv6LxPhrza5ieycnZ/mVU3W27?=
- =?us-ascii?Q?0qM7fbWsL2MvXK3pbbCtGvUtzJkoUUa93p7uLCBbd5fvIilbxY14Jk0ejDXC?=
- =?us-ascii?Q?iFkVpp+12nxrVK1Vo38LxLx8xffoq1oXEQRNiX6dJfebjCbjP23Nlidgl0sq?=
- =?us-ascii?Q?fEFNkMZ1XMropID1O65qWApoINS35Sc5b5l9Nz7D8Y2r9LZ5w/+aL2ykFMxl?=
- =?us-ascii?Q?0x2lIUTD5TFex9zs9JaHNHkTnqjtYKQiHQ1OaWsk459ssvnHmG8xmk6akzxc?=
- =?us-ascii?Q?+13cMta0+NIQyvFydzVtIH6AZv+i05mI+yWBeuQjPHmTGjG+ZbEbMUXWCmcn?=
- =?us-ascii?Q?lacSnNCG248RYGg2V4BYLt7vkl05Wl+uN27Ba4cwjADuD2Hq5Pp98GZbYPwS?=
- =?us-ascii?Q?tA=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d970747-1289-4ba1-5177-08dc20affc14
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 09:52:20.2243
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6cMj7uMuCKGsG8jZAIE5QbSF0mOoo0BB2pIO9mu/ot92TzInkLCgLqT4vm2HEEaaHfR1nExl/tg6r90lzQRd0LTeFy4IQCYAv2KzsWK6SrU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1016
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 5/6] mm: rmap: weaken the WARN_ON in
+ __folio_add_anon_rmap()
+Content-Language: en-US
+To: Chris Li <chrisl@kernel.org>, Barry Song <21cnbao@gmail.com>
+Cc: ryan.roberts@arm.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, mhocko@suse.com, shy828301@gmail.com,
+ wangkefeng.wang@huawei.com, willy@infradead.org, xiang@kernel.org,
+ ying.huang@intel.com, yuzhao@google.com, surenb@google.com,
+ steven.price@arm.com, Barry Song <v-songbaohua@oppo.com>,
+ Chuanhua Han <hanchuanhua@oppo.com>
+References: <20231025144546.577640-1-ryan.roberts@arm.com>
+ <20240118111036.72641-1-21cnbao@gmail.com>
+ <20240118111036.72641-6-21cnbao@gmail.com>
+ <58efd8d4-28aa-45d6-b384-7463568b24bb@redhat.com>
+ <CAGsJ_4zwUpL7LihRBOefg-cmY2mgNjMm-MPkq9VFBdXS_4b=uQ@mail.gmail.com>
+ <CAF8kJuNHrM+ZQSnTAOt6rrmGr1P=YS8eU+RSqhAc1CjQ7qdEwQ@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAF8kJuNHrM+ZQSnTAOt6rrmGr1P=YS8eU+RSqhAc1CjQ7qdEwQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Changes since v5:
-- Add entry to MAINTAINERS and mark the driver as "Maintained".
+On 29.01.24 04:25, Chris Li wrote:
+> Hi David and Barry,
+> 
+> On Mon, Jan 22, 2024 at 10:49 PM Barry Song <21cnbao@gmail.com> wrote:
+>>
+>>>
+>>>
+>>> I have on my todo list to move all that !anon handling out of
+>>> folio_add_anon_rmap_ptes(), and instead make swapin code call add
+>>> folio_add_new_anon_rmap(), where we'll have to pass an exclusive flag
+>>> then (-> whole new folio exclusive).
+>>>
+>>> That's the cleaner approach.
+>>>
+>>
+>> one tricky thing is that sometimes it is hard to know who is the first
+>> one to add rmap and thus should
+>> call folio_add_new_anon_rmap.
+>> especially when we want to support swapin_readahead(), the one who
+>> allocated large filio might not
+>> be that one who firstly does rmap.
+> 
+> I think Barry has a point. Two tasks might race to swap in the folio
+> then race to perform the rmap.
+> folio_add_new_anon_rmap() should only call a folio that is absolutely
+> "new", not shared. The sharing in swap cache disqualifies that
+> condition.
 
-Changes since v4:
-- Add Reviewed-by tag from Conor to dt-bindings.
-- Add Documentation/admin-guide/perf/starfive_starlink_pmu.rst.
-- Rework starfive_starlink_pmu.c based on Jonathan's comment.
-  - Use <linux/mod_devicetable.h> in place of <linux/of_device.h>.
-  - Prefix CYCLES to STARLINK_CYCLES.
-  - Fixup error handling, remove unnecessary comma after NULL and comments.
+We have to hold the folio lock. So only one task at a time might do the
+folio_add_anon_rmap_ptes() right now, and the 
+folio_add_new_shared_anon_rmap() in the future [below].
 
-Changes since v3:
-- Change dt-bindings filename along with the compatible field to
-   "starfive,jh8100-starlink-pmu" with SOC specific naming
-   convention.
-- Drop unused label defined in examples section in dt-bindings.
-- Update compatible field in starfive_starlink_pmu.c to the
-  aforementioned.
+Also observe how folio_add_anon_rmap_ptes() states that one must hold 
+the page lock, because otherwise this would all be completely racy.
 
-Changes since v2:
-- Change compatible field from generic "starfive,starlink-pmu"
-   to "starfive,starlink-500-pmu" with specific IP versioning
-   in bindings and driver.
-- Fix warning '-Wmissing-prototypes' reported by kernel test robot,
-   by appending static to starlink_pmu_set_event_period() in
-   starfive_starlink_pmu.c.
+ From the pte swp exclusive flags, we know for sure whether we are 
+dealing with exclusive vs. shared. I think patch #6 does not properly 
+check that all entries are actually the same in that regard (all 
+exclusive vs all shared). That likely needs fixing.
 
-Changes since v1:
-- Change 'depends on SOC_STARFIVE' to 'depends on ARCH_STARFIVE'
-   in Kconfig
+[I have converting per-page PageAnonExclusive flags to a single 
+per-folio flag on my todo list. I suspect that we'll keep the 
+per-swp-pte exlusive bits, but the question is rather what we can 
+actually make work, because swap and migration just make it much more 
+complicated. Anyhow, future work]
 
-----
+> 
+>> is it an acceptable way to do the below in do_swap_page?
+>> if (!folio_test_anon(folio))
+>>        folio_add_new_anon_rmap()
+>> else
+>>        folio_add_anon_rmap_ptes()
+> 
+> I am curious to know the answer as well.
 
-This patch series adds support for StarFive's Starlink Performance
-Monitor Unit(PMU).
-StarFive's StarLink PMU integrates one or more CPU cores with
-a shared L3 memory system. The PMU supports overflow interrupt,
-up to 16 programmable 64bit event counters, and an independent
-64bit cycle counter.
-StarLink PMU is accessed via MMIO.
 
-Example Perf stat output:
-[root@user]# perf stat -a -e /starfive_starlink_pmu/cycles/ \
-        -e /starfive_starlink_pmu/read_miss/ \
-        -e /starfive_starlink_pmu/read_hit/ \
-        -e /starfive_starlink_pmu/release_request/  \
-        -e /starfive_starlink_pmu/write_hit/ \
-        -e /starfive_starlink_pmu/write_miss/ \
-        -e /starfive_starlink_pmu/write_request/ \
-        -e /starfive_starlink_pmu/writeback/ \
-        -e /starfive_starlink_pmu/read_request/ \
-        -- openssl speed rsa2048
-Doing 2048 bits private rsa's for 10s: 5 2048 bits private RSA's in
-2.84s
-Doing 2048 bits public rsa's for 10s: 169 2048 bits public RSA's in
-2.42s
-version: 3.0.11
-built on: Tue Sep 19 13:02:31 2023 UTC
-options: bn(64,64)
-CPUINFO: N/A
-                  sign    verify    sign/s verify/s
-rsa 2048 bits 0.568000s 0.014320s      1.8     69.8
-/////////
- Performance counter stats for 'system wide':
+Yes, the end code should likely be something like:
 
-         649991998      starfive_starlink_pmu/cycles/
-           1009690      starfive_starlink_pmu/read_miss/
-           1079750      starfive_starlink_pmu/read_hit/
-           2089405      starfive_starlink_pmu/release_request/
-               129      starfive_starlink_pmu/write_hit/
-                70      starfive_starlink_pmu/write_miss/
-               194      starfive_starlink_pmu/write_request/
-            150080      starfive_starlink_pmu/writeback/
-           2089423      starfive_starlink_pmu/read_request/
+/* ksm created a completely new copy */
+if (unlikely(folio != swapcache && swapcache)) {
+	folio_add_new_anon_rmap(folio, vma, vmf->address);
+	folio_add_lru_vma(folio, vma);
+} else if (folio_test_anon(folio)) {
+	folio_add_anon_rmap_ptes(rmap_flags)
+} else {
+	folio_add_new_anon_rmap(rmap_flags)
+}
 
-      27.062755678 seconds time elapsed
+Maybe we want to avoid teaching all existing folio_add_new_anon_rmap() 
+callers about a new flag, and just have a new 
+folio_add_new_shared_anon_rmap() instead. TBD.
 
-Ji Sheng Teoh (4):
-  perf: starfive: Add StarLink PMU support
-  dt-bindings: perf: starfive: Add JH8100 StarLink PMU
-  docs: perf: Add description for StarFive's StarLink PMU
-  MAINTAINERS: Add entry for StarFive StarLink PMU
-
- Documentation/admin-guide/perf/index.rst      |   1 +
- .../perf/starfive_starlink_pmu.rst            |  46 ++
- .../perf/starfive,jh8100-starlink-pmu.yaml    |  46 ++
- MAINTAINERS                                   |   7 +
- drivers/perf/Kconfig                          |   9 +
- drivers/perf/Makefile                         |   1 +
- drivers/perf/starfive_starlink_pmu.c          | 643 ++++++++++++++++++
- 7 files changed, 753 insertions(+)
- create mode 100644 Documentation/admin-guide/perf/starfive_starlink_pmu.rst
- create mode 100644 Documentation/devicetree/bindings/perf/starfive,jh8100-starlink-pmu.yaml
- create mode 100644 drivers/perf/starfive_starlink_pmu.c
+> 
+> BTW, that test might have a race as well. By the time the task got
+> !anon result, this result might get changed by another task. We need
+> to make sure in the caller context this race can't happen. Otherwise
+> we can't do the above safely.
+Again, folio lock. Observe the folio_lock_or_retry() call that covers 
+our existing folio_add_new_anon_rmap/folio_add_anon_rmap_pte calls.
 
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
