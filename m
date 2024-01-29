@@ -1,115 +1,125 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDE2156970;
-	Mon, 29 Jan 2024 16:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0640D156963;
+	Mon, 29 Jan 2024 16:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545682; cv=none; b=mThe7vU454tMb12vzE/v3OomWBK1fIqkJwwyk9/AJKTFyNpsVTHbS3B3n4Y8OawE7N5ttlEtpc+3CIYR1lgqciFc677OnUs4op0jDz0uJF37E6VN8vCFaCmwu0GW9+di2omyLagw3JHrSn8RMODmfghoXKpcFr55GGn+pizSzoI=
+	t=1706545681; cv=none; b=KjLO33dt1fkZeFP9EeSEN1QAAfhYgObYIIOHNMq3xo5FSbOPQdMF0Pk3tG80k49oznHjXdy38vhSV8Q5/H2o1FZ/Ca6/j+bIIk+iL/sR7mMvjQ6vTP3rcmjf4oML5S+bpTvXrDDwUcjN98yTFW1QyovWw0lptwPALCop6VMGehA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545682; c=relaxed/simple;
-	bh=kDFWAW+zEb3sLd+G9xWayloOQteRsgnLXToSAxt3wKc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eAJsBDja9ccadWh2WDA3e7oh4HQloCq8iah2hnWR/gVQJZ+5VB2tK1wjlmWPBVOh2x4aJYD04zw/7RX39DLiEjoMetbfIPX/LhYUQUPq5DsorUY7hyw3ml8f85ApmedF5OQU77xvWLwdCvRQ4815g60suPOPoFs26QkZFV3zC4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=h+y1F0cK; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1706545681; c=relaxed/simple;
+	bh=CkQykIsUrm3sfSKR0V8g1q/+LCFk4Llq9v1g5jrzoS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z7XVWM2+ToAf17pW9R5IaO2S7YrklqEFhR1vbn8YJQxbRzcEvx8NJj/TRFziFalospWtXmxbxJD3OWZsHb6mhU4jInoBbEaiaZ2+AxXd64b0h+sJJaiEZ8p8o0qW0vD8v6hvCIDQOWq+YHGnnsyJ7oHg4MUGW3jawwnaexUulA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I+FOuich; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="h+y1F0cK"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0D006968;
-	Mon, 29 Jan 2024 10:27:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=aDJwWaBdkWaUuW6yxzuAslRbUrkyn9OuWCePyIRoL3s=; b=
-	h+y1F0cKb/iRnggpfI2NP5R5LaarPfyihZNgZofav9IKLAM50eJAo4uXCLQRzYsc
-	leKTG+XE6QrraHKyQ0nUzcLLxSpdBrSTGtXlE4yIdrAwqx9gIk64mpY0g6UH2lUy
-	JEZuRWjHlu+9ewWLqwMbnu8CLyD345zgXAKNO/ax5MWzC7lglFsJgpRhosfPYww7
-	LMy4+VMx3KaW/G9we3F590SjI12oPDf/AFuejtnA5CDCJc428ah0Aj3t/FEl/m15
-	Xt5qlY+4CSrvI0dbwApjEhuoJUXN/Jvhf5Eq9pSv/gWOrYE1AtRvV/9PGjS6Bmoe
-	Y4YksYeVVFq6R4c2CVtsDw==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8n-4
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:27:53 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 16:27:44 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:44 +0000
-Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.64.204])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2A4E4820242;
-	Mon, 29 Jan 2024 16:27:44 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>, <tiwai@suse.com>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Richard
- Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH 08/18] ASoC: cs35l56: Fix default SDW TX mixer registers
-Date: Mon, 29 Jan 2024 16:27:27 +0000
-Message-ID: <20240129162737.497-9-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240129162737.497-1-rf@opensource.cirrus.com>
-References: <20240129162737.497-1-rf@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+FOuich"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a350bfcc621so301994366b.0;
+        Mon, 29 Jan 2024 08:27:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706545678; x=1707150478; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ekRXlRD9sMYvDhkEUn4vNmGp7PidTrPzm1ir271L0uQ=;
+        b=I+FOuichFoO2vZfZYpQq3HerAKr/3plrUxvbfKljbGfuoOS52O6QSsBuRfG7DWqAth
+         c13EyQcsIaDs749X+GfdYmliNaYuUc0RRVA7S2TnAO6nzwwnW4PcnQcKmWKipGfHy9JP
+         z1HVHMszai/8pOn6Tay81IOOBpQza/vDUR3LUhaEs/RhrNxx58kDLH5qY2Z7hJ+zsG45
+         7AQ76bwe1OqGlbtjTxbBgXBs+HAI/IigrQz+X17iksv+INMfxzhXDAzGYUzGFN1h7Qld
+         t7bwVnUeL/B4beGVZu218kxp8j/QkHPLh4W/GiX4uw1yNGxtehzZkBZzduf3FZ2c8ECJ
+         mSIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706545678; x=1707150478;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ekRXlRD9sMYvDhkEUn4vNmGp7PidTrPzm1ir271L0uQ=;
+        b=wAm6gPKFTLpq/rnv1HQx6RBw/qB4zpQdGMdeuEpo0cZFGYQdKMM0Ont/Y/4ByEzvVA
+         8mdN7+DsRvqYtdsa0rY7aa/kxbqNhzJr2K+X6NhbcOlXLU66h1frP+SYvU7lHGmoihy4
+         87anyLvOQ+FkX1PM4HoiT+rHFjURZj4VYEmzX3cw5Gmk8qHFz2kEomBIYbFfRZ4Q5DH4
+         r48oeRTuKFJ3J4XeuseBhXTPI3SuW1W2ARHLe9FViACATnWs2ocrvI90nZ7EFOaJK/wD
+         Uq4+RcY3I62yx7ZvHAj6L8i2AINdinHBTa3VNjkpFDXhg4YxDaHpFJDPj70e2zyOO7IP
+         5wtQ==
+X-Gm-Message-State: AOJu0YyHWqE3FwRxBmxIqpARkGjua5qNkv2xk8uNOXp/jGuSHB0zMlDr
+	oC2FrLXLJKVsldXps1Hb7vzmG95+2qiHp67jO0vSzJ0bbD8hCim0
+X-Google-Smtp-Source: AGHT+IEfp1ng4c16rTEjqdb1pWuJos1D0ck6ThBr47sPROdD23LYtXmEIBt7ZDzRCiDCnIKranZbGQ==
+X-Received: by 2002:a17:906:28c4:b0:a26:90a0:696e with SMTP id p4-20020a17090628c400b00a2690a0696emr4775654ejd.41.1706545678086;
+        Mon, 29 Jan 2024 08:27:58 -0800 (PST)
+Received: from skbuf ([188.25.173.195])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170906068b00b00a2d49132dc3sm4037147ejb.197.2024.01.29.08.27.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 08:27:57 -0800 (PST)
+Date: Mon, 29 Jan 2024 18:27:55 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Russell King <linux@armlinux.org.uk>, mithat.guner@xeront.com,
+	erkin.bozoglu@xeront.com,
+	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net-next v3 6/7] net: dsa: mt7530: do not set
+ priv->p5_interface on mt7530_setup_port5()
+Message-ID: <20240129162755.j3q3wxtovzv4sh3i@skbuf>
+References: <20240122-for-netnext-mt7530-improvements-1-v3-0-042401f2b279@arinc9.com>
+ <20240122-for-netnext-mt7530-improvements-1-v3-6-042401f2b279@arinc9.com>
+ <20240129125241.gu4srgufad6hpwor@skbuf>
+ <431750cc-fb6b-4f7a-9123-b6986d359742@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: iSNVIfx41Bj--QEaepYM2YM6kp4WAUg8
-X-Proofpoint-GUID: iSNVIfx41Bj--QEaepYM2YM6kp4WAUg8
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <431750cc-fb6b-4f7a-9123-b6986d359742@arinc9.com>
 
-Patch the SDW TX mixer registers to silicon defaults.
+On Mon, Jan 29, 2024 at 07:22:28PM +0300, Arınç ÜNAL wrote:
+> On 29.01.2024 15:52, Vladimir Oltean wrote:
+> > On Mon, Jan 22, 2024 at 08:35:57AM +0300, Arınç ÜNAL via B4 Relay wrote:
+> > > From: Arınç ÜNAL <arinc.unal@arinc9.com>
+> > > 
+> > > Running mt7530_setup_port5() from mt7530_setup() used to handle all cases
+> > > of configuring port 5, including phylink.
+> > > 
+> > > Setting priv->p5_interface under mt7530_setup_port5() makes sure that
+> > > mt7530_setup_port5() from mt753x_phylink_mac_config() won't run.
+> > > 
+> > > The commit ("net: dsa: mt7530: improve code path for setting up port 5")
+> > > makes so that mt7530_setup_port5() from mt7530_setup() runs only on
+> > > non-phylink cases.
+> > > 
+> > > Get rid of unnecessarily setting priv->p5_interface under
+> > > mt7530_setup_port5() as port 5 phylink configuration will be done by
+> > > running mt7530_setup_port5() from mt753x_phylink_mac_config() now.
+> > > 
+> > > Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> > > ---
+> > 
+> > Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+> > 
+> > I hope this moves the patch set out of the 'deferred' state.
+> > 
+> > ---
+> > pw-bot: under-review
+> 
+> I still see deferred. I guess I'll have to submit this again. :/
+> 
+> Arınç
 
-CS35L56 is designed for SDCA and a generic SDCA driver would
-know nothing about these chip-specific registers. So the
-firmware sets up the SDW TX mixer registers to whatever audio
-is relevant on a specific system.
-
-This means that the driver cannot assume the initial values
-of these registers. But Linux has ALSA controls to configure
-routing, so the registers can be patched to silicon default and
-the ALSA controls used to select what audio to feed back to the
-host capture path.
-
-Backport note:
-This won't apply to kernels older than v6.6.
-
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Fixes: e49611252900 ("ASoC: cs35l56: Add driver for Cirrus Logic CS35L56")
----
- sound/soc/codecs/cs35l56-shared.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
-index 35789ffc63af..a812abf90836 100644
---- a/sound/soc/codecs/cs35l56-shared.c
-+++ b/sound/soc/codecs/cs35l56-shared.c
-@@ -12,6 +12,15 @@
- #include "cs35l56.h"
- 
- static const struct reg_sequence cs35l56_patch[] = {
-+	/*
-+	 * Firmware can change these to non-defaults to satisfy SDCA.
-+	 * Ensure that they are at known defaults.
-+	 */
-+	{ CS35L56_SWIRE_DP3_CH1_INPUT,		0x00000018 },
-+	{ CS35L56_SWIRE_DP3_CH2_INPUT,		0x00000019 },
-+	{ CS35L56_SWIRE_DP3_CH3_INPUT,		0x00000029 },
-+	{ CS35L56_SWIRE_DP3_CH4_INPUT,		0x00000028 },
-+
- 	/* These are not reset by a soft-reset, so patch to defaults. */
- 	{ CS35L56_MAIN_RENDER_USER_MUTE,	0x00000000 },
- 	{ CS35L56_MAIN_RENDER_USER_VOLUME,	0x00000000 },
--- 
-2.39.2
-
+Please wait for a few more hours for one of the networking maintainers
+to have a chance to see this and ask you to resend, if necessary.
