@@ -1,133 +1,123 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F4F56B70;
-	Mon, 29 Jan 2024 10:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4A956469;
+	Mon, 29 Jan 2024 10:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706525334; cv=none; b=tu+WAJmeXZwUs6xSqK9Ztd+67eDFCG6I8TShkqOOwzfdD5LBH+Nei+XPX73IAL541lB5/D7daJb5FRJ8VQyh4U/6PwLXEANW6JGq7ctUu7L/qlwM94G1bZx5y0IRE7SMZtvEY2cLOw23g7vHZKZhlmaS4gC5Tjwi88avFhC2iZA=
+	t=1706525423; cv=none; b=fT2wP1YzzGquvFOCNoDc75mQREtd2RCnYkV4yqOAtdpADIbMnqwNoqZGYPE3ez1wFgGjy0l1VrilTloz8YTQ5KK3+oVTKwqrI8nTDmNrEbfV9jiuMZedUde5bs+wLLTZYWH26JsKoPSFDKjf4l6uKOhlnpP0hUtTHAC+2i/ynbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706525334; c=relaxed/simple;
-	bh=Cwwb1IrnhAqflNwwr5xSZUeDUm1bhUtrWeRJtuIBwI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=syJt3Tqae2O5H5za9zsv/4DqdLBtEwa/qi7cwTREtHn/BgBPncsfkYL+7Ej8bGD0aPavEfofm8ZCw9blT7CmuaiJ2mYsvndQVfiiQjLCLUPiI5Da1+1q75TxeRADhfgISlRMAEW/mdx3Kf5fXtbMUCglaLojPzxz5Q7i4seLWeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D45sQB0K; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706525423; c=relaxed/simple;
+	bh=je4BCKddaeJFCgeD8nlqFK65Ey9jQCjtMpDtUG1yxqQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t1+1pACAi6hFvkVYQB4MlYWg5XAEfMoxqTnKIHUV+4lFXOzXUIbtz6XygAQqaMZzcQMtzyHEdqnJ0EOPkaHaRwtaDuVQjrJ7WaANhpPCtMbN4a7ZEWVEGDtXe2KpnptejoMurGCP4MxiGLrKa8fTtTJftkwXhhvrg8lTSXLJ/zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pq0MY3Db; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D45sQB0K"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T7jqMX032528;
-	Mon, 29 Jan 2024 10:48:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ZugSSSRjJH8eOzWRrav1dwHxGdpfMlgQG3DI1tTj0AA=; b=D4
-	5sQB0Kw7xD3lwRWOS6sew+n5Kzq8u07fxKWSdBBZK8F+LBGR2rOBctnssd6JAXQb
-	pHfwTrFn/NPwUHwqkZR4kMESANNhkVxRvAts0f0ZnFDpJkkFeyudiflRvcXWA8SE
-	HKrg3m7jYhJOUazEqPRligwenMRwG36zoB0kTbviwWiwWbYTjb+5aX3aIkA8pMXp
-	C9FVkF9QlMXvGkojXRQHqwQfbEjWJ7ait1NhG4D+QdbGig+wEDHy7h9SvtXiSSKh
-	anMXPDm1leRtwCEAs6A9zuptGiX1BIWGLOjAkl1bHxdY7XRnHYf9CiHk2M56QnUb
-	a5mutE+13vhQLPD+0mpQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vx23k8wsa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:48:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40TAmgcl008905
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:48:42 GMT
-Received: from [10.218.35.133] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 02:48:39 -0800
-Message-ID: <151f5738-791e-42cb-b8fe-e0cfbf9f7dca@quicinc.com>
-Date: Mon, 29 Jan 2024 16:18:36 +0530
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pq0MY3Db"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40TAo3CC022630;
+	Mon, 29 Jan 2024 04:50:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706525403;
+	bh=m0htI7go7or/yzNzVCGjz5hppU2wqyr8vuBJ7cUUKzs=;
+	h=From:To:CC:Subject:Date;
+	b=pq0MY3DbCuwjGFSt3hP10A1JzEymc3OC0rI+bosIlb/TCrzTgTjdsrYhJSPOGuqoF
+	 0l0/lPPOGrYdeHoEcJJbi1tOKkGNDDqgyPEmUEOLAfpmeiGhMueuVSxeIR+6KV2oSn
+	 D8HSvHThPk9E+6O0Pt0p0M9XBXhO1sHICKx/OGjI=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40TAo3hD030235
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Jan 2024 04:50:03 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Jan 2024 04:50:02 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Jan 2024 04:50:03 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40TAnxhF088113;
+	Mon, 29 Jan 2024 04:49:59 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <vigneshr@ti.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <afd@ti.com>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH] PCI: j721e: Extend j721e_pcie_ctrl_init() for non syscon nodes
+Date: Mon, 29 Jan 2024 16:19:58 +0530
+Message-ID: <20240129104958.1139787-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] rpmsg: glink: Add bounds check on tx path
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>, <afaerber@suse.com>,
-        <ivan.ivanov@suse.com>
-References: <20240113002505.15503-1-mkoutny@suse.com>
-Content-Language: en-US
-From: Deepak Kumar Singh <quic_deesin@quicinc.com>
-In-Reply-To: <20240113002505.15503-1-mkoutny@suse.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: UiTqmIwQw3BpaeOMGQ7Ee7xTrNm9Ik5I
-X-Proofpoint-GUID: UiTqmIwQw3BpaeOMGQ7Ee7xTrNm9Ik5I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-29_06,2024-01-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxlogscore=793
- mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401290077
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+The "ti,syscon-pcie-ctrl" device-tree property is used to obtain
+reference to the "pcie_ctrl" register within the System Controller Module
+in order to configure the link speed, number of lanes and the mode of
+operation of the PCIe controller. The existing implementation of the
+"j721e_pcie_ctrl_init()" function handles the case where the compatible for
+the System Controller Module node specified using the "ti,syscon-pcie-ctrl"
+property is "syscon". Since the System Controller Module can be modelled as
+a "simple-bus" as well, extend the implementation of the
+"j721e_pcie_ctrl_init()" function to handle the "simple-bus" case.
 
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
 
-On 1/13/2024 5:55 AM, Michal Koutný wrote:
-> Add bounds check on values read from shared memory in the tx path. In
-> cases where the VM is misbehaving, the transport should exit and print a
-> warning when bogus values may cause out of bounds to be read.
-> 
-> Link: https://git.codelinaro.org/clo/la/kernel/msm-5.10/-/commit/32d9c3a2f2b6a4d1fc48d6871194f3faf3184e8b
-> Suggested-by: Chris Lew <quic_clew@quicinc.com>
-> Suggested-by: Sarannya S <quic_sarannya@quicinc.com>
-> Signed-off-by: Michal Koutný <mkoutny@suse.com>
-> ---
->   drivers/rpmsg/qcom_glink_smem.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> Why RFC? The patch is adopted from the link above. It would be good to
-> asses whether such conditions can also happen with rpmsg glink.
-> (And if so, whether the zeroed values are the best correction.)
-> 
-Hi Michal,
+Hello,
 
-There is already a patch posted for similar problem -
-https://lore.kernel.org/all/20231201110631.669085-1-quic_deesin@quicinc.com/
+This patch is based on linux-next tagged next-20240129.
 
-> diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
-> index 7a982c60a8dd..3e786e590c03 100644
-> --- a/drivers/rpmsg/qcom_glink_smem.c
-> +++ b/drivers/rpmsg/qcom_glink_smem.c
-> @@ -146,6 +146,11 @@ static size_t glink_smem_tx_avail(struct qcom_glink_pipe *np)
->   	else
->   		avail -= FIFO_FULL_RESERVE + TX_BLOCKED_CMD_RESERVE;
->   
-> +	if (avail > pipe->native.length) {
-> +		pr_warn_once("%s: avail clamped\n", __func__);
-> +		avail = 0;
-> +	}
-> +
->   	return avail;
->   }
->   
-> @@ -177,6 +182,10 @@ static void glink_smem_tx_write(struct qcom_glink_pipe *glink_pipe,
->   	unsigned int head;
->   
->   	head = le32_to_cpu(*pipe->head);
-> +	if (head > pipe->native.length) {
-> +		pr_warn_once("%s: head overflow\n", __func__);
-> +		return;
-> +	}
->   
->   	head = glink_smem_tx_write_one(pipe, head, hdr, hlen);
->   	head = glink_smem_tx_write_one(pipe, head, data, dlen);
+The System Controller Module is modelled as a "simple-bus" in J784S4 SoC at
+https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi#L45
+The existing SoCs such as J721E and J7200 which currently model the node as
+a Syscon node will also be updated to model it as a "simple-bus".
+Therefore this patch aims to update the driver in order to handle the
+migration of the System Controller Module to the "simple-bus" compatible
+without breaking PCIe functionality on existing TI SoCs which make use
+of the pci-j721e.c driver.
+
+Regards,
+Siddharth.
+
+ drivers/pci/controller/cadence/pci-j721e.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index 85718246016b..2ace7e78a880 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -224,12 +224,20 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+ {
+ 	struct device *dev = pcie->cdns_pcie->dev;
+ 	struct device_node *node = dev->of_node;
++	struct device_node *scm_conf;
+ 	struct of_phandle_args args;
+ 	unsigned int offset = 0;
+ 	struct regmap *syscon;
+ 	int ret;
+ 
+-	syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-ctrl");
++	scm_conf = of_parse_phandle(node, "ti,syscon-pcie-ctrl", 0);
++	if (!scm_conf) {
++		dev_err(dev, "unable to get System Controller node\n");
++		return -ENODEV;
++	}
++
++	syscon = device_node_to_regmap(scm_conf);
++	of_node_put(scm_conf);
+ 	if (IS_ERR(syscon)) {
+ 		dev_err(dev, "Unable to get ti,syscon-pcie-ctrl regmap\n");
+ 		return PTR_ERR(syscon);
+-- 
+2.34.1
+
