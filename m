@@ -1,125 +1,98 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0640D156963;
-	Mon, 29 Jan 2024 16:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B78B15698A;
+	Mon, 29 Jan 2024 16:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545681; cv=none; b=KjLO33dt1fkZeFP9EeSEN1QAAfhYgObYIIOHNMq3xo5FSbOPQdMF0Pk3tG80k49oznHjXdy38vhSV8Q5/H2o1FZ/Ca6/j+bIIk+iL/sR7mMvjQ6vTP3rcmjf4oML5S+bpTvXrDDwUcjN98yTFW1QyovWw0lptwPALCop6VMGehA=
+	t=1706545682; cv=none; b=lRWZUyme3Ey/bPTGd2GCgPtuyI0cvUV9KViq/+IeYhz076kpHRV6XVeuL5JUdd7oLmxLUwVQH34hUlWaNsHtslid6NfVjCRfDTGMImlqOQa69soGry+hheMwDgCvfhyOm8JmPv9Pn6nz79ileDavvwGxErk/gayw0oFeankDW4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545681; c=relaxed/simple;
-	bh=CkQykIsUrm3sfSKR0V8g1q/+LCFk4Llq9v1g5jrzoS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7XVWM2+ToAf17pW9R5IaO2S7YrklqEFhR1vbn8YJQxbRzcEvx8NJj/TRFziFalospWtXmxbxJD3OWZsHb6mhU4jInoBbEaiaZ2+AxXd64b0h+sJJaiEZ8p8o0qW0vD8v6hvCIDQOWq+YHGnnsyJ7oHg4MUGW3jawwnaexUulA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I+FOuich; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706545682; c=relaxed/simple;
+	bh=nKzg7ZUZ5PicJ3de2Xnf4E2RszVbiYMky9NH4GS1hSY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k3gFMAgQkNH0ipGeGiKwi9rW2BVZ5chwfM6wUJA/Yh9r/h6YryZbP8xlaLlf6GWBDA/XJVtbJuMYMsjMonpgyxHUJ4lR8D1OnIjy1cQAtJECnxhXvHRfuItLt0T38uooFi8+ui4kMZJlyzpXQhpunG3GK1BQYXQm3+BmPUSVLQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=MKOTEDfh; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+FOuich"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a350bfcc621so301994366b.0;
-        Mon, 29 Jan 2024 08:27:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706545678; x=1707150478; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ekRXlRD9sMYvDhkEUn4vNmGp7PidTrPzm1ir271L0uQ=;
-        b=I+FOuichFoO2vZfZYpQq3HerAKr/3plrUxvbfKljbGfuoOS52O6QSsBuRfG7DWqAth
-         c13EyQcsIaDs749X+GfdYmliNaYuUc0RRVA7S2TnAO6nzwwnW4PcnQcKmWKipGfHy9JP
-         z1HVHMszai/8pOn6Tay81IOOBpQza/vDUR3LUhaEs/RhrNxx58kDLH5qY2Z7hJ+zsG45
-         7AQ76bwe1OqGlbtjTxbBgXBs+HAI/IigrQz+X17iksv+INMfxzhXDAzGYUzGFN1h7Qld
-         t7bwVnUeL/B4beGVZu218kxp8j/QkHPLh4W/GiX4uw1yNGxtehzZkBZzduf3FZ2c8ECJ
-         mSIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706545678; x=1707150478;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ekRXlRD9sMYvDhkEUn4vNmGp7PidTrPzm1ir271L0uQ=;
-        b=wAm6gPKFTLpq/rnv1HQx6RBw/qB4zpQdGMdeuEpo0cZFGYQdKMM0Ont/Y/4ByEzvVA
-         8mdN7+DsRvqYtdsa0rY7aa/kxbqNhzJr2K+X6NhbcOlXLU66h1frP+SYvU7lHGmoihy4
-         87anyLvOQ+FkX1PM4HoiT+rHFjURZj4VYEmzX3cw5Gmk8qHFz2kEomBIYbFfRZ4Q5DH4
-         r48oeRTuKFJ3J4XeuseBhXTPI3SuW1W2ARHLe9FViACATnWs2ocrvI90nZ7EFOaJK/wD
-         Uq4+RcY3I62yx7ZvHAj6L8i2AINdinHBTa3VNjkpFDXhg4YxDaHpFJDPj70e2zyOO7IP
-         5wtQ==
-X-Gm-Message-State: AOJu0YyHWqE3FwRxBmxIqpARkGjua5qNkv2xk8uNOXp/jGuSHB0zMlDr
-	oC2FrLXLJKVsldXps1Hb7vzmG95+2qiHp67jO0vSzJ0bbD8hCim0
-X-Google-Smtp-Source: AGHT+IEfp1ng4c16rTEjqdb1pWuJos1D0ck6ThBr47sPROdD23LYtXmEIBt7ZDzRCiDCnIKranZbGQ==
-X-Received: by 2002:a17:906:28c4:b0:a26:90a0:696e with SMTP id p4-20020a17090628c400b00a2690a0696emr4775654ejd.41.1706545678086;
-        Mon, 29 Jan 2024 08:27:58 -0800 (PST)
-Received: from skbuf ([188.25.173.195])
-        by smtp.gmail.com with ESMTPSA id u11-20020a170906068b00b00a2d49132dc3sm4037147ejb.197.2024.01.29.08.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 08:27:57 -0800 (PST)
-Date: Mon, 29 Jan 2024 18:27:55 +0200
-From: Vladimir Oltean <olteanv@gmail.com>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Russell King <linux@armlinux.org.uk>, mithat.guner@xeront.com,
-	erkin.bozoglu@xeront.com,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v3 6/7] net: dsa: mt7530: do not set
- priv->p5_interface on mt7530_setup_port5()
-Message-ID: <20240129162755.j3q3wxtovzv4sh3i@skbuf>
-References: <20240122-for-netnext-mt7530-improvements-1-v3-0-042401f2b279@arinc9.com>
- <20240122-for-netnext-mt7530-improvements-1-v3-6-042401f2b279@arinc9.com>
- <20240129125241.gu4srgufad6hpwor@skbuf>
- <431750cc-fb6b-4f7a-9123-b6986d359742@arinc9.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="MKOTEDfh"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0E006968;
+	Mon, 29 Jan 2024 10:27:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=r5QH0UgHuWLq2qxamMiPxt7EwPVsMxTa0U6W9j5X34I=; b=
+	MKOTEDfhY5HlWeFWvOuBXKH5HM//LtxGuJP4L3yrZaokL6JdtPXA8uFVsnnl10ZJ
+	WbeR2smid4kNNrau0UU4Hz5MREAfdkQDUgCPPEvXCPxSuRtWAxQYcA5903+1zp2s
+	i4TasD3mH4hwjZmTX5y8cjHvl+5TPiORlk66dBwpxQ84UFrhZRIMxzzQsvaiueTv
+	M28GBiXTcfVf7MDzYWqLZ6BRJL2En1ZsnGfugL7QYiD+IxxqtOwdhZW3ocZRVyAM
+	ibjtTZEOq41Gzfh24amx2EM5X1IWcFHWEw3vbVBRrH8D6fsj2BbI65EnixNNMZL0
+	1hFJTvVlacxxSPHSEunZaA==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8p-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jan 2024 10:27:53 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
+ 2024 16:27:43 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:43 +0000
+Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.64.204])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id C0BB8820242;
+	Mon, 29 Jan 2024 16:27:42 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Richard
+ Fitzgerald" <rf@opensource.cirrus.com>
+Subject: [PATCH 04/18] ASoC: cs35l56: cs35l56_component_remove() must clean up wm_adsp
+Date: Mon, 29 Jan 2024 16:27:23 +0000
+Message-ID: <20240129162737.497-5-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240129162737.497-1-rf@opensource.cirrus.com>
+References: <20240129162737.497-1-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <431750cc-fb6b-4f7a-9123-b6986d359742@arinc9.com>
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: U-DzzndOOXzgNtJRrv7Bror1zWg2bbDx
+X-Proofpoint-GUID: U-DzzndOOXzgNtJRrv7Bror1zWg2bbDx
+X-Proofpoint-Spam-Reason: safe
 
-On Mon, Jan 29, 2024 at 07:22:28PM +0300, Arınç ÜNAL wrote:
-> On 29.01.2024 15:52, Vladimir Oltean wrote:
-> > On Mon, Jan 22, 2024 at 08:35:57AM +0300, Arınç ÜNAL via B4 Relay wrote:
-> > > From: Arınç ÜNAL <arinc.unal@arinc9.com>
-> > > 
-> > > Running mt7530_setup_port5() from mt7530_setup() used to handle all cases
-> > > of configuring port 5, including phylink.
-> > > 
-> > > Setting priv->p5_interface under mt7530_setup_port5() makes sure that
-> > > mt7530_setup_port5() from mt753x_phylink_mac_config() won't run.
-> > > 
-> > > The commit ("net: dsa: mt7530: improve code path for setting up port 5")
-> > > makes so that mt7530_setup_port5() from mt7530_setup() runs only on
-> > > non-phylink cases.
-> > > 
-> > > Get rid of unnecessarily setting priv->p5_interface under
-> > > mt7530_setup_port5() as port 5 phylink configuration will be done by
-> > > running mt7530_setup_port5() from mt753x_phylink_mac_config() now.
-> > > 
-> > > Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> > > ---
-> > 
-> > Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
-> > 
-> > I hope this moves the patch set out of the 'deferred' state.
-> > 
-> > ---
-> > pw-bot: under-review
-> 
-> I still see deferred. I guess I'll have to submit this again. :/
-> 
-> Arınç
+cs35l56_component_remove() must call wm_adsp_power_down() and
+wm_adsp2_component_remove().
 
-Please wait for a few more hours for one of the networking maintainers
-to have a chance to see this and ask you to resend, if necessary.
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Fixes: e49611252900 ("ASoC: cs35l56: Add driver for Cirrus Logic CS35L56")
+---
+ sound/soc/codecs/cs35l56.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
+index 09944db4db30..491da77112c3 100644
+--- a/sound/soc/codecs/cs35l56.c
++++ b/sound/soc/codecs/cs35l56.c
+@@ -810,6 +810,11 @@ static void cs35l56_component_remove(struct snd_soc_component *component)
+ 
+ 	cancel_work_sync(&cs35l56->dsp_work);
+ 
++	if (cs35l56->dsp.cs_dsp.booted)
++		wm_adsp_power_down(&cs35l56->dsp);
++
++	wm_adsp2_component_remove(&cs35l56->dsp, component);
++
+ 	cs35l56->component = NULL;
+ }
+ 
+-- 
+2.39.2
+
