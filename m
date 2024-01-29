@@ -1,296 +1,217 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2078.outbound.protection.partner.outlook.cn [139.219.17.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C02C5644B
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706522296; cv=none; b=JBawX9jIVxAFXv03BMy2FwAlJrrr0QbnoQDreLG65X+LKKLw8YlMgervOSE6vV+Ts9GebkFgG1keIG8Ixm5BUXOL6he50IbCaDD3+pdxnQfowD2bCZP3WJXQ/Bv4xkIVWTC3YiUVtS+W2a88XiMrZqW8U1M+qN+kcMfrFnSgu74=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706522296; c=relaxed/simple;
-	bh=0nRlWJibNBWrP/2+ulbYIt6Yw5St4sDPPbMGqESeuNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aERLLInfLypFKOacq3qz3vkbFW8sWPI5dwcLcoY+jVdy8uFA330QQT2QmFX4WHHTs5DJKmS4WWCbGtYGZ6FsdUFJKofqQS9iVPgJaIj3dzGJv/SrLppZghS4QuuMzB9HLAppu4wB0EPk8HmIgYocv0iJJjA5r7kTlfDSdCsDNUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=RNlgWAFy; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="RNlgWAFy"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso1792318a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 01:58:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1706522293; x=1707127093; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/yj2cF4QFPTINMOJ5Odb3ijjKjStQFfbkPQ+E8TM9k=;
-        b=RNlgWAFymMFKB1KEo7jH+RHIQNT28ekJbYNTSENDaalXis+6y1iBW0fOQGnGryBZXF
-         M37I1DmiNkwo2xfZEUvv5UjtDudZxeTfY64M0FfKOsN8CR+HQs2iRVdDU1wliwQ5G42I
-         mscyRe8fUxTacV0U0bRBYktI7S6ERHfZtlpZtzAEQ9YcK4k7/bRnolmOt871rpLoBBD+
-         hbPnBEsbbDsPe21lwfmufus032ca4lvxuEFyQ/c+4lXGmGQXTAq1l5CiuWctE2CtxKva
-         v6sz2k2ORTC7QkDb2POt2tn0J4GpfrecWoBjBPFEnyCs7SbanydC8Kh1Ao8/PJPe4uPV
-         RTdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706522293; x=1707127093;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/yj2cF4QFPTINMOJ5Odb3ijjKjStQFfbkPQ+E8TM9k=;
-        b=rIuaq8qToIXIJbDJqSe0aDleUqoGtU+3DpdjLd0yceIrlzoRmF2arWDA+GD15t7ulI
-         afXKRIWIaaifFa2g+JAcb7BacZr8GbHJ6dipNZ0+1FiSNxm9kinfpxDWjw33Dyxj35Jp
-         BwFh4+KMr+U11iALjgOm3YbQMQx4unhVzy1CAPs/O/OLhc6xPOYsu8HJxh8IR9vDY6GU
-         FlaZqxgHhAu7d5W/JEWjM7g02xK535l+XZWp4cwlyIHEFtIKpyFxBMACpzQu1mWI8nhn
-         7CPysJzlruRhXK+Ob4maxDl4/k3RFTN7M6MPs9qRSJjaaIgMvXw8W4Bte5qQrhHtAjyT
-         h6ow==
-X-Gm-Message-State: AOJu0YztAjecFXSra1zcQPEZ/HJXYSJqnUhtHMrF4pIfIzLlWysmLTtI
-	hMUB/8L0T/cvWpnmTwaWY9WOK/JMBLpR/sv5w+X6HKCRtagXfXmOceno1Bo7GX4=
-X-Google-Smtp-Source: AGHT+IGLLoxO4r2cecG2riTmnlc0oiwaiM2/Qa304+OOrXxvULSm26H9zFdDAUUlmZA6ogAFjHFqxA==
-X-Received: by 2002:a05:6a20:9591:b0:19c:b4ef:3fa5 with SMTP id iu17-20020a056a20959100b0019cb4ef3fa5mr241147pzb.29.1706522293506;
-        Mon, 29 Jan 2024 01:58:13 -0800 (PST)
-Received: from [10.255.192.107] ([139.177.225.255])
-        by smtp.gmail.com with ESMTPSA id ju11-20020a170903428b00b001d8ead3d805sm1027576plb.58.2024.01.29.01.58.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 01:58:12 -0800 (PST)
-Message-ID: <d900f0fd-a586-404d-8568-0d2511908067@bytedance.com>
-Date: Mon, 29 Jan 2024 17:58:05 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D01655E52;
+	Mon, 29 Jan 2024 10:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706522825; cv=fail; b=RNWt+OP1ptiAslPVRFzeruipIMp+EgrTrb884JBg8rG9zx+5ZMuSG4jwq6j5n8BHITKHzhBP7sS4IjzfJPWmirLGwgACpH8Xv9HlXFrYSxqL+DzpCwjkIlhepHy5YfOnC/syK5nkAjrQ0G7+h4Qx67s5/HXwxRvu1BJ11wws3yQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706522825; c=relaxed/simple;
+	bh=qHZ4k68QwDxbeugZFjfXcaJZ8QbjqmvVRqfUOf02drs=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OwA9XP6oDI3MaqtUP3qYw9Tt0YOCDAqQtgOB3OmdxOraCnT7//5ScJ51vbRNa417wrO7Zpy+ttjr1hHeueh0Y6BBZUcjMVIxh007eEqAiH85UvpxSnCN8L7pqJCBwVqOhJ5FiB+6RMaWnCgFjzkW/HQXYJ0smUX5nBHGSAp9xnk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y/04ABzUJp4RyGEBf7R/Iehxqt1tDSEV8gaCcEgre9kXQm+8ne94Z4lLibBW/WJjV0vEGzas37DCzEZlldjNRuIIBHH2plv1dChkODwuVd4SelDOtglejJrL1JLq7nfdIZ/YPE4gSECe9BF4dGwpyQF8VnaG/U7pe1/Q5sbkyHtM5XwYuFhN6ssWcJK+2gYXmZVFsM54GmS9qcwlQaFfxghWEIT9Zfp75keoBmCBUMsxC9RjqJSOxBpijB16XX6WFVFN2sE0nIRAWTZNSkbIEZOEcvrXROkbI1dxsiX6Jj80z5pnSTrSXk3kksb7fA/fT2t05AlXL6rovPg2BDagjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7gsq/fTh85hPUpqQokgxn7fOGa6u54SKDSjz6iKGcGI=;
+ b=l9Zp6xJlLF/owYq2gRAiKnpU7i+FivEY41vD9kDrfPLwIIopsId8vrQySPhZ8tkKGe8ra9/D00ch65gDtX4OluTDoZVyfUElBBEwIeefUaTdUZr6g5I4r/Rd8u7TqYzax/gDiY4iy7f4K7+zjSslPHSWMY56LkojavWeYXEJDVdizs2xy8yPqG+hEyBopa97K1tInUsHaUe2jGK1Fk0CAbh0Ki74N6DN5C5rsdGACoiZF7p93ownk4S6TgkXRL7Jmf+2gU2LXTAyXh/AL8J1ppIG46qMyvSTs6DLUmN0tLpxISBs0IwcEDqxrFpy9yiybpc1mEDDeARa6SUs1J/g5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6) by ZQ0PR01MB1016.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:c::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.28; Mon, 29 Jan
+ 2024 09:52:20 +0000
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::1dbb:b090:7d89:4e22]) by
+ ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::1dbb:b090:7d89:4e22%4])
+ with mapi id 15.20.7228.028; Mon, 29 Jan 2024 09:52:20 +0000
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v6 0/4] StarFive's StarLink PMU Support
+Date: Mon, 29 Jan 2024 17:51:37 +0800
+Message-ID: <20240129095141.3262366-1-jisheng.teoh@starfivetech.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SH0PR01CA0003.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:5::15) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH 5.10 000/286] 5.10.209-rc1 review
-To: "Michael S. Tsirkin" <mst@redhat.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Nathan Chancellor <nathan@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, llvm@lists.linux.dev, keescook@chromium.org,
- arei.gonglei@huawei.com, jasowang@redhat.com,
- virtualization@lists.linux.dev, linux-crypto@vger.kernel.org
-References: <20240122235732.009174833@linuxfoundation.org>
- <6b563537-b62f-428e-96d1-2a228da99077@roeck-us.net>
- <2024012636-clubbed-radial-1997@gregkh>
- <2f342268-8517-4c06-8785-96a588d20c63@roeck-us.net>
- <20240126203436.GA913905@dev-arch.thelio-3990X>
- <0a194a79-e3a3-45e7-be98-83abd3e1cb7e@roeck-us.net>
- <20240126223554.GA1320833@dev-arch.thelio-3990X>
- <bef7737e-4b8e-4a89-b538-cd8e75874fd2@roeck-us.net>
- <20240129034304-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-From: zhenwei pi <pizhenwei@bytedance.com>
-In-Reply-To: <20240129034304-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1016:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d970747-1289-4ba1-5177-08dc20affc14
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	EohCljLX9xXSZmHwbi916HV1UYwCv/Q/hu7zQXPOqPm4jqdXvdormCavnF1leWxWoUxEaMJmrwyfx/RxIuVjNXhs8AjaOk4VitVYy0xqqoP1ziaFfUVSd9om148b413wwe+4KjfmSoemrTcvvONhCnlLqxPTfG9HtgkATVo8GsrUkBAZ0Z2KsSXqSEPMkW6J8aRLKxHOZbcEypgmZ364LJjeEavQ0PS+hyEU1wBUQNDMSiG+/jMifS9Uq1opRd2Nn9qM+aK97lvoaR3KyZCHEdkN5R5tZjmhqsRnoSSTMiLJ+klyyOJ3Iu7Kw+7e2FkUYX6VYYEsrRAia7P7/h303dM+hqzFzlSTOukdLAHcfA5FRak+jszCtozQBnGE3GPn5qj4CKkJsk52IqmONoVeOdcnlKIexC2Hu46ws2yoDv0y3iG65k3P6vcFhaoUo/zL1yEb0C74pYM0cCHVYhYpERnMN0RvCZWMUmN+lcsRT9vFD0nKEGOcYq1lUcnZ3LP7rbE02NxP3/7xGOXZvakYciT3QZG75k8XROHVo3TrtOJta3EyZUaFY3zIwYG3edaoxKAzUhuVFkPoBK+yq/jiZLLFAxxd/0PyCsN9VfKX3qT9H20VMIKY+25L7DmYdegZ
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(136003)(366004)(346002)(396003)(230173577357003)(230922051799003)(230273577357003)(186009)(64100799003)(451199024)(1800799012)(36756003)(41320700001)(8676002)(8936002)(4326008)(2906002)(7416002)(5660300002)(66556008)(110136005)(86362001)(66946007)(66476007)(54906003)(38350700005)(40160700002)(40180700001)(38100700002)(52116002)(508600001)(6666004)(83380400001)(2616005)(1076003)(26005)(41300700001)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?WsmeOPTWdTbAmU+EWEp3SbLEpJwfLT4ZY8qj++nSWBoFvKB4Fhixt+7MkXaO?=
+ =?us-ascii?Q?thCy0LXWPLVQ6nJxTfcpKBfKbJ04m707+mUq8C8by7lIikBfPVcCUkpRv/iP?=
+ =?us-ascii?Q?CQV8pxvahU6DWvBesXwDEh1zifrmrO49wxQs8sypSnco5ZiWLS9wm0itsd3P?=
+ =?us-ascii?Q?K16DICN0Q3wyjBD+AjgFA3rA2nY1xkQ91EUAEf3OUTRo27nS5N9T67ngYoCp?=
+ =?us-ascii?Q?3m0YRPY0VL6UUTnMM4iRA00ueIYhY4pASC1Nt2pgYiHlAUGMwI0Kt6YE/D7V?=
+ =?us-ascii?Q?FG3boPgeZyfaUXhtfoaINP+dsSO+mFrj99BDrXK7ivp47/5zCIdkcb6u4s8Y?=
+ =?us-ascii?Q?/wek9Hx5UcDu+GeB/ASMRGC3ZLQH+oVPUyystDZ18khh54bfeySQCnlzDTDD?=
+ =?us-ascii?Q?b1uxyWQLOiW63JslG89jAJ6Yq4e+mrr2/4cFwhs98AshrlAQoAV3JEnXVbnw?=
+ =?us-ascii?Q?JuoBoNJeFZplMYWMpbF6OS4ShIXoz4p1fMEDiArUBztdAyb0FUM5m0Ni1sFu?=
+ =?us-ascii?Q?6Ou0TBvWEJEEkMWvO4JZFiRW1Qx2kySd2YCOgMpccIRWNoc7jrMUtL9UL6dc?=
+ =?us-ascii?Q?W08kJ2Pdia6zx9VRqvHoSmgFt6rZh8428JbD60E13GySEOi+M8NStto3sMuE?=
+ =?us-ascii?Q?4QZJzhtzinhyfMfMMfthTswZuBHP7vqsl/sAsMOcZbdu6Jgte++GuDXnf+pi?=
+ =?us-ascii?Q?GtXGPUc6kfRd2Vl2k5KLkZMKAwSKITNwTLUJyuDEMpwMMAa7B+XnYTY8DQvj?=
+ =?us-ascii?Q?qNQntM8zu99tnW3gB9I3gejqiX54D2iRxJgFfEkVDJJzFK/Hw8YhgCNYBGR4?=
+ =?us-ascii?Q?IiLLe/8TCp03xr/VdkBEOD4Ud6MTYn4jC1fS1ZHY/zwKiDs3xh8SHFdMWjPP?=
+ =?us-ascii?Q?JimiDt8u2cKXaqsFVETPxIFX0lgEiBL81Jp2/vB4nzTho78Pj1eQ84xKzpTj?=
+ =?us-ascii?Q?qzsF4LuMR4BRN0rRGww5vxdlWXopFmZ3a+xf8l/xsctOe0S7/Kqcjsh+FPAm?=
+ =?us-ascii?Q?EDJ04PQJHrfnzxODnUB2twUssySgY6x6xTvi5e06qqGX3sPl+p7m+65pmQ1D?=
+ =?us-ascii?Q?UBR1ZSaNHv5CQLCpo+yNJ+a+S1jh1kT8PYhmydAaUvwpEP1ctxInObt+vYUN?=
+ =?us-ascii?Q?xABsu6Zli6NtuYuaMTRzIXhoPwPRSe+7m27ZRydOeJPWhha4xqnb/an2PWek?=
+ =?us-ascii?Q?chPL3tBzbeFpOg94ZRSPCJPo8JqmJUSO2Bkkv6LxPhrza5ieycnZ/mVU3W27?=
+ =?us-ascii?Q?0qM7fbWsL2MvXK3pbbCtGvUtzJkoUUa93p7uLCBbd5fvIilbxY14Jk0ejDXC?=
+ =?us-ascii?Q?iFkVpp+12nxrVK1Vo38LxLx8xffoq1oXEQRNiX6dJfebjCbjP23Nlidgl0sq?=
+ =?us-ascii?Q?fEFNkMZ1XMropID1O65qWApoINS35Sc5b5l9Nz7D8Y2r9LZ5w/+aL2ykFMxl?=
+ =?us-ascii?Q?0x2lIUTD5TFex9zs9JaHNHkTnqjtYKQiHQ1OaWsk459ssvnHmG8xmk6akzxc?=
+ =?us-ascii?Q?+13cMta0+NIQyvFydzVtIH6AZv+i05mI+yWBeuQjPHmTGjG+ZbEbMUXWCmcn?=
+ =?us-ascii?Q?lacSnNCG248RYGg2V4BYLt7vkl05Wl+uN27Ba4cwjADuD2Hq5Pp98GZbYPwS?=
+ =?us-ascii?Q?tA=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d970747-1289-4ba1-5177-08dc20affc14
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 09:52:20.2243
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6cMj7uMuCKGsG8jZAIE5QbSF0mOoo0BB2pIO9mu/ot92TzInkLCgLqT4vm2HEEaaHfR1nExl/tg6r90lzQRd0LTeFy4IQCYAv2KzsWK6SrU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1016
 
-On 1/29/24 16:46, Michael S. Tsirkin wrote:
-> On Fri, Jan 26, 2024 at 03:55:02PM -0800, Guenter Roeck wrote:
->> On 1/26/24 14:35, Nathan Chancellor wrote:
->>> (slimming up the CC list, I don't think this is too relevant to the
->>> wider stable community)
->>>
->>> On Fri, Jan 26, 2024 at 01:01:15PM -0800, Guenter Roeck wrote:
->>>> On 1/26/24 12:34, Nathan Chancellor wrote:
->>>>> On Fri, Jan 26, 2024 at 10:17:23AM -0800, Guenter Roeck wrote:
->>>>>> On 1/26/24 09:51, Greg Kroah-Hartman wrote:
->>>>>>> On Fri, Jan 26, 2024 at 08:46:42AM -0800, Guenter Roeck wrote:
->>>>>>>> On 1/22/24 15:55, Greg Kroah-Hartman wrote:
->>>>>>>>> This is the start of the stable review cycle for the 5.10.209 release.
->>>>>>>>> There are 286 patches in this series, all will be posted as a response
->>>>>>>>> to this one.  If anyone has any issues with these being applied, please
->>>>>>>>> let me know.
->>>>>>>>>
->>>>>>>>> Responses should be made by Wed, 24 Jan 2024 23:56:49 +0000.
->>>>>>>>> Anything received after that time might be too late.
->>>>>>>>>
->>>>>>>> [ ... ]
->>>>>>>>
->>>>>>>>> zhenwei pi <pizhenwei@bytedance.com>
->>>>>>>>>          virtio-crypto: implement RSA algorithm
->>>>>>>>>
->>>>>>>>
->>>>>>>> Curious: Why was this (and its subsequent fixes) backported to v5.10.y ?
->>>>>>>> It is quite beyond a bug fix. Also, unless I am really missing something,
->>>>>>>> the series (or at least this patch) was not applied to v5.15.y, so we now
->>>>>>>> have functionality in v5.10.y which is not in v5.15.y.
->>>>>>>
->>>>>>> See the commit text, it was a dependency of a later fix and documented
->>>>>>> as such.
->>>>>>>
->>>>>>> Having it in 5.10 and not 5.15 is a bit odd, I agree, so patches are
->>>>>>> gladly accepted :)
->>>>>>>
->>>>>>
->>>>>> We reverted the entire series from the merge because it results in a build
->>>>>> failure for us.
->>>>>>
->>>>>> In file included from /home/groeck/src/linux-chromeos/drivers/crypto/virtio/virtio_crypto_akcipher_algs.c:10:
->>>>>> In file included from /home/groeck/src/linux-chromeos/include/linux/mpi.h:21:
->>>>>> In file included from /home/groeck/src/linux-chromeos/include/linux/scatterlist.h:5:
->>>>>> In file included from /home/groeck/src/linux-chromeos/include/linux/string.h:293:
->>>>>> /home/groeck/src/linux-chromeos/include/linux/fortify-string.h:512:4: error: call to __read_overflow2_field declared with 'warning' attribute: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
->>>>>>                            __read_overflow2_field(q_size_field, size);
->>>>>
->>>>> For what it's worth, this is likely self inflicted for chromeos-5.10,
->>>>> which carries a revert of commit eaafc590053b ("fortify: Explicitly
->>>>> disable Clang support") as commit c19861d34c003 ("CHROMIUM: Revert
->>>>> "fortify: Explicitly disable Clang support""). I don't see the series
->>>>> that added proper support for clang to fortify in 5.18 that ended with
->>>>> commit 281d0c962752 ("fortify: Add Clang support") in that ChromeOS
->>>>> branch, so this seems somewhat expected.
->>>>>
->>>>
->>>> That explains that ;-). I don't mind if the patches stay in v5.10.y,
->>>> we have them reverted anyway.
->>>>
->>>> The revert was a pure process issue, as you may see when looking into
->>>> commit c19861d34c003, so, yes, I agree that it is self-inflicted damage.
->>>> Still, that doesn't explain why the problem exists in 5.18+.
->>>>
->>>>>> I also see that upstream (starting with 6.1) when trying to build it with clang,
->>>>>> so I guess it is one of those bug-for-bug compatibility things. I really have
->>>>>> no idea what causes it, or why we don't see the problem when building
->>>>>> chromeos-6.1 or chromeos-6.6, but (so far) only with chromeos-5.10 after
->>>>>> merging 5.10.209 into it. Making things worse, the problem isn't _always_
->>>>>> seen. Sometimes I can compile the file in 6.1.y without error, sometimes not.
->>>>>> I have no idea what triggers the problem.
->>>>>
->>>>> Have a .config that reproduces it on upstream? I have not personally
->>>>> seen this warning in my build matrix nor has our continuous-integration
->>>>> matrix (I don't see it in the warning output at the bottom but that
->>>>> could have missed something for some reason) in 6.1:
->>>>>
->>>>
->>>> The following command sequence reproduces the problem for me with all stable
->>>> branches starting with 5.18.y (plus mainline).
->>>>
->>>> rm -rf /tmp/crypto-build
->>>> mkdir /tmp/crypto-build
->>>> make -j CC=clang-15 mrproper >/dev/null 2>&1
->>>> make -j O=/tmp/crypto-build CC=clang-15 allmodconfig >/dev/null 2>&1
->>>> make -j O=/tmp/crypto-build W=1 CC=clang-15 drivers/crypto/virtio/virtio_crypto_akcipher_algs.o
->>>>
->>>> I tried clang versions 14, 15, and 16. This is with my home system running
->>>> Ubuntu 22.04, no ChromeOS or Google specifics/internals involved. For clang-15,
->>>> the version is
->>>>
->>>> Ubuntu clang version 15.0.7
->>>> Target: x86_64-pc-linux-gnu
->>>> Thread model: posix
->>>> InstalledDir: /usr/bin
->>>
->>> Okay interesting, this warning is hidden behind W=1, which our CI does
->>> not test with. Looks like it has been that way since the introduction of
->>> these checks in f68f2ff91512 ("fortify: Detect struct member overflows
->>> in memcpy() at compile-time").
->>>
->>
->> Interestingly the warning is seen in chromeos-5.10, without this patch,
->> and without W=1. I guess that must have to do with the revert which is
->> finally biting us.
->>
->>> I think this is a legitimate warning though. It is complaining about the
->>> second memcpy() in virtio_crypto_alg_akcipher_init_session():
->>>
->>>     memcpy(&ctrl->u, para, sizeof(ctrl->u));
->>>
->>> where ctrl is:
->>>
->>>     struct virtio_crypto_op_ctrl_req {
->>>             struct virtio_crypto_ctrl_header header;         /*     0    16 */
->>>             union {
->>>                     struct virtio_crypto_sym_create_session_req sym_create_session; /*    16    56 */
->>>                     struct virtio_crypto_hash_create_session_req hash_create_session; /*    16    56 */
->>>                     struct virtio_crypto_mac_create_session_req mac_create_session; /*    16    56 */
->>>                     struct virtio_crypto_aead_create_session_req aead_create_session; /*    16    56 */
->>>                     struct virtio_crypto_akcipher_create_session_req akcipher_create_session; /*    16    56 */
->>>                     struct virtio_crypto_destroy_session_req destroy_session; /*    16    56 */
->>>                     __u8               padding[56];          /*    16    56 */
->>>             } u;                                             /*    16    56 */
->>>             union {
->>>                     struct virtio_crypto_sym_create_session_req sym_create_session; /*     0    56 */
->>>                     struct virtio_crypto_hash_create_session_req hash_create_session; /*     0    56 */
->>>                     struct virtio_crypto_mac_create_session_req mac_create_session; /*     0    56 */
->>>                     struct virtio_crypto_aead_create_session_req aead_create_session; /*     0    56 */
->>>                     struct virtio_crypto_akcipher_create_session_req akcipher_create_session; /*     0    56 */
->>>                     struct virtio_crypto_destroy_session_req destroy_session; /*     0    56 */
->>>                     __u8                       padding[56];          /*     0    56 */
->>>             };
->>>
->>>
->>>             /* size: 72, cachelines: 2, members: 2 */
->>>             /* last cacheline: 8 bytes */
->>>     };
->>>
->>> (so size and p_size_field should be 56) and the type of the para
->>> parameter in virtio_crypto_alg_akcipher_init_session() is 'void *' but
->>> the para passed by reference to
->>> virtio_crypto_alg_akcipher_init_session() in virtio_crypto_rsa_set_key()
->>> has a type of 'struct virtio_crypto_akcipher_session_para':
->>>
->>>     struct virtio_crypto_akcipher_session_para {
->>>             __le32                     algo;                 /*     0     4 */
->>>             __le32                     keytype;              /*     4     4 */
->>>             __le32                     keylen;               /*     8     4 */
->>>             union {
->>>                     struct virtio_crypto_rsa_session_para rsa; /*    12     8 */
->>>                     struct virtio_crypto_ecdsa_session_para ecdsa; /*    12     8 */
->>>             } u;                                             /*    12     8 */
->>>             union {
->>>                     struct virtio_crypto_rsa_session_para rsa;       /*     0     8 */
->>>                     struct virtio_crypto_ecdsa_session_para ecdsa;   /*     0     8 */
->>>             };
->>>
->>>
->>>             /* size: 20, cachelines: 1, members: 4 */
->>>             /* last cacheline: 20 bytes */
->>>     };
->>>
->>> (so q_size_field would be 20 if clang were able to do inlining to see
->>> through the 'void *'...?), which would result in the
->>>
->>>     __compiletime_lessthan(q_size_field, size)
->>>
->>> check succeeding and triggering the warning because 20 < 56, so it does
->>> seem like there is an overread of the source buffer here? Adding the
->>
->> Looks like it; I think either the passed 'para' should be of type
->> virtio_crypto_akcipher_create_session_req() or it should only copy
->> sizeof(struct virtio_crypto_akcipher_session_para) bytes.
->>
->> Anyway, how did you find that ? Is there a magic trick to find the
->> actual code causing the warning ? I am asking because we had seen
->> similar warnings before, and it would help to know how to find the
->> problematic code.
->>
->> Thanks,
->> Guenter
-> 
-> 
-> 
-> Cc: zhenwei pi <pizhenwei@bytedance.com>
-> 
-> Zhenwei I think you wrote most of the code here.
-> Can you take a look please?
-> Stack overflows are plus plus ungood.
-> 
-> 
-> 
-> 
->>> maintainers of the driver and subsystem in question.
->>>
->>> Cheers,
->>> Nathan
-> 
+Changes since v5:
+- Add entry to MAINTAINERS and mark the driver as "Maintained".
 
-I can also reproduce this warning by commands on ubuntu-2204:
-make -j CC=clang-14 mrproper >/dev/null 2>&1
-make -j O=/tmp/crypto-build CC=clang-14 allmodconfig >/dev/null 2>&1
-make -j O=/tmp/crypto-build W=1 CC=clang-14 
-drivers/crypto/virtio/virtio_crypto_akcipher_algs.o
+Changes since v4:
+- Add Reviewed-by tag from Conor to dt-bindings.
+- Add Documentation/admin-guide/perf/starfive_starlink_pmu.rst.
+- Rework starfive_starlink_pmu.c based on Jonathan's comment.
+  - Use <linux/mod_devicetable.h> in place of <linux/of_device.h>.
+  - Prefix CYCLES to STARLINK_CYCLES.
+  - Fixup error handling, remove unnecessary comma after NULL and comments.
 
-so sorry on this issue, I think Guenter's suggestion is right(also test 
-by these commands), I'll send a fix later.
+Changes since v3:
+- Change dt-bindings filename along with the compatible field to
+   "starfive,jh8100-starlink-pmu" with SOC specific naming
+   convention.
+- Drop unused label defined in examples section in dt-bindings.
+- Update compatible field in starfive_starlink_pmu.c to the
+  aforementioned.
+
+Changes since v2:
+- Change compatible field from generic "starfive,starlink-pmu"
+   to "starfive,starlink-500-pmu" with specific IP versioning
+   in bindings and driver.
+- Fix warning '-Wmissing-prototypes' reported by kernel test robot,
+   by appending static to starlink_pmu_set_event_period() in
+   starfive_starlink_pmu.c.
+
+Changes since v1:
+- Change 'depends on SOC_STARFIVE' to 'depends on ARCH_STARFIVE'
+   in Kconfig
+
+----
+
+This patch series adds support for StarFive's Starlink Performance
+Monitor Unit(PMU).
+StarFive's StarLink PMU integrates one or more CPU cores with
+a shared L3 memory system. The PMU supports overflow interrupt,
+up to 16 programmable 64bit event counters, and an independent
+64bit cycle counter.
+StarLink PMU is accessed via MMIO.
+
+Example Perf stat output:
+[root@user]# perf stat -a -e /starfive_starlink_pmu/cycles/ \
+        -e /starfive_starlink_pmu/read_miss/ \
+        -e /starfive_starlink_pmu/read_hit/ \
+        -e /starfive_starlink_pmu/release_request/  \
+        -e /starfive_starlink_pmu/write_hit/ \
+        -e /starfive_starlink_pmu/write_miss/ \
+        -e /starfive_starlink_pmu/write_request/ \
+        -e /starfive_starlink_pmu/writeback/ \
+        -e /starfive_starlink_pmu/read_request/ \
+        -- openssl speed rsa2048
+Doing 2048 bits private rsa's for 10s: 5 2048 bits private RSA's in
+2.84s
+Doing 2048 bits public rsa's for 10s: 169 2048 bits public RSA's in
+2.42s
+version: 3.0.11
+built on: Tue Sep 19 13:02:31 2023 UTC
+options: bn(64,64)
+CPUINFO: N/A
+                  sign    verify    sign/s verify/s
+rsa 2048 bits 0.568000s 0.014320s      1.8     69.8
+/////////
+ Performance counter stats for 'system wide':
+
+         649991998      starfive_starlink_pmu/cycles/
+           1009690      starfive_starlink_pmu/read_miss/
+           1079750      starfive_starlink_pmu/read_hit/
+           2089405      starfive_starlink_pmu/release_request/
+               129      starfive_starlink_pmu/write_hit/
+                70      starfive_starlink_pmu/write_miss/
+               194      starfive_starlink_pmu/write_request/
+            150080      starfive_starlink_pmu/writeback/
+           2089423      starfive_starlink_pmu/read_request/
+
+      27.062755678 seconds time elapsed
+
+Ji Sheng Teoh (4):
+  perf: starfive: Add StarLink PMU support
+  dt-bindings: perf: starfive: Add JH8100 StarLink PMU
+  docs: perf: Add description for StarFive's StarLink PMU
+  MAINTAINERS: Add entry for StarFive StarLink PMU
+
+ Documentation/admin-guide/perf/index.rst      |   1 +
+ .../perf/starfive_starlink_pmu.rst            |  46 ++
+ .../perf/starfive,jh8100-starlink-pmu.yaml    |  46 ++
+ MAINTAINERS                                   |   7 +
+ drivers/perf/Kconfig                          |   9 +
+ drivers/perf/Makefile                         |   1 +
+ drivers/perf/starfive_starlink_pmu.c          | 643 ++++++++++++++++++
+ 7 files changed, 753 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/starfive_starlink_pmu.rst
+ create mode 100644 Documentation/devicetree/bindings/perf/starfive,jh8100-starlink-pmu.yaml
+ create mode 100644 drivers/perf/starfive_starlink_pmu.c
 
 -- 
-zhenwei pi
+2.43.0
+
