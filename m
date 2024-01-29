@@ -1,115 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE061534EB
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 20:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635E37602C;
+	Mon, 29 Jan 2024 20:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706561054; cv=none; b=XyqV12AVH2fYxpdTluo+1mqlYWNcTJcE5ZnPCjFY1LisTOKfcEK/Fw8FXSbocHPkTnf/CEBpp0YMl8fO9lOSPEO3QJpvLivwflN1oKOk7NisKJ+AaV5OP1whCUyDCmubsAfHiIGHWT4p7MmupiPz2CtwDuiQoKNneb9W67oejNw=
+	t=1706561125; cv=none; b=bXAsDBSWKYh0wPnnRWKbX9pQYR8N500GA5QMzkGtq70AD59Qxo0gzrL5v4xswFW8bZDMPENV3WoiDV+ZNyr7pSTH45CZyrTX3RiIupyKQmJHPhVmmM1/c7//uKwkrK8FiYtW1r8PP7hzwfZuq5ChRX9koTrntpDn/COiUZmEd0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706561054; c=relaxed/simple;
-	bh=Elo6Kas6QgeP8iJYfbZQ29s6uVogIsyKYcHhQDUTX4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VxJJSN0VymY8lyFr1NRwQ4X+MAiH8xH9viMiSqQKkDZDVUy91lQfF9CMdQTfmFqBuwlc67wjn2Bv6VhpxZZWPK4z+utgS8hQvOcQDAzzF6hQlogd16K4VU1haZy8m8PB+Nu4uMUGK1ko5yr4Uen1esu19FeU0q5WxjX6OlA9/Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iQ9gsx7u; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iQ9gsx7u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706561053; x=1738097053;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Elo6Kas6QgeP8iJYfbZQ29s6uVogIsyKYcHhQDUTX4w=;
-  b=iQ9gsx7uYHD3Ow405moXh8YF/f8oPpayxZTt/D9tYublkUhRIX36oIvP
-   5HA1jvzwDCLrIfYf69ApCFXdw+vaUaMm7huZHyHFK2cEjROr0veGttdEQ
-   N9pIkP7g+PMaPlEODJiCPN/PLole5wjukZijYffmTjoHsUYgqj2DFIy8N
-   mRj/IqVXFi80dk/5w//skIfqpeM5QTDpYnv2nNoGkaPJ6Zz0DfHAdVWTY
-   ro5W/pmfmCXNvFT8EUKUt6I4B8gDK7ZNx6G7qKeSWDSNDfOVz2ymWJR5H
-   YuLALJ/sH8zyByDPmJiUuWhAPSTq5RmPUORUTucKx96Xd9Z1PFHAmTpHg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="2913273"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="2913273"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 12:44:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="858241427"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="858241427"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Jan 2024 12:44:07 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id E906FFF; Mon, 29 Jan 2024 22:26:06 +0200 (EET)
-Date: Mon, 29 Jan 2024 22:26:06 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	"Kalra, Ashish" <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Randomness on confidential computing platforms
-Message-ID: <dlhffyn7cccn5d4uvubggkrmtyxl4jodj5ukffafpsxsnqini3@5rcbybumab4c>
-References: <20240126134230.1166943-1-kirill.shutemov@linux.intel.com>
- <276aaeee-cb01-47d3-a3bf-f8fa2e59016c@intel.com>
- <dqiaimv3qqh77cfm2huzja4vsho3jls7vjmnwgda7enw633ke2@qiqrdnno75a7>
- <f5236e76-27d0-4a90-bde5-513ac9446184@intel.com>
+	s=arc-20240116; t=1706561125; c=relaxed/simple;
+	bh=wH59XtXAzJJua0WPMURILT065bEyBsmYhcbPLahSQXo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TJ54WTWYPAxk9qmmERjv7HMOKewj9A8r2+2ssKmywzXvZ7w/2bgYYOfAgvrf8Vr7pUEs5Q1ExZrlqLHGdL908URbLRW2HtbnA9adygdb0ondKdGLwjmVeTDBN1e9/gOuzHHfXjqOVqw3GrmGRY7vqc8a4M0VNl/6Lrzogqp/PmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-59a1e21b0ebso556783eaf.1;
+        Mon, 29 Jan 2024 12:45:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706561122; x=1707165922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xvTbQy9VMHt6fnQCY3TVYNEIJh4tIcaNRd3FXe7uHFs=;
+        b=uccwupb73DTrI1WK5X/i8gspTnpHYmHAc5ljB68qc4sxDKZZDMRQs1ahvD01Qnx78E
+         fOwxfLDrSLnVR5U6DYmLcVFS9a8kgYO3IhS0UANkVIuiF4DysA1YBxhx5EEsidz3QWP5
+         kLzH30NGMpoYMgJrbGKT5jCnbE3RFANaw7hO0NywF5jZnM8OyGBwhoxHnbAdnBhFhRaj
+         ggfN71qBXZYWviRezGZvc/IVYVl+7OTVFgkYySicDOXTYWONNNahi1+LkgScDqfXAa0i
+         Mo4uOf7MbIQlibysHPV0gZMp3+PAXvsFhYmTkCKU+NOFa5nGhE3NHZoyDW566jSfls7H
+         w9Uw==
+X-Gm-Message-State: AOJu0YzyRjFcwC4IcvUMmZhSJk2FmZ8X/TXHdiTsPg1S4yxwl2gIRU8Y
+	+Wyc4aiFScFIj0qzTSvscRPgfTSAv0f/OCY9DKyqwQTF22F7Fc+cN8pI1k5oSJgPuIwtrW08nFN
+	Zqrt4I/KeMAVXzBJVyH9dEzZM5WM=
+X-Google-Smtp-Source: AGHT+IGXEdGhYxv86UV6LeFhYgPGovISemJErd0WIwGSlX5M1LIIFf32vuVoDsdxj7oCEiNyT9WxPgWzloe1o7AM1MM=
+X-Received: by 2002:a05:6870:a2c9:b0:210:9749:d377 with SMTP id
+ w9-20020a056870a2c900b002109749d377mr8058390oak.2.1706561122709; Mon, 29 Jan
+ 2024 12:45:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5236e76-27d0-4a90-bde5-513ac9446184@intel.com>
+References: <20240106191502.29126-1-quic_manafm@quicinc.com>
+ <CAJZ5v0gE6eEpALrfxHvCd5TRqjB+v8pffG4CKLTVXiSvuiWhHg@mail.gmail.com>
+ <d7b82fc8-0ed8-80b8-9eb8-c77f9277178f@quicinc.com> <CAJZ5v0g4hnRqRCseRnTjfEF+-2=ZT8U9=2m9FODqh3G8eDd=Sw@mail.gmail.com>
+ <921c2f90-fb8b-4e70-9e3d-6e185fec03b6@linaro.org> <CAJZ5v0h+93YBsYsA5rOvzp+b3JMGyjUStHA=J8P7ynv+-ym-4g@mail.gmail.com>
+ <41b284d7-e31f-48b5-8b21-0dca3e23cb1c@linaro.org> <CAJZ5v0ina=7R6x6Ff=8_rRR9Kkmz2tkojbs_WWCN=JPmzhg+HQ@mail.gmail.com>
+ <CAJZ5v0hM9Y+cV7WrEHe6WjzQ0ATnBce4NO1wxvZh=fcLWPkqKA@mail.gmail.com> <a522d8de-c871-4a2e-8b07-d5693abb4a7b@linaro.org>
+In-Reply-To: <a522d8de-c871-4a2e-8b07-d5693abb4a7b@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 29 Jan 2024 21:45:11 +0100
+Message-ID: <CAJZ5v0g=bT4FcVHEOpU1H8EC8648EtDGEEyPL1DuwrU9_W87Zg@mail.gmail.com>
+Subject: Re: [PATCH] thermal/sysfs: Always enable hysteresis write support
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2024 at 10:55:38AM -0800, Dave Hansen wrote:
-> On 1/29/24 08:41, Kirill A. Shutemov wrote:
-> > On Mon, Jan 29, 2024 at 08:30:11AM -0800, Dave Hansen wrote:
-> >> On 1/26/24 05:42, Kirill A. Shutemov wrote:
-> >>> 3. Panic after enough re-tries of RDRAND/RDSEED instructions fail.
-> >>>    Another DoS variant against the Guest.
-> >>
-> >> I think Sean was going down the same path, but I really dislike the idea
-> >> of having TDX-specific (or CoCo-specific) policy here.
-> >>
-> >> How about we WARN_ON() RDRAND/RDSEED going bonkers?  The paranoid folks
-> >> can turn on panic_on_warn, if they haven't already.
-> > 
-> > Sure, we can do it for kernel, but we have no control on what userspace
-> > does.
-> > 
-> > Sensible userspace on RDRAND/RDSEED failure should fallback to kernel
-> > asking for random bytes, but who knows if it happens in practice
-> > everywhere.
-> > 
-> > Do we care?
-> 
-> I want to make sure I understand the scenario:
-> 
->  1. We're running in a guest under TDX (or SEV-SNP)
->  2. The VMM (or somebody) is attacking the guest by eating all the
->     hardware entropy and RDRAND is effectively busted
->  3. Assuming kernel-based panic_on_warn and WARN_ON() rdrand_long()
->     failure, that rdrand_long() never gets called.
+Hi Daniel,
 
-Never gets called during attack. It can be used before and after.
+On Mon, Jan 29, 2024 at 6:54=E2=80=AFPM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> Hi Rafael,
+>
+> On 29/01/2024 18:07, Rafael J. Wysocki wrote:
+>
+> [ ... ]
+>
+> >> Index: linux-pm/drivers/thermal/thermal_sysfs.c
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> --- linux-pm.orig/drivers/thermal/thermal_sysfs.c
+> >> +++ linux-pm/drivers/thermal/thermal_sysfs.c
+> >> @@ -474,7 +474,8 @@ static int create_trip_attrs(struct ther
+> >>                       tz->trip_hyst_attrs[indx].name;
+> >>           tz->trip_hyst_attrs[indx].attr.attr.mode =3D S_IRUGO;
+> >>           tz->trip_hyst_attrs[indx].attr.show =3D trip_point_hyst_show=
+;
+> >> -        if (tz->ops->set_trip_hyst) {
+> >> +        if (IS_ENABLED(CONFIG_THERMAL_WRITABLE_TRIPS) &&
+> >> +            mask & (1 << indx)) {
+> >>               tz->trip_hyst_attrs[indx].attr.attr.mode |=3D S_IWUSR;
+> >>               tz->trip_hyst_attrs[indx].attr.store =3D
+> >>                       trip_point_hyst_store;
+> >
+> > So it looks like I need to submit this, even though I'm not sure if
+> > anyone cares.
+> >
+> > In any case, I care about consistency.
+>
+> Yeah, sorry for the delay. I'll have a look at it tomorrow
 
->  4. Userspace is using RDRAND output in some critical place like key
->     generation and is not checking it for failure, nor mixing it with
->     entropy from any other source
->  5. Userspace uses the failed RDRAND output to generate a key
->  6. Someone exploits the horrible key
-> 
-> Is that it?
+Thanks!
 
-Yes.
+Posted here with some additional remarks:
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+https://lore.kernel.org/linux-pm/4565526.LvFx2qVVIh@kreacher/
+
+Let's continue the discussion there.
