@@ -1,101 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2364E1C8
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEECE4D5AC
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706513107; cv=none; b=FAVXkckluQYcfRokSjdq5zp6BKzuCtJ5AWiyIl8Isjdf86jEfK2BAKZmhVw/ypXFo5+gJp24wFiffkEL52BbHeYjfSpsuhafvjp8DAWHCi6EomP0Hs6gz/52gfulg6UEyEV9toBxGqT85Dl6a3p6xBFzf2bSsCWZK/Zs5jW89zM=
+	t=1706513240; cv=none; b=l7Hn2RE6QhwRjbsaCZ+tmmj28ln6M8lzmX8dMao62w14E//CxHi80eup87lahBxkk/Gn6eRrEVHNMYIc2/GyzvFB/nbqViMZ0AT+ve7QuV9hkYW/uXZT9NIEXCtplhZRWnWgZSEO4kfB6E3U4Z95aPgLBCU/3Er4gUosopMcTaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706513107; c=relaxed/simple;
-	bh=oYcxImTQq+1tjT/wwyYicNP+ut2AE6+9OGh0Vd1KEv4=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Nzyhfmi0n1bTZrM2egIX71QISo3YrusGdr/+YGmTgJLn6tFj1NUO4iDkhm2ti/9x2wd0clokUmae9nC3LJ3I8mcOOWlpekFYVwdnWtjptW4V0v3emvL6GYYn+z5qrzsNam1X+PdEZ+6wTXSbgF3EY6j7nyx165a7WWoOaaroqNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbYV9foc; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706513240; c=relaxed/simple;
+	bh=UQg/5njUp9OZkRWZYCC4RzpOoedARfKxs5rcJ9UqsdE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=EhBs3UatUGWeHVZwWhhrnl2KcxMfz84prHMeKoy3x4wGjbzGFIwVGkWuSIHqVUaBqdFpceD+Il3L7ZcZYU7N7vptTfj1vMhNQYn6kBxAkJ205OAYKcbF7T+c/hvr1l4Z1AtFM/KaY102fkYemdyZm1e70eItLSS0ZbH84YzEc3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=E9vIl4BU; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbYV9foc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706513105; x=1738049105;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oYcxImTQq+1tjT/wwyYicNP+ut2AE6+9OGh0Vd1KEv4=;
-  b=mbYV9foctAZHUYmBnvPpoGjCcR39ZtweXlKbaR95NKgz/2HS8JAB2LZZ
-   IfOI8uCD22UK1B/JOV6nfmt2ORtr91q8gJQ/us7gixDFwXxCzVwtO2kR3
-   1O19v0gJaQMtrQoY4y8E16gfnRz2QCo4TX5WLfNsrTUr2FDoyFs4+3tAi
-   G+lGdrwfEXYvCbtXs8viSpt4QK+SYlqGuvkGQljfbFd5GeF84SVq8Kgft
-   isPiMlcPvGJQMz1Vbh09ChbmHoCkambp50IqOwAB+gewTChn3YiBGCsAx
-   veUr3uO0ba0WoiZ1480pBki3kly5A4KClBT409nWKOHacEJpjevHzkko/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="434033273"
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="434033273"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 23:24:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="3288660"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.249.174.51]) ([10.249.174.51])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 23:24:42 -0800
-Message-ID: <abc6771f-fafe-4ca7-898a-aecbe017b3c7@linux.intel.com>
-Date: Mon, 29 Jan 2024 15:24:39 +0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E9vIl4BU"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240129072709epoutp04367ef4ec9318bc22502dab49212fe3b2~uwL2S2Vj11997119971epoutp04A
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:27:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240129072709epoutp04367ef4ec9318bc22502dab49212fe3b2~uwL2S2Vj11997119971epoutp04A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1706513229;
+	bh=SlQ1IskImIa1p6m1vQ2rqgCrN2OhcIVK0Fav7DA6fWY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E9vIl4BU/B0LE37zwdoxwMvznp5XhTPdEtVvBHEhQa/M9HzTprBRXnbP/gH3PAvpr
+	 bFnnJtaMfGQIlVpWAyJ6OMMDCkYFlE0dwOkIUal3VV7WmQ7PgR9lTkOhjvQ2sEwQ44
+	 UTEIIILDLAibQIxJpmea+bAgIIGOqS6ZdJoh5smU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240129072708epcas5p22bcc24d03a515c53b530109181280576~uwL15IV6v1618316183epcas5p2c;
+	Mon, 29 Jan 2024 07:27:08 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4TNfy252S4z4x9Q9; Mon, 29 Jan
+	2024 07:27:06 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	75.11.09672.94357B56; Mon, 29 Jan 2024 16:27:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240129072655epcas5p35d140dba2234e1658b7aa40770b93314~uwLpaXhW72948229482epcas5p3J;
+	Mon, 29 Jan 2024 07:26:55 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240129072655epsmtrp2f78420a682b8202b3027a39fbfefe833~uwLpZjuDb0907209072epsmtrp2E;
+	Mon, 29 Jan 2024 07:26:55 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff700000025c8-01-65b75349d03c
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8C.E4.18939.F3357B56; Mon, 29 Jan 2024 16:26:55 +0900 (KST)
+Received: from AHRE124.. (unknown [109.105.118.124]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240129072654epsmtip2bb7a2b9f5aa86d3d4f891e5c5ecf9a1c~uwLoH6Q1u0936709367epsmtip2_;
+	Mon, 29 Jan 2024 07:26:53 +0000 (GMT)
+From: Xiaobing Li <xiaobing.li@samsung.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
+	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
+	ruyi.zhang@samsung.com, xiaobing.li@samsung.com
+Subject: Re: Re: [PATCH v7] io_uring: Statistics of the true utilization of
+ sq threads.
+Date: Mon, 29 Jan 2024 15:18:44 +0800
+Message-Id: <20240129071844.317225-1-xiaobing.li@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <8e104175-7388-4930-b6a2-405fb9143a2d@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] iommu/vt-d: Remove INTEL_IOMMU_BROKEN_GFX_WA
-To: "Tian, Kevin" <kevin.tian@intel.com>,
- Christoph Hellwig <hch@infradead.org>
-References: <20240127064512.16744-1-baolu.lu@linux.intel.com>
- <Zbc_mdOYxMIxWAdd@infradead.org>
- <BN9PR11MB5276D63FAC442A415018ACB58C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276D63FAC442A415018ACB58C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKJsWRmVeSWpSXmKPExsWy7bCmpq5n8PZUgyX75S3mrNrGaLH6bj+b
+	xbvWcywWR/+/ZbP41X2X0WLrl6+sFpd3zWGzeLaX0+LL4e/sFmcnfGC1mLplB5NFR8tlRgce
+	j52z7rJ7XD5b6tG3ZRWjx+dNcgEsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
+	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKTAr0
+	ihNzi0vz0vXyUkusDA0MjEyBChOyM84tusxc0Mhbcaj5M1MD4xvOLkZODgkBE4lnv7tZuxi5
+	OIQEdjNKTJ/+FMr5xCjROP0VgjOx5z8TTEvb9H4miMRORonm+6/ZIZyXjBI/GvewglSxCWhL
+	XF/XBWaLCAhL7O9oZQEpYhb4yygx4eVvZpCEsECkxIKPM9hAbBYBVYkd59+ygNi8ArYSh/tO
+	s0Ksk5fYf/AsWD0nUPzojelsEDWCEidnPgGrZwaqad46mxlkgYTAX3aJtpOr2SCaXSSuL1/L
+	DmELS7w6vgXKlpL4/G4vVE2xxJGe76wQzQ3AILh9FarIWuLflT1AGziANmhKrN+lDxGWlZh6
+	ah0TxGI+id7fT6DhwiuxYx6MrSqx+tJDFghbWuJ1w2+ouIfEudYbzJDgmgAMrtZ1jBMYFWYh
+	eWgWkodmIaxewMi8ilEytaA4Nz212LTAOC+1HB7Ryfm5mxjB6VXLewfjowcf9A4xMnEwHmKU
+	4GBWEuH9qbk1VYg3JbGyKrUoP76oNCe1+BCjKTDEJzJLiSbnAxN8Xkm8oYmlgYmZmZmJpbGZ
+	oZI47+vWuSlCAumJJanZqakFqUUwfUwcnFINTMpX1Zb3TeCY9nU/i8iCl02/q4/vW/u+5bDB
+	VbNVjBf/XeNb2OzuYWM6VbHYY9YHkR31hl+N0uZ4vzU+3/p138bWMm9zL7Upx7O/mqcrN615
+	vkQrZVZE0lcpjYezivwWybaEzXv75u0VpUWvxIK9V+//cmQpbyXrY/tHkbLbptlk3a0xW5zN
+	2uN7cktHUlJYrPSZzLsnSxdMcf++0d5/810Bzjub2FibWJNu5xhcTmp0jlz8Mrsib+vnJf1+
+	+VppEev9SgIPXrwnvvRYwfIj/Samp+UPSh9PE2GaP0fF4PODeaG2e+NZdkukXXrEevXYDtm/
+	rzxYt0/YZ7fmhHPbz5oz77JO7dLby7iHfXPz9hNKLMUZiYZazEXFiQBrkeYdOAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsWy7bCSvK598PZUgwkTRC3mrNrGaLH6bj+b
+	xbvWcywWR/+/ZbP41X2X0WLrl6+sFpd3zWGzeLaX0+LL4e/sFmcnfGC1mLplB5NFR8tlRgce
+	j52z7rJ7XD5b6tG3ZRWjx+dNcgEsUVw2Kak5mWWpRfp2CVwZ5xZdZi5o5K041PyZqYHxDWcX
+	IyeHhICJRNv0fqYuRi4OIYHtjBIXHq4GcjiAEtISf/6UQ9QIS6z895wdouY5o8SXiUuZQBJs
+	AtoS19d1sYLYIkBF+ztaWUBsZoFOJonXn/VAbGGBcImVB3+A1bMIqErsOP8WrIZXwFbicN9p
+	VogF8hL7D55lBrE5geJHb0xnA7GFBGwkPj3+ygRRLyhxcuYTqPnyEs1bZzNPYBSYhSQ1C0lq
+	ASPTKkbR1ILi3PTc5AJDveLE3OLSvHS95PzcTYzggNcK2sG4bP1fvUOMTByMhxglOJiVRHh/
+	am5NFeJNSaysSi3Kjy8qzUktPsQozcGiJM6rnNOZIiSQnliSmp2aWpBaBJNl4uCUamAKKzUr
+	2LxG877Lba/myD2qyTbvJ83idzdoCZherJC/9P26I2/ZuniLC9ctNdv72Ku5NODrhMC1/zQd
+	diw5w+/mxZvRN0d7tqbV7VNrWW6He+effVIVaX5Z6VGYV+XGY9oJHw5x3n2twrZb+E4rg+Sk
+	XW6bWcLWffJV+Lai0s/1l0HLn+1Nd1+EZWZLvqg9qXZo3sSJW4QnRiRf0e9I+Xms48XepXVi
+	uzkFi6Ny37hN/Px3fXTb1c1x29vNJ1atOKTuMWmROGv/vspF/w0s2n/t/Rxte2LCFtauK1sF
+	DogwCmkvS5HnfHekLCNsDcuGmovxrvPWCIfsjax/5e2b7/PpOMdFxoi592dsuOxuErNTiaU4
+	I9FQi7moOBEA8AX/zecCAAA=
+X-CMS-MailID: 20240129072655epcas5p35d140dba2234e1658b7aa40770b93314
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240129072655epcas5p35d140dba2234e1658b7aa40770b93314
+References: <8e104175-7388-4930-b6a2-405fb9143a2d@kernel.dk>
+	<CGME20240129072655epcas5p35d140dba2234e1658b7aa40770b93314@epcas5p3.samsung.com>
 
-On 2024/1/29 14:08, Tian, Kevin wrote:
->> From: Christoph Hellwig <hch@infradead.org>
->> Sent: Monday, January 29, 2024 2:03 PM
->>
->> On Sat, Jan 27, 2024 at 02:45:12PM +0800, Lu Baolu wrote:
->>> Commit 62edf5dc4a524 ("intel-iommu: Restore DMAR_BROKEN_GFX_WA
->> option for
->>> broken graphics drivers") was introduced 24 years ago as a temporary
->>> workaround for graphics drivers that used physical addresses for DMA and
->>> avoided DMA APIs. This workaround was disabled by default.
->>>
->>> As 24 years have passed, it is expected that graphics driver developers
->>> have migrated their drivers to use kernel DMA APIs. Therefore, this
->>> workaround is no longer required and could been removed.
->>
->> How about you Cc the intel graphics maintainers and get a confirmation?
->>
-> 
-> in the worst case there is still "igfx_off" option available to achieve the
-> same effect.
-> 
-> there is really no good reason to keep this config option so long while it
-> was intended to be removed in 2.6.32.
-> 
-> but yes the Intel graphics maintainers should be CCed.
-> 
+On 1/18/24 19:34, Jens Axboe wrote:
+>> diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
+>> index 8df37e8c9149..c14c00240443 100644
+>> --- a/io_uring/sqpoll.h
+>> +++ b/io_uring/sqpoll.h
+>> @@ -16,6 +16,7 @@ struct io_sq_data {
+>>  	pid_t			task_pid;
+>>  	pid_t			task_tgid;
+>>  
+>> +	long long			work_time;
+>>  	unsigned long		state;
+>>  	struct completion	exited;
+>>  };
+>
+>Probably just make that an u64.
+>
+>As Pavel mentioned, I think we really need to consider if fdinfo is the
+>appropriate API for this. It's fine if you're running stuff directly and
+>you're just curious, but it's a very cumbersome API in general as you
+>need to know the pid of the task holding the ring, the fd of the ring,
+>and then you can get it as a textual description. If this is something
+>that is deemed useful, would it not make more sense to make it
+>programatically available in addition, or even exclusively?
 
-You both are right.
+Hi, Jens and Pavel
+sorry for the late reply.
 
-I will add above in the commit message and Cc graphic guys with a new
-upgraded version.
+I've tried some other methods, but overall, I haven't found a more suitable 
+method than fdinfo.
+If you think it is troublesome to obtain the PID,  then I can provide
+ a shell script to output the total_time and work_time of all sqpoll threads 
+ to the terminal, so that we do not have to manually obtain the PID of each 
+ thread (the script can be placed in tools/ include/io_uring).
 
-Best regards,
-baolu
+eg:
+
+PID    WorkTime(us)   TotalTime(us)   COMMAND
+9330   1106578        2215321         iou-sqp-9329
+9454   1510658        1715321         iou-sqp-9453
+9478   165785         223219          iou-sqp-9477
+9587   106578         153217          iou-sqp-9586
+
+What do you think of this solution?
