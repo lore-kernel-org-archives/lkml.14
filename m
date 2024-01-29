@@ -1,100 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93B75A799
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA605B5DE
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706526385; cv=none; b=nNPB3WYDzSRwuYR39SUBX84cWWKWCj3k/HaFaw+vbG1spgoNAvnodnnS7yYuMOF42rQ/MzFsvq8bZkPUv1mMv5V/c6gPC5dX8NGj5kS81q4//a4jBpnGaZQx9sg4hGsSC6BYpC72rS2Q1FuESUkryBTiiDdIpUqhrhjRIXO0oLk=
+	t=1706526401; cv=none; b=ILkHfneUoAqw6rSoNItDLsBHwl8qaTMFaVAi6V7J4uLR5TwbMbbVbZjDdRlNu+7TNjKgafzWfdeWU0S9aBp0wXPDe83TMJUOeMikVhY8UMBFxKV9qL5dOtcrN3d61S7Bcyxepzujy81UsOerAyBkSPOy9H91BO5dJ8EJpGZoOSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706526385; c=relaxed/simple;
-	bh=TnVAwkwndXh3G3bGKC1EQlHHDq8Xhg5GNLD4X/BSEvQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uf1oK87ywC1BdZELf0IwEfdbqcOMZxoIpi3g52cBkORolHSR7o3CMuw7a89ciB0gktfjvbkd6TEtMlNMqz2WR4DqGZR4LwK5nXSLvCv6DpEMiA2D+Ukk7LXSNu1koPCFkUCPIm1WRoEHgJRcrU4Ji56XpeFztaiH9wFnpDfVCqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pz7NKky9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pz7NKky9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F7CC43394
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706526384;
-	bh=TnVAwkwndXh3G3bGKC1EQlHHDq8Xhg5GNLD4X/BSEvQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Pz7NKky9U/hfIRx4S3MKi0qS2DxorX9TZC3ZV9WQlHTyUgX/LkvXIk6L5c0CymFAT
-	 yj/nIH7Oz9Mzuc0SJsyvYRPRCxKg3qnWEYwtMdRPllvzhO2x8NquljyL61uImK+OI1
-	 K/P3Fz/FBBy9vz702tgCYy/EDFY0NfFg8AyNESbxHEene/m+fzByEy7fdI4pQkK0nq
-	 pcqxQysrbZoqjO9dBKdtCYZ5QYEUXYbUOSnmXufe4Hk+Bwf4uSJGtZd4/44o6FQORt
-	 ojEK+3uUtmk4QKm/tM5NiwMI3Oe/EHTJThLkmpKiWPH2bM3X40lIF/idG3C9Bl09RS
-	 gexgfWQMi8xpw==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5102b00c2cdso1659881e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 03:06:24 -0800 (PST)
-X-Gm-Message-State: AOJu0YwFiJEFykK8k1GMACBw5nE4LTHbjnY+52vohM4J9uxPPsQBozMt
-	90bI8aw3oJto8tjSGeUn1mkxwqRcSDuT9y/0IcTyN67Yrl85OaJRB+QvdB9DzB9mOZrxFktDcPi
-	ux8KDdySSRaozAEApIsqokSLaR+M=
-X-Google-Smtp-Source: AGHT+IHKaolwTP3TqaX2Qrfhbe3cV4oebtLBiGehaQv+hguucdfgWrnqQb8eonBgKBJ/qW/2cWU4ZUDaDI6rbTed/6U=
-X-Received: by 2002:a19:e01c:0:b0:50e:a91d:422a with SMTP id
- x28-20020a19e01c000000b0050ea91d422amr3184140lfg.29.1706526382680; Mon, 29
- Jan 2024 03:06:22 -0800 (PST)
+	s=arc-20240116; t=1706526401; c=relaxed/simple;
+	bh=bN8edVEibQUi4cNIoeXwKAWhUhuvpW1rx432LV6Rp34=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TidUNRCYrll1QfEGHtW3QJg9PUlh4qrcfFYUAVlGiu0PFwbKy5mapQIF1sg7qiJE7k+WjbQJxYfrLJxn2YID7PSwVZC5RKjd+pL3BOIi83AGs/mQ3t+z34EyiZY5kOS1Teqez1IM4KQzpp8l3qtYHQvWPVD0CalrjKDsaWjFpAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:3b5f:c6ad:b5fc:a0f3])
+	by laurent.telenet-ops.be with bizsmtp
+	id gb6X2B0022ZPkuY01b6XDK; Mon, 29 Jan 2024 12:06:31 +0100
+Received: from geert (helo=localhost)
+	by ramsan.of.borg with local-esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rUPTC-00GgzQ-W5;
+	Mon, 29 Jan 2024 12:06:31 +0100
+Date: Mon, 29 Jan 2024 12:06:30 +0100 (CET)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: linux-kernel@vger.kernel.org
+cc: sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org, 
+    linux-hwmon@vger.kernel.org, intel-xe@lists.freedesktop.org
+Subject: Re: Build regressions/improvements in v6.8-rc2
+In-Reply-To: <20240129104954.1778339-1-geert@linux-m68k.org>
+Message-ID: <8ea40b3-adde-acb5-5e46-fe1fd395daf@linux-m68k.org>
+References: <CAHk-=wgxzm+Oc1ywuNGxb1R1=ZEC85LJi776R2QEpk6=_2Qfdw@mail.gmail.com> <20240129104954.1778339-1-geert@linux-m68k.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126163918.2908990-2-ardb+git@google.com> <20240127105240.GAZbTgeOwAmYbSfgXR@fat_crate.local>
-In-Reply-To: <20240127105240.GAZbTgeOwAmYbSfgXR@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 29 Jan 2024 12:06:11 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH-RMhkQMWq0jVWbp=UgsE0=k0E-6cMN32rsYuANWY+6w@mail.gmail.com>
-Message-ID: <CAMj1kXH-RMhkQMWq0jVWbp=UgsE0=k0E-6cMN32rsYuANWY+6w@mail.gmail.com>
-Subject: Re: [PATCH] x86/sme: Fix memory encryption if enabled by default and
- not overridden
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Nikita Zhandarovich <n.zhandarovich@fintech.ru>, 
-	Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Sat, 27 Jan 2024 at 11:53, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Jan 26, 2024 at 05:39:19PM +0100, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Commit cbebd68f59f0 ("x86/mm: Fix use of uninitialized buffer in
-> > sme_enable()") 'fixed' an issue in sme_enable() detected by static
-> > analysis, and broke the common case in the process.
-> >
-> > cmdline_find_option() will return < 0 on an error, or when the command
-> > line argument does not appear at all.
->
-> Is it just me or cmdline_find_option() should be fixed to return 0 when
-> there's no cmdline argument and < 0 only when there was a real error
-> parsing?
->
-> Hohumm, sounds like a TODO for me or someone who wants to audit all
-> callers and fix them up accordingly.
->
+On Mon, 29 Jan 2024, Geert Uytterhoeven wrote:
+> JFYI, when comparing v6.8-rc2[1] to v6.8-rc1[3], the summaries are:
+>  - build errors: +26/-14
 
-I intend to propose removing this occurrence entirely, and move it
-into the EFI stub/decompressor.
 
-Parsing external input in security related code when the entire kernel
-is still mapped writable is kind of gross, and since I'm cleaning up
-the early PIC code anyway, might just as well rip this out.
+   + /kisskb/src/arch/sparc/kernel/setup_64.c: error: no previous prototype for 'alloc_irqstack_bootmem' [-Werror=missing-prototypes]:  => 602:13
 
-Another issue here is that it does not honor
-CONFIG_CMDLINE_BOOL/CONFIG_CMDLINE_OVERRIDE. I.e., if memory
-encryption is enabled by default, and the kernel is configured to
-ignore the command line, the current code will still disable memory
-encryption when mem_encrypt=off is passed. Probably not a big deal,
-but unintuitive nonetheless.
+sparc64-gcc{5,1[123]}/sparc64-{allno,def}config
 
-For the other cases, I agree that this would be a good thing to clean
-up. Note that someone has been looking into the handling of the
-command line recently.
+   + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' specified bound between 4294967240 and 4294967263 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]:  => 298:17
+   + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' specified bound between 4294967264 and 4294967287 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]:  => 161:9
 
-https://lore.kernel.org/all/20231110013817.2378507-6-danielwa@cisco.com/T/#m817c573e25f6f7da237272178a8f6b116192a6ad
+parisc-gcc1[23]/generic-32bit_defconfig
+parisc-gcc1[23]/parisc-{allmod,def}config
 
-but I am not sure what the state of the code is, or whether the
-approach is the right one. I was meaning to look at that but haven't
-found the time yet.
+   + /kisskb/src/drivers/hwmon/pc87360.c: error: writing 1 byte into a region of size 0 [-Werror=stringop-overflow=]:  => 383:51
+
+arm64-gcc12/arm64-allmodconfig
+parisc-gcc12/parisc-allmodconfig
+
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1045' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1065' declared with attribute error: FIELD_PREP: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1084' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1095' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1137' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1139' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1148' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1150' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_924' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_935' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
+
+in drivers/gpu/drm/xe/xe_guc_ct.c:526
+arm64-gcc5/arm64-allmodconfig
+powerpc-gcc5/powerpc-all{mod,yes}config
+powerpc-gcc5/ppc{32,64le,64_book3e}_allmodconfig
+(seen before in v6.8-rc1, with different assertion numbers)
+
+   + /kisskb/src/include/linux/fortify-string.h: error: writing 16 bytes into a region of size 0 [-Werror=stringop-overflow=]:  => 57:33
+
+in drivers/gpu/drm/xe/xe_gt_pagefault.c:340
+arm64-gcc13/arm64-allmodconfig
+s390x-gcc13/s390-all{mod,yes}config
+
+   + {standard input}: Error: displacement to undefined symbol .L101 overflows 8-bit field :  => 593
+   + {standard input}: Error: displacement to undefined symbol .L104 overflows 8-bit field :  => 588
+   + {standard input}: Error: displacement to undefined symbol .L139 overflows 8-bit field :  => 606
+   + {standard input}: Error: displacement to undefined symbol .L73 overflows 12-bit field:  => 594
+   + {standard input}: Error: displacement to undefined symbol .L74 overflows 8-bit field :  => 585
+   + {standard input}: Error: displacement to undefined symbol .L75 overflows 12-bit field: 606, 586 => 589, 606, 586
+   + {standard input}: Error: displacement to undefined symbol .L76 overflows 8-bit field : 577 => 580, 577
+   + {standard input}: Error: displacement to undefined symbol .L80 overflows 8-bit field : 601 => 601, 607
+   + {standard input}: Error: displacement to undefined symbol .L81 overflows 8-bit field : 606, 604 => 604, 610, 606
+   + {standard input}: Error: displacement to undefined symbol .L96 overflows 12-bit field:  => 602
+   + {standard input}: Error: displacement to undefined symbol .L99 overflows 12-bit field:  => 607
+
+The usual SH ICE crickets.
+
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/41bccc98fb7931d63d03f326a746ac4d429c1dd3/ (all 239 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/6613476e225e090cc9aad49be7fa504e290dd33d/ (all 239 configs)
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
