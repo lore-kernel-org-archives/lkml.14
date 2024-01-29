@@ -1,189 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CB2629EF;
-	Mon, 29 Jan 2024 13:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A9F62805;
+	Mon, 29 Jan 2024 13:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706533604; cv=none; b=fS8oMgQzD01Hecl3WfyDtZx86kZDK1VItP/5sO4Uy8ZLadtIEfunUemFcsC+O/GtQ0Sk3vABJeZCeQsPw8v7gzXSUvw6uZtl/9QEXFkOvLJINdU7WRuADuQ2ZuZSJ7JkPTSfxR1AzkwmuzRs47ENeoiTNP8G1T3rFaa0AO4KEkI=
+	t=1706533630; cv=none; b=tRqrbhgulL9qOau4pBj/A9u069C6ycS0dBp5yQjr/ADgKDyqgPrnhd8rR1M6L+/eYr7zld9P7crIJZwy/sh4Qhu0Mf4zAFBDyj/BXF4eqIWGRpQDzFMcfa/g0SQj81Bf61DdbJjo424NkqXtHCy75iXORrHHedvLfFYgRKO3FuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706533604; c=relaxed/simple;
-	bh=LJf7dTcJbBMHD+bB1uzaU0zJsclsm818XWVIqsj/XS4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MwcLG3JjKaj/In0mxzq+HgvoHlPepF4MnnyC3i9/LgwIz+4vAx7HHWCRy1mtYCb73inOHXjdibPgroFPGXdwm/5GaYJ3kv4BOywt+9b4mHn/31dQwif9zc/ngV79fftwtXVRDoEkE+ALv3E4wxTzIeHlX3x/kNU3HS1RiZcZ3GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJyKOJ9b; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706533630; c=relaxed/simple;
+	bh=ohwrdZDM8vaPRClPA73d/eC9TaOp9u2xSfByKk4W4Wc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BVanrIfzaTZ9vgGaRuPfMy9BkfNK1UtvTf/kpORf43yh40m5ikDa1czUhJVrF/kcSMPu7G1IU8WjUldaAjWDZtdnlTg9No7KXETtkmy9SOn5gxb8j1h/59oGfovKt08bCSYiqBF2IF8fGFyQVb82XCvKsiiqHAER+qX7TnFLmho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=lkJJhIQY; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJyKOJ9b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706533604; x=1738069604;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LJf7dTcJbBMHD+bB1uzaU0zJsclsm818XWVIqsj/XS4=;
-  b=XJyKOJ9bCRCETTL5vNlvw+NYHHvA8lldw2UUpA+o/4L2UD765i/wkJ4B
-   7s3kY2dEPeuAKWdFUeD8JEZIMxCRTvxfzEa3FdQrhf1ichydmo4fCBifY
-   zrd+PaaqVQFRHbk3EuuQjuqBX4sqUmS++AYpgdb2rqVFZJ6SL/PtPM0uO
-   ncP+aE+jmBkGZCZT+d9IE9L66YLBt/lZ0qjWWGiRq+8r+NgLHMIAXbq6P
-   8MKu2qhe38BfgZl/DUAO1CIK2zetKH4zwkJSoSj8+GT7s/R3iNRBMc/sA
-   9tsq36/k8d1Yr3p9Si0ubnDGxQV70CgjJBJS4OYx9e/MIAShyJhnam6Ql
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="21473742"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="21473742"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:06:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="907106901"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="907106901"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jan 2024 05:06:35 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Voon Wei Feng <weifeng.voon@intel.com>,
-	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
-	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
-Subject: [PATCH net-next v4 11/11] stmmac: intel: interface switching support for ADL-N platform
-Date: Mon, 29 Jan 2024 21:02:53 +0800
-Message-Id: <20240129130253.1400707-12-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
-References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="lkJJhIQY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1706533620;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WZ6n1UUyKZ6/GqoAl9C1IKiMh8xfnXYw9yivuJaenjc=;
+	b=lkJJhIQY7TfMtm88L38sEkEJxselNAE/Twb2fKnBQqdR6TXUlZ2g4KFkZoV01JpOgc4RAR
+	rYr2XoaTW10D8p2tIFa0TUtnH8Nx8VUwnoNONT3e/nD7GZ+aKpfpdjZxhhLhw4eziLUrZs
+	1uCNQrzVPFDxkK4VvOHIVRP3VMh3YSE=
+Message-ID: <aac82ce15a49c5e4b939a69229b9a8a51ca00f5d.camel@crapouillou.net>
+Subject: Re: [PATCH v5 5/8] iio: core: Add new DMABUF interface
+ infrastructure
+From: Paul Cercueil <paul@crapouillou.net>
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
+	Jonathan Cameron
+	 <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
+ <sumit.semwal@linaro.org>,  Vinod Koul <vkoul@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-iio@vger.kernel.org,
+ linux-media@vger.kernel.org,  dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, Nuno =?ISO-8859-1?Q?S=E1?=
+ <noname.nuno@gmail.com>, Michael Hennerich <Michael.Hennerich@analog.com>
+Date: Mon, 29 Jan 2024 14:06:58 +0100
+In-Reply-To: <d6bef39c-f940-4097-8ca3-0cf4ef89a743@amd.com>
+References: <20231219175009.65482-1-paul@crapouillou.net>
+	 <20231219175009.65482-6-paul@crapouillou.net>
+	 <20231221120624.7bcdc302@jic23-huawei>
+	 <ee5d7bb2fb3e74e8fc621d745b23d1858e1f0c3c.camel@crapouillou.net>
+	 <20240127165044.22f1b329@jic23-huawei>
+	 <d6bef39c-f940-4097-8ca3-0cf4ef89a743@amd.com>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
+	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-'intel_get_pcs_neg_mode' and 'intel_config_serdes' was provided to
-handle interface mode change for ADL-S platform.
+Hi Christian,
 
-Modphy register lane was provided to configure serdes on interface
-mode changing.
+Le lundi 29 janvier 2024 =C3=A0 13:52 +0100, Christian K=C3=B6nig a =C3=A9c=
+rit=C2=A0:
+> Am 27.01.24 um 17:50 schrieb Jonathan Cameron:
+> > > > > +	iio_buffer_dmabuf_put(attach);
+> > > > > +
+> > > > > +out_dmabuf_put:
+> > > > > +	dma_buf_put(dmabuf);
+> > > > As below. Feels like a __free(dma_buf_put) bit of magic would
+> > > > be a
+> > > > nice to have.
+> > > I'm working on the patches right now, just one quick question.
+> > >=20
+> > > Having a __free(dma_buf_put) requires that dma_buf_put is first
+> > > "registered" as a freeing function using DEFINE_FREE() in
+> > > <linux/dma-
+> > > buf.h>, which has not been done yet.
+> > >=20
+> > > That would mean carrying a dma-buf specific patch in your tree,
+> > > are you
+> > > OK with that?
+> > Needs an ACK from appropriate maintainer, but otherwise I'm fine
+> > doing
+> > so.=C2=A0 Alternative is to circle back to this later after this code i=
+s
+> > upstream.
+>=20
+> Separate patches for that please, the autocleanup feature is so new
+> that=20
+> I'm not 100% convinced that everything works out smoothly from the
+> start.
 
-Signed-off-by: Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 49 ++++++++++++++++++-
- .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  2 +
- 2 files changed, 50 insertions(+), 1 deletion(-)
+Separate patches is a given, did you mean outside this patchset?
+Because I can send a separate patchset that introduces scope-based
+management for dma_fence and dma_buf, but then it won't have users.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index fd9d56b7c511..f54595d156fb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -992,6 +992,53 @@ static int adls_sgmii_phy1_data(struct pci_dev *pdev,
- static struct stmmac_pci_info adls_sgmii1g_phy1_info = {
- 	.setup = adls_sgmii_phy1_data,
- };
-+
-+static int adln_common_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->rx_queues_to_use = 6;
-+	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 204800000;
-+
-+	plat->safety_feat_cfg->tsoee = 1;
-+	plat->safety_feat_cfg->mrxpee = 0;
-+	plat->safety_feat_cfg->mestee = 1;
-+	plat->safety_feat_cfg->mrxee = 1;
-+	plat->safety_feat_cfg->mtxee = 1;
-+	plat->safety_feat_cfg->epsi = 0;
-+	plat->safety_feat_cfg->edpp = 0;
-+	plat->safety_feat_cfg->prtyen = 0;
-+	plat->safety_feat_cfg->tmouten = 0;
-+
-+	intel_priv->tsn_lane_registers = adln_tsn_lane_registers;
-+	intel_priv->max_tsn_lane_registers = ARRAY_SIZE(adln_tsn_lane_registers);
-+
-+	return intel_mgbe_common_data(pdev, plat);
-+}
-+
-+static int adln_sgmii_phy0_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->bus_id = 1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->max_speed = SPEED_2500;
-+	plat->serdes_powerup = intel_serdes_powerup;
-+	plat->serdes_powerdown = intel_serdes_powerdown;
-+	plat->get_pcs_neg_mode = intel_get_pcs_neg_mode;
-+	plat->config_serdes = intel_config_serdes;
-+	intel_priv->pid_modphy = PID_MODPHY1;
-+
-+	return adln_common_data(pdev, plat);
-+}
-+
-+static struct stmmac_pci_info adln_sgmii1g_phy0_info = {
-+	.setup = adln_sgmii_phy0_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -1374,7 +1421,7 @@ static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, TGLH_SGMII1G_1, &tgl_sgmii1g_phy1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_0, &adls_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_1, &adls_sgmii1g_phy1_info) },
--	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &tgl_sgmii1g_phy0_info) },
-+	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &adln_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, RPLP_SGMII1G, &tgl_sgmii1g_phy0_info) },
- 	{}
- };
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-index 093eed977ab0..2c6b50958988 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-@@ -124,8 +124,10 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- 	{}
- };
- 
-+static const int adln_tsn_lane_registers[] = {6};
- static const int ehl_tsn_lane_registers[] = {7, 8, 9, 10, 11};
- #else
-+static const int adln_tsn_lane_registers[] = {};
- static const int ehl_tsn_lane_registers[] = {};
- #endif /* CONFIG_INTEL_PMC_IPC */
- 
--- 
-2.34.1
-
+Cheers,
+-Paul
