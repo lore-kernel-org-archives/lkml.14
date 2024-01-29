@@ -1,261 +1,339 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890AA57865;
-	Mon, 29 Jan 2024 08:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3D75FEED;
+	Mon, 29 Jan 2024 08:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706517203; cv=none; b=NnoTunLOcxje/3fkPnJ6m+0benDL8k4aqOWdkTeWdCNP59U3E7iT+64xRop7+1GUKB0vKN6Mywkke6VR9v82DNTn/TrXBjfMhsR1fYkvGKnt+QWS7YOmZXyQG2vxBE98juhl0z86VGvT9wVK/NV+h9/tWs+ahWtUHtH0anKRs4E=
+	t=1706517205; cv=none; b=UNRPObDLKEf7Yrt6S6b9c3CKXem9y5GX06iUR3LPiUCa2HIXTmtf43HpZJ7CXO1XT+YthmqiisnDYu8tPMbLBaLvSFHdB29y4lngifGvwM+OucYzRTuBvLxz3Q1ukPDkcAPb1bsO/LdIU/yZRsf7rWK8KXkXGJyJs+5zcbd4MQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706517203; c=relaxed/simple;
-	bh=0OLRga1LcfHeQkjMoJOa+JV0bOzhYh3zwLeCH8fUSsE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YjCS5LUgwA6AzxiigSIv4AXAS4dgEjbEeozYbDqE/fDyQ/OaQqcEh3Fyj8akwHKoMsDiTxUiBk+WpBtaxuyfVVhhL+t+eyRdEyat3PomEeOPo/o3MwPK2m6dC25hsMZhu/LTEof6wVSvCTXpyHAlrrtyAQE2jAqfMFwtfACtUsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=hJRq9Zt9; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1706517205; c=relaxed/simple;
+	bh=gPpx/D0AFFX1KG5syJb7H8q92DHqMNH5spjAbdTRFKM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QJZrAwc7N7iXgrRvMOtZGWLEZ/p8UartO1DG2i6RAszV8MI9cOd+Cvt5yUEc/y5zHJqX7at2gljjG93TRlIiYBsfokJ1rMfELgpcfFG2iWg7BOhq2/pALGaJNUD6PglzDIkfItcBkx1Y63P94uOxYBWqI5PxKMVg3bKwQP0RZH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ht43Nctn; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hJRq9Zt9"
-X-UUID: 09257914be8111ee9e680517dc993faa-20240129
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=4aFHlKO68gkpQ2H5DEC8ScmJLpJQbxtvVULWLax4NcE=;
-	b=hJRq9Zt9DKIWEjhwVt+oFt2PxzqrlLUWbhc9nweeP5+x5B58DFO6284fAC6G65DPjIFhJBlaYVkL3cQ7X8gKiCPOotAQfxddbCwL6vVeN9N8VdUJqq85nzhrkQwZZohOtizvcUpovEUJiiw02slJYjUki/evcggLWZ3lxmndU3s=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.36,REQID:0fa141f8-c87f-4633-a718-92c1152ef138,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:6e16cf4,CLOUDID:c2185e83-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 09257914be8111ee9e680517dc993faa-20240129
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <yi-de.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1672033661; Mon, 29 Jan 2024 16:33:10 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 29 Jan 2024 16:33:09 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 29 Jan 2024 16:33:09 +0800
-From: Yi-De Wu <yi-de.wu@mediatek.com>
-To: Yingshiuan Pan <yingshiuan.pan@mediatek.com>, Ze-Yu Wang
-	<ze-yu.wang@mediatek.com>, Yi-De Wu <yi-de.wu@mediatek.com>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<netdev@vger.kernel.org>, <linux-mediatek@lists.infradead.org>, David Bradil
-	<dbrazdil@google.com>, Trilok Soni <quic_tsoni@quicinc.com>, My Chuang
-	<my.chuang@mediatek.com>, Shawn Hsiao <shawn.hsiao@mediatek.com>, PeiLun Suei
-	<peilun.suei@mediatek.com>, Liju Chen <liju-clr.chen@mediatek.com>, "Willix
- Yeh" <chi-shen.yeh@mediatek.com>, Kevenny Hsieh <kevenny.hsieh@mediatek.com>
-Subject: [PATCH v9 21/21] virt: geniezone: Enable PTP for synchronizing time between host and guest VMs
-Date: Mon, 29 Jan 2024 16:33:02 +0800
-Message-ID: <20240129083302.26044-22-yi-de.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240129083302.26044-1-yi-de.wu@mediatek.com>
-References: <20240129083302.26044-1-yi-de.wu@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ht43Nctn"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d7232dcb3eso9728495ad.2;
+        Mon, 29 Jan 2024 00:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706517202; x=1707122002; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w8rvCs0CTengdVMrYR436oClLvAgG0ieZs9mk2u2MpA=;
+        b=Ht43NctnnNQ1xdphfGQ4jhjWoIjuz5DYoQxTfX+BinDX4v1nzzQSOv+gWaWW0JWcIX
+         ToBb9gt3RviaD/Y3h3xM7vOvVQhZl8W//5sjax45rNXX4R4bkwuaIbhymvvc45HehGuT
+         lTddrnEdwr3QdgNGqnPyQG55CXEUDwN1PU8N2kNCgbSh2USuhACV4y2jFu0Lfs5wl8lf
+         TSWweQ0fEe9ofH95GDrZOEwP21raItZdLHw89UqKq1SdT2pyGES/bkD6ul7nAQgsgqOd
+         IRAERr0ThQAuqi15yfjOvP+UWtpQur/Sz/otSn8rewP6SMuVwcnX+yJgDLJ85EzAcwD+
+         QKnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706517202; x=1707122002;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w8rvCs0CTengdVMrYR436oClLvAgG0ieZs9mk2u2MpA=;
+        b=wNaub1diJjE26Nbi/7G1r2PYbPSVe4cw8GhhDIgpIgzqaW+vvlCSUCcR4+A54UxzZQ
+         EWmTwfJ6IBSeTnav+bB+J60qmQYG54ye/KznbdUUFcYVniTaNPOQTk3pXm50LAiUWJ/P
+         QOBkV6Q4jdfGUboaiCaGSmUuHASA1q7cY7/FdBAaLbJryFMIlU65CmHNePxoWifAEgk0
+         px/CvaVMnnhClPtDOQWbUrXjs2A4zx2BA290gAt/eXPDPcw9K/ScuOO2Px5V+ptlfslK
+         zarDBy0V9yNVN+pjrlnxQVffyziZT+KCaI0D15qjxKSMtzD+JtdsG2+rLgbQwSXLAKyF
+         G4Yg==
+X-Gm-Message-State: AOJu0YzlAIlhEwUNqBd9Me18YIRPGVmnNi8lPfTY9iT7CwsgpR8D+WgK
+	UorR+BRxw//CBVjyJFda0VRxV11xU0R0GnhHAX/BrEgBykycDOeN
+X-Google-Smtp-Source: AGHT+IHRbMIKxO3A3x41zkurSgi/UviAUp4JFNFrOSe6P/sbdsT8o4QgZGTE3UZ9cHGnhjfJipJ7Sw==
+X-Received: by 2002:a17:902:db12:b0:1d7:44f8:4aab with SMTP id m18-20020a170902db1200b001d744f84aabmr2123516plx.25.1706517202231;
+        Mon, 29 Jan 2024 00:33:22 -0800 (PST)
+Received: from charles-System-Product-Name.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
+        by smtp.gmail.com with ESMTPSA id v19-20020a170902d09300b001d8d0487edbsm2001878plv.223.2024.01.29.00.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 00:33:21 -0800 (PST)
+From: Charles Hsu <ythsu0511@gmail.com>
+To: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jdelvare@suse.com,
+	linux@roeck-us.net,
+	corbet@lwn.net,
+	Delphine_CC_Chiu@Wiwynn.com,
+	naresh.solanki@9elements.com,
+	peteryin.openbmc@gmail.com,
+	patrick.rudolph@9elements.com,
+	alexander.stein@ew.tq-group.com,
+	lakshmiy@us.ibm.com,
+	bhelgaas@google.com,
+	michal.simek@amd.com,
+	lukas@wunner.de,
+	festevam@denx.de
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	ytshu0511@gmail.com,
+	Charles Hsu <ythsu0511@gmail.com>
+Subject: [PATCH v2] hwmon: Add driver for MPS MPQ8785 Synchronous Step-Down Converter
+Date: Mon, 29 Jan 2024 16:31:15 +0800
+Message-Id: <20240129083115.2107466-1-ythsu0511@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--10.205400-8.000000
-X-TMASE-MatchedRID: y128Pza/oi5PB4rXagQZ+5LPLrFS265P4Ob1SHQRSIgNqAa+u3rIYNwB
-	sjzU/tkx4ZQqYHZtqxhYo3G+rvxrNao77AcuQhw7A9lly13c/gHt/okBLaEo+BjO8pfx4H7gcam
-	vz988laISXSK8uF+jaPAL7Jj8ilE4LZbtj42l31G4jAucHcCqnZYcYQ11P5U/xKLCLOyCW5B25K
-	XQ4QIGJr1A4/e8Np0k4I4a/QXu4NCR8u6DOJbzp8nUT+eskUQP7h2RrsKOiu0+gR+s21UkWIEpJ
-	RcbelqdADXE8V3mpEVDNcDXkV4d67bfdDP+zORmdXz3l78F3YmkWoMjFfK3Xpsoi2XrUn/Jn6Kd
-	MrRsL14qtq5d3cxkNZd/mwLf2BVU/u97Tz1Q+0kDBDLbZrqaEgJOsKQTld6amsvvnoS3ZploBmT
-	SwRxjXg==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--10.205400-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: A9B58409E70E1E727DD1BE319D4B6D809EFF4DB11FC966FF0DF0FAA8F2E88A3C2000:8
-X-MTK: N
+Content-Transfer-Encoding: 8bit
 
-From: "Kevenny Hsieh" <kevenny.hsieh@mediatek.com>
+Add support for mpq8785 device from Monolithic Power Systems, Inc.
+(MPS) vendor. This is synchronous step-down controller.
 
-Enabled Precision Time Protocol (PTP) for improved host-guest VM time
-synchronization, optimizing operations needing precise clock sync in
-virtual environment.
+Signed-off-by: Charles Hsu <ythsu0511@gmail.com>
 
-Signed-off-by: Kevenny Hsieh <kevenny.hsieh@mediatek.com>
-Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
-Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
 ---
- arch/arm64/geniezone/Makefile           |  2 +-
- arch/arm64/geniezone/gzvm_arch_common.h |  3 +
- arch/arm64/geniezone/hvc.c              | 73 +++++++++++++++++++++++++
- drivers/virt/geniezone/gzvm_exception.c |  3 +-
- include/linux/gzvm_drv.h                |  1 +
- include/uapi/linux/gzvm.h               |  1 +
- 6 files changed, 80 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/geniezone/hvc.c
+Change in v1:
+    Initial patchset.
+Change in v2:
+    1.Add pmbus support status registers.
+    2.Add mpq8785 in trivial-devices.yaml.
+    3.Remove format[PSC_VOLTAGE_OUT]
+    4.Fix MODULE_DESCRIPTION
+---
+ .../devicetree/bindings/trivial-devices.yaml  |  2 +
+ Documentation/hwmon/index.rst                 |  1 +
+ Documentation/hwmon/mpq8785.rst               | 94 +++++++++++++++++++
+ drivers/hwmon/pmbus/Kconfig                   |  9 ++
+ drivers/hwmon/pmbus/Makefile                  |  1 +
+ drivers/hwmon/pmbus/mpq8785.c                 | 62 ++++++++++++
+ 6 files changed, 169 insertions(+)
+ create mode 100644 Documentation/hwmon/mpq8785.rst
+ create mode 100644 drivers/hwmon/pmbus/mpq8785.c
 
-diff --git a/arch/arm64/geniezone/Makefile b/arch/arm64/geniezone/Makefile
-index 0e4f1087f9de..553a64a926dc 100644
---- a/arch/arm64/geniezone/Makefile
-+++ b/arch/arm64/geniezone/Makefile
-@@ -4,6 +4,6 @@
- #
- include $(srctree)/drivers/virt/geniezone/Makefile
- 
--gzvm-y += vm.o vcpu.o vgic.o
-+gzvm-y += vm.o vcpu.o vgic.o hvc.o
- 
- obj-$(CONFIG_MTK_GZVM) += gzvm.o
-diff --git a/arch/arm64/geniezone/gzvm_arch_common.h b/arch/arm64/geniezone/gzvm_arch_common.h
-index fbaf2da792a4..e697223f0fd6 100644
---- a/arch/arm64/geniezone/gzvm_arch_common.h
-+++ b/arch/arm64/geniezone/gzvm_arch_common.h
-@@ -93,6 +93,8 @@ static inline u16 get_vcpuid_from_tuple(unsigned int tuple)
-  * @__pad: add an explicit '__u32 __pad;' in the middle to make it clear
-  *         what the actual layout is.
-  * @lr: The array of LRs(list registers).
-+ * @vtimer_offset: The offset maintained by hypervisor that is host cycle count
-+ *                 when guest VM startup.
-  *
-  * - Keep the same layout of hypervisor data struct.
-  * - Sync list registers back for acking virtual device interrupt status.
-@@ -101,6 +103,7 @@ struct gzvm_vcpu_hwstate {
- 	__le32 nr_lrs;
- 	__le32 __pad;
- 	__le64 lr[GIC_V3_NR_LRS];
-+	__le64 vtimer_offset;
- };
- 
- static inline unsigned int
-diff --git a/arch/arm64/geniezone/hvc.c b/arch/arm64/geniezone/hvc.c
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 79dcd92c4a43..088b23ed2ae6 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -129,6 +129,8 @@ properties:
+           - mps,mp2975
+             # Monolithic Power Systems Inc. multi-phase hot-swap controller mp5990
+           - mps,mp5990
++            # Monolithic Power Systems Inc. synchronous step-down converter mpq8785
++          - mps,mpq8785
+             # Honeywell Humidicon HIH-6130 humidity/temperature sensor
+           - honeywell,hi6130
+             # IBM Common Form Factor Power Supply Versions (all versions)
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index c7ed1f73ac06..085ad6ca9b05 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -163,6 +163,7 @@ Hardware Monitoring Kernel Drivers
+    mp2975
+    mp5023
+    mp5990
++   mpq8785
+    nct6683
+    nct6775
+    nct7802
+diff --git a/Documentation/hwmon/mpq8785.rst b/Documentation/hwmon/mpq8785.rst
 new file mode 100644
-index 000000000000..603db0fad3d8
+index 000000000000..bf8176b87086
 --- /dev/null
-+++ b/arch/arm64/geniezone/hvc.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/hwmon/mpq8785.rst
+@@ -0,0 +1,94 @@
++.. SPDX-License-Identifier: GPL-2.0-only
++
++Kernel driver mpq8785
++=======================
++
++Supported chips:
++
++  * MPS MPQ8785
++
++    Prefix: 'mpq8785'
++
++Author: Charles Hsu <ythsu0511@gmail.com>
++
++Description
++-----------
++
++The MPQ8785 is a fully integrated, PMBus-compatible, high-frequency, synchronous
++buck converter. The MPQ8785 offers a very compact solution that achieves up to
++40A output current per phase, with excellent load and line regulation over a
++wide input supply range. The MPQ8785 operates at high efficiency over a wide
++output current load range.
++
++The PMBus interface provides converter configurations and key parameters
++monitoring.
++
++The MPQ8785 adopts MPS's proprietary multi-phase digital constant-on-time (MCOT)
++control, which provides fast transient response and eases loop stabilization.
++The MCOT scheme also allows multiple MPQ8785 devices to be connected in parallel
++with excellent current sharing and phase interleaving for high-current
++applications.
++
++Fully integrated protection features include over-current protection (OCP),
++over-voltage protection (OVP), under-voltage protection (UVP), and
++over-temperature protection (OTP).
++
++The MPQ8785 requires a minimal number of readily available, standard external
++components, and is available in a TLGA (5mmx6mm) package.
++
++Device compliant with:
++
++- PMBus rev 1.3 interface.
++
++The driver exports the following attributes via the 'sysfs' files
++for input voltage:
++
++**in1_input**
++
++**in1_label**
++
++**in1_max**
++
++**in1_max_alarm**
++
++**in1_min**
++
++**in1_min_alarm**
++
++**in1_crit**
++
++**in1_crit_alarm**
++
++The driver provides the following attributes for output voltage:
++
++**in2_input**
++
++**in2_label**
++
++**in2_alarm**
++
++The driver provides the following attributes for output current:
++
++**curr1_input**
++
++**curr1_label**
++
++**curr1_max**
++
++**curr1_max_alarm**
++
++**curr1_crit**
++
++**curr1_crit_alarm**
++
++The driver provides the following attributes for temperature:
++
++**temp1_input**
++
++**temp1_max**
++
++**temp1_max_alarm**
++
++**temp1_crit**
++
++**temp1_crit_alarm**
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index 294808f5240a..557ae0c414b0 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -377,6 +377,15 @@ config SENSORS_MPQ7932
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called mpq7932.
+ 
++config SENSORS_MPQ8785
++	tristate "MPS MPQ8785"
++	help
++	  If you say yes here you get hardware monitoring functionality support
++	  for power management IC MPS MPQ8785.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called mpq8785.
++
+ config SENSORS_PIM4328
+ 	tristate "Flex PIM4328 and compatibles"
+ 	help
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index cf8a76744545..f14ecf03ad77 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -39,6 +39,7 @@ obj-$(CONFIG_SENSORS_MP2975)	+= mp2975.o
+ obj-$(CONFIG_SENSORS_MP5023)	+= mp5023.o
+ obj-$(CONFIG_SENSORS_MP5990)	+= mp5990.o
+ obj-$(CONFIG_SENSORS_MPQ7932)	+= mpq7932.o
++obj-$(CONFIG_SENSORS_MPQ8785)	+= mpq8785.o
+ obj-$(CONFIG_SENSORS_PLI1209BC)	+= pli1209bc.o
+ obj-$(CONFIG_SENSORS_PM6764TR)	+= pm6764tr.o
+ obj-$(CONFIG_SENSORS_PXE1610)	+= pxe1610.o
+diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
+new file mode 100644
+index 000000000000..52c73e5f6a3e
+--- /dev/null
++++ b/drivers/hwmon/pmbus/mpq8785.c
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Copyright (c) 2023 MediaTek Inc.
++ * Driver for MPS MPQ8785 Step-Down Converter
 + */
-+#include <linux/clocksource.h>
-+#include <linux/kernel.h>
-+#include <linux/timekeeping.h>
-+#include <linux/gzvm_drv.h>
-+#include "gzvm_arch_common.h"
 +
-+#define GZVM_PTP_VIRT_COUNTER 0
-+#define GZVM_PTP_PHYS_COUNTER 1
-+/**
-+ * gzvm_handle_ptp_time() - Sync time between host and guest VM
-+ * @vcpu: Pointer to struct gzvm_vcpu_run in userspace
-+ * @counter: Counter type from guest VM
-+ * Return: Always return 0 because there are no cases of failure
-+ *
-+ * The following register values will be passed to the guest VM
-+ * for time synchronization:
-+ * regs->x0 (upper 32 bits) wall clock time
-+ * regs->x1 (lower 32 bits) wall clock time
-+ * regs->x2 (upper 32 bits) cycles
-+ * regs->x3 (lower 32 bits) cycles
-+ */
-+static int gzvm_handle_ptp_time(struct gzvm_vcpu *vcpu, int counter)
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include "pmbus.h"
++
++static struct pmbus_driver_info mpq8785_info = {
++	.pages = 1,
++	.format[PSC_VOLTAGE_IN] = direct,
++	.format[PSC_CURRENT_OUT] = direct,
++	.format[PSC_TEMPERATURE] = direct,
++	.m[PSC_VOLTAGE_IN] = 4,
++	.b[PSC_VOLTAGE_IN] = 0,
++	.R[PSC_VOLTAGE_IN] = 1,
++	.m[PSC_CURRENT_OUT] = 16,
++	.b[PSC_CURRENT_OUT] = 0,
++	.R[PSC_CURRENT_OUT] = 0,
++	.m[PSC_TEMPERATURE] = 1,
++	.b[PSC_TEMPERATURE] = 0,
++	.R[PSC_TEMPERATURE] = 0,
++	.func[0] =
++		PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT |
++		PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
++		PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
++		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
++};
++
++static int mpq8785_probe(struct i2c_client *client)
 +{
-+	struct system_time_snapshot snapshot;
-+	u64 cycles = 0;
++	return pmbus_do_probe(client, &mpq8785_info);
++};
 +
-+	ktime_get_snapshot(&snapshot);
++static const struct i2c_device_id mpq8785_id[] = {
++	{ "mpq8785", 0 },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, mpq8785_id);
 +
-+	switch (counter) {
-+	case GZVM_PTP_VIRT_COUNTER:
-+		cycles = snapshot.cycles -
-+			 le64_to_cpu(vcpu->hwstate->vtimer_offset);
-+		break;
-+	case GZVM_PTP_PHYS_COUNTER:
-+		cycles = snapshot.cycles;
-+		break;
-+	default:
-+		break;
-+	}
++static const struct of_device_id __maybe_unused mpq8785_of_match[] = {
++	{ .compatible = "mps,mpq8785" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, mpq8785_of_match);
 +
-+	vcpu->run->hypercall.args[0] = upper_32_bits(snapshot.real);
-+	vcpu->run->hypercall.args[1] = lower_32_bits(snapshot.real);
-+	vcpu->run->hypercall.args[2] = upper_32_bits(cycles);
-+	vcpu->run->hypercall.args[3] = lower_32_bits(cycles);
++static struct i2c_driver mpq8785_driver = {
++	.driver = {
++		   .name = "mpq8785",
++		   .of_match_table = of_match_ptr(mpq8785_of_match),
++	},
++	.probe_new = mpq8785_probe,
++	.id_table = mpq8785_id,
++};
 +
-+	return 0;
-+}
++module_i2c_driver(mpq8785_driver);
 +
-+/**
-+ * gzvm_arch_handle_guest_hvc() - Handle architecture-related guest hvc
-+ * @vcpu: Pointer to struct gzvm_vcpu_run in userspace
-+ * Return:
-+ * * true - This hvc has been processed, no need to back to VMM.
-+ * * false - This hvc has not been processed, require userspace.
-+ */
-+bool gzvm_arch_handle_guest_hvc(struct gzvm_vcpu *vcpu)
-+{
-+	int ret, counter;
-+
-+	switch (vcpu->run->hypercall.args[0]) {
-+	case GZVM_HVC_PTP:
-+		counter = vcpu->run->hypercall.args[1];
-+		ret = gzvm_handle_ptp_time(vcpu, counter);
-+		return (ret == 0) ? true : false;
-+	default:
-+		break;
-+	}
-+	return false;
-+}
-diff --git a/drivers/virt/geniezone/gzvm_exception.c b/drivers/virt/geniezone/gzvm_exception.c
-index af26d1c82791..e6209b3b3a3e 100644
---- a/drivers/virt/geniezone/gzvm_exception.c
-+++ b/drivers/virt/geniezone/gzvm_exception.c
-@@ -56,7 +56,6 @@ bool gzvm_handle_guest_hvc(struct gzvm_vcpu *vcpu)
- 		ret = gzvm_handle_relinquish(vcpu, ipa);
- 		return (ret == 0) ? true : false;
- 	default:
--		break;
-+		return gzvm_arch_handle_guest_hvc(vcpu);
- 	}
--	return false;
- }
-diff --git a/include/linux/gzvm_drv.h b/include/linux/gzvm_drv.h
-index d532d2d31d43..ca8adf403d48 100644
---- a/include/linux/gzvm_drv.h
-+++ b/include/linux/gzvm_drv.h
-@@ -195,6 +195,7 @@ int gzvm_handle_page_fault(struct gzvm_vcpu *vcpu);
- bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu);
- int gzvm_handle_relinquish(struct gzvm_vcpu *vcpu, phys_addr_t ipa);
- bool gzvm_handle_guest_hvc(struct gzvm_vcpu *vcpu);
-+bool gzvm_arch_handle_guest_hvc(struct gzvm_vcpu *vcpu);
- 
- int gzvm_arch_create_device(u16 vm_id, struct gzvm_create_device *gzvm_dev);
- int gzvm_arch_inject_irq(struct gzvm *gzvm, unsigned int vcpu_idx,
-diff --git a/include/uapi/linux/gzvm.h b/include/uapi/linux/gzvm.h
-index 205fcf7cdfa7..681917357ed0 100644
---- a/include/uapi/linux/gzvm.h
-+++ b/include/uapi/linux/gzvm.h
-@@ -191,6 +191,7 @@ enum {
- 
- /* hypercall definitions of GZVM_EXIT_HYPERCALL */
- enum {
-+	GZVM_HVC_PTP = 0x86000001,
- 	GZVM_HVC_MEM_RELINQUISH = 0xc6000009,
- };
- 
++MODULE_AUTHOR("Charles Hsu <ythsu0511@gmail.com>");
++MODULE_DESCRIPTION("PMBus driver for MPS MPQ8785");
++MODULE_LICENSE("GPL");
 -- 
-2.18.0
+2.34.1
 
