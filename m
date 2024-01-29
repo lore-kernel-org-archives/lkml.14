@@ -1,52 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBAD55765;
-	Mon, 29 Jan 2024 09:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B801C55765;
+	Mon, 29 Jan 2024 09:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706521102; cv=none; b=KukQa8jmbjNYvADqoYvW8mZzbljspgKTm/c5ZDNRetNV30PJHvcH5clF/lMyqf4xsB6zPKF9S/VudPjENZNB2iceTZVwp7E0q1fr2dZxkhlmnRc39NRSVh8KIUGhLjBZpzrcSPMgbrc5ezKGpovkAfavOUXzUQrDRghZIDGNN38=
+	t=1706521166; cv=none; b=ght2K2Bw6r7nGFgNuzfYWBoPMIbfPuW3sRyaQy9/cO9sdCdet+Ps9WC+pn2Q2mNEjmuxzES0esH38VVyqFl3x3sdcMf/EfL4xSxBrt8bKRJHiQjG3F9pioUX1mQ/YykpJPX/w6cMsVSvSUrshq2cCtubGrePOEL3yDNkAUAn9kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706521102; c=relaxed/simple;
-	bh=rhLbs8RDtFB5pDbCrc/ZKmEFvyOrcNyrTDC+mGeGs/Q=;
+	s=arc-20240116; t=1706521166; c=relaxed/simple;
+	bh=aWQKANCB/jJlxRlIU3TNvJO3vbpQJA7QbcB8gMmUMn0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHugUOY+B6OGJ8ZeZFrkE7jKxUoJfbiRFhAo3NTCHtzcqD1ykfvXPNleZlftGVMgYBSKMQ28EhzaEG4tCtdv8ijmCtDeTUUvd3RrKy/rEiIyplvbR1mTiEhLi95/QY+mkPU8U/7tToG2uxteGW905/XXfa61pXRqSvamQuvKKCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/A8iDK+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKFfxoPpw9ngggyZuYlkNNoOwYks6ox3yDg+W4I8nYl+KkFcsPwXMRQC8rovMBqt5zqlE+zm3w1Bztlrfrl4pjOrMY+TNKuOLOVWQ5YG8TW4kSI6cWihBBLCYitij1iGvMRB/sftXngQdPy9hyRmg0eHBcm5AyhteRxsMg38oWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QqwMqmKw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=OCJJC7if; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=v2txEFOd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NfJqAgE9; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/A8iDK+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BDE6C433F1;
-	Mon, 29 Jan 2024 09:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706521102;
-	bh=rhLbs8RDtFB5pDbCrc/ZKmEFvyOrcNyrTDC+mGeGs/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R/A8iDK+qvEwZQs2jOfXYFIcUpQQ/XZuYln2omvDlDaFiFFOy/yzYlz2KordHXCDh
-	 Zj1TdiiWtfD235gQGah2tV+0Sxg/xDBNEy/iwcL2QXprybV7H0nNFQnEsoTiuzlROF
-	 KcPcjXd8fQYU8yUZU2zJwQNH/vttSQB9FAJKiDOL9J3tu3q50LAr2OMO68asc/1bPa
-	 lfWeBWaxFR3jwv0xWtlLmsf748j/eDZzdBLIHj2NRs6Jy7gl9g4PV6O6t5vCOQEXCl
-	 Mqt3sGrOkb6afAVlF8IP6KJmIbIuGhwORf1387FSgHyNklONGfkfykiSoft9uwXN80
-	 kWmM9t1DqFqNg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rUO5m-000000006fw-2Kvx;
-	Mon, 29 Jan 2024 10:38:15 +0100
-Date: Mon, 29 Jan 2024 10:38:14 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc8280xp: Introduce additional
- tsens instances
-Message-ID: <ZbdyBgbX2Su80eln@hovoldconsulting.com>
-References: <20240126-sc8280xp-tsens2_3-v2-1-8504d18828de@quicinc.com>
- <ZbPfeq6ElA3vMf_O@hovoldconsulting.com>
- <20240126165113.GS2936378@hu-bjorande-lv.qualcomm.com>
- <ZbPlRsx3czAHRBew@hovoldconsulting.com>
- <f28604d2-20a8-4662-9412-f09c6bf4a67b@linaro.org>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QqwMqmKw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="OCJJC7if";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="v2txEFOd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NfJqAgE9"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F0EB01F7D9;
+	Mon, 29 Jan 2024 09:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706521163; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
+	b=QqwMqmKwn8G+sV4alb5J5Zb6QNYpHkBtse++XJGocEIXkwAQQR6VBMUFkrwIenXSWeenRy
+	3EvYzQZ2omC1XO3k8b/2TLJGa5zrgnD44aEd3c1zld8/CCxSKrxhSvUINEDViYXaKSALNf
+	yocKEbGJSGRnkqT+YOH/zen44ioq7N0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706521163;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
+	b=OCJJC7ifMExXqfg03eA10zHyBgtoOnmuHsTgr60bTaUC87QvCt1IJrkpCzPrmKGgIicDp/
+	0QFU9yihX6SSmKDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706521161; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
+	b=v2txEFOdGNP2le+AkjHqbQhAGL2WIIj9h42Q6mMdqF1Mhpu8eUpn5/Z7p6KlO6Qjksdzt7
+	P7t9OTFNGs+alMjFO8u2+3z87x31/K7X1ZKez9L1tsAds7BTfg1Nhttc9NdvZN3R9nRjjJ
+	eBK9zg0ouhwoaHOOG+jXpOC4OuohzLE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706521161;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vP4ZRnNJagh1Jnd//oHgKH6RzaoD7F7RB0IJxLI/4+w=;
+	b=NfJqAgE9a+kXY3BwphnUzsA8n9tWXWviIQIYbzIRjq/UApjtkBQiEJhXXM09ek3NlFWcQG
+	672vsJO1sGiwwMAA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DD2C613911;
+	Mon, 29 Jan 2024 09:39:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id EezyNUhyt2UgRgAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 29 Jan 2024 09:39:20 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 74B6EA0807; Mon, 29 Jan 2024 10:39:20 +0100 (CET)
+Date: Mon, 29 Jan 2024 10:39:20 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+500a5eabc2495aaeb60e@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	luto@kernel.org, peterz@infradead.org,
+	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	tglx@linutronix.de, yukuai3@huawei.com, yuran.pereira@hotmail.com
+Subject: Re: [syzbot] [kernel?] general protection fault in timerqueue_del (2)
+Message-ID: <20240129093920.tame7kmz46zmjpjf@quack3>
+References: <000000000000c6ec640601d95e6c@google.com>
+ <00000000000072355b060ffc546e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,60 +89,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f28604d2-20a8-4662-9412-f09c6bf4a67b@linaro.org>
+In-Reply-To: <00000000000072355b060ffc546e@google.com>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=v2txEFOd;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=NfJqAgE9
+X-Spamd-Result: default: False [1.37 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[hotmail.com];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=fa5bd4cd5ab6259d];
+	 TAGGED_RCPT(0.00)[500a5eabc2495aaeb60e];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-1.32)[90.27%];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.dk,kernel.org,suse.cz,vger.kernel.org,infradead.org,googlegroups.com,linutronix.de,huawei.com,hotmail.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 1.37
+X-Rspamd-Queue-Id: F0EB01F7D9
+X-Spam-Level: *
+X-Spam-Flag: NO
+X-Spamd-Bar: +
 
-On Fri, Jan 26, 2024 at 10:23:41PM +0100, Konrad Dybcio wrote:
-> On 26.01.2024 18:00, Johan Hovold wrote:
-> > On Fri, Jan 26, 2024 at 08:51:13AM -0800, Bjorn Andersson wrote:
-> >> On Fri, Jan 26, 2024 at 05:36:10PM +0100, Johan Hovold wrote:
-> > 
-> >>> Shall you submit a follow-on patch to set the polling delays to zero
-> >>> for the other thermal zones (cpu, cluster, mem) so that we don't poll
-> >>> for those?
-> >>
-> >> I optimistically interpreted Konrad's response as a promise by him to do
-> >> so ;)
-> >>
-> >> I do like his patch which remove the poll-properties for non-polling
-> >> mode. Would be nice to not first change the values to 0 and then remove
-> >> the properties...
+On Sat 27-01-24 23:18:03, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
 > 
-> That was my intention as well..
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
 > 
-> > 
-> > No, that should not be an issue as it allows us to get rid of the
-> > polling without waiting for a binding update which may or may not
-> > materialise in 6.9-rc1.
+>     fs: Block writes to mounted block devices
 > 
-> If you really insist, I may do that, but if the thermal guys act on it
-> quickly and we negotiate an immutable branch, we can simply but atop it,
-> saving the submitter timeof(patchset), the reviewers timeof(verify), the
-> build bots timeof(builds) and the applier timeof(pick-build-push)..
-
-Why would introduce such a dependency for really no good reason?
-
-Submit a patch based on the current binding, then when/if your proposed
-binding update hits mainline, you can send a *single* patch dropping the
-parameters from all qualcomm dtsi.
-
-Updating the binding is a separate and lower priority task. In fact, it
-may not even be desirable at all as an omission of adding these
-parameters could then lead to broken thermal management on platforms
-where the interrupts do not work. Having an explicit poll-delay of zero
-at least gives people a reason to think about it when merging a new
-platform.
-
-But again, that's a separate discussion. Don't make this patch depend on
-that.
-
-> > But whoever updates those properties need to do some proper testing to
-> > make sure that those interrupts really work.
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=172204dfe80000
+> start commit:   4b954598a47b Merge tag 'exfat-for-6.5-rc5' of git://git.ke..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa5bd4cd5ab6259d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=500a5eabc2495aaeb60e
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169efdf6a80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13733f31a80000
 > 
-> They seem to, check /proc/interrupts before and after adding an e.g. 45degC
-> trip point on one of the CPU thermal zones, they fire aplenty.
+> If the result looks correct, please mark the issue as fixed by replying with:
 
-That's not proper testing. Add/enable debugging in the thermal driver
-and make sure that you trigger precisely once when passing the threshold
-in both directions.
+Makes sense:
+ 
+#syz fix: fs: Block writes to mounted block devices
 
-Johan
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
