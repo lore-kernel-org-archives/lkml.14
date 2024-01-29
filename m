@@ -1,234 +1,112 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2068.outbound.protection.outlook.com [40.107.21.68])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1048D7604A;
-	Mon, 29 Jan 2024 20:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706559417; cv=fail; b=tda1jNQhXxNG1A1s8rp0iw6t8Iz9JSX8g2iurTvAHFrM2JGcTxEs1KPQA977d3fTrMs5L3X3FPtQXd8ERpuVki/bswoaQXM4vUxblTakHqhG+i9nF6Dc8aqx6dnR6G7GGGhGgc9DFqxK0nso06woXFzhWwoi1LyhuSh0+252Idk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706559417; c=relaxed/simple;
-	bh=RuPGceKsuWshKDWgwpcbzC7UV24LS/+ioYc257ehz+Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gwmWDR56yQ3dbwm0p43Bbsw3vCeBuGNu/fpqADztvOx/ZQOztq20+jsP6xqcJQG9yVHlJU4IdsVbXDLEBis8DDBSdYsIMwXTWdFLoixfJEWWvLksPE6FVJ+XDCQv2DQvbADy9/P0n8hv2DCfsbrL3QuCmqY6bLnfFCCcRVWb7z4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=McvW9+B3; arc=fail smtp.client-ip=40.107.21.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF267602C;
+	Mon, 29 Jan 2024 20:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706559565; cv=none; b=p/Co7MljbzCAc0m9vhHk2Ue5lYyok6vvweBqPjlNTjKdBkYBKIa19B4hlNoyNDEoacCYNZO5X0BfF42D3hilcu9gWPdGP1JSRfbx/pj18oEPlW0QqZso4+X68X+IZx334gBndHS8fu6fmhe3nsotm3FYuDLoshRPuiDiEYFVBvY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706559565; c=relaxed/simple;
+	bh=zBCohKNvRGhj7gfexT0mPaUTjd2BuLf8CXnzCM5fCPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LV1Snh7i1GLd4rYkRT77DrXLXa7BYuKhKj5QYKfdz463Yon4weKaMkIobtd/9I8VZUZGtTJDFQjtyLYEGGVrLibr7avYo1fKE3H66NWN9WI8a1tyjqgAOsT/a0Tx7aJpP5j42seRDqnEYwe7G+lESk1OcWKxn5YDmKvxq4ZHrlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fLQTzX0B; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="McvW9+B3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lo7nWNqIYXIkLvt4TeAv/WicUgf1Nwao40JhuaPhWZwHbgLwPvuZi59cFUghJXpEm4ucx3teAJbFKeFtUiJsfCVv3ayxI6B6VG0OAbvz8C/bUhpqD+prLTPW9ceY6yZ7sBtLiCAAGN51gfyBehehl1sz9es8EXEBxAi5v42kxHYqb6RoVMEH6oFGZI4RS4zVColuPriFMi+C2fMxGaU3BgssYz2jowVdAJwOrDU5/MjATGs8FM5aT5qcHfAZqKK/I+tPgTfjtHCaVXmku1ynFSoQEGpet07gZeX/sajyh64ZPhdgc5kh+Y6StO27H8bsQe0HYP9F7gztzsZNLonJ1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hvYXFO1hSEfagHRw9Co8dNOxLvgllsUiYifS82qpah4=;
- b=impghooIS8TgYVJfkWZiPaTg1AycfszSXAgkNhgunZoYlBldLQFPvTzBRNSKj2rBrcN/ZuyiMeWfzx9SxXVNCui5/Ldo1yhM0yPE+TcNc0CM3sYUcZMKDjv0S4OXmEBkuEIEuoXVXSDk8gEfkKCT/lPJkQCxi7dSZ/QzDNYh3+zmuns2sru9lHTfTm900VD7oZvpNI2UkNLND1hilpUin00bDan/lXiOhMNJlVMoyizmYPZJqqy65+Dco8IHT/H5yaIWAaNYuU3j1a6kq7FVVGP7vQcSQuh4YWfhlylVYnmA1KAoI5JVLiFcOWKaHfjVZ4jPIwHpqnhGnnqjl30Xow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hvYXFO1hSEfagHRw9Co8dNOxLvgllsUiYifS82qpah4=;
- b=McvW9+B3RNe4sN8eWbV2NqNmyJVlxMrDGCkLjI9X256Kb9sIEbh6mRyDix1PaYsTtYEVFO7f5REYzer/ySiy65K4TBdAbBQulNLzgjIs7zcWEB/2yFL7ZgIHgWJ6Z9xhu4+YM6r1zGixzadf2v9nhAA/y/trWCSV+B5rgriNHoI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VE1PR04MB7213.eurprd04.prod.outlook.com (2603:10a6:800:1b3::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
- 2024 20:16:53 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 20:16:53 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 2/2] arm64: dts: imx8dxl update edma0 information
-Date: Mon, 29 Jan 2024 15:16:32 -0500
-Message-Id: <20240129201633.234255-2-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129201633.234255-1-Frank.Li@nxp.com>
-References: <20240129201633.234255-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0150.namprd05.prod.outlook.com
- (2603:10b6:a03:33d::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fLQTzX0B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WAigPmVNmrZ4Q7NScBbnGOHfNcKGdxLaLpMpEktixVw=; b=fLQTzX0B2kYvB5i93Y4XIvbGMc
+	dm9ecb4yVk5wybSuBljWIkleLuSyQ+mMl1Dxvj7yWn21F4JhMRWxn0+9oCv7tRwP6tdD+euHOiAhC
+	Zo1XZHkbL/FLYK49Ucm0dmV/chfpFGtcKdy51xhkmwSVtH7CFvdq2xZMg1ZF9X81K2Le1kDaWcksS
+	E22VHU7BwhPIgw0UT7SOS6zY26Hn0G42CRc08Ions+kWCPRGnglT3bs8H63h3B91lCJOj+ehwZkJw
+	lYJpFLjfRvYD0rIXA99z0WQkDlD+kpDM92/1lTAZC+dAJxXroKVExnN8OJfIubl/tmp9v7wjLUOE8
+	5Sp5KOeQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rUY63-00000007eMk-11Xv;
+	Mon, 29 Jan 2024 20:19:11 +0000
+Date: Mon, 29 Jan 2024 20:19:11 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Kees Cook <keescook@chromium.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH 3/3] rust: add abstraction for `struct page`
+Message-ID: <ZbgIP88JtKAP7hyP@casper.infradead.org>
+References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
+ <20240124-alice-mm-v1-3-d1abcec83c44@google.com>
+ <ZbfnmX1J8iLV8UnO@casper.infradead.org>
+ <Zbf0-o-8m_V9gSzZ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VE1PR04MB7213:EE_
-X-MS-Office365-Filtering-Correlation-Id: fac2a3e6-79c3-48bc-d3cc-08dc21073be4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2jNPY1PvvbH42fMRsSR9S2Q9B/YL4WlmCZz8oWq4RuoU4lhWsJRF8L9mE9z6qnzkCvZFJsRXoeWfQHLtU5c/XhjVyeoVEfeNkxL40uhwFXIv4miKBZSb5DjZ00bQollL7FdaryR1Ey7AUOIcx6XjA/Mhyn0yEfOgCW49gRjTc1F1te4b8/of0AuD+gILrOWsr5kZs6yQXp+cG4C9AGcOV1VLJ7DBY+BMTg2t+6CFvscWQxXugaFPAI8Aaq9ZSlCD/pRdC1vYS72XHSpwwst2UtsNzmn/6jtH+AUAl1p7Gt/0l4ZzJOjvCeMwA2Lr0ItRI+b7AFX40iwyvIX8HgyPofl/z6k9g+qFYbKrY9B6PIIhV8DfX4ERSATB8OGYYvpPBTq0djDxskk/gYrItEWZNx0ZmILBT+PHJ0KxDbWVrqSYhw1cf3HAj39VUhKz+d9gG6DHstTpehGNDjtxE44V4A/dTPnMRTMDFXqUB7SErgqJNM8U9rVDf6QaacdE3gKkDprnaWW0ELLqYn+4OiNOFBuD/myOTUesSJiN510caV5S/6P6o9eJQcbUrdF7py0uGQyyVntGaM3ln0vTeydDjRmnwbdrl7/6Xkov2J1aHgcMRIF75/QntbPtBTRECrDFqcGoAVmojJ25GacvvbiVPmj57uwg1FE8NOWKlds1rpY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(376002)(39860400002)(396003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(66556008)(5660300002)(8936002)(4326008)(8676002)(7416002)(86362001)(15650500001)(110136005)(2906002)(316002)(38350700005)(36756003)(66476007)(66946007)(38100700002)(6506007)(6512007)(478600001)(52116002)(6666004)(83380400001)(6486002)(1076003)(41300700001)(26005)(921011)(2616005)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZQ1UX2HPBqORU8/3M+ZR5BF/ngXpm0U3eIuGrhC1MYUyyP9IisTJVi5o9iFg?=
- =?us-ascii?Q?lYEvUtLKr0GgR8O5PPXgqJzmMf/SfKBGV52ema6UM26lpQMDQnrIOJAzS0kY?=
- =?us-ascii?Q?ST2IYaoCBnXONzhaQBVm2YL+eXEx9MhRLUiRK/2sfeWftRhJi/SwiF90Xvqg?=
- =?us-ascii?Q?FLhtPSHshK8/lPCPr6HxrW92YGc8LvXgDznBFudZnhr0lNFw32pVhLo/ikNy?=
- =?us-ascii?Q?b88EgCN8MzzdEu1eBdgYvASCwjYFKgQu3S9XVhUfMcqLG+TI8e5IQIQ/gb9m?=
- =?us-ascii?Q?aF/pDn5arGm9IJCxDbzA0AiK4STtIcilyOMTLgDK7ZZR0Gcg4UJMQSbJD+vD?=
- =?us-ascii?Q?Ek8XioO2J/aECE1JFs4WAhfX8YbuJmnLtb9D1IkLUBPPQatU0k2OHR+IYi+y?=
- =?us-ascii?Q?hKe3fuZR9btanTzx6faIxjMLkvznD5DmEOfbCn8ajaUK/YH30LuyecN4qhNQ?=
- =?us-ascii?Q?4X9YuOnxxA8O/xljCm/WjcEmlTQirGnez+kTPsFAECKMkspixZXXeNflqvyo?=
- =?us-ascii?Q?SpVGOI0fZqEX2BA0pk2Ca/HPjUuHsEFG+dk3uHyu2QjqQcc1NjWcpkyEAzU3?=
- =?us-ascii?Q?SO2gJGcchAGv7tt7Pa/be/ZhRVWKV7Z51RnSmLp34dyHs39MuN+7zOuCiyKF?=
- =?us-ascii?Q?onccbm48qMAGdIFF4479QdbqV9mWYBYy+XgbgO9Xfg5rjrDoa9tG0WgRDvwO?=
- =?us-ascii?Q?5yeI6JmJGO6SPDMKY82K2sHfWZKMSEwY22AGv6RKU+EGW6ZRZkRI36zAIh7R?=
- =?us-ascii?Q?xKCfzFEnGdwB5VFRNS9mdHvzTzETebjh6BN6jfGfqENZRI79RV2mj3MiV5qY?=
- =?us-ascii?Q?yA5U2QVyOpUcAlDgnHVBcI1lUSj4Go/cg4JAG8erQOsX8/8UALM/H2LbGOdO?=
- =?us-ascii?Q?7IFlUz/iGZ0IxLAoKsGZvedx5itEu3+/LXHGunIfim6IU9prHkxRFZjLsu4i?=
- =?us-ascii?Q?h8CkdGyLajJnZ00NZbsQX8NjpWW18ds5FZVUhDAQNOQ5XoZl6VDmkkIQi20U?=
- =?us-ascii?Q?LY5980rU4BeUP5EJoZqZ7I5yW5nTpYq/8fJcPOjW9ABI2ygoqceiiLKlkatL?=
- =?us-ascii?Q?ODNSh+LwlFMsBy7ejLb9QDJYJk88XNiSZluZeq99thzQ6SwFhwibYbx1Gnrh?=
- =?us-ascii?Q?xpcKhh8THmM6bRzNx93gZyBvwmmZ2on033SUDY26XzHLyG//qtFpharO0KlQ?=
- =?us-ascii?Q?ZQAyV/K9GvqheSvYfOl7YU1YFYg85cK27DtZYtmDgm3TWu6Bs/NzLtgEcTP3?=
- =?us-ascii?Q?7RQwvwqXxSarJW/3fzc+wZVr2GLahXvsIuzY6T3EsCSdPSuvxZuIgjRiJWra?=
- =?us-ascii?Q?9LWqLUN1aVyf6O/fgnLophHjbBX3ga9ipzDzWpWeX68bjdEvLlaI3y3GAQ6T?=
- =?us-ascii?Q?jNknIZqaG7JcyczZ8OWTUzEHKMh3NAiRBy8gDSqHDzR58jabGrYEblyXY0bd?=
- =?us-ascii?Q?Lw3LQDn4Q6PAqK90B9V45Q4c4uchIH7hgO3aw5nPfoqR2BxQi2foPI9I5gGa?=
- =?us-ascii?Q?Uc+83c4GJffIGOYbXBydTktOq1kFr/DPW8p1hPbMC0VcYxdK+BzWmagd6r5W?=
- =?us-ascii?Q?QEnXmYZcCR0YcyAUI24pjBCDuHXl2c3EhxEtlPSt?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fac2a3e6-79c3-48bc-d3cc-08dc21073be4
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 20:16:53.4336
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FaFU48xuwDdg/tPPZ3lyJ3DJhz94wKTyodH/a+kh9/6Z3D6yDfbujAMR395VpcZUnDN3VsWbPZQ/orq/RPjLnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7213
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zbf0-o-8m_V9gSzZ@google.com>
 
-edma0 of iMX8DXL is difference with other imx8 chips. Update register's
-size, channel number and power-domain.
-Update i2c[0-3] channel number information.
+On Mon, Jan 29, 2024 at 06:56:58PM +0000, Carlos Llamas wrote:
+> On Mon, Jan 29, 2024 at 05:59:53PM +0000, Matthew Wilcox wrote:
+> > On Wed, Jan 24, 2024 at 11:20:23AM +0000, Alice Ryhl wrote:
+> > > This patch only adds support for pages of order zero, as that is all
+> > > Rust Binder needs. However, it is written to make it easy to add support
+> > > for higher-order pages in the future. To do that, you would add a const
+> > > generic parameter to `Page` that specifies the order. Most of the
+> > > methods do not need to be adjusted, as the logic for dealing with
+> > > mapping multiple pages at once can be isolated to just the
+> > > `with_pointer_into_page` method. Finally, the struct can be renamed to
+> > > `Pages<ORDER>`, and the type alias `Page = Pages<0>` can be introduced.
+> > 
+> > This description concerns me because it reads like you're not keeping
+> > up with the current thinking in MM about what pages are and how we're
+> > improving the type hierarchy.  As in, we're creating one instead of
+> > allowing the current mish-mash of absolutely everything to continue.
+> > 
+> > Are you the right person to ask about the operations that Binder does
+> > with a page so we can figure out where it fits in the type hierarchy?
+>  
+> I would guess you are suggesting a transition to folios here? I don't
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../boot/dts/freescale/imx8dxl-ss-adma.dtsi   | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
+I don't think folios are the right type to use.  Folios are for files and
+anonymous memory; things which are managed on the LRU, have refcounts and
+mapcounts, can be found with an rmap, need private data, belong to memory
+control groups, belong to either an inode or an anon_vma, and so on.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi
-index 0a477f6318f15..f8fca86babda7 100644
---- a/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi
-@@ -15,6 +15,63 @@ &adc0 {
- 	interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
- };
- 
-+&edma0 {
-+	reg = <0x591f0000 0x1a0000>;
-+	#dma-cells = <3>;
-+	dma-channels = <25>;
-+	dma-channel-mask = <0x1c0cc0>;
-+	interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>, /* asrc 0 */
-+		<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>, /* spdif0 */
-+		<GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>, /* sai0 */
-+		<GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>, /* sai1 */
-+		<GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>, /* sai2 */
-+		<GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>, /* sai3 */
-+		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>, /* gpt0 */
-+		<GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>, /* gpt1 */
-+		<GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>, /* gpt2 */
-+		<GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>; /* gpt3 */
-+	power-domains = <&pd IMX_SC_R_DMA_0_CH0>,
-+			<&pd IMX_SC_R_DMA_0_CH1>,
-+			<&pd IMX_SC_R_DMA_0_CH2>,
-+			<&pd IMX_SC_R_DMA_0_CH3>,
-+			<&pd IMX_SC_R_DMA_0_CH4>,
-+			<&pd IMX_SC_R_DMA_0_CH5>,
-+			<&pd IMX_SC_R_DMA_0_CH6>,
-+			<&pd IMX_SC_R_DMA_0_CH7>,
-+			<&pd IMX_SC_R_DMA_0_CH8>,
-+			<&pd IMX_SC_R_DMA_0_CH9>,
-+			<&pd IMX_SC_R_DMA_0_CH10>,
-+			<&pd IMX_SC_R_DMA_0_CH11>,
-+			<&pd IMX_SC_R_DMA_0_CH12>,
-+			<&pd IMX_SC_R_DMA_0_CH13>,
-+			<&pd IMX_SC_R_DMA_0_CH14>,
-+			<&pd IMX_SC_R_DMA_0_CH15>,
-+			<&pd IMX_SC_R_DMA_0_CH16>,
-+			<&pd IMX_SC_R_DMA_0_CH17>,
-+			<&pd IMX_SC_R_DMA_0_CH18>,
-+			<&pd IMX_SC_R_DMA_0_CH19>,
-+			<&pd IMX_SC_R_DMA_0_CH20>,
-+			<&pd IMX_SC_R_DMA_0_CH21>,
-+			<&pd IMX_SC_R_DMA_0_CH22>,
-+			<&pd IMX_SC_R_DMA_0_CH23>,
-+			<&pd IMX_SC_R_DMA_0_CH24>;
-+};
-+
- &edma2 {
- 	interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>,
- 		     <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>,
-@@ -48,21 +105,29 @@ &edma3 {
- &i2c0 {
- 	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
- 	interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-+	dma-names = "tx","rx";
-+	dmas = <&edma3 1 0 0>, <&edma3 0 0 FSL_EDMA_RX>;
- };
- 
- &i2c1 {
- 	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
- 	interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-+	dma-names = "tx","rx";
-+	dmas = <&edma3 3 0 0>, <&edma3 2 0 FSL_EDMA_RX>;
- };
- 
- &i2c2 {
- 	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
- 	interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
-+	dma-names = "tx","rx";
-+	dmas = <&edma3 5 0 0>, <&edma3 4 0 FSL_EDMA_RX>;
- };
- 
- &i2c3 {
- 	compatible = "fsl,imx8dxl-lpi2c", "fsl,imx7ulp-lpi2c";
- 	interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+	dma-names = "tx","rx";
-+	dmas = <&edma3 7 0 0>, <&edma3 6 0 FSL_EDMA_RX>;
- };
- 
- &lpuart0 {
--- 
-2.34.1
+It's _possible_ that Binder fits this use case well enough, but my
+guess is that it needs its own type, or maybe it's the initial example
+of a different type from folios (right now we have three types: folios,
+slabs and ptdescs, but more are on their way).
 
+> The only concern I have is that we've implemented a binder LRU-shrinker
+> mechanism. We add the unused pages to our freelist and give them back to
+> the system on demand. However, if a new transaction requests the unused
+> page before it gets reclaimed it is simply removed from this freelist.
+> This is convenient as we avoid taking the mmap sem during this process.
+> I don't know how this mechanism would look with folios though?
+
+This doesn't seem like too much of a problem.  The key thing is that
+with memdescs, you get to define your own data type of whatever size
+makes sense for you.  Until then you're limited to what we can fit into
+a struct page (and we need to be careful not to step on stuff that other
+people look at like the refcount).
