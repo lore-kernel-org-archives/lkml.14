@@ -1,123 +1,187 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F242B154BEE;
-	Mon, 29 Jan 2024 15:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D596155A4F;
+	Mon, 29 Jan 2024 15:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706541398; cv=none; b=tHOmiwpOWacV/htS/AEhvdv2iwadlrwPx1ec7xrvZ5/ibwC9Qs5RK0eML975z1ry6pfjy90Ik3dVkjasenasWKeIqMnJG3LBa57qPKXGtkvDqdvC4Gkzr1g49WkpexKSYN4lHedVWagzxfYtOyXVi8HM3RV1btRDvjLceB0v/yk=
+	t=1706541418; cv=none; b=cMPGkCqRKKhhCpNpMqAyWSukKdOKcNGUn6wVYfteReBInm+UtZoexdFNMtZwmdPQIChX2VytGlQVnze0qZmUEKDMbBQg5Oh+md+uFzPfrdANBsenAvEFljw1eoAqiQ6UXpeyzt0+yIg/BhS1aoQ3kmdWm+y5BeA+zq75Kzw8KK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706541398; c=relaxed/simple;
-	bh=UZfV+7nzQjsF2UELFcWkXOI/dVH5yQJV/6seSEnMvPM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FbiiGMYC94BVzSrNC3JgOKaGYhualTz7OilnEr8Li71VyPKMhjrNrPFmUppMVGUB6RCNqtR4lAtnUsTu6e4ot3Cc7V2YOYaAsIcibHjQEpML58EgD9tXd1Zs4mC2rXVWWBm/YxaScFvV5UH5WPZBu2i6LCoBP2wd7CE0bM5Zpws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsS2/bAw; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1706541418; c=relaxed/simple;
+	bh=qlUFaMcwXWhmmEzdeZQB+wJ3uKRWS2OB5K9A9Gc8SA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NHGuKL2SZC4ghOvJlta66VEPcewBqj9dftzAStqBMRdTjSWAhtP5lC+XrS/Olya+GVFHvsT/VK4ZaxmJU0UyDIlr5W9faE7YutEQVUo51Hwtkxj+Xaeb/SNxQKPsYOgnbV15QOge+5AoD6vXrRbTSfrjjufweigOQgvmLFoho5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVJ4Hzgp; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsS2/bAw"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40ef207c654so14162785e9.1;
-        Mon, 29 Jan 2024 07:16:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVJ4Hzgp"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-59612e4a21eso965298eaf.3;
+        Mon, 29 Jan 2024 07:16:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706541393; x=1707146193; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L4bMMpLXuQIixNeR6WwJ9UQMuCJ9W4sOuZfXsidKNW4=;
-        b=BsS2/bAw+cyCok0z7NtZTYKRMyg7rdP334vVPOzosB2jZwFYKsmRr506C5S9qQIqWu
-         xWu4JdbtL5LummzltBIVckrImQEQkhHZgMoAALjDuiZmb7B9wVdWBFF8bG/CLuWGtz3l
-         KOtD8Fheeftm3sSCRDw6ryvpo9b5eyiMl2cLwwSFYNB95RiEhKGzMDlbKipAHDliUini
-         TdiNdHJ5GqLhgJQ74Gs+xNPxkvDxmno6WRLJg20ftCbh0FqW7ZuMuUFia51ixMHOSPf4
-         Dd9V5QKt6fHA+1pp1De1hRK4j2v1IyfGgBB8PCazHdcF7GMDI6CgjcaiOk0RwVwCPbYn
-         AXLg==
+        d=gmail.com; s=20230601; t=1706541415; x=1707146215; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=kB5Et7w3ZzgIpdxhAVYJONzfcR1otDulInd0ia/bfUc=;
+        b=RVJ4HzgpKLlw3to5qzET8XaLTK11k/zn/5h6gyEqc3ObHoPSBKX7R9eUBAQw6QRGK0
+         P8TLUofieO6Jh5OlCzMH5c13xgeRFKFtdHGANfBy4H9CFkoCUsDOvr1/FT/kY9j5em/3
+         wqsKEzvVq1WZ1Vl8SnfWbvsG6y8yHhL1xII81LvU6FeffsrPgOxUxduG4Mc/y9wMwbWb
+         kQHaBfH9LJlJXWtvsCAuZ0VG0deoABKiYahPwvuJUhv12QfSNXHtG5m2I4QlodyFZzVY
+         e7s8EomtSsd0R6IeFhnZa5l8AfjGKrHe8lGdJt9LKOHLyzZMUt33nDznlyH5qDuWSSxf
+         p1/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706541393; x=1707146193;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L4bMMpLXuQIixNeR6WwJ9UQMuCJ9W4sOuZfXsidKNW4=;
-        b=RCvjCVC8GlWWyxQtAhMDHht0bLu3tN4VEcdnD9SLsLQr1S8vAuzMX3zkn0y6f/Crtd
-         xxoNWc/S8a8grKkGvJVDNycrcIJ8lapeiq8D2BBT+ab615EUX0NpKtHIqxoOI/ZTac+t
-         kqujtK2IO7m7Nl2x+q+UfxUAzpIXMFjQL6zBJpQaJRn9E7AD4aIJCDp+e+7ndwhayRHU
-         gnHfMYyeswxly37u5DdoLa9fgHjQw1JxX0nXActrNAqtW2Msy9/mQWofz7BpF2/NRzU/
-         dAs8ROVmX+AHgRrKT1agS6RgCgBZ4365jtIM9KZ8/CN45CPkt3kdnBGUBbrnELXkKjrR
-         u39g==
-X-Gm-Message-State: AOJu0YzL6Cinc/FjdeoaqciaIa85AbvE0FIUgExD2yXLlxkCmUcH5RhC
-	jMV+/F63GwBVl6cANrENWPFX8ZrvVpDM1DPq0uiukGekgKqgrwlJ
-X-Google-Smtp-Source: AGHT+IGC87bYjEe1iZ7p/5fpoWfZzxhMEEhDy0q4/HOyZO3KfblXARleUUPCKunnw42Wa9PiyCeq9w==
-X-Received: by 2002:a5d:47a9:0:b0:33a:f34c:23a0 with SMTP id 9-20020a5d47a9000000b0033af34c23a0mr1892243wrb.2.1706541393177;
-        Mon, 29 Jan 2024 07:16:33 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2500:a01:5616:a18c:ea50:2995])
-        by smtp.gmail.com with ESMTPSA id h4-20020adfa4c4000000b00337d4eed87asm8397774wrb.115.2024.01.29.07.16.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 07:16:32 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 5/5] riscv: dts: renesas: rzfive-smarc-som: Drop deleting interrupt properties from ETH0/1 nodes
-Date: Mon, 29 Jan 2024 15:16:18 +0000
-Message-Id: <20240129151618.90922-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129151618.90922-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240129151618.90922-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        d=1e100.net; s=20230601; t=1706541415; x=1707146215;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kB5Et7w3ZzgIpdxhAVYJONzfcR1otDulInd0ia/bfUc=;
+        b=s2OUhx8cih037Pg/c+85Kel9MG18BcIDKE5EIPv/N+SmJKRKREcyxOfnkk0hSG9Whm
+         iUsnmisxk1zJthZHSlDjf8foQ7WvcQ62deKov4UQZlTbGN0YV9G1FGdd9opbrvHOpBO2
+         Yh187l/MShBWC+nFrRoFi4iXg9Rt9KD3xI1RtN9mFr5ArPsd5q0FxUsnGogWt7k94ONZ
+         swQz6CVCl/zG4IlscGKE6GqIc/dQN4711QAsrfIkZWq765kaPm4JjF+35LY1DK010vRS
+         NdCxRnRO6rww/0AI+N3Z9A7MX3HHhbprm2GA6LBpY3JuwI2R7dm0eG0lN9voXrTdrirE
+         bWng==
+X-Gm-Message-State: AOJu0YzLTwUAkjM2VedFRPIZxS6hm9P/GSBAltS+TNYrVOa8JAeYtRva
+	cxaiQDa1/cUJRIR0h4zSOSOfv6AFcAMe3kaoqu3xUB1cuY/DjtbY
+X-Google-Smtp-Source: AGHT+IGr+MSeuJUTZb7DaKfa3gJXjjeWMmepVT9Lq6RXzavNVlN+XEq3wzubeKMDEFc70r3wv2bU8g==
+X-Received: by 2002:a05:6358:6a47:b0:176:cd90:6ff8 with SMTP id c7-20020a0563586a4700b00176cd906ff8mr2025908rwh.7.1706541415240;
+        Mon, 29 Jan 2024 07:16:55 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i17-20020a63e451000000b005d8b8efac4csm4050657pgk.85.2024.01.29.07.16.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 07:16:54 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <ee2f4758-0b50-449a-b74b-492814a9cc8a@roeck-us.net>
+Date: Mon, 29 Jan 2024 07:16:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] hwmon: Add driver for MPS MPQ8785 Synchronous
+ Step-Down Converter
+Content-Language: en-US
+To: Charles Hsu <ythsu0511@gmail.com>, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jdelvare@suse.com,
+ corbet@lwn.net, Delphine_CC_Chiu@Wiwynn.com, naresh.solanki@9elements.com,
+ peteryin.openbmc@gmail.com, patrick.rudolph@9elements.com,
+ alexander.stein@ew.tq-group.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
+ michal.simek@amd.com, lukas@wunner.de, festevam@denx.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-i2c@vger.kernel.org, ytshu0511@gmail.com
+References: <20240129083115.2107466-1-ythsu0511@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240129083115.2107466-1-ythsu0511@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 1/29/24 00:31, Charles Hsu wrote:
+> Add support for mpq8785 device from Monolithic Power Systems, Inc.
+> (MPS) vendor. This is synchronous step-down controller.
+> 
+> Signed-off-by: Charles Hsu <ythsu0511@gmail.com>
+> 
+> ---
+> Change in v1:
+>      Initial patchset.
+> Change in v2:
+>      1.Add pmbus support status registers.
+>      2.Add mpq8785 in trivial-devices.yaml.
+>      3.Remove format[PSC_VOLTAGE_OUT]
 
-Now that we have enabled IRQC support for RZ/Five SoC switch to interrupt
-mode for ethernet0/1 PHYs instead of polling mode.
+This is insufficient, sorry. Problem is that pmbus_identify_common()
+compares the more reported by PMBUS_VOUT_MODE with the configured mode.
+Not setting format[PSC_VOLTAGE_OUT] means that the mode is the default (0),
+which is linear mode. If the chip is configured for direct or vid mode
+this again will result in probe failure.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../riscv/boot/dts/renesas/rzfive-smarc-som.dtsi | 16 ----------------
- 1 file changed, 16 deletions(-)
+I can see two options:
 
-diff --git a/arch/riscv/boot/dts/renesas/rzfive-smarc-som.dtsi b/arch/riscv/boot/dts/renesas/rzfive-smarc-som.dtsi
-index 72d9b6fba526..86b2f15375ec 100644
---- a/arch/riscv/boot/dts/renesas/rzfive-smarc-som.dtsi
-+++ b/arch/riscv/boot/dts/renesas/rzfive-smarc-som.dtsi
-@@ -7,22 +7,6 @@
- 
- #include <arm64/renesas/rzg2ul-smarc-som.dtsi>
- 
--#if (!SW_ET0_EN_N)
--&eth0 {
--	phy0: ethernet-phy@7 {
--		/delete-property/ interrupt-parent;
--		/delete-property/ interrupts;
--	};
--};
--#endif
--
--&eth1 {
--	phy1: ethernet-phy@7 {
--		/delete-property/ interrupt-parent;
--		/delete-property/ interrupts;
--	};
--};
--
- &sbc {
- 	status = "disabled";
- };
--- 
-2.34.1
+- Add a chip configuration flag such as PMBUS_DETECT_VOUT_MODE (for lack
+   of a better idea) and use it in pmbus_identify_common() to actually
+   _set_ the mode from the VOUT_MODE command instead of expecting it
+   to be already set. This would require providing the coefficients for
+   output voltage direct mode in mpq8785_info. This would be my preferred
+   solution (but require a separate patch to add the code to pmbus_core.c).
+- Select a fixed mode and write code to convert affected register readings
+   to that mode if needed. See mp5990.c for an example.
+
+>      4.Fix MODULE_DESCRIPTION
+> ---
+>   .../devicetree/bindings/trivial-devices.yaml  |  2 +
+>   Documentation/hwmon/index.rst                 |  1 +
+>   Documentation/hwmon/mpq8785.rst               | 94 +++++++++++++++++++
+>   drivers/hwmon/pmbus/Kconfig                   |  9 ++
+>   drivers/hwmon/pmbus/Makefile                  |  1 +
+>   drivers/hwmon/pmbus/mpq8785.c                 | 62 ++++++++++++
+>   6 files changed, 169 insertions(+)
+>   create mode 100644 Documentation/hwmon/mpq8785.rst
+>   create mode 100644 drivers/hwmon/pmbus/mpq8785.c
+> 
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> index 79dcd92c4a43..088b23ed2ae6 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -129,6 +129,8 @@ properties:
+>             - mps,mp2975
+>               # Monolithic Power Systems Inc. multi-phase hot-swap controller mp5990
+>             - mps,mp5990
+> +            # Monolithic Power Systems Inc. synchronous step-down converter mpq8785
+> +          - mps,mpq8785
+>               # Honeywell Humidicon HIH-6130 humidity/temperature sensor
+>             - honeywell,hi6130
+>               # IBM Common Form Factor Power Supply Versions (all versions)
+
+Sorry, devicetree changes require a separate patch.
+
+Thanks,
+Guenter
 
