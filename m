@@ -1,108 +1,131 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD14612CB
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 12:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE8E612CD
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 12:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706532266; cv=none; b=C9rgZwR4JrkaFofJTc2Yqpym8Sd7VzKKjd3Kuvd6P7WHIouth0O2a1XgN56nj6LOMTGQYVLWiSwh80ZaF2DO2LOHJ3QeQFdd5EXc/YloTHHL4ufzx7jMwTvJIQiHyMVRMeTrH+slsGOuZbW0nxJa7TBq3zifIaUJuNG71dniBrA=
+	t=1706532340; cv=none; b=GgHqvnAT3R0bQpXZ/FBD3odaHezcylhYpb0Z4ZWRgMmuLpjJwwIBZ3Y2cncrtO9BtI63T5MffdaTnuVme43XpYa2VM/dVMpqHEuEC3/0JXuKM1s0AMJisZWYiale1pU1lV2YgU/YitU17TeRItbmJphqXq7G7wswJFLdMuoxxVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706532266; c=relaxed/simple;
-	bh=iwVv+KpgojzTz7UiwmCrNbljMrBZg86uVe4TR/XlwHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JaOXmCrSavqw9yTMYNB8hb8JsZAIhgYqe7FWQqEpdI2fBST2f5i1VdaetpPkwQMlyDjkZnzoAIdrUQ6q+btHxqo8oQRK2dMvvLNjFxFfyEs65Ds1CKQzduVlbvitr+lO8n6q0AIXHvmeEtgr0XDlPtatUlHuUwuI7DGS4iAPVgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B9MVX1j8; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B9MVX1j8"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so293592366b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 04:44:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706532263; x=1707137063; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jyyVmj8UXdIVbn7EeSCjlw1l1jJogntZyHkx/8C4+fY=;
-        b=B9MVX1j8iOKwvmWD3QAPD+AbWRZ3sdZW4ptzry3V9r/WnHBzNsfRNxqw395ABkCunE
-         5TFBshl/6mPfoEEUV+8ZxwR6pZWsjbbrtjKUXPgGLDsZd2CwqjIkUY+X6huKb003gtqh
-         shmfIqh8Lt4IYxhCilQHTPFP05yH7IcpNRu24pDUCX4/r5mvsF6HEGFtwhBHg/rq4aR3
-         9nsUpLWIJ+zy7Hb2WOS2DDyPPylYwPBM4Ebt7dv/EWMd4RmCVsoZLuKWKwSisGhwdHxU
-         we1HxbdAbv6nd44xuhnIwcsvP3YhB7XfttdsCIdiLBu8Y9WduzuzZARSbVYEGrMEK4GY
-         6t9g==
+	s=arc-20240116; t=1706532340; c=relaxed/simple;
+	bh=CHT/UvYOHji0r/mcFEVYGzN2pmHuEOKTabVerwfiNOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YsYPAdp0ZC08DQBJ9qVFLHVYd8BQ39XngLWyfznSnZj5MdqNeq6xqU20f2ExXlFqV79w85J0WiJv61rR13isUBrcmf6VwcpzP0ntb8LxdOzE0DzmpFsLw+f8h1Te14owalENBAF7yv38GGvjcN5oKrL9mnVhE5IzHhey2EyoZ04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55f03ede12cso949582a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 04:45:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706532263; x=1707137063;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jyyVmj8UXdIVbn7EeSCjlw1l1jJogntZyHkx/8C4+fY=;
-        b=jYqxrm8hYsrXu1QKx4ozyK++FOwwK23PkFMdgFPV0cclV43HGjKQ+yDQxwI/Iyuz4w
-         DABEvXhANb5d05FplUctcoX1FJrGjz5ZncVibutArWYl/2uVdVxRa7A5UdvscZZh8Hnx
-         YhC7RufcEEfkKihMwFE10UCHXArfbuKCgYcDCaJLfeMgweLG2DeRvTiLUssKmiiaepbI
-         po5kX6rUio56KXIs17tfpPFhFvH5L4n3OL/fvU/Ln0bKpBPgoGDQutW3nx4gBFtRtHx2
-         TgdkWunuMStBSopjUBacBSVIBbgGDVcCKdkW2hPWOGdqV3Eq3g0Ml8L346dSKuJMUGP3
-         DHlw==
-X-Gm-Message-State: AOJu0YyIAeLjJUYdwdq1/+sc6YypYXbVbI7oImYNXYWcNK5qGPvXgaqa
-	e4ODdhw5FT5BA13KvwEvCUt1zBJ9o1g4jhhSyWDfIz7WIF1YT1onUyAfa8F3/zA=
-X-Google-Smtp-Source: AGHT+IHcXpDWBglEaMrnhlcTL7JB54poYiZiJo/8VdZd2NLCsiYyXGakojUQHAMn/oc6HZ1dQxwfnA==
-X-Received: by 2002:a17:906:a219:b0:a35:6601:e401 with SMTP id r25-20020a170906a21900b00a356601e401mr3389607ejy.5.1706532263374;
-        Mon, 29 Jan 2024 04:44:23 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id vg14-20020a170907d30e00b00a30f3e8838bsm3864736ejc.127.2024.01.29.04.44.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 04:44:22 -0800 (PST)
-Message-ID: <93443d6e-50ac-4352-b579-71d5ee12e448@linaro.org>
-Date: Mon, 29 Jan 2024 12:44:20 +0000
+        d=1e100.net; s=20230601; t=1706532337; x=1707137137;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/XBG9kFEaRnAAH7vBNHAabPo0iBDwnoKijQp+k7kbBw=;
+        b=GCurvUB6Xfx+XbbLIoKQokWfTYIfA4bmb1kGCTGivqGl87rOqT2jvggY9slgh+vaKp
+         KbeckaALbZx0El7oUnIJbiEmNrKrysE8u2cjDYLKjWJlD0dQxwiSY4ZctFh/5q5vFHS3
+         OUVn/PKbyds0IaGbbshoj9wYmGWJFLrFU28u1017x98KdqlXxaCrCc90Sh09/BkoMN5O
+         ZXHVpeC+Jmhoa8E4b95rPZZpqpBNe7UCPkzB3z/yETyul9uzmUL+73DaD4oLwD49fOwD
+         kyEsZQqfpntXhyhmGj2BfhcLCofOidudgNDmyYhMMdIUTkAz1C07YRzs0V/bBUxnx8LF
+         qekA==
+X-Gm-Message-State: AOJu0Yx2bgXbY1FaOBXFrbL0GcPG3d8sQUC1xFHZqH2hf1a/H5CgyI/i
+	zhUx96qCd8UcGGJCeNuFdRVB2oIi4koM1fI62m34KheAwlZo9uZzCpSVduwi/xLT0g==
+X-Google-Smtp-Source: AGHT+IFWCfE0GI5vHIVPrNSMYwLdUjsx2uLON4IZW8QzhSo44niCSgeugPXbLnsIcOeVK17JCtnuuA==
+X-Received: by 2002:aa7:d8d0:0:b0:55e:faef:b1fd with SMTP id k16-20020aa7d8d0000000b0055efaefb1fdmr1731568eds.2.1706532336550;
+        Mon, 29 Jan 2024 04:45:36 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-011.fbsv.net. [2a03:2880:31ff:b::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a20-20020aa7d754000000b0055efeee7722sm1005959eds.79.2024.01.29.04.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 04:45:36 -0800 (PST)
+Date: Mon, 29 Jan 2024 04:45:34 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>, lstoakes@gmail.com,
+	willy@infradead.org, mike.kravetz@oracle.com,
+	Rik van Riel <riel@surriel.com>,
+	"open list:HUGETLB SUBSYSTEM" <linux-mm@kvack.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mm/hugetlb: Restore the reservation if needed
+Message-ID: <Zbed7hlo38WHbQaf@gmail.com>
+References: <20240117171058.2192286-1-leitao@debian.org>
+ <7a0d92a9-f28c-4f3c-b956-1157e614dcbe@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] clk: samsung: gs-101: drop extra empty line
-Content-Language: en-US
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
- willmcvicker@google.com, semen.protsenko@linaro.org,
- alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com,
- cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240127001926.495769-1-andre.draszik@linaro.org>
- <20240127001926.495769-2-andre.draszik@linaro.org>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240127001926.495769-2-andre.draszik@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a0d92a9-f28c-4f3c-b956-1157e614dcbe@arm.com>
 
-
-
-On 1/27/24 00:19, André Draszik wrote:
-> There is an extra empty line here which doesn't exist in any of the
-> other cmu code blocks in this file.
+On Wed, Jan 24, 2024 at 09:22:03AM +0000, Ryan Roberts wrote:
+> On 17/01/2024 17:10, Breno Leitao wrote:
+> > Currently there is a bug that a huge page could be stolen, and when the
+> > original owner tries to fault in it, it causes a page fault.
+> > 
+> > You can achieve that by:
+> >   1) Creating a single page
+> > 	echo 1 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+> > 
+> >   2) mmap() the page above with MAP_HUGETLB into (void *ptr1).
+> > 	* This will mark the page as reserved
+> >   3) touch the page, which causes a page fault and allocates the page
+> > 	* This will move the page out of the free list.
+> > 	* It will also unreserved the page, since there is no more free
+> > 	  page
+> >   4) madvise(MADV_DONTNEED) the page
+> > 	* This will free the page, but not mark it as reserved.
+> >   5) Allocate a secondary page with mmap(MAP_HUGETLB) into (void *ptr2).
+> > 	* it should fail, but, since there is no more available page.
+> > 	* But, since the page above is not reserved, this mmap() succeed.
+> >   6) Faulting at ptr1 will cause a SIGBUS
+> > 	* it will try to allocate a huge page, but there is none
+> > 	  available
+> > 
+> > A full reproducer is in selftest. See
+> > https://lore.kernel.org/all/20240105155419.1939484-1-leitao@debian.org/
+> > 
+> > Fix this by restoring the reserved page if necessary. If the page being
+> > unmapped has HPAGE_RESV_OWNER set, and needs a reservation, set the
+> > restore_reserve flag, which will move the page from free to reserved.
+> > 
+> > Suggested-by: Rik van Riel <riel@surriel.com>
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  mm/hugetlb.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index ed1581b670d4..fa2c17767e44 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -5677,6 +5677,16 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >  		hugetlb_count_sub(pages_per_huge_page(h), mm);
+> >  		hugetlb_remove_rmap(page_folio(page));
+> >  
+> > +		if (is_vma_resv_set(vma, HPAGE_RESV_OWNER) &&
+> > +		    vma_needs_reservation(h, vma, start)) {
+> > +			/*
+> > +			 * Restore the reservation if needed, otherwise the
+> > +			 * backing page could be stolen by someone.
+> > +			 */
+> > +			folio_set_hugetlb_restore_reserve(page_folio(page));
+> > +			vma_add_reservation(h, vma, address);
+> > +		}
+> > +
+> >  		spin_unlock(ptl);
+> >  		tlb_remove_page_size(tlb, page, huge_page_size(h));
+> >  		/*
 > 
-> Drop it to align cmu_top with the rest of the file.
+> Hi Breno,
 > 
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> I'm seeing a kernel bug fire when running the "map_hugetlb" mm selftest against latest mm-unstable. Bisect tells me this patch is culprit. I'm running on arm64 with defconfig plus the following:
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Hello Ryan,
 
-> ---
->  drivers/clk/samsung/clk-gs101.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs101.c
-> index 4a0520e825b6..27debbafdce4 100644
-> --- a/drivers/clk/samsung/clk-gs101.c
-> +++ b/drivers/clk/samsung/clk-gs101.c
-> @@ -25,7 +25,6 @@
->  /* ---- CMU_TOP ------------------------------------------------------------- */
->  
->  /* Register Offset definitions for CMU_TOP (0x1e080000) */
-> -
->  #define PLL_LOCKTIME_PLL_SHARED0			0x0000
->  #define PLL_LOCKTIME_PLL_SHARED1			0x0004
->  #define PLL_LOCKTIME_PLL_SHARED2			0x0008
+Thanks for the heads-up. I was able to reproduce the problem, and I am
+working on a solution.
+
+Thanks,
