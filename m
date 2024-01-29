@@ -1,76 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4FC65BAC
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AD5657B5
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706536551; cv=none; b=pWEwH2IuPhRclgDUG89c7uGlrOHLz2/TwZFnLY/OalqgxpBfkL06ngxyVjRR8ePT8cXNdatuVnH5FKZ+s7dLpFgXugZop0cHJmgwoiuBQ8prdCLLfHrLNTktA/GSdH19OMVk34WgE7ZW0Q4qJf4rCjFdicjmHfjgtAB6KGBYPTw=
+	t=1706536560; cv=none; b=l7AWV+Or0QY5iSJoDEJJfykZMGeKxeJ4y3726Hl0LfdEwhlGQEBbahVqBitpLCBYTgkpxQE54w6lYyBFSnZZ4//9DAlEn7Elbw683PUvr2HWyGVgTbMYM1KG5W4yHo1BKoLicvvM8XKbXZ5pNgcKCqyrH1VlFdhMlYkc7Xm0gyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706536551; c=relaxed/simple;
-	bh=fGTY8wk+7FZYdLAKuIsKJzTeIDJ4tR1MMhapoSmIbHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GeIvSueQmAv4CZ8WYq8pqGY/YcAmCiP1I8yTtRUZFH/tu2g9uGC4s/5Dkxic2+6BlEfCWuplk7h7BBFMGtY/ZNtj9E/ggqJmYe95HB8lpK9DCY+Wo3b+R4YhggRGasbK5YxVbG2cNuNnvJrE9CB/hcgHvsl0f63n3iLPDVldPsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fc6JWBke; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706536560; c=relaxed/simple;
+	bh=0kU0XJcwqyXCVZxm+kFwwNR3JQ+C+nscVOHBvBX63BU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IzjrCGI2aLxKBmY4BPmhpfM0baYv57oXibwEIYEkFDBcEGK7bXtcbZOK+d4uXOHWsDB9S2+KNkK4i2auOh9DhmJ+gkInq1eBBRHFUOXpri0rV7TquFS2WLBmTQT/4l7ach77Xbt7+rO7FuLsXzDim1dDTb1epv+D1YLZAX+zDMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=hROZEAOj; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fc6JWBke"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D33E5C433C7;
-	Mon, 29 Jan 2024 13:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706536550;
-	bh=fGTY8wk+7FZYdLAKuIsKJzTeIDJ4tR1MMhapoSmIbHw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fc6JWBke9OIaN1uN3fC39GR3mX8zY7XQ8cgVPCJaxLyrByCiGTLoGPv8AjseUuM/E
-	 8jWVmqTbiuTBxGqwoZeq0/u1qkE50MDTZY+WVSxUqnveTEtsJtWJzSkW9w/YoydW9+
-	 uMQqc4q60jZ47zZnERsA+2oOhFfp4ZaGpAcVbBVHq3+6GZbiilPeZLSvBtPW0paEkS
-	 874/z6GcVmRjflAuvQAzRenXBBGAvagWi/oNxnx3/tPcI6lXlRlC/9LpkPcodakWQD
-	 2sf5YJL0bQ2cPacourBLTBXMciFlWQhbvQ6lI8+ZO25wr52+ZEANsDN31xjct0UObW
-	 B738V8mK2WXKA==
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Tycho Andersen <tycho@tycho.pizza>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] pidfd: don't do_notify_pidfd() if !thread_group_empty()
-Date: Mon, 29 Jan 2024 14:55:41 +0100
-Message-ID: <20240129-baldigen-geklont-185287b43190@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240127132043.GA29080@redhat.com>
-References: <20240127132043.GA29080@redhat.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="hROZEAOj"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a3566c0309fso177641666b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:55:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1706536556; x=1707141356; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c2pjxJTJw4PCQDkxC6JWUuLXXl1QpeecImfpOYgGbFk=;
+        b=hROZEAOjLz3J60bpDQybqKcOKTAfOfCWZM1ktDfBXG9EqRZZRx+KL5llybC2WYa2Ze
+         hRkajEAO8ntFw39Oq+MQb0XPtC24dmYmYrSu5wC+VniBLDRbCLedDWd5B4mEaIP61Phx
+         9c03UmMFs9oScGcL9ey3d9swu7NnWAjV1124iDSjmzXhfMBUo7w1SJoBBXCTbea64kMt
+         VRqi8PNdIjXSkegMXHfvAZ40TrC7NPFf6yO6rT0vI+aSeFyiqK/T6JP+YCikybSrUZf7
+         hfSeNPI1VQz1v4c6lZMt4zXEttgLj8Ew6XEwH5/anW+zRG0vQnpvOjJm1qJnEFuy5gEl
+         LttA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706536556; x=1707141356;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c2pjxJTJw4PCQDkxC6JWUuLXXl1QpeecImfpOYgGbFk=;
+        b=lfx6Hiwmgbwrs3JZAGolgdB9FtpY+1bPexFgqdmnEZCDSpDz9smLpg1kDLR49lJDoL
+         ELHaJQfXA7cFDwnIZWzjul16ybUAKSoK2yNqI1hsrM1ffvfuHcHNv7tlnTbRW1ImtbNl
+         8odHuKEVVadUXih8J8VI9Is8D8NWVyX+5najQFXPeoe7F8FoeWnQd4XoYrW/7vFMCSvR
+         lezH460hWB/EFHalr9GBUgewTCc9rX8axYQk99dX423NemNxsAB+DjGBkjfDeLcV/j22
+         k1JqZE91qga15JCDvXMFtqcfsQpPCcoMp5Fr+8bwRsPPyqtzjc9CXyHZeHBpH8xj1n00
+         wtyg==
+X-Gm-Message-State: AOJu0YzhUIvX5b0+oCxXuBbHpBovut/BdRntKfKJrA9AKPxVJ/HFru6/
+	XOJ3JmjlwNlqYxYmloVYxa1UEWVNFGGAlUbjiV67lZwXRwnYbG0Ecqj3OX5hJ8o=
+X-Google-Smtp-Source: AGHT+IEdvnhMQ/CDu0i2JcMjQ93Mjck1u0vYpVh300T2TKQ++pg6Wjm5npTJCOfGrbQJZ3bPR/M7rw==
+X-Received: by 2002:a17:906:b0d:b0:a35:dafa:a5d8 with SMTP id u13-20020a1709060b0d00b00a35dafaa5d8mr1224292ejg.73.1706536556328;
+        Mon, 29 Jan 2024 05:55:56 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.87])
+        by smtp.gmail.com with ESMTPSA id vx6-20020a170907a78600b00a35ea4a21e8sm425895ejc.2.2024.01.29.05.55.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 05:55:55 -0800 (PST)
+Message-ID: <1c680be4-67b7-435b-9609-b5f7a45ca675@tuxon.dev>
+Date: Mon, 29 Jan 2024 15:55:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=962; i=brauner@kernel.org; h=from:subject:message-id; bh=fGTY8wk+7FZYdLAKuIsKJzTeIDJ4tR1MMhapoSmIbHw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRuXxf39dSVqStbr+QFTwtbyGtbaTalz1gq9dSdU/2zj nMbqbbVd5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzknBDDX8GdQYn/OtlXmqmp 7WY4kndKWjl9euMzp0vbP+TcUvy/OInhn/EENcm9J60iX91cPOPkIYU7CRdirx3f8zlSK0fGadL 7dcwA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 10/15] net: ravb: Move delay mode set in the
+ driver's ndo_open API
+Content-Language: en-US
+To: Sergey Shtylyov <s.shtylyov@omp.ru>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ richardcochran@gmail.com, p.zabel@pengutronix.de, geert+renesas@glider.be
+Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240123125829.3970325-11-claudiu.beznea.uj@bp.renesas.com>
+ <b0a4f320-6218-2631-a5a0-26cfa9a25ee1@omp.ru>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <b0a4f320-6218-2631-a5a0-26cfa9a25ee1@omp.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, 27 Jan 2024 14:20:43 +0100, Oleg Nesterov wrote:
-> To me this patch makes sense regardless, but also this is another
-> preparation for PIDFD_THREAD change we discuss.
+
+
+On 24.01.2024 22:18, Sergey Shtylyov wrote:
+> On 1/23/24 3:58 PM, Claudiu wrote:
 > 
-> Oleg.
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Delay parsing and setting were done in the driver's probe API. As some IP
+>> variants switch to reset mode (and thus registers content is lost) when
 > 
+>    s/registers content/the register contents/, perhaps?
+> 
+>> setting clocks (due to module standby functionality) to be able to
+>> implement runtime PM keep the delay parsing in the driver's probe function
+>> and move the delay applying function to the driver's ndo_open API.
+>>
+>> Along with it, both delay specific functions were kept together.
+>>
+>> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> [...]
+> 
+>> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+>> index 8956c33c60e2..69d4854d6738 100644
+>> --- a/drivers/net/ethernet/renesas/ravb_main.c
+>> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+>> @@ -1800,6 +1800,59 @@ static int ravb_compute_gti(struct net_device *ndev)
+>>  	return 0;
+>>  }
+>>  
+>> +/* Set tx and rx clock internal delay modes */
+>> +static void ravb_parse_delay_mode(struct device_node *np, struct net_device *ndev)
+> 
+>    Wait, why are you moving this? Its call site didn't move -- it's still
+> down in the probe() method...
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+As explained in the patch description ("Along with it, both delay specific
+functions were kept together.") functions were moved closed to each other
+to have the code dealing with delay in the same place.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] pidfd: don't do_notify_pidfd() if !thread_group_empty()
-      https://git.kernel.org/vfs/vfs/c/e191619dcdca
+> 
+> [...]
+>> @@ -2785,10 +2793,7 @@ static int ravb_probe(struct platform_device *pdev)
+>>  	if (error)
+>>  		goto out_rpm_put;
+>>  
+>> -	if (info->internal_delay) {
+>> -		ravb_parse_delay_mode(np, ndev);
+>> -		ravb_set_delay_mode(ndev);
+>> -	}
+>> +	ravb_parse_delay_mode(np, ndev);
+>>  
+>>  	/* Allocate descriptor base address table */
+>>  	priv->desc_bat_size = sizeof(struct ravb_desc) * DBAT_ENTRY_NUM;
+>>
+> 
+> MBR, Sergey
