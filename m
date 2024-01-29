@@ -1,76 +1,101 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BDA55761
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E5B20B29;
+	Mon, 29 Jan 2024 09:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520192; cv=none; b=mJ9r1djbcohdvcJ7Cxm0BMAcO53F1j7yXXlgGUwSKkMS9ANiKdqBAUhpYdJnD0icbh2+xBLx/Lkc+i1WEnlHKz1tmYDpeYa67FcmYsaCmi7J01fCjwVBShHwuM/W9WHy/TNR7lim597b5XpBULx33vvXMSIAYMbhQiBo2BhNfss=
+	t=1706520208; cv=none; b=OHN/A6RTkeM3Jva6c3pBdKAP89qoy8ySqkjuiaJFhpHPIGFCAwwa2smEJ+NdjCTaZHE5nUkk1xL+dp20sINrEGiF/esqnxs1yAA29PoTOsAhgoAXHMxJUC/8bYjKYOVTDAnMVf/LO5pQcwZlr7hgjuw71TmYtKBa6Rm/5Drhiu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706520192; c=relaxed/simple;
-	bh=6G8K2vrcWsK8/sbuRZURPEgtHaWjvBNgWTy/Ndz5Peo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=d3yDipMLUex2RtgrzSHDhBw/dCD3d6kGrbwXPJUUg+iOjdt6VIbHANFR5QnAre7UzquJZcgHnbfIDWblVHglK075s578OJYv4XLCTc3hZ76TAmgoUcSz9dVZ4hNweRAd2ddLQP5VPw/DpGDHi4hniS+m4qaqbawlWIwIYEfMOME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-31-yT1IZiFMOyGriZohOn-eyA-1; Mon, 29 Jan 2024 09:23:07 +0000
-X-MC-Unique: yT1IZiFMOyGriZohOn-eyA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 29 Jan
- 2024 09:22:40 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 29 Jan 2024 09:22:40 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Jani Nikula' <jani.nikula@linux.intel.com>,
-	"'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'Linus
- Torvalds'" <torvalds@linux-foundation.org>, 'Netdev'
-	<netdev@vger.kernel.org>, "'dri-devel@lists.freedesktop.org'"
-	<dri-devel@lists.freedesktop.org>
-CC: 'Jens Axboe' <axboe@kernel.dk>, "'Matthew Wilcox (Oracle)'"
-	<willy@infradead.org>, 'Christoph Hellwig' <hch@infradead.org>,
-	"'linux-btrfs@vger.kernel.org'" <linux-btrfs@vger.kernel.org>, "'Andrew
- Morton'" <akpm@linux-foundation.org>, 'Andy Shevchenko'
-	<andriy.shevchenko@linux.intel.com>, "'David S . Miller'"
-	<davem@davemloft.net>, 'Dan Carpenter' <dan.carpenter@linaro.org>
-Subject: RE: [PATCH next 10/11] block: Use a boolean expression instead of
- max() on booleans
-Thread-Topic: [PATCH next 10/11] block: Use a boolean expression instead of
- max() on booleans
-Thread-Index: AdpSITDgD70hEVnBTjm/gYoTnRBnpgAcWocAAAB9+7A=
-Date: Mon, 29 Jan 2024 09:22:40 +0000
-Message-ID: <963d1126612347dd8c398a9449170e16@AcuMS.aculab.com>
-References: <0ca26166dd2a4ff5a674b84704ff1517@AcuMS.aculab.com>
- <b564df3f987e4371a445840df1f70561@AcuMS.aculab.com>
- <87sf2gjyn9.fsf@intel.com>
-In-Reply-To: <87sf2gjyn9.fsf@intel.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1706520208; c=relaxed/simple;
+	bh=Msg8F5IL/0AenrkHit9Ad5Txza0O1ySzpyON+YbB29Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a3XfHlQolpmBCqvTqRXe2iccWQAvBXZQi34BfwoH8O1uWDxE9Fc/JiwzN8X+CIOuWJ/WkthFHzyQztSuQtfuJyVQHDTFes9Ky/MJeFPx21bPiLLAtQ4FCiGDr0GuudjRJkDujYUk2OsitcD+OCTGDwmkc2/Ode5pEWVIAvjNVqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from luzhipeng.223.5.5.5 (unknown [183.159.96.158])
+	by mail-app2 (Coremail) with SMTP id by_KCgCnfKx4brdlpzb9AA--.35670S2;
+	Mon, 29 Jan 2024 17:23:05 +0800 (CST)
+From: Zhipeng Lu <alexious@zju.edu.cn>
+To: alexious@zju.edu.cn
+Cc: "David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] net: ipv4: fix a memleak in ip_setup_cork
+Date: Mon, 29 Jan 2024 17:10:17 +0800
+Message-Id: <20240129091017.2938835-1-alexious@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:by_KCgCnfKx4brdlpzb9AA--.35670S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1fGF1kuFWrAF13Kw43Awb_yoW8JFWUpr
+	Z8KayrJrW8Xr17KFsFyrW5ZFWfWw1vyFyjgw4ava4Y93WvqryaqrnrKFWa9FyavayxJ3Wr
+	Cwn7J34UWr18XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
+	UUU
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
-RnJvbTogSmFuaSBOaWt1bGENCj4gU2VudDogMjkgSmFudWFyeSAyMDI0IDA5OjA4DQo+IA0KPiBP
-biBTdW4sIDI4IEphbiAyMDI0LCBEYXZpZCBMYWlnaHQgPERhdmlkLkxhaWdodEBBQ1VMQUIuQ09N
-PiB3cm90ZToNCj4gPiBibGtfc3RhY2tfbGltaXRzKCkgY29udGFpbnM6DQo+ID4gCXQtPnpvbmVk
-ID0gbWF4KHQtPnpvbmVkLCBiLT56b25lZCk7DQo+ID4gVGhlc2UgYXJlIGJvb2wsIHNvIGl0IGlz
-IGp1c3QgYSBiaXR3aXNlIG9yLg0KPiANCj4gU2hvdWxkIGJlIGEgbG9naWNhbCBvciwgcmVhbGx5
-LiBBbmQgfHwgaW4gY29kZS4NCg0KTm90IHJlYWxseSwgYml0d2lzZSBpcyBmaW5lIGZvciBib29s
-IChlc3BlY2lhbGx5IGZvciAnb3InKQ0KYW5kIGdlbmVyYXRlcyBiZXR0ZXIgY29kZS4NCg0KCURh
-dmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3Vu
-dCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3
-Mzg2IChXYWxlcykNCg==
+When inetdev_valid_mtu fails, cork->opt should be freed if it is
+allocated in ip_setup_cork. Otherwise there could be a memleak.
+
+Fixes: 501a90c94510 ("inet: protect against too small mtu values.")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+---
+Changelog:
+
+v2: fix memleak by placing the malloc as the last error-handling.
+---
+ net/ipv4/ip_output.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+index b06f678b03a1..41537d18eecf 100644
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -1287,6 +1287,12 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
+ 	if (unlikely(!rt))
+ 		return -EFAULT;
+ 
++	cork->fragsize = ip_sk_use_pmtu(sk) ?
++			 dst_mtu(&rt->dst) : READ_ONCE(rt->dst.dev->mtu);
++
++	if (!inetdev_valid_mtu(cork->fragsize))
++		return -ENETUNREACH;
++
+ 	/*
+ 	 * setup for corking.
+ 	 */
+@@ -1303,12 +1309,6 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
+ 		cork->addr = ipc->addr;
+ 	}
+ 
+-	cork->fragsize = ip_sk_use_pmtu(sk) ?
+-			 dst_mtu(&rt->dst) : READ_ONCE(rt->dst.dev->mtu);
+-
+-	if (!inetdev_valid_mtu(cork->fragsize))
+-		return -ENETUNREACH;
+-
+ 	cork->gso_size = ipc->gso_size;
+ 
+ 	cork->dst = &rt->dst;
+-- 
+2.34.1
 
