@@ -1,26 +1,26 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8AF5644A;
-	Mon, 29 Jan 2024 09:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B50C58ABA;
+	Mon, 29 Jan 2024 09:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520495; cv=none; b=ibLZp7YD8N7C5kWlcrj+sqiOyVtKNp7ENb3BPEBzbT1Ebf3smsmVv06Spyh5JNtMs9EwtqAZLsAnlysI3qtdoI2cyUurxa6Lf58iPWRGROte9B5f5sY7jEj+8YRjJ+2Lfm7OLUJCGVMPJNho1eqxGcgQmgLORgeJ+4+jVR/Hg3E=
+	t=1706520497; cv=none; b=VIQteZGfk1R4c7VY1ZMd+/dZqXQWsR0hkAelZpLMYlVcyxW20FcOumnP+HlzDKNBrSy3SMwMIEO9Pm9tityZcAlnDKNt3id/EiTHj6mZ8RMT/nY1RXPp4/oYpmapsrtEhlRHo4tiVAxK48ABpIunhoACr1egi1bVyLvJ7Lpmo2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706520495; c=relaxed/simple;
-	bh=hNF47SCc3CmOusd/IOOGyr8v6D0iLsRCPHXn/hGJ5+A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LHOKqxgnDZVFTQYVNfUCqG/KK4lgmTPDFi0Zcg6N7MPIYCpMdz0dNb6tHRRF1l7ZuWZb/1DvfbXFXl2Ln4jrBLAjZOT6sovu1bWS9FvRwucK0k15d4hMA6fbWUpLYi4NmBk5hVulLseLI4x5gKCAjlHXV2JaswUOGGfmpqCMCZg=
+	s=arc-20240116; t=1706520497; c=relaxed/simple;
+	bh=ZpsePdhkqsFzOwuoHVhBYBar6q2hFDLcTLjSFVdzv7w=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tkXxqVgFIJS27MVDdnHyiDhdkRDgDnRkdbaCZA8yiqGMSDrSOZbl2GCzvJkatp7ZbzMEGyf3yew5Ig2yejcJ7uvHTxE6p9yk5qNt5N5xll5LVe1/Nu17FDzCqsTwYAGjV6G8Nc4wtulmPW132BRp2pTykyEdEbjJz2+mTCZMXR8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 40T9Q97i080046;
-	Mon, 29 Jan 2024 17:26:09 +0800 (+08)
+	by Atcsqr.andestech.com with ESMTP id 40T9QJ1g080108;
+	Mon, 29 Jan 2024 17:26:20 +0800 (+08)
 	(envelope-from peterlin@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS16.andestech.com
  (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Mon, 29 Jan 2024
- 17:26:06 +0800
+ 17:26:17 +0800
 From: Yu Chien Peter Lin <peterlin@andestech.com>
 To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <alexander.shishkin@linux.intel.com>, <andre.przywara@arm.com>,
@@ -44,10 +44,9 @@ To: <acme@kernel.org>, <adrian.hunter@intel.com>, <ajones@ventanamicro.com>,
         <tim609@andestech.com>, <uwu@icenowy.me>, <wens@csie.org>,
         <will@kernel.org>, <inochiama@outlook.com>, <unicorn_wang@outlook.com>,
         <wefu@redhat.com>
-CC: Randolph <randolph@andestech.com>, Atish Patra <atishp@rivosinc.com>
-Subject: [PATCH v8 02/10] irqchip/riscv-intc: Allow large non-standard interrupt number
-Date: Mon, 29 Jan 2024 17:25:45 +0800
-Message-ID: <20240129092553.2058043-3-peterlin@andestech.com>
+Subject: [PATCH v8 04/10] dt-bindings: riscv: Add Andes interrupt controller compatible string
+Date: Mon, 29 Jan 2024 17:25:47 +0800
+Message-ID: <20240129092553.2058043-5-peterlin@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240129092553.2058043-1-peterlin@andestech.com>
 References: <20240129092553.2058043-1-peterlin@andestech.com>
@@ -57,125 +56,64 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 40T9Q97i080046
+X-MAIL:Atcsqr.andestech.com 40T9QJ1g080108
 
-Currently, the implementation of the RISC-V INTC driver uses the
-interrupt cause as the hardware interrupt number, with a maximum of
-64 interrupts. However, the platform can expand the interrupt number
-further for custom local interrupts.
+Add "andestech,cpu-intc" compatible string to indicate that
+Andes specific local interrupt is supported on the core,
+e.g. AX45MP cores have 3 types of non-standard local interrupt
+which can be handled in supervisor mode:
 
-To fully utilize the available local interrupt sources, switch
-to using irq_domain_create_tree() that creates the radix tree
-map, add global variables (riscv_intc_nr_irqs, riscv_intc_custom_base
-and riscv_intc_custom_nr_irqs) to determine the valid range of local
-interrupt number (hwirq).
+- Slave port ECC error interrupt
+- Bus write transaction error interrupt
+- Performance monitor overflow interrupt
+
+These interrupts are enabled/disabled via a custom register
+SLIE instead of the standard interrupt enable register SIE.
 
 Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
-Reviewed-by: Randolph <randolph@andestech.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
 Changes v1 -> v2:
-  - Fixed irq mapping failure checking (suggested by Clément and Anup)
+  - New patch
 Changes v2 -> v3:
+  - Updated commit message
+  - Fixed possible compatibles for Andes INTC
+Changes v3 -> v4:
+  - Add const entry instead of enum (Suggested by Conor)
+Changes v4 -> v5:
+  - Include Conor's Acked-by
+  - Include Prabhakar's Reviewed-by
+Changes v5 -> v6:
   - No change
-Changes v3 -> v4: (Suggested by Thomas [1])
-  - Use pr_warn_ratelimited instead
-  - Fix coding style and commit message
-Changes v4 -> v5: (Suggested by Thomas)
-  - Fix commit message
-Changes v5 -> v6: (Suggested by Anup [2])
-  - Add riscv_intc_* global variables for checking the range of valid
-    interrupt number in riscv_intc_domain_alloc()
-  - Advertise the number of interrupts allowed
 Changes v6 -> v7:
-  - No functional change
+  - No change
 Changes v7 -> v8:
-  - Include Reviewed-by tags from Anup and Atish
-
-[1] https://patchwork.kernel.org/project/linux-riscv/patch/20231023004100.2663486-3-peterlin@andestech.com/#25573085                                                                                         ..
-[2] https://patchwork.kernel.org/project/linux-riscv/patch/20231213070301.1684751-3-peterlin@andestech.com/#25636589
+  - No change
 ---
- drivers/irqchip/irq-riscv-intc.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/riscv/cpus.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-index e8d01b14ccdd..b13a16b164c9 100644
---- a/drivers/irqchip/irq-riscv-intc.c
-+++ b/drivers/irqchip/irq-riscv-intc.c
-@@ -19,15 +19,17 @@
- #include <linux/smp.h>
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index 9d8670c00e3b..6ccd75cbbc59 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -106,7 +106,11 @@ properties:
+         const: 1
  
- static struct irq_domain *intc_domain;
-+static unsigned int riscv_intc_nr_irqs __ro_after_init;
-+static unsigned int riscv_intc_custom_base __ro_after_init;
-+static unsigned int riscv_intc_custom_nr_irqs __ro_after_init;
+       compatible:
+-        const: riscv,cpu-intc
++        oneOf:
++          - items:
++              - const: andestech,cpu-intc
++              - const: riscv,cpu-intc
++          - const: riscv,cpu-intc
  
- static asmlinkage void riscv_intc_irq(struct pt_regs *regs)
- {
- 	unsigned long cause = regs->cause & ~CAUSE_IRQ_FLAG;
- 
--	if (unlikely(cause >= BITS_PER_LONG))
--		panic("unexpected interrupt cause");
--
--	generic_handle_domain_irq(intc_domain, cause);
-+	if (generic_handle_domain_irq(intc_domain, cause))
-+		pr_warn_ratelimited("Failed to handle interrupt (cause: %ld)\n",
-+				    cause);
- }
- 
- /*
-@@ -93,6 +95,14 @@ static int riscv_intc_domain_alloc(struct irq_domain *domain,
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Only allow hwirq for which we have corresponding standard or
-+	 * custom interrupt enable register.
-+	 */
-+	if ((riscv_intc_nr_irqs <= hwirq && hwirq < riscv_intc_custom_base) ||
-+	    (riscv_intc_custom_base + riscv_intc_custom_nr_irqs) <= hwirq)
-+		return -EINVAL;
-+
- 	for (i = 0; i < nr_irqs; i++) {
- 		ret = riscv_intc_domain_map(domain, virq + i, hwirq + i);
- 		if (ret)
-@@ -117,8 +127,7 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
- {
- 	int rc;
- 
--	intc_domain = irq_domain_create_linear(fn, BITS_PER_LONG,
--					       &riscv_intc_domain_ops, NULL);
-+	intc_domain = irq_domain_create_tree(fn, &riscv_intc_domain_ops, NULL);
- 	if (!intc_domain) {
- 		pr_err("unable to add IRQ domain\n");
- 		return -ENXIO;
-@@ -132,7 +141,10 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn)
- 
- 	riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
- 
--	pr_info("%d local interrupts mapped\n", BITS_PER_LONG);
-+	pr_info("%d local interrupts mapped\n", riscv_intc_nr_irqs);
-+	if (riscv_intc_custom_nr_irqs)
-+		pr_info("%d custom local interrupts mapped\n",
-+			riscv_intc_custom_nr_irqs);
- 
- 	return 0;
- }
-@@ -166,6 +178,10 @@ static int __init riscv_intc_init(struct device_node *node,
- 		return 0;
- 	}
- 
-+	riscv_intc_nr_irqs = BITS_PER_LONG;
-+	riscv_intc_custom_base = riscv_intc_nr_irqs;
-+	riscv_intc_custom_nr_irqs = 0;
-+
- 	return riscv_intc_init_common(of_node_to_fwnode(node));
- }
+       interrupt-controller: true
  
 -- 
 2.34.1
