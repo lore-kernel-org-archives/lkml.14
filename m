@@ -1,67 +1,66 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA9E155A32
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E96F153BE2
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706544036; cv=none; b=cAHCNMTtj9wnBSzfMtQjcoNjKHZVCvdfseUsP1J33OTzz8ukjbhyFbSFcMlhUjJqYwo2RL27ikDGf/mS2T9LPxxKcmQgEV3mlOEm++rM5tqbC+psC2SZo33Q0IaK0oUPEa7/LOPkHd25AUR3wJZpzMkSwr7Xszm3bI8PkxyleWA=
+	t=1706544177; cv=none; b=EISX/P8CnDP3lTs6xZnR6d0XUdZ/Y+GUxB4mOGtZWrcnwcaG321wEoPKO4baUo9NuzBaSTdT9FXHVpvU9wE1GehihlKzAr6ANhyFhDdM32LwwSC5pDlQ5QgigHvOcx4Ikm4X9SWr1aiK8C10qMWDgHQJb4QZ09fgtU3Z754dZCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706544036; c=relaxed/simple;
-	bh=IpNBFj7rTRncHa2LoXpyMTadF1pa/ioDUWs0SSZnZJA=;
+	s=arc-20240116; t=1706544177; c=relaxed/simple;
+	bh=hXlY0ftLlr6P+LZ8KvIoazr2KLExV1awHs5qk0LTyQs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VOdccN77eE9PqOHrqEmdpoknSlBwPK6WFNpgYNRAKoeG+eJuv6PRsID/s6ypilFVRmIPi9X/7F15Gr3PTXh7gf9rB+E3uvqE63Hi/5tA6A8IxLVjKehkCt1BeixhCQAAnSLiBkmVcuBllURB2LKYRpuWmnAO7b1b+3/udXqutkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDN9Xdz+; arc=none smtp.client-ip=209.85.215.181
+	 To:Cc:Content-Type; b=Smo+buaN5oRq++A56MONhvgKByMq1/ZzOgp0fyh0vtfsrpPh8eVGrXtptyg51S7tnFR0Vix/Kt77h5XILS6nS24FJSKl6hg33+kLyzRYK008aQbOiTQ3En5j9aa1ioVoHlbEr1B9L10yWdZfERLsA5dZBgsYLgcIogsA4XsCPLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HjuHlYPS; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDN9Xdz+"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5d4a1e66750so1449239a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:00:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjuHlYPS"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-68c37bf73aaso25426286d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:02:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706544034; x=1707148834; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706544175; x=1707148975; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iRGYZpq7Hm473xlHR3mHisE1vtl8EqHHSDvobXAqEcc=;
-        b=XDN9Xdz+Rxg8jhroQAnxJ2od+jrukmqWLFepDcYTXrxST3N9JHWy6jT8aVx7ZKuM7a
-         JZNYK5mYBAkH2boehOi/c/RRvASbQiUgGvBCHV7pbryP9ln+zx75QlQ5Dq1GVHXElDcg
-         d7LE1QekAerMonq3IsC4l7SHSPu4hwxVD6gVdfi1A5xB99hPycJS/Z3XwMvqGpX6NGV3
-         0KJyORqSihxpYpNXNyA2VLODqZfMmK5MpvRfQz1JbfZWIe1tkjmxM0p5C6SIES0QBbiE
-         vMZaL37O44ZXwy6Q0ufwmFYn4qihn3IXDmLtxFgLww3MGNydj///9U+XJrBRa5h0EN+z
-         Aovw==
+        bh=fStLCbKUTcGzRAhk1o+DOE0szU2Or0956o0vgo2cygQ=;
+        b=HjuHlYPSW72fuKMoJFBktRH6IlWuSB7UI4iqrhrL2JLgXWUyCGJNPg4oVdZIv1ype1
+         2POGGO8QC7PDMzupJGKYUY1B/zq0iz8NBvilijjUkdfI/BMkBIhax9aoRdyxcrT3vx0K
+         R5fjIVyVl1ZK5cSxlpeoWh/bOKEM/FKUfSU+EVPYLbX8Qk892cfgxLcQzHFZj9xS0tDQ
+         k1imBxieMN6yRN8KvOf5Qs7BN/SkLABmqdNCb5AoJJexDFw068pRec32DpAjmnHDom2N
+         OAZAo4BrAU4wo/SMg/iWhXaqhINxIapxdk4oPurbytbMaAMIBEit7luQQpQG62B9o5HD
+         qmUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706544034; x=1707148834;
+        d=1e100.net; s=20230601; t=1706544175; x=1707148975;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iRGYZpq7Hm473xlHR3mHisE1vtl8EqHHSDvobXAqEcc=;
-        b=JD2yd2zCKsGVhOt9fAu3z3+hw0UojLw1XkldZxIlOMJ642gAJsZGT/GFbOuHhyC2CY
-         +q4m8YvESpiisQX/rZMK66Pcv8725XSwGDTIpFauSs8V98qBnFwAy0Wt0Ppn90J+m5aw
-         rDJ+FToXBI10RyaF2ISVhGjFoNzXh7lZzDAS5pliw2VnkFIYpNDwg4FLZuXzgH/QiyLc
-         O/bZom5P5VSbUyCRlkSTNo1tWzMTTm40cxowrDNokxT4/LZkvLh8rnC1RK+HJtTQ+6pO
-         gJpmbvIwNIIHI0C7R1oUPdOZw0t6V9Sr+zN7QfOj91JOARL2s9Y6m7XDrwGcAhpMtfDc
-         BF6Q==
-X-Gm-Message-State: AOJu0Yy/k4rP7PvwpdE9LpG45aqBPoYVMMXwGFh7a3+hnQsyZU7RAEB+
-	RdJ9st2Trv2tROfVDIfLfkbIfrduqtKKWiSMUvmrky3Ps/h+qBahGY9bQ6i1VUyLYjX7ESqizRs
-	75PEC1xqke5jWvYUo74/v1cQUmc4=
-X-Google-Smtp-Source: AGHT+IHYaG4TGyxxr+QUwFox3uX0KozbTrw1DkpCcQ884SLYhEdC9+JyrnlvINgX+uMWf1yitLFYVV1FQU1tdpUGP4c=
-X-Received: by 2002:a05:6a21:2d84:b0:19c:9ba4:4851 with SMTP id
- ty4-20020a056a212d8400b0019c9ba44851mr2176004pzb.14.1706544034239; Mon, 29
- Jan 2024 08:00:34 -0800 (PST)
+        bh=fStLCbKUTcGzRAhk1o+DOE0szU2Or0956o0vgo2cygQ=;
+        b=s3BgqlzfR0A1ekYcc+wqseblu0e13alAzfYvprpFrCzr6VXyZ0FaVw8Rjf0DhMRyTj
+         IG1RGmSpHcAIU/ggTzzkn6EJwMekBKe/u1kMAjy6tGIYfeKAqEkFSWYsNY/x0pYiNvsi
+         uBGC29GhdrV2sEJ/OQKxtGO9oNO+0DeEBW2y/yI2UAwcv1i0oe30g0Px6sw8imEwJx03
+         CSgFUzyJRoFyV55YLacPYEdtmJ5D4TmyjhaULTzrKVA8zVl7bNHQ5v2MKNfBCV9teo10
+         xKhZdnmAw8pdx3Y2opmjDHqyjzt5SR2AJ5bNVPNL2nphmKpqPyczJw0QUtLiKcovbYPk
+         /Oyg==
+X-Gm-Message-State: AOJu0Yx+akY+hju+2TVqurXQtcTVVR/sFt9OU6dazBpTyZn9aVaVsdSH
+	X6YBLb66uw+H9GKAvKtuR7U9s6LElY9hI6+tKwvXeoXeb+ZC9FxL4Gg02bIx8HzBzQbeoHgOJp2
+	lBFs8ik7FaLRI+Uwi2byoLR9lATQ5hPPd
+X-Google-Smtp-Source: AGHT+IHBY+NYlPvzlNbY5B0NDhyQZuJLDGA4D0xQA4x9CU2a4FSDpGesHGJijQAaIWOPvHAlcXSv1vtPLB6KRBQD0Ag=
+X-Received: by 2002:a05:6214:20ad:b0:686:ae74:ae2f with SMTP id
+ 13-20020a05621420ad00b00686ae74ae2fmr6678844qvd.92.1706544175148; Mon, 29 Jan
+ 2024 08:02:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125170628.2017784-1-tj@kernel.org> <20240125170628.2017784-10-tj@kernel.org>
-In-Reply-To: <20240125170628.2017784-10-tj@kernel.org>
+References: <20240125170628.2017784-1-tj@kernel.org> <20240125170628.2017784-9-tj@kernel.org>
+In-Reply-To: <20240125170628.2017784-9-tj@kernel.org>
 From: Lai Jiangshan <jiangshanlai@gmail.com>
-Date: Tue, 30 Jan 2024 00:00:22 +0800
-Message-ID: <CAJhGHyAuoGNmaaDa0p+wiJMprXYVYnVV75PS4+kPy-fsPJVH8w@mail.gmail.com>
-Subject: Re: [PATCH 09/10] workqueue: Implement system-wide nr_active
- enforcement for unbound workqueues
+Date: Tue, 30 Jan 2024 00:02:42 +0800
+Message-ID: <CAJhGHyA=uO4P4skas0-DZCE+cS453V+PrJMOFj2G2DAc1tE0jA@mail.gmail.com>
+Subject: Re: [PATCH 08/10] workqueue: Introduce struct wq_node_nr_active
 To: Tejun Heo <tj@kernel.org>
 Cc: linux-kernel@vger.kernel.org, Naohiro.Aota@wdc.com, kernel-team@meta.com
 Content-Type: text/plain; charset="UTF-8"
@@ -71,21 +70,78 @@ Hello, Tejun
 
 On Fri, Jan 26, 2024 at 1:06=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
 
-> @@ -5121,6 +5374,9 @@ void workqueue_set_max_active(struct workqueue_stru=
-ct *wq, int max_active)
+> @@ -4036,12 +4097,62 @@ static void wq_free_lockdep(struct workqueue_stru=
+ct *wq)
+>  }
+>  #endif
 >
->         wq->flags &=3D ~__WQ_ORDERED;
->         wq->saved_max_active =3D max_active;
-> +       if (wq->flags & WQ_UNBOUND)
-> +               wq->saved_min_active =3D min(wq->saved_min_active, max_ac=
-tive);
+> +static void free_node_nr_active(struct wq_node_nr_active **nna_ar)
+> +{
+> +       int node;
+> +
+> +       for_each_node(node) {
+> +               kfree(nna_ar[node]);
+> +               nna_ar[node] =3D NULL;
+> +       }
+> +
+> +       kfree(nna_ar[nr_node_ids]);
+> +       nna_ar[nr_node_ids] =3D NULL;
+> +}
 > +
 
-wq_update_node_max_active() must be also called here.
+[....]
+
+
+>  static void rcu_free_wq(struct rcu_head *rcu)
+>  {
+>         struct workqueue_struct *wq =3D
+>                 container_of(rcu, struct workqueue_struct, rcu);
+>
+>         wq_free_lockdep(wq);
+> +       free_node_nr_active(wq->node_nr_active);
+
+for percpu workqueue, free_node_nr_active() will access out of bound.
+
+>         free_percpu(wq->cpu_pwq);
+>         free_workqueue_attrs(wq->unbound_attrs);
+>         kfree(wq);
+
+[......]
+
+> @@ -4832,8 +4950,13 @@ struct workqueue_struct *alloc_workqueue(const cha=
+r *fmt,
+>         wq_init_lockdep(wq);
+>         INIT_LIST_HEAD(&wq->list);
+>
+> +       if (flags & WQ_UNBOUND) {
+> +               if (alloc_node_nr_active(wq->node_nr_active) < 0)
+> +                       goto err_unreg_lockdep;
+> +       }
+> +
+>         if (alloc_and_link_pwqs(wq) < 0)
+> -               goto err_unreg_lockdep;
+> +               goto err_free_node_nr_active;
+>
+>         if (wq_online && init_rescuer(wq) < 0)
+>                 goto err_destroy;
+> @@ -4858,6 +4981,8 @@ struct workqueue_struct *alloc_workqueue(const char=
+ *fmt,
+>
+>         return wq;
+>
+> +err_free_node_nr_active:
+> +       free_node_nr_active(wq->node_nr_active);
+
+
+for percpu workqueue, free_node_nr_active() will access out of bound.
+
 
 Thanks
 Lai
 
->         wq_adjust_max_active(wq);
+>  err_unreg_lockdep:
+>         wq_unregister_lockdep(wq);
+>         wq_free_lockdep(wq);
+> --
+> 2.43.0
 >
->         mutex_unlock(&wq->mutex);
