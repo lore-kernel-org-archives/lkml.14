@@ -1,57 +1,58 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE56B15957D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32326158D8E;
 	Mon, 29 Jan 2024 16:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545688; cv=none; b=RH9WTL+HY5dpsm5EqYoz6TfCYrXMnqhkA4GHZeBIM/xsWoTbL7OmHN4XNNpmvGp4r6O3RgAS0ptfXvU2UWXHevI7D1XWb2ldTqC1r5zECMkOMuGYLF8zLFRS0Od84U8NJdqWZz/c9TSG6JRxJPCNeo5xBonyVVVKSyQ3krg1uHk=
+	t=1706545688; cv=none; b=m3xlzzzf7aZ80Th/QWLjl0Q1G+e7yavsY37gZBUiOpxFEzDoWVMIDSvJQpsr1VoCsR0h7dT5IFsU6pYwbOIAQ5vorh4NIsd2sDmFWgkrQ+wJyM1QuphqSoe1W+p/mIO+ACovp3EShkhiiRrGsVetEXrP2aptWOHwvQFAL5JW3/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706545688; c=relaxed/simple;
-	bh=BkYUj9J0S9uZC6cARe/4MnNL8VlDnXU3fcAQ1S2UeUk=;
+	bh=h0rgb6aZm4gwgUniAiZJ+bxuduUl6CsjAiO7cHkbWBM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=efdaODs11iXDVqMUCMToE1VcSF7HhyhCO9n9d0vjx3h/qpW7JYewHVrsrInkSsPiesJNWBSNRc2fgOHkdR9aQok+wn27vS3G3bYrsydAboeo8WiPBeO7PS9hwfLl8Ixm8hlI3mEojlMN69SVkL/80RiW+CC1DOOUHGlQrKMNQ/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=VAq83DXf; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=SDpOIY65cybnHgr9ntmDrzGF3inCtyLKB7pQj2ePDvyJpkGfZBQTp3tPTKGzae5LBTJM2bqiREbmP09FpqoW5eqz4ra4i549i+wNzqYhxcGderGQjon3TyopdRrYIz3pARrUHNGWueTfyvJUNqdqVNiOboqq+8jzPKmEagdqB3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=C1FsGSbj; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VAq83DXf"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="C1FsGSbj"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0R006968;
-	Mon, 29 Jan 2024 10:28:00 -0600
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0P006968;
+	Mon, 29 Jan 2024 10:27:58 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=wpM0IEXUU+L0htJrBM+q7AUNIjabpxsqMat65cQAX8Q=; b=
-	VAq83DXfWvQdH58ZCz7hzM0HWUjNbSF+rGcNY8Awbk4CkgMhjCvuUKQktnzyU8/o
-	ZAqs9avwZfJDsSNfs0Kyd6F2Mu8hW8SF+QO1pskAxcWmkSOxQggFa0U9xVUBbXO+
-	bVdi20W9YxOMfTdw+e4PqIQECeNv9yN/GyO3O1q2ZSSVnlKxMV2bEolGfBNzjyg+
-	f+yHIReq3BETUBvNhUHjXH2olYf6+abx4NTNDhe+8D2Lyk4eTNz+4k6R/J9PFDhG
-	Z+pZhbb/Nxijyx9MLXbjmO/EJ0ZWaumZ41QwgK1q6SOORF+fDcToyxeWTRR733iv
-	G6HLZGHY9q+d/RI0/+jpRA==
+	PODMain02222019; bh=w4CGZbUCOC1yLU5NKzT5GdiUkJej28e0tOzXCRok5ms=; b=
+	C1FsGSbjVsmQ7qt3rNFc5xvBEqxwaL5P1J2VMOsZGKUICcUuIa5mkFYux2xzCFyi
+	N10PxZlSVZx55HFREquwZAFeMl0Ia2ACLNkgSf9tm9BI6+foKsaAQd5kzkwe8F65
+	urbgaSxTYazMeMC+a1aChBnGcLa8N4rYuxAiv8q6H6iLXxB19mYNSnNCmo6YIjUp
+	BSTsRLDl18c96sI2kG0AOdWTY3L0aHqhw0a0cfApZFC6y6Yhfd3Xef5I/7qCRkr7
+	JSzFHNkbKCP3cLprQI7Or4pZ2b2rOkjd9/2/0uRaPPSFu0OEycGTtWN9u6XVXasM
+	vhMjHgFz9O6hMicydxG+kg==
 Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8p-11
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8p-9
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:28:00 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+	Mon, 29 Jan 2024 10:27:58 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 16:27:47 +0000
+ 2024 16:27:46 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:47 +0000
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:46 +0000
 Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.64.204])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 9B198820247;
-	Mon, 29 Jan 2024 16:27:47 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id E03C7820247;
+	Mon, 29 Jan 2024 16:27:45 +0000 (UTC)
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
 To: <broonie@kernel.org>, <tiwai@suse.com>
 CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
         "Richard
  Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH 18/18] ALSA: hda: cs35l56: Remove unused test stub function
-Date: Mon, 29 Jan 2024 16:27:37 +0000
-Message-ID: <20240129162737.497-19-rf@opensource.cirrus.com>
+Subject: [PATCH 13/18] ASoC: cs35l56: Load tunings for the correct speaker models
+Date: Mon, 29 Jan 2024 16:27:32 +0000
+Message-ID: <20240129162737.497-14-rf@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240129162737.497-1-rf@opensource.cirrus.com>
 References: <20240129162737.497-1-rf@opensource.cirrus.com>
@@ -63,44 +64,174 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: ThVYG6jeUEf0DAB4fk-r0FgbZvgPRDcg
-X-Proofpoint-GUID: ThVYG6jeUEf0DAB4fk-r0FgbZvgPRDcg
+X-Proofpoint-ORIG-GUID: mws68Ze2d3ptg8Hci6V7kFmy9aJMOmA4
+X-Proofpoint-GUID: mws68Ze2d3ptg8Hci6V7kFmy9aJMOmA4
 X-Proofpoint-Spam-Reason: safe
 
-Remove an unused stub function that calls a non-existant function.
+If the "spk-id-gpios" property is present it points to GPIOs whose
+value must be used to select the correct bin file to match the
+speakers.
 
-This function was accidentally added as part of commit
-2144833e7b41 ("ALSA: hda: cirrus_scodec: Add KUnit test"). It was
-a relic of an earlier version of the test that should have been
-removed.
+Some manufacturers use multiple sources of speakers, which need
+different tunings for best performance. On these models the type of
+speaker fitted is indicated by the values of one or more GPIOs. The
+number formed by the GPIOs identifies the tuning required.
+
+The speaker ID must be used in combination with the subsystem ID
+(either from PCI SSID or cirrus,firmware-uid property), because the
+GPIOs can only indicate variants of a specific model.
 
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Fixes: 2144833e7b41 ("ALSA: hda: cirrus_scodec: Add KUnit test")
+Fixes: 1a1c3d794ef6 ("ASoC: cs35l56: Use PCI SSID as the firmware UID")
 ---
- sound/pci/hda/cs35l56_hda.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ include/sound/cs35l56.h           |  1 +
+ sound/soc/codecs/cs35l56-shared.c | 36 +++++++++++++++++++++++++++++++
+ sound/soc/codecs/cs35l56.c        | 32 ++++++++++++++++++++++-----
+ sound/soc/codecs/cs35l56.h        |  1 +
+ 4 files changed, 65 insertions(+), 5 deletions(-)
 
-diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
-index 32736d3e45ba..75a14ba54fcd 100644
---- a/sound/pci/hda/cs35l56_hda.c
-+++ b/sound/pci/hda/cs35l56_hda.c
-@@ -1063,16 +1063,6 @@ const struct dev_pm_ops cs35l56_hda_pm_ops = {
- };
- EXPORT_SYMBOL_NS_GPL(cs35l56_hda_pm_ops, SND_HDA_SCODEC_CS35L56);
+diff --git a/include/sound/cs35l56.h b/include/sound/cs35l56.h
+index 5d6aefc41e64..23da6298ab37 100644
+--- a/include/sound/cs35l56.h
++++ b/include/sound/cs35l56.h
+@@ -289,6 +289,7 @@ void cs35l56_init_cs_dsp(struct cs35l56_base *cs35l56_base, struct cs_dsp *cs_ds
+ int cs35l56_read_prot_status(struct cs35l56_base *cs35l56_base,
+ 			     bool *fw_missing, unsigned int *fw_version);
+ int cs35l56_hw_init(struct cs35l56_base *cs35l56_base);
++int cs35l56_get_speaker_id(struct cs35l56_base *cs35l56_base);
+ int cs35l56_get_bclk_freq_id(unsigned int freq);
+ void cs35l56_fill_supply_names(struct regulator_bulk_data *data);
  
--#if IS_ENABLED(CONFIG_SND_HDA_SCODEC_CS35L56_KUNIT_TEST)
--/* Hooks to export static function to KUnit test */
--
--int cs35l56_hda_test_hook_get_speaker_id(struct device *dev, int amp_index, int num_amps)
--{
--	return cs35l56_hda_get_speaker_id(dev, amp_index, num_amps);
--}
--EXPORT_SYMBOL_NS_GPL(cs35l56_hda_test_hook_get_speaker_id, SND_HDA_SCODEC_CS35L56);
--#endif
--
- MODULE_DESCRIPTION("CS35L56 HDA Driver");
- MODULE_IMPORT_NS(SND_HDA_CIRRUS_SCODEC);
- MODULE_IMPORT_NS(SND_HDA_CS_DSP_CONTROLS);
+diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
+index 33835535ef84..02fba4bc0a14 100644
+--- a/sound/soc/codecs/cs35l56-shared.c
++++ b/sound/soc/codecs/cs35l56-shared.c
+@@ -5,6 +5,7 @@
+ // Copyright (C) 2023 Cirrus Logic, Inc. and
+ //                    Cirrus Logic International Semiconductor Ltd.
+ 
++#include <linux/gpio/consumer.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/types.h>
+@@ -736,6 +737,41 @@ int cs35l56_hw_init(struct cs35l56_base *cs35l56_base)
+ }
+ EXPORT_SYMBOL_NS_GPL(cs35l56_hw_init, SND_SOC_CS35L56_SHARED);
+ 
++int cs35l56_get_speaker_id(struct cs35l56_base *cs35l56_base)
++{
++	struct gpio_descs *descs;
++	int speaker_id;
++	int i, ret;
++
++	/* Read the speaker type qualifier from the motherboard GPIOs */
++	descs = gpiod_get_array_optional(cs35l56_base->dev, "spk-id", GPIOD_IN);
++	if (!descs) {
++		return -ENOENT;
++	} else if (IS_ERR(descs)) {
++		ret = PTR_ERR(descs);
++		return dev_err_probe(cs35l56_base->dev, ret, "Failed to get spk-id-gpios\n");
++	}
++
++	speaker_id = 0;
++	for (i = 0; i < descs->ndescs; i++) {
++		ret = gpiod_get_value_cansleep(descs->desc[i]);
++		if (ret < 0) {
++			dev_err_probe(cs35l56_base->dev, ret, "Failed to read spk-id[%d]\n", i);
++			goto err;
++		}
++
++		speaker_id |= (ret << i);
++	}
++
++	dev_dbg(cs35l56_base->dev, "Speaker ID = %d\n", speaker_id);
++	ret = speaker_id;
++err:
++	gpiod_put_array(descs);
++
++	return ret;
++}
++EXPORT_SYMBOL_NS_GPL(cs35l56_get_speaker_id, SND_SOC_CS35L56_SHARED);
++
+ static const u32 cs35l56_bclk_valid_for_pll_freq_table[] = {
+ 	[0x0C] = 128000,
+ 	[0x0F] = 256000,
+diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
+index 597677422547..c23e29da4cfb 100644
+--- a/sound/soc/codecs/cs35l56.c
++++ b/sound/soc/codecs/cs35l56.c
+@@ -959,10 +959,19 @@ static int cs35l56_component_probe(struct snd_soc_component *component)
+ 
+ 	if (!cs35l56->dsp.system_name &&
+ 	    (snd_soc_card_get_pci_ssid(component->card, &vendor, &device) == 0)) {
+-		cs35l56->dsp.system_name = devm_kasprintf(cs35l56->base.dev,
+-							  GFP_KERNEL,
+-							  "%04x%04x",
+-							  vendor, device);
++		/* Append a speaker qualifier if there is a speaker ID */
++		if (cs35l56->speaker_id >= 0) {
++			cs35l56->dsp.system_name = devm_kasprintf(cs35l56->base.dev,
++								  GFP_KERNEL,
++								  "%04x%04x-spkid%d",
++								  vendor, device,
++								  cs35l56->speaker_id);
++		} else {
++			cs35l56->dsp.system_name = devm_kasprintf(cs35l56->base.dev,
++								  GFP_KERNEL,
++								  "%04x%04x",
++								  vendor, device);
++		}
+ 		if (!cs35l56->dsp.system_name)
+ 			return -ENOMEM;
+ 	}
+@@ -1245,7 +1254,13 @@ static int cs35l56_get_firmware_uid(struct cs35l56_private *cs35l56)
+ 	if (ret < 0)
+ 		return 0;
+ 
+-	cs35l56->dsp.system_name = devm_kstrdup(dev, prop, GFP_KERNEL);
++	/* Append a speaker qualifier if there is a speaker ID */
++	if (cs35l56->speaker_id >= 0)
++		cs35l56->dsp.system_name = devm_kasprintf(dev, GFP_KERNEL, "%s-spkid%d",
++							  prop, cs35l56->speaker_id);
++	else
++		cs35l56->dsp.system_name = devm_kstrdup(dev, prop, GFP_KERNEL);
++
+ 	if (cs35l56->dsp.system_name == NULL)
+ 		return -ENOMEM;
+ 
+@@ -1260,6 +1275,7 @@ int cs35l56_common_probe(struct cs35l56_private *cs35l56)
+ 
+ 	init_completion(&cs35l56->init_completion);
+ 	mutex_init(&cs35l56->base.irq_lock);
++	cs35l56->speaker_id = -ENOENT;
+ 
+ 	dev_set_drvdata(cs35l56->base.dev, cs35l56);
+ 
+@@ -1296,6 +1312,12 @@ int cs35l56_common_probe(struct cs35l56_private *cs35l56)
+ 		gpiod_set_value_cansleep(cs35l56->base.reset_gpio, 1);
+ 	}
+ 
++	ret = cs35l56_get_speaker_id(&cs35l56->base);
++	if ((ret < 0) && (ret != -ENOENT))
++		goto err;
++
++	cs35l56->speaker_id = ret;
++
+ 	ret = cs35l56_get_firmware_uid(cs35l56);
+ 	if (ret != 0)
+ 		goto err;
+diff --git a/sound/soc/codecs/cs35l56.h b/sound/soc/codecs/cs35l56.h
+index dc2fe4c91e67..596b141e3f96 100644
+--- a/sound/soc/codecs/cs35l56.h
++++ b/sound/soc/codecs/cs35l56.h
+@@ -45,6 +45,7 @@ struct cs35l56_private {
+ 	bool sdw_attached;
+ 	struct completion init_completion;
+ 
++	int speaker_id;
+ 	u32 rx_mask;
+ 	u32 tx_mask;
+ 	u8 asp_slot_width;
 -- 
 2.39.2
 
