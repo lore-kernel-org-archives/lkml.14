@@ -1,150 +1,189 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6659A65BB9
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CDA66B27
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706538416; cv=none; b=npijgMCaD866pW1sJhjc9GfsZFXoWEmyrz5+rKPHrABGlK+R/dG+jvvZGyIdVnYxu8I5gT3iEscj9soV1HBP3Ag8mGFMRneFmd6x1TJB4HCb4M1JesWCPbOX/zvqf1yjdib0PXFPY0TwajjQ2dzgbe8YkIStLltjpMhvmTw9gTc=
+	t=1706538465; cv=none; b=DeYuSCv9sjIYx/dExnd1K5oh3D8S4QLQDZ+asIw+w7+G+vV0lt9lGJAJHd/9Py1Qba5XclyBGedzFuuNkPk7mizBg7QkqkdziWvOzGbXB3PidoZo00ST6ZRD7OyZDWW0SxYDwUf8eFoSFKjAZx2nwRNwawj7q0Z+tN6/UdQVxyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706538416; c=relaxed/simple;
-	bh=NCfehVqjR5Cj9j2TbgLuA6MKTFfTrvfb+PMVFfwU4eU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=RtOQZpavPn/TMI0HTIH4/MMS0P9LHRTR8xnSRxmfOMe40EUvuckZYu9sQYjIpfa4H0kEZzO3lW5J95HhWtEiVDiVIdY9r74yNgWSvwEjpaotSzUaDDvvnai/t0T9keJxuiGXJQ+/Ot7pZWzx9ZaNWJz+ptEZd9ju107g74xTsqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YA8ocWqD; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706538465; c=relaxed/simple;
+	bh=6bzM16UBxP08WHaFfcFo1ofPi4ev583qMl2qYHoKPgo=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=BUxXtnbUMFRkxpwX2WzKgg71G8CzhY2XQSB5mKDCeTLLTekDw8CHtm9zvIITFXDxB7a3WcTOY8nYe3bdyAk32W9r9sjKcacTMSxcaHGkTxuIrDRzIHxNfzMgPUtX+20aHENjDQ64+V/Xt/BVEv1tu9m78FEqeea13Oj5K282Id4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=Bnk4P57t; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YA8ocWqD"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2a17f3217aso389341066b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 06:26:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="Bnk4P57t"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3394ca0c874so2529086f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 06:27:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706538412; x=1707143212; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z/8SajdHHtiLWqLgdrEaXxFtoatwZriBX16EN6CF+8k=;
-        b=YA8ocWqD+8wPjwaPOjcSKwVF7n88N0P4N3/4GlSgELNLSZ3HKFiQ0gmoI8emQUmRtS
-         4kSLJHUOQyKMPf/1QLCvPP58C9t2WSvP/Kl+Pk5ANs9Kn6H8I1ZRONIu6O+xyl96Tcjb
-         Tc/DhLRtOOTwLsjIuDAw8jVYC7GOGrnxY/C9gpQSOX6J6rCHVD8rMMd+ypDT3KhIeXc6
-         KUPzQKwTMkFts4ZD8ME1KryZet3P9iQRzhYyiTHWwCwyEVBOkzOksugEBrOLk2M5mt5K
-         FeH70j7mt5zEMelY0baMQZzPV/IFq91sBo/J/DFE9zyNN5hqhdk7y1PhGc64ZpB6pbRs
-         oiTQ==
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1706538461; x=1707143261; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=9SpRD2seb2hFO2F2eYuqqQkOpWG+jBIz46VQxNPe840=;
+        b=Bnk4P57t6cpXMr9bIHUjebrMow12H1ie7eOrIl+eYVcEK14V+XJm67zHWjQzAY9qPN
+         0/MLDsIWOmGgetC79xU08NO79JGNx3RS1FRPQeDLArzYBIoOL5gtzq9xRt/M3ERBm6Tu
+         T8shhjG6BpUS/vm9QYbdpcaUdnLIPbzCyfA2xUsIg2A4GWg6q2rIiHlZMCZfjg5xqm6q
+         SUT5D6DcQe6r2l00cs4tM2hnbtfIlGAUtsO3v+jFfm+dv3+TUBa9jvPtVO5UAgxsGY4I
+         kcqvzyuAUGcHAzQQ3OWyQq+OQUghA25FwbNF21uaieDNFzflnrA6Dmm8D38z80KirOoS
+         sX3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706538412; x=1707143212;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z/8SajdHHtiLWqLgdrEaXxFtoatwZriBX16EN6CF+8k=;
-        b=Jd40HJjs59zL3nChy6DE4fJv4b1xFjdsK4pYP6oAzlsLCKJGPNhQtpiD5O6FdUe4uV
-         ATTNaVltHF/4glivXPTnoHMAJLrQDG1zKvdkAl0u3sv+XTM5IxQtiCceZM8lK69A4GjR
-         joQ6xK0mUp77G6yK2RLHmsEFy378wNEKDMnj410tJff2tcHbQjDePMZlU9gOJNQv9wue
-         tlqzIGEtEKUTiIxR7gLzOJryeReEBPwAgzBmDNtuBXsVLrPq8FGaWRvuEkJ4gJ2KwxDk
-         7Lyl7aR19N7i8HuGwtO0gYedQJpNFI7h5IFJStrJ1pN9ytFa+k5mZyJB9+++jElYBukx
-         q64w==
-X-Gm-Message-State: AOJu0YxjlR8lzx0EZ2Ok/TYYC7tmnpEd05llHcYGueXl3pdOIXiwCDIp
-	H6AmSGPbOutk24kTbYEX2IAnj+5+w+nMZtjg2COeyWRfjYA/nDjkc5J6LSIw8v4=
-X-Google-Smtp-Source: AGHT+IEAUZOMQLtPlVyM1GTDiHf2EOZEGrWn7XiJzSw2YnVmXyJxgDI4PHYffQWngYenQ85W7Cjefw==
-X-Received: by 2002:a17:906:4ad2:b0:a35:fbc4:4c20 with SMTP id u18-20020a1709064ad200b00a35fbc44c20mr326661ejt.6.1706538412474;
-        Mon, 29 Jan 2024 06:26:52 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id tz15-20020a170907c78f00b00a356e5ac7casm2200992ejc.86.2024.01.29.06.26.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 06:26:52 -0800 (PST)
-Message-ID: <e9b6f790-831c-4df6-b16c-8d7a2f8ddc26@linaro.org>
-Date: Mon, 29 Jan 2024 15:26:50 +0100
+        d=1e100.net; s=20230601; t=1706538461; x=1707143261;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9SpRD2seb2hFO2F2eYuqqQkOpWG+jBIz46VQxNPe840=;
+        b=WM44xYtaAmccEYugukNb/EYr61wURqCevyH6AEEN80Ovsgtjpl5ugVH4mFC65Rvngs
+         QRs6VuDQdRaaLo1EbtcwhizrK7F4IdOHYK+9jQw7QwoCWBKZM+BalKHNSvFSsbl3Pcd4
+         3wG/3BA7J4aHcDrklAtnI5MOJ7pHaO3Soxn7pZzSZRQdnGV/q8tA34sWujX6QzCdvISW
+         nPuQjo7YFM1JN2DvWlK8LvFJ6SHE7/6i+fcZLimgDtMv85ujv8Qx5ZvB9OfnL/Ma/TpW
+         1a2RYcqqEUcXLhAZRowtNXFnEVFyTDWSn0ZOPX/cP8jhlfV+AE0cC3twpztoL2/h0JUo
+         l3Fg==
+X-Gm-Message-State: AOJu0YzEaKGNyVJU4qGqjNML1BH9oLZt/9+Innup9xTtIPezmbSnmmpe
+	OL135wlENtQSKxuC2/e4rwmlWJ5COzMBdSuAkSGOCnwDcXMy9GaWgqGSlGDmlX8=
+X-Google-Smtp-Source: AGHT+IF687yIs+FI2jGNHFF+JBGNUG60+S+Rqe4sHIAnRad9l9UQH5/3KSyty1FjpSpCXMtpmut+RQ==
+X-Received: by 2002:adf:8b56:0:b0:33a:e598:cabb with SMTP id v22-20020adf8b56000000b0033ae598cabbmr3910064wra.70.1706538460714;
+        Mon, 29 Jan 2024 06:27:40 -0800 (PST)
+Received: from localhost ([165.225.194.205])
+        by smtp.gmail.com with ESMTPSA id eo9-20020a056000428900b0033ae9e7f6b6sm4015743wrb.111.2024.01.29.06.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 06:27:40 -0800 (PST)
+References: <20230503090708.2524310-1-nmi@metaspace.dk>
+ <20230503090708.2524310-4-nmi@metaspace.dk>
+ <iL2M45BoRlK6yS9y8uo0A5yUXcZWMkdk3vtH3LRFSWXfvPVagVZ-0YC7taIKOBFUcjJYA_2xNNFPoC4WL-_ulCHOLkbqvsZlIshE_LEeYtU=@proton.me>
+ <87il3kjgk0.fsf@metaspace.dk>
+ <104a22f7-a5bb-4fb6-9ce9-aa2d4e63417f@proton.me>
+ <874jf3kflx.fsf@metaspace.dk>
+ <59f007a0-bb30-4291-ab49-0e69112e2566@proton.me>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith
+ Busch <kbusch@kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Hannes
+ Reinecke <hare@suse.de>, lsf-pc@lists.linux-foundation.org,
+ rust-for-linux@vger.kernel.org, linux-block@vger.kernel.org, Matthew
+ Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>, linux-kernel@vger.kernel.org,
+ gost.dev@samsung.com
+Subject: Re: [RFC PATCH 03/11] rust: block: introduce `kernel::block::mq`
+ module
+Date: Mon, 29 Jan 2024 15:14:50 +0100
+In-reply-to: <59f007a0-bb30-4291-ab49-0e69112e2566@proton.me>
+Message-ID: <87r0i0gqp8.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sc8280xp-x13s: correct analogue
- microphone route
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240125154531.417098-1-krzysztof.kozlowski@linaro.org>
- <c34dd7ca-01b5-4424-a8ec-a525b8d722a3@linaro.org>
- <5497d428-cdc1-4057-afda-6861d2e3860a@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <5497d428-cdc1-4057-afda-6861d2e3860a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 26/01/2024 14:22, Krzysztof Kozlowski wrote:
-> On 26/01/2024 14:21, Srinivas Kandagatla wrote:
->> Thanks Krzystof,
->>
->> On 25/01/2024 15:45, Krzysztof Kozlowski wrote:
->>> Starting with Qualcomm SM8350 SoC, so Low Power Audio SubSystem (LPASS)
->>> block version v9.2, the register responsible for TX SMIC MUXn muxes is
->>> different.  The LPASS TX macro codec driver is being fixed to handle
->>> that difference, so the DTS must be updated as well for new widget name.
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>
->>> ---
->>>
->> Unfortunately this is breaking mic on X13s.
-> 
-> This alone? Of course, there is dependency... Or you meant something else?
 
-There was no further comments on my proposal to skip touching sc8280xp:
-https://lore.kernel.org/alsa-devel/20240125153110.410295-1-krzysztof.kozlowski@linaro.org/T/#mc45e487f25a2d6388b5c478b1b7827b113640f4f
+Benno Lossin <benno.lossin@proton.me> writes:
 
-so I will go with that approach. Please ignore this DTS patch. I will
-send ASoC changes which won't affect sc8280xp.
+> On 23.01.24 19:39, Andreas Hindborg (Samsung) wrote:
+>>>>>> +/// A generic block device
+>>>>>> +///
+>>>>>> +/// # Invariants
+>>>>>> +///
+>>>>>> +///  - `gendisk` must always point to an initialized and valid `struct gendisk`.
+>>>>>> +pub struct GenDisk<T: Operations> {
+>>>>>> +    _tagset: Arc<TagSet<T>>,
+>>>>>> +    gendisk: *mut bindings::gendisk,
+>>>>>
+>>>>> Why are these two fields not embedded? Shouldn't the user decide where
+>>>>> to allocate?
+>>>>
+>>>> The `TagSet` can be shared between multiple `GenDisk`. Using an `Arc`
+>>>> seems resonable?
+>>>>
+>>>> For the `gendisk` field, the allocation is done by C and the address
+>>>> must be stable. We are owning the pointee and must drop it when it goes out
+>>>> of scope. I could do this:
+>>>>
+>>>> #[repr(transparent)]
+>>>> struct GenDisk(Opaque<bindings::gendisk>);
+>>>>
+>>>> struct UniqueGenDiskRef {
+>>>>       _tagset: Arc<TagSet<T>>,
+>>>>       gendisk: Pin<&'static mut GenDisk>,
+>>>>
+>>>> }
+>>>>
+>>>> but it seems pointless. `struct GenDisk` would not be pub in that case. What do you think?
+>>>
+>>> Hmm, I am a bit confused as to how you usually use a `struct gendisk`.
+>>> You said that a `TagSet` might be shared between multiple `GenDisk`s,
+>>> but that is not facilitated by the C side?
+>>>
+>>> Is it the case that on the C side you create a struct containing a
+>>> tagset and a gendisk for every block device you want to represent?
+>> 
+>> Yes, but the `struct tag_set` can be shared between multiple `struct
+>> gendisk`.
+>> 
+>> Let me try to elaborate:
+>> 
+>> In C you would first allocate a `struct tag_set` and partially
+>> initialize it. The allocation can be dynamic, static or part of existing
+>> allocation. You would then partially initialize the structure and finish
+>> the initialization by calling `blk_mq_alloc_tag_set()`. This populates
+>> the rest of the structure which includes more dynamic allocations.
+>> 
+>> You then allocate a `struct gendisk` by calling `blk_mq_alloc_disk()`,
+>> passing in a pointer to the `struct tag_set` you just created. This
+>> function will return a pointer to a `struct gendisk` on success.
+>> 
+>> In the Rust abstractions, we allocate the `TagSet`:
+>> 
+>> #[pin_data(PinnedDrop)]
+>> #[repr(transparent)]
+>> pub struct TagSet<T: Operations> {
+>>      #[pin]
+>>      inner: Opaque<bindings::blk_mq_tag_set>,
+>>      _p: PhantomData<T>,
+>> }
+>> 
+>> with `PinInit` [^1]. The initializer will partially initialize the struct and
+>> finish the initialization like C does by calling
+>> `blk_mq_alloc_tag_set()`. We now need a place to point the initializer.
+>> `Arc::pin_init()` is that place for now. It allows us to pass the
+>> `TagSet` reference to multiple `GenDisk` if required. Maybe we could be
+>> generic over `Deref<TagSet>` in the future. Bottom line is that we need
+>> to hold on to that `TagSet` reference until the `GenDisk` is dropped.
+>
+> I see, thanks for the elaborate explanation! I now think that using `Arc`
+> makes sense.
+>
+>> `struct tag_set` is not reference counted on the C side. C
+>> implementations just take care to keep it alive, for instance by storing
+>> it next to a pointer to `struct gendisk` that it is servicing.
+>
+> This is interesting, is this also done in the case where it is shared
+> among multiple `struct gendisk`s?
+
+Yes. The architecture is really quite flexible. For instance C NVMe uses
+one tag set for the admin queue of a nvme controller, and one tag set
+shared for all IO queues of a controller. The admin queue tag set is not
+actually attached to a `struct gendisk` and does not appear as a block
+device to the user. The IO queue tag set serves a number `struct
+gendisk`, one for each name space of the controller.
+
+> Does this have some deeper reason? Or am I right to assume that creating
+> `Gendisk`/`TagSet` is done rarely (i.e. only at initialization of the
+> driver)?
+
+I am not sure. It could probably be reference counted on C side. Perhaps
+nobody felt the need for it, since the lifetime of it is not that
+complex. And yes, it is relatively rare as it is only as part of
+initialization and tear down that you would create or destroy this
+structure.
 
 Best regards,
-Krzysztof
+Andreas
 
