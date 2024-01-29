@@ -1,136 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED17B5B5B2;
-	Mon, 29 Jan 2024 11:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41F75B5D5;
+	Mon, 29 Jan 2024 11:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706527791; cv=none; b=DkG8Qm8CkK2rZzvnAUwBJw8Etb3BciaMpcqEAt8QZu+KS9ntZVY2WCidAQSOk7CHDpWSzZ8D5H47jE93zedpizfcU4B5ECYrXhDN0/p6KvsTchGcxq2tJIJYp/AdRHjoDeVLpg0R4nypOn+3JDmbwk9SljHsDPL98A62CgVxMVo=
+	t=1706527827; cv=none; b=qnNbHaPY62ZleBZUM7RmtWlukZX1PZ1LBMQkbH/F2uymJYrs9+pJ5g/y7DN4CMcYqUhKsPygrpIm5hPen3Uw+xBjGKRY93cjp/FSemcr8+wMJ7M4M+2Csnj7cfdjjbtl3nqibwOXlIPMtqDrr8aODeLvesTj6jqvmGeSIR9U4IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706527791; c=relaxed/simple;
-	bh=C1bZO06qv1Eiozo75zTNq7EL0T6h5w//IZNDQaGVD68=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ONnMykk2rqbQeP9XbVl/txQ8XXcEMCV+RC4dUXtZF7znEMRhWKD15Pgnj5dyoljHx//CgWagZKQa2kBUmIxgMkdqPvkHU/5G1btmjlzZY9b1I+rWfyttYTmNx+qk+IHyT1kfUISVOSiGpe9TY96q/0QZBCVibS/mjx1BJkHTc9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YPY9ehdi; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706527827; c=relaxed/simple;
+	bh=g00WJ7QnN+wgpuglo6tzkpl11BU0YKAjQwZCVlMUDdE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Jj2LpA4xinQiHP/WAwz7cDOCz6vpoqOnhYQI+ypd08GIn5d+mQxCYF7aN5jLSJA48aMo28UQnsr5/79psf6Jrq+eY03X/XQFqc7tV/+E7HmVMt+kxhDDWzh69ny7FlbS+EaGNo2hOmcZ09kWIDjVzCsSDp2w03hbcvnK1+tHi7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfHAfH7U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YPY9ehdi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706527790; x=1738063790;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=C1bZO06qv1Eiozo75zTNq7EL0T6h5w//IZNDQaGVD68=;
-  b=YPY9ehdi779HyVu/ug4cNFRoALxjw5V+hY3VV8MRtC0KN8fUHppzqCCv
-   B4x7iLNGA3XtDUx0PBvj/0roMj80r4i/ECKbiSzfox+McX6tHwjTiZ352
-   FisRAyFZL9O0J3mscofoj4BfLGcmvVLq6Sib+VRcom94Onj/mPlPz183R
-   CXEJGqbCwtqXpnjQTZCtKFuPpTpkf6lF9FMSgMsRQBdk55Jx028zYSXXQ
-   Upi4842QMaCse9mZ4yJK0wR8wjiynnpNXCMh7VjYjdcOA81g29iUb/JnK
-   nszDdKiTrX9tnmatsU1SWtZN1Mq0aKlAXDiLvtjdU7JDL89r0sTE5NOwg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="16284307"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="16284307"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 03:29:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="960868400"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="960868400"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.253.213])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 03:29:18 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 2/2] PCI: Do not wait for disconnected devices when resuming
-Date: Mon, 29 Jan 2024 13:27:10 +0200
-Message-Id: <20240129112710.2852-3-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240129112710.2852-1-ilpo.jarvinen@linux.intel.com>
-References: <20240129112710.2852-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfHAfH7U"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E2F3C43601;
+	Mon, 29 Jan 2024 11:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706527827;
+	bh=g00WJ7QnN+wgpuglo6tzkpl11BU0YKAjQwZCVlMUDdE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=lfHAfH7UXPazleRkpwTH+QPHYciI0XxoemEOcxy45ibArBQvN/IUbQ1aP4RFMHMCp
+	 Y09EqBXKAsBh/B6YSRu2sWDs3kGIv+yQy1uT4inXnfc8IPTtYNHFBPX4kzZ07L+VGj
+	 blw6P5GUPpPeUxbXCIptrBYq5Lhq6uhonGZIGijWdftEyz6AQlic2kpdHDTZcwypa9
+	 B6UM/p0ck0oNlDE9jDHWlNlnjsHAs33PwWjOkxIYQW7kqSIRNgXdOfNMjp3T+Nu4/6
+	 9QvspDe9vVPh4mPBp17aKfLngv7H1Eud1idpxSeMVumgbOdCZKtj4vl/Dpoipd+/4/
+	 WqMcCy+OJa5wA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 007DCC561EE;
+	Mon, 29 Jan 2024 11:30:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: hsr: remove WARN_ONCE() in
+ send_hsr_supervision_frame()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170652782699.19974.1569305900184151152.git-patchwork-notify@kernel.org>
+Date: Mon, 29 Jan 2024 11:30:26 +0000
+References: <20240124102147.14081-1-n.zhandarovich@fintech.ru>
+In-Reply-To: <20240124102147.14081-1-n.zhandarovich@fintech.ru>
+To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, r-gunasekaran@ti.com, horms@kernel.org,
+ wojciech.drewek@intel.com, m-karicheri2@ti.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
+ syzbot+3ae0a3f42c84074b7c8e@syzkaller.appspotmail.com
 
-On runtime resume, pci_dev_wait() is called:
-  pci_pm_runtime_resume()
-    pci_pm_bridge_power_up_actions()
-      pci_bridge_wait_for_secondary_bus()
-        pci_dev_wait()
+Hello:
 
-While a device is runtime suspended along with its PCIe hierarchy, the
-device could get disconnected. In such case, the link will not come up
-no matter how log pci_dev_wait() waits for it.
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Besides the above mentioned case, there could be other ways to get the
-device disconnected while pci_dev_wait() is waiting for the link to
-come up.
+On Wed, 24 Jan 2024 02:21:47 -0800 you wrote:
+> Syzkaller reported [1] hitting a warning after failing to allocate
+> resources for skb in hsr_init_skb(). Since a WARN_ONCE() call will
+> not help much in this case, it might be prudent to switch to
+> netdev_warn_once(). At the very least it will suppress syzkaller
+> reports such as [1].
+> 
+> Just in case, use netdev_warn_once() in send_prp_supervision_frame()
+> for similar reasons.
+> 
+> [...]
 
-Make pci_dev_wait() to exit if the device is already disconnected to
-avoid unnecessary delay. As disconnected device is not really even a
-failure in the same sense as link failing to come up for whatever
-reason, return 0 instead of errno.
+Here is the summary with links:
+  - [net] net: hsr: remove WARN_ONCE() in send_hsr_supervision_frame()
+    https://git.kernel.org/netdev/net/c/37e8c97e5390
 
-Also make sure compiler does not become too clever with
-dev->error_state and use READ_ONCE() to force a fetch for the
-up-to-date value.
-
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/pci.c | 5 +++++
- drivers/pci/pci.h | 4 +++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d8f11a078924..ec9bf6c90312 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1250,6 +1250,11 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
- 	for (;;) {
- 		u32 id;
- 
-+		if (pci_dev_is_disconnected(dev)) {
-+			pci_dbg(dev, "disconnected; not waiting\n");
-+			return 0;
-+		}
-+
- 		pci_read_config_dword(dev, PCI_COMMAND, &id);
- 		if (!PCI_POSSIBLE_ERROR(id))
- 			break;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2336a8d1edab..563a275dff67 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -4,6 +4,8 @@
- 
- #include <linux/pci.h>
- 
-+#include <asm/rwonce.h>
-+
- /* Number of possible devfns: 0.0 to 1f.7 inclusive */
- #define MAX_NR_DEVFNS 256
- 
-@@ -370,7 +372,7 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
- 
- static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
- {
--	return dev->error_state == pci_channel_io_perm_failure;
-+	return READ_ONCE(dev->error_state) == pci_channel_io_perm_failure;
- }
- 
- /* pci_dev priv_flags */
+You are awesome, thank you!
 -- 
-2.39.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
