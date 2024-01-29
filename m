@@ -1,172 +1,152 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F97B15531C;
-	Mon, 29 Jan 2024 15:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706543340; cv=fail; b=Ugc+juduCBLQE1bPCW2ZNLRg/4j0NEYN0EX6J5ZoJd6QEKheC/WpNxySF31GPQfo6gBpPaT3b9HmhNe8flDIpyu/WA8nVfBNSQ/ZJ6mCDkWXopgBvv2cmfeRliF9CuGMSfzUo4KGuaP1ibfgvyREX80fJr2HcYB2WHfJ/0B+vwU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706543340; c=relaxed/simple;
-	bh=5G9pVet5oAyYXbNTF6sRgdiJKHUbhS6s/TOnDJ1hctE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WcE/up9++Mh7l+E4fnMjOtN8Ab8jjsQyhTTHaVEgICTndTqHfV9Kh9h4tP5j/e29XJNZbOyJdsO2MsPVmFGtfpwCIPhkeBInYtoDsGB5DDfPg9kL9PbZKk1A+T/3yfOnZcTwPBINJSkV4RFs6PRvLhWUFzyrnvYYrXAGaHr12O8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=0Eg/1de2; arc=fail smtp.client-ip=40.107.220.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A12C155303;
+	Mon, 29 Jan 2024 15:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706543375; cv=none; b=X61STPVfiHoaxyLnvJTck6RZ0XIScovfJLyl6T6hjh4lvH+sZAIOC3nEuKm9rtMawOnDhOZkJYEZaakmgC5zI9GbWBJnsOBS5iHjNtp82Zo/QFAR2aIfNekjO0ODtW9q232haJvWKHP0oq5mRPhhRnrOcAnbxdu90oKjH9iYiT4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706543375; c=relaxed/simple;
+	bh=Zx20aw8bxqZbzVA6EGvzAj5iiiWHikZt6nCgLe2ot7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X9OQ5DXNM36aoIoGbl/iXvwFO0ugbK5AOQf8DXe83EgWGxKtvFTVO9Sjj4BFKp1Rpx+YR2VsAEmQ3IBM61hQZOqj0/ksaR3ZQMLfsv1turU1YFag1MdLkpAW6TNWYfJIc8BRz027Asjn8oTj5JsbUkJL2hGrpV/dEuhgYUGTNBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hNv7zTGZ; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="0Eg/1de2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LkzeT1f2YuMA6yJNHCCVWuoCJxKOIF3Ee9jcP8/L5r3BROX5yiknGHRc2ly3BaNxwj5sEuRhj9MXLGDFDOtj1DG+Kr+qIN14+RGrz+yMw371aC8FbWXr2uzUFPZhJUgSkC/80rye2eVVOL0H6Z5ElxSInyYoiAGZVCRLUE05lK7R32ScaWEMz6M+CYCK5DbD7cNdMWoast9eP1kVFQhMe1mikiOcnaJXK8iDLsr7RAG1DiGyokrixAY5HseIGGIaCIbG355GbVRYteJPotNQmMRlSYbZgbX2mMtkcmoskwo0PapOFmbUlWGLpJ7+K+dVU3a1iixYlhCFNcU8mPgStQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jmHQ/R5uh/8YvjKCi0vlntmngjiN2NtR67L7NkXvhvg=;
- b=RbDgD0zHYsHwzs5fRLsuOxQteYUG5dqLvOPhl1lgJ+XGEWrq6gxqogo1n1l9E12lQgJf2iVlZYoOzqWBrdHZr4awqem8KPZqr8Sj/uJLE0UxTCuaKE4f1BUSCaid6cmfzmu3vfiJ6YYvmh6OZfo7wQhj4qjyr3JraJV77GEToFmd0GBCNgEl4h2s/MDevTxKlpKdA+jEPC9IhgLi6U7eZ0B5T9cBjKzzXwZ/mKoOEiBf1Dgj3vQhd+jsr6Kg9TAu8MRM13XUQhjwjzbxfW7T/mEYoPglck1JwZOocQRmfP7TRZQ4aUu1wAgM4CFpzJDOE8jxH8+AJRnnJXhRfg9VLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jmHQ/R5uh/8YvjKCi0vlntmngjiN2NtR67L7NkXvhvg=;
- b=0Eg/1de2LdFZedY6hoRHqSRKWGIOxQaUEbe2VZtczfcpOvD8CoPRv6ZlpaY+hyrkK4sm4AD+E6d8qi9UVqSCVU6Qw8BHYiyFjyMFdzKFb2Mwifrd1ybM+JS+x0U/7gPT7jLhS7TKBRrz+uV2uCvDt27C1c5W6IBQ7I5HTWqoR2k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by SJ0PR17MB4303.namprd17.prod.outlook.com (2603:10b6:a03:298::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
- 2024 15:48:55 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7a04:dc86:2799:2f15]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7a04:dc86:2799:2f15%5]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 15:48:55 +0000
-Date: Mon, 29 Jan 2024 10:48:47 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-	corbet@lwn.net, akpm@linux-foundation.org, honggyu.kim@sk.com,
-	rakie.kim@sk.com, hyeongtak.ji@sk.com, mhocko@kernel.org,
-	vtavarespetr@micron.com, jgroves@micron.com,
-	ravis.opensrc@micron.com, sthanneeru@micron.com,
-	emirakhur@micron.com, Hasan.Maruf@amd.com, seungjun.ha@samsung.com,
-	hannes@cmpxchg.org, dan.j.williams@intel.com
-Subject: Re: [PATCH v3 4/4] mm/mempolicy: change cur_il_weight to atomic and
- carry the node with it
-Message-ID: <ZbfI3+nhgQlNKMPG@memverge.com>
-References: <20240125184345.47074-1-gregory.price@memverge.com>
- <20240125184345.47074-5-gregory.price@memverge.com>
- <87sf2klez8.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZbPf6d2cQykdl3Eb@memverge.com>
- <877cjsk0yd.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877cjsk0yd.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: BYAPR21CA0016.namprd21.prod.outlook.com
- (2603:10b6:a03:114::26) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNv7zTGZ"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7d5bbbe57f7so369310241.3;
+        Mon, 29 Jan 2024 07:49:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706543372; x=1707148172; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=dMnJOTdzG7a16ZkGN1wYLd1rwYgOffQVSBuPgavSzTo=;
+        b=hNv7zTGZ0/WmvU8ZfKYpv7eON+jmY5GxHKbT/pHHWtiKv8a4oqdWLBIRajT1io8dSb
+         KyzspREYvcS7sYcgjzwJf1Rwt/rrfm/ZF9FiQ+ePS2g4/50srZ3O1fOJGtoRdj8ny592
+         Zzj51DChL3eckAocF3IF2VP7HlEhfT4L/5v9J3ywjK8Z/51zj0kSEKmNPQu6ID66T1ls
+         J381UojoJ/SVlygEjk5ASt9TrUgZh3xhJO2GAPEKuT+ooTWkY3dg+dPJTzjZ127KWuFp
+         5Ghv7JDPUGMXtR/gZWQmsS2MfJI2BYW1J1EdLJvCH0gia4Jo+CciIUfO37ZKGh1D7hhp
+         pipA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706543372; x=1707148172;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dMnJOTdzG7a16ZkGN1wYLd1rwYgOffQVSBuPgavSzTo=;
+        b=tdETCAQQpNVHx2PRN8+G4QbJnI1I6iIw09mxMo+HhmsNTctKDsuTKR6O0B6qH9DIQU
+         Evb704Amf7hJNGViRNnZkuUc2c8gxb0B81dydbPcYndf8V/cvqJPvh/rycW9WVis2pKg
+         D4U0cjCQb8iQE/rtBWDR2cPBEsazr8VNTdxKy1GwYh5asWj4/HaGzcBOuVodjSIl39RX
+         sqmdXqEA7pEDNg8N9DCqG7PKxxgtNos4NqU+RN9bf0QXQcUw8XAzg2o5PBY2cWIThGDW
+         w3/w4b3JQ28WDq6Yt2gwgTt32dkENWFK2Ox6Ieq5PHxRkSyZ9athPJh83mOea0zSgPbD
+         cIgQ==
+X-Gm-Message-State: AOJu0YyNJkW79OY9n+w3nlxIsXPc43dUfwODQ/3rsUCe3C2mS3mMILrm
+	exOw/l1Oukcdc/WNJgWXINSUjoXS8LlMqLdMw4JEl4FW6Th75suq
+X-Google-Smtp-Source: AGHT+IGhsxjQLqHkE1o7cWurr5eI5xqNVuLZjma4JBD35E+SfC/Kts1hY2CFfTrZ8DIivGO+RTVkdQ==
+X-Received: by 2002:a67:e9d2:0:b0:469:b18f:b86d with SMTP id q18-20020a67e9d2000000b00469b18fb86dmr2166466vso.33.1706543372040;
+        Mon, 29 Jan 2024 07:49:32 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d16-20020ac86690000000b0042a6e6792basm2794881qtp.69.2024.01.29.07.49.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 07:49:31 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <d18763ea-bd8a-40a0-8072-c9a87120c0e1@roeck-us.net>
+Date: Mon, 29 Jan 2024 07:49:28 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SJ0PR17MB4303:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d86384f-02a6-4814-a6c7-08dc20e1ccaa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Ose/SujTTFN5DwEaWaJVFyWkoIcfcbXmmELCvqKGbG+9KLHvebP0oV6Ee/dGZYKvcTbNiSO67W0NWBcCk+/53jboDrdzTRtXzlSIB1Ek/jPtQMcDE/tNVtQNibmekJoSEM7xoWiKAS/+8zvmgx2QL/XNCxWn0sQBwMeb52agJBIusv3F/dSGVRLrn6aiQIhtCEMX36jHpbFXprL8kk6Z9dcUR4EKJPteoG0ZqS3No3BloGCjaSsyK9KcyvDtApucnIPM3Z0kC+gHXB8ozZnsO5kiNks9trUqM4oNow7GMOdSRIBAWqt4NWTOXpyzToAiKaxnlc6PoLTTq3jJ/R8jd4lB8P9U8sl1HvypDpSzKRWSCKScmrXR7CTYDwY9W3m9RTwy3owASgieYXKulodt97BJNgt1wpm6xeCRVHXjcPekTHaOnAExgOql4ggY+1xl/eBYS8bkI6XV6sIjwq371Xas189Q3hZYmJiodibyyz7MJHDLRRYx93YkPlQHhte/jd6mie9X7JD5sXlGMfNNIe2AQE1+gkrSAaf5B0aRJ8/dn2Kpzrh1+y/i2PzfBlmwg3Uzymc1PA2AkGOdCdF1ImwAiXCvdrpTSEL3J5SPqgGSF6jYn5f8mnfAxlW1K/YdMuvnYO5CUdP69O1md805zQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(376002)(39840400004)(136003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(41300700001)(38100700002)(66556008)(6506007)(86362001)(316002)(6916009)(66946007)(66476007)(6486002)(8676002)(8936002)(44832011)(2616005)(5660300002)(6512007)(7416002)(26005)(478600001)(6666004)(2906002)(4326008)(83380400001)(36756003)(16393002)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CeuUms+e7X+eFBk+MoNuTCY6oZj00nJnkDfuYDldeKdXQT+Mt4sRnh8EPAzq?=
- =?us-ascii?Q?I9xhKd5uKHdCwiPebmwKAvUi2Aef8CKKb/7AYbigNTh0aQHhs4PHteuM/nzo?=
- =?us-ascii?Q?KPcF1Putt0Byd2qpWyOu2XCmLrqbJcWsnu5PPgg5qRDPPAn+lUmDkm79dCps?=
- =?us-ascii?Q?IeSuhNSTUCfNPhXIi+GOYfChetUnYCLgLyxnCeTO5zaxunhD2wGOG2RMaIFo?=
- =?us-ascii?Q?XpChrxRVZafpYjXmQpHVuK5yuYRN5vpLiWp2ZRXqJfSsj9KEpCBl3yL2oDEd?=
- =?us-ascii?Q?tlQYI0d92twUzu+LLICS92sCpQUk4BclOulxTgBKtcl2wiAuOD0RNMe0RXwj?=
- =?us-ascii?Q?FZ1A5oKm9r9qr0B2BCrWoj7m41lx90GZAGWvjOShUzg7aTvIkG3Nl/ic4bk3?=
- =?us-ascii?Q?F2hEshtnVz6clk5DfbpC4aqIkJ8tlYPh2e2atzajJlbFZeoAZpPlIIkHk6Zl?=
- =?us-ascii?Q?rZr7wi3bSsm5HV1sHKcV7syCc4Zifqrfp0S4CzoXPxXya/4hcNeiVi2IOGGY?=
- =?us-ascii?Q?Hwmq1U3EQDgDrB8Vb6ipJ4y6qXIIlTZIuMjQsyQMw69F3x1MPH5c2LPYS36P?=
- =?us-ascii?Q?M9XS3cE/D8FzCqTKFwHha8d7s6CB/Xz4iCwtG+0FcWgIhFVmyuQuicwFjOM2?=
- =?us-ascii?Q?ffK6LALB35X3tirl3ycG0MECk0zYYwwqcpBrD3tMDRGPf1pm1QrDdixZEEFg?=
- =?us-ascii?Q?BvkdePgDatugXXKtCMiK3jssR+crNPlLNG5C3NDktmt63vdSQB6ykuCLyYDU?=
- =?us-ascii?Q?UnxLNmFI0/dXkjXYUpM1jj9+x2+eCNeq6NcCcpw0PmikHEq14s42boKtSNgU?=
- =?us-ascii?Q?RByRw4YSy5g5sClN8bFsRCEoSjO2rbaTSF/TGJlWD4m2GZu4almb3TxRDBzt?=
- =?us-ascii?Q?a97GQ7aVJsTA1qozNNTv97m6TBQKAVo2lmzcZBDtR+KCP9jVHd8V2E1/lkIi?=
- =?us-ascii?Q?eb2jYB/V3QaHTuMrZnb0B9d27lIfrChDo84u4q6io/l0JG5wr3/mKbRY16xh?=
- =?us-ascii?Q?1lN1Ow9lYhTTPnaMhQgk4Rd1t9698PnBcpSqqDHksG/t0APwCSKygkOF+Jnb?=
- =?us-ascii?Q?OialfFzKlQDnoO3pt6bCRlOvpzNGOldSschRS8k7Vnib0iCmEL3iP8oQ35a3?=
- =?us-ascii?Q?TqGk5wMzdfARzHkFRBkIBI+zvkWE+D07SoF3FNhW3XeB+mslHqqzlPCdOzd4?=
- =?us-ascii?Q?vC2gqKD2iPC2s1gftZ2s0UQzp+ry8Ed+gHwPDF6xG6hcpZQ4HHDQMjs5h+l7?=
- =?us-ascii?Q?XjZvBdNDLGIm7Ooj3dtEbhrr7L14tDP6X+KEu7l5hZWdzXNLUITeW4EtPR/j?=
- =?us-ascii?Q?hZgnaaq8gORZpIMzdMwPaLvy7Hs/WqsNzBwxYmmTRJgN5AlRWt/Cs2hYuaww?=
- =?us-ascii?Q?mcprfHAIVDRq/t7wlD9kJxP5lqpBnmzW+aMhs6FAebXCxo1fBiav+qPNJz5+?=
- =?us-ascii?Q?cJrofY3TntvZp9oMX1ATjdqpfN+Yo6RtXETaHCnIcX5N0zRhNgThZs9gKyfU?=
- =?us-ascii?Q?CqDWG97RjDxWEIWkfqKpE+CDJaXRLYeiJDZfD4xTeLGNXbfFI2zFi1bIzpZz?=
- =?us-ascii?Q?WE1badmujGsrg1wfd7jr/t+LuG96Up3/1SAiVhz3dOl/Ei4pw3K8QwwFBQTn?=
- =?us-ascii?Q?5w=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d86384f-02a6-4814-a6c7-08dc20e1ccaa
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 15:48:55.5292
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zzy/a/eFjFCdFOetbcN0/zick0p7FcLxetEhpcRpiEwP+aNmDXnki+71EvYqbBeJGNN4JIxRAO3FRcwp9TOIEkk0mP+UX8RkWWMhlQvYYF0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB4303
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] hwmon: Add driver for MPS MPQ8785 Synchronous
+ Step-Down Converter
+Content-Language: en-US
+To: Charles Hsu <ythsu0511@gmail.com>, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jdelvare@suse.com,
+ corbet@lwn.net, Delphine_CC_Chiu@Wiwynn.com, naresh.solanki@9elements.com,
+ peteryin.openbmc@gmail.com, patrick.rudolph@9elements.com,
+ alexander.stein@ew.tq-group.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
+ michal.simek@amd.com, lukas@wunner.de, festevam@denx.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-i2c@vger.kernel.org, ytshu0511@gmail.com
+References: <20240129083115.2107466-1-ythsu0511@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240129083115.2107466-1-ythsu0511@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 29, 2024 at 04:17:46PM +0800, Huang, Ying wrote:
-> Gregory Price <gregory.price@memverge.com> writes:
+On 1/29/24 00:31, Charles Hsu wrote:
+> Add support for mpq8785 device from Monolithic Power Systems, Inc.
+> (MPS) vendor. This is synchronous step-down controller.
 > 
-> > Using current->il_prev between these two policies, is just plain incorrect,
-> > so I will need to rethink this, and the existing code will need to be
-> > updated such that weighted_interleave does not use current->il_prev.
-> 
-> IIUC, weighted_interleave_nodes() is only used for mempolicy of tasks
-> (set_mempolicy()), as in the following code.
-> 
-> +		*nid = (ilx == NO_INTERLEAVE_INDEX) ?
-> +			weighted_interleave_nodes(pol) :
-> +			weighted_interleave_nid(pol, ilx);
->
+> Signed-off-by: Charles Hsu <ythsu0511@gmail.com>
 
-Was digging through this the past couple of days.  It does look like
-this is true - because if (pol) comes from a vma, ilx will not be
-NO_INTERLEAVE_INDEX.  If this changes in the future, however,
-weighted_interleave_nodes may begin to miscount under heavy contention.
+I hope you are somehow getting this.
 
-It may be worth documenting this explicitly, because this is incredibly
-non-obvious.  I will add a comment to this chunk here.
+I got:
 
-> But, in contrast, it's bad to put task-local "current weight" in
-> mempolicy.  So, I think that it's better to move cur_il_weight to
-> task_struct.  And maybe combine it with current->il_prev.
-> 
+Address not found
+Your message wasn't delivered to ytshu0511@gmail.com because the address couldn't be found, or is unable to receive mail.
 
-Given all of this, I think is reasonably. That is effectively what is
-happening anyway for anyone that just uses `numactl -w --interleave=...`
+and:
 
-Style question: is it preferable add an anonymous union into task_struct:
+550 5.1.1 The email account that you tried to reach does not exist.
+Please try double-checking the recipient's email address for typos or unnecessary spaces.
+For more information, go to https://support.google.com/mail/?p=NoSuchUser eo9-20020a056830720900b006e11433d3c1sor1010792otb.11 - gsmtp
 
-union {
-    short il_prev;
-    atomic_t wil_node_weight;
-};
+Maybe your address got banned from gmail for sending patches to too many
+recipients (that happened to me before, so it would not be surprising).
+Unfortunately, I can only accept patches from valid e-mail addresses,
+so I hope you can get this resolved.
 
-Or should I break out that union explicitly in mempolicy.h?
+Thanks,
+Guenter
 
-The latter involves additional code updates in mempolicy.c for the union
-name (current->___.il_prev) but it lets us add documentation to mempolicy.h
-
-~Gregory
