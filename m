@@ -1,90 +1,147 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1C465BD8
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C446664AE;
+	Mon, 29 Jan 2024 13:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706533585; cv=none; b=AIIls3uPIQ0Po4fwNAT+UA7DrrTL93tPR4hJvvzWhsBtuc/Ska3jvJU2mrMrgouI93nIK9nHp0YA9OmYkwU7TFVzFSWOQmh73WFlaTmUNOSovg+jCIUa0KxAiUNDDzDzt+tiG6owNiIOvowJSipS9Ig2Tifa9+dRRKh2W3wJA2M=
+	t=1706533587; cv=none; b=BI4p7028vRmPway3YgBbon18n4COfwUey6Pfo/O+WQj+7wFI2LAl5abpLwlXe4y5iL6sGtLG3EtLKYXhRKVHTxNDe4vxSBOPZ2qO4Ohc6c/WW+J1fkydrmx2hgUTJpRNIFk5GetNs7SDmzDKIqxOWhrq61DC8cw6q80wLV4iQlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706533585; c=relaxed/simple;
-	bh=VZrE8f8zCIOoTX/qV216j37du50vp/T05X9GLljT+Mo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hi9j89Kh4yk/ZU5AuImFy3Gq7sXD0sbOxPYMgzzS99yUMHV4H786VHnjdNxKDnVLjQ+4PxUqE18NxorCc3l7TRYXMR96Nb36JB+gmVEt/QsekBDEXdHNkV/3ghGxCVRCqPUn7euDaDMLJTZ/vdnXnrwbfDtqpj+Yioisw8tZy2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TNpRJ4QW8z29kmm
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 21:04:28 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (unknown [7.185.36.236])
-	by mail.maildlp.com (Postfix) with ESMTPS id 657951404DB
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 21:06:17 +0800 (CST)
-Received: from mdc.huawei.com (10.175.112.208) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 29 Jan 2024 21:06:16 +0800
-From: Chen Jun <chenjun102@huawei.com>
-To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC: <xuqiang36@huawei.com>, <chenjun102@huawei.com>
-Subject: [PATCH] irqchip/mbigen: Fix incorrect null pointer check
-Date: Mon, 29 Jan 2024 21:00:03 +0800
-Message-ID: <20240129130003.18181-1-chenjun102@huawei.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1706533587; c=relaxed/simple;
+	bh=YX+8SYjl2KN0yI2CjlWGvAYamUQY2YUGDNZGqVMB2u8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Kpnijbh1LPuRAi6DClyBksWVKrlG8KuSmn7unR6JmX9SZT5udGzfhlf73AKOU6LAmQojdb49gv04IFzWXLby4QmGYoc2fx50wn3OQon74waS2xC6tv0ywnXgJS+8lYsAdiYZzIxebO6aFRWAc0yuMB2dM28DneqCkId/KN8qPH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AcPE/c2T; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AcPE/c2T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706533587; x=1738069587;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=YX+8SYjl2KN0yI2CjlWGvAYamUQY2YUGDNZGqVMB2u8=;
+  b=AcPE/c2TphnboSNkXyibmUJLk4pX1eLfwXtFO9rABkLWP6+l+HaDarl9
+   JdT8KdbEMyfOXvnuBm+zo32wmrB96BPP0ruPOT0Rz6L1t3SQZXRgvs3Qu
+   EZCZyZY69aOSL8+ezkXN5CP2aT3OAcmqNHV8XZkBGO7jMvlBJcZlKiddu
+   Cd/3r6rjXNAFSuIod7GCmlpKqJ/FWvm2kQu63eH331Mwpoa3lI/nMEnsa
+   u1pGJdqJAIdyBkID1OqnOK77uv0cN0he6Uz2HF45oR36IpEHzxAulvdZB
+   IZiNeZEIuzilMrQZvod6lYPsaIXEmIfoHL915Q6CU/0JmQQs99Dwmigu6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="21473643"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="21473643"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:06:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="907106871"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="907106871"
+Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Jan 2024 05:06:17 -0800
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Andrew Halaney <ahalaney@redhat.com>,
+	Simon Horman <simon.horman@corigine.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Voon Wei Feng <weifeng.voon@intel.com>,
+	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+Subject: [PATCH net-next v4 09/11] net: stmmac: configure SerDes on mac_finish
+Date: Mon, 29 Jan 2024 21:02:51 +0800
+Message-Id: <20240129130253.1400707-10-yong.liang.choong@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500006.china.huawei.com (7.185.36.236)
+Content-Transfer-Encoding: 8bit
 
-bus_get_dev_root(&platform_bus_type) always returns NULL.
-This makes mbigen_of_create_domain always return -ENODEV.
+SerDes will configure according to the provided interface mode after
+finish a major reconfiguration of the interface mode.
 
-Fixes: fea087fc291b ("irqchip/mbigen: move to use bus_get_dev_root()")
-Signed-off-by: Chen Jun <chenjun102@huawei.com>
+Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
 ---
- drivers/irqchip/irq-mbigen.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 +++++++++++++
+ include/linux/stmmac.h                            |  3 +++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 5101a3fb11df..58881d313979 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -235,22 +235,17 @@ static const struct irq_domain_ops mbigen_domain_ops = {
- static int mbigen_of_create_domain(struct platform_device *pdev,
- 				   struct mbigen_device *mgn_chip)
- {
--	struct device *parent;
- 	struct platform_device *child;
- 	struct irq_domain *domain;
- 	struct device_node *np;
- 	u32 num_pins;
- 	int ret = 0;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 50429c985441..ced26c01e88e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1129,12 +1129,25 @@ static unsigned int stmmac_get_pcs_neg_mode(struct phylink_config *config,
+ 	return neg_mode;
+ }
  
--	parent = bus_get_dev_root(&platform_bus_type);
--	if (!parent)
--		return -ENODEV;
--
- 	for_each_child_of_node(pdev->dev.of_node, np) {
- 		if (!of_property_read_bool(np, "interrupt-controller"))
- 			continue;
++static int stmmac_mac_finish(struct phylink_config *config, unsigned int mode,
++			     phy_interface_t interface)
++{
++	struct net_device *ndev = to_net_dev(config->dev);
++	struct stmmac_priv *priv = netdev_priv(ndev);
++
++	if (priv->plat->config_serdes)
++		priv->plat->config_serdes(ndev, priv->plat->bsp_priv, interface);
++
++	return 0;
++}
++
+ static const struct phylink_mac_ops stmmac_phylink_mac_ops = {
+ 	.mac_select_pcs = stmmac_mac_select_pcs,
+ 	.mac_config = stmmac_mac_config,
+ 	.mac_link_down = stmmac_mac_link_down,
+ 	.mac_link_up = stmmac_mac_link_up,
+ 	.mac_get_pcs_neg_mode = stmmac_get_pcs_neg_mode,
++	.mac_finish = stmmac_mac_finish,
+ };
  
--		child = of_platform_device_create(np, NULL, parent);
-+		child = of_platform_device_create(np, NULL, NULL);
- 		if (!child) {
- 			ret = -ENOMEM;
- 			break;
-@@ -273,7 +268,6 @@ static int mbigen_of_create_domain(struct platform_device *pdev,
- 		}
- 	}
- 
--	put_device(parent);
- 	if (ret)
- 		of_node_put(np);
- 
+ /**
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index 778bdfc3f010..c14b4c204190 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -279,6 +279,9 @@ struct plat_stmmacenet_data {
+ 	void (*speed_mode_2500)(struct net_device *ndev, void *priv);
+ 	unsigned int (*get_pcs_neg_mode)(phy_interface_t interface,
+ 					 struct pci_dev *pdev);
++	int (*config_serdes)(struct net_device *ndev,
++			     void *priv,
++			     phy_interface_t interface);
+ 	void (*ptp_clk_freq_config)(struct stmmac_priv *priv);
+ 	int (*init)(struct platform_device *pdev, void *priv);
+ 	void (*exit)(struct platform_device *pdev, void *priv);
 -- 
-2.17.1
+2.34.1
 
