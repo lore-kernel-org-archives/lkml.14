@@ -1,182 +1,439 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2072.outbound.protection.partner.outlook.cn [139.219.17.72])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20019EAE5;
-	Mon, 29 Jan 2024 02:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706495671; cv=fail; b=q1mAGq8aQ/4jkG+VzQjxbCS8MBF3x24oKnOGNi11ALZ3tODOXJZEZQmSOF1VGyGmkyEB21HNSgJiwQC7p0dpt7A3LqM/JHA7OtVl8cAgT8Ntu728kkobeezOcXWZjoE7+9FYGD1nZ34BCWyqaY1dAfNU4EYA2zcWlhwBRZeK5CI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706495671; c=relaxed/simple;
-	bh=BBYnptWQIjFtcUllo2fZRW0ZqwaT8YAxJA0EoTd48OI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UshY/UiHkmsP67tKjEuFuqPqCBkXjsmX1HIgsRrmWbB0b1UYCJ/O8mLSrg5XrkfDlfOA1xF1egYhJXKrvr3PmHvtoo6XjpDJxVPzavxnnHriS13cR/SWX8tJGb+UX2wL9pQNUqhd0ZdfLkEdVeSB4CyH36PPaWtpOOLD09L8FPY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IkOjHvzxO7w2jvpgdfoZlmviGz60hMBnVDuKinrExfQWAk2G+EdiQz8lN1rP2kYKYdgAaR0SVNtKZ5jnOFNleFWcqlN9/GiO2yECTHPog97fqtZkU3Q+xX4v4fbOrbvTGLwO2YgmRU0dXXC1T9OCuD4yg0ZadJ0Hf1wWi8aTw928/r/7s7PuJglXPS5onQYQm+XNKY7d7cLLgV8sijpYznHdMOQZyqp8ArKAFb4MDdXU+3s6VnH0I3ec09ZbAJxppXLRH39WQGr+kDHMMSDeI5CDobLpktEPAUA+DsuzOb8rJ/TktVHv/3PhksLi2AhwusiNw6Ac18Fh7k7wUZppuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=loSF85QfSFsTWg1Z4YTdJt2rwA9n7SE/EKB3f4Wn2eA=;
- b=FpYMDZKVprkMyTcdsTr8MxJlYuF4MWQcVB5VGFoy8cSevmBTWCdyyzSLn+y1AVB7fFlmslUzo8FVNXmL7ltgQxkUMOoNmt8UIs1qVeqfNLQvohi/oN9OyYQqS+OTlLJUe/e0+hSBwbsLQSpGifZzXjnmuZ8uRwPO0qsoep81XmuA7yoKt7kvQba0iJIWWfef5AnxBiygFYUzusiRSpttaXO01O0uzfuEBuz4NTZ6kkrBoW40jatzvjKuLAMEBzQP6+5Filxpe0GX2Oc5DpHvGOcuNbw345Y4tHyDbD07VSDMSIeT4uNQBH+YLLOsxwPwXa75NgFDKO1dCj9gUPixHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:18::12) by BJXPR01MB0552.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:13::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Mon, 29 Jan
- 2024 01:00:21 +0000
-Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
- ([fe80::1ea1:19d5:efef:6fc6]) by
- BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn ([fe80::1ea1:19d5:efef:6fc6%4])
- with mapi id 15.20.7228.029; Mon, 29 Jan 2024 01:00:21 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v14,RESEND 13/22] PCI: microchip: Add INTx and MSI event num to struct plda_event
-Date: Mon, 29 Jan 2024 08:59:58 +0800
-Message-Id: <20240129005958.3613-12-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240129005958.3613-1-minda.chen@starfivetech.com>
-References: <20240129005958.3613-1-minda.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SHXPR01CA0010.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1b::19) To BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:18::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD69DEEDB
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 02:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706495852; cv=none; b=MSW6MHy6v8rrzO8ASk6OZGVuQ2Owd0/2o4hJpEen2eygjrPEsmTV+kYo7lNsIciYaIF1An+Az93TVtZ5RtHzckxm721nhdM2QLv8fiEAyrSbqT+iH6/O7/VarEuRs9Gb1lJ7SVo3yWgrtXBWlp8kqP0RmZfGftl3YPMEgyeBRY8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706495852; c=relaxed/simple;
+	bh=CAWwSzCuBzJdr058/ylm6lEd55rfXQHXxKM1iD0BTXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fFeP/YRWIUBHbiil//Ct7AiDN0/0QTVZ8csOm11DX2S2LuoTDuNQbyWlvamDD9uT2UUgasmL+iLfGqZUCbWIXyhaUUjq59PIwuuk1eGOomy6bElR5HdIATZq3R7Nj0XxtMqJlBrZHO6Ip0YXb6Y14pBCg+n5G61GS6jEu1uWsxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JSoQCUew; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSoQCUew"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706495848;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGgk+9hWDFF+qHIPCRgy4HE2ZOQkr1JKpCtykkITOz0=;
+	b=JSoQCUewLO70jBzjI2MVU5RAue/P0c92+RzEXm8p964ipGeBkGV3z372wlifUDWyO79dys
+	uKlWPs4l9cYMk8cOe4H/JGpwomkwHkrwBXQTH5e6F/FBFBplx/CjOi/XkQc6bn2lEsPhBo
+	/n2425oOmAoHcF3rq6pAB47nJpD6a8A=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-168-R7SbbB7GOtK-57DFQGBuzQ-1; Sun, 28 Jan 2024 21:37:26 -0500
+X-MC-Unique: R7SbbB7GOtK-57DFQGBuzQ-1
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3637aa8a40dso3349905ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 18:37:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706495845; x=1707100645;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wGgk+9hWDFF+qHIPCRgy4HE2ZOQkr1JKpCtykkITOz0=;
+        b=B8T4qoTVgvR8qqX8oq12x5cIdr8DY1EnqcLLp+08oCEbik173oZ1XJlA6CvcEwGvU7
+         4jHeg0KYKE9YA1kpmNQ9ZPUfVzmFYjdvBXFxAkGAJ5/jdHj1Vdq7D+cRL8C26aXcyQuQ
+         V5MJ1iQaCM81n9TQBrXwn70PBOdhWOlzsd+OhCPmbzljJ7bTt1JiTwTDCARAsGdUIlin
+         NpDZCk01w0XiyOtv4J3D6E6/CITciT8BQQY4UfB+czOWemJdCJUbuAwM1CbeEZTJ9rm/
+         MCaTP93IZUUIGYTvn4EnejdvlWUiadcCKCumKNoiKVwKocrVCUCRnYRMdmhzYZ1d5AtZ
+         2Baw==
+X-Gm-Message-State: AOJu0Yz0p9WTidTkOKU7lZZcUddOewS6GpPYNyh7+0pkPyJSdmNlMTw3
+	eirdNXE+jzMsQBbrv30MEeI/uulIfm6IqCTrntVN1G+EGBuJCCjLzsXkvcEt/W5JfWjtzlIfp5h
+	knX8sws2aJtPPI/Q3OOudshtZ7ubud9wxwrIE2lF4fW3glNoZPMzaAfZj86W8lDw0VI24tw==
+X-Received: by 2002:a92:ce52:0:b0:363:7777:658f with SMTP id a18-20020a92ce52000000b003637777658fmr3539025ilr.11.1706495845480;
+        Sun, 28 Jan 2024 18:37:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGL4U+CjALkUwgvEr0R2oxBdMRVvvqiairWp4q2asmJLUfMC7QmBMQd0rY+7cfLFiD2FCE7LA==
+X-Received: by 2002:a92:ce52:0:b0:363:7777:658f with SMTP id a18-20020a92ce52000000b003637777658fmr3539021ilr.11.1706495845142;
+        Sun, 28 Jan 2024 18:37:25 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id n12-20020a92d9cc000000b0036382484384sm275669ilq.17.2024.01.28.18.37.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jan 2024 18:37:24 -0800 (PST)
+Date: Sun, 28 Jan 2024 19:37:23 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: liulongfang <liulongfang@huawei.com>
+Cc: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
+ <jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
+Subject: Re: [PATCH 2/3] hisi_acc_vfio_pci: register debugfs for hisilicon
+ migration driver
+Message-ID: <20240128193723.2f16c2fc.alex.williamson@redhat.com>
+In-Reply-To: <ff787286-e3f6-1a32-2eb0-3d7976aeb34e@huawei.com>
+References: <20240125081031.48707-1-liulongfang@huawei.com>
+	<20240125081031.48707-3-liulongfang@huawei.com>
+	<20240125153834.3f44bbad.alex.williamson@redhat.com>
+	<ff787286-e3f6-1a32-2eb0-3d7976aeb34e@huawei.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BJXPR01MB0855:EE_|BJXPR01MB0552:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b6c131f-776f-462f-76da-08dc2065ab28
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	pIMkIlWw45Er7GEFnqxSMHOTtoU2Nawjek8h2fIQ9HdUn3slOhojXC69y3DaNbH0HlJYm0mlf3pt313zXOyVUFntGSu+o2ke1vsoXF2YZN9INRsI5OvwhLRytSFDxIO562GxivFCIGBEwM4srtQR0c7hoYjRE/nQBd42tHiKZBcQl5mZ1TMn5H6wALcTvyA/w6vPfrDd26l7RcHZC87HvyLej0c2F5I+A99/9IsuiGCh9JvXgIAOEmNtLKocfZDu10AhpQRAfjbWj4r1fJG4dTV5YqSSQcpCsFhoSULqqOCSKJGlJeAaYELfAwBdKLTV9aFzvJ9Q/0xTcCTjetq2a0iJDeYgMmLOaBGC1l/wvrDGWYQ2tKQKwlk9vzIqabliPYqCZTxW6U+7p3X3j0qrCXeWaO3vpfs7w0UOKK9QdVl+5eeefraPMddjRzjCgLE+4QPrHrzkRpaeg8VVUr9dRbScd/IsVjaQ8kqmXeYGBVbRDw+pZcjAPqKniAP003OiicdYtw/l93aYbluM5BjsKafcAVKUr747EqlVzjWb2RLt0fMSibv2wgLqoRU6P7VZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(39830400003)(366004)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(107886003)(2616005)(1076003)(41300700001)(26005)(41320700001)(40180700001)(40160700002)(38350700005)(508600001)(6666004)(83380400001)(54906003)(52116002)(36756003)(38100700002)(2906002)(66476007)(5660300002)(8936002)(86362001)(66946007)(110136005)(44832011)(4326008)(7416002)(8676002)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XP0gpC9AKx0cezZwnbE0TkvquSaYxDkYExgeiDql++vTWs2+fWDBW4PSRhkb?=
- =?us-ascii?Q?3yUDLAGR7i2SFORdDW2EiBHEZcH7zZJQaiqaPnbyZVx1o2mn4g30dMZFUqK0?=
- =?us-ascii?Q?8OjLuusfimoR06gUlJJ3x4DVqNyMT+WktJXeG8teHYO5SZbeNxPCFi+oSP+3?=
- =?us-ascii?Q?OKSvuiTCMztLl5A7egCqCn4T6+ggdq3pCA8K+FoRb91vO64dw0VmIVfhQXBg?=
- =?us-ascii?Q?DT2VP+mrAa3WfL74W3Jx6JNCqbPFwUp5mje9v4yv2E3CS2oStHwU7Vbyk7AG?=
- =?us-ascii?Q?YvLmAy9/y0uEcCO1gy1sBbXda0WU/5+XEYsH4WC3Z+y0lmEULbwD5tH5Gt62?=
- =?us-ascii?Q?OGznnvU6agluhe23x59AsCsuTlinMQcJsiTGlT9e6Qg19cDf194mZFogrlm2?=
- =?us-ascii?Q?SpGfBDS2KIY5NysvNmkLG+nARML0a+0zT0ie1ezlfqJ4UfcjUXq9mxwusfuq?=
- =?us-ascii?Q?KQfMR7mMxW3k1Rz2JkWh4vdplSqKe8uA2vOaTV6SWwc6IJGy1DGhtrLOVNSS?=
- =?us-ascii?Q?wVHXN47e3TY84VdorBS4aKVo3VWpcvUHXwIsBHMxlwZtYHz8wnCzWloAF8qQ?=
- =?us-ascii?Q?cyr1ZbEhBiS7EKJJMDqXLJ5ogX2mkSwN5Qxt6Mv5kRrVyRRKQCAIP2y+fJD4?=
- =?us-ascii?Q?QwSnbF4HVGaWrOO5hfmYtdKY7h3aL6nJp9sWrYBBnWZ9s6wu1LW9YwXV2B4T?=
- =?us-ascii?Q?A4zkaZjQY6FrSH+tDK4W9fxGBHYhzsQvyNUuyT/Cs2V6391xfdzR7Hw4kYKa?=
- =?us-ascii?Q?06zh4XiddKrZCxMu1qZfS1LQDU6MHIGsFe3YL4hU9SFYpT+k6b948lzkd9kU?=
- =?us-ascii?Q?gSGGwvNhdCh4BbrVwFSGLfFGjZ67Yph3Qkt8d392JooJW2CTJtvRbyj6EZyN?=
- =?us-ascii?Q?CJuL19bltYJdlL6QYU3lgsItkih6PK2SUnMLJO80g1+tgio+G7kjf2Xqdi67?=
- =?us-ascii?Q?kAO/u44Y9qmnJt8I02Le20y9c87CiyrgWfDoyaC3AYscoWkcg0ZwEqn38WHy?=
- =?us-ascii?Q?Is/CIPK7u5STz77Ai+cGUYMTDHkto6SOfjbnT8iJvsbPvsGgtAnM/yjkNwrY?=
- =?us-ascii?Q?sPKnbm7BFLRDWMP4B5ndWBcWSbV8Rwjuza2GhSq1S67vWYVtlJU1KmaxGwJa?=
- =?us-ascii?Q?u+ebIeWoLK2TR8PPHyazvOHRzlid8F6vK3NlEoE50NkuKgfMCV3/G3FNy7BF?=
- =?us-ascii?Q?zlK7/W9IBJXdoQMg6QzWmCC7mVNKBV99XUeDmDvwOgCQdtzv52+ESxD+iYjk?=
- =?us-ascii?Q?K7G5N6OXPufhLnm55b9VVZRjt6k8qftbpfCk3duXZTRljkxs86IG0lB2Hv/m?=
- =?us-ascii?Q?JdV6XrcjnRuxAGvFobd+hWw4+5A1R4KQ/tJxGcg1ch0epJPeH871OpHjAeHA?=
- =?us-ascii?Q?N9WrpeUXJ4CokmjKLPBNyo0dIfdTuE8vTPEMbrua6c7W+TvzGETCrwuQUq0/?=
- =?us-ascii?Q?A3o86W+LcIB3x1JYZpqHR1IH3LKLC90isSqHj0g8jGhq02RauEsttwhSfqII?=
- =?us-ascii?Q?wsR/LSanJth9AIKPUYZD3V+xGw4BP8nQNYILZYe1tCtTYofAbKfeoI0JSkPu?=
- =?us-ascii?Q?wi5CL7MCaDzPhBzwnPhl6KRVHfwuJZtvAssV568dAwmswuIA2Qlwd58EfHxg?=
- =?us-ascii?Q?KA=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b6c131f-776f-462f-76da-08dc2065ab28
-X-MS-Exchange-CrossTenant-AuthSource: BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 01:00:21.6270
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kfi1utL1CC6nfncxpkyiEIv7Up7WFufHzo1P8Y4QLBk27gz3hTx3B9aBxmDkcZqRtiXE6bEN5gVy8Eaoqk9c7PS2OuDE7X99iMIps/d7XYE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJXPR01MB0552
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The INTx and MSI interrupt event num is different in Microchip and
-StarFive platform.
+On Mon, 29 Jan 2024 10:24:00 +0800
+liulongfang <liulongfang@huawei.com> wrote:
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
- drivers/pci/controller/plda/pcie-microchip-host.c | 6 ++++--
- drivers/pci/controller/plda/pcie-plda.h           | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+> On 2024/1/26 6:38, Alex Williamson wrote:
+> > On Thu, 25 Jan 2024 16:10:30 +0800
+> > Longfang Liu <liulongfang@huawei.com> wrote:
+> >   
+> >> On the debugfs framework of VFIO, if the CONFIG_VFIO_DEBUGFS macro is
+> >> enabled, the debug function is registered for the live migration driver
+> >> of the HiSilicon accelerator device.
+> >>
+> >> After registering the HiSilicon accelerator device on the debugfs
+> >> framework of live migration of vfio, a directory file "hisi_acc"
+> >> of debugfs is created, and then three debug function files are
+> >> created in this directory:
+> >>
+> >>    vfio
+> >>     |
+> >>     +---<dev_name1>
+> >>     |    +---migration
+> >>     |        +--state
+> >>     |        +--hisi_acc
+> >>     |            +--attr
+> >>     |            +--data
+> >>     |            +--save
+> >>     |            +--cmd_state
+> >>     |
+> >>     +---<dev_name2>
+> >>          +---migration
+> >>              +--state
+> >>              +--hisi_acc
+> >>                  +--attr
+> >>                  +--data
+> >>                  +--save
+> >>                  +--cmd_state
+> >>
+> >> data file: used to get the migration data from the driver
+> >> attr file: used to get device attributes parameters from the driver
+> >> save file: used to read the data of the live migration device and save
+> >> it to the driver.
+> >> cmd_state: used to get the cmd channel state for the device.
+> >>
+> >> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+> >> ---
+> >>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 190 ++++++++++++++++++
+> >>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |   5 +
+> >>  2 files changed, 195 insertions(+)
+> >>
+> >> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> >> index 5f6e01571a7b..2cbbc52b7377 100644
+> >> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> >> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> >> @@ -15,6 +15,7 @@
+> >>  #include <linux/anon_inodes.h>
+> >>  
+> >>  #include "hisi_acc_vfio_pci.h"
+> >> +#include "../../vfio.h"
+> >>  
+> >>  /* Return 0 on VM acc device ready, -ETIMEDOUT hardware timeout */
+> >>  static int qm_wait_dev_not_ready(struct hisi_qm *qm)
+> >> @@ -617,6 +618,18 @@ hisi_acc_check_int_state(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+> >>  	}
+> >>  }
+> >>  
+> >> +static void hisi_acc_vf_migf_save(struct hisi_acc_vf_migration_file *dst_migf,
+> >> +	struct hisi_acc_vf_migration_file *src_migf)
+> >> +{
+> >> +	if (!dst_migf)
+> >> +		return;
+> >> +
+> >> +	dst_migf->disabled = false;
+> >> +	dst_migf->total_length = src_migf->total_length;
+> >> +	memcpy(&dst_migf->vf_data, &src_migf->vf_data,
+> >> +		    sizeof(struct acc_vf_data));
+> >> +}
+> >> +
+> >>  static void hisi_acc_vf_disable_fd(struct hisi_acc_vf_migration_file *migf)
+> >>  {
+> >>  	mutex_lock(&migf->lock);
+> >> @@ -629,12 +642,16 @@ static void hisi_acc_vf_disable_fd(struct hisi_acc_vf_migration_file *migf)
+> >>  static void hisi_acc_vf_disable_fds(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+> >>  {
+> >>  	if (hisi_acc_vdev->resuming_migf) {
+> >> +		hisi_acc_vf_migf_save(hisi_acc_vdev->debug_migf,
+> >> +						hisi_acc_vdev->resuming_migf);
+> >>  		hisi_acc_vf_disable_fd(hisi_acc_vdev->resuming_migf);
+> >>  		fput(hisi_acc_vdev->resuming_migf->filp);
+> >>  		hisi_acc_vdev->resuming_migf = NULL;
+> >>  	}
+> >>  
+> >>  	if (hisi_acc_vdev->saving_migf) {
+> >> +		hisi_acc_vf_migf_save(hisi_acc_vdev->debug_migf,
+> >> +						hisi_acc_vdev->saving_migf);
+> >>  		hisi_acc_vf_disable_fd(hisi_acc_vdev->saving_migf);
+> >>  		fput(hisi_acc_vdev->saving_migf->filp);
+> >>  		hisi_acc_vdev->saving_migf = NULL;
+> >> @@ -1175,6 +1192,7 @@ static int hisi_acc_vf_qm_init(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+> >>  	if (!vf_qm->io_base)
+> >>  		return -EIO;
+> >>  
+> >> +	mutex_init(&hisi_acc_vdev->enable_mutex);
+> >>  	vf_qm->fun_type = QM_HW_VF;
+> >>  	vf_qm->pdev = vf_dev;
+> >>  	mutex_init(&vf_qm->mailbox_lock);
+> >> @@ -1325,6 +1343,172 @@ static long hisi_acc_vfio_pci_ioctl(struct vfio_device *core_vdev, unsigned int
+> >>  	return vfio_pci_core_ioctl(core_vdev, cmd, arg);
+> >>  }
+> >>  
+> >> +static int hisi_acc_vf_debug_check(struct seq_file *seq, struct vfio_device *vdev)
+> >> +{
+> >> +	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
+> >> +	struct hisi_acc_vf_migration_file *migf = hisi_acc_vdev->debug_migf;
+> >> +
+> >> +	if (!vdev->mig_ops || !migf) {
+> >> +		seq_printf(seq, "%s\n", "device does not support live migration!");
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	/**
+> >> +	 * When the device is not opened, the io_base is not mapped.
+> >> +	 * The driver cannot perform device read and write operations.
+> >> +	 */
+> >> +	if (!vdev->open_count) {
+> >> +		seq_printf(seq, "%s\n", "device not opened!");
+> >> +		return -EINVAL;
+> >> +	}  
+> > 
+> > This is racy, this check could occur while the user is already closing
+> > the device and vfio_df_device_last_close() may have already iounmap'd
+> > the io_base.  Only after that is open_count decremented.  The debugfs
+> > interfaces would then proceed to access the unmapped space.  The
+> > enable_mutex is entirely ineffective (and also asymmetric, initialized
+> > in the open_device path but never destroyed).
+> > 
+> > In fact, the enable_mutex really only seems to be trying to protect
+> > io_base (which it doesn't do), meanwhile the core driver execution path
+> > can run concurrently to debugfs operations with no serialization.  It
+> > looks like these operations would step on each other.
+> >  
+> 
+> Yes, this enable_mutex is used to protect io_base. It prevents debugfs
+> from being used after executing iounmap in io_base.
+> 
+> > I think you might need an atomic to guard against io_base unmapping and
+> > then maybe a mutex or semaphore to avoid debugfs accesses from
+> > interfering with the actual core logic interacting with the device.
+> > Thanks,
+> >  
+> 
+> OK An atomic variable needs to be added to replace vdev->open_count to prevent
+> competition. And use enable_mutex to prevent io_base from being released early.
 
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index bf5ce33ee275..8a51d3aa7e88 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -817,6 +817,8 @@ static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
- 
- static const struct plda_event mc_event = {
- 	.request_event_irq = mc_request_event_irq,
-+	.intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
-+	.msi_event         = EVENT_LOCAL_PM_MSI_INT_MSI,
- };
- 
- static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
-@@ -960,7 +962,7 @@ static int plda_init_interrupts(struct platform_device *pdev,
- 	}
- 
- 	intx_irq = irq_create_mapping(port->event_domain,
--				      EVENT_LOCAL_PM_MSI_INT_INTX);
-+				      event->intx_event);
- 	if (!intx_irq) {
- 		dev_err(dev, "failed to map INTx interrupt\n");
- 		return -ENXIO;
-@@ -970,7 +972,7 @@ static int plda_init_interrupts(struct platform_device *pdev,
- 	irq_set_chained_handler_and_data(intx_irq, plda_handle_intx, port);
- 
- 	msi_irq = irq_create_mapping(port->event_domain,
--				     EVENT_LOCAL_PM_MSI_INT_MSI);
-+				     event->msi_event);
- 	if (!msi_irq)
- 		return -ENXIO;
- 
-diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index 935686bba837..89172ce18237 100644
---- a/drivers/pci/controller/plda/pcie-plda.h
-+++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -130,6 +130,8 @@ struct plda_pcie_rp {
- struct plda_event {
- 	int (*request_event_irq)(struct plda_pcie_rp *pcie,
- 				 int event_irq, int event);
-+	int intx_event;
-+	int msi_event;
- };
- 
- void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
--- 
-2.17.1
+That's not what I'm suggesting, open_count is safe in the core code, it
+doesn't need to be an atomic.  Your use of it is unsafe.  enable_mutex
+doesn't protect what it intends to protect.  Thanks,
+
+Alex
+
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int hisi_acc_vf_debug_cmd(struct seq_file *seq, void *data)
+> >> +{
+> >> +	struct device *vf_dev = seq->private;
+> >> +	struct vfio_pci_core_device *core_device = dev_get_drvdata(vf_dev);
+> >> +	struct vfio_device *vdev = &core_device->vdev;
+> >> +	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
+> >> +	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
+> >> +	u64 value;
+> >> +	int ret;
+> >> +
+> >> +	ret = hisi_acc_vf_debug_check(seq, vdev);
+> >> +	if (ret)
+> >> +		return 0;
+> >> +
+> >> +	mutex_lock(&hisi_acc_vdev->enable_mutex);
+> >> +	ret = qm_wait_dev_not_ready(vf_qm);
+> >> +	if (ret) {
+> >> +		mutex_unlock(&hisi_acc_vdev->enable_mutex);
+> >> +		seq_printf(seq, "%s\n", "VF device not ready!");
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	value = readl(vf_qm->io_base + QM_MB_CMD_SEND_BASE);
+> >> +	mutex_unlock(&hisi_acc_vdev->enable_mutex);
+> >> +	seq_printf(seq, "%s:0x%llx\n", "mailbox cmd channel state is OK", value);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int hisi_acc_vf_debug_save(struct seq_file *seq, void *data)
+> >> +{
+> >> +	struct device *vf_dev = seq->private;
+> >> +	struct vfio_pci_core_device *core_device = dev_get_drvdata(vf_dev);
+> >> +	struct vfio_device *vdev = &core_device->vdev;
+> >> +	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
+> >> +	struct hisi_acc_vf_migration_file *migf = hisi_acc_vdev->debug_migf;
+> >> +	int ret;
+> >> +
+> >> +	ret = hisi_acc_vf_debug_check(seq, vdev);
+> >> +	if (ret)
+> >> +		return 0;
+> >> +
+> >> +	mutex_lock(&hisi_acc_vdev->enable_mutex);
+> >> +	ret = vf_qm_state_save(hisi_acc_vdev, migf);
+> >> +	if (ret) {
+> >> +		mutex_unlock(&hisi_acc_vdev->enable_mutex);
+> >> +		seq_printf(seq, "%s\n", "failed to save device data!");
+> >> +		return 0;
+> >> +	}
+> >> +	mutex_unlock(&hisi_acc_vdev->enable_mutex);
+> >> +	seq_printf(seq, "%s\n", "successful to save device data!");
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int hisi_acc_vf_data_read(struct seq_file *seq, void *data)
+> >> +{
+> >> +	struct device *vf_dev = seq->private;
+> >> +	struct vfio_pci_core_device *core_device = dev_get_drvdata(vf_dev);
+> >> +	struct vfio_device *vdev = &core_device->vdev;
+> >> +	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
+> >> +	struct hisi_acc_vf_migration_file *debug_migf = hisi_acc_vdev->debug_migf;
+> >> +	size_t vf_data_sz = offsetofend(struct acc_vf_data, padding);
+> >> +
+> >> +	if (debug_migf && debug_migf->total_length)
+> >> +		seq_hex_dump(seq, "Mig Data:", DUMP_PREFIX_OFFSET, 16, 1,
+> >> +				(unsigned char *)&debug_migf->vf_data,
+> >> +				vf_data_sz, false);
+> >> +	else
+> >> +		seq_printf(seq, "%s\n", "device not migrated!");
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int hisi_acc_vf_attr_read(struct seq_file *seq, void *data)
+> >> +{
+> >> +	struct device *vf_dev = seq->private;
+> >> +	struct vfio_pci_core_device *core_device = dev_get_drvdata(vf_dev);
+> >> +	struct vfio_device *vdev = &core_device->vdev;
+> >> +	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
+> >> +	struct hisi_acc_vf_migration_file *debug_migf = hisi_acc_vdev->debug_migf;
+> >> +
+> >> +	if (debug_migf && debug_migf->total_length) {
+> >> +		seq_printf(seq,
+> >> +			 "acc device:\n"
+> >> +			 "device  state: %d\n"
+> >> +			 "device  ready: %u\n"
+> >> +			 "data    valid: %d\n"
+> >> +			 "data     size: %lu\n",
+> >> +			 hisi_acc_vdev->mig_state,
+> >> +			 hisi_acc_vdev->vf_qm_state,
+> >> +			 debug_migf->disabled,
+> >> +			 debug_migf->total_length);
+> >> +	} else {
+> >> +		seq_printf(seq, "%s\n", "device not migrated!");
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int hisi_acc_vfio_debug_init(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+> >> +{
+> >> +	struct vfio_device *vdev = &hisi_acc_vdev->core_device.vdev;
+> >> +	struct dentry *vfio_dev_migration = NULL;
+> >> +	struct dentry *vfio_hisi_acc = NULL;
+> >> +	struct device *dev = vdev->dev;
+> >> +	void *migf = NULL;
+> >> +
+> >> +	if (!debugfs_initialized())
+> >> +		return 0;
+> >> +
+> >> +	migf = kzalloc(sizeof(struct hisi_acc_vf_migration_file), GFP_KERNEL);
+> >> +	if (!migf)
+> >> +		return -ENOMEM;
+> >> +	hisi_acc_vdev->debug_migf = migf;
+> >> +
+> >> +	vfio_dev_migration = debugfs_lookup("migration", vdev->debug_root);
+> >> +	if (!vfio_dev_migration) {
+> >> +		kfree(migf);
+> >> +		dev_err(dev, "failed to lookup migration debugfs file!\n");
+> >> +		return -ENODEV;
+> >> +	}
+> >> +
+> >> +	vfio_hisi_acc = debugfs_create_dir("hisi_acc", vfio_dev_migration);
+> >> +	debugfs_create_devm_seqfile(dev, "data", vfio_hisi_acc,
+> >> +				  hisi_acc_vf_data_read);
+> >> +	debugfs_create_devm_seqfile(dev, "attr", vfio_hisi_acc,
+> >> +				  hisi_acc_vf_attr_read);
+> >> +	debugfs_create_devm_seqfile(dev, "cmd_state", vfio_hisi_acc,
+> >> +				  hisi_acc_vf_debug_cmd);
+> >> +	debugfs_create_devm_seqfile(dev, "save", vfio_hisi_acc,
+> >> +				  hisi_acc_vf_debug_save);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static void hisi_acc_vf_debugfs_exit(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+> >> +{
+> >> +	if (!debugfs_initialized())
+> >> +		return;
+> >> +
+> >> +	kfree(hisi_acc_vdev->debug_migf);
+> >> +}
+> >> +
+> >>  static int hisi_acc_vfio_pci_open_device(struct vfio_device *core_vdev)
+> >>  {
+> >>  	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
+> >> @@ -1353,7 +1537,9 @@ static void hisi_acc_vfio_pci_close_device(struct vfio_device *core_vdev)
+> >>  	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
+> >>  	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
+> >>  
+> >> +	mutex_lock(&hisi_acc_vdev->enable_mutex);
+> >>  	iounmap(vf_qm->io_base);
+> >> +	mutex_unlock(&hisi_acc_vdev->enable_mutex);
+> >>  	vfio_pci_core_close_device(core_vdev);
+> >>  }
+> >>  
+> >> @@ -1444,6 +1630,9 @@ static int hisi_acc_vfio_pci_probe(struct pci_dev *pdev, const struct pci_device
+> >>  	ret = vfio_pci_core_register_device(&hisi_acc_vdev->core_device);
+> >>  	if (ret)
+> >>  		goto out_put_vdev;
+> >> +
+> >> +	if (ops == &hisi_acc_vfio_pci_migrn_ops)
+> >> +		hisi_acc_vfio_debug_init(hisi_acc_vdev);
+> >>  	return 0;
+> >>  
+> >>  out_put_vdev:
+> >> @@ -1456,6 +1645,7 @@ static void hisi_acc_vfio_pci_remove(struct pci_dev *pdev)
+> >>  	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_drvdata(pdev);
+> >>  
+> >>  	vfio_pci_core_unregister_device(&hisi_acc_vdev->core_device);
+> >> +	hisi_acc_vf_debugfs_exit(hisi_acc_vdev);
+> >>  	vfio_put_device(&hisi_acc_vdev->core_device.vdev);
+> >>  }
+> >>  
+> >> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+> >> index c58fc5861492..38327b97d535 100644
+> >> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+> >> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+> >> @@ -116,5 +116,10 @@ struct hisi_acc_vf_core_device {
+> >>  	spinlock_t reset_lock;
+> >>  	struct hisi_acc_vf_migration_file *resuming_migf;
+> >>  	struct hisi_acc_vf_migration_file *saving_migf;
+> >> +
+> >> +	/* To make sure the device is enabled */
+> >> +	struct mutex enable_mutex;
+> >> +	/* For debugfs */
+> >> +	struct hisi_acc_vf_migration_file *debug_migf;
+> >>  };
+> >>  #endif /* HISI_ACC_VFIO_PCI_H */  
+> > 
+> > .
+> >   
+> 
 
