@@ -1,116 +1,98 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8D2157035
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD6A157043;
+	Mon, 29 Jan 2024 16:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545732; cv=none; b=ApGNeZufBwM7aPjEyqN4Y/vaWsU2yPQ1oEM4krr64lSnEIULFGDymRhN3wTDRZFRUuWUpQ9prjlO5Hzk/IuvxQE7ya4BDJA3x2PB5DcXls96oZVv3F/6hdJD9fIxF++dA1bf1iNUUOOL3Y67mmwulTektynASwyYr71P/O/NOMI=
+	t=1706545756; cv=none; b=RT+mOiA89R4/UuUCR0Lg3ODP0fLP0+TFvAjWx5iM+oIAEvynu+P9NJn0SzamowmU7xCeyBRuV9WDRAWw/h9wrndSnB6gLuHaFcF5gowfZ07AOL5ZsxezqgAVgAMBKQVqDqbi1CuU+mHihUdNrto/c+qujsD/mkZ1hz9q/K6WKEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545732; c=relaxed/simple;
-	bh=dLUua/FV/D+oSNf4wtskJdzGZLmArhy5mTtk5oBrNg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O47SyxYAqBRNIn2O6zB43k3NDt5WCAVu1pZWa3pdXcIfHNJ9Zawhi2xWsTkCK8NhAHZyD0B96MUnUnsfFhLZaVDusWzn4Iz9GnVjIaYk5he6nYfZFOzsOqLOMsUlUnmNASW+evSYwdJ9Bq1Cx+EYyOE9LrQc97/JF9AqC0xVp2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=XUTLamqS; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=XUTLamqS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1706545756; c=relaxed/simple;
+	bh=+INxXA+sGgvh1Q/k988NqOX38wZyZZlhJW4AzbbZvFE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KWWF11TCfpVcGajj/Pqb1o7jNS1myXx7BMpeqIjqigtVw5YyFwdrnUmwScG5Q7pPzLwJLh1NXDUMckGUQ8jsNU+0ry7rrdehJF6zmzrAkRDX0tPYkZCxuUZovvn9WJuckhFBwteUvMoxayZopNLfMocpBe/oQbYtDgTdyZ1KdjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZlHoyrt; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="XUTLamqS";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="XUTLamqS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 50EB322113;
-	Mon, 29 Jan 2024 16:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706545728; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xNOhVEGA1+wfkSw8lLpS1nHrin/VwWv41XiZwlbriU0=;
-	b=XUTLamqS6cd43HyhnadirfxcREIIdcSOwpPQRua7eYb0PQE6FwmmZFjot86SHgO4lr2i11
-	qkNTftHHazJjiCwG00CUWJ+G4hiywzyL5mq/aenxyeVDiiEOVLmcwqzU3eruhQKNUVYqMV
-	1SZy3nK9L/8NGIeJmwW4VTNi5A0IAjI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706545728; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xNOhVEGA1+wfkSw8lLpS1nHrin/VwWv41XiZwlbriU0=;
-	b=XUTLamqS6cd43HyhnadirfxcREIIdcSOwpPQRua7eYb0PQE6FwmmZFjot86SHgO4lr2i11
-	qkNTftHHazJjiCwG00CUWJ+G4hiywzyL5mq/aenxyeVDiiEOVLmcwqzU3eruhQKNUVYqMV
-	1SZy3nK9L/8NGIeJmwW4VTNi5A0IAjI=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2B30012FF7;
-	Mon, 29 Jan 2024 16:28:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8lD2BkDSt2V0UwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Mon, 29 Jan 2024 16:28:48 +0000
-Date: Mon, 29 Jan 2024 17:28:47 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, zokeefe@google.com, david@redhat.com,
-	songmuchun@bytedance.com, shy828301@gmail.com, peterx@redhat.com,
-	minchan@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm/khugepaged: bypassing unnecessary scans with
- MMF_DISABLE_THP check
-Message-ID: <ZbfSP6xt6JAE2NrH@tiehlicka>
-References: <20240129054551.57728-1-ioworker0@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZlHoyrt"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6de3141f041so386011b3a.0;
+        Mon, 29 Jan 2024 08:29:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706545754; x=1707150554; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=myZaihACyUJUsgUkXKOA1oofUNHQVfAkH1R/0fTWfv4=;
+        b=CZlHoyrtF7lT+TcLDezERfppRPM4ZB1Qq3GLtgwtRoqWTgpx9cXsGPDkLFcN8p+8Ho
+         0raIo6Al1ALl+6qxO/S/Pc5s9yDm1+/zNd+IL0BUK8aHeyxJhYIC6k60nPYEb53zfLmr
+         C8TmTPc1+9Lejl4iE2HLgQ9W+1R1VpGXRhjdEH8doDPe5uevT99fHsrNoOU4RB59b35q
+         H6FcCOtF/fnuUEI2q3u+1Acsx/y20U8cDcpmiAvQtv6xIL2O9iJNz6mTiQ6IvPaRdc5/
+         dNzl2EK0pSKPFWTgGacriyl+e8n06A6w+/ik7VgzR3BSpAkn1GSQmeAAWyKQ7wvzl6PY
+         Ij3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706545754; x=1707150554;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=myZaihACyUJUsgUkXKOA1oofUNHQVfAkH1R/0fTWfv4=;
+        b=TU3ik+R7BacH4dG66ldVuR0HLVRyvynt0AfpfLJgki8QUaJrtaTvU65ceXhz1IxPaV
+         Trxi0DyE3/naXNidf4yPGDloHKRiadRjBTvZc4fmDjAVbRAfbfamZFZAu2eGe8M/SfEK
+         vS+kFJm3jvIe7dgvom/cI5OnpJyMOJbXNS4QGoyt6hVjk2KdzIxRA1BTggb2yi3Q1Sqd
+         eCO+svNeOwwKNR2Y+PaRmVH8Syr4YyATuYtM7AQcKwKbX8bxLMBtH9R9URbXF6qQk4Ri
+         ieI77MCXdt+4KeZMIp1cBI15hrl1qJ7dWItOkKt7FtZUtxVVh19apZbAeQ5pUclThoGa
+         MgAA==
+X-Gm-Message-State: AOJu0Ywif3W2ZpsjDmQcGo04MVUTwH1lxSnchEuVllqGgYiYdCMMKNwt
+	Mwjg1xAcvlOJSpd59Oxv1eA6Q3pnyc+lIo818u/wqRnKug//aY+74+0/nSRxdok=
+X-Google-Smtp-Source: AGHT+IEVDk5kfmQa+NB3FpC/nBGh3Jt4V2HODqGFNvRKZekPIrnVgxVPfs86wVngMdsvNPTtiEjN5A==
+X-Received: by 2002:a05:6a00:4f08:b0:6db:d986:5c1a with SMTP id lb8-20020a056a004f0800b006dbd9865c1amr2487945pfb.25.1706545753738;
+        Mon, 29 Jan 2024 08:29:13 -0800 (PST)
+Received: from kousik.local ([2405:201:c006:31fd:e71f:2351:f8bc:8b88])
+        by smtp.gmail.com with ESMTPSA id gx20-20020a056a001e1400b006dde04c10dasm6021864pfb.217.2024.01.29.08.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 08:29:13 -0800 (PST)
+From: Kousik Sanagavarapu <five231003@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Kousik Sanagavarapu <five231003@gmail.com>
+Subject: [PATCH] selftest/ftrace: fix typo in ftracetest script
+Date: Mon, 29 Jan 2024 21:58:07 +0530
+Message-ID: <20240129162841.57979-1-five231003@gmail.com>
+X-Mailer: git-send-email 2.43.0.443.g6965527da0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129054551.57728-1-ioworker0@gmail.com>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.81
-X-Spamd-Result: default: False [-0.81 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,google.com,redhat.com,bytedance.com,gmail.com,kernel.org,kvack.org,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.01)[50.99%]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Mon 29-01-24 13:45:51, Lance Yang wrote:
-> khugepaged scans the entire address space in the
-> background for each given mm, looking for
-> opportunities to merge sequences of basic pages
-> into huge pages. However, when an mm is inserted
-> to the mm_slots list, and the MMF_DISABLE_THP flag
-> is set later, this scanning process becomes
-> unnecessary for that mm and can be skipped to avoid
-> redundant operations, especially in scenarios with
-> a large address space.
+Fix a typo in ftracetest script which is run when running the kselftests
+for ftrace.
 
-Is this a real problem? I thought that the prctl is called
-on the parent before fork/exec. Or are you aware of any
-applications which do call prctl late enough that the race
-would be actually observable?
+s/faii/fail
+
+Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
+---
+ tools/testing/selftests/ftrace/ftracetest | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index c778d4dcc17e..25d4e0fca385 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -504,7 +504,7 @@ prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+ if [ "$KTAP" = "1" ]; then
+   echo -n "# Totals:"
+   echo -n " pass:"`echo $PASSED_CASES | wc -w`
+-  echo -n " faii:"`echo $FAILED_CASES | wc -w`
++  echo -n " fail:"`echo $FAILED_CASES | wc -w`
+   echo -n " xfail:"`echo $XFAILED_CASES | wc -w`
+   echo -n " xpass:0"
+   echo -n " skip:"`echo $UNTESTED_CASES $UNSUPPORTED_CASES | wc -w`
 -- 
-Michal Hocko
-SUSE Labs
+2.43.0.443.g6965527da0
+
