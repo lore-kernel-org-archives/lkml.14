@@ -1,140 +1,156 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AA155784;
-	Mon, 29 Jan 2024 10:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D825755E58;
+	Mon, 29 Jan 2024 10:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706523101; cv=none; b=IAuJEVJ1kJ9tK/fzpPbvuhL5IptScjnSyQJAKixvYNZnImeB1bX3QoJTWSoZSGjjI8sGpn56fXdtKzWko680u5/AacO3vAgjGQD4WFjnhzqy2ME0sLBn+vgwrzrMSCfPBkI3yO5VaIHVJBA/iB9nPN9AAxnykcEvQ7ibyCqjdtc=
+	t=1706523187; cv=none; b=GZKKb2qRu7XkiSqKTVQ5/3c2uFutmCl4bSBWKQ0tiUzRvWvvgBsGltR/3rceBxHdRPS+gqgHlbx4wZT4VrYeDG9KfhuiNabrhLaooivyStQLthbbe3rAU1z1iVTWdmEIdrzkmW5ByTyW8yKrykUMGC68th7w19xXwbNOvGwtkqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706523101; c=relaxed/simple;
-	bh=aP6nppY5vuDWhdT1EKho5Ztj2YLfKifFJSnO2YmYNGk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LcIxr8oMP7bHnwaQz3KbMGI/xIDNY7s5TmwduVDtG99ZDFGF8BcPOzT7XK14FAi+eAM5ocs48yIw35ESEJrnwnMlzIRLTylb2Xzzj538IHZ/ckny10AGwRStfD61mWVbb3N8BRpqvJgxjaTCYIflTvtYJp6FZrHN1HtauFUUzO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=yyS6D+u3; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1706523187; c=relaxed/simple;
+	bh=WdAQ1iY1kSuqBeRtoPKV93JSO2bOz2pmnfZ8DWSSTUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jVY3LXOVw3tIJmjcWUHxCJlXxRZCaBBkPzUWbNV5rcHMExyTiOzdOQ2OPNUnIkB4RmupvTsthosVx3j8AKlZmA7UIbwTWjJiPrPkFtET3/OmVSBmxHRr5CkqZ+IujOysRSTN66JY5k0ToREssR1YfObKlpM35XLauklSLBCsRF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m9t3ppjR; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="yyS6D+u3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=F3JBR5y9GKGAqMtonNzwpD3YmZTrMPQTqcJ9HmXVvzc=; b=yyS6D+u3TeFvuc2yHwCeZfP0JR
-	OgJzuLndRUYv7v6AM35molg6u0/YwdUERsHc8tZMxqn4K2hr9aEaDYuPlIkH8MsfguYVjxS2jB4p+
-	f0zW2O9ytkKSensR9kvABo/dufznu3EUbn5pPFyiUxi6aPMkypV8NRJnHskaOev8kpF9yRVf5pIor
-	/JBu+YIOUz4t97i3qloAd31bpDL3fdttH97a8GDHfb229B1FoRwfryShX/KDEZ4MUuCYMBIwVMxJg
-	h/SxO4AKTNVlJTzVRYFpCNYUmOa3bpBPeplerPFb3R3Khms9eXPk6uUoM/pE4VuXXMi1ZvPpy2H+o
-	sWfhyh5g==;
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1rUObn-0003SD-7S; Mon, 29 Jan 2024 11:11:19 +0100
-Received: from [87.49.42.9] (helo=localhost)
-	by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <esben@geanix.com>)
-	id 1rUObm-000XU1-3Y; Mon, 29 Jan 2024 11:11:18 +0100
-From: Esben Haabendal <esben@geanix.com>
-To: rohan.g.thomas@intel.com
-Cc: alexandre.torgue@foss.st.com,  conor+dt@kernel.org,
-  davem@davemloft.net,  devicetree@vger.kernel.org,  edumazet@google.com,
-  fancer.lancer@gmail.com,  joabreu@synopsys.com,
-  krzysztof.kozlowski+dt@linaro.org,  kuba@kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  linux-stm32@st-md-mailman.stormreply.com,  mcoquelin.stm32@gmail.com,
-  netdev@vger.kernel.org,  pabeni@redhat.com,  peppe.cavallaro@st.com,
-  robh+dt@kernel.org
-Subject: Re: [PATCH net-next 2/2] net: stmmac: TBS support for platform driver
-In-Reply-To: <20240126173925.16794-1-rohan.g.thomas@intel.com> (rohan g.
-	thomas's message of "Sat, 27 Jan 2024 01:39:25 +0800")
-References: <87v87g4hmy.fsf@geanix.com>
-	<20240126173925.16794-1-rohan.g.thomas@intel.com>
-Date: Mon, 29 Jan 2024 11:11:17 +0100
-Message-ID: <87plxktpoa.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m9t3ppjR"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51111e57a66so494848e87.3;
+        Mon, 29 Jan 2024 02:13:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706523184; x=1707127984; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HVJamU9bQQ6+0WvzoygEwXeYOPfoMRXxP8XdjaJOfHo=;
+        b=m9t3ppjRB0kHW+l3uStsuHANdDD9h4VL5w98xGPg4hwjGt1dEv4GLjdhTeYzfulmyB
+         wGqYs9ZNhJf0U6ZMWOQouuIwvHnuzAG6v7x3h20wI/8bW/ZQw939o8vGgNMgD6JwHm/X
+         0kA/36OTuF0gWybyolwU/wAuKfbrm7jvOu04GvyIVB0QuViSYIDf+u8Zqq4nhgiyO392
+         /norghjRbNqpn0TiQFzr4C2wIHSnMvcVX82QEFo4Y28f663SdJuc5jPtSzJEVJSeaNt4
+         QlBZucuA6zxMCLq6e3ru7deiWG66KM3nrcbgRfaMAX2aK40OnBdjJULMV/FX3vTgpa7T
+         jE+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706523184; x=1707127984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HVJamU9bQQ6+0WvzoygEwXeYOPfoMRXxP8XdjaJOfHo=;
+        b=mz8RPuk7KIW76r+7nho1HflJPls8Wc6HjzkbYXF1clMyjHOYYaFw4QRIFFvwFPj6Tu
+         aO4ffW7gr3SKAwMcgYIOvtPty4wN+XWqvSkpGEWnCCsGhGZx8COqhaqmn7zMv2U5ivhu
+         0waEox1F4RJVHrlZZush7KURrh8CmNOU5CToRro+YHIvrfxflFHEuLByuKNs6Tfwuni5
+         p2BvQAPsAFSzU8lk5i+ZR03O47Ed7VyBvPF52sC2CHbywcSRbEJ3wk1MN8CTEmfwQYMx
+         AvCwFM8flab9CiJA4+K2Clx9mqufeJ96aQIOnUcKzs8V6YV2wbFm9ikkx3uUJ86fs43y
+         V/aQ==
+X-Gm-Message-State: AOJu0Yx4NjE/rRWVIxSj/zbX5JqAZJVsrtJajIilHb/4aoPrsP99bJps
+	T2wSq0FktKrFkCHy1ZWpQQSODoenxDvcSZx0GSnavuz7gH9J/gbaIAneXJNz3fI=
+X-Google-Smtp-Source: AGHT+IFdEjHXLJVvIW+SMdTG2Eh3PVnYf4vY4vPdSfQP8hn7Xfuy1u2k7j1ZD2SMQdMEOw7vzHJ5Ww==
+X-Received: by 2002:a05:6512:201c:b0:50e:ca2a:50f8 with SMTP id a28-20020a056512201c00b0050eca2a50f8mr3093547lfb.63.1706523183529;
+        Mon, 29 Jan 2024 02:13:03 -0800 (PST)
+Received: from gmail.com (1F2EF327.nat.pool.telekom.hu. [31.46.243.39])
+        by smtp.gmail.com with ESMTPSA id bg42-20020a05600c3caa00b0040e54f15d3dsm13686429wmb.31.2024.01.29.02.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 02:13:02 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 29 Jan 2024 11:13:00 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+	linux-tip-commits@vger.kernel.org, maz@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [tip: irq/core] genirq/irq_sim: Shrink code by using cleanup
+ helpers
+Message-ID: <Zbd6LPDRFxCWZnqb@gmail.com>
+References: <20240122124243.44002-5-brgl@bgdev.pl>
+ <170627361652.398.12825437185563577604.tip-bot2@tip-bot2>
+ <20240126210509.GA1212219@dev-arch.thelio-3990X>
+ <CACMJSesVR_3-PBt1ScricSKNMRzH5gesqtTVW3mqN=gg0-O-7w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27168/Sun Jan 28 10:37:47 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACMJSesVR_3-PBt1ScricSKNMRzH5gesqtTVW3mqN=gg0-O-7w@mail.gmail.com>
 
-rohan.g.thomas@intel.com writes:
 
-> From: Rohan G Thomas <rohan.g.thomas@intel.com>
->
-> On Fri, 26 Jan 2024 09:35:01 +0100, Esben Haabendal wrote:
->
->> > +	/* If TBS feature is supported(i.e. tbssel is true), then at least 1 Tx
->> > +	 * DMA channel supports TBS. So if tbs_ch_num is 0 and tbssel is true,
->> > +	 * assume all Tx DMA channels support TBS. TBS_CH field, which gives
->> > +	 * number of Tx DMA channels with TBS support is only available only
->> for
->> > +	 * DW xGMAC IP. For other DWMAC IPs all Tx DMA channels can
->> support TBS.
->> 
->> The Ethernet QOS controllers found in various i.MX socs does not support TBS
->> on TX queue 0. I believe this patch would break the dwmac driver for these
->> platforms.
->
-> AFAIU from Synopsys DWMAC5 Databook, all queues support TBS. But TBS
-> cannot coexist with TSO. So all glue drivers enabling TBS feature are
-> avoiding queue 0 to support TSO. Also packets requesting TSO are
-> always directed to queue 0 by stmmac driver.
+* Bartosz Golaszewski <bartosz.golaszewski@linaro.org> wrote:
 
-After re-reading the i.MX8MP documentation, and making a few
-experiments, I have to agree with you. Enabling TBS (enhanced
-descriptors) for Q0 should be ok on i.MX.
+> On Fri, 26 Jan 2024 at 22:05, Nathan Chancellor <nathan@kernel.org> wrote:
+> >
+> > > Committer:     Thomas Gleixner <tglx@linutronix.de>
+> > > CommitterDate: Fri, 26 Jan 2024 13:44:48 +01:00
+> > >
+> > > genirq/irq_sim: Shrink code by using cleanup helpers
+> > >
+> > > Use the new __free() mechanism to remove all gotos and simplify the error
+> > > paths.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > > Link: https://lore.kernel.org/r/20240122124243.44002-5-brgl@bgdev.pl
+> > >
+> > > ---
+> > >  kernel/irq/irq_sim.c | 25 ++++++++++---------------
+> > >  1 file changed, 10 insertions(+), 15 deletions(-)
+> > >
+> > > diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+> > > index b0d50b4..fe8fd30 100644
+> > > --- a/kernel/irq/irq_sim.c
+> > > +++ b/kernel/irq/irq_sim.c
+> > > @@ -4,6 +4,7 @@
+> > >   * Copyright (C) 2020 Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >   */
+> > >
+> > > +#include <linux/cleanup.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/irq.h>
+> > >  #include <linux/irq_sim.h>
+> > > @@ -163,33 +164,27 @@ static const struct irq_domain_ops irq_sim_domain_ops = {
+> > >  struct irq_domain *irq_domain_create_sim(struct fwnode_handle *fwnode,
+> > >                                        unsigned int num_irqs)
+> > >  {
+> > > -     struct irq_sim_work_ctx *work_ctx;
+> > > +     struct irq_sim_work_ctx *work_ctx __free(kfree) = kmalloc(sizeof(*work_ctx), GFP_KERNEL);
+> > > +     unsigned long *pending;
+> > >
+> > > -     work_ctx = kmalloc(sizeof(*work_ctx), GFP_KERNEL);
+> > >       if (!work_ctx)
+> > > -             goto err_out;
+> > > +             return ERR_PTR(-ENOMEM);
+> > >
+> > > -     work_ctx->pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
+> > > -     if (!work_ctx->pending)
+> > > -             goto err_free_work_ctx;
+> > > +     pending = __free(bitmap) = bitmap_zalloc(num_irqs, GFP_KERNEL);
+> >
+> > Apologies if this has already been reported elsewhere. This does not
+> > match what was sent and it causes the build to break with both GCC:
+> >
+> 
+> I did not see any other report. I don't know what happened here but
+> this was a ninja edit as it's not what I sent. If Thomas' intention
+> was to move the variable declaration and detach it from the assignment
+> then 'pending' should at least be set to NULL and __free() must
+> decorate the declaration.
+> 
+> But the coding style of declaring variables when they're first
+> assigned their auto-cleaned value is what Linus Torvalds explicitly
+> asked me to do when I first started sending PRs containing uses of
+> linux/cleanup.h.
 
->> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> > @@ -3773,12 +3773,18 @@ stmmac_setup_dma_desc(struct stmmac_priv
->> *priv, unsigned int mtu)
->> >  		dma_conf->dma_rx_size = DMA_DEFAULT_RX_SIZE;
->> >
->> >  	/* Earlier check for TBS */
->> > -	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++) {
->> > -		struct stmmac_tx_queue *tx_q = &dma_conf-
->> >tx_queue[chan];
->> > -		int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;
->> > +	if (priv->dma_cap.tbssel) {
->> > +		/* TBS is available only for tbs_ch_num of Tx DMA channels,
->> > +		 * starting from the highest Tx DMA channel.
->> > +		 */
->> > +		chan = priv->dma_cap.number_tx_channel - priv-
->> >dma_cap.tbs_ch_num;
->
-> For IPs which don't have tbs_ch_num, this loop goes from 0 to
-> number_tx_channel to check if tbs_enable is set by glue driver.
-> Existing logic is also the same. Unless you set tbs_en flag of
-> queue 0 from the glue driver or dts configuration this patch doesn't
-> set tbs flag for queue 0. This is a sanity check to avoid wrong
-> configuration for IPs which support tbs only in a few number of
-> queues.
+Ok - I've rebased tip:irq/core with the original patch.
 
-Sounds good.
+Do you have a reference to Linus's mail about C++ style definition
+of variables? I can see the validity of the pattern in this context,
+but it's explicitly against the kernel coding style AFAICS, which
+I suppose prompted Thomas's edit. I'd like to have an URL handy when the
+inevitable checkpatch 'fix' gets submitted. ;-)
 
->> > +		for (; chan < priv->plat->tx_queues_to_use; chan++) {
->> > +			struct stmmac_tx_queue *tx_q = &dma_conf-
->> >tx_queue[chan];
->> > +			int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;
->> >
->> > -		/* Setup per-TXQ tbs flag before TX descriptor alloc */
->> > -		tx_q->tbs |= tbs_en ? STMMAC_TBS_AVAIL : 0;
->> > +			/* Setup per-TXQ tbs flag before TX descriptor alloc
->> */
->> > +			tx_q->tbs |= tbs_en ? STMMAC_TBS_AVAIL : 0;
->> > +		}
->> >  	}
->
-> Please correct me if I've misstated anything.
+Thanks,
 
-No corrections for now :)
-
-/Esben
+	Ingo
