@@ -1,227 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDB115A4A6
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4456F15A4AB
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545922; cv=none; b=EG17R4Gn9YButCwoyru9H5ev5+e3XNEOao7fPsZ1+xUBMQh9vQ3vq6XkJm1zKtKWYlDrgWWCsCa9q7LXfnr57fIf2RwrW04jNue9Efs0CqEuwY3EnvdssxpSNvllcWttpFYNRmApK6QAB7M3JZNN+92zHXfKF7/Id7dyiIzBqes=
+	t=1706545924; cv=none; b=uBPifmk2EnIFOg6k1RYI9+QjQhihQJ8RKf9rcUEeLSmXtKIJY6UEqxfjkrc1OS/Tu0n3Dnn5olJWZhj3bTYm6frBGUf4LOvcRSKZkg31Ih1eK14TjtFVgjwG/hZYrnQokHxzyKwryZYrU+bR7X7s5o+0GP8+/4+j+FAiNdK39kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545922; c=relaxed/simple;
-	bh=k4/BNjbTTqjP49J8n1Pv3LvMOl+KNbRGTBoLdiaiFNM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JcF/wPgcn1+Dwe/OBzU2quWor+1tZcXHYpaaaDYYyt4chV9ytYtULho9fi44awzQo9PnRNLXs8p4ScsvYXmjI1DvYnlX6og5ATVJbN85TQHFzysExZ+lDlc5uC3thHkK6lgxgY5atkmXXeWUJB8sKSaBCDssSQNfgzFm+yZ/hh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=heGG28np; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706545924; c=relaxed/simple;
+	bh=/u1rFiHmhXAQAtlUXq7FgxQxSIB+dSj/HU6AwwQbRoo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EWL8xi3H11+V0Hoz0Nf4J1r/7JWMhrqF2BgsF35aYVPaqDjJUkbaobnMag+Ra7Z0ciQIRaUcDwTrDVUSqfrZDS9hbdIf2L8wkbfxKGnEDsnPv0riKJysbwP8MoAnJFKbi47LJormEbpNVkDa/uVM5vXxZBPyVt99iLhhheMu1dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+YZYA9S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="heGG28np"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706545919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6/L/3+aj4kshl/a2QQJi71HdU9Hie8YBQwAh5a5RCoI=;
-	b=heGG28npeEaYyZP1suMeswaL0aka3ldxy21pLYIdYiElDkP+8O1u2oZ18VLc/tXU2ljb5B
-	Ms1MrSaDepd947fPRT5tDBcCLkQfc2hHPdKfaT3P18JjZ3F5SuNL5wjJhe8jiQYWZH8jP2
-	wZKJRNGCU1cKrEK9XakCJeSSBoHykig=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-56-6L_ePKKkNNisQsGUd9fiLA-1; Mon, 29 Jan 2024 11:31:57 -0500
-X-MC-Unique: 6L_ePKKkNNisQsGUd9fiLA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a2bc65005feso223543166b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:31:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706545916; x=1707150716;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6/L/3+aj4kshl/a2QQJi71HdU9Hie8YBQwAh5a5RCoI=;
-        b=m8GAgYIimP/Q/yEyg2C7GtUWzwc9naVZnQzG4gAmJ5rvjWqu3+0s6NnazGo9bsXvl0
-         xsaAf/HnEGNOVUOIiAjaERCpp218ur2T9Fqo4QobPJ1jvzcwnXe7O0/I+FpeJrtrSWvg
-         sXudeO1YYeyoBOiZV/oO2+CI6lMeZQm8K5ljVi1O+6qxg0AHwtLX6WzVS7JKuPAoy0AS
-         oswL/8vGhtqbF2SfUfYUY4RQ8WWIjy8/JebSMf3ezEaJYmtJMwX0sDHK1ZcqkNVnaoq5
-         Kgu+Mn9R2SGRjRj8q95ExSKd1nQ/k2vdKZkdo/Lh8+Z+TjDG3EEFU+aeNOHc/SJ8Sihj
-         UkCg==
-X-Gm-Message-State: AOJu0YxB/RyhPRLICdJbwrw6SHrNyjn/yP/OjG1I2pESwX60CMZ8Hfok
-	SULNCzg0PPV0xv5WnLPqXFJ1yLPu3UNFcUsDIK66XkfPWHnTur5pPK4H+91S1ws5ETJnnxUOzF1
-	bJVkgTp2+ufu7qsxy0zrm5pgTT0TIOg9b3Dj9e5rx7mTNbHGMtTSre3NF1121sA==
-X-Received: by 2002:a17:906:a415:b0:a35:becf:4320 with SMTP id l21-20020a170906a41500b00a35becf4320mr1957161ejz.29.1706545916224;
-        Mon, 29 Jan 2024 08:31:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG41dzZkEn7luj4mU81wo0+h4odyPle7e5h7j96uGkVWaE6nOrcUuTyWM6BIIjQN653dEmHuw==
-X-Received: by 2002:a17:906:a415:b0:a35:becf:4320 with SMTP id l21-20020a170906a41500b00a35becf4320mr1957140ejz.29.1706545915782;
-        Mon, 29 Jan 2024 08:31:55 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id tl10-20020a170907c30a00b00a3554bb5d22sm2691654ejc.69.2024.01.29.08.31.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 08:31:55 -0800 (PST)
-Message-ID: <6ba16249-a4d7-400d-a18a-96753367c722@redhat.com>
-Date: Mon, 29 Jan 2024 17:31:54 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+YZYA9S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9FD4C4166B
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706545923;
+	bh=/u1rFiHmhXAQAtlUXq7FgxQxSIB+dSj/HU6AwwQbRoo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p+YZYA9S5HvYtpH/fWISTw5LLg6YC26CUaUE0OOkycY2NWeb4mIy88mZqtJ3zu2TA
+	 CUpwtuAcyoVN25144BfjKst3mkyuVvnDA8ELm7vKAFrzBramuJCqNmRIupLIsrivd2
+	 geGtoUhQzku9bIcOOwhNJN+srTO1fQyUOh+BcVTNpNbcBz6MB0QqnJnnC4jGeetD2g
+	 Wie4q3thvfistpghwe9jY38naYjt0lob/XXbn5qr2OwB40a3CAeu0S/HRxRcCo4wDX
+	 QnwcEq6FcIwOLHI4tx3LKCqZM/SIQ9VpKYbJbUomnYHU4Sdne44ItfBKJzV5dmXMCS
+	 4v8lEFRTEDvyw==
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3638b5f8240so313445ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:32:03 -0800 (PST)
+X-Gm-Message-State: AOJu0Yz8kJydBcmd4YBuNVChyFvCuxpPA87ek50Mz9TcHYvk3LGWJu54
+	xUQo6JZxhbhdroG1Hm24aLQenjoXE4DuceaInblNin2CXKBGFw60jKoEgP4y+ygMzgmPRU49DT0
+	DQIdtQCUGawJEHjuDfTLuKyoT8y4jp1sJYuB6
+X-Google-Smtp-Source: AGHT+IESDGAmy2d4K/fKQc27p+6fDI0mCGTCPnb2naFB86pPGb1OS+MLUkevgvtCdcIj3BNmBQogt+Hm5RAyE7VgE4c=
+X-Received: by 2002:a92:a306:0:b0:360:73de:be5e with SMTP id
+ a6-20020a92a306000000b0036073debe5emr4185014ili.14.1706545922962; Mon, 29 Jan
+ 2024 08:32:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Flood of logitech-hidpp-device messages in v6.7
-Content-Language: en-US, nl
-To: Oleksandr Natalenko <oleksandr@natalenko.name>,
- linux-kernel@vger.kernel.org
-Cc: linux-input@vger.kernel.org, =?UTF-8?Q?Filipe_La=C3=ADns?=
- <lains@riseup.net>, Bastien Nocera <hadess@hadess.net>,
- Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <3277085.44csPzL39Z@natalenko.name>
- <12371430.O9o76ZdvQC@natalenko.name>
- <489d6c71-73eb-4605-8293-5cfea385cf08@redhat.com>
- <4894984.31r3eYUQgx@natalenko.name>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <4894984.31r3eYUQgx@natalenko.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20231025144546.577640-1-ryan.roberts@arm.com> <20240118111036.72641-1-21cnbao@gmail.com>
+ <20240118111036.72641-6-21cnbao@gmail.com> <58efd8d4-28aa-45d6-b384-7463568b24bb@redhat.com>
+ <CAGsJ_4zwUpL7LihRBOefg-cmY2mgNjMm-MPkq9VFBdXS_4b=uQ@mail.gmail.com>
+ <CAF8kJuNHrM+ZQSnTAOt6rrmGr1P=YS8eU+RSqhAc1CjQ7qdEwQ@mail.gmail.com> <c11d73d5-105e-4ae1-837a-b9da392d2dad@redhat.com>
+In-Reply-To: <c11d73d5-105e-4ae1-837a-b9da392d2dad@redhat.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Mon, 29 Jan 2024 08:31:51 -0800
+X-Gmail-Original-Message-ID: <CAF8kJuMmh06rCXuiu5V0BiT8t1ckEEnY4rM-ivRBQ+xdyMhRKQ@mail.gmail.com>
+Message-ID: <CAF8kJuMmh06rCXuiu5V0BiT8t1ckEEnY4rM-ivRBQ+xdyMhRKQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 5/6] mm: rmap: weaken the WARN_ON in __folio_add_anon_rmap()
+To: David Hildenbrand <david@redhat.com>
+Cc: Barry Song <21cnbao@gmail.com>, ryan.roberts@arm.com, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com, 
+	shy828301@gmail.com, wangkefeng.wang@huawei.com, willy@infradead.org, 
+	xiang@kernel.org, ying.huang@intel.com, yuzhao@google.com, surenb@google.com, 
+	steven.price@arm.com, Barry Song <v-songbaohua@oppo.com>, 
+	Chuanhua Han <hanchuanhua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Oleksandr,
+On Mon, Jan 29, 2024 at 2:07=E2=80=AFAM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 29.01.24 04:25, Chris Li wrote:
+> > Hi David and Barry,
+> >
+> > On Mon, Jan 22, 2024 at 10:49=E2=80=AFPM Barry Song <21cnbao@gmail.com>=
+ wrote:
+> >>
+> >>>
+> >>>
+> >>> I have on my todo list to move all that !anon handling out of
+> >>> folio_add_anon_rmap_ptes(), and instead make swapin code call add
+> >>> folio_add_new_anon_rmap(), where we'll have to pass an exclusive flag
+> >>> then (-> whole new folio exclusive).
+> >>>
+> >>> That's the cleaner approach.
+> >>>
+> >>
+> >> one tricky thing is that sometimes it is hard to know who is the first
+> >> one to add rmap and thus should
+> >> call folio_add_new_anon_rmap.
+> >> especially when we want to support swapin_readahead(), the one who
+> >> allocated large filio might not
+> >> be that one who firstly does rmap.
+> >
+> > I think Barry has a point. Two tasks might race to swap in the folio
+> > then race to perform the rmap.
+> > folio_add_new_anon_rmap() should only call a folio that is absolutely
+> > "new", not shared. The sharing in swap cache disqualifies that
+> > condition.
+>
+> We have to hold the folio lock. So only one task at a time might do the
+> folio_add_anon_rmap_ptes() right now, and the
+> folio_add_new_shared_anon_rmap() in the future [below].
+>
 
-On 1/29/24 17:19, Oleksandr Natalenko wrote:
-> On pondělí 29. ledna 2024 17:08:56 CET Hans de Goede wrote:
->> Hi,
->>
->> On 1/29/24 16:58, Oleksandr Natalenko wrote:
->>> Hello.
->>>
->>> On úterý 9. ledna 2024 12:58:10 CET Hans de Goede wrote:
->>>> Hi Oleksandr,
->>>>
->>>> On 1/9/24 12:45, Oleksandr Natalenko wrote:
->>>>> Hello Hans et al.
->>>>>
->>>>> Starting from v6.7 release I get the following messages repeating in `dmesg` regularly:
->>>>>
->>>>> ```
->>>>> Jan 09 10:05:06 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
->>>>> Jan 09 10:07:15 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: Disconnected
->>>>> Jan 09 10:16:51 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
->>>>> Jan 09 10:16:55 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
->>>>> Jan 09 10:16:55 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
->>>>> Jan 09 10:36:31 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
->>>>> Jan 09 10:37:07 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
->>>>> Jan 09 10:46:21 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
->>>>> Jan 09 10:48:23 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: Disconnected
->>>>> Jan 09 11:12:27 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
->>>>> Jan 09 11:12:47 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
->>>>> Jan 09 11:12:47 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
->>>>> Jan 09 11:38:32 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
->>>>> Jan 09 11:43:32 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: Disconnected
->>>>> Jan 09 11:45:10 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
->>>>> Jan 09 11:45:11 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
->>>>> Jan 09 11:45:11 spock kernel: logitech-hidpp-device 0003:046D:408A.0005: HID++ 4.5 device connected.
->>>>> Jan 09 12:31:48 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: Disconnected
->>>>> Jan 09 12:33:21 spock kernel: logitech-hidpp-device 0003:046D:4051.0006: HID++ 4.5 device connected.
->>>>> ```
->>>>>
->>>>> I've got the following hardware:
->>>>>
->>>>> * Bus 006 Device 004: ID 046d:c52b Logitech, Inc. Unifying Receiver
->>>>> * Logitech MX Keys
->>>>> * Logitech M510v2
->>>>>
->>>>> With v6.6 I do not get those messages.
->>>>>
->>>>> I think this is related to 680ee411a98e ("HID: logitech-hidpp: Fix connect event race").
->>>>>
->>>>> My speculation is that some of the devices enter powersaving state after being idle for some time (5 mins?), and then wake up and reconnect once I touch either keyboard or mouse. I should highlight that everything works just fine, it is the flood of messages that worries me.
->>>>>
->>>>> Is it expected?
->>>>
->>>> Yes this is expected, looking at your logs I see about 10 messages per
->>>> hour which IMHO is not that bad.
->>>>
->>>> I guess we could change things to track we have logged the connect
->>>> message once and if yes then log future connect messages (and all
->>>> disconnect messages) at debug level.
->>>
->>> How granular such a tracking should be? Per-`struct hidpp_device`?
->>
->> Yes per struct hidpp_device we want to log the connect message once
->> per device since it gives info which might be useful for troubleshooting.
->>
->>> Should there be something like `hid_info_once_then_dbg()` macro, or open-code it in each place instead?
->>
->> Since we want something like e.g. a "first_connect" (initialized
->> to true if you use that name) flag per struct hidpp_device this needs
->> to be open coded.
-> 
-> OK, would something like this make sense (not tested)?
+Ah, I see. The folio_lock() is the answer I am looking for.
 
-Yes, thank you. I would call once_connected connected_once and
-you can drop the disconnected flag and just always log
-disconnect messages at the dbg level.
+> Also observe how folio_add_anon_rmap_ptes() states that one must hold
+> the page lock, because otherwise this would all be completely racy.
+>
+>  From the pte swp exclusive flags, we know for sure whether we are
+> dealing with exclusive vs. shared. I think patch #6 does not properly
+> check that all entries are actually the same in that regard (all
+> exclusive vs all shared). That likely needs fixing.
+>
+> [I have converting per-page PageAnonExclusive flags to a single
+> per-folio flag on my todo list. I suspect that we'll keep the
+> per-swp-pte exlusive bits, but the question is rather what we can
+> actually make work, because swap and migration just make it much more
+> complicated. Anyhow, future work]
+>
+> >
+> >> is it an acceptable way to do the below in do_swap_page?
+> >> if (!folio_test_anon(folio))
+> >>        folio_add_new_anon_rmap()
+> >> else
+> >>        folio_add_anon_rmap_ptes()
+> >
+> > I am curious to know the answer as well.
+>
+>
+> Yes, the end code should likely be something like:
+>
+> /* ksm created a completely new copy */
+> if (unlikely(folio !=3D swapcache && swapcache)) {
+>         folio_add_new_anon_rmap(folio, vma, vmf->address);
+>         folio_add_lru_vma(folio, vma);
+> } else if (folio_test_anon(folio)) {
+>         folio_add_anon_rmap_ptes(rmap_flags)
+> } else {
+>         folio_add_new_anon_rmap(rmap_flags)
+> }
+>
+> Maybe we want to avoid teaching all existing folio_add_new_anon_rmap()
+> callers about a new flag, and just have a new
+> folio_add_new_shared_anon_rmap() instead. TBD.
 
-Regards,
-
-Hans
+There is more than one caller needed to perform that dance around
+folio_test_anon() then decide which function to call. It would be nice
+to have a wrapper function folio_add_new_shared_anon_rmap() to
+abstract this behavior.
 
 
+>
+> >
+> > BTW, that test might have a race as well. By the time the task got
+> > !anon result, this result might get changed by another task. We need
+> > to make sure in the caller context this race can't happen. Otherwise
+> > we can't do the above safely.
+> Again, folio lock. Observe the folio_lock_or_retry() call that covers
+> our existing folio_add_new_anon_rmap/folio_add_anon_rmap_pte calls.
 
-> 
-> ```
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-> index 6ef0c88e3e60a..a9899709d6b74 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -203,6 +203,9 @@ struct hidpp_device {
->  	struct hidpp_scroll_counter vertical_wheel_counter;
->  
->  	u8 wireless_feature_index;
-> +
-> +	bool once_connected;
-> +	bool once_disconnected;
->  };
->  
->  /* HID++ 1.0 error codes */
-> @@ -988,8 +991,13 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
->  	hidpp->protocol_minor = response.rap.params[1];
->  
->  print_version:
-> -	hid_info(hidpp->hid_dev, "HID++ %u.%u device connected.\n",
-> -		 hidpp->protocol_major, hidpp->protocol_minor);
-> +	if (!hidpp->once_connected) {
-> +		hid_info(hidpp->hid_dev, "HID++ %u.%u device connected.\n",
-> +			 hidpp->protocol_major, hidpp->protocol_minor);
-> +		hidpp->once_connected = true;
-> +	} else
-> +		hid_dbg(hidpp->hid_dev, "HID++ %u.%u device connected.\n",
-> +			 hidpp->protocol_major, hidpp->protocol_minor);
->  	return 0;
->  }
->  
-> @@ -4184,7 +4192,11 @@ static void hidpp_connect_event(struct work_struct *work)
->  	/* Get device version to check if it is connected */
->  	ret = hidpp_root_get_protocol_version(hidpp);
->  	if (ret) {
-> -		hid_info(hidpp->hid_dev, "Disconnected\n");
-> +		if (!hidpp->once_disconnected) {
-> +			hid_info(hidpp->hid_dev, "Disconnected\n");
-> +			hidpp->once_disconnected = true;
-> +		} else
-> +			hid_dbg(hidpp->hid_dev, "Disconnected\n");
->  		if (hidpp->battery.ps) {
->  			hidpp->battery.online = false;
->  			hidpp->battery.status = POWER_SUPPLY_STATUS_UNKNOWN;
-> ```
-> 
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>
-> 
-> 
+Ack. Thanks for the explanation.
 
+Chris
