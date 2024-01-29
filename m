@@ -1,47 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A045821B
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C145820C
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706524934; cv=none; b=ivuRT9JkZZJJwI5vzA2x++DEHBcGC2CdVOyXFbWCsX6HCquBos3ty0SONo6yXlHaetRfGIg+IjQ+VwKBGJdUAA57xW1imOpVB1nCgDTxA7rFKBqGHDpD6BsvW0nDxbpEaNsOhzNklH58zZCZbNF/CItBDmRHpABOZhLoqIxOa/8=
+	t=1706524932; cv=none; b=riQlBTysgDYMsreRfQKLDxIZTcCzdYu/BM0XlC+kD2eyFnQQr9H3xYSrI4Ic4r96nJrPPCRWlyc7QKfKiDzkCkJxU1oCEdRhjAAIEFaQRBzcTSv39+TYq1AeRHTcdBRn2PBLqvHxGONWBxd6+sUyq4v6YydC7RDFXpcJ1RRJQlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706524934; c=relaxed/simple;
-	bh=fvTMrxGTgQP5shcwR9YmUV+YxzR4KmUQp8IrSM1zMeA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hvsn0Iu3+Cnk5e9ZSzfyMdcF2JoyQc/To8ybtBlRj2vIhqjhV0dM1oJoKJa+BwpRwfCFm11YKLziSxDtHuJW3lcF5AgSSKrg2UOzbD6EvfKGTeSRWzT7WUttGxEoqvASMCovrw60tezPHZTJa4eL2pHcitpcSc2BTf4QXN6L9iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=2GSlDyqc; arc=none smtp.client-ip=185.132.182.106
+	s=arc-20240116; t=1706524932; c=relaxed/simple;
+	bh=kl/4ovMtYNFXC8LbdOh8xUDpQ2m6FDCerkaDyKatHbY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PY7S1UfdjHsCi/GIEooUXfBjAYRsQ2dQUevZXY00Xireufmkg54FS44uMVesqiGoy/i+6uG/duAJhoFard8KPhYsEWhQTfEmxmZ8OzbavNvDnOz3pVrOSelFPaxQoK4mBEGGveTjqyMJdny2jUmI1Iqs9gx8awI6r9hOGkHc1gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=nDc+/c+f; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="2GSlDyqc"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T61ECc013749;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="nDc+/c+f"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T61GZE019758;
 	Mon, 29 Jan 2024 11:41:21 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=7vOrMpK
-	rhmC5GZ7lLl0/bEb14hQaIT+NcW4xeoCn3wg=; b=2GSlDyqctOIb3x4m53c1K5/
-	Oide7sWqUf+6oQbsbk9X/s0qXKxkfTUq8dKtWnxmZcwYuDlGUD61WEgNLtZfkpPt
-	kKjb6PSZHK9vYqdaqle8FCDu3k7rrAWsl5vCouyBtRb3WXpMcZGwe57klr0udbNa
-	BPII8BBknXd3gZiav/gn3qMYbY8BBXm0YlBqvRXp1+I5qVuoCmHHG0GGkrc973d/
-	Mw2EZzQqbz0L60i/VzV8Mn1QoqHP8d5Pw4Fk4HTMFTMSIClw9+MbPydfNuHBldeK
-	dlp+VcrC+SePb21VjSIMv7i0WwEve26xRxt2qNiqJxBv9stP/hMKp+GTmBycpnA=
-	=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=6hfGw0RhT4qoAVlq5UYImYdoxzmaiZjeqx1NKe8hFj0=; b=nD
+	c+/c+fap2l4P1iePY+fN3rwAIywWlNd6rrbO2n3fv5oTA1gTt4odUX9rw2ouqcmh
+	84bOHj4zPTOsfsnG4y39vVW1hbCZ62J/qmuivuhHDx27l7v4IONnx+0W8uq+YlM+
+	qjh6HEWgs753kY0nkW5RuLmaiZkzuwLeZLNpxsGRqmufuG45u+ewu+shjJg4ev+T
+	PhX5rPMyX6JorVUGJn8lWinpYJvQpkXVKIlPeEz0oMhbmiPzYQB9yP5EcRrCLYbp
+	u83EW7KCVcIVYngvYI4DAfcyjdBK1IrZu3oouhLrA5FGJAoKZpi425V4lgSZLgjR
+	XpxKlMAUoSrAclYgxhjQ==
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vwc94v9dk-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vvskgpact-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 29 Jan 2024 11:41:21 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E46AC100064;
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7D587100063;
 	Mon, 29 Jan 2024 11:41:18 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DD6FB21683A;
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 75044216838;
 	Mon, 29 Jan 2024 11:41:18 +0100 (CET)
 Received: from localhost (10.252.28.37) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 29 Jan
- 2024 11:41:16 +0100
+ 2024 11:41:18 +0100
 From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 To: Yannick Fertre <yannick.fertre@foss.st.com>,
         Raphael Gallais-Pou
@@ -58,10 +59,12 @@ To: Yannick Fertre <yannick.fertre@foss.st.com>,
 CC: <dri-devel@lists.freedesktop.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v3 0/3] Update STM DSI PHY driver
-Date: Mon, 29 Jan 2024 11:41:03 +0100
-Message-ID: <20240129104106.43141-1-raphael.gallais-pou@foss.st.com>
+Subject: [PATCH RESEND v3 3/3] drm/stm: dsi: expose DSI PHY internal clock
+Date: Mon, 29 Jan 2024 11:41:06 +0100
+Message-ID: <20240129104106.43141-4-raphael.gallais-pou@foss.st.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240129104106.43141-1-raphael.gallais-pou@foss.st.com>
+References: <20240129104106.43141-1-raphael.gallais-pou@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,48 +79,388 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-29_06,2024-01-29_01,2023-05-22_02
 
+	DSISRC __________
+	               __\_
+	              |    \
+	pll4_p_ck   ->|  1  |____dsi_k
+	ck_dsi_phy  ->|  0  |
+	              |____/
 
-This patch series aims to add several features of the dw-mipi-dsi phy
-driver that are missing or need to be updated.
+A DSI clock is missing in the clock framework. Looking at the
+clk_summary, it appears that 'ck_dsi_phy' is not implemented. Since the
+DSI kernel clock is based on the internal DSI pll. The common clock
+driver can not directly expose this 'ck_dsi_phy' clock because it does
+not contain any common registers with the DSI. Thus it needs to be done
+directly within the DSI phy driver.
 
-First patch update a PM macro.
-
-Second patch adds runtime PM functionality to the driver.
-
-Third patch adds a clock provider generated by the PHY itself.  As
-explained in the commit log of the second patch, a clock declaration is
-missing.  Since this clock is parent of 'dsi_k', it leads to an orphan
-clock.  Most importantly this patch is an anticipation for future
-versions of the DSI PHY, and its inclusion within the display subsystem
-and the DRM framework.
-
-Last patch fixes a corner effect introduced previously.  Since 'dsi' and
-'dsi_k' are gated by the same bit on the same register, both reference
-work as peripheral clock in the device-tree.
-
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 ---
-Changes in v3-resend:
-	- Removed last patch as it has been merged
-https://lore.kernel.org/lkml/bf49f4c9-9e81-4c91-972d-13782d996aaa@foss.st.com/
-
 Changes in v3:
-	- Fix smatch warning (disable dsi->pclk when clk_register fails)
+	- Fix smatch warning:
+	.../dw_mipi_dsi-stm.c:719 dw_mipi_dsi_stm_probe() warn: 'dsi->pclk'
+	from clk_prepare_enable() not released on lines: 719.
+---
+ drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 247 ++++++++++++++++++++++----
+ 1 file changed, 216 insertions(+), 31 deletions(-)
 
-Changes in v2:
-	- Added patch 1/4 to use SYSTEM_SLEEP_PM_OPS instead of old macro
-	  and removed __maybe_used for accordingly
-	- Changed SET_RUNTIME_PM_OPS to RUNTIME_PM_OPS
-
-Raphael Gallais-Pou (3):
-  drm/stm: dsi: use new SYSTEM_SLEEP_PM_OPS() macro
-  drm/stm: dsi: expose DSI PHY internal clock
-
-Yannick Fertre (1):
-  drm/stm: dsi: add pm runtime ops
-
- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 279 ++++++++++++++++++++++----
- 1 file changed, 238 insertions(+), 41 deletions(-)
-
+diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+index 82fff9e84345..b20123854c4a 100644
+--- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
++++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+@@ -7,7 +7,9 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/clk-provider.h>
+ #include <linux/iopoll.h>
++#include <linux/kernel.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -77,9 +79,12 @@ enum dsi_color {
+ 
+ struct dw_mipi_dsi_stm {
+ 	void __iomem *base;
++	struct device *dev;
+ 	struct clk *pllref_clk;
+ 	struct clk *pclk;
++	struct clk_hw txbyte_clk;
+ 	struct dw_mipi_dsi *dsi;
++	struct dw_mipi_dsi_plat_data pdata;
+ 	u32 hw_version;
+ 	int lane_min_kbps;
+ 	int lane_max_kbps;
+@@ -196,29 +201,198 @@ static int dsi_pll_get_params(struct dw_mipi_dsi_stm *dsi,
+ 	return 0;
+ }
+ 
+-static int dw_mipi_dsi_phy_init(void *priv_data)
++#define clk_to_dw_mipi_dsi_stm(clk) \
++	container_of(clk, struct dw_mipi_dsi_stm, txbyte_clk)
++
++static void dw_mipi_dsi_clk_disable(struct clk_hw *clk)
+ {
+-	struct dw_mipi_dsi_stm *dsi = priv_data;
++	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(clk);
++
++	DRM_DEBUG_DRIVER("\n");
++
++	/* Disable the DSI PLL */
++	dsi_clear(dsi, DSI_WRPCR, WRPCR_PLLEN);
++
++	/* Disable the regulator */
++	dsi_clear(dsi, DSI_WRPCR, WRPCR_REGEN | WRPCR_BGREN);
++}
++
++static int dw_mipi_dsi_clk_enable(struct clk_hw *clk)
++{
++	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(clk);
+ 	u32 val;
+ 	int ret;
+ 
++	DRM_DEBUG_DRIVER("\n");
++
+ 	/* Enable the regulator */
+ 	dsi_set(dsi, DSI_WRPCR, WRPCR_REGEN | WRPCR_BGREN);
+-	ret = readl_poll_timeout(dsi->base + DSI_WISR, val, val & WISR_RRS,
+-				 SLEEP_US, TIMEOUT_US);
++	ret = readl_poll_timeout_atomic(dsi->base + DSI_WISR, val, val & WISR_RRS,
++					SLEEP_US, TIMEOUT_US);
+ 	if (ret)
+ 		DRM_DEBUG_DRIVER("!TIMEOUT! waiting REGU, let's continue\n");
+ 
+ 	/* Enable the DSI PLL & wait for its lock */
+ 	dsi_set(dsi, DSI_WRPCR, WRPCR_PLLEN);
+-	ret = readl_poll_timeout(dsi->base + DSI_WISR, val, val & WISR_PLLLS,
+-				 SLEEP_US, TIMEOUT_US);
++	ret = readl_poll_timeout_atomic(dsi->base + DSI_WISR, val, val & WISR_PLLLS,
++					SLEEP_US, TIMEOUT_US);
+ 	if (ret)
+ 		DRM_DEBUG_DRIVER("!TIMEOUT! waiting PLL, let's continue\n");
+ 
+ 	return 0;
+ }
+ 
++static int dw_mipi_dsi_clk_is_enabled(struct clk_hw *hw)
++{
++	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
++
++	return dsi_read(dsi, DSI_WRPCR) & WRPCR_PLLEN;
++}
++
++static unsigned long dw_mipi_dsi_clk_recalc_rate(struct clk_hw *hw,
++						 unsigned long parent_rate)
++{
++	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
++	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
++	u32 val;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	pll_in_khz = (unsigned int)(parent_rate / 1000);
++
++	val = dsi_read(dsi, DSI_WRPCR);
++
++	idf = (val & WRPCR_IDF) >> 11;
++	if (!idf)
++		idf = 1;
++	ndiv = (val & WRPCR_NDIV) >> 2;
++	odf = int_pow(2, (val & WRPCR_ODF) >> 16);
++
++	/* Get the adjusted pll out value */
++	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
++
++	return (unsigned long)pll_out_khz * 1000;
++}
++
++static long dw_mipi_dsi_clk_round_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long *parent_rate)
++{
++	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
++	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
++	int ret;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	pll_in_khz = (unsigned int)(*parent_rate / 1000);
++
++	/* Compute best pll parameters */
++	idf = 0;
++	ndiv = 0;
++	odf = 0;
++
++	ret = dsi_pll_get_params(dsi, pll_in_khz, rate / 1000,
++				 &idf, &ndiv, &odf);
++	if (ret)
++		DRM_WARN("Warning dsi_pll_get_params(): bad params\n");
++
++	/* Get the adjusted pll out value */
++	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
++
++	return pll_out_khz * 1000;
++}
++
++static int dw_mipi_dsi_clk_set_rate(struct clk_hw *hw, unsigned long rate,
++				    unsigned long parent_rate)
++{
++	struct dw_mipi_dsi_stm *dsi = clk_to_dw_mipi_dsi_stm(hw);
++	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
++	int ret;
++	u32 val;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	pll_in_khz = (unsigned int)(parent_rate / 1000);
++
++	/* Compute best pll parameters */
++	idf = 0;
++	ndiv = 0;
++	odf = 0;
++
++	ret = dsi_pll_get_params(dsi, pll_in_khz, rate / 1000, &idf, &ndiv, &odf);
++	if (ret)
++		DRM_WARN("Warning dsi_pll_get_params(): bad params\n");
++
++	/* Get the adjusted pll out value */
++	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
++
++	/* Set the PLL division factors */
++	dsi_update_bits(dsi, DSI_WRPCR,	WRPCR_NDIV | WRPCR_IDF | WRPCR_ODF,
++			(ndiv << 2) | (idf << 11) | ((ffs(odf) - 1) << 16));
++
++	/* Compute uix4 & set the bit period in high-speed mode */
++	val = 4000000 / pll_out_khz;
++	dsi_update_bits(dsi, DSI_WPCR0, WPCR0_UIX4, val);
++
++	return 0;
++}
++
++static void dw_mipi_dsi_clk_unregister(void *data)
++{
++	struct dw_mipi_dsi_stm *dsi = data;
++
++	DRM_DEBUG_DRIVER("\n");
++
++	of_clk_del_provider(dsi->dev->of_node);
++	clk_hw_unregister(&dsi->txbyte_clk);
++}
++
++static const struct clk_ops dw_mipi_dsi_stm_clk_ops = {
++	.enable = dw_mipi_dsi_clk_enable,
++	.disable = dw_mipi_dsi_clk_disable,
++	.is_enabled = dw_mipi_dsi_clk_is_enabled,
++	.recalc_rate = dw_mipi_dsi_clk_recalc_rate,
++	.round_rate = dw_mipi_dsi_clk_round_rate,
++	.set_rate = dw_mipi_dsi_clk_set_rate,
++};
++
++static struct clk_init_data cdata_init = {
++	.name = "ck_dsi_phy",
++	.ops = &dw_mipi_dsi_stm_clk_ops,
++	.parent_names = (const char * []) {"ck_hse"},
++	.num_parents = 1,
++};
++
++static int dw_mipi_dsi_clk_register(struct dw_mipi_dsi_stm *dsi,
++				    struct device *dev)
++{
++	struct device_node *node = dev->of_node;
++	int ret;
++
++	DRM_DEBUG_DRIVER("Registering clk\n");
++
++	dsi->txbyte_clk.init = &cdata_init;
++
++	ret = clk_hw_register(dev, &dsi->txbyte_clk);
++	if (ret)
++		return ret;
++
++	ret = of_clk_add_hw_provider(node, of_clk_hw_simple_get,
++				     &dsi->txbyte_clk);
++	if (ret)
++		clk_hw_unregister(&dsi->txbyte_clk);
++
++	return ret;
++}
++
++static int dw_mipi_dsi_phy_init(void *priv_data)
++{
++	struct dw_mipi_dsi_stm *dsi = priv_data;
++	int ret;
++
++	ret = clk_prepare_enable(dsi->txbyte_clk.clk);
++	return ret;
++}
++
+ static void dw_mipi_dsi_phy_power_on(void *priv_data)
+ {
+ 	struct dw_mipi_dsi_stm *dsi = priv_data;
+@@ -235,6 +409,8 @@ static void dw_mipi_dsi_phy_power_off(void *priv_data)
+ 
+ 	DRM_DEBUG_DRIVER("\n");
+ 
++	clk_disable_unprepare(dsi->txbyte_clk.clk);
++
+ 	/* Disable the DSI wrapper */
+ 	dsi_clear(dsi, DSI_WCR, WCR_DSIEN);
+ }
+@@ -245,9 +421,8 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+ 			  unsigned int *lane_mbps)
+ {
+ 	struct dw_mipi_dsi_stm *dsi = priv_data;
+-	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
++	unsigned int pll_in_khz, pll_out_khz;
+ 	int ret, bpp;
+-	u32 val;
+ 
+ 	pll_in_khz = (unsigned int)(clk_get_rate(dsi->pllref_clk) / 1000);
+ 
+@@ -268,25 +443,10 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+ 		DRM_WARN("Warning min phy mbps is used\n");
+ 	}
+ 
+-	/* Compute best pll parameters */
+-	idf = 0;
+-	ndiv = 0;
+-	odf = 0;
+-	ret = dsi_pll_get_params(dsi, pll_in_khz, pll_out_khz,
+-				 &idf, &ndiv, &odf);
++	ret = clk_set_rate((dsi->txbyte_clk.clk), pll_out_khz * 1000);
+ 	if (ret)
+-		DRM_WARN("Warning dsi_pll_get_params(): bad params\n");
+-
+-	/* Get the adjusted pll out value */
+-	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
+-
+-	/* Set the PLL division factors */
+-	dsi_update_bits(dsi, DSI_WRPCR,	WRPCR_NDIV | WRPCR_IDF | WRPCR_ODF,
+-			(ndiv << 2) | (idf << 11) | ((ffs(odf) - 1) << 16));
+-
+-	/* Compute uix4 & set the bit period in high-speed mode */
+-	val = 4000000 / pll_out_khz;
+-	dsi_update_bits(dsi, DSI_WPCR0, WPCR0_UIX4, val);
++		DRM_DEBUG_DRIVER("ERROR Could not set rate of %d to %s clk->name",
++				 pll_out_khz, clk_hw_get_name(&dsi->txbyte_clk));
+ 
+ 	/* Select video mode by resetting DSIM bit */
+ 	dsi_clear(dsi, DSI_WCFGR, WCFGR_DSIM);
+@@ -445,6 +605,7 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct dw_mipi_dsi_stm *dsi;
++	const struct dw_mipi_dsi_plat_data *pdata = of_device_get_match_data(dev);
+ 	int ret;
+ 
+ 	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
+@@ -514,18 +675,41 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+ 		dsi->lane_max_kbps *= 2;
+ 	}
+ 
+-	dw_mipi_dsi_stm_plat_data.base = dsi->base;
+-	dw_mipi_dsi_stm_plat_data.priv_data = dsi;
++	dsi->pdata = *pdata;
++	dsi->pdata.base = dsi->base;
++	dsi->pdata.priv_data = dsi;
++
++	dsi->pdata.max_data_lanes = 2;
++	dsi->pdata.phy_ops = &dw_mipi_dsi_stm_phy_ops;
+ 
+ 	platform_set_drvdata(pdev, dsi);
+ 
+-	dsi->dsi = dw_mipi_dsi_probe(pdev, &dw_mipi_dsi_stm_plat_data);
++	dsi->dsi = dw_mipi_dsi_probe(pdev, &dsi->pdata);
+ 	if (IS_ERR(dsi->dsi)) {
+ 		ret = PTR_ERR(dsi->dsi);
+ 		dev_err_probe(dev, ret, "Failed to initialize mipi dsi host\n");
+ 		goto err_dsi_probe;
+ 	}
+ 
++	/*
++	 * We need to wait for the generic bridge to probe before enabling and
++	 * register the internal pixel clock.
++	 */
++	ret = clk_prepare_enable(dsi->pclk);
++	if (ret) {
++		DRM_ERROR("%s: Failed to enable peripheral clk\n", __func__);
++		goto err_dsi_probe;
++	}
++
++	ret = dw_mipi_dsi_clk_register(dsi, dev);
++	if (ret) {
++		DRM_ERROR("Failed to register DSI pixel clock: %d\n", ret);
++		clk_disable_unprepare(dsi->pclk);
++		goto err_dsi_probe;
++	}
++
++	clk_disable_unprepare(dsi->pclk);
++
+ 	return 0;
+ 
+ err_dsi_probe:
+@@ -542,12 +726,13 @@ static void dw_mipi_dsi_stm_remove(struct platform_device *pdev)
+ 
+ 	dw_mipi_dsi_remove(dsi->dsi);
+ 	clk_disable_unprepare(dsi->pllref_clk);
++	dw_mipi_dsi_clk_unregister(dsi);
+ 	regulator_disable(dsi->vdd_supply);
+ }
+ 
+ static int dw_mipi_dsi_stm_suspend(struct device *dev)
+ {
+-	struct dw_mipi_dsi_stm *dsi = dw_mipi_dsi_stm_plat_data.priv_data;
++	struct dw_mipi_dsi_stm *dsi = dev_get_drvdata(dev);
+ 
+ 	DRM_DEBUG_DRIVER("\n");
+ 
+@@ -560,7 +745,7 @@ static int dw_mipi_dsi_stm_suspend(struct device *dev)
+ 
+ static int dw_mipi_dsi_stm_resume(struct device *dev)
+ {
+-	struct dw_mipi_dsi_stm *dsi = dw_mipi_dsi_stm_plat_data.priv_data;
++	struct dw_mipi_dsi_stm *dsi = dev_get_drvdata(dev);
+ 	int ret;
+ 
+ 	DRM_DEBUG_DRIVER("\n");
 -- 
 2.25.1
 
