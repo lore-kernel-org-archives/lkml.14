@@ -1,58 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3990F48790;
-	Mon, 29 Jan 2024 19:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FF676020;
+	Mon, 29 Jan 2024 19:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706556405; cv=none; b=svGhejJsaCYXTeFcMUPX+a17CDPkZ/dXslpVLgfg+Ypxi+xapECYJVwbrJRDcLNd1/ExEK+uccYfaRxqzOhkA6mfqbUV0yeKDfnl3mb6coDyP1O4AvHvuPMqjmtlJ/JC32iHKoiFVi79YK/VuON5LOQ5QjMK4CUxl7xXF8alF8M=
+	t=1706556411; cv=none; b=uhLaagN+k5KoMu8uFjLNusKVQMV/wz3tYAThfJyfADoLx3bs2CILEsmDPSoH+fkfnTrIowzG+4GDyC+lFeiQG9sjiwwXsllUctGUiPHlVohWEYUNh35p0UTdWuey4uM7oYU0wvYrmqhU3KM33lX2IY7YTh9LjTWGzLz8BLAsnBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706556405; c=relaxed/simple;
-	bh=plWbGUJOEIziFL6QefrbA/05MPFIS6W43Vymo6o2EG4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IsLdzd/67Zt/Hen9Mq98mQlK5pMdPXMHcUAtefKwucyFHw3ct9pQiMwSSyC5SXAL/6WpGel6GFEeFy8YEpuZ1P53/skIK0Merzl8lVPOFL2ZQBJyfhTQZJQYUWgu0VXhZjAHJ5a1N2vbUmcWJtDJndpmSpcS/ImIM7+k+aPhzI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmzLN0ts; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706556411; c=relaxed/simple;
+	bh=fWacdajCuKruy4IRIC3PfeCsbekc4brMNN4YQdaTalo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cQRhUiZ1JKMMA29tYtPFQLf2NMso5Xtn2SeDXg1xZSuGoS/iSQGqZRxlNScSzti7Vkw84LUMv7rwURZ9S/kd27Nigp8RxUC7/WVjm6fyq5v1R+IZcnz9nOMSn7kXqDu6gx0osijjjjUcak0WEHZAofqnZtOe9TbnCjxsLs2EbL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gVyAxVbI; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmzLN0ts"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56363C433F1;
-	Mon, 29 Jan 2024 19:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706556404;
-	bh=plWbGUJOEIziFL6QefrbA/05MPFIS6W43Vymo6o2EG4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cmzLN0tsnpXU4hUKsliFbl6vkJVhomHNBXIzdgwVfiqAJi10Mf+o9OFhnqNegfqqg
-	 3VLrHPEeG1N/wvbjjQuGHlN3deSbGZjJyxON4iV0hwvousWqPe3e2v0jqxRLN5uZEI
-	 Fdz9ZlKkhuXn5DaB2qfgIJfP5kDjJKbPQH7N9is2xppcAc0Qqz3NeoIbARoeTdeo/g
-	 0wVL6lE3QONsdbKin2GpDmiLPYfle+9JRUz6WuZwGRzRAzv9j41dyxuFZb+rr6ltJs
-	 OCTKjy1A4jxvD2y4nDdGyupRreHnKFRBR74A7wfY0rSbdfBtPJssrDXtq/LHClibuu
-	 gUXz1zQ3hDIrQ==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	damon@lists.linux.dev,
-	SeongJae Park <sj@kernel.org>
-Subject: Re: [PATCH 6.6 000/331] 6.6.15-rc1 review
-Date: Mon, 29 Jan 2024 11:26:41 -0800
-Message-Id: <20240129192641.129294-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240129170014.969142961@linuxfoundation.org>
-References: 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gVyAxVbI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=StcUcdeBhMll4u6Z4i+H51owxL/+smnyRSjHl622094=; b=gVyAxVbI/Cx6Kpl28JvKZOP4tk
+	57nEOoe6Sw4I2IkN5W6psqo4tGP5Gq3ZdR+GkxDCGugiLgnvDXU2pMiFvb80xUU6eXm28Ak5CXA2y
+	G8Lk6q/0KXugythCeLCBYAX00gkMTnjDDGWrZ6sPBA6xaQs7Pr4Ek5NPJRkWIAJ55OwzUwBi22ckc
+	/tVg8mBsT6PWGFCc04CitPe4u1ACSPzDWFFFewYOeE2vv2W7pytKtvYvjy8HTVrDb7WsRC2EwOddt
+	uef/XXchE3++mqs/Oqpx8pexEnLD4kd5VYcxkCKAVhHrJDAfRB+mxjasCSn1z2S1qDpsyYW3Fw++/
+	KLmSJaUw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rUXHN-0000000E67v-2wh9;
+	Mon, 29 Jan 2024 19:26:49 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: masahiroy@kernel.org,
+	deller@gmx.de
+Cc: mcgrof@kernel.org,
+	arnd@arndb.de,
+	linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/4] vmlinux.lds.h: add missing alignment for symbol CRCs
+Date: Mon, 29 Jan 2024 11:26:42 -0800
+Message-ID: <20240129192644.3359978-4-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240129192644.3359978-1-mcgrof@kernel.org>
+References: <20240129192644.3359978-1-mcgrof@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,68 +50,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Hello,
+Commit f3304ecd7f06 (linux/export: use inline assembler to populate
+symbol CRCs") fixed an issue with unexpected padding  by adding
+asm inline assembly to directly specify the desired data layout.
+It however forgot to add the alignment, fix that.
 
-On Mon, 29 Jan 2024 09:01:04 -0800 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> This is the start of the stable review cycle for the 6.6.15 release.
-> There are 331 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 31 Jan 2024 16:59:28 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.15-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
-
-Tested-by: SeongJae Park <sj@kernel.org>
-
-[1] https://github.com/awslabs/damon-tests/tree/next/corr
-[2] 1ff49073b88b ("Linux 6.6.15-rc1")
-
-Thanks,
-SJ
-
-[...]
-
+Reported-by: Helge Deller <deller@gmx.de>
+Fixes: f3304ecd7f06 ("linux/export: use inline assembler to populate symbol CRCs")
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
+ include/linux/export-internal.h | 1 +
+ 1 file changed, 1 insertion(+)
 
- [32m
-ok 1 selftests: damon: debugfs_attrs.sh
-ok 2 selftests: damon: debugfs_schemes.sh
-ok 3 selftests: damon: debugfs_target_ids.sh
-ok 4 selftests: damon: debugfs_empty_targets.sh
-ok 5 selftests: damon: debugfs_huge_count_read_write.sh
-ok 6 selftests: damon: debugfs_duplicate_context_creation.sh
-ok 7 selftests: damon: debugfs_rm_non_contexts.sh
-ok 8 selftests: damon: sysfs.sh
-ok 9 selftests: damon: sysfs_update_removed_scheme_dir.sh
-ok 10 selftests: damon: reclaim.sh
-ok 11 selftests: damon: lru_sort.sh
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh
-ok 12 selftests: damon-tests: build_m68k.sh
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
-_remote_run_corr.sh SUCCESS
+diff --git a/include/linux/export-internal.h b/include/linux/export-internal.h
+index 69501e0ec239..51b8cf3f60ef 100644
+--- a/include/linux/export-internal.h
++++ b/include/linux/export-internal.h
+@@ -61,6 +61,7 @@
+ 
+ #define SYMBOL_CRC(sym, crc, sec)   \
+ 	asm(".section \"___kcrctab" sec "+" #sym "\",\"a\""	"\n" \
++	    ".balign 4"						"\n" \
+ 	    "__crc_" #sym ":"					"\n" \
+ 	    ".long " #crc					"\n" \
+ 	    ".previous"						"\n")
+-- 
+2.42.0
+
