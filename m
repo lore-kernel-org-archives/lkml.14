@@ -1,75 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419B55BACE;
-	Mon, 29 Jan 2024 11:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838BE5BAC0
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706527649; cv=none; b=UhaFG2IpXt8X9LIcWADwj1veyAWO77nmaBlnta66vVFWPlyBjHGYJHymLJGRiBk0zKj3alnf/DzSRzuuEXXE6xhUbV+UOhUs6IhrCmP0Pi7RqvxK5Q0by58KchiA68PdHzVkVy+NuEMwGuPIK+QEJwkUsOSVGK7SAVYDtgfL1b8=
+	t=1706527672; cv=none; b=HhRHuycmRuBYGKLJqQuOdtmX76Y/ZyWcGFYDVDgGyhioK5VmLfiW/YZMeMKn+7ymOCGWi9q6unInGcTXSWPNLi3IEB1huOAmTpIKTECo6Q1oieR+RGCRvCP0C8fj/CAks28JimM216R9NyAGcq1bKbeQTAxoT3GTu3OuRxVz45c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706527649; c=relaxed/simple;
-	bh=QjEduxmVVqL7KnO5vm0x6bH4grGRCF1a+Hd2U0PJUFo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=D+TKgorQaFUD41XskuOQ2rHdIzwBRwg2h8iXWdoB0cfzZlEzKyf0ovcScHRQe5G7w9pVtCQGkG3Nhkg8fnZEbF8O0OU1BvgNY2wxj7jvwofYUAbI/6CxA2B1GFsgXmJpA9tUGwFFDGMOvgFygZKtOTytVGPJSJnG/ZV/1LlJMqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AlHukrP0; arc=none smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706527672; c=relaxed/simple;
+	bh=K+SoEOU6xu54KZgacf/5Gi6Jlpq+URdws/owLbfDtyk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rrdh0SsAj1e8/7buMuJh15mXpHDoMZnXsaDAdsXsK25MnG+Rhqbju/4sMFfWUtPpJPoUaI0suidjXmQ7p2Ug9lp/QTxJRPQod1W0qOabiPNnhQ4wScFUocWUktY+OPkpm/HrEL88GF8ABeD2+9x22B9cIVOI9F9ZtPdJtf1rQvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8fAALCA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AlHukrP0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706527648; x=1738063648;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QjEduxmVVqL7KnO5vm0x6bH4grGRCF1a+Hd2U0PJUFo=;
-  b=AlHukrP0E+sffuUa+K2EK6/hUYQ2zJfrdb28XvSP91sRu26ev9dslJF9
-   kYga2fHGR7D/fDMpP9tbcolpf1xzPAjmERZBXVFILVI1+7LJhZtqaN4vh
-   Smh0IrDz+/f124irIZVBCVejWFDR2TuQiXQUc1+8M0nPzY5MEDM37lPBQ
-   1peD/fZgHTRcCgn5MsuluAjoVJrFQQZVQlzDSNM1JV8CkNdC0uGJGTdai
-   +mcT6afdNCOUOpAbPByX0mtKZkDe7Gt5FAwz6ceinOXHugTq1YHERfrh8
-   8XNt6lX7mTt9hBt+P0orJ2mayG6yiKI1qOL7mcC0mpbfzlG2ejedk3qci
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="467186852"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="467186852"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 03:27:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="29488541"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.253.213])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 03:27:23 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8fAALCA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A2CC433C7;
+	Mon, 29 Jan 2024 11:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706527672;
+	bh=K+SoEOU6xu54KZgacf/5Gi6Jlpq+URdws/owLbfDtyk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N8fAALCAOzGymJZPOGyuPKdywZ0KLY/CSMt6p06Q9Bbrmk6oDIyrzEcXpTGJmhuGj
+	 tED0fFlgYtd4ws09ioEWHM47oJoVKdEcfpZD/LrWzbp/TvPjhkC7ZgAcMhVLr2RVLY
+	 j28kR4dgZIV6pQbimFWM4cR6mDMHioxsf+p1GLheWLyKUreMLC8z/8wtPhwiJxgvkZ
+	 ExRyyIxF5zXCh4d21vlAYesFzpRCKrqTruKTIOZPfi1ow7bZMAwsD3K2waD3w9qCA0
+	 frhZFsB96kX5eFFl6mN0k9i0Ja/+N8NH0VEMmkvn92HqpPcWXALHye47KkfN9AZysD
+	 HYsl+FD2PsJrQ==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 0/2] PCI: Fix disconnect related issues
-Date: Mon, 29 Jan 2024 13:27:08 +0200
-Message-Id: <20240129112710.2852-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: zone: fix to wait completion of last bio in zone correctly
+Date: Mon, 29 Jan 2024 19:27:40 +0800
+Message-Id: <20240129112740.1908649-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series addresses two PCI suspend related issues Mika Westerberg
-reported to occur because of Thunderbolt disconnect.
+It needs to check last zone_pending_bio and wait IO completion before
+traverse next fio in io->io_list, otherwise, bio in next zone may be
+submitted before all IO completion in current zone.
 
-Ilpo Järvinen (2):
-  PCI: Clear LBMS on resume to avoid Target Speed quirk
-  PCI: Do not wait for disconnected devices when resuming
+Fixes: e067dc3c6b9c ("f2fs: maintain six open zones for zoned devices")
+Cc: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/data.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
- drivers/pci/pci-driver.c | 6 ++++++
- drivers/pci/pci.c        | 5 +++++
- drivers/pci/pci.h        | 4 +++-
- 3 files changed, 14 insertions(+), 1 deletion(-)
-
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index f45ecb810ae6..8cdbc5ae44db 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1006,7 +1006,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 	f2fs_bug_on(sbi, is_read_io(fio->op));
+ 
+ 	f2fs_down_write(&io->io_rwsem);
+-
++next:
+ #ifdef CONFIG_BLK_DEV_ZONED
+ 	if (f2fs_sb_has_blkzoned(sbi) && btype < META && io->zone_pending_bio) {
+ 		wait_for_completion_io(&io->zone_wait);
+@@ -1016,7 +1016,6 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+ 	}
+ #endif
+ 
+-next:
+ 	if (fio->in_list) {
+ 		spin_lock(&io->io_lock);
+ 		if (list_empty(&io->io_list)) {
 -- 
-2.39.2
+2.40.1
 
