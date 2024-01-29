@@ -1,91 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8F4155A5F
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC2C15699F;
+	Mon, 29 Jan 2024 16:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706547549; cv=none; b=awF53WnnQDSJy7L1eBaiQWMx7vmdHsb5c5Ddf9aSc681FN9bLJPze6ZFdzQwobWWlkT8lJx+QUewEy+5Oo8rn22QdOfALDxgIWBIggCyiyvFS9jZ0LhD+Hj+PofOUa5XQHmpn/SOy5eECsY77SNGoUxCKRILrQhuthoEpDOC4+E=
+	t=1706547579; cv=none; b=Da7+Uik6erafNzx1R7jAJrnjeLb+r7xZ/yGoSPymK6JCTGPKoqAIi+OUBATIj/KQypSE4jLQ9N46utTAuaL3KlQ3I0FljS/h3BOblrJV0vAJbh6Une5+zwHes0r7GM5ftXtLJej7q2Is69qLj5DY7aEYLCOdeoVvGgnJ2egUZSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706547549; c=relaxed/simple;
-	bh=orEs8V0KcQLlcZg+WsnWSS40wmP3mUbL/yu7YTdCOOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AdWNUTDxWuQ3YZb+0lS+vtVyFI1GnTZ10tnFFKdnTaITeUJqTRFXtOYGJXw03WMiTD162IgVm6+OumiE+E+KuRggbWJE12+2eN5ZWcZBcW81U1ZnEYRKTHSL3FSMC0x+CEcXgOeUW9Z7iFTLjwfNPkWKuuywKwjJwYqIFhIirEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/w/xzoV; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706547579; c=relaxed/simple;
+	bh=8LILpHnnmR1A97ktFVzmWGYzak1i8dEqIJcb6XHLYyQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hWN1DF1f9OlJxXxL3KAX8LRVgMN659I/ebVsA+edi/ItraXmgdzNce0tWxMkzAaI0lHXTdKdGijYAgBNi6uJE4AJk9+VyOz+OoSF77AqfWvt0I36L2GZmPVPljRoAWTtT+AZt/nHGzUkkGhXxBqqDRr1zBIoI04bKl2rKkNEaZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=If2Ygv7A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/w/xzoV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706547548; x=1738083548;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=orEs8V0KcQLlcZg+WsnWSS40wmP3mUbL/yu7YTdCOOI=;
-  b=O/w/xzoVKBgNoD1OkahskHDUDbwiHoi2qKYCDOgG7kkeRnF3NUxXNRdR
-   yxGZTR+2LlPsGHKEXMUaM8UR1R35JR9p3KaklcD9fddjumZ1C1vLI9QcG
-   xrc7SjkD8jZ6YE8jAKDk/ytLcUckRu+sjqJhgzl/RkYF+WIfg8gYlAb/4
-   8MRclTa3jP/im9RT89jTzONBDqz30JM64MsVEj+H3/dGlYvqz8OAXayON
-   fGEcgS3Dy7dP1mXKARzVVpOV8NtXnSVr0jd33q/lUY6O+yxWmQAhkZSt1
-   CuWMRWrtYKsJlzKdhY9eC/dsT2M0ZlRTseVobPPjutLa70sj9C0ftlW6y
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="2871385"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="2871385"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 08:59:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="911123505"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="911123505"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 29 Jan 2024 08:59:02 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id AE38DFF; Mon, 29 Jan 2024 18:41:49 +0200 (EET)
-Date: Mon, 29 Jan 2024 18:41:49 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	"Kalra, Ashish" <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Randomness on confidential computing platforms
-Message-ID: <dqiaimv3qqh77cfm2huzja4vsho3jls7vjmnwgda7enw633ke2@qiqrdnno75a7>
-References: <20240126134230.1166943-1-kirill.shutemov@linux.intel.com>
- <276aaeee-cb01-47d3-a3bf-f8fa2e59016c@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="If2Ygv7A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64430C433F1;
+	Mon, 29 Jan 2024 16:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706547579;
+	bh=8LILpHnnmR1A97ktFVzmWGYzak1i8dEqIJcb6XHLYyQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=If2Ygv7AdJwTzIWfpgSrb/PMUe1PQ/pHHVsXfyua4k38Kcv7gHt8ZnaYdLbbyulTg
+	 oxRHLQdokcIdEFGXe5UBdoBKletECirIQ+k9umBu1eoQtH3XAuh4fGAunou7U/b1TM
+	 ZWDfYkQdTxt/Pb7AT2yNx+PcH7zZhJWiUjASuAMGyy3Hx9HmWzsPaizJ1IT5Z49vYx
+	 V1jSgezKjRWIvCF9vVS2Ygd69ls3N/ZuH/WH/0h9nx9GIaVDs3dMLGOva2fNzg2ahC
+	 03Qq+CnSLqjN8IWAvfNHFjKLyO0jPGzF+mWBYK2827mpVgX/+OcqO3NafyMBpQ5Wr5
+	 Cg4LCz560sYjg==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Subject: [PATCH] MAINTAINERS: Step down as PCI ENDPOINT maintainer
+Date: Mon, 29 Jan 2024 17:59:33 +0100
+Message-Id: <20240129165933.33428-1-lpieralisi@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <276aaeee-cb01-47d3-a3bf-f8fa2e59016c@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 29, 2024 at 08:30:11AM -0800, Dave Hansen wrote:
-> On 1/26/24 05:42, Kirill A. Shutemov wrote:
-> > 3. Panic after enough re-tries of RDRAND/RDSEED instructions fail.
-> >    Another DoS variant against the Guest.
-> 
-> I think Sean was going down the same path, but I really dislike the idea
-> of having TDX-specific (or CoCo-specific) policy here.
-> 
-> How about we WARN_ON() RDRAND/RDSEED going bonkers?  The paranoid folks
-> can turn on panic_on_warn, if they haven't already.
+The PCI endpoint subsystem is evolving at a rate I
+cannot keep up with, therefore I am standing down as
+a maintainer handing over to Manivannan (currently
+reviewer for this code) and Krzysztof who are doing
+an excellent job on the matter - they don't need my
+help any longer.
 
-Sure, we can do it for kernel, but we have no control on what userspace
-does.
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krzysztof Wilczyński <kw@linux.com>
+---
+ MAINTAINERS | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Sensible userspace on RDRAND/RDSEED failure should fallback to kernel
-asking for random bytes, but who knows if it happens in practice
-everywhere.
-
-Do we care?
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..a40cfcd1c65e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16856,9 +16856,8 @@ F:	Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+ F:	drivers/pci/controller/pcie-xilinx-cpm.c
+ 
+ PCI ENDPOINT SUBSYSTEM
+-M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
++M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ M:	Krzysztof Wilczyński <kw@linux.com>
+-R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ R:	Kishon Vijay Abraham I <kishon@kernel.org>
+ L:	linux-pci@vger.kernel.org
+ S:	Supported
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.34.1
+
