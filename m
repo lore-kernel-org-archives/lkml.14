@@ -1,102 +1,84 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9828B524AA
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 23:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFF64C3D4
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 23:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706570189; cv=none; b=A89J6kpWChmrdSVDEkye17U2JFD8un1MBfZGYEhFVA0UDfKTr2ESF83wrLigjiH4p9g4eumF+YcYZByS56tU9vi11C264BNcJlW+/da6Ifith0w5zQjyUCfGWLEACTULTRKS6SEzY02Achocrli35LPAvYN8xH6ZFTa64IAGI0U=
+	t=1706570235; cv=none; b=XfB5ZaT7GOtbW29nEke1UsqovR4KLM7/iVjoX5gDe35J7SFZdodntpBmlEgd4+WQCUqCJ+xCa1L4eG993mCYlbeg6A0YvvC02z7OFeqKooQKGPrIpfhkEtVKV0tlGTH4uS9m9+kI5HpsBfwiJGKLsOtHpDmvuHC9ZBPf/R6186s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706570189; c=relaxed/simple;
-	bh=EHU/gFLmRVzGlHoLA/zjYW4/9gQBhzXmrwpJH2AHQlk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oy/biyHG3uP/mo1QepLNn92tgYEHluADDBPqEHQ9Uqm89lWZiTDJXHNW/LbJBi5MkT6MINrOBt9ubBLTATkG15SREEo9xtYNYd09y3q9CQ02pAVM04uEPIRQiyTDxIPPfpQmoK0bGPpW205doJA+pJp9GvzmQaO+jKi+j87ex3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FJkAVnTF; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706570235; c=relaxed/simple;
+	bh=w/QfgsSmE5DAFlEeJou+7szSE6ht1mKclUNhYbABw6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IMceTkRIcIY2E1qxRlugKzmb2biMwi9tfL2ZWrJaegA+XfSz93XCJn3hkRo8K4G9IiJnW5pR+eaY3paQAxEF0ws8Zuuvo9xnUm+zsMMUVC9aQiPkGcpQbsQfrlHFh9IIrR+k/iamZ04VP5PstqDxfWa1HJlYHZBb0/vuQn0s6ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=admD522d; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FJkAVnTF"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7c00a2cbcf6so4067739f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1706570187; x=1707174987; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v2XpaGGZCWFpMyaB9aPEtxHOP3hYJmSQiAvS87bMfNM=;
-        b=FJkAVnTFd9l4g3cElfMgIML1qAUDphkJAGQkEF1R0Iowl5gy2EAlZt8MFc5E9uy441
-         sTMJsbs1oMB8T2k6xxuGC8UfzBP4TNHFqTYGr/SGzUNrko3UX4fRsYzupXskyZTg33rU
-         xVS8SYVvrL+SDW0QdQ76RfszDD20FZY6fKbME=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706570187; x=1707174987;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v2XpaGGZCWFpMyaB9aPEtxHOP3hYJmSQiAvS87bMfNM=;
-        b=nKAC1Dy1WpH2oWOLtyU5CCTK33tAeGgcKKsc2jfxQX9SH7fbivKMfbKKDWU985tRDK
-         ofNOmYGVpjP3FD9Iw7sNvwcUCJ3H5SAa7MHB9A8U4ya61eCoa6wEH6/CRnZ5xM5qdKj5
-         0kFfXftOZD7Px72xLW+ffaNta/dqcSk4ltxMpTNa7w2AJvxzWvai02DD3+YE3QUHNFgb
-         hr/YljeaBI3v0iFSWntndHJh1ng8X1/ncS76gVkuBKPJuSgAkiNPtNNVFxCPuIx2l/GK
-         gP+1MqZ97Id7Roog71SeYnxW/FXX2CQcHm5V82kFZCjQyEDWN9YqKUCF6J8dq9Y42kTD
-         C1Xg==
-X-Gm-Message-State: AOJu0YzJcmiKU8xu4ZPIr7FT+ii/ZPxtEwcO4s80CdzDz4PBogu1fDeA
-	jeqHuFkkhjJDeKcnO+LoGN/toFGqUNqMuteGBNn1vsAkIaxg60E2XIdzg1ge1x7nMG0BAAKth6l
-	v
-X-Google-Smtp-Source: AGHT+IE06yL/FKzzFPN8CpJNqqMMYEYB7Ec6sTMjdLr826q5Y5ke1zuJTodWnXyDOQTPnb13WBUS0Q==
-X-Received: by 2002:a5e:c748:0:b0:7c0:bd3:ab7d with SMTP id g8-20020a5ec748000000b007c00bd3ab7dmr502826iop.0.1706570186744;
-        Mon, 29 Jan 2024 15:16:26 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id g19-20020a02c553000000b0046edf6bffedsm1988701jaj.85.2024.01.29.15.16.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 15:16:26 -0800 (PST)
-Message-ID: <b065a083-e87b-42ad-8d49-a71f0c53b303@linuxfoundation.org>
-Date: Mon, 29 Jan 2024 16:16:25 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="admD522d"
+Date: Mon, 29 Jan 2024 23:17:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1706570231;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WLuRlRCwuI6asqqMQ9nqwhi3i/dMRQr3XJD+CfB0Xy4=;
+	b=admD522d8Nl6IR0vun3fAoB/CzcnGnamlNUcMKTFhvtQQykH72MoRtbwWmbwRbNv//uele
+	plUr+qqVTK36LEGYcFj9OCElFiDiG5pC6pTG/5pCGLPP790dCQqnv52d2zejGFImLx8lKv
+	HfyseVmIXjQ+Y4HHjuc+7ZrcDXW1U24=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: arm64: Add capability for unconditional WFx
+ passthrough
+Message-ID: <Zbgx8hZgWCmtzMjH@linux.dev>
+References: <20240129213918.3124494-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/185] 6.1.76-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240129165958.589924174@linuxfoundation.org>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240129165958.589924174@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129213918.3124494-1-coltonlewis@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 1/29/24 10:03, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.76 release.
-> There are 185 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 31 Jan 2024 16:59:28 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.76-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi Colton,
 
-Compiled and booted on my test system. No dmesg regressions.
+On Mon, Jan 29, 2024 at 09:39:17PM +0000, Colton Lewis wrote:
+> Add KVM_CAP_ARM_WFX_PASSTHROUGH capability to always allow WFE/WFI
+> instructions to run without trapping. Current behavior is to only
+> allow this if the vcpu is the only task running. This commit keeps the
+> old behavior when the capability is not set.
+> 
+> This allows userspace to set deterministic behavior and increase
+> efficiency for platforms with direct interrupt injection support.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Marc and I actually had an offlist conversation (shame on us!) about
+this very topic since there are users asking for the _opposite_ of this
+patch (unconditionally trap) [*].
 
-thanks,
--- Shuah
+I had originally wanted something like this, but Marc made the very good
+point that (1) the behavior of WFx traps is in no way user-visible and
+(2) it is entirely an IMP DEF behavior. The architecture only requires
+the traps be effective if the instruction does not complete in finite
+time.
+
+We need to think of an interface that doesn't depend on
+implementation-specific behavior, such as a control based on runqueue
+depth.
+
+[*] https://lore.kernel.org/kvmarm/a481ef04-ddd2-dfc1-41b1-d2ec45c6a3b5@huawei.com/
+
+-- 
+Thanks,
+Oliver
