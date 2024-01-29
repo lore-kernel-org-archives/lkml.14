@@ -1,160 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4456F15A4AB
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B72715AABD;
+	Mon, 29 Jan 2024 16:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545924; cv=none; b=uBPifmk2EnIFOg6k1RYI9+QjQhihQJ8RKf9rcUEeLSmXtKIJY6UEqxfjkrc1OS/Tu0n3Dnn5olJWZhj3bTYm6frBGUf4LOvcRSKZkg31Ih1eK14TjtFVgjwG/hZYrnQokHxzyKwryZYrU+bR7X7s5o+0GP8+/4+j+FAiNdK39kg=
+	t=1706545930; cv=none; b=G1fE7oyJc0peM7CWL9AzzU7WWC3uMmg4Q68dAwnUpAwut1CoM+sBEgUMXMWmRTajE5JbP8E3mOvjfDvqfffKSJJHU7688YsdGo/ceZ94oAdGw6VXnUYJeSd89Ai1uXsvnFlfkui28SUTsCCNR7rqw1lgMDzpKgafzX7lr21xAYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545924; c=relaxed/simple;
-	bh=/u1rFiHmhXAQAtlUXq7FgxQxSIB+dSj/HU6AwwQbRoo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EWL8xi3H11+V0Hoz0Nf4J1r/7JWMhrqF2BgsF35aYVPaqDjJUkbaobnMag+Ra7Z0ciQIRaUcDwTrDVUSqfrZDS9hbdIf2L8wkbfxKGnEDsnPv0riKJysbwP8MoAnJFKbi47LJormEbpNVkDa/uVM5vXxZBPyVt99iLhhheMu1dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+YZYA9S; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+YZYA9S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9FD4C4166B
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706545923;
-	bh=/u1rFiHmhXAQAtlUXq7FgxQxSIB+dSj/HU6AwwQbRoo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p+YZYA9S5HvYtpH/fWISTw5LLg6YC26CUaUE0OOkycY2NWeb4mIy88mZqtJ3zu2TA
-	 CUpwtuAcyoVN25144BfjKst3mkyuVvnDA8ELm7vKAFrzBramuJCqNmRIupLIsrivd2
-	 geGtoUhQzku9bIcOOwhNJN+srTO1fQyUOh+BcVTNpNbcBz6MB0QqnJnnC4jGeetD2g
-	 Wie4q3thvfistpghwe9jY38naYjt0lob/XXbn5qr2OwB40a3CAeu0S/HRxRcCo4wDX
-	 QnwcEq6FcIwOLHI4tx3LKCqZM/SIQ9VpKYbJbUomnYHU4Sdne44ItfBKJzV5dmXMCS
-	 4v8lEFRTEDvyw==
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3638b5f8240so313445ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:32:03 -0800 (PST)
-X-Gm-Message-State: AOJu0Yz8kJydBcmd4YBuNVChyFvCuxpPA87ek50Mz9TcHYvk3LGWJu54
-	xUQo6JZxhbhdroG1Hm24aLQenjoXE4DuceaInblNin2CXKBGFw60jKoEgP4y+ygMzgmPRU49DT0
-	DQIdtQCUGawJEHjuDfTLuKyoT8y4jp1sJYuB6
-X-Google-Smtp-Source: AGHT+IESDGAmy2d4K/fKQc27p+6fDI0mCGTCPnb2naFB86pPGb1OS+MLUkevgvtCdcIj3BNmBQogt+Hm5RAyE7VgE4c=
-X-Received: by 2002:a92:a306:0:b0:360:73de:be5e with SMTP id
- a6-20020a92a306000000b0036073debe5emr4185014ili.14.1706545922962; Mon, 29 Jan
- 2024 08:32:02 -0800 (PST)
+	s=arc-20240116; t=1706545930; c=relaxed/simple;
+	bh=X8yJX78PRc9PLq39CvJuPfk62qc/DaiPaXVMfh6eyMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uz8PfD6jQdBObDZgmIdOzhUQ5TWM5nfhFXSco+GJ+sGchpXvyfS8Cnz6XCQ+ZsiRXT4RJXI+geBtncvH0eiCaEH9uzSEK2VRu7pBMcBSr2zEL7RWPhny36svGtVproZwmG8LJbZARdorjy1zlTfIXyZJkmVxsIFdp11M/OJMWKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
+ id 46298f7f9473cea7; Mon, 29 Jan 2024 17:32:06 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id D765C66975C;
+	Mon, 29 Jan 2024 17:32:05 +0100 (CET)
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Subject: [PATCH v2 00/10] PM: sleep: Fix up suspend stats handling and clean up core suspend code
+Date: Mon, 29 Jan 2024 17:00:43 +0100
+Message-ID: <5770175.DvuYhMxLoT@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231025144546.577640-1-ryan.roberts@arm.com> <20240118111036.72641-1-21cnbao@gmail.com>
- <20240118111036.72641-6-21cnbao@gmail.com> <58efd8d4-28aa-45d6-b384-7463568b24bb@redhat.com>
- <CAGsJ_4zwUpL7LihRBOefg-cmY2mgNjMm-MPkq9VFBdXS_4b=uQ@mail.gmail.com>
- <CAF8kJuNHrM+ZQSnTAOt6rrmGr1P=YS8eU+RSqhAc1CjQ7qdEwQ@mail.gmail.com> <c11d73d5-105e-4ae1-837a-b9da392d2dad@redhat.com>
-In-Reply-To: <c11d73d5-105e-4ae1-837a-b9da392d2dad@redhat.com>
-From: Chris Li <chrisl@kernel.org>
-Date: Mon, 29 Jan 2024 08:31:51 -0800
-X-Gmail-Original-Message-ID: <CAF8kJuMmh06rCXuiu5V0BiT8t1ckEEnY4rM-ivRBQ+xdyMhRKQ@mail.gmail.com>
-Message-ID: <CAF8kJuMmh06rCXuiu5V0BiT8t1ckEEnY4rM-ivRBQ+xdyMhRKQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 5/6] mm: rmap: weaken the WARN_ON in __folio_add_anon_rmap()
-To: David Hildenbrand <david@redhat.com>
-Cc: Barry Song <21cnbao@gmail.com>, ryan.roberts@arm.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com, 
-	shy828301@gmail.com, wangkefeng.wang@huawei.com, willy@infradead.org, 
-	xiang@kernel.org, ying.huang@intel.com, yuzhao@google.com, surenb@google.com, 
-	steven.price@arm.com, Barry Song <v-songbaohua@oppo.com>, 
-	Chuanhua Han <hanchuanhua@oppo.com>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtgedgjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuhhlfhdrhhgrnhhsshhonheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhtrghnihhslhgrfidrghhruhhsiihkrgeslhhinhhugidrihhnthgvlhdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-On Mon, Jan 29, 2024 at 2:07=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 29.01.24 04:25, Chris Li wrote:
-> > Hi David and Barry,
-> >
-> > On Mon, Jan 22, 2024 at 10:49=E2=80=AFPM Barry Song <21cnbao@gmail.com>=
- wrote:
-> >>
-> >>>
-> >>>
-> >>> I have on my todo list to move all that !anon handling out of
-> >>> folio_add_anon_rmap_ptes(), and instead make swapin code call add
-> >>> folio_add_new_anon_rmap(), where we'll have to pass an exclusive flag
-> >>> then (-> whole new folio exclusive).
-> >>>
-> >>> That's the cleaner approach.
-> >>>
-> >>
-> >> one tricky thing is that sometimes it is hard to know who is the first
-> >> one to add rmap and thus should
-> >> call folio_add_new_anon_rmap.
-> >> especially when we want to support swapin_readahead(), the one who
-> >> allocated large filio might not
-> >> be that one who firstly does rmap.
-> >
-> > I think Barry has a point. Two tasks might race to swap in the folio
-> > then race to perform the rmap.
-> > folio_add_new_anon_rmap() should only call a folio that is absolutely
-> > "new", not shared. The sharing in swap cache disqualifies that
-> > condition.
->
-> We have to hold the folio lock. So only one task at a time might do the
-> folio_add_anon_rmap_ptes() right now, and the
-> folio_add_new_shared_anon_rmap() in the future [below].
->
+Hi Everyone,
 
-Ah, I see. The folio_lock() is the answer I am looking for.
+This is a v2 of
 
-> Also observe how folio_add_anon_rmap_ptes() states that one must hold
-> the page lock, because otherwise this would all be completely racy.
->
->  From the pte swp exclusive flags, we know for sure whether we are
-> dealing with exclusive vs. shared. I think patch #6 does not properly
-> check that all entries are actually the same in that regard (all
-> exclusive vs all shared). That likely needs fixing.
->
-> [I have converting per-page PageAnonExclusive flags to a single
-> per-folio flag on my todo list. I suspect that we'll keep the
-> per-swp-pte exlusive bits, but the question is rather what we can
-> actually make work, because swap and migration just make it much more
-> complicated. Anyhow, future work]
->
-> >
-> >> is it an acceptable way to do the below in do_swap_page?
-> >> if (!folio_test_anon(folio))
-> >>        folio_add_new_anon_rmap()
-> >> else
-> >>        folio_add_anon_rmap_ptes()
-> >
-> > I am curious to know the answer as well.
->
->
-> Yes, the end code should likely be something like:
->
-> /* ksm created a completely new copy */
-> if (unlikely(folio !=3D swapcache && swapcache)) {
->         folio_add_new_anon_rmap(folio, vma, vmf->address);
->         folio_add_lru_vma(folio, vma);
-> } else if (folio_test_anon(folio)) {
->         folio_add_anon_rmap_ptes(rmap_flags)
-> } else {
->         folio_add_new_anon_rmap(rmap_flags)
-> }
->
-> Maybe we want to avoid teaching all existing folio_add_new_anon_rmap()
-> callers about a new flag, and just have a new
-> folio_add_new_shared_anon_rmap() instead. TBD.
+https://lore.kernel.org/linux-pm/5760158.DvuYhMxLoT@kreacher
 
-There is more than one caller needed to perform that dance around
-folio_test_anon() then decide which function to call. It would be nice
-to have a wrapper function folio_add_new_shared_anon_rmap() to
-abstract this behavior.
+except for the first two patches that have been queued up for 6.9
+already.
+
+The original series description still applies:
+
+> This series of patches modifies the core system-wide suspend resume of
+> devices to get it more internally consistent (between the suspend and
+> resume parts) and fixes up the handling of suspend statistics in it.
+> 
+> The functional changes made by it are expected to be limited to the
+> statistics handling part.
+
+and the differences from the v1 are minor.
+
+Please refer to individual patch changelogs for details.
+
+Thanks!
 
 
->
-> >
-> > BTW, that test might have a race as well. By the time the task got
-> > !anon result, this result might get changed by another task. We need
-> > to make sure in the caller context this race can't happen. Otherwise
-> > we can't do the above safely.
-> Again, folio lock. Observe the folio_lock_or_retry() call that covers
-> our existing folio_add_new_anon_rmap/folio_add_anon_rmap_pte calls.
 
-Ack. Thanks for the explanation.
-
-Chris
