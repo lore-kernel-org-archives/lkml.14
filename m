@@ -1,123 +1,183 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086BC4EB4B
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0743E4F21F;
+	Mon, 29 Jan 2024 07:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706514744; cv=none; b=cDuVrWCJ8Sg4NRDUlz+kQ//9vY1MMgnkX+9spwQVYg6h6OhvxlkuR0nWiLS8uyPBqc/QBBZmglJze56+ZPhpmOTG1UxTovlt6DKfAHq8AtnUWdQe0khABmHv9ccOedLisfloe6SEnmLxZ/fj2bMBVVdrQOpqIRC7hlXo9G0mIvo=
+	t=1706514747; cv=none; b=Qe3lW6Aj2ShkPN6Hs5fKY0xyWLc3qjWP3C5GOWrLXBlKwws332oLoDgeWCsllitozwzAGy9VYU05g2LLfK4EhWuWTwowVXWMyQP4Q6GCgtH1zdI71VYvI90JHVTn+2A1FwAsvaN4Et3rE5wOPyEbhVhIlMBRVkIMnWjes26KQFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706514744; c=relaxed/simple;
-	bh=zsixOtgoxOAaktuLOVRNS+8gFKTlnwz3zGLUZ3WnNGo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RJ+jQZuOoa/0oCyalR+3i2kyCMNeUK1h104TTkcl5+0ckNHrwR1M+w0S1mW/QeyXJkKwjane32R8UFzMbZXpP4VoH6QTMuUlSo6HHhw4GFRp8WG+ngN+oXJ/t7/9foCG8UmdmQzxpEIFftGAisF7gxyd8qxxUEutU5Rk7JAsciE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jU+pRh35; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706514747; c=relaxed/simple;
+	bh=pwcgZHTKUrBHMyq34U7FHOUbnpLeMk1V/mq9JGQayb0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fPxtFIJTdXvH90yvjhG/D6+DvNHgsn9wGpoU5ji9HufV+kTPgamiRaJNd7c8gDRNfS4VGgcJcfD/+xdAdPXluUGTJ3jtoqd1MR49Jk3/WfAovM3oMnchIeCxVqqrrGcjVs8oSnowDQ/SycJdazaTddbWXIPja1NcLrnkQ/4/wng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kXy1dHJN; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jU+pRh35"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6de0ba30994so1238115b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 23:52:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXy1dHJN"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3510d79ae9so227839766b.0;
+        Sun, 28 Jan 2024 23:52:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706514742; x=1707119542; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fNguBtqcgFqP7NZKo6lpCS4yOVt7MJ3Er1hgEXdMUg8=;
-        b=jU+pRh35erKYerFZJlVghxYfHwFqEALAxQuSONfv141q3V4zT16f4ij5FyiVY6/xKd
-         4dJWBUyOkD1c+feluQtL1EswghR12syxUjA0MkR+bTPOpWOkGUQHcp6WsGiYJ9gjp8qX
-         9b6igq0EwvySW6CLMBIJ5qp52xV5i1sSn2lhJghvsT0gFteRpxGIR7EpHJHlG/RMcSx2
-         g9M3ywj1uQ3McMMyFAiaW6Pq+eshV4KNHxSKQU4doG6tDFPfprp7x+6VHoWbCPMry5Ek
-         tDrZ67qJ5M04JA6Fs013OkSjs0E/yWIEt3hPp+ZTHuIYSSJSTd2/ZEFuvafkxtNzOsYN
-         8iNw==
+        d=gmail.com; s=20230601; t=1706514744; x=1707119544; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pwcgZHTKUrBHMyq34U7FHOUbnpLeMk1V/mq9JGQayb0=;
+        b=kXy1dHJNzrdHnvjUyvhesU36czmyrctH6d9hpHBB5YeudP1lzPXYBlLvsqpc1yUwpm
+         i2rCaMTC7xlQmxEAHWEbD+pBFfKSFYGWEfl0O6U701FYbN/Ari6T5sfHjj0tOzfn7j3M
+         8TtGvp7Nv7AM8kGfo1O8VuSVplW1SKFqwI0OREgr1Fg8JI4ygGghFHd8pKS+VtDsdQwf
+         E5MM1NafXUrXFniqhaDhUz2JszfiqlcqDzkS/NCjDBZjEmTMyofJiUoKxCrAPGRt9OCF
+         1ACIjePlPVX/9deB9F1NICr3nAKOZpR/Zoq+pIKoBOykxrXwiMnMqMuCoDG1aszzQldt
+         IBTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706514742; x=1707119542;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fNguBtqcgFqP7NZKo6lpCS4yOVt7MJ3Er1hgEXdMUg8=;
-        b=GyaJ0GmxqG8GuS0jmBZ3A24QZAdVDRVOpy6sbiyUbLKOeFLtCqkdkNp4rY/8NIWytH
-         rSbEovHaN6/NTBC5eWOpRg53vLAcebNT2XPL7lZA9tidCmwWtsDlmwTmQzrQKaoGyX1+
-         DzEVCtinP15qbfvKL49pcqm4Cd00xO+ttW16z/+8tgb8ku7r4FQpAhANVkQmOF4yet+n
-         mM68vlNuXjtJt0pXDI20PSNoraqua+/9lwf4wv8iKKDoML5ohAeUgPMedUz1lqw1IEJi
-         6NNWurbExv4jXCjgQf9dpdOy4HACz0ulSS5W8SQ/8wtBLgPECmCKqZOI0/0lNTZtSj2S
-         G9oA==
-X-Gm-Message-State: AOJu0Ywjul6j+eCCGuY/vOO2Hfr+cyMWvcejOEyIDo3EPuobACEPs7vD
-	h/io5eqZP4ZRmi8xnLZoOf1lXKG9j7c6KKtGNn1L+XPiKNfxQ1/unVWbb0jZ47NfpRf3Y9Y5m4g
-	=
-X-Google-Smtp-Source: AGHT+IGLj5HGoGuy0l3yI/NV57KQmeoJRLi2YW0sBBeEqN3seWdetPb4xNwGFcfa76uqzDgLcB640w==
-X-Received: by 2002:a62:b60d:0:b0:6de:1095:4b9b with SMTP id j13-20020a62b60d000000b006de10954b9bmr3538877pff.7.1706514742083;
-        Sun, 28 Jan 2024 23:52:22 -0800 (PST)
-Received: from [127.0.1.1] ([117.193.214.109])
-        by smtp.gmail.com with ESMTPSA id t19-20020a62d153000000b006dddd685bbesm5467329pfl.122.2024.01.28.23.52.15
+        d=1e100.net; s=20230601; t=1706514744; x=1707119544;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pwcgZHTKUrBHMyq34U7FHOUbnpLeMk1V/mq9JGQayb0=;
+        b=rUDydyffgEONFai4wNpzxjNUj5frwnDj9Cyld7Uc7wRYyV9zukYeGgJSbYYjcMBz+C
+         WfyG2f0gqEfiPfxt/lkqvhStom8x4NIUqh8G7XNMbqIoEcZLqfqZAaKgYZA/h36/sLgr
+         Ite9asVWsTU7qVDOT0lZ4SNuLbdnjPK/LWQYlCJfi2+FrcmWOFcuSspYFi57L2Al78TH
+         Ths9wD73e8yMuujaWqAzWRpEkRDdRXdx1vLFhojp75/Yz6tFl2Ztto05SrXHzHIGUmb1
+         /fxsjQYCd07yYwR5u92dWkxEp8cCetQkPWp3s6hSlqX45hHfdHp0mzqfnFtqs1y62Z6i
+         v16A==
+X-Gm-Message-State: AOJu0YwIHFBz/T3PWBQ5/6x0pfQFz/1KykYQAuz2dFn4ZdMcKjtx9SjL
+	MghFYKaiB7u+Z9jVfHzbo9NQ2CHl7CIXCiZUog6A/CPczY+dUcoN
+X-Google-Smtp-Source: AGHT+IGe2Xb4m5k2Ojysw6hg1OnJCFDfbQ9jmsgb0PA154Ax0tq/GjsyywhwJcluG79bj6PCz0b8kg==
+X-Received: by 2002:a17:906:f6d0:b0:a35:6a40:b4cf with SMTP id jo16-20020a170906f6d000b00a356a40b4cfmr2721797ejb.19.1706514743859;
+        Sun, 28 Jan 2024 23:52:23 -0800 (PST)
+Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
+        by smtp.gmail.com with ESMTPSA id b12-20020a170906660c00b00a35b06fa7d0sm964940ejp.18.2024.01.28.23.52.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jan 2024 23:52:21 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/3] ufs: qcom: Mark "core_reset" as required property
-Date: Mon, 29 Jan 2024 13:22:03 +0530
-Message-Id: <20240129-ufs-core-reset-fix-v1-0-7ac628aa735f@linaro.org>
+        Sun, 28 Jan 2024 23:52:23 -0800 (PST)
+Message-ID: <84827fd6461c9650443608e33afe9eb011793656.camel@gmail.com>
+Subject: Re: [PATCH v5 0/2] drivers: rtc: add max313xx series rtc driver
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+ "a.zummo@towertech.it" <a.zummo@towertech.it>,
+ "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+ "jdelvare@suse.com" <jdelvare@suse.com>,  "linux@roeck-us.net"
+ <linux@roeck-us.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, 
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>
+Cc: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, "linux-hwmon@vger.kernel.org"
+	 <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org"
+	 <devicetree@vger.kernel.org>
+Date: Mon, 29 Jan 2024 08:55:40 +0100
+In-Reply-To: <170c8d6b-3246-493f-8cd9-6ac580cabc28@alliedtelesis.co.nz>
+References: <20230403154342.3108-1-Ibrahim.Tilki@analog.com>
+	 <147c92f9-b42b-4a51-a6f9-2d90bfe63aa0@alliedtelesis.co.nz>
+	 <1b42866bb6f05b7d68e9b8304e42359fccdf2bad.camel@gmail.com>
+	 <170c8d6b-3246-493f-8cd9-6ac580cabc28@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACNZt2UC/x2MSQqAMAwAvyI5G2hLKehXxINLqrm0kqgIxb9bP
- M7ATAElYVLomwJCNyvnVMG2DSz7lDZCXiuDM84b6zq8ouKShVBI6cTID9p59dPsQojBQw0Poar
- /6TC+7wdFQJPqZAAAAA==
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
- Bart Van Assche <bvanassche@acm.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>, 
- Andy Gross <andy.gross@linaro.org>, 
- "James E.J. Bottomley" <jejb@linux.ibm.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1197;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=zsixOtgoxOAaktuLOVRNS+8gFKTlnwz3zGLUZ3WnNGo=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBlt1kukOiTQDGcIeoelZVUHLMR2QZqqCSV88qj/
- CmxdYiFC9+JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZbdZLgAKCRBVnxHm/pHO
- 9Y1IB/0ePDpYszqZJSgILa+x2JyZQMEuYoiet03wzEowK3tUc5prM87SkXDuBsTGDGXuU6ircTY
- BOqsSZnJzbZGCQT6a18kHAUKdd9hRzqUjNWFARhLdAydYDkMZxViId3LmeRhfZ+0RjyfqMPTtv3
- drA+inetP/z0Ly7WZhLNrmsDbId9xkp0NbhYuXgfx+JlrT0Jy0yYMXe5Vin3piNw/qLQ5CtwR+s
- +w/n2c6Fvrbw0X8RSBiR9PaM2OPe2zhuDbR5XIatxo0FZOBDxKR9hIAKk43DhkR6KV6oZfKOKPw
- AdhOnaLI7cYEMBVW9CeKsC8CIM+aZBrycpik9ckgYg1pfXbY
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-As concluded in [1], mark the "core_reset" (UFS host controller reset from GCC)
-as required in the binding and also add the missing property in MSM8996 DT.
+On Mon, 2024-01-29 at 03:28 +0000, Chris Packham wrote:
+>=20
+> On 26/01/24 20:51, Nuno S=C3=A1 wrote:
+> > On Fri, 2024-01-26 at 02:22 +0000, Chris Packham wrote:
+> > > Hi All,
+> > >=20
+> > > On 4/04/23 03:43, Ibrahim Tilki wrote:
+> > > > changelog:
+> > > > since v5:
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: add enum value "2" to aux-voltage-=
+chargable
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: remove adi,trickle-diode-enable
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: change description of trickle-resi=
+stor-ohms
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: reorder as in example schema
+> > > > =C2=A0=C2=A0=C2=A0 - parse "wakeup-source" when irq not requested
+> > > > =C2=A0=C2=A0=C2=A0 - remove limitation on max31328 irq and clokout
+> > > > =C2=A0=C2=A0=C2=A0 - remove error and warning messages during trick=
+le charger setup
+> > > >=20
+> > > > since v4:
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: remove interrupt names.
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: add description for "interrupts" p=
+roperty
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: replace deprecated property "trick=
+le-diode-disable"
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 by "aux-voltage-chargeab=
+le"
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: add new property "adi,trickle-diod=
+e-enable"
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: remove "wakeup-source"
+> > > > =C2=A0=C2=A0=C2=A0 - use clear_bit instead of __clear_bit
+> > > > =C2=A0=C2=A0=C2=A0 - use devm_of_clk_add_hw_provider instead of of_=
+clk_add_provider
+> > > > =C2=A0=C2=A0=C2=A0 - use chip_desc pointer as driver data instead o=
+f enum.
+> > > >=20
+> > > > since v3:
+> > > > =C2=A0=C2=A0=C2=A0 - add "break" to fix warning: unannotated fall-t=
+hrough
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Reported-by: kernel test robot <lkp@=
+intel.com>
+> > > >=20
+> > > > since v2:
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: update title and description
+> > > > =C2=A0=C2=A0=C2=A0 - dt-binding: remove last example
+> > > > =C2=A0=C2=A0=C2=A0 - drop watchdog support
+> > > > =C2=A0=C2=A0=C2=A0 - support reading 12Hr format instead of forcing=
+ 24hr at probe time
+> > > > =C2=A0=C2=A0=C2=A0 - use "tm_year % 100" instead of range check
+> > > > =C2=A0=C2=A0=C2=A0 - refactor max313xx_init for readability
+> > > >=20
+> > > > Ibrahim Tilki (2):
+> > > > =C2=A0=C2=A0=C2=A0 drivers: rtc: add max313xx series rtc driver
+> > > > =C2=A0=C2=A0=C2=A0 dt-bindings: rtc: add max313xx RTCs
+> > > >=20
+> > > > =C2=A0=C2=A0 .../devicetree/bindings/rtc/adi,max313xx.yaml |=C2=A0 =
+144 +++
+> > > > =C2=A0=C2=A0 drivers/rtc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 11 +
+> > > > =C2=A0=C2=A0 drivers/rtc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 1 +
+> > > > =C2=A0=C2=A0 drivers/rtc/rtc-max313xx.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 1053
+> > > > +++++++++++++++++
+> > > > =C2=A0=C2=A0 4 files changed, 1209 insertions(+)
+> > > > =C2=A0=C2=A0 create mode 100644
+> > > > Documentation/devicetree/bindings/rtc/adi,max313xx.yaml
+> > > > =C2=A0=C2=A0 create mode 100644 drivers/rtc/rtc-max313xx.c
+> > > What happened to this series in the end? It kind of went off my radar
+> > > and I forgot about it.
+> > >=20
+> > > We've been carrying a version of these changes in our local tree for =
+a
+> > > while (and using it quite happily I should add).
+> > >=20
+> > Hi Chris,
+> >=20
+> > Also not sure.... In the meantime Ibrahim left ADI so if this is not in
+> > shape to
+> > be merged he won't be able to re-spin. If there's a need for a re-spin,
+> > please
+> > let me know so I can see internally if there's someone who can continue=
+ this
+> > work. I would do it myself if I had the HW.
+> I've got a board with a max31331 so I can test that. I don't have any of=
+=20
+> the interrupts hooked up so I won't be able to test that. Looks like=20
+> there was some outstanding discussion around the trickle-charge=20
+> devicetree properties so I'd need to figure out what was wanted there.=
+=20
+> I'll try to pick up the last series from the mailing list and go from the=
+re.
 
-However, to keep backwards compatibility with old DT, the driver cannot make it
-required. So it is still an optional property for the driver, but a comment has
-been added to clarify this.
+Thanks Chris!
 
-- Mani
-
-[1] https://lore.kernel.org/linux-scsi/190651ad-6aeb-69eb-89c5-ed18221b5a7a@quicinc.com/
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
-Manivannan Sadhasivam (3):
-      dt-bindings: ufs: qcom: Make reset properties as required
-      scsi: ufs: qcom: Clarify the comment of core_reset property
-      arm64: dts: qcom: msm8996: Add missing UFS host controller reset
-
- Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 2 ++
- arch/arm64/boot/dts/qcom/msm8996.dtsi               | 2 ++
- drivers/ufs/host/ufs-qcom.c                         | 6 +++++-
- 3 files changed, 9 insertions(+), 1 deletion(-)
----
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-change-id: 20240129-ufs-core-reset-fix-1bd4ab266f64
-
-Best regards,
--- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
+- Nuno S=C3=A1
