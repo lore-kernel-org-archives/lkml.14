@@ -1,101 +1,103 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E5B20B29;
-	Mon, 29 Jan 2024 09:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2517054F93;
+	Mon, 29 Jan 2024 09:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520208; cv=none; b=OHN/A6RTkeM3Jva6c3pBdKAP89qoy8ySqkjuiaJFhpHPIGFCAwwa2smEJ+NdjCTaZHE5nUkk1xL+dp20sINrEGiF/esqnxs1yAA29PoTOsAhgoAXHMxJUC/8bYjKYOVTDAnMVf/LO5pQcwZlr7hgjuw71TmYtKBa6Rm/5Drhiu8=
+	t=1706520277; cv=none; b=J9BXUB33LQF1JwDZfYd07jKDDQuRkX40fW6XULlS0BxFvRPIGKFHNNJbT8JNSlUQTCmZSvjhReXDH71p5ThPLSF5W5ZtQpZV11P6XRw6590x2OngZnRDDcxb35ESxUnQ8QTYp209uLXy2vbj7wOOOYKdhdpNn7p5UAb9v+KXb+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706520208; c=relaxed/simple;
-	bh=Msg8F5IL/0AenrkHit9Ad5Txza0O1ySzpyON+YbB29Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a3XfHlQolpmBCqvTqRXe2iccWQAvBXZQi34BfwoH8O1uWDxE9Fc/JiwzN8X+CIOuWJ/WkthFHzyQztSuQtfuJyVQHDTFes9Ky/MJeFPx21bPiLLAtQ4FCiGDr0GuudjRJkDujYUk2OsitcD+OCTGDwmkc2/Ode5pEWVIAvjNVqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [183.159.96.158])
-	by mail-app2 (Coremail) with SMTP id by_KCgCnfKx4brdlpzb9AA--.35670S2;
-	Mon, 29 Jan 2024 17:23:05 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] net: ipv4: fix a memleak in ip_setup_cork
-Date: Mon, 29 Jan 2024 17:10:17 +0800
-Message-Id: <20240129091017.2938835-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706520277; c=relaxed/simple;
+	bh=inmOTze7uKfZeWIoyGwST8hZ+d0IPucCCcqmZ34CTwM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RSaub6YEpF49Y5VZS9ojZ54+jfYWYJR0RoOmNL7zwrOEEX3548X0A/DVzQ6Y8bljG8NWn3su5xFC5PNHdYNCEeQs42ufOEA62JagMQM1tuhBjxfmWFHAaWU98o+SVJwDMQxTY4jCdkhyj99xI42nxdjfB6VdDw1DAmdqz5lUsfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 132871FB;
+	Mon, 29 Jan 2024 01:25:18 -0800 (PST)
+Received: from [10.162.42.11] (a077893.blr.arm.com [10.162.42.11])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B6393F762;
+	Mon, 29 Jan 2024 01:24:23 -0800 (PST)
+Message-ID: <0a71c87a-ae2c-4a61-8adb-3a51d6369b99@arm.com>
+Date: Mon, 29 Jan 2024 14:54:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgCnfKx4brdlpzb9AA--.35670S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1fGF1kuFWrAF13Kw43Awb_yoW8JFWUpr
-	Z8KayrJrW8Xr17KFsFyrW5ZFWfWw1vyFyjgw4ava4Y93WvqryaqrnrKFWa9FyavayxJ3Wr
-	Cwn7J34UWr18XFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
-	UUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 06/35] mm: cma: Make CMA_ALLOC_SUCCESS/FAIL count
+ the number of pages
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
+ will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
+ james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+ mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
+Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-7-alexandru.elisei@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240125164256.4147-7-alexandru.elisei@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When inetdev_valid_mtu fails, cork->opt should be freed if it is
-allocated in ip_setup_cork. Otherwise there could be a memleak.
 
-Fixes: 501a90c94510 ("inet: protect against too small mtu values.")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
 
-v2: fix memleak by placing the malloc as the last error-handling.
----
- net/ipv4/ip_output.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+On 1/25/24 22:12, Alexandru Elisei wrote:
+> The CMA_ALLOC_SUCCESS, respectively CMA_ALLOC_FAIL, are increased by one
+> after each cma_alloc() function call. This is done even though cma_alloc()
+> can allocate an arbitrary number of CMA pages. When looking at
+> /proc/vmstat, the number of successful (or failed) cma_alloc() calls
+> doesn't tell much with regards to how many CMA pages were allocated via
+> cma_alloc() versus via the page allocator (regular allocation request or
+> PCP lists refill).
+> 
+> This can also be rather confusing to a user who isn't familiar with the
+> code, since the unit of measurement for nr_free_cma is the number of pages,
+> but cma_alloc_success and cma_alloc_fail count the number of cma_alloc()
+> function calls.
+> 
+> Let's make this consistent, and arguably more useful, by having
+> CMA_ALLOC_SUCCESS count the number of successfully allocated CMA pages, and
+> CMA_ALLOC_FAIL count the number of pages the cma_alloc() failed to
+> allocate.
+> 
+> For users that wish to track the number of cma_alloc() calls, there are
+> tracepoints for that already implemented.
+> 
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+>  mm/cma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/cma.c b/mm/cma.c
+> index f49c95f8ee37..dbf7fe8cb1bd 100644
+> --- a/mm/cma.c
+> +++ b/mm/cma.c
+> @@ -517,10 +517,10 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
+>  	pr_debug("%s(): returned %p\n", __func__, page);
+>  out:
+>  	if (page) {
+> -		count_vm_event(CMA_ALLOC_SUCCESS);
+> +		count_vm_events(CMA_ALLOC_SUCCESS, count);
+>  		cma_sysfs_account_success_pages(cma, count);
+>  	} else {
+> -		count_vm_event(CMA_ALLOC_FAIL);
+> +		count_vm_events(CMA_ALLOC_FAIL, count);
+>  		if (cma)
+>  			cma_sysfs_account_fail_pages(cma, count);
+>  	}
 
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index b06f678b03a1..41537d18eecf 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1287,6 +1287,12 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
- 	if (unlikely(!rt))
- 		return -EFAULT;
- 
-+	cork->fragsize = ip_sk_use_pmtu(sk) ?
-+			 dst_mtu(&rt->dst) : READ_ONCE(rt->dst.dev->mtu);
-+
-+	if (!inetdev_valid_mtu(cork->fragsize))
-+		return -ENETUNREACH;
-+
- 	/*
- 	 * setup for corking.
- 	 */
-@@ -1303,12 +1309,6 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
- 		cork->addr = ipc->addr;
- 	}
- 
--	cork->fragsize = ip_sk_use_pmtu(sk) ?
--			 dst_mtu(&rt->dst) : READ_ONCE(rt->dst.dev->mtu);
--
--	if (!inetdev_valid_mtu(cork->fragsize))
--		return -ENETUNREACH;
--
- 	cork->gso_size = ipc->gso_size;
- 
- 	cork->dst = &rt->dst;
--- 
-2.34.1
-
+Without getting into the merits of this patch - which is actually trying to do
+semantics change to /proc/vmstat, wondering how is this even related to this
+particular series ? If required this could be debated on it's on separately.
