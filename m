@@ -1,339 +1,418 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3D75FEED;
-	Mon, 29 Jan 2024 08:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C465813B;
+	Mon, 29 Jan 2024 08:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706517205; cv=none; b=UNRPObDLKEf7Yrt6S6b9c3CKXem9y5GX06iUR3LPiUCa2HIXTmtf43HpZJ7CXO1XT+YthmqiisnDYu8tPMbLBaLvSFHdB29y4lngifGvwM+OucYzRTuBvLxz3Q1ukPDkcAPb1bsO/LdIU/yZRsf7rWK8KXkXGJyJs+5zcbd4MQM=
+	t=1706517204; cv=none; b=HAxZt8TThybHQLvjZyrW2beM/K/3eM0D8HRwBWrGYQIw/J2kI8s9RTvMHV/8jDSq0hRkclWtk3USEXTcE9xdqNM1BqyyFc8GckIAXxu3LWoeW8+nWSMkGrOzHMcu3p+1/47FRa23J6dM62YPLNYwNC8HmAmncDLRrDm1sOagi/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706517205; c=relaxed/simple;
-	bh=gPpx/D0AFFX1KG5syJb7H8q92DHqMNH5spjAbdTRFKM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QJZrAwc7N7iXgrRvMOtZGWLEZ/p8UartO1DG2i6RAszV8MI9cOd+Cvt5yUEc/y5zHJqX7at2gljjG93TRlIiYBsfokJ1rMfELgpcfFG2iWg7BOhq2/pALGaJNUD6PglzDIkfItcBkx1Y63P94uOxYBWqI5PxKMVg3bKwQP0RZH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ht43Nctn; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706517204; c=relaxed/simple;
+	bh=3dioaQQofEhsS7KTsT+rGyR1qA6uyIkdniyOWFMgmlE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NQ89tC6tmjW2kTeVG9Py0X9KuN578zSLe4ZLqG4J7dZk7keAU046bnygtImfiDrC//aSs5jYOLbWYNjwQ/CKvtjaEMsdMa+v1zR2xPVlpRq3qIwkg2KMBFV3QzVKXabU57+jXoDRTm3ah36ShUVAY2o0XioWwMJIcoTB/wZWbRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=BPaBX+dN; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ht43Nctn"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d7232dcb3eso9728495ad.2;
-        Mon, 29 Jan 2024 00:33:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706517202; x=1707122002; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w8rvCs0CTengdVMrYR436oClLvAgG0ieZs9mk2u2MpA=;
-        b=Ht43NctnnNQ1xdphfGQ4jhjWoIjuz5DYoQxTfX+BinDX4v1nzzQSOv+gWaWW0JWcIX
-         ToBb9gt3RviaD/Y3h3xM7vOvVQhZl8W//5sjax45rNXX4R4bkwuaIbhymvvc45HehGuT
-         lTddrnEdwr3QdgNGqnPyQG55CXEUDwN1PU8N2kNCgbSh2USuhACV4y2jFu0Lfs5wl8lf
-         TSWweQ0fEe9ofH95GDrZOEwP21raItZdLHw89UqKq1SdT2pyGES/bkD6ul7nAQgsgqOd
-         IRAERr0ThQAuqi15yfjOvP+UWtpQur/Sz/otSn8rewP6SMuVwcnX+yJgDLJ85EzAcwD+
-         QKnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706517202; x=1707122002;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w8rvCs0CTengdVMrYR436oClLvAgG0ieZs9mk2u2MpA=;
-        b=wNaub1diJjE26Nbi/7G1r2PYbPSVe4cw8GhhDIgpIgzqaW+vvlCSUCcR4+A54UxzZQ
-         EWmTwfJ6IBSeTnav+bB+J60qmQYG54ye/KznbdUUFcYVniTaNPOQTk3pXm50LAiUWJ/P
-         QOBkV6Q4jdfGUboaiCaGSmUuHASA1q7cY7/FdBAaLbJryFMIlU65CmHNePxoWifAEgk0
-         px/CvaVMnnhClPtDOQWbUrXjs2A4zx2BA290gAt/eXPDPcw9K/ScuOO2Px5V+ptlfslK
-         zarDBy0V9yNVN+pjrlnxQVffyziZT+KCaI0D15qjxKSMtzD+JtdsG2+rLgbQwSXLAKyF
-         G4Yg==
-X-Gm-Message-State: AOJu0YzlAIlhEwUNqBd9Me18YIRPGVmnNi8lPfTY9iT7CwsgpR8D+WgK
-	UorR+BRxw//CBVjyJFda0VRxV11xU0R0GnhHAX/BrEgBykycDOeN
-X-Google-Smtp-Source: AGHT+IHRbMIKxO3A3x41zkurSgi/UviAUp4JFNFrOSe6P/sbdsT8o4QgZGTE3UZ9cHGnhjfJipJ7Sw==
-X-Received: by 2002:a17:902:db12:b0:1d7:44f8:4aab with SMTP id m18-20020a170902db1200b001d744f84aabmr2123516plx.25.1706517202231;
-        Mon, 29 Jan 2024 00:33:22 -0800 (PST)
-Received: from charles-System-Product-Name.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id v19-20020a170902d09300b001d8d0487edbsm2001878plv.223.2024.01.29.00.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 00:33:21 -0800 (PST)
-From: Charles Hsu <ythsu0511@gmail.com>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	corbet@lwn.net,
-	Delphine_CC_Chiu@Wiwynn.com,
-	naresh.solanki@9elements.com,
-	peteryin.openbmc@gmail.com,
-	patrick.rudolph@9elements.com,
-	alexander.stein@ew.tq-group.com,
-	lakshmiy@us.ibm.com,
-	bhelgaas@google.com,
-	michal.simek@amd.com,
-	lukas@wunner.de,
-	festevam@denx.de
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	ytshu0511@gmail.com,
-	Charles Hsu <ythsu0511@gmail.com>
-Subject: [PATCH v2] hwmon: Add driver for MPS MPQ8785 Synchronous Step-Down Converter
-Date: Mon, 29 Jan 2024 16:31:15 +0800
-Message-Id: <20240129083115.2107466-1-ythsu0511@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BPaBX+dN"
+X-UUID: 084177d2be8111eea2298b7352fd921d-20240129
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=nMw2rY0id1kLvdBTzaUucT+yGeT5AxQk5Fa2HF2/eSo=;
+	b=BPaBX+dNfhnLhYXVxpJpZCXaczq8eS4YczpaFSi0DxgtDbSvnaMjiwBxReLnAYtGX80UegrBDukcLskhhO1oigHLO6A4oUS8n1pZVi9e8e/MHiDxzJU4cu+Yum1BayoP82+NWNG5Mc+DYk4DCBqcByxsN3MCzpmagjTjaMRFsgc=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.36,REQID:dbe2aaa8-894f-4fe9-b97f-924b73662cf4,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:6e16cf4,CLOUDID:db25c58e-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 084177d2be8111eea2298b7352fd921d-20240129
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
+	(envelope-from <yi-de.wu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 988928144; Mon, 29 Jan 2024 16:33:09 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Mon, 29 Jan 2024 16:33:09 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Mon, 29 Jan 2024 16:33:09 +0800
+From: Yi-De Wu <yi-de.wu@mediatek.com>
+To: Yingshiuan Pan <yingshiuan.pan@mediatek.com>, Ze-Yu Wang
+	<ze-yu.wang@mediatek.com>, Yi-De Wu <yi-de.wu@mediatek.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<netdev@vger.kernel.org>, <linux-mediatek@lists.infradead.org>, David Bradil
+	<dbrazdil@google.com>, Trilok Soni <quic_tsoni@quicinc.com>, My Chuang
+	<my.chuang@mediatek.com>, Shawn Hsiao <shawn.hsiao@mediatek.com>, PeiLun Suei
+	<peilun.suei@mediatek.com>, Liju Chen <liju-clr.chen@mediatek.com>, Willix
+ Yeh <chi-shen.yeh@mediatek.com>, Kevenny Hsieh <kevenny.hsieh@mediatek.com>
+Subject: [PATCH v9 19/21] virt: geniezone: Provide individual VM memory statistics within debugfs
+Date: Mon, 29 Jan 2024 16:33:00 +0800
+Message-ID: <20240129083302.26044-20-yi-de.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240129083302.26044-1-yi-de.wu@mediatek.com>
+References: <20240129083302.26044-1-yi-de.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-Add support for mpq8785 device from Monolithic Power Systems, Inc.
-(MPS) vendor. This is synchronous step-down controller.
+From: "Jerry Wang" <ze-yu.wang@mediatek.com>
 
-Signed-off-by: Charles Hsu <ythsu0511@gmail.com>
+Created a dedicated per-VM debugfs folder under gzvm, providing
+user-level programs with easy access to per-VM memory statistics for
+debugging and profiling purposes. This enables users to effectively
+analyze and optimize the memory usage of individual virtual machines.
 
+Two types of information can be obtained:
+
+`cat /sys/kernel/debug/gzvm/<pid>-<vmid>/protected_hyp_mem` shows memory
+used by the hypervisor and the size of the stage 2 table in bytes.
+
+`cat /sys/kernel/debug/gzvm/<pid>-<vmid>/protected_shared_mem` gives
+memory used by the shared resources of the guest and host in bytes.
+
+For example:
+console:/ # cat /sys/kernel/debug/gzvm/3417-15/protected_hyp_mem
+180328
+console:/ # cat /sys/kernel/debug/gzvm/3417-15/protected_shared_mem
+262144
+console:/ #
+
+More stats will be added in the future.
+
+Signed-off-by: Jerry Wang <ze-yu.wang@mediatek.com>
+Signed-off-by: Liju-Clr Chen <liju-clr.chen@mediatek.com>
+Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
 ---
-Change in v1:
-    Initial patchset.
-Change in v2:
-    1.Add pmbus support status registers.
-    2.Add mpq8785 in trivial-devices.yaml.
-    3.Remove format[PSC_VOLTAGE_OUT]
-    4.Fix MODULE_DESCRIPTION
----
- .../devicetree/bindings/trivial-devices.yaml  |  2 +
- Documentation/hwmon/index.rst                 |  1 +
- Documentation/hwmon/mpq8785.rst               | 94 +++++++++++++++++++
- drivers/hwmon/pmbus/Kconfig                   |  9 ++
- drivers/hwmon/pmbus/Makefile                  |  1 +
- drivers/hwmon/pmbus/mpq8785.c                 | 62 ++++++++++++
- 6 files changed, 169 insertions(+)
- create mode 100644 Documentation/hwmon/mpq8785.rst
- create mode 100644 drivers/hwmon/pmbus/mpq8785.c
+ arch/arm64/geniezone/gzvm_arch_common.h |   2 +
+ arch/arm64/geniezone/vm.c               |  13 +++
+ drivers/virt/geniezone/gzvm_main.c      |   6 ++
+ drivers/virt/geniezone/gzvm_vm.c        | 137 ++++++++++++++++++++++++
+ include/linux/gzvm_drv.h                |  15 +++
+ 5 files changed, 173 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 79dcd92c4a43..088b23ed2ae6 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -129,6 +129,8 @@ properties:
-           - mps,mp2975
-             # Monolithic Power Systems Inc. multi-phase hot-swap controller mp5990
-           - mps,mp5990
-+            # Monolithic Power Systems Inc. synchronous step-down converter mpq8785
-+          - mps,mpq8785
-             # Honeywell Humidicon HIH-6130 humidity/temperature sensor
-           - honeywell,hi6130
-             # IBM Common Form Factor Power Supply Versions (all versions)
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index c7ed1f73ac06..085ad6ca9b05 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -163,6 +163,7 @@ Hardware Monitoring Kernel Drivers
-    mp2975
-    mp5023
-    mp5990
-+   mpq8785
-    nct6683
-    nct6775
-    nct7802
-diff --git a/Documentation/hwmon/mpq8785.rst b/Documentation/hwmon/mpq8785.rst
-new file mode 100644
-index 000000000000..bf8176b87086
---- /dev/null
-+++ b/Documentation/hwmon/mpq8785.rst
-@@ -0,0 +1,94 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+Kernel driver mpq8785
-+=======================
-+
-+Supported chips:
-+
-+  * MPS MPQ8785
-+
-+    Prefix: 'mpq8785'
-+
-+Author: Charles Hsu <ythsu0511@gmail.com>
-+
-+Description
-+-----------
-+
-+The MPQ8785 is a fully integrated, PMBus-compatible, high-frequency, synchronous
-+buck converter. The MPQ8785 offers a very compact solution that achieves up to
-+40A output current per phase, with excellent load and line regulation over a
-+wide input supply range. The MPQ8785 operates at high efficiency over a wide
-+output current load range.
-+
-+The PMBus interface provides converter configurations and key parameters
-+monitoring.
-+
-+The MPQ8785 adopts MPS's proprietary multi-phase digital constant-on-time (MCOT)
-+control, which provides fast transient response and eases loop stabilization.
-+The MCOT scheme also allows multiple MPQ8785 devices to be connected in parallel
-+with excellent current sharing and phase interleaving for high-current
-+applications.
-+
-+Fully integrated protection features include over-current protection (OCP),
-+over-voltage protection (OVP), under-voltage protection (UVP), and
-+over-temperature protection (OTP).
-+
-+The MPQ8785 requires a minimal number of readily available, standard external
-+components, and is available in a TLGA (5mmx6mm) package.
-+
-+Device compliant with:
-+
-+- PMBus rev 1.3 interface.
-+
-+The driver exports the following attributes via the 'sysfs' files
-+for input voltage:
-+
-+**in1_input**
-+
-+**in1_label**
-+
-+**in1_max**
-+
-+**in1_max_alarm**
-+
-+**in1_min**
-+
-+**in1_min_alarm**
-+
-+**in1_crit**
-+
-+**in1_crit_alarm**
-+
-+The driver provides the following attributes for output voltage:
-+
-+**in2_input**
-+
-+**in2_label**
-+
-+**in2_alarm**
-+
-+The driver provides the following attributes for output current:
-+
-+**curr1_input**
-+
-+**curr1_label**
-+
-+**curr1_max**
-+
-+**curr1_max_alarm**
-+
-+**curr1_crit**
-+
-+**curr1_crit_alarm**
-+
-+The driver provides the following attributes for temperature:
-+
-+**temp1_input**
-+
-+**temp1_max**
-+
-+**temp1_max_alarm**
-+
-+**temp1_crit**
-+
-+**temp1_crit_alarm**
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index 294808f5240a..557ae0c414b0 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -377,6 +377,15 @@ config SENSORS_MPQ7932
- 	  This driver can also be built as a module. If so, the module will
- 	  be called mpq7932.
+diff --git a/arch/arm64/geniezone/gzvm_arch_common.h b/arch/arm64/geniezone/gzvm_arch_common.h
+index 07c5e2df7a74..fbaf2da792a4 100644
+--- a/arch/arm64/geniezone/gzvm_arch_common.h
++++ b/arch/arm64/geniezone/gzvm_arch_common.h
+@@ -26,6 +26,7 @@ enum {
+ 	GZVM_FUNC_SET_DTB_CONFIG = 16,
+ 	GZVM_FUNC_MAP_GUEST = 17,
+ 	GZVM_FUNC_MAP_GUEST_BLOCK = 18,
++	GZVM_FUNC_GET_STATISTICS = 19,
+ 	NR_GZVM_FUNC,
+ };
  
-+config SENSORS_MPQ8785
-+	tristate "MPS MPQ8785"
-+	help
-+	  If you say yes here you get hardware monitoring functionality support
-+	  for power management IC MPS MPQ8785.
+@@ -52,6 +53,7 @@ enum {
+ #define MT_HVC_GZVM_SET_DTB_CONFIG	GZVM_HCALL_ID(GZVM_FUNC_SET_DTB_CONFIG)
+ #define MT_HVC_GZVM_MAP_GUEST		GZVM_HCALL_ID(GZVM_FUNC_MAP_GUEST)
+ #define MT_HVC_GZVM_MAP_GUEST_BLOCK	GZVM_HCALL_ID(GZVM_FUNC_MAP_GUEST_BLOCK)
++#define MT_HVC_GZVM_GET_STATISTICS	GZVM_HCALL_ID(GZVM_FUNC_GET_STATISTICS)
+ 
+ #define GIC_V3_NR_LRS			16
+ 
+diff --git a/arch/arm64/geniezone/vm.c b/arch/arm64/geniezone/vm.c
+index 691e6521cc48..571326e70d98 100644
+--- a/arch/arm64/geniezone/vm.c
++++ b/arch/arm64/geniezone/vm.c
+@@ -412,3 +412,16 @@ int gzvm_arch_map_guest_block(u16 vm_id, int memslot_id, u64 gfn, u64 nr_pages)
+ 	return gzvm_hypcall_wrapper(MT_HVC_GZVM_MAP_GUEST_BLOCK, vm_id,
+ 				    memslot_id, gfn, nr_pages, 0, 0, 0, &res);
+ }
 +
-+	  This driver can also be built as a module. If so, the module will
-+	  be called mpq8785.
-+
- config SENSORS_PIM4328
- 	tristate "Flex PIM4328 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index cf8a76744545..f14ecf03ad77 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_SENSORS_MP2975)	+= mp2975.o
- obj-$(CONFIG_SENSORS_MP5023)	+= mp5023.o
- obj-$(CONFIG_SENSORS_MP5990)	+= mp5990.o
- obj-$(CONFIG_SENSORS_MPQ7932)	+= mpq7932.o
-+obj-$(CONFIG_SENSORS_MPQ8785)	+= mpq8785.o
- obj-$(CONFIG_SENSORS_PLI1209BC)	+= pli1209bc.o
- obj-$(CONFIG_SENSORS_PM6764TR)	+= pm6764tr.o
- obj-$(CONFIG_SENSORS_PXE1610)	+= pxe1610.o
-diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
-new file mode 100644
-index 000000000000..52c73e5f6a3e
---- /dev/null
-+++ b/drivers/hwmon/pmbus/mpq8785.c
-@@ -0,0 +1,62 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Driver for MPS MPQ8785 Step-Down Converter
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include "pmbus.h"
-+
-+static struct pmbus_driver_info mpq8785_info = {
-+	.pages = 1,
-+	.format[PSC_VOLTAGE_IN] = direct,
-+	.format[PSC_CURRENT_OUT] = direct,
-+	.format[PSC_TEMPERATURE] = direct,
-+	.m[PSC_VOLTAGE_IN] = 4,
-+	.b[PSC_VOLTAGE_IN] = 0,
-+	.R[PSC_VOLTAGE_IN] = 1,
-+	.m[PSC_CURRENT_OUT] = 16,
-+	.b[PSC_CURRENT_OUT] = 0,
-+	.R[PSC_CURRENT_OUT] = 0,
-+	.m[PSC_TEMPERATURE] = 1,
-+	.b[PSC_TEMPERATURE] = 0,
-+	.R[PSC_TEMPERATURE] = 0,
-+	.func[0] =
-+		PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT |
-+		PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-+		PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
-+		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
-+};
-+
-+static int mpq8785_probe(struct i2c_client *client)
++int gzvm_arch_get_statistics(struct gzvm *gzvm)
 +{
-+	return pmbus_do_probe(client, &mpq8785_info);
++	struct arm_smccc_res res;
++	int ret;
++
++	ret = gzvm_hypcall_wrapper(MT_HVC_GZVM_GET_STATISTICS, gzvm->vm_id,
++				   0, 0, 0, 0, 0, 0, &res);
++
++	gzvm->stat.protected_hyp_mem = ((ret == 0) ? res.a1 : 0);
++	gzvm->stat.protected_shared_mem = ((ret == 0) ? res.a2 : 0);
++	return ret;
++}
+diff --git a/drivers/virt/geniezone/gzvm_main.c b/drivers/virt/geniezone/gzvm_main.c
+index af5ab8949206..da1c0f478b61 100644
+--- a/drivers/virt/geniezone/gzvm_main.c
++++ b/drivers/virt/geniezone/gzvm_main.c
+@@ -113,6 +113,11 @@ static int gzvm_drv_probe(struct platform_device *pdev)
+ 	ret = gzvm_drv_irqfd_init();
+ 	if (ret)
+ 		return ret;
++
++	ret = gzvm_drv_debug_init();
++	if (ret)
++		return ret;
++
+ 	return 0;
+ }
+ 
+@@ -121,6 +126,7 @@ static int gzvm_drv_remove(struct platform_device *pdev)
+ 	gzvm_drv_irqfd_exit();
+ 	gzvm_destroy_all_vms();
+ 	misc_deregister(&gzvm_dev);
++	gzvm_drv_debug_exit();
+ 	return 0;
+ }
+ 
+diff --git a/drivers/virt/geniezone/gzvm_vm.c b/drivers/virt/geniezone/gzvm_vm.c
+index 1af78f161eb3..4861730d555d 100644
+--- a/drivers/virt/geniezone/gzvm_vm.c
++++ b/drivers/virt/geniezone/gzvm_vm.c
+@@ -11,11 +11,14 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/gzvm_drv.h>
++#include <linux/debugfs.h>
+ #include "gzvm_common.h"
+ 
+ static DEFINE_MUTEX(gzvm_list_lock);
+ static LIST_HEAD(gzvm_list);
+ 
++static struct dentry *gzvm_debugfs_dir;
++
+ u64 gzvm_gfn_to_hva_memslot(struct gzvm_memslot *memslot, u64 gfn)
+ {
+ 	u64 offset = gfn - memslot->base_gfn;
+@@ -308,6 +311,12 @@ static void gzvm_destroy_all_ppage(struct gzvm *gzvm)
+ 	}
+ }
+ 
++static int gzvm_destroy_vm_debugfs(struct gzvm *vm)
++{
++	debugfs_remove_recursive(vm->debug_dir);
++	return 0;
++}
++
+ static void gzvm_destroy_vm(struct gzvm *gzvm)
+ {
+ 	size_t allocated_size;
+@@ -334,6 +343,8 @@ static void gzvm_destroy_vm(struct gzvm *gzvm)
+ 	/* No need to lock here becauese it's single-threaded execution */
+ 	gzvm_destroy_all_ppage(gzvm);
+ 
++	gzvm_destroy_vm_debugfs(gzvm);
++
+ 	kfree(gzvm);
+ }
+ 
+@@ -391,6 +402,113 @@ static void setup_vm_demand_paging(struct gzvm *vm)
+ 	}
+ }
+ 
++static int debugfs_open(struct inode *inode, struct file *file)
++{
++	file->private_data = inode->i_private;
++	return 0;
++}
++
++/**
++ * hyp_mem_read() - Get size of hypervisor-allocated memory and stage 2 table
++ * @file: Pointer to struct file
++ * @buf: User space buffer for storing the return value
++ * @len: Size of @buf, in bytes
++ * @offset: Pointer to loff_t
++ *
++ * Return: Size of hypervisor-allocated memory and stage 2 table, in bytes
++ */
++static ssize_t hyp_mem_read(struct file *file, char __user *buf, size_t len,
++			    loff_t *offset)
++{
++	char tmp_buffer[GZVM_MAX_DEBUGFS_VALUE_SIZE] = {0};
++	struct gzvm *vm = file->private_data;
++	int ret;
++
++	if (*offset == 0) {
++		ret = gzvm_arch_get_statistics(vm);
++		if (ret)
++			return ret;
++		snprintf(tmp_buffer, sizeof(tmp_buffer), "%llu\n",
++			 vm->stat.protected_hyp_mem);
++		if (copy_to_user(buf, tmp_buffer, sizeof(tmp_buffer)))
++			return -EFAULT;
++		*offset += sizeof(tmp_buffer);
++		return sizeof(tmp_buffer);
++	}
++	return 0;
++}
++
++/**
++ * shared_mem_read() - Get size of memory shared between host and guest
++ * @file: Pointer to struct file
++ * @buf: User space buffer for storing the return value
++ * @len: Size of @buf, in bytes
++ * @offset: Pointer to loff_t
++ *
++ * Return: Size of memory shared between host and guest, in bytes
++ */
++static ssize_t shared_mem_read(struct file *file, char __user *buf, size_t len,
++			       loff_t *offset)
++{
++	char tmp_buffer[GZVM_MAX_DEBUGFS_VALUE_SIZE] = {0};
++	struct gzvm *vm = file->private_data;
++	int ret;
++
++	if (*offset == 0) {
++		ret = gzvm_arch_get_statistics(vm);
++		if (ret)
++			return ret;
++		snprintf(tmp_buffer, sizeof(tmp_buffer), "%llu\n",
++			 vm->stat.protected_shared_mem);
++		if (copy_to_user(buf, tmp_buffer, sizeof(tmp_buffer)))
++			return -EFAULT;
++		*offset += sizeof(tmp_buffer);
++		return sizeof(tmp_buffer);
++	}
++	return 0;
++}
++
++static const struct file_operations hyp_mem_fops = {
++	.owner = THIS_MODULE,
++	.open = debugfs_open,
++	.read = hyp_mem_read,
++	.llseek = no_llseek,
 +};
 +
-+static const struct i2c_device_id mpq8785_id[] = {
-+	{ "mpq8785", 0 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, mpq8785_id);
-+
-+static const struct of_device_id __maybe_unused mpq8785_of_match[] = {
-+	{ .compatible = "mps,mpq8785" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mpq8785_of_match);
-+
-+static struct i2c_driver mpq8785_driver = {
-+	.driver = {
-+		   .name = "mpq8785",
-+		   .of_match_table = of_match_ptr(mpq8785_of_match),
-+	},
-+	.probe_new = mpq8785_probe,
-+	.id_table = mpq8785_id,
++static const struct file_operations shared_mem_fops = {
++	.owner = THIS_MODULE,
++	.open = debugfs_open,
++	.read = shared_mem_read,
++	.llseek = no_llseek,
 +};
 +
-+module_i2c_driver(mpq8785_driver);
++static int gzvm_create_vm_debugfs(struct gzvm *vm)
++{
++	struct dentry *dent;
++	char dir_name[GZVM_MAX_DEBUGFS_DIR_NAME_SIZE];
 +
-+MODULE_AUTHOR("Charles Hsu <ythsu0511@gmail.com>");
-+MODULE_DESCRIPTION("PMBus driver for MPS MPQ8785");
-+MODULE_LICENSE("GPL");
++	if (vm->debug_dir) {
++		pr_warn("VM debugfs directory is duplicated\n");
++		return 0;
++	}
++
++	snprintf(dir_name, sizeof(dir_name), "%d-%d", task_pid_nr(current), vm->vm_id);
++
++	dent = debugfs_lookup(dir_name, gzvm_debugfs_dir);
++	if (dent) {
++		pr_warn("Debugfs directory is duplicated\n");
++		dput(dent);
++		return 0;
++	}
++	dent = debugfs_create_dir(dir_name, gzvm_debugfs_dir);
++	vm->debug_dir = dent;
++
++	debugfs_create_file("protected_shared_mem", 0444, dent, vm, &shared_mem_fops);
++	debugfs_create_file("protected_hyp_mem", 0444, dent, vm, &hyp_mem_fops);
++
++	return 0;
++}
++
+ static struct gzvm *gzvm_create_vm(unsigned long vm_type)
+ {
+ 	int ret;
+@@ -432,6 +550,8 @@ static struct gzvm *gzvm_create_vm(unsigned long vm_type)
+ 	list_add(&gzvm->vm_list, &gzvm_list);
+ 	mutex_unlock(&gzvm_list_lock);
+ 
++	gzvm_create_vm_debugfs(gzvm);
++
+ 	pr_debug("VM-%u is created\n", gzvm->vm_id);
+ 
+ 	return gzvm;
+@@ -469,3 +589,20 @@ void gzvm_destroy_all_vms(void)
+ out:
+ 	mutex_unlock(&gzvm_list_lock);
+ }
++
++int gzvm_drv_debug_init(void)
++{
++	if (!debugfs_initialized())
++		return 0;
++
++	if (!gzvm_debugfs_dir && !debugfs_lookup("gzvm", gzvm_debugfs_dir))
++		gzvm_debugfs_dir = debugfs_create_dir("gzvm", NULL);
++
++	return 0;
++}
++
++void gzvm_drv_debug_exit(void)
++{
++	if (gzvm_debugfs_dir && debugfs_lookup("gzvm", gzvm_debugfs_dir))
++		debugfs_remove_recursive(gzvm_debugfs_dir);
++}
+diff --git a/include/linux/gzvm_drv.h b/include/linux/gzvm_drv.h
+index 2e50ee3011e8..d532d2d31d43 100644
+--- a/include/linux/gzvm_drv.h
++++ b/include/linux/gzvm_drv.h
+@@ -47,6 +47,9 @@
+ 
+ #define GZVM_BLOCK_BASED_DEMAND_PAGE_SIZE	(2 * 1024 * 1024) /* 2MB */
+ 
++#define GZVM_MAX_DEBUGFS_DIR_NAME_SIZE  20
++#define GZVM_MAX_DEBUGFS_VALUE_SIZE	20
++
+ /* struct mem_region_addr_range - Identical to ffa memory constituent */
+ struct mem_region_addr_range {
+ 	/* the base IPA of the constituent memory region, aligned to 4 kiB */
+@@ -89,6 +92,11 @@ struct gzvm_pinned_page {
+ 	u64 ipa;
+ };
+ 
++struct gzvm_vm_stat {
++	u64 protected_hyp_mem;
++	u64 protected_shared_mem;
++};
++
+ struct gzvm {
+ 	struct gzvm_vcpu *vcpus[GZVM_MAX_VCPUS];
+ 	/* userspace tied to this vm */
+@@ -133,6 +141,9 @@ struct gzvm {
+ 	struct rb_root pinned_pages;
+ 	/* lock for memory operations */
+ 	struct mutex mem_lock;
++
++	struct gzvm_vm_stat stat;
++	struct dentry *debug_dir;
+ };
+ 
+ long gzvm_dev_ioctl_check_extension(struct gzvm *gzvm, unsigned long args);
+@@ -154,6 +165,7 @@ int gzvm_arch_destroy_vm(u16 vm_id);
+ int gzvm_arch_map_guest(u16 vm_id, int memslot_id, u64 pfn, u64 gfn,
+ 			u64 nr_pages);
+ int gzvm_arch_map_guest_block(u16 vm_id, int memslot_id, u64 gfn, u64 nr_pages);
++int gzvm_arch_get_statistics(struct gzvm *gzvm);
+ int gzvm_vm_ioctl_arch_enable_cap(struct gzvm *gzvm,
+ 				  struct gzvm_enable_cap *cap,
+ 				  void __user *argp);
+@@ -175,6 +187,9 @@ int gzvm_arch_vcpu_run(struct gzvm_vcpu *vcpu, __u64 *exit_reason);
+ int gzvm_arch_destroy_vcpu(u16 vm_id, int vcpuid);
+ int gzvm_arch_inform_exit(u16 vm_id);
+ 
++int gzvm_drv_debug_init(void);
++void gzvm_drv_debug_exit(void);
++
+ int gzvm_find_memslot(struct gzvm *vm, u64 gpa);
+ int gzvm_handle_page_fault(struct gzvm_vcpu *vcpu);
+ bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu);
 -- 
-2.34.1
+2.18.0
 
