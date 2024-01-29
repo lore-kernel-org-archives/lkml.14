@@ -1,90 +1,217 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68E8157E6D
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706547295; cv=none; b=uYKCZnt1ZE9ouFExnxYkuXdfeCt5C+TVNCs1XYzKDmiEp7xYpdg5+H9n50d5rWJ4aSeGVk/th1ix+10ZwVCUWrN1bznJN9De3LOd2a68MtnxrGvG0sW7AmhQNbrfUjCLlnLJ+yFeUrZ2iQWTCAvFKyK5IwScYs4qB3RA/YkqNmE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706547295; c=relaxed/simple;
-	bh=Jt+LiN/noCq7Ty1uEN6t2Ox1ZFOSRbxHqFfobXnTMR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BpwL//hGhOx2BVIUqjuwbDKz3eSq8r//g8Ph8h8IeYksccFFaF8yk0e4C5eG9a8Q3y3+7GoIoIxmJh4wURxuvN7ym56QoatO7QrKxmKs3Z0veXKJ6mttdTuPPGeH+vNL5a3ZES7bqxUeJoBWAU7/8VCuI4Y6IocFTUgRHvPMusQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=OdudcxDA; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8890315705C;
+	Mon, 29 Jan 2024 16:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706547302; cv=fail; b=JnEWWRbj6NIutpmoOeO0x+25vTiZQjlpy2f4DbtmoCUradcfZ5BLWa9clhMHtaRNGe/Aplf+vor1M7ws+7c5rXAZkL7+rHhwNt4rVYCAjnZ4hpM4tKuMCvl+ruhioFoIw3vl7cY6Cr5v7wpH4tgEClnCR86P4nDcKTURLjhNfV4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706547302; c=relaxed/simple;
+	bh=xt9+0Mp4bfen++9wWEDtMaeesCo6qg52KhGorCKumPA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=O1giRRvQBAxIv7MC8ZXHQoLDywo0+J9N+BZiF73428fy13O+b9v8VwO3oAGVvsDazUXAqJugru2JhThnNjYrZdtHABA7Q07+tz+fZRr7/zSGAPoO9FIra0gUU8qx3ZLupD8eeer2R5OsTHbeeckcNAH5rUrT+w/KWLejx6AIZng=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kcT96dWG; arc=fail smtp.client-ip=40.107.212.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="OdudcxDA"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc22ae44595so3256001276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1706547292; x=1707152092; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cJSj/N6Zg4F+lG6KjfxIFFgsTp8LvTjrWxVd0svGSOQ=;
-        b=OdudcxDAxsC7Mj+ANnAREQa3JXWVhMSMvTsaTJ0ZmrEDmnsL83FtAFQzCiMrtJ3NFs
-         cPkUM3mJCixuqMtpTXa9KgsDJajEyMZqIpgVsW26djQ8a8BzLedTK01KGkAgggRid8zZ
-         uqhsptsCIXemQGIkYeOMb7XMVr/ztzkYAl+6KHe8u2ucGQ+u25hCCNSyGTBXek8v7XOu
-         gxDYSrKSBxZ3pXpNnXVOWtix5l5ejnVLrAsu8sW5gAlmiyLhlw5IkcaD1EpKKLT38MkO
-         DrB+XXoY6wlIGWJVdJFCb3OdY4ijVcSTSvY+TaMXTzF1PFHu5DEbTtI9vzJAHLOhdWEW
-         Celg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706547292; x=1707152092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cJSj/N6Zg4F+lG6KjfxIFFgsTp8LvTjrWxVd0svGSOQ=;
-        b=DjI290HnXxlG+ybkysD5Q/iCYmUtpMWbvzkCN5CyPcSQfv4n58rSs8ewF7U+yupSt7
-         sYliGq3V2SHJpvEklFSeQb69iXgVwchrxikEnW09+bfGyl9DCtOiNkNQISv0did6F22V
-         y1twPSoIwLL1bwJsNof34qM1cHenUSyoW8oBmsgvPMUFbJarCjo0mL7Bsi09C16OmkQe
-         fXlO3VaQlMqBwXi2hqtNPSFKxuFfbc1cG2fWdvScx20j41/cya0Tun1wPkT9ZVr04/jF
-         UP3ZgEhkOPW90KyHweD9Dvn+inE/mcyLVagFHjMfJHnfb/qC5FP4HFo4zJSphLZLVtL0
-         XhSg==
-X-Gm-Message-State: AOJu0YxRbebfIncFq5U81RGsFTARAYfpC3/PsgEkHunMCHYqKQh09P/X
-	vpH0q+35PCH/BqSygvakEzCDJ/3NebyOHkjmXUrfeKWCK5eE+jKbaj8BHrXNB7IkLYD0HjR43lT
-	kXnwHjcxAgGmS/DEmNdh2ScWY10NafYTQ2Clj
-X-Google-Smtp-Source: AGHT+IF8X1D+bWyAPQJNFbX1ZiVwTlYzbSpwWMXDZMU7ADUl9sQfUKA8+DOt9TS5idgvImt1O8TW1U0zl1KsysUVJSw=
-X-Received: by 2002:a25:ad99:0:b0:dc2:3f74:c507 with SMTP id
- z25-20020a25ad99000000b00dc23f74c507mr3318675ybi.33.1706547292625; Mon, 29
- Jan 2024 08:54:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kcT96dWG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VGUbd0uoYJ+TSE0lFEMAdq6rtrHI2ohTr8rdXZw/7afoiyh582NDRxdaGGKFnjbAXOZGhVIsMC712uRFmEfR8Fobx9hF00BbFW9To9lgnzsUW3xvWBrvu16nCdscVU1G1CoBFzRsaAPSisYuD29t6TU3ZFYXBOJmcJfxH6mts/h9Nm7/yP/GAyAZKP80dHLG/367izSB4Kan6R0DdO1aA/VEp+nVPBP/8UX6CgRsYe1WoGiB3GbV0m06cgne2udWkNfc0FBfpqpsV38XIw3nJBgENfrxd3EcF2c2+A+EuBKokSdzZ/o+MHnnP6DlkoQ7EKNdumW+sLR6iDYryAygZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qFxPptALoffkygo7l02OQ2yYnkkmSJ1B5391eBqq/l0=;
+ b=oHaKJcGrmhddZ5fRliyQx1AmUHzcsRYw2wf2iTtjpLgWskeoLhsCWKPn5rIYzB6N9sd7jA2J+4M7SBK+8QqLe510Ki0HUFQ7VJE1G+y1EnBDqdePpoxxCWCKVlfUsmBrgmqWr3z+yNNTXlcHGRgsvEy9eiQw0Pim+kT5RlSB6Eg2cfabsy0GurgtNOs1g+4PtyO1Oqs4Ntom3ZuXTOfr23/QLu6UdmOVyoHXRteeDJHdUaQKRoPr26Vr4Rc7fdvJZXJ3GI4FGZerjHLozBYT/0lsERRCLnAVtK5os9HYeNIBx/eVQS6ywhdfdrsPrrqTf/kbCqFSGh4scW6z9k5obg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qFxPptALoffkygo7l02OQ2yYnkkmSJ1B5391eBqq/l0=;
+ b=kcT96dWGzw2VW6cK/j96K6Lht/x+VxDVhLk/DaFXF2MJwJxa07RMkyH+UXpOuJqrEyJHS9P2TFsi3UFtmqE5/MrbMWfWFbWGHSL9rH78MIdvXrJqgYPyTCQ7sfAOd6XkzVV9rXMYabg6dfOqamBoJaFw2793gwEIma/guO9jeyA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SA3PR12MB9105.namprd12.prod.outlook.com (2603:10b6:806:382::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Mon, 29 Jan
+ 2024 16:54:56 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::c30:614f:1cbd:3c64]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::c30:614f:1cbd:3c64%4]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 16:54:56 +0000
+Message-ID: <b1b8545c-d05e-4e99-acae-690c3c052943@amd.com>
+Date: Mon, 29 Jan 2024 10:54:53 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/amd: Fetch the EDID from _DDC if available for
+ eDP
+Content-Language: en-US
+To: Jani Nikula <jani.nikula@linux.intel.com>, amd-gfx@lists.freedesktop.org,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Harry Wentland <harry.wentland@amd.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: open list <linux-kernel@vger.kernel.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ Melissa Wen <mwen@igalia.com>, "open list:ACPI"
+ <linux-acpi@vger.kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>
+References: <20240126184639.8187-1-mario.limonciello@amd.com>
+ <20240126184639.8187-3-mario.limonciello@amd.com> <87le88jx63.fsf@intel.com>
+ <63c60424-1b2d-4912-81b2-7c7ead4c8289@amd.com> <87cytkjddy.fsf@intel.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <87cytkjddy.fsf@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DS7PR05CA0033.namprd05.prod.outlook.com
+ (2603:10b6:8:2f::20) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZbfMuAlUMRO9Hqa6@kernel.org>
-In-Reply-To: <ZbfMuAlUMRO9Hqa6@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 29 Jan 2024 11:55:17 -0500
-Message-ID: <CAHC9VhTX4k5YMLoqkkosB7_RVOT3-pC-e2kW5c3UjunFjooKMw@mail.gmail.com>
-Subject: Re: [PATCH 1/1 fyi] tools headers UAPI: Sync unistd.h to pick
- {list,stat}mount, lsm_{[gs]et_self_attr,list_modules} syscall numbers
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>, 
-	Christian Brauner <brauner@kernel.org>, Miklos Szeredi <mszeredi@redhat.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA3PR12MB9105:EE_
+X-MS-Office365-Filtering-Correlation-Id: acdd31f0-a634-43f0-3fc1-08dc20eb059b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	fdRqQJ/B1T5L6YXM10ZRPKQ/4aD/sIQ4C8bkEQh5A//ohftde6x906S3LtLdzFwvqLMSVKuEUy63B6LdCpgAaPQKaoauhwSzmkNupMWdC/r7gxL9nyZQRFjYbVCTfeQECGw70/ix23sh70OuhyQ7VuiJ8pWk9dpvMxykmNe8sDZJwpuGqz8jUfrIMMbjjRfhUdwOxs6fNqu6IXdKJSZqFU3QhvgwBjONrX9f6biptSh3SuNCtCleLdHGSDpKBAkgvOW6MciuRlrihB6IjFAVkezAUagaVqfnY09hKMGjQDJMxf7i72G11iARZSS5rgrdJWZE6g5Zb4OvNJQOOn6iFIquvG/tQ0w9S0xN/qa3VIB8Tc0+LTDLWwFuc4gdKJo4O4cev3S7r1txa6ok+XAAsYLcAL+SFJJLmm7sWKdctTdiRdn6TuUGv+QHvSFKkRWqGaLTrsn4htBBPdTiYHll2z+LMwLYAUVM/PV/9+kOOkM2Eqhmo0D49cvMLnt6VlSc65SoAjI4rtfUXTQ0F368Epjxz9zzCFdWyBFQgTpM7UF5NQXjKdT7aYEZnhOrfd5iWzelF5cJtvkZCz+Qb2Vw3kDmDpuncQtHu57DAel05UM7E8ZhyGY7Q234E9/NZqHCcatPEB/LC60696wC3yQdhQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(39860400002)(136003)(376002)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(41300700001)(26005)(2616005)(31686004)(36756003)(66899024)(6486002)(316002)(54906003)(53546011)(478600001)(6506007)(38100700002)(6512007)(83380400001)(6666004)(966005)(110136005)(31696002)(66556008)(5660300002)(66946007)(66476007)(86362001)(2906002)(8676002)(44832011)(4326008)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Vm10TEpJOFVoK3poY3N3bmRlWGhsUjk2OGIrdE95QzZPb2xxbzRBcjRWV2ZY?=
+ =?utf-8?B?S3VsZWlidXdWRzhEMXlIbTdjOGtpUHc5ZkFScG9BNWNBSFNTTWw5RVNscExo?=
+ =?utf-8?B?c1hoejFwWlpEK3YyOGZLbVpaVWNaS0hHOFBKeXp6OW5XMGNkUVVYQU9TWmhD?=
+ =?utf-8?B?eW1xYlRiM01GTmtTd2VpOGU0dFNERmtwV3NSMnlyYTFJMlp0cSswdGhtK0Vs?=
+ =?utf-8?B?M0JOSDAzOG9iQVJQQmtXQXJra01NOFhTVGxmL2l2N0lRMmRDNnd5MnJ5d2ha?=
+ =?utf-8?B?WC9VTHJITWZEb0o1bXp2QUVDK2lTNHF1TG9MVDFiZGNXbFNUODE3OE11aFU4?=
+ =?utf-8?B?WTIvRDNjdHMrb3oydmNJdXlqakROSXZhb05QWWtSeitvaW9MVzJGK1NqV241?=
+ =?utf-8?B?NUlkWnhLUHRWMHZycU4rNk9ONzFNaHJrRnhGNWZya0ZQaTJ4TWtlaGxZVHFO?=
+ =?utf-8?B?eHRVZXR3TEExUXVBd3MveE1VUFBEWG1wZ0Nhc29qQ2FWbWVMRFF6aTVoWkZD?=
+ =?utf-8?B?ekVocno0VGY2VGlYcjloYWlUcStFbzlIK0pZNVNHM0VuY1lDcnp6a2dpc3Z5?=
+ =?utf-8?B?YUpXb2dhN3Z0dEY1VmtabnFadUx3UFROa1llM1h5MnFVVTRLVkMyaHNKM2Zj?=
+ =?utf-8?B?d1gzR3AxZHo0WVlvMkhqc3NZZ1I5cDgzRFl4a04wK2d5Q1R3RGt3RENHdFNs?=
+ =?utf-8?B?U2hSdkJqQlBLakVpSGQ0ZkZoZ0Q1YXo5OHVMZGlRSzhZbU1UcTYvYzErRmVV?=
+ =?utf-8?B?TTVKUEFhMWNNc2J0VjZkeDMrSE5nWGZCSk9YcGcxeHNRM2lKSGdmOWthWnBa?=
+ =?utf-8?B?VmIzN3k0Wmp6NzNKTDdDUnBmTnJvRGl2QWhLOFJIS3FxVjVpRWQzYTZ1M2Z2?=
+ =?utf-8?B?aDdHRDdlZUVpSmlaR2FnM2srSVh3TFdURHU0ZktTUDJNK2hiQk95QlQxcFd3?=
+ =?utf-8?B?WXhseE5SUERVZlgrTjk3dDhOSkMxY3ZRK1BSdTgwNk04RURhVEpQdzF2WU5y?=
+ =?utf-8?B?eGlCZ3p1c0hQNjYwOVJadVdCTThWWWNtSWhNZmVQQkMvZUZ4MHluOU1UVnVZ?=
+ =?utf-8?B?NExRdWdBWTZ3cTBqY0ZGcUJRckZ6Qis5Yk80aGNrRWFvelE4MGlyREh1VXNz?=
+ =?utf-8?B?NmNZb0M2dE1iVE5Bc1dHNnNCeE55dHJma2ZpRTRNZXp3clNwbFZOd213ZmZj?=
+ =?utf-8?B?R1VKV1RRdzdJNDhiVXBGUnBsSDhqYkNlZzZOaW9wNTJLMkk3U01XRHd1QWRC?=
+ =?utf-8?B?Z1Y5ZUpNVmZQdVBWNnFETzBrWDZhUUo0amxTS3FWcWYza2VzdGdoa2Z1WWdv?=
+ =?utf-8?B?QzQ4aXk2WE1Kbmh4ZEtHS2lWaFcrMERJYXg4SEFXV21KT3RUZjgzQTZMQkZt?=
+ =?utf-8?B?TVJjN1pEckNBTG1ENVdJb2FEZGk3YUV4L25QdjE1bjhHd0hHUjB3VXh2Y1dK?=
+ =?utf-8?B?OVRHNHNzR1RqbXVNTG1tb3JOS3l6VTU4UnBqU3BVRHBQcVNJcjZMRXZrNE1I?=
+ =?utf-8?B?ZDJSbmhtMHgvbCs2V28vQmJWK1RMYlJwaVNnNW1ZL0pBRURhWmZOUDBVL09L?=
+ =?utf-8?B?aVNHRFlESzdHSHVOZHRtdERzQVl3UiswM0NaOU5KdzQ2UmJiY1BHVDhCdGxY?=
+ =?utf-8?B?REVDYXBvdUFuSE4wNnRSdmpYZnBOQUxtanZOdTdTVG93UGJDUitBRnI0UXVE?=
+ =?utf-8?B?TnEzMy9ZV3NCMjhZT0hVN0hwTDZCU2grSzdydEN2U2FKcnJudkk4Vm5xZzZ4?=
+ =?utf-8?B?UUs0N01LTGdxejYvSW5xaWVoMWpZNFlweFdOLzNUZjJ0MzU5TDU3dHY2WjNv?=
+ =?utf-8?B?RXpjV1p4N05QaDNJS0taaFJMWXN1UTIzbjVITE0vcVFTc0U1QTIvZXhGZkJR?=
+ =?utf-8?B?T3VCRGlTdEgzN08xNWJ1cVpHa2NQb3ZNQ1M5anZ5UTFSemhaTlZNUlFvb1Rq?=
+ =?utf-8?B?OHJQR0Fkcm5BRkE3VE14S2NLaDBwTW1Wc0phNk55Z0ZWeWdzU0NOM09wUFdE?=
+ =?utf-8?B?aDR0elBzQ2RjaWpZTkFNSXQ2cmVYbXl2RDFJcCtUbTI3TWFSK1VnZDVIVGdj?=
+ =?utf-8?B?cHBzS1dPZXJndnhRRFN1d1hjWWh6cDdTcTZkanJSRFUvTTNaWDNtTzN3aFQ3?=
+ =?utf-8?Q?rkOgn43xB89u9Ar/AyBgZAE8H?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acdd31f0-a634-43f0-3fc1-08dc20eb059b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 16:54:56.5085
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fNM32aqQ/rrsFWx31mjN8zaIwWzRPmHawGy5j3FZcMn5Tp4MQr1mFhqnz18tUwK2BJ5bvTAu5UgZNZt3ecdyHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9105
 
-On Mon, Jan 29, 2024 at 11:05=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> tldr; Just FYI, I'm carrying this on the perf tools tree.
+On 1/29/2024 10:46, Jani Nikula wrote:
+> On Mon, 29 Jan 2024, Mario Limonciello <mario.limonciello@amd.com> wrote:
+>> On 1/29/2024 03:39, Jani Nikula wrote:
+>>> On Fri, 26 Jan 2024, Mario Limonciello <mario.limonciello@amd.com> wrote:
+>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+>>>> index 9caba10315a8..c7e1563a46d3 100644
+>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+>>>> @@ -278,6 +278,11 @@ static void amdgpu_connector_get_edid(struct drm_connector *connector)
+>>>>    	struct amdgpu_device *adev = drm_to_adev(dev);
+>>>>    	struct amdgpu_connector *amdgpu_connector = to_amdgpu_connector(connector);
+>>>>    
+>>>> +	if (amdgpu_connector->edid)
+>>>> +		return;
+>>>> +
+>>>> +	/* if the BIOS specifies the EDID via _DDC, prefer this */
+>>>> +	amdgpu_connector->edid = amdgpu_acpi_edid(adev, connector);
+>>>
+>>> Imagine the EDID returned by acpi_video_get_edid() has edid->extensions
+>>> bigger than 4. Of course it should not, but you have no guarantees, and
+>>> it originates outside of the kernel.
+>>>
+>>> The real fix is to have the function return a struct drm_edid which
+>>> tracks the allocation size separately. Unfortunately, it requires a
+>>> bunch of changes along the way. We've mostly done it in i915, and I've
+>>> sent a series to do this in drm/bridge [1].
+> 
+> Looking at it again, perhaps the ACPI code should just return a blob,
+> and the drm code should have a helper to wrap that around struct
+> drm_edid, so that the ACPI code does not have to depend on drm. Basic
+> idea remains.
 
-Thanks.
+I'd ideally like to split this stuff and Melissa's rework to be 
+independent if possible.  I'll see if that's actually feasible.
 
-> So its important not to touch the copies in tools/ when doing changes in
-> the original kernel headers, that will be done later, when
-> check-headers.sh inform about the change to the perf tools hackers.
+> 
+>>> Bottom line, we should stop using struct edid in drivers. They'll all
+>>> parse the info differently, and from what I've seen, often wrong.
+>>>
+>>>
+>>
+>> Thanks for the feedback.  In that case this specific change should
+>> probably rebase on the Melissa's work
+>> https://lore.kernel.org/amd-gfx/20240126163429.56714-1-mwen@igalia.com/
+>> after she takes into account the feedback.
+>>
+>> Let me ask you this though - do you think that after that's done should
+>> we let all drivers get EDID from BIOS as a priority?  Or would you
+>> prefer that this is unique to amdgpu?
+> 
+> If the reason for having this is that the panel EDID contains some
+> garbage, that's certainly not unique to amdgpu... :p
 
-We had a chat with Linus about this during this past merge window and
-I've made a mental note not to update any syscall numbers under tools/
-in the future.  I apologize for any problems here, believe it or not
-we were trying to be helpful ;)
+OK; maybe a helper in DRM that wraps the ACPI code then and amdgpu will 
+use the helper for this series.
 
---=20
-paul-moore.com
+I'm also thinking it makes sense to have a new /proc/cmdline setup 
+option to ignore the BIOS for EDID.  I'm hoping that since Windows uses 
+_DDC that BIOS will be higher quality; but you know; BIOS =)
+
+> 
+>> Something like:
+>>
+>> 1) If user specifies on kernel command line and puts an EDID in
+>> /lib/firmware use that.
+>> 2) If BIOS has EDID in _DDC and it's eDP panel, use that.
+> 
+> I think we should also look into this. We currently don't do this, and
+> it might help with some machines. However, gut feeling says it's
+> probably better to keep this as a per driver decision instead of trying
+> to bolt it into drm helpers.
+
+OK; I'll wire up the helper and if you want to use in the future you can 
+too then.
+
+> 
+> BR,
+> Jani.
+> 
+> 
+>> 3) Get panel EDID.
+>>
+> 
+
