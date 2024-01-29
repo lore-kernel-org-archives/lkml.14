@@ -1,57 +1,58 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E8E157056;
-	Mon, 29 Jan 2024 16:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E07157E71;
+	Mon, 29 Jan 2024 16:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706545684; cv=none; b=aUFEr4rZvtzJNY8ugX+0izLya2IQxU06KxPH5qPG0GgOphJweCxKQk7YkHFss5vQmUTc3KXcC8iIKJfbV9YKYghqR48ZqiUx6h6kd/Kaefz0osdCrpSN3GvMMPKYZcOjrRWOY1lIO5nifNXOXWHBT016mWT8v1bxSbITGLsJg7s=
+	t=1706545685; cv=none; b=PrJ4QyuZ2hjJpTZbyU0Vb3PwVlKse3P4m8+aM36DURD902nRflFuiwpNzhCsxZtcPX9q+dW1JHfK2tcCx3gjDI1lM/8NCPCZAeXi5Khz2Rhf0IvALom3URpSITmJER7ofB6V6VEJnMFSdbTKjPkaR+gjzs71RZNWfJ4fFnFY180=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706545684; c=relaxed/simple;
-	bh=NDcG2FLGzxLiyCK7FSbgtFUBRX79qZ/fL/1LI2KhnQs=;
+	s=arc-20240116; t=1706545685; c=relaxed/simple;
+	bh=R1QHxOx4Sr0JtnBQnCXuCrel+1OfZI23IoUuIh6UYDE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NQypZSHmphenvUqsHoAl3GMQSiBozMhnQz07fnMruMsCIbiaMy0fFu/hIGd+xmmDYOQQFl+hW+tP+7/wlVbpTdPZ3wSJOQKCS3dLcNJc9AcOKCXuFAmaratdsw7DKH/GzRN7xxO9eo/GmyFLr9jQXKOShRzUx0zZmvC57XDHDus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=TtaNEI3x; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=GfpM5c6iWWz2yGjPoFWUq9MQ64NMDdwqJB34N03xDyfJ2Xsiw8dfUR9eO0V/9+jOU8ex7KUptSrjgzaKLkCgfK8cBK0IV/ErPEjhIzCoQaS4q7fVXNJytNsJ6jheqbcaMvR4xPJkjQc94yN2it/K0vUkXShUdANZCQuG/4cJOwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=SylP/xHn; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="TtaNEI3x"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SylP/xHn"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0G006968;
-	Mon, 29 Jan 2024 10:27:54 -0600
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fM0K006968;
+	Mon, 29 Jan 2024 10:27:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=75qdV8k43SbI4wq02+anfiwv9c1wTYCZBM6bd1fSHB0=; b=
-	TtaNEI3xlsa3BoPqvWwroWNZEXF5fCuIU3/JqBvQJ2XfN9RTVD5rpkUrQLa0VE6m
-	EBpfwDpWBiC5G1rnOl1WFPQwhFsIl8n22YG5Wgx/snRXJJCRr43/XBJImFQBc8k2
-	E02g+8czOlipaVMFpLL7kk8RaRGvwtORtS/AGgZPIXzaSQQvRtpRH5sIh17+mRkK
-	FRj8O9JKTEFpEfNrmAMF3CaDyrE6ORykowv0uWzNtCcJEvoxCgl12NJee3GC/pSG
-	L3VueIKkwTJ9+dHS8Wt1Gn7cyPIu9fM1GBoaWMOrH4OhFP6QrR2TQGQ+Hy93ky5v
-	DDj0qcCUVYhBxiZVR85Zsg==
+	PODMain02222019; bh=bTDeZPKMjF1LZBgDZqWVGGUorkGwCKYk0L/1ww1B5x4=; b=
+	SylP/xHnYdV3I9AghlABCYVmcIN5Mi2dzL5HGIY6qUAh5Ih4PWmCGsbGJ2MHMkVA
+	zfTe96hSsjctZ9Mwitm3DwRSrjuDBxmfJluxvT8767VN3Cu9GT6iNGR64uYxddCq
+	lWZnCumuC/Uz/CUhpOHGMx94Rxo56hPjxNKaMZSIbGO6Egc6rtsbU/jsVZ0uohhu
+	zjHTdFe8Ajsto5btI2C5bXV/2LiG2QTRTcjlZPWqbMxjrkMofFvExaYwgU2JSpq8
+	r7isA70bciKodcvnpmbzLbUdMRPbRe+AVd3Tuwkg2K7nXz15HL3TiUhoGAZUtDL4
+	Urjo3u4Rm4ehcCXX4Z5k8A==
 Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8n-5
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nta8n-7
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:27:54 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+	Mon, 29 Jan 2024 10:27:55 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 16:27:45 +0000
+ 2024 16:27:46 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:45 +0000
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 16:27:46 +0000
 Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.64.204])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 37F5E820248;
-	Mon, 29 Jan 2024 16:27:45 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 91CB082024B;
+	Mon, 29 Jan 2024 16:27:46 +0000 (UTC)
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
 To: <broonie@kernel.org>, <tiwai@suse.com>
 CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
         "Richard
  Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH 11/18] ASoC: cs35l56: Fix misuse of wm_adsp 'part' string for silicon revision
-Date: Mon, 29 Jan 2024 16:27:30 +0000
-Message-ID: <20240129162737.497-12-rf@opensource.cirrus.com>
+Subject: [PATCH 15/18] ALSA: hda: cs35l56: Fix order of searching for firmware files
+Date: Mon, 29 Jan 2024 16:27:34 +0000
+Message-ID: <20240129162737.497-16-rf@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240129162737.497-1-rf@opensource.cirrus.com>
 References: <20240129162737.497-1-rf@opensource.cirrus.com>
@@ -63,94 +64,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: W_TlISqmvKoxFZ50ljCZ0cQp7hYaSPzi
-X-Proofpoint-GUID: W_TlISqmvKoxFZ50ljCZ0cQp7hYaSPzi
+X-Proofpoint-ORIG-GUID: PmhZbXe5gxq0nalhv0POwxT439SOX2jp
+X-Proofpoint-GUID: PmhZbXe5gxq0nalhv0POwxT439SOX2jp
 X-Proofpoint-Spam-Reason: safe
 
-Put the silicon revision and secured flag in the wm_adsp fwf_name
-string instead of including them in the part string.
+Check for the cases of system-specific bin file without a
+wmfw before falling back to looking for a generic wmfw.
 
-This changes the format of the firmware name string from
-
- cs35l56[s]-rev-misc[-system_name]
-
-to
- cs35l56-rev[-s]-misc[-system_name]
-
-No firmware files have been published, so this doesn't cause a
-compatibility break.
-
-Silicon revision and secured flag are included in the firmware
-filename to pick a firmware compatible with the part. These strings
-were being added to the part string, but that is a misuse of the
-string. The correct place for these is the fwf_name string, which
-is specifically intended to select between multiple firmware files
-for the same part.
-
-Backport note:
-This won't apply to kernels older than v6.6.
+All system-specific options should be tried before falling
+back to loading a generic wmfw/bin. With the original code,
+the presence of a fallback generic wmfw on the filesystem
+would prevent using a system-specific tuning with a ROM
+firmware.
 
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Fixes: 608f1b0dbdde ("ASoC: cs35l56: Move DSP part string generation so that it is done only once")
+Fixes: 73cfbfa9caea ("ALSA: hda/cs35l56: Add driver for Cirrus Logic CS35L56 amplifier")
 ---
- sound/soc/codecs/cs35l56.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ sound/pci/hda/cs35l56_hda.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
-index 1b51650a19ff..8899c02c6dea 100644
---- a/sound/soc/codecs/cs35l56.c
-+++ b/sound/soc/codecs/cs35l56.c
-@@ -907,6 +907,18 @@ static void cs35l56_dsp_work(struct work_struct *work)
- 
- 	pm_runtime_get_sync(cs35l56->base.dev);
- 
-+	/* Populate fw file qualifier with the revision and security state */
-+	if (!cs35l56->dsp.fwf_name) {
-+		cs35l56->dsp.fwf_name = kasprintf(GFP_KERNEL, "%02x%s-dsp1",
-+						  cs35l56->base.rev,
-+						  cs35l56->base.secured ? "-s" : "");
-+		if (!cs35l56->dsp.fwf_name)
-+			goto err;
-+	}
+diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
+index f22bcb104a4e..7ba7234d8d9c 100644
+--- a/sound/pci/hda/cs35l56_hda.c
++++ b/sound/pci/hda/cs35l56_hda.c
+@@ -483,6 +483,20 @@ static void cs35l56_hda_request_firmware_files(struct cs35l56_hda *cs35l56,
+ 								  NULL, "bin");
+ 			return;
+ 		}
 +
-+	dev_dbg(cs35l56->base.dev, "DSP fwf name: '%s' system name: '%s'\n",
-+		cs35l56->dsp.fwf_name, cs35l56->dsp.system_name);
++		/*
++		 * Check for system-specific bin files without wmfw before
++		 * falling back to generic firmware
++		 */
++		if (amp_name)
++			cs35l56_hda_request_firmware_file(cs35l56, coeff_firmware, coeff_filename,
++							  cirrus_dir, system_name, amp_name, "bin");
++		if (!*coeff_firmware)
++			cs35l56_hda_request_firmware_file(cs35l56, coeff_firmware, coeff_filename,
++							  cirrus_dir, system_name, NULL, "bin");
 +
- 	/*
- 	 * When the device is running in secure mode the firmware files can
- 	 * only contain insecure tunings and therefore we do not need to
-@@ -926,7 +938,7 @@ static void cs35l56_dsp_work(struct work_struct *work)
- 	 * on the DAPM mutex.
- 	 */
- 	queue_work(cs35l56->dsp_wq, &cs35l56->mux_init_work);
++		if (*coeff_firmware)
++			return;
+ 	}
+ 
+ 	ret = cs35l56_hda_request_firmware_file(cs35l56, wmfw_firmware, wmfw_filename,
+@@ -493,16 +507,6 @@ static void cs35l56_hda_request_firmware_files(struct cs35l56_hda *cs35l56,
+ 		return;
+ 	}
+ 
+-	/* When a firmware file is not found must still search for the coeff files */
+-	if (system_name) {
+-		if (amp_name)
+-			cs35l56_hda_request_firmware_file(cs35l56, coeff_firmware, coeff_filename,
+-							  cirrus_dir, system_name, amp_name, "bin");
+-		if (!*coeff_firmware)
+-			cs35l56_hda_request_firmware_file(cs35l56, coeff_firmware, coeff_filename,
+-							  cirrus_dir, system_name, NULL, "bin");
+-	}
 -
-+err:
- 	pm_runtime_mark_last_busy(cs35l56->base.dev);
- 	pm_runtime_put_autosuspend(cs35l56->base.dev);
- }
-@@ -979,6 +991,9 @@ static void cs35l56_component_remove(struct snd_soc_component *component)
- 
- 	wm_adsp2_component_remove(&cs35l56->dsp, component);
- 
-+	kfree(cs35l56->dsp.fwf_name);
-+	cs35l56->dsp.fwf_name = NULL;
-+
- 	cs35l56->component = NULL;
- }
- 
-@@ -1330,12 +1345,6 @@ int cs35l56_init(struct cs35l56_private *cs35l56)
- 	if (ret)
- 		return ret;
- 
--	/* Populate the DSP information with the revision and security state */
--	cs35l56->dsp.part = devm_kasprintf(cs35l56->base.dev, GFP_KERNEL, "cs35l56%s-%02x",
--					   cs35l56->base.secured ? "s" : "", cs35l56->base.rev);
--	if (!cs35l56->dsp.part)
--		return -ENOMEM;
--
- 	if (!cs35l56->base.reset_gpio) {
- 		dev_dbg(cs35l56->base.dev, "No reset gpio: using soft reset\n");
- 		cs35l56->soft_resetting = true;
+ 	if (!*coeff_firmware)
+ 		cs35l56_hda_request_firmware_file(cs35l56, coeff_firmware, coeff_filename,
+ 						  cirrus_dir, NULL, NULL, "bin");
 -- 
 2.39.2
 
