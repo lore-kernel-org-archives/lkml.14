@@ -1,144 +1,99 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E3D4CE02;
-	Mon, 29 Jan 2024 06:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938D44E1C5
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 06:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706509851; cv=none; b=XF6omy+l7RbNq2vZ9g+LsiwzadBX82KJW0SbFOsBDa10LWKYd1wgujZt+CrlipkRKTGVfutEQA3X5xR3dSifJQV7r9p4WWX7ycGjFw5L/RSAz54m0MTcQpyFpg4dCeh5w8FyMrV2bTsaa3Aosw1IdieVQaG7GecGv/uXNO5q17c=
+	t=1706509852; cv=none; b=eVX1U4qfEMefY3T/bs9HFLnvG1EOm0DkDUOZ4tvmednDte1TVdLJzUkmqYAa8ocQ2AEp9PUyBjXMWc9FlPy8jZJoKRGS1vQaxvLgMUMpUUMLiYz3ZcpumMAA/36KQkNNHfV/OqUURoNUK5tO42w19E3w9AW0sFe7pImRodG8dTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706509851; c=relaxed/simple;
-	bh=9w2g6Gq7+Vgz14KR9HnQQihLeCCf4NtwnAbBqhhkmRM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HXawG8Ii/ZQ/qmHXI/oLkksNIrERm5q2A9x6YciBvtW02CY+R0R+KtmY9QyXXtY/gHJtz6feEv0pCXI/33diTa7hWa5jv5ybsw7roQguATpoCWfO5BF1bYof7SepaV+y9P/2daiW6MHCCK+exKcqEQd8+yckR1kQmWCY63JpuxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=jhkTa5bB; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1706509852; c=relaxed/simple;
+	bh=Nh5fNbqnzNpSKk7yH37ydnGyv3ul2OhY4GvbMvtsgNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7F1uJ6vr8fnwlcawHWVQFuQfXurpYwgCmkadbPDVmUM3URqqEgl+pHylpCoA7JvP3fmyAHfkG3gjP6iPSIfVFiAvuGUPngg6h2LEpKALM5TXy3CdTaRxzCA+7eW+JuOFf8whFBxP2zBrS7W/v/wt4TYPrlXO/XgAZ4wivjMKXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iM9GuFvR; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jhkTa5bB"
-X-UUID: edf4142cbe6f11eea2298b7352fd921d-20240129
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=iRfjJ9YWROks75IUMtZC2wrUKi1suXGk03fbJUFbyt0=;
-	b=jhkTa5bBLiYUT3wpEltBxfzcWPuTQQZYVqddzaf9asJdWmMcexNnkzGzCmHJqKWIzWSQxBOVUfhdMicHCknFw6ecI1RAoTomn2is7LHQtJgekjkE1ZtA2Lo6HW2V877F/BsOqusz6vAkJ+Cfu6vXriNcO0HJT9lNCgFAU1VnBUE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.36,REQID:fb4fdc5f-960c-4c64-89c6-9a1053dcc4b8,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6e16cf4,CLOUDID:7ed4dc7f-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: edf4142cbe6f11eea2298b7352fd921d-20240129
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 902818360; Mon, 29 Jan 2024 14:30:43 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 29 Jan 2024 14:30:40 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 29 Jan 2024 14:30:38 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: Jeffrey Kardatzke <jkardatzke@google.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>
-CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
-	"Hsin-Yi Wang" <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	"Daniel Vetter" <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>,
-	"Brian Starkey" <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T
- . J . Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v4,03/22] v4l2: verify restricted dmabufs are used in restricted queue
-Date: Mon, 29 Jan 2024 14:30:06 +0800
-Message-ID: <20240129063025.29251-4-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240129063025.29251-1-yunfei.dong@mediatek.com>
-References: <20240129063025.29251-1-yunfei.dong@mediatek.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iM9GuFvR"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso2186704a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 22:30:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706509850; x=1707114650; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qcNcTEhoIWYD8Jyza8FT+m6h2KJ7pAuMT+sHRSLuWk8=;
+        b=iM9GuFvRGWM71YvcjnJw73gMBeFJ02MIWov/qaO/lfKNjVs5sAcyysdah//jOwBJXT
+         YIvGHDfqWqk9Ekj3dLK35tlkc0RZMakLM6zUIY4JlgT5IOYHZz9wdiCrWYm+5V2sk+sw
+         iYNtEwH+J5m+DmYwssrWYb+IMDxM5P2tRxFz+Mn8mRfyHzVuAHdSKTresAhdMsp0Kf2N
+         D1OZJFgTe5FR4v0hwj8Wb9JUSrpyL11XnEzrlUfsvZT+9fEtHiSqiC/J8bafQA/rLs0x
+         AXUZ/L6xalpzxTF/Gu2aQWdApnN+kIZfx8vlIuyUcmSbM1Rdml6Fuhsiwymr53iEsDWZ
+         BucA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706509850; x=1707114650;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qcNcTEhoIWYD8Jyza8FT+m6h2KJ7pAuMT+sHRSLuWk8=;
+        b=Wx1tlUFn81SeQ3CzIRY0yT9NmJ0HHO+GkN4M0Tl4LHSEKmL+TtyzViy9iorPJro41P
+         jDxq/qWy5xaRk10whqv0l7xnYlmdE2ZQLPzxD4rxMuvm+ROGs4tgUFKPtO1/axxrQngF
+         1Zib/+1MiQ4TIfntOhfYQqCNn1v6dfhZV87uM6fosf0voCSv33OBDRfVkhixp0E5sbLo
+         MDHaplV+B6x0q8BR+DbLj7o7KF9AmZrJZT0wNKVH76TZUEu50XxPInSyXojMk6icbv1r
+         JLX9iJ3MUgCQhhRQPmRgNMKVpl32KjzhyZdt230IgOt/kbCQevCKMLEknFOAVt2l+UfA
+         2W6g==
+X-Gm-Message-State: AOJu0YzKzMYA3N20wGy4jF8iOPa9UylDeISMTjl32oS531LjDQ8m4uSd
+	uCpwTlsfcYD8NZeSZaRGInR4DhJAIH9o/ylVy3iHIiYostOEFBrG1oywoD5oCgpOvq5nEiHnGMG
+	k
+X-Google-Smtp-Source: AGHT+IGh1h+05vCnmj809KQhjvUSTg1qxRaQJCyMKHLDmh1e7V1HvPMklyZdkqrrztZ7SNswfm/rew==
+X-Received: by 2002:a05:6a20:7f8a:b0:19c:71bc:ec82 with SMTP id d10-20020a056a207f8a00b0019c71bcec82mr4830387pzj.48.1706509849818;
+        Sun, 28 Jan 2024 22:30:49 -0800 (PST)
+Received: from localhost ([122.172.83.95])
+        by smtp.gmail.com with ESMTPSA id v15-20020a17090a088f00b002902076c395sm7215305pjc.34.2024.01.28.22.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jan 2024 22:30:49 -0800 (PST)
+Date: Mon, 29 Jan 2024 12:00:47 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Harald Mommer <Harald.Mommer@opensynergy.com>
+Cc: virtio-dev@lists.oasis-open.org, Haixu Cui <quic_haixcui@quicinc.com>,
+	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ztu@quicinc.com,
+	Matti Moell <Matti.Moell@opensynergy.com>,
+	Mikhail Golubev <Mikhail.Golubev@opensynergy.com>
+Subject: Re: [RFC PATCH v2 1/3] virtio: Add ID for virtio SPI.
+Message-ID: <20240129063047.hgnljeqq2xswoteh@vireshk-i7>
+References: <20240104130129.17823-1-Harald.Mommer@opensynergy.com>
+ <20240104130129.17823-2-Harald.Mommer@opensynergy.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--8.360000-8.000000
-X-TMASE-MatchedRID: vT/skvKLwFh/+iNkyaz33x+WEMjoO9WWTJDl9FKHbrn8dcjERAe6XpPD
-	bikkMnICYUA4QKGgNJ2/QAgXHCg/RXdWNVeH9NKPSEQN/D/3cG4k9Lf/qe8xx9VU7IWeAUCLMCm
-	LSFOvZt1yylwV7Bc73YAy6p60ZV62fJ5/bZ6npdiyO81X3yak88kZdO1mPd6HHujJdWgMIOuuBc
-	q5ylGQImmWoby5Y3Os7MRn2aF6FKR+3BndfXUhXQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--8.360000-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: DF28679987472B888EA7E9A1D6228B4E0BCD01647BD0B2DD86B95E8C06EC4EB42000:8
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104130129.17823-2-Harald.Mommer@opensynergy.com>
 
-From: Jeffrey Kardatzke <jkardatzke@google.com>
+On 04-01-24, 14:01, Harald Mommer wrote:
+> From: Harald Mommer <harald.mommer@opensynergy.com>
+> 
+> Add #define ID VIRTIO_ID_SPI 45 for virtio SPI.
+> 
+> Signed-off-by: Harald Mommer <harald.mommer@opensynergy.com>
+> ---
+>  include/uapi/linux/virtio_ids.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
+> index 7aa2eb766205..6c12db16faa3 100644
+> --- a/include/uapi/linux/virtio_ids.h
+> +++ b/include/uapi/linux/virtio_ids.h
+> @@ -68,6 +68,7 @@
+>  #define VIRTIO_ID_AUDIO_POLICY		39 /* virtio audio policy */
+>  #define VIRTIO_ID_BT			40 /* virtio bluetooth */
+>  #define VIRTIO_ID_GPIO			41 /* virtio gpio */
+> +#define VIRTIO_ID_SPI			45 /* virtio spi */
 
-Verfies in the dmabuf implementations that if the restricted memory
-flag is set for a queue that the dmabuf submitted to the queue is
-unmappable.
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
----
- drivers/media/common/videobuf2/videobuf2-dma-contig.c | 8 ++++++++
- drivers/media/common/videobuf2/videobuf2-dma-sg.c     | 8 ++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-index 3d4fd4ef5310..f953570fef27 100644
---- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-@@ -710,6 +710,14 @@ static int vb2_dc_map_dmabuf(void *mem_priv)
- 		return -EINVAL;
- 	}
- 
-+	/* Verify the dmabuf is restricted if we are in restricted mode, this is done
-+	 * by validating there is no page entry for the dmabuf.
-+	 */
-+	if (buf->vb->vb2_queue->restricted_mem && sg_page(sgt->sgl)) {
-+		pr_err("restricted queue requires restricted dma_buf");
-+		return -EINVAL;
-+	}
-+
- 	/* checking if dmabuf is big enough to store contiguous chunk */
- 	contig_size = vb2_dc_get_contiguous_size(sgt);
- 	if (contig_size < buf->size) {
-diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-index 6975a71d740f..f87bd3f40b9b 100644
---- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-@@ -570,6 +570,14 @@ static int vb2_dma_sg_map_dmabuf(void *mem_priv)
- 		return -EINVAL;
- 	}
- 
-+	/* Verify the dmabuf is restricted if we are in restricted mode, this is done
-+	 * by validating there is no page entry for the dmabuf.
-+	 */
-+	if (buf->vb->vb2_queue->restricted_mem && !sg_page(sgt->sgl)) {
-+		pr_err("restricted queue requires restricted dma_buf");
-+		return -EINVAL;
-+	}
-+
- 	buf->dma_sgt = sgt;
- 	buf->vaddr = NULL;
- 
 -- 
-2.18.0
-
+viresh
