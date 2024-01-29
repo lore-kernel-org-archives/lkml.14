@@ -1,126 +1,94 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DB16312A;
-	Mon, 29 Jan 2024 13:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B3164CE0
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706535180; cv=none; b=iWCURXaVnc2gOHS7FVtRU4agVfbylr0M8JQeCBR04eU9iNgeFqO1vBQAoDPQza7Y15vuxctU5r7H6vE4UAMmbVQUikT8uyYPo3Dn5en58bEgsLZz4BAwXKHzgXGw2d6V7h6gnQd7MPvGRgt+LKzz5Hi/8IDpXPKvPH+KO8heD6I=
+	t=1706535262; cv=none; b=IOxfamkEV6nwZ8cJYkEzPHttpQYmVjXu2RhoHvznb2jy69xM4VnuB2cgghs03oIwS33FGyKDrqv0KlrMlRqJfge0K/7XooT5P+8lnsPHv0+Po3AjsZyzFFyv8DhlSWBYWAMPMsT4VM0cRcfYpawB056+c0rP9IbGfPX7KoPwbAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706535180; c=relaxed/simple;
-	bh=BGpt/5lgF7ofdAo0VfpSXDQ0g9lYVqz5tGNHPb6MK6I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LL6TG9fRW9J+gnInfMTQz/v+ldqUlzWaLgarlaUKj35IAaGC5gcJVVvoxEAo/YZb5E5ecBcIQinJkGaggxof9A+xiA0tPbQg7AGUieu61r5DMqE1CT+FZk5qbGI64aH6dcWzxrJnSsmyr7JSH+bMIdAqjgrxXvAtxrT7JwYficA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=W9EZzwIn; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1706535262; c=relaxed/simple;
+	bh=Y32Ro5hXWgmbKAtIr0bWdglhv9oAGAt86HXcokVaqoo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PGIFUwipK6LUPAxaiOuqWnTOlHC0XN5fww06t4IHTd7Px77wmDavizli+n4Eu0ZnJxP6URreXevNrYIMZmtnQiuJiJWJ3K/GjlOnx3dxfGruZqONb+vNle3wrg4zApxhd0yExMWCFR7jzBrmaWiLz2biskxK/kqn6laUZ+XcvAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFGCjtsq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="W9EZzwIn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1706535175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=d59Wxe7oQ2xFV3YZRkuj9csNOvmp5rKBI3z/v6Jf598=;
-	b=W9EZzwInuv+DZkm0mAs6/p/QQ1xECK94jjGnlrJPq4Utmp0mFY7Dj/Dsv5Q+BCOEpHEc24
-	RcwF01RMkY2HmSghuvyrmB9uAa/zPccW+L540sta2i7SkKsg8D2hx96zstRdUSoapxDx1q
-	zhhPs5pkOJ7eMIkH4/2FQWQtIigx7Rs=
-Message-ID: <fb4bcbefcfd0ab1982172c780ce5c5f1e96ae798.camel@crapouillou.net>
-Subject: Re: [PATCH v5 5/8] iio: core: Add new DMABUF interface
- infrastructure
-From: Paul Cercueil <paul@crapouillou.net>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
-	Jonathan Cameron
-	 <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Sumit Semwal
- <sumit.semwal@linaro.org>,  Vinod Koul <vkoul@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-iio@vger.kernel.org,
- linux-media@vger.kernel.org,  dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, Nuno =?ISO-8859-1?Q?S=E1?=
- <noname.nuno@gmail.com>, Michael Hennerich <Michael.Hennerich@analog.com>
-Date: Mon, 29 Jan 2024 14:32:53 +0100
-In-Reply-To: <8fc55451-dfd7-4d09-8051-8b39048f85e2@amd.com>
-References: <20231219175009.65482-1-paul@crapouillou.net>
-	 <20231219175009.65482-6-paul@crapouillou.net>
-	 <20231221120624.7bcdc302@jic23-huawei>
-	 <ee5d7bb2fb3e74e8fc621d745b23d1858e1f0c3c.camel@crapouillou.net>
-	 <20240127165044.22f1b329@jic23-huawei>
-	 <d6bef39c-f940-4097-8ca3-0cf4ef89a743@amd.com>
-	 <aac82ce15a49c5e4b939a69229b9a8a51ca00f5d.camel@crapouillou.net>
-	 <8fc55451-dfd7-4d09-8051-8b39048f85e2@amd.com>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
-	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFGCjtsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58B50C433F1;
+	Mon, 29 Jan 2024 13:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706535262;
+	bh=Y32Ro5hXWgmbKAtIr0bWdglhv9oAGAt86HXcokVaqoo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=tFGCjtsqpCEdO0JDTVGrqvdHwzKxH7Y9iuq0p9pfWkGybaBpGSKQMDua/IPS4l4qq
+	 cWvRe1qQ50t/XO2y4GlrTjsO9fPe3QfwGQ55yRLs+idMjYao08vvU6pnriLb23QpgA
+	 SNZCaRtJ6nYnOjMdG6hGcK2PdGP06ISk2KzdzcZBy2RjePiMOAIuKTkJi1+H6djk9g
+	 EQeY3K1rQvPUrtRmV8cjcAhKLIBnE42RqtS+vYH28qQi3NV8+zGvvG9E5rOAFGrvoI
+	 lAVtgE7OwVaQ0p55xvlxGlLYmotph51SKpToeLtJguEkGC5MoNEEw8sbnfiCj90/N7
+	 FGEQN6gRKdz1A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  michael@walle.cc,
+  miquel.raynal@bootlin.com,  richard@nod.at,  jaimeliao@mxic.com.tw,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] mtd: spi-nor: drop superfluous debug prints
+In-Reply-To: <99babcb3-770d-487c-a297-beea2f6f8e9e@linaro.org> (Tudor
+	Ambarus's message of "Mon, 29 Jan 2024 13:27:50 +0000")
+References: <20231215082138.16063-1-tudor.ambarus@linaro.org>
+	<20231215082138.16063-5-tudor.ambarus@linaro.org>
+	<120bf090-0c07-4971-a18a-a1b326f1b139@linaro.org>
+	<mafs0v87cs238.fsf@kernel.org>
+	<99babcb3-770d-487c-a297-beea2f6f8e9e@linaro.org>
+Date: Mon, 29 Jan 2024 14:34:20 +0100
+Message-ID: <mafs0r0i0s1pf.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-Le lundi 29 janvier 2024 =C3=A0 14:17 +0100, Christian K=C3=B6nig a =C3=A9c=
-rit=C2=A0:
-> Am 29.01.24 um 14:06 schrieb Paul Cercueil:
-> > Hi Christian,
-> >=20
-> > Le lundi 29 janvier 2024 =C3=A0 13:52 +0100, Christian K=C3=B6nig a =C3=
-=A9crit=C2=A0:
-> > > Am 27.01.24 um 17:50 schrieb Jonathan Cameron:
-> > > > > > > +	iio_buffer_dmabuf_put(attach);
-> > > > > > > +
-> > > > > > > +out_dmabuf_put:
-> > > > > > > +	dma_buf_put(dmabuf);
-> > > > > > As below. Feels like a __free(dma_buf_put) bit of magic
-> > > > > > would
-> > > > > > be a
-> > > > > > nice to have.
-> > > > > I'm working on the patches right now, just one quick
-> > > > > question.
-> > > > >=20
-> > > > > Having a __free(dma_buf_put) requires that dma_buf_put is
-> > > > > first
-> > > > > "registered" as a freeing function using DEFINE_FREE() in
-> > > > > <linux/dma-
-> > > > > buf.h>, which has not been done yet.
-> > > > >=20
-> > > > > That would mean carrying a dma-buf specific patch in your
-> > > > > tree,
-> > > > > are you
-> > > > > OK with that?
-> > > > Needs an ACK from appropriate maintainer, but otherwise I'm
-> > > > fine
-> > > > doing
-> > > > so.=C2=A0 Alternative is to circle back to this later after this
-> > > > code is
-> > > > upstream.
-> > > Separate patches for that please, the autocleanup feature is so
-> > > new
-> > > that
-> > > I'm not 100% convinced that everything works out smoothly from
-> > > the
-> > > start.
-> > Separate patches is a given, did you mean outside this patchset?
-> > Because I can send a separate patchset that introduces scope-based
-> > management for dma_fence and dma_buf, but then it won't have users.
->=20
-> Outside of the patchset, this is essentially brand new stuff.
->=20
-> IIRC we have quite a number of dma_fence selftests and sw_sync which
-> is=20
-> basically code inside the drivers/dma-buf directory only there for=20
-> testing DMA-buf functionality.
->=20
-> Convert those over as well and I'm more than happy to upstream this
-> change.
+On Mon, Jan 29 2024, Tudor Ambarus wrote:
 
-Well there is very little to convert there; you can use scope-based
-management when the unref is done in all exit points of the functional
-block, and the only place I could find that does that in drivers/dma-
-buf/ was in dma_fence_chain_enable_signaling() in dma-fence-chain.c.
+> On 1/29/24 13:26, Pratyush Yadav wrote:
+>> On Fri, Dec 15 2023, Tudor Ambarus wrote:
+>> 
+>>> I missed to drop some unused variables. Will drop them if everything
+>>> else is fine.
+>>>
+>>> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+>>> index a708c3448809..92c992eb73d5 100644
+>>> --- a/drivers/mtd/spi-nor/core.c
+>>> +++ b/drivers/mtd/spi-nor/core.c
+>>> @@ -3492,9 +3492,7 @@ int spi_nor_scan(struct spi_nor *nor, const char
+>>> *name,
+>>>  {
+>>>         const struct flash_info *info;
+>>>         struct device *dev = nor->dev;
+>>> -       struct mtd_info *mtd = &nor->mtd;
+>>>         int ret;
+>>> -       int i;
+>>>
+>>>         ret = spi_nor_check(nor);
+>>>         if (ret)
+>> 
+>> 
+>> With these, 
+>> 
+>> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+>> 
+> Hi, Pratyush,
+>
+> All in these series were already applied, as I specified in a reply.
+> Please check patchwork for patches that are not yet handled.
 
-Cheers,
--Paul
+Ah sorry, I didn't see that. I was browsing through my email backlog and
+these patches just caught my eye.
+
+Will look at the newer ones.
+
+-- 
+Regards,
+Pratyush Yadav
