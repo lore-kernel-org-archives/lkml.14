@@ -1,101 +1,120 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1D4657A0
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C17651B4
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706535880; cv=none; b=mD0VzJ70fxWrsDtAgp8M+6YrSyE74HRzRKHg4wqdH3GrwxeaLkcIH2RJ5HFQVYi0XjZrOjVULxtCB2b/+7/9oulpJ+6Po2F2E89jxyDqI9FCgsMLwbUeYcz5vvr2wvi1h/SjfQrki8yqEdfNRFGxQGPjkncvt26nk2E9TwK3u8U=
+	t=1706536025; cv=none; b=BN2cCx72DFTqRs9eBZ1kpKHzriB57dSHJpMJ3zWHWDytkFKUshCii+zFvguSqr3+OwRajVBF3rGd4dQfDdyNs07LNRYAsGD3i+mlzz5EdqcFSY/UOOiXes4uD4qawj1jYiZV7qvtFbKnDjBnmLYizpKA1zqU7uXktILYCxpl4ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706535880; c=relaxed/simple;
-	bh=9RHzmXyp95smTH596j3zPZcF6C09siyI6U3XzckAzkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E4ryMv1SKUZV7Nej31TxQuOQf8L7HGHZL1fWygQkBkzYPDS2pX3U+dUBlh0htxa/+89cMPN4NzwJNSYn+TnD9O2IJWjYR+AErBAyYyJd1aTTk5LqeJSF1XiGfaBy2MLtFRF2suUIfioWhSAvzEuKSayGgomsvN8Pu1qs/E1kfDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TNpyN2J57z4f3jHs
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 21:27:56 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 67FB01A0232
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 21:28:00 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-	by APP2 (Coremail) with SMTP id Syh0CgDH6w7fp7dl3CmSCQ--.20232S3;
-	Mon, 29 Jan 2024 21:28:00 +0800 (CST)
-Message-ID: <eac2fbfe-5565-96ad-68cb-11efa8af2ec8@huaweicloud.com>
-Date: Mon, 29 Jan 2024 21:27:59 +0800
+	s=arc-20240116; t=1706536025; c=relaxed/simple;
+	bh=bFrVw2Ws0d71Ys/zNaqJ6yUfFYy2SG5zl6dnCupuG+c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aHIM8VW7JnFRmbrToIPjgahPjtxnefyyUG6JshPHUpABVF+ZJu5Wcg4lomR4tD/1YbKL2gJmX0LBxbSygjRbekgsGBbXLTdN5Qo3boLYSueCExKAPxyEHXHq8rfUP1H8P1l4g1T3Du4g+AM3tdNRowz86hGkgYVGINLaUVen4Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TNqMD0tZpz1xmlw;
+	Mon, 29 Jan 2024 21:46:00 +0800 (CST)
+Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0E5831A016D;
+	Mon, 29 Jan 2024 21:46:58 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Jan 2024 21:46:55 +0800
+From: Tong Tiangen <tongtiangen@huawei.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, Robin
+ Murphy <robin.murphy@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Michael Ellerman
+	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+	<christophe.leroy@csgroup.eu>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<kasan-dev@googlegroups.com>, Tong Tiangen <tongtiangen@huawei.com>,
+	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
+Subject: [PATCH v10 1/6] uaccess: add generic fallback version of copy_mc_to_user()
+Date: Mon, 29 Jan 2024 21:46:47 +0800
+Message-ID: <20240129134652.4004931-2-tongtiangen@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240129134652.4004931-1-tongtiangen@huawei.com>
+References: <20240129134652.4004931-1-tongtiangen@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2] ubi: block: fix memleak in ubiblock_create()
-To: linan666@huaweicloud.com, richard@nod.at, miquel.raynal@bootlin.com,
- vigneshr@ti.com
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- yukuai3@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
- yangerkun@huawei.com
-References: <20231208074629.1656356-1-linan666@huaweicloud.com>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <20231208074629.1656356-1-linan666@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgDH6w7fp7dl3CmSCQ--.20232S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrKry7KrWrWFyDAr43CFWUtwb_yoWkGrcE9w
-	4aqr93XrWIkwn2k34jyry3ua1Ykr4UKrWkuF1ftws8XFW7XFn7AF93Kr15Ww4DAF429a4r
-	A3W8Wr12yr40qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbS8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
-	xwACI402YVCY1x02628vn2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUAkucUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600017.china.huawei.com (7.193.23.234)
 
-friendly ping ...
+x86/powerpc has it's implementation of copy_mc_to_user(), we add generic
+fallback in include/linux/uaccess.h prepare for other architechures to
+enable CONFIG_ARCH_HAS_COPY_MC.
 
-在 2023/12/8 15:46, linan666@huaweicloud.com 写道:
-> From: Li Nan <linan122@huawei.com>
-> 
-> If idr_alloc() fails, dev->gd will be put after goto out_cleanup_disk in
-> ubiblock_create(), but dev->gd has not been assigned yet at this time, and
-> 'gd' will not be put anymore. Fix it by putting 'gd' directly.
-> 
-> Signed-off-by: Li Nan <linan122@huawei.com>
-> Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
-> ---
-> Changes in v2:
->   - modify the description of the problem in log
-> 
->   drivers/mtd/ubi/block.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
-> index 309a42aeaa4c..654bd7372cd8 100644
-> --- a/drivers/mtd/ubi/block.c
-> +++ b/drivers/mtd/ubi/block.c
-> @@ -434,7 +434,7 @@ int ubiblock_create(struct ubi_volume_info *vi)
->   	list_del(&dev->list);
->   	idr_remove(&ubiblock_minor_idr, gd->first_minor);
->   out_cleanup_disk:
-> -	put_disk(dev->gd);
-> +	put_disk(gd);
->   out_free_tags:
->   	blk_mq_free_tag_set(&dev->tag_set);
->   out_free_dev:
+Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/include/asm/uaccess.h | 1 +
+ arch/x86/include/asm/uaccess.h     | 1 +
+ include/linux/uaccess.h            | 9 +++++++++
+ 3 files changed, 11 insertions(+)
 
+diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+index f1f9890f50d3..4bfd1e6f0702 100644
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -381,6 +381,7 @@ copy_mc_to_user(void __user *to, const void *from, unsigned long n)
+ 
+ 	return n;
+ }
++#define copy_mc_to_user copy_mc_to_user
+ #endif
+ 
+ extern long __copy_from_user_flushcache(void *dst, const void __user *src,
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 5c367c1290c3..fd56282ee9a8 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -497,6 +497,7 @@ copy_mc_to_kernel(void *to, const void *from, unsigned len);
+ 
+ unsigned long __must_check
+ copy_mc_to_user(void __user *to, const void *from, unsigned len);
++#define copy_mc_to_user copy_mc_to_user
+ #endif
+ 
+ /*
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 3064314f4832..550287c92990 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -205,6 +205,15 @@ copy_mc_to_kernel(void *dst, const void *src, size_t cnt)
+ }
+ #endif
+ 
++#ifndef copy_mc_to_user
++static inline unsigned long __must_check
++copy_mc_to_user(void *dst, const void *src, size_t cnt)
++{
++	check_object_size(src, cnt, true);
++	return raw_copy_to_user(dst, src, cnt);
++}
++#endif
++
+ static __always_inline void pagefault_disabled_inc(void)
+ {
+ 	current->pagefault_disabled++;
 -- 
-Thanks,
-Nan
+2.25.1
 
