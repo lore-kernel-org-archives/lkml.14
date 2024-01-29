@@ -1,15 +1,16 @@
 Received: from alerce.blitiri.com.ar (alerce.blitiri.com.ar [49.12.208.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092E86311F
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:15:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A825165BA9
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.208.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706537746; cv=none; b=buy9MJ62aG9s0QGXYDOAZKQZu7CvRb7vKypUBNHQiAWiV5scp17IXWSpXDVFF56CTCvNNIf56mWCpKM56/7peWgxnY4usP3QrcEA0CEASylomgvlmmDXjNwhu/EZrLnDTMYN807DccqvoQTUroRoajYOujAWpwXapRMgCvSBC8s=
+	t=1706537746; cv=none; b=cQ05S+2B6wcvtki4dIcNMmUu9XqLK75SEvhYKlZaJ5y7lxqqmBj1zRactS535MEMcAKExQLdhbBkWEvgiINqfDw5YSvGvC6hH5VWWkEr2ev9E45ToeWPKdl1w2+CML8+ai7vaGxzc6ydIlaV+/d42cfG8mA9N9diuNyafBbr058=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706537746; c=relaxed/simple;
-	bh=mH5A9hH5XvVo2T9vZBvlGm1W3LlxcYXSTb48Acf7hK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=shWIsQogf5UOyGlku248JW/2Y/ruzv1p2Ye8Ge5Sar/g+RAWrgrQzBAsvX5JKRGHRe5xzLXqk5j0e38rd1HREpiuFcfzdTtU3W9HFOq+LtofINBYA6YEYHQ5ctnbgoTclMExSSJ0Ard5n0BfEgv5N8cnHBMc6szFBAwXkO8ZsTs=
+	bh=Gn5XMisrKqtPzKloUCYqV2dG6OKnyY1SiteWokRK9/A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AWCcHve6UpmpAv58u5m67Qa7cRP8KAGhVdhfe/HEvj+qUKWxvSZ3VzkGpXRzogPgH79adSxBHgCYWdOC8NDKQyIGW0/OeSWulniNFxax+rdozHgQdWDPziupaBshRo1FzWPC9nWsl794EWr4F9LUoxpcPlT9r2CIomfdZ+NNmdo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sdfg.com.ar; spf=pass smtp.mailfrom=sdfg.com.ar; arc=none smtp.client-ip=49.12.208.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sdfg.com.ar
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sdfg.com.ar
@@ -17,16 +18,18 @@ Received: from localhost.localdomain
 	by sdfg.com.ar (chasquid) with ESMTPSA
 	tls TLS_AES_128_GCM_SHA256
 	(over submission, TLS-1.3, envelope from "rodrigo@sdfg.com.ar")
-	; Mon, 29 Jan 2024 14:15:35 +0000
+	; Mon, 29 Jan 2024 14:15:36 +0000
 From: Rodrigo Campos <rodrigo@sdfg.com.ar>
 To: Willy Tarreau <w@1wt.eu>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org,
 	Rodrigo Campos <rodrigo@sdfg.com.ar>
-Subject: [PATCH 0/4] tools/nolibc: Misc fixes for strlcpy() and strlcat()
-Date: Mon, 29 Jan 2024 15:15:12 +0100
-Message-ID: <20240129141516.198636-1-rodrigo@sdfg.com.ar>
+Subject: [PATCH 4/4] selftests/nolibc: Add tests for strlcat() and strlcpy()
+Date: Mon, 29 Jan 2024 15:15:16 +0100
+Message-ID: <20240129141516.198636-5-rodrigo@sdfg.com.ar>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240129141516.198636-1-rodrigo@sdfg.com.ar>
+References: <20240129141516.198636-1-rodrigo@sdfg.com.ar>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,47 +38,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As requested by Willy and Thomas[1], here go some more fixes and tests for
-strlcpy() and strlcat().
+I've verified that the tests matches libbsd's strlcat()/strlcpy()
+implementation.
 
-From the previous discussion, I uderstand that we want to apply the first patch
-(export strlen()) as is, I've included it again here just in case. Maybe we should just include the
--Wl,--gc-sections in the nolibc.h comment about the flags to use when compiling?
+Please note that as strlcat()/strlcpy() are not part of the libc, the
+tests are only compiled when using nolibc.
 
-The rest of the commits are quite simple too, they just:
-	* Fix the return code of both functions
-	* Make sure to always null-terminate the dst buffer
-	* Don't copy more than what size allows us (this handles the size=0 case
-	  for free too)
-
-All has been checked against the corresponding libbsd implementation[2].
-
-I thought the manpage was clear, but when checking against that, I noted a few
-twists (like the manpage says the return code of strlcat is strlen(src) +
-strlen(dst), but it was not clear it is not that if size < strlen(dst). When
-looking at the libbsd implementation and re-reading the manpage, I understood
-what it really meant).
-
-Let me know what you think :)
-
-Best,
-Rodrigo
-
-
-[1]: https://lore.kernel.org/all/9538a8fe-b92f-42a5-99d1-25969cf51647@sdfg.com.ar/
-[2]: https://gitlab.freedesktop.org/libbsd/libbsd.git
-
-
-Rodrigo Campos (4):
-  tools/nolibc/string: export strlen()
-  tools/nolibc: Fix strlcat() return code and size usage
-  tools/nolibc: Fix strlcpy() return code and size usage
-  selftests/nolibc: Add tests for strlcat() and strlcpy()
-
- tools/include/nolibc/string.h                | 25 +++++++-------
+Signed-off-by: Rodrigo Campos <rodrigo@sdfg.com.ar>
+---
  tools/testing/selftests/nolibc/nolibc-test.c | 34 ++++++++++++++++++++
- 2 files changed, 47 insertions(+), 12 deletions(-)
+ 1 file changed, 34 insertions(+)
 
+diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+index 6ba4f8275ac4..aa365443bb2b 100644
+--- a/tools/testing/selftests/nolibc/nolibc-test.c
++++ b/tools/testing/selftests/nolibc/nolibc-test.c
+@@ -600,6 +600,25 @@ int expect_strne(const char *expr, int llen, const char *cmp)
+ 	return ret;
+ }
+ 
++#define EXPECT_STRBUFEQ(cond, expr, buf, val, cmp)				\
++	do { if (!(cond)) result(llen, SKIPPED); else ret += expect_str_buf_eq(expr, buf, val, llen, cmp); } while (0)
++
++static __attribute__((unused))
++int expect_str_buf_eq(size_t expr, const char *buf, size_t val, int llen, const char *cmp)
++{
++	llen += printf(" = %lu <%s> ", expr, buf);
++	if (strcmp(buf, cmp) != 0) {
++		result(llen, FAIL);
++		return 1;
++	}
++	if (expr != val) {
++		result(llen, FAIL);
++		return 1;
++	}
++
++	result(llen, OK);
++	return 0;
++}
+ 
+ /* declare tests based on line numbers. There must be exactly one test per line. */
+ #define CASE_TEST(name) \
+@@ -991,6 +1010,9 @@ int run_stdlib(int min, int max)
+ 	for (test = min; test >= 0 && test <= max; test++) {
+ 		int llen = 0; /* line length */
+ 
++		/* For functions that take a long buffer, like strlcat() */
++		char buf[7] = "foo";
++
+ 		/* avoid leaving empty lines below, this will insert holes into
+ 		 * test numbers.
+ 		 */
+@@ -1007,6 +1029,18 @@ int run_stdlib(int min, int max)
+ 		CASE_TEST(strchr_foobar_z);    EXPECT_STRZR(1, strchr("foobar", 'z')); break;
+ 		CASE_TEST(strrchr_foobar_o);   EXPECT_STREQ(1, strrchr("foobar", 'o'), "obar"); break;
+ 		CASE_TEST(strrchr_foobar_z);   EXPECT_STRZR(1, strrchr("foobar", 'z')); break;
++#ifdef NOLIBC
++		CASE_TEST(strlcat_0);          EXPECT_STRBUFEQ(1, strlcat(buf, "bar", 0), buf, 3, "foo"); break;
++		CASE_TEST(strlcat_1);          EXPECT_STRBUFEQ(1, strlcat(buf, "bar", 1), buf, 4, "foo"); break;
++		CASE_TEST(strlcat_3);          EXPECT_STRBUFEQ(1, strlcat(buf, "bar", 3), buf, 6, "foo"); break;
++		CASE_TEST(strlcat_5);          EXPECT_STRBUFEQ(1, strlcat(buf, "bar", 5), buf, 6, "foob"); break;
++		CASE_TEST(strlcat_7);          EXPECT_STRBUFEQ(1, strlcat(buf, "bar", 7), buf, 6, "foobar"); break;
++		CASE_TEST(strlcpy_0);          EXPECT_STRBUFEQ(1, strlcpy(buf, "bar", 0), buf, 3, "foo"); break;
++		CASE_TEST(strlcpy_1);          EXPECT_STRBUFEQ(1, strlcpy(buf, "bar", 1), buf, 3, ""); break;
++		CASE_TEST(strlcpy_2);          EXPECT_STRBUFEQ(1, strlcpy(buf, "bar", 2), buf, 3, "b"); break;
++		CASE_TEST(strlcpy_3);          EXPECT_STRBUFEQ(1, strlcpy(buf, "bar", 3), buf, 3, "ba"); break;
++		CASE_TEST(strlcpy_4);          EXPECT_STRBUFEQ(1, strlcpy(buf, "bar", 4), buf, 3, "bar"); break;
++#endif
+ 		CASE_TEST(memcmp_20_20);       EXPECT_EQ(1, memcmp("aaa\x20", "aaa\x20", 4), 0); break;
+ 		CASE_TEST(memcmp_20_60);       EXPECT_LT(1, memcmp("aaa\x20", "aaa\x60", 4), 0); break;
+ 		CASE_TEST(memcmp_60_20);       EXPECT_GT(1, memcmp("aaa\x60", "aaa\x20", 4), 0); break;
 -- 
 2.43.0
 
