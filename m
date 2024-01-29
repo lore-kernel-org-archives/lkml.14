@@ -1,107 +1,108 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FA6537EE
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3423744371
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706524807; cv=none; b=DNmQEdb/hJuxRWCkdagNEwRKUlkcqyP5pX9EhXC0yiKjJeGpPLNtBwYwu+6ig+PslGBp++uYhMUb3fzPmRxhqXLZJWJEtogDG6Kqeq/wp0yC9X+si48NJF0564fF6uNap5fqfuAPbbHm/Rfw+SSiFCUhEXcShBcjs7FWQ52pByI=
+	t=1706524888; cv=none; b=pkkSXxqQ7hcgG5zNvMXB61XZbyRn2GJRD+JFc2xUYnbqCkqUwbI1etvT2/ovzl78tfKWrZ0Vbndcx0KeazlizCI3d5X0QFQF36ChHsJzR2WOpHqG+gSFGBEnuPqeuw4RCtTq7C5MmYjx8a20bmlGZux7ARg3Hjbxevs/drcadV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706524807; c=relaxed/simple;
-	bh=WaFE+pXwPRypPxIRaulg/gFvImbvbsthbSmM+meA068=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ry5KG19diUf4uFwpY91pKeTHXvRtpEI3ThSD4+bmhUFlNQYC1IKPaDYMpuwU/xjYKWFkYSTOmNhbOS2BBNqecjjZvO6WT7Qf5klvLFLyewdRmpfLq4wBIClKd53A/EmgJIw/kGkoShWY1wVWvbxxTidQ3RufXp69nnB56tcFX0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s856pUGZ; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706524888; c=relaxed/simple;
+	bh=mziL3smNpACHeEVkLl7JlHuipOHyJpTEIIo2FfIWXuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gyyUVIyAsvotaGObiMf3rh79ElZ3koehj6JcWVfgFRTXSZx6XIGfja0w4JUT2UY6lGE+hs5WkuqPQ+RFiSFd9njLvcGSqDwKHouDnvdPPaU5a//Lkl9LBUYVYAEqJIyvEQ9CRa7ulLeZgU27glwVz1jMYf7bXKlCLB8Mw3MsJG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=STCR4vUq; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s856pUGZ"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e80046246so13437605e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 02:40:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706524804; x=1707129604; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=J0JbM0JGF1J7IySg62RrNatTS3/ANKn5efUsptKY4Sw=;
-        b=s856pUGZ2tkBV2hqYXDZkr81tQsbD1UyyTRw2HdlLGVR+VwiC7bv54bsLYS32vfU9k
-         t3UjPfLuEqQuAond0sJTSU4/gQmWCpk2G7mjusYpnnarsI0AcKIwJzwxJ3rYeH8bPEbO
-         pNuyu8CnkR9FaBKUjB43YrEFC8T9x6theEnsY13vbmJszEFNRW097FPPQOTNm7rPQVE9
-         dXG8ttrI/JTHPMXECOTaVmHvY547JjLN6FGx8MaiRRSHL+FeMs1/SvUlqB885XkTD6FQ
-         SCbpxTtls6zx1zY1kULe7rlrzlEe81kS5B4fi6s/jjkZ/05z47nEQpliaJd4LLM0wEms
-         2bfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706524804; x=1707129604;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J0JbM0JGF1J7IySg62RrNatTS3/ANKn5efUsptKY4Sw=;
-        b=nnUSGIWnQBa/I6nqSpAzTYYFoNlKSxQEHUEA47oB3TNUGFmNfuFsFt+Cp0g3ffzHcx
-         HwzAcSKqnyRdMChncVU1aKDmyB3B2g/E0j1MGc68NtPrwVFacFFIac6U3nOYt+JKRejf
-         5UsGFmqt8tTj1RW3IDIy0APCV7eLzeWwm8C9Y1OFVqq7jXU9To82GNl5RPNffhkx2Ts8
-         3BjkIa0onDLf3GV6QyIsfStcV1KwlkE0Gexl/rffC/GyyCOf0eOqLknqih9y1M5eJuQQ
-         KK+TAxZcIzuKGw1PkC+EyoQRDpuk4yKbwqYDXjZAHV7OhSWfOz4MZ3kyCqFySOxhpOe5
-         KL5w==
-X-Gm-Message-State: AOJu0Yz1zOT/MRGgfx6zSx9y5k06yiPaaDTMmqSRNvvjI9eECFDh4s0T
-	wN10sc0N/4QOOsPY6WBmenz4Rdtg5PGPh+bT+e670xGy4G09bYcq4sV/sJQC9+Q=
-X-Google-Smtp-Source: AGHT+IEgR4YcDqRDiTudYYipsxEtqbgIADWVwpxpCcbuB0Tw75yxRycXmOHhf4ySXorJ+nzxIfUq7g==
-X-Received: by 2002:a05:600c:1c12:b0:40e:fa51:3526 with SMTP id j18-20020a05600c1c1200b0040efa513526mr993752wms.10.1706524803970;
-        Mon, 29 Jan 2024 02:40:03 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ay8-20020a05600c1e0800b0040eec3f384esm7001854wmb.42.2024.01.29.02.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 02:40:03 -0800 (PST)
-Message-ID: <0d3236e90604e82a609d205c6fbb56fd882ecfbb.camel@linaro.org>
-Subject: Re: [PATCH 6/9] arm64: dts: exynos: gs101: enable i2c bus 12 on
- gs101-oriole
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-  linux-kernel@vger.kernel.org, kernel-team@android.com,
- tudor.ambarus@linaro.org,  willmcvicker@google.com,
- alim.akhtar@samsung.com, s.nawrocki@samsung.com,  tomasz.figa@gmail.com,
- cw00.choi@samsung.com,  linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org,  linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org
-Date: Mon, 29 Jan 2024 10:40:02 +0000
-In-Reply-To: <CAPLW+4m4G+-zFLGr6Bp-73-mERCofxDiD7F=2fd_Wq+18iTs9g@mail.gmail.com>
-References: <20240127001926.495769-1-andre.draszik@linaro.org>
-	 <20240127001926.495769-7-andre.draszik@linaro.org>
-	 <CAPLW+4m4G+-zFLGr6Bp-73-mERCofxDiD7F=2fd_Wq+18iTs9g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1-1 
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="STCR4vUq"
+Received: by linux.microsoft.com (Postfix, from userid 1112)
+	id 6E48820E67D1; Mon, 29 Jan 2024 02:41:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6E48820E67D1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1706524885;
+	bh=poMPwNlCA9ASorWGoIcCLj1xsjtr7a7gs6hsW60aNI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=STCR4vUqyLhO4ItMg9dbXnXPUlEmkYF6gyp14yscuoLtZTrCQSj4wR0JAliItBFGf
+	 iTjjeMxbC+Rm9iTq6PzFtGwSiVnZFo0Uwv6sjiaTrowrStgJ40D5FrKwAqV4155FOH
+	 Pc+DWe8upwpS7MAFselbmv8CaIkRfQpzeZK3Dv+c=
+Date: Mon, 29 Jan 2024 02:41:25 -0800
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>
+Subject: Re: [PATCH 07/11] x86/sev: Provide SVSM discovery support
+Message-ID: <20240129104125.GA20729@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <cover.1706307364.git.thomas.lendacky@amd.com>
+ <2518c82f24f3e5d7533eea72512cea9ce985704b.1706307364.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2518c82f24f3e5d7533eea72512cea9ce985704b.1706307364.git.thomas.lendacky@amd.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Hi Sam,
+On Fri, Jan 26, 2024 at 04:16:00PM -0600, Tom Lendacky wrote:
+> The SVSM specification documents an alternative method of discovery for
+> the SVSM using a reserved CPUID bit and a reserved MSR.
+> 
+> For the CPUID support, the #VC handler of an SEV-SNP guest should modify
+> the returned value in the EAX register for the 0x8000001f CPUID function
+> by setting bit 28 when an SVSM is present.
+> 
 
-On Fri, 2024-01-26 at 20:58 -0600, Sam Protsenko wrote:
-> On Fri, Jan 26, 2024 at 6:19=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik=
-@linaro.org> wrote:
-> >=20
-> > This bus has various USB-related devices attached to it.
-> >=20
-> > [...]
-> >=20
-> > +&hsi2c_12 {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D "okay";
->=20
-> But there are no bus clients declared here? A bit of explanation about
-> how this bus is being currently used would be nice to have (in commit
-> message); e.g. maybe it's used in user space somehow, etc. Because
-> otherwise it doesn't have much sense to enable the bus with no users.
+It seems awkward that the guest would have to set the bit in the CPUID response
+itself. Is there no way for the SVSM to fixup the CPUID page contents, or the
+CPUID instruction return?
 
-As per the commit message, there are devices, but:
-* most or all don't have an upstream driver at this stage
-* it does make sense to enable the bus, as enabling it allows working on
-  the drivers for the devices that are attached to this bus
+Could you also add a definition for the feature to arch/x86/include/asm/cpufeatures.h.
 
-Cheers,
-Andre'
-
+> For the MSR support, new reserved MSR 0xc001f000 has been defined. A #VC
+> should be generated when accessing this MSR. The #VC handler is expected
+> to ignore writes to this MSR and return the physical calling area address
+> (CAA) on reads of this MSR.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/include/asm/msr-index.h |  2 ++
+>  arch/x86/kernel/sev-shared.c     |  4 ++++
+>  arch/x86/kernel/sev.c            | 17 +++++++++++++++++
+>  3 files changed, 23 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index f1bd7b91b3c6..4746135cbe21 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -622,6 +622,8 @@
+>  
+>  #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
+>  
+> +#define MSR_SVSM_CAA			0xc001f000
+> +
+>  /* AMD Collaborative Processor Performance Control MSRs */
+>  #define MSR_AMD_CPPC_CAP1		0xc00102b0
+>  #define MSR_AMD_CPPC_ENABLE		0xc00102b1
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index f26e872bc5d0..9bd7d7e75b31 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -628,6 +628,10 @@ static int snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+>  		/* node ID */
+>  		leaf->ecx = (leaf->ecx & GENMASK(31, 8)) | (leaf_hv.ecx & GENMASK(7, 0));
+>  		break;
+> +	case 0x8000001f:
+> +		if (vmpl)
+> +			leaf->eax |= BIT(28);
+> +		break;
+>  	default:
+>  		/* No fix-ups needed, use values as-is. */
+>  		break;
