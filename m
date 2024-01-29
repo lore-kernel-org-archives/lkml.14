@@ -1,48 +1,48 @@
 Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BD155C3F;
-	Mon, 29 Jan 2024 06:31:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2DF56445;
+	Mon, 29 Jan 2024 06:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706509866; cv=none; b=SZ6YaIh3RSWQiYM0Akg9pe0nDP3Lwt45srNOTZf8k+7V953gMUyad/RxTTCL79IdIBrOhHdciMvY67dF1GLxgBSSWfmVmMnRzqM0F2petIhaC7s+yoRrcabKAanIDplOyQIvvHMJN9e6crso2L/i+MTXcGYtJLeK+YZHMrSQENw=
+	t=1706509869; cv=none; b=IQ3ipYXrsclQOzrllhcAFd1L36Sdyppd+kri655WkXtDdJnI4kI2i5VJ/YYKzjC5gKHdx8UQWNEDlf1yaI8IWvRxgyA6JpyLcePjwGZhLzbVX0iuYhX6eFk7JatRcEBjBz0ZPJs0OoRLf19sfvAz9cl/ABEnBos2ZKe7NVSsAg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706509866; c=relaxed/simple;
-	bh=CYznYMOomAPrga0MglS3xCj/dcAECK1NBl6/8hXKQOs=;
+	s=arc-20240116; t=1706509869; c=relaxed/simple;
+	bh=WiIjUCF8+rFVH1JAGZb99ANWCjBV8LC91Gu6iOjZLds=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mBzGKOmf504GvkepdPxIeKQrn/39tcRNS2y0FJwErET+9Uw53oyLyD4SU6sPPM4a7MnNc6Rj7vcwAVNW11jGAoRJwPr7CGXW4rbv33zHC9AZchfpzdytqUJHHWsAWcQEuFWBrkT47RrYNt5JAxgOGbKR5xrJ7UHtHVRavB1xoQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=RBt2SaF4; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=JAHnRP6Z46zrLyBXHJm5LT94hAcvuSjdKRdt/Sy1pzGScS6yG0bNq3NO0t+mNeorQTV1Ri3pai2lDC9132hxDW2lmuXdbLW0l6vh2ZR/nxIEcerNf5pWe1eZqjpwKe6bcomfYDLM8WwHSm7CKJqJ+AYausYH5LMunFS1tI3be+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=kAwNqxGO; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RBt2SaF4"
-X-UUID: f6451cfcbe6f11eea2298b7352fd921d-20240129
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kAwNqxGO"
+X-UUID: f8849be6be6f11eea2298b7352fd921d-20240129
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=RIQoT27GcYuuJ+QhfUoHjqOEFRPYloQJzRhu1bfSFyk=;
-	b=RBt2SaF43ekmbOxBB5pVQBCiupegyT8L1GQTa7sXa68eyIOLOjaQe4fxQGhDU1WIONcMczBLnmMMl8N3w/XR3+9LSgoBESKBUMWos6v2bMczGsSDo5PWHkcTXG3/xB0+l33SURo6RGcLnN6O0Fg8UZj+6Ps1tfj1UFJnICVDfGM=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tDdbTuWdtMHx44dMsP7Vdfz0hNjFshKJXaC0iWiaF9M=;
+	b=kAwNqxGO6H/jjheOphrZ1Ne6f7lx1t1CPZngkccM0nw41xTalJqmQ1z1U1l1MuufggpOPx3Uvhj2LppBcPjUByp2WA1iqtSsEw4SY3HnQZEZY2auiSAOSw3LYujNnVGGwP/26SZqb/OXsxiM8T8u8aqEv5PB8Xiafw7U4pXPvj8=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.36,REQID:5e8cd2b6-4756-43c9-9a50-e2e15ea17989,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6e16cf4,CLOUDID:9aa95c83-8d4f-477b-89d2-1e3bdbef96d1,B
+X-CID-O-INFO: VERSION:1.1.36,REQID:2c19284c-04cb-4681-8e21-7f01cae06b5d,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:6e16cf4,CLOUDID:2ed141fe-c16b-4159-a099-3b9d0558e447,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
 	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: f6451cfcbe6f11eea2298b7352fd921d-20240129
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+X-UUID: f8849be6be6f11eea2298b7352fd921d-20240129
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
 	(envelope-from <yunfei.dong@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 111755880; Mon, 29 Jan 2024 14:30:57 +0800
+	with ESMTP id 487120532; Mon, 29 Jan 2024 14:31:01 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 29 Jan 2024 14:30:56 +0800
+ 15.2.1118.26; Mon, 29 Jan 2024 14:31:00 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 29 Jan 2024 14:30:54 +0800
+ 15.2.1118.26 via Frontend Transport; Mon, 29 Jan 2024 14:30:58 +0800
 From: Yunfei Dong <yunfei.dong@mediatek.com>
 To: Jeffrey Kardatzke <jkardatzke@google.com>,
 	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
@@ -50,20 +50,20 @@ To: Jeffrey Kardatzke <jkardatzke@google.com>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
 	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
 	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>
-CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
-	"Hsin-Yi Wang" <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	"Daniel Vetter" <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>,
-	"Brian Starkey" <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T
- . J . Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>, Hsin-Yi
+ Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>, Daniel
+ Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei Dong
+	<yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, Brian
+ Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
+ Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
 	<christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
 	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v4,15/22] media: mediatek: vcodec: Add one plane format
-Date: Mon, 29 Jan 2024 14:30:18 +0800
-Message-ID: <20240129063025.29251-16-yunfei.dong@mediatek.com>
+Subject: [PATCH v4,18/22] media: mediatek: vcodec: remove parse nal_info in kernel
+Date: Mon, 29 Jan 2024 14:30:21 +0800
+Message-ID: <20240129063025.29251-19-yunfei.dong@mediatek.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240129063025.29251-1-yunfei.dong@mediatek.com>
 References: <20240129063025.29251-1-yunfei.dong@mediatek.com>
@@ -75,78 +75,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--6.687000-8.000000
-X-TMASE-MatchedRID: SJCrnFkDoFv1f6EBkUtKacu00lnG8+PWqQ9UezeTkThjHFhWIf8DgWb6
-	PphVtfZg1Bh8AQwURElq7k1NHAqvK9pkOfaFflnAdXu122+iJtqH7D1bP/FcOvHFoBcOsKezcam
-	vz988laL3cuxjGnQlwIAy6p60ZV62SwOSQ/fMiOrdB/CxWTRRu25FeHtsUoHuAcFKPL0sGcRPy5
-	a1EU1tr466zVpODusNRGNNTyZV6iJoBmTSwRxjXg==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--6.687000-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	69ADA67086B33733C482C43682C906382C2EE46B253CA828B12F16EF60EE0EEF2000:8
 X-MTK: N
 
-Adding capture formats to support V4L2_PIX_FMT_MS21. This format has
-one plane and only be used for secure video playback at current period.
+The hardware can parse syntax to get nal_info, needn't to use cpu.
 
 Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 ---
- .../platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c    | 4 +++-
- .../mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c   | 9 ++++++++-
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ .../vcodec/decoder/vdec/vdec_h264_req_multi_if.c    | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-index ba742f0e391d..604fdc8ee3ce 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-@@ -49,7 +49,9 @@ static bool mtk_vdec_get_cap_fmt(struct mtk_vcodec_dec_ctx *ctx, int format_inde
- 		num_frame_count++;
- 	}
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
+index a1a68487131c..2dfb3043493e 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
+@@ -645,11 +645,10 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 	struct vdec_h264_slice_inst *inst = h_vdec;
+ 	struct vdec_vpu_inst *vpu = &inst->vpu;
+ 	struct mtk_video_dec_buf *src_buf_info;
+-	int nal_start_idx, err, timeout = 0;
++	int err, timeout = 0;
+ 	unsigned int data[2];
+ 	struct vdec_lat_buf *lat_buf;
+ 	struct vdec_h264_slice_share_info *share_info;
+-	unsigned char *buf;
  
--	if (num_frame_count == 1 || (!ctx->is_10bit_bitstream && fmt->fourcc == V4L2_PIX_FMT_MM21))
-+	if ((!ctx->is_10bit_bitstream && fmt->fourcc == V4L2_PIX_FMT_MM21) ||
-+	    (ctx->is_secure_playback && fmt->fourcc == V4L2_PIX_FMT_MS21) ||
-+	    num_frame_count == 1)
- 		return true;
+ 	if (vdec_msg_queue_init(&inst->ctx->msg_queue, inst->ctx,
+ 				vdec_h264_slice_core_decode,
+@@ -673,14 +672,6 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 	share_info = lat_buf->private_data;
+ 	src_buf_info = container_of(bs, struct mtk_video_dec_buf, bs_buffer);
  
- 	q_data = &ctx->q_data[MTK_Q_DATA_SRC];
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-index d54b3833790d..cc42c942eb8a 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
-@@ -229,7 +229,7 @@ static const struct mtk_stateless_control mtk_stateless_controls[] = {
+-	buf = (unsigned char *)bs->va;
+-	nal_start_idx = mtk_vdec_h264_find_start_code(buf, bs->size);
+-	if (nal_start_idx < 0) {
+-		err = -EINVAL;
+-		goto err_free_fb_out;
+-	}
+-
+-	inst->vsi->dec.nal_info = buf[nal_start_idx];
+ 	lat_buf->src_buf_req = src_buf_info->m2m_buf.vb.vb2_buf.req_obj.req;
+ 	v4l2_m2m_buf_copy_metadata(&src_buf_info->m2m_buf.vb, &lat_buf->ts_info, true);
  
- #define NUM_CTRLS ARRAY_SIZE(mtk_stateless_controls)
+@@ -689,7 +680,7 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 		goto err_free_fb_out;
  
--static struct mtk_video_fmt mtk_video_formats[9];
-+static struct mtk_video_fmt mtk_video_formats[10];
+ 	if (!inst->ctx->is_secure_playback)
+-		vdec_h264_insert_startcode(inst->ctx->dev, buf, &bs->size,
++		vdec_h264_insert_startcode(inst->ctx->dev, bs->va, &bs->size,
+ 					   &share_info->h264_slice_params.pps);
  
- static struct mtk_video_fmt default_out_format;
- static struct mtk_video_fmt default_cap_format;
-@@ -770,6 +770,11 @@ static void mtk_vcodec_add_formats(unsigned int fourcc,
- 		mtk_video_formats[count_formats].type = MTK_FMT_FRAME;
- 		mtk_video_formats[count_formats].num_planes = 2;
- 		break;
-+	case V4L2_PIX_FMT_MS21:
-+		mtk_video_formats[count_formats].fourcc = fourcc;
-+		mtk_video_formats[count_formats].type = MTK_FMT_FRAME;
-+		mtk_video_formats[count_formats].num_planes = 1;
-+		break;
- 	default:
- 		mtk_v4l2_vdec_err(ctx, "Can not add unsupported format type");
- 		return;
-@@ -798,6 +803,8 @@ static void mtk_vcodec_get_supported_formats(struct mtk_vcodec_dec_ctx *ctx)
- 		cap_format_count++;
- 	}
- 	if (ctx->dev->dec_capability & MTK_VDEC_FORMAT_MM21) {
-+		mtk_vcodec_add_formats(V4L2_PIX_FMT_MS21, ctx);
-+		cap_format_count++;
- 		mtk_vcodec_add_formats(V4L2_PIX_FMT_MM21, ctx);
- 		cap_format_count++;
- 	}
+ 	*res_chg = inst->resolution_changed;
 -- 
 2.18.0
 
