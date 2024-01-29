@@ -1,116 +1,149 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB5876022;
-	Mon, 29 Jan 2024 19:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DDC60EFF
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 19:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706556556; cv=none; b=cABHIAMkfBqjXHcZxlE04QJ4J4vrA/pj3qU1pPgNgXsVWRhwyFXDRzDC95clya9+EHZKb0ClzzYZft2WvrgRO5tSo/hjaourJxDU8biEOERuSMi3CHGY5E3uZnQvSbI/cgII3HT5wMzPTpm5780BaPuk3+8YvL2/sKAkETKyiq0=
+	t=1706556558; cv=none; b=tvb2iIVjFU1bIgaG4V+FDnKw3Lu4UoN/7EjS9FiAn1EGYSS5Ma1j6hZ1UP1nK1cRUwvv6GuaDcMiDd8lmIqRgWZ4rv8BVuImL8QU8PitZXnIm1SEqlq0tey0FpwlurIo737743Hn67jjwXFi2OrnuxQU/GKUWfoyfvTQX7UM8Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706556556; c=relaxed/simple;
-	bh=VQQ3cJA1L0hatrI0mRr0aOpyfpRd+ae2raDJzQ4r4Jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hn3crknw1APgQs1mSxwdqbj0oZq/q0d8AURaQjVv49PthIv+los4jKOcUw5crGCdQtmZuP8uMZNwb0iwHp6RWYfEkDhghdBamAZjkayx5xN5fXTT5b2R0GfUbpgSmLnU4l4yZ25kR2i/f3y7n0J+CqzPSMv9JHngko7t37sofaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=R61YC1vh; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706556558; c=relaxed/simple;
+	bh=ZESgME+ALPbx9lJo++BhthHpPseuVzsqW4G7/pIDDu8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Kn4CoNleTOpE9pbCS/pgRVzrekNEV/jQXtH3ZggaPU9PCmHrDlhJIz81llHp1mtGIvpzy9ETPExg3CThqi6g0JdkXbsa0rYD1oAL6FGBNFv4F9JpiM7u2Ucqhh8LS1zVaTDSh8ZJGuVXPc5Ai2vzhuXTI8wRxGAXT9ni3d/cXmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dzxviD/U; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="R61YC1vh"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 09DB240E00C5;
-	Mon, 29 Jan 2024 19:29:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id aHknbiBvH0yA; Mon, 29 Jan 2024 19:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706556544; bh=svaXdVUso9XIpSV+g65yFy2vYB9o70I/9oMzH+fLOv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R61YC1vhG4HxoGwH8d9NMiAqt/ypwcQvlKP7/NVPICMBvVV7t1AM5FG/fiLUAZe9f
-	 rXTwSsUgMGD68KxLZxgNDccSBb2vRbjVIX8SYndLfknLagsvbX6/simSi66tVLOUfx
-	 JOoDqACAYKB27snRlrOIbA02RaY003wIud6RAd1y9MZl5+uBZi/JWx0KSvEAjLPRxJ
-	 bTLlLxYzX2WEgwS4q9lIA5kDrwgBlxWLx47JOTwGtXJn7Go2qyY9sfg8dGiJJpYm2a
-	 UFKuQB8CP5F3q7Ge54sEqaqdNFaqPR34dxmroO1YIGiEL18/kqrE96bU3E/prCO0HN
-	 JdlXpSx0kQdg3svTOtIElL688qRJ9lp3bJcvYc6o0tvFMBHvJHtgLAVp+nK1AZwDvL
-	 F7G/vWMl9WfLyM7TkJKUbtAn6sBeqm4QApmgxwq0xwyblmpXpOyqYQUOHCp6O4//yG
-	 0t0QDFFhTi6Uvg2L7rerfGTNAhM0dP5mZihtHDC3zaVrubgjsgXf4FntZGS//zhlBr
-	 Bn4cO4vmOc0D/dH/QDwqsQYV2DAatN0swyETnk2BpP1Ctb5r0ZyEYakZ7ST2z13yRO
-	 RdAAuyaqOO6eyOjtkZ5CYM/idgTNpPGpL4NCYNuOrCGDiyBQwzRJJayTjrUS+VH49O
-	 l9U/vVKCVSs0caq7HcOL5KUI=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dzxviD/U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706556555;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cfAt1hi0Z3grmQvgCjXAH8jNPiFb7a7TOp8BzFVC+CU=;
+	b=dzxviD/UlfDTsyN7eo45uvi5kar49ra7IAQzXFqVPl6TnWw42vtmm0Z2RoaWK3A5TzepWM
+	zRHXQkSAeZaPZElTrwKnhAKTgO73Iu4z6dirghDkZQtMSsrc5AX2oKxLYeTuzusO15t8PK
+	YWkM3T3GiGtC7IsR/fByaHLG6T9pKF8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-612-xTtw-wHBNZe64_K3hDLlAQ-1; Mon, 29 Jan 2024 14:29:11 -0500
+X-MC-Unique: xTtw-wHBNZe64_K3hDLlAQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A636140E016C;
-	Mon, 29 Jan 2024 19:28:26 +0000 (UTC)
-Date: Mon, 29 Jan 2024 20:28:20 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Liam Merwick <liam.merwick@oracle.com>
-Cc: Michael Roth <michael.roth@amd.com>, "x86@kernel.org" <x86@kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"jroedel@suse.de" <jroedel@suse.de>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"hpa@zytor.com" <hpa@zytor.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>,
-	"jmattson@google.com" <jmattson@google.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"slp@redhat.com" <slp@redhat.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"tobin@ibm.com" <tobin@ibm.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
-	"kirill@shutemov.name" <kirill@shutemov.name>,
-	"ak@linux.intel.com" <ak@linux.intel.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"alpergun@google.com" <alpergun@google.com>,
-	"jarkko@kernel.org" <jarkko@kernel.org>,
-	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-	"nikunj.dadhania@amd.com" <nikunj.dadhania@amd.com>,
-	"pankaj.gupta@amd.com" <pankaj.gupta@amd.com>,
-	Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v2 10/25] x86/sev: Add helper functions for RMPUPDATE and
- PSMASH instruction
-Message-ID: <20240129192820.GEZbf8VBsDhI0Be8y0@fat_crate.local>
-References: <20240126041126.1927228-1-michael.roth@amd.com>
- <20240126041126.1927228-11-michael.roth@amd.com>
- <23cb85b1-4072-45a4-b7dd-9afd6ad20126@oracle.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C6D5685A58E;
+	Mon, 29 Jan 2024 19:29:10 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7648EC2590E;
+	Mon, 29 Jan 2024 19:29:10 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id 5F15330C14EB; Mon, 29 Jan 2024 19:29:10 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 54E793FB4E;
+	Mon, 29 Jan 2024 20:29:10 +0100 (CET)
+Date: Mon, 29 Jan 2024 20:29:10 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Hongyu Jin <hongyu.jin.cn@gmail.com>
+cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, ebiggers@kernel.org, 
+    zhiguo.niu@unisoc.com, ke.wang@unisoc.com, yibin.ding@unisoc.com, 
+    hongyu.jin@unisoc.com, linux-kernel@vger.kernel.org, 
+    dm-devel@lists.linux.dev, linux-block@vger.kernel.org
+Subject: Re: [PATCH v8 0/5] Fix I/O priority lost in device-mapper
+In-Reply-To: <20240124053556.126468-1-hongyu.jin.cn@gmail.com>
+Message-ID: <8b31bbef-35f7-6efd-d1ba-381cc1952e5d@redhat.com>
+References: <20231221103139.15699-6-hongyu.jin.cn@gmail.com> <20240124053556.126468-1-hongyu.jin.cn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <23cb85b1-4072-45a4-b7dd-9afd6ad20126@oracle.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Mon, Jan 29, 2024 at 06:00:36PM +0000, Liam Merwick wrote:
-> asid is typically a u32 (or at least unsigned) - is it better to avoid 
-> potential conversion issues with an 'int'?
+The patchset seems OK to me.
 
-struct rmp_state.asid is already u32 but yeah, lemme fix that.
+Reviewed-by: Mikulas Patocka <mpatocka@redhat.com>
 
-> Otherwise
-> Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
 
-Thx.
+On Wed, 24 Jan 2024, Hongyu Jin wrote:
 
--- 
-Regards/Gruss,
-    Boris.
+> From: Hongyu Jin <hongyu.jin@unisoc.com>
+> 
+> High-priority tasks get data from dm-verity devices via RT IO priority,
+> I/O will lose RT priority when reading FEC and hash values via kworker
+> submission IO during verification, and the verification phase may be
+> blocked by low-priority IO.
+> 
+> Dm-crypt has the same problem in the data writing process.
+> 
+> This is because io_context and blkcg are missing.
+> 
+> Move bio_set_ioprio() into submit_bio():
+> 1. Only call bio_set_ioprio() once to set the priority of original bio,
+>    the bio that cloned and splited from original bio will auto inherit
+>    the priority of original bio in clone process.
+> 
+> 2. Make the IO priority of the original bio to be passed to dm,
+>    and the dm target inherits the IO priority as needed.
+> 
+> Changes in v8:
+>   - Rebase patch 1 on commit 7ed2632ec7d7
+> Changes in v7:
+>   - Modify patch 4: change dm-verity-fec.c
+> Changes in v6:
+>   - Rebase patch and resolve conflict for patch 1, 3, 4
+>   - Modify patch 4: fec_read_parity() follow the priority of original
+>     bio
+>   - Update commit message
+> Changes in v5:
+>   - Rewrite patch 2, add ioprio parameter in dm_io();
+>   - Modify dm_io() in patch 3
+> Changes in v4:
+>   - Modify commit message by Suggestion
+>   - Modify patch for dm-crypt
+> Changes in v3:
+>   - Split patch for device-mapper
+>   - Add patch to fix dm-crypy I/O priority question
+>   - Add block patch to review together
+>   - Fix some error in v2 patch
+> Changes in v2:
+>   - Add ioprio field in struct dm_io_region
+>   - Initial struct dm_io_region::ioprio to IOPRIO_DEFAULT
+>   - Add two interface
+> 
+> 
+> Hongyu Jin (5):
+>   block: Fix bio IO priority setting
+>   dm: Support I/O priority for dm_io()
+>   dm-bufio: Support I/O priority
+>   dm verity: Fix I/O priority lost when read FEC and hash
+>   dm-crypt: Fix lost ioprio when queuing write bios
+> 
+>  block/blk-core.c                              | 10 +++++
+>  block/blk-mq.c                                | 10 -----
+>  drivers/md/dm-bufio.c                         | 43 +++++++++++--------
+>  drivers/md/dm-crypt.c                         |  1 +
+>  drivers/md/dm-ebs-target.c                    |  8 ++--
+>  drivers/md/dm-integrity.c                     | 12 +++---
+>  drivers/md/dm-io.c                            | 23 +++++-----
+>  drivers/md/dm-kcopyd.c                        |  4 +-
+>  drivers/md/dm-log.c                           |  4 +-
+>  drivers/md/dm-raid1.c                         |  6 +--
+>  drivers/md/dm-snap-persistent.c               |  8 ++--
+>  drivers/md/dm-verity-fec.c                    | 21 +++++----
+>  drivers/md/dm-verity-target.c                 | 13 ++++--
+>  drivers/md/dm-writecache.c                    |  8 ++--
+>  drivers/md/persistent-data/dm-block-manager.c |  6 +--
+>  include/linux/dm-bufio.h                      |  5 ++-
+>  include/linux/dm-io.h                         |  3 +-
+>  17 files changed, 102 insertions(+), 83 deletions(-)
+> 
+> 
+> base-commit: 7ed2632ec7d72e926b9e8bcc9ad1bb0cd37274bf
+> -- 
+> 2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
