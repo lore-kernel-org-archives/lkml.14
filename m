@@ -1,168 +1,207 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5327315A486
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 22:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706566914; cv=none; b=tlrjobEU7UFmqHszV2IsLR7hbf0m7b7xSlmfSVNb9VVHjZBsG+K0cJEZ93Ls9R4rhyMaTePf7C3+z9LTe5rN9sluIcjiBYi7P8nAGhw5z88XGtCARsfSIpki1IQW7KMLJLyr5jDUmxJJ802/VJPapI8QuOAH6DP2knsZro9+DYw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706566914; c=relaxed/simple;
-	bh=oLz4ft6NDVhlxBOshy8i33An2i1tATyCAKzp2PWf8Ig=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=TXYRpZbx5XmrySYxtseJ8fRmsO2ABUJ5zB9yGpuVKOfVz8/4k4PUHzpsinUZ8FHJnPchCmlcspTM751+27h5Fj+wg4CGDXrJrPRynubYfJx0hCEmI7+f2C377JKOXZG47dYriJ4nfYlyCK91wxwVDYgvNrwHs3i+HzWf0mE6zT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3637b5e1487so8949145ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:21:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706566911; x=1707171711;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aNzeGQMIKxlx3j5CSSRHESXOGzLP4dOOTM8hqwvtTOE=;
-        b=lyWymlwC8OZ5k058eTDrY72Kch3epqcNCLA5ejLMr7c2V5P2FHyjEEpaC98usipgRO
-         uXDhimLld2mfxDjUEaNTDmx6bDvAPJ0Z566HygbRZcTnsRlEwkzEBKQtzwjtQaUEMWQj
-         PD5ICP+/gZtGHjd4tiabDtvacfHk6p7Lc+MD585R0ejy9twDai7SpSvoo7tE8hFZHsnV
-         sAdq0zSz2GZHLPSV1jWYAL9KXsT39cdwP6Er8Z9jIanN0xb1fWhPnqwlRbDVDkTicq0h
-         WS8etIMN88N1rKNjXy6+o/B59ME4IU2TecMOQVraIDavnNm1K2oMFQZQMKHkXQEo8Xxq
-         UpFA==
-X-Gm-Message-State: AOJu0YxP44Azlq3dJMa/63YkRt82k6WPJhGI/cVBMAVvaAQ6QBLyejFD
-	e813K8RH2NB5Mg8la9wFxFqExi5Dp6kKa/lMCESjLX3hTbcq99wqbzyHSW8BCpx5dIAwG6GwoF6
-	+uDE0typK0VCfZshpl9ovKApcAg/16Pwsb6esZWoYpvapv+JIYCAtW9i1lQ==
-X-Google-Smtp-Source: AGHT+IFJBNj7YXXeck89GQlAOvshsCaVadGTGnULf5CVc3JA07hfNBCW6nNHkcbMNhvVJ8xpgJiascgkODrid3ErQkBtdAz185SW
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A810615956E
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 22:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706567005; cv=fail; b=fdrvv0yPxLDAppqEZOuohlTt3TVpcOtT0oe/BWP+N0338VEPKUuoEufk0qQRTlYUWMoazP2todKQ1zlyemYvtMENIj43NXQnalN2mwfetXPvdQPdQ1R1q2T125qTk+LXpJMqM6yxTeZSHwfoTV1Wdbh3Y+qaOy0O+1oS0XQY8Og=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706567005; c=relaxed/simple;
+	bh=5gR0I0XmvdP3HjAgH1qy5cRSIqzjqwBmB1oYO+/HZj0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=o44e1bTiZJLzsGM3jb58/uBjAM/enjJzAguEiZ4OvqOLLv1C5gZjEc+HQsDhL6RrbQ4eKK5SueeoND5UWupCXftBYGscCGxTzT6HalS5Kv4maHwgEOsmZkhv4VJSkqMEsK66Ld1gbxY8sfJmc00jwiT6a2eYfik0572wuFrdRx4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GDJA2K1a; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GDJA2K1a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706567003; x=1738103003;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=5gR0I0XmvdP3HjAgH1qy5cRSIqzjqwBmB1oYO+/HZj0=;
+  b=GDJA2K1a8jQ6llgJSQji8bpHxe8Z9GhtgvB49pKhQl9Al94wCD9btzhV
+   M4kOe0m9+QroKjbpUk+ysUfzhQjn+Z7azjkeWBxKqSRHZDzUDUHpbWYOv
+   3QAKJP9khFtTAv1zYJdpQnyBbvTsmSpZ0/LCB7bhjzOa6Y6fI1UFF5dLs
+   49/af9sSHoHjE/PMqfsXsNBJlTwReLATnAV7NCS/FRSbEGIHgua18zawP
+   VV43hEPN5Cfz8VDXCoewA8k2O/FHB6P4YGxz2IOdacILPCwmNAZc6QXig
+   6D/W6OF59AGLMwEeUmhmVxTsf20pVaoCHMoDhtfug/0l9RgbAJTx+bk4I
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="21623564"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="21623564"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 14:23:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="787980011"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="787980011"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jan 2024 14:23:22 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 29 Jan 2024 14:23:22 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 29 Jan 2024 14:23:22 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 29 Jan 2024 14:23:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WtK/mfDDwrL4wFN6vvXgBC2nxnoEWvmnC13uCYnrQ4NyJVXL4u/twmyTUhRtSSIRZolkAWsJPKXTLy/Fb42A4Q7/pD+QoZCiQ2FvqomL7VhPRl0hzkkfpybm0rH4uEZPmV0j0IlqailJHnwe9EhsEdrizXrf4t2VtQ4MIoXJ0qAJ2avSxV4bexB3/rCA9D8mZlmwK+5oZ5VFIEYMA+TubwnUn0pfKXKoizzNpCVEE2xJABbat1qaPIBtFsh7fUSeE2lFDAtu3cqoSzThYru86Nsv8siy+pzeJ0tumnFAMJQttJC1tmsYlLDQz+QJFE6Z9Wx91Eel+pqowhJeMs2yQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ao8RdQ0pS6n7z3OXkp22835YHv+f/BrDURx3Tvy/uGY=;
+ b=IWClSV1398EOFgXWSl+/djY6N69w4TxUfY5+JPZrx2qc20bzbtZ0Eoe+mhtIDU3rOIPbWasZZqEXTjHcEPkW8iGFj6xLxm/1mGuYtDdD76NC+264DRq/Fcsl0GWp70fdtdOfdUP8F/vWuS3nc84hTWrbF/xRdJBBtagEq5zC6Jw6+j//7Mq/wyW50Ek/NmA3QUC4ytGCtjHVgWT0l8BJmTx1yVwIicS39Bq7K6UDrVhzuGwCXtaOTMNcGG0bAHLxTep5Cxb20mIk/ZIt9nRxawez2CCU+IDu6p9wHqMZUc+ikXy8UgO7gvaa6O8dOE+GjAG5RGnS649smaVuUQ2HxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ0PR11MB6576.namprd11.prod.outlook.com (2603:10b6:a03:478::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.30; Mon, 29 Jan
+ 2024 22:23:19 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 22:23:19 +0000
+Date: Mon, 29 Jan 2024 14:23:17 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>
+CC: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, "Peter
+ Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
+	"Ira Weiny" <ira.weiny@intel.com>
+Subject: Re: [RFC PATCH] cleanup: Add cond_guard() to conditional guards
+Message-ID: <65b82555aaf86_5902829447@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240129190100.329791-1-fabio.maria.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240129190100.329791-1-fabio.maria.de.francesco@linux.intel.com>
+X-ClientProxiedBy: MW4PR03CA0238.namprd03.prod.outlook.com
+ (2603:10b6:303:b9::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12e3:b0:363:7aed:f073 with SMTP id
- l3-20020a056e0212e300b003637aedf073mr444456iln.0.1706566911554; Mon, 29 Jan
- 2024 14:21:51 -0800 (PST)
-Date: Mon, 29 Jan 2024 14:21:51 -0800
-In-Reply-To: <000000000000cb5b07060bef7ac0@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008c79ef06101d1226@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [net?] WARNING in ip6_route_info_create
-From: syzbot <syzbot+c15aa445274af8674f41@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB6576:EE_
+X-MS-Office365-Filtering-Correlation-Id: 732a9a9f-a6c5-413b-8af4-08dc2118e59e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YOpejPWVDngErL/rjN2oiVP/MCV1HbgrP6cG8iKlGMEwgTEv+h8pAtgdjig8fvp7otrGei0CdbhVkPLDXyKjYf5L8+1+eRzbeYkbmVyBQwro+A5EaYTE0xNc2MBiQBDsAGAIRFSx106WrQ4NMXhzGZ/M3v4Lq5gyonyRvS9d7VKSxBznlTXSzlZ6HjBR/VL9eaxorn4bSrhkeTAzJXnXS1PNZHj33zIowblXSIeCTSpNI8yqL3IRs7a0kb0gTgHtnl7/jb6SPDb7/jc2rLXvjD35IdCPIPF0rZbQgBthF/r38ASPbixfVtbEMbxpUh9YGCJO9Rzfq4aq6qMJwFQ50DF5C0UuuwOYxSW8/lSdvwYQxxKF7fwFuw6pEf4cvjxyDNk1C3UpR8s47kBZfV7IeK6ezVX0i1SSr96U+BHAXB2eRDSKxN7mN0rVurqwemKUx1ibV5sGkxFap73uGFCouLTDqdqw7v82fdA66w5UH9Coea+FWCbVXkyKpbtU/Z2RD7YYQV6l1dO0w9suUVjV0zEzuFZnTCn/OqCUEV0CEA95fdTBvEftgP5YIhIEul+4
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(136003)(39860400002)(376002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(26005)(82960400001)(86362001)(41300700001)(83380400001)(38100700002)(478600001)(4326008)(8676002)(6486002)(66476007)(316002)(66946007)(54906003)(2906002)(6512007)(9686003)(6506007)(5660300002)(8936002)(66556008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3exZEsUqxhUa2EmOXN46MsEOmaYC4zJYCZe1QQH2ra0khL4Hy+ZS2qEWYjfg?=
+ =?us-ascii?Q?7r7WoWBuTMEXQXr0btwppLzhto+Yo5zJVs4J41YgGpeZ8jcooLuLxbZVV8tO?=
+ =?us-ascii?Q?zctC4A0XvbcDXuPSnKnwn+DA4CwiqqA39Gbfbt4vYZesw9rtp5hKOjliFKtY?=
+ =?us-ascii?Q?ipMlI8VV7s3phV/lqnvZMMPsTC6TaPn/gBOZmuCftczMhiT5O86mUDfy7D02?=
+ =?us-ascii?Q?ErSbkbqubaCAdmSbl3NZ0fd8bAaeb5hBuLgwKWQjOSESHS1k+0xQb0qYipzO?=
+ =?us-ascii?Q?cu0sDv4dRLVRNMgCbc8fgR8rRLAeJjsqZOFVu6NW4d+Bc2sJdc0jqneBPWeh?=
+ =?us-ascii?Q?t8ZlBjf6uLigVIBX8hs98+xNadWEv9RtDQCyZiFj52SFSbifne/bT0emjCzw?=
+ =?us-ascii?Q?49Mn4nAmcjoHeMj2Ht1HyncxD+RkDQ4FZZCZYo3QEmnQ+T8S9yYmSDbmwVsS?=
+ =?us-ascii?Q?Pg9vJbRQIwR4EtFr3GxPZYVwUvLAbPjXi8l8fHKP6Fza99fuFy8N7OfxdUyb?=
+ =?us-ascii?Q?8QzitmAg3pyuugoCgc5BfF5HejDzKTb/pG167F6tLv9j+qXWmQky+xNI2Tm/?=
+ =?us-ascii?Q?RI29JiVCKD1fvHFCoJt4ArL7951FqMku3WOsqh7KU+m0tZX9xGGO5Fu3Rjsk?=
+ =?us-ascii?Q?ZPsOsOf4Si8Hlo9OnuWUo8fRECKRw4R6Mjm1+P2gWPZNDd6Ch5BDNC4ia3Qp?=
+ =?us-ascii?Q?J2M/BpfinywtzFedHRsk2nShDfI7BekO7yBiFStFh/wTOyNqtHPVB9WY7KnK?=
+ =?us-ascii?Q?tXeYcx7jSV5g0vxeidfNFVk9a+5XkWzwWZL8xYkqx/Mn6703qS9x6oqaBeRX?=
+ =?us-ascii?Q?jCmvDO4s96JgEe2mgG4kXZkvmGp2VtPV0oSQcw7oV+QZlEPOZbSEhUl2EHCv?=
+ =?us-ascii?Q?uMdrX/lB1xEYhbBabmGoKtQwDFosCzQ6f9TfIC3A7G+biBqe2pjS9qF4UzqD?=
+ =?us-ascii?Q?V9ud1N/yNsR+FnD78SSRZB79V3ygkrS9iK4W7bcDEI/PrEDNk5WB8IjrVjgh?=
+ =?us-ascii?Q?N4Daoh2ZMno6FUHx8wKnm5w5rrfzt4Mmo9yHj7DxVOXSv1J3/QsUS3g+NXUr?=
+ =?us-ascii?Q?LIN+3hZYbVIAZcp96wntfkOGbw9MDTPvmgRaxPx9PKMOH/1csLJyKZOmn6YE?=
+ =?us-ascii?Q?1Snp+iWygoUd/S5FN4peT5IUAIsiyHrtgpLAR8EOwgEnQtCQ7fM12PaAX2o7?=
+ =?us-ascii?Q?mAUmQmXhjkrCwcCfFv/BWv8E58OVH6Rnayb7C8Qnt5+zvpBQN9YJpPsqbdX4?=
+ =?us-ascii?Q?nhTqfTXGt2tNhKiwJh7PRra5z6zayw+2CcNYxpk1L7Na7Fc/VSyvd659gnXx?=
+ =?us-ascii?Q?vlJQaXPc4ERki0SG0wKXqIL96O+H8H77ifAidCMqkL7P/UG7JMxu8lG88sed?=
+ =?us-ascii?Q?S/FnyP5378FojzQkYcAlsojxD91vEhV9tMIGw9JM3dKKHHywe5UO8wkuh5/v?=
+ =?us-ascii?Q?8cgk7vmRdxHDjwQQ1Q5Wh0+XaXzimowA/z2A8sbrBFpdvTEPV9y+YleTRmcc?=
+ =?us-ascii?Q?/ZW8acaRDibqyRg15Kd3x9IcIfYPWctF6bRkFdQM+evtSSsy8E599KSIunuU?=
+ =?us-ascii?Q?Nw1e9jcnRPBwBBpaZd/1WI8ot8fG5GD8Ew6VYEREoaAiOsCALDt4OPkQbJeG?=
+ =?us-ascii?Q?CA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 732a9a9f-a6c5-413b-8af4-08dc2118e59e
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 22:23:19.6036
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hhlQIEIeMgkMWW1BmS0vR0pBuDyp3PUCby80t1B/bUR4HCpMIJP3ia95ukDdTgQguGEWmMdDmsv9nP9PhzSOoDFSgk3CoQbMq0kknb4hm6s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6576
+X-OriginatorOrg: intel.com
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+Fabio M. De Francesco wrote:
+> Add cond_guard() to conditional guards.
+> 
+> cond_guard() stores the return value from _interruptible(), _killable(),
+> and _try versions of locks to a variable whose address is passed as the
+> second parameter, so that the value can later be checked and an action
+> be taken accordingly (e.g., calling printk() in case of failure).
 
-***
+This does not look like it returns the result from the conditional
+locking function, it looks like it returns whether the boolean of
+whether the CLASS() constructor succeeded or failed:
 
-Subject: Re: [syzbot] [net?] WARNING in ip6_route_info_create
-Author: sinquersw@gmail.com
+ "*_ret = (!__guard_ptr(_name)(&scope)"
 
-#syz test: git@github.com:ThinkerYzu/linux.git fix-gc-uaf
+Even if it can't return the result from the lock call itself directly,
+it would still be nice to be able to write something like:
 
-On 12/7/23 10:17, syzbot wrote:
-> Hello,
+    rc = cond_guard(rwsem_read_intr, -EINTR, &rwsem);
+    if (rc)
+        return rc;
+
+...and know that the lock is taken of -EINTR is returned.
+
+That would also mean being able to write "if (cond_guard())", which I
+don't think would work with the current proposal.
+
+> As the other guards, it avoids to open code the release of the lock
+> after a goto to an 'out' label.
 > 
-> syzbot found the following issue on:
+> This is an RFC at least for two reasons...
 > 
-> HEAD commit:    5a08d0065a91 ipv6: add debug checks in fib6_info_release()
-> git tree:       net-next
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=175698dae80000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f8715b6ede5c4b90
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c15aa445274af8674f41
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16070374e80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145e1574e80000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/12a59d7df47f/disk-5a08d006.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/14f0ca0a861e/vmlinux-5a08d006.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/ae9306decbe5/bzImage-5a08d006.xz
-> 
-> The issue was bisected to:
-> 
-> commit 5a08d0065a915ccf325563d7ca57fa8b4897881c
-> Author: Eric Dumazet <edumazet@google.com>
-> Date:   Tue Dec 5 17:32:50 2023 +0000
-> 
->      ipv6: add debug checks in fib6_info_release()
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1137437ae80000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=1337437ae80000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1537437ae80000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+c15aa445274af8674f41@syzkaller.appspotmail.com
-> Fixes: 5a08d0065a91 ("ipv6: add debug checks in fib6_info_release()")
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 5062 at include/net/ip6_fib.h:332 fib6_info_release include/net/ip6_fib.h:332 [inline]
-> WARNING: CPU: 0 PID: 5062 at include/net/ip6_fib.h:332 ip6_route_info_create+0x1a1a/0x1f10 net/ipv6/route.c:3829
-> Modules linked in:
-> CPU: 0 PID: 5062 Comm: syz-executor399 Not tainted 6.7.0-rc3-syzkaller-00805-g5a08d0065a91 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
-> RIP: 0010:fib6_info_release include/net/ip6_fib.h:332 [inline]
-> RIP: 0010:ip6_route_info_create+0x1a1a/0x1f10 net/ipv6/route.c:3829
-> Code: 49 83 7f 40 00 75 28 e8 04 ae 50 f8 49 8d bf a0 00 00 00 48 c7 c6 c0 ae 37 89 e8 41 2c 3a f8 e9 65 f4 ff ff e8 e7 ad 50 f8 90 <0f> 0b 90 eb ad e8 dc ad 50 f8 90 0f 0b 90 eb cd e8 d1 ad 50 f8 e8
-> RSP: 0018:ffffc900039cf8e0 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: 0000000000400000 RCX: ffffffff8936e418
-> RDX: ffff888014695940 RSI: ffffffff8936e469 RDI: 0000000000000005
-> RBP: ffffc900039cf9d0 R08: 0000000000000005 R09: 0000000000000000
-> R10: 0000000000400000 R11: ffffffff8aa0008b R12: ffffffffffffffed
-> R13: ffff88802560682c R14: ffffc900039cfac4 R15: ffff888025606800
-> FS:  00005555567bb380(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000200001c2 CR3: 00000000793d5000 CR4: 00000000003506f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   <TASK>
->   ip6_route_add+0x26/0x1f0 net/ipv6/route.c:3843
->   ipv6_route_ioctl+0x3ff/0x590 net/ipv6/route.c:4467
->   inet6_ioctl+0x265/0x2b0 net/ipv6/af_inet6.c:575
->   sock_do_ioctl+0x113/0x270 net/socket.c:1220
->   sock_ioctl+0x22e/0x6b0 net/socket.c:1339
->   vfs_ioctl fs/ioctl.c:51 [inline]
->   __do_sys_ioctl fs/ioctl.c:871 [inline]
->   __se_sys_ioctl fs/ioctl.c:857 [inline]
->   __x64_sys_ioctl+0x18f/0x210 fs/ioctl.c:857
->   do_syscall_x64 arch/x86/entry/common.c:51 [inline]
->   do_syscall_64+0x40/0x110 arch/x86/entry/common.c:82
->   entry_SYSCALL_64_after_hwframe+0x63/0x6b
-> RIP: 0033:0x7f73fa33f369
-> Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffce78f30b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00007ffce78f3288 RCX: 00007f73fa33f369
-> RDX: 00000000200001c0 RSI: 000000000000890b RDI: 0000000000000003
-> RBP: 00007f73fa3b2610 R08: 0000000000000000 R09: 00007ffce78f3288
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-> R13: 00007ffce78f3278 R14: 0000000000000001 R15: 0000000000000001
->   </TASK>
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
-> 
+> 1) I'm not sure that this guard is needed unless we want to avoid the
+> use of scoped_cond_guard() with its necessary indentation of the code
+> in the successful path and/or we want to check the return value of the
+> conditional lock.
+
+Taking this argument to its logical conclusion would mean removing plain
+guard() as well. There is definitely a code readability benefit for
+having the option of guard() vs scoped_guard(), so it would be nice to
+have similar flexibility in the conditional case.
+
+> 2) By using cond_guard() it is not possible to release the lock before
+> calling other functions from the current one. The lock is held until the
+> current function exits. This is not always desirable.
+
+No, that's not correct, the lock is only held until the exit from the
+current scope, and if you call functions from within that scope the lock
+remains held. So:
+
+    func1()
+    {
+        guard(...)(lock1);
+        if (condition) {
+            guard(...)(lock2);
+            func2();
+        }
+        func3();
+    }
+
+func2() is called with lock1 and lock2 held, func3() is only called with
+lock1() held.
