@@ -1,589 +1,225 @@
-Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AC654F85;
-	Mon, 29 Jan 2024 09:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF42355E7A
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706519903; cv=none; b=d6tRtksmV3jY0bQ+hkcq6WebxyTqgGVQZR7XNklM15nrX5uvmieBTGeRr6rZ1TT7Qu8NpAKTjxXkNfGTtVdNyIa+Jz/M1CoqDcIhFSqHfdCIQDMOLe0+Xp76KqAIPMM2QvrHM3RI1pRkQu1qh9OEGRWNzOt/JGsHhu4AepT8eg4=
+	t=1706519922; cv=none; b=dyUAg6MyWoqg+eLwiL3CWH4+SOYTtsRnsE6FqGpJcrqplJoj2nH5h1qqlmudI1kE9a98OF4EuF1EUxEE8J8zKw4AAqJMLiOT6/QbVvVW4kA+Ch0UgHCOZ4TvIXPpWOo9ANP8xVfrT5N3mkdOcFGc01snVRgeNQJAc6ilSb6XTCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706519903; c=relaxed/simple;
-	bh=pegDcFvpeDmA2S8lEI/5yY9EQEQQacSqxB56edI44eQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ir+XhbiBDZ709lxXWp/EaBv+vMb+bs/oo7ZWlhanMXSFCxAf439rirRoQS4riGizEcj+p+1Fu025FrMq7SUEA7liTt9U6xHZbhBcVGBXtMWc+odWJdlqdw0fRybU5eIqVmwLXYjoC4QbszYEClykrPYODF7g1Rs+pavTSSUnN0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: by air.basealt.ru (Postfix, from userid 490)
-	id 856162F2024D; Mon, 29 Jan 2024 09:18:17 +0000 (UTC)
-X-Spam-Level: 
-Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
-	by air.basealt.ru (Postfix) with ESMTPSA id 59B662F20231;
-	Mon, 29 Jan 2024 09:18:13 +0000 (UTC)
-From: kovalev@altlinux.org
-To: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	kpsingh@kernel.org,
-	john.fastabend@gmail.com,
-	yhs@fb.com,
-	songliubraving@fb.com,
-	kafai@fb.com,
-	andrii@kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org,
-	kovalev@altlinux.org,
-	nickel@altlinux.org,
-	oficerovas@altlinux.org,
-	dutyrok@altlinux.org
-Subject: [PATCH 5.10.y 0/1] bpf: fix warning ftrace_verify_code
-Date: Mon, 29 Jan 2024 12:17:45 +0300
-Message-Id: <20240129091746.260538-1-kovalev@altlinux.org>
-X-Mailer: git-send-email 2.33.8
+	s=arc-20240116; t=1706519922; c=relaxed/simple;
+	bh=sFozMJoAolAGCF8tscjr3ajpcwVLl1NfdfeFIagusCw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=esgFD6gsTezn8i7aOsFfWLJcbzMp/r3LP3lnK1Gt8a9eiYjBoCzhL1b79luJuNOV3MR4FmFuhOITpqgP/H2D9XXaalc56qOlIWPZ6IygmwyjOV+1eHyT6wO4ljYzdtiO2hXz52/JoGau2SxYGUgSWWPrL9PF8sa80ZrvhUpPGuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O+Zw8yen; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+Zw8yen"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-68c2f4c3282so21451756d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 01:18:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706519918; x=1707124718; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P8QUCC8mxaAYBk9a7j4VTD2YmBLyr7XLPrPfEMJfXSE=;
+        b=O+Zw8yenzEoPh/vaH6nKmPzzb1zsqsmaYbBFktz6RVnBM709pNz15R6Rgvr27AfR0o
+         MwO7/mLx21K8jGrMCKDJyuUSUseeMayD/QLFWdsrc+sYiEy0UxlWS6E7t0S4BsZuBLgM
+         HB4AbIL3J5FtCKzhg84o0DXq49wR1NpIQzAEy3/4RwjvXPxHsIEeFC/gcBRsVpN1UZAa
+         Po0CsTl3vBnKZxWjSs89KtSYk9WZ9XK6y6CuaqRcWYufniEVgL21lo9vy703ZfCX+kKL
+         rpLjP6jUhISNkU87OLmhnLmZPUAaAsAfMhMyGoums+jBARQj3aM3vkv55eXhSsUqDY7B
+         nTNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706519918; x=1707124718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P8QUCC8mxaAYBk9a7j4VTD2YmBLyr7XLPrPfEMJfXSE=;
+        b=tup1wFMbvakkTjPy7KcBxSJQA6+luz2rt2P0ClLVOMHKFv6y5MkFLrpsz8JcpsmYS7
+         aUDC3FO4NrWo4BKP1VhtYGYqw0QGTfzU/RjiXqos/Wbl3kZHQeA73DGEk6DwWc2Wkz81
+         8Vei0VSmimzHmAw3kkU359ZnU6iPSzmJwiYtJvSKGgaV5iB5+/z+sIkdHT1IezFZUb1q
+         Etzf+l9HNtFeUV5LSgs5ksGuVDuCaAIy2dNiIcmHGqXnGYGWZqYofGUAzfYewtINmfV4
+         OASKUN27nBC5Ny/Mt/PLnWVsGQIunrO4Uw0Ss8lSuvCaMU0EaZEfyDJg7kjneGymOYKf
+         YRsg==
+X-Gm-Message-State: AOJu0YxmaDrApmqXn1AG/3xFeLMwitqt09/i9Gyp4g9lAVsY2O2JEiew
+	MNFWJrQCPKOHOxiUR+p5zgwM/2BZ6bhC9W92vE+j7Moo3IPpdKlte0ECM3rDlUnuh7B7ajOS+UW
+	nUyv3wpvs/fz1mqpVqSQIEOt60tDCz15xjZFQFA==
+X-Google-Smtp-Source: AGHT+IHMF9jA2tNnrgpg+GOHbhcFMUcNlosZdvmduCi5ermtTKqbkzvQ64jyco/nTt46T/fJWnSt6/5J7Zh94ctVnIA=
+X-Received: by 2002:a05:6214:2a4e:b0:685:cf86:45eb with SMTP id
+ jf14-20020a0562142a4e00b00685cf8645ebmr6633834qvb.104.1706519918653; Mon, 29
+ Jan 2024 01:18:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240127001926.495769-1-andre.draszik@linaro.org> <20240127001926.495769-3-andre.draszik@linaro.org>
+In-Reply-To: <20240127001926.495769-3-andre.draszik@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 29 Jan 2024 09:18:27 +0000
+Message-ID: <CADrjBPox_NDkq+-XxX5cuxAhYDubMHnqjnpwj4+76_A=izuhjw@mail.gmail.com>
+Subject: Re: [PATCH 2/9] dt-bindings: clock: google,gs101-clock: add PERIC1
+ clock management unit
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	tudor.ambarus@linaro.org, willmcvicker@google.com, semen.protsenko@linaro.org, 
+	alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
+	cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Syzkaller hit 'WARNING in ftrace_verify_code' bug.
+Hi Andr=C3=A9
 
-This bug is not a vulnerability and is reproduced only when running
-with root privileges on stable 5.10 kernel.
+On Sat, 27 Jan 2024 at 00:19, Andr=C3=A9 Draszik <andre.draszik@linaro.org>=
+ wrote:
+>
+> Add dt-schema documentation and clock IDs for the Connectivity
+> Peripheral 1 (PERIC1) clock management unit.
+>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+>
+> ---
 
-journalctl -k (v5.10.206):
-... 
-bpfilter: Loaded bpfilter_umh pid 2732
-Started bpfilter
-------------[ cut here ]------------
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 4107 at arch/x86/kernel/ftrace.c:97 ftrace_verify_code+0x3e/0x80
-WARNING: CPU: 1 PID: 4107 at arch/x86/kernel/ftrace.c:97 ftrace_verify_code+0x3e/0x80
-Modules linked in: xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat ip6table_filter ip6_tables iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter bridge stp llc qrtr bnep hid_generic usbhid uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common btusb btrtl btbcm btintel videodev bluetooth mc ecdh_generic ecc nls_utf8 nls_cp866 vfat fat coretemp hwmon x86_pkg_temp_thermal intel_powerclamp mei_hdcp kvm_intel kvm rtsx_pci_sdmmc mmc_core irqbypass crct10dif_pclmul wmi_bmof crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel crypto_simd xhci_pci mei_me ucsi_acpi ideapad_laptop cryptd xhci_pci_renesas glue_helper pcspkr typec_ucsi tiny_power_button rtsx_pci sparse_keymap xhci_hcd mei thermal typec wmi i2c_hid button fan rfkill hid acpi_pad intel_pmc_core battery video ac sch_fq_codel vboxnetadp(OE) vboxnetflt(OE) vboxdrv(OE) vboxvideo
-Modules linked in: xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat ip6table_filter ip6_tables iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter bridge stp llc qrtr bnep hid_generic usbhid uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common btusb btrtl btbcm btintel videodev bluetooth mc ecdh_generic ecc nls_utf8 nls_cp866 vfat fat coretemp hwmon x86_pkg_temp_thermal intel_powerclamp mei_hdcp kvm_intel kvm rtsx_pci_sdmmc mmc_core irqbypass crct10dif_pclmul wmi_bmof crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel crypto_simd xhci_pci mei_me ucsi_acpi ideapad_laptop cryptd xhci_pci_renesas glue_helper pcspkr typec_ucsi tiny_power_button rtsx_pci sparse_keymap xhci_hcd mei thermal typec wmi i2c_hid button fan rfkill hid acpi_pad intel_pmc_core battery video ac sch_fq_codel vboxnetadp(OE) vboxnetflt(OE) vboxdrv(OE) vboxvideo
- drm_vram_helper drm_ttm_helper ttm drm_kms_helper cec rc_core vboxsf vboxguest snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_seq_device snd_timer snd soundcore drm msr fuse dm_mod efi_pstore efivarfs ip_tables x_tables autofs4 evdev input_leds serio_raw
- drm_vram_helper drm_ttm_helper ttm drm_kms_helper cec rc_core vboxsf vboxguest snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_seq_device snd_timer snd soundcore drm msr fuse dm_mod efi_pstore efivarfs ip_tables x_tables autofs4 evdev input_leds serio_raw
-CPU: 1 PID: 4107 Comm: repro5 Tainted: G           OE     5.10.206-std-def-alt1 #1
-CPU: 1 PID: 4107 Comm: repro5 Tainted: G           OE     5.10.206-std-def-alt1 #1
-Hardware name: LENOVO 82X8/LNVNB161216, BIOS LTCN30WW 11/08/2023
-Hardware name: LENOVO 82X8/LNVNB161216, BIOS LTCN30WW 11/08/2023
-RIP: 0010:ftrace_verify_code+0x3e/0x80
-RIP: 0010:ftrace_verify_code+0x3e/0x80
-Code: 25 28 00 00 00 48 89 44 24 08 31 c0 48 8d 7c 24 03 e8 56 f9 1b 00 48 85 c0 75 3e 8b 03 39 44 24 03 74 28 48 89 1d e2 1d 05 03 <0f> 0b b8 ea ff ff ff 48 8b 4c 24 08 65 48 2b 0c 25 28 00 00 00 75
-Code: 25 28 00 00 00 48 89 44 24 08 31 c0 48 8d 7c 24 03 e8 56 f9 1b 00 48 85 c0 75 3e 8b 03 39 44 24 03 74 28 48 89 1d e2 1d 05 03 <0f> 0b b8 ea ff ff ff 48 8b 4c 24 08 65 48 2b 0c 25 28 00 00 00 75
-RSP: 0018:ffffc90003aa7c88 EFLAGS: 00010212
-RSP: 0018:ffffc90003aa7c88 EFLAGS: 00010212
-RAX: 0000000000441f0f RBX: ffffffff82005684 RCX: 0000000000000010
-RAX: 0000000000441f0f RBX: ffffffff82005684 RCX: 0000000000000010
-RDX: 000000000f9dbb1f RSI: 0000000000000005 RDI: ffffffff8183d240
-RDX: 000000000f9dbb1f RSI: 0000000000000005 RDI: ffffffff8183d240
-RBP: ffff8881000607a0 R08: 0000000000000001 R09: 0000000000000000
-RBP: ffff8881000607a0 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000001
-R13: ffffffff840b9f40 R14: ffffffff82005684 R15: ffffffff82a6a760
-R13: ffffffff840b9f40 R14: ffffffff82005684 R15: ffffffff82a6a760
-FS:  00007f671d1c2640(0000) GS:ffff8882a7840000(0000) knlGS:0000000000000000
-FS:  00007f671d1c2640(0000) GS:ffff8882a7840000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007efd44003490 CR3: 000000013e3f2000 CR4: 0000000000750ee0
-CR2: 00007efd44003490 CR3: 000000013e3f2000 CR4: 0000000000750ee0
-PKRU: 55555554
-PKRU: 55555554
-Call Trace:
-Call Trace:
- ? __warn+0x80/0x100
- ? __warn+0x80/0x100
- ? ftrace_verify_code+0x3e/0x80
- ? ftrace_verify_code+0x3e/0x80
- ? report_bug+0x9e/0xc0
- ? report_bug+0x9e/0xc0
- ? handle_bug+0x32/0xa0
- ? handle_bug+0x32/0xa0
- ? exc_invalid_op+0x14/0x70
- ? exc_invalid_op+0x14/0x70
- ? asm_exc_invalid_op+0x12/0x20
- ? asm_exc_invalid_op+0x12/0x20
- ? sk_lookup_convert_ctx_access+0x280/0x280
- ? sk_lookup_convert_ctx_access+0x280/0x280
- ? ftrace_verify_code+0x3e/0x80
- ? ftrace_verify_code+0x3e/0x80
- ? ftrace_verify_code+0x2a/0x80
- ? ftrace_verify_code+0x2a/0x80
- ftrace_replace_code+0xa6/0x190
- ftrace_replace_code+0xa6/0x190
- ftrace_modify_all_code+0xd8/0x170
- ftrace_modify_all_code+0xd8/0x170
- ftrace_run_update_code+0x13/0x70
- ftrace_run_update_code+0x13/0x70
- ftrace_startup.part.0+0xe9/0x160
- ftrace_startup.part.0+0xe9/0x160
- register_ftrace_function+0x52/0x90
- register_ftrace_function+0x52/0x90
- perf_trace_event_init+0x60/0x2b0
- perf_trace_event_init+0x60/0x2b0
- perf_trace_init+0x69/0xa0
- perf_trace_init+0x69/0xa0
- perf_tp_event_init+0x1b/0x50
- perf_tp_event_init+0x1b/0x50
- perf_try_init_event+0x42/0x130
- perf_try_init_event+0x42/0x130
- perf_event_alloc+0x5e3/0xdf0
- perf_event_alloc+0x5e3/0xdf0
- ? __alloc_fd+0x44/0x170
- ? __alloc_fd+0x44/0x170
- __do_sys_perf_event_open+0x1cd/0xec0
- __do_sys_perf_event_open+0x1cd/0xec0
- do_syscall_64+0x30/0x40
- do_syscall_64+0x30/0x40
- entry_SYSCALL_64_after_hwframe+0x62/0xc7
- entry_SYSCALL_64_after_hwframe+0x62/0xc7
-RIP: 0033:0x7f671d2c0d49
-RIP: 0033:0x7f671d2c0d49
-Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ef 70 0d 00 f7 d8 64 89 01 48
-Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ef 70 0d 00 f7 d8 64 89 01 48
-RSP: 002b:00007f671d1c1df8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RSP: 002b:00007f671d1c1df8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f671d2c0d49
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f671d2c0d49
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
-RBP: 00007f671d1c1e20 R08: 0000000000000000 R09: 0000000000000000
-RBP: 00007f671d1c1e20 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffd562f62de
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffd562f62de
-R13: 00007ffd562f62df R14: 0000000000000000 R15: 00007f671d1c2640
-R13: 00007ffd562f62df R14: 0000000000000000 R15: 00007f671d1c2640
----[ end trace 74a81e537b634ec5 ]---
----[ end trace 74a81e537b634ec5 ]---
-------------[ ftrace bug ]------------
-------------[ ftrace bug ]------------
-ftrace failed to modify
-ftrace failed to modify
-[<ffffffff8183d240>] bpf_dispatcher_xdp_func+0x0/0x10
-[<ffffffff8183d240>] bpf_dispatcher_xdp_func+0x0/0x10
- actual:   ffffffe9:ffffffbb:ffffff9d:0f:1f
- actual:   ffffffe9:ffffffbb:ffffff9d:0f:1f
- expected: 0f:1f:44:00:00
- expected: 0f:1f:44:00:00
-Setting ftrace call site to call ftrace function
-Setting ftrace call site to call ftrace function
-ftrace record flags: 10000001
-ftrace record flags: 10000001
- (1)
- (1)
-                                  expected tramp: ffffffff81068ac0
-------------[ cut here ]------------
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 4107 at kernel/trace/ftrace.c:2075 ftrace_bug+0x22c/0x256
-WARNING: CPU: 1 PID: 4107 at kernel/trace/ftrace.c:2075 ftrace_bug+0x22c/0x256
-Modules linked in: xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat ip6table_filter ip6_tables iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter bridge stp llc qrtr bnep hid_generic usbhid uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common btusb btrtl btbcm btintel videodev bluetooth mc ecdh_generic ecc nls_utf8 nls_cp866 vfat fat coretemp hwmon x86_pkg_temp_thermal intel_powerclamp mei_hdcp kvm_intel kvm rtsx_pci_sdmmc mmc_core irqbypass crct10dif_pclmul wmi_bmof crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel crypto_simd xhci_pci mei_me ucsi_acpi ideapad_laptop cryptd xhci_pci_renesas glue_helper pcspkr typec_ucsi tiny_power_button rtsx_pci sparse_keymap xhci_hcd mei thermal typec wmi i2c_hid button fan rfkill hid acpi_pad intel_pmc_core battery video ac sch_fq_codel vboxnetadp(OE) vboxnetflt(OE) vboxdrv(OE) vboxvideo
-Modules linked in: xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat ip6table_filter ip6_tables iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter bridge stp llc qrtr bnep hid_generic usbhid uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common btusb btrtl btbcm btintel videodev bluetooth mc ecdh_generic ecc nls_utf8 nls_cp866 vfat fat coretemp hwmon x86_pkg_temp_thermal intel_powerclamp mei_hdcp kvm_intel kvm rtsx_pci_sdmmc mmc_core irqbypass crct10dif_pclmul wmi_bmof crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel crypto_simd xhci_pci mei_me ucsi_acpi ideapad_laptop cryptd xhci_pci_renesas glue_helper pcspkr typec_ucsi tiny_power_button rtsx_pci sparse_keymap xhci_hcd mei thermal typec wmi i2c_hid button fan rfkill hid acpi_pad intel_pmc_core battery video ac sch_fq_codel vboxnetadp(OE) vboxnetflt(OE) vboxdrv(OE) vboxvideo
- drm_vram_helper drm_ttm_helper ttm drm_kms_helper cec rc_core vboxsf vboxguest snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_seq_device snd_timer snd soundcore drm msr fuse dm_mod efi_pstore efivarfs ip_tables x_tables autofs4 evdev input_leds serio_raw
- drm_vram_helper drm_ttm_helper ttm drm_kms_helper cec rc_core vboxsf vboxguest snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_seq_device snd_timer snd soundcore drm msr fuse dm_mod efi_pstore efivarfs ip_tables x_tables autofs4 evdev input_leds serio_raw
-CPU: 1 PID: 4107 Comm: repro5 Tainted: G        W  OE     5.10.206-std-def-alt1 #1
-CPU: 1 PID: 4107 Comm: repro5 Tainted: G        W  OE     5.10.206-std-def-alt1 #1
-Hardware name: LENOVO 82X8/LNVNB161216, BIOS LTCN30WW 11/08/2023
-Hardware name: LENOVO 82X8/LNVNB161216, BIOS LTCN30WW 11/08/2023
-RIP: 0010:ftrace_bug+0x22c/0x256
-RIP: 0010:ftrace_bug+0x22c/0x256
-Code: ff 84 c0 74 d0 eb b4 48 c7 c7 36 4b 30 82 e8 0b c5 ff ff 48 89 ef e8 2a df 7a ff 48 c7 c7 47 4b 30 82 48 89 c6 e8 f4 c4 ff ff <0f> 0b c7 05 0f a5 2c 01 01 00 00 00 5b c7 05 14 a5 2c 01 00 00 00
-Code: ff 84 c0 74 d0 eb b4 48 c7 c7 36 4b 30 82 e8 0b c5 ff ff 48 89 ef e8 2a df 7a ff 48 c7 c7 47 4b 30 82 48 89 c6 e8 f4 c4 ff ff <0f> 0b c7 05 0f a5 2c 01 01 00 00 00 5b c7 05 14 a5 2c 01 00 00 00
-RSP: 0018:ffffc90003aa7c88 EFLAGS: 00010246
-RSP: 0018:ffffc90003aa7c88 EFLAGS: 00010246
-RAX: 0000000000000022 RBX: 00000000ffffffea RCX: ffff8882a7860808
-RAX: 0000000000000022 RBX: 00000000ffffffea RCX: ffff8882a7860808
-RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff8882a7860800
-RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff8882a7860800
-RBP: ffff8881000607a0 R08: 0000000000000000 R09: ffffc90003aa7ac8
-RBP: ffff8881000607a0 R08: 0000000000000000 R09: ffffc90003aa7ac8
-R10: ffffc90003aa7ac0 R11: ffffffff82ae22e8 R12: ffffffff8183d240
-R10: ffffc90003aa7ac0 R11: ffffffff82ae22e8 R12: ffffffff8183d240
-R13: ffffffff840b9f40 R14: ffffffff82005684 R15: ffffffff82a6a760
-R13: ffffffff840b9f40 R14: ffffffff82005684 R15: ffffffff82a6a760
-FS:  00007f671d1c2640(0000) GS:ffff8882a7840000(0000) knlGS:0000000000000000
-FS:  00007f671d1c2640(0000) GS:ffff8882a7840000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007efd44003490 CR3: 000000013e3f2000 CR4: 0000000000750ee0
-CR2: 00007efd44003490 CR3: 000000013e3f2000 CR4: 0000000000750ee0
-PKRU: 55555554
-PKRU: 55555554
-Call Trace:
-Call Trace:
- ? __warn+0x80/0x100
- ? __warn+0x80/0x100
- ? ftrace_bug+0x22c/0x256
- ? ftrace_bug+0x22c/0x256
- ? report_bug+0x9e/0xc0
- ? report_bug+0x9e/0xc0
- ? handle_bug+0x32/0xa0
- ? handle_bug+0x32/0xa0
- ? exc_invalid_op+0x14/0x70
- ? exc_invalid_op+0x14/0x70
- ? asm_exc_invalid_op+0x12/0x20
- ? asm_exc_invalid_op+0x12/0x20
- ? sk_lookup_convert_ctx_access+0x280/0x280
- ? sk_lookup_convert_ctx_access+0x280/0x280
- ? ftrace_bug+0x22c/0x256
- ? ftrace_bug+0x22c/0x256
- ? ftrace_bug+0x22c/0x256
- ? ftrace_bug+0x22c/0x256
- ftrace_replace_code+0xbb/0x190
- ftrace_replace_code+0xbb/0x190
- ftrace_modify_all_code+0xd8/0x170
- ftrace_modify_all_code+0xd8/0x170
- ftrace_run_update_code+0x13/0x70
- ftrace_run_update_code+0x13/0x70
- ftrace_startup.part.0+0xe9/0x160
- ftrace_startup.part.0+0xe9/0x160
- register_ftrace_function+0x52/0x90
- register_ftrace_function+0x52/0x90
- perf_trace_event_init+0x60/0x2b0
- perf_trace_event_init+0x60/0x2b0
- perf_trace_init+0x69/0xa0
- perf_trace_init+0x69/0xa0
- perf_tp_event_init+0x1b/0x50
- perf_tp_event_init+0x1b/0x50
- perf_try_init_event+0x42/0x130
- perf_try_init_event+0x42/0x130
- perf_event_alloc+0x5e3/0xdf0
- perf_event_alloc+0x5e3/0xdf0
- ? __alloc_fd+0x44/0x170
- ? __alloc_fd+0x44/0x170
- __do_sys_perf_event_open+0x1cd/0xec0
- __do_sys_perf_event_open+0x1cd/0xec0
- do_syscall_64+0x30/0x40
- do_syscall_64+0x30/0x40
- entry_SYSCALL_64_after_hwframe+0x62/0xc7
- entry_SYSCALL_64_after_hwframe+0x62/0xc7
-RIP: 0033:0x7f671d2c0d49
-RIP: 0033:0x7f671d2c0d49
-Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ef 70 0d 00 f7 d8 64 89 01 48
-Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ef 70 0d 00 f7 d8 64 89 01 48
-RSP: 002b:00007f671d1c1df8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RSP: 002b:00007f671d1c1df8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f671d2c0d49
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f671d2c0d49
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
-RBP: 00007f671d1c1e20 R08: 0000000000000000 R09: 0000000000000000
-RBP: 00007f671d1c1e20 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffd562f62de
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffd562f62de
-R13: 00007ffd562f62df R14: 0000000000000000 R15: 00007f671d1c2640
-R13: 00007ffd562f62df R14: 0000000000000000 R15: 00007f671d1c2640
----[ end trace 74a81e537b634ec6 ]---
----[ end trace 74a81e537b634ec6 ]---
+Thanks for working on these regexes! That should make enabling more
+clock units and other Exynos SoCs a bit easier.
 
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
 
-C reproducer:
-// autogenerated by syzkaller (https://github.com/google/syzkaller)
-
-#define _GNU_SOURCE 
-
-#include <endian.h>
-#include <errno.h>
-#include <pthread.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
-#include <time.h>
-#include <unistd.h>
-
-#include <linux/futex.h>
-
-#ifndef __NR_bpf
-#define __NR_bpf 321
-#endif
-
-static void sleep_ms(uint64_t ms)
-{
-	usleep(ms * 1000);
-}
-
-static uint64_t current_time_ms(void)
-{
-	struct timespec ts;
-	if (clock_gettime(CLOCK_MONOTONIC, &ts))
-	exit(1);
-	return (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
-}
-
-static void thread_start(void* (*fn)(void*), void* arg)
-{
-	pthread_t th;
-	pthread_attr_t attr;
-	pthread_attr_init(&attr);
-	pthread_attr_setstacksize(&attr, 128 << 10);
-	int i = 0;
-	for (; i < 100; i++) {
-		if (pthread_create(&th, &attr, fn, arg) == 0) {
-			pthread_attr_destroy(&attr);
-			return;
-		}
-		if (errno == EAGAIN) {
-			usleep(50);
-			continue;
-		}
-		break;
-	}
-	exit(1);
-}
-
-#define BITMASK(bf_off,bf_len) (((1ull << (bf_len)) - 1) << (bf_off))
-#define STORE_BY_BITMASK(type,htobe,addr,val,bf_off,bf_len) *(type*)(addr) = htobe((htobe(*(type*)(addr)) & ~BITMASK((bf_off), (bf_len))) | (((type)(val) << (bf_off)) & BITMASK((bf_off), (bf_len))))
-
-typedef struct {
-	int state;
-} event_t;
-
-static void event_init(event_t* ev)
-{
-	ev->state = 0;
-}
-
-static void event_reset(event_t* ev)
-{
-	ev->state = 0;
-}
-
-static void event_set(event_t* ev)
-{
-	if (ev->state)
-	exit(1);
-	__atomic_store_n(&ev->state, 1, __ATOMIC_RELEASE);
-	syscall(SYS_futex, &ev->state, FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1000000);
-}
-
-static void event_wait(event_t* ev)
-{
-	while (!__atomic_load_n(&ev->state, __ATOMIC_ACQUIRE))
-		syscall(SYS_futex, &ev->state, FUTEX_WAIT | FUTEX_PRIVATE_FLAG, 0, 0);
-}
-
-static int event_isset(event_t* ev)
-{
-	return __atomic_load_n(&ev->state, __ATOMIC_ACQUIRE);
-}
-
-static int event_timedwait(event_t* ev, uint64_t timeout)
-{
-	uint64_t start = current_time_ms();
-	uint64_t now = start;
-	for (;;) {
-		uint64_t remain = timeout - (now - start);
-		struct timespec ts;
-		ts.tv_sec = remain / 1000;
-		ts.tv_nsec = (remain % 1000) * 1000 * 1000;
-		syscall(SYS_futex, &ev->state, FUTEX_WAIT | FUTEX_PRIVATE_FLAG, 0, &ts);
-		if (__atomic_load_n(&ev->state, __ATOMIC_ACQUIRE))
-			return 1;
-		now = current_time_ms();
-		if (now - start > timeout)
-			return 0;
-	}
-}
-
-struct thread_t {
-	int created, call;
-	event_t ready, done;
-};
-
-static struct thread_t threads[16];
-static void execute_call(int call);
-static int running;
-
-static void* thr(void* arg)
-{
-	struct thread_t* th = (struct thread_t*)arg;
-	for (;;) {
-		event_wait(&th->ready);
-		event_reset(&th->ready);
-		execute_call(th->call);
-		__atomic_fetch_sub(&running, 1, __ATOMIC_RELAXED);
-		event_set(&th->done);
-	}
-	return 0;
-}
-
-static void loop(void)
-{
-	int i, call, thread;
-	for (call = 0; call < 3; call++) {
-		for (thread = 0; thread < (int)(sizeof(threads) / sizeof(threads[0])); thread++) {
-			struct thread_t* th = &threads[thread];
-			if (!th->created) {
-				th->created = 1;
-				event_init(&th->ready);
-				event_init(&th->done);
-				event_set(&th->done);
-				thread_start(thr, th);
-			}
-			if (!event_isset(&th->done))
-				continue;
-			event_reset(&th->done);
-			th->call = call;
-			__atomic_fetch_add(&running, 1, __ATOMIC_RELAXED);
-			event_set(&th->ready);
-			event_timedwait(&th->done, 50 + (call == 0 ? 500 : 0));
-			break;
-		}
-	}
-	for (i = 0; i < 100 && __atomic_load_n(&running, __ATOMIC_RELAXED); i++)
-		sleep_ms(1);
-}
-
-uint64_t r[1] = {0xffffffffffffffff};
-
-void execute_call(int call)
-{
-		intptr_t res = 0;
-	switch (call) {
-	case 0:
-*(uint32_t*)0x20000000 = 6;
-*(uint32_t*)0x20000004 = 3;
-*(uint64_t*)0x20000008 = 0x200000c0;
-*(uint8_t*)0x200000c0 = 0x18;
-STORE_BY_BITMASK(uint8_t, , 0x200000c1, 0, 0, 4);
-STORE_BY_BITMASK(uint8_t, , 0x200000c1, 0, 4, 4);
-*(uint16_t*)0x200000c2 = 0;
-*(uint32_t*)0x200000c4 = 0;
-*(uint8_t*)0x200000c8 = 0;
-*(uint8_t*)0x200000c9 = 0;
-*(uint16_t*)0x200000ca = 0;
-*(uint32_t*)0x200000cc = 0;
-*(uint8_t*)0x200000d0 = 0x95;
-*(uint8_t*)0x200000d1 = 0;
-*(uint16_t*)0x200000d2 = 0;
-*(uint32_t*)0x200000d4 = 0;
-*(uint64_t*)0x20000010 = 0x20000100;
-memcpy((void*)0x20000100, "syzkaller\000", 10);
-*(uint32_t*)0x20000018 = 0;
-*(uint32_t*)0x2000001c = 0;
-*(uint64_t*)0x20000020 = 0;
-*(uint32_t*)0x20000028 = 0;
-*(uint32_t*)0x2000002c = 0;
-memset((void*)0x20000030, 0, 16);
-*(uint32_t*)0x20000040 = 0;
-*(uint32_t*)0x20000044 = 0x1b;
-*(uint32_t*)0x20000048 = -1;
-*(uint32_t*)0x2000004c = 8;
-*(uint64_t*)0x20000050 = 0;
-*(uint32_t*)0x20000058 = 0;
-*(uint32_t*)0x2000005c = 0x10;
-*(uint64_t*)0x20000060 = 0;
-*(uint32_t*)0x20000068 = 0;
-*(uint32_t*)0x2000006c = 0;
-*(uint32_t*)0x20000070 = 0;
-*(uint32_t*)0x20000074 = 0;
-*(uint64_t*)0x20000078 = 0;
-		res = syscall(__NR_bpf, 5ul, 0x20000000ul, 0x80ul);
-		if (res != -1)
-				r[0] = res;
-		break;
-	case 1:
-*(uint32_t*)0x20000280 = r[0];
-*(uint32_t*)0x20000284 = 0;
-*(uint32_t*)0x20000288 = 0;
-*(uint32_t*)0x2000028c = 0;
-*(uint64_t*)0x20000290 = 0;
-*(uint64_t*)0x20000298 = 0;
-*(uint32_t*)0x200002a0 = 0xffffff7f;
-*(uint32_t*)0x200002a4 = 0;
-*(uint32_t*)0x200002a8 = 0;
-*(uint32_t*)0x200002ac = 0;
-*(uint64_t*)0x200002b0 = 0;
-*(uint64_t*)0x200002b8 = 0;
-*(uint32_t*)0x200002c0 = 0;
-*(uint32_t*)0x200002c4 = 0;
-		syscall(__NR_bpf, 0xaul, 0x20000280ul, 0x48ul);
-		break;
-	case 2:
-*(uint32_t*)0x200000c0 = 2;
-*(uint32_t*)0x200000c4 = 0x80;
-*(uint8_t*)0x200000c8 = 1;
-*(uint8_t*)0x200000c9 = 0;
-*(uint8_t*)0x200000ca = 0;
-*(uint8_t*)0x200000cb = 0;
-*(uint32_t*)0x200000cc = 0;
-*(uint64_t*)0x200000d0 = 0;
-*(uint64_t*)0x200000d8 = 0;
-*(uint64_t*)0x200000e0 = 0;
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 0, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 1, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 2, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 3, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 4, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 5, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 6, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 7, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 8, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 9, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 10, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 11, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 12, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 13, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 14, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 15, 2);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 17, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 18, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 19, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 20, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 21, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 22, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 23, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 24, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 25, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 26, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 27, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 28, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 29, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 30, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 31, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 32, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 33, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 34, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 35, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 36, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 37, 1);
-STORE_BY_BITMASK(uint64_t, , 0x200000e8, 0, 38, 26);
-*(uint32_t*)0x200000f0 = 0;
-*(uint32_t*)0x200000f4 = 2;
-*(uint64_t*)0x200000f8 = 0;
-*(uint64_t*)0x20000100 = 0;
-*(uint64_t*)0x20000108 = 0;
-*(uint64_t*)0x20000110 = 4;
-*(uint32_t*)0x20000118 = 0;
-*(uint32_t*)0x2000011c = 0;
-*(uint64_t*)0x20000120 = 0;
-*(uint32_t*)0x20000128 = 0;
-*(uint16_t*)0x2000012c = 0;
-*(uint16_t*)0x2000012e = 0;
-*(uint32_t*)0x20000130 = 0;
-*(uint32_t*)0x20000134 = 0;
-*(uint64_t*)0x20000138 = 0;
-		syscall(__NR_perf_event_open, 0x200000c0ul, 0, 0ul, -1, 0ul);
-		break;
-	}
-
-}
-int main(void)
-{
-		syscall(__NR_mmap, 0x1ffff000ul, 0x1000ul, 0ul, 0x32ul, -1, 0ul);
-	syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 7ul, 0x32ul, -1, 0ul);
-	syscall(__NR_mmap, 0x21000000ul, 0x1000ul, 0ul, 0x32ul, -1, 0ul);
-			loop();
-	return 0;
-}
-
-
-The following adapted patch is proposed to fix the bug on the 5.10.y kernel:
-[PATCH 5.10.y 1/1] bpf: Convert BPF_DISPATCHER to use static_call() (not ftrace)
-
+> Note for future reference: To ensure consistent naming throughout this
+> file, the IDs have been derived from the data sheet using the
+> following, with the expectation for all future additions to this file
+> to use the same:
+>     sed \
+>         -e 's|^PLL_LOCKTIME_PLL_\([^_]\+\)|CLK_FOUT_\1_PLL|' \
+>         \
+>         -e 's|^PLL_CON0_MUX_CLKCMU_\([^_]\+\)_|CLK_MOUT_\1_|' \
+>         -e 's|^PLL_CON0_PLL_\(.*\)|CLK_MOUT_PLL_\1|' \
+>         -e 's|^CLK_CON_MUX_MUX_CLK_\(.*\)|CLK_MOUT_\1|' \
+>         -e '/^PLL_CON[1-4]_[^_]\+_/d' \
+>         -e '/^[^_]\+_CMU_[^_]\+_CONTROLLER_OPTION/d' \
+>         -e '/^CLKOUT_CON_BLK_[^_]\+_CMU_[^_]\+_CLKOUT0/d' \
+>         \
+>         -e 's|_IPCLKPORT||' \
+>         -e 's|_RSTNSYNC||' \
+>         \
+>         -e 's|^CLK_CON_DIV_DIV_CLK_\([^_]\+\)_|CLK_DOUT_\1_|' \
+>         \
+>         -e 's|^CLK_CON_BUF_CLKBUF_\([^_]\+\)_|CLK_GOUT_\1_|' \
+>         -e 's|^CLK_CON_GAT_CLK_BLK_\([^_]\+\)_UID_|CLK_GOUT_\1_|' \
+>         -e 's|^CLK_GOUT_[^_]\+_[^_]\+_CMU_\([^_]\+\)_PCLK$|CLK_GOUT_\1_PC=
+LK|' \
+>         -e 's|^CLK_CON_GAT_GOUT_BLK_\([^_]\+\)_UID_|CLK_GOUT_\1_|' \
+>         -e 's|^CLK_CON_GAT_CLK_\([^_]\+\)_\(.*\)|CLK_GOUT_\1_CLK_\1_\2|' =
+\
+>         \
+>         -e '/^\(DMYQCH\|PCH\|QCH\|QUEUE\)_/d'
+> ---
+>  .../bindings/clock/google,gs101-clock.yaml    |  9 ++--
+>  include/dt-bindings/clock/google,gs101.h      | 48 +++++++++++++++++++
+>  2 files changed, 54 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/google,gs101-clock.y=
+aml b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+> index 03698cdecf7a..1d2bcea41c85 100644
+> --- a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+> +++ b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+> @@ -31,6 +31,7 @@ properties:
+>        - google,gs101-cmu-apm
+>        - google,gs101-cmu-misc
+>        - google,gs101-cmu-peric0
+> +      - google,gs101-cmu-peric1
+>
+>    clocks:
+>      minItems: 1
+> @@ -93,15 +94,17 @@ allOf:
+>        properties:
+>          compatible:
+>            contains:
+> -            const: google,gs101-cmu-peric0
+> +            enum:
+> +              - google,gs101-cmu-peric0
+> +              - google,gs101-cmu-peric1
+>
+>      then:
+>        properties:
+>          clocks:
+>            items:
+>              - description: External reference clock (24.576 MHz)
+> -            - description: Connectivity Peripheral 0 bus clock (from CMU=
+_TOP)
+> -            - description: Connectivity Peripheral 0 IP clock (from CMU_=
+TOP)
+> +            - description: Connectivity Peripheral 0/1 bus clock (from C=
+MU_TOP)
+> +            - description: Connectivity Peripheral 0/1 IP clock (from CM=
+U_TOP)
+>
+>          clock-names:
+>            items:
+> diff --git a/include/dt-bindings/clock/google,gs101.h b/include/dt-bindin=
+gs/clock/google,gs101.h
+> index 64e6bdc6359c..3dac3577788a 100644
+> --- a/include/dt-bindings/clock/google,gs101.h
+> +++ b/include/dt-bindings/clock/google,gs101.h
+> @@ -470,4 +470,52 @@
+>  #define CLK_GOUT_PERIC0_CLK_PERIC0_USI8_USI_CLK                78
+>  #define CLK_GOUT_PERIC0_SYSREG_PERIC0_PCLK             79
+>
+> +/* CMU_PERIC1 */
+> +#define CLK_MOUT_PERIC1_BUS_USER                       1
+> +#define CLK_MOUT_PERIC1_I3C_USER                       2
+> +#define CLK_MOUT_PERIC1_USI0_USI_USER                  3
+> +#define CLK_MOUT_PERIC1_USI10_USI_USER                 4
+> +#define CLK_MOUT_PERIC1_USI11_USI_USER                 5
+> +#define CLK_MOUT_PERIC1_USI12_USI_USER                 6
+> +#define CLK_MOUT_PERIC1_USI13_USI_USER                 7
+> +#define CLK_MOUT_PERIC1_USI9_USI_USER                  8
+> +#define CLK_DOUT_PERIC1_I3C                            9
+> +#define CLK_DOUT_PERIC1_USI0_USI                       10
+> +#define CLK_DOUT_PERIC1_USI10_USI                      11
+> +#define CLK_DOUT_PERIC1_USI11_USI                      12
+> +#define CLK_DOUT_PERIC1_USI12_USI                      13
+> +#define CLK_DOUT_PERIC1_USI13_USI                      14
+> +#define CLK_DOUT_PERIC1_USI9_USI                       15
+> +#define CLK_GOUT_PERIC1_IP                             16
+> +#define CLK_GOUT_PERIC1_PCLK                           17
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_I3C_CLK             18
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_OSCCLK_CLK          19
+> +#define CLK_GOUT_PERIC1_D_TZPC_PERIC1_PCLK             20
+> +#define CLK_GOUT_PERIC1_GPC_PERIC1_PCLK                        21
+> +#define CLK_GOUT_PERIC1_GPIO_PERIC1_PCLK               22
+> +#define CLK_GOUT_PERIC1_LHM_AXI_P_PERIC1_I_CLK         23
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_1            24
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_2            25
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_3            26
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_4            27
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_5            28
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_6            29
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_8            30
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_1             31
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_15            32
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_2             33
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_3             34
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_4             35
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_5             36
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_6             37
+> +#define CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_8             38
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_BUSP_CLK            39
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI0_USI_CLK                40
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI10_USI_CLK       41
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI11_USI_CLK       42
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI12_USI_CLK       43
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI13_USI_CLK       44
+> +#define CLK_GOUT_PERIC1_CLK_PERIC1_USI9_USI_CLK                45
+> +#define CLK_GOUT_PERIC1_SYSREG_PERIC1_PCLK             46
+> +
+>  #endif /* _DT_BINDINGS_CLOCK_GOOGLE_GS101_H */
+> --
+> 2.43.0.429.g432eaa2c6b-goog
+>
