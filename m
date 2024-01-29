@@ -1,85 +1,67 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D76955C3D;
-	Mon, 29 Jan 2024 13:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FE9657A9
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706535724; cv=none; b=EFjGFRmA7jxxtiq6Rx9H8SqhXBJE93TnMZYvfrmGdpqWjShtjE71uf3VbW/FzOX3QCCuDATkXR7NszDRHMvT/B4JAlhXWOsDiGmnyCYvZvbevbFSjnhN6Tju97/w/23iGEFyaUGTh15N3+2hwcN+vuMw8alFLHr3xcXS6ejCcIg=
+	t=1706535849; cv=none; b=qfjcGJHOxyzmY4/BZ8t0qDQ3oOalKB3jueKHIODiBYVoQWayrzPiZEu4Tk58nINhKeL9fh6ocYeae+8F4OwiK2SWV3PSISqChHmj29Sy5B0dtigvSLCKKXyyFOUJZ+40rl9Q7uqZb4Yypq1rBlKrD4vD/PtMmTx1cnzSUdhjnmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706535724; c=relaxed/simple;
-	bh=WdLW7o2nui+iHwt3lAXvXu94QN07TEcZhFQ1B6tqTUM=;
+	s=arc-20240116; t=1706535849; c=relaxed/simple;
+	bh=S8kbVyjQ+Xxyq/e0oWsbM2LE48Ugi1oJFP+DJtdQZK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/fHImHdKHDLJeF9YVqbSa3qjE9NZV3DXDI332eckuY035hvbWt/7U5gCbhg1KiTv0qqPkLuIo1V/Pk494wxIvq9+eCAr8AOARKFLTcRnRsrYVqCQ73xMDcRahugsKRiALZ4MlnOyDbqaqd6VKksE1UdNXkQFj+VDxNAt8qqZbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4toPmIrw; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=fS1gtvxMYP3p0ZBOjtaSMinJVG0wYtGx9k1GHHjk4OC6clq98RWV57cXcIgjLDC2i+srynVfA2IT8wixRJhGHiNm4c/9S2lcZ8t9bxE1R5Trz7AWcz23slCNurgVRmOmBCwy18e0zHOeS1boqP8Lj8RE4GEPqojBEV6z/QNiLIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HCoPOiTL; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4toPmIrw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=p8iz8UHzQ67utsCq6pzEtf5vnFHnxs2dHAkgKZcozJE=; b=4toPmIrwbTb6LGQNgb70Hp7k57
-	EU2YoN7SuDLwqLn8YJyiQ1wp9fpelF/3tZ0Wau7QZWYxLYRPkGawKvnlXdq4gNl/8Rb1E9EERToex
-	bnzINlpiQJx9x3gIeUFCChZ2AwLd/BoKGWH/19mW5T2PK6hTROpBhH4O3QNckmNF0ZLM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rURt7-006Nmb-Tt; Mon, 29 Jan 2024 14:41:25 +0100
-Date: Mon, 29 Jan 2024 14:41:25 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Wong Vee Khee <veekhee@apple.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Revanth Kumar Uppala <ruppala@nvidia.com>,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Andrey Konovalov <andrey.konovalov@linaro.org>,
-	Jochen Henneberg <jh@henneberg-systemdesign.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-	Tan Tee Min <tee.min.tan@linux.intel.com>,
-	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-	Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Subject: Re: [PATCH net-next v3 4/5] net: stmmac: enable Intel mGbE 1G/2.5G
- auto-negotiation support
-Message-ID: <07a4aa8e-800c-4564-81c8-7cfcdddf1379@lunn.ch>
-References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
- <20230921121946.3025771-5-yong.liang.choong@linux.intel.com>
- <jmq54bskx4zd75ay4kf5pcdo6wnz72pxzfo5ivevleef4scucr@uw4fkfs64f3c>
- <26568944-563d-4911-8f6f-14c0162db6e9@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HCoPOiTL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706535847; x=1738071847;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=S8kbVyjQ+Xxyq/e0oWsbM2LE48Ugi1oJFP+DJtdQZK8=;
+  b=HCoPOiTLyZMpcCo9nXaEKAJceipANUFkcnRRy4Sb8XnQv4wVW1LJV6Fb
+   AC9OT9aVEQPs8p/yVI1jRQsqHgtYVUh2FV71bvla92MEIveziyZo9Puqd
+   7RYjezbx+oQTfr7af1c+iQm+3kTSRocK12ie0ScDmDXiTAV7DSw7J1QmP
+   ZJgDE+222BtVo0eK7YMpqCCDb7P35HPkiUY78vQ15qVA+k++j5fznSGSz
+   Pfe1jBbvGx28x5JfATtAajGT5kWiEcaQr6FnDhRfO7LX6kWsUySdUxdYt
+   fannQw0LQ228dFQ4ZhOeBvFZiNIMPr8DE0VAuTKJdeagnVm9KQX6R2wJz
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="16311027"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="16311027"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:44:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="931093593"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="931093593"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jan 2024 05:44:01 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 992EC53C; Mon, 29 Jan 2024 15:34:26 +0200 (EET)
+Date: Mon, 29 Jan 2024 15:34:26 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv6 10/16] x86/tdx: Convert shared memory back to private
+ on kexec
+Message-ID: <ao36mdmctptya2r25v3lvuocjbhllum2upmskxjcjtt3c7o3ii@nsghte2cnmkx>
+References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
+ <20240124125557.493675-11-kirill.shutemov@linux.intel.com>
+ <f0677a02-72ea-49e8-9499-18eca6b5e8d7@amd.com>
+ <r5logoyy46fztohkm6bjobomsrst2izbs2nsts4fegii2uswca@fovizly7y5ju>
+ <fad515ec-aba3-4f48-b8be-ebc6640899e3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,52 +70,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <26568944-563d-4911-8f6f-14c0162db6e9@linux.intel.com>
+In-Reply-To: <fad515ec-aba3-4f48-b8be-ebc6640899e3@amd.com>
 
-On Mon, Jan 29, 2024 at 09:19:58PM +0800, Choong Yong Liang wrote:
-> > >   static const struct phylink_mac_ops stmmac_phylink_mac_ops = {
-> > >   	.mac_select_pcs = stmmac_mac_select_pcs,
-> > >   	.mac_config = stmmac_mac_config,
-> > >   	.mac_link_down = stmmac_mac_link_down,
-> > >   	.mac_link_up = stmmac_mac_link_up,
-> > > +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
-> > > +	.mac_prepare = stmmac_mac_prepare,
-> > > +#endif
-> > 
-> > Please no for the platform-specific ifdef's in the generic code.
-> > STMMAC driver is already overwhelmed with clumsy solutions. Let's not
-> > add another one.
-> > 
-> > -Serge(y)
-> > 
-> > >   };
-> > >   /**
-> > > diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-> > > index c0079a7574ae..aa7d4d96391c 100644
-> > > --- a/include/linux/stmmac.h
-> > > +++ b/include/linux/stmmac.h
-> > > @@ -275,6 +275,7 @@ struct plat_stmmacenet_data {
-> > >   	int (*serdes_powerup)(struct net_device *ndev, void *priv);
-> > >   	void (*serdes_powerdown)(struct net_device *ndev, void *priv);
-> > >   	void (*speed_mode_2500)(struct net_device *ndev, void *priv);
-> > > +	int (*config_serdes)(struct net_device *ndev, void *priv);
-> > >   	void (*ptp_clk_freq_config)(struct stmmac_priv *priv);
-> > >   	int (*init)(struct platform_device *pdev, void *priv);
-> > >   	void (*exit)(struct platform_device *pdev, void *priv);
-> > > -- 
-> > > 2.25.1
-> > > 
-> > > 
-> Hi Russell and Serge,
+On Mon, Jan 29, 2024 at 07:09:37AM -0600, Kalra, Ashish wrote:
+> Hello Kirill,
 > 
-> Thank you for pointing that out.
-> The ifdef was removed and the config serdes will be implemented in
-> mac_link_up in the new patch series.
+> On 1/29/2024 4:36 AM, Kirill A. Shutemov wrote:
+> > On Mon, Jan 29, 2024 at 04:24:09AM -0600, Kalra, Ashish wrote:
+> > > In case of SNP and crash/kdump case, we need to prevent the boot_ghcb being
+> > > converted to shared (in snp_kexec_unshare_mem()) as the boot_ghcb is
+> > > required to handle all I/O for disabling IO-APIC/lapic, hpet, etc., as the
+> > > enc_kexec_unshare_mem() callback is invoked before the apics, hpet, etc. are
+> > > disabled.
+> > > 
+> > > Is there any reason why enc_kexec_unshare_mem() callback is invoked in crash
+> > > case before the IO-APIC/lapic, hpet, etc. are shutdown/disabled ?
+> > Not really. Either way works for TDX. I've tested the patch below. Is it
+> > what you want?
+> > 
+> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> > index 6585a5f2c2ba..3001f4857ed7 100644
+> > --- a/arch/x86/kernel/crash.c
+> > +++ b/arch/x86/kernel/crash.c
+> > @@ -107,11 +107,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+> >   	crash_smp_send_stop();
+> > -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+> > -		x86_platform.guest.enc_kexec_stop_conversion(true);
+> > -		x86_platform.guest.enc_kexec_unshare_mem();
+> > -	}
+> > -
+> >   	cpu_emergency_disable_virtualization();
+> >   	/*
+> > @@ -129,6 +124,12 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+> >   #ifdef CONFIG_HPET_TIMER
+> >   	hpet_disable();
+> >   #endif
+> > +
+> > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+> > +		x86_platform.guest.enc_kexec_stop_conversion(true);
+> > +		x86_platform.guest.enc_kexec_unshare_mem();
+> > +	}
+> > +
+> >   	crash_save_cpu(regs, safe_smp_processor_id());
+> >   }
+> 
+> Yes, this will work for SNP.
 
-Hi Choong
+Okay, good. Will include the change into the next version of the patchset.
 
-Please trim the text when replying. It can be hard to find actually
-replies when having to do lots and lots of page downs. Just give the
-context needed to understand your reply.
-
-	Andrew
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
