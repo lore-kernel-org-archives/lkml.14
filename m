@@ -1,186 +1,124 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391D412F58B;
-	Mon, 29 Jan 2024 14:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A27148FF8;
+	Mon, 29 Jan 2024 14:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706538630; cv=none; b=jQrnZyrlxqHzaQxydgfnEk3CejmUHwz5A70SsfsdmIH967V7XaPGrDWYR+BLm7+ob+YWVmafdhh/Og6kUaFnmP/XYxKdKIFCPNcJXpxywHHh4lyMZPsboQyO58GWNiPo9f4oVnDYsPKmeN1fV6StZAj7DWEjTNUH+NSKZhrm29Q=
+	t=1706538702; cv=none; b=LsajUqyJSswNgqFdz/FmBFt8cHiYIl3QFeJCKjru6eoB71US7SIZOEzBCOoLGrgT7w1iPDNpRRyJMYFA9fDdZBbikf49Yp1HRZdVUVn0VzKwIr6sMU4FIOcJ5+8eXKN4lnKxn31G/rSW43D/hx3cjK+zzV9vJHmn9jsaGcQHE94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706538630; c=relaxed/simple;
-	bh=ayzDPWWSUzfAB5KHVQGtFP4MQXzJbDYr8DV6p9odp5c=;
+	s=arc-20240116; t=1706538702; c=relaxed/simple;
+	bh=RizKcmX3RRLlgUG/ugjzq4ScN+Mw8mbriMNFmh8enxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N1NIWVK06H/eb1VPZT3E146yj43nBVkjKnk9z6zovy5/Ue8mwzAWBAmN78nCsaqXToG/96NUELb2oRNNfJK0NeTY6sn6no/F8xO3pe/pBfkz/NN+bgQJ1rfewaQyMrWUrEpJrwXX73HjMeWFAKO3HggtcZNx55KcgB/Oz4PU3t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=EXF/t4Ls; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ONBVnLh0o3Gi7ZRQrEwDZaqy90d2X7mB9BuHsEXSTNYAxtN+QgkzRuJNHDllqUlP7JzIUeJVacqiM8yrv13Ga5QCsHLenfJUQxCzGWlnELz6HuVA8WXkx/tUbkdzEYy5sbNL5zuY1Z4mGsIJNydDLFv67sXdLNhC00YJssrzZ7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=IRYT/Zcs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=u44/savz; arc=none smtp.client-ip=66.111.4.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="EXF/t4Ls"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D582D40E0177;
-	Mon, 29 Jan 2024 14:30:23 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FUPz_7lY-mHO; Mon, 29 Jan 2024 14:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706538620; bh=v/O0496sOj7E1BARErP/HiyS4WURPDfte46HYKMJ6P4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EXF/t4Lsre5LWHpg3suGTHt3uoe6qWn8BUr86sTS2Gc6R2Xs5NwBmITbk/8FoyjUN
-	 Ey9o45iD9r94OG5RO2A4jONYert5Z5i0txtLKsaFPexOyVPm/I04zPL3yth7wDKsWV
-	 plJYH+ODDcLgOl6qGGk/qtuO/55VVrSN9pntqb5PpGaof+HIOaA+TK7XfnYPclelBL
-	 5CJUuOg09x6MdBIMAeUDkSja7oJFNAKH93g7xKq9S7BBzAdajaIZco3qRl5gaN6Feb
-	 tEKtApW/w/WznqteTuX2SM4KB9kY24IRQ16NRlxrOjLtfxxk2ySB/kjU+YABK1hrQS
-	 glqxWD+qciDMmlEFHRoXbKijLSGPzWktgBlgEGTaMIoP2s1TFtf2wkM08IkGx936Ac
-	 HPjwxrmcS28yDBWWpF7xpu+DIM/KwZEDbn5fccpk1T1CpdCxSk1iVwgzZ14vZcGn2E
-	 /nV/ozXRkFdREB08sa7/8X+wV2f+qHXUIZh3H74YDq4yWYX+2j+55pljfu1PuHauQ4
-	 lLGIqWRSvj0mM8JLHApHV2s1bOU0CMq2C1XOgJgLjqGR3Y5Ixp8QebJBYUYOKuo89q
-	 SvFDW6w2HEFXtHMQ/uoXpIDw1Npgc7fYp8n5oBbNd+mXkuLiTUabQWq25OLvvsv1S2
-	 xIiLpOGbHDTn0ICST7wICnHE=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0337A40E00C5;
-	Mon, 29 Jan 2024 14:29:43 +0000 (UTC)
-Date: Mon, 29 Jan 2024 15:29:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michael Roth <michael.roth@amd.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de,
-	thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org,
-	pbonzini@redhat.com, seanjc@google.com, vkuznets@redhat.com,
-	jmattson@google.com, luto@kernel.org, dave.hansen@linux.intel.com,
-	slp@redhat.com, pgonda@google.com, peterz@infradead.org,
-	srinivas.pandruvada@linux.intel.com, rientjes@google.com,
-	tobin@ibm.com, kirill@shutemov.name, ak@linux.intel.com,
-	tony.luck@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	alpergun@google.com, jarkko@kernel.org, ashish.kalra@amd.com,
-	nikunj.dadhania@amd.com, pankaj.gupta@amd.com,
-	liam.merwick@oracle.com
-Subject: Re: [PATCH v2 15/25] x86/sev: Introduce snp leaked pages list
-Message-ID: <20240129142939.GCZbe2U3lb2RPV7VOg@fat_crate.local>
-References: <20240126041126.1927228-1-michael.roth@amd.com>
- <20240126041126.1927228-16-michael.roth@amd.com>
- <1cc76023-ef3e-4639-9a02-644c5abe918d@suse.cz>
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="IRYT/Zcs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u44/savz"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 9CBFB5C0140;
+	Mon, 29 Jan 2024 09:31:38 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 29 Jan 2024 09:31:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1706538698; x=1706625098; bh=B4pNIPUED5
+	e8/0rG6KTfg7B2imzrt3EK7wCNXBQ9N68=; b=IRYT/Zcs6PYprK1iWpOsU2VzBk
+	TslIQkVJQT9LxvrAJaPlNSUzUi/8CaBLdQCiM26bn2kyRhZfrRvjzwDOPpZJ1DCM
+	QoN9TjnyOXhd649b3bCh+hIEh2qR8PR4xvMQpiViLLUeJEW6YLQw+DP72SY1SDSd
+	jI4prNKUSxpCrV2777oUcMdnoc3vNcV3h5j1wrl04RHdfgYuM4AF8LGvYba/nTIE
+	4tzEtX/+L2asEPn0tEaa0o+QtwueTKDQ2wacTfj2+Jx9kUuSON44Cu85ihy6GK5T
+	ReqdecmTZPARZFyC86X/JJ/WbvOHnRT46oczemdveC0Clwg7Vm/fbtzpe0VA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706538698; x=1706625098; bh=B4pNIPUED5e8/0rG6KTfg7B2imzr
+	t3EK7wCNXBQ9N68=; b=u44/savz0unPS7y0N5xrioUI4Cxd1N1aPBZbBm+j+n12
+	qvN4XcwjJCi9ilJqC2JBZLNhws0oAQ0vW+up5o9fDcXdHaFeRSbGVOnofUiLoQDF
+	RcHchMet0eE+oMWSyrYxHBd+T9fCPlkoryF5uUWFGx4tWod8RUhN1/t+4O4JKArZ
+	ozdj+l8uGkmK9rpdEODB59zQ0BHctoBlpn73duuE5nZhjs8jnlMCHl70XZAUrBP4
+	/oG9qu+4evjxv8bwDlmeb3O+mHvtHAVI+5tH3P+WkW1ILtCmKGss3N9kyUYFtgP6
+	hYRwXTCWIfsXmXQsqwbbKjzzQlVL+POUrU4OubbRFA==
+X-ME-Sender: <xms:yra3ZdV1gsg_pVamSpA4-LtoqVN2H4ria7dIolDj7zgSLAtxkYhc0A>
+    <xme:yra3ZdmluzNukBcMeNZvP5NAaC2ThgFnTsuP0a1t_K5q1DUHYcEBC327uhZ4UkXSk
+    cEqd1DxtlWm8wZT_G8>
+X-ME-Received: <xmr:yra3ZZbrUqdmVBca6i62oeGpvbTKbkI8ngx4BWM85d-F4XKxK0S6OXLBhDtKTozSKDTJSIFWReKnwY0pDqVb0pnHQEXv>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtgedgheehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
+    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
+    grthhtvghrnhepueettdetgfejfeffheffffekjeeuveeifeduleegjedutdefffetkeel
+    hfelleetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epthihtghhohesthihtghhohdrphhiiiiirg
+X-ME-Proxy: <xmx:yra3ZQV_IkUkZlJy8saaoFq_Jn6ryzoUwJrkSL8sf4TRi9UIosT4Xw>
+    <xmx:yra3ZXlXrhhmCtcMItaTgknnHUx98osIkJ07LJgdZbXUckqzdZLGyg>
+    <xmx:yra3ZdeQRDfgKYsOwgcnPrMkNRhWCwZjzzujdLteV_eLngi2SuO7iA>
+    <xmx:yra3ZSvRfR0Zqr-sL3lENBOeC7LZ0nTzC6x0y8Cxrl-edqRe-K-wbQ>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Jan 2024 09:31:37 -0500 (EST)
+Date: Mon, 29 Jan 2024 07:31:35 -0700
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [RFC PATCH] pidfd: implement PIDFD_THREAD flag for pidfd_open()
+Message-ID: <Zbe2x+M8tDBotSNZ@tycho.pizza>
+References: <ZbQpPknTTCyiyxrP@tycho.pizza>
+ <20240127105410.GA13787@redhat.com>
+ <ZbUngjQMg+YUBAME@tycho.pizza>
+ <20240127163117.GB13787@redhat.com>
+ <ZbU7d0dpTY08JgIl@tycho.pizza>
+ <20240127193127.GC13787@redhat.com>
+ <ZbVrRgIvudX242ZU@tycho.pizza>
+ <20240127210634.GE13787@redhat.com>
+ <20240129112313.GA11635@redhat.com>
+ <20240129-plakat-einlud-4903633a5410@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1cc76023-ef3e-4639-9a02-644c5abe918d@suse.cz>
+In-Reply-To: <20240129-plakat-einlud-4903633a5410@brauner>
 
-On Mon, Jan 29, 2024 at 03:26:29PM +0100, Vlastimil Babka wrote:
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+On Mon, Jan 29, 2024 at 02:41:11PM +0100, Christian Brauner wrote:
+> On Mon, Jan 29, 2024 at 12:23:15PM +0100, Oleg Nesterov wrote:
+> > --- a/kernel/signal.c
+> > +++ b/kernel/signal.c
+> > @@ -2051,7 +2051,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+> >  	WARN_ON_ONCE(!tsk->ptrace &&
+> >  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
+> >  	/*
+> > -	 * tsk is a group leader and has no threads, wake up the pidfd waiters.
+> > +	 * tsk is a group leader and has no threads, wake up the !PIDFD_THREAD
+> > +	 * waiters.
+> >  	 */
+> >  	if (thread_group_empty(tsk))
+> >  		do_notify_pidfd(tsk);
+> > @@ -3926,6 +3927,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+> >  		prepare_kill_siginfo(sig, &kinfo);
+> >  	}
+> >  
+> > +	/* TODO: respect PIDFD_THREAD */
 > 
-> Some minor nitpicks:
+> So I've been thinking about this at the end of last week. Do we need to
+> give userspace a way to send a thread-group wide signal even when a
+> PIDFD_THREAD pidfd is passed? Or should we just not worry about this
+> right now and wait until someone needs this?
 
-Thanks, here's what I have applied:
+I don't need it currently, but it would have been handy for some of
+the tests I wrote.
 
-commit c3875aff4e0739a6af385795470da70d675a7635
-Author: Ashish Kalra <ashish.kalra@amd.com>
-Date:   Thu Jan 25 22:11:15 2024 -0600
+Should I fix those up and send them too on top of Oleg's v2?
 
-    x86/sev: Introduce an SNP leaked pages list
-    
-    Pages are unsafe to be released back to the page-allocator if they
-    have been transitioned to firmware/guest state and can't be reclaimed
-    or transitioned back to hypervisor/shared state. In this case, add them
-    to an internal leaked pages list to ensure that they are not freed or
-    touched/accessed to cause fatal page faults.
-    
-      [ mdr: Relocate to arch/x86/virt/svm/sev.c ]
-    
-    Suggested-by: Vlastimil Babka <vbabka@suse.cz>
-    Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-    Signed-off-by: Michael Roth <michael.roth@amd.com>
-    Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-    Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-    Link: https://lore.kernel.org/r/20240126041126.1927228-16-michael.roth@amd.com
-
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index d3ccb7a0c7e9..435ba9bc4510 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -264,6 +264,7 @@ void snp_dump_hva_rmpentry(unsigned long address);
- int psmash(u64 pfn);
- int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, int asid, bool immutable);
- int rmp_make_shared(u64 pfn, enum pg_level level);
-+void snp_leak_pages(u64 pfn, unsigned int npages);
- #else
- static inline bool snp_probe_rmptable_info(void) { return false; }
- static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level) { return -ENODEV; }
-@@ -275,6 +276,7 @@ static inline int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, int as
- 	return -ENODEV;
- }
- static inline int rmp_make_shared(u64 pfn, enum pg_level level) { return -ENODEV; }
-+static inline void snp_leak_pages(u64 pfn, unsigned int npages) {}
- #endif
- 
- #endif
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index f1be56555ee6..901863a842d7 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -65,6 +65,11 @@ static u64 probed_rmp_base, probed_rmp_size;
- static struct rmpentry *rmptable __ro_after_init;
- static u64 rmptable_max_pfn __ro_after_init;
- 
-+static LIST_HEAD(snp_leaked_pages_list);
-+static DEFINE_SPINLOCK(snp_leaked_pages_list_lock);
-+
-+static unsigned long snp_nr_leaked_pages;
-+
- #undef pr_fmt
- #define pr_fmt(fmt)	"SEV-SNP: " fmt
- 
-@@ -515,3 +520,35 @@ int rmp_make_shared(u64 pfn, enum pg_level level)
- 	return rmpupdate(pfn, &state);
- }
- EXPORT_SYMBOL_GPL(rmp_make_shared);
-+
-+void snp_leak_pages(u64 pfn, unsigned int npages)
-+{
-+	struct page *page = pfn_to_page(pfn);
-+
-+	pr_warn("Leaking PFN range 0x%llx-0x%llx\n", pfn, pfn + npages);
-+
-+	spin_lock(&snp_leaked_pages_list_lock);
-+	while (npages--) {
-+
-+		/*
-+		 * Reuse the page's buddy list for chaining into the leaked
-+		 * pages list. This page should not be on a free list currently
-+		 * and is also unsafe to be added to a free list.
-+		 */
-+		if (likely(!PageCompound(page)) ||
-+
-+			/*
-+			 * Skip inserting tail pages of compound page as
-+			 * page->buddy_list of tail pages is not usable.
-+			 */
-+		    (PageHead(page) && compound_nr(page) <= npages))
-+			list_add_tail(&page->buddy_list, &snp_leaked_pages_list);
-+
-+		dump_rmpentry(pfn);
-+		snp_nr_leaked_pages++;
-+		pfn++;
-+		page++;
-+	}
-+	spin_unlock(&snp_leaked_pages_list_lock);
-+}
-+EXPORT_SYMBOL_GPL(snp_leak_pages);
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Tycho
