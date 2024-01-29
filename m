@@ -1,136 +1,130 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AD5657B5
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 13:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20969657C2;
+	Mon, 29 Jan 2024 13:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706536560; cv=none; b=l7AWV+Or0QY5iSJoDEJJfykZMGeKxeJ4y3726Hl0LfdEwhlGQEBbahVqBitpLCBYTgkpxQE54w6lYyBFSnZZ4//9DAlEn7Elbw683PUvr2HWyGVgTbMYM1KG5W4yHo1BKoLicvvM8XKbXZ5pNgcKCqyrH1VlFdhMlYkc7Xm0gyE=
+	t=1706536586; cv=none; b=E+4tmxR8nc53ltIVP5aAgZpm5PCsZRxUjUTlhMSqJkxf8IqiMrdOANu8H83KmefkypJnYh9naKNjdfujXZrhgHh886s588+V2O1trgQVYhWBbQLvedXczd9XO98mkoSv8NsdyD86enXdFAb+GWBlrqntoQNum1qZlOjGiWihEmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706536560; c=relaxed/simple;
-	bh=0kU0XJcwqyXCVZxm+kFwwNR3JQ+C+nscVOHBvBX63BU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IzjrCGI2aLxKBmY4BPmhpfM0baYv57oXibwEIYEkFDBcEGK7bXtcbZOK+d4uXOHWsDB9S2+KNkK4i2auOh9DhmJ+gkInq1eBBRHFUOXpri0rV7TquFS2WLBmTQT/4l7ach77Xbt7+rO7FuLsXzDim1dDTb1epv+D1YLZAX+zDMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=hROZEAOj; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1706536586; c=relaxed/simple;
+	bh=LjKaS9a9ftamQwX3DEza7SKDpTVw8DPs6rjsrh9fANQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i1xpnj5DjAnVPqJ1GwWwIRMsAANexAh+gumRjqQLzEPTTtGPQLDux2zWArr6J8JP0c1FdS4ncYZ3yO184XDt3t3m99tPU/v0jukg7GSBQS5siIUrpDRRwckp/gaw7ZgcTYUdJ9EK1srQz+9o1GlJISsCCuQKxvbzT/RnohCszWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=atdMK3XY; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="hROZEAOj"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a3566c0309fso177641666b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 05:55:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atdMK3XY"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5110f515deaso1647434e87.2;
+        Mon, 29 Jan 2024 05:56:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1706536556; x=1707141356; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c2pjxJTJw4PCQDkxC6JWUuLXXl1QpeecImfpOYgGbFk=;
-        b=hROZEAOjLz3J60bpDQybqKcOKTAfOfCWZM1ktDfBXG9EqRZZRx+KL5llybC2WYa2Ze
-         hRkajEAO8ntFw39Oq+MQb0XPtC24dmYmYrSu5wC+VniBLDRbCLedDWd5B4mEaIP61Phx
-         9c03UmMFs9oScGcL9ey3d9swu7NnWAjV1124iDSjmzXhfMBUo7w1SJoBBXCTbea64kMt
-         VRqi8PNdIjXSkegMXHfvAZ40TrC7NPFf6yO6rT0vI+aSeFyiqK/T6JP+YCikybSrUZf7
-         hfSeNPI1VQz1v4c6lZMt4zXEttgLj8Ew6XEwH5/anW+zRG0vQnpvOjJm1qJnEFuy5gEl
-         LttA==
+        d=gmail.com; s=20230601; t=1706536583; x=1707141383; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kLNm6aWjWhP3Zo5PR428kbbo6W3kbQTRbP3vEHT7Ffg=;
+        b=atdMK3XYJwQ1Jsbt0SJp513owJvKojgA/IaJgcIImEySyMKSx2TLnDfYnvRIvxv1WR
+         8B1jsqqBdZ1AMQI46fQOvPVEOfeN9GElFG3vjSdmtNrzdCUj+nRoUUznnyf/MCrBccKL
+         7e5zlIKtJU+mBVR2oZpoEIEKPBPsIJaD+hyQI2QYPcsuH4w2/EJKHK8DH4FmcjehhvOV
+         SJxArGmq6XUHrOujCXB/NFkzq05reOhbb84sRQRtTA99EpKm3ITbuX4U3r8hH8UQLz3y
+         NL7WhQ1ctFUdq4MBHWAKdABLCNMKvlJo90zJLSI8+IfVTRinyV3O/N2hxTliUrGSNUZI
+         FnYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706536556; x=1707141356;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c2pjxJTJw4PCQDkxC6JWUuLXXl1QpeecImfpOYgGbFk=;
-        b=lfx6Hiwmgbwrs3JZAGolgdB9FtpY+1bPexFgqdmnEZCDSpDz9smLpg1kDLR49lJDoL
-         ELHaJQfXA7cFDwnIZWzjul16ybUAKSoK2yNqI1hsrM1ffvfuHcHNv7tlnTbRW1ImtbNl
-         8odHuKEVVadUXih8J8VI9Is8D8NWVyX+5najQFXPeoe7F8FoeWnQd4XoYrW/7vFMCSvR
-         lezH460hWB/EFHalr9GBUgewTCc9rX8axYQk99dX423NemNxsAB+DjGBkjfDeLcV/j22
-         k1JqZE91qga15JCDvXMFtqcfsQpPCcoMp5Fr+8bwRsPPyqtzjc9CXyHZeHBpH8xj1n00
-         wtyg==
-X-Gm-Message-State: AOJu0YzhUIvX5b0+oCxXuBbHpBovut/BdRntKfKJrA9AKPxVJ/HFru6/
-	XOJ3JmjlwNlqYxYmloVYxa1UEWVNFGGAlUbjiV67lZwXRwnYbG0Ecqj3OX5hJ8o=
-X-Google-Smtp-Source: AGHT+IEdvnhMQ/CDu0i2JcMjQ93Mjck1u0vYpVh300T2TKQ++pg6Wjm5npTJCOfGrbQJZ3bPR/M7rw==
-X-Received: by 2002:a17:906:b0d:b0:a35:dafa:a5d8 with SMTP id u13-20020a1709060b0d00b00a35dafaa5d8mr1224292ejg.73.1706536556328;
-        Mon, 29 Jan 2024 05:55:56 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.87])
-        by smtp.gmail.com with ESMTPSA id vx6-20020a170907a78600b00a35ea4a21e8sm425895ejc.2.2024.01.29.05.55.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 05:55:55 -0800 (PST)
-Message-ID: <1c680be4-67b7-435b-9609-b5f7a45ca675@tuxon.dev>
-Date: Mon, 29 Jan 2024 15:55:54 +0200
+        d=1e100.net; s=20230601; t=1706536583; x=1707141383;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kLNm6aWjWhP3Zo5PR428kbbo6W3kbQTRbP3vEHT7Ffg=;
+        b=xHRFVErMyKmH/ljNBgI0fpuhX8v13iRom3DaGLnsl9UFEjVd4YQGT5SxsaNREQg60R
+         bwtW/Sw7FDOtMzcQXXgoa/WiUtbPmESow654eNiGtxITE9jYwYB1L6ogOPY/2EGg53OB
+         8CGHWlc5NED/CT0WvqSr1v1y3PckUG2/Ty343ZJO5o7xrZbed5hsFC3bTw4KHNrUzZan
+         0ewKcB+CndwAJoqR+/Tqpzoshq1YcrhwkkMuejjG89FzzngSUKSZ5IxRc7k00O37rrMA
+         PCZUSbwgy4ZS6S8hVLcZNS9EButDZN33fMnNaHOHZYS0+a3Xd0yDfNxihUDaUPybOy9b
+         Lcng==
+X-Gm-Message-State: AOJu0Yyjlpuh+o2BUmNhMHmRaxXSoG2XLRGKrFQbRV6sm1lY6jvblJRD
+	LzTV2gK1WpsoQgIBnAL1HJsh+nWDN3N9udUQhjUDd2KB9q/8M2MW
+X-Google-Smtp-Source: AGHT+IEEtghO5GV+T/CBEzKDmZAqom9CfctaZ5B5R9VZvhtHodZrQXvLgfVQnCcQnTFaBnCC9ONtzQ==
+X-Received: by 2002:a19:7612:0:b0:50e:36ad:5f6e with SMTP id c18-20020a197612000000b0050e36ad5f6emr3552167lff.20.1706536582819;
+        Mon, 29 Jan 2024 05:56:22 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2500:a01:5616:a18c:ea50:2995])
+        by smtp.gmail.com with ESMTPSA id bh5-20020a05600005c500b0033aed46956csm3058057wrb.80.2024.01.29.05.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 05:56:22 -0800 (PST)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v6 0/4] Add missing port pins on RZ/Five SoC
+Date: Mon, 29 Jan 2024 13:55:52 +0000
+Message-Id: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 10/15] net: ravb: Move delay mode set in the
- driver's ndo_open API
-Content-Language: en-US
-To: Sergey Shtylyov <s.shtylyov@omp.ru>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- richardcochran@gmail.com, p.zabel@pengutronix.de, geert+renesas@glider.be
-Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
- <20240123125829.3970325-11-claudiu.beznea.uj@bp.renesas.com>
- <b0a4f320-6218-2631-a5a0-26cfa9a25ee1@omp.ru>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <b0a4f320-6218-2631-a5a0-26cfa9a25ee1@omp.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Hi All,
 
-On 24.01.2024 22:18, Sergey Shtylyov wrote:
-> On 1/23/24 3:58 PM, Claudiu wrote:
-> 
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> Delay parsing and setting were done in the driver's probe API. As some IP
->> variants switch to reset mode (and thus registers content is lost) when
-> 
->    s/registers content/the register contents/, perhaps?
-> 
->> setting clocks (due to module standby functionality) to be able to
->> implement runtime PM keep the delay parsing in the driver's probe function
->> and move the delay applying function to the driver's ndo_open API.
->>
->> Along with it, both delay specific functions were kept together.
->>
->> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> [...]
-> 
->> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
->> index 8956c33c60e2..69d4854d6738 100644
->> --- a/drivers/net/ethernet/renesas/ravb_main.c
->> +++ b/drivers/net/ethernet/renesas/ravb_main.c
->> @@ -1800,6 +1800,59 @@ static int ravb_compute_gti(struct net_device *ndev)
->>  	return 0;
->>  }
->>  
->> +/* Set tx and rx clock internal delay modes */
->> +static void ravb_parse_delay_mode(struct device_node *np, struct net_device *ndev)
-> 
->    Wait, why are you moving this? Its call site didn't move -- it's still
-> down in the probe() method...
+This patch series intends to incorporate the absent port pins P19 to P28,
+which are exclusively available on the RZ/Five SoC.
 
-As explained in the patch description ("Along with it, both delay specific
-functions were kept together.") functions were moved closed to each other
-to have the code dealing with delay in the same place.
+Cheers,
+Prabhakar
 
-> 
-> [...]
->> @@ -2785,10 +2793,7 @@ static int ravb_probe(struct platform_device *pdev)
->>  	if (error)
->>  		goto out_rpm_put;
->>  
->> -	if (info->internal_delay) {
->> -		ravb_parse_delay_mode(np, ndev);
->> -		ravb_set_delay_mode(ndev);
->> -	}
->> +	ravb_parse_delay_mode(np, ndev);
->>  
->>  	/* Allocate descriptor base address table */
->>  	priv->desc_bat_size = sizeof(struct ravb_desc) * DBAT_ENTRY_NUM;
->>
-> 
-> MBR, Sergey
+v5 -> v6:
+- Rebased the changes due to conflict in pinctrl-rzg2l.c
+
+v4 -> v5:
+- Made struct rzg2l_variable_pin_cfg variables u32
+- Updated PIN_CFG_PIN_MAP_MASK macro to use GENMASK_ULL() as reported
+  by kernel test robot.
+
+v3 -> v4:
+- Rebased the changes on top Claudiu's patches
+- patch 1/4 is new patch for using FIELD_PREP_CONST/FIELD_GET as
+  suggested by Geert
+- patch 2/4 adjusted the code again using FIELD_PREP_CONST/FIELD_GET
+- patch 3/4 fixed rzg2l_pinctrl_get_variable_pin_cfg() as pointed by Geert
+- patch 4/4 is unchanged
+- patches 1-3 have been boot tested on g2l family
+
+v2->v3:
+- Fixed build warnings for m68k as reported by Kernel test robot.
+
+RFC -> v2:
+- Fixed review comments pointed by Geert & Biju
+
+RFC:
+Link: https://lore.kernel.org/lkml/20230630120433.49529-3-prabhakar.mahadev-lad.rj@bp.renesas.com/T/
+
+Lad Prabhakar (4):
+  pinctrl: renesas: rzg2l: Improve code for readability
+  pinctrl: renesas: rzg2l: Include pinmap in RZG2L_GPIO_PORT_PACK()
+    macro
+  pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28
+  riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
+
+ arch/riscv/boot/dts/renesas/r9a07g043f.dtsi |   4 +
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 284 +++++++++++++++++---
+ 2 files changed, 248 insertions(+), 40 deletions(-)
+
+-- 
+2.34.1
+
