@@ -1,208 +1,156 @@
-Received: from mail-4323.proton.ch (mail-4323.proton.ch [185.70.43.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5924A76020;
-	Mon, 29 Jan 2024 18:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675FA7602B
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706551247; cv=none; b=IJK2v7f3eV2bkqbllXWRZUywJ34ropj49hfsHcyQpKxbp5dyo4k43xJAXDNDq3MjjWnRSZ7qsyDC3PhKIJO+cPfgZjFvDibaUg653PITsDTwh5Gukrb2PClZbBTy5dpUWV8k/doox7ImVuyyd44cZ/V3RMtedYKgqMQ7Y1JVTXE=
+	t=1706551250; cv=none; b=H123YO1VZocVY+NaHZDSqJDVP6V/mensAqtjzPyCR29V1WFQngPzG5EWhSFAsqq9UKSZoQiiS5eTCy9PYd8pR4+9npMcNCO9DswtF5cIlkyVFDtiIh7X0b8Qtfi/a+wxXsBlCEgpIqDQzcaRxF0a07AfOO0+PvKTme33GXd7nPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706551247; c=relaxed/simple;
-	bh=9+ZXDWdPJAeaOha4zQ1+0jITzNR/67zdHl/455cVzFs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MsaCpdY6O2im0DTNzkjSB8L8FGhw2c7oPo1XEwY6RNpN3n4jwMqzIylumvcRpACxLoT4vPjg++aGnblgGvEKBailjulZpCI5++LrZXaGF2Uvb1Pj6Y5Tx54CCed0NkBAkhgTi24w2DvKiftSo+yAjLmme/7IHseZ9hKlYsTFKZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art; spf=pass smtp.mailfrom=bluemarch.art; dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b=H9CPCZo2; arc=none smtp.client-ip=185.70.43.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bluemarch.art
+	s=arc-20240116; t=1706551250; c=relaxed/simple;
+	bh=ZGGqBUPumN+idc9ens24RKWiq23wqMqhdGfjFbkJcRQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cgZ0ZPIpNM71+cEH7qLJ/F79xzk1DwoLm7Bs0ggIh1hx0UF1L+tDFsFvUGb0pc0Z+y127bYsEex+k/c2Ukzxh6FOguFc1QHLx05ZAHpgoiukf3D7bdGHnTei1qum11xLHeH5criilBNwnkNAe8rhYkoBfM55vIS98/2pSdI+x6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eA/EIvsM; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b="H9CPCZo2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bluemarch.art;
-	s=protonmail; t=1706551238; x=1706810438;
-	bh=kWKQ4f/Bj8ANB5Z+gowC7n7O4QcvZo07zvKsDMyLdv4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=H9CPCZo2u6qZ/3/9eT+ywwPT/1puRst6FP4/qIpwh+wing44HiWGvRGgYQbLh0Ucz
-	 Iio49A695GWzfpsNggg/t6gyvdeGj4b8YOCRYiud7OVWEue+akyp5ink+tUzf/j446
-	 CxaCm382vSV00P02NHEEOXWGT2hXEzZ5ZcOiADCdH/I6HtRtAiZwJQSkhiEbziNq9A
-	 msAL/yj/7/KuAjPUTFuM2Q5qQd1xTSo+Gr4XTpqD58pjXNGeUOQ/OqHlLWYtt85FEg
-	 8Gxwzv6RGf1Xr5d0wV2IQJASAQx6qQIo7Opkc2GCsZvE5CyWCkaE7ujBUiG+E92zHv
-	 cM0cZthzt7UBA==
-Date: Mon, 29 Jan 2024 18:00:23 +0000
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jwoithe@just42.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-From: Szilard Fabian <szfabian@bluemarch.art>
-Cc: Szilard Fabian <szfabian@bluemarch.art>
-Subject: [RFC PATCH v2] platform/x86/fujitsu-laptop: Add battery charge control support
-Message-ID: <20240129175714.164326-2-szfabian@bluemarch.art>
-In-Reply-To: <20240129163502.161409-2-szfabian@bluemarch.art>
-References: <20240129163502.161409-2-szfabian@bluemarch.art>
-Feedback-ID: 87830438:user:proton
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eA/EIvsM"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ddc0c02593so1305038b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:00:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706551248; x=1707156048; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/+CW+in6EnK2znPTJ0AfQ7xRsovW5JNd4hWidmf+BiM=;
+        b=eA/EIvsMZ3JtvygLEp+XdI4nquW1ZX4bLgP9CHpIeDb/7wUhhgybI20kG1mHI5CwBc
+         ztcrXShmDkU9D4Us13ouRA3+VtIKNnGvzy5B0kaS+xez+9WSh6Q1vvSSnT9dBg8yEqas
+         NqlAgpkq613CW+DBudYfBYAKk8FDTSMTzI6Vk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706551248; x=1707156048;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/+CW+in6EnK2znPTJ0AfQ7xRsovW5JNd4hWidmf+BiM=;
+        b=JV8Ws389y2ttofPXjRMSst53QdNETy0gTvpdaiHfBBh4us3l1Q3s+ekACHrEtZZ3WT
+         WRuFcUXwB2CuqG/leRMSCSSw1KbX42HhPZUn0hZZDcCtd/RDmzQY93gU98eep6Qi9eJd
+         Gonqrvg/eei+u4mmW/yxLf26ZKmOSrMZiYHrP8TfxLHPwFyWVcBlKSzS2fLDHfu1hz+j
+         oI7ByHwyl2wubFd0kA2BeiwQajptbX0STvAhzNHcVCmLGZ5GSk3lSkP4lTVZJomdAkjZ
+         jcTR5bG3lTE7hNjlaI/v7+V6FCH4Mky+G9O5JVSucRZbzHF2qJCDxdkzRaJh+wEJ46Nu
+         BM+w==
+X-Gm-Message-State: AOJu0YwtgiN6NYIQUL6Y+pzF1qVfQTH4o0MuMSSS12sp+/pUTm4jO2zY
+	0mLBA1mwdNbpbuZL/6aSXGL46ms/axeKa0bcabxJTcAKRvb/rxJyf5dOVM1GwYkp/vC3BjAXU1w
+	=
+X-Google-Smtp-Source: AGHT+IHzMbnsAAlCzNBmOOUIN7GWD2qtf0TQqIGnd2N24RJxcnvtRd6Jpb1GCe1rOCRHM6gjcuNAQA==
+X-Received: by 2002:a05:6a20:e18f:b0:19e:25ab:5d30 with SMTP id ks15-20020a056a20e18f00b0019e25ab5d30mr329007pzb.49.1706551247798;
+        Mon, 29 Jan 2024 10:00:47 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id n10-20020a170902968a00b001d71729ec9csm5622621plp.188.2024.01.29.10.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 10:00:47 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Fangrui Song <maskray@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 0/6] ubsan: Introduce wrap-around sanitizers
+Date: Mon, 29 Jan 2024 10:00:37 -0800
+Message-Id: <20240129175033.work.813-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2740; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=ZGGqBUPumN+idc9ens24RKWiq23wqMqhdGfjFbkJcRQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlt+fKr4C/1Uw/qKiym8JNIHrticwbGItvtoLwR
+ XmESZ6nhtiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbfnygAKCRCJcvTf3G3A
+ JsyCD/4l4Nk/URvw3kj0okH6XFWIxs/ZeiLVH2vDL41SvfbPQhpi+lCU4RKMP2XieuJ3KygVmGa
+ mA8ABOVAJUOmhBNIrC2l9M7tjVcPoXBkTHKV6M282fJYo2pN03EHVZsbjNcng9HMLjgRm2WGjnU
+ JYorKquSB4s3PocpIMNr0b0Ct3bnUCnp5tZOjSeEE8EQbNWGc5jPJSnV4UCPkXhZoWb7lAFZuYJ
+ UDpE+Wz79/BRLULF+tLwiIQPu8rKVxn5AbO1gRgU8bbUsR4rg0nfIj04eTdS/hnQ+eqjuEtRymG
+ E+8Bwd67rfWxhYkbZiIwif6Pz9zuXsENRBB5j/NnsqrrBl1/oBPprzdG3xIUlNfGh3lC2p/XUaH
+ X9mtGkfvMvv8ir2VhNed6tLbbUOhodLmPen/S96YcxNcbPM/RZTfibLcuCBWLPOaOtBZnKKdz3f
+ YTArlBA0afCW3HPJiMHkpmtMdzhbOs8QtVpKTCyQCuULqrciWRtrNdoMB6Loguv794PpwIkL6Uy
+ CnsREXq/qSq/CbmirNh0yylWWz13AjMoedgfxjqXRJX8V43XC/w5iSrcmUwQhbxW2aU8jJ6HqrH
+ YRZouC6AHWt83CGOCCLGr7yFpxF0+Un/xkB2uSHPWP8vndnHTl+jscCvIXPaRnlUzY+zoVpk7BA
+ zhUdRD7 sxkuuu9w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-This patch adds battery charge control support on Fujitsu notebooks
-via the S006 method of the FUJ02E3 ACPI device. With this method it's
-possible to set charge_control_end_threshold between 50 and 100%.
+Hi,
 
-Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
-patch on a dual battery one, but I didn't find any clue about
-independent battery charge control on dual battery Fujitsu notebooks
-either. And by that I mean checking the DSDT table of various Lifebook
-notebooks and reverse engineering FUJ02E3.dll.
+Lay the ground work for gaining instrumentation for signed[1],
+unsigned[2], and pointer[3] wrap-around by making all 3 sanitizers
+available for testing. Additionally gets x86_64 bootable under the
+unsigned sanitizer for the first time.
 
-Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
----
-v2:
-Forgot to sign-off the original commit. Fixed, sorry for the
-inconvenience.
----
- drivers/platform/x86/fujitsu-laptop.c | 95 +++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+The compilers will need work before this can be generally useful, as the
+signed and pointer sanitizers are effectively a no-op with the kernel's
+required use of -fno-strict-overflow. The unsigned sanitizer will also
+need adjustment to deal with the many common code patterns that exist
+for unsigned wrap-around (e.g. "while (var--)", "-1UL", etc).
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/f=
-ujitsu-laptop.c
-index 085e044e888e..bf3df74e4d63 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -49,6 +49,8 @@
- #include <linux/kfifo.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <acpi/battery.h>
- #include <acpi/video.h>
-=20
- #define FUJITSU_DRIVER_VERSION=09=09"0.6.0"
-@@ -97,6 +99,10 @@
- #define BACKLIGHT_OFF=09=09=09(BIT(0) | BIT(1))
- #define BACKLIGHT_ON=09=09=090
-=20
-+/* FUNC interface - battery control interface */
-+#define FUNC_S006_METHOD=09=090x1006
-+#define CHARGE_CONTROL_RW=09=090x21
-+
- /* Scancodes read from the GIRB register */
- #define KEY1_CODE=09=09=090x410
- #define KEY2_CODE=09=09=090x411
-@@ -164,6 +170,91 @@ static int call_fext_func(struct acpi_device *device,
- =09return value;
- }
-=20
-+/* Battery charge control code */
-+
-+static ssize_t charge_control_end_threshold_store(struct device *dev,
-+=09=09=09=09struct device_attribute *attr,
-+=09=09=09=09const char *buf, size_t count)
-+{
-+=09int value, ret;
-+
-+=09ret =3D kstrtouint(buf, 10, &value);
-+=09if (ret)
-+=09=09return ret;
-+
-+=09if (value < 50 || value > 100)
-+=09=09return -EINVAL;
-+
-+=09int cc_end_value, s006_cc_return;
-+
-+=09cc_end_value =3D value * 0x100 + 0x20;
-+=09s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09=09CHARGE_CONTROL_RW, cc_end_value, 0x0);
-+
-+=09/*
-+=09 * The S006 0x21 method returns 0x00 in case the provided value
-+=09 * is invalid.
-+=09 */
-+=09if (s006_cc_return =3D=3D 0x00)
-+=09=09return -EINVAL;
-+
-+=09return count;
-+}
-+
-+static ssize_t charge_control_end_threshold_show(struct device *dev,
-+=09=09=09=09struct device_attribute *attr,
-+=09=09=09=09char *buf)
-+{
-+=09int status;
-+=09status =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09CHARGE_CONTROL_RW, 0x21, 0x0);
-+
-+=09return sprintf(buf, "%d\n", status);
-+}
-+
-+static DEVICE_ATTR_RW(charge_control_end_threshold);
-+
-+/* ACPI battery hook */
-+
-+static int fujitsu_battery_add(struct power_supply *battery,
-+=09=09=09       struct acpi_battery_hook *hook)
-+{
-+=09/* Check if there is an existing FUJ02E3 ACPI device. */
-+=09if (fext =3D=3D NULL)
-+=09=09return -ENODEV;
-+
-+=09/*
-+=09 * Check if the S006 0x21 method exists by trying to get the current
-+=09 * battery charge limit.
-+=09 */
-+=09int s006_cc_return;
-+=09s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09=09CHARGE_CONTROL_RW, 0x21, 0x0);
-+=09if (s006_cc_return =3D=3D UNSUPPORTED_CMD)
-+=09=09return -ENODEV;
-+
-+=09if (device_create_file(&battery->dev,
-+=09=09=09       &dev_attr_charge_control_end_threshold))
-+=09=09return -ENODEV;
-+
-+=09return 0;
-+}
-+
-+static int fujitsu_battery_remove(struct power_supply *battery,
-+=09=09=09=09  struct acpi_battery_hook *hook)
-+{
-+=09device_remove_file(&battery->dev,
-+=09=09=09   &dev_attr_charge_control_end_threshold);
-+
-+=09return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook =3D {
-+=09.add_battery =3D fujitsu_battery_add,
-+=09.remove_battery =3D fujitsu_battery_remove,
-+=09.name =3D "Fujitsu Battery Extension",
-+};
-+
- /* Hardware access for LCD brightness control */
-=20
- static int set_lcd_level(struct acpi_device *device, int level)
-@@ -839,6 +930,8 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *=
-device)
- =09if (ret)
- =09=09goto err_free_fifo;
-=20
-+=09battery_hook_register(&battery_hook);
-+
- =09return 0;
-=20
- err_free_fifo:
-@@ -851,6 +944,8 @@ static void acpi_fujitsu_laptop_remove(struct acpi_devi=
-ce *device)
- {
- =09struct fujitsu_laptop *priv =3D acpi_driver_data(device);
-=20
-+=09battery_hook_unregister(&battery_hook);
-+
- =09fujitsu_laptop_platform_remove(device);
-=20
- =09kfifo_free(&priv->fifo);
---=20
-2.43.0
+-Kees
 
+Link: https://github.com/KSPP/linux/issues/26 [1]
+Link: https://github.com/KSPP/linux/issues/27 [2]
+Link: https://github.com/KSPP/linux/issues/344 [3]
+
+Kees Cook (6):
+  ubsan: Use Clang's -fsanitize-trap=undefined option
+  ubsan: Reintroduce signed and unsigned overflow sanitizers
+  ubsan: Introduce CONFIG_UBSAN_POINTER_WRAP
+  ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL
+  ubsan: Split wrapping sanitizer Makefile rules
+  ubsan: Get x86_64 booting with unsigned wrap-around sanitizer
+
+ Documentation/dev-tools/ubsan.rst | 28 +++-------
+ arch/arm/Kconfig                  |  2 +-
+ arch/arm64/Kconfig                |  2 +-
+ arch/mips/Kconfig                 |  2 +-
+ arch/parisc/Kconfig               |  2 +-
+ arch/powerpc/Kconfig              |  2 +-
+ arch/riscv/Kconfig                |  2 +-
+ arch/s390/Kconfig                 |  2 +-
+ arch/x86/Kconfig                  |  2 +-
+ arch/x86/kernel/Makefile          |  1 +
+ arch/x86/kernel/apic/Makefile     |  1 +
+ arch/x86/mm/Makefile              |  1 +
+ arch/x86/mm/pat/Makefile          |  1 +
+ crypto/Makefile                   |  1 +
+ drivers/acpi/Makefile             |  1 +
+ include/linux/compiler_types.h    | 19 ++++++-
+ kernel/Makefile                   |  1 +
+ kernel/locking/Makefile           |  1 +
+ kernel/rcu/Makefile               |  1 +
+ kernel/sched/Makefile             |  1 +
+ lib/Kconfig.ubsan                 | 41 +++++++++-----
+ lib/Makefile                      |  1 +
+ lib/crypto/Makefile               |  1 +
+ lib/crypto/mpi/Makefile           |  1 +
+ lib/test_ubsan.c                  | 82 ++++++++++++++++++++++++++++
+ lib/ubsan.c                       | 89 +++++++++++++++++++++++++++++++
+ lib/ubsan.h                       |  5 ++
+ lib/zlib_deflate/Makefile         |  1 +
+ lib/zstd/Makefile                 |  2 +
+ mm/Makefile                       |  1 +
+ net/core/Makefile                 |  1 +
+ net/ipv4/Makefile                 |  1 +
+ scripts/Makefile.lib              | 11 +++-
+ scripts/Makefile.ubsan            | 11 +++-
+ 34 files changed, 278 insertions(+), 43 deletions(-)
+
+-- 
+2.34.1
 
