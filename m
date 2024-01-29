@@ -1,114 +1,101 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292FD55789
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A7055E49;
+	Mon, 29 Jan 2024 09:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706521733; cv=none; b=LzKPg+cfSSehoQQ4eDJYc3P5+P4adIxySdh13nKjNdDcDla/noctqGwfpDWvXff6w4spPmDnKB0PmoK3/K8Gp3nUr/TW+PcIkLJgPBsT7VqT623zksjPpMjPWyErpjLr7ds/71xBEfjBflKLvtApVLg9642Q8d8VdBpbtPuQ5r8=
+	t=1706521765; cv=none; b=gwAKoDNm4IawnrqHXy+IqLVYC8LcploCQ6uS/qFR+VqKMkglQMJDZrbY1ru0W/B9edoOx0mfXrWkw91MGXtWlrCpwm0V3kUrNYqzYDUFAw0w4OQYl0S/i2wcETH8433TWarnOWrVkBjs0sbnuSfwkM6bz9NLvS+SKg5rDEoEfvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706521733; c=relaxed/simple;
-	bh=BA1tOGEvLJ2F1biwjB2573ANIuiUoV8stL0uXeeVPnE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E/zKnYDxcBqXNnpCLlNnaqJbcU0PnwzRZwpWw2LHO+SXuiaH4ljo+SjPZn7A8mJpPQdMKxIrl7MG+06mO85+uJ0tiiNJ5EnFWBsr5eptVF7oN18wqMzNoBgCxqBOrE0BH7mdF8YrM1ixZ8omZo+JeQ2pJI04Ee3zVM0HDjJ25Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JeGa3dgS; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706521765; c=relaxed/simple;
+	bh=BcsHhEXWi5xMJWTtz5/c5ki18Idpl9aWenNr9qUQymg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IckgAX2NK5cd/1HquhtETzj7DN1iJaKiymdhNomnlkuAkA8J0eY7cMzWPWCmo1TyiMtD6WDq1bQNLSFMPjTlX5SNjasnuF8/r0ZacK7kAu65YNDGCpEUTrnn2g406uqz4Fg+2yOC7+yoAbFmJgqqyA3iUXXK2ZQA0xUKc/paJUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jVYbEqyD; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JeGa3dgS"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-781753f52afso232250885a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 01:48:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706521730; x=1707126530; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pHEsVlM7f5nwbIgc9gzWyFxBBE04dfKP6ctAVu1W4LQ=;
-        b=JeGa3dgSsjcygSr6r7tr9gwnGHHJ8xC36E0lXADUUDAT3b0z2wUc6orpW2w0W7R5JK
-         8zVXJhEfUEDcyef6P7Afmg7jGg8OZxspOaKOtd7BFI1TFql/wui+tRnHKDMvAgEQUQ3G
-         3/EFX659GThPRQsE6F5ewxqExsC6JOjkzuPSVqTnVrOjETaHaj0qW34JAWHV/JFmv7u4
-         vRsZcQBDxlOu+8OKloqntIXF7dureVbgvK9sN8r1gJVXDOzX/LCH3KZ3TUT5KI+fRmsu
-         PxRj9KFixCsVGFts4VkluiW2uqHhWWN0FZzTYvvfZ5DCK2K/1aPpBmEhF+xYVzVL1Vr6
-         AT+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706521730; x=1707126530;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pHEsVlM7f5nwbIgc9gzWyFxBBE04dfKP6ctAVu1W4LQ=;
-        b=uKeP169dkPzpw8BwUh42bVNH+/boV1Z9yRbkvM/eezOtfhcZ2X0s0EKgMxYjfs4kbe
-         5ffC7uLg3+sznkqvt7M8uEw3dxlSLh1a0P8xt3ceXp0mUDQpchyUXVinhjexOb5l8GYc
-         XhPNogvayq9+PX/9KrGVRuMad8T4lMItmU5RMiEjjP9ge+xXVJiAGH+vS4rPWIQFkvwI
-         w6fOM6JJ7diGBRFALPFSFw5O5DkKF13u0PKoWixs4cSdo4wastNyoooDGU7efq5yOAmb
-         g9edHrfXWjRfHgdSeuMqFIvKK5p423dOtsake8vsJtNDcWez2M07pgx7T52T91U7H9Hf
-         c+dg==
-X-Gm-Message-State: AOJu0YweAxD1Dg9fsrzLTVjhOA7GdpOcD8pVwb6WXosNa0PStJ1Ga3Eo
-	z0vrPX93KrnbuCSnBLPvARILt6WFJX8AkvT1tD7joYsyDyPlAJ4RcpFz/pjTczWdNh/Vo71A5WI
-	AXflp2urY348EQOEVkqTuqrSJ9knbS7YGaaJO6w==
-X-Google-Smtp-Source: AGHT+IE/FkXm22hoOy7Bm93rW+z/+jgXNC3MtDsNhFcBpfDqK2p05aSH1dhnMpcNvIVeXslT5ipbAnbdvzJvrwoQ90U=
-X-Received: by 2002:ad4:5f8a:0:b0:68c:467d:c60d with SMTP id
- jp10-20020ad45f8a000000b0068c467dc60dmr4539234qvb.118.1706521730025; Mon, 29
- Jan 2024 01:48:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jVYbEqyD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706521762;
+	bh=BcsHhEXWi5xMJWTtz5/c5ki18Idpl9aWenNr9qUQymg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jVYbEqyDuZW+HE+sdCpLKAAKTpOEi8F0b29iUJ0QWx1IxYqdkztJpU1N1zHnOqtUQ
+	 xmcF2ZVfLMveGB5RbvT+pDLrpIjqKuiBuXyEWbI8NZKNN8qrendUhDEum03NJ1QAPW
+	 jSd79i5YCAy4XBVBNNcGbYQPUSJE/6l2YZ74nImp7ljO2RSpRdc+xoHViHElBzo5l4
+	 xx7L0RssUdwqXf55PCqO6cHGyIrceKkwCl9Qy8iDuSN2adxhfufQed1930I9dc87mE
+	 aGWiAgewzYzk3kvftAPR0BwGLrd+3DlBGfxc6cxOXMz2D1GTAQJYisqlGIka15by4n
+	 AXSbspLqZMO6g==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 23AF13781F92;
+	Mon, 29 Jan 2024 09:49:21 +0000 (UTC)
+Message-ID: <e29ae12b-5823-4fba-8029-e8e490462138@collabora.com>
+Date: Mon, 29 Jan 2024 11:49:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240127003607.501086-1-andre.draszik@linaro.org> <20240127003607.501086-3-andre.draszik@linaro.org>
-In-Reply-To: <20240127003607.501086-3-andre.draszik@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 29 Jan 2024 09:48:38 +0000
-Message-ID: <CADrjBPoTewqx2eF9Zw2EHZtjEpPzesAA5cEjVKw-WWgTT8fd_Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] arm64: dts: exynos: gs101: fix usi8 default mode
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	tudor.ambarus@linaro.org, willmcvicker@google.com, semen.protsenko@linaro.org, 
-	alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
-	cw00.choi@samsung.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] dt-bindings: net: starfive,jh7110-dwmac: Add
+ JH7100 SoC compatible
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
+ Samin Guo <samin.guo@starfivetech.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Giuseppe Cavallaro <peppe.cavallaro@st.com>, Andrew Lunn <andrew@lunn.ch>,
+ Jacob Keller <jacob.e.keller@intel.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+References: <20240126191319.1209821-1-cristian.ciocaltea@collabora.com>
+ <20240126191319.1209821-2-cristian.ciocaltea@collabora.com>
+ <0a6f6dcb-18b0-48d5-8955-76bce0e1295d@linaro.org>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <0a6f6dcb-18b0-48d5-8955-76bce0e1295d@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, 27 Jan 2024 at 00:37, Andr=C3=A9 Draszik <andre.draszik@linaro.org>=
- wrote:
->
-> While commit 6d44d1a1fb62 ("arm64: dts: exynos: gs101: define USI8 with
-> I2C configuration") states that the USI8 CONFIG is 0 at reset, the boot
-> loader has configured it by the time Linux runs and it has a different
-> value at this stage.
->
-> Since we want board DTS files to explicitly select the mode, we should
-> set it to none here so as to ensure things don't work by accident and
-> to make it clear that board DTS actually need to set the mode based on
-> the configuration.
->
-> Fixes: 6d44d1a1fb62 ("arm64: dts: exynos: gs101: define USI8 with I2C con=
-figuration")
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> ---
+Hi Krzysztof,
 
-Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+On 1/29/24 10:26, Krzysztof Kozlowski wrote:
+> On 26/01/2024 20:13, Cristian Ciocaltea wrote:
+>> The Synopsys DesignWare MAC found on StarFive JH7100 SoC is mostly
+>> similar to the newer JH7110, but it requires only two interrupts and a
+>> single reset line, which is 'ahb' instead of the commonly used
+>> 'stmmaceth'.
+>>
+>> Since the common binding 'snps,dwmac' allows selecting 'ahb' only in
+>> conjunction with 'stmmaceth', extend the logic to also permit exclusive
+>> usage of the 'ahb' reset name.  This ensures the following use cases are
+>> supported:
+>>
+>>   JH7110: reset-names = "stmmaceth", "ahb";
+>>   JH7100: reset-names = "ahb";
+>>   other:  reset-names = "stmmaceth";
+> 
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/bo=
-ot/dts/exynos/google/gs101.dtsi
-> index aaac04df5e65..bc251e565be6 100644
-> --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> @@ -384,6 +384,7 @@ usi8: usi@109700c0 {
->                                  <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP0=
-_IPCLK_7>;
->                         clock-names =3D "pclk", "ipclk";
->                         samsung,sysreg =3D <&sysreg_peric0 0x101c>;
-> +                       samsung,mode =3D <USI_V2_NONE>;
->                         status =3D "disabled";
->
->                         hsi2c_8: i2c@10970000 {
-> --
-> 2.43.0.429.g432eaa2c6b-goog
->
+Thank you for the review!
+
+Could you please apply it to the RESEND version [1] instead, as this one 
+had an issue collecting the latest tags, as indicated in [2].
+
+Regards,
+Cristian
+
+[1] https://lore.kernel.org/lkml/20240126192128.1210579-2-cristian.ciocaltea@collabora.com/
+[2] https://lore.kernel.org/lkml/920e764c-4fa3-4298-bb49-d31416fc3dd6@collabora.com/
