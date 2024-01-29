@@ -1,292 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D94B14AAA;
-	Mon, 29 Jan 2024 04:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C1A3C481
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 04:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706502567; cv=none; b=mKR/TfEIR/NSVy4BCSx/Txf6GhTuPu/GFTaE9Rhg9P7iVHwp5OA9DEXSPMyITpOCdgSdOypESIaBtuqZ/KoiNPkbLW8abeiVVoutbDo2AB6amKN3+/uIZgYbLP4CyIrkhuRCM1b8BEtfhDnMnBCcU9QyB1eGhOCG0OA0sFf0IFU=
+	t=1706502994; cv=none; b=uo0T7vWUzq1sX9SRzhOo5j199jMjw/mnvo9XQ1MvSEQiW+dj4OWS6ESNlIzLbEeI9N3MPa9coPs/6NW+o4G1V3MSHttbZQ54hmSJWntIbJs7OSyp71/LEE34Jr/9LQqcJDdSFZMma5bqaTW1h9pa1arxUDvdTO7hnuQjfHUw1PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706502567; c=relaxed/simple;
-	bh=3EK/8yxeed8m7k4dlgjD0V/NjwPLMBHE+69C12MTZ18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hw3SBe0QSKWkCtxY2ypV7dAfEYmdji0P9mMLVnsYw0UMhUDCfLgHgOBUKc8BguOADY8i02Ds822LAfed80DdQauPnSWoxjoh0u42uEjTwJ4dvC2rBES07HuZQO5Wk00/08R8HGbQ8TEKS3nIfnc3FdX7KJIP2X5Swd7mhrfjiuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OmFk+bD2; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706502994; c=relaxed/simple;
+	bh=Qvclxu84S/Vj00n5XJGicbf+1n9+wvgXNZJSxffCMaA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cOOwBygJAOBbzj/ec1vAeuICQzz9yhQM87soZvei2u1aOlIrISuaIxxFglGDibZkZdbU3x1JqkFxSxMeejhZ2JGkMG7JaiJpp85jkYKeFg2ABqGx4pd8XFKP9LIUUXAKZqJ3T/U7XQxCel5cQhlbZE/3Jw9vwr0wgw4yodfC40Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ej0cPmGB; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OmFk+bD2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706502565; x=1738038565;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3EK/8yxeed8m7k4dlgjD0V/NjwPLMBHE+69C12MTZ18=;
-  b=OmFk+bD2PXX+IfN88vXweFzYh5e5D0jSpW6UMakb4VbR+ai1EC+PUw1w
-   jOqlcWdM8lswiiO6SKlH8z0cwMypgQeQeLPZunNSBNHGHg6uwd4wLIXq8
-   8cJFJcLVy91sGktP6Na8qKB8i6Hb6+QidF84a8g84wM0XmjCkfkjB6hx0
-   ArR8/0nVjbXdah8nYPSM7WhPd0YfVZnK2nuFvU1h6a/roQ1UDIeYttSZc
-   MH0u43LuHt7xSWjhJIvu8WQc9IVTVADAhn+J368yUkSLg+gl/ii1R9GF/
-   LznAK6Z9lRlNHDMZf8t15GrruMzuhxqXtka1NU3xiHILOncDxJNdC8bev
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="9521283"
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="9521283"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 20:29:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="3229390"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.10.49]) ([10.238.10.49])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 20:29:21 -0800
-Message-ID: <56882cd9-67f5-4396-b91b-52fb202d3386@linux.intel.com>
-Date: Mon, 29 Jan 2024 12:29:18 +0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ej0cPmGB"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a26f73732c5so236559066b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 20:36:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706502990; x=1707107790; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GNrDOkLUoRhPhAZaq9nU6yW/IkHOgSVhQm/kSJS29jU=;
+        b=ej0cPmGBny+KdMuseOrUhYXXVycTUu3+fxdZfL1Z2YgKqqGdUTgu1Z0Rd3E/nYABYZ
+         fbBAnusZ3NgXP4YiXRr9iTodT7ygtVFbHqTiuK+gS8Dm443gpN2Ft+znUx0qOVgxc4Hy
+         /oIDFQ2POU2NVLBhy1q4VjW9r8x+sOysReZns=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706502990; x=1707107790;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GNrDOkLUoRhPhAZaq9nU6yW/IkHOgSVhQm/kSJS29jU=;
+        b=XvmFnNu6YY34/KLbmtDtccUmJ8WdGFiQshP9CqUmf25XnstqkZT3Lx0QZznQPle9Pk
+         r+X5hg2cuZ7gy7GNXJqjhNJS+lMBse9iNOPTtLG5kXBnsvkodXVEY59nJbE9tYF3lijY
+         KnOnWjWQQUBtarP9J/SOuFoQ48mQLEJ4pgIlK2N/am/mgMGnxUQgJKdvrT1CDyy3ohUP
+         5XljBgQlD8vDejOLyRVjhCpej2QMs/KaVhrgwH7Ze7hWpTC08RuW68xI2fhXdxkEakuf
+         zKSv6N1YKjriB7sJlBoioIkymeuEegSXROIa8co4lVkMTAicdk/HD8S07YUCmGFl43Yd
+         4nnA==
+X-Gm-Message-State: AOJu0Yx6R0CdeD1KVS6SPd6MzAYxfp8966zXOLb6CATzVgOcC8sng/Jp
+	zZQ6MEbuEWocquTFeCkwmirkT6obBDJr/7t0cKx57uTvz8/VjQS81bus62pBlBx8xZCeA34FMbS
+	MEtKMvA==
+X-Google-Smtp-Source: AGHT+IE9wihg2DUE9wMe1uBewTis98Pn0NhL63GVfRChMaBS7RR5F/95UGs1ENL/FJ9oET3ANvjVfA==
+X-Received: by 2002:a17:906:560e:b0:a35:3ce3:c48c with SMTP id f14-20020a170906560e00b00a353ce3c48cmr3281085ejq.23.1706502990139;
+        Sun, 28 Jan 2024 20:36:30 -0800 (PST)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id vu5-20020a170907a64500b00a313ba55c35sm3521262ejc.98.2024.01.28.20.36.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Jan 2024 20:36:29 -0800 (PST)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55c2c90c67dso1963484a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 20:36:29 -0800 (PST)
+X-Received: by 2002:a05:6402:2709:b0:55a:813f:8802 with SMTP id
+ y9-20020a056402270900b0055a813f8802mr3784740edd.25.1706502988865; Sun, 28 Jan
+ 2024 20:36:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 047/121] KVM: x86/mmu: Add a private pointer to struct
- kvm_mmu_page
-To: isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <3a97d83c79350c4a2ae10de86270ee8f8d0bf1e2.1705965635.git.isaku.yamahata@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <3a97d83c79350c4a2ae10de86270ee8f8d0bf1e2.1705965635.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <202401291043.e62e89dc-oliver.sang@intel.com>
+In-Reply-To: <202401291043.e62e89dc-oliver.sang@intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 28 Jan 2024 20:36:12 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
+Message-ID: <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
+Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
+To: kernel test robot <oliver.sang@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, oe-lkp@lists.linux.dev, lkp@intel.com, 
+	linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-
-On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
+On Sun, 28 Jan 2024 at 18:59, kernel test robot <oliver.sang@intel.com> wrote:
 >
-> For private GPA, CPU refers a private page table whose contents are
-> encrypted.  The dedicated APIs to operate on it (e.g. updating/reading its
-> PTE entry) are used and their cost is expensive.
->
-> When KVM resolves KVM page fault, it walks the page tables.  To reuse the
-> existing KVM MMU code and mitigate the heavy cost to directly walk private
-> page table, allocate one more page to copy the dummy page table for KVM MMU
-> code to directly walk.  Resolve KVM page fault with the existing code, and
-> do additional operations necessary for the private page table.  To
-> distinguish such cases, the existing KVM page table is called a shared page
-> table (i.e. not associated with private page table), and the page table
-> with private page table is called a private page table.  The relationship
-> is depicted below.
->
-> Add a private pointer to struct kvm_mmu_page for private page table and
-> add helper functions to allocate/initialize/free a private page table
-> page.
->
->                KVM page fault                     |
->                       |                           |
->                       V                           |
->          -------------+----------                 |
->          |                      |                 |
->          V                      V                 |
->       shared GPA           private GPA            |
->          |                      |                 |
->          V                      V                 |
->      shared PT root      dummy PT root            |    private PT root
->          |                      |                 |           |
->          V                      V                 |           V
->       shared PT            dummy PT ----propagate---->   private PT
->          |                      |                 |           |
->          |                      \-----------------+------\    |
->          |                                        |      |    |
->          V                                        |      V    V
->    shared guest page                              |    private guest page
->                                                   |
->                             non-encrypted memory  |    encrypted memory
->                                                   |
-> PT: page table
-> - Shared PT is visible to KVM and it is used by CPU.
-> - Private PT is used by CPU but it is invisible to KVM.
-> - Dummy PT is visible to KVM but not used by CPU.  It is used to
->    propagate PT change to the actual private PT which is used by CPU.
+>   21:   48 8b 47 f8             mov    -0x8(%rdi),%rax
+>   25:   48 85 c0                test   %rax,%rax
+>   28:   74 11                   je     0x3b
+>   2a:*  f6 40 78 02             testb  $0x2,0x78(%rax)          <-- trapping instruction
 
-Nit: one typo below.
+So this is
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+        struct tracefs_inode *ti = get_tracefs(inode);
+        struct eventfs_inode *ei = ti->private;
 
->
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> ---
->   arch/x86/include/asm/kvm_host.h |  5 ++
->   arch/x86/kvm/mmu/mmu.c          |  7 +++
->   arch/x86/kvm/mmu/mmu_internal.h | 83 +++++++++++++++++++++++++++++++--
->   arch/x86/kvm/mmu/tdp_mmu.c      |  1 +
->   4 files changed, 92 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 0cdbbc21136b..1d074956ac0d 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -841,6 +841,11 @@ struct kvm_vcpu_arch {
->   	struct kvm_mmu_memory_cache mmu_shadow_page_cache;
->   	struct kvm_mmu_memory_cache mmu_shadowed_info_cache;
->   	struct kvm_mmu_memory_cache mmu_page_header_cache;
-> +	/*
-> +	 * This cache is to allocate private page table. E.g.  Secure-EPT used
-> +	 * by the TDX module.
-> +	 */
-> +	struct kvm_mmu_memory_cache mmu_private_spt_cache;
->   
->   	/*
->   	 * QEMU userspace and the guest each have their own FPU state.
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 583ae9d6bf5d..32c619125be4 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -685,6 +685,12 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu, bool maybe_indirect)
->   				       1 + PT64_ROOT_MAX_LEVEL + PTE_PREFETCH_NUM);
->   	if (r)
->   		return r;
-> +	if (kvm_gfn_shared_mask(vcpu->kvm)) {
-> +		r = kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_private_spt_cache,
-> +					       PT64_ROOT_MAX_LEVEL);
-> +		if (r)
-> +			return r;
-> +	}
->   	r = kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_shadow_page_cache,
->   				       PT64_ROOT_MAX_LEVEL);
->   	if (r)
-> @@ -704,6 +710,7 @@ static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
->   	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache);
->   	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_shadow_page_cache);
->   	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_shadowed_info_cache);
-> +	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_private_spt_cache);
->   	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
->   }
->   
-> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-> index 97af4e39ce6f..957654c3cde9 100644
-> --- a/arch/x86/kvm/mmu/mmu_internal.h
-> +++ b/arch/x86/kvm/mmu/mmu_internal.h
-> @@ -101,7 +101,23 @@ struct kvm_mmu_page {
->   		int root_count;
->   		refcount_t tdp_mmu_root_count;
->   	};
-> -	unsigned int unsync_children;
-> +	union {
-> +		struct {
-> +			unsigned int unsync_children;
-> +			/*
-> +			 * Number of writes since the last time traversal
-> +			 * visited this page.
-> +			 */
-> +			atomic_t write_flooding_count;
-> +		};
-> +#ifdef CONFIG_KVM_MMU_PRIVATE
-> +		/*
-> +		 * Associated private shadow page table, e.g. Secure-EPT page
-> +		 * passed to the TDX module.
-> +		 */
-> +		void *private_spt;
-> +#endif
-> +	};
->   	union {
->   		struct kvm_rmap_head parent_ptes; /* rmap pointers to parent sptes */
->   		tdp_ptep_t ptep;
-> @@ -124,9 +140,6 @@ struct kvm_mmu_page {
->   	int clear_spte_count;
->   #endif
->   
-> -	/* Number of writes since the last time traversal visited this page.  */
-> -	atomic_t write_flooding_count;
-> -
->   #ifdef CONFIG_X86_64
->   	/* Used for freeing the page asynchronously if it is a TDP MMU page. */
->   	struct rcu_head rcu_head;
-> @@ -150,6 +163,68 @@ static inline bool is_private_sp(const struct kvm_mmu_page *sp)
->   	return kvm_mmu_page_role_is_private(sp->role);
->   }
->   
-> +#ifdef CONFIG_KVM_MMU_PRIVATE
-> +static inline void *kvm_mmu_private_spt(struct kvm_mmu_page *sp)
-> +{
-> +	return sp->private_spt;
-> +}
-> +
-> +static inline void kvm_mmu_init_private_spt(struct kvm_mmu_page *sp, void *private_spt)
-> +{
-> +	sp->private_spt = private_spt;
-> +}
-> +
-> +static inline void kvm_mmu_alloc_private_spt(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
-> +{
-> +	bool is_root = vcpu->arch.root_mmu.root_role.level == sp->role.level;
-> +
-> +	KVM_BUG_ON(!kvm_mmu_page_role_is_private(sp->role), vcpu->kvm);
-> +	if (is_root)
-> +		/*
-> +		 * Because TDX module assigns root Secure-EPT page and set it to
-> +		 * Secure-EPTP when TD vcpu is created, secure page table for
-> +		 * root isn't needed.
-> +		 */
-> +		sp->private_spt = NULL;
-> +	else {
-> +		/*
-> +		 * Because the TDX module doesn't trust VMM and initializes
-> +		 * the pages itself, KVM doesn't initialize them.  Allocate
-> +		 * pages with garbage and give them to the TDX module.
-> +		 */
-> +		sp->private_spt = kvm_mmu_memory_cache_alloc(&vcpu->arch.mmu_private_spt_cache);
-> +		/*
-> +		 * Because mmu_private_spt_cache is topped up before staring kvm
-s/staring/starting
+        if (!ei || !ei->is_events || ..
 
-> +		 * page fault resolving, the allocation above shouldn't fail.
-> +		 */
-> +		WARN_ON_ONCE(!sp->private_spt);
-> +	}
-> +}
-> +
-> +static inline void kvm_mmu_free_private_spt(struct kvm_mmu_page *sp)
-> +{
-> +	if (sp->private_spt)
-> +		free_page((unsigned long)sp->private_spt);
-> +}
-> +#else
-> +static inline void *kvm_mmu_private_spt(struct kvm_mmu_page *sp)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void kvm_mmu_init_private_spt(struct kvm_mmu_page *sp, void *private_spt)
-> +{
-> +}
-> +
-> +static inline void kvm_mmu_alloc_private_spt(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
-> +{
-> +}
-> +
-> +static inline void kvm_mmu_free_private_spt(struct kvm_mmu_page *sp)
-> +{
-> +}
-> +#endif
-> +
->   static inline bool kvm_mmu_page_ad_need_write_protect(struct kvm_mmu_page *sp)
->   {
->   	/*
-> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> index 87233b3ceaef..d47f0daf1b03 100644
-> --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> @@ -53,6 +53,7 @@ void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm)
->   
->   static void tdp_mmu_free_sp(struct kvm_mmu_page *sp)
->   {
-> +	kvm_mmu_free_private_spt(sp);
->   	free_page((unsigned long)sp->spt);
->   	kmem_cache_free(mmu_page_header_cache, sp);
->   }
+in set_top_events_ownership(), and it's that 'ei->is_events' test that oopses.
 
+The 'inode' is the incoming argument (in %rdi), and you don't see code
+generation for the "get_tracefs(inode)" because it's just an offset
+off the inode.
+
+So the "ti->private" read is that read off "-8(%rdi)", because
+
+  struct tracefs_inode {
+        unsigned long           flags;
+        void                    *private;
+        struct inode            vfs_inode;
+  };
+
+so 'private' is 8 bytes below the 'struct inode' pointer.
+
+So 'ei' isn't NULL, but it's a bad pointer, and 'ei->is_events' is
+that "testb  $0x2,0x78(%rax)" and it oopses as a result.
+
+I don't think this is directly related to that commit 852e46e239ee
+("eventfs: Do not create dentries nor inodes in iterate_shared") that
+the kernel test robot talks about.
+
+It looks like some inode creation never filled in the ->private field
+at all, and it's just garbage.
+
+I note that we have code like this:
+
+ create_dir_dentry():
+        ...
+        mutex_unlock(&eventfs_mutex);
+
+        dentry = create_dir(ei, parent);
+
+        mutex_lock(&eventfs_mutex);
+        ...
+        if (!ei->dentry && !ei->is_freed) {
+                ei->dentry = dentry;
+                eventfs_post_create_dir(ei);
+                dentry->d_fsdata = ei;
+        } else {
+
+and that eventfs_post_create_dir() seems to be where it fills in that
+->private pointer:
+
+        ti = get_tracefs(ei->dentry->d_inode);
+        ti->private = ei;
+
+but notice how create_dir() has done that
+
+        d_instantiate(dentry, inode);
+
+which exposes the inode to lookup - long before it's actually then filled in.
+
+IOW, what I think is going on is a very basic race, where
+create_dir_dentry() will allocate the inode and attach it to the
+dentry long before the inode has been fully initialized.
+
+So if somebody comes in *immediately* after that, and does a 'stat()'
+on that name that now is exposed, it will see an inode that has not
+yet made it to that eventfs_post_create_dir() phase, and that in turn
+explains why
+
+        struct eventfs_inode *ei = ti->private;
+
+just reads random garbage values.
+
+So if I'm right (big "if" - it looks likely, but who knows) this bug
+is entirely unrelated to any dentry caching or any reference counting.
+
+It just needs just the right timing, where one CPU happens to do a
+'stat()' just as another one creates the directory.
+
+It's not a big window, so you do need some timing "luck".
+
+End result: the d_instantiate() needs to be done *after* the inode has
+been fully filled in.
+
+Alternatively, you could
+
+ (a) not drop the eventfs_mutex around the create_dir() call
+
+ (b) take the eventfs_mutex around all of set_top_events_ownership()
+
+and just fix it by having the lock protect the lack of ordering.
+
+                 Linus
