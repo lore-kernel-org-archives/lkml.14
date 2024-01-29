@@ -1,149 +1,132 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84136155314
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B284D154445
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706542962; cv=none; b=aHYcITu5/+5NsiB82Mhq9NnPIpXCoXOOSo/EXEpH5rr4KvyZCqhYaBB9cxaYtAnzJelsmX0WQVc8w9IuR5Zlw3stY+/yXI6PyJNXcJwVq5OiCuNZaPw21qkt5KS1WaSjQAOXRbIguSpM37KgZszQmYpqU25c2HP1/9YRBVbr1Uo=
+	t=1706542968; cv=none; b=ILTYKAxF072bymuk1HOsjgjsY3VzYK/gbYA8KHkjMohEjrjsTdlFmAjviVil+rTiZ9Pm2Tzc2slXtujLlkVaLlQQE0p0pN8YnwCsZ6WiKZUPAwhdp2sf9E/iASQtOGAhLiXfYG/G40vZGd8VC1YoOnvRYUWk3aaiPP876VBFpWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706542962; c=relaxed/simple;
-	bh=xUWRBNQZVqitk4v7i63j+Unyd7Fb9W7l+PKYSUawyxw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j4m4XqRBro8eOsITz6getshbwwd5bIX67Sg77FNG0v+C+OAPy0AWpFSIuWdsFBiph//bejwy+aoxqqXa3hbeIn4UbUbZ8ynz6PeAO7uJwOt/2L5h4zhK6XWGW67nixsEY8rqRBcQnYdwU+EGy7ACsFhSHkq8mOo27FOL5TNVWEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C84EEDA7;
-	Mon, 29 Jan 2024 07:43:23 -0800 (PST)
-Received: from e127643.lan (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4DF813F738;
-	Mon, 29 Jan 2024 07:42:37 -0800 (PST)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v2 10/12] coresight: Add helper for atomically taking the device
-Date: Mon, 29 Jan 2024 15:40:41 +0000
-Message-Id: <20240129154050.569566-11-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129154050.569566-1-james.clark@arm.com>
-References: <20240129154050.569566-1-james.clark@arm.com>
+	s=arc-20240116; t=1706542968; c=relaxed/simple;
+	bh=E2pz83SaHUUBSu+k2FmR9GyqPifnumB7xkbI8/ZNP6c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IWFaXWHFRBCBbWbDo/0DDxIif28YEQMW3UIxoo+CQicxWTZ04VCWZlZsmOuWb+SSxEESv2foaU03G+qjA73MY9WYAHf8v09z0AObssPPWZpl83SB/7PBBH1OX2Vb+wgZ/VdaOceP1LelX1f0wlgQgsN6gx4KqY4a4/Yn2NR+05E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=MUe+POmJ; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="MUe+POmJ"
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 3C7EA3FD9F
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1706542962;
+	bh=FmVwiL7ssmvBS/Rk3AP7EZwNHMhnVZ9IcleUiv9ucoo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type;
+	b=MUe+POmJwanreQNkMuyXUEq1Gmq9m0Zpn4dwmRWFZQ5BzDHtJDEdYSbd9rki/VMhn
+	 dfeKT+ZUKscxbYDeyC3KelkrTJw1HbA7L9P7QTOlOe6BfmIElvg+wjzi/K0Jk+y0xF
+	 y65fe92JueevglKGclECrr2iB95ErVFt+4SCp2UZLlAY8GQysEiPd2itKVm//iUhZr
+	 KP7Xg0A+mkx/gS8biAlzu8ZQklRHklnZknAQTOd5MdTbkG/Gkcsst1k+IkrN4SLULj
+	 t69SIeJzDyouJzA+9nLCib2mpNC1TJbwZvsDwPTm9iVjqMNyeIwfjs2IswUrau5pcn
+	 9cKF1KwKjHLuw==
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a35a649c608so68701166b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:42:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706542961; x=1707147761;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FmVwiL7ssmvBS/Rk3AP7EZwNHMhnVZ9IcleUiv9ucoo=;
+        b=CAzXIZ0zmKI7X5VqKrT+MfGJHelkYOMir1Jffb7Bev4Nz9IGBQueMWv/AIZobyJrBZ
+         gS+fiGXIwpYMbJTvwLeH1d1NEHRWwliRxuLGZJSzGwuBD3ZDZJcWHLbG1I5oBPdFX+29
+         j57B0DKZvmFe2bynALPFriX+3ogHcbXprd2KK2OIK/rWBq4MYokvZroxePfvPdvIZfbS
+         rlyJ7sdSYIFfpocKRQci7I1a6+ne/iQO1zfQpJyrUouDJJPU+9bEXaLFd0cjMuTouRI9
+         XXomQUZ7zHhHxid2aU1K27OXqWLqk+xZMG4BfbQ+nGeIXH1nTjztNqXfwI2V5LSi3hlx
+         NGhA==
+X-Gm-Message-State: AOJu0Yy0PK5FqDesj2Za7uBWAOYwnEDlfRnZntdOfxSG3eb8kF5yADRV
+	LYX2k0CaQarD2X4IbYYrrA3t7bKyv5d+kphRjSCwC+CpNuzIG0xRXUD5yhfkq8dQ2rky+MzK+hM
+	EG+Dkl6advuu6piqLf65RhWMl02H1EivqoC3u3g2H6XRjH5k26X+IYUJJDkaV7fmStwuC7aPb/4
+	DVPg==
+X-Received: by 2002:a17:906:7f90:b0:a2c:3596:b0c1 with SMTP id f16-20020a1709067f9000b00a2c3596b0c1mr4985254ejr.75.1706542961640;
+        Mon, 29 Jan 2024 07:42:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF4WvBpWmKQPkCgy9/7v4IVO3JZ0fzYsBag+YDG8GPdLA0TxgRJEg58UOGotA/ZgDC9TpA24w==
+X-Received: by 2002:a17:906:7f90:b0:a2c:3596:b0c1 with SMTP id f16-20020a1709067f9000b00a2c3596b0c1mr4985242ejr.75.1706542961322;
+        Mon, 29 Jan 2024 07:42:41 -0800 (PST)
+Received: from amikhalitsyn ([91.64.72.41])
+        by smtp.gmail.com with ESMTPSA id fj18-20020a1709069c9200b00a3496fa1f7fsm4069969ejc.91.2024.01.29.07.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 07:42:40 -0800 (PST)
+Date: Mon, 29 Jan 2024 16:42:40 +0100
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: mszeredi@redhat.com, stgraber@stgraber.org,
+ linux-fsdevel@vger.kernel.org, Seth Forshee <sforshee@kernel.org>, Miklos
+ Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Bernd
+ Schubert <bschubert@ddn.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/9] fs/fuse: support idmapped getattr inode op
+Message-Id: <20240129164240.9e35bcf01695efcb1f966517@canonical.com>
+In-Reply-To: <20240120-heult-applaudieren-d6449392b497@brauner>
+References: <20240108120824.122178-1-aleksandr.mikhalitsyn@canonical.com>
+	<20240108120824.122178-5-aleksandr.mikhalitsyn@canonical.com>
+	<20240120-heult-applaudieren-d6449392b497@brauner>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Now that mode is in struct coresight_device, this pattern can be wrapped
-in a helper.
+On Sat, 20 Jan 2024 16:21:08 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- drivers/hwtracing/coresight/coresight-etm3x-core.c |  8 +++-----
- drivers/hwtracing/coresight/coresight-etm4x-core.c |  8 +++-----
- drivers/hwtracing/coresight/coresight-stm.c        |  8 +++-----
- include/linux/coresight.h                          | 11 +++++++++++
- 4 files changed, 20 insertions(+), 15 deletions(-)
+> >  int fuse_update_attributes(struct inode *inode, struct file *file, u32 mask)
+> >  {
+> > -	return fuse_update_get_attr(inode, file, NULL, mask, 0);
+> > +	return fuse_update_get_attr(&nop_mnt_idmap, inode, file, NULL, mask, 0);
+> >  }
+> >  
+> >  int fuse_reverse_inval_entry(struct fuse_conn *fc, u64 parent_nodeid,
+> > @@ -1506,7 +1510,7 @@ static int fuse_perm_getattr(struct inode *inode, int mask)
+> >  		return -ECHILD;
+> >  
+> >  	forget_all_cached_acls(inode);
+> > -	return fuse_do_getattr(inode, NULL, NULL);
+> > +	return fuse_do_getattr(&nop_mnt_idmap, inode, NULL, NULL);
+> >  }
+> >  
+> >  /*
+> > @@ -2062,7 +2066,7 @@ static int fuse_setattr(struct mnt_idmap *idmap, struct dentry *entry,
+> >  			 * ia_mode calculation may have used stale i_mode.
+> >  			 * Refresh and recalculate.
+> >  			 */
+> > -			ret = fuse_do_getattr(inode, NULL, file);
+> > +			ret = fuse_do_getattr(&nop_mnt_idmap, inode, NULL, file);
+> >  			if (ret)
+> >  				return ret;
+> 
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-index a8be115636f0..ce2b3ed90fb9 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-@@ -556,14 +556,12 @@ static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
- 		      enum cs_mode mode)
- {
- 	int ret;
--	u32 val;
- 	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 
--	val = local_cmpxchg(&drvdata->csdev->mode, CS_MODE_DISABLED, mode);
--
--	/* Someone is already using the tracer */
--	if (val)
-+	if (!coresight_take_mode(csdev, mode)) {
-+		/* Someone is already using the tracer */
- 		return -EBUSY;
-+	}
- 
- 	switch (mode) {
- 	case CS_MODE_SYSFS:
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index 3480b563981c..8fca7fc379e6 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -840,13 +840,11 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
- 		       enum cs_mode mode)
- {
- 	int ret;
--	u32 val;
- 
--	val = local_cmpxchg(&csdev->mode, CS_MODE_DISABLED, mode);
--
--	/* Someone is already using the tracer */
--	if (val)
-+	if (!coresight_take_mode(csdev, mode)) {
-+		/* Someone is already using the tracer */
- 		return -EBUSY;
-+	}
- 
- 	switch (mode) {
- 	case CS_MODE_SYSFS:
-diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-index af9b21224246..80fed4c377f1 100644
---- a/drivers/hwtracing/coresight/coresight-stm.c
-+++ b/drivers/hwtracing/coresight/coresight-stm.c
-@@ -193,17 +193,15 @@ static void stm_enable_hw(struct stm_drvdata *drvdata)
- static int stm_enable(struct coresight_device *csdev, struct perf_event *event,
- 		      enum cs_mode mode)
- {
--	u32 val;
- 	struct stm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 
- 	if (mode != CS_MODE_SYSFS)
- 		return -EINVAL;
- 
--	val = local_cmpxchg(&csdev->mode, CS_MODE_DISABLED, mode);
--
--	/* Someone is already using the tracer */
--	if (val)
-+	if (!coresight_take_mode(csdev, mode)) {
-+		/* Someone is already using the tracer */
- 		return -EBUSY;
-+	}
- 
- 	pm_runtime_get_sync(csdev->dev.parent);
- 
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index c5be46d7f85c..175d184b3a1b 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -580,6 +580,17 @@ static inline bool coresight_is_percpu_sink(struct coresight_device *csdev)
- 	       (csdev->subtype.sink_subtype == CORESIGHT_DEV_SUBTYPE_SINK_PERCPU_SYSMEM);
- }
- 
-+/*
-+ * Atomically try to take the device and set a new mode. Returns true on
-+ * success, false if the device is already taken by someone else.
-+ */
-+static inline bool coresight_take_mode(struct coresight_device *csdev,
-+				       enum cs_mode new_mode)
-+{
-+	return local_cmpxchg(&csdev->mode, CS_MODE_DISABLED, new_mode) ==
-+	       CS_MODE_DISABLED;
-+}
-+
- extern struct coresight_device *
- coresight_register(struct coresight_desc *desc);
- extern void coresight_unregister(struct coresight_device *csdev);
--- 
-2.34.1
+Hi, Christian!
+
+> These are internal getattr requests that don't originate from a specific mount?
+
+These requests do originate from a specific mount, but we don't need an idmapping in there
+because 3rd argument of fuse_do_getattr(struct mnt_idmap *idmap, struct inode *inode, struct kstat *stat, struct file *file) is NULL,
+which means that this request will not fill an stat structure => we don't need to take an idmapping into account.
+
+> Can you please add a comment about this in the commit message so it's
+> clear why it's ok to not pass the idmapping?
+
+Sure, that's my bad that I haven't added this explanation! It's not obvious at all.
+
+Will be fixed in -v2.
+
+Thanks,
+Alex
 
