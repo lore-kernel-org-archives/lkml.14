@@ -1,111 +1,133 @@
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA605B5DE
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706526401; cv=none; b=ILkHfneUoAqw6rSoNItDLsBHwl8qaTMFaVAi6V7J4uLR5TwbMbbVbZjDdRlNu+7TNjKgafzWfdeWU0S9aBp0wXPDe83TMJUOeMikVhY8UMBFxKV9qL5dOtcrN3d61S7Bcyxepzujy81UsOerAyBkSPOy9H91BO5dJ8EJpGZoOSs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706526401; c=relaxed/simple;
-	bh=bN8edVEibQUi4cNIoeXwKAWhUhuvpW1rx432LV6Rp34=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TidUNRCYrll1QfEGHtW3QJg9PUlh4qrcfFYUAVlGiu0PFwbKy5mapQIF1sg7qiJE7k+WjbQJxYfrLJxn2YID7PSwVZC5RKjd+pL3BOIi83AGs/mQ3t+z34EyiZY5kOS1Teqez1IM4KQzpp8l3qtYHQvWPVD0CalrjKDsaWjFpAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:3b5f:c6ad:b5fc:a0f3])
-	by laurent.telenet-ops.be with bizsmtp
-	id gb6X2B0022ZPkuY01b6XDK; Mon, 29 Jan 2024 12:06:31 +0100
-Received: from geert (helo=localhost)
-	by ramsan.of.borg with local-esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rUPTC-00GgzQ-W5;
-	Mon, 29 Jan 2024 12:06:31 +0100
-Date: Mon, 29 Jan 2024 12:06:30 +0100 (CET)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: linux-kernel@vger.kernel.org
-cc: sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, intel-xe@lists.freedesktop.org
-Subject: Re: Build regressions/improvements in v6.8-rc2
-In-Reply-To: <20240129104954.1778339-1-geert@linux-m68k.org>
-Message-ID: <8ea40b3-adde-acb5-5e46-fe1fd395daf@linux-m68k.org>
-References: <CAHk-=wgxzm+Oc1ywuNGxb1R1=ZEC85LJi776R2QEpk6=_2Qfdw@mail.gmail.com> <20240129104954.1778339-1-geert@linux-m68k.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41185B20F;
+	Mon, 29 Jan 2024 11:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706526405; cv=fail; b=oQE0k1tKJgRjbWOxQGKvHa+wmAt+ohpHUjPJ9LRPkRjGZ2hSIvZi68PzV0cGuUIiIaRg3p+6AbN819jlAX1nnwHwtFTXmXJ5fiTS9X+QcYB1IpgPo3AQKEBsDcUDtA/eefZGCftO4JN8DGahllFMM7ijZYLJmHGzKXI4F8HI4J8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706526405; c=relaxed/simple;
+	bh=cpOVrc9/MOdrbbpJOB4L6QJLF1b077f9hPEqEjZFW2k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XqlVhV/c6rEnS3BDgICqPuY9afpek0hlxU9LowuXHN0XkcTa2FhujmTGtQA9fbJhHy9yA/4r/Mjgj0mAy3CMWYmnSbD8HcrRXQdX0nLl6hFkBhh/a657tHdwPDQJrO0GlfUjbnQw32ifohmVXKEVBYgb5+sUlL9dnC4++cJEOkk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TNEMBc1Y; arc=fail smtp.client-ip=40.107.220.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TNEMBc1Y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j99hY19GXgs1cw+A/Fl/sgvQ3ZoYKoJQ/95KndVe7lXVPHM+BHMOQ71Z7ZvxyT3QlT9j6DsOpjAmDFfvSWHFTquUdy2A959p2oNLDcWKpVVLJ3yVYjrybUd9tEoNTA21kDaFYvVz8qtU+eWSDezCTFhnYxrCXOhnGG8L9wyExCinzUjzxRHe9XiMtMYnBZpWp6uyVPN9LIcyuNVgDyTWvqUGh+yF+KM/e2JrnGMpU186lslNTmRl2UEyIn+4ZYh1FrQ4BAQomr5YK0MVjrFH6uee9ulA0o2AIDZOQnEtGJFkPSZ7CoRsb9iCkD4bi2ZViKAKMak35mUswnFT0tieIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EP9ieVX1UQvN4X57w19jA4iL9iEmQEJ7qkwoCo4wLis=;
+ b=MQc47D5yvvzuIoJ1mukOm8xIng4pwHc+BwIF3NduwkkfYGmAkZR98UEoJJcN7tqrYQGaVoZl04EhFCqn5g8bPIf0UZsDEzjPsGUr3KAm37lFnByhlOOijRYAOseVRYrW3O6eyiD33m4JQKYHFzjAz5A/IysuEkY6gQ4zuHAkqhjVxLs93KQ8X89Zet4JRdfc21mKcVQA/S5ACK6CWc1pmvVLnJkcypNFmi0Jup0Z7gOY7Fg6WlyInfsoCdBoM64o0Wdp4f3sorK65aFHymQqgoyOLC4PaIluyTrNPgIokeCfUAXRb5mbJoPekusoyl7uKqsybtISSz8sJpV3xMvpfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EP9ieVX1UQvN4X57w19jA4iL9iEmQEJ7qkwoCo4wLis=;
+ b=TNEMBc1YAoBdRxbakfy1ZuUAMCICaAvLHQOLF4bbAytiG390T5jidpvclcNxR7BycMlqxufBS3dlUHRw45herEDB5a4e5xWOjDxRNdRIT87LjYrrmoRWNzMnC/n5+bUz/Y3uzK3XHljKRVYgJRzlVOr9tegfyaW6g3oW4PxNA8s=
+Received: from DM6PR21CA0023.namprd21.prod.outlook.com (2603:10b6:5:174::33)
+ by PH0PR12MB8774.namprd12.prod.outlook.com (2603:10b6:510:28e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
+ 2024 11:06:39 +0000
+Received: from DS1PEPF0001709C.namprd05.prod.outlook.com
+ (2603:10b6:5:174:cafe::5a) by DM6PR21CA0023.outlook.office365.com
+ (2603:10b6:5:174::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.10 via Frontend
+ Transport; Mon, 29 Jan 2024 11:06:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0001709C.mail.protection.outlook.com (10.167.18.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7228.16 via Frontend Transport; Mon, 29 Jan 2024 11:06:39 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 29 Jan
+ 2024 05:06:33 -0600
+From: Sandipan Das <sandipan.das@amd.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <x86@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<acme@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<namhyung@kernel.org>, <adrian.hunter@intel.com>, <tglx@linutronix.de>,
+	<bp@alien8.de>, <eranian@google.com>, <irogers@google.com>,
+	<mario.limonciello@amd.com>, <ravi.bangoria@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
+Subject: [PATCH v3 0/3] perf/x86/amd: Miscellaneous fixes
+Date: Mon, 29 Jan 2024 16:36:23 +0530
+Message-ID: <cover.1706526029.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709C:EE_|PH0PR12MB8774:EE_
+X-MS-Office365-Filtering-Correlation-Id: aca20f6a-97eb-458e-c9fc-08dc20ba5df2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	YY2ocIT/h3NoTqlrOUaWyxXPddf3Fld8OFMzcCNTbPTpoCFJ/WO4xuxSk5jmUYx3wnJB6fZgC/4O9hceeP6nCM0mpxHdyX4koUWyBKKiFZEOLre9JPm83ruTSVZ1T2n2MhUl2/IZ5/9CgwqnxZYMZDabl0zSYQYW4RuCcqSTGErC381FCmNQTcqfoc3Ph+hGAgKvvvlEkFAPP6uA5Rrs7BJ0h9KTwqng5t1m7y810mEaaCpjq5gGPNBif4cHFvCnK92dVCr7RAtX6NPOFwcYh3n6CnwWTQ8YY9/joeA+CACTl5GjXyKIueXW8UFWP6MbFkPQsLLdWJ3hMi17QIJdva/vAoTFs6lPQQ4kc+P7hlLqycHzKH6kgNsxSLsssL6H42pLgreq4qA8pzvQcHRZ+0omb5kT8dmoZaQc5e1hvnfk1o5Im9xLtoNLdmt41wRMSK1ts9EmYdg9VXLsudKGYuThQEC0Z6G0EXC45W7Zpb/L3n03ureOA324i4++Zm8gcX2GUOXaG5yDUcu/4yy0mTWbdEkds/3a4UhY2mKEwHgi9OUVXvjz6SERdHyfKqppE9Ab5q/R8LnZuJuP7tJnw2o2zsdVAbu+wT4deClmgEjCR+gkqREMjhHatHaGksbimI4Jx9YcT9SdbNnh50h5dhLq1xPtrr3a2rJTE0OxobQAWISrWmRIkPVW7f3NO/lkIxu22DXG2QiyUIjQtA9mAZzJhPqzEnzqILw0q+6XksySsNflQoaCnvt13eI5loDOIasshKM+yHfIp2TIncXe3g==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(376002)(346002)(39860400002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(82310400011)(36840700001)(40470700004)(46966006)(426003)(336012)(26005)(16526019)(83380400001)(6666004)(2616005)(36860700001)(47076005)(5660300002)(44832011)(7416002)(4326008)(8676002)(8936002)(41300700001)(2906002)(478600001)(966005)(316002)(54906003)(110136005)(70586007)(70206006)(86362001)(36756003)(82740400003)(356005)(81166007)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 11:06:39.0716
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aca20f6a-97eb-458e-c9fc-08dc20ba5df2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709C.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8774
 
-On Mon, 29 Jan 2024, Geert Uytterhoeven wrote:
-> JFYI, when comparing v6.8-rc2[1] to v6.8-rc1[3], the summaries are:
->  - build errors: +26/-14
+Contains fixes w.r.t usage of LBR Freeze, Erratum 1452 and a bug in the
+CPU offline path where PMU-related registers are reset.
 
+Previous versions can be found at:
+v2: https://lore.kernel.org/all/cover.1704103399.git.sandipan.das@amd.com/
+v1: https://lore.kernel.org/all/cover.1702833179.git.sandipan.das@amd.com/
 
-   + /kisskb/src/arch/sparc/kernel/setup_64.c: error: no previous prototype for 'alloc_irqstack_bootmem' [-Werror=missing-prototypes]:  => 602:13
+Changes in v3:
+ - As suggested by Boris, update the commit message of the first patch
+   with the reason behind making the LBR and PMC Freeze feature bit
+   visible in /proc/cpuinfo.
 
-sparc64-gcc{5,1[123]}/sparc64-{allno,def}config
+Changes in v2:
+ - Make the LBR and PMC Freeze feature bit visible in /proc/cpuinfo. As
+   suggested by Stephane, this will be useful to determine if it is
+   feasible to perform kernel FDO on a system.
 
-   + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' specified bound between 4294967240 and 4294967263 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]:  => 298:17
-   + /kisskb/src/drivers/gpu/drm/nouveau/nvif/object.c: error: 'memcpy' specified bound between 4294967264 and 4294967287 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]:  => 161:9
+Sandipan Das (3):
+  perf/x86/amd/lbr: Use freeze based on availability
+  perf/x86/amd/lbr: Discard erroneous branch entries
+  perf/x86/amd/core: Avoid register reset when CPU is dead
 
-parisc-gcc1[23]/generic-32bit_defconfig
-parisc-gcc1[23]/parisc-{allmod,def}config
+ arch/x86/events/amd/core.c         |  5 ++---
+ arch/x86/events/amd/lbr.c          | 22 ++++++++++++++--------
+ arch/x86/include/asm/cpufeatures.h |  2 +-
+ arch/x86/kernel/cpu/scattered.c    |  1 +
+ 4 files changed, 18 insertions(+), 12 deletions(-)
 
-   + /kisskb/src/drivers/hwmon/pc87360.c: error: writing 1 byte into a region of size 0 [-Werror=stringop-overflow=]:  => 383:51
+-- 
+2.34.1
 
-arm64-gcc12/arm64-allmodconfig
-parisc-gcc12/parisc-allmodconfig
-
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1045' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1065' declared with attribute error: FIELD_PREP: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1084' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1095' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1137' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1139' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1148' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_1150' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_924' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_935' declared with attribute error: FIELD_GET: mask is not constant:  => 435:38
-
-in drivers/gpu/drm/xe/xe_guc_ct.c:526
-arm64-gcc5/arm64-allmodconfig
-powerpc-gcc5/powerpc-all{mod,yes}config
-powerpc-gcc5/ppc{32,64le,64_book3e}_allmodconfig
-(seen before in v6.8-rc1, with different assertion numbers)
-
-   + /kisskb/src/include/linux/fortify-string.h: error: writing 16 bytes into a region of size 0 [-Werror=stringop-overflow=]:  => 57:33
-
-in drivers/gpu/drm/xe/xe_gt_pagefault.c:340
-arm64-gcc13/arm64-allmodconfig
-s390x-gcc13/s390-all{mod,yes}config
-
-   + {standard input}: Error: displacement to undefined symbol .L101 overflows 8-bit field :  => 593
-   + {standard input}: Error: displacement to undefined symbol .L104 overflows 8-bit field :  => 588
-   + {standard input}: Error: displacement to undefined symbol .L139 overflows 8-bit field :  => 606
-   + {standard input}: Error: displacement to undefined symbol .L73 overflows 12-bit field:  => 594
-   + {standard input}: Error: displacement to undefined symbol .L74 overflows 8-bit field :  => 585
-   + {standard input}: Error: displacement to undefined symbol .L75 overflows 12-bit field: 606, 586 => 589, 606, 586
-   + {standard input}: Error: displacement to undefined symbol .L76 overflows 8-bit field : 577 => 580, 577
-   + {standard input}: Error: displacement to undefined symbol .L80 overflows 8-bit field : 601 => 601, 607
-   + {standard input}: Error: displacement to undefined symbol .L81 overflows 8-bit field : 606, 604 => 604, 610, 606
-   + {standard input}: Error: displacement to undefined symbol .L96 overflows 12-bit field:  => 602
-   + {standard input}: Error: displacement to undefined symbol .L99 overflows 12-bit field:  => 607
-
-The usual SH ICE crickets.
-
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/41bccc98fb7931d63d03f326a746ac4d429c1dd3/ (all 239 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/6613476e225e090cc9aad49be7fa504e290dd33d/ (all 239 configs)
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
