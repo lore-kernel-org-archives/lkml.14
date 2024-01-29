@@ -1,123 +1,139 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC15C537E8
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E4454672
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 08:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706516926; cv=none; b=p2X41jtXXEcdS7mQD7JBaazRNvY7yr55BCJTGtAapwEkYRAbbZK/RGLk8DQNh1ACPnP6oJ9a2Kx91Go3XaIlVI6wqAl+XFazn1facHf4gNy2aR/hyqOYbMAsXBOZHX4sBs5tElyX1wpQyu5M9P8+VIEYkNb08IYfJxiB2jj5R/M=
+	t=1706517115; cv=none; b=djsQdaFv1PXX2a9FpyecFZEevAjYDTsveh55rHkmPTO7l1ue4KUQEGYfgzRygjKupPxvufbdeNzUCOAtr8WjQ2Wvzl//cwo/9VE8fpC1NRpQA9tCeuQ/P9x5tiNrXiKcLuUHS5PzMV4mSlkIb0ykYU3/kxoe8eMrhT9ueK4rs2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706516926; c=relaxed/simple;
-	bh=/pjA2KSaka0lLZ5DWjNHdib5zf0h8Lj0U5/77I1Pkgw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LpynWA//bdH4Aam8vge/QKzKk8/A9EzPSMnIX/wrAzq22/cCf5nM9VsmKIP8QlO2Vyp0xYJsH0rM0zBLK6fdXxy3J0yiQk0CNizPJ7HNTcsP6LCSJeRAOnZeUFKrLnlIx9RQ2IMyC7o5z4uvoTqPaaTaV91H3/+xEdiHUApBP18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=G9pgIXwJ; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1706517115; c=relaxed/simple;
+	bh=DwijenbgAaGe65floQQ8H4kAuFmmzEQgZDuMiAmM2rY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q+mqrKZgOdO4e65zLstYBhbte9i7OJBiYQzITvQQSLakNUAtztkJiIePsShjiaIEY00cKOeg3tTfRQ4T4AFiih7fWtha5jZInWSSxDMrjmELDV/Hh27EdN31+VxFhlbsTN6j/lTBDBA71wf+gYJhVLiQm9XhH9GQWXHoN3aRSH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ye2e94tA; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="G9pgIXwJ"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55a90a0a1a1so1815507a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 00:28:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ye2e94tA"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d03fde0bd9so14886011fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 00:31:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706516922; x=1707121722; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hd11WU3DwyoDiQmIHC9dAoBbMr9OMPEBjtClwqo3z+E=;
-        b=G9pgIXwJapfcPZRGiMp4V9K3NPqm2iQV+Z2eihDPdD80IYPYx4u5A5TonoB3DwxFne
-         6zGviSYyfGNENmIVShGCTIJs4yYDpIUnBzgDLbz+7BKBb3TOxCFU2xhPR5n546hfcpZ5
-         mxxmMEI/CT2/vc+8RCuRsupeYw+GVhEx2rnR//06fbaMR5ftz5T7h+mLT8s1NGkbtUIw
-         o3Z2fi0fASx6kikRpwrex8kxULA4qdTMNEeoinPoi/kdu76t4qaIfa4R2At8rngHP4X4
-         MwoK4cZdQoa83Yv9HZhqNaiPS7Xh1MUEBsZhokrg6bNUbTyXEnYbretioueebj/mRVs9
-         ENBg==
+        d=linaro.org; s=google; t=1706517111; x=1707121911; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wIUsDtI5BQJYaVvJla8GNSNJmChWHmzjn8aW95ejbQg=;
+        b=ye2e94tAaYytaMIRcVKYSxhFn2oeoa1yntc2bMtBYIPwtgYyJpahoBsdcwFSbc6Lqv
+         YiLHti4Tlxq04AjrZb+zbTecnxamZn6g1RY/BN9ajmdGoaKnGoPwoyOeeL4k8yztQ8Ea
+         9RKnYnJGWqJixOtkUXW/lf/ro8QpltEQRR1qEB28Xf7VoO958qqm2KCXp60D0xCYNAlm
+         Epmh/po5EHjj/AWYjGgY8KwBgW6HoucgMLNbFK8JO3I/9fXmBgpq/mkn0EERqzxTxK7C
+         GsHRiJpqIUT7Mzs2GfDtCd4Cb79NbYes9ksDgO7RdU9VgQ/+u2VSNRY5T7VEQF6z4Kak
+         9jpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706516922; x=1707121722;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hd11WU3DwyoDiQmIHC9dAoBbMr9OMPEBjtClwqo3z+E=;
-        b=Z6p3hIUFpY2WAGzKitF94DDM8E/Vg3TMMT1lNDOsr5Hh8ZhjZK+EJV1HAYWBzPfyhj
-         GXTD2FBf/E7q8XImV7akfd/m/zoQSwcKsAK9qbObQBk2nx8JV12gpPpvRVUGvae/Hz+J
-         nQZC1aWuPAlFPewjcqu+VflkNQFpPpTPqMzwSnukPZ335MWNKexsy0jD+cKoUMC/IDtm
-         g10I5AgL5SK64bn3He5UvwfTjBX4TvJhhmQOiIVcUEW9IiQHcyxG5YH4/8kgiil4gbli
-         LYvj80MrTSIOGfQTTbdDD0Dbph6BOTXy2QIiGrZLrcD4KiZOfZIxnBloZUV6oVPVrf8g
-         OigA==
-X-Gm-Message-State: AOJu0YzF93wac860VFyZH8s7DiXU3wPV6N/+ryDYvRCZclUzJo19LOwz
-	V6KlXNr3ixn7/+j1bH9e10UrEOAtEEKyL2QS4heM3Vaz9fEBxVV2xPA7IZKFrS+FiUbKPrsLDr2
-	2kKCZvuetF/MdQfLshi06k6Rdzt2WiuswqJqWCg==
-X-Google-Smtp-Source: AGHT+IFacY4fVBAqo3eoUiC3SDYNIryPK6IalhO4mwElYxnAhkKVJG35uT7HJpRO66DjFSDiv+wfUR6R4GBsWpAbKMc=
-X-Received: by 2002:a17:906:5fc6:b0:a35:edda:ca88 with SMTP id
- k6-20020a1709065fc600b00a35eddaca88mr192229ejv.66.1706516922072; Mon, 29 Jan
- 2024 00:28:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706517111; x=1707121911;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wIUsDtI5BQJYaVvJla8GNSNJmChWHmzjn8aW95ejbQg=;
+        b=u6BfUhe8UdLCtHFHnNVgPyiKGp5lyD6YSObadbCkNZdQGMiZGEe+/RZwnSIgTMX4nU
+         se9VzdPRWWIDrWZeZKngloOyz5rUztuQLwviIneJEau6zBfs1g/Rfr8wZ+PEKp7/uUlw
+         mniCdBTVpf7Peqlh0mS/3Fw4zxpYlyKfGIVzU1QOYLngXhpnV3EvvMcq8qoYaiK8zQkb
+         TCOMjBDEO4/EqVybtB5Qd5TqxnXvH715obdBaqqgBonUP8k2T1/JaE8C+9HrnTAjvzci
+         1ryAATP0zUDq349igQ6bRqh+Ka5MqeYeE9BDrzs86rdtlEA/6R67IJs/EiyKYw033rj6
+         IpuA==
+X-Gm-Message-State: AOJu0YzOPCqlaOPdPNkv920LHsYwDU/t3ETFzs6otvFb8ljkdJQ1gLkK
+	jJowwJ5Xbhlmtg+Q+3WbCMwWkMVF9jOAL63LbqXnHrTjkRGa15iXIM5fQ+8Dtqw=
+X-Google-Smtp-Source: AGHT+IGF5VHXRW26CwWaEs+GE/5MEiQTpp7UNH8XTpHHu4qLu6+OTK9kCL1vOZn1xNQxrdOpsbXeFQ==
+X-Received: by 2002:a2e:9e81:0:b0:2d0:50c0:41f1 with SMTP id f1-20020a2e9e81000000b002d050c041f1mr554857ljk.28.1706517111381;
+        Mon, 29 Jan 2024 00:31:51 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id j17-20020aa7c351000000b0055c4a251205sm3456371edr.90.2024.01.29.00.31.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 00:31:50 -0800 (PST)
+Message-ID: <1d8c00d2-bc43-41ff-8b35-a35eea378225@linaro.org>
+Date: Mon, 29 Jan 2024 09:31:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240128120405.25876-1-alexghiti@rivosinc.com> <CAEEQ3wmXvnqdvv39JZhkfUsoLbJr4B2WwdgWnGY=aHgE8A-+0g@mail.gmail.com>
-In-Reply-To: <CAEEQ3wmXvnqdvv39JZhkfUsoLbJr4B2WwdgWnGY=aHgE8A-+0g@mail.gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Mon, 29 Jan 2024 09:28:31 +0100
-Message-ID: <CAHVXubgjF9z6-0HpjPewaHsG-6ub1BC=E5sZaqVwcFXj=7R_pw@mail.gmail.com>
-Subject: Re: [External] [PATCH -fixes] riscv: Flush the tlb when a page
- directory is freed
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: Will Deacon <will@kernel.org>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Samuel Holland <samuel.holland@sifive.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] dt-bindings: arm: msm: Add llcc Broadcast_AND
+ register region
+Content-Language: en-US
+To: Unnathi Chalicheemala <quic_uchalich@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <cover.1706296015.git.quic_uchalich@quicinc.com>
+ <f86592f43523ec7f025121379a61ed37962ff672.1706296015.git.quic_uchalich@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <f86592f43523ec7f025121379a61ed37962ff672.1706296015.git.quic_uchalich@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Yunhui,
+On 26/01/2024 20:47, Unnathi Chalicheemala wrote:
+> The LLCC block in SM8450, SM8550 and SM8650 has a new register
+> space for Broadcast_AND region. This is used to check that all
+> channels have bit set to "1", mainly in SCID activation/deactivation.
+> 
+> Previously we were mapping only the Broadcast_OR region assuming
+> there was only one broadcast register region. Now we also map
+> Broadcast_AND region.
+> 
+> Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
 
-On Mon, Jan 29, 2024 at 4:07=E2=80=AFAM yunhui cui <cuiyunhui@bytedance.com=
-> wrote:
->
-> Hi Alexandre,
->
-> On Sun, Jan 28, 2024 at 8:04=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosi=
-nc.com> wrote:
-> >
-> > The riscv privileged specification mandates to flush the TLB whenever a
-> > page directory is modified, so add that to tlb_flush().
-> >
-> > Fixes: c5e9b2c2ae82 ("riscv: Improve tlb_flush()")
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > ---
-> >  arch/riscv/include/asm/tlb.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/riscv/include/asm/tlb.h b/arch/riscv/include/asm/tlb.=
-h
-> > index 1eb5682b2af6..50b63b5c15bd 100644
-> > --- a/arch/riscv/include/asm/tlb.h
-> > +++ b/arch/riscv/include/asm/tlb.h
-> > @@ -16,7 +16,7 @@ static void tlb_flush(struct mmu_gather *tlb);
-> >  static inline void tlb_flush(struct mmu_gather *tlb)
-> >  {
-> >  #ifdef CONFIG_MMU
-> > -       if (tlb->fullmm || tlb->need_flush_all)
-> > +       if (tlb->fullmm || tlb->need_flush_all || tlb->freed_tables)
-> >                 flush_tlb_mm(tlb->mm);
->
-> Why is it necessary to flush all TLB entries of the process?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-That's quite heavy but that's the only to flush any "intermediate"
-cache that would cache non-leaf PTEs, the specification mentions this:
+Best regards,
+Krzysztof
 
-"If software modifies a non-leaf PTE, it should execute SFENCE.VMA
-with rs1=3Dx0. If any PTE along the traversal path had its G bit set,
-rs2 must be x0; otherwise, rs2 should be set to the ASID for which the
-translation is being modified."
-
-That was the behaviour before commit c5e9b2c2ae82 ("riscv: Improve
-tlb_flush()").
-
->
-> Thanks,
-> Yunhui
