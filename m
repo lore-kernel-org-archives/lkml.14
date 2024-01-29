@@ -1,239 +1,79 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7515A56477;
-	Mon, 29 Jan 2024 10:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6810458AC2
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706525285; cv=none; b=HJ+fyC09B7oNY4qfAV3WsZ+C0Hemaiax6gRF0Xcs3E45m70Gi3s4fOOxV/oNrP3xY3qwZtQ/MIKHyA5/0W0khA7RY+vBmiVW7mUkt8Df7pHwgyXyfvk631Uqxpa2KHNWCPktNgfk3Z8O08zeokYksYCsDSU/MbIbPu+ZPAALuV8=
+	t=1706525295; cv=none; b=f9PBGnwDzWvY0cuHX5NCLsaM1J5wPjIMppIgOxsxUGmuz85G498qCw3Et/YDVChaNgH3dnAfUHC/Q7Y31OV0XHzPLpL7HTZUKG4NqqzQsUQ3IlHW0kCr3IFfxS5RlLP96+qhr53Pl+xfIqdnT4oAywara/1hR/+QapldAZdKTB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706525285; c=relaxed/simple;
-	bh=c9IPpZ4cFHbqHl/lU3bqD7/v37yb5IFOVeyY3t8Gy/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bL74TZ5FTc+YMab6O8QsDSCdSY+BEcVlOCKspNGCKh6wtwAUl64eZVirRUThD7Vm5uiYjLrwCZKgD2rMDVtZkhNWvvoP0zsB1dHBFZMrpwAxU4zfbe0LIi6fZe1mYqE58YHRFw4u5kG/+NrCDKDChuq3EZtQJsIc/4+24qsEyKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VX9e2rP6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VX9e2rP6"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40T8sO0g012993;
-	Mon, 29 Jan 2024 10:47:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=Ij2Rapdm3IU0nLKbuSjeynA+xLwbQej0VShoWHYQmTI=;
- b=VX9e2rP6cgm1T+3AfvrEovdzvPl+1o9WM1j4gbyF8sPupu5P0r8sbQuT0Oa6/vLHnJ+X
- 4EFj6aeg+zAe5O6DZX7ZyQuwDwv7hku/yCSUP/EWd43Seaiq0/5FkHnIhdAn6h08fHFf
- rs/yupBXAQH7Puc1fs0/qZqBpK9zRoK6yLjyo0Vg3Q/Z73EBEEOr0CeZCTNmlG29l70n
- MWTOW3qKZrM1Fp5QWMnt/yHUzUWHNTK25ewPAoCgJGtUErIb1fnutQFQJosGWZVyI2ZM
- MMRT/8H3qWzi3yyxtFZ4zXTsHXaS9C/klKxIYshMzzOD1Esj0AtWwqHIHBvl99Qkec6v YQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vx75bmtxb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:47:51 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40T9CiDI011814;
-	Mon, 29 Jan 2024 10:47:51 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vx75bmtwv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:47:50 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40TAIF75002319;
-	Mon, 29 Jan 2024 10:47:49 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vwc5syy1j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 10:47:49 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40TAlkHY64750026
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jan 2024 10:47:46 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C06F520040;
-	Mon, 29 Jan 2024 10:47:46 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4C68B20049;
-	Mon, 29 Jan 2024 10:47:44 +0000 (GMT)
-Received: from li-a83676cc-350e-11b2-a85c-e11f86bb8d73.ibm.com (unknown [9.204.204.156])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 29 Jan 2024 10:47:44 +0000 (GMT)
-Date: Mon, 29 Jan 2024 16:17:41 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org
-Cc: Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Amit Machhiwal <amachhiw@linux.ibm.com>, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] KVM: PPC: Book3S HV: Fix L2 guest reboot failure due
- to empty 'arch_compat'
-Message-ID: <2p36gb2dfk2s4tro6uekxbngyqwxmiddbh73zs6wz47d5wtnue@ioogh7wwzjdf>
-Mail-Followup-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org, 
-	Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Jordan Niethe <jniethe5@gmail.com>, 
-	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kernel@vger.kernel.org
-References: <20240118095653.2588129-1-amachhiw@linux.ibm.com>
- <87v87jp4i4.fsf@kernel.org>
+	s=arc-20240116; t=1706525295; c=relaxed/simple;
+	bh=H8pawYssUx3E0NXxVdNhnMnHUsU90Z8KPRaoaVqfrVw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AbHk0bCNiRwN1rbBdlEd1zp4DNMsM/tkp2Q72lA54mlwdfVb/81PvCiXkPoIIREMGEyRG0WE10u1724FIJ0MV163Pl9Fdwkrs20Z+rGTTkTcBMPG5MIMnf4zmXxE4Qrl7tMsnxMwotNI+DsGBb5xbhyj9SXrhZNIaSK9WzU/UDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.8.153])
+	by sina.com (172.16.235.24) with ESMTP
+	id 65B78263000077B5; Mon, 29 Jan 2024 18:48:06 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 53416445089313
+X-SMAIL-UIID: 9DD052BF59374A74BB40FD791467B2AB-20240129-184806-1
+From: Hillf Danton <hdanton@sina.com>
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: syzbot <syzbot+a984066a63e9c1e62662@syzkaller.appspotmail.com>,
+	eadavis@qq.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] INFO: task hung in hci_conn_failed
+Date: Mon, 29 Jan 2024 18:47:53 +0800
+Message-Id: <20240129104753.1328-1-hdanton@sina.com>
+In-Reply-To: <4c59b146-df67-48d8-9378-3948dd6fb427@I-love.SAKURA.ne.jp>
+References: <tencent_4A66EF6ACD6878526F542C2D6D109794E80A@qq.com> <20240129044824.1218-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v87jp4i4.fsf@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: KHp5UWja3MsK7G_MPsaa240H1_-6d7PL
-X-Proofpoint-ORIG-GUID: YqhCIo7KA7Cex_JHgQ2eF__LhzplDpDl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-29_06,2024-01-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 mlxlogscore=851 spamscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 clxscore=1015 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401290078
+Content-Transfer-Encoding: 8bit
 
-Hi Aneesh,
-
-Thanks for looking into the patch. My comments are inline below.
-
-On 2024/01/24 01:06 PM, Aneesh Kumar K.V wrote:
-> Amit Machhiwal <amachhiw@linux.ibm.com> writes:
+On Mon, 29 Jan 2024 14:53:20 +0900 Tetsuo Handa wrote:
+> On 2024/01/29 13:48, Hillf Danton wrote:
+> >> 3 locks held by kworker/1:2/779:
+> >>  #0: ffff8880b993ccd8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x29/0x130 kernel/sched/core.c:559
+> >>  #1: ffffc900038c7d80 ((work_completion)(&aux->work)#2){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
+> >>  #2: ffff888052984c80 (&aux->poke_mutex){+.+.}-{3:3}, at: __fd_array_map_delete_elem+0x125/0x2f0 kernel/bpf/arraymap.c:884
+> > 
+> > Could locking people shed any light on the failure of detecting the
+> > poke_mutex with rq lock held?
+> > 
 > 
-> > Currently, rebooting a pseries nested qemu-kvm guest (L2) results in
-> > below error as L1 qemu sends PVR value 'arch_compat' == 0 via
-> > ppc_set_compat ioctl. This triggers a condition failure in
-> > kvmppc_set_arch_compat() resulting in an EINVAL.
-> >
-> > qemu-system-ppc64: Unable to set CPU compatibility mode in KVM: Invalid
-> >
-> > This patch updates kvmppc_set_arch_compat() to use the host PVR value if
-> > 'compat_pvr' == 0 indicating that qemu doesn't want to enforce any
-> > specific PVR compat mode.
-> >
-> > Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
-> > ---
-> >  arch/powerpc/kvm/book3s_hv.c          |  2 +-
-> >  arch/powerpc/kvm/book3s_hv_nestedv2.c | 12 ++++++++++--
-> >  2 files changed, 11 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-> > index 1ed6ec140701..9573d7f4764a 100644
-> > --- a/arch/powerpc/kvm/book3s_hv.c
-> > +++ b/arch/powerpc/kvm/book3s_hv.c
-> > @@ -439,7 +439,7 @@ static int kvmppc_set_arch_compat(struct kvm_vcpu *vcpu, u32 arch_compat)
-> >  	if (guest_pcr_bit > host_pcr_bit)
-> >  		return -EINVAL;
-> >  
-> > -	if (kvmhv_on_pseries() && kvmhv_is_nestedv2()) {
-> > +	if (kvmhv_on_pseries() && kvmhv_is_nestedv2() && arch_compat) {
-> >  		if (!(cap & nested_capabilities))
-> >  			return -EINVAL;
-> >  	}
-> >
+> Showing held locks (lockdep_print_held_locks()) is not a snapshot.
+> Synchronous printk() can make #0 already released by the moment #2 is taken.
 > 
-> Instead of that arch_compat check, would it better to do
-> 
-> 	if (kvmhv_on_pseries() && kvmhv_is_nestedv2()) {
-> 		if (cap && !(cap & nested_capabilities))
-> 			return -EINVAL;
-> 	}
-> 
-> ie, if a capability is requested, then check against nested_capbilites
-> to see if the capability exist.
+> Please consult printk() people for possibility of making printk() from
+> lockdep reports (and/or hung task reports) asynchronous.
 
-The above condition check will cause problems when we would try to boot
-a machine below Power 9.
+If printk did its work well then we have difficulty explaining why RCU
+stalled more than two minutes.
 
-For example, if we passed the arch_compat == PVR_ARCH_207, cap will
-remain 0 resulting the above check into a false condition. Consequently,
-we would never return an -EINVAL in that case resulting the arch
-compatilbility request succeed when it doesn't support nested papr
-guest.
-
-> 
-> 
-> > diff --git a/arch/powerpc/kvm/book3s_hv_nestedv2.c b/arch/powerpc/kvm/book3s_hv_nestedv2.c
-> > index fd3c4f2d9480..069a1fcfd782 100644
-> > --- a/arch/powerpc/kvm/book3s_hv_nestedv2.c
-> > +++ b/arch/powerpc/kvm/book3s_hv_nestedv2.c
-> > @@ -138,6 +138,7 @@ static int gs_msg_ops_vcpu_fill_info(struct kvmppc_gs_buff *gsb,
-> >  	vector128 v;
-> >  	int rc, i;
-> >  	u16 iden;
-> > +	u32 arch_compat = 0;
-> >  
-> >  	vcpu = gsm->data;
-> >  
-> > @@ -347,8 +348,15 @@ static int gs_msg_ops_vcpu_fill_info(struct kvmppc_gs_buff *gsb,
-> >  			break;
-> >  		}
-> >  		case KVMPPC_GSID_LOGICAL_PVR:
-> > -			rc = kvmppc_gse_put_u32(gsb, iden,
-> > -						vcpu->arch.vcore->arch_compat);
-> > +			if (!vcpu->arch.vcore->arch_compat) {
-> > +				if (cpu_has_feature(CPU_FTR_ARCH_31))
-> > +					arch_compat = PVR_ARCH_31;
-> > +				else if (cpu_has_feature(CPU_FTR_ARCH_300))
-> > +					arch_compat = PVR_ARCH_300;
-> > +			} else {
-> > +				arch_compat = vcpu->arch.vcore->arch_compat;
-> > +			}
-> > +			rc = kvmppc_gse_put_u32(gsb, iden, arch_compat);
-> >
-> 
-> Won't a arch_compat = 0 work here?. ie, where you observing the -EINVAL from
-> the first hunk or does this hunk have an impact? 
->
-
-No, an arch_compat == 0 won't work in nested API v2. That's because the
-guest wide PVR cannot be 0, and if arch_compat == 0, then suppported
-host PVR value should be mentioned.
-
-If we were to skip this hunk (keeping the arch_compat == 0), a system
-reboot of L2 guest would fail and result into a kernel trap as below:
-
-[   22.106360] reboot: Restarting system
-KVM: unknown exit, hardware reason ffffffffffffffea
-NIP 0000000000000100   LR 000000000000fe44 CTR 0000000000000000 XER 0000000020040092 CPU#0
-MSR 0000000000001000 HID0 0000000000000000  HF 6c000000 iidx 3 didx 3
-TB 00000000 00000000 DECR 0
-GPR00 0000000000000000 0000000000000000 c000000002a8c300 000000007fe00000
-GPR04 0000000000000000 0000000000000000 0000000000001002 8000000002803033
-GPR08 000000000a000000 0000000000000000 0000000000000004 000000002fff0000
-GPR12 0000000000000000 c000000002e10000 0000000105639200 0000000000000004
-GPR16 0000000000000000 000000010563a090 0000000000000000 0000000000000000
-GPR20 0000000105639e20 00000001056399c8 00007fffe54abab0 0000000105639288
-GPR24 0000000000000000 0000000000000001 0000000000000001 0000000000000000
-GPR28 0000000000000000 0000000000000000 c000000002b30840 0000000000000000
-CR 00000000  [ -  -  -  -  -  -  -  -  ]     RES 000@ffffffffffffffff
- SRR0 0000000000000000  SRR1 0000000000000000    PVR 0000000000800200 VRSAVE 0000000000000000
-SPRG0 0000000000000000 SPRG1 0000000000000000  SPRG2 0000000000000000  SPRG3 0000000000000000
-SPRG4 0000000000000000 SPRG5 0000000000000000  SPRG6 0000000000000000  SPRG7 0000000000000000
-HSRR0 0000000000000000 HSRR1 0000000000000000
- CFAR 0000000000000000
- LPCR 0000000000020400
- PTCR 0000000000000000   DAR 0000000000000000  DSISR 0000000000000000
-
-Message from syslogd@ltcd48-lp1 at Jan 24 08:02:16 ...
- kernel:trap=0xffffffea | pc=0x100 | msr=0x1000
-
-> 
-> >  			break;
-> >  		}
-> >  
-> > -- 
-> > 2.43.0
-> 
-> -aneesh
-
-~Amit
+6 locks held by kworker/u5:0/51:
+ #0: ffff88802a730d38 ((wq_completion)hci2){+.+.}-{0:0}, at: process_one_work+0x789/0x15d0 kernel/workqueue.c:2608
+ #1: ffffc90000bc7d80 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
+ #2: ffff888020989060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_cmd_sync_work+0x170/0x410 net/bluetooth/hci_sync.c:305
+ #3: ffff888020988078 (&hdev->lock){+.+.}-{3:3}, at: hci_abort_conn_sync+0x150/0xb70 net/bluetooth/hci_sync.c:5337
+ #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_connect_cfm include/net/bluetooth/hci_core.h:1983 [inline]
+ #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_failed+0x158/0x370 net/bluetooth/hci_conn.c:1289
+ #5: ffffffff8d1b83f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:324 [inline]
+ #5: ffffffff8d1b83f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x3ff/0x800 kernel/rcu/tree_exp.h:995
