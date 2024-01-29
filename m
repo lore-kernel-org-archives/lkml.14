@@ -1,61 +1,52 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E41351C4B
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C949752F80;
+	Mon, 29 Jan 2024 07:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.141.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706514751; cv=none; b=EE4hszcbu1EzWKzjpg1KWlLsHgqLE4oMH6yLjq1J7/cJEnprSMzlbrrLxN01TvvZGp9VBARzdjHrxd59ASqNEqaEic/e0I9ovsObAjWrRwS/ydXYBu6NvRBJyMX+Z6XkkJj5BG/jZ+1kRtK1VfDp51gyLyl2i7Gan9eY5UTa/50=
+	t=1706514757; cv=none; b=hD7tQ5YH7pFkUO+lQdNlVQJPDMWNPrKldnhjOCPczT+4wWOnxSpdVzFTMt4aM+Wd8TJv0ItDaRuIwZunLhK77ahkGxMN3sk0bYu8Y24rrS4Z2Q45YF++1k4KiAKrjlgHSpm2MJj7lpdZ/GJZnEp+XoDEssB3xSEwmguj4aDSzmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706514751; c=relaxed/simple;
-	bh=tTQT9Ku7RM1FLsAH3vWmzrAWVFN9wIhJQ1xDZJNKp4M=;
+	s=arc-20240116; t=1706514757; c=relaxed/simple;
+	bh=eGx4McY1FmrYKhrAp3TTxFkfkbSfbNbdZDzzsYbn3SA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a+reR/svefSAclpb2qQA3Aqjy6uBZFvAA0OlBX95CtCUJOzSyMVNGJP4mcJug54DkPjhx1sgpjJhUaShdMgD/scNb5GhqkVeRy+HnDURa+pHXqN1vnKILptlGEaTrgE54ChOm5EkyaSLEtH4tmlAy7udDtGu3Kq9S4WuXGGGCek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U7uXVklI; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:To:Cc; b=cQvk44QC1tEXNENt9JmSUaoE5bmPpF3WhkF49UHROPf9SvGoAkWgi2sSf/YYGdHMDT0xcsb33ZpWT3ALc98Aj3YZsFni9f/AcU4MKH4l+6ws4xZjLlizyt8jYdRvsfa8Di3govmuiwZey6V4Gt+j7xsULc6UxvnZyLNkYrstCOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=b0kdW2sE; arc=none smtp.client-ip=68.232.141.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U7uXVklI"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6dddee3ba13so741002b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jan 2024 23:52:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706514749; x=1707119549; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hKwoviPF9lK3MXodrfrYqIC6rePNJHWY3NWvE/KNFG4=;
-        b=U7uXVklI6V+bqjGhgkCveo05yEQd8svuDNluOwLk9kJWyR87Vq9dza+UeLyCi3Y736
-         x7mCw6gnmQWuujnQK+ESYbgeg/jDauLzM6sPGoJf884sfSois95itnIJRXW4DeXPL04Z
-         plBzn3DZyLDKlU2MnTMGGWcOjX0zRquAPVCgSzJhrxWAhmEr608id+DS/0kqi+dCKDBB
-         tiPTHqE0uIRLRCVI/s5nk97ijqEec4igZmYsi93Yt4M92BjWXTBBDC4yiiDvB7DtLuBA
-         lRivEjK61IvUSUlYDW0WP9+AHpxMWsWWyiJ81r8sPWTyPssp+4iUADkRateto+HzIHku
-         R3wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706514749; x=1707119549;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hKwoviPF9lK3MXodrfrYqIC6rePNJHWY3NWvE/KNFG4=;
-        b=IM1xypIZFipQ6u69VeG191vhC+c8laE9dbPmxJflWNzz0mFVrUoItqp/uO0yUvh09n
-         apPND8KiHCp0DGqVnEM8NJl6Z/7X+oapmf4gr8Bz8yHOPLHDyl5NeyTqx7dqv2saMICr
-         X7bUPGE0GpAq2mp2fAfsnkZ7dKlI0ZH1eFG5+wbv+5NFRa2O7iJb8c6cW+soqacEoSIt
-         dPRqltgHeHLEGukPHSCFbX5xXn6wiEUzqC/+r79g65BHzVarMDm9UAib86ePlrLCsU5/
-         axhY1pfec3eNowv46DOD0njqveKC3Bz2fWls3Il//BMdY4+OB1SYIAXSrr5H8wrOvx8t
-         bF0g==
-X-Gm-Message-State: AOJu0YywFWCbq+aawxG96xJDAoqhBpRdlUkLrAIF2j9Ke+DuCdRG3/BB
-	Hwx0g2xYWHrps7+RzoAX0QQ+Ylegt+1o3m6FF1Vh1+Sj2p4UZhIYKsUDlpJCq6323XiVwgspuE0
-	=
-X-Google-Smtp-Source: AGHT+IGeqfu9dp2sjT94pd6qtcHQFzY9slmsKzbOpFB8yRIcm2BqugXLuSHM1wzJ+Y/sUQaIjfRiow==
-X-Received: by 2002:a62:d159:0:b0:6db:d4f8:bb1d with SMTP id t25-20020a62d159000000b006dbd4f8bb1dmr1559157pfl.2.1706514748782;
-        Sun, 28 Jan 2024 23:52:28 -0800 (PST)
-Received: from [127.0.1.1] ([117.193.214.109])
-        by smtp.gmail.com with ESMTPSA id t19-20020a62d153000000b006dddd685bbesm5467329pfl.122.2024.01.28.23.52.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jan 2024 23:52:28 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Mon, 29 Jan 2024 13:22:04 +0530
-Subject: [PATCH 1/3] dt-bindings: ufs: qcom: Make reset properties as
- required
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="b0kdW2sE"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1706514755; x=1738050755;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=eGx4McY1FmrYKhrAp3TTxFkfkbSfbNbdZDzzsYbn3SA=;
+  b=b0kdW2sE4ONRfs8jGwY/v4nA1WUCksxaIE0iQy/LAjNIWbXBQBPxhSf7
+   iyMVK/Ayn7Z1K1Od9nac2bmF4TgczIKpyI3Ngpw3YFWHFZdb8tz3iZg4x
+   Kik5mzwv711q6Do0soiCSMy+4dpNA6p6cdISQ05vq+xESEdDwHnpTZIsP
+   K296N3XM8WytmOHF8q/ZeVQ9nRK8bffKMPVAixf0atxclhayucyHxzjme
+   EkgPL2HexsGMHHJxF95YSwqIvaeIEt5Z5syfgrPKyMGsliBznIl7zo0ux
+   oksxYJAzrVvDq8s5KJwB85ItIEcDMrpH4ypXqmNyF/smdKfFsoj27lWQg
+   g==;
+X-CSE-ConnectionGUID: SX9cJwP2TQOalpS9SLaRMg==
+X-CSE-MsgGUID: m4iXc/eRRye5LfRgd4HTLA==
+X-IronPort-AV: E=Sophos;i="6.05,226,1701100800"; 
+   d="scan'208";a="8194611"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jan 2024 15:52:31 +0800
+IronPort-SDR: cAR7V5dWRuCGGVUIC2Yz+9GQPP42jhwBXAf7VvylpX8W6shxDYvaEPOxq2giVJt+i7d8JMw3gv
+ VZ6B58gXqE9g==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Jan 2024 22:56:46 -0800
+IronPort-SDR: TgaA8LrWz4JmksfFMd9XbYuIoWjMlrDoGLua+Pb607OI4wE3Fe9/wAPKrNdtSrWLoefyzcMDAc
+ YY+ofLHHgnnA==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun91.ssa.fujisawa.hgst.com) ([10.149.66.6])
+  by uls-op-cesaip02.wdc.com with ESMTP; 28 Jan 2024 23:52:27 -0800
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Date: Sun, 28 Jan 2024 23:52:16 -0800
+Subject: [PATCH v3 1/5] zonefs: pass GFP_KERNEL to blkdev_zone_mgmt() call
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,61 +55,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240129-ufs-core-reset-fix-v1-1-7ac628aa735f@linaro.org>
-References: <20240129-ufs-core-reset-fix-v1-0-7ac628aa735f@linaro.org>
-In-Reply-To: <20240129-ufs-core-reset-fix-v1-0-7ac628aa735f@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
- Bart Van Assche <bvanassche@acm.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>, 
- Andy Gross <andy.gross@linaro.org>, 
- "James E.J. Bottomley" <jejb@linux.ibm.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=902;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=tTQT9Ku7RM1FLsAH3vWmzrAWVFN9wIhJQ1xDZJNKp4M=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBlt1ku3SWI50z6DJN+7R7fmRweEhh0xY3/ioY31
- p0C1ZBGJuWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZbdZLgAKCRBVnxHm/pHO
- 9SXMB/4ye39b1v8wXzuxS/o1v4RtjLlLVKqi/NF7kJjRDBql/AeZp2Hf9+s5yn417kUWlbcsLVO
- Hv3+1bV8Qbw+vY5P9VNH9VLyX1ZbqEbk45/TCxNp9Hf++u25PNjappM18E0ZRSOZ6EIFrmMHdXl
- eMcLxBY1kDQjvrbiawIdtPEG7SVhafiLkxL/cnOfCj1bWhvr2n/LljnEtLqsu9eyjHnrXmEjSTI
- FoGhc2e0gJCJADNnkl5dQLibYNJYd+8yNws4LHbb1L3+A0AfU/lTkaSXNsBnqZ86OO+Nsuj2kWn
- OpJjH2fcgHiXyuNP7M6bKXa44uyTFSawclFl3gxssnvZ1wIO
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Message-Id: <20240128-zonefs_nofs-v3-1-ae3b7c8def61@wdc.com>
+References: <20240128-zonefs_nofs-v3-0-ae3b7c8def61@wdc.com>
+In-Reply-To: <20240128-zonefs_nofs-v3-0-ae3b7c8def61@wdc.com>
+To: Damien Le Moal <dlemoal@kernel.org>, 
+ Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+ Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev, 
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+ David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, 
+ Chao Yu <chao@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, 
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706514743; l=1041;
+ i=johannes.thumshirn@wdc.com; s=20230613; h=from:subject:message-id;
+ bh=eGx4McY1FmrYKhrAp3TTxFkfkbSfbNbdZDzzsYbn3SA=;
+ b=t4wcaJhs6oV11H9tXDjzJ4heS84olNEuvuiMDoCT7kiC4VWqi/UCfvHK0WP330iTVs0p8G2QQ
+ 0WRameby5F7DGgOvyyko8FG4gi9vkmFaf+HGZUlvOWp9nymIgGBuC/o
+X-Developer-Key: i=johannes.thumshirn@wdc.com; a=ed25519;
+ pk=TGmHKs78FdPi+QhrViEvjKIGwReUGCfa+3LEnGoR2KM=
 
-Apart from the legacy UFS controllers that were not supported in upstream,
-rest of the controllers do require reset property to reset the UFS host
-controller. So mark them as required.
+Pass GFP_KERNEL instead of GFP_NOFS to the blkdev_zone_mgmt() call in
+zonefs_zone_mgmt().
 
-Even though this is an ABI break, the bindings should reflect the
-capabilities of the hardware.
+As as zonefs_zone_mgmt() and zonefs_inode_zone_mgmt() are never called
+from a place that can recurse back into the filesystem on memory reclaim,
+it is save to call blkdev_zone_mgmt() with GFP_KERNEL.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/all/ZZcgXI46AinlcBDP@casper.infradead.org/
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/zonefs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
-index 10c146424baa..03dce5e402d1 100644
---- a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
-+++ b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
-@@ -108,6 +108,8 @@ properties:
- required:
-   - compatible
-   - reg
-+  - resets
-+  - reset-names
+diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
+index 93971742613a..63fbac018c04 100644
+--- a/fs/zonefs/super.c
++++ b/fs/zonefs/super.c
+@@ -113,7 +113,7 @@ static int zonefs_zone_mgmt(struct super_block *sb,
  
- allOf:
-   - $ref: ufs-common.yaml
+ 	trace_zonefs_zone_mgmt(sb, z, op);
+ 	ret = blkdev_zone_mgmt(sb->s_bdev, op, z->z_sector,
+-			       z->z_size >> SECTOR_SHIFT, GFP_NOFS);
++			       z->z_size >> SECTOR_SHIFT, GFP_KERNEL);
+ 	if (ret) {
+ 		zonefs_err(sb,
+ 			   "Zone management operation %s at %llu failed %d\n",
 
 -- 
-2.25.1
+2.43.0
 
