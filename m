@@ -1,48 +1,48 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CAD54F92;
-	Mon, 29 Jan 2024 06:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4999155780;
+	Mon, 29 Jan 2024 06:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706509863; cv=none; b=MZa2p2G8G5IJsXl+nsloP+8LmzG9PFmgEMDfgL72RU9nz18Jo97jaLvGNKECy8IggLFqaGECl0XNo/d/eTvU2eFLT+c2ssLYVaZ3+TwgDNnI1NgN+GX3w/ukK0MEfpkmU54ZK1uE/hSB0qX9BW+GWwXCzxsh+1L/YIotid12LSo=
+	t=1706509865; cv=none; b=A8+7qmvw1u19ZtLalW4boU9MOq5QXnJbBI8XAaT2YhYkULA2/aEaCzC/LWNVefNtDsg+ilDGZXMFm70ugioQ9ubGCmW1oxbaT01P+IaL5+3UkWbQ1ooL3hZykECFqVtCLuW0b4HC6SJxmy8mDsv3S4o3FVHvNuR1Q3+sZkA4cgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706509863; c=relaxed/simple;
-	bh=7T/zY2N/pch9MWNXDPUoohEbYacdECTWjMgbNRUQsZI=;
+	s=arc-20240116; t=1706509865; c=relaxed/simple;
+	bh=eIM8Q/xzmdqYu+7En/WYcJOSOwwQSsbkWpRqxWYQBqE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m9Hp2bd+Cc9z+SopnmjyuOBD8zjPlQfktFN6Oj0qqd6IyLkBeLbGIicGrp8wFyi14djTjoocD/+RI5Zz5YWyQdx2hOlNehygLF1Q0pVGkhmeVM4ISPQtuMrj/O0FiDEJ8jTkeBvzTfO6mvsfHR/4Yp8FFD+/RxhJHh6ECF5fYQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pKDBtsTp; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=bffuq19jtOZyi/6sMlANuHCdBZA8R9QNLEZh1kmHoxLl0wEjuqx05LJKhQ5q3tTBvYftbd5ALN+AOA+95dgUsvHkAsfs7cswR8PV81tklESh//eQuAoAAH30fs4wHq300kPBSbmXWMhd3LjJjAboroyYwIvAwmq5IMdGLChxi2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=UrPGzwAg; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pKDBtsTp"
-X-UUID: f555ba54be6f11eea2298b7352fd921d-20240129
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UrPGzwAg"
+X-UUID: f708a94cbe6f11ee9e680517dc993faa-20240129
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=51VI1JkKQncCrOrUDLV94zJpq+Ll7EawPvLUuMJPvV4=;
-	b=pKDBtsTpLu8enx7QlG+wDlwtB+pvA8hI5G1//CTtSubNqf/lUYhd9Qg0jY2Rs6nNLIS0Jrkw/Um7gy/JKGPsOK3otCTiOj2nUHg1y7jp9DsYRS8qGJFJrgAilXPqziZHwfFZTy6fMJEOiWkv8qEXt1oZZsNM4EEonKWp42A6Tys=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Cg9rhVDIUdOGy9/6TLSBnMKtmzezqEQOEQF3unbi4u8=;
+	b=UrPGzwAgdAxvRVdFstriWFh0ZO0NP3M985fqXB+u9bDe4Bx5A/mShSGf2gcUkyK1VkKzC1h3qCjrx5BqAuBzNPP+kUBN2Hn6/0z0n1uTmIxNXOjzXmeLqyeUqsUCGbC38HJ3zG27X02B02MwpxotSWlW2EzS2qBjUnLQzULoJMg=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.36,REQID:bfaaba1b-68da-4f38-a778-8ad8686754ff,IP:0,U
+X-CID-O-INFO: VERSION:1.1.36,REQID:e86e98fd-196f-4206-a83c-500989dc1a04,IP:0,U
 	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
 	N:release,TS:-25
-X-CID-META: VersionHash:6e16cf4,CLOUDID:12d5dc7f-4f93-4875-95e7-8c66ea833d57,B
+X-CID-META: VersionHash:6e16cf4,CLOUDID:92a95c83-8d4f-477b-89d2-1e3bdbef96d1,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: f555ba54be6f11eea2298b7352fd921d-20240129
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: f708a94cbe6f11ee9e680517dc993faa-20240129
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
 	(envelope-from <yunfei.dong@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 766245453; Mon, 29 Jan 2024 14:30:56 +0800
+	with ESMTP id 1070610159; Mon, 29 Jan 2024 14:30:59 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 29 Jan 2024 14:30:54 +0800
+ 15.2.1118.26; Mon, 29 Jan 2024 14:30:57 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 29 Jan 2024 14:30:53 +0800
+ 15.2.1118.26 via Frontend Transport; Mon, 29 Jan 2024 14:30:56 +0800
 From: Yunfei Dong <yunfei.dong@mediatek.com>
 To: Jeffrey Kardatzke <jkardatzke@google.com>,
 	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
@@ -50,20 +50,20 @@ To: Jeffrey Kardatzke <jkardatzke@google.com>,
 	Hans Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
 	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
 	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>
-CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>, Hsin-Yi
- Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>, Daniel
- Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei Dong
-	<yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, Brian
- Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
- Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
+	"Hsin-Yi Wang" <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+	"Daniel Vetter" <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
+ Dong <yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+	"Brian Starkey" <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T
+ . J . Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
 	<christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
 	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v4,14/22] media: mediatek: vcodec: Add capture format to support one plane memory
-Date: Mon, 29 Jan 2024 14:30:17 +0800
-Message-ID: <20240129063025.29251-15-yunfei.dong@mediatek.com>
+Subject: [PATCH v4,16/22] media: mediatek: vcodec: support one plane capture buffer
+Date: Mon, 29 Jan 2024 14:30:19 +0800
+Message-ID: <20240129063025.29251-17-yunfei.dong@mediatek.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240129063025.29251-1-yunfei.dong@mediatek.com>
 References: <20240129063025.29251-1-yunfei.dong@mediatek.com>
@@ -75,76 +75,150 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--8.238200-8.000000
+X-TMASE-MatchedRID: IdwiQWGfGmyON+GapO42vQI0yP/uoH+Dh+w9Wz/xXDr7efdnqtsaE5kC
+	erFMaabilTJXKqh1ne29cOdjc/43lUMpVZZsZyZGHPYwOJi6PLmBHKTJ+sfXGfNhzIgXtFJVJkA
+	T6PZqtWG0gVrq9RizuWF6wLzbAtAr7U4NkBX42MYQ9/tMNQ4aiuWNJG9IamrcGM7yl/HgfuBLbT
+	Uf+O4SvG0xs/kJ5jkfbhGQTDKMjW9sQJ9Z3jpPTZ4CIKY/Hg3AGdQnQSTrKGPEQdG7H66TyMdRT
+	5TQAJnA56FLyMh+oymI9bcjcLbWqxAoGrvafT2017miKbd1tCqeqD9WtJkSIw==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--8.238200-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: C2A0D557D206DC74E4C049EF483DD9C943FB0F938B741967A4F6ACCA7EFFA2032000:8
 X-MTK: N
 
-Define one uncompressed capture format V4L2_PIX_FMT_MS21 in order to
-support one plane memory. The buffer size is luma + chroma, luma is
-stored at the start and chrome is stored at the end.
+The capture buffer has two planes for format MM21, but user space only
+allocate secure memory for plane[0], and the size is Y data + uv data.
+The driver need to support one plane decoder for svp mode.
 
 Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 ---
- Documentation/userspace-api/media/v4l/pixfmt-reserved.rst | 8 ++++++++
- drivers/media/v4l2-core/v4l2-common.c                     | 2 ++
- drivers/media/v4l2-core/v4l2-ioctl.c                      | 1 +
- include/uapi/linux/videodev2.h                            | 1 +
- 4 files changed, 12 insertions(+)
+ .../mediatek/vcodec/decoder/mtk_vcodec_dec.c  |  7 ++++-
+ .../vcodec/decoder/mtk_vcodec_dec_stateless.c | 26 ++++++++++---------
+ .../decoder/vdec/vdec_h264_req_common.c       | 18 ++++++-------
+ .../mediatek/vcodec/decoder/vdec_drv_if.c     |  4 +--
+ 4 files changed, 31 insertions(+), 24 deletions(-)
 
-diff --git a/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst b/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
-index 886ba7b08d6b..6ec899649d50 100644
---- a/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
-+++ b/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
-@@ -295,6 +295,14 @@ please make a proposal on the linux-media mailing list.
-       - Compressed format used by Nuvoton NPCM video driver. This format is
-         defined in Remote Framebuffer Protocol (RFC 6143, chapter 7.7.4 Hextile
-         Encoding).
-+    * .. _V4L2-PIX-FMT-MS21:
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
+index 604fdc8ee3ce..5d876a31e566 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
+@@ -653,7 +653,12 @@ static int vidioc_vdec_g_fmt(struct file *file, void *priv,
+ 		 * So we just return picinfo yet, and update picinfo in
+ 		 * stop_streaming hook function
+ 		 */
+-		q_data->sizeimage[0] = ctx->picinfo.fb_sz[0];
 +
-+      - ``V4L2_PIX_FMT_MS21``
-+      - 'MS21'
-+      - This format has one plane, luma and chroma are stored in a contiguous
-+        memory. Luma pixel in 16x32 tiles at the start, chroma pixel in 16x16
-+        tiles at the end. The image height must be aligned with 32 and the image
-+        width must be aligned with 16.
- .. raw:: latex
++		if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 1 || ctx->is_secure_playback)
++			q_data->sizeimage[0] = ctx->picinfo.fb_sz[0] + ctx->picinfo.fb_sz[1];
++		else
++			q_data->sizeimage[0] = ctx->picinfo.fb_sz[0];
++
+ 		q_data->sizeimage[1] = ctx->picinfo.fb_sz[1];
+ 		q_data->bytesperline[0] = ctx->last_decoded_picinfo.buf_w;
+ 		q_data->bytesperline[1] = ctx->last_decoded_picinfo.buf_w;
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
+index cc42c942eb8a..707ed57a412e 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_stateless.c
+@@ -285,14 +285,14 @@ static struct vdec_fb *vdec_get_cap_buffer(struct mtk_vcodec_dec_ctx *ctx)
+ 	framebuf = container_of(vb2_v4l2, struct mtk_video_dec_buf, m2m_buf.vb);
  
-     \normalsize
-diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-index 273d83de2a87..315b906ed730 100644
---- a/drivers/media/v4l2-core/v4l2-common.c
-+++ b/drivers/media/v4l2-core/v4l2-common.c
-@@ -269,6 +269,8 @@ const struct v4l2_format_info *v4l2_format_info(u32 format)
- 		  .block_w = { 16, 8, 0, 0 }, .block_h = { 32, 16, 0, 0 }},
- 		{ .format = V4L2_PIX_FMT_MT2110R, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 5, 10, 0, 0 }, .bpp_div = { 4, 4, 1, 1 }, .hdiv = 2, .vdiv = 2,
- 		  .block_w = { 16, 8, 0, 0 }, .block_h = { 32, 16, 0, 0 }},
-+		{ .format = V4L2_PIX_FMT_MS21,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 2, .vdiv = 2,
-+		  .block_w = { 16, 8, 0, 0 }, .block_h = { 32, 16, 0, 0 }},
+ 	pfb = &framebuf->frame_buffer;
+-	pfb->base_y.va = vb2_plane_vaddr(dst_buf, 0);
++	if (!ctx->is_secure_playback)
++		pfb->base_y.va = vb2_plane_vaddr(dst_buf, 0);
+ 	pfb->base_y.dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
+ 	pfb->base_y.size = ctx->q_data[MTK_Q_DATA_DST].sizeimage[0];
  
- 		/* YUV planar formats */
- 		{ .format = V4L2_PIX_FMT_NV12,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 2, .bpp = { 1, 2, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 2, .vdiv = 2 },
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 33076af4dfdb..c38b12511bdb 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1511,6 +1511,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
- 		case V4L2_PIX_FMT_MT2110T:	descr = "Mediatek 10bit Tile Mode"; break;
- 		case V4L2_PIX_FMT_MT2110R:	descr = "Mediatek 10bit Raster Mode"; break;
- 		case V4L2_PIX_FMT_HEXTILE:	descr = "Hextile Compressed Format"; break;
-+		case V4L2_PIX_FMT_MS21:		descr = "MediaTek One Plane Format"; break;
- 		default:
- 			if (fmt->description[0])
- 				return;
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 3e3f8d4b7c81..53a3c908fcba 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -798,6 +798,7 @@ struct v4l2_pix_format {
- #define V4L2_PIX_FMT_MM21     v4l2_fourcc('M', 'M', '2', '1') /* Mediatek 8-bit block mode, two non-contiguous planes */
- #define V4L2_PIX_FMT_MT2110T  v4l2_fourcc('M', 'T', '2', 'T') /* Mediatek 10-bit block tile mode */
- #define V4L2_PIX_FMT_MT2110R  v4l2_fourcc('M', 'T', '2', 'R') /* Mediatek 10-bit block raster mode */
-+#define V4L2_PIX_FMT_MS21     v4l2_fourcc('M', 'S', '2', '1') /* MediaTek 8-bit block mode with one plane */
- #define V4L2_PIX_FMT_INZI     v4l2_fourcc('I', 'N', 'Z', 'I') /* Intel Planar Greyscale 10-bit and Depth 16-bit */
- #define V4L2_PIX_FMT_CNF4     v4l2_fourcc('C', 'N', 'F', '4') /* Intel 4-bit packed depth confidence information */
- #define V4L2_PIX_FMT_HI240    v4l2_fourcc('H', 'I', '2', '4') /* BTTV 8-bit dithered RGB */
+-	if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 2) {
++	if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 2 && !ctx->is_secure_playback) {
+ 		pfb->base_c.va = vb2_plane_vaddr(dst_buf, 1);
+-		pfb->base_c.dma_addr =
+-			vb2_dma_contig_plane_dma_addr(dst_buf, 1);
++		pfb->base_c.dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 1);
+ 		pfb->base_c.size = ctx->q_data[MTK_Q_DATA_DST].sizeimage[1];
+ 	}
+ 	mtk_v4l2_vdec_dbg(1, ctx,
+@@ -339,16 +339,18 @@ static void mtk_vdec_worker(struct work_struct *work)
+ 	mtk_v4l2_vdec_dbg(3, ctx, "[%d] (%d) id=%d, vb=%p", ctx->id,
+ 			  vb2_src->vb2_queue->type, vb2_src->index, vb2_src);
+ 
+-	bs_src->va = vb2_plane_vaddr(vb2_src, 0);
+-	bs_src->dma_addr = vb2_dma_contig_plane_dma_addr(vb2_src, 0);
+-	bs_src->size = (size_t)vb2_src->planes[0].bytesused;
+-	if (!bs_src->va) {
+-		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
+-		mtk_v4l2_vdec_err(ctx, "[%d] id=%d source buffer is NULL", ctx->id,
+-				  vb2_src->index);
+-		return;
++	if (!ctx->is_secure_playback) {
++		bs_src->va = vb2_plane_vaddr(vb2_src, 0);
++		if (!bs_src->va) {
++			v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
++			mtk_v4l2_vdec_err(ctx, "[%d] id=%d source buffer is NULL", ctx->id,
++					  vb2_src->index);
++			return;
++		}
+ 	}
+ 
++	bs_src->dma_addr = vb2_dma_contig_plane_dma_addr(vb2_src, 0);
++	bs_src->size = (size_t)vb2_src->planes[0].bytesused;
+ 	mtk_v4l2_vdec_dbg(3, ctx, "[%d] Bitstream VA=%p DMA=%pad Size=%zx vb=%p",
+ 			  ctx->id, bs_src->va, &bs_src->dma_addr, bs_src->size, vb2_src);
+ 	/* Apply request controls. */
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_common.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_common.c
+index 5ca20d75dc8e..5e0d55218363 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_common.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_common.c
+@@ -79,15 +79,15 @@ void mtk_vdec_h264_fill_dpb_info(struct mtk_vcodec_dec_ctx *ctx,
+ 		vb2_v4l2 = container_of(vb, struct vb2_v4l2_buffer, vb2_buf);
+ 		h264_dpb_info[index].field = vb2_v4l2->field;
+ 
+-		h264_dpb_info[index].y_dma_addr =
+-			vb2_dma_contig_plane_dma_addr(vb, 0);
+-		if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 2)
+-			h264_dpb_info[index].c_dma_addr =
+-				vb2_dma_contig_plane_dma_addr(vb, 1);
+-		else
+-			h264_dpb_info[index].c_dma_addr =
+-				h264_dpb_info[index].y_dma_addr +
+-				ctx->picinfo.fb_sz[0];
++		h264_dpb_info[index].y_dma_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
++		if (!ctx->is_secure_playback) {
++			if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 2)
++				h264_dpb_info[index].c_dma_addr =
++					vb2_dma_contig_plane_dma_addr(vb, 1);
++			else
++				h264_dpb_info[index].c_dma_addr =
++					h264_dpb_info[index].y_dma_addr + ctx->picinfo.fb_sz[0];
++		}
+ 	}
+ }
+ 
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec_drv_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec_drv_if.c
+index d0b459b1603f..fb3e4f75ed93 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/vdec_drv_if.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec_drv_if.c
+@@ -73,14 +73,14 @@ int vdec_if_decode(struct mtk_vcodec_dec_ctx *ctx, struct mtk_vcodec_mem *bs,
+ {
+ 	int ret = 0;
+ 
+-	if (bs) {
++	if (bs && !ctx->is_secure_playback) {
+ 		if ((bs->dma_addr & 63) != 0) {
+ 			mtk_v4l2_vdec_err(ctx, "bs dma_addr should 64 byte align");
+ 			return -EINVAL;
+ 		}
+ 	}
+ 
+-	if (fb) {
++	if (fb && !ctx->is_secure_playback) {
+ 		if (((fb->base_y.dma_addr & 511) != 0) ||
+ 		    ((fb->base_c.dma_addr & 511) != 0)) {
+ 			mtk_v4l2_vdec_err(ctx, "frame buffer dma_addr should 512 byte align");
 -- 
 2.18.0
 
