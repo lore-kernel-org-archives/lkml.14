@@ -1,79 +1,133 @@
-Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6810458AC2
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F4F56B70;
+	Mon, 29 Jan 2024 10:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706525295; cv=none; b=f9PBGnwDzWvY0cuHX5NCLsaM1J5wPjIMppIgOxsxUGmuz85G498qCw3Et/YDVChaNgH3dnAfUHC/Q7Y31OV0XHzPLpL7HTZUKG4NqqzQsUQ3IlHW0kCr3IFfxS5RlLP96+qhr53Pl+xfIqdnT4oAywara/1hR/+QapldAZdKTB0=
+	t=1706525334; cv=none; b=tu+WAJmeXZwUs6xSqK9Ztd+67eDFCG6I8TShkqOOwzfdD5LBH+Nei+XPX73IAL541lB5/D7daJb5FRJ8VQyh4U/6PwLXEANW6JGq7ctUu7L/qlwM94G1bZx5y0IRE7SMZtvEY2cLOw23g7vHZKZhlmaS4gC5Tjwi88avFhC2iZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706525295; c=relaxed/simple;
-	bh=H8pawYssUx3E0NXxVdNhnMnHUsU90Z8KPRaoaVqfrVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AbHk0bCNiRwN1rbBdlEd1zp4DNMsM/tkp2Q72lA54mlwdfVb/81PvCiXkPoIIREMGEyRG0WE10u1724FIJ0MV163Pl9Fdwkrs20Z+rGTTkTcBMPG5MIMnf4zmXxE4Qrl7tMsnxMwotNI+DsGBb5xbhyj9SXrhZNIaSK9WzU/UDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.8.153])
-	by sina.com (172.16.235.24) with ESMTP
-	id 65B78263000077B5; Mon, 29 Jan 2024 18:48:06 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 53416445089313
-X-SMAIL-UIID: 9DD052BF59374A74BB40FD791467B2AB-20240129-184806-1
-From: Hillf Danton <hdanton@sina.com>
-To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: syzbot <syzbot+a984066a63e9c1e62662@syzkaller.appspotmail.com>,
-	eadavis@qq.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] INFO: task hung in hci_conn_failed
-Date: Mon, 29 Jan 2024 18:47:53 +0800
-Message-Id: <20240129104753.1328-1-hdanton@sina.com>
-In-Reply-To: <4c59b146-df67-48d8-9378-3948dd6fb427@I-love.SAKURA.ne.jp>
-References: <tencent_4A66EF6ACD6878526F542C2D6D109794E80A@qq.com> <20240129044824.1218-1-hdanton@sina.com>
+	s=arc-20240116; t=1706525334; c=relaxed/simple;
+	bh=Cwwb1IrnhAqflNwwr5xSZUeDUm1bhUtrWeRJtuIBwI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=syJt3Tqae2O5H5za9zsv/4DqdLBtEwa/qi7cwTREtHn/BgBPncsfkYL+7Ej8bGD0aPavEfofm8ZCw9blT7CmuaiJ2mYsvndQVfiiQjLCLUPiI5Da1+1q75TxeRADhfgISlRMAEW/mdx3Kf5fXtbMUCglaLojPzxz5Q7i4seLWeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D45sQB0K; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D45sQB0K"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T7jqMX032528;
+	Mon, 29 Jan 2024 10:48:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=ZugSSSRjJH8eOzWRrav1dwHxGdpfMlgQG3DI1tTj0AA=; b=D4
+	5sQB0Kw7xD3lwRWOS6sew+n5Kzq8u07fxKWSdBBZK8F+LBGR2rOBctnssd6JAXQb
+	pHfwTrFn/NPwUHwqkZR4kMESANNhkVxRvAts0f0ZnFDpJkkFeyudiflRvcXWA8SE
+	HKrg3m7jYhJOUazEqPRligwenMRwG36zoB0kTbviwWiwWbYTjb+5aX3aIkA8pMXp
+	C9FVkF9QlMXvGkojXRQHqwQfbEjWJ7ait1NhG4D+QdbGig+wEDHy7h9SvtXiSSKh
+	anMXPDm1leRtwCEAs6A9zuptGiX1BIWGLOjAkl1bHxdY7XRnHYf9CiHk2M56QnUb
+	a5mutE+13vhQLPD+0mpQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vx23k8wsa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jan 2024 10:48:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40TAmgcl008905
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jan 2024 10:48:42 GMT
+Received: from [10.218.35.133] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
+ 2024 02:48:39 -0800
+Message-ID: <151f5738-791e-42cb-b8fe-e0cfbf9f7dca@quicinc.com>
+Date: Mon, 29 Jan 2024 16:18:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] rpmsg: glink: Add bounds check on tx path
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>, <afaerber@suse.com>,
+        <ivan.ivanov@suse.com>
+References: <20240113002505.15503-1-mkoutny@suse.com>
+Content-Language: en-US
+From: Deepak Kumar Singh <quic_deesin@quicinc.com>
+In-Reply-To: <20240113002505.15503-1-mkoutny@suse.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: UiTqmIwQw3BpaeOMGQ7Ee7xTrNm9Ik5I
+X-Proofpoint-GUID: UiTqmIwQw3BpaeOMGQ7Ee7xTrNm9Ik5I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-29_06,2024-01-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxlogscore=793
+ mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401290077
 
-On Mon, 29 Jan 2024 14:53:20 +0900 Tetsuo Handa wrote:
-> On 2024/01/29 13:48, Hillf Danton wrote:
-> >> 3 locks held by kworker/1:2/779:
-> >>  #0: ffff8880b993ccd8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x29/0x130 kernel/sched/core.c:559
-> >>  #1: ffffc900038c7d80 ((work_completion)(&aux->work)#2){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
-> >>  #2: ffff888052984c80 (&aux->poke_mutex){+.+.}-{3:3}, at: __fd_array_map_delete_elem+0x125/0x2f0 kernel/bpf/arraymap.c:884
-> > 
-> > Could locking people shed any light on the failure of detecting the
-> > poke_mutex with rq lock held?
-> > 
+
+
+On 1/13/2024 5:55 AM, Michal Koutný wrote:
+> Add bounds check on values read from shared memory in the tx path. In
+> cases where the VM is misbehaving, the transport should exit and print a
+> warning when bogus values may cause out of bounds to be read.
 > 
-> Showing held locks (lockdep_print_held_locks()) is not a snapshot.
-> Synchronous printk() can make #0 already released by the moment #2 is taken.
+> Link: https://git.codelinaro.org/clo/la/kernel/msm-5.10/-/commit/32d9c3a2f2b6a4d1fc48d6871194f3faf3184e8b
+> Suggested-by: Chris Lew <quic_clew@quicinc.com>
+> Suggested-by: Sarannya S <quic_sarannya@quicinc.com>
+> Signed-off-by: Michal Koutný <mkoutny@suse.com>
+> ---
+>   drivers/rpmsg/qcom_glink_smem.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
 > 
-> Please consult printk() people for possibility of making printk() from
-> lockdep reports (and/or hung task reports) asynchronous.
+> Why RFC? The patch is adopted from the link above. It would be good to
+> asses whether such conditions can also happen with rpmsg glink.
+> (And if so, whether the zeroed values are the best correction.)
+> 
+Hi Michal,
 
-If printk did its work well then we have difficulty explaining why RCU
-stalled more than two minutes.
+There is already a patch posted for similar problem -
+https://lore.kernel.org/all/20231201110631.669085-1-quic_deesin@quicinc.com/
 
-6 locks held by kworker/u5:0/51:
- #0: ffff88802a730d38 ((wq_completion)hci2){+.+.}-{0:0}, at: process_one_work+0x789/0x15d0 kernel/workqueue.c:2608
- #1: ffffc90000bc7d80 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
- #2: ffff888020989060 (&hdev->req_lock){+.+.}-{3:3}, at: hci_cmd_sync_work+0x170/0x410 net/bluetooth/hci_sync.c:305
- #3: ffff888020988078 (&hdev->lock){+.+.}-{3:3}, at: hci_abort_conn_sync+0x150/0xb70 net/bluetooth/hci_sync.c:5337
- #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_connect_cfm include/net/bluetooth/hci_core.h:1983 [inline]
- #4: ffffffff8ef23348 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_conn_failed+0x158/0x370 net/bluetooth/hci_conn.c:1289
- #5: ffffffff8d1b83f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:324 [inline]
- #5: ffffffff8d1b83f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x3ff/0x800 kernel/rcu/tree_exp.h:995
+> diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
+> index 7a982c60a8dd..3e786e590c03 100644
+> --- a/drivers/rpmsg/qcom_glink_smem.c
+> +++ b/drivers/rpmsg/qcom_glink_smem.c
+> @@ -146,6 +146,11 @@ static size_t glink_smem_tx_avail(struct qcom_glink_pipe *np)
+>   	else
+>   		avail -= FIFO_FULL_RESERVE + TX_BLOCKED_CMD_RESERVE;
+>   
+> +	if (avail > pipe->native.length) {
+> +		pr_warn_once("%s: avail clamped\n", __func__);
+> +		avail = 0;
+> +	}
+> +
+>   	return avail;
+>   }
+>   
+> @@ -177,6 +182,10 @@ static void glink_smem_tx_write(struct qcom_glink_pipe *glink_pipe,
+>   	unsigned int head;
+>   
+>   	head = le32_to_cpu(*pipe->head);
+> +	if (head > pipe->native.length) {
+> +		pr_warn_once("%s: head overflow\n", __func__);
+> +		return;
+> +	}
+>   
+>   	head = glink_smem_tx_write_one(pipe, head, hdr, hlen);
+>   	head = glink_smem_tx_write_one(pipe, head, data, dlen);
