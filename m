@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B92157E6A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BE0157E6B
 	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 20:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706560171; cv=none; b=N3M8Oux6kF2D4A2jXTo1kqUZYvhhmRXKUIEmX1ke0J0Mj7e5BeYa1D6D3/hQqN2tNUlZB4jj5BHyEDeDzQbU1II6l9T/mZBuLP6qjgNL7mrG8XqumeVmNhoMpSSy6jJfaiq9zdhU6mr4IR7MgC7nct70ZJW2UwfYhXMQolmuwbY=
+	t=1706560171; cv=none; b=LnA/qH/Xaxu37W05hT8n0JpjRft88Ijxtp/TTHndh5RuL97vjFyXfEpDeu7UbPdOg56n/nfvrxzEo6suK+jn70wyeCRAFWKeVlYhtTOjOG327PY5JrfxQEr/4kkguQ72eM8EQIqnKadDU2x08Kr4SLyZGYVFYCCBnTkMXk3C2ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706560171; c=relaxed/simple;
-	bh=SQvwe0KRiHiPwuYKPEiT60vxLx2ZZ9hEflej5w8CJWo=;
+	bh=Q2PS2lZlOGrrB/bPRS9SVGx50bnEePqslt7qVPvTqkk=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=fMgF8XaOLWMhOYYfKea3z6Bhr0cSBixp+d2ZIFXWPjeHSVw6uZx34yCMCM0fVGnKNmbv1ilmH5yPU9BfCoZ/lexnGbJ7G7FLjJpa46NNVhXpqtBcKbi4fB7/NV8BSxoNA1TqER0nvOnlHoz3TbjxmBcHnFdx1wo065A+rnPKPU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iqi35FLe; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=eevsYGHcJRoG+vQ+F67qnUM0xOwYIrSqZ5tQx4AdDHVAfBPqbc2Nyjzz1FmEw6pXkVCKTv5XHGFZ1yA0X96fpWTKodQOvbcsknBOXsP1aXXZmGaIRe6FctzVbHqJAXnFo+kCJ33wPfJtvUNH8SZPhpkhg/4ZQ7BLhIf5WuVrLIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLlFbQRu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iqi35FLe"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0A49FC433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLlFbQRu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E81C0C433C7;
 	Mon, 29 Jan 2024 20:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706560171;
-	bh=SQvwe0KRiHiPwuYKPEiT60vxLx2ZZ9hEflej5w8CJWo=;
+	bh=Q2PS2lZlOGrrB/bPRS9SVGx50bnEePqslt7qVPvTqkk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Iqi35FLedO3/mPZyzKC1IpFcnB3HyeDKbRD2jD09jwyQeVmUDSJ5bGiYoHZGbo1Pm
-	 Vn0oaRl1tbg9XA2oADo5Ng+7927oXzy6iet/aKGSIsOh2UViuJ558ixlgLRv0slyXu
-	 YOU0p16d29j+HtGg2Ph+rvJgFOWZUEwcX1NqhSPanyQvnAYRUIgHxl7fg2ZydGZMSk
-	 rwYK/GEKzBa7nPRvXiZ7BuiJGqVLhs4eyvohzSelrLzQCraZTcI9rGqJvO7okuNVH0
-	 hraEmI8+P07vdIBkDVVdddmo+NO4c/rTQoQ+fLAcuzPbpO1vA9n8p7epsTJ15J9ZoC
-	 1fChSamkIYTdA==
+	b=DLlFbQRueLvaM92KSa8aniBK5Gv7KaHB5WWk1W1L+ucr6y4bLJ32QLa1xxHezm3Nt
+	 2MjVcET8vyhIkNcCRozyl3VJRhN3qp5wG9JRHUE9XTG/+cTVB760pYFj2KE02A3MWx
+	 cb/p0xvOhAk5Kjlb2fYzwGcx/m/WaVigu1JlYTtWmY9RpMKeJyHenmAcI6mhxEYBhy
+	 Xd63Bf5sfsotMyg4MYgSRrIUz0CWFugghUrXAf7sWcLQWwSEhe2ccOMdjlTdq+dPBf
+	 ErEyvkXQEcBcVn7OENzLPjK208UZ/hCtXRQdz7yRImDV3y6LqVemBocaJ3BNTLgRSZ
+	 2LdtlMhv7lZSQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DBBC4C595C3;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D27C9C4166F;
 	Mon, 29 Jan 2024 20:29:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,41 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: support printk_ratelimited() in
- f2fs_printk()
+Subject: Re: [f2fs-dev] [PATCH] f2fs: check free sections before disable
+ checkpoint
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <170656017089.16041.14974521466482956589.git-patchwork-notify@kernel.org>
+ <170656017085.16041.11567801546674226632.git-patchwork-notify@kernel.org>
 Date: Mon, 29 Jan 2024 20:29:30 +0000
-References: <20240126151917.837565-1-chao@kernel.org>
-In-Reply-To: <20240126151917.837565-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+References: <20231229032507.2016012-1-bo.wu@vivo.com>
+In-Reply-To: <20231229032507.2016012-1-bo.wu@vivo.com>
+To: Wu Bo <bo.wu@vivo.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, wubo.oduw@gmail.com,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
 
-This series was applied to jaegeuk/f2fs.git (dev)
+This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Fri, 26 Jan 2024 23:19:16 +0800 you wrote:
-> This patch supports using printk_ratelimited() in f2fs_printk(), and
-> wrap ratelimited f2fs_printk() into f2fs_{err,warn,info}_ratelimited(),
-> then, use these new helps to clean up codes.
+On Thu, 28 Dec 2023 20:25:07 -0700 you wrote:
+> 'f2fs_is_checkpoint_ready()' checks free sections. If there is not
+> enough free sections, most f2fs operations will return -ENOSPC when
+> checkpoint is disabled.
 > 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/compress.c | 10 +++++-----
->  fs/f2fs/dir.c      |  5 ++---
->  fs/f2fs/f2fs.h     | 40 +++++++++++++++++++++++-----------------
->  fs/f2fs/super.c    | 11 ++++++++---
->  4 files changed, 38 insertions(+), 28 deletions(-)
+> It would be better to check free sections before disable checkpoint.
+> 
+> Signed-off-by: Wu Bo <bo.wu@vivo.com>
+> 
+> [...]
 
 Here is the summary with links:
-  - [f2fs-dev,1/2] f2fs: support printk_ratelimited() in f2fs_printk()
-    https://git.kernel.org/jaegeuk/f2fs/c/83253fc066b9
-  - [f2fs-dev,2/2] f2fs: use f2fs_err_ratelimited() to avoid redundant logs
-    https://git.kernel.org/jaegeuk/f2fs/c/9a63d6e6382a
+  - [f2fs-dev] f2fs: check free sections before disable checkpoint
+    https://git.kernel.org/jaegeuk/f2fs/c/e2f29120ff1f
 
 You are awesome, thank you!
 -- 
