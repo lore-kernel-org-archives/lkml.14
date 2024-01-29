@@ -1,124 +1,184 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A27148FF8;
-	Mon, 29 Jan 2024 14:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B26151CDD
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706538702; cv=none; b=LsajUqyJSswNgqFdz/FmBFt8cHiYIl3QFeJCKjru6eoB71US7SIZOEzBCOoLGrgT7w1iPDNpRRyJMYFA9fDdZBbikf49Yp1HRZdVUVn0VzKwIr6sMU4FIOcJ5+8eXKN4lnKxn31G/rSW43D/hx3cjK+zzV9vJHmn9jsaGcQHE94=
+	t=1706538754; cv=none; b=VQzF8B48quBZQBRUMW1Z3Xz/z5/dPgohQv0IukY1M7J35yEv56E9z0BLR++KuEAMOsiLlfSXnqmAsy0X3jxZJhC3+GnvqJMV8FWLVUNBDCvZKB3QzMbUxyjsAD7QSk1ZShL+0KD4GK7fboI9bj86AsTiFpwkMdIyBZs3acW0j4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706538702; c=relaxed/simple;
-	bh=RizKcmX3RRLlgUG/ugjzq4ScN+Mw8mbriMNFmh8enxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONBVnLh0o3Gi7ZRQrEwDZaqy90d2X7mB9BuHsEXSTNYAxtN+QgkzRuJNHDllqUlP7JzIUeJVacqiM8yrv13Ga5QCsHLenfJUQxCzGWlnELz6HuVA8WXkx/tUbkdzEYy5sbNL5zuY1Z4mGsIJNydDLFv67sXdLNhC00YJssrzZ7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=IRYT/Zcs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=u44/savz; arc=none smtp.client-ip=66.111.4.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
+	s=arc-20240116; t=1706538754; c=relaxed/simple;
+	bh=4KscbxAYCjj2PD8V1wCvHcnFXsKmpE5jCNYRuVMCyW4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KsRXDZhOZ28ltzAwjfANYXmGTPQ1lm8DYDaVaRGmG/ZORzkjUp1PEWUlvCwjyu12qZyzqi4y0lrxBAVPBSpDCsRk9FUjG3FY93oNA3Iw8MtyougEKmfb6aQJjvm4lZndXha4j4d/zcGQKADAoHFqC2fMMkckAlYd2BUxxeqYok0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ej3Gtral; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="IRYT/Zcs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u44/savz"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 9CBFB5C0140;
-	Mon, 29 Jan 2024 09:31:38 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 29 Jan 2024 09:31:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1706538698; x=1706625098; bh=B4pNIPUED5
-	e8/0rG6KTfg7B2imzrt3EK7wCNXBQ9N68=; b=IRYT/Zcs6PYprK1iWpOsU2VzBk
-	TslIQkVJQT9LxvrAJaPlNSUzUi/8CaBLdQCiM26bn2kyRhZfrRvjzwDOPpZJ1DCM
-	QoN9TjnyOXhd649b3bCh+hIEh2qR8PR4xvMQpiViLLUeJEW6YLQw+DP72SY1SDSd
-	jI4prNKUSxpCrV2777oUcMdnoc3vNcV3h5j1wrl04RHdfgYuM4AF8LGvYba/nTIE
-	4tzEtX/+L2asEPn0tEaa0o+QtwueTKDQ2wacTfj2+Jx9kUuSON44Cu85ihy6GK5T
-	ReqdecmTZPARZFyC86X/JJ/WbvOHnRT46oczemdveC0Clwg7Vm/fbtzpe0VA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706538698; x=1706625098; bh=B4pNIPUED5e8/0rG6KTfg7B2imzr
-	t3EK7wCNXBQ9N68=; b=u44/savz0unPS7y0N5xrioUI4Cxd1N1aPBZbBm+j+n12
-	qvN4XcwjJCi9ilJqC2JBZLNhws0oAQ0vW+up5o9fDcXdHaFeRSbGVOnofUiLoQDF
-	RcHchMet0eE+oMWSyrYxHBd+T9fCPlkoryF5uUWFGx4tWod8RUhN1/t+4O4JKArZ
-	ozdj+l8uGkmK9rpdEODB59zQ0BHctoBlpn73duuE5nZhjs8jnlMCHl70XZAUrBP4
-	/oG9qu+4evjxv8bwDlmeb3O+mHvtHAVI+5tH3P+WkW1ILtCmKGss3N9kyUYFtgP6
-	hYRwXTCWIfsXmXQsqwbbKjzzQlVL+POUrU4OubbRFA==
-X-ME-Sender: <xms:yra3ZdV1gsg_pVamSpA4-LtoqVN2H4ria7dIolDj7zgSLAtxkYhc0A>
-    <xme:yra3ZdmluzNukBcMeNZvP5NAaC2ThgFnTsuP0a1t_K5q1DUHYcEBC327uhZ4UkXSk
-    cEqd1DxtlWm8wZT_G8>
-X-ME-Received: <xmr:yra3ZZbrUqdmVBca6i62oeGpvbTKbkI8ngx4BWM85d-F4XKxK0S6OXLBhDtKTozSKDTJSIFWReKnwY0pDqVb0pnHQEXv>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtgedgheehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
-    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
-    grthhtvghrnhepueettdetgfejfeffheffffekjeeuveeifeduleegjedutdefffetkeel
-    hfelleetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epthihtghhohesthihtghhohdrphhiiiiirg
-X-ME-Proxy: <xmx:yra3ZQV_IkUkZlJy8saaoFq_Jn6ryzoUwJrkSL8sf4TRi9UIosT4Xw>
-    <xmx:yra3ZXlXrhhmCtcMItaTgknnHUx98osIkJ07LJgdZbXUckqzdZLGyg>
-    <xmx:yra3ZdeQRDfgKYsOwgcnPrMkNRhWCwZjzzujdLteV_eLngi2SuO7iA>
-    <xmx:yra3ZSvRfR0Zqr-sL3lENBOeC7LZ0nTzC6x0y8Cxrl-edqRe-K-wbQ>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 29 Jan 2024 09:31:37 -0500 (EST)
-Date: Mon, 29 Jan 2024 07:31:35 -0700
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [RFC PATCH] pidfd: implement PIDFD_THREAD flag for pidfd_open()
-Message-ID: <Zbe2x+M8tDBotSNZ@tycho.pizza>
-References: <ZbQpPknTTCyiyxrP@tycho.pizza>
- <20240127105410.GA13787@redhat.com>
- <ZbUngjQMg+YUBAME@tycho.pizza>
- <20240127163117.GB13787@redhat.com>
- <ZbU7d0dpTY08JgIl@tycho.pizza>
- <20240127193127.GC13787@redhat.com>
- <ZbVrRgIvudX242ZU@tycho.pizza>
- <20240127210634.GE13787@redhat.com>
- <20240129112313.GA11635@redhat.com>
- <20240129-plakat-einlud-4903633a5410@brauner>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ej3Gtral"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706538751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UhBdOI+JB6L0dCFGLAOqO2pJABjn3Znd2yV65wClG/w=;
+	b=ej3GtralVDolEs5cYmdUtsPEjISAMnGhmFNFiYddKWPMzPPLKD/Doa8j//oEtAFey0ePry
+	VDjXI+/uClitakNmzzMCdhgVbS02Hg/y2wECh1x9+nldqy1CJtycAQvJetXwnkKIrqhAqz
+	4AkrHQNDd9w+MuSV53C2jSzmvIKoKsY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-478-Kz5-1HWrO6SlttN34_aWHQ-1; Mon,
+ 29 Jan 2024 09:32:29 -0500
+X-MC-Unique: Kz5-1HWrO6SlttN34_aWHQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 979933C13A90;
+	Mon, 29 Jan 2024 14:32:27 +0000 (UTC)
+Received: from t14s.fritz.box (unknown [10.39.194.46])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 75D74C3F;
+	Mon, 29 Jan 2024 14:32:22 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+	Nick Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH v1 0/9] mm/memory: optimize unmap/zap with PTE-mapped THP
+Date: Mon, 29 Jan 2024 15:32:12 +0100
+Message-ID: <20240129143221.263763-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129-plakat-einlud-4903633a5410@brauner>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Mon, Jan 29, 2024 at 02:41:11PM +0100, Christian Brauner wrote:
-> On Mon, Jan 29, 2024 at 12:23:15PM +0100, Oleg Nesterov wrote:
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -2051,7 +2051,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
-> >  	WARN_ON_ONCE(!tsk->ptrace &&
-> >  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
-> >  	/*
-> > -	 * tsk is a group leader and has no threads, wake up the pidfd waiters.
-> > +	 * tsk is a group leader and has no threads, wake up the !PIDFD_THREAD
-> > +	 * waiters.
-> >  	 */
-> >  	if (thread_group_empty(tsk))
-> >  		do_notify_pidfd(tsk);
-> > @@ -3926,6 +3927,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
-> >  		prepare_kill_siginfo(sig, &kinfo);
-> >  	}
-> >  
-> > +	/* TODO: respect PIDFD_THREAD */
-> 
-> So I've been thinking about this at the end of last week. Do we need to
-> give userspace a way to send a thread-group wide signal even when a
-> PIDFD_THREAD pidfd is passed? Or should we just not worry about this
-> right now and wait until someone needs this?
+This series is based on [1] and must be applied on top of it.
+Similar to what we did with fork(), let's implement PTE batching
+during unmap/zap when processing PTE-mapped THPs.
 
-I don't need it currently, but it would have been handy for some of
-the tests I wrote.
+We collect consecutive PTEs that map consecutive pages of the same large
+folio, making sure that the other PTE bits are compatible, and (a) adjust
+the refcount only once per batch, (b) call rmap handling functions only
+once per batch, (c) perform batch PTE setting/updates and (d) perform TLB
+entry removal once per batch.
 
-Should I fix those up and send them too on top of Oleg's v2?
+Ryan was previously working on this in the context of cont-pte for
+arm64, int latest iteration [2] with a focus on arm6 with cont-pte only.
+This series implements the optimization for all architectures, independent
+of such PTE bits, teaches MMU gather/TLB code to be fully aware of such
+large-folio-pages batches as well, and amkes use of our new rmap batching
+function when removing the rmap.
 
-Tycho
+To achieve that, we have to enlighten MMU gather / page freeing code
+(i.e., everything that consumes encoded_page) to process unmapping
+of consecutive pages that all belong to the same large folio. I'm being
+very careful to not degrade order-0 performance, and it looks like I
+managed to achieve that.
+
+While this series should -- similar to [1] -- be beneficial for adding
+cont-pte support on arm64[2], it's one of the requirements for maintaining
+a total mapcount[3] for large folios with minimal added overhead and
+further changes[4] that build up on top of the total mapcount.
+
+Independent of all that, this series results in a speedup during munmap()
+and similar unmapping (process teardown, MADV_DONTNEED on larger ranges)
+with PTE-mapped THP, which is the default with THPs that are smaller than
+a PMD (for example, 16KiB to 1024KiB mTHPs for anonymous memory[5]).
+
+On an Intel Xeon Silver 4210R CPU, munmap'ing a 1GiB VMA backed by
+PTE-mapped folios of the same size (stddev < 1%) results in the following
+runtimes for munmap() in seconds (shorter is better):
+
+Folio Size | mm-unstable |      New | Change
+---------------------------------------------
+      4KiB |    0.058110 | 0.057715 |   - 1%
+     16KiB |    0.044198 | 0.035469 |   -20%
+     32KiB |    0.034216 | 0.023522 |   -31%
+     64KiB |    0.029207 | 0.018434 |   -37%
+    128KiB |    0.026579 | 0.014026 |   -47%
+    256KiB |    0.025130 | 0.011756 |   -53%
+    512KiB |    0.024292 | 0.010703 |   -56%
+   1024KiB |    0.023812 | 0.010294 |   -57%
+   2048KiB |    0.023785 | 0.009910 |   -58%
+
+CCing especially s390x folks, because they have a tlb freeing hooks that
+needs adjustment. Only tested on x86-64 for now, will have to do some more
+stress testing. Compile-tested on most other architectures. The PPC
+change is negleglible and makes my cross-compiler happy.
+
+[1] https://lkml.kernel.org/r/20240129124649.189745-1-david@redhat.com
+[2] https://lkml.kernel.org/r/20231218105100.172635-1-ryan.roberts@arm.com
+[3] https://lkml.kernel.org/r/20230809083256.699513-1-david@redhat.com
+[4] https://lkml.kernel.org/r/20231124132626.235350-1-david@redhat.com
+[5] https://lkml.kernel.org/r/20231207161211.2374093-1-ryan.roberts@arm.com
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Nick Piggin <npiggin@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arch@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+
+David Hildenbrand (9):
+  mm/memory: factor out zapping of present pte into zap_present_pte()
+  mm/memory: handle !page case in zap_present_pte() separately
+  mm/memory: further separate anon and pagecache folio handling in
+    zap_present_pte()
+  mm/memory: factor out zapping folio pte into zap_present_folio_pte()
+  mm/mmu_gather: pass "delay_rmap" instead of encoded page to
+    __tlb_remove_page_size()
+  mm/mmu_gather: define ENCODED_PAGE_FLAG_DELAY_RMAP
+  mm/mmu_gather: add __tlb_remove_folio_pages()
+  mm/mmu_gather: add tlb_remove_tlb_entries()
+  mm/memory: optimize unmap/zap with PTE-mapped THP
+
+ arch/powerpc/include/asm/tlb.h |   2 +
+ arch/s390/include/asm/tlb.h    |  30 ++++--
+ include/asm-generic/tlb.h      |  40 ++++++--
+ include/linux/mm_types.h       |  37 ++++++--
+ include/linux/pgtable.h        |  66 +++++++++++++
+ mm/memory.c                    | 167 +++++++++++++++++++++++----------
+ mm/mmu_gather.c                |  63 +++++++++++--
+ mm/swap.c                      |  12 ++-
+ mm/swap_state.c                |  12 ++-
+ 9 files changed, 347 insertions(+), 82 deletions(-)
+
+-- 
+2.43.0
+
