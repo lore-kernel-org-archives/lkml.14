@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C139F76059
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E72B159562
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706551549; cv=none; b=Odc2p8emXGqA/TkhNVip5mWTNXdSAxjUZ+0+PgZTPaEPcvMaCo6/zlhgeANgQk0gY2GD58JEsfSGhTbjciRPfUk3whnysUSO+FbUeTJqmMRCpZa6SfRDqxvnDFg6FsbjwEfPJ3bMFKckoMcDobDBhUJ2xUbn7a3HxDnjlPMzRGc=
+	t=1706551553; cv=none; b=ElIZjDiBU/L5xvz0ERghSfqGGrcvEsuZEMOTfjA6StJuxFl6bI9Ajo0EnXc4A4tG9baAVDxACKHWpXHxJeXmbZRj6jrUMWik3ARTrxzxjCxS2p7t5ikAFzEgEKI8WhfAUTHCgD87wzMnQflaWpY1YaO3Yma5qqGGqgnTB37dUzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706551549; c=relaxed/simple;
-	bh=WA3GaPDqZzEz1qs5YrhEzMU8VCRLnQnkxmbA8Q+jrL4=;
+	s=arc-20240116; t=1706551553; c=relaxed/simple;
+	bh=vnJpTtkwXP8em8CZ9TF/csF2frUk4VGX3QPQ5IolY7Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Wa3NhDkpgrYWcTY4NdMqKMLkYT2B8L8iNfTnmY5IA5Qbatcv67eqgiJ9cAIu97jDaTzKFzoFRbNxg6fbW43q9K0ebgST38KdfIezZOxozC4vU6+vwX3HFuwqj8bELsPXSjlKeo4xEDyEFvM/efKp2TNrlPlAJbF5JelyS4Yzy+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y3Ia4pFK; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=i+ijttvzxm0xVhDCVzKJiIcGBx4WOY5OD11rF6fcBaOYgDHyG26u99djq+8Mqa3AcZGsYayPscB5HizsqbpNmg8TUakOdWoE6I579mSs8pwmgt9aRDhhl4DBdcIG/uE63LSdJjQ1CLwUbDxj7k9gBOfUkWousl4+UvKx8hiH4rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S3uSkdJ1; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y3Ia4pFK"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-40efbba82c8so2990235e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:05:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S3uSkdJ1"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-d9a541b720aso5390644276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 10:05:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706551546; x=1707156346; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706551550; x=1707156350; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=doBLlrV3uqsZT11TuQPgH059AZeb19QGBGbs9zJgK3U=;
-        b=y3Ia4pFKd0uLGRgSsnlMraO2Q/3Y3NGRaXEXs8QsSUuoOTw1rAbM+mXZ82yV/omYhv
-         XccppK2eiv3Jl03XxiZUgP8UF8pEyeiCVCfXHFXnhc7hVPtZkpdANwuoL0fD8H9Rmt1p
-         e24HoU3f9CvglTesVnzSwcQvjIGhPyEHnfnf88ru/oRfiRpa2AOsd4su0KaZlhI8aWxx
-         hWbh8PNf5EbVfaDyajni5DJTK7lDkVEs8MFoOND73cWeA/0hkhXJeJsYbK5ZVamR79qm
-         TModA3gQriAqvhPhMRfXec2EpZhSOIRLfX9JBufqkREv2t9Lho36uCGrHIwFJDYAMAN+
-         5+TQ==
+        bh=f5x1F22voMMyYv1Zr6tqhVy0DTOzfkx0XvX+Zrp+ZGY=;
+        b=S3uSkdJ16H3weJLQ/5O4Q3Epqky2y6rRWziWJTHoGi03HYXCwjBFdPoodUKn4RaYrn
+         H5Cl/whowaymXw0dKReDC2Oq7XrvPmA+Xnw0i7FP+1eL8qHnImMk0wQmcL9o1K0dYfId
+         P+xP9dtpb1ULTYodTcpK2L8er53Gvr+4gOHcDNeOG/BlPJ6kepZBEHsUnWWkQry7C9TX
+         yUy/FIaSB+O0bCWKhlroKXmI5qx3NP7LfSapvt97FKICc0yuqEFRsA3c6RK85AuEKS/7
+         yUAXmISYC+1p+WCkF6GzTFzlRPxlRS2C8k15LQP6y8HmDx7JV4dOAV/xnpjvem6ld0o9
+         kV9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706551546; x=1707156346;
+        d=1e100.net; s=20230601; t=1706551550; x=1707156350;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=doBLlrV3uqsZT11TuQPgH059AZeb19QGBGbs9zJgK3U=;
-        b=pIhuB/bC3dYeXXevgANqMSGMyoHIisZVBwNjWMVW6he2s9/fDk2HRWTP6mo4ZWp4h+
-         oAwqf4JrfWwhHaZsp3ckE4zVbUQfvwdv3KfbO+dfMB0poWcV5zSx64uVWoBPxkOZ9R23
-         nHdy5/4I8fxDqoQBR6AFzeCvaTdqDSL08II06u3PgTJYnvXerp9JYp45R80sZ7g1/5Tn
-         wGm2OB/hNrEZ9/8GL/mGkiQB6Kg5x9lFvasIPXvGYUpD6sM4aTEkrM4HpKI2Q6s+cXT/
-         SqUFt1+Px8GChj6IKHShzXrCsl0NfZa5XiCYHJA0d9g9p/nBqjF9h5UCcrxAbgLYvb73
-         Mphw==
-X-Gm-Message-State: AOJu0YwHd19rKFn1sQ4lYOCbPS/uS3I+uRALgDIQBGCkEgbs7nSUYTy/
-	ckaFqG4FlfKWeBuyZ8UqCrC6mc7G3lVDGNjm3yxFD75ZM0g6PuVzslTSFu+0QwerlDPQjScrzFm
-	CWQDur3Mwaic9ONX/66AQToMBA+bnYwjpQg/cxA0xmL7eXcSD5t5t5H8GQBY9/Httg5FTZ9TrAx
-	1rAFf34+OyD3HKYC+6iFsX9PRmKP87OQ==
-X-Google-Smtp-Source: AGHT+IGgLvB19x2zAJjRldl0JEb/xb9QA3oXZZrv8DOC9t5a0RO4E+sxtTda+dI1q6WUKq+yPoiI36ws
+        bh=f5x1F22voMMyYv1Zr6tqhVy0DTOzfkx0XvX+Zrp+ZGY=;
+        b=FzRyfPg7JHQje9ottxG1U4J2yytHpzh2Z40sakQqfF5IAtkHXQb8cXasM2LpqavIHI
+         yki8k0vmmFnhKSDnDnkANqw96Uo+y5g4uWdUv5DWUngS/wwb3H2CT9sCVkR47hS9HnQo
+         Is7Ro6YRiAq+jLgNQDDGXbR994iUV+RQHZe8FWQEcK5oRPskuii6fr7UujHKR+9cgh4J
+         +3DQtv23YaMrwxXZmhoxBV8EybL0pOM/+1Y0BgRKhTZ6pZjrsqrPiGQBFEWNIR7woFvl
+         bIq4KiXILTO28OnGC/qav4lNoV3p0xaW+XGerOg51MqToxKKzvR+YpwyW4UYxtI5hL7z
+         hIqQ==
+X-Gm-Message-State: AOJu0YyI8nKXOwhXzwBQFBSQEnyL7DR18DgLgNURwn2K5921kOvuFWOm
+	N8CzDcqGjP5UuY1wgZ5QlsEf2saARUxcQZDlzNiUhIVIYQyd+7XiwsM/hDVme/NtxA5Uvxi0yID
+	nL95mbYiRvGDUAnglnm00+IQnJIRIUdUymMTfjugKSp5eCE3k6XK8N1dplErQM48/y0fSfo0dNw
+	9pTHMGUmc7y9oRSPtXvSP7o9GDzbdlog==
+X-Google-Smtp-Source: AGHT+IGgNqs4arPCH5rAGfnn6yAEx3ibS3mxOByBiz/gXz1ea0MTq5J9nfV4BBbOTaOTO6X7O+L/ylT4
 X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a05:600c:6003:b0:40e:fc7f:56d5 with SMTP id
- az3-20020a05600c600300b0040efc7f56d5mr2818wmb.2.1706551545993; Mon, 29 Jan
- 2024 10:05:45 -0800 (PST)
-Date: Mon, 29 Jan 2024 19:05:10 +0100
+ (user=ardb job=sendgmr) by 2002:a05:6902:108f:b0:dc2:23d8:722d with SMTP id
+ v15-20020a056902108f00b00dc223d8722dmr2386953ybu.13.1706551550415; Mon, 29
+ Jan 2024 10:05:50 -0800 (PST)
+Date: Mon, 29 Jan 2024 19:05:12 +0100
 In-Reply-To: <20240129180502.4069817-21-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240129180502.4069817-21-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3319; i=ardb@kernel.org;
- h=from:subject; bh=+6neEz5nbm/aVlO1e2fNUKJ40Al3PcnJxf6DJ7u3+Uc=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIXX7i2sfjtrc7f3APb8q8oWkdEncnIuz/V6+7d5ssnK9v
- rNa2+qNHaUsDGIcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAilawM/8NErkz3/zatq/+f
- L/fj020ntBoMtp0V9dVZ1bdptmTND2dGhnnC9kwqy0+rX35ZxMBYltTQvDvxIHejVca1+mRfDqY fPAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4031; i=ardb@kernel.org;
+ h=from:subject; bh=GRGmQn1xgXFPK1qedgfyRwvXHekb7bPD6uUy2cYh0y8=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIXX7i5vrWbMWbRB/pTXhQYTroe6r825LXbbdoZi54/syE
+ faa5cFLOkpZGMQ4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBEGP4y/OFJ1fCZvC+r871W
+ QXDCwtItz6p5Qo1+Beg0rJB627tLQ5mR4Wub4nvV5lBLhY6ik+UvEn+ZrPQ889P7+dUNae+vLHl 0ixcA
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240129180502.4069817-28-ardb+git@google.com>
-Subject: [PATCH v3 07/19] x86/startup_64: Simplify virtual switch on primary boot
+Message-ID: <20240129180502.4069817-30-ardb+git@google.com>
+Subject: [PATCH v3 09/19] x86/head64: Simplify GDT/IDT initialization code
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: Ard Biesheuvel <ardb@kernel.org>, Kevin Loughlin <kevinloughlin@google.com>, 
@@ -81,111 +81,126 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-The secondary startup code is used on the primary boot path as well, but
-in this case, the initial part runs from a 1:1 mapping, until an
-explicit cross-jump is made to the kernel virtual mapping of the same
-code.
+There used to be two separate code paths for programming the IDT early:
+one that was called via the 1:1 mapping, and one via the kernel virtual
+mapping, where the former used explicit pointer fixups to obtain 1:1
+mapped addresses.
 
-On the secondary boot path, this jump is pointless as the code already
-executes from the mapping targeted by the jump. So combine this
-cross-jump with the jump from startup_64() into the common boot path.
-This simplifies the execution flow, and clearly separates code that runs
-from a 1:1 mapping from code that runs from the kernel virtual mapping.
-
-Note that this requires a page table switch, so hoist the CR3 assignment
-into startup_64() as well.
-
-Given that the secondary startup code does not require a special
-placement inside the executable, move it to the .text section.
+That distinction is now gone so the GDT/IDT init code can be unified and
+simplified accordingly.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/kernel/head_64.S | 41 +++++++++-----------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+ arch/x86/kernel/head64.c | 57 +++++++-------------
+ 1 file changed, 18 insertions(+), 39 deletions(-)
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index ca46995205d4..953b82be4cd4 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -39,7 +39,6 @@ L4_START_KERNEL = l4_index(__START_KERNEL_map)
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index a4a380494703..58c58c66dec9 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -59,21 +59,12 @@ EXPORT_SYMBOL(vmemmap_base);
+ /*
+  * GDT used on the boot CPU before switching to virtual addresses.
+  */
+-static struct desc_struct startup_gdt[GDT_ENTRIES] __initdata = {
++static struct desc_struct startup_gdt[GDT_ENTRIES] __initconst = {
+ 	[GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(DESC_CODE32, 0, 0xfffff),
+ 	[GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(DESC_CODE64, 0, 0xfffff),
+ 	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(DESC_DATA64, 0, 0xfffff),
+ };
  
- L3_START_KERNEL = pud_index(__START_KERNEL_map)
+-/*
+- * Address needs to be set at runtime because it references the startup_gdt
+- * while the kernel still uses a direct mapping.
+- */
+-static struct desc_ptr startup_gdt_descr __initdata = {
+-	.size = sizeof(startup_gdt)-1,
+-	.address = 0,
+-};
+-
+ #define __va_symbol(sym) ({						\
+ 	unsigned long __v;						\
+ 	asm("movq $" __stringify(sym) ", %0":"=r"(__v));		\
+@@ -517,47 +508,32 @@ void __init __noreturn x86_64_start_reservations(char *real_mode_data)
+  */
+ static gate_desc bringup_idt_table[NUM_EXCEPTION_VECTORS] __page_aligned_data;
  
--	.text
- 	__HEAD
- 	.code64
- SYM_CODE_START_NOALIGN(startup_64)
-@@ -128,9 +127,19 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	call	sev_verify_cbit
- #endif
- 
--	jmp 1f
-+	/*
-+	 * Switch to early_top_pgt which still has the identity mappings
-+	 * present.
-+	 */
-+	movq	%rax, %cr3
+-static struct desc_ptr bringup_idt_descr = {
+-	.size		= (NUM_EXCEPTION_VECTORS * sizeof(gate_desc)) - 1,
+-	.address	= 0, /* Set at runtime */
+-};
+-
+-static void set_bringup_idt_handler(gate_desc *idt, int n, void *handler)
+-{
+-#ifdef CONFIG_AMD_MEM_ENCRYPT
+-	struct idt_data data;
+-	gate_desc desc;
+-
+-	init_idt_data(&data, n, handler);
+-	idt_init_desc(&desc, &data);
+-	native_write_idt_entry(idt, n, &desc);
+-#endif
+-}
+-
+-/* This runs while still in the direct mapping */
+-static void __head startup_64_load_idt(void)
++static void early_load_idt(void (*handler)(void))
+ {
+ 	gate_desc *idt = bringup_idt_table;
++	struct desc_ptr bringup_idt_descr;
 +
-+	/* Branch to the common startup code at its kernel virtual address */
-+	movq	$common_startup_64, %rax
-+	ANNOTATE_RETPOLINE_SAFE
-+	jmp	*%rax
- SYM_CODE_END(startup_64)
++	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
++		struct idt_data data;
++		gate_desc desc;
  
-+	.text
- SYM_CODE_START(secondary_startup_64)
- 	UNWIND_HINT_END_OF_STACK
- 	ANNOTATE_NOENDBR
-@@ -176,8 +185,15 @@ SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 	addq	sme_me_mask(%rip), %rax
- #endif
-+	/*
-+	 * Switch to the init_top_pgt here, away from the trampoline_pgd and
-+	 * unmap the identity mapped ranges.
-+	 */
-+	movq	%rax, %cr3
+-	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
+ 		/* VMM Communication Exception */
+-		set_bringup_idt_handler(idt, X86_TRAP_VC, vc_no_ghcb);
++		init_idt_data(&data, X86_TRAP_VC, handler);
++		idt_init_desc(&desc, &data);
++		native_write_idt_entry(idt, X86_TRAP_VC, &desc);
++	}
  
--1:
-+SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
-+	UNWIND_HINT_END_OF_STACK
-+	ANNOTATE_NOENDBR // above
+ 	bringup_idt_descr.address = (unsigned long)idt;
++	bringup_idt_descr.size = sizeof(bringup_idt_table);
+ 	native_load_idt(&bringup_idt_descr);
+ }
  
- 	/*
- 	 * Define a mask of CR4 bits to preserve. PAE and LA57 cannot be
-@@ -195,17 +211,6 @@ SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
- 	 */
- 	orl	$X86_CR4_MCE, %edx
- #endif
--
--	/*
--	 * Switch to new page-table
--	 *
--	 * For the boot CPU this switches to early_top_pgt which still has the
--	 * identity mappings present. The secondary CPUs will switch to the
--	 * init_top_pgt here, away from the trampoline_pgd and unmap the
--	 * identity mapped ranges.
--	 */
--	movq	%rax, %cr3
--
- 	/*
- 	 * Do a global TLB flush after the CR3 switch to make sure the TLB
- 	 * entries from the identity mapping are flushed.
-@@ -216,14 +221,6 @@ SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
- 	movq	%rcx, %cr4
- 	jc	0b
+-/* This is used when running on kernel addresses */
+ void early_setup_idt(void)
+ {
+-	/* VMM Communication Exception */
+-	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
++	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
+ 		setup_ghcb();
+-		set_bringup_idt_handler(bringup_idt_table, X86_TRAP_VC, vc_boot_ghcb);
+-	}
  
--	/* Ensure I am executing from virtual addresses */
--	movq	$1f, %rax
--	ANNOTATE_RETPOLINE_SAFE
--	jmp	*%rax
--1:
--	UNWIND_HINT_END_OF_STACK
--	ANNOTATE_NOENDBR // above
--
- #ifdef CONFIG_SMP
- 	/*
- 	 * For parallel boot, the APIC ID is read from the APIC, and then
+-	bringup_idt_descr.address = (unsigned long)bringup_idt_table;
+-	native_load_idt(&bringup_idt_descr);
++	early_load_idt(vc_boot_ghcb);
+ }
+ 
+ /*
+@@ -565,8 +541,11 @@ void early_setup_idt(void)
+  */
+ void __head startup_64_setup_env(void)
+ {
++	struct desc_ptr startup_gdt_descr;
++
+ 	/* Load GDT */
+ 	startup_gdt_descr.address = (unsigned long)startup_gdt;
++	startup_gdt_descr.size = sizeof(startup_gdt) - 1;
+ 	native_load_gdt(&startup_gdt_descr);
+ 
+ 	/* New GDT is live - reload data segment registers */
+@@ -574,5 +553,5 @@ void __head startup_64_setup_env(void)
+ 		     "movl %%eax, %%ss\n"
+ 		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
+ 
+-	startup_64_load_idt();
++	early_load_idt(vc_no_ghcb);
+ }
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
