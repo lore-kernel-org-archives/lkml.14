@@ -1,91 +1,114 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4243B15AAD5
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9975615B308
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706548083; cv=none; b=ERlcLpCAV9YcDHOJY1uZOnZipsGSSh1EJr04vya8oeq/9jyOXZf8dyu8WVzf/5MGf2u+xnU2jY5FtzVEHYvTA/BVfScwt+usFAn5PcwSO9m2AKp06zEnGAB8p+s/4h/n5jcXnQss+YkNETu5Uhw9IvElCD8pA7nxsKuqPG7y3Pc=
+	t=1706548121; cv=none; b=uGh54s1MOpC0L+LxxjfQC7I2fh8nP3Eu93J2acGjV8YR7Mupup9ZpCWtq/vua8FXJybPK0xEnuAKklAlcXlabcR0ZH9cZH1awBYjSz4Z/j/nUj3pWkI866M2Ii69vGAzYv1qBxIhqf7aUPv360UPywrKuhRGNX1Ca4oQ0FkN7o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706548083; c=relaxed/simple;
-	bh=0LKrBNn/tdgYxQG5tXJjBvRgb8P6qEb0b3d3tmgiVL4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=B09sCF6u9g+SnJzCm09nYmxOamh9uXjuNK77ovUd2xiINilQcit0Hilr47Hwy7tNjboLfN7tBaITwADedNbp4OS3DYJV4EkxJ6JARTivm/ziSlQjV1xuQ3Ebwosq4Qs7N2ZSimBl1MsxVT06AwFTZqpVJc1Zfx9y9NaUQdJbTqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=fail (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZyG41W4t reason="signature verification failed"; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1706548121; c=relaxed/simple;
+	bh=UFA2sbZ3Uszgy+yX9T1/72+bJwfqcVAD5CapdxRxgN0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U0boYOChQdIEGFXKdA4Y2ywBdBr9OAa4EsxC45x1hmQdMcnlok5BeuPY6wmRGdDctqr8OWUHpMFua+CUNVcbB6BPjAFiOu2xzGfjKRrCC8s6w0FqQmDGw/aYqs9Dd7fM9Eit/OqOcgzVYCQNWkfrEn+QSvYQYCBDLrnbQCEOe0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=On+uWy0v; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZyG41W4t"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 40TH7GOG2246529
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 29 Jan 2024 09:07:17 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 40TH7GOG2246529
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024011201; t=1706548038;
-	bh=5MgQaeiM+/jYwFflXcmFfBk4nscCJV22lLY8J+jZeMM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ZyG41W4tgHSLobFqHKGEupEcCs6PB4mbtcLDIHcTPTTwHOWrC6KexJsTVE/ff1ndU
-	 5OhAYNEdR0F9PJ8N9QmcyiE/p4a/BsVtg9A3vkhIFlKrmuEPMfzdrOH+WrRUL5ZNAZ
-	 XaSakUAOVmfiYPxnQA88cpcdKcvql9+I9IkyajGURzbsa2dFSlvldE7easV1Fr5a28
-	 jPTOcYZ+w3RbBq3V9aYJ+pnfqIn+S8o50V4owFWZG/QUB9amNec8PPwVbpGZUlgk4u
-	 eDWwBPjI0gtp3sv2rA0YBljxZi6YdWSs9/lDJYj2hjpzoTQZ/caRio78l6o8JJnVGY
-	 oEyTNk0vyAYkg==
-Date: Mon, 29 Jan 2024 09:07:13 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>, linux-coco@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Randomness on confidential computing platforms
-User-Agent: K-9 Mail for Android
-In-Reply-To: <dqiaimv3qqh77cfm2huzja4vsho3jls7vjmnwgda7enw633ke2@qiqrdnno75a7>
-References: <20240126134230.1166943-1-kirill.shutemov@linux.intel.com> <276aaeee-cb01-47d3-a3bf-f8fa2e59016c@intel.com> <dqiaimv3qqh77cfm2huzja4vsho3jls7vjmnwgda7enw633ke2@qiqrdnno75a7>
-Message-ID: <B5BF8A36-DB2C-4CEA-8011-1708F84827D9@zytor.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="On+uWy0v"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d2a78c49d1so1733939241.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:08:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706548118; x=1707152918; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EytCfCt7Mdn+cYY/W3p5gw2x+cwVqNDRPkfT5+zTUNI=;
+        b=On+uWy0vOWV6oVVgcSwFa0WMil8Hqocjk50nCrwJRtMSPGPvQ0Mm7NoGZ42WFprNDn
+         n6wT3QBFwFFvoGCVwqt0QTEQO33zIyvvYbAt9BmiZrCghYbF0CumaGv9Mbk/fI3/ZNCN
+         9IZK2+tavJf4L9tam7xxEWheZ/uvu5SjuqA0s+wCIWy8Vpb5B7GoAddBr2qD8cWPmGa+
+         yj/6yYmxfeDTSpuy3Mg0q2zx5kzQSPXS80VgHm4BkMCOM5Z646JAS4nHBmdt9BuwRKFX
+         ug5lliiZHy0WALv2FJFgiarlw3CF6i5FClmblQkcs+KvKOaSRZ16M3KHV+ucoxhE3KkF
+         RS8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706548118; x=1707152918;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EytCfCt7Mdn+cYY/W3p5gw2x+cwVqNDRPkfT5+zTUNI=;
+        b=WbksMhg0k0r+fBK6aRsjadZDexL2MLm6P5XRxcS/oC0GHp1LBrUo5Kqul8uArLOwnk
+         RmahVzW8+kz3+hVlv1EofL85iqJCELzJXwZwbbeyKj/wCxYouvnsp0c+MNIsNWxaSPFP
+         iZQ7V9HbrZ+Aej3C1JXeqXQfzz/R/n9hGV3A0vXdDAvmnWke3adxltnDAMsvZOTEt3UM
+         mdKhIR1cn9hPrkCJfVPPUVMuzhpUCqGTkyNzFNnyXRB9jPU6Pq0HJ7MQ299blwAobeEB
+         r7nuGUUAs8u6Ibf544lHDh5yRvUfvPdTJ5YyFFeoOP7zGeKIIkd8shUkCLYFjX8F0fY5
+         Cmvg==
+X-Gm-Message-State: AOJu0YwSf+vphvIUTEpevTY+3meCGq5FIzGy1LKlIEnyfMwiAXDrUo6P
+	iSRJVzb95KOVTVsQochaFjXeM9ugfGelAs2WMb+V5+GfvWV3QGXz8vl4khTBf7Xq6nV4cVpJKcN
+	FdO3xGEtyPLktsK7yJbU5jCEVAC3RK0aRX4AB
+X-Google-Smtp-Source: AGHT+IF9Cu5QQ8w4oZJwiWiMcHW4RaXyLjrg31UTRbHFnVHAFPnrShgJD92nkJB3pF4cIqhqy+YlGQA7E/cQ25bGa4E=
+X-Received: by 2002:a05:6122:1799:b0:4b7:57a4:1238 with SMTP id
+ o25-20020a056122179900b004b757a41238mr3247799vkf.14.1706548118338; Mon, 29
+ Jan 2024 09:08:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20240118-alice-file-v3-0-9694b6f9580c@google.com>
+ <20240118-alice-file-v3-9-9694b6f9580c@google.com> <1ac11c65-7024-41c3-a788-cfcad8fb6c55@proton.me>
+In-Reply-To: <1ac11c65-7024-41c3-a788-cfcad8fb6c55@proton.me>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 29 Jan 2024 18:08:27 +0100
+Message-ID: <CAH5fLgjMvh65PXdxnkPAtxNH82UDAwtyXmPK+VJPFTtXfiN2JQ@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] rust: file: add abstraction for `poll_table`
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On January 29, 2024 8:41:49 AM PST, "Kirill A=2E Shutemov" <kirill=2Eshutem=
-ov@linux=2Eintel=2Ecom> wrote:
->On Mon, Jan 29, 2024 at 08:30:11AM -0800, Dave Hansen wrote:
->> On 1/26/24 05:42, Kirill A=2E Shutemov wrote:
->> > 3=2E Panic after enough re-tries of RDRAND/RDSEED instructions fail=
-=2E
->> >    Another DoS variant against the Guest=2E
->>=20
->> I think Sean was going down the same path, but I really dislike the ide=
-a
->> of having TDX-specific (or CoCo-specific) policy here=2E
->>=20
->> How about we WARN_ON() RDRAND/RDSEED going bonkers?  The paranoid folks
->> can turn on panic_on_warn, if they haven't already=2E
+On Wed, Jan 24, 2024 at 11:11=E2=80=AFAM Benno Lossin <benno.lossin@proton.=
+me> wrote:
 >
->Sure, we can do it for kernel, but we have no control on what userspace
->does=2E
+> On 18.01.24 15:36, Alice Ryhl wrote:
+> > +/// Wraps the kernel's `struct poll_table`.
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// This struct contains a valid `struct poll_table`.
+> > +///
+> > +/// For a `struct poll_table` to be valid, its `_qproc` function must =
+follow the safety
+> > +/// requirements of `_qproc` functions. It must ensure that when the w=
+aiter is removed and a rcu
 >
->Sensible userspace on RDRAND/RDSEED failure should fallback to kernel
->asking for random bytes, but who knows if it happens in practice
->everywhere=2E
->
->Do we care?
->
+> The first sentence sounds a bit weird, what is meant by `_qproc` function=
+s?
+> Do you have a link to where that is defined? Or is the whole definition t=
+he
+> next sentence?
 
-You can't fix what you can't touch=2E
+Yeah. Does this wording work better for you?
+
+/// For a `struct poll_table` to be valid, its `_qproc` function must
+follow the safety
+/// requirements of `_qproc` functions:
+///
+/// * The `_qproc` function is given permission to enqueue a waiter to
+the provided `poll_table`
+///   during the call. Once the waiter is removed and an rcu grace
+period has passed, it must no
+///   longer access the `wait_queue_head`.
+
+Alice
