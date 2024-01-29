@@ -1,202 +1,204 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590D3154BFA
-	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2E154436
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706543283; cv=none; b=BGhM0+l01ib331YNJFzypyQ3Qxa8Z5CdhK5L1O9zLfsxHrGkENpFZeUQn4Pl7lLICCYM4BgWv++88UnqJQxzQAXOa+G6THVwkaFBkvdVv0g6ARHR7hHAFSH5doWKVmz2oLJWePsyUaszE2H6vSlzSPjYHpG8VPFuv9ZcF63OGD8=
+	t=1706543335; cv=none; b=slaFvup+o8lLDKjHVuTcUcCZIAS4cfXsWHhxgYss9D7CoySFTPkoR4q/qUzqlsMjjSID5bJvPAia232H0sOT0dMsw0sDBdgGVgeMJHQoQAMzWL6CahmVfF1yQ038C6aNMAJq7Kngtfb2hMC4ItnAXwpYsBsJ7/XcXW3bREtIEd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706543283; c=relaxed/simple;
-	bh=3yDimO1UyMKiqWulOUWprVEfvvaqnqCbJQiBomSk6nA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kMbCRl4P/j3uRBgS/rBtRtWJGw+hapxacQfDgRZ14pFNB/vZfyODtlH2B7tRFOgwiyudJzPOgMLwymrc+rfYMLgCYtxgEuc9gRIiZxT7pB0EubJyDf2pw4ZG4ElWbW1MeubtBrBySx/NC5JeKsvd3rsFZyPS4cbq28ZoOO84kPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xn7UBdJJ; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706543335; c=relaxed/simple;
+	bh=EbAEw347qcvSuv+fvVAAs9Is7ai41ozVeNUSnwX+BeE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HUWW/4xXWN/R993XtmQbpW9mBAWKsAipOFn1O49PlcD7YWAgpdEsHx0mBc62r2m4pAvCFzgZfek0Gzx+tQCrjEm6cKnWcYjlOyRdrgMPJFkI9elggiNJCcZcSVcRkn/AUJSASyvrdW6nhQYrjCI2G6yfnkWrhat8aPGaOPBrh2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=G2yg5cKs; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xn7UBdJJ"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-46b3359f5efso517063137.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:48:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706543281; x=1707148081; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ODjba7daqQSA/bpemrGWhqRuyPAJHOSTchEASYwM++Q=;
-        b=Xn7UBdJJIy4dk6h07sxqJ08e4WdFapNf/KUiH3wD3S0RhjxZsCTf8sn1DHxDr6cqKO
-         1CbnE/Bhr73Y5h6xFI1nH0XF56pOcYfEdyqZjdoyk/vcTDnzu+2XLFY+2E2afvQ899sd
-         yXeAxutuVAA0mI4di09nIAIytgHi5Ovda2LwMnX5wlMh98lI1EGGpnjJ57Hftpws/ezR
-         FObKmkt56PGSHUFI2jFuls38XsYyj46KRYDo+x1bAv0SMQJdN6TJyxyH0d67eFgmyyNt
-         o+PVLuRUBfPF4oZV3XbAQvJILXfcZDovAiFPyfVZ7x4X6UnRljQjcKFbWlRFqyljKs3H
-         KhyA==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="G2yg5cKs"
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 30A4A3F878
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 15:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1706543331;
+	bh=vL5Zi0arUmjHrE5oSVk9nUAXH0R9Ep+8PCB8rGK6E0c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type;
+	b=G2yg5cKsbsupiPxGMuaoSaDi83sXDgVKIYXy7u8W2tD+syaB/IHZXcgqsB91KekgZ
+	 QB3SvlSD4PSts5o35aZiEBSnqT9jVhZ52pvDAHQU2NwHSJX8UXqJ4r4sKVVRAdVcLy
+	 GSeGR5JRcWhyk6uNInEK99+LV3zCf/3GKEnfJ31cqfHn/SGRM/rD1ZJDKyZzKyskFY
+	 i4EudxpiRR5NxENO9nSQLuJIec7dI3uwnUOgAi5C6cK7nwKsPt7b7mKbzCI0XGC99g
+	 ZVl81V2V7knyWVVt8fiFCFyclL1TppORrrQhdKX0vCKdYX7WzGdkFYq8fzZ6E6Cpjj
+	 LJusphaSLEuzA==
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a29bb25df84so149117466b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 07:48:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706543281; x=1707148081;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1706543331; x=1707148131;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ODjba7daqQSA/bpemrGWhqRuyPAJHOSTchEASYwM++Q=;
-        b=KjNcXisOQZ+K33hS+KqaL9eIjgfQ/oOs5VZium/tF4p1Do+mdsf42ZAk9ypMAV2Yd1
-         ycnBz4GQfLGQFdlR2yNTbajX88nNwfU0JCjOCUucz2DctrPokJ1d55yQqCjsJOHWLZ79
-         Sk0BnK9dL/vQ3i6jDs5qyLdMDz9C0DNZ/9BSJvnWdaCqjyEntqhmg9zp5MGHJqHtwQcM
-         MPMKsWqNu0MEZVRe4xYbEuCArUbDv7rSV+fk/7227rskVQCNM8HhsLxQEsRCOIDtLPcC
-         fSiVtoXXhJ/M7fLwNddCGfs0wdLS9yHcORJhKU72dzlmX67H6yzHsZnq1tES8wm8cULg
-         6XsA==
-X-Gm-Message-State: AOJu0YyPD5ELswRrRauy6bqNCXkmBRYCjO3eZBIwxtjsGyP3l8Yu0HA6
-	4UR1PYiqb+NdZvytR7VR3rIYZUSpgQeaoe/LpMDzKPhuVMPv2749fViDsdNDG6A/G36ov8jquws
-	4feMiKzOdbh+Nl92KAprCU+FZgAA=
-X-Google-Smtp-Source: AGHT+IH4QDAGFfXnGhrLRLY6rwy51DbyBy7RrfW9QB8vtw0tWsB2LtFxMP4Js/YSviWWCO9pjcat/Nbe9mcYfXqywaQ=
-X-Received: by 2002:a05:6122:4e88:b0:4bd:8a18:2b8a with SMTP id
- gf8-20020a0561224e8800b004bd8a182b8amr2197406vkb.24.1706543281055; Mon, 29
- Jan 2024 07:48:01 -0800 (PST)
+        bh=vL5Zi0arUmjHrE5oSVk9nUAXH0R9Ep+8PCB8rGK6E0c=;
+        b=DKzOma0g8Ca4fYEsIhSdhUUYnZZ5o2dNJhq8qyDu74fAn9GvlYDHcIojAIr7JO3Rdk
+         r/JQUCQL/JGhZgwcNBHtluxDt//l3FIwGunC3Era8RHJ4+wtYljIR5nuiM12BQ/7bJF0
+         GH0EgfjGzVwFGRIHxZzVhbvM4AkCs6JmAoc1xuoA1ihPvjG9+aZ6cVSIhOwG8Ec0F+bu
+         1yyIrvTj+jgK8x6ZH6ryUDrI1VjkqqDnK8GpESy/qEuqfINIows6S41VZsGI+NihUvu5
+         eInaNK17DujCbxbCPlfBjB5pci2JXL8sH1kp4cpD3ZzW7bQdAXFXMpQVudMof+Puq9m6
+         CbqQ==
+X-Gm-Message-State: AOJu0Yx2anBR8DIBOg0EHZUlSP3zmXfe8U+bcKEEBld9qYrvDkYWMVNH
+	MSRTs+eeZwtSt16HzH7rx7z4c1fJgahfgpZinkECrVzijNbPkRi1Ib0uyUMUlmEZ9APi32DJYjU
+	jb0RwNRFnCFd5nxMkwQwiJO0mFnDEkVQggKgtVVomZxczV6DzQGpIRPbRXpznaIsFyyh0qTGFaH
+	aqVg==
+X-Received: by 2002:a17:906:4119:b0:a35:e85a:e5ff with SMTP id j25-20020a170906411900b00a35e85ae5ffmr1249484ejk.64.1706543330885;
+        Mon, 29 Jan 2024 07:48:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFSWIOlchrFG7Fd3XUHaixrlXmaJYwFe+PlTLqiJxKYpJCBJ9TCc4QkWJ4pNDkTJdbt7cu1pg==
+X-Received: by 2002:a17:906:4119:b0:a35:e85a:e5ff with SMTP id j25-20020a170906411900b00a35e85ae5ffmr1249470ejk.64.1706543330607;
+        Mon, 29 Jan 2024 07:48:50 -0800 (PST)
+Received: from amikhalitsyn ([91.64.72.41])
+        by smtp.gmail.com with ESMTPSA id p7-20020a170906784700b00a310f2b4b91sm4050907ejm.48.2024.01.29.07.48.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 07:48:50 -0800 (PST)
+Date: Mon, 29 Jan 2024 16:48:49 +0100
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: mszeredi@redhat.com, stgraber@stgraber.org,
+ linux-fsdevel@vger.kernel.org, Seth Forshee <sforshee@kernel.org>, Miklos
+ Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Bernd
+ Schubert <bschubert@ddn.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 6/9] fs/fuse: support idmapped ->setattr op
+Message-Id: <20240129164849.f3f194a800d88fd26a373203@canonical.com>
+In-Reply-To: <20240120-zeitmanagement-abbezahlen-8a3e2b5de72a@brauner>
+References: <20240108120824.122178-1-aleksandr.mikhalitsyn@canonical.com>
+	<20240108120824.122178-7-aleksandr.mikhalitsyn@canonical.com>
+	<20240120-zeitmanagement-abbezahlen-8a3e2b5de72a@brauner>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240117230032.2312067-1-daeho43@gmail.com> <df9645d9-1e9a-4bd2-88bb-26425cf45811@kernel.org>
- <CACOAw_yjEuGSvo_qyoA13U0HwOr3gOzGtNf2Twhes01SNSGQeg@mail.gmail.com>
- <b18c286a-cc72-439c-b373-98e0d6504618@kernel.org> <CACOAw_yqrtEhq4wtJbs7CVn260h7iZyC7koCWH1iMyeQo5140g@mail.gmail.com>
- <e879da72-4c4f-4aed-8081-784f2de5c887@kernel.org>
-In-Reply-To: <e879da72-4c4f-4aed-8081-784f2de5c887@kernel.org>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Mon, 29 Jan 2024 07:47:49 -0800
-Message-ID: <CACOAw_xDDoOQEHOAXkG+8PF8yD0MtUAW4J04tYcPCh3VMp7FGQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs-tools: allocate logs after conventional
- area for HM zoned devices
-To: Chao Yu <chao@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	kernel-team@android.com, Daeho Jeong <daehojeong@google.com>, 
-	Yongpeng Yang <yangyongpeng1@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jan 28, 2024 at 5:27=E2=80=AFPM Chao Yu <chao@kernel.org> wrote:
->
-> On 2024/1/27 2:17, Daeho Jeong wrote:
-> > On Thu, Jan 25, 2024 at 5:27=E2=80=AFPM Chao Yu <chao@kernel.org> wrote=
-:
-> >>
-> >> On 2024/1/26 0:25, Daeho Jeong wrote:
-> >>> On Wed, Jan 24, 2024 at 7:34=E2=80=AFPM Chao Yu <chao@kernel.org> wro=
-te:
-> >>>>
-> >>>> +Cc Yongpeng Yang
-> >>>>
-> >>>> Daeho,
-> >>>>
-> >>>> Yongpeng reports a potential issue: if c.devices[0].total_segments i=
-s
-> >>>> larger than segments of mainarea, c.cur_seg[CURSEG_HOT_NODE] will ex=
-ceed
-> >>>> end boundary of mainarea. Could you please check that? though it's a=
- corner
-> >>>> case.
-> >>>
-> >>> Can you elaborate more?
-> >>
-> >> Since c.cur_seg[CURSEG_HOT_NODE] is an offset started from main_blkadd=
-r.
-> >
-> > Oh, Got it.
-> > Then, how about this?
-> >
-> >           c.cur_seg[CURSEG_HOT_NODE] =3D c.zoned_model =3D=3D F2FS_ZONE=
-D_HM ?
-> >                           (c.devices[1].start_blkaddr -
-> > get_sb(main_blkaddr)) / c.blks_per_seg : 0;
->
-> Better, but log header should align to start blkaddr of zone?
+On Sat, 20 Jan 2024 16:23:38 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-It's already aligned here.
+> On Mon, Jan 08, 2024 at 01:08:21PM +0100, Alexander Mikhalitsyn wrote:
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Seth Forshee <sforshee@kernel.org>
+> > Cc: Miklos Szeredi <miklos@szeredi.hu>
+> > Cc: Amir Goldstein <amir73il@gmail.com>
+> > Cc: Bernd Schubert <bschubert@ddn.com>
+> > Cc: <linux-fsdevel@vger.kernel.org>
+> > Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+> > ---
+> >  fs/fuse/dir.c    | 32 +++++++++++++++++++++-----------
+> >  fs/fuse/file.c   |  2 +-
+> >  fs/fuse/fuse_i.h |  4 ++--
+> >  3 files changed, 24 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> > index f7c2c54f7122..5fbb7100ad1c 100644
+> > --- a/fs/fuse/dir.c
+> > +++ b/fs/fuse/dir.c
+> > @@ -1739,17 +1739,27 @@ static bool update_mtime(unsigned ivalid, bool trust_local_mtime)
+> >  	return true;
+> >  }
+> >  
+> > -static void iattr_to_fattr(struct fuse_conn *fc, struct iattr *iattr,
+> > -			   struct fuse_setattr_in *arg, bool trust_local_cmtime)
+> > +static void iattr_to_fattr(struct mnt_idmap *idmap, struct fuse_conn *fc,
+> > +			   struct iattr *iattr, struct fuse_setattr_in *arg,
+> > +			   bool trust_local_cmtime)
+> >  {
+> >  	unsigned ivalid = iattr->ia_valid;
+> >  
+> >  	if (ivalid & ATTR_MODE)
+> >  		arg->valid |= FATTR_MODE,   arg->mode = iattr->ia_mode;
+> > -	if (ivalid & ATTR_UID)
+> > -		arg->valid |= FATTR_UID,    arg->uid = from_kuid(fc->user_ns, iattr->ia_uid);
+> > -	if (ivalid & ATTR_GID)
+> > -		arg->valid |= FATTR_GID,    arg->gid = from_kgid(fc->user_ns, iattr->ia_gid);
+> > +
+> > +	if (ivalid & ATTR_UID) {
+> > +		kuid_t fsuid = from_vfsuid(idmap, fc->user_ns, iattr->ia_vfsuid);
+> > +		arg->valid |= FATTR_UID;
+> > +		arg->uid = from_kuid(fc->user_ns, fsuid);
+> > +	}
+> > +
+> > +	if (ivalid & ATTR_GID) {
+> > +		kgid_t fsgid = from_vfsgid(idmap, fc->user_ns, iattr->ia_vfsgid);
+> > +		arg->valid |= FATTR_GID;
+> > +		arg->gid = from_kgid(fc->user_ns, fsgid);
+> > +	}
+> > +
+> >  	if (ivalid & ATTR_SIZE)
+> >  		arg->valid |= FATTR_SIZE,   arg->size = iattr->ia_size;
+> >  	if (ivalid & ATTR_ATIME) {
+> > @@ -1869,8 +1879,8 @@ int fuse_flush_times(struct inode *inode, struct fuse_file *ff)
+> >   * vmtruncate() doesn't allow for this case, so do the rlimit checking
+> >   * and the actual truncation by hand.
+> >   */
+> > -int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
+> > -		    struct file *file)
+> > +int fuse_do_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+> > +		    struct iattr *attr, struct file *file)
+> >  {
+> >  	struct inode *inode = d_inode(dentry);
+> >  	struct fuse_mount *fm = get_fuse_mount(inode);
+> > @@ -1890,7 +1900,7 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
+> >  	if (!fc->default_permissions)
+> >  		attr->ia_valid |= ATTR_FORCE;
+> >  
+> > -	err = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+> > +	err = setattr_prepare(idmap, dentry, attr);
+> >  	if (err)
+> >  		return err;
+> >  
+> > @@ -1949,7 +1959,7 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
+> >  
+> >  	memset(&inarg, 0, sizeof(inarg));
+> >  	memset(&outarg, 0, sizeof(outarg));
+> > -	iattr_to_fattr(fc, attr, &inarg, trust_local_cmtime);
+> > +	iattr_to_fattr(idmap, fc, attr, &inarg, trust_local_cmtime);
+> >  	if (file) {
+> >  		struct fuse_file *ff = file->private_data;
+> >  		inarg.valid |= FATTR_FH;
+> > @@ -2084,7 +2094,7 @@ static int fuse_setattr(struct mnt_idmap *idmap, struct dentry *entry,
+> >  	if (!attr->ia_valid)
+> >  		return 0;
+> >  
+> > -	ret = fuse_do_setattr(entry, attr, file);
+> > +	ret = fuse_do_setattr(idmap, entry, attr, file);
+> >  	if (!ret) {
+> >  		/*
+> >  		 * If filesystem supports acls it may have updated acl xattrs in
+> > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> > index a660f1f21540..e0fe5497a548 100644
+> > --- a/fs/fuse/file.c
+> > +++ b/fs/fuse/file.c
+> > @@ -2870,7 +2870,7 @@ static void fuse_do_truncate(struct file *file)
+> >  	attr.ia_file = file;
+> >  	attr.ia_valid |= ATTR_FILE;
+> >  
+> > -	fuse_do_setattr(file_dentry(file), &attr, file);
+> > +	fuse_do_setattr(&nop_mnt_idmap, file_dentry(file), &attr, file);
+> 
+> Same as for the other patch. Please leave a comment in the commit
+> message that briefly explains why it's ok to pass &nop_mnt_idmap here.
+> It'll help us later. :)
 
-        if (c.zoned_mode && c.ndevs > 1)
-                zone_align_start_offset +=3D
-                        (c.devices[0].total_sectors * c.sector_size) %
-zone_size_bytes;
+Sure, will be fixed in -v2 ;-)
 
-...
+Explanation here is that in this specific case attr.ia_valid = ATTR_SIZE | ATTR_FILE,
+which but we only need an idmapping for ATTR_UID | ATTR_GID.
 
-        for (i =3D 0; i < c.ndevs; i++) {
-                if (i =3D=3D 0) {
-                        c.devices[i].total_segments =3D
-                                (c.devices[i].total_sectors *
-                                c.sector_size - zone_align_start_offset) /
-                                segment_size_bytes;
-                        c.devices[i].start_blkaddr =3D 0;
-                        c.devices[i].end_blkaddr =3D c.devices[i].total_seg=
-ments *
-                                                c.blks_per_seg - 1 +
-                                                sb->segment0_blkaddr;
-                } else {
-                        c.devices[i].total_segments =3D
-                                c.devices[i].total_sectors /
-                                (c.sectors_per_blk * c.blks_per_seg);
-                        c.devices[i].start_blkaddr =3D
-                                        c.devices[i - 1].end_blkaddr + 1;
+From the other side, having struct file pointer means that getting an idmapping as easy as file_mnt_idmap(file),
+and probably it's easier to pass an idmapping in this specific case rather than skipping it for a valid reasons.
+What do you think about this?
 
-...
-
-        total_meta_zones =3D ZONE_ALIGN(total_meta_segments *
-                                                c.blks_per_seg);
-
-        set_sb(main_blkaddr, get_sb(segment0_blkaddr) + total_meta_zones *
-                                c.segs_per_zone * c.blks_per_seg);
-
->
-> Thanks,
->
-> >
-> >> If c.cur_seg[CURSEG_HOT_NODE] was assigned w/ c.devices[0].total_segme=
-nts,
-> >> and c.devices[0].total_segments is larger than segments of mainare,
-> >> c.cur_seg[CURSEG_HOT_NODE] will exceed the end boundary of mainarea.
-> >>
-> >>          c.cur_seg[CURSEG_HOT_NODE] =3D c.zoned_model =3D=3D F2FS_ZONE=
-D_HM ?
-> >>                          c.devices[0].total_segments : 0;
-> >>
-> >>> In the case of F2FS_ZONED_HM, we have the devices[1].
-> >>> Do you mean the case we format the filesystem intentionally smaller
-> >>> than what devices have?
-> >>
-> >> I mean blew case:
-> >> device[0]: conventional device size =3D 10240 MB
-> >> device[1]: zone device size =3D 2 MB
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>>>
-> >>>> On 2024/1/18 7:00, Daeho Jeong wrote:
-> >>>>> From: Daeho Jeong <daehojeong@google.com>
-> >>>>>
-> >>>>> Make to allocate logs after conventional area for HM zoned devices =
-to
-> >>>>> spare them for file pinning support.
-> >>>>>
-> >>>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> >>>>> ---
-> >>>>>     mkfs/f2fs_format.c | 3 ++-
-> >>>>>     1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/mkfs/f2fs_format.c b/mkfs/f2fs_format.c
-> >>>>> index f2840c8..91a7f4b 100644
-> >>>>> --- a/mkfs/f2fs_format.c
-> >>>>> +++ b/mkfs/f2fs_format.c
-> >>>>> @@ -557,7 +557,8 @@ static int f2fs_prepare_super_block(void)
-> >>>>>                 c.cur_seg[CURSEG_COLD_DATA] =3D 0;
-> >>>>>                 c.cur_seg[CURSEG_WARM_DATA] =3D next_zone(CURSEG_CO=
-LD_DATA);
-> >>>>>         } else if (c.zoned_mode) {
-> >>>>> -             c.cur_seg[CURSEG_HOT_NODE] =3D 0;
-> >>>>> +             c.cur_seg[CURSEG_HOT_NODE] =3D c.zoned_model =3D=3D F=
-2FS_ZONED_HM ?
-> >>>>> +                     c.devices[0].total_segments : 0;
-> >>>>>                 c.cur_seg[CURSEG_WARM_NODE] =3D next_zone(CURSEG_HO=
-T_NODE);
-> >>>>>                 c.cur_seg[CURSEG_COLD_NODE] =3D next_zone(CURSEG_WA=
-RM_NODE);
-> >>>>>                 c.cur_seg[CURSEG_HOT_DATA] =3D next_zone(CURSEG_COL=
-D_NODE);
+Kind regards,
+Alex
