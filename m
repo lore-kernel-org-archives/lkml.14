@@ -1,108 +1,115 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4226C604C5;
-	Mon, 29 Jan 2024 20:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE061534EB
+	for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 20:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706560860; cv=none; b=AVJI+tHPw9Sp8cx/Q/4E2I1+xBymubPZuz5NPHi336DWA+8Ax5n2323Eo7rx+5YaGHBjWnyt6MYL5LM9V5kYr/TECnRIcRcizYQNfoVSPgLBTaE3MDT5rQt/kFeHWlS4eOozp5WVrgjwcubN/tkQhafbI5rUjcv3GvWYkXp7Ar0=
+	t=1706561054; cv=none; b=XyqV12AVH2fYxpdTluo+1mqlYWNcTJcE5ZnPCjFY1LisTOKfcEK/Fw8FXSbocHPkTnf/CEBpp0YMl8fO9lOSPEO3QJpvLivwflN1oKOk7NisKJ+AaV5OP1whCUyDCmubsAfHiIGHWT4p7MmupiPz2CtwDuiQoKNneb9W67oejNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706560860; c=relaxed/simple;
-	bh=bgKBzEUJGevs+03viKCGW7Vn/kvA4V7Wl7NnMIBDmXI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rZ7f4oP6CNmY4H3oYB451QU4C6Qpj8deUXrr+Ej97rKOY953a7aFoHLBZYPOqGfjwnfBo4CItRi04QdyK0fAWQ0Rjnw0jR7jool9ghDvaDVwcmTZw4mPc8RqxBbklaYqybyRfIvuHLAa5DUTb1Ctiz5/p+sr8cuUiG+rvpcAfls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id da105db8dd8b6701; Mon, 29 Jan 2024 21:40:54 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 4F993669776;
-	Mon, 29 Jan 2024 21:40:54 +0100 (CET)
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
-Subject: [PATCH v1] thermal: sysfs: Make trip hysteresis writable along with trip temperature
-Date: Mon, 29 Jan 2024 21:40:54 +0100
-Message-ID: <4565526.LvFx2qVVIh@kreacher>
+	s=arc-20240116; t=1706561054; c=relaxed/simple;
+	bh=Elo6Kas6QgeP8iJYfbZQ29s6uVogIsyKYcHhQDUTX4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VxJJSN0VymY8lyFr1NRwQ4X+MAiH8xH9viMiSqQKkDZDVUy91lQfF9CMdQTfmFqBuwlc67wjn2Bv6VhpxZZWPK4z+utgS8hQvOcQDAzzF6hQlogd16K4VU1haZy8m8PB+Nu4uMUGK1ko5yr4Uen1esu19FeU0q5WxjX6OlA9/Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iQ9gsx7u; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iQ9gsx7u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706561053; x=1738097053;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Elo6Kas6QgeP8iJYfbZQ29s6uVogIsyKYcHhQDUTX4w=;
+  b=iQ9gsx7uYHD3Ow405moXh8YF/f8oPpayxZTt/D9tYublkUhRIX36oIvP
+   5HA1jvzwDCLrIfYf69ApCFXdw+vaUaMm7huZHyHFK2cEjROr0veGttdEQ
+   N9pIkP7g+PMaPlEODJiCPN/PLole5wjukZijYffmTjoHsUYgqj2DFIy8N
+   mRj/IqVXFi80dk/5w//skIfqpeM5QTDpYnv2nNoGkaPJ6Zz0DfHAdVWTY
+   ro5W/pmfmCXNvFT8EUKUt6I4B8gDK7ZNx6G7qKeSWDSNDfOVz2ymWJR5H
+   YuLALJ/sH8zyByDPmJiUuWhAPSTq5RmPUORUTucKx96Xd9Z1PFHAmTpHg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="2913273"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="2913273"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 12:44:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="858241427"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="858241427"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Jan 2024 12:44:07 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id E906FFF; Mon, 29 Jan 2024 22:26:06 +0200 (EET)
+Date: Mon, 29 Jan 2024 22:26:06 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Theodore Ts'o <tytso@mit.edu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	"Kalra, Ashish" <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] Randomness on confidential computing platforms
+Message-ID: <dlhffyn7cccn5d4uvubggkrmtyxl4jodj5ukffafpsxsnqini3@5rcbybumab4c>
+References: <20240126134230.1166943-1-kirill.shutemov@linux.intel.com>
+ <276aaeee-cb01-47d3-a3bf-f8fa2e59016c@intel.com>
+ <dqiaimv3qqh77cfm2huzja4vsho3jls7vjmnwgda7enw633ke2@qiqrdnno75a7>
+ <f5236e76-27d0-4a90-bde5-513ac9446184@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtgedguddvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeegfffhudejlefhtdegffekteduhfethffhieettefhkeevgfdvgfefieekiefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopehruhhirdiihhgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5236e76-27d0-4a90-bde5-513ac9446184@intel.com>
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Mon, Jan 29, 2024 at 10:55:38AM -0800, Dave Hansen wrote:
+> On 1/29/24 08:41, Kirill A. Shutemov wrote:
+> > On Mon, Jan 29, 2024 at 08:30:11AM -0800, Dave Hansen wrote:
+> >> On 1/26/24 05:42, Kirill A. Shutemov wrote:
+> >>> 3. Panic after enough re-tries of RDRAND/RDSEED instructions fail.
+> >>>    Another DoS variant against the Guest.
+> >>
+> >> I think Sean was going down the same path, but I really dislike the idea
+> >> of having TDX-specific (or CoCo-specific) policy here.
+> >>
+> >> How about we WARN_ON() RDRAND/RDSEED going bonkers?  The paranoid folks
+> >> can turn on panic_on_warn, if they haven't already.
+> > 
+> > Sure, we can do it for kernel, but we have no control on what userspace
+> > does.
+> > 
+> > Sensible userspace on RDRAND/RDSEED failure should fallback to kernel
+> > asking for random bytes, but who knows if it happens in practice
+> > everywhere.
+> > 
+> > Do we care?
+> 
+> I want to make sure I understand the scenario:
+> 
+>  1. We're running in a guest under TDX (or SEV-SNP)
+>  2. The VMM (or somebody) is attacking the guest by eating all the
+>     hardware entropy and RDRAND is effectively busted
+>  3. Assuming kernel-based panic_on_warn and WARN_ON() rdrand_long()
+>     failure, that rdrand_long() never gets called.
 
-Trip point temperature can be modified via sysfs if
-CONFIG_THERMAL_WRITABLE_TRIPS is enabled and the thermal
-zone creator requested that the given trip be writable
-in the writable trips mask passed to the registration
-function.
+Never gets called during attack. It can be used before and after.
 
-However, trip point hysteresis is treated differently - it is only
-writable if the thermal zone has a .set_trip_hyst() operation defined
-and neither CONFIG_THERMAL_WRITABLE_TRIPS, nor the writable trips mask
-supplied by the zone creator has any bearing on this.  That is
-inconsistent and confusing, and it generally does not meet user
-expectations.
+>  4. Userspace is using RDRAND output in some critical place like key
+>     generation and is not checking it for failure, nor mixing it with
+>     entropy from any other source
+>  5. Userspace uses the failed RDRAND output to generate a key
+>  6. Someone exploits the horrible key
+> 
+> Is that it?
 
-For this reason, modify create_trip_attrs() to handle trip point
-hysteresis in the same way as trip point temperature, so they both
-are writable at the same time regardless of what trip point operations
-are defined for the thermal zone.
+Yes.
 
-Link: https://lore.kernel.org/linux-pm/20240106191502.29126-1-quic_manafm@quicinc.com
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Notes:
-
- * I don't think that CONFIG_THERMAL_WRITABLE_TRIPS is very useful.
-   The only thing controlled by it is whether or not the writable trip
-   mask used during registration will have any effect and this is quite
-   confusing.  Some drivers select it for this reason which seems a bit
-   odd to me.
-
-   Maybe it can be dropped after the patch below?
-
- * IMO the writable trips mask itself is quite cumbersome and it would be
-   better to mark individual trips as writable in the trips table passed
-   during registration.  This would be less prone to mistakes and it
-   would allow the code to check whether or not the given trip should
-   be writable (root can change sysfs file modes after all).  If I'm not
-   mistaken, this change should not be very hard to make, although it may
-   take some time to switch over all of the relevant drivers from using
-   the mask.
-
----
- drivers/thermal/thermal_sysfs.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-Index: linux-pm/drivers/thermal/thermal_sysfs.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_sysfs.c
-+++ linux-pm/drivers/thermal/thermal_sysfs.c
-@@ -474,7 +474,8 @@ static int create_trip_attrs(struct ther
- 					tz->trip_hyst_attrs[indx].name;
- 		tz->trip_hyst_attrs[indx].attr.attr.mode = S_IRUGO;
- 		tz->trip_hyst_attrs[indx].attr.show = trip_point_hyst_show;
--		if (tz->ops->set_trip_hyst) {
-+		if (IS_ENABLED(v) &&
-+		    mask & (1 << indx)) {
- 			tz->trip_hyst_attrs[indx].attr.attr.mode |= S_IWUSR;
- 			tz->trip_hyst_attrs[indx].attr.store =
- 					trip_point_hyst_store;
-
-
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
