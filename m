@@ -1,89 +1,117 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8767E1E4A1
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BFA1E4A1
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706634130; cv=none; b=lRXXilXeox0CiLxY6vXVyhZYGejfgoYfNI844rNnbZkDPajTuCKTRpy0u3RP9IHHJdTdyKlXgJdzvlA8GGCr8E96U6nH0+Fu58Ae/vnfsPwiiW58fKCOJTcjKoekqRF47nGj2v/hpM82hHdxaEVm/F6+sLOUa6alLn+XQ6MhCRw=
+	t=1706634143; cv=none; b=Z92EVWpcWwucxrYxKXwKVh9NVoO8TVrJOqUuVfRb6ue9Dn6MlCE4QxgoA3ejLmP282NZXYUXm9FrWF8C3Ajo1azHAV3daQdF943wpQNnS0CLWcZKmzlXMh0eaK2K2JZ05OHcVbwIFw6IXwOL6WwVcyF+5/0tCxYVbIfK5JXGhzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706634130; c=relaxed/simple;
-	bh=UdAWFMhVWskyEezYlWIXrrfz1aIEFDkRzDWmsPFUZaw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SzHtrAAfeGN4jH5iNApPE+VEshNtMNZUCbyvB6qdPetZ+mMD9lhxABPDRAIlzfOOGo5jfy9MlIdXipq+OdkBrMno/HoNYwMAcJkKb4upfwEE2wu10cFARDWg3MNNy3/BjvgEXwqyDVWUsHc6Z7vT7E2qWbScuDm42iJkMO42NaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=SOe+KHLc; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1706634143; c=relaxed/simple;
+	bh=L/KdqVCV6Bzxc3SoLK/k21kGaOh5FQ6fpwBhCQsyUQ8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CkJUNxAEIsEQwXELOYotYr37MyLUoKCh9YREPLvM7YbeI37SgIFifjOmyR/9vK1+OBkJ1HKwCQ83FKnLfFSkC0yj5e7r3ltgKsYM6MwUE5/+crfYwjNjLbra1scDz4ApsNqtTFSz0XyoB78dh8vQ8S4ithj+vPPxiHZOSMQAl7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uEaB2tMH; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="SOe+KHLc"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso2069132a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:02:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uEaB2tMH"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ddb83a5deeso4487886b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:02:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1706634129; x=1707238929; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UdAWFMhVWskyEezYlWIXrrfz1aIEFDkRzDWmsPFUZaw=;
-        b=SOe+KHLc9s+nV30oXVvGcgyUgEU6fEU6EzxntnbJTE+nl3Uc/MEA1EWM22hQoauDXD
-         CSlufKASAnZoR5j/LkOtZnceRpnb2A6gdCF47GV3bwv39nFGkynYnDJcNlixyDrCz10Z
-         +7YuwOfoZifwJ5aqxP/tqWmoFFa1qRt41fYyWOTIUBrUtJuHcuaxodAY+dhM8aMd12q8
-         nIOhBt2SXFfMv+yAuqh4zqnN5owkhsYtSOffyIiMo4n+aZGMVRO80wcMb+k0rJrTZ1y+
-         buQx2J65TqYjjXw7eBcvN9RfYWfVSQNMvBLKw8I6zPQTlj5z+SvvhUT6sO33MxVQiXs4
-         uq6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706634129; x=1707238929;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=google.com; s=20230601; t=1706634141; x=1707238941; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UdAWFMhVWskyEezYlWIXrrfz1aIEFDkRzDWmsPFUZaw=;
-        b=pUxxo6NkwT9l38pq5mwk0/tMDmL/O28PuLHPjAEpT+SAyL+Bq1llndEjlgss1Z9C38
-         Y4Txx9G7oDtR1dv42gOyCUjSA+QPhKMT1E0SkwGHw02h2BDgzrA6Lvfzpx7mzDqq9K0m
-         wsQBEa4i/D3ZPlYz4CKQZxvtYGYJrm4kPlrjtKzgYclr/OAXtIJQH4bSxI71C8D94p9i
-         Sdpp4bVxCsRcKJUwsRZUDZ32EUpU1shreMYaQ9Nne7pyzOhKlftHVmuAKx+yCYET0omq
-         PrXKWzJ6buKevDdR3VU0+FIg5oBQ25nRNKKWHBGxqa0DGwZpD5snMZ/4O8UtRZ5HuSqf
-         SBkA==
-X-Gm-Message-State: AOJu0YwRbfT2HiCdoK7JWAeSrZi9XvJRX2JS6GqtvVNKC2twkR6V7Ljg
-	HW0EXZq8MtcDA9vDye2WpNmasxlkXJWHvZJHAgj4loHQFd0jAR36e+Aag/mLudGlowxvUgXm+yi
-	81HRr3NLRORyH5M76fwa0WcantUIzmDiWv7iafQ==
-X-Google-Smtp-Source: AGHT+IFOy96TCjteG0UAX6AIpinpu4X7+FOvTpBQjGrkV3nrUYd7/KbDXfEpg9DrREVncBZI0eO5ZXbjKT7VIM62Kjk=
-X-Received: by 2002:a05:6a20:d703:b0:19c:b1f0:9842 with SMTP id
- iz3-20020a056a20d70300b0019cb1f09842mr4453505pzb.8.1706634128647; Tue, 30 Jan
- 2024 09:02:08 -0800 (PST)
+        bh=6OxUoyIJ3bgXe6LBTsvCQjNpEhIzQfA+N+joEQUVhLo=;
+        b=uEaB2tMHCWHFvNnko7C9pYhyUb3xDinTfDQHRPxWh7AwF8RGHdy6PtKoa+g8c703j/
+         Z8O9J3XVjcEFFXzyuk/fKQm1NMAT1xJxKCPF4jHlxeoFrG8qvMLztaMjTUfWGXZtJHx5
+         9eFKAAGwkSPVs8tJ5fRLMx19RYZefK9oFDYSkBaFuijSMemzcvnmE6jIUnkynNsAKQib
+         DM9UbRQWdL7oYrKw3CZDUYHAAJayj6iboAbbI+ETaXWdM6CTJqIaGj+5GPH1B1yKoBpp
+         BnbIjp4E26T17bdVrrdjBeg03tPk82h81BOe9r7co9QwkMc1a8RJ+sBJli2jKBi5epM8
+         BRLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706634141; x=1707238941;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6OxUoyIJ3bgXe6LBTsvCQjNpEhIzQfA+N+joEQUVhLo=;
+        b=JLySpYSIxgHZaN3GPq65TszYhCJ0lBTR8KKKHkvQN/Mj9kMTEttjx3mKP8nbBt19Fv
+         hqjCnMMDNl1c1LFnwqu0QWYkr4pNskK5C+7vGYBUCVYKmJhWNqIEAKu/LbCLTDv0tySi
+         3XjsnmO9OBHv/kAaWyLmfcai4LaRHEKvdb62AZBM2/JN1cL/Mp+aRSevImua6S847OJu
+         nETBY/cN44gpGWbLVjgjzbWm8Tuv6fLNXJ+YlVStEaB0DZ4bHtTBOchu1+keCTuPWvqh
+         JGIysj09z0Mt+cfvn6T5W+8g3GLnLD2tcfJ34wHtXnuBeOGRuqpGk9pwjcTdzvg5no3Q
+         mKJg==
+X-Gm-Message-State: AOJu0YyPowTA/wfrfKtZ23dMT3SG44iinx270SuzB/q1ooinrI+Qp7qS
+	SG1RC6y6FUDVFZuGiYCkfzIVFhX0TWsqWj5EgFJEG0hEW8s2cxPZ7tapIB1eLw2bWHJonBzPyY5
+	/ArLTSKErShRrnpYhSg==
+X-Google-Smtp-Source: AGHT+IFSJOITkX9FQ5vyk7lZp7iPUAfNUdn773OnngacDKk9fsVdQ25tPAEr+IEdrY3ZfMZZPLW/+Q0AOqb7g5YT
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a05:6a00:27a5:b0:6de:39ef:7e05 with
+ SMTP id bd37-20020a056a0027a500b006de39ef7e05mr408355pfb.3.1706634141087;
+ Tue, 30 Jan 2024 09:02:21 -0800 (PST)
+Date: Tue, 30 Jan 2024 17:02:18 +0000
+In-Reply-To: <CAKEwX=NjgXOt1f1nb_T=2ZCSZMeCbTW7g5s9VejA_HzKxM-Pmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240130152903.3651341-1-naresh.solanki@9elements.com> <6aa79b06-ab59-4f4b-96c4-bdfb03974aec@roeck-us.net>
-In-Reply-To: <6aa79b06-ab59-4f4b-96c4-bdfb03974aec@roeck-us.net>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Tue, 30 Jan 2024 22:31:58 +0530
-Message-ID: <CABqG17ghoF0UMU4m=+tQtSncgZUJ7fdk04cjHN4r-x=RwiAWbQ@mail.gmail.com>
-Subject: Re: [PATCH] hwmon: (pmbus_core) Allow to hook PMBUS_SMBALERT_MASK
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, mazziesaccount@gmail.com, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>, linux-hwmon@vger.kernel.org, 
+Mime-Version: 1.0
+References: <20240130014208.565554-1-hannes@cmpxchg.org> <20240130014208.565554-6-hannes@cmpxchg.org>
+ <Zbiqmi0KMo0zTJ-p@google.com> <CAKEwX=NjgXOt1f1nb_T=2ZCSZMeCbTW7g5s9VejA_HzKxM-Pmw@mail.gmail.com>
+Message-ID: <Zbkrms4k100Hdu7Q@google.com>
+Subject: Re: [PATCH 05/20] mm: zswap: clean up zswap_entry_put()
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Guenter,
-
-On Tue, 30 Jan 2024 at 22:01, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Tue, Jan 30, 2024 at 08:59:03PM +0530, Naresh Solanki wrote:
-> > From: Patrick Rudolph <patrick.rudolph@9elements.com>
+On Tue, Jan 30, 2024 at 08:31:22AM -0800, Nhat Pham wrote:
+> On Mon, Jan 29, 2024 at 11:51=E2=80=AFPM Yosry Ahmed <yosryahmed@google.c=
+om> wrote:
 > >
-> > Use _pmbus_write_word_data to allow intercepting writes to
-> > PMBUS_SMBALERT_MASK in the custom chip specific code.
+> > On Mon, Jan 29, 2024 at 08:36:41PM -0500, Johannes Weiner wrote:
+> > > Remove stale comment and unnecessary local variable.
+> > >
+> > > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > ---
+> > >  mm/zswap.c | 10 +++-------
+> > >  1 file changed, 3 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/mm/zswap.c b/mm/zswap.c
+> > > index 0c6adaf2fdb6..7a7e8da2b4f8 100644
+> > > --- a/mm/zswap.c
+> > > +++ b/mm/zswap.c
+> > > @@ -546,15 +546,11 @@ static void zswap_entry_get(struct zswap_entry =
+*entry)
+> > >       entry->refcount++;
+> > >  }
+> > >
+> > > -/* caller must hold the tree lock
+> > > -* remove from the tree and free it, if nobody reference the entry
+> > > -*/
+> > > +/* caller must hold the tree lock */
 > >
-> > This is required for MP2971/MP2973 which doesn't follow the
-> > PMBUS specification for PMBUS_SMBALERT_MASK.
->
-> Applied, but is there going to be a follow-up patch for those chips ?
-Yes.
+> > We should replace all those "caller must hold the tree lock" comments
+> > with lockdep_assert_held() or assert_spin_locked() or something.
+> >
+> > I can send follow up patches on top if you don't want to resend this
+> > series.
+>=20
+> Agree. There's also this:
+>=20
+> /* should be called under RCU */
+> #ifdef CONFIG_MEMCG
+> static inline struct mem_cgroup *mem_cgroup_from_entry(struct
+> zswap_entry *entry)
+> {
+> return entry->objcg ? obj_cgroup_memcg(entry->objcg) : NULL;
+> }
+>=20
+> which you pointed out in the per-cgroup zswap LRU review :)
 
-Regards,
-Naresh
->
-> Thanks,
-> Guenter
+I will send out a patch this week or so.
