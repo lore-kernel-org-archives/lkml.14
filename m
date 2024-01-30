@@ -1,145 +1,84 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AE56EB50;
-	Tue, 30 Jan 2024 11:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51ADA679E2;
+	Tue, 30 Jan 2024 11:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706613232; cv=none; b=de3e41KbJzTCrRGcIsvKrM9xsWOQw5+8tayIIFiSQmmPcpkw5yp/0s8non8PoE/PuLJyTT6GXUm9fq0mV+TIxMoiAekGjXViBmSJfBzIo9gqxjumNZwoSGa3JsfjxP+diVBZaNaZV8MA6C57ejNjt01K53L79WaY8n6ptMLiGG4=
+	t=1706613243; cv=none; b=ssQcYSDLXcxSeowymZvahr6jY9b5GmWKHRRZHd9oV+mm247az5N6rrRB9CLdm4lg1u0VaIpll7bDY77tv5Ft0yhRtfXz1WKKDuqK30mX5iUyDlNhadarY3bvbpUQtp8vpMcG3nkoWynBn3nLT/wUrwQMgzk8CzaJUMLnz/HvJgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706613232; c=relaxed/simple;
-	bh=1MaXaoAlGaux22185ES05zD+Vc6KSQlHot9SWkJLGp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m/TtpW19r7WBY8lBgKcbGa/sVEKE1PDQeaiJpBOxQuOiBUbPQfTLJhPxXuP4wFISCSYKQHSaG/DmtCkSrroMqUh+R1XomHpaslMYLMouxDHz49bS1AkK2C+CJDgdLvHUGUrgCUq0qKLsMU+aPEHVIg4p9pbGwMx0qGnw8iDmPVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HlU33HM8; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706613243; c=relaxed/simple;
+	bh=/9NzOhfNsiFt9TBV15bxnbKB8v1glIQ/hLc+NQj7LX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cZ+Ge4aYdo9VPRgwr5sVB+ge49E8/E1evAlCBI1BGN6KXdOMv6wivjbf26+gXYMaQQCZixOCL6QfGYpKBBiUk+KV3lmkex7xxsUXWkqDkecQXy28enknmNViReknhCPeJj+BItOSvi+PpHs9E8s8QQ4591YpRUOAHewy9gp/lQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yumtipkg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HlU33HM8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706613229;
-	bh=1MaXaoAlGaux22185ES05zD+Vc6KSQlHot9SWkJLGp0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HlU33HM8DXvNnHd5pfL0Un12V2JosWoeboB5m/VaZSU7mn27JZRL7n0hOSbYmEV63
-	 nbQXPRYgNnV9Tg09ybHmHOhmVp5umMRDpOApeet2UUjPgeUG/2TZDKp/Kpyz+HgXZG
-	 HjC+6zWpXXGHJzQMPFzdZYEqaqQZxazoLeLlMmgd8mLUOxWzvFSmQESaHg+0Dz/Gh2
-	 HAyBQd2ww0Hzr2aKjZ1depqQEX+Q9jSqA9P+yS8KR91henEbqscmEDj2/qaW9sT9sq
-	 9WWEE88qf6woeJXZQ4+1zKcYguqf9dKIOVMXS0iAcsTnVywM4v2EaqrU0mJlnhEql4
-	 bXn5tAHgulcXA==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CCFE93780FC7;
-	Tue, 30 Jan 2024 11:13:47 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: daniel.lezcano@linaro.org
-Cc: miquel.raynal@bootlin.com,
-	rafael@kernel.org,
-	rui.zhang@intel.com,
-	lukasz.luba@arm.com,
-	support.opensource@diasemi.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	amitk@kernel.org,
-	thara.gopinath@gmail.com,
-	niklas.soderlund@ragnatech.se,
-	srinivas.pandruvada@linux.intel.com,
-	angelogioacchino.delregno@collabora.com,
-	baolin.wang@linux.alibaba.com,
-	u.kleine-koenig@pengutronix.de,
-	hayashi.kunihiko@socionext.com,
-	d-gole@ti.com,
-	linus.walleij@linaro.org,
-	DLG-Adam.Ward.opensource@dm.renesas.com,
-	error27@gmail.com,
-	heiko@sntech.de,
-	hdegoede@redhat.com,
-	jernej.skrabec@gmail.com,
-	f.fainelli@gmail.com,
-	bchihi@baylibre.com,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH v1 18/18] thermal/drivers/int340x: Migrate to thermal_zone_device_register()
-Date: Tue, 30 Jan 2024 12:12:50 +0100
-Message-ID: <20240130111250.185718-19-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240130111250.185718-1-angelogioacchino.delregno@collabora.com>
-References: <20240130111250.185718-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yumtipkg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BED6C433F1;
+	Tue, 30 Jan 2024 11:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706613242;
+	bh=/9NzOhfNsiFt9TBV15bxnbKB8v1glIQ/hLc+NQj7LX8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yumtipkggd8S+HmelxCX+RgmP58dbbSqaP1bl0m9Jk8KAfbq57cRp7DF/g9AQO/bZ
+	 SIJSkZTXsWBFcxJJwFps8y+WP7wrW9azpG6uOaqHkoiB9UYw1+yJlRRvSeBUVgArhx
+	 Od7wfg+QwsYx9Yf2m2wUE3M3cFWp4KtBlOXhs9BoyWcSXrh7JhKND5VWv43cBGWANy
+	 uts3cwul209VPKtFwcCGFai9xYiOlSYUNlTbAkrj45qKvdA7US2r7WSwn30ESSdc3V
+	 hsJp1CDqsKtmTKZwz9m50KJIJvoktjc6uZ75SzKX+AVLIq/Nali7SDxE9wbZoZ4w0h
+	 uklMom/GuJGVw==
+Date: Tue, 30 Jan 2024 11:13:55 +0000
+From: Mark Brown <broonie@kernel.org>
+To: kovalev@altlinux.org
+Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org, u.kleine-koenig@pengutronix.de,
+	a.firago@yadro.com, sashal@kernel.org, zhuning0077@gmail.com,
+	tiwai@suse.com, perex@perex.cz, lgirdwood@gmail.com
+Subject: Re: [PATCH 6.1.y 1/7] ASoC: codecs: es8326: Convert to i2c's
+ .probe_new()
+Message-ID: <25386374-44e8-4b74-8803-2dcb0806f80d@sirena.org.uk>
+References: <20240130094708.290485-1-kovalev@altlinux.org>
+ <20240130094708.290485-2-kovalev@altlinux.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JlNGArQx6R6RiAba"
+Content-Disposition: inline
+In-Reply-To: <20240130094708.290485-2-kovalev@altlinux.org>
+X-Cookie: 1 bulls, 3 cows.
 
-The thermal API has a new thermal_zone_device_register() function which
-is deprecating the older thermal_zone_device_register_with_trips() and
-thermal_tripless_zone_device_register().
 
-Migrate to the new thermal zone device registration function.
+--JlNGArQx6R6RiAba
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- .../intel/int340x_thermal/int3400_thermal.c   | 20 +++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+On Tue, Jan 30, 2024 at 12:47:02PM +0300, kovalev@altlinux.org wrote:
+> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> Commit 784252bac835c831e10c48be633cd1ff0d697326 upstream.
+>=20
+> The probe function doesn't make use of the i2c_device_id * parameter so it
+> can be trivially converted.
 
-diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-index 427d370648d5..d8ca7ed37950 100644
---- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-@@ -536,11 +536,6 @@ static struct thermal_zone_device_ops int3400_thermal_ops = {
- 	.change_mode = int3400_thermal_change_mode,
- };
- 
--static struct thermal_zone_params int3400_thermal_params = {
--	.governor_name = "user_space",
--	.no_hwmon = true,
--};
--
- static void int3400_setup_gddv(struct int3400_thermal_priv *priv)
- {
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -572,6 +567,16 @@ static void int3400_setup_gddv(struct int3400_thermal_priv *priv)
- static int int3400_thermal_probe(struct platform_device *pdev)
- {
- 	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-+	struct thermal_zone_device_params tzdp = {
-+		.tzp = {
-+			.type = "INT3400 Thermal",
-+			.no_hwmon = true,
-+			.ops = &int3400_thermal_ops,
-+		}
-+	};
-+	struct thermal_governor_params tgp = {
-+		.governor_name = "user_space"
-+	};
- 	struct int3400_thermal_priv *priv;
- 	int result;
- 
-@@ -609,9 +614,8 @@ static int int3400_thermal_probe(struct platform_device *pdev)
- 
- 	evaluate_odvp(priv);
- 
--	priv->thermal = thermal_tripless_zone_device_register("INT3400 Thermal", priv,
--							      &int3400_thermal_ops,
--							      &int3400_thermal_params);
-+	tzdp.tgp = &tgp;
-+	priv->thermal = thermal_zone_device_register(&tzdp);
- 	if (IS_ERR(priv->thermal)) {
- 		result = PTR_ERR(priv->thermal);
- 		goto free_art_trt;
--- 
-2.43.0
+This is obviously not a bug fix.
 
+--JlNGArQx6R6RiAba
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmW42fIACgkQJNaLcl1U
+h9AF4wf+KMjI0jWwgikQQPyjfg4Md2U3jxs0VUI32Yjrul2MIOQvX5y1E4+/SL76
+nXtvq0QhXhQYgk8mdv4zlUD5+9ozi6NqWGNeU0ggquRieWOu1Wl4K5H/OeGDhuIB
+uefbKQ+TFBvjzyQRub/KiQkI/RGvjdIj42ttScUuVID6BG3FlXiZQJATy+gWZIs9
+2r7Up22dgKsmIw6U4GoV9fvQwP9xIM5gp3/OR8i3wpD+4edGekIUbYcs+NbpSo+e
+xUjSz1YlrFfVnTdqZ/6lmdz84P8+0oTesan7TClPSG5qvWDoVvb3ruNeNdwNiMhF
+qNRLj14lGgNu/7SJ+RXonBvcPHPpgQ==
+=4Ne0
+-----END PGP SIGNATURE-----
+
+--JlNGArQx6R6RiAba--
