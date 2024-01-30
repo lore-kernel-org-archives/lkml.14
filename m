@@ -1,129 +1,216 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872221F951
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E69E6A00C;
+	Tue, 30 Jan 2024 12:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706619584; cv=none; b=gQZvbfFqXkQkk9txuvNAH+1iYcBFYSf0v0KBPHTsPdyyLbGAi5a9XR5M4CS58BtFYCS+UIV20sODV2NC9DBp7No/c6f+/3mkqrTEu+IEGWUSCwD8nx4irkLC1WXPfqDdSvbFPl8jQ4nnpZqWca8uhpijs6Jg1z0ScWXi8TezHtM=
+	t=1706619592; cv=none; b=mJNK7NkS+eErPoGRMvHZmXy4DYF8CyEdWOL45/Rfu5LBoQI6KNOe/+7V8xflKS/tJWtTT5xWUXv79mLsLv/xGQMFaZnWHh+8uTszvhS5rD4o30wOWuvK6xtrNJApoJKyNNnAXrpJHE/fBJNFRtzVr/qTO3H0pUHssTIFnCuSFX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706619584; c=relaxed/simple;
-	bh=llKIpxzlNFJiUk8PY5b3Z3fCFrJxXebr98TkLhVix6c=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=E/B96gDYa+xD8mO5KGmAxo16+/ezmb+CcnihV1Xrn+Qp0G2Nciw+tPqrV3g+Zj1iKEqiQV+ZjBW1aBK0OxbqZZNci3D+ahgpQqSRAF/Ueb4Ji4wleH/KUXQQItxAdXLNfNTgHeVSkcmJjwocjvpDc8XBy7MHW8hp3NKHgKMUGxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fU6IjAxN; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1706619592; c=relaxed/simple;
+	bh=Mu1NhudjxUkFXPufimvTKubuhwMDSSA6gg5w3F+WcgI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TwfYYzz2vqI9utZJMLf3cuSPydi4EPNrx5eYm5bMf3GLm2EEIik7c6he6v679ZYNc9ZjadpRJs++X7uSAmgpbsq/xX0HJ3+9afuiwTRcwrAvyplkma3LhrKMRrlHuV5wuQsirunHb95yFpi9hqbPNV03qSV56AluSCLCn4J4Qas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8bWkoI3; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fU6IjAxN"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240130125939epoutp02691d2c33992d2675cdf2398a2be6ec83~vIXcWEknK2582125821epoutp020
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:59:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240130125939epoutp02691d2c33992d2675cdf2398a2be6ec83~vIXcWEknK2582125821epoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1706619579;
-	bh=86uf5cHblxYzJLM1VjZACQcgiuV34NFC+LyTgR1BKi0=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=fU6IjAxNhaNVoL0dcG9yfloQY4KoDhGzATrGw8o7tpb1z25WZ/4wrV8N42AHUiXnc
-	 JKeTEoXbxeeFbGey/QoOljQ1350q/Rq+0M85BW6+lMXjGyjQ7Qtm6b9K6RUHVTX4ap
-	 6htqun4h5XfRQfvSUn+xUqLR8KDqvg9oezbr+XZY=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240130125938epcas5p27117a2b65534244744c3e07e26ecc13f~vIXbvpSQ82295622956epcas5p22;
-	Tue, 30 Jan 2024 12:59:38 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4TPQHD6C8kz4x9Pr; Tue, 30 Jan
-	2024 12:59:36 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5F.0F.10009.8B2F8B56; Tue, 30 Jan 2024 21:59:36 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240130125754epcas5p2edd5cc52dc58add09299d3aa5985a9fd~vIV7QCMa91230812308epcas5p22;
-	Tue, 30 Jan 2024 12:57:54 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240130125754epsmtrp2e12576e79ff1cc8625f64e1057826356~vIV7PB6Nn0742507425epsmtrp2j;
-	Tue, 30 Jan 2024 12:57:54 +0000 (GMT)
-X-AuditID: b6c32a4a-ff1ff70000002719-cd-65b8f2b8df94
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	7A.C1.08755.252F8B56; Tue, 30 Jan 2024 21:57:54 +0900 (KST)
-Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240130125752epsmtip148d450aa6a46e8e5e6576d0cffcc96bd~vIV4u265V0502605026epsmtip1C;
-	Tue, 30 Jan 2024 12:57:52 +0000 (GMT)
-From: Aakarsh Jain <aakarsh.jain@samsung.com>
-To: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: m.szyprowski@samsung.com, andrzej.hajda@intel.com, mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl, krzysztof.kozlowski+dt@linaro.org,
-	robh+dt@kernel.org, conor+dt@kernel.org, linux-samsung-soc@vger.kernel.org,
-	andi@etezian.org, gost.dev@samsung.com, alim.akhtar@samsung.com,
-	pankaj.dubey@samsung.com, aakarsh.jain@samsung.com
-Subject: [PATCH] dt-bindings: media: s5p-mfc: Remove s5p-mfc.txt binding
-Date: Tue, 30 Jan 2024 18:27:48 +0530
-Message-Id: <20240130125748.54194-1-aakarsh.jain@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSf0wTZxjH895dr6dJl1tB966BrdyGC7BCC6U7pkwZxNw2XdjMNsMi0LQn
-	Rfrj1isC2xJ1C+pwot1GIhbZ5NcMWIsVpLCWYUtk6oDMYecIOB0wLSZzoRXRmTnqwfbf9/3m
-	833e93neh0CldlxGlJptrNWsNVL4SuxsIClZ4ZnzsMpvD6joGU+9iL7eeBanmxduIvRvzWGM
-	PukbQeivB0dE9K8DvQj9U/0kRtfeuoHS7qmgiP65rwGnP+/sFtFHRvsR2jk4Kabb3A8Ruqk7
-	IqarfYPiDU8yv7TMoUyzN4Qw7vbPcGYi6MWZMy27mNqudsCE3c8wF++GxflEQdk6A6vVs1Y5
-	a9ZZ9KXmkmzqjS1FuUWZGqVKocqiX6LkZq2JzabyNuUrNpYaF9ug5Du1xvJFK1/L81TaK+us
-	lnIbKzdYeFs2xXJ6I6fmUnmtiS83l6SaWdvLKqUyPXMRLC4zND24g3FOrPJK4Di2G8yiNWAF
-	AUk1POEPgRqwkpCS3wHYNzaOCYc5AHuHxkVRSkrOAzg5altOhB0TuAD5APzEPbSUqEbgFy47
-	UgMIAicVcLjHGA3EknsAnNpvizIoOYrA1umFx1VjSAZO1oXwKI+RifD3+wlRW0Jmw3D4mli4
-	7FnY0TmARrOQtBNwwH8ZjfKQzIMHWt4TmBg4O9S1xMtg+E8fLmgdnGoKLbVphC7vV5ig18OB
-	sQYsWgYlk6CrL02w42HdxVNIVKPkE/Dg39OI4Eugp3FZr4ENE8LrIRkHAx2tQNAMdLr3ioVZ
-	bYNzP5xGDoP4o//f8A0A7eBpluNNJSyfyaWb2Yr/vklnMbnB491Mft0Dblz/K9UPEAL4ASRQ
-	KlZyP6mblUr02qoPWaulyFpuZHk/yFycmB2VrdJZFpfbbCtSqbOUao1Go87K0KiopyS3q4/p
-	pWSJ1saWsSzHWpdzCLFCths5s3aalV/jHp03DU+1N94kMjbnpL0petdRwmzTUBXcg6odzbff
-	eic3VO+bjkvThFzS7R9ELn258+ON6ck5m77vH5ZdyI3RrI5L3Gd3rW3rybo6grs4M/68+urY
-	1jadZ399MGXzhnuODl/iQy6nMrK9K7H7xPyrJ3WBvMKCYGUhP/0j9GXuiVvV8s9HzjvqyPk1
-	PZEX5K1vf1p10HvX6XB7swK36mZnIufyZYrsQ3pFv/qYIbZ23/jxU6sv181qUtbPJAw/9+Kj
-	vfP3XnOoLojwii0mLNx67v3O+DhCrdqx61D5QkbhFU9xwtE/gl002tt+JOWSd6tTVJA7N1VM
-	BpynCyiMN2hVyaiV1/4LXsDzLCQEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSnG7Qpx2pBm3v9Sye7pjJavFg3jY2
-	i8U/njNZ3F/8mcVizd5zTBbzj5xjtbh5YCeTxcWZd1ks+l48ZLbY9Pgaq8XlXXPYLHo2bGW1
-	mHF+H5PF2iN32S2WbfrDZLFo6xd2i9a9R9gdBD2uL/nE7LF4z0smj02rOtk87lzbw+axeUm9
-	R9+WVYwenzfJeZz6+pk9gCOKyyYlNSezLLVI3y6BK2PRr/csBWtZKq4eXsjSwPiKuYuRk0NC
-	wETi8+w7bF2MXBxCArsZJZ71bGeCSMhI/G87xg5hC0us/PecHaKomUniTk8fUBEHB5uArsTZ
-	7TkgcRGBVkaJ6ys7mUAcZoH7TBJP1+4DmyQs4CFxd+pLNpAGFgFViUc/FUHCvAK2Ep8/34Na
-	IC+xesMB5gmMPAsYGVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgSHsZbmDsbtqz7o
-	HWJk4mA8xCjBwawkwvtTc2uqEG9KYmVValF+fFFpTmrxIUZpDhYlcV7xF70pQgLpiSWp2amp
-	BalFMFkmDk6pBibBfxMrzkrOarFfpuNl16TBy6H+yuT7r/S8eBb+FUv5bwo1l7/gNDuy2/Xz
-	hu9dbV1/K+x7N5xZrcRQL1STFRmh5fzKOeKbzIxHUy/e89x5xeGi1VpVwUOOv9ZNWLjqr3r8
-	xx0tO15MED3qXvVG/M63tZsbjJZP5pc4JnTa6nlY2J2H33ftZrnlJ8hlO3uGubthEc/jjav+
-	KpU4uSyzeZVy87HJDvu9lp1Bhv4cwXs1XBnTD/97VXWL5ZnxrCknN1/ZeTNgen24uYvaTEar
-	h3dWzPmccodHXaX+hHLKmlfzxI/8OnLy6IVrOv+z37TOWPj79IPTPP0BE0ReK9Z/jf1yY/2V
-	XIlZ5v83/rwTsnTyAiWW4oxEQy3mouJEAGdDD3LSAgAA
-X-CMS-MailID: 20240130125754epcas5p2edd5cc52dc58add09299d3aa5985a9fd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240130125754epcas5p2edd5cc52dc58add09299d3aa5985a9fd
-References: <CGME20240130125754epcas5p2edd5cc52dc58add09299d3aa5985a9fd@epcas5p2.samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8bWkoI3"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4bdd2160a71so2034471e0c.1;
+        Tue, 30 Jan 2024 04:59:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706619590; x=1707224390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VimagF6ubxCrk5XysR9xh2L9RrsLERkc1cac+8PgDII=;
+        b=E8bWkoI3hv/OJYwohHxyZrWefJsCiEcT/K8jdaKSbdmkaAxpsvojf7uF2kvH/dGofZ
+         EjeO+iUvTvup5tWuebDLPsOoNYhFCbGpKV6cslGeBKdGpwQ94C361qSK8dX4PF18iZ6O
+         igQIpGvdsO67jZyCHkUmTOC6RmERyepesSokdh7sWe9vvbWahx63B1UdBWqCY4BGhpJD
+         9bUWezVzmkB8VXj0he7xROrl7qFYTtbUt3hmBV4Dp//s04BIwvQdZITqT40CXO1CPSCS
+         hvNpxg1qvTI9fKXKAeKgrMYY7cipScAH13r3sBMLT/NOcpseP7s5DbeUl2rEV31fu+y0
+         AmeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706619590; x=1707224390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VimagF6ubxCrk5XysR9xh2L9RrsLERkc1cac+8PgDII=;
+        b=b/gMpIF/GFUHTu8RU30IeOsAia/VIIOledYIAeESB/yfA2Gv2oHrJqxUpCM+tTKbq+
+         9bqxNxicAB+RNe8HCp1Tc5EpDhSis19nUWOeVlloeNEQrB25ZMXHEZZm+8TpSTmnS7Y0
+         Pzl5+JpWhWBCTfYai8OvagtLLtea9zsbXC+p7+8FmMsiCqeI2Ib8bkuuiRXGUzAxDQQF
+         7CSMMiRjS3uHum2noPKff+UYSVUi8KTDkLca9OJ/tC/qhYd/OwaDkMV+0VOPql9o6h3J
+         +fZHIKO8lGGHmWr+ciQF4Mww0fJKe6c9o16qsd1ERk2c+SFr7onTVG2+7jlNBbWwHIUa
+         E7Eg==
+X-Gm-Message-State: AOJu0YzW0fVUc8PHjxP6dit2tuqEEJa+zB6bawgPeU6NCWdUvJFiYDpF
+	nCF7hqlEBIcBzglx33Y7TtHS3Oq68UkAp92Sy605E2pQJVy4sYzK4sO95/GgkM6uPzIanEe6yot
+	to9ZlaPz8/Fsj0JRK4CCwNWHSK8g=
+X-Google-Smtp-Source: AGHT+IFU2DqyVMQfyAetN1nNeVoTPMKMLlD1AhfHroTRYVH1iRaB38yi97B/YSecvnNVxS/1gAAjx6OH0SqsPzTYXwk=
+X-Received: by 2002:a1f:f2c6:0:b0:4bd:5713:f01d with SMTP id
+ q189-20020a1ff2c6000000b004bd5713f01dmr420012vkh.15.1706619589951; Tue, 30
+ Jan 2024 04:59:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240129151618.90922-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240129151618.90922-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240129-magical-unclaimed-e725e2491ccb@spud> <CAMuHMdVhXh_Cd8m00xfVRB9JA8Mfb9+qccu94iVpUMS2z5kmUQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVhXh_Cd8m00xfVRB9JA8Mfb9+qccu94iVpUMS2z5kmUQ@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 30 Jan 2024 12:59:19 +0000
+Message-ID: <CA+V-a8v0tdr-xh__5rcK=xL-yYG1qLtSrAUjPcS_-ZVYy8p9pQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: interrupt-controller:
+ renesas,rzg2l-irqc: Document RZ/Five SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Conor Dooley <conor@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit "538af6e5856b" which convert s5p-mfc bindings to
-json-schema is already merged. Remove "s5p-mfc.txt" file.
+Hi Geert,
 
-Signed-off-by: Aakarsh Jain <aakarsh.jain@samsung.com>
----
- Documentation/devicetree/bindings/media/s5p-mfc.txt | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+Thank you for the review.
 
-diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-deleted file mode 100644
-index e69de29bb2d1..000000000000
--- 
-2.17.1
+On Tue, Jan 30, 2024 at 11:13=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, Jan 29, 2024 at 6:30=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
+> > On Mon, Jan 29, 2024 at 03:16:14PM +0000, Prabhakar wrote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Document RZ/Five (R9A07G043F) IRQC bindings. The IRQC block on RZ/Fiv=
+e SoC
+> > > is almost identical to one found on the RZ/G2L SoC with below differe=
+nces,
+> > > * Additional BUS error interrupt
+> > > * Additional ECCRAM error interrupt
+> > > * Has additional mask control registers for NMI/IRQ/TINT
+> > >
+> > > Hence new compatible string "renesas,r9a07g043f-irqc" is added for RZ=
+/Five
+> > > SoC.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+>
+> Thanks for your patch!
+>
+> > > --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,=
+rzg2l-irqc.yaml
+> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,=
+rzg2l-irqc.yaml
+> > > @@ -23,6 +23,7 @@ properties:
+> > >    compatible:
+> > >      items:
+> > >        - enum:
+> > > +          - renesas,r9a07g043f-irqc   # RZ/Five
+> > >            - renesas,r9a07g043u-irqc   # RZ/G2UL
+> > >            - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
+> > >            - renesas,r9a07g054-irqc    # RZ/V2L
+> > > @@ -88,6 +89,12 @@ properties:
+> > >        - description: GPIO interrupt, TINT30
+> > >        - description: GPIO interrupt, TINT31
+> > >        - description: Bus error interrupt
+> > > +      - description: ECCRAM0 TIE1 interrupt
+>
+> ECCRAM0 1bit error interrupt?
+>
+OK.
 
+> > > +      - description: ECCRAM0 TIE2 interrupt
+>
+> ECCRAM0 2bit error interrupt?
+>
+OK.
+> > > +      - description: ECCRAM0 overflow interrupt
+>
+> ECCRAM0 error overflow interrupt?
+>
+> > > +      - description: ECCRAM1 TIE1 interrupt
+> > > +      - description: ECCRAM1 TIE2 interrupt
+> > > +      - description: ECCRAM1 overflow interrupt
+>
+> Likewise.
+>
+OK.
+
+> > >    interrupt-names:
+> > >      minItems: 41
+> > > @@ -134,6 +141,12 @@ properties:
+> > >        - const: tint30
+> > >        - const: tint31
+> > >        - const: bus-err
+> > > +      - const: eccram0-tie1
+> > > +      - const: eccram0-tie2
+> > > +      - const: eccram0-ovf
+> > > +      - const: eccram1-tie1
+> > > +      - const: eccram1-tie2
+> > > +      - const: eccram1-ovf
+>
+> Why not use the naming from the docs (all 6 include "ti")?
+> EC7TIE1_0, EC7TIE2_0, EC7TIOVF_0, EC7TIE1_1, EC7TIE2_1, EC7TIOVF_1
+> =3D> ec7tie1-0, ec7tie2-0, ec7tiovf-0, ...?
+>
+Agreed.
+
+> > I think the restrictions already in the file become incorrect with this
+> > patch:
+> >   - if:
+> >       properties:
+> >         compatible:
+> >           contains:
+> >             enum:
+> >               - renesas,r9a07g043u-irqc
+> >               - renesas,r9a08g045-irqc
+> >     then:
+> >       properties:
+> >         interrupts:
+> >           minItems: 42
+> >         interrupt-names:
+> >           minItems: 42
+> >       required:
+> >         - interrupt-names
+> >
+> > This used to require all 42 interrupts for the two compatibles here
+> > and at least the first 41 otherwise. Now you've increased the number of
+> > interrupts to 48 thereby removing the upper limits on the existing
+> > devices.
+>
+> I'm gonna repeat (and extend) my question from [1]: How come we thought
+> RZ/G2L and RZ/V2L do not have the bus error and ECCRAM interrupts?
+>
+Hmm not sure how this was missed earlier.
+
+> Looks like most of the conditional handling can be removed (see below).
+>
+> > Given the commit message, I figure that providing 48 interrupts for
+> > (at least some of) those devices would be incorrect?
+>
+> Looks like all of RZ/G2L{,C}, RZ/V2L, RZ/G2UL, and RZ/Five support
+> all 48 interrupts.  RZ/G3S lacks the final three for ECCRAM1.
+>
+Agreed for RZ/G2L{,C}, RZ/V2L, RZ/G2UL, and RZ/Five, but for RZ/G3S it
+becomes tricky the interrupts for ECCRAM0/1 are combined hence they
+have just 3 interrupts. How do you propose the above interrupt naming?
+
+> [1] "Re: [PATCH v3 8/9] dt-bindings: interrupt-controller:
+> renesas,rzg2l-irqc: Document RZ/G3S"
+> https://lore.kernel.org/r/CAMuHMdX88KRnvJchUwrWcgmPooAESOT2492Nr1Z_5UMng3=
+q__Q@mail.gmail.com
+>
+Sorry I missed this thread.
+
+Cheers,
+Prabhakar
