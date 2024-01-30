@@ -1,121 +1,160 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A04381B4;
-	Tue, 30 Jan 2024 08:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF11D5647A
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706603892; cv=none; b=ARTl5NUhMZbCw7lxYQG43GVbXi0GIRsi/lSYuXTDZS0xjCe57jr0zwQb5E7VCV1f5CSpwJPP913zAneQWDMfqLdsUpz4T1dUOece/ScTkfU9dmEqxO8+xvmi6AkruR444dAiR83ZEyQxKmg2g/K3UPxtTGmNAzq50C9qeQP+e/A=
+	t=1706603949; cv=none; b=N5hTTxqiqnKYhX1ET1ceLJUQdxTla1FJk1aTH1YlbRRIg+BBAxjCUqDofwSCoXXvDrii1eniEjCWd2ledNkLnpPvf460PgKBEt6wUB0QP1TeVKtZsX0QGSXO10FRoprBhGkH1mlgXwL8VVbe3O9qFIbuFDgK9szFI9w6j+puRJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706603892; c=relaxed/simple;
-	bh=OH4l3l+PiVerAo7bJ29F5CDHx+9RNN4LLhE2EUaq0/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d8TecrDxI8zrbV0FQjzYQahKVH6jSUB7layyxRcrHBKO+XJeF3bI+xQKsv+jnDL6syVmcbcF3uSRa4tu+RS4jb1FyB3poLld71Ba99qOwAYiZedCEj5qbTe7Z9Bu5Z3aocgGOHzJJfjPxhJpMKnoizCuPe7vxGJxQeVwcF3bA64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DPdwzMVf; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706603949; c=relaxed/simple;
+	bh=UKBvv/BFlyrDxBcZH/pwwW+bTFeY41MHyLdKXLHf118=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcWbZlQA2IBIJQrlVZ0KxIRvkcpcxXd3oO+HZpNt3KEdvrQMx6pJkmoFKkTb6uUPc55m4pwbp1JvlTyPVEGHzm33nJ+95GWF904pqFmGGZMxPdvUKl+tUVaOv5LYpRAiQa1lleSGPT+FODz3uOM558nbHxsyVBaJumslCqFiDRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=VLFkN1Km; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPdwzMVf"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d057003864so8108501fa.3;
-        Tue, 30 Jan 2024 00:38:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VLFkN1Km"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a352d9c0f9dso108323166b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:39:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706603889; x=1707208689; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xDU/2MwbFRllUTNWUINgIIfQ9WlIfROwCcs26QMTgo4=;
-        b=DPdwzMVfR+GilX4dx8lFm1KucgtHzrmOS7RT01lxWODOAf9x0Y0sbHQph3vXDvBY1s
-         9EKWL6OIrx54nNdKyPgU+hYluaSQskYet4APeSA6MJ1tgeuDt43SNeovhvjx/SfgdKKx
-         L+qspfg2w6pVs+0qW4gf5LPq8brnwbuPgxRSej6Z2wLdWySjuPDALXDifhuH+55G85Ar
-         szbTjC/Ed+HzlwuwYfbQMVLhzxdn/XhuPtQNxYlf1CO0wlbU7rpCxjJXJUVSYGz3ZFPj
-         tK0pFFJoPJrs6wpRun+D3PMTSvVKP/hA4hL3qisphgEf3OnpQmFKSP/s3H4E+pa3gJfX
-         MMHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706603889; x=1707208689;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=ffwll.ch; s=google; t=1706603946; x=1707208746; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xDU/2MwbFRllUTNWUINgIIfQ9WlIfROwCcs26QMTgo4=;
-        b=cBHwsvPfM+F/Ku+kvakQb+AwQ+Rndekfyt8MNKEyY97WuQll8nR1TQDsV3DLK9KTG0
-         uHVJiY3S4neJay5SWrCZIDe4mWTikkwd7BsGPxdLCfUAjKEqSCgKx/QWw3TOPPVDtjVz
-         gWXVj/0u6goAr2xhcBdrl0OQYe8m9ZPOpcJPG0UyrKKphbfElfK9kmkE+Iwcjn3M9vwh
-         NA4EP9zSnLWp1L4rPLk5aLA5mlyQGfezVbchUmRfoEbfMgWA4y34PXMa++MQjpPImgdB
-         Cmo/G5TQyUWhF00fu7upDDEr/znA9KRuw+gfrw+DZPHzNjbAWpm8rEyguMj3x9VsBsmv
-         vmeA==
-X-Gm-Message-State: AOJu0YzRYZSwJpXA3zyS1PYmCYP/1WPQfDUX/uNiQqnBhTAUDVikps67
-	WmzA2Wq3doMvqDL619M1IFSpcIW8TgNabhlAeB4YF+cJwFinXpQvKZ5u8Py8Pn2QnLJqmame3UZ
-	19lnK4mnT1uuzdWmtxu0PKCBXjNQ=
-X-Google-Smtp-Source: AGHT+IHu0HanyunsHlgYEqJQJkb6JsQMDMYRKggdaYtUb1d24h//flk1b8/XUBsfJ1tJjUmeHUbxDJxWMCKp612sy4o=
-X-Received: by 2002:a2e:a278:0:b0:2d0:4c36:8cbf with SMTP id
- k24-20020a2ea278000000b002d04c368cbfmr2772545ljm.16.1706603888667; Tue, 30
- Jan 2024 00:38:08 -0800 (PST)
+        bh=TE8g68bLoogToLshL4JAe9mPYk5p/5wsw2SHoYT3R4c=;
+        b=VLFkN1KmuWTsVitoLnBh79rcMLIg3LOLoqWwkQf+bPNukQbpPJTaYrMFXakN42Kcny
+         G6ez3u1M278sO8iOxJ7xvldiPgnYcXcQ+1JLrCJM/R7kINbII56iwpolpooBZsaEDuPE
+         aqoDTzevT0CB1HXbU4RVdkOUuGCut+GMxw7LY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706603946; x=1707208746;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TE8g68bLoogToLshL4JAe9mPYk5p/5wsw2SHoYT3R4c=;
+        b=bXFdAS6i48JbBozqgUfJ9bmttbeX+dLpJSUx6JmtXAoJeabOuXfY1O+TY8AtXVs0Qy
+         ARANU7PPWbWG46GM4H3b6azlUN1JMwYQCprpJSUrJmvXwGPeYydjnoRH2vwsPh+ZWjsH
+         GgnKetx2OxC3Y3rvOHzcP3QvgKXk0XiNzz11S8pMkPVpq3uRAsx2ItmV+9ePfB/uyzir
+         zn6XceHqqYn4iieG9wVPOwBR3ZcWA5LUWWfvYJJ6H8LAiIgFERDr+Ry9fcf3fds5W9YY
+         kJT40+P5w1NxT9cuYVDCJ4S6w+wDP6+ZWrW0NO3N16TD+3kAt49njmpGAYRyMlrCgxN3
+         ShTQ==
+X-Gm-Message-State: AOJu0YxAKmKSrf3eFaFf2Z+3mpBwS3alGagMa2VE5S5cCzVJdJ0+uuMO
+	hAmv+SsWqfCYIzjoMalB6ylfCe1pnbTpIyPlHRvXkATPgS69I5EIHbxcdkqrcJ4=
+X-Google-Smtp-Source: AGHT+IFdCTZEdjvisRYBnyq6kNe7z03n8kmvQKAP+gzRjiJX+KgoRRSwkprv6TQSY4NWeiBUSsDbbA==
+X-Received: by 2002:a17:906:6d01:b0:a35:561d:cf5a with SMTP id m1-20020a1709066d0100b00a35561dcf5amr5688909ejr.6.1706603945702;
+        Tue, 30 Jan 2024 00:39:05 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id s8-20020a17090699c800b00a351828ca32sm4271064ejn.118.2024.01.30.00.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 00:39:05 -0800 (PST)
+Date: Tue, 30 Jan 2024 09:39:03 +0100
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Qiang Yu <yuq825@gmail.com>, Steven Price <steven.price@arm.com>,
+	Emma Anholt <emma@anholt.net>, Melissa Wen <mwen@igalia.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel@collabora.com, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v19 22/30] drm/shmem-helper: Add common memory shrinker
+Message-ID: <Zbi1pzY3CbQxnnBQ@phenom.ffwll.local>
+Mail-Followup-To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Qiang Yu <yuq825@gmail.com>, Steven Price <steven.price@arm.com>,
+	Emma Anholt <emma@anholt.net>, Melissa Wen <mwen@igalia.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel@collabora.com, virtualization@lists.linux-foundation.org
+References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
+ <20240105184624.508603-23-dmitry.osipenko@collabora.com>
+ <20240125100703.76d802ad@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126120800.3410349-1-zhaoyang.huang@unisoc.com> <ZbPAjGJr7hrOvNOo@casper.infradead.org>
-In-Reply-To: <ZbPAjGJr7hrOvNOo@casper.infradead.org>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Tue, 30 Jan 2024 16:37:46 +0800
-Message-ID: <CAGWkznGSFi9thfuauMtRy6o9YxQV_CiWtFzuxkrTPtvpJrnsiw@mail.gmail.com>
-Subject: Re: [PATCHv4 1/1] block: introduce content activity based ioprio
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jens Axboe <axboe@kernel.dk>, Yu Zhao <yuzhao@google.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Niklas Cassel <niklas.cassel@wdc.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, 
-	Hannes Reinecke <hare@suse.de>, Linus Walleij <linus.walleij@linaro.org>, linux-mm@kvack.org, 
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, steve.kang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125100703.76d802ad@collabora.com>
+X-Operating-System: Linux phenom 6.6.11-amd64 
 
-On Fri, Jan 26, 2024 at 10:24=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
-g> wrote:
->
-> On Fri, Jan 26, 2024 at 08:08:00PM +0800, zhaoyang.huang wrote:
-> > +#ifdef CONFIG_CONTENT_ACT_BASED_IOPRIO
-> > +#define bio_add_page(bio, page, len, offset) \
-> > +     ({                                      \
-> > +             int class, level, hint, activity;       \
-> > +             int ret =3D 0;                            \
-> > +             ret =3D bio_add_page(bio, page, len, offset);            =
- \
-> > +             if (ret > 0) {                                          \
-> > +                     class =3D IOPRIO_PRIO_CLASS(bio->bi_ioprio);     =
- \
-> > +                     level =3D IOPRIO_PRIO_LEVEL(bio->bi_ioprio);     =
- \
-> > +                     hint =3D IOPRIO_PRIO_HINT(bio->bi_ioprio);       =
- \
-> > +                     activity =3D IOPRIO_PRIO_ACTIVITY(bio->bi_ioprio)=
-;                \
-> > +                     activity +=3D (bio->bi_vcnt + 1 <=3D IOPRIO_NR_AC=
-TIVITY &&          \
-> > +                             PageWorkingset(&folio->page)) ? 1 : 0;   =
-               \
->
-> I know you didn't even compile this version.
-sorry for forgetting to enable corresponding fs, it will be corrected
-in the next patchset. The correct version is compiled and verified by
-including act_ioprio.h in the below files in the same android
-environment as the previous version.
+On Thu, Jan 25, 2024 at 10:07:03AM +0100, Boris Brezillon wrote:
+> On Fri,  5 Jan 2024 21:46:16 +0300
+> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+> 
+> >   *
+> >   * This function Increases the use count and allocates the backing pages if
+> >   * use-count equals to zero.
+> > + *
+> > + * Note that this function doesn't pin pages in memory. If your driver
+> > + * uses drm-shmem shrinker, then it's free to relocate pages to swap.
+> > + * Getting pages only guarantees that pages are allocated, and not that
+> > + * pages reside in memory. In order to pin pages use drm_gem_shmem_pin().
+> 
+> I still find this explanation confusing, if pages are allocated, they
+> reside in memory. The only difference between drm_gem_shmem_get_pages()
+> and drm_gem_shmem_pin_pages() is that the former lets the system
+> reclaim the memory if the buffer is idle (no unsignalled fence attached
+> to the dma_resv).
+> 
+> We also need to describe the workflow for GEM validation (that's the
+> TTM term for the swapin process happening when a GPU job is submitted).
+> 
+> 1. Prepare the GPU job and initialize its fence
+> 2. Lock the GEM resv
+> 3. Add the GPU job fence to the resv object
+> 4. If the GEM is evicted
+>    a. call drm_gem_shmem_swapin_locked()
+>    b. get the new sgt with drm_gem_shmem_get_pages_sgt_locked()
+>    c. repopulate the MMU table (driver internals)
 
-modified:   fs/erofs/zdata.c
-modified:   fs/ext4/page-io.c
-modified:   fs/ext4/readpage.c
-modified:   fs/f2fs/data.c
-modified:   fs/mpage.c
+Might be good to explain where to call drm_sched_job_arm() here for
+drivers using drm/sched, since that also needs to be at a very specific
+point. Probably best to flesh out the details here by linking to the
+relevant drm/sched and gpuvm functions as examples.
 
->
-> More importantly, conceptually it doesn't work.  All kinds of pages
-> get added to bios, and not all of them are file/anon pages.  That
-> PageWorkingset bit might well be reused for other purposes.  Only
-> the caller knows if this is file/anon memory.  You can't do this here.
->
-I noticed the none-file bio's you mentioned such as the one in
-xfs_rw_bdev() and fscrypt_zeroout_range(). That's also the reason I
-don't define the macro in common fs's header file. It should be up to
-fs to decide which bio_add_xxx should be replaced by the activity
-based one while keeping others as legacy versions.
+> 5. Unlock the GEM dma_resv
+> 6. Submit the GPU job
+> 
+> With this sequence, the GEM pages are guaranteed to stay around until
+> the GPU job is finished.
+
+Yeah I think the comment needs to explain how this ties together with
+dma_resv locking and dma_resv fences, otherwise it just doesn't make much
+sense.
+
+This holds even more so given that some of the earlier drivers derived
+from i915-gem code (and i915-gem itself) use _pin() both for these more
+permanent pinnings, and also to temporarily put the memory in place before
+it all gets fenced and then unpinned&unlocked.
+
+So would be really good to have the sharpest possible nomeclatura here we
+can get, and link between all the related concepts and functions in the
+kerneldoc.
+
+Some overview flow like Boris sketched above in a DOC: section would also
+be great.
+
+Cheers, Sima
+> 
+> >   */
+> >  int drm_gem_shmem_get_pages(struct drm_gem_shmem_object *shmem)
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
