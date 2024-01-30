@@ -1,87 +1,202 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from brightrain.aerifal.cx (brightrain.aerifal.cx [104.156.224.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1032479DCA;
-	Tue, 30 Jan 2024 20:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56B269E19
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 20:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.156.224.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706646711; cv=none; b=L9GvrxUW0OYVEKP+yA4x3hdkNIkyoCfqHdjF4w3O9hUyupFK03aA6unLV6tQv+vXEDN+uiAv8SoDUnVn3REqokxK1ToWUc8fGGWQzuGq0NYr6BTz/xSg1dMtGCwk2Uw9sCUVNEjHsxUuQxAr1feZwcZK9E33FPtTclhlL1+HvuE=
+	t=1706646724; cv=none; b=nz9jzds3amQLGaJmebD6/H4i4cq0bSuvpJs8Qrjk6dqq+a9at5T5Svu42C8Ioq2cT/jekoa5XeiChg+6WSSSb73F375oD+sPcCeE+5cudPcN19yxl5NA/TtOJM0EA0rWj7w0cAuQhVtvsZwKW8bQJwuM6Tmu21iJ4tUEufG1jWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706646711; c=relaxed/simple;
-	bh=LOP+6Gd8XzSZncwRf7uGMAG0j2Ql64OEcnAO+AqFH8M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KHs26priTw032ZQks6zeD5XnamxGAhH1miQqjdY7CWvzARglp0u78MD+bwN670f2htTl7zoUR4Q/t3B/3OXdOkjzJFKRRupCf2QG1s1puuYctCtYio6kB12lUgdyS4m+BwE/XpL2TlorjBHklG84CgW3f6r6pnUoQQNrUyEtil4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=FY8eqXAx; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="FY8eqXAx"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 33FB641A47
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1706646709; bh=EDJoJIFoiaWQo8LexHsdvIE4pZPld1QgS2DhtQSIQ2Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=FY8eqXAxH813hKcE8MPW5zA9a5xhZm0OSkdFqVn+CrIE21aVr4ep3/5/bbLPbwm5K
-	 rUj0ALrqZx0pKXMes1WafO/n2enLXwkfYlrwzCIZVpkSqw53liR5FnPxRd3VRTfEzd
-	 4SbNbJ7ikXRYqV/0c8yVXzrxxw4zuElC6cmDqvgnkcTp+nuN8ajcgdlPGrsObS4j9X
-	 jPixq8zKDm0RH6qtBGsFn/MZk9sZiSCfI4a7Onin9aZqY/0w2Zl0+QjHdheLdy5/j0
-	 ybLvrlEsO0ac39xiSTXDlcLCJWQmUkO+KeMfqMAUbLnmkL7M0xC9qIs1i1r4+s3IEk
-	 NAkpQ66r2uH4A==
-Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 33FB641A47;
-	Tue, 30 Jan 2024 20:31:49 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Daniel Vetter <daniel.vetter@ffwll.ch>, Randy Dunlap
- <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] doc-guide: kernel-doc: tell about object-like macros
-In-Reply-To: <CAKMK7uGQqH7Y7bnNb=zeKkLyavtoJBpGJxwptBBUSqsYGdFEtA@mail.gmail.com>
-References: <20240107012400.32587-1-rdunlap@infradead.org>
- <CAKMK7uGQqH7Y7bnNb=zeKkLyavtoJBpGJxwptBBUSqsYGdFEtA@mail.gmail.com>
-Date: Tue, 30 Jan 2024 13:31:48 -0700
-Message-ID: <875xzabm17.fsf@meer.lwn.net>
+	s=arc-20240116; t=1706646724; c=relaxed/simple;
+	bh=UB7BQcsJs2vQ3jKIDJCT4WdO5D5ZedyE0DSP+eaeJ4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcrPoca+O/duZYt1wWR9A+kD57ALcTPQyzqGUx8C+kx3IBoYq7z2x4qzxrK9T4j03wXcPuS8c3+Ta3M3E0A3IEbqggSfWRcevVSfQewcnhPmrB+QTESDm2d5zuABUImGP8wk/BnQ9bLeIheyg09d6qJXIvzYFckJcXYC91t1kH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org; spf=pass smtp.mailfrom=libc.org; arc=none smtp.client-ip=104.156.224.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libc.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=libc.org
+Date: Tue, 30 Jan 2024 15:17:03 -0500
+From: Rich Felker <dalias@libc.org>
+To: musl@lists.openwall.com
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Fixing ELF loader for systems with oversized pages [was: Re: [musl]
+ Segmentation fault musl 1.2.4]
+Message-ID: <20240130201701.GT4163@brightrain.aerifal.cx>
+References: <20240111170323.GP1427497@port70.net>
+ <CAFj3ykeFLLS0VAo9xd70SC+6Rqt1H8nV+4u8CURcgPE_zEtj-w@mail.gmail.com>
+ <20240112185713.GQ1427497@port70.net>
+ <CAFj3ykddo8asH9udkxmybeKzeAP2Xt1QDHjZOOHafTitdU2sgg@mail.gmail.com>
+ <20240115223008.GR1427497@port70.net>
+ <CAFj3ykeCHGiT1SH9MJTEf65jxZjjrpuHxn95u2O=KN+cPkZCPA@mail.gmail.com>
+ <20240116182918.GS1427497@port70.net>
+ <20240116204552.GV4163@brightrain.aerifal.cx>
+ <20240130104338.GD1254592@port70.net>
+ <20240130153730.GS4163@brightrain.aerifal.cx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/mixed; boundary="5G+Imvfxoe+o1e80"
+Content-Disposition: inline
+In-Reply-To: <20240130153730.GS4163@brightrain.aerifal.cx>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Daniel Vetter <daniel.vetter@ffwll.ch> writes:
 
-> On Sun, 7 Jan 2024 at 02:24, Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> Since 2014 kernel-doc has supported describing object-like macros
->> but it is not documented anywhere. I should have required some
->> documentation for it when I merged the patch. :(
->>
->> There are currently only 3 uses of this (all in DRM headers, in
->> include/drm/*.h).
->>
->> Add object-like macro kernel-doc documentation now so that more may
->> know about it and use it.
->>
->> Fixes: cbb4d3e6510b ("scripts/kernel-doc: handle object-like macros")
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: linux-doc@vger.kernel.org
->> ---
->> v2: Previous attempts to use kernel-doc were for data definitions,
->>     not macros, so remove that comment.
->>     Remove a duplicate word in the patch description.
->>     Add examples.
->
-> Randy pointed to this in another thread and also mentioned that
-> function-like macros are already documented, so this also has my
->
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+--5G+Imvfxoe+o1e80
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-OK, I'm slowly catching up with the world...I've applied this in favor
-of Daniel's version.
+On Tue, Jan 30, 2024 at 10:37:30AM -0500, Rich Felker wrote:
+> On Tue, Jan 30, 2024 at 11:43:38AM +0100, Szabolcs Nagy wrote:
+> > * Rich Felker <dalias@libc.org> [2024-01-16 15:45:52 -0500]:
+> > 
+> > > On Tue, Jan 16, 2024 at 07:29:18PM +0100, Szabolcs Nagy wrote:
+> > > > * Cody Wetzel <codyawetzel@gmail.com> [2024-01-16 09:21:05 -0600]:
+> > > > > Here is the output for the old
+> > > > > ....
+> > > > > >
+> > > > > > / # /tmp/ld-musl-armhf.so.1 /usr/bin/readelf -lW /tmp/ld-musl-armhf.so.1
+> > > > > >
+> > > > > > Elf file type is DYN (Shared object file)
+> > > > > > Entry point 0x359cd
+> > > > > > There are 6 program headers, starting at offset 52
+> > > > > >
+> > > > > > Program Headers:
+> > > > > >   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+> > > > > >   EXIDX          0x07acec 0x0007acec 0x0007acec 0x00008 0x00008 R   0x4
+> > > > > >   LOAD           0x000000 0x00000000 0x00000000 0x7acf4 0x7acf4 R E 0x10000
+> > > > > >   LOAD           0x07fd6c 0x0008fd6c 0x0008fd6c 0x0054a 0x02258 RW  0x10000
+> > > > 
+> > > > this load segment is 64k aligned.
+> > > > 
+> > > > > >   DYNAMIC        0x07febc 0x0008febc 0x0008febc 0x000c0 0x000c0 RW  0x4
+> > > > > >   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10
+> > > > > >   GNU_RELRO      0x07fd6c 0x0008fd6c 0x0008fd6c 0x00294 0x00294 R   0x1
+> > > > > >
+> > > > > >  Section to Segment mapping:
+> > > > > >   Segment Sections...
+> > > > > >    00     .ARM.exidx
+> > > > > >    01     .hash .gnu.hash .dynsym .dynstr .rel.dyn .rel.plt .plt .text
+> > > > > > .rodata .ARM.exidx
+> > > > > >    02     .data.rel.ro .dynamic .got .data .bss
+> > > > > >    03     .dynamic
+> > > > > >    04
+> > > > > >    05     .data.rel.ro .dynamic .got
+> > > > > >
+> > > > > 
+> > > > > And the new...
+> > > > > 
+> > > > > / # /tmp/ld-musl-armhf.so.1 /usr/bin/readelf -lW /lib/ld-musl-armhf.so.1
+> > > > > >
+> > > > > > Elf file type is DYN (Shared object file)
+> > > > > > Entry point 0x362f1
+> > > > > > There are 6 program headers, starting at offset 52
+> > > > > >
+> > > > > > Program Headers:
+> > > > > >   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+> > > > > >   EXIDX          0x07b81c 0x0007b81c 0x0007b81c 0x00008 0x00008 R   0x4
+> > > > > >   LOAD           0x000000 0x00000000 0x00000000 0x7b824 0x7b824 R E 0x1000
+> > > > > >   LOAD           0x07bd74 0x0007cd74 0x0007cd74 0x0054a 0x0225c RW  0x1000
+> > > > 
+> > > > this load segment is 4k aligned and offset vs addr is not congruent
+> > > > modulo 64k, or 32k, so won't work on systems with such page size.
+> > > > 
+> > > > > >   DYNAMIC        0x07bebc 0x0007cebc 0x0007cebc 0x000c0 0x000c0 RW  0x4
+> > > > > >   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10
+> > > > > >   GNU_RELRO      0x07bd74 0x0007cd74 0x0007cd74 0x0028c 0x0028c R   0x1
+> > > > > >
+> > > > > >  Section to Segment mapping:
+> > > > > >   Segment Sections...
+> > > > > >    00     .ARM.exidx
+> > > > > >    01     .hash .gnu.hash .dynsym .dynstr .rel.dyn .rel.plt .plt .text
+> > > > > > .rodata .ARM.exidx
+> > > > > >    02     .data.rel.ro .dynamic .got .data .bss
+> > > > > >    03     .dynamic
+> > > > > >    04
+> > > > > >    05     .data.rel.ro .dynamic .got
+> > > > > 
+> > > > > 
+> > > > > I hope that helps.
+> > > > 
+> > > > yes, this is a linking issue, not musl libc.
+> > > > 
+> > > > alpine linux links binaries for 4k pagesize only.
+> > > > 
+> > > > arm linkers were updated at some point to create binaries supporting
+> > > > up to 64k pagesize.  i suspect some ppl ran into issues in practice
+> > > > and decided the larger binaries are not worth it, if they dont work
+> > > > reliably and forced 4k page size at link time.
+> > > > 
+> > > > you have to raise an issue with alpine linux, if you think 32k
+> > > > oage size is useful and reliably supportable.
+> > > 
+> > > Are they using -Wl,-z,separate-code? That incurs a large
+> > > binary-size-on-disk penalty when supporting oversized pages, and IIRC
+> > > something was done to make the linker default to not supporting
+> > > oversized pages when that's used. It might be the reason, if arm
+> > > linking is normally expected to use a larger max pagesize.
+> > 
+> > i looked at this now, turns out they just changed the
+> > pagesize back to 4k (i missed this change):
+> > 
+> > https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=1a26a53a0dee39106ba58fcb15496c5f13074652
+> 
+> This doesn't help immediately, but a major ingredient to fix this
+> situation would be getting the kernel to stop doing the wrong thing.
+> Right now, it's ignoring the fact that the ELF program header
+> constraints are incompatible with mmap given the oversized system
+> pagesize, and just incorrectly mapping the executable and trying to
+> run it anyway, whereby it blows up.
+> 
+> The right thing to do would be either to fail with ENOEXEC in this
+> case, or when mmap with the required offset constraint fails, falling
+> back to making an anonymous map and copying the whole content of the
+> loadable segment into that (no COW sharing). The latter is really not
+> all that bad for got/data/etc. mappings which you expect will be dirty
+> (modified) anyway.
+> 
+> BTW the former choice (ENOEXEC) would allow doing the latter in
+> userspace with a binfmt_misc loader.
 
-Thanks,
+Completely untested draft patch showing the concept is attached.
 
-jon
+Rich
+
+--5G+Imvfxoe+o1e80
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="fix_elf_loader_with_oversized_pages.diff"
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index f8c7f26f1fbb..45c50f379377 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -861,6 +861,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	if (!elf_phdata)
+ 		goto out;
+ 
++	elf_ppnt = elf_phdata;
++	for (i = 0; i < elf_ex->e_phnum; i++, elf_ppnt++) {
++		if (elf_ppnt->p_type != PT_LOAD) continue;
++		if (ELF_PAGEOFFSET(elf_ppnt->p_vaddr - elf_ppnt->p_offset))
++			goto out;
++	}
+ 	elf_ppnt = elf_phdata;
+ 	for (i = 0; i < elf_ex->e_phnum; i++, elf_ppnt++) {
+ 		char *elf_interpreter;
+@@ -962,6 +968,13 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 		if (!interp_elf_phdata)
+ 			goto out_free_dentry;
+ 
++		elf_ppnt = interp_elf_phdata;
++		for (i = 0; i < elf_ex->e_phnum; i++, elf_ppnt++) {
++			if (elf_ppnt->p_type != PT_LOAD) continue;
++			if (ELF_PAGEOFFSET(elf_ppnt->p_vaddr - elf_ppnt->p_offset))
++				goto out_free_dentry;
++		}
++
+ 		/* Pass PT_LOPROC..PT_HIPROC headers to arch code */
+ 		elf_property_phdata = NULL;
+ 		elf_ppnt = interp_elf_phdata;
+
+--5G+Imvfxoe+o1e80--
