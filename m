@@ -1,45 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2085.outbound.protection.outlook.com [40.107.237.85])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2068.outbound.protection.outlook.com [40.107.212.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D137376E9;
-	Tue, 30 Jan 2024 03:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA8A33CCF;
+	Tue, 30 Jan 2024 03:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706584746; cv=fail; b=X4VXyzmsqWhDebK8TdfkpZEVI13pa5HhO4rBp9AZAYgiWGh5waF4Vip6dYm5ny32CMmWMJ/YUT0FFBqiUeCFDNTnJa5fXkxN6kKVhirc9EjlNYiioT6/zS60Bc3YKmYZE73IipfdOfXKtErShXlKQqDz2pKvd3Z+hqcZ9UzbslI=
+	t=1706584758; cv=fail; b=pDyce7oXXQVfPMZLBPWH2mVJ0z4rpUV445Ho2xSf0m3t/niMXPSTz+vTUMOUaMjbgVMphcCYkKg44xfbFN9sz5rTLrZSDQ9+fAw4+jFWaMbmaIJwJnTrU7T0wij9Gw1b+evdmTTOneKll58WNwBt+jGDYn4ojySKsxgvHMdxVws=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706584746; c=relaxed/simple;
-	bh=XPb07nikLN76Gsbj0GQ7in8HFSgJ5Ua6ET9kQqbLcLs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NN5xN52/hR11BrlogoR7p2jFkFAbzU7QDzMde5Ti2zTRNNgx54Nq1qdgkV6IBjfLGdnrjTnIYSj+/z+LAXWJh6xXJIkte47JJ0Fpolh4bz4exBlhS53yy21hEsbscmexAx/UX4ZZZa7rNujiMF3q0tyDLx1AvLePUaWohADdmhc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gzyK9Neo; arc=fail smtp.client-ip=40.107.237.85
+	s=arc-20240116; t=1706584758; c=relaxed/simple;
+	bh=0G893uXq6j8C35Bu9LEWfW3UuxUFjqrvGD2c9z7oHsE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HjAGGQlaMojPvOHO0zcKnQHbFw15GjnVKVEPm2t65mQFNRCdVqI4oF8qrLIoRjDwR9OIer0K0i4yCmmEsZkXO2xYOlxeH2LAvCM+LuDsDPaWqeFkew3rPHz7y3fY6734xSqRzvxKrX4jLeoIkknLpLNglB2Pel2VqOzrnFE+1N8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o6U53Y2H; arc=fail smtp.client-ip=40.107.212.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gzyK9Neo"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o6U53Y2H"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SniUVrkik8MZlWpG7UjCpkCKXkV7YcESKmeQTtC+qOr6zYnrHx+8/WnsthcR9Zxmsmwo+owKqecQzFpLArugLQOJQL2wODrNqEPn5ZpifsZ5J4X2o/bSi7OF0g+A7q2wzQ2JQK2khT05+dVsotSDry02h/O+uV53gwmmeWlVTIP5cRLaR1Kntf+elXVU9HNcmt5CRLPPcOgAB2yTEKJBsrjxfsk0RCQzw+7sJ/o16g4jOIV0HmHB3pgQYCJfXC6/kE8O+sevR9vd8BfG2yZFejPWNQlB8GPNfDcxvYOqzkyUC6itY3/gdcs+X4nsZM9sTrP2twd78KF39/dDP1DHPA==
+ b=RDOn3+3CsVUuDe3mlqRJ+zDm7pr+9jLpyJMbmm0OrzevhKYidsLJlmZZGRddMNMZp49aFJk7UYq5yuTYNO8TRjSjao/8BFnn+nMDUYkhK/Ej6Rjyse5XoWQ9b3LAtcMIeqNE4YH2DQM+PfBZUMKKY2UTC5fcqgkiG+TCw9WhVIOLkIaMgLn9OHgfeTZWGlo5mFaAoCuBON+1omp3abWlDDpjT6eE70UBb1EgqEdpe7bM8erR8F/+mjfVLKNgrq0FRFlT97RLZcygoCbG7UCPbLMcqR33K9NfmLqIO880+zl3bTUXghNUhR0A7XtPrhj9u5TfNd0AghmKGTEAkZQ/1A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jl28IBS9BbZYQALlef26RCRomYENhhi/5tgiaiD180c=;
- b=J/GO6NAm+ZQn3AnNvhAvH7zUgkdZ0+3O286qDFhKP2JJElu01+MFPxRrlXTeqfqZ/4aFNq3r+sTLx9II6nmu5ycGFnDWgcVbGHuYqRURGlTxu6NgElGRBHtUUqE71VU30GLeymCJ4l2zZHP/DaxLHzjcxZTMQn5A8821FSoqLqxAsO5A6h574nM0a5xbUCa8+dWe8K2iEzOxSQ8SDzcbj9IxYMOCuIOR/xcDM0064zBe5s7kQm5RyxSGIYplZ7SMCxWxl1NI3LXQTlnsJ6knumGzF4HVzOO53kwEjszdw+AclrCWWE0awbD07vnr4+ICIF+28bCym/317X7mFdJ1Ww==
+ bh=El7iS3nTWLyttkc/AHd0Q5tO2IGNevZrBoWvB0GxErs=;
+ b=irIIxqt9Zka2GsVbMYoHy2GZ3dYkaYt1a96rVA7pllznCUwzog9QLpKXEmftE7EbkxvLKcmyZQVXguuPa2zGchQ6nag1x8C3JBmmojWIgtj9DsN5fx8SkXeGzW021S5VA8zOX//V4dWvBdKSQ0UaBLh9/7QITiAf74789F6W0hk9UpwMRl7IbTuYw99n+Bb++6bjwJJxdKKH/h47cC4jZAzXbALLC6D4fJSKF5W0DkbdV0uPbUbeBDixaQJ35qFKpNdxX9NImLJ5Njz19mXiSE/QzBXYxW9s9sP441rGMPd4eZp3XLdGCK5GDJZfSpF/x70/eIiTZpTQtjHdZW4s6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jl28IBS9BbZYQALlef26RCRomYENhhi/5tgiaiD180c=;
- b=gzyK9NeoXrWx5WvcWyrElAcwG/RNL7WQNY3+GLxPAFWkfN1MBt32YSmu8t25IW1ely+zTwQv1zh7mWuI3Orfnd8EN7uco4oRNwl2wgVBoeCBzNBS/ldd0AxOy24YsFb7hv9IWjfY47H87Dh7Qnfv7YDiqpVCw+nxmgc1prulOEA=
-Received: from CY5PR19CA0081.namprd19.prod.outlook.com (2603:10b6:930:69::27)
- by SN7PR12MB8170.namprd12.prod.outlook.com (2603:10b6:806:32c::15) with
+ bh=El7iS3nTWLyttkc/AHd0Q5tO2IGNevZrBoWvB0GxErs=;
+ b=o6U53Y2HMV+0inYZRrEQ9P9qDfBQW5WRDyA5ndZqMYqXu2JoEaxITNnAqscYd470BgaOYhrY+SSoZjuD5iBXPLwuSLhBZYWHcajxCUDZ2Jpe+Lz4vmCPhL1tN93OKX01k2llKBXTOho6TcujWQnIsDNCZSTMy6dseShy4vknang=
+Received: from DS7PR05CA0001.namprd05.prod.outlook.com (2603:10b6:5:3b9::6) by
+ BL1PR12MB5351.namprd12.prod.outlook.com (2603:10b6:208:317::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.33; Tue, 30 Jan
- 2024 03:19:00 +0000
-Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
- (2603:10b6:930:69:cafe::b8) by CY5PR19CA0081.outlook.office365.com
- (2603:10b6:930:69::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34 via Frontend
- Transport; Tue, 30 Jan 2024 03:19:00 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
+ 2024 03:19:11 +0000
+Received: from CY4PEPF0000E9D9.namprd05.prod.outlook.com
+ (2603:10b6:5:3b9:cafe::39) by DS7PR05CA0001.outlook.office365.com
+ (2603:10b6:5:3b9::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.20 via Frontend
+ Transport; Tue, 30 Jan 2024 03:19:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.76) with Microsoft
+ CY4PEPF0000E9D9.mail.protection.outlook.com (10.167.241.77) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Tue, 30 Jan 2024 03:19:00 +0000
+ 15.20.7249.19 via Frontend Transport; Tue, 30 Jan 2024 03:19:11 +0000
 Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
  SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 29 Jan 2024 21:18:56 -0600
+ 15.1.2507.34; Mon, 29 Jan 2024 21:19:03 -0600
 From: Perry Yuan <perry.yuan@amd.com>
 To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
 	<Borislav.Petkov@amd.com>, <viresh.kumar@linaro.org>, <Ray.Huang@amd.com>,
@@ -61,10 +62,12 @@ To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
 CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
 	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/8] enable x86_energy_perf_policy for AMD CPU
-Date: Tue, 30 Jan 2024 11:18:28 +0800
-Message-ID: <cover.1706583551.git.perry.yuan@amd.com>
+Subject: [PATCH 2/8] tools/power x86_energy_perf_policy: enable AMD pstate EPP profile switching on MSR based system
+Date: Tue, 30 Jan 2024 11:18:30 +0800
+Message-ID: <8572a009206244f4caae5a4c9db3c475cfacc289.1706583551.git.perry.yuan@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1706583551.git.perry.yuan@amd.com>
+References: <cover.1706583551.git.perry.yuan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,98 +80,177 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|SN7PR12MB8170:EE_
-X-MS-Office365-Filtering-Correlation-Id: 001c5276-29f5-43e2-fc62-08dc2142340c
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D9:EE_|BL1PR12MB5351:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86626450-f4ee-491e-bc78-08dc21423a8e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	VjcAe6OjEAp6QLhrLKVxVjy/xZPwjHFOoSxSP6JlpXpPVp0kGCtZuhZ0I02eXHM0fJA2hsUVx+vm56GxNHrtPYxaU9Dh4rlkk5GQUoQihV+9u8LbUyaWqLHcne0Jc2Taba5ymQOlRxIqrINfOKiVkEaVUGJZW59w6Ud9zRA4mGELZFMGPuZOdUBEf1J3KH1AD8lF5N3I5W3QrkShGFlchXwSUCZKAuaBdUlKwjxUnOfZ2aWUPw+8Oh1YoCJ6fAZaN50VcCe+dHO2kmFHyvChP3o86/rq5DFPgQk25pFl2JPoir0p9iw4Uhumj3HB7I1jRGCsxkiPt+PkGQPXSWeMsgjB6jT6vSeSWevonG20oFXQcpC5GB5lHWMCkRSj0l4j5Q9vOLcVUxV1Shv6NFZzhWd/bpQb+B80Chrj9vfV6gbKR98Mpo5jJa3aO4eADD1djhgZh+0AqSbQpOG6FMJRG+Q7RT9aLwLCJ6rs/u/f40w1a2qo9GVbSvLYoHyxVlaeAIk9MO3Yr8/M4Ah6g+4fGmUo0lwsGmBPGA+eSBEflJQBg/otWugDPXGuWcsAmwAvwnd7bCKx6MXe4UMtkpSIfwuRlJsbM8IEQkHzOMkIGHMcpg2nl1cp+/aCye1RWta8VCTMaED/WcnFqZpg+tRRByqjPrafqpI4pTRQizgZ0Ns3Kc8MvEI2cJGn8ANUAj0Uwk75mE9whH0HyFOmgecPcLMBOS9JbsELOxiT/GGIaNHZ7uJBWHhSAAtGyzIjnk51TLhpYvPeo+lqjQX/8Mg0fA==
+	aGCdvEf+JMgDOnEJj4xo6opCQrM3yByVlnOx2QvfHaLotKD8qx5atNqd7370x1w9gbUmL4Q2iqz5bbYfM3iiOYfOVF/p0C/bsRtY+41//I41uJJLRD8Judtv1ttYxP3YqA6sa1d9fnFOroY5R6ceUgqZKDhsLN9rFILoimpYaFhCRCIyGeiFWmoluDc1nn9LLgjUjpSGuDvC5P6DbWRe8xHMBYyz8Ck0LykEv0w0rSe1nKl1gBrAgYAisPXOW5KT59gsA7ctU4uh22ugcbBE2BIXwqJ+P8UWSNkL2+rV1uOLgXdEMMaDq2hdp2LH7UHvnXg02oHpel1Yt1ag0Ne68lGp+e3HV6Y8DjULXPOj2fC+npI4qrGexQ4rQX7RJQ603rKDu6ftdnMkki/mh/cFLyfJWVHuZMwc3TgADgvX12YpJbLSGECqLvhDhEPRxgXcYzxdsYyQpbvRMY46MkcpEsO66qWA6Wv8ZOqqbsKBlG8BHAVtgfl6J0GIXwmlVkGBMHEFmfKFgolKtOpnvVZXb99xnQM/2judNblD0Eb+sQR4PZyQdTVMTbYPbP35JfZ0Kq0/2DBOzoXf/lbUoI8XwYVYhwnDYmg80uU/JUSvJizJRJ7FNSfHlXu4KONaP6OWmtTWQnpGsuaOYtHvUFvJL/8LYUFBVDCq4qTstUK2pilfuQBKPbc1czyHdjyiykkCcTvn4oW9tzqrsq4fkUG+2Cv2uvChbi4uPPAsbeTDs7YslyK+iTekWdLOPWMXFrfrS0E4JdNpJ33SZ/0MtRjq4g==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(396003)(136003)(346002)(230922051799003)(64100799003)(82310400011)(451199024)(1800799012)(186009)(40470700004)(46966006)(36840700001)(4326008)(336012)(426003)(36860700001)(47076005)(478600001)(41300700001)(36756003)(86362001)(82740400003)(83380400001)(81166007)(356005)(8936002)(2616005)(110136005)(6636002)(316002)(70206006)(44832011)(70586007)(26005)(54906003)(2906002)(7696005)(6666004)(8676002)(16526019)(5660300002)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(39860400002)(396003)(136003)(230922051799003)(1800799012)(451199024)(82310400011)(64100799003)(186009)(46966006)(40470700004)(36840700001)(40460700003)(40480700001)(2616005)(6666004)(7696005)(2906002)(5660300002)(16526019)(54906003)(4326008)(8676002)(110136005)(70586007)(336012)(44832011)(316002)(70206006)(26005)(426003)(8936002)(6636002)(36860700001)(47076005)(356005)(478600001)(81166007)(86362001)(82740400003)(83380400001)(41300700001)(36756003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 03:19:00.3498
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 03:19:11.2821
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 001c5276-29f5-43e2-fc62-08dc2142340c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86626450-f4ee-491e-bc78-08dc21423a8e
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D5.namprd05.prod.outlook.com
+	CY4PEPF0000E9D9.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8170
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5351
 
+From: Perry Yuan <Perry.Yuan@amd.com>
 
-Hi all,
-This patch series introduces support for the x86_energy_perf_policy utility on AMD processors that
-utilize the CPPC (Collaborative Processor Performance Control) interface for frequency scaling,
-using the amd_pstate driver module. AMD processors already support various
-Energy Performance Preference (EPP) profiles. With this utility, users can now seamlessly
-switch between these EPP profiles using the provided commands. And check the CPPC capabilities
-with this tool.
-This enhancement aims to improve power efficiency and performance management for AMD processors,
-providing users with more control over their system's energy-performance behavior.
+x86_energy_perf_policy adds AMD EPP profiles switch support,the EPP
+driver also has four EPP profiles implemented under power
+firmware autonomous mode.
+(performance, balance-performance, balance-power, power)
+User can choose the new profile to use with this utility support while
+`amd_pstate_epp` driver instance loaded for the MSR support systems.
 
-There are some EPP profile already support by AMD processors, user can
-switch EPP profile listed below with the utility commands.
+for example:
+$ sudo x86_energy_perf_policy -d --hwp-epp balance-performance
+cpu0: old: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
+cpu0: HWP_CAP: low 13 eff 157 guar 0 high 231
+cpu0: new: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
+cpu1: old: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
+cpu1: HWP_CAP: low 13 eff 157 guar 0 high 236
+cpu1: new: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
+cpu2: old: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
+cpu2: HWP_CAP: low 13 eff 157 guar 0 high 211
+cpu2: new: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
+cpu3: old: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
+cpu3: HWP_CAP: low 13 eff 157 guar 0 high 206
+cpu3: new: HWP_REQ: min 13 max 166 des 0 epp 128 window 0x9 (9*10^0us) use_pkg 0
 
-User can change EPP profile like this:
-$ sudo x86_energy_perf_policy --hwp-epp performance
-$ sudo x86_energy_perf_policy --hwp-epp balance-performance
-$ sudo x86_energy_perf_policy --hwp-epp balance_power
-$ sudo x86_energy_perf_policy --hwp-epp power
+Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
+---
+ .../x86_energy_perf_policy.c                  | 69 +++++++++++++++----
+ 1 file changed, 54 insertions(+), 15 deletions(-)
 
-0 performance
-128 balance_performance (default)
-192 balance_power
-255 power
-
-
-It also supports to check CPPC capabilities and change EPP profiles
-at runtime.
-
-$ sudo x86_energy_perf_policy
-cpu0: [AMD HWP_REQ]: lowest 13 highest 166 desired 0 epp 128 window 0x7829a7d0 (80*10^7us) use_pkg 87
-cpu0: [AMD HWP_CAP]: low 13 lowest_non 68 nominal 77 highest 166
-
-cpu1: [AMD HWP_REQ]: lowest 13 highest 166 desired 0 epp 128 window 0x7829a7d0 (80*10^7us) use_pkg 87
-cpu1: [AMD HWP_CAP]: low 13 lowest_non 68 nominal 77 highest 166
-
-cpu2: [AMD HWP_REQ]: lowest 13 highest 166 desired 0 epp 128 window 0x7829a7d0 (80*10^7us) use_pkg 87
-cpu2: [AMD HWP_CAP]: low 13 lowest_non 68 nominal 77 highest 166
-
-cpu3: [AMD HWP_REQ]: lowest 13 highest 166 desired 0 epp 128 window 0x7829a7d0 (80*10^7us) use_pkg 87
-cpu3: [AMD HWP_CAP]: low 13 lowest_non 68 nominal 77 highest 166
-
-cpu4: [AMD HWP_REQ]: lowest 13 highest 166 desired 0 epp 128 window 0x7829a7d0 (80*10^7us) use_pkg 87
-cpu4: [AMD HWP_CAP]: low 13 lowest_non 68 nominal 77 highest 166
-
-
-Any feedback are apprea
-
-Perry Yuan (8):
-  tools/power x86_energy_perf_policy: add info show support for AMD
-    Pstate EPP driver
-  tools/power x86_energy_perf_policy: enable AMD pstate EPP profile
-    switching on MSR based system
-  tools/power x86_energy_perf_policy: rename get_msr() and put_msr()
-    with intel prefix
-  tools/power x86_energy_perf_policy: rename get_cpuid_or_exit() with
-    intel prefix
-  tools/power x86_energy_perf_policy: add nominal and lowest nonlinear
-    perf values showing support
-  tools/power x86_energy_perf_policy: remove the invalid feature options
-    for AMD processors
-  tools/power x86_energy_perf_policy: rename some perf output strings
-    for AMD processors
-  tools/power x86_energy_perf_policy: change intel msr functions to be
-    static
-
- .../x86_energy_perf_policy                    | Bin 0 -> 50808 bytes
- .../x86_energy_perf_policy.c                  | 355 +++++++++++++-----
- 2 files changed, 271 insertions(+), 84 deletions(-)
- create mode 100755 tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy
-
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index 5daf1c2bb601..da9087873915 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -902,14 +902,23 @@ void write_hwp_request(int cpu, struct msr_hwp_request *hwp_req, unsigned int ms
+ 			hwp_req->hwp_desired, hwp_req->hwp_epp,
+ 			hwp_req->hwp_window, hwp_req->hwp_use_pkg);
+ 
+-	msr |= HWP_MIN_PERF(ratio_2_msr_perf(hwp_req->hwp_min));
+-	msr |= HWP_MAX_PERF(ratio_2_msr_perf(hwp_req->hwp_max));
+-	msr |= HWP_DESIRED_PERF(ratio_2_msr_perf(hwp_req->hwp_desired));
+-	msr |= HWP_ENERGY_PERF_PREFERENCE(hwp_req->hwp_epp);
+-	msr |= HWP_ACTIVITY_WINDOW(hwp_req->hwp_window);
+-	msr |= HWP_PACKAGE_CONTROL(hwp_req->hwp_use_pkg);
+-
+-	put_msr(cpu, msr_offset, msr);
++	if (genuine_intel) {
++		msr |= HWP_MIN_PERF(ratio_2_msr_perf(hwp_req->hwp_min));
++		msr |= HWP_MAX_PERF(ratio_2_msr_perf(hwp_req->hwp_max));
++		msr |= HWP_DESIRED_PERF(ratio_2_msr_perf(hwp_req->hwp_desired));
++		msr |= HWP_ENERGY_PERF_PREFERENCE(hwp_req->hwp_epp);
++		msr |= HWP_ACTIVITY_WINDOW(hwp_req->hwp_window);
++		msr |= HWP_PACKAGE_CONTROL(hwp_req->hwp_use_pkg);
++		put_msr(cpu, msr_offset, msr);
++	} else if (authentic_amd) {
++		/* AMD EPP need to set desired perf with zero */
++		hwp_req->hwp_desired = 0;
++		msr |= AMD_CPPC_MIN_PERF(hwp_req->hwp_min);
++		msr |= AMD_CPPC_MAX_PERF(hwp_req->hwp_max);
++		msr |= AMD_CPPC_DES_PERF(hwp_req->hwp_desired);
++		msr |= AMD_CPPC_ENERGY_PERF_PREF(hwp_req->hwp_epp);
++		amd_put_msr(cpu, msr_offset, (unsigned int)msr);
++	}
+ }
+ 
+ static int get_epb(int cpu)
+@@ -1157,8 +1166,12 @@ int update_hwp_request(int cpu)
+ {
+ 	struct msr_hwp_request req;
+ 	struct msr_hwp_cap cap;
++	int msr_offset = 0;
+ 
+-	int msr_offset = MSR_HWP_REQUEST;
++	if (genuine_intel)
++		msr_offset = MSR_HWP_REQUEST;
++	else if (authentic_amd)
++		msr_offset = MSR_AMD_CPPC_REQ;
+ 
+ 	read_hwp_request(cpu, &req, msr_offset);
+ 	if (debug)
+@@ -1181,7 +1194,11 @@ int update_hwp_request(int cpu)
+ 
+ 	req.hwp_use_pkg = req_update.hwp_use_pkg;
+ 
+-	read_hwp_cap(cpu, &cap, MSR_HWP_CAPABILITIES);
++	if (genuine_intel)
++		read_hwp_cap(cpu, &cap, MSR_HWP_CAPABILITIES);
++	else if (authentic_amd)
++		read_hwp_cap(cpu, &cap, MSR_AMD_CPPC_CAP1);
++
+ 	if (debug)
+ 		print_hwp_cap(cpu, &cap, "");
+ 
+@@ -1203,8 +1220,12 @@ int update_hwp_request_pkg(int pkg)
+ 	struct msr_hwp_request req;
+ 	struct msr_hwp_cap cap;
+ 	int cpu = first_cpu_in_pkg[pkg];
++	int msr_offset = 0;
+ 
+-	int msr_offset = MSR_HWP_REQUEST_PKG;
++	if (genuine_intel)
++		msr_offset = MSR_HWP_REQUEST_PKG;
++	else if (authentic_amd)
++		msr_offset = MSR_AMD_CPPC_REQ;
+ 
+ 	read_hwp_request(cpu, &req, msr_offset);
+ 	if (debug)
+@@ -1225,7 +1246,11 @@ int update_hwp_request_pkg(int pkg)
+ 	if (update_hwp_epp)
+ 		req.hwp_epp = req_update.hwp_epp;
+ 
+-	read_hwp_cap(cpu, &cap, MSR_HWP_CAPABILITIES);
++	if (genuine_intel)
++		read_hwp_cap(cpu, &cap, MSR_HWP_CAPABILITIES);
++	else if (authentic_amd)
++		read_hwp_cap(cpu, &cap, MSR_AMD_CPPC_CAP1);
++
+ 	if (debug)
+ 		print_hwp_cap(cpu, &cap, "");
+ 
+@@ -1246,13 +1271,27 @@ int update_hwp_request_pkg(int pkg)
+ int enable_hwp_on_cpu(int cpu)
+ {
+ 	unsigned long long msr;
++	int ret;
++
++	if (genuine_intel) {
++		get_msr(cpu, MSR_PM_ENABLE, &msr);
++		put_msr(cpu, MSR_PM_ENABLE, 1);
++	} else if (authentic_amd) {
++		ret = amd_get_msr(cpu, MSR_AMD_CPPC_ENABLE, (unsigned long *)(&msr));
++		if (ret < 0)
++			errx(-1, "failed to get msr with return %d", ret);
+ 
+-	get_msr(cpu, MSR_PM_ENABLE, &msr);
+-	put_msr(cpu, MSR_PM_ENABLE, 1);
++		ret = amd_put_msr(cpu, MSR_AMD_CPPC_ENABLE, 1);
++		if (ret < 0)
++			errx(-1, "failed to put msr with return %d", ret);
++	}
+ 
+-	if (verbose)
++	if (verbose && genuine_intel)
+ 		printf("cpu%d: MSR_PM_ENABLE old: %d new: %d\n", cpu, (unsigned int) msr, 1);
+ 
++	if (verbose && authentic_amd)
++		printf("cpu%d: MSR_AMD_CPPC_ENABLE old: %d new: %d\n", cpu, (unsigned int) msr, 1);
++
+ 	return 0;
+ }
+ 
 -- 
 2.34.1
 
