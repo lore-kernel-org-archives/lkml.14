@@ -1,104 +1,155 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC24D7B3F6;
-	Tue, 30 Jan 2024 19:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DD524214;
+	Tue, 30 Jan 2024 19:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706644301; cv=none; b=rT2QWZntfOC4V0a8IHfDGLYgB6v+WkUnCp+njRjztdtHhGcMXCBFeChHk7kQDx0d9TUnTT8Y1DjD6aZFisGEStFvaPAg16bNKCMXv4dNg7z39IbfIxFl38o2dQSsyPHG+90HRGYHvyuhbrY35xyQmzT1x0pLmIWyRPPXEiqgDxY=
+	t=1706644447; cv=none; b=tGvJ4ufqYuvB73o646Ltsd4GN1zRZmf1/5NSIzIZ/NQvdKQiwW+4twKEv9I9krOJJTR/MzQktYegwDIDDdnh1NVbYDK8WzyA1VIZC5zCxlmyeh+tx7OKC2rvtm+or5KEnokSNHeFxz4k9pYDJ5OF700fGxfn+PC5A3Yej1JMmjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706644301; c=relaxed/simple;
-	bh=RO88XeQOTblJOni8gFGayt2JWJIos1QyjNoFHXD8EKY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kWQyAxSVZDhTPDZ6ZuVk6ukX5epDDABBTmJ6pvjHvANWjmajdPqzsoob7+aOR7yGrAPE8/5HCEJHDLELorTDE9scBMRQTPuBWxWnPLW13f1SFtuZ7+HZkga7noT49e95bjhsyVlZuyQIB+yzjD0OF4cBxQQyPEYItsfEYXs+96c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fFlEkusr; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706644447; c=relaxed/simple;
+	bh=QRuAGiKg2Gt5kMYsmgpV2NrhDQiqSPKbxLU+UZ+R/wM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L63Knv+2bNPJcJWEbf6FrMVbUoxvIPsLKZod9L5X5hNsXlkU4eg2Ps9lEVmXrpNyj4zUDZBUYX2dspDjcAaFg1Ulf5v7fu0NUzE+qvE+ng4TVWIpiZ5PPcn6dAT1TiN2RNPf8TFW5ylEwEyybes5n+0QxLFpyH+Z9bWDXnOOct0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noxo0Dsr; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fFlEkusr"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40UJpUMT090050;
-	Tue, 30 Jan 2024 13:51:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706644290;
-	bh=Hz9x1qh2ZfSepIaUFBwFwX4XigsDM5yxW6ZItLlcZW0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=fFlEkusrvNzNvZN5Iy8KkwJ7mScbBxHJW3aGqW8UhalgdoLiAJyD7AJelvlUUv0AB
-	 a6OMarGTdFS0se4nfIASTkPnaT+X1fdjVfjL2J0/EdpZgeAtWkFNxmcoCDs5gtbdA8
-	 eNOQEOpg7oJ6euhpOwXkhmGYqt+T9+FulUoIMRtk=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40UJpU5s048575
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 30 Jan 2024 13:51:30 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 30
- Jan 2024 13:51:30 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 30 Jan 2024 13:51:30 -0600
-Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40UJpTKw005747;
-	Tue, 30 Jan 2024 13:51:29 -0600
-From: Andrew Davis <afd@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-am65: Add full compatible to SerDes control nodes
-Date: Tue, 30 Jan 2024 13:51:28 -0600
-Message-ID: <20240130195128.58748-2-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240130195128.58748-1-afd@ti.com>
-References: <20240130195128.58748-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noxo0Dsr"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51117bfd452so2431399e87.3;
+        Tue, 30 Jan 2024 11:54:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706644444; x=1707249244; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D3wO7BFSthurTRKjqrvhcV7JSVxdDru5aDJKbt2OZqE=;
+        b=noxo0DsrXM6VaKBORQBxYCIv5b8JEmp/U31qMY9ZPAtgFQSoJL4F8/82tPStMXi5ta
+         e8bjrNy6Byg+rASM6X2g2cF9GJTAoaFtjoB53kNyelZu5CRzRQUi9XaQ+a5Nj+cAsgyh
+         MlZKYgtZ+CKvgXVZXWASMx6S9fg26XZ1x2kGqXUmmbskT9q8hmlmAGUg8dw0fgqIQPNn
+         XYX4cgYFX3H57KI/5/LDbjy4GL/95eZYbA0/6XHLuFCxEHDKHk4iwaioZ2kA3TWzxspR
+         7AN+DPmBv6ieZK87XS+R/GYGNCDqeFTpcDVsNsG2kfyGklhcCVEv7l9/h5AW29XFvTD5
+         3zyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706644444; x=1707249244;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D3wO7BFSthurTRKjqrvhcV7JSVxdDru5aDJKbt2OZqE=;
+        b=RBAnfEPdicdsrgxhELy0TuT1DTULHUiKXlHCTmKeDe0xj7naGNbIpYQ26JChleFJAL
+         Yl9tCR2AwYfPcGBnhLIdjJx9n8SLAbBltR01NJUQve22BjGv7SsnsQjZdE4m7apdfRJG
+         S0++lqoRQggmkWE97U5r1EHsUu9q64e4Q8XCQvqvFPb3fS33M+wpDfUYFnb8MOx6C9/D
+         vFu+qnDDs8weNrQkx/1MokITF36vCE75Ieh1LW9BjmqdTd3GEit/cpP0yN1CGBPaI6XY
+         qI32j31R4FFujhkAkKRIlfega5zDGqi3qddeAG4iA+xX/7jfuudNrR12xeZvpqnqzYb9
+         fb5Q==
+X-Gm-Message-State: AOJu0Yw7AkxyUfUz6E91ObjOuHJglluLSYNUThtUcKutJQS32o9EvjHo
+	jTKn1MoSW+gE+le+s9Ok9jyrtFEPYWPiM+93zZgS+sSzc4+VD+7D
+X-Google-Smtp-Source: AGHT+IFEQrZhBM8T+DeRxci0XROcHTplnv/b6ZUuxFUOtUSJIq+cU8fmycOszrb5TMPUF77QkIkzjg==
+X-Received: by 2002:ac2:55a8:0:b0:510:27a7:cccd with SMTP id y8-20020ac255a8000000b0051027a7cccdmr7129548lfg.2.1706644443488;
+        Tue, 30 Jan 2024 11:54:03 -0800 (PST)
+Received: from pc636 (host-185-121-47-193.sydskane.nu. [185.121.47.193])
+        by smtp.gmail.com with ESMTPSA id h5-20020a197005000000b0051120a8eb3fsm148533lfc.10.2024.01.30.11.54.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 11:54:03 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 30 Jan 2024 20:54:00 +0100
+To: Lorenzo Stoakes <lstoakes@gmail.com>, Kees Cook <keescook@chromium.org>
+Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 33/82] mm/vmalloc: Refactor intentional wrap-around
+ calculation
+Message-ID: <ZblT2OjkPcZQEw7A@pc636>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-33-keescook@chromium.org>
+ <24526e13-2df6-47ea-865f-b5a5594bc024@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24526e13-2df6-47ea-865f-b5a5594bc024@lucifer.local>
 
-This matches the binding for this register region which fixes a couple
-DTS check warnings.
+On Tue, Jan 30, 2024 at 06:55:57PM +0000, Lorenzo Stoakes wrote:
+> On Mon, Jan 22, 2024 at 04:27:08PM -0800, Kees Cook wrote:
+> > In an effort to separate intentional arithmetic wrap-around from
+> > unexpected wrap-around, we need to refactor places that depend on this
+> > kind of math. One of the most common code patterns of this is:
+> >
+> > 	VAR + value < VAR
+> >
+> > Notably, this is considered "undefined behavior" for signed and pointer
+> > types, which the kernel works around by using the -fno-strict-overflow
+> > option in the build[1] (which used to just be -fwrapv). Regardless, we
+> > want to get the kernel source to the position where we can meaningfully
+> > instrument arithmetic wrap-around conditions and catch them when they
+> > are unexpected, regardless of whether they are signed[2], unsigned[3],
+> > or pointer[4] types.
+> >
+> > Refactor open-coded unsigned wrap-around addition test to use
+> > check_add_overflow(), retaining the result for later usage (which removes
+> > the redundant open-coded addition). This paves the way to enabling the
+> > unsigned wrap-around sanitizer[2] in the future.
+> >
+> > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> > Link: https://github.com/KSPP/linux/issues/26 [2]
+> > Link: https://github.com/KSPP/linux/issues/27 [3]
+> > Link: https://github.com/KSPP/linux/issues/344 [4]
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Uladzislau Rezki <urezki@gmail.com>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+> > Cc: linux-mm@kvack.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  mm/vmalloc.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index d12a17fc0c17..7932ac99e9d3 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -1223,6 +1223,7 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
+> >  	unsigned long align, unsigned long vstart)
+> >  {
+> >  	unsigned long nva_start_addr;
+> > +	unsigned long sum;
+> >
+> >  	if (va->va_start > vstart)
+> >  		nva_start_addr = ALIGN(va->va_start, align);
+> > @@ -1230,11 +1231,11 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
+> >  		nva_start_addr = ALIGN(vstart, align);
+> >
+> >  	/* Can be overflowed due to big size or alignment. */
+> > -	if (nva_start_addr + size < nva_start_addr ||
+> > +	if (check_add_overflow(nva_start_addr, size, &sum) ||
+> >  			nva_start_addr < vstart)
+> >  		return false;
+> >
+> > -	return (nva_start_addr + size <= va->va_end);
+> > +	return (sum <= va->va_end);
+> >  }
+> >
+> >  /*
+> > --
+> > 2.34.1
+> >
+> 
+> Looks good to me,
+> 
+> Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
+>
+Same here. One small nit though. The "sum" variable is not something
+that it suits for. IMO, we should use a better name and replace it:
 
-While here trim the leading 0s from the "reg" definition.
+"nva_offset"?
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index fcea544656360..62a68740dac6e 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -483,13 +483,13 @@ scm_conf: scm-conf@100000 {
- 		ranges = <0x0 0x0 0x00100000 0x1c000>;
- 
- 		serdes0_clk: clock@4080 {
--			compatible = "syscon";
--			reg = <0x00004080 0x4>;
-+			compatible = "ti,am654-serdes-ctrl", "syscon";
-+			reg = <0x4080 0x4>;
- 		};
- 
- 		serdes1_clk: clock@4090 {
--			compatible = "syscon";
--			reg = <0x00004090 0x4>;
-+			compatible = "ti,am654-serdes-ctrl", "syscon";
-+			reg = <0x4090 0x4>;
- 		};
- 
- 		serdes_mux: mux-controller {
--- 
-2.39.2
-
+--
+Uladzislau Rezki
