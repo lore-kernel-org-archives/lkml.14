@@ -1,54 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B422467E67
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9456772A;
+	Tue, 30 Jan 2024 11:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706614533; cv=none; b=qclYaeZtMtYtjt9l6eQCEe4SXZPvyn2wGXNVwrHdoGpkAHtytwwfiZuKDw4poBfbRKud9ZG223ifhy8yTCgBxFXg+0bW3MOW00R6YSEjyo2Y1QhMpCYELEzpV+2sRVOVL1pZOBzPbGr4NfEPjQZISqpUrsvxgyX4pIJajary5qc=
+	t=1706614566; cv=none; b=gw8gwFbopdgSq4jJ7/alF33sZunpjxibM6eH4soA9wqKln6I/4sXPiPgKlsMBJjQByuG6nToshSaOio2QO68XXanD3VmueMeiS43P0jGAPPEmvOAkSz1C0CTok4NN8V3WN1mLxvJjWxAyY5kKi7iH33e7sed1mldvKUgrME9XSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706614533; c=relaxed/simple;
-	bh=Q/f//XJ6fy4wyrAGJAV8Dy5IkrAkQvtOVKgQ73Vg/Xc=;
+	s=arc-20240116; t=1706614566; c=relaxed/simple;
+	bh=WAaU6v81gufqF9xiusdx5rm8WpIZ9KbQZ5T5pInSwSg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFerAN2f+7cC1LYshjHlSqqieUrhQIQ6YfK8BZLoIE62NvTizCIQw4QnGdpbIZ5HwQuC+GTx7SSCq7eR8rLz87hPJqXR1UNkJqwh+OzppD+PN4rEOzaMw9Xq7xldBzc/e0wRx9cq+mTx/nGzxZzV01pqcwbTYNRRRg7Yt1u9kO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AVqu4n7c; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AVqu4n7c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706614530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=epNqACiBPMhuK7yMEN8O8JZQN8F9szuc7H1SVxoQmhI=;
-	b=AVqu4n7c/50MB/8eSt8zT7Z8yRnj5qUdIE5yljoBj/M3K5cxfniCsiC2GfWC9sD7/zsAfj
-	2fGOhQytMLT+PiojqzMQhleHfFJN+iPIkNcBkTrb2Stz4B/LkGUto31T1W1l8sTvU1CzED
-	H/fPDEjf/TRppHu9f8HO4zm5kduofkc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-391-QYJCSJYoOSWfaqWE-4zQtQ-1; Tue, 30 Jan 2024 06:35:26 -0500
-X-MC-Unique: QYJCSJYoOSWfaqWE-4zQtQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DBA10800074;
-	Tue, 30 Jan 2024 11:35:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.237])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 9E6F4C259DD;
-	Tue, 30 Jan 2024 11:35:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 30 Jan 2024 12:34:11 +0100 (CET)
-Date: Tue, 30 Jan 2024 12:34:09 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pidfd: implement PIDFD_THREAD flag for pidfd_open()
-Message-ID: <20240130113409.GA29849@redhat.com>
-References: <20240130112638.GA29773@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTzTGyEMoGRxngaBRnPMKaFHznaIRT80fyQauKbtUT12YAbw//HmrQl7EK3NI9mHvvdBpSpxR5/LlEkUGJeouMSDEjcMZ9eEZSgTYnB/P2FMPc8xicmfkYhZMy5RVt/8Fwna8fYj7TDKXciOFY0Bb2QBfy/PM6ya0ssTPa4wC8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09868DA7;
+	Tue, 30 Jan 2024 03:36:47 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4B3C3F5A1;
+	Tue, 30 Jan 2024 03:35:57 -0800 (PST)
+Date: Tue, 30 Jan 2024 11:35:47 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, vincenzo.frascino@arm.com, david@redhat.com,
+	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v3 08/35] mm: cma: Introduce cma_alloc_range()
+Message-ID: <ZbjfEzlNgprdxfxX@raptor>
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-9-alexandru.elisei@arm.com>
+ <61a3dbb7-25b6-4f49-aa70-9a8aaeb53365@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,245 +48,251 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130112638.GA29773@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <61a3dbb7-25b6-4f49-aa70-9a8aaeb53365@arm.com>
 
-Damn. Self-NACK.
+Hi,
 
-I forgot (we all ;) about mt-exec, and there are 2 problems.
-
-1. The "if (!thread_group_leader(tsk))" block in de_thread() needs
-   do_notify_pidfd() too, the execing non-leader thread looses its
-   old pid, pidfd_poll(PIDFD_THREAD, pid-of-execing-sub-thread)
-   should succeed. Must be fixed, I think.
-
-2. pidfd_poll(PIDFD_THREAD, pid-of-group-leader) should not succeed
-   when its sub-thread execs, the execing thread inherits the leader's
-   pid. Perhaps pidfd_task_exited() can check sig->group_exec_task,
-   but:
-
-   OTOH. do we really care? Group leader can exit and become a
-   zombie. Then another thread can exec. Perhaps we can simply
-   emphasize that if you use pidfd_open(leader-pid, PIDFD_THREAD)
-   then you shouldn't expect that after poll() this pid can't be
-   "vivified" again? I don't think this can be "fixed".
-
-I'll try to think more. We don't want to take tasklist in poll...
-
-Oleg.
-
-On 01/30, Oleg Nesterov wrote:
->
-> With this flag:
+On Tue, Jan 30, 2024 at 10:50:00AM +0530, Anshuman Khandual wrote:
 > 
-> 	- pidfd_open() doesn't require that the target task must be
-> 	  a thread-group leader
 > 
-> 	- pidfd_poll() succeeds when the task exits and becomes a
-> 	  zombie (iow, passes exit_notify()), even if it is a leader
-> 	  and thread-group is not empty.
+> On 1/25/24 22:12, Alexandru Elisei wrote:
+> > Today, cma_alloc() is used to allocate a contiguous memory region. The
+> > function allows the caller to specify the number of pages to allocate, but
+> > not the starting address. cma_alloc() will walk over the entire CMA region
+> > trying to allocate the first available range of the specified size.
+> > 
+> > Introduce cma_alloc_range(), which makes CMA more versatile by allowing the
+> > caller to specify a particular range in the CMA region, defined by the
+> > start pfn and the size.
+> > 
+> > arm64 will make use of this function when tag storage management will be
+> > implemented: cma_alloc_range() will be used to reserve the tag storage
+> > associated with a tagged page.
 > 
-> thread_group_exited() is no longer used, perhaps it can die.
+> Basically, you would like to pass on a preferred start address and the
+> allocation could just fail if a contig range is not available from such
+> a starting address ?
 > 
-> Co-developed-by: Tycho Andersen <tycho@tycho.pizza>
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> ---
->  include/uapi/linux/pidfd.h |  3 ++-
->  kernel/exit.c              |  7 +++++++
->  kernel/fork.c              | 38 +++++++++++++++++++++++++++++++-------
->  kernel/pid.c               | 14 +++-----------
->  kernel/signal.c            |  4 +++-
->  5 files changed, 46 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/uapi/linux/pidfd.h b/include/uapi/linux/pidfd.h
-> index 5406fbc13074..2e6461459877 100644
-> --- a/include/uapi/linux/pidfd.h
-> +++ b/include/uapi/linux/pidfd.h
-> @@ -7,6 +7,7 @@
->  #include <linux/fcntl.h>
->  
->  /* Flags for pidfd_open().  */
-> -#define PIDFD_NONBLOCK O_NONBLOCK
-> +#define PIDFD_NONBLOCK	O_NONBLOCK
-> +#define PIDFD_THREAD	O_EXCL
->  
->  #endif /* _UAPI_LINUX_PIDFD_H */
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index dfb963d2f862..493647fd7c07 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -739,6 +739,13 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
->  		kill_orphaned_pgrp(tsk->group_leader, NULL);
->  
->  	tsk->exit_state = EXIT_ZOMBIE;
-> +	/*
-> +	 * sub-thread or delay_group_leader(), wake up the
-> +	 * PIDFD_THREAD waiters.
-> +	 */
-> +	if (!thread_group_empty(tsk))
-> +		do_notify_pidfd(tsk);
-> +
->  	if (unlikely(tsk->ptrace)) {
->  		int sig = thread_group_leader(tsk) &&
->  				thread_group_empty(tsk) &&
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 347641398f9d..bea32071fff2 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -101,6 +101,7 @@
->  #include <linux/user_events.h>
->  #include <linux/iommu.h>
->  #include <linux/rseq.h>
-> +#include <uapi/linux/pidfd.h>
->  
->  #include <asm/pgalloc.h>
->  #include <linux/uaccess.h>
-> @@ -2050,6 +2051,8 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
->  
->  	seq_put_decimal_ll(m, "Pid:\t", nr);
->  
-> +	/* TODO: report PIDFD_THREAD */
-> +
->  #ifdef CONFIG_PID_NS
->  	seq_put_decimal_ll(m, "\nNSpid:\t", nr);
->  	if (nr > 0) {
-> @@ -2068,22 +2071,35 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
->  }
->  #endif
->  
-> +static bool pidfd_task_exited(struct pid *pid, bool thread)
-> +{
-> +	struct task_struct *task;
-> +	bool exited;
-> +
-> +	rcu_read_lock();
-> +	task = pid_task(pid, PIDTYPE_PID);
-> +	exited = !task ||
-> +		(READ_ONCE(task->exit_state) && (thread || thread_group_empty(task)));
-> +	rcu_read_unlock();
-> +
-> +	return exited;
-> +}
-> +
->  /*
->   * Poll support for process exit notification.
->   */
->  static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
->  {
->  	struct pid *pid = file->private_data;
-> +	bool thread = file->f_flags & PIDFD_THREAD;
->  	__poll_t poll_flags = 0;
->  
->  	poll_wait(file, &pid->wait_pidfd, pts);
-> -
->  	/*
-> -	 * Inform pollers only when the whole thread group exits.
-> -	 * If the thread group leader exits before all other threads in the
-> -	 * group, then poll(2) should block, similar to the wait(2) family.
-> +	 * Depending on PIDFD_THREAD, inform pollers when the thread
-> +	 * or the whole thread-group exits.
->  	 */
-> -	if (thread_group_exited(pid))
-> +	if (pidfd_task_exited(pid, thread))
->  		poll_flags = EPOLLIN | EPOLLRDNORM;
->  
->  	return poll_flags;
-> @@ -2141,6 +2157,11 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
->  		return PTR_ERR(pidfd_file);
->  	}
->  	get_pid(pid); /* held by pidfd_file now */
-> +	/*
-> +	 * anon_inode_getfile() ignores everything outside of the
-> +	 * O_ACCMODE | O_NONBLOCK mask, set PIDFD_THREAD manually.
-> +	 */
-> +	pidfd_file->f_flags |= (flags & PIDFD_THREAD);
->  	*ret = pidfd_file;
->  	return pidfd;
->  }
-> @@ -2154,7 +2175,8 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
->   * Allocate a new file that stashes @pid and reserve a new pidfd number in the
->   * caller's file descriptor table. The pidfd is reserved but not installed yet.
->   *
-> - * The helper verifies that @pid is used as a thread group leader.
-> + * The helper verifies that @pid is still in use, without PIDFD_THREAD the
-> + * task identified by @pid must be a thread-group leader.
->   *
->   * If this function returns successfully the caller is responsible to either
->   * call fd_install() passing the returned pidfd and pidfd file as arguments in
-> @@ -2173,7 +2195,9 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
->   */
->  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
->  {
-> -	if (!pid || !pid_has_task(pid, PIDTYPE_TGID))
-> +	bool thread = flags & PIDFD_THREAD;
-> +
-> +	if (!pid || !pid_has_task(pid, thread ? PIDTYPE_PID : PIDTYPE_TGID));
->  		return -EINVAL;
->  
->  	return __pidfd_prepare(pid, flags, ret);
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index c7a3e359f8f5..e11144466828 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -552,11 +552,6 @@ struct pid *pidfd_get_pid(unsigned int fd, unsigned int *flags)
->   * Return the task associated with @pidfd. The function takes a reference on
->   * the returned task. The caller is responsible for releasing that reference.
->   *
-> - * Currently, the process identified by @pidfd is always a thread-group leader.
-> - * This restriction currently exists for all aspects of pidfds including pidfd
-> - * creation (CLONE_PIDFD cannot be used with CLONE_THREAD) and pidfd polling
-> - * (only supports thread group leaders).
-> - *
->   * Return: On success, the task_struct associated with the pidfd.
->   *	   On error, a negative errno number will be returned.
->   */
-> @@ -615,11 +610,8 @@ static int pidfd_create(struct pid *pid, unsigned int flags)
->   * @flags: flags to pass
->   *
->   * This creates a new pid file descriptor with the O_CLOEXEC flag set for
-> - * the process identified by @pid. Currently, the process identified by
-> - * @pid must be a thread-group leader. This restriction currently exists
-> - * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
-> - * be used with CLONE_THREAD) and pidfd polling (only supports thread group
-> - * leaders).
-> + * the task identified by @pid. Without PIDFD_THREAD flag the target task
-> + * must be a thread-group leader.
->   *
->   * Return: On success, a cloexec pidfd is returned.
->   *         On error, a negative errno number will be returned.
-> @@ -629,7 +621,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
->  	int fd;
->  	struct pid *p;
->  
-> -	if (flags & ~PIDFD_NONBLOCK)
-> +	if (flags & ~(PIDFD_NONBLOCK | PIDFD_THREAD))
->  		return -EINVAL;
->  
->  	if (pid <= 0)
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 9561a3962ca6..5f48d2c4b409 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2051,7 +2051,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
->  	WARN_ON_ONCE(!tsk->ptrace &&
->  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
->  	/*
-> -	 * tsk is a group leader and has no threads, wake up the pidfd waiters.
-> +	 * tsk is a group leader and has no threads, wake up the
-> +	 * non-PIDFD_THREAD waiters.
->  	 */
->  	if (thread_group_empty(tsk))
->  		do_notify_pidfd(tsk);
-> @@ -3926,6 +3927,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
->  		prepare_kill_siginfo(sig, &kinfo);
->  	}
->  
-> +	/* TODO: respect PIDFD_THREAD */
->  	ret = kill_pid_info(sig, &kinfo, pid);
->  
->  err:
-> -- 
-> 2.25.1.362.g51ebf55
-> 
+> Then why not just change cma_alloc() to take a new argument 'start_pfn'.
+> Why create a new but almost similar allocator ?
 
+I tried doing that, and I gave up because:
+
+- It made cma_alloc() even more complex and hard to follow.
+
+- What value should 'start_pfn' be to tell cma_alloc() that it should be
+  ignored? Or, to put it another way, what pfn number is invalid on **all**
+  platforms that Linux supports?
+
+I can give it another go if we can come up with an invalid value for
+'start_pfn'.
+
+> 
+> But then I am wondering why this could not be done in the arm64 platform
+> code itself operating on a CMA area reserved just for tag storage. Unless
+> this new allocator has other usage beyond MTE, this could be implemented
+> in the platform itself.
+
+I had the same idea in the previous iteration, David Hildenbrand suggested
+this approach [1].
+
+[1] https://lore.kernel.org/linux-fsdevel/2aafd53f-af1f-45f3-a08c-d11962254315@redhat.com/
+
+Thanks,
+Alex
+
+> 
+> > 
+> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > ---
+> > 
+> > Changes since rfc v2:
+> > 
+> > * New patch.
+> > 
+> >  include/linux/cma.h        |  2 +
+> >  include/trace/events/cma.h | 59 ++++++++++++++++++++++++++
+> >  mm/cma.c                   | 86 ++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 147 insertions(+)
+> > 
+> > diff --git a/include/linux/cma.h b/include/linux/cma.h
+> > index 63873b93deaa..e32559da6942 100644
+> > --- a/include/linux/cma.h
+> > +++ b/include/linux/cma.h
+> > @@ -50,6 +50,8 @@ extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+> >  					struct cma **res_cma);
+> >  extern struct page *cma_alloc(struct cma *cma, unsigned long count, unsigned int align,
+> >  			      bool no_warn);
+> > +extern int cma_alloc_range(struct cma *cma, unsigned long start, unsigned long count,
+> > +			   unsigned tries, gfp_t gfp);
+> >  extern bool cma_pages_valid(struct cma *cma, const struct page *pages, unsigned long count);
+> >  extern bool cma_release(struct cma *cma, const struct page *pages, unsigned long count);
+> >  
+> > diff --git a/include/trace/events/cma.h b/include/trace/events/cma.h
+> > index 25103e67737c..a89af313a572 100644
+> > --- a/include/trace/events/cma.h
+> > +++ b/include/trace/events/cma.h
+> > @@ -36,6 +36,65 @@ TRACE_EVENT(cma_release,
+> >  		  __entry->count)
+> >  );
+> >  
+> > +TRACE_EVENT(cma_alloc_range_start,
+> > +
+> > +	TP_PROTO(const char *name, unsigned long start, unsigned long count,
+> > +		 unsigned tries),
+> > +
+> > +	TP_ARGS(name, start, count, tries),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__string(name, name)
+> > +		__field(unsigned long, start)
+> > +		__field(unsigned long, count)
+> > +		__field(unsigned, tries)
+> > +	),
+> > +
+> > +	TP_fast_assign(
+> > +		__assign_str(name, name);
+> > +		__entry->start = start;
+> > +		__entry->count = count;
+> > +		__entry->tries = tries;
+> > +	),
+> > +
+> > +	TP_printk("name=%s start=%lx count=%lu tries=%u",
+> > +		  __get_str(name),
+> > +		  __entry->start,
+> > +		  __entry->count,
+> > +		  __entry->tries)
+> > +);
+> > +
+> > +TRACE_EVENT(cma_alloc_range_finish,
+> > +
+> > +	TP_PROTO(const char *name, unsigned long start, unsigned long count,
+> > +		 unsigned attempts, int err),
+> > +
+> > +	TP_ARGS(name, start, count, attempts, err),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__string(name, name)
+> > +		__field(unsigned long, start)
+> > +		__field(unsigned long, count)
+> > +		__field(unsigned, attempts)
+> > +		__field(int, err)
+> > +	),
+> > +
+> > +	TP_fast_assign(
+> > +		__assign_str(name, name);
+> > +		__entry->start = start;
+> > +		__entry->count = count;
+> > +		__entry->attempts = attempts;
+> > +		__entry->err = err;
+> > +	),
+> > +
+> > +	TP_printk("name=%s start=%lx count=%lu attempts=%u err=%d",
+> > +		  __get_str(name),
+> > +		  __entry->start,
+> > +		  __entry->count,
+> > +		  __entry->attempts,
+> > +		  __entry->err)
+> > +);
+> > +
+> >  TRACE_EVENT(cma_alloc_start,
+> >  
+> >  	TP_PROTO(const char *name, unsigned long count, unsigned int align),
+> > diff --git a/mm/cma.c b/mm/cma.c
+> > index 543bb6b3be8e..4a0f68b9443b 100644
+> > --- a/mm/cma.c
+> > +++ b/mm/cma.c
+> > @@ -416,6 +416,92 @@ static void cma_debug_show_areas(struct cma *cma)
+> >  static inline void cma_debug_show_areas(struct cma *cma) { }
+> >  #endif
+> >  
+> > +/**
+> > + * cma_alloc_range() - allocate pages in a specific range
+> > + * @cma:   Contiguous memory region for which the allocation is performed.
+> > + * @start: Starting pfn of the allocation.
+> > + * @count: Requested number of pages
+> > + * @tries: Number of tries if the range is busy
+> > + * @no_warn: Avoid printing message about failed allocation
+> > + *
+> > + * This function allocates part of contiguous memory from a specific contiguous
+> > + * memory area, from the specified starting address. The 'start' pfn and the the
+> > + * 'count' number of pages must be aligned to the CMA bitmap order per bit.
+> > + */
+> > +int cma_alloc_range(struct cma *cma, unsigned long start, unsigned long count,
+> > +		    unsigned tries, gfp_t gfp)
+> > +{
+> > +	unsigned long bitmap_maxno, bitmap_no, bitmap_start, bitmap_count;
+> > +	unsigned long i = 0;
+> > +	struct page *page;
+> > +	int err = -EINVAL;
+> > +
+> > +	if (!cma || !cma->count || !cma->bitmap)
+> > +		goto out_stats;
+> > +
+> > +	trace_cma_alloc_range_start(cma->name, start, count, tries);
+> > +
+> > +	if (!count || start < cma->base_pfn ||
+> > +	    start + count > cma->base_pfn + cma->count)
+> > +		goto out_stats;
+> > +
+> > +	if (!IS_ALIGNED(start | count, 1 << cma->order_per_bit))
+> > +		goto out_stats;
+> > +
+> > +	bitmap_start = (start - cma->base_pfn) >> cma->order_per_bit;
+> > +	bitmap_maxno = cma_bitmap_maxno(cma);
+> > +	bitmap_count = cma_bitmap_pages_to_bits(cma, count);
+> > +
+> > +	spin_lock_irq(&cma->lock);
+> > +	bitmap_no = bitmap_find_next_zero_area(cma->bitmap, bitmap_maxno,
+> > +					       bitmap_start, bitmap_count, 0);
+> > +	if (bitmap_no != bitmap_start) {
+> > +		spin_unlock_irq(&cma->lock);
+> > +		err = -EEXIST;
+> > +		goto out_stats;
+> > +	}
+> > +	bitmap_set(cma->bitmap, bitmap_start, bitmap_count);
+> > +	spin_unlock_irq(&cma->lock);
+> > +
+> > +	for (i = 0; i < tries; i++) {
+> > +		mutex_lock(&cma_mutex);
+> > +		err = alloc_contig_range(start, start + count, MIGRATE_CMA, gfp);
+> > +		mutex_unlock(&cma_mutex);
+> > +
+> > +		if (err != -EBUSY)
+> > +			break;
+> > +	}
+> > +
+> > +	if (err) {
+> > +		cma_clear_bitmap(cma, start, count);
+> > +	} else {
+> > +		page = pfn_to_page(start);
+> > +
+> > +		/*
+> > +		 * CMA can allocate multiple page blocks, which results in
+> > +		 * different blocks being marked with different tags. Reset the
+> > +		 * tags to ignore those page blocks.
+> > +		 */
+> > +		for (i = 0; i < count; i++)
+> > +			page_kasan_tag_reset(nth_page(page, i));
+> > +	}
+> > +
+> > +out_stats:
+> > +	trace_cma_alloc_range_finish(cma->name, start, count, i, err);
+> > +
+> > +	if (err) {
+> > +		count_vm_events(CMA_ALLOC_FAIL, count);
+> > +		if (cma)
+> > +			cma_sysfs_account_fail_pages(cma, count);
+> > +	} else {
+> > +		count_vm_events(CMA_ALLOC_SUCCESS, count);
+> > +		cma_sysfs_account_success_pages(cma, count);
+> > +	}
+> > +
+> > +	return err;
+> > +}
+> > +
+> > +
+> >  /**
+> >   * cma_alloc() - allocate pages from contiguous area
+> >   * @cma:   Contiguous memory region for which the allocation is performed.
+> 
