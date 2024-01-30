@@ -1,142 +1,149 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2073.outbound.protection.partner.outlook.cn [139.219.146.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8351654F8E;
-	Tue, 30 Jan 2024 07:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706599633; cv=fail; b=TXiZkgOoaU9SJhDsfCFVikAyK2tTrwhKtiayAV0mkH1jhaauN799jQfrMlAAGxgNhqWs33hRUVX6rln5Pu/uvbnOBYf9dUWMpM/J7eyezPSgzH9lyBmI2Lh8LPm4NApPl/zlapg013RAWGBkt7R/7shQtuapmgpfJr0o5OnKB8k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706599633; c=relaxed/simple;
-	bh=Y3PD+8QcDf6qI2LEORL0jEvnkGwlhauiTgMBDrDA1QY=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=MVaC5burYS+e6HB/KanBc2g7OT+7ZKdjT++xkLTkw0u7rA228z1a9Jrc7XHTDAh7gxLpDZYgOLHETAS6ZH3a2Z7vKw1v6/fSHlQ/gzLqq65G57S+UNpyujEHNzYS2/ID/UBIhWN+fW5lmnSTbRlC3dSnn8O77MgBDTTtxxwTLL8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nYliVV75UxpqEA2mrgmvaNLnIRie6QTqf+AJ8Z/TmPE0rZttntVGrJGB74MYSmqd6Z0+h11vXsg7S07gLAQ2SmIZCfGYvK4Tfp8hKi7qSst17jpC9ssISqwF8Qc8PYNR7b2AKezaZmq49kx9sd5RKIgck/Cnz8zVH1P08rHb1y/xfNdNWghLSnWdNs8Tss1a01Ml1SosZQ9ZO0Xtvbf2tj2652jm3NNeR/cTjPss6sLW/udEa/a9MitaRxC3jFznO859ImuLla0BUbmt2wnQm93oZQVDJrfO2TVhJpTYqnvbaDC19PHE5t7s3mGxPSzEFwDu/k9LW5dfn4c7Y/CKUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5/ym4ARTvOcck4XoGLMmghS3yD7nmIPcdnZFLZ/b/3Y=;
- b=hulUf/sERJWt+FIZ8QT63ovd1PuGvNGKe23YLJtSkI3gwwJ/QxAn3ppIKJ4OuzG5VQD4LayVifAUXZrZpVBJiiBqvAbVP0OQ0H+C1eC+2rH51uuHF2MFcQ0ZSl2k5K8a65/yHvIALls8IIz4D8Zg/1iXUWq0+XmVETklz1icfkZEURopOKFgJkUv/+mIXSjVJ/aHshXuw55w4a4uS28kwelZMALJSb5Lov7cDSouKIjdfHtQHPa4FxzgnCkMi+uh0nH3sU/DVglrKfiAf0WK6v9qJpL44/hpVrjqXfELllfggvdiVCc1Rnsj0BwWPrBGKIAjV6+PWhik2AiE4vQyjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6) by ZQ0PR01MB1208.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Tue, 30 Jan
- 2024 05:54:01 +0000
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- ([fe80::1dbb:b090:7d89:4e22]) by
- ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::1dbb:b090:7d89:4e22%4])
- with mapi id 15.20.7228.028; Tue, 30 Jan 2024 05:54:01 +0000
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Xingyu Wu <xingyu.wu@starfivetech.com>,
-	Samin Guo <samin.guo@starfivetech.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sia Jee Heng <jeeheng.sia@starfivetech.com>
-Subject: [PATCH] watchdog: starfive: check watchdog status before enabling in system resume
-Date: Tue, 30 Jan 2024 13:51:18 +0800
-Message-ID: <20240130055118.1917086-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SH0PR01CA0016.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:5::28) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFDB4F1EE
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706599754; cv=none; b=YZS28yUjQ9Pt41KzY4A2q3EzYmABx+8flZFqivjqvFv+Juk/mm5eG9cFWmdg/7lyym8h33gPsx46PsS48r51PgN5hY1xWP88RXRzbtBRq2q4yPwdgBKzojVFks0QFxwG+MNY4mhKQ0DQSBO3bBtnoazSZGyRe4wkQuIUkn8PQSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706599754; c=relaxed/simple;
+	bh=x+BceOeiNmaGxLiJhb7fO8u4IewJ3WRvBV8kaWb2fbw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JRRzkuRYzQP4kJS1Ib0JnXijtpS8ZEZQTCYdrh89JTSX3bpZwbfyD6dFbLttSjUSPAwPk+4J1ffjUhztl4tVhC6lbt24y5vRqiTioRbOQWga+PVbtQudDEjzmtxyySW2P4yzLQtNFgAHg+BJa3XromNwBWibuBc7i6JuKJqsWYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OaKevLdz; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OaKevLdz"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55ef4a66008so2443417a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 23:29:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706599750; x=1707204550; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=1hArtQWrp3hZ+e4F70yHoO5Sri2J0Xol4lzMl6YTL7Q=;
+        b=OaKevLdzn928BW/gMh4R3kRfkAPgcWGj7S5SoOHrCEJJyymRRt0fWn0dPukrc1AlqU
+         0RK3isFQedTNqY7RFkTNLWWLEhk+5/HBYThfSTvinzj3mgpvmLts1zTG4qXgdHcy9Ayx
+         3t4h75s8Sys2eB4UViRvzDjb0QwLJQ6Ul7tJAVz6e9UVWN93oz9U5HxqYXHAJW6rNI/A
+         X6UWW3enFRFCfKkfqUuUYFxxvoxUptYcJOoeAxPIaLHCuvkTT1uqd03CXJ3JkpTBNcTn
+         qq17P86vwYTES70fWOs5eLocpfDTF2bApCHCzgSQtPt5jqyxhpY9YuO1GuNGvkhdbwuk
+         iarg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706599750; x=1707204550;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1hArtQWrp3hZ+e4F70yHoO5Sri2J0Xol4lzMl6YTL7Q=;
+        b=tCCPdMjH1Q0Gtao23kcm1A9Y9XU7F2p/ydtfK6O4qlfQQVM2Vmrw9RKKDu+zcAW2pK
+         yDhlnCOvYEIKIgFnCdFs6HG1gTyLo+cK6Z0RU1OJWRFCRnL+nzceJEx33bWAn4C359iA
+         7sjjFvo0/2j0ZvknvbkGHnTVod+DOrGzvzVjmnrLRLw18PuOmZIuZnKIIUMnAKIIhqJJ
+         EgvTrRsgC+PiUpRvDAmEBxwwAO/SFOb16KbfZ32idXXTR3k5oaMuhPwr8uWrNUvkmrdk
+         i8SqlfF4MSi6adVQOvjxADvEBYJoFW6L3IOTHb715lRS8crw2B1CKCUgd5sLq3CjOdz/
+         KmEA==
+X-Gm-Message-State: AOJu0Yz3KHIfwGeZBYQ0raITcs593wdbrJguu/R1aBger47x58Fgv8vG
+	q5nTyNKU0ANtWAaPb2fsZV8Djatx6KYlERG7o9SNMZ+T0F5Jp1VppR/Jq8x2dr0=
+X-Google-Smtp-Source: AGHT+IHzKX/WdFJy55ipjEVM09ZalvomsYTKcJP0jKZv/465TrQZLrHG7KO+t2E9b8zWzph+zF/Xzw==
+X-Received: by 2002:aa7:df03:0:b0:55e:ef54:a4dc with SMTP id c3-20020aa7df03000000b0055eef54a4dcmr3957988edy.23.1706599750602;
+        Mon, 29 Jan 2024 23:29:10 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id f14-20020a056402004e00b0055f1e3e769bsm1127242edu.35.2024.01.29.23.29.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 23:29:10 -0800 (PST)
+Message-ID: <8659d79a-e18e-4591-be9e-817d0ab63b75@linaro.org>
+Date: Tue, 30 Jan 2024 08:29:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1208:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e3c1082-7173-4489-dbae-08dc2157dbcf
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	OSQhLHrMC/Tp/4kdNIgOmz93WB4oapAZDe1CTa/8E6BP+VU8WirvbLIkQkowHeG/Ha3Og7pkWAk3I+T9rZyLOJDLV3YOy4P41gW0IK8jg2FyoQ252TxIjIBRomAcsE18MROb1ZmAuQkEEw3FKb3aLDf/lxnh80ZtNhtnRAkx7aCIAB3HJ/OPehxYjtEAHcquJ57Ln0Q5m3/9ZXKNwdI5cmfVWDCNKz9/gZd+DKgj0R6BxHtOYGnsuJ5Ju+yqVGuSpbWJm5fYoJ38mm55d9a2aeIYQ+uGMgxrEZHGAHPQ9/rDJauYcv3ZCN5mvFsGjykwVgo5S495SogUEl4fjb4a9x/X9wvvwatbWFMk0Im6uu22yODnG7oiqT9VJLrMIHqI0pvx5yz3tFaDjVzGieVFzDGdrxr+YOE3ApDtHYAGkfI3Lp8iGKCjATcd+pjLYVsbTupisP+aHH/umDP/ib1Pn7QLdgeNxEPmR0TYHXU62qlfiuKqukrNySj/dW4WrbW17DZ9lec+UGqc4dokGlbxzoE8wYhM7i99FrSf83JnHOIiiFtwiBhzp47IL40vQ5JH
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(230922051799003)(1800799012)(186009)(451199024)(38100700002)(4326008)(40180700001)(5660300002)(8676002)(86362001)(54906003)(38350700005)(8936002)(66556008)(110136005)(66476007)(66946007)(4744005)(26005)(36756003)(508600001)(2906002)(52116002)(2616005)(83380400001)(1076003)(6666004)(40160700002)(107886003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GorqAkK5GxqYS1JRZRms8H20NHPsztzaWpFi4kaM45S0rFtxX/ZrwEbqiP/b?=
- =?us-ascii?Q?ub7yedZoc+tWXzlW2YTxGgfR4vnVvDl6ERPXZb27oNvuUggvmGRAVDd/3aWo?=
- =?us-ascii?Q?6Fit9so9+OcUkWe+0CO5/HUSDCdlZzlkAow62sjjQ8drvwQNQLpXWD/lZMKE?=
- =?us-ascii?Q?7vLhUNC3NnKaFJ9/uxou5/ykTH7Yj3oEhS4QSjUv9welR7UpRFWirjuNMtYQ?=
- =?us-ascii?Q?Wzi+6bm3c4qDDySA1L/FCfPAwQBu6EJ8J0/TsSpHrvQXuFF8VSVMJASnC6ix?=
- =?us-ascii?Q?0P8zyL0RsXnBUHWAgWKQmZ0Y+rqujr4CRHKSk8q68qgeKn1fheUk4fA2BuVq?=
- =?us-ascii?Q?70CMiemYIJSG0yDOG6hF4ZQSgvAPtPTixj08S6Zf/6mZtjwbZqwiOYIRm0yO?=
- =?us-ascii?Q?+4v6mHWfx9TEIJ3kA7bOy/94ldmYgFn/+UdPVqdekma1762XY42Wb1yENpJc?=
- =?us-ascii?Q?dNRlPgQEBUPvR/aCWDGj1tXlLiJMCYqy8g5ww97WLdSN78d+bd3WSwmeRlVY?=
- =?us-ascii?Q?f3BlFRBWU2kLir4w1sb0J2C8zCM3i8wl0L0jv0iOsGcRPGukzWmOPsKit9zD?=
- =?us-ascii?Q?+UHqBn5BaSSQDXE+Ee4q7bhSxIqSoC54ajJLsiPTreAOWAf8WCOWw94NVXby?=
- =?us-ascii?Q?KE82CZabrKRnDydrq7zqRcg1iBZzv4SvyB5eNME3fmAk2CyAaB9gbUNz+KhW?=
- =?us-ascii?Q?ssafAHaqkIXEmrOnH+h8w1aKTFem9g4CIJXfaiEzajqSU4fkt4Bo1FgLMtZ1?=
- =?us-ascii?Q?E4RyhrPiepfcQIheZxOTL1Q4dV2uAi9Mc3MMukSQ9VsENAUfg/Sll2KB9dTn?=
- =?us-ascii?Q?KL1Oe26NEV7viLwXm3ieQwoMcnTmpXkm04g3OH01+reCASPbH8GyG7awUVlM?=
- =?us-ascii?Q?utNyDDuVzWrQ+QSd/lCZb4qmItbZl+Yx/oi3KBlKJlhpENTirMebfdIRCeWG?=
- =?us-ascii?Q?oJ0rXxGRMAj9AGe851hKip2H7/XBBX51Kamrh7p9skQPWk7DwHiMFjCHGwVm?=
- =?us-ascii?Q?PC7uvRNiPZjS6Jnmh3wC19Yty5AgJJ1oAC9RqHg+37nuSggbKJx7HpzL/BZf?=
- =?us-ascii?Q?TE+ZU+rYDNFQenOQ4LkUgOVJfDyds3SzcxOSvPdIonhjGy6LJygS4JTxuWuC?=
- =?us-ascii?Q?FUS7rT84wk2JdylqZiEsh25CO1eH0h9VTLuuULvWTv2O3baw4p3KWmziCI8m?=
- =?us-ascii?Q?gV8hBvtinmpMz0pO/yDhXQIXFkpqKzLmTy64doMxtfBYMCEojKkxQu4/o70X?=
- =?us-ascii?Q?xfeosOVKEoUrJj/aqb0yWaiLxyTSXKcd2+qOwfwLFC6pFyMR3KhbqF0+eKIr?=
- =?us-ascii?Q?P1omLM6VkioRy225JIc/JS6bisJ3iy3PYf1XGn/CZGiQULdvNACzkcaf8iu8?=
- =?us-ascii?Q?BIQO2CMJjUIH2rYKr0+W3RahLC+vBVg540X+TVMrGrsoiuk0VKH9EnpXKn+9?=
- =?us-ascii?Q?DldL4wN22+DLjB8YGojIDPJepm+LwZP581/47gHTFWDLVmbbRA0kk8Kcn8Ua?=
- =?us-ascii?Q?xmtn/+kfoEUd3gba43olSxc9XAFp+Ls7h4Md2dos9LsiQDsJCrg1vA8fYoq8?=
- =?us-ascii?Q?f91Ag2nK7hUj8b0RlT2N3fRd6CnD7ibruPX4EPyphAXZK36EJW6QeohvRquG?=
- =?us-ascii?Q?Ww=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e3c1082-7173-4489-dbae-08dc2157dbcf
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 05:54:01.5641
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: U0O/3fARYv4+GoJk5/D2hldEoLuprgNP3w09PRduSVJjks4lfxwmeXyKMpbKTF6RwqfJ07/IG8kZiD1GpYs1CL1PXWceziuyVIklKvoqwbE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1208
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Add entry for Samsung Exynos850 SoC
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240129204717.9091-1-semen.protsenko@linaro.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240129204717.9091-1-semen.protsenko@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-System resume will start and enable watchdog regardless of whether the
-watchdog is enabled/disabled during a system suspend.
-Add a check to the watchdog status and only start and enable the
-watchdog if the watchdog status is running/active.
+On 29/01/2024 21:47, Sam Protsenko wrote:
+> Add maintainers entry for the Samsung Exynos850 SoC based platforms.
+> 
+> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+> ---
+>  MAINTAINERS | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 939f6dd0ef6a..77c10cc669f8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19281,6 +19281,16 @@ B:	mailto:linux-samsung-soc@vger.kernel.org
+>  F:	Documentation/devicetree/bindings/sound/samsung*
+>  F:	sound/soc/samsung/
+>  
+> +SAMSUNG EXYNOS850 SoC SUPPORT
+> +M:	Sam Protsenko <semen.protsenko@linaro.org>
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +L:	linux-samsung-soc@vger.kernel.org
 
-Signed-off-by: Sia Jee Heng <jeeheng.sia@starfivetech.com>
-Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
----
- drivers/watchdog/starfive-wdt.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Sorry, but I am still against individual SoC entries in maintainers,
+like I replied multiple times and pointed to the updated
+get_maintainers.pl script to fetch emails from boards.
 
-diff --git a/drivers/watchdog/starfive-wdt.c b/drivers/watchdog/starfive-wdt.c
-index e28ead24c520..f72fc38a41f8 100644
---- a/drivers/watchdog/starfive-wdt.c
-+++ b/drivers/watchdog/starfive-wdt.c
-@@ -554,7 +554,10 @@ static int starfive_wdt_resume(struct device *dev)
- 	starfive_wdt_set_reload_count(wdt, wdt->reload);
- 	starfive_wdt_lock(wdt);
- 
--	return starfive_wdt_start(wdt);
-+	if (watchdog_active(&wdt->wdd))
-+		return starfive_wdt_start(wdt);
-+
-+	return 0;
- }
- 
- static int starfive_wdt_runtime_suspend(struct device *dev)
--- 
-2.43.0
+
+Best regards,
+Krzysztof
 
