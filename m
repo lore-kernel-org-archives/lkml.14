@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7166364CA;
-	Tue, 30 Jan 2024 01:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D00374DD;
+	Tue, 30 Jan 2024 01:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706578559; cv=none; b=B7/eIvYQDCAjZqFL1vuR32/B1dyD+ym4vM5ki8yKL9kVUPWYHKICk1qnwGtWDBKDGRq+DLxfj1MdBcUhpGo7uypSa+Xob2j0cYYbzEI3hjTC1G4fzr/VxqQB+x+9ubsj1FZAL9n6FPMLmq+D8DdtjdioHUiiMQadSxpHAalLxDM=
+	t=1706578561; cv=none; b=VIOLkQFFVNlehqU6c9ExXgbENLVHTJW1gP1ZUE3+IYHB3O87Hzh0ItSPFVlP6wRDV9dVj8d0O8aKmcXf4VW3m1RSlLbDnsq/BipKkPG+wDZ/jL2JgSIYarPOeQFUQbEVcRNH5OeUi63+a5IlSP/35Bhz3JiSHp8cU3NSE9xyWkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706578559; c=relaxed/simple;
-	bh=OvMM8iJkFhvWNhsVLNub4HhcW21nuv8NW9IL6jHpWeY=;
+	s=arc-20240116; t=1706578561; c=relaxed/simple;
+	bh=TappCEs1QiYT505+DhU0zSdNYL81quzZAEnLH6jY5LM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n9rJZ8JPNK0zYLMrz+Z3dV7dhSGT0WSIXt/n3V46eo8v9CX7QAkuDweSbKRwb5ovKFTUwWQ3VxdaDUcuaxf4MJ2+7b8MnCzk2Zkl2tdeL06fhAtB8FZWZ22wjyYL10Y2sJ1R3kxP9I+9331Olr7fQ8WEUbrsKhWzbYfGRBxX5e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAAuZhTk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JWqdDISbKJu3fNwAKYBR/dr2BQvaRVt0pSeITr7NruYJohg6g6N2v8mtjaHWtHKoJQqnJcYrKRdHzcqrdRaBR8jA5X8BHuzaRR3glykD6Y6YhklX2Ai2T74VoiGXM6Ygcc3NdsujHZW3BWi9vRyuMZfn+bGk7GIjC2fI3iFGsVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFP5NFEw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAAuZhTk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0964FC43330;
-	Tue, 30 Jan 2024 01:35:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFP5NFEw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EFE5C43390;
+	Tue, 30 Jan 2024 01:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706578559;
-	bh=OvMM8iJkFhvWNhsVLNub4HhcW21nuv8NW9IL6jHpWeY=;
+	s=k20201202; t=1706578560;
+	bh=TappCEs1QiYT505+DhU0zSdNYL81quzZAEnLH6jY5LM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HAAuZhTk9Ynq9mnYQP2Pkmcbpcd5Lg6BDiyjM+rZXnkWTHikCQS1p9FHvI24SkFhD
-	 ZdhKkrHuUzxpbRD/VtTqVpzP0p+HECcFBDoPaDHb5356mZzQC2joaa14LWsPrDuGfB
-	 lJoV1XYenWuoKc3znKqn8HLKPeKxHvYJtmWfopvS/Z5aAViVj17+6NmxfJVPcyDj8G
-	 Ue/aEGz9BUlxrfWlCSAOQD4ejnXtZXptj80MiSBKwxqs2FpaIehQdmnbmPE8ooRgT0
-	 EvBuZRpWCsb/FbF4hz5ysYQZXWg85FXnwU0SECSbVZp7NPKKPdr50dZkyM2fr9o0lL
-	 gA1Iyha6cBm4A==
+	b=FFP5NFEwwozb08uVo+7nRDp7jigTnADRzHoD+Dy+L61NqdYWr+6phTtrauODwooAb
+	 24tlphXSd5ldl6GdqunuS3hAvvajyCkKiYqyMAUnafFNPGzD8RpSmmKEEpedkpMaKb
+	 rk95qqTgwffbKqfnE2aiupjub6g61Ew5jAJrhlWW1e19S9dEhv27qrVbFiSO0IHNvc
+	 eTR/lirtG9EvJbGftZc5q6DTflhxF/CmWvc9YokRAgPTvwpvkT3YI4gVashAmj7BdP
+	 iboBri8jUHSZ9GFXgaMQWViP3epe2I6gYgm35prRmu9psnS7Kar+u0Vnil+VIFEnDI
+	 3z4WulC2vtuRQ==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
 	damon@lists.linux.dev,
 	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/9] mm/damon/dbgfs: make debugfs interface deprecation message a macro
-Date: Mon, 29 Jan 2024 17:35:43 -0800
-Message-Id: <20240130013549.89538-5-sj@kernel.org>
+Subject: [PATCH 6/9] selftets/damon: prepare for monitor_on file renaming
+Date: Mon, 29 Jan 2024 17:35:45 -0800
+Message-Id: <20240130013549.89538-7-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240130013549.89538-1-sj@kernel.org>
 References: <20240130013549.89538-1-sj@kernel.org>
@@ -46,55 +48,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DAMON debugfs interface deprecation message is written twice, once for
-the warning, and again for DEPRECATED file's read output.  De-duplicate
-those by defining the message as a macro and reuse.
+Following change will rename 'monitor_on' DAMON debugfs file to
+'monitor_on_DEPRECATED', to make the deprecation unignorable in runtime.
+Since it could make DAMON selftests fail and disturb future bisects,
+update DAMON selftests to support the change.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- mm/damon/dbgfs.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ tools/testing/selftests/damon/_chk_dependency.sh     | 11 +++++++++--
+ tools/testing/selftests/damon/_debugfs_common.sh     |  7 +++++++
+ .../testing/selftests/damon/debugfs_empty_targets.sh | 12 ++++++++++--
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/mm/damon/dbgfs.c b/mm/damon/dbgfs.c
-index fc6ece5a9f37..fbc0cd63f34c 100644
---- a/mm/damon/dbgfs.c
-+++ b/mm/damon/dbgfs.c
-@@ -15,6 +15,11 @@
- #include <linux/page_idle.h>
- #include <linux/slab.h>
+diff --git a/tools/testing/selftests/damon/_chk_dependency.sh b/tools/testing/selftests/damon/_chk_dependency.sh
+index 0328ac0b5a5e..350f8c2b071d 100644
+--- a/tools/testing/selftests/damon/_chk_dependency.sh
++++ b/tools/testing/selftests/damon/_chk_dependency.sh
+@@ -18,7 +18,14 @@ then
+ 	exit $ksft_skip
+ fi
  
-+#define DAMON_DBGFS_DEPRECATION_NOTICE					\
-+	"DAMON debugfs interface is deprecated, so users should move "	\
-+	"to DAMON_SYSFS. If you cannot, please report your usecase to "	\
-+	"damon@lists.linux.dev and linux-mm@kvack.org.\n"
+-for f in attrs target_ids monitor_on
++if [ -f "$DBGFS/monitor_on_DEPRECATED" ]
++then
++	monitor_on_file="monitor_on_DEPRECATED"
++else
++	monitor_on_file="monitor_on"
++fi
 +
- static struct damon_ctx **dbgfs_ctxs;
- static int dbgfs_nr_ctxs;
- static struct dentry **dbgfs_dirs;
-@@ -22,10 +27,7 @@ static DEFINE_MUTEX(damon_dbgfs_lock);
++for f in attrs target_ids "$monitor_on_file"
+ do
+ 	if [ ! -f "$DBGFS/$f" ]
+ 	then
+@@ -28,7 +35,7 @@ do
+ done
  
- static void damon_dbgfs_warn_deprecation(void)
- {
--	pr_warn_once("DAMON debugfs interface is deprecated, "
--		     "so users should move to DAMON_SYSFS. If you cannot, "
--		     "please report your usecase to damon@lists.linux.dev and "
--		     "linux-mm@kvack.org.\n");
-+	pr_warn_once(DAMON_DBGFS_DEPRECATION_NOTICE);
- }
+ permission_error="Operation not permitted"
+-for f in attrs target_ids monitor_on
++for f in attrs target_ids "$monitor_on_file"
+ do
+ 	status=$( cat "$DBGFS/$f" 2>&1 )
+ 	if [ "${status#*$permission_error}" != "$status" ]; then
+diff --git a/tools/testing/selftests/damon/_debugfs_common.sh b/tools/testing/selftests/damon/_debugfs_common.sh
+index 48989d4813ae..aa995516870b 100644
+--- a/tools/testing/selftests/damon/_debugfs_common.sh
++++ b/tools/testing/selftests/damon/_debugfs_common.sh
+@@ -45,6 +45,13 @@ test_content() {
+ source ./_chk_dependency.sh
  
- /*
-@@ -808,10 +810,7 @@ static void dbgfs_destroy_ctx(struct damon_ctx *ctx)
- static ssize_t damon_dbgfs_deprecated_read(struct file *file,
- 		char __user *buf, size_t count, loff_t *ppos)
- {
--	char kbuf[512] = "DAMON debugfs interface is deprecated, "
--		     "so users should move to DAMON_SYSFS. If you cannot, "
--		     "please report your usecase to damon@lists.linux.dev and "
--		     "linux-mm@kvack.org.\n";
-+	char kbuf[512] = DAMON_DBGFS_DEPRECATION_NOTICE;
- 	int len = strnlen(kbuf, 1024);
+ damon_onoff="$DBGFS/monitor_on"
++if [ -f "$DBGFS/monitor_on_DEPRECATED" ]
++then
++	damon_onoff="$DBGFS/monitor_on_DEPRECATED"
++else
++	damon_onoff="$DBGFS/monitor_on"
++fi
++
+ if [ $(cat "$damon_onoff") = "on" ]
+ then
+ 	echo "monitoring is on"
+diff --git a/tools/testing/selftests/damon/debugfs_empty_targets.sh b/tools/testing/selftests/damon/debugfs_empty_targets.sh
+index 87aff8083822..effbea33dc16 100755
+--- a/tools/testing/selftests/damon/debugfs_empty_targets.sh
++++ b/tools/testing/selftests/damon/debugfs_empty_targets.sh
+@@ -8,6 +8,14 @@ source _debugfs_common.sh
  
- 	return simple_read_from_buffer(buf, count, ppos, kbuf, len);
+ orig_target_ids=$(cat "$DBGFS/target_ids")
+ echo "" > "$DBGFS/target_ids"
+-orig_monitor_on=$(cat "$DBGFS/monitor_on")
+-test_write_fail "$DBGFS/monitor_on" "on" "orig_monitor_on" "empty target ids"
++
++if [ -f "$DBGFS/monitor_on_DEPRECATED" ]
++then
++	monitor_on_file="$DBGFS/monitor_on_DEPRECATED"
++else
++	monitor_on_file="$DBGFS/monitor_on"
++fi
++
++orig_monitor_on=$(cat "$monitor_on_file")
++test_write_fail "$monitor_on_file" "on" "orig_monitor_on" "empty target ids"
+ echo "$orig_target_ids" > "$DBGFS/target_ids"
 -- 
 2.39.2
 
