@@ -1,208 +1,134 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E8C2E40E;
-	Tue, 30 Jan 2024 01:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B9336137
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706578241; cv=none; b=fO2dP37198/alb6LpzZ8PpNVSaXAA3yvdlMaRwWvV6GkIiHSkyYUvzOmKYT+Zk6vE3dsC76d6+ihSSQPUYl/7LchmAmhfrhj6oh7ubJmrdMX8RiYfCACwoZ/bh369PiKfWib2Q5ohMiEmCtToZYZ0uODJMpAfJSZy79ljq19aYI=
+	t=1706578283; cv=none; b=AQ09B7tnXJVFIVAvOwH6g3syoE1M8YBuswZvpMNILaiKd8jJnSeYN9H0d12PM6TIpyWjccmEWdC1hVXl02AsoL8aGCPgzXCTDeeeo68bvf8E0nPooQYsmR/Alv4xdQ21RVaJjFCW0AP5RbeUMBVAZ2ygxmd9LIscJ6YZPYsI3OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706578241; c=relaxed/simple;
-	bh=0QtepIhapBUQYBXsTlb3iozbTJoWSBaagWuqgVCvxwc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=is7c4TfZ4ep9n9UiFIcBzSXtWo33eVyGrWF2gWnXYjKN6OsBFr68I6u77d72WEVFqYEgqZsKGCYrofI/jboj4c8iq5c8eBE20XYavwmVWXgM6VO0qlilaza+5V8xlDVsyo2QQKI1p0p/OqNSqJFmFcsD0oiecD5TgbKYRESqFOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TP6zy5xTQz4f3lgJ;
-	Tue, 30 Jan 2024 09:30:22 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 4C64F1A01E9;
-	Tue, 30 Jan 2024 09:30:29 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxAzUbhlL0+cCQ--.50348S3;
-	Tue, 30 Jan 2024 09:30:29 +0800 (CST)
-Subject: Re: [PATCH] scsi: sd: unregister device if device_add_disk() failed
- in sd_probe()
-To: Luis Chamberlain <mcgrof@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: linan666@huaweicloud.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linan122@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
- yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20231208082335.1754205-1-linan666@huaweicloud.com>
- <ZYUxZc/my2v6UfFJ@bombadil.infradead.org>
- <78fb6d82-c50a-8fea-ae6d-551fd35656bf@huaweicloud.com>
- <ZbfkZxMVpVI97zmk@bombadil.infradead.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <8d75f4dc-554c-b0ae-3e92-d2cf033dc555@huaweicloud.com>
-Date: Tue, 30 Jan 2024 09:30:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1706578283; c=relaxed/simple;
+	bh=l0t9jFgPIDb+BxojStFw/B4mQF8sX83DTK7Dq/RDMiE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i/izE9X0tJewafsiV+0Pz97Ol/wgedKn07P2CdOdS131aCTkZiDZuOCKmVd7wGsOaDn8Ugdd4iQsrSkCO6e15NxdrlN0uQXnaNBLi5rVvbYrHEl3+Et8Indb6hZKtELEIVr7YmKi2vmNyitV5ts0ghkOL8bLD9pqD2rCNgu3uGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xHNgrfwl; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xHNgrfwl"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2185739b64cso1630717fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:31:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706578281; x=1707183081; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yKPTGpRJe4iviA3naEAAGwI9bB27NhTfAciTApm6FaU=;
+        b=xHNgrfwlz/oC1NG5Ag09fbdGq0AEujFbVmZcOvLpTng3kzaJAAvJizbu2/hdhGVB89
+         oAVo5eyTy9OGrWRRZnyZ2ESMXedyd2UCVKv0DO4IhNt83mqTJyL4AI6uWqdbUUfAAiEo
+         of/l5DhsiKmLmR4Yi02SAof1rj0KmaCGRPlhEWmjjvjIKOsCzVKAFD9hX2xv/j1PGBtI
+         aXrcAuMRN524lWciZHigTIiq1T7B4tPJwGdK3HhcI75Yy20k2kyiksrD5OUwrjtgCS/7
+         D0QaK0iOYxXZwhj9e+oCwXw469xg++LIaHAJWYE4QDNTk4pW5ff69bQisnWzTP/uTVsV
+         EHoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706578281; x=1707183081;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yKPTGpRJe4iviA3naEAAGwI9bB27NhTfAciTApm6FaU=;
+        b=wvwuwzJk3QGsRZLqSr9xwYXp+Vwa4wcftUQ63kSfAdMn+P32fqBG5M4PZw+4cltB8o
+         3IcLsvBLUVY6TsqTrRZuAcyc7u4Lw+wxr4P0+ILSDc73AYmYNKybdhGut6vWaYVGnFI+
+         nnYMvnZbKh6YnJxYy3Yy1AkXpqh2UOzE9l0zrHaGORomv2lShJJBlLlYxH3RK6r3BK44
+         9WAQve+MShZd4cW0ZmDCN225srYz3YXSyztYIhBvMh5o5LbQ1trtzc2mx39rqeMv0Ypb
+         amqd9f5rAYuXAwKPf+TS6mTb80xobPFum74duxzhHCWa7cqFKjxierhU/Xa8eqdOOUZo
+         Cb6w==
+X-Gm-Message-State: AOJu0YyQVRO8derXpN4nK835IVUVGtwOCZzwxpuyOjLkpM1RUUYtVECM
+	b9XDH0buVPUW6F7xAybbrLrM+EWakRtFru02yhS+cMwv42k+0Isp9qKWH3y1sjI=
+X-Google-Smtp-Source: AGHT+IHiRF8RsmyJ9JXE/PR5570OucKCZWuOzmou1M+BxzDtaClKxilJ/q3KJ54CKVlIg/NScbdClw==
+X-Received: by 2002:a05:6870:e0c9:b0:214:8499:1233 with SMTP id a9-20020a056870e0c900b0021484991233mr7224701oab.22.1706578280724;
+        Mon, 29 Jan 2024 17:31:20 -0800 (PST)
+Received: from [192.168.17.16] ([148.222.132.181])
+        by smtp.gmail.com with ESMTPSA id lt7-20020a05687142c700b00214ca092655sm2295401oab.46.2024.01.29.17.31.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 17:31:20 -0800 (PST)
+Message-ID: <4a2b55da-ee57-4fca-bb7b-240792b25460@linaro.org>
+Date: Mon, 29 Jan 2024 19:31:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZbfkZxMVpVI97zmk@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 000/185] 6.1.76-rc1 review
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
+References: <20240129165958.589924174@linuxfoundation.org>
+From: =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>
+In-Reply-To: <20240129165958.589924174@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxAzUbhlL0+cCQ--.50348S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr48ArWUJr47GFyfuF48Zwb_yoWrKFWxpF
-	WDWa90krW8Gr1UCwn0vrWUZa45Kw40y34fXry8G34Yg3s8XryYqFW3GFW5Wa4fJrZrCF4U
-	JrW7GryxW3W8Jw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+Hello!
 
-在 2024/01/30 1:46, Luis Chamberlain 写道:
-> On Fri, Dec 22, 2023 at 04:27:16PM +0800, Yu Kuai wrote:
->> Hi,
->>
->> 在 2023/12/22 14:49, Luis Chamberlain 写道:
->>> On Fri, Dec 08, 2023 at 04:23:35PM +0800, linan666@huaweicloud.com wrote:
->>>> From: Li Nan <linan122@huawei.com>
->>>>
->>>> "if device_add() succeeds, you should call device_del() when you want to
->>>> get rid of it."
->>>>
->>>> In sd_probe(), device_add_disk() fails when device_add() has already
->>>> succeeded, so change put_device() to device_unregister() to ensure device
->>>> resources are released.
->>>>
->>>> Fixes: 2a7a891f4c40 ("scsi: sd: Add error handling support for add_disk()")
->>>> Signed-off-by: Li Nan <linan122@huawei.com>
->>>
->>> Nacked-by: Luis Chamberlain <mcgrof@kernel.org>
->>>
->>>> ---
->>>>    drivers/scsi/sd.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
->>>> index 542a4bbb21bc..d81cbeee06eb 100644
->>>> --- a/drivers/scsi/sd.c
->>>> +++ b/drivers/scsi/sd.c
->>>> @@ -3736,7 +3736,7 @@ static int sd_probe(struct device *dev)
->>>>    	error = device_add_disk(dev, gd, NULL);
->>>>    	if (error) {
->>>> -		put_device(&sdkp->disk_dev);
->>>> +		device_unregister(&sdkp->disk_dev);
->>>>    		put_disk(gd);
->>>>    		goto out;
->>>>    	}
->>>
->>> This is incorrect, device_unregister() calls:
->>>
->>> void device_unregister(struct device *dev)
->>> {
->>> 	pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
->>> 	device_del(dev);
->>> 	put_device(dev);
->>> }
->>>
->>> So you're adding what you believe to be a correct missing device_del().
->>> But what you missed is that if device_add_disk() fails then device_add()
->>> did not succeed because the new code we have in the kernel *today* unwinds
->>> this for us now.
->>
->> I'm confused here, there are two device here, one is 'sdkp->disk_dev',
->> one is gendisk->part0->bd_device, and the order in which they
->> initialize:
->>
->> sd_probe
->> device_add(&sdkp->disk_dev) -> succeed
->> device_add_disk -> failed, and device_add(bd_device) did not succeed
->> put_device(&sdkp->disk_dev) -> device_del is missed
->>
->> I don't see that if device_add_disk() fail, device_del() for
->> 'sdkp->disk_dev'is called from anywhere. Do I missing anything?
+On 29/01/24 11:03 a. m., Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.76 release.
+> There are 185 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Ah then the fix is still incorrect and the commit log should
-> describe that this is for another device.
+> Responses should be made by Wed, 31 Jan 2024 16:59:28 +0000.
+> Anything received after that time might be too late.
 > 
-> How about this instead?
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.76-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
 > 
->>From c3f6e03f4a82aa253b6c487a293dcd576393b606 Mon Sep 17 00:00:00 2001
-> From: Luis Chamberlain <mcgrof@kernel.org>
-> Date: Mon, 29 Jan 2024 09:25:18 -0800
-> Subject: [PATCH] sd: remove extra put_device() for extra scsi device
+> thanks,
 > 
-> The sd driver first device_add() its own device, and later use
-> device_add_disk() with another device. When we added error handling
-> for device_add_disk() we now call put_disk() and that will trigger
-> disk_release() when the refcount is 0. That will end up calling
-> the block driver's disk->fops->free_disk() if one is defined. The
+> greg k-h
 
-This is incorrect. GD_ADDED will only set when device_add_disk()
-succeed, and free_disk() will only be called from disk_release() if
-GD_ADDED is set. I think Li Nan's patch is correct.
+We see build regressions on Arm64, as reported by Naresh earlier, and System/390:
 
-> sd driver has scsi_disk_free_disk() as its free_disk() and that
-> does the proper put_device(&sdkp->disk_dev) for us so we should not
-> need to call it, however we are left still missing the device_del()
-> for it.
-> 
-> While at it, unwind with scsi_autopm_put_device(sdp) *prior* to
-> putting to device as we do in sd_remove().
-> 
-> Reported-by: Li Nan <linan122@huawei.com>
-> Reported-by: Yu Kuai <yukuai1@huaweicloud.com>
-> Fixes: 2a7a891f4c40 ("scsi: sd: Add error handling support for add_disk()")
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->   drivers/scsi/sd.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-> index 7f949adbadfd..6475a3c947f8 100644
-> --- a/drivers/scsi/sd.c
-> +++ b/drivers/scsi/sd.c
-> @@ -3693,8 +3693,9 @@ static int sd_probe(struct device *dev)
->   
->   	error = device_add(&sdkp->disk_dev);
->   	if (error) {
-> +		scsi_autopm_put_device(sdp);
->   		put_device(&sdkp->disk_dev);
-> -		goto out;
-> +		return error;
+-----8<-----
+   /builds/linux/drivers/net/ethernet/mellanox/mlx5/core/en/params.c: In function 'mlx5e_build_sq_param':
+   /builds/linux/drivers/net/ethernet/mellanox/mlx5/core/en/params.c:994:53: error: 'MLX5_IPSEC_CAP_CRYPTO' undeclared (first use in this function)
+     994 |                     (mlx5_ipsec_device_caps(mdev) & MLX5_IPSEC_CAP_CRYPTO);
+         |                                                     ^~~~~~~~~~~~~~~~~~~~~
+   /builds/linux/drivers/net/ethernet/mellanox/mlx5/core/en/params.c:994:53: note: each undeclared identifier is reported only once for each function it appears in
+   make[7]: *** [/builds/linux/scripts/Makefile.build:250: drivers/net/ethernet/mellanox/mlx5/core/en/params.o] Error 1
+----->8-----
 
-I don't see why this is necessary, the tag 'out' is still there. If
-you think is a problem, I think you need a separate patch to call
-scsi_autopm_put_device() before putting the device.
+Bisection points to:
 
-Thanks,
-Kuai
+   commit 1288b23c9c528796ab656d2796705f52c5ffad8a
+   Author: Leon Romanovsky <leonro@nvidia.com>
+   Date:   Tue Dec 12 13:52:55 2023 +0200
 
->   	}
->   
->   	dev_set_drvdata(dev, sdkp);
-> @@ -3734,9 +3735,10 @@ static int sd_probe(struct device *dev)
->   
->   	error = device_add_disk(dev, gd, NULL);
->   	if (error) {
-> -		put_device(&sdkp->disk_dev);
-> +		scsi_autopm_put_device(sdp);
-> +		device_del(&sdkp->disk_dev);
->   		put_disk(gd);
-> -		goto out;
-> +		return error;
->   	}
->   
->   	if (sdkp->security) {
-> 
+       net/mlx5e: Allow software parsing when IPsec crypto is enabled
+       
+       [ Upstream commit 20f5468a7988dedd94a57ba8acd65ebda6a59723 ]
+
+
+Reverting that commit made the build pass again.
+
+Reproducers:
+
+   tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13 --kconfig defconfig
+   tuxmake --runtime podman --target-arch s390  --toolchain gcc-13 --kconfig defconfig
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Greetings!
+
+Daniel Díaz
+daniel.diaz@linaro.org
 
