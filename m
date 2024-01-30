@@ -1,64 +1,37 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20446BB53;
-	Tue, 30 Jan 2024 10:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9851562A07;
+	Tue, 30 Jan 2024 10:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706611447; cv=none; b=AIG/IsYbvFIQf1A9PAn8WZMZIDSU6G5yE6WJBJW41PdrXT2o/sB5n2JI14SWFVa5zAscI0zibk4TBZh5T2KzhuHejx40w22XLynCUEc2BPbomTVanFHxVEaweHvuYvw9jv9/0GVzmEYYRRfgUjhTPgfcYf3CxodfRhZ5plRhOK8=
+	t=1706611489; cv=none; b=rqTx+9vLY5f2IVOp5g4kFw4TDAl/oUczds44ttorPQuEaIaef2QGjPICBtGlkMvan//lddudd+K+tLgCdzyixVjPQhvNUnx3VOGniHRXInYZ763hbeteJJWaDQw+jWerC76qdwBkvf0Iw0EZfLZG7qfJ9VLxoANPoTQRtwBFsqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706611447; c=relaxed/simple;
-	bh=AkmHSSa57qN8LZ0yMBT2KyIKhNTq2JgdY2J2bGhIyQE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lH7UHVBAN1Hk4bbCGcnj0fsdVe3snqRLrjwptd1XMEKavsQ3TqGWuJPQpELDgW7wRI+WrZzuF5aCHUw8I/p1Me8DbaIFX+SYa2t5nS4jEW41/w3fPlbRxasxuzFgYNI3V1wp0kCjYT+2CFvfeTQ2p1mVLbcBjqDQXau32Lcl/bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso466834866b.2;
-        Tue, 30 Jan 2024 02:44:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706611444; x=1707216244;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hLPR4JADSjWz8gexW9Jm5LzMnbjYKDt+7ixjxT+vbYM=;
-        b=INfXeqQ7jQ1+NgdF/6bBssJpSqpBgkRm1d7ACZ0d7ow3kLiD49WcIQm2cpEX7riXw0
-         BzTDMbqjjfE4Xab+ZfZfjawIALCvSOACLrivnb7yawgs/vNKK1SRitZ02HEqugEhohhv
-         CmVZT8qiIIsnccY3aNh4zyfHV4SWVdTzqTBtNce27mU0AFEsQzYVzVXpgpBHLC1eROqe
-         bW9Yc+EhZsTKGuVgpmy4B3GGXn1nE0EkNSy54TdL3JawDC8OiATRDNlogFOJ6Lr5XyNq
-         SHeRuiW/Lv5PQ8qikB3Em9m5CDiwD2y7REb1tttX/cH6L5/spk4zzjBHlvcuXPsHpVjT
-         IHjw==
-X-Gm-Message-State: AOJu0YwFq+w6iMG+yxMdIJlaNRQc/RHWwdbx05Nmm8QCwNuZj4pHklGp
-	3TKc3+xwlQiUHckndOa5ZXujYaVYjypT/BIhPp1ZUzCKdkQHvgnl
-X-Google-Smtp-Source: AGHT+IENBMr/7QokIHdu+Ye1h7uAkO8emj4VgTq313THJ2DsSIcZnxiw+WLoATzWx+bWx+1FzKoTlw==
-X-Received: by 2002:a17:906:a001:b0:a30:70fd:7749 with SMTP id p1-20020a170906a00100b00a3070fd7749mr6798326ejy.47.1706611443969;
-        Tue, 30 Jan 2024 02:44:03 -0800 (PST)
-Received: from localhost (fwdproxy-lla-120.fbsv.net. [2a03:2880:30ff:78::face:b00c])
-        by smtp.gmail.com with ESMTPSA id l5-20020a1709062a8500b00a35922ecbccsm2721181eje.203.2024.01.30.02.44.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 02:44:03 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-To: kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	Ajay Singh <ajay.kathat@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: dsahern@kernel.org,
-	weiwan@google.com,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1706611489; c=relaxed/simple;
+	bh=TWCilI70G0ZJ8AVfj5RY2XjZjY1InA1IMvi1KPgmJEE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s1edBP5cPMF+0oEmGHhSetzGY4LjUs6AQZbLgqk+YAUpFdtpjXKmpVY7KFXhTCc76pkiIIpC7gcByPQgtyA8UixN5iWOzIMJY+ytqd1Y7IMc1E2vyMHv1gB402K7aNzerqQpFrxJSIn1bVlz98xE0OjtdwmhQaQZzktksBvf1wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; arc=none smtp.client-ip=212.227.17.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+Received: from archbook.speedport.ip ([91.37.179.254]) by
+ mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1McHM2-1quLS40FQ4-00cgZG; Tue, 30 Jan 2024 11:44:28 +0100
+From: Valentin Obst <kernel@valentinobst.de>
+To: aliceryhl@google.com
+Cc: alex.gaynor@gmail.com,
+	fraunhofer@valentinobst.de,
+	kernel@valentinobst.de,
 	linux-kernel@vger.kernel.org,
-	horms@kernel.org,
-	andrew@lunn.ch,
-	leit@fb.com,
-	linux-wireless@vger.kernel.org (open list:MICROCHIP WILC1000 WIFI DRIVER)
-Subject: [PATCH net 8/9] wifi: fill in MODULE_DESCRIPTION()s for wilc1000
-Date: Tue, 30 Jan 2024 02:42:42 -0800
-Message-Id: <20240130104243.3025393-9-leitao@debian.org>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240130104243.3025393-1-leitao@debian.org>
-References: <20240130104243.3025393-1-leitao@debian.org>
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	wedsonaf@gmail.com
+Subject: Re: [PATCH v2 00/12] rust: kernel: documentation improvements
+Date: Tue, 30 Jan 2024 11:44:08 +0100
+Message-ID: <20240130104408.45153-1-kernel@valentinobst.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240130092252.1610582-1-aliceryhl@google.com>
+References: <20240130092252.1610582-1-aliceryhl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,50 +39,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TuQY0iUk4qyUTx2siwXQW5auU1X9DoZarLZqaWLEO6AlSvwmYJX
+ N90nKkorXCAO8YQbmorubKEZESmT2ZnqJRntC7r4XCGub4BQDv8zCKJ+uJ3p+YU/GaSeZuG
+ gQ9k1m5HQTqFyPQLI0uY4l/FAw2qY+K5pZMrPdB+x+A1SyfjwyrbqNqLZQahCtWA76kpI8L
+ M2MDuNLoqfkSLZN9Ir/9A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5e+z9YtyKQQ=;KrNyKu8E2Jmm9U0/TXG1ptOaqUu
+ uIa+ruCKtmeADKl3FJfdZHSbG3rn3cGTptvekS5XfBxl6gxM4/K1KTfVnFDTphw6StTIc29ss
+ bz5KlEP8hs0+Iul6vEYllpRd5dz7aM86SxtEGxkH5d87BrlTbc+eJpUUtfUHhXLNCFz2tbSBt
+ PR3EJ2KDi2LIAkbxm/i8rvsnUQ8wXGgB15ASsOavc6m3WoS/27gmPHpxaq+Vo8zGl0eYTUmcn
+ Fiey3b1htxoffp3Blb7yq6Di3bZr/pnDR7UHllDMnbSkLGsEBYrjBkgfH29tMDq5uqavW5Red
+ WJ/wDH1U7A3tbk3+knEinyKeEhtNyq1A/O/yaNFbprRpq7Ee5NrGU9d8WodQpAl62vEpQAi9R
+ tx3bn7FXt7+7n7hufae0xMOsfqQG14EW9mVrtCH/DrWFROr9orzubjaIN9vVEOx5LSp5mJdPK
+ PVPEb55vwpr55gVy8GoECiwLKR41QETDIYTDeJs6vcj73+uFEv/uGt82V4qefvSfJK6XKRa2V
+ iQFNH26K6MWzAsVVh+6bDzN5NEEcLS5MvyLxf0TTTnIKp0bFM6eNxe67i4tqj3oXG80q+ppGb
+ rSSAUty1LO2c/S7BnOfG3GURz7zW/bZW2Vpe5X4kBO+otd7WUKIEbBFJRZ4GMUKRW+b7TMFbN
+ tSv+BXkPC/P4KGqCIdGeijsn04qxYeaznXJy4xiv02f0NpNrwM9RBb26krJ/VMD682mfLNUXI
+ 0Opk2U/8e4X6a8F+QmI3WiIm067jTwSh+WDx3yiDQQT2Zv82/W7+ALr3y/p48hNb5vXXGi5Bd
+ 74ATawY3y7cC331KzDeuh7us74rV8M98vy5flR4CyQFHlbbSS7j3bBLWpZOlOA5bV1LCkXgAv
+ UtTORifDW7oguWg==
 
-W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-Add descriptions to the Atmel WILC1000 SPI driver.
+> I left one comment [1] on the last patch. With that fixed, you may add:
+>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>
+> to all of the patches.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/wireless/microchip/wilc1000/netdev.c | 1 +
- drivers/net/wireless/microchip/wilc1000/sdio.c   | 1 +
- drivers/net/wireless/microchip/wilc1000/spi.c    | 1 +
- 3 files changed, 3 insertions(+)
+Thanks, I'll fix that, rebase with `rust-next` and send out a v3.
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index 3be3c1754770..ef22bf6bf86a 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -1010,5 +1010,6 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
- 	return ERR_PTR(ret);
- }
- 
-+MODULE_DESCRIPTION("Atmel WILC1000 core wireless driver");
- MODULE_LICENSE("GPL");
- MODULE_FIRMWARE(WILC1000_FW(WILC1000_API_VER));
-diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
-index 0d13e3e46e98..d6d394693090 100644
---- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-+++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-@@ -984,4 +984,5 @@ static struct sdio_driver wilc_sdio_driver = {
- module_driver(wilc_sdio_driver,
- 	      sdio_register_driver,
- 	      sdio_unregister_driver);
-+MODULE_DESCRIPTION("Atmel WILC1000 SDIO wireless driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
-index 77b4cdff73c3..1d8b241ce43c 100644
---- a/drivers/net/wireless/microchip/wilc1000/spi.c
-+++ b/drivers/net/wireless/microchip/wilc1000/spi.c
-@@ -273,6 +273,7 @@ static struct spi_driver wilc_spi_driver = {
- 	.remove = wilc_bus_remove,
- };
- module_spi_driver(wilc_spi_driver);
-+MODULE_DESCRIPTION("Atmel WILC1000 SPI wireless driver");
- MODULE_LICENSE("GPL");
- 
- static int wilc_spi_tx(struct wilc *wilc, u8 *b, u32 len)
--- 
-2.39.3
+	- Valentin
 
+>
+> (I responded on v1 by accident, but it was v2 that I have reviewed.)
+>
+> [1]: https://lore.kernel.org/rust-for-linux/CAH5fLghSaorRgDDuqNCN-BhQ86ysX96b=nKM_cZAN0_E6Ai04A@mail.gmail.com/
