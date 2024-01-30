@@ -1,76 +1,47 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6157B86AC9;
-	Tue, 30 Jan 2024 16:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA08886AC4;
+	Tue, 30 Jan 2024 16:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706630974; cv=none; b=GhWXYTULUWKdBgy1RGHqF04cQ5DzaKtVWEivUERl+RyutidNTqgAnEBLulRPaG9t1qehPlN4ROsfjMCmv3Dgd5qqk257JfVyyXWsM8uojuq2qp8ovlUgkulpb8uwKyO50KakD31SLJBJoJ4N9EBQqjBzcyQa/j+mih0IctI8PhA=
+	t=1706631005; cv=none; b=qApUstkmy8aHjSDrKNHBJnolMnoj2Iytm64oHefUJdWA6/1FeefPxGaebOxFf2ktcqpoPljrX7Yhq/PGAjD1huzVfsPoSiwzQLAT1WtYJLAAxpI28i/gGM+bJb6KdRrG2NtgqFLaKCWGOXeDPj5blSXY8rx0pF2X/cbknlTD0M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706630974; c=relaxed/simple;
-	bh=qgYFI1B3Pdjuc0Arvki6y0tzVdOLmU/7dKfsCaUoa8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RYvLHS7+YJGhvmxAfvVXShyDXSUxO1mhPw9ESXOMv4zm6ZjRSOxMHYaLfIQolVyo33E6xbGePefJzWYgQ+PiZrGaXp6SkKE6dSpSHobRYGkJ/jJ9zVkHAOv27/uNYjwRILMsLFfqNXm55Jabekr4tNPhVznMSj76l63CCteX0iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WZ3HiJGH; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706631005; c=relaxed/simple;
+	bh=/NjfqjGJigrfpu5TUJIQztR9ZCv06LXIa3Mte/WCioU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dyxoyL3R0C0Qs4UiepClOdpyPKLnpRHWjeKi3ILqpV0RApQ5RWYXe93O9WWUtKQe/tf2KxnbzfHUq2CaWvCAkK4+JNgzzlpmsyS2NwUYjn58j1PejwSZ2sTTm/oY9Bcd+7OrG8757s+vCwacujjloHq/0Be0pWT6MtvUluhvHPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ntb4WJpa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZ3HiJGH"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e5afc18f5so44468655e9.3;
-        Tue, 30 Jan 2024 08:09:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706630970; x=1707235770; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uGdpIQ3h7USVCYzxg0c4UgIyLi+Uz0SXFUiMKfQCYHM=;
-        b=WZ3HiJGHn3sV636PVkLzFmjmblg9Bg5NCuzbo7vpvlSWMLj0S9mbLV+v1cpRa4IDNX
-         EJDjjD3fOY8Wajh3S21ZH1Ne0uDjOd2nN043OB6TwI2w8UBhEOfN/KbIHrN7NSgf5AVD
-         0V9RJzW/KSRsX0WZTYs7qghkPXcElZTUTI0ZFvw7TDH0Wv2SpaF5mvZRR4MZ4YSkSUF0
-         QbN6Iybuca4Z971cU7QHLWC7rh9bDZfXozAg9GZZRQS6x3RwysUT6Slcv7QBJueAdnev
-         YvUn2RqXe6Uvfm45xF2QBX8ZJ/EfR0mDg4viBUYW8eUxVm1bkZvBDG1gtZUn7YIoyxR/
-         QtxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706630970; x=1707235770;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uGdpIQ3h7USVCYzxg0c4UgIyLi+Uz0SXFUiMKfQCYHM=;
-        b=gcJ8jLAeZEO45pT39ZpjZV138I+0SeddEZWrBYPR6jPksy+T/wtISJJb8/+WGPtqvZ
-         2khDCu3LFFrh5DSVdyKkkXWXq1XshY+JDkxJhiBwh4xq5DsJjfdapWI4mmALymenfsfN
-         BMvepG4nWitCjDXwAHYpHtS0KU7myLAIGVYBHNEdU0a2cAFhN7Bn/jalTMQzr+pjgObd
-         aipYiqwFnq3Hkb/y2JuoEHlLIZLE+5HzV1syuhWqOmp1NJCoa8769mY9AAsSVL9WM+mv
-         8N4ALz+c7gAxPH5giZAEXPj5KQ86fKWH/yL336lw9o83pM307ZqmvMX71F0G+EIIYToG
-         18cg==
-X-Gm-Message-State: AOJu0YwS+ZHr1o2y1dK9/u6nZjq3FA856mlQCkgnERffp/mAViE7ijfk
-	2a7LwqRJCQGbZ9XdU1XpvxzMhojWxv/tzDkl/tlDHJJfatM9Yo+y
-X-Google-Smtp-Source: AGHT+IGWFnJrRxLBHumfHhI1WBj7sgb0ex91I19YCMtOUFEnhpMWS9ZsJLWMPQLIEI5GPzONDB11wA==
-X-Received: by 2002:a1c:4b19:0:b0:40e:46b6:bc48 with SMTP id y25-20020a1c4b19000000b0040e46b6bc48mr7040329wma.41.1706630970210;
-        Tue, 30 Jan 2024 08:09:30 -0800 (PST)
-Received: from localhost.localdomain ([176.230.105.209])
-        by smtp.gmail.com with ESMTPSA id n4-20020a5d4c44000000b0033aeda49732sm5725756wrt.33.2024.01.30.08.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 08:09:29 -0800 (PST)
-From: Elad Yifee <eladwf@gmail.com>
-To: 
-Cc: eladwf@gmail.com,
-	Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Mark Lee <Mark-MC.Lee@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Russell King <linux@armlinux.org.uk>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC] net: ethernet: mtk_eth_soc: ppe: add support for multiple PPEs
-Date: Tue, 30 Jan 2024 18:08:49 +0200
-Message-ID: <20240130160854.5221-1-eladwf@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ntb4WJpa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46E6DC433F1;
+	Tue, 30 Jan 2024 16:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706631005;
+	bh=/NjfqjGJigrfpu5TUJIQztR9ZCv06LXIa3Mte/WCioU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ntb4WJpaZzYkRxd87lbmJfTXlaj9YSWFCf8btUK7hV/EeuEj9mhBF2YyIpGK+uG/D
+	 t1wwamVGtWxWb+bHWn10OhUCDmaieJwrE+D5ViINS5VaK1OoTHaFrVHPCRlGH2bL7N
+	 ht+n15MnnBTNyURgRL3c7o3f5lf/3oPbhymycmH+/BZOkjDS3z/C3f9vO/9BEkpdUy
+	 U/X+6oWFZ3G9RqoTjzjcByFpvqwpJqNi8Tiw5lxmaldY93EBlQqbDwjnG0m8VHtDcY
+	 VF9j08zwTK7FJ15dUU9/Ew09TY1scz8mC+2EhbWuR3eV6h0FL+dMa/WtJOewcGtNsb
+	 Wksm6Rx3ejdMg==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
+	Juergen Quade <quade@hsnr.de>,
+	David Laight <David.Laight@aculab.com>
+Subject: [PATCH v3 1/1] lib/vsprintf: Implement spprintf() to catch truncated strings
+Date: Tue, 30 Jan 2024 16:09:53 +0000
+Message-ID: <20240130160953.766676-1-lee@kernel.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,248 +50,188 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the missing pieces to allow multiple PPEs units, one for each GMAC.
-mtk_gdm_config has been modified to work on targted mac ID,
-the inner loop moved outside of the function to allow unrelated
-operations like setting the MAC's PPE index.
+There is an ongoing effort to replace the use of {v}snprintf() variants
+with safer alternatives - for a more in depth view, see Jon's write-up
+on LWN [0] and/or Alex's on the Kernel Self Protection Project [1].
 
-Signed-off-by: Elad Yifee <eladwf@gmail.com>
+Whist executing the task, it quickly became apparent that the initial
+thought of simply s/snprintf/scnprintf/ wasn't going to be adequate for
+a number of cases.  Specifically ones where the caller needs to know
+whether the given string ends up being truncated.  This is where
+spprintf() comes in, since it takes the best parts of both of the
+aforementioned variants.  It has the testability of truncation of
+snprintf() and returns the number of Bytes *actually* written, similar
+to scnprintf(), making it a very programmer friendly alternative.
+
+Here's some examples to show the differences:
+
+  Success: No truncation - all 9 Bytes successfully written to the buffer
+
+    ret = snprintf (buf, 10, "%s", "123456789");  // ret = 9
+    ret = scnprintf(buf, 10, "%s", "123456789");  // ret = 9
+    ret = spprintf (buf, 10, "%s", "123456789");  // ret = 9
+
+  Failure: Truncation - only 9 of 10 Bytes written; '-' is truncated
+
+    ret = snprintf (buf, 10, "%s", "123456789---"); // ret = 12
+
+      Reports: "12 Bytes would have been written if buf was large enough"
+      Issue: Too easy for programmers to assume ret is Bytes written
+
+    ret = scnprintf(buf, 10, "%s", "123456789---"); // ret = 9
+
+      Reports: "9 Bytes actually written"
+      Issue: Not testable - returns 9 on success AND failure (see above)
+
+    ret = spprintf (buf, 10, "%s", "123456789---"); // ret = 10
+
+      Reports: "Data provided is too large to fit in the buffer"
+      Issue: No tangible impact: No way to tell how much data was lost
+
+Since spprintf() only reports the total size of the buffer, it's easy to
+test if they buffer overflowed since if we include the compulsory '\0',
+only 9 Bytes additional Bytes can fit, so the return of 10 informs the
+caller of an overflow.  Also, if the return data is plugged straight
+into an additional call to spprintf() after the occurrence of an
+overflow, no out-of-bounds will occur:
+
+    int size = 10;
+    char buf[size];
+    char *b = buf;
+
+    ret = spprintf(b, size, "1234");
+    size -= ret;
+    b += ret;
+    // ret = 4  size = 6  buf = "1234\0"
+
+    ret = spprintf(b, size, "5678");
+    size -= ret;
+    b += ret;
+    // ret = 4  size = 2  buf = "12345678\0"
+
+    ret = spprintf(b, size, "9***");
+    size -= ret;
+    b += ret;
+    // ret = 2  size = 0  buf = "123456789\0"
+
+Since size is now 0, further calls result in no changes of state.
+
+    ret = spprintf(b, size, "----");
+    size -= ret;
+    b += ret;
+    // ret = 0  size = 0  buf = "123456789\0"
+
+[0] https://lwn.net/Articles/69419/
+[1] https://github.com/KSPP/linux/issues/105
+Signed-off-by: Lee Jones <lee@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c   | 79 +++++++++++--------
- drivers/net/ethernet/mediatek/mtk_eth_soc.h   | 15 +++-
- .../net/ethernet/mediatek/mtk_ppe_offload.c   |  6 +-
- 3 files changed, 62 insertions(+), 38 deletions(-)
+Changelog:
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index a6e91573f8da..ba4e54977f34 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2176,7 +2176,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
- 		}
- 
- 		if (reason == MTK_PPE_CPU_REASON_HIT_UNBIND_RATE_REACHED)
--			mtk_ppe_check_skb(eth->ppe[0], skb, hash);
-+			mtk_ppe_check_skb(eth->ppe[eth->mac[mac]->ppe_idx], skb, hash);
- 
- 		skb_record_rx_queue(skb, 0);
- 		napi_gro_receive(napi, skb);
-@@ -3267,37 +3267,27 @@ static int mtk_start_dma(struct mtk_eth *eth)
- 	return 0;
+v1 => v2:
+ - Address Rasmus Villemoes's review comments:
+   - Remove explicit check for zero sized buffer (-E2BIG is appropriate)
+   - Remove unreachable branch in vssprintf()
+
+v2 => v3:
+  - Address session from David Laight
+    - Return 'size' instead of '-E2BIG'
+
+ include/linux/sprintf.h |  2 ++
+ lib/vsprintf.c          | 51 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Crutcher Dunnavant <crutcher+kernel@datastacks.com>
+Cc: Juergen Quade <quade@hsnr.de>
+Cc: David Laight <David.Laight@aculab.com>
+
+diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
+index 33dcbec719254..5c4b7e612ba04 100644
+--- a/include/linux/sprintf.h
++++ b/include/linux/sprintf.h
+@@ -13,6 +13,8 @@ __printf(3, 4) int snprintf(char *buf, size_t size, const char *fmt, ...);
+ __printf(3, 0) int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
+ __printf(3, 4) int scnprintf(char *buf, size_t size, const char *fmt, ...);
+ __printf(3, 0) int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
++__printf(3, 4) int spprintf(char *buf, size_t size, const char *fmt, ...);
++__printf(3, 0) int vspprintf(char *buf, size_t size, const char *fmt, va_list args);
+ __printf(2, 3) __malloc char *kasprintf(gfp_t gfp, const char *fmt, ...);
+ __printf(2, 0) __malloc char *kvasprintf(gfp_t gfp, const char *fmt, va_list args);
+ __printf(2, 0) const char *kvasprintf_const(gfp_t gfp, const char *fmt, va_list args);
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 552738f14275a..54d4e170ded1d 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -2936,6 +2936,34 @@ int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
  }
+ EXPORT_SYMBOL(vscnprintf);
  
--static void mtk_gdm_config(struct mtk_eth *eth, u32 config)
-+static void mtk_gdm_config(struct mtk_eth *eth, u32 id, u32 config)
- {
--	int i;
-+	u32 val;
- 
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
- 		return;
- 
--	for (i = 0; i < MTK_MAX_DEVS; i++) {
--		u32 val;
--
--		if (!eth->netdev[i])
--			continue;
-+	val = mtk_r32(eth, MTK_GDMA_FWD_CFG(id));
- 
--		val = mtk_r32(eth, MTK_GDMA_FWD_CFG(i));
-+	/* default setup the forward port to send frame to PDMA */
-+	val &= ~0xffff;
- 
--		/* default setup the forward port to send frame to PDMA */
--		val &= ~0xffff;
-+	/* Enable RX checksum */
-+	val |= MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
- 
--		/* Enable RX checksum */
--		val |= MTK_GDMA_ICS_EN | MTK_GDMA_TCS_EN | MTK_GDMA_UCS_EN;
-+	val |= config;
- 
--		val |= config;
-+	if (eth->netdev[id] && netdev_uses_dsa(eth->netdev[id]))
-+		val |= MTK_GDMA_SPECIAL_TAG;
- 
--		if (netdev_uses_dsa(eth->netdev[i]))
--			val |= MTK_GDMA_SPECIAL_TAG;
--
--		mtk_w32(eth, val, MTK_GDMA_FWD_CFG(i));
--	}
--	/* Reset and enable PSE */
--	mtk_w32(eth, RST_GL_PSE, MTK_RST_GL);
--	mtk_w32(eth, 0, MTK_RST_GL);
-+	mtk_w32(eth, val, MTK_GDMA_FWD_CFG(id));
- }
- 
- 
-@@ -3369,6 +3359,7 @@ static int mtk_open(struct net_device *dev)
- 	/* we run 2 netdevs on the same dma ring so we only bring it up once */
- 	if (!refcount_read(&eth->dma_refcnt)) {
- 		const struct mtk_soc_data *soc = eth->soc;
-+		const u32 ppe_num = mtk_get_ppe_num(eth);
- 		u32 gdm_config;
- 		int i;
- 
-@@ -3381,17 +3372,36 @@ static int mtk_open(struct net_device *dev)
- 		for (i = 0; i < ARRAY_SIZE(eth->ppe); i++)
- 			mtk_ppe_start(eth->ppe[i]);
- 
--		gdm_config = soc->offload_version ? soc->reg_map->gdma_to_ppe
--						  : MTK_GDMA_TO_PDMA;
--		mtk_gdm_config(eth, gdm_config);
-+		for (i = 0; i < MTK_MAX_DEVS; i++) {
-+			if (!eth->netdev[i])
-+				break;
-+			struct mtk_mac *target_mac = netdev_priv(eth->netdev[i]);
-+
-+			if (!soc->offload_version) {
-+				target_mac->ppe_idx = 0;
-+				gdm_config = MTK_GDMA_TO_PDMA;
-+			} else if (ppe_num >= 3 && target_mac->id == 2) {
-+				target_mac->ppe_idx = 2;
-+				gdm_config = MTK_GDMA_TO_PPE2;
-+			} else if (ppe_num >= 2 && target_mac->id == 1) {
-+				target_mac->ppe_idx = 1;
-+				gdm_config = MTK_GDMA_TO_PPE1;
-+			} else {
-+				target_mac->ppe_idx = 0;
-+				gdm_config = soc->reg_map->gdma_to_ppe;
-+			}
-+			mtk_gdm_config(eth, target_mac->id, gdm_config);
-+		}
-+		/* Reset and enable PSE */
-+		mtk_w32(eth, RST_GL_PSE, MTK_RST_GL);
-+		mtk_w32(eth, 0, MTK_RST_GL);
- 
- 		napi_enable(&eth->tx_napi);
- 		napi_enable(&eth->rx_napi);
- 		mtk_tx_irq_enable(eth, MTK_TX_DONE_INT);
- 		mtk_rx_irq_enable(eth, soc->txrx.rx_irq_done_mask);
- 		refcount_set(&eth->dma_refcnt, 1);
--	}
--	else
-+	} else
- 		refcount_inc(&eth->dma_refcnt);
- 
- 	phylink_start(mac->phylink);
-@@ -3469,7 +3479,8 @@ static int mtk_stop(struct net_device *dev)
- 	if (!refcount_dec_and_test(&eth->dma_refcnt))
- 		return 0;
- 
--	mtk_gdm_config(eth, MTK_GDMA_DROP_ALL);
-+	for (i = 0; i < MTK_MAX_DEVS; i++)
-+		mtk_gdm_config(eth, i, MTK_GDMA_DROP_ALL);
- 
- 	mtk_tx_irq_disable(eth, MTK_TX_DONE_INT);
- 	mtk_rx_irq_disable(eth, eth->soc->txrx.rx_irq_done_mask);
-@@ -4945,11 +4956,11 @@ static int mtk_probe(struct platform_device *pdev)
- 	}
- 
- 	if (eth->soc->offload_version) {
--		u32 num_ppe = mtk_is_netsys_v2_or_greater(eth) ? 2 : 1;
-+		u32 num_ppe = mtk_get_ppe_num(eth);
- 
- 		num_ppe = min_t(u32, ARRAY_SIZE(eth->ppe), num_ppe);
- 		for (i = 0; i < num_ppe; i++) {
--			u32 ppe_addr = eth->soc->reg_map->ppe_base + i * 0x400;
-+			u32 ppe_addr = eth->soc->reg_map->ppe_base + (i == 2 ? 0xC00 : i * 0x400);
- 
- 			eth->ppe[i] = mtk_ppe_init(eth, eth->base + ppe_addr, i);
- 
-@@ -4957,11 +4968,11 @@ static int mtk_probe(struct platform_device *pdev)
- 				err = -ENOMEM;
- 				goto err_deinit_ppe;
- 			}
--		}
-+			err = mtk_eth_offload_init(eth, i);
- 
--		err = mtk_eth_offload_init(eth);
--		if (err)
--			goto err_deinit_ppe;
-+			if (err)
-+				goto err_deinit_ppe;
-+		}
- 	}
- 
- 	for (i = 0; i < MTK_MAX_DEVS; i++) {
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 9ae3b8a71d0e..7654fa74e7fc 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -124,6 +124,8 @@
- #define MTK_GDMA_UCS_EN		BIT(20)
- #define MTK_GDMA_STRP_CRC	BIT(16)
- #define MTK_GDMA_TO_PDMA	0x0
-+#define MTK_GDMA_TO_PPE1	0x4444
-+#define MTK_GDMA_TO_PPE2	0xcccc
- #define MTK_GDMA_DROP_ALL       0x7777
- 
- /* GDM Egress Control Register */
-@@ -1286,7 +1288,7 @@ struct mtk_eth {
- 
- 	struct metadata_dst		*dsa_meta[MTK_MAX_DSA_PORTS];
- 
--	struct mtk_ppe			*ppe[2];
-+	struct mtk_ppe			*ppe[3];
- 	struct rhashtable		flow_table;
- 
- 	struct bpf_prog			__rcu *prog;
-@@ -1311,6 +1313,7 @@ struct mtk_eth {
- struct mtk_mac {
- 	int				id;
- 	phy_interface_t			interface;
-+	unsigned int			ppe_idx;
- 	int				speed;
- 	struct device_node		*of_node;
- 	struct phylink			*phylink;
-@@ -1421,6 +1424,14 @@ static inline u32 mtk_get_ib2_multicast_mask(struct mtk_eth *eth)
- 	return MTK_FOE_IB2_MULTICAST;
- }
- 
-+static inline u32 mtk_get_ppe_num(struct mtk_eth *eth)
++/**
++ * vspprintf - Format a string and place it in a buffer
++ * @buf: The buffer to place the result into
++ * @size: The size of the buffer, including the trailing null space
++ * @fmt: The format string to use
++ * @args: Arguments for the format string
++ *
++ * The return value is the number of characters which have been written into
++ * the @buf not including the trailing '\0' or the size of the buffer if the
++ * string was truncated.
++ *
++ * If you're not already dealing with a va_list consider using spprintf().
++ *
++ * See the vsnprintf() documentation for format string extensions over C99.
++ */
++int vspprintf(char *buf, size_t size, const char *fmt, va_list args)
 +{
-+	if (!eth->soc->offload_version)
-+		return 0;
++	int i;
 +
-+	return eth->soc->version;
++	i = vsnprintf(buf, size, fmt, args);
++
++	if (likely(i < size))
++		return i;
++
++	return size;
 +}
++EXPORT_SYMBOL(vspprintf);
 +
- /* read the hardware status register */
- void mtk_stats_update_mac(struct mtk_mac *mac);
- 
-@@ -1432,7 +1443,7 @@ int mtk_gmac_sgmii_path_setup(struct mtk_eth *eth, int mac_id);
- int mtk_gmac_gephy_path_setup(struct mtk_eth *eth, int mac_id);
- int mtk_gmac_rgmii_path_setup(struct mtk_eth *eth, int mac_id);
- 
--int mtk_eth_offload_init(struct mtk_eth *eth);
-+int mtk_eth_offload_init(struct mtk_eth *eth, int id);
- int mtk_eth_setup_tc(struct net_device *dev, enum tc_setup_type type,
- 		     void *type_data);
- int mtk_flow_offload_cmd(struct mtk_eth *eth, struct flow_cls_offload *cls,
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-index fbb5e9d5af13..220685f6daaa 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-@@ -570,7 +570,7 @@ mtk_eth_setup_tc_block_cb(enum tc_setup_type type, void *type_data, void *cb_pri
- 	if (type != TC_SETUP_CLSFLOWER)
- 		return -EOPNOTSUPP;
- 
--	return mtk_flow_offload_cmd(eth, cls, 0);
-+	return mtk_flow_offload_cmd(eth, cls, mac->ppe_idx);
+ /**
+  * snprintf - Format a string and place it in a buffer
+  * @buf: The buffer to place the result into
+@@ -2987,6 +3015,29 @@ int scnprintf(char *buf, size_t size, const char *fmt, ...)
  }
+ EXPORT_SYMBOL(scnprintf);
  
- static int
-@@ -633,7 +633,9 @@ int mtk_eth_setup_tc(struct net_device *dev, enum tc_setup_type type,
- 	}
- }
- 
--int mtk_eth_offload_init(struct mtk_eth *eth)
-+int mtk_eth_offload_init(struct mtk_eth *eth, int id)
- {
-+	if (!eth->ppe[id] || !eth->ppe[id]->foe_table)
-+		return 0;
- 	return rhashtable_init(&eth->flow_table, &mtk_flow_ht_params);
- }
++/**
++ * spprintf - Format a string and place it in a buffer
++ * @buf: The buffer to place the result into
++ * @size: The size of the buffer, including the trailing null space
++ * @fmt: The format string to use
++ * @...: Arguments for the format string
++ *
++ * The return value is the number of characters written into @buf not including
++ * the trailing '\0' or the size of the buffer if the string was truncated.
++ */
++int spprintf(char *buf, size_t size, const char *fmt, ...)
++{
++	va_list args;
++	int i;
++
++	va_start(args, fmt);
++	i = vspprintf(buf, size, fmt, args);
++	va_end(args);
++
++	return i;
++}
++EXPORT_SYMBOL(spprintf);
++
+ /**
+  * vsprintf - Format a string and place it in a buffer
+  * @buf: The buffer to place the result into
 -- 
-2.43.0
+2.43.0.429.g432eaa2c6b-goog
 
