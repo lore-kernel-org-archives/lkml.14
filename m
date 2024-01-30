@@ -1,43 +1,43 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2B77D410;
-	Tue, 30 Jan 2024 22:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6146F08E;
+	Tue, 30 Jan 2024 22:20:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706653246; cv=none; b=QtCeldqiBxdCRsEK29Id1ZOTDfG7RdBzlfZRGQCElqZRgsCh7VfbKURW+dVfpgu4IQvJmU89nHnCUGObxWUBebnMQIvsmGT9UhMwKSNkOinSCci0NmD3SBTqJGxkcl8qe4UtBXMpXC6QOWlhTkJXVRzrvduj03PbwdX0YcFzY24=
+	t=1706653248; cv=none; b=VHUmYWgHma8UjlO4fb38nqpvXLTOz9uITTqjB2wLre8W1ZIbLD2bUWWAMiWdxvoTlBcxNk4fO96G4RpoG5CDCHCMb+rlx4kGze2k3dg3NSlnItkZ3b4a/JtDdsUYp9DS3q6hZnhUBWc/Bys1XGdxveC9MMnE++aNytfwNyGyn0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706653246; c=relaxed/simple;
-	bh=At0RKTLoBHv44HG3Uy9zivC4vUPHbbq8Oy87lxfsgWQ=;
+	s=arc-20240116; t=1706653248; c=relaxed/simple;
+	bh=4+Sl+NwFbXMo1a6gRDqTKEVyh7WFVjJ+Uv+TU1KbyG8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NvE7Xph6PYaRX0N+K/FY9Rq1rZRYMW1OJE7jrAy9Mqy0CgnYopP3dxr/lJ8IHVbU2XS7D2DrKLS3G6Ky1fdR/ivVi7+keSgvyESPLOp4Ic0qfQupyF1Z0ONJaB64kES/AZtUrmIE+mMNbMu+aqyK8+UVgCISmk+ISFAAtve+SxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ejlFTTY7; arc=none smtp.client-ip=192.55.52.115
+	 MIME-Version; b=sXAUvkktI2uypnrRUgt1ByoanZEvkZ1d+SKDvwGG9kmyt1HvR7ybywgAQ5zOeFymLzzuCW4RmOJ7fRs+6Rssvbzs3wYEjVB6FUh0tZW3n09dxbPr1T+l93Mr5U8SeeONkvaKA5+qvhvWWdv5Ga6Z5P49jmUbeW8cAYV/1vH7xiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bpwyNST5; arc=none smtp.client-ip=192.55.52.115
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ejlFTTY7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bpwyNST5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706653245; x=1738189245;
+  t=1706653246; x=1738189246;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=At0RKTLoBHv44HG3Uy9zivC4vUPHbbq8Oy87lxfsgWQ=;
-  b=ejlFTTY7YqCsg8cB+Cqd3xY4NnYlnfsLlT6LdrI7U6tvFIlg8HoJ4Vu/
-   Ayz3lZeTXD7pCaUL9mDIw8ehB41yytUgFjG5NcKUMi3+hmt7MH4s1ENoj
-   bWk8ly4/vtX4dn04n8sqOH9dmqlAmayhqr7UpJ3rvIHuI3Wbuqzx4fok8
-   ca0d+Wq31N0AlIfsy1wzkyywB4HWfVCpT8g0bdgmFwPqm6NXQCBXoVN4y
-   xwpvN2midCK4a5OJQRHH4+yCf7yX8aGQ3tCARM1vPvgnltLGoAUDQ5Nvs
-   5lZJzw0Ho7lvWON3ZY16yecVtv+4IhyF4iKc+pV5QB9EWd5VwGWPybf6U
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403041708"
+  bh=4+Sl+NwFbXMo1a6gRDqTKEVyh7WFVjJ+Uv+TU1KbyG8=;
+  b=bpwyNST5RPE33+tfIJuKHNSwe9DFzAjfhV3Qpi26TiNWpLZNvDMJHOfr
+   NM0lsThtKBG5pEQA0ex7mQzU3fSvSDOosBA51u2/ku6q6xGJnVitAnA6u
+   HQDqmo/q/rHbynPIC8UjAaTkU7wADKd6q0grkkF9DTTywFZVnxFfuEBj5
+   21M7FBYa6U0JHaNOoM5+7qucv1ygdkWExO5raxX4VaQa4luXDtbopViau
+   AkB7cm8gf9kMnIR6LaQ4InA92OKWF0hhHdtaiy6Gtj/ElRI7wi+AKP1Gg
+   6x3o/RaJ/o/q+DoYUOqVTGXF5UckA0CToBfX3X+sfi2gvmXHIRVQK5oJ8
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403041757"
 X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
-   d="scan'208";a="403041708"
+   d="scan'208";a="403041757"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 14:20:42 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 14:20:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119412838"
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119412847"
 X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
-   d="scan'208";a="1119412838"
+   d="scan'208";a="1119412847"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.74])
   by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 14:20:42 -0800
 From: Tony Luck <tony.luck@intel.com>
@@ -57,9 +57,9 @@ Cc: Shaopeng Tan <tan.shaopeng@fujitsu.com>,
 	linux-doc@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v15-RFC 1/8] x86/resctrl: Split the RDT_RESOURCE_L3 resource
-Date: Tue, 30 Jan 2024 14:20:27 -0800
-Message-ID: <20240130222034.37181-2-tony.luck@intel.com>
+Subject: [PATCH v15-RFC 4/8] x86/resctrl: Add helper function to look up domain_id from scope
+Date: Tue, 30 Jan 2024 14:20:30 -0800
+Message-ID: <20240130222034.37181-5-tony.luck@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240130222034.37181-1-tony.luck@intel.com>
 References: <20240126223837.21835-1-tony.luck@intel.com>
@@ -72,53 +72,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RDT_RESOURCE_L3 is unique in that it is used for both monitoring
-an control functions. This made sense while both uses had the same
-scope. But systems with Sub-NUMA clustering enabled do not follow this
-pattern.
-
-Create a new resource: RDT_RESOURCE_L3_MON ready to take over the
-monitoring functions.
+Prepare for more options for scope of resources. Add some diagnostic
+messages if lookup fails.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/internal.h |  1 +
- arch/x86/kernel/cpu/resctrl/core.c     | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ arch/x86/kernel/cpu/resctrl/core.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 52e7e7deee10..c6051bc70e96 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -429,6 +429,7 @@ DECLARE_STATIC_KEY_FALSE(rdt_alloc_enable_key);
- extern struct dentry *debugfs_resctrl;
- 
- enum resctrl_res_level {
-+	RDT_RESOURCE_L3_MON,
- 	RDT_RESOURCE_L3,
- 	RDT_RESOURCE_L2,
- 	RDT_RESOURCE_MBA,
 diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index aa9810a64258..c50f55d7790e 100644
+index d89dce63397b..59e6aa7abef5 100644
 --- a/arch/x86/kernel/cpu/resctrl/core.c
 +++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -60,6 +60,16 @@ mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m,
- #define domain_init(id) LIST_HEAD_INIT(rdt_resources_all[id].r_resctrl.domains)
+@@ -499,6 +499,19 @@ static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_domain *hw_dom)
+ 	return 0;
+ }
  
- struct rdt_hw_resource rdt_resources_all[] = {
-+	[RDT_RESOURCE_L3_MON] =
-+	{
-+		.r_resctrl = {
-+			.rid			= RDT_RESOURCE_L3_MON,
-+			.name			= "L3",
-+			.cache_level		= 3,
-+			.domains		= domain_init(RDT_RESOURCE_L3_MON),
-+			.fflags			= RFTYPE_RES_CACHE,
-+		},
-+	},
- 	[RDT_RESOURCE_L3] =
- 	{
- 		.r_resctrl = {
++static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
++{
++	switch (scope) {
++	case RESCTRL_L2_CACHE:
++	case RESCTRL_L3_CACHE:
++		return get_cpu_cacheinfo_id(cpu, scope);
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
+ /*
+  * domain_add_cpu - Add a cpu to a resource's domain list.
+  *
+@@ -514,12 +527,18 @@ static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_domain *hw_dom)
+  */
+ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ {
+-	int id = get_cpu_cacheinfo_id(cpu, r->scope);
++	int id = get_domain_id_from_scope(cpu, r->scope);
+ 	struct list_head *add_pos = NULL;
+ 	struct rdt_hw_domain *hw_dom;
+ 	struct rdt_domain *d;
+ 	int err;
+ 
++	if (id < 0) {
++		pr_warn_once("Can't find domain id for CPU:%d scope:%d for resource %s\n",
++			     cpu, r->scope, r->name);
++		return;
++	}
++
+ 	d = rdt_find_domain(r, id, &add_pos);
+ 	if (IS_ERR(d)) {
+ 		pr_warn("Couldn't find cache id for CPU %d\n", cpu);
+@@ -564,10 +583,16 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ 
+ static void domain_remove_cpu(int cpu, struct rdt_resource *r)
+ {
+-	int id = get_cpu_cacheinfo_id(cpu, r->scope);
++	int id = get_domain_id_from_scope(cpu, r->scope);
+ 	struct rdt_hw_domain *hw_dom;
+ 	struct rdt_domain *d;
+ 
++	if (id < 0) {
++		pr_warn_once("Can't find domain id for CPU:%d scope:%d for resource %s\n",
++			     cpu, r->scope, r->name);
++		return;
++	}
++
+ 	d = rdt_find_domain(r, id, NULL);
+ 	if (IS_ERR_OR_NULL(d)) {
+ 		pr_warn("Couldn't find cache id for CPU %d\n", cpu);
 -- 
 2.43.0
 
