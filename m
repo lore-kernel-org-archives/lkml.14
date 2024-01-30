@@ -1,126 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9EE67A04;
-	Tue, 30 Jan 2024 09:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EA4605D5;
+	Tue, 30 Jan 2024 09:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608746; cv=none; b=VkjdOwuEanzc/M1FeL9qj65fKE5ylNqdH4+irtAmCVywH45jhVHBJq9CMYA8p5R3gXL3USoB17jcv0ID73k5gIO3AQlIoraTefiofaxmUzbDisgqqzORDQWmNy9N1H3sMAg5LPirAZuBtcU3wcJSrX0BLegxChqmeyLNFdJrFWI=
+	t=1706608793; cv=none; b=EG4Wv+dbB2ZZk1Z9ihbagPxjvqgnT9bkb3EL70OJEKuYlyBMuCcYASD86qjA4+24bIf73/ClK5szjv2fb7+BXfKnAKhMUvyWiKhe+eCA3SesjGhykPXi4f4UWUEUwzyCi2FNeBuH6CyZbo//hXTYhm7yvN9prgxzEz16HAuq1i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608746; c=relaxed/simple;
-	bh=NLufhWI/HuTT3DCLkEBOo/5dp1Sv2l5FbL/NzMCPhxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FXE7zBLikr4Lc/1+FX4goAHBMrvnju+yM5oJWQ4fDc289anacWFvISaXYMETjQo8OG9YbH1CSqxzYvoEb341xzpxPAXJZNeVdBk9epU1VgBie5K1AsHStkeSJrBbqM8+B3V0FrRAbUGCNP7xlWq/AVWCGCvh9Cu+kDhbr3T/Vfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ge9fH80I; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1706608793; c=relaxed/simple;
+	bh=6P5FfbFKXvpTVgfjV2JFIycWosCzugB7elVDu3wefxI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oMK2BF2PUUwtUpjGLXVUIJDy1BUe3Oh8FZioRcMXlZE3kuDk3ougA9I/5Gt6cLzmBKNxwFUesLlG3w8zIHZ9j3q+D8EXwyfDg9TDwfTNNfCIfPnOaKg56r2VdPG1lAPKR3Jjx3/adiWC+xYlzex7YwbezWouPAUzHDHHRa9aPHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nPHfBZJG; arc=none smtp.client-ip=134.134.136.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ge9fH80I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nPHfBZJG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706608745; x=1738144745;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NLufhWI/HuTT3DCLkEBOo/5dp1Sv2l5FbL/NzMCPhxI=;
-  b=Ge9fH80IP7rIRmkxnW0+PgeJdc1mG/0nlJkTHVvhUGDBL/iSnJ3nd87V
-   Hpc/h+kifprX8UtM2+HA8P6u6IltPUC8tUeqiEmyAWv5O4+K2ZDloRWFj
-   rA/vdlyF1wMeHT2nc++EG91c8lN2k3trq/IDnnwIOnYaSYLCYtlkx6LON
-   gmDWG8YSKop+OnfjwwgsBG1zK4Hjed7qtiR5klpDg0AuhZ/DwzzGP/S2d
-   sX6Q7U/injysfCWs+7D5nbFdAjB1Lk/7KOBOZ6f76HQdZc2R3Wd9uA6vq
-   FcxH2Yt2Ya70DglWECmBxrRiGrHQL7bwn7XFtOSYETiShnkt6v9XYcrX0
+  t=1706608791; x=1738144791;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6P5FfbFKXvpTVgfjV2JFIycWosCzugB7elVDu3wefxI=;
+  b=nPHfBZJG1kw4TxyPAx+BJReQtlMBJCyo2M8ZUJXATbhuN13eD0Gqykf5
+   20JZYfhVN0T7mSkAKzxYrJ+0EbxOA91FIln4cnBe5lLr9pQVFZTdz3FtK
+   wlsj4bFeiNfWQmSwruWwRnHDpPWX6VUVggjRJujuy9mkz6UKl4atBfg+W
+   R3z2BfYHFEnvJ2c7DOwQIFxaWd9WLAK3L70BFJtWeNgR6S4BtdKu0s0Xn
+   GPVdJuskmHJGCVB7xOdm6j3+FHljvarYIiK6A06t+UqXkhXppFh/ckHCO
+   nTn5y0y/s89wNy51L9TlgmR/hV56LK9Fqk+XVazIQ8SB6eRJiPhTlPJ9T
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10334359"
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="393662032"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="10334359"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:59:04 -0800
+   d="scan'208";a="393662032"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:59:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="737720407"
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="911388471"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="737720407"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orsmga003.jf.intel.com with ESMTP; 30 Jan 2024 01:59:00 -0800
-Date: Tue, 30 Jan 2024 17:55:35 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] fpga: dfl: afu: support Rev 2 of DFL Port feature
-Message-ID: <ZbjHl8ptQG5FdHvC@yilunxu-OptiPlex-7050>
-References: <20240125233715.861883-1-matthew.gerlach@linux.intel.com>
+   d="scan'208";a="911388471"
+Received: from mszycik-mobl1.ger.corp.intel.com (HELO [10.246.34.225]) ([10.246.34.225])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:59:46 -0800
+Message-ID: <92958c7b-7e5f-4e25-819f-4e52f9ffcf7b@linux.intel.com>
+Date: Tue, 30 Jan 2024 10:59:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240125233715.861883-1-matthew.gerlach@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH net-next RESENT v3] ethtool: ice:
+ Support for RSS settings to GTP from ethtool
+To: takeru hayasaka <hayatake396@gmail.com>
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ vladimir.oltean@nxp.com, linux-kernel@vger.kernel.org, laforge@gnumonks.org,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ mailhol.vincent@wanadoo.fr
+References: <20240127140747.905552-1-hayatake396@gmail.com>
+ <154f979e-a335-461b-b72e-5e9c54fe940c@linux.intel.com>
+ <CADFiAcJShbgBLXdVgs1vK1jqDFopkRcw-se4b4h0V3Yd60xLVw@mail.gmail.com>
+Content-Language: en-US
+From: Marcin Szycik <marcin.szycik@linux.intel.com>
+In-Reply-To: <CADFiAcJShbgBLXdVgs1vK1jqDFopkRcw-se4b4h0V3Yd60xLVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 25, 2024 at 03:37:15PM -0800, Matthew Gerlach wrote:
-> Revision 2 of the Device Feature List (DFL) Port feature
-> adds support for connecting the contents of the port to
-> multiple PCIe Physical Functions (PF).
-> 
-> This new functionality requires changing the port reset
-> behavior during FPGA and software initialization from
-> revision 1 of the port feature. With revision 1, the initial
-> state of the logic inside the port was not guaranteed to
-> be valid until a port reset was performed by software during
-> driver initialization. With revision 2, the initial state
-> of the logic inside the port is guaranteed to be valid,
-> and a port reset is not required during driver initialization.
-> 
-> This change in port reset behavior avoids a potential race
-> condition during PCI enumeration when a port is connected to
-> multiple PFs. Problems can occur if the driver attached to
-> the PF managing the port asserts reset in its probe function
-> when a driver attached to another PF accesses the port in its
-> own probe function. The potential problems include failed or hung
 
-Only racing during probe functions? I assume any time port_reset()
-would fail TLPs for the other PF. And port_reset() could be triggered
-at runtime by ioctl().
+
+On 30.01.2024 07:39, takeru hayasaka wrote:
+> Hi Marcin-san
+> Thanks for your review!
+> 
+>> Do I understand correctly that all gtpu* include TEID? Maybe write it here.
+> Yes, that's correct.
+> 
+>> It would be nice to see a link to the patch that added GTP and 'e' flag support
+> to ethtool itself ("ethtool: add support for rx-flow-hash gtp").
+> I will send you the link.
+> The one I sent earlier was outdated, so I've updated it to match this patch.
+> https://lore.kernel.org/netdev/20240130053742.946517-1-hayatake396@gmail.com/
+> 
+>> gtpc(4|6) doesn't include TEID, so what is its purpose?
+> In GTPC communication, there is no TEID in the CSR (Create Session Request).
+> Therefore, there are cases of GTPC that do not include TEID.
+
+The way I understand it now, this patch (and the ethtool one) adds hashing on
+TEID field in GTP* headers. So I wanted to ask why do we have a case (gtpc(4|6))
+that doesn't include TEID? Do we hash on other fields in this header?
+
+> 
+>> s/TEID(4byte)/TEID (4bytes)/
+>> Also, I think two newlines should remain here.
+> I will correct the TEID notation in the next patch!
 
 Thanks,
-Yilun
+Marcin
 
-> transaction layer packet (TLP) transactions and invalid data
-> being returned.
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> 
-> ---
-> v2:
-> - Update commit message for clarity
-> - Remove potentially confusing dev_info message.
-> ---
->  drivers/fpga/dfl-afu-main.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> index c0a75ca360d6..42fe27660ab7 100644
-> --- a/drivers/fpga/dfl-afu-main.c
-> +++ b/drivers/fpga/dfl-afu-main.c
-> @@ -417,7 +417,15 @@ static const struct attribute_group port_hdr_group = {
->  static int port_hdr_init(struct platform_device *pdev,
->  			 struct dfl_feature *feature)
->  {
-> -	port_reset(pdev);
-> +	void __iomem *base;
-> +	u8 rev;
-> +
-> +	base = dfl_get_feature_ioaddr_by_id(&pdev->dev, PORT_FEATURE_ID_HEADER);
-> +
-> +	rev = dfl_feature_revision(base);
-> +
-> +	if (rev < 2)
-> +		port_reset(pdev);
->  
->  	return 0;
->  }
-> -- 
-> 2.34.1
-> 
-> 
+---8<---
