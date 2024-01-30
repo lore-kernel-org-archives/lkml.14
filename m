@@ -1,286 +1,119 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EA766B46;
-	Tue, 30 Jan 2024 09:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA9F5813B
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706605484; cv=none; b=ldUsa0pI4XX7qQEdmijGRvdIuNnJtHfsX0wKYiAn5tRk8WLV41OeoPMP0sYC/IOCDqCeIItAWf6nHKREbHazp52v3gpHf5t5qXHcW2UD+4Yd5NiNcnZHHP70H4NxqfQznQuHp0PXEH1+7tvijXISEXCqzJwVN7iG4Pby4Wx2XJY=
+	t=1706605584; cv=none; b=qMkiTyfBR7FpDT7p9Gx3l1S5Evnj/2EkoTGSGdaqRBnJJwj5CNxnSN3Sdg615KcFP2d4DQtIRNBMBOH0g+nozc4+Xazsvlt9jeuTFzQNjWk0HNuyyGsPTMzFFDH22G6P/wp6S0Asi0i/LblIbprxXLJDV1G/IqgzfOCfhDI8I+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706605484; c=relaxed/simple;
-	bh=YvFyEfP+dCZA9ZKondkqF7lJWdDHPoc6eQRkDL7dZxI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PkQQJMxWQdd4cCPxZVAq3fNt92uyYhVrZ5Y6vNwEHwtT6VqFQ754orhFUlLzRO8kg54P/CYw6r4K6rA6TydxzmzeNXNSP4XBT2FHwboUGyL4LS0HVz2QE2n+1gDF93He52aYNzoPQzNOO3D/IO7zo6nc8PX/60RMkUy8nGoAd6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UFdfHjAt; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1706605584; c=relaxed/simple;
+	bh=UiTaMIx2Jm1EUQDykoIgKkQLEt+vN6yTNf/ep5hPZjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T5rNxCH5opbnGND0MMXoOCYg2iCAQCb4ziifKRcXSTAJ3CmhQlR5os9bUWU0xVq3SPwT5PEB9ko2y3sVYd4MqmAGdse5HRNFHdBUmjHtQUQaKT7xPD9B2IcC26fe/MkvzYQKNUCFAgrNy507hVtvabcWOkKySO7HO2uxR2qQX/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wGT7lJqI; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UFdfHjAt"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 97C4F240002;
-	Tue, 30 Jan 2024 09:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706605479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l/L6bzf2gaHl/JyjqO/iv8M2x2ZxFgKdEPhznPGhi2w=;
-	b=UFdfHjAtq0cdculhhmemTP/dfOs/LSfzOgZf77WhhPHYDXys8PnSWlhThw2cLFuQCqAk6M
-	SthqX37ODNd/4vbJN1DkmbnvrbpCAZ/ng7pMwbmL7/fVWKNcv+0xu4AqRRKWOduFPG41Ti
-	MRjGX2S/lcFQPd/ajJ80aJk4MynWS7FJ73WhqU+L8FM3Tc46VP83kmbFHod5HabYzz3Zai
-	Nz3spRedOhgVgBoB45D9/5lHouceELLs+aHgaDoNTwwxiHI20AHlxsTR4GkHGk3D2baGng
-	3XVzayg0VCkDgAax7zTeVJf5fsTcO6tuhVxUrEW8ynHgNVppYD+qQgUpDoirkQ==
-From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH 2/2] net: phy: Add some configuration from device-tree
-Date: Tue, 30 Jan 2024 09:59:35 +0100
-Message-ID: <20240130085935.33722-3-bastien.curutchet@bootlin.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240130085935.33722-1-bastien.curutchet@bootlin.com>
-References: <20240130085935.33722-1-bastien.curutchet@bootlin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wGT7lJqI"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4bd9b71456fso683967e0c.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:06:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706605581; x=1707210381; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ZhWHmKw4vi7AxSEO7CuV+xNiUe+yFZ2ZzlwsymAg/E=;
+        b=wGT7lJqIintsMjwm0ifRYemISbJCg+SGcnQRNhf8ghKDdd4HIxQE915m/RLitrWGAE
+         trTE2vcfkzaSIdNOIVbc0voS+c4nvBQnVRCEDLcgs3v/dvJuc9wMJa+jZsOPNoGI9TCu
+         ig4kSqgHVq8EgzwxObmZtcpbwaGq2rSoSG1Bd5Aomwlp4ffjWP6VM2Vy7opqIWRRQGGl
+         YDH1V+o7SCnK7k2sC74dTTVhrxCkgMBzuZDeUDoFSK0JHk3OdQlPe+DO7psalWBjhluh
+         6t3sLmVKEZK36SZbpV1UJjdq/05qWeRvqtmSLyY4+eU2aWvAYLPNZrbuECFVpsHKo5R3
+         kmAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706605581; x=1707210381;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3ZhWHmKw4vi7AxSEO7CuV+xNiUe+yFZ2ZzlwsymAg/E=;
+        b=FWUHSnbWLrHZ59xr5BFckPR6ZzVtOawMM2HbODvpEpE4NQFhpsNgTU+mT6cI53zuVX
+         yp5zTWXnkgCfIqq4L7CBOIeLzAqi3/JJf0qX3Y8D/gcy3rjzvstVRWaOSe46LCTFwXmn
+         Vc3wH99QMaumRb1bJLllyW40TLlAyEu/QxBoV68i1fGHyLLT7DweOcl6Czx7+bbJnlOv
+         ZCoIS1VCevTJ1jhs19uDH1R4qkyWxbLiP5Ae8/rwl/sChgl4azFPgrqQT252Zh5IgpSf
+         7dxWZ7QoVvHyLZ/8/n4Pdjymzion7Sb6WoVpWHh3beoXQRnIEogMBFcagbwAgieZ6cc9
+         3t3Q==
+X-Gm-Message-State: AOJu0YzWH5viFlKV+KbDjB4bTteM8HxepG8OHSgU6xsesb9q6F2tBUpL
+	RcxqzOLy4Lag9wn1+wUX5U/ggrOjrxAZGe0LuD2KiVqNsy/uJwMnzBdbXSIMsfhXtd7kHyizzKq
+	MOonj+wDmaQev5wU29p+A9yJ4litA81vNozUB
+X-Google-Smtp-Source: AGHT+IFRKvthvPaK/eQQw262qb3uj3gwoqQFpPfljrQVEpXmKBSAG0JgZF/aeoOMlfcPoJI9wUzPo2V3cNjqBI6Lioc=
+X-Received: by 2002:a05:6122:45a5:b0:4b7:689d:9d9 with SMTP id
+ de37-20020a05612245a500b004b7689d09d9mr3412354vkb.32.1706605581206; Tue, 30
+ Jan 2024 01:06:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: bastien.curutchet@bootlin.com
+References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
+ <20240124-alice-mm-v1-3-d1abcec83c44@google.com> <CGME20240129180005eucas1p1c1962ece31e6b9619f9e22dc95f54087@eucas1p1.samsung.com>
+ <ZbfnmX1J8iLV8UnO@casper.infradead.org> <87mssngpnc.fsf@samsung.com>
+In-Reply-To: <87mssngpnc.fsf@samsung.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 30 Jan 2024 10:06:09 +0100
+Message-ID: <CAH5fLghoxdAQaWRpDpn32A5YUM20oW=7Vck1fPUz1rk5ruH_AA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: add abstraction for `struct page`
+To: Andreas Hindborg <a.hindborg@samsung.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Kees Cook <keescook@chromium.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some features can now be enabled or disabled from device tree.
-If attributes are present in device-tree, features are enabled
-or disabled via MDIO registers. Else, hardware configuration is
-left as is.
-These features are : Energy Detect Mode, PHY Control Frames,
-LED configuration and Fiber Mode.
+On Tue, Jan 30, 2024 at 10:02=E2=80=AFAM Andreas Hindborg
+<a.hindborg@samsung.com> wrote:
+>
+>
+> Matthew Wilcox <willy@infradead.org> writes:
+>
+> > On Wed, Jan 24, 2024 at 11:20:23AM +0000, Alice Ryhl wrote:
+> >> +impl Page {
+> >> +    /// Allocates a new set of contiguous pages.
+> >> +    pub fn new() -> Result<Self, AllocError> {
+> >> +        // SAFETY: These are the correct arguments to allocate a sing=
+le page.
+> >> +        let page =3D unsafe {
+> >> +            bindings::alloc_pages(
+> >> +                bindings::GFP_KERNEL | bindings::__GFP_ZERO | binding=
+s::__GFP_HIGHMEM,
+> >> +                0,
+> >> +            )
+> >> +        };
+> >
+> > This feels too Binder-specific to be 'Page'.  Pages are not necessarily
+> > allocated with GFP_HIGHMEM, nor are they necessarily zeroed.  Maybe you
+> > want a BinderPage type?
+>
+> Rust null block uses the same definition of these flags [1], so there is
+> at least that synergy.
+>
+> I feel like we had the discussion of the flags before, although I can't
+> find the thread now. I think the conclusion was that we fix them until
+> we have code that need to actually change them (as to not add dead
+> code).
 
-Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
----
- drivers/net/phy/dp83640.c     | 131 +++++++++++++++++++++++++++++++++-
- drivers/net/phy/dp83640_reg.h |  21 +++++-
- 2 files changed, 150 insertions(+), 2 deletions(-)
+I don't think there's any problem with replacing the constructor with
+one that takes a flag argument dead-code-wise. I can definitely do
+that.
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index 5c42c47dc564..f5770002b849 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -7,6 +7,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <dt-bindings/net/ti-dp83640.h>
- #include <linux/crc32.h>
- #include <linux/ethtool.h>
- #include <linux/kernel.h>
-@@ -16,6 +17,7 @@
- #include <linux/net_tstamp.h>
- #include <linux/netdevice.h>
- #include <linux/if_vlan.h>
-+#include <linux/of.h>
- #include <linux/phy.h>
- #include <linux/ptp_classify.h>
- #include <linux/ptp_clock_kernel.h>
-@@ -1418,15 +1420,142 @@ static int dp83640_ts_info(struct mii_timestamper *mii_ts,
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF_MDIO
-+static int dp83640_of_init(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	struct device_node *of_node = dev->of_node;
-+	int reg_val;
-+	u32 of_val;
-+	int ret;
-+
-+	if (!of_node)
-+		return 0;
-+
-+	/* All configured features reside in PAGE 0 */
-+	phy_write(phydev, PAGESEL, 0);
-+
-+	/* Energy detect mode */
-+	reg_val = phy_read(phydev, EDCR);
-+	if (of_property_present(of_node, "ti,energy-detect-en"))
-+		reg_val |= ED_EN;
-+	else
-+		reg_val &= ~ED_EN;
-+	phy_write(phydev, EDCR, reg_val);
-+
-+	/* CLK_OUTPUT Pin */
-+	if (of_property_present(of_node, "ti,clk-output")) {
-+		ret = of_property_read_u32(of_node, "ti,clk-output", &of_val);
-+		if (ret)
-+			return ret;
-+
-+		reg_val = phy_read(phydev, PHYCR2);
-+		switch (of_val) {
-+		case 0:
-+			reg_val |= CLK_OUT_DIS;
-+			break;
-+		case 1:
-+			reg_val &= ~CLK_OUT_DIS;
-+			break;
-+		default:
-+			phydev_err(phydev, "Invalid value for ti,clk-output property (%d)"
-+					, of_val);
-+			return -EINVAL;
-+		}
-+		phy_write(phydev, PHYCR2, reg_val);
-+	}
-+
-+	/* LED configuration */
-+	if (of_property_present(of_node, "ti,led-config"))  {
-+		ret = of_property_read_u32(of_node, "ti,led-config", &of_val);
-+		if (ret)
-+			return ret;
-+
-+		reg_val = phy_read(phydev, PHYCR) & ~(LED_CNFG_1 | LED_CNFG_0);
-+		switch (of_val) {
-+		case DP83640_PHYCR_LED_CNFG_MODE_1:
-+			reg_val |= LED_CNFG_0;
-+			break;
-+		case DP83640_PHYCR_LED_CNFG_MODE_2:
-+			/* Keeping LED_CNFG_1 and LED_CNFG_0 unset */
-+			break;
-+		case DP83640_PHYCR_LED_CNFG_MODE_3:
-+			reg_val |= LED_CNFG_1;
-+			break;
-+		default:
-+			phydev_err(phydev, "Invalid value for ti,led-config property (%d)"
-+					, of_val);
-+			return -EINVAL;
-+		}
-+		phy_write(phydev, PHYCR, reg_val);
-+	}
-+	if (of_property_present(of_node, "ti,phy-control-frames")) {
-+		of_property_read_u32(of_node, "ti,phy-control-frames", &of_val);
-+		if (ret)
-+			return ret;
-+
-+		reg_val = phy_read(phydev, PCFCR);
-+		switch (of_val) {
-+		case 0:
-+			reg_val &= ~PCF_EN;
-+			break;
-+		case 1:
-+			reg_val |= PCF_EN;
-+			break;
-+		default:
-+			phydev_err(phydev, "Invalid value for ti,phy-control-frames property (%d)"
-+					, of_val);
-+			return -EINVAL;
-+		}
-+		phy_write(phydev, PCFCR, reg_val);
-+	}
-+	if (of_property_present(of_node, "ti,fiber-mode")) {
-+		ret = of_property_read_u32(of_node, "ti,fiber-mode", &of_val);
-+		if (ret)
-+			return ret;
-+
-+		reg_val = phy_read(phydev, PCSR);
-+		switch (of_val) {
-+		case 0:
-+			reg_val &= ~FX_EN;
-+			break;
-+		case 1:
-+			reg_val |= FX_EN;
-+			break;
-+		default:
-+			phydev_err(phydev, "Invalid value for ti,fiber-mode property (%d)"
-+					, of_val);
-+			return -EINVAL;
-+		}
-+		phy_write(phydev, PCSR, reg_val);
-+		/* Write SOFT_RESET bit to ensure configuration */
-+		reg_val = phy_read(phydev, PHYCR2) | SOFT_RESET;
-+		phy_write(phydev, PHYCR2, reg_val);
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int dp83640_of_init(struct phy_device *phydev)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_OF_MDIO */
-+
- static int dp83640_probe(struct phy_device *phydev)
- {
- 	struct dp83640_clock *clock;
- 	struct dp83640_private *dp83640;
--	int err = -ENOMEM, i;
-+	int err, i;
- 
- 	if (phydev->mdio.addr == BROADCAST_ADDR)
- 		return 0;
- 
-+	err = dp83640_of_init(phydev);
-+	if (err < 0)
-+		return err;
-+
-+	err = -ENOMEM;
- 	clock = dp83640_clock_get_bus(phydev->mdio.bus);
- 	if (!clock)
- 		goto no_clock;
-diff --git a/drivers/net/phy/dp83640_reg.h b/drivers/net/phy/dp83640_reg.h
-index daae7fa58fb8..8877ba560406 100644
---- a/drivers/net/phy/dp83640_reg.h
-+++ b/drivers/net/phy/dp83640_reg.h
-@@ -6,7 +6,11 @@
- #define HAVE_DP83640_REGISTERS
- 
- /* #define PAGE0                  0x0000 */
-+#define PCSR                      0x0016 /* PCS Configuration and Status Register */
-+#define PHYCR                     0x0019 /* PHY Control Register */
- #define PHYCR2                    0x001c /* PHY Control Register 2 */
-+#define EDCR                      0x001D /* Energy Detect Control Register */
-+#define PCFCR                     0x001F /* PHY Control Frames Control Register */
- 
- #define PAGE4                     0x0004
- #define PTP_CTL                   0x0014 /* PTP Control Register */
-@@ -50,8 +54,23 @@
- #define PTP_GPIOMON               0x001e /* PTP GPIO Monitor Register */
- #define PTP_RXHASH                0x001f /* PTP Receive Hash Register */
- 
-+/* Bit definitions for the PCSR register */
-+#define FX_EN		          BIT(6)  /* Enable FX Fiber Mode */
-+
-+/* Bit definitions for the PHYCR register */
-+#define LED_CNFG_0	          BIT(5)  /* LED configuration, bit 0 */
-+#define LED_CNFG_1	          BIT(6)  /* LED configuration, bit 1 */
-+
- /* Bit definitions for the PHYCR2 register */
--#define BC_WRITE                  (1<<11) /* Broadcast Write Enable */
-+#define CLK_OUT_DIS	          BIT(1)  /* Disable CLK_OUT pin */
-+#define SOFT_RESET		  BIT(9)  /* Soft Reset */
-+#define BC_WRITE                  BIT(11) /* Broadcast Write Enable */
-+
-+/* Bit definitions for the EDCR register */
-+#define ED_EN		          BIT(15) /* Enable Energy Detect Mode */
-+
-+/* Bit definitions for the PCFCR register */
-+#define PCF_EN	                  BIT(0)  /* Enable PHY Control Frames */
- 
- /* Bit definitions for the PTP_CTL register */
- #define TRIG_SEL_SHIFT            (10)    /* PTP Trigger Select */
--- 
-2.43.0
-
+Alice
