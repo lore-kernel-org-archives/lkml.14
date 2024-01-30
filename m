@@ -1,94 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82252383A2
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EDF383A2
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706596753; cv=none; b=XlMCAfpNKoqc9NyGeGtXuoB/qALLWT73YLqv7zBc9TprV7w8j0lON9tQn+mFv/IBVhoNWzjHlWVdG2/nGp2aZdTECMEtpfin+QvNOlDD+AxWRgNuxqihLpSGx6AiI2ZC0JVINMKX+PFNem3nZwqTrWVfBKBQgB13gAMXC4EdBYU=
+	t=1706596805; cv=none; b=WZ9P9PxuptJHIeULnjdiqQ7BvQIbtIMyLqrYmbpZDgrW18wn8STfKm1Pa+kiMZ/Nv/miCENLrWwNM8CveEUxLjFwf2qV2wEeubp/rhsJW9T0ADPeTXB2sRJnTprxdvmX3aOvc7QkLsJmGYgUYihWq427iL4A7S6Dhj7qb3YJTuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706596753; c=relaxed/simple;
-	bh=ql8JyOqXu4hDbI4cy8/jf9zI9M1di9RVCr3fSSdMWeE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ssJMK0Dnxm+yJfANDYuLg4kaBoIHLCKOyRQu/dZza1Rx1rPgxgf9qAiEq+kSVJgeyzm/rGUSOU8aKUPcFRK+xovalT2cR7a2cxvJIR8zFxPWDIejt3Fv7RxDvItMrJk706dh6AGrO8qV3yGdfVDgbD4UbGmIFs2WUt13eKi0QZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NwhTjqAc; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NwhTjqAc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706596751; x=1738132751;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ql8JyOqXu4hDbI4cy8/jf9zI9M1di9RVCr3fSSdMWeE=;
-  b=NwhTjqAc0GCVieCAS1FSnqaajcJl42FRE1QBhcZkeCLMu3EpSV2TJ0Ud
-   OSrRZBuCAMPBwkgoNNaADsZKkGzBLV0C7r01F82J/G/++M7tdUkNRQNvi
-   MD/RnK6dFrx4GvtLwm3TgfgX8ML46ljedoRK+JRJNPA55G3S1fkeOEV63
-   QTpq1y8h67rYgJ5jRjv2OLDdD7R/WKKrwcLCu9la4WtrbvM9hdpizYSRV
-   Ez/SCQ5FxJ9Vk7XQYWnDJNDx2lDWKhUy7DtiMoIskFWAXx1I8goQkTH9l
-   VCLrDuuRkJ7L9ZcMt/Az2vwL+dBoduAmGTpQ6+0YNRa2q41tQy7PZZnBm
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="24662706"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="24662706"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:39:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="36394744"
-Received: from unknown (HELO [10.249.174.186]) ([10.249.174.186])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:39:08 -0800
-Message-ID: <757c6b52-628c-4d73-8e66-43a06e1cd982@linux.intel.com>
-Date: Tue, 30 Jan 2024 14:39:04 +0800
+	s=arc-20240116; t=1706596805; c=relaxed/simple;
+	bh=SbxQH8pCY2qeXLeoiGtq4S1uXcyRkQ03Tz1xnlX507c=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=YUpV1mfcrv6SNi99LwIW4fHRh7a7hJTUbIBe86hPn07rXRDKzDTamYHYkzv/fKvhtzKKYcKRwKm+umh+fCocQ8jK2Dc2XXxAPQu63C0XeoBKlixAMdmV6FeELZpbKctRfwh4xObrqzuhjMRR1Nv52nNHzDqfBnWS14usKe8e4Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7bef5e512b6so295677739f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 22:40:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706596803; x=1707201603;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+oMwg3PFTnIaJkXmNJC69+Q6VOUn8cC8qomw8d1KQ00=;
+        b=lPahQKfjCY1qxX3hHp2CJFIV+wZDTKiR2gSI3Oy/PGfEtvHVyhb7WDoPY6uO6GIJea
+         g8pfedOxClEx/xb3AfPAUPFGqbU7djfiYccEuFK3EUprcYQ8tMzMS7jS95Rgi29PUHai
+         xfEKIMOm5fG+4YmeFBxiBah95iusrjLHVfOXfi7TiGJ2rnVAlSJno6Jf99A6aeecuU2u
+         QtRyYPMNH3pR31P2vuXJwx2u+4fUSSQsO2SPvjfQch2FsIoUkVwN7AOiDGzMIf+q2bhX
+         1RlzAHTaEX0H+nnsKAMiusA3Wy1KjR95KIgJuWp9JaAh68rFSudEGzKs1HsN37wdUDXx
+         cbwA==
+X-Gm-Message-State: AOJu0Yya9EygNHb6gz7Aey6bKVLdS/UcuoyYJohSBBMmNFT/PQnzBU7c
+	RoiXWQbf/sLbNBhTYauG8ahf9DKiTswdIenshBYTiNkjqUSgxbEM+BAfhCf73Rz5ZPCfgOdb81r
+	GVftCovOpc4FXvHZ2FqVwkZl7HZ/eLEAlsrKrj+EPmZcUIzUCkYSpzdQ=
+X-Google-Smtp-Source: AGHT+IHXyJOF9P7O7uhy76RalsYAGf8yyTYv72bC+M3IU7MTykjY3N4XULvKvVHwZP3Tjs5Sd60fqutt+QbvMMIevfSXlKhFsGTd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] iommu/vt-d: Remove INTEL_IOMMU_BROKEN_GFX_WA
-To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240130060823.57990-1-baolu.lu@linux.intel.com>
- <BN9PR11MB5276DD160FDBEC47F9441F008C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276DD160FDBEC47F9441F008C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:35d:b0:470:aae7:5dda with SMTP id
+ x29-20020a056638035d00b00470aae75ddamr65267jap.6.1706596803173; Mon, 29 Jan
+ 2024 22:40:03 -0800 (PST)
+Date: Mon, 29 Jan 2024 22:40:03 -0800
+In-Reply-To: <tencent_324B541BA3251CBAC1BB0F33A29EDF1B6E08@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003a6e4f061024082a@google.com>
+Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
+From: syzbot <syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024/1/30 14:24, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Tuesday, January 30, 2024 2:08 PM
->>
->> Commit 62edf5dc4a524 ("intel-iommu: Restore DMAR_BROKEN_GFX_WA
->> option for
->> broken graphics drivers") was introduced 24 years ago as a temporary
->> workaround for graphics drivers that used physical addresses for DMA and
->> avoided DMA APIs. This workaround was disabled by default.
->>
->> As 24 years have passed, it is expected that graphics driver developers
->> have migrated their drivers to use kernel DMA APIs. Therefore, this
->> workaround is no longer required and could been removed.
->>
->> The Intel iommu driver also provides a "igfx_off" option to turn off
->> the DAM translation for the graphic dedicated IOMMU. Hence, there is
->> really no good reason to keep this config option.
->>
-> 
-> s/DAM/DMA/
+Hello,
 
-Fixed. :-)
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Best regards,
-baolu
+kernel/trace/blktrace.c:332:21: error: macro "kfree_rcu" requires 2 arguments, but only 1 given
+kernel/trace/blktrace.c:332:9: error: 'kfree_rcu' undeclared (first use in this function)
+
+
+Tested on:
+
+commit:         861c0981 Merge tag 'jfs-6.8-rc3' of github.com:kleikam..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4059ab9bf06b6ceb
+dashboard link: https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17512a0fe80000
+
