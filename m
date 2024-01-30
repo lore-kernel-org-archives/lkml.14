@@ -1,127 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B43A7CF08
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 14:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43E77CF08
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706626791; cv=none; b=XsMnj0+hmqFqdeL4fu+Ea2P4Rf+oAU7nGUw07uPD1ng4gv+bXkeNmZrbdPArFi7/fwBTe6DAQhSnkfK5r9Qcmrjeri3YMEJmop6CLt25LTgUd+jnCNURu8G2kehD0vYZxs+W5nnffHM7nKcljfk0bgXJgd69jYS4gAt/IquPrt8=
+	t=1706626827; cv=none; b=fBX/3Yh/ikXaBvrX6hrcN0O13Trw6K3ZMxwoXuM+pJ5IcYojpejG1HpXbVjTWuIjJzZU7daLdPwAWMQeAJiwEVzBswtJyUWGUZqRWd75hZf/GvVxu6HAaQADiocZyb17S1VSw0/uucmS6i0axuVlYa9t8vIxWHpKkjfeBQSWnw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706626791; c=relaxed/simple;
-	bh=1tgAgVSY1WXEHtXlxjinJFnJmsZeG3N/wjN5CzUBIZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S9XlXop0OfIT+PlmtK/PFDXxrSQihrbunqNeOabuHRqGWJ66kMfGH6956pg2QCMqvZKbpgu+xLGmSn10s+ItJbiNvphI3u3KLgGIgVs0hvpQVoSnvQBz357gY1q2yhAQcwSfnsLj0jBGXrJITDVHFb425wqF1sOSRoGyzXjl6/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QfHT3XZw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706626827; c=relaxed/simple;
+	bh=efSG7SSvYuTZmaIZe1rT07IPTrpLnxs1P3jW8v0XLtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sm4/zTCpdLaD/QAp+d9PhKj9+fR44kfQXwMbIjfkp6+v5iuy2nQOvUv6vOQd93TTEY/jIIvgF2gPILSILStUjFMkmav1O313Ii121QEAXBZch8I4YiJcoTOnvrx3RFCWBZjDnTipoP/eRBtQeDRGzdwcEv/85wapzXQ1qvDWY4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hdAwoaf1; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QfHT3XZw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706626789;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hdAwoaf1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5F1BA1C000F;
+	Tue, 30 Jan 2024 15:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706626823;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1tgAgVSY1WXEHtXlxjinJFnJmsZeG3N/wjN5CzUBIZc=;
-	b=QfHT3XZwK88KwZCpXEFti8+XLepgEDh5a29IMchVK9bNIebrC2r0GwtWqkv7qFqyrjOpFZ
-	gerkr9qZJ2RmHMwzBMVdcQ+MbKn0IYim67LJY0O/6hkyKDT9fLlfTMQ5zl6aTPDOqIY9oS
-	utzVlHACs7k3I9kFMKNroY26xP8XAX0=
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com
- [209.85.222.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-brbp_rAUMvyAJ6QGb7z09Q-1; Tue, 30 Jan 2024 09:59:46 -0500
-X-MC-Unique: brbp_rAUMvyAJ6QGb7z09Q-1
-Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-7d3184d4989so2288011241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:59:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706626786; x=1707231586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1tgAgVSY1WXEHtXlxjinJFnJmsZeG3N/wjN5CzUBIZc=;
-        b=eGeqxggks4NR2ELWHPUd6n4JsR244vuOTzgwIXWutCqtWm8D0z0tVbGz7ei6tp68Hq
-         oK3feK8bpXEFK8G+pAdnMEiHO5Pq54szJB5tX1gZFm2EAebHZA2WQq9AdPxfC/czAAnU
-         5yA8dB4DjBB8uhTrkp+TUdIP5bWTxKYj4cslgfYpb4T4/V5LMNBacpCc6kxmNHyOaVCe
-         toLtUT0euqv4Xk/r6kohVE3meOggg+aAG0Omac7Z+birXm1wzs0uwkKxD4Xc2zbOkbr4
-         xTJJTAv0VkWcZ3okHLWXrLAIsL7RNiQXzLeYNyED/OeGqJXJpm3sMZm35FNnCVRudzQ9
-         Q1Vg==
-X-Gm-Message-State: AOJu0YzzO0tQlz80SAJzRu+B/ca0biETVwcbbgNCLMbAzbZThBmyz+Sm
-	wrxae//PXPIlyMfJ4O+FvRxhYdFoM+mVUw7hpX52KMNm0EfO5wPBGAE3T7Wwmnm0EASD4gLA5MK
-	kRHnv3h7oXnt3AzT8Dei+VLNyAmoCSNczjSKRQIt9VlwjhohUhirTeYGzpaG08jW8tRWN6dOegR
-	WJIsxSm1SJ+gpvRGdN2yVOXy5554YcIB6T89C5
-X-Received: by 2002:a05:6102:2256:b0:46b:6a7a:30a1 with SMTP id e22-20020a056102225600b0046b6a7a30a1mr2218301vsb.6.1706626786409;
-        Tue, 30 Jan 2024 06:59:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEDswsxCrtanUl+20n0ev8u+2WT23/0oF8G8nh8pG6OHZQJZLcwjksCHvNXwQ79sSgdmASJmVb7xQIYR598Wyc=
-X-Received: by 2002:a05:6102:2256:b0:46b:6a7a:30a1 with SMTP id
- e22-20020a056102225600b0046b6a7a30a1mr2218288vsb.6.1706626786190; Tue, 30 Jan
- 2024 06:59:46 -0800 (PST)
+	bh=efSG7SSvYuTZmaIZe1rT07IPTrpLnxs1P3jW8v0XLtI=;
+	b=hdAwoaf1yqqfueCdiJ3rQuvOKterIxAoxcJRv529yjB24HPJCGH+LfD0Yakjqi7IophcKc
+	H2mb0uKAUpNsHQlFYha8G+8l7326TVVPXdueWR7FTeGag8a6QdlzkspgjyoEKua7c9CzlS
+	KAvOTp47z2/j7VHMRmBpa4cgm7DkguDBaOOVD/SYA/aXhfCboQRpLhO0w7OBdkIyPq9wBU
+	lB4HllvFP5Z0UJ9yG09ZDbb4HtKqlWxArB09xio/mW/NHtCsIC6toDyJfnSlYQFQ1b3alU
+	SSjXwjt7/e4/y3POEZlpw4UYJopVsvBd86drrjDDLEeLSEfHRU76FA05yoK1Xg==
+Date: Tue, 30 Jan 2024 16:00:21 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
+Cc: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+ "michael@walle.cc" <michael@walle.cc>, "rafal@milecki.pl"
+ <rafal@milecki.pl>, "robh@kernel.org" <robh@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "luca.ceresoli@bootlin.com" <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH] nvmem: core: add fixed-layout declaration
+Message-ID: <20240130160021.70ddef92@xps-13>
+In-Reply-To: <d568b3e2-0305-4041-9f6a-8375b5c497b2@leica-geosystems.com>
+References: <20240111152849.3649549-1-catalin.popescu@leica-geosystems.com>
+	<20240111164145.39255eac@xps-13>
+	<d568b3e2-0305-4041-9f6a-8375b5c497b2@leica-geosystems.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
- <3f44458f-2b4a-4464-a3df-cb791298dafc@redhat.com> <g7jh422ild6c23hjxvf7q2xtygkumbpynz4hcops7nvg5izvpp@r3oyhvssph2o>
-In-Reply-To: <g7jh422ild6c23hjxvf7q2xtygkumbpynz4hcops7nvg5izvpp@r3oyhvssph2o>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Tue, 30 Jan 2024 15:59:34 +0100
-Message-ID: <CABgObfZiyx8hRsD37xZq5TNs9sRq48vLUxbOKa=HZ1vcr67sWQ@mail.gmail.com>
-Subject: Re: [PATCHv6 00/16] x86/tdx: Add kexec support
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Elena Reshetova <elena.reshetova@intel.com>, Jun Nakajima <jun.nakajima@intel.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	"Kalra, Ashish" <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, 
-	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, Jan 30, 2024 at 3:34=E2=80=AFPM Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
->
-> On Tue, Jan 30, 2024 at 02:43:15PM +0100, Paolo Bonzini wrote:
-> > On 1/24/24 13:55, Kirill A. Shutemov wrote:
-> > > The patchset adds bits and pieces to get kexec (and crashkernel) work=
- on
-> > > TDX guest.
-> > >
-> > > The last patch implements CPU offlining according to the approved ACP=
-I
-> > > spec change poposal[1]. It unlocks kexec with all CPUs visible in the=
- target
-> > > kernel. It requires BIOS-side enabling. If it missing we fallback to =
-booting
-> > > 2nd kernel with single CPU.
-> > >
-> > > Please review. I would be glad for any feedback.
-> >
-> > Hi Kirill,
-> >
-> > I have a very basic question: is there a reason why this series does no=
-t
-> > revert commit cb8eb06d50fc, "x86/virt/tdx: Disable TDX host support whe=
-n
-> > kexec is enabled"?
->
-> My patchset enables kexec for TDX guest. The commit you refer blocks kexe=
-c
-> for host. TDX host and guest have totally different problems with handlin=
-g
-> kexec. Kai looks on how to get host kexec functional.
+Hi Catalin,
 
-Yeah, that was right there in the cover letter (and I should have
-gotten a clue from the many references to CC_* constants...). Somebody
-pointed me to this series as "the TDX kexec series from Intel" and I
-had some tunnel vision issues. Sorry for the noise!
+catalin.popescu@leica-geosystems.com wrote on Mon, 29 Jan 2024 15:29:31
++0000:
 
-But since I have your attention, do you have a pointer to the
-corresponding edk2 series? Thanks,
+> Hi Miquel,
+>=20
+> Now, that "specific" layouts are considered like drivers and rely on=20
+> NVMEM_LAYOUTS to populate the nvmem cells (layouts.c), I guess it's not=20
+> possible anymore to consider "fixed-layout" as a normal layout that=20
+> should be treated the same way than any layout. Unless, we move=20
+> "fixed-layout" under drivers/nvmem/layouts.
 
-Paolo
+That would be the relevant approach, yes.
 
+> But, this also means that=20
+> "fixed-layout" won't be supported anymore out-of-the-box (by nvmem core)=
+=20
+
+That would not be acceptable indeed.
+
+> and will require additional kernel configuration change.
+
+This would presumably be manageable however.
+
+No pressure if you don't feel like you could carry that task, it's not
+longer trivial.
+
+Thanks,
+Miqu=C3=A8l
