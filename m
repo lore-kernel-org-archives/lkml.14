@@ -1,134 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45353839C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FC138DE7
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706595240; cv=none; b=S5ptesMRqvjWyWAiUz93gGduw2FdKRuhkOQw8ZH+fxuocJ/6tQ9zIANAEAuisRgzGHOdIbnImox36Hr+ZgltKTuxGUuuwUF9hviJ4cE1tecueBtaMUOFA6Iv8xTYeL4gqWK9nwhCaFOAWV+kn0IdYS7DAI3r2vocLILvPrM7aPU=
+	t=1706595293; cv=none; b=R685Sr7CeH6dmS8TtVlo5QmUIbo0xP8rA51jlLeL053Ng03h5n4lcpliQvG+81miyy3MlMWIxzLl1KlUjcx7EU8CPs3uH/cxjmDwISCEkycezBTikpUHPpP7f7sDjiPtjMVyEPsVkPtfPRUdVpWgiUVYFJCciIzySIghMtTdA3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706595240; c=relaxed/simple;
-	bh=mbAJ/zTviPWkO8LHJ1tHYgfZ4TkYmkoH7kPNS0Gfjmc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nCUVfSs7sBNxPMiu3YifVm4gjlXFnMCCpQgWs0upMXT5LRYlOzHszAKMBHDMtMVrp4uhECMnsUeYuZQfPDS4+xzWnLWkoC32YsEq6aHGw8ybdnAxpP/QZ8/47vpkfeb8KV8vxNbTUPDh6UdrVFtIZDc2Wpb5u47WQujRzOXNE/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTvbDsNF; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706595293; c=relaxed/simple;
+	bh=6tMx4zes44BHB3RxXD/liTKY4G8BQEwt5jh/+9tg+Sc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aotZfD9ZTugLzYgeT5LwlxCalv/DIysqs8rCi1FjmIb0KClHy2+qkK4StuRFtz+Z4CLvQUQWJhmgt6uQ0hzN7S8z6vBfkjHFe3oEKtvTaHoVWgcutGAPUlHrP3Y4djhpcJtBwJh4RDbJ6moZWpUDv7R+UB0HYIOVY19OyQRQzM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m7SEU3xm; arc=none smtp.client-ip=134.134.136.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTvbDsNF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m7SEU3xm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706595239; x=1738131239;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mbAJ/zTviPWkO8LHJ1tHYgfZ4TkYmkoH7kPNS0Gfjmc=;
-  b=hTvbDsNFCn/m7I7+0xP7Y77bZuaEssL2M9Aa43MYkbSGADHRhl9LAXY6
-   XJQCtzstH7vCJXUtDvqaiLft6pTCzTnTCMNx2ZYmzOc9qZj5YU3XPeBMH
-   U+WxA0kd5UuT49zpoHLiwlEObMB0jDfnNmkVnhPR1EhDR3UWG8YK8V/OB
-   6gtJN9l9pLbplSIbFWi7gP5jEFGrEMiT/VgWFP37Bqm2yyKsuB4NteveW
-   vuyNMASBUcFkE39q5ixyvJODRhg0ZlrNHsBNx0vJ/s858hmoJCJAiYy9T
-   vA0be23kvYJhzUP3Mfz2Iup5Ko1Lu6xh3lhLA7VfBzKKJEfVXaKF7HxeO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10570669"
+  t=1706595290; x=1738131290;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=6tMx4zes44BHB3RxXD/liTKY4G8BQEwt5jh/+9tg+Sc=;
+  b=m7SEU3xmfWofRq+D4pP3kFkIugoJioNWWCvUeDzvEzLPtwjcfU7MmdDj
+   tQAQ653pHCm2gF3/8CC1BG69dhOmgSocYugbz/z1L2ezSVNFbi0eA4s7U
+   i23fwxwTCdHUr5y43ZrvxCNCrs57j2Cilh9L6KwfFvdylsj2eTUH8p4T1
+   T33DQUbG9mhQTySikiSa10pey6bm+3FcfupBmZgoSccTy4XalbzkL4LPm
+   DB+aFW6D3UpibzAgq9mF0vELFxqg/Sn2n5vpSgIFC2+Ib6+5+XgK8UtHt
+   twXg2bvhi33dbyXGoDBIjTeDj2z9WMTFOtuWqAvVg8PEyvKuJaOjwdDug
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="393613454"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="10570669"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:13:57 -0800
+   d="scan'208";a="393613454"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:14:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3706925"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by orviesa004.jf.intel.com with ESMTP; 29 Jan 2024 22:13:54 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	iommu@lists.linux.dev,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v2 1/1] iommu/vt-d: Remove INTEL_IOMMU_BROKEN_GFX_WA
-Date: Tue, 30 Jan 2024 14:08:23 +0800
-Message-Id: <20240130060823.57990-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="3565532"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:14:47 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org,  Kairui Song <kasong@tencent.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Chris Li <chrisl@kernel.org>,  Hugh Dickins
+ <hughd@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew Wilcox
+ <willy@infradead.org>,  Michal Hocko <mhocko@suse.com>,  Yosry Ahmed
+ <yosryahmed@google.com>,  David Hildenbrand <david@redhat.com>,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] mm/swap: always account swapped in page into
+ current memcg
+In-Reply-To: <20240129175423.1987-4-ryncsn@gmail.com> (Kairui Song's message
+	of "Tue, 30 Jan 2024 01:54:18 +0800")
+References: <20240129175423.1987-1-ryncsn@gmail.com>
+	<20240129175423.1987-4-ryncsn@gmail.com>
+Date: Tue, 30 Jan 2024 14:12:50 +0800
+Message-ID: <87sf2fgxi5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
-Commit 62edf5dc4a524 ("intel-iommu: Restore DMAR_BROKEN_GFX_WA option for
-broken graphics drivers") was introduced 24 years ago as a temporary
-workaround for graphics drivers that used physical addresses for DMA and
-avoided DMA APIs. This workaround was disabled by default.
+Kairui Song <ryncsn@gmail.com> writes:
 
-As 24 years have passed, it is expected that graphics driver developers
-have migrated their drivers to use kernel DMA APIs. Therefore, this
-workaround is no longer required and could been removed.
+> From: Kairui Song <kasong@tencent.com>
+>
+> Currently, mem_cgroup_swapin_charge_folio is always called with
+> mm == NULL, except in swapin_direct.
+>
+> swapin_direct is only used when swapin should skip readahead
+> and swapcache (SWP_SYNCHRONOUS_IO). All other callers of
+> mem_cgroup_swapin_charge_folio are for swapin that should
+> not skip readahead and cache.
+>
+> This could cause swapin charging to behave differently depending
+> on swap device, which is unexpected.
+>
+> This is currently not happening because the only caller of
+> swapin_direct is the direct anon page fault path, where mm always
+> equals to current->mm, but will no longer be true if swapin_direct
+> is shared and have other callers (eg, swapoff) to share the
+> readahead skipping logic.
+>
+> So make swapin_direct also pass NULL for mm, so swpain charge
+> will behave consistently and not effected by type of swapin device
+> or readahead policy.
+>
+> After this, the second param of mem_cgroup_swapin_charge_folio is
+> never used now, so it can be safely dropped.
+>
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>  include/linux/memcontrol.h | 4 ++--
+>  mm/memcontrol.c            | 5 ++---
+>  mm/swap_state.c            | 7 +++----
+>  3 files changed, 7 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 20ff87f8e001..540590d80958 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -693,7 +693,7 @@ static inline int mem_cgroup_charge(struct folio *folio, struct mm_struct *mm,
+>  int mem_cgroup_hugetlb_try_charge(struct mem_cgroup *memcg, gfp_t gfp,
+>  		long nr_pages);
+>  
+> -int mem_cgroup_swapin_charge_folio(struct folio *folio, struct mm_struct *mm,
+> +int mem_cgroup_swapin_charge_folio(struct folio *folio,
+>  				  gfp_t gfp, swp_entry_t entry);
+>  void mem_cgroup_swapin_uncharge_swap(swp_entry_t entry);
+>  
+> @@ -1281,7 +1281,7 @@ static inline int mem_cgroup_hugetlb_try_charge(struct mem_cgroup *memcg,
+>  }
+>  
+>  static inline int mem_cgroup_swapin_charge_folio(struct folio *folio,
+> -			struct mm_struct *mm, gfp_t gfp, swp_entry_t entry)
+> +		gfp_t gfp, swp_entry_t entry)
+>  {
+>  	return 0;
+>  }
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index e4c8735e7c85..5852742df958 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -7306,8 +7306,7 @@ int mem_cgroup_hugetlb_try_charge(struct mem_cgroup *memcg, gfp_t gfp,
+>   *
+>   * Returns 0 on success. Otherwise, an error code is returned.
+>   */
+> -int mem_cgroup_swapin_charge_folio(struct folio *folio, struct mm_struct *mm,
+> -				  gfp_t gfp, swp_entry_t entry)
+> +int mem_cgroup_swapin_charge_folio(struct folio *folio, gfp_t gfp, swp_entry_t entry)
+>  {
+>  	struct mem_cgroup *memcg;
+>  	unsigned short id;
+> @@ -7320,7 +7319,7 @@ int mem_cgroup_swapin_charge_folio(struct folio *folio, struct mm_struct *mm,
+>  	rcu_read_lock();
+>  	memcg = mem_cgroup_from_id(id);
+>  	if (!memcg || !css_tryget_online(&memcg->css))
+> -		memcg = get_mem_cgroup_from_mm(mm);
+> +		memcg = get_mem_cgroup_from_current();
 
-The Intel iommu driver also provides a "igfx_off" option to turn off
-the DAM translation for the graphic dedicated IOMMU. Hence, there is
-really no good reason to keep this config option.
+The behavior of get_mem_cgroup_from_mm(NULL) and
+get_mem_cgroup_from_current() isn't same exactly.  Are you sure that
+this is OK?
 
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
----
- drivers/iommu/intel/iommu.c |  4 ----
- drivers/iommu/intel/Kconfig | 11 -----------
- 2 files changed, 15 deletions(-)
+--
+Best Regards,
+Huang, Ying
 
-Change log:
-v2:
- - Add igfx_off option to commit message and Cc Intel graphic
-   maintainers.
 
-v1: https://lore.kernel.org/linux-iommu/20240127064512.16744-1-baolu.lu@linux.intel.com/
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 6fb5f6fceea1..fc52fcd786aa 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2660,10 +2660,6 @@ static int __init init_dmars(void)
- 		iommu_set_root_entry(iommu);
- 	}
- 
--#ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
--	dmar_map_gfx = 0;
--#endif
--
- 	if (!dmar_map_gfx)
- 		iommu_identity_mapping |= IDENTMAP_GFX;
- 
-diff --git a/drivers/iommu/intel/Kconfig b/drivers/iommu/intel/Kconfig
-index 012cd2541a68..d2d34eb28d94 100644
---- a/drivers/iommu/intel/Kconfig
-+++ b/drivers/iommu/intel/Kconfig
-@@ -64,17 +64,6 @@ config INTEL_IOMMU_DEFAULT_ON
- 	  one is found. If this option is not selected, DMAR support can
- 	  be enabled by passing intel_iommu=on to the kernel.
- 
--config INTEL_IOMMU_BROKEN_GFX_WA
--	bool "Workaround broken graphics drivers (going away soon)"
--	depends on BROKEN && X86
--	help
--	  Current Graphics drivers tend to use physical address
--	  for DMA and avoid using DMA APIs. Setting this config
--	  option permits the IOMMU driver to set a unity map for
--	  all the OS-visible memory. Hence the driver can continue
--	  to use physical addresses for DMA, at least until this
--	  option is removed in the 2.6.32 kernel.
--
- config INTEL_IOMMU_FLOPPY_WA
- 	def_bool y
- 	depends on X86
--- 
-2.34.1
-
+>  	rcu_read_unlock();
+>  
+>  	ret = charge_memcg(folio, memcg, gfp);
+> diff --git a/mm/swap_state.c b/mm/swap_state.c
+> index 645f5bcad123..a450d09fc0db 100644
+> --- a/mm/swap_state.c
+> +++ b/mm/swap_state.c
+> @@ -495,7 +495,7 @@ struct folio *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+>  	__folio_set_locked(folio);
+>  	__folio_set_swapbacked(folio);
+>  
+> -	if (mem_cgroup_swapin_charge_folio(folio, NULL, gfp_mask, entry))
+> +	if (mem_cgroup_swapin_charge_folio(folio, gfp_mask, entry))
+>  		goto fail_unlock;
+>  
+>  	/* May fail (-ENOMEM) if XArray node allocation failed. */
+> @@ -884,9 +884,8 @@ struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
+>  		__folio_set_locked(folio);
+>  		__folio_set_swapbacked(folio);
+>  
+> -		if (mem_cgroup_swapin_charge_folio(folio,
+> -					vma->vm_mm, GFP_KERNEL,
+> -					entry)) {
+> +		if (mem_cgroup_swapin_charge_folio(folio, GFP_KERNEL,
+> +						   entry)) {
+>  			folio_unlock(folio);
+>  			folio_put(folio);
+>  			return NULL;
