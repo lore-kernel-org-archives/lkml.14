@@ -1,109 +1,150 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A536860DCB;
-	Tue, 30 Jan 2024 10:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6059F67E61;
+	Tue, 30 Jan 2024 10:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706611037; cv=none; b=PA2uCgC3wsJ9wRHfTFq3qDbVFAw/pgveI4KXuyHmXnv06RgtQz+iTTP/XZENp8+2NeEn5M4Oycqyvd68KduIiHo3+h8AM4VmHeO+Aikmz+K+X+0EotP5Q65F7vLDyUXph0SZzthsDF35I2M/D4+WURMMGKV7TNTFfgbMmaNGBJA=
+	t=1706611044; cv=none; b=T6CoUSP+QcBJTx56XHpiTmzkkucyJER8YoPPprm9C+j+iZ1s2Joo4TFGKkBanhCVCKuer4RDSI0K57hwd02lFeGatjrxMv9hZEh1zqZMsdWs/3YEijdo3JGsP1O+pz53ZMPqBLW9P0c5PX4la03rtAd8I39JJ0/CjtcU9M2s8oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706611037; c=relaxed/simple;
-	bh=o4SIw1MsOZqjCHoG26s43p+YhsuNKyDrb6bLrGJ9cmo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L2fEgsHsI0XPiSZoK91eXchXr75a/1oBaMmX60nlOQecDkSb0nTYI7tKFOYyQfd8JqqKmnWXEc6nFNKOwjlcXBzukt2PJ/1TIHvUMzCZjdoZhCLILu9Xt/NdgCrANaMWGuu9Xw2QqTOMY0sMHn4Zi7rK7tJq1xHfVe79GaoLjH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-603f3946f0eso3025997b3.1;
-        Tue, 30 Jan 2024 02:37:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706611034; x=1707215834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=19lEWnW+fTM5E0eE3+Mc9J8ZaYPIteOuYV4JI4QwkRc=;
-        b=MsIEdaego12Pw8zRpOQz8hcxTD54Bz4Cf9PJ71ygXOQypiyyrVl/K3Jcvv+0msCI89
-         KaHceNyg8mJv1M3jGdQ+aWKgPBpHGN/0JwbQJNiUdWjInFI9uSk5oRm+6xP95TJGkGUF
-         QSL8Ikop8gRh9yvQIPFByd6BvwSJjwXj1uLak989INpF/EF11nzVtJOhNgvP1yZWl3jv
-         G6G/DD3Iia/T4/GwDCpWYFg81bTzqji7nhc/VR7mEecP52zXr2Vhs653BdHQaPAZkb2Z
-         frMMe/DlNhMh8gXMSxKnWykU2oSmFjzMNn2YLuC8eYdHv67bm1cxRr/svYO4CSdroMMv
-         WwOA==
-X-Gm-Message-State: AOJu0YwbtrPupZFl3y2OYlkFLXe+LxYGQs46swYxj4eYv3csXaHk6HDp
-	Qh9jISQBs1//M4CRGqzRAYk6ChZ/NcCXSM2NSj3Ic3k8dXwkxRdfZQW1/5EJMnU=
-X-Google-Smtp-Source: AGHT+IF6/kKek6TdOLehOY/dpiVEKa0eU4Mi84wA2NgnL5glgRM4Ti7GecYkpX3svzY8ZYAvpunMfw==
-X-Received: by 2002:a0d:f4c3:0:b0:5ff:55f6:7537 with SMTP id d186-20020a0df4c3000000b005ff55f67537mr5898108ywf.5.1706611034460;
-        Tue, 30 Jan 2024 02:37:14 -0800 (PST)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id q131-20020a819989000000b00600392410ffsm3148549ywg.73.2024.01.30.02.37.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 02:37:14 -0800 (PST)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5ff7ec8772dso39741307b3.0;
-        Tue, 30 Jan 2024 02:37:14 -0800 (PST)
-X-Received: by 2002:a05:690c:3508:b0:5ed:a4e8:510 with SMTP id
- fq8-20020a05690c350800b005eda4e80510mr7143838ywb.14.1706611033979; Tue, 30
- Jan 2024 02:37:13 -0800 (PST)
+	s=arc-20240116; t=1706611044; c=relaxed/simple;
+	bh=TKTRofUYYrbUThvbqcMKPrRzLs8Got0eDI2UGF040b4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwbs1Jb8xv2aEVYx6r43xROs9nKkR/kc+ZY0ATPInuq07J3alyDbk3MXW1oTR1vZRM7gA4OCZsNLygSNz9fJ3aeADU6/7ijWeH2o1fPCg1X5bhskl3r3nsBtV+KkLm5nzmUfHly1WuXAc+LNIg3jA7xLhWZL+E0B9ZzVAFhSbzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dYTREBys; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dYTREBys"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706611042; x=1738147042;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TKTRofUYYrbUThvbqcMKPrRzLs8Got0eDI2UGF040b4=;
+  b=dYTREBysH8qpUOMNHZEFC8ziUD+64ipnFiPab1/nU5vpOT/fOxNZGjks
+   jkDTxw1EHVkD9djcTlA2D88lFxDlZFtAq41gMFRmht8bgbhqvX0ENLsCF
+   D7j5BmTgJBGhhfHjIGDI1nOT9QI8cuQ7ephSxzk7HgClbuOw7iCk1nTYt
+   QK307zeoYuqpYv9PTjY6K4zxfszeVfk8HRC6FC/1VN7v9AO0qQXJbv6OB
+   UAXzD5pluWr6mMCpfyC73oK4RybKnP+QRtFm4ehlbmRKg3QqKWshLCe+G
+   bck5MUBPlgMzBeoqwvPH3WuvTRmZni/JqU+aG4mzC9E3OIoRJQ8PETHF1
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10624642"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="10624642"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 02:31:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="1119221035"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="1119221035"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 02:30:25 -0800
+Date: Tue, 30 Jan 2024 12:30:23 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] pwm: dwc: Add 16 channel support for Intel
+ Elkhart Lake
+Message-ID: <ZbjPv_-S-6CQsaja@black.fi.intel.com>
+References: <20240122030238.29437-1-raag.jadav@intel.com>
+ <20240122030238.29437-2-raag.jadav@intel.com>
+ <ZbZqZDvdw-_D3hyb@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240129135556.63466-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240129135556.63466-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 11:37:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX9XEPQGxtVVT46H8QskFOAcYYjE3qve21EaBcTCpRAMg@mail.gmail.com>
-Message-ID: <CAMuHMdX9XEPQGxtVVT46H8QskFOAcYYjE3qve21EaBcTCpRAMg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the missing
- port pins P19 to P28
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbZqZDvdw-_D3hyb@smile.fi.intel.com>
 
-On Mon, Jan 29, 2024 at 2:56=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add the missing port pins P19 to P28 for RZ/Five SoC. These additional
-> pins provide expanded capabilities and are exclusive to the RZ/Five SoC.
->
-> Couple of port pins have different configuration and are not identical fo=
-r
-> the complete port so introduce struct rzg2l_variable_pin_cfg to handle
-> such cases and introduce the PIN_CFG_VARIABLE macro. The actual pin confi=
-g
-> is then assigned in rzg2l_pinctrl_get_variable_pin_cfg().
->
-> Add an additional check in rzg2l_gpio_get_gpioint() to only allow GPIO pi=
-ns
-> which support interrupt facility.
->
-> While at define RZG2L_GPIO_PORT_PACK() using RZG2L_GPIO_PORT_SPARSE_PACK(=
-).
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Sun, Jan 28, 2024 at 04:53:24PM +0200, Andy Shevchenko wrote:
+> On Mon, Jan 22, 2024 at 08:32:36AM +0530, Raag Jadav wrote:
+> > Intel Elkhart Lake PSE includes two instances of PWM as a single PCI
+> > function with 8 channels each. Add support for the remaining channels.
+> 
+> ...
+> 
+> > +static int dwc_pwm_init(struct device *dev, const struct dwc_pwm_info *info, void __iomem *base)
+> > +{
+> > +	/* Default values for single instance devices */
+> > +	unsigned int nr = 1, size = 0;
+> > +	int i, ret;
+> > +
+> > +	/* Fill up values from driver_data, if any */
+> > +	if (info) {
+> > +		nr = info->nr;
+> > +		size = info->size;
+> > +	}
+> > +
+> > +	for (i = 0; i < nr; i++) {
+> > +		struct dwc_pwm *dwc;
+> > +
+> > +		dwc = dwc_pwm_alloc(dev);
+> > +		if (!dwc)
+> > +			return -ENOMEM;
+> > +
+> > +		dwc->base = base + (i * size);
+> > +
+> > +		ret = devm_pwmchip_add(dev, &dwc->chip);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> Why not doing this slightly differently?
+> 
+> First option: Always provide driver data (info is never NULL).
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.9.
+Allowing empty driver_data would save us from adding dummy info
+for single instance devices in the future.
 
-Gr{oetje,eeting}s,
+> Second option, have the body of the for-loop be factored to a helper
+> dwc_pwm_init_one() and here
+> 
+> 	if (!info)
+> 		return dwc_pwm_init_one(..., 1, 0);
+> 
+> 	for (i = 0; i < info->nr; i++) {
+> 		ret = dwc_pwm_init_one(...);
+> 		if (ret)
+> 			return ret;
+> 	}
 
-                        Geert
+Considering above, we're looking at something like this.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+static int dwc_pwm_init_one(struct device *dev, void __iomem *base, unsigned int size)
+{
+        struct dwc_pwm *dwc;
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+        dwc = dwc_pwm_alloc(dev);
+        if (!dwc)
+                return -ENOMEM;
+
+        dwc->base = base + size;
+
+        return devm_pwmchip_add(dev, &dwc->chip);
+}
+
+	...
+
+        if (info) {
+                for (i = 0; i < info->nr; i++) {
+                        ret = dwc_pwm_init_one(dev, base, i * info->size);
+                        if (ret)
+                                return ret;
+                }
+        } else {
+                ret = dwc_pwm_init_one(dev, base, 0);
+                if (ret)
+                        return ret;
+        }
+	...
+
+Raag
