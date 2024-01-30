@@ -1,124 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C554967744;
-	Tue, 30 Jan 2024 11:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14AE66B36;
+	Tue, 30 Jan 2024 11:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706612706; cv=none; b=Ybsn7zVgGSQ0EU4ned0wPMGXvI3A7fyMJt26W3JACXXB990FEEebCjrUy0si1l9dukEMz+0kfcoGB1xuNJbXPLi7EGsphfWuQt3zx8mfy3HRa6uu0JIiomshEWb4JsWKZMsLUqRxw4h98NYtDZ1LDRo3H6rcmvvNI7XZgMvHOSQ=
+	t=1706612717; cv=none; b=p78aaRyf9UVwZI0lgp+/VXkE0KKL0m0A0r3G7SJ5wv2hxvN4wVzgLFm1pvBwuCAoGm85ogbUgVzNwx+zdi17aAPBYOCjsQM8RG0BhUazqDx30JwOd5Vi0NBAQqnqseBRwsUBB/QzDNpPuhhWtYtjoKPPJMu2fqoM/l0NjCjbgs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706612706; c=relaxed/simple;
-	bh=FPjSOL02faexuB1BXgC53k3A0QdD2xtS7r/hZoVFvuc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iIkNsLkOa5IUa4dsLHBitktWXRobRDX3LLOd7adTjrKucBQEvZidRVbIQXxRIzblE3jcQO55vQ0klUlZe0H0jF6SJaSxMBWy990hxzyyQUHXUn+y4AVdIX7d93z0PTvbim/uI89yd8+iRA9ME/DtsTxAjmestdlERrI7clSuswM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxOJjVm6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706612717; c=relaxed/simple;
+	bh=YWoRr++LtmqrklpXT4FN730vpyGR9Vt9NvXbQgTv6DA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eaUHTxT+z5/88NuX4JqLnS9yl08Yr8VuekQyRFq+85aO2NMvtKxHR31lchYnBgKCkQlqwoXtlWBVHAAVq8bxx2jdVYKMsuOnKL6Y4sZzizS4Pv6IMIzzxl7WtqkWywJhlRQDCYOkGHD3dH/YsGLimrMLR43tX59W1vpWowuV9mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=EwcKsWm7; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxOJjVm6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BADE6C43390;
-	Tue, 30 Jan 2024 11:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706612706;
-	bh=FPjSOL02faexuB1BXgC53k3A0QdD2xtS7r/hZoVFvuc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=KxOJjVm6NHVWWyv4OU761WsEmvvTaK6AOVZGXGhBf9XEa1cDPvJyCzSF9QIN48pTV
-	 aLj2ji8j9E/eLnA/qq2NSzICbbhzCx+ODRyqZeuDTzL8ccCSqldHmOL/Q15HHJmEPB
-	 3mrR4IrUI9LC9loqptLEpno3boG4XmZgTabp+w5k//pwoSjP1Z0hCW0SrXjsbg1upV
-	 bkDtprS0umWUo2av/zR8GIqlruORVPB/KwALEup+/cdEWpoFinhVOnFLcmmq5q7c4C
-	 6PaMOashVJ4kIUTYzBZgsNoTvhz3YDfKF4dqXSpF1RyxX9dMVYeutQp5m0z7jg4Keu
-	 H6Piw0AEBelAg==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand
- <frowand.list@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, Saravana Kannan <saravanak@google.com>, Marc
- Zyngier <maz@kernel.org>, Anup Patel <anup@brainfault.org>,
- linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Andrew Jones <ajones@ventanamicro.com>
-Subject: Re: [PATCH v12 00/25] Linux RISC-V AIA Support
-In-Reply-To: <CAK9=C2U2mGzTLaXDqyD86bEM4XRc3UmBxRtrd3=+QXXwMK3hjg@mail.gmail.com>
-References: <20240127161753.114685-1-apatel@ventanamicro.com>
- <87r0hzuw87.fsf@all.your.base.are.belong.to.us>
- <87le87uulb.fsf@all.your.base.are.belong.to.us>
- <CAK9=C2U2mGzTLaXDqyD86bEM4XRc3UmBxRtrd3=+QXXwMK3hjg@mail.gmail.com>
-Date: Tue, 30 Jan 2024 12:05:03 +0100
-Message-ID: <87le87w080.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EwcKsWm7"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40U6m6fK015755;
+	Tue, 30 Jan 2024 05:04:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	PODMain02222019; bh=7fkoap6tDn5V09KItRc07wxlB0r/CaVc096KyiaEmTw=; b=
+	EwcKsWm7Xv5RXOP9O+rQrFl4ul+uzXVB0OJTT3xwOV6klHLMs2dGIgCByBaFSHZC
+	TnbzGFdvLP9CKEw2DPjacbeYvpB7fG4KHRZZSfTFtITvqkyOEI/eHViWDi+rf/oZ
+	soEXABvXy1qbsmy5IA0q5DBoynwKcsAwfTAMKXV5erT2BSNs2NlRcTNom9BrtxS5
+	+RelvvnNHudCp6XyH6Fn7Io3/FWtGWeUNEpgB5jNnkMov1rQhHKGIsws3s+8VuTg
+	uIJ+fliAEobFWKx/rzA5gNMhywqZwvDSbUhMIFDj0H/JLieIXXwFeaCVHXCADUnW
+	ICAtk2fZjF8CGglzOLYQmQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vw043u6s6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jan 2024 05:04:56 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 30 Jan
+ 2024 11:04:54 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Tue, 30 Jan 2024 11:04:54 +0000
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 5F753820247;
+	Tue, 30 Jan 2024 11:04:54 +0000 (UTC)
+Message-ID: <a8432725-6dc6-4765-831f-178dcee8b829@opensource.cirrus.com>
+Date: Tue, 30 Jan 2024 11:04:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/18] ASoC: cs35l56: Fix default SDW TX mixer registers
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        <broonie@kernel.org>, <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+References: <20240129162737.497-1-rf@opensource.cirrus.com>
+ <20240129162737.497-9-rf@opensource.cirrus.com>
+ <4f54a12c-c8a3-414c-b4df-3f7b25e6d524@linux.intel.com>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <4f54a12c-c8a3-414c-b4df-3f7b25e6d524@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: oet1IvvhAV8hsmYkbAJ3mUff-NWRGpf-
+X-Proofpoint-GUID: oet1IvvhAV8hsmYkbAJ3mUff-NWRGpf-
+X-Proofpoint-Spam-Reason: safe
 
-Anup Patel <apatel@ventanamicro.com> writes:
-
-> On Tue, Jan 30, 2024 at 1:22=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kern=
-el.org> wrote:
+On 29/01/2024 17:15, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 1/29/24 17:27, Richard Fitzgerald wrote:
+>> Patch the SDW TX mixer registers to silicon defaults.
 >>
->> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+>> CS35L56 is designed for SDCA and a generic SDCA driver would
+>> know nothing about these chip-specific registers. So the
+>> firmware sets up the SDW TX mixer registers to whatever audio
+>> is relevant on a specific system.
 >>
->> > Anup Patel <apatel@ventanamicro.com> writes:
->> >
->> >> The RISC-V AIA specification is ratified as-per the RISC-V internatio=
-nal
->> >> process. The latest ratified AIA specifcation can be found at:
->> >> https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-interr=
-upts-1.0.pdf
->> >>
->> >> At a high-level, the AIA specification adds three things:
->> >> 1) AIA CSRs
->> >>    - Improved local interrupt support
->> >> 2) Incoming Message Signaled Interrupt Controller (IMSIC)
->> >>    - Per-HART MSI controller
->> >>    - Support MSI virtualization
->> >>    - Support IPI along with virtualization
->> >> 3) Advanced Platform-Level Interrupt Controller (APLIC)
->> >>    - Wired interrupt controller
->> >>    - In MSI-mode, converts wired interrupt into MSIs (i.e. MSI genera=
-tor)
->> >>    - In Direct-mode, injects external interrupts directly into HARTs
->> >>
->> >> For an overview of the AIA specification, refer the AIA virtualization
->> >> talk at KVM Forum 2022:
->> >> https://static.sched.com/hosted_files/kvmforum2022/a1/AIA_Virtualizat=
-ion_in_KVM_RISCV_final.pdf
->> >> https://www.youtube.com/watch?v=3Dr071dL8Z0yo
->> >>
->> >> To test this series, use QEMU v7.2 (or higher) and OpenSBI v1.2 (or h=
-igher).
->> >>
->> >> These patches can also be found in the riscv_aia_v12 branch at:
->> >> https://github.com/avpatel/linux.git
->> >>
->> >> Changes since v11:
->> >>  - Rebased on Linux-6.8-rc1
->> >>  - Included kernel/irq related patches from "genirq, irqchip: Convert=
- ARM
->> >>    MSI handling to per device MSI domains" series by Thomas.
->> >>    (PATCH7, PATCH8, PATCH9, PATCH14, PATCH16, PATCH17, PATCH18, PATCH=
-19,
->> >>     PATCH20, PATCH21, PATCH22, PATCH23, and PATCH32 of
->> >>     https://lore.kernel.org/linux-arm-kernel/20221121135653.208611233=
-@linutronix.de/)
->> >>  - Updated APLIC MSI-mode driver to use the new WIRED_TO_MSI mechanis=
-m.
->> >>  - Updated IMSIC driver to support per-device MSI domains for PCI and
->> >>    platform devices.
->> >
->> > Thanks for working on this, Anup! I'm still reviewing the patches.
->> >
->> > I'm hitting a boot hang in text patching, with this series applied on
->> > 6.8-rc2. IPI issues?
->>
->> Not text patching! One cpu spinning in smp_call_function_many_cond() and
->> the others are in cpu_relax(). Smells like IPI...
+>> This means that the driver cannot assume the initial values
+>> of these registers. But Linux has ALSA controls to configure
+>> routing, so the registers can be patched to silicon default and
+>> the ALSA controls used to select what audio to feed back to the
+>> host capture path.
+> 
+> humm, which has the precedence then?
+> a) the values set by firmware
+> b) the default values set by the driver?
+> 
+> Also if the firmware touches those registers shouldn't they be marked as
+> 'volatile'?
 >
-> Can you share the complete bootlog ?
 
-Here: https://gist.github.com/bjoto/04a580568378f3b5483af07cd9d22501
+The firmware was designed to work with Windows, so it looks a bit
+strange if you are coming at it from ALSA. There's not really any
+defined 'precedence'. The firmware will setup the feedback monitor paths
+to something that satisfies SDCA and Windows expectations.
+
+We don't care about that in Linux, the firmware on the Intel DSP
+probably isn't running the same algorithms for Linux, and we have ALSA
+controls to configure those paths. So we patch the mixers back to their
+silicon defaults and take over complete control of them.
+
+The firmware only writes them during its power-up sequence so they
+will only change when we are rebooting the firmware or coming out of
+low-power standby, which is under the control of the driver. When that
+happens regmap will re-apply the patch and then sync up the registers
+again. The firmware won't touch them after boot, so we can avoid having
+to mark them volatile (which would mean implementing our own manual
+caching of the settings).
+
+> 
+>> Backport note:
+>> This won't apply to kernels older than v6.6.
+>>
+>> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+>> Fixes: e49611252900 ("ASoC: cs35l56: Add driver for Cirrus Logic CS35L56")
+>> ---
+>>   sound/soc/codecs/cs35l56-shared.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
+>> index 35789ffc63af..a812abf90836 100644
+>> --- a/sound/soc/codecs/cs35l56-shared.c
+>> +++ b/sound/soc/codecs/cs35l56-shared.c
+>> @@ -12,6 +12,15 @@
+>>   #include "cs35l56.h"
+>>   
+>>   static const struct reg_sequence cs35l56_patch[] = {
+>> +	/*
+>> +	 * Firmware can change these to non-defaults to satisfy SDCA.
+>> +	 * Ensure that they are at known defaults.
+>> +	 */
+>> +	{ CS35L56_SWIRE_DP3_CH1_INPUT,		0x00000018 },
+>> +	{ CS35L56_SWIRE_DP3_CH2_INPUT,		0x00000019 },
+>> +	{ CS35L56_SWIRE_DP3_CH3_INPUT,		0x00000029 },
+>> +	{ CS35L56_SWIRE_DP3_CH4_INPUT,		0x00000028 },
+>> +
+>>   	/* These are not reset by a soft-reset, so patch to defaults. */
+>>   	{ CS35L56_MAIN_RENDER_USER_MUTE,	0x00000000 },
+>>   	{ CS35L56_MAIN_RENDER_USER_VOLUME,	0x00000000 },
 
