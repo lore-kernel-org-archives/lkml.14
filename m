@@ -1,25 +1,25 @@
 Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F47A605BE;
-	Tue, 30 Jan 2024 09:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957C0657BC;
+	Tue, 30 Jan 2024 09:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608048; cv=none; b=K0deZ8W9cJaT6qWXS6BGwYLwNwX85OlPfjPWZilnT8B2CqUVOx02xWgaWZAIXQr5QRFQaSk1Eho0oh7wb2fKyUdoWpl+9N9ELqn8kqC/0/55BzGM7S6sQm/Taa0BfVEDsQVVjmGxFIqYL0q3pNNT9vVuuRRwjIhFS3bf5lPegAk=
+	t=1706608050; cv=none; b=BVL+tmHAq9V1C8EJ4cAetuaJzIpy/3BTzXxtsw38xHux4XY7f8ZfthTuwpNZ8Pe4WseLJwye2M81X9L6+ZEoLyNo3bbJycZ4SGG/GCdQPQur0vhazjGhl787se2OmSlY4zzBMuHz5L+5MEZfHQwMUs3KjU2/55d5HEF+//IFp10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608048; c=relaxed/simple;
-	bh=YRuXpTlWCvDvTGIvkGPSYfFYrkfWJfwNqa9QpXr7Ef8=;
+	s=arc-20240116; t=1706608050; c=relaxed/simple;
+	bh=76vNyh8F4XZ0a480DjHSCr5Iu/Fp4x+9DNu9tsjd75E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bhXwoNv+QG1ezaVJkbtnePDgyxlPUp4Jy7YxdLEcZ3D15fum2JnBky6nVxAce3yJCe1fFikoYYv+ftns2YyO5CV4ftrUOpq8dccDfGSNH9YaI/uiiyxQh/kWKKUGRiytPllDBN+lPAwKESwQSColmiqFrY9FpUmNYKMKGU9TfEE=
+	 MIME-Version:Content-Type; b=Iu8bOWLqWL1OUJ4k8NmH+toBvgPU8qeDhynM0Yln3bmas7NsbMxC4um0kmskmq/LLvint3ljCfnTtN8zUE/wUsb40HDM63CDd+jFansFG3W+hmuRyv7+Vhfi9tuDwd9akPrbZytMuUQH7ZqN77DSZVtObqx6TNOj2uVPVlzUk9g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
 Received: by air.basealt.ru (Postfix, from userid 490)
-	id 59C362F2024B; Tue, 30 Jan 2024 09:47:19 +0000 (UTC)
+	id 889142F2024C; Tue, 30 Jan 2024 09:47:21 +0000 (UTC)
 X-Spam-Level: 
 Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
-	by air.basealt.ru (Postfix) with ESMTPSA id 7B81C2F2022A;
-	Tue, 30 Jan 2024 09:47:15 +0000 (UTC)
+	by air.basealt.ru (Postfix) with ESMTPSA id BF8882F20242;
+	Tue, 30 Jan 2024 09:47:14 +0000 (UTC)
 From: kovalev@altlinux.org
 To: stable@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc: linux-kernel@vger.kernel.org,
 	broonie@kernel.org,
 	lgirdwood@gmail.com,
 	kovalev@altlinux.org
-Subject: [PATCH 6.1.y 7/7] ASoC: codecs: ES8326: Update jact detection function
-Date: Tue, 30 Jan 2024 12:47:08 +0300
-Message-Id: <20240130094708.290485-8-kovalev@altlinux.org>
+Subject: [PATCH 6.1.y 1/7] ASoC: codecs: es8326: Convert to i2c's .probe_new()
+Date: Tue, 30 Jan 2024 12:47:02 +0300
+Message-Id: <20240130094708.290485-2-kovalev@altlinux.org>
 X-Mailer: git-send-email 2.33.8
 In-Reply-To: <20240130094708.290485-1-kovalev@altlinux.org>
 References: <20240130094708.290485-1-kovalev@altlinux.org>
@@ -45,208 +45,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Zhu Ning <zhuning0077@gmail.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Commit 04f96c9340463aae20d2511a3d6cb0b005b07d24 upstream.
+Commit 784252bac835c831e10c48be633cd1ff0d697326 upstream.
 
-The old jack detection function only supports fixed OMTP/CTIA
-hardware connection. The new one supports auto OMTP/CTIA
-headset detection
+The probe function doesn't make use of the i2c_device_id * parameter so it
+can be trivially converted.
 
-Signed-off-by: Zhu Ning <zhuning0077@gmail.com>
-Link: https://lore.kernel.org/r/20230717033223.42506-5-zhuning0077@gmail.com
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Link: https://lore.kernel.org/r/20221118224540.619276-602-uwe@kleine-koenig.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
 ---
- sound/soc/codecs/es8326.c | 109 +++++++++++++++++++++++++++++++-------
- 1 file changed, 89 insertions(+), 20 deletions(-)
+ sound/soc/codecs/es8326.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/sound/soc/codecs/es8326.c b/sound/soc/codecs/es8326.c
-index 50b13296e246e1..74c03d151005d3 100644
+index 555125efd9ad3f..28a0565c2a955b 100644
 --- a/sound/soc/codecs/es8326.c
 +++ b/sound/soc/codecs/es8326.c
-@@ -41,6 +41,8 @@ struct es8326_priv {
- 
- 	bool calibrated;
- 	int version;
-+	int hp;
-+	int jack_remove_retry;
+@@ -816,8 +816,7 @@ static const struct snd_soc_component_driver soc_component_dev_es8326 = {
+ 	.endianness		= 1,
  };
  
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(dac_vol_tlv, -9550, 50, 0);
-@@ -535,6 +537,7 @@ static void es8326_jack_button_handler(struct work_struct *work)
- 		cur_button = SND_JACK_BTN_0;
- 		break;
- 	case 0x6f:
-+	case 0x4b:
- 		/* button volume up */
- 		cur_button = SND_JACK_BTN_1;
- 		break;
-@@ -543,6 +546,7 @@ static void es8326_jack_button_handler(struct work_struct *work)
- 		cur_button = SND_JACK_BTN_2;
- 		break;
- 	case 0x1e:
-+	case 0xe2:
- 		/* button released or not pressed */
- 		cur_button = 0;
- 		break;
-@@ -552,20 +556,20 @@ static void es8326_jack_button_handler(struct work_struct *work)
- 
- 	if ((prev_button == cur_button) && (cur_button != 0)) {
- 		press_count++;
--		if (press_count > 10) {
--			/* report a press every 500ms */
-+		if (press_count > 3) {
-+			/* report a press every 120ms */
- 			snd_soc_jack_report(es8326->jack, cur_button,
- 					SND_JACK_BTN_0 | SND_JACK_BTN_1 | SND_JACK_BTN_2);
- 			press_count = 0;
- 		}
- 		button_to_report = cur_button;
- 		queue_delayed_work(system_wq, &es8326->button_press_work,
--				   msecs_to_jiffies(50));
-+				   msecs_to_jiffies(35));
- 	} else if (prev_button != cur_button) {
- 		/* mismatch, detect again */
- 		prev_button = cur_button;
- 		queue_delayed_work(system_wq, &es8326->button_press_work,
--				   msecs_to_jiffies(50));
-+				   msecs_to_jiffies(35));
- 	} else {
- 		/* released or no pressed */
- 		if (button_to_report != 0) {
-@@ -589,32 +593,96 @@ static void es8326_jack_detect_handler(struct work_struct *work)
- 	mutex_lock(&es8326->lock);
- 	iface = snd_soc_component_read(comp, ES8326_HPDET_STA);
- 	dev_dbg(comp->dev, "gpio flag %#04x", iface);
-+
-+	if (es8326->jack_remove_retry == 1) {
-+		if (iface & ES8326_HPINSERT_FLAG)
-+			es8326->jack_remove_retry = 2;
-+		else
-+			es8326->jack_remove_retry = 0;
-+
-+		dev_dbg(comp->dev, "remove event check, set HPJACK_POL normal, cnt = %d\n",
-+				es8326->jack_remove_retry);
-+		/*
-+		 * Inverted HPJACK_POL bit to trigger one IRQ to double check HP Removal event
-+		 */
-+		regmap_update_bits(es8326->regmap, ES8326_HPDET_TYPE,
-+					ES8326_HP_DET_JACK_POL, (es8326->jd_inverted ?
-+					~es8326->jack_pol : es8326->jack_pol));
-+		goto exit;
-+	}
-+
- 	if ((iface & ES8326_HPINSERT_FLAG) == 0) {
- 		/* Jack unplugged or spurious IRQ */
--		dev_dbg(comp->dev, "No headset detected");
-+		dev_dbg(comp->dev, "No headset detected\n");
-+		es8326_disable_micbias(es8326->component);
- 		if (es8326->jack->status & SND_JACK_HEADPHONE) {
-+			dev_dbg(comp->dev, "Report hp remove event\n");
- 			snd_soc_jack_report(es8326->jack, 0, SND_JACK_HEADSET);
--			snd_soc_component_write(comp, ES8326_ADC1_SRC, es8326->mic2_src);
--			es8326_disable_micbias(comp);
-+			/* mute adc when mic path switch */
-+			regmap_write(es8326->regmap, ES8326_ADC_SCALE, 0x33);
-+			regmap_write(es8326->regmap, ES8326_ADC1_SRC, 0x44);
-+			regmap_write(es8326->regmap, ES8326_ADC2_SRC, 0x66);
-+			es8326->hp = 0;
-+		}
-+		regmap_update_bits(es8326->regmap, ES8326_HPDET_TYPE, 0x03, 0x01);
-+		/*
-+		 * Inverted HPJACK_POL bit to trigger one IRQ to double check HP Removal event
-+		 */
-+		if (es8326->jack_remove_retry == 0) {
-+			es8326->jack_remove_retry = 1;
-+			dev_dbg(comp->dev, "remove event check, invert HPJACK_POL, cnt = %d\n",
-+					es8326->jack_remove_retry);
-+			regmap_update_bits(es8326->regmap, ES8326_HPDET_TYPE,
-+					ES8326_HP_DET_JACK_POL, (es8326->jd_inverted ?
-+					es8326->jack_pol : ~es8326->jack_pol));
-+
-+		} else {
-+			es8326->jack_remove_retry = 0;
- 		}
- 	} else if ((iface & ES8326_HPINSERT_FLAG) == ES8326_HPINSERT_FLAG) {
-+		es8326->jack_remove_retry = 0;
-+		if (es8326->hp == 0) {
-+			dev_dbg(comp->dev, "First insert, start OMTP/CTIA type check\n");
-+			/*
-+			 * set auto-check mode, then restart jack_detect_work after 100ms.
-+			 * Don't report jack status.
-+			 */
-+			regmap_update_bits(es8326->regmap, ES8326_HPDET_TYPE, 0x03, 0x01);
-+			usleep_range(50000, 70000);
-+			regmap_update_bits(es8326->regmap, ES8326_HPDET_TYPE, 0x03, 0x00);
-+			queue_delayed_work(system_wq, &es8326->jack_detect_work,
-+					msecs_to_jiffies(100));
-+			es8326->hp = 1;
-+			goto exit;
-+		}
- 		if (es8326->jack->status & SND_JACK_HEADSET) {
- 			/* detect button */
-+			dev_dbg(comp->dev, "button pressed\n");
- 			queue_delayed_work(system_wq, &es8326->button_press_work, 10);
-+			goto exit;
-+		}
-+		if ((iface & ES8326_HPBUTTON_FLAG) == 0x01) {
-+			dev_dbg(comp->dev, "Headphone detected\n");
-+			snd_soc_jack_report(es8326->jack,
-+					SND_JACK_HEADPHONE, SND_JACK_HEADSET);
- 		} else {
--			if ((iface & ES8326_HPBUTTON_FLAG) == 0x00) {
--				dev_dbg(comp->dev, "Headset detected");
--				snd_soc_jack_report(es8326->jack,
--						    SND_JACK_HEADSET, SND_JACK_HEADSET);
--				snd_soc_component_write(comp,
--							ES8326_ADC1_SRC, es8326->mic1_src);
--			} else {
--				dev_dbg(comp->dev, "Headphone detected");
--				snd_soc_jack_report(es8326->jack,
--						    SND_JACK_HEADPHONE, SND_JACK_HEADSET);
--			}
-+			dev_dbg(comp->dev, "Headset detected\n");
-+			snd_soc_jack_report(es8326->jack,
-+					SND_JACK_HEADSET, SND_JACK_HEADSET);
-+
-+			regmap_write(es8326->regmap, ES8326_ADC_SCALE, 0x33);
-+			regmap_update_bits(es8326->regmap, ES8326_PGA_PDN,
-+					0x08, 0x08);
-+			regmap_update_bits(es8326->regmap, ES8326_PGAGAIN,
-+					0x80, 0x80);
-+			regmap_write(es8326->regmap, ES8326_ADC1_SRC, 0x00);
-+			regmap_write(es8326->regmap, ES8326_ADC2_SRC, 0x00);
-+			regmap_update_bits(es8326->regmap, ES8326_PGA_PDN,
-+					0x08, 0x00);
-+			usleep_range(10000, 15000);
- 		}
- 	}
-+exit:
- 	mutex_unlock(&es8326->lock);
- }
- 
-@@ -633,7 +701,7 @@ static irqreturn_t es8326_irq(int irq, void *dev_id)
- 				   msecs_to_jiffies(10));
- 	else
- 		queue_delayed_work(system_wq, &es8326->jack_detect_work,
--				   msecs_to_jiffies(300));
-+				   msecs_to_jiffies(600));
- 
- out:
- 	return IRQ_HANDLED;
-@@ -763,7 +831,8 @@ static int es8326_resume(struct snd_soc_component *component)
- 			(ES8326_HP_DET_SRC_PIN9 | es8326->jack_pol) :
- 			(ES8326_HP_DET_SRC_PIN9 | es8326->jack_pol | 0x04)));
- 
--	es8326_irq(es8326->irq, es8326);
-+	es8326->jack_remove_retry = 0;
-+	es8326->hp = 0;
- 	return 0;
- }
- 
+-static int es8326_i2c_probe(struct i2c_client *i2c,
+-			    const struct i2c_device_id *id)
++static int es8326_i2c_probe(struct i2c_client *i2c)
+ {
+ 	struct es8326_priv *es8326;
+ 	int ret;
+@@ -897,7 +896,7 @@ static struct i2c_driver es8326_i2c_driver = {
+ 		.acpi_match_table = ACPI_PTR(es8326_acpi_match),
+ 		.of_match_table = of_match_ptr(es8326_of_match),
+ 	},
+-	.probe = es8326_i2c_probe,
++	.probe_new = es8326_i2c_probe,
+ 	.id_table = es8326_i2c_id,
+ };
+ module_i2c_driver(es8326_i2c_driver);
 -- 
 2.33.8
 
