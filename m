@@ -1,95 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE30E5821A
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B09A57891;
+	Tue, 30 Jan 2024 09:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606791; cv=none; b=N+wWe0BiHzcOHTfPs071yvW6qjwIcFgEXUbGgqwkm6m37LVvV1TPWBe1T7WZJccTQzLFq6sVC2+vkaWY9CBgM2zcw7LGjDTw/nIe3h1CiHsq8/fHS2arzZ6JXwZUn7kZ5ZoKVztrXQC6d/k2hQ4jQfZY7P4SI7Upn/lt+GMeLZU=
+	t=1706606876; cv=none; b=oZgReyCPQcdqKQcxR9pSS37YgQh1hQqIf9nghKeX50WgeINV6rjos60RHojcoKHDpHrT1sVGrwR1YfhpqBKkGfoVAMZZUm8F84LtfdlHVWtp3y6scW+2A0QW4Gnba2ROgzdHyKgqDjnV5y9SeAKjWh7Qxb/eUFmggReKNmokGuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606791; c=relaxed/simple;
-	bh=+Wa+UewSUjQ+evNuV3fl9xdlJrL1UOY62kc5bL0+Gbs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UZVYnBAn+XfeXmchGHLPjTCEN11WB2XRRT5qC8yfv6IkidYwrVt3rfNUWxW+TEULRXdc/DEDrgb0CUVmNPVk+dSpHRWHC+glp3xilg2PHqYSYrPwX/7UHvM0d87P9pT89U6q/9vEbN31q2zNYsklJNcByhUgqcuVTkE1x5uawms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZ+r2qHD; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZ+r2qHD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706606789; x=1738142789;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=+Wa+UewSUjQ+evNuV3fl9xdlJrL1UOY62kc5bL0+Gbs=;
-  b=TZ+r2qHDzBT5lHdt4lZ5b2Un0+MmnwDz074BzN81/2sNGAdPzovtnVhf
-   VKmaRNumxbFQI4v0q7k7nHaVqxL/8TQOozqFucHsOq2TT84bm4U583FXO
-   1Smo8PRQwftdNFmsdmRS2oV2idUH0xrplwIhfWgGkn+svKRA49+zD91YG
-   wbUhhDuAaXQuEjCf2NaU/3nB2UyySyhihZrfYmGL6i1JoBXfBG3++rT9G
-   gCsMQbaLt+c8ptZGOIY/acCMqFYFL2DbkPl+fXEtkoMhDG5oF/xD1CKr+
-   rZEfikIuXfRavacx6gACss84n0qP9uJ4CB+9WD+PkFcbfs4KHBL9vLXx3
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16604727"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="16604727"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:26:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3612205"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 30 Jan 2024 01:26:28 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rUkNG-00009o-2a;
-	Tue, 30 Jan 2024 09:25:47 +0000
-Date: Tue, 30 Jan 2024 17:18:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>
-Subject: arch/riscv/kernel/paravirt.c:44:1: sparse: sparse: symbol
- '__pcpu_scope_steal_time' was not declared. Should it be static?
-Message-ID: <202401301733.XLBqnyLY-lkp@intel.com>
+	s=arc-20240116; t=1706606876; c=relaxed/simple;
+	bh=cQyNKX5SJGiHTCO+KmEdO+MwVWTOKOVYyLhPuY+O8bk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PerSJ6mUZkwDjqEZSmkDGRIqBex0nPo8JtpkGN085RstRIwHvv0VHkanuMwWjrh9Y2D4E6WDrWih9Eey9MNS8OKmxohH+i36JxOEikT9JhCLIPQN1qrUgYSZCVBtt3o/T5hc+ppBcnybpoZuOoYlUvIZerJXqr+yZT97qae+NDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.112.150])
+	by gateway (Coremail) with SMTP id _____8CxrusYwbhlN0oIAA--.25346S3;
+	Tue, 30 Jan 2024 17:27:52 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.112.150])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLs8WwbhlWL8nAA--.23412S3;
+	Tue, 30 Jan 2024 17:27:51 +0800 (CST)
+Message-ID: <e45bd402-0c39-4075-a730-1dd5f4fc2208@loongson.cn>
+Date: Tue, 30 Jan 2024 17:27:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/doc: Update EM API em_pd_energy to em_cpu_energy
+To: Chenggang Wang <wangchenggang@vivo.com>, Jonathan Corbet
+ <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+ Pierre Gondois <Pierre.Gondois@arm.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <TY0PR06MB5470E30E86989E8CD84FCE0DC47D2@TY0PR06MB5470.apcprd06.prod.outlook.com>
+ <1706585531-24072-1-git-send-email-wangchenggang@vivo.com>
+Content-Language: en-US
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <1706585531-24072-1-git-send-email-wangchenggang@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxLs8WwbhlWL8nAA--.23412S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGFyfWF4DuFW3ZF4UtF1xXrc_yoW5Xr1xpF
+	ykKr4xtF1fAFn8KryxAw1UXrWrXw4fCayUGFs8t3saqrs5ArW0yw13t343Grs7ZrySyFZr
+	XryYg3s2yw12vwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjxU7PrcDUUUU
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   861c0981648f5b64c86fd028ee622096eb7af05a
-commit: fdf68acccfc6af9497c34ee411d89af13b6516ed RISC-V: paravirt: Implement steal-time support
-date:   4 weeks ago
-config: riscv-randconfig-r133-20240130 (https://download.01.org/0day-ci/archive/20240130/202401301733.XLBqnyLY-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 4a39d08908942b2d415db405844cbe4af73e75d4)
-reproduce: (https://download.01.org/0day-ci/archive/20240130/202401301733.XLBqnyLY-lkp@intel.com/reproduce)
+Hi Chenggang,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401301733.XLBqnyLY-lkp@intel.com/
+在 2024/1/30 11:32, Chenggang Wang 写道:
+> The em_pd_energy function name is obsolete and non-existent now.
+> ---
 
-sparse warnings: (new ones prefixed by >>)
->> arch/riscv/kernel/paravirt.c:44:1: sparse: sparse: symbol '__pcpu_scope_steal_time' was not declared. Should it be static?
-   arch/riscv/kernel/paravirt.c:106:19: sparse: sparse: cast to restricted __le32
-   arch/riscv/kernel/paravirt.c:107:30: sparse: sparse: restricted __le32 degrades to integer
-   arch/riscv/kernel/paravirt.c:102:26: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] sequence @@     got restricted __le32 @@
-   arch/riscv/kernel/paravirt.c:102:26: sparse:     expected unsigned int [usertype] sequence
-   arch/riscv/kernel/paravirt.c:102:26: sparse:     got restricted __le32
-   arch/riscv/kernel/paravirt.c:104:23: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long [usertype] steal @@     got restricted __le64 @@
-   arch/riscv/kernel/paravirt.c:104:23: sparse:     expected unsigned long long [usertype] steal
-   arch/riscv/kernel/paravirt.c:104:23: sparse:     got restricted __le64
-   arch/riscv/kernel/paravirt.c:109:16: sparse: sparse: cast to restricted __le64
+It is not a complete patch, at least it is missing a Signed of by; Then, 
+could you please explain
 
-vim +/__pcpu_scope_steal_time +44 arch/riscv/kernel/paravirt.c
+the reason for sending again in a short period of time? Perhaps this 
+email should be used as
 
-    43	
-  > 44	DEFINE_PER_CPU(struct sbi_sta_struct, steal_time) __aligned(64);
-    45	
+patch v2. see .../Documentation/translations/zh_CN/process/5.Posting.rst
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+You can also execute this command:
+
+  $:./scripts/checkpatch.pl
+
+Then silence all warnings and errors.
+
+
+Thanks,
+
+Yanteng
+
+>   Documentation/scheduler/sched-energy.rst                    | 2 +-
+>   Documentation/translations/zh_CN/scheduler/sched-energy.rst | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/scheduler/sched-energy.rst b/Documentation/scheduler/sched-energy.rst
+> index 70e2921..84b37a2 100644
+> --- a/Documentation/scheduler/sched-energy.rst
+> +++ b/Documentation/scheduler/sched-energy.rst
+> @@ -141,7 +141,7 @@ in its previous activation.
+>   find_energy_efficient_cpu() uses compute_energy() to estimate what will be the
+>   energy consumed by the system if the waking task was migrated. compute_energy()
+>   looks at the current utilization landscape of the CPUs and adjusts it to
+> -'simulate' the task migration. The EM framework provides the em_pd_energy() API
+> +'simulate' the task migration. The EM framework provides the em_cpu_energy() API
+>   which computes the expected energy consumption of each performance domain for
+>   the given utilization landscape.
+>   
+> diff --git a/Documentation/translations/zh_CN/scheduler/sched-energy.rst b/Documentation/translations/zh_CN/scheduler/sched-energy.rst
+> index fdbf6cf..03dedc6 100644
+> --- a/Documentation/translations/zh_CN/scheduler/sched-energy.rst
+> +++ b/Documentation/translations/zh_CN/scheduler/sched-energy.rst
+> @@ -119,7 +119,7 @@ EAS覆盖了CFS的任务唤醒平衡代码。在唤醒平衡时，它使用平
+>   
+>   如果唤醒的任务被迁移，find_energy_efficient_cpu()使用compute_energy()来估算
+>   系统将消耗多少能量。compute_energy()检查各CPU当前的利用率情况，并尝试调整来
+> -“模拟”任务迁移。EM框架提供了API em_pd_energy()计算每个性能域在给定的利用率条件
+> +“模拟”任务迁移。EM框架提供了API em_cpu_energy()计算每个性能域在给定的利用率条件
+>   下的预期能量消耗。
+>   
+>   下面详细介绍一个优化能量消耗的任务放置决策的例子。
+
