@@ -1,277 +1,282 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2711E4A1
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706634182; cv=fail; b=CnSfSvufre1uQsfBO9G3G21N2AKqhQinyPs74hoBvTFsunTG0M5W9y/aer7BHKKeoPdszwLwvdOA9h5Xn4uyzSFP3g4ncbsUnOAw175rsUyaGQOZ02Ls7yb5Z3kTHBxsFiNL+nXb3E0oJkDrCIseYWN/wEiykoxb2LcX1RgI9rw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706634182; c=relaxed/simple;
-	bh=iREplQB/HhrYgMGxotLM6uackOC4MIlbFQSDJWY5pgU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=T9TxKtxtln6FLt6Pc23lDh7zFb+1WNv6r3L4mWDxSdr/4uER2gyM9NmkfX6SSRrOdC1oAIFsWKfMSjD6uIJeRmzgfau6Vjt5CD6RT1MoNf6eJcmBiSsxEmu+giRdLpmiQDHfg5YkZ93K7YEjmzRCFYpUrX4567WntA0XbbKHL7M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IZF5XkyG; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IZF5XkyG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706634180; x=1738170180;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=iREplQB/HhrYgMGxotLM6uackOC4MIlbFQSDJWY5pgU=;
-  b=IZF5XkyGjXCx5ly0lXYp9ZxquPbVnAi2/v8nw44jGZ2gpoWEzZS4wXhy
-   F0hzgim/MPZFaJ9Uwkp7dDj50dlyYxyHgDNHeRt55ByDmQ6/w/MQ6TZv6
-   /pV8fc7QMhH97zpxPwX9tntYCsZSUgGtlhhdK913XCfOmPrr8HA8uCu4S
-   aKRFYTxINojzUt6k65JecwlWfUXtSFL6by59UNhocGvafctsQgXW6sUaj
-   CEwNmuyvqGHnR9zeuwjWyq6wsrvMdDpN22rvjOCH7RLqioMfUwlRCXNFg
-   LLe9Wj6MGAD+jDGH+Zl5UrxnhcfKn6Z9livS3tMM5/6YQV3BUcf38mrSy
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10008086"
-X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
-   d="scan'208";a="10008086"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 09:03:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
-   d="scan'208";a="3749227"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Jan 2024 09:02:59 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 30 Jan 2024 09:02:58 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 30 Jan 2024 09:02:41 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 30 Jan 2024 09:02:41 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 30 Jan 2024 09:02:20 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PyEtUchbEexlDGjn6pT1zYRee6jxRcNDT38fNBuNJC7PuS4eEzsrMdh6bZe+v7q2Z5/9h33pqToIyACVTfp4exfbN/Vsucr8n+fvAHOWPPSZIZHsGSLKypZXztCVBz6cCVFJgNkHoKzWQ4/aM+6Tvqrog6ucTKmSSj/1Z9kHIkkBjm5YVnvQnZ4xHdG63aIw17FqADegbvRuOr7ziLDKuFYnQVXNl6EJcBKT179GYa4pS+72qMmKbl7magvoURJ7V1uTsMHoe7uqTH7kzLuMuk999/0ykAfl9f7URjQf2yEG2y+xpj07knL2rOofUz/Z6I8KP5pmS0ZSJuaoXRmY3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EkKa51I36igVoHNhHTCR6d5k4D7SY+R9C4TqUXkBgow=;
- b=RlepMaBmWzWdHYfZhcSJfJmpaatzekR74Zk7mZZWtEfjvqkfdZ5/rXduzwE+d6gHmc9JPvhWLUfxaiFVJWdXmd/aIxhRoS+PD3YQT8PJ64IUNUUvzGUBvZ+IyT523ap6iGojTpk8MUypl+IQ0X56pLb3lAORaISxUVYvnrhBpuVHStphC5BoTSIG3TGzQafTuGojOvbAcLwUAJnVOLkk9gFJItVcO1GtDKZ6S1+jAEvLelQ2u+25cIURk3l+YIf1BC0lmonOz7QCp04ogvEYSi/d0IPUZar+sr0PdJi4Icf67vNqRsbBSIKt7xHruXvPAvawb7UT1l+xGTm1mop3Nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB6843.namprd11.prod.outlook.com (2603:10b6:930:60::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
- 2024 17:02:12 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
- 17:02:11 +0000
-Date: Tue, 30 Jan 2024 09:02:09 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>
-CC: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, "Peter
- Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH v2] cleanup: Add cond_guard() to conditional guards
-Message-ID: <65b92b91a41a8_5cc6f29484@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240130164059.25130-1-fabio.maria.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240130164059.25130-1-fabio.maria.de.francesco@linux.intel.com>
-X-ClientProxiedBy: MW4PR04CA0223.namprd04.prod.outlook.com
- (2603:10b6:303:87::18) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925E6128368
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706634264; cv=none; b=n7mj9VRUOtlj/TBkCZKwd4/X6dkaNituOnFyNyyMI0iCzB25Us2mWEFUq2iqFsHn6d+nSK/BRjJ3zJuJJMVAxIsU9nGXn0LINNMpWS2ARYI8seJOE+VUxYIoF/D6wIJFXlZBUwBWETeGYr0g9uf80d6dW23L2zny1/FvRUkg74E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706634264; c=relaxed/simple;
+	bh=3pfv8DrhOc+NO9nZeVRJo0p/HPKZ2UWJ4tqbn5dy87Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Mjz+Oo+3kpn3wvU2/WRnrh99NrK8UyN+AIuPyWBzGwBgLH0SNGU9ooky5Swal/8oizMEeVDm4ArGlDDPF/6Ab61GgMWtpBB/0cVX4Eyv8283MUuurtnlVk50M8F5oEvTI5BukewZBWqajxwpA7MQbxyD4aDt3M5hYfp/h7mhvhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3629478945bso23151345ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:04:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706634261; x=1707239061;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3S9Lo3TYEsIsWYicLYwDhSuraYYj/Ce9WNX//uUIpTQ=;
+        b=RaLqeTCXEP2BjnbEITOedJLS7MHYN2+lWx4hIuljJSbpgVxLLkxwroKMd0H6JAE2Ks
+         KV974IeUlfST+hPBTVKxqNTw1+czvX62nx/vQBIT9yM2FTzzxmevGZHyyqRNfpSmpH2U
+         hjrkmzVZp2BMTDNXnqiep7Q50Bv+LunKYcIKfQwWfpjRUMICrKbMFrur7U4XsSK1Rh3D
+         h+6Rg14ISe1oY+Ww3RnWEN40pD9MswmEHk2npRvplNJVVQH762R9XKUXgzo2awjIocgn
+         ESUI7ZSF039Edx2aAP52IgRdE1YYZ/XIJKbsBsjj+SZPRJHmplsjfq1t4LVtotCVF/fs
+         rCdA==
+X-Gm-Message-State: AOJu0Yy3gHuPcK9Vw8uez4hk0FNb/cTV2Rpii3wnEzCj7w9JV0YGPOa7
+	liuQlpz6XQ/D0YOAJfBd93KeyDWgbe0wy0u0rqwg63uZDi6UtWNaoD+ULT1/HU2TVHaS0rQHlK+
+	hqmSVHuXWWXUlB+8Opc5wuEtyJjy1FzrqY33u9CqxLZNjYXd91RtPHV0=
+X-Google-Smtp-Source: AGHT+IFs63ZYxaOvC+Vqhsn0I50xYzxrUJhfinQOcbTiRAFPX86m43ozptEjyNHJ8oM5EZnZIaL9lDQT/SSwLpgR7mE1x7qkflfW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB6843:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95902eda-fa3d-4353-5498-08dc21b5337f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SfHyiW+/8DCOuokSKFzS+YbxWPdHMst5a/0LG0C1bTYyBGRXOxn3LDScHZEdQN926XmJRBbvkx+JYRIGKBOBVkuMPWGaOhu6R+tEXv4y4GgGHTi1FdS9NfrqBSFnnFGA0NZQGDHYUhk2CGPXbp+eA/n9XRVNclTCnvYQDHiFbl7VsvUjIGDNBmgk7wna/gOP4prGeOqxO4PZOgUYQa9IjRgDaOmddgy4s+9To8j17v/ZRfpOwYWI7ZtjkTXnr/wgte9EDPEBkZgkMctGzPGI5kun9BAfuQWKHr9T9aNCbJ2b35t2IWvspnih5ac1r4uN5lb9A/6roubBWrFcd6onYX12q63cjTTAj0rKD7rm7EVBXRzhkexUPQY/kCZhn5gOHend62EGIiMYvaaqpTmthhori6uphdrkjKBVlDI9Sh5O6zJpxjkIlW0wV/d3G/gEbn+mDcInZfOjor5leb+DovcgXXXg8lhrvfN0g5qK7Ta8SW2Is6cSBqJwnF2tXeg7awEgMPgLgeUqMGuLe0BieXQFRZPwZ7E5e5x9wp/iv0NtvKJJlKXaMxy4X40zNT7y
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(366004)(346002)(39860400002)(396003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(83380400001)(82960400001)(86362001)(8676002)(38100700002)(66556008)(6512007)(9686003)(26005)(6486002)(8936002)(41300700001)(478600001)(5660300002)(66476007)(316002)(66946007)(2906002)(54906003)(4326008)(6506007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7AV5/DXOawTg9STkFBuntRVG3/eQdJx9eZRmSAe89BYCyzknGerqjkDDS6k2?=
- =?us-ascii?Q?mpDnzAKNM7XWO8Zt9tpEDPBpi/gOrXnHlXIDz5TeRlKdf5+82oUuMLUr9ynu?=
- =?us-ascii?Q?8CwG+O3Yh+J5FTIipasLiYOXX7pdsy+U8Jdkn6HmlPV+v1Cdq+OMuWSHoo4d?=
- =?us-ascii?Q?Glfol6R1IP21zEfV7nKr9SvHU0MWmdZEEHuUuAwxZltrWvEC+ohKs7RcTfC1?=
- =?us-ascii?Q?DENZuVyoid3p+IT+ugWOsVtH1IHtv+Y0jZgYHuGGZGBjxCE+JDzPqSPFlKi5?=
- =?us-ascii?Q?4EAad4BYjs/70f6hLLjrRH2JPRUILYrsLijWhLjsSrXFogS2oMv+f67J60vM?=
- =?us-ascii?Q?4rgX0aHLhMyAJobD1aIK8QI/3uGC48m+0CQYOQNoZ5Kt0npGuSgjAOy72iRn?=
- =?us-ascii?Q?zVlVAWp7YNkLim6KrrcYSddESjigQEe1/mHCEYBVOS5r4oYR9syHcD8xqLY2?=
- =?us-ascii?Q?kHqgHQBXLxl+FFv1CJHHBl3TqEYVxZfd4zi+TfD9gq+T8kEMB6nXs2VNpqKY?=
- =?us-ascii?Q?rrOJFRX6dhExNI3XDdjSNjaECFiP2+ej2f9u0OdZHjCjp0sjqpBWdEdojSFZ?=
- =?us-ascii?Q?OjTROwQ3TvIQ8/b8IbFdpG4W614rKKWxu4lhdN+5dNOeCpXAz+L2iVIry+sa?=
- =?us-ascii?Q?UCsgQnQEiGIqBOZK3A6HzBjlPK/3R8Qk5+jnmcqSHFxZJltK40LWG2FQU+2m?=
- =?us-ascii?Q?MoL68rvke314LeY5I8Us5TwVmzK8G8XnDiueRGdVUgyyBH4+tw7cXd74yxcY?=
- =?us-ascii?Q?QAgrCKSDwzItAirCsVROe1HGCBvKm0fhBqjDOUK4y2if68LSl0w3/pT8XNat?=
- =?us-ascii?Q?3LM8OFDZ4hVZFazypE59qF8zt9Uke04cC79XygLOTqcybFyygeUz7MxzGYQk?=
- =?us-ascii?Q?mvgS6nqSS7y+6DSmdV3LMdPwPQ0at41M2KI6vOKbj94gf0WYT3kj8YBlZxTU?=
- =?us-ascii?Q?lx8ccEPWfjv66hyvg47AqcZ8TPspAGj91YHd4hxJNBNZToXv6yrcjrkg+Hdi?=
- =?us-ascii?Q?TWSVAWlh07Kx7ZW+VhVEbRxtWA4Usdk2LDFYqpaFZ7p+PmecnkWfTduSQTPB?=
- =?us-ascii?Q?9gLUO79K9ZNpkFdXuPqWmqeZ4/BM+Sb0LrDPtyaBv5ClTlRfUPY1a4pVtQ1C?=
- =?us-ascii?Q?tXeLy394bzGGuHVm4nkgUT+Cmd98smKeS2LEpG7jgcQad5PVhdTA4Nx0ZrN7?=
- =?us-ascii?Q?Y2B92kjfC8g46RuuWjknz6mKrm9n5EkXjcn11Ov/uMdM/WWeW8bKI3qFtOcL?=
- =?us-ascii?Q?xSJi3cOJzSsgfvYWEc2C3R1fyMrfgMZveWJAxbpV0PsW53iQZzhFXcHmr/Pm?=
- =?us-ascii?Q?j9hgdu2vwHW7oiN5upHCeJfNwZ5IvdUPPwf548F+49VF1zjoxjjBcoE9//6a?=
- =?us-ascii?Q?2/1R0dmh4jNtNDKZQCuBKttAlVmJlI5N4aB8koA08hvK64g9hqSNYmSX+Bb2?=
- =?us-ascii?Q?OffiNKPOtlnrF/laJ9N+CGq4rQlPpEkuPMIScFF5+AydZ9HzukzjStkvJReM?=
- =?us-ascii?Q?75IGn+wCDdSkbirsbWXKJC4JE7IuiVhaZGeWCamP5kCIdIXSq9W1VmIWe7jr?=
- =?us-ascii?Q?Es0LR9mq3h8RpjLESyPDxvXrbQ6LGarWNig8P3LZAs1pMvf6tFBuEPSPRKbc?=
- =?us-ascii?Q?cQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95902eda-fa3d-4353-5498-08dc21b5337f
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 17:02:11.7819
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fccRNHyVz/QOVRgDcoqam5G0onVpQNX1gTSbWTqBekiNcLta5/vZr6fBkFDjGjMO6qCyxlx1xTFUEFAHxuV/vF5c/EgE3NrElpB+jq0C2+A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6843
-X-OriginatorOrg: intel.com
+X-Received: by 2002:a05:6e02:3207:b0:35f:d260:57b3 with SMTP id
+ cd7-20020a056e02320700b0035fd26057b3mr894935ilb.3.1706634261720; Tue, 30 Jan
+ 2024 09:04:21 -0800 (PST)
+Date: Tue, 30 Jan 2024 09:04:21 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ee76c406102cc0bf@google.com>
+Subject: [syzbot] [pvrusb2?] KASAN: slab-use-after-free Read in
+ pvr2_context_set_notify (2)
+From: syzbot <syzbot+ce750e124675d4599449@syzkaller.appspotmail.com>
+To: isely@pobox.com, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-usb@vger.kernel.org, mchehab@kernel.org, pvrusb2@isely.net, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Fabio M. De Francesco wrote:
-> Add cond_guard() to conditional guards.
-> 
-> cond_guard() is used for the _interruptible(), _killable(), and _try
-> versions of locks. It expects a block where the failure can be handled
-> (e.g., calling printk() and returning -EINTR in case of failure).
-> 
-> As the other guards, it avoids to open code the release of the lock
-> after a goto to an 'out' label.
-> 
-> This remains an RFC because Dan suggested a slightly different syntax:
-> 
-> 	if (cond_guard(...))
-> 		return -EINTR;
-> 
-> But the scoped_cond_guard() macro omits the if statement:
-> 
->     	scoped_cond_guard (...) {
->     	}
-> 
-> Thus define cond_guard() similarly to scoped_cond_guard() but with a block
-> to handle the failure case:
-> 
-> 	cond_guard(...)
-> 		return -EINTR;
+Hello,
 
-That's too subtle for me, because of the mistakes that can be made with
-brackets how about a syntax like:
+syzbot found the following issue on:
 
- 	cond_guard(..., return -EINTR, ...)
+HEAD commit:    f1a27f081c1f usb: typec: qcom-pmic-typec: allow different ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=159f19fde80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=70204d1d16341bf4
+dashboard link: https://syzkaller.appspot.com/bug?extid=ce750e124675d4599449
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-...to make it clear what happens if the lock acquisition fails without
-having to remember there is a hidden incomplete "if ()" statement in
-that macro? More below...
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Suggested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.maria.de.francesco@linux.intel.com>
-> ---
->  drivers/cxl/core/region.c | 17 +++++------------
->  include/linux/cleanup.h   | 13 +++++++++++++
->  2 files changed, 18 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 0f05692bfec3..20d405f01df5 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -666,28 +666,21 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_endpoint_decoder *cxled;
-> -	int rc;
->  
-> -	rc = down_read_interruptible(&cxl_region_rwsem);
-> -	if (rc)
-> -		return rc;
-> +	cond_guard(rwsem_read_intr, &cxl_region_rwsem)
-> +		return -EINTR;
->  
->  	if (pos >= p->interleave_ways) {
->  		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
->  			p->interleave_ways);
-> -		rc = -ENXIO;
-> -		goto out;
-> +		return -ENXIO;
->  	}
->  
->  	cxled = p->targets[pos];
->  	if (!cxled)
-> -		rc = sysfs_emit(buf, "\n");
-> +		return sysfs_emit(buf, "\n");
->  	else
-> -		rc = sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
-> -out:
-> -	up_read(&cxl_region_rwsem);
-> -
-> -	return rc;
-> +		return sysfs_emit(buf, "%s\n", dev_name(&cxled->cxld.dev));
->  }
->  
->  static int match_free_decoder(struct device *dev, void *data)
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index c2d09bc4f976..fc850e61a47e 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> @@ -134,6 +134,15 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
->   *	an anonymous instance of the (guard) class, not recommended for
->   *	conditional locks.
->   *
-> + * cond_guard(_name, args...):
-> + * 	for conditional locks like mutex_trylock() or down_read_interruptible().
-> + * 	It expects a block for handling errors like in the following example:
-> + *
-> + * 	cond_guard(rwsem_read_intr, &my_sem) {
-> + * 		printk(KERN_NOTICE "Try failure in work0()\n");
-> + * 		return -EINTR;
-> + * 	}
-> + *
->   * scoped_guard (name, args...) { }:
->   *	similar to CLASS(name, scope)(args), except the variable (with the
->   *	explicit name 'scope') is declard in a for-loop such that its scope is
-> @@ -165,6 +174,10 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
->  
->  #define __guard_ptr(_name) class_##_name##_lock_ptr
->  
-> +#define cond_guard(_name, args...) \
-> +	CLASS(_name, scope)(args); \
-> +	if (!__guard_ptr(_name)(&scope))
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5c37a861daee/disk-f1a27f08.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/09f1af46fd09/vmlinux-f1a27f08.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/82eb085e0be1/bzImage-f1a27f08.xz
 
-This needs to protect against being used within another if () block.
-Imagine a case of:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ce750e124675d4599449@syzkaller.appspotmail.com
 
-    if (...) {
-    	cond_guard(...);
-	    <statement>
-    } else if (...)
+pvrusb2: Device being rendered inoperable
+==================================================================
+BUG: KASAN: slab-use-after-free in pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+Read of size 4 at addr ffff888111b8fed8 by task kworker/0:6/8544
 
-...does that "else if" belong to the first "if ()" or the hidden one
-inside the macro?
+CPU: 0 PID: 8544 Comm: kworker/0:6 Not tainted 6.8.0-rc1-syzkaller-00046-gf1a27f081c1f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc4/0x620 mm/kasan/report.c:488
+ kasan_report+0xda/0x110 mm/kasan/report.c:601
+ pvr2_context_set_notify+0x2c4/0x310 drivers/media/usb/pvrusb2/pvrusb2-context.c:35
+ pvr2_context_notify drivers/media/usb/pvrusb2/pvrusb2-context.c:95 [inline]
+ pvr2_context_disconnect+0x94/0xb0 drivers/media/usb/pvrusb2/pvrusb2-context.c:272
+ pvr_disconnect+0x80/0xf0 drivers/media/usb/pvrusb2/pvrusb2-main.c:79
+ usb_unbind_interface+0x1e5/0x960 drivers/usb/core/driver.c:461
+ device_remove drivers/base/dd.c:569 [inline]
+ device_remove+0x11f/0x170 drivers/base/dd.c:561
+ __device_release_driver drivers/base/dd.c:1272 [inline]
+ device_release_driver_internal+0x44a/0x610 drivers/base/dd.c:1295
+ bus_remove_device+0x22c/0x420 drivers/base/bus.c:574
+ device_del+0x39a/0xa50 drivers/base/core.c:3814
+ usb_disable_device+0x36c/0x7f0 drivers/usb/core/message.c:1416
+ usb_disconnect+0x2e1/0x910 drivers/usb/core/hub.c:2286
+ hub_port_connect drivers/usb/core/hub.c:5334 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5634 [inline]
+ port_event drivers/usb/core/hub.c:5794 [inline]
+ hub_event+0x1be0/0x4f40 drivers/usb/core/hub.c:5876
+ process_one_work+0x884/0x15c0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+ kthread+0x33c/0x440 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+ </TASK>
 
-You can steal the embedded "if ()" trick from scoped_cond_guard() and do
-something like (untested):
+Allocated by task 8544:
+ kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:372 [inline]
+ __kasan_kmalloc+0x87/0x90 mm/kasan/common.c:389
+ kmalloc include/linux/slab.h:590 [inline]
+ kzalloc include/linux/slab.h:711 [inline]
+ pvr2_context_create+0x53/0x2a0 drivers/media/usb/pvrusb2/pvrusb2-context.c:207
+ pvr_probe+0x25/0xe0 drivers/media/usb/pvrusb2/pvrusb2-main.c:54
+ usb_probe_interface+0x307/0x9c0 drivers/usb/core/driver.c:399
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x234/0xc90 drivers/base/dd.c:658
+ __driver_probe_device+0x1de/0x4b0 drivers/base/dd.c:800
+ driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:830
+ __device_attach_driver+0x1d4/0x300 drivers/base/dd.c:958
+ bus_for_each_drv+0x157/0x1d0 drivers/base/bus.c:457
+ __device_attach+0x1e8/0x4b0 drivers/base/dd.c:1030
+ bus_probe_device+0x17c/0x1c0 drivers/base/bus.c:532
+ device_add+0x117e/0x1aa0 drivers/base/core.c:3625
+ usb_set_configuration+0x10cb/0x1c40 drivers/usb/core/message.c:2207
+ usb_generic_driver_probe+0xad/0x110 drivers/usb/core/generic.c:254
+ usb_probe_device+0xec/0x3e0 drivers/usb/core/driver.c:294
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x234/0xc90 drivers/base/dd.c:658
+ __driver_probe_device+0x1de/0x4b0 drivers/base/dd.c:800
+ driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:830
+ __device_attach_driver+0x1d4/0x300 drivers/base/dd.c:958
+ bus_for_each_drv+0x157/0x1d0 drivers/base/bus.c:457
+ __device_attach+0x1e8/0x4b0 drivers/base/dd.c:1030
+ bus_probe_device+0x17c/0x1c0 drivers/base/bus.c:532
+ device_add+0x117e/0x1aa0 drivers/base/core.c:3625
+ usb_new_device+0xd80/0x19f0 drivers/usb/core/hub.c:2625
+ hub_port_connect drivers/usb/core/hub.c:5494 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5634 [inline]
+ port_event drivers/usb/core/hub.c:5794 [inline]
+ hub_event+0x2e62/0x4f40 drivers/usb/core/hub.c:5876
+ process_one_work+0x884/0x15c0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+ kthread+0x33c/0x440 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
 
-#define cond_guard(_name, _fail, args...) \
-	CLASS(_name, scope)(args); \
-	if (!__guard_ptr(_name)(&scope)) _fail; else /* pass */;
+Freed by task 897:
+ kasan_save_stack+0x33/0x50 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3f/0x60 mm/kasan/generic.c:640
+ poison_slab_object mm/kasan/common.c:241 [inline]
+ __kasan_slab_free+0x106/0x1b0 mm/kasan/common.c:257
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2121 [inline]
+ slab_free mm/slub.c:4299 [inline]
+ kfree+0x105/0x330 mm/slub.c:4409
+ pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:137 [inline]
+ pvr2_context_thread_func+0x69d/0x960 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
+ kthread+0x33c/0x440 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+
+The buggy address belongs to the object at ffff888111b8fe00
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 216 bytes inside of
+ freed 256-byte region [ffff888111b8fe00, ffff888111b8ff00)
+
+The buggy address belongs to the physical page:
+page:ffffea000446e380 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x111b8e
+head:ffffea000446e380 order:1 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+anon flags: 0x200000000000840(slab|head|node=0|zone=2)
+page_type: 0xffffffff()
+raw: 0200000000000840 ffff888100041b40 ffffea0004698e80 dead000000000003
+raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 1, migratetype Unmovable, gfp_mask 0x1d20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC|__GFP_HARDWALL), pid 6208, tgid 6208 (dhcpcd-run-hook), ts 253184444708, free_ts 252376724208
+ set_page_owner include/linux/page_owner.h:31 [inline]
+ post_alloc_hook+0x2cf/0x340 mm/page_alloc.c:1533
+ prep_new_page mm/page_alloc.c:1540 [inline]
+ get_page_from_freelist+0x139a/0x3460 mm/page_alloc.c:3311
+ __alloc_pages+0x1d0/0x4a0 mm/page_alloc.c:4567
+ __alloc_pages_node include/linux/gfp.h:238 [inline]
+ alloc_pages_node include/linux/gfp.h:261 [inline]
+ alloc_slab_page mm/slub.c:2190 [inline]
+ allocate_slab+0xa3/0x360 mm/slub.c:2354
+ new_slab mm/slub.c:2407 [inline]
+ ___slab_alloc+0x4d2/0x1950 mm/slub.c:3540
+ __slab_alloc.constprop.0+0x56/0xa0 mm/slub.c:3625
+ __slab_alloc_node mm/slub.c:3678 [inline]
+ slab_alloc_node mm/slub.c:3850 [inline]
+ __do_kmalloc_node mm/slub.c:3980 [inline]
+ __kmalloc_node+0x177/0x4b0 mm/slub.c:3988
+ kmalloc_array_node include/linux/slab.h:688 [inline]
+ kcalloc_node include/linux/slab.h:693 [inline]
+ memcg_alloc_slab_cgroups+0xa9/0x170 mm/memcontrol.c:2988
+ account_slab mm/slub.c:2317 [inline]
+ allocate_slab+0x2b5/0x360 mm/slub.c:2372
+ new_slab mm/slub.c:2407 [inline]
+ ___slab_alloc+0x4d2/0x1950 mm/slub.c:3540
+ __slab_alloc.constprop.0+0x56/0xa0 mm/slub.c:3625
+ __slab_alloc_node mm/slub.c:3678 [inline]
+ slab_alloc_node mm/slub.c:3850 [inline]
+ kmem_cache_alloc+0x326/0x370 mm/slub.c:3867
+ anon_vma_chain_alloc mm/rmap.c:142 [inline]
+ anon_vma_fork+0x1fc/0x610 mm/rmap.c:365
+ dup_mmap kernel/fork.c:712 [inline]
+ dup_mm kernel/fork.c:1685 [inline]
+ copy_mm kernel/fork.c:1734 [inline]
+ copy_process+0x9306/0x9920 kernel/fork.c:2496
+ kernel_clone+0xfc/0x850 kernel/fork.c:2901
+ __do_sys_clone+0xba/0x100 kernel/fork.c:3044
+page last free pid 4799 tgid 4799 stack trace:
+ reset_page_owner include/linux/page_owner.h:24 [inline]
+ free_pages_prepare mm/page_alloc.c:1140 [inline]
+ free_unref_page_prepare+0x503/0xae0 mm/page_alloc.c:2346
+ free_unref_page+0x33/0x2c0 mm/page_alloc.c:2486
+ __put_partials+0x149/0x160 mm/slub.c:2922
+ qlink_free mm/kasan/quarantine.c:160 [inline]
+ qlist_free_all+0x58/0x150 mm/kasan/quarantine.c:176
+ kasan_quarantine_reduce+0x18e/0x1d0 mm/kasan/quarantine.c:283
+ __kasan_slab_alloc+0x4a/0x70 mm/kasan/common.c:324
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3813 [inline]
+ slab_alloc_node mm/slub.c:3860 [inline]
+ kmalloc_trace+0x13a/0x390 mm/slub.c:4007
+ kmalloc include/linux/slab.h:590 [inline]
+ usb_control_msg+0xbd/0x4a0 drivers/usb/core/message.c:144
+ get_bMaxPacketSize0+0xc3/0x280 drivers/usb/core/hub.c:4779
+ hub_port_init+0x6a8/0x3a50 drivers/usb/core/hub.c:4975
+ hub_port_connect drivers/usb/core/hub.c:5423 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5634 [inline]
+ port_event drivers/usb/core/hub.c:5794 [inline]
+ hub_event+0x2c20/0x4f40 drivers/usb/core/hub.c:5876
+ process_one_work+0x884/0x15c0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+ kthread+0x33c/0x440 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+
+Memory state around the buggy address:
+ ffff888111b8fd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888111b8fe00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888111b8fe80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                    ^
+ ffff888111b8ff00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888111b8ff80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
