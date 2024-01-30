@@ -1,265 +1,230 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2040.outbound.protection.outlook.com [40.107.20.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD051364CA;
-	Tue, 30 Jan 2024 02:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706581704; cv=fail; b=CeBiVfOZo0eASmyIx7PqDmtVs31lBwrPZLSoDNAPba0K/cfSoc2vG44pwvotJgwBY6hOhutIFP1Jn+gDCqyCy4XRSQ7OSpa42dQ07cvckQLvC0ZJYP8o4hA4bT4RuByq81Hial5JsOs84HaYn/XJoOstTczT11Dj36rcCq5lRiY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706581704; c=relaxed/simple;
-	bh=RmjSv8tplKUyNkC/J+01CRjpdBI5t7GZ5rFbFUUBD2o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Bh6BaGZAv6PZWVkdenvhaQ7hCRuY42jTVTcA+PKsB6uq1xswRAl/4jD5MgnAZPhk43jHEo09saoRGZUw9PyGLJXPu9MheOYwQMTjz41JMv8RRQQRBVgSws3c2PklJcKh/0WPr2S41i9En/CwPJ3u25QrL8aVf1qzckQ/Y57zdLo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=mZVhOkF2; arc=fail smtp.client-ip=40.107.20.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D834634545
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706581830; cv=none; b=Af9V0wpUnJe2LKF440OJx7GjLopVixrS3Wk2Y7+0ngrc/TxrkX3YoERyFztXTmDxUX/VUV0/3JvPieCq+45tImZ70JkV7OWWWSJ1igcgiccaFRwDcyK6zxbC/IBFiHV8FvereERDYpMsQZ83lfRBhmhMPzi2XpTuFDEPvcjyjHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706581830; c=relaxed/simple;
+	bh=1tK65aq00w5a7+LD2l+YbH1nPbkudjM7sj+WjCAda40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NfKeQKgqEjKjACHmxGyBWT5RlSdgYAQSsZuXH0mftPPgl1VHesc1YLt+ZNJ4Gc5xXqVQ/v7hglSvSEHazv6prTcFoQlBGb6qYXSAF58jAAcgrJAWky9T7UsHQ8lT79oufuqdk+dCH87yTfpIGAaQ3GWV3SYvKho9cvA9oezMsgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=apwh97E/; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mZVhOkF2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k37ytzpm34Qwfu4WJ9RRFpthbt+iV0NhG6yU5Id8Xb383aBj8Y02mN/F5ysVsUeJfKLiWYmL+knGPSG5gI8eJeUSXUeQ1Ku+fqcYlaa0YbZr3MenCH+FegNUjl9epaAPkvJcRQpJBoJJ4xhHwF5PrZJBtTFVs9YqhdYlUEWIne3LrNUVXWS5XXJUPeikKAvmFehvOlxfWT79jACasXaHe807Z5hUGD8NoXapXbomwiDjVONt+BzJlM64nJUVCyrQ82WKRRgmKisPPmCHZW8ZwLGawFYlZMsss+lq8x4WCzaJ1rTeERW8BnkYu/8SUPwZZ8pwL9HuXLGFmshuO3EJOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RmjSv8tplKUyNkC/J+01CRjpdBI5t7GZ5rFbFUUBD2o=;
- b=hLaEfS/MeobSj6E/GEpiob7BbIOJE3ACrWBDmKuKUx+kiRCmzxOJDD89Khxm6dkFusnMtNRthcBLaHsYlIABLSDFjKLn4QzsSULEG6qDbQNNLdsmlZa/8SXG+5LcLM0GULYTKWFzZGh8m1hnD+co7mOcpgvW812Dgg0SnrGTeZPvD9xNwg2unI9/L4CW29nbZg+swqhgeTtoBLCddiWnVD2EbssjXwalfRypXxJRmGaiDH0mf29/gUphv5pif0Dzf1w4GET1bsMb/2e40yBy6oz+A2xvPOM5YGfFSmoFvC+GMpbV8ITP+v1B0AKfQxDkc8sT1KgKVn+G58rqh0sWAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RmjSv8tplKUyNkC/J+01CRjpdBI5t7GZ5rFbFUUBD2o=;
- b=mZVhOkF2IHZyygMVC2ejHaFUPm6lL1yQ5ovznw2QQZuXxZJptYK0YzaUoH2tY50eTWTxsLaWozUkU7hw9ao5mCW4Vv/KjMV4XTJJo6q5wIbqJZyFMwAYWZzF1P8QN5LBjPZg+4X3RQxycidxzJPkVF/IcEjIW3V2oj4zJkfEfYo=
-Received: from PAXPR04MB9448.eurprd04.prod.outlook.com (2603:10a6:102:2b1::21)
- by PAXPR04MB9490.eurprd04.prod.outlook.com (2603:10a6:102:2c2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Tue, 30 Jan
- 2024 02:28:18 +0000
-Received: from PAXPR04MB9448.eurprd04.prod.outlook.com
- ([fe80::b24c:5d0d:bb15:3e9]) by PAXPR04MB9448.eurprd04.prod.outlook.com
- ([fe80::b24c:5d0d:bb15:3e9%5]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
- 02:28:18 +0000
-From: Sandor Yu <sandor.yu@nxp.com>
-To: Adam Ford <aford173@gmail.com>
-CC: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Jacky Bai
-	<ping.bai@nxp.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
-	<festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Lucas Stach <l.stach@pengutronix.de>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>
-Subject: RE: [EXT] Re: [PATCH 2/3] pmdomain: imx8mp-blk-ctrl: imx8mp_blk: Add
- fdcc clock to hdmimix domain
-Thread-Topic: [EXT] Re: [PATCH 2/3] pmdomain: imx8mp-blk-ctrl: imx8mp_blk: Add
- fdcc clock to hdmimix domain
-Thread-Index: AQHaUU1zpB2x2NMooUO62wmFXPCChLDv9e3AgAEgMoCAAI0vAA==
-Date: Tue, 30 Jan 2024 02:28:18 +0000
-Message-ID:
- <PAXPR04MB9448EB972FBC59EE9E1482BEF47D2@PAXPR04MB9448.eurprd04.prod.outlook.com>
-References: <20240106223951.387067-1-aford173@gmail.com>
- <20240106223951.387067-2-aford173@gmail.com>
- <CAHCN7x+=etco+xEELdf5AyR07sR6c9tTFtsA3K5Dy99qhAZQMg@mail.gmail.com>
- <DB9PR04MB9452DB580ACF844505F7AA2CF47E2@DB9PR04MB9452.eurprd04.prod.outlook.com>
- <CAHCN7xLwSyGsyo5XigJroB8RftJNXeRDb8o+a-VRSFGSs5NW8A@mail.gmail.com>
-In-Reply-To:
- <CAHCN7xLwSyGsyo5XigJroB8RftJNXeRDb8o+a-VRSFGSs5NW8A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB9448:EE_|PAXPR04MB9490:EE_
-x-ms-office365-filtering-correlation-id: 34583fb5-b3b4-4b55-baf7-08dc213b1ecf
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- gPYugI9Z+t2uftOh0doSNwBe9kKJR5cGl0yuGf5S04WjXLG/0vNwXrlc8Oph2jLtNqPwv4LPGg4/5osq0+JmZIYxbjc8SWJuFxe0QZ/sJ8wedGQQGzWwX6dO2xlyGYWFyD3GLDFzu3WU5D9cVGrsrLQBWxU0KWFARiKWkIDAfbOeHtGFNVsG9H1xijEY8L1/VPGafiRdX7DiSHwvXuDkBOgpL4sWVMXp1Yi+URsEQ4+AXWx7hFu6APy1GUXIYYuKPq2rQv5o/Cj3/jwp+PIgVrAYQiUPeyNj3cIRHA/sofWQiYYhGooTvrrFNdvwx3LTH+cJouUi1bcwcyYrDAeFx4VrPF023b6idJ3QaXqVDosuQeUdVHi/o+jiJKtbYUhwZdERghkJazWSlJo4Xma9v5AlCPYIUJ8eKD5JfaVdbulwQve+16Xswa0FJ9Ln1NJBninxYqQBWFcw5OUf14+EZ6twIJl4Yp/OwKvx+LoU6h/hEjDMf35JxoihuelPGajixz0siIh2SVd9zB47feByvAG3l/M5g1SwbRWYw+Fy5083u9TMaOnDyrB15v4WP0kqQxTB0v5J4I1c3BJTEsL9tK1qpy6SRkBAcuRBf1z3isykqRUZYt43czGGHdjxBPGCANsCukA07L1QGUF3oRWqcDsAX/dcJgxBKGO3i+Tz9TTSLD13yG6wlaBfKNGFZ6iL
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9448.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(366004)(376002)(396003)(39860400002)(230922051799003)(230273577357003)(230173577357003)(186009)(64100799003)(451199024)(1800799012)(55016003)(53546011)(26005)(83380400001)(6506007)(7696005)(33656002)(86362001)(38070700009)(7416002)(8676002)(41300700001)(44832011)(5660300002)(4326008)(8936002)(9686003)(66946007)(38100700002)(122000001)(66476007)(2906002)(76116006)(6916009)(66556008)(71200400001)(66446008)(54906003)(64756008)(478600001)(52536014)(316002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?RnpOUXoveFBpT3FLelNUSEdKTzZZRWNPd2w3T2p5ZFIzTTBRS09VaG1lT3Zw?=
- =?utf-8?B?czM5SmFQeS9NL2lwbHk2dHNhRmU3L2t0TmZEczdmYUR2YVZWcWM4Wnpvem9s?=
- =?utf-8?B?ZEs2NENQNEN2SXMwbmhGNmxZWW5YYnQwTXRVZGRZRzltNGpKMDZxbGJ5WmIw?=
- =?utf-8?B?UGREWjFreWxZd1pyeDZ4OXNDdi9MTTRYRGt5UVNNdWFtUlJOZTVHZVZxcFZk?=
- =?utf-8?B?Z3VsYjRPV2orMUJzc2Z5N3gxbkl4MmZzY241R2FwTTVXMjhTS0NHYlU2OFBi?=
- =?utf-8?B?R3hiK2lPREd0UENTbVc2TW5lMTFIdlFCMmM5WVdlTmhCMTVjYXAwWEJPRURx?=
- =?utf-8?B?QUpWNHZCZlZ0dUpvRVdQT2ZKMnVab0NzZjlnc2RTY3Q3WFNqQ0VLbDdobWpm?=
- =?utf-8?B?TDZQL3NSRG12WFlLMXI5K3lmc0JOdjJNdzVHYVJwbjZNa2cvNnczV05FQmJ5?=
- =?utf-8?B?RmJ2K3dyb2RoSk5FdHBNNzd6THhTNzNjQWovdlMwK1NGUnVPTVZlcVowSVFZ?=
- =?utf-8?B?SEFHd05NeTF1Mm9xTWFlODJDUnBVc04wT08yVU1ibXR4eHozTWF1c2NWSlhI?=
- =?utf-8?B?Y2UxUzRWcXZTTVBabVQrL3ZMYnFKeVU1N1ZGTFQ4VmswTnBRUWhVQWJlcVRK?=
- =?utf-8?B?ZklyUC9iT0Q5blVlNThod2Z4VUsrOGs3c3VYSVF5VC95bkJ3ZVZhK2VpRis2?=
- =?utf-8?B?Q2xtRmwxazhud0g4Q0gvekluaWhMb2QwSU5WQWJxQUVyamNDc3RJOGpEdnYy?=
- =?utf-8?B?OEM5L3BBTTJZcXJ4WlN5dnh1MGx6d3d0cFFJenF0K3dMNThYRW9yQ0xSYnhq?=
- =?utf-8?B?SXNheURmbHAzNTVFOHFta2VESWRIaTRiMUJ5RjkwTHdlZTBzSkRjWXkyUnRN?=
- =?utf-8?B?WUNGUXBKcUh3RDF3T3RvQ0ZVY2dnZFllNWF1YnpZbFlwbTlqSlorZ3ltUElB?=
- =?utf-8?B?QktVMjhmcjdIeEVMZDhjV2ZJSTE2ZmJOaGdCZ29hTy9hSjBDOHFtam9pWlpV?=
- =?utf-8?B?eVc2NTNTNXJ3Tk1abmdaS05xQ09GTlZZMEE1TTFQcWJzSkJFK3V3b3lHZEto?=
- =?utf-8?B?am54KzNyS002aGJpOGVpUWI2Qkx3Z2pzNW1QaVlmVHVoVzh4K2l0enlnbEhW?=
- =?utf-8?B?RTFabVNpU3NsWlF0QUhYcGdqdGtUQ2RHelduellheHpyQkRJV0JIUlkrMUto?=
- =?utf-8?B?YVFwYy9JWVVvQkZiWkU5TEVSdEtDY2JzKzdxVlJQNFFzR25PRHQvWUpta1BX?=
- =?utf-8?B?VkZpK0dBU0lobU9zOXNja1k0UlJia3NVMnVsWW5QOHNJL3NEc3o3b0k3d0Ft?=
- =?utf-8?B?Y2VGYUxQWTYrWW1sQ2k3bVc0bEdFdDRhOCtNa1FIVVhucDQvOFJqZnlkRmdY?=
- =?utf-8?B?QVJEYW1NaUNTKzdKV0IzOEYvbCs1a1JTTk5Zby9Gci9rUWwzU2RJaGhIV2Zo?=
- =?utf-8?B?NzlhdXNaakYrMitzU0xPZU5PT0VnR3V1eUg2cWdIRS9ZMHJtYXhCWFZJZWZ6?=
- =?utf-8?B?RDVFTGZ1enFlaDNOS3NSQU5ObFpSZTVDQTdYL05YUTNVZ1RDN09YMkV6cG9x?=
- =?utf-8?B?VFNoY20rc2JrSk9XeXN1RkN6TEt6aGtGK2FVZlFiUS8zQzdubVhZZHcxVHAr?=
- =?utf-8?B?ai9nRXBiQkNqbmRmdDhFbTJ2YlRUbU9mQ1ozZmlBUlFILzEwd1h0UnMwbVVj?=
- =?utf-8?B?TGlpdE5uUzhKZWttNHhERkxEbFpzVmpteHhibGluNnlzQUpLR09RTEo1aFNY?=
- =?utf-8?B?OUZVRXdtVDhBV1A4NUF2dTE3R1VrSGlmVVlnT0VaSlduTjFSTjlUQWo0RzIw?=
- =?utf-8?B?d0Y2U2d5eTlxMlo4SG92VFFYdHd2NHZQSjZMQ3BKVEtxSzlRbW1OcGduaE1P?=
- =?utf-8?B?TUtHUWZveGxiZGdaN2JSc1FzQ0tTQWRqRHVQM0Z0WFJrQ3hXNFZLTUFMVFlq?=
- =?utf-8?B?VDBQRTlGZ1Z0V0ZKZXpKVVRSRDNieUw0V0tja05qTFNRamRHOGJCRHhxNW1C?=
- =?utf-8?B?QWZ5TDhjYjNqNi9kejhYc2R4Mllob1p5MDdQUTN5NFRPa3ZmUG1LYnpJTk1J?=
- =?utf-8?B?b2lBWmo0SnJ0aUtPRXdITGJrRGxKc3RmcHVLZDBvM2NDUHhTWWJuQWE1RllB?=
- =?utf-8?Q?kmTo=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="apwh97E/"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3bbc649c275so1306575b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:30:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1706581827; x=1707186627; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8iMbOMhcDQigHMHzkBs9cWL7KAKUIeL4mt5OHwh9D/M=;
+        b=apwh97E/5RY68f3Gz4gnWHURSt+2PolBOSzxo7Usdr1ymaKsxzTKdHhVi1/spkRHe3
+         LDS02K0sXX09HlTmQg0V6SOMb03Ta6sMrwvp6OFlcya7TOtDf1DMETBA8QNEg67Fv+Ie
+         TY4QQzVKKoWkIFScUyw04pL1oIJcQ19CAwhQi2By5YTMUydCg9mobI3oSAKFaoAOfF9Y
+         qofS8T93zFL+mxwkRMSKNrx5AZVjBT8G89wryYrSDFNWl+OHNr1YVttLDcagL2L5Jmeu
+         t7lkT3aAo6wDfStcX4SD3naJoKZct1zSdUFy6iy3HBAiUY13eMTAH3fi3knjvllaH0lf
+         kxHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706581827; x=1707186627;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8iMbOMhcDQigHMHzkBs9cWL7KAKUIeL4mt5OHwh9D/M=;
+        b=I+zrfMW90g6C7Iz/ATKqoMoX6dnzuyMxtxBGN9xamHfVxvNrbBtDjhWfA+r3oEJEKs
+         scxn1UA5ESVlUacNA64lSjdJ2N95L65X4F4T95Xt/l+WJP3+5fXzWQT4q27A3eb0m7+G
+         +lrFsTjqnzpKghx18H2BsxNQ0baK1odYFdVYJZIkl216e1PLmWZ4dvfjNFejs3qwMibF
+         2TjEjMSFtnKsjOynKu8lP7xti9Gim4s3R+JKBgRTFaHcAbCqhBoYNbMoTBoB8v1lY7Aw
+         ifZRw5b6jNl5sWcjwfl+3fLERFd3IkysgOHmWX8/8bF6OwBdcslvRVXcWGdOKjZYkccm
+         aiXg==
+X-Gm-Message-State: AOJu0YzoO/kBhHLXS7KI1oT25mrR6bK6l8wRfWvXbEMfkXK9lH22J/Wu
+	tIe4PHL/9+BDFnNBfE9w+UrpMScTn38sAn1Ce2sdQzCdfCFRCDU8elEp6/agPu0=
+X-Google-Smtp-Source: AGHT+IEvSdbiqmuh7AWgwFm2qdhPatu2kGGze+C55YwdpehzzqNdsBcjfaMKO33rjkjSvRL9wgNtFQ==
+X-Received: by 2002:a05:6808:3009:b0:3bd:c26a:f803 with SMTP id ay9-20020a056808300900b003bdc26af803mr4394813oib.14.1706581826570;
+        Mon, 29 Jan 2024 18:30:26 -0800 (PST)
+Received: from [10.4.207.234] ([139.177.225.234])
+        by smtp.gmail.com with ESMTPSA id n28-20020a635c5c000000b005cfba3c84b7sm6054282pgm.81.2024.01.29.18.30.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 18:30:26 -0800 (PST)
+Message-ID: <527bd543-97a5-4262-be73-6a5d21c2f896@bytedance.com>
+Date: Tue, 30 Jan 2024 10:30:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9448.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34583fb5-b3b4-4b55-baf7-08dc213b1ecf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2024 02:28:18.3451
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yRPdd0B/sJcySqGmMBJLJ+vswwf+7ATfGv62RnYlyMsjk6feMXy0mqIzF+AHydHO2vzFunZXDAKx3hitOwTIIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9490
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] mm/zswap: fix race between lru writeback and
+ swapoff
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Chris Li <chriscli@google.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20240126-zswap-writeback-race-v2-0-b10479847099@bytedance.com>
+ <20240126-zswap-writeback-race-v2-2-b10479847099@bytedance.com>
+ <ZbhBNkayw1hNlkpL@google.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <ZbhBNkayw1hNlkpL@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWRhbSBGb3JkIDxhZm9y
-ZDE3M0BnbWFpbC5jb20+DQo+IFNlbnQ6IDIwMjTlubQx5pyIMzDml6UgMTo1Ng0KPiBUbzogU2Fu
-ZG9yIFl1IDxzYW5kb3IueXVAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBtQHZnZXIua2VybmVsLm9y
-ZzsgSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRA
-a2VybmVsLm9yZz47IEtyenlzenRvZiBLb3psb3dza2kNCj4gPGtyenlzenRvZi5rb3psb3dza2kr
-ZHRAbGluYXJvLm9yZz47IENvbm9yIERvb2xleSA8Y29ub3IrZHRAa2VybmVsLm9yZz47DQo+IFNo
-YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlcg0KPiA8cy5oYXVlckBw
-ZW5ndXRyb25peC5kZT47IFBlbmd1dHJvbml4IEtlcm5lbCBUZWFtDQo+IDxrZXJuZWxAcGVuZ3V0
-cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+Ow0KPiBkbC1saW51
-eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgVWxmIEhhbnNzb24gPHVsZi5oYW5zc29uQGxpbmFy
-by5vcmc+Ow0KPiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT47IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IE1hcmVrDQo+IFZhc3V0IDxtYXJleEBk
-ZW54LmRlPjsgUGVuZyBGYW4gKE9TUykgPHBlbmcuZmFuQG9zcy5ueHAuY29tPg0KPiBTdWJqZWN0
-OiBSZTogW0VYVF0gUmU6IFtQQVRDSCAyLzNdIHBtZG9tYWluOiBpbXg4bXAtYmxrLWN0cmw6IGlt
-eDhtcF9ibGs6DQo+IEFkZCBmZGNjIGNsb2NrIHRvIGhkbWltaXggZG9tYWluDQo+IA0KPiBDYXV0
-aW9uOiBUaGlzIGlzIGFuIGV4dGVybmFsIGVtYWlsLiBQbGVhc2UgdGFrZSBjYXJlIHdoZW4gY2xp
-Y2tpbmcgbGlua3Mgb3INCj4gb3BlbmluZyBhdHRhY2htZW50cy4gV2hlbiBpbiBkb3VidCwgcmVw
-b3J0IHRoZSBtZXNzYWdlIHVzaW5nIHRoZSAnUmVwb3J0DQo+IHRoaXMgZW1haWwnIGJ1dHRvbg0K
-PiANCj4gDQo+IE9uIFN1biwgSmFuIDI4LCAyMDI0IGF0IDc6MznigK9QTSBTYW5kb3IgWXUgPHNh
-bmRvci55dUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBBZGFtIEZvcmQgPGFmb3JkMTczQGdtYWlsLmNv
-bT4NCj4gPiA+IFNlbnQ6IDIwMjTlubQx5pyIMjjml6UgMjoyMA0KPiA+ID4gVG86IGxpbnV4LXBt
-QHZnZXIua2VybmVsLm9yZw0KPiA+ID4gQ2M6IFNhbmRvciBZdSA8c2FuZG9yLnl1QG54cC5jb20+
-OyBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+OyBSb2INCj4gPiA+IEhlcnJpbmcgPHJvYmgr
-ZHRAa2VybmVsLm9yZz47IEtyenlzenRvZiBLb3psb3dza2kNCj4gPiA+IDxrcnp5c3p0b2Yua296
-bG93c2tpK2R0QGxpbmFyby5vcmc+OyBDb25vciBEb29sZXkNCj4gPiA+IDxjb25vcitkdEBrZXJu
-ZWwub3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhDQo+IEhhdWVy
-DQo+ID4gPiA8cy5oYXVlckBwZW5ndXRyb25peC5kZT47IFBlbmd1dHJvbml4IEtlcm5lbCBUZWFt
-DQo+ID4gPiA8a2VybmVsQHBlbmd1dHJvbml4LmRlPjsgRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1A
-Z21haWwuY29tPjsNCj4gPiA+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBVbGYg
-SGFuc3Nvbg0KPiA+ID4gPHVsZi5oYW5zc29uQGxpbmFyby5vcmc+OyBMdWNhcyBTdGFjaCA8bC5z
-dGFjaEBwZW5ndXRyb25peC5kZT47DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgTWFyZWsgVmFzdXQgPG1hcmV4QGRlbnguZGU+OyBQZW5nIEZhbg0K
-PiA+ID4gKE9TUykgPHBlbmcuZmFuQG9zcy5ueHAuY29tPg0KPiA+ID4gU3ViamVjdDogW0VYVF0g
-UmU6IFtQQVRDSCAyLzNdIHBtZG9tYWluOiBpbXg4bXAtYmxrLWN0cmw6DQo+ID4gPiBpbXg4bXBf
-YmxrOiBBZGQgZmRjYyBjbG9jayB0byBoZG1pbWl4IGRvbWFpbg0KPiA+ID4NCj4gPiA+IENhdXRp
-b246IFRoaXMgaXMgYW4gZXh0ZXJuYWwgZW1haWwuIFBsZWFzZSB0YWtlIGNhcmUgd2hlbiBjbGlj
-a2luZw0KPiA+ID4gbGlua3Mgb3Igb3BlbmluZyBhdHRhY2htZW50cy4gV2hlbiBpbiBkb3VidCwg
-cmVwb3J0IHRoZSBtZXNzYWdlDQo+ID4gPiB1c2luZyB0aGUgJ1JlcG9ydCB0aGlzIGVtYWlsJyBi
-dXR0b24NCj4gPiA+DQo+ID4gPg0KPiA+ID4gT24gU2F0LCBKYW4gNiwgMjAyNCBhdCA0OjQw4oCv
-UE0gQWRhbSBGb3JkIDxhZm9yZDE3M0BnbWFpbC5jb20+IHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4g
-PiBBY2NvcmRpbmcgdG8gaS5NWDhNUCBSTSBhbmQgSERNSSBBREQsIHRoZSBmZGNjIGNsb2NrIGlz
-IHBhcnQgb2YNCj4gPiA+ID4gaGRtaSByeCB2ZXJpZmljYXRpb24gSVAgdGhhdCBzaG91bGQgbm90
-IGVuYWJsZSBmb3IgSERNSSBUWC4NCj4gPiA+ID4gQnV0IGFjdHVhbGx5IGlmIHRoZSBjbG9jayBp
-cyBkaXNhYmxlZCBiZWZvcmUgSERNSS9MQ0RJRiBwcm9iZSwNCj4gPiA+ID4gTENESUYgd2lsbCBu
-b3QgZ2V0IHBpeGVsIGNsb2NrIGZyb20gSERNSSBQSFkgYW5kIHByaW50IHRoZSBlcnJvcg0KPiA+
-ID4gPiBsb2dzOg0KPiA+ID4gPg0KPiA+ID4gPiBbQ1JUQzozOTpjcnRjLTJdIHZibGFuayB3YWl0
-IHRpbWVkIG91dA0KPiA+ID4gPiBXQVJOSU5HOiBDUFU6IDIgUElEOiA5IGF0IGRyaXZlcnMvZ3B1
-L2RybS9kcm1fYXRvbWljX2hlbHBlci5jOjE2MzQNCj4gPiA+ID4gZHJtX2F0b21pY19oZWxwZXJf
-d2FpdF9mb3JfdmJsYW5rcy5wYXJ0LjArMHgyM2MvMHgyNjANCj4gPiA+ID4NCj4gPiA+ID4gQWRk
-IGZkY2MgY2xvY2sgdG8gTENESUYgYW5kIEhETUkgVFggcG93ZXIgZG9tYWlucyB0byBmaXggdGhl
-IGlzc3VlLg0KPiA+ID4NCj4gPiA+IFBlbmcgKG9yIGFueW9uZSBmcm9tIE5YUCksDQo+ID4gPg0K
-PiA+ID4gSSBib3Jyb3dlZCB0aGlzIHBhdGNoIGZyb20gdGhlIE5YUCBkb3duLXN0cmVhbSBrZXJu
-ZWwgZm9yIHR3byByZWFzb25zOg0KPiA+ID4gIEl0J3MgaW4gTlhQJ3MgYnJhbmNoIHRvIGFkZHJl
-c3MgYW4gZXJyb3IgJiBtb3ZlIHRoZSBmZGNjIGNsb2NrIG91dA0KPiA+ID4gb2YgdGhlIEhETUkt
-dHggZHJpdmVyIGR1ZSB0byBxdWVzdGlvbnMvZmVlZGJhY2sgdGhhdCBMdWNhcyBnb3Qgb24gdGhh
-dA0KPiBkcml2ZXIuDQo+ID4gPg0KPiA+ID4gVGhlIEZEQ0MgY2xvY2sgaXNuJ3Qgd2VsbCBkb2N1
-bWVudGVkLCBhbmQgaXQgc2VlbXMgbGlrZSBpdCdzDQo+ID4gPiBuZWNlc3NhcnkgZm9yIHRoZSBI
-RE1JLVRYLCBidXQgSSdkIGxpa2UgdG8gbWFrZSBzdXJlIHRoaXMgaXMgdGhlDQo+ID4gPiBwcm9w
-ZXIgc29sdXRpb24sIGFuZCBJIGhhdmVuJ3QgcmVjZWl2ZWQgYW55IGFkZGl0aW9uYWwgZmVlZGJh
-Y2suDQo+ID4gPiBDYW4gc29tZW9uZSBmcm9tIE5YUCBjb25maXJtIHRoYXQgcmVhbGx5IGlzIHRo
-ZSBwcm9wZXIgc29sdXRpb24/DQo+ID4gPg0KPiA+ID4gdGhhbmsgeW91LA0KPiA+ID4NCj4gPiA+
-IGFkYW0NCj4gPg0KPiA+IEhpIEFkYW0sDQo+ID4NCj4gDQo+IFNhbmRvciwNCj4gDQo+ID4gSW4g
-TlhQIGludGVybmFsIGRvY3VtZW50LCB0aGUgY2xvY2sgSERNSV9GRENDX1RTVF9DTEtfUk9PVCB3
-YXMgZm9yDQo+IGludGVybmFsIHVzZSBvbmx5IGZvciBmdXR1cmUgTlhQIGRldmVsb3BtZW50IElQ
-Lg0KPiA+IEl0IHNob3VsZCBub3QgYmUgZXhwb3NlZCB0byBjdXN0b21lciBpbiBkb2N1bWVudCBi
-dXQgdW5mb3J0dW5hdGVseSBpdCBoYXZlDQo+IHRvIGJlIGVuYWJsZWQgZm9yIEhETUlUWC4NCj4g
-Pg0KPiA+IEkgc3VibWl0dGVkIGEgcmVxdWVzdCB0aWNrZXQgdG8gdGhlIGRlc2lnbiB0ZWFtIHNl
-dmVyYWwgbW9udGhzIGFnbywNCj4gPiBHZW5lcmFsbHksIHRpY2tldHMgb2YgdGhpcyBkaWRuJ3Qg
-Z2V0IHRoZSBwcmlvcml0eSBpbiBkZXNpZ24gdGVhbSBhbmQgSSBoYXZlbuKAmXQNCj4gcmVjZWl2
-ZWQgYW55IHZhbHVhYmxlIGZlZWRiYWNrLg0KPiA+IE9uY2UgZGVzaWduIHRlYW0gY29uZmlybWVk
-LCBJIHRoaW5rIHRoZSBkb2N1bWVudCB3aWxsIHVwZGF0ZSB0byBhZGQgdGhlDQo+IGZkY2MgY2xv
-Y2suDQo+IA0KDQpIaSBBZGFtLA0KDQo+IFRoYW5rIHlvdSBmb3IgeW91ciByZXNwb25zZS4gICBE
-byB5b3UgaGF2ZSBhbnkgb2JqZWN0aW9ucyB0byBoYXZpbmcNCj4gdGhlIEZEQ0MgY2xvY2sgYWRk
-ZWQgdG8gdGhlIHBvd2VyIGRvbWFpbiBkcml2ZXI/ICBJIGtub3cgdGhlcmUgYXJlIHNldmVyYWwN
-Cj4gb2YgdXMgd2hvIHdvdWxkIHJlYWxseSBsaWtlIHRvIHNlZSB0aGUgSERNSS1UWCBkcml2ZXIg
-YXBwbGllZCwgYW5kIEkgdGhpbmsgdGhpcw0KPiBwYXRjaCBnZXRzIHVzIG9uZSBzdGVwIGNsb3Nl
-ci4NCj4gDQpBcyBJIG1lbnRpb25lZCBhYm92ZSwgdGhlIEZEQ0MgY2xvY2sgaXMgbm90IGZvciBI
-RE1JVFggaW4gZGVzZ2luLCBidXQgaXQgaXMgcGFydCBvZiBIRE1JIGRvbWFpbiB0aGF0IG5lZWRl
-ZCBieSBIRE1JVFguDQpTbyBJIHRoaW5rIGl0IGlzIHJlYXNvbmFibGUgYWRkZWQgaXQgdG8gdGhl
-IHBvd2VyIGRvbWFpbiBkcml2ZXIuDQoNCkIuUg0KU2FuZG9yDQoNCj4gdGhhbmtzLA0KPiANCj4g
-YWRhbQ0KPiA+DQo+ID4gQi5SDQo+ID4gU2FuZG9yDQo+ID4NCj4gPiA+DQo+ID4gPiA+DQo+ID4g
-PiA+IFNpZ25lZC1vZmYtYnk6IFNhbmRvciBZdSA8U2FuZG9yLnl1QG54cC5jb20+DQo+ID4gPiA+
-IFJldmlld2VkLWJ5OiBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+DQo+ID4gPiA+IFNpZ25l
-ZC1vZmYtYnk6IEFkYW0gRm9yZCA8YWZvcmQxNzNAZ21haWwuY29tPg0KPiA+ID4gPiAtLS0NCj4g
-PiA+ID4gVGhlIG9yaWdpbmFsIHdvcmsgd2FzIGZyb20gU2FuZG9yIG9uIHRoZSBOWFAgRG93bi1z
-dHJlYW0ga2VybmVsDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BtZG9t
-YWluL2lteC9pbXg4bXAtYmxrLWN0cmwuYw0KPiA+ID4gPiBiL2RyaXZlcnMvcG1kb21haW4vaW14
-L2lteDhtcC1ibGstY3RybC5jDQo+ID4gPiA+IGluZGV4IGUzMjAzZWI2YTAyMi4uYTU2ZjdmOTJk
-MDkxIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3BtZG9tYWluL2lteC9pbXg4bXAtYmxr
-LWN0cmwuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3BtZG9tYWluL2lteC9pbXg4bXAtYmxrLWN0
-cmwuYw0KPiA+ID4gPiBAQCAtNTUsNyArNTUsNyBAQCBzdHJ1Y3QgaW14OG1wX2Jsa19jdHJsX2Rv
-bWFpbl9kYXRhIHsNCj4gPiA+ID4gICAgICAgICBjb25zdCBjaGFyICpncGNfbmFtZTsNCj4gPiA+
-ID4gIH07DQo+ID4gPiA+DQo+ID4gPiA+IC0jZGVmaW5lIERPTUFJTl9NQVhfQ0xLUyAyDQo+ID4g
-PiA+ICsjZGVmaW5lIERPTUFJTl9NQVhfQ0xLUyAzDQo+ID4gPiA+ICAjZGVmaW5lIERPTUFJTl9N
-QVhfUEFUSFMgMw0KPiA+ID4gPg0KPiA+ID4gPiAgc3RydWN0IGlteDhtcF9ibGtfY3RybF9kb21h
-aW4gew0KPiA+ID4gPiBAQCAtNDU3LDggKzQ1Nyw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QNCj4g
-PiA+ID4gaW14OG1wX2Jsa19jdHJsX2RvbWFpbl9kYXRhDQo+ID4gPiBpbXg4bXBfaGRtaV9kb21h
-aW5fZGF0YVtdID0gew0KPiA+ID4gPiAgICAgICAgIH0sDQo+ID4gPiA+ICAgICAgICAgW0lNWDhN
-UF9IRE1JQkxLX1BEX0xDRElGXSA9IHsNCj4gPiA+ID4gICAgICAgICAgICAgICAgIC5uYW1lID0g
-ImhkbWlibGstbGNkaWYiLA0KPiA+ID4gPiAtICAgICAgICAgICAgICAgLmNsa19uYW1lcyA9IChj
-b25zdCBjaGFyICpbXSl7ICJheGkiLCAiYXBiIiB9LA0KPiA+ID4gPiAtICAgICAgICAgICAgICAg
-Lm51bV9jbGtzID0gMiwNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIC5jbGtfbmFtZXMgPSAoY29u
-c3QgY2hhciAqW10peyAiYXhpIiwgImFwYiIsICJmZGNjIiB9LA0KPiA+ID4gPiArICAgICAgICAg
-ICAgICAgLm51bV9jbGtzID0gMywNCj4gPiA+ID4gICAgICAgICAgICAgICAgIC5ncGNfbmFtZSA9
-ICJsY2RpZiIsDQo+ID4gPiA+ICAgICAgICAgICAgICAgICAucGF0aF9uYW1lcyA9IChjb25zdCBj
-aGFyICpbXSl7ImxjZGlmLWhkbWkifSwNCj4gPiA+ID4gICAgICAgICAgICAgICAgIC5udW1fcGF0
-aHMgPSAxLA0KPiA+ID4gPiBAQCAtNDgzLDggKzQ4Myw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QN
-Cj4gPiA+ID4gaW14OG1wX2Jsa19jdHJsX2RvbWFpbl9kYXRhDQo+ID4gPiBpbXg4bXBfaGRtaV9k
-b21haW5fZGF0YVtdID0gew0KPiA+ID4gPiAgICAgICAgIH0sDQo+ID4gPiA+ICAgICAgICAgW0lN
-WDhNUF9IRE1JQkxLX1BEX0hETUlfVFhdID0gew0KPiA+ID4gPiAgICAgICAgICAgICAgICAgLm5h
-bWUgPSAiaGRtaWJsay1oZG1pLXR4IiwNCj4gPiA+ID4gLSAgICAgICAgICAgICAgIC5jbGtfbmFt
-ZXMgPSAoY29uc3QgY2hhciAqW10peyAiYXBiIiwgInJlZl8yNjZtIiB9LA0KPiA+ID4gPiAtICAg
-ICAgICAgICAgICAgLm51bV9jbGtzID0gMiwNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIC5jbGtf
-bmFtZXMgPSAoY29uc3QgY2hhciAqW10peyAiYXBiIiwgInJlZl8yNjZtIiwNCj4gPiA+ICJmZGNj
-IiB9LA0KPiA+ID4gPiArICAgICAgICAgICAgICAgLm51bV9jbGtzID0gMywNCj4gPiA+ID4gICAg
-ICAgICAgICAgICAgIC5ncGNfbmFtZSA9ICJoZG1pLXR4IiwNCj4gPiA+ID4gICAgICAgICB9LA0K
-PiA+ID4gPiAgICAgICAgIFtJTVg4TVBfSERNSUJMS19QRF9IRE1JX1RYX1BIWV0gPSB7DQo+ID4g
-PiA+IC0tDQo+ID4gPiA+IDIuNDMuMA0KPiA+ID4gPg0K
+On 2024/1/30 08:22, Yosry Ahmed wrote:
+> On Sun, Jan 28, 2024 at 01:28:50PM +0000, Chengming Zhou wrote:
+>> LRU writeback has race problem with swapoff, as spotted by Yosry [1]:
+>>
+>> CPU1			CPU2
+>> shrink_memcg_cb		swap_off
+>>   list_lru_isolate	  zswap_invalidate
+>> 			  zswap_swapoff
+>> 			    kfree(tree)
+>>   // UAF
+>>   spin_lock(&tree->lock)
+>>
+>> The problem is that the entry in lru list can't protect the tree from
+>> being swapoff and freed, and the entry also can be invalidated and freed
+>> concurrently after we unlock the lru lock.
+>>
+>> We can fix it by moving the swap cache allocation ahead before
+>> referencing the tree, then check invalidate race with tree lock,
+>> only after that we can safely deref the entry. Note we couldn't
+>> deref entry or tree anymore after we unlock the folio, since we
+>> depend on this to hold on swapoff.
+>>
+>> So this patch moves all tree and entry usage to zswap_writeback_entry(),
+>> we only use the copied swpentry on the stack to allocate swap cache
+>> and if returned with folio locked we can reference the tree safely.
+>> Then we can check invalidate race with tree lock, the following things
+>> is much the same like zswap_load().
+>>
+>> Since we can't deref the entry after zswap_writeback_entry(), we
+>> can't use zswap_lru_putback() anymore, instead we rotate the entry
+>> in the beginning. And it will be unlinked and freed when invalidated
+>> if writeback success.
+> 
+> You are also removing one redundant lookup from the zswap writeback path
+> to check for the invalidation race, and simplifying the code. Give
+> yourself full credit :)
+
+Ah right, forgot to mention it, I will add this part in the commit message.
+Thanks for your reminder!
+
+> 
+>>
+>> Another change is we don't update the memcg nr_zswap_protected in
+>> the -ENOMEM and -EEXIST cases anymore. -EEXIST case means we raced
+>> with swapin or concurrent shrinker action, since swapin already
+>> have memcg nr_zswap_protected updated, don't need double counts here.
+>> For concurrent shrinker, the folio will be writeback and freed anyway.
+>> -ENOMEM case is extremely rare and doesn't happen spuriously either,
+>> so don't bother distinguishing this case.
+>>
+>> [1] https://lore.kernel.org/all/CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com/
+>>
+>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>> Acked-by: Nhat Pham <nphamcs@gmail.com>
+>> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+>> ---
+>>  mm/zswap.c | 114 ++++++++++++++++++++++++++-----------------------------------
+>>  1 file changed, 49 insertions(+), 65 deletions(-)
+>>
+>> diff --git a/mm/zswap.c b/mm/zswap.c
+>> index 81cb3790e0dd..f5cb5a46e4d7 100644
+>> --- a/mm/zswap.c
+>> +++ b/mm/zswap.c
+>> @@ -277,7 +277,7 @@ static inline struct zswap_tree *swap_zswap_tree(swp_entry_t swp)
+>>  		 zpool_get_type((p)->zpools[0]))
+>>  
+>>  static int zswap_writeback_entry(struct zswap_entry *entry,
+>> -				 struct zswap_tree *tree);
+>> +				 swp_entry_t swpentry);
+>>  static int zswap_pool_get(struct zswap_pool *pool);
+>>  static void zswap_pool_put(struct zswap_pool *pool);
+>>  
+>> @@ -445,27 +445,6 @@ static void zswap_lru_del(struct list_lru *list_lru, struct zswap_entry *entry)
+>>  	rcu_read_unlock();
+>>  }
+>>  
+>> -static void zswap_lru_putback(struct list_lru *list_lru,
+>> -		struct zswap_entry *entry)
+>> -{
+>> -	int nid = entry_to_nid(entry);
+>> -	spinlock_t *lock = &list_lru->node[nid].lock;
+>> -	struct mem_cgroup *memcg;
+>> -	struct lruvec *lruvec;
+>> -
+>> -	rcu_read_lock();
+>> -	memcg = mem_cgroup_from_entry(entry);
+>> -	spin_lock(lock);
+>> -	/* we cannot use list_lru_add here, because it increments node's lru count */
+>> -	list_lru_putback(list_lru, &entry->lru, nid, memcg);
+>> -	spin_unlock(lock);
+>> -
+>> -	lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(entry_to_nid(entry)));
+>> -	/* increment the protection area to account for the LRU rotation. */
+>> -	atomic_long_inc(&lruvec->zswap_lruvec_state.nr_zswap_protected);
+>> -	rcu_read_unlock();
+>> -}
+>> -
+>>  /*********************************
+>>  * rbtree functions
+>>  **********************************/
+>> @@ -860,40 +839,47 @@ static enum lru_status shrink_memcg_cb(struct list_head *item, struct list_lru_o
+>>  {
+>>  	struct zswap_entry *entry = container_of(item, struct zswap_entry, lru);
+>>  	bool *encountered_page_in_swapcache = (bool *)arg;
+>> -	struct zswap_tree *tree;
+>> -	pgoff_t swpoffset;
+>> +	swp_entry_t swpentry;
+>>  	enum lru_status ret = LRU_REMOVED_RETRY;
+>>  	int writeback_result;
+>>  
+>> +	/*
+>> +	 * Rotate the entry to the tail before unlocking the LRU,
+>> +	 * so that in case of an invalidation race concurrent
+>> +	 * reclaimers don't waste their time on it.
+>> +	 *
+>> +	 * If writeback succeeds, or failure is due to the entry
+>> +	 * being invalidated by the swap subsystem, the invalidation
+>> +	 * will unlink and free it.
+>> +	 *
+>> +	 * Temporary failures, where the same entry should be tried
+>> +	 * again immediately, almost never happen for this shrinker.
+>> +	 * We don't do any trylocking; -ENOMEM comes closest,
+>> +	 * but that's extremely rare and doesn't happen spuriously
+>> +	 * either. Don't bother distinguishing this case.
+>> +	 *
+>> +	 * But since they do exist in theory, the entry cannot just
+>> +	 * be unlinked, or we could leak it. Hence, rotate.
+> 
+> The entry cannot be unlinked because we cannot get a ref on it without
+> holding the tree lock, and we cannot deref the tree before we acquire a
+> swap cache ref in zswap_writeback_entry() -- or if
+> zswap_writeback_entry() fails. This should be called out explicitly
+> somewhere. Perhaps we can describe this whole deref dance with added
+> docs to shrink_memcg_cb().
+
+Maybe we should add some comments before or after zswap_writeback_entry()?
+Or do you have some suggestions? I'm not good at this. :)
+
+> 
+> We could also use a comment in zswap_writeback_entry() (or above it) to
+> state that we only deref the tree *after* we get the swapcache ref.
+
+I just notice there are some comments in zswap_writeback_entry(), should
+we add more comments here?
+
+	/*
+	 * folio is locked, and the swapcache is now secured against
+	 * concurrent swapping to and from the slot. Verify that the
+	 * swap entry hasn't been invalidated and recycled behind our
+	 * backs (our zswap_entry reference doesn't prevent that), to
+	 * avoid overwriting a new swap folio with old compressed data.
+	 */
+
