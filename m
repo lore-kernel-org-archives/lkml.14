@@ -1,118 +1,109 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCFD67A14;
-	Tue, 30 Jan 2024 09:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5AF6773A
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608461; cv=none; b=gmDxR4COtE1n9TgPTFCA++PM+CoZjxtFQ3pJrcREC7kq8coMkev2hW++Y8whJckF4zdub7M+jO5BByLkuoKxd/WvVctcfA1l2PY5+UzLMposE6S5Vp5JUTLYR618PZFKQ+Y4kWSRV2hifbBbxxci740aMmCdI+ozVpz60kfSvME=
+	t=1706608504; cv=none; b=WFAKeHIF5L7rjk3ntS1v38i+w5tgzHEVxAN80yHVCQHRakZ2TCQPQhYFOY4YMdYG58LQGMVq3Tk+oKUqgKrsncXWn9Bc4jBg+CA4duU9J0HUUs54umjn3PC+EFpCnjTmjYw8/+XK3izqaGx0+VzxuH5S2hnvgQsvyvCqdTuj9jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608461; c=relaxed/simple;
-	bh=tnYqQ70kp7sfoIKQUVxIUH4w26IuosHZfWvYN+VVl6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y1kcDE5SnnB5y4NNu/hIncynvcZOCX47Q4ooKZR0uEDbVR6Js4MwRULRiQeZnQPthsCf3GLT55Wn+8QXRpKBiItTPBCi9x1E3MRfbBT2i2kO/77x69/c5kt9F+ixichf8nyIQKkn8/BA9Uxx7pRdkOyk0BKyHJBI5thBNaio4a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOx9a39C; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706608504; c=relaxed/simple;
+	bh=GfBdeJzGb3Dr+4DHZv3lavSCQwPmP/68TQMZyct44Rk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ofM03fiTacaf0LxOVMRPK1OQPA+ZkFxRe0x9C2TM+ei5X3NgEZQmYUlOD7pZa7KRFTuZGRqYhGipE6PLFr2gAkXFRlW0IwoLkm7+2E6ZO1w6Bhu0tTScJWwXO9dZZszwBhW0founal6s/dgWZE4lIbHNdaasCej1NpEVJKwQk+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K/KGaXWQ; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOx9a39C"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51030667cedso4485928e87.3;
-        Tue, 30 Jan 2024 01:54:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/KGaXWQ"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e9101b5f9so41989255e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:55:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706608458; x=1707213258; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x3MyEanSzGBKqYz8rFKTqF+DV7yB/htZJ26fWzOdfAY=;
-        b=eOx9a39CAIh1IqbX0Ld6QikIwXhGDlmctGudrY0etIBh74GKH7KDKXJOabnetQxj5u
-         aVOFc1VhnLGUOLAAaxSrCqZ1IsXCZSFzLgEpMpXoIgYj3AB9+Hu+KxqLwWh8tQg/3mU9
-         nrj639e7XsRQFyPIvwBVTeE+pEgx1/09gZq6JbahFQVPqKq+VldWuKto+ONq1bYOgMz1
-         JdgIdrn+uaVbBiFlcMNLyMaF7idgqJDZ3hzxRR+h5OCAR0isV/7X4QK9UQDvM3Emsp5m
-         AdsMceZL9PZ93DOJ4MR1Mv/lcjvcpfUdUBNwJdb915KE+675q/t1pCoDWdAA5ypg5eiB
-         Bifw==
+        d=linaro.org; s=google; t=1706608501; x=1707213301; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jeMbeD/uNn8B0S2W7XkIfdcJDUpQv994E+HPOf4FW6M=;
+        b=K/KGaXWQcJx5zyGhPJGKxmjFVxZLxP7NADo/t2yHW10WubTJakqlfMrJvZiGRzT7kq
+         4nQ1xet+uR3epVqsUj+4XdKqVz6Yil0+3Nc4z2h01Cq71Xc/gotBNveMBTB5tY7rbHeJ
+         EJRl++0Bczn73RmALoVorLenShYS5yhQF8SrjM+fILtwfW8UlIiKo0Fzjf+djviCuHW4
+         MlRuA7sRwkWVsduefU4nViI5/zOFX9wAdXEfKy9KFTRXXrMySZhFstPsB1NM/4VJXIjf
+         1vMooIHKrFiQNWACp15G5pYzwkdh5RXNiRmvcZ5YKji9Vn9wHIi/bo+EuevEEyPye5BI
+         mdXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706608458; x=1707213258;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x3MyEanSzGBKqYz8rFKTqF+DV7yB/htZJ26fWzOdfAY=;
-        b=ufyRkINXrV738o2H88hcxfUiBkKZv23Z6hP/Jue8j8zI5ZIM6fUGAz82qDOm/0CaG2
-         OQqFgv5ypYUxWSS4H6D+yN4Ud0gxGSAybw/A7Ava4er9hKzhncqnFX3MoxHsUKeMoVOV
-         IGysiQXhIXV1iYum1n6t/rt6p9h1Z5/P2HyJVvOljbzxhlVObJMV3lXyWfj+tjiQ7pmx
-         p3/3qVVJXdZi0SP42L/NEQdhkBk2YbKri1FV0q3Ao9kxJOaD47jAmwSuVxVO2oAr0CJc
-         +nbh+ogRZmt/Kk1qT7c9iFDs9q9R1hlqDQSzDutreT8NfdB9+4pTK8rzjNZuJv3/WI3P
-         Pwxg==
-X-Gm-Message-State: AOJu0Yz2HReS72aJ9CPaBeahABB8ScAPbwfHU3tj5x95ccsX8awihyiB
-	utX1d4RgLlCL0ogPTC6t9mFcPcEA1g18siMoCaf5fDNsTAt3rMN0
-X-Google-Smtp-Source: AGHT+IFGhjGZ4gnkZbgvyF06iywG3e9ro8xFxU7RHOlU1QNpWyr7wiGJp+E9fll+MCjd4KWMpcflTw==
-X-Received: by 2002:ac2:5f79:0:b0:50e:ccd5:beac with SMTP id c25-20020ac25f79000000b0050eccd5beacmr4445416lfc.54.1706608457669;
-        Tue, 30 Jan 2024 01:54:17 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id s9-20020a197709000000b00510ee2d0ce5sm932529lfc.81.2024.01.30.01.54.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 01:54:17 -0800 (PST)
-Date: Tue, 30 Jan 2024 12:54:14 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Dawei Li <dawei.li@shingroup.cn>
-Cc: arnd@arndb.de, gregkh@linuxfoundation.org, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, set_pte_at@outlook.com, stable@vger.kernel.org
-Subject: Re: [PATCH] misc: eeprom/idt_89hpesx: Convert data structures to LE
- explicitly
-Message-ID: <cb7f2cozoo5l2dxb5tdgvkxttu7zjzgcjechecoy6jmqi36yqb@znitshltzrmt>
-References: <20240130040632.3039911-1-dawei.li@shingroup.cn>
+        d=1e100.net; s=20230601; t=1706608501; x=1707213301;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jeMbeD/uNn8B0S2W7XkIfdcJDUpQv994E+HPOf4FW6M=;
+        b=XN7UK/5U9pUZg8PqSYZaVH6zwqP+1DPILckugKHCWA3bgaENjkcjF9SewxtNv1BAbw
+         9uGu49eeNkPif92S94c7+pZsie9C3xuP+XKwm8zM4nFZhjD2FAwvuMyg7TI1GgMKck1r
+         StJ602Aq4tOKo1la4P5Mynr9i8pJjPN6PoTFFF3kKkbXtLRP4LKlO32NnXf/V69jqtfc
+         O6icfam1FJAu88G4E/k4GbjS8YyrQvTopo02hNwvoWQ/8VUgJHScau6vaNOanSghUxLW
+         EQhaw1IxeWqMoCxKCHeN6bFJKnV5vtc5Ka3B+DsBH1JIsWAoK5urYKFzJm0TtkP1B6mq
+         Lo7g==
+X-Gm-Message-State: AOJu0YxVX2+V7dWg86hPvwbD/xWwqnRpHb+i25k4uC9Zoj3nSEciUTS9
+	JjLcByCoyZxzRgYAyBRjCuBi9g1q5Tg9Ho3GLxif9MLIBGZB54Gs/Dao/hDE5uA=
+X-Google-Smtp-Source: AGHT+IF92jgiXA3xKHufpbtgSPJbMRgX2vYkkXiWhwHoCA53f8jLGKT698ChHJQx170BU5WnhsFzzg==
+X-Received: by 2002:a05:600c:4f06:b0:40f:afbf:804b with SMTP id l6-20020a05600c4f0600b0040fafbf804bmr75754wmq.22.1706608501360;
+        Tue, 30 Jan 2024 01:55:01 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id bn7-20020a056000060700b0033946c0f9e7sm10388135wrb.17.2024.01.30.01.55.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 01:55:01 -0800 (PST)
+Message-ID: <beadeaae-d740-47b7-9de3-3be7d9fbc586@linaro.org>
+Date: Tue, 30 Jan 2024 10:55:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130040632.3039911-1-dawei.li@shingroup.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: timer: exynos4210-mct: Add
+ google,gs101-mct compatible
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, tglx@linutronix.de, conor+dt@kernel.org,
+ alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com,
+ cw00.choi@samsung.com, mturquette@baylibre.com, sboyd@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@android.com,
+ tudor.ambarus@linaro.org, andre.draszik@linaro.org,
+ semen.protsenko@linaro.org, saravanak@google.com, willmcvicker@google.com
+References: <20231222165355.1462740-1-peter.griffin@linaro.org>
+ <20231222165355.1462740-2-peter.griffin@linaro.org>
+ <e4288d81-cd0c-41cf-989f-85ce10d5904e@linaro.org>
+ <bc643c81-ba84-48e9-8805-a27ca8d9acc5@linaro.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <bc643c81-ba84-48e9-8805-a27ca8d9acc5@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 30, 2024 at 12:06:32PM +0800, Dawei Li wrote:
-> For data structures needs cpu_to_le* conversion, its prototype needs to
-> be declared with __le* explicitly.
+On 30/01/2024 08:33, Krzysztof Kozlowski wrote:
+> On 22/01/2024 13:11, Daniel Lezcano wrote:
+>> On 22/12/2023 17:53, Peter Griffin wrote:
+>>> Add dedicated google,gs101-mct compatible to the dt-schema for
+>>> representing mct timer of the Google Tensor gs101 SoC.
+>>>
+>>
+>> Applied, thanks
 > 
-> Fixes: cfad6425382e ("eeprom: Add IDT 89HPESx EEPROM/CSR driver")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401261250.b07Yt30Z-lkp@intel.com/
-> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> Cc: <stable@vger.kernel.org>
+> Daniel,
+> You a week ago that this was applied, but I still do not see the patch
+> in linux-next. Can you double check?
 
-Awesome! Thanks for the patch. Definitely
+It is applied, but I did not pushed the branch. It is done now, it 
+should appear in linux-next soon.
 
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Thanks for the head up
 
--Serge(y)
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> ---
->  drivers/misc/eeprom/idt_89hpesx.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/eeprom/idt_89hpesx.c b/drivers/misc/eeprom/idt_89hpesx.c
-> index d807d08e2614..327afb866b21 100644
-> --- a/drivers/misc/eeprom/idt_89hpesx.c
-> +++ b/drivers/misc/eeprom/idt_89hpesx.c
-> @@ -129,7 +129,7 @@ struct idt_smb_seq {
->  struct idt_eeprom_seq {
->  	u8 cmd;
->  	u8 eeaddr;
-> -	u16 memaddr;
-> +	__le16 memaddr;
->  	u8 data;
->  } __packed;
->  
-> @@ -141,8 +141,8 @@ struct idt_eeprom_seq {
->   */
->  struct idt_csr_seq {
->  	u8 cmd;
-> -	u16 csraddr;
-> -	u32 data;
-> +	__le16 csraddr;
-> +	__le32 data;
->  } __packed;
->  
->  /*
-> -- 
-> 2.27.0
-> 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
