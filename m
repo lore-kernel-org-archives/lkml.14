@@ -1,181 +1,182 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908E01D55F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655F8364BF
 	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706582332; cv=none; b=N5xzHaWmR7sWJhvKb2OvfRKwvcPsEbZKdPCvLdOuMzvn/ovYKNJJhBOtz6rSnu/Avznk+S/3kA9Pn21v3Z1X2xk50rcVg5DIpTOcZGmvjG6z4vRvdt+2r6uWO/SHkbPh7ew08/Tzc0J6AQNut9/xD5uD/BnU197/PZdi0Ajt5pg=
+	t=1706582333; cv=none; b=h3JA2cYv7HtSZnuTg+4gqb2njLvPdTEY3V2WmYRjwcgEhJ0RUzPJteCaGY0ljf2UX8swjFfbj7rqizBeeLYKasvgRnFq4rYwQj+XV1vM00phov5pQXQ3B83WBC5ujrptShZA1k2JfVq2L79PQQ3RHEjVl9M88Uj7gMcImlWE9xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706582332; c=relaxed/simple;
-	bh=L89IzrilsDGveQdWAYWcXjFYMXSJQAdLrLejwXbXPuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ujUotML0JAbnO+l9kOK2OFgwjJ3jjsTgLD3DyMVNOGVcKj5I4A9JIVqPxR+BRM+5wOBKU6zLyQAulKTdewKkH0VpfLMW73Tl3vrLElMMH0X57pQkd5fZ6I6zBnWo9VGilXymUnObCWAllfjX54r7YoA9mcpPDZvjNAMaTMkcewA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=PZyrJLlx; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1706582333; c=relaxed/simple;
+	bh=8NFkxLjfDsMYKBVX/2CVn4EMmha53R183167AkLrZ2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=imzYZWsSmhofJ79UyZ1+R3PsMsVTnGBQ2Kj/qXYVBHYUCdfUwUmQLRhZahxAnViEK6aVUJ0b+KX+xVbl29qmGKlbotn7pvM6rXFQfcNm6CJRyLvz5qynWgjDg8UALNBKHxqq2T/YuvPLw8rvvNeJU1BEuj7qgxJCYNXY9VYbkeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ue6PF6IV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="PZyrJLlx"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d8e78270c1so9623385ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:38:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706582330; x=1707187130; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hqxjY1ElxNAwoveLPHwWFoaAKo7t78H+KCuILCPEg64=;
-        b=PZyrJLlxIYjvzme9mwBwHI/K/G8ewUUCPUM6YbldfgLjelfRrxmoMQ9oYBPx/ZwbgS
-         1RnXgjdfkRjncmC6mE2ekanNB4Ltj0Uwhow0otUdcdLzj4HxYZuzLQxdEdNmAdrXqZOQ
-         8xviYM8yc/kz1QaORBEr/7Snh2vjPaRghbqC1iBl8rJZubjiRMwlik0Sl4gxzJWiPKek
-         TywRxtqxpRH1ukviI9wttiZW59Rhy68ToElsbgtBIR+erMk8uiVPSbIm5/924vbbjfTa
-         NpYGQKrb0wSdlU9edC/OggmhKewh1s6MdtgCeYHJ+JXFfVk9ASZwzFD8+McYORYnR21W
-         ZN5g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ue6PF6IV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706582330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Da1Kai79LDMmtf1ru1K3D52dA9E7Gwnh/kl6V6/IJ3k=;
+	b=Ue6PF6IVxrl+3qIItXpXndttGjjkoM4SK65WrrfyVI55P2G+0fvxEwQOOTpuan40Fg8KbZ
+	GasI8PGsTirEYytgJOwm3rcwcGGS0Wx1KRSCX60d/9F5Sj7soWC4x6soV/Iz7zawa8sGrj
+	qLHR7wsQYY9WG8PqwqoxtMxcm7Jwkl4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-389-Fcs0CYXaPW2-ini3LQrffw-1; Mon, 29 Jan 2024 21:38:48 -0500
+X-MC-Unique: Fcs0CYXaPW2-ini3LQrffw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a357c92f241so103593566b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:38:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706582330; x=1707187130;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hqxjY1ElxNAwoveLPHwWFoaAKo7t78H+KCuILCPEg64=;
-        b=vNgMIslZLcrMoglu/GXgPlxy8tQpEVmPTOFsSLmENv4lUjMF0R6GzkiR/r5Tz60igm
-         +ZUaUBL8xCYUJUkaCSMbvcO4p6S9a5KzMX8MQYmQmLIFv6h1mLhcm3dd+GhdrH48+XqJ
-         HVP7dObBXGBwEaE7neMUGLFSPLwEalrPhrbOrSvU45akwOzfsmojzre0aYsb944Yrhug
-         UdaE0C2i8Ezo1z5NsD4aDNlKB7PGM6UCUgP3UjPA3qlRAgMZjTAhfqcLB3KwHfK+J9xS
-         LL4sFbkjI8XFMCJfQCDbwLVnB9u9JFdIQfPvkV/FsBmyQWOnmWuUcmbyBHTcMfEyTXrl
-         mbaA==
-X-Gm-Message-State: AOJu0YxgKhkz5z0QQNR7Qm3Bzajd08sn8OsrJum0lvfhVUpFZN0wWzu9
-	0p/ThzRRu9TZulbBc2H6itdAco1Z4mP013SYqSyJ47xBRbrmRR1q8yDo6FQQhpTjqMKVOXBdl7g
-	X
-X-Google-Smtp-Source: AGHT+IG3Tf1LicjzS4Qa3v1HBWJ0okdxx8XgE9n1laWHdO3qtQvRbO5N3KnA5oTi64pctq5hmJtDrA==
-X-Received: by 2002:a17:902:d550:b0:1d7:1a90:65ba with SMTP id z16-20020a170902d55000b001d71a9065bamr500304plf.25.1706582329913;
-        Mon, 29 Jan 2024 18:38:49 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id ml8-20020a17090334c800b001d8fb16118csm1038823plb.267.2024.01.29.18.38.49
+        d=1e100.net; s=20230601; t=1706582327; x=1707187127;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Da1Kai79LDMmtf1ru1K3D52dA9E7Gwnh/kl6V6/IJ3k=;
+        b=hdxU8KRuuHZFS6TEzzCjZYEXbVKMTtivy1FX7zYt105xS46wgzXxBADvWfEGLObMy5
+         z//TvLFTbfDRVk7LXQegl+On1c+yuxWiT5ge3dJcQMqkrkjcIll1je3hDUnpS1iPOQZM
+         ZYW7XJYIZHU9OOzoAmEaxfrzG6P8pFQBrrsnyRwTy12IsjnovLH+aZw1Df/TN2IqKsgF
+         k00Rd7koWKinpVpZij6FCtAvuIYCdK3DgZNVMfOdb3rsn0M0uIlyntvuq4+YjmdgeUiw
+         QNlk8iL0wanxM2vuwkc6oYamgr8k0sLPRiQN4ld1QHdjaWk0mv6rD35M97wymb6rckHi
+         dUug==
+X-Gm-Message-State: AOJu0YxesDIK50scs04j7NyZf0F2xpw/Ob7gWJmbHbenKL04doU021H+
+	jGnXRN9F6KXQztdiwYPX9l7UWTpxRa4nyGGy3pPuz5kRhZQudPwbDYAjPq4Vt3I8ZSIi36SsbUQ
+	JLiTBYAkBjH8oeoR1leMFcnahmTgW1Sgsgo4rYMs6pfSWRlcf172gqZgOv/2u/w==
+X-Received: by 2002:a17:906:81d5:b0:a31:49a1:4d5e with SMTP id e21-20020a17090681d500b00a3149a14d5emr5643881ejx.24.1706582327375;
+        Mon, 29 Jan 2024 18:38:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHV3Puy+toKVntNBLPCBVKA8P9s0vfikb8UxH9LYr4Idft4CPH4iGMWXhgCD6yu6FxA1NsNvA==
+X-Received: by 2002:a17:906:81d5:b0:a31:49a1:4d5e with SMTP id e21-20020a17090681d500b00a3149a14d5emr5643876ejx.24.1706582327099;
+        Mon, 29 Jan 2024 18:38:47 -0800 (PST)
+Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id fj18-20020a1709069c9200b00a3496fa1f7fsm4591092ejc.91.2024.01.29.18.38.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 18:38:49 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rUe1O-00H85k-2a;
-	Tue, 30 Jan 2024 13:38:46 +1100
-Date: Tue, 30 Jan 2024 13:38:46 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [RFC PATCH 7/7] xfs: Use dax_is_supported()
-Message-ID: <ZbhhNnQ+fqd4Hda+@dread.disaster.area>
-References: <20240129210631.193493-1-mathieu.desnoyers@efficios.com>
- <20240129210631.193493-8-mathieu.desnoyers@efficios.com>
+        Mon, 29 Jan 2024 18:38:46 -0800 (PST)
+From: Danilo Krummrich <dakr@redhat.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Subject: [PATCH v2] rust: str: add {make,to}_{upper,lower}case() to CString
+Date: Tue, 30 Jan 2024 03:35:39 +0100
+Message-ID: <20240130023843.11512-1-dakr@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129210631.193493-8-mathieu.desnoyers@efficios.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 29, 2024 at 04:06:31PM -0500, Mathieu Desnoyers wrote:
-> Use dax_is_supported() to validate whether the architecture has
-> virtually aliased caches at mount time.
-> 
-> This is relevant for architectures which require a dynamic check
-> to validate whether they have virtually aliased data caches
-> (ARCH_HAS_CACHE_ALIASING_DYNAMIC=y).
+Add functions to convert a CString to upper- / lowercase, either
+in-place or by creating a copy of the original CString.
 
-Where's the rest of this patchset? I have no idea what
-dax_is_supported() actually does, how it interacts with
-CONFIG_FS_DAX, etc.
+Naming followes the one from the Rust stdlib, where functions starting
+with 'to' create a copy and functions starting with 'make' perform an
+in-place conversion.
 
-If you are changing anything to do with FSDAX, the cc-ing the
--entire- patchset to linux-fsdevel is absolutely necessary so the
-entire patchset lands in our inboxes and not just a random patch
-from the middle of a bigger change.
+This is required by the Nova project (GSP only Rust successor of
+Nouveau) to convert stringified enum values (representing different GPU
+chipsets) to strings in order to generate the corresponding firmware
+paths. See also [1].
 
-> Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Chandan Babu R <chandan.babu@oracle.com>
-> Cc: Darrick J. Wong <djwong@kernel.org>
-> Cc: linux-xfs@vger.kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: nvdimm@lists.linux.dev
-> Cc: linux-cxl@vger.kernel.org
-> ---
->  fs/xfs/xfs_super.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 764304595e8b..b27ecb11db66 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -1376,14 +1376,22 @@ xfs_fs_parse_param(
->  	case Opt_nodiscard:
->  		parsing_mp->m_features &= ~XFS_FEAT_DISCARD;
->  		return 0;
-> -#ifdef CONFIG_FS_DAX
->  	case Opt_dax:
-> -		xfs_mount_set_dax_mode(parsing_mp, XFS_DAX_ALWAYS);
-> -		return 0;
-> +		if (dax_is_supported()) {
-> +			xfs_mount_set_dax_mode(parsing_mp, XFS_DAX_ALWAYS);
-> +			return 0;
-> +		} else {
-> +			xfs_warn(parsing_mp, "dax option not supported.");
-> +			return -EINVAL;
-> +		}
->  	case Opt_dax_enum:
-> -		xfs_mount_set_dax_mode(parsing_mp, result.uint_32);
-> -		return 0;
-> -#endif
-> +		if (dax_is_supported()) {
-> +			xfs_mount_set_dax_mode(parsing_mp, result.uint_32);
-> +			return 0;
-> +		} else {
-> +			xfs_warn(parsing_mp, "dax option not supported.");
-> +			return -EINVAL;
-> +		}
+[1] https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General/topic/String.20manipulation.20in.20kernel.20Rust
 
-Assuming that I understand what dax_is_supported() is doing, this
-change isn't right.  We're just setting the DAX configuration flags
-from the mount options here, we don't validate them until 
-we've parsed all options and eliminated conflicts and rejected
-conflicting options. We validate whether the options are
-appropriate for the underlying hardware configuration later in the
-mount process.
+Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+---
+Changes in V2:
+  - expand commit message mentioning the use case
+  - expand function doc comments to match the ones from Rust's stdlib
+  - rename to_* to make_* and add the actual to_* implementations
+---
+ rust/kernel/str.rs | 60 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-dax=always suitability is check in xfs_setup_dax_always() called
-later in the mount process when we have enough context and support
-to open storage devices and check them for DAX support. If the
-hardware does not support DAX then we simply we turn off DAX
-support, we do not reject the mount as this change does.
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index 7d848b83add4..758bb70d98e9 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -581,6 +581,66 @@ pub fn try_from_fmt(args: fmt::Arguments<'_>) -> Result<Self, Error> {
+         // exist in the buffer.
+         Ok(Self { buf })
+     }
++
++    /// Converts this CString to its ASCII lower case equivalent in-place.
++    ///
++    /// ASCII letters 'A' to 'Z' are mapped to 'a' to 'z',
++    /// but non-ASCII letters are unchanged.
++    ///
++    /// To return a new lowercased value without modifying the existing one, use
++    /// [`to_ascii_lowercase()`].
++    ///
++    /// [`to_ascii_lowercase()`]: #method.to_ascii_lowercase
++    pub fn make_ascii_lowercase(&mut self) {
++        self.buf.make_ascii_lowercase();
++    }
++
++    /// Converts this CString to its ASCII upper case equivalent in-place.
++    ///
++    /// ASCII letters 'a' to 'z' are mapped to 'A' to 'Z',
++    /// but non-ASCII letters are unchanged.
++    ///
++    /// To return a new uppercased value without modifying the existing one, use
++    /// [`to_ascii_uppercase()`].
++    ///
++    /// [`to_ascii_uppercase()`]: #method.to_ascii_uppercase
++    pub fn make_ascii_uppercase(&mut self) {
++        self.buf.make_ascii_uppercase();
++    }
++
++    /// Returns a copy of this CString where each character is mapped to its
++    /// ASCII lower case equivalent.
++    ///
++    /// ASCII letters 'A' to 'Z' are mapped to 'a' to 'z',
++    /// but non-ASCII letters are unchanged.
++    ///
++    /// To lowercase the value in-place, use [`make_ascii_lowercase`].
++    ///
++    /// [`make_ascii_lowercase`]: str::make_ascii_lowercase
++    pub fn to_ascii_lowercase(&self) -> Result<CString, AllocError> {
++        let mut s = (*self).to_cstring()?;
++
++        s.make_ascii_lowercase();
++
++        return Ok(s);
++    }
++
++    /// Returns a copy of this CString where each character is mapped to its
++    /// ASCII upper case equivalent.
++    ///
++    /// ASCII letters 'a' to 'z' are mapped to 'A' to 'Z',
++    /// but non-ASCII letters are unchanged.
++    ///
++    /// To uppercase the value in-place, use [`make_ascii_uppercase`].
++    ///
++    /// [`make_ascii_uppercase`]: str::make_ascii_uppercase
++    pub fn to_ascii_uppercase(&self) -> Result<CString, AllocError> {
++        let mut s = (*self).to_cstring()?;
++
++        s.make_ascii_uppercase();
++
++        return Ok(s);
++    }
+ }
+ 
+ impl Deref for CString {
 
-dax=inode and dax=never are valid options on all configurations,
-even those with without FSDAX support or have hardware that is not
-capable of using DAX. dax=inode only affects how an inode is
-instantiated in cache - if the inode has a flag that says "use DAX"
-and dax is suppoortable by the hardware, then the turn on DAX for
-that inode. Otherwise we just use the normal non-dax IO paths.
-
-Again, we don't error out the filesystem if DAX is not supported,
-we just don't turn it on. This check is done in
-xfs_inode_should_enable_dax() and I think all you need to do is
-replace the IS_ENABLED(CONFIG_FS_DAX) with a dax_is_supported()
-call...
-
--Dave.
+base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
 -- 
-Dave Chinner
-david@fromorbit.com
+2.43.0
+
