@@ -1,207 +1,192 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5694D86AE8;
-	Tue, 30 Jan 2024 15:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CEC823D3
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706629768; cv=fail; b=sx1nhLTGht5WfAWbiDuVD6JMG5d25rH2jDqZK8/R3MTMF0AJ75r3itfcBQGV8yeNCO+fZU5wZocnKzIsIvC/OwS9XTAOmJkUOO5OkBVXZ00crz/tiMBDXTMEuLccgspsAFn8nlOwDFkwTqWyuCG1xWCkHNky+VKkSonyvsh4/DQ=
+	t=1706629802; cv=fail; b=IM+oFK88H4eEC7ySbKEZBUeW84+e8n+pqwvaIm2mMWhkRlLWXbqIO0ZaheLroMprtNV2nFSxkANq4FMvKR6UkT4IIqQrNfkW/ejXdfzIqbKqZVdLSVeTP3q0EJueXT0jRDu8k1oYJv/ZFETMydtvEuzIO2E1TK55oajijw0emHk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706629768; c=relaxed/simple;
-	bh=2/L3CMIpD2Q6WTee3CeIHz3X6PEST7CYI3j9OqQiozU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k7Z9CAbERyFYB9i6CopTZqjWN1ujgBewmcmVKIuDyb9FgvBoZavzGyihdWXoIbRuv6kCoXdZLnPgMmcU4P1WrshNBhX8ATbJHGLwliprye6AYKe5jzvIX7VxmE6xJDIe0DyL4nYoLB1tFMXoNGV1W87BHvJuDZ1i0nY81kzkx2A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C0qDyFNe; arc=fail smtp.client-ip=40.107.236.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1706629802; c=relaxed/simple;
+	bh=tIg5iSxbschwaF2QeHXe3m9Mc3Z5fmJbef4NCtAFpeg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tMSCkSc+69/emi8dAhTaqKzrdU7Gz4CMEJEUX9AfzNEJdP08RWFx8ikwx2peIXcrGz2DWsyZTD4Vb2TB9/kVn4jLRPRZ9ZHOGkojwO05SXuVnotB6vUorvMfrvx5iC9+wus93cCC0CSs1MyN2bAJca9l0AGdx+q6gPcSOy8mOoo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djAWnCEN; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C0qDyFNe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djAWnCEN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706629801; x=1738165801;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=tIg5iSxbschwaF2QeHXe3m9Mc3Z5fmJbef4NCtAFpeg=;
+  b=djAWnCENbDJDgAyIdxYObMlTqbpEJKfExjrcYmT3MIMhidnAbwGBaa7K
+   muR9FQPdK71Fyyw+VFnTuYMJl7qiWXTs2OBbCrulS5/S2mqTsVOvJcAMr
+   Yzh9eZzzFW7jtZm2rBhNrWmYJhqOB4niGuaeQpvE8M5fb4xMHVXTJmx76
+   ruAxMGnKhhOhVctlfQCgWTlyJ7Q+3I3S06Ea98o8Vlp4ICd7tEhSberq3
+   gcDhi+tTcj4gSKCa9oMzT4+fUqFIW/phtGoDPYf8WOcK8HfsCSQO0QbMr
+   I82htZ/1Zj7GEnTf+qgXYPDBLAs3MWB2X+vVAqVHn97hgOVX0L7qbHm+H
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10694326"
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="10694326"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:49:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788238446"
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="788238446"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Jan 2024 07:49:48 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 30 Jan 2024 07:49:48 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 30 Jan 2024 07:49:48 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 30 Jan 2024 07:49:45 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oc/gzXyAc/D2cJ0LnZVt1Xfy+kLKIfcimLSZ8+NU6VNV8fCsd7IMG+Npi6BAHkbh86HvaDSHzY2JqfcSuvb8b9bcO/dWiBGXEouEHQ9K5OnuFK6lTI3qJj3HqFSMWWuHJQ0QrkLuUHPiSGlIw06xxyi/E8Tg6UwiUEawscERKSOGE9FttJsTaDtZrorSy6nQzo033PpPA5Szu4tkampkKkp83Umi/lXCfNCksAyYIUrK326DfWS5LecsyP0K/RteoEAAvnoDVIFLN25EySIaw5qfeS0us4JaXABvAXBj30JorVBFGH/hbJm99b2XYCAmZUw7puPYFTmkpQuAJJQEtA==
+ b=fIJB0QA5hj9vMoPzCzd+1hhcxKDeDqPIWNO64Utt89fxiKlHaAtxUQ9gq5bcaP1fVM4wVW/0DJMlH2AOrcatO+AEnwiSAloGlaP1yfGgL4lz8JhZV5fBs8vguD+QmhVfwC/r+Cnl+Nd4JpYkAo8+CfNyWuo8K+C3kEUukoHIkvo+4UqynIbMGoJizoSfWI8ba9LyukBgCN/F8DvXahd70doxp3rjYbJM67qO3eZgmXt+yPc1eCDg0qA8SAHEZRpNvItsLc2TeSCYpC8B06BEuJtmR2Lclnw57KAhN/o4abM3ddW/G5J8dl67MNvTG93BXilmYObaMKGUGYYuwQocCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5BsRx+5Ng7RgJdjezWuHPR+PBFBF/orE+c2CGbsv9hA=;
- b=Y0+TvSpAH3aZwZVk5xwCRsrrqvaWNIc1avbQeZJ1B8t/zBQcTvLtjaLYY06mUn0UjbFMz5XLTXWbfArYHz6JIUzbEOf5OT7lCzZJZuRoEW2DTlK0pEXqhAK22NdhCrEc2qpg2dnSDmXUGszWUyF681HgqAi+1Tmeh0QkZl4ZzEh8hMXhQAE/mNjJd1+qwgFngdCmBczmYOQtdvpvVTF3JiHgYx4mSkv6lAt/WQ8azcV1buWj6xRFxTByLbldQ4XpRzI+RrAVazhaexNyvC/onpbGuhwf9nFzMqyu5Jrv7+uiccox3+oiiYH0zi1eTn1VmJYncy5c7hj/md67W7Q63g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5BsRx+5Ng7RgJdjezWuHPR+PBFBF/orE+c2CGbsv9hA=;
- b=C0qDyFNe8TPABDNcq32empr29Y3EmGlWIqwtAFIHRI6FkA3G+fiC6F7TS29rLSE2Nq1YdUtaVHoN+VoN+Ezyj/afHJI3EF5jd08A3Sqb/t55rAPiI79NXQbj3bRpfl6dZd3U5/W4/lqCswsq8oTkJz+b14pw/by9EpQk2YZ0WSU=
-Received: from BN8PR07CA0002.namprd07.prod.outlook.com (2603:10b6:408:ac::15)
- by DM8PR12MB5397.namprd12.prod.outlook.com (2603:10b6:8:38::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.22; Tue, 30 Jan 2024 15:49:23 +0000
-Received: from BN3PEPF0000B069.namprd21.prod.outlook.com
- (2603:10b6:408:ac:cafe::e4) by BN8PR07CA0002.outlook.office365.com
- (2603:10b6:408:ac::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22 via Frontend
- Transport; Tue, 30 Jan 2024 15:49:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN3PEPF0000B069.mail.protection.outlook.com (10.167.243.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7270.0 via Frontend Transport; Tue, 30 Jan 2024 15:49:23 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 30 Jan
- 2024 09:49:23 -0600
-Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
- Transport; Tue, 30 Jan 2024 09:49:22 -0600
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Ben
- Levinsky" <ben.levinsky@xilinx.com>, Tarak Reddy <tarak.reddy@amd.com>,
-	"Tanmay Shah" <tanmay.shah@amd.com>
-Subject: [PATCH v5] remoteproc: Make rproc_get_by_phandle() work for clusters
-Date: Tue, 30 Jan 2024 07:48:49 -0800
-Message-ID: <20240130154849.1018666-1-tanmay.shah@amd.com>
-X-Mailer: git-send-email 2.25.1
+ bh=mmp7/6FTxKWVPxs669QCGbAw6af8d7gT/r7ovErCTW8=;
+ b=C3YVz93KUfKdcA5X4wGtC5TBhVyyJpA6mXoo+hn42azyfIL34JDFl+tYU3JZk44KtystSwe39Ch7DobjBqjqole+4erb2Ioc5UcVJhErultXe4xJb/siNy6MnBWhc8roI2z4VBI7bKjUFIcfXv+DM3K+MvLjuKJlCBhK/Mph9B4DhggDOCTucP7vbWP72tqep+mARwiNSJxopvH/zm8Xe12CJaIuZJRwQeMmIOsC0hjZNVH9OlnWvrPEJncQ9F81wpXHAwLFUpL5B7TC+6/rfvBNBlohIQNnx+4X4caA4aTIFpXkhXPwTbTvWpEqs0zBZCrXzsiN9qNNzEdEGWftNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6059.namprd11.prod.outlook.com (2603:10b6:208:377::9)
+ by PH7PR11MB7720.namprd11.prod.outlook.com (2603:10b6:510:2b3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Tue, 30 Jan
+ 2024 15:49:43 +0000
+Received: from MN0PR11MB6059.namprd11.prod.outlook.com
+ ([fe80::a7f1:384c:5d93:1d1d]) by MN0PR11MB6059.namprd11.prod.outlook.com
+ ([fe80::a7f1:384c:5d93:1d1d%4]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
+ 15:49:43 +0000
+Date: Tue, 30 Jan 2024 10:49:37 -0500
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Johannes Berg <johannes@sipsolutions.net>
+CC: <linux-kernel@vger.kernel.org>, Jose Souza <jose.souza@intel.com>,
+	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 1/2] devcoredump: Remove devcoredump device if failing
+ device is gone
+Message-ID: <ZbkakWFtV5iQrfLP@intel.com>
+References: <20240126151121.1076079-1-rodrigo.vivi@intel.com>
+ <d57dc34fa8b0e25cec014b8001dcd0527d1c1013.camel@sipsolutions.net>
+ <ZbgYyra1Ypa0nf6u@intel.com>
+ <33df6c78c4c47a8f57a1c2bfe835065becb5a253.camel@sipsolutions.net>
+ <ZbkSvcEtRgTXuzgJ@intel.com>
+ <8681168464fa85061db4a7234f89cead65cb0261.camel@sipsolutions.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <8681168464fa85061db4a7234f89cead65cb0261.camel@sipsolutions.net>
+X-ClientProxiedBy: SJ0PR05CA0013.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b::18) To MN0PR11MB6059.namprd11.prod.outlook.com
+ (2603:10b6:208:377::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B069:EE_|DM8PR12MB5397:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c4eadac-ab17-4353-4501-08dc21ab07fc
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6059:EE_|PH7PR11MB7720:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f1167c6-239d-4865-66b8-08dc21ab134b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	z7P33WArlmURc0lD5x0jq+BPbMEwBKBPb+gmDaUKestaQ1R4CgS+IuDdJDFfpW1kudHER+K8KlGQG6u3rfi+5fNh8IZmfU9JrN1Japws2yCVLyXKfYODwt4Oe78JNHQ3vFlL8CN+rCK8VFSrhjDcRqRB6+gqzOWZDBqxotVaoNKhwZgSDRsNCwaK3o2b1XmHBjrXjlo+uRIzwxnueam6/4wWhlq+KQXH5dwYQpCeIeZF5GIpq7v93oMq7Vq2XCnf5xrf3zLTT2eaFZYSfT0ahfUli/q9D8BCvUuKfJdL3bcPrANOdRuoVEJ2z0QCptqoGCPTnK88yQTNs1R5yZzHs2W4eFq6O7UgaF0hIK7rqOSEcECdRGSPqy1AXuVLoUEo5jxaHDH9YjR4XEi3zAYrfE/+i/pL3zgQzxm0x2DzMwtsOrKE1oaaAEylJGvwuQxglvyjDumsqdxZPDKr/rC+eV/CgfCklLGOoL2b15pw9Lg4HDBSKd2yYy+ghlUodn5G3f4vJYBgFQGwa57CTLsPcyxzgl0yOzuqVO0ylXZ7k3uLHiJ6IxPn/cUlDuqiadESBb3rQBvaCkBqQ5uS9Br1EzQIHMNfw10yFCDrA78uZ0/gyzxbS0qgj9Qmzd5vuzF9lOtfdFEKVbRtk1zF3icpVxmKsBNDW+xyp0QUj/OhM+zkgu+uXfwo3UPaUDdgYkdtasuHN2B+sKQhJ75AZiztigimTfUESqzQHyzhnyF34RZ5VO3OpNS2pDa2F8VmBZMQ0sMvs/Je9zPXnc9JXe6e7g==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(396003)(39860400002)(376002)(230922051799003)(1800799012)(186009)(82310400011)(451199024)(64100799003)(46966006)(40470700004)(36840700001)(426003)(336012)(2616005)(1076003)(41300700001)(40460700003)(40480700001)(36756003)(47076005)(36860700001)(110136005)(26005)(6666004)(478600001)(83380400001)(81166007)(82740400003)(356005)(54906003)(86362001)(2906002)(5660300002)(4326008)(70206006)(316002)(44832011)(70586007)(8676002)(8936002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 15:49:23.6396
+X-Microsoft-Antispam-Message-Info: QWWerCH5F8Z4t59mLsWUY1vo2N7YfkxqWRqVzxnSdcEqhWsvN40LlRR0O0iB1ZccMILbn/hRhacuWt1ae2lC18GanvGLdbutNuTTyG3lsvHE/mzIDOUpauRN/IGYBmlbQ03RWoUeoRqCF0otDcnXWhhUGaLHY9X5h40UKUXuUBFT4bQ84RMqDxveBe15adMO56WXMmugtkLldFrh23z/nY9Y7W+7ppsdsBBa7a+UfMKIh9oI+T9770Rbuod8JTf2dnOlz5ACFb/SAdSyqdXpYYnXB6Gu/INR5TkeeUBYeClDPy7H0HyiWfLKLT0B+ZTqs2s0nrMC8Y49KOysoHCcKZuwcuedn7kP9EauZeNlcfVRflU4TK43XhykOUnObjeXXaR0agIPhOPqwCS6saWahVAJKvB609qrxYTgS471fguWvaAmbZ6WSJEtkdt5vQ9xDW6y0yPhK34bwpquPswuFwjk/GBKvN3m2xcSJJK1nN13hs16lcb0TcnGJ6EQ7sRd3FwUu0KyIolSyau6HMpTKYDuP2Yiuj7j3J0UFduVF5WqaqWpbRw5F4LWg4382v6B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6059.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(39860400002)(136003)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(41300700001)(82960400001)(38100700002)(66946007)(316002)(6506007)(54906003)(6916009)(8676002)(66476007)(6486002)(8936002)(44832011)(6512007)(5660300002)(2616005)(86362001)(478600001)(4326008)(26005)(2906002)(6666004)(36756003)(66556008)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?f48G/0ux5kFzMIpQK0n3I8YtUjx12bYVwWJsqBdtNqjdLdh4KxL3jLcELONh?=
+ =?us-ascii?Q?H28KK5utPTkbd3CYidHb4lPb4HC0VF7KNVtORGKEyYfZlB8ACQXHoId7ap7d?=
+ =?us-ascii?Q?AyNl/6HGgCovjmfFZ642zs1pI1voO28de1NPWD0/rPC+fkvZ9tBkRSTAs5fI?=
+ =?us-ascii?Q?FsXdcSIc+E2kICo7+gXp1hASI+m2wxFpGXlgazeqQwH0fb7hPxqDSD+6WX8e?=
+ =?us-ascii?Q?03u7F/OCJEOKqKw4idWJb4ztxuGpZTRDCBLAr4IEW5RmM8RD62hUEnOEXw47?=
+ =?us-ascii?Q?PBmtpICefN6M7nvIZyCYROIVV2j1JyfVu54otej9k3O3oKj9rfP5TRWWwt0q?=
+ =?us-ascii?Q?OguCRu8znxM03P4AS65sAzKK3R1eV+JakH32THFeOlzOX1Ip3uW6IShnBfvI?=
+ =?us-ascii?Q?YFLYPaZ0BfTVhbO+4hN1Plv37n/uO5ar/aKNeqTMfLVuycKE57M1K5TJYVue?=
+ =?us-ascii?Q?tNh6AwkI8LCSI7x0nZipot7f8I0C9qRVmzu5/PYUspvOWv6QMxNG8rYQufM6?=
+ =?us-ascii?Q?6LeX8+tgzV4xk/5N9WmcHqEkmdmVy14RkQhxrUINup0xTsu8F7FJG4T/BH8W?=
+ =?us-ascii?Q?o87AjEy1drjrHdzuw2vHXGbEU9bbCBAb1QbAItJPvbsd605AIorSq5qCXfjJ?=
+ =?us-ascii?Q?2A8WuPv16cIvE4KoVxdiCUtZfTxMDpt552dcfeNcfPowuXVLSfPPK6xmPKiL?=
+ =?us-ascii?Q?NuDkSpvONsz/9aS/pqdJUe/vlb8mL+UWlPpZMOqvW+xKRzYzIbCIachme+ee?=
+ =?us-ascii?Q?TIwDPD5kmjDsoiRI/4+unALJxSzZEF6j30lVudy6KCNpex/kplSTBefReOIE?=
+ =?us-ascii?Q?lGnRzIa7IOA7p9WRUnWruBlm4bPI70MTKicIkRHbl8jHYrHG+ojMDyMuxfEx?=
+ =?us-ascii?Q?hRN3/3Hn42weO88nymjGWAcJtWO/sRcvLjKCoSyFoQfA2E3LbwffdFLTPyAf?=
+ =?us-ascii?Q?4xBVrpsXziqL+YyGEKNoVGm1MXndTTPbf9go8wdBdzllz52sLDy9pksYic/e?=
+ =?us-ascii?Q?KAU+n4gsxcdyQ8l2rm0cvA2AVFLAm4LucEdmks0YLs30WLIFt8ojXsuz6so6?=
+ =?us-ascii?Q?q9ZgMCfsRInbykdbdFNqGEsUZD3xxXOScHUxlqGuNp8bKY2mCaqPsbGQnd8V?=
+ =?us-ascii?Q?IwJo2hX49QBiotE4k6hpDMQ/0YsuNS7jFIva8+LbeFdhRqnFAzsYWw4EhQWd?=
+ =?us-ascii?Q?G8O3gswHagsbfNoWMVQ6DAxgoDO7CoR8XxIDoXVJ/yPZcRjqb6Ct4xX5hCbC?=
+ =?us-ascii?Q?AiElSrdJd/HHg1/LXRzdk8OmbWaN6C48LIxnofLc2bVvM6uBf3mjwRvb+Lud?=
+ =?us-ascii?Q?03pbzOkfX1pHIcOH/Jgb0qFV4HNQ/P0Zckt9kYBlxHZf27Hfu5gSEQNsi6J3?=
+ =?us-ascii?Q?fIfO6ZsYThRO6jwDUsHXA24L7+iBgkuA5XSiDcxhlsq+wh3N28+nNInQM/Y6?=
+ =?us-ascii?Q?nsib8BzJTQfztiYbwd/wUV9cOSCW2BRJg6phA+KPY/9+v3NkMgoKvOJim/1s?=
+ =?us-ascii?Q?LH3nKWj7uOEVltt/3I/XIvjKOn8pZM92XIX0zU6gaSS1p5ChBQG0cMdMAXC+?=
+ =?us-ascii?Q?wZsCC9nxvfunZL05WRWUdjcNusZ/46j0OLimKXT4?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f1167c6-239d-4865-66b8-08dc21ab134b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6059.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 15:49:43.0041
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c4eadac-ab17-4353-4501-08dc21ab07fc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B069.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR12MB5397
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CpOr2t9IC7NEoso1CwS0UINi0hp4zQkyHtuMLueOsU7A9VNIwqUG15MiV+McGAD997Z00fnRyEuxz5vOWf3PoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7720
+X-OriginatorOrg: intel.com
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Tue, Jan 30, 2024 at 04:19:18PM +0100, Johannes Berg wrote:
+> On Tue, 2024-01-30 at 10:16 -0500, Rodrigo Vivi wrote:
+> > > 
+> > > But I'd rather not, it
+> > > feels weird to have a need for it.
+> > 
+> > We could change or CI and instruct our devs to always write
+> > something to 'data' to ensure that devcoredump is deleted
+> > before we can reload our module. Maybe that's the right
+> > approach indeed, although I would really prefer to have
+> > a direct way.
+> 
+> That's not really what I meant :-) I think we can agree that it's wrong
+> for the kernel to be _able_ to run into some kind of use-after-free if
+> userspace isn't doing the right thing here!
+> 
+> What I meant though is: it's weird for 'data' to actually depend on the
+> struct device being still around, no? Whatever you want 'data' to be,
+> couldn't you arrange it so that it's valid as long as the module isn't
+> removed, so that the 'data' pointer literally encapsulates the needed
+> data, doesn't depend on anything else, and the method you pass is more
+> like a 'format' method.
 
-Multi-cluster remoteproc designs typically have the following DT
-declaration:
+I'm sorry for not being clear here. I totally agree with you.
 
-        remoteproc-cluster {
-                compatible = "soc,remoteproc-cluster";
+I will make changes to our driver to make the 'data' a standalone memory
+that devcoredump will free. this ensures no uaf and no null deref.
+data could be read even after unbinding the driver.
 
-                core0: core0 {
-                        compatible = "soc,remoteproc-core"
-                        memory-region;
-                        sram;
-                };
+What I meant to userspace 'writing to 'data'' was to ensure that
+on our CI we run something like
 
-                core1: core1 {
-                        compatible = "soc,remoteproc-core"
-                        memory-region;
-                        sram;
-                }
-        };
+if /sys/.../device/devcd<n> exists, then
+echo 1 > /sys/.../device/devcd<n>/data
+before attempting the rmmod <driver>
 
-A driver exists for the cluster rather than the individual cores
-themselves so that operation mode and HW specific configurations
-applicable to the cluster can be made.
+our rmmod cannot get stuck or our CI is blocked, but then ensuring
+the devcd is gone with module_put happening is the only current way
+of not blocking the rmmod.
 
-Because the driver exists at the cluster level and not the individual
-core level, function rproc_get_by_phandle() fails to return the
-remoteproc associated with the phandled it is called for.
-
-This patch enhances rproc_get_by_phandle() by looking for the cluster's
-driver when the driver for the immediate remoteproc's parent is not
-found.
-
-Reported-by: Ben Levinsky <ben.levinsky@xilinx.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Co-developed-by: Tarak Reddy <tarak.reddy@amd.com>
-Signed-off-by: Tarak Reddy <tarak.reddy@amd.com>
-Co-developed-by: Tanmay Shah <tanmay.shah@amd.com>
-Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
----
- drivers/remoteproc/remoteproc_core.c | 29 ++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 695cce218e8c..f276956f2c5c 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -33,6 +33,7 @@
- #include <linux/idr.h>
- #include <linux/elf.h>
- #include <linux/crc32.h>
-+#include <linux/of_platform.h>
- #include <linux/of_reserved_mem.h>
- #include <linux/virtio_ids.h>
- #include <linux/virtio_ring.h>
-@@ -2112,6 +2113,7 @@ EXPORT_SYMBOL(rproc_detach);
- struct rproc *rproc_get_by_phandle(phandle phandle)
- {
- 	struct rproc *rproc = NULL, *r;
-+	struct device_driver *driver;
- 	struct device_node *np;
- 
- 	np = of_find_node_by_phandle(phandle);
-@@ -2122,7 +2124,26 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
- 	list_for_each_entry_rcu(r, &rproc_list, node) {
- 		if (r->dev.parent && device_match_of_node(r->dev.parent, np)) {
- 			/* prevent underlying implementation from being removed */
--			if (!try_module_get(r->dev.parent->driver->owner)) {
-+
-+			/*
-+			 * If the remoteproc's parent has a driver, the
-+			 * remoteproc is not part of a cluster and we can use
-+			 * that driver.
-+			 */
-+			driver = r->dev.parent->driver;
-+
-+			/*
-+			 * If the remoteproc's parent does not have a driver,
-+			 * look for the driver associated with the cluster.
-+			 */
-+			if (!driver) {
-+				if (r->dev.parent->parent)
-+					driver = r->dev.parent->parent->driver;
-+				if (!driver)
-+					break;
-+			}
-+
-+			if (!try_module_get(driver->owner)) {
- 				dev_err(&r->dev, "can't get owner\n");
- 				break;
- 			}
-@@ -2533,7 +2554,11 @@ EXPORT_SYMBOL(rproc_free);
-  */
- void rproc_put(struct rproc *rproc)
- {
--	module_put(rproc->dev.parent->driver->owner);
-+	if (rproc->dev.parent->driver)
-+		module_put(rproc->dev.parent->driver->owner);
-+	else
-+		module_put(rproc->dev.parent->parent->driver->owner);
-+
- 	put_device(&rproc->dev);
- }
- EXPORT_SYMBOL(rproc_put);
-
-base-commit: 99f59b148871dadb9104366e3d25b120a97f897b
--- 
-2.25.1
-
+> 
+> johannes
