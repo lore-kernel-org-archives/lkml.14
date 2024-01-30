@@ -1,95 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9319F6F073
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A352274E0D;
+	Tue, 30 Jan 2024 13:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706620473; cv=none; b=Oy4j3Pew2Bwjnpup0swu8dedAJlez0JPp1L2cJchAtnuX2QzSyuP2ooK2YMwoJiCTSC9lrKwEwToUsh/sQWxd0mOTHdSiR9K3iQP+1viC0tlfGF6cHRRqspHbf1mosFKxBVQ0/M6aGm/I6gQSmWw6hjC2DE6HDGm6EgWuNx91qk=
+	t=1706620504; cv=none; b=LN0aYNDPT0GaZcAe/YRQbAL2npY8LG6e3ITTrTVswtb3auxu+CtupSp/CtANAI0parmmp5z/lczM/vuqvCo0AW/ILxc8uvujBpMMD+tqmY2zKfAWFgp5cGtNrviW2GHgbQ/PEHv/N4NaOdotRWbK/tJ86noXkH6+2omGPhVmglM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706620473; c=relaxed/simple;
-	bh=g+mDwC9FPU+XmcCzxUJ4hYXHnkp5fd/Hyf0d6FKB8Rg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PSeTKEbyZrCtN+I66Hozh+RPKDxwz47m1/AU4hHvzIbhqLq1P0qSOpc0gpw9sThFAbCgiZVAs56+24yUytE81xIK++ogyFAaVMHa/R/bw+GR8we5Vpa01816pYQign2clzl87dKbZYVEtSbtsM2yUP1avZIYxoqcZ2XfkIxi35c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNrtEUQH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706620504; c=relaxed/simple;
+	bh=XzgL+n4cnmh65E3tupGX/Y9mODh/MkIzXKMo80VVDsM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J2pTI2O3KsnM1rV/+yyldk44xxaqIohn8GBfhkn1v3c/mRITxYdSLzXjc/mNIcW/7gAIYrCl9yU7cINCb8aEukKUfCZOeYNZ6eH9kg4SUY3ftzvu+e+I3D8DFfMy3/O8x/JibSY3sEeie89QTDd4u/63DA4sd+mOb8sY1+PWEzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j7p6M2rS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fcbkxqsP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j7p6M2rS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fcbkxqsP; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNrtEUQH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF9BC43394;
-	Tue, 30 Jan 2024 13:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706620473;
-	bh=g+mDwC9FPU+XmcCzxUJ4hYXHnkp5fd/Hyf0d6FKB8Rg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YNrtEUQHPV4xlePXQ6bNoPbZUy0QY/ygNg91OYFhS3FGt7U8wGld+bVHMvTz9l3LE
-	 doiIaK5zw+jr/I8PRnw4XKDB9aVDgs/U2UcYq7aY2WwTrblQyXf1bbL0NTRWDEq35n
-	 gdp2a8c0Fjd/8W7n+KYY9LLuYKQLcGRcrd/jCCzPTohOsmUxT1EJS8hyEEpfueRpzR
-	 BLDAx6QffUjuSONcVLGKjW4hbeQFiWuBhLlrkAmD72bkqAu4Gin9FPcN0bD4IPNJqg
-	 l7vpgDKDOEUfJ/Q88D+Ym1r9C/WJr06Wx2fui6ugjuhMfnqRsvG4U+BRdQQYRYyqug
-	 HFuO6TF4MSF2w==
-From: alexs@kernel.org
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	ricardo.neri-calderon@linux.intel.com,
-	sshegde@linux.ibm.com
-Cc: Alex Shi <alexs@kernel.org>
-Subject: [PATCH v2 6/6 RFT] sched/fair: change sched asym checking condition
-Date: Tue, 30 Jan 2024 21:17:08 +0800
-Message-ID: <20240130131708.429425-6-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240130131708.429425-1-alexs@kernel.org>
-References: <20240130131708.429425-1-alexs@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j7p6M2rS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fcbkxqsP";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j7p6M2rS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fcbkxqsP"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E4EA91F84B;
+	Tue, 30 Jan 2024 13:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706620500; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C20JTUPpSyGGJZB6BpIGKouuM36f4VjdkcvrYvd2OG8=;
+	b=j7p6M2rSxY1fqRrfGnnEUjHSyodlEuP1g/51oxlwIP3MVG1mUZ8I4JRaSSQbJNOBvl6Jaf
+	67W1wKvZXIq2I77CSXO0E9jS7CxYUpCOEG5n29l4QPltP4JfItm8iWAY1pwrmPHhYUiInT
+	/ioE7bdZPCAo87tcaAB6ReoWHwPXbOg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706620500;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C20JTUPpSyGGJZB6BpIGKouuM36f4VjdkcvrYvd2OG8=;
+	b=fcbkxqsP011Fc7c4WBBUKhvmV16eMMTLcJADCcgw5CCmc/ojHQm+s5pnkZxXiQurPTL+i3
+	lKm/+Y190oo+XEAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706620500; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C20JTUPpSyGGJZB6BpIGKouuM36f4VjdkcvrYvd2OG8=;
+	b=j7p6M2rSxY1fqRrfGnnEUjHSyodlEuP1g/51oxlwIP3MVG1mUZ8I4JRaSSQbJNOBvl6Jaf
+	67W1wKvZXIq2I77CSXO0E9jS7CxYUpCOEG5n29l4QPltP4JfItm8iWAY1pwrmPHhYUiInT
+	/ioE7bdZPCAo87tcaAB6ReoWHwPXbOg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706620500;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C20JTUPpSyGGJZB6BpIGKouuM36f4VjdkcvrYvd2OG8=;
+	b=fcbkxqsP011Fc7c4WBBUKhvmV16eMMTLcJADCcgw5CCmc/ojHQm+s5pnkZxXiQurPTL+i3
+	lKm/+Y190oo+XEAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AD88F12FF7;
+	Tue, 30 Jan 2024 13:15:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id FL7DKFT2uGW5WQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 30 Jan 2024 13:15:00 +0000
+Date: Tue, 30 Jan 2024 14:15:00 +0100
+Message-ID: <87wmrr2ca3.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Ivan Orlov <ivan.orlov0322@gmail.com>
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ALSA: pcm: Add missing formats to formats list
+In-Reply-To: <20240125223522.1122765-1-ivan.orlov0322@gmail.com>
+References: <20240125223522.1122765-1-ivan.orlov0322@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: 0.30
+X-Spamd-Result: default: False [0.30 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.90)[86.07%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-From: Alex Shi <alexs@kernel.org>
+On Thu, 25 Jan 2024 23:35:19 +0100,
+Ivan Orlov wrote:
+> 
+> Add 4 missing formats to 'snd_pcm_format_names' array in order to be
+> able to get their names with 'snd_pcm_format_name' function.
+> 
+> Signed-off-by: Ivan Orlov <ivan.orlov0322@gmail.com>
 
-Asym only used on SMT sd, or core sd with ITMT and core idled.
-!sched_smt_active isn't necessary.
+Now applied all three patches.  This first one is to for-linus, while
+the rest two are to for-next for 6.9 kernel.
 
-Signed-off-by: Alex Shi <alexs@kernel.org>
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: linux-kernel@vger.kernel.org
-To: Valentin Schneider <vschneid@redhat.com>
-To: Daniel Bristot de Oliveira <bristot@redhat.com>
-To: Ben Segall <bsegall@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-To: Juri Lelli <juri.lelli@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@redhat.com>
----
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For further improvements (e.g. Amadeusz suggested), let's apply on top
+of that.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6680cb39c787..0b7530b93429 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9744,8 +9744,8 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
- 	if (!(sd->flags & SD_ASYM_PACKING))
- 		return false;
- 
--	return (!sched_smt_active()) ||
--		(sd->flags & SD_SHARE_CPUCAPACITY) || is_core_idle(cpu);
-+	return (sd->flags & SD_SHARE_CPUCAPACITY) ||
-+		(is_core_idle(cpu) && test_bit(cpu_core_flags(), (void *)&sd->flags));
- }
- 
- static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int src_cpu)
--- 
-2.43.0
 
+thanks,
+
+Takashi
