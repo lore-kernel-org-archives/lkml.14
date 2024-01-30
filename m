@@ -1,104 +1,149 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CFF360AE;
-	Tue, 30 Jan 2024 10:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19E4360AE;
+	Tue, 30 Jan 2024 10:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706610991; cv=none; b=uTHDgiaiAENU8qMoHlZ/pDijKWIu/loBHc3iojXkycrAshLWjGI/q+/LT2TrPCuC/isjg8rRZs94gpBIuSgBbHYlLsq2VFAkQROZy1tAPQXmO/XkMuhKdu1BCNDgWt011r789R1Os5Q6RLukMJg6z8VxP7fraLJ/et1+t3FsH6E=
+	t=1706610997; cv=none; b=dv0MOWs94PqDC8fl4oDUgZ5QVWXHbRAP3fSopm9Jn62n9Y34MAtx0rYHNVubgJUHeBuYJiENiITozCdGMkEXVO6VRhTCqJ/OhG/Ec0DfP/xvLFJ95ylfic+TDVzb6s62eJeC4ouWKFiXEYEKDHt03/KXg4dZ/9d47TrcpoZ7DxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706610991; c=relaxed/simple;
-	bh=1VEZsTwp9W5LxTMM5zFoUdxDncCyBRFtLz8ybVOricc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DitmvX2n8ILRqt1NM6glWem+rIDsVHF1/WUWr7kyWUf2VlW9RLzpiDrkNi5Zqkr/732kQ5BcBrYi3Q4Sj6kBgYvxMW/R1dmCN1Gu8zo/ViH+3JZdye6Q5wDkTiTom4mO0kjEFi7s82agswXwFRT9KCQb/okhtDsOVehVuBSPtXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5edfcba97e3so42235207b3.2;
-        Tue, 30 Jan 2024 02:36:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706610989; x=1707215789;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f0zKEeIH6XGdGj+q5gmx2XiQOnw1KXquglVBPd+xyto=;
-        b=aYsnIpO0j8Fu0c8hMGLMxprwsqBhu+4/LtbKaNvy47RjmJ1Epvg0Ota+xDtCC8S1m7
-         3Eq2DOHqKEqcR2aRuLOfgYeeEyDaTfVTX7tQZA+qPSCVd2suAsOJkgpkxsb9Js6djxzV
-         pM5G7azD04s4ofm21DMGVR1e46HcWGDRYzidnpPZVJQyRINWUlrX57eWToCPuyUpoLZ3
-         4PPv6QYkzSh9I8hL9FK8pmgHMd3BzztBCsYI+seNbiBzS4XF7/mblmwF/0eRzuO00qbo
-         8CE1lA8Mb97Vp3rmEctYb3Ix/rfNsOPaarTEX6/StE00YhcfAvbs4j1JxqJTkSKKXgKa
-         +x9w==
-X-Gm-Message-State: AOJu0Ywk3Ofz3vDr9elSYv0uz48htbmSjaicnQkwnXRGF16q4EP0onpm
-	lM6jU5w/I58DJm0Ib5HEUhNJcsjCAB3dvayd7xiSoBye5U5s9KI2N5kVe3Sg/FM=
-X-Google-Smtp-Source: AGHT+IHVZtyGo2xht6Yj5/6d/jNkjtUKKD/9RnpugLSoG3UCzH6h/ZnhTdy6CKc2twT2R3ARlgzEXg==
-X-Received: by 2002:a81:bc54:0:b0:602:ab11:4264 with SMTP id b20-20020a81bc54000000b00602ab114264mr5716847ywl.43.1706610988934;
-        Tue, 30 Jan 2024 02:36:28 -0800 (PST)
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
-        by smtp.gmail.com with ESMTPSA id fr3-20020a05690c358300b0060033cc4fb0sm3088864ywb.13.2024.01.30.02.36.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 02:36:28 -0800 (PST)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6029e069e08so50158837b3.0;
-        Tue, 30 Jan 2024 02:36:28 -0800 (PST)
-X-Received: by 2002:a81:e207:0:b0:5e9:fa4a:fd56 with SMTP id
- p7-20020a81e207000000b005e9fa4afd56mr5491349ywl.13.1706610987546; Tue, 30 Jan
- 2024 02:36:27 -0800 (PST)
+	s=arc-20240116; t=1706610997; c=relaxed/simple;
+	bh=GLnDgyafe3Abwdfr1jBJzmg1hyqpqoPnd3cHPH0oxrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lchc+oBzqIpFvulxq6KKZwvsa4HWzW0SIPOtI3nKWM8XmVpkfiDwSn+IjV92EQm3sq5Lb9Yf2rar+TUpWurN2nvDmLgrc6Slb7cK/Wl5XtVZKFkyHfFsAZaj0JAo/o6avbLSRapM2JItx6TLL9hrACW2T9AL1wYgWxeYomDU8vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4TPM625ppBz9sB6;
+	Tue, 30 Jan 2024 11:36:26 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Ws_uhNN709Je; Tue, 30 Jan 2024 11:36:26 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4TPM4R4bMWz9vDl;
+	Tue, 30 Jan 2024 11:35:03 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 93C778B76E;
+	Tue, 30 Jan 2024 11:35:03 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 5Vre96fi8PyS; Tue, 30 Jan 2024 11:35:03 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.134])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id D09B58B763;
+	Tue, 30 Jan 2024 11:35:01 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-mm@kvack.org,
+	steven.price@arm.com,
+	Phong Tran <tranmanphong@gmail.com>,
+	mark.rutland@arm.com,
+	Greg KH <greg@kroah.com>
+Subject: [PATCH v2 0/5] mm: ptdump: Refactor CONFIG_DEBUG_WX and check_wx_pages debugfs attribute
+Date: Tue, 30 Jan 2024 11:34:31 +0100
+Message-ID: <cover.1706610398.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240129135556.63466-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240129135556.63466-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 11:36:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV-x94pcJ7UwYH_SUcFc_k0CiNckqxEX=_QCi+Ad9adJw@mail.gmail.com>
-Message-ID: <CAMuHMdV-x94pcJ7UwYH_SUcFc_k0CiNckqxEX=_QCi+Ad9adJw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] pinctrl: renesas: rzg2l: Include pinmap in
- RZG2L_GPIO_PORT_PACK() macro
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706610876; l=2737; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=GLnDgyafe3Abwdfr1jBJzmg1hyqpqoPnd3cHPH0oxrY=; b=tIZe4XZQjVwWyWqJ6WaH1FMomnKnFXJjNxF+XKnvH0G3eYwBTTFLAyHmPCAqyI2HJixgHIMEp +ciHrtrDDPHBl9BQwIT71a8HT+O9hvNWFDyEfO0KDZbwbPjdDLV5qLD
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 29, 2024 at 2:56=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Currently we assume all the port pins are sequential ie always PX_0 to
-> PX_n (n=3D1..7) exist, but on RZ/Five SoC we have additional pins P19_1 t=
-o
-> P28_5 which have holes in them, for example only one pin on port19 is
-> available and that is P19_1 and not P19_0. So to handle such cases
-> include pinmap for each port which would indicate the pin availability
-> on each port. As the pincount can be calculated based on pinmap drop this
-> from RZG2L_GPIO_PORT_PACK() macro.
->
-> Previously we had a max of 7 pins on each port but on RZ/Five Port-20
-> has 8 pins, so move the single pin configuration to BIT(63).
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Refer old discussion at https://lore.kernel.org/lkml/20200422152656.GF676@willie-the-truck/T/#m802eaf33efd6f8d575939d157301b35ac0d4a64f
+And https://github.com/KSPP/linux/issues/35
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.9.
+This series refactors CONFIG_DEBUG_WX for the 5 architectures
+implementing CONFIG_GENERIC_PTDUMP
 
-Gr{oetje,eeting}s,
+First rename stuff in ARM which uses similar names while not
+implementing CONFIG_GENERIC_PTDUMP.
 
-                        Geert
+Then define a generic version of debug_checkwx() that calls
+ptdump_check_wx() when CONFIG_DEBUG_WX is set. Call it immediately
+after calling mark_rodata_ro() instead of calling it at the end of
+every mark_rodata_ro().
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Then implement a debugfs attribute that can be used to trigger
+a W^X test at anytime and regardless of CONFIG_DEBUG_WX
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Changes in v2:
+- Fixed a few build failures (patch 1 and 2)
+- Added patch 4
+- Make the attribute return SUCCESS/FAILURE as suggested by Heiko (patch 5)
+
+Christophe Leroy (5):
+  arm: ptdump: Rename CONFIG_DEBUG_WX to CONFIG_ARM_DEBUG_WX
+  arm64, powerpc, riscv, s390, x86: ptdump: Refactor CONFIG_DEBUG_WX
+  powerpc,s390: ptdump: Define ptdump_check_wx() regardless of
+    CONFIG_DEBUG_WX
+  mm: ptdump: Have ptdump_check_wx() return bool
+  mm: ptdump: add check_wx_pages debugfs attribute
+
+ arch/arm/Kconfig.debug               |  2 +-
+ arch/arm/configs/aspeed_g4_defconfig |  2 +-
+ arch/arm/configs/aspeed_g5_defconfig |  2 +-
+ arch/arm/include/asm/ptdump.h        |  6 +++---
+ arch/arm/mm/init.c                   |  2 +-
+ arch/arm64/include/asm/ptdump.h      |  7 -------
+ arch/arm64/mm/mmu.c                  |  2 --
+ arch/arm64/mm/ptdump.c               | 11 ++++++++---
+ arch/powerpc/mm/mmu_decl.h           |  6 ------
+ arch/powerpc/mm/pgtable_32.c         |  4 ----
+ arch/powerpc/mm/pgtable_64.c         |  3 ---
+ arch/powerpc/mm/ptdump/ptdump.c      | 21 ++++++++++++++-------
+ arch/riscv/include/asm/ptdump.h      | 22 ----------------------
+ arch/riscv/mm/init.c                 |  3 ---
+ arch/riscv/mm/ptdump.c               | 12 ++++++++----
+ arch/s390/include/asm/ptdump.h       | 14 --------------
+ arch/s390/mm/dump_pagetables.c       | 21 +++++++++++----------
+ arch/s390/mm/init.c                  |  2 --
+ arch/x86/include/asm/pgtable.h       |  5 ++---
+ arch/x86/mm/dump_pagetables.c        | 20 ++++++++++++++------
+ arch/x86/mm/init_32.c                |  2 --
+ arch/x86/mm/init_64.c                |  2 --
+ include/linux/ptdump.h               |  7 +++++++
+ init/main.c                          |  2 ++
+ mm/ptdump.c                          | 22 ++++++++++++++++++++++
+ 25 files changed, 95 insertions(+), 107 deletions(-)
+ delete mode 100644 arch/riscv/include/asm/ptdump.h
+ delete mode 100644 arch/s390/include/asm/ptdump.h
+
+-- 
+2.43.0
+
