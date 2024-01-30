@@ -1,585 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E35762E2;
-	Tue, 30 Jan 2024 19:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683C279952
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706641462; cv=none; b=IAcFrRiRoVNfGwHcxDh5hIbpHmQp1gqQjLfKneDV5kKxb6N7h2DpDEGyl1O6tT4hRDhikTazw6rmBaoA6frEoQXsykLePFf9xpjgwGPT65IsZp2bRGPXhm8nhPVdafr11PDqvK1bN+h37oZLXHP93bJuhJe899/86+G7zWohGL0=
+	t=1706641475; cv=none; b=raJ3pO2twuAzzVsd16IbmIqer11IELDp+O5pn7UfeqMLx8sN26FyLJdPY2QWnn+YYESsKEYqQclqEwMfB2LjWIDNGsGSa9okxnpiuxiGJbAYek16wu61CR3EB1CGbolTRVyZiMLfAVumYky4P/6SAyCWWy5ZYnB8zW2NxJvMcSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706641462; c=relaxed/simple;
-	bh=/AduH2y6UR3zLY3u5BVwfhnp623uLwZq8kEsuen1JbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lblda4/+g39q/XdKV4yxU1ujovzf+X4PpkUhxnJEcuKY5IZxf5ZnWtef9Nh0eWHeh4VvjdfYf0+BKGudd4J4yVO2H1JcKYO/5Z/pyhHQFm3KHLBSAxY2OwKWh/eoR65rg7i0gOCDpdgOP2BJLhOfRa7FcAmw4NOSLO/julT+6YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=z15KhCVN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706641475; c=relaxed/simple;
+	bh=nus7scvl4gLMAQ9st9lYJlzmjXyvjRvTvEos3E8SaN8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YvthnFT7wuTvt8HJJyyJf5nPib1bKoMeCilLlwXMh2xNx2tVmTW5qacjOQHRHfaokIe5y6GyTSu7QGlXMbDMDYUpm5tiMB42PlWTbAcHT0y88SnMGtGWNmDWQ7fMrNd4H8o1ZpDy6zwWzxhaWaPpHEztwYq2QQ8CxCnKtaq6w2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=WtOl0kYi; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="z15KhCVN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2EEC433F1;
-	Tue, 30 Jan 2024 19:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1706641462;
-	bh=/AduH2y6UR3zLY3u5BVwfhnp623uLwZq8kEsuen1JbE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=z15KhCVNcKxl05ai2J3k0CNNcgWmCkmvkUx1/1GwEjWVWQokGXRR/FmgQGd0ou9g0
-	 MyLSscd3Ld0SC4H4UfVrdg5zdIye4qGr/g/L3a6O5SqV8dS6mPC+DxKLwbJyIZibHm
-	 tQoupqGzDFg6+U/Bsyewhcb+wS7spUA+2I6pTSvQ=
-From: Linus Torvalds <torvalds@linux-foundation.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5/6] eventfs: get rid of dentry pointers without refcounts
-Date: Tue, 30 Jan 2024 11:03:54 -0800
-Message-ID: <20240130190355.11486-5-torvalds@linux-foundation.org>
-X-Mailer: git-send-email 2.43.0.5.g38fb137bdb
-In-Reply-To: <20240130190355.11486-1-torvalds@linux-foundation.org>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="WtOl0kYi"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso2035615b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:04:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706641473; x=1707246273; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4D44QK/kPW88RwduNoGSI0iqhkYRS1kC786c0l3XOWc=;
+        b=WtOl0kYitu1vk6+q9ok354ZBzSSeGHb1mECB12anN16/adJSmK/EWiYkyGgQpqz+GB
+         NrZbS8As71csahGuZNk3flpFwI/Ppq4cdYRA9T1uZK91u1E/dDekmBqmzdLmzTzc50lb
+         W28Cy+y/xBKxSkmyHI/3CqgHbGG07QK+4hDFeHU2xp0qR/UvDbf0E+/zzBPMM8fbRjt6
+         8RDTxVYRFmreFOz4kiVoDk/J2HA2u0g0qvVc/Pk0NdDAKBNwaGuWMs0l2MnrFM3Zw6+D
+         FfiY53s7AjeyVC2z8dBNr9TTUW5PBJi4vzwOIcWWRPhaYi20eCdowJbhDgUu28hZoeJ4
+         joEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706641473; x=1707246273;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4D44QK/kPW88RwduNoGSI0iqhkYRS1kC786c0l3XOWc=;
+        b=Ol5OH26LtFxN3J/ZWJ1EONUDqkW2bhIDvSVCUZAPBrtVgal6gB5qp9ue/HsuKHfqfY
+         b3FXTJbQoipFeW/1ismQj0ylyw7azaCKrqFKU8R5g5OUHO3VpcszXNJVHiBddX2Z5wm6
+         I9zw6Tvckj6F2WIEqPDioILVFTg/rdr6m4gr7xD+kJGMH+MoPTHmOCUUvQ93Mcx3OSgU
+         KFpUgCP8PEUtWcTZLRXFqb4l0n73MsTgFQsfRlX60cEUC6xotA+wCOCWmv5g0uazpOan
+         yFAmZhczVDNPALqTCzdFw4DzIftk336w3+9H81ivzOka2uCFFUxNKkp9Bv81p1M/Ch04
+         EWmQ==
+X-Gm-Message-State: AOJu0Yzs36toRK5wGiDhq0U/SpPcBrdR6aSYLjiK0J/P+976iPdV5ca0
+	UxFxtJI7HO24lJARFx44MUHImXahpRpRlqRo0y0ZbCv/T1lQOZcZ876lBUYE2rs=
+X-Google-Smtp-Source: AGHT+IHDqzd/dBdeKM2ZuEG20ibf2MrAQHh0T7+zovFIc6n7MNP/9tMbddtfCfApaIPGdcPdBlRWvQ==
+X-Received: by 2002:a05:6a20:291e:b0:199:8ed6:746e with SMTP id t30-20020a056a20291e00b001998ed6746emr4930207pzf.58.1706641472640;
+        Tue, 30 Jan 2024 11:04:32 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id f6-20020a17090aec8600b00295c3bb9318sm1196541pjy.54.2024.01.30.11.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 11:04:31 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v2 0/3] riscv: mm: Use hint address in mmap if available
+Date: Tue, 30 Jan 2024 11:04:29 -0800
+Message-Id: <20240130-use_mmap_hint_address-v2-0-f34ebfd33053@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD1IuWUC/3XNQQ6CMBCF4auQrq1hagXrynsYQtoylVnQkhaJh
+ nB3gbBxwfKfZL43sYSRMLF7NrGIIyUKfglxyphttX8hp2ZpJnIhcwDF3wnrrtN93ZIfat00EVP
+ iTjlpwBTu6oAtv31ER5/NfVZLt5SGEL/bzAjrdReFOBBH4MCLwhq8lU6qAh+RxpDI27MN3bqxA
+ +oYyLm0pWz0DS5Gwz9QzfP8AxGwGU3+AAAA
+To: Alexandre Ghiti <alexghiti@rivosinc.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Yangyu Chen <cyy@cyyself.name>
+Cc: linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706641471; l=2052;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=nus7scvl4gLMAQ9st9lYJlzmjXyvjRvTvEos3E8SaN8=;
+ b=KdPbSOIofsdWCW2zc9sZLA78Ps5RefDdeL5SX6tbIQDoFBXQBMlLBYRg9jpjXuHz+YesaWxjJ
+ OSV+nMMkghNBtK/mt4vwjxEe5eas0TqtgvuALwBT9CPyCLon78uuHuz
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-The eventfs inode had pointers to dentries (and child dentries) without
-actually holding a refcount on said pointer.  That is fundamentally
-broken, and while eventfs tried to then maintain coherence with dentries
-going away by hooking into the '.d_iput' callback, that doesn't actually
-work since it's not ordered wrt lookups.
+On riscv, mmap currently returns an address from the largest address
+space that can fit entirely inside of the hint address. This makes it
+such that the hint address is almost never returned. This patch raises
+the mappable area up to and including the hint address. This allows mmap
+to often return the hint address, which allows a performance improvement
+over searching for a valid address as well as making the behavior more
+similar to other architectures.
 
-There were two reasonms why eventfs tried to keep a pointer to a dentry:
+Note that a previous patch introduced stronger semantics compared to
+other architectures for riscv mmap. On riscv, mmap will not use bits in
+the upper bits of the virtual address depending on the hint address. On
+other architectures, a random address is returned in the address space
+requested. On all architectures the hint address will be returned if it
+is available. This allows riscv applications to configure how many bits
+in the virtual address should be left empty. This has the two benefits
+of being able to request address spaces that are smaller than the
+default and doesn't require the application to know the page table
+layout of riscv.
 
- - the creation of a 'events' directory would actually have a stable
-   dentry pointer that it created with tracefs_start_creating().
-
-   And it needed that dentry when tearing it all down again in
-   eventfs_remove_events_dir().
-
-   This use is actually ok, because the special top-level events
-   directory dentries are actually stable, not just a temporary cache of
-   the eventfs data structures.
-
- - the 'eventfs_inode' (aka ei) needs to stay around as long as there
-   are dentries that refer to it.
-
-   It then used these dentry pointers as a replacement for doing
-   reference counting: it would try to make sure that there was only
-   ever one dentry associated with an event_inode, and keep a child
-   dentry array around to see which dentries might still refer to the
-   parent ei.
-
-This gets rid of the invalid dentry pointer use, and renames the one
-valid case to a different name to make it clear that it's not just any
-random dentry.
-
-The magic child dentry array that is kind of a "reverse reference list"
-is simply replaced by having child dentries take a ref to the ei.  As
-does the directory dentries.  That makes the broken use case go away.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- fs/tracefs/event_inode.c | 245 ++++++++++++---------------------------
- fs/tracefs/internal.h    |   9 +-
- 2 files changed, 80 insertions(+), 174 deletions(-)
+Changes in v2:
+- Add back forgotten "mmap_end = STACK_TOP_MAX"
+- Link to v1: https://lore.kernel.org/r/20240129-use_mmap_hint_address-v1-0-4c74da813ba1@rivosinc.com
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 1d0102bfd7da..a37db0dac302 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -62,6 +62,34 @@ enum {
- 
- #define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
- 
-+/*
-+ * eventfs_inode reference count management.
-+ *
-+ * NOTE! We count only references from dentries, in the
-+ * form 'dentry->d_fsdata'. There are also references from
-+ * directory inodes ('ti->private'), but the dentry reference
-+ * count is always a superset of the inode reference count.
-+ */
-+static void release_ei(struct kref *ref)
-+{
-+	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
-+	kfree(ei->entry_attrs);
-+	kfree(ei);
-+}
-+
-+static inline void put_ei(struct eventfs_inode *ei)
-+{
-+	if (ei)
-+		kref_put(&ei->kref, release_ei);
-+}
-+
-+static inline struct eventfs_inode *get_ei(struct eventfs_inode *ei)
-+{
-+	if (ei)
-+		kref_get(&ei->kref);
-+	return ei;
-+}
-+
- static struct dentry *eventfs_root_lookup(struct inode *dir,
- 					  struct dentry *dentry,
- 					  unsigned int flags);
-@@ -289,7 +317,8 @@ static void update_inode_attr(struct dentry *dentry, struct inode *inode,
-  * directory. The inode.i_private pointer will point to @data in the open()
-  * call.
-  */
--static struct dentry *lookup_file(struct dentry *dentry,
-+static struct dentry *lookup_file(struct eventfs_inode *parent_ei,
-+				  struct dentry *dentry,
- 				  umode_t mode,
- 				  struct eventfs_attr *attr,
- 				  void *data,
-@@ -302,11 +331,11 @@ static struct dentry *lookup_file(struct dentry *dentry,
- 		mode |= S_IFREG;
- 
- 	if (WARN_ON_ONCE(!S_ISREG(mode)))
--		return NULL;
-+		return ERR_PTR(-EIO);
- 
- 	inode = tracefs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode))
--		return eventfs_failed_creating(dentry);
-+		return ERR_PTR(-ENOMEM);
- 
- 	/* If the user updated the directory's attributes, use them */
- 	update_inode_attr(dentry, inode, attr, mode);
-@@ -322,9 +351,12 @@ static struct dentry *lookup_file(struct dentry *dentry,
- 	ti->flags = TRACEFS_EVENT_INODE;
- 	ti->private = NULL;			// Directories have 'ei', files not
- 
-+	// Files have their parent's ei as their fsdata
-+	dentry->d_fsdata = get_ei(parent_ei);
-+
- 	d_add(dentry, inode);
- 	fsnotify_create(dentry->d_parent->d_inode, dentry);
--	return eventfs_end_creating(dentry);
-+	return NULL;
- };
- 
- /**
-@@ -343,7 +375,7 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
- 
- 	inode = tracefs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode))
--		return eventfs_failed_creating(dentry);
-+		return ERR_PTR(-ENOMEM);
- 
- 	/* If the user updated the directory's attributes, use them */
- 	update_inode_attr(dentry, inode, &ei->attr,
-@@ -359,24 +391,28 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
- 	ti->flags = TRACEFS_EVENT_INODE;
- 	ti->private = ei;
- 
--	dentry->d_fsdata = ei;
--        ei->dentry = dentry;	// Remove me!
-+	dentry->d_fsdata = get_ei(ei);
- 
- 	inc_nlink(inode);
- 	d_add(dentry, inode);
- 	inc_nlink(dentry->d_parent->d_inode);
- 	fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
--	return eventfs_end_creating(dentry);
-+	return NULL;
- }
- 
--static void free_ei(struct eventfs_inode *ei)
-+static inline struct eventfs_inode *alloc_ei(const char *name)
- {
--	kfree_const(ei->name);
--	kfree(ei->d_children);
--	kfree(ei->entry_attrs);
--	kfree(ei);
-+	int namesize = strlen(name) + 1;
-+	struct eventfs_inode *ei = kzalloc(sizeof(*ei) + namesize, GFP_KERNEL);
-+
-+	if (ei) {
-+		memcpy((char *)ei->name, name, namesize);
-+		kref_init(&ei->kref);
-+	}
-+	return ei;
- }
- 
-+
- /**
-  * eventfs_set_ei_status_free - remove the dentry reference from an eventfs_inode
-  * @ti: the tracefs_inode of the dentry
-@@ -387,38 +423,20 @@ static void free_ei(struct eventfs_inode *ei)
- void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- {
- 	struct eventfs_inode *ei;
--	int i;
- 
- 	mutex_lock(&eventfs_mutex);
--
- 	ei = dentry->d_fsdata;
--	if (!ei)
--		goto out;
--
--	/* This could belong to one of the files of the ei */
--	if (ei->dentry != dentry) {
--		for (i = 0; i < ei->nr_entries; i++) {
--			if (ei->d_children[i] == dentry)
--				break;
--		}
--		if (WARN_ON_ONCE(i == ei->nr_entries))
--			goto out;
--		ei->d_children[i] = NULL;
--	} else if (ei->is_freed) {
--		free_ei(ei);
--	} else {
--		ei->dentry = NULL;
-+	if (ei) {
-+		dentry->d_fsdata = NULL;
-+		put_ei(ei);
- 	}
--
--	dentry->d_fsdata = NULL;
-- out:
- 	mutex_unlock(&eventfs_mutex);
- }
- 
- /**
-  * lookup_file_dentry - create a dentry for a file of an eventfs_inode
-  * @ei: the eventfs_inode that the file will be created under
-- * @idx: the index into the d_children[] of the @ei
-+ * @idx: the index into the entry_attrs[] of the @ei
-  * @parent: The parent dentry of the created file.
-  * @name: The name of the file to create
-  * @mode: The mode of the file.
-@@ -435,17 +453,11 @@ lookup_file_dentry(struct dentry *dentry,
- 		   const struct file_operations *fops)
- {
- 	struct eventfs_attr *attr = NULL;
--	struct dentry **e_dentry = &ei->d_children[idx];
- 
- 	if (ei->entry_attrs)
- 		attr = &ei->entry_attrs[idx];
- 
--	dentry->d_fsdata = ei;		// NOTE: ei of _parent_
--	lookup_file(dentry, mode, attr, data, fops);
--
--	*e_dentry = dentry;	// Remove me
--
--	return dentry;
-+	return lookup_file(ei, dentry, mode, attr, data, fops);
- }
- 
- /**
-@@ -466,6 +478,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 	struct tracefs_inode *ti;
- 	struct eventfs_inode *ei;
- 	const char *name = dentry->d_name.name;
-+	struct dentry *result;
- 
- 	ti = get_tracefs(dir);
- 	if (!(ti->flags & TRACEFS_EVENT_INODE))
-@@ -482,7 +495,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 			continue;
- 		if (ei_child->is_freed)
- 			goto enoent;
--		lookup_dir_entry(dentry, ei, ei_child);
-+		result = lookup_dir_entry(dentry, ei, ei_child);
- 		goto out;
- 	}
- 
-@@ -499,17 +512,18 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 		if (entry->callback(name, &mode, &data, &fops) <= 0)
- 			goto enoent;
- 
--		lookup_file_dentry(dentry, ei, i, mode, data, fops);
-+		result = lookup_file_dentry(dentry, ei, i, mode, data, fops);
- 		goto out;
- 	}
- 
-  enoent:
- 	/* Nothing found? */
- 	d_add(dentry, NULL);
-+	result = NULL;
- 
-  out:
- 	mutex_unlock(&eventfs_mutex);
--	return NULL;
-+	return result;
- }
- 
- /*
-@@ -659,25 +673,10 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
- 	if (!parent)
- 		return ERR_PTR(-EINVAL);
- 
--	ei = kzalloc(sizeof(*ei), GFP_KERNEL);
-+	ei = alloc_ei(name);
- 	if (!ei)
- 		return ERR_PTR(-ENOMEM);
- 
--	ei->name = kstrdup_const(name, GFP_KERNEL);
--	if (!ei->name) {
--		kfree(ei);
--		return ERR_PTR(-ENOMEM);
--	}
--
--	if (size) {
--		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
--		if (!ei->d_children) {
--			kfree_const(ei->name);
--			kfree(ei);
--			return ERR_PTR(-ENOMEM);
--		}
--	}
--
- 	ei->entries = entries;
- 	ei->nr_entries = size;
- 	ei->data = data;
-@@ -691,7 +690,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
- 
- 	/* Was the parent freed? */
- 	if (list_empty(&ei->list)) {
--		free_ei(ei);
-+		put_ei(ei);
- 		ei = NULL;
- 	}
- 	return ei;
-@@ -726,28 +725,20 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	if (IS_ERR(dentry))
- 		return ERR_CAST(dentry);
- 
--	ei = kzalloc(sizeof(*ei), GFP_KERNEL);
-+	ei = alloc_ei(name);
- 	if (!ei)
--		goto fail_ei;
-+		goto fail;
- 
- 	inode = tracefs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode))
- 		goto fail;
- 
--	if (size) {
--		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
--		if (!ei->d_children)
--			goto fail;
--	}
--
--	ei->dentry = dentry;
-+	// Note: we have a ref to the dentry from tracefs_start_creating()
-+	ei->events_dir = dentry;
- 	ei->entries = entries;
- 	ei->nr_entries = size;
- 	ei->is_events = 1;
- 	ei->data = data;
--	ei->name = kstrdup_const(name, GFP_KERNEL);
--	if (!ei->name)
--		goto fail;
- 
- 	/* Save the ownership of this directory */
- 	uid = d_inode(dentry->d_parent)->i_uid;
-@@ -778,7 +769,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	inode->i_op = &eventfs_root_dir_inode_operations;
- 	inode->i_fop = &eventfs_file_operations;
- 
--	dentry->d_fsdata = ei;
-+	dentry->d_fsdata = get_ei(ei);
- 
- 	/* directory inodes start off with i_nlink == 2 (for "." entry) */
- 	inc_nlink(inode);
-@@ -790,72 +781,11 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	return ei;
- 
-  fail:
--	kfree(ei->d_children);
--	kfree(ei);
-- fail_ei:
-+	put_ei(ei);
- 	tracefs_failed_creating(dentry);
- 	return ERR_PTR(-ENOMEM);
- }
- 
--static LLIST_HEAD(free_list);
--
--static void eventfs_workfn(struct work_struct *work)
--{
--        struct eventfs_inode *ei, *tmp;
--        struct llist_node *llnode;
--
--	llnode = llist_del_all(&free_list);
--        llist_for_each_entry_safe(ei, tmp, llnode, llist) {
--		/* This dput() matches the dget() from unhook_dentry() */
--		for (int i = 0; i < ei->nr_entries; i++) {
--			if (ei->d_children[i])
--				dput(ei->d_children[i]);
--		}
--		/* This should only get here if it had a dentry */
--		if (!WARN_ON_ONCE(!ei->dentry))
--			dput(ei->dentry);
--        }
--}
--
--static DECLARE_WORK(eventfs_work, eventfs_workfn);
--
--static void free_rcu_ei(struct rcu_head *head)
--{
--	struct eventfs_inode *ei = container_of(head, struct eventfs_inode, rcu);
--
--	if (ei->dentry) {
--		/* Do not free the ei until all references of dentry are gone */
--		if (llist_add(&ei->llist, &free_list))
--			queue_work(system_unbound_wq, &eventfs_work);
--		return;
--	}
--
--	/* If the ei doesn't have a dentry, neither should its children */
--	for (int i = 0; i < ei->nr_entries; i++) {
--		WARN_ON_ONCE(ei->d_children[i]);
--	}
--
--	free_ei(ei);
--}
--
--static void unhook_dentry(struct dentry *dentry)
--{
--	if (!dentry)
--		return;
--	/*
--	 * Need to add a reference to the dentry that is expected by
--	 * simple_recursive_removal(), which will include a dput().
--	 */
--	dget(dentry);
--
--	/*
--	 * Also add a reference for the dput() in eventfs_workfn().
--	 * That is required as that dput() will free the ei after
--	 * the SRCU grace period is over.
--	 */
--	dget(dentry);
--}
--
- /**
-  * eventfs_remove_rec - remove eventfs dir or file from list
-  * @ei: eventfs_inode to be removed.
-@@ -868,8 +798,6 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
- {
- 	struct eventfs_inode *ei_child;
- 
--	if (!ei)
--		return;
- 	/*
- 	 * Check recursion depth. It should never be greater than 3:
- 	 * 0 - events/
-@@ -881,28 +809,12 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
- 		return;
- 
- 	/* search for nested folders or files */
--	list_for_each_entry_srcu(ei_child, &ei->children, list,
--				 lockdep_is_held(&eventfs_mutex)) {
--		/* Children only have dentry if parent does */
--		WARN_ON_ONCE(ei_child->dentry && !ei->dentry);
-+	list_for_each_entry(ei_child, &ei->children, list)
- 		eventfs_remove_rec(ei_child, level + 1);
--	}
--
- 
- 	ei->is_freed = 1;
--
--	for (int i = 0; i < ei->nr_entries; i++) {
--		if (ei->d_children[i]) {
--			/* Children only have dentry if parent does */
--			WARN_ON_ONCE(!ei->dentry);
--			unhook_dentry(ei->d_children[i]);
--		}
--	}
--
--	unhook_dentry(ei->dentry);
--
--	list_del_rcu(&ei->list);
--	call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
-+	list_del(&ei->list);
-+	put_ei(ei);
- }
- 
- /**
-@@ -913,22 +825,12 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
-  */
- void eventfs_remove_dir(struct eventfs_inode *ei)
- {
--	struct dentry *dentry;
--
- 	if (!ei)
- 		return;
- 
- 	mutex_lock(&eventfs_mutex);
--	dentry = ei->dentry;
- 	eventfs_remove_rec(ei, 0);
- 	mutex_unlock(&eventfs_mutex);
--
--	/*
--	 * If any of the ei children has a dentry, then the ei itself
--	 * must have a dentry.
--	 */
--	if (dentry)
--		simple_recursive_removal(dentry, NULL);
- }
- 
- /**
-@@ -941,7 +843,11 @@ void eventfs_remove_events_dir(struct eventfs_inode *ei)
- {
- 	struct dentry *dentry;
- 
--	dentry = ei->dentry;
-+	dentry = ei->events_dir;
-+	if (!dentry)
-+		return;
-+
-+	ei->events_dir = NULL;
- 	eventfs_remove_dir(ei);
- 
- 	/*
-@@ -951,5 +857,6 @@ void eventfs_remove_events_dir(struct eventfs_inode *ei)
- 	 * sticks around while the other ei->dentry are created
- 	 * and destroyed dynamically.
- 	 */
-+	simple_recursive_removal(dentry, NULL);
- 	dput(dentry);
- }
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 8f38740bfb5b..72db3bdc4dfb 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -34,8 +34,7 @@ struct eventfs_attr {
-  * @entries:	the array of entries representing the files in the directory
-  * @name:	the name of the directory to create
-  * @children:	link list into the child eventfs_inode
-- * @dentry:     the dentry of the directory
-- * @d_children: The array of dentries to represent the files when created
-+ * @events_dir: the dentry of the events directory
-  * @entry_attrs: Saved mode and ownership of the @d_children
-  * @attr:	Saved mode and ownership of eventfs_inode itself
-  * @data:	The private data to pass to the callbacks
-@@ -44,12 +43,11 @@ struct eventfs_attr {
-  * @nr_entries: The number of items in @entries
-  */
- struct eventfs_inode {
-+	struct kref			kref;
- 	struct list_head		list;
- 	const struct eventfs_entry	*entries;
--	const char			*name;
- 	struct list_head		children;
--	struct dentry			*dentry; /* Check is_freed to access */
--	struct dentry			**d_children;
-+	struct dentry			*events_dir;
- 	struct eventfs_attr		*entry_attrs;
- 	struct eventfs_attr		attr;
- 	void				*data;
-@@ -66,6 +64,7 @@ struct eventfs_inode {
- 		struct llist_node	llist;
- 		struct rcu_head		rcu;
- 	};
-+	const char name[];
- };
- 
- static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+---
+Charlie Jenkins (3):
+      riscv: mm: Use hint address in mmap if available
+      selftests: riscv: Generalize mm selftests
+      docs: riscv: Define behavior of mmap
+
+ Documentation/arch/riscv/vm-layout.rst           | 16 ++--
+ arch/riscv/include/asm/processor.h               | 22 +++---
+ tools/testing/selftests/riscv/mm/mmap_bottomup.c | 20 +----
+ tools/testing/selftests/riscv/mm/mmap_default.c  | 20 +----
+ tools/testing/selftests/riscv/mm/mmap_test.h     | 93 +++++++++++++-----------
+ 5 files changed, 67 insertions(+), 104 deletions(-)
+---
+base-commit: 556e2d17cae620d549c5474b1ece053430cd50bc
+change-id: 20240119-use_mmap_hint_address-f9f4b1b6f5f1
 -- 
-2.43.0.5.g38fb137bdb
+- Charlie
 
