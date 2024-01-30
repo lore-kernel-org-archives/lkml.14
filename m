@@ -1,196 +1,174 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2061.outbound.protection.outlook.com [40.107.102.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF5B6BB5C;
-	Tue, 30 Jan 2024 13:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706620203; cv=fail; b=ECYl7wKEyJMOAL0Bp12W8FE+H3dGpARvnN9RkrCuEWNdpqKqLdXymxXeEj8xwcJXGZ2dCD1zEmToiDF03Mtb2LtnOTvrXFC5dedoXpBWNyDKf5LCfpYlDSQsUDkA0UjaUQX7LFamEa5eFCiTUE/7IeqeRkyHvnDKegqieloafh4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706620203; c=relaxed/simple;
-	bh=/qrURTatOldc1nL59Q4tzLN7FzggvQwOPTD4vDhRYH4=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jPTp4/pQGxl7vz24N/vyUqingarj3atpxR3MvWQG5Cs2chHBlNMmMfnfYXUReC2C/9tgB0zm64k+5sANmI/J5MdVArcQA02i5T9M/AJybnZDQXnFh6oZtQLTPWgQh95TnCemHRItNPcVqST9xmWSg29hQeLhcquEoiRnNUIYkhk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yYCnlwpY; arc=fail smtp.client-ip=40.107.102.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8436A6A34B
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706620205; cv=none; b=GI8MP4pZpSgbj9RnHTBH96z5kxuR/szb91uFDcQ7zysUt6KD1toU+IEHm46JNhTmGha5JY6SHKPub/LVqKOD17xlwhFOFZemS6qoMdmxnIG6PAoeIoCiUY4vyMo5/N1srIFuKQ7IfSQWR6VGyhoPYr/9umwWthxuDmPmVoRBflA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706620205; c=relaxed/simple;
+	bh=4/LR4FlPqyGgY8vDOPU9zbxtotdGsmFZozHdb0jD0KE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kQYZvLACyWJ5Dtzc44uYIEsuZsAW2SbPrsnR+ti3wsyHQfS2AHvAvXoATSkWD+MH6qZQDG9nrm7s3EbiJBBkdoVsHMj2GlbNoxUc0eredD4dduOQ6YRG8S1mjd5IHiseriGnno6o8Xj/PJc2XW34yLjSPcqHZKcJD2KTUoWGMyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=loLnwade; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yYCnlwpY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KfKrprOf3PaAZA4V1PfAyXaIVaH/MYvYumsBuSHCT9o3PJvzDCewsIckSelRYUhVCg/UfgyYrxuNL9wjjFGwfcj+m22an0aVUEJbide0DwjHX3AxgdIHzBlSvIVGE34moL65ssP3fCm8gw8V86YT6h+FM0p9Vu3RXzBFDzNtte8+WyLyeSIcnQ2pMwxHShid690g/G2zqntbksxd7oBb5ntZHYSSjBbfOgFjcWvkHr8fRHtO8wgYxVzFIU4iIq1xa+YDFY+o65sV/TFw5iE3G++8fqG+QNGlKljecimFti1wciCYKr+Aag9EIvDM9tkY1vEeVlQZEdtygoXIsnMbFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8YyCWdugEcbPxK31IUu4twc4iWTbXF20lRfL264iGms=;
- b=nx/FGXxxaiSKatI26s0Z8BBC3FkzFvhUpz16hccBZlwmjRUboBhZ2mmyp/BAmNBy7hutl32IcU5E2x66h0tfZTD5QXGuIbBEO04YijphUUk6e36Y3RaovazaFT2Nbo8IoDjqAksS7XiridzOSaQ+qw4YaHg0QrtMkpo7e3C7B0/RUMFwco6qH1SPtCKHFubjVkoE6MIcqxG6yi8ijutEQI1jOPrL5LZhQMWyretJQrcW0xkHkW+IMVFnAgM2G3/49TkUKTxdDRLC7zBO+CJDDvlnO6C5qZOxu+fQJK0aXNsIPDEyN5dMwVkUGUnkpYrmgUNJ/KLx+vXgS/kq3jEzZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8YyCWdugEcbPxK31IUu4twc4iWTbXF20lRfL264iGms=;
- b=yYCnlwpYtBswQbu32R+MCg1B2U7INFj0GH2Fj8rqQSo5k2dliF9K7QUvqH9Bmv64Z6oY1DaHG6mBL0V6AZVUZzWgTIrQKmd8HoshRZ8HNz5dZxWZX72JqfCKjngSUADI/CDyPMK1fnrnpDBsuedu3Fghuvp8aIqIPCDktinxNWs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CY5PR12MB6528.namprd12.prod.outlook.com (2603:10b6:930:43::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
- 2024 13:09:53 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
- 13:09:52 +0000
-Message-ID: <1d912523-b980-4386-82b2-8d79808398c1@amd.com>
-Date: Tue, 30 Jan 2024 14:09:45 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linaro-mm-sig] Re: [PATCH v5 1/6] dma-buf: Add
- dma_buf_{begin,end}_access()
-Content-Language: en-US
-To: Paul Cercueil <paul@crapouillou.net>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <noname.nuno@gmail.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
- linux-usb@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- Christoph Hellwig <hch@lst.de>
-References: <85a89505-edeb-4619-86c1-157f7abdd190@amd.com>
- <0fe2755fb320027234c086bcc88fd107855234c5.camel@crapouillou.net>
- <577501f9-9d1c-4f8d-9882-7c71090e5ef3@amd.com>
- <7928c0866ac5b2bfaaa56ad3422bedc9061e0f7b.camel@crapouillou.net>
- <2ac7562c-d221-409a-bfee-1b3cfcc0f1c6@amd.com>
- <ZbKiCPhRvWaz4Icn@phenom.ffwll.local>
- <c97e38ee-b860-4990-87f1-3e59d7d9c999@amd.com>
- <Zbi6zQYtnfOZu5Wh@phenom.ffwll.local>
- <a2346244-e22b-4ff6-b6cd-1da7138725ae@amd.com>
- <7eec45a95808afe94ac65a8518df853356ecf117.camel@crapouillou.net>
- <ZbjSJi07gQhZ4WMC@phenom.ffwll.local>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <ZbjSJi07gQhZ4WMC@phenom.ffwll.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0383.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f7::6) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="loLnwade"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ffcb478512so28435857b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 05:09:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706620197; x=1707224997; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cn6tr3K56Ei1Sf/jm4iMFciPE+uwKnz5rDJj/hsfnl0=;
+        b=loLnwadeSRb8t9E7lKtThgZ6LR+ulDJW8u+uLIq3dnv0ZWt2ih5MNrFkwt3TzhadvI
+         wH2kNgDNJuGqZi15xU7V3vaQ1JojvBCn/vNr/DKHD/85eFxspKnPcRsmvLYVg4u7b/aU
+         JF3Eunt0oYrHucyrrGUHIQTWB7VLhA+QPLluRUsyDbS20Fu4pGF+93pdDW7dHDJY+47l
+         hZUpHtrZLYdbkUXyNj8YxlPq0nvmiVbsqyx/bgK7zCZ3qI6bc7zngrpYBOiKfbLbjTqE
+         2P0YudDXU7mftCfTUdVLD/AOsjB5ns6rw9J+i9AcxxNInSL3U9rK+eygnZ8fBM5+4kHz
+         JMdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706620197; x=1707224997;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cn6tr3K56Ei1Sf/jm4iMFciPE+uwKnz5rDJj/hsfnl0=;
+        b=YJxlFS1DpccUaztSBTX0y3d7FnjWbJ+8BQyJ/7YGXcLIXyDnFLaza91pe9CFZOjuPY
+         Jg/R/ZOcYGEUM9an1Df2XtJ/tCBe0I0H2HLCnQKvVO9Bm088JYZitsZI8p/eRMvpOy6M
+         S/VUu1bhKzHz0FLcXVl9Q/clXhK5gND4saerGmX6pLNAjvxv2CVRsU9okfJX60hpfXmJ
+         nRhERpA5YVBrxBlsB3iaY2DMWGzvWrwG3deobWzZb3VO5hQEtVvjxxgxEmok/eDc11Gd
+         TviSZ6MHKnfG3GMxGFZ+Nn/dILm6bKA78yHmjzGnzFWaNBcvA4HuXFiVTQSLvUWUBonS
+         eiFA==
+X-Gm-Message-State: AOJu0YylZDfNqjw67BAqUEPNhA01+gy8Rrskxf5ppmA37AkAoxOP/E5B
+	I32mqagmS+xbYmXQojwSjK/nICGbRMkowL1VrgKZs66Hb2BrOdx+2BsiQs7ZJ/lFK+0Toy9QGDI
+	kgzRlYlScy3Pmn0wQy8VW1n77kHvROw9m4Wrx8g==
+X-Google-Smtp-Source: AGHT+IFxUTfdcZIedBUdrEgcBFlf9mmA/qIvHlQUO1locput6LLOj0LxdZaYNFMa0fj8+nqHpKd9qjfkaiNU8is2C1w=
+X-Received: by 2002:a81:e40a:0:b0:5ff:da8a:753b with SMTP id
+ r10-20020a81e40a000000b005ffda8a753bmr530804ywl.50.1706620196847; Tue, 30 Jan
+ 2024 05:09:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CY5PR12MB6528:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7585fff9-e117-467c-e830-08dc2194bf2a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qcof7NtiKz2W+HNvj5RLPNzZhhTRZQffg+5djtOVtdoBmkoukeqHBY9QxGwshN27bhAHn1f8T9X9Bb7iWr5P1H7DSKnCz1QpalsGUT0GNAXKns3+2UWKS2kJmHwOEueUOrNEEib2Tq+NoVFzOJmbtzDo9wlTQNTwYF2OL3p0TCw0uEwd9vjExqFRCJ//tlkue/6HHQvpHEBhg1IXgH08W6jtqLz+NHfRz5Y2aW/qI/n9bwqjta8ZJsZ77BgN9Kf+W3wVlAMobwy7+9cmEIX8xODaXYioiEhdQOC1cd0bmb1en54RH7l8o2ooHcsrnfHrfLTi9s7N7nEyCuDtA/DjGWuk9nTalRx8TIXewjwPtyGg4AHTmAadb0xn7ZlbtHuO1J5yxMzgQUCffgyL25RiIh/qbj6opIMRcdv8kYO+PytFEdV1EXxsAciPbb/7394GRt037CeC0eF8fzAoJZk0v+qcRsQOV8MVGjf1SCUT5bxNMbhrUL8FSeByz3gswwudRL78qXTTgCaEq4J0Pl4GygMKg4/zJDxTHy2KuE+9SbW2koWiwBbKc1/Rz7qEbbB08tU/d4tuvAQ5Js46xBkskN1MfmWemUed+UaxvzjV/4+AU8bljDUW5xyldiJc+81tbQmUSw6dUe6Go6AA3UBheLsqmlTfAD51I+jhXo3tpLU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(376002)(136003)(396003)(39860400002)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(41300700001)(2906002)(7416002)(5660300002)(36756003)(921011)(66556008)(86362001)(66946007)(66476007)(316002)(31696002)(83380400001)(110136005)(478600001)(6486002)(6666004)(26005)(2616005)(8936002)(6512007)(8676002)(6506007)(66574015)(31686004)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b08xM2thSWdTWVEyWEZEWFVWemdTK1BGVDdyY1JVdmRaZXo4QjUvRlF5b0Q1?=
- =?utf-8?B?eDMyZWV2QWorQXZvZzdSNUdBSnBnVXdqRWc2TEZUbWp6UnFTQVBYRS9FaVJE?=
- =?utf-8?B?alA3N21rVEhTVkN1NEdFMG83ZVFlVGZRa2l2b25vcFZSdS9naTFaZld5MGdL?=
- =?utf-8?B?cVZjbVJvTnJuY0l4OTdiQldIbWRZbDRUN2g5QVgweVgvc2ZNYjJ5NUQxL0JT?=
- =?utf-8?B?Q2tNYVhqaWc1dlNFVkNxc1BBZklSbUN0VTlFQ2pjRm5oZERTeUsvVTc2RmZh?=
- =?utf-8?B?a2NKMXd3WStCUVdaTkNUd3dwOG1HK0YvZXY3d1M1YTdUV29SZ2lPeTByanpG?=
- =?utf-8?B?SHd2aXgxOTFCTGVVajVqYm1qb0Rabzc0YzhnWVpzR01OdVBVTE1Zd2liRGZV?=
- =?utf-8?B?OUhPa3gyTWZvVU11QzEwNEt6bmJqSWtOR0tuREVNeW1Na2lTeit4a3ovZzhq?=
- =?utf-8?B?NjJLdFNjZ1lQQ0J0TGQ0OW0vdXJ2T1licXZ3M3p4dUJVdGVQeWpTQXpFa1ZB?=
- =?utf-8?B?bUVFbTV5cGg1RXd6bkxkdjhxcWRHTXp6aXhhMlVrN2VPMHozbmoyajhLUWZX?=
- =?utf-8?B?eVVhTGpJWmY2eUNjQU5GQ3E3Lzg0R1JQazZEeEthRFk2eFQ1TU1EWjh1OWZL?=
- =?utf-8?B?cEFaRWpiQk95OU1iZkpSWGhvSFY3VG5pWFZ0cnNkbFpaeHZsTFNkUnJFem9o?=
- =?utf-8?B?NHAvUVJCL1ZuUzV3TmpaWndQRC9zQVhvZU5FVlMwL3IyQkpWaU9NMzdRRHQy?=
- =?utf-8?B?Y00veXYxTjJiZnVQQVlIUm9QVUxRQ3BlSGdrYzlxRGFSYkNUcmZrL1UraHo1?=
- =?utf-8?B?SDlJTXAvT1RZdUc4MlRhazhSRVdrblpYS0VJK0hoZ0x2a0xmMGZxVkhISklz?=
- =?utf-8?B?Sm91RjhSOFdSN0owOXU0YjlpUVRMc1ROcjlOeStCZGJkOFVSaEM4bmU3MVRz?=
- =?utf-8?B?MVdnTUtEdHBjdHJISFJRMFQ0dk16NFJjN0pPc0lXTy8zMzhOc0ZEMjhwZEw2?=
- =?utf-8?B?QVZUY2U4Y25IQlM2Tm5ZVHNwUVo5d0cwZjc3bWpmaFlKamUrYWxYaGJ5S0hy?=
- =?utf-8?B?aEQ4czR4K0tFZGVVMk5hdEU1Mzg2L3lwQ1hBRGNvMFhMV3F6dHZPM0VFZU51?=
- =?utf-8?B?Z0YrYWlkT0x3L1VjKzJqTFV4ZWlrR0RuV0s0ZGFGQW54ZXhTbE8zU3ZreDRW?=
- =?utf-8?B?SlFJWTZjcUZOSFFiV2dueURLbXpzeS9yMHZwd0ZFd2o5WEt0REVJZHNSeDhs?=
- =?utf-8?B?ZmtvaUYwNFJ3UjNTZmFwUEcrSk13cHZidW12S1p1RlFMYjIyYWlnV2w1Y1NY?=
- =?utf-8?B?Mzl5QnE0UVg3aWVjZ0ErRm8xcEI3Y3BPZnpmUDNLR3U0OTRUUkVpR0Z3V3hj?=
- =?utf-8?B?TzBjc2UybUZyMkh1d3JNR09Bd0MzWjVvOHNhcDYxUklhTWhsSG85MzBwWHNJ?=
- =?utf-8?B?Nzd6dk5LQzlORGlRTlRWN3NQL2tVR1B6WlFEbEtZRXAvK0diTDFlY01OOHpI?=
- =?utf-8?B?YlZLa2ZUVlA3d2JvbEd6bEZmWSt4MkEwQzZwaWl4V1lwMDNrVTVobU5JaTBh?=
- =?utf-8?B?T1h0K05nYVNTWU5IT2x2dDQrWU1WbmZCRktCYkl6bXU0SzFyQjVsb2daOUZQ?=
- =?utf-8?B?TEFMZDRQUk9xQktVTGQ1QjRBc2ZOQlFjekhSWE04ck03ZktjaHpYZnMzSHkr?=
- =?utf-8?B?QmNhT2RiYklMZG5FclFkNkpaaTIrWUVod1ZEZlk4QmhtVGNDNTBLM0I4K3JJ?=
- =?utf-8?B?emZwa2syNjR1STdlYXpiT2VTY3dBL3NVa2FwMWZsSVFCNHJmdEJSei91ZFVX?=
- =?utf-8?B?MnVzYmpzaXJrbEdIV0U2T3lJSkQ0QTBuVkNybVNydmp1Y1YrZzViZHlQWC9P?=
- =?utf-8?B?NVpUMnpld3NwSVE2NmxYckppMjZPNzA4dkljTnBHdUs5dzlaTTRKZ1ZITkgw?=
- =?utf-8?B?dExVYTdTWUExcmU3Y3RaV05Mbk9wUDVoWkxJbjM1cVBFSzlWSzQzSm5Cazlr?=
- =?utf-8?B?MVd6T1B4aHJMazNOUUNBUWtHZmhBOUpZa2RVMDZlSW5oY0JuUlFPdnkyMkJ3?=
- =?utf-8?B?dVRQa1RwbjRvY29aMm1QL3VXR2xwa0hvR2NxQUoxZTlXaTFiNjhpZ1hpNGZa?=
- =?utf-8?Q?h5EAqCcP51ixF3oy1i7IdvimL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7585fff9-e117-467c-e830-08dc2194bf2a
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 13:09:52.7870
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RiH56v4IHea2T5VGpf6DL4a9H+TpS+18JQF55hxSqBFbOilKHlTE95QmJmFogqeQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6528
+References: <20240125191756.868860-1-cristian.marussi@arm.com>
+In-Reply-To: <20240125191756.868860-1-cristian.marussi@arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 30 Jan 2024 14:09:20 +0100
+Message-ID: <CAPDyKFpqZf15DFWa8K6RRzSTX70chEVTV8zRgnJ3VStSq_d9UQ@mail.gmail.com>
+Subject: Re: [PATCH] pmdomain: arm: Fix NULL dereference on scmi_perf_domain removal
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Am 30.01.24 um 11:40 schrieb Daniel Vetter:
-> On Tue, Jan 30, 2024 at 10:48:23AM +0100, Paul Cercueil wrote:
->> Le mardi 30 janvier 2024 à 10:23 +0100, Christian König a écrit :
->>>   I would say we start with the DMA-API by getting away from sg_tables
->>> to something cleaner and state oriented.
->> FYI I am already adding a 'dma_vec' object in my IIO DMABUF patchset,
->> which is just a dead simple
->>
->> struct dma_vec {
->>    dma_addr_t addr;
->>    size_t len;
->> };
->>
->> (The rationale for introducing it in the IIO DMABUF patchset was that
->> the "scatterlist" wouldn't allow me to change the transfer size.)
->>
->> So I believe a new "sg_table"-like could just be an array of struct
->> dma_vec + flags.
-> Yeah that's pretty much the proposal I've seen, split the sg table into
-> input data (struct page + len) and output data (which is the dma_addr_t +
-> len you have above).
+On Thu, 25 Jan 2024 at 20:18, Cristian Marussi <cristian.marussi@arm.com> wrote:
+>
+> On unloading of the scmi_perf_domain module got the below splat, when in
+> the DT provided to the system under test the '#power-domain-cells' property
+> was missing.
+> Indeed, this particular setup causes the probe to bail out early without
+> giving any error, so that, then, the removal code is run on unload, but
+> without all the expected initialized structures in place.
+>
+> Add a check and bail out early on remove too.
 
-I would extend that a bit and say we have an array with 
-dma_addr+power_of_two_order and a header structure with lower bit offset 
-and some DMA transaction flags.
+Thanks for spotting this!
 
-But this is something which can be worked as an optimization later on. 
-For a start this proposal here looks good to me as well.
+>
+> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+> Mem abort info:
+>    ESR = 0x0000000096000004
+>    EC = 0x25: DABT (current EL), IL = 32 bits
+>    SET = 0, FnV = 0
+>    EA = 0, S1PTW = 0
+>    FSC = 0x04: level 0 translation fault
+>  Data abort info:
+>    ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+>    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+>  user pgtable: 4k pages, 48-bit VAs, pgdp=00000001076e5000
+>  [0000000000000008] pgd=0000000000000000, p4d=0000000000000000
+>  Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+>  Modules linked in: scmi_perf_domain(-) scmi_module scmi_core
+>  CPU: 0 PID: 231 Comm: rmmod Not tainted 6.7.0-00084-gb4b1f27d3b83-dirty #15
+>  Hardware name: linux,dummy-virt (DT)
+>  pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+>  pc : scmi_perf_domain_remove+0x28/0x70 [scmi_perf_domain]
+>  lr : scmi_perf_domain_remove+0x28/0x70 [scmi_perf_domain]
+>  sp : ffff80008393bc10
+>  x29: ffff80008393bc10 x28: ffff0000875a8000 x27: 0000000000000000
+>  x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+>  x23: ffff00008030c090 x22: ffff00008032d490 x21: ffff80007b287050
+>  x20: 0000000000000000 x19: ffff00008032d410 x18: 0000000000000000
+>  x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+>  x14: 8ba0696d05013a2f x13: 0000000000000000 x12: 0000000000000002
+>  x11: 0101010101010101 x10: ffff00008510cff8 x9 : ffff800080a6797c
+>  x8 : 0101010101010101 x7 : 7f7f7f7f7f7f7f7f x6 : fefefeff6364626d
+>  x5 : 8080808000000000 x4 : 0000000000000020 x3 : 00000000553a3dc1
+>  x2 : ffff0000875a8000 x1 : ffff0000875a8000 x0 : ffff800082ffa048
+>  Call trace:
+>   scmi_perf_domain_remove+0x28/0x70 [scmi_perf_domain]
+>   scmi_dev_remove+0x28/0x40 [scmi_core]
+>   device_remove+0x54/0x90
+>   device_release_driver_internal+0x1dc/0x240
+>   driver_detach+0x58/0xa8
+>   bus_remove_driver+0x78/0x108
+>   driver_unregister+0x38/0x70
+>   scmi_driver_unregister+0x28/0x180 [scmi_core]
+>   scmi_perf_domain_driver_exit+0x18/0xb78 [scmi_perf_domain]
+>   __arm64_sys_delete_module+0x1a8/0x2c0
+>   invoke_syscall+0x50/0x128
+>   el0_svc_common.constprop.0+0x48/0xf0
+>   do_el0_svc+0x24/0x38
+>   el0_svc+0x34/0xb8
+>   el0t_64_sync_handler+0x100/0x130
+>   el0t_64_sync+0x190/0x198
+>  Code: a90153f3 f9403c14 f9414800 955f8a05 (b9400a80)
+>  ---[ end trace 0000000000000000 ]---
+>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Fixes: 2af23ceb8624 ("pmdomain: arm: Add the SCMI performance domain")
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> ---
+> I suppose the probe does NOT bail out with an error because this DT config has
+> to be supported, right ?
 
-> The part I don't expect to ever happen, because it hasn't the past 20 or
-> so years, is that the dma-api will give us information about what is
-> needed to keep the buffers coherency between various devices and the cpu.
+Actually, no. It's a mistake by me, the probe should bail out with an
+error code.
 
-Well maybe that's what we are doing wrong.
+In fact, there is also one additional similar problem in probe, when
+the number of perf-domains are zero. In that case, we should also
+return an error code, rather than returning 0.
 
-Instead of asking the dma-api about the necessary information we should 
-give the API the opportunity to work for us.
+Would you mind updating the patch to cover both problems - or if you
+are too busy, just let me know and I can help out.
 
-In other words we don't need the information about buffer coherency what 
-we need is that the API works for as and fulfills the requirements we have.
+> ---
+>  drivers/pmdomain/arm/scmi_perf_domain.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pmdomain/arm/scmi_perf_domain.c b/drivers/pmdomain/arm/scmi_perf_domain.c
+> index 709bbc448fad..d7ef46ccd9b8 100644
+> --- a/drivers/pmdomain/arm/scmi_perf_domain.c
+> +++ b/drivers/pmdomain/arm/scmi_perf_domain.c
+> @@ -159,6 +159,9 @@ static void scmi_perf_domain_remove(struct scmi_device *sdev)
+>         struct genpd_onecell_data *scmi_pd_data = dev_get_drvdata(dev);
+>         int i;
+>
+> +       if (!scmi_pd_data)
+> +               return;
+> +
+>         of_genpd_del_provider(dev->of_node);
+>
+>         for (i = 0; i < scmi_pd_data->num_domains; i++)
+> --
+> 2.43.0
+>
 
-So the question is really what should we propose to change on the 
-DMA-api side to get this working as expected?
-
-Regards,
-Christian.
-
-
-
-
-
-> -Sima
-
+Kind regards
+Uffe
