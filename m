@@ -1,80 +1,79 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CC971B32
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 20:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CD56E2A5
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 20:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706647766; cv=none; b=iN06EaJpFAAOty8TiC2npfaZ9Cx6sro8K1bDfD9ya0XoVxrHshi7zSD885XdJ/Gkm9IZh0lpFE3Ea4AGP8TvZwQpSgOWyAvO0ueB+DOLYiDXPVZuYZPykfhbb2JmoOHwa1ffqMIabvFIboJo+bj3/oP1gkPhW06O3cI4ShZFf1Y=
+	t=1706647826; cv=none; b=Gd6hPw2jnaWX67Dt1YJ4Cr8++LZvnzmRAGo/D88hpbESaqTUlrfphyXiR3wIJluh2fDwX4HZnRyhRXMbJq4W4a/uZ8nz+9EKRixy8QEaMILMLMsgXagGEtD+/Z+yPbxBcKZaiW/xIWnPftxf5NZqmSYtmtrrQ//QS5TzNLRJUjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706647766; c=relaxed/simple;
-	bh=bS3zY4RD+CMpw9nf3G/9PKea3i0PDScm6HPQf3AhHgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gaLRoSW+v/CV+hyOpPvGvgSGJti39iol518xze75YoxhKoOQPUh0Nwv815ZgBmE2J4jkKYUb8Yl81JpN87d1/Cxz8io33DdWswnuw8v4vF678kvs/nbuNWCBntzcba7YwPf/v+pw8FMLjQVZOub2+ziX6GdCgy12b/SQP2RCV8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-68009cb4669so32878096d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:49:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706647763; x=1707252563;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AtZBEe426KIf/mBUMlvvoaF7jyFEZ9/COBSE2/txMLU=;
-        b=Ww6SwMGexzZ73kGSQbe/YIkuYi4F/Zh0o9+v0kour6sVnvDun2B+y4xIeEIImnbrkp
-         OeK+VsUdhmBHt9VEPx010U3puqXHelKKIuZisdLkT28venjIjDZiLCREpfRaYGlrCFB0
-         55Ma7Exm4dyTSg0l/JhhJleOH8uUGMfWEClbjZSKCBo38jtg4dNXlUZyqMJjX1USbjg+
-         vgmnXUTN5lkR1JWMqhYOf1L8ixYLwcYwpLmu2ucDePxlGi5vvVuMxmg6CsfZ+vvuVvvQ
-         vnTEu/ROsczpaeKbz2nvsu70InJx2kylM+DZpjbhVK0kjBynllhKHSpkLknJv67PhOQ8
-         P2aQ==
-X-Gm-Message-State: AOJu0Yxz7/8krBiWOaJRmrbVLhS1TXsOZZE1DoQF8QDlUpo2njBTGBpq
-	oaady+7bArT62ECBfW2g34DXXPcBYtmIWIjkn0BT+6B/qT1HnqSbVC5ZFVxOiw==
-X-Google-Smtp-Source: AGHT+IExCJjqhy5J/HQbLwc6HEIv1PKoKFV6opMfTc/hdwP/PWAAPv9RfvTcXLRcTuNHUUdlDE2mNw==
-X-Received: by 2002:a05:6214:f2c:b0:681:7d81:705b with SMTP id iw12-20020a0562140f2c00b006817d81705bmr615439qvb.4.1706647763522;
-        Tue, 30 Jan 2024 12:49:23 -0800 (PST)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id of10-20020a056214434a00b0068c560eaf8fsm1688182qvb.134.2024.01.30.12.49.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 12:49:23 -0800 (PST)
-Date: Tue, 30 Jan 2024 15:49:22 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	Alasdair Kergon <agk@redhat.com>,
-	Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v3 5/5] block: remove gfp_flags from blkdev_zone_mgmt
-Message-ID: <Zblg0qE25wPt-SRv@redhat.com>
-References: <20240128-zonefs_nofs-v3-0-ae3b7c8def61@wdc.com>
- <20240128-zonefs_nofs-v3-5-ae3b7c8def61@wdc.com>
+	s=arc-20240116; t=1706647826; c=relaxed/simple;
+	bh=64/LeL2k+UjUg6/nAXzx8iXURymnJck5XBIH+3IRkjI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=mHXYsWVfD68p6Rxb+8s/4URNdA1AvoZIJmbKXVDntVPlMrwE1hwRu0nIR7GPtqFwowXJOdlVjNXfE0u7XcGcOPRds8LEjVZyqhzfjxyeRQS/83jUYpp4hPeOlg/qxfwkvx2NMgNxBO6SnO8dE80VrXYCbxZRSnh/Hg9D4gSjPSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MB/YiCOC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MB/YiCOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E00E3C433A6;
+	Tue, 30 Jan 2024 20:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706647825;
+	bh=64/LeL2k+UjUg6/nAXzx8iXURymnJck5XBIH+3IRkjI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MB/YiCOC4uyvx7BN4uXBMWnHtueM4znJQAfrvH420X9tCNDFC9/DItWHkTABswouF
+	 HcYzZvyqIU2pyNeRRGgqWNcg2VryZWNOf9wmMf7iFDvKvhsioFr1hXdYx0yEsoH7OQ
+	 /PIeWVzSql8aCBDCxXvemmDe7RE+SP0swmQWDAE5mZ9LlFJqon2JfKXmPJglvNF4p+
+	 cqBq0r6dWWDozt+iEIQ7Le5iUBgTyBbP+rc0wXiuXiC4bdRdfUjjGJa6Hpb/Z5K3vk
+	 GRvQKE2Vu4a79ZptWdGl7VgfSn815tUgBnz9rVd8txazYZbIb3W3PRd/u7lpMQVAYO
+	 YMhcfIQOkCebA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C51A2C395F3;
+	Tue, 30 Jan 2024 20:50:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240128-zonefs_nofs-v3-5-ae3b7c8def61@wdc.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: compress: fix to cover
+ f2fs_disable_compressed_file() w/ i_sem
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <170664782580.32692.7563939117930612868.git-patchwork-notify@kernel.org>
+Date: Tue, 30 Jan 2024 20:50:25 +0000
+References: <20240122022313.3054810-1-chao@kernel.org>
+In-Reply-To: <20240122022313.3054810-1-chao@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
-On Mon, Jan 29 2024 at  2:52P -0500,
-Johannes Thumshirn <johannes.thumshirn@wdc.com> wrote:
+Hello:
 
-> Now that all callers pass in GFP_KERNEL to blkdev_zone_mgmt() and use
-> memalloc_no{io,fs}_{save,restore}() to define the allocation scope, we can
-> drop the gfp_mask parameter from blkdev_zone_mgmt() as well as
-> blkdev_zone_reset_all() and blkdev_zone_reset_all_emulated().
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
+
+On Mon, 22 Jan 2024 10:23:13 +0800 you wrote:
+> - f2fs_disable_compressed_file
+>   - check inode_has_data
+> 					- f2fs_file_mmap
+> 					- mkwrite
+> 					 - f2fs_get_block_locked
+> 					 : update metadata in compressed
+> 					   inode's disk layout
+>   - fi->i_flags &= ~F2FS_COMPR_FL
+>   - clear_inode_flag(inode, FI_COMPRESSED_FILE);
 > 
-> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> [...]
 
-Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+Here is the summary with links:
+  - [f2fs-dev,v2] f2fs: compress: fix to cover f2fs_disable_compressed_file() w/ i_sem
+    https://git.kernel.org/jaegeuk/f2fs/c/9f100ecdedc3
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
