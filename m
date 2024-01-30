@@ -1,120 +1,105 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE1878B49;
-	Tue, 30 Jan 2024 18:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA0A69D36
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 18:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706639848; cv=none; b=WkCqo+dc7TgPXYUZG9UeV6+VjARwib6tVKjHiiOSjp7yFNbspu33M9xwTp/ymSSxVy+3LGM3px/3SpDywoTuOPf8rix4dXhW2DxBBGSEDghlKYuDTuVkaZFYKonctVlh+XKrV5gXX0u61s56pSQsyBPaa4+8oi7S95qdkhZ4hcI=
+	t=1706639978; cv=none; b=HZFhbFIaubHVuL7Ai8DguhoMu1jRQ9RclAh1xnEvf+IB76LOKLMgduFWUyrAblg9SmwXY1GjICovBymOfjR+UauqL1i24tAuuSL/F89pnU+M8yu+C5faewxmgTFghbnY0JYx/hEXb/pjVHJ0xnOiODSGuvjWxbRhMOyb5ii//5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706639848; c=relaxed/simple;
-	bh=ZsZ4CSEEReHodm5XT1/IpDGk1NZ+OdsfN9HrhiTiSkI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QFoT6acVVwpqEEX3/u9zIWaOMOycDPp+Te+p8Fv8mpCtkc9ezeCXLHnePKvi2z5tnGo0GheIbUq0Utp+AO+zwDAEdGLGMfrdK7E5OPUXqigO4oTWKB3oESilSruMUuRXZdreyZkfAzF3zapz17MDCpe273xyMs4r7sH4Y6LRYcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ggc7RK4A; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706639978; c=relaxed/simple;
+	bh=MI0NDS6Iev4PjDUdrQb7Fd1NOLSljNC70XXvSCaQOzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FThIKqjp+lkqA1hl45OWebsvqo3PW2FEzeFJgfPlnjgQRg3t57e6nrmbyTkabbQNHtAqxodW1blTVW6cbn9NWbmMTe+T4ATe8w0WmKCP3F1paJgVTMuE17AtD6n8zGoKM4GZtBSgGjjfMnM5UxRIxG1xHBELZA8uOQGfLmoaDLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XjxBiw7h; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ggc7RK4A"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7bfd5eeffefso150577139f.1;
-        Tue, 30 Jan 2024 10:37:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XjxBiw7h"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bd5c4cffefso4732247b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:39:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706639846; x=1707244646; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hM9ej9K+8Z1VJp/yGHaHZXuJOYSDyYzm2GNeYFRuOio=;
-        b=ggc7RK4AzqB5CGmU6/v/l+uga4A8OixXr4IPje5DIXtqGR4DabhEGv1oSaJ/SwJQW+
-         x7rbBxvOyUhcn02AKFVSKOOa8ODXZN8cj0rkBkMvHYD2N1bw9XLhdUBi8ZspUUYzY09f
-         y0KsekUgj13Y+SLvV2KJ8vMcTARndIdv15EiPv6tLDtfV11SlQR5HDMMXMWQ9KNlD5yR
-         /k2Zb/o9/gbkbsKRSRYSokkdgVAeimi21INEiKTNtQTlXts2P1eB9GAq3M7QvpEw/Dx4
-         Ffhh2Ke+TLg7/ZZ/pMLx4/NgwQUoftOgO2HTcJ5ep3usOf3VBYc0noIleJii4VbgBCGT
-         naWQ==
+        d=linaro.org; s=google; t=1706639975; x=1707244775; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pOjCTKxf4sFvuTCxIsDxH4OosQIHqdZ2rmZHkDuD9II=;
+        b=XjxBiw7hNjXi97wqdnaZnr50iZg6Un6HCWlkP1K/7QQbCT1ZxHcRBeE+UcgXnKdb6h
+         JO2JiBVA6wlXrucB1uiOuH9z3UxPSqOGuEnPipvw5hfO+eGrtQHa8FV1F0cl7GIP+OsU
+         STuUwEwcQHkj3hBPw4ciud70s9Fm0iWEep1p0gLXY7QUyniSB2npKnlwSpdyKSzl3fcn
+         7siI3wgPFmajLyQi2dZXNRzWuGrZF0LaO8kOnj0keSjW9a6YGwtw6jHRTjWHO5A0IS/A
+         Ktw6qPi3LslO+LporoUnnF2hOpSP7tESbicSCKjphYvJHtY1jc8qgeESkSMR3VJ3AM2a
+         6A4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706639846; x=1707244646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hM9ej9K+8Z1VJp/yGHaHZXuJOYSDyYzm2GNeYFRuOio=;
-        b=S7aCRfhvUMcGbeA/V7bsrjxUcxXNWGQQvyKDUVsjnMIDMgX63Nhj5t1roYZb47fb9G
-         qqPD5gfpYAdAvB0wPLtLdiHNlVkwIk2eUaR8xUb6ROdkPEBcyh/Sb91xh+uUw9bl6iDr
-         fa1ihUbmH5aX8pddtkw9TB5filyxsKEVaCXMYcSTGKDvWRfnwcWmdHn24ZyHPJ/E9mQ7
-         KY7WXySS1WNz0Wyh0e81xoy5K5l/mxPgZM3U2T6Enn4puz5Z9zjZbRlebew4+0OsXNzT
-         gOpI7NaQrEcGja35XS6iimtwEpzwr0d0DCuSkMcs7qon6kDr0sdm4HIwBu4p3xRfgeOB
-         R7dg==
-X-Gm-Message-State: AOJu0YyZYpOAdKj1pDk6zsPabdWvLTRid3aWtd8+mp6E1vkNbpAz5dzi
-	roXS9Cd/jkU+iwIb/CGYGX8Wn1rd//mzJglNc2LG8Vi1vs607/p/Oo95ymr4okXT6FgNtICZvum
-	bRQQzegD+BvGWUIA/ocVtq2dkSAo=
-X-Google-Smtp-Source: AGHT+IERoa1G5FtsZFo/vtPsaqg2DfIVxKvUU5JLdo3L/X1OxY9spoX0SrOT+0nfO/bBF0zz61CYZCV1tV831AGsjD0=
-X-Received: by 2002:a92:d5c8:0:b0:363:900b:fa50 with SMTP id
- d8-20020a92d5c8000000b00363900bfa50mr1933229ilq.2.1706639845877; Tue, 30 Jan
- 2024 10:37:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706639975; x=1707244775;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pOjCTKxf4sFvuTCxIsDxH4OosQIHqdZ2rmZHkDuD9II=;
+        b=IOiisuZiVpJ0UZl7jfku952WDvCwhwf3cxuH8ax3iwUM5A1vX6rV7loTaJNmmc6Uui
+         BsVdp6esQxL4vDe0QU9bvSqRLggWfoJTL6U7z3+uzQRDtrApXs8ZbZvCz2Ov12Oo7twI
+         UsrB95Qku6hQyX/he029Q1yQwYu82YJOMEma9WifyJnp4maxEDvQ5cRDK05X6Qt1vHuf
+         w4WBOYwlYzBoJh2LHJdo3idezK6QLfIftwxI7lnH3+C05h3AiLr9XvYz5xfCWSKv6TfT
+         /dftCpC+cvGLN6QqBWKS/8+bhX73Jzd4VsjYBMFLyy8yc8K9DtD0j55HsOWogFTivvos
+         +Xxw==
+X-Gm-Message-State: AOJu0Yx/jjTlFBjWYSVKp0KIN6puBVlHOSI3KKMPnraEbqyswh1lY9Tp
+	XkV+WU29wuDIZ2Ke1JkZHPZnM96I0VvAPEO47+V97y7hACj7rLDkhv+PJGhBlQ==
+X-Google-Smtp-Source: AGHT+IHKbwYWqn9d33FCtu9hgL0/2+JLAXUvS/DetlfUcPARSY8K+NddJ08iJ+7Sj53243anjwXCdg==
+X-Received: by 2002:a05:6808:17a7:b0:3be:ac08:ea3e with SMTP id bg39-20020a05680817a700b003beac08ea3emr981434oib.40.1706639975619;
+        Tue, 30 Jan 2024 10:39:35 -0800 (PST)
+Received: from thinkpad ([103.28.246.123])
+        by smtp.gmail.com with ESMTPSA id fb8-20020a056a002d8800b006dd8148efd8sm8081795pfb.103.2024.01.30.10.39.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 10:39:35 -0800 (PST)
+Date: Wed, 31 Jan 2024 00:09:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 2/2] PCI: qcom: Add X1E80100 PCIe support
+Message-ID: <20240130183930.GF4218@thinkpad>
+References: <20240130065506.GE32821@thinkpad>
+ <20240130180040.GA527428@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129224542.162599-1-nphamcs@gmail.com> <20240129224542.162599-2-nphamcs@gmail.com>
- <ZbhKoJ5BcP_RhMt4@google.com>
-In-Reply-To: <ZbhKoJ5BcP_RhMt4@google.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 30 Jan 2024 10:37:15 -0800
-Message-ID: <CAKEwX=OwsEcSnw5V_zivdFzGLLVA_PC+Acv+5sozkCJU1NHpeg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] selftests: zswap: add zswap selftest file to zswap
- maintainer entry
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: akpm@linux-foundation.org, shuah@kernel.org, hannes@cmpxchg.org, 
-	tj@kernel.org, lizefan.x@bytedance.com, linux-mm@kvack.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240130180040.GA527428@bhelgaas>
 
-On Mon, Jan 29, 2024 at 5:02=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
->
-> On Mon, Jan 29, 2024 at 02:45:40PM -0800, Nhat Pham wrote:
-> > Make it easier for contributors to find the zswap maintainers when they
-> > update the zswap tests.
-> >
-> > Signed-off-by: Nhat Pham <nphamcs@gmail.com>
->
-> I guess I had to check the zswap tests at some point :)
+On Tue, Jan 30, 2024 at 12:00:40PM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 30, 2024 at 12:25:06PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jan 29, 2024 at 04:41:20PM +0200, Abel Vesa wrote:
+> > > Add the compatible and the driver data for X1E80100.
+> > 
+> > If you happen to respin the series, please add info about the PCIe controller
+> > found on this SoC. Like IP version, Gen speed, max. link width etc...
+> 
+> FWIW, I always prefer actual speeds, e.g., "8 GT/s", instead of things
+> like "Gen3", for the reason mentioned in the spec:
+> 
+>   Terms like "PCIe Gen3" are ambiguous and should be avoided. For
+>   example, "gen3" could mean (1) compliant with Base 3.0, (2)
+>   compliant with Base 3.1 (last revision of 3.x), (3) compliant with
+>   Base 3.0 and supporting 8.0 GT/s, (4) compliant with Base 3.0 or
+>   later and supporting 8.0 GT/s, ....
+> 
 
-We sorely need more zswap tests :)
+Makes sense. Will keep a note of it, thanks!
 
-I'm one of the offenders of adding new features without including
-tests, so no judging anyone of course, and admittedly zswap is quite
-intertwined with other parts of MM, so it's kinda hard to write
-unit-ish tests for zswap only. I often had to resort to scripting
-stress tests to iron out bugs.
+- Mani
 
-But there are still tests that we can write to verify public API
-(cgroup's zswap options come to mind), simple tests that cover crucial
-code paths, etc. that we should probably add in. At the very least
-this can be a quick/sanity check for developing and backporting
-patches into the production system.
-
->
-> Acked-by: Yosry Ahmed <yosryahmed@google.com>
->
-> > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index fecebfc4c0dc..5f60faaefaf2 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -24396,6 +24396,7 @@ F:    include/linux/zpool.h
-> >  F:   include/linux/zswap.h
-> >  F:   mm/zpool.c
-> >  F:   mm/zswap.c
-> > +F:   tools/testing/selftests/cgroup/test_zswap.c
-> >
-> >  THE REST
-> >  M:   Linus Torvalds <torvalds@linux-foundation.org>
-> > --
-> > 2.39.3
-> >
+-- 
+மணிவண்ணன் சதாசிவம்
