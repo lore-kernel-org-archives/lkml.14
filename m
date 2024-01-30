@@ -1,137 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7034B15530D;
-	Tue, 30 Jan 2024 17:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5685C14E2D1;
+	Tue, 30 Jan 2024 17:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706637519; cv=none; b=dARlvcghBoY05kPVmLotNUjEmZusajIBHiyTgILTREU5fwg1FlTAMNftSdSNjzVQvLuxfR/DrQFSefITy+wxfUIyGMejEyUwVBEgYLWozYOoDTi7chpmBtSpWPVoXlC+NTlPpjCKXZ8/fMUG5jU6qlcQxgApo92qQGh8Xf4PhwI=
+	t=1706637519; cv=none; b=pbcs6CzPV4MwtDjTyHpTNl3r+qqQDdQPX5dMwBCoFaqdxLPJStSWuT1nvIe9rrIZdZ45xfqFd8RmRBVkmQtHqmObnWkjKmyuvrjyH+s+2AjWwQ8t7YLqlwFz/9LdYNoIEvs4A4YBPp7y+0FiY2rUhPkyzOmVn2Gv2cJu4IT9V6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706637519; c=relaxed/simple;
-	bh=haZtEcAtM6RAOUswKZSwgnSzcYCz0/OtRj7b44h2iHM=;
+	bh=eRO58rhLkDC3XGVDbdIcragPqA1KWB4/whLzh4oIseI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LYJdIDwm4N4b9CxW4+Fn5w7NnmiP01uJ0wLtpDXgHfEEBYQytmJQuLOyRK7f1ZrxWSN70EBv+yW2Dtz0lNEd1t46gElhZJXBLUfOHH1p7XohhhAcwThMcktJky7aa83PUqgQ11PBw+Hu/1+GnA/cIa3gh293zM1tqOu/yjYfhy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5AB7DA7;
-	Tue, 30 Jan 2024 09:59:18 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.45.140])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 820CA3F762;
-	Tue, 30 Jan 2024 09:58:32 -0800 (PST)
-Date: Tue, 30 Jan 2024 17:58:24 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	Nikhil Rao <nikhil.rao@intel.com>, Tony Zhu <tony.zhu@intel.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] dmaengine: idxd: Change wmb() to smp_wmb() when copying
- completion record to user space
-Message-ID: <Zbk4wGNcB-g91Vr0@FVFF77S0Q05N>
-References: <20240130025806.2027284-1-fenghua.yu@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=D9GNVC01K0Apm/KKvLBV1BobxzWwHVfP00VraxsevVGnKupd9QMwCRlAgJrlQAOYriVa2UzP/LEPCPoqvdcQaPpMrjLmFy7pfphd8YSZV5ExZT8RXxpDdvsV3vtgF6FxJ7pjTKeF1ZDTf6+VgjUb3yxdXcUw9fxSEK51oD3/Qrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5dAbHzq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5dAbHzq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6185AC433C7;
+	Tue, 30 Jan 2024 17:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706637518;
+	bh=eRO58rhLkDC3XGVDbdIcragPqA1KWB4/whLzh4oIseI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B5dAbHzqxmhoTlyK9egPKCyXc5D9IJkcVjxVLzsvwumOCy+fmTd70T8BqBUcKBcxf
+	 bXLUphvCq5sUVr8q+gCuumt2latEVIbQHW24HnhUCJOC8mKNGE25dDINl/25e/JBSX
+	 7WFcb5SGyWTCp2swIobZJ+RWEbD4qspuLrdUcrtEFToO7K9FHqA32jLtP2RiJOBLgp
+	 bA2oLO4tHLjGd5bGxO/qJrpoRjGcz9WDr+IOn6ey3F5+UVA6EsGDeOGVMSIHHrai3l
+	 a5szKTjg60P4WUbQjyyEq/BjJrrU7GgBnFGioPiQ4by+dWj83zNbP69Dw4BEoZcrBS
+	 ubWb6JbvNzKtg==
+Date: Tue, 30 Jan 2024 17:58:34 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Stefan Eichenberger <eichest@gmail.com>
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	piyush.mehta@amd.com, michal.simek@amd.com,
+	francesco.dolcini@toradex.com, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>
+Subject: Re: [PATCH] dt-bindings: usb: microchip,usb5744: Remove peer-hub as
+ requirement
+Message-ID: <20240130-blazing-jovial-8c15bbfd9ca1@spud>
+References: <20240130073505.8916-1-eichest@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wUsBcy9YsbXTTG7j"
+Content-Disposition: inline
+In-Reply-To: <20240130073505.8916-1-eichest@gmail.com>
+
+
+--wUsBcy9YsbXTTG7j
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130025806.2027284-1-fenghua.yu@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-This patch might be ok (it looks reasonable as an optimization), but I think
-the description of wmb() and smp_wmb() is incorrect. I also think that you're
-missing an rmb()/smp_rmb()eor equivalent on the reader side.
+On Tue, Jan 30, 2024 at 08:35:05AM +0100, Stefan Eichenberger wrote:
+> From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+>=20
+> The peer-hub is used to model the relationship between the USB 2 and USB
+> 3 hub. However, it is possible to only connect USB 2 without having
+> USB 3. Therefore, the peer-hub property should not be marked as required.
+>=20
+> Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
 
-On Mon, Jan 29, 2024 at 06:58:06PM -0800, Fenghua Yu wrote:
-> wmb() is used to ensure status in the completion record is written
-> after the rest of the completion record, making it visible to the user.
-> However, on SMP systems, this may not guarantee visibility across
-> different CPUs.
-> 
-> Considering this scenario that event log handler is running on CPU1 while
-> user app is polling completion record (cr) status on CPU2:
-> 
-> 	CPU1				CPU2
-> event log handler			user app
-> 
-> 					1. cr = 0 (status = 0)
-> 2. copy X to user cr except "status"
-> 3. wmb()
-> 4. copy Y to user cr "status"
-> 					5. poll status value Y
-> 				 	6. read rest cr which is still 0.
-> 					   cr handling fails
-> 					7. cr value X visible now
-> 
-> Although wmb() ensure value Y is written and visible after X is written
-> on CPU1, the order is not guaranteed on CPU2. So user app may see status
-> value Y while cr value X is still not visible yet on CPU2. This will
-> cause reading 0 from the rest of cr and cr handling fails.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-The wmb() on CPU1 ensures the order of the reads, but you need an rmb() on CPU2
-between reading the 'status' and 'rest' parts; otherwise CPU2 (or the
-compiler!) is permitted to hoist the read of 'rest' early, before reading from
-'status', and hence you can end up with a sequence that is effectively:
+Cheers,
+Conor.
 
-	CPU1				CPU2
-  event log handler			user app
-					
-  					1. cr = 0 (status = 0)
-  				 	6a. read rest cr which is still 0.
-  2. copy X to user cr except "status"
-  3. wmb()
-  4. copy Y to user cr "status"
-  					5. poll status value Y
-  					6b. cr handling fails
-  					7. cr value X visible now
+--wUsBcy9YsbXTTG7j
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Since this is all to regular cacheable memory, it's *sufficient* to use
-smp_wmb() and smp_rmb(), but that's an optimization rather than an ordering
-fix.
+-----BEGIN PGP SIGNATURE-----
 
-Note that on x86_64, TSO means that the stores are in-order (and so smp_wmb()
-is just a compiler barrier), and IIUC loads are not reordered w.r.t. other
-loads (and so smp_rmb() is also just a compiler barrier).
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbk4ygAKCRB4tDGHoIJi
+0nQ7AQC2snoup2KWag8GoxVgNdDzgpVNDKIv6nxn8T1ciJa76AEAq9OtUNaVd1zk
+8GIFEffIl8Iyh/5I125yK0Ex4BScYgU=
+=6jsI
+-----END PGP SIGNATURE-----
 
-> Changing wmb() to smp_wmb() ensures Y is written after X on both CPU1
-> and CPU2. This guarantees that user app can consume cr in right order.
-
-This implies that smp_wmb() is *stronger* than wmb(), whereas smp_wmb() is
-actually *weaker* (e.g. on x86_64 wmb() is an sfence, whereas smp_wmb() is a
-barrier()).
-
-Thanks,
-Mark.
-
-> 
-> Fixes: b022f59725f0 ("dmaengine: idxd: add idxd_copy_cr() to copy user completion record during page fault handling")
-> Suggested-by: Nikhil Rao <nikhil.rao@intel.com>
-> Tested-by: Tony Zhu <tony.zhu@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->  drivers/dma/idxd/cdev.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> index 77f8885cf407..9b7388a23cbe 100644
-> --- a/drivers/dma/idxd/cdev.c
-> +++ b/drivers/dma/idxd/cdev.c
-> @@ -681,9 +681,10 @@ int idxd_copy_cr(struct idxd_wq *wq, ioasid_t pasid, unsigned long addr,
->  		 * Ensure that the completion record's status field is written
->  		 * after the rest of the completion record has been written.
->  		 * This ensures that the user receives the correct completion
-> -		 * record information once polling for a non-zero status.
-> +		 * record information on any CPU once polling for a non-zero
-> +		 * status.
->  		 */
-> -		wmb();
-> +		smp_wmb();
->  		status = *(u8 *)cr;
->  		if (put_user(status, (u8 __user *)addr))
->  			left += status_size;
-> -- 
-> 2.37.1
-> 
-> 
+--wUsBcy9YsbXTTG7j--
