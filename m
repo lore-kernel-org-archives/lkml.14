@@ -1,106 +1,165 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71743823AA
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 16:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0A1129A95;
+	Tue, 30 Jan 2024 16:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706633111; cv=none; b=fvp+puQ+Al6+z0j8uaePRxlQ9D6bOUhSwhK+4xsRIIZEPMZP92dEQ3PBgYbGyfTnCRzbY0ioPnOorTofnbNZMyySm1uVNHuEzlh+0pRMXdGfA2sv3Z5UL8yLpEvNx1CCAxqONlSt1eqYVFP/ox2LTSAIHieQ14Rf6SQB/j42SJA=
+	t=1706633119; cv=none; b=MBhszNOtD4BZq5LhCoVyH643pJTIaLyYIUnQVpuqu+dSx9tLtxdJsIfoXqVaQUmJTYrp9Xk11gEKtw+KPfzsPLLNZ15gqc5CPrL8570WMem1dEXpzOTTTU32G53PcCxOGrZZPib+fwPtwYGUeNPkz5fNWo/GJNR5Pdx/fZAm9zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706633111; c=relaxed/simple;
-	bh=gu861JxVK+YlPBKUGVxXJIPtb1yCoYWMQ0RkEI8EOec=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=aaMG8EUa8o8rli0pSyIIYmmqea3Te27rrZUcoHOxBbAvtWDPuSlt5ksqF5CPRWc2jcETeR+37lmP97w+6nDX8SBAdu3zd40ogOn8r7OLPvNptGUCRTAWl/jk3nQVKGXZ+eTmIeqZzqZGAQOsQxw7aSbYxCpBf+0k1h9snCOAzqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o66xEKtp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c6hfqlMT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o66xEKtp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c6hfqlMT"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706633107;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V73c0bJOIfsp+IxKwdVANpoPIBXYkA+Z/1o8vaANWpA=;
-	b=o66xEKtpWAyWBjuYIXjt6O6wK+mF69FtbbGIN4xsTRACmm1jcQjZN6bPSIVf8kdFduKzGU
-	v56NVJ4RhgT0pyeVTVhcV47FDmwfPUkC/tm99GCk6wo6SnMG84JFhfkUPyY2+PEFcWvQMx
-	gRHt+/QZtZIBPklUuarD8ywNA3uBbOEqW/djL1tS23KG2K8V9+7P8Ce2sUZ34zQyAGuQNb
-	Bwln6EOAagc++3ozzueT4yoHyj9we0PRDDcfdEel/E3nhPw6kG9GF6k9RYpN1o+7Dt65hA
-	a4+UGSHH9cYOn0hKEwmr2hEzesWoT4Bo1CQN1BTFq8Ok4R4rtN2qUVNEez355A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706633107;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V73c0bJOIfsp+IxKwdVANpoPIBXYkA+Z/1o8vaANWpA=;
-	b=c6hfqlMTVCJbI4Vzr+47FdgIsdk24rflmxOECbLfH3ig/8CptXsEFeZBJnkJPqxHxZ68VE
-	3JQhCceeJlDxjACw==
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Eric Dumazet <edumazet@google.com>, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, Arjan van de Ven <arjan@infradead.org>,
- "Paul E . McKenney" <paulmck@kernel.org>, Rik van Riel <riel@surriel.com>,
- Steven Rostedt <rostedt@goodmis.org>, Sebastian Siewior
- <bigeasy@linutronix.de>, Giovanni Gherdovich <ggherdovich@suse.cz>, Lukasz
- Luba <lukasz.luba@arm.com>, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Srinivas Pandruvada <srinivas.pandruvada@intel.com>, K Prateek Nayak
- <kprateek.nayak@amd.com>
-Subject: Re: [PATCH v10 18/20] timers: Implement the hierarchical pull model
-In-Reply-To: <ZbkV9wVxFhQxujb3@localhost.localdomain>
-References: <20240115143743.27827-1-anna-maria@linutronix.de>
- <20240115143743.27827-19-anna-maria@linutronix.de>
- <ZbJwol4QoSgz0QlH@lothringen> <877cjtcuv4.fsf@somnus>
- <ZbkV9wVxFhQxujb3@localhost.localdomain>
-Date: Tue, 30 Jan 2024 17:45:06 +0100
-Message-ID: <87zfwm93e5.fsf@somnus>
+	s=arc-20240116; t=1706633119; c=relaxed/simple;
+	bh=Piwy79QW6cDC70P3Di3e058IJrU9THBDbC12+4N07Hg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GhW5WZx01recRFuC7GUbTTI7NU2jSLl9mClqT7hI6XhjvukgJ+Im7ilEUHsunpofkVj4Jv+wBrkZ/LILBVQVPAeIMpPqyLzGB3NxiRzdgkdh/A9UvsRVMXJg+TJPofWhkcBS2s/ixg3R6QXwr5sIk2WleYh7EcSdAgSOsqrOqkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8E83D1F871;
+	Tue, 30 Jan 2024 16:45:10 +0000 (UTC)
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 71CA413212;
+	Tue, 30 Jan 2024 16:45:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 2IxNEZUnuWXKWwAAn2gu4w
+	(envelope-from <leeman.duncan@gmail.com>); Tue, 30 Jan 2024 16:45:09 +0000
+From: Lee Duncan <leeman.duncan@gmail.com>
+To: linux-scsi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	hare@suse.de,
+	Lee Duncan <lduncan@suse.com>
+Subject: [PATCH 2/2] fnic: move fnic_fnic_flush_tx() to a work queue
+Date: Tue, 30 Jan 2024 08:42:22 -0800
+Message-Id: <9c51ef07a04413fb2f2bd20f1534f96e004e4e59.1706632031.git.lduncan@suse.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <cover.1706632031.git.lduncan@suse.com>
+References: <cover.1706632031.git.lduncan@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: ********
+X-Spam-Score: 8.30
+X-Spamd-Result: default: False [8.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_SPAM(5.10)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 FREEMAIL_FROM(0.50)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 TO_DN_SOME(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_ENVFROM(0.00)[gmail.com];
+	 TAGGED_FROM(0.00)[];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
 
-Frederic Weisbecker <frederic@kernel.org> writes:
+From: Hannes Reinecke <hare@suse.de>
 
-> Le Sun, Jan 28, 2024 at 04:58:55PM +0100, Anna-Maria Behnsen a =C3=A9crit=
- :
->> Frederic Weisbecker <frederic@kernel.org> writes:
->> >> +
->> >> +			if (tmigr_check_lonely(topgroup))
->> >> +				return READ_ONCE(topgroup->next_expiry);
->>=20
->> When I hand in tevt->global as a parameter, I'll need to compare the
->> first expiry of the toplevel group and the tevt->global value and return
->> the earlier expiry. Only a single child is active in top level, so it
->> might be that this CPU is the last active CPU in hierarchy.
->>=20
->> I didn't check all the way to the top whether all groups are
->> 'lonely'. So when the top level group has only a single active child, it
->> is also possible that the child of the top level group has two active
->> children... Then a return of KTIME_MAX would be also a more precise
->> forecast.
->>=20
->> This quick check is there to keep the overhead minimal when checking
->> whether it might be possible to go idle. So I don't know, if we should
->> add this additional check per level (which is pretty simple when using
->> group->parent for walking the hierarchy). What do you think?
->
-> Not sure. Maybe if the tree never exceeds 3 levels (does it?) it's ok to
-> do the walk?
+Rather than call 'fnic_flush_tx()' from interrupt context we should
+be moving it onto a work queue to avoid any locking issues.
 
-Levels depend on the number of CPUs and NUMA nodes
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Lee Duncan <lduncan@suse.com>
+---
+ drivers/scsi/fnic/fnic.h      | 3 ++-
+ drivers/scsi/fnic/fnic_fcs.c  | 3 ++-
+ drivers/scsi/fnic/fnic_main.c | 1 +
+ drivers/scsi/fnic/fnic_scsi.c | 4 ++--
+ 4 files changed, 7 insertions(+), 4 deletions(-)
 
-Take 4096 CPUs, all evenly distributed across 4 NUMA nodes, then you
-will end up with 6 levels.
-
-Thanks,
-
-	Anna-Maria
+diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
+index 2074937c05bc..3b8eb7dee500 100644
+--- a/drivers/scsi/fnic/fnic.h
++++ b/drivers/scsi/fnic/fnic.h
+@@ -305,6 +305,7 @@ struct fnic {
+ 	unsigned int copy_wq_base;
+ 	struct work_struct link_work;
+ 	struct work_struct frame_work;
++	struct work_struct flush_work;
+ 	struct sk_buff_head frame_queue;
+ 	struct sk_buff_head tx_queue;
+ 
+@@ -363,7 +364,7 @@ void fnic_handle_event(struct work_struct *work);
+ int fnic_rq_cmpl_handler(struct fnic *fnic, int);
+ int fnic_alloc_rq_frame(struct vnic_rq *rq);
+ void fnic_free_rq_buf(struct vnic_rq *rq, struct vnic_rq_buf *buf);
+-void fnic_flush_tx(struct fnic *);
++void fnic_flush_tx(struct work_struct *);
+ void fnic_eth_send(struct fcoe_ctlr *, struct sk_buff *skb);
+ void fnic_set_port_id(struct fc_lport *, u32, struct fc_frame *);
+ void fnic_update_mac(struct fc_lport *, u8 *new);
+diff --git a/drivers/scsi/fnic/fnic_fcs.c b/drivers/scsi/fnic/fnic_fcs.c
+index 5e312a55cc7d..1bf1418bbde4 100644
+--- a/drivers/scsi/fnic/fnic_fcs.c
++++ b/drivers/scsi/fnic/fnic_fcs.c
+@@ -1190,8 +1190,9 @@ int fnic_send(struct fc_lport *lp, struct fc_frame *fp)
+  *
+  * Called without fnic_lock held.
+  */
+-void fnic_flush_tx(struct fnic *fnic)
++void fnic_flush_tx(struct work_struct *work)
+ {
++	struct fnic *fnic = container_of(work, struct fnic, flush_work);
+ 	struct sk_buff *skb;
+ 	struct fc_frame *fp;
+ 
+diff --git a/drivers/scsi/fnic/fnic_main.c b/drivers/scsi/fnic/fnic_main.c
+index 5ed1d897311a..29eead383eb9 100644
+--- a/drivers/scsi/fnic/fnic_main.c
++++ b/drivers/scsi/fnic/fnic_main.c
+@@ -830,6 +830,7 @@ static int fnic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		spin_lock_init(&fnic->vlans_lock);
+ 		INIT_WORK(&fnic->fip_frame_work, fnic_handle_fip_frame);
+ 		INIT_WORK(&fnic->event_work, fnic_handle_event);
++		INIT_WORK(&fnic->flush_work, fnic_flush_tx);
+ 		skb_queue_head_init(&fnic->fip_frame_queue);
+ 		INIT_LIST_HEAD(&fnic->evlist);
+ 		INIT_LIST_HEAD(&fnic->vlans);
+diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
+index 8d7fc5284293..fc4cee91b175 100644
+--- a/drivers/scsi/fnic/fnic_scsi.c
++++ b/drivers/scsi/fnic/fnic_scsi.c
+@@ -680,7 +680,7 @@ static int fnic_fcpio_fw_reset_cmpl_handler(struct fnic *fnic,
+ 
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+ 
+-	fnic_flush_tx(fnic);
++	queue_work(fnic_event_queue, &fnic->flush_work);
+ 
+  reset_cmpl_handler_end:
+ 	fnic_clear_state_flags(fnic, FNIC_FLAGS_FWRESET);
+@@ -736,7 +736,7 @@ static int fnic_fcpio_flogi_reg_cmpl_handler(struct fnic *fnic,
+ 		}
+ 		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+ 
+-		fnic_flush_tx(fnic);
++		queue_work(fnic_event_queue, &fnic->flush_work);
+ 		queue_work(fnic_event_queue, &fnic->frame_work);
+ 	} else {
+ 		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+-- 
+2.43.0
 
