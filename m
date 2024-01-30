@@ -1,237 +1,170 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC906A038;
-	Tue, 30 Jan 2024 11:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005506A01E;
+	Tue, 30 Jan 2024 11:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706614690; cv=none; b=XMgQQz18IqsFDyGfVSgre1feaxzGx8druoOO/selqM7sjNKI3+KALCa4d1+nNqaGTprWZloQxMQiDT6ll3BEGQNltxiVq/XkG8EYFBFzWu/oIPnWQKqCAEysAMJG8JqQgePICp2vav9p4+1pOmOrHqp8COrhXaoZI9BWBISvBFY=
+	t=1706614693; cv=none; b=DPPlGDJh0TjlAAwwHM06nLNXg+zeqL9sduAEhJTWFbEOiN2+qxEVqb+QsXfOTb0VC1Qgwx+cVTvGs9mZ2H86MUryW/CM7Lecq3Du+QJwfIn48UGmekXsX5GaMob08P8qOL0v2jdhA1o6NErNJ5tUHZ0H5k8Y3WXi/zl453I123o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706614690; c=relaxed/simple;
-	bh=EkOVPmyG8AwI1ztH4WPEnwo5N1dm4jflvATq8fvXt7Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lkWF3TPHzRDgTYJCZaBPxzWtRy1Z9NTCtjsYJd1/H19my2/SuB/106fi75LKl7lUvNVROeVlvFqUh/Lh3ErweL7oWVO1KpXhu2YrDOYdacSxh07xCzErhBGL1wdhh1YwC1yrotBA2mDjcRoNEp/M/cbR+SvsMhoAkMM9Vj2b58U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TPNS23wNyz1xmr9;
-	Tue, 30 Jan 2024 19:37:06 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 76D191404FF;
-	Tue, 30 Jan 2024 19:38:05 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 30 Jan 2024 19:38:05 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Jason Wang <jasowang@redhat.com>, "Michael S.
- Tsirkin" <mst@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, <kvm@vger.kernel.org>,
-	<virtualization@lists.linux.dev>, <bpf@vger.kernel.org>
-Subject: [PATCH net-next v4 4/5] vhost/net: remove vhost_net_page_frag_refill()
-Date: Tue, 30 Jan 2024 19:37:09 +0800
-Message-ID: <20240130113710.34511-5-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240130113710.34511-1-linyunsheng@huawei.com>
-References: <20240130113710.34511-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1706614693; c=relaxed/simple;
+	bh=/DsBAHX8HTlca+Vpy4zDg5DsZ5AAjetwE7nEWjeRix8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=psG7XgZC/QZh+3TWfF6WlwUnle3O6N5nNOWS6ZaT5EgH7ZJi98iLDHnMqtOqLJXN9uTW5nxVUR53EgA/dhTpaP5REhbX7ZVvU4xPeKvIIWwzmGRIOKimtrI1312qj/p75kHv+83+8KM4MzIVD0RjK21dVsTE8ODeZqccmekg4PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F6CEDA7;
+	Tue, 30 Jan 2024 03:38:54 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 070733F5A1;
+	Tue, 30 Jan 2024 03:38:04 -0800 (PST)
+Date: Tue, 30 Jan 2024 11:38:02 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Peter Collingbourne <pcc@google.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, steven.price@arm.com,
+	anshuman.khandual@arm.com, vincenzo.frascino@arm.com,
+	david@redhat.com, eugenis@google.com, kcc@google.com,
+	hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v3 23/35] arm64: mte: Try to reserve tag storage in
+ arch_alloc_page()
+Message-ID: <ZbjfmqpYex4C8Uhm@raptor>
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-24-alexandru.elisei@arm.com>
+ <CAMn1gO5pGVRCErVF+Ca-4JgHRKEcq9sDGyEe--gEjj5ZLrB8sA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+In-Reply-To: <CAMn1gO5pGVRCErVF+Ca-4JgHRKEcq9sDGyEe--gEjj5ZLrB8sA@mail.gmail.com>
 
-The page frag in vhost_net_page_frag_refill() uses the
-'struct page_frag' from skb_page_frag_refill(), but it's
-implementation is similar to page_frag_alloc_align() now.
+Hi Peter,
 
-This patch removes vhost_net_page_frag_refill() by using
-'struct page_frag_cache' instead of 'struct page_frag',
-and allocating frag using page_frag_alloc_align().
+On Mon, Jan 29, 2024 at 04:04:18PM -0800, Peter Collingbourne wrote:
+> On Thu, Jan 25, 2024 at 8:45 AM Alexandru Elisei
+> <alexandru.elisei@arm.com> wrote:
+> >
+> > Reserve tag storage for a page that is being allocated as tagged. This
+> > is a best effort approach, and failing to reserve tag storage is
+> > allowed.
+> >
+> > When all the associated tagged pages have been freed, return the tag
+> > storage pages back to the page allocator, where they can be used again for
+> > data allocations.
+> >
+> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > ---
+> >
+> > Changes since rfc v2:
+> >
+> > * Based on rfc v2 patch #16 ("arm64: mte: Manage tag storage on page
+> > allocation").
+> > * Fixed calculation of the number of associated tag storage blocks (Hyesoo
+> > Yu).
+> > * Tag storage is reserved in arch_alloc_page() instead of
+> > arch_prep_new_page().
+> >
+> >  arch/arm64/include/asm/mte.h             |  16 +-
+> >  arch/arm64/include/asm/mte_tag_storage.h |  31 +++
+> >  arch/arm64/include/asm/page.h            |   5 +
+> >  arch/arm64/include/asm/pgtable.h         |  19 ++
+> >  arch/arm64/kernel/mte_tag_storage.c      | 234 +++++++++++++++++++++++
+> >  arch/arm64/mm/fault.c                    |   7 +
+> >  fs/proc/page.c                           |   1 +
+> >  include/linux/kernel-page-flags.h        |   1 +
+> >  include/linux/page-flags.h               |   1 +
+> >  include/trace/events/mmflags.h           |   3 +-
+> >  mm/huge_memory.c                         |   1 +
+> >  11 files changed, 316 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
+> > index 8034695b3dd7..6457b7899207 100644
+> > --- a/arch/arm64/include/asm/mte.h
+> > +++ b/arch/arm64/include/asm/mte.h
+> > @@ -40,12 +40,24 @@ void mte_free_tag_buf(void *buf);
+> >  #ifdef CONFIG_ARM64_MTE
+> >
+> >  /* track which pages have valid allocation tags */
+> > -#define PG_mte_tagged  PG_arch_2
+> > +#define PG_mte_tagged          PG_arch_2
+> >  /* simple lock to avoid multiple threads tagging the same page */
+> > -#define PG_mte_lock    PG_arch_3
+> > +#define PG_mte_lock            PG_arch_3
+> > +/* Track if a tagged page has tag storage reserved */
+> > +#define PG_tag_storage_reserved        PG_arch_4
+> > +
+> > +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> > +DECLARE_STATIC_KEY_FALSE(tag_storage_enabled_key);
+> > +extern bool page_tag_storage_reserved(struct page *page);
+> > +#endif
+> >
+> >  static inline void set_page_mte_tagged(struct page *page)
+> >  {
+> > +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> > +       /* Open code mte_tag_storage_enabled() */
+> > +       WARN_ON_ONCE(static_branch_likely(&tag_storage_enabled_key) &&
+> > +                    !page_tag_storage_reserved(page));
+> > +#endif
+> >         /*
+> >          * Ensure that the tags written prior to this function are visible
+> >          * before the page flags update.
+> > diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/include/asm/mte_tag_storage.h
+> > index 7b3f6bff8e6f..09f1318d924e 100644
+> > --- a/arch/arm64/include/asm/mte_tag_storage.h
+> > +++ b/arch/arm64/include/asm/mte_tag_storage.h
+> > @@ -5,6 +5,12 @@
+> >  #ifndef __ASM_MTE_TAG_STORAGE_H
+> >  #define __ASM_MTE_TAG_STORAGE_H
+> >
+> > +#ifndef __ASSEMBLY__
+> > +
+> > +#include <linux/mm_types.h>
+> > +
+> > +#include <asm/mte.h>
+> > +
+> >  #ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> >
+> >  DECLARE_STATIC_KEY_FALSE(tag_storage_enabled_key);
+> > @@ -15,6 +21,15 @@ static inline bool tag_storage_enabled(void)
+> >  }
+> >
+> >  void mte_init_tag_storage(void);
+> > +
+> > +static inline bool alloc_requires_tag_storage(gfp_t gfp)
+> > +{
+> > +       return gfp & __GFP_TAGGED;
+> > +}
+> > +int reserve_tag_storage(struct page *page, int order, gfp_t gfp);
+> > +void free_tag_storage(struct page *page, int order);
+> > +
+> > +bool page_tag_storage_reserved(struct page *page);
+> >  #else
+> >  static inline bool tag_storage_enabled(void)
+> >  {
+> > @@ -23,6 +38,22 @@ static inline bool tag_storage_enabled(void)
+> >  static inline void mte_init_tag_storage(void)
+> >  {
+> >  }
+> > +static inline bool alloc_requires_tag_storage(struct page *page)
+> 
+> This function should take a gfp_t to match the
+> CONFIG_ARM64_MTE_TAG_STORAGE case.
 
-The added benefit is that not only unifying the page frag
-implementation a little, but also having about 0.5% performance
-boost testing by using the vhost_net_test introduced in the
-last patch.
+Ah, yes, it should, nice catch, the compiler didn't throw an error. Will
+fix, thanks!
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/net.c | 91 ++++++++++++++-------------------------------
- 1 file changed, 27 insertions(+), 64 deletions(-)
-
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index e574e21cc0ca..4b2fcb228a0a 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -141,10 +141,8 @@ struct vhost_net {
- 	unsigned tx_zcopy_err;
- 	/* Flush in progress. Protected by tx vq lock. */
- 	bool tx_flush;
--	/* Private page frag */
--	struct page_frag page_frag;
--	/* Refcount bias of page frag */
--	int refcnt_bias;
-+	/* Private page frag cache */
-+	struct page_frag_cache pf_cache;
- };
- 
- static unsigned vhost_net_zcopy_mask __read_mostly;
-@@ -655,41 +653,6 @@ static bool tx_can_batch(struct vhost_virtqueue *vq, size_t total_len)
- 	       !vhost_vq_avail_empty(vq->dev, vq);
- }
- 
--static bool vhost_net_page_frag_refill(struct vhost_net *net, unsigned int sz,
--				       struct page_frag *pfrag, gfp_t gfp)
--{
--	if (pfrag->page) {
--		if (pfrag->offset + sz <= pfrag->size)
--			return true;
--		__page_frag_cache_drain(pfrag->page, net->refcnt_bias);
--	}
--
--	pfrag->offset = 0;
--	net->refcnt_bias = 0;
--	if (SKB_FRAG_PAGE_ORDER) {
--		/* Avoid direct reclaim but allow kswapd to wake */
--		pfrag->page = alloc_pages((gfp & ~__GFP_DIRECT_RECLAIM) |
--					  __GFP_COMP | __GFP_NOWARN |
--					  __GFP_NORETRY | __GFP_NOMEMALLOC,
--					  SKB_FRAG_PAGE_ORDER);
--		if (likely(pfrag->page)) {
--			pfrag->size = PAGE_SIZE << SKB_FRAG_PAGE_ORDER;
--			goto done;
--		}
--	}
--	pfrag->page = alloc_page(gfp);
--	if (likely(pfrag->page)) {
--		pfrag->size = PAGE_SIZE;
--		goto done;
--	}
--	return false;
--
--done:
--	net->refcnt_bias = USHRT_MAX;
--	page_ref_add(pfrag->page, USHRT_MAX - 1);
--	return true;
--}
--
- #define VHOST_NET_RX_PAD (NET_IP_ALIGN + NET_SKB_PAD)
- 
- static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
-@@ -699,7 +662,6 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 	struct vhost_net *net = container_of(vq->dev, struct vhost_net,
- 					     dev);
- 	struct socket *sock = vhost_vq_get_backend(vq);
--	struct page_frag *alloc_frag = &net->page_frag;
- 	struct virtio_net_hdr *gso;
- 	struct xdp_buff *xdp = &nvq->xdp[nvq->batched_xdp];
- 	struct tun_xdp_hdr *hdr;
-@@ -710,6 +672,7 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 	int sock_hlen = nvq->sock_hlen;
- 	void *buf;
- 	int copied;
-+	int ret;
- 
- 	if (unlikely(len < nvq->sock_hlen))
- 		return -EFAULT;
-@@ -719,18 +682,17 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 		return -ENOSPC;
- 
- 	buflen += SKB_DATA_ALIGN(len + pad);
--	alloc_frag->offset = ALIGN((u64)alloc_frag->offset, SMP_CACHE_BYTES);
--	if (unlikely(!vhost_net_page_frag_refill(net, buflen,
--						 alloc_frag, GFP_KERNEL)))
-+	buf = page_frag_alloc_align(&net->pf_cache, buflen, GFP_KERNEL,
-+				    SMP_CACHE_BYTES);
-+	if (unlikely(!buf))
- 		return -ENOMEM;
- 
--	buf = (char *)page_address(alloc_frag->page) + alloc_frag->offset;
--	copied = copy_page_from_iter(alloc_frag->page,
--				     alloc_frag->offset +
--				     offsetof(struct tun_xdp_hdr, gso),
--				     sock_hlen, from);
--	if (copied != sock_hlen)
--		return -EFAULT;
-+	copied = copy_from_iter(buf + offsetof(struct tun_xdp_hdr, gso),
-+				sock_hlen, from);
-+	if (copied != sock_hlen) {
-+		ret = -EFAULT;
-+		goto err;
-+	}
- 
- 	hdr = buf;
- 	gso = &hdr->gso;
-@@ -743,27 +705,30 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
- 			       vhost16_to_cpu(vq, gso->csum_start) +
- 			       vhost16_to_cpu(vq, gso->csum_offset) + 2);
- 
--		if (vhost16_to_cpu(vq, gso->hdr_len) > len)
--			return -EINVAL;
-+		if (vhost16_to_cpu(vq, gso->hdr_len) > len) {
-+			ret = -EINVAL;
-+			goto err;
-+		}
- 	}
- 
- 	len -= sock_hlen;
--	copied = copy_page_from_iter(alloc_frag->page,
--				     alloc_frag->offset + pad,
--				     len, from);
--	if (copied != len)
--		return -EFAULT;
-+	copied = copy_from_iter(buf + pad, len, from);
-+	if (copied != len) {
-+		ret = -EFAULT;
-+		goto err;
-+	}
- 
- 	xdp_init_buff(xdp, buflen, NULL);
- 	xdp_prepare_buff(xdp, buf, pad, len, true);
- 	hdr->buflen = buflen;
- 
--	--net->refcnt_bias;
--	alloc_frag->offset += buflen;
--
- 	++nvq->batched_xdp;
- 
- 	return 0;
-+
-+err:
-+	page_frag_free(buf);
-+	return ret;
- }
- 
- static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-@@ -1353,8 +1318,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
- 
- 	f->private_data = n;
--	n->page_frag.page = NULL;
--	n->refcnt_bias = 0;
-+	n->pf_cache.va = NULL;
- 
- 	return 0;
- }
-@@ -1422,8 +1386,7 @@ static int vhost_net_release(struct inode *inode, struct file *f)
- 	kfree(n->vqs[VHOST_NET_VQ_RX].rxq.queue);
- 	kfree(n->vqs[VHOST_NET_VQ_TX].xdp);
- 	kfree(n->dev.vqs);
--	if (n->page_frag.page)
--		__page_frag_cache_drain(n->page_frag.page, n->refcnt_bias);
-+	page_frag_cache_drain(&n->pf_cache);
- 	kvfree(n);
- 	return 0;
- }
--- 
-2.33.0
-
+Alex
