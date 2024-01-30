@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A9A36AE4;
-	Tue, 30 Jan 2024 00:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8617D3716F;
+	Tue, 30 Jan 2024 00:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706575514; cv=none; b=Le0lmI06wpZyXSwmmycs6b2lnPJxZjv7H2jr2VJ/08wkqeB7heKE4gEjX2ljvN9u3njLqA0bF8BJOGETdsXSRHS2cPyLdHlL1zruZQkNQiQlg2brnZoTDiCFVtMQRu3W4qbRgz/kwSOWGkf9+gpPjJx2ELKtYqbKbXFrjGhryF4=
+	t=1706575515; cv=none; b=kE+xAXOnLgozS9uHXvZlFkRTCGpECq8K6RvW/Z+BBwsd7461/0TzulTNxXS9bxBebdEVG/2gS4GtCVsYJR2zbwmZbasRNsJzO0zYYbqEPnNyUPRIn0bRQ88zhjJotEpVRNDqVIMV8WEpFRnAhucnyMufWVkN0fAyVHXzhZ2Y+CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706575514; c=relaxed/simple;
-	bh=hmcfZcHfNINwBnAg8u+eyBX+W/WQoRq0BbThFhRJmxg=;
+	s=arc-20240116; t=1706575515; c=relaxed/simple;
+	bh=PiweXFroDHF7yXaa82SMFRXH/FDbm1RzgiHTih6bLA8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CnoqbjTUSw1ldmr9xyIXIK/A911Coh4RV5SMSLnP7ylZHJ2pTEhaEGp4J5/QGmRPFD4X5/ALGEldoMe6VTUpPjYUDbyqo998FCt2esJ8NOs1YkQeBuYrZkvxoRNYzvVD1oBniJownpwf1KQ2GhvtJN8AamwYL6JKrHHplTiHP48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6YZnVON; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LVlxJzGg/RC1xTQiLKm8w98HNxbY/KrcpkoLEA5heqfwXizIuwy3U+waXDa0/X0PRxhisHMGHaAv4KQ83j6v/7+DwJ5zFVfsj0bR/TrGDezEPgCauRPOjvvSomJQyFMMcV1eneDWZemjRdjC+VY42mNirJGlTTp2AhvUHw62U7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TzGOXf0x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6YZnVON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F29C433C7;
-	Tue, 30 Jan 2024 00:45:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TzGOXf0x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB6E4C43609;
+	Tue, 30 Jan 2024 00:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706575514;
-	bh=hmcfZcHfNINwBnAg8u+eyBX+W/WQoRq0BbThFhRJmxg=;
+	s=k20201202; t=1706575515;
+	bh=PiweXFroDHF7yXaa82SMFRXH/FDbm1RzgiHTih6bLA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A6YZnVONJIKoy/aVneDUKE/lqzWcU2BV1YPk4r+b+C9I38byOmV9GCQn+hoctkyW6
-	 LYVIFGJRtQujgpvrTeirMXRuUVx8a/ulHPU4mxeeBAj9AEGfvZr/OUUT42u225TeR8
-	 t7I4K6v3OxP/6nVIFrzs6cPOi9ubK8zGJvYCVML1PTxYkbzxt0Uf2KLIFfjRmNL5sZ
-	 2RdWip4f+M5eU03Xl9IIoLxvUuAnaPmI5xkWjTnOB3afu9RPVJtf6LBbz+sqKGjmUV
-	 PmK049tUWVQqQzN3yLMG0xH47ynpdvOZiG8w+XqOUgTh3cNuSIwHZqX85wB8g+oUkG
-	 eW/9F4M5gh2KA==
+	b=TzGOXf0xtEnuBMKuXJA6vqerJOp0D0uIDNQFWdGOH3l33XbaHnYJ9I3mYGODL2xxv
+	 FvYYJep2tflHq4V0UcqCEB2qc3z3xiIyVM65MQ8F12kGMHIq0zhX5iTNd0OwzHK3uJ
+	 +D5rvAm5GRr5SPCQ7vSVXDIJvzCWbXCZx1R6KdhL5mC8W37TCpLc6jZVKmF9iSNWQJ
+	 QLggfDM/lA5RPUFdkYhPg/HyXl5R+4b4rdKWSsuxduScfg/a0lFoiNIhC2yqRQoXdj
+	 ajXgXI0puNc540MbLYhob5cDaQwc0mvu8sBP/DHUYcm2YixEL2Rpls3ikHYNE9Xsnw
+	 cWSsF2qgM1ovg==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>,
-	linux-kernel@vger.kernel.org,
+Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	linux-um@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
 	kunit-dev@googlegroups.com,
 	linux-kselftest@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 5/7] of: Create of_root if no dtb provided by firmware
-Date: Mon, 29 Jan 2024 16:45:04 -0800
-Message-ID: <20240130004508.1700335-6-sboyd@kernel.org>
+	devicetree@vger.kernel.org,
+	Frank Rowand <frowand.list@gmail.com>,
+	David Gow <davidgow@google.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>
+Subject: [PATCH v2 7/7] of: Add KUnit test to confirm DTB is loaded
+Date: Mon, 29 Jan 2024 16:45:06 -0800
+Message-ID: <20240130004508.1700335-8-sboyd@kernel.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240130004508.1700335-1-sboyd@kernel.org>
 References: <20240130004508.1700335-1-sboyd@kernel.org>
@@ -50,179 +52,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Frank Rowand <frowand.list@gmail.com>
+Add a KUnit test that confirms a DTB has been loaded, i.e. there is a
+root node, and that the of_have_populated_dt() API works properly.
 
-When enabling CONFIG_OF on a platform where 'of_root' is not populated
-by firmware, we end up without a root node. In order to apply overlays
-and create subnodes of the root node, we need one. Create this root node
-by unflattening an empty builtin dtb.
-
-If firmware provides a flattened device tree (FDT) then the FDT is
-unflattened via setup_arch(). Otherwise, the call to
-unflatten(_and_copy)?_device_tree() will create an empty root node.
-
-We make of_have_populated_dt() return true only if the DTB was loaded by
-firmware so that existing callers don't change behavior after this
-patch. The call in the of platform code is removed because it prevents
-overlays from creating platform devices when the platform bus isn't
-fully initialized.
-
-Signed-off-by: Frank Rowand <frowand.list@gmail.com>
-Link: https://lore.kernel.org/r/20230317053415.2254616-2-frowand.list@gmail.com
 Cc: Rob Herring <robh+dt@kernel.org>
-[sboyd@kernel.org: Update of_have_populated_dt() to treat this empty dtb
-as not populated. Drop setup_of() initcall]
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: David Gow <davidgow@google.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/of/Kconfig        |  2 +-
- drivers/of/Makefile       |  2 +-
- drivers/of/empty_root.dts |  6 ++++++
- drivers/of/fdt.c          | 20 ++++++++++++++++++++
- drivers/of/platform.c     |  3 ---
- include/linux/of.h        | 25 +++++++++++++++----------
- 6 files changed, 43 insertions(+), 15 deletions(-)
- create mode 100644 drivers/of/empty_root.dts
+ drivers/of/.kunitconfig |  3 +++
+ drivers/of/Kconfig      |  9 ++++++++
+ drivers/of/Makefile     |  2 ++
+ drivers/of/of_test.c    | 48 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 62 insertions(+)
+ create mode 100644 drivers/of/.kunitconfig
+ create mode 100644 drivers/of/of_test.c
 
+diff --git a/drivers/of/.kunitconfig b/drivers/of/.kunitconfig
+new file mode 100644
+index 000000000000..5a8fee11978c
+--- /dev/null
++++ b/drivers/of/.kunitconfig
+@@ -0,0 +1,3 @@
++CONFIG_KUNIT=y
++CONFIG_OF=y
++CONFIG_OF_KUNIT_TEST=y
 diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index da9826accb1b..17733285b415 100644
+index 17733285b415..53d1b5dd89e8 100644
 --- a/drivers/of/Kconfig
 +++ b/drivers/of/Kconfig
-@@ -54,7 +54,7 @@ config OF_FLATTREE
- 	select CRC32
+@@ -37,6 +37,15 @@ config OF_UNITTEST
  
- config OF_EARLY_FLATTREE
--	bool
-+	def_bool OF && !SPARC
- 	select DMA_DECLARE_COHERENT if HAS_DMA && HAS_IOMEM
- 	select OF_FLATTREE
+ 	  If unsure, say N here. This option is not safe to enable.
  
++config OF_KUNIT_TEST
++	tristate "Devicetree KUnit Test" if !KUNIT_ALL_TESTS
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  This option builds KUnit unit tests for device tree infrastructure.
++
++	  If unsure, say N here, but this option is safe to enable.
++
+ config OF_ALL_DTBS
+ 	bool "Build all Device Tree Blobs"
+ 	depends on COMPILE_TEST
 diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index eff624854575..df305348d1cb 100644
+index df305348d1cb..251d33532148 100644
 --- a/drivers/of/Makefile
 +++ b/drivers/of/Makefile
-@@ -2,7 +2,7 @@
- obj-y = base.o cpu.o device.o module.o platform.o property.o
- obj-$(CONFIG_OF_KOBJ) += kobj.o
- obj-$(CONFIG_OF_DYNAMIC) += dynamic.o
--obj-$(CONFIG_OF_FLATTREE) += fdt.o
-+obj-$(CONFIG_OF_FLATTREE) += fdt.o empty_root.dtb.o
- obj-$(CONFIG_OF_EARLY_FLATTREE) += fdt_address.o
- obj-$(CONFIG_OF_PROMTREE) += pdt.o
- obj-$(CONFIG_OF_ADDRESS)  += address.o
-diff --git a/drivers/of/empty_root.dts b/drivers/of/empty_root.dts
+@@ -19,4 +19,6 @@ obj-y	+= kexec.o
+ endif
+ endif
+ 
++obj-$(CONFIG_OF_KUNIT_TEST) += of_test.o
++
+ obj-$(CONFIG_OF_UNITTEST) += unittest-data/
+diff --git a/drivers/of/of_test.c b/drivers/of/of_test.c
 new file mode 100644
-index 000000000000..cf9e97a60f48
+index 000000000000..71a767b42b43
 --- /dev/null
-+++ b/drivers/of/empty_root.dts
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/dts-v1/;
-+
-+/ {
-+
-+};
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index b488ad86d456..f7dd7fd68d4d 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -32,6 +32,13 @@
- 
- #include "of_private.h"
- 
++++ b/drivers/of/of_test.c
+@@ -0,0 +1,48 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * __dtb_empty_root_begin[] and __dtb_empty_root_end[] magically created by
-+ * cmd_dt_S_dtb in scripts/Makefile.lib
++ * KUnit tests for OF APIs
 + */
-+extern uint8_t __dtb_empty_root_begin[];
-+extern uint8_t __dtb_empty_root_end[];
++#include <linux/module.h>
++#include <linux/of.h>
 +
- /*
-  * of_fdt_limit_memory - limit the number of regions in the /memory node
-  * @limit: maximum entries
-@@ -1343,6 +1350,19 @@ static void __init copy_device_tree(void)
-  */
- void __init unflatten_device_tree(void)
- {
-+	if (!initial_boot_params) {
-+		initial_boot_params = (void *) __dtb_empty_root_begin;
-+		/* fdt_totalsize() will be used for copy size */
-+		if (fdt_totalsize(initial_boot_params) >
-+		    __dtb_empty_root_end - __dtb_empty_root_begin) {
-+			pr_err("invalid size in dtb_empty_root\n");
-+			return;
-+		}
-+		of_fdt_crc32 = crc32_be(~0, initial_boot_params,
-+					fdt_totalsize(initial_boot_params));
-+		copy_device_tree();
-+	}
++#include <kunit/test.h>
 +
- 	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
- 				early_init_dt_alloc_memory_arch, false);
- 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 126d265aa7d8..20087bb8a46b 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -549,9 +549,6 @@ static int __init of_platform_default_populate_init(void)
- 
- 	device_links_supplier_sync_state_pause();
- 
--	if (!of_have_populated_dt())
--		return -ENODEV;
--
- 	if (IS_ENABLED(CONFIG_PPC)) {
- 		struct device_node *boot_display = NULL;
- 		struct platform_device *dev;
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 6a9ddf20e79a..52f6ad6a1c8c 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -180,11 +180,6 @@ static inline bool is_of_node(const struct fwnode_handle *fwnode)
- 			&__of_fwnode_handle_node->fwnode : NULL;	\
- 	})
- 
--static inline bool of_have_populated_dt(void)
--{
--	return of_root != NULL;
--}
--
- static inline bool of_node_is_root(const struct device_node *node)
- {
- 	return node && (node->parent == NULL);
-@@ -549,11 +544,6 @@ static inline struct device_node *of_find_node_with_property(
- 
- #define of_fwnode_handle(node) NULL
- 
--static inline bool of_have_populated_dt(void)
--{
--	return false;
--}
--
- static inline struct device_node *of_get_compatible_child(const struct device_node *parent,
- 					const char *compatible)
- {
-@@ -1634,6 +1624,21 @@ static inline bool of_device_is_system_power_controller(const struct device_node
- 	return of_property_read_bool(np, "system-power-controller");
- }
- 
-+/**
-+ * of_have_populated_dt() - Has DT been populated by bootloader
-+ *
-+ * Return: True if a DTB has been populated by the bootloader and it isn't the
-+ * empty builtin one. False otherwise.
++/*
++ * Test that the root node "/" can be found by path.
 + */
-+static inline bool of_have_populated_dt(void)
++static void dtb_root_node_found_by_path(struct kunit *test)
 +{
-+#ifdef CONFIG_OF
-+	return of_property_present(of_root, "compatible");
-+#else
-+	return false;
-+#endif
++	struct device_node *np;
++
++	np = of_find_node_by_path("/");
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, np);
++	of_node_put(np);
 +}
 +
- /*
-  * Overlay support
-  */
++/*
++ * Test that the 'of_root' global variable is always populated when DT code is
++ * enabled.
++ */
++static void dtb_root_node_populates_of_root(struct kunit *test)
++{
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, of_root);
++}
++
++static struct kunit_case dtb_test_cases[] = {
++	KUNIT_CASE(dtb_root_node_found_by_path),
++	KUNIT_CASE(dtb_root_node_populates_of_root),
++	{}
++};
++
++/*
++ * Test suite to confirm a DTB is loaded.
++ */
++static struct kunit_suite dtb_suite = {
++	.name = "dtb",
++	.test_cases = dtb_test_cases,
++};
++
++kunit_test_suites(
++	&dtb_suite,
++);
++MODULE_LICENSE("GPL");
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
