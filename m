@@ -1,65 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FFF78B42;
-	Tue, 30 Jan 2024 18:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435F178B4B;
+	Tue, 30 Jan 2024 18:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706639788; cv=none; b=u1lMsLoTJltUuwhldH6ca2zwv6SLfQfJPm8E9PmrKYL5fEn85IrDCoH25T0e13KTWC3OAfC0/sA8tAlIHnN9mHSTJLkioliGf4D3lH1+p23DCBpFGUpN3pcqnW+Mug2kyTie1eVMqfYzHsNSOSks9zcn2RKn4ZHSbIROrZT0mjk=
+	t=1706639795; cv=none; b=Op74YA8lonpHSKm1KSil+cuHl5ChpLIsH2qXYzTIXnAGAOdpiB2PrjyclLLSiuM85UUUBF26MxPyDkbm+NkyMKYTHrKNIUVli4QYH/uX5fAgVlbtPxYjbhu/YWVj0aJSw96Vq7nB7WKSfSJ8DAFHYAnrr0lnML/6OYswizbFzb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706639788; c=relaxed/simple;
-	bh=MAq6UTzZ5I8FQRIOgfrKTJJAi0lX50HQeuJa1ZfmREE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CcFDtGonmY5Wg5iMvJ95fPbUjPmeJGAL9wm6lixOeYoD4T+iuwcMVB/AmYaz4usZiloT/CeJWTIDBu2BaCzIaKJ5r9ZRq7bmcKvnTrUw9eUDftfPPsULEwCxle+reLU/XKFrT/nmiVCIOuDdK8LjpaqA7peF6tKhBSNbo98jOlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B028DC433C7;
-	Tue, 30 Jan 2024 18:36:26 +0000 (UTC)
-Date: Tue, 30 Jan 2024 13:36:38 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
- <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
- <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [linus:master] [eventfs] 852e46e239:
- BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240130133638.2c268b6d@gandalf.local.home>
-In-Reply-To: <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
-References: <202401291043.e62e89dc-oliver.sang@intel.com>
-	<CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
-	<20240129120125.605e97af@gandalf.local.home>
-	<CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
-	<CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
-	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
-	<20240129152600.7587d1aa@gandalf.local.home>
-	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
-	<20240129172200.1725f01b@gandalf.local.home>
-	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
-	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
-	<20240129174950.5a17a86c@gandalf.local.home>
-	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
-	<20240129193549.265f32c8@gandalf.local.home>
-	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
-	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706639795; c=relaxed/simple;
+	bh=cA5Zn5/WMws58Qtz6JIub0Jb5+CjAaFY21Nf3/33IwE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=RJUtalMng1FXV9QFqHdXYRf2H7InWI5qtVadpEXB4lNLcT3X08iuzQgsrAC3X46h/CKnp7lGGJshHY31gt3/VwplkhRYJqmrhdm1X8EfeCsKPYTAVuwk7XhBr8cdP8xfp/DMTr7gb2hPH8UDb1ZHE9vqXT/oytbiwII4aBNeaoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RiQrgwd1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9cL7vkI3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RiQrgwd1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9cL7vkI3"
+Date: Tue, 30 Jan 2024 18:36:31 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706639792;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ktXC4Tu4W/PI2o1wNKexythDSeKUb+mJhHwcTcpw7PM=;
+	b=RiQrgwd10ALmpLA4fIu+swhm8HGByb5Ye4aOMpNbTcIaVvJEEhNKT+o4JpAGSAdM/GcAYJ
+	IAr3Bus93v60R0Puk7XClSDV3qll/UOEafxkNCIwp2Lka6R7mYLYWO7R4ANUqmNcU5JW47
+	G5fBQqUN5v2pdRYgiDxLgxlrMcIlzNhXgb1IraJZZHxGexBK4ZKyAF9PZm7ddzTCIIs12q
+	T6kpAdKRvlTej9XfU6f9w7RmgjIUPdFx/NLoImUCPLoxUXl31Q1iBTIo/bYo3ac+csNIP0
+	+M6iWHmiaulng7Uxb0tyEzAy9w7bnFxVswYTez5oOo1XKUkN4+wIk2nhQ/FyUA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706639792;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ktXC4Tu4W/PI2o1wNKexythDSeKUb+mJhHwcTcpw7PM=;
+	b=9cL7vkI30um2/OJ+IjRdYfmnr9Fru6hMxY2iSi8es2T5Ynq+KnOSKKtDYt+KgxfXMZufz1
+	JizSW+6nshmALEAA==
+From: "tip-bot2 for Thomas Zimmermann" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/build] x86/efi: Implement arch_ima_efi_boot_mode() in source file
+Cc: Ard Biesheuvel <ardb@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240112095000.8952-4-tzimmermann@suse.de>
+References: <20240112095000.8952-4-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <170663979187.398.3170118854005669182.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 29 Jan 2024 19:56:52 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+The following commit has been merged into the x86/build branch of tip:
 
-> [0001-tracefs-avoid-using-the-ei-dentry-pointer-unnecessar.patch  text/x-patch (3561 bytes)] 
-> 
-> [0002-eventfsfs-initialize-the-tracefs-inode-properly.patch  text/x-patch (2548 bytes)] 
+Commit-ID:     785ddc8b6bebd958a5b6fb7b6b4aa6584c2f0cb2
+Gitweb:        https://git.kernel.org/tip/785ddc8b6bebd958a5b6fb7b6b4aa6584c2f0cb2
+Author:        Thomas Zimmermann <tzimmermann@suse.de>
+AuthorDate:    Fri, 12 Jan 2024 10:44:38 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 30 Jan 2024 15:17:17 +01:00
 
-Ah these two are new.
+x86/efi: Implement arch_ima_efi_boot_mode() in source file
 
--- Steve
+The x86 implementation of arch_ima_efi_boot_mode() uses the global
+boot_param state. Move it into a source file to clean up the header.
+Avoid potential rebuilds of unrelated source files if boot_params
+changes.
+
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Link: https://lore.kernel.org/r/20240112095000.8952-4-tzimmermann@suse.de
+---
+ arch/x86/include/asm/efi.h  | 5 +++--
+ arch/x86/platform/efi/efi.c | 5 +++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index a5d7a83..1dc600f 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -409,8 +409,9 @@ extern int __init efi_memmap_split_count(efi_memory_desc_t *md,
+ extern void __init efi_memmap_insert(struct efi_memory_map *old_memmap,
+ 				     void *buf, struct efi_mem_range *mem);
+ 
+-#define arch_ima_efi_boot_mode	\
+-	({ extern struct boot_params boot_params; boot_params.secure_boot; })
++extern enum efi_secureboot_mode __x86_ima_efi_boot_mode(void);
++
++#define arch_ima_efi_boot_mode	__x86_ima_efi_boot_mode()
+ 
+ #ifdef CONFIG_EFI_RUNTIME_MAP
+ int efi_get_runtime_map_size(void);
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index e9f99c5..f090ec9 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -950,3 +950,8 @@ umode_t efi_attr_is_visible(struct kobject *kobj, struct attribute *attr, int n)
+ 	}
+ 	return attr->mode;
+ }
++
++enum efi_secureboot_mode __x86_ima_efi_boot_mode(void)
++{
++	return boot_params.secure_boot;
++}
