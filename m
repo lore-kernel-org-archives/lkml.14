@@ -1,100 +1,89 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAA06BB28
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFFF6A337
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706620358; cv=none; b=o5AjDfxo7TZkq2JRcN9r1JJVHIlp16VT6LySZN725ACfsXIjkx9KmXGQT4T9b/2HrJ6LzyGSN3J0qjYSn9RtINjHaiew6OSqwzXIMnbLENOlSHCZEfxwBh78hifNe+WVs+D7mH2I2eUczdYSjPYQJGxK0mIG3lrdMRMFXNIdqMA=
+	t=1706620456; cv=none; b=hwqyyOVUDRhjL9AN6IREGHn1jJliwnLlKdJUUzJC0w23jhryliSJU8d95KlrCeIVzHye+lQR/fSM2HJOMed3IkQd/EcOPYGs0emIDhF9gj/0UIL88VgXYCXbmGyN7v5JpftyFcdzJ7J1FoGlVCsbowTvcgwVMa0LOOA0awty8kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706620358; c=relaxed/simple;
-	bh=A+ONNkJdbSKWp/DxO94Z/o0YVNM65s8QEU9vU5ojKCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHBC4MmhCOAWNiHI+b11YCCPcgldGp9z85Bq/Y5LTPfMM3JdYhMdSWWi5SWqvsLbkQA4ng1/nUDk1dw2aQ6a/JBkzmA0cKufV8f4bOj6ih+p7FsdYqws4nbrTgchEH1ALAA4WUOvkq7GYXcxEQTp+epvcpyfM/d84BoqKfFdOeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CeXq6TeK; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1706620456; c=relaxed/simple;
+	bh=igel0xrDbniIkaaDmTpoNc96gkHdCdCHSRZ68ZZFEe0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rIEqFyRpzVg2I0A4eJmEJ87a/Tb30bvbke6b6CgVd8MaUKLNfQt+ZVpwv9sGXxSXxEGyOF/lwqmh6jwhe18XyKGVZZbhzEfAypmIGaQjxo3n7h5ibkZIeFwgKlftZbTmTfq1xkXPzuremmmxwuIBioSoFBNks1w1EXBuRukv9EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kO/mGNHP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CeXq6TeK"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso490827666b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 05:12:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1706620353; x=1707225153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NHNgqo2ejpHW782QEu4xpIQb0v6vpUHndrnJztXi/5Y=;
-        b=CeXq6TeKw0l5TQWmAxNDL8ZT2AYiKOAflGQJrm8jm2y79zslEbC11SgQ8JKWDFdhhK
-         RDyXm8NeAn6tEHlGkLtuIRakHdfEO3ar/Nykc5p81frl24gUylP0sSVvjAHoIp3P99Q0
-         Y2Jh2uxU2j3yoMAs0I735Isc/4uwgAxDpCYpLpzhJyipIELOtIXw0PF5uLlX28KvHvaX
-         qYpoqi8lTW2VvW8jW66tFWc5HhKWV/gMDJzGzralpcOD+qsFXJiyu1VsgnBKBxZV1DEA
-         +zApGFMFfYH0As72OAfU+sWWLLcnIbRW937jbaUidMOZHQzVJM89AcG/FM3BP2pdn9FX
-         qu7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706620353; x=1707225153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NHNgqo2ejpHW782QEu4xpIQb0v6vpUHndrnJztXi/5Y=;
-        b=stZkyhsq+o2hGH8Ou99RmljTmlxOkZEYOkY4C18yWrULjgwua0FIRzTTdYQy6aK+n+
-         rJboNgS440QeXO+yN2jshdeVMoCcJRDfbXGPclq3nCldo0o9HYCdCgbUCgF1Z/j/PmSM
-         /12VParlfEEqT0+ypbrALqeeosxD1UcRbdYCpgMKqxe6AtQNFA6Cj2xZTfSxUcDLQdsE
-         FAMDAVC5eTP0bU3ZUniJIHoAmv1K2DFjfW9fnfkmm3Zi/S+daAmUGAF25bFUze1E7hhZ
-         qP59/+S7CmZXuk/MaftJ1CwZLBs4P/srPuRh2Vpm0PZG/XLRt5t9WsbFKNwbXxBOrc9F
-         d/YQ==
-X-Gm-Message-State: AOJu0YzwsvfswOYSA3Pezy17OkKUQrL3IAiKUwUxhUfOuI1CGylP7Zkq
-	t3Sdq1IcOhVlz3se+D/G0orD+zybpV7nb+2ufksYx2hlBITRjp14Z3TiUntAtuP30J4bl+8iyPb
-	q
-X-Google-Smtp-Source: AGHT+IGVsxfy6AcPEm4G3hK1VaRqmYqT5vMX9QHNlYuLQjyEKhJ783PAnYve61iT470I9ZGE9G7Z5A==
-X-Received: by 2002:a17:906:e098:b0:a2f:1817:2ef with SMTP id gh24-20020a170906e09800b00a2f181702efmr6568527ejb.70.1706620353194;
-        Tue, 30 Jan 2024 05:12:33 -0800 (PST)
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id l14-20020a170906a40e00b00a35de0619dbsm1694437ejz.200.2024.01.30.05.12.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 05:12:32 -0800 (PST)
-Date: Tue, 30 Jan 2024 14:12:31 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kO/mGNHP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3BC6C433C7;
+	Tue, 30 Jan 2024 13:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706620455;
+	bh=igel0xrDbniIkaaDmTpoNc96gkHdCdCHSRZ68ZZFEe0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kO/mGNHPhKqQWzL8j0hqH3l5sXFFbDogLO41f5djOqMxCipaBrG0h4rBODXPevz9/
+	 qW6XeRZybwxQw70VKy53GVtMppl2Pz2RDUtwDV8JnqpEg1ji0rIRMBaRhuKNIpCZco
+	 y4fSSK37mcprJR7eTlU0Gm2R9JldtM5zfi+9gXXLlpPZIZDPjbze+0qVt6AW2ONvjZ
+	 XvjbBnwiW0DqmN7HnNxOjT7jRA5djDlrIenDZQtWn0X7eqWHKe3gjSInyz8bQMxdqu
+	 dniLjoe6QWjEQPgt7NB4eeHrC78gL5NK8JXfrc2DOS/2y7QLvwtSmLpyzH1j0x6eKG
+	 dZmQUBsVgapYA==
+From: alexs@kernel.org
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH printk v3 05/14] printk: ringbuffer: Clarify special lpos
- values
-Message-ID: <Zbj1vz5J1hgXaLf4@alley>
-References: <20231214214201.499426-1-john.ogness@linutronix.de>
- <20231214214201.499426-6-john.ogness@linutronix.de>
+	Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	ricardo.neri-calderon@linux.intel.com,
+	sshegde@linux.ibm.com
+Cc: Alex Shi <alexs@kernel.org>
+Subject: [PATCH v2 1/6] sched/fair: add SD_CLUSTER in comments
+Date: Tue, 30 Jan 2024 21:17:03 +0800
+Message-ID: <20240130131708.429425-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214214201.499426-6-john.ogness@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Thu 2023-12-14 22:47:52, John Ogness wrote:
-> For empty line records, no data blocks are created. Instead,
-> these valid records are identified by special logical position
-> values (in fields of @prb_desc.text_blk_lpos).
-> 
-> Currently the macro NO_LPOS is used for empty line records.
-> This name is confusing because it does not imply _why_ there is
-> no data block.
-> 
-> Rename NO_LPOS to EMPTY_LINE_LPOS so that it is clear why there
-> is no data block.
-> 
-> Also add comments explaining the use of EMPTY_LINE_LPOS as well
-> as clarification to the values used to represent data-less
-> blocks.
-> 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+From: Alex Shi <alexs@kernel.org>
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+The SD_CLUSTER omitted in following TOPOLOGY_SD_FLAGS explaination, add
+it to fill the absent.
 
-Best Regards,
-Petr
+Signed-off-by: Alex Shi <alexs@kernel.org>
+To: linux-kernel@vger.kernel.org
+To: Daniel Bristot de Oliveira <bristot@redhat.com>
+To: Ben Segall <bsegall@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Valentin Schneider <vschneid@redhat.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+To: Juri Lelli <juri.lelli@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+---
+ kernel/sched/topology.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-PS: Just for record. I had to make a pause in the review
-    because I have been on a sick leave last week and half.
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 10d1391e7416..c342c52b1f34 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1554,6 +1554,7 @@ static struct cpumask		***sched_domains_numa_masks;
+  * function:
+  *
+  *   SD_SHARE_CPUCAPACITY   - describes SMT topologies
++ *   SD_CLUSTER		    - describes Cluster topologies
+  *   SD_SHARE_PKG_RESOURCES - describes shared caches
+  *   SD_NUMA                - describes NUMA topologies
+  *
+-- 
+2.43.0
 
