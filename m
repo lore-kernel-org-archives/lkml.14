@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3DE7994D;
-	Tue, 30 Jan 2024 19:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20788762CE;
+	Tue, 30 Jan 2024 19:04:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706641458; cv=none; b=QvZCbPjauh+biMAwaCIyFStY/sToMfJfvO910z+8NyjspITMR4b/2ePsYOisK3jB1OWhBtSpZS5qWlXbjH1JCGl6RqzoG+Fwp5JdO+AutVzXzE7Oj/HcWab6fTadbYZEIQ951aufQ7psAMRQP8wHy2ho6Ajuwob5ojArhUqofYs=
+	t=1706641461; cv=none; b=iWDtrsQTVlFu5eCKEMyxxGsdFA607TjAzbQNad4n/BLhTURrlbV68I9tYRJJ3DvGLmIHKY5lJUsyezLUarsSilmiSs2WrsY1kOfgmxmfGWgJF8GDZmLdeGKWyXW28ITHXZJNJiUZAQMfuvWa1r8oz8SjUBy1QFreZryyFdvbC48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706641458; c=relaxed/simple;
-	bh=UN73rU1wKgk+kPZG4I6r0l+EYowt6RDqJg5XsMuGiLQ=;
+	s=arc-20240116; t=1706641461; c=relaxed/simple;
+	bh=VfkCiOcbDiF97nCdF1XS/rB91kgxot2LBBvCXyBvEHs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V/2OZDZm7Le22C/grg8G+n782s3uw1yVqFq36mhl7SHuo9M2CtVK1hUCB4OWZuFkXB/i2OVPPr9YCh8OO6O9M9ziDF+LhtmEo75wpo+iC+xhNFarKmeNLJZMGX1oLexKPrJrWgaxfhenxKNTB/+oGtPpLOy0cngkKBkgg11ZhG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Vd1hrNDi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DCb56iAsAPw5P1qSTGqAt9q60jE73ofoLOjw4aIQYvPiGT+kcPvUTy795FHZEwQZmrAv4kxJXS20RvrU4ziLaq9yGkvYBXnbBMsgvoXStAl5sFrRHlJkBbVfE68h82rTXN/N3jluFIogg7bCNQ3ZsqOyCquPSQNQrNG81iQ3FDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=HE4bR2zZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Vd1hrNDi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B164C433F1;
-	Tue, 30 Jan 2024 19:04:17 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="HE4bR2zZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695FAC433C7;
+	Tue, 30 Jan 2024 19:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1706641457;
-	bh=UN73rU1wKgk+kPZG4I6r0l+EYowt6RDqJg5XsMuGiLQ=;
+	s=korg; t=1706641460;
+	bh=VfkCiOcbDiF97nCdF1XS/rB91kgxot2LBBvCXyBvEHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vd1hrNDi9XyJiMLBg7nk96fWw9ntucwuoWji3NVvRxAagTIdMFOl0KoD36I7e+2VN
-	 VnHMY7fCpF6mvFH03bTwvvq/HhaKy3ufgcODBFOxIt/jukpRAqV9ZQPeNO61tr5hZy
-	 XzWvd6ERZDEGPk+VJTU5IUICtY1fOooFW2U32I7k=
+	b=HE4bR2zZg6i+6WEvZ49qbdu3atDQF/Z8KiZkSjdlT+O1NoUOIzsHjUoIRCP0QPJPP
+	 aJ4XKQn5U4yPeZG9xliQ//NBL4c/PRXF4H9a/nrpDxp+YP61Y7NoCjk25mH6+H2tL8
+	 w4VfRlXOs48PNEwx2vOS8lxTp5vkNw+uvpbN60D0=
 From: Linus Torvalds <torvalds@linux-foundation.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 2/6] eventfsfs: initialize the tracefs inode properly
-Date: Tue, 30 Jan 2024 11:03:51 -0800
-Message-ID: <20240130190355.11486-2-torvalds@linux-foundation.org>
+Subject: [PATCH 4/6] eventfs: remove unused 'd_parent' pointer field
+Date: Tue, 30 Jan 2024 11:03:53 -0800
+Message-ID: <20240130190355.11486-4-torvalds@linux-foundation.org>
 X-Mailer: git-send-email 2.43.0.5.g38fb137bdb
 In-Reply-To: <20240130190355.11486-1-torvalds@linux-foundation.org>
 References: <20240130190355.11486-1-torvalds@linux-foundation.org>
@@ -43,72 +43,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The tracefs-specific fields in the inode were not initialized before the
-inode was exposed to others through the dentry with 'd_instantiate()'.
-
-And the ->flags file was initialized incorrectly with a '|=', when the
-old value was stale.  It should have just been a straight assignment.
-
-Move the field initializations up to before the d_instantiate, and fix
-the use of uninitialized data.
+It's never used
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- fs/tracefs/event_inode.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ fs/tracefs/event_inode.c | 4 +---
+ fs/tracefs/internal.h    | 2 --
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 2d128bedd654..c0d977e6c0f2 100644
+index ad11063bdd53..1d0102bfd7da 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -328,7 +328,9 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 	inode->i_ino = EVENTFS_FILE_INODE_INO;
- 
- 	ti = get_tracefs(inode);
--	ti->flags |= TRACEFS_EVENT_INODE;
-+	ti->flags = TRACEFS_EVENT_INODE;
-+	ti->private = NULL;			// Directories have 'ei', files not
-+
- 	d_instantiate(dentry, inode);
- 	fsnotify_create(dentry->d_parent->d_inode, dentry);
- 	return eventfs_end_creating(dentry);
-@@ -367,7 +369,8 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
- 	inode->i_ino = eventfs_dir_ino(ei);
- 
- 	ti = get_tracefs(inode);
--	ti->flags |= TRACEFS_EVENT_INODE;
-+	ti->flags = TRACEFS_EVENT_INODE;
-+	ti->private = ei;
- 
- 	inc_nlink(inode);
- 	d_instantiate(dentry, inode);
-@@ -513,7 +516,6 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
- static void eventfs_post_create_dir(struct eventfs_inode *ei)
- {
- 	struct eventfs_inode *ei_child;
--	struct tracefs_inode *ti;
- 
- 	lockdep_assert_held(&eventfs_mutex);
- 
-@@ -523,9 +525,6 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
- 				 srcu_read_lock_held(&eventfs_srcu)) {
- 		ei_child->d_parent = ei->dentry;
- 	}
--
--	ti = get_tracefs(ei->dentry->d_inode);
--	ti->private = ei;
- }
- 
- /**
-@@ -943,7 +942,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+@@ -685,10 +685,8 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
  	INIT_LIST_HEAD(&ei->list);
  
- 	ti = get_tracefs(inode);
--	ti->flags |= TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
-+	ti->flags = TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
- 	ti->private = ei;
+ 	mutex_lock(&eventfs_mutex);
+-	if (!parent->is_freed) {
++	if (!parent->is_freed)
+ 		list_add_tail(&ei->list, &parent->children);
+-		ei->d_parent = parent->dentry;
+-	}
+ 	mutex_unlock(&eventfs_mutex);
  
- 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+ 	/* Was the parent freed? */
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 91c2bf0b91d9..8f38740bfb5b 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -35,7 +35,6 @@ struct eventfs_attr {
+  * @name:	the name of the directory to create
+  * @children:	link list into the child eventfs_inode
+  * @dentry:     the dentry of the directory
+- * @d_parent:   pointer to the parent's dentry
+  * @d_children: The array of dentries to represent the files when created
+  * @entry_attrs: Saved mode and ownership of the @d_children
+  * @attr:	Saved mode and ownership of eventfs_inode itself
+@@ -50,7 +49,6 @@ struct eventfs_inode {
+ 	const char			*name;
+ 	struct list_head		children;
+ 	struct dentry			*dentry; /* Check is_freed to access */
+-	struct dentry			*d_parent;
+ 	struct dentry			**d_children;
+ 	struct eventfs_attr		*entry_attrs;
+ 	struct eventfs_attr		attr;
 -- 
 2.43.0.5.g38fb137bdb
 
