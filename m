@@ -1,136 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B162E86122
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5A28613E;
+	Tue, 30 Jan 2024 15:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706630012; cv=none; b=EqoO20s1ngQffNdfcMoqUCmR2/zGXR4GLCIGgNDdGhPYV/O7/UlTfp4x8++TZPM6ibvA4Hjz9JjjMg45i5nRtFgpqJeK7BInJiiIvPO7EKMphw8OMkQG5AtLCg409ksKHDDgpVpdYI4P1iCcDPzRlHL2bKp846llPRn5cuvAxsg=
+	t=1706630022; cv=none; b=InpQFRTL73QLChP5H9pJxcvYxHenAkoq5YMOFXK6Li5lvqwQwVfKchX72F83sd7CS2XqDgqaDPeZ/G312x0lIOgfh8ujSv6+Lf3qh5HwAvsbyk8hAgLVNXZl09tlvajAIdMdmxdqb7P4KhuWIztOLcgHvNSHBExehPnORQEZrGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706630012; c=relaxed/simple;
-	bh=5gq9bk2CACo+T8MhwqInhSIy3rOGWTcRWK1IgBCsVxI=;
+	s=arc-20240116; t=1706630022; c=relaxed/simple;
+	bh=R+skgP9gYAOnJxpGZoCeIncWf1CrBc8RcUjjZVvJHHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dqkryGUYAnc8Nl7WogFIsUoBmanx3xygOYSHAxIZgR3FNIXoJcfpa8d3TKCXmpdXyUxf+oJKqdS1RFxcVa8u6/qaT8f73ZCnKDOT/F2VIlkHiil90v8LHUZosvPAhgjVJJCyhqoYDRHgBs4MxhhnDEgtwO4pYe4cUXpB8gOZuNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IopQ6CkF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZFxg3oxKi5ZAr8pMapvkOd/8+xUwK3JIEkJF0ZCAcNavLnk4N/vFHAmsytRHwfR2qHouubop03NiRU2QZTWPEwDzPb7mW9LaXHSrMEu1Hb12LeL0x3GjubFmoD7PQoZTRkBsnFctwkc/lSzvvosRF1Is7vOnpiMNl87Jin+L+Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWd14fgN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IopQ6CkF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706630009;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oSj1lyNclmh9b1DFiLfFnvUIxkzThYLUPlpLm9/wz/A=;
-	b=IopQ6CkFdtaCaqV5cZ7dzixRvffYOoCKSoWpBlyKmr4hl10LYNAoynDeTDKhN4BjWUJqpE
-	hgz3Eh5ZjBkbOqH7HaagGu2qIG4gP2dM8CKmGjarZGRNuZyiqhso8Si1dsWpTiPhUQGQvc
-	vQ5nBVOIn3kzRE5EQoaWwvZn2S6rtC0=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-624-Nhy_kmvHM4-OuagXzYK2HQ-1; Tue, 30 Jan 2024 10:53:25 -0500
-X-MC-Unique: Nhy_kmvHM4-OuagXzYK2HQ-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-783f0e989e1so332137085a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:53:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706630005; x=1707234805;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oSj1lyNclmh9b1DFiLfFnvUIxkzThYLUPlpLm9/wz/A=;
-        b=xAkZ4tMQNCWVkmSOn4mNyAe6NEIaxaLpHvXtGZx8Xk5rJJ3AqNn06QZdNVPrhkI5ea
-         TWeOeR1JESQScGrWjTw93n1PIzd0YX1PuNP4/PZ/6kqPxtWl+lgBFGRCT3nMrBXIyD9v
-         3u7L4OCIPaRdqTKB5/pp3IQ6aa0baEC/r+DFiIfY+7mKiZEwNRbJDcNX7Wlbo5XlUfRp
-         AlqcPzfa4T5zuM/NsO4aAJwXFSs9lA8cbCYfexM7+D9HOl1hgM0B7FLgTVQZHcg7ChFT
-         Ri4Vz9QUFsr/BRYQvStRWEzSGHqeWI8iljtHAnzQ8TTPr6RNxEyn0qXVhbV4EiWQ935f
-         aiCQ==
-X-Gm-Message-State: AOJu0YxvjzfwKvSOeussCw2Vy90YweaURiuAyqx/T7X6j7aOSy/CY8Bv
-	VAJR3QYDHS9JGYzpDQEuZGfTsaqGzIoo+SaZugcNHtkgbYLNlPdcUdWAen6rLXQ5022PQ1ByPx5
-	zaKzg21KBrc/P9wx1mEaURZSj7xae+vmY8winjHnPyTt5XwqdGXFv7G1YvSyBZw==
-X-Received: by 2002:ac8:5950:0:b0:42a:6df3:1f1d with SMTP id 16-20020ac85950000000b0042a6df31f1dmr12272883qtz.74.1706630005303;
-        Tue, 30 Jan 2024 07:53:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFVEawnHTN95Z6HJiyigSQy1AJjcgY3k8TnIlbRXYXuot4rDh5Z3hGCkiEuIFI9fTvFfvDK0Q==
-X-Received: by 2002:ac8:5950:0:b0:42a:6df3:1f1d with SMTP id 16-20020ac85950000000b0042a6df31f1dmr12272860qtz.74.1706630005018;
-        Tue, 30 Jan 2024 07:53:25 -0800 (PST)
-Received: from fedora ([2600:1700:1ff0:d0e0::47])
-        by smtp.gmail.com with ESMTPSA id z12-20020ac87cac000000b0042a1223cb9bsm3313663qtv.70.2024.01.30.07.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 07:53:24 -0800 (PST)
-Date: Tue, 30 Jan 2024 09:53:22 -0600
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: bhupesh.linux@gmail.com, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: Re: [PATCH] MAINTAINERS: Drop unreachable reviewer for Qualcomm
- ETHQOS ethernet driver
-Message-ID: <ual3c4fuuz5trgn2ekklsfeslwvswfjg5nij5epbnuf5mihfay@pp32fs6btwxk>
-References: <20240129-remove-dwmac-qcom-ethqos-reviewer-v1-1-2645eab61451@redhat.com>
- <ZbkWwn-oN5wqoPfJ@matsya>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWd14fgN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67585C433C7;
+	Tue, 30 Jan 2024 15:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706630021;
+	bh=R+skgP9gYAOnJxpGZoCeIncWf1CrBc8RcUjjZVvJHHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WWd14fgNauH0btT8LYpk58n2O3ZUTLfdNxSnN8E6uSrQXqwFcnvYIQ9dZVeQbASf3
+	 8hTdYuN9SFrRniqbNzGLBQx80cp7Q8B+S1cp8XK22ouQmZyeE025DPnvBdEAZl7T4B
+	 wnMrBWiUz4N1vh5s3B/or/2dSAEfxQkZuKHjvFF4PI2z4VFZzU0Oepa8n7WDQIP8bt
+	 hFoVW2VU/4jh49FiUo8i7TUcDU0zYXBmcFa+mLgT0cyZV7BMKmMYKRCwYpFYzKGubB
+	 Jb9mX+qFpH2AeJtjUh7JST1PRM369brANH1C0CbldVSUOEz4SDsoY20s0Ty79xnJTD
+	 K2cYn4CszVaLA==
+Date: Tue, 30 Jan 2024 15:53:36 +0000
+From: Lee Jones <lee@kernel.org>
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: David Laight <David.Laight@aculab.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
+	Juergen Quade <quade@hsnr.de>
+Subject: Re: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
+ truncated strings
+Message-ID: <20240130155336.GA8551@google.com>
+References: <20240125083921.1312709-1-lee@kernel.org>
+ <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
+ <20240125103624.GC74950@google.com>
+ <54e518b6dd9647c1add38b706eccbb4b@AcuMS.aculab.com>
+ <20240129092440.GA1708181@google.com>
+ <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
+ <20240129095237.GC1708181@google.com>
+ <20240130150721.GA692144@google.com>
+ <79921f9a-2453-48ec-85db-e63a0958db1e@prevas.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZbkWwn-oN5wqoPfJ@matsya>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <79921f9a-2453-48ec-85db-e63a0958db1e@prevas.dk>
 
-On Tue, Jan 30, 2024 at 09:03:22PM +0530, Vinod Koul wrote:
-> On 29-01-24, 11:12, Andrew Halaney wrote:
-> > Bhupesh's email responds indicating they've changed employers and with
-> > no new contact information. Let's drop the line from MAINTAINERS to
-> > avoid getting the same response over and over.
-> 
-> Looks like Bhupesh sent the patch changing but never followed up with a
-> v2 for this:
-> lore.kernel.org/r/20230915191600.3410862-1-bhupesh.linux@gmail.com
-> 
-> Would prefer if this is changed to his email (copied him as well)
-> 
+On Tue, 30 Jan 2024, Rasmus Villemoes wrote:
 
-Thanks for finding that! Bhupesh, do you plan on spinning a v2 soon? If
-so I will not send a v2, otherwise I can respin this with your email and
-no .mailmap change.
+> On 30/01/2024 16.07, Lee Jones wrote:
+> > On Mon, 29 Jan 2024, Lee Jones wrote:
+> > 
+> >> On Mon, 29 Jan 2024, David Laight wrote:
+> >>
+> >>> ...
+> >>>>> I'm sure that the safest return for 'truncated' is the buffer length.
+> >>>>> The a series of statements like:
+> >>>>> 	buf += xxx(buf, buf_end - buf, .....);
+> >>>>> can all be called with a single overflow check at the end.
+> >>>>>
+> >>>>> Forget the check, and the length just contains a trailing '\0'
+> >>>>> which might cause confusion but isn't going to immediately
+> >>>>> break the world.
+> >>>>
+> >>>> snprintf() does this and has been proven to cause buffer-overflows.
+> >>>> There have been multiple articles authored describing why using
+> >>>> snprintf() is not generally a good idea for the masses including the 2
+> >>>> linked in the commit message:
+> >>>
+> >>> snprintf() returns the number of bytes that would have been output [1].
+> >>> I'm not suggesting that, or not terminating the buffer.
+> >>> Just returning the length including the '\0' (unless length was zero).
+> >>> This still lets the code check for overflow but isn't going to
+> >>> generate a pointer outside the buffer if used to update a pointer.
+> >>
+> >> I see.  Well I'm not married to my solution.  However, I am convinced
+> >> that the 2 solutions currently offered can be improved upon.  If you or
+> >> anyone else has a better solution, I'd be more than happy to implement
+> >> and switch to it.
+> >>
+> >> Let me have a think about the solution you suggest and get back to you.
+> > 
+> > Okay, I've written a bunch of simple test cases and results are
+> > positive.  It seems to achieve my aim whilst minimising any potential
+> > pitfalls.
+> > 
+> >  - Success returns Bytes actually written - no functional change
+> >  - Overflow returns the size of the buffer - which makes the result
+> >    a) testable for overflow
+> >    b) non-catastrophic if accidentally used to manipulate later sizes
+> 
+> You are describing scnprintf(), which almost does exactly that. The last
+> thing we need is another interface with almost identical semantics.
 
-> 
-> > 
-> > Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
-> > ---
-> > If anyone knows how to contact Bhupesh / if they're willing to continue
-> > being a reviewer feel free to suggest an alternative, but for the moment
-> > this is better than nothing.
-> > ---
-> >  MAINTAINERS | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 939f6dd0ef6a..b285d9a123ce 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -18080,7 +18080,6 @@ F:	drivers/net/ethernet/qualcomm/emac/
-> >  
-> >  QUALCOMM ETHQOS ETHERNET DRIVER
-> >  M:	Vinod Koul <vkoul@kernel.org>
-> > -R:	Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> >  L:	netdev@vger.kernel.org
-> >  L:	linux-arm-msm@vger.kernel.org
-> >  S:	Maintained
-> > 
-> > ---
-> > base-commit: 596764183be8ebb13352b281a442a1f1151c9b06
-> > change-id: 20240129-remove-dwmac-qcom-ethqos-reviewer-1a37d8c71383
-> > 
-> > Best regards,
-> > -- 
-> > Andrew Halaney <ahalaney@redhat.com>
-> 
-> -- 
-> ~Vinod
-> 
+It does, which is why when I first centred my efforts on this task the
+plan was to simply switch to it.  However, as I described in the commit
+message:
 
+  "Whist executing the task, it quickly became apparent that the initial
+  thought of simply s/snprintf/scnprintf/ wasn't going to be adequate
+  for a number of cases.  Specifically ones where the caller needs to
+  know whether the given string ends up being truncated."
+
+A great deal of callers want to know if the string they attempted to
+form was successful.  A malformed string would lead to oddities in the
+best cases and various device/probing/matching failures in the worst.
+
+> >     int size = 10;
+> >     char buf[size];
+> >     char *b = buf;
+> > 
+> >     ret = spprintf(b, size, "1234");
+> >     size -= ret;
+> >     b += ret;
+> >     // ret = 4  size = 6  buf = "1234\0"
+> > 
+> >     ret = spprintf(b, size, "5678");
+> >     size -= ret;
+> >     b += ret;
+> >     // ret = 4  size = 2  buf = "12345678\0"
+> > 
+> >     ret = spprintf(b, size, "9***");
+> >     size -= ret;
+> >     b += ret;
+> >     // ret = 2  size = 0  buf = "123456789\0"
+> 
+> So here scnprint() would have returned 1, leaving size at 1. scnprintf()
+> has the invariant that, for non-zero size, the return value is strictly
+> less than that size, so when passed a size of 1, all subsequent calls
+> return 0 (corresponding to the fact that all it could do was to write
+> the '\0' terminator).
+> 
+> This pattern already exists, and is really the reason scnprint exists.
+> Yes, scnprintf() cannot distinguish overflow from
+> it-just-exactly-fitted. Maybe it would have been better to make it work
+> like this, but I don't think there's a real use
+
+There are real use-cases.  They are what brought me here.
+
+> and we do have
+> seq_buf() if one really wants an interface that can build a string
+> piece-meal while keeping track of whether it ever caused overflow.
+
+seq_buf_*() looks okay, but it's petty heavy requiring what looks like
+the buffers to be initialised with an API call before use.  We're
+looking for something more light weight.
+
+scnprint() had clear safety centric improvements over snprintf() and
+spprintf() adds an additional layer of return value checking on top of
+that.
+
+I'm not sure I understand the resistance to something which is needed
+and has clear benefits over what presently exists just for the sake of a
+few lines of code.  I'd be on board if it were change for the sake of
+change, but the added flexibility and ease of use is evident.
+
+-- 
+Lee Jones [李琼斯]
