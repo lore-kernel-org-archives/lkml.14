@@ -1,154 +1,176 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11580679EC;
-	Tue, 30 Jan 2024 09:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643B460241;
+	Tue, 30 Jan 2024 09:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706605999; cv=none; b=GkDTpyxZi27W9n9AQDn+KqvktuXLyqFrRQjNgf0Xz81EANEftCpI6zkeO+/mzBVXgEEKLw8vC50O+RRfCf7KsKmwHUwuBYiKnubQ03zIS8pU6LLvneYhzwycCuEsri4Nai2uJNg0guSHgLajdgh9EEDwWT8xLFliDT3yvc/PA1M=
+	t=1706606016; cv=none; b=Az2HceFHfstJh0YQkiPs/UpYhPMqk5OvAfCt/TrUyv/SSFnkUQ5vdiTkXb3fyTd+DJSh5PTQShrdTe47w9egH/iOpDJRSKCfOVMmgpBHV3NcEJMu5YUoPDE3zaRR9oYjyYpJGPUXCZAOnvVZHGLfIKj+S/3AIYpEsKat33qZBm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706605999; c=relaxed/simple;
-	bh=yxd9IHSWjzcBrPuUDO7+SCI1N0zvICZf05uTKbbfPXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AvGxjly5iM+H29jokXv6wgFDDUN6c7XxxYyyTis9zougPD3eHiWFy1LpwYNrZhG+mhVTzlezvzGGO7MnJc8zRjFN6N+UuU3sMymfJN1n6pxUMJFx1WlPw4yVd6go6veHfPswnSl85hjr+e4dNFEumlRauUtvGvOq0mpnxKqW6vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6Pe6k+U; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706606016; c=relaxed/simple;
+	bh=Y4nDFYjUZfzurJ80YZ+gps4Y0inJ3LqS/yvK9HXgBPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CdrHSGp4w5RybjEhaBREThxQ29w4WawOWYR5OyyepH5YrxsFhRjcThpC9BHMN53vuTwEXoCXaU4Eo3YJKzsHmZmaAdzz2Uw0z8+SGmXe1eFz0BmQTQ7jjfWhcUs389ekPCTdmhvPOYzMcS5cpxlPGzkwikd8dXTSOiMp94Nym+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbt/b/Wl; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6Pe6k+U"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e1214ae9d4so1189040a34.3;
-        Tue, 30 Jan 2024 01:13:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706605997; x=1707210797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kP7G/zPUbEjcGqCRjgaQMWAAf9wDrODicb4k9l2g++8=;
-        b=V6Pe6k+UGrgqV7xqpVrcPSh4/WagxZcW6mVw87SxgkRJqAjxyXUfuq2csLKHoPFYOA
-         wbEWNj/drHXX/UXtPMGayfKC3QAjqL4BkL6SvcXYHK1gUBvDzisitzOiU8/EluqgcxAU
-         yM3wcUZ9bG1xzuosC4eeY1cI5pXwhlprp2M8yYW0nDZeXwOK9dtuHLVM3ys2zeLCCwrt
-         WMoTZp6CKUqK9y7noEWv+KxA0ekazZqNWanG2o8HAMSQIgocy4ipIfENpe+ggCd8bSys
-         vDvkGo0HvH+JYn10rcnvBpFvOk+8aPh7hO8Io8e6fokvd1IPZnQknoZhpICYsZDms35i
-         04wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706605997; x=1707210797;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kP7G/zPUbEjcGqCRjgaQMWAAf9wDrODicb4k9l2g++8=;
-        b=pSkpwMqZzWGQgELxlm9IEkN8M4GHSQMYjjnlCDZCHyMpI2LtV3I7++gKkfjSzo+0FZ
-         FsASvyi1TYC0aKhRLC0qpXJOb/UTMa2f0eQ5PhhY6K0yyNBm3T39vy4fWgUixuDaUTeD
-         RgDyeWSOk5+aWpupZCFLVm7fM87kZyyUqqISZ8KAVe2wS952yj3XByeUU338SFTU3lyD
-         kSdHXdwHRN+LuirjVKDSCCasyJjsYAXuoGyzHFxk1Oc0Y2SY5kzLJ8noAb0FpR6JlQ6y
-         i8ihZWm6mkwMYUhcpekAcN2eZSKwieAGEdwkr87vGkXOnobKKytsfEPwqKEN+o5eVvRA
-         btjw==
-X-Gm-Message-State: AOJu0Yw7CM89QiNGnN+7I/mM+wrBryMcw5P9ScZW0wew9y6om/UiX2ft
-	zDU1i6h+u3f+m8E3N2QdDEiqE6Endj6QXS/1KLTE2whcaI3jGNtV
-X-Google-Smtp-Source: AGHT+IE8Q4KG3NbeQFqt34/6WaZTRJSkgwKNvSafvHvYRaM+fZtDCLEugDIup6U8STh4gXX2K2JK/g==
-X-Received: by 2002:a05:6358:7e83:b0:178:7f7d:91a6 with SMTP id o3-20020a0563587e8300b001787f7d91a6mr2601345rwn.46.1706605997066;
-        Tue, 30 Jan 2024 01:13:17 -0800 (PST)
-Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
-        by smtp.gmail.com with ESMTPSA id b4-20020a056a000a8400b006dde023cce8sm7211721pfl.57.2024.01.30.01.13.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 01:13:16 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-From: Tejun Heo <tj@kernel.org>
-To: torvalds@linux-foundation.org,
-	mpatocka@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	msnitzer@redhat.com,
-	ignat@cloudflare.com,
-	damien.lemoal@wdc.com,
-	bob.liu@oracle.com,
-	houtao1@huawei.com,
-	peterz@infradead.org,
-	mingo@kernel.org,
-	netdev@vger.kernel.org,
-	allen.lkml@gmail.com,
-	kernel-team@meta.com,
-	Tejun Heo <tj@kernel.org>,
-	Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>
-Subject: [PATCH 8/8] dm-verity: Convert from tasklet to BH workqueue
-Date: Mon, 29 Jan 2024 23:11:55 -1000
-Message-ID: <20240130091300.2968534-9-tj@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240130091300.2968534-1-tj@kernel.org>
-References: <20240130091300.2968534-1-tj@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbt/b/Wl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706606015; x=1738142015;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Y4nDFYjUZfzurJ80YZ+gps4Y0inJ3LqS/yvK9HXgBPo=;
+  b=gbt/b/WloVmYr9ROvIJHlmxfeeGLge8uZR6emF/tk4s/JJbM49xKk7kx
+   /kxoKkmcgD40Tn04tuwLq21dkZM+64wDqNL6Sg3VG59ASdhZXAe+kOnnz
+   GcghLZsuqsvb3snh6LpH012HnaICGJDx4SRgjbDrl+f4xD08P0aKhLw5f
+   LFTJZvLLmgTrbgoc3oAUKCWlS9i8SMi1MwcSn9QX0w9WxxDIMEvCa+ZvF
+   LASI8eLKtacIOdkfAQhLknCAvRMumbO8DlY74BGl+Y5BbS7a+6VKpVdqR
+   IFNZaabwQTSRy5Qm087K00xpegnAOXG2w+oZkB798eyFtqsVjBdbl2x0G
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="400356512"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="400356512"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:13:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="858412928"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="858412928"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.249.174.131]) ([10.249.174.131])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:13:31 -0800
+Message-ID: <56a9971e-7015-4584-89c7-80056b7ec547@linux.intel.com>
+Date: Tue, 30 Jan 2024 17:13:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
+ device isn't present
+To: "Tian, Kevin" <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
+ "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>,
+ "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
+ <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
+ <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
+ <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
+ <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
+ <BN9PR11MB527674172BBA9BDC49A004D08C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <BN9PR11MB527674172BBA9BDC49A004D08C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The only generic interface to execute asynchronously in the BH context is
-tasklet; however, it's marked deprecated and has some design flaws. To
-replace tasklets, BH workqueue support was recently added. A BH workqueue
-behaves similarly to regular workqueues except that the queued work items
-are executed in the BH context.
 
-This patch converts dm-verity from tasklet to BH workqueue.
+On 1/30/2024 4:43 PM, Tian, Kevin wrote:
+>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>> Sent: Tuesday, January 30, 2024 4:16 PM
+>>
+>> On 1/30/2024 2:22 PM, Tian, Kevin wrote:
+>>> Here we need consider two situations.
+>>>
+>>> One is that the device is not bound to a driver or bound to a driver
+>>> which doesn't do active work to the device when it's removed. In
+>>> that case one may observe the timeout situation only in the removal
+>>> path as the stack dump in your patch02 shows.
+>> When iommu_bus_notifier() got called for hotplug removal cases to
+>> flush devTLB (ATS invalidation), driver was already unloaded.
+>> whatever safe removal or surprise removal. so in theory no active
+>> driver working there.
+>>
+>> pciehp_ist()
+>>    pciehp_disable_slot()
+>>     remove_board()
+>>      pciehp_unconfigure_device()
+>>       pci_stop_and_remove_bus_device()
+>>        pci_stop_bus_device()--->here unload driver
+>>        pci_remove_bus_device()->here qi_flush_dev_iotlb() got called.
+> yes, so patch02 can fix this case.
+>
+>>> patch02 can fix that case by checking whether the device is present
+>>> to skip sending the invalidation requests. So the logic being discussed
+>>> here doesn't matter.
+>>>
+>>> The 2nd situation is more tricky. The device might be bound to
+>>> a driver which is doing active work to the device with in-fly
+>>> ATS invalidation requests. In this case in-fly requests must be aborted
+>>> before the driver can be detached from the removed device. Conceptually
+>>> a device is removed from the bus only after its driver is detached.
+>> Some tricky situations:
+>>
+>> 1. The ATS invalidation request is issued from driver driver, while it is
+>> in handling, device is removed. this momment, the device instance still
+>> exists in the bus list. yes, if searching it by BDF, could get it.
+> it's searchable between the point where the device is removed and the
+> point where the driver is unloaded:
+>
+>          CPU0                                CPU1
+>    (Driver is active)                    (pciehp handler)
+>    qi_submit_sync()                      pciehp_ist()
+>      ...                                   ...
+>      loop for completion() {               pciehp_unconfigure_device()
+>        ...                                   pci_dev_set_disconnected()
+>        if (ITE) {                            ...
+>          //find pci_dev from sid             pci_remove_bus_device()
+>          if (pci_dev_is_connected())           device_del()
+>            break;                                bus_remove_device()
+>        }                                           device_remove_driver()
 
-This is a minimal conversion which doesn't rename the related names
-including the "try_verify_in_tasklet" option. If this patch is applied, a
-follow-up patch would be necessary. I couldn't decide whether the option
-name would need to be updated too.
+If the device was hot plugin or re-scanned, the device has a PCI_DEV_ADDED flag,
+if so the driver unloading work isn't defered to the tail of device_del(), it
+is unloaded before pci_remove_bus_device()->device_del(), in pci_stop_dev
 
-Only compile tested. I don't know how to verity.
+pci_stop_bus_device()
+  pci_stop_dev()
+  {
+   if (pci_dev_is_added(dev)) {
+       device_release_driver(&dev->dev);
+  }
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
-Cc: dm-devel@lists.linux.dev
----
- drivers/md/dm-verity-target.c | 8 ++++----
- drivers/md/dm-verity.h        | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+So the interval the device is searchable, only applied to those devices
+not hot plugged, or never be scanned.
 
-diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-index 14e58ae70521..911261de2d08 100644
---- a/drivers/md/dm-verity-target.c
-+++ b/drivers/md/dm-verity-target.c
-@@ -645,9 +645,9 @@ static void verity_work(struct work_struct *w)
- 	verity_finish_io(io, errno_to_blk_status(verity_verify_io(io)));
- }
- 
--static void verity_tasklet(unsigned long data)
-+static void verity_bh_work(struct work_struct *w)
- {
--	struct dm_verity_io *io = (struct dm_verity_io *)data;
-+	struct dm_verity_io *io = container_of(w, struct dm_verity_io, bh_work);
- 	int err;
- 
- 	io->in_tasklet = true;
-@@ -675,8 +675,8 @@ static void verity_end_io(struct bio *bio)
- 	}
- 
- 	if (static_branch_unlikely(&use_tasklet_enabled) && io->v->use_tasklet) {
--		tasklet_init(&io->tasklet, verity_tasklet, (unsigned long)io);
--		tasklet_schedule(&io->tasklet);
-+		INIT_WORK(&io->bh_work, verity_bh_work);
-+		queue_work(system_bh_wq, &io->bh_work);
- 	} else {
- 		INIT_WORK(&io->work, verity_work);
- 		queue_work(io->v->verify_wq, &io->work);
-diff --git a/drivers/md/dm-verity.h b/drivers/md/dm-verity.h
-index f9d522c870e6..7c16f834f31a 100644
---- a/drivers/md/dm-verity.h
-+++ b/drivers/md/dm-verity.h
-@@ -83,7 +83,7 @@ struct dm_verity_io {
- 	struct bvec_iter iter;
- 
- 	struct work_struct work;
--	struct tasklet_struct tasklet;
-+	struct work_struct bh_work;
- 
- 	/*
- 	 * Three variably-size fields follow this struct:
--- 
-2.43.0
 
+Thanks,
+Ethan
+
+>        ..                                            //wait for driver unload
+>      }
+>      ..
+>      return;
+>
+>                                                    BUS_NOTIFY_REMOVED_DEVICE;
+>                                                list_del(&dev->bus_list);
+>
+> (I didn’t draw the full calling stack on the right hand side)
+
+>
+>> 2. The ATS invalidation request is issued from iommu_bus_notifier()
+>> for surprise removal reason, as shown in above calltrace, device was
+>> already removed from bus list. if searching it by BDF, return NULL.
+>>
+>> 3. The ATS invlidation request is issued from iommu_bus_notifier()
+>> for safe removal, when is in handling, device is removed or link
+>> is down. also as #2, device was already removed from bus list.
+>> if searching it by BDF. got NULL.
+>> ...
+>>
+>> so, searching device by BDF, only works for the ATS invalidation
+>> request is from device driver.
+>>
+> anything related to bus notifier has been fixed by patch02.
+>
+> the remaining logic is really for fixing the race invalidation from
+> device driver.
