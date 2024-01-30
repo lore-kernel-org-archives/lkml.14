@@ -1,119 +1,77 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D86138F82
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6733838B
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706595549; cv=none; b=og3HlB+79nwW5Y3BciEsgeTAVNIpyo+jf3UaCbpR2rwLBj3Qys7OgTd95kzx2wSxRDei+w5k3mCDgdi9dbW4V2im/rwsh/xjm4p7sBPoiIMxtIvlW1Eeg7PA483ysLN/ZX9lIPGcQHu3nv9CH6jNp62vhwrtZVDxad3UN/BHPbs=
+	t=1706595726; cv=none; b=qK2cOxfKl9vyUQcH5ULFuaDQ/00i2xCPopTlTvw/8BnPFOVc9NYTCw+7UvKWntfTjJ3ba6jSgiv6yKKm01en72DIchkuAF43BH/JAckR0j37//YvR217eLmGvIViokHIBRXGIGMHWTUpfxKeM4p18TSN9guXFXlBBsPdLOfq9nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706595549; c=relaxed/simple;
-	bh=S0dLhOoOjHqllmMRbdI054iuekaMA3L7e5M6fpkR0uA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q7bA84gkUMMY+7MV+UhMfldsa1KYfmffFNmwXKu2PSPhccSKaahQLVNBr28MaOjDP9epk4wOG4B6S52wQVtl/XumR6bAgZ2lOLYeH7SZ9mdFwsUyF9rPeERanamvRXGczTr8nla/8hMJRfL+SHVrbvzGa0iKi6+8OjObkkaW5gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxJ+iBlLhlEzYIAA--.5625S3;
-	Tue, 30 Jan 2024 14:17:37 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxnhN7lLhlYXQnAA--.34034S8;
-	Tue, 30 Jan 2024 14:17:36 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 6/8] objtool: Check local label in read_unwind_hints()
-Date: Tue, 30 Jan 2024 14:17:28 +0800
-Message-ID: <20240130061730.21118-7-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240130061730.21118-1-yangtiezhu@loongson.cn>
-References: <20240130061730.21118-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1706595726; c=relaxed/simple;
+	bh=r5Ux2iyL+AtcuOKpR9DhMnN0TKsSJlW0pyPduii04zE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=oE5nSLLrZevWF2Hal1J+9V4HyTIvK8XkXlX33DhOPzZurCbg/1wURfMUKmtuUddCKkHAxDsPkDyDoDFVtTeayvD3pnfqNX346ml/dsdfkrDA8r9rFOHHSdrQI+6w4zXhMn8nSMTqc6Gizv6XUQxpUKpXcRtriw+42LmX+kgQdMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36389e43e3dso6598135ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 22:22:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706595724; x=1707200524;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QA6ideeye3nTcQmEXGXWv37hgB8xmaoLG/vHEi175ho=;
+        b=vs4LBE1rwUg0MyitCKEWMdM0FKN9tbrCA5wuhLKIKd/JxQ820OBK7MLEImo+y4j8wf
+         6L/oNx9YmSB/hu366OFPRf7z9wS//l9wz/yb6Cg7ojx87g5QIDQsn4XFrlYKLpdjIMEq
+         VP86chNGANKQvjEK/ux1v8KWdehcmeLrSRUnhu7KNluJHzkd0QUA72lk+b0ZX5HgFgx4
+         xi+lT7SiRFK1tKUZtn8QbVIUZOgUW6WE/69eaVkPjIMhhExJeicfYapywFexYbBzNkVm
+         Qd4m5j1ntMrAvESHXlDQh+n0PfoqvFwXvQd8WXz4+ePGrvfJmCSQrzgfXPQPGWRZYGAy
+         KZUg==
+X-Gm-Message-State: AOJu0YydtKTyyYFV0jNAoMjJbVxMmGsILSDAwBkpAQN9zSjtnWSN76wH
+	HhvxepgjEoFaZeiVf/iwyBXXFzcmXzNb6AyJo5XDmM2FDEb/ai/SJPep+X2MRJsr25Ca/kn9V3X
+	JfpEUzn9xweXX6Hr4PKLTuqNd/RdEyqRKAwVB3u6283e0lG7AfH78adY=
+X-Google-Smtp-Source: AGHT+IHvi14tnxAPWo4QWV/I/g+7W4U0Ez/MIMUfbRrlXheZgCmN45tlrld5ljTOiRk3OOrsPbvbcRirPawZgmaQpAMC+RUcCaIn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxnhN7lLhlYXQnAA--.34034S8
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tFW3ArWxurWUtw4UtFyxZwc_yoW8Kry5pF
-	W3G3y3Wr40qry7Zw17ta48W3sxKws7CF17trZrGrWrAry2qw15K3ZIyr1ayFyqgr4Y9w4U
-	XF9Yga4j9a1qywcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8EeHDUUUUU==
+X-Received: by 2002:a05:6e02:1c02:b0:363:91a3:4b60 with SMTP id
+ l2-20020a056e021c0200b0036391a34b60mr5312ilh.4.1706595724354; Mon, 29 Jan
+ 2024 22:22:04 -0800 (PST)
+Date: Mon, 29 Jan 2024 22:22:04 -0800
+In-Reply-To: <00000000000044b47605ee8544b2@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ecec7e061023c790@google.com>
+Subject: Re: [syzbot] [ext4?] kernel BUG in __ext4_journal_stop
+From: syzbot <syzbot+bdab24d5bf96d57c50b0@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, axboe@kernel.dk, brauner@kernel.org, 
+	jack@suse.cz, joneslee@google.com, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nogikh@google.com, syzkaller-android-bugs@googlegroups.com, 
+	syzkaller-bugs@googlegroups.com, tudor.ambarus@linaro.org, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-When update the latest upstream gcc and binutils, it generates some
-objtool warnings on LoongArch, like this:
+syzbot suspects this issue was fixed by commit:
 
-  arch/loongarch/kernel/entry.o: warning: objtool: ret_from_fork+0x0: unreachable instruction
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-We can see that the reloc sym name is local label instead of section
-in relocation section '.rela.discard.unwind_hints', in this case, the
-reloc sym type is STT_NOTYPE instead of STT_SECTION. Let us check it
-to not return -1, then use reloc->sym->offset instead of reloc addend
-which is 0 to find the corresponding instruction.
+    fs: Block writes to mounted block devices
 
-Here are some detailed info:
-[fedora@linux 6.8.test]$ gcc --version
-gcc (GCC) 14.0.1 20240129 (experimental)
-[fedora@linux 6.8.test]$ as --version
-GNU assembler (GNU Binutils) 2.42.50.20240129
-[fedora@linux 6.8.test]$ readelf -r arch/loongarch/kernel/entry.o | grep -A 3 "rela.discard.unwind_hints"
-Relocation section '.rela.discard.unwind_hints' at offset 0x3a8 contains 7 entries:
-  Offset          Info           Type           Sym. Value    Sym. Name + Addend
-000000000000  000a00000063 R_LARCH_32_PCREL  0000000000000000 .Lhere_1 + 0
-00000000000c  000b00000063 R_LARCH_32_PCREL  00000000000000a8 .Lhere_50 + 0
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d23c97e80000
+start commit:   eeac8ede1755 Linux 6.3-rc2
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dbab9019ad6fc418
+dashboard link: https://syzkaller.appspot.com/bug?extid=bdab24d5bf96d57c50b0
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e5a788c80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141e64e2c80000
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/objtool/check.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+If the result looks correct, please mark the issue as fixed by replying with:
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index d0e82c729dd9..1009d144f756 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2227,6 +2227,7 @@ static int read_unwind_hints(struct objtool_file *file)
- 	struct unwind_hint *hint;
- 	struct instruction *insn;
- 	struct reloc *reloc;
-+	unsigned long offset;
- 	int i;
- 
- 	sec = find_section_by_name(file->elf, ".discard.unwind_hints");
-@@ -2254,7 +2255,16 @@ static int read_unwind_hints(struct objtool_file *file)
- 			return -1;
- 		}
- 
--		insn = find_insn(file, reloc->sym->sec, reloc_addend(reloc));
-+		if (reloc->sym->type == STT_SECTION) {
-+			offset = reloc_addend(reloc);
-+		} else if (reloc->sym->local_label) {
-+			offset = reloc->sym->offset;
-+		} else {
-+			WARN("unexpected relocation symbol type in %s", sec->rsec->name);
-+			return -1;
-+		}
-+
-+		insn = find_insn(file, reloc->sym->sec, offset);
- 		if (!insn) {
- 			WARN("can't find insn for unwind_hints[%d]", i);
- 			return -1;
--- 
-2.42.0
+#syz fix: fs: Block writes to mounted block devices
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
