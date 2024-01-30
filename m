@@ -1,136 +1,132 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B577128382
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 16:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A6E12BEAA
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 16:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706632203; cv=none; b=IZyKRwpZhJdn4PoZv3GFUwTimLVfVMcDbG/sc2De9t96Op0SPPXQKQsR0iDIljlSeLrx9Z3ANESFYCaB6vnAOmGo93BlXeQ+hvs5DRb0J7dCKaqP0WF5Is4Il/Dv5i8EmrrLXIgaTlWYnfI+kBvJrfBPFQrftjdyF/nsIin9UT4=
+	t=1706632295; cv=none; b=iZKqyFpeLGuPFnBZU2hI6UIETcIzrfECtD7j4bxnSmxx2X6kbxXnYH2vAM/Q02Oggg9uR+NBE2KN3LxqOB7n2EQCQ0VZm4MiH3HWjHBtAoC4OSJUV/pn6ZE+pjQ1SNbkuLn3aDS97N/1+bBZ3GaYqauq8NX5aLMozfOUYdUUkyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706632203; c=relaxed/simple;
-	bh=HGUrBCzw44fCvpMm/PJWRDlmh/Lag6HIgqKwNA9HrWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQK766U3kRZ5Mxx2nCvA/inPnulg/nJdPhTq2PeQG+lmJORlCayYLqV37RrStBw1XcMxPFIPLFxdRKCTHfL9kKjW2Dnn2tYxELfr06kjxdtXGK1n4N9oMOydKj6MG4DOzzDXZS/rAPVNaB/vEiME936M3oHroQ4UIG4SlkQ4uKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oee9L0w6; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1706632295; c=relaxed/simple;
+	bh=NT2fSX5twVnBGuy7jNRiCkg8HZiJXCO7HcED6If46MU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=faDa4+QUeWcQ2iBoBNfMHyq8sc15/nSd/zNNFz1R6dOxCZbSwyPnH+022Ousr9uJG3cYIy661/xiz3fztrnupd4OVWK+sdZb5xt4zx4kNBDqjt3ss9uvvz5FimcKZ4oNWmf5jPBYNxuLa8lZ4RKyUBtvhQ/tLkvqxwB+6NXuL5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y90bWpMM; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oee9L0w6"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-42a4516ec46so34730321cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:30:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y90bWpMM"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7bf7e37dc60so165759939f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:31:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1706632200; x=1707237000; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Zcz0g1eKRHdqCkK9hAt9D66pTC6Kq1KClFa9gGBswE=;
-        b=oee9L0w6kTxb+TEBX1EaGVSqTUgLmvaM7W5MhZngj0CBv4NyMFZAXvoOS8DGUETRXE
-         1o2c+xEhFJN1AvQMGo9HUO4Byl6rVkehTmJRiXUqO390VwHVBNDz039b7sv0uPTQyalp
-         lQjpeiO9/z62r8x3lmOwKL0H0BqnQKSHaOY8ARY6aysr7MJej13TcgQS9KdysPF+UJC7
-         FYN5uMfxVC01Pmk5YmXR6tVRcZ/uz4xqpR3BTiwo6aHG3TCASM10C1EW/wQrX2WCtMMB
-         cC3gJ2A22niq56IWArJbmV4Lh9eLKMVOQ35yopowSIFO+ZdwmF2Oushel/sfRbo/0pxG
-         Venw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706632200; x=1707237000;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1706632293; x=1707237093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Zcz0g1eKRHdqCkK9hAt9D66pTC6Kq1KClFa9gGBswE=;
-        b=f2ocL8wXVQU8KLO3wJWFNCZJOafcrbDpzka1abMWu8PjEACIxjgad2ecX6DCkIGBl/
-         IJxy/kDoxhzRj1g79Rhx2IJYEGA050qTaH/prdbQJn2qSl8Y0K8RCsvvpljTta1k27jz
-         DH3tnHqUG4ciX7UTGSTJydEVerkH7mL29t7uOnXs8f1zA0OTR96IekHEG6NwrXoThQt7
-         zI0yVr41mFG/DiKcKQsgt28qqe1ngT/u4NuiUnh3D/AiCDh04EaMWLAXNL2PicPqaTiJ
-         JirbY/May5f2wkW5s8cQ+FJafLfp+sLv3LJFUsbqn11JcfCAlENZqCFU/XQ/9RwH68IN
-         gvQw==
-X-Gm-Message-State: AOJu0Yx216k/BRQZbheztMnasKHfLolWcjRIVzg7wjHVzUMEg41nqM/N
-	TOo7guRKijEmYWepdEs67Ujs76qweT8wWNs41yvug0vj5hMQxwlb1fPaGlldXeg=
-X-Google-Smtp-Source: AGHT+IHJ22nh+Fe0GzCkeJR6CbigdX/oZbOW5Ogqo3y2IKf/Ji393IFIDhCodz601kwxWiAWl4jxrQ==
-X-Received: by 2002:a05:622a:1454:b0:42a:ad6b:cf92 with SMTP id v20-20020a05622a145400b0042aad6bcf92mr255081qtx.10.1706632200418;
-        Tue, 30 Jan 2024 08:30:00 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id fb21-20020a05622a481500b0042796ee2fb4sm4144162qtb.30.2024.01.30.08.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 08:29:59 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rUqzm-00AJVf-T4;
-	Tue, 30 Jan 2024 12:29:58 -0400
-Date: Tue, 30 Jan 2024 12:29:58 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"will@kernel.org" <will@kernel.org>,
-	"lukas@wunner.de" <lukas@wunner.de>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
- device isn't present
-Message-ID: <20240130162958.GF50608@ziepe.ca>
-References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
- <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
- <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
- <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
- <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
+        bh=iXEo6tViShoTo2n/pOYuxZCls+OeB092lEk8RbUTs/Y=;
+        b=Y90bWpMM+6Ox7F0ZjGWoAJh2TXtwhQzXArp3NhrmubA+5B5azAsOURuKNt2wb44dAw
+         yoRl7reqrOrsycTrSjquPrppgX7aq0RU/OwuSQ20SCD0e79jHGWpa+3UOpfxbfeCnrUY
+         Vj7AUR/dgGUsvi4z0F5jt2/suOxTpqTolkwkyWqmrv6Ra/Qw7Nh6N8ZoaUpiTzju7okP
+         WHkqNt5HmmT3u0V7X+2gEyZP571/BxaDG/rna2p3AKjjyXcPbcdfH7uBUA5ZKcO0r31E
+         YdeG/TvQf/NazEyuwlMYBmhdjcOKX8KyFK+Q34jWM31vj654AX2yQVvdx85tedO/TWxZ
+         QRwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706632293; x=1707237093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iXEo6tViShoTo2n/pOYuxZCls+OeB092lEk8RbUTs/Y=;
+        b=HNkgqLLUwIRfl0uKGhBo91HDyNKC4a4KPl+yU2PoiJSzFQldpglaBeqWWwT2V7XmBO
+         NtD1BOoljzbJpjwniJAmTBVv0iohZZ0h8+cJAOaqeKlgaPjsAzvieyrf/UI6nrjb0W4E
+         BIBIyq8TedczUy5n4g56BXVq6pbnlbji2hnGE+ESN0iNBmBcqtQlVJ3a8GEdRU/H6AOs
+         nu0FBWSGL0jn4RKDrvNzH2sv3YMOVrMsEy2szgMZ2kKrZ4q0Q9HJPBk/JU/ml4SdaMav
+         LW+HCtnNtH9qah9bJAWoDY7hzhoMvUPKqX45JShU6rGMA/MfVCWIAS5sHWQuT8ZbQYw1
+         2dDA==
+X-Gm-Message-State: AOJu0YzWHL1kyOYP9UT4Dg7Sg7u2fQGs9czc8VgJ71uAaZNmAQ8OQ5U0
+	RV7Fg5B6vVp/F3AuK+6HpBF0+9vwhLyhldDGDg05338C5704MepmLrjK50Kfx27A9lrVkFajrPz
+	BbjkROGhBl7jEaWLCmj2f9s5zozs=
+X-Google-Smtp-Source: AGHT+IEqcoKNDg6fRo9g1TsD62TKjw9WEVcse47t+lCBCaCilTDcdbErOzup8HTWsyvOdH1T2bK/rEjJSC5A1LmFPRA=
+X-Received: by 2002:a05:6602:35a:b0:7bf:8a64:25a6 with SMTP id
+ w26-20020a056602035a00b007bf8a6425a6mr9756431iou.1.1706632292955; Tue, 30 Jan
+ 2024 08:31:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
+References: <20240130014208.565554-1-hannes@cmpxchg.org> <20240130014208.565554-6-hannes@cmpxchg.org>
+ <Zbiqmi0KMo0zTJ-p@google.com>
+In-Reply-To: <Zbiqmi0KMo0zTJ-p@google.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 30 Jan 2024 08:31:22 -0800
+Message-ID: <CAKEwX=NjgXOt1f1nb_T=2ZCSZMeCbTW7g5s9VejA_HzKxM-Pmw@mail.gmail.com>
+Subject: Re: [PATCH 05/20] mm: zswap: clean up zswap_entry_put()
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 30, 2024 at 04:15:33PM +0800, Ethan Zhao wrote:
-> Some tricky situations:
-> 
-> 1. The ATS invalidation request is issued from driver driver, while it is
-> in handling, device is removed. this momment, the device instance still
-> exists in the bus list. yes, if searching it by BDF, could get it.
-> 
-> 2. The ATS invalidation request is issued from iommu_bus_notifier()
-> for surprise removal reason, as shown in above calltrace, device was
-> already removed from bus list. if searching it by BDF, return NULL.
-> 
-> 3. The ATS invlidation request is issued from iommu_bus_notifier()
-> for safe removal, when is in handling, device is removed or link
-> is down. also as #2, device was already removed from bus list.
-> if searching it by BDF. got NULL.
-> ...
-> 
-> so, searching device by BDF, only works for the ATS invalidation
-> request is from device driver.
+On Mon, Jan 29, 2024 at 11:51=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com=
+> wrote:
+>
+> On Mon, Jan 29, 2024 at 08:36:41PM -0500, Johannes Weiner wrote:
+> > Remove stale comment and unnecessary local variable.
+> >
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > ---
+> >  mm/zswap.c | 10 +++-------
+> >  1 file changed, 3 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/mm/zswap.c b/mm/zswap.c
+> > index 0c6adaf2fdb6..7a7e8da2b4f8 100644
+> > --- a/mm/zswap.c
+> > +++ b/mm/zswap.c
+> > @@ -546,15 +546,11 @@ static void zswap_entry_get(struct zswap_entry *e=
+ntry)
+> >       entry->refcount++;
+> >  }
+> >
+> > -/* caller must hold the tree lock
+> > -* remove from the tree and free it, if nobody reference the entry
+> > -*/
+> > +/* caller must hold the tree lock */
+>
+> We should replace all those "caller must hold the tree lock" comments
+> with lockdep_assert_held() or assert_spin_locked() or something.
+>
+> I can send follow up patches on top if you don't want to resend this
+> series.
 
-In the good path, where the hot removal is expected and this is about
-coordinating, the IOMMU driver should do an orderly shutdown of the
-ATS mechanism:
+Agree. There's also this:
 
- 1 Write to PCI config space to disable the ATS
- 2 Make the IOMMU respond to ATS requests with UR and set it to BLOCKED
- 3 Issue a flush of the ATC
- 4 Wait for all outstanding ATC flushes to complete
+/* should be called under RCU */
+#ifdef CONFIG_MEMCG
+static inline struct mem_cgroup *mem_cgroup_from_entry(struct
+zswap_entry *entry)
+{
+return entry->objcg ? obj_cgroup_memcg(entry->objcg) : NULL;
+}
 
-If it is a bad/surprise path where the device is already gone then:
+which you pointed out in the per-cgroup zswap LRU review :)
 
- 1 should automatically not do anything, possibly timing out
- 2 must succeed
- 3 should time out
- 4 should "complete" in that the ATC flushes are all timed out
 
-IMHO all you need to do is not crash/lockup while processing the ATC
-timeouts. If this is a surprise path then the ATC timeout might
-already happened before the iommu driver remove notifier event happens.
+>
+> >  static void zswap_entry_put(struct zswap_entry *entry)
+> >  {
+> > -     int refcount =3D --entry->refcount;
+> > -
+> > -     WARN_ON_ONCE(refcount < 0);
+> > -     if (refcount =3D=3D 0) {
+> > +     WARN_ON_ONCE(!entry->refcount);
+> > +     if (--entry->refcount =3D=3D 0) {
+> >               WARN_ON_ONCE(!RB_EMPTY_NODE(&entry->rbnode));
+> >               zswap_entry_free(entry);
+> >       }
+> > --
+> > 2.43.0
+> >
 
-If the driver needs to translate from the IOMMU device table index
-into a struct device it is probably best to do that inside the driver.
-
-eg ARM maintains a rbtree in the iommu dev data. (see
-arm_smmu_insert_master)
-
-Jason
+Reviewed-by: Nhat Pham <nphamcs@gmail.com>
