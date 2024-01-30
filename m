@@ -1,180 +1,161 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667AD54668
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D37355E64
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706601573; cv=none; b=cV+Lthy7JPjYbrAO7xOVNlqbzZHPLEWrofEzGZ7IvZsS4dcZBs4VZVvKMWj5KidHJRzqPcOLT6gw+SeBoLn6P+00WWknd8eJUNrb051tpbI+ck1fz8Wm7QkCv7k7j4iSIYyRJhWnq6Bh/1EPlubKAlKeF03msCr5UptwoEptpQY=
+	t=1706601607; cv=none; b=qQ4b3gkaK7pYoE8++G+J8ufzwmzTmYmWFdMaf6N8WIuaoFwdQy8shEO7+Q0g3zkFXR3vz+lC17NQsyk1QIimBKfsXNWXnm3Df47+IkbaNI5AaPbPIGYwiBR6bBPZLCc47kjYocSuzBY8LLD9sZ/Rlei3QyKdOWEJ3KMUrFFAWRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706601573; c=relaxed/simple;
-	bh=pb/LnA0yM9eURb/c2PSjDZQPoCZrE6NsMFcH1GbD9Bo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=PVFI+LyMcpr8s8B00J8jw1BbRpIQnKNWk4y0LmU3sr2hTk2x/4dsz+LtuwjHJqG6n+8dz45MxpJMYAV7bfGLijmTRYJdpnmNRgfPyJi2/v7xIoAxuLu2qYTvc789JIBNCcF8j3rBHFqzzqkSfObXyqOD2inCnO8k7No7yHAUc18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AE8VCBBn; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1706601607; c=relaxed/simple;
+	bh=prwXKEAfpMsarqn1FR+YN2/OFbqwi8HRsfCkWF3MtDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O/NrHu4pk5DEqVx8g6KJsnNgMdKCQ33q5VhWObq4g3zzdVolI478C87cXXO6+D1L8b8aSkfzC7vBTTVHuo87iKECxyJZdJ/gfD4UyAsEDWn13hYGbY9jvgGwoncJa83kwKL4QVzfhxfIVBaB7rlKIQffIAALppYEZDVnolQhCyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J/6nv7pp; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AE8VCBBn"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240130075225epoutp01f85fd1129120053e7d80948525a5efd0~vELMRVJrt1107511075epoutp01W
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:52:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240130075225epoutp01f85fd1129120053e7d80948525a5efd0~vELMRVJrt1107511075epoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1706601145;
-	bh=4GusHRVSl/jPvRw8MbBdoLjJ+enCGbBslEdWi0taXsE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AE8VCBBnaISokPMzZcplUb+LVI/SgK4DiA1ISBZ1FQffyeWaCWoyhuXxdSgDy6KaO
-	 N3J7F4emTp5i9QDkE9HbQPCvlCRuNyczwf33ffiLbaWaa5etKDVnzlh6xSQlEBujZr
-	 iKn94s5o+NhohiHeCr3sj6M1MILx+LD2OVByqJTo=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240130075224epcas5p1a99b7f76986370fb610abf88792969c8~vELL12u3n1098810988epcas5p12;
-	Tue, 30 Jan 2024 07:52:24 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4TPHSk5XDGz4x9Q3; Tue, 30 Jan
-	2024 07:52:22 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	03.6F.10009.6BAA8B56; Tue, 30 Jan 2024 16:52:22 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240130055554epcas5p2ad9d28f1e6c256db540ce985c4351461~vCld8z7hm2990729907epcas5p24;
-	Tue, 30 Jan 2024 05:55:54 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240130055554epsmtrp28e51d871603fc187bd3212b2bbf72b87~vCld75MH_2750927509epsmtrp2j;
-	Tue, 30 Jan 2024 05:55:54 +0000 (GMT)
-X-AuditID: b6c32a4a-261fd70000002719-27-65b8aab6cfd0
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6B.3B.18939.A6F88B56; Tue, 30 Jan 2024 14:55:54 +0900 (KST)
-Received: from AHRE124.. (unknown [109.105.118.124]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240130055553epsmtip268f856ca6e9327b68145bb173a734122~vClcpXhPU3025130251epsmtip21;
-	Tue, 30 Jan 2024 05:55:52 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: asml.silence@gmail.com
-Cc: axboe@kernel.dk, linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-	kun.dou@samsung.com, peiwei.li@samsung.com, joshi.k@samsung.com,
-	kundan.kumar@samsung.com, wenwen.chen@samsung.com, ruyi.zhang@samsung.com,
-	xiaobing.li@samsung.com
-Subject: Re: Re: [PATCH v7] io_uring: Statistics of the true utilization of
- sq threads.
-Date: Tue, 30 Jan 2024 13:47:42 +0800
-Message-Id: <20240130054742.417610-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <3044a700-252c-4e87-a0cf-a1fec6e83f8f@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J/6nv7pp"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-51025cafb51so5159170e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:00:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706601603; x=1707206403; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+HkH4XQMR2Fb/ctwAmYb0jzkl/3spUTrWnMDkagnUdU=;
+        b=J/6nv7pp4ZBD1b5+O18qrfeMblq15x+q+RyRUMbe70SOL487qWxogs6HSDS0B8cwMW
+         lWzbaF+o6sdRkVAuJc/acUQ1aUi0InGp6BLmmWSNgHsM/4ES1GN/xCgksSs3+ppHE2UG
+         Q3+8s+K+4KP32pd6vjjuVHlkaQ8RAS7r0aEZfUOm9D3Nkyeez/jtSo7zgN8nEldQrjUr
+         tB3UU8KnrSo2av/CXsSboa4kkrZiGvBlJtG0eIoN4CY9bnCE0v+kbRhgfCrbhwZb2Klf
+         RBG0EZTGEtpaIW474EW2VEGbhlj07JiplSDBZUcpzDGi+6y/HRf238qe2rB5aSd68jNx
+         Dl5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706601603; x=1707206403;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+HkH4XQMR2Fb/ctwAmYb0jzkl/3spUTrWnMDkagnUdU=;
+        b=QqIYcOxsJaVn+XcFH2wmxMpElzOMXm42DUYEq4oAp9lHvkaQIsmzL+HmS2vEWj/rsb
+         IR5NRPJzHHn0Qcf5VU9Msm4zhqEsrcKnBaMmtlqu/fJULkwQqzPkyePiY7wJZbv+n7kC
+         B4NIZhKRELec2Fw9YflfHp/XdipvC0vjBjzJWmK2say8GoywrZWbu74kJN1qNzm0tioj
+         F1UcdmJonJAeFHQVz4hu/6TH+GkWgK9cWNa0rwuHvFDRKpf0etx8UcfQpnXfWv4QJKZ4
+         PaJUyiZbOK0QGn7CRnPzREpFq3dkiWulg2MRGgExYMNiPy5gELyEc+Vih4/uQQ0AlXKQ
+         sQQQ==
+X-Gm-Message-State: AOJu0Yy26qxjP1NA0jRR5qD4TJecK6bQRYjj7tZ9HWUfe+0qNkp9fhJc
+	TBUNd9m2S3ctNXT0YFtDTuv8NgnFOBl1l/O5ymJE4E2QKktNNqxMoVjyFpPKnJU=
+X-Google-Smtp-Source: AGHT+IFuPg9GW35NCszZH+DhM+lLv9BCNrTEafYzWSWwdeVr6ZfYv4zy+S40oJYAS+lHGsoDq5uojQ==
+X-Received: by 2002:a05:6512:1082:b0:50e:75ee:ec4c with SMTP id j2-20020a056512108200b0050e75eeec4cmr6389637lfg.11.1706601603441;
+        Tue, 30 Jan 2024 00:00:03 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id s15-20020a170906354f00b00a3186c2c254sm4797333eja.213.2024.01.30.00.00.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 00:00:02 -0800 (PST)
+Message-ID: <37dae8b0-4e23-4325-810c-e7f555894964@linaro.org>
+Date: Tue, 30 Jan 2024 09:00:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmlu62VTtSDXp3aFnMWbWN0WL13X42
-	i3et51gsjv5/y2bxq/suo8XWL19ZLS7vmsNm8Wwvp8WXw9/ZLc5O+MBqMXXLDiaLjpbLjA48
-	Hjtn3WX3uHy21KNvyypGj8+b5AJYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
-	zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBTo
-	FSfmFpfmpevlpZZYGRoYGJkCFSZkZ7y+/Ja1oEm44ufumewNjM38XYwcHBICJhK7ujO6GDk5
-	hAR2M0qs++jYxcgFZH9ilDjYtp4Jznn6uI0FpAqk4eeLq4wQiZ2MEpNeHGaBcF4ySpzduwes
-	ik1AW+L6ui5WkBUiAlISv+9ygNQwC3xjlHi/fg0zSI2wQKTEgo8z2EBsFgFViedfVoL18grY
-	Ssw6eRVqm7zE/oNnmUHmcALFF98pgCgRlDg58wlYCTNQSfPW2cwg8yUE/rJLzL71lhmi10Wi
-	c+ldVghbWOLV8S3sELaUxOd3e9kg7GKJIz3fWSGaGxglpt++ClVkLfHvCsgzHEAbNCXW79KH
-	CMtKTD21jgliMZ9E7+8nTBBxXokd82BsVYnVlx5C3S8t8brhN1TcQ+Luq6dMkLCewCjxtTFz
-	AqPCLCT/zELyzyyEzQsYmVcxSqYWFOempxabFhjlpZbD4zg5P3cTIzipanntYHz44IPeIUYm
-	DsZDjBIczEoivD81t6YK8aYkVlalFuXHF5XmpBYfYjQFhvdEZinR5HxgWs8riTc0sTQwMTMz
-	M7E0NjNUEud93To3RUggPbEkNTs1tSC1CKaPiYNTqoHJav1yBwVp06ONNmsCfpRbrtnldcrU
-	o3+2pXHg87MTrllYBCZdcKz2TNaY1jMtc1eTnVKN/ZnZpwO4si5oix3ePauLWXPWz/Ifbo4X
-	z6XzFtlsMpms/XLeYu0VNvlOTa/7W6omP6nr7Sjw4CoXXukXmZsWe9Xap9tXcav+vV9H/7x9
-	9Mbx9aom1+meNoLebfePT9Aw59tbuWOd595kgXvvX1e9af/3O5LvXdClKbdce3W9DCa2zyr9
-	m7ZF9o2WYPwyh5TC+YEzKpuWHLs2u4dhcxr75v2PVrk1s8u2ZTzQXXy6YY/u+4Lft4zj54Wq
-	3P2+5kt858WWB5GH4455n2RpniDF3S7b4jbvqNSa18pKLMUZiYZazEXFiQAUqbNvMwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsWy7bCSvG5W/45Ug0m35S3mrNrGaLH6bj+b
-	xbvWcywWR/+/ZbP41X2X0WLrl6+sFpd3zWGzeLaX0+LL4e/sFmcnfGC1mLplB5NFR8tlRgce
-	j52z7rJ7XD5b6tG3ZRWjx+dNcgEsUVw2Kak5mWWpRfp2CVwZry+/ZS1oEq74uXsmewNjM38X
-	IyeHhICJxM8XVxm7GLk4hAS2M0pcunmUpYuRAyghLfHnTzlEjbDEyn/P2SFqnjNK/Ho3hRkk
-	wSagLXF9XRcrSL2IgJTE77scIDXMAk1MEn2PGhlBaoQFwiVWHvzBBGKzCKhKPP+ykgXE5hWw
-	lZh18ioLxAJ5if0HzzKDzOEEii++UwASFhKwkXizbiJUuaDEyZlPwGxmoPLmrbOZJzAKzEKS
-	moUktYCRaRWjaGpBcW56bnKBoV5xYm5xaV66XnJ+7iZGcLhrBe1gXLb+r94hRiYOxkOMEhzM
-	SiK8PzW3pgrxpiRWVqUW5ccXleakFh9ilOZgURLnVc7pTBESSE8sSc1OTS1ILYLJMnFwSjUw
-	CV3tcArVDpt+6rfts9jOCaV/+AREru3b3BeSIvJ8yQzF3vWsUgnxO294cNZx5j+4ls3uWlP6
-	+7LNGtHQP5mfS+UlO2PcY13nX2m6+qaU1eBxtQSHklHTTU0rq4qqr/ddpsm4CvfdjN/ttfdX
-	avjFup7jfJWbS+v2Lfs6Q6Y4Z6bImlj3qcaBOgFbWlq+Zh59quBcbvXld69NGGdB67e28n01
-	lrmO6nHxl7dqHup4vKVwmtZbTVYjA4+qyK2tvy8xNSawaJXM38XEtETPxKtG5piq5jt1vdSs
-	CJ+bBbfmzpY4fI5va8VHwz9KG5yF1Y907tpxxX6TwqNTSd8MnrftmSbHOcVvnfZOVq+MdCWW
-	4oxEQy3mouJEAI9lcAXmAgAA
-X-CMS-MailID: 20240130055554epcas5p2ad9d28f1e6c256db540ce985c4351461
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240130055554epcas5p2ad9d28f1e6c256db540ce985c4351461
-References: <3044a700-252c-4e87-a0cf-a1fec6e83f8f@gmail.com>
-	<CGME20240130055554epcas5p2ad9d28f1e6c256db540ce985c4351461@epcas5p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: display/msm: Document the DPU for
+ X1E80100
+Content-Language: en-US
+To: Abel Vesa <abel.vesa@linaro.org>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240129-x1e80100-display-v1-0-0d9eb8254df0@linaro.org>
+ <20240129-x1e80100-display-v1-2-0d9eb8254df0@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240129-x1e80100-display-v1-2-0d9eb8254df0@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 1/29/24 15:01, Pavel Begunkov wrote:
->On 1/29/24 07:18, Xiaobing Li wrote:
->> On 1/18/24 19:34, Jens Axboe wrote:
->>>> diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
->>>> index 8df37e8c9149..c14c00240443 100644
->>>> --- a/io_uring/sqpoll.h
->>>> +++ b/io_uring/sqpoll.h
->>>> @@ -16,6 +16,7 @@ struct io_sq_data {
->>>>   	pid_t			task_pid;
->>>>   	pid_t			task_tgid;
->>>>   
->>>> +	long long			work_time;
->>>>   	unsigned long		state;
->>>>   	struct completion	exited;
->>>>   };
->>>
->>> Probably just make that an u64.
->>>
->>> As Pavel mentioned, I think we really need to consider if fdinfo is the
->>> appropriate API for this. It's fine if you're running stuff directly and
->>> you're just curious, but it's a very cumbersome API in general as you
->>> need to know the pid of the task holding the ring, the fd of the ring,
->>> and then you can get it as a textual description. If this is something
->>> that is deemed useful, would it not make more sense to make it
->>> programatically available in addition, or even exclusively?
->> 
->> Hi, Jens and Pavel
->> sorry for the late reply.
->> 
->> I've tried some other methods, but overall, I haven't found a more suitable
->> method than fdinfo.
->
->I wouldn't mind if it's fdinfo only for now, that can be changed later
->if needed. I'm more concerned that reading fdinfo and then parsing it
->is incompatible with the word performance, which you mentioned in the
->context of using 1 vs 2 syscalls to get the stats.
->
->That can be left to be resolved later, however. Let's just be clear
->in docs that stats could be 0, which means the feature is not
->working/disabled.
->
->Another question I raised in my reply (v6 thread), why it's using
->ktime_get(), which same as jiffies but more precise, instead of a
->task time?
+On 29/01/2024 14:18, Abel Vesa wrote:
+> Document the DPU for Qualcomm X1E80100 platform in the SM8650 schema, as
+> they are similar.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
+> index a01d15a03317..f84fa6d5e6a2 100644
+> --- a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
+> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
+> @@ -13,7 +13,10 @@ $ref: /schemas/display/msm/dpu-common.yaml#
+>  
+>  properties:
+>    compatible:
+> -    const: qcom,sm8650-dpu
+> +    items:
 
-Sorry, I forgot to reply to you.
-I was thinking wrong. you are right,  we can use "getrusage" to statistics 
-the work_time of sqpoll in the ring.
+Drop items, it's just "enum :"
 
->
->
->> If you think it is troublesome to obtain the PID,  then I can provide
->
->I missed the context, where do we need to know PIDs?
+> +      - enum:
+> +          - qcom,sm8650-dpu
+> +          - qcom,x1e80100-dpu
 
-Since obtaining the fdinfo content of sqpoll requires finding the corresponding 
-PID first, I guess Jens thinks it is troublesome to manually obtain the PID of 
-each sqpoll thread when there are many sqpoll threads.
-Therefore, I want to write a script that can automatically output all sqpoll
- statistics.
- 
---
-Xiaobing Li
+
+
+Best regards,
+Krzysztof
+
