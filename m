@@ -1,164 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F7938DD3
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688616BB4E
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706621926; cv=none; b=R/DYA4um+XzyiiNSIxJGBRwOreAa/yE0qrArUpTNz+zY4K//ZZTOAOHlbkrUcuTfFBE3zqIyjWwFxCI2SAOZEb+d2trRmW8DPDAzZ+Mn8k6qZDyucaKZR4jzyaKYjtfxbDHEPS0u2+Dbna8wXyjg42S5IdL3Tv15jQ1qm+CCRg4=
+	t=1706622027; cv=none; b=VPFI+5m6ydq2sb4E+9BQC1a+Gpb1/X6bdBuKozivLTgTDto6lYo2MU+zgvXPpuo27upmh7gEEJoe4Zbcv87P5X6Qz2ZygsQsuqfolafvU8oPGZdlMEQM2VuvLWK2T+C/u0oxXvd6qChLa3webGQOQeyAoAzNY6ceZ5c/kr1ldFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706621926; c=relaxed/simple;
-	bh=xay3PI/Hwj0fNnXBZKE/+lBBhM3wX3Wp31e3E0sjX4A=;
+	s=arc-20240116; t=1706622027; c=relaxed/simple;
+	bh=LBb7sT5Nl3jU1/yQicrNZLPhGLRYw1QDuFbrZiy36WM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hDM383fSYIYgdWerhPh2UlnERK5ox9uSEwAq6LSj5ObcCRtyEIFtwmSHgTUPaNwlAQ7I0nExXAtVTJE3kfqx/127yXCZDGfmpEFT4dqcA6Nmga/BS68TikwcLyjwI4Zm3ufAJ/nxAdZN+FEWDu1yInQMcA7ocaK8umhtRTg6ezQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsj9h8iZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ij7hRX0vNftpjvR2pvkH1y3nW+CWPF6Akk5+L8e8gkauSsewvHrrzag8d90BBdBEYRu9ipS36p4mADlT+dwTEP6NbYfiUlKU/tU0vXg4yZBJX0cjRD70X9TAbcvZCbu7fOpQ1WjPm5njN380RNUPP6VEQiQlPuNniWwSoNVtgVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hETJ1YYl; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsj9h8iZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3111C433C7;
-	Tue, 30 Jan 2024 13:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706621925;
-	bh=xay3PI/Hwj0fNnXBZKE/+lBBhM3wX3Wp31e3E0sjX4A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tsj9h8iZY2aMJC53CXOKLFz4LsJq8oqWRAzzEC9+cXF9Xa8WkvaoGPhVxmuq9pzj/
-	 7NcOiH14E7UmFWhgy/q292BEONRVoNwEDs9zTNO2PtpMOIMW2yWdi0BiQxnKDGpf4B
-	 KB60EB9a1dXdw9GA9SkEfIBPHzy0LjBojp50r6D0Jvzln7hmuSrbZ0F444RTnYWrOQ
-	 5+kHe28ToY98XUgNITCAeoog14Dp8FA/7AX1WYuj5ANgqVB6WFFKULJLvTi1Bele5j
-	 SnqIu6dXFD3QcfcDVZepw+rQ9YddMAZE9wVoY6HkKqtHpFtttTpL31BXS3oZFO2V15
-	 UByrHn9TCNV3g==
-Date: Tue, 30 Jan 2024 21:25:54 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Matteo Croce <mcroce@microsoft.com>
-Subject: Re: [PATCH 3/3] riscv: optimized memset
-Message-ID: <Zbj44v8QsQPtQ_jD@xhacker>
-References: <20240128111013.2450-1-jszhang@kernel.org>
- <20240128111013.2450-4-jszhang@kernel.org>
- <b7ae944c-2b7c-4c8d-8623-a8387b8d4e02@ics.forth.gr>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hETJ1YYl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=LBb7
+	sT5Nl3jU1/yQicrNZLPhGLRYw1QDuFbrZiy36WM=; b=hETJ1YYl0GYlJq+/7lHF
+	Nt4qb7RS0gT/ART42YJh1aSAr/bV0lUdYieqVDt8pcgGPyhXOo5ovQ4Nz2tJxAY5
+	I2CKv/6aH1sRa+727UAozj2hR1EIr3/XBukmLP+7ca3wD6SUmkfcnoktPOpqByuk
+	10g4UYgDX1aW86KJZQy0CMFFbqyOSfWENgOf7iQy2uX+IZlFO6blZcJqaiHeSZ0b
+	d3jcvTbnEHwqiMbK3xttbt48veAkv9sV0Y8Osv1e1d2GSXRDNUNQQ3kGiU6CXHMk
+	zcIbIv5q6or9KVCGZY6hpHoN+5Fc+HuXef0kwsGJ4PJg939U+fdelBlf8WAVLW34
+	HA==
+Received: (qmail 2856890 invoked from network); 30 Jan 2024 14:40:20 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Jan 2024 14:40:20 +0100
+X-UD-Smtp-Session: l3s3148p1@wQFJ5ykQGuBehhtJ
+Date: Tue, 30 Jan 2024 14:40:19 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: sh-msiof: avoid integer overflow in constants
+Message-ID: <Zbj8Qyqu8KQ4Rshp@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240130094053.10672-1-wsa+renesas@sang-engineering.com>
+ <CAMuHMdUMeHCCiAkNyJMHTGUSTqewt=AWPUy+beA_kR26vcS8_Q@mail.gmail.com>
+ <Zbjc_p_Pin7TAHw4@ninjato>
+ <CAMuHMdVBXXpv9QfttBETQAeeRQjWRvfVJnrpPNiQj-N1SB9GQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wiSvPfKpqb9oap3e"
 Content-Disposition: inline
-In-Reply-To: <b7ae944c-2b7c-4c8d-8623-a8387b8d4e02@ics.forth.gr>
+In-Reply-To: <CAMuHMdVBXXpv9QfttBETQAeeRQjWRvfVJnrpPNiQj-N1SB9GQw@mail.gmail.com>
 
-On Tue, Jan 30, 2024 at 02:07:37PM +0200, Nick Kossifidis wrote:
-> On 1/28/24 13:10, Jisheng Zhang wrote:
-> > diff --git a/arch/riscv/lib/string.c b/arch/riscv/lib/string.c
-> > index 20677c8067da..022edda68f1c 100644
-> > --- a/arch/riscv/lib/string.c
-> > +++ b/arch/riscv/lib/string.c
-> > @@ -144,3 +144,44 @@ void *memmove(void *dest, const void *src, size_t count) __weak __alias(__memmov
-> >   EXPORT_SYMBOL(memmove);
-> >   void *__pi_memmove(void *dest, const void *src, size_t count) __alias(__memmove);
-> >   void *__pi___memmove(void *dest, const void *src, size_t count) __alias(__memmove);
-> > +
-> > +void *__memset(void *s, int c, size_t count)
-> > +{
-> > +	union types dest = { .as_u8 = s };
-> > +
-> > +	if (count >= MIN_THRESHOLD) {
-> > +		unsigned long cu = (unsigned long)c;
-> > +
-> > +		/* Compose an ulong with 'c' repeated 4/8 times */
-> > +#ifdef CONFIG_ARCH_HAS_FAST_MULTIPLIER
-> > +		cu *= 0x0101010101010101UL;
 
-Here we need to check BITS_PER_LONG, use 0x01010101UL for rv32
+--wiSvPfKpqb9oap3e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +#else
-> > +		cu |= cu << 8;
-> > +		cu |= cu << 16;
-> > +		/* Suppress warning on 32 bit machines */
-> > +		cu |= (cu << 16) << 16;
-> > +#endif
-> 
-> I guess you could check against __SIZEOF_LONG__ here.
 
-Hmm I believe we can remove the | and shift totally, and fall
-back to ARCH_HAS_FAST_MULTIPLIER, see
-https://lore.kernel.org/linux-riscv/20240125145703.913-1-jszhang@kernel.org/
+> > But they don't match, so we can't unify them?
+>=20
+> I stand corrected...
 
-> 
-> > +		if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)) {
-> > +			/*
-> > +			 * Fill the buffer one byte at time until
-> > +			 * the destination is word aligned.
-> > +			 */
-> > +			for (; count && dest.as_uptr & WORD_MASK; count--)
-> > +				*dest.as_u8++ = c;
-> > +		}
-> > +
-> > +		/* Copy using the largest size allowed */
-> > +		for (; count >= BYTES_LONG; count -= BYTES_LONG)
-> > +			*dest.as_ulong++ = cu;
-> > +	}
-> > +
-> > +	/* copy the remainder */
-> > +	while (count--)
-> > +		*dest.as_u8++ = c;
-> > +
-> > +	return s;
-> > +}
-> > +EXPORT_SYMBOL(__memset);
-> 
-> BTW a similar approach could be used for memchr, e.g.:
-> 
-> #if __SIZEOF_LONG__ == 8
-> #define HAS_ZERO(_x) (((_x) - 0x0101010101010101ULL) & ~(_x) &
-> 0x8080808080808080ULL)
-> #else
-> #define HAS_ZERO(_x) (((_x) - 0x01010101UL) & ~(_x) & 0x80808080UL)
-> #endif
-> 
-> void *
-> memchr(const void *src_ptr, int c, size_t len)
-> {
-> 	union const_data src = { .as_bytes = src_ptr };
-> 	unsigned char byte = (unsigned char) c;
-> 	unsigned long mask = (unsigned long) c;
-> 	size_t remaining = len;
-> 
-> 	/* Nothing to do */
-> 	if (!src_ptr || !len)
-> 		return NULL;
-> 
-> 	if (len < 2 * WORD_SIZE)
-> 		goto trailing;
-> 
-> 	mask |= mask << 8;
-> 	mask |= mask << 16;
-> #if __SIZEOF_LONG__ == 8
-> 	mask |= mask << 32;
-> #endif
-> 
-> 	/* Search by byte up to the src's alignment boundary */
-> 	for(; src.as_uptr & WORD_MASK; remaining--, src.as_bytes++) {
-> 		if (*src.as_bytes == byte)
-> 			return (void*) src.as_bytes;
-> 	}
-> 
-> 	/* Search word by word using the mask */
-> 	for(; remaining >= WORD_SIZE; remaining -= WORD_SIZE, src.as_ulong++) {
-> 		unsigned long check = *src.as_ulong ^ mask;
-> 		if(HAS_ZERO(check))
-> 			break;
-> 	}
-> 
->  trailing:
-> 	for(; remaining > 0; remaining--, src.as_bytes++) {
-> 		if (*src.as_bytes == byte)
-> 			return (void*) src.as_bytes;
-> 	}
-> 
-> 	return NULL;
-> }
-> 
-> Regards,
-> Nick
+So, the patch is good as-is?
+
+
+--wiSvPfKpqb9oap3e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmW4/D8ACgkQFA3kzBSg
+KbYoXRAAjh/crtb5kD/iWDZL989vy3GBwPk69nrBJtCiZmrKjtZ8GofcV2xy30+Q
++bNR8ugcnYoDD86cwtZy71W7qSMACteNN5MsNnsYYyLjymy/Z1LG7P3M8nFlhfR3
+3tgCqHzJvbtJPz05qkuEpaZgy65SuuyPl51pCfFSTRyiaC0BSceazFLfrtwd137f
+YVii/5K3GczebEfy4ogZQ3AvAQNvkaJn7vWHHEv2IiYOF1ecDZkJt79KG8HgOkuZ
+B161qoswDEaocmm6gMSx48rdblJV85vj3LQm6pZ3u6+2wpHSuTxGBQrEfd/G0p2k
+8dcdMtqMSTfUcnt6FvttkhRtYaNkcnOf/VjDmDLmawiYgNNCSHwU/mP/bEr4QK4V
+VMDMxk8kTsjVs0s8678fXxWIPFR3mdIus68IVHWmd0Y34vpaGHV/rcT3wBeqz06K
+NZOKVERmoeJSyDjU7bvsbAyA3ykfI5TCqYkzxu+5YtL4bAYh82uk+Xp4q3s9lrnG
+24mFTiO16z1wVBekUcpJghZyGW7Swqlu7HKr0L+c1Y61XB/6u9/0ar0wrgx0iWQ6
+szE7oZ4s+VCjUTM2TXTWpzVTCQl9zhGgFSSVwAyVN7/6hVbgfWtQOXnwBrt5ldIQ
+ufaaUtheHP1V84BeYVy4OB6eXst1b+5Ea4U6ja/6VGLmbRboMDc=
+=cKu5
+-----END PGP SIGNATURE-----
+
+--wiSvPfKpqb9oap3e--
