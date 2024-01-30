@@ -1,455 +1,213 @@
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD6A664D5;
-	Tue, 30 Jan 2024 11:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E07066B4C;
+	Tue, 30 Jan 2024 11:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706612692; cv=none; b=o9c4RzQmjlyOIYAg7Esx1DbcCJYU6zLCZB69kF1l2T3lrXZE2YH5Vf0shzsNQN0NOXJM+DnCn/5N26u96DtBbS2RfWV1mLle/CI0cyS9KMiYL0jLk+AjfCwGHL7EvRvuBLqkhAriUvx9AjZ++dVNdbrEVsEOGpXVt0QoXotpZJk=
+	t=1706612701; cv=none; b=ZXcb+SM8NsXLvJe0WRkLHKlsQ6YcEFryNUR28JmOjo0tFoPozgCMUrxJ52A0SYekPZ9nBrl93zljvUsm2IadbNjCu6Ghfi40bf9DOQ0eGhVMeodBW+MNisa6SYm/f4q6bz1dIzN45OUj+anRpRdAt34WqGK6Sp/24Sl2SJl/Lzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706612692; c=relaxed/simple;
-	bh=xAazWK1TBwRgBwPDjmqMpw58fFQdD/vhCbBzfIdNgnE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pskkLEUE+V1UCbeOMwiiuGFD0d0aAPfxgrD4V+BLAjHqaFy08lRapPtLdbwxwMYZAV03LlJtRj75jgUKzUmiIENyibtLDKEuc0tfkP9BLRfI3M9yIJ6W2rcdOdwE4DomO1hKkWOmIQU4zSVpC6WVRIEXFURvC0vXCed5u4fKLbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.de; spf=pass smtp.mailfrom=kloenk.de; dkim=pass (1024-bit key) header.d=kloenk.de header.i=@kloenk.de header.b=WBygx/4t; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.de
+	s=arc-20240116; t=1706612701; c=relaxed/simple;
+	bh=PdeoMiYgUER3iysKvji/sSX8mFKzGpxS1nsIZk+d188=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dfHVzTKq/eFwrO3w/58It+v/I+2bEf016Va8qwYDg6J94/NI/UR3sAwhONucvjilSFhsIc55KTL75/9BYI/i2IcFkoYyiV6I8cGvCorheWniy0bdFRXuO1gN+iJPHIy72ES8iE4T49TC1yRHUlINSMMhpHwiDMyD5sH+bng677E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=upl+k7v2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bA274UEq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=upl+k7v2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bA274UEq; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.de header.i=@kloenk.de header.b="WBygx/4t"
-From: Finn Behrens <me@kloenk.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.de; s=mail;
-	t=1706612151; bh=xJvrGE3xhE9lJyWcs/KsWV4ng9+Xpu8qmEntGeVtCtY=;
-	h=From:To:Cc:Subject:Date;
-	b=WBygx/4txnwJhHvnKKVa6OueTkZF5GvGMEK8HV51MM3ePQvHF2KMV+017p22Gmo37
-	 47ZPb1m0UUzGpV8rfnmYXqioRHAe3Y64Bd2RWtjrOSzXCF4m17kkXTV6Jfpc5bQfSY
-	 ipg6uAPjwC5yEJo4uoLcTW90J1EKyW1kHENL8c3E=
-To: Thierry Reding <thierry.reding@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-pwm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Finn Behrens <me@kloenk.de>,
-	Heisath <jannis@imserv.org>,
-	Yureka Lilian <yuka@yuka.dev>
-Subject: [PATCH] gpio-mvebu: no hardcoded timer assignment for pwm
-Date: Tue, 30 Jan 2024 11:55:13 +0100
-Message-ID: <20240130105515.30258-1-me@kloenk.de>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="upl+k7v2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bA274UEq";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="upl+k7v2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bA274UEq"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 98AFC1F842;
+	Tue, 30 Jan 2024 11:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706612697; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UKC3VT/yxm8QuquH0mJbFZHi45tefg50JMHGoP/3fP8=;
+	b=upl+k7v2jgC8e/LOcqed3oJ7nMEKZZwBBVVFePzAUZivut0SOR3ayyCUaQEkqeOtEU2wlN
+	EBECpioeOmWyyQ9aYCJ1GVRZDjTtNrEhDbND7YGNXMzI1rFjXrKUwRXZDhIbx8XMzjYOOU
+	FJ3AJS2RJq+ToBlBmw7fxgdaMHJy/SI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706612697;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UKC3VT/yxm8QuquH0mJbFZHi45tefg50JMHGoP/3fP8=;
+	b=bA274UEqLWuoPqTyOiMkMod8zh206bkz2t3SI/Lg/j24OKwKuIzwxprbxrwonjFXWwe5qr
+	bOS/gUc8alVD1JCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706612697; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UKC3VT/yxm8QuquH0mJbFZHi45tefg50JMHGoP/3fP8=;
+	b=upl+k7v2jgC8e/LOcqed3oJ7nMEKZZwBBVVFePzAUZivut0SOR3ayyCUaQEkqeOtEU2wlN
+	EBECpioeOmWyyQ9aYCJ1GVRZDjTtNrEhDbND7YGNXMzI1rFjXrKUwRXZDhIbx8XMzjYOOU
+	FJ3AJS2RJq+ToBlBmw7fxgdaMHJy/SI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706612697;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UKC3VT/yxm8QuquH0mJbFZHi45tefg50JMHGoP/3fP8=;
+	b=bA274UEqLWuoPqTyOiMkMod8zh206bkz2t3SI/Lg/j24OKwKuIzwxprbxrwonjFXWwe5qr
+	bOS/gUc8alVD1JCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6F88012FF7;
+	Tue, 30 Jan 2024 11:04:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pETmGtnXuGVMPQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 30 Jan 2024 11:04:57 +0000
+Message-ID: <8fc59462-2940-4e60-95f1-2955a8c24ea0@suse.cz>
+Date: Tue, 30 Jan 2024 12:04:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/4] fs/locks: Fix file lock cache accounting, again
+From: Vlastimil Babka <vbabka@suse.cz>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Shakeel Butt <shakeelb@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+ Chuck Lever <chuck.lever@oracle.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+ Vasily Averin <vasily.averin@linux.dev>, Michal Koutny <mkoutny@suse.com>,
+ Waiman Long <longman@redhat.com>, Muchun Song <muchun.song@linux.dev>,
+ Jiri Kosina <jikos@kernel.org>, cgroups@vger.kernel.org, linux-mm@kvack.org,
+ Howard McLauchlan <hmclauchlan@fb.com>, bpf <bpf@vger.kernel.org>
+References: <cover.1705507931.git.jpoimboe@kernel.org>
+ <ac84a832feba5418e1b58d1c7f3fe6cc7bc1de58.1705507931.git.jpoimboe@kernel.org>
+ <6667b799702e1815bd4e4f7744eddbc0bd042bb7.camel@kernel.org>
+ <20240117193915.urwueineol7p4hg7@treble>
+ <CAHk-=wg_CoTOfkREgaQQA6oJ5nM9ZKYrTn=E1r-JnvmQcgWpSg@mail.gmail.com>
+ <CALvZod6LgX-FQOGgNBmoRACMBK4GB+K=a+DYrtExcuGFH=J5zQ@mail.gmail.com>
+ <ZahSlnqw9yRo3d1v@P9FQF9L96D.corp.robot.car>
+ <CALvZod4V3QTULTW5QxgqCbDpNtVO6fXzta33HR7GN=L2LUU26g@mail.gmail.com>
+ <CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com>
+ <6d5bb852-8703-4abf-a52b-90816bccbd7f@suse.cz>
+Content-Language: en-US
+In-Reply-To: <6d5bb852-8703-4abf-a52b-90816bccbd7f@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-3.09 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[20];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.09
 
-Removes the hardcoded timer assignment of timers to pwm controllers.
-This allows to use more than one pwm per gpio bank.
+On 1/26/24 10:50, Vlastimil Babka wrote:
+> On 1/22/24 06:10, Linus Torvalds wrote:
+>> On Wed, 17 Jan 2024 at 14:56, Shakeel Butt <shakeelb@google.com> wrote:
+>>> >
+>>> > So I don't see how we can make it really cheap (say, less than 5% overhead)
+>>> > without caching pre-accounted objects.
+>>>
+>>> Maybe this is what we want. Now we are down to just SLUB, maybe such
+>>> caching of pre-accounted objects can be in SLUB layer and we can
+>>> decide to keep this caching per-kmem-cache opt-in or always on.
+>> 
+>> So it turns out that we have another case of SLAB_ACCOUNT being quite
+>> a big expense, and it's actually the normal - but failed - open() or
+>> execve() case.
+>> 
+>> See the thread at
+>> 
+>>     https://lore.kernel.org/all/CAHk-=whw936qzDLBQdUz-He5WK_0fRSWwKAjtbVsMGfX70Nf_Q@mail.gmail.com/
+>> 
+>> and to see the effect in profiles, you can use this EXTREMELY stupid
+>> test program:
+>> 
+>>     #include <fcntl.h>
+>> 
+>>     int main(int argc, char **argv)
+>>     {
+>>         for (int i = 0; i < 10000000; i++)
+>>                 open("nonexistent", O_RDONLY);
+>>     }
+> 
+> This reminded me I can see should_failslab() in the profiles (1.43% plus the
+> overhead in its caller) even if it does nothing at all, and it's completely
+> unconditional since commit 4f6923fbb352 ("mm: make should_failslab always
+> available for fault injection").
+> 
+> We discussed it briefly when Jens tried to change it in [1] to depend on
+> CONFIG_FAILSLAB again. But now I think it should be even possible to leave
+> it always available, but behind a static key. BPF or whoever else uses these
+> error injection hooks would have to track how many users of them are active
+> and manage the static key accordingly. Then it could be always available,
+> but have no overhead when there's no active user? Other similars hooks could
+> benefit from such an approach too?
+> 
+> [1]
+> https://lore.kernel.org/all/e01e5e40-692a-519c-4cba-e3331f173c82@kernel.dk/#t
 
-Original patch with chip_data interface by Heisath <jannis@imserv.org>
+Just for completeness, with the hunk below I've seen some 2% improvement on
+the test program from Linus.
+Of course something needs to operate the static key and I'm not familiar
+enough with bpf and related machinery whether it's tracking users of the
+injection points already where the static key toggling could be hooked.
 
-Link: https://wiki.kobol.io/helios4/pwm/#patch-requirement
-Co-developed-by: Yureka Lilian <yuka@yuka.dev>
-Signed-off-by: Yureka Lilian <yuka@yuka.dev>
-Signed-off-by: Finn Behrens <me@kloenk.de>
----
- drivers/gpio/gpio-mvebu.c | 223 ++++++++++++++++++++++++--------------
- 1 file changed, 139 insertions(+), 84 deletions(-)
+diff --git a/mm/slub.c b/mm/slub.c
+index 2ef88bbf56a3..da07b358d092 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3750,6 +3750,8 @@ noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+ }
+ ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
+ 
++static DEFINE_STATIC_KEY_FALSE(failslab_enabled);
++
+ static __fastpath_inline
+ struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
+                                       struct list_lru *lru,
+@@ -3760,8 +3762,10 @@ struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
+ 
+        might_alloc(flags);
+ 
+-       if (unlikely(should_failslab(s, flags)))
+-               return NULL;
++       if (static_branch_unlikely(&failslab_enabled)) {
++               if (unlikely(should_failslab(s, flags)))
++                       return NULL;
++       }
+ 
+        if (unlikely(!memcg_slab_pre_alloc_hook(s, lru, objcgp, size, flags)))
+                return NULL;
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index a13f3c18ccd4..303ea3be0b69 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -94,21 +94,43 @@
- 
- #define MVEBU_MAX_GPIO_PER_BANK		32
- 
--struct mvebu_pwm {
-+enum mvebu_pwm_ctrl {
-+	MVEBU_PWM_CTRL_SET_A = 0,
-+	MVEBU_PWM_CTRL_SET_B,
-+	MVEBU_PWM_CTRL_MAX
-+};
-+
-+struct mvebu_pwmchip {
- 	struct regmap		*regs;
- 	u32			 offset;
- 	unsigned long		 clk_rate;
--	struct gpio_desc	*gpiod;
--	struct pwm_chip		 chip;
- 	spinlock_t		 lock;
--	struct mvebu_gpio_chip	*mvchip;
-+	bool			 in_use;
- 
- 	/* Used to preserve GPIO/PWM registers across suspend/resume */
--	u32			 blink_select;
- 	u32			 blink_on_duration;
- 	u32			 blink_off_duration;
- };
- 
-+struct mvebu_pwm_chip_drv {
-+	enum mvebu_pwm_ctrl	 ctrl;
-+	struct gpio_desc	*gpiod;
-+	bool			 master;
-+};
-+
-+struct mvebu_pwm {
-+	struct pwm_chip		 chip;
-+	struct mvebu_gpio_chip	*mvchip;
-+	struct mvebu_pwmchip	 controller;
-+	enum mvebu_pwm_ctrl	 default_controller;
-+
-+	/* Used to preserve GPIO/PWM registers across suspend/resume */
-+	u32				 blink_select;
-+	struct mvebu_pwm_chip_drv	 drv[];
-+};
-+
-+static struct mvebu_pwmchip  *mvebu_pwm_list[MVEBU_PWM_CTRL_MAX];
-+
- struct mvebu_gpio_chip {
- 	struct gpio_chip   chip;
- 	struct regmap     *regs;
-@@ -285,12 +307,12 @@ mvebu_gpio_write_level_mask(struct mvebu_gpio_chip *mvchip, u32 val)
-  * Functions returning offsets of individual registers for a given
-  * PWM controller.
-  */
--static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwm *mvpwm)
-+static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwmchip *mvpwm)
- {
- 	return mvpwm->offset + PWM_BLINK_ON_DURATION_OFF;
- }
- 
--static unsigned int mvebu_pwmreg_blink_off_duration(struct mvebu_pwm *mvpwm)
-+static unsigned int mvebu_pwmreg_blink_off_duration(struct mvebu_pwmchip *mvpwm)
- {
- 	return mvpwm->offset + PWM_BLINK_OFF_DURATION_OFF;
- }
-@@ -623,39 +645,71 @@ static int mvebu_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
- 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
- 	struct gpio_desc *desc;
-+	enum mvebu_pwm_ctrl id;
- 	unsigned long flags;
- 	int ret = 0;
-+	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
- 
--	spin_lock_irqsave(&mvpwm->lock, flags);
-+	spin_lock_irqsave(&mvpwm->controller.lock, flags);
- 
--	if (mvpwm->gpiod) {
-+	if (drv->gpiod || (mvchip->blink_en_reg & BIT(pwm->hwpwm))) {
- 		ret = -EBUSY;
--	} else {
--		desc = gpiochip_request_own_desc(&mvchip->chip,
--						 pwm->hwpwm, "mvebu-pwm",
--						 GPIO_ACTIVE_HIGH,
--						 GPIOD_OUT_LOW);
--		if (IS_ERR(desc)) {
--			ret = PTR_ERR(desc);
--			goto out;
--		}
-+		goto out;
-+	}
-+
-+	desc = gpiochip_request_own_desc(&mvchip->chip,
-+					 pwm->hwpwm, "mvebu-pwm",
-+					 GPIO_ACTIVE_HIGH,
-+					 GPIOD_OUT_LOW);
-+	if (IS_ERR(desc)) {
-+		ret = PTR_ERR(desc);
-+		goto out;
-+	}
- 
--		mvpwm->gpiod = desc;
-+	ret = gpiod_direction_output(desc, 0);
-+	if (ret) {
-+		gpiochip_free_own_desc(desc);
-+		goto out;
- 	}
-+
-+	for (id = MVEBU_PWM_CTRL_SET_A; id < MVEBU_PWM_CTRL_MAX; id++) {
-+		if (!mvebu_pwm_list[id]->in_use) {
-+			drv->ctrl = id;
-+			drv->master = true;
-+			mvebu_pwm_list[id]->in_use = true;
-+			break;
-+		}
-+	}
-+
-+	if (!drv->master)
-+		drv->ctrl = mvpwm->default_controller;
-+
-+	regmap_update_bits(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
-+			   BIT(pwm->hwpwm), drv->ctrl ? BIT(pwm->hwpwm) : 0);
-+
-+	drv->gpiod = desc;
-+
-+	regmap_read(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
-+		    &mvpwm->blink_select);
- out:
--	spin_unlock_irqrestore(&mvpwm->lock, flags);
-+	spin_unlock_irqrestore(&mvpwm->controller.lock, flags);
- 	return ret;
- }
- 
- static void mvebu_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
-+	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&mvpwm->lock, flags);
--	gpiochip_free_own_desc(mvpwm->gpiod);
--	mvpwm->gpiod = NULL;
--	spin_unlock_irqrestore(&mvpwm->lock, flags);
-+	spin_lock_irqsave(&mvpwm->controller.lock, flags);
-+	if (drv->master)
-+		mvebu_pwm_list[drv->ctrl]->in_use = false;
-+
-+	gpiochip_free_own_desc(drv->gpiod);
-+	memset(drv, 0, sizeof(struct mvebu_pwm_chip_drv));
-+
-+	spin_unlock_irqrestore(&mvpwm->controller.lock, flags);
- }
- 
- static int mvebu_pwm_get_state(struct pwm_chip *chip,
-@@ -665,28 +719,35 @@ static int mvebu_pwm_get_state(struct pwm_chip *chip,
- 
- 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
- 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
-+	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
-+	struct mvebu_pwmchip *controller;
- 	unsigned long long val;
- 	unsigned long flags;
- 	u32 u;
- 
--	spin_lock_irqsave(&mvpwm->lock, flags);
-+	if (drv->gpiod)
-+		controller = mvebu_pwm_list[drv->ctrl];
-+	else
-+		controller = &mvpwm->controller;
-+
-+	spin_lock_irqsave(&controller->lock, flags);
- 
--	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm), &u);
-+	regmap_read(controller->regs, mvebu_pwmreg_blink_on_duration(controller), &u);
- 	/* Hardware treats zero as 2^32. See mvebu_pwm_apply(). */
- 	if (u > 0)
- 		val = u;
- 	else
- 		val = UINT_MAX + 1ULL;
- 	state->duty_cycle = DIV_ROUND_UP_ULL(val * NSEC_PER_SEC,
--			mvpwm->clk_rate);
-+			controller->clk_rate);
- 
--	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
-+	regmap_read(controller->regs, mvebu_pwmreg_blink_off_duration(controller), &u);
- 	/* period = on + off duration */
- 	if (u > 0)
- 		val += u;
- 	else
- 		val += UINT_MAX + 1ULL;
--	state->period = DIV_ROUND_UP_ULL(val * NSEC_PER_SEC, mvpwm->clk_rate);
-+	state->period = DIV_ROUND_UP_ULL(val * NSEC_PER_SEC, controller->clk_rate);
- 
- 	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset, &u);
- 	if (u)
-@@ -694,7 +755,7 @@ static int mvebu_pwm_get_state(struct pwm_chip *chip,
- 	else
- 		state->enabled = false;
- 
--	spin_unlock_irqrestore(&mvpwm->lock, flags);
-+	spin_unlock_irqrestore(&controller->lock, flags);
- 
- 	return 0;
- }
-@@ -703,6 +764,8 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   const struct pwm_state *state)
- {
- 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
-+	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
-+	struct mvebu_pwmchip *controller;
- 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
- 	unsigned long long val;
- 	unsigned long flags;
-@@ -711,7 +774,11 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		return -EINVAL;
- 
--	val = (unsigned long long) mvpwm->clk_rate * state->duty_cycle;
-+	if (drv->gpiod)
-+		controller = mvebu_pwm_list[drv->ctrl];
-+	else
-+		controller = &mvpwm->controller;
-+	val = (unsigned long long) controller->clk_rate * state->duty_cycle;
- 	do_div(val, NSEC_PER_SEC);
- 	if (val > UINT_MAX + 1ULL)
- 		return -EINVAL;
-@@ -726,7 +793,7 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	else
- 		on = 1;
- 
--	val = (unsigned long long) mvpwm->clk_rate * state->period;
-+	val = (unsigned long long) controller->clk_rate * state->period;
- 	do_div(val, NSEC_PER_SEC);
- 	val -= on;
- 	if (val > UINT_MAX + 1ULL)
-@@ -738,16 +805,16 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	else
- 		off = 1;
- 
--	spin_lock_irqsave(&mvpwm->lock, flags);
-+	spin_lock_irqsave(&controller->lock, flags);
- 
--	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm), on);
--	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), off);
-+	regmap_write(controller->regs, mvebu_pwmreg_blink_on_duration(controller), on);
-+	regmap_write(controller->regs, mvebu_pwmreg_blink_off_duration(controller), off);
- 	if (state->enabled)
- 		mvebu_gpio_blink(&mvchip->chip, pwm->hwpwm, 1);
- 	else
- 		mvebu_gpio_blink(&mvchip->chip, pwm->hwpwm, 0);
- 
--	spin_unlock_irqrestore(&mvpwm->lock, flags);
-+	spin_unlock_irqrestore(&controller->lock, flags);
- 
- 	return 0;
- }
-@@ -762,25 +829,27 @@ static const struct pwm_ops mvebu_pwm_ops = {
- static void __maybe_unused mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
- {
- 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
-+	struct mvebu_pwmchip *controller = &mvpwm->controller;
- 
- 	regmap_read(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
- 		    &mvpwm->blink_select);
--	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm),
--		    &mvpwm->blink_on_duration);
--	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm),
--		    &mvpwm->blink_off_duration);
-+	regmap_read(controller->regs, mvebu_pwmreg_blink_on_duration(controller),
-+		    &controller->blink_on_duration);
-+	regmap_read(controller->regs, mvebu_pwmreg_blink_off_duration(controller),
-+		    &controller->blink_off_duration);
- }
- 
- static void __maybe_unused mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
- {
- 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
-+	struct mvebu_pwmchip *controller = &mvpwm->controller;
- 
- 	regmap_write(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
- 		     mvpwm->blink_select);
--	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm),
--		     mvpwm->blink_on_duration);
--	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm),
--		     mvpwm->blink_off_duration);
-+	regmap_write(controller->regs, mvebu_pwmreg_blink_on_duration(controller),
-+		     controller->blink_on_duration);
-+	regmap_write(controller->regs, mvebu_pwmreg_blink_off_duration(controller),
-+		     controller->blink_off_duration);
- }
- 
- static int mvebu_pwm_probe(struct platform_device *pdev,
-@@ -792,6 +861,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 	void __iomem *base;
- 	u32 offset;
- 	u32 set;
-+	enum mvebu_pwm_ctrl ctrl_set;
- 
- 	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
- 		int ret = of_property_read_u32(dev->of_node,
-@@ -813,57 +883,39 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 	if (IS_ERR(mvchip->clk))
- 		return PTR_ERR(mvchip->clk);
- 
--	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
-+	mvpwm = devm_kzalloc(dev, struct_size(mvpwm, drv, mvchip->chip.ngpio), GFP_KERNEL);
- 	if (!mvpwm)
- 		return -ENOMEM;
- 	mvchip->mvpwm = mvpwm;
- 	mvpwm->mvchip = mvchip;
--	mvpwm->offset = offset;
- 
--	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
--		mvpwm->regs = mvchip->regs;
-+	base = devm_platform_ioremap_resource_byname(pdev, "pwm");
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+	mvpwm->controller.regs = devm_regmap_init_mmio(&pdev->dev, base,
-+						       &mvebu_gpio_regmap_config);
-+	if (IS_ERR(mvpwm->controller.regs))
-+		return PTR_ERR(mvpwm->controller.regs);
- 
--		switch (mvchip->offset) {
--		case AP80X_GPIO0_OFF_A8K:
--		case CP11X_GPIO0_OFF_A8K:
--			/* Blink counter A */
--			set = 0;
--			break;
--		case CP11X_GPIO1_OFF_A8K:
--			/* Blink counter B */
--			set = U32_MAX;
--			mvpwm->offset += PWM_BLINK_COUNTER_B_OFF;
--			break;
--		default:
--			return -EINVAL;
--		}
-+	/*
-+	 * User set A for lines of GPIO chip with id 0, B for GPIO chip
-+	 * with id 1. Don't allow further GPIO chips to be used for PWM.
-+	 */
-+	if (id == 0) {
-+		set = 0;
-+		ctrl_set = MVEBU_PWM_CTRL_SET_A;
-+	} else if (id == 1) {
-+		set = U32_MAX;
-+		ctrl_set = MVEBU_PWM_CTRL_SET_B;
- 	} else {
--		base = devm_platform_ioremap_resource_byname(pdev, "pwm");
--		if (IS_ERR(base))
--			return PTR_ERR(base);
--
--		mvpwm->regs = devm_regmap_init_mmio(&pdev->dev, base,
--						    &mvebu_gpio_regmap_config);
--		if (IS_ERR(mvpwm->regs))
--			return PTR_ERR(mvpwm->regs);
--
--		/*
--		 * Use set A for lines of GPIO chip with id 0, B for GPIO chip
--		 * with id 1. Don't allow further GPIO chips to be used for PWM.
--		 */
--		if (id == 0)
--			set = 0;
--		else if (id == 1)
--			set = U32_MAX;
--		else
--			return -EINVAL;
-+		return -EINVAL;
- 	}
- 
- 	regmap_write(mvchip->regs,
- 		     GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, set);
- 
--	mvpwm->clk_rate = clk_get_rate(mvchip->clk);
--	if (!mvpwm->clk_rate) {
-+	mvpwm->controller.clk_rate = clk_get_rate(mvchip->clk);
-+	if (!mvpwm->controller.clk_rate) {
- 		dev_err(dev, "failed to get clock rate\n");
- 		return -EINVAL;
- 	}
-@@ -872,7 +924,10 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 	mvpwm->chip.ops = &mvebu_pwm_ops;
- 	mvpwm->chip.npwm = mvchip->chip.ngpio;
- 
--	spin_lock_init(&mvpwm->lock);
-+	spin_lock_init(&mvpwm->controller.lock);
-+
-+	mvpwm->default_controller = ctrl_set;
-+	mvebu_pwm_list[ctrl_set] = &mvpwm->controller;
- 
- 	return devm_pwmchip_add(dev, &mvpwm->chip);
- }
--- 
-2.43.0
+
 
