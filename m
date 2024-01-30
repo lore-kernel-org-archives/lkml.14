@@ -1,256 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138E56A01F;
-	Tue, 30 Jan 2024 08:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC9E55C2D
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706602519; cv=none; b=rwUhqGP2q8HUyMTtgNwvY0CqXSlz6ESPEWM3oNNZkIWHCV+DXVAlm0hBjDluSxy0F1GedFIHFlXbLHARm6NsegvB8ud+Ars5afAVBwkZO6KvGWDqKBhFUQ0lYXCariaBz+t5OpJAdKGMpx2LCw87ZxzdvP/PiRdrE0jITKta9o4=
+	t=1706602534; cv=none; b=fUBVLya1oTHjISkTekS/oUhHXoKtehKsufegQnw/SZIaREQsXLhJjSUkGWC/6VfdAoqOHY2G4qLa8PatVWlVeOK/akAedKy8o2QypRDTSq724KT/YnRk6pv84yFlb1Qly63Hdmry9skpOSUiyJs+3MAV3omfXXGxytClcpdcNVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706602519; c=relaxed/simple;
-	bh=xAXFWXbfZ0fCyVjEm8a/lDKedHKzBbgMHiYFrctbvM8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LHVcl6pkIqP7wQYs5X03ohaVhXuJZgpEmfW7tI4goW9HqT/CgRLJ9cDfgzoCdZ+9OmW8Nvwnm1QwhtDJqLkRUwiovFhHE2WSb6QqzKSX48rtMOuHYUk5tS5kQphiwMvOLFNawInrSKwHm0vJXMCIUgwSIQl0PDQImTg9AqddYY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XIftHMrP; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706602534; c=relaxed/simple;
+	bh=mL33EfexsGy81qLYkGxPiFCZamrOqVY9zJmZcZSmZmg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fnx6Ar2dGDJhPVs80mjnQRZBHQJj2Vk5gXUJj7wEvTNlyVIts0s9RjRzzJrkmQslke7renRU4nrru8gQlEmHlgKmicOk2CsPzOdgqH8611DXpYqZb5hnkoubMMb44OwF26Aka9JJ595TSkQOm67VtIMb0oyA1/lW35OhWNLVzGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Eso3REuN; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XIftHMrP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706602517; x=1738138517;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xAXFWXbfZ0fCyVjEm8a/lDKedHKzBbgMHiYFrctbvM8=;
-  b=XIftHMrP6a6PKuJmWKeZIMtNv02xG4p1NB6wk3GX5lx928gcX1Eh+xCt
-   9EXqBsI87aLB+o4OP37hffAorjUKuAFhUOnuXv1WIpW+wx3jK+MYUwUWf
-   riVlAl4kT3dBXMPV8nO/BI6/wQGNQ83N3tNc1lamwGTZJimuB2aQGiZcE
-   8o68YQj5/gHKw2y4+RXiQ/JErkBvrMMMJFvJbIL4dTNwsr9VL9+0/cCrY
-   0pqGEwAehVEzoiBvzqLqK9RVdByAj2zV7S8zJNHGOCgPvr0ZMoRhBG7T9
-   PFn/25iKNU3QODkQ/dMWitEgqIFLtY2lBDXwGkuYOE4aTgMldN440C175
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10588583"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="10588583"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 00:15:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3634053"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by fmviesa003.fm.intel.com with ESMTP; 30 Jan 2024 00:15:13 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Cc: Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Joel Granados <j.granados@samsung.com>,
-	iommu@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v11 16/16] iommu: Make iommu_report_device_fault() return void
-Date: Tue, 30 Jan 2024 16:08:35 +0800
-Message-Id: <20240130080835.58921-17-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240130080835.58921-1-baolu.lu@linux.intel.com>
-References: <20240130080835.58921-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eso3REuN"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a350bfcc621so387863666b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:15:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706602531; x=1707207331; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GhMp7KKsjo07nqB7KZNtEWJ6AL1gedASvjEszHUkpSM=;
+        b=Eso3REuNjvmymgk5PVCF9iRJsqF0IuL5WNOthgPctLsOywJWsORFxV5pT1LVUGxdI/
+         Zn8bvbVaKtbxl/jpKr8+2h8Fgpt7V1XITdG1j2xtUImGVAO3aEah4W/iNcyGcXQkngZl
+         AjnR3creEomeLY+AJX7awc89Y6DHTpeecnRVj9wJ/1t4Moweq+yPu2NYL3HAldTx2XAA
+         F/P6vbsXNlSDZmLddDRymkAmOctN/tJ35QeIKtY0i+ndtIPD9m6BU3RXSUTnNaW85vFm
+         fpC5qnX3ozWICJYnP+Opg7Y9DRxYNjmTLVKN1/BTHUAWrM+NQNT01vsBc4p4nm2TCBUj
+         KaRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706602531; x=1707207331;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GhMp7KKsjo07nqB7KZNtEWJ6AL1gedASvjEszHUkpSM=;
+        b=Tv5zAf3DBEibiidmmWbazzRl6+1AHfg/cWLZ7g4BYBgcNNc2fbUO/Yu/PxQnN8Uv1K
+         vPWwdR1h+QJHylqZDXbqnSTV22G+SgL332F65rlVHBNfzGrg14Pg8SAB3pa1xnlg6qSk
+         9eWyk/F8pdCghsL2RdugUOundDIOvS1Vm8XK1xGMZhcwv7rgHcAB7j+M2JHePkZKiBqj
+         IR/d2XseX/J1iKceAIr1Cy7ya/MM20nFRoNduI93jDjrXj+x++SZzBTHE07mWKwaCwsX
+         zY+Ei004Oo3rgViA+WzLXx+ojskj8+EY8bjov0sh6u7/hbq+rjK0CNEWPy2mQRIO6ViX
+         GvCw==
+X-Gm-Message-State: AOJu0YxC6z53k6uBvTtNh5hgcFIGTS5qjkSzVMuPQRGcqSOG2PsJuJqw
+	G/V75s+761PEE8WIO0m0fpROzD3mWse9ARajeArjd/lUzp14n789l86XqZ7Efpc=
+X-Google-Smtp-Source: AGHT+IEbD7LG12p286tpDqgpNwalI+adkVXaHQkutVJ57xIRpsIJJyVzZMK0ChiLS9ACxa9kw8wWkw==
+X-Received: by 2002:a17:906:af0c:b0:a35:f647:ccac with SMTP id lx12-20020a170906af0c00b00a35f647ccacmr2198534ejb.44.1706602531368;
+        Tue, 30 Jan 2024 00:15:31 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id vw7-20020a170907a70700b00a35e26d86dfsm1410740ejc.201.2024.01.30.00.15.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 00:15:30 -0800 (PST)
+Message-ID: <881d08a4-8bd7-4028-82f2-27bd70aff1e8@linaro.org>
+Date: Tue, 30 Jan 2024 09:15:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/8] dt-bindings: i3c: svc: add proptery mode
+Content-Language: en-US
+To: Frank Li <Frank.Li@nxp.com>, ilpo.jarvinen@linux.intel.com
+Cc: alexandre.belloni@bootlin.com, conor.culhane@silvaco.com,
+ devicetree@vger.kernel.org, gregkh@linuxfoundation.org, imx@lists.linux.dev,
+ jirislaby@kernel.org, joe@perches.com, krzysztof.kozlowski+dt@linaro.org,
+ linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, miquel.raynal@bootlin.com, robh@kernel.org,
+ zbigniew.lukwinski@linux.intel.com
+References: <20240129195321.229867-1-Frank.Li@nxp.com>
+ <20240129195321.229867-3-Frank.Li@nxp.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240129195321.229867-3-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-As the iommu_report_device_fault() has been converted to auto-respond a
-page fault if it fails to enqueue it, there's no need to return a code
-in any case. Make it return void.
+On 29/01/2024 20:53, Frank Li wrote:
+> Add 'mode' property to distinguish between 'controller' and 'target' modes.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> 
+> Notes:
+>     Change from v3 to v4
+>     -fix dtb check error
+>     
+>     Change from v2 to v3
+>         - using 'mode' distringuish master and target mode
 
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- include/linux/iommu.h                       |  5 ++---
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c |  4 ++--
- drivers/iommu/intel/svm.c                   | 19 ++++++----------
- drivers/iommu/io-pgfault.c                  | 25 +++++++--------------
- 4 files changed, 19 insertions(+), 34 deletions(-)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index ceadbeaffd98..6ab90cb93da9 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -1545,7 +1545,7 @@ struct iopf_queue *iopf_queue_alloc(const char *name);
- void iopf_queue_free(struct iopf_queue *queue);
- int iopf_queue_discard_partial(struct iopf_queue *queue);
- void iopf_free_group(struct iopf_group *group);
--int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt);
-+void iommu_report_device_fault(struct device *dev, struct iopf_fault *evt);
- void iopf_group_response(struct iopf_group *group,
- 			 enum iommu_page_response_code status);
- #else
-@@ -1583,10 +1583,9 @@ static inline void iopf_free_group(struct iopf_group *group)
- {
- }
- 
--static inline int
-+static inline void
- iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- {
--	return -ENODEV;
- }
- 
- static inline void iopf_group_response(struct iopf_group *group,
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index 42eb59cb99f4..02580364acda 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -1455,7 +1455,7 @@ arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
- /* IRQ and event handlers */
- static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- {
--	int ret;
-+	int ret = 0;
- 	u32 perm = 0;
- 	struct arm_smmu_master *master;
- 	bool ssid_valid = evt[0] & EVTQ_0_SSV;
-@@ -1511,7 +1511,7 @@ static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- 		goto out_unlock;
- 	}
- 
--	ret = iommu_report_device_fault(master->dev, &fault_evt);
-+	iommu_report_device_fault(master->dev, &fault_evt);
- out_unlock:
- 	mutex_unlock(&smmu->streams_mutex);
- 	return ret;
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 2f8716636dbb..b644d57da841 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -561,14 +561,11 @@ static int prq_to_iommu_prot(struct page_req_dsc *req)
- 	return prot;
- }
- 
--static int intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
--				struct page_req_dsc *desc)
-+static void intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
-+				 struct page_req_dsc *desc)
- {
- 	struct iopf_fault event = { };
- 
--	if (!dev || !dev_is_pci(dev))
--		return -ENODEV;
--
- 	/* Fill in event data for device specific processing */
- 	event.fault.type = IOMMU_FAULT_PAGE_REQ;
- 	event.fault.prm.addr = (u64)desc->addr << VTD_PAGE_SHIFT;
-@@ -601,7 +598,7 @@ static int intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
- 		event.fault.prm.private_data[0] = ktime_to_ns(ktime_get());
- 	}
- 
--	return iommu_report_device_fault(dev, &event);
-+	iommu_report_device_fault(dev, &event);
- }
- 
- static void handle_bad_prq_event(struct intel_iommu *iommu,
-@@ -704,12 +701,10 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 		if (!pdev)
- 			goto bad_req;
- 
--		if (intel_svm_prq_report(iommu, &pdev->dev, req))
--			handle_bad_prq_event(iommu, req, QI_RESP_INVALID);
--		else
--			trace_prq_report(iommu, &pdev->dev, req->qw_0, req->qw_1,
--					 req->priv_data[0], req->priv_data[1],
--					 iommu->prq_seq_number++);
-+		intel_svm_prq_report(iommu, &pdev->dev, req);
-+		trace_prq_report(iommu, &pdev->dev, req->qw_0, req->qw_1,
-+				 req->priv_data[0], req->priv_data[1],
-+				 iommu->prq_seq_number++);
- 		pci_dev_put(pdev);
- prq_advance:
- 		head = (head + sizeof(*req)) & PRQ_RING_MASK;
-diff --git a/drivers/iommu/io-pgfault.c b/drivers/iommu/io-pgfault.c
-index e932ab5e8dc9..f70a09149b95 100644
---- a/drivers/iommu/io-pgfault.c
-+++ b/drivers/iommu/io-pgfault.c
-@@ -176,26 +176,22 @@ static struct iopf_group *iopf_group_alloc(struct iommu_fault_param *iopf_param,
-  * freed after the device has stopped generating page faults (or the iommu
-  * hardware has been set to block the page faults) and the pending page faults
-  * have been flushed.
-- *
-- * Return: 0 on success and <0 on error.
-  */
--int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
-+void iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- {
- 	struct iommu_fault *fault = &evt->fault;
- 	struct iommu_fault_param *iopf_param;
- 	struct iopf_group abort_group = {};
- 	struct iopf_group *group;
--	int ret;
- 
- 	iopf_param = iopf_get_dev_fault_param(dev);
- 	if (WARN_ON(!iopf_param))
--		return -ENODEV;
-+		return;
- 
- 	if (!(fault->prm.flags & IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE)) {
--		ret = report_partial_fault(iopf_param, fault);
-+		report_partial_fault(iopf_param, fault);
- 		iopf_put_dev_fault_param(iopf_param);
- 		/* A request that is not the last does not need to be ack'd */
--		return ret;
- 	}
- 
- 	/*
-@@ -207,25 +203,21 @@ int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- 	 * leaving, otherwise partial faults will be stuck.
- 	 */
- 	group = iopf_group_alloc(iopf_param, evt, &abort_group);
--	if (group == &abort_group) {
--		ret = -ENOMEM;
-+	if (group == &abort_group)
- 		goto err_abort;
--	}
- 
- 	group->domain = get_domain_for_iopf(dev, fault);
--	if (!group->domain) {
--		ret = -EINVAL;
-+	if (!group->domain)
- 		goto err_abort;
--	}
- 
- 	/*
- 	 * On success iopf_handler must call iopf_group_response() and
- 	 * iopf_free_group()
- 	 */
--	ret = group->domain->iopf_handler(group);
--	if (ret)
-+	if (group->domain->iopf_handler(group))
- 		goto err_abort;
--	return 0;
-+
-+	return;
- 
- err_abort:
- 	iopf_group_response(group, IOMMU_PAGE_RESP_FAILURE);
-@@ -233,7 +225,6 @@ int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- 		__iopf_free_group(group);
- 	else
- 		iopf_free_group(group);
--	return ret;
- }
- EXPORT_SYMBOL_GPL(iommu_report_device_fault);
- 
--- 
-2.34.1
+Best regards,
+Krzysztof
 
