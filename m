@@ -1,68 +1,42 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725FC67739
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2D466B24
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608628; cv=none; b=EW14FoptPLzQlfQhvWYBkfqwt1lcoqeqZJgdyU2z4IOujJakGi+gf06aPXfo5PbzdkqHvwWzCWbgCAbS0TczIrNMk5ExwNEB1/N5nBQL3msBBTYrrUA6AiqZ+u9G4FB8T8NyCSzvjeO8Sdg6a+nH8gZNk/0zxyjwcvmTbhbmiTE=
+	t=1706608660; cv=none; b=LcNAOCj6V9POIsJEGnoDYUQ2qlxQEWRbam8R80JbSZA2e7wNhAIMxp/GrIh1FkgeMbfTN+gFyLqyViGgf0OuqMFGEY+RoDA/Z86yrV1s+B1uf1xFKod0XcI/yUIB040i+m7R/3bLbgUZmd3+6eZ1LmgtG92wFSJ74UjOZDhhtwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608628; c=relaxed/simple;
-	bh=PjLNZGOK4cojVlDhXj8cggrO1CsQ4u8l1duSGG978Bo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EYkA9KfJVpwVp/yVhF6CqEZVlCTmLjwNHQq8Dfc66Ttkx+7grUbhGu7sQONxIBPAA99be8JoFPHJrlyoN5qqzwcYj81Ur3Unyxv48/GB8kOAliHURj9xAND1odag7LFua3w0vfEOpoJRONrQennVzhjSX+wfpAxx0dCjH/6tFyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=arOvOHtO; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="arOvOHtO"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2901ceb0d33so3553651a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:57:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706608627; x=1707213427; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gdC3n49f3pUPNsrcBA7Bt2BGENrWBIomL/x/RasR6Lw=;
-        b=arOvOHtONb2E51YRGSlT/H6dFpxETt36r1dKYJzVpEyMf5vDtG9InBYf7KAoEE+G1d
-         oRVJiFszU5u8kZEu9WATRXzhnt/Xe46soqRWVHUuMHsKf86mR/yhdM75Hr1/xI59Z0Qz
-         FKXkTaFT5RwrUYUOqITq01ORHBrNxUhjJphnM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706608627; x=1707213427;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gdC3n49f3pUPNsrcBA7Bt2BGENrWBIomL/x/RasR6Lw=;
-        b=pRf6hDstuFnanddHwVTwPrJ6z18oKw8KlHAg6DVBO4AKOpc90VDlEGrSWEsMWB/Zg8
-         dx0co58DP5vOkVxG2v0K4PsVQXLkJig9fGwKNvb1dgh7iakKhC6WN/V/xJvg7OFvhrb8
-         6ug2M/TPfGm0uCrFqXWAtKHqHT5rtTsQFd6ysrKT6aIGgxMBqKB6Jkz8YrQgHZ/aOIY9
-         SSauu/GSfzNF2d7Trg1scRJ5vS9xZfdVqtSIlh2RlmsEIiJsvk9bC4crQy40Hr/VhcLo
-         8plv3SMD5iVIxEYiHajtRBufkC1PPinA1kUXSKEWfs3217SZe8XK63XicVGA4GHzkYJ/
-         m88Q==
-X-Gm-Message-State: AOJu0YxXOPSzOB3YMQjdK6jUWZTPfwu0Da+M8RNIfITXJkeefPB+b3it
-	skRkn5ABLod1xlSbmHUtNUidgGRItajnHpaFDcAgCQNVbGrLwROcDo7Rj1fKWw==
-X-Google-Smtp-Source: AGHT+IGlxSqsMuF9m2bnctGlj48RdUWW+c4ToCBn1TGjF/x6IAqZ5PbEFfSDJkkT532DsO+oYz2DtQ==
-X-Received: by 2002:a17:90b:696:b0:28d:1581:29e6 with SMTP id m22-20020a17090b069600b0028d158129e6mr1136268pjz.13.1706608626736;
-        Tue, 30 Jan 2024 01:57:06 -0800 (PST)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:469:110f:d748:6896])
-        by smtp.gmail.com with ESMTPSA id sm5-20020a17090b2e4500b0028ffea988a2sm8069810pjb.37.2024.01.30.01.57.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 01:57:06 -0800 (PST)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	s=arc-20240116; t=1706608660; c=relaxed/simple;
+	bh=YD2kWtvkZk3mAOQpGATJUTtc8GxT/nSj+syfnly8mH8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m4tJQq/mtwCv54xgik7rJb27ETc/ARQ1yj7Z4ZumAsk2owr2fbAAHiepS9/z2I0Y8PF74HrgtDDQzWkgdwCIO2v6agbWsx+6ieV2VvfDcqBgp1XdeIrlfwrcGmKKxybpCBduIYFk9SBBKgf1KfftpGoX14+Kp4CJd7sZdB3IF7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TPLF26P6jz4f3nJd
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:57:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 5E8C41A0232
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:57:33 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP1 (Coremail) with SMTP id cCh0CgAHJQ4LyLhlP+O_CQ--.6931S2;
+	Tue, 30 Jan 2024 17:57:33 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	revest@chromium.org,
+	rostedt@goodmis.org,
+	mark.rutland@arm.com,
+	arnd@arndb.de,
+	pengdonglin@sangfor.com.cn
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	William-tw Lin <william-tw.lin@mediatek.com>
-Subject: [PATCH 3/3] nvmem: mtk-efuse: Drop NVMEM device name
-Date: Tue, 30 Jan 2024 17:56:53 +0800
-Message-ID: <20240130095656.3712469-4-wenst@chromium.org>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-In-Reply-To: <20240130095656.3712469-1-wenst@chromium.org>
-References: <20240130095656.3712469-1-wenst@chromium.org>
+	shikemeng@huaweicloud.com
+Subject: [PATCH] arm64: make member of struct pt_regs and it's offset macro in the same order
+Date: Wed, 31 Jan 2024 01:55:04 +0800
+Message-Id: <20240130175504.106364-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,32 +44,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAHJQ4LyLhlP+O_CQ--.6931S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrur1rZw13tr15XF4kur45Jrb_yoWDKrXEyw
+	47ta4UGa1fK34Igw18t3yagrs2k3yrK34xurWxtrWkZFykXry0yw1xGrn3Kr1DWw17KrW7
+	A3sIqFyYkFy0yjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbaxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M28lY4IEw2IIxx
+	k0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK
+	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjc
+	xK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
+	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
+	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
+	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyU
+	JVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYx
+	BIdaVFxhVjvjDU0xZFpf9x0pRQo7tUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-The MT8183 has not one but two efuse devices. The static name and ID
-causes the second efuse device to fail to probe, due to duplicate sysfs
-entries.
+In struct pt_regs, member pstate is after member pc. Move offset macro
+of pstate after offset macro of pc to improve readability a little.
 
-With the rework of the mtk-socinfo driver, lookup by name is no longer
-necessary. The custom name can simply be dropped.
-
-Fixes: 4e6102d60d88 ("nvmem: mtk-efuse: Register MediaTek socinfo driver from efuse")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 ---
- drivers/nvmem/mtk-efuse.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/kernel/asm-offsets.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvmem/mtk-efuse.c b/drivers/nvmem/mtk-efuse.c
-index f5bebcecf9bd..9caf04667341 100644
---- a/drivers/nvmem/mtk-efuse.c
-+++ b/drivers/nvmem/mtk-efuse.c
-@@ -86,7 +86,6 @@ static int mtk_efuse_probe(struct platform_device *pdev)
- 	econfig.size = resource_size(res);
- 	econfig.priv = priv;
- 	econfig.dev = dev;
--	econfig.name = "mtk-efuse";
- 	if (pdata->uses_post_processing)
- 		econfig.fixup_dt_cell_info = &mtk_efuse_fixup_dt_cell_info;
- 	nvmem = devm_nvmem_register(dev, &econfig);
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 5ff1942b04fc..865ba901c233 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -75,8 +75,8 @@ int main(void)
+   DEFINE(S_FP,			offsetof(struct pt_regs, regs[29]));
+   DEFINE(S_LR,			offsetof(struct pt_regs, regs[30]));
+   DEFINE(S_SP,			offsetof(struct pt_regs, sp));
+-  DEFINE(S_PSTATE,		offsetof(struct pt_regs, pstate));
+   DEFINE(S_PC,			offsetof(struct pt_regs, pc));
++  DEFINE(S_PSTATE,		offsetof(struct pt_regs, pstate));
+   DEFINE(S_SYSCALLNO,		offsetof(struct pt_regs, syscallno));
+   DEFINE(S_SDEI_TTBR1,		offsetof(struct pt_regs, sdei_ttbr1));
+   DEFINE(S_PMR_SAVE,		offsetof(struct pt_regs, pmr_save));
 -- 
-2.43.0.429.g432eaa2c6b-goog
+2.30.0
 
