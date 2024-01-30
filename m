@@ -1,85 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0167860885;
-	Tue, 30 Jan 2024 10:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1869760885;
+	Tue, 30 Jan 2024 10:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706609590; cv=none; b=PQUbpaeCGfq4w96Ay7OZRQBHMkwjMxczGa8IkTbvLKtqGBz9qpzv9yX62ubjKejbQ1RB/vZE3/f4T5v8Kt3gN+ZQfi0AnJyc7VN5FzOtpe0nLwRzPM247SrlpwZSBPfyP/B/cd6EmuDl/R8rlk5Big1ne+CntRgaIaBygdmeDA8=
+	t=1706609621; cv=none; b=r0EtmyxDyOlGMiwJyRK1IXG79+PAOI52cL5RUPjLNqre4CgXAymcrFV9rq3uKJ/O6ZD3wNl6riVs/tBAQM0tx4wNFH6hUL9HxGKxEH01B0W3deUSjfLn7b7x/yUTXy55fw26u2MqMefEHDPTtFYkhu6Eqqw6JgEFrpmRSM8/wD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706609590; c=relaxed/simple;
-	bh=bHjhb7ec4V/9qFcEdq9saB1TdkNyxZJVjbB3yRsYgO8=;
+	s=arc-20240116; t=1706609621; c=relaxed/simple;
+	bh=PBHyE/70hNgy03hBgSuUnxkVHspsZdCRdFN/IU+Qe0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tbEDKV0z/DKd7glaQDKNhejN0IOFlotJ0c9F7Q3L+mTbEKiA9bSAlY4OiTQwICHyT/PlZbSeSXxrowoMkFTmbUZMLSE4JlJRJpm2xdhoFSObOYUE1ZviBkzPRbKrnjCjXTgAUyMieuVy1UlUXDJxu2HjQol909ioeIKc2T0TxCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upKCdCbW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TduT4+so9qkdc44DQYPWf52bRIpajJJfAxFkbRhpSpGzlAsBXDsnTxuIJjvdqyP89JtJk2OReH04ATBR3ezogeIxGv7msvA+xbzZY1GTRtqO158lOXg7iQm1C+iwXFLc0XV3hEc6JBagihOM8X8qM3+vD7CCAVhIqcgc+1UcN5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nd+UIPQc; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upKCdCbW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAC36C433C7;
-	Tue, 30 Jan 2024 10:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706609589;
-	bh=bHjhb7ec4V/9qFcEdq9saB1TdkNyxZJVjbB3yRsYgO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=upKCdCbWCMu6O2DUujUu6FBWxFmraU34DJSlkckJglsaVtY2vGvNCUgqq/ruhWPEU
-	 7yG5bFI/JA8WSY6IQJr2+ZFhYZIK/6CAFmUGgc5b70uZNaoT/TROi6HpO4mXFZB4rF
-	 gq9tb+y/o8sWjDTbBAO+YB3QfbWaw7GETtqUW3P9uBS4s9KzupPAfP6/yJQ/Q/D6TY
-	 lONw0wgWvp3+t/A/Ba7Mh1N149xbXO4XJac3pONPXFbFPQu0M/b5cwtGMx0SJwONob
-	 GC56e4pqUpZLsOh4Dwr5l6vSkIrgIFs3icQ8zdCYuTbi0yVOrsVg1PUJLs7KJExID8
-	 wUtDi4MEfa6Pg==
-Date: Tue, 30 Jan 2024 10:11:34 +0000
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
-	edumazet@google.com, Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com, dsahern@kernel.org, weiwan@google.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: Re: [PATCH net 02/10] net: fill in MODULE_DESCRIPTION()s for ocelot
-Message-ID: <20240130101134.GG349047@kernel.org>
-References: <20240125193420.533604-1-leitao@debian.org>
- <20240125193420.533604-3-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nd+UIPQc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706609620; x=1738145620;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PBHyE/70hNgy03hBgSuUnxkVHspsZdCRdFN/IU+Qe0U=;
+  b=Nd+UIPQcaw0QGlsDhF8RWVCua0RcB+4FL2LnZEQzbjNhB6l3dLSP5msG
+   wJE48E0boCAaEyygo3PRjWLthEroC6ONFY03yiet29e9Big6KqzuB6cPw
+   N6nt0DvBRviRckFV6Q+OkCkQhzb4MK4YkmhRq6ZHzeCULLQZE59rTPH5F
+   cjlI/bbAPyKSal1GP37KXQTdrqgFoPOhm6CMUeeV8X03Qocy+CBabyIHo
+   N9jyCVK+fJWqZc5TJCC4+WEXIHixWPgjRarqU0Vfic3tAcf8OoTwR1rRc
+   k8KMKUWhIdwGrnSTwRgQUNc4WJ8R0TQNA8Q0tIs87DN5fwNJTVr87yQcL
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="9903473"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="9903473"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 02:13:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="931396166"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="931396166"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Jan 2024 02:13:36 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 3B759DE; Tue, 30 Jan 2024 12:13:35 +0200 (EET)
+Date: Tue, 30 Jan 2024 12:13:35 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: David Box <david.e.box@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@endlessos.org
+Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS
+ B1400CEAE
+Message-ID: <20240130101335.GU2543524@black.fi.intel.com>
+References: <20240130095933.14158-1-jhp@endlessos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240125193420.533604-3-leitao@debian.org>
+In-Reply-To: <20240130095933.14158-1-jhp@endlessos.org>
 
-On Thu, Jan 25, 2024 at 11:34:12AM -0800, Breno Leitao wrote:
-> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> Add descriptions to the Ocelot SoCs (VSC7514) helpers driver.
+Hi,
+
+On Tue, Jan 30, 2024 at 05:59:33PM +0800, Jian-Hong Pan wrote:
+> Some systems, like ASUS B1400CEAE equipped with the SATA controller
+> [8086:a0d3] can use LPM policy to save power, especially for s2idle.
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> Reviewed-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  drivers/net/ethernet/mscc/ocelot.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-> index 56ccbd4c37fe..2194f2a7ab27 100644
-> --- a/drivers/net/ethernet/mscc/ocelot.c
-> +++ b/drivers/net/ethernet/mscc/ocelot.c
-> @@ -3078,4 +3078,5 @@ void ocelot_deinit_port(struct ocelot *ocelot, int port)
->  }
->  EXPORT_SYMBOL(ocelot_deinit_port);
->  
-> +MODULE_DESCRIPTION("Microsemi Ocelot (VSC7514) Switch driver");
+> However, the same controller may be failed on other platforms. So,
+> commit (ata: ahci: Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI
+> controller") drops LPM policy for [8086:a0d3]. But, this blocks going
+> to deeper CPU Package C-state when s2idle with enabled Intel VMD.
 
-Hi Breno,
+Tiger Lake really should support this with no issues (as are the
+generations after it). I suggest trying to figure out what was the root
+cause of the original problem that triggered the revert, if possible at
+all, perhaps it is is something not related to LPM and that would allow
+us to enable this unconditionally on all Tiger Lake.
 
-I really appreciate your work in this area.
-
-WRT this patch, I could well be wrong, but I think this code is also used
-by Felix (VSC9959). If so the description might want tweaking.
-
-Vladimir, can you shed some light on this?
-
->  MODULE_LICENSE("Dual MIT/GPL");
-> -- 
-> 2.39.3
-> 
+I'm pretty sure the platform where this was reported suffers the same
+s2idle issue you are seeing without this patch.
