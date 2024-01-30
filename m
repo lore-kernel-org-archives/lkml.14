@@ -1,87 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D4585C67;
-	Tue, 30 Jan 2024 15:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F21823AA
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706629423; cv=none; b=kJ3aES5lM5TxNKXGRxsQrs1ki0FCH5s/64xnBylS+0g6i/80AHqzOO/kwHPwcs9DpGcq6uvk0W+LxMFCXH376PMKIYbRYHzjTLD3Hdc4U6hOS/t/6YjT4eJiKkHAWNov/RhHh0Bxy+4rgmIknoyBAH8k5R9tKxkFjdPwcZvp1qw=
+	t=1706629479; cv=none; b=O6P6vCD5YijUfWfU5tqh7KI3QIgAAF53WJ2gdYBUtg1+/7dt5qV4oPmOepTTPkuG1C4lsJMxEWkNjgd4wpwIx5WnHTUKiY4ZgTNPHjFaTeiiuTZZ+cS9+lBAtWDVK/9J399KRBM4EkEZ2blq2PiJj6XYs6B21vuXt0CO9Q20EbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706629423; c=relaxed/simple;
-	bh=pNWT5OlTiyqv3QvYZIhiFVUlSQd/qptTPUKWYGPAt34=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FQr59VYtGkeOkb/CEZH/WyeHQ8A7u6uz+ehA8ibl5/SL2omdo7f84Eowvj9KuMSdXt/Gg3u8IWPy8z2ovJD30wOswp92qOx5by5SbUN1TIQWRiCTvd+VPI9l1S0sNchAxln2ltvcQZfjtWNBph4/XdUH4US+2GnPdQ82SjnOpuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fet2r2Xm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706629479; c=relaxed/simple;
+	bh=H9m5L+gl6b+V+BQn2ouEpS21xEZtO77MxusqWCRPkaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G+KYnghwau4hOiW2ezK8QqaM74aForTPVreOdRsN82DIw2abdZgxZ5XvPZmKF/fS9j2/f64mJdg3sY5paXB5wDrlehO8GWeN3KjmA8oIcC9Jyteds87ooS0tN72ozT4oCXvmgV7rb5CvNbY0qIzUnOrE5SVJRIiott5SELNMbL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdlJKpyG; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fet2r2Xm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62165C433C7;
-	Tue, 30 Jan 2024 15:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706629422;
-	bh=pNWT5OlTiyqv3QvYZIhiFVUlSQd/qptTPUKWYGPAt34=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=fet2r2Xm6Hv0hxJ4p3lKxYY2NgGYhROGyBg+6Qm6jYw5bYYYmpZ+b7kPRcl5xeMwH
-	 ZfFx/npdn4MnpeJZ+bCxa5NBy71p+NB0p7d7r9z4Tw1KoKbB5VXpKxQ2K3r6KDGWtZ
-	 1a/y+t0YOWRKAH/41yTF8Yx+sPclwVIOxhrTAykT48757Wa4lbBMhY9Vf6R1oXuBTp
-	 Mp4DMzsXa231wzkToqVw5R+3wr+ZhC3b9nOQ9FwMba9S2p14hB95v1T2J8xYDI8XYB
-	 gGNq+iB6Q8QOKF18TtlgZLIgvUm8Plwyniu5rMfxK27Yhb3yKb6OWlGrl3tW8YvqrT
-	 fPeJqh+o/Pm3Q==
-From: Mark Brown <broonie@kernel.org>
-To: srinivas.kandagatla@linaro.org, bgoswami@quicinc.com, tiwai@suse.com, 
- Fullway Wang <fullwaywang@outlook.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- fullwaywang@tencent.com
-In-Reply-To: <PH7PR20MB59255EF9DFFB022CB1BBB574BF712@PH7PR20MB5925.namprd20.prod.outlook.com>
-References: <PH7PR20MB59255EF9DFFB022CB1BBB574BF712@PH7PR20MB5925.namprd20.prod.outlook.com>
-Subject: Re: [PATCH] sound: soc: wcd934x: fix an incorrect use of
- kstrndup()
-Message-Id: <170662942110.37296.1277489815994094565.b4-ty@kernel.org>
-Date: Tue, 30 Jan 2024 15:43:41 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdlJKpyG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706629477; x=1738165477;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=H9m5L+gl6b+V+BQn2ouEpS21xEZtO77MxusqWCRPkaM=;
+  b=EdlJKpyGfF4k8PVqe7dVLLIbXIkL30td6eV1oBQRKuYjUplI9aReL+a0
+   80GTlzvSg/tEnVJtet/msJTHB7YxCiFN7Fi6aB1emSx/jkYj5gt0tYpg0
+   O8ERZ+9xrNmpgSBlgkqAmDWcG7tJBhPtgdfAn9BUoOV1QDSEEB3UD7BV0
+   iLeFL8xl8snCdpswpNQd7TxML53IaXraxXzvvE6J7YWhS/VwRrkL8kmd1
+   RLv6NBRHYRoV4CafFwCXDPNneCz9i3co26rs9fiUiZmABb8BTFqnJLgoK
+   P8z+XGE3PHiT0I9oLlRP4G5r/tdDcOlpfgxVjWpNa2tDcRQmmytA0omIo
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="9984005"
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="9984005"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:44:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="3751415"
+Received: from pangchin-mobl3.amr.corp.intel.com (HELO [10.209.54.246]) ([10.209.54.246])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:44:35 -0800
+Message-ID: <62c3cd00-d072-4daa-8e67-442d52325cde@linux.intel.com>
+Date: Tue, 30 Jan 2024 07:44:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
+Content-Language: en-US
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>, Tom Lendacky
+ <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>,
+ Sean Christopherson <seanjc@google.com>, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
 
-On Thu, 18 Jan 2024 15:52:49 +0800, Fullway Wang wrote:
-> In wcd934x_codec_enable_dec(), kstrndup() is used to alloc memory.
-> However, kmemdup_nul() should be used instead with the size known.
-> 
-> This is similar to CVE-2019-12454 which was fixed in commit
-> a549881.
-> 
-> 
-> [...]
 
-Applied to
+On 1/30/24 12:30 AM, Kirill A. Shutemov wrote:
+> The function rdrand_long() retries 10 times before returning failure to
+> the caller. On the other hand, rdseed_long() gives up on the first
+> failure.
+>
+> According to the Intel SDM, both instructions should follow the same
+> retry approach. This information can be found in the section titled
+> "Random Number Generator Instructions".
+>
+> To align the behavior of rdseed_long() with rdrand_long(), it should be
+> modified to retry 10 times before giving up.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Change looks good to me.
 
-Thanks!
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-[1/1] sound: soc: wcd934x: fix an incorrect use of kstrndup()
-      commit: eeab239d6a2418fc5d2cd7ea76187085a97acde0
+Wondering whether this needs to go to stable trees?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+>  arch/x86/include/asm/archrandom.h | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/archrandom.h b/arch/x86/include/asm/archrandom.h
+> index 02bae8e0758b..918c5880de9e 100644
+> --- a/arch/x86/include/asm/archrandom.h
+> +++ b/arch/x86/include/asm/archrandom.h
+> @@ -33,11 +33,19 @@ static inline bool __must_check rdrand_long(unsigned long *v)
+>  
+>  static inline bool __must_check rdseed_long(unsigned long *v)
+>  {
+> +	unsigned int retry = RDRAND_RETRY_LOOPS;
+>  	bool ok;
+> -	asm volatile("rdseed %[out]"
+> -		     CC_SET(c)
+> -		     : CC_OUT(c) (ok), [out] "=r" (*v));
+> -	return ok;
+> +
+> +	do {
+> +		asm volatile("rdseed %[out]"
+> +			     CC_SET(c)
+> +			     : CC_OUT(c) (ok), [out] "=r" (*v));
+> +
+> +		if (ok)
+> +			return true;
+> +	} while (--retry);
+> +
+> +	return false;
+>  }
+>  
+>  /*
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
