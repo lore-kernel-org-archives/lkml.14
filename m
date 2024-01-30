@@ -1,367 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34915F849;
-	Tue, 30 Jan 2024 09:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F28565BDA
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606214; cv=none; b=XvbbbBv4BdN96/6qNjjvBLQnacO7PJrWZfhkwJ15QCMoS3YC8pnX4RH7SWYvqI77i3v+2n+PmX61Vncnn89qiuJY/gyJV8O0uijEXNQDXM3ZLcpsl6vxL5YWQXqtdzrwlN1st22V+aX9K0WZKM57YwSE0z2XuTX21yhvd6ivqeA=
+	t=1706606229; cv=none; b=Gm4oriA52gmWobJZxl32Kk6PO/TZBPlvu52d237dsnJ5RtvStbC4fb92pXIeBnsjANhGS1KFsSXOqsQdyScuWODJXz4ZfByjoMYL2kEKgE8M/SeV0UX7GVFM/diwFYmf1hMFOL+PWY1R47doAqrZUzqt0NLYZtjDW32l6wEDsWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606214; c=relaxed/simple;
-	bh=tTAS6UztStpo0SYXx14eTSJP+yk4zMdR6h+ep2k7+s4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a6Ij615pRaliq8G9j4eYMggyg+tJ4g4nwtkHMHnHomHeyq0fFIK8HnjL8dWRdTv9r6rjrwUzu7CQMsQHtKGc4TYIJC0rQlxHpkdvk/XopndELc1/xvDaqdnnVSHkQVwxQGH/huqO+UqQ4zPwQLnhNsNfeQ9YjLokPogi9qpB75I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LI6damsW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706606229; c=relaxed/simple;
+	bh=RB/RU+14zjSuFDBCBrMDaKkG53QFQyHCD+mk0Bdf+kQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CrsgmrksKwvzZ2SNflxZhbjGW9dW3U5SLLIVDqlnGJLg+oddlaCKoXiuZCPwcOzd2lM9eS28q5ZbYznjNj9nFqQpdESlWZJ7nBLrikcMvEdgp/fAnAgR/TUW88PC5o5VPsvzXrVETkJFj92h7xNcLPOkRKXLx9zKNINyWdcxEGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xem86HeO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LI6damsW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FF54C433F1;
-	Tue, 30 Jan 2024 09:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706606213;
-	bh=tTAS6UztStpo0SYXx14eTSJP+yk4zMdR6h+ep2k7+s4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LI6damsWx45gi0EMf45wHMGUnuXtIwsTNZogYgpI5h5B+rgxfpc9gOdVtrqGbUGIa
-	 +UJujQrtAIFMXyzaUjuM7PEaxxWUP74kPpmpKFg8eOblA6UPD2Qxxj3yNhQBPFgJ3k
-	 MbNuoA8jnneE4CH3xGTInz1nauTv8RJPLKlT5zdGGHxDfg6IaugG4MhiDtWg3QT4KK
-	 /ZXHpgr2oaaQR6EZsIFKSr5FraPB+3mSJ24KuNOGt3q6NF4QEfzDSQpOZtwEAyiCWq
-	 KgB6ZslNcjIPKDZK/dxqlRF8woq2Z5ITZ93fjHEGquF2SV0m9hq476FEnmeITe8JZ7
-	 izDIdpR4+sdDw==
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-210ce33ea1aso1917683fac.0;
-        Tue, 30 Jan 2024 01:16:53 -0800 (PST)
-X-Gm-Message-State: AOJu0Yww8nKGiBtIzUIVR9O2YbCT0ZoP9wDTRjuamPzZyktJW8ftps2T
-	cGn2fuSjeLZDNtEC+f2smapa0sNMaai2MbjBOTiEeg5lqWoLgaST/p/9WOLUaO2ChfO32BwawwA
-	RVWcxXNSYrexTNZtk+h84hlSKRjc=
-X-Google-Smtp-Source: AGHT+IEZ5HgcZiwMnOtdPH0wJzLQI3BAbDfeft5qApbQhSwGWUprF5hwqNIGW5fDJY9ewFd9/U2oFc9Fzwd4QPxuasc=
-X-Received: by 2002:a05:6870:b684:b0:214:ff12:3dda with SMTP id
- cy4-20020a056870b68400b00214ff123ddamr7405022oab.2.1706606212712; Tue, 30 Jan
- 2024 01:16:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xem86HeO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706606227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bsxh3glxMHMP5Jb5fGRHylI+iN6TGtV7J1Cs1H5riFM=;
+	b=Xem86HeOFZdyy/ptBBeNlVEZLJKUdvX9t6hdy1CERvwYi1WPmXpzoRjFQeIR2zlHHHKlhA
+	Xdu2wwkqGKoDB0b6dmisSTyYzAw3XqffhOPiNFYNdqieNnT92ncBT8M1wDXY6U05AI9IbF
+	lGnm8DYx1PT0mKF6wuUf+YTQ+CiH43I=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-qn-fWWeoOVyBQxKWachJjg-1; Tue, 30 Jan 2024 04:17:05 -0500
+X-MC-Unique: qn-fWWeoOVyBQxKWachJjg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a26f2da3c7bso196781666b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:17:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706606224; x=1707211024;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bsxh3glxMHMP5Jb5fGRHylI+iN6TGtV7J1Cs1H5riFM=;
+        b=g4dPqKq1ovzl1XqoVoGCEcHrHDLfdU0jwkIcS+EW/SZbAbVq7UKDyxWJZpNjbj41dU
+         53eGYWBSp/ZTD909J1SwTT98NFtL2stw63PAa7VgOdFlLoA+HQEbr12Ny78zeMkMIA4Y
+         nPIG1pC9CTHekfJIiEO+2HYzm52vJ7Rag8WJ2vfDWKO4/5eWDLnBDdcTxr9r/b9gW+6O
+         Nb530d3lOBbhq+NUFRW2aIv5cebWJW17pAMBNEYzKOvDrzA/1A1dwW7Eli3g7KXEICSH
+         RQJ5NIx6wqDaP0bCkkkY9j3e8Cui0m90TSwGRhLuibhDGuh+ylTLUX8Gkb5WGYIKjU3c
+         08zw==
+X-Gm-Message-State: AOJu0YwLr0Tn50r5VbotBuhyh4JZ0rpO0rIfDi2B7ZTyA2H3bE8L1pXn
+	k80E26uyLXUY9FML8gNjsgIPr2+hMqiMCAH7Woc0JnWRyH/Vt5VaxIELKS9ztDmArA7lRxFCzrl
+	yv8/cPuJ6SKS8bXdr0tIrGOV8tyAmUNJydE1oK+mnySK5SxCmRyNs2rEHfc6NcA==
+X-Received: by 2002:a17:906:a013:b0:a34:bc0d:3ca5 with SMTP id p19-20020a170906a01300b00a34bc0d3ca5mr5710542ejy.13.1706606223876;
+        Tue, 30 Jan 2024 01:17:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGa5kt/DuYffhGsop77KpBROb3I0ajmiY5RPux3EHSCMiQZl85DSsHnNvtpSFTn8tU8ZocQJQ==
+X-Received: by 2002:a17:906:a013:b0:a34:bc0d:3ca5 with SMTP id p19-20020a170906a01300b00a34bc0d3ca5mr5710525ejy.13.1706606223543;
+        Tue, 30 Jan 2024 01:17:03 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l17-20020a1709061c5100b00a3472da6696sm4886274ejg.159.2024.01.30.01.17.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 01:17:02 -0800 (PST)
+Message-ID: <c09ecd6a-7b1e-42a3-84fa-ba7dbeba2851@redhat.com>
+Date: Tue, 30 Jan 2024 10:17:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231202035511.487946-1-sjg@chromium.org> <20231202035511.487946-3-sjg@chromium.org>
- <20231213121353.GA31326@willie-the-truck> <CAFLszTjfmSx1YMqzb2TsQf7sP4KrcQB=X7DY_HxRQp0J5HAppQ@mail.gmail.com>
- <CAK7LNAQRCDC03e=TVO=k4FuD2a2RdTy7yLr3UptQjVCX7pM1CA@mail.gmail.com>
- <20240109143349.GR1610741@bill-the-cat> <CAFLszTjwhy24UiT6kUJABMC1Xn0h9Q1q9fYpZZJg9DX8Vss9cA@mail.gmail.com>
- <CAFLszTjPAHd6RdO1mvatXC=yRS+h=sgJ_pMdyEnkROTx7yRpog@mail.gmail.com>
-In-Reply-To: <CAFLszTjPAHd6RdO1mvatXC=yRS+h=sgJ_pMdyEnkROTx7yRpog@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 30 Jan 2024 18:16:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARsY6-rrx=sNFq6oFqpqf0s5S_=3DrUsCOS7zF0BXcoTg@mail.gmail.com>
-Message-ID: <CAK7LNARsY6-rrx=sNFq6oFqpqf0s5S_=3DrUsCOS7zF0BXcoTg@mail.gmail.com>
-Subject: Re: [PATCH v9 2/2] arm64: boot: Support Flat Image Tree
-To: Simon Glass <sjg@chromium.org>
-Cc: Tom Rini <trini@konsulko.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
-	U-Boot Mailing List <u-boot@lists.denx.de>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Terrell <terrelln@fb.com>, linux-doc@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	workflows@vger.kernel.org, Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: wmi: Initialize ACPI device class
+Content-Language: en-US, nl
+To: Armin Wolf <W_Armin@gmx.de>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240124190732.4795-1-W_Armin@gmx.de>
+ <9ccc3b9d-d71a-451c-80f5-3da62108d983@redhat.com>
+ <CAJZ5v0j1qvJYXqo96eMmtD4JnGh4Mu2ESdri5cGAqL-4bK0geA@mail.gmail.com>
+ <62a9942f-97b2-4237-b99f-131535368c68@gmx.de>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <62a9942f-97b2-4237-b99f-131535368c68@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+On 1/30/24 03:10, Armin Wolf wrote:
+> Am 29.01.24 um 14:08 schrieb Rafael J. Wysocki:
+> 
+>> On Mon, Jan 29, 2024 at 1:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>> Hi,
+>>>
+>>> On 1/24/24 20:07, Armin Wolf wrote:
+>>>> When an ACPI netlink event is received by acpid, the ACPI device
+>>>> class is passed as its first argument. But since the class string
+>>>> is not initialized, an empty string is being passed:
+>>>>
+>>>>        netlink:  PNP0C14:01 000000d0 00000000
+>>>>
+>>>> Fix this by initializing the ACPI device class during probe.
+>>>>
+>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>>> ---
+>>>> Note: This patch is based on commit 3f399b5d7189 ("platform/x86: wmi: Use ACPI device name in netlink event")
+>>>> ---
+>>>>   drivers/platform/x86/wmi.c | 6 +++++-
+>>>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>>>> index 7ef1e82dc61c..b92425c30a50 100644
+>>>> --- a/drivers/platform/x86/wmi.c
+>>>> +++ b/drivers/platform/x86/wmi.c
+>>>> @@ -32,6 +32,8 @@
+>>>>   #include <linux/wmi.h>
+>>>>   #include <linux/fs.h>
+>>>>
+>>>> +#define ACPI_WMI_DEVICE_CLASS        "wmi"
+>>>> +
+>>>>   MODULE_AUTHOR("Carlos Corbacho");
+>>>>   MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
+>>>>   MODULE_LICENSE("GPL");
+>>>> @@ -1202,7 +1204,7 @@ static int wmi_notify_device(struct device *dev, void *data)
+>>>>                wblock->handler(*event, wblock->handler_data);
+>>>>        }
+>>>>
+>>>> -     acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
+>>>> +     acpi_bus_generate_netlink_event(acpi_device_class(wblock->acpi_device),
+>>>>                                        acpi_dev_name(wblock->acpi_device), *event, 0);
+>>>>
+>>>>        return -EBUSY;
+>>>> @@ -1267,6 +1269,8 @@ static int acpi_wmi_probe(struct platform_device *device)
+>>>>                return -ENODEV;
+>>>>        }
+>>>>
+>>>> +     strscpy(acpi_device_class(acpi_device), ACPI_WMI_DEVICE_CLASS, sizeof(acpi_device_class));
+>>>> +
+>>> Hmm, I'm not sure if you are supposed to do this when you are not an
+>>> acpi_driver's add() function.
+>> You aren't.
+> 
+> I believed otherwise, as the ACPI AC driver (which is a platform_driver) does the same thing.
+> Seems i was wrong on that.
+
+I'm pretty sure that the ACPI AC driver used to be an acpi_driver
+and was converted to a platform_driver recently.
+
+AFAIK the plan is to convert all drivers to platform_drivers
+and completely get rid of the acpi_driver concept.
+
+That does mean that we will indeed have platform_drivers
+now setting the acpi_device_class. So I guess that maybe
+this is ok to do for the WMI bus driver too, since that
+is also not a plain driver.
+
+>>> Rafael, do you have any comments on this ?
+>> I'm not quite sure why this is done here.
+> 
+> The initialization of the ACPI device class is being done to access this value later when sending an
+> ACPI netlink event like other ACPI drivers do.
+> 
+> However since you clarified that doing this outside of an acpi_driver's add() function is forbidden
+> i think it would indeed be better to just pass the value directly without touching the ACPI device class.
+
+Right I was thinking that you could just pass the string
+directly to acpi_bus_generate_netlink_event() myself too.
+
+Rafael, do you have any preference for how to solve this ?
+
+Regards,
+
+Hans
 
-On Fri, Jan 26, 2024 at 1:04=E2=80=AFAM Simon Glass <sjg@chromium.org> wrot=
-e:
->
-> Hi,
->
-> On Wed, 17 Jan 2024 at 06:14, Simon Glass <sjg@chromium.org> wrote:
-> >
-> > Hi Masahiro, Tom,
-> >
-> > On Tue, 9 Jan 2024 at 07:33, Tom Rini <trini@konsulko.com> wrote:
-> > >
-> > > On Tue, Jan 09, 2024 at 11:01:42PM +0900, Masahiro Yamada wrote:
-> > > > Hi Simon,
-> > > >
-> > > >
-> > > > On Wed, Jan 3, 2024 at 8:47=E2=80=AFAM Simon Glass <sjg@chromium.or=
-g> wrote:
-> > > > >
-> > > > > Hi Masahiro,
-> > > > >
-> > > > > On Wed, Dec 13, 2023 at 5:14=E2=80=AFAM Will Deacon <will@kernel.=
-org> wrote:
-> > > > > >
-> > > > > > On Fri, Dec 01, 2023 at 08:54:42PM -0700, Simon Glass wrote:
-> > > > > > > Add a script which produces a Flat Image Tree (FIT), a single=
- file
-> > > > > > > containing the built kernel and associated devicetree files.
-> > > > > > > Compression defaults to gzip which gives a good balance of si=
-ze and
-> > > > > > > performance.
-> > > > > > >
-> > > > > > > The files compress from about 86MB to 24MB using this approac=
-h.
-> > > > > > >
-> > > > > > > The FIT can be used by bootloaders which support it, such as =
-U-Boot
-> > > > > > > and Linuxboot. It permits automatic selection of the correct
-> > > > > > > devicetree, matching the compatible string of the running boa=
-rd with
-> > > > > > > the closest compatible string in the FIT. There is no need fo=
-r
-> > > > > > > filenames or other workarounds.
-> > > > > > >
-> > > > > > > Add a 'make image.fit' build target for arm64, as well. Use
-> > > > > > > FIT_COMPRESSION to select a different algorithm.
-> > > > > > >
-> > > > > > > The FIT can be examined using 'dumpimage -l'.
-> > > > > > >
-> > > > > > > This features requires pylibfdt (use 'pip install libfdt'). I=
-t also
-> > > > > > > requires compression utilities for the algorithm being used. =
-Supported
-> > > > > > > compression options are the same as the Image.xxx files. For =
-now there
-> > > > > > > is no way to change the compression other than by editing the=
- rule for
-> > > > > > > $(obj)/image.fit
-> > > > > > >
-> > > > > > > While FIT supports a ramdisk / initrd, no attempt is made to =
-support
-> > > > > > > this here, since it must be built separately from the Linux b=
-uild.
-> > > > > > >
-> > > > > > > Signed-off-by: Simon Glass <sjg@chromium.org>
-> > > > > > > ---
-> > > > > > >
-> > > > > > > Changes in v9:
-> > > > > > > - Move the compression control into Makefile.lib
-> > > > > > >
-> > > > > > > Changes in v8:
-> > > > > > > - Drop compatible string in FDT node
-> > > > > > > - Correct sorting of MAINTAINERS to before ARM64 PORT
-> > > > > > > - Turn compress part of the make_fit.py comment in to a sente=
-nce
-> > > > > > > - Add two blank lines before parse_args() and setup_fit()
-> > > > > > > - Use 'image.fit: dtbs' instead of BUILD_DTBS var
-> > > > > > > - Use '$(<D)/dts' instead of '$(dir $<)dts'
-> > > > > > > - Add 'mkimage' details Documentation/process/changes.rst
-> > > > > > > - Allow changing the compression used
-> > > > > > > - Tweak cover letter since there is only one clean-up patch
-> > > > > > >
-> > > > > > > Changes in v7:
-> > > > > > > - Add Image as a dependency of image.fit
-> > > > > > > - Drop kbuild tag
-> > > > > > > - Add dependency on dtbs
-> > > > > > > - Drop unnecessary path separator for dtbs
-> > > > > > > - Rebase to -next
-> > > > > > >
-> > > > > > > Changes in v5:
-> > > > > > > - Drop patch previously applied
-> > > > > > > - Correct compression rule which was broken in v4
-> > > > > > >
-> > > > > > > Changes in v4:
-> > > > > > > - Use single quotes for UIMAGE_NAME
-> > > > > > >
-> > > > > > > Changes in v3:
-> > > > > > > - Drop temporary file image.itk
-> > > > > > > - Drop patch 'Use double quotes for image name'
-> > > > > > > - Drop double quotes in use of UIMAGE_NAME
-> > > > > > > - Drop unnecessary CONFIG_EFI_ZBOOT condition for help
-> > > > > > > - Avoid hard-coding "arm64" for the DT architecture
-> > > > > > >
-> > > > > > > Changes in v2:
-> > > > > > > - Drop patch previously applied
-> > > > > > > - Add .gitignore file
-> > > > > > > - Move fit rule to Makefile.lib using an intermediate file
-> > > > > > > - Drop dependency on CONFIG_EFI_ZBOOT
-> > > > > > > - Pick up .dtb files separately from the kernel
-> > > > > > > - Correct pylint too-many-args warning for write_kernel()
-> > > > > > > - Include the kernel image in the file count
-> > > > > > > - Add a pointer to the FIT spec and mention of its wide indus=
-try usage
-> > > > > > > - Mention the kernel version in the FIT description
-> > > > > > >
-> > > > > > >  Documentation/process/changes.rst |   9 +
-> > > > > > >  MAINTAINERS                       |   7 +
-> > > > > > >  arch/arm64/Makefile               |   7 +-
-> > > > > > >  arch/arm64/boot/.gitignore        |   1 +
-> > > > > > >  arch/arm64/boot/Makefile          |   6 +-
-> > > > > > >  scripts/Makefile.lib              |  16 ++
-> > > > > > >  scripts/make_fit.py               | 291 ++++++++++++++++++++=
-++++++++++
-> > > > > > >  7 files changed, 334 insertions(+), 3 deletions(-)
-> > > > > > >  create mode 100755 scripts/make_fit.py
-> > > > > >
-> > > > > > I'll need Masahiro's Ack on the scripts/ changes before I can t=
-ake this
-> > > > > > one.
-> > > > >
-> > > > > Any thoughts on this request, please?
-> > > > >
-> > > > > Regards,
-> > > > > Simon
-> > > > >
-> > > >
-> > > >
-> > > >
-> > > > As I mentioned before, I am concerned with having
-> > > > the same "compatible" entries, with different contents,
-> > > > as you use the "compatible" string as an ID to selecting
-> > > > the target config node, right?
-> > > >
-> > > >
-> > > >
-> > > >
-> > > >
-> > > > $ fdtdump  arch/arm64/boot/image.fit
-> > > >
-> > > >         ...
-> > > >
-> > > >         conf-10 {
-> > > >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
-> > > > "tq,am642-tqma6442l", "ti,am642";
-> > > >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL c=
-arrier board";
-> > > >             fdt =3D "fdt-10";
-> > > >             kernel =3D "kernel";
-> > > >         };
-> > > >
-> > > >         ...
-> > > >
-> > > >         conf-25 {
-> > > >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
-> > > > "tq,am642-tqma6442l", "ti,am642";
-> > > >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL c=
-arrier board";
-> > > >             fdt =3D "fdt-25";
-> > > >             kernel =3D "kernel";
-> > > >         };
-> > >
-> > > I had asked Rob a while ago about if having the same compatible for t=
-wo
-> > > functionally different machines is a feature, or a bug, and I don't
-> > > think either of us fully agreed either way. I'd be leaning towards
-> > > saying the above example is a bug in the dts files, it's just not bee=
-n a
-> > > bug people have worried about before due to (sadly) how little the
-> > > top-level compatible has been used.
-> >
-> > Yes I believe this is a bug in the files.
-> >
-> > What should the script do in this case? Print a warning, perhaps?
->
-> Is there anything I should do here? Would a warning be helpful, or
-> just confusing?
-
-
-
-I do not think it is useful.
-You would almost always get a warning, and there is no way to fix it.
-
-
-
-With arm64 defconfig, image.fit will include a thousand DTBs.
-
-
-The config node of my board was listed 214th.
-(I found it by fdtdump)
-
-
-Then, I learned
-
-  >  bootm  ${loadaddr}#conf-214
-
-is the correct command to boot my board.
-
-
-Of course, the "214" will be different in the future.
-
-The node names, conf-*, are useless.
-
-
-
-Only the useful way is to enable CONFIG_FIT_BEST_MATCH in U-Boot,
-but this relies on the uniqueness of a compatible string,
-which is not true.
-
-(I do not know how to do it in barebox)
-
-
-
-
-
-I think using the file name as a config node
-mitigates the issue because a file name is
-considered unique.
-
-
-For example, with composite DTBs:
-
-imx8mm-venice-gw72xx-0x-imx219-dtbs :=3D imx8mm-venice-gw72xx-0x.dtb
-imx8mm-venice-gw72xx-0x-imx219.dtbo
-imx8mm-venice-gw72xx-0x-rpidsi-dtbs :=3D imx8mm-venice-gw72xx-0x.dtb
-imx8mm-venice-gw72xx-0x-rpidsi.dtbo
-
-
-
-
-configurations {
-      imx8mm-venice-gw72xx-0x-imx219 {
-            ...
-      };
-
-      imx8mm-venice-gw72xx-0x-rpidsi {
-            ...
-      }
-};
-
-
-
-Then, we can distinguish them by node, even if they have
-the same compatible string.
-At least we can do
-
-  > bootm  ${loadaddr}#imx8mm-venice-gw72xx-0x-imx219
-
-
-
-
-For the issue including stale DTBs, you can use my patch:
-[PATCH 1/4] kbuild: create a list of all built DTB files
-(https://lore.kernel.org/linux-kbuild/CAK7LNASOxi-gzve+_d-sCW9z_eEJ5TMMnzPE=
-vN2Nj2AwgVjF9g@mail.gmail.com/T/#ma3595627a96a04554a78cbbd22056831e13db260)
-
-
-You can change scripts/make_fit.py to take
-the DTB files instead of the directory to search.
-
-Optionally, you can support '@' syntax to
-take command arguments from a file.
-
-
-scripts/make_fit.py ... @arch/$(SRCARCH)/boot/dts/dtbs-list
-
-
-
-
-
-
-For the separate base and overlays support,
-you can use my patch as a base:
-[PATCH 3/4] kbuild: create a list of base and overlays for each DTB
-(https://lore.kernel.org/linux-kbuild/CAK7LNASOxi-gzve+_d-sCW9z_eEJ5TMMnzPE=
-vN2Nj2AwgVjF9g@mail.gmail.com/T/#m32c5bdde9098901b7c7776b932827493a05c82d5)
-
-
-
-
-
-Lastly, you do not need to require mkimage for
-args.external.
-You can simply concatenate files.
-
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
