@@ -1,71 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9817EF15;
-	Tue, 30 Jan 2024 23:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318E57EF1F
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 23:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706656245; cv=none; b=Bf2O8HYLs/Pgn+bNJvdgmWSYe7geyMcJQ/BxhpBl4jHmnbhjZj6Z02vO8AhdLeQMOMT9hVT6fHHNgvDZychNRaYmMOprDiFV0FJtC/XIURo+1P7QR8JdlmV2adpbb+m5vs6Cw3If+YZTGVWHlkpNsnjSQxXyseyPJGz6U3O7avU=
+	t=1706656433; cv=none; b=HhO1yCJ3gzoOzomqtKLuo9TgTRdqWJpCxzy9nb6uMXGxZ7WF137EvG5KB0kcUw1qc+cuhxgQJeUjDl9c6J1zqq1WeRX6WgG4shrqJHHNc9K41qGWB2dplFCWI0F23/mupIYefVKdwXmbDT3dVay9NT5yJPC4wc+M570k/I50hcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706656245; c=relaxed/simple;
-	bh=qQGsXULyrB3Ryczms+iBaRXs0qHPwY0/zFdVSrn4PO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oa4PsV8H6d7qsJ+P1QwdOsA/c8KC/mP0+qk792JIz1MRVjp+dPQaa1C73YAuK98h/FX7TXzFGPu+Ol2bD6BqvJy8NQ8sF6P1IuNEjE56IyH7QeDmQ13TYHiaIptl7kPaP+jyVULoYb/Pg0eIK4Hc9s0ih3hFaejerJ4BoOWp1sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AEAC433F1;
-	Tue, 30 Jan 2024 23:10:44 +0000 (UTC)
-Date: Tue, 30 Jan 2024 18:10:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
- refcounts
-Message-ID: <20240130181057.278ac05c@gandalf.local.home>
-In-Reply-To: <CAHk-=wiPWaiD5fwyXXHX-qgk6t2+0NM_KHzwiecvCBiNWZacHA@mail.gmail.com>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-5-torvalds@linux-foundation.org>
-	<20240130155550.4881d558@gandalf.local.home>
-	<CAHk-=whD=9qTfhYVhH+d44KbwefC_vnRAjqz-pthcSn1p5zZLA@mail.gmail.com>
-	<CAHk-=wg=tFFTep3dDTVHKYZBdNj0+PV4a0-UR1sVR3K7RHPGFg@mail.gmail.com>
-	<CAHk-=wiPWaiD5fwyXXHX-qgk6t2+0NM_KHzwiecvCBiNWZacHA@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706656433; c=relaxed/simple;
+	bh=aCglTAeVcM0PfMd5hwBjAlJh3ooM/5RsDnU91GWahMA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X/5IjFLudO5XAJuv632clZvgouBrEJ2vIrwQTpohxjrnS6ULwiv7nkxRy2TpKIZWLzkv1RLc3rOhk9Wtn06LutPHzIjtWjJqIDAb+VYEHvqJwySqnEJNwOV++VX9ox7k7Dpa6ZCV1LIxb6XWBnhHlrlAmyHPl9tHX/nuyLjzNUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=opV4NaYl; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="opV4NaYl"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6de0f53f8e8so266421b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:13:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706656431; x=1707261231; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aCglTAeVcM0PfMd5hwBjAlJh3ooM/5RsDnU91GWahMA=;
+        b=opV4NaYlwKKIDdO7mZG0r2sxBLQJ9TWN+8Mw59h4LKHsxarYux4eMRUM96W2EmdVYb
+         FynTt/wATDjIALtgIy8ed160jWjRGB+BT6ylFxkKeZNY85zv5krcKEpGUanEqrAneXEK
+         U1/nVm1qGU5UV0xZG7w4q0k4KL/nrDPkVsXknBRDD+Nfh90pnQ2qMPIh6FIHrUI5tPok
+         W3eQmKe+ksoqd8JKJjdkTiKiXzOGq+Fxx5Wx6rnRywjyzjUMPhv9qdmZ4Lcm6vTdOUh8
+         WliSvNkW/lUy8g8qYoKlGTTKyFVS/nGB2uNBVKKrMOeveLwop4LW0lQpxxjcvc0Gpzbx
+         gATA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706656431; x=1707261231;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aCglTAeVcM0PfMd5hwBjAlJh3ooM/5RsDnU91GWahMA=;
+        b=iKxIuI9rEwrgcvJcs6s8JK6je8kcu0Vz0p+iulTxCUDmCvmkPktaVKl/W2JTC97uiL
+         9v7wHICm6d3wT64czTigpEGgiST3Utnl0yehPkV+WWzlgzLtH2Fam7iZsNZvBEUiUlSb
+         tQcy5FfZsKnemNX5GFRY6dEnakRneAycJkWx/5+2KJD1tj62B8Ih1AoYqDQkggJxqKrz
+         4X3LWOHkZNamycKzPCrtApNw0bUVdr7G4JCTbiQvJ/8QEEXEjiUHsuFB/zooQ3UBKXYV
+         HtYdFaTJlQGQmqjzvVzpDNafkBXM8W3HyfX625wHbj5Wb3eTz8CP3zs5QqsQYeZC0f/O
+         r4Fw==
+X-Gm-Message-State: AOJu0Yz8esQLJjmnfBJs93dHWfdRC9W77Zv62lfqNRupUEU/rrMPyc7l
+	jvEffz2uGgYa5D7PjioO3y5giILBRxtrDjzsB2iVUu2h9tUXVlyS7vr5JXIQnkhkz01pT7QL2Rp
+	Q5I2xtGS22zFvBG/BEKrHLnD80NuAA5uL9zFJHg==
+X-Google-Smtp-Source: AGHT+IHQAahjrMg9Y0dWXqUUXGOGOSgWGyqO+PDriasAlruF7X/96XL4KAI6X8n/QyRmm5M2vm1fvk6Mz+jrJ7j0344=
+X-Received: by 2002:a05:6a20:9f06:b0:19a:5257:9828 with SMTP id
+ mk6-20020a056a209f0600b0019a52579828mr3198323pzb.22.1706656431461; Tue, 30
+ Jan 2024 15:13:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYtEGe_DhY2Ms7+L7NKsLYUomGsgqpdBj+QwDLeSg=JhGg@mail.gmail.com>
+ <ad5b7442-385d-41db-9202-a36414460610@sirena.org.uk> <CA+G9fYsbwWpDVR9KJXx8UO5MXsYT81uAJbLLNDnLianr8jmXUA@mail.gmail.com>
+ <63e92a6a-9cb7-4272-b524-ccaf997aceb3@sirena.org.uk> <CAEUSe7_9tE5K7NpsmaG_v_bTJaMGhVVSDRhMn1QYnr2z4vSg8w@mail.gmail.com>
+ <20231221093442.3c4b84f0d39350f9deb4e51f@kernel.org>
+In-Reply-To: <20231221093442.3c4b84f0d39350f9deb4e51f@kernel.org>
+From: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Date: Tue, 30 Jan 2024 17:13:40 -0600
+Message-ID: <CAEUSe7-q2byVG=qM-uw-oe+aRb=wbDzAc8JMJQdUCFbqJMwyeg@mail.gmail.com>
+Subject: Re: selftests: ftrace: Internal error: Oops: sve_save_state
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	linux-stable <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 30 Jan 2024 15:06:13 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hello, Masami-san!
 
-> On Tue, 30 Jan 2024 at 14:56, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > With that, the base size of 'struct eventfs_inode' actually becomes 96
-> > bytes for me.  
-> 
-> It can be shrunk some more.
-> 
-> The field ordering is suboptimal. Pointers are 8 bytes and 8-byte
-> aligned, but 'struct kref' is just 4 bytes, and 'struct eventfs_attr'
-> is 12 bytes and 4-byte aligned.
-> 
-> So if you pack all the 8-byte-aligned fields at the beginning, and the
-> 4-byte-aligned ones at the end, you get 88 bytes.
-> 
-> At which point a name pointer would *just* fit in 96 bytes.
+Sorry for the late reply -- winter break, expired artifacts, life, etc.
 
-Does that mean I should keep the kstrdup_const()?
+On Wed, 20 Dec 2023 at 18:34, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> Hi Daniel,
+> Would you know what ftrace selftest testcase script is running when
+> this crash happened? I think it depends on the selftest version but
+> I don't know which one you run.
 
-> 
-> ...  and then some debug option is enabled, and it all goes to hell again.
+If I remember correctly, that actually happened during LTP testing. I
+found a new instance on 6.1 today, on ltp-controllers, so there were
+no kselftests involved.
 
-Heh, I'm not too concerned about debug options. As anyone concerned about
-memory size should have already have audited their .config to turn off
-anything they don't need.
+I'll share more details in a bit.
 
--- Steve
+Greetings!
+
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
