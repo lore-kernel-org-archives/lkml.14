@@ -1,207 +1,76 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478EE65BA9
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FD6664A0;
+	Tue, 30 Jan 2024 09:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706607587; cv=none; b=fCLvYy9+5fneIMgrcQkqbJ4p7pBRAeGKH9EUeKT6IHzpQ1iftFqpyXATgEIkdqrqFoMqQZ/0E6Khuyvv1N0lRYjY97IHnQnwcz9g10QWdJDcZ6ce5eLDJuX7/DecIeiUoS1ddjJdnKfaMOW8uR1HSnyQP1j71GUvf1Y3GuU1TvI=
+	t=1706607588; cv=none; b=OxaaJt/62j98NdZb0sxdHKk71P9PMhDi22pzEMmvpJ7n57hYbTzeUAFF6zu//wAmMs5/mat727PKw4MXr8BGPs8po88ymU95Pq07C+ZmeIlECoe0pFJNs22oMiAOyzopRyAX1oXjdvN3PtSfJPyo3EU7L5T0etCFfdy8Aw/FTZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706607587; c=relaxed/simple;
-	bh=BoH7plNOPHJjIWtlMvLmcyKU/0ddmPig/gF/cuYUg1g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qUTuWMDA0zU+r6SmtkYvo62519xHFhbij8PtcHl6MGfUbVWl3y3xnimQR+GLBHgzQ+UH3qRDEQEgKVxlwNbC5Rdi7y8tCycPvDJvBv9ilmt/EzkC6zFfvsAzkl4RePrtdC02ZrBKOu6DhzUe2Ml3ojzdjGjWul+DaysOJaZUPB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtp66t1706607524t8ljfom5
-X-QQ-Originating-IP: MNSEeMuOZ9lvFqensrikzTfnoUJDWSKe36HfiiCwqdY=
-Received: from localhost.localdomain ( [123.114.60.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 30 Jan 2024 17:38:42 +0800 (CST)
-X-QQ-SSF: 01400000000000E0L000000A0000000
-X-QQ-FEAT: HXiF522FjMjWLRmR8bTORYhARGnWrOcrgyElIPyt8kAHCwHZECQDBFeqATL3C
-	8c7qFuKJxAeancrgd0kdGIOcCftL24HUfKOFw/GpbUS+L17iA7IOnA419/RC1nq+YG+FOJA
-	3QGeDJ8RqCZ7+OTCLt6Zc2JczZBztM8meAMRiwmCZ8aEjioDewYc3FEjgoLhylMDki4hrWz
-	J5pPRYW0a0APCSDIM9yFVVi8jO7lAv1dtS/UyKYjzdcbgkrHxlTim26gQQJyQgEJX57UN5A
-	NzaSe1Ro53wL5LFEQH4wHfEY1x4plzuAy9wUxDtp+hsVYWM9YKO6B1fpDmzBMg/7JN3pNTN
-	J0ZrRoY0llUQ6ZXAtZG8n3mt/hWy0kw51uMIgIO3NRG6SulEJO6BOclFGX3XqvQq5SDPOsS
-	z1J9Ty9RXmU=
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10257619297343523134
-From: Qiang Ma <maqianga@uniontech.com>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	sunran001@208suo.com,
-	srinivasan.shanmugam@amd.com
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH] drm/amdgpu: Clear the hotplug interrupt ack bit before hpd initialization
-Date: Tue, 30 Jan 2024 17:38:08 +0800
-Message-Id: <20240130093808.23890-1-maqianga@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1706607588; c=relaxed/simple;
+	bh=mM2ess45AwnKbrhva6jwqwOxaR8DZ3trNEEwfS3BavI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ma1ItYTaqIwF+3QFWLII+vWCejTA6If0dVvviHew1RC3J0QdyKP7brBNLNETdBFOC4xvGxvO40G1RCT4y1+WL7TwV9TEfEuB3F8fHiz5O2ropr3tg3Be32mTLILtscUaalF0Isc1KeLFLxfZfwNoRvVwhChMt2CzD5cBunkZxKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/1AD10a; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/1AD10a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3855C433F1;
+	Tue, 30 Jan 2024 09:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706607587;
+	bh=mM2ess45AwnKbrhva6jwqwOxaR8DZ3trNEEwfS3BavI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=M/1AD10ainb7xZ5Xh7+PkxKhKUE9EsKLKZ7Bp+7g1cEz3OhwehROSbXZnub3W1B/1
+	 NFs0Nmk4eCsy+5LR97e9uqIqHAkH7qnHv+QoF5ou27Foh9gpPr1cldovq4KCNoUzXD
+	 aytEQQVmfwCm7FswpGuP2DnawKPKxqIK0eR6O9xGlSCvZjMME69H2AvW6y0i3Fi6Vo
+	 LGWBiRLqKjtKtfJTzcvbna7VSS5AA0G3tAvhvQEs/tBkhgwH5MfarX5YH7HYuSLKS/
+	 axWcO1qbO5Pe8qkT87aYPv3cegHTz+qiVBv1DjsQFCiU/2+a2J4pUFREIYHVIUIolR
+	 PloqIRzKSMh3Q==
+From: Christian Brauner <brauner@kernel.org>
+To: Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	ntfs3@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH 1/2] ntfs3: use file_mnt_idmap helper
+Date: Tue, 30 Jan 2024 10:39:36 +0100
+Message-ID: <20240130-heimvorteil-glasfaser-0e371f946d21@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240129180024.219766-1-aleksandr.mikhalitsyn@canonical.com>
+References: <20240129180024.219766-1-aleksandr.mikhalitsyn@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=908; i=brauner@kernel.org; h=from:subject:message-id; bh=mM2ess45AwnKbrhva6jwqwOxaR8DZ3trNEEwfS3BavI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTuOHzbxHape+Lmq1ur/0XFTAnOVJ1x57zL9m3ycwvW3 lLSzUuu7ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAYTJDH9Fn78uKBAV6y/XCMyX PKCyc3H7vaWO+cY8px2vKP1JM3ZlZHgmYHd035cz60+YW87iWMOQnzvFIaJ5VUdYys0VZouaYzg B
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4a-0
 
-Problem:
-The computer in the bios initialization process, unplug the HDMI display,
-wait until the system up, plug in the HDMI display, did not enter the
-hotplug interrupt function, the display is not bright.
+On Mon, 29 Jan 2024 19:00:23 +0100, Alexander Mikhalitsyn wrote:
+> Let's use file_mnt_idmap() as we do that across the tree.
+> 
+> No functional impact.
+> 
+> 
 
-Fix:
-After the above problem occurs, and the hpd ack interrupt bit is 1,
-the interrupt should be cleared during hpd_init initialization so that
-when the driver is ready, it can respond to the hpd interrupt normally.
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Signed-off-by: Qiang Ma <maqianga@uniontech.com>
----
- drivers/gpu/drm/amd/amdgpu/dce_v10_0.c |  2 ++
- drivers/gpu/drm/amd/amdgpu/dce_v11_0.c |  2 ++
- drivers/gpu/drm/amd/amdgpu/dce_v6_0.c  | 20 +++++++++++++++++---
- drivers/gpu/drm/amd/amdgpu/dce_v8_0.c  | 20 +++++++++++++++++---
- 4 files changed, 38 insertions(+), 6 deletions(-)
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c b/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c
-index bb666cb7522e..11859059fd10 100644
---- a/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c
-@@ -51,6 +51,7 @@
- 
- static void dce_v10_0_set_display_funcs(struct amdgpu_device *adev);
- static void dce_v10_0_set_irq_funcs(struct amdgpu_device *adev);
-+static void dce_v10_0_hpd_int_ack(struct amdgpu_device *adev, int hpd);
- 
- static const u32 crtc_offsets[] = {
- 	CRTC0_REGISTER_OFFSET,
-@@ -363,6 +364,7 @@ static void dce_v10_0_hpd_init(struct amdgpu_device *adev)
- 				    AMDGPU_HPD_DISCONNECT_INT_DELAY_IN_MS);
- 		WREG32(mmDC_HPD_TOGGLE_FILT_CNTL + hpd_offsets[amdgpu_connector->hpd.hpd], tmp);
- 
-+		dce_v6_0_hpd_int_ack(adev, amdgpu_connector->hpd.hpd);
- 		dce_v10_0_hpd_set_polarity(adev, amdgpu_connector->hpd.hpd);
- 		amdgpu_irq_get(adev, &adev->hpd_irq,
- 			       amdgpu_connector->hpd.hpd);
-diff --git a/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c b/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c
-index 7af277f61cca..745e4fdffade 100644
---- a/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c
-@@ -51,6 +51,7 @@
- 
- static void dce_v11_0_set_display_funcs(struct amdgpu_device *adev);
- static void dce_v11_0_set_irq_funcs(struct amdgpu_device *adev);
-+static void dce_v11_0_hpd_int_ack(struct amdgpu_device *adev, int hpd);
- 
- static const u32 crtc_offsets[] =
- {
-@@ -387,6 +388,7 @@ static void dce_v11_0_hpd_init(struct amdgpu_device *adev)
- 				    AMDGPU_HPD_DISCONNECT_INT_DELAY_IN_MS);
- 		WREG32(mmDC_HPD_TOGGLE_FILT_CNTL + hpd_offsets[amdgpu_connector->hpd.hpd], tmp);
- 
-+		dce_v11_0_hpd_int_ack(adev, amdgpu_connector->hpd.hpd);
- 		dce_v11_0_hpd_set_polarity(adev, amdgpu_connector->hpd.hpd);
- 		amdgpu_irq_get(adev, &adev->hpd_irq, amdgpu_connector->hpd.hpd);
- 	}
-diff --git a/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c b/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c
-index 143efc37a17f..f8e15ebf74b4 100644
---- a/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c
-@@ -272,6 +272,21 @@ static void dce_v6_0_hpd_set_polarity(struct amdgpu_device *adev,
- 	WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp);
- }
- 
-+static void dce_v6_0_hpd_int_ack(struct amdgpu_device *adev,
-+				 int hpd)
-+{
-+	u32 tmp;
-+
-+	if (hpd >= adev->mode_info.num_hpd) {
-+		DRM_DEBUG("invalid hdp %d\n", hpd);
-+		return;
-+	}
-+
-+	tmp = RREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd]);
-+	tmp |= DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
-+	WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp);
-+}
-+
- /**
-  * dce_v6_0_hpd_init - hpd setup callback.
-  *
-@@ -311,6 +326,7 @@ static void dce_v6_0_hpd_init(struct amdgpu_device *adev)
- 			continue;
- 		}
- 
-+		dce_v6_0_hpd_int_ack(adev, amdgpu_connector->hpd.hpd);
- 		dce_v6_0_hpd_set_polarity(adev, amdgpu_connector->hpd.hpd);
- 		amdgpu_irq_get(adev, &adev->hpd_irq, amdgpu_connector->hpd.hpd);
- 	}
-@@ -3101,9 +3117,7 @@ static int dce_v6_0_hpd_irq(struct amdgpu_device *adev,
- 	mask = interrupt_status_offsets[hpd].hpd;
- 
- 	if (disp_int & mask) {
--		tmp = RREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd]);
--		tmp |= DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
--		WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp);
-+		dce_v6_0_hpd_int_ack(adev, hpd);
- 		schedule_delayed_work(&adev->hotplug_work, 0);
- 		DRM_DEBUG("IH: HPD%d\n", hpd + 1);
- 	}
-diff --git a/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c b/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c
-index adeddfb7ff12..141e33a01686 100644
---- a/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c
-@@ -264,6 +264,21 @@ static void dce_v8_0_hpd_set_polarity(struct amdgpu_device *adev,
- 	WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp);
- }
- 
-+static void dce_v8_0_hpd_int_ack(struct amdgpu_device *adev,
-+				 int hpd)
-+{
-+	u32 tmp;
-+
-+	if (hpd >= adev->mode_info.num_hpd) {
-+		DRM_DEBUG("invalid hdp %d\n", hpd);
-+		return;
-+	}
-+
-+	tmp = RREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd]);
-+	tmp |= DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
-+	WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp);
-+}
-+
- /**
-  * dce_v8_0_hpd_init - hpd setup callback.
-  *
-@@ -303,6 +318,7 @@ static void dce_v8_0_hpd_init(struct amdgpu_device *adev)
- 			continue;
- 		}
- 
-+		dce_v6_0_hpd_int_ack(adev, amdgpu_connector->hpd.hpd);
- 		dce_v8_0_hpd_set_polarity(adev, amdgpu_connector->hpd.hpd);
- 		amdgpu_irq_get(adev, &adev->hpd_irq, amdgpu_connector->hpd.hpd);
- 	}
-@@ -3189,9 +3205,7 @@ static int dce_v8_0_hpd_irq(struct amdgpu_device *adev,
- 	mask = interrupt_status_offsets[hpd].hpd;
- 
- 	if (disp_int & mask) {
--		tmp = RREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd]);
--		tmp |= DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
--		WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp);
-+		dce_v6_0_hpd_int_ack(adev, hpd);
- 		schedule_delayed_work(&adev->hotplug_work, 0);
- 		DRM_DEBUG("IH: HPD%d\n", hpd + 1);
- 	}
--- 
-2.20.1
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/2] ntfs3: use file_mnt_idmap helper
+      https://git.kernel.org/vfs/vfs/c/16a37cba65f1
