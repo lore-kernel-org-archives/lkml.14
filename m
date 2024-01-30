@@ -1,148 +1,174 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2010.outbound.protection.outlook.com [40.92.20.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3432A36114
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706578776; cv=none; b=RT/Sxz0VF3icfOAoGIW+C+IX07ZV+jDE2ChUVBJfjNI3TXO1pV17OwYfjbk3wrjLCCpCWy78siewnUvcjQi2nysn+hGHVIWOqxCDZDXQDhCkCXHZEUV0GEtttRuk1R1WtJOUOujnaUfTcXUGgfmXaKnhFXQ2b+rSK6ATO4Q1ay8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706578776; c=relaxed/simple;
-	bh=urRqlIqLu6PJACjhufX8qN5lQX7duFCU85eiVyFHyjc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B3bvQdjv26hW9TsjqC6St29b8J0fsBJlwG7j3bR1wMuU7nUIjwY5p+/xAuWKpAlAbn58XdM1Z2U3nrvQOnHwpBMAju2poCvKWCN0bIBXP7Tae8B+Hgr/bTAapfUqOGv9yTL8KXFx7bU4tJ1xwB/35ls0AZ5VBxxcXa17d8bi7KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TP7B16qH4z1vskm;
-	Tue, 30 Jan 2024 09:39:05 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 708DD1404F1;
-	Tue, 30 Jan 2024 09:39:30 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 30 Jan 2024 09:39:30 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <cl@linux.com>, <penberg@kernel.org>, <rientjes@google.com>,
-	<iamjoonsoo.kim@lge.com>, <akpm@linux-foundation.org>, <vbabka@suse.cz>,
-	<roman.gushchin@linux.dev>, <42.hyeyoo@gmail.com>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<zhengyejian1@huawei.com>
-Subject: [PATCH] mm/slub: remove parameter 'flags' in create_kmalloc_caches()
-Date: Tue, 30 Jan 2024 09:41:07 +0800
-Message-ID: <20240130014107.1262373-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BB3364B5;
+	Tue, 30 Jan 2024 01:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706578784; cv=fail; b=NXBN018nTq+vsgNJkBG6g3HA4pH8O/lGsnInpbeg2kYlNZhE8+aJu1iN2wLvDczAiYjS0p65wNyW9pu/fhiE4a6QfHC6Vc4Oee84uc3zDL2o42ax65fsajswBG8y2zFKE51yF1pyraGvQgYrm2i8z6yHdoO+s+2NgGGBKDoj98g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706578784; c=relaxed/simple;
+	bh=vad4s0v25act4tfwHbbL0iJMjHBNtLNWaTmldCKQ4B8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mGKce1WEPqXQklvpm8ojejAaNzNrSnPUB7HC2k1dOMfLLWF1lrY4ofSO5vqxGzAWz1Th3s1XF7m58bwbmOBlRcn6O8z4WATTpH7VxI0T8+kFbmuIcaI+TlS/VNdZNc6IM2Ag4mrwnE0uNIAWqBFUP2w6Ybw3kD7wvkoGcMrcsRk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cunjjfdy; arc=fail smtp.client-ip=40.92.20.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cunjjfdy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iNffiWe9rTGm6PT6vMVQ+jkrlwSae6q0PkVR1kfHkQWl70sozEuPo6hA6XewX4TAAvq31bcNnwk/MYIxDMEvG58oQ5zPH9gaHUoJ6boabzkHQB4b6Ey0kxXhzuHihBlFDLHr8kBaAbCw3PjzE5bfHs1ACzlmYF5fMcM2FjLH7va0VGWeItwi06BvMgCG8K+wFqqW+MCkZKL+quQL6fwIWUIYwsZ9bhw9OIe7mPeiaJZomU+r0oHCnFhkD75ZQ1hFA8HEjduPcSLt1Wyy5BlLqTd05YCDdSCpsAV7NYw85gNkNnpuRjeNICoN8rXs+RtC8CYL49B4H83PFI9VNL07vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8TM/mnC4MpU2e/MTlMNhBaePxbHem/jo7MWCtDq9wXk=;
+ b=jBQciPK9KrBeFbQmNQCr7YmePJOrsr1QmfDzoIuxt7vQMo4XFUFpnj5FWyuGh64PqHoFdFcR83JVDlqdtnjBUW36fQ4B6dHl2bUlxMIsrudNJHBNxywGK1Nqwv9HA602Xs0CjlSv8C9xvm4RPsVwd8YDDLMx8o5ooXVSVP4B/30Iefb/NwGyf5V+7W/MQx3e2tlInZ8yMogrCErS5YnvUHpXONMMIxaQqKOgyGh+1XV5kMmyP1cK29CFL2ZGHUutjoUX4B86C9tZEEdZFXWKiGsERurwFum0eXZQGXbhMibZcvuWeYcjxIK6+pLN67NsWZopPIY4iWI846GbJ1jd8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8TM/mnC4MpU2e/MTlMNhBaePxbHem/jo7MWCtDq9wXk=;
+ b=cunjjfdyvvL1NJEi43kKI4nuhW3g2WRTJEWZUYAOdQ9l55e3sYpl7DFjHijse7u8kD/wVyEw2OAka8GxQ9jGtHdwzagO5AS86dK5/bfm77DqSF3GO/P9ahC0j+rjkiP5A/5fqijD42D0Swcvo8CG7jxr1XU4Jbflbeusi6mivmSjZevguRY5IjnRarCr6ghOxs+wQMuB3ttJQO1lkqS8IPQJN30rO5AUXeCELtX0mORXETY4QAQdVO7KfLgT5El5zeyCQ1jAzst+1raxruy6QbVSHLMgR0ZuC2OvRuYjTU9DHR7DdJ36mykYb9S9pVCNX0k/+yZyqkj6o0rkqGoA0g==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CO6PR02MB7569.namprd02.prod.outlook.com (2603:10b6:303:a4::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.33; Tue, 30 Jan
+ 2024 01:39:39 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
+ 01:39:39 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Baoquan He <bhe@redhat.com>
+CC: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "nathan@kernel.org" <nathan@kernel.org>
+Subject: RE: [PATCH linux-next 1/3] x86, crash: don't nest CONFIG_CRASH_DUMP
+ ifdef inside CONFIG_KEXEC_CODE ifdef scope
+Thread-Topic: [PATCH linux-next 1/3] x86, crash: don't nest CONFIG_CRASH_DUMP
+ ifdef inside CONFIG_KEXEC_CODE ifdef scope
+Thread-Index: AQHaUronjJlmGLvjNUqyTXz++ApJcbDxGaMggABtuACAAAyiMA==
+Date: Tue, 30 Jan 2024 01:39:39 +0000
+Message-ID:
+ <SN6PR02MB41575A5568875B85C8AA7F4BD47D2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240129135033.157195-1-bhe@redhat.com>
+ <SN6PR02MB41571397201804BD486C6148D47E2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZbhH+sg1BPi+R0j4@MiWiFi-R3L-srv>
+In-Reply-To: <ZbhH+sg1BPi+R0j4@MiWiFi-R3L-srv>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [f6gxA1Z1br0jb8qCeGpCoyfarbW4/IE1]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB7569:EE_
+x-ms-office365-filtering-correlation-id: 4d09f39f-6c44-4dbd-4e49-08dc213452db
+x-ms-exchange-slblob-mailprops:
+ AlkLxVwsndnviVuw7EOM5d/HS1lrSHYDrnkKpga0rK7XdnLJLvXqLpHbHI/6uL8XWbZSSlTfNb0mRcuYCiOgb9Z3S1oNiJD3+g9saVZi5suy05IIanXm8QI+E1g7YJboGb0WOUBP1TAFyNSYCrJEIFqimsUOQloku002HXLOqaFOQKU5gwPHC4EPoUMpxEuVKilNUVHopYnUSbodJTR/KTJtkVHIVbXySpaHxwMQtmNdOA2w3oST1mCimJ7Kk4oc2AOaE6sIQWRfcgHgexEy2sWIJ2HlDUwS4yhr1YsC9XZz7E34BUel7u9OSHlNmuGpo3nrINXcL6JWd6+Ftf+RNJu/39/k0t7+EQXwfSxl3dqdjEhkx5+Kj5zz7b69juX9ftpDJ55hcAjJNS5IhWHZrPjWgv52+vmMxMrw56//aEiClnMBZ4WWORJxTQ096bckh78MGWz7cAl3pdMNT9b/zjXR1+xjOjEYGV65IERa4sEjBSv8jHWbU7TK7e7JTVOqNbmnqfMcxvE8jo+Q1vXVAP6U3X8zACLBJRZyQ+3RuAG7UDE/8aBiL7o+jlgVFq3pLYAPbXIOsSZDafRa9ENuwPv5bYH56lpPm80eRmIVzn0uKjVgaBinhNGk9ILdwokfhyV91slGFkDxXL7Cx5j9ljRDD4OpszK+Qh77/+daCE9gn5YOChIbT/nb5fQjaYfw8qrRb6uZKZSLMVRm+RUz6KEmQPj9snz+nqv0J+lyzKxGeedF0ojN4/KC5WpCpqtK4Rybv8Ot3BxGIMNQV3AmvzGOgAntnCKy
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Nq2yfBAOjlPUdJ0wql2obPtounD0bj1ubV2nIjfp00vO8jg44W8/Sut4YB6ucy9Lzz8GgWJYGzGmOV5faxvsgjCOcpip0o4XdrXDYc68eOtb/jlpdUr2b9OT+EuUpu6V8yNACOnQ1KHSE5HA1lblBUoJICL44ulHdTluvGnttpQjE/hiQ6/q9aAtj0tkDTjjpajpPX6k7n6cXp3+g132dVOde95TuBfOQhmex4rC2WrIFtkcVlIzeP1kiAcKgNqQCGcP8SQhQaa5GzLkBDJzIK95iTc+Y7wJHLjCxMbRdOppK5VOT10hPHIP0vVk6vgcRE1YfwsHniZFrxqituLgKaMs/66emuwBtDPyPRARKpDRaxTQCJ8ppsOpZi/3aUvMj4EqESwYKWgDCqVXIcxydAm6Qb0es863kq2C6gNxWwEicr1w807suDhOXt7WIOOxJN2AgyJ7XsghIjL+QdS8S8seE9pYY4xqt/kzFwPpTvRTeZmInb8bMfg6ABFHcfOslhH9O1zIjjJHb6UYumDGa2Fw8RhggtHf8V6k+z/5vcal3uhCoNkLYJV5LdF7W3iM
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?LTfswSaTstvgCalujfwqmHxDygK6RvCTKWQBj2gPXebZS2WWGXBVjdfkojbF?=
+ =?us-ascii?Q?rwaLL6+fqm/JmQPeOy9VX8iRfq5Xl3lK1bMC19/i65BgeWVSyMK6kjfjYcqn?=
+ =?us-ascii?Q?KB2BEj9tSt69BT2FdEJeGVrhB1NjvdXdPAWsc0J014ZYwYis6W2tAPcI5DVY?=
+ =?us-ascii?Q?p8bG3CQDzg18qCfVx5cg8Di0w1bsCbY9FI6XHe1YFLLB4cihMAbiHrAG9sB+?=
+ =?us-ascii?Q?6HImqPPcy3aaEZ6y1Qb9yz8mkEL7AZzhBSgeSsAy/8P0Lhtu1xzWKhbV0jRc?=
+ =?us-ascii?Q?luXoJgO735QO4H0VKVO8f4YVEOoJu7fZLVpVokMJTluKO8REekU/tRslfnmr?=
+ =?us-ascii?Q?uVTTbVaffQa7RuHysXexmnuytMPGRL/8X4PrSOSfjUMJsNzrmBBftwnbjYz/?=
+ =?us-ascii?Q?Np404xlLVioDfzYKWVp/hWRoAjZA9PZrVgdVvHa6NFY7u5tgXQdiSw0kDi0g?=
+ =?us-ascii?Q?/CLYiTzs/wfSUlSUvz/RYWXhik34vkWEvRscBqKsoMM/Fsy9o6CQC91CK3g9?=
+ =?us-ascii?Q?ZN5/MPmrsR9j62xLsaY5gNI+bTukDzUyUpnyExSKKP71khsj/RdnIDx9nm6/?=
+ =?us-ascii?Q?obCSkhfv70ekl0kTmkcMsOOi9GYnKy997wjpZyxtro5ob2SeHIiVvXSWzsD/?=
+ =?us-ascii?Q?+9beM59KE1nrvyBwIL+X1TCnhcvjjxkZhackWex005OaWKn7qYwcHfTP5D9O?=
+ =?us-ascii?Q?ZRA2i7ddB2Pn2bFfAGgNQjrOiTfXAHyopGvGR/ypss5Npmuh7O4WD+hhJ2yj?=
+ =?us-ascii?Q?Mgplg64uxdXB9zO48Wz9TuMMt8GYftrbqtNJ1jZjTgnUFJ9E13SENXWXbjBu?=
+ =?us-ascii?Q?iFBp/W8EYRk1Gzbl+qDavX2Y6q30D0JVM0wAJLX1u+LoK394u9TeoIKVUVUN?=
+ =?us-ascii?Q?6fHd/bkImEcdAUBelI4vZ6nHG9btq0k1dVcY8y+Ulzm6a0TrHQFMeE8ulVYj?=
+ =?us-ascii?Q?+wQ9pLnCVLmbfpU7yg0Xqo9oi4UQQ1BWAdmilQvv44V1ulZsbX/+TWsVZp4+?=
+ =?us-ascii?Q?YYBYGtvBsv1P2aWiZeivGc2YSqcL90czZ3agpxY1l88jHgzoDb2m5kyBr1jm?=
+ =?us-ascii?Q?7kierzHXcevcjGQ3RCscEi8XaEn858lVd7be9nmC0RlUhNgN5yIjoHen3DyF?=
+ =?us-ascii?Q?1vobYYgTUqbxZ0D9p8aGUznMWxKVQ6O82Sk42IgOZ8p9rnfK+WLWY5JlswPm?=
+ =?us-ascii?Q?8zKW2sZe+ffbDwfcvOOW5UNBFUFoHB3yo1j5pQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d09f39f-6c44-4dbd-4e49-08dc213452db
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2024 01:39:39.1755
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB7569
 
-After commit 16a1d968358a ("mm/slab: remove mm/slab.c and slab_def.h"),
-parameter 'flags' is only passed as 0 in create_kmalloc_caches(), and
-then it is only passed to new_kmalloc_cache().
+From: Baoquan He <bhe@redhat.com>
+>=20
+> On 01/29/24 at 06:27pm, Michael Kelley wrote:
+> > From: Baoquan He <bhe@redhat.com> Sent: Monday, January 29, 2024
+> 5:51 AM
+> > >
+> > > Michael pointed out that the #ifdef CONFIG_CRASH_DUMP is nested insid=
+e
+> > > arch/x86/xen/enlighten_hvm.c.
+> >
+> > Did some words get left out in the above sentence?  It mentions the Xen
+> > case, but not the Hyper-V case.  I'm not sure what you intended.
+>=20
+> Thanks a lot for your careful reviewing.
+>=20
+> Yeah, I tried to list all affected file names, seems my vim editor threw
+> away some words. And I forgot mentioning the change in reboot.c.
+>=20
+> I adjusted log as below according to your comments, do you think it's OK
+> now?
 
-So we can change parameter 'flags' to be a local variable with
-initial value 0 in new_kmalloc_cache() and remove parameter 'flags'
-in create_kmalloc_caches(). Also make new_kmalloc_cache() static
-due to it is only used in mm/slab_common.c.
+Yes -- looks like everything is included and clear up my confusion.  But
+I still have two small nits per below. :-)
 
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- mm/slab.h        |  4 +---
- mm/slab_common.c | 13 +++++++------
- mm/slub.c        |  2 +-
- 3 files changed, 9 insertions(+), 10 deletions(-)
+Michael
 
-diff --git a/mm/slab.h b/mm/slab.h
-index 54deeb0428c6..09c673346ece 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -387,7 +387,7 @@ extern const struct kmalloc_info_struct {
- 
- /* Kmalloc array related functions */
- void setup_kmalloc_cache_index_table(void);
--void create_kmalloc_caches(slab_flags_t);
-+void create_kmalloc_caches(void);
- 
- extern u8 kmalloc_size_index[24];
- 
-@@ -422,8 +422,6 @@ gfp_t kmalloc_fix_flags(gfp_t flags);
- int __kmem_cache_create(struct kmem_cache *, slab_flags_t flags);
- 
- void __init kmem_cache_init(void);
--void __init new_kmalloc_cache(int idx, enum kmalloc_cache_type type,
--			      slab_flags_t flags);
- extern void create_boot_cache(struct kmem_cache *, const char *name,
- 			unsigned int size, slab_flags_t flags,
- 			unsigned int useroffset, unsigned int usersize);
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 238293b1dbe1..61530df8b35b 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -853,9 +853,10 @@ static unsigned int __kmalloc_minalign(void)
- 	return max(minalign, arch_slab_minalign());
- }
- 
--void __init
--new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
-+static void __init
-+new_kmalloc_cache(int idx, enum kmalloc_cache_type type)
- {
-+	slab_flags_t flags = 0;
- 	unsigned int minalign = __kmalloc_minalign();
- 	unsigned int aligned_size = kmalloc_info[idx].size;
- 	int aligned_idx = idx;
-@@ -902,7 +903,7 @@ new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
-  * may already have been created because they were needed to
-  * enable allocations for slab creation.
-  */
--void __init create_kmalloc_caches(slab_flags_t flags)
-+void __init create_kmalloc_caches(void)
- {
- 	int i;
- 	enum kmalloc_cache_type type;
-@@ -913,7 +914,7 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- 	for (type = KMALLOC_NORMAL; type < NR_KMALLOC_TYPES; type++) {
- 		for (i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++) {
- 			if (!kmalloc_caches[type][i])
--				new_kmalloc_cache(i, type, flags);
-+				new_kmalloc_cache(i, type);
- 
- 			/*
- 			 * Caches that are not of the two-to-the-power-of size.
-@@ -922,10 +923,10 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- 			 */
- 			if (KMALLOC_MIN_SIZE <= 32 && i == 6 &&
- 					!kmalloc_caches[type][1])
--				new_kmalloc_cache(1, type, flags);
-+				new_kmalloc_cache(1, type);
- 			if (KMALLOC_MIN_SIZE <= 64 && i == 7 &&
- 					!kmalloc_caches[type][2])
--				new_kmalloc_cache(2, type, flags);
-+				new_kmalloc_cache(2, type);
- 		}
- 	}
- #ifdef CONFIG_RANDOM_KMALLOC_CACHES
-diff --git a/mm/slub.c b/mm/slub.c
-index 2ef88bbf56a3..4f912f5ec11c 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5663,7 +5663,7 @@ void __init kmem_cache_init(void)
- 
- 	/* Now we can use the kmem_cache to allocate kmalloc slabs */
- 	setup_kmalloc_cache_index_table();
--	create_kmalloc_caches(0);
-+	create_kmalloc_caches();
- 
- 	/* Setup random freelists for each cache */
- 	init_freelist_randomization();
--- 
-2.25.1
+>=20
+> =3D=3D=3D
+> Michael pointed out that the #ifdef CONFIG_CRASH_DUMP is nested inside
+> CONFIG_KEXEC_CODE ifdef scope in some XEN, HyperV codes.
+
+s/Hyper-V/HyperV/
+
+>=20
+> Although the nesting works well too since CONFIG_CRASH_DUMP has
+> dependency on CONFIG_KEXEC_CORE, it may cause confusion because there
+> are places where it's not nested, and people may think it needs be nested
+
+s/needs to be/needs be/
+
+> even though it doesn't have to.
+>=20
+> Fix that by moving  CONFIG_CRASH_DUMP ifdeffery of codes out of
+> CONFIG_KEXEC_CODE ifdeffery scope.
+>=20
+> And also put function machine_crash_shutdown() definition inside
+> CONFIG_CRASH_DUMP ifdef scope instead of CONFIG_KEXEC_CORE ifdef.
+>=20
+> And also fix a building error Nathan reported as below by replacing
+> CONFIG_KEXEC_CORE ifdef with CONFIG_VMCORE_INFO ifdef.
+> ......
+> =3D=3D=3D
+>=20
+> Thanks
+> Baoquan
 
