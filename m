@@ -1,139 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 17.mo583.mail-out.ovh.net (17.mo583.mail-out.ovh.net [46.105.56.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE671401B;
-	Tue, 30 Jan 2024 20:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C501769D35
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 20:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.56.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706646857; cv=none; b=NYN2tTaKUAbyRUiekS4xj7ioHsKiPDgnccz3oEQ3l5X2mgBOvy1uuguKOPzNE3KHQPei88OBD81HnGKvA9DHv6MvUxRRqy81mQLfc+BrupEctu909fL1Mv9INYbniNNDxl3IThIQHKIDNjKe6B7cH2otbJCeRS9/wnisE+1XZlE=
+	t=1706646948; cv=none; b=A67Q5XY8yGI5cj5i2gxdA/4UNgpSgiihkeYJrqP9v0rf4cWDjhktNBTolj+SVOsa7EsWQUSIEihkMfipz5bNGAnIhaVu82z5YixTGDkY3a+bwZ65w5YcflA01XgdFOEnpIprYltbZN6vR/XiV7cXKRMRziucSyU9VDuBmDwqCGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706646857; c=relaxed/simple;
-	bh=/t3GFmRm5hVeR5xzoWsZKKi65PGNECWaoN8DFhDtjuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LJa5iPXfMJSlnfwFfVeQWLewxmBccGE9JNk5orBxZ12saVwG8hOqo5O1JFUQyhtytMXyLa7shRmnJdHwVWyetdyruIEl1D5SY7lhbh/OQBhm07v7qBt4ZkFurZkmjNsl9fb3mfGrd+SMmRYLLj+kSqBC8SDQEmCIG7PNXjbR1NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KR4vSkzh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KR4vSkzh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CEB0C433F1;
-	Tue, 30 Jan 2024 20:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706646856;
-	bh=/t3GFmRm5hVeR5xzoWsZKKi65PGNECWaoN8DFhDtjuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KR4vSkzhXVYDoJgMgUekpqQCkB0fnG56TeJoVnaeQrHDhNs0viEsSZp1NgkHvj6hy
-	 K+/DGxoG65pCGKy7cnZIha/D50KPC8xbtVQ6sIokl/3dE28rYz2dK+aWQd37rppXqq
-	 SzgWt77k7MdIHZ7h7aDp7XpwOf2bJT9oPn2IPkX5bH5XJNcfotHgGVmpofnhDmODiX
-	 xaxrL3RDXJEZHTc3bLIVQQgMqUOnxrHgzh7Aq17lpk4Q+VlaUmDEFj0H2jpJDOO84G
-	 a499XEVFN6mwFjKRSIepGcMTFMMZZcuJ34w89OqoWwhIDRlA3vX5ph1YreFdnVsiJp
-	 wFvB0O34NMVTw==
-Date: Tue, 30 Jan 2024 14:34:13 -0600
-From: Rob Herring <robh@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+	s=arc-20240116; t=1706646948; c=relaxed/simple;
+	bh=B2ppdC8u/QDeG8tThRyRJOXtZ0rOnmI2LRCGp0bMwmA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n/LIa36vWWkmLUZ9lt5BJCzw/eq6m9TIGkwG8sfaSB+GdFPIGtrt2vdABflpiO3V5I5CqjPUAdBDZvwb8Lbb0iPaSY5DglumwazpZ5eHeRdRnG44Kvl/+gnuDGQcb6tEJRbeyGeK1Gub956Pbr6j+m3deZtEN/MQ36hClT25WJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.56.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director5.ghost.mail-out.ovh.net (unknown [10.108.17.1])
+	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 79DD524588
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 20:25:52 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-ctjrb (unknown [10.110.113.129])
+	by director5.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 4D6741FDB8;
+	Tue, 30 Jan 2024 20:25:50 +0000 (UTC)
+Received: from etezian.org ([37.59.142.99])
+	by ghost-submission-6684bf9d7b-ctjrb with ESMTPSA
+	id +DAYJE5buWXh3AsAF6xv8A
+	(envelope-from <andi@etezian.org>); Tue, 30 Jan 2024 20:25:50 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-99G0030724d115-007f-4b95-b9ff-1a0b342b8d03,
+                    A55004731C2A18159FC94DBA16C28717FFA6C146) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:194.230.145.85
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Peter Rosin <peda@axentia.se>,
+	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Russell King <linux@armlinux.org.uk>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: mediatek: convert PCIESYS to the
- json-schema
-Message-ID: <20240130203413.GA2290196-robh@kernel.org>
-References: <20240123082100.7334-1-zajec5@gmail.com>
- <20240123082100.7334-3-zajec5@gmail.com>
- <e17b85b1-7f1f-4b60-89b7-43f560466cc2@collabora.com>
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>,
+	mazziesaccount@gmail.com,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 1/2] dt-bindings: i2c: pca954x: Add custom properties for MAX7357
+Date: Tue, 30 Jan 2024 21:24:55 +0100
+Message-ID: <170664590836.3575391.9594221857532318871.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240130121902.462619-1-naresh.solanki@9elements.com>
+References: <20240130121902.462619-1-naresh.solanki@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e17b85b1-7f1f-4b60-89b7-43f560466cc2@collabora.com>
+X-Ovh-Tracer-Id: 6579759056189590235
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtjedgieelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeevveeiffeifefgfeduvdetleffuefhleffjeetjeduvdevkeevhedvjeegfeetveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdduleegrddvfedtrddugeehrdekhedpfeejrdehledrudegvddrleelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpeeorghnughisegvthgviihirghnrdhorhhgqedpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekfedpmhhouggvpehsmhhtphhouhht
 
-On Tue, Jan 23, 2024 at 12:20:29PM +0100, AngeloGioacchino Del Regno wrote:
-> Il 23/01/24 09:20, Rafał Miłecki ha scritto:
-> > From: Rafał Miłecki <rafal@milecki.pl>
-> > 
-> > This helps validating DTS files. Introduced changes:
-> > 1. Documented "reg" property
-> > 2. Adjusted "reg" in example
-> > 
-> > Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> > ---
-> >   .../arm/mediatek/mediatek,mt7622-pciesys.yaml | 47 +++++++++++++++++++
-> >   .../arm/mediatek/mediatek,pciesys.txt         | 25 ----------
-> >   2 files changed, 47 insertions(+), 25 deletions(-)
-> >   create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml
-> >   delete mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml
-> > new file mode 100644
-> > index 000000000000..7340a2512402
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml
-> 
-> I think that we should really move all those clock controller yaml files to their
-> proper directory, which would be
-> 
-> Documentation/devicetree/bindings/clock/
-> 
-> ...because those are clock controllers anyway and the fact that they do also
-> provide a reset controller doesn't really justify having them in arm/mediatek.
-> 
-> Besides, I would appreciate if you could also move mt8186/92/95 and eventual
-> others that are there to clock/.
 
-Yes, please move it.
+Hi Naresh,
 
+On Tue, 30 Jan 2024 17:49:00 +0530, Naresh Solanki wrote:
+> Maxim Max7357 has a configuration register to enable additional
+> features. These features aren't enabled by default & its up to
+> board designer to enable the same as it may have unexpected side effects.
 > 
-> > @@ -0,0 +1,47 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/mediatek/mediatek,mt7622-pciesys.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: MediaTek PCIESYS controller
-> > +
-> > +description:
-> > +  The MediaTek PCIESYS controller provides various clocks to the system.
-> > +
-> > +maintainers:
-> > +  - Matthias Brugger <matthias.bgg@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - mediatek,mt7622-pciesys
-> > +          - mediatek,mt7629-pciesys
-> > +      - const: syscon
+> These should be validated for proper functioning & detection of devices
+> in secondary bus as sometimes it can cause secondary bus being disabled.
 > 
-> I know that there's syscon all over the place and, even if I admit I didn't check,
-> I am fairly sure that there's absolutely no reason to have syscon there, and that
-> the syscon compatible never did anything for (most of, or all of) those clock
-> controllers, at all.
-> 
-> I'm not sure - though - if removing syscon during the txt->yaml conversion is
-> acceptable (yeah we'd be cheating a bit), but something makes me say it is, because
-> the bindings couldn't validate before that one as well.
+> [...]
 
-As long as you state why you are removing it in the commit msg.
+Applied to i2c/i2c-host on 
 
-> 
-> Of course you'd have to remove the syscon compatible from the affected device trees
-> as well as omitting it here.
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
-You could also do 'minItems: 1' and 'deprecated' in the 2nd item.
+Thank you,
+Andi
 
-> However, to be sure that we're doing the right thing here, I have to summon someone
-> that can actually give a definitive answer to what I just said.....
-> 
-> Krzysztof, please? :-)
+Patches applied
+===============
+[1/2] dt-bindings: i2c: pca954x: Add custom properties for MAX7357
+      commit: 8e7d967f04df0fa2c2db00f47ac4cd5ea16ade91
+[2/2] i2c: muxes: pca954x: Enable features on MAX7357
+      commit: 6b572ea231236bb3be4b819d92119470ac121a9e
