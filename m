@@ -1,114 +1,103 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591E8339AD
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5038458229
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606982; cv=none; b=WeG/PbdOnfOVDY2dsWwd7BCnA+7k7QxzhJldoUVhommxA+EG8AfT5CAUztxzLPraVRyIxEVtrojf5zkMVNb8+BIiZVrZl+5XivwP2e2Tfd2trLAOC1m2OxPxnDlMLAZM/2pVwpjdpOPGBE64H21xHTtijWhkZaa8MZsSlwx6ZLg=
+	t=1706607087; cv=none; b=elXK9KBm4HtBMBRHASiruwCqMQCi3c4qho6Q8mTyMYNmEjX02As+nM+6i/OsDIm5Ji+Ri37f5JjKe/zRgnwn0jEEqjJ4eDfzRVScTiFi1WwbHiAKCJymAUnEkOq1HY/gZ3C7AbfPsb+5ul6+xwBgUOcTboHC5j4gkLQ/pcN82Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606982; c=relaxed/simple;
-	bh=huiu7FiS6Ka98PX9AGRHOYZr8LDkTZM/ajgwBoH9zqA=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=dMeO8Ewm8vo6PiFvf7lll6A/KYWduPyfOjvjp9eycXb/pY2Cl+fexhpaQ+agvqYV+01zwr7s16wfnP11Lh+qFSCml5BbilbZN5yyd4q9QsT/hEai3Rz6xuv/HVuZ/BVHjdwtxzCyaG8ElRyXx52Dh1CR1O8kRxmlRIAv7ay/TwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=xO1x1Kok; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
+	s=arc-20240116; t=1706607087; c=relaxed/simple;
+	bh=XYx0s0X4N57mkCoKTn7uq1S0HzyLcLKx4l9yG2NJoTw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D0faTy9XME81qjnPLMAzr2Mg40V4Xrf9QWick0d074LkgUOH4kPq3kz4UxYydWTjOfNUSEpJp2kHZa9xHrKcQOcs9WlzvplcasQKETC4A4WtqSCGrR0uVnuTwHzXVxpepxQEgeNxAIlRDKTmvEixR63xFiu0+aMe/XIHO/cKE28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FSNoKLvy; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="xO1x1Kok"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-558f523c072so4328702a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:29:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FSNoKLvy"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-510221ab3ebso5036077e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:31:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1706606977; x=1707211777; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=9tz7+Pj2sphUK5zlEcIBtuji5ko1j4GrxA9tCxYfuyg=;
-        b=xO1x1KokQyiG7e4TC25rR+enVqZFtk4ZLafdQotlTlU/iZcZjwqX0BB1QTpjVPJ75N
-         0KueI3E3HKsBmk8EcjSp7kfRkn0s2vfl5Vj1xdeQtIqTjBlxjImM86Hy2qOaA+vmAfaP
-         4bAkmbXqG1Jd39+TFTC302o3fJrA3VxHnVk6wDDYk0oSpxrXPB8I9xxlfQ7tQKL81H+D
-         uz6SMI9b+9SvR1uGtNu3uU78IDpVK4qeGB0Fi5B+7J5yyqViLUVaiCD3ZJqj7TX2hWd7
-         B/ycUcfQtH6datBvdg6TMNatmYBcoXG3DDvmGoyUUPC7w/ONkUE1ZHyBL9Tmz64ouhYW
-         QFew==
+        d=linaro.org; s=google; t=1706607083; x=1707211883; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XYx0s0X4N57mkCoKTn7uq1S0HzyLcLKx4l9yG2NJoTw=;
+        b=FSNoKLvye6bBhZZNYpBh/KbwH7uMI5bx7ZbW0Mn/GclqE5dUexRET+cs0kHa5efLvS
+         1C0EQIpnfAIAWAfyvLTy3k3u791A8woTVIGGZaRklDYlEmAWZ9xroApUcvdfGGDNG/Kx
+         uqqS2h9w0dAoc1IDVwxw+0DOSJxxi1xebKNN3lhVEiv46jqi4WTwKDCorfJAiTX3xgMT
+         Xpsq7NcY4/2NVaQ66KU0dwd/7ldVubWr0GJYzJXOkgfpspbq4YxRCNQeDftrDWS5Lovi
+         MNalSZMtqkO28hrFqr9uV0E6RX2GP5AXT3HYK+r5ApxYbSN4v+0u54g6QD4xefIIzMB8
+         3NDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706606977; x=1707211777;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9tz7+Pj2sphUK5zlEcIBtuji5ko1j4GrxA9tCxYfuyg=;
-        b=kXlMhi986nWFTHrddz924InDD00OG3KMEs7xHJ0ygvs9arjTm8+zejwp40DdTDDi61
-         ZTov232MmGXAB4TgvaaOHFRFj99lACjQ/YoYS7Q6NSPzJfb1uJyYQy+awF7D07Cgpt1H
-         /WKNjnBqun2m8c7J2r6XGp3VIBjX+tveURsaZzfFRAi/UVXtstOJV20SOl+3Qbnc7xiL
-         vw/LBm4mPH+blF55qBnBvzsr0ZOwZNSwcPokcpOkO5LchWPiv4x2T+XBuFps/wYvNRDv
-         U51V93cXlP9hIYEg2r8vTCSePQBUfsWEjLXYxwI78hvT9a9e+p6kDfCQl9DK6HLVOkw4
-         RFbg==
-X-Gm-Message-State: AOJu0Ywz8PR1s8ZQpYnIXTbuKi1E4F40pmyaYmWyTROvIGoptHqF4xqE
-	rDD0cVf6qGwSlk67smWd+GWQqpBERaeX8D6Lz0sadNbdJIKm88OaFhwi3d1p+Y4=
-X-Google-Smtp-Source: AGHT+IGxPhyxEY7oiLslsel5OsK965iXiA1cfRttHEQb5I5451oB7+uVOkgXsRheMgrVk0aWgZ2K6A==
-X-Received: by 2002:aa7:da84:0:b0:55f:3cb:d02e with SMTP id q4-20020aa7da84000000b0055f03cbd02emr3451599eds.16.1706606976900;
-        Tue, 30 Jan 2024 01:29:36 -0800 (PST)
-Received: from localhost ([194.62.217.3])
-        by smtp.gmail.com with ESMTPSA id n17-20020a05640205d100b0055f05342a41sm1802687edx.44.2024.01.30.01.29.36
+        d=1e100.net; s=20230601; t=1706607083; x=1707211883;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XYx0s0X4N57mkCoKTn7uq1S0HzyLcLKx4l9yG2NJoTw=;
+        b=iOjaK7fg9rmc23/ydCVVRKPE9Q1ZpGLeStOA+bl2KDia+UQWo19BjnVcMptchnjPAx
+         wU1mNC5OzMLfMiCGR5f3vpUrwoq7jVbKn0/w5ezgzfN5jQlEshFMAEDtXl/DK55DMYX6
+         /6D1qy1I7WQiRqKRYtHsa4VzF7KY6lApHkYV8GB7ZWnb0StMOq/QTbAlrOQxea8B/37j
+         lb0tbtF9v3tz7CvLFakxlDAuio22kbZVgeSH/PlynFZst1MdyeAV0s7tPiZ/qvDF4lbF
+         8AVDs478YtKOuL9mlUnqrq7Nn6QSjP0dIdZJ0xHUnd+gYGEyst0Yzn3iZnF3yd9247H/
+         X0VA==
+X-Gm-Message-State: AOJu0Yw0lvq2mtax9wygkg0su8RxKKLLgMxchTQ3lt5WBR/kDmSAXIZe
+	AM5dZfHk8ZVaS3JOY71NT573iba05CD0T+mnGl7iLcDAwz06Qf6wkGDs71Kwyag=
+X-Google-Smtp-Source: AGHT+IH73ECOedOmbLboh50bSkCcm9bWbbIIdQpZY7C2yF6U75+RErqJaRRYI5LoY3XIRMWTRBDv2A==
+X-Received: by 2002:ac2:4208:0:b0:510:293e:83b with SMTP id y8-20020ac24208000000b00510293e083bmr4843330lfh.18.1706607083413;
+        Tue, 30 Jan 2024 01:31:23 -0800 (PST)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id l22-20020a05600c1d1600b0040ef95e1c78sm4452775wms.3.2024.01.30.01.31.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 01:29:36 -0800 (PST)
-References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
- <20240124-alice-mm-v1-3-d1abcec83c44@google.com>
- <ZbMA1yiM6Bqv9Sqg@boqun-archlinux>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>, Kees Cook <keescook@chromium.org>,
- Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton
- <akpm@linux-foundation.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=
- <arve@android.com>, Todd Kjos
- <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes
- <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren
- Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH 3/3] rust: add abstraction for `struct page`
-Date: Tue, 30 Jan 2024 10:15:11 +0100
-In-reply-to: <ZbMA1yiM6Bqv9Sqg@boqun-archlinux>
-Message-ID: <87il3bgoee.fsf@metaspace.dk>
+        Tue, 30 Jan 2024 01:31:23 -0800 (PST)
+Message-ID: <bbaab3addf958bc1f484a20ee0bdb65af05cf5da.camel@linaro.org>
+Subject: Re: [PATCH 5/5] clk: samsung: gs101: don't mark non-essential
+ clocks as critical
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: peter.griffin@linaro.org, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, kernel-team@android.com,
+ tudor.ambarus@linaro.org,  willmcvicker@google.com,
+ alim.akhtar@samsung.com, s.nawrocki@samsung.com,  tomasz.figa@gmail.com,
+ cw00.choi@samsung.com, mturquette@baylibre.com,  sboyd@kernel.org,
+ linux-arm-kernel@lists.infradead.org,  linux-samsung-soc@vger.kernel.org,
+ linux-clk@vger.kernel.org,  devicetree@vger.kernel.org
+Date: Tue, 30 Jan 2024 09:31:22 +0000
+In-Reply-To: <CAPLW+4kSka+twSoZmQeMsh3RWermrGG-wyENrr14AmX3zZ2eqA@mail.gmail.com>
+References: <20240127003607.501086-1-andre.draszik@linaro.org>
+	 <20240127003607.501086-6-andre.draszik@linaro.org>
+	 <CAPLW+4mL1gb_R8PhKaMhwOUTa0GDqat_9W=348ScYj+hBarQJg@mail.gmail.com>
+	 <d45de3b2bb6b48653842cf1f74e58889ed6783ae.camel@linaro.org>
+	 <CAPLW+4kSka+twSoZmQeMsh3RWermrGG-wyENrr14AmX3zZ2eqA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 
+On Mon, 2024-01-29 at 13:16 -0600, Sam Protsenko wrote:
+> That sounds reasonable. But I wonder if that bit (about making this
+> clock CLK_IS_CRITICAL to make earlycon functional) can be documented
+> somewhere. Perhaps in the serial driver (earlycon function), or
+> somewhere in device tree bindings? Because otherwise it might remain
+> an arcane knowledge and people won't be able to use earlycon later.
+> Anyways, for this patch:
+>=20
+> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+>=20
+> and if you think it makes sense to document the bit above, please do.
 
-Boqun Feng <boqun.feng@gmail.com> writes:
+Will do on top of
+https://lore.kernel.org/all/20240119104526.1221243-6-tudor.ambarus@linaro.o=
+rg/
+once that is in.
 
-> On Wed, Jan 24, 2024 at 11:20:23AM +0000, Alice Ryhl wrote:
+Cheers,
+Andre'
 
->> +
->> +    /// Maps the page and writes into it from the given buffer.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// Callers must ensure that `src` is valid for reading `len` bytes.
->> +    pub unsafe fn write(&self, src: *const u8, offset: usize, len: usize) -> Result {
->
-> Use a slice like type as `src` maybe? Then the function can be safe:
->
-> 	pub fn write<S: AsRef<[u8]>>(&self, src: S, offset: usize) -> Result
->
-> Besides, since `Page` impl `Sync`, shouldn't this `write` and the
-> `fill_zero` be a `&mut self` function? Or make them both `unsafe`
-> because of potential race and add some safety requirement?
-
-We can add a safe version that takes a slice later, as here [1]. Same
-for the with_* that take a closure.
-
-It would be nice to model ownership of pages that are only mapped in
-kernel with `&mut`.
-
-BR Andreas
-
-[1] https://github.com/metaspace/linux/blob/702026e6645193fc89b7d55e00dac75fd492bfb8/rust/kernel/pages.rs#L178
