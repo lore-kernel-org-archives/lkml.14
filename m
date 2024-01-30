@@ -1,107 +1,95 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50E538DEC
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE30E5821A
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606754; cv=none; b=mU3Kwug3QtL3iL0eRDzNLwMY1oHmW1qL8PyrrU0Q+6SPQLvORjXRe6NO+gR43kiFOhsO/afrSoapyYFcJ7KryVXIxmdVXeKhHHdRX2z0X+lgdXcAkXf3ypxu2MgmyHOXM3sUAVavCVjuv0Hc2LBw6kGALlY8unPXsTL0X5iG1bU=
+	t=1706606791; cv=none; b=N+wWe0BiHzcOHTfPs071yvW6qjwIcFgEXUbGgqwkm6m37LVvV1TPWBe1T7WZJccTQzLFq6sVC2+vkaWY9CBgM2zcw7LGjDTw/nIe3h1CiHsq8/fHS2arzZ6JXwZUn7kZ5ZoKVztrXQC6d/k2hQ4jQfZY7P4SI7Upn/lt+GMeLZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606754; c=relaxed/simple;
-	bh=SDrIhhk0216kuinfVjYExBnLEatSwxttoaR1lucHHbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YAux4r9Qs9E7hgpgFnoEEMhaQZebyhUmq+HMZSduEr5cZSxH4RephmHi6RUPSqUtpLlZ/fH3T3HOVBn4xpO9fkR0TtgqWuh5GCmdsT/XiESf6931MvlrZTgMy+EdmOCsYVDW2P1KJ91bLbU8N6Zt0fvfQK4azffzlTw7OLV3CTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=usqM2Erd; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1706606791; c=relaxed/simple;
+	bh=+Wa+UewSUjQ+evNuV3fl9xdlJrL1UOY62kc5bL0+Gbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UZVYnBAn+XfeXmchGHLPjTCEN11WB2XRRT5qC8yfv6IkidYwrVt3rfNUWxW+TEULRXdc/DEDrgb0CUVmNPVk+dSpHRWHC+glp3xilg2PHqYSYrPwX/7UHvM0d87P9pT89U6q/9vEbN31q2zNYsklJNcByhUgqcuVTkE1x5uawms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZ+r2qHD; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="usqM2Erd"
-Message-ID: <d5f27642-e3e2-c5c9-f9d8-a688512ce945@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706606749;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RSk7it6b1JMh823m6ptl66Jh5MU45iWziHAMy2DNJmA=;
-	b=usqM2Erdea00X8HzNmACoAbCZnm5HDokXtXhSQv93VoOKGqRQmjhulO7Qm5tXIJioBb77K
-	X/au/eifMwJTdv6qjZiGAQ/vGDjqQZnXf4koQw7QhnQx9yEuRve1G1dMB4z5SOo1P9M4ox
-	02JkUv6XSszcfGxXCzoq/Dmmi6Y6A0U=
-Date: Tue, 30 Jan 2024 17:25:41 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZ+r2qHD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706606789; x=1738142789;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=+Wa+UewSUjQ+evNuV3fl9xdlJrL1UOY62kc5bL0+Gbs=;
+  b=TZ+r2qHDzBT5lHdt4lZ5b2Un0+MmnwDz074BzN81/2sNGAdPzovtnVhf
+   VKmaRNumxbFQI4v0q7k7nHaVqxL/8TQOozqFucHsOq2TT84bm4U583FXO
+   1Smo8PRQwftdNFmsdmRS2oV2idUH0xrplwIhfWgGkn+svKRA49+zD91YG
+   wbUhhDuAaXQuEjCf2NaU/3nB2UyySyhihZrfYmGL6i1JoBXfBG3++rT9G
+   gCsMQbaLt+c8ptZGOIY/acCMqFYFL2DbkPl+fXEtkoMhDG5oF/xD1CKr+
+   rZEfikIuXfRavacx6gACss84n0qP9uJ4CB+9WD+PkFcbfs4KHBL9vLXx3
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16604727"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="16604727"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:26:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="3612205"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 30 Jan 2024 01:26:28 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rUkNG-00009o-2a;
+	Tue, 30 Jan 2024 09:25:47 +0000
+Date: Tue, 30 Jan 2024 17:18:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>
+Subject: arch/riscv/kernel/paravirt.c:44:1: sparse: sparse: symbol
+ '__pcpu_scope_steal_time' was not declared. Should it be static?
+Message-ID: <202401301733.XLBqnyLY-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/mmap: use SZ_{8M, 128M} helper macro
-Content-Language: en-US
-To: Mike Rapoport <rppt@kernel.org>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240126085905.2835513-1-yajun.deng@linux.dev>
- <Zbi9OyG9kcldGyJ1@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yajun Deng <yajun.deng@linux.dev>
-In-Reply-To: <Zbi9OyG9kcldGyJ1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   861c0981648f5b64c86fd028ee622096eb7af05a
+commit: fdf68acccfc6af9497c34ee411d89af13b6516ed RISC-V: paravirt: Implement steal-time support
+date:   4 weeks ago
+config: riscv-randconfig-r133-20240130 (https://download.01.org/0day-ci/archive/20240130/202401301733.XLBqnyLY-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 4a39d08908942b2d415db405844cbe4af73e75d4)
+reproduce: (https://download.01.org/0day-ci/archive/20240130/202401301733.XLBqnyLY-lkp@intel.com/reproduce)
 
-On 2024/1/30 17:11, Mike Rapoport wrote:
-> On Fri, Jan 26, 2024 at 04:59:05PM +0800, Yajun Deng wrote:
->> Use SZ_{8M, 128M} macro intead of the number in init_user_reserve and
->> reserve_mem_notifier.
->>
->> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
->> ---
->>   mm/mmap.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index 476de5daf598..f90924b2a6d2 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -3845,7 +3845,7 @@ static int init_user_reserve(void)
->>   
->>   	free_kbytes = K(global_zone_page_state(NR_FREE_PAGES));
->>   
->> -	sysctl_user_reserve_kbytes = min(free_kbytes / 32, 1UL << 17);
->> +	sysctl_user_reserve_kbytes = min(free_kbytes / 32, SZ_128M);
-> (1UL << 17) != SZ_128M
-I am sorry for this, I didn't realize that the unit was kbyte.
->
->>   	return 0;
->>   }
->>   subsys_initcall(init_user_reserve);
->> @@ -3866,7 +3866,7 @@ static int init_admin_reserve(void)
->>   
->>   	free_kbytes = K(global_zone_page_state(NR_FREE_PAGES));
->>   
->> -	sysctl_admin_reserve_kbytes = min(free_kbytes / 32, 1UL << 13);
->> +	sysctl_admin_reserve_kbytes = min(free_kbytes / 32, SZ_8M);
->>   	return 0;
->>   }
->>   subsys_initcall(init_admin_reserve);
->> @@ -3898,12 +3898,12 @@ static int reserve_mem_notifier(struct notifier_block *nb,
->>   	case MEM_ONLINE:
->>   		/* Default max is 128MB. Leave alone if modified by operator. */
->>   		tmp = sysctl_user_reserve_kbytes;
->> -		if (0 < tmp && tmp < (1UL << 17))
->> +		if (tmp > 0 && tmp < SZ_128M)
->>   			init_user_reserve();
->>   
->>   		/* Default max is 8MB.  Leave alone if modified by operator. */
->>   		tmp = sysctl_admin_reserve_kbytes;
->> -		if (0 < tmp && tmp < (1UL << 13))
->> +		if (tmp > 0 && tmp < SZ_8M)
-> (1UL << 13) != SZ_8M
->
->>   			init_admin_reserve();
->>   
->>   		break;
->> -- 
->> 2.25.1
->>
->>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401301733.XLBqnyLY-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> arch/riscv/kernel/paravirt.c:44:1: sparse: sparse: symbol '__pcpu_scope_steal_time' was not declared. Should it be static?
+   arch/riscv/kernel/paravirt.c:106:19: sparse: sparse: cast to restricted __le32
+   arch/riscv/kernel/paravirt.c:107:30: sparse: sparse: restricted __le32 degrades to integer
+   arch/riscv/kernel/paravirt.c:102:26: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] sequence @@     got restricted __le32 @@
+   arch/riscv/kernel/paravirt.c:102:26: sparse:     expected unsigned int [usertype] sequence
+   arch/riscv/kernel/paravirt.c:102:26: sparse:     got restricted __le32
+   arch/riscv/kernel/paravirt.c:104:23: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long [usertype] steal @@     got restricted __le64 @@
+   arch/riscv/kernel/paravirt.c:104:23: sparse:     expected unsigned long long [usertype] steal
+   arch/riscv/kernel/paravirt.c:104:23: sparse:     got restricted __le64
+   arch/riscv/kernel/paravirt.c:109:16: sparse: sparse: cast to restricted __le64
+
+vim +/__pcpu_scope_steal_time +44 arch/riscv/kernel/paravirt.c
+
+    43	
+  > 44	DEFINE_PER_CPU(struct sbi_sta_struct, steal_time) __aligned(64);
+    45	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
