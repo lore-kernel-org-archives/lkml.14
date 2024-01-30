@@ -1,81 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1D560BB0;
-	Tue, 30 Jan 2024 09:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5103A66B24
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608160; cv=none; b=j+ySPIZfshI6WGRSCulujXO4T9sEVUbrbIOucWM9PRfl8JlnASmZ562eG/Chhq23g8EKabTf38c1vYu70sU/E2mmGHe0OtOQH19Taq5shxqtvI1/rrhnV7KYZ4RoNsoFReeODnu+3eABkEhLDhYu02hzJ3BKZda5waBxvYJWp5M=
+	t=1706608193; cv=none; b=m7Wzl9M6GGYxZ09CqnXUyVWlsZtHkvgUUT2wsAQT92tj4h00ytbJKCHyx1NJRQi9+WfYiyxYOp47YQ5b9P9hOLB5thz/0LhTEK1JS5W/laM4upWg37Jxu4/FpQbHU61h1jpjsXBj/fVK4B/Uv0UdcImNgsdepinKogJYPuU8G0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608160; c=relaxed/simple;
-	bh=9EEwbvIMGEnEj9No9CAfp/4Tfeu1tehss7c6XJeh6nY=;
+	s=arc-20240116; t=1706608193; c=relaxed/simple;
+	bh=Lbfj3Z0PTLwuhTwd7V4Bm9MgVroo+VvqDP8UxzsaoIY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K8tBoNCYSe69GOr2MzP53ILr+FzJCeDLNJvsK/Rm4Xj6QlsoN62sBkADPdZ4m86pi57Uo9N4DQ6bxXVQyKBRYbLL9wcZDuz4ynu+IO436xswxTKOJ/t3iZ8Ixr1lNpyqGKWCwWjuQsVqkXbmVJVnV81qWtB4gvYVBol4jpTyEuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XisrWEuS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XisrWEuS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90182C433F1;
-	Tue, 30 Jan 2024 09:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706608159;
-	bh=9EEwbvIMGEnEj9No9CAfp/4Tfeu1tehss7c6XJeh6nY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XisrWEuSi4MvUDAjSC37EjVj1CPda7zNWR9GS72XK5rEmXbjy1u1wrSPe3ub4mS4S
-	 AemgWhjfkCTYXNxrionkITzJzlsLClotn6mqhRlB7K7s1zlCPRADTHeUV7ffGSO/Tx
-	 Ipc3tFusQuehtq5MjQq8GELpq489dCIhhGg7t4hkGunI5uW3ITuFnKsvsMD70VoB+F
-	 d9Ry/R9kyA3wKUehh34DjGmeZR7ku/q3NA0j33uzvJem3LFqIzX30/J/iu2FbUu3TY
-	 l6ewkwjpQUdX0ztd0lS+V8eTskENGID2umhDOEWfCYJjXifaA/ZhuH19HwuhorWYoG
-	 x6c428R5T1Aag==
-From: Christian Brauner <brauner@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
+	 MIME-Version; b=izq6bCe7ssoFa3PcDNHkI+viJ31gt8SsTeDMIdnA0xNGb4rxkuedV196EPBMHOVHXxF/ZBL+GYrWk+vFa0d0n4WD1pifiRKOaYR5kfyq2QsXqsgGb1AxiDNqnsbpwmeyFDG90wJdtL8ICCXDbxaV4cAPYAk1+QMpw2prJb+feNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C6C0F222DE;
+	Tue, 30 Jan 2024 09:49:49 +0000 (UTC)
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A7BE61376E;
+	Tue, 30 Jan 2024 09:49:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id EcKBJz3GuGWJbwAAn2gu4w
+	(envelope-from <dwagner@suse.de>); Tue, 30 Jan 2024 09:49:49 +0000
+From: Daniel Wagner <dwagner@suse.de>
+To: James Smart <james.smart@broadcom.com>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Hannes Reinecke <hare@suse.de>,
+	linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] select: Avoid wrap-around instrumentation in do_sys_poll()
-Date: Tue, 30 Jan 2024 10:49:10 +0100
-Message-ID: <20240130-galant-messlatte-0a81f7a91b11@brauner>
+	Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v4 03/12] nvmet-fc: release reference on target port
+Date: Tue, 30 Jan 2024 10:49:29 +0100
+Message-ID: <20240130094938.1575-4-dwagner@suse.de>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240129184014.work.593-kees@kernel.org>
-References: <20240129184014.work.593-kees@kernel.org>
+In-Reply-To: <20240130094938.1575-1-dwagner@suse.de>
+References: <20240130094938.1575-1-dwagner@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1292; i=brauner@kernel.org; h=from:subject:message-id; bh=9EEwbvIMGEnEj9No9CAfp/4Tfeu1tehss7c6XJeh6nY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTuOCbx1uDg853yZcJS/Mziaz0mSDf84tN59sfe5vu29 t0zf/jv6ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjI5wZGhh3WauwrZTVful/L W/y+c/eUWKO7gpPz276ecI7kWxvzPpeRYWWag8G72q27VhvLPV0/Y4PRDQmtlbu4N97UE9a+dJO 7hgkA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: C6C0F222DE
+X-Spam-Flag: NO
 
-On Mon, 29 Jan 2024 10:40:15 -0800, Kees Cook wrote:
-> The mix of int, unsigned int, and unsigned long used by struct
-> poll_list::len, todo, len, and j meant that the signed overflow
-> sanitizer got worried it needed to instrument several places where
-> arithmetic happens between these variables. Since all of the variables
-> are always positive and bounded by unsigned int, use a single type in
-> all places. Additionally expand the zero-test into an explicit range
-> check before updating "todo".
-> 
-> [...]
+In case we return early out of __nvmet_fc_finish_ls_req() we still have
+to release the reference on the target port.
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ drivers/nvme/target/fc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+index 05e6a755b330..3d53d9dc1099 100644
+--- a/drivers/nvme/target/fc.c
++++ b/drivers/nvme/target/fc.c
+@@ -360,7 +360,7 @@ __nvmet_fc_finish_ls_req(struct nvmet_fc_ls_req_op *lsop)
+ 
+ 	if (!lsop->req_queued) {
+ 		spin_unlock_irqrestore(&tgtport->lock, flags);
+-		return;
++		goto out_puttgtport;
+ 	}
+ 
+ 	list_del(&lsop->lsreq_list);
+@@ -373,6 +373,7 @@ __nvmet_fc_finish_ls_req(struct nvmet_fc_ls_req_op *lsop)
+ 				  (lsreq->rqstlen + lsreq->rsplen),
+ 				  DMA_BIDIRECTIONAL);
+ 
++out_puttgtport:
+ 	nvmet_fc_tgtport_put(tgtport);
+ }
+ 
+-- 
+2.43.0
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] select: Avoid wrap-around instrumentation in do_sys_poll()
-      https://git.kernel.org/vfs/vfs/c/ecd1f34f1242
