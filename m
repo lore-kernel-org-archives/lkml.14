@@ -1,336 +1,334 @@
-Received: from mx0b-00007101.pphosted.com (mx0b-00007101.pphosted.com [148.163.139.28])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2044.outbound.protection.outlook.com [40.107.7.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B3836B1C;
-	Tue, 30 Jan 2024 02:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268BB36AE9;
+	Tue, 30 Jan 2024 02:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706583119; cv=fail; b=CDWTWm64LIS5UxdZout57VWKPkCMOjEF/hRU1GhKpW1EWv+C/EyWapL3UXL5Hapjh+lqWbbpCk9FGEtY5xMzESv2cNUt84KFrdy4QRlgqfD6h1f/noCi+Hjn14DJbSTr2cIfS5ouQmG5ryk9BZKmq81lEVLwflkq6phHUfPT8X8=
+	t=1706583158; cv=fail; b=LJjZ4iUqY3dQnwVHR6azJCOmVnIXTwYbAkYI4iR1qYPZwbjsiU4uP7ExTYYwASAAN47XPPx4isKYarSJpIIcOYgNLZUQmzla75Dw3deIq21NoCp0XGr1SKnRSJrW/d5dVTQDlermttGRK/cQ+vjYLzM7z/kOQdUzIUWELYUESrc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706583119; c=relaxed/simple;
-	bh=zCj9syQHIjkt6RDhFFMu+u9jOia03VNSR6g8H8wn9DI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=r0ml2lJz+Bb1nFlt23rzgQ8I98iu6enHSmjr5K/u8y672msXk1EDu7SJ0iew/ooI7i/ij5wCcO2J2izUNEaSYTDkz9SXB2D/ZEEHG2Hz/HP2ZpFD2WlFpFtFr8m48ZzDMDVajaGuWxrqSSpXhghSlAx9unHppQkONpzvquRNScE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=fvrSEtKI; arc=fail smtp.client-ip=148.163.139.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
+	s=arc-20240116; t=1706583158; c=relaxed/simple;
+	bh=c8BMl4EXFNNw4TkewgpNx2zblX2nANzX/ts1MxhcmYI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UVUJcW2Nyq4A6wgbDh6M4eP1koq9onm/rzrSYBtHWpgoH1IB0w5LCOKf00qLTmCgPyBdp0hRJGLHHyJEEgbX1rMVee7UT5YoBgKunK1JObNytVo0YYufad4HgqaKyaNkPNnwfBUyvCAECBnTItG89o25mZBpP+MKvNeU0OOOQKk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=MpXrQYTu; arc=fail smtp.client-ip=40.107.7.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="fvrSEtKI"
-Received: from pps.filterd (m0166260.ppops.net [127.0.0.1])
-	by mx0b-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40TLLdD6030785;
-	Tue, 30 Jan 2024 02:50:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- mime-version; s=campusrelays;
- bh=pWzK9134IN6xzSZewc9I4JhW+EXbDP0PHDZ9Qti3xcs=;
- b=fvrSEtKI4am47lAGMwX9+NFRgd4ognonBnQSMU2ePeXqwU9+9+ummEDMB9oGOvuoKG6g
- d87UVDwA+t6jSafHcYzDyaO7T+ZjebsI+KPc1kora3NXM9zntYcu8UYo13q3nBfLIDz4
- jZqVFF5YLii3K4n5Ts0ClHogjR80efdvFqhW0rY+vtVWFWb/IiJRoT3+9NTt4Gt1WMVW
- uLQ94TqOEGWOlqXoxdkQOdidj6rA+IrYcR3Qymrp7Qp/3tXxCeIjIf2nxlSPMbPcARu4
- dB/6TSy2Lm2Mv+wsNFxeCaKxi7T5C8qGnuOn3lrZy05FRDkO6ZrCUsNHD3fK2WmWiKeZ SA== 
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
-	by mx0b-00007101.pphosted.com (PPS) with ESMTPS id 3vxkv61xh4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jan 2024 02:50:44 +0000
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MpXrQYTu"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eklK3pSNmJUJP1lBXFL8lThTN9Fht2umPzDyXzexemakDYwgmTjUdsGMiR2fV8T/k/zAmGZz6pcjOvynQwjjMRZzBKLyY5gy/WfigZgRhAk0H0u9XyMBBK36WXVmRhhy+qMszxFI5RVlwZq1MGeJrD8SF/yjAqay2GeFJeMsbLtA5p7u676FMcEvShDReTXWtwz+E8bgyXV/zSnwfCfJzmPQKRgVVsOSUTKk9nyKpWdEtDJZKnEm3RFGkkJEQZoKRWCED7QWtvuCSZV5cs9u6e106MAFlFzxPIaBFI9jI5hJcphLxIpkvP7r+lJ/KdmEbgiszEAEmRmQv3WPTgEQNQ==
+ b=k9JahCLOTfAjSHdK923J3E9IWeyIfeyXXYIEZ4J/E/re9RuUpRDW7BFXrD0uqX6bSgiegxotRFQkVfqvd9O9jcwvzOgu077tZfnqs/R0IgabD2L63RQAW0bYOZN49RVz0dxGMV0krpbQfr3WIHmUGQsLZy+mzOXu0AjWDry2kYn31vfaEbIZpTBHw4Wbx/s/P7ZWgah6bdoxw502eS0UfjVnHRUrUTGmNtAgrOxKFTDUnpn9QZ9a9SYigTCsH7YXFSL31BkwDy/3RPhGgaqjiekHbIRAknz63gFOGWgCui3zvcNwP5DD6Irk7VN0UMtD4GE8Q+tyr/xY8m6gj2MayA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pWzK9134IN6xzSZewc9I4JhW+EXbDP0PHDZ9Qti3xcs=;
- b=EkbAZObKB9D97uhTzsQToFYgtMuNR9xqy32XuKIjdKmAZqFVjDpPhWFuDHmWuQPU+hHp+Vqysr2e8ESDJvNFiTmat7WixVR1JP4clCXpGHfsDbxxouJ1azHCeHK8SYDvpv/LizMf4I8T4pZx1jovS6Pjkq3CCgozRYGXrlf0TLNKnchtFOjvOdufSObFuY8zkkyb4Su8hJ6hoaoksnAnt9/a4taBeMwFTP+5PVZQFLK6V9gm08P2XNhXYxT9dur8VzDDvw6D0eHn3ylb4q4LLUKNxbJcjiLQWLHQ5Ho8AwJK/5Zg1z3uYXr4f6X1KGE5qE0LZHNF7Azeg81KAouxaw==
+ bh=v9Y9rcqqoZZYFB9qx8nqBuiQNn+xxms8B7ZePKusSkA=;
+ b=APFKnefav6fgaq+gMYRimURD2CHx5eQphTVHlt/ZN7Vm20weC5S7Af/CfimlqkmDkymyVZghyblccr/FZCQO8sES58C1g5UFmdZTZehYZZ6oJkFtJc5Jfl4MyJcIBX1YEjBIPhv2x86omtmLFz7X2H6BN27s67dlyHFpJ7Jy1kuYYzdKwdkTxkG65YlXWX5i5uEhyUBzzWxZXZcLuxPcXj7RlR2Efm5ct5ggAkN3nK/TO7+cKulGCbPCq9MrlRPQYIQCCRrDzG8G9DcnfM0pgCu+0Qy6KbEenG6ZZONVYnfdwwssrkh1ieYFVO2S7+LRob7jmJNv49nns8CnhxhYzQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=illinois.edu; dmarc=pass action=none header.from=illinois.edu;
- dkim=pass header.d=illinois.edu; arc=none
-Received: from DS0PR11MB7286.namprd11.prod.outlook.com (2603:10b6:8:13c::15)
- by BL1PR11MB5478.namprd11.prod.outlook.com (2603:10b6:208:31d::12) with
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9Y9rcqqoZZYFB9qx8nqBuiQNn+xxms8B7ZePKusSkA=;
+ b=MpXrQYTu4MFeuIr7tYKX7MLCTIVOBnhHiXYqvBxngy59M14y5f1QrV2I6g8bbyM7YtVJXPYfVX3v3EWi/OfiCgY20hLgDQr+96dfsTW/C5bRiGY6Gnu5JJZWsS4z5NYF8oTssPthylconcXTMjsOa3Sh8KeO8QZIQnSg3oV7FAM=
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
+ by DB8PR04MB7002.eurprd04.prod.outlook.com (2603:10a6:10:119::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
- 2024 02:50:41 +0000
-Received: from DS0PR11MB7286.namprd11.prod.outlook.com
- ([fe80::df27:adc7:bb62:4690]) by DS0PR11MB7286.namprd11.prod.outlook.com
- ([fe80::df27:adc7:bb62:4690%4]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
- 02:50:40 +0000
-Message-ID: <15690bf4-a803-4ce0-87bc-ec21727fa38e@illinois.edu>
-Date: Mon, 29 Jan 2024 20:50:39 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/2] x86/kprobes: Prohibit kprobing on INT and UD
+ 2024 02:52:32 +0000
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::d45f:4483:c11:68b0]) by DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::d45f:4483:c11:68b0%7]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
+ 02:52:32 +0000
+From: Xu Yang <xu.yang_2@nxp.com>
+To: Frank Li <frank.li@nxp.com>, "will@kernel.org" <will@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org"
+	<robh+dt@kernel.org>, "krzysztof.kozlowski+dt@linaro.org"
+	<krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de"
+	<kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>,
+	"john.g.garry@oracle.com" <john.g.garry@oracle.com>, "jolsa@kernel.org"
+	<jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>,
+	"irogers@google.com" <irogers@google.com>
+CC: dl-linux-imx <linux-imx@nxp.com>, "mike.leach@linaro.org"
+	<mike.leach@linaro.org>, "leo.yan@linaro.org" <leo.yan@linaro.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
+	<mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>
+Subject: RE: [PATCH v3 3/4] perf: imx_perf: limit counter ID from user space
+ and optimize counter usage
+Thread-Topic: [PATCH v3 3/4] perf: imx_perf: limit counter ID from user space
+ and optimize counter usage
+Thread-Index: AQHaUpsXAYyR9Zx+Y066MBNVZB3wIbDw/J2AgACrv4A=
+Date: Tue, 30 Jan 2024 02:52:32 +0000
+Message-ID:
+ <DU2PR04MB882224AF65845B2AB0F30B998C7D2@DU2PR04MB8822.eurprd04.prod.outlook.com>
+References: <20240129101433.2429536-1-xu.yang_2@nxp.com>
+ <20240129101433.2429536-3-xu.yang_2@nxp.com>
+ <PAXPR04MB9642D08437D60164E91E73D6887E2@PAXPR04MB9642.eurprd04.prod.outlook.com>
+In-Reply-To:
+ <PAXPR04MB9642D08437D60164E91E73D6887E2@PAXPR04MB9642.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240127044124.57594-1-jinghao7@illinois.edu>
- <20240127044124.57594-2-jinghao7@illinois.edu>
- <20240128101912.5ad6717347bd66089ecea03a@kernel.org>
- <8c29d66d-b17d-4185-988c-de078566d0da@illinois.edu>
- <20240130104414.4548b70ada33ea3180047423@kernel.org>
-From: Jinghao Jia <jinghao7@illinois.edu>
-Autocrypt: addr=jinghao7@illinois.edu; keydata=
- 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
-In-Reply-To: <20240130104414.4548b70ada33ea3180047423@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------6dN03QmBUgWHRy6Jsm3cFtp6"
-X-ClientProxiedBy: CH0PR03CA0102.namprd03.prod.outlook.com
- (2603:10b6:610:cd::17) To DS0PR11MB7286.namprd11.prod.outlook.com
- (2603:10b6:8:13c::15)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU2PR04MB8822:EE_|DB8PR04MB7002:EE_
+x-ms-office365-filtering-correlation-id: 1217e9e5-b8df-4bff-5403-08dc213e816e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ vAvZoCO2mR8cK2c16fsCgds1CxjN6H3/1IBFsV4vjNaPcBY0zOINotQ+ECKlQMtyM017tdd6xe/iF8YkfC3LUzTaAkSjDyQvZtig0EdAAiAhocyfz5PxwBFLmktprjhfkG8zm1anph9kfSeCh/yGCA4bF8G0IH02YpRk7UoR8PirHPcZMUY8ehSpD5BcA5+fqeQxPSLC+HAhHgD0CdaPXFkdn3in5WN9ukAIWoxH0tqL7BC3SY9MbqYpyoIM6ytMNwzAE7C9e9fD7xa5ey99R6E9ZBOwCJ+Kf9y5ZQHUotB4vSpUHoYWyVs1sSkP131csFObdQHKf6Fp43g9GfF6pXUZOOOEMEqp4CiwmK9Ne69NwbA8m6Kc/q7zChkzZKoI22fHOP7z4wLEuXgT0r2k+WeNM8s4A5y9aPA92vmHu7omsvTRFX5VtXndG5MllIN4aiVpogyu5wd3nGFnd8QwCe9kv+FsFFdhhIlNor+dcR3QHXSiB1T3JeWXlXdj51TFnfzA70rGbUCG84TXe9CfpiyRxVLyOOvPQAhrPnqZ31SV3NLSH75cOdpZVXTlHwzYJwnMux2M4JvVbqQIVKyAKFmPyTt3AQt2Rw0ie9Dmof+xatPwg5SFeustntDlQlp4w3P/rA0iMthomkUknK7tPQ==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(396003)(366004)(376002)(136003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(38070700009)(5660300002)(2906002)(7416002)(33656002)(41300700001)(921011)(86362001)(54906003)(64756008)(316002)(66446008)(66476007)(110136005)(66556008)(66946007)(76116006)(71200400001)(7696005)(6506007)(9686003)(26005)(55016003)(478600001)(83380400001)(52536014)(8936002)(8676002)(4326008)(38100700002)(122000001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?TsodjZLytnIB7xCRHT6fvLFSjrGg3h+nHFAVQVD73eTPpH46sjzwVAw71okJ?=
+ =?us-ascii?Q?W9aBndO0ass9OFTacDJksyDTWGZ/PN+wxEl3KG2qaZ8rDd6OO1r4TcNEiIqR?=
+ =?us-ascii?Q?wuv5CCIq7mvKIbdps+gQIMO7zH0IkNz9UG33MI9lU4LGKSLDd9gtRpRVJN9J?=
+ =?us-ascii?Q?0dgQQqmMELYcS9RGcBcxaHgkpJUMCCjjWC43a/G6SW8l2bj8jkpZFFEOYY74?=
+ =?us-ascii?Q?Em9Sjxix6oYB4R0vC9bSy9bLgnBl+jQ21Ox96SgYGHGUYuFGjUxn9j8aQy6o?=
+ =?us-ascii?Q?MNiaw3PdUCWrdysznK6WJ7em49+WOL+atNJ32rnUsms90B+ClmPU2NbqQWKF?=
+ =?us-ascii?Q?hplior9Gb4w2VXd151dY39hfhWKsPLpFcUBokJrj+9kcAMkyNZNWny1VxD4R?=
+ =?us-ascii?Q?rD41uAYthmab2QdjSeM1BhX/qcLXDz9zPyN8GsDQqK/dS6mF2Kd0Csea56WU?=
+ =?us-ascii?Q?Sc1AFt1A1T6khX4CVB4Jp1yR/YQRh1+E7ebwqpHkwwNu1K/OI2ObP0I7fPTW?=
+ =?us-ascii?Q?enmmyfw+cWW9wUifBW4H8idotCr4BVokTP+fqoG0p1TMxwpd+jV7By6z//yD?=
+ =?us-ascii?Q?UOJ3aA5PYl9usRokeJatd9l0hwwgoPYPEY97sEK40YANaFjPvFtScuUqkYWg?=
+ =?us-ascii?Q?IZPsmdYFKedTd0AdX8X70r/M53Xr8ToG2AGwyrw+6H88UgEWYa4F8elDF5jd?=
+ =?us-ascii?Q?TyLy50H1D6dcZ5hKJgqNpO9aTWiWMLOx4g/cn4/02jE9Z0yGhSxsQdcO3vAy?=
+ =?us-ascii?Q?RchBJHIZRGclyd/6bChQCV+mWbm0r0a35Rjg/JJ7pLMBFTgOmSC9GqHWOs6R?=
+ =?us-ascii?Q?iiSI65sbpwAkvUZdRPo2WuiSaeWEsZuVMmLkngW0dwmThmZ8HyQ9PolgunCG?=
+ =?us-ascii?Q?9u7vq7GkkGRxEL8or4LJWFdr7l7zwzPsATEwzIxkLCbRPDkNZjWmv2MaZ2Y4?=
+ =?us-ascii?Q?40R83x2yxjxebB8bV9yldSzBlZS5bqLGsGDt4C7p6t5W88QxP4GW23orjYwq?=
+ =?us-ascii?Q?UP28TbnIAcYPOyWKm+LUutUsh19fp/CNs7CknW80B9qn4dy0E8O3Qfn3cJAA?=
+ =?us-ascii?Q?MfGEjGoWckcn8Gp9BizqiK0XEqaBkDFIJIvzceXfl41Y8HuOhI47tQtChys3?=
+ =?us-ascii?Q?IyN/C9fDXgCgopQ3TwGmHodXPKhbQQozDP8hktDB+v2MLcfUkuysdLk3oJ7S?=
+ =?us-ascii?Q?UuAVjOp6EXcO6HHVtZYnnWxl6HYw8CT0a68VI/PN9mVSsXVYqyW8It5EtxQ3?=
+ =?us-ascii?Q?GDwNUYet80Qa+TTrul5wK4J1ERJgMrZOq7WD3PK1d4RausO0WuSMG6GGopxe?=
+ =?us-ascii?Q?H8zF6nFfhPXIRYMKhEi4lNe1ZYJNzLLPv317032AbUgKCuhPPpHmHqLJGx/W?=
+ =?us-ascii?Q?75tzNrPc5gzjynh0oZ7r39MmPLwbsh30H6dhpcglJ0kX1qefkHtaP/yoisx6?=
+ =?us-ascii?Q?Qmt7bSdPLxoDP63hT3LcsVEUDLhhrIZ48yVDPEs258uIAgPfULLpjaggHizL?=
+ =?us-ascii?Q?bCfQ7is/SSDrRwPOaMTJDe76UI3qaaYdYAONCnrIQYhU+cLekCFjwfhETCMA?=
+ =?us-ascii?Q?fKj2QNXEG1+2PWbQ8vs=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB7286:EE_|BL1PR11MB5478:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e5cb650-cff0-45cd-dd3f-08dc213e3ef2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	RVvRjCXib1g316s7UERu2j64MgWBKRdROdbHb09LFqRVkqoYt7ZtkgT/+bN9WCzYZYyHUALI9rVfzayLsK2/3WCwLKrZ3OpqH45DvqfE+IMnbHJPk7reYLP8P3PKeF9GsKA8gyzCWxZ+ne4xcpG9HKu2hvg+qLJwdOqJ9I36pLUlIyBs+6ea7i1B7QAL+LPl1uwA0U5fquWwUrA0h5enOLyYnMara3BRKQIPNxClYoO07RC88u/M9mzAFW7jxeH2INfLt2BeIG8lqaJDoLg6ZxFquFgrOsRMhLoCqU7G88zZnxy63VFja5uTQ2clBqOVb1j57K4Sbtg4OyckRssOF+AcL6NTY1+n7R2sYeOJ8/siInAG7boWuI+pKQ5wfXtLKL7acsvWzppjp2LIjjHx3oN/vu9PSLrm1GrdlBlqQmdMtrmGMw3Iy5VzwtWJIE2rImYSONVhcLsovAOgM1UOYAvzEW52axA3gia+diMjm8yye6A1Qhbzdi0OwSEaP0lhTIUQH3S/fNyir+tQtGoZEVbxfifNVsHs9wff21r/gMW8Xg7o+MvuDpJjxV/Jyyk4GYDYJ5svPt2a+FsQK4YQVl0Rh3Bc+UIGCU5SrxE8nXGz6Z/HaSlUOjA6iWG0ev5PzxC3p+/ICaOghWrnQ6gYIg==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7286.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(396003)(346002)(376002)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(75432002)(316002)(31696002)(66556008)(83380400001)(36756003)(53546011)(54906003)(66946007)(6916009)(86362001)(6506007)(786003)(8676002)(8936002)(66476007)(33964004)(6486002)(478600001)(4326008)(2906002)(21480400003)(7416002)(5660300002)(6512007)(2616005)(235185007)(41300700001)(38100700002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?MWFqYndnb25aLysvY05BampJU1BoRkZMVHdaeXFBc3UzRzdMa3htTUNVR0hj?=
- =?utf-8?B?d2lkM2hNd0YvdFZoemNyY2dTdXhFWDAwbXR1K21VOTcxd2kvRVRSZHJNUWVs?=
- =?utf-8?B?dkRCS1o4dWJYUHExMFRUd0Nrb0JyMXIvNEhiMkNsUERjZVk0Wk80N0RZaFFu?=
- =?utf-8?B?RUZVeEtZY2M1MEdyMTdxLzFXRnFRYnhIdmZBUmhDTVFEU2JGb2JvMnNHbm8z?=
- =?utf-8?B?VXRzd1JOUjVTc0t2aTNBUWpqdVR5TzFwd01VOVgreHlMT29MODhRSWltL1oz?=
- =?utf-8?B?aTR2WDhtVzI4ekdqTjlOL3FCWi9tRDlsVTJyaFd1YjI1NWJKUkM5NWkyU1pW?=
- =?utf-8?B?Q0dXb2d6bUQvMytJbUY3Y2IrUVNxN2VnU1pTSS9BS1dWUXI1djd6TnF4ajBj?=
- =?utf-8?B?QTRwcktHUDlmTllqa1VpdUY3Vi9YMDJmdTVxRzlMVnVZdWJKSWVteDl4bTNT?=
- =?utf-8?B?dUlncHR0T0JzaFhrd0I0b3VncXlQN2Zqc0ZoTHlnTlhvcDc0SXJqWWwzRXVO?=
- =?utf-8?B?YkhFeG9OSStMZytGa09wNDFPemRETHI3RFNwZGFZSk02ZnVjcTM1NjV0TEFv?=
- =?utf-8?B?ditQeUQzalIwVG03UEFSWnZUeG5RWCtpbG1NZU1LQXR3eTZxc1E4R3d2U3hI?=
- =?utf-8?B?UHpCbmVhbnpVcU1PVlhBWlZ0NkRaZVdqemhsZ3NVUjRyTHU5aUVzQjN3OC9V?=
- =?utf-8?B?eVB2WDMxTnNEUW1xZTBqN1UyUktrLy9WWERYNW1hWW9vYlpXUEJycFA4YmdE?=
- =?utf-8?B?ckVKYU1XRUplK3VRbWJTais3TmM4anNTbkZpQktOUHV0TUFRQjY4Z3pRc2JX?=
- =?utf-8?B?TDhtYS9neEJNdFZIQVBHMlpYUExnRmViTzNXL1ZqYUNxN3M5UVE1U0RLTTlW?=
- =?utf-8?B?M1pXL2NVSnZubklvYmRYZGNOOXVMN2Zud2tBVVpGenhHc0ducElQSDRVMDB1?=
- =?utf-8?B?RWdSekhha1A0Wms3S3lDMmZXUFZxMmlxVEMxWmZ5SHpUNGZSVUhWSDlSQkNy?=
- =?utf-8?B?TEZLRy9QeXZvM0hrdFlkT2N6V3FHdnNNUkcyVk1PZ3U0NGdDcC95eXNibm1m?=
- =?utf-8?B?M1huVlZhZHdBT0FJYmR5Qmdoem4ycGdZcWdLbnBVb2hCYXBHcEptTjRzZTdo?=
- =?utf-8?B?UzZFT1pSb1FIOG5vbXE5TTBTWjdRSEdRWnNveUJzcVVBTHJQTXhKYUlMUDVm?=
- =?utf-8?B?SUZTbFAvbk4vVHhMVjUzT0l6S1pOVWdBZmJaWEVXaTI5R3ByK3lhRnd0ZHdH?=
- =?utf-8?B?ZTY3M1NleURVKzJzbnRSNTZqQ1o5TEVPdnB0UUNXcVpYNFJHNjRmaEhuUGp0?=
- =?utf-8?B?UjRPV1NXNVBEOVlOejNyNE9TWDB1ek1hN1NJM1YvNlh3VE13ZkFIdVlnNmRh?=
- =?utf-8?B?Tm42YTN2eHNuRzQrcmxOdU90Y1I4V0R4Wnl2TFdwZGp5ZncvV1NKUEozL1RL?=
- =?utf-8?B?S2RmM0VvZjUwZkJNM3MwalBKQmp6aFVXY1lHU1JiYjBWMFRUT1MrZnlSUk9G?=
- =?utf-8?B?eXE5TzhCT0dHQ1JIQ2ZHeU51TWJkaHpxaTl3R3p1SFZiVmsrbGYwYWhnUDR3?=
- =?utf-8?B?aU9tY1grK2tHTytiYzNDVFB2YWtucFVVZ2VWVG1LMUVjNy9HKzNETmRRUUp1?=
- =?utf-8?B?V0F6eDZCcm5GQlZBcGF4YTd0RjhSM2JmOGNMT0xFeE4vMndxeWJDN2FzQWhu?=
- =?utf-8?B?YzNNUUt3OXhma21MN0NzMTFyWW9Mdiswb253ejJlYkhHMHBDenVhRHZpd2Jy?=
- =?utf-8?B?RWF1TWljS0dsQnJQc2oyR0tqZU9HbEprMmlyTWJBQUM4THQzYXN3V1d6K3Qr?=
- =?utf-8?B?Z1VjK2J2bUp5UTlGVS9hcWc1SndES242Y2dmSnh0QzRTUTZnckNaeGxaa1gx?=
- =?utf-8?B?WHRrQVdFMzIzdmoxUDNBVVZtNysxYkpzU1RncFZzSFhNZzIxQkIrOWZiNWgv?=
- =?utf-8?B?b2UwQ3NTaXIvVjFFNXFQTHo0QnNRTHliZkhXNTd3ak1GbEFKbk00eDE5SUZW?=
- =?utf-8?B?Q2d1aDk5Wk5CZWwxRXgrN1Jkei9SM2JEQkV6ZG8yS2JmOEFtNllnUUg5Y1hL?=
- =?utf-8?B?cTRQalZ4LzB5MEJQMUt4UlR0WCtuWlBWVHdXWGVkaFJnTVptUjdGK2xEU0cy?=
- =?utf-8?B?eDhZeWVBNTVPL01rRjk0SmRrOFViTkp4SllXWXNaZGNDK0lTOFJPNEc0ZkZw?=
- =?utf-8?Q?AwBD4GbWBJIDxMFZXEkr6QH+xGgCdqF1eMSAJddnJBjS?=
-X-OriginatorOrg: illinois.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e5cb650-cff0-45cd-dd3f-08dc213e3ef2
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7286.namprd11.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 02:50:40.8966
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1217e9e5-b8df-4bff-5403-08dc213e816e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2024 02:52:32.2935
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 44467e6f-462c-4ea2-823f-7800de5434e3
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f5V6Fw8IG6F2d3YGBK3WEepJnG7Qdf59H/GS+/i2iIIQjLPQ2mPz+VfGuRyKfffzYoikU3wlA1PQjYDKQuoWQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5478
-X-Proofpoint-ORIG-GUID: qHJRPKkQW8YxbUJrFRN0qOEu27BM51ma
-X-Proofpoint-GUID: qHJRPKkQW8YxbUJrFRN0qOEu27BM51ma
-X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0 bulkscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 spamscore=0
- mlxlogscore=771 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2401300018
-X-Spam-Score: 0
-X-Spam-OrigSender: jinghao7@illinois.edu
-X-Spam-Bar: 
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vkFBf9yChNhaooB1SrtEIBp3rtmnXVgyk0EIy+NCRlmTe9L5NFaEFteM0h/eEMaXJmHjREjLyPu77a2f3qufGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7002
 
---------------6dN03QmBUgWHRy6Jsm3cFtp6
-Content-Type: multipart/mixed; boundary="------------iMeSB0tXMpbIt5T8u72D0UKG";
- protected-headers="v1"
-From: Jinghao Jia <jinghao7@illinois.edu>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <15690bf4-a803-4ce0-87bc-ec21727fa38e@illinois.edu>
-Subject: Re: [RFC PATCH 1/2] x86/kprobes: Prohibit kprobing on INT and UD
-References: <20240127044124.57594-1-jinghao7@illinois.edu>
- <20240127044124.57594-2-jinghao7@illinois.edu>
- <20240128101912.5ad6717347bd66089ecea03a@kernel.org>
- <8c29d66d-b17d-4185-988c-de078566d0da@illinois.edu>
- <20240130104414.4548b70ada33ea3180047423@kernel.org>
-In-Reply-To: <20240130104414.4548b70ada33ea3180047423@kernel.org>
+Hi Frank,
 
---------------iMeSB0tXMpbIt5T8u72D0UKG
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 1/29/24 19:44, Masami Hiramatsu (Google) wrote:
-> On Sun, 28 Jan 2024 15:25:59 -0600
-> Jinghao Jia <jinghao7@illinois.edu> wrote:
+> > Subject: [PATCH v3 3/4] perf: imx_perf: limit counter ID from user spac=
+e and
+> > optimize counter usage
+> >
+> > The user can pass any counter ID to perf app. However, current pmu driv=
+er
+> > doesn't judge the validity of the counter ID. This will add necessary
+> > check for counter ID from user space. Besides, this pmu has 10 counters
+> > except cycle counter which can be used to count reference events and
+> > counter specific evnets. This will also add supports to auto allocate
+> > counter if the user doesn't pass it the perf. Then, the usage of counte=
+r
+> > will be optimized.
+> >
+> > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> >
+> > ---
+> > Changes in v2:
+> >  - limit counter ID from user to 0-10
+> >  - combine dynamic and static allocation of counter
+> > Changes in v3:
+> >  - no changes
+> > ---
+> >  drivers/perf/fsl_imx9_ddr_perf.c | 69
+> > +++++++++++++++++++++++++++++++-
+> >  1 file changed, 67 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/perf/fsl_imx9_ddr_perf.c
+> > b/drivers/perf/fsl_imx9_ddr_perf.c
+> > index fd118773508d..4bb80050920c 100644
+> > --- a/drivers/perf/fsl_imx9_ddr_perf.c
+> > +++ b/drivers/perf/fsl_imx9_ddr_perf.c
+> > @@ -51,6 +51,7 @@
+> >
+> >  #define NUM_COUNTERS		11
+> >  #define CYCLES_COUNTER		0
+> > +#define CYCLES_EVENT_ID		0
+> >
+> >  #define to_ddr_pmu(p)		container_of(p, struct ddr_pmu, pmu)
+> >
+> > @@ -235,6 +236,14 @@ static struct attribute *ddr_perf_events_attrs[] =
+=3D {
+> >  	NULL,
+> >  };
+> >
+> > +static bool ddr_perf_is_specific_event(int event)
 >=20
->>>>  /* Check if paddr is at an instruction boundary */
->>>>  static int can_probe(unsigned long paddr)
->>>>  {
->>>> @@ -294,6 +310,16 @@ static int can_probe(unsigned long paddr)
->>>>  #endif
->>>>  		addr +=3D insn.length;
->>>>  	}
->>>> +	__addr =3D recover_probed_instruction(buf, addr);
->>>> +	if (!__addr)
->>>> +		return 0;
->>>> +
->>>> +	if (insn_decode_kernel(&insn, (void *)__addr) < 0)
->>>> +		return 0;
->>>> +
->>>> +	if (is_exception_insn(&insn))
->>>> +		return 0;
->>>> +
->>>
->>> Please don't put this outside of decoding loop. You should put these =
-in
->>> the loop which decodes the instruction from the beginning of the func=
-tion.
->>> Since the x86 instrcution is variable length, can_probe() needs to ch=
-eck
->>> whether that the address is instruction boundary and decodable.
->>>
->>> Thank you,
->>
->> If my understanding is correct then this is trying to decode the kprob=
-e
->> target instruction, given that it is after the main decoding loop.  He=
-re I
->> hoisted the decoding logic out of the if(IS_ENABLED(CONFIG_CFI_CLANG))=
+> Why call specific? Name is too general.  Such as is_fixed? Or Is_with_fil=
+ter?
+> Need know what specific?
 
->> block so that we do not need to decode the same instruction twice.  I =
-left
->> the main decoding loop unchanged so it is still decoding the function =
-from
->> the start and should handle instruction boundaries. Are there any cave=
-ats
->> that I missed?
+There are only two types of event: reference event and counter specific evn=
+et.
+To make it clear, I'll change it to ddr_perf_is_counter_specific_event().
+
 >=20
-> Ah, sorry I misread the patch. You're correct!
-> This is a good place to do that.
+> > +{
+> > +	if (event >=3D 64 && event <=3D 73)
+> > +		return true;
+> > +	else
+> > +		return false;
+> > +}
+> > +
+> >  static const struct attribute_group ddr_perf_events_attr_group =3D {
+> >  	.name =3D "events",
+> >  	.attrs =3D ddr_perf_events_attrs,
+> > @@ -507,6 +516,7 @@ static int ddr_perf_event_init(struct perf_event
+> > *event)
+> >  	struct ddr_pmu *pmu =3D to_ddr_pmu(event->pmu);
+> >  	struct hw_perf_event *hwc =3D &event->hw;
+> >  	struct perf_event *sibling;
+> > +	int event_id, counter;
+> >
+> >  	if (event->attr.type !=3D event->pmu->type)
+> >  		return -ENOENT;
+> > @@ -519,6 +529,18 @@ static int ddr_perf_event_init(struct perf_event
+> > *event)
+> >  		return -EOPNOTSUPP;
+> >  	}
+> >
+> > +	counter =3D (event->attr.config & 0xFF00) >> 8;
 >=20
-> But hmm, I think we should add another patch to check the addr =3D=3D p=
-addr
-> soon after the loop so that we will avoid decoding.
+> Define 0xFF00?
+
+Okay.
+
 >=20
-> Thank you,
+> > +	if (counter > NUM_COUNTERS) {
+> > +		dev_warn(pmu->dev, "Only counter 0-10 is supported!\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	event_id =3D event->attr.config & 0x00FF;
 >=20
+> same for hardcode 0x00FF
 
-Yes, that makes sense to me. At the same time, I'm also thinking about
-changing the return type of can_probe() to bool, since we are just using
-int as bool in this context.
+Okay.
 
---Jinghao
+Thanks,
+Xu Yang
 
->>
->> --Jinghao
->>
->>>
->>>>  	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
->>>>  		/*
->>>>  		 * The compiler generates the following instruction sequence
->>>> @@ -308,13 +334,6 @@ static int can_probe(unsigned long paddr)
->>>>  		 * Also, these movl and addl are used for showing expected
->>>>  		 * type. So those must not be touched.
->>>>  		 */
->>>> -		__addr =3D recover_probed_instruction(buf, addr);
->>>> -		if (!__addr)
->>>> -			return 0;
->>>> -
->>>> -		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
->>>> -			return 0;
->>>> -
->>>>  		if (insn.opcode.value =3D=3D 0xBA)
->>>>  			offset =3D 12;
->>>>  		else if (insn.opcode.value =3D=3D 0x3)
->>>> --=20
->>>> 2.43.0
->>>>
->>>
->>>
 >=20
->=20
+> > +	if (ddr_perf_is_specific_event(event_id) && counter =3D=3D 0) {
+> > +		dev_err(pmu->dev, "Need specify counter for counter
+> > specific events!\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> >  	/*
+> >  	 * We must NOT create groups containing mixed PMUs, although
+> > software
+> >  	 * events are acceptable (for example to create a CCN group
+> > @@ -552,6 +574,39 @@ static void ddr_perf_event_start(struct perf_event
+> > *event, int flags)
+> >  	hwc->state =3D 0;
+> >  }
+> >
+> > +static int ddr_perf_alloc_counter(struct ddr_pmu *pmu, int event, int
+> > counter)
+> > +{
+> > +	int i;
+> > +
+> > +	if (event =3D=3D CYCLES_EVENT_ID) {
+> > +		/*
+> > +		 * Always map cycle event to counter 0.
+> > +		 * Cycles counter is dedicated for cycle event
+> > +		 * can't used for the other events.
+> > +		 */
+> > +		if (pmu->events[CYCLES_COUNTER] =3D=3D NULL)
+> > +			return CYCLES_COUNTER;
+> > +	} else if (counter !=3D 0) {
+> > +		/*
+> > +		 * 1. ddr_perf_event_init() will make sure counter
+> > +		 *    is not 0 for counter specific events.
+> > +		 * 2. Allow specify counter for referene event too.
+> > +		 */
+> > +		if (pmu->events[counter] =3D=3D NULL)
+> > +			return counter;
+> > +	} else {
+> > +		/*
+> > +		 * Counter may be 0 if user doesn't specify it.
+> > +		 * Auto allocate counter for referene event.
+> > +		 */
+> > +		for (i =3D 1; i < NUM_COUNTERS; i++)
+> > +			if (pmu->events[i] =3D=3D NULL)
+> > +				return i;
+> > +	}
+> > +
+> > +	return -ENOENT;
+> > +}
+> > +
+> >  static int ddr_perf_event_add(struct perf_event *event, int flags)
+> >  {
+> >  	struct ddr_pmu *pmu =3D to_ddr_pmu(event->pmu);
+> > @@ -559,9 +614,17 @@ static int ddr_perf_event_add(struct perf_event
+> > *event, int flags)
+> >  	int cfg =3D event->attr.config;
+> >  	int cfg1 =3D event->attr.config1;
+> >  	int cfg2 =3D event->attr.config2;
+> > -	int counter;
+> > +	int event_id, counter;
+> >
+> > -	counter =3D (cfg & 0x0000FF00) >> 8;
+> > +	event_id =3D cfg & 0x00FF;
+> > +	counter =3D (cfg & 0xFF00) >> 8;
+> > +
+> > +	/* check if counter is available */
+> > +	counter =3D ddr_perf_alloc_counter(pmu, event_id, counter);
+> > +	if (counter < 0) {
+> > +		dev_dbg(pmu->dev, "There are not enough counters\n");
+> > +		return -EOPNOTSUPP;
+> > +	}
+> >
+> >  	pmu->events[counter] =3D event;
+> >  	pmu->active_events++;
+> > @@ -597,9 +660,11 @@ static void ddr_perf_event_del(struct perf_event
+> > *event, int flags)
+> >  {
+> >  	struct ddr_pmu *pmu =3D to_ddr_pmu(event->pmu);
+> >  	struct hw_perf_event *hwc =3D &event->hw;
+> > +	int counter =3D hwc->idx;
+> >
+> >  	ddr_perf_event_stop(event, PERF_EF_UPDATE);
+> >
+> > +	pmu->events[counter] =3D NULL;
+> >  	pmu->active_events--;
+> >  	hwc->idx =3D -1;
+> >  }
+> > --
+> > 2.34.1
 
---------------iMeSB0tXMpbIt5T8u72D0UKG--
-
---------------6dN03QmBUgWHRy6Jsm3cFtp6
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEE2/ZzTtJDFIshN/BBL9huahcPNUYFAmW4Y/8FAwAAAAAACgkQL9huahcPNUbl
-SBAAz18r3RA6CNu/qchTOuyX5Up/LCjJACdfH3UCIZfbsLn0eeXMGLmJjYA9rJhFlMtDE096fWpz
-ZwCDmEL5cMkGttfcs7jC/daVpeuJZSF5sy5Fiw7qoZ4YvNiyyWDItF778RYWu6XrrwECX4l3hBDI
-cpuFp5hXZp+qM5e0BzfyDTHdZ/a/oaGjzLfwI46YsuWd1NdxIjBgV8I2jsMoIcXoQThdIpfm6x/U
-jwDSaAXfyko+4V12Gty4HzlHAb3uvsa9VS7D2G5a6uni0WJV91IId5P+VcKUbYIv+56i0+jmh6kB
-BG8Wkm+Rw7OmpBbJknazIbq2LqXWLKxhCOnU4m6lxiw+cdu4gKiC8tMNJq8LEsrSfJDuvb82r225
-iXlD6HkPhFr0YYlgC6u09V8a8XL0kYMWadQaD76xXEYCdJFJwq0ESBoF3m94bNuVc45bposHnfkw
-ao5iw8Oo6TFaXR2fJo7/Ig4Rgu+xbDENIgoEPYgZJAYp4m2K6JA9f4rUi104elXZBBDgtpqICc54
-/5VmvfukjCF/Z6fky9hYbxpzglkCBHF2wQHQ3g/V7v5RQFB3GcqxxTkEAp3bhyX09MrLK4Cs1xhp
-X0ZXHX6fzzgfXvFkMbGhN2Z0wF3Lfe+1KqLFOWRQVahoZw3rUZWuGuobzZtQ4/plT+u2CpSc+YW5
-F0g=
-=ix0z
------END PGP SIGNATURE-----
-
---------------6dN03QmBUgWHRy6Jsm3cFtp6--
