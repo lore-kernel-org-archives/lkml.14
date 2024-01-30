@@ -1,66 +1,47 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1B52CCD5
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFEB2CCD5;
+	Tue, 30 Jan 2024 01:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706578488; cv=none; b=h45+XpJjQXZ1Z8Nxt0oyYmpbBpK/PgUySkn5pXdCdEmfY89tZjFR3PxwRE+78UVC6d8l96t6q17MkYfmEaWZVLlZc5ws5xR1dY5oONAfAqA53lWj/hRJw6NNW0Ko5HbvdrfSOKNJ1NsvKrHSZR+MvG8j1a1g8HX8EMBnoMt6MvE=
+	t=1706578558; cv=none; b=bFoZLFEUYjxSSu/7griMMm6M6AufUWr8l67Y7qgTfWHdyiEBjqAyQKr2Ik5O0ADf8Jrp4iC+Caxyvb0MnTU2CnZ3QqfGQUpDmTiHnf3wwQ5NrP0MJeZ40hd4hQWYIldshUGsioA3Q2bBFZ3V8pDk3tWjjBcEBdH67S0Vt3XGh2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706578488; c=relaxed/simple;
-	bh=pjKF8tIho/v+IEph4zer3wh/eDSGzR3EZwX8YiJO+eM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZxReijmo/VpGGJdKFHPJtUbCRD7wxo5zI8abAnjsKJJK0gg/BZOFA80dAJGg/eacOu2c0mMHhV7MnpT2TdZ5RxpZIR0rrMeX8KSEcWtzIeNWJib1ANIcR/uyw3eU3nVShxXbD5B0Ra3l10nlr3Sv96UImeTVpx1Hfx6cjfs/Hmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=2Xb3lWu0; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1706578558; c=relaxed/simple;
+	bh=Vvkeu61i6vdOz/6no5T26QV127L9fGOYLD6tF9jpGww=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ytw9+Gsw6k5Z4Hmf9HmOFpgRnyp8+bY6fxKd6L4mQ2NUMFz6PK0NN48g2LHf5sep7KLYBrXxV/9gtTaZnDRbahfzLnXOadK+Mcxbtc7UN2ilb+RNY87ranMUAp+MoLwgr0En3mODdLMEcKmBH5Er1kGRQGrrtW09HS6xWX16upg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJQr6Eul; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="2Xb3lWu0"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78405c9a152so63222985a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:34:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1706578484; x=1707183284; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pt4QpYqiCKtezqoZ60BQzd+DA/EH8n3ps/uzvBONghI=;
-        b=2Xb3lWu0d4Zc4Y43nYe4ADjKg6/D7FK72J9crEkBZCOcPymT+cRsCsrkzLlvFICOJL
-         PXEhe1K1RV6STzuwSrnG7MemEIhi0XqesiXzg6RFLJs76tsy322j3jhSJrlsvwYFWwLP
-         AGwY9hdwdLJgrQj/Xc4YkdmRk5LSnxAX1Rb3BdPbsAJUF+4mtgWoaa6foT/8chFBB/5D
-         K45ZsjkXvMiCTtqTPhEztQpd4IehJGo8YJdqxECR41ayO5jOI4YAAIsOwNA27s8Wil/P
-         NfKwOURFGrZkUDbZyDl63t348tp9Q8g60pOtiqwt5ilwvKmzn1ih35Z0Blprs7EOyY7Y
-         tU3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706578484; x=1707183284;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pt4QpYqiCKtezqoZ60BQzd+DA/EH8n3ps/uzvBONghI=;
-        b=lEpQqtXoCbxZV5qsWP4Sbp677BM/FmpmGDcbbE5so1AonEcWevjqC7rBU7e9rzxPAS
-         i5xTRp5u6EBebNUSlE1tJan3s0jAAqdcI8YNtLe+q6Gi8zVsz+6lnDcXOw5llbsdQw1J
-         oxEtWyk4nuTm9iEhWL+Vr6FYzsfkpak8ragm7fPL6frmN0Fk7YHWDVzkQmOvndICGrIu
-         Mra1X1th1mtcXpvgssSefgLkHDpVJsmq1CKFk9gfIoCpVV5IAGb1UrLmD1Fudv1O559r
-         ZvLXXgQCJtp3pvrKkaYSOzqN8TAMqznLsXSICqeaeLFdbwgCAXvb9Us76Kka4Jf5JjX1
-         BrJw==
-X-Gm-Message-State: AOJu0YzLpAGRaAHXORCjtwKMf+f+U6rrwYkq/aO9aonOkap02myv06V4
-	pEdBMxRhJM2EqotXs7O2NLGJ4aNIPAgrQhIoTxZAM9owHb3Cd0fvuUuc5DRMmx32+S5ePyGUKY3
-	a
-X-Google-Smtp-Source: AGHT+IEdaB1qwTqKaziaa6HRsPa2jrEC3sjEOrMYISc8fAwH2/VeWWl0i2SKtM6XAG5+P7O3eNWenA==
-X-Received: by 2002:a05:620a:1663:b0:783:de7c:e880 with SMTP id d3-20020a05620a166300b00783de7ce880mr5760345qko.6.1706578484027;
-        Mon, 29 Jan 2024 17:34:44 -0800 (PST)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id s18-20020ae9f712000000b00783f8693df1sm1799849qkg.37.2024.01.29.17.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 17:34:43 -0800 (PST)
-From: Johannes Weiner <hannes@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJQr6Eul"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C506C433F1;
+	Tue, 30 Jan 2024 01:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706578556;
+	bh=Vvkeu61i6vdOz/6no5T26QV127L9fGOYLD6tF9jpGww=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IJQr6Eul5PF/ZAc/M1vLjnFqj548hUzTdsNfcEbNG3K2p/kAuWlH2qTvnT2bzrE+d
+	 mWjUbzlG1QCCcJ4u2TbppnxJHh4J3jnryLPGrBH/lmd4X2coK9IgzevxN/zxmElyyO
+	 23aHtv534j1l73V9n1AUbU8trZta6Zj9NPJnpt+xi7Gg1zm3wL0XVCOnLSdNz1XFZv
+	 0BeQlV0DrxYAOMhx8ThIwGbORXc1Z1Bb5gbD4dUnryBcJobN+UQ/k8N4GBmjzSaYJc
+	 kPf+6QoU8OQ72RshjB0KU1FPbVBcCi7aacc3MATN+YVCZrGjTj2OTQ8gDGhnGvGRFp
+	 gn8VwnSVSgbxQ==
+From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Nhat Pham <nphamcs@gmail.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Chengming Zhou <zhouchengming@bytedance.com>,
+Cc: SeongJae Park <sj@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Alex Shi <alexs@kernel.org>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	damon@lists.linux.dev,
 	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: zswap: fix objcg use-after-free in entry destruction
-Date: Mon, 29 Jan 2024 20:34:38 -0500
-Message-ID: <20240130013438.565167-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.43.0
+Subject: [PATCH 0/9] mm/damon: make DAMON debugfs interface deprecation unignorable
+Date: Mon, 29 Jan 2024 17:35:39 -0800
+Message-Id: <20240130013549.89538-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,42 +50,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the per-memcg LRU universe, LRU removal uses entry->objcg to
-determine which list count needs to be decreased. Drop the objcg
-reference after updating the LRU, to fix a possible use-after-free.
+DAMON debugfs interface is deprecated in February 2023, by commit
+5445fcbc4cda ("Docs/admin-guide/mm/damon/usage: add DAMON debugfs
+interface deprecation notice").  Make the fact unable to be easily
+ignored by removing an example usage from the document (patch 1),
+renaming the config (patch 2), adding a deprecation notice file to the
+debugfs directory (patches 3-5), and renaming the debugfs file that
+essnetial to be used for real use of DAMON (patches 6-9).
 
-Fixes: a65b0e7607cc ("zswap: make shrinking memcg-aware")
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/zswap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+SeongJae Park (9):
+  Docs/admin-guide/mm/damon/usage: use sysfs interface for tracepoints
+    example
+  mm/damon: rename CONFIG_DAMON_DBGFS to DAMON_DBGFS_DEPRECATED
+  mm/damon/dbgfs: implement deprecation notice file
+  mm/damon/dbgfs: make debugfs interface deprecation message a macro
+  Docs/admin-guide/mm/damon/usage: document 'DEPRECATED' file of DAMON
+    debugfs interface
+  selftets/damon: prepare for monitor_on file renaming
+  mm/damon/dbgfs: rename monitor_on file to monitor_on_DEPRECATED
+  Docs/admin-guide/mm/damon/usage: update for monitor_on renaming
+  Docs/translations/damon/usage: update for monitor_on renaming
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index de68a5928527..7f88b3a77e4a 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -522,10 +522,6 @@ static struct zpool *zswap_find_zpool(struct zswap_entry *entry)
-  */
- static void zswap_free_entry(struct zswap_entry *entry)
- {
--	if (entry->objcg) {
--		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
--		obj_cgroup_put(entry->objcg);
--	}
- 	if (!entry->length)
- 		atomic_dec(&zswap_same_filled_pages);
- 	else {
-@@ -534,6 +530,10 @@ static void zswap_free_entry(struct zswap_entry *entry)
- 		atomic_dec(&entry->pool->nr_stored);
- 		zswap_pool_put(entry->pool);
- 	}
-+	if (entry->objcg) {
-+		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
-+		obj_cgroup_put(entry->objcg);
-+	}
- 	zswap_entry_cache_free(entry);
- 	atomic_dec(&zswap_stored_pages);
- 	zswap_update_total_size();
+ Documentation/admin-guide/mm/damon/usage.rst  | 42 +++++++++++--------
+ .../zh_CN/admin-guide/mm/damon/usage.rst      | 20 ++++-----
+ .../zh_TW/admin-guide/mm/damon/usage.rst      | 20 ++++-----
+ mm/damon/Kconfig                              |  7 +++-
+ mm/damon/dbgfs.c                              | 27 +++++++++---
+ .../selftests/damon/_chk_dependency.sh        | 11 ++++-
+ .../selftests/damon/_debugfs_common.sh        |  7 ++++
+ .../selftests/damon/debugfs_empty_targets.sh  | 12 +++++-
+ 8 files changed, 98 insertions(+), 48 deletions(-)
+
+
+base-commit: f1ab2f51e99ffb94ce127d132b24be00dc130e6c
 -- 
-2.43.0
+2.39.2
 
