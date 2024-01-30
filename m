@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15742364BA;
-	Tue, 30 Jan 2024 00:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91CE36B02;
+	Tue, 30 Jan 2024 00:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706575514; cv=none; b=dKVzWGO/VeyJuEegVdyXfe/CfYoF358obfPho4AAgRQF9wFmYPKTllmvo5jv2OjhT61dA/caIWA8ZxpvfxwGDyS+2QOqAipve0FMUMNNviglCvEvGtnYp5xk1tqO57jSBpCpyENduDVd60Oz9sXThB3b4vYAzCekLjuJDqS30pI=
+	t=1706575515; cv=none; b=CmdTnOzxV4UL9ifg2zEv6f92Nn554VgpRdi9ZlhPugrGca61PaRoit63GPHHHP6UnqrchI+hc5YwdlTZOLHNFLydxcyqqX3OlHCjFdgRmzArWx5ya5lDSAUcYLJvs3vB/9RC55Hsfn0q8RDbnbMXs9y5xBoJfwQ4XEtWlyBcYbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706575514; c=relaxed/simple;
-	bh=1E4tLOV0ALY1Bfj9SzYihrCA2jRIId2N3gEBgK6iS+E=;
+	s=arc-20240116; t=1706575515; c=relaxed/simple;
+	bh=QNmBS0brQeJSjUserQhzHk2Vt2IzcbhX82b9CN/v9CM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ShYGM9ShXNFrjPY1MYQF8dpWnMoNBqKWctu8GVe+yZY+QOQZH4FitKjHA6o3f7TaRyWj3UAfkFgkMpFY//wFUR2KUA/D39rH3Q4EIF7djsRRFB2YIotupVKiZQNxRRXh3usm39swDVF1aeGYQyhobk1OR+l6Z6RimASFcmc3uPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iz2zfn9a; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=emrrLAf/68NPd7ZuNnZCeNsWAVZcKU56fWYqXCutdKLNZ3tDHzSbTKRTTvkutd5EPhbPb9PanyKJ9+LLWbckQxX4UjFMu5xh7PXnmIacZV+ydkzVEAGvL/Oog9Wuw2oUzF/IeZdw8PFHJZzzP/rz6Cmk5vo/Q1SThHfZ0ZeHH5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAvRw3fA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iz2zfn9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BA9C433A6;
-	Tue, 30 Jan 2024 00:45:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAvRw3fA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C548C43399;
+	Tue, 30 Jan 2024 00:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706575513;
-	bh=1E4tLOV0ALY1Bfj9SzYihrCA2jRIId2N3gEBgK6iS+E=;
+	s=k20201202; t=1706575514;
+	bh=QNmBS0brQeJSjUserQhzHk2Vt2IzcbhX82b9CN/v9CM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Iz2zfn9aqvK2c8BkZWCB3BAiuj857Wo7xdv7e2MGsiieVxtEq3tzTJQUvFm9+NaW3
-	 PpxGQgfXslXyjDpqx7Cpd+3+ZAsqiGC9De6l1kwIHpC33MneTUcp0h/9TYnUuRaZPa
-	 tOIQo6Wjnc9dW1MXMwmUtGjqTyePE19xg4Y9ddsWcSXYierDRxrSujqGPcarNVHik2
-	 5RGpnD6SxyNiWWdaVbtmJcXatXlru45w+1Gyy05Y2KfeZvClAbpN0YVOZ+Jv6IOzcZ
-	 eeUPiglgbn2Gc/3/k2jKOR6kXFwnoZ7eSy9AEPMgRlbKwt0e6lGMsLAbRd8tX5Ztwf
-	 gQGwkNDOAS8iA==
+	b=oAvRw3fAoNWjiVmINtzMu5LYHOPzthZ41RXtSehMcsOa5hH/n47mQJbwPX2YmtRQH
+	 bzWW1cBevhWm3guAvl0N4bT/8Is877dtInpWAtotrWqzYO0DdFYikRUBbXY+71z0iT
+	 /pv5C9PH8rC3AmSPrzXXEB7xIE4NlYtlu0suj1aSB3RA3o39qzMCUBpl27IdEdtupr
+	 jVCILCD5y8v/gEjL2xzgqAcFMBCJySfXA1Gwxafe26t3L/H+BORWJN4ONXYV3gI5gH
+	 CVpyf+GvJfjjAqShbWztM2Npaan26dTC/XaAATjqVlON4splpFImESEFk1h1AOMSWI
+	 +kqrvevHV7aEg==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
+Cc: Frank Rowand <frowand.list@gmail.com>,
+	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	linux-um@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
 	kunit-dev@googlegroups.com,
 	linux-kselftest@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH v2 4/7] of: Always unflatten in unflatten_and_copy_device_tree()
-Date: Mon, 29 Jan 2024 16:45:03 -0800
-Message-ID: <20240130004508.1700335-5-sboyd@kernel.org>
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 6/7] of: unittest: treat missing of_root as error instead of fixing up
+Date: Mon, 29 Jan 2024 16:45:05 -0800
+Message-ID: <20240130004508.1700335-7-sboyd@kernel.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240130004508.1700335-1-sboyd@kernel.org>
 References: <20240130004508.1700335-1-sboyd@kernel.org>
@@ -50,72 +50,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We want to populate an empty DT whenever CONFIG_OF is enabled so that
-overlays can be applied and the DT unit tests can be run. Make
-unflatten_and_copy_device_tree() stop printing a warning if the
-'initial_boot_params' pointer is NULL. Instead, simply copy the dtb if
-there is one and then unflatten it. If there isn't a DT to copy, then
-the call to unflatten_device_tree() is largely a no-op, so nothing
-really changes here.
+From: Frank Rowand <frowand.list@gmail.com>
 
+unflatten_device_tree() now ensures that the 'of_root' node is populated
+with the root of a default empty devicetree. Remove the unittest code
+that created 'of_root' if it was missing. Verify that 'of_root' is valid
+before attempting to attach the testcase-data subtree. Remove the
+unittest code that unflattens the unittest overlay base if architecture
+is UML because that is always done now.
+
+Signed-off-by: Frank Rowand <frowand.list@gmail.com>
+Link: https://lore.kernel.org/r/20230317053415.2254616-3-frowand.list@gmail.com
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/of/fdt.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ drivers/of/unittest.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index bf502ba8da95..b488ad86d456 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1318,6 +1318,21 @@ bool __init early_init_dt_scan(void *params)
- 	return true;
- }
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index a8b27dd16ecf..742d919e8ab4 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1732,20 +1732,16 @@ static int __init unittest_data_add(void)
+ 		return -EINVAL;
+ 	}
  
-+static void __init copy_device_tree(void)
-+{
-+	int size;
-+	void *dt;
-+
-+	size = fdt_totalsize(initial_boot_params);
-+	dt = early_init_dt_alloc_memory_arch(size,
-+					     roundup_pow_of_two(FDT_V17_SIZE));
-+
-+	if (dt) {
-+		memcpy(dt, initial_boot_params, size);
-+		initial_boot_params = dt;
-+	}
-+}
-+
- /**
-  * unflatten_device_tree - create tree of device_nodes from flat blob
-  *
-@@ -1350,22 +1365,9 @@ void __init unflatten_device_tree(void)
-  */
- void __init unflatten_and_copy_device_tree(void)
- {
--	int size;
--	void *dt;
-+	if (initial_boot_params)
-+		copy_device_tree();
++	/* attach the sub-tree to live tree */
+ 	if (!of_root) {
+-		of_root = unittest_data_node;
+-		for_each_of_allnodes(np)
+-			__of_attach_node_sysfs(np);
+-		of_aliases = of_find_node_by_path("/aliases");
+-		of_chosen = of_find_node_by_path("/chosen");
+-		of_overlay_mutex_unlock();
+-		return 0;
++		pr_warn("%s: no live tree to attach sub-tree\n", __func__);
++		kfree(unittest_data);
++		return -ENODEV;
+ 	}
  
--	if (!initial_boot_params) {
--		pr_warn("No valid device tree found, continuing without\n");
--		return;
--	}
--
--	size = fdt_totalsize(initial_boot_params);
--	dt = early_init_dt_alloc_memory_arch(size,
--					     roundup_pow_of_two(FDT_V17_SIZE));
--
--	if (dt) {
--		memcpy(dt, initial_boot_params, size);
--		initial_boot_params = dt;
--	}
- 	unflatten_device_tree();
- }
+ 	EXPECT_BEGIN(KERN_INFO,
+ 		     "Duplicate name in testcase-data, renamed to \"duplicate-name#1\"");
  
+-	/* attach the sub-tree to live tree */
+ 	np = unittest_data_node->child;
+ 	while (np) {
+ 		struct device_node *next = np->sibling;
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
