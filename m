@@ -1,60 +1,34 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC19E6D1B1;
-	Tue, 30 Jan 2024 14:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38106D1CF;
+	Tue, 30 Jan 2024 14:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706623392; cv=none; b=bk4DJS3xgcxNlTCS4TRlvOtWSHQgUT6mujFsLepR0cuNG9CGiNEGcOy1+UcQwlgA6CrpxKQ+znBhZeOPdzA7AyDzPo/KeR0yWRESQprRw0pJwrZyRJ7Co2TKOO7V8UNDg2snQhBK5CINExi1M0cE8bYGvAuhKtIXjlUotSE7rEQ=
+	t=1706623508; cv=none; b=KNPXDuNCgfSmDheDfKIsvojFThBUf23M0ECYgoOiFk4GuXPeRLEsGpoxr3noJxmjPm6mrhDgIYUwjxAqxDyhwN0qTmco9+MNU+APinI4pcIgH0fWnqvjQJA/Bw1i3/agoiIg9kIPVX9730YauCVIsxtrNu0uQ0BEXJ0hlOLIq3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706623392; c=relaxed/simple;
-	bh=DzsaNEVFKguc0ZC4CtlzX7lscBOx1aUABMiNF9+SE+U=;
+	s=arc-20240116; t=1706623508; c=relaxed/simple;
+	bh=h/0PsSn6SlbvjgMVOf5o+PaEpIM/8IyIENj99pKY8d4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OEJw6NG92SI7I/aiNmOisJc6Tfx4nMc5n0+FMknJINtoxP64pHFb6PVwFxw56AOwpsjO/jgjF73/GIh2GA4IUeqxA4kMOtyHnKxS9XidSyEw9wkLx3G7hNjBLEmxkPV7u/l3M64ZxbzgobRH4ZdPfZ8VI6+Kdn0G5VgLw51IIFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ew4Uhpl8; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ew4Uhpl8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706623391; x=1738159391;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DzsaNEVFKguc0ZC4CtlzX7lscBOx1aUABMiNF9+SE+U=;
-  b=Ew4Uhpl8Ue1muczcA+RtPNqyl3P1jfCDZE+NCtFLmXw4FV5vw5FG8Z/Z
-   dr9DWeJ6Yl8vJUPe+AtrSfspSlM8giu9d2m/wlWZkPWWsXwahZj1W8kzi
-   UKp9x4SMu+/BvmwpnhESLl4Q5PcdpV/GMU7PgBXqKYemaPjYCfdCPwjAU
-   hemVJNMGBjAFWRrnWN9XtPpcb4Rpt4NZoQuPsO4t6zA7OdVXlnMwmdO8A
-   RKNdzDhQ0hstSdN00fzl+HJt52tTeq+96RiIPVVUuF4efSjLkWn4FZHqQ
-   PcvCMS0vadwJO9p9aQlrI2uEHs2g8b+8UjCqPxQdzEuAZ/A15wqJg8Id2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10676692"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="10676692"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 06:03:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3697226"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa005.fm.intel.com with ESMTP; 30 Jan 2024 06:03:08 -0800
-Date: Tue, 30 Jan 2024 21:59:42 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-fpga@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Luwei Kang <luwei.kang@intel.com>, Moritz Fischer <mdf@kernel.org>,
-	Tom Rix <trix@redhat.com>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, LKML <linux-kernel@vger.kernel.org>,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: Re: fpga: dfl: fme: Return directly after a failed devm_kasprintf()
- call in fme_perf_pmu_register()
-Message-ID: <ZbkAziPCX+RDSgfP@yilunxu-OptiPlex-7050>
-References: <d94376b6-12e8-45bb-a9be-4887bb316d35@web.de>
- <ZbjJYMlDifIv0WId@yilunxu-OptiPlex-7050>
- <ZbjPDX1y2I9Heanq@yilunxu-OptiPlex-7050>
- <49183574-ea83-4517-8e34-5d6e87ede064@web.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aKYkhFhTToTe8rldnqFqpRyJIC9zsV2JDxUNIjuCAdD1RWNYzwDwKgLepgOy0uS/un+uBn8GfOJQhC8pUBzigmN+lwosi8QtutOQxPUrqydGqC5aduJaD/CZ2+o0YKGrRViDEKm1OphnzMmifozPAfHqm9Oggru5yMHhbS1wyDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 3C684227A87; Tue, 30 Jan 2024 15:05:00 +0100 (CET)
+Date: Tue, 30 Jan 2024 15:04:59 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Brian Foster <bfoster@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 06/19] writeback: Factor out writeback_finish()
+Message-ID: <20240130140459.GA31126@lst.de>
+References: <20240125085758.2393327-1-hch@lst.de> <20240125085758.2393327-7-hch@lst.de> <ZbgG+7QhHGMz/uMJ@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,25 +37,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <49183574-ea83-4517-8e34-5d6e87ede064@web.de>
+In-Reply-To: <ZbgG+7QhHGMz/uMJ@bfoster>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Jan 30, 2024 at 11:48:31AM +0100, Markus Elfring wrote:
-> >>> Thus return directly after a failed devm_kasprintf() call.
-> >>>
-> >>> Fixes: 724142f8c42a7 ("fpga: dfl: fme: add performance reporting support")
-> >
-> > One more char of sha.
+On Mon, Jan 29, 2024 at 03:13:47PM -0500, Brian Foster wrote:
+> > @@ -2481,6 +2500,9 @@ int write_cache_pages(struct address_space *mapping,
+> >  				folio_unlock(folio);
+> >  				error = 0;
+> >  			}
+> > +		
 > 
-> There are different preferences involved.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.8-rc2#n109
+> JFYI: whitespace damage on the above line.
 
-Ah, I mean you use 13 chars, but 12 chars is better. Also the doc
-doens't seem to enforce 12 chars, but checkpatch warns on that. So just
-follow the 12 chars style.
-
-Thanks,
-Yilun
+Thanks, fixed.
 
 > 
-> Regards,
-> Markus
+> > +			if (error && !wbc->err)
+> > +				wbc->err = error;
+> >  
+> 
+> Also what happened to the return of the above "first error encountered"
+> for the WB_SYNC_ALL case? Is that not needed for some reason (and so the
+> comment just below might require an update)?
+
+No, this got broken during the various rebases (and is fixed again later
+in the series).  We need to return wbc->err from write_cache_pages at
+this stage, I'll fix it.
