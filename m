@@ -1,99 +1,129 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B4036117
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B62422083;
+	Tue, 30 Jan 2024 01:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706576549; cv=none; b=MsrH0FzCLIRZI1b1R7Hkk5b6cTvQ1/O2D/4ENeUfcowEfPfdZOaNONdSKL5fNblrReAvU99zLQZYfu75pgFSPIixcM8pqmGlc/akeRgI/+Q2WRrN7SV2DM8r42hS7d9OfrRaZWowdRT0YzQON+IPiZ6tFm+j78PiqigDpeQVsGo=
+	t=1706576711; cv=none; b=lEEmkChvp1jzYvwdewTr6IBm90yJNdtatJ3HMo4b/exwWMLg/gEZSBMTn5GvzlBSvSzs74vE18x8C6J9TN+LqQtzaKEBhpF+r9TSBRslSDb1kY5p4oPmxjZxZFxSc0/vsaQMwdK9L7cBrLuMZiSjQBTTV491yuky7Z4zBctvW5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706576549; c=relaxed/simple;
-	bh=eQQVzNpyQ4k5C+OR/TJK6umpga8oG0wdB6/rTvPba3w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KeS0L5qErPeks4xWVJ3NdFYkQwNudMN0tAbYcbU7n4aMHT1ro4cdWX2NmkypgAoxBINyzQHa/GKEb0XUxo54/oWW4pmlNsaPS4FyM87JxEo9jwzl5HkRhIMpSfOlvwIgqMBdv8sP5dLETfy1/Vopt5Whc8sxI3950cPCR1tADCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4gNubVh4; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+	s=arc-20240116; t=1706576711; c=relaxed/simple;
+	bh=bG7LWMMzQOA4pnHxVE9T5M/eEsZhCIbhOeGSUfM/lKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AriK6cdD46Orq3gb67r0OVY/qqCQL30fkliXZa2RHSvzZw357OJAgu3H5TxLge2UJMfpcUtnWrMGBe5CoKI5aYD2C+X7LinDc7uIqs5L5YZ1LqPOBZd0fmc/5dHuDkA1iomFgUDlEAIL6IwEolTLPpWlSg5TiCfFKF5CnVtdNu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VH4+r4ue; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4gNubVh4"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc2629d180fso7199791276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:02:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706576546; x=1707181346; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lZSrdH5I7u0zNwSNWZORF6UyHmXuWHBABDMeAreYwGg=;
-        b=4gNubVh4qRFO+lhGWbIuVgh5rnqbJRuGzjjRSX7xmZVcszTSU32INZingPc31W6b/p
-         OghHyj7zOAgQMgavQPFkEgSKxMIADtV8vRyaS8UnCeoTU2wDBK0JCQ5hVjPoPh/L4Ycz
-         +sJVn309MBFmhmtjiTHwvu37afaZ1PcsWEIKZ92zQDv+p3PGP9oTdKC2butNLMOWsRDB
-         YAr2kQlqe9tPBU7yoOYRGaujI3bpIX59FZoifRSbTs58dFTymPu6MimQnNIGkSgOV551
-         clk6qfEe708stggE0XnDWmc9a8fxuxZHTLaWs6rFMGSjD2FzgRGTRwxMMxPot/lEtVAa
-         IliA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706576546; x=1707181346;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lZSrdH5I7u0zNwSNWZORF6UyHmXuWHBABDMeAreYwGg=;
-        b=I0GJ3gYkV46Gk/YTv/io/S4BmZY9G/F+34zPO88msx/KSDSwdLr9cr4fNuekPGxTpU
-         fD+1A8Z5AOziCKixFmb/NHHAe18boXFU0u1Oil50FqZYqwJ6XT+y/2lYDmTNXHe+7nFG
-         Fhe1Wy7yddUmgY4BRXGkynHdOvE77XnkJ1l741O/uqgdkHg1+r67Uz7xMcivtwQMfZ7h
-         DrkNZgQgXZyQXyJrwYk6hAPcQz0mRzt22cqr8yftbtVW9Z02urvdPH6Gopjiq/C3LkJN
-         BjmbzXm2L9zBXDDjz2XQM1Vwu2/KoY3r0F7jWY9uYPZpOCYWkg6hhV/z/apieNCm9gfI
-         wStA==
-X-Gm-Message-State: AOJu0Yzs9XE5nMH5Cihq0p9K/EHlOjekYIqIVfgtXuLvhpv67DMn+smW
-	Xu0zvhPYNyNNhszB2gbrZXu0g6iL9SQAXa2I8r2YjF5HpTM46pB1SleXDidJDNhYGmSZsTH8kZS
-	X28+T+muO4iKHuvJ89w==
-X-Google-Smtp-Source: AGHT+IE9Mh60TagYwcbyXda/9IpvEZ5n8YwuyQK5UTl98rhZse04NPXV79Dk78e5oca4DqkUwxuVBrGZG2ciKDSn
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:2405:b0:dc2:6501:f42 with SMTP
- id dr5-20020a056902240500b00dc265010f42mr2482352ybb.5.1706576546597; Mon, 29
- Jan 2024 17:02:26 -0800 (PST)
-Date: Tue, 30 Jan 2024 01:02:24 +0000
-In-Reply-To: <20240129224542.162599-2-nphamcs@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VH4+r4ue"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706576711; x=1738112711;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bG7LWMMzQOA4pnHxVE9T5M/eEsZhCIbhOeGSUfM/lKE=;
+  b=VH4+r4ue2ZMNASQsQOoTk+/pQDt2Bd3s05csty7MZCeZAy6dTUA0aRci
+   2ZWhMBf5shCzBiIvmiSkxnzwxq2xA6REZP/b6DrwMmuMPeep/mRjub3cc
+   x0BUqU0NwW9nJeTG51QnKr8NN8CKoMAvMKPBHklqfGX+znWZWeIfbCjL6
+   lnnc7bjVfea3Ac6llpgcEnd+oQ6w8YtTZAPFtSHX5GAiDalaTpPxQiiM/
+   qLNAirP7XOUksGl+vaye8NRThXZfdDzgfxqjDTPL2JOu+3LW1yKM3vsFt
+   UPQSnTt+QazJAnQPKSqdoh2aerUO/716RRAS9MLLzRxdxgYEOKc0dyx9O
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="3006761"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="3006761"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 17:05:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="29719504"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.74])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 17:05:09 -0800
+Date: Mon, 29 Jan 2024 17:05:08 -0800
+From: Tony Luck <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Shaopeng Tan <tan.shaopeng@fujitsu.com>,
+	James Morse <james.morse@arm.com>,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v14 0/8] Add support for Sub-NUMA cluster (SNC) systems
+Message-ID: <ZbhLRDvZrxBZDv2j@agluck-desk3>
+References: <20231204185357.120501-1-tony.luck@intel.com>
+ <20240126223837.21835-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240129224542.162599-1-nphamcs@gmail.com> <20240129224542.162599-2-nphamcs@gmail.com>
-Message-ID: <ZbhKoJ5BcP_RhMt4@google.com>
-Subject: Re: [PATCH 1/3] selftests: zswap: add zswap selftest file to zswap
- maintainer entry
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: akpm@linux-foundation.org, shuah@kernel.org, hannes@cmpxchg.org, 
-	tj@kernel.org, lizefan.x@bytedance.com, linux-mm@kvack.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126223837.21835-1-tony.luck@intel.com>
 
-On Mon, Jan 29, 2024 at 02:45:40PM -0800, Nhat Pham wrote:
-> Make it easier for contributors to find the zswap maintainers when they
-> update the zswap tests.
-> 
-> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
+I've been wondering whether the SNC patches were creating way too much
+infrastructure that isn't generally useful. Specifically the capability
+for a reactrl resource to have different scope for monitoring and
+control functions.
 
-I guess I had to check the zswap tests at some point :)
+That seems like a very strange thing.
 
-Acked-by: Yosry Ahmed <yosryahmed@google.com> 
+History here is that Intel CMT, MBM and L3 CAT features arrived in
+quick succession, closely followed by MBA and then L2 CAT. At the time
+it made sense for the "L3" resource to cover all of CMT, MBM and L3 CAT.
 
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fecebfc4c0dc..5f60faaefaf2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -24396,6 +24396,7 @@ F:	include/linux/zpool.h
->  F:	include/linux/zswap.h
->  F:	mm/zpool.c
->  F:	mm/zswap.c
-> +F:	tools/testing/selftests/cgroup/test_zswap.c
->  
->  THE REST
->  M:	Linus Torvalds <torvalds@linux-foundation.org>
-> -- 
-> 2.39.3
-> 
+That became slightly odd when MBA (another L3 scoped resource) was
+added. It was given its own "struct rdt_resource". AMD later added
+SMBA as yet another L3-scoped resource with its own "struct resource".
+
+I wondered how the SNC series would look if I went back to an approach
+from one of the earlier versions. In that one I created a new resource
+for SNC monitoring that was NODE scoped. And then made all the CMT and
+MBM code switch over to using that one when SNC was enabled. That was
+a bit hacky, and I moved from there to the dual domain lists per
+resource.
+
+I just tried out an approach the split the RDT_RESOURCE_L3 resource
+into separate resources, one for control, one for monitoring.
+
+It makes the code much simpler:
+
+ 8 files changed, 235 insertions(+), 30 deletions(-) [1]
+
+vs.
+
+ 9 files changed, 629 insertions(+), 282 deletions(-)
+
+
+Tradeoffs:
+
+The complex series (posted as v14) cleanly split the "rdt_domain"
+structure into two. So it no longer carried all the fields needed
+for both control and monitor, even though only one set was ever
+used. But the cost was a lot of code churn that may never be useful
+for anything other than SNC.
+
+On non-SNC systems the new series produces separate linked lists
+of domains for L3 control & monitor, even though the lists are the
+same, and the domain structures still carry all fields for both
+control and monitor functions.
+
+Question: Does anyone think that single domain with different scope for
+control and monitor is inherently more useful than two separate domains?
+
+
+While I get this sorted out, maybe Boris should take James next set
+of MPAM patches as they are, instead of on top of the complex SNC
+series.
+
+-Tony
+
+[1] I'll post this set just as soon as I can get time on and SNC machine
+to make sure they actually work.
