@@ -1,59 +1,65 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55232664B9
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B723360DE0
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706611249; cv=none; b=p+cIZhT9g2+kBvPnomf8UDFo2osziXwADBV01GGStRSO2prilpY1yxpGTI645PQvEGc7zj5iiaIuhKQq8u7Tn6igcVhIPWXbmWfgCTIE/sbtABrwPnWZg0si+iP+vZo8ejCLiCgYdvIP9evB5rbSItHEQU/s87V8qukZAx22k0A=
+	t=1706611409; cv=none; b=WD3/A6TA7mah9hXKaaDEU0mc0TgzqDb/wk1W/PD7GhmT4voLlnt1ZcLBh861L7CXd9quKD3RYCICM3b8DX4hNrSIaLumAs5Ok/9HjIwSwuDVYJ/8b2FV0VphDDRl4dhuN/Wo0ESQeDL+WwR+sSOaaCIWTjokJ3BBM46Oo6hNkIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706611249; c=relaxed/simple;
-	bh=i5YiiQ7bg7wuD/RiKd60lDs/l1J+lJ1xk5N97Z7zlGU=;
+	s=arc-20240116; t=1706611409; c=relaxed/simple;
+	bh=owkU35HiBe4EUW9bL/iY9553g7P8YyHRpTmmFYvFxTA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KDYwKfMK0GQyJ2Yj/WnmpFb3RaI1vQkoFQYrRKwiC7t2d2oenFg1X0z/0xIqA2l22tJcjumul4ZtwOaxL8yRKdYntiZmCkijLIXVdE3wrWdsOcmsWvLU6LqaxdMlkTLS8Y0SYKIGb01diMeAx0/ETjvLEOzHf2vuogaLo46tWJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RPz7Py+a; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=aM3fzjLX+U5Ax7S6dDE5a4E4sX8M2E2W+DbMSDsilfLNzbWrIvkXrZuWRbDklL1H799esqcJdqIHg24l3KlOJyl50Ks+8JZu0ZM5F61ktmGE0jOGiPvcM78TcHvSjgQ2BPF0pyPZhUZlCHI+NUzzWx1lKk6tVW0PDijk1Iu/0bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JbsS9ZAN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RPz7Py+a"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so3938620a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:40:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706611245; x=1707216045; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qFLwa3UQcdOnGrCTl945Oaq6U4cRv5l6NG+wON7vkHo=;
-        b=RPz7Py+a675d8x/sdSfsRT5V2YLd3Y7akzy43Bb97vMRYiFP3x2J7CamfZJ8wOrSZ9
-         Hjh0Dz/jKYdutih6ZpPAZonnBHEmvPZ7kZOy/dsAHSAa5Jxj1OqKcPRPApyc0Ioiw1Zy
-         wiX9HeIkSjAujsydRlBIefWXqNy118szUU+rRI18G589bnATeYdp/eEedbUqlMtYweD/
-         EjfKtpGmOeF2Qr3Fsjd7eEwPF0CYUROrX99Ru1Atyz1PapsUg8WaB5af2KtHhxe1ZZt8
-         lrMT+HFa5x7X+NCEIZX5ZyWE/cEntnAfvruTv/N06YaQxdFfu3LAdJ78overRipX1XqG
-         pxMA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JbsS9ZAN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706611406;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2HONVDKuSZ2w2l05+cN156w2V56GzzGmZ9dXonpaH9I=;
+	b=JbsS9ZANWadul27lgkJdXIZ8mnwUbHiVB3maQCo4ChmFj2VI7b+6umJ1epgFYrRPCWKMaH
+	NtdyZLx0OENAuezVxmzIfNJVZ5jOdhVpaSpfIwOKdUoQ0DyoTekXiyXo52V0434aJM2qy6
+	Dd9+oW18hbBq4LVbIwGDFKK3gvDewg4=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-541-XJZMCy-kN5KEwEkLHE-uSg-1; Tue, 30 Jan 2024 05:43:25 -0500
+X-MC-Unique: XJZMCy-kN5KEwEkLHE-uSg-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50e9e5c8f49so3948180e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:43:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706611245; x=1707216045;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qFLwa3UQcdOnGrCTl945Oaq6U4cRv5l6NG+wON7vkHo=;
-        b=utd2N2WE/8M4dvIm5GabjmgZSe8jKIyARuo30mo5CUANJnGDgKnSStLLqqht1WLNKy
-         w1ms3fHgIV2g5vG/v5ZEZk5BrMbrq0aENil8p1PWKj14LW8LkWtufGxLnowzUzoZym+Y
-         7I+LihC4AFrmyecQgKjsTNTHv4ufMZTfpvTI60z/BBfkVC5eDD95Dm5SRpaeR56Rt1tZ
-         gbNcH+bOFvu4UGSIElAd7zzQyTjEECK0nsTT7G+v9bLEho2wITJR6QVLRybIHoQaScjz
-         b8KSo7/RU3cdxoabKNLE0W+wkldU6GWrOsgDjpnCiZH1CVCXwZ0J8c+xFpwX4dntx1JR
-         sFew==
-X-Gm-Message-State: AOJu0YxJZOlBijLam/uqPcj37pGSZUorpIv/hwXQaOxlM3duh219Dcz6
-	NHjbmiUQ1gfXkzovwt6Tv/R09IkwlT5di8MLLOjeEwr0I0JF+OaTohScI+SZxvY=
-X-Google-Smtp-Source: AGHT+IHCNFb7FMA8kU95tZdChdnP005nbUcHExixBUxTToV5eAyWEsQ5XA1fAj7gKoKCQsermEbU4Q==
-X-Received: by 2002:a17:906:c20c:b0:a35:78e1:2d1f with SMTP id d12-20020a170906c20c00b00a3578e12d1fmr4823022ejz.71.1706611245537;
-        Tue, 30 Jan 2024 02:40:45 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX05fQGyKIagmkhzHeMedDVupb+uPr9ILZtFlRnpn1nsL1PXYFqHGc6Gk1/mYMItGHBDufW+3Xn1qP7uxgNqlKGSCceld+0ZfykMEsfkOXWk5szudrp3rCdHhScCExZGPK2IIDLJeS9sjyDaRUkw/QstmgYAibFRtzuxTClkoigqN42IDRvxrbLVJrcNYFQg63C6dd0p5zbQiGcgCN3mdjh17KfOm1irkJkvc2/epoWJhptdG9bMQRN5xqWGZr8i2zk2nd1vFga/gcwDXMvUrVND4JxH0HUtWSLs2aUzrOp6FwwjF33aYoHHczBq8FPM48DH0tPNNTEe7udetcIn6lPhHrteUsbpcG/iWRRWtFL4iFB0t2PKMQePJ63J0SGj2VRHGSyEH1L36NZcmC9YJbOtIVLa51z2wur9zbN6zj1J3F5A5nYhYZ5HIR5eUcOv0kLa9Lc4mTxY7nYSur97LHiwjPjnxVgyc+8K/aLpLWJ+nXW6dYkRElBkAJ6gekOaoTp1YGud26REOJ3DtadaP94I4GdfoeKGB/kg0iAEz5f2+kWeYYQPU/J3eX+DiTgNYtB7hHdpNhNAwO0Ofnm+H37wEcw2SE=
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id st14-20020a170907c08e00b00a35c5491b58sm1947720ejc.174.2024.01.30.02.40.43
+        d=1e100.net; s=20230601; t=1706611404; x=1707216204;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2HONVDKuSZ2w2l05+cN156w2V56GzzGmZ9dXonpaH9I=;
+        b=MOzxmP9+E+qTzKbye6LR9A9M6F+Y+IoA0yjkhf7ct6ner0oRiajWxXcEcAx9IyHTid
+         RX9HdQ5Zbd02WiUwYxYuwgIAEBrOnYF8A9z9LpjST4r19c4ds9lTnX15bk82PLUBam1B
+         lpzjd4veDfNR3upuzqb7A/18u0BVdDAwb3u4iHyh/0Xs6OlT+ZgNqBkI8q2bsJBok4hA
+         fNMB4Pln5f+Crt4OBwLIqv03cDFuJoYgBk41F5BeIrs8WFQ5a6l67mH7achfeqO6Ld7P
+         85MU7sIZCtd4UVLLTJYMlbrNCW6F4V+XIaHfU56+B19F1ti0UyrIDgZbrqei6CyPrQVv
+         Or7Q==
+X-Gm-Message-State: AOJu0Yx8JwmBKCpQjsuU3pP7RLAmhioT5E/QId80nHiHZ+ixjBR15MCR
+	oPNUeOER75P7fhSsaiJ1VjgTt09zQYNJtZsB2mmGIM28ghknRP0PIDtcws9wBSjInlL0DWHplMk
+	LBqZWP62p/G0/m7IfW6drH/zDd6emICkU45gn7oEVsm5PEa2GExo0G3YI2pul1Q==
+X-Received: by 2002:a05:6512:2209:b0:50e:4098:3798 with SMTP id h9-20020a056512220900b0050e40983798mr6360921lfu.60.1706611403681;
+        Tue, 30 Jan 2024 02:43:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG0hoFT/mbW3gfNLOSpHj4kn6LMJFHpVVvm57xwFbQxEZ1sjrCGkbHqCeqLjjgjqBok32zPQw==
+X-Received: by 2002:a05:6512:2209:b0:50e:4098:3798 with SMTP id h9-20020a056512220900b0050e40983798mr6360892lfu.60.1706611403250;
+        Tue, 30 Jan 2024 02:43:23 -0800 (PST)
+Received: from ?IPV6:2003:cb:c708:2700:bdf6:739b:9f9d:862f? (p200300cbc7082700bdf6739b9f9d862f.dip0.t-ipconnect.de. [2003:cb:c708:2700:bdf6:739b:9f9d:862f])
+        by smtp.gmail.com with ESMTPSA id b16-20020a05600c4e1000b0040fafc8bb3asm204081wmq.9.2024.01.30.02.43.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 02:40:45 -0800 (PST)
-Message-ID: <5c6dbb39-2db9-40bf-b593-9cb28f257db7@linaro.org>
-Date: Tue, 30 Jan 2024 11:40:43 +0100
+        Tue, 30 Jan 2024 02:43:22 -0800 (PST)
+Message-ID: <a754add2-de29-4c91-b4f4-cbd7eb888cb6@redhat.com>
+Date: Tue, 30 Jan 2024 11:43:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,82 +67,138 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: dt-bindings: qcom,sc7280-venus: Allow one IOMMU
- entry
+Subject: Re: [RFC PATCH] mm/readahead: readahead aggressively if read drops in
+ willneed range
 Content-Language: en-US
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- Stanimir Varbanov <stanimir.varbanov@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240129-sc7280-venus-bindings-v1-1-20a9ba194c60@fairphone.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240129-sc7280-venus-bindings-v1-1-20a9ba194c60@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
+To: Mike Snitzer <snitzer@kernel.org>, Dave Chinner <david@fromorbit.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Don Dutile <ddutile@redhat.com>,
+ Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, linux-block@vger.kernel.org
+References: <ZbenbtEXY82N6tHt@casper.infradead.org>
+ <Zbc0ZJceZPyt8m7q@dread.disaster.area>
+ <20240128142522.1524741-1-ming.lei@redhat.com> <ZbfeBrKVMaeSwtYm@redhat.com>
+ <Zbgi6wajZlEkWISO@dread.disaster.area> <Zbgq3B8nmMuJooEl@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Zbgq3B8nmMuJooEl@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 29/01/2024 08:48, Luca Weiss wrote:
-> Some SC7280-based boards crash when providing the "secure_non_pixel"
-> context bank, so allow only one iommu in the bindings also.
+On 29.01.24 23:46, Mike Snitzer wrote:
+> On Mon, Jan 29 2024 at  5:12P -0500,
+> Dave Chinner <david@fromorbit.com> wrote:
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
+>> On Mon, Jan 29, 2024 at 12:19:02PM -0500, Mike Snitzer wrote:
+>>> While I'm sure this legacy application would love to not have to
+>>> change its code at all, I think we can all agree that we need to just
+>>> focus on how best to advise applications that have mixed workloads
+>>> accomplish efficient mmap+read of both sequential and random.
+>>>
+>>> To that end, I heard Dave clearly suggest 2 things:
+>>>
+>>> 1) update MADV/FADV_SEQUENTIAL to set file->f_ra.ra_pages to
+>>>     bdi->io_pages, not bdi->ra_pages * 2
+>>>
+>>> 2) Have the application first issue MADV_SEQUENTIAL to convey that for
+>>>     the following MADV_WILLNEED is for sequential file load (so it is
+>>>     desirable to use larger ra_pages)
+>>>
+>>> This overrides the default of bdi->ra_pages and _should_ provide the
+>>> required per-file duality of control for readahead, correct?
+>>
+>> I just discovered MADV_POPULATE_READ - see my reply to Ming
+>> up-thread about that. The applicaiton should use that instead of
+>> MADV_WILLNEED because it gives cache population guarantees that
+>> WILLNEED doesn't. Then we can look at optimising the performance of
+>> MADV_POPULATE_READ (if needed) as there is constrained scope we can
+>> optimise within in ways that we cannot do with WILLNEED.
+> 
+> Nice find! Given commit 4ca9b3859dac ("mm/madvise: introduce
+> MADV_POPULATE_(READ|WRITE) to prefault page tables"), I've cc'd David
+> Hildenbrand just so he's in the loop.
 
+Thanks for CCing me.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+MADV_POPULATE_READ is indeed different; it doesn't give hints (not 
+"might be a good idea to read some pages" like MADV_WILLNEED documents), 
+it forces swapin/read/.../.
 
-Best regards,
-Krzysztof
+In a sense, MADV_POPULATE_READ is similar to simply reading one byte 
+from each PTE, triggering page faults. However, without actually reading 
+from the target pages.
+
+MADV_POPULATE_READ has a conceptual benefit: we know exactly how much 
+memory user space wants to have populated (which range). In contrast, 
+page faults contain no such hints and we have to guess based on 
+historical behavior. One could use that range information to *not* do 
+any faultaround/readahead when we come via MADV_POPULATE_READ, and 
+really only popoulate the range of interest.
+
+Further, one can use that range information to allocate larger folios, 
+without having to guess where placement of a large folio is reasonable, 
+and which size we should use.
+
+> 
+> FYI, I proactively raised feedback and questions to the reporter of
+> this issue:
+>   
+> CONTEXT: madvise(WILLNEED) doesn't convey the nature of the access,
+> sequential vs random, just the range that may be accessed.
+
+Indeed. The "problem" with MADV_SEQUENTIAL/MADV_RANDOM is that it will 
+fragment/split VMAs. So applying it to smaller chunks (like one would do 
+with MADV_WILLNEED) is likely not a good option.
+
+-- 
+Cheers,
+
+David / dhildenb
 
