@@ -1,135 +1,165 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7C96376EA;
-	Tue, 30 Jan 2024 04:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706590356; cv=none; b=oMz8nH17qrj+eNtclkPEaA/dmhBFvTvvcN3G4ArVWY4T46++tPgLhxjd0VGuP9wUaMO6O+SoB8xaVSAel43Y0m1DPb/ut0YuDQsA2hgEgpvWZy8JQawDzXjmhZ+opaf2SlMNHSxL346GSG8QHNucz656II5Z+PqeL78LjpKGfG4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706590356; c=relaxed/simple;
-	bh=pSny46fbcm5afdgGkL8N9AZNYoV2BmDZXSWgbG1D29A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UoGenMDxeebLrD+fGkOt6fdpPkhzv+dBI2J3alJpNIvwVikmN38GCWBxvTPAw8aw6FJYx4bjM4EdUQ3akB7hC5RMor6m12RhZoKn3JKOHDJ0BNeO3ya4vXmKlu2fuhSg2RBu8Jb/gZWBixetMFdDqh72Bk5NEZH2ETa3YMz8T14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BB05DA7;
-	Mon, 29 Jan 2024 20:53:11 -0800 (PST)
-Received: from [10.163.41.110] (unknown [10.163.41.110])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45BD03F762;
-	Mon, 29 Jan 2024 20:52:15 -0800 (PST)
-Message-ID: <2cb8288c-5378-4968-a75b-8462b41998c6@arm.com>
-Date: Tue, 30 Jan 2024 10:22:11 +0530
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2046.outbound.protection.partner.outlook.cn [139.219.146.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE40C376F2
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 05:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706591387; cv=fail; b=RtCWNC+yLkckBrVJEUqk8XB4j2TubE/PXaZWiAvaoHa+a2HnkCMUjTnxVi9xfaI1Mt49axaiFRrL3qlQDT/KGjt3IkQvFJRfl4HPUeVJOrcE0foRkfJJs1PO/jNNABCQYQqbtr1giaCgZh3ChvolhbJpF/JVCpJcMoQkex2KL0Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706591387; c=relaxed/simple;
+	bh=J8Adtm6qYkz1gxVFf7RME346Fpr5ToV9FIp+5yWXGbo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=n35Wnmao7YpijSqbLIoPRLBReDUPN2/Buwy7flrTTecHbJ1hIyOBuhSUAAHmKzCpXcLUAXRengt8GNxbOrYDWpHciHxsuUjtExBsWcjxNByCYh2Vs5DWpYtGM4dpthAxU+MCZmK7vjkRH60wX3wgjoSc4jNI1HzNh+87ep+BspU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XcyJ1H/MmNrX01oR7cV2pCatJRU8JDWBJp/bRX+Iu6T/8/mg/c5IL0Nr1o4pw8Gwjxic+RD0HumxSedWNPlwf13vy1gmkfmKE8wiDxQvHIodxXzgavGInw720qF1uUXa8/WlKeVe5IKNIfYA3XUWEE04W6j0VitTWCtiaWRZutETFxm3sdvwU8RRECPiIGlLcqyo+KNkmmvnseOBuFbFWYrrlkNkZB5sYuOaZ2wuqolt0slQHfx/xhnOw8DLPFOhVTrNQcrfa50JUf7VFrNBU7lrmGYwo5ikjsRl3BKRLY0NLrSVRlJHdrKcObW6lpg++hlxSZwOKkptCwz513CwCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IEPtxa0ROSusAr+5Ulo7JJUMZJ11e3YOqNyD3r7bGUk=;
+ b=MwO/Xhjn0jC/MF+Un1PkhC3TmG634tqvIWxH/3FnV7GVczLSYN94Z3YOoWuj0/612YyXyzyD3u7MCWYIpxNrPUSvP4ynXX7AsXHSZUn3CP9EsJBvNmPSDwntL/N3gvywH0K0FrTQG5x+ZJX4itrv5NaaKpqWu6n3N8FIcspyOEM6LHVYBOxDm1RsT2dXuxDK8afVnIGyGfHim+KTcQGnAgQBRdB1MLTqqgUkjsXo97Mpa3+f7SJF5Y+UyZoCMfd6ktlWGwrLFONTy5Ult5E6ukzLZEisCUHaLYeeXQFmS/G7+nbnOUTMhPDpA5vBimacXpcjG3YrPgrSvQwpOJvOOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:f::16) by BJSPR01MB0834.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:1c::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.37; Tue, 30 Jan
+ 2024 05:09:32 +0000
+Received: from BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+ ([fe80::3862:65b4:c857:c4a6]) by
+ BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn ([fe80::3862:65b4:c857:c4a6%4])
+ with mapi id 15.20.7228.029; Tue, 30 Jan 2024 05:09:32 +0000
+From: JeeHeng Sia <jeeheng.sia@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "palmer@dabbelt.com"
+	<palmer@dabbelt.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "robh@kernel.org"
+	<robh@kernel.org>, "conor.dooley@microchip.com" <conor.dooley@microchip.com>,
+	"suagrfillet@gmail.com" <suagrfillet@gmail.com>
+Subject: RE: [RFC v1 0/2] riscv: Cache Population Code Refactoring for ACPI
+ and DT Support
+Thread-Topic: [RFC v1 0/2] riscv: Cache Population Code Refactoring for ACPI
+ and DT Support
+Thread-Index: AQHaUokvDmoQ0eJwi0KkFvpqCqpN+7DwrYAAgAEgxTA=
+Date: Tue, 30 Jan 2024 05:09:32 +0000
+Message-ID:
+ <BJSPR01MB0561CC865A63D6E84DF0CFB69C7DA@BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn>
+References: <20240129075957.116033-1-jeeheng.sia@starfivetech.com>
+ <20240129-disburse-plug-9f4a37c550f3@spud>
+In-Reply-To: <20240129-disburse-plug-9f4a37c550f3@spud>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BJSPR01MB0561:EE_|BJSPR01MB0834:EE_
+x-ms-office365-filtering-correlation-id: 44b10dfc-2238-4af4-cff1-08dc2151a555
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 4BgjlgEdRt705iKzq3hQxHAMTzljmm9j55rfH3sZ+gmmxuuw0cfeQLs9Bk+h6zC7ID6Fq7+I/NkNwHiTLtZDjXn22WjL6gOUEh8PWExw32Wzyf7ybVHkHck0ncLjz20GXmq+3wFhKKwr8QeHpikhz+lKxvw5Z1pnTrL5xvU9ZoQ6n7lpuUGJBt8Zz6uvyUw72an8Myi5E+M1gkFaMdaafraSzQV9uJcNE7E6OOZ80IhqpShyJMP/3y5jRKNm9PCF3ArVv4jgLMGAGYRebyNqnLr96U8ckaQkkFnidiNboLJIg8K4V44qGnH6uiOP7O05uVI7zEAx6ficMQyoJyVQVuKaK08pzeWE44cIKP6BjKdwiWKcSSs586LcASJJz6dJV4lwWMGgh2U7Vg/X3phds46YI5gQE4gnKi8N8pSlFXR7iy2saGtePg4Z/fJ8vugYmj/5h6z9wQpo7dvdZw9OhdV+u8+os3fI4AGv1Z84NUVCYfK8wDca+TyHDdPBjfy13wU3I0t/AnUDrKapJLX1/aY7mf6qqhwUXnJy1KTONbOjKRIRYtlT7zLlOivDK+z8
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(346002)(39830400003)(366004)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(122000001)(26005)(4326008)(83380400001)(33656002)(40180700001)(8676002)(38100700002)(966005)(508600001)(54906003)(7416002)(66946007)(76116006)(8936002)(64756008)(71200400001)(5660300002)(66556008)(6916009)(55016003)(2906002)(66446008)(66476007)(86362001)(41320700001)(9686003)(40160700002)(41300700001)(7696005)(53546011)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?GcqjPLsBOsD0vYTYtI4y9JPd0dWlMYMusFdUCd1+yEbHAJRddgEO28qh4hry?=
+ =?us-ascii?Q?esSq6PtOiZEdo1aVMtzj+mpKOpwuibRoQuZQ74kqWDCR1WVrenkWoKDAtKCi?=
+ =?us-ascii?Q?ee2l75cJCo5SXXKgINeKMCFJruQ2TqOnb7AisbRHs3FHc+xUeWhfZ36uvgQa?=
+ =?us-ascii?Q?/C8HQI894a7TcLggfBUynoKPpdCP/4Jm8TAwkzYUbDLdijhhiil0drpHgyxw?=
+ =?us-ascii?Q?5kruNz8AlLZzbDO2AtKQ2ferLa21TvU81iHncH1CMNisgBtEF5IxvX2C/6wD?=
+ =?us-ascii?Q?kVWDdGXCEjUTUNlJ3v04c7dfGvRulgA7BYDQbVppAOnSvFEtZzOA9kxSB87R?=
+ =?us-ascii?Q?GZq0kQ+IIBOlEdniEi8EKVcWv0qRmKS66CRbR1Z0qiNrMvigtmvYfrOMjd4z?=
+ =?us-ascii?Q?KQ9l6oyeHuJcXFrD3nbjhKUXmm9EVNHSRM3FTUu/+nJWMqgG/aVNXyaNfXwO?=
+ =?us-ascii?Q?WPqNk+TJ8pQh4N6Tn41kjGxsosM58g+4c0VSRi1T24avNhKbyVh95OqmBhts?=
+ =?us-ascii?Q?2hZy9ZbQtnrXfgnEG/FgBwofsR+3lhi+qnQqy/2C8lAHhqIAmirpxBsOyyBv?=
+ =?us-ascii?Q?hz1Z9Ei6fpRHggpLcLX0EnUlmPmzWCw8nvr40O741r/xF0mNIJOXFLy9yaA8?=
+ =?us-ascii?Q?csIeQ9GUbSmAqb6tUS0/11RB51Kyac5NHztlrhX5REGfIYVszdpdysN5mtE0?=
+ =?us-ascii?Q?qXiGTrPRAekUc31k97KohIyRnSqJZXavFNtyp2w5wMezugACJychbi2ydoHk?=
+ =?us-ascii?Q?+P5TQoqCKgECt9tubarW2e+fYjkMnAkqTPUE0TBGnz6r9YmQ/qHAFlsoQu8y?=
+ =?us-ascii?Q?3Rr9Ff+9ZYS53GZwg328aSCu5paTfkz5AyfAvg0QReFTymdVEsN0KkUbMz8L?=
+ =?us-ascii?Q?0auuPsdGnNs9TajRVFSoOU7c++KeYiMj4Von4Y6UEF6zotmrMZEGoStF7iQ1?=
+ =?us-ascii?Q?dEsL5QsFNmMnz/cuUT0q1mEFzxng1JTthl0t/krxC1WD2sF88M4ru/tBzB4o?=
+ =?us-ascii?Q?shH9cQ+lAbY6C1RxeZeX8cUnfjavyQaoLNpnrOA8sm8pxBATQUzHHjllib/J?=
+ =?us-ascii?Q?PJAIxjJfhfQU3M1sideX5rlY/e43OzAr15vn/l+W8O9KUIM9BpbyzNV8KTdV?=
+ =?us-ascii?Q?AepzwS287ZSq3DNbiJqmSfnclWOj367VsJPSBZx75Xbq4GaCyHu5LrGzuNtE?=
+ =?us-ascii?Q?pwlRWjDMC7G27G3GdgM5dpuP7ylRRZNWTB+1N7MipqtAojxt+cFZPf2goWtk?=
+ =?us-ascii?Q?1vVmr7UxnIntynJn/8/RvlcbaC7QrkOlzAFC+eHDBEYENgKdURIYc20BrWbV?=
+ =?us-ascii?Q?FXWTp8C7VaVAIYKXdAzLviIUzvGBTvmg7b8h/nToiU/yzRQH0iRsseX5z5Td?=
+ =?us-ascii?Q?e/MQwOo9bY3LAfLOvQYAoujdmwztdRZHp7CVKde7uRihrCERKSMJGUlPvIm5?=
+ =?us-ascii?Q?doom1Ba5DFun15cFgmGYnhx/qKjNqT6U0G192nAiYxafZ961UrT71b5radva?=
+ =?us-ascii?Q?JqqDhTw1WFa1JTRlPzM/Ww0KcjEupObYbNg+mYDw1htrps7kXPTnP1BjuOKB?=
+ =?us-ascii?Q?6SuStM84JXf7g3qvJoLFQ6pRQyaPuY1d9hJ2sLmLEjXbHaeVEM8e9BqBSiNW?=
+ =?us-ascii?Q?ng=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 06/35] mm: cma: Make CMA_ALLOC_SUCCESS/FAIL count
- the number of pages
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
- maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
- yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
- vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
- pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-7-alexandru.elisei@arm.com>
- <0a71c87a-ae2c-4a61-8adb-3a51d6369b99@arm.com> <ZbeRQpGNnfXnjayQ@raptor>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <ZbeRQpGNnfXnjayQ@raptor>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44b10dfc-2238-4af4-cff1-08dc2151a555
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2024 05:09:32.9149
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t6Y59SPceRv48FGIUMNT+mw3CrObSTJXScD4eZBY/PBcwkdz68XFEOC/YvGvVUy7GwkCkEChHS/HI/PhOTWUPvf4dGp5nyMIw7Q2KE+MUlI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0834
 
 
 
-On 1/29/24 17:21, Alexandru Elisei wrote:
-> Hi,
-> 
-> On Mon, Jan 29, 2024 at 02:54:20PM +0530, Anshuman Khandual wrote:
->>
->>
->> On 1/25/24 22:12, Alexandru Elisei wrote:
->>> The CMA_ALLOC_SUCCESS, respectively CMA_ALLOC_FAIL, are increased by one
->>> after each cma_alloc() function call. This is done even though cma_alloc()
->>> can allocate an arbitrary number of CMA pages. When looking at
->>> /proc/vmstat, the number of successful (or failed) cma_alloc() calls
->>> doesn't tell much with regards to how many CMA pages were allocated via
->>> cma_alloc() versus via the page allocator (regular allocation request or
->>> PCP lists refill).
->>>
->>> This can also be rather confusing to a user who isn't familiar with the
->>> code, since the unit of measurement for nr_free_cma is the number of pages,
->>> but cma_alloc_success and cma_alloc_fail count the number of cma_alloc()
->>> function calls.
->>>
->>> Let's make this consistent, and arguably more useful, by having
->>> CMA_ALLOC_SUCCESS count the number of successfully allocated CMA pages, and
->>> CMA_ALLOC_FAIL count the number of pages the cma_alloc() failed to
->>> allocate.
->>>
->>> For users that wish to track the number of cma_alloc() calls, there are
->>> tracepoints for that already implemented.
->>>
->>> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
->>> ---
->>>  mm/cma.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/mm/cma.c b/mm/cma.c
->>> index f49c95f8ee37..dbf7fe8cb1bd 100644
->>> --- a/mm/cma.c
->>> +++ b/mm/cma.c
->>> @@ -517,10 +517,10 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
->>>  	pr_debug("%s(): returned %p\n", __func__, page);
->>>  out:
->>>  	if (page) {
->>> -		count_vm_event(CMA_ALLOC_SUCCESS);
->>> +		count_vm_events(CMA_ALLOC_SUCCESS, count);
->>>  		cma_sysfs_account_success_pages(cma, count);
->>>  	} else {
->>> -		count_vm_event(CMA_ALLOC_FAIL);
->>> +		count_vm_events(CMA_ALLOC_FAIL, count);
->>>  		if (cma)
->>>  			cma_sysfs_account_fail_pages(cma, count);
->>>  	}
->>
->> Without getting into the merits of this patch - which is actually trying to do
->> semantics change to /proc/vmstat, wondering how is this even related to this
->> particular series ? If required this could be debated on it's on separately.
-> 
-> Having the number of CMA pages allocated and the number of CMA pages freed
-> allows someone to infer how many tagged pages are in use at a given time:
-
-That should not be done in CMA which is a generic multi purpose allocator.
-
-> (allocated CMA pages - CMA pages allocated by drivers* - CMA pages
-> released) * 32. That is valuable information for software and hardware
-> designers.
-> 
-> Besides that, for every iteration of the series, this has proven invaluable
-> for discovering bugs with freeing and/or reserving tag storage pages.
-
-I am afraid that might not be enough justification for getting something
-merged mainline.
-
-> 
-> *that would require userspace reading cma_alloc_success and
-> cma_release_success before any tagged allocations are performed.
-
-While assuming that no other non-memory-tagged CMA based allocation amd free
-call happens in the meantime ? That would be on real thin ice.
-
-I suppose arm64 tagged memory specific allocation or free related counters
-need to be created on the caller side, including arch_free_pages_prepare().
+> -----Original Message-----
+> From: Conor Dooley <conor@kernel.org>
+> Sent: Monday, January 29, 2024 7:50 PM
+> To: JeeHeng Sia <jeeheng.sia@starfivetech.com>
+> Cc: linux-kernel@vger.kernel.org; linux-riscv@lists.infradead.org; paul.w=
+almsley@sifive.com; palmer@dabbelt.com;
+> aou@eecs.berkeley.edu; sudeep.holla@arm.com; robh@kernel.org; conor.doole=
+y@microchip.com; suagrfillet@gmail.com
+> Subject: Re: [RFC v1 0/2] riscv: Cache Population Code Refactoring for AC=
+PI and DT Support
+>=20
+> On Sun, Jan 28, 2024 at 11:59:55PM -0800, Sia Jee Heng wrote:
+> > This series of patches refactors the cache population function to
+> > seamlessly accommodate both DT and ACPI-based platforms. Additionally,
+> > to streamline the code, the unused parameter in the ci_leaf_init()
+> > function has been removed.
+>=20
+> Why's this an RFC? I don't see any mention of why.
+My bad, I should have mentioned the reason in the cover letter.
+Btw, the reason treating this as RFC patch is because I am seeking for more
+opinions as it is the first try for riscv acpi based cacheinfo.
+>=20
+> Thanks,
+> Conor.
+>=20
+> >
+> > Sia Jee Heng (2):
+> >   riscv: cacheinfo: Remove unused parameter
+> >   riscv: cacheinfo: Refactor populate_cache_leaves()
+> >
+> >  arch/riscv/kernel/cacheinfo.c | 50 ++++++++++++++---------------------
+> >  1 file changed, 20 insertions(+), 30 deletions(-)
+> >
+> >
+> > base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+> > --
+> > 2.34.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
