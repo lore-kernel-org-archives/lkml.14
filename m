@@ -1,145 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940746A32C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D266A32C
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608822; cv=none; b=q/c0l+hmqyJ/UTtPv8AtRnlSjw0tbOV4ozgw34bwYlfnGeW4SGGKMFre4uAC/YZHG9DKiYFeYlmlcrEVCYJUVwjgygn4jf4ALbplo96zRNeLK1pttipOzuByJSaK6zutNEXTdfQe/BG8gGcJK0XYhVHhebW0ypq6GwW5r54CyVk=
+	t=1706608829; cv=none; b=kr5f4lsmKmXNO/jPnLZTf1BY6BlKlku0GuMBw6XmoHgLeTppJEAQFgqRVFjh4izFvpAyiz8WwkHeI0mHthd3RLOcrw1l94x3oMZQZRXe9SU8qFJSM0tLjZWM0bRZH/L2dmBH+rKu5TtLAY3XGfizO4IyNN79yPzP7HshQQZqSj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608822; c=relaxed/simple;
-	bh=hl3aWWcDKcj6n80V7MgjKRZSLee3oVCAam4GiDvNx9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bSWtkyUYrRqTzXjxBJhC+I0NdCLjWlPgU5W+sf5V9gwnJv/SUckJqExVod0C14S0RGznXhlCoFx3f/bAFvAzAaoBhAXpje3OAAatoef5WzbBJ3eVjSRQJsZljHOauzhJGk8XTTS8+IEduXoGF2e2aIEcbDk3GULptypS+z/LEUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dShA7CDH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706608829; c=relaxed/simple;
+	bh=UXxOFnzyPjSmWhL7VN01cLQZkxTaV1mX68f4OmqP1C8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MCR/AJ8EvHMnhMc+xqA6KS4T34qSLXpoSDUdu2mAsM1epGBnLmSzYURbq5vgTzLmupBZ+4+Wmrds+LJVhS/IlEPNkLsNowkIVW30ZMbX4dZHWhCpFgBHDFjkIUm8uezeRJPK4kG6+5S5gIhV346b+UigtjgieAiyqUEt3PyUEWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=XFxZfmIC; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dShA7CDH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706608819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lvd79EwJ/EeeRbQUvV7D8alEJPVcC5AuHB/N6mbkr5Q=;
-	b=dShA7CDHqo7nkGNy44jA4nN+FQ0AATCq6wDSNRu3iORsbO9j6rEWcB4vSthI1j1Z6ujsQv
-	sDeaE8GMwdO3kW+Qq0GJH63l/NxyS5eepJOHHXe34uRjakjWJqnwJlxxQPSpCx5W/MaM++
-	C8D3GwDxqQGipvnZ1nnWFTQDkSaMNmI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-459-Qzd-oGeuMXyENNVF1gEpXg-1; Tue, 30 Jan 2024 05:00:17 -0500
-X-MC-Unique: Qzd-oGeuMXyENNVF1gEpXg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33af5879edfso583094f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:00:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="XFxZfmIC"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ddcfda697cso2825362b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:00:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1706608826; x=1707213626; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b8wT6bcymUslDtltBZzAISdjS3jJfOOrz/LevDJCQnA=;
+        b=XFxZfmICV3268PQyy8LsPPvJWfUwpbnkOgIuLrCTHiIIwHU4+G5pj/9KBrVGiA5DZI
+         gr3rHTmTnECx62dynyV94UXRv3x1wDvmOlfPUYN7aN3NxfKHRB7XPL2kTk8PUJUKwGBQ
+         kfu1Mb1rTwfZZLiB6IFgnybZyYoY8Fmd5lLW93r6C2ElBL8CH/q4jEgI8gcAgJMRbdvF
+         p9o11P5r1oSSjGGYVP5+Z4pOqIEQnMpoEDCSBw7tfLWYWLq52vhuSwB72ZwFCexnUki4
+         QUSHGgyiy4r/nWhL2YwWyOIUSbLJ9xv8NlQWP8ocphquFTM4Oj3tNY/tQXVD33w5nMg5
+         V61g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706608816; x=1707213616;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lvd79EwJ/EeeRbQUvV7D8alEJPVcC5AuHB/N6mbkr5Q=;
-        b=T0txsOi45ZpxDohQN5Vu8p4WLU3s/as7SAJAzNgkXW4FbPxGo2yfJpHaMjBo7v/LFL
-         WFoslzSpXJoPnVnJK3ydIgbHoZ9gwpqmCEf6joEOYDav0Rpg9LAiRAZRGevjaQ5NEdZY
-         RaA/kwsVVzD+HRgQRvZl9PMLv1PzTbeuq3lvVfm4F2HTruA9xJvQFiA69yHWdPNFFT3c
-         TLYbSaEyZVMtZdjso2etwCrpIti+VJyu4cNnpmG8sRJ3axriwfZZO2/W87mae+Bmu9+X
-         2QVh7x3XSFg/Kb19P1oHLt60a24Nis3/yZyDJbIKcgMq8nBIlam65LYDN1M7GQL6w0eD
-         FuQQ==
-X-Gm-Message-State: AOJu0YzDP5p/+1CkHltYYEqgIQM7sjPc+cvSrkuaMHmn5RJBE9IapP9S
-	lLXJBpPg51yWPQJN7grN9CAJV/9pQEHFJ6a1r0eFAGrxl563fhkoreTsy43NJJznhzzRzLi7oqL
-	ZLXFCW39+UFbV0ukBOhoASTT1QycV6b7o+8mGmo+R+/ENIqjA/Lov9xkqjUQE4g==
-X-Received: by 2002:a05:6000:2ac:b0:33a:f521:5815 with SMTP id l12-20020a05600002ac00b0033af5215815mr2795199wry.26.1706608816486;
-        Tue, 30 Jan 2024 02:00:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEwb92jelVdRIonuHD9AAXhHL37860vpbI9s5dqUN+CbIom/XaWO3f0Bq1fr41DoHF1tZ3ZDA==
-X-Received: by 2002:a05:6000:2ac:b0:33a:f521:5815 with SMTP id l12-20020a05600002ac00b0033af5215815mr2795173wry.26.1706608816134;
-        Tue, 30 Jan 2024 02:00:16 -0800 (PST)
-Received: from t14s (109-81-83-173.rct.o2.cz. [109.81.83.173])
-        by smtp.gmail.com with ESMTPSA id az28-20020adfe19c000000b0033afcf8925asm678165wrb.24.2024.01.30.02.00.14
+        d=1e100.net; s=20230601; t=1706608826; x=1707213626;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b8wT6bcymUslDtltBZzAISdjS3jJfOOrz/LevDJCQnA=;
+        b=XHFMfHzsz+J1btJKM4OsxeqfakprrrAiJ3tR+gW1R0XPPAMbDqCrUGD0hsITxVx2x2
+         kCosrMxW+HZ5TtYgE0RhwhdRb1iDv11YX3S01v2jHGypM51AQcyWs00KsZ0OEYPOvIS/
+         WhqTHdm6WE9JQtZz39W2XUc6pkIVl/PfFd//ikdBQ8OIbO7TbBnkYFI8lZHmBLKUWCFy
+         jrqDMe4paRNqH5fC+r82MtvPSHitMjk6gFX4UEHTlHrMgLZefZNY+BNH9O/UfaGmGQQT
+         g7iUo5QwSwpGwHOjrn1JDM+5wOpGg7hfrMvOARiW+M7oWUOqBETTVW53wgQiOH+fJ22n
+         SatQ==
+X-Gm-Message-State: AOJu0YwGtel1DJy8/luc/GwfyW0MDDhPdC8ALQgvRJP0G4BBH7/g8lT4
+	9qBIfxU47EvV3goel7mskmP1zrsNw2DW5kAVVjrW2hsmQslu/9RpB2PFHwi8vhQ=
+X-Google-Smtp-Source: AGHT+IGDHT0UPx/DNjOeTCfqAlne/0fbxsadm9lL9NrmGBXb7/BJ1WXgntbW37yuK8GXzLGuWXYMBA==
+X-Received: by 2002:a05:6a00:179c:b0:6dd:7fd4:9fa1 with SMTP id s28-20020a056a00179c00b006dd7fd49fa1mr6712516pfg.8.1706608826374;
+        Tue, 30 Jan 2024 02:00:26 -0800 (PST)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id w22-20020aa78596000000b006dde44a2d16sm7345021pfn.199.2024.01.30.02.00.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 02:00:15 -0800 (PST)
-Date: Tue, 30 Jan 2024 10:54:20 +0100
-From: Jan Stancek <jstancek@redhat.com>
-To: Nicholas Piggin <npiggin@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linuxppc-dev@lists.ozlabs.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, jstancek@redhat.com
-Subject: Re: [PATCH] powerpc: add crtsavres.o to always-y instead of extra-y
-Message-ID: <ZbjHTMhQ4Z9lRR6L@t14s>
-References: <20231120232332.4100288-1-masahiroy@kernel.org>
- <CX42TU4QHS1Z.A0UUHMDAMZOL@wheely>
+        Tue, 30 Jan 2024 02:00:26 -0800 (PST)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	David Box <david.e.box@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>
+Cc: linux-ide@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE
+Date: Tue, 30 Jan 2024 17:59:33 +0800
+Message-ID: <20240130095933.14158-1-jhp@endlessos.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CX42TU4QHS1Z.A0UUHMDAMZOL@wheely>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 21, 2023 at 10:51:34AM +1000, Nicholas Piggin wrote:
->On Tue Nov 21, 2023 at 9:23 AM AEST, Masahiro Yamada wrote:
->> crtsavres.o is linked to modules. However, as explained in commit
->> d0e628cd817f ("kbuild: doc: clarify the difference between extra-y
->> and always-y"), 'make modules' does not build extra-y.
->>
->> For example, the following command fails:
->>
->>   $ make ARCH=powerpc LLVM=1 KBUILD_MODPOST_WARN=1 mrproper ps3_defconfig modules
->>     [snip]
->>     LD [M]  arch/powerpc/platforms/cell/spufs/spufs.ko
->>   ld.lld: error: cannot open arch/powerpc/lib/crtsavres.o: No such file or directory
->>   make[3]: *** [scripts/Makefile.modfinal:56: arch/powerpc/platforms/cell/spufs/spufs.ko] Error 1
->>   make[2]: *** [Makefile:1844: modules] Error 2
->>   make[1]: *** [/home/masahiro/workspace/linux-kbuild/Makefile:350: __build_one_by_one] Error 2
->>   make: *** [Makefile:234: __sub-make] Error 2
->>
->
->Thanks. Is this the correct Fixes tag?
->
->Fixes: d0e628cd817f ("powerpc/64: Do not link crtsavres.o in vmlinux")
->
->Hmm, looks like LLD might just do this now automatically for us
->too without --save-restore-funcs (https://reviews.llvm.org/D79977).
->But we probably still need it for older versions, so we still need
->your patch.
+Some systems, like ASUS B1400CEAE equipped with the SATA controller
+[8086:a0d3] can use LPM policy to save power, especially for s2idle.
 
-Hi,
+However, the same controller may be failed on other platforms. So,
+commit (ata: ahci: Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI
+controller") drops LPM policy for [8086:a0d3]. But, this blocks going
+to deeper CPU Package C-state when s2idle with enabled Intel VMD.
 
-I'm still seeing the error of crtsavres.o missing when building external modules
-after "make LLVM=1 modules_prepare". Should it be built also in archprepare?
+This patch adds ahci_force_lpm_policy DMI quirk for ASUS B1400CEAE to
+fix s2idle's power consumption issue when Intel VMD feature is enabled.
 
-Thanks,
-Jan
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
+Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+---
+ drivers/ata/ahci.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index 051247027..a62334194 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -57,8 +57,11 @@ ifeq ($(CONFIG_PPC64)$(CONFIG_LD_IS_BFD),yy)
-  # Have the linker provide sfpr if possible.
-  # There is a corresponding test in arch/powerpc/lib/Makefile
-  KBUILD_LDFLAGS_MODULE += --save-restore-funcs
-+crtsavres_prepare:
-  else
-  KBUILD_LDFLAGS_MODULE += arch/powerpc/lib/crtsavres.o
-+crtsavres_prepare:
-+       $(MAKE) $(build)=arch/powerpc/lib arch/powerpc/lib/crtsavres.o
-  endif
-
-  ifdef CONFIG_CPU_LITTLE_ENDIAN
-@@ -389,7 +392,7 @@ vdso_prepare: prepare0
-                 $(build)=arch/powerpc/kernel/vdso include/generated/vdso64-offsets.h)
-  endif
-
--archprepare: checkbin
-+archprepare: checkbin crtsavres_prepare
-
-  archheaders:
-         $(Q)$(MAKE) $(build)=arch/powerpc/kernel/syscalls all
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index d2460fa985b7..6bc5298a4adf 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -1434,6 +1434,33 @@ static bool ahci_broken_devslp(struct pci_dev *pdev)
+ 	return pci_match_id(ids, pdev);
+ }
+ 
++static bool ahci_force_lpm_policy(void)
++{
++	/*
++	 * Some systems, like ASUS B1400CEAE equipped with the SATA controller
++	 * [8086:a0d3] can use LPM policy to save power, especially for s2idle.
++	 * However, the same controller may be failed on other platforms. So,
++	 * commit (ata: ahci: Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI
++	 * controller") drops LPM policy for [8086:a0d3].
++	 *
++	 * https://bugzilla.kernel.org/show_bug.cgi?id=218394
++	 */
++	static const struct dmi_system_id sysids[] = {
++		{
++			.ident = "ASUS B1400CEAE",
++			.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR,
++					  "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_PRODUCT_NAME,
++					  "ASUS EXPERTBOOK B1400CEAE"),
++			},
++		},
++		{ }	/* terminate list */
++	};
++
++	return dmi_first_match(sysids);
++}
++
+ #ifdef CONFIG_ATA_ACPI
+ static void ahci_gtf_filter_workaround(struct ata_host *host)
+ {
+@@ -1760,6 +1787,11 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 			ahci_pci_bar = AHCI_PCI_BAR_LOONGSON;
+ 	}
+ 
++	if (ahci_force_lpm_policy()) {
++		pi = ahci_port_info[board_ahci_low_power];
++		dev_info(&pdev->dev, "force controller follow LPM policy\n");
++	}
++
+ 	/* acquire resources */
+ 	rc = pcim_enable_device(pdev);
+ 	if (rc)
+-- 
+2.43.0
 
