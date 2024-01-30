@@ -1,151 +1,76 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7931F55C02
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C201B54677
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706602053; cv=none; b=tlzoL+r/YRt0GfD0PGJ0ueZPUlU0LmTZN35wfHYUnGyaFtraMyHEHX43CLA2kfZidRbaxqfAKXb73320B+guf213/6x7rQfJtqMYMuLhZ9ZTIE/UiHCPU7FK3LcKCZCHupdFKu9AF39H+YylAMH7+cflHI+8Aior9kSdIT/mE4A=
+	t=1706602132; cv=none; b=Bz7cN6QbRc6xIxxWgfULfmuh0i9ZufNJ+urXOMPnyobJm9t3DWsqNzd++sN6gZkUm9DezsR9q6f5YUHRn3SPtBxej8KZr0RG7MdlXV7Ee436EGYkp4/uhmPkfSOkE0z5mqdlWsGTPWI+UGu2899LZt7C17CC7mEwXEm/yV37fQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706602053; c=relaxed/simple;
-	bh=lixRsKqZbJZXIkGyOzAqZUfXdnrx6g0JD9mQ7KwNOJg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CV9kgqBu2J/yTtdFBFw/PzI4gR89FkN3CEKvJu51M4OQBN1W33Wbz1HhT9CjVH7gJsW5mb0Q7mneHMTp9orzXLXOzF3evlVJ+Hk87CI3k4F+qMbAzF6NGtEPq4ZRog1UcwaQFGaK1dKC1wIlCA3TUU/8Xr9IlupsR7PVHBzZywg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 40U8796h038585;
-	Tue, 30 Jan 2024 16:07:09 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TPHd15m7Dz2S73y6;
-	Tue, 30 Jan 2024 15:59:33 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Tue, 30 Jan 2024 16:07:06 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <juri.lelli@redhat.com>,
-        <vincent.guittot@linaro.org>
-CC: <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>, <bsegall@google.com>,
-        <mgorman@suse.de>, <bristot@redhat.com>, <vschneid@redhat.com>,
-        <wuyun.abel@bytedance.com>, <ke.wang@unisoc.com>,
-        <xuewen.yan94@gmail.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] sched/eevdf: Prevent vlag from exceeding the limit value
-Date: Tue, 30 Jan 2024 16:06:43 +0800
-Message-ID: <20240130080643.1828-1-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1706602132; c=relaxed/simple;
+	bh=MsX32WjhNDdW2qr6JOHB9rEwqosyJkstTNFGRZOwOuk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=L6BrM0bW0sZDYs/hFOdXINqLWJ2dxAxQNwnvS1zlpiKYtwYO5TY8fAWa1C1v0a+8Euj+pZCkEsG/Zsjgz6gNThcKyVZmHRLjIOpCRBal758n5Rm9bXHMpnDIYx/BqdG/I26PR/xRIb8Wyy7wdVuA1vNwZ2eDU5NcvMRGrGzm4sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uuVC6mQV; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uuVC6mQV"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5fffb2798bfso62548527b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:08:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706602129; x=1707206929; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4yuy6DXMuQ7aM2x/F8JDP7FABfqZoOLw5CnCxlTpGVA=;
+        b=uuVC6mQVagqiaTri0wSyvJLr+suSR3o43FkKQMMxmSqk0S7mmTqKSlFC39M7BBADzX
+         ltYBaAzmlEsP6TaPKtm8BRqO0NszUh5xN4C9uNQzpomFGWo7SjxwU7iPOPEl2OiRKznO
+         9H+Sb/B1bDTjLQqpKfiHE4jwnc1gQRQLXjXVndZR1BApI/ouEOUuIACnvE5lshY9Sa7C
+         WHGT5vxOCtGY9Lx8NAEbAwdL/zb55izpvG7MrMTKuYJDnv2ySCm3tiUrL/CfQ9hnb8m6
+         iEonkC2Ek7ncu+tXxqPyZW/dwpE6Jv+N2HySWHjm2hcqHOOVxGCt8a2pS2X7k9eTckO8
+         B7+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706602129; x=1707206929;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4yuy6DXMuQ7aM2x/F8JDP7FABfqZoOLw5CnCxlTpGVA=;
+        b=fnTCeIybWVkYRspOHdsogwPxf2aUpv8tprTo/6z0aKNpx9VR43avRaTTTDbcv09zuS
+         H+LqXwnRVCfBR0a9o8L6qM0sewdrNJZQXtdqeLqgNjod7pFPVaC5siZJJcG0KmMxd45K
+         Z8x0muqiYU7mg4o++ndfHHShC2DpGCb6Rq7ILFRKtG8rKyIIHJvly8YLOaaQ47iGdCHg
+         ZxCBEkaC8e/SU+vJcq/RZn+n+2DpKLeTZKZk5D9ocDHeHoYEs2JdT3/SV6rDSOLLOBph
+         8QwjjrJkKukqy03H2nv3d1K8ckVlJYCOrmGEZzIMi05RSsagLpfXDy/Z5Bd3Uq57omKp
+         EEJA==
+X-Gm-Message-State: AOJu0Yx60FQJyB/QKWD2+XSX2p+eILgMWyFKGypyE/33OzwYA74Geivh
+	sEZIuNzJKRlOHJpT2MVYHaYXyLGV5ORKUD4s6Sffp2lDKS+wY/To8nTK1opFmhdHFOIYD96zRPQ
+	taZeXQ1lrkiltbUc+TA==
+X-Google-Smtp-Source: AGHT+IHYJh/JZb9tcGVFMyDOwEKQlvsjTsnVcdkiirQ0l/OYkIkLQ0xdTfuKo+pCIIg1GGlzGiCXJcuUxWGhHlNo
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a81:79d0:0:b0:5ff:aa85:6244 with SMTP
+ id u199-20020a8179d0000000b005ffaa856244mr2355603ywc.8.1706602129686; Tue, 30
+ Jan 2024 00:08:49 -0800 (PST)
+Date: Tue, 30 Jan 2024 08:08:47 +0000
+In-Reply-To: <20240130014208.565554-2-hannes@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 40U8796h038585
+Mime-Version: 1.0
+References: <20240130014208.565554-1-hannes@cmpxchg.org> <20240130014208.565554-2-hannes@cmpxchg.org>
+Message-ID: <Zbiuj7qXrKJ2sQhW@google.com>
+Subject: Re: [PATCH 01/20] mm: zswap: rename zswap_free_entry to zswap_entry_free
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-There are some scenarios here that will cause vlag to
-exceed eevdf's limit.
+On Mon, Jan 29, 2024 at 08:36:37PM -0500, Johannes Weiner wrote:
+> There is a zswap_entry_ namespace with multiple functions already.
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-1. In set_next_entity, it will stash a copy of deadline
-at the point of pick in vlag, and if the task fork child,
-the child's vlag would inherit parent's vlag, as a result,
-the child's vlag is equal to the deadline. And then,
-when place_entity, because the se's vlag is wrong, it would
-cause vruntime and deadline update error.
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
 
-2. When reweight_entity, the vlag would be recalculated,
-because the new weights are uncertain, and it may cause
-the vlag to exceed eevdf's limit.
-
-In order to ensure that vlag does not exceed the limit,
-separate the calculation of limit from the update_entity_lag
-and create a new func limit_entity_lag. When the vlag is
-updated, use this func to prevent vlag from exceeding the limit.
-
-And add check whether the se is forked in place_entity, and calc
-the curr's vlag to update the se's vlag.
-
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
- kernel/sched/fair.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 533547e3c90a..3fc99b4b8b41 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -696,15 +696,22 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
-  *
-  * XXX could add max_slice to the augmented data to track this.
-  */
-+static s64 limit_entity_lag(struct sched_entity *se, s64 lag)
-+{
-+	s64 limit;
-+
-+	limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
-+	return clamp(lag, -limit, limit);
-+}
-+
- static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
- {
--	s64 lag, limit;
-+	s64 lag;
- 
- 	SCHED_WARN_ON(!se->on_rq);
- 	lag = avg_vruntime(cfs_rq) - se->vruntime;
- 
--	limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
--	se->vlag = clamp(lag, -limit, limit);
-+	se->vlag = limit_entity_lag(se, lag);
- }
- 
- /*
-@@ -3757,6 +3764,7 @@ static void reweight_eevdf(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 	if (avruntime != se->vruntime) {
- 		vlag = (s64)(avruntime - se->vruntime);
- 		vlag = div_s64(vlag * old_weight, weight);
-+		vlag = limit_entity_lag(se, vlag);
- 		se->vruntime = avruntime - vlag;
- 	}
- 
-@@ -3804,6 +3812,9 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 
- 	update_load_set(&se->load, weight);
- 
-+	if (!se->on_rq)
-+		se-vlag = limit_entity_lag(se, se->vlag);
-+
- #ifdef CONFIG_SMP
- 	do {
- 		u32 divider = get_pelt_divider(&se->avg);
-@@ -5177,6 +5188,16 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 
- 		lag = se->vlag;
- 
-+		/* When fork, the child would inherit parent's vlag,
-+		 * but parent's vlag may be euqual to it's deadline.
-+		 */
-+		if (flag & ENQUEUE_INITIAL) {
-+			if (curr)
-+				lag = vruntime - curr->vruntime;
-+
-+			lag = limit_entity_lag(se, lag);
-+			se->vlag = lag;
-+		}
- 		/*
- 		 * If we want to place a task and preserve lag, we have to
- 		 * consider the effect of the new entity on the weighted
-@@ -5237,6 +5258,7 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 		if (WARN_ON_ONCE(!load))
- 			load = 1;
- 		lag = div_s64(lag, load);
-+		lag = limit_entity_lag(se, lag);
- 	}
- 
- 	se->vruntime = vruntime - lag;
--- 
-2.25.1
-
+Thanks.
