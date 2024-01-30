@@ -1,157 +1,195 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3835E7D3EE
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAA47D3ED;
+	Tue, 30 Jan 2024 21:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706651835; cv=none; b=nHyLQkSUQff/O740P1tLebRzmxFKetFd6Wiv3jNqJlbPfPnD9K6/6QcmqaA9LmFRS4Gl0npF4OnEZX581CZxox2PbyzfmBwja84FLC4yWG9t9RaeyM5izKBaO4Nci0EnkGhez6VaBvEzLoCNSRWpiyHrcxkTJG+5A7zntdrbz1c=
+	t=1706651874; cv=none; b=PZIGnDMExYDlFAWnPBPxGUjXWXlUkuvhMm99RyVapk+KZYN16RL/qQRvxh27p9CuZKgU33cgOlWpS+WMWbwKeKet968xfTa2oVCBy4Tzov6NoXMHqJ/zzeIS1LpMTquWxd+ND2w9XpeKlcj9oyFmwmayPO12oLRckRhrZ1Tk9to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706651835; c=relaxed/simple;
-	bh=SJeL4VmwMt85IREwh/WCKzPi0aDbNEOX0Q8fiUCOSXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ufwwEf2NHB+D/XZvANtHmLi12VLuFsT/NxOb67a7I/KHsY71yqGJBXnxk2nZU1gFsiFRbe6yy/5gsbbVr6ONU3vmOMJVZ2H6pYbGMhhotbFliCC6E2OElZX0jgr8QVZljx31ymPXQoHUimUsuglGY+pjAri0TQWOT11HiTb2T9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dJRC3kZl; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706651874; c=relaxed/simple;
+	bh=HDWDAcQoYXifJAgQU95qvjKYaNNSaHnT1PVLpa+0ZHk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g8w3OpW29+q0WKDjxqFMWcBAsPKJ2Ke1rv+UnesKv6SEmg+GplATlk++Q2ayaa87vFonQsxt2gR7V8qk24o/uKqc+EnsyAVIJCXPxDHCwiAH4/AF0eSkTns2SzD/JRr7APtZHABpwHU2zqGbyeDRuOA8JNKg+4lImmbwcQbSzXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQ8rXa/J; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dJRC3kZl"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-20536d5c5c7so2838205fac.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:57:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQ8rXa/J"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3122b70439so607259366b.3;
+        Tue, 30 Jan 2024 13:57:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706651833; x=1707256633; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jcDCGmwUxE4c0aGDkwHcRSvrmg1sdA6mlv/IQQCx6ZY=;
-        b=dJRC3kZlZ0QuqNNAc+ZOtnJYEiQcV0bxkhdvcA2hWDjYHt2FCc287ErU93O3VtEkYp
-         d3gdWLI7e5JMP3qED1klAe0VC5QS7FfOFuO1HGfPIwRBflGr9/wOZacdnUHUgCB19Hdx
-         a0FzUQXv8qhIB9Xs+4FgD2GA3CzZhl+OxxJhs=
+        d=gmail.com; s=20230601; t=1706651871; x=1707256671; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wdh/VQpoX951eaSBCyP28Nr1FHihNafI7p4+z0vryQs=;
+        b=KQ8rXa/J37U7wb7KHrtHOx6czJ6ul7t2tz6610jCIPG0ZC2WCmfGmbrkM/gouYvKKd
+         GQg7mOIQgrasd7+iHcEl40IqKZA/jOqoLoSMEjQny6FbgJJZKkaHSAA74g9gpA3oFPMb
+         1ypx/9QebExnKgN0fFvgLgbhwp3Ph8cyfoA+X5hDoFvFHdxgM2/4q57AdYYeyGaHV7hA
+         DCitzktYTyUHXqbys4HEkBZTaoEkg/Nd8vhfmjKMeOUekZ8bXP43jJ1zgmyw+KaoocET
+         srS0NwkZjszcqjax0V8g46FvYzL43JXHRUoHd4jz959hTVAat3aEaOo3huKqCMxUkGRR
+         4Ptw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706651833; x=1707256633;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jcDCGmwUxE4c0aGDkwHcRSvrmg1sdA6mlv/IQQCx6ZY=;
-        b=GIkpZ8EpwfOJrNIukGw8jiGDwtzFQmLKOr3nDNoSVGVnM3ocryk0EWBSVudh0e83Wq
-         sLvbGzDZalCFdbTx5w1CFuN2ImjkcX1ULAzwh2cZWtnIUZ2fRyfdB2ZzckepOYQ8JKjr
-         NNS8gns31/GFVkq+z0nnU1a7n6L/NC0wS6B3wGi5VNLFiZyHyItucfu/1ib7UgSAUi7t
-         ITNp47UxwC1HAL5aZYfNObtoILJCFT3+QZGSZhOWF+frtfDtE5er9gf8SVw8Wl8Is3oN
-         78tffusnUJp5AhpaOfyAyGXkzBAX8+QZfEvZSXjsnz6rLK3x8e3vMNMIX5eNvX5/efZ8
-         vxuQ==
-X-Gm-Message-State: AOJu0Yw5HNN7tKbhwuHgIkuxMV7cw/tc8BksBT8defRIhfb+xgmhTLRy
-	g++JnPBvYKEJXQgnxWot4PgdU4oYtps3p/7uLgdP014yxh1hiLDNJFKpMkiurQ==
-X-Google-Smtp-Source: AGHT+IG7VNSkRKTfrFQKKzj3pYu2rCl/Sscr49lUqKuRxSTqkD3njddB8NnGkSXYSNCwoZUjctqxDg==
-X-Received: by 2002:a05:6870:5707:b0:218:7079:6177 with SMTP id k7-20020a056870570700b0021870796177mr5357267oap.43.1706651833264;
-        Tue, 30 Jan 2024 13:57:13 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 17-20020a630011000000b005c621e0de25sm2271749pga.71.2024.01.30.13.57.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 13:57:12 -0800 (PST)
-Date: Tue, 30 Jan 2024 13:57:12 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Lorenzo Stoakes <lstoakes@gmail.com>, linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 33/82] mm/vmalloc: Refactor intentional wrap-around
- calculation
-Message-ID: <202401301356.4F87B727@keescook>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-33-keescook@chromium.org>
- <24526e13-2df6-47ea-865f-b5a5594bc024@lucifer.local>
- <ZblT2OjkPcZQEw7A@pc636>
+        d=1e100.net; s=20230601; t=1706651871; x=1707256671;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wdh/VQpoX951eaSBCyP28Nr1FHihNafI7p4+z0vryQs=;
+        b=kTGB3WCubst1/DcxXG7po9q67EhDvomWhKTD8mhAxsdjZJpEk2WOao8tOY3s92wJiz
+         reZ52waM+gmIhp1Iu9CD630r3gpLffUb/VBsPsxi4DG+6j05NuP5yl9imj3Sx7HYczn6
+         ol12HaGwifLL0bWSu01U4/sgg8gkW8zQbCCX6IynA2i6ZxR8WJtoKq4EWKZe/S2yK6UQ
+         KfFoVDjs0dimwxeU5O93enXWiWgCpxNG7cMVHvuyfSo65vDir875+kKUuHXYc+daP1Q9
+         xW/NuozaAHSJJsFBnegbuTnMvIQYw+VQtrFjSss9P61miUTxn0Z85cYgKZOkSAlOFqxY
+         BJqg==
+X-Gm-Message-State: AOJu0Ywa9smqYU8DSH9d9rWaib6vzl1LMBBXqUAp321+d9cJ6LkxqJpA
+	t5+I0e2omJ04FnB1ZubteM+Ff7HcXa5ZxKnDGghJBL7GzYeuIVFs
+X-Google-Smtp-Source: AGHT+IEQSbMTrpr0DCCyf4rAOMtntZKl6TLmVGMeQghYBiFGqw3C3cfdFBUahwQOq31kv6SqyZh6xQ==
+X-Received: by 2002:a17:906:4ad2:b0:a35:fbc4:4c20 with SMTP id u18-20020a1709064ad200b00a35fbc44c20mr3161908ejt.6.1706651870454;
+        Tue, 30 Jan 2024 13:57:50 -0800 (PST)
+Received: from [192.168.26.149] (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.googlemail.com with ESMTPSA id x10-20020a170906298a00b00a34a20b247fsm5519809eje.84.2024.01.30.13.57.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 13:57:49 -0800 (PST)
+Message-ID: <c2adae73-9f1b-467e-880d-3e87eaeb10ea@gmail.com>
+Date: Tue, 30 Jan 2024 22:57:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZblT2OjkPcZQEw7A@pc636>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dt-bindings: arm: mediatek: convert PCIESYS to the
+ json-schema
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, devicetree@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Russell King <linux@armlinux.org.uk>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20240123082100.7334-1-zajec5@gmail.com>
+ <20240123082100.7334-3-zajec5@gmail.com>
+ <e17b85b1-7f1f-4b60-89b7-43f560466cc2@collabora.com>
+ <20240130203413.GA2290196-robh@kernel.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+In-Reply-To: <20240130203413.GA2290196-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 30, 2024 at 08:54:00PM +0100, Uladzislau Rezki wrote:
-> On Tue, Jan 30, 2024 at 06:55:57PM +0000, Lorenzo Stoakes wrote:
-> > On Mon, Jan 22, 2024 at 04:27:08PM -0800, Kees Cook wrote:
-> > > In an effort to separate intentional arithmetic wrap-around from
-> > > unexpected wrap-around, we need to refactor places that depend on this
-> > > kind of math. One of the most common code patterns of this is:
-> > >
-> > > 	VAR + value < VAR
-> > >
-> > > Notably, this is considered "undefined behavior" for signed and pointer
-> > > types, which the kernel works around by using the -fno-strict-overflow
-> > > option in the build[1] (which used to just be -fwrapv). Regardless, we
-> > > want to get the kernel source to the position where we can meaningfully
-> > > instrument arithmetic wrap-around conditions and catch them when they
-> > > are unexpected, regardless of whether they are signed[2], unsigned[3],
-> > > or pointer[4] types.
-> > >
-> > > Refactor open-coded unsigned wrap-around addition test to use
-> > > check_add_overflow(), retaining the result for later usage (which removes
-> > > the redundant open-coded addition). This paves the way to enabling the
-> > > unsigned wrap-around sanitizer[2] in the future.
-> > >
-> > > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> > > Link: https://github.com/KSPP/linux/issues/26 [2]
-> > > Link: https://github.com/KSPP/linux/issues/27 [3]
-> > > Link: https://github.com/KSPP/linux/issues/344 [4]
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Uladzislau Rezki <urezki@gmail.com>
-> > > Cc: Christoph Hellwig <hch@infradead.org>
-> > > Cc: Lorenzo Stoakes <lstoakes@gmail.com>
-> > > Cc: linux-mm@kvack.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  mm/vmalloc.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > index d12a17fc0c17..7932ac99e9d3 100644
-> > > --- a/mm/vmalloc.c
-> > > +++ b/mm/vmalloc.c
-> > > @@ -1223,6 +1223,7 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
-> > >  	unsigned long align, unsigned long vstart)
-> > >  {
-> > >  	unsigned long nva_start_addr;
-> > > +	unsigned long sum;
-> > >
-> > >  	if (va->va_start > vstart)
-> > >  		nva_start_addr = ALIGN(va->va_start, align);
-> > > @@ -1230,11 +1231,11 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
-> > >  		nva_start_addr = ALIGN(vstart, align);
-> > >
-> > >  	/* Can be overflowed due to big size or alignment. */
-> > > -	if (nva_start_addr + size < nva_start_addr ||
-> > > +	if (check_add_overflow(nva_start_addr, size, &sum) ||
-> > >  			nva_start_addr < vstart)
-> > >  		return false;
-> > >
-> > > -	return (nva_start_addr + size <= va->va_end);
-> > > +	return (sum <= va->va_end);
-> > >  }
-> > >
-> > >  /*
-> > > --
-> > > 2.34.1
-> > >
-> > 
-> > Looks good to me,
-> > 
-> > Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> >
-> Same here. One small nit though. The "sum" variable is not something
-> that it suits for. IMO, we should use a better name and replace it:
+On 30.01.2024 21:34, Rob Herring wrote:
+> On Tue, Jan 23, 2024 at 12:20:29PM +0100, AngeloGioacchino Del Regno wrote:
+>> Il 23/01/24 09:20, Rafał Miłecki ha scritto:
+>>> From: Rafał Miłecki <rafal@milecki.pl>
+>>>
+>>> This helps validating DTS files. Introduced changes:
+>>> 1. Documented "reg" property
+>>> 2. Adjusted "reg" in example
+>>>
+>>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>>> ---
+>>>    .../arm/mediatek/mediatek,mt7622-pciesys.yaml | 47 +++++++++++++++++++
+>>>    .../arm/mediatek/mediatek,pciesys.txt         | 25 ----------
+>>>    2 files changed, 47 insertions(+), 25 deletions(-)
+>>>    create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml
+>>>    delete mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml
+>>> new file mode 100644
+>>> index 000000000000..7340a2512402
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mt7622-pciesys.yaml
+>>
+>> I think that we should really move all those clock controller yaml files to their
+>> proper directory, which would be
+>>
+>> Documentation/devicetree/bindings/clock/
+>>
+>> ...because those are clock controllers anyway and the fact that they do also
+>> provide a reset controller doesn't really justify having them in arm/mediatek.
+>>
+>> Besides, I would appreciate if you could also move mt8186/92/95 and eventual
+>> others that are there to clock/.
 > 
-> "nva_offset"?
+> Yes, please move it.
+> 
+>>
+>>> @@ -0,0 +1,47 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/arm/mediatek/mediatek,mt7622-pciesys.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: MediaTek PCIESYS controller
+>>> +
+>>> +description:
+>>> +  The MediaTek PCIESYS controller provides various clocks to the system.
+>>> +
+>>> +maintainers:
+>>> +  - Matthias Brugger <matthias.bgg@gmail.com>
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +          - mediatek,mt7622-pciesys
+>>> +          - mediatek,mt7629-pciesys
+>>> +      - const: syscon
+>>
+>> I know that there's syscon all over the place and, even if I admit I didn't check,
+>> I am fairly sure that there's absolutely no reason to have syscon there, and that
+>> the syscon compatible never did anything for (most of, or all of) those clock
+>> controllers, at all.
+>>
+>> I'm not sure - though - if removing syscon during the txt->yaml conversion is
+>> acceptable (yeah we'd be cheating a bit), but something makes me say it is, because
+>> the bindings couldn't validate before that one as well.
+> 
+> As long as you state why you are removing it in the commit msg.
+> 
+>>
+>> Of course you'd have to remove the syscon compatible from the affected device trees
+>> as well as omitting it here.
+> 
+> You could also do 'minItems: 1' and 'deprecated' in the 2nd item.
 
-Sure, I can use that. Other folks in other patches have suggested "end",
-so maybe nva_end or nva_end_addr ?
+I expected this to be quite straightforward but I can't get it to work.
 
--Kees
+Can you tell me if I'm making some mistake or is that some meta schema
+limitation?
 
--- 
-Kees Cook
+properties:
+   compatible:
+     oneOf:
+       - minItems: 1
+         items:
+           - enum:
+               - mediatek,mt2701-hifsys
+               - mediatek,mt7622-hifsys
+           - const: syscon
+             deprecated: true
+       - minItems: 2
+         items:
+           - enum:
+               - mediatek,mt7623-hifsys
+           - const: mediatek,mt2701-hifsys
+           - const: syscon
+             deprecated: true
+
+Gives me:
+
+Documentation/devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml: properties:compatible:oneOf:0:items: 'oneOf' conditional failed, one must be fixed:
+         [{'enum': ['mediatek,mt2701-hifsys', 'mediatek,mt7622-hifsys']}, {'const': 'syscon', 'deprecated': True}] is not of type 'object'
+         Additional properties are not allowed ('deprecated' was unexpected)
+         from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+Documentation/devicetree/bindings/clock/mediatek,mt2701-hifsys.yaml: properties:compatible:oneOf:1:items: 'oneOf' conditional failed, one must be fixed:
+         [{'enum': ['mediatek,mt7623-hifsys']}, {'const': 'mediatek,mt2701-hifsys'}, {'const': 'syscon', 'deprecated': True}] is not of type 'object'
+         Additional properties are not allowed ('deprecated' was unexpected)
+         from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
