@@ -1,118 +1,137 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1099657DD;
-	Tue, 30 Jan 2024 10:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DDD65BC9
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706612370; cv=none; b=t7busj1WgdWeZW/dmUW4DOYUjUGpfXXZpmHbyf8JxNjoO6XfgGSaT0LYRsPzrsuigCgU382oxV0fhiVQW92N+Iy8meTPwtOWSnSPxqi+aBleInjmUeU6XRdXqA2cKYtEnX/PRcW3ysOOr1Wt3pca3vY3kAE3sMfVDJj/2t5SIUk=
+	t=1706612391; cv=none; b=YvrOdCTs2l6/tzpQhvzPs6GPG9dC2rtFsXTsFB3CeIA38A4ry7KOV3MXtEGCtmkj8aFtp/vb18OXff8PLl3g1DQm1fCTqWo/xYHnxP3oZxTwtHKRqHgsODzE2xvCKWbEBz9WT/N9SIdUy/+sAIs1HeKOp1QRkNmpN2QCZYj9EXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706612370; c=relaxed/simple;
-	bh=hriKEi3Sv4gStp1lVTHTabtn0IF1x30Yrbw88AS+yh8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=NsxHfxgevDFtK1qYNuWa20WgK9B/I8PSR695ZoPCjJ1yl6DpdYRzDPyWDnCoczIpq5VLFW+20+Vxizi76LEaVfNwJ/9RpI8CPepCh/DmvcBa48lQBbCRS0lPVrgA17Sy7/5cwNErxR2BMCqgQdSN0nVnow/EEvrwvJQWbFWH++s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YKHZJLE7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=U2ctUQWI; arc=none smtp.client-ip=64.147.123.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1706612391; c=relaxed/simple;
+	bh=GB2IybzwCWFKvSFD6TdEeL9jOEQsn9lbMsabAy/BvEk=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=XBEPjpbm7nZNag/sAsGYnt21Xg+1lrrMvY5WKjNBFi2x9WvKZzBArvpyjYxa/StlzE5sDWNYSSf93doklkCFyAsMk904gDiNar5orhuf+RonCKxx+p85jIrpPkufwFOSo1sqYaETYWpjV5ElCl71FKf5h4wrYU0HTO7aIt11VVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Sq289lLa; arc=none smtp.client-ip=203.205.251.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YKHZJLE7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U2ctUQWI"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id EE7093200A24;
-	Tue, 30 Jan 2024 05:59:25 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 30 Jan 2024 05:59:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1706612365; x=1706698765; bh=vLH/ZiLStC
-	joOoUQcobS4Maaw1gFmNEZ5FBewuBPXDY=; b=YKHZJLE7i7nCO3EFdLtd80Zbev
-	NydOk1DEef4ovG2Ly7T4TDvLYBhd1qM35bkT2KrDVMwAZ12eM6I+hIXC7l92CgWl
-	2CWS3lslkUERO6nkLeYh2ZW8IIf0Z7iMCndzfx4p/cb8v0SGDmyb9y5fWkH0dA3o
-	GqZZQ6iXu6+EZ5mvanCkFVG7mSXI2qjxXWGpkW55q9SSp/kVX6Lrf+mHacoFWA1B
-	DsmW7OP3N49ckMMzCJmlqsmZuqHIG6AC1KXvag3GOt/ZuNg80zR7ftjb/GXtvIMj
-	kSgNAo+dl1nuBS3ty+U34jK//U0JxAuXM/T/703Dwzeoy4I3+csSZMHOKToQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706612365; x=1706698765; bh=vLH/ZiLStCjoOoUQcobS4Maaw1gF
-	mNEZ5FBewuBPXDY=; b=U2ctUQWI6ZUgHoJMJCBghSLKPyOFmCGVbsgvBtI5Q3+/
-	957ENDoE5+tTGqRuS350ajieBaPh3XlGWrXocoowk1iErAnZE70vz54QtipZQyKz
-	tAL2qpN8LKdYk3Sdo+8Os9R93vgtkfqYFSKRkadGlFfkV6HthlAdntVvdY9zI9s/
-	6A08YaSxv8stQ0EqUFu5zLACGLZnRKOOpG9CULZZOxwCQzbvZclvSqDrBCVoKNxi
-	2Tvvt7OnCZYJD+wz7Rohs2mdCXtRUpRkZZ3dKf68ou74leByONqG465nSBxm3hv/
-	A5GemgFE+mJhzvy147L5AtWdgK8sleei7QoAu64S+A==
-X-ME-Sender: <xms:jNa4ZfkvUAtD9JiWq5HpTZCDzz_qMSBF0ERmNs3-T2Rk6lLelE4KKA>
-    <xme:jNa4ZS0_wEtXTIIBZcWVpHtYVB4vk177YbnlMd1769_f_YpCgLvhzh6WwpS5a-T3E
-    ZO-oKBwYZ1YDqBtlAQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtiedgvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:jNa4ZVqseTSV4jiA_GL9AYgBHoivoB7y9a7L2ICz0w5RWoafrKoKdg>
-    <xmx:jNa4ZXmqgtzCNtKKEmOtJE3aHk264EzTz8cdZJ4NPiYIhLqlFaw_wQ>
-    <xmx:jNa4Zd0Pm5r0wRlQujCh8Q9KPW_M7oz4FdnerbKAyUxu8z-LtdBtcA>
-    <xmx:jda4ZV9ilBtQlH-f5dl3EqyleztOaSdrUmCVsDZgCGgHgQafMkYUTw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 4F22DB6008D; Tue, 30 Jan 2024 05:59:24 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Sq289lLa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706612386; bh=zb2voQHdwFouq3+bHsSfj3f+sdaaJqRfRDqSUKWcVqA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Sq289lLa+imgpUMSabocPeFmYCs8ajjrx9rfz9wUnOxJvW3eUxEGWmSdFWV7Ou7KI
+	 Y8JDMbtktbsfgJF2M+oEHBTm7Ze0Dn1UayI/XeAn4JFaflefhXHR0S4/d10g4Drl3p
+	 JmVcp4yEAq0u3Qf/nJ6f2F8aHYH4v+lsiwENc/mE=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id D6B15CE0; Tue, 30 Jan 2024 18:53:43 +0800
+X-QQ-mid: xmsmtpt1706612023tdu1foa1s
+Message-ID: <tencent_185DA85DAC9919CFF40D99A5F00DFA121507@qq.com>
+X-QQ-XMAILINFO: MgH8QHUHzFh7ennCN7xTm/B9Ev1wpdoKig/6PQiyPTfqIYNHA7Q660oAk2Ihuy
+	 3UMmkJS3oHraVGekR/msbScZsAOdar30Nm4bYsekg0DQXUThgwgAzrGJeosSg+Q8I5n/rPjcOprn
+	 VeoJoZkF7C46zJR6qNCyOSAcj+ZjgKqw5VyVXLiTT7jgaqnCD3z8IDkqnRstkF/Gacg1mf5e4oww
+	 r0SHS23soSOts2K5qno8sZyN6JKbN8/ThXvgrzfPxlnRLWPLGP2zWWnWppTUZNmQ4XQ7KihzJcck
+	 5mxHLKaOhA+cM7/V9E5RVWDdOiyg0KazKHlDf0zYq+1tAIjKHVoHn7ti92nZ/iuVieVdd7cGhEvJ
+	 W0+0BGMbGVeGuKO9C5QH06puPzljTzbjaK+SzuBbKFjvnE08i+iFKH7nYW+z/0+HCdfpUjZMJFQb
+	 TEgzvq99zfyS94/uKbgqL+VnPaw4dgHeogTjMTZlmoW0EjE/orbZ6Hg9MFimcOZgUpn4VjlrFoD0
+	 qC+zIDhtWQSyQJ1bYFCtSWkypXFXoCO3WXh+u66vkZRpd75QqdM1QfTRPi+pkHluZbHIAHFGBvZu
+	 b9WkUCJG9ge+Hlc9oNEbYR3LoVmNziXYlvjd1ynUedZKbeuqRwLa3zvyrMlwlwP/M46EPEmvNv5a
+	 pETI1dQX1+VjpPgv475tI8lnQ7HxkfNg8cxo9gFeb86l+y1pno+Yz3OlfcMlTL+efbAIxFwkHv8l
+	 xJYXNkv1H3+M22AKuOsXkEX5lfLdOCbTZzFvVF6zT1LkXi3e/Ca6a3FxN0LhDf38DD0RtUen1xKV
+	 Bcvy8nCvosgihS6YEuyQbGudK3i5RTp9yOPHNhjqL+EY411esO6E9MG3NQeY/lKfv8UKav/j4+3W
+	 DVRwj1cIF+K5VYF3gKvbRRgqKy9p1sVrrohpqgpE+Hu1UAyL0Iofxo5wX8HEir2JORb4cHkY4dRu
+	 xrbDqTr5Zw0UQhBihvlSua4ZKq2TEe
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
+Date: Tue, 30 Jan 2024 18:53:43 +0800
+X-OQ-MSGID: <20240130105342.3944585-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000002b1fc7060fca3adf@google.com>
+References: <0000000000002b1fc7060fca3adf@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <dafa2fb5-276d-4c87-b003-4b7f30d44f0a@app.fastmail.com>
-In-Reply-To: <61e8b6ae-fd30-4443-8473-6429f6de8768@nvidia.com>
-References: <20240129143030.16647483@canb.auug.org.au>
- <d0e1a7c1-06a2-4fa4-b4f8-df149af8eccb@infradead.org>
- <61e8b6ae-fd30-4443-8473-6429f6de8768@nvidia.com>
-Date: Tue, 30 Jan 2024 11:59:03 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jon Hunter" <jonathanh@nvidia.com>,
- "Randy Dunlap" <rdunlap@infradead.org>,
- "Stephen Rothwell" <sfr@canb.auug.org.au>,
- linux-next <linux-next@vger.kernel.org>, Kartik <kkartik@nvidia.com>
-Cc: "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
- "Thierry Reding" <treding@nvidia.com>
-Subject: Re: linux-next: Tree for Jan 29 (soc/tegra/fuse/fuse-tegra30.c)
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 30, 2024, at 11:46, Jon Hunter wrote:
-> On 30/01/2024 04:06, Randy Dunlap wrote:
+please test task hung in blk_trace_remove
 
-> Looks like we are missing the following ...
->
-> diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c 
-> b/drivers/soc/tegra/fuse/fuse-tegra30.c
-> index 2070d36c510d..eb14e5ff5a0a 100644
-> --- a/drivers/soc/tegra/fuse/fuse-tegra30.c
-> +++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
-> @@ -38,7 +38,8 @@
->       defined(CONFIG_ARCH_TEGRA_210_SOC) || \
->       defined(CONFIG_ARCH_TEGRA_186_SOC) || \
->       defined(CONFIG_ARCH_TEGRA_194_SOC) || \
-> -    defined(CONFIG_ARCH_TEGRA_234_SOC)
-> +    defined(CONFIG_ARCH_TEGRA_234_SOC) || \
-> +    defined(CONFIG_ARCH_TEGRA_241_SOC)
->   static u32 tegra30_fuse_read_early(struct tegra_fuse *fuse, unsigned 
-> int offset)
->
->
-> Kartik, can you send a fix for this?
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-If I get an Ack for my original patch, I can pick that
-up into the soc tree directly:
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index d5d94510afd3..f3d02bf98a80 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -330,6 +330,13 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
+ 	kfree(bt);
+ }
+ 
++static void blk_trace_free_rcu(struct blk_trace *bt)
++{
++	free_percpu(bt->sequence);
++	free_percpu(bt->msg_data);
++	kfree(bt);
++}
++
+ static void get_probe_ref(void)
+ {
+ 	mutex_lock(&blk_probe_mutex);
+@@ -377,12 +384,36 @@ static int blk_trace_stop(struct blk_trace *bt)
+ 	return 0;
+ }
+ 
++static void blk_trace_rcu_free(struct rcu_head *rcu)
++{
++	struct blk_trace *bt;
++
++	bt = container_of(rcu, struct blk_trace, rcu);
++	if (bt) {
++		blk_trace_free_rcu(bt);
++	}
++}
++
+ static void blk_trace_cleanup(struct request_queue *q, struct blk_trace *bt)
+ {
+ 	blk_trace_stop(bt);
+-	synchronize_rcu();
+-	blk_trace_free(q, bt);
++	if (!bt->dir)
++		bt->debugfs_dir = q->debugfs_dir;
++	mutex_unlock(&q->debugfs_mutex);
++	relay_close(bt->rchan);
++	/*
++	 * If 'bt->dir' is not set, then both 'dropped' and 'msg' are created
++	 * under 'q->debugfs_dir', thus lookup and remove them.
++	 */
++	if (!bt->dir) {
++		debugfs_lookup_and_remove("dropped", bt->debugfs_dir);
++		debugfs_lookup_and_remove("msg", bt->debugfs_dir);
++	} else {
++		debugfs_remove(bt->dir);
++	}
+ 	put_probe_ref();
++	call_rcu(&bt->rcu, blk_trace_rcu_free);
++	mutex_lock(&q->debugfs_mutex);
+ }
+ 
+ static int __blk_trace_remove(struct request_queue *q)
+diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
+index 122c62e561fc..4920c201bd12 100644
+--- a/include/linux/blktrace_api.h
++++ b/include/linux/blktrace_api.h
+@@ -26,6 +26,8 @@ struct blk_trace {
+ 	struct dentry *dir;
+ 	struct list_head running_list;
+ 	atomic_t dropped;
++	struct dentry  *debugfs_dir;
++	struct rcu_head rcu;
+ };
+ 
+ extern int blk_trace_ioctl(struct block_device *, unsigned, char __user *);
 
-https://lore.kernel.org/all/20240103102654.3779458-1-arnd@kernel.org/
-
-    Arnd
