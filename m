@@ -1,31 +1,48 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id D376F76C6A
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AADC112BF03;
+	Tue, 30 Jan 2024 17:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706634747; cv=none; b=WmYfiEvlh5YN7bXNgjT8DaMU2R5fhXaMi1PiQuhjQ8LZYLlHjHr/GA5+5wh1mJ9pwPvOeGo0Sc36Flg4XIxgYNCTIv5qil9UhT9SPa+0sOPY3ry5BdaDeUBgAcMR91ZOB9Mlnj/v3zSVOuhNH7C0I4TPl+nA+vIymxJy5m+kZuw=
+	t=1706634762; cv=none; b=fo8y6E9I0TJRUW6MSpSAyT1M8ltPAte01pakAIy1LwQwI4iX8D1XdPhk9nyeT9h8tCqzTR/nWLihQDZL34f38YHZez9amuBKC61GSf8D6X9IwF6TOO/PDEiN7IL5wxoUxw4nrZIkzCemG6WPTBFEnbZaxITMuzcw2PEZCVYbaTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706634747; c=relaxed/simple;
-	bh=hR47GmGj2RdK1d7gKYDeYQwmG0DVJI+5y0VYDSSUr5M=;
+	s=arc-20240116; t=1706634762; c=relaxed/simple;
+	bh=HXl1FyBzCOPH2WUgPaTFyW6YIyaZ0FyPabts9TuNKKE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=heHxMyv983lW+L3FBS0ZXWbXtTRHwljxcTbjJkqjSWpyfFO3ghCiL16oVzpW5c0ucyTUHQwaaekMUWvIrVWoFAAftDD/r+Wy6K+D9qJ2p2BxvtmjIwtFGoFNai1WquW64EeoZppTQQZ24iyQv5x1YR8Frce8AswYSpTU3uoi1WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 410195 invoked by uid 1000); 30 Jan 2024 12:12:19 -0500
-Date: Tue, 30 Jan 2024 12:12:19 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Guan-Yu Lin <guanyulin@google.com>
-Cc: gregkh@linuxfoundation.org, mathias.nyman@intel.com, royluo@google.com,
-  hadess@hadess.net, benjamin.tissoires@redhat.com,
-  heikki.krogerus@linux.intel.com, oneukum@suse.com, grundler@chromium.org,
-  yajun.deng@linux.dev, dianders@chromium.org, linux-kernel@vger.kernel.org,
-  linux-usb@vger.kernel.org, badhri@google.com, albertccwang@google.com,
-  pumahsu@google.com
-Subject: Re: [PATCH] [RFC] usb: host: Allow userspace to control usb suspend
- flows
-Message-ID: <0e4221b5-bafe-4bea-b533-0ed8add81ef1@rowland.harvard.edu>
-References: <20240130064819.1362642-1-guanyulin@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hMJ1QhzC484uYTHPLMS64BnJNc5nZ3F1iCJvPCW3ZMOc5SwISEGk/Klz1CRGezwvKEr0DCXczl77z7/9WkegREEaqBseQDXpJcUvjoyj44kSFsVbtBylSZtPDEehNBqtXXKt+JRZhHnYHoqI5uS3T3ZFSt7xAPcPNvKFQTnA6Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AB14DA7;
+	Tue, 30 Jan 2024 09:13:20 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.45.140])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3BA03F5A1;
+	Tue, 30 Jan 2024 09:12:30 -0800 (PST)
+Date: Tue, 30 Jan 2024 17:12:23 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	E.@paulmck-thinkpad-p17-gen-1.smtp.subspace.kernel.org,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	Paul@paulmck-thinkpad-p17-gen-1.smtp.subspace.kernel.org,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [PATCH doc] Emphasize that failed atomic operations give no
+ ordering
+Message-ID: <Zbkt94Q8a-xFXrve@FVFF77S0Q05N>
+References: <63d9d6f6-05e8-473d-9d09-ce8d3a33ca39@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,39 +51,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130064819.1362642-1-guanyulin@google.com>
+In-Reply-To: <63d9d6f6-05e8-473d-9d09-ce8d3a33ca39@paulmck-laptop>
 
-On Tue, Jan 30, 2024 at 06:47:13AM +0000, Guan-Yu Lin wrote:
-> In a system with sub-system engaged, the controllers are controlled by
+On Tue, Jan 30, 2024 at 06:53:38AM -0800, Paul E. McKenney wrote:
+> The ORDERING section of Documentation/atomic_t.txt can easily be read as
+> saying that conditional atomic RMW operations that fail are ordered when
+> those operations have the _acquire() or _release() prefixes.  This is
+> not the case, therefore update this section to make it clear that failed
+> conditional atomic RMW operations provide no ordering.
+> 
+> Reported-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Andrea Parri <parri.andrea@gmail.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Akira Yokosawa <akiyks@gmail.com>
+> Cc: Daniel Lustig <dlustig@nvidia.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: <linux-arch@vger.kernel.org>
+> Cc: <linux-doc@vger.kernel.org>
+> 
+> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> index d7adc6d543db4..bee3b1bca9a7b 100644
+> --- a/Documentation/atomic_t.txt
+> +++ b/Documentation/atomic_t.txt
+> @@ -171,14 +171,14 @@ The rule of thumb:
+>   - RMW operations that are conditional are unordered on FAILURE,
+>     otherwise the above rules apply.
+>  
+> -Except of course when an operation has an explicit ordering like:
+> +Except of course when a successful operation has an explicit ordering like:
+>  
+>   {}_relaxed: unordered
+>   {}_acquire: the R of the RMW (or atomic_read) is an ACQUIRE
+>   {}_release: the W of the RMW (or atomic_set)  is a  RELEASE
+>  
+>  Where 'unordered' is against other memory locations. Address dependencies are
+> -not defeated.
+> +not defeated.  Conditional operations are still unordered on FAILURE.
+>  
+>  Fully ordered primitives are ordered against everything prior and everything
+>  subsequent. Therefore a fully ordered primitive is like having an smp_mb()
+> 
 
-What is a sub-system and how does it become engaged?
+FWIW:
 
-> both the main processor and the co-processor. Chances are when the main
-> processor decides to suspend the USB device, the USB device might still
-> be used by the co-processor. In this scenario, we need a way to let
-> system know whether it can suspend the USB device or not. We introduce a
-> new sysfs entry "deprecate_device_pm" to allow userspace to control the
-> device power management functionality on demand. As the userspace should
-> possess the information of both the main processor and the co-processor,
-> it should be able to address the conflict mentioned above.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-This description and the comments and documentation in the patch all
-talk about "device power management".  But in fact the patch only
-affects system power management; it does not affect runtime power
-management.
-
-Also, "deprecate_device_pm" does not seem like a very good name.
-You're not deprecating power management; you're just disabling it
-temporarily.  You should find a better name.
-
-Do you really want your new flag to affect device suspend during
-hibernation?  Does the co-processor remain powered when the system is
-powered off and unplugged?
-
-Do you really want the new sysfs flag to be present even on systems
-that don't have a co-processor?
-
-Why does this affect only the USB subsystem?  Can't the co-processor
-use other, non-USB, devices on the system?
-
-Alan Stern
+Mark.
