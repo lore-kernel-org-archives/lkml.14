@@ -1,140 +1,129 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD076997A
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002BA7AE58
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706641846; cv=none; b=FC9z61keMTSBoR2Q7yTZlQJS9f7Zd5PkdfmT2ygYwasHzCv58HnShzvErHaDpND0oJjRla23L6yNi5MRXwww9FPVuwFOsHhZw0kVSes35d/Yr/iMkSMs/WHKc8zgRxrQrqG/f3SLufWwIebeuxLSwmAuE4IrNT2nQuCkiF3JjDo=
+	t=1706641849; cv=none; b=XTIz5VGdyJNwwRGsM47aQ3iKT6MFUSABRBsAbKJIev6N49U3qnDn9Bo4U9wPC7bnCM3vuX21HbRHZVGPk33pL/IlnoKX6zbqKeJD4YKzlJ2dCbYDj+FiwUHaVF/ISQJcPZS/oN+SOCkKdxTKWlgicERaQC92XdJcGzT5x6dWPSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706641846; c=relaxed/simple;
-	bh=4CKurykIUNpeJxcrH6U0OPpd6xWiFvuooSO5RXl+kNI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j+7Xr4QRToXcEaWOe85zNXWQ/DOZ7VdOhkyrdIBdleNAEtGTsHpy+5ymq0eoPwrrxwhSejYIMDKawIYbfixW4B+aFqnAMFx7hXWV1PdHlD94oCX0h/DfHmAtb2qr9btXxxwcTg/lb2Kk3i0P96nCjFusYmYL/blYDobOLerGB38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=RUrUVSLZ; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1706641849; c=relaxed/simple;
+	bh=sZv4hZ59DmUixucPnWeXqZ6a7oFZ896iY95SEZQmMEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qO+bvjiDxj06H3mzOtjvE+17Cjo1QFiinHeXcM/5//umCU0OVGDj3hoa6xgP94xx9T7OOinhV8+5e1cRYsL+uO0IUWKhZxryk5K309R0LRk5fcKo+dFWyT11u1PWjPxqigIPS4qAyZjZbRPlnHuu+BZxy9DlO8JMesufGyNuEyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=NmYN9gGL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CHWphIxE; arc=none smtp.client-ip=64.147.123.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="RUrUVSLZ"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d8cea8bb3bso13653745ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:10:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706641844; x=1707246644; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B/BsuHj3VQmzHd8+a3KYmlbDxHGdjbJNxGMh2W3gCsc=;
-        b=RUrUVSLZrxi29N0BkyQS9YKvUt5Lqu525raBdn7aLilRRlXIPTk+mCgiX+O6dI8x9A
-         R3lw75r2PHzukiqpA2m/eSr4L3zcbppjUYMiWJXJ8606wR9XzZAXk7vIihJphSHBbLOO
-         oUhSxUGY2Y3cptoEwwiN1RFHqc2BN5ZbngGkS2L1v00bWUVsNuG22RgLTzimTqUBv7zc
-         DhPR0Jq7cFmmUvHDIin1DQMeArbhoHo43Qne0iERiT/3q/bHnayd8HNdtTaqD2t27JYz
-         8WEK6Z0rRbS2c9xg2p+s0wb1nJ/lCJVbBj35BjJZ9Jw6Oj6hGaYfErGVV5Uwn6QxMWZy
-         3fCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706641844; x=1707246644;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/BsuHj3VQmzHd8+a3KYmlbDxHGdjbJNxGMh2W3gCsc=;
-        b=Z0UmUPHlkd+P2cS7C/pysZhseNqO3DEG3FEk7s4GkDeLCuQ1ZhgcW6wABugpgFFszg
-         a0R34ccdkQvxea5Rs2WB5nI+X1NRVRApzbLGct9BpaLzDvdvb1ai9aLA1pH/CF1Jcw7U
-         UdRXD+hDZ/lCoBtDVjudiHXHSIAK6vb4BkUlAnDXhRq6ll/r/6dK+5nVLUkSx9VbCYWZ
-         tWPfRKhrcNsaySS5VFFbFWurFNRRqMKJJ/7LriZu6efGmdq2oNIQjaGVjqcSiwqJ2+Qb
-         wvZEcWzt1MVUni3pG7mav+HRC34dAv8sT8r+CAXsrcLJlalMUDU89bpdXGRAx2O6AHIt
-         vuVw==
-X-Gm-Message-State: AOJu0Ywt583k83SjnW0vVdXWU+udX/90smdiRA29sC5mqpvSEsRsnDVW
-	p8TAdPVE1GB5lIQHFWVgkQXWIApxxuCRiPcjCC156/J93w1zGcbI8CQxnEr1P3o=
-X-Google-Smtp-Source: AGHT+IGYIYaf27SkkDQMBKq5PCpBQ1EXRgp/Ndp48IM5ImEknaDxFpXU9VFAvP6yqalVYuKyBI7TLg==
-X-Received: by 2002:a17:903:2985:b0:1d8:e2af:f7a3 with SMTP id lm5-20020a170903298500b001d8e2aff7a3mr516804plb.60.1706641844013;
-        Tue, 30 Jan 2024 11:10:44 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id p16-20020a170902ebd000b001d91d515dffsm605340plg.156.2024.01.30.11.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 11:10:43 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Tue, 30 Jan 2024 11:10:03 -0800
-Subject: [PATCH v5 1/2] lib: checksum: Fix type casting in checksum kunits
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="NmYN9gGL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CHWphIxE"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.west.internal (Postfix) with ESMTP id BF4213200B6F;
+	Tue, 30 Jan 2024 14:10:45 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 30 Jan 2024 14:10:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1706641845; x=
+	1706728245; bh=+gJh8ZcSY4aL5gFs6qPyGXcGkB9f/lwBzjFZBMTljRQ=; b=N
+	mYN9gGLmOYjRAN+BQ3ASsuLiYWHhM7vKyuUaTJdaHrbfjfWtqDakhhCWRrbJ+0fU
+	q02qgiFG3E3VzMjCIIT7aku4XU9vOe/5k6cGRlfbE2qQuZvGuwBZq37jCPKIfVPZ
+	xE3cVPc21yxG1f+2rmg9JX0ssML52PnU7q7ele6T0Ja1J/o6CedvsLGPVLpNTEbl
+	Ki+FpeCjFm3YYkXDWwgoUiB0f9rYR8YB+5HCJohemRDsasz5pSqI0oP6ZVSizC7M
+	gvz8w9LXNq6shgE4EvTVQs5O9VnYXG//9gxswN8kFIJQmR9WvoV89KPTSFqK68ca
+	2IrdDuiozmlgjuZMG0zxg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706641845; x=1706728245; bh=+gJh8ZcSY4aL5gFs6qPyGXcGkB9f
+	/lwBzjFZBMTljRQ=; b=CHWphIxER++1SfPEXD67bf1ELZKQ6YOftuQhf/WLlV3X
+	9xdBKlvMzzfyuFSNQAVxZAwIpWtmUs0nCJca5xjS/k5j7XRgJN3Q/dyAdJ1vOTlR
+	JskNMqRflQ+3WDDbVR4u3PE0hN+3glMolle2US33lN6GjGB7YGPEpegnB8Ihm6zH
+	23EjpaJMyRLq7zQxMB+dh2J4T+/Gcqs6ZdJHUP9xDVDrjp6LN1xuTn+gkrXB0SAD
+	eLp4qVMypTo8zZtCdwoMVJfC/5bBWX2rOLkGGJysIjj4AqsaDjYEmr+8CuIJ8ipf
+	Ur2b7yDdUWoxb/8kXwneYXuHdnHQMX499C7LkToiNQ==
+X-ME-Sender: <xms:tEm5ZWzj_nukIFsyQsXbUUEicKwed1DtERHGAKXSs58nFVZh6uGoTw>
+    <xme:tEm5ZST5X2M9VyVb2FIOFI1vd4TtUfmLvDawIxqGWht2D-9qz4V778V7q6V0Jg7xg
+    4NLCQixHOvSd2Sv3Cw>
+X-ME-Received: <xmr:tEm5ZYXEQ2aXvYWUR36cE5C34jRO9mlym6xw9qqQeY_wsjZRnRThh_9fH0IbhakiHIXlvyLhqfFg5CWL1cjhGWqID50ijG8O>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtjedgheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
+    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
+    hjpheqnecuggftrfgrthhtvghrnhepveeilefhudekffehkeffudduvedvfeduleelfeeg
+    ieeljeehjeeuvdeghfetvedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:tUm5ZciW6TKa6yWDiBeqIbO8gHU7D8v7sVAwy0vFsGNZZBqFutU0fg>
+    <xmx:tUm5ZYCnkDe4PSZj182yzm0pjUxW5b-9ijGFilNJmk-lKNr3hxDI3Q>
+    <xmx:tUm5ZdLt-omORLz4l55szDVqstZU_1Rz8lauWjviKPUWAm1b_LzFlQ>
+    <xmx:tUm5ZR6zAcN2BD_BVFcHsLLkQQ2VC_RmuYu6oH_tD4M9Ty__hbI71g>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 30 Jan 2024 14:10:43 -0500 (EST)
+Date: Wed, 31 Jan 2024 04:10:40 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Adam Goldman <adamg@pobox.com>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firewire: core: mask previous entry's type bits when
+ looking for leaf
+Message-ID: <20240130191040.GA35237@workstation.local>
+Mail-Followup-To: Adam Goldman <adamg@pobox.com>,
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <ZbJQ0JdbGixJouvn@iguana.24-8.net>
+ <20240126011705.GA22564@workstation.local>
+ <ZbNyHg3TTWpjiieI@iguana.24-8.net>
+ <20240126121917.GA99160@workstation.local>
+ <ZbSMVdOZB1zusXmo@iguana.24-8.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240130-fix_sparse_errors_checksum_tests-v5-1-4d8a0a337e5e@rivosinc.com>
-References: <20240130-fix_sparse_errors_checksum_tests-v5-0-4d8a0a337e5e@rivosinc.com>
-In-Reply-To: <20240130-fix_sparse_errors_checksum_tests-v5-0-4d8a0a337e5e@rivosinc.com>
-To: Guenter Roeck <linux@roeck-us.net>, 
- David Laight <David.Laight@aculab.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
- kernel test robot <lkp@intel.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706641842; l=2449;
- i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=4CKurykIUNpeJxcrH6U0OPpd6xWiFvuooSO5RXl+kNI=;
- b=ntcjB985UMqaIuXRZL/4gxJlmmqHVS2v+EXM00xdfj5+udEoKNMBpvbauhVdIbkewXW4KAH3R
- 5vuR6BOPq+SDVNzK2iuYzdq3rs7iWwM1CNUNclHaGjmcDfQYU5Ldo1e
-X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
- pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbSMVdOZB1zusXmo@iguana.24-8.net>
 
-The checksum functions use the types __wsum and __sum16. These need to
-be explicitly casted to.
+Hi,
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Fixes: 6f4c45cbcb00 ("kunit: Add tests for csum_ipv6_magic and ip_fast_csum")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401200106.PMTn6g56-lkp@intel.com/
----
- lib/checksum_kunit.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+On Fri, Jan 26, 2024 at 08:53:42PM -0800, Adam Goldman wrote:
+> On Fri, Jan 26, 2024 at 09:19:17PM +0900, Takashi Sakamoto wrote:
+> > I think we can handle the quirk of configuration ROM without changing
+> > the kernel API. Would you test the following patch? (not tested in my
+> > side).
+> > 
+> > ======== 8< --------
+> > 
+> > >From 83bf1e04d308ea89c76c64e3168b9701f9d9191b Mon Sep 17 00:00:00 2001
+> > From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> > Date: Fri, 26 Jan 2024 20:37:21 +0900
+> > Subject: [PATCH] firewire: search descriptor leaf just after vendor directory
+> >  entry in root directory
+> 
+> Hi Takashi,
+> 
+> I tested your patch with the DVMC-DA1. I also tested it with another 
+> device with normal placement of the leaf entry. In both cases, it works.
 
-diff --git a/lib/checksum_kunit.c b/lib/checksum_kunit.c
-index 225bb7701460..776ad3d6d5a1 100644
---- a/lib/checksum_kunit.c
-+++ b/lib/checksum_kunit.c
-@@ -215,7 +215,7 @@ static const u32 init_sums_no_overflow[] = {
- 	0xffff0000, 0xfffffffb,
- };
- 
--static const __sum16 expected_csum_ipv6_magic[] = {
-+static const u16 expected_csum_ipv6_magic[] = {
- 	0x18d4, 0x3085, 0x2e4b, 0xd9f4, 0xbdc8, 0x78f,	0x1034, 0x8422, 0x6fc0,
- 	0xd2f6, 0xbeb5, 0x9d3,	0x7e2a, 0x312e, 0x778e, 0xc1bb, 0x7cf2, 0x9d1e,
- 	0xca21, 0xf3ff, 0x7569, 0xb02e, 0xca86, 0x7e76, 0x4539, 0x45e3, 0xf28d,
-@@ -241,7 +241,7 @@ static const __sum16 expected_csum_ipv6_magic[] = {
- 	0x3845, 0x1014
- };
- 
--static const __sum16 expected_fast_csum[] = {
-+static const u16 expected_fast_csum[] = {
- 	0xda83, 0x45da, 0x4f46, 0x4e4f, 0x34e,	0xe902, 0xa5e9, 0x87a5, 0x7187,
- 	0x5671, 0xf556, 0x6df5, 0x816d, 0x8f81, 0xbb8f, 0xfbba, 0x5afb, 0xbe5a,
- 	0xedbe, 0xabee, 0x6aac, 0xe6b,	0xea0d, 0x67ea, 0x7e68, 0x8a7e, 0x6f8a,
-@@ -582,7 +582,7 @@ static void test_ip_fast_csum(struct kunit *test)
- 	for (int len = IPv4_MIN_WORDS; len < IPv4_MAX_WORDS; len++) {
- 		for (int index = 0; index < NUM_IP_FAST_CSUM_TESTS; index++) {
- 			csum_result = ip_fast_csum(random_buf + index, len);
--			expected =
-+			expected = (__force __sum16)
- 				expected_fast_csum[(len - IPv4_MIN_WORDS) *
- 						   NUM_IP_FAST_CSUM_TESTS +
- 						   index];
-@@ -614,8 +614,9 @@ static void test_csum_ipv6_magic(struct kunit *test)
- 		len = *(unsigned int *)(random_buf + i + len_offset);
- 		proto = *(random_buf + i + proto_offset);
- 		csum = *(unsigned int *)(random_buf + i + csum_offset);
--		CHECK_EQ(expected_csum_ipv6_magic[i],
--			 csum_ipv6_magic(saddr, daddr, len, proto, csum));
-+		CHECK_EQ((__force __sum16)expected_csum_ipv6_magic[i],
-+			 csum_ipv6_magic(saddr, daddr, len, proto,
-+					 (__force __wsum)csum));
- 	}
- #endif /* !CONFIG_NET */
- }
+Thanks for your test. I reposted the patch in the series of changes for
+v6.8-rc3[1].
 
--- 
-2.43.0
+The behaviour change of kernel API is not preferable within the same
+version of kernel once the release candidates is public, while we need to
+handle it as the series of changes to support the legacy layout of
+configuration ROM. So I'll apply my version to for-linus branch and send
+it to him.
 
+Anyway thanks for your work and suggestion.
+
+[1] https://lore.kernel.org/lkml/20240130100409.30128-1-o-takashi@sakamocchi.jp/
+
+
+Thanks
+
+Takashi Sakamoto
