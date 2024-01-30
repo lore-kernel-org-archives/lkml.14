@@ -1,248 +1,163 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDCC39879
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333163F9FE
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706597370; cv=none; b=kzAN6RK1fXBjFjux3uEiP0QmNQ1pNjorGkLT8tNqq8wzypic0vSomxerK1SwfEL7SMJfNqhoXizvstbvMM4buOCLEiPC8TjXCgfe67RaIbW3AV2NGHDBYthDfFi9GTfa238/0mIC7POGCwLNLg4QN0f4zEMIHbxxOvUzy4B/6Fs=
+	t=1706597589; cv=none; b=Wgp85vKYGCfD3uhtmuUgpmWti86gFSpnevpBdDj2YbLjhKZ7gSEaxQK5FAx4OxvhEIZvfasys/SzQINWLyVFOTFb4jxM2bcbr6pMPxRubEgQSgyiLunp4ZDT9l9NcH6rcRzZMnqWCxqz7addj/+yMNma357tWnt6S8uiz4sgW88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706597370; c=relaxed/simple;
-	bh=F677IBoUhHzMTuvWXqwcPdgWDOJp521cNnxnaG/vMiM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=HPylqKdw5iRnURNNZce9LVsWe49b9jFRTkwwiyNn1uJVDH6+dWrExiVfyUfD2/4RWFRca8IW5s2SpA5Yb58BM6jl8LugLLd7slwc/7C/lXmjcqdyikd/9nLH7yoUP6lcOlKvXWR3ZAJCCZd53/NARsx2tYE+VsBzkcMjI3iNcrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eYC2M3eF; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com
+	s=arc-20240116; t=1706597589; c=relaxed/simple;
+	bh=Uua8AEJpGWmpkqTiwzFsY8wXVc9KJY6aZ72D91JKadI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JdZI/8ekQfD3eShr/ADWMc5G1jTJJuQ7afM/Er3MwlcYCwosfqTU9lHQ0yqQkJd5bEpxJpjiIRDBBj9asy7eN1un0qS9xq+B6XSuS7wNhS6gUcTVvfgE84D7M1wpyrGo9xGHjQPCDqTC+5G2GGVnDI3AFk5fadZhEeLKBoDIMek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e+UghyA0; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eYC2M3eF"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso5762412276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 22:49:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e+UghyA0"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-290da27f597so1654354a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 22:53:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706597367; x=1707202167; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0kJpyZRLEun0ampJIfj1X21WJ21b9jsbskmJbElfrgM=;
-        b=eYC2M3eFPEOfG+smc9aFGfTkPI3tlUcxF9DEyL+NkZqXhxBG7Pn5MZsPLCDUy8YOHA
-         K6PI9gejBBDWuCfpA9rSkPiA+b52atjnTS8r1vi+3JeAyfTFMV7mi4kyISEJoIaCLFXv
-         0yu0dDImyHSKzpLSA5eHq+xwHeMfx02hibxyoKI1gYqf/7Taz6j2N9HG3lBuCbE4VxlH
-         YvpuGQjhQ+r0pY0e3Oibr2xJS3Toq/Iqb00kuiLkRXgIA5xpzXk8NhbI3GvhC3xOAFj2
-         pIkrlNxmktQ6iPotU+SF1wbvs/9CITAleFef5cYBZSOcDBY+CT5QFGmRgFZ/5Awp+4af
-         wIzA==
+        d=linaro.org; s=google; t=1706597586; x=1707202386; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HBYeRPxem/erlBXPgzZrx2qdN8I83pDKmoAAgmzuOtU=;
+        b=e+UghyA0c46HGxDNp5VB2PnBJRcPC2YBoPjYeJMz0+QTFSGcfuL58BJIW84euopFze
+         JnPrb5YPgw1Bn9buSgANK7Lw+I6a+I3Va+KWjIzYumbTyOD9KSfMEh2cP5UGeIjd2soM
+         m/NC/lTrUQCf2k6uLVGiS0fbCMMqpRlJluSYnL3Xe+PnCX4yyk7IyfIRlI7Dd7fgnY1g
+         VQj38CaH2l1AJScWR7y+O51K2VmXj0nf+/gDpxTFYi6zWfJRdQMBvNhZBWFVAuzpZZr9
+         7GEsehmuOc7eEz8qh2FymwWuTD+bSLDhNMQVk9rU2MZ/GljhdQxmleLAxYlWe1LqjO0D
+         Nmnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706597367; x=1707202167;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0kJpyZRLEun0ampJIfj1X21WJ21b9jsbskmJbElfrgM=;
-        b=PH7FTMXcI4u6j5UsoQosX120yeze2lCLkgs2sX7xbE56EQbeLh8J3r4C0JaHXcn2JP
-         nKOiBsXAkCb/brxHH66fEsUzQJrkH+yjEURITr+aPWdyVJa4DExSIRmr6Nu3UOAjMlfY
-         qh2/zPR0QD5fTsgve03N7aS9joCmmgxsNzYOWogRKUQjuNcbLLRGAwGeVDt1zJouGAli
-         Atj2+kb/JXyYkHRNkwPIY6mYpkN0GpKjBYemN6pxFebT3h64uxJy3tRp2OO/NeBW1lky
-         quIsQ48fkkO7TNO8HCqC/Mgikdh6x+57YhQlKa6ej0lB1Srv5Zo6N/K0QRoFEBNksq8l
-         niaQ==
-X-Gm-Message-State: AOJu0YwC56eDYssifuFrunX2XxcVMZ+v1DAD7+bbr/QfZ4PENXedmlMl
-	nO0iQrwxO3tcRtS/wDqtjWeScSCpAsUUa4ONW+Gs4djtWU5xhLDfsdkA2y3bNHXQr1WLO7mmOXU
-	ZgOtXfwfduF7sRA==
-X-Google-Smtp-Source: AGHT+IHeRsN4S+ZasZ7WTqWPfffkOA5I3/+8mG/F05qDX+kl3h16PrH683ZuBuiyqhOvgaIrGl0G8sP0P81XF/s=
-X-Received: from guanyulin.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:1af])
- (user=guanyulin job=sendgmr) by 2002:a05:6902:108f:b0:dc2:23d8:722d with SMTP
- id v15-20020a056902108f00b00dc223d8722dmr2784786ybu.13.1706597367593; Mon, 29
- Jan 2024 22:49:27 -0800 (PST)
-Date: Tue, 30 Jan 2024 06:47:13 +0000
+        d=1e100.net; s=20230601; t=1706597586; x=1707202386;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HBYeRPxem/erlBXPgzZrx2qdN8I83pDKmoAAgmzuOtU=;
+        b=Fif6fIFNPTvhcgURo+4/SF//3ZWtT+uSx25U1LGJOuchgVdXWFpBrliEZFVjRE7u3U
+         OJtYpm3EgtfOMX/1Z1jadPE3bOyak3t1Rl1zFK/MHnZSTtWBRl/9lSYOKqDQo90bKqz/
+         8uQdpF3oCJxQT02Aqn2t/SiFOBBgNLdEpZVX4UJAa6gy8ImkHmi5b8UMMwKyCzQMf0qh
+         /DSUGlPDyg1m6Kkk+7vxOW0Wkx+d6SHpzZwLjKU3uGH5VKM3VXWQ5kuhfVDqBRuLudgU
+         oFc08T1CwvlB6WwWIKilcpMan5brrVbpqHCDP5Qou8mdPDqw535ZDw3aDVrQP75ikPLz
+         /hSw==
+X-Gm-Message-State: AOJu0YwY+Y2rqyq+X8U/x8vTtZs29llqThkO7oNFmO2R8vRY1xrEBTO3
+	Iv8IenwzyKTBZgmj1/U94fgrCc6lWmwiJc5GwVPvbbFMSYj2aXaBbPSw4ERisw==
+X-Google-Smtp-Source: AGHT+IEGPtPBk1jGlW6ugBIW9qVPUdO2XKCvAewXwuo17gBW50pqPF4/Q5IXrkOCWtFprXXV4sCDcQ==
+X-Received: by 2002:a17:90b:1947:b0:290:1cd6:6acf with SMTP id nk7-20020a17090b194700b002901cd66acfmr3581438pjb.37.1706597586547;
+        Mon, 29 Jan 2024 22:53:06 -0800 (PST)
+Received: from thinkpad ([117.202.188.6])
+        by smtp.gmail.com with ESMTPSA id h21-20020a17090a9c1500b0028e87ce1de0sm9391496pjp.51.2024.01.29.22.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 22:53:06 -0800 (PST)
+Date: Tue, 30 Jan 2024 12:22:59 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 1/2] dt-bindings: PCI: qcom: Document the
+ X1E80100 PCIe Controller
+Message-ID: <20240130065259.GD32821@thinkpad>
+References: <20240129-x1e80100-pci-v2-0-5751ab805483@linaro.org>
+ <20240129-x1e80100-pci-v2-1-5751ab805483@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240130064819.1362642-1-guanyulin@google.com>
-Subject: [PATCH] [RFC] usb: host: Allow userspace to control usb suspend flows
-From: Guan-Yu Lin <guanyulin@google.com>
-To: gregkh@linuxfoundation.org, mathias.nyman@intel.com, 
-	stern@rowland.harvard.edu, royluo@google.com, hadess@hadess.net, 
-	benjamin.tissoires@redhat.com, heikki.krogerus@linux.intel.com, 
-	oneukum@suse.com, grundler@chromium.org, yajun.deng@linux.dev, 
-	dianders@chromium.org
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, badhri@google.com, 
-	albertccwang@google.com, pumahsu@google.com, 
-	Guan-Yu Lin <guanyulin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240129-x1e80100-pci-v2-1-5751ab805483@linaro.org>
 
-In a system with sub-system engaged, the controllers are controlled by
-both the main processor and the co-processor. Chances are when the main
-processor decides to suspend the USB device, the USB device might still
-be used by the co-processor. In this scenario, we need a way to let
-system know whether it can suspend the USB device or not. We introduce a
-new sysfs entry "deprecate_device_pm" to allow userspace to control the
-device power management functionality on demand. As the userspace should
-possess the information of both the main processor and the co-processor,
-it should be able to address the conflict mentioned above.
+On Mon, Jan 29, 2024 at 04:41:19PM +0200, Abel Vesa wrote:
+> Document the PCIe Controllers on the X1E80100 platform. They are similar
+> to the ones found on SM8550, but they don't have SF QTB clock.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 
-Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
----
- Documentation/ABI/testing/sysfs-bus-usb | 10 +++++++++
- drivers/usb/core/driver.c               | 18 ++++++++++++++++
- drivers/usb/core/sysfs.c                | 28 +++++++++++++++++++++++++
- drivers/usb/host/xhci-plat.c            | 20 ++++++++++++++++++
- include/linux/usb.h                     |  4 ++++
- 5 files changed, 80 insertions(+)
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-usb b/Documentation/ABI/testing/sysfs-bus-usb
-index 2b7108e21977..3f3d6c14201f 100644
---- a/Documentation/ABI/testing/sysfs-bus-usb
-+++ b/Documentation/ABI/testing/sysfs-bus-usb
-@@ -19,6 +19,16 @@ Description:
- 		would be authorized by default.
- 		The value can be 1 or 0. It's by default 1.
- 
-+What:		/sys/bus/usb/devices/usbX/deprecate_device_pm
-+Date:		January 2024
-+Contact:	Guan-Yu Lin <guanyulin@google.com>
-+Description:
-+		Deprecates the device power management functionality of USB devices
-+		and their host contorller under this usb bus. The modification of
-+		this entry should be done when the system is active to ensure the
-+		correctness of system power state transitions.
-+		The value can be 1 or 0. It's by default 0.
-+
- What:		/sys/bus/usb/device/.../authorized
- Date:		July 2008
- KernelVersion:	2.6.26
-diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-index e02ba15f6e34..e03cf972160d 100644
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -1569,6 +1569,15 @@ int usb_suspend(struct device *dev, pm_message_t msg)
- 	struct usb_device	*udev = to_usb_device(dev);
- 	int r;
- 
-+	/*
-+	 * Skip the entire suspend process under the same usb bus if its sysfs
-+	 * entry `deprecate_device_pm` is set.
-+	 */
-+	if (udev->bus->deprecate_device_pm) {
-+		dev_vdbg(&udev->dev, "deprecating dev_pm_ops: %s\n", __func__);
-+		return 0;
-+	}
-+
- 	unbind_no_pm_drivers_interfaces(udev);
- 
- 	/* From now on we are sure all drivers support suspend/resume
-@@ -1605,6 +1614,15 @@ int usb_resume(struct device *dev, pm_message_t msg)
- 	struct usb_device	*udev = to_usb_device(dev);
- 	int			status;
- 
-+	/*
-+	 * Skip the entire resume process under the same usb bus if its sysfs
-+	 * entry `deprecate_device_pm` is set.
-+	 */
-+	if (udev->bus->deprecate_device_pm) {
-+		dev_vdbg(&udev->dev, "deprecating dev_pm_ops: %s\n", __func__);
-+		return 0;
-+	}
-+
- 	/* For all calls, take the device back to full power and
- 	 * tell the PM core in case it was autosuspended previously.
- 	 * Unbind the interfaces that will need rebinding later,
-diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
-index 5d21718afb05..b4520e5c8974 100644
---- a/drivers/usb/core/sysfs.c
-+++ b/drivers/usb/core/sysfs.c
-@@ -68,6 +68,33 @@ static ssize_t bMaxPower_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(bMaxPower);
- 
-+static ssize_t deprecate_device_pm_show(struct device *dev,
-+					struct device_attribute *attr, char *buf)
-+{
-+	struct usb_device *udev;
-+
-+	udev = to_usb_device(dev);
-+	return sysfs_emit(buf, "%d\n", !!(udev->bus->deprecate_device_pm));
-+}
-+
-+static ssize_t deprecate_device_pm_store(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t count)
-+{
-+	struct usb_device	*udev = to_usb_device(dev);
-+	int			val, rc;
-+
-+	if (sscanf(buf, "%d", &val) != 1 || val < 0 || val > 1)
-+		return -EINVAL;
-+	rc = usb_lock_device_interruptible(udev);
-+	if (rc < 0)
-+		return -EINTR;
-+	udev->bus->deprecate_device_pm = !!(val);
-+	usb_unlock_device(udev);
-+	return count;
-+}
-+static DEVICE_ATTR_RW(deprecate_device_pm);
-+
- static ssize_t configuration_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
- {
-@@ -984,6 +1011,7 @@ static DEVICE_ATTR_RW(interface_authorized_default);
- static struct attribute *usb_bus_attrs[] = {
- 		&dev_attr_authorized_default.attr,
- 		&dev_attr_interface_authorized_default.attr,
-+		&dev_attr_deprecate_device_pm.attr,
- 		NULL,
- };
- 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index f04fde19f551..bc05d83d1c0b 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -442,6 +442,15 @@ static int xhci_plat_suspend(struct device *dev)
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
- 	int ret;
- 
-+	/*
-+	 * Skip the entire suspend process under the same usb bus if its sysfs
-+	 * entry `deprecate_device_pm` is set.
-+	 */
-+	if (hcd->self.deprecate_device_pm) {
-+		dev_vdbg(dev, "deprecating dev_pm_ops: %s\n", __func__);
-+		return 0;
-+	}
-+
- 	if (pm_runtime_suspended(dev))
- 		pm_runtime_resume(dev);
- 
-@@ -507,6 +516,17 @@ static int xhci_plat_resume_common(struct device *dev, struct pm_message pmsg)
- 
- static int xhci_plat_resume(struct device *dev)
- {
-+	struct usb_hcd	*hcd = dev_get_drvdata(dev);
-+
-+	/*
-+	 * Skip the entire resume process under the same usb bus if its sysfs
-+	 * entry `deprecate_device_pm` is set.
-+	 */
-+	if (hcd->self.deprecate_device_pm) {
-+		dev_vdbg(dev, "deprecating dev_pm_ops: %s\n", __func__);
-+		return 0;
-+	}
-+
- 	return xhci_plat_resume_common(dev, PMSG_RESUME);
- }
- 
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index 9e52179872a5..1a1873104663 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -465,6 +465,10 @@ struct usb_bus {
- 					 * the ep queue on a short transfer
- 					 * with the URB_SHORT_NOT_OK flag set.
- 					 */
-+	unsigned deprecate_device_pm:1; /* Deprecates the device power management
-+					 * functionality of USB devices on this
-+					 * bus and their hcd.
-+					 */
- 	unsigned no_sg_constraint:1;	/* no sg constraint */
- 	unsigned sg_tablesize;		/* 0 or largest number of sg list entries */
- 
+- Mani
+
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index a93ab3b54066..7381e38b7398 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -41,6 +41,7 @@ properties:
+>            - qcom,pcie-sm8450-pcie0
+>            - qcom,pcie-sm8450-pcie1
+>            - qcom,pcie-sm8550
+> +          - qcom,pcie-x1e80100
+>        - items:
+>            - enum:
+>                - qcom,pcie-sm8650
+> @@ -227,6 +228,7 @@ allOf:
+>                - qcom,pcie-sm8450-pcie0
+>                - qcom,pcie-sm8450-pcie1
+>                - qcom,pcie-sm8550
+> +              - qcom,pcie-x1e80100
+>      then:
+>        properties:
+>          reg:
+> @@ -826,6 +828,32 @@ allOf:
+>            items:
+>              - const: pci # PCIe core reset
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,pcie-x1e80100
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 7
+> +        clock-names:
+> +          items:
+> +            - const: aux # Auxiliary clock
+> +            - const: cfg # Configuration clock
+> +            - const: bus_master # Master AXI clock
+> +            - const: bus_slave # Slave AXI clock
+> +            - const: slave_q2a # Slave Q2A clock
+> +            - const: noc_aggr # Aggre NoC PCIe AXI clock
+> +            - const: cnoc_sf_axi # Config NoC PCIe1 AXI clock
+> +        resets:
+> +          maxItems: 2
+> +        reset-names:
+> +          items:
+> +            - const: pci # PCIe core reset
+> +            - const: link_down # PCIe link down reset
+> +
+>    - if:
+>        properties:
+>          compatible:
+> @@ -884,6 +912,7 @@ allOf:
+>                - qcom,pcie-sm8450-pcie0
+>                - qcom,pcie-sm8450-pcie1
+>                - qcom,pcie-sm8550
+> +              - qcom,pcie-x1e80100
+>      then:
+>        oneOf:
+>          - properties:
+> 
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.43.0.429.g432eaa2c6b-goog
-
+மணிவண்ணன் சதாசிவம்
