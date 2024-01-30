@@ -1,93 +1,159 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB969657BC;
-	Tue, 30 Jan 2024 10:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C84664A0;
+	Tue, 30 Jan 2024 10:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706611823; cv=none; b=LDOzQSChaO+hLjFRxLibABHmtRKqiT5qtmLtcEXAoThu3ggO1Ls+8FZmQ5u3O5io1vGKMuCmXdbukdxYJasAxnQ6ZyyBCKD7Rju1wwB094lhbkNX4SP1fCVte8tM9CbBfabD4wwLCXRRXVz1uVD1wcBPuobuOhS/vl4Maw2GWzE=
+	t=1706612007; cv=none; b=Pot0yoJVVYQJd4bHGCNyk6a1opeocJ/lcIqY9+CNZMIdk/EFfjijvSrMvBscRwrAMpyO8B0PdrZ/KIdV822mXqxzzFVyaKLh4z7AGhrk3q7jx8HMlJaEKKY7nXEnSeEgIZdkVU0lO5wkQWCKCxHf53DoRpeFPH+RDbMNgovGg10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706611823; c=relaxed/simple;
-	bh=ak+VEmhPjrrv3eoPoWuXgfFeFRuBlQCGLMapi9FoAXo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OvO9mOVjSL5f1jN6nsKP23MrFe9i7R86IlAEl9nvxYf8/pe2PTb9A3mpvxu/uiuMwokrkYFoefNvlzGW1B/EvHTMN8BwWZyRxHXB3Gtb9Rl+H4/up2Hmrzru0PY0+UvkYKtSdmF69KeW8+r5QbAs5RCS4YekXpQcEQVxgVAwg5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Gtd7Q019; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1706612007; c=relaxed/simple;
+	bh=OnuVYsvU2WNhZcmPss9Ip918LCpNRJoRqA6UpHf/Lc0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uM/OB4boZpeVkR1+lWB/ZPvA8Zxfil3XE6S0BmzYJ9mxJ+KuD9GxJ4QiVUvpZFBf2yfYf5zCdgc6J4kgVRH8gpKp96joo1+gk4wmdtDAkZrFccP6YqEnrOzpfpEi/L4d+KY4umccCac6nfadYiijicSemgESZmf8Y5hk7iRTpkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKsKcLpy; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Gtd7Q019"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1706611772; x=1707216572; i=markus.elfring@web.de;
-	bh=ak+VEmhPjrrv3eoPoWuXgfFeFRuBlQCGLMapi9FoAXo=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=Gtd7Q019bwtpKAt4oJqIODulE3pzRxHXZCbFV/YNNIn979A3j04JjjkbW+2I+W2K
-	 OoItXwHLACd+yG9fPyCSPWgALUNFSdIZplFrQD/12xz3qrV9sz2BehRNbZujnbxY7
-	 j0dJmFvjWh6sVhaSX2JZk0vcyI7im0plAwmDfD48CYLHNWkzTt1JGGbMegCmckZRY
-	 S1mp9Pe2qDqkuaV/BM1EBS3863pbWES36h340SBuE00gAStMl3IU4jrIGkx1q4XQ0
-	 2VFr2bEK5LUHf8Vx1aTancffJSVvOYyW5TOMmnZTYBxftc79Br8U27yKw6/tYq7+V
-	 AQIsC7esd3vjQX+xyw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mvbik-1rEbyU2W1O-00sveS; Tue, 30
- Jan 2024 11:49:32 +0100
-Message-ID: <49183574-ea83-4517-8e34-5d6e87ede064@web.de>
-Date: Tue, 30 Jan 2024 11:48:31 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKsKcLpy"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5bbbe57b9so947889241.3;
+        Tue, 30 Jan 2024 02:53:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706612005; x=1707216805; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t2Wgc2ClmelSiswazxUWS0iU6q84Ug0M/jBpx2lzDSQ=;
+        b=JKsKcLpyVjRLi+cLAItKbpp09kKZ63HI4B4voAHYrNGiQNbO4+yLm/Ko3KD024geeo
+         0NlUenOPodSSBOPZyRu1Kw1MGZlKoHAJzzT028QbdklVOFZz25Exl78feGyxHidIgFll
+         PQk3pDDFUIbCJ42Qro0TEPooX9RZDvU5WPYF6/9b//bnBdPwwmiNSU7KR5Ck1VCYXAfU
+         aZ5KKPdusYGrUgSmLROymYvyQc0383CMQOUscimjH6RQxmA1SMnVs8z90arEQXE/f8si
+         x6ijFlNcrsUwOe2sp/Y0AJRwqdu1JpoEJGjD7zbDNs7RWtQseDmr1cVgggRM8cQgoGsh
+         gXZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706612005; x=1707216805;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t2Wgc2ClmelSiswazxUWS0iU6q84Ug0M/jBpx2lzDSQ=;
+        b=DEwe9PvajgiSvjqYpWcpT5pZDe2oMOz0IiCvSmNW1hS/EcaI9vnv+n076c77+E6kcy
+         qbyU8uFo9W6hyjDUp7Jr4XMER5FxuRf4VTiZ5E+IZWFJ71KEezgcTcdjEwqpOw+iIq8q
+         s9pJun/CJcb5sjdqldPsEVaxW5Uh7mCxh8kfY02F5dtAjC9cJCn+CT3f9kpKuckDdXNI
+         j//hRdsERZw55AYK0Nq9Aq+eHCTeIBAc9Y8BMXWMzvEwsLtfAGtztskfEQDzQnZykcqq
+         PGxRYmKgvZ/jcNmCUXdnS0BWeIjoVN0xBDIJFK79R+jnEn3DnpjUbVzGUIEdKTEVnZW6
+         V5eg==
+X-Gm-Message-State: AOJu0YyUSVvbcDNLURi6JPdI2yCRo+7e4j3cc4GGY/Wm43RDuT6U7GVg
+	X01HrMEzHbVSF2wVpoodhkdpqMs/LBZSiI+9EzrTGwaAbU6ejSfhyAAg83x4z3eUpi+HLGo2yzL
+	+MvaAzn7DlJFVX7VwLqmX7GhrjZw+3Ab+
+X-Google-Smtp-Source: AGHT+IHgpOYGVwZC7jGnAQ5quTRMCHeTj6rwn160Ts+Wqt1/jnYyj4K3u3HJFVo+yEseFc6FkttQlfm/AvfFuGOWpDg=
+X-Received: by 2002:a05:6122:d28:b0:4b6:c49a:174a with SMTP id
+ az40-20020a0561220d2800b004b6c49a174amr3593381vkb.14.1706612004892; Tue, 30
+ Jan 2024 02:53:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: fpga: dfl: fme: Return directly after a failed devm_kasprintf()
- call in fme_perf_pmu_register()
-To: Xu Yilun <yilun.xu@linux.intel.com>, linux-fpga@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Luwei Kang <luwei.kang@intel.com>, Moritz Fischer <mdf@kernel.org>,
- Tom Rix <trix@redhat.com>, Wu Hao <hao.wu@intel.com>,
- Xu Yilun <yilun.xu@intel.com>, LKML <linux-kernel@vger.kernel.org>,
- Kunwu Chan <chentao@kylinos.cn>
-References: <d94376b6-12e8-45bb-a9be-4887bb316d35@web.de>
- <ZbjJYMlDifIv0WId@yilunxu-OptiPlex-7050>
- <ZbjPDX1y2I9Heanq@yilunxu-OptiPlex-7050>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <ZbjPDX1y2I9Heanq@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8
+References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240129135556.63466-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWbPooCMqyKjTh+uJgAqh=az0+DOQAJYKQ7cuBrxyV1-w@mail.gmail.com>
+In-Reply-To: <CAMuHMdWbPooCMqyKjTh+uJgAqh=az0+DOQAJYKQ7cuBrxyV1-w@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 30 Jan 2024 10:52:54 +0000
+Message-ID: <CA+V-a8ux+AfF4rTmfr448Gp_=_M2TczsZ5_j2afk9qRFs3ePGQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] pinctrl: renesas: rzg2l: Improve code for readability
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7VTb9LLznircDPxFLGcyGvPsGEb+ynPhRgQeOkBmMkBT4hJ0Dkf
- SUTcEQH/5r8NmS4GGMGw+F8BSDJ8AZFEWL4ImF1zTOjuEhLWBm84d84vGAWMaIA0N7lugAl
- sF95PywaopbOLFyFntygqjg1F1I65LQ5zdqTp2Fd6B6XXUeVomR7CKglERdK8ryfIc48J9G
- l7MNYLt15UtN6Otgd2vaw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:diN0LIWrJRI=;0d0L3w3qZ7vY2fg7r8ey+304ViY
- gMwinlg+WZSc4nfK2sn90qgDNLocc+wUxGW2Dx3Y/iRJAIIZSHy80G5Gb6IEjAbMuNqkc33Fp
- McOmQemZuP/D99uUVQ6+Y7PnwXJbI5yxTCN5gdFAG2AkLkAqZnMCAhk7+QZtWRQI6SGnLN3nC
- /24l1NHCyO2KllwuvOtdnCJRt61wDV9kjN64ltbGze7YgS4YiU/OswomXz5t9Z5DrlWwVOu/b
- M1t6IroKQ9G/IKOt1wkbzbubrz0wLwCQBHKFSn1hepn3fxU6qx1m+oKjavUj+zquFKD7DqXGe
- G/KMdX6KgZ2yB/+amtE/qbEpEnRqlHuWDDmjWcp0LQwFWFO5H1RLdFmgO+8LxKFSe0QDxI0h+
- aaaP0YL1TkOOlMo54xuwmM9DAj65pL+ov4PQbJggqzhR1b0VpBsO4fQoevWDLIPJmEvU9PrU5
- /D8l2ATXyC1JK5damWiW75EfHHg/K4XQdFoW5+T/bYMLYOmpR6Sxl4xCsIukyFd/I3WVAIed4
- 6eFYTDCrnEnyvyGEs4dyd8+F3emuOZ0IHT9+61y3L/bgsf+lK3sAO/lsiT4d6QJ8fz1+T8rug
- L0Y6NYvedsrVqSCeaiFT66grRjh7Go2eZDZ3MUAW4gsDnocjNQ7ReJJO9k6kAYYs/dtxeye28
- rSPM+uAgsUjlE//Ts1SkyR4rZdL0Guz2OIucRtlWSY0BdADZZwX6Ni/bGGzQtFMAh5R7exS52
- 1D821E1rdWdzxeO/7P0WnX9Kr/BEBj2mTIW5r63Kpp42ItGyemT/w4hklpLFZedumPobfSsIP
- SVWXP/ZZ9uYNPe1C1G/ynz6e/FiG6+0WR8VhTk+PSOHxN0+Ma5Q7PL0a6T9m5glHDIku7Vu4u
- mDW/KCpoJPfoy9/OUKDqUT0I6L3SXrGSRAwo4acN0BiXHd46UG+NiuK4Nqw7Jbho0mBWHldkc
- FT36Ww==
 
->>> Thus return directly after a failed devm_kasprintf() call.
->>>
->>> Fixes: 724142f8c42a7 ("fpga: dfl: fme: add performance reporting suppo=
-rt")
+HI Geert,
+
+Thank you for the review.
+
+On Tue, Jan 30, 2024 at 10:35=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> One more char of sha.
+> Hi Prabhakar,
+>
+> On Mon, Jan 29, 2024 at 2:56=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > As the RZ/G2L pinctrl driver is extensively utilized by numerous SoCs a=
+nd
+> > has experienced substantial growth, enhance code readability by
+> > incorporating FIELD_PREP_CONST/FIELD_GET macros wherever necessary.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-pinctrl for v6.9.
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>
+> > @@ -90,14 +93,18 @@
+> >   * (b * 8) and f is the pin configuration capabilities supported.
+> >   */
+> >  #define RZG2L_SINGLE_PIN               BIT(31)
+> > +#define RZG2L_SINGLE_PIN_INDEX_MASK    GENMASK(30, 24)
+> > +#define RZG2L_SINGLE_PIN_BITS_MASK     GENMASK(22, 20)
+> > +
+> >  #define RZG2L_SINGLE_PIN_PACK(p, b, f) (RZG2L_SINGLE_PIN | \
+> > -                                        ((p) << 24) | ((b) << 20) | (f=
+))
+> > -#define RZG2L_SINGLE_PIN_GET_BIT(x)    (((x) & GENMASK(22, 20)) >> 20)
+> > +                                        FIELD_PREP_CONST(RZG2L_SINGLE_=
+PIN_INDEX_MASK, (p)) | \
+> > +                                        FIELD_PREP_CONST(RZG2L_SINGLE_=
+PIN_BITS_MASK, (b)) | \
+> > +                                        FIELD_PREP_CONST(PIN_CFG_MASK,=
+ (f)))
+> >
+> > -#define RZG2L_PIN_CFG_TO_CAPS(cfg)             ((cfg) & GENMASK(19, 0)=
+)
+> > +#define RZG2L_PIN_CFG_TO_CAPS(cfg)             ((cfg) & PIN_CFG_MASK)
+>
+> Do you mind if I drop RZG2L_PIN_CFG_TO_CAPS() and replace its two
+> users by FIELD_GET(PIN_CFG_MASK, *pin_data) while applying?
+>
+Fine by me.
 
-There are different preferences involved.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.8-rc2#n109
+Cheers,
+Prabhakar
 
-Regards,
-Markus
+> >  #define RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg)      ((cfg) & RZG2L_SINGLE_P=
+IN ? \
+> > -                                               (((cfg) & GENMASK(30, 2=
+4)) >> 24) : \
+> > -                                               (((cfg) & GENMASK(26, 2=
+0)) >> 20))
+> > +                                                FIELD_GET(RZG2L_SINGLE=
+_PIN_INDEX_MASK, (cfg)) : \
+> > +                                                FIELD_GET(PIN_CFG_PIN_=
+REG_MASK, (cfg)))
+> >
+> >  #define P(off)                 (0x0000 + (off))
+> >  #define PM(off)                        (0x0100 + (off) * 2)
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
