@@ -1,87 +1,74 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5387AE70
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 23:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0448B7EF06;
+	Tue, 30 Jan 2024 23:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706657103; cv=none; b=Zd+tmqdLndfj6sDX+Vz3NrV0OEG1+GqI3iRewoJSjScXOpwfJQzueZpty7mMlE1wb+IelKR9JHa+2jo6KZgriZqRyTTfMDe+D9gC3cleCrhU0TXU7tLapVf2P3wXQRQYQPnpYEtLVpx2SUyU3hnFq+QpIwzMf88IZWafF2og8S8=
+	t=1706657120; cv=none; b=BYlxUl9xTQYK5yo7nqCGY/n4RPIFE+J996TRXKbHGSi4TGAoiZapszwL6634QS0ZiEolpVovNFcjUvFQBL+ywgJ3BQ/YtH2NT41qy6LXbcft37Fy6M+4kbHfB6CuAj1fGCADrdnlxRF+kASfbsebc74emucd3sv4IkkelJ1H6r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706657103; c=relaxed/simple;
-	bh=QLf5+s2EXzxM6NEMqH1PSQJKz8I1rG4C6C6q/v8c3r0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s8ixA8Qb9By3bALMk3mV+cfCx0XnDK+RAdhNXPiLWar7URB4GejHn+qxBMl0IrlBW5WTJGukZbGPkzZMquk95rqhM45XQmikOdL56VYAxc5M40czCJIivqX6E5sK0kTWDoupzTLVerilQyAxxzDd8F5LANa7OCCYBuFQVsurWIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jWelPv54; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1706657120; c=relaxed/simple;
+	bh=xhHQxDgz4WJv9YDPEekgMzWVmwxQu21H4INhA2VR63Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L5KT3z3/DBgMqVvoV7GfkWw343pdwMd4M5RnRmsCxGa/pmlKGNVxsRM859p2fRplfF9FXNtbf1t8YAEcviL5HEurS5gGJgTO5DM3mP8DGkSKc12zp/LIRtftO3q8uO+k804PCPc3eRN6nbV++GjVTEjaDM/oEbBg1a8R+v20vu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IWDOsg8O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jWelPv54"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6531fa07fso6829251276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:25:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706657100; x=1707261900; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+DZOnZhgrOi058fY32LTm4dCLP0HDk6nBa+5Ze3KMOU=;
-        b=jWelPv54eDo7fZbkAfQdoYMNqSE9W2eURCcFAAA8KLVPJuYJWzkQ2xFgyJEQ0mx4GD
-         Uh++H1LVRuFa36dYpXQBpL05IIBrupZHE2TN/+gQmWK/U9jtH7Rq+Su9qxcvQTZjK/8a
-         7pf+T6Wx3KLgEKoidtFNRXAhFxSZ/FcMOAO0SeUX4KEKH1ml9B3Axq5wREGlW2RSFeq/
-         4p+31Xd0dhM4BcSonDkxvh14Dl5fYY9HV076SHQWnde3Zo3waw7uYCPTTMTkqz1H/Jc5
-         2vgZod7KZOJyJXb/zVMxmVNHfmi/SwwXItU7N29NwPzitsAdVLBtNwxIDCzRN5WhlLI1
-         E8kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706657100; x=1707261900;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+DZOnZhgrOi058fY32LTm4dCLP0HDk6nBa+5Ze3KMOU=;
-        b=uqaq56l/SMCi1wUI+qeoCm3gFwiYi4SrhprmIqPGA0Tstvo5x2hUM8SxVhUn5SKyfw
-         ERbxbyBV1woXjXMfbOKQBkWe6hGNqmjnftzMY+rJfWcda5qZwbp7GskOtm3Rx0hd7R7l
-         7VRPZh00x78Tnyl2uUPBRS4sHFeMcv3p5FdAMvuRhLJkxHqaE/P+NOL3q9UP4jIyKNtk
-         d2hJ7IhG5EIUcJjPLHT3fu8zdfpJ829kKbRbgLAFpL4/H3dPyWFlBS5JMTGd2EwqI099
-         nf67lbtlBpMbeL0qJj8RkleOge3RP7+Ow2PzBPuRU0nD5l9yiA+Nhdl1QJzaZh0XeqfQ
-         t5Nw==
-X-Gm-Message-State: AOJu0Yymx79AEHnNEAXqYb4zv2MTeQJcCC56Vgd1a16BkSW1mitb928R
-	l+4UtY47FWObzKEghsveCEkXUGunbyEmtr/+BP+xuQ/SIsPmClSGLaincVaZDHfTvAp9hDzV1jh
-	T3A==
-X-Google-Smtp-Source: AGHT+IF3YmDiUVLol3Ma2dGjY66h66Myp8jul3JHp2eJRacVDXua9zfCDa1EBBpN/JLALWFl8Uus4BKOxZ8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1b8d:b0:dc2:331e:48b9 with SMTP id
- ei13-20020a0569021b8d00b00dc2331e48b9mr313ybb.12.1706657100630; Tue, 30 Jan
- 2024 15:25:00 -0800 (PST)
-Date: Tue, 30 Jan 2024 15:24:58 -0800
-In-Reply-To: <20240109141121.1619463-2-vkuznets@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IWDOsg8O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 422D1C433C7;
+	Tue, 30 Jan 2024 23:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706657119;
+	bh=xhHQxDgz4WJv9YDPEekgMzWVmwxQu21H4INhA2VR63Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IWDOsg8O/ginvXn1r+dEyk5UMI4cIUldqsgzVfcGXmn+EVug5vwZeOOfEAn1onrK8
+	 8UDinIWIBiVVXVpF11OGM+8Jm9duax2nCg2uN6MjdquY0MTWtZ1sfviPV3v9K5GUpF
+	 FOV3gA3nqsADviJFn2fGrLoIqhkeHGi0tYSyZ5vo=
+Date: Tue, 30 Jan 2024 15:25:18 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Udipto Goswami <quic_ugoswami@quicinc.com>
+Subject: Re: linux-next: manual merge of the jc_docs tree with the
+ usb.current tree
+Message-ID: <2024013009-helium-woozy-c6c2@gregkh>
+References: <20240131095231.292911c3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240109141121.1619463-1-vkuznets@redhat.com> <20240109141121.1619463-2-vkuznets@redhat.com>
-Message-ID: <ZbmFSuPBix_USbif@google.com>
-Subject: Re: [PATCH 1/5] KVM: selftests: Generalize check_clocksource() from kvm_clock_test
-From: Sean Christopherson <seanjc@google.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Oliver Upton <oupton@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131095231.292911c3@canb.auug.org.au>
 
-On Tue, Jan 09, 2024, Vitaly Kuznetsov wrote:
-> +bool sys_clocksource_is_tsc(void)
-> +{
-> +	char *clk_name = sys_get_cur_clocksource();
-> +	bool ret = false;
-> +
-> +	if (!strcmp(clk_name, "tsc\n"))
-> +		ret = true;
+On Wed, Jan 31, 2024 at 09:52:31AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the jc_docs tree got a conflict in:
+> 
+>   Documentation/usb/gadget-testing.rst
+> 
+> between commit:
+> 
+>   20d03ae36ec0 ("usb: gadget: ncm: Fix indentations in documentation of NCM section")
+> 
+> from the usb.current tree and commit:
+> 
+>   e49bf650ab5b ("usb: gadget: fix max_segment_size malformed table")
+> 
+> from the jc_docs tree.
+> 
+> I fixed it up (these commits fix the same problem, I used the former) and
+> can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
 
-This can more simply be:
+Fixup sounds good, thanks!
 
-	bool ret = !strcmp(clk_name, "tsc\n");
-
-and then
-
-	bool ret = !strcmp(clk_name, "tsc\n") ||
-		   !strcmp(clk_name, "hyperv_clocksource_tsc_page\n");
-
-when the Hyper-V variant comes along.  I'll fixup when applying unless you
-violently disagree.
+gre gk-h
