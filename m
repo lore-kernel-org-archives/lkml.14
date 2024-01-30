@@ -1,22 +1,22 @@
 Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DA04C66;
-	Tue, 30 Jan 2024 13:02:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42B467751;
+	Tue, 30 Jan 2024 13:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706619725; cv=none; b=iQ82i9leZJZWFl0W0WepirEPdtO2OZnZwtM8gmD/pH8SIEzUf/izOhtrpdiuY5/gCnrX0IKU6gv2QthNl3arPIyVOk4GBATf6DH5a3PK66HQ51oBUC7gtW6d20CepOJ48s3ykAheNxVwsaHO+G+w2dlqk6eJlfCdNW1TTMOCT1s=
+	t=1706619726; cv=none; b=XUYQ9lhaK9uyYrg8kYVUCd+LUJImpdgihERtMa+WOdABWeKFFkw4u116rlScgZH9xTa3v7y7UZkdCRy10R3hnfpVDlq2az+RGWqsMEQ0GDe4ID/tmUDGk4cEzTX74x/C+rGbkS16b1l9CPaH+YjWKVvIZU+Uvlus9NoNiNGWYWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706619725; c=relaxed/simple;
-	bh=qnU/LIELkHnoBvZsHvvuD152LHUJa6PSVgWt0s4vJEM=;
+	s=arc-20240116; t=1706619726; c=relaxed/simple;
+	bh=YCSLDRcNcUHZlJNPEpFCiUHc+hOkTwgbBxDfzJO2/IQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UpjauD6zLpRxJHxBp/2/87o3ZoIiX09OqJ23wOVkwDPQMnbZ1N/qPhKzPZ5Rj89K5tNLe53zPTEY1DDgKNei7j2IpbyFtKyECvR6yKNnachO2ktFjuuDXggfqifBXFzDhbipGhqlOFybZ0GjTGyaUWSnteaQkU0Z+zCaYX/x0Ug=
+	 MIME-Version; b=Dr4QqIxcigWLrBDlMBD1vLOs8t/GjVlc403uBK/8e7eSrL+1ecuT5FlmkXn1MM81fRgRtLwYcgxE4umAhZgk4oQ7Zq46+Xdd+NdqDhx40C1eosji/1Gij1c7XGlhZXS5vbiKVfO01gRpF6j0ZbcS8RaBVBC7u2EN2HjM6n8ng/Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
 Received: from amadeus-Vostro-3710.lan (unknown [116.25.94.16])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 007F37E013B;
-	Tue, 30 Jan 2024 21:01:42 +0800 (CST)
+	by smtp.qiye.163.com (Hmail) with ESMTPA id EC4187E0137;
+	Tue, 30 Jan 2024 21:01:41 +0800 (CST)
 From: Chukun Pan <amadeus@jmu.edu.cn>
 To: Bjorn Andersson <andersson@kernel.org>
 Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -26,10 +26,11 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH v4 2/2] arm64: dts: qcom: ipq6018: add sdhci node
-Date: Tue, 30 Jan 2024 21:01:32 +0800
-Message-Id: <20240130130132.9550-3-amadeus@jmu.edu.cn>
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Robert Marko <robimarko@gmail.com>
+Subject: [PATCH v4 1/2] arm64: dts: qcom: ipq6018: add LDOA2 regulator
+Date: Tue, 30 Jan 2024 21:01:31 +0800
+Message-Id: <20240130130132.9550-2-amadeus@jmu.edu.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240130130132.9550-1-amadeus@jmu.edu.cn>
 References: <20240130130132.9550-1-amadeus@jmu.edu.cn>
@@ -41,56 +42,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGh1NVh5DHRkYGU8YSx9IGVUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKTVVJTlVCT1VKTVlXWRYaDxIVHRRZQVlPS0hVSkpLSEpDVUpLS1VLWQY+
-X-HM-Tid: 0a8d5a7610c503a2kunm007f37e013b
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaQk5IVkgeTUxKSRlIT0hIQ1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKTVVJTlVCT1VKTVlXWRYaDxIVHRRZQVlPS0hVSkxKT0xDVUpLS1VKQktLWQY+
+X-HM-Tid: 0a8d5a760cef03a2kunmec4187e0137
 X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBA6Mjo5LzMJOkpNQwI*ExA5
-	AhlPFEhVSlVKTEtNTUpCTEtPSkhJVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	TVVJTlVCT1VKTVlXWQgBWUFJTU1CNwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NTY6Lio5AjMNEEoeQwwBExML
+	DCwwCktVSlVKTEtNTUpCTEtJQ0NNVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
+	TVVJTlVCT1VKTVlXWQgBWUFJSUtPNwY+
 
-Add node to support mmc controller inside of IPQ6018.
-This controller supports both eMMC and SD cards.
+Add LDOA2 regulator of MP5496 to support SDCC voltage scaling.
 
-Tested with:
-  eMMC (HS200)
-  SD Card (SDR50/SDR104)
-
+Suggested-by: Robert Marko <robimarko@gmail.com>
 Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 322eced0b876..420c192bccd9 100644
+index 5e1277fea725..322eced0b876 100644
 --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
 +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -441,6 +441,25 @@ dwc_1: usb@7000000 {
+@@ -174,6 +174,11 @@ ipq6018_s2: s2 {
+ 						regulator-max-microvolt = <1062500>;
+ 						regulator-always-on;
+ 					};
++
++					ipq6018_l2: l2 {
++						regulator-min-microvolt = <1800000>;
++						regulator-max-microvolt = <3300000>;
++					};
+ 				};
  			};
  		};
- 
-+		sdhc: mmc@7804000 {
-+			compatible = "qcom,ipq6018-sdhci", "qcom,sdhci-msm-v5";
-+			reg = <0x0 0x7804000 0x0 0x1000>,
-+			      <0x0 0x7805000 0x0 0x1000>;
-+			reg-names = "hc", "cqhci";
-+
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+
-+			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
-+				 <&gcc GCC_SDCC1_APPS_CLK>,
-+				 <&xo>;
-+			clock-names = "iface", "core", "xo";
-+			resets = <&gcc GCC_SDCC1_BCR>;
-+			max-frequency = <192000000>;
-+			status = "disabled";
-+		};
-+
- 		blsp_dma: dma-controller@7884000 {
- 			compatible = "qcom,bam-v1.7.0";
- 			reg = <0x0 0x07884000 0x0 0x2b000>;
 -- 
 2.25.1
 
