@@ -1,133 +1,116 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC06D36AE9;
-	Tue, 30 Jan 2024 02:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EC8374E9;
+	Tue, 30 Jan 2024 02:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706583530; cv=none; b=HBarTKCqYR6Y61lDLKYeCnYE/CxI/wsxcDbh3hvYd8BwiGJOKGSdK7MyLoSP5+sYY87bIpj5mRoGf3Ep8VfsQ4QWRQlKxAG6jKDyuoOfY4gJjqeb7mO1D9FfR1aWk9WBzgVIr1khnQhrUy6tC4i8jSaDv41XSAn7MIqhFkjTlY8=
+	t=1706583533; cv=none; b=IrznwPCSRPLZqgSW3m6syVTJ7m1HtMWp2VmMB9DnmeJpB50ddKcz2W5DaOoslFXV4GNzK7xyzr78/0Cj+Cg8oiqETAnAiyaQW1/r5H7Qvq7emuFQhvTKPiKQjqinzCiy5/jcYAx3+XdYV3djvDXnRoFalTYWKk0+leGpPTOwP+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706583530; c=relaxed/simple;
-	bh=AbZE0B3FO5+TtB5HOi5ZjpCgzTcHcZXFvQyGWmlwlXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtIBHI26ClMrkER7F2wcUdoPaXPSvejAaDbRP2mwpUECXQS/WP6cy9BfCqqfy7CpWJsnnIxZgt+Q37F+yqCu6tuU3PdCo0hO7FnFq+wXB0Q+AVyo22BPQZMAxkPxwbKIajViFHTmceNq2xiG8dc+a++F2VR8Yenl+/A3nWVvPRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-1d-65b865e1c3ac
-Date: Tue, 30 Jan 2024 11:58:36 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, rostedt@goodmis.org, joel@joelfernandes.org,
-	sashal@kernel.org, daniel.vetter@ffwll.ch, duyuyang@gmail.com,
-	johannes.berg@intel.com, tj@kernel.org, tytso@mit.edu,
-	willy@infradead.org, david@fromorbit.com, amir73il@gmail.com,
-	gregkh@linuxfoundation.org, kernel-team@lge.com, linux-mm@kvack.org,
-	akpm@linux-foundation.org, mhocko@kernel.org, minchan@kernel.org,
-	hannes@cmpxchg.org, vdavydov.dev@gmail.com, sj@kernel.org,
-	jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-	penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-	ngupta@vflare.org, linux-block@vger.kernel.org,
-	josef@toxicpanda.com, linux-fsdevel@vger.kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, jlayton@kernel.org,
-	dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
-	dri-devel@lists.freedesktop.org, rodrigosiqueiramelo@gmail.com,
-	melissa.srw@gmail.com, hamohammed.sa@gmail.com, 42.hyeyoo@gmail.com,
-	chris.p.wilson@intel.com, gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com, boqun.feng@gmail.com,
-	longman@redhat.com, hdanton@sina.com, her0gyugyu@gmail.com
-Subject: Re: [PATCH v11 14/26] locking/lockdep, cpu/hotplus: Use a weaker
- annotation in AP thread
-Message-ID: <20240130025836.GA49173@system.software.com>
-References: <20240124115938.80132-1-byungchul@sk.com>
- <20240124115938.80132-15-byungchul@sk.com>
- <87il3ggfz9.ffs@tglx>
+	s=arc-20240116; t=1706583533; c=relaxed/simple;
+	bh=GmuwNFJzWnA1Oqg0ns6ZK1TFM5ogyUhRCfAnEm9agos=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OO4h8TN2G986qWk5pojOGs0LR67+GRQCbaWKCjbkwKkIVIwxaanMi1i+ik9CrlwXGbC4Wz2y4W/+0bCYmKnW4e37f1WfNdDT6k+SkrfJMyUeZy8xrhuvIWva+s2x6WuazhYn2p/KRGMzSIvA5xBnOyJ3YgRfP+xMJ8qcRTqAKyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1vd3WUV; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1vd3WUV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706583531; x=1738119531;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GmuwNFJzWnA1Oqg0ns6ZK1TFM5ogyUhRCfAnEm9agos=;
+  b=Y1vd3WUVOe2fmCAOY4HOVXRn3e6qUsV/k+Djxxu6lEeh0VYM/VROdLd8
+   YQ3uJquMGarfuRVGMUNgdVPeuzx+6Xii5DbhWxaEiyF3upwKBxpG6pg6p
+   ZkM1DS+BjtGh7IgAXKeOPgQrmlW7aiMQYsemRhyoFgSXLrwypJGLBWl2c
+   34R8kGrQn+Rtn6nCkbJIWkfASqS/nlt6aSUuZ1HZp1XTip3Xq/UX2aq7J
+   YtJmSefMZMiOxlOVH11QiWZtCOnl83gNip3PLdoKvq4b3JIeAvaL00JmS
+   ZCf65iv4LgIfRGtqeIxT6dpk1f6jTyu9M13PsohPsOn2ocv2jopOOPtx5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="9891664"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="9891664"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 18:58:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="3520576"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orviesa005.jf.intel.com with ESMTP; 29 Jan 2024 18:58:49 -0800
+From: Fenghua Yu <fenghua.yu@intel.com>
+To: "Vinod Koul" <vkoul@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>
+Cc: dmaengine@vger.kernel.org,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Nikhil Rao <nikhil.rao@intel.com>,
+	Tony Zhu <tony.zhu@intel.com>
+Subject: [PATCH] dmaengine: idxd: Change wmb() to smp_wmb() when copying completion record to user space
+Date: Mon, 29 Jan 2024 18:58:06 -0800
+Message-Id: <20240130025806.2027284-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87il3ggfz9.ffs@tglx>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUyTVxTHc5/3NpQ8VpxX+LCsC9PB5nBqPFmWxSx7uXEz0bgv02VblSfS
-	jbcVqJTMBbQwBsq0C3YUYlo0tSlMZtttbBNXwIKdE4sQVhgSxS6jCmKoZVZqWQsx88vNL+f8
-	7++cD0eglYtsuqApLJW0hep8FSdn5DMp1hcnpU4pp29EgONHciByv5aBlo52Dvxn2xC0u6so
-	CHnfhj/npxEsXLlKg6nRj8B68zoN7r4JBF32QxwMBVNhODLLga+xnoPDpzo4GLwTo2D8hJGC
-	Nud2uHyslQJP9B8GTCEOmk2HqcQzRUHU5uDBVpkJk3YzD7GbG8A3McJC11g2NJ0c5+B8l4+B
-	vs5JCoZ+aeFgon2Rhct9lxjwHz/Kwnd3Wzm4M2+jwRaZ5eGax0LB94aEqCYcZ6H/qIeCmtPn
-	KBge/RXBhdobFDjbRzjojUxT4HI20vDwjBfBZMMMD9VHojw0VzUgqK8+wcDVR/0sGMY3w8KD
-	Fm7rK6R3epYmBtcB0jVvYcjvrZj8bL7OE8OFMZ5YnGXEZc8ip86HKGKdi7DE6fiKI845I0/q
-	ZoYpcndggCeXvl1gSHDYRO3I2C1/NVfK1+gk7UuvfSzPcw3+RRd3p5Rbw9V0Jbonq0MyAYub
-	sNMTZB+zK77AJ5kRM7G9d4BLMieuxYFAlE5ymrgOn7s2tsS06JNjf+vrSV4p7sOjt7qXPAoR
-	8MXTxkRGEJRiBXbXrVour8C+piCz/DULB+IhKhmhxQx8Ji4kyzJRhY21hqWpq8RnsefH/kRE
-	ntisQ4b9oSv88pprcLc9wBxDovkJrfkJrfl/rQXRDqTUFOoK1Jr8Tevz9IWa8vX7igqcKHGW
-	toOxPZ1ozr+rB4kCUqUotn7zk6Rk1boSfUEPwgKtSlNEn/9BUipy1foKSVv0kbYsXyrpQRkC
-	o1qteHn+QK5S3K8ulT6VpGJJ+7hLCbL0SpRb1Rwsf2YwJruo8bLjK3ZY20rveZ9+v+E5t3Hx
-	S1LfkOri15l22d3Zu7/eaGI9D9+JWbaVvbFx76OAThdO1R+6PSHu/eK+VJO+sujzs+Bw7Nz2
-	4VvvZW9Rr3kTvbB/9JOndPp4TmZ46I/V4c9++9vbnNb9oOnd7VP/xocq9ox8UDyVomJK8tQb
-	smhtifo/4an4aJIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbWxLYRTH8zz33ufeNjpXDTf4IPU+8TJZOUFEJOwSb5GIIGLFjdXeaPdK
-	JJt1zDaLlSo1spV0y4zRDhsms9mmFrNZw1SNzYTFGKOL6oyVCF9Ofjnn/zvny+EoZQczltPG
-	xku6WE20ishp+ZqF6TM7pAppzufcaZCXMwe8XzNpyC8rJdB8+SKC0vI0DN114fC0vweB/+Ej
-	CsymZgSFHS8oKK9vR1BVfJBAa1cQuLy9BJymbALp58sItLwfwOA5acRw0b4aGo9ZMVT73tJg
-	7iZwxpyOh8o7DD5bCQu21MnQWWxhYaAjFJztTxioPetkoMo9A06f8xC4XeWkob6iE0PrzXwC
-	7aU/GWisv09Dc95RBi59tBJ432+jwObtZeFxdQGGK4ahbYe+DDLQcLQaw6ELVzG4nt1CcCfz
-	FQZ76RMCtd4eDA67iYLvRXUIOnM/sJCR42PhTFouguyMkzQ8+tHAgMGjBv+3fLJkoVjb00uJ
-	BkeSWNVfQIsPrIJYaXnBioY7blYssCeIjuIQ8fztbiwW9nkZ0V5yhIj2PiMrZn1wYfFjUxMr
-	3j/lp8UulxmvG79ZvminFK1NlHSzF0fIIx0tz6k9d4clF37JoFLRJ1kWknECHyY4Bv1sgGl+
-	slBc20QCTPipQlubjwpwMD9NuPrY/Zsp3ikXmq1LAzyS3yE8e32XCbCCB+HeBeNQhuOU/D6h
-	PGvUn/YIwXm6i/6jhghtg904EKH4cULRIBdoy3iVYMw0/L46ip8oVF9vwMeQwvKfbfnPtvyz
-	CxBVgoK1sYkxGm20epY+KjIlVps8a0dcjB0NPZ7twEBeBfraGl6DeA6phikiym5ISkaTqE+J
-	qUECR6mCFb7p1ySlYqcmZZ+ki9umS4iW9DVoHEerxihWbpQilPwuTbwUJUl7JN3fKeZkY1NR
-	BZq7KmjE/LLWz3u3h8q2MhGHE/wqtTotrCfM44p8+ZzoutatGGk6xSTvJhPW7zdV2pOS9C19
-	87xr47a5N0yZsfxa0M2ZR7ae+2llFTlbohKWhS8wjSbzh9c5DjcqTxjy47M3tRuk40y/uSj0
-	8gH3JPWYeKPnbdAJf+Wb10l0i05F6yM1oSGUTq/5Bd0J6+p0AwAA
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 26, 2024 at 06:30:02PM +0100, Thomas Gleixner wrote:
-> On Wed, Jan 24 2024 at 20:59, Byungchul Park wrote:
-> 
-> Why is lockdep in the subsystem prefix here? You are changing the CPU
-> hotplug (not hotplus) code, right?
-> 
-> > cb92173d1f0 ("locking/lockdep, cpu/hotplug: Annotate AP thread") was
-> > introduced to make lockdep_assert_cpus_held() work in AP thread.
-> >
-> > However, the annotation is too strong for that purpose. We don't have to
-> > use more than try lock annotation for that.
-> 
-> This lacks a proper explanation why this is too strong.
-> 
-> > Furthermore, now that Dept was introduced, false positive alarms was
-> > reported by that. Replaced it with try lock annotation.
-> 
-> I still have zero idea what this is about.
+wmb() is used to ensure status in the completion record is written
+after the rest of the completion record, making it visible to the user.
+However, on SMP systems, this may not guarantee visibility across
+different CPUs.
 
-1. can track PG_locked that is a potential deadlock trigger.
+Considering this scenario that event log handler is running on CPU1 while
+user app is polling completion record (cr) status on CPU2:
 
-   https://lore.kernel.org/lkml/1674268856-31807-1-git-send-email-byungchul.park@lge.com/
+	CPU1				CPU2
+event log handler			user app
 
-2. can track any waits/events e.g. wait_for_xxx(), dma fence and so on.
+					1. cr = 0 (status = 0)
+2. copy X to user cr except "status"
+3. wmb()
+4. copy Y to user cr "status"
+					5. poll status value Y
+				 	6. read rest cr which is still 0.
+					   cr handling fails
+					7. cr value X visible now
 
-3. easy to annotate using dept_wait() on waits, dept_event() on events.
+Although wmb() ensure value Y is written and visible after X is written
+on CPU1, the order is not guaranteed on CPU2. So user app may see status
+value Y while cr value X is still not visible yet on CPU2. This will
+cause reading 0 from the rest of cr and cr handling fails.
 
-4. track read lock better way instead of the ugly way, by assinging wait
-   or event annotations onto read lock and write lock. For instrance, a
-   read lock is annotated as a potential waiter for its write unlock,
-   and a write lock is annotated as a potential waiter for either write
-   unlock or read unlock.
+Changing wmb() to smp_wmb() ensures Y is written after X on both CPU1
+and CPU2. This guarantees that user app can consume cr in right order.
 
-I'd like to remove unnecessary complexity on deadlock detection and add
-additional functionality by making it do what the type of tool exactly
-should do.
+Fixes: b022f59725f0 ("dmaengine: idxd: add idxd_copy_cr() to copy user completion record during page fault handling")
+Suggested-by: Nikhil Rao <nikhil.rao@intel.com>
+Tested-by: Tony Zhu <tony.zhu@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ drivers/dma/idxd/cdev.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-	Byungchul
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index 77f8885cf407..9b7388a23cbe 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -681,9 +681,10 @@ int idxd_copy_cr(struct idxd_wq *wq, ioasid_t pasid, unsigned long addr,
+ 		 * Ensure that the completion record's status field is written
+ 		 * after the rest of the completion record has been written.
+ 		 * This ensures that the user receives the correct completion
+-		 * record information once polling for a non-zero status.
++		 * record information on any CPU once polling for a non-zero
++		 * status.
+ 		 */
+-		wmb();
++		smp_wmb();
+ 		status = *(u8 *)cr;
+ 		if (put_user(status, (u8 __user *)addr))
+ 			left += status_size;
+-- 
+2.37.1
 
-> Thanks,
-> 
->         tglx
