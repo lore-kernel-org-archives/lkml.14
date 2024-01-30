@@ -1,130 +1,141 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C87F65BBF
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E51664B6
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608901; cv=none; b=uWH/mkiwAR2dOBZfsxVFHXbIzxPrIpekyUd1RSbrjebaPbadvPbNzZYuCylz0lVzXOV3G3DPgxUv5EVuUQi4Uhn4vRidr/rAzaXm5Jc8vSu69VG7dng5Z3CLTeHNsWaCZWGlnXSQyAXshw9vFKQzhA1zbnzSQ/RMIcf5p8NJHAk=
+	t=1706608958; cv=none; b=F5SKr/6QGswh2QIOSXAhnQaEPPwtx05BfbG8n16hbr5ICvqsvBAPTTfHUIw5RHACa6ra5OKIB5N/6tZLVvpxrQSksXsBjO0BVANYLbtLrqMPtrcPxLGkGl1ZIYm3mVQQEh16qEbn+wj3cQl9XDUmAuToAIC31moXhgw9f0ttKwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608901; c=relaxed/simple;
-	bh=teXt9OHZdZez3wzxIY3fbH5xLvmsOi4Wj5q2dFRSqx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p0xMCQT1UKtTlf7Iq+lWWqjOHy651ehRZhD+safqo0FCJQZzt/hnAcmJI1zprBUCj74ykXVCuDVGxeoyJHHt2mPn7ELPav0XxyGZ7bZoY5FZXFFQPEwQZDfqnxaJfMBm2G60ak2pMQ+8uyn4bM9ihyHs/c3532/oTzLSl6QTeyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=Pg8ZQJsu; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+	s=arc-20240116; t=1706608958; c=relaxed/simple;
+	bh=W8/Rk4qSp/sqelgKB3KXmEt+9w3uNGbFNVLPtunhLZM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZWfP+TlGLfn2mvu3ZxyJLTAAXUZSabacO3QuMTccRhUGVbjXZZzwZwNpeDs5N6k2eoOsEfAI+ayCRzW5vnvBRkYnQh4WirB63bG/detYURPcTf2KdMSNLCqBY2vnuEuH+Fp0cc0u5gh23Go+NzMEmZUHgnzs36CS2LvT/lLz3/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Yut0v+AR; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="Pg8ZQJsu"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2901f9ea918so1738972a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:01:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Yut0v+AR"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-510f37d673aso3032881e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:02:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1706608900; x=1707213700; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QKkQF0FpW08UeteOAoIxviKy11wOo5codk8APJXnHpw=;
-        b=Pg8ZQJsuOIKrKWAPtAdwj5JEMcqmwByEUHyPkHoyIeI6rd8cAgKB7dODgs4H37vWof
-         UZOFF+qg83yKXNm1ar+ZncH5VL0C3KU6guVI3nVf41V1ZP/Jk+AXXD/rI5uO75TBa3uW
-         slx4fV5rysnvznkjxxcVw+4lhidKLB5fVCWSF+yFSw+FX6wEe25t4qnKtte8gSAhuCL2
-         7egLUuUH77GBRVIvWT8XnkT3pDanYR/kS1iUTpA7k8wC21NL3UZavlf+0PuD9i/elSvP
-         7FKO+zU5JD6DSaHcSVCv3zMMXywKe4Sq9+A9jfjgYkuTNyaoYy8EmHIzYB98d2R6Fvab
-         jzAw==
+        d=ventanamicro.com; s=google; t=1706608953; x=1707213753; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kClA8daQckTIvu1OZztRzd8EFBYH/WDKzJCQ35/y4Ao=;
+        b=Yut0v+ARusz0ZnFfn4Gbaz6GcZxAzTVvzVzfm1h9WskVdwKuzNfuq5QMu1bpRhCZV9
+         qhk6ZcA2Jp7Z8DYQtnBEtuhNN28VY5xTvcC4UXoy3qQ07EJdS0mfdNos1TIREXTH49YJ
+         PLDufS4XL9ikJqxo7M3uhqc9ZxNaoOX/evT/xenEQL3DPpIey1uf81cL1K6FZm5STcrY
+         AYS/3YJBab0LVXBBiLbQCBAI5N1pkNCHUxzd4TmF1Ss4PP7hrr1XMIAS45E4RO/cHf0K
+         IMPmXTiItbKEbtkccCQmNJsbPqpKxI/oGm93+k2PJowgT0xpfiyLAoIVZ8WOKOz5cc14
+         7wuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706608900; x=1707213700;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QKkQF0FpW08UeteOAoIxviKy11wOo5codk8APJXnHpw=;
-        b=UXDpalcLYmRYTtnZp7irnpcD4K6+pKEyhXgsppE9xyYlnUPUhsl9nn3moob2QX8UI6
-         mA4ldJwafv297WFTOSnVAeN3m0zocwV0Ms+Ey3c0DSEQ/5ukLDlvE4mdtExMLlSoaN+A
-         Tm731tpJWLlIyOsAAAaZWYkS+BYtCr0rmFwWUHJhqxqaXcmkC0AD6KHNyKOGMEHAf47m
-         h8n961bHPQCF+z50lzQ8dEsHTQMlP4zy5rWR8GZqJupIvpERB+zJmDcvJW2RAAy1QP2v
-         8lNf5kw77Tlknyhw6Pvh4R06/jPdCxfCk3iF0B/1//1AbL26KqPVFcy1oL2NYflfFkCe
-         X3LQ==
-X-Gm-Message-State: AOJu0Yw0KxtQ55pyGUcihePwPqLfaGNG8K5ZU1HLNiEkkrwUyUlZvMiG
-	72kex97DtQTOXS2BDR87189nFBMPIAyYvU1nTAGJzIF/psZ8KtVb4zvLytGWlSE=
-X-Google-Smtp-Source: AGHT+IESf0EpjQx4lpB34RFQ6qQXQst1fuUCLWSZ9r/E3tjdjKkRAJqjn7CH4cmrPl4d8ixCz9wsdQ==
-X-Received: by 2002:a17:90a:604f:b0:295:b7d0:eadc with SMTP id h15-20020a17090a604f00b00295b7d0eadcmr456213pjm.24.1706608899779;
-        Tue, 30 Jan 2024 02:01:39 -0800 (PST)
-Received: from localhost.localdomain ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id sg14-20020a17090b520e00b00295bc312ceasm730672pjb.34.2024.01.30.02.01.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 02:01:39 -0800 (PST)
-From: Jian-Hong Pan <jhp@endlessos.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	David Box <david.e.box@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc: linux-ide@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@endlessos.org,
-	Jian-Hong Pan <jhp@endlessos.org>
-Subject: [PATCH 2/2] PCI: vmd: enable PCI PM's L1 substates of remapped PCIe port and NVMe
-Date: Tue, 30 Jan 2024 18:00:51 +0800
-Message-ID: <20240130100050.14182-2-jhp@endlessos.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1706608953; x=1707213753;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kClA8daQckTIvu1OZztRzd8EFBYH/WDKzJCQ35/y4Ao=;
+        b=qbSL2N2uc2laigWa1paL+c6AgskI0fkd5hxc2zUWZy4ZN7QD+5PTRRvnEdkR5p/PfQ
+         FnPdmVq0yQrkZK3RtfGdkFnVhnS2aPCTY/TdgGMmmoQpFPXHihAypBjpSZErwbwchKXt
+         uhvWiXImc4y9IOSI6VBdKXQEFOna1w1+qMBaekhyvgTfxS9D8BTUMDZlfJGIWbMecpfs
+         Z17xjROaQin+jPkeNMEsRyCwWVdyn8xgnDeCLQEnzKBYzKJlbqrwEc0BoqnPkzqsBRoN
+         2wo8wGoYi/RGGMAVzrDCapxS5tQIChr0kG+1ZazyETmpgSt7c64Z9PA96DNXMfXakSkg
+         3xcg==
+X-Gm-Message-State: AOJu0Ywb4Zh9vy2DRtzwvAEGduSoZUzR6pDsLQm8jOT+Cqvh46W46ecL
+	bv4j7yUEieQjILYKSHJOFDeTZBnnaUcBnQIL63A03xWyPRXSFelC9ZESBaXSqTA8XErVL9IVW03
+	C58woUBpPNudoS2J2IThyxgPyohJpWpjzLqliaA==
+X-Google-Smtp-Source: AGHT+IEu4GUw7zdQUbV+R6CcIgnxnw9wAWoqOjcKDwjumwIFhh0v31H+fAq88YVX4N5QfeCdu72T3yofgT9yNyrYMQo=
+X-Received: by 2002:a05:6512:61:b0:50e:8eff:3980 with SMTP id
+ i1-20020a056512006100b0050e8eff3980mr6148028lfo.30.1706608953505; Tue, 30 Jan
+ 2024 02:02:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+ <87r0hzuw87.fsf@all.your.base.are.belong.to.us> <87le87uulb.fsf@all.your.base.are.belong.to.us>
+In-Reply-To: <87le87uulb.fsf@all.your.base.are.belong.to.us>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Tue, 30 Jan 2024 15:32:21 +0530
+Message-ID: <CAK9=C2U2mGzTLaXDqyD86bEM4XRc3UmBxRtrd3=+QXXwMK3hjg@mail.gmail.com>
+Subject: Re: [PATCH v12 00/25] Linux RISC-V AIA Support
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	Saravana Kannan <saravanak@google.com>, Marc Zyngier <maz@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>, 
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	Andrew Jones <ajones@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The remmapped PCIe port and NVMe have PCI PM L1 substates capability on
-ASUS B1400CEAE, but they are disabled originally:
+On Tue, Jan 30, 2024 at 1:22=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel=
+.org> wrote:
+>
+> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+>
+> > Anup Patel <apatel@ventanamicro.com> writes:
+> >
+> >> The RISC-V AIA specification is ratified as-per the RISC-V internation=
+al
+> >> process. The latest ratified AIA specifcation can be found at:
+> >> https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-interru=
+pts-1.0.pdf
+> >>
+> >> At a high-level, the AIA specification adds three things:
+> >> 1) AIA CSRs
+> >>    - Improved local interrupt support
+> >> 2) Incoming Message Signaled Interrupt Controller (IMSIC)
+> >>    - Per-HART MSI controller
+> >>    - Support MSI virtualization
+> >>    - Support IPI along with virtualization
+> >> 3) Advanced Platform-Level Interrupt Controller (APLIC)
+> >>    - Wired interrupt controller
+> >>    - In MSI-mode, converts wired interrupt into MSIs (i.e. MSI generat=
+or)
+> >>    - In Direct-mode, injects external interrupts directly into HARTs
+> >>
+> >> For an overview of the AIA specification, refer the AIA virtualization
+> >> talk at KVM Forum 2022:
+> >> https://static.sched.com/hosted_files/kvmforum2022/a1/AIA_Virtualizati=
+on_in_KVM_RISCV_final.pdf
+> >> https://www.youtube.com/watch?v=3Dr071dL8Z0yo
+> >>
+> >> To test this series, use QEMU v7.2 (or higher) and OpenSBI v1.2 (or hi=
+gher).
+> >>
+> >> These patches can also be found in the riscv_aia_v12 branch at:
+> >> https://github.com/avpatel/linux.git
+> >>
+> >> Changes since v11:
+> >>  - Rebased on Linux-6.8-rc1
+> >>  - Included kernel/irq related patches from "genirq, irqchip: Convert =
+ARM
+> >>    MSI handling to per device MSI domains" series by Thomas.
+> >>    (PATCH7, PATCH8, PATCH9, PATCH14, PATCH16, PATCH17, PATCH18, PATCH1=
+9,
+> >>     PATCH20, PATCH21, PATCH22, PATCH23, and PATCH32 of
+> >>     https://lore.kernel.org/linux-arm-kernel/20221121135653.208611233@=
+linutronix.de/)
+> >>  - Updated APLIC MSI-mode driver to use the new WIRED_TO_MSI mechanism=
+.
+> >>  - Updated IMSIC driver to support per-device MSI domains for PCI and
+> >>    platform devices.
+> >
+> > Thanks for working on this, Anup! I'm still reviewing the patches.
+> >
+> > I'm hitting a boot hang in text patching, with this series applied on
+> > 6.8-rc2. IPI issues?
+>
+> Not text patching! One cpu spinning in smp_call_function_many_cond() and
+> the others are in cpu_relax(). Smells like IPI...
 
-Capabilities: [900 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
-                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-                   T_CommonMode=0us LTR1.2_Threshold=0ns
-        L1SubCtl2: T_PwrOn=10us
+Can you share the complete bootlog ?
 
-Power on all of the VMD remapped PCI devices before enable PCI-PM L1 PM
-Substates by following "Section 5.5.4 of PCIe Base Spec Revision 5.0
-Version 0.1". Then, PCI PM's L1 substates control are enabled
-accordingly.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
-Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
----
- drivers/pci/controller/vmd.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 87b7856f375a..b1bbe8e6075a 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -738,6 +738,12 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
- 	vmd_bridge->native_dpc = root_bridge->native_dpc;
- }
- 
-+static int vmd_power_on_pci_device(struct pci_dev *pdev, void *userdata)
-+{
-+	pci_set_power_state(pdev, PCI_D0);
-+	return 0;
-+}
-+
- /*
-  * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-  */
-@@ -928,6 +934,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	vmd_acpi_begin();
- 
- 	pci_scan_child_bus(vmd->bus);
-+
-+	/*
-+	 * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
-+	 * Section 5.5.4 of PCIe Base Spec Revision 5.0 Version 0.1
-+	 */
-+	pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL);
-+
- 	vmd_domain_reset(vmd);
- 
- 	/* When Intel VMD is enabled, the OS does not discover the Root Ports
--- 
-2.43.0
-
+Regards,
+Anup
