@@ -1,145 +1,109 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6361E65BD0;
-	Tue, 30 Jan 2024 10:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A536860DCB;
+	Tue, 30 Jan 2024 10:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706611017; cv=none; b=CGBHKdYH16Q8B5AoXX/reeEljk2gAMjA5RJazqPtdAL1meaN8b+wJgSuzVdBuis0Oqc+2kFDeW6dmH42+iNs8TkHF7l2VjSss0Zmn6AFH3Yw5ToqvIBci1eIFWtOFyQk6qadGrD9dcp2vemiheD/IVydxkTLsnP2P2UJkxvsJPo=
+	t=1706611037; cv=none; b=PA2uCgC3wsJ9wRHfTFq3qDbVFAw/pgveI4KXuyHmXnv06RgtQz+iTTP/XZENp8+2NeEn5M4Oycqyvd68KduIiHo3+h8AM4VmHeO+Aikmz+K+X+0EotP5Q65F7vLDyUXph0SZzthsDF35I2M/D4+WURMMGKV7TNTFfgbMmaNGBJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706611017; c=relaxed/simple;
-	bh=joW5f5HSLrWZ5GQmf1rXby/U2dLAlVL7zEy3NPVkAVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h72O2DjmaOCsSTQ8/zeE5YZskrIrHYUMRSlrB63eGs3KIXOS0RUJHdyty6lwXxyh14V6xXgOrpC6ijbgWW6KIJEg5c7ABiD/qqIdeI5RUsSXd0yGwhHkeDF/ACpCAYVRz0XCM2awJAe0E14xFrHXsepHV9UiS3oYlnKnCPdJtGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4TPM6B2Rk2z9t5l;
-	Tue, 30 Jan 2024 11:36:34 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id bWlRn__eVLko; Tue, 30 Jan 2024 11:36:34 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4TPM4b0x0Nz9sbF;
-	Tue, 30 Jan 2024 11:35:11 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 16E428B763;
-	Tue, 30 Jan 2024 11:35:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id W3NGrQMVAtQf; Tue, 30 Jan 2024 11:35:11 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.134])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D00E8B76C;
-	Tue, 30 Jan 2024 11:35:09 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-mm@kvack.org,
-	steven.price@arm.com,
-	Phong Tran <tranmanphong@gmail.com>,
-	mark.rutland@arm.com,
-	Greg KH <greg@kroah.com>
-Subject: [PATCH v2 5/5] mm: ptdump: add check_wx_pages debugfs attribute
-Date: Tue, 30 Jan 2024 11:34:36 +0100
-Message-ID: <e947fb1a9f3f5466344823e532d343ff194ae03d.1706610398.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1706610398.git.christophe.leroy@csgroup.eu>
-References: <cover.1706610398.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1706611037; c=relaxed/simple;
+	bh=o4SIw1MsOZqjCHoG26s43p+YhsuNKyDrb6bLrGJ9cmo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L2fEgsHsI0XPiSZoK91eXchXr75a/1oBaMmX60nlOQecDkSb0nTYI7tKFOYyQfd8JqqKmnWXEc6nFNKOwjlcXBzukt2PJ/1TIHvUMzCZjdoZhCLILu9Xt/NdgCrANaMWGuu9Xw2QqTOMY0sMHn4Zi7rK7tJq1xHfVe79GaoLjH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-603f3946f0eso3025997b3.1;
+        Tue, 30 Jan 2024 02:37:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706611034; x=1707215834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=19lEWnW+fTM5E0eE3+Mc9J8ZaYPIteOuYV4JI4QwkRc=;
+        b=MsIEdaego12Pw8zRpOQz8hcxTD54Bz4Cf9PJ71ygXOQypiyyrVl/K3Jcvv+0msCI89
+         KaHceNyg8mJv1M3jGdQ+aWKgPBpHGN/0JwbQJNiUdWjInFI9uSk5oRm+6xP95TJGkGUF
+         QSL8Ikop8gRh9yvQIPFByd6BvwSJjwXj1uLak989INpF/EF11nzVtJOhNgvP1yZWl3jv
+         G6G/DD3Iia/T4/GwDCpWYFg81bTzqji7nhc/VR7mEecP52zXr2Vhs653BdHQaPAZkb2Z
+         frMMe/DlNhMh8gXMSxKnWykU2oSmFjzMNn2YLuC8eYdHv67bm1cxRr/svYO4CSdroMMv
+         WwOA==
+X-Gm-Message-State: AOJu0YwbtrPupZFl3y2OYlkFLXe+LxYGQs46swYxj4eYv3csXaHk6HDp
+	Qh9jISQBs1//M4CRGqzRAYk6ChZ/NcCXSM2NSj3Ic3k8dXwkxRdfZQW1/5EJMnU=
+X-Google-Smtp-Source: AGHT+IF6/kKek6TdOLehOY/dpiVEKa0eU4Mi84wA2NgnL5glgRM4Ti7GecYkpX3svzY8ZYAvpunMfw==
+X-Received: by 2002:a0d:f4c3:0:b0:5ff:55f6:7537 with SMTP id d186-20020a0df4c3000000b005ff55f67537mr5898108ywf.5.1706611034460;
+        Tue, 30 Jan 2024 02:37:14 -0800 (PST)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id q131-20020a819989000000b00600392410ffsm3148549ywg.73.2024.01.30.02.37.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 02:37:14 -0800 (PST)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5ff7ec8772dso39741307b3.0;
+        Tue, 30 Jan 2024 02:37:14 -0800 (PST)
+X-Received: by 2002:a05:690c:3508:b0:5ed:a4e8:510 with SMTP id
+ fq8-20020a05690c350800b005eda4e80510mr7143838ywb.14.1706611033979; Tue, 30
+ Jan 2024 02:37:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706610876; l=1389; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=joW5f5HSLrWZ5GQmf1rXby/U2dLAlVL7zEy3NPVkAVA=; b=sNgiUjWR0Fhosv8enaHSXqsDx5ggf6VAZ13c2rbebUX4KZyQTgf7zPLtHsJdwuYc6lV39bCGn 7Ww4MoEZLHXBCZISIB9MHxmZP08gTQfzYa0f+uOXeeMWzGpYGg6D3St
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240129135556.63466-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240129135556.63466-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Jan 2024 11:37:03 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX9XEPQGxtVVT46H8QskFOAcYYjE3qve21EaBcTCpRAMg@mail.gmail.com>
+Message-ID: <CAMuHMdX9XEPQGxtVVT46H8QskFOAcYYjE3qve21EaBcTCpRAMg@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the missing
+ port pins P19 to P28
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a readable attribute in debugfs to trigger a
-W^X pages check at any time.
+On Mon, Jan 29, 2024 at 2:56=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add the missing port pins P19 to P28 for RZ/Five SoC. These additional
+> pins provide expanded capabilities and are exclusive to the RZ/Five SoC.
+>
+> Couple of port pins have different configuration and are not identical fo=
+r
+> the complete port so introduce struct rzg2l_variable_pin_cfg to handle
+> such cases and introduce the PIN_CFG_VARIABLE macro. The actual pin confi=
+g
+> is then assigned in rzg2l_pinctrl_get_variable_pin_cfg().
+>
+> Add an additional check in rzg2l_gpio_get_gpioint() to only allow GPIO pi=
+ns
+> which support interrupt facility.
+>
+> While at define RZG2L_GPIO_PORT_PACK() using RZG2L_GPIO_PORT_SPARSE_PACK(=
+).
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-To trigger the test, just read /sys/kernel/debug/check_wx_pages
-It will report FAILED if the test failed, SUCCESS otherwise.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.9.
 
-Detailed result is provided into dmesg.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v2: Make it a read attribute which reports SUCCESS/FAILED instead of only relying on kernel message log.
----
- mm/ptdump.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+                        Geert
 
-diff --git a/mm/ptdump.c b/mm/ptdump.c
-index 03c1bdae4a43..106e1d66e9f9 100644
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include <linux/pagewalk.h>
-+#include <linux/debugfs.h>
- #include <linux/ptdump.h>
- #include <linux/kasan.h>
- 
-@@ -163,3 +164,24 @@ void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm, pgd_t *pgd)
- 	/* Flush out the last page */
- 	st->note_page(st, 0, -1, 0);
- }
-+
-+static int check_wx_show(struct seq_file *m, void *v)
-+{
-+	if (ptdump_check_wx())
-+		seq_puts(m, "SUCCESS\n");
-+	else
-+		seq_puts(m, "FAILED\n");
-+
-+	return 0;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(check_wx);
-+
-+static int ptdump_debugfs_init(void)
-+{
-+	debugfs_create_file("check_wx_pages", 0400, NULL, NULL, &check_wx_fops);
-+
-+	return 0;
-+}
-+
-+device_initcall(ptdump_debugfs_init);
--- 
-2.43.0
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
