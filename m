@@ -1,34 +1,35 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AA960BBE
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478EE65BA9
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706607565; cv=none; b=QThdylQMtZp0+pMaJY86rgOrSWC1+aU0tcpW/Qg2nNqbD2qieMf/OcuO/HZOcUBRxxSqSDLUeizizpSDmIZ/SLftmWzEv5Itr20Of0CIKS3JoqTsT87hZut4JfnvqXbDA6M6lZDmoMzHYO04MT7KRmTIbUJnxdnZCVfWbn3BHC8=
+	t=1706607587; cv=none; b=fCLvYy9+5fneIMgrcQkqbJ4p7pBRAeGKH9EUeKT6IHzpQ1iftFqpyXATgEIkdqrqFoMqQZ/0E6Khuyvv1N0lRYjY97IHnQnwcz9g10QWdJDcZ6ce5eLDJuX7/DecIeiUoS1ddjJdnKfaMOW8uR1HSnyQP1j71GUvf1Y3GuU1TvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706607565; c=relaxed/simple;
+	s=arc-20240116; t=1706607587; c=relaxed/simple;
 	bh=BoH7plNOPHJjIWtlMvLmcyKU/0ddmPig/gF/cuYUg1g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=smUb15DlXiHhW20D1k1HaTRRgMfHL2LcV97qZMjGP06D5FW9wcoUglSjoLy1eyF27//fzmoXsTi0Zlj0MBkvqc9HMQHZv/Anvai+kp/k2fKoMAojPLAw/usZNrDBTlt4/4HsVVdWY0RIU1aEVP49ABjFnFHN7smq2pIlqxRKSGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.206.16.166
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qUTuWMDA0zU+r6SmtkYvo62519xHFhbij8PtcHl6MGfUbVWl3y3xnimQR+GLBHgzQ+UH3qRDEQEgKVxlwNbC5Rdi7y8tCycPvDJvBv9ilmt/EzkC6zFfvsAzkl4RePrtdC02ZrBKOu6DhzUe2Ml3ojzdjGjWul+DaysOJaZUPB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=52.59.177.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtp71t1706607329tbh5qk6e
-X-QQ-Originating-IP: cjYjlkJhiv5hbyfuepnzhLxHS1vJE5yiT2motTV2zpA=
+X-QQ-mid: bizesmtp66t1706607524t8ljfom5
+X-QQ-Originating-IP: MNSEeMuOZ9lvFqensrikzTfnoUJDWSKe36HfiiCwqdY=
 Received: from localhost.localdomain ( [123.114.60.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 30 Jan 2024 17:35:27 +0800 (CST)
-X-QQ-SSF: 01400000000000E0L000000B0000000
-X-QQ-FEAT: CR3LFp2JE4k40jGMEfOa+OI/+nLk0vpRRvxgweEg+QdnIGnRgI+Big0mm2vqn
-	7f3Y54Do0f4p5cSCPbBNpUFl1xqESz7YR1WqSLXelN2DA47JKtLXBLieXmxw11ioj8MhRnV
-	UHfXrt5bvrNaUdKzcYDHwQ8mNLVRYXqrRGcSGYdQzLD4Y/H0ibEjvnM+P3L/e0qn5GjwEep
-	9iNLI1m14vObzXQxYACGQbuPVJPrP0KUIwDXueAsML4ZxbTuqPBbzYivvNRY3tWQKXRhlAW
-	IaOhwXXcCbct9pluMUceM230jfwxKFUkYtcNRIKsj5uwF3aFewg4C8+wS1LoKj4EgMh+an2
-	lwq4Oo8+9DUENyEqfQvYivio9gjZqS3MhdLNisjaQea77nTnJbPXP8l56sxtLTvS3ea+XfC
+	id ; Tue, 30 Jan 2024 17:38:42 +0800 (CST)
+X-QQ-SSF: 01400000000000E0L000000A0000000
+X-QQ-FEAT: HXiF522FjMjWLRmR8bTORYhARGnWrOcrgyElIPyt8kAHCwHZECQDBFeqATL3C
+	8c7qFuKJxAeancrgd0kdGIOcCftL24HUfKOFw/GpbUS+L17iA7IOnA419/RC1nq+YG+FOJA
+	3QGeDJ8RqCZ7+OTCLt6Zc2JczZBztM8meAMRiwmCZ8aEjioDewYc3FEjgoLhylMDki4hrWz
+	J5pPRYW0a0APCSDIM9yFVVi8jO7lAv1dtS/UyKYjzdcbgkrHxlTim26gQQJyQgEJX57UN5A
+	NzaSe1Ro53wL5LFEQH4wHfEY1x4plzuAy9wUxDtp+hsVYWM9YKO6B1fpDmzBMg/7JN3pNTN
+	J0ZrRoY0llUQ6ZXAtZG8n3mt/hWy0kw51uMIgIO3NRG6SulEJO6BOclFGX3XqvQq5SDPOsS
+	z1J9Ty9RXmU=
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10247733467961666524
+X-BIZMAIL-ID: 10257619297343523134
 From: Qiang Ma <maqianga@uniontech.com>
-To: lexander.deucher@amd.com,
+To: alexander.deucher@amd.com,
 	christian.koenig@amd.com,
 	Xinhui.Pan@amd.com,
 	airlied@gmail.com,
@@ -40,8 +41,8 @@ Cc: amd-gfx@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	Qiang Ma <maqianga@uniontech.com>
 Subject: [PATCH] drm/amdgpu: Clear the hotplug interrupt ack bit before hpd initialization
-Date: Tue, 30 Jan 2024 17:35:22 +0800
-Message-Id: <20240130093522.19914-1-maqianga@uniontech.com>
+Date: Tue, 30 Jan 2024 17:38:08 +0800
+Message-Id: <20240130093808.23890-1-maqianga@uniontech.com>
 X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
