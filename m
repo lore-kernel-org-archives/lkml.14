@@ -1,124 +1,73 @@
-Received: from a.peacevolution.org (a.peacevolution.org [206.189.193.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6AB78B7B;
-	Tue, 30 Jan 2024 20:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.193.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8740E69E1A;
+	Tue, 30 Jan 2024 20:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706647087; cv=none; b=Tvbyb7xDcMU+d9gtm190sWumB/wGJ6JHwTV851UDbs02EHAa/Zg2bHFfoY8FomvydBnL4qeX+/sTQ9bycLKLlp5xk5M366IpDXbG841Q1i7TSUJ7w2eo7COUplMMCqwX+37nmXdrRV+RHoZIsvV5j1dVYbEiflbeyXGnmp+k4+w=
+	t=1706647164; cv=none; b=eH9pQ1aNKcWE5Rbdw52Gg7DsKHS3bdlGToxiVi/9Sbm1PNVXhMi6LiEh5XecJaEqNUKBw3fYTzE1VZLaQWaom2MvyVzssJ6EVmoLTMOMQj7KtbfwZGz+C9vlOMS4YPmdXfcT+t/qDE+pT1Ofqz87tDMvZgnb+ZO8V3YwHD+W9eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706647087; c=relaxed/simple;
-	bh=ItXbRSSuRULGHehgAkFOPt/p0MSJUvWQ3KbcLpvFS5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F7pkK2zK2fS251z62x+ZlkNlbQpr/vdbrqmktPSRtedBZs1aFKgdnGVOsHGXt15m3nm0TCYTusrq/d+YEFFP+mmg4J0TrTMutW3IG//EWjvOlyMR+uMDHWwPIhBlOj0JUrfccdJFINIPv4QpzBP9+5LpqUWuDa5DyuBhhtoh4PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=M/8nUGKs; arc=none smtp.client-ip=206.189.193.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peacevolution.org
+	s=arc-20240116; t=1706647164; c=relaxed/simple;
+	bh=K5vOyDAZH33Lnu4vDYurahA8ZLJkazz+ZavXy0qdlzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rNNcBFTWKU+J7YxaKjIhWIMb0GaDggV5S8HBD/2LGzYtbiTjPZZB7ecKZ7y/YIRPBKAEe7LE2SMJPlrVVyhDJ+hPd3e8xGHlF6BKwwDs2DYNcjrF9uu6SpR1QAvWMc+jZEjLqVQM8v1eBuJ5rJZIpcBOX7mezP3pgDI38lmxecc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoX5hB+p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="M/8nUGKs"
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-	by a.peacevolution.org (Postfix) with ESMTPA id D42EA4661E;
-	Tue, 30 Jan 2024 20:38:03 +0000 (UTC)
-From: Aren Moynihan <aren@peacevolution.org>
-To: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>,
-	Hans de Goede <j.w.r.degoede@gmail.com>,
-	Aidan MacDonald <aidanmacdonald.0x0@gmail.com>,
-	Aren Moynihan <aren@peacevolution.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Quentin Schulz <quentin.schulz@bootlin.com>,
-	Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH v2 5/5] power: supply: axp20x_usb_power: set input current limit in probe
-Date: Tue, 30 Jan 2024 15:28:01 -0500
-Message-ID: <20240130203714.3020464-6-aren@peacevolution.org>
-In-Reply-To: <20240130203714.3020464-1-aren@peacevolution.org>
-References: <20240130203714.3020464-1-aren@peacevolution.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoX5hB+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B83E2C433C7;
+	Tue, 30 Jan 2024 20:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706647164;
+	bh=K5vOyDAZH33Lnu4vDYurahA8ZLJkazz+ZavXy0qdlzw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uoX5hB+p4SSfKQGPNSa0c86H8hkuAvHqMuN1ovtOhzbNn19U3HQrINYCfHeBGxl57
+	 lJYh+tXBR2EULslL/VGNQ6o9oM+loW/HYDKC3r1t5IV+MGXXhefzuzGOurJ1tI9hMT
+	 axJxHKVLIpllO8Cu3DHv4TLQ31tdd+BkcCBswm099isd+OdthJfRJtUcjZZnITmNyA
+	 HTz5w17vnEldTbnOZDc01BvmzZRCkAh3xqV+LWsfhlBG/9bQikPzxssVrqMtSQHlIA
+	 qqqoTjm1DXpYwjeqZCwYbdeiSF6xBIdmXvLe7Bdwf4DGfLqwOQZA6qkxaFiP1U3Ap/
+	 Yg0uAga/DcCjQ==
+Date: Tue, 30 Jan 2024 14:39:21 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: timer: narrow regex for unit address to hex
+ numbers
+Message-ID: <20240130203921.GA2300248-robh@kernel.org>
+References: <20240123083312.20808-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: -
-Authentication-Results: auth=pass smtp.auth=aren@peacevolution.org smtp.mailfrom=aren@peacevolution.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=peacevolution.org;
-	s=dkim; t=1706647084;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
-	bh=eZlM22aJvF3MR5EwxjV3X6ckVSfAYjgJvEHp2kxoO6k=;
-	b=M/8nUGKsclChSRKnGxLzS4IoO1E9Nt8BRog8y+x/fzhn6ORnN4xP84cIDZ4K93ex/n0XjY
-	sD0Rk0yEGcDFyekb7xdkqxCLD6MFP4pqDTHf/vJ+e919wrUuYmGdFDYTggTOVkjv4d5JsR
-	fizhJ0M8fVYbAy4RwiCrGadYlLng8SQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123083312.20808-1-krzysztof.kozlowski@linaro.org>
 
-axp803 sets the current limit to 3A by default if it doesn't detect a
-battery. The datasheet says that register 0x2D bit 6 is used to indicate
-first power on status. According to it, if that bit is 0 and the battery
-is not detected, it will set the input current limit to 3A, however
-setting that bit to 1 doesn't to prevent the pmic from setting the
-current limit to 3A.
+On Tue, Jan 23, 2024 at 09:33:12AM +0100, Krzysztof Kozlowski wrote:
+> Regular expression used to match the unit address part should not allow
+> non-hex numbers.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../devicetree/bindings/timer/arm,arch_timer_mmio.yaml          | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> index 7a4a6ab85970..5b9fda2a81e0 100644
+> --- a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> +++ b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> @@ -60,7 +60,7 @@ properties:
+>        be implemented in an always-on power domain."
+>  
+>  patternProperties:
+> -  '^frame@[0-9a-z]*$':
+> +  '^frame@[0-9a-f]*$':
 
-Waiting for USB BC detection doesn't work either, because (as far as I
-can tell) USB BC detection isn't performed when there isn't a battery
-detected.
-
-Fixes: c279adafe6ab ("power: supply: axp20x_usb_power: add support for AXP813")
-
-Signed-off-by: Aren Moynihan <aren@peacevolution.org>
----
-I'm not sure if the pmic simply ignores the first power on field, or if
-it needs to be set in a specific way / at a specific time. I tried
-setting it in arm-trusted-firmware, and the pmic still set the input
-current limit to 3A.
-
-The datasheet for axp813 says it has the same first power on bit, but I
-don't have hardware to test if it behaves the same way. This driver uses
-the same platform data for axp803 and axp813.
-
-(no changes since v1)
-
- drivers/power/supply/axp20x_usb_power.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index dae7e5cfc54e..751b9f02d36f 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -51,6 +51,7 @@ struct axp_data {
- 	unsigned int			num_irq_names;
- 	const int			*curr_lim_table;
- 	int				curr_lim_table_size;
-+	int				force_curr_lim;
- 	struct reg_field		curr_lim_fld;
- 	struct reg_field		vbus_valid_bit;
- 	struct reg_field		vbus_mon_bit;
-@@ -545,6 +546,7 @@ static const struct axp_data axp813_data = {
- 	.curr_lim_table = axp813_usb_curr_lim_table,
- 	.curr_lim_table_size = ARRAY_SIZE(axp813_usb_curr_lim_table),
- 	.curr_lim_fld	= REG_FIELD(AXP22X_CHRG_CTRL3, 4, 7),
-+	.force_curr_lim = 500000,
- 	.usb_bc_en_bit	= REG_FIELD(AXP288_BC_GLOBAL, 0, 0),
- 	.usb_bc_det_fld = REG_FIELD(AXP288_BC_DET_STAT, 5, 7),
- 	.vbus_disable_bit = REG_FIELD(AXP20X_VBUS_IPSOUT_MGMT, 7, 7),
-@@ -726,6 +728,17 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
-+	if (power->axp_data->force_curr_lim) {
-+		/*
-+		 * Some chips set the input current limit to 3A when there is no
-+		 * battery connected. Normally the default is 500mA.
-+		 */
-+		ret = axp20x_usb_power_set_input_current_limit(power,
-+				power->axp_data->force_curr_lim);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (power->usb_bc_en_bit) {
- 		/* Enable USB Battery Charging specification detection */
- 		ret = regmap_field_write(power->usb_bc_en_bit, 1);
--- 
-2.43.0
-
+Technically, it should be '+' rather than '*'. But I'm pretty sure 
+generically we check that node name can't end with '@'.
