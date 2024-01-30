@@ -1,80 +1,111 @@
-Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F736089A;
-	Tue, 30 Jan 2024 10:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C9F605B4;
+	Tue, 30 Jan 2024 10:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706609717; cv=none; b=HyOzxP5HWZJ7Qr6COqRFGnKBUULITTH+n4bvPAhAZkQ2waN3th7obcx+jMTKiczqzk+jYb+lxJxhvxuEW2az1ZIrlj6iq4xz040UzdiotMDxt5NBZRfj2U7bQuzfuZpJ29SW1GbLk0pcR9TMb9Ta6+Zmcwe8lQ28L3OtGY8yl9k=
+	t=1706609780; cv=none; b=BZeeDWrWw90crDzB/7gkEUxvK3bXsB3oxq3fteLEB7NScpShlbzLZmlAi2gwg6ANDpK/4lHOSE9tjebXIyTe7+lI3hQwg5kQ/tlCL7ttaHaRXXlwxac3mldz7cVLuD7dYOPR7gZW7TSGTCKjAPCfHCkxOcgMtlZPLErP2f3dYO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706609717; c=relaxed/simple;
-	bh=9fYioI8dC2iBxcG6AmP63IOk32XJP98pHndMcV1dzEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cCSqYjGIN7b4321OuvyZRdgMT80JGvXSQKB/rW9yuzGEch/7jf9VnuPlMylI/H0Y9xhsLFcMzGdQkfYM22CmWY6ZoFPScY2aUyID6RPEyHD43Ugz+acET1CeQWtbTJ+n4e/rwER5e/y1KQ4//6P6Am93clmceJEQlph4zsQhYzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
-Received: from uucp by ganesha.gnumonks.org with local-bsmtp (Exim 4.94.2)
-	(envelope-from <laforge@gnumonks.org>)
-	id 1rUl90-00F0vY-2G; Tue, 30 Jan 2024 11:15:06 +0100
-Received: from laforge by localhost.localdomain with local (Exim 4.97)
-	(envelope-from <laforge@gnumonks.org>)
-	id 1rUl5f-0000000FnQK-1I97;
-	Tue, 30 Jan 2024 11:11:39 +0100
-Date: Tue, 30 Jan 2024 11:11:39 +0100
-From: Harald Welte <laforge@gnumonks.org>
-To: Marcin Szycik <marcin.szycik@linux.intel.com>
-Cc: takeru hayasaka <hayatake396@gmail.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	vladimir.oltean@nxp.com, linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	mailhol.vincent@wanadoo.fr
-Subject: Re: [Intel-wired-lan] [PATCH net-next RESENT v3] ethtool: ice:
- Support for RSS settings to GTP from ethtool
-Message-ID: <ZbjLWwG8m-FdyxMH@nataraja>
-References: <20240127140747.905552-1-hayatake396@gmail.com>
- <154f979e-a335-461b-b72e-5e9c54fe940c@linux.intel.com>
- <CADFiAcJShbgBLXdVgs1vK1jqDFopkRcw-se4b4h0V3Yd60xLVw@mail.gmail.com>
- <92958c7b-7e5f-4e25-819f-4e52f9ffcf7b@linux.intel.com>
+	s=arc-20240116; t=1706609780; c=relaxed/simple;
+	bh=EKido4cfkiPSNL005kSWWswMbAIta1D446sWSq/aX7s=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=VvGm7zfonclBXn8maCGhqIrFck2gTm/aubYWuhEJYTXU4PPuk9uCYx/f8ynVeNZ7GUNuw0D1WAn+dX6fwpi4OxuRYOTGsL/GoQ6K0jBHyhSXqcPpQ85T9lVoCb3YcpnhX+vu+3KUg5MkJjHmFhCwyX6PMxmfo15wjj8NvrriFw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EOXJFH0G; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EOXJFH0G"
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+	id 0489720541E2; Tue, 30 Jan 2024 02:16:18 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0489720541E2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1706609778;
+	bh=lWjvTitWSXmCVj9tD67yPr16D3fiYZ1z5BKjD2XlLRg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EOXJFH0G7tayi52lb6OIV4X8MfQM5rdbWzzN8htV351zOxwFxrJGx4Gh9m0I4lhpz
+	 gi33oSm245JV5oWwlD11Eo2pd3O5Dauj5ZPPwRNu5kJ+IaSLeTGjDnsfDlNljn4Il5
+	 PUlNQmoTnNJvmpKmPEeeXGIwvdCqEfLvdH5SkqbU=
+From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	longli@microsoft.com,
+	yury.norov@gmail.com,
+	leon@kernel.org,
+	cai.huoqing@linux.dev,
+	ssengar@linux.microsoft.com,
+	vkuznets@redhat.com,
+	tglx@linutronix.de,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: schakrabarti@microsoft.com,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Subject: [PATCH net] hv_netvsc: Fix race condition between netvsc_probe and netvsc_remove
+Date: Tue, 30 Jan 2024 02:16:12 -0800
+Message-Id: <1706609772-5783-1-git-send-email-schakrabarti@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92958c7b-7e5f-4e25-819f-4e52f9ffcf7b@linux.intel.com>
 
-hi Marcin,
+In commit ac5047671758 ("hv_netvsc: Disable NAPI before closing the
+VMBus channel"), napi_disable was getting called for all channels,
+including all subchannels without confirming if they are enabled or not.
 
-Disclaimer: I have no understanding of the proposed implementation here, just commenting
-on this from a 3GPP protocol architecture point of view.
+Which caused hv_netvsc getting hung at napi_disable, when netvsc_probe()
+and netvsc_remove() are happening simultaneously and netvsc_remove()
+calls cancel_work_sync(&nvdev->subchan_work) before netvsc_sc_open()
+calls napi_enable for the sub channels. Which causes NAPIF_STATE_SCHED
+bit not getting cleared for the subchannels.
 
-On Tue, Jan 30, 2024 at 10:59:40AM +0100, Marcin Szycik wrote:
-> >> gtpc(4|6) doesn't include TEID, so what is its purpose?
-> > In GTPC communication, there is no TEID in the CSR (Create Session Request).
-> > Therefore, there are cases of GTPC that do not include TEID.
-> 
-> The way I understand it now, this patch (and the ethtool one) adds hashing on
-> TEID field in GTP* headers. So I wanted to ask why do we have a case (gtpc(4|6))
-> that doesn't include TEID? Do we hash on other fields in this header?
+Now during netvsc_device_remove(), when napi_disable is called for those
+subchannels, napi_disable gets stuck on infinite msleep.
 
-There are many differen GTPv2C messages, most of which contain a TEID.  So it does
-in general still make sense to be able to use RSS for all those other messages.
+Call trace:
+[  654.559417] task:modprobe        state:D stack:    0 pid: 2321 ppid:  1091 flags:0x00004002
+[  654.568030] Call Trace:
+[  654.571221]  <TASK>
+[  654.573790]  __schedule+0x2d6/0x960
+[  654.577733]  schedule+0x69/0xf0
+[  654.581214]  schedule_timeout+0x87/0x140
+[  654.585463]  ? __bpf_trace_tick_stop+0x20/0x20
+[  654.590291]  msleep+0x2d/0x40
+[  654.593625]  napi_disable+0x2b/0x80
+[  654.597437]  netvsc_device_remove+0x8a/0x1f0 [hv_netvsc]
+[  654.603935]  rndis_filter_device_remove+0x194/0x1c0 [hv_netvsc]
+[  654.611101]  ? do_wait_intr+0xb0/0xb0
+[  654.615753]  netvsc_remove+0x7c/0x120 [hv_netvsc]
+[  654.621675]  vmbus_remove+0x27/0x40 [hv_vmbus]
 
-The CSR (Create Session Request) will not be able to benfit from it, but
-it's just the first message initiating a dialogue between two elements
-(think of it like a TCP SYN).  All the follow-up messages in that
-dialogue contain TEIDs and hence can benefit from RSS.
+Fixes: ac5047671758 ("hv_netvsc: Disable NAPI before closing the VMBus channel")
+Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+---
+ drivers/net/hyperv/netvsc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 1dafa44155d0..a6fcbda64ecc 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -708,7 +708,10 @@ void netvsc_device_remove(struct hv_device *device)
+ 	/* Disable NAPI and disassociate its context from the device. */
+ 	for (i = 0; i < net_device->num_chn; i++) {
+ 		/* See also vmbus_reset_channel_cb(). */
+-		napi_disable(&net_device->chan_table[i].napi);
++		/* only disable enabled NAPI channel */
++		if (i < ndev->real_num_rx_queues)
++			napi_disable(&net_device->chan_table[i].napi);
++
+ 		netif_napi_del(&net_device->chan_table[i].napi);
+ 	}
+ 
 -- 
-- Harald Welte <laforge@gnumonks.org>          https://laforge.gnumonks.org/
-============================================================================
-"Privacy in residential applications is a desirable marketing option."
-                                                  (ETSI EN 300 175-7 Ch. A6)
+2.34.1
+
