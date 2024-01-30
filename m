@@ -1,137 +1,97 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2064.outbound.protection.outlook.com [40.107.220.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E9543AB3;
-	Tue, 30 Jan 2024 03:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706584782; cv=fail; b=FeyDgAovyeR3k9MB6amcmlAFEJrI9lclEMbC+MeK6ZunBZI37BPrJ3n5YBqns1hsvABVIS3DRxMloBGKmL66kKnUOlR99C7V00+meKDHkvBGyFBST8pzVK0ZX6ntpCp4tTzrfzf5GyShGtlP6DPZokxPnufEciKbHSJyQbc6Deg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706584782; c=relaxed/simple;
-	bh=3ME+v1M95ybXx96nhasNEZ3w22e2BKuPtRJR41vGdaE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A4fymJozOoHwU8CZRgOg42dFVm8eJDmkTqfKPkvODgN/xwVlEfaNaUqMQLVF2rx8cHWLNOgmVGjOZULLiokTh4i9aWAICeg1ihkK3zdQk1uoVgdS90nppAoeYTOisXaLOpKkrfeN0ZKg98xAUqVjvAkfXJslCzCVoypT1K465Pk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JfCCE9Z5; arc=fail smtp.client-ip=40.107.220.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67887374DD
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 03:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706584910; cv=none; b=aro66taEt0ibjaR8gB1+c6vedF32oXno/iSeO7NZvZcH6V5NxotNNsD3Bqs6efs/VXq9A2fOXsLS25Jyyl42aTXydBLOi836sZLvpfAhNJECl4dPkNbl4SmoIWXf3gpWhV/9viShVQ9k1pwVmEQh1+JVQclOph5NdiMelBxtnDQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706584910; c=relaxed/simple;
+	bh=GVgpS0kWdba5RHznJAUo54ANw3Oz18XB79QwSzgGW1I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=odeIsvE2Rsi5UmC2XN+ruXuBYGRxsTWh4xWryPgVJo/xGdpx12nISabUVKIkT02iP6xEdzl2KchffoiRD4+baqyhzQ3MDGT4nY3nwoSDM3pVQFviuFgDkA+e8KAlvHFnW+6Jv81gbnLs51e4AV2gH0alzwv2fK2Myi7OmDXYjXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UtCuiBPP; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JfCCE9Z5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LpvJXYRcxiJ1yevzKaxxF2uI1ipD2EUNTKt5WwJaQYuDKLEa427xmRcXLlL5+g60bbCIsM7PABntenyztfZWKXaVVhBDP/K//ck6O0QQdr0oxXXEGsM3fVaq8eLbl5X2Ysx44ljUDyZHhMB3RDzBJFdJyDb++7sW/jL3jxm0ijlD6wrRA8SFfy6Mr/+PYJSGoldPzK6BtaiFEn6oiVf84y+IGfgnZnfoVE69cKDmIeadRHDpUNkF5U66CWrapXkzGK4dZN2Av53mG435eYggD4z6iKr15pnc/4DEqDlpTEWuA2LX2Cn7k3HeODrEWy0u5dNzQq2Rc1OF34ICbHvy/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/WUTkD0MHNo9tADSWnprHWaLAzSOW0I26nQ+yW648ws=;
- b=FEO9qIjWAs/u1ubEtNsHifwxaEgoA0xPSa01vD+IWpZ6HqRwZ0pFmrce23997fB9Yd2pMViLjwLcWHLGW3cWK0tTbhYuNII5NlRanYe23L9Rv898Q9BeEN/079AUAVPmhaxFv+DSLBfsK/Kqx4VdXhfbJZHHWGjYEyvPHrte4dxX2Hk7eK836BnyHm4S668lKn3MFGPbOklT0B1UzHD77OwhPygphWEaj6Umf2OFIKwoJXqFX/2K/TbK0m/3Aej8cYlO3eA/6lVj0BBftJyeyaOH3ic+SY6rbA/GYPoINzkeZcfQWqHmIKYdlOG6SF3CdZMEIgW9ZBZv53Q6FfF4LA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/WUTkD0MHNo9tADSWnprHWaLAzSOW0I26nQ+yW648ws=;
- b=JfCCE9Z59eKviVE27AsrV5+BKPmLWbY7sl4ReMIXjMm1KFvQoDtcsgHs8IVu68/Yv61yInx0hPpHnizU2TjHJpDC+P0Lf2e5M5P3Z5dqv56WBCkQiC72L+RzJ7wGIAXT/3fS9lbC9jOU1ly6ot7ccNY9azXdkoBYZ9qYq8gFsjc=
-Received: from DS7PR05CA0021.namprd05.prod.outlook.com (2603:10b6:5:3b9::26)
- by CYYPR12MB8964.namprd12.prod.outlook.com (2603:10b6:930:bc::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.33; Tue, 30 Jan
- 2024 03:19:38 +0000
-Received: from CY4PEPF0000E9D9.namprd05.prod.outlook.com
- (2603:10b6:5:3b9:cafe::aa) by DS7PR05CA0021.outlook.office365.com
- (2603:10b6:5:3b9::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22 via Frontend
- Transport; Tue, 30 Jan 2024 03:19:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D9.mail.protection.outlook.com (10.167.241.77) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Tue, 30 Jan 2024 03:19:37 +0000
-Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 29 Jan 2024 21:19:34 -0600
-From: Perry Yuan <perry.yuan@amd.com>
-To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
-	<Borislav.Petkov@amd.com>, <viresh.kumar@linaro.org>, <Ray.Huang@amd.com>,
-	<gautham.shenoy@amd.com>
-CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
-	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 8/8] tools/power x86_energy_perf_policy: change intel msr functions to be static
-Date: Tue, 30 Jan 2024 11:18:36 +0800
-Message-ID: <67a44547a902e2d266a872ee1a5f6d9894e401c8.1706583551.git.perry.yuan@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706583551.git.perry.yuan@amd.com>
-References: <cover.1706583551.git.perry.yuan@amd.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UtCuiBPP"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-290b37bb7deso2922092a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 19:21:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1706584908; x=1707189708; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F0sbop7XQqdjmioWaFQ3H9fsjzAkSy2+DWUpY41QSrM=;
+        b=UtCuiBPPS2LtAygT6M33IpRZg2rWTDjLdshlsTlQJZ7BdhbxtAAUe6eoH6IdpmYDMm
+         FMPbB4VID2ZkzJlJtmzFLFUjhNnAPFBm0mCGt94cZ92lj0dYL0VgGvmKTxLO3qoWIhgl
+         um8cm262ngi8tuS+NzFyCWAuXJk1/1UOIHIDX9fxJ9+yggEgHaFpoudEF5JYGMXt/E6c
+         t9YTPEkCYgn+MB/n0ifFueujecjnYaz6rr8h/y3ZXA6p5jxg9mpieUzZ//XjRsAn4t79
+         dX5LBLRBGdzWirr6NPWq6vYOuFCWJFx3er+swjvQ1osFrkCvgJZybZo+GlaDvBjU1fOB
+         aaVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706584908; x=1707189708;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F0sbop7XQqdjmioWaFQ3H9fsjzAkSy2+DWUpY41QSrM=;
+        b=sU6lC01vOTmYsEPGCmEe2I91PtbNl6Mk6Mq6RvKjAZLCPW23oRmynVDRFWy1uofK1g
+         R6B3ZP2q3zzRkfmmlE8CksyhTOGQ7ACaMxCWfCjk29aGRtMcmqyj9j56mRc03JMzdC/G
+         g6/ehe8k9gv4jr+bx2SICwn3kCT6eU3dyvcP8M6X/nxjpl/aYAuCmcaUvrSzuWNYddmV
+         5fGeyZ4N/mDnUTbrIIUV4AK3zL4dg7B1znd+7quIR83rF28SS+sPsba+7zMwnc05Td5b
+         ebQw/wXKeE3ugopJuf3bv+q8GCwIxiT45MOMXIMhgMslt56LjSiw46OwWMdlvm/wNvoX
+         BPtQ==
+X-Gm-Message-State: AOJu0Yx+Fwb3fv34H3RVw9/JLlVs5m8TjkA+Vmoz9Nds3SIGvGentW7W
+	Gs860fFzk7Nt0MRY72FS4n1CItH3dww8SqUTKxD3Dfn+1VA1xnWhBbQ3lN+VSjs=
+X-Google-Smtp-Source: AGHT+IGs4cIwjAEL8S1Pi2YUsDojQGkhT4IamQA2tICFDYHddN5Dz2xG9Fu0iOYaXtt2kAYQWVhPQA==
+X-Received: by 2002:a17:90a:b398:b0:290:f7a7:333d with SMTP id e24-20020a17090ab39800b00290f7a7333dmr4686882pjr.36.1706584908715;
+        Mon, 29 Jan 2024 19:21:48 -0800 (PST)
+Received: from [10.4.207.234] ([139.177.225.234])
+        by smtp.gmail.com with ESMTPSA id sw12-20020a17090b2c8c00b0029105d49b2dsm7199938pjb.20.2024.01.29.19.21.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 19:21:48 -0800 (PST)
+Message-ID: <0e7c202d-3a53-4b07-b316-259d6fedc592@bytedance.com>
+Date: Tue, 30 Jan 2024 11:21:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D9:EE_|CYYPR12MB8964:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32639d07-0c1a-44c2-7907-08dc21424a80
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	MPhC6MjfNOmYrZX0b7+yqeAaEv0kgyv1vCu3OZZEeF6TpMzZDeVOfW9fxoAKEUqX0iG6B5qHUL9yyWOWRVBLnWGLRHAFSAsivRRJiuuId3kobtjSCmot6gpSz8o8JCC7KFNaf6lxkaR7qpuu6cuqoWbRk5GV0Lx6fYJCOsYNjZhcwUvEQyUjvHiN268YTa1SF0ZJWfnqYTOQv5DG1rhe5HkpmS00HDs2pEOoqobKZ8I4fN6WjsMRtOiQzypx/vK1KNsduvGji1wjZeqXe+3WHC9WvgVL5QIZzItEbBahmzkD8rYbalY1tm4lNnS3CPswA7M8OrG81FI5dF+7psH9iMaTFIkvzAE9iycvIDP38XBQT69YAdMLi6uIdwkSfNTtpQn8QV9NMjckAR7xEfTii19ZUvGYuVclSoJ85MTcXQCbsWOyTO7oQ1jC0oXV/7ixUA+rSEyUtYwCdDGBJktvVW2RVYD5wimG4lFNB9I5Nht0AxoiLhEVBzyalHX1EQi9FLMIoaF1RHU6fvOEB9hwWKe5z3mvMvy5IMvOGskJiu1aG8bXRaoA5PeiXM4GUKff9K/inRc8pKTOqmgpsX5fTd+NhxzmsPIdset8IiBRvJjmwhEVdsncuuLTGzMI9lfYSXlH53SdM28fWEoTr1u/qZVDncUdJAw7Z9nFzTvpY3CNLjkA55VixIXzrwJbIsOqHnRx5Bfv6p5Pzt+61Kfx8JUgTEFIzzak7DxnEa8mnaw7yr8n34z0ow9UzP73cTPS8vQQVIFt+ivXU1sr+ywy6w==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(376002)(136003)(396003)(230922051799003)(451199024)(1800799012)(186009)(82310400011)(64100799003)(36840700001)(40470700004)(46966006)(83380400001)(47076005)(2616005)(426003)(6636002)(336012)(26005)(36860700001)(16526019)(82740400003)(7696005)(81166007)(4326008)(5660300002)(8936002)(44832011)(8676002)(478600001)(2906002)(110136005)(54906003)(41300700001)(70586007)(316002)(70206006)(356005)(86362001)(36756003)(40460700003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 03:19:37.9697
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32639d07-0c1a-44c2-7907-08dc21424a80
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D9.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8964
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/20] mm: zswap: rename zswap_free_entry to
+ zswap_entry_free
+Content-Language: en-US
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>,
+ Yosry Ahmed <yosryahmed@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240130014208.565554-1-hannes@cmpxchg.org>
+ <20240130014208.565554-2-hannes@cmpxchg.org>
+ <eceb2dc5-f13b-4c54-b2dd-0e4a199c1280@bytedance.com>
+ <20240130031938.GA772725@cmpxchg.org>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <20240130031938.GA772725@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-change the intel_get_msr and intel_put_msr functions to be static.
+On 2024/1/30 11:19, Johannes Weiner wrote:
+> On Tue, Jan 30, 2024 at 11:13:16AM +0800, Chengming Zhou wrote:
+>> On 2024/1/30 09:36, Johannes Weiner wrote:
+>>> There is a zswap_entry_ namespace with multiple functions already.
+>>
+>> Another is zswap_invalidate_entry(), maybe zswap_entry_invalidate is better.
+> 
+> You're right.
+> 
+> I originally had a patch for that, but then dropped it because it is
+> sort of also a tree operation and it looked a bit weird to me.
 
-No functional change intended.
+Right.
 
-Signed-off-by: Perry Yuan <perry.yuan@amd.com>
----
- .../power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> But I could be persuaded to include it again, no strong preferences
+> either way.
 
-diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-index 845cfedab06e..a5f2f96fa383 100644
---- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-+++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-@@ -686,7 +686,7 @@ void err_on_hypervisor(void)
- 		    "not supported on this virtual machine");
- }
- 
--int intel_get_msr(int cpu, int offset, unsigned long long *msr)
-+static int intel_get_msr(int cpu, int offset, unsigned long long *msr)
- {
- 	int retval;
- 	char pathname[32];
-@@ -710,7 +710,7 @@ int intel_get_msr(int cpu, int offset, unsigned long long *msr)
- 	return 0;
- }
- 
--int intel_put_msr(int cpu, int offset, unsigned long long new_msr)
-+static int intel_put_msr(int cpu, int offset, unsigned long long new_msr)
- {
- 	char pathname[32];
- 	int retval;
--- 
-2.34.1
-
+Never mind.
