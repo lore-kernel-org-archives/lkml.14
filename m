@@ -1,130 +1,127 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD257D3E3
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278457D3E3;
+	Tue, 30 Jan 2024 21:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706651546; cv=none; b=OgSMUYKwc15jLYY46FI0P5ZSTaBLJUIknVN9pX2an/4T00mJJxICGTwHcfAZoG0wMgjN2GTTU/kKccUzyvoaTNFbhnTkZPY+h4gj3GJhvkEiqzGi1x0gzdyWnn6AqPJbPpE01IWNDvyT/nElmPxFFLkrzKkM0k7qXUF42T/NsSs=
+	t=1706651656; cv=none; b=MSLRyESbpHNIekqzJ5IvSWjRxsruUR4iZl1wd/yB4d5k/aGuohLAIbraLWvLHnVCoBat/KLsWzSq0QtFoGYu1K7INRH0oi0RHzjKffhINu9vXTPmZ+zgA6u5d620Qa9+mpxwdEi4ctQy82Cd5ZdlTrmK5+DvwtR6DBJrJePZVW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706651546; c=relaxed/simple;
-	bh=+qk4vgKPY6g/M0jnFj6arXo9HY1VFRhgbxgqYyNRIGA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qeldLi/S6OaQP2li8Xo0gU/O3SO6BbBTmYaXUUr2piZpXwwON8vcQlDowkyEX1vPqUGkumNWTU+cVcja+ePR8oIqRSLlh5R4S9gD35kx22+MLbBCkZJcyr6fU0+YM0oggTpbBEM3khEIufXleOWnskvHKSE5B4ppPO+y+x34JAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DCtrMZ7b; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706651656; c=relaxed/simple;
+	bh=LTMVYrnQ0Ac5UrUfHkqd52vj2qm9n46fuacsL4mVVR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CT5c683JYJ/sloXDikQCsJ9kI1N9+q+5z6aaLXVtoSsjJWHN6I5WOEHfTWdTjBIYci3CM40L5d4kSMOEKp7Lhfyif39km5fwc23zSqUztDWdVvQknPw+93o2jpSTsA85G0lIXDhtrfGwxe6yM/XdBWvMEPcbOgxqzBDqtxs0uJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9uVnBa8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DCtrMZ7b"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a30e445602cso59983566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:52:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706651542; x=1707256342; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=z/besbXOlWgDfiLFxKbwW3KTuDEF1myzGGPgRYrtdjU=;
-        b=DCtrMZ7bDmdjTtllWpRZ2+7nKAB2lObHXYuNPzu2HexW1SwamGtKyFCLTquLgJTWze
-         WtWHyPNuJ0r6T16e+MB+2k34o3UNwY1jPaOPcRYnJaP2mGLHMs9KwuPdvix7m1DEw9W/
-         aZiDc98W/IowygrbijqDFifkTe5oa4XmxgBy4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706651542; x=1707256342;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z/besbXOlWgDfiLFxKbwW3KTuDEF1myzGGPgRYrtdjU=;
-        b=LJGiIF00AWLHX7orpvcw1M7fRQUnjh7y19SfneQ82r6nbNiIV9JwdoyVRKeqxKecGE
-         WJGR+ivkZlZMGKIQoa5qRqMyA86j1rJQXxGgAJ3BMUwW8wWLQOGvBMqC1I2LC+uIaP6a
-         3Lh1xfvx8DjUc0FTBZn/IyS9+9Fygz4wZX5mzYvqDzhp5b1XajGmkOThBApsPOhTuwnA
-         psiAx0EXVHr2HR7g+Bc7C0aqv6IHbGXj71xxesGkCAzDyvtvzOZXllCcvaEeKit/E/BP
-         zv2e7tZGKfKFig1jegD+Ssi1lZa3ThSt+B3qEtqt6lY29p/aDLbpv+e0VkRrWfTK+7Xi
-         QglA==
-X-Gm-Message-State: AOJu0YwXGH+uVg7ywXv2mxQSUrgien0rQjpVVyN8oRZuskfoZzO8sZo9
-	5AZy+Ffg5p5I7DJ/n37tFGSI0OnBjkQUEyl5VA9vJVmIFKi7E0tj8KYZBx6hH/NbqNUPOdSuQwK
-	v2GxxhA==
-X-Google-Smtp-Source: AGHT+IG9ofX1g0X726rsv1HNP05a54ky0ooZiHH5oQu7IfYARRhYwXuuR5SvTzxW8ccJjatu0WUxQQ==
-X-Received: by 2002:a17:906:2714:b0:a36:5924:77e0 with SMTP id z20-20020a170906271400b00a36592477e0mr697926ejc.10.1706651542689;
-        Tue, 30 Jan 2024 13:52:22 -0800 (PST)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id cw1-20020a170907160100b00a359558648esm3218804ejd.24.2024.01.30.13.52.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 13:52:22 -0800 (PST)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55f19a3ca7aso465007a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:52:22 -0800 (PST)
-X-Received: by 2002:a50:ee12:0:b0:55f:2ef8:7fec with SMTP id
- g18-20020a50ee12000000b0055f2ef87fecmr2373087eds.21.1706651541820; Tue, 30
- Jan 2024 13:52:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9uVnBa8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B482CC433F1;
+	Tue, 30 Jan 2024 21:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706651655;
+	bh=LTMVYrnQ0Ac5UrUfHkqd52vj2qm9n46fuacsL4mVVR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d9uVnBa8V4EX3P0L1wK1PVj+miY4+RIkfPIpH2K9TfKIAIQN9ZgpI+Ru+O9K0+Cde
+	 YKHMlEpMJ3tf1RwQ90YWtoBLJvxkS5uP5vAO914uS1bErG4AX1gB3ja33Nnpb8obPw
+	 vvomTc7HUQSZ3vqbhEm7l3Jq0JrL5ZmjRchPK+b+pRY1DLx2gnBBjVc+9hgleG3odt
+	 JXOwZu8e7iPvzuvHTQZV9CTGrBAIVR0aNv6qwPnyfu3foshVlhkE6Hrh4Q7dgbloL8
+	 cBFVhghTwNmG/tvmyoVAbKAXhwG1H9IdWkfbUz/WvPYTgDCqUybPNsVpRTzqeQLBfL
+	 7Eh52wD8vn8hQ==
+Date: Tue, 30 Jan 2024 15:54:10 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kalle Valo <kvalo@kernel.org>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	=?utf-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4=?= Prado <nfraprado@collabora.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Terry Bowman <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: Re: [PATCH 4/9] PCI: create platform devices for child OF nodes
+ of the port node
+Message-ID: <d2he3ufg6m46zos4swww4t3peyq55blxhirsx37ou37rwqxmz2@5khumvic62je>
+References: <20240117160748.37682-1-brgl@bgdev.pl>
+ <20240117160748.37682-5-brgl@bgdev.pl>
+ <2024011707-alibi-pregnancy-a64b@gregkh>
+ <CAMRc=Mef7wxRccnfQ=EDLckpb1YN4DNLoC=AYL8v1LLJ=uFH2Q@mail.gmail.com>
+ <2024011836-wok-treadmill-c517@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
- <20240130190355.11486-5-torvalds@linux-foundation.org> <20240130155550.4881d558@gandalf.local.home>
-In-Reply-To: <20240130155550.4881d558@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 30 Jan 2024 13:52:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whD=9qTfhYVhH+d44KbwefC_vnRAjqz-pthcSn1p5zZLA@mail.gmail.com>
-Message-ID: <CAHk-=whD=9qTfhYVhH+d44KbwefC_vnRAjqz-pthcSn1p5zZLA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without refcounts
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2024011836-wok-treadmill-c517@gregkh>
 
-On Tue, 30 Jan 2024 at 12:55, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> I'm going to be putting back the ei->name pointer as the above actually
-> adds more memory usage.
+On Thu, Jan 18, 2024 at 12:15:27PM +0100, Greg Kroah-Hartman wrote:
+> On Thu, Jan 18, 2024 at 11:58:50AM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Jan 17, 2024 at 5:45 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Wed, Jan 17, 2024 at 05:07:43PM +0100, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > In order to introduce PCI power-sequencing, we need to create platform
+> > > > devices for child nodes of the port node.
+> > >
+> > > Ick, why a platform device?  What is the parent of this device, a PCI
+> > > device?  If so, then this can't be a platform device, as that's not what
+> > > it is, it's something else so make it a device of that type,.
+> > >
+> > 
+> > Greg,
+> > 
+> > This is literally what we agreed on at LPC. In fact: during one of the
+> > hall track discussions I said that you typically NAK any attempts at
+> > using the platform bus for "fake" devices but you responded that this
+> > is what the USB on-board HUB does and while it's not pretty, this is
+> > what we need to do.
+> 
+> Ah, you need to remind me of these things, this changelog was pretty
+> sparse :)
+> 
 
-I did it mainly because I hate having multiple different allocation
-sites that then have to do that kref_init() etc individually, and once
-there was a single site the "name" thing really looked lik ean obvious
-simplification.
+I believe I missed this part of the discussion, why does this need to be
+a platform_device? What does the platform_bus bring that can't be
+provided by some other bus?
 
-That said, I think you're confused about the memory usage.
+(I'm not questioning the need for having a bus, creating devices, and
+matching/binding them to a set of drivers)
 
-Sure, 'kstrdup_const()' optimizes away the allocation for static
-constant strings, but what it does *not* do is to optimize away the
-pointer.
+Regards,
+Bjorn
 
-In contrast, allocating them together gets rid of the pointer itself,
-because now the name is just an offset in the structure.
-
-And the pointer is 8 bytes right there.
-
-So allocating the string _with_ the ei will always save at least 8 bytes.
-
-So whenever the string is less than that in length it's *always* a win.
-
-And even when it's not an absolute win, it will take advantage of the
-kmalloc() quantized sizes too, and generally not be a loss even with
-longer names.
-
-So I'm pretty sure you are simply entirely wrong on the memory usage.
-Not counting the size of the pointer is overlooking a big piece of the
-puzzle.
-
-Btw, you can look at name lengths in tracefs with something stupid like this:
-
-    find . | sed 's:^.*/::' | tr -c '\n' . | sort | uniq -c
-
-and you will see that (at least in my case) names of lengths 1..7 are
-dominating it all:
-
-      1 .
-   2189 ..
-     34 ...
-   2229 ....
-    207 .....
-   6833 ......
-   2211 .......
-
-with the rest being insignificant in comparison.
-
-The reason? There's a *lot* of those 'filter' and 'enable' and 'id'
-files. All of which are better off without a 'const char *name' taking
-8 bytes.
-
-              Linus
+> > Now as for the implementation, the way I see it we have two solutions:
+> > either we introduce a fake, top-level PCI slot platform device device
+> > that will reference the PCI host controller by phandle or we will live
+> > with a secondary, "virtual" platform device for power sequencing that
+> > is tied to the actual PCI device. The former requires us to add DT
+> > bindings, add a totally fake DT node representing the "slot" which
+> > doesn't really exist (and Krzysztof already expressed his negative
+> > opinion of that) and then have code that will be more complex than it
+> > needs to be. The latter allows us to not change DT at all (other than
+> > adding regulators, clocks and GPIOs to already existing WLAN nodes),
+> > reuse the existing parent-child relationship between the port node and
+> > the instantiated platform device as well as result in simpler code.
+> > 
+> > Given that DT needs to be stable while the underlying C code can
+> > freely change if we find a better solution, I think that the second
+> > option is a no-brainer here.
+> 
+> Ok, I remove my objections, sorry about that, my confusion.
+> 
+> greg k-h
