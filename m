@@ -1,264 +1,152 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03C367747
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D68167730;
+	Tue, 30 Jan 2024 11:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706615597; cv=none; b=InHq7PKKKvbtbyVZax+KBNRC+2JDo2q5a3aZurfJOg8ygkA/8lxdsc217MMGBtStin8MZR8ug58VITXa5K1JwzQnJTbOD5MHToEBSxc8dhCGxTPheOKSNAQgG06HrZnCV/vrf5s60uc2W65fDmqo7ipWkk42sXQB3peVwJIzU5M=
+	t=1706615676; cv=none; b=JLJyX56erIRwSqyvmF6W1MIElMjogiSUtj+PNtCC4S7tX2I0p2Y9+SxJTwnpmd0AcrqDetyLc+OChrVAI5Jrno/eLl+U0RZQllS2DmChSmQshrpTSPAthKY3k6SxGNJpCLnftS+l9s3EiGfPsvJzTCBdhcYOXG/oGZOW1w+z3fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706615597; c=relaxed/simple;
-	bh=JztyLydpOvMohc+UwTatWh0c53pEslI4RUN5TBcmW2Q=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=cvpvyMlPdRD3IvxllWyu8PNJ5uYbGucxkDzKPH+6XaQHLXkSQ0sMnGM0hxf6TfRQdze8RWGy1FDrD1HTJP7RSLu6pZmSoKW0RfhMzM/LcL3zEl/adkkZ0u66zAtV9dw0xuqQuy4Df8KMUhCmVENwiciLAK8IgzJx5TGte5O2OVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hsIs+yNn; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1706615676; c=relaxed/simple;
+	bh=uFzF0c7y0Xa5eSfpXQjqGeNrxWa15vZJgvwqZSw5274=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQqXJtst+uodcEFAwQm4a2rnFHYMGzoT9NO5nKOtLu1Nq1t8MF4VwreQRE7jmDAMSqCUiGBz/8W85FwNRwCHnKl+yqSIzAHt0qSRRzFr9zrWRrr2jOTp5yGO1MwSFEGbluwU1HMb9yCv65JnnDR4efeXszt0V4S6g6lNErx00dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=a1/K2Lja; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o1pRKWzY; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bTJ6JEVv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9bOvETPW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hsIs+yNn"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1706615591; h=Message-ID:Subject:Date:From:To;
-	bh=q2JRxgqAQrdi04QI4nuksa65Pz4ECDDuDGAQKGPG6hQ=;
-	b=hsIs+yNn6uLQ7+56aeexzSeNIUhjrdDdck86lHcsyD8H38I67WgXjvJ6bDfqtlTQuD1yat2Mjwneu6dzgmgi0i7N/3bmueQV8awQBwYy1jDPT9aQKG93HC33Xt1IQk0pVVrGZjrZZncFNAvA6KGTG8TYA9/+QrDtS/qhrMcASfs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W.g5LPL_1706615590;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.g5LPL_1706615590)
-          by smtp.aliyun-inc.com;
-          Tue, 30 Jan 2024 19:53:11 +0800
-Message-ID: <1706615528.9879212-2-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v3] virtio_net: Support RX hash XDP hint
-Date: Tue, 30 Jan 2024 19:52:08 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Liang Chen <liangchen.linux@gmail.com>
-Cc: virtualization@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org,
- liangchen.linux@gmail.com,
- mst@redhat.com,
- jasowang@redhat.com,
- hengqi@linux.alibaba.com
-References: <20240125101912.60346-1-liangchen.linux@gmail.com>
-In-Reply-To: <20240125101912.60346-1-liangchen.linux@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="a1/K2Lja";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o1pRKWzY";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bTJ6JEVv";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9bOvETPW"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 76A7A1F848;
+	Tue, 30 Jan 2024 11:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706615672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnqLZBlDKpe4vlipCmXXPECUe1oy+3ydvLI/2aiDEv8=;
+	b=a1/K2LjasCHk8VC1+Mv9MMio1D7f+pKVCjtL2QvlP4ud6ZJn/jrPzv1HW0lZw4nhyiE6OO
+	w8Mh25o1VAaeNHtbAPaiBgF3wrKuDeVvDWQv9MJnj1MDg5EQNoflnBYd2tcN86clPJF433
+	hu1jDRX/Ii9KMMGot0KKUUz9U44Bl00=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706615672;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnqLZBlDKpe4vlipCmXXPECUe1oy+3ydvLI/2aiDEv8=;
+	b=o1pRKWzY/K2bnB4oa2+DxPSI9kNchKco4S3HJJKut0FnJlyV5nlQf9ch3GPYbyyj8+EYmB
+	WRpCMU/GfoxJPhAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706615670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnqLZBlDKpe4vlipCmXXPECUe1oy+3ydvLI/2aiDEv8=;
+	b=bTJ6JEVvHTL1X4SldT6ke7pjLnJ03JzIPjm3+FdH/PZPETNwOsA3YMkmxfysIWSOo48ozg
+	XPJbtaljXB/+zCw0hCxFgefHm5bjr6Z+X2TaftOVjuTMHCfJvTVJzPkqZq3nYi9oWlhKQ2
+	1muuCC42T7KLL7Bpk8G9gcUi12qQy1M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706615670;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DnqLZBlDKpe4vlipCmXXPECUe1oy+3ydvLI/2aiDEv8=;
+	b=9bOvETPWQ8F6h2aztso666fLDiQVBQP4e0vjNNAhAyWRzfiXw3Zc86Y5EjZnR/47SVGohq
+	Q+WVAr8dJP7OTdDQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6327A13462;
+	Tue, 30 Jan 2024 11:54:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 9JcxGHbjuGWDFAAAn2gu4w
+	(envelope-from <jack@suse.cz>); Tue, 30 Jan 2024 11:54:30 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1B758A0807; Tue, 30 Jan 2024 12:54:30 +0100 (CET)
+Date: Tue, 30 Jan 2024 12:54:30 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+69b40dc5fd40f32c199f@syzkaller.appspotmail.com>
+Cc: akpm@linux-foundation.org, axboe@kernel.dk, brauner@kernel.org,
+	chenzhongjin@huawei.com, dchinner@redhat.com, hch@infradead.org,
+	hch@lst.de, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp,
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+	willy@infradead.org
+Subject: Re: [syzbot] [fs?] BUG: sleeping function called from invalid
+ context in __getblk_gfp
+Message-ID: <20240130115430.rljjwjcji3vlrgyz@quack3>
+References: <0000000000000ccf9a05ee84f5b0@google.com>
+ <0000000000000d130006101f7e0e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000000d130006101f7e0e@google.com>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-0.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=174a257c5ae6b4fd];
+	 TAGGED_RCPT(0.00)[69b40dc5fd40f32c199f];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[15];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,syzkaller.appspot.com:url,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -0.10
 
-On Thu, 25 Jan 2024 18:19:12 +0800, Liang Chen <liangchen.linux@gmail.com> wrote:
-> The RSS hash report is a feature that's part of the virtio specification.
-> Currently, virtio backends like qemu, vdpa (mlx5), and potentially vhost
-> (still a work in progress as per [1]) support this feature. While the
-> capability to obtain the RSS hash has been enabled in the normal path,
-> it's currently missing in the XDP path. Therefore, we are introducing
-> XDP hints through kfuncs to allow XDP programs to access the RSS hash.
->
-> 1.
-> https://lore.kernel.org/all/20231015141644.260646-1-akihiko.odaki@daynix.com/#r
->
-> Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
-> ---
->  drivers/net/virtio_net.c | 98 +++++++++++++++++++++++++++++++++++-----
->  1 file changed, 86 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index d7ce4a1011ea..0c845f2223da 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -349,6 +349,12 @@ struct virtio_net_common_hdr {
->  	};
->  };
->
-> +struct virtnet_xdp_buff {
-> +	struct xdp_buff xdp;
-> +	u32 hash_value;
-> +	u16 hash_report;
-> +};
-> +
->  static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf);
->
->  static bool is_xdp_frame(void *ptr)
-> @@ -1033,6 +1039,16 @@ static void put_xdp_frags(struct xdp_buff *xdp)
->  	}
->  }
->
-> +static void virtnet_xdp_save_rx_hash(struct virtnet_xdp_buff *virtnet_xdp,
-> +				     struct net_device *dev,
-> +				     struct virtio_net_hdr_v1_hash *hdr_hash)
-> +{
-> +	if (dev->features & NETIF_F_RXHASH) {
-> +		virtnet_xdp->hash_value = __le32_to_cpu(hdr_hash->hash_value);
-> +		virtnet_xdp->hash_report = __le16_to_cpu(hdr_hash->hash_report);
+On Mon 29-01-24 17:15:05, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
+> 
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
+> 
+>     fs: Block writes to mounted block devices
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=116642dfe80000
+> start commit:   d88520ad73b7 Merge tag 'pull-nfsd-fix' of git://git.kernel..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=174a257c5ae6b4fd
+> dashboard link: https://syzkaller.appspot.com/bug?extid=69b40dc5fd40f32c199f
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a77593680000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1104a593680000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
+> 
+> #syz fix: fs: Block writes to mounted block devices
 
-Could we put the __leXX_to_cpu to virtnet_xdp_rx_hash?
+This doesn't look correct. The problem here really is that sysv is calling
+sb_bread() under a RWLOCK - pointers_lock - in get_block(). Which more or
+less shows nobody has run sysv in ages because otherwise the chances of
+sleeping in atomic context are really high? Perhaps another candidate for
+removal?
 
-Other looks good to me.
-
-Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-
-Thanks.
-
-
-> +	}
-> +}
-> +
->  static int virtnet_xdp_handler(struct bpf_prog *xdp_prog, struct xdp_buff *xdp,
->  			       struct net_device *dev,
->  			       unsigned int *xdp_xmit,
-> @@ -1199,9 +1215,10 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
->  	unsigned int headroom = vi->hdr_len + header_offset;
->  	struct virtio_net_hdr_mrg_rxbuf *hdr = buf + header_offset;
->  	struct page *page = virt_to_head_page(buf);
-> +	struct virtnet_xdp_buff virtnet_xdp;
->  	struct page *xdp_page;
-> +	struct xdp_buff *xdp;
->  	unsigned int buflen;
-> -	struct xdp_buff xdp;
->  	struct sk_buff *skb;
->  	unsigned int metasize = 0;
->  	u32 act;
-> @@ -1233,17 +1250,20 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
->  		page = xdp_page;
->  	}
->
-> -	xdp_init_buff(&xdp, buflen, &rq->xdp_rxq);
-> -	xdp_prepare_buff(&xdp, buf + VIRTNET_RX_PAD + vi->hdr_len,
-> +	xdp = &virtnet_xdp.xdp;
-> +	xdp_init_buff(xdp, buflen, &rq->xdp_rxq);
-> +	xdp_prepare_buff(xdp, buf + VIRTNET_RX_PAD + vi->hdr_len,
->  			 xdp_headroom, len, true);
->
-> -	act = virtnet_xdp_handler(xdp_prog, &xdp, dev, xdp_xmit, stats);
-> +	virtnet_xdp_save_rx_hash(&virtnet_xdp, dev, (void *)hdr);
-> +
-> +	act = virtnet_xdp_handler(xdp_prog, xdp, dev, xdp_xmit, stats);
->
->  	switch (act) {
->  	case XDP_PASS:
->  		/* Recalculate length in case bpf program changed it */
-> -		len = xdp.data_end - xdp.data;
-> -		metasize = xdp.data - xdp.data_meta;
-> +		len = xdp->data_end - xdp->data;
-> +		metasize = xdp->data - xdp->data_meta;
->  		break;
->
->  	case XDP_TX:
-> @@ -1254,7 +1274,7 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
->  		goto err_xdp;
->  	}
->
-> -	skb = virtnet_build_skb(buf, buflen, xdp.data - buf, len);
-> +	skb = virtnet_build_skb(buf, buflen, xdp->data - buf, len);
->  	if (unlikely(!skb))
->  		goto err;
->
-> @@ -1591,10 +1611,11 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
->  	int num_buf = virtio16_to_cpu(vi->vdev, hdr->num_buffers);
->  	struct page *page = virt_to_head_page(buf);
->  	int offset = buf - page_address(page);
-> +	struct virtnet_xdp_buff virtnet_xdp;
->  	unsigned int xdp_frags_truesz = 0;
->  	struct sk_buff *head_skb;
->  	unsigned int frame_sz;
-> -	struct xdp_buff xdp;
-> +	struct xdp_buff *xdp;
->  	void *data;
->  	u32 act;
->  	int err;
-> @@ -1604,16 +1625,19 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
->  	if (unlikely(!data))
->  		goto err_xdp;
->
-> -	err = virtnet_build_xdp_buff_mrg(dev, vi, rq, &xdp, data, len, frame_sz,
-> +	xdp = &virtnet_xdp.xdp;
-> +	err = virtnet_build_xdp_buff_mrg(dev, vi, rq, xdp, data, len, frame_sz,
->  					 &num_buf, &xdp_frags_truesz, stats);
->  	if (unlikely(err))
->  		goto err_xdp;
->
-> -	act = virtnet_xdp_handler(xdp_prog, &xdp, dev, xdp_xmit, stats);
-> +	virtnet_xdp_save_rx_hash(&virtnet_xdp, dev, (void *)hdr);
-> +
-> +	act = virtnet_xdp_handler(xdp_prog, xdp, dev, xdp_xmit, stats);
->
->  	switch (act) {
->  	case XDP_PASS:
-> -		head_skb = build_skb_from_xdp_buff(dev, vi, &xdp, xdp_frags_truesz);
-> +		head_skb = build_skb_from_xdp_buff(dev, vi, xdp, xdp_frags_truesz);
->  		if (unlikely(!head_skb))
->  			break;
->  		return head_skb;
-> @@ -1626,7 +1650,7 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
->  		break;
->  	}
->
-> -	put_xdp_frags(&xdp);
-> +	put_xdp_frags(xdp);
->
->  err_xdp:
->  	put_page(page);
-> @@ -4579,6 +4603,55 @@ static void virtnet_set_big_packets(struct virtnet_info *vi, const int mtu)
->  	}
->  }
->
-> +static int virtnet_xdp_rx_hash(const struct xdp_md *_ctx, u32 *hash,
-> +			       enum xdp_rss_hash_type *rss_type)
-> +{
-> +	const struct virtnet_xdp_buff *virtnet_xdp = (void *)_ctx;
-> +
-> +	if (!(virtnet_xdp->xdp.rxq->dev->features & NETIF_F_RXHASH))
-> +		return -ENODATA;
-> +
-> +	switch (virtnet_xdp->hash_report) {
-> +	case VIRTIO_NET_HASH_REPORT_TCPv4:
-> +		*rss_type = XDP_RSS_TYPE_L4_IPV4_TCP;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_UDPv4:
-> +		*rss_type = XDP_RSS_TYPE_L4_IPV4_UDP;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_TCPv6:
-> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_UDPv6:
-> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_TCPv6_EX:
-> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP_EX;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_UDPv6_EX:
-> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP_EX;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_IPv4:
-> +		*rss_type = XDP_RSS_TYPE_L3_IPV4;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_IPv6:
-> +		*rss_type = XDP_RSS_TYPE_L3_IPV6;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_IPv6_EX:
-> +		*rss_type = XDP_RSS_TYPE_L3_IPV6_EX;
-> +		break;
-> +	case VIRTIO_NET_HASH_REPORT_NONE:
-> +	default:
-> +		*rss_type = XDP_RSS_TYPE_NONE;
-> +	}
-> +
-> +	*hash = virtnet_xdp->hash_value;
-> +	return 0;
-> +}
-> +
-> +static const struct xdp_metadata_ops virtnet_xdp_metadata_ops = {
-> +	.xmo_rx_hash			= virtnet_xdp_rx_hash,
-> +};
-> +
->  static int virtnet_probe(struct virtio_device *vdev)
->  {
->  	int i, err = -ENOMEM;
-> @@ -4704,6 +4777,7 @@ static int virtnet_probe(struct virtio_device *vdev)
->  				  VIRTIO_NET_RSS_HASH_TYPE_UDP_EX);
->
->  		dev->hw_features |= NETIF_F_RXHASH;
-> +		dev->xdp_metadata_ops = &virtnet_xdp_metadata_ops;
->  	}
->
->  	if (vi->has_rss_hash_report)
-> --
-> 2.40.1
->
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
