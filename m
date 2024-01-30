@@ -1,34 +1,34 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A9C762D6
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 20:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3474762FC
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 20:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706646487; cv=none; b=frQYZPiA0dcK6EE1V6ztUwWx7izbBQYSQNP5/c1OtOZHPdJvk165gb4qXB4YrB5HgLGSpDe2BZYi7L167rULidvrbSLaudVd5iIe5IkBoJmqw/EB2zVPeU3rKbe/G7cvtTlWNlMJ64n40PbVxSPKM/nkv21Krwlh5jgkYtd9FG8=
+	t=1706646489; cv=none; b=VsiFO2FaI8CNP9ACsMBnXMgTtysnoiW+cfy47+qRKPJ2+jIu9fexGS8MHWYqqV2V6EkWOMlRmiSY1rg4sqPeZU89mbfCYJu8M1rnpy4voGYYsbJ6iLRZkjnmEtRRr+KijwzFrOcke0/ArZr2ANoeTxxEDZeVgOhMTH0vWKolBKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706646487; c=relaxed/simple;
-	bh=Q7ic03v6VHuiP/aRPG6jSBwO/tENYk51lrKm6ckZSQs=;
+	s=arc-20240116; t=1706646489; c=relaxed/simple;
+	bh=tIshaH/wG7+F7fysCqp2VwCqah3ZG8cEyzEYuEn46tM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gIKNMEfkhvjt/xxp5UYwPTVxAmZd/Wo+CsT7jXNqUL/TxJFPCit6jkEyZcFule9uGJx5LAuTbslgGtEUm7iMwQaTA9R2DNrzZmvuXCy3sjwPVUHmqKAD2PfCgJJiRM8JeWMAK7mipXOkjy3dxxCv5b99yAGktmqNcgoQXdwHVDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=S4iB3nDX; arc=none smtp.client-ip=91.218.175.185
+	 MIME-Version; b=WhRZUIRjJ4x4xUVbQBlOk6qYMafbMStAT7G8TKZH613zMwoDkKTy2bDPRAVBgITG9pfFwjyXrr5Kgwdhu6boOL1nOoL/qq/SkBMNXhiGK2e9dkjmxvpgdnYwCSx0fsS2Hrxl4U8mcuNt6kPrPCHklXOeB799ddVg17+uZYFOXHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=LsPAcHKh; arc=none smtp.client-ip=91.218.175.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="S4iB3nDX"
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="LsPAcHKh"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1706646483;
+	s=key1; t=1706646485;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WieXiP6jVeaikwGFs5GYfcOQ5pozF8PL5Bu9LGVOFGQ=;
-	b=S4iB3nDXplv8yBGTkl/ieJySLopMfXUX0msq0il16ZJVQv5RQzfR4eDyY2Jcst4jWNVE/e
-	5RSRbmO6gzNDGbZnlkILPWjOmNRkrQRfGFfFwI+zW+HkWn+4GVksEgtnIfEqzxfpXeSmU/
-	HexPxAqUo51R+GJnRztzSqlu4V7DZBx6LI0765Ysdlgm7icgI9iKKzAGx21popa6qCCbAl
-	Ay7CoSdScO9tvxOJ5P9egTW9Ee9GWyis+iYCkdPkd836QtOgwGovTS5R9rdC7PhKrb0ebQ
-	y0VzbVOnG07tYMGPRYsfaQsxuBioCPidXl0Q6++Hd+qndRdxqjzBNpfheX7RVA==
+	bh=l3vOiuOqt9TDvwN9BP7L45s+X6J46YstAyZSD8xBADQ=;
+	b=LsPAcHKhksYkMmT6BWwaWod3g582fH7CnOV253HRADRG7nN3TUqg3PYfkbWFDy8K356Tvc
+	yS+iCjRuOqMCu5Gvqie9cd87EgAfZYcYAp8ILXHyDuKPbJCTghRWaPk6yi/nG5CAYvEk/n
+	jRAA5EyCxOf+gwMf4GS8smbzKMya5uaNj4KLWBXUHdgQW3okrIWa3TDIADT9kJLIc4kIXe
+	+lXFKBCAqNrPNvEyqsX0Mgq1I5vFOd/pxf4GrK59Vkb8nUagt0q2LKNkiQUQgO8AGl6nbX
+	1FyomSh7Iq/ohApuxJ10yQ/1hwTDRmlRNow00tv7aGDPdpPLV3llqEWdZv9NEw==
 From: Anton Bambura <jenneron@postmarketos.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -38,9 +38,9 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/5] arm64: dts: qcom: sc8180x-lenovo-flex-5g: set names for i2c hid nodes
-Date: Tue, 30 Jan 2024 22:27:52 +0200
-Message-ID: <20240130202755.2289952-3-jenneron@postmarketos.org>
+Subject: [PATCH v1 4/5] arm64: dts: qcom: sc8180x-lenovo-flex-5g: set touchpad i2c frequency to 10 kHz
+Date: Tue, 30 Jan 2024 22:27:54 +0200
+Message-ID: <20240130202755.2289952-5-jenneron@postmarketos.org>
 In-Reply-To: <20240130202755.2289952-1-jenneron@postmarketos.org>
 References: <20240130202755.2289952-1-jenneron@postmarketos.org>
 Precedence: bulk
@@ -52,44 +52,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Set names, so they correspond to devices connected to these interfaces.
+This solves the issue when touchpad gets stuck on right or middle
+click. This also makes touchpad working smoother.
 
 Signed-off-by: Anton Bambura <jenneron@postmarketos.org>
 ---
- arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts b/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
-index 49b740c54674..af61acf58d68 100644
+index 8e8e1fca11c0..a8816ff0ba51 100644
 --- a/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
 +++ b/arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts
-@@ -362,7 +362,7 @@ &i2c1 {
+@@ -392,7 +392,7 @@ touchscreen@10 {
+ };
  
- 	status = "okay";
+ &i2c7 {
+-	clock-frequency = <100000>;
++	clock-frequency = <1000000>;
  
--	hid@10 {
-+	touchscreen@10 {
- 		compatible = "hid-over-i2c";
- 		reg = <0x10>;
- 		hid-descr-addr = <0x1>;
-@@ -379,7 +379,7 @@ &i2c7 {
- 
- 	status = "okay";
- 
--	hid@5 {
-+	keyboard@5 {
- 		compatible = "hid-over-i2c";
- 		reg = <0x5>;
- 		hid-descr-addr = <0x20>;
-@@ -387,7 +387,7 @@ hid@5 {
- 		interrupts-extended = <&tlmm 37 IRQ_TYPE_LEVEL_LOW>;
- 	};
- 
--	hid@2c {
-+	touchpad@2c {
- 		compatible = "hid-over-i2c";
- 		reg = <0x2c>;
- 		hid-descr-addr = <0x20>;
+ 	pinctrl-0 = <&i2c7_active>, <&i2c7_hid_active>;
+ 	pinctrl-names = "default";
 -- 
 2.42.0
 
