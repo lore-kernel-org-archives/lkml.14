@@ -1,197 +1,154 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2051.outbound.protection.partner.outlook.cn [139.219.146.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A36738DFA;
-	Tue, 30 Jan 2024 06:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706595297; cv=fail; b=LK+BZMNAmbfnKBbm6AVFwHFBHubSoGh2JgT7EwcV7vWYMC+a8wHyPrYSzoE8WMhvYr5WKWJn9aOJ9Fv5WeufFI7RlhLfclo8a7EUxpQ25UG7uJumRRwbBoMMDxXCbvMhvp/v8Vs+Ioafg7VENJ3qP4chV9CYiksAgyCc3AItcxA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706595297; c=relaxed/simple;
-	bh=0yiPhBPD0XmSqNgTotKrvpZyiaRRfpNFEnfcDBEKB/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=q2liyVZYkzJPAYvFmxpeL+xq6oznGPWFK5///8McD5Vh52zkmV77wcXRkl9o95By1m7jhsFmQoLbW2Sffnq3TZp9SeZGewY8tVAjj495gwAKy8sz2ZjiEOTiX+tTjSLn8mDvci8UPJ8QOmq+FYqtzhM8pLC97R8DiUYuc+V21KA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n7K0g3MQN9ls9iPWS0crvGWHiHE45WruiE3gu00ytar7MU0AA95UmEuXY6rKt4uPtxsVXjAFUXjIaSQVS0TVDFl/t+dsYkYaSAigq9f/8yWXIRPsoUi9C+i2ENY2F/AwlWhaLkNzF0n4vcrthiz0OlxXA4aEOPEKGUkckzngJd/mKRA3K2w0aprf4jHMtz3yzRXXnDkakOxWRcoN651LTN8l67sQ2lKyA2sVNwweUP/FPN5RUkjaj26Sci0Dvu+soh0IHiXyE3K8BNDDXlZswV/peWmqt7NwZxLO9Pwl6lEB0+ckGoXJiBaVlhgPUQMafBQDJGjC9gS6pk6hbQ8QDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/WITnoB2inaLbaJX02D9zOEJin+aUqaAEOe2KuvSRp8=;
- b=gK8vmOAK3FLa+GBMRWgco8BNwZHjWfFy/AQ6BBerR/pOLMNIyPG3MSIStU1Abpmnj7yW3SsmDGXFAVTDu3IsM0cCHKjl1nuX743W9m4NQl86oHNC0kiAbNI877YhXvJan/oXa007E9IpZtnTEz7pyWtGK57pFQcKWzon32NZK67VYerVVDRzGfLvzWBxToLfp5YlcHqr9VQc7SsZlxtgm5sKIiCJtlioCItltWilX/zhmKfGjSAlXQwUHtR4wYe4x2MyavG/7hJjUatyho2vL30Jq/i8OkA7DXzHx/CYmWfJ48cQ/b5iQBx6tBUybVcksX/2KxtChqJonTCQi9bwVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0878.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1e::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.28; Tue, 30 Jan
- 2024 05:58:50 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::148c:e1dd:302a:196b]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::148c:e1dd:302a:196b%6])
- with mapi id 15.20.7228.022; Tue, 30 Jan 2024 05:58:50 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: interrupt-controller: Add starfive,jh8100-intc
-Date: Mon, 29 Jan 2024 21:58:42 -0800
-Message-Id: <20240130055843.216342-2-changhuang.liang@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240130055843.216342-1-changhuang.liang@starfivetech.com>
-References: <20240130055843.216342-1-changhuang.liang@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0006.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510::8) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F230381D4
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706595458; cv=none; b=GE1LIo1bFPD/vY4d2Wx19wPWBDWIHiukuHEXMtvJiwoQmb7gNm6pG0ItOCI9YjOyoLdzYALabHGkiwJ2N6etzTKiWP89mxYiK8KFjBglorP45vxOhFw2sXRtKLystHjuFkjRfhQNF7Ffty4wWaMaIt/tkQMnihYRN31SSzyySvA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706595458; c=relaxed/simple;
+	bh=1kOWIzmsJoporGw30Qoft6ml2gLj2mn7G2dsJGbt3Cc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mdk9KfkPnKvxSaLq4mxuAMVo8SMAc0TvHkw5nyCvlPt+cc3ksrwt/ISCaXMBlV7VcYxchCqveZVapbecnLgs7+3XnayBn1j16z9vbJU4cHwS+TtTTqnhXtqg4mC3ea2VaFNW9WJX+DrPpMOnGXjmT3JCO+lOnxR4LhLYAyKloSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Bxnut9lLhl+jUIAA--.25090S3;
+	Tue, 30 Jan 2024 14:17:33 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxnhN7lLhlYXQnAA--.34034S2;
+	Tue, 30 Jan 2024 14:17:31 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/8] Add objtool, orc and livepatching support for LoongArch
+Date: Tue, 30 Jan 2024 14:17:22 +0800
+Message-ID: <20240130061730.21118-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0878:EE_
-X-MS-Office365-Filtering-Correlation-Id: 406087dd-c546-4ba2-8524-08dc21588829
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	075SCM2BfAxPxveIG4Eporp41xi5YoMFXPVk34kFSfcfvj1PyDeyG6K0t6LF5XMDzDnDU2zk9UJZYgfSMULeqPwCworOs75zRlfjNADKCgqqVQsYZUPoe57XnGbaA3P3FyYdZ7wwSyR/vMlLQ10S78yqn9FmGX9YPuKc9o+5vLU3GGNDfGlJI0A9RB/Ceg1bW/TOHoSf+N6cnQqN/7UpruGkf//U9qRAla9eDrfxWYlZug8TnH3PhmYLJNLTdjgYUkGMoYRZNYL4yzF6FYYLPkYJIWeAn09k7R7PiKgI9uCX6BVGRs32r9freA7RXTEmZ2ifIAD7pflcoLaOKgzlZ5Ep3I9fp7YQhvTk4y/NSD8OW9gGbIQiFSXUJRG1BCExe/ABZFAZxvQs1gSOtFxEee/4pt8RINmDsBFPxsdjl/9UgSAVRNtLjVpYqdQTiAhZDzRKIBvYNN/DXSIYYIhVccrzf/zwuzWvD4qQ4uuKDMbKPapBh+6hiS8nB4Eykug0QM4PAUN+4op+4U0wb+UNOxoXh2arl8sSfeJxLYdz7GMYanpGCTyVzFHf+v6tnXV1tAxvRbBOJYA+4jP+g67xq1IRU5P4yOxwEU+4DwRvu48=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(366004)(39830400003)(136003)(230273577357003)(230173577357003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(26005)(41300700001)(1076003)(41320700001)(36756003)(38350700005)(2616005)(508600001)(40160700002)(40180700001)(54906003)(83380400001)(52116002)(6666004)(966005)(38100700002)(8676002)(5660300002)(110136005)(86362001)(66556008)(66476007)(4326008)(44832011)(2906002)(66946007)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7G3+02eqoec4Vl5lp5BC/oXOF4urikTnYZlWQGi1U+OKuppGYDjhBlT+VUDF?=
- =?us-ascii?Q?zXDuMZ3MlukIdVBDTo8J+Jp57sYI0alo0Au1sNoxEQFgiFnugxpmOSs0YhLe?=
- =?us-ascii?Q?WCH0smi/l8f1WyEItOPLigKYyjzPV9E++X/6nnUrejo3LLlNVwFLA8zNQPQn?=
- =?us-ascii?Q?NHBZEH4ygwSsyZYtree4nM70VnOTXboaYp0wx2HfP+qmoZcUowd6DVATbpuf?=
- =?us-ascii?Q?ItRa9fdu7aATQyGcOv6pkgltwlFlI/wBBRuHyH+APlMrOT1n7H5G+JCh2orH?=
- =?us-ascii?Q?rundexHxuz1/QoJdWX1FDEH46ddJzBngN7TkWFclrDoy7quTCgSAxMMIik5A?=
- =?us-ascii?Q?uRVZY9AN9sjCLVxe3T/uQdQSE+oSzJt52PPycx13xWfwwLuMv4vxYNJKll05?=
- =?us-ascii?Q?EJeohesSHzfNsVLvU+Wu+UayDHwHjB9yVRAzbixGTlv+NlWT1dRY0dr1izk/?=
- =?us-ascii?Q?XnWw2HjgAXXRSo2vMEq9ScsUwaAPTXpXNLNlybiGevP45AEbEcDHZsDYqcCs?=
- =?us-ascii?Q?MuAUduMk/bjdWQCHXHqsQNHGpX6NMSCHyQr6JQF/5XpA8v5HV2ZCCZzLhjnw?=
- =?us-ascii?Q?RQtXl/hxk8rDrTP68xeZtM0YyEyinWN71vJpZ4XeZLcXDbkLeIDbqvL0II9I?=
- =?us-ascii?Q?wIWGNgWIsUb8Hs1aS1zralWkihmX25iIed0p5SR5xMPjFLw21s6eLrL2XS5A?=
- =?us-ascii?Q?ydLCZUfN7Io5kBz66xXR5+nMLkZ6Rya3LSXNZNdNWUxS7MCAhYMyIZpEO1TC?=
- =?us-ascii?Q?r+UnOj6RI3F6s0bl3lj4u4bWQk4CWo7O0dNPiJEtAHTJp+dq5rTACPFL624F?=
- =?us-ascii?Q?7cHKmIAmKtp1djvhizsQDmHMHhkoTltEh5sI/E9e8K6mBmn1XfyjznXDMv0K?=
- =?us-ascii?Q?ki8bwdGlufvzLTAWSgslZT8Ed9Ih3t7M9HHtsLPlOUaoszHaM+0MwE9m3wtP?=
- =?us-ascii?Q?DzcG6KAwAOX/2hEFS6geHSl4TM+CALoBDygL5605QLWNl5yYHRAR8a67ni9P?=
- =?us-ascii?Q?6gQspEVlL9uG8ABY3QbGUx0oFI1nAoyqqDuIT7g+BS1BqkS6UBCt+DHtT2VW?=
- =?us-ascii?Q?gwutEosytRuSsgeOvNfTuT9QBNdB8LwxGahShP20mO4cVQAKjEjx2aFg0V7d?=
- =?us-ascii?Q?/JgR6uom/QdMD+Q2PpwPKyZs4oFO2eM2+O8hNb6r1VadG/GmXxFsM1ENRvSK?=
- =?us-ascii?Q?PXWCi7wS09SIg/FrWnXpvDpHOrZdbwVKTpHnINn4ZDUUBzIyhiJ6qUQkw8SW?=
- =?us-ascii?Q?znRYKcRCvhj5kaSbfhnemUk+wmW2NzwCy5coUYJk3deoj1FuBmFrftNyJcbg?=
- =?us-ascii?Q?OZFy4c21uPeMve5SbthkxhfzYJ7r/fzBmf1vsw80bRdyAB98B6+0SJ0OMP2F?=
- =?us-ascii?Q?di/KHj483nEYtbp/H3sMXkYXYO6Zbb56KGIoPaZMMPLVUbE7ZcVKG9MoHvBV?=
- =?us-ascii?Q?mhUUvYCedjko+d26vMaRJlY4OmSxVxQ6/NqSyKg4KhXIlVo4gvQ0EXHGp/90?=
- =?us-ascii?Q?5kGWSu/cXTxJG6ZkozoMaf40Xzi+Znzj2TczxiO8qUrKs3qVoX5TbwJdKB/b?=
- =?us-ascii?Q?aIh9t9SjDDDiaOjRKPM23hHTZND/oXYa98lA7o66t1vJs+NSf1cdcqoxJTA+?=
- =?us-ascii?Q?0BFvJM5Rwz7m5sQwMvdwqmY=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 406087dd-c546-4ba2-8524-08dc21588829
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 05:58:50.6182
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WQE8kAgjBUkic6TIcAjUSq7OistxClxjw8dkSdX/gN0i7tbtOgcoGMeqzaQwELYfpAS4FVhSx98lEqy3xH/XaEtsL/30tC7dENS9ZZDXyD3zdQx4q2cRCqYrEvlPdApV
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0878
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxnhN7lLhlYXQnAA--.34034S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWr45JF45KFyUury7XFWDtrc_yoWruF1rpF
+	9rZrykGF4UWr93Aw1Dta4UurWDJan7Gr12g3Wavry8CFW2qr1DArsakryDZF9Fqa1rGFy0
+	qF1rGw4aqa1jqabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-StarFive SoCs like the JH8100 use a interrupt controller. Add a binding
-for it.
+This version is based on 6.8-rc2, tested with the latest upstream
+gcc and binutils (20240129).
 
-Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
-Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../starfive,jh8100-intc.yaml                 | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/starfive,jh8100-intc.yaml
+v6:
+  -- Add "-mno-relax" option
+  -- Remove "-fno-optimize-sibling-calls" option
+  -- Remove "-falign-functions=4 -falign-labels=4" options
+  -- Remove "#ifdef CONFIG_CPU_HAS_LBT" in lbt.S
+  -- Remove patch "objtool: Check local label about sibling call"
+  -- Silence the objtool warnings under CONFIG_FUNCTION_TRACER
+  -- Add livepatching support and fix the problems when testing
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/starfive,jh8100-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/starfive,jh8100-intc.yaml
-new file mode 100644
-index 000000000000..ada5788602d6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/starfive,jh8100-intc.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/starfive,jh8100-intc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: StarFive External Interrupt Controller
-+
-+description:
-+  StarFive SoC JH8100 contain a external interrupt controller. It can be used
-+  to handle high-level input interrupt signals. It also send the output
-+  interrupt signal to RISC-V PLIC.
-+
-+maintainers:
-+  - Changhuang Liang <changhuang.liang@starfivetech.com>
-+
-+properties:
-+  compatible:
-+    const: starfive,jh8100-intc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description: APB clock for the interrupt controller
-+    maxItems: 1
-+
-+  resets:
-+    description: APB reset for the interrupt controller
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@12260000 {
-+      compatible = "starfive,jh8100-intc";
-+      reg = <0x12260000 0x10000>;
-+      clocks = <&syscrg_ne 76>;
-+      resets = <&syscrg_ne 13>;
-+      interrupts = <45>;
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
-+    };
+Tiezhu Yang (8):
+  objtool/LoongArch: Enable objtool to be built
+  objtool/LoongArch: Implement instruction decoder
+  objtool/x86: Separate arch-specific and generic parts
+  objtool/LoongArch: Enable orc to be built
+  objtool: Check local label in add_dead_ends()
+  objtool: Check local label in read_unwind_hints()
+  LoongArch: Add ORC stack unwinder support
+  LoongArch: Add kernel livepatching support
+
+ arch/loongarch/Kconfig                        |   6 +
+ arch/loongarch/Kconfig.debug                  |  11 +
+ arch/loongarch/Makefile                       |  23 +-
+ arch/loongarch/include/asm/Kbuild             |   2 +
+ arch/loongarch/include/asm/bug.h              |   1 +
+ arch/loongarch/include/asm/exception.h        |   2 +
+ arch/loongarch/include/asm/module.h           |   7 +
+ arch/loongarch/include/asm/orc_header.h       |  18 +
+ arch/loongarch/include/asm/orc_lookup.h       |  31 ++
+ arch/loongarch/include/asm/orc_types.h        |  58 ++
+ arch/loongarch/include/asm/stackframe.h       |   3 +
+ arch/loongarch/include/asm/thread_info.h      |   2 +
+ arch/loongarch/include/asm/unwind.h           |  20 +-
+ arch/loongarch/include/asm/unwind_hints.h     |  28 +
+ arch/loongarch/kernel/Makefile                |   4 +
+ arch/loongarch/kernel/entry.S                 |   5 +
+ arch/loongarch/kernel/fpu.S                   |   7 +
+ arch/loongarch/kernel/genex.S                 |   6 +
+ arch/loongarch/kernel/lbt.S                   |   2 +
+ arch/loongarch/kernel/mcount_dyn.S            |   6 +
+ arch/loongarch/kernel/module.c                |  22 +-
+ arch/loongarch/kernel/relocate_kernel.S       |   8 +-
+ arch/loongarch/kernel/rethook_trampoline.S    |   1 +
+ arch/loongarch/kernel/setup.c                 |   2 +
+ arch/loongarch/kernel/stacktrace.c            |  42 ++
+ arch/loongarch/kernel/traps.c                 |  42 +-
+ arch/loongarch/kernel/unwind_orc.c            | 516 ++++++++++++++++++
+ arch/loongarch/kernel/vmlinux.lds.S           |   3 +
+ arch/loongarch/kvm/switch.S                   |   9 +-
+ arch/loongarch/lib/clear_user.S               |   2 +
+ arch/loongarch/lib/copy_user.S                |   2 +
+ arch/loongarch/lib/memcpy.S                   |   2 +
+ arch/loongarch/lib/memset.S                   |   2 +
+ arch/loongarch/mm/tlb.c                       |  27 +-
+ arch/loongarch/mm/tlbex.S                     |   9 +
+ arch/loongarch/vdso/Makefile                  |   1 +
+ include/linux/compiler.h                      |   9 +
+ scripts/Makefile                              |   7 +-
+ tools/arch/loongarch/include/asm/inst.h       | 161 ++++++
+ tools/arch/loongarch/include/asm/orc_types.h  |  58 ++
+ tools/include/linux/bitops.h                  |  11 +
+ tools/objtool/Makefile                        |   4 +
+ tools/objtool/arch/loongarch/Build            |   3 +
+ tools/objtool/arch/loongarch/decode.c         | 356 ++++++++++++
+ .../arch/loongarch/include/arch/cfi_regs.h    |  22 +
+ .../objtool/arch/loongarch/include/arch/elf.h |  30 +
+ .../arch/loongarch/include/arch/special.h     |  33 ++
+ tools/objtool/arch/loongarch/orc.c            | 171 ++++++
+ tools/objtool/arch/loongarch/special.c        |  15 +
+ tools/objtool/arch/x86/Build                  |   1 +
+ tools/objtool/arch/x86/orc.c                  | 188 +++++++
+ tools/objtool/check.c                         |  52 +-
+ tools/objtool/include/objtool/elf.h           |   1 +
+ tools/objtool/include/objtool/orc.h           |  14 +
+ tools/objtool/orc_dump.c                      |  69 +--
+ tools/objtool/orc_gen.c                       | 113 +---
+ 56 files changed, 2011 insertions(+), 239 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/orc_header.h
+ create mode 100644 arch/loongarch/include/asm/orc_lookup.h
+ create mode 100644 arch/loongarch/include/asm/orc_types.h
+ create mode 100644 arch/loongarch/include/asm/unwind_hints.h
+ create mode 100644 arch/loongarch/kernel/unwind_orc.c
+ create mode 100644 tools/arch/loongarch/include/asm/inst.h
+ create mode 100644 tools/arch/loongarch/include/asm/orc_types.h
+ create mode 100644 tools/objtool/arch/loongarch/Build
+ create mode 100644 tools/objtool/arch/loongarch/decode.c
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/cfi_regs.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/elf.h
+ create mode 100644 tools/objtool/arch/loongarch/include/arch/special.h
+ create mode 100644 tools/objtool/arch/loongarch/orc.c
+ create mode 100644 tools/objtool/arch/loongarch/special.c
+ create mode 100644 tools/objtool/arch/x86/orc.c
+ create mode 100644 tools/objtool/include/objtool/orc.h
+
 -- 
-2.25.1
+2.42.0
 
