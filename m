@@ -1,285 +1,158 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2079.outbound.protection.outlook.com [40.107.20.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40CE67E60
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706616195; cv=none; b=ue3iAejXUGPycyD5wwd531+hhCEAv69ZnN6vdjkjGzAj3lJuu0VfEiHXZedAJD+IGNF8dbk9Q/eIcaD95WhKBV0xdJ9WwwD/+zG7h6OaNb2WWvcFKbQ1LXt6of3jdy/fyO+QOp8SMZNVtMqbfO/RToZmS2R5G7Hztn8X6Cem97U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706616195; c=relaxed/simple;
-	bh=tlA+jX2+X0ES44mMmHrP5toU5J4qr+/mnhjLIXFD7Vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mArbMbYL6iVJsffnKPM8k9HU3djnF6tDDzPJ5Yb2bRFPeaMZiHMfQXzILzEJgFEYrRBi6QRCE4Q0XwD9lB4UgqJyreqgfs8EZE8Kbaop4XqnwPy2bFAMaVVZQmN4alEVrAyP1x6biEMYbnpbQcSKq5zzygRgSfBhFif9srs7ZmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UiwTFrlw; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95906679E6;
+	Tue, 30 Jan 2024 12:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706616224; cv=fail; b=DVlY3RhFjDsUp4pZmbcBztCHCvYhmh6VexLFdUD27/zvbt4TdrVg4x0iNIhTKS69HF+TZRJLv7ayikGWSKmxVOSB6Cf8SZBayV7LlWQL2L2/M7LciUvSOy9qVOOZtG150+KF4PnrK/r4AFsAFcHxC5qg5y0uLhKzMO0r0ODChcs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706616224; c=relaxed/simple;
+	bh=FuOi/uHNMbsjbvfzjatKjpO66f3pYMe8zeeg4sRT1Hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=EG9wd5FGvBnZVcg8g9bdD4xt2ENRL2Sw8CF+zX4HIiX1LW/L3WVi1jqNO/cwPsJlnQIrEAq9W1bB8C6V9tOnylO7HDkaL1TrTDH/1PmkRnUhWyXg/nbrg1zfF+GO2ILyBCtOu9KHDZmUj6jnEnVlVJFZebHM2v+XnvJHCRugjoE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=pNB6zqQD; arc=fail smtp.client-ip=40.107.20.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UiwTFrlw"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40UBgeKH021039;
-	Tue, 30 Jan 2024 12:03:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=VKY6PLreTsAeAlCJB7PUV8RRSGH/npEjFNI8hoSFBMg=; b=Ui
-	wTFrlwQMi0ohSfLbokGQCilqFKIv6dT2sks1Pa3DjevEbK7twZ5D6oL/FXBZ5hps
-	/fQUPrtiTLzK1yczqTHUeiOykAmnyGybZVO5KyBBsOxVURJvg4dbAeSWlhdlqs/y
-	UY0EmpHG6M514eV3AUj+kf8fQFhFwe5ab5aOBq+kBqZeD2nWd9Vs+RVxQGFeXKxq
-	T8J9/wo4UJHe7RDSLHjEmdAYaWXjdqhins01AA6vsaLdEdSPIHIXdDP9aQsB/rH1
-	pw8wTp+xYdQ9qnZp7Rfqos8IhOfU6rT8OsgJ/MDRS+5FED3FUUUJ9xuv8p7VkuJM
-	NzoJc39T12jRiRlb+2Og==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vxvwqrh1q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jan 2024 12:03:04 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40UC2Uwi031462
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jan 2024 12:02:30 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 30 Jan
- 2024 04:02:28 -0800
-Message-ID: <e356adc5-937f-08ba-68bc-975ef96d6332@quicinc.com>
-Date: Tue, 30 Jan 2024 17:32:24 +0530
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pNB6zqQD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SBJ2APzzG6W1kddyh6S3i3baPOm8zeH+akkc6WopfdA53LaYhhy08DexryGq4HDTa+YlfeYVA5gEuJjgdt1GDkJGqjNgJvSR4icYmV+CTgzcUM+HsUFF640b0DKEThMV8oFiX5r91f7gnY8UcqLo1K3l0XE/gt/W1M2cuAVRvUz8fCllVRzrmwkqIwFwvqaIduyW/t8rbcgap0Dy4oAneuh7nyW+3xLCnQAXZqLbG4Bd4llfwaIDYGQj6zeGSFavx9kjc+U5M+YCWc0QZFFHxtYpi8gWFjMHUWnuDhRvbGLapCKC3WCYm67MBLbVC012nPhDkVDOCvesLTWpGk1n5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xwaoW742bVEOeuLDDUae5bKhjvL65eFUacQEXadq7wU=;
+ b=AHNcfVgum3rYujJoIGe6IbR3/J77+VfJPKRpUng7EOIdbKuo3xj8HnM3wqqEuy3uU+TQXhFjJ5LEUBmoiww1vM4aCrjfpjcHj8Daj1ZnGf851nmpgMEEZjMBzQQLHhKM7sh8QoOvBNTxSfWnHbhrnEkOEqsbnvPwSfGZ1KEYmR3+/eW3QHauk2Jokbp1v4067FKoQV2UQ+ap/g4gTgBPH8qNigXctu1aLYzV4D25Tbd52ANYMs5XZqNQEaVftfKNtmwzGzM/tn6rWpjL6QHO9MD9tAmR9n8f0gWH7L0lF+LvlsnUHk2ZwNciuc4dBnQ+09pJUutriXH4g4VlEPlKBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xwaoW742bVEOeuLDDUae5bKhjvL65eFUacQEXadq7wU=;
+ b=pNB6zqQDLmaMLigSx+kwZqlV4JUCqZ3LuMsjSKtC5ph5sCiwXZ9rL5mvcesKZrdi6nlMAwuOdTQshXmUA8CL5hzBM6cuOLQgCyrS/Uq+qPi5NV3YJ4c65legrYMEtocOHBDhPUhxIvD4T/e/89qAeYyG9s3sRCjAmyJJJ2sT0MM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DBAPR04MB7368.eurprd04.prod.outlook.com (2603:10a6:10:1ad::19)
+ by AS8PR04MB8294.eurprd04.prod.outlook.com (2603:10a6:20b:3f7::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
+ 2024 12:03:32 +0000
+Received: from DBAPR04MB7368.eurprd04.prod.outlook.com
+ ([fe80::5795:6dd5:bf:6ca9]) by DBAPR04MB7368.eurprd04.prod.outlook.com
+ ([fe80::5795:6dd5:bf:6ca9%5]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
+ 12:03:32 +0000
+Date: Tue, 30 Jan 2024 14:03:28 +0200
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, kuba@kernel.org, davem@davemloft.net,
+	pabeni@redhat.com, edumazet@google.com,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, dsahern@kernel.org, weiwan@google.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: Re: [PATCH net 02/10] net: fill in MODULE_DESCRIPTION()s for ocelot
+Message-ID: <20240130120328.rmmbgeywvj6jvqkm@skbuf>
+References: <20240125193420.533604-1-leitao@debian.org>
+ <20240125193420.533604-3-leitao@debian.org>
+ <20240130101134.GG349047@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130101134.GG349047@kernel.org>
+X-ClientProxiedBy: VI1P194CA0036.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:803:3c::25) To DBAPR04MB7368.eurprd04.prod.outlook.com
+ (2603:10a6:10:1ad::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 2/2] devcoredump: Remove the mutex serialization
-Content-Language: en-US
-To: Rodrigo Vivi <rodrigo.vivi@intel.com>, <linux-kernel@vger.kernel.org>
-CC: Johannes Berg <johannes@sipsolutions.net>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Jose
- Souza <jose.souza@intel.com>
-References: <20240126151121.1076079-1-rodrigo.vivi@intel.com>
- <20240126151121.1076079-2-rodrigo.vivi@intel.com>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20240126151121.1076079-2-rodrigo.vivi@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VpHlM8TKJ286BWm3Tf0EbiMGHsxCPb_s
-X-Proofpoint-GUID: VpHlM8TKJ286BWm3Tf0EbiMGHsxCPb_s
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-30_05,2024-01-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- spamscore=0 priorityscore=1501 impostorscore=0 clxscore=1011 adultscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401190000
- definitions=main-2401300088
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBAPR04MB7368:EE_|AS8PR04MB8294:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3891d5f-cd9e-4a76-4bc4-08dc218b7a84
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	h3g4NVWLUYwqkb4U32n7MW9ihHRzla9ICYuSfpdLxeqXbTHE7gtZuB/RFvZs6I37VGDsvDQit3S3rUMFzin1zN/RxfG0NVetuETnPZe+zEw3dpttl6BlOzHRxHQXvLVg40eP5K5WleHinwpAYAUVtuDNWBrMSGKZf6BTisSWdwwvWO3DNHlditX8J5+ELLkgt/Vu6A/Gr1LP02JZEFtxGBnIgg6dxp4j1H1xolYdqfbaATDf0d3q6okQTGu9yreRM4bqePFIAJNeDUEAKguhoGs9PFiscaaPWsDUWR9TNMpx8LcS2+awapku+s7ZZhIW+njWUtTWsvpT8JqASJr75iIowKHLHMPZZUsbs6vdIH8scH14U6CJ3+RiJmCHhBtqcjhb4VjFslvuipwrkkPnGl0J9YZeRV+mZBv10OHKJSm/c5fh+Q6PTcxtj3+XrXMFUr/GMcIiyoQ6K44KcN2fZL5OnxWHO0z2c+8ssgfapqPuVD6ZgkVGWVQfR/zu7Kr6VcCrhk/nPlxUsIueA5RqVuk4l3v2WAVPPv9XwBnXFn/Z1mymRU3FvFKgoKXgP7dC
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBAPR04MB7368.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(396003)(39860400002)(376002)(366004)(136003)(346002)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(66476007)(41300700001)(6506007)(9686003)(6512007)(1076003)(26005)(4326008)(6916009)(8676002)(316002)(54906003)(66556008)(478600001)(6666004)(6486002)(8936002)(38100700002)(66946007)(33716001)(7416002)(2906002)(5660300002)(44832011)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?br4hfnNYn+wOC+emar7wSKajtRiRyKi2OW24Uva95G737pR1Xvq+/MJALBXt?=
+ =?us-ascii?Q?9dHHfV9so9K9sJWwpB2piwNZy9s+ChVmRVoEepASHuhXqcetuTafY5afX+Za?=
+ =?us-ascii?Q?GE/9MXJ5RbBbs2LLvfa4kxuDhBvRygHS5qtA0lpq9uUHi+Kvv22EO7rPUvQE?=
+ =?us-ascii?Q?gq01+0EdyvDb+twUpb7YtCZhfJx9j2PNM3Bp5ZXVBLOJfyJCw/R8wN2tAfye?=
+ =?us-ascii?Q?20lAKGFiwgmucVX9K2agV4n4zCCcOMowLlDH97sCAOMeugzoBJlm/D4oZTMG?=
+ =?us-ascii?Q?uSwrD4EhtAOD9dafeqtNYmYRrXj7/USrjqbsq1w1oKdbhb1QQlJI8nTLuQ6Q?=
+ =?us-ascii?Q?pUW4oMQmpcRJQqFvqwE87nEP/i51NRaLSBBxZHmTjMYwQpTY75NIo35dKi7T?=
+ =?us-ascii?Q?Oo2YLSxcMZzqfbf+4jRjGA94zTGh/xgJL/SfZq1dp2cEvRwAToA1nvOwzKyu?=
+ =?us-ascii?Q?YkY9avWAoSdfSXPMD/C8OZ9eUb8Zz4d/2nySx1kfJYCpzxIiDQfYye4UoHCY?=
+ =?us-ascii?Q?BCJENjRIxCpb7P9UBPTlFHNz0K/AeTz3LJFYpnbqhngyjnQ3Wlc441QsdJpL?=
+ =?us-ascii?Q?P9mnz+0oDyPoD0lg1nagRWFvwx60MxptJFJxEDtsUHcgQeNf7TCKDtigake+?=
+ =?us-ascii?Q?wXHoGobSIoa4tvRv3pMjFYu+DTHSnBHETITS1JXSFO8N2gJ82itnA5Z2rBSN?=
+ =?us-ascii?Q?fqS5MgatmFOO7+wdMJuRH9MtdJiJAQDGzCH/Pro0MY/xM+qSh6YgaiQw2jqJ?=
+ =?us-ascii?Q?3UYYBRPbHUiAaG4WT8yriSHTTHTFhlt/gj+hnQOSo/LkXFXbOuQD4fxj1p/0?=
+ =?us-ascii?Q?vRTCWj5wd6mtTgt4DQZAaLKZGA0Y+ZnzNJFw5OwZEJE3vTp2QNkYpRyWtiCr?=
+ =?us-ascii?Q?lvDhC+socgRnXqjAbD1UPdprRXlyuuw3oziX9e+OOqLBXSH9cc4BHYwrppmP?=
+ =?us-ascii?Q?2jxA/XPn8cUFMGn1H+9P3rgi2IBdrPu7yWm+qQky1HJY0lLFqU7zyvNngYNf?=
+ =?us-ascii?Q?NefGFIUHMOiEKt5qwi2jKx2xMzIS0mKQ+RF5M9IRC+58cwadHGusrLDZDxsr?=
+ =?us-ascii?Q?yBWbZzSFmWrqoW66KKvFu+Yo3qVgvVhGi+nfMw9bFNwlCOrymIoy5BxsrD/g?=
+ =?us-ascii?Q?wNYqZl3LdGcEJAGLzAhKPziASD5f0O39gUOtHwOgNps79K3gr4lJSUA3Id9p?=
+ =?us-ascii?Q?CM2fLDUkGnd/oM2r1qGdNa0glskIv2CpvpV6bGVD4mRqo3Hz1wZhqTyQTgz8?=
+ =?us-ascii?Q?NqQhyatBZC1RDBz/iWtZbYvy4VELvCefQ90XNpuS594Uv/7QZBVtnRzJ4H/f?=
+ =?us-ascii?Q?VlwY2b70qgoMJu9A5T6uIC0GXva28/HBI6ewnPgHF83xnthtTgjcw+JcrY5c?=
+ =?us-ascii?Q?5zR6uHC2YeIRfdfg9dTzRTis6cFgYNXupP9yFv2pquoCp9uA7g6cjv0B726P?=
+ =?us-ascii?Q?UlUVTy8dHo+2Indf9bX+inj4+0gj8t7+LJURdkrbVJldAW4ky7cr3ckYqCaX?=
+ =?us-ascii?Q?ZwFccn69NHpOIfUuZyTpzOfG7aUf5OxhIH7o2ShZNvl74QKs3adVwweWNs1E?=
+ =?us-ascii?Q?XnD/Rgnq4zNIpjLv+kVcnrGdcIcTaypU3B7355geR7MDMKu1lCdutQrH/RbC?=
+ =?us-ascii?Q?mg=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3891d5f-cd9e-4a76-4bc4-08dc218b7a84
+X-MS-Exchange-CrossTenant-AuthSource: DBAPR04MB7368.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 12:03:32.0858
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WMP3qYoYvp0dVUdOFlL5LUGtmLqH4/NNYlSPduEvesnMfiQnsiwKConHPx0EvERE3C8lJld91dTAx4nttMGdAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8294
 
-
-
-On 1/26/2024 8:41 PM, Rodrigo Vivi wrote:
-> The commit 01daccf74832 ("devcoredump : Serialize devcd_del work")
-> introduced the mutex to protect the case where mod_delayed_work
-> could be called before the delayed work even existed.
+On Tue, Jan 30, 2024 at 10:11:34AM +0000, Simon Horman wrote:
+> On Thu, Jan 25, 2024 at 11:34:12AM -0800, Breno Leitao wrote:
+> > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> > Add descriptions to the Ocelot SoCs (VSC7514) helpers driver.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > Reviewed-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  drivers/net/ethernet/mscc/ocelot.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+> > index 56ccbd4c37fe..2194f2a7ab27 100644
+> > --- a/drivers/net/ethernet/mscc/ocelot.c
+> > +++ b/drivers/net/ethernet/mscc/ocelot.c
+> > @@ -3078,4 +3078,5 @@ void ocelot_deinit_port(struct ocelot *ocelot, int port)
+> >  }
+> >  EXPORT_SYMBOL(ocelot_deinit_port);
+> >  
+> > +MODULE_DESCRIPTION("Microsemi Ocelot (VSC7514) Switch driver");
 > 
-> Instead, we can simply initialize the delayed work before the device
-> is added, so the race condition doesn't exist at first place.
+> Hi Breno,
 > 
-> The mutex_unlock is very problematic here. Although mod_delayed_work
-> is async, we have no warranty that the work is not finished before
-> the mutex_unlock(devcd->mutex), and if that happen 'devcd' is used
-> after freed.
-
-I agree, Mutex is bad and last time there was only a situation of UAF 
-from disable_store() and that can not occur as it keeps its ref, so
-we went ahead with the change.,
-
+> I really appreciate your work in this area.
 > 
-> Cc: Mukesh Ojha <quic_mojha@quicinc.com>
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Jose Souza <jose.souza@intel.com>
-> Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> ---
->   drivers/base/devcoredump.c | 97 +++-----------------------------------
->   1 file changed, 6 insertions(+), 91 deletions(-)
+> WRT this patch, I could well be wrong, but I think this code is also used
+> by Felix (VSC9959). If so the description might want tweaking.
 > 
-> diff --git a/drivers/base/devcoredump.c b/drivers/base/devcoredump.c
-> index 678ecc2fa242..0e26b1273920 100644
-> --- a/drivers/base/devcoredump.c
-> +++ b/drivers/base/devcoredump.c
-> @@ -25,47 +25,6 @@ struct devcd_entry {
->   	struct device devcd_dev;
->   	void *data;
->   	size_t datalen;
-> -	/*
-> -	 * Here, mutex is required to serialize the calls to del_wk work between
-> -	 * user/kernel space which happens when devcd is added with device_add()
-> -	 * and that sends uevent to user space. User space reads the uevents,
-> -	 * and calls to devcd_data_write() which try to modify the work which is
-> -	 * not even initialized/queued from devcoredump.
-> -	 *
-> -	 *
-> -	 *
-> -	 *        cpu0(X)                                 cpu1(Y)
-> -	 *
-> -	 *        dev_coredump() uevent sent to user space
-> -	 *        device_add()  ======================> user space process Y reads the
-> -	 *                                              uevents writes to devcd fd
-> -	 *                                              which results into writes to
-> -	 *
-> -	 *                                             devcd_data_write()
-> -	 *                                               mod_delayed_work()
-> -	 *                                                 try_to_grab_pending()
-> -	 *                                                   del_timer()
-> -	 *                                                     debug_assert_init()
-> -	 *       INIT_DELAYED_WORK()
-> -	 *       schedule_delayed_work()
-> -	 *
-> -	 *
-> -	 * Also, mutex alone would not be enough to avoid scheduling of
-> -	 * del_wk work after it get flush from a call to devcd_free()
-> -	 * mentioned as below.
-> -	 *
-> -	 *	disabled_store()
-> -	 *        devcd_free()
-> -	 *          mutex_lock()             devcd_data_write()
-> -	 *          flush_delayed_work()
-> -	 *          mutex_unlock()
-> -	 *                                   mutex_lock()
-> -	 *                                   mod_delayed_work()
-> -	 *                                   mutex_unlock()
-> -	 * So, delete_work flag is required.
-> -	 */
-> -	struct mutex mutex;
-> -	bool delete_work;
->   	struct module *owner;
->   	ssize_t (*read)(char *buffer, loff_t offset, size_t count,
->   			void *data, size_t datalen);
-> @@ -125,13 +84,8 @@ static ssize_t devcd_data_write(struct file *filp, struct kobject *kobj,
->   	struct device *dev = kobj_to_dev(kobj);
->   	struct devcd_entry *devcd = dev_to_devcd(dev);
->   
-> -	mutex_lock(&devcd->mutex);
-> -	if (!devcd->delete_work) {
-> -		devcd->delete_work = true;
-> -		mod_delayed_work(system_wq, &devcd->del_wk, 0);
-> -	}
-> -	mutex_unlock(&devcd->mutex);
-> -
-> +	/* This file needs to be closed before devcd can be deleted */
-> +	mod_delayed_work(system_wq, &devcd->del_wk, 0);
->   	return count;
->   }
->   
-> @@ -158,12 +112,7 @@ static int devcd_free(struct device *dev, void *data)
->   {
->   	struct devcd_entry *devcd = dev_to_devcd(dev);
->   
-> -	mutex_lock(&devcd->mutex);
-> -	if (!devcd->delete_work)
-> -		devcd->delete_work = true;
-> -
->   	flush_delayed_work(&devcd->del_wk);
-> -	mutex_unlock(&devcd->mutex);
->   	return 0;
->   }
->   
-> @@ -173,30 +122,6 @@ static ssize_t disabled_show(const struct class *class, const struct class_attri
->   	return sysfs_emit(buf, "%d\n", devcd_disabled);
->   }
->   
-> -/*
-> - *
-> - *	disabled_store()                                	worker()
-> - *	 class_for_each_device(&devcd_class,
-> - *		NULL, NULL, devcd_free)
-> - *         ...
-> - *         ...
-> - *	   while ((dev = class_dev_iter_next(&iter))
-> - *                                                             devcd_del()
-> - *                                                               device_del()
-> - *                                                                 put_device() <- last reference
-> - *             error = fn(dev, data)                           devcd_dev_release()
-> - *             devcd_free(dev, data)                           kfree(devcd)
-> - *             mutex_lock(&devcd->mutex);
-> - *
-> - *
-> - * In the above diagram, It looks like disabled_store() would be racing with parallely
-> - * running devcd_del() and result in memory abort while acquiring devcd->mutex which
-> - * is called after kfree of devcd memory  after dropping its last reference with
-> - * put_device(). However, this will not happens as fn(dev, data) runs
-> - * with its own reference to device via klist_node so it is not its last reference.
-> - * so, above situation would not occur.
-> - */
-> -
->   static ssize_t disabled_store(const struct class *class, const struct class_attribute *attr,
->   			      const char *buf, size_t count)
->   {
-> @@ -308,13 +233,7 @@ static void devcd_remove(void *data)
->   {
->   	struct devcd_entry *devcd = data;
->   
-> -	mutex_lock(&devcd->mutex);
-> -	if (!devcd->delete_work) {
-> -		devcd->delete_work = true;
-> -		/* XXX: Cannot flush otherwise the mutex below will hit a UAF */
-> -		mod_delayed_work(system_wq, &devcd->del_wk, 0);
-> -	}
-> -	mutex_unlock(&devcd->mutex);
-> +	flush_delayed_work(&devcd->del_wk);
->   }
->   
->   /**
-> @@ -365,16 +284,15 @@ void dev_coredumpm(struct device *dev, struct module *owner,
->   	devcd->read = read;
->   	devcd->free = free;
->   	devcd->failing_dev = get_device(dev);
-> -	devcd->delete_work = false;
->   
-> -	mutex_init(&devcd->mutex);
->   	device_initialize(&devcd->devcd_dev);
->   
->   	dev_set_name(&devcd->devcd_dev, "devcd%d",
->   		     atomic_inc_return(&devcd_count));
->   	devcd->devcd_dev.class = &devcd_class;
->   
-> -	mutex_lock(&devcd->mutex);
-> +	INIT_DELAYED_WORK(&devcd->del_wk, devcd_del);
-> +	schedule_delayed_work(&devcd->del_wk, DEVCD_TIMEOUT);
+> Vladimir, can you shed some light on this?
 
-Last time, we discussed [1] here, involves a assumption
-about timeout can not happen before device_add() succeeds.
-It is rare but it is there.
+Thanks for pointing this out, Simon, you are correct. This would be better:
 
-https://lore.kernel.org/all/87ilr15ekx.ffs@tglx/
+MODULE_DESCRIPTION("Microsemi Ocelot switch family library");
 
--Mukesh
-
->   	dev_set_uevent_suppress(&devcd->devcd_dev, true);
->   	if (device_add(&devcd->devcd_dev))
->   		goto put_device;
-> @@ -392,15 +310,12 @@ void dev_coredumpm(struct device *dev, struct module *owner,
->   
->   	dev_set_uevent_suppress(&devcd->devcd_dev, false);
->   	kobject_uevent(&devcd->devcd_dev.kobj, KOBJ_ADD);
-> -	INIT_DELAYED_WORK(&devcd->del_wk, devcd_del);
-> -	schedule_delayed_work(&devcd->del_wk, DEVCD_TIMEOUT);
->   	if (devm_add_action(dev, devcd_remove, devcd))
->   		dev_warn(dev, "devcoredump managed auto-removal registration failed\n");
-> -	mutex_unlock(&devcd->mutex);
->   	return;
->    put_device:
-> +	cancel_delayed_work(&devcd->del_wk);
->   	put_device(&devcd->devcd_dev);
-> -	mutex_unlock(&devcd->mutex);
->    put_module:
->   	module_put(owner);
->    free:
+Also, the commit prefix for this driver should be "net: mscc: ocelot:
+fill in MODULE_DESCRIPTION()".
