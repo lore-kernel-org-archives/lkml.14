@@ -1,177 +1,250 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FCC5813B
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C27B59141;
+	Tue, 30 Jan 2024 09:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706605388; cv=none; b=Dd/xMGj1I4qlq5shVzfLl3B3mkfPhjZUvsxxUlD3CS9zREHypu5c5bLGww+hfZxKCs+yjy3AILKBT1gspH5ALs/PLRRIrQUBoGOv6Znc4m0Iu+5TXtbG+q2idH8spTFNnLz6uLR9Pps4Ii++uxGdJ7pbSOoiP+/v1BJZA/X4U48=
+	t=1706605407; cv=none; b=HTfaXMDS3AhYLDk6xt1uPCkUYFK/CTz9Rcj7puuGrKzSd0n3QFsJ942ql6hIxWoPr0vl6TeyDxXDLyQj6UImsObdp+FNoMUnNiaaTh8B3Y+V04RSoXFMEYJoNn9tOzB4jvuPLuoH4t/PI8SEhtcbpxvpb5teM4vnbLDycp50ACE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706605388; c=relaxed/simple;
-	bh=BEcq/qhqoqGZggGlJrW/V6J25+ggKvqtaGOMG4iq9qI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=tCeBw/YGZG3wQS2SsxUw32S5B4EysUqDzKH6ibMXGAeGToLdVUuIiPBRzSqVsli8blMXJ2ygiZ4+qhLVXCFexC2IxhLU4T5+zX1X6+7/MxM9zVY3N8rKqD2uTwu3FB/hu/7G5VPfK37MEJ886TqQK2tXsZ68aspfw3HJcYSZX2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=femepWid; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1706605407; c=relaxed/simple;
+	bh=yfWWvKqBvgEfUBvViOCfzVHxsS4Lo4sb5YDwvfs5KyE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nnZWIPq8G7N2ad14b6Pg6vtQRNNPeJS8gGqdFEbFf1V2JQz1d9Q23LxDqjrCBz94AnUOnVpDbtUTekBNLNURv/PS3xo+p8OJPXhg6hopepxsbRbzS1caPyew9nQDKiq3/vjG8YJ4z9iPcB1g+6aWzPWcJc/U37lAfaqU4JQIms0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mP48PiG+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="femepWid"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240130090258euoutp02ef20137f78992f8e38578891ba0dbe7f~vFIzOX6SQ2650926509euoutp02f
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:02:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240130090258euoutp02ef20137f78992f8e38578891ba0dbe7f~vFIzOX6SQ2650926509euoutp02f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1706605378;
-	bh=u5skJTC1NiSxxvHS0YUB/jwBwTXaDHnBS1B0psxcAog=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=femepWidQ6EJHN5Aj267qrGtF2Jj7X6duSAVhyRkcrvlFpZIedfxS0i9+vGOsH9mH
-	 CLvI/Rr1lyfxVC0AdGP3i5yLHHTN3/vIXPxXWveiGws8JsTewSgggmcU1ijYvcYvHc
-	 9Fx00Ywvq0bR/hzzDjpxC1SQam69EF/PqyoYvwDs=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240130090257eucas1p1c595c555b393cc3c01079203e10f2e1c~vFIxnu7vV1567115671eucas1p1E;
-	Tue, 30 Jan 2024 09:02:57 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 67.24.09539.04BB8B56; Tue, 30
-	Jan 2024 09:02:56 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240130090256eucas1p1f65f4e34dbbd7dec2ac619b7b60ae073~vFIxJt5-O1387013870eucas1p1S;
-	Tue, 30 Jan 2024 09:02:56 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240130090256eusmtrp11bc05448befd85e707a393fc56944407~vFIxIkU4C3128631286eusmtrp1E;
-	Tue, 30 Jan 2024 09:02:56 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-bd-65b8bb40e463
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id DF.1E.10702.04BB8B56; Tue, 30
-	Jan 2024 09:02:56 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240130090256eusmtip10e72268538ab337e757e9fc1dd96fbbd~vFIw7uTDP2109621096eusmtip1F;
-	Tue, 30 Jan 2024 09:02:56 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) by
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) with Microsoft SMTP
-	Server (TLS) id 15.0.1497.2; Tue, 30 Jan 2024 09:02:55 +0000
-Received: from CAMSVWEXC02.scsc.local ([::1]) by CAMSVWEXC02.scsc.local
-	([fe80::3c08:6c51:fa0a:6384%13]) with mapi id 15.00.1497.012; Tue, 30 Jan
-	2024 09:02:55 +0000
-From: Andreas Hindborg <a.hindborg@samsung.com>
-To: Matthew Wilcox <willy@infradead.org>
-CC: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	"Alex Gaynor" <alex.gaynor@gmail.com>, Wedson Almeida Filho
-	<wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
-	<gary@garyguo.net>, =?iso-8859-1?Q?Bj=F6rn_Roy_Baron?=
-	<bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Kees Cook
-	<keescook@chromium.org>, Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton
-	<akpm@linux-foundation.org>, "Greg Kroah-Hartman"
-	<gregkh@linuxfoundation.org>, =?iso-8859-1?Q?Arve_Hj=F8nnev=E5g?=
-	<arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen
-	<maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas
-	<cmllamas@google.com>, "Suren Baghdasaryan" <surenb@google.com>, Arnd
-	Bergmann <arnd@arndb.de>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, Christian
-	Brauner <brauner@kernel.org>
-Subject: Re: [PATCH 3/3] rust: add abstraction for `struct page`
-Thread-Topic: [PATCH 3/3] rust: add abstraction for `struct page`
-Thread-Index: AQHaUD8NVXQbcxmBfkinu8UJuZg2mrDxGW2AgAD5TwA=
-Date: Tue, 30 Jan 2024 09:02:54 +0000
-Message-ID: <87mssngpnc.fsf@samsung.com>
-In-Reply-To: <ZbfnmX1J8iLV8UnO@casper.infradead.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mP48PiG+"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40U8mTUr003786;
+	Tue, 30 Jan 2024 09:03:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding; s=qcppdkim1; bh=30/+P/2wsWs2yARxwGXO
+	yN2uVq5B8hlYLvH13NzA4Xo=; b=mP48PiG++QYJOsibVKU+0qREScibtsL0mSpi
+	jd1sLuHnOFSOnyE468SDGCF/89emItrAb2zAiewyaD+8n3HQC/m623EyUplOJYRG
+	tNpGPrYdOtzBHe827tFOChtMSB5NBF1qN7KTdwjS/ypFZqopBMAKrEJEzP3xBvnp
+	wq47r+oh6Sys1kmBKKs/0zXDrcwdbk4Aegy8VqwcBf9EySd3b2Qqok0wMOl/VfU7
+	CYhQqaDXcl2T0rtyUIClEkqJtyFIt3lcm+uG/aYVlq0SLgfA3sJi6XMI7HUW9OW7
+	Q9mBKNWYD5JVotvRbmUdDqcbLu9QJOCkBBYv8RxqVv6+uStbBw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vxwwv80ut-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jan 2024 09:03:11 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40U93AHE001714
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jan 2024 09:03:10 GMT
+Received: from taozha-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 30 Jan 2024 01:03:05 -0800
+From: Tao Zhang <quic_taozha@quicinc.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Mike Leach <mike.leach@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC: Tao Zhang <quic_taozha@quicinc.com>,
+        Jinlong Mao
+	<quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        Trilok Soni
+	<quic_tsoni@quicinc.com>,
+        Song Chai <quic_songchai@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <andersson@kernel.org>
+Subject: [PATCH v5 00/10] Add support to configure TPDM CMB subunit
+Date: Tue, 30 Jan 2024 17:02:36 +0800
+Message-ID: <1706605366-31705-1-git-send-email-quic_taozha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf1CTdRzH+z579jwPQ66HgfIVJyV3ZOkaQv3xPTQk666n6Ad6R2dJxpQn
-	kDagjcHUrgZ4mLQ8AzthoJskILQFzW2YgzYH8UN+GGADOTDjViegKaAZEBjbgx3/vT73fX/e
-	n/fnc1+KJ6wjQqkDGdmsIkMqCycEuK1t9urzcfaL7BZD71ZUUW8k0EJ5I4k6BvNxtFDcRqK7
-	C78R6J47n4+GfnHwkNGSh6HJlmmA7jv7SdTXPQlQwbf1BKrWRKDuL+Vo4FIFgW4YH/GRzajh
-	o1p9DUD1f7bwUEm/gUAG9xyJri6081FDtQmg+X8qiDjI2Ow2PjM/VwyYck0fzpw7NocxP+pG
-	ScZgVjEXzm9izk4/4DPmumMEY54uJpmO0nmccZw2kszDo00Eoy00Y8yMOYwxe+5gCfT7gm0p
-	rOxADquIjE0WpLmGvsOz9H7qL0xTQANmiSLgR0H6RVhZ1IkXAQElpM8DaLOdAVxxH0D98PcY
-	V8wAON44Ax63LBoKMC8L6RoAr5k++l800HOD5IpuAPMsruX2WgAnHrhwbwtBR0K30c0rAhQV
-	TD8Lb1uivRoe7SHh33aXzzaIjoPu8Ws+fTD9Mmw43k9wHAPbCzSkl3E6Al7Wan0csOST31ns
-	0/gtxesf7eJ7GdDr4VjtnE/Do0PgsEePcSsEwsryJh7Ha+Dipd+XryGGPYOe5TW3QGvVTzjH
-	G6Bbex1wPhI49M1JguPNsPrsJI/LEAg7yzy+S0Ja6w/HHv6xbPQqrKq7yec4CE60W0iORbCr
-	RIufAJt1K/LpVszQrZihWzHDAPA6EMKqlPJUVhmVweZKlFK5UpWRKtmfKTeDpe/ctdg+fRGc
-	npiSuABGAReAFC88OGD2OSsrDEiRHjzEKjI/VKhkrNIF1lF4eEhARMpTrJBOlWazH7NsFqt4
-	/IpRfqEaLGb0iOERNtBmsQynqfPuvit4ffvcS2dKPrWO1Lwlas4pFKlG9EkXHCc3mg4fPXGk
-	Nzoua9Bpvdf3uRqE7TyVvW/7lUT7VPKtf/clOrfKtLmv2aLfS0ot2+jSxciDZvMN6QmiSN36
-	VZOxUel7xuwz4+LGD0ITplp3rPUv3vm1o1CmCBHl3NwvpJ4U72iOWluacvBci1O3ruGHwlyT
-	2Tra55T+9fae3eQTkpHFW81kfGv68OW9q/WNhz5x+JcmvtnhmVj9WRkI283y71xJGqzSXU+K
-	XXP8hVfeyey9rXaT236uElam7XWoBdmH43tSJsRP17zxa1PgqmdsCfzk1l274sxfaeLF4bgy
-	TRq1iadQSv8D4nuX1D0EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUxTVxjGPb23t4Wk866UeMJgm02MClJopfUgrGNmuouZboZsMxqnjd7x
-	IbTYDzf7x1IpTKVs04pka2soE5hgFdZBZXzIKFgQcEzmCpihi3ZzUhjCWIAy2EqvS/jvd877
-	Ps/7PieHi/GriShutlJLq5WKXCERjvctdY/Gp7U00YmeyWhkq3MQaNF6nYN6hgpwtGj2cNDk
-	4gMCPfUWsNHwj+0YcjScZCF/5zRAM98PctCdfj9Axkt1BKo2rEP9pjz0U7ONQPcd/7KRy2Fg
-	o5ryrwGq+70TQ+cH7QSyewMcNLDYzUb11VcBWpizEWmQcrW42NRCwAwoq+EOTlWeCbCo7yyj
-	HMru1FHfXo6lKqb/ZlPO2jME5Zw2c6ieLxZwqv2ig0PNnmolqJJPnCzqL+eLlNM3wXqb3CdK
-	Vat0WvrlLJVG+4pwvxhJROJkJJIkJYvEm7cc2CqRChPkqUfo3OzjtDpBfkiU5R6+gueXh310
-	+uoUMIB5ohiEcSGZBJfsRlYxCOfyySoAT/kbMaYQDb+Z+ZnNcAT8x1scEvDJKQAXy1czgn4A
-	W4sWOMyhBkDTTaaLIBOg1+ENOnG5AnIDHG+QLPdg5EMO9J0cCblGkGnQ++QuvswC8jVY/9kg
-	wfBW2G00cJYZJ9fBjpKSEPOCPgW3zAQzbCK4avNIqBAWzDA42hcyBWQMfFgTCN1j5Bp4z1fO
-	YiKQsLJ14Fm0SPjk0dKzaJvg7SEfYDgRNlbdwBleC70lI4DxEcHhC6UEw3GwusKPMQs9D299
-	6cPPghcsK8ZZVkgsKySWFRI7wGuBgNZp8jLzNBKRRpGn0SkzRYdVeU4Q/LAuz3xDE6gZmxK5
-	AYsL3AByMaGAN7+xkebzjihO6Gm16qBal0tr3EAafKRzWFTkYVXwxyu1B8WyRKk4SZacKE2W
-	bRau4aXnn1bwyUyFlj5K0/m0+n8dixsWZWDtjMPbju+pOsYX3hck1NsCCdaYQ2LJhtkida+c
-	p4qMrh4rVV37atcVd6k8xW/dlC3+mBRgMuvumbdqcevINB1emP5e/lLiox+u5Txo6xkwDi3s
-	6f3DeWCj9zdj2fvn9NFo0hS/vnC8tfO5dwWex+MdsrgU+edW+e3Y7a/qt/wpl/hduvC5HTk5
-	nZe2Vcx2bC/6Zaj0gvXoRakJZhxL83yg6zIXfJgaY9u3VDb31H137f72d+7VXN4br3xzPYnV
-	v37zem2Lre+NvRMdN3ZKfk1KydCvOuEOVOyIi6xUtOnHIpolfatNU2O9hWTX2ab0bTPN7K7J
-	VS0Zn76Utvuxbhf3vLRMiGuyFOJYTK1R/AecrINTOQQAAA==
-X-CMS-MailID: 20240130090256eucas1p1f65f4e34dbbd7dec2ac619b7b60ae073
-X-Msg-Generator: CA
-X-RootMTR: 20240129180005eucas1p1c1962ece31e6b9619f9e22dc95f54087
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240129180005eucas1p1c1962ece31e6b9619f9e22dc95f54087
-References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
-	<20240124-alice-mm-v1-3-d1abcec83c44@google.com>
-	<CGME20240129180005eucas1p1c1962ece31e6b9619f9e22dc95f54087@eucas1p1.samsung.com>
-	<ZbfnmX1J8iLV8UnO@casper.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: NDtuD7vXNg7PRXBRUYKeYhPJcm5IIj_c
+X-Proofpoint-ORIG-GUID: NDtuD7vXNg7PRXBRUYKeYhPJcm5IIj_c
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-30_03,2024-01-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 phishscore=0 bulkscore=0 adultscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401300065
 
+Introduction of TPDM CMB(Continuous Multi Bit) subunit
+CMB subunit is responsible for creating a dataset element, and is also
+optionally responsible for packing it to fit multiple elements on a
+single ATB transfer if possible in the configuration. The TPDM Core
+Datapath requests timestamps be stored by the TPDA and then delivering
+ATB sized data (depending on ATB width and element size, this could
+be smaller or larger than a dataset element) to the ATB Mast FSM.
+The CMB makes trace elements in two modes. In ‘continuous’ mode, every
+valid data cycle creates an element. In ‘trace on change’ mode, when
+valid data changes on the bus, a trace element is created. In
+continuous mode, all cycles where this condition is true create trace
+elements. In trace on change mode, a data element is only when the
+previously sampled input is different from the current sampled input.
 
-Matthew Wilcox <willy@infradead.org> writes:
+The CMB subunit must be configured prior to enablement. This series
+adds support for TPDM to configure the configure CMB subunit.
 
-> On Wed, Jan 24, 2024 at 11:20:23AM +0000, Alice Ryhl wrote:
->> +impl Page {
->> +    /// Allocates a new set of contiguous pages.
->> +    pub fn new() -> Result<Self, AllocError> {
->> +        // SAFETY: These are the correct arguments to allocate a single=
- page.
->> +        let page =3D unsafe {
->> +            bindings::alloc_pages(
->> +                bindings::GFP_KERNEL | bindings::__GFP_ZERO | bindings:=
-:__GFP_HIGHMEM,
->> +                0,
->> +            )
->> +        };
->
-> This feels too Binder-specific to be 'Page'.  Pages are not necessarily
-> allocated with GFP_HIGHMEM, nor are they necessarily zeroed.  Maybe you
-> want a BinderPage type?
+Once this series patches are applied properly, the new tpdm nodes for
+should be observed at the tpdm path /sys/bus/coresight/devices/tpdm*
+which supports CMB subunit.
+e.g.
+root@qemuarm64:/sys/devices/platform/soc@0/684c000.tpdm/tpdm0# ls -l
+-rw-r--r--    1 root     root          4096 Jan  1 00:00 cmb_mode
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 cmb_msr
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 cmb_patt
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 cmb_trig_patt
+-rw-r--r--    1 root     root          4096 Jan  1 00:00 cmb_trig_ts
+-rw-r--r--    1 root     root          4096 Jan  1 00:00 cmb_ts_all
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 connections
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 dsb_edge
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 dsb_msr
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 dsb_patt
+drwxr-xr-x    2 root     root             0 Jan  1 00:00 dsb_trig_patt
+-rw-r--r--    1 root     root          4096 Jan  1 00:00 enable_source
+--w-------    1 root     root          4096 Jan  1 00:00 integration_test
+drwxr-xr-x    2 root     root             0 Ja?  1 00:00 power
+--w-------    1 root     root          4096 Jan  1 00:00 reset_dataset
+lrwxrwxrwx    1 root     root             0 Apr  5  2021 subsystem -> ../../../../../bus/coresight
+-rw-r--r--    1 root     root          4096 Apr  5  2021 uevent
+-r--r--r--    1 root     root          4096 Jan  1 00:00 waiting_for_supplier
 
-Rust null block uses the same definition of these flags [1], so there is
-at least that synergy.
+We can use the commands are similar to the below to configure the
+TPDMs which support CMB subunit. Enable coresight sink first.
+echo 1 > /sys/bus/coresight/devices/tmc_etf0/enable_sink
+echo 1 > /sys/bus/coresight/devices/tpdm0/reset_dataset
+echo 1 > /sys/bus/coresight/devices/tpdm0/cmb_mode
+echo 1 > /sys/bus/coresight/devices/tpdm0/cmb_patt/enable_ts
+echo 0xFFFFFFFF > /sys/bus/coresight/devices/tpdm0/cmb_patt/tpmr0
+echo 0 > /sys/bus/coresight/devices/tpdm0/cmb_trig_ts
+echo 0xFFFFFFFF > /sys/bus/coresight/devices/tpdm0/cmb_trig_patt/xpr1
+echo 1 > /sys/bus/coresight/devices/tpdm0/enable_source
 
-I feel like we had the discussion of the flags before, although I can't
-find the thread now. I think the conclusion was that we fix them until
-we have code that need to actually change them (as to not add dead
-code).
+codelinaro link:
+https://git.codelinaro.org/clo/linux-kernel/coresight/-/commits/tpdm-cmb-v5
 
-BR Andreas
+Changes in V5:
+1. Return directly to refine the process of "tpdm_enable_dsb" and
+"tpdm_disable_dsb" if the TPDM does not support DSB dataset.
+-- Suzuki K Poulose
+2. Change the new property name from "qcom,cmb-element-size" to
+"qcom,cmb-element-bits". And update the property name to the new
+tpdm example which supports the CMB dataset.
+-- Krzysztof
+3. Drop unnecessary () around the drvdata member access in patch#5.
+-- Suzuki K Poulose
+4. Replace the error code "-EEXIST" with the port number in detecting
+multiple TPDMs on one input port. In patch#5.
+-- Suzuki K Poulose
+5. Due to the modification of the new property name, the searched
+property name was changed from "qcom,cmb-element-size" to
+"qcom,cmb-element-bits". In patch#5.
+6. Replace the judgement "tpdm_has_cmb_dataset(drvdata)" with
+"drvdata->cmb" in the function "tpdm_reset_datasets". In patch#6.
+-- Suzuki K Poulose
+7. Drop unnecessary () around kstrtoul() in the function
+"cmb_mode_store". In patch#6.
+-- Suzuki K Poulose
+8. Update the date and the kernel version in the Document.
+-- Suzuki K Poulose
+9. Initialize the return value to "-EINVAL" and remove the unnecessary
+code in the function "enable_ts_show". In patch#8.
+-- Suzuki K Poulose
+10. Replace spin lock/unlock with guard(spinlock). In patch#8.
+-- Suzuki K Poulose
+11. Drop _rw from the macro "tpdm_patt_enable_ts_rw". In patch#8.
+-- Suzuki K Poulose
 
-[1] https://github.com/metaspace/linux/blob/702026e6645193fc89b7d55e00dac75=
-fd492bfb8/rust/kernel/pages.rs#L28=
+Changes in V4:
+1. Replace spin lock/unlock to avoid forgetting to unlock when the
+function exits.
+-- Suzuki K Poulose
+2. Move the helper "tpdm_has_dsb_dataset" to the header file.
+-- Suzuki K Poulose
+3. Fix the incorrect property of the sample in the documents.
+-- James Clark
+4. Clear the dsb/cmb element size directly in the clear helper.
+-- Suzuki K Poulose
+5. Correct the comment of "tpdm_read_element_size".
+-- Suzuki K Poulose
+6. Call the helper "tpdm_has_dsb/cmb_dataset" in TPDA driver to
+check what dataset the TPDM supports.
+-- Suzuki K Poulose
+7. Refine the dsb/cmb dataset support check in enable/disable functions.
+-- Suzuki K Poulose
+8. Get rid of redundant code in function "set_cmb_tier".
+-- Suzuki K Poulose
+9. Since one SysFs file should follow "one value", use "dev_ext_attribute"
+to instead of the previous "enable_ts" Sysfs file approach.
+-- Suzuki K Poulose
+10. Change the kernel version to 6.9 for the MSR related SysFs file.
+-- James Clark
+11. Refine the function "tpdm_simple_dataset_store".
+-- Suzuki K Poulose
+
+Changes in V3:
+1. Add 8-bit support to the description in the TPDM devicetree document.
+-- Rob Herring
+2. Change how the result is produced in "tpdm_read_element_size".
+-- James Clark
+3. Calling "tpdm_clear_element_size" at the beginning of
+"tpda_enable_port".
+-- James Clark
+4. Use "dsb_esize" and "cmb_esize" to determine whether multiple TPDMs
+are detected on a TPDA input port in "tpda_get_element_size".
+-- James Clark
+5. Modify the judgment logic in "tpda_enable_port".
+-- James Clark
+6. Add more description of "cmb_mode" to TPDM SysFS document.
+-- James Clark
+
+Changes in V2:
+1. Optimizate and modify this patch series based on the patch series
+"Add support to configure TPDM CMB subunit".
+2. Modify the functions that read the element size of DSB/CMB in TPDA driver.
+
+Tao Zhang (10):
+  coresight-tpdm: Optimize the store function of tpdm simple dataset
+  coresight-tpdm: Optimize the useage of tpdm_has_dsb_dataset
+  dt-bindings: arm: qcom,coresight-tpdm: Add support for CMB element
+    size
+  coresight-tpdm: Add CMB dataset support
+  coresight-tpda: Add support to configure CMB element
+  coresight-tpdm: Add support to configure CMB
+  coresight-tpdm: Add pattern registers support for CMB
+  coresight-tpdm: Add timestamp control register support for the CMB
+  dt-bindings: arm: qcom,coresight-tpdm: Add support for TPDM CMB MSR
+    register
+  coresight-tpdm: Add msr register support for CMB
+
+ .../testing/sysfs-bus-coresight-devices-tpdm  |  87 ++++
+ .../bindings/arm/qcom,coresight-tpdm.yaml     |  35 ++
+ drivers/hwtracing/coresight/coresight-tpda.c  | 123 +++--
+ drivers/hwtracing/coresight/coresight-tpda.h  |   6 +
+ drivers/hwtracing/coresight/coresight-tpdm.c  | 455 ++++++++++++++++--
+ drivers/hwtracing/coresight/coresight-tpdm.h  | 113 +++++
+ 6 files changed, 727 insertions(+), 92 deletions(-)
+
+-- 
+2.17.1
+
