@@ -1,81 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F8C376F2;
-	Tue, 30 Jan 2024 04:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64376381A2;
+	Tue, 30 Jan 2024 04:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706589262; cv=none; b=GBOYmue34Im2NIjgczqPnuDi+tIYHKb1GV/L++72sVh+ttgXYS+zamGTq/EodtkE/p+0BVIDDXknvXC6g2sIfVnKWjMcNRL5mCEEbnEfqlXg+J2O8WGop/8w3+B2MQtlfsKRs4jleS+nH7lhASEwaziDra7TT+rRLbdOZvH9zp4=
+	t=1706589275; cv=none; b=VkPvLLBV9IXN7o072Bhi0gPjH2wWjTKTeEM+sfu+tb6vOKgTnM4lhiNj9uEORbFBCRkPyBcOLSmXEOtL9NL6h0S2PrASqO9rCS2Z/LPsvZodSvO9U4e99bt4io2hKGcOpNfWgWdEeGivCfJSZqxf/6JSWxAgfzQJbLKtLfstAtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706589262; c=relaxed/simple;
-	bh=0F5mFah0QNd5K10CodthfzW/RM1sMIaJbOS1PHFaycA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BJZPbOBm2hPXH1PzWMK93ZydkpV/F+3BGnfCO4+YuArImbgAlMLsxgn2HiJA+8P7c7LCDXBS74LwQM8YAzf3MpAQAyS1NgkivuP1u1ACL8z7Y0wxjZB4cIb3LFboiCLjhmvCcND5I/z1YVs3OQL1NZJKGlxb/6F/J5ymiChgCGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BC74DA7;
-	Mon, 29 Jan 2024 20:35:03 -0800 (PST)
-Received: from [10.163.41.110] (unknown [10.163.41.110])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E3CB3F762;
-	Mon, 29 Jan 2024 20:34:06 -0800 (PST)
-Message-ID: <3983416f-b613-42c7-bb42-d3ab268ea1be@arm.com>
-Date: Tue, 30 Jan 2024 10:04:02 +0530
+	s=arc-20240116; t=1706589275; c=relaxed/simple;
+	bh=xriwrT8PK5ZnMFWSAiOQ0+sQh4cRZ169864/lire6Kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YegMJT1XXxuWrjpp8mrYe6EupJ8MblTFLS0TqewLiLdzfP1bMGD3Fux8z59PGZmogLA0JHcOi7O8gC5r1om9g0TU5yXVSHHMMGP39Ut97If9oyzXCIbnaIsS3FD19NnJ6PsYM5pnRLIigpznDVvb172LYooFQRHl5rKByLP1/oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VLPlyD1L; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VLPlyD1L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706589273; x=1738125273;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xriwrT8PK5ZnMFWSAiOQ0+sQh4cRZ169864/lire6Kw=;
+  b=VLPlyD1LSzMSQed3d83ih9aHEWWGMSz16eiNeUKZvWNIXkc/7uNI/px/
+   MWuGqArH2pBrmCdn+R1vxFsk01eSFlYUV7r28mKxau4rdaW62UlCkVwJc
+   /2QzW0iXwRe95Ihdr5sZc7eDI9gHTFDOxaPWRyy3p8v9FSzIXAd18c/JJ
+   IjeE95Z5SW0FUqtq3mZ7b8/KBVpMCnxXp8AXark5GKcDY6tvqCgH7IKnA
+   nhmbyOwe5efOZUM4NZepo2aLr2CjgNMJXcHxD/ie5pox2eT8IBnceWaGD
+   7aavG403yYpTOtjR2LgFt6zP3QvqVcJIkDd99mt7djUbTqH/tzVNUKap9
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="3042805"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="3042805"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 20:34:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="30022513"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa001.fm.intel.com with ESMTP; 29 Jan 2024 20:34:29 -0800
+Date: Tue, 30 Jan 2024 12:31:04 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Marco Pagani <marpagan@redhat.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Tull <atull@opensource.altera.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fpga@vger.kernel.org
+Subject: Re: [RFC PATCH v5 1/1] fpga: add an owner and use it to take the
+ low-level module's refcount
+Message-ID: <Zbh7iO9wlm9ekzB7@yilunxu-OptiPlex-7050>
+References: <20240111160242.149265-1-marpagan@redhat.com>
+ <20240111160242.149265-2-marpagan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 04/35] mm: page_alloc: Partially revert "mm:
- page_alloc: remove stale CMA guard code"
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
- maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
- yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
- vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
- pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-5-alexandru.elisei@arm.com>
- <966a1a84-76dc-40da-bde2-251d2a81ee31@arm.com> <ZbeQBDwe8zc_pLDZ@raptor>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <ZbeQBDwe8zc_pLDZ@raptor>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111160242.149265-2-marpagan@redhat.com>
 
+> +#define fpga_mgr_register_full(parent, info) \
+> +	__fpga_mgr_register_full(parent, info, THIS_MODULE)
+>  struct fpga_manager *
+> -fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
+> +__fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
+> +			 struct module *owner);
+>  
+> +#define fpga_mgr_register(parent, name, mops, priv) \
+> +	__fpga_mgr_register(parent, name, mops, priv, THIS_MODULE)
+>  struct fpga_manager *
+> -fpga_mgr_register(struct device *parent, const char *name,
+> -		  const struct fpga_manager_ops *mops, void *priv);
+> +__fpga_mgr_register(struct device *parent, const char *name,
+> +		    const struct fpga_manager_ops *mops, void *priv, struct module *owner);
+> +
+>  void fpga_mgr_unregister(struct fpga_manager *mgr);
+>  
+> +#define devm_fpga_mgr_register_full(parent, info) \
+> +	__devm_fpga_mgr_register_full(parent, info, THIS_MODULE)
+>  struct fpga_manager *
+> -devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
+> +__devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
+> +			      struct module *owner);
 
+Add a line here. I can do it myself if you agree.
 
-On 1/29/24 17:16, Alexandru Elisei wrote:
-> Hi,
+There is still a RFC prefix for this patch. Are you ready to get it merged?
+If yes, Acked-by: Xu Yilun <yilun.xu@intel.com>
+
+Next time if you think patches are ready for serious review and merge, drop
+the RFC prefix. That avoids an extra query.
+
+Thanks,
+Yilun
+
+> +#define devm_fpga_mgr_register(parent, name, mops, priv) \
+> +	__devm_fpga_mgr_register(parent, name, mops, priv, THIS_MODULE)
+>  struct fpga_manager *
+> -devm_fpga_mgr_register(struct device *parent, const char *name,
+> -		       const struct fpga_manager_ops *mops, void *priv);
+> +__devm_fpga_mgr_register(struct device *parent, const char *name,
+> +			 const struct fpga_manager_ops *mops, void *priv,
+> +			 struct module *owner);
+>  
+>  #endif /*_LINUX_FPGA_MGR_H */
+> -- 
+> 2.43.0
 > 
-> On Mon, Jan 29, 2024 at 02:31:23PM +0530, Anshuman Khandual wrote:
->>
->>
->> On 1/25/24 22:12, Alexandru Elisei wrote:
->>> The patch f945116e4e19 ("mm: page_alloc: remove stale CMA guard code")
->>> removed the CMA filter when allocating from the MIGRATE_MOVABLE pcp list
->>> because CMA is always allowed when __GFP_MOVABLE is set.
->>>
->>> With the introduction of the arch_alloc_cma() function, the above is not
->>> true anymore, so bring back the filter.
->>
->> This makes sense as arch_alloc_cma() now might prevent ALLOC_CMA being
->> assigned to alloc_flags in gfp_to_alloc_flags_cma().
 > 
-> Can I add your Reviewed-by tag then?
-
-I think all these changes need to be reviewed in their entirety
-even though some patches do look good on their own. For example
-this patch depends on whether [PATCH 03/35] is acceptable or not.
-
-I would suggest separating out CMA patches which could be debated
-and merged regardless of this series.
