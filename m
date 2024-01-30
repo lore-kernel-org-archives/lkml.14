@@ -1,170 +1,260 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FA933CD0;
-	Tue, 30 Jan 2024 01:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A616364A1;
+	Tue, 30 Jan 2024 02:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706579672; cv=none; b=P2ZzUJytSkJms2EudQngkMTVvGEudf0MVuWvk8ihMVpJCmV+8M40uuYoMua3w4js8LIS/WTRespgxU/KaRjKF+LTUu4KkNyqiXjQhDCd7nAgIJqANYp2irqSQrodVTTdjWPdMse1ezA+ET6369tn/jR/a0AQLL7HsSewjC087Lw=
+	t=1706580191; cv=none; b=P9X4bQC5ByVTlE18U4FbFMV1XJYtwJbIEMy1RNAEH5CFOKSGE0+f3Ufh5VLGvuD6aI+CisoCpbApFByNlaX2Tbs/jNpKUjoplBjhsYku2G8BxiYFPA4YpCZqbEdwx8Fi3aMEC4zJIhOL19vaBi4LgHSsMVWcCZQAAk3uihjXDmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706579672; c=relaxed/simple;
-	bh=eIeYLq9/742SiWiUw4IIOlMxueZ84oQHFavPtxby0bs=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Fkb39RfL/j2b5KzIa+/tPKFpbg78+rDiGtjSChFs7I6FBnDT8yyjG5FMb/08pQcVddZV+I8sUKLzehF2wPcAtyTpFmE8BCAAUhh3qApF59py0/OEoHS5g/tNJbwsRC9JEkh1O5wQYTc7YcdKfY7JK4RAgL22/JBMXE8CtB7TEOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=DhbXJuXu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kXNeMn+g; arc=none smtp.client-ip=66.111.4.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+	s=arc-20240116; t=1706580191; c=relaxed/simple;
+	bh=Zxize6MwWsvIVjrOsAPOOYpEQj3Tt6iR4kx7UibsFBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=IXnD6udtToSPptSHhkz2Xbn6IoTN0QH2VEu7SeOmDoHV2+kEZtLSxa57fodTgudpsK8NDlq03sTfieQc/bzIY7Wg6AutKSC9orSb9nPn3M4kAOpDZWbL0pko7z4rl1ZtnBvx7rFi5b5TvpNTm0YGmXuTaiJbq/1XlzP2GmX3z8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YwBT5ePn; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="DhbXJuXu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kXNeMn+g"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id B0B195C008E;
-	Mon, 29 Jan 2024 20:54:29 -0500 (EST)
-Received: from imap50 ([10.202.2.100])
-  by compute3.internal (MEProxy); Mon, 29 Jan 2024 20:54:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1706579669; x=1706666069; bh=mMpNTLFWFB
-	+c+/GqlSqqj8inaaP0ntBJTMndPE1dOMg=; b=DhbXJuXuirbal3flctgFLnEDMY
-	NVV90NGALz4rFUD+jhVjdOPnm9O1a/Z8Cqj182nL6o0fQ1583n+uaLdPbVyN8S4M
-	kJ7KtlaTJcuIlHk96FfWq/2B6lpWE+SCIuKgfLlo/y2Q/aUrknQwdWuosJl8WWzV
-	BguoRjRYMAtQYncU8/4S6s4dIAdSyv3hEJ4eOcMph0S2EQIND86VZv9HdumZZXX1
-	zvAIKBi7Xn4J7hGkGZHa90NEewHFJI3+YEWgOGT5zuyFwE+ukDmwTknR5EJMei3Q
-	blre5Y+f31bvwkO30v0lWYZ4gHDsdDHrGGjzqihyfU9p1lhcNHyHrOo7ZvPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706579669; x=1706666069; bh=mMpNTLFWFB+c+/GqlSqqj8inaaP0
-	ntBJTMndPE1dOMg=; b=kXNeMn+gqMZDHn5/MRv1MlFQLB7P4lJvgo/HQFt22TxG
-	EbQll0ypr4fVfX8hSBY76VsXMttudPwTFqCYQpYUrIkmLU5BOo8tSbxepMhFYa37
-	O39tmRZS2LXLZlaRUJb1sajC8ZMtvOA5/mk4LgODWKhEtsgpwJ85cpRtj5LfHrBn
-	3KNNddQ9vh61s7naxyBn5vwTPoU1Yg3zE/l6JE5Nu27n0ypq9vRZLbkFMdCrWxVr
-	71+SWNyMS4GKx+W2rVoHomY5EEIGEqX4faD5FpUh2QEOQ2QF9VNxu1I+IVUx8WNQ
-	+aNJZ6IrZtY9byS/BhWszHijVEMax6byne2kludvfQ==
-X-ME-Sender: <xms:1Va4Zch97yQW2uZHhRP3aVO1GyaW8fGNG-fZkc_enBgKyb6_OWUDuA>
-    <xme:1Va4ZVBaUJG9ZqQAFuUQqTJMVIftV-CP40drOQf8-pAf4p5enN2DOWpuU-50lacRW
-    pDQDl8uwvAJkTJPrw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedthedggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfufht
-    vghfrghnucfqkdftvggrrhdfuceoshhorhgvrghrsehfrghsthhmrghilhdrtghomheqne
-    cuggftrfgrthhtvghrnhepjeeuheegtdeuteeghfehjeejiefghfeifeejheduvdeugedt
-    hfehvefggefgkedtnecuffhomhgrihhnpehinhhfrhgruggvrggurdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshhorhgvrghrsehf
-    rghsthhmrghilhdrtghomh
-X-ME-Proxy: <xmx:1Va4ZUGseqlASZF7QeeiKcjbmesx_chOdeWTawBf1ffzzBaiSov5AQ>
-    <xmx:1Va4ZdQpzc4y7-9nZ2i9a9L8AdhHDlW5VH8ooA50yJsM7qzJeq8e7Q>
-    <xmx:1Va4ZZwLowROqck9Rq2H9wRJTggRNAII88JP7-tjL0QFzntH88vqmg>
-    <xmx:1Va4ZZdnkK2W4JBOV-1A5EKgpvCdqdWALiFkOrL2fPoyoXhciqvzjg>
-Feedback-ID: i84414492:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id F40761700096; Mon, 29 Jan 2024 20:54:28 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YwBT5ePn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1706580131; x=1707184931; i=w_armin@gmx.de;
+	bh=Zxize6MwWsvIVjrOsAPOOYpEQj3Tt6iR4kx7UibsFBs=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=YwBT5ePnxQwsy/+x4FkyxGwjfb2pHKUIFUKeMHhmcpO2n6MyBecIbshcRvIbB+cL
+	 Q2VH10tucuEDIm9WJEYDP+tTxfGz2CnDprLTjNCaefMAUIX3b8YqKp/oiedGt/zpO
+	 P7nyDPRyWAlbs4XKh9ijcVqp3lmnurkr3ktVslpyQhw0IJRFZwmOQEmNQqt+Z3r0K
+	 g7ssh8Wt9/idJYpJ6UPyXEp6d1MGABL4FS30yMMVIV7sp875pijyytLchHfp92p6S
+	 vJ++WlvByfroo9Xa/ZBgtF6Gp3AmD9kMmRh/btSnEq1QYFp2N71O/oZ5/nci9EnaG
+	 T1dS4/8oW67d1dgHCQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2V0B-1r440i2pkF-013vuB; Tue, 30
+ Jan 2024 03:02:11 +0100
+Message-ID: <fabf391c-933c-4a7b-a23c-d361ad3d7cc0@gmx.de>
+Date: Tue, 30 Jan 2024 03:02:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <46b90dbc-3b5f-4f52-8539-0f6fa7e28ce9@app.fastmail.com>
-In-Reply-To: <20240129-use_mmap_hint_address-v1-1-4c74da813ba1@rivosinc.com>
-References: <20240129-use_mmap_hint_address-v1-0-4c74da813ba1@rivosinc.com>
- <20240129-use_mmap_hint_address-v1-1-4c74da813ba1@rivosinc.com>
-Date: Mon, 29 Jan 2024 20:53:31 -0500
-From: "Stefan O'Rear" <sorear@fastmail.com>
-To: "Charlie Jenkins" <charlie@rivosinc.com>,
- "Alexandre Ghiti" <alexghiti@rivosinc.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Shuah Khan" <shuah@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Yangyu Chen" <cyy@cyyself.name>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/3] riscv: mm: Use hint address in mmap if available
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2] platform/x86/fujitsu-laptop: Add battery charge
+ control support
+To: Szilard Fabian <szfabian@bluemarch.art>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, jwoithe@just42.net,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+References: <20240129163502.161409-2-szfabian@bluemarch.art>
+ <20240129175714.164326-2-szfabian@bluemarch.art>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240129175714.164326-2-szfabian@bluemarch.art>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KZm0EGG8+/DE4MIPVf22w5ipQ30Io/qYOl/sVQpyfnltb86YIG0
+ sn/1EcjUJ3JdzdvhHnLSbsXjPMwlSluORw9F5BhCdntNl/AwImQWDN5zLmEUyaD73CeUgYM
+ 2aklcRKf333X6NqJLDtiB72OukgANdhFZN02jbChg9gXRKN4KbQxJOfDs41EicNsEcF6+0T
+ gsDDj7V/8WYaEuz/Opv5Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:W88KII8sWAI=;l0dMNUJjAicsIRMxYpHiBeUe7HF
+ dA4nkncqNmy2OS3q8XjJ8IoJNzOtDtFoomCdMjZOKhdi7ohr1/mLjMni27ilGKEX3dZo0wpcJ
+ SCkThL+0gfvSt1yM/S1p2kmF+uarhgbWCtYudPTZihxFEK6fonmB7X++v05a0jGLKAd7OOu7M
+ nx7AuPAwx1IPy7adOwblm8YytSd/YmK1U17qd29ZkfleOXwV+LCrtGbe8/HmfaYgcCaUnIggk
+ Yxf5+EcpD4+Tn+nVEMazlJttHqxAvXMd98EdjyUKeqO+ixp3F9oYubqyWqevtw+40XwSDe7wX
+ DamMeheIlv3kPrzSKyiW27qeax/3FM4qEqSklgRfyr0xqoS98Yr5a75IbTyVaHFQoUib0zOqn
+ lnzU5fd3vvWUVOpP7tgl6c8jSLQyle283fBciDXs+bkJvY04vj1hjgdzOSiQyl40ViAVjXiyA
+ NNZbyaQJOGj9t9Tk04tdsqEqzgThlP7qBRIKf3dQZAnMtc5lPTMPYP452CBHgXE7j3DdUUCRh
+ u3xSHZZxFnupx0Qr5sxmDgqYbf61xqKg0dltX76q9MZqyO2SxFT1Ks5SCFyfUzjhLE7CV/iD0
+ mx6gK7IxsgQQ2RpY1Edekp4xnBxcA66xi3ElidIBq4YX2SAMoKTqtt1LMPOxz2Acnp2P4rfee
+ RTtFk8XTN573g2QylCjEYmlXuHKap0DUnT3b1fGX1WbetoGb2HkmGZMTEECNYoGKYpWtK/5Q7
+ 5TygFFqhxax3brStEUyQpm9g/iCJtu5/8ba4uW3EGaCv9KlrEXzUNcLlaHJ52dVOjRpxBapnm
+ K4apI5Fb5s4BgYdkKtS/aOP2kmXxi1jrLzEdf/Fxs5prQBEyB7cUGWA8F3alDkrjzJItehQJa
+ iK1M3BUnsTdliaaCgUyz7m9DFf1wLk1SD6eAeLdwzPIGYcufrPWkeevQ9P6VqVC7WLMnB1MkH
+ RCYLlHishjffp9dve2CMp9n8WV4=
 
-On Mon, Jan 29, 2024, at 7:37 PM, Charlie Jenkins wrote:
-> On riscv it is guaranteed that the address returned by mmap is less than
-> the hint address. Allow mmap to return an address all the way up to
-> addr, if provided, rather than just up to the lower address space.
+Am 29.01.24 um 19:00 schrieb Szilard Fabian:
+
+> This patch adds battery charge control support on Fujitsu notebooks
+> via the S006 method of the FUJ02E3 ACPI device. With this method it's
+> possible to set charge_control_end_threshold between 50 and 100%.
 >
-> This provides a performance benefit as well, allowing mmap to exit after
-> checking that the address is in range rather than searching for a valid
-> address.
+> Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
+> patch on a dual battery one, but I didn't find any clue about
+> independent battery charge control on dual battery Fujitsu notebooks
+> either. And by that I mean checking the DSDT table of various Lifebook
+> notebooks and reverse engineering FUJ02E3.dll.
 >
-> It is possible to provide an address that uses at most the same number
-> of bits, however it is significantly more computationally expensive to
-> provide that number rather than setting the max to be the hint address.
-> There is the instruction clz/clzw in Zbb that returns the highest set bit
-> which could be used to performantly implement this, but it would still
-> be slower than the current implementation. At worst case, half of the
-> address would not be able to be allocated when a hint address is
-> provided.
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
 > ---
->  arch/riscv/include/asm/processor.h | 21 ++++++++-------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
+> v2:
+> Forgot to sign-off the original commit. Fixed, sorry for the
+> inconvenience.
+> ---
+>   drivers/platform/x86/fujitsu-laptop.c | 95 +++++++++++++++++++++++++++
+>   1 file changed, 95 insertions(+)
 >
-> diff --git a/arch/riscv/include/asm/processor.h 
-> b/arch/riscv/include/asm/processor.h
-> index f19f861cda54..f3ea5166e3b2 100644
-> --- a/arch/riscv/include/asm/processor.h
-> +++ b/arch/riscv/include/asm/processor.h
-> @@ -22,14 +22,11 @@
->  ({								\
->  	unsigned long mmap_end;					\
->  	typeof(addr) _addr = (addr);				\
-> -	if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
-> -		mmap_end = STACK_TOP_MAX;			\
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x8=
+6/fujitsu-laptop.c
+> index 085e044e888e..bf3df74e4d63 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -49,6 +49,8 @@
+>   #include <linux/kfifo.h>
+>   #include <linux/leds.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/power_supply.h>
+> +#include <acpi/battery.h>
+>   #include <acpi/video.h>
+>
+>   #define FUJITSU_DRIVER_VERSION		"0.6.0"
+> @@ -97,6 +99,10 @@
+>   #define BACKLIGHT_OFF			(BIT(0) | BIT(1))
+>   #define BACKLIGHT_ON			0
+>
+> +/* FUNC interface - battery control interface */
+> +#define FUNC_S006_METHOD		0x1006
+> +#define CHARGE_CONTROL_RW		0x21
+> +
+>   /* Scancodes read from the GIRB register */
+>   #define KEY1_CODE			0x410
+>   #define KEY2_CODE			0x411
+> @@ -164,6 +170,91 @@ static int call_fext_func(struct acpi_device *devic=
+e,
+>   	return value;
+>   }
+>
+> +/* Battery charge control code */
+> +
+> +static ssize_t charge_control_end_threshold_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	int value, ret;
+> +
+> +	ret =3D kstrtouint(buf, 10, &value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (value < 50 || value > 100)
+> +		return -EINVAL;
+> +
+> +	int cc_end_value, s006_cc_return;
+> +
+> +	cc_end_value =3D value * 0x100 + 0x20;
+> +	s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
+> +					CHARGE_CONTROL_RW, cc_end_value, 0x0);
 
-Setting mmap_end in the no-hint case seems to have been lost?
+Hi,
 
--s
+Error handling is missing for call_fext_func(), as it can return an negati=
+ve error code.
 
-> -	else if ((_addr) >= VA_USER_SV57)			\
-> -		mmap_end = STACK_TOP_MAX;			\
-> -	else if ((((_addr) >= VA_USER_SV48)) && (VA_BITS >= VA_BITS_SV48)) \
-> -		mmap_end = VA_USER_SV48;			\
-> +	if ((_addr) == 0 ||					\
-> +		(IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||	\
-> +		((_addr + len) > BIT(VA_BITS - 1)))		\
->  	else							\
-> -		mmap_end = VA_USER_SV39;			\
-> +		mmap_end = (_addr + len);			\
->  	mmap_end;						\
->  })
-> 
-> @@ -39,14 +36,12 @@
->  	typeof(addr) _addr = (addr);				\
->  	typeof(base) _base = (base);				\
->  	unsigned long rnd_gap = DEFAULT_MAP_WINDOW - (_base);	\
-> -	if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
-> +	if ((_addr) == 0 ||					\
-> +	    (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||	\
-> +	    ((_addr + len) > BIT(VA_BITS - 1)))			\
->  		mmap_base = (_base);				\
-> -	else if (((_addr) >= VA_USER_SV57) && (VA_BITS >= VA_BITS_SV57)) \
-> -		mmap_base = VA_USER_SV57 - rnd_gap;		\
-> -	else if ((((_addr) >= VA_USER_SV48)) && (VA_BITS >= VA_BITS_SV48)) \
-> -		mmap_base = VA_USER_SV48 - rnd_gap;		\
->  	else							\
-> -		mmap_base = VA_USER_SV39 - rnd_gap;		\
-> +		mmap_base = (_addr + len) - rnd_gap;		\
->  	mmap_base;						\
->  })
-> 
+> +
+> +	/*
+> +	 * The S006 0x21 method returns 0x00 in case the provided value
+> +	 * is invalid.
+> +	 */
+> +	if (s006_cc_return =3D=3D 0x00)
+> +		return -EINVAL;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t charge_control_end_threshold_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int status;
+> +	status =3D call_fext_func(fext, FUNC_S006_METHOD,
+> +				CHARGE_CONTROL_RW, 0x21, 0x0);
+
+Same as above.
+
+> +
+> +	return sprintf(buf, "%d\n", status);
+> +}
+> +
+> +static DEVICE_ATTR_RW(charge_control_end_threshold);
+> +
+> +/* ACPI battery hook */
+> +
+> +static int fujitsu_battery_add(struct power_supply *battery,
+> +			       struct acpi_battery_hook *hook)
+> +{
+> +	/* Check if there is an existing FUJ02E3 ACPI device. */
+> +	if (fext =3D=3D NULL)
+> +		return -ENODEV;
+
+Can you put the struct acpi_battery_hook into the struct fujitsu_laptop
+and then use container_of() to retrieve the ACPI device from there?
+The dell-wmi-ddv driver does something similar.
+
+This would guarantee that the battery hook always accesses the correct ACP=
+I device
+and you could drop this check.
+
+> +
+> +	/*
+> +	 * Check if the S006 0x21 method exists by trying to get the current
+> +	 * battery charge limit.
+> +	 */
+> +	int s006_cc_return;
+> +	s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
+> +					CHARGE_CONTROL_RW, 0x21, 0x0);
+> +	if (s006_cc_return =3D=3D UNSUPPORTED_CMD)
+> +		return -ENODEV;
+
+Maybe this check should be done once during probe?
+
+> +
+> +	if (device_create_file(&battery->dev,
+> +			       &dev_attr_charge_control_end_threshold))
+> +		return -ENODEV;
+> +
+> +	return 0;
+
+Better to just return the result of device_create_file() here.
+
+Thanks,
+Armin Wolf
+
+> +}
+> +
+> +static int fujitsu_battery_remove(struct power_supply *battery,
+> +				  struct acpi_battery_hook *hook)
+> +{
+> +	device_remove_file(&battery->dev,
+> +			   &dev_attr_charge_control_end_threshold);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct acpi_battery_hook battery_hook =3D {
+> +	.add_battery =3D fujitsu_battery_add,
+> +	.remove_battery =3D fujitsu_battery_remove,
+> +	.name =3D "Fujitsu Battery Extension",
+> +};
+> +
+>   /* Hardware access for LCD brightness control */
 >
-> -- 
-> 2.43.0
+>   static int set_lcd_level(struct acpi_device *device, int level)
+> @@ -839,6 +930,8 @@ static int acpi_fujitsu_laptop_add(struct acpi_devic=
+e *device)
+>   	if (ret)
+>   		goto err_free_fifo;
 >
+> +	battery_hook_register(&battery_hook);
+> +
+>   	return 0;
 >
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>   err_free_fifo:
+> @@ -851,6 +944,8 @@ static void acpi_fujitsu_laptop_remove(struct acpi_d=
+evice *device)
+>   {
+>   	struct fujitsu_laptop *priv =3D acpi_driver_data(device);
+>
+> +	battery_hook_unregister(&battery_hook);
+> +
+>   	fujitsu_laptop_platform_remove(device);
+>
+>   	kfifo_free(&priv->fifo);
