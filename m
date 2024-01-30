@@ -1,25 +1,25 @@
 Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9578464CE9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95753629EF;
 	Tue, 30 Jan 2024 09:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608050; cv=none; b=tN+V1xt0VX4zpCjcTLVhBjEYGlDdhReySHBmCCG+hGqEv5dAF5WEh12QISoCCOQz+TzZv527rp97NvRxsxM84mooxa55QgAHGQX2d466CWOZ574HV77mqIRIBKBxrfbaXtyR6iSHfzWGeJO6jekEozGmW5rYc6dUF20AAwVzB/A=
+	t=1706608050; cv=none; b=YzAZnfwt4TQti+pyl5PNwUeiBEyMzzeCFXPHuaqZNnLy2siuSypP3Bud/HlVIV90W1+XdpQz1uboZf5Zo9zfV11SsjArOXRnoWSFYnggVT9p+UbG3hRBruNGqXinTEaOp8v2F0Yy35Rm1jY6NQR3KKGtJo7W8oZfT944PT2aRCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706608050; c=relaxed/simple;
-	bh=oS3AHplQmCRdXXSejB5i1KR+12GyFSBJYf63Yd7y340=;
+	bh=3j7qNw//RbI0sRRiGsyMLOaSNqnyk1fLqWXikzWa7e0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V5QUmb+M+NbeGG43Be3DJt/9ifoTWw59T2/gakT6r5MX1Xa3lSgikq/aDk3cCkzrLFGicIS0vTHtGf3SkrIgWMHFXuJUANrBDm40lN7ODvah8jYpzMJ/BZDFGllO5XRq3Zw5rEzjnU940PMBkp0orDFI8ECZkDCMLQ5ebsMtp50=
+	 MIME-Version; b=Y+B0uBqaqsaAY8eGnD+t9iNs3x+XQe48tENsQwFUOtRQb/NIwipH6Bl3NhClOK4j6TngJYtKdykptOfD0LL2r8pV1Q27kciIBkRrRZfsCxnQNpLa4/NE9cbw4HHvC7oKmjj963ksDf2d8GJBA8iOVwgHLVXHV151mf+1HIX8wBE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
 Received: by air.basealt.ru (Postfix, from userid 490)
-	id 4E4D42F2022A; Tue, 30 Jan 2024 09:47:24 +0000 (UTC)
+	id 5052C2F20248; Tue, 30 Jan 2024 09:47:25 +0000 (UTC)
 X-Spam-Level: 
 Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
-	by air.basealt.ru (Postfix) with ESMTPSA id D77732F20245;
-	Tue, 30 Jan 2024 09:47:14 +0000 (UTC)
+	by air.basealt.ru (Postfix) with ESMTPSA id 4F4882F20249;
+	Tue, 30 Jan 2024 09:47:15 +0000 (UTC)
 From: kovalev@altlinux.org
 To: stable@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc: linux-kernel@vger.kernel.org,
 	broonie@kernel.org,
 	lgirdwood@gmail.com,
 	kovalev@altlinux.org
-Subject: [PATCH 6.1.y 2/7] ASoC: codecs: ES8326: Add es8326_mute function
-Date: Tue, 30 Jan 2024 12:47:03 +0300
-Message-Id: <20240130094708.290485-3-kovalev@altlinux.org>
+Subject: [PATCH 6.1.y 6/7] ASOC: codecs: ES8326: Add calibration support for version_b
+Date: Tue, 30 Jan 2024 12:47:07 +0300
+Message-Id: <20240130094708.290485-7-kovalev@altlinux.org>
 X-Mailer: git-send-email 2.33.8
 In-Reply-To: <20240130094708.290485-1-kovalev@altlinux.org>
 References: <20240130094708.290485-1-kovalev@altlinux.org>
@@ -49,190 +49,156 @@ Content-Transfer-Encoding: 8bit
 
 From: Zhu Ning <zhuning0077@gmail.com>
 
-Commit 083912c240de0c5f797da0443f5a99e87b75fcb3 upstream.
+Commit 0663286e58e6f611f3578b5e63e1faa576d139fd upstream.
 
-The internal analog power and hp Vref of es8326 should always be on to
-reduce pop noise. The HP_VOL and HP_CAL are moved to es8326_mute function
-so they are turned on at last and turned off at first.
-
-Also, the calibration should be done manually once during start-up
-to reduce DC offset on headphone.
+Version_b requires a new way of calibrating headset offset. A new
+calibration function is added.
 
 Signed-off-by: Zhu Ning <zhuning0077@gmail.com>
-Link: https://lore.kernel.org/r/20230714032453.3334-1-zhuning0077@gmail.com
+Link: https://lore.kernel.org/r/20230717033223.42506-4-zhuning0077@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
 ---
- sound/soc/codecs/es8326.c | 75 ++++++++++++++++-----------------------
- sound/soc/codecs/es8326.h |  8 +++--
- 2 files changed, 36 insertions(+), 47 deletions(-)
+ sound/soc/codecs/es8326.c | 83 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 68 insertions(+), 15 deletions(-)
 
 diff --git a/sound/soc/codecs/es8326.c b/sound/soc/codecs/es8326.c
-index 28a0565c2a955b..4399ba36aee25d 100644
+index 1525fac1f9b8b1..50b13296e246e1 100644
 --- a/sound/soc/codecs/es8326.c
 +++ b/sound/soc/codecs/es8326.c
-@@ -38,6 +38,9 @@ struct es8326_priv {
- 	u8 interrupt_clk;
- 	bool jd_inverted;
- 	unsigned int sysclk;
+@@ -388,6 +388,7 @@ static int es8326_mute(struct snd_soc_dai *dai, int mute, int direction)
+ {
+ 	struct snd_soc_component *component = dai->component;
+ 	struct es8326_priv *es8326 = snd_soc_component_get_drvdata(component);
++	unsigned int offset_l, offset_r;
+ 
+ 	if (mute) {
+ 		regmap_write(es8326->regmap, ES8326_HP_CAL, ES8326_HP_OFF);
+@@ -398,10 +399,16 @@ static int es8326_mute(struct snd_soc_dai *dai, int mute, int direction)
+ 		if (!es8326->calibrated) {
+ 			regmap_write(es8326->regmap, ES8326_HP_CAL, ES8326_HP_FORCE_CAL);
+ 			msleep(30);
++			regmap_write(es8326->regmap, ES8326_HP_CAL, ES8326_HP_OFF);
++			regmap_read(es8326->regmap, ES8326_HPL_OFFSET_INI, &offset_l);
++			regmap_read(es8326->regmap, ES8326_HPR_OFFSET_INI, &offset_r);
++			regmap_write(es8326->regmap, ES8326_HP_OFFSET_CAL, 0x8c);
++			regmap_write(es8326->regmap, ES8326_HPL_OFFSET_INI, offset_l);
++			regmap_write(es8326->regmap, ES8326_HPR_OFFSET_INI, offset_r);
+ 			es8326->calibrated = true;
+ 		}
+ 		regmap_write(es8326->regmap, ES8326_HP_DRIVER, 0xa0);
+-		regmap_write(es8326->regmap, ES8326_HP_VOL, 0x00);
++		regmap_write(es8326->regmap, ES8326_HP_VOL, 0x80);
+ 		regmap_write(es8326->regmap, ES8326_HP_CAL, ES8326_HP_ON);
+ 		regmap_update_bits(es8326->regmap, ES8326_DAC_MUTE,
+ 				ES8326_MUTE_MASK, ~(ES8326_MUTE));
+@@ -420,15 +427,17 @@ static int es8326_set_bias_level(struct snd_soc_component *codec,
+ 		ret = clk_prepare_enable(es8326->mclk);
+ 		if (ret)
+ 			return ret;
+-		regmap_write(es8326->regmap, ES8326_RESET, ES8326_PWRUP_SEQ_EN);
+-		regmap_write(es8326->regmap, ES8326_INTOUT_IO, 0x45);
 +
-+	bool calibrated;
-+	int version;
- };
++		regmap_write(es8326->regmap, ES8326_RESET, 0x9f);
++		msleep(20);
++		regmap_update_bits(es8326->regmap, ES8326_DAC_DSM, 0x01, 0x00);
++		regmap_write(es8326->regmap, ES8326_INTOUT_IO, es8326->interrupt_clk);
+ 		regmap_write(es8326->regmap, ES8326_SDINOUT1_IO,
+ 			    (ES8326_IO_DMIC_CLK << ES8326_SDINOUT1_SHIFT));
+-		regmap_write(es8326->regmap, ES8326_SDINOUT23_IO, ES8326_IO_INPUT);
+-		regmap_write(es8326->regmap, ES8326_CLK_RESAMPLE, 0x05);
+-		regmap_write(es8326->regmap, ES8326_VMIDSEL, 0x02);
++		regmap_write(es8326->regmap, ES8326_VMIDSEL, 0x0E);
+ 		regmap_write(es8326->regmap, ES8326_PGA_PDN, 0x40);
+-		regmap_write(es8326->regmap, ES8326_DAC2HPMIX, 0xAA);
++		regmap_write(es8326->regmap, ES8326_ANA_PDN, 0x00);
++		regmap_update_bits(es8326->regmap,  ES8326_CLK_CTL, 0x20, 0x20);
+ 		regmap_write(es8326->regmap, ES8326_RESET, ES8326_CSM_ON);
+ 		break;
+ 	case SND_SOC_BIAS_PREPARE:
+@@ -437,15 +446,10 @@ static int es8326_set_bias_level(struct snd_soc_component *codec,
+ 		break;
+ 	case SND_SOC_BIAS_OFF:
+ 		clk_disable_unprepare(es8326->mclk);
+-		regmap_write(es8326->regmap, ES8326_DAC2HPMIX, 0x11);
+-		regmap_write(es8326->regmap, ES8326_RESET, ES8326_CSM_OFF);
+-		regmap_write(es8326->regmap, ES8326_PGA_PDN, 0xF8);
++		regmap_write(es8326->regmap, ES8326_ANA_PDN, 0x3b);
+ 		regmap_write(es8326->regmap, ES8326_VMIDSEL, 0x00);
+-		regmap_write(es8326->regmap, ES8326_INT_SOURCE, 0x08);
++		regmap_update_bits(es8326->regmap, ES8326_CLK_CTL, 0x20, 0x00);
+ 		regmap_write(es8326->regmap, ES8326_SDINOUT1_IO, ES8326_IO_INPUT);
+-		regmap_write(es8326->regmap, ES8326_SDINOUT23_IO, ES8326_IO_INPUT);
+-		regmap_write(es8326->regmap, ES8326_RESET,
+-			     ES8326_CODEC_RESET | ES8326_PWRUP_SEQ_EN);
+ 		break;
+ 	}
  
- static const SNDRV_CTL_TLVD_DECLARE_DB_SCALE(dac_vol_tlv, -9550, 50, 0);
-@@ -121,33 +124,12 @@ static const struct snd_soc_dapm_widget es8326_dapm_widgets[] = {
- 	/* Analog Power Supply*/
- 	SND_SOC_DAPM_DAC("Right DAC", NULL, ES8326_ANA_PDN, 0, 1),
- 	SND_SOC_DAPM_DAC("Left DAC", NULL, ES8326_ANA_PDN, 1, 1),
--	SND_SOC_DAPM_SUPPLY("Analog Power", ES8326_ANA_PDN, 7, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("IBias Power", ES8326_ANA_PDN, 6, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("ADC Vref", ES8326_ANA_PDN, 5, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("DAC Vref", ES8326_ANA_PDN, 4, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("Vref Power", ES8326_ANA_PDN, 3, 1, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("MICBIAS1", ES8326_ANA_MICBIAS, 2, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("MICBIAS2", ES8326_ANA_MICBIAS, 3, 0, NULL, 0),
- 
- 	SND_SOC_DAPM_PGA("LHPMIX", ES8326_DAC2HPMIX, 7, 0, NULL, 0),
- 	SND_SOC_DAPM_PGA("RHPMIX", ES8326_DAC2HPMIX, 3, 0, NULL, 0),
- 
--	/* Headphone Charge Pump and Output */
--	SND_SOC_DAPM_SUPPLY("HPOR Cal", ES8326_HP_CAL, 7, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("HPOL Cal", ES8326_HP_CAL, 3, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("Headphone Charge Pump", ES8326_HP_DRIVER,
--			    3, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("Headphone Driver Bias", ES8326_HP_DRIVER,
--			    2, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("Headphone LDO", ES8326_HP_DRIVER,
--			    1, 1, NULL, 0),
--	SND_SOC_DAPM_SUPPLY("Headphone Reference", ES8326_HP_DRIVER,
--			    0, 1, NULL, 0),
--	SND_SOC_DAPM_REG(snd_soc_dapm_supply, "HPOR Supply", ES8326_HP_CAL,
--			 ES8326_HPOR_SHIFT, 7, 7, 0),
--	SND_SOC_DAPM_REG(snd_soc_dapm_supply, "HPOL Supply", ES8326_HP_CAL,
--			 0, 7, 7, 0),
--
- 	SND_SOC_DAPM_OUTPUT("HPOL"),
- 	SND_SOC_DAPM_OUTPUT("HPOR"),
- };
-@@ -166,34 +148,12 @@ static const struct snd_soc_dapm_route es8326_dapm_routes[] = {
- 	{"I2S OUT", NULL, "ADC L"},
- 	{"I2S OUT", NULL, "ADC R"},
- 
--	{"I2S OUT", NULL, "Analog Power"},
--	{"I2S OUT", NULL, "ADC Vref"},
--	{"I2S OUT", NULL, "Vref Power"},
--	{"I2S OUT", NULL, "IBias Power"},
--	{"I2S IN", NULL, "Analog Power"},
--	{"I2S IN", NULL, "DAC Vref"},
--	{"I2S IN", NULL, "Vref Power"},
--	{"I2S IN", NULL, "IBias Power"},
--
- 	{"Right DAC", NULL, "I2S IN"},
- 	{"Left DAC", NULL, "I2S IN"},
- 
- 	{"LHPMIX", NULL, "Left DAC"},
- 	{"RHPMIX", NULL, "Right DAC"},
- 
--	{"HPOR", NULL, "HPOR Cal"},
--	{"HPOL", NULL, "HPOL Cal"},
--	{"HPOR", NULL, "HPOR Supply"},
--	{"HPOL", NULL, "HPOL Supply"},
--	{"HPOL", NULL, "Headphone Charge Pump"},
--	{"HPOR", NULL, "Headphone Charge Pump"},
--	{"HPOL", NULL, "Headphone Driver Bias"},
--	{"HPOR", NULL, "Headphone Driver Bias"},
--	{"HPOL", NULL, "Headphone LDO"},
--	{"HPOR", NULL, "Headphone LDO"},
--	{"HPOL", NULL, "Headphone Reference"},
--	{"HPOR", NULL, "Headphone Reference"},
--
- 	{"HPOL", NULL, "LHPMIX"},
- 	{"HPOR", NULL, "RHPMIX"},
- };
-@@ -419,6 +379,31 @@ static int es8326_pcm_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
+@@ -635,6 +639,54 @@ static irqreturn_t es8326_irq(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
  }
  
-+static int es8326_mute(struct snd_soc_dai *dai, int mute, int direction)
++static int es8326_calibrate(struct snd_soc_component *component)
 +{
-+	struct snd_soc_component *component = dai->component;
 +	struct es8326_priv *es8326 = snd_soc_component_get_drvdata(component);
++	unsigned int reg;
++	unsigned int offset_l, offset_r;
 +
-+	if (mute) {
++	regmap_read(es8326->regmap, ES8326_CHIP_VERSION, &reg);
++	es8326->version = reg;
++
++	if ((es8326->version == ES8326_VERSION_B) && (es8326->calibrated == false)) {
++		dev_dbg(component->dev, "ES8326_VERSION_B, calibrating\n");
++		regmap_write(es8326->regmap, ES8326_CLK_INV, 0xc0);
++		regmap_write(es8326->regmap, ES8326_CLK_DIV1, 0x01);
++		regmap_write(es8326->regmap, ES8326_CLK_DLL, 0x30);
++		regmap_write(es8326->regmap, ES8326_CLK_MUX, 0xed);
++		regmap_write(es8326->regmap, ES8326_CLK_TRI, 0xc1);
++		regmap_write(es8326->regmap, ES8326_DAC_MUTE, 0x03);
++		regmap_write(es8326->regmap, ES8326_ANA_VSEL, 0x7f);
++		regmap_write(es8326->regmap, ES8326_VMIDLOW, 0x33);
++		regmap_write(es8326->regmap, ES8326_DAC2HPMIX, 0x88);
++		regmap_write(es8326->regmap, ES8326_HP_VOL, 0x80);
++		regmap_write(es8326->regmap, ES8326_HP_OFFSET_CAL, 0x8c);
++		regmap_write(es8326->regmap, ES8326_RESET, 0xc0);
++		usleep_range(15000, 20000);
++
++		regmap_write(es8326->regmap, ES8326_HP_OFFSET_CAL, ES8326_HP_OFF);
++		regmap_read(es8326->regmap, ES8326_CSM_MUTE_STA, &reg);
++		if ((reg & 0xf0) != 0x40)
++			msleep(50);
++
++		regmap_write(es8326->regmap, ES8326_HP_CAL, 0xd4);
++		msleep(200);
++		regmap_write(es8326->regmap, ES8326_HP_CAL, 0x4d);
++		msleep(200);
 +		regmap_write(es8326->regmap, ES8326_HP_CAL, ES8326_HP_OFF);
-+		regmap_update_bits(es8326->regmap, ES8326_DAC_MUTE,
-+				ES8326_MUTE_MASK, ES8326_MUTE);
-+		regmap_write(es8326->regmap, ES8326_HP_DRIVER, 0xf0);
-+	} else {
-+		if (!es8326->calibrated) {
-+			regmap_write(es8326->regmap, ES8326_HP_CAL, ES8326_HP_FORCE_CAL);
-+			msleep(30);
-+			es8326->calibrated = true;
-+		}
-+		regmap_write(es8326->regmap, ES8326_HP_DRIVER, 0xa0);
-+		regmap_write(es8326->regmap, ES8326_HP_VOL, 0x00);
-+		regmap_write(es8326->regmap, ES8326_HP_CAL, ES8326_HP_ON);
-+		regmap_update_bits(es8326->regmap, ES8326_DAC_MUTE,
-+				ES8326_MUTE_MASK, ~(ES8326_MUTE));
++		regmap_read(es8326->regmap, ES8326_HPL_OFFSET_INI, &offset_l);
++		regmap_read(es8326->regmap, ES8326_HPR_OFFSET_INI, &offset_r);
++		regmap_write(es8326->regmap, ES8326_HP_OFFSET_CAL, 0x8c);
++		regmap_write(es8326->regmap, ES8326_HPL_OFFSET_INI, offset_l);
++		regmap_write(es8326->regmap, ES8326_HPR_OFFSET_INI, offset_r);
++		regmap_write(es8326->regmap, ES8326_CLK_INV, 0x00);
++
++		es8326->calibrated = true;
 +	}
++
 +	return 0;
 +}
 +
- static int es8326_set_bias_level(struct snd_soc_component *codec,
- 				 enum snd_soc_bias_level level)
+ static int es8326_resume(struct snd_soc_component *component)
  {
-@@ -469,6 +454,8 @@ static const struct snd_soc_dai_ops es8326_ops = {
- 	.hw_params = es8326_pcm_hw_params,
- 	.set_fmt = es8326_set_dai_fmt,
- 	.set_sysclk = es8326_set_dai_sysclk,
-+	.mute_stream = es8326_mute,
-+	.no_capture_mute = 1,
- };
- 
- static struct snd_soc_dai_driver es8326_dai = {
-@@ -691,7 +678,7 @@ static int es8326_suspend(struct snd_soc_component *component)
- 
- 	cancel_delayed_work_sync(&es8326->jack_detect_work);
- 	es8326_disable_micbias(component);
+ 	struct es8326_priv *es8326 = snd_soc_component_get_drvdata(component);
+@@ -673,7 +725,8 @@ static int es8326_resume(struct snd_soc_component *component)
+ 	regmap_write(es8326->regmap, ES8326_CLK_VMIDS1, 0xc4);
+ 	regmap_write(es8326->regmap, ES8326_CLK_VMIDS2, 0x81);
+ 	regmap_write(es8326->regmap, ES8326_CLK_CAL_TIME, 0x00);
 -
-+	es8326->calibrated = false;
- 	regmap_write(es8326->regmap, ES8326_CLK_CTL, ES8326_CLK_OFF);
- 	regcache_cache_only(es8326->regmap, true);
- 	regcache_mark_dirty(es8326->regmap);
-diff --git a/sound/soc/codecs/es8326.h b/sound/soc/codecs/es8326.h
-index 8e5ffe5ee10da3..65ed4d1dc7da09 100644
---- a/sound/soc/codecs/es8326.h
-+++ b/sound/soc/codecs/es8326.h
-@@ -9,8 +9,6 @@
- #ifndef _ES8326_H
- #define _ES8326_H
- 
--#define CONFIG_HHTECH_MINIPMP	1
--
- /* ES8326 register space */
- #define ES8326_RESET		0x00
- #define ES8326_CLK_CTL		0x01
-@@ -94,6 +92,8 @@
- #define	ES8326_PWRUP_SEQ_EN	(1 << 5)
- #define ES8326_CODEC_RESET (0x0f << 0)
- #define ES8326_CSM_OFF (0 << 7)
-+#define ES8326_MUTE_MASK (3 << 0)
-+#define ES8326_MUTE (3 << 0)
- 
- /* ES8326_CLK_CTL */
- #define ES8326_CLK_ON (0x7f << 0)
-@@ -122,7 +122,9 @@
- #define ES8326_MIC2_SEL (1 << 5)
- 
- /* ES8326_HP_CAL */
--#define ES8326_HPOR_SHIFT 4
-+#define ES8326_HP_OFF 0
-+#define ES8326_HP_FORCE_CAL ((1 << 7) | (1 << 3))
-+#define ES8326_HP_ON ((7 << 4) | (7 << 0))
- 
- /* ES8326_ADC1_SRC */
- #define ES8326_ADC1_SHIFT 0
++	/* calibrate for B version */
++	es8326_calibrate(component);
+ 	/* turn off headphone out */
+ 	regmap_write(es8326->regmap, ES8326_HP_CAL, 0x00);
+ 	/* set ADC and DAC in low power mode */
 -- 
 2.33.8
 
