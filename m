@@ -1,144 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991CF60ED3;
-	Tue, 30 Jan 2024 14:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC19E6D1B1;
+	Tue, 30 Jan 2024 14:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706623341; cv=none; b=FCa3Lzi90G0qa9hszG3C2A6ABr0dk+pOJAaujq6uXeF4szJtVzv+Gu/ECcWg4MVCTnjJDs7uF//vki0InjVHmGiU4TpNqxCwiO6anl+CS3DTM9QwE8RAr/G8T2mR9CSz/0RsEgV/WekSYHbSmhZs6cmxf+Klj2ah4mPgBoN9a+A=
+	t=1706623392; cv=none; b=bk4DJS3xgcxNlTCS4TRlvOtWSHQgUT6mujFsLepR0cuNG9CGiNEGcOy1+UcQwlgA6CrpxKQ+znBhZeOPdzA7AyDzPo/KeR0yWRESQprRw0pJwrZyRJ7Co2TKOO7V8UNDg2snQhBK5CINExi1M0cE8bYGvAuhKtIXjlUotSE7rEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706623341; c=relaxed/simple;
-	bh=E4O+rDogaPUll+wLBT5x1wpMvV0U7UCoGRlSeC3bRbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mSlpnkSXtRGHRUM9/OpyC6lDZ52ssu9KmutR3FOPC1Mcs6rUnMKvmg9UPdNREkDGqi+YhrsYbjH951SDgOCc64sJ1G14ZmeldDU6AOnTjW3fd1/c8SyIPlR3s0mKFkBkj5n9WfBT5Xx55EIYH2gOulDd4Z0qAewAhhsblnnOHDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPKGr9mN; arc=none smtp.client-ip=192.55.52.93
+	s=arc-20240116; t=1706623392; c=relaxed/simple;
+	bh=DzsaNEVFKguc0ZC4CtlzX7lscBOx1aUABMiNF9+SE+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OEJw6NG92SI7I/aiNmOisJc6Tfx4nMc5n0+FMknJINtoxP64pHFb6PVwFxw56AOwpsjO/jgjF73/GIh2GA4IUeqxA4kMOtyHnKxS9XidSyEw9wkLx3G7hNjBLEmxkPV7u/l3M64ZxbzgobRH4ZdPfZ8VI6+Kdn0G5VgLw51IIFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ew4Uhpl8; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PPKGr9mN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ew4Uhpl8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706623339; x=1738159339;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=E4O+rDogaPUll+wLBT5x1wpMvV0U7UCoGRlSeC3bRbs=;
-  b=PPKGr9mNjSNEfdoFj6J0qDS4whj+0LGGJ7yHgTkVriwai63ZB2Yemcp0
-   c9YijYlWVOoKKw5dHoyoxozDXvz3uPvwTH/eyA06HRw5nq+J1/E0PaFkC
-   BJyrF9sgUorXF2mtEo6/JZYl+ZHRyq2I2qJkrLAvuZmFhasKeBe353EyF
-   1wiLn4hjsZCv3tPYNLZFdBJGyfoeASr8hgclcbv2KwkUWtPNjCEnZDsH6
-   lOOSrvELR7xqPPkaeJGNwMZmXdx/L+Ncb6s1rqezJK7T2BUC3xbK7mjRL
-   F6ERHaSp+AdyGR6b0ry7xRCKnu51TLja4xtM4n+AzZNuYICOTbpReirIY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="400423989"
+  t=1706623391; x=1738159391;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DzsaNEVFKguc0ZC4CtlzX7lscBOx1aUABMiNF9+SE+U=;
+  b=Ew4Uhpl8Ue1muczcA+RtPNqyl3P1jfCDZE+NCtFLmXw4FV5vw5FG8Z/Z
+   dr9DWeJ6Yl8vJUPe+AtrSfspSlM8giu9d2m/wlWZkPWWsXwahZj1W8kzi
+   UKp9x4SMu+/BvmwpnhESLl4Q5PcdpV/GMU7PgBXqKYemaPjYCfdCPwjAU
+   hemVJNMGBjAFWRrnWN9XtPpcb4Rpt4NZoQuPsO4t6zA7OdVXlnMwmdO8A
+   RKNdzDhQ0hstSdN00fzl+HJt52tTeq+96RiIPVVUuF4efSjLkWn4FZHqQ
+   PcvCMS0vadwJO9p9aQlrI2uEHs2g8b+8UjCqPxQdzEuAZ/A15wqJg8Id2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10676692"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="400423989"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 06:02:19 -0800
+   d="scan'208";a="10676692"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 06:03:10 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="22439003"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 06:02:18 -0800
-Received: from [10.213.169.162] (kliang2-mobl1.ccr.corp.intel.com [10.213.169.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 75637580DA4;
-	Tue, 30 Jan 2024 06:02:17 -0800 (PST)
-Message-ID: <fe3a8fea-00ba-48ca-8dba-4b48901042f3@linux.intel.com>
-Date: Tue, 30 Jan 2024 09:02:16 -0500
+   d="scan'208";a="3697226"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 30 Jan 2024 06:03:08 -0800
+Date: Tue, 30 Jan 2024 21:59:42 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-fpga@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luwei Kang <luwei.kang@intel.com>, Moritz Fischer <mdf@kernel.org>,
+	Tom Rix <trix@redhat.com>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, LKML <linux-kernel@vger.kernel.org>,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: fpga: dfl: fme: Return directly after a failed devm_kasprintf()
+ call in fme_perf_pmu_register()
+Message-ID: <ZbkAziPCX+RDSgfP@yilunxu-OptiPlex-7050>
+References: <d94376b6-12e8-45bb-a9be-4887bb316d35@web.de>
+ <ZbjJYMlDifIv0WId@yilunxu-OptiPlex-7050>
+ <ZbjPDX1y2I9Heanq@yilunxu-OptiPlex-7050>
+ <49183574-ea83-4517-8e34-5d6e87ede064@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: perf test hybrid failing on 14700K
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>
-Cc: Kan Liang <kan.liang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- linux-perf-users@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <ZYbm5L7tw7bdpDpE@kernel.org>
- <CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com>
- <Zbj_8KkXWnCJB-8M@kernel.org>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <Zbj_8KkXWnCJB-8M@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <49183574-ea83-4517-8e34-5d6e87ede064@web.de>
 
-
-
-On 2024-01-30 8:56 a.m., Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jan 19, 2024 at 10:09:10PM -0800, Ian Rogers escreveu:
->> On Sat, Dec 23, 2023 at 5:55 AM Arnaldo Carvalho de Melo
->> <acme@kernel.org> wrote:
->>>
->>> Hi Kan,
->>>
->>> I noticed the following problem, are you able to reproduce it?
->>>
->>> Happy solstice!
->>>
->>> - Arnaldo
->>
->> Hi Arnaldo,
->>
->> I'm seeing a test failure on Alderlake in perf-tools-next and wondered
->> if it was on your radar:
->> ```
->>  32: Session topology                                                :
->> --- start ---
->> test child forked, pid 539222
->> templ file: /tmp/perf-test-HMet21
->> Using CPUID GenuineIntel-6-97-2
->> ------------------------------------------------------------
->> perf_event_attr:
->>  type                             0 (PERF_TYPE_HARDWARE)
->>  config                           0x800000000
->>  disabled                         1
->> ------------------------------------------------------------
->> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 4
->> ------------------------------------------------------------
->> perf_event_attr:
->>  type                             0 (PERF_TYPE_HARDWARE)
->>  config                           0x400000000
->>  disabled                         1
->> ------------------------------------------------------------
->> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 5
->> non matching sample_type
->> FAILED tests/topology.c:73 can't get session
->> test child finished with -1
->> ---- end ----
->> Session topology: FAILED!
->> ```
->>
->> The code is hitting this line in evlist__valid_sample_type as
->> core.nr_entries is 2 on hybrid not 1:
->> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/evlist.c?h=perf-tools-next#n1215
->> this causes perf_session__open to fail:
->> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/session.c?h=perf-tools-next#n129
+On Tue, Jan 30, 2024 at 11:48:31AM +0100, Markus Elfring wrote:
+> >>> Thus return directly after a failed devm_kasprintf() call.
+> >>>
+> >>> Fixes: 724142f8c42a7 ("fpga: dfl: fme: add performance reporting support")
+> >
+> > One more char of sha.
 > 
-> Yes, I see this as well, haven't yet analysed it
+> There are different preferences involved.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.8-rc2#n109
 
-This should has been fixed by James.
-https://lore.kernel.org/lkml/20240124094358.489372-1-james.clark@arm.com/
+Ah, I mean you use 13 chars, but 12 chars is better. Also the doc
+doens't seem to enforce 12 chars, but checkpatch warns on that. So just
+follow the 12 chars style.
 
 Thanks,
-Kan
+Yilun
+
 > 
-> root@number:~# perf test -v topology
->  38: Session topology                                                :
-> --- start ---
-> test child forked, pid 260120
-> templ file: /tmp/perf-test-WMa4M5
-> Using CPUID GenuineIntel-6-B7-1
-> non matching sample_type
-> FAILED tests/topology.c:73 can't get session
-> test child finished with -1
-> ---- end ----
-> Session topology: FAILED!
-> root@number:~#
-> 
+> Regards,
+> Markus
