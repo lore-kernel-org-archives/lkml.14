@@ -1,117 +1,143 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C344C2E62A
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763032E62A
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706582497; cv=none; b=WE69QUeY0RbB2KkUOhCvmYbmOCqCmgUo9UaNW+oDkn2wksEXCbzLtVps21AUnqK6JOMRFDnBGebVG1TuRGuLup+X54y1QQQ41PKoqVqLyg6wRPRlXoZLuzK8fvdCglCn/7oQ14yG80biUBL3nZkcL2DMWMDOJeaQPcZxEZeoFG0=
+	t=1706582508; cv=none; b=CI5zSnmAuvlRmUwfI78xupkFWc1Ov4wkgZCs1vz8QHZ0mYWt+/SGzqMa4eHFkhxJTAdGNpIg/ZP0zTN2SsHVx6kopc5RV+88U0R1VZWrlXbaMrGVLvPA95bif3rmpDt7IfbLvX3cOnkQnAj985lnodxiW/lk0oa5rmWaDHi8umg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706582497; c=relaxed/simple;
-	bh=aVwVdNf3Mfp8Z8muKC48fjZnYIf3JuIc7nHYzLezxWw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FI7k31QBRXSGrROPViFCSMIVplglfQHudbAdPui6UKQohA7FhIvU/uSBJ3r9mc/NDjgkffmITQr/WfeTnFQTazZID4TMjwSyhY779RCpelCfm7/dWu3MDXqIOKalg+inJCMBvxGrzj1M1Z0Ft+5Qw3lKwSqOja1ZPqQTzA8dkfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=M5oAsqaB; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1706582508; c=relaxed/simple;
+	bh=9Ut89lTFvq6e5zUsCJr9shpwYxDSjuxBW81gAsURs/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C7p5iSPPPNzi45QTggrgFQf9xKTU/rNeNKQOrKSit2jgud3ejE7q/6YPJuq2WZiBAbCPiFnew9YqElS5MAMKOVQztnlupVzoWi+qhLanRrxLWWX9AhWuzENqyzDQ8fQuuTluuLfFswwYn+V+vkRlNuh5JdegYfVQuP9wRqneoo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpGWGzS0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="M5oAsqaB"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-290da27f597so1589023a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:41:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1706582495; x=1707187295; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SNJWPiDT9XCn+XhD734CW8fJDtPz3dLIEFDP1H5QFL0=;
-        b=M5oAsqaBL2fJlEfqMb5X2kgPfpMYI33MjVMFiADaflxU9BLuLXqMq0A25EAjjL5iii
-         plPbGdGlDWA5DpQf4eVRUgAjs4W7Eg2+tfrLP06KIu85+hJUbtV6NJaCw+4gXv1Dzsa4
-         oZjaLntr1bx8kY7K//XwgrW5Bfw5jediIWUvM4xtH8qzd3kdnW6JEJ/zAe9y0xtZE0+v
-         yAH8OAK1rpP0+vR17aRQ/B9zKg6Y/0Avq0qcio0ZMuT9Tw+hcTnY8dFXsaV1NuBN1Edq
-         tK/Mip35Kvx0gbNfEEETKcwgpHXgWkwSQAsh7UrRmCSnSd4UlqC45JR8kW0fW8/J3WbY
-         gJww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706582495; x=1707187295;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNJWPiDT9XCn+XhD734CW8fJDtPz3dLIEFDP1H5QFL0=;
-        b=uGZLoBdS9JxYvKbqSlH19je1jbWdl9Uab+YVEb0akPeF55y+F/YRwaWSDTSOJBBm9/
-         njaQw5E21nUTrm1/uvpqpMbJjGw9DZZUDHh/PVqCUVSKv5je3A5a8cILsN9DUCiWODQP
-         HF/WHgDGEqPKBT+B3bSU/cwZ24gp/S8lKKn9tkzvkvSezHx0Yl4HgBBaDoIpdEPbQ5gs
-         vw6gWYedJX1NLEbC1c2S25jM9cmCyRwHv+IrVh4XH/Bg2z2ejQBbgszcSzathC1GFNad
-         Rxk/N6m7++//Rs54g9lIedRtOBtrs1bt9ThGitfPGwXcvNwsDSF1wOUUmhHFgXVtxcy1
-         M27Q==
-X-Gm-Message-State: AOJu0Yyh8gA0iI3uFGGthdihAOs0GBUgKRXYN463xEUhYgV6g7qkV2zN
-	NXwo9Kj4ppVMK+TZwfgh19BT/D16Niddsd8RCCd0bKD38cmwDen8iQrJghuNXEM6NS/z+/q9U6y
-	O
-X-Google-Smtp-Source: AGHT+IGLmVFtPuKxEvknXyOUbPHBKk+x+DHrG1IpQdw0ANYURWfQ1ZfjL2/uduYOZDH6p7PC92WIpg==
-X-Received: by 2002:a17:90a:db91:b0:295:aaa5:7dcb with SMTP id h17-20020a17090adb9100b00295aaa57dcbmr568314pjv.35.1706582495099;
-        Mon, 29 Jan 2024 18:41:35 -0800 (PST)
-Received: from [10.4.207.234] ([139.177.225.234])
-        by smtp.gmail.com with ESMTPSA id j11-20020a17090a318b00b00293d173ccbasm7839409pjb.52.2024.01.29.18.41.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 18:41:34 -0800 (PST)
-Message-ID: <ffc74759-e3e3-499f-85fb-abe52bac2464@bytedance.com>
-Date: Tue, 30 Jan 2024 10:41:29 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpGWGzS0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F94C433F1;
+	Tue, 30 Jan 2024 02:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706582508;
+	bh=9Ut89lTFvq6e5zUsCJr9shpwYxDSjuxBW81gAsURs/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KpGWGzS0rU9bW2NfkcGOQIeDMhTtcxkWvt03ID4ShGnoZgMPDhszFEpiQSAdIl83D
+	 1Ia/QTCZkN8ZaPolnrovBBC2WyYXO3C1avKLVm5nLYcDREeL/et/km68xTwFWndN5y
+	 GgXRwlaSs5GxWO2xcSMD23b8GKI7M6BBZtELrfYt+2uJSn9kodwSb+tyfzHpsUaxdb
+	 6oY49H9ppM/EkcaFHNPUoorX0C/zaSXWChza3l9JWsBnTiAsbeMWdaAXdhVuPo+/yp
+	 gbHyPcyUtT36AT9wn201Jca+iA0jvcBY5A6BV5fogvBtZxoIGziH7R1toxrb3qYSE7
+	 mAFe2RG/+zZdQ==
+Date: Tue, 30 Jan 2024 10:28:57 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] riscv: optimize memcpy/memmove/memset
+Message-ID: <Zbhe6c4kCYv0uIZv@xhacker>
+References: <20240128111013.2450-1-jszhang@kernel.org>
+ <20240129-prelaw-tweet-ae59a90ded20@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: zswap: fix objcg use-after-free in entry destruction
-Content-Language: en-US
-To: Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Nhat Pham <nphamcs@gmail.com>, Yosry Ahmed <yosryahmed@google.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240130013438.565167-1-hannes@cmpxchg.org>
-From: Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <20240130013438.565167-1-hannes@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240129-prelaw-tweet-ae59a90ded20@spud>
 
-On 2024/1/30 09:34, Johannes Weiner wrote:
-> In the per-memcg LRU universe, LRU removal uses entry->objcg to
-> determine which list count needs to be decreased. Drop the objcg
-> reference after updating the LRU, to fix a possible use-after-free.
+On Mon, Jan 29, 2024 at 06:16:13PM +0000, Conor Dooley wrote:
+> On Sun, Jan 28, 2024 at 07:10:10PM +0800, Jisheng Zhang wrote:
+> > This series is to renew Matteo's "riscv: optimized mem* functions"
+> > sereies.
+> > 
+> > Compared with Matteo's original series, Jisheng made below changes:
+> > 1. adopt Emil's change to fix boot failure when build with clang
+> > 2. add corresponding changes to purgatory
+> > 3. always build optimized string.c rather than only build when optimize
+> > for performance
+> > 4. implement unroll support when src & dst are both aligned to keep
+> > the same performance as assembly version. After disassembling, I found
+> > that the unroll version looks something like below, so it acchieves
+> > the "unroll" effect as asm version but in C programming language:
+> > 	ld	t2,0(a5)
+> > 	ld	t0,8(a5)
+> > 	ld	t6,16(a5)
+> > 	ld	t5,24(a5)
+> > 	ld	t4,32(a5)
+> > 	ld	t3,40(a5)
+> > 	ld	t1,48(a5)
+> > 	ld	a1,56(a5)
+> > 	sd	t2,0(a6)
+> > 	sd	t0,8(a6)
+> > 	sd	t6,16(a6)
+> > 	sd	t5,24(a6)
+> > 	sd	t4,32(a6)
+> > 	sd	t3,40(a6)
+> > 	sd	t1,48(a6)
+> > 	sd	a1,56(a6)
+> > And per my testing, unrolling more doesn't help performance, so
+> > the "c" version only unrolls by using 8 GP regs rather than 16
+> > ones as asm version.
+> > 5. Add proper __pi_memcpy and __pi___memcpy alias
+> > 6. more performance numbers.
+> > 
+> > Per my benchmark with [1] on TH1520, CV1800B and JH7110 platforms,
+> > the unaligned medium memcpy performance is running about 3.5x ~ 8.6x
+> > speed of the unpatched versions's! Check patch1 for more details and
+> > performance numbers.
+> > 
+> > Link:https://github.com/ARM-software/optimized-routines/blob/master/string/bench/memcpy.c [1]
+> > 
+> > Here is the original cover letter msg from Matteo:
+> > Replace the assembly mem{cpy,move,set} with C equivalent.
+> > 
+> > Try to access RAM with the largest bit width possible, but without
+> > doing unaligned accesses.
+> > 
+> > A further improvement could be to use multiple read and writes as the
+> > assembly version was trying to do.
+> > 
+> > Tested on a BeagleV Starlight with a SiFive U74 core, where the
+> > improvement is noticeable.
 > 
-> Fixes: a65b0e7607cc ("zswap: make shrinking memcg-aware")
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-
-LGTM, thanks!
-
-Reviewed-by: Chengming Zhou <zhouchengming@bytedance.com>
-
-> ---
->  mm/zswap.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> However, with allmodconfig it doesn't compile:
+>   Redirect to /build/tmp.zzMIlhgQQo and /build/tmp.vxnoxu8G5e
+>   Tree base:
+>   0c526539d432 ("riscv: optimized memcpy")
+>   Building the whole tree with the patch
+>   ../arch/riscv/lib/string.c:118:7: error: expected identifier or '('
+>   ../arch/riscv/lib/string.c:118:7: error: expected ')'
+>   ../arch/riscv/lib/string.c:143:7: error: expected identifier or '('
+>   ../arch/riscv/lib/string.c:143:7: error: expected ')'
+>   ../arch/riscv/lib/string.c:118:7: error: expected identifier or '('
+>   ../arch/riscv/lib/string.c:118:7: error: expected ')'
+>   ../arch/riscv/lib/string.c:143:7: error: expected identifier or '('
+>   ../arch/riscv/lib/string.c:143:7: error: expected ')'
 > 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index de68a5928527..7f88b3a77e4a 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -522,10 +522,6 @@ static struct zpool *zswap_find_zpool(struct zswap_entry *entry)
->   */
->  static void zswap_free_entry(struct zswap_entry *entry)
->  {
-> -	if (entry->objcg) {
-> -		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
-> -		obj_cgroup_put(entry->objcg);
-> -	}
->  	if (!entry->length)
->  		atomic_dec(&zswap_same_filled_pages);
->  	else {
-> @@ -534,6 +530,10 @@ static void zswap_free_entry(struct zswap_entry *entry)
->  		atomic_dec(&entry->pool->nr_stored);
->  		zswap_pool_put(entry->pool);
->  	}
-> +	if (entry->objcg) {
-> +		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
-> +		obj_cgroup_put(entry->objcg);
-> +	}
->  	zswap_entry_cache_free(entry);
->  	atomic_dec(&zswap_stored_pages);
->  	zswap_update_total_size();
+> Seems to be the case both with llvm and gcc.
+
+Hi Conor,
+
+This is due to missing proper FORTIFY_SOURCE handling.
+Below trival patch can fix it :)
+I'm waiting for more comments before sending out v2.
+
+diff --git a/arch/riscv/lib/string.c b/arch/riscv/lib/string.c
+index 022edda68f1c..bfaab058f2cb 100644
+--- a/arch/riscv/lib/string.c
++++ b/arch/riscv/lib/string.c
+@@ -6,6 +6,7 @@
+  * Copyright (C) 2021 Matteo Croce
+  */
+
++#define __NO_FORTIFY
+ #include <linux/types.h>
+ #include <linux/module.h>
+> 
+> Cheers,
+> Conor.
+> 
+
+
