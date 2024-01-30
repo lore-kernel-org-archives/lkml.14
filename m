@@ -1,116 +1,157 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2070.outbound.protection.outlook.com [40.107.93.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAB637147
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 03:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706584773; cv=none; b=nhH+NTeHQltXmClSywBxxNT9aAS16RF1cuR+/fYEol7BWx/FUpmFVV5pt9TNVlR7yMbkq10/DcxupWf/EICNoLPEyFPC5QBAUe6QhHD5no27uUeHCBROjpDbRDQM6zu+S7sPK48u9Kj15/aZcuWbeadJg6cT6movVg0EaWljbgQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706584773; c=relaxed/simple;
-	bh=CHhGECNi2t3OryC64t81I4nI0dXAE/V7YmWKA4rGFyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m7Q3pCqzS8i1MLDkQ4oMTcDmY3A3IGYDF0AtmHqiOI7p3FSDZf/uO+EHUM4v2C8sl50YXxDW56EKtWRrhZkM15ZJXAOb3t7aV5qI2cjlQEsPya3phtXG0w71rQ+sxfZPkHCzxsulRRy+2hFRsXecrVhxn5+2LR1aOcmbG0gIA/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eMxXlbRG; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD765381A2;
+	Tue, 30 Jan 2024 03:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706584772; cv=fail; b=uhhPtoJmQiYvcVwUXS8Yv9s66/C+/dzhLzj5+4FkTPHNgy1+hF+HM1NpY431CpaYWvpRlgmfuDxgGwFQmZ9+ya3VilDJvflftYtoggiV/tJ9Dofi1V49SzsXAssToxhicJGiWdZBZqk9Zjfj135yuM3mBDYxyVgbt1y+I1gRy98=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706584772; c=relaxed/simple;
+	bh=a9eUX6AQ65FqSCC63RDtsYkieoasv4p8b61Gwy4hIWo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lzbhenPi3yEdR+CyuKQzhg7ZCJVp2X8pImrJOpTzCJ6sVbMmutbzNh9munOaNTJ4V6hMEnYuVwZaC+gGAS1ZcVYwNwrIZ2piJy1tGd//FDwWzjwZXS06E6XF8m88FGxtxEwn31EcmkvaVp9/GjXdm67xZqWQqq7v9ZlabF7Y3u0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AWlev+Rn; arc=fail smtp.client-ip=40.107.93.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eMxXlbRG"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6de029f88d8so2475443b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 19:19:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1706584771; x=1707189571; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=so4m4az6mOqkmU0JQqmlPq2+I4lK36pSq8Vc85kD/oE=;
-        b=eMxXlbRGWp4IKElIaG3Rjm5UBfyVKPgWfIna/PPzo8A4YcZeilF/07sKPcNSy67sA6
-         rPIHByahrOMBortO/dJr4GqgIX/bMioGRL/aU/qr252OHxqeNaPK2Ud3cBGrBRtgsPY2
-         nNKNXOPmi+lVgtX8WwvdzxP0y6Mv4+ZxgI4/w5AwUmLdLfhnnUfEFjup6WmN9Or1bMGP
-         yN3hwXsHlSD+bJtW2QXETR214hmAGdIU5UoYUlBjyMQfxt7VBCiqTYvNKxwdfpeEjkly
-         ueQyp9XxMsO/6Nk21uyBbw+rdbeVOapGr5kDMZvgbKckq3Vr5D+goL1nseXTSXJWeNQS
-         r7OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706584771; x=1707189571;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=so4m4az6mOqkmU0JQqmlPq2+I4lK36pSq8Vc85kD/oE=;
-        b=saB31/s8ohOicoObxuQYS6depZC4D18gz9Jylpdbd4A0ExA5ZiN1q7+ZXiGtPzir/q
-         +v9GWhsvDNzhkJs7zQ6u87udK5mefZk+K9HRK1XOybdzmsNjvnZBWcpOqptSB51rXS3U
-         v5gTJ9xm+hc+QNw4V7B+30I/5H8G8UqL2bjDGq8SP38PJGq1o3F2NppAGAs5SodqSi7L
-         Im9H9KHmuC2Abw+Kg1DunHBd5mcs9WsPD1CYzP4dQpQVqxtyodxFv/bQavj3q63TJTL6
-         xz9lL4xRYQhAniRSkGCODsGaDUQxums8w8Md9q6SImnMoWJPE3GTxhqSspdlvWaZDChF
-         4fCQ==
-X-Gm-Message-State: AOJu0Yxjvr6xdQzyPuHDHESD9x5xgNMy8kwJqxM/1//rBGSoR76hupEZ
-	yYQeFU7ZZ9IOupuUhrQi6OFSoyrBJ2oQPs212pxXzj4ApCkVxNxe4MGiUTs6zDs=
-X-Google-Smtp-Source: AGHT+IFSKWvJKRawGYZ8jvIAhhb6bggBAjvzIB5n4zApCOjIEVVhMc+O8NSLC8fJjtP+5szXERefQQ==
-X-Received: by 2002:a62:cdcd:0:b0:6db:ca49:9ce3 with SMTP id o196-20020a62cdcd000000b006dbca499ce3mr5589811pfg.6.1706584771474;
-        Mon, 29 Jan 2024 19:19:31 -0800 (PST)
-Received: from [10.4.207.234] ([139.177.225.234])
-        by smtp.gmail.com with ESMTPSA id fb8-20020a056a002d8800b006dd8148efd8sm6551867pfb.103.2024.01.29.19.19.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 19:19:31 -0800 (PST)
-Message-ID: <285afb68-64e3-4adf-b6d2-9b13de46a62b@bytedance.com>
-Date: Tue, 30 Jan 2024 11:19:26 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AWlev+Rn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CfZNxJaWFYchdIZV7XRQ7cXw6EI77u+JrKqmA1zvX1DwMYIDH9DwdJeNut5kgHYWU2bCCouWokml/MKBSHd+rSJ6v3HFUsx1jEJaQT1I4VkkOKn+Ad/x84MEOTeDQa3co84Y+MlVpIlTTbg7qIjJDX8yJOBymxheyXc09HUxwSp6K98S7F0tsVfCSgawT/fEqZfwFkaE2EEUobOfkIOZxwQsDh1samFbDUWHTaESuUlqWQ991hongzyhP6hK7bRrT7hBf8Xu2pv58eIpDMqRzuMgcSFYaHpR/G2aEgGlmbbUkvEDvyKPt/gru9fECJf6BBc+OhWPwkFoYNz1ELpKkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jUn4qpiUjibqWARrg/Th5+gTRHvCjqaXV/07KD7RMPE=;
+ b=DHbN9mBhzIYO9LhpSJHQld6J4FXzgNSJW2oxDntSRSePvKtZfS4GrUTFI+PNgWQfOkf/DjYyXtUBy70IHQan8NO7/cULc4ytF9IqpAM5k3U/oQ6HhnZWfwttiasZHsPld5WP5CWZM/rZBn6hyu5iW7Mw6f+30Nc0SxoCztzdU0NLi6L7KanOHHj+Qzprly+u5mb3s/EWethKX1Kus1/8Q0COIVJ6zaiX1dRfSAUGwV0wew/XgjsI6I+Z7YE2JZBTtMFdphAeGWAFIOo9AXQluxJqDK7kW0+mlJjiFYGxe5TTLo674Ma3goq5CslGEXXYn6fw95/5IxJua6AURMdcFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jUn4qpiUjibqWARrg/Th5+gTRHvCjqaXV/07KD7RMPE=;
+ b=AWlev+RnpkqCXBkaKcqgrzXWmIGdqLRIi0FyyujRnTpSOo9dCDy/BVfZYXFa+vutS8DmmE3f9e8uSt8PyY9bch/i730e+M5ptjPbjRsqPIpS/Dlmomjn9ZnKplCQ0A83puonE4MZvsFRRAO3gwUxAHalZ+DBe2i8Eeuz1fHQaAA=
+Received: from DS7PR06CA0028.namprd06.prod.outlook.com (2603:10b6:8:54::33) by
+ DM6PR12MB4452.namprd12.prod.outlook.com (2603:10b6:5:2a4::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7228.33; Tue, 30 Jan 2024 03:19:28 +0000
+Received: from CY4PEPF0000E9DA.namprd05.prod.outlook.com
+ (2603:10b6:8:54:cafe::18) by DS7PR06CA0028.outlook.office365.com
+ (2603:10b6:8:54::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34 via Frontend
+ Transport; Tue, 30 Jan 2024 03:19:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9DA.mail.protection.outlook.com (10.167.241.79) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Tue, 30 Jan 2024 03:19:28 +0000
+Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Mon, 29 Jan 2024 21:19:15 -0600
+From: Perry Yuan <perry.yuan@amd.com>
+To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
+	<Borislav.Petkov@amd.com>, <viresh.kumar@linaro.org>, <Ray.Huang@amd.com>,
+	<gautham.shenoy@amd.com>
+CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
+	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH 5/8] tools/power x86_energy_perf_policy: add nominal and lowest nonlinear perf values showing support
+Date: Tue, 30 Jan 2024 11:18:33 +0800
+Message-ID: <31bb6289418648cdc29b175fe81a55e63c0ea64a.1706583551.git.perry.yuan@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1706583551.git.perry.yuan@amd.com>
+References: <cover.1706583551.git.perry.yuan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/20] mm: zswap: rename __zswap_load() to
- zswap_decompress()
-Content-Language: en-US
-To: Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Nhat Pham <nphamcs@gmail.com>, Yosry Ahmed <yosryahmed@google.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240130014208.565554-1-hannes@cmpxchg.org>
- <20240130014208.565554-7-hannes@cmpxchg.org>
-From: Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <20240130014208.565554-7-hannes@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DA:EE_|DM6PR12MB4452:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86b23e77-0cc6-4fa2-792e-08dc214244ab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	RxsKZSlNZlnBaMGdCL8f385oEUXOf3tXvripP6OLxAZ+1lM0uvA283UmSMdZEwCzyxfxMA4aznbBZKIOBkb347eSkfbQ9GNcgzC/GaoZAQ+FO3Z1691lKNjwCFMzj1PlOwuUEPgh5OTIo5Y4zVSwvY1CLW9HKoC6EAAnJTFcO+1xFs29UROPk9wrr8Kgomv1xJfIGPPyiu32Ef29WccAmEprmqr4TnDQxHVu8OH7uHN16nUmfxtwvAyXiWrL/giU/F6vwMGMvRf70KOpxcTbS/tDya7NuDz23Bj+4/imMQOtgcInpPW2AR1FIJxQl+N2vk2i/So+jqsu5GfFRo+IDpVawxXC85XKmA+4sk9EXCCLkYBbIG9ajyEQ9nj3h63fGAxKjF+f6FXHaHnldcox2a5hI8sdKfO0UtfLpFjO9/4sIt03oUVZDZxx1OpLbEyYfZelI8zPAe57sfoodKkVAQKeCfhnoRK8MPXwHDLMyhsj+1UXlOZaPzGQwhwel5ojTeOo8TEGHF6IVUwr9pQLTMs5miuuP1PpCXMwChmEfoCFe7xHw/ozX5yOndiFhkKr8UdFGhhRP83IY1xERY4f3doZ3ylRuaOS7ysHLdzM5Hn4qUhqfBdwpqPidTwYw2A4Gh4p8OOYvDM4GTGLgJ+9ldsP+dk8yILVGNT8dx0VBxV8t2kKoX9UAgfjpXshQAExA1g2BQDTZLdmbyWsYhrzW8YV0kpIzF7OBUe0k72AQ6LtQ4L2zDohwpJMDpZrdDbNLrFSffJHg0NT1Iu9IgpMLg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(376002)(346002)(230922051799003)(82310400011)(1800799012)(186009)(451199024)(64100799003)(46966006)(40470700004)(36840700001)(47076005)(6636002)(316002)(54906003)(110136005)(70206006)(86362001)(70586007)(83380400001)(40460700003)(478600001)(6666004)(40480700001)(8936002)(81166007)(36860700001)(336012)(26005)(2616005)(7696005)(8676002)(82740400003)(16526019)(426003)(356005)(4326008)(44832011)(41300700001)(5660300002)(2906002)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 03:19:28.2320
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86b23e77-0cc6-4fa2-792e-08dc214244ab
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9DA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4452
 
-On 2024/1/30 09:36, Johannes Weiner wrote:
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Add nominal_perf and lowest_nonlinear_perf read and print the values. It
+will help user to check each core all perf values of CPPC and change the
+EPP profile as need.
 
-Reviewed-by: Chengming Zhou <zhouchengming@bytedance.com>
+cpu0: [AMD HWP_CAP]: low 12 lowest_non 86 nominal 121 highest 196
+cpu1: [AMD HWP_CAP]: low 12 lowest_non 86 nominal 121 highest 176
+cpu2: [AMD HWP_CAP]: low 12 lowest_non 86 nominal 121 highest 201
+cpu3: [AMD HWP_CAP]: low 12 lowest_non 86 nominal 121 highest 181
 
-> ---
->  mm/zswap.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 7a7e8da2b4f8..bdc9f82fe4b9 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -1316,7 +1316,7 @@ static int zswap_enabled_param_set(const char *val,
->  	return ret;
->  }
->  
-> -static void __zswap_load(struct zswap_entry *entry, struct page *page)
-> +static void zswap_decompress(struct zswap_entry *entry, struct page *page)
->  {
->  	struct zpool *zpool = zswap_find_zpool(entry);
->  	struct scatterlist input, output;
-> @@ -1411,7 +1411,7 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
->  	zswap_entry_get(entry);
->  	spin_unlock(&tree->lock);
->  
-> -	__zswap_load(entry, &folio->page);
-> +	zswap_decompress(entry, &folio->page);
->  
->  	count_vm_event(ZSWPWB);
->  	if (entry->objcg)
-> @@ -1702,7 +1702,7 @@ bool zswap_load(struct folio *folio)
->  	spin_unlock(&tree->lock);
->  
->  	if (entry->length)
-> -		__zswap_load(entry, page);
-> +		zswap_decompress(entry, page);
->  	else {
->  		dst = kmap_local_page(page);
->  		zswap_fill_page(dst, entry->value);
+Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+---
+ .../x86_energy_perf_policy/x86_energy_perf_policy.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index a08403ab219a..7bc668d22728 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -38,6 +38,8 @@ struct msr_hwp_cap {
+ 	unsigned char guaranteed;
+ 	unsigned char efficient;
+ 	unsigned char lowest;
++	unsigned char nominal_perf;
++	unsigned char lowest_nonlinear_perf;
+ };
+ 
+ struct msr_hwp_request {
+@@ -820,8 +822,13 @@ void print_hwp_cap(int cpu, struct msr_hwp_cap *cap, char *str)
+ 	if (cpu != -1)
+ 		printf("cpu%d: ", cpu);
+ 
+-	printf("HWP_CAP: low %d eff %d guar %d high %d\n",
+-		cap->lowest, cap->efficient, cap->guaranteed, cap->highest);
++	if (genuine_intel) {
++		printf("HWP_CAP: low %d eff %d guar %d high %d\n",
++			cap->lowest, cap->efficient, cap->guaranteed, cap->highest);
++	} else if (authentic_amd) {
++		printf("[AMD HWP_CAP]: low %d lowest_non %d nominal %d highest %d\n\n",
++			cap->lowest, cap->lowest_nonlinear_perf, cap->nominal_perf, cap->highest);
++	}
+ }
+ void read_hwp_cap(int cpu, struct msr_hwp_cap *cap, unsigned int msr_offset)
+ {
+@@ -840,6 +847,8 @@ void read_hwp_cap(int cpu, struct msr_hwp_cap *cap, unsigned int msr_offset)
+ 			errx(-1, "failed to get msr with return %d", ret);
+ 		cap->highest = msr_perf_2_ratio(AMD_CPPC_HIGHEST_PERF(msr));
+ 		cap->lowest = msr_perf_2_ratio(AMD_CPPC_LOWEST_PERF(msr));
++		cap->nominal_perf = msr_perf_2_ratio(AMD_CPPC_NOMINAL_PERF(msr));
++		cap->lowest_nonlinear_perf = msr_perf_2_ratio(AMD_CPPC_LOWNONLIN_PERF(msr));
+ 	}
+ }
+ 
+-- 
+2.34.1
+
