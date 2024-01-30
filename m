@@ -1,106 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD2C58120
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A786605B2
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706605907; cv=none; b=Q7+e+27Bir+C75VSxJqUWD/HwbCZ56Pg1BMAuKfHjWfyuidbkwlPOR5+K4mdr6H2YJzod7D4jC/V6cV0dqgKxE4tnWgYuVBZfx4R8fucs1IznLRrhaAZ35Qcw/talJWsVX2FA/8nFFHlhM3v5mOR0TtTRJr2kVn9+0xCvVEg5SY=
+	t=1706605915; cv=none; b=PSq7JZcW3ff0/02ZrOvPzyyr9NRiY558drMn3AfzbaAsfjqnoQ1iJYQPAwRFXzLWrY+LpeqYrjC//62VvjZJ3Vr1lSloBkrwTG2it31UoiyW1n8g9HhmIpP0hUIUaoUW+5MyvBDbYj8yZ2IW+tjS+2dRWl7n/7wn0lPbV0cCq2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706605907; c=relaxed/simple;
-	bh=iOP2KXEOOGWBsVf+9872GoWmuWoOPq2IE9ros2SOLHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMkEoyF31YnhsX8NqYRvLlbYI5B7p3cAo81sokBqwXsd4izzk48EaLBOimAebgRW1u5ji52zVW4xaNHhVb7CdnWZknIFKxQCHZEWToD8DysiBpj5NsEpWPyfv9yIUnTVcpxzJy+3idUWG55RqTA1BIOCdLxhdiuPh42MHArjftA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JoTkEI92; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706605915; c=relaxed/simple;
+	bh=mg13l6GoIYbaIsT206+Ed4s9MWuDP+u3gPMxCKTqenA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mAZgD7nuKPfil4LyxZTbY3J5PXfrnFTfMsR1ndRBx+7/67xFtvU7wtPkmBdvLbRXaeQOkq7lSrNTayv5tePgEQDvbSZEnAOvv8epMQAKcOrNYo8rwAUw6HCxk1422f/7h+wPjKUwlfk5HjaSFw7C14zPx2uKXRwY588lM6iKt0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rNwNUHtP; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JoTkEI92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D23C433C7;
-	Tue, 30 Jan 2024 09:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706605906;
-	bh=iOP2KXEOOGWBsVf+9872GoWmuWoOPq2IE9ros2SOLHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JoTkEI92AC+PUmil+8rH12bstaBvvlUN4UWkxg/3o8tOErY6zDfZDWL2COwZ6DnAb
-	 o9rt87V+o+nvcsG2z2kqygnJzk96n6dGYIpeQorbyZNi8b4+fLUrfw7P4Hyjb1lzpt
-	 eaPRfTUWFsJ7eyj9W3Pkrxm6MeqXpDuMoOZ8D29HYGBFZqnKqe/69k4/J8l+PNq90C
-	 SivtCgSMpi5THdeJBNBrQM6m8FD1+Mlm8poYdIDCmwEsInUJccUQcFkSb5yBBA3uBu
-	 epDT3+FI1nMpSVBYFH5eB5ME17K2HLFsPKycJkcbI8JtLLsB5FN2dxtCXwGaXJxvdr
-	 BRyblMe11WcKg==
-Date: Tue, 30 Jan 2024 11:11:23 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Yajun Deng <yajun.deng@linux.dev>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/mmap: use SZ_{8M, 128M} helper macro
-Message-ID: <Zbi9OyG9kcldGyJ1@kernel.org>
-References: <20240126085905.2835513-1-yajun.deng@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rNwNUHtP"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so688344866b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:11:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706605911; x=1707210711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P0uzspMxyTAe1K1El4yqw3UnGLBxlhUfh6vxmuD6SvI=;
+        b=rNwNUHtPt5sl998s0l65eQmK0XyBmwRtK3J9yrLWt+za4NqWmwxlrF0SPArOr3uC/P
+         GkYsEAGM/iSn3EEwAk1ZRhFIjn23Kh+w6WfRwI3BmwDouMK3F8qClM/yEtTd+EXbvG2j
+         ZnMGSWO9qW/QT0KPuU0koS6FQWD2+LID2RoGFnNHYzn1iYujzkd9VN7IxSYUfv2Cbt6G
+         pn+CAS5mb7ui0nQ01woeOp8xf5bY+C1LZXstUiaNvrW/VrGGuwnKLDwWt+NujDlpi7N/
+         OEZjHmEoPkbryBhaYVvVnm1kBaXZcwDolk5pAGaGPB2W38BKZ94KoHcB6gvuC6FSPtHP
+         CePg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706605911; x=1707210711;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P0uzspMxyTAe1K1El4yqw3UnGLBxlhUfh6vxmuD6SvI=;
+        b=jMWKieZF2h3Uwb3+XMH8+iNM3DYrU1yigIgUg2OSEt1kgPw+nZaQJ/JA5+vN2Hrp/7
+         A1Icdo7+NOsuLagZ7qE4P0PXxpYbVqUxLEs2RW6eTWXGLRk1P95L50WtLQbfTXlX8MDX
+         Xxb2IceLUhBauLSBeQuB9Q4wmqLoHS1bPP8/cMcn739+zK2/d1f2r4j/C8h8KA2bVEN6
+         dWx64stWpBrhZEWQNW7Pz8lQBIxT/K2sWDm84+R7FLRK/CtYwof3IaNGNTeunPJWvJ3r
+         wHJcY4mcYPtFk5Jmf3nSRZSJrnpO4SyOpHLNSMB3nVobp/fxMDNDlHtWRJ0CcIwf12N8
+         6kQw==
+X-Gm-Message-State: AOJu0YzuYokPTOiEHN5hlUECGUhraMzFb/sMv/7wpSSJ5A2BZod+EofW
+	GEcMUnlZ19VY1zqFZHsHfTBy6tRRpiekh6iO0ZuobNXL70gRyOP0E0QUafPSPMc=
+X-Google-Smtp-Source: AGHT+IHY75lv43WV7NtMQ5xrm3xMVd5ZHPUbyq3NYqVsdgPeWfMSMy1jjyvDwAwa/OPcCY10VkSgAg==
+X-Received: by 2002:a17:907:a091:b0:a36:416:a365 with SMTP id hu17-20020a170907a09100b00a360416a365mr736648ejc.5.1706605911217;
+        Tue, 30 Jan 2024 01:11:51 -0800 (PST)
+Received: from [192.168.2.107] ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id ss6-20020a170907c00600b00a3535b76c42sm3958064ejc.15.2024.01.30.01.11.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 01:11:50 -0800 (PST)
+Message-ID: <354b72d7-ea53-4686-bfa6-023c632d8edd@linaro.org>
+Date: Tue, 30 Jan 2024 09:11:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126085905.2835513-1-yajun.deng@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/7] arm64: dts: exynos: gs101: define USI12 with I2C
+ configuration
+Content-Language: en-US
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
+ willmcvicker@google.com, semen.protsenko@linaro.org,
+ alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com,
+ cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240129174703.1175426-1-andre.draszik@linaro.org>
+ <20240129174703.1175426-7-andre.draszik@linaro.org>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240129174703.1175426-7-andre.draszik@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 26, 2024 at 04:59:05PM +0800, Yajun Deng wrote:
-> Use SZ_{8M, 128M} macro intead of the number in init_user_reserve and
-> reserve_mem_notifier.
+
+
+On 1/29/24 17:46, André Draszik wrote:
+> On the gs101-oriole board, i2c bus 12 has various USB-related
+> controllers attached to it.
 > 
-> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+> Note the selection of the USI protocol is intentionally left for the
+> board dts file.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+
+> 
 > ---
->  mm/mmap.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> v2:
+> * reorder pinctrl-0 & pinctrl-names
+> * collect Reviewed-by: tags
+> ---
+>  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 30 ++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 476de5daf598..f90924b2a6d2 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -3845,7 +3845,7 @@ static int init_user_reserve(void)
+> diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> index e1bcf490309a..9876ecae0ad8 100644
+> --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> @@ -451,6 +451,36 @@ pinctrl_peric1: pinctrl@10c40000 {
+>  			interrupts = <GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH 0>;
+>  		};
 >  
->  	free_kbytes = K(global_zone_page_state(NR_FREE_PAGES));
->  
-> -	sysctl_user_reserve_kbytes = min(free_kbytes / 32, 1UL << 17);
-> +	sysctl_user_reserve_kbytes = min(free_kbytes / 32, SZ_128M);
-
-(1UL << 17) != SZ_128M
-
->  	return 0;
->  }
->  subsys_initcall(init_user_reserve);
-> @@ -3866,7 +3866,7 @@ static int init_admin_reserve(void)
->  
->  	free_kbytes = K(global_zone_page_state(NR_FREE_PAGES));
->  
-> -	sysctl_admin_reserve_kbytes = min(free_kbytes / 32, 1UL << 13);
-> +	sysctl_admin_reserve_kbytes = min(free_kbytes / 32, SZ_8M);
->  	return 0;
->  }
->  subsys_initcall(init_admin_reserve);
-> @@ -3898,12 +3898,12 @@ static int reserve_mem_notifier(struct notifier_block *nb,
->  	case MEM_ONLINE:
->  		/* Default max is 128MB. Leave alone if modified by operator. */
->  		tmp = sysctl_user_reserve_kbytes;
-> -		if (0 < tmp && tmp < (1UL << 17))
-> +		if (tmp > 0 && tmp < SZ_128M)
->  			init_user_reserve();
->  
->  		/* Default max is 8MB.  Leave alone if modified by operator. */
->  		tmp = sysctl_admin_reserve_kbytes;
-> -		if (0 < tmp && tmp < (1UL << 13))
-> +		if (tmp > 0 && tmp < SZ_8M)
-
-(1UL << 13) != SZ_8M
-
->  			init_admin_reserve();
->  
->  		break;
-> -- 
-> 2.25.1
-> 
-> 
-
--- 
-Sincerely yours,
-Mike.
+> +		usi12: usi@10d500c0 {
+> +			compatible = "google,gs101-usi",
+> +				     "samsung,exynos850-usi";
+> +			reg = <0x10d500c0 0x20>;
+> +			ranges;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			clocks = <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_5>,
+> +				 <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_5>;
+> +			clock-names = "pclk", "ipclk";
+> +			samsung,sysreg = <&sysreg_peric1 0x1010>;
+> +			samsung,mode = <USI_V2_NONE>;
+> +			status = "disabled";
+> +
+> +			hsi2c_12: i2c@10d50000 {
+> +				compatible = "google,gs101-hsi2c",
+> +					     "samsung,exynosautov9-hsi2c";
+> +				reg = <0x10d50000 0xc0>;
+> +				interrupts = <GIC_SPI 655 IRQ_TYPE_LEVEL_HIGH 0>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				pinctrl-0 = <&hsi2c12_bus>;
+> +				pinctrl-names = "default";
+> +				clocks = <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_5>,
+> +					 <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_5>;
+> +				clock-names = "hsi2c", "hsi2c_pclk";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>  		pinctrl_hsi1: pinctrl@11840000 {
+>  			compatible = "google,gs101-pinctrl";
+>  			reg = <0x11840000 0x00001000>;
