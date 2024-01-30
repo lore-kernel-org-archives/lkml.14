@@ -1,125 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3417F7F8;
-	Tue, 30 Jan 2024 15:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E418613E;
+	Tue, 30 Jan 2024 15:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706629813; cv=none; b=Yoc/GzbYHCccupUIOFZjet8YMa3g8JhZgfTqaGLu9XEx+eRCkYn9buaaXNUN15VBO8awiatxJFuic85g18eX8DkGmBYyeWqKVaYh/saN4+eiEmJ0IvwMSd1ZsGH7zL0Ek7AC7VGHU0aHGpeMXqQdpYQXEVuCEZuLxacsJWPu1GA=
+	t=1706629837; cv=none; b=tGRS1KCK0Xxcu8ijclty+DYADP31cs6oz76o2Ke/qbuZg16afAHbECXTAMxrj/jzsYqCDspZ2j4r1LJVgicfGXVFZXFZTIGD1E+IlBnWbNM+bFode8j47D7pPdmhUBb15GDYMEPBR1WPYCezPC2MocMzRqksarSJRxXAQ7HdzOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706629813; c=relaxed/simple;
-	bh=Vk+a4/PMaLBaT+nR1i1sQXCbsnZJFcPjFylI7eVgV6Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Y38bnktNgc2EqRUaYIwMG+VkoluOG/PjQPautmMKkO2iFhZojBJ7y8Jhx1XP59Lo5kLry++zxzx9JH1Ms4NrKMYAussksdoI1aaY0CsjuER8o8GsDo9conxKzYitoODrlDUTuF8XMUgZ8k0EyzuJ5eXj2tGHyBXqG/yYMiBbjps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M973pKRE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706629837; c=relaxed/simple;
+	bh=QvBaZsLh8DPvYcl3VO8X2y1UuYCG/UYWMaa3pZVysnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t0w1ePbXAJwX+MRP0pT0shgH5b1xZW/oOX474GLWCi884VAP4wRui2AX4nr+VZYt58Nl4e2oKxBoJerIgQSOezF6qqM6nfpfIPx8ZGsbcwVA3w7khCGRfC/EKrS5OGSUtC0q/vSnHjsk/Is5dI9io4UIep72sjmtyexie1Muinw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eH+Yct7B; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M973pKRE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161BAC43390;
-	Tue, 30 Jan 2024 15:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706629812;
-	bh=Vk+a4/PMaLBaT+nR1i1sQXCbsnZJFcPjFylI7eVgV6Y=;
-	h=From:Date:Subject:To:Cc:From;
-	b=M973pKRE6MfhRjYhN/QX9P4MIQdalu8v2X3PRR4X2wkpeF5HlJSrqVSgv0cfoZRte
-	 byNduhOFiXGGCs0nEyoN+41yhcwLWbZDwKRw3/EQgJ+0PdwIj6lk2OOoq2OE3dQ/It
-	 muBxO+dRteoisnZlfjG+GpK4uz4SRL2bG+GXBk6DVkJiyNYtmENYWnA8Lqu4Z9N+V8
-	 Tf26BdKgVrF6jKZT5aRhf94VyY5Cjssfkk+CRC5XN4Sc4nUFvTnvsUHjOCACL3HOn3
-	 bq6fA0xPEyV0FZK3LTxxpVX06/yHXKrKED5TCF4qBBFDbtv8HoAsHChH0WjljAmYF7
-	 ENi08H6//CVBg==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 30 Jan 2024 15:43:53 +0000
-Subject: [PATCH v2] arm64/signal: Don't assume that TIF_SVE means we saved
- SVE state
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eH+Yct7B"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d8cea8bb3bso12134065ad.2;
+        Tue, 30 Jan 2024 07:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706629834; x=1707234634; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XL1Fflhk+Xb40dzgpJerE8E3hGMxHAI4xcbrdBQFd/M=;
+        b=eH+Yct7BzuiUCYPqw61A+ywaYaN0Z6mvbZ86gGRPWUjIV2G+hR7aAX1K7lMkvV8exh
+         dcd9DxGWgEMTrchX50UZBJj/4E24i4ggGmpW6xxr0I0s+WoRwzlDtg6MLo2WVpHe8nV+
+         oXG0Hz5q1zNPpD5FhN+xHsWo3Ya9Db/Y2Z8wtxhrJz4evULygQF0nMV8nzpVaH9QW585
+         wrtaagWQUj6/xb8TFO0N3Fng8AYiH+KrK77JAeiZ0kCXTzbBiIcAfCJhxCOpYf2T9iOe
+         u7snojzX7fgLQ7IynUqKAyK2fui1AppUHh7Z0dp2MENLbQCaMlHYFlVeftx17KxAbVi7
+         GziA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706629834; x=1707234634;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XL1Fflhk+Xb40dzgpJerE8E3hGMxHAI4xcbrdBQFd/M=;
+        b=PpM+IiRxgAd86XHK9/k9LsV4QbAi7tLphsZMyVtmJZ6nuSvxajre1k08pK4cE2tZ61
+         2u0KaARhFxAVyGDrYBzcOw86pIW8LDNwi/PO8RpAVhrrMusSLvfJ3J3G70FJlflWTL31
+         7UaMAZV5WesHzCw9klSVJFrDh864lz72xf6LnU60lSBjk23QiFX0fgVDB72hm+GfKHor
+         1Rim0GcWHGy1C2PWfb8Jysh9bSWiOhelhojYrg2gzWIIdGhMy6mgYOe3U3LalCqU+dVo
+         brOXNRI73iQfdnsgJrTAXcGnaKEmF8qpvCVz0k8fsgvLX+T27psHe0DP7+Tt+Zoko648
+         Er6Q==
+X-Gm-Message-State: AOJu0Yx4aTqj96zQ9H9o5SvdovYPdsAvonbOXnhtbA6vmPRFLspJfoTN
+	IiXF4JayazmkLPvQQ8ZcgCtnI90nPcAM+jFDztu1ZeYatIanAyzy
+X-Google-Smtp-Source: AGHT+IHIMCnEYaqIb4Pi3z0PuUNUYde12Aucu4qoHrB+Jeqg1FHSLC8058xLuEM1zdrmgWVouVt3kw==
+X-Received: by 2002:a17:903:40c3:b0:1d8:d2b8:446a with SMTP id t3-20020a17090340c300b001d8d2b8446amr5082317pld.27.1706629833562;
+        Tue, 30 Jan 2024 07:50:33 -0800 (PST)
+Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
+        by smtp.gmail.com with ESMTPSA id c6-20020a170902724600b001d8aadaa7easm6480425pll.96.2024.01.30.07.50.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 07:50:33 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 30 Jan 2024 05:50:32 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: torvalds@linux-foundation.org, mpatocka@redhat.com,
+	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
+	msnitzer@redhat.com, ignat@cloudflare.com, damien.lemoal@wdc.com,
+	bob.liu@oracle.com, houtao1@huawei.com, peterz@infradead.org,
+	mingo@kernel.org, netdev@vger.kernel.org, allen.lkml@gmail.com,
+	kernel-team@meta.com, tglx@linutronix.de
+Subject: Re: [PATCHSET wq/for-6.9] workqueue: Implement BH workqueue and
+ convert several tasklet users
+Message-ID: <ZbkayGEYJNJx3ohw@slm.duckdns.org>
+References: <20240130091300.2968534-1-tj@kernel.org>
+ <20240130102011.rX9Qjnp1@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240130-arm64-sve-signal-regs-v2-1-9fc6f9502782@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADgZuWUC/3WNQQ6CMBBFr2Jm7ZhOAwiuvIdhUWQojVjMjGk0h
- LtbSVy6fC/57y+gLIEVTrsFhFPQMMcMdr+D6+iiZwx9ZrDGFoaoRif3qkBNjBp8dBMKe8XySMS
- mJ1PYEvL2ITyE19a9tJnHoM9Z3ttNoq/9FZs/xURI2DVDX1FnbN24840l8nSYxUO7rusHZNnBz
- LsAAAA=
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
- stable@vger.kernel.org
-X-Mailer: b4 0.13-dev-a684c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2358; i=broonie@kernel.org;
- h=from:subject:message-id; bh=Vk+a4/PMaLBaT+nR1i1sQXCbsnZJFcPjFylI7eVgV6Y=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBluRqyMHHatjsuh3dci6BH1TGN/k8YOn3ayYgBl2xd
- Ylsce+6JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZbkasgAKCRAk1otyXVSH0CWgB/
- 9EgqGXGKiU/cckQpSisnL3ThKknzqaZLsTFUsNS7B7DhLmSNufzrK+9UzTncwxTV3dvF6hoNg26pep
- iGC3J5/DWPnFOhudx5hLftkNu8HWRICd819Zl4G1UAFnL5RCL3g1JrvvbC2doFWVAOknqz3u9uro+A
- RA/ULVS00sIN+1vPXCeUcsjDwyfvHeN5UP2/nxHHUBz2z0Bk/sT7clfE1ngtd4Jvbt3tVIPbDmP/vA
- RsPakFYbyZNrrJivLxbx7FwtC11A46INvB41FdUV1Le7GUxNPlIorIMHf20CILIkaZTCXHxRa0/0g1
- P1qqOvKFDLw+8aWGNm81vhM2cxFJ3l
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130102011.rX9Qjnp1@linutronix.de>
 
-When we are in a syscall we will only save the FPSIMD subset even though
-the task still has access to the full register set, and on context switch
-we will only remove TIF_SVE when loading the register state. This means
-that the signal handling code should not assume that TIF_SVE means that
-the register state is stored in SVE format, it should instead check the
-format that was recorded during save.
+Hello, Sebastian.
 
-Fixes: 8c845e273104 ("arm64/sve: Leave SVE enabled on syscall if we don't context switch")
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
----
-Changes in v2:
-- Rebase onto v6.8-rc2.
-- Link to v1: https://lore.kernel.org/r/20240119-arm64-sve-signal-regs-v1-1-b9fd61b0289a@kernel.org
----
- arch/arm64/kernel/fpsimd.c | 2 +-
- arch/arm64/kernel/signal.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+On Tue, Jan 30, 2024 at 11:20:11AM +0100, Sebastian Andrzej Siewior wrote:
+> If one context creates multiple work item which are then moved to
+> tasklet I don't see the difference vs workqueue with a bh_disable()
+> around it.
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index a5dc6f764195..25ceaee6b025 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -1635,7 +1635,7 @@ void fpsimd_preserve_current_state(void)
- void fpsimd_signal_preserve_current_state(void)
- {
- 	fpsimd_preserve_current_state();
--	if (test_thread_flag(TIF_SVE))
-+	if (current->thread.fp_type == FP_STATE_SVE)
- 		sve_to_fpsimd(current);
- }
- 
-diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
-index 0e8beb3349ea..425b1bc17a3f 100644
---- a/arch/arm64/kernel/signal.c
-+++ b/arch/arm64/kernel/signal.c
-@@ -242,7 +242,7 @@ static int preserve_sve_context(struct sve_context __user *ctx)
- 		vl = task_get_sme_vl(current);
- 		vq = sve_vq_from_vl(vl);
- 		flags |= SVE_SIG_FLAG_SM;
--	} else if (test_thread_flag(TIF_SVE)) {
-+	} else if (current->thread.fp_type == FP_STATE_SVE) {
- 		vq = sve_vq_from_vl(vl);
- 	}
- 
-@@ -878,7 +878,7 @@ static int setup_sigframe_layout(struct rt_sigframe_user_layout *user,
- 	if (system_supports_sve() || system_supports_sme()) {
- 		unsigned int vq = 0;
- 
--		if (add_all || test_thread_flag(TIF_SVE) ||
-+		if (add_all || current->thread.fp_type == FP_STATE_SVE ||
- 		    thread_sm_enabled(&current->thread)) {
- 			int vl = max(sve_max_vl(), sme_max_vl());
- 
+The main difference is that it avoids scheduling latencies in scenarios
+where softirq isn't heavily loaded.
 
----
-base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
-change-id: 20240118-arm64-sve-signal-regs-5711e0d10425
+> Looking at the USB changes, I would prefer to see it converted to
+> threaded interrupts instead of using tasklet or workqueue. Both
+> approaches (current tasklet, suggested workqueue) lose the original
+> context where the request was created. Having threaded interrupts would
+> allow to keep everything in the same "context" so you could prioritize
+> according to your needs.
 
-Best regards,
+That's great. If threaded IRQs or even regular workqueues are suitable, that
+should be fine. This conversion is just targeted at the use cases which can
+benefit from executing in the softirq context.
+
+Thanks.
+
 -- 
-Mark Brown <broonie@kernel.org>
-
+tejun
