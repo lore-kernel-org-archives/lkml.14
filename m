@@ -1,309 +1,124 @@
-Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D3D57864
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2DC5786C
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706604802; cv=none; b=OqM2eNNPhjzQWMH+8bv5JADRncWxCnJm/fupQapaZt+6oP8jaylV2CnDPqHdSMxvNqqcm6Zjwzifg0qLXY0JEuvVh9sKWcLupbx2Yx/DS6v1BFLkmPE7OARBR5trRaTYJOeeGAfk/CcHHkPeKTVxQdZyoGIHKTTzq2RQmK4sQI4=
+	t=1706604844; cv=none; b=aXuAJT2IQAVtsShKgoEKz13gJ6SRQ/uXVGREOJMqmkRSdpcgSKwaBd4zZeK1N9dvuOnQ+HK/1iGqZTVAueokYMXYmMlw9Yb2pqe80uJ8M7TVrp7vPYPyhyo44i9zIPI1MU7IaajoK0X9p5ltAIHG6RlZOPSLwoouS9SrwofacGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706604802; c=relaxed/simple;
-	bh=PYrUS3/+Y771ILCs3sTwuOn/MKRq3WY1J8faebJpjzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wv+1571DuaKxxP+YOkICq5aJcYQaGYuPLvjZB5GJgOJX+gPCDxTDAF3oa45XSjOems7434tLx/B/lW2ciAsoXNt862NRK3+gcTPWYo7AclvgtWY4wwEJTmOKFT12MXIrhU7ve/nTRyQsvUMWWR0EijcIu83YVqFYbG3zh89/DLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=s48meHNh; arc=none smtp.client-ip=68.232.139.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1706604844; c=relaxed/simple;
+	bh=G8sl2lS+IaDiGr/COgYH10cSJ7PzxMwL+ublPA4/gvI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CXcu10T8FvWuy2JGTmC4MPzIUUOIBNnvrSgXt0KMxOLtLbI4KI5OanxVtendPuwFhVA0MjAhquPIt+/NB3D2PnVCkdYTQjLRUuidWgNVaH6lVGH8+o0DUlOYBmp7gjKgaFBCLzktAjUgZMzm/KDWHlfQARTf7rWdub0nqYrh5Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zPbgxoi7; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="s48meHNh"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1706604800; x=1738140800;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PYrUS3/+Y771ILCs3sTwuOn/MKRq3WY1J8faebJpjzI=;
-  b=s48meHNhXWuUS4dTu4E2U4O0DyymAAgNGlzc/G2HAM4w1D2EKPIuqa6K
-   K9UHYM/MhFQHwwJnqEREAhSfi9R72j9olXeSLMgEeW0CAjfHKL+po0Y5+
-   0dKENGNCGAJxL78ltCnezzjfZGXU+2MgfKHseUaMxKz+/fyyQ7SwDH8My
-   0djxiVglG+vPiGeZ9whSMT6BYKElAefB7pn5fnyzEOkiQDWCeLm+jJg3u
-   gCscQRneZMaV89+WdJ+Q/vXGpG5CRSOmcSXLq2xFjHLMga76IL1q06G00
-   MsbZHJ3zkkH5b9d5ciXfRTyegbEFOdEhxfKFpn8GXNurXYG8tIUJ49oB8
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="149466937"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701097200"; 
-   d="scan'208";a="149466937"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 17:53:16 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id EDD39D4800
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:53:12 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 284C3D5B3C
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:53:12 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id B97BE20083888
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:53:11 +0900 (JST)
-Received: from [10.167.226.45] (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id E16711A006A;
-	Tue, 30 Jan 2024 16:53:10 +0800 (CST)
-Message-ID: <d1d5add8-8f4a-4578-8bf0-2cbe79b09989@fujitsu.com>
-Date: Tue, 30 Jan 2024 16:53:10 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zPbgxoi7"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3bbc649c275so1439185b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:54:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706604841; x=1707209641; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7TkZJIKQyigRSw9xWbiatjiA506UbWDVE+Kdu3nQRyk=;
+        b=zPbgxoi7VBa+k0GUe+XCvN0hsM0hVzFoLAmjsJxbtMaxyhUctvawiAnVmUKhoJS4dX
+         Dshbet+62X3Yh1/sc2LBjha2eafPw+cu/nIzh2dwLmI6NOtzpo//qwCU52bWct5UAD3E
+         j2RNzZ0d2FevjSNz7UwDo7J8VBzegEsbFlkXVvQJvYHDkPNPOITO95ZOeDFkzBOZLOtQ
+         weH7GshiJr2zUDyRq3t0qFiYUb+LMs7qWDsgyLWpTegpXpUUDRcLv82Gjpy5FAKczPF3
+         nQKFsEdJgydS9JxBDYBr1k5ulSx21XFoAcC55wOzDYzvdicEjVw3i+NHYQWI+cZl3C1u
+         PaqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706604841; x=1707209641;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7TkZJIKQyigRSw9xWbiatjiA506UbWDVE+Kdu3nQRyk=;
+        b=wJP5W/6PqrKcYnI4/9+sXJ82oOjwUeEUw7ernq5c7GoK6Wax7QF1S+uDg9MWsM1Iv9
+         wTPwqRS8w2LzrLGeViuyzg4zAJ5LZp9k8xFq5wVrsX0FMKvjMtyQgOCy/iMDFko6P+oz
+         HPlpbynlda4FKw8UKUn0qVuDEzVPDYeTynvEztAyKnveL0Iq7iZ+4iOTcRyJdX7r64As
+         qk5g82LYyw8cRn/1uZTQzYMKqPStJaCrbzHXP11s/IjdWGgKu+z2Wk9fenzikuizVUU/
+         2ZRCU2ULPEieWssc8o71/P6sUQaMSKXhSCOKpxw01fhKnPqbrOEJRgWZyEQkxy41V+MG
+         2jJQ==
+X-Gm-Message-State: AOJu0YyOhs0qMbIOVVdswSYIlqCFGIwqJt83Pr9kAxEXudcjAWLoKt/0
+	LTx/FijkyWLuyTgfo/uUePjQmYolZjolo54iI1Ii0HSjM+EcmEe7ufW3auqmhQ==
+X-Google-Smtp-Source: AGHT+IHF8tvqT6/4XZap19WF5cks4KGjl1+krysKoU6uZio3PMGnP7+Hq13PeNnAUYP203TS4jLkEw==
+X-Received: by 2002:a05:6808:1287:b0:3bd:f103:4550 with SMTP id a7-20020a056808128700b003bdf1034550mr4853058oiw.34.1706604841479;
+        Tue, 30 Jan 2024 00:54:01 -0800 (PST)
+Received: from thinkpad ([117.202.188.6])
+        by smtp.gmail.com with ESMTPSA id s20-20020a056a00195400b006dbe42b8f75sm7180736pfk.220.2024.01.30.00.53.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 00:54:01 -0800 (PST)
+Date: Tue, 30 Jan 2024 14:23:51 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: vkoul@kernel.org, jingoohan1@gmail.com, conor+dt@kernel.org,
+	konrad.dybcio@linaro.org, robh+dt@kernel.org,
+	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+	dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+	quic_schintav@quicinc.com, quic_shijjose@quicinc.com,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	mhi@lists.linux.dev
+Subject: Re: [PATCH v1 6/6] PCI: epf-mhi: Add flag to enable HDMA for SA8775P
+Message-ID: <20240130085351.GC83288@thinkpad>
+References: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com>
+ <1705669223-5655-7-git-send-email-quic_msarkar@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/4] drivers/base/node: Add demotion_nodes sys
- infterface
-Content-Language: en-US
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rafael@kernel.org,
- linux-mm@kvack.org, y-goto@fujitsu.com, linux-kernel@vger.kernel.org
-References: <20231102025648.1285477-1-lizhijian@fujitsu.com>
- <20231102025648.1285477-2-lizhijian@fujitsu.com>
- <878r7g3ktj.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Li Zhijian <lizhijian@fujitsu.com>
-In-Reply-To: <878r7g3ktj.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28150.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28150.005
-X-TMASE-Result: 10--28.496600-10.000000
-X-TMASE-MatchedRID: UomY2wWC/KyPvrMjLFD6eJTQgFTHgkhZsBSA1tuZVSbtP4RQ+dxonQVM
-	9kPsaYx4vtqCRGwbz0Fkjvv21BvS6hH6a53AZfDxR+GtoiXVeDHYUDvAr2Y/1zpnHdhQ1BMbe0K
-	jC/8CK0pVZIN0tHD4H+AbxsLrrMxv0FQxfjRHOzjN+qWlu2ZxaLFcDzCo2ZtWCxzju735hWTAwJ
-	WfIE4NHs1j70qfy418woo+ldrMeVCwHb9D99XpM6zGfgakLdjawdP+8YXeAclOaDdl7pggvRFEt
-	97pQ+C8kf935YO20KhO9mtymj1NEjN1VvnSogA6A9lly13c/gEINLW/nC4hC/dt0QHl1BcpA3DT
-	3VehETp72aKohPmGR81qGMpNtFmr+UviL1yO5g3NgrlT5Ajc7sMKxxeacM3vKxnRjlf7+WsYODB
-	tbaa9ST+Ok6f9gUlFtdh2oL28A44v+0FNnM7lDR+0aBf65h9MWQ3R4k5PTnC4GyTmeN+AbKDpIN
-	QWjbma6wtGsupCFkWaspefDToLzTcpdZ3fQiLdOX/V8P8ail1ZDL1gLmoa/ALDAYP4AXVR7nY51
-	lwLq0+8QIu4z6HhEH7cGd19dSFd
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1705669223-5655-7-git-send-email-quic_msarkar@quicinc.com>
 
-Hi Ying
+On Fri, Jan 19, 2024 at 06:30:22PM +0530, Mrinmay Sarkar wrote:
+> SA8775P supports HDMA as DMA engine so adding 'MHI_EPF_USE_DMA'
 
+s/adding/add
 
-I need to pick up this thread/patch again.
+> flag to enable HDMA support.
+> 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-> We have /sys/devices/virtual/memory_tiering/memory_tier*/nodelist
-> already.  A node in a higher tier can demote to any node in the lower
-> tiers.  What's more need to be displayed in nodeX/demotion_nodes?
+With above addressed,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> index 2c54d80..570c1d1f 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> @@ -137,6 +137,7 @@ static const struct pci_epf_mhi_ep_info sa8775p_info = {
+>  	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
+>  	.msi_count = 32,
+>  	.mru = 0x8000,
+> +	.flags = MHI_EPF_USE_DMA,
+>  };
+>  
+>  struct pci_epf_mhi {
+> -- 
+> 2.7.4
 > 
 
-Yes, it's believed that /sys/devices/virtual/memory_tiering/memory_tierN/nodelist
-are intended to show nodes in memory_tierN. But IMHO, it's not enough, especially
-for the preferred demotion node(s).
-
-Currently, when a demotion occurs, it will prioritize selecting a node
-from the preferred nodes as the destination node for the demotion. If
-the preferred nodes does not meet the requirements, it will try from all
-the lower memory tier nodes until it finds a suitable demotion destination
-node or ultimately fails.
-                                                                                 
-However, currently it only lists the nodes of each tier. If the
-administrators want to know all the possible demotion destinations for a
-given node, they need to calculate it themselves:
-Step 1, find the memory tier where the given node is located
-Step 2, list all nodes under all its lower tiers
-                                                                                    
-It will be even more difficult to know the preferred nodes which depend on
-more factors, distance etc. For the following example, we may have 6 nodes
-splitting into three memory tiers.
-                                                                                 
-For emulated hmat numa topology example:
-> $ numactl -H                                                                  
-> available: 6 nodes (0-5)                                                      
-> node 0 cpus: 0                                                                
-> node 0 size: 1974 MB                                                          
-> node 0 free: 1767 MB                                                             
-> node 1 cpus: 1                                                                
-> node 1 size: 1694 MB                                                          
-> node 1 free: 1454 MB                                                          
-> node 2 cpus:                                                                  
-> node 2 size: 896 MB                                                           
-> node 2 free: 896 MB                                                           
-> node 3 cpus:                                                                  
-> node 3 size: 896 MB                                                           
-> node 3 free: 896 MB                                                           
-> node 4 cpus:                                                                  
-> node 4 size: 896 MB                                                           
-> node 4 free: 896 MB                                                           
-> node 5 cpus:                                                                  
-> node 5 size: 896 MB                                                           
-> node 5 free: 896 MB                                                           
-> node distances:                                                               
-> node   0   1   2   3   4   5                                                  
->   0:  10  31  21  41  21  41                                                  
->   1:  31  10  41  21  41  21                                                  
->   2:  21  41  10  51  21  51                                                  
->   3:  31  21  51  10  51  21                                                  
->   4:  21  41  21  51  10  51                                                  
->   5:  31  21  51  21  51  10                                                  
->                                                                               
-> $ cat memory_tier4/nodelist                                                   
-> 0-1                                                                           
-> $ cat memory_tier12/nodelist                                                  
-> 2,5
-> $ cat memory_tier54/nodelist                                                  
-> 3-4                                                                           
-                                                                                 
-For above topology, memory-tier will build the demotion path for each node
-like this:
-node[0].preferred = 2
-node[0].demotion_targets = 2-5
-node[1].preferred = 5
-node[1].demotion_targets = 2-5
-node[2].preferred = 4
-node[2].demotion_targets = 3-4
-node[3].preferred = <empty>
-node[3].demotion_targets = <empty>
-node[4].preferred = <empty>
-node[4].demotion_targets = <empty>
-node[5].preferred = 3
-node[5].demotion_targets = 3-4
-                                                                          
-But this demotion path is not explicitly known to administrator. And with the
-feedback from our customers, they also think it is helpful to know demotion
-path built by kernel to understand the demotion behaviors.
-
-So i think we should have 2 new interfaces for each node:
-
-/sys/devices/system/node/nodeN/demotion_allowed_nodes
-/sys/devices/system/node/nodeN/demotion_preferred_nodes
-
-I value your opinion, and I'd like to know what you think about...
-
-
-Thanks
-Zhijian
-
-
-On 02/11/2023 11:17, Huang, Ying wrote:
-> Li Zhijian <lizhijian@fujitsu.com> writes:
-> 
->> It shows the demotion target nodes of a node. Export this information to
->> user directly.
->>
->> Below is an example where node0 node1 are DRAM, node3 is a PMEM node.
->> - Before PMEM is online, no demotion_nodes for node0 and node1.
->> $ cat /sys/devices/system/node/node0/demotion_nodes
->>   <show nothing>
->> - After node3 is online as kmem
->> $ daxctl reconfigure-device --mode=system-ram --no-online dax0.0 && daxctl online-memory dax0.0
->> [
->>    {
->>      "chardev":"dax0.0",
->>      "size":1054867456,
->>      "target_node":3,
->>      "align":2097152,
->>      "mode":"system-ram",
->>      "online_memblocks":0,
->>      "total_memblocks":7
->>    }
->> ]
->> $ cat /sys/devices/system/node/node0/demotion_nodes
->> 3
->> $ cat /sys/devices/system/node/node1/demotion_nodes
->> 3
->> $ cat /sys/devices/system/node/node3/demotion_nodes
->>   <show nothing>
-> 
-> We have /sys/devices/virtual/memory_tiering/memory_tier*/nodelist
-> already.  A node in a higher tier can demote to any node in the lower
-> tiers.  What's more need to be displayed in nodeX/demotion_nodes?
-> 
-> --
-> Best Regards,
-> Huang, Ying
-> 
->> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
->> ---
->>   drivers/base/node.c          | 13 +++++++++++++
->>   include/linux/memory-tiers.h |  6 ++++++
->>   mm/memory-tiers.c            |  8 ++++++++
->>   3 files changed, 27 insertions(+)
->>
->> diff --git a/drivers/base/node.c b/drivers/base/node.c
->> index 493d533f8375..27e8502548a7 100644
->> --- a/drivers/base/node.c
->> +++ b/drivers/base/node.c
->> @@ -7,6 +7,7 @@
->>   #include <linux/init.h>
->>   #include <linux/mm.h>
->>   #include <linux/memory.h>
->> +#include <linux/memory-tiers.h>
->>   #include <linux/vmstat.h>
->>   #include <linux/notifier.h>
->>   #include <linux/node.h>
->> @@ -569,11 +570,23 @@ static ssize_t node_read_distance(struct device *dev,
->>   }
->>   static DEVICE_ATTR(distance, 0444, node_read_distance, NULL);
->>   
->> +static ssize_t demotion_nodes_show(struct device *dev,
->> +			     struct device_attribute *attr, char *buf)
->> +{
->> +	int ret;
->> +	nodemask_t nmask = next_demotion_nodes(dev->id);
->> +
->> +	ret = sysfs_emit(buf, "%*pbl\n", nodemask_pr_args(&nmask));
->> +	return ret;
->> +}
->> +static DEVICE_ATTR_RO(demotion_nodes);
->> +
->>   static struct attribute *node_dev_attrs[] = {
->>   	&dev_attr_meminfo.attr,
->>   	&dev_attr_numastat.attr,
->>   	&dev_attr_distance.attr,
->>   	&dev_attr_vmstat.attr,
->> +	&dev_attr_demotion_nodes.attr,
->>   	NULL
->>   };
->>   
->> diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
->> index 437441cdf78f..8eb04923f965 100644
->> --- a/include/linux/memory-tiers.h
->> +++ b/include/linux/memory-tiers.h
->> @@ -38,6 +38,7 @@ void init_node_memory_type(int node, struct memory_dev_type *default_type);
->>   void clear_node_memory_type(int node, struct memory_dev_type *memtype);
->>   #ifdef CONFIG_MIGRATION
->>   int next_demotion_node(int node);
->> +nodemask_t next_demotion_nodes(int node);
->>   void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets);
->>   bool node_is_toptier(int node);
->>   #else
->> @@ -46,6 +47,11 @@ static inline int next_demotion_node(int node)
->>   	return NUMA_NO_NODE;
->>   }
->>   
->> +static inline next_demotion_nodes next_demotion_nodes(int node)
->> +{
->> +	return NODE_MASK_NONE;
->> +}
->> +
->>   static inline void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets)
->>   {
->>   	*targets = NODE_MASK_NONE;
->> diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
->> index 37a4f59d9585..90047f37d98a 100644
->> --- a/mm/memory-tiers.c
->> +++ b/mm/memory-tiers.c
->> @@ -282,6 +282,14 @@ void node_get_allowed_targets(pg_data_t *pgdat, nodemask_t *targets)
->>   	rcu_read_unlock();
->>   }
->>   
->> +nodemask_t next_demotion_nodes(int node)
->> +{
->> +	if (!node_demotion)
->> +		return NODE_MASK_NONE;
->> +
->> +	return node_demotion[node].preferred;
->> +}
->> +
->>   /**
->>    * next_demotion_node() - Get the next node in the demotion path
->>    * @node: The starting node to lookup the next node
+-- 
+மணிவண்ணன் சதாசிவம்
