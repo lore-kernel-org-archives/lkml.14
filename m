@@ -1,169 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278901292D0;
-	Tue, 30 Jan 2024 17:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035CD1292CD
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706635684; cv=none; b=i7EC29L3CdsisaWliKNA37ZGxkpzo0YPoWit/u7eE91Khq80PYjwrQhXTE6yK9g6dv0xFp/7JDJoJlKx59Wpwn25X01FNgTHOUQbQ16PTsLYF6heto28HiUvHeOWJqzfSuBkukUm1nIzhoFPwRTys7JE+5IuHWQeBJF16+WrhxY=
+	t=1706635734; cv=none; b=FEoRmTXGUmvn+6HLWkxImObBo15vWLNExuHzA9nUk5J5LpzKHT9ZzlqyuOnxsc3BIg9ynwj9V3lAfCWHtO9DtBT6eq5Lm0YVWReb0rDQvwEY689OMky670iKbD6eXJAIzjsW83xAPx0gZDfxAdyovQDc+xm2v2Yt45YtRJI6P+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706635684; c=relaxed/simple;
-	bh=28S1L4bBFK8hBbbAvq3VNr8X9WWe5HGCxwCf29i8V1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Nyop9XKyGxI83TEBX/awvhPxoLUUsw4tXDezLRVvJUKQzFJoaw2eiP/DSosqIBP+J1NbTE5dAj2YXaLyEL0E9ic6mampMD7rHc1/pkFNYukvQ4QlJj7MR4o5dPBG3bL3QfCUSAkp6bOuakJn9jU8h1X8XoFza9q+BhEKDZf3jvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvoKLUts; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706635734; c=relaxed/simple;
+	bh=14TQ/1zcCqLGdolRK0IcXEJl5bdtA9sEHTihtDnduYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VFNQMH207IZvpY3PH1Eab/cSCgCcIZym4zt7V6pHV5heIVxqdu3uR9rn3fylBOTgA9TH8acgEwKZ9xidEjbZf/y6ApfkGpZtDSFlZ0Zm4IUxMB8DEzPaRGsT4aViJgSGuOTNxH52av3DKX/4hUtkKecvYJIiJ1cy18/uzN0EpDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=krXG7/Lh; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvoKLUts"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42B2EC433C7;
-	Tue, 30 Jan 2024 17:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706635683;
-	bh=28S1L4bBFK8hBbbAvq3VNr8X9WWe5HGCxwCf29i8V1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KvoKLUtsIhLo2iMrs/tk4Fs3ck6VQ5kxNc+ZJ1x4OAoe+Xu+1Xp9EI6O7jz6m4POn
-	 0EpF+zc2ffFd6iFqslbBTpCRtfKvng58DEEix/QDAPO7LFy1u5jiDnHS85U5E6PrMg
-	 54HPIQfzeLPLPzfxwnCtR+V13T600V2YKsnk22rqiGbEJ6JhJ0qalSUUOgjl5rQ9oU
-	 +1DF1ZJI0x3l+BpE/9x431FqlOaxvqt91LahCdbmAARYTkK5IhNrrkIixVYvThYnWk
-	 dro5+5Ob8zwzJM1sqhSSUrAdUT++UeofSTsHiAxj+Xum7b0zcbjk+tyTXIUrVehb+a
-	 LGZNtqVALhhOw==
-Date: Tue, 30 Jan 2024 11:28:01 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jian-Hong Pan <jhp@endlessos.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	David Box <david.e.box@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@endlessos.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: vmd: enable PCI PM's L1 substates of remapped
- PCIe port and NVMe
-Message-ID: <20240130172801.GA525128@bhelgaas>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="krXG7/Lh"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso2328169a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:28:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706635732; x=1707240532; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fZz+3WykNM8556Tzol1mqtpnBeKBTaXu9EkNH0f8s9c=;
+        b=krXG7/LhOyZCCXw1aBfLZE/J8LJmLxFgj1GUWfM4v36DhPcxTkZ1898b3r6iKvR55q
+         AUOScNK4SWlik+35ZJoL6gJcq+jfRY7iAhPAfP81GzynXSTh5vZ1Vda4nmqjQDaziKVU
+         aEnmOvY0sYM02ZhF7OobqW2ohyA4/Cq7LgLKan/oYZpwXnSHi1vYBxLjU+tkrJSJF1yh
+         sUjuc9DRSQAxeUqpx5WCB304WXg3Etzobudy1J6rogRqnNdXg8ePUxawVxdeqB67GnI1
+         BhBNHZPixZ2qO/+MDzyk59nyu5EV4qam2ObDVgpYNkFAqjnJ9IBiLuiJrkzeP7wEQUeq
+         ujQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706635732; x=1707240532;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fZz+3WykNM8556Tzol1mqtpnBeKBTaXu9EkNH0f8s9c=;
+        b=u1UDTdYXgsroTZ2SDgxF663869pXpjJp/MgZlTe7MBdWcpTMdUldi/jJEn1oqCxCAU
+         4oB96z2/W4vYtnT93RiDNMVEIt6zeQzeZb42mPZvpmBKmwwA50d0eoFuH0Eh3Z3Z4v+M
+         hk3881tkZ1bHINtmHfMehhWQv7HOV3SjuzgbVKGwpM74hKJ4aM1nmFwm7N0kkr8ffNSO
+         4AJEehBKDT/4EepdID+rxmuY9oLSUSAGBrxMjERQKUtspBTC5Py4Vcfve/qzHRyIv/55
+         +IwZhZB9Ca+AlwRt+9ikI/+XgePUYsoA5tatat7KgTaZ3dN95iR8r/dX4p4LPd586Hlo
+         LwhA==
+X-Gm-Message-State: AOJu0YynWopgaARw1cg/GninyUFoZ3Y5lKhlWM2I88JX4ly9j6H4dyFX
+	dU1C+PuFrIL2t2K1HpbDu+s1boKPE72yaDhZo5aUo01cWIh7FE7GIqmy6mmGRS+jfhMj2w5RyWT
+	LBruk1GPLkbsMCcf7wFX3Zt+KpxF94Tzw+oQnOQ==
+X-Google-Smtp-Source: AGHT+IFhnTLNnR0RIqoES54tod5OivJXs32LyIzAe5lH54IERWGNOWiPrgUtQZYL8/C6vjjnV6O2Ng/fDqCQzij4xrY=
+X-Received: by 2002:a05:6a20:6e81:b0:199:37ce:2370 with SMTP id
+ gr1-20020a056a206e8100b0019937ce2370mr4431243pzb.23.1706635732296; Tue, 30
+ Jan 2024 09:28:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130163519.GA521777@bhelgaas>
+References: <20231208002342.367117-1-qyousef@layalina.io> <20231208002342.367117-9-qyousef@layalina.io>
+ <a561029e-993d-726d-18ce-0bc014e6533c@quicinc.com> <20240121000444.ghue2miejmiair6l@airbuntu>
+ <8dfb5db7-6da0-4f6f-30ef-8966428e4a1c@quicinc.com>
+In-Reply-To: <8dfb5db7-6da0-4f6f-30ef-8966428e4a1c@quicinc.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 30 Jan 2024 18:28:40 +0100
+Message-ID: <CAKfTPtB=nv7DDqTvsdenOg+UNoNFx=f2SLvihHx+CMkeE6NyNA@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] sched/pelt: Introduce PELT multiplier
+To: Ashay Jaiswal <quic_ashayj@quicinc.com>
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Lukasz Luba <lukasz.luba@arm.com>, Wei Wang <wvw@google.com>, Rick Yiu <rickyiu@google.com>, 
+	Chung-Kai Mei <chungkai@google.com>, quic_anshar@quicinc.com, quic_atulpant@quicinc.com, 
+	quic_shashim@quicinc.com, quic_rgottimu@quicinc.com, 
+	quic_adharmap@quicinc.com, quic_kshivnan@quicinc.com, 
+	quic_pkondeti@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-[+cc Johan since qcom has similar code]
-
-On Tue, Jan 30, 2024 at 10:35:19AM -0600, Bjorn Helgaas wrote:
-> On Tue, Jan 30, 2024 at 06:00:51PM +0800, Jian-Hong Pan wrote:
-> > The remmapped PCIe port and NVMe have PCI PM L1 substates capability on
-> > ASUS B1400CEAE, but they are disabled originally:
+On Sun, 28 Jan 2024 at 17:22, Ashay Jaiswal <quic_ashayj@quicinc.com> wrote:
+>
+> Hello Qais Yousef,
+>
+> Thank you for your response.
+>
+> On 1/21/2024 5:34 AM, Qais Yousef wrote:
+> > Hi Ashay
 > >
-> > Capabilities: [900 v1] L1 PM Substates
-> >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
-> >                   PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
-> >         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> >                    T_CommonMode=0us LTR1.2_Threshold=0ns
-> >         L1SubCtl2: T_PwrOn=10us
-> > 
-> > Power on all of the VMD remapped PCI devices before enable PCI-PM L1 PM
-> > Substates by following "Section 5.5.4 of PCIe Base Spec Revision 5.0
-> > Version 0.1". Then, PCI PM's L1 substates control are enabled
-> > accordingly.
-> > 
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
-> > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> > ---
-> >  drivers/pci/controller/vmd.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index 87b7856f375a..b1bbe8e6075a 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -738,6 +738,12 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
-> >  	vmd_bridge->native_dpc = root_bridge->native_dpc;
-> >  }
-> >  
-> > +static int vmd_power_on_pci_device(struct pci_dev *pdev, void *userdata)
-> > +{
-> > +	pci_set_power_state(pdev, PCI_D0);
-> > +	return 0;
-> > +}
-> > +
-> >  /*
-> >   * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-> >   */
-> > @@ -928,6 +934,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> >  	vmd_acpi_begin();
-> >  
-> >  	pci_scan_child_bus(vmd->bus);
-> > +
-> > +	/*
-> > +	 * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
-> > +	 * Section 5.5.4 of PCIe Base Spec Revision 5.0 Version 0.1
-> > +	 */
-> > +	pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL);
-> 
-> Sec 5.5.4 indeed says "If setting either or both of the enable bits
-> for PCI-PM L1 PM Substates, both ports must be configured ... while in
-> D0."
-> 
-> This applies to *all* PCIe devices, not just those below a VMD bridge,
-> so I'm not sure this is the right place to do this.  Is there anything
-> that prevents a similar issue for non-VMD hierarchies?
-> 
-> I guess the bridges (Root Ports and Switch Ports) must already be in
-> D0, or we wouldn't be able to enumerate anything below them, right?
-> 
-> It would be nice to connect this more closely with the L1 PM Substates
-> configuration.  I don't quite see the connection here.  The only path
-> I see for L1SS configuration is this:
-> 
->   pci_scan_slot
->     pcie_aspm_init_link_state
->       pcie_aspm_cap_init
-> 	aspm_l1ss_init
-> 
-> which of course is inside pci_scan_child_bus(), which happens *before*
-> this patch puts the devices in D0.  Where does the L1SS configuration
-> happen after this vmd_power_on_pci_device()?
+> > On 01/20/24 13:22, Ashay Jaiswal wrote:
+> >> Hello Qais Yousef,
+> >>
+> >> We ran few benchmarks with PELT multiplier patch on a Snapdragon 8Gen2
+> >> based internal Android device and we are observing significant
+> >> improvements with PELT8 configuration compared to PELT32.
+> >>
+> >> Following are some of the benchmark results with PELT32 and PELT8
+> >> configuration:
+> >>
+> >> +-----------------+---------------+----------------+----------------+
+> >> | Test case                       |     PELT32     |     PELT8      |
+> >> +-----------------+---------------+----------------+----------------+
+> >> |                 |    Overall    |     711543     |     971275     |
+> >> |                 +---------------+----------------+----------------+
+> >> |                 |    CPU        |     193704     |     224378     |
+> >> |                 +---------------+----------------+----------------+
+> >> |ANTUTU V9.3.9    |    GPU        |     284650     |     424774     |
+> >> |                 +---------------+----------------+----------------+
+> >> |                 |    MEM        |     125207     |     160548     |
+> >> |                 +---------------+----------------+----------------+
+> >> |                 |    UX         |     107982     |     161575     |
+> >> +-----------------+---------------+----------------+----------------+
+> >> |                 |   Single core |     1170       |     1268       |
+> >> |GeekBench V5.4.4 +---------------+----------------+----------------+
+> >> |                 |   Multi core  |     2530       |     3797       |
+> >> +-----------------+---------------+----------------+----------------+
+> >> |                 |    Twitter    |     >50 Janks  |     0          |
+> >> |     SCROLL      +---------------+----------------+----------------+
+> >> |                 |    Contacts   |     >30 Janks  |     0          |
+> >> +-----------------+---------------+----------------+----------------+
+> >>
+> >> Please let us know if you need any support with running any further
+> >> workloads for PELT32/PELT8 experiments, we can help with running the
+> >> experiments.
+> >
+> > Thanks a lot for the test results. Was this tried with this patch alone or
+> > the whole series applied?
+> >
+> I have only applied patch8(sched/pelt: Introduce PELT multiplier) for the tests.
+>
+> > Have you tried to tweak each policy response_time_ms introduced in patch
+> > 7 instead? With the series applied, boot with PELT8, record the response time
+> > values for each policy, then boot back again to PELT32 and use those values.
+> > Does this produce similar results?
+> >
+> As the device is based on 5.15 kernel, I will try to pull all the 8 patches
+> along with the dependency patches on 5.15 and try out the experiments as
+> suggested.
 
-I think I found it; a more complete call tree is like this, where the
-L1SS configuration is inside the pci_enable_link_state_locked() done
-by the vmd_pm_enable_quirk() bus walk:
+Generally speaking, it would be better to compare with the latest
+kernel or at least close and which includes new features added since
+v5.15 (which is more than 2 years old now). I understand that this is
+not always easy or doable but you could be surprised by the benefit of
+some features like [0] merged since v5.15
 
-  vmd_enable_domain
-    pci_scan_child_bus
-      ...
-        pci_scan_slot
-          pcie_aspm_init_link_state
-            pcie_aspm_cap_init
-              aspm_l1ss_init
-+   pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL)
-    ...
-    pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features)
-      vmd_pm_enable_quirk
-        pci_enable_link_state_locked(PCIE_LINK_STATE_ALL)
-          __pci_enable_link_state
-            link->aspm_default |= ...
-            pcie_config_aspm_link
-              pcie_config_aspm_l1ss
-                pci_clear_and_set_config_dword(PCI_L1SS_CTL1)  # <--
-              pcie_config_aspm_dev
-                pcie_capability_clear_and_set_word(PCI_EXP_LNKCTL)
+[0] https://lore.kernel.org/lkml/249816c9-c2b5-8016-f9ce-dab7b7d384e4@arm.com/
 
-qcom_pcie_enable_aspm() does a similar pci_set_power_state(PCI_D0)
-before calling pci_enable_link_state_locked().  I would prefer to
-avoid the D0 precondition, but at the very least, I think we should
-add a note to the pci_enable_link_state_locked() kernel-doc saying the
-caller must ensure the device is in D0.
-
-I think vmd_pm_enable_quirk() is also problematic because it
-configures the LTR Capability *after* calling
-pci_enable_link_state_locked(PCIE_LINK_STATE_ALL).
-
-The pci_enable_link_state_locked() will enable ASPM L1.2, but sec
-5.5.4 says LTR_L1.2_THRESHOLD must be programmed *before* ASPM L1.2
-Enable is set.
-
-Bjorn
+>
+> > You didn't share power numbers which I assume the perf gains are more important
+> > than the power cost for you.
+> >
+> If possible I will try to collect the power number for future test and share the
+> details.
+>
+> >
+> > Thanks!
+> >
+> > --
+> > Qais Yousef
