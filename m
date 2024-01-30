@@ -1,144 +1,154 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75B4657BC;
-	Tue, 30 Jan 2024 10:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF80C6089B;
+	Tue, 30 Jan 2024 10:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706609660; cv=none; b=SF9T2TVmkhxptDrfQ3uKynl1/uzStpSXkQ4OoeAE2mu5yUaWcqG9qW4xaCoT+o8yZdzckYyuDD9ebByXlB0NZd4K0yScz30u8CES/3MiuoYT8j2glBsDU3wa9kLvzZ4lhgIrTAtHrEqFDgd1mnvHTdnz4b03AAvdlpsy8duJ//M=
+	t=1706609683; cv=none; b=FlKVzI8T3yY45ONBHEbPslHkaYPsxes+orGWnLXT6GoQ2ViDy6zC+fihfluSIrZytZpooI0mIzmU8nj3jUJ1yBz3RujKrnAZriMyyiL9PEB80x+0f1EqOLx+IOxCm76MI4OvUBypOd3Y5f9NtirKFdvS3aUNvq6SyBNzFlim1J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706609660; c=relaxed/simple;
-	bh=0p+Z1IAS+0bfXxsX6EFfFq3pCuHgzmTrGO2D1IR92ok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=csgFSj162DpQAhvzkvgzVG3dGUjFbyD5ScB01lXF1qsNw4V/S83O2WUco/7TJNSLujPS7mw/GA07EMx1g1hh7rO9kDGjDIHkIp33xQ2ehjciJz1LsNOnWJwIWahyVczSA13YEkVnPLu5A9ElhhCuLWnyEcm6uPG5ncp08qniSKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc6933a46efso1378983276.0;
-        Tue, 30 Jan 2024 02:14:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706609657; x=1707214457;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1Gu3jMAydPMH9OZkWS6/YdPAkAQjZBus+ODe9FhclmQ=;
-        b=fZhqieVrNh2i0lP/DStBqU66LNd2b4y2K5tTXKbLZT2xXek3eHEh5sklGNsx8B4B0S
-         JmhEM5aOpPf5xu56zJcQetBnWW8C3H2KTpteaNMEagoYiCET5/jm1Q9QMTRTdh4+52rf
-         cRkD3TTOAPBhF4BagKcE5OePRQz8QyKgpKuxX9A3ngfyuWACutemvuHfRBFIGdkaHilK
-         OWj6SqJHnM0/gBmJrUstNpFuEx671Svk0LbeFWl6n1DweK1mwlL5FXxT3igS3sK4MXkg
-         ZJt1RA59Vu2bMmFOCF0ThELYp4I5XRHMPF3Xd2mY3lPFzgx91xWbYOSvACMhYkg9vnb9
-         U/AQ==
-X-Gm-Message-State: AOJu0YxrlRRsunCOhkFzzJ/YxKdQpNvfaV8gYs3Yszz8j/Tk5jQv1eHi
-	57hRsKzxU6zl4NmgvmWRzAOUacmE3Mgzjm1DIBdWgwJ9+1Y4lx96KLs0QgOoc8g=
-X-Google-Smtp-Source: AGHT+IGSNmTk4D/LdXaDL3Mmn3DRGJPlr38+TPB+QJQhQ6UEqBv2yQahTrpvHStp2oLmUAST2Kuibg==
-X-Received: by 2002:a25:f507:0:b0:dc2:66ab:4bc0 with SMTP id a7-20020a25f507000000b00dc266ab4bc0mr4075120ybe.36.1706609657230;
-        Tue, 30 Jan 2024 02:14:17 -0800 (PST)
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
-        by smtp.gmail.com with ESMTPSA id y9-20020a2586c9000000b00dc228b22cd5sm2787044ybm.41.2024.01.30.02.14.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 02:14:17 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6001449a2beso26526747b3.3;
-        Tue, 30 Jan 2024 02:14:17 -0800 (PST)
-X-Received: by 2002:a0d:ead2:0:b0:5ff:82fc:9686 with SMTP id
- t201-20020a0dead2000000b005ff82fc9686mr5762820ywe.3.1706609656855; Tue, 30
- Jan 2024 02:14:16 -0800 (PST)
+	s=arc-20240116; t=1706609683; c=relaxed/simple;
+	bh=4OenpZVY4dbk5nXvN+goEJzBtcGnmrWCa+AaSJWh1NA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZfHUdpJKY+Qvhnl0QemOZyRxl5af3NpxlMg5FD9Y5wPuKDhtUp6TVK63M1M11MAumdyYgI5bcIrIvzZ9XSvu0sKkY0g/lFrJH6Wuu8TLtnLTFwIRobnc2Ye90yM9gp7XMe1UxbHoBnrF9zmBO1xG49QKFNC98a0brVkzgwPeSJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aTLvInhO; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aTLvInhO"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40UA9WOL004459;
+	Tue, 30 Jan 2024 10:12:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=upER89UEQid8jme3NrL4nYMZx1b2Ukd4Ox1S4tv0K6E=;
+ b=aTLvInhOgDFtWo+hahWtXRW09lRICEdOe3b6Q91S9mNs/doIfakYKAP0nELHZTabo3Xg
+ emX1+QOw8fLbkvWGYH1yxzvaV8W6LTEfZPvgpYGm9wDsoakTbsfI5RY7ar2PCYMBSOPq
+ m3eyJCkFL1IA8GOsm9jgpa3/xVeFB3E20CbVwqmKV9WZkAds106b3Cof77cRTc2banBx
+ 1+isQ3N2tZrLrNX7J20FGlaR0GskVO5Q734Ry6t2XXfx3PjB0jAHNhiIxbqGRkxohIa6
+ KhvS9S/a9P+JocfuHX+35v9aXyKGeuTW0ba+qYmYiHaKe8alZWRIUFWeXpOFlSPTMg9y SQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vxy40g1q3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jan 2024 10:12:07 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40UAAtYa007474;
+	Tue, 30 Jan 2024 10:12:06 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vxy40g1pp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jan 2024 10:12:06 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40U7Z93l007979;
+	Tue, 30 Jan 2024 10:12:05 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vwdnkwxkq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jan 2024 10:12:05 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40UAC20W12386846
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Jan 2024 10:12:02 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 33E5D20065;
+	Tue, 30 Jan 2024 10:12:02 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 652AC2005A;
+	Tue, 30 Jan 2024 10:12:01 +0000 (GMT)
+Received: from [9.179.18.183] (unknown [9.179.18.183])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 30 Jan 2024 10:12:01 +0000 (GMT)
+Message-ID: <eacbf3b3-b004-4086-8db1-82e75407bbaa@linux.ibm.com>
+Date: Tue, 30 Jan 2024 11:12:01 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: Several tst-robust* tests time out with recent Linux kernel
+Content-Language: en-US
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>
+Cc: "xry111@xry111.site" <xry111@xry111.site>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "andrealmeid@igalia.com" <andrealmeid@igalia.com>,
+        "fweimer@redhat.com" <fweimer@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "svens@linux.ibm.com" <svens@linux.ibm.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <4bda9f2e06512e375e045f9e72edb205104af19c.camel@xry111.site>
+ <d69d50445284a5e0d98a64862877c1e6ec22a9a8.camel@xry111.site>
+ <20231114153100.GY8262@noisy.programming.kicks-ass.net>
+ <20231114154017.GI4779@noisy.programming.kicks-ass.net>
+ <87ttpowajb.fsf@oldenburg.str.redhat.com>
+ <20231114201402.GA25315@noisy.programming.kicks-ass.net>
+ <822f3a867e5661ce61cea075a00ce04a4e4733f3.camel@intel.com>
+ <20231115085102.GY3818@noisy.programming.kicks-ass.net>
+ <564119521b61b5a38f9bdfe6c7a41fcbb07049c9.camel@intel.com>
+ <158f6a47727a40c163e3fa6041a24388549c68f2.camel@intel.com>
+ <fc3fd07a-218d-406c-918b-e7f701968eb0@linux.ibm.com>
+ <eeb6d178dff61dfebf5a3ce9675486a3271b748c.camel@intel.com>
+From: Stefan Liebler <stli@linux.ibm.com>
+In-Reply-To: <eeb6d178dff61dfebf5a3ce9675486a3271b748c.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: zAaT6FhW-QCX8Kl-edW71T0vd8GHnCfD
+X-Proofpoint-GUID: QnaFMkxqxQUKrl7I6Cwi0p6BjCr660eX
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130094053.10672-1-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20240130094053.10672-1-wsa+renesas@sang-engineering.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 11:14:05 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUMeHCCiAkNyJMHTGUSTqewt=AWPUy+beA_kR26vcS8_Q@mail.gmail.com>
-Message-ID: <CAMuHMdUMeHCCiAkNyJMHTGUSTqewt=AWPUy+beA_kR26vcS8_Q@mail.gmail.com>
-Subject: Re: [PATCH] spi: sh-msiof: avoid integer overflow in constants
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-30_05,2024-01-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 suspectscore=0 adultscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401300074
 
-Hi Wolfram,
+On 29.01.24 23:23, Edgecombe, Rick P wrote:
+> On Fri, 2024-01-19 at 14:56 +0100, Stefan Liebler wrote:
+>> I've reduced the test (see attachement) and now have only one process
+>> with three threads.
+> 
+> This tests fails on my setup as well:
+> main: start 3 threads.
+> #0: started: fct=1
+> #1: started: fct=1
+> #2: started: fct=1
+> #2: mutex_timedlock failed with 22 (round=28772)
+> 
+> But, after this patch:
+> https://lore.kernel.org/all/20240116130810.ji1YCxpg@linutronix.de/
+> 
+> ...the attached test hangs.
+> 
+> However, the glibc test that was failing for me "nptl/tst-robustpi8"
+> passes with the linked patch applied. So I think that patch fixes the
+> issue I hit.
+> 
+> What is passing supposed to look like on the attached test?
 
-On Tue, Jan 30, 2024 at 10:42=E2=80=AFAM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> cppcheck rightfully warned:
->
->  drivers/spi/spi-sh-msiof.c:792:28: warning: Signed integer overflow for =
-expression '7<<29'. [integerOverflow]
->  sh_msiof_write(p, SIFCTR, SIFCTR_TFWM_1 | SIFCTR_RFWM_1);
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+kernel commit "futex: Prevent the reuse of stale pi_state"
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/patch/?id=e626cb02ee8399fd42c415e542d031d185783903
 
-> --- a/drivers/spi/spi-sh-msiof.c
-> +++ b/drivers/spi/spi-sh-msiof.c
-> @@ -136,14 +136,14 @@ struct sh_msiof_spi_priv {
->
->  /* SIFCTR */
->  #define SIFCTR_TFWM_MASK       GENMASK(31, 29) /* Transmit FIFO Watermar=
-k */
-> -#define SIFCTR_TFWM_64         (0 << 29)       /*  Transfer Request when=
- 64 empty stages */
-> -#define SIFCTR_TFWM_32         (1 << 29)       /*  Transfer Request when=
- 32 empty stages */
-> -#define SIFCTR_TFWM_24         (2 << 29)       /*  Transfer Request when=
- 24 empty stages */
-> -#define SIFCTR_TFWM_16         (3 << 29)       /*  Transfer Request when=
- 16 empty stages */
-> -#define SIFCTR_TFWM_12         (4 << 29)       /*  Transfer Request when=
- 12 empty stages */
-> -#define SIFCTR_TFWM_8          (5 << 29)       /*  Transfer Request when=
- 8 empty stages */
-> -#define SIFCTR_TFWM_4          (6 << 29)       /*  Transfer Request when=
- 4 empty stages */
-> -#define SIFCTR_TFWM_1          (7 << 29)       /*  Transfer Request when=
- 1 empty stage */
-> +#define SIFCTR_TFWM_64         (0UL << 29)     /*  Transfer Request when=
- 64 empty stages */
-> +#define SIFCTR_TFWM_32         (1UL << 29)     /*  Transfer Request when=
- 32 empty stages */
-> +#define SIFCTR_TFWM_24         (2UL << 29)     /*  Transfer Request when=
- 24 empty stages */
-> +#define SIFCTR_TFWM_16         (3UL << 29)     /*  Transfer Request when=
- 16 empty stages */
-> +#define SIFCTR_TFWM_12         (4UL << 29)     /*  Transfer Request when=
- 12 empty stages */
-> +#define SIFCTR_TFWM_8          (5UL << 29)     /*  Transfer Request when=
- 8 empty stages */
-> +#define SIFCTR_TFWM_4          (6UL << 29)     /*  Transfer Request when=
- 4 empty stages */
-> +#define SIFCTR_TFWM_1          (7UL << 29)     /*  Transfer Request when=
- 1 empty stage */
->  #define SIFCTR_TFUA_MASK       GENMASK(26, 20) /* Transmit FIFO Usable A=
-rea */
->  #define SIFCTR_TFUA_SHIFT      20
->  #define SIFCTR_TFUA(i)         ((i) << SIFCTR_TFUA_SHIFT)
+fixes the issue on s390x.
 
-There is a similar issue with the SIFCTR_RFWM_* definitions below,
-but these don't trigger, as no data is shifted into the sign bit.
+With this commit, the test runs to the end:
+main: start 3 threads.
+#0: started: fct=1
+#1: started: fct=1
+#2: started: fct=1
+#2: REACHED round 100000000. => exit
+#0: REACHED round 100000000. => exit
+#1: REACHED round 100000000. => exit
+main: end.
 
-What about unifying the individual SIFCTR_?FWM_[0-9]* definitions
-into SIFCTR_xFWM_[0-9]* instead, and using the bitfield helpers in its
-sole user?
-
--        sh_msiof_write(p, SIFCTR, SIFCTR_TFWM_1 | SIFCTR_RFWM_1);
-+        sh_msiof_write(p, SIFCTR,
-+                       FIELD_PREP(SIFCTR_TFWM_MASK, SIFCTR_xFWM_1) |
-+                       FIELD_PREP(SIFCTR_RFWM_MASK, SIFCTR_xFWM_1);
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+If you want you can reduce the number of rounds by compiling with
+-DROUNDS=XYZ or manually adjusting the ROUNDS macro define.
