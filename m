@@ -1,56 +1,56 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C35159170;
-	Tue, 30 Jan 2024 09:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63B6657B3;
+	Tue, 30 Jan 2024 09:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706605989; cv=none; b=Oshl/EUktDfevPd44eNvpKQimy12axhZi+H+ozjvLL2jEpSuSN93RnZ+dCA6GCSvNnGC/YrGDyqfk0HBrz7wbtZ0nSv6nHVX+d0FKHXaz+VNqNKh6zMKnXYfEfMIOn52BdenSmlXvC9WM5722Xp9bK7lyOHuUew7DiUtHvJn2ZA=
+	t=1706605993; cv=none; b=O2/OX8YwAHB6eanfYmlsL2nX4BFQ1GHs21X92595QWMqcwWVWP8fJQcTwPnEDjx6eCH95mOVJWSNgSVKdJ06s7UvWTLtFLvBCJRgaWSaULb47k+CFFMpK822XbzAeODO54g2CgapMB4k7tQt/eZt54laF8YU+1s1Xmc2xEUIhU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706605989; c=relaxed/simple;
-	bh=cpO6m2Pr5p3n/qePucxFD1UXJhPW8vRxbzSH1keUjbw=;
+	s=arc-20240116; t=1706605993; c=relaxed/simple;
+	bh=phi5T2izEMsiOsO8bLtfMS+kNUjV4V4DeiWbRLOq9mc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eulRqqBW5p2IEZULNkA4gca6HB5MO1Upg/SMYmjXD4LtOgfYU7XUqBgYfDpBhN+NCZ4xYqJlZVK+/AfCqhSAuGixuCr7fMmGo/9I0p6+MJ2m2R41Wq2w3wUfY7ww68DL6SqymRLkDZ7+7duGE5Nl4X88jhT3bnYdv3hADKh90ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFHRNa4w; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=aqHcNTEQgCyjocXxz8CAttyG+WVBrGUN9PqzcLrUizFqSgXLyJ3lOKJq+l2trHWWKj21VcIhP48Nbim2McV2Pv8WbFKHuDzkWeXNM8S58EP26zenmPMiQwAjfMrq0KSUv+dLMcZ2qn2YPOJH1Gj7Z0Ohz+EtuEON0l9ulBpnCoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iIFtvsV6; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFHRNa4w"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d8e7ebbbadso10388505ad.3;
-        Tue, 30 Jan 2024 01:13:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIFtvsV6"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d7858a469aso19895095ad.2;
+        Tue, 30 Jan 2024 01:13:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706605986; x=1707210786; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706605991; x=1707210791; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0f+E+7Yr7tZg5UZ5N5kXMlDMZoo9OCBh+FLJ8A0xtV0=;
-        b=eFHRNa4wmLsWDG1/uAVCuvwsK8H7opNPnHKbhM9jyv23Mop2vOZETF/fTeRnhIeGR4
-         VefkONdoxHbX8EHzh3IRC1fbYAc/z/Za1VvuEZ6bZL0F8d17SeUQa1OkQkW8pt+92Z2F
-         wqDYIO/AbUj7G01o0a6ki7gEYXQVUVYx53RnoJ0l7cOr5lpU+GW5WomKT8aQvEpRFWun
-         X0/3j2UVABUMACIM/eyli8arG4BzyIEdKRU5u0nIvLl9/dukhr/B0zrQALXNswRLibMZ
-         WWX6aiNBgurPGo7BUPu56UtNUkOGvqFu9yNbMAKuDg+lfkxjPxefdMDj/M2+h01KWArE
-         d+gw==
+        bh=IweQZX1rrzr6gibPdXDs6vE0Yntn8jSnRWjOw+ZAuiQ=;
+        b=iIFtvsV6UlcJASYdNwjwbpaUTnlsM9lWq/yi9UF3ImXruIw4flKTwMx5MnRwbqrxb9
+         359QSH8jCTMZ1tjNmvshaZkuWZIXWRGQREgWt95Rvfa3lgZ9NSVg8XFR7EWjwaS3759Z
+         cHu0LG+otNK6NNTRkPFQ7O0/FPLG+c7wKtXHqVKCCa1AZ5dFW2VqW+rm3f8IAhtfz0kJ
+         e47NjkgO/el5XzVV+hSH22yRH5PUZhkkVKTx0tmro+loWGzvs3h5TAHNFJJA2MBLl+W9
+         wMCQt7PN9Az/jEfid1KRoAIPcbupnsOcwmJ4l+GskDJ5T2fijo8MleolM+sFRPLa98LC
+         Lp4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706605986; x=1707210786;
+        d=1e100.net; s=20230601; t=1706605991; x=1707210791;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=0f+E+7Yr7tZg5UZ5N5kXMlDMZoo9OCBh+FLJ8A0xtV0=;
-        b=E0j/7OV+NVb9Khql1uc4ZarpW4jdwKSA74jK/jw2+OLKNyHve8vDLy1MEPoyc55Sk3
-         hKQfqxIFKzvB0DYjII5Ooy2uLBHs90aRINF/P7twukILDxJP1uOpYOapO6sHW6/qOSyP
-         olmXriYumA8NhyHKNvvTzBe9js4mDD/j0fKbxSQvKpgcejptf28xQ7bb2pFgs7VFWRNo
-         CHoOZYgN79+nDzYt1aa/h7fjJe5lJg5jLiedcG5/TdGXFkBoAxwMwjiFlVYcNtlFd1k7
-         9eeYyGSLhi4vKal5JP++QOD9/3Sqp7iBUPi2YKrhURjN6fhe7glRAlLLoxQhTTY2mEoS
-         Yc4g==
-X-Gm-Message-State: AOJu0YwXQANRhC+oZakjZ6FqjDfIMRCXdxNhyifOOCJ7DGx/iRoLnUaB
-	M1DK5YD7MPO0Dhd9bmpabz/MdG7aqGqSUEHk3r+ZhEj8wJrGsNjg
-X-Google-Smtp-Source: AGHT+IHW8nd6s3CduJC+/WZAHKizzZVidAfFEzNUZ1XDA7JjpE2326FNHUnbnisZAxd67Me78MzjWA==
-X-Received: by 2002:a17:903:491:b0:1d8:eb22:5f25 with SMTP id jj17-20020a170903049100b001d8eb225f25mr2684625plb.102.1706605986265;
-        Tue, 30 Jan 2024 01:13:06 -0800 (PST)
+        bh=IweQZX1rrzr6gibPdXDs6vE0Yntn8jSnRWjOw+ZAuiQ=;
+        b=NXD1O38E4JcBBjnvIRDxPVuHhNtccsK6NApjgCQLyIjMbX0k1jNH4a7WKOTSlOqZbq
+         gO3q12M6T0bRJ0onozj3KubvRaUxZ8vH/7MY4BMGghcKZr+YLGvg8YT3wSURCZRUYBBY
+         lhxTguzkwPNZB7zzULR1UDsj6BagiylJDunVuADNM3OidfGmBr1Smxn66q0GyFyieWGh
+         0fGtWRrVdGO2NmKs1Kio5s95Jv14Wqtxo/Boqlsh1r0QIfW2SjtH0tCD0SfLdcmvcrWQ
+         5dTp6Ad+NMGYUwQapb0c5+D8jY9ZfziUAiE0Cal2rHGuOEYour+eqnk9jY1kfd/LHxvH
+         1GGg==
+X-Gm-Message-State: AOJu0YzphgYLeACAfCCpRl3Cbw90OKr0/zxWelfIlBOf/IJil4YlwUQq
+	FgVMbLDTS0Q1tI08wFR5pJbJUd7EhfNF243CltYoebhTzic5so3w
+X-Google-Smtp-Source: AGHT+IGYhVaGIj5DWHqtUhr2Kt2mmgKziOlN4O7Skqws3YGQXAGVxoBC24HM0zRZrGiTaUbKWwB5Eg==
+X-Received: by 2002:a17:902:fc8d:b0:1d6:fa0b:4949 with SMTP id mf13-20020a170902fc8d00b001d6fa0b4949mr5439018plb.38.1706605991070;
+        Tue, 30 Jan 2024 01:13:11 -0800 (PST)
 Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
-        by smtp.gmail.com with ESMTPSA id c3-20020a170902d90300b001d901e176afsm1171941plz.232.2024.01.30.01.13.05
+        by smtp.gmail.com with ESMTPSA id u17-20020a170902a61100b001d6f8b31ddcsm6703203plq.3.2024.01.30.01.13.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 01:13:05 -0800 (PST)
+        Tue, 30 Jan 2024 01:13:10 -0800 (PST)
 Sender: Tejun Heo <htejun@gmail.com>
 From: Tejun Heo <tj@kernel.org>
 To: torvalds@linux-foundation.org,
@@ -67,10 +67,11 @@ Cc: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	allen.lkml@gmail.com,
 	kernel-team@meta.com,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 1/8] workqueue: Update lock debugging code
-Date: Mon, 29 Jan 2024 23:11:48 -1000
-Message-ID: <20240130091300.2968534-2-tj@kernel.org>
+	Tejun Heo <tj@kernel.org>,
+	Arjan van de Ven <arjan@linux.intel.com>
+Subject: [PATCH 4/8] backtracetest: Convert from tasklet to BH workqueue
+Date: Mon, 29 Jan 2024 23:11:51 -1000
+Message-ID: <20240130091300.2968534-5-tj@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240130091300.2968534-1-tj@kernel.org>
 References: <20240130091300.2968534-1-tj@kernel.org>
@@ -82,147 +83,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These changes are in preparation of BH workqueue which will execute work
-items from BH context.
+The only generic interface to execute asynchronously in the BH context is
+tasklet; however, it's marked deprecated and has some design flaws. To
+replace tasklets, BH workqueue support was recently added. A BH workqueue
+behaves similarly to regular workqueues except that the queued work items
+are executed in the BH context.
 
-- Update lock and RCU depth checks in process_one_work() so that it
-  remembers and checks against the starting depths and prints out the depth
-  changes.
+This patch converts backtracetest from tasklet to BH workqueue.
 
-- Factor out lockdep annotations in the flush paths into
-  touch_{wq|work}_lockdep_map(). The work->lockdep_map touching is moved
-  from __flush_work() to its callee - start_flush_work(). This brings it
-  closer to the wq counterpart and will allow testing the associated wq's
-  flags which will be needed to support BH workqueues. This is not expected
-  to cause any functional changes.
+- Replace "irq" with "bh" in names and message to better reflect what's
+  happening.
+
+- Replace completion usage with a flush_work() call.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
 ---
- kernel/workqueue.c | 51 ++++++++++++++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 17 deletions(-)
+ kernel/backtracetest.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 9221a4c57ae1..3f2081bd05a4 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2954,6 +2954,7 @@ __acquires(&pool->lock)
- 	struct pool_workqueue *pwq = get_work_pwq(work);
- 	struct worker_pool *pool = worker->pool;
- 	unsigned long work_data;
-+	int lockdep_start_depth, rcu_start_depth;
- #ifdef CONFIG_LOCKDEP
- 	/*
- 	 * It is permissible to free the struct work_struct from
-@@ -3016,6 +3017,8 @@ __acquires(&pool->lock)
- 	pwq->stats[PWQ_STAT_STARTED]++;
- 	raw_spin_unlock_irq(&pool->lock);
- 
-+	rcu_start_depth = rcu_preempt_depth();
-+	lockdep_start_depth = lockdep_depth(current);
- 	lock_map_acquire(&pwq->wq->lockdep_map);
- 	lock_map_acquire(&lockdep_map);
- 	/*
-@@ -3051,12 +3054,15 @@ __acquires(&pool->lock)
- 	lock_map_release(&lockdep_map);
- 	lock_map_release(&pwq->wq->lockdep_map);
- 
--	if (unlikely(in_atomic() || lockdep_depth(current) > 0 ||
--		     rcu_preempt_depth() > 0)) {
--		pr_err("BUG: workqueue leaked lock or atomic: %s/0x%08x/%d/%d\n"
--		       "     last function: %ps\n",
--		       current->comm, preempt_count(), rcu_preempt_depth(),
--		       task_pid_nr(current), worker->current_func);
-+	if (unlikely((worker->task && in_atomic()) ||
-+		     lockdep_depth(current) != lockdep_start_depth ||
-+		     rcu_preempt_depth() != rcu_start_depth)) {
-+		pr_err("BUG: workqueue leaked atomic, lock or RCU: %s[%d]\n"
-+		       "     preempt=0x%08x lock=%d->%d RCU=%d->%d workfn=%ps\n",
-+		       current->comm, task_pid_nr(current), preempt_count(),
-+		       lockdep_start_depth, lockdep_depth(current),
-+		       rcu_start_depth, rcu_preempt_depth(),
-+		       worker->current_func);
- 		debug_show_held_locks(current);
- 		dump_stack();
- 	}
-@@ -3538,6 +3544,19 @@ static bool flush_workqueue_prep_pwqs(struct workqueue_struct *wq,
- 	return wait;
+diff --git a/kernel/backtracetest.c b/kernel/backtracetest.c
+index 370217dd7e39..a4181234232b 100644
+--- a/kernel/backtracetest.c
++++ b/kernel/backtracetest.c
+@@ -21,24 +21,20 @@ static void backtrace_test_normal(void)
+ 	dump_stack();
  }
  
-+static void touch_wq_lockdep_map(struct workqueue_struct *wq)
-+{
-+	lock_map_acquire(&wq->lockdep_map);
-+	lock_map_release(&wq->lockdep_map);
-+}
-+
-+static void touch_work_lockdep_map(struct work_struct *work,
-+				   struct workqueue_struct *wq)
-+{
-+	lock_map_acquire(&work->lockdep_map);
-+	lock_map_release(&work->lockdep_map);
-+}
-+
- /**
-  * __flush_workqueue - ensure that any scheduled work has run to completion.
-  * @wq: workqueue to flush
-@@ -3557,8 +3576,7 @@ void __flush_workqueue(struct workqueue_struct *wq)
- 	if (WARN_ON(!wq_online))
- 		return;
- 
--	lock_map_acquire(&wq->lockdep_map);
--	lock_map_release(&wq->lockdep_map);
-+	touch_wq_lockdep_map(wq);
- 
- 	mutex_lock(&wq->mutex);
- 
-@@ -3757,6 +3775,7 @@ static bool start_flush_work(struct work_struct *work, struct wq_barrier *barr,
- 	struct worker *worker = NULL;
- 	struct worker_pool *pool;
- 	struct pool_workqueue *pwq;
-+	struct workqueue_struct *wq;
- 
- 	might_sleep();
- 
-@@ -3780,11 +3799,14 @@ static bool start_flush_work(struct work_struct *work, struct wq_barrier *barr,
- 		pwq = worker->current_pwq;
- 	}
- 
--	check_flush_dependency(pwq->wq, work);
-+	wq = pwq->wq;
-+	check_flush_dependency(wq, work);
- 
- 	insert_wq_barrier(pwq, barr, work, worker);
- 	raw_spin_unlock_irq(&pool->lock);
- 
-+	touch_work_lockdep_map(work, wq);
-+
- 	/*
- 	 * Force a lock recursion deadlock when using flush_work() inside a
- 	 * single-threaded or rescuer equipped workqueue.
-@@ -3794,11 +3816,9 @@ static bool start_flush_work(struct work_struct *work, struct wq_barrier *barr,
- 	 * workqueues the deadlock happens when the rescuer stalls, blocking
- 	 * forward progress.
- 	 */
--	if (!from_cancel &&
--	    (pwq->wq->saved_max_active == 1 || pwq->wq->rescuer)) {
--		lock_map_acquire(&pwq->wq->lockdep_map);
--		lock_map_release(&pwq->wq->lockdep_map);
--	}
-+	if (!from_cancel && (wq->saved_max_active == 1 || wq->rescuer))
-+		touch_wq_lockdep_map(wq);
-+
- 	rcu_read_unlock();
- 	return true;
- already_gone:
-@@ -3817,9 +3837,6 @@ static bool __flush_work(struct work_struct *work, bool from_cancel)
- 	if (WARN_ON(!work->func))
- 		return false;
- 
--	lock_map_acquire(&work->lockdep_map);
--	lock_map_release(&work->lockdep_map);
+-static DECLARE_COMPLETION(backtrace_work);
 -
- 	if (start_flush_work(work, &barr, from_cancel)) {
- 		wait_for_completion(&barr.done);
- 		destroy_work_on_stack(&barr.work);
+-static void backtrace_test_irq_callback(unsigned long data)
++static void backtrace_test_bh_workfn(struct work_struct *work)
+ {
+ 	dump_stack();
+-	complete(&backtrace_work);
+ }
+ 
+-static DECLARE_TASKLET_OLD(backtrace_tasklet, &backtrace_test_irq_callback);
++static DECLARE_WORK(backtrace_bh_work, &backtrace_test_bh_workfn);
+ 
+-static void backtrace_test_irq(void)
++static void backtrace_test_bh(void)
+ {
+-	pr_info("Testing a backtrace from irq context.\n");
++	pr_info("Testing a backtrace from BH context.\n");
+ 	pr_info("The following trace is a kernel self test and not a bug!\n");
+ 
+-	init_completion(&backtrace_work);
+-	tasklet_schedule(&backtrace_tasklet);
+-	wait_for_completion(&backtrace_work);
++	queue_work(system_bh_wq, &backtrace_bh_work);
++	flush_work(&backtrace_bh_work);
+ }
+ 
+ #ifdef CONFIG_STACKTRACE
+@@ -65,7 +61,7 @@ static int backtrace_regression_test(void)
+ 	pr_info("====[ backtrace testing ]===========\n");
+ 
+ 	backtrace_test_normal();
+-	backtrace_test_irq();
++	backtrace_test_bh();
+ 	backtrace_test_saved();
+ 
+ 	pr_info("====[ end of backtrace testing ]====\n");
 -- 
 2.43.0
 
