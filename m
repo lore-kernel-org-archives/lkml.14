@@ -1,93 +1,80 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail115-63.sinamail.sina.com.cn (mail115-63.sinamail.sina.com.cn [218.30.115.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC6466B5B;
-	Tue, 30 Jan 2024 11:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077FA66B33
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.63
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706614236; cv=none; b=czSbpQ6s1w+OcII2dDmnHcKfHNTk6a2ED/fnkTxaR9N+3EF3F9YmLEfVT3iBycLoqB4v0qnmuef4+MemVKRgf+EvWbqyXsQFgsXZDS9XwY1bYN3eiPujrZ7kR+QolMJrfzyt7YOMaSjqKpOQssyexB8R8Sj5KINJQ5pvZNbOWPY=
+	t=1706614266; cv=none; b=qsRY/mNlLsrvBDqqPI/LVRCI80J0IuML3NcDL0P0jHZx/misF4jAtla+CSjQY4xAOyGFzYuzCFnDKy1RYkhaMOwyGYyRtECnFHu/yCVkOttTixav8ryY99xgeh/968gpAbmIFMlSvY6eFN4d6MuzxX8l99fzxYENuxHs3U721c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706614236; c=relaxed/simple;
-	bh=aPwVSdgNb2lpDjxd5+qOm/0CKHj0VgtsG12CFe8DFSA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bM/+cRjiVVx8bxtmd3fxJqriiwwavALg7nogWXs6wtt59+CoGHRhnM2vLjjeeo82PtVTbUuBquff06790FRvjyAgNIubTAunoPkAaY+9yagVCk34mf6GlJLyRBLHR0OdITgmyaFoe29k4Oz3+19muYK927LDyIDifiMbYot19NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5ff7a8b5e61so35940347b3.2;
-        Tue, 30 Jan 2024 03:30:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706614233; x=1707219033;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4jUIV76EfqiSCLTOlQ3xpsNr/TvqMGBmwC/ORazdxeY=;
-        b=i7/ahYAAXHRobtTNdtQr8jbarcgJqm6WZm8BTPSfWc7LziNlkYD+Mjz/+NSB9wjbf4
-         EAGqaHT9k/yt6W3kpfCFXCfQU+0lZNX0FZs/SKEXePmP66rUt1QU+xTW72uZ6a7FEMI0
-         aoyc71ubmvjiM3d5sEsv1IoW4vgNEm1wwG+bZgjxk/BfaSBZP6iNtTgtKhm+BYJjxXLQ
-         r9zsrA/YdptxkmDC58GzyTaT1qcWyEa9jh5af1WbPdCvnLWya4FN+5bCH5R5G5KfTlXA
-         tkSoXMKgSTNMegSk3X5c86PlcC8KFF1tgVg9H+KphB9etWligqCKy26uMgB95IV6fSgG
-         iG1g==
-X-Gm-Message-State: AOJu0YwXZ+PO65maBD5J3uiuMfhWRxV/guznQA8rBjt9HocHfDLjT0zM
-	hM+bGPtf0+yKgMKyJ3Rv+xFxA9vZqt2QaMgAzfo5BQtP/mKxMsce0ho3xpR6ba4=
-X-Google-Smtp-Source: AGHT+IE0hsCBR+luoDJu9Adz5yctBeT2ENjb0RIa0H0x2PlwQnlP3M1CLf+nNcxfRVdX3f7AY4setQ==
-X-Received: by 2002:a81:431b:0:b0:5e7:ae43:e90f with SMTP id q27-20020a81431b000000b005e7ae43e90fmr5343520ywa.3.1706614233384;
-        Tue, 30 Jan 2024 03:30:33 -0800 (PST)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id d142-20020a0ddb94000000b005e7d8d6e446sm3173958ywe.93.2024.01.30.03.30.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 03:30:33 -0800 (PST)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-602d0126e80so35786117b3.3;
-        Tue, 30 Jan 2024 03:30:33 -0800 (PST)
-X-Received: by 2002:a81:af21:0:b0:600:2710:1e51 with SMTP id
- n33-20020a81af21000000b0060027101e51mr5585278ywh.13.1706614232794; Tue, 30
- Jan 2024 03:30:32 -0800 (PST)
+	s=arc-20240116; t=1706614266; c=relaxed/simple;
+	bh=8izGayVFiylM6e6Nv0jsppZ+9+/0Qelwm4RqoWSLt/w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bS5XqkSvhi0UQxI058KjpS9BLUj3EgNzZ+USFVcEW033ja0BEkfHcpD4ly7fxswthkQENWhD3ShwE16MX+VaCxPp31RG091TE4KA2UAoiXRdgj9OCCSBzVuTB0vQIhEqqjUBoiLtlqbR+mxnxClUC8xKWrNXS3tWHh0o1HAnrBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.10.30])
+	by sina.com (10.75.12.45) with ESMTP
+	id 65B8DDE6000075BC; Tue, 30 Jan 2024 19:30:52 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 48242231457765
+X-SMAIL-UIID: 1F60C372F9BC48C7B815906CE64D145F-20240130-193052-1
+From: Hillf Danton <hdanton@sina.com>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	syzbot <syzbot+a984066a63e9c1e62662@syzkaller.appspotmail.com>,
+	eadavis@qq.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] INFO: task hung in hci_conn_failed
+Date: Tue, 30 Jan 2024 19:30:37 +0800
+Message-Id: <20240130113037.1390-1-hdanton@sina.com>
+In-Reply-To: <ZbgJqc06rEZ_FqRw@boqun-archlinux>
+References: <tencent_4A66EF6ACD6878526F542C2D6D109794E80A@qq.com> <20240129044824.1218-1-hdanton@sina.com> <20240129104753.1328-1-hdanton@sina.com> <afb57c55-5fd0-4f79-9653-67ef0c1e341e@I-love.SAKURA.ne.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129151618.90922-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240129151618.90922-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240129151618.90922-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 12:30:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXAuvR55NZtq-0N32kh-W9X5V30mA4bzkqER=kGdsb_eA@mail.gmail.com>
-Message-ID: <CAMuHMdXAuvR55NZtq-0N32kh-W9X5V30mA4bzkqER=kGdsb_eA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] riscv: dts: renesas: rzfive-smarc-som: Drop deleting
- interrupt properties from ETH0/1 nodes
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 29, 2024 at 4:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Now that we have enabled IRQC support for RZ/Five SoC switch to interrupt
-> mode for ethernet0/1 PHYs instead of polling mode.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, 29 Jan 2024 12:25:13 -0800 Boqun Feng <boqun.feng@gmail.com>
+> 
+> Looks to me that debug_show_all_locks() doesn't hold the lockdep lock,
+> so it's really a best effort race read of all tasks on lock hold
+> information. Maybe Hillf wants the following? (Completely untested, it
+> will stop your whole system and print lock holding information).
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -6611,6 +6611,8 @@ void debug_show_all_locks(void)
+ 	}
+ 	pr_warn("\nShowing all locks held in the system:\n");
+ 
++	local_irq_disable();
++	lockdep_lock();
+ 	rcu_read_lock();
+ 	for_each_process_thread(g, p) {
+ 		if (!p->lockdep_depth)
+@@ -6620,6 +6622,8 @@ void debug_show_all_locks(void)
+ 		touch_all_softlockup_watchdogs();
+ 	}
+ 	rcu_read_unlock();
++	lockdep_unlock();
++	local_irq_enable();
+ 
+ 	pr_warn("\n");
+ 	pr_warn("=============================================\n\n");
+--
