@@ -1,169 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002BC57883;
-	Tue, 30 Jan 2024 08:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4282F5823A;
+	Tue, 30 Jan 2024 08:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706602460; cv=none; b=BOTziin8/zRpp1qLw58kbwtLR/Fm0SM0+81CEZringGNLrZv+xxHLAffef5yZUCDkgE+ADuGgwwBZSuCy1t5wflRpvvSzJunW/h9M9J/+EHi0o+mMZadv2vo/X+G1K7xd5H3X6tdkYeFBeLTIgxEO3gZZ8gqlkCOk6qEAgexLmo=
+	t=1706602463; cv=none; b=ixOfQtJXoL36vAqlxTjK7qIYNI2mC6GNNPwR59U0CTYrVCVxBE68i0rjTm8UNijChRCUJXqp54fCW6U0XSiY1lGqFLk/iqxXEDpd6VeeGmmtu1qZfMG5pt5Gl5QdvEbI/WbfCREi3zW5t72Vqn+UaSnQGXGmwXqmeRBpXOltz8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706602460; c=relaxed/simple;
-	bh=bQjTjgCLfYsPH5p+7Al5Zy19r6O5Dl9UPL8NgLDT+B4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ecKApa6qFDdw29NF9f3OeMOq2WxZKFvzU+4ZnwTF9U12q2iD2tVTeQbDKlj0e7t9cam7X5smZMoTzTcfH+UA760zv0IVyp0hnz1TxRGmppuZagS/DCe050Jkt2tbMyPMaS36nXSVjqvSX7JYjKqXAtcuLRHmK8fCQDCJ887cMJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LoztytLW; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1706602463; c=relaxed/simple;
+	bh=E8RAqBrguK3vR29UWlT3SGFAVHtLTsrLAzb3l9M3J3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S5iU6cCkWPNUwlXqcgA1Yez1WTRn/ssH6MrtLOje1AjmCQvg6u6U6LM5YCDExp5TqA3Xg6CfIg8w9+p56q+uzaHBFc4OnrySP7DPQ28RXFakXkpL5Q05YAxoWp2qTfanw4s3mBWjKPquhfMwB0UYwlkuTEZdABToY0WO3S5ZpZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b4kF8FIm; arc=none smtp.client-ip=192.55.52.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LoztytLW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b4kF8FIm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706602459; x=1738138459;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bQjTjgCLfYsPH5p+7Al5Zy19r6O5Dl9UPL8NgLDT+B4=;
-  b=LoztytLWLkOeyPaFxoh7qV0SdfsUsG5GAnYtDmIbn3AuV4b5z8KV6pFD
-   80hxyjhfZtu5Vtt/lKlQTXR9mR4e923KXWeP6lCytTONHjl8eOZ5xT1MU
-   xaa1aILI0HcJoy0dDqQwzdxYknbsCjaI7wgaIQlciHMs3R7PyLk/PT+h2
-   aNF5Y0mx5jtC8nw1YNE2B5Ow0NmJnS+KEhKN8X56mKC3jaETlQX53rQZj
-   2LsQtBvvPByiYH1vAt96lEGgtPj1lMszFqibnjHIT7SzsLD7gWgb6w1Xr
-   RHKs2plQllUNWesH/ISutgU09w002rwsIlA14VLLyOk3y2QPWEYj9Ls/C
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10588206"
+  t=1706602462; x=1738138462;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E8RAqBrguK3vR29UWlT3SGFAVHtLTsrLAzb3l9M3J3c=;
+  b=b4kF8FImrRrTh1q251wn+SXmyA2zx10jvILfUixAmHrRe1isx5PsBN13
+   wmCAQcV55nWVy68LrbvIYtqz0T98vhIizU90ZBsroMb7XmE67rFQztcD2
+   5FxPdRp70SpmQpm7FHhNP/UYp+D2iIHt9OU5VaEVSRMWRG+pF+m5iaQPp
+   52KZq7sj+xDhLmEj/NMo2ciUISE2V0OQFiLb5Qt5fnm7x1M62c0PG83hH
+   2sQ6gT2TTDVCdQFzsoBMxy3Cyj/PL3DilwkHXVgjVo8y4TKwFpWg3/hnY
+   +tL3lWi7Ud/FZChgegv3VGMazCro4i6NAQrculGpyCFCrvdnxopzaGfZQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="434376209"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="10588206"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 00:14:19 -0800
+   d="scan'208";a="434376209"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 00:14:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3633717"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by fmviesa003.fm.intel.com with ESMTP; 30 Jan 2024 00:14:15 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Cc: Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Joel Granados <j.granados@samsung.com>,
-	iommu@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v11 02/16] iommu/arm-smmu-v3: Remove unrecoverable faults reporting
-Date: Tue, 30 Jan 2024 16:08:21 +0800
-Message-Id: <20240130080835.58921-3-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240130080835.58921-1-baolu.lu@linux.intel.com>
-References: <20240130080835.58921-1-baolu.lu@linux.intel.com>
+   d="scan'208";a="36420080"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.10.49]) ([10.238.10.49])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 00:14:18 -0800
+Message-ID: <3ef50211-7746-4054-84b6-6861d6a91341@linux.intel.com>
+Date: Tue, 30 Jan 2024 16:14:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 050/121] KVM: x86/tdp_mmu: Sprinkle __must_check
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+References: <cover.1705965634.git.isaku.yamahata@intel.com>
+ <8f7d5a1b241bf5351eaab828d1a1efe5c17699ca.1705965635.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <8f7d5a1b241bf5351eaab828d1a1efe5c17699ca.1705965635.git.isaku.yamahata@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-No device driver registers fault handler to handle the reported
-unrecoveraable faults. Remove it to avoid dead code.
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Tested-by: Longfang Liu <liulongfang@huawei.com>
----
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 46 ++++++---------------
- 1 file changed, 13 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index 0ffb1cf17e0b..4cf1054ed321 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -1461,7 +1461,6 @@ arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
- static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- {
- 	int ret;
--	u32 reason;
- 	u32 perm = 0;
- 	struct arm_smmu_master *master;
- 	bool ssid_valid = evt[0] & EVTQ_0_SSV;
-@@ -1471,16 +1470,9 @@ static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- 
- 	switch (FIELD_GET(EVTQ_0_ID, evt[0])) {
- 	case EVT_ID_TRANSLATION_FAULT:
--		reason = IOMMU_FAULT_REASON_PTE_FETCH;
--		break;
- 	case EVT_ID_ADDR_SIZE_FAULT:
--		reason = IOMMU_FAULT_REASON_OOR_ADDRESS;
--		break;
- 	case EVT_ID_ACCESS_FAULT:
--		reason = IOMMU_FAULT_REASON_ACCESS;
--		break;
- 	case EVT_ID_PERMISSION_FAULT:
--		reason = IOMMU_FAULT_REASON_PERMISSION;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-@@ -1490,6 +1482,9 @@ static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- 	if (evt[1] & EVTQ_1_S2)
- 		return -EFAULT;
- 
-+	if (!(evt[1] & EVTQ_1_STALL))
-+		return -EOPNOTSUPP;
-+
- 	if (evt[1] & EVTQ_1_RnW)
- 		perm |= IOMMU_FAULT_PERM_READ;
- 	else
-@@ -1501,32 +1496,17 @@ static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- 	if (evt[1] & EVTQ_1_PnU)
- 		perm |= IOMMU_FAULT_PERM_PRIV;
- 
--	if (evt[1] & EVTQ_1_STALL) {
--		flt->type = IOMMU_FAULT_PAGE_REQ;
--		flt->prm = (struct iommu_fault_page_request) {
--			.flags = IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE,
--			.grpid = FIELD_GET(EVTQ_1_STAG, evt[1]),
--			.perm = perm,
--			.addr = FIELD_GET(EVTQ_2_ADDR, evt[2]),
--		};
-+	flt->type = IOMMU_FAULT_PAGE_REQ;
-+	flt->prm = (struct iommu_fault_page_request) {
-+		.flags = IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE,
-+		.grpid = FIELD_GET(EVTQ_1_STAG, evt[1]),
-+		.perm = perm,
-+		.addr = FIELD_GET(EVTQ_2_ADDR, evt[2]),
-+	};
- 
--		if (ssid_valid) {
--			flt->prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
--			flt->prm.pasid = FIELD_GET(EVTQ_0_SSID, evt[0]);
--		}
--	} else {
--		flt->type = IOMMU_FAULT_DMA_UNRECOV;
--		flt->event = (struct iommu_fault_unrecoverable) {
--			.reason = reason,
--			.flags = IOMMU_FAULT_UNRECOV_ADDR_VALID,
--			.perm = perm,
--			.addr = FIELD_GET(EVTQ_2_ADDR, evt[2]),
--		};
--
--		if (ssid_valid) {
--			flt->event.flags |= IOMMU_FAULT_UNRECOV_PASID_VALID;
--			flt->event.pasid = FIELD_GET(EVTQ_0_SSID, evt[0]);
--		}
-+	if (ssid_valid) {
-+		flt->prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
-+		flt->prm.pasid = FIELD_GET(EVTQ_0_SSID, evt[0]);
- 	}
- 
- 	mutex_lock(&smmu->streams_mutex);
--- 
-2.34.1
+On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> TDP MMU allows tdp_mmu_set_spte_atomic() and tdp_mmu_zap_spte_atomic() to
+> return -EBUSY or -EAGAIN error.  The caller must check the return value and
+> retry.  Sprinkle __must_check to guarantee it.
+
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+>   arch/x86/kvm/mmu/tdp_mmu.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> index fdc6e2221c33..2aacfab25e93 100644
+> --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> @@ -507,9 +507,9 @@ static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
+>    *            no side-effects other than setting iter->old_spte to the last
+>    *            known value of the spte.
+>    */
+> -static inline int tdp_mmu_set_spte_atomic(struct kvm *kvm,
+> -					  struct tdp_iter *iter,
+> -					  u64 new_spte)
+> +static inline int __must_check tdp_mmu_set_spte_atomic(struct kvm *kvm,
+> +						       struct tdp_iter *iter,
+> +						       u64 new_spte)
+>   {
+>   	u64 *sptep = rcu_dereference(iter->sptep);
+>   
+> @@ -539,8 +539,8 @@ static inline int tdp_mmu_set_spte_atomic(struct kvm *kvm,
+>   	return 0;
+>   }
+>   
+> -static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
+> -					  struct tdp_iter *iter)
+> +static inline int __must_check tdp_mmu_zap_spte_atomic(struct kvm *kvm,
+> +						       struct tdp_iter *iter)
+>   {
+>   	int ret;
+>   
 
