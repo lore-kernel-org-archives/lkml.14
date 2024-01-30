@@ -1,139 +1,182 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mailgate.ics.forth.gr (mailgate.ics.forth.gr [139.91.1.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6BC6A33B
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A6C679EF
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.91.1.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706616442; cv=none; b=tFA046nJkIFwI98aiMFRX2onNdYchAoPAZF6GU0UVLyKk5CHY+hTJJeFo/XfoRtzGTbFhJ2CqIJkuAvGeWjP/a70qRlaRsodd7t6dhlsubbhcgIl3w3Fw1B07RV9911uZ1FzJDUYQLCtpzdSW2YMbUkvR/PTWJg4Ef2Szh/QyIA=
+	t=1706616473; cv=none; b=Rvdrp1pz3XhqKR1BZcJ1ExVNEfd5kSL2o2uLrSsxbhFE8jJ5BhtMPzrA7jASFNS7nGB5twGy84foUEVqlVxBB6UGV45Xf9fRS8Gvz3EZc9RaSaoY2H51wnpULYvp/X+YumGJqJ71/H0+Ydlvwd0f3oD6WVKfWBb9uLbgkgMCR1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706616442; c=relaxed/simple;
-	bh=FPK5d6wZ3tRsi+P+mD8Fl6iT3s4MZM+/HZrzEsQWlMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CpeIDrPNLrjjVYdZxFlJ0zCpMZ1acK9bHaTDiobSSnK1X1kBJvSe7qoR/dNJTUmwD0obrrUmyYAnUUMK/ylv5DRoSPYLZBju6hk2K9mFfUcAqGx5EhIr9Re01MU1qNxHpIsHsazVCSslQXe91VLfeVaKqOZYMXveFWsyOyhZOwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kn6MSuMt; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706616473; c=relaxed/simple;
+	bh=Iq4El0XupAdJ9EMVA4rv5oTgmdh7tQX13verRpi39oo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bb/HFxHp+bDEKRLoitBdvS4CmGOiYtU1wyaNE+4vWgbhIAjMcTSYQ5n0OF5Kl3d21QOPt9GCxva7dYyhQhp/90sOs1Xm2u45FZjSDBNHtRMXIRmSFDaABLa2ITvdT6wmbgt+0fx2kId3k5KVBh3KvfEQcPQ6pPzU8dnhRapBd6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ics.forth.gr; spf=pass smtp.mailfrom=ics.forth.gr; dkim=pass (2048-bit key) header.d=ics.forth.gr header.i=@ics.forth.gr header.b=CHdy3mk5; arc=none smtp.client-ip=139.91.1.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ics.forth.gr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ics.forth.gr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kn6MSuMt"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5ff9adbf216so34156287b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 04:07:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706616440; x=1707221240; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=63pL5ic4j14Z3rxqAwcvu11MNf/ECwDkUdquteX6BAo=;
-        b=kn6MSuMtOrYVRVWE2jIc88jNFZ0QcWg1hbUppKOJyBg8AHN2HaUa96ePkhaeY+2AcV
-         fNgdEJzNTnz4VCmQsAsOE77IHsomJLzqep5MWzOvzWPLNmp70UV3pUyTzoe5czUUSDet
-         cs6pu8B+OCACb5R0Fx1iWtcTvx6ndCkTZ6oILr4TW9wXgVAWG3n+32AxfM+jQoW5Na1M
-         rNOxBeeOf1l7IBYf4tz7AFHe1ESZqzmtY7xsMLRNhj668Gd2cc/kuGvM2PnEpDBhgx9I
-         YqXgj1m4QiLKoDEYbuw0PsZ+MSJH2WCdzN7RTpnEfzUf0Ujryp4/34ywrXTkMH2/EmlQ
-         v2Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706616440; x=1707221240;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=63pL5ic4j14Z3rxqAwcvu11MNf/ECwDkUdquteX6BAo=;
-        b=coRE9RsL3XGicxvXD6PgAtdE/O+WT8mI3sEDBPmXc/YfBrCwxbJI5c4RvPIQHoHAnm
-         pA/fiAya1B9+Br1Lm6GWPNa3Bw1E1j+4wMtSnabD0/GTmF1crJH6GJYbY16EghiIe21p
-         oNeqnP9BZp95yDTPDxeLOUrtMgJg9he9gMsGpE8WAUC8r++WdB6lJFdMliaOic6wXkem
-         A3Z3QvKKdvLsKH2GB2t1v339EZliL+CR5j9CtmPd48V3w7+zJPxiMu9BF8pvj8pv/G2j
-         LxbLlviCQFVSW6Z0zE8tB1Cs2hh/PgXCNbGd/J/r+86Pq0T3jYbBwvRYiplSEleAzJms
-         yhPQ==
-X-Gm-Message-State: AOJu0YwTeqnjrGHbfbetMHhqsh/d19nn3Pu7cRxFQj8om13KOsre3X1J
-	inaJaEBGmtx3pc56X1Nr+m8fjxv3m17yIl+hAh9ZXA8zW6yMdJmTRUuKV8ZrJlFoO+spLkmXdWH
-	48ZnaankK2rhTmBT974Ws4xWWvoNiY9VfNQ8CdA==
-X-Google-Smtp-Source: AGHT+IHh26xMVRbTQoIdXhYrRHLz+HXM2q/jhvMQqq2NnnS84TTGT/FvWrIgUfAdMbTgWpv+93PdlF8+WHDn5Um7O3o=
-X-Received: by 2002:a05:690c:f8d:b0:5ff:d4c1:48f9 with SMTP id
- df13-20020a05690c0f8d00b005ffd4c148f9mr8705324ywb.0.1706616439736; Tue, 30
- Jan 2024 04:07:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ics.forth.gr header.i=@ics.forth.gr header.b="CHdy3mk5"
+Received: from av3.ics.forth.gr (av3in.ics.forth.gr [139.91.1.77])
+	by mailgate.ics.forth.gr (8.15.2/ICS-FORTH/V10-1.8-GATE) with ESMTP id 40UC7mdS004455
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 14:07:48 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; d=ics.forth.gr; s=av; c=relaxed/simple;
+	q=dns/txt; i=@ics.forth.gr; t=1706616463; x=1709208463;
+	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Iq4El0XupAdJ9EMVA4rv5oTgmdh7tQX13verRpi39oo=;
+	b=CHdy3mk5F4tOU97XzSzXGQavQKwBFR4D+11W2UOQRa4bKsd730xr4qEgV3PNHrgi
+	G/fisWOMS09IhzoFkEVWDGK+iRAHm+CX55sS29DmuKJgVBcvuYuiO/NZZbzaxKV0
+	P2CcKbxoT6Aa5hvTshClLGVC5PbBC76NiCMFChl8g6Konpd152Z2Tf9yyzSWDDtU
+	DOtNDJ0AWwqdmKkmuDYyVeVbAVOEhhJQyru9USxruIZmDIorPqr3Kuym0zV2QSh5
+	4ihjBpmLY+Bu3AR4Iklw1OVph2LF4tmWIxVuwl3kWCaXws8pPVgLW/Oz9+4J5n7J
+	qGxg08BG/oSg1IginLhMnQ==;
+X-AuditID: 8b5b014d-a17eb70000002178-22-65b8e68eb329
+Received: from enigma.ics.forth.gr (webmail.ics.forth.gr [139.91.151.35])
+	by av3.ics.forth.gr (Symantec Messaging Gateway) with SMTP id 79.C1.08568.E86E8B56; Tue, 30 Jan 2024 14:07:42 +0200 (EET)
+X-ICS-AUTH-INFO: Authenticated user: mick at ics.forth.gr
+Message-ID: <b7ae944c-2b7c-4c8d-8623-a8387b8d4e02@ics.forth.gr>
+Date: Tue, 30 Jan 2024 14:07:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125-mmc-no-blk-bounce-high-v1-1-d0f92a30e085@linaro.org>
-In-Reply-To: <20240125-mmc-no-blk-bounce-high-v1-1-d0f92a30e085@linaro.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 30 Jan 2024 13:06:43 +0100
-Message-ID: <CAPDyKFrOOX1PaqrH08icGFMLYeCv9ru7FwjN-Xhp6H_jUSt0BA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core Drop BLK_BOUNCE_HIGH
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] riscv: optimized memset
+Content-Language: el-GR
+To: Jisheng Zhang <jszhang@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt
+ <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matteo Croce <mcroce@microsoft.com>
+References: <20240128111013.2450-1-jszhang@kernel.org>
+ <20240128111013.2450-4-jszhang@kernel.org>
+From: Nick Kossifidis <mick@ics.forth.gr>
+In-Reply-To: <20240128111013.2450-4-jszhang@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXSHT1dWbfv2Y5Ug4P7LSy2/p7FbtF8bD2b
+	xeVdc9gstn1uYbP4++s/q8XLyz3MFm2z+B3YPd68fMnicbjjC7vHplWdbB6bl9R7tO74y+5x
+	qfk6u8fnTXIB7FFcNimpOZllqUX6dglcGUc/NDIXrBWrmDG9h7GBcYFgFyMnh4SAicT89iUs
+	XYxcHEICRxkljj7cywiRsJTY/OklC4jNK2AvcXPKW2YQm0VAVeL5+ymMEHFBiZMzn4DViArI
+	S9y/NYMdxBYWMJCYeK4frJ5ZQFziyPnfzCALRAS2MkpsffWWHSKRL7GkbQHYICGBZImnKy6A
+	DWIT0JSYf+kgmM0pYC7x8fg+Joh6M4murV2MELa8xPa3c5gnMArMQnLHLCT7ZiFpmYWkZQEj
+	yypGgcQyY73M5GK9tPyikgy99KJNjOAoYPTdwXh781u9Q4xMHIyHGCU4mJVEeH9qbk0V4k1J
+	rKxKLcqPLyrNSS0+xCjNwaIkznvCdkGykEB6YklqdmpqQWoRTJaJg1Oqgan9657llraK/57O
+	4z1YprTuYdGPkiUfS0+LCm5+MaEyM2uxr8ftyVmfPu42Uua8z8eko2vU894xXeCefZJJlbHH
+	ga7X/zq0+tyOmQar7He48cCh6vnypRtztd4WSPF+yshgWSMuufippH9h1czjH9Oep5/f+7Hf
+	Q9Z3568K6Rqjq66fvh1vUbrG0fubWSh5d2XgDs3uVyWr5k2Kz/p+x+FE281ZH15F+ShMtOuz
+	myE+UU25cH9T8/1LLR/KXNTytJ5kpW3/FxNfsWBKYYjbnHM3Mp4eFD9r8cWivfz8X+7yIAHB
+	E1dfeK1PiVz5L/1PvcCvl2f9zTasNuZbLxFmE/nklKZD4YGL65+unro+yE+JpTgj0VCLuag4
+	EQCq+/Hb8QIAAA==
 
-On Thu, 25 Jan 2024 at 09:50, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> The MMC core sets BLK_BOUNCE_HIGH for devices where dma_mask
-> is unassigned.
->
-> For the majority of MMC hosts this path is never taken: the
-> OF core will unconditionally assign a 32-bit mask to any
-> OF device, and most MMC hosts are probed from device tree,
-> see drivers/of/platform.c:
->
-> of_platform_device_create_pdata()
->         dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->         if (!dev->dev.dma_mask)
->                 dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
->
-> of_amba_device_create()
->         dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->         dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
->
-> MMC devices that are probed from ACPI or PCI will likewise
-> have a proper dma_mask assigned.
->
-> The only remaining devices that could have a blank dma_mask
-> are platform devices instantiated from board files.
->
-> These are mostly used on systems without CONFIG_HIGHMEM
-> enabled which means the block layer will not bounce, and in
-> the few cases where it is enabled it is not used anyway:
-> for example some OMAP2 systems such as Nokia n800/n810 will
-> create a platform_device and not assign a dma_mask, however
-> they do not have any highmem, so no bouncing will happen
-> anyway: the block core checks if max_low_pfn >= max_pfn
-> and this will always be false.
->
-> Should it turn out there is a platform_device with blank
-> DMA mask actually using CONFIG_HIGHMEM somewhere out there
-> we should set dma_mask for it, not do this trickery.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+On 1/28/24 13:10, Jisheng Zhang wrote:
+> diff --git a/arch/riscv/lib/string.c b/arch/riscv/lib/string.c
+> index 20677c8067da..022edda68f1c 100644
+> --- a/arch/riscv/lib/string.c
+> +++ b/arch/riscv/lib/string.c
+> @@ -144,3 +144,44 @@ void *memmove(void *dest, const void *src, size_t count) __weak __alias(__memmov
+>   EXPORT_SYMBOL(memmove);
+>   void *__pi_memmove(void *dest, const void *src, size_t count) __alias(__memmove);
+>   void *__pi___memmove(void *dest, const void *src, size_t count) __alias(__memmove);
+> +
+> +void *__memset(void *s, int c, size_t count)
+> +{
+> +	union types dest = { .as_u8 = s };
+> +
+> +	if (count >= MIN_THRESHOLD) {
+> +		unsigned long cu = (unsigned long)c;
+> +
+> +		/* Compose an ulong with 'c' repeated 4/8 times */
+> +#ifdef CONFIG_ARCH_HAS_FAST_MULTIPLIER
+> +		cu *= 0x0101010101010101UL;
+> +#else
+> +		cu |= cu << 8;
+> +		cu |= cu << 16;
+> +		/* Suppress warning on 32 bit machines */
+> +		cu |= (cu << 16) << 16;
+> +#endif
 
-Applied for next, thanks!
+I guess you could check against __SIZEOF_LONG__ here.
 
-Kind regards
-Uffe
+> +		if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)) {
+> +			/*
+> +			 * Fill the buffer one byte at time until
+> +			 * the destination is word aligned.
+> +			 */
+> +			for (; count && dest.as_uptr & WORD_MASK; count--)
+> +				*dest.as_u8++ = c;
+> +		}
+> +
+> +		/* Copy using the largest size allowed */
+> +		for (; count >= BYTES_LONG; count -= BYTES_LONG)
+> +			*dest.as_ulong++ = cu;
+> +	}
+> +
+> +	/* copy the remainder */
+> +	while (count--)
+> +		*dest.as_u8++ = c;
+> +
+> +	return s;
+> +}
+> +EXPORT_SYMBOL(__memset);
 
+BTW a similar approach could be used for memchr, e.g.:
 
-> ---
->  drivers/mmc/core/queue.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-> index a0a2412f62a7..316415588a77 100644
-> --- a/drivers/mmc/core/queue.c
-> +++ b/drivers/mmc/core/queue.c
-> @@ -351,8 +351,6 @@ static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
->         if (mmc_can_erase(card))
->                 mmc_queue_setup_discard(mq->queue, card);
->
-> -       if (!mmc_dev(host)->dma_mask || !*mmc_dev(host)->dma_mask)
-> -               blk_queue_bounce_limit(mq->queue, BLK_BOUNCE_HIGH);
->         blk_queue_max_hw_sectors(mq->queue,
->                 min(host->max_blk_count, host->max_req_size / 512));
->         if (host->can_dma_map_merge)
->
-> ---
-> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-> change-id: 20240124-mmc-no-blk-bounce-high-d84e8898c707
->
-> Best regards,
-> --
-> Linus Walleij <linus.walleij@linaro.org>
->
+#if __SIZEOF_LONG__ == 8
+#define HAS_ZERO(_x) (((_x) - 0x0101010101010101ULL) & ~(_x) & 
+0x8080808080808080ULL)
+#else
+#define HAS_ZERO(_x) (((_x) - 0x01010101UL) & ~(_x) & 0x80808080UL)
+#endif
+
+void *
+memchr(const void *src_ptr, int c, size_t len)
+{
+	union const_data src = { .as_bytes = src_ptr };
+	unsigned char byte = (unsigned char) c;
+	unsigned long mask = (unsigned long) c;
+	size_t remaining = len;
+
+	/* Nothing to do */
+	if (!src_ptr || !len)
+		return NULL;
+
+	if (len < 2 * WORD_SIZE)
+		goto trailing;
+
+	mask |= mask << 8;
+	mask |= mask << 16;
+#if __SIZEOF_LONG__ == 8
+	mask |= mask << 32;
+#endif
+
+	/* Search by byte up to the src's alignment boundary */
+	for(; src.as_uptr & WORD_MASK; remaining--, src.as_bytes++) {
+		if (*src.as_bytes == byte)
+			return (void*) src.as_bytes;
+	}
+
+	/* Search word by word using the mask */
+	for(; remaining >= WORD_SIZE; remaining -= WORD_SIZE, src.as_ulong++) {
+		unsigned long check = *src.as_ulong ^ mask;
+		if(HAS_ZERO(check))
+			break;
+	}
+
+  trailing:
+	for(; remaining > 0; remaining--, src.as_bytes++) {
+		if (*src.as_bytes == byte)
+			return (void*) src.as_bytes;
+	}
+
+	return NULL;
+}
+
+Regards,
+Nick
