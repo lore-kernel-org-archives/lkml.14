@@ -1,163 +1,117 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D194071B23;
-	Tue, 30 Jan 2024 19:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706641817; cv=fail; b=pf8OJqFrGpWgAsXFo7js+XdfP7dHXxl/wgGABy48ayJSPpYuM5QoBNHpgqt/GkreFgx52+cHdqSSGpzwJFahWZ/RG8U1ssxA7G6CRuKcm+HELsaRYsHZ4kaCI6Vn/Cxex5SEx7mz8C1Av1BVxvA48e5xWGJnAl7jp/gWqXYrAFg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706641817; c=relaxed/simple;
-	bh=RNMdBNWGRB9aozbl66V1Yjg1u7DDI2ivCHxYCVnPS88=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uV5QYpJ8JBXqpwMJh0TRvV+AufhlQW8eLSurMo0c2/V6DkkaCfWIae8tf1SrTk+Prh5PvFgAb+1IvW1TzIBXBiFIGkbVHSRhKr18KL8UQ0x+U31omPumbKsHvyywZ+suBvnpophhcAJ8VqWnteEVK7NZYV/pWXplgBeTVTxwedY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nzZ6vMMM; arc=fail smtp.client-ip=40.107.244.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF906995A
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706641845; cv=none; b=bPGPQH+lA+HA58EKDzIxJ7M97CG4R6HigxnKi5YwZ6tRbncPo7KCcevBI6Elk2GRfq/aZMI8O9pWoC2eCpvNWfXJKuXTGzBgV4+jK0JtnvBDm5qtcGtdBOwd2eSnIikahFW91jorlKrS++3hWiFUZaiepOqFlJMW4DdRF3KWt0o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706641845; c=relaxed/simple;
+	bh=eBVjOwBzBXz+wIjzt1q65tjnnhsG8BpMMZrg4Z57nN8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bu5mJOmerFhlmHqrXn+OmoOJZVx6vOADBpUC1NMsJjymsjR/kMWSprs/0g5KNFKgTai+51m6Gc8Ou6Vb4ELINQgkVGzSPW8cUS6Z5oHJOJ/lobXYCqFVcyYkeC+lzwtK/8JG4tjTo0G4E5UqmVY9QiCiovZE25ejnkyBx/mXIHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NAabapWD; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nzZ6vMMM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oTn93XM1G4V7A05dkXkYyW5YlTHqt4YvkH8mvcs+jXj1xwiNDQXurFEBT8ei2uof0EtGKK/rKSuAf8DZ+8kz3UqN6NNZbIQ8xaHw2mUJvlDKWYRRdA2v9lp+3JBT3bM2cZAbUjCeJW047FcALFZx8O/UZWKGlcxKaoAVYEOaDVMV7GBx9gma4pLjRm9o/zOFbKKbpaPFIxThcgOkGkGmmTWPJk9qh1ZGnQpURj9AVI9eUxXtqJl0DZiY3SnI8ZPkvNGndF8EC/RG+f5PetMkllvNBNOac0sBHKu3C6yg1bz9ADbbm3sCGY+gpkyZBzrFW2+gH1PnnoifNEkjy3bOGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z28FGx7ELDyjyyzEPNk1nCypG88n6mEYl5VCOR55GhA=;
- b=ExGYIAsVWh7p3+tSGfI9sfdpFhlFo04TzivEtCbFyvyDkjfkJSJCQ7wF2/2UwKAC0i9CZKxkPxHA5zN1YYxEh7AVIxqpJc6SEmzIQ4fjmyK3cQrUoAIYdT1Io53n1sMPXUeAOMUrc+stRoZxoy0MxGPxeWmKIyx4NtOugKRqI8I30B+eiNUsLdtJqo4fLnbeMF5o/Lz6rmE7Zvm8QX4KExa/6KxadEee7WvDrU1f/dmgpHLiwSHxDWD/nfWitP5RLGMedfOc9pgBQZW7CrkN4rP9cMlOcteWLUUaozd1/FcFcRnvqam+gvbGBCajcXipvVs2exUBmgh7rZYssHzqBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z28FGx7ELDyjyyzEPNk1nCypG88n6mEYl5VCOR55GhA=;
- b=nzZ6vMMM0l4sxbUm50ZNKr5CKkNSM33wdGEr/BRlLhPIXVt0y6JP1P511D2Tv7jgU9MWkY2PdbU0SMDdqU1y/Xz/aIHkNjRhTIlkPcEtsXdqsgHHeKukbqKio7jMnMtj3uWZ5CC7yUlmXGoR84RoNcS/2rGmJajc2VZwnhPoLPc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MN0PR12MB5883.namprd12.prod.outlook.com (2603:10b6:208:37b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
- 2024 19:10:12 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64%4]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
- 19:10:11 +0000
-Message-ID: <4478a4b0-fd17-4d5f-b11c-ba4a867bf92b@amd.com>
-Date: Tue, 30 Jan 2024 13:10:09 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
-Content-Language: en-US
-To: Daniel Drake <drake@endlessos.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com, david.e.box@linux.intel.com,
- Jian-Hong Pan <jhp@endlessos.org>
-References: <20240130183124.19985-1-drake@endlessos.org>
- <7a8f3595-3efc-428a-852a-d9edc8ebb01b@amd.com>
- <CAD8Lp45ycrY-hkKVZGEQdeYmODauaShgFp2tj=QtEXK_C2tcYA@mail.gmail.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAD8Lp45ycrY-hkKVZGEQdeYmODauaShgFp2tj=QtEXK_C2tcYA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM6PR21CA0008.namprd21.prod.outlook.com
- (2603:10b6:5:174::18) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NAabapWD"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d8cea8bb3bso13653625ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:10:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706641843; x=1707246643; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Ih6aJQpYeudm4DH7GXDOkPsJAqGPh0tA+fMPoGsmAE=;
+        b=NAabapWDUOV40bv+6ZwqKfkgcp2rzUkefapK8A8r4GnPPi7tCfMJ4rsjkM21a9aiBP
+         6a46PvDrgFknr1KEufEs1lk4YTnSaNOBSJXWXUwc1IuoPQVGnYrPdAy2HiTmP+35mhER
+         ZWSd7zR1cJyfLPVb/h26BLDhk3GZUoHsG6r1Dwxm47z49an7e+bQS9YMaG2i1w0PEXJK
+         8RJ+1tedqD4WoXpV6CPlMCe7BbQyr01QADTQg0+qfcwsDb2UvZlroUidhEc6ur9L4NXW
+         Z0CVKrh0GV+fzPckYqQld4ADyu2p7p4Ou40Xf4TCh2KRc5zjxdH8w2pw6Uuu/BqOVZin
+         7qLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706641843; x=1707246643;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6Ih6aJQpYeudm4DH7GXDOkPsJAqGPh0tA+fMPoGsmAE=;
+        b=H0KwT0sPYNBuVPjJll8GQgPB2/HSvn/jKFv6cWtf8AQs9deQ9rVLm4Av2rqz7RsBA2
+         u4oyuxIr1r/C/A8qA4m4ApN8QxgQlGnqqQHVvWDOqsvWVbldc6UG2maOrX7OxJU6evAr
+         yiCQ5KOVyASxH5jc3nVVCIAyoL3FMla0FizEWzmK+Y2aWXofANBIA2O7Y2s2Lc8WIgw0
+         1F3OIgYiVJBwYkQimTRKNsvKBnXRttxYIDihXre5khyzMkKc/sk44uywQWBFQKCVA7BF
+         B0YHi11Xaer65a9omRCVmVRpQ1i+y4iQfR9b6m6AFx2XD5hj8ysec9KLN/WkoK6CGQ+8
+         z9Hg==
+X-Gm-Message-State: AOJu0YygIxTx5OG7e9lsfPf893uB18IS6cLL63gFgFtCclNZMXpTpV7Q
+	cGDekfFMR+k3h0fQZ/HLsr2aGZ/cMZNcagvq/Xw5EXnW2Ra0bVE/Tvdorz4lOFc=
+X-Google-Smtp-Source: AGHT+IFuOQ56M0BP8wcdrL0TKmyCJCLk2a3wcsCv//tTV80wCtl5ogSqVeOVepqLf89//Be6TCXAGA==
+X-Received: by 2002:a17:902:f689:b0:1d8:f7d2:a3ec with SMTP id l9-20020a170902f68900b001d8f7d2a3ecmr399698plg.61.1706641843104;
+        Tue, 30 Jan 2024 11:10:43 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id p16-20020a170902ebd000b001d91d515dffsm605340plg.156.2024.01.30.11.10.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 11:10:42 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v5 0/2] lib: checksum: Fix issues with checksum tests
+Date: Tue, 30 Jan 2024 11:10:02 -0800
+Message-Id: <20240130-fix_sparse_errors_checksum_tests-v5-0-4d8a0a337e5e@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN0PR12MB5883:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1e84227-1c1b-4aea-a10b-08dc21c7152d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	lcpTlnfxNJT6B3kxhfVOwV52/uSEk0kxIzHH51wp91XBZt1TdgNK6i/LBdjfqgdlrpgtaiDLO7IR1cZ8c0mJ+OWCkxX+9BOuEqTHuvZse9eV15C3+143skPTY4IgfXgOhFLlcJvj3I8yEoUuoRqdimZXXTwUWShBUNscOpePreiwED6nkmJRmzBZjL0kPDE/lzAVUNmg0zdbgpwJHLmmhCIgMUZLnMTtQgrKByGQRtLyTcXGJBEceAGsHXWka7VQdbDt26ZKloi3lwzQASW7RJ8n/3nGcOvs7uIarIThIGQlQOVS45jLGP970bFuDE3yNdZ7z0dZUlcMrvhR6ObpQo1IySfcaribi8h2EQ4MW4pR8yMXeDBDxTIOxAB+zNnaGJbNAMH+VzA/7OqXlPtlVcbTFjNnjBUWx1/Hbqk+i04eb8oWOUY2/Ak9W7S6g6brMyPDH6w1DWjPxZHT51XuTPhp9znuZAXZlfcv4q6x/heq0bQ/EecRFxfTDIxdXRfxLBx8MGSMyCVNGQ5TnyeXWDDxVSezRSCn5L9AU286pTuwE93MYircP5E5P5cDlwHd9AtzBSHltknM6EEit3Szawud9Gq5HbmTca+zm7C+3D+Bt+Fr/herc0QmTqL/Uv5SHWZUeVWxC3mga46ozrmYxfErp0tUVtkKnofqUAVtAWc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(136003)(366004)(346002)(396003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(83380400001)(6506007)(6512007)(53546011)(478600001)(66946007)(38100700002)(2616005)(316002)(8936002)(41300700001)(44832011)(5660300002)(4326008)(7416002)(2906002)(8676002)(66476007)(6486002)(6916009)(66556008)(36756003)(31696002)(86362001)(31686004)(26005)(32563001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WEpWbVB2M3JxQkNPc2RtU056M2RTV0VKV2l4NmRFcFRYVFQ0M1pzZEd2NCs4?=
- =?utf-8?B?d05malFvOEova3lNckFLQzhIY25RZU1ZeDVpMjRadVFVcUdtWDJMSUJYSkUv?=
- =?utf-8?B?S3hVdG1oZHRqSzlqK2w5RDFGei9ZcFhQMlg4KzI4OW5vWnJ4cGJObFZ2ekRv?=
- =?utf-8?B?dlFSalh4TE9jSHgwQVZhbmFiMnd0eTJKRmxITytNUzNMc1kyTVhLNUlRRkRk?=
- =?utf-8?B?NCtsNTJ3UGZxRmttWUIvUHRaVGVyaVlxTzNkdFVHTEs0cmpHWlR1aVlxb0RW?=
- =?utf-8?B?WFhWMVg2cVlnektTMXZNSE9uOE1uVnVMdEdHOS9WLzZyMzhVV3ZoN1paeHAz?=
- =?utf-8?B?NEI5UkZTRldNU2NrN0RoR2dvb01NWXN0ajVOcUxER25xWnZ3RnRvZ1orSEcw?=
- =?utf-8?B?NXlFT2h1K3pVOEt5WkdiQWVEUkpaL0x5Z2N5anhiazZaOGExaHJMd2o0dWVn?=
- =?utf-8?B?aWN2V2llem1ucGxiVndRQ1RkWGV5MVhGN09JUk9XbHhqdVkvd0h6V1pmSTIw?=
- =?utf-8?B?aE1pTzMxNi9PWW1lWDc4eGpxaUc0cjkxKzJUeUFPME1IZWxnNE02cHlPTHFD?=
- =?utf-8?B?OXlsNTNLTUdMN0E1cC8vQ0M0MUZldHBMNzBBR1dsNEUwbzlVeFpENnM0bExC?=
- =?utf-8?B?ZHVrbnZ4Zkdzb3UxcWRnSnhSaEZVUDVzbEx2dkNvd082T05vWVZuSGNlbVFL?=
- =?utf-8?B?dmcvbGlBUHhoREZ5TnFzSllDSmVzdHcxL0gzYnpLTklKa2tHamh3NytmSGpN?=
- =?utf-8?B?RGthT1QzaEpFdWcvRFp3aU83aHRPbXZWb012UDc1MkV5RWJYMmg1Tm5QRkRu?=
- =?utf-8?B?a0NQYndlZUVqMGhpY0VEZ2hZZlNDSmlpVlVpYnl2a2ZRZDdPcG5Ib3QrOXJ1?=
- =?utf-8?B?ckVjdEtpK3pNS0pCS1VYL1pna3A0cFZ4YUNzTHBBY2VWSjYwT0FmajZ3YnFP?=
- =?utf-8?B?RXBoTjhpd0xaZjY3ditqTUMweUhGWWM3eUlvWU1NK0FZYy9lOFBBa0RkOUFG?=
- =?utf-8?B?VGZEZ211b1FSWnluRFlxY0xKWXdwSU9RYjZIaFYxYXBGZThTSXVaSW51d0o5?=
- =?utf-8?B?c0M3ZlBWL2orT3lscEwvUVgxVThKdFZFSEpMTDdjdTdENnVMdS8rNFVsWUow?=
- =?utf-8?B?eE8wS2ZaenpSSmE4eE92c1psMmorQkl1czlKcEpwMCtzWEVkMzN5djFWUXkz?=
- =?utf-8?B?OHgxREpqcVNHcGdHTlBWa2pzTGprdm91VmhMRW5Ya2ZKRUFhQ3lSMy9ibWhv?=
- =?utf-8?B?dU50b0lnQ1BOL0NDd0l5YkNybngwSXVRaDBlWmhPRGlIZEVsWVZUSVdrNXQ5?=
- =?utf-8?B?Q0xmOUxGS3FQK0VSU2NwZWg2RG1FSXh0M0JuMWxhZTBSTC9OZCtPZ2ZJajdt?=
- =?utf-8?B?RGdtTXo0YWZFK2toL2FUWEtBb2xETFlIQlNkUnNYUjVLbFBwekZlbUxmbmNX?=
- =?utf-8?B?S1Q0MHZnQzBKU204cENZUEt5Uk00Tk9Id1B2UDFiOWJ5MlJiTHJFM2FWMkx5?=
- =?utf-8?B?T2ZmMXA3dWR4Rmx2QTZLQXljNlZqTkhMZ3JyWnBRVjNRbzdwbUdySEx1eC9C?=
- =?utf-8?B?TlpLcU1acDhiU2hWSVYrZFFkNGFORHBOQS9DMjBzbFFuQnducmF5czlST3B2?=
- =?utf-8?B?WDJpMVk4V0FkNFJUVFdDZHJKY1FTVXVKQjB5aXVEdUgvemNPTnN5OVhSREVZ?=
- =?utf-8?B?RUl0ZVdkZjdZU0V0SSs2Rm8ycXE0cFpzQXVNMldBRHJuOEEzRE04dGV5RlBy?=
- =?utf-8?B?eHBiRE9OZFg4V3pva0laUHRqdGdDS1BiTEhORVBqQURrNnhUKzBmUEx1amZn?=
- =?utf-8?B?R3hxT25Nc1p0WjZCOFpabnIrZDBIaDR1RS91MWlBcFFpVEZGZ0FvWlN6TUdD?=
- =?utf-8?B?YnBkOE02UEw0UU5zYWJuNlBTVWNqL29zcExZRkJBYnBaOUcyb0QzaG53cUZ1?=
- =?utf-8?B?OVdyaThYc2VUVG5ocWtQMkgzQ0p0YTNPbml2Q09uUU0vQ2lNU0lSSUlvYnll?=
- =?utf-8?B?aWh6NlFzazFGWkpQeG5UMVo2K21KV0VwanQyT0hpRVJKVThqQUszVHg4d3lR?=
- =?utf-8?B?ZHRpTXhQNUhIUGs0ZEtrbHNIRVBwYUF4TDRyTW4xSHJkSUg0S2tGS244OFI2?=
- =?utf-8?Q?8pEMd79LK7zGIx5ZD15TCWPrQ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1e84227-1c1b-4aea-a10b-08dc21c7152d
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 19:10:11.8925
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xohErMHQbTN284rUqFpD7GUWuOZdNjFwEXhcylpjfIMg76Dp9n/UUAONFSoJvu6fezsapjHIciB/pUYbht8Khw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5883
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIpJuWUC/5XOQWrDMBAF0KsEratijWRZzqr3KMVYo3EtSqygc
+ UVL8N0rZxVKFsnyf5j35yKYciQWx8NFZCqRY1pqaF8OAudx+SQZQ80CGjCNUr2c4s/A5zEzDZR
+ zyjzgTPjF36dhJV5ZgvXOem1C54yozDlTvblOvH/UPEdeU/69Lha1t0/gRUklIegwORtcnXjLs
+ SSOC75iOondL3Bjgn7ABNlIrxvrLVIXxvaOqZ81dTVpIsRu6g303R3T3JrmAdPsfyJ4F0CPusV
+ /5rZtf7gqhQ/PAQAA
+To: Guenter Roeck <linux@roeck-us.net>, 
+ David Laight <David.Laight@aculab.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
+ kernel test robot <lkp@intel.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706641842; l=1332;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=eBVjOwBzBXz+wIjzt1q65tjnnhsG8BpMMZrg4Z57nN8=;
+ b=7sF2F1mP4h7BoqiMwL28dR/S3hgryYSg+PKK6R9aomtq9SivpE91yVhID2gujBmc4jLiPiEIl
+ YuEQKAxdEgzCSSz4JXwndteXr6YgurhPhiSJeM98NUfehlN86tmUzRv
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On 1/30/2024 13:00, Daniel Drake wrote:
-> On Tue, Jan 30, 2024 at 2:47 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
->> Has there already been a check done whether any newer firmware is
->> available from ASUS that doesn't suffer the deficiency described below?
-> 
-> The latest firmware does flip StorageD3Enable to 0, which has the side
-> effect of never putting the NVMe device or the parent bridge into
-> D3cold.
-> However, we have shipped hundreds of these devices with the original
-> production BIOS version to first time computer users, so it is not
-> feasible to ask the end user to upgrade. And there is no
-> Linux-compatible online firmware update for this product range. Hence
-> a Linux-level workaround for this issue would be highly valuable.
+The ip_fast_csum and csum_ipv6_magic tests did not have the data
+types properly casted, and improperly misaligned data.
 
-Sure; it makes sense to me why to put a workaround in Linux with your 
-above explanation.
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Changes in v5:
+- Add Guenter's tested-by
+- CC Andrew Morton
+- Link to v4: https://lore.kernel.org/r/20240124-fix_sparse_errors_checksum_tests-v4-0-bc2b8d23a35c@rivosinc.com
 
-Perhaps it make sense to limit the quirk to only the DMI version strings 
-of the initial production firmware?
+Changes in v4:
+- Pad test values with zeroes (David)
+- Link to v3: https://lore.kernel.org/r/20240123-fix_sparse_errors_checksum_tests-v3-0-efecc7f94297@rivosinc.com
 
-> 
->> Is this the only problem blocking s2idle from working effectively on
->> this platform?  If so, I would think you want to just do the revert in
->> the same series if it's decided this patch needs to spin again for any
->> reason.
-> 
-> Yes these could be combined into the same series, with agreement from
-> the drivers/acpi/ maintainers for the S3 revert.
-> 
-> Thanks
-> Daniel
+Changes in v3:
+- Don't read memory out of bounds
+- Link to v2: https://lore.kernel.org/r/20240123-fix_sparse_errors_checksum_tests-v2-0-b306b6ce7da5@rivosinc.com
+
+Changes in v2:
+- Add additional patch to fix alignment issues
+- Link to v1: https://lore.kernel.org/r/20240119-fix_sparse_errors_checksum_tests-v1-1-2d3df86d8d78@rivosinc.com
+
+---
+Charlie Jenkins (2):
+      lib: checksum: Fix type casting in checksum kunits
+      lib: checksum: Use aligned accesses for ip_fast_csum and csum_ipv6_magic tests
+
+ lib/checksum_kunit.c | 389 +++++++++++++++++----------------------------------
+ 1 file changed, 129 insertions(+), 260 deletions(-)
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240119-fix_sparse_errors_checksum_tests-26b86b34d784
+-- 
+- Charlie
 
