@@ -1,327 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C090B56B9E;
-	Tue, 30 Jan 2024 09:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61A05914F
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606275; cv=none; b=uIUPV5eINQlQ69RvdH5PSj1jmB2Yra42Yjn6msxn7WrQJzRlVyMStBrTc7ylqzHF8kwMiEj3UUO9//i0H8L5c4Pwp9z9f6avGXw8cqLRHmp6cDSvk+8YnMbtUYJugsCNj/ZMv8AVqmO3cpZUzXKnpIjJ52eLiwFqXCrE2xoSH4o=
+	t=1706606290; cv=none; b=cbLFApWj4XlgRwoNxprNhZzEJO+hl+hLSmfBb9ioBfnYSa5rCTatSnInO8/WnuhsGrKsPb1i/fS4OPf4UXctLfsRjmZFcT2xAxwStuoK7GQm7SZmKKgS3k00+YpbAe9g3mDb2Y+El6ybwcRJlc7ELtfDjq4x8hrLScfRa4c5+XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606275; c=relaxed/simple;
-	bh=o5o7p/UCx3XB1t0QRp4KktVXT9ivgdBfuDago6NCk+U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=I0BGSEfgoXanpggI6k5ffgtiJpt7OZ5geExLHI1rOoSA2vLS6B+jTqSk0GN3UD/crZJqNgomxrR6Ija+YnclyifmmgzzJXunq/XHccigw6JgOn3KeoFUvcUiV8mEiNhRvzEpOELljIuxf572NR6HnTcc91y9SokXki8Jh74LNHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwU9RxYj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwU9RxYj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16B7C433C7;
-	Tue, 30 Jan 2024 09:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706606275;
-	bh=o5o7p/UCx3XB1t0QRp4KktVXT9ivgdBfuDago6NCk+U=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=BwU9RxYj6vMt9AlMZuI7or6bmdUH4QEAVH/SLMuIYmKr+9kh1QGulgItIz8yBlCqs
-	 GTWgwy+/EQw5Z+i8z+6EFDYK7IFVS1ZXCwDUww6FItZ+c8hJ7gZY+XuDwgxwkAi+02
-	 bAe0J1QSoT2jknF6NMnObFB68faWzQTvhqZtPnaPYAvgqVuzv+CZJeLeoUwMxyXswY
-	 gwoTm/2UP93TkzRXlzuK14atd8pxJ3thzSt3a08jIgUs618KxvZ+ehcom4xC9jKB3R
-	 kGGczQCxn/KFDVBLx6Kp+MfcKXQJkhvUP3MlpnzEhAZ0kzj/irE7q9bXsc35LMU6ho
-	 P8uA975OBjCLw==
-Message-ID: <aa307901-d20a-4301-8774-97287d7192e9@kernel.org>
-Date: Tue, 30 Jan 2024 18:17:51 +0900
+	s=arc-20240116; t=1706606290; c=relaxed/simple;
+	bh=yksdEApdWHwtbFYRYAw3fm4KDprbo5WN9QSNvsY7rBA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SsVU4xcTsrvppaNEW6SWea2/vsMOF83LsR1JhDyBoYL4SSRbz0xY3eDXrR0UojeVhr0y9sXtNWqVkAKSI5ySZwIo190A2rHp7xbHiAR501Pgul4hhMo1I6mNt8tIcb91KzLaplR6/QCJCwcwwTvy1SA6hu/MwwUxjve3uF6yHyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3629478945bso18738905ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:18:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706606285; x=1707211085;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mlwKWW0i2CNZL08aW/K+gSS6XNfArMYOsRVptZ0INSc=;
+        b=M1IJSGXg/K4wlkZgcilym71KM3+DDYYbhZaXLxVW0w1U+pujX/md6V2Kmxxdskd5Lh
+         dssK3NqUDIXskjLByGt749ArsT+qIdQyBMZDGHIKBPDCTChyv3XsxJXDvEP2oa782rCK
+         BOC3kdh58Pb5jpUyU96ZG3gQXUlrWNvBqawETPB+icEVenOjAKxy6KC7jzkn8xL14yKy
+         W845f+4s4ixk0ymn/EYVHFwdrW+yKbg7ZOGXQamji9AGjr759cSlnTe1cATaRqwx6PLY
+         CX3EvzkphGCDkpNX7D0NqWRYG6QvOfFDMXzUE6b9lhD90S0rUdsdQ2/dJBc+oNzMA+th
+         h2Rw==
+X-Gm-Message-State: AOJu0YyOmPdSk7trt7iSnkekegyB7jeYT494xNygWlR75OhDHYZ9Pl9+
+	bqy+3Qh+tKyXLT79/6hTSS7xQ3gbVSPJPnUtaxRQ5IZNAmG7QU7pjrbVmygXUaaUwLotOjDUfJP
+	IdWGVWDjEvs5PhV0zyfRMq0xwtfgXx9PT/Is2cg1myELMx1kd9ikvqtM=
+X-Google-Smtp-Source: AGHT+IHRGToUJwe/OMLiem8vB+l3Zlk1s5MQZhUj+R9/57Dh4cU/IubDlscNqI8lSWQ/HTNXWqZWa1RYeC/z+9CCbUxR4He0OZE8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv5 1/1] block: introduce content activity based ioprio
-Content-Language: en-US
-To: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- Matthew Wilcox <willy@infradead.org>, Yu Zhao <yuzhao@google.com>,
- Niklas Cassel <niklas.cassel@wdc.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- Hannes Reinecke <hare@suse.de>, Linus Walleij <linus.walleij@linaro.org>,
- linux-mm@kvack.org, linux-block@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zhaoyang Huang <huangzhaoyang@gmail.com>, steve.kang@unisoc.com
-References: <20240130084207.3760518-1-zhaoyang.huang@unisoc.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20240130084207.3760518-1-zhaoyang.huang@unisoc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3207:b0:35f:d260:57b3 with SMTP id
+ cd7-20020a056e02320700b0035fd26057b3mr812469ilb.3.1706606285783; Tue, 30 Jan
+ 2024 01:18:05 -0800 (PST)
+Date: Tue, 30 Jan 2024 01:18:05 -0800
+In-Reply-To: <tencent_C16C982E616C44951CE80EEF46CD707B820A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006f88590610263d14@google.com>
+Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
+From: syzbot <syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/30/24 17:42, zhaoyang.huang wrote:
-> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> 
-> Currently, request's ioprio are set via task's schedule priority(when no
-> blkcg configured), which has high priority tasks possess the privilege on
-> both of CPU and IO scheduling.
-> This commit works as a hint of original policy by promoting the request ioprio
-> based on the page/folio's activity. The original idea comes from LRU_GEN
-> which provides more precised folio activity than before. This commit try
-> to adjust the request's ioprio when certain part of its folios are hot,
-> which indicate that this request carry important contents and need be
-> scheduled ealier.
-> 
-> This commit is verified on a v6.6 6GB RAM android14 system via 4 test cases
-> by changing the bio_add_page/folio API in erofs, ext4 and f2fs in
-> another commit.
-> 
-> Case 1:
-> script[a] which get significant improved fault time as expected[b]
-> where dd's cost also shrink from 55s to 40s.
-> (1). fault_latency.bin is an ebpf based test tool which measure all task's
->    iowait latency during page fault when scheduled out/in.
-> (2). costmem generate page fault by mmaping a file and access the VA.
-> (3). dd generate concurrent vfs io.
-> 
-> [a]
-> ./fault_latency.bin 1 5 > /data/dd_costmem &
-> costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
-> costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
-> costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
-> costmem -c0 -a2048000 -b128000 -o0 1>/dev/null &
-> dd if=/dev/block/sda of=/data/ddtest bs=1024 count=2048000 &
-> dd if=/dev/block/sda of=/data/ddtest1 bs=1024 count=2048000 &
-> dd if=/dev/block/sda of=/data/ddtest2 bs=1024 count=2048000 &
-> dd if=/dev/block/sda of=/data/ddtest3 bs=1024 count=2048000
-> [b]
->                        mainline		commit
-> io wait                836us            156us
-> 
-> Case 2:
-> fio -filename=/dev/block/by-name/userdata -rw=randread -direct=0 -bs=4k -size=2000M -numjobs=8 -group_reporting -name=mytest
-> mainline: 513MiB/s
-> READ: bw=531MiB/s (557MB/s), 531MiB/s-531MiB/s (557MB/s-557MB/s), io=15.6GiB (16.8GB), run=30137-30137msec
-> READ: bw=543MiB/s (569MB/s), 543MiB/s-543MiB/s (569MB/s-569MB/s), io=15.6GiB (16.8GB), run=29469-29469msec
-> READ: bw=474MiB/s (497MB/s), 474MiB/s-474MiB/s (497MB/s-497MB/s), io=15.6GiB (16.8GB), run=33724-33724msec
-> READ: bw=535MiB/s (561MB/s), 535MiB/s-535MiB/s (561MB/s-561MB/s), io=15.6GiB (16.8GB), run=29928-29928msec
-> READ: bw=523MiB/s (548MB/s), 523MiB/s-523MiB/s (548MB/s-548MB/s), io=15.6GiB (16.8GB), run=30617-30617msec
-> READ: bw=492MiB/s (516MB/s), 492MiB/s-492MiB/s (516MB/s-516MB/s), io=15.6GiB (16.8GB), run=32518-32518msec
-> READ: bw=533MiB/s (559MB/s), 533MiB/s-533MiB/s (559MB/s-559MB/s), io=15.6GiB (16.8GB), run=29993-29993msec
-> READ: bw=524MiB/s (550MB/s), 524MiB/s-524MiB/s (550MB/s-550MB/s), io=15.6GiB (16.8GB), run=30526-30526msec
-> READ: bw=529MiB/s (554MB/s), 529MiB/s-529MiB/s (554MB/s-554MB/s), io=15.6GiB (16.8GB), run=30269-30269msec
-> READ: bw=449MiB/s (471MB/s), 449MiB/s-449MiB/s (471MB/s-471MB/s), io=15.6GiB (16.8GB), run=35629-35629msec
-> 
-> commit: 633MiB/s
-> READ: bw=668MiB/s (700MB/s), 668MiB/s-668MiB/s (700MB/s-700MB/s), io=15.6GiB (16.8GB), run=23952-23952msec
-> READ: bw=589MiB/s (618MB/s), 589MiB/s-589MiB/s (618MB/s-618MB/s), io=15.6GiB (16.8GB), run=27164-27164msec
-> READ: bw=638MiB/s (669MB/s), 638MiB/s-638MiB/s (669MB/s-669MB/s), io=15.6GiB (16.8GB), run=25071-25071msec
-> READ: bw=714MiB/s (749MB/s), 714MiB/s-714MiB/s (749MB/s-749MB/s), io=15.6GiB (16.8GB), run=22409-22409msec
-> READ: bw=600MiB/s (629MB/s), 600MiB/s-600MiB/s (629MB/s-629MB/s), io=15.6GiB (16.8GB), run=26669-26669msec
-> READ: bw=592MiB/s (621MB/s), 592MiB/s-592MiB/s (621MB/s-621MB/s), io=15.6GiB (16.8GB), run=27036-27036msec
-> READ: bw=691MiB/s (725MB/s), 691MiB/s-691MiB/s (725MB/s-725MB/s), io=15.6GiB (16.8GB), run=23150-23150msec
-> READ: bw=569MiB/s (596MB/s), 569MiB/s-569MiB/s (596MB/s-596MB/s), io=15.6GiB (16.8GB), run=28142-28142msec
-> READ: bw=563MiB/s (590MB/s), 563MiB/s-563MiB/s (590MB/s-590MB/s), io=15.6GiB (16.8GB), run=28429-28429msec
-> READ: bw=712MiB/s (746MB/s), 712MiB/s-712MiB/s (746MB/s-746MB/s), io=15.6GiB (16.8GB), run=22478-22478msec
-> 
-> Case 3:
-> This commit is also verified by the case of launching camera APP which is
-> usually considered as heavy working load on both of memory and IO, which
-> shows 12%-24% improvement.
-> 
-> 		ttl = 0		ttl = 50	ttl = 100
-> mainline        2267ms		2420ms		2316ms
-> commit          1992ms          1806ms          1998ms
-> 
-> case 4:
-> androbench has no improvment as well as regression which supposed to be
-> its test time is short which MGLRU hasn't take effect yet.
-> 
-> Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> ---
-> change of v2: calculate page's activity via helper function
-> change of v3: solve layer violation by move API into mm
-> change of v4: keep block clean by removing the page related API
-> change of v5: introduce the macros of bio_add_folio/page for read dir.
-> ---
-> ---
->  include/linux/act_ioprio.h  | 60 +++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/ioprio.h | 38 +++++++++++++++++++++++
->  mm/Kconfig                  |  8 +++++
->  3 files changed, 106 insertions(+)
->  create mode 100644 include/linux/act_ioprio.h
-> 
-> diff --git a/include/linux/act_ioprio.h b/include/linux/act_ioprio.h
-> new file mode 100644
-> index 000000000000..ca7309b85758
-> --- /dev/null
-> +++ b/include/linux/act_ioprio.h
-> @@ -0,0 +1,60 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _ACT_IOPRIO_H
-> +#define _ACT_IOPRIO_H
-> +
-> +#ifdef CONFIG_CONTENT_ACT_BASED_IOPRIO
-> +#include <linux/bio.h>
-> +
-> +static __maybe_unused
-> +bool act_bio_add_folio(struct bio *bio, struct folio *folio, size_t len,
-> +		size_t off)
-> +{
-> +	int class, level, hint, activity;
-> +	bool ret;
-> +
-> +	ret = bio_add_folio(bio, folio, len, off);
-> +	if (bio_op(bio) == REQ_OP_READ && ret) {
-> +		class = IOPRIO_PRIO_CLASS(bio->bi_ioprio);
-> +		level = IOPRIO_PRIO_LEVEL(bio->bi_ioprio);
-> +		hint = IOPRIO_PRIO_HINT(bio->bi_ioprio);
-> +		activity = IOPRIO_PRIO_ACTIVITY(bio->bi_ioprio);
-> +		activity += (activity < IOPRIO_NR_ACTIVITY &&
-> +				folio_test_workingset(folio)) ? 1 : 0;
-> +		if (activity >= bio->bi_vcnt / 2)
-> +			class = IOPRIO_CLASS_RT;
-> +		else if (activity >= bio->bi_vcnt / 4)
-> +			class = max(IOPRIO_PRIO_CLASS(get_current_ioprio()), IOPRIO_CLASS_BE);
-> +		activity = min(IOPRIO_NR_ACTIVITY - 1, activity);
-> +		bio->bi_ioprio = IOPRIO_PRIO_VALUE_ACTIVITY(class, level, hint, activity);
-> +	}
-> +	return ret;
-> +}
+Hello,
 
-Big non-inline functions in a header file... That is unusual, to say the least.
-So every FS that includes this will get its own copy of the binary for these
-functions. That is not exactly optimal.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+inconsistent lock state in simple_pin_fs
 
-> +
-> +static __maybe_unused
-> +int act_bio_add_page(struct bio *bio, struct page *page,
-> +		unsigned int len, unsigned int offset)
-> +{
-> +	int class, level, hint, activity;
-> +	int ret = 0;
-> +
-> +	ret = bio_add_page(bio, page, len, offset);
-> +	if (bio_op(bio) == REQ_OP_READ && ret > 0) {
-> +		class = IOPRIO_PRIO_CLASS(bio->bi_ioprio);
-> +		level = IOPRIO_PRIO_LEVEL(bio->bi_ioprio);
-> +		hint = IOPRIO_PRIO_HINT(bio->bi_ioprio);
-> +		activity = IOPRIO_PRIO_ACTIVITY(bio->bi_ioprio);
-> +		activity += (activity < IOPRIO_NR_ACTIVITY &&
-> +				PageWorkingset(page)) ? 1 : 0;
-> +		if (activity >= bio->bi_vcnt / 2)
-> +			class = IOPRIO_CLASS_RT;
-> +		else if (activity >= bio->bi_vcnt / 4)
-> +			class = max(IOPRIO_PRIO_CLASS(get_current_ioprio()), IOPRIO_CLASS_BE);
-> +		activity = min(IOPRIO_NR_ACTIVITY - 1, activity);
-> +		bio->bi_ioprio = IOPRIO_PRIO_VALUE_ACTIVITY(class, level, hint, activity);
-> +	}
-> +	return ret;
-> +}
-> +#define bio_add_folio(bio, folio, len, off)     act_bio_add_folio(bio, folio, len, off)
-> +#define bio_add_page(bio, page, len, offset)    act_bio_add_page(bio, page, len, offset)
+================================
+WARNING: inconsistent lock state
+6.8.0-rc2-syzkaller-g861c0981648f-dirty #0 Not tainted
+--------------------------------
+inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+kworker/u4:1/12 [HC0[0]:SC1[1]:HE1:SE0] takes:
+ffffffff8d38c8d8 (pin_fs_lock){+.?.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
+ffffffff8d38c8d8 (pin_fs_lock){+.?.}-{2:2}, at: simple_pin_fs+0x26/0x190 fs/libfs.c:978
+{SOFTIRQ-ON-W} state was registered at:
+  lock_acquire kernel/locking/lockdep.c:5754 [inline]
+  lock_acquire+0x1ae/0x520 kernel/locking/lockdep.c:5719
+  __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+  _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+  spin_lock include/linux/spinlock.h:351 [inline]
+  simple_pin_fs+0x26/0x190 fs/libfs.c:978
+  securityfs_create_dentry+0x74/0x4c0 security/inode.c:121
+  securityfs_create_file security/inode.c:204 [inline]
+  securityfs_init+0x9d/0x100 security/inode.c:345
+  do_one_initcall+0x11c/0x650 init/main.c:1236
+  do_initcall_level init/main.c:1298 [inline]
+  do_initcalls init/main.c:1314 [inline]
+  do_basic_setup init/main.c:1333 [inline]
+  kernel_init_freeable+0x687/0xc10 init/main.c:1551
+  kernel_init+0x1c/0x2a0 init/main.c:1441
+  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+irq event stamp: 4567394
+hardirqs last  enabled at (4567394): [<ffffffff8a91ffae>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
+hardirqs last  enabled at (4567394): [<ffffffff8a91ffae>] _raw_spin_unlock_irqrestore+0x4e/0x70 kernel/locking/spinlock.c:194
+hardirqs last disabled at (4567393): [<ffffffff8a91fd5e>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
+hardirqs last disabled at (4567393): [<ffffffff8a91fd5e>] _raw_spin_lock_irqsave+0x4e/0x50 kernel/locking/spinlock.c:162
+softirqs last  enabled at (4567282): [<ffffffff89e2f8fc>] spin_unlock_bh include/linux/spinlock.h:396 [inline]
+softirqs last  enabled at (4567282): [<ffffffff89e2f8fc>] cfg80211_inform_single_bss_frame_data+0x96c/0x12c0 net/wireless/scan.c:3039
+softirqs last disabled at (4567283): [<ffffffff814ff74a>] do_softirq kernel/softirq.c:454 [inline]
+softirqs last disabled at (4567283): [<ffffffff814ff74a>] do_softirq+0xaa/0xe0 kernel/softirq.c:441
 
-These functions are *NOT* part of the block layer. So please do not pretend they
-are. Why don't you simply write a function equivalent to what you have inside
-the "if" above and have the FS call that after bio_add_Page() ?
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-And I seriously doubt that all compilers will be happy with these macro names
-clashing with real function names...
+       CPU0
+       ----
+  lock(pin_fs_lock);
+  <Interrupt>
+    lock(pin_fs_lock);
 
-> +#endif
-> +#endif
-> diff --git a/include/uapi/linux/ioprio.h b/include/uapi/linux/ioprio.h
-> index bee2bdb0eedb..64cf5ff0ac5f 100644
-> --- a/include/uapi/linux/ioprio.h
-> +++ b/include/uapi/linux/ioprio.h
-> @@ -71,12 +71,24 @@ enum {
->   * class and level.
->   */
->  #define IOPRIO_HINT_SHIFT		IOPRIO_LEVEL_NR_BITS
-> +#ifdef CONFIG_CONTENT_ACT_BASED_IOPRIO
-> +#define IOPRIO_HINT_NR_BITS		3
-> +#else
->  #define IOPRIO_HINT_NR_BITS		10
-> +#endif
->  #define IOPRIO_NR_HINTS			(1 << IOPRIO_HINT_NR_BITS)
->  #define IOPRIO_HINT_MASK		(IOPRIO_NR_HINTS - 1)
->  #define IOPRIO_PRIO_HINT(ioprio)	\
->  	(((ioprio) >> IOPRIO_HINT_SHIFT) & IOPRIO_HINT_MASK)
->  
-> +#ifdef CONFIG_CONTENT_ACT_BASED_IOPRIO
-> +#define IOPRIO_ACTIVITY_SHIFT		(IOPRIO_HINT_NR_BITS + IOPRIO_LEVEL_NR_BITS)
-> +#define IOPRIO_ACTIVITY_NR_BITS		7
+ *** DEADLOCK ***
 
-I already told you that taking all the free hint bits for yourself, leaving no
-room fo future IO hints, is not nice. Do you really need 7 bits for your thing ?
-Why does the activity even need to be part of the IO priority ? From the rather
-short explanation in the commit message, it seems that activity should simply
-raise the priority (either class or level or both). I do not see why that
-activity number needs to be in the ioprio. Who in the kernel will look at it ?
-IO scheduler ? the storage device ?
+4 locks held by kworker/u4:1/12:
+ #0: ffff888013089938 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x789/0x15d0 kernel/workqueue.c:2608
+ #1: ffffc90000117d80 ((work_completion)(&rdev->wiphy_work)){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2609
+ #2: ffff88809d6f0768 (&rdev->wiphy.mtx){+.+.}-{3:3}, at: wiphy_lock include/net/cfg80211.h:5928 [inline]
+ #2: ffff88809d6f0768 (&rdev->wiphy.mtx){+.+.}-{3:3}, at: cfg80211_wiphy_work+0x2b/0x330 net/wireless/core.c:424
+ #3: ffffffff8d1acac0 (rcu_callback){....}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
+ #3: ffffffff8d1acac0 (rcu_callback){....}-{0:0}, at: rcu_do_batch kernel/rcu/tree.c:2184 [inline]
+ #3: ffffffff8d1acac0 (rcu_callback){....}-{0:0}, at: rcu_core+0x7bd/0x1680 kernel/rcu/tree.c:2465
 
-> +#define IOPRIO_NR_ACTIVITY		(1 << IOPRIO_ACTIVITY_NR_BITS)
-> +#define IOPRIO_ACTIVITY_MASK		(IOPRIO_NR_ACTIVITY - 1)
-> +#define IOPRIO_PRIO_ACTIVITY(ioprio)	\
-> +	(((ioprio) >> IOPRIO_ACTIVITY_SHIFT) & IOPRIO_ACTIVITY_MASK)
-> +#endif
->  /*
->   * I/O hints.
->   */
-> @@ -104,6 +116,7 @@ enum {
->  
->  #define IOPRIO_BAD_VALUE(val, max) ((val) < 0 || (val) >= (max))
->  
-> +#ifndef CONFIG_CONTENT_ACT_BASED_IOPRIO
->  /*
->   * Return an I/O priority value based on a class, a level and a hint.
->   */
-> @@ -123,5 +136,30 @@ static __always_inline __u16 ioprio_value(int prioclass, int priolevel,
->  	ioprio_value(prioclass, priolevel, IOPRIO_HINT_NONE)
->  #define IOPRIO_PRIO_VALUE_HINT(prioclass, priolevel, priohint)	\
->  	ioprio_value(prioclass, priolevel, priohint)
-> +#else
-> +/*
-> + * Return an I/O priority value based on a class, a level, a hint and
-> + * content's activities
-> + */
-> +static __always_inline __u16 ioprio_value(int prioclass, int priolevel,
-> +		int priohint, int activity)
-> +{
-> +	if (IOPRIO_BAD_VALUE(prioclass, IOPRIO_NR_CLASSES) ||
-> +			IOPRIO_BAD_VALUE(priolevel, IOPRIO_NR_LEVELS) ||
-> +			IOPRIO_BAD_VALUE(priohint, IOPRIO_NR_HINTS) ||
-> +			IOPRIO_BAD_VALUE(activity, IOPRIO_NR_ACTIVITY))
-> +		return IOPRIO_CLASS_INVALID << IOPRIO_CLASS_SHIFT;
->  
-> +	return (prioclass << IOPRIO_CLASS_SHIFT) |
-> +		(activity << IOPRIO_ACTIVITY_SHIFT) |
-> +		(priohint << IOPRIO_HINT_SHIFT) | priolevel;
-> +}
-> +
-> +#define IOPRIO_PRIO_VALUE(prioclass, priolevel)			\
-> +	ioprio_value(prioclass, priolevel, IOPRIO_HINT_NONE, 0)
-> +#define IOPRIO_PRIO_VALUE_HINT(prioclass, priolevel, priohint)	\
-> +	ioprio_value(prioclass, priolevel, priohint, 0)
-> +#define IOPRIO_PRIO_VALUE_ACTIVITY(prioclass, priolevel, priohint, activity)	\
-> +	ioprio_value(prioclass, priolevel, priohint, activity)
-> +#endif
->  #endif /* _UAPI_LINUX_IOPRIO_H */
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 264a2df5ecf5..e0e5a5a44ded 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1240,6 +1240,14 @@ config LRU_GEN_STATS
->  	  from evicted generations for debugging purpose.
->  
->  	  This option has a per-memcg and per-node memory overhead.
-> +
-> +config CONTENT_ACT_BASED_IOPRIO
-> +	bool "Enable content activity based ioprio"
-> +	depends on LRU_GEN
-> +	default n
-> +	help
-> +	  This item enable the feature of adjust bio's priority by
-> +	  calculating its content's activity.
->  # }
->  
->  config ARCH_SUPPORTS_PER_VMA_LOCK
+stack backtrace:
+CPU: 0 PID: 12 Comm: kworker/u4:1 Not tainted 6.8.0-rc2-syzkaller-g861c0981648f-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ print_usage_bug kernel/locking/lockdep.c:3971 [inline]
+ valid_state kernel/locking/lockdep.c:4013 [inline]
+ mark_lock_irq kernel/locking/lockdep.c:4216 [inline]
+ mark_lock+0x91a/0xc50 kernel/locking/lockdep.c:4678
+ mark_usage kernel/locking/lockdep.c:4567 [inline]
+ __lock_acquire+0x13f6/0x3b30 kernel/locking/lockdep.c:5091
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1ae/0x520 kernel/locking/lockdep.c:5719
+ __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+ _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+ spin_lock include/linux/spinlock.h:351 [inline]
+ simple_pin_fs+0x26/0x190 fs/libfs.c:978
+ debugfs_remove+0x4e/0x80 fs/debugfs/inode.c:811
+ blk_trace_free_rcu kernel/trace/blktrace.c:343 [inline]
+ blk_trace_rcu_free+0x57/0x150 kernel/trace/blktrace.c:403
+ rcu_do_batch kernel/rcu/tree.c:2190 [inline]
+ rcu_core+0x819/0x1680 kernel/rcu/tree.c:2465
+ __do_softirq+0x21a/0x8de kernel/softirq.c:553
+ do_softirq kernel/softirq.c:454 [inline]
+ do_softirq+0xaa/0xe0 kernel/softirq.c:441
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0xfc/0x120 kernel/softirq.c:381
+ spin_unlock_bh include/linux/spinlock.h:396 [inline]
+ cfg80211_inform_single_bss_frame_data+0x96c/0x12c0 net/wireless/scan.c:3039
+ cfg80211_inform_bss_frame_data+0x14c/0x350 net/wireless/scan.c:3068
+ ieee80211_bss_info_update+0x311/0xab0 net/mac80211/scan.c:226
+ ieee80211_rx_bss_info net/mac80211/ibss.c:1098 [inline]
+ ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1577 [inline]
+ ieee80211_ibss_rx_queued_mgmt+0x1973/0x30e0 net/mac80211/ibss.c:1604
+ ieee80211_iface_process_skb net/mac80211/iface.c:1589 [inline]
+ ieee80211_iface_work+0xa67/0xda0 net/mac80211/iface.c:1643
+ cfg80211_wiphy_work+0x24e/0x330 net/wireless/core.c:437
+ process_one_work+0x886/0x15d0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+ kthread+0x2c6/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+ </TASK>
+BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1578
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12, name: kworker/u4:1
+preempt_count: 101, expected: 0
+RCU nest depth: 0, expected: 0
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<0000000000000000>] 0x0
+CPU: 0 PID: 12 Comm: kworker/u4:1 Not tainted 6.8.0-rc2-syzkaller-g861c0981648f-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x125/0x1b0 lib/dump_stack.c:106
+ __might_resched+0x3c3/0x5e0 kernel/sched/core.c:10176
+ down_write+0x19/0x50 kernel/locking/rwsem.c:1578
+ inode_lock include/linux/fs.h:802 [inline]
+ simple_recursive_removal+0x171/0x850 fs/libfs.c:528
+ debugfs_remove+0x5d/0x80 fs/debugfs/inode.c:812
+ blk_trace_free_rcu kernel/trace/blktrace.c:343 [inline]
+ blk_trace_rcu_free+0x57/0x150 kernel/trace/blktrace.c:403
+ rcu_do_batch kernel/rcu/tree.c:2190 [inline]
+ rcu_core+0x819/0x1680 kernel/rcu/tree.c:2465
+ __do_softirq+0x21a/0x8de kernel/softirq.c:553
+ do_softirq kernel/softirq.c:454 [inline]
+ do_softirq+0xaa/0xe0 kernel/softirq.c:441
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0xfc/0x120 kernel/softirq.c:381
+ spin_unlock_bh include/linux/spinlock.h:396 [inline]
+ cfg80211_inform_single_bss_frame_data+0x96c/0x12c0 net/wireless/scan.c:3039
+ cfg80211_inform_bss_frame_data+0x14c/0x350 net/wireless/scan.c:3068
+ ieee80211_bss_info_update+0x311/0xab0 net/mac80211/scan.c:226
+ ieee80211_rx_bss_info net/mac80211/ibss.c:1098 [inline]
+ ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1577 [inline]
+ ieee80211_ibss_rx_queued_mgmt+0x1973/0x30e0 net/mac80211/ibss.c:1604
+ ieee80211_iface_process_skb net/mac80211/iface.c:1589 [inline]
+ ieee80211_iface_work+0xa67/0xda0 net/mac80211/iface.c:1643
+ cfg80211_wiphy_work+0x24e/0x330 net/wireless/core.c:437
+ process_one_work+0x886/0x15d0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b9/0x1290 kernel/workqueue.c:2787
+ kthread+0x2c6/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+ </TASK>
+BUG: scheduling while atomic: kworker/u4:1/12/0x00000102
+INFO: lockdep is turned off.
+Modules linked in:
+Preemption disabled at:
+[<0000000000000000>] 0x0
 
--- 
-Damien Le Moal
-Western Digital Research
+
+Tested on:
+
+commit:         861c0981 Merge tag 'jfs-6.8-rc3' of github.com:kleikam..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=13751c2fe80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b168fa511db3ca08
+dashboard link: https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15288adfe80000
 
