@@ -1,101 +1,70 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DECE67730;
-	Tue, 30 Jan 2024 11:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E96A67736
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706614803; cv=none; b=PUh4PKn1kJYRJuZX/ZFoqVCfSUtndSGqhs41KuBMuR7edjg3ig52cS1Ut45yJLlzRRUm3/KM08oTUJSV4B6GXJ/B2oQ3Tk1dY260ARNjH8JiAag7abSoA+9N8dEXa4XdYXgrolfp6ZNFdlv0blYM2iBuoAjcqrAbFyXBp2eb6oQ=
+	t=1706614866; cv=none; b=RUyschEP894RHnACdVIBlNcyg8mjKxctQx6c+xJSnlaMmMY/EzciNLpXOuAMGkR0RdGZNN3l3QGOmcr5IMK0jc0j7soBlRO+4z+k8a+tUyqtgteDfk0nnwUQrvdS87lLeGIr0q6fdAmlzsH+F7Vm85RLdVQFYmMX8lPnZGlPNXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706614803; c=relaxed/simple;
-	bh=QZi6hH3hCiwolBzzRH1I95c2gokGmaqMuHyc4kuOpDA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bvrfnm1T7rw+vYfGYNKSoKiFCBSKOToUJVU5Y5G90vJjUw7FgOcmxTO5ARet/3jMcs0juwf/IvKNq/pohDyU+J6277BDjJ4MJe0Cu2ZjZx8dVvjjZNnKsSsegbDZYDGN47c0WyDzmSdljl523JYTDP+9THrIdDtqxKaSy/owxqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-602cf7dfeb1so36658017b3.0;
-        Tue, 30 Jan 2024 03:40:02 -0800 (PST)
+	s=arc-20240116; t=1706614866; c=relaxed/simple;
+	bh=N8UXd0HU8Wyb0bjouFf34AqZvaGuo+t/lnNUTIkmuUA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=HTAOPsO+D1G8PjLKS1iP62w8M3xtpLmihWWAEwczNU+37FOmqq3aQ9IfitIr3hI939QX97QLN8ixnp1ePbr7CRshAVjYZcE8m7zzTvODsHMA6RUnIPx+TjEmV+QlEJOu8qLJkOz74v6emb+FJEUOZQYoIV3XYPh6E5Z4LRrKFaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-363827f3e55so11289435ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 03:41:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706614801; x=1707219601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zZlJC9u1HnC8q9K+3pMnjJXJAMpe7B2980by2Js6G+M=;
-        b=EJ8D2kGZIdQS4cxSVJK1JXMzs0wRRUh/jnw7MQ02SClj96o6XzAD/tX646VLEntzw7
-         j/ZOWrKq+rkthtieY0NP1knmUjBcVEeT1D0kXgzc/fA3Oor1HvP63fLxgeyazp8Kaqx1
-         e+yu74pjPsMgnTZdIfJSR8Jza8ZZAm6lSh4XhK015FL6vY8YJdzGdQUiKCr8WEJaA9yA
-         p3dWmrzQsEQxRwbpN/E2nVL6jVu6ujoeDG1Qsh65QJNnQvn0gyBc4MKQGUtxghra015a
-         eVfzcOyTw4XBHUXUCuvVe4LcnvTL75itvnQ9mqiwb6qGxKrFyniQyxORTR3vey9kuW5z
-         g/Pg==
-X-Gm-Message-State: AOJu0YwoimrD5T00FDlYJ5ON9Q1p67WdKkPL9LK4uUhHduPWEcDTr4HL
-	0ZvlADu44xKhcx/H4hFQEpUAQ4Jhfin5DzD46PLOpTUSJxPPE2gmg6XcOkZY7wg=
-X-Google-Smtp-Source: AGHT+IEoWmE+U3Rh9KZsPcID17g8PAwntMd/z1cKsI5vB7fXdUxMonfFVaDauymTTY3ZC4yaSNEMBA==
-X-Received: by 2002:a0d:d691:0:b0:600:3cf0:955f with SMTP id y139-20020a0dd691000000b006003cf0955fmr5456111ywd.43.1706614800844;
-        Tue, 30 Jan 2024 03:40:00 -0800 (PST)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id gq7-20020a05690c444700b006029b98821csm3095188ywb.3.2024.01.30.03.40.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 03:40:00 -0800 (PST)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5ff7a8b5e61so36013147b3.2;
-        Tue, 30 Jan 2024 03:40:00 -0800 (PST)
-X-Received: by 2002:a81:490f:0:b0:5ff:81bb:8135 with SMTP id
- w15-20020a81490f000000b005ff81bb8135mr5960801ywa.32.1706614800402; Tue, 30
- Jan 2024 03:40:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706614864; x=1707219664;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VMK2ZZYzp1i2IvP4Mygra1dJ946G5400ecODPcHRHo8=;
+        b=bKDItY9t1ofop90izU6u1drHpLtUxoCfyW6nRT0S2mKr/61j0U6ghWW/7+Zbyt0Q38
+         BUo9WL3B/2nTlWC1qQLErJRAtR8dRZIEjRd/kauAMJYd9TloFIFjZRaBX9iUpcQhl5n2
+         +THF42il7QXRGHUOi1E7U6ZNGuRCigU5LQs36qiy9UMfNx9UpHPwqBapajPNS0T0i4st
+         ivJs7auP+oilhM7IusKyiODuRkXRlk3DyzkuXsCp377bt/xK3Blx4WjwW12jVRYakZfw
+         rkyYJWfniL+UAaj/zjk1WFxxUPO7dbYEZvvMjUecyKYFNJtuvsslZOhHvpzHWdIaYCIJ
+         j8xw==
+X-Gm-Message-State: AOJu0YzdeD9w6PdK6wMKkengEUrU7kiQYA2sXSJFsuGe9pkLwUPI7YUc
+	pDT/ta7IfjjNGxGDWmN7DPeJLhiaSUoy6i5QkzWLTYgFTlIz03gT0DoGPptBb+MrubiA33qUIHe
+	TgJLJx2wetGadzrtl291wB4rWvqXdwiAsp8Yw1/fXoLFEj+30nEXU2YQ=
+X-Google-Smtp-Source: AGHT+IER73NT/AuOjF5IYW+0LiPfUNwY88jBROVrxUOes1N0ClbMt1HvsvXEv7KCcCJ85yX4RP6HvNj09FoBJqVw2mBkrx0JdOrB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130094053.10672-1-wsa+renesas@sang-engineering.com>
- <CAMuHMdUMeHCCiAkNyJMHTGUSTqewt=AWPUy+beA_kR26vcS8_Q@mail.gmail.com> <Zbjc_p_Pin7TAHw4@ninjato>
-In-Reply-To: <Zbjc_p_Pin7TAHw4@ninjato>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 12:39:49 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVBXXpv9QfttBETQAeeRQjWRvfVJnrpPNiQj-N1SB9GQw@mail.gmail.com>
-Message-ID: <CAMuHMdVBXXpv9QfttBETQAeeRQjWRvfVJnrpPNiQj-N1SB9GQw@mail.gmail.com>
-Subject: Re: [PATCH] spi: sh-msiof: avoid integer overflow in constants
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6e02:1747:b0:35f:c187:ea04 with SMTP id
+ y7-20020a056e02174700b0035fc187ea04mr1043019ill.3.1706614864258; Tue, 30 Jan
+ 2024 03:41:04 -0800 (PST)
+Date: Tue, 30 Jan 2024 03:41:04 -0800
+In-Reply-To: <tencent_185DA85DAC9919CFF40D99A5F00DFA121507@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c0afd80610283ca6@google.com>
+Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
+From: syzbot <syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Wolfram,
+Hello,
 
-On Tue, Jan 30, 2024 at 12:26=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > What about unifying the individual SIFCTR_?FWM_[0-9]* definitions
-> > into SIFCTR_xFWM_[0-9]* instead, and using the bitfield helpers in its
-> > sole user?
->
-> But they don't match, so we can't unify them?
->
-> #define SIFCTR_TFWM_1           (7UL << 29)     /*  Transfer Request when=
- 1 empty stage */
->
-> vs
->
-> #define SIFCTR_RFWM_1           (0 << 13)       /*  Transfer Request when=
- 1 valid stages */
->
-> Also, the steps don't match (1, 4, 8, 12..) vs (1, 4, 8, 16...).
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-I stand corrected...
+Reported-and-tested-by: syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com
 
-/me looks envious for a brown paper bag...
+Tested on:
 
-Gr{oetje,eeting}s,
+commit:         861c0981 Merge tag 'jfs-6.8-rc3' of github.com:kleikam..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=1742ec47e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b168fa511db3ca08
+dashboard link: https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16171997e80000
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Note: testing is done by a robot and is best-effort only.
