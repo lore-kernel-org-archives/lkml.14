@@ -1,145 +1,186 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A786605B2
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C2958AB8
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706605915; cv=none; b=PSq7JZcW3ff0/02ZrOvPzyyr9NRiY558drMn3AfzbaAsfjqnoQ1iJYQPAwRFXzLWrY+LpeqYrjC//62VvjZJ3Vr1lSloBkrwTG2it31UoiyW1n8g9HhmIpP0hUIUaoUW+5MyvBDbYj8yZ2IW+tjS+2dRWl7n/7wn0lPbV0cCq2Y=
+	t=1706605928; cv=none; b=FeuwaDCNwDHr3OJHfsGzxXyPX+qUoOhP0KfTPdX/vRel9G1OnK5hrYRCl9D4u03D4CpQrPM606BGzf+oemTJ5VFnXNNTi32PPC0EIaXlpzfzFyh9XanYmn5W75QL7u+SjDMaPkEnUvPc0X6TMdr2S052dsUw3XwReVLixoly3co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706605915; c=relaxed/simple;
-	bh=mg13l6GoIYbaIsT206+Ed4s9MWuDP+u3gPMxCKTqenA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mAZgD7nuKPfil4LyxZTbY3J5PXfrnFTfMsR1ndRBx+7/67xFtvU7wtPkmBdvLbRXaeQOkq7lSrNTayv5tePgEQDvbSZEnAOvv8epMQAKcOrNYo8rwAUw6HCxk1422f/7h+wPjKUwlfk5HjaSFw7C14zPx2uKXRwY588lM6iKt0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rNwNUHtP; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706605928; c=relaxed/simple;
+	bh=vZlHem6hzuG3LFpthbRM+SoNrdspQpN3rAyWGZtr6Is=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sR9H6pPamra10s8ezqaZNGMbN0kPM15Rl3T9DfdGlBT8NxceORfcKMewYlIGuITWZHoHY5QtToFq1OdKLbwfWt93pTWAMMVJ+iJOVqLqZah1o+sFPB/UChxovIq0q1/9PHg09G507VMTz7zf2JYw1zDiaSpA7d34p9gX2LlkxhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=V9gbwDs+; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rNwNUHtP"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so688344866b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:11:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="V9gbwDs+"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc261316b0dso3182140276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:12:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706605911; x=1707210711; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P0uzspMxyTAe1K1El4yqw3UnGLBxlhUfh6vxmuD6SvI=;
-        b=rNwNUHtPt5sl998s0l65eQmK0XyBmwRtK3J9yrLWt+za4NqWmwxlrF0SPArOr3uC/P
-         GkYsEAGM/iSn3EEwAk1ZRhFIjn23Kh+w6WfRwI3BmwDouMK3F8qClM/yEtTd+EXbvG2j
-         ZnMGSWO9qW/QT0KPuU0koS6FQWD2+LID2RoGFnNHYzn1iYujzkd9VN7IxSYUfv2Cbt6G
-         pn+CAS5mb7ui0nQ01woeOp8xf5bY+C1LZXstUiaNvrW/VrGGuwnKLDwWt+NujDlpi7N/
-         OEZjHmEoPkbryBhaYVvVnm1kBaXZcwDolk5pAGaGPB2W38BKZ94KoHcB6gvuC6FSPtHP
-         CePg==
+        d=amarulasolutions.com; s=google; t=1706605926; x=1707210726; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UjMzYiCsE7PaNmy35UnbQyvsqa5heiYDi1xRNMyjnas=;
+        b=V9gbwDs+MRG/9Dmz3S1zl7jiwZtgiSowRAkiweiAwpnqrXJSeu5l/GKYJLhYXmeIf/
+         ufR/Deho1nkNTNMNO3giicpJJC+Kn+4SwXt3g6d6uVn2iitVWQ50OZtsXxZyNCFAgqTy
+         nXa2nAPsxILUv7/32uymRpR9fvcotmFTKm/fs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706605911; x=1707210711;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P0uzspMxyTAe1K1El4yqw3UnGLBxlhUfh6vxmuD6SvI=;
-        b=jMWKieZF2h3Uwb3+XMH8+iNM3DYrU1yigIgUg2OSEt1kgPw+nZaQJ/JA5+vN2Hrp/7
-         A1Icdo7+NOsuLagZ7qE4P0PXxpYbVqUxLEs2RW6eTWXGLRk1P95L50WtLQbfTXlX8MDX
-         Xxb2IceLUhBauLSBeQuB9Q4wmqLoHS1bPP8/cMcn739+zK2/d1f2r4j/C8h8KA2bVEN6
-         dWx64stWpBrhZEWQNW7Pz8lQBIxT/K2sWDm84+R7FLRK/CtYwof3IaNGNTeunPJWvJ3r
-         wHJcY4mcYPtFk5Jmf3nSRZSJrnpO4SyOpHLNSMB3nVobp/fxMDNDlHtWRJ0CcIwf12N8
-         6kQw==
-X-Gm-Message-State: AOJu0YzuYokPTOiEHN5hlUECGUhraMzFb/sMv/7wpSSJ5A2BZod+EofW
-	GEcMUnlZ19VY1zqFZHsHfTBy6tRRpiekh6iO0ZuobNXL70gRyOP0E0QUafPSPMc=
-X-Google-Smtp-Source: AGHT+IHY75lv43WV7NtMQ5xrm3xMVd5ZHPUbyq3NYqVsdgPeWfMSMy1jjyvDwAwa/OPcCY10VkSgAg==
-X-Received: by 2002:a17:907:a091:b0:a36:416:a365 with SMTP id hu17-20020a170907a09100b00a360416a365mr736648ejc.5.1706605911217;
-        Tue, 30 Jan 2024 01:11:51 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id ss6-20020a170907c00600b00a3535b76c42sm3958064ejc.15.2024.01.30.01.11.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 01:11:50 -0800 (PST)
-Message-ID: <354b72d7-ea53-4686-bfa6-023c632d8edd@linaro.org>
-Date: Tue, 30 Jan 2024 09:11:48 +0000
+        d=1e100.net; s=20230601; t=1706605926; x=1707210726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UjMzYiCsE7PaNmy35UnbQyvsqa5heiYDi1xRNMyjnas=;
+        b=f2zlBNIe4Kb4Q9NgzEM9HOnhFjUguUjPgIoPy9/s7Ds6eZh3rfFqIYFSMRf1y7vdZ8
+         XXpBngCGWVGAMe4KSmuqzycYbaFLM3zygL01rHHvFw/k9pfCEY36JW1kZO1N4KH9Bz0n
+         pXRqCvuWOBkul/Dr5Gf89FSMJeufE2wofB3JVhGaVhqPtWtezPIleyxq8pOjPNrvd7Eo
+         FDEB6MWvDfeLjZGzPtKJ1RoomI+CicQC8U9s++5OvdOJuQOxOLibqQln2VItTdluNTzn
+         OLElJq3Rxk+6/pSLuxQJLpcl8XHpaR+ccz4BTYbE5wHuaFWn/FIvCTPSLIOwGPrzd3BV
+         wVfg==
+X-Gm-Message-State: AOJu0YxzohqWEgzydAby+t3w4kXYuoAckt2DAE3WdF5F1ZoBtVRZDV/j
+	yVXs3xKl/qQCO2dEETV+D8tf/tdacu4PA1bJlD/filLk3lFlWY2w93/xFASF9k8TkaDB/pYpjFp
+	JJHSFUaTRoEsSLDumMXAPnqiMzLPs002j8AD5CA==
+X-Google-Smtp-Source: AGHT+IE1Xtyo447bABZUIXxJVEHr3YoCy1sd7si+1fdu6stw64epBG2GA9tH9vg6XiVGO8+8xyGxBj+g/74LPW1Euz8=
+X-Received: by 2002:a25:854b:0:b0:dc2:3608:2b24 with SMTP id
+ f11-20020a25854b000000b00dc236082b24mr4210395ybn.25.1706605926248; Tue, 30
+ Jan 2024 01:12:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] arm64: dts: exynos: gs101: define USI12 with I2C
- configuration
-Content-Language: en-US
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
- willmcvicker@google.com, semen.protsenko@linaro.org,
- alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com,
- cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240129174703.1175426-1-andre.draszik@linaro.org>
- <20240129174703.1175426-7-andre.draszik@linaro.org>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240129174703.1175426-7-andre.draszik@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20231113164344.1612602-1-mwalle@kernel.org> <631fe35a2a3b00781231e4f3f5094fae@kernel.org>
+ <1ef3dad2-5f55-40e5-bba7-3c71d71c12e4@kontron.de> <CAAQKjZMccDwa63_PNJCP0rNOaHjTwcOz8AbKa=JXLQi-b0QVVw@mail.gmail.com>
+ <2400535875c353ff7208be2d86d4556f@kernel.org> <ZZ1BBO2nNSp3g-gT@phenom.ffwll.local>
+ <CAAQKjZNnJQDn_r1+WNmsxM-2O48O0+yWAUAqpjZRjMYMT3xGwg@mail.gmail.com>
+ <CAPM=9tytMB9frxNeD08hu1qsusY=wEE3bJOFmUgA1rSpabwDpg@mail.gmail.com>
+ <b18d88302acfca001a6693d78909bc2a@kernel.org> <31e1a38a1d012a32d6f7bc8372b6360e@kernel.org>
+In-Reply-To: <31e1a38a1d012a32d6f7bc8372b6360e@kernel.org>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Tue, 30 Jan 2024 10:11:55 +0100
+Message-ID: <CABGWkvp5Xx61h+sfKotb=jsQE3jPXP0bJfTtb1k9_OCH-TzTvQ@mail.gmail.com>
+Subject: Re: [PATCH] drm: bridge: samsung-dsim: Don't use FORCE_STOP_STATE
+To: Michael Walle <mwalle@kernel.org>
+Cc: Dave Airlie <airlied@gmail.com>, Dmitry Osipenko <dmitry.osipenko@collabora.com>, 
+	Inki Dae <daeinki@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Robert Foss <rfoss@kernel.org>, 
+	Frieder Schrempf <frieder.schrempf@kontron.de>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Tim Harvey <tharvey@gateworks.com>, Alexander Stein <alexander.stein@ew.tq-group.com>, 
+	linux-kernel@vger.kernel.org, 
+	DRI mailing list <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>, 
+	Michael Trimarchi <michael@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Michael,
 
-
-On 1/29/24 17:46, André Draszik wrote:
-> On the gs101-oriole board, i2c bus 12 has various USB-related
-> controllers attached to it.
-> 
-> Note the selection of the USI protocol is intentionally left for the
-> board dts file.
-> 
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
-> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-
-> 
-> ---
-> v2:
-> * reorder pinctrl-0 & pinctrl-names
-> * collect Reviewed-by: tags
-> ---
->  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 30 ++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> index e1bcf490309a..9876ecae0ad8 100644
-> --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> @@ -451,6 +451,36 @@ pinctrl_peric1: pinctrl@10c40000 {
->  			interrupts = <GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH 0>;
->  		};
->  
-> +		usi12: usi@10d500c0 {
-> +			compatible = "google,gs101-usi",
-> +				     "samsung,exynos850-usi";
-> +			reg = <0x10d500c0 0x20>;
-> +			ranges;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			clocks = <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_5>,
-> +				 <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_5>;
-> +			clock-names = "pclk", "ipclk";
-> +			samsung,sysreg = <&sysreg_peric1 0x1010>;
-> +			samsung,mode = <USI_V2_NONE>;
-> +			status = "disabled";
+On Mon, Jan 29, 2024 at 5:06=E2=80=AFPM Michael Walle <mwalle@kernel.org> w=
+rote:
+>
+> >> Just FYI this conflictted pretty heavily with drm-misc-next changes in
+> >> the same area, someone should check drm-tip has the correct
+> >> resolution, I'm not really sure what is definitely should be.
+> >
+> > FWIW, this looks rather messy now. The drm-tip doesn't build.
+> >
+> > There was a new call to samsung_dsim_set_stop_state() introduced
+> > in commit b2fe2292624ac (drm: bridge: samsung-dsim: enter display
+> > mode in the enable() callback).
+>
+> I had a closer look at the latest linux-next (where somehow my patch
+> made it into) and tried to apply commit b2fe2292624ac (drm: bridge:
+> samsung-dsim: enter display mode in the enable() callback). It looks
+> like only the following hunk is still needed from that patch. Everything
+> else is covered by this fixes patch.
+>
+> Dario, could you rebase your commit onto this patch? I had a quick test
+> with this change and it seems to work fine for our case.
+>
+> --snip--
+> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c
+> b/drivers/gpu/drm/bridge/samsung-dsim.c
+> index 63a1a0c88be4..92755c90e7d2 100644
+> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> @@ -1498,6 +1498,8 @@ static void samsung_dsim_atomic_disable(struct
+> drm_bridge *bridge,
+>          if (!(dsi->state & DSIM_STATE_ENABLED))
+>                  return;
+>
+> +       samsung_dsim_set_display_enable(dsi, false);
 > +
-> +			hsi2c_12: i2c@10d50000 {
-> +				compatible = "google,gs101-hsi2c",
-> +					     "samsung,exynosautov9-hsi2c";
-> +				reg = <0x10d50000 0xc0>;
-> +				interrupts = <GIC_SPI 655 IRQ_TYPE_LEVEL_HIGH 0>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				pinctrl-0 = <&hsi2c12_bus>;
-> +				pinctrl-names = "default";
-> +				clocks = <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_IPCLK_5>,
-> +					 <&cmu_peric1 CLK_GOUT_PERIC1_PERIC1_TOP0_PCLK_5>;
-> +				clock-names = "hsi2c", "hsi2c_pclk";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->  		pinctrl_hsi1: pinctrl@11840000 {
->  			compatible = "google,gs101-pinctrl";
->  			reg = <0x11840000 0x00001000>;
+>          dsi->state &=3D ~DSIM_STATE_VIDOUT_AVAILABLE;
+>   }
+>
+> @@ -1506,8 +1508,6 @@ static void
+> samsung_dsim_atomic_post_disable(struct drm_bridge *bridge,
+>   {
+>          struct samsung_dsim *dsi =3D bridge_to_dsi(bridge);
+>
+> -       samsung_dsim_set_display_enable(dsi, false);
+> -
+>          dsi->state &=3D ~DSIM_STATE_ENABLED;
+>          pm_runtime_put_sync(dsi->dev);
+>   }
+> --snip--
+>
+> -michael
+
+I'm sorry, but I didn't understand well what I have to do.
+This is what I have done:
+
+git clone https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/lin=
+ux-next.git
+cd linux-next
+# add your changes, the ones of the emails
+git am --reject 0001-drm-bridge-samsung-dsim-enter-display-mode-in-the-en.p=
+atch
+
+diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c
+b/drivers/gpu/drm/bridge/samsung-dsim.c
+index 92755c90e7d2..b47929072583 100644
+--- a/drivers/gpu/drm/bridge/samsung-dsim.c
++++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+@@ -1508,6 +1508,9 @@ static void
+samsung_dsim_atomic_post_disable(struct drm_bridge *bridge,
+ {
+        struct samsung_dsim *dsi =3D bridge_to_dsi(bridge);
+
++       if (!samsung_dsim_hw_is_exynos(dsi->plat_data->hw_type))
++               samsung_dsim_set_stop_state(dsi, true);
++
+        dsi->state &=3D ~DSIM_STATE_ENABLED;
+        pm_runtime_put_sync(dsi->dev);
+ }
+
+And then test the driver for my use case.
+
+Is everything I wrote correct, or am I making a mistake?
+
+Thanks and regards,
+Dario
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
