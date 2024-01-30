@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297D7823A7;
-	Tue, 30 Jan 2024 15:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD8A81AD7;
+	Tue, 30 Jan 2024 15:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706628057; cv=none; b=qhaC8A5reUIOYa6xVhrfFeXdeCz4xq8YS1ze8piH68xutmvLS6av/Jjg161h/68ARcQLy9+C5rZdufBWI8Qlm9vC21iAnGZSTulQ3r1E3x9Mx4+YdoC2W/iBjd57S5I3ioDVC+wQxoHcrh25GCjS0FO4Wp3aFdylMG2JW4TYK40=
+	t=1706628057; cv=none; b=jYI4kA3mLV38pbLSNK4GaURM0zMp1y+S/jOaO1W9GsCEcDOgeXuUymOlU+HOIke2QQxM2OVyHDEpv/tn+XFU4dqiGW7uROBaO1AaDALHMZXH1Gdo3SHdH1zPywrQYm3KQIw+sp3fkjOpOqnaufjv9Tie/is+OSQYsjP8p7aBKe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706628057; c=relaxed/simple;
-	bh=msQVr9s6HrHM8DrJhHCwrIGkygPIMMpIFB46gjE9M7I=;
+	bh=urKbjaUWgGpmRsfGLlhmq0QU5w9x/bMdWCZ0Tma4ii8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WlNSD2OeVGhwaaVrMNqGiaDe5jbrjovPxiQvkwjZRImHhWNA+K6qlVP+3Qh1CM4ON+HFMIpOW+EkCv/VZ8fhWPrmce5Wn4stz8R4yy2Dr7enNUSuupE8CYdZm9tpDJ9UsZtONGhqrQUcOJlPiMvxTKpanyPV/z6dFpn742sYvEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1T1xXnu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GETddBcNrkwSd/fuMvudKEgc+g+NJ0sTlk6U69jQRJtKogOOnr3u2ZHyqfefJkpZb8Dpe4+HVXqc9ZCKuQhRNfaQfhni98dFgHlhV2QY553P/E2yvWwRFuPPRh//Sz19iV8e6DCUzqgh1uOk7rB7gV6FNb0DJd10nJVYFxiUzhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvo9wbGt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1T1xXnu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D6E4CC32784;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvo9wbGt"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9A2E8C4166D;
 	Tue, 30 Jan 2024 15:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706628056;
-	bh=msQVr9s6HrHM8DrJhHCwrIGkygPIMMpIFB46gjE9M7I=;
+	bh=urKbjaUWgGpmRsfGLlhmq0QU5w9x/bMdWCZ0Tma4ii8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=f1T1xXnuyntf6lbjXWmD3EfOcH8jNnOj8RKAZpmq7UgywGXy55t5iCvdoQ6ey6vY/
-	 WGslurVgvvN72SIiXDj1x/UWEEHCkmGoEQACKU18OEX+2wL8e8HTe+QmYlmukURXMb
-	 ScEbKc44Rkp3m1u5Tc2JtSO0SOF5j28Kwk3iZA8rlgO8+QnZ0WEtRUMu1MvTJOUFhB
-	 HxTnJi4lrw3NlWWEsciwiPeYItBorKXzsFJzt8uv1J1TpZQdTj8slkDc+W4vG6F+ng
-	 Nur2HDvdCljIBIbPr+Vo2xJvn9Tv0MS8qZ/7SzyFKElU/cY4zbtR7rS0xQanEVyvaJ
-	 LTJ/3AzVWMVCA==
+	b=nvo9wbGtpPPiUFswiARBXPIMBmrsH4GtX+buA4eMja60CSVG0YFy7wzkyqCK+1lwE
+	 +GDmaekusoIeXUyjVTtPF8HKw5XHT5OiDz2hTOgZfPvsFMYkFdXRhO/ZXopAd5cvb6
+	 BvEFDHZzLivMqZtv7yYaBxVPNpWWVt2sNiDBTKbCs+x9ap75hwdcUGJHdaz2yPeglL
+	 8p1i2pmI9whdRltCi9O6RbfLV+wivSbfxBTrAxhAx0uysk0kx7g2djgr50ZFYjG/dk
+	 az/oNK2QeW8qZTctxe9bBs7ne6JwusuF8h9N1RyuOx8pj9b3GE83HmRNIsA9Nj6qDU
+	 m8qKCzHT+udEA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C589AC4828C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80965C48286;
 	Tue, 30 Jan 2024 15:20:56 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Tue, 30 Jan 2024 18:20:52 +0300
-Subject: [PATCH net-next v2 6/7] net: dsa: mt7530: correct port
- capabilities of MT7988
+Date: Tue, 30 Jan 2024 18:20:48 +0300
+Subject: [PATCH net-next v2 2/7] net: dsa: mt7530: call port 6 setup from
+ mt7530_mac_config()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240130-for-netnext-mt7530-improvements-2-v2-6-ba06f5dd9eb0@arinc9.com>
+ <20240130-for-netnext-mt7530-improvements-2-v2-2-ba06f5dd9eb0@arinc9.com>
 References:
  <20240130-for-netnext-mt7530-improvements-2-v2-0-ba06f5dd9eb0@arinc9.com>
 In-Reply-To:
@@ -63,11 +63,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706628055; l=1084;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706628055; l=2415;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=qgwVD3oCKv9eQ/3EPjjXtTaWHDhG5bpqRvc5PpGf3Uo=;
- b=K7aHXOw0xi1WQgkCS+NjcDvUcJ0R9W8AM7wckWoXDNIHYTBW7O+nQEi4iDULhCZxa663+isa4
- nNmjq64fz3KDUdT2HgEIrYFNX6K72quW8PjaEya2/J/cIeXB1puHtBG
+ bh=B4ubcnj0kkoG/x10O/6vsrHgrghUPFvE8EQyfqv241o=;
+ b=wbVqdldAsfM1ptedSTSHFLY6w81KMOBuljiOmmDQyRJy/pjSzp6o5mguOME2GA37HmfLIWlAe
+ klPsSsrP+JxAXUjsWpyjZnLc2kF0D2prDTdf1Y+kkIVCWzCLSam++eq
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -77,33 +77,86 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-On the switch on the MT7988 SoC, as shown in Block Diagram 8.1.1.3 on page
-125 of "MT7988A Wi-Fi 7 Generation Router Platform: Datasheet (Open
-Version) v0.1", there are only 4 PHYs. That's port 0 to 3. Set the case for
-ports which connect to switch PHYs to '0 ... 3'.
+mt7530_pad_clk_setup() is called if port 6 is enabled. It used to do more
+things than setting up port 6. That part was moved to more appropriate
+locations, mt7530_setup() and mt7530_pll_setup().
 
-Port 4 and 5 are not used at all in this design.
+Now that all it does is set up port 6, rename it to mt7530_setup_port6(),
+and move it to a more appropriate location, under mt7530_mac_config().
 
-Link: https://wiki.banana-pi.org/Banana_Pi_BPI-R4#Documents [1]
+Leave an empty mt7530_pad_clk_setup() to satisfy the pad_setup function
+pointer.
+
+This is the code path for setting up the ports before:
+
+mt753x_phylink_mac_config()
+-> mt753x_mac_config()
+   -> mt7530_mac_config()
+      -> mt7530_setup_port5()
+-> mt753x_pad_setup()
+   -> mt7530_pad_clk_setup()
+
+This is after:
+
+mt753x_phylink_mac_config()
+-> mt753x_mac_config()
+   -> mt7530_mac_config()
+      -> mt7530_setup_port5()
+      -> mt7530_setup_port6()
+
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Acked-by: Daniel Golle <daniel@makrotopia.org>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/mt7530.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/mt7530.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 36dc2bbcf3b6..638cd3f2a495 100644
+index 330e22abc076..2d468a5f2e70 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -2577,7 +2577,7 @@ static void mt7988_mac_port_get_caps(struct dsa_switch *ds, int port,
+@@ -415,7 +415,7 @@ mt753x_preferred_default_local_cpu_port(struct dsa_switch *ds)
  
- 	switch (port) {
- 	/* Ports which are connected to switch PHYs. There is no MII pinout. */
--	case 0 ... 4:
-+	case 0 ... 3:
- 		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
- 			  config->supported_interfaces);
- 		break;
+ /* Setup port 6 interface mode and TRGMII TX circuit */
+ static int
+-mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
++mt7530_setup_port6(struct dsa_switch *ds, phy_interface_t interface)
+ {
+ 	struct mt7530_priv *priv = ds->priv;
+ 	u32 ncpo1, ssc_delta, trgint, xtal;
+@@ -487,6 +487,12 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
+ 	return 0;
+ }
+ 
++static int
++mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
++{
++	return 0;
++}
++
+ static int
+ mt7531_pad_setup(struct dsa_switch *ds, phy_interface_t interface)
+ {
+@@ -2624,12 +2630,15 @@ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		  phy_interface_t interface)
+ {
+ 	struct mt7530_priv *priv = ds->priv;
++	int ret;
+ 
+-	/* Only need to setup port5. */
+-	if (port != 5)
+-		return 0;
+-
+-	mt7530_setup_port5(priv->ds, interface);
++	if (port == 5) {
++		mt7530_setup_port5(priv->ds, interface);
++	} else if (port == 6) {
++		ret = mt7530_setup_port6(priv->ds, interface);
++		if (ret)
++			return ret;
++	}
+ 
+ 	return 0;
+ }
 
 -- 
 2.40.1
