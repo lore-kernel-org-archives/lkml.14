@@ -1,68 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD79A67729
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B422467E67
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706614518; cv=none; b=hftZuwvSOJd8pJAO9ATH/Ed0mT5IjLy9lrAKOC4ks4NMasbxTEHllritl3Pi63O5/DK0JYpU/7VijQWPN0lB9cpNogjB7UwPeWiwYbM4l91O4bRa2RQt3WK2n7PTonCo8vH+c+l1KT+tu87hjNoqzC+Har9E3sbwdWfTWiJ1Rpo=
+	t=1706614533; cv=none; b=qclYaeZtMtYtjt9l6eQCEe4SXZPvyn2wGXNVwrHdoGpkAHtytwwfiZuKDw4poBfbRKud9ZG223ifhy8yTCgBxFXg+0bW3MOW00R6YSEjyo2Y1QhMpCYELEzpV+2sRVOVL1pZOBzPbGr4NfEPjQZISqpUrsvxgyX4pIJajary5qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706614518; c=relaxed/simple;
-	bh=qqxjh81NRRMyKVrTNcIoz7Y+jhPc6WPwBiL26RCpQ8o=;
+	s=arc-20240116; t=1706614533; c=relaxed/simple;
+	bh=Q/f//XJ6fy4wyrAGJAV8Dy5IkrAkQvtOVKgQ73Vg/Xc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1YGzTtx2Ep46JdcnwNNcO29U8UD+l5q4PxBHTEMsf+iCi7OwuYuOF2aKCDZ5d8eyUX2vnfr8LSb/rmnyaK29Zn9G8Xj4xyAiIQSVXnXUs8HYQMgQcnx+M18x8aDnLmgfEIMEK1tcW9LT8C0T2O9Ws63h9ZnfcYqKPBgWWZpy84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a5ML3lA+; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFerAN2f+7cC1LYshjHlSqqieUrhQIQ6YfK8BZLoIE62NvTizCIQw4QnGdpbIZ5HwQuC+GTx7SSCq7eR8rLz87hPJqXR1UNkJqwh+OzppD+PN4rEOzaMw9Xq7xldBzc/e0wRx9cq+mTx/nGzxZzV01pqcwbTYNRRRg7Yt1u9kO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AVqu4n7c; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5ML3lA+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AVqu4n7c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706614515;
+	s=mimecast20190719; t=1706614530;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kR0xiXlTgctwy0ZOXXh3w90idhtmWLxzB6iSAte8Lhs=;
-	b=a5ML3lA+dhi2tBmqF9rvQVOVhDDhszhutvUIY9vpdmDeiWzRfD5DcSZ8aZGGL5Y9BNA08c
-	9rHQ615vD/OUkBE6LhPimI6r9C4nBWTgYL5ItRklkJnhMPqfJkRiDzuA96Tn3o1UP7ZDbF
-	MylLj8zgoW/0bbHkmclJ4BLqhphe6E8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-672-6-0lTcvCMgW8wdlU2BLhIA-1; Tue,
- 30 Jan 2024 06:35:10 -0500
-X-MC-Unique: 6-0lTcvCMgW8wdlU2BLhIA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	bh=epNqACiBPMhuK7yMEN8O8JZQN8F9szuc7H1SVxoQmhI=;
+	b=AVqu4n7c/50MB/8eSt8zT7Z8yRnj5qUdIE5yljoBj/M3K5cxfniCsiC2GfWC9sD7/zsAfj
+	2fGOhQytMLT+PiojqzMQhleHfFJN+iPIkNcBkTrb2Stz4B/LkGUto31T1W1l8sTvU1CzED
+	H/fPDEjf/TRppHu9f8HO4zm5kduofkc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-391-QYJCSJYoOSWfaqWE-4zQtQ-1; Tue, 30 Jan 2024 06:35:26 -0500
+X-MC-Unique: QYJCSJYoOSWfaqWE-4zQtQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C24A11C0513C;
-	Tue, 30 Jan 2024 11:35:09 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.143])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E9CAF8B;
-	Tue, 30 Jan 2024 11:35:03 +0000 (UTC)
-Date: Tue, 30 Jan 2024 19:34:59 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Mike Snitzer <snitzer@kernel.org>, Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Don Dutile <ddutile@redhat.com>,
-	Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, linux-block@vger.kernel.org,
-	ming.lei@redhat.com
-Subject: Re: [RFC PATCH] mm/readahead: readahead aggressively if read drops
- in willneed range
-Message-ID: <Zbje4/789Zs1Ia1t@fedora>
-References: <ZbbfXVg9FpWRUVDn@redhat.com>
- <ZbbvfFxcVgkwbhFv@casper.infradead.org>
- <CAH6w=aw_46Ker0w8HmSA41vUUDKGDGC3gxBFWAhd326+kEtrNg@mail.gmail.com>
- <ZbcDvTkeDKttPfJ4@dread.disaster.area>
- <ZbciOba1h3V9mmup@fedora>
- <Zbc0ZJceZPyt8m7q@dread.disaster.area>
- <ZbdhBaXkXm6xyqgC@fedora>
- <ZbghnK+Hs+if6vEz@dread.disaster.area>
- <ZbhpbpeV6ChPD9NT@fedora>
- <ZbiJP3Dhjkh6Dz4x@dread.disaster.area>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DBA10800074;
+	Tue, 30 Jan 2024 11:35:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.237])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 9E6F4C259DD;
+	Tue, 30 Jan 2024 11:35:24 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 30 Jan 2024 12:34:11 +0100 (CET)
+Date: Tue, 30 Jan 2024 12:34:09 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pidfd: implement PIDFD_THREAD flag for pidfd_open()
+Message-ID: <20240130113409.GA29849@redhat.com>
+References: <20240130112638.GA29773@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,133 +57,245 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZbiJP3Dhjkh6Dz4x@dread.disaster.area>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+In-Reply-To: <20240130112638.GA29773@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Tue, Jan 30, 2024 at 04:29:35PM +1100, Dave Chinner wrote:
-> On Tue, Jan 30, 2024 at 11:13:50AM +0800, Ming Lei wrote:
-> > On Tue, Jan 30, 2024 at 09:07:24AM +1100, Dave Chinner wrote:
-> > > On Mon, Jan 29, 2024 at 04:25:41PM +0800, Ming Lei wrote:
-> > > > On Mon, Jan 29, 2024 at 04:15:16PM +1100, Dave Chinner wrote:
-> > > > > On Mon, Jan 29, 2024 at 11:57:45AM +0800, Ming Lei wrote:
-> > > > > > On Mon, Jan 29, 2024 at 12:47:41PM +1100, Dave Chinner wrote:
-> > > > > > > On Sun, Jan 28, 2024 at 07:39:49PM -0500, Mike Snitzer wrote:
-> > > > > > Follows the current report:
-> > > > > > 
-> > > > > > 1) usersapce call madvise(willneed, 1G)
-> > > > > > 
-> > > > > > 2) only the 1st part(size is from bdi->io_pages, suppose it is 2MB) is
-> > > > > > readahead in madvise(willneed, 1G) since commit 6d2be915e589
-> > > > > > 
-> > > > > > 3) the other parts(2M ~ 1G) is readahead by unit of bdi->ra_pages which is
-> > > > > > set as 64KB by userspace when userspace reads the mmaped buffer, then
-> > > > > > the whole application becomes slower.
-> > > > > 
-> > > > > It gets limited by file->f_ra->ra_pages being initialised to
-> > > > > bdi->ra_pages and then never changed as the advice for access
-> > > > > methods to the file are changed.
-> > > > > 
-> > > > > But the problem here is *not the readahead code*. The problem is
-> > > > > that the user has configured the device readahead window to be far
-> > > > > smaller than is optimal for the storage. Hence readahead is slow.
-> > > > > The fix for that is to either increase the device readahead windows,
-> > > > > or to change the specific readahead window for the file that has
-> > > > > sequential access patterns.
-> > > > > 
-> > > > > Indeed, we already have that - FADV_SEQUENTIAL will set
-> > > > > file->f_ra.ra_pages to 2 * bdi->ra_pages so that readahead uses
-> > > > > larger IOs for that access.
-> > > > > 
-> > > > > That's what should happen here - MADV_WILLNEED does not imply a
-> > > > > specific access pattern so the application should be running
-> > > > > MADV_SEQUENTIAL (triggers aggressive readahead) then MADV_WILLNEED
-> > > > > to start the readahead, and then the rest of the on-demand readahead
-> > > > > will get the higher readahead limits.
-> > > > > 
-> > > > > > This patch changes 3) to use bdi->io_pages as readahead unit.
-> > > > > 
-> > > > > I think it really should be changing MADV/FADV_SEQUENTIAL to set
-> > > > > file->f_ra.ra_pages to bdi->io_pages, not bdi->ra_pages * 2, and the
-> > > > > mem.load() implementation in the application converted to use
-> > > > > MADV_SEQUENTIAL to properly indicate it's access pattern to the
-> > > > > readahead algorithm.
-> > > > 
-> > > > Here the single .ra_pages may not work, that is why this patch stores
-> > > > the willneed range in maple tree, please see the following words from
-> > > > the original RH report:
-> > > 
-> > > > "
-> > > > Increasing read ahead is not an option as it has a mixed I/O workload of
-> > > > random I/O and sequential I/O, so that a large read ahead is very counterproductive
-> > > > to the random I/O and is unacceptable.
-> > > > "
-> > > 
-> > > Yes, I've read the bug. There's no triage that tells us what the
-> > > root cause of the application perofrmance issue might be. Just an
-> > > assertion that "this is how we did it 10 years ago, it's been
-> > > unchanged for all this time, the new kernel we are upgrading
-> > > to needs to behave exactly like pre-3.10 era kernels did.
-> > > 
-> > > And to be totally honest, my instincts tell me this is more likely a
-> > > problem with a root cause in poor IO scheduling decisions than be a
-> > > problem with the page cache readahead implementation. Readahead has
-> > > been turned down to stop the bandwidth it uses via background async
-> > > read IO from starving latency dependent foreground random IO
-> > > operation, and then we're being asked to turn readahead back up
-> > > in specific situations because it's actually needed for performance
-> > > in certain access patterns. This is the sort of thing bfq is
-> > > intended to solve.
-> > 
-> > Reading mmaped buffer in userspace is sync IO, and page fault just
-> > readahead 64KB. I don't understand how block IO scheduler makes a
-> > difference in this single 64KB readahead in case of cache miss.
+Damn. Self-NACK.
+
+I forgot (we all ;) about mt-exec, and there are 2 problems.
+
+1. The "if (!thread_group_leader(tsk))" block in de_thread() needs
+   do_notify_pidfd() too, the execing non-leader thread looses its
+   old pid, pidfd_poll(PIDFD_THREAD, pid-of-execing-sub-thread)
+   should succeed. Must be fixed, I think.
+
+2. pidfd_poll(PIDFD_THREAD, pid-of-group-leader) should not succeed
+   when its sub-thread execs, the execing thread inherits the leader's
+   pid. Perhaps pidfd_task_exited() can check sig->group_exec_task,
+   but:
+
+   OTOH. do we really care? Group leader can exit and become a
+   zombie. Then another thread can exec. Perhaps we can simply
+   emphasize that if you use pidfd_open(leader-pid, PIDFD_THREAD)
+   then you shouldn't expect that after poll() this pid can't be
+   "vivified" again? I don't think this can be "fixed".
+
+I'll try to think more. We don't want to take tasklist in poll...
+
+Oleg.
+
+On 01/30, Oleg Nesterov wrote:
+>
+> With this flag:
 > 
-> I think you've misunderstood what I said. I was refering to the
-> original customer problem of "too much readahead IO causes problems
-> for latency sensitive IO" issue that lead to the customer setting
-> 64kB readahead device limits in the first place.
-
-Looks we are not in same page, I never see words of "latency sensitive IO"
-in this report(RHEL-22476).
-
+> 	- pidfd_open() doesn't require that the target task must be
+> 	  a thread-group leader
 > 
-> That is, if reducing readahead for sequential IO suddenly makes
-> synchronous random IO perform a whole lot better and the application
-> goes faster, then it indicates the problem is IO dispatch
-> prioritisation, not that there is too much readahead. Deprioritising
-> readahead will educe it's impact on other IO, without having to
-> reduce the readahead windows that provide decent sequential IO
-> perofrmance...
+> 	- pidfd_poll() succeeds when the task exits and becomes a
+> 	  zombie (iow, passes exit_notify()), even if it is a leader
+> 	  and thread-group is not empty.
 > 
-> I really think the customer needs to retune their application from
-> first principles. Start with the defaults, measure where things are
-> slow, address the worst issue by twiddling knobs. Repeat until
-> performance is either good enough or they hit on actual problems
-> that need code changes.
-
-io priority is set in blkcg/process level, we even don't know if the random IO
-and sequential IO are submitted from different process.
-
-Also io priority is only applied when IOs with different priority are
-submitted concurrently.
-
-The main input from the report is that iostat shows that read IO request size is
-reduced to 64K from 1MB, which isn't something io priority can deal with.
-
-Here from my understanding the problem is that advise(ADV_RANDOM, ADV_SEQUENTIAL,
-ADV_WILLNEED) are basically applied on file level instead of range level, even
-though range is passed in from these syscalls.
-
-So sequential and random advise are actually exclusively on the whole file.
-
-That is why the customer don't want to set bigger ra_pages because they
-are afraid(or have tested) that bigger ra_pages hurts performance of random
-IO workload because unnecessary data may be readahead. But readahead
-algorithm is supposed to be capable of dealing with it, maybe still not
-well enough.
-
-But yes, more details are needed for understand the issue further.
-
-thanks, 
-Ming
+> thread_group_exited() is no longer used, perhaps it can die.
+> 
+> Co-developed-by: Tycho Andersen <tycho@tycho.pizza>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  include/uapi/linux/pidfd.h |  3 ++-
+>  kernel/exit.c              |  7 +++++++
+>  kernel/fork.c              | 38 +++++++++++++++++++++++++++++++-------
+>  kernel/pid.c               | 14 +++-----------
+>  kernel/signal.c            |  4 +++-
+>  5 files changed, 46 insertions(+), 20 deletions(-)
+> 
+> diff --git a/include/uapi/linux/pidfd.h b/include/uapi/linux/pidfd.h
+> index 5406fbc13074..2e6461459877 100644
+> --- a/include/uapi/linux/pidfd.h
+> +++ b/include/uapi/linux/pidfd.h
+> @@ -7,6 +7,7 @@
+>  #include <linux/fcntl.h>
+>  
+>  /* Flags for pidfd_open().  */
+> -#define PIDFD_NONBLOCK O_NONBLOCK
+> +#define PIDFD_NONBLOCK	O_NONBLOCK
+> +#define PIDFD_THREAD	O_EXCL
+>  
+>  #endif /* _UAPI_LINUX_PIDFD_H */
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index dfb963d2f862..493647fd7c07 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -739,6 +739,13 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+>  		kill_orphaned_pgrp(tsk->group_leader, NULL);
+>  
+>  	tsk->exit_state = EXIT_ZOMBIE;
+> +	/*
+> +	 * sub-thread or delay_group_leader(), wake up the
+> +	 * PIDFD_THREAD waiters.
+> +	 */
+> +	if (!thread_group_empty(tsk))
+> +		do_notify_pidfd(tsk);
+> +
+>  	if (unlikely(tsk->ptrace)) {
+>  		int sig = thread_group_leader(tsk) &&
+>  				thread_group_empty(tsk) &&
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 347641398f9d..bea32071fff2 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -101,6 +101,7 @@
+>  #include <linux/user_events.h>
+>  #include <linux/iommu.h>
+>  #include <linux/rseq.h>
+> +#include <uapi/linux/pidfd.h>
+>  
+>  #include <asm/pgalloc.h>
+>  #include <linux/uaccess.h>
+> @@ -2050,6 +2051,8 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+>  
+>  	seq_put_decimal_ll(m, "Pid:\t", nr);
+>  
+> +	/* TODO: report PIDFD_THREAD */
+> +
+>  #ifdef CONFIG_PID_NS
+>  	seq_put_decimal_ll(m, "\nNSpid:\t", nr);
+>  	if (nr > 0) {
+> @@ -2068,22 +2071,35 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+>  }
+>  #endif
+>  
+> +static bool pidfd_task_exited(struct pid *pid, bool thread)
+> +{
+> +	struct task_struct *task;
+> +	bool exited;
+> +
+> +	rcu_read_lock();
+> +	task = pid_task(pid, PIDTYPE_PID);
+> +	exited = !task ||
+> +		(READ_ONCE(task->exit_state) && (thread || thread_group_empty(task)));
+> +	rcu_read_unlock();
+> +
+> +	return exited;
+> +}
+> +
+>  /*
+>   * Poll support for process exit notification.
+>   */
+>  static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
+>  {
+>  	struct pid *pid = file->private_data;
+> +	bool thread = file->f_flags & PIDFD_THREAD;
+>  	__poll_t poll_flags = 0;
+>  
+>  	poll_wait(file, &pid->wait_pidfd, pts);
+> -
+>  	/*
+> -	 * Inform pollers only when the whole thread group exits.
+> -	 * If the thread group leader exits before all other threads in the
+> -	 * group, then poll(2) should block, similar to the wait(2) family.
+> +	 * Depending on PIDFD_THREAD, inform pollers when the thread
+> +	 * or the whole thread-group exits.
+>  	 */
+> -	if (thread_group_exited(pid))
+> +	if (pidfd_task_exited(pid, thread))
+>  		poll_flags = EPOLLIN | EPOLLRDNORM;
+>  
+>  	return poll_flags;
+> @@ -2141,6 +2157,11 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
+>  		return PTR_ERR(pidfd_file);
+>  	}
+>  	get_pid(pid); /* held by pidfd_file now */
+> +	/*
+> +	 * anon_inode_getfile() ignores everything outside of the
+> +	 * O_ACCMODE | O_NONBLOCK mask, set PIDFD_THREAD manually.
+> +	 */
+> +	pidfd_file->f_flags |= (flags & PIDFD_THREAD);
+>  	*ret = pidfd_file;
+>  	return pidfd;
+>  }
+> @@ -2154,7 +2175,8 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
+>   * Allocate a new file that stashes @pid and reserve a new pidfd number in the
+>   * caller's file descriptor table. The pidfd is reserved but not installed yet.
+>   *
+> - * The helper verifies that @pid is used as a thread group leader.
+> + * The helper verifies that @pid is still in use, without PIDFD_THREAD the
+> + * task identified by @pid must be a thread-group leader.
+>   *
+>   * If this function returns successfully the caller is responsible to either
+>   * call fd_install() passing the returned pidfd and pidfd file as arguments in
+> @@ -2173,7 +2195,9 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
+>   */
+>  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
+>  {
+> -	if (!pid || !pid_has_task(pid, PIDTYPE_TGID))
+> +	bool thread = flags & PIDFD_THREAD;
+> +
+> +	if (!pid || !pid_has_task(pid, thread ? PIDTYPE_PID : PIDTYPE_TGID));
+>  		return -EINVAL;
+>  
+>  	return __pidfd_prepare(pid, flags, ret);
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index c7a3e359f8f5..e11144466828 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -552,11 +552,6 @@ struct pid *pidfd_get_pid(unsigned int fd, unsigned int *flags)
+>   * Return the task associated with @pidfd. The function takes a reference on
+>   * the returned task. The caller is responsible for releasing that reference.
+>   *
+> - * Currently, the process identified by @pidfd is always a thread-group leader.
+> - * This restriction currently exists for all aspects of pidfds including pidfd
+> - * creation (CLONE_PIDFD cannot be used with CLONE_THREAD) and pidfd polling
+> - * (only supports thread group leaders).
+> - *
+>   * Return: On success, the task_struct associated with the pidfd.
+>   *	   On error, a negative errno number will be returned.
+>   */
+> @@ -615,11 +610,8 @@ static int pidfd_create(struct pid *pid, unsigned int flags)
+>   * @flags: flags to pass
+>   *
+>   * This creates a new pid file descriptor with the O_CLOEXEC flag set for
+> - * the process identified by @pid. Currently, the process identified by
+> - * @pid must be a thread-group leader. This restriction currently exists
+> - * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
+> - * be used with CLONE_THREAD) and pidfd polling (only supports thread group
+> - * leaders).
+> + * the task identified by @pid. Without PIDFD_THREAD flag the target task
+> + * must be a thread-group leader.
+>   *
+>   * Return: On success, a cloexec pidfd is returned.
+>   *         On error, a negative errno number will be returned.
+> @@ -629,7 +621,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+>  	int fd;
+>  	struct pid *p;
+>  
+> -	if (flags & ~PIDFD_NONBLOCK)
+> +	if (flags & ~(PIDFD_NONBLOCK | PIDFD_THREAD))
+>  		return -EINVAL;
+>  
+>  	if (pid <= 0)
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 9561a3962ca6..5f48d2c4b409 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2051,7 +2051,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+>  	WARN_ON_ONCE(!tsk->ptrace &&
+>  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
+>  	/*
+> -	 * tsk is a group leader and has no threads, wake up the pidfd waiters.
+> +	 * tsk is a group leader and has no threads, wake up the
+> +	 * non-PIDFD_THREAD waiters.
+>  	 */
+>  	if (thread_group_empty(tsk))
+>  		do_notify_pidfd(tsk);
+> @@ -3926,6 +3927,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+>  		prepare_kill_siginfo(sig, &kinfo);
+>  	}
+>  
+> +	/* TODO: respect PIDFD_THREAD */
+>  	ret = kill_pid_info(sig, &kinfo, pid);
+>  
+>  err:
+> -- 
+> 2.25.1.362.g51ebf55
+> 
 
