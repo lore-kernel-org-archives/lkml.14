@@ -1,127 +1,93 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502F76A03A;
-	Tue, 30 Jan 2024 10:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD29F6A35C;
+	Tue, 30 Jan 2024 10:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706611443; cv=none; b=fZ/tbsvnVyqqwtqemq4VirWeP+Vg6fonAKXpffylNMaS8umUJvaNHDWtcaQLn4x/u4HmU63YGuFMDe4biFl3/GCmnwreChrgYtL7lZ1CjmpittEBTGX5OoY25KVqyOQG4Hjdt7LxjEy70uPMHS2L2H/PFwWtv1GB2bwdi7nznIs=
+	t=1706611445; cv=none; b=uOnEqR0UtRVM755ry5bo5L+trgmtoZZUU6/x24djORz/k8xHD5lJdC15ZTZZrE7p1S2YlxerunlyohvpXxJI8lHfT20/bs+eZw5P/KFEIuoAPMzKKmfUCzoO9/5FxOPD2n6KzJfFPz3YUPhQFhmw9I9rz15CxX28v8vL5yvLP+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706611443; c=relaxed/simple;
-	bh=LR4Tqdwk6o5B3sBkOoFmCKb782ENpektt/aVbGbwqOo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DDn/6LwfTwhrFKK1uwtfht69SiPaiy3g/s33mIwJ1PewMkFcyZzhzNiaVcgAVQraEtRp/1OQymndMaPwkSLDYDDd5XOvnJ3Bs+9UOrLtUh6RhY5Quecwg8114MsitkpcfmlzIdRee/1sGrYuf/bnHP2BYz7nrBXwph91ekj6H8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav413.sakura.ne.jp (fsav413.sakura.ne.jp [133.242.250.112])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 40UAh0Lq008630;
-	Tue, 30 Jan 2024 19:43:00 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav413.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp);
- Tue, 30 Jan 2024 19:43:00 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 40UAh0YY008627
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 30 Jan 2024 19:43:00 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <56432241-1947-4701-a3d1-febd57fb3096@I-love.SAKURA.ne.jp>
-Date: Tue, 30 Jan 2024 19:42:59 +0900
+	s=arc-20240116; t=1706611445; c=relaxed/simple;
+	bh=r0XNrSM8xrYrjkGY+kLXt0iVTRC8VsPT0yPJ0PYXU/o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KgfjKwoKPKX8gkH9G/k0GRU7Uty2NfI2Aga8ALDFsmmk0wi70J4bZS8ikd6pK2wpm22/UNKDw4ZrCwMp35yvYD2F3DOrXFQY385bpV4N6BqEJkJlleMjQquBK96kTMnrtYgueU9RxouYxsBV+06yyGYq7pXQTFIkR7Tvy2wPrs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a90a0a1a1so3530559a12.0;
+        Tue, 30 Jan 2024 02:44:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706611442; x=1707216242;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F/FBsGmaU0v38mjD0wQsroCdxmJrzCQpL6ZDqMWITCc=;
+        b=ufJMk8ZfV9xrnujEhzgF2Icmf2LahWrcCPO6nv9gkxgCdVFT+4Af3rY9LdI5biPk1p
+         lErRNj3nrWLJwWpIgtR2glN1kS89Wc8JzF1rwh72HzMUlqy42n2JGDiZXQK8gelf1UIS
+         i5ahTo0q41Ddy6X8EMJ4WYvNbXAsMLxYLh+JE9Zmj22aZwVDlOsq1B8oY0MDFQPa0Tne
+         VyRkLAmkMjNSTrMoN8sy7Lj/ip1fiH3tcT3zsGi1l6KmSUhgn1bUxF9Ip9keeSI8w202
+         IfA9J9tk0pHJASeUwJQq2LX3kAtM6wqUt4rKa2YsESkE63+ObGgT1DOZgXiT6AEkKmN4
+         nX4w==
+X-Gm-Message-State: AOJu0YzbfgG0vAeQun3EgwgwMCc+BWwvRy9LU+Dv7a4yeUKoJBPLkVi3
+	8390WgW4nyiW6tUb+BfptgGySV8DCsUrbqpff317a4vybIoUshiV
+X-Google-Smtp-Source: AGHT+IG26FT+gevDQpYSFljgTDG5f6QVhZLBk5s2lMOjjITAri8rY8kBYrX/aOhgKF5fSpjn7vSLjQ==
+X-Received: by 2002:aa7:daca:0:b0:55c:6935:1b1c with SMTP id x10-20020aa7daca000000b0055c69351b1cmr5603178eds.36.1706611442061;
+        Tue, 30 Jan 2024 02:44:02 -0800 (PST)
+Received: from localhost (fwdproxy-lla-000.fbsv.net. [2a03:2880:30ff::face:b00c])
+        by smtp.gmail.com with ESMTPSA id x13-20020aa7dacd000000b0055eb8830906sm3602167eds.85.2024.01.30.02.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 02:44:01 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	Kalle Valo <kvalo@kernel.org>
+Cc: dsahern@kernel.org,
+	weiwan@google.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org,
+	andrew@lunn.ch,
+	leit@fb.com,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Kees Cook <keescook@chromium.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-wireless@vger.kernel.org (open list:TI WILINK WIRELESS DRIVERS)
+Subject: [PATCH net 7/9] wifi: fill in MODULE_DESCRIPTION()s for wl18xx
+Date: Tue, 30 Jan 2024 02:42:41 -0800
+Message-Id: <20240130104243.3025393-8-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240130104243.3025393-1-leitao@debian.org>
+References: <20240130104243.3025393-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] LSM: add security_bprm_aborting_creds() hook
-Content-Language: en-US
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <e938c37b-d615-4be4-a2da-02b904b7072f@I-love.SAKURA.ne.jp>
- <613a54d2-9508-4f87-a163-a25a77a101cd@I-love.SAKURA.ne.jp>
- <87frygbx04.fsf@email.froward.int.ebiederm.org>
- <dbf0ef61-355b-4dcb-8e51-9298cf847367@I-love.SAKURA.ne.jp>
- <8734ug9fbt.fsf@email.froward.int.ebiederm.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <8734ug9fbt.fsf@email.froward.int.ebiederm.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024/01/30 3:15, Eric W. Biederman wrote:
-> If you aren't going to change your design your new hook should be:
-> 	security_execve_revert(current);
-> Or maybe:
-> 	security_execve_abort(current);
-> 
-> At least then it is based upon the reality that you plan to revert
-> changes to current->security.  Saying anything about creds or bprm when
-> you don't touch them, makes no sense at all.  Causing people to
-> completely misunderstand what is going on, and making it more likely
-> they will change the code in ways that will break TOMOYO.
+W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+Add descriptions to the TI WiLink 8 wireless driver.
 
-Fine for me. The current argument is redundant, for nobody will try to
-call security_execve_abort() on a remote thread.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/net/wireless/ti/wl18xx/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> 
-> What I understand from the documentation you provided about TOMOYO is:
-> - TOMOYO provides the domain transition early so that the executable
->   can be read.
-> - TOMOYO did that because it could not detect reliably when a file
->   was opened for execve and read for execve.
-> 
-> Am I wrong in my understanding?
-> 
-> If that understanding is correct, now that (file->f_mode & __FMODE_EXEC)
-> is a reliable indication of a file used exclusively for exec then it
-> should be possible to take advantage of the new information and get
-> TOMOYO and the rest of the execve playing nicely with each other without
-> having to add new hooks.
-
-current->in_execve flag has two purposes: "whether to check permission" and
-"what domain is used for checking permission (if need to check permission)".
-
-One is to distinguish "open from execve()" and "open from uselib()".
-This was replaced by the (file->f_mode & __FMODE_EXEC) change, for
-__FMODE_EXEC was now removed from uselib(). But this is after all about
-"whether to check permission".
-
-The other is to emulate security_execve_abort(). security_execve_abort() is
-needed because TOMOYO checks permission for opening interpreter file from
-execve() using a domain which the current thread will belong to if execve()
-succeeds (whereas DAC checks permission for opening interpreter file from
-execve() using credentials which the current thread is currently using).
-This is about "what domain is used for checking permission".
-
-Since security_file_open() hook cannot see bprm->cred, TOMOYO cannot know
-"what domain is used for checking permission" from security_file_open().
-TOMOYO can know only "whether to check permission" from security_file_open().
-
-Since TOMOYO cannot pass bprm->cred to security_file_open() hook using
-override_creds()/revert_creds(), TOMOYO is passing "what domain is used for
-checking permission" to security_file_open() via "struct task_struct"->security.
-"struct task_struct"->security is updated _before_ security_file_open() for the
-interpreter file is called.
-
-Since security_execve_abort() was missing, when execve() failed, TOMOYO had
-to keep the domain which the current thread would belong to if execve() succeeded.
-The kept domain is cleared when TOMOYO finds that previous execve() was finished
-(indicated by current->in_execve == 0) or when TOMOYO finds that new execve() is
-in progress (indicated by current->in_execve == 0 when security_cred_prepare() is
-called).
-
-It is not possible to extract "what domain is used for checking permission" from
-"whether file->f_mode includes __FMODE_EXEC". Talking about the
-(file->f_mode & __FMODE_EXEC) change (i.e. "whether to check permission") is
-pointless when talking about "what domain is used for checking permission".
+diff --git a/drivers/net/wireless/ti/wl18xx/main.c b/drivers/net/wireless/ti/wl18xx/main.c
+index 20d9181b3410..2ccac1cdec01 100644
+--- a/drivers/net/wireless/ti/wl18xx/main.c
++++ b/drivers/net/wireless/ti/wl18xx/main.c
+@@ -2086,6 +2086,7 @@ module_param_named(num_rx_desc, num_rx_desc_param, int, 0400);
+ MODULE_PARM_DESC(num_rx_desc_param,
+ 		 "Number of Rx descriptors: u8 (default is 32)");
+ 
++MODULE_DESCRIPTION("TI WiLink 8 wireless driver");
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Luciano Coelho <coelho@ti.com>");
+ MODULE_FIRMWARE(WL18XX_FW_NAME);
+-- 
+2.39.3
 
