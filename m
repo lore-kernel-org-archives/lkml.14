@@ -1,90 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E394D1F5E6
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:14:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE12410FD;
+	Tue, 30 Jan 2024 00:21:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706573673; cv=none; b=qHHe7hFg3CmAu7Tc+tE5gKMAo/d63aG2X58hZ8HSenXoWk+Kfn4Hc1xWyP6AqQw7tNBGFutVQHiQYQA+lcSwkj2W4sVIgFnTsxEWOuocZkt9jb2KwJhrBSGeb3udQEbL0dp9AVaMhIkl5tIzRC+BDsg3iECa3sBhyk27QSLTJPI=
+	t=1706574106; cv=none; b=gDXVfLbwOekqEk9dwtqNyV9+grsWGHnHQCxZHNVF9ON3slnICQPGnB7m6stBdINpY1x5+YxhYnnrHlhIO2GbBF0Y+7KWuEQQCw+nyb5CoS9WMPXk15yg4/ml1lJTYsh0WcuytI2yoFXYiNye0eHHNkIw1i5SbgGOopODQ8jIgUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706573673; c=relaxed/simple;
-	bh=xEARPrXco3uTwEMG96xAAVNItcj/45n5YEk1eOwXClE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j6hh0jhnLUfmnPRpqN6Yqgk8TgBDp56y2bGFjQl5DtsHcGF9nVxkjoWA89X8RfG6hDtqcUIxs89avYHcJfVixHNaNJaaasvkpFU576H/r82SF6ZEfX9K3Bh8sdGxcx+/NQu9fR24nneh6ytz4/bQxeKrOKc/FIviYBmteonZXSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpfJiGmv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706574106; c=relaxed/simple;
+	bh=WwZr4D28HIW9IF6cl2zLedh8M7SwhhFpFoQUPwdLlsU=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=l5zsGrEWQgK+d70/nRVL2ZrF7UC0E+1eIvflE2twF0IF4OxHVa3nAceHN5WaQycFjorr3KiEVwyGYHncDIKSVlOho8kS3LPOurLpYPtas2j60UYx4lItvqfXBKSv81SsmAG982vMbWnVDFy6gkJv6TkXSXsN0EVlMR5KADt0m5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1WLJsFk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpfJiGmv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129CAC433F1;
-	Tue, 30 Jan 2024 00:14:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1WLJsFk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10EA5C433C7;
+	Tue, 30 Jan 2024 00:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706573672;
-	bh=xEARPrXco3uTwEMG96xAAVNItcj/45n5YEk1eOwXClE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rpfJiGmv2ewynNRmxqcFutzROj92ZWWNfnlXznIBeT9B+qAkKvijXcMfnZjwUVhtP
-	 NhihLpFTDJjpzw9k4FF+CfxUhaRDUJMAN+z9W44pz/kDQpbI9Z8RnFAkDkGUQgVI9B
-	 n4CT+IUSQzEad1xWllVykN+pTeDuMSOYLYDF1t4f6BckgyttiXv0oLdwODzr9OUYXc
-	 ls/2WGTTjNuQ+sZlOL9AJl9NrYlrXF1/pgUCqG41PLpCCa5y/5rD0kztRKovoasGB0
-	 57Yc5VeCx+I3SG7p8YWNm/hOdu0+SjuWn7nHfkG3KqTMohlpVrB5+AFbt50tqC9lYG
-	 PcoOXd/lDwODw==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 30 Jan 2024 00:02:49 +0000
-Subject: [PATCH 2/2] arm64/sme: Restore SMCR_EL1.EZT0 on exit from suspend
+	s=k20201202; t=1706574106;
+	bh=WwZr4D28HIW9IF6cl2zLedh8M7SwhhFpFoQUPwdLlsU=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=U1WLJsFkOGJjOIY1YaD79ArO8XZDUAkFrGAEv5/FI30ISmVlBJb2nFf1vMZdjD6ZJ
+	 rYzCVoLxXRWjVMXzNy8DZLDqTSYMy6cu18EdnSTXA2mGe0K+opaK70UnwJuHqP8SMq
+	 DJPZEKFzfsPlFyyKaUaX+wpsskdJOFmH/ZvMQ9zGnd/6FO+rZ4s0ZrQ09lIq94TwlF
+	 8TqsximYHyRRNHBiQG8SXo5YQcVpkXAf9Cy/CVgBZWiW63wMkFWAFOQ1B0WKhj8rUy
+	 LZpi3hK1DPnnr2m43sk5vd0xIoJ0/KiALRxMDAeHGz9BLcpxJosc/kt8sP612TOiW2
+	 DQrldaHAo7qcQ==
+Date: Mon, 29 Jan 2024 18:21:45 -0600
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240130-arm64-sme-resume-v1-2-0e60ebba18df@kernel.org>
-References: <20240130-arm64-sme-resume-v1-0-0e60ebba18df@kernel.org>
-In-Reply-To: <20240130-arm64-sme-resume-v1-0-0e60ebba18df@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: Dave Martin <Dave.Martin@arm.com>, 
- Jackson Cooper-Driver <Jackson.Cooper-Driver@arm.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-a684c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=953; i=broonie@kernel.org;
- h=from:subject:message-id; bh=xEARPrXco3uTwEMG96xAAVNItcj/45n5YEk1eOwXClE=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBluD9i6yBs2MgbbLUzAPKlp1ZuhKTGe0vDXTQl6XYM
- 5TVEHjqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZbg/YgAKCRAk1otyXVSH0KIZB/
- 0VUqbC1WxvC5599zPIxyITE5LsBkJ1mSnsGokZEsNminewQPOex98hDJhyZYzBNMULgL636VUgyLL4
- sLiH4tj4vzBEDIuGN4q8lNnLs7PnrNh2tC1+0u9SAHllCPuognJbWsRWZfbejbYxu16Jwci4KqhTjW
- /TfAx9RQgmbOb4X1qTLpc7Mfd5B7bo4aeJR2ZcLBsRtYGug91XOKzhVX4N4xynZqQatLuzp2A9MK2l
- qUfvY0yLD11I2dQeVp/3Fcqg1rGLOt8MGRt/I/pfBKJaq3UYLb5ueLUMn9G+I1q9Md2h9NuoSaIBk1
- 2WysA6QBWN+bsC8h6lTv4xZ30EKYav
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+From: Rob Herring <robh@kernel.org>
+To: Charles Perry <charles.perry@savoirfairelinux.com>
+Cc: bcody@markem-imaje.com, yilun.xu@intel.com, trix@redhat.com, 
+ avandiver@markem-imaje.com, linux-fpga@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, hao.wu@intel.com, mdf@kernel.org
+In-Reply-To: <20240129225602.3832449-2-charles.perry@savoirfairelinux.com>
+References: <20240129225602.3832449-1-charles.perry@savoirfairelinux.com>
+ <20240129225602.3832449-2-charles.perry@savoirfairelinux.com>
+Message-Id: <170657410397.50510.3267645071897066696.robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: fpga: xlnx,fpga-slave-selectmap: add
+ DT schema
 
-The fields in SMCR_EL1 reset to an architecturally UNKNOWN value. Since we
-do not otherwise manage the traps configured in this register at runtime we
-need to reconfigure them after a suspend in case nothing else was kind
-enough to preserve them for us. Do so for SMCR_EL1.EZT0.
 
-Fixes: d4913eee152d (arm64/sme: Add basic enumeration for SME2)
-Reported-by: Jackson Cooper-Driver <Jackson.Cooper-Driver@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/kernel/fpsimd.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, 29 Jan 2024 17:56:01 -0500, Charles Perry wrote:
+> Document the slave SelectMAP interface of Xilinx 7 series FPGA.
+> 
+> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
+> ---
+>  .../fpga/xlnx,fpga-slave-selectmap.yaml       | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-selectmap.yaml
+> 
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 69201208bb13..329782fe39c5 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -1320,6 +1320,8 @@ void sme_suspend_exit(void)
- 
- 	if (system_supports_fa64())
- 		smcr |= SMCR_ELx_FA64;
-+	if (system_supports_sme2())
-+		smcr |= SMCR_ELx_EZT0;
- 
- 	write_sysreg_s(smcr, SYS_SMCR_EL1);
- }
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
--- 
-2.30.2
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-selectmap.yaml: 'maintainers' is a required property
+	hint: Metaschema for devicetree binding documentation
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+Error: Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-selectmap.example.dts:19.9-14 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/fpga/xlnx,fpga-slave-selectmap.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240129225602.3832449-2-charles.perry@savoirfairelinux.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
