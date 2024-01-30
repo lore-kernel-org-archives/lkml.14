@@ -1,202 +1,148 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55164823CC
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E25A1292D0
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706634566; cv=none; b=qO6jHMcH7do4wvC0NGxVBAg1N1XNknGmIW1LXFsBBJTxM7A/1BLtAstQXBwIcI9tt3CS/bm6/9mCV+WVFugxwo9RyHbjKYIf5MeUQ9WPt0nnLSXFLHohy9+NF/UfqrA5uT8j2LAtt/qNXKL+iJlNXhVbz6MtlGNqcWWSk7nYGQ8=
+	t=1706634590; cv=none; b=ED7EvFayV1dRZcVIV/kvKmPwPzPR6+CXuMY1mZGAOKwnRr3ZU+3rEvtgaNRxDEmf/QD3vqjnLEkR4z4809mzhCGLNeMmeoN7Tn9A3jW6Lt2mFkZtbWO5BZUweq15SvjA2IDw9Sg91bJ0hnUPWc00tDwJMxSJNmlIBQnBb2zvdtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706634566; c=relaxed/simple;
-	bh=OQn8hC4ZkfJdMMsbefth4JV/39ONC8FzGYAJXp/p1bk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fcxJB9t1D3A7afiatvqJQ58rK40lGF8S6Vif1tkDB0zmNosoWiMPsR5Rt1TsRJNHotts5jElX0eh9aeoBt1FJqixS9w+F/Br0HWKMzQROW3vZWTAd79tM7n+krbHZu18bCRS2s+GK9dqKAuenrBFj5dnNroHZpz+QC/axg4AqGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LTWDmWD1; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706634590; c=relaxed/simple;
+	bh=ozTRL504Xs+y38dN7hpmz9/MkdUYy3m28oZBq7+GDso=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hnHYw/RsfdIddm978vjAKNN5etY7J8+S0nX9uePf2DuOPmnvg81uusa12JN4MgOdOtRF+vmg9CyYlElz3thcVcP1OvsCrys9UI9Yb50PNwYTUKmzighjH2r1AV9/Ziy6n834QZNcq16rq855iSl3f+lulhtpJqFsDpcg2XpyyT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wKkhS5YE; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LTWDmWD1"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55ee686b5d5so3598224a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:09:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wKkhS5YE"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so238469276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:09:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706634562; x=1707239362; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Djs1OTbFMC+4TjUzpye92JIfwg7EBRT3Q8+brNbcyPk=;
-        b=LTWDmWD1ajWTsa3l3QtzO3dMZbgewMLcp6A+ere3Wp93BIQ0MtYkYUP6BlfBC6mkx8
-         S+gJvkj2AvQGIBBxIMfHh561dHSVdoL44nWks4bIe2BndDbMjvuTng7N4tFa3kN4BZoT
-         ugWitAUNs+FQueRRQhoz/0TST4R8Wm4/fH7js=
+        d=google.com; s=20230601; t=1706634586; x=1707239386; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gUAiVWxsdrX9MXtJSqjLmwRv/f/RgRmiC76ruk/jsk=;
+        b=wKkhS5YEBpDt2vlodWszox39LdIEj/oQawgXls48TNYPNr2H3xLWYxya9j9/nuabio
+         DlCnL00V2utLyUp0KD7KBriB2PIauPUTMJD1zIC2B1hHHlCwWoYUnuAruGudf77YNdJp
+         FFXBZ0zwIhIQY51K/8d1GrHwRaG9PIipGkMCV46ZjJfICXxJwgTPTH/wyFAYHEqlhttu
+         FuGm7sc4MkxLhj/fUDAFAPbwQMLfEEnZDRofI/PC+jCfCsO62vIMCQi4fKnGofN4c1Vw
+         0VE5CjEc6/h8BJI82bIrunv8c0JCyCZNB72XqjjVI/hzpOLma3a+94OCROr92xed2qOM
+         pjLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706634562; x=1707239362;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Djs1OTbFMC+4TjUzpye92JIfwg7EBRT3Q8+brNbcyPk=;
-        b=L8mrf+jnelqVYK2CljgLy76lghFmB8qnQeB0ETsH8AL/9wv03S/asROhVdPtoslxQo
-         KPVNYl/Hv6GXlLNi0IK8scBy+DayGieeSNnsC0Rudi9xEoWi4Vm+TsMWX1KsZ4xb+s9K
-         XddPPq9ewDyDxOuVlOv2819rSJN7A4P2pj9/umOZt+gYuwseESO7fUb04PdhRaNNpUl1
-         A9HoYzoXIM6E6660MYPpPf4MIZwLfwqaYA9HD3mjr21S9uvjWNMmcbypeunxxkNgGCLe
-         uyzZZIDVdEH+rXoH08mvDMIbBUYvzYCxUElTEYoYI+T4lB5crt7ZE/XEtcIoFcs6412+
-         ku1A==
-X-Gm-Message-State: AOJu0Yy1F4QI5b4gryaFTWETg+BsdV/r90CNeuYAoi7915A/cjmwOdjl
-	yolOtvL9RjouDYJuhbOoyBW+DgXF6VpMYOITaOXvze7vWDydm8zm8nQv7J+0HLnIBdB/0rb4hCR
-	WI+zoGw==
-X-Google-Smtp-Source: AGHT+IFWQfkoDw3QW99KSlIwJ13blmM8GII8hpfVPc4P+u9LxOS+tHTyruARsUz9cDxK8EslqZsUqg==
-X-Received: by 2002:a17:906:d7b1:b0:a35:c371:8b27 with SMTP id pk17-20020a170906d7b100b00a35c3718b27mr4147965ejb.30.1706634562257;
-        Tue, 30 Jan 2024 09:09:22 -0800 (PST)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id qt11-20020a170906eceb00b00a358f659989sm3059462ejb.113.2024.01.30.09.09.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 09:09:20 -0800 (PST)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55ee686b5d5so3598141a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:09:20 -0800 (PST)
-X-Received: by 2002:a05:6402:2692:b0:55c:7aa7:53a9 with SMTP id
- w18-20020a056402269200b0055c7aa753a9mr7521104edd.5.1706634559950; Tue, 30 Jan
- 2024 09:09:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706634586; x=1707239386;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gUAiVWxsdrX9MXtJSqjLmwRv/f/RgRmiC76ruk/jsk=;
+        b=O+8uyKSv6QE0yi0QgDKCDTD4hBJkMM0ZrF+8NrMUt9loYfLsHF3rOwDFwhQbMUK4WK
+         LPcKsqTmukP/bDsAUNazJTThwlRm0cEdJkQg/3Flm+hxunRWVDFos+Vci3ObJ/da0Di8
+         hFuqF4UdYWLlOkmPHkl6uKGHOjOlEYp7HEiOCkbVn/XMKA8HiluVrh0W4EkGezQLV7JF
+         FdLa1dwFiPxmkfcTm/9ucAcPGG8cBPmk9Np+ZRcuLzy3yT69mycAg57mMLaT22134E0C
+         /GCCNhdL+tujUFw8HEIWg6OnXU/rS4gEpvUv0Vy9BwiyfK0ztzQQ2xXxa6MC+QbGDKRn
+         EjVw==
+X-Gm-Message-State: AOJu0YzH6vSm5Qh50vAX/TI+wXXWqk+wTSIMplQrfa1pdzmLU8MnMh79
+	NsxExwchshY9Fnuz8tzJq6gwF8sd9v3Dw4jlmgc7CcyW8qRMgJcng4E2ne5kioKV5pUchju9kP9
+	afC4mmIgdfXAcRZf9HQ==
+X-Google-Smtp-Source: AGHT+IGSAt/cicvuYR+6VzSMEHyc1YMNmMpNIIn+3acHabrN/cjKOm187soaitREtOeSDbJEryRDFwsxRAXg741d
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a05:6902:e05:b0:dc6:207d:7797 with SMTP
+ id df5-20020a0569020e0500b00dc6207d7797mr458648ybb.3.1706634586391; Tue, 30
+ Jan 2024 09:09:46 -0800 (PST)
+Date: Tue, 30 Jan 2024 17:09:44 +0000
+In-Reply-To: <2024012948-hungry-tibia-5345@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <202401291043.e62e89dc-oliver.sang@intel.com> <CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
- <CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
- <20240129152600.7587d1aa@gandalf.local.home> <CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
- <20240129172200.1725f01b@gandalf.local.home> <CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
- <CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
- <20240129174950.5a17a86c@gandalf.local.home> <CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
- <20240129193549.265f32c8@gandalf.local.home> <CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
- <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
- <CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
- <CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
- <20240130093942.56206ff1@gandalf.local.home> <20240130114947.5bc856b0@gandalf.local.home>
- <CAHk-=wiNY3W1QKveFnH=dJtRNW7kA1Nbn6Ua49EbM6AC+Rx8wg@mail.gmail.com>
-In-Reply-To: <CAHk-=wiNY3W1QKveFnH=dJtRNW7kA1Nbn6Ua49EbM6AC+Rx8wg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 30 Jan 2024 09:09:03 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjb=Kc_i+qwA-Rp07Qp015sBkcox9y2V-MS+Rx=FthuEA@mail.gmail.com>
-Message-ID: <CAHk-=wjb=Kc_i+qwA-Rp07Qp015sBkcox9y2V-MS+Rx=FthuEA@mail.gmail.com>
-Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000b536a306102cd2ec"
+Mime-Version: 1.0
+References: <20240129224204.1812062-1-souravpanda@google.com>
+ <20240129224204.1812062-2-souravpanda@google.com> <2024012948-hungry-tibia-5345@gregkh>
+Message-ID: <ZbktWLMYBqNVfFZc@google.com>
+Subject: Re: [PATCH v7 1/1] mm: report per-page metadata information
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Sourav Panda <souravpanda@google.com>, corbet@lwn.net, rafael@kernel.org, 
+	akpm@linux-foundation.org, mike.kravetz@oracle.com, muchun.song@linux.dev, 
+	rppt@kernel.org, david@redhat.com, rdunlap@infradead.org, 
+	chenlinxuan@uniontech.com, yang.yang29@zte.com.cn, tomas.mudrunka@gmail.com, 
+	bhelgaas@google.com, ivan@cloudflare.com, pasha.tatashin@soleen.com, 
+	hannes@cmpxchg.org, shakeelb@google.com, kirill.shutemov@linux.intel.com, 
+	wangkefeng.wang@huawei.com, adobriyan@gmail.com, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, surenb@google.com, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	willy@infradead.org, weixugc@google.com
+Content-Type: text/plain; charset="us-ascii"
 
---000000000000b536a306102cd2ec
-Content-Type: text/plain; charset="UTF-8"
+On Mon, Jan 29, 2024 at 02:52:23PM -0800, Greg KH wrote:
+> On Mon, Jan 29, 2024 at 02:42:04PM -0800, Sourav Panda wrote:
+> > Adds two new per-node fields, namely nr_page_metadata and
+> > nr_page_metadata_boot, to /sys/devices/system/node/nodeN/vmstat
+> > and a global PageMetadata field to /proc/meminfo. This information can
+> > be used by users to see how much memory is being used by per-page
+> > metadata, which can vary depending on build configuration, machine
+> > architecture, and system use.
+> > 
+> > Per-page metadata is the amount of memory that Linux needs in order to
+> > manage memory at the page granularity. The majority of such memory is
+> > used by "struct page" and "page_ext" data structures. In contrast to
+> > most other memory consumption statistics, per-page metadata might not
+> > be included in MemTotal. For example, MemTotal does not include memblock
+> > allocations but includes buddy allocations. In this patch, exported
+> > field nr_page_metadata in /sys/devices/system/node/nodeN/vmstat would
+> > exclusively track buddy allocations while nr_page_metadata_boot would
+> > exclusively track memblock allocations. Furthermore, PageMetadata in
+> > /proc/meminfo would exclusively track buddy allocations allowing it to
+> > be compared against MemTotal.
+> > 
+> > This memory depends on build configurations, machine architectures, and
+> > the way system is used:
+> > 
+> > Build configuration may include extra fields into "struct page",
+> > and enable / disable "page_ext"
+> > Machine architecture defines base page sizes. For example 4K x86,
+> > 8K SPARC, 64K ARM64 (optionally), etc. The per-page metadata
+> > overhead is smaller on machines with larger page sizes.
+> > System use can change per-page overhead by using vmemmap
+> > optimizations with hugetlb pages, and emulated pmem devdax pages.
+> > Also, boot parameters can determine whether page_ext is needed
+> > to be allocated. This memory can be part of MemTotal or be outside
+> > MemTotal depending on whether the memory was hot-plugged, booted with,
+> > or hugetlb memory was returned back to the system.
+> > 
+> > Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > Signed-off-by: Sourav Panda <souravpanda@google.com>
+> > ---
+> >  Documentation/filesystems/proc.rst |  3 +++
+> >  fs/proc/meminfo.c                  |  4 ++++
+> >  include/linux/mmzone.h             |  4 ++++
+> >  include/linux/vmstat.h             |  4 ++++
+> >  mm/hugetlb_vmemmap.c               | 19 ++++++++++++++----
+> >  mm/mm_init.c                       |  3 +++
+> >  mm/page_alloc.c                    |  1 +
+> >  mm/page_ext.c                      | 32 +++++++++++++++++++++---------
+> >  mm/sparse-vmemmap.c                |  8 ++++++++
+> >  mm/sparse.c                        |  7 ++++++-
+> >  mm/vmstat.c                        | 26 +++++++++++++++++++++++-
+> >  11 files changed, 96 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+> > index 49ef12df631b..d5901d04e082 100644
+> > --- a/Documentation/filesystems/proc.rst
+> > +++ b/Documentation/filesystems/proc.rst
+> > @@ -993,6 +993,7 @@ Example output. You may not have all of these fields.
+> >      AnonPages:       4654780 kB
+> >      Mapped:           266244 kB
+> >      Shmem:              9976 kB
+> > +    PageMetadata:     513419 kB
+> >      KReclaimable:     517708 kB
+> >      Slab:             660044 kB
+> >      SReclaimable:     517708 kB
+> 
+> Why are you adding it to the middle of the file?  Are you sure the
+> userspace tools that parse this file today can handle an unknown field
+> here, and not just at the end of the file?
 
-On Tue, 30 Jan 2024 at 08:55, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Let me just reboot into it to test that I got all the cases.
->
-> It makes the code even more obvious, and avoids all the complexity.
-
-Yup, this works at least for the case you pointed out, and it really
-feels like the RightThing(tm) from a VFS standpoint.
-
-NOTE! This patch is on top of my previous 5-patch series.
-
-                 Linus
-
---000000000000b536a306102cd2ec
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-eventfs-clean-up-dentry-ops-and-add-revalidate-funct.patch"
-Content-Disposition: attachment; 
-	filename="0001-eventfs-clean-up-dentry-ops-and-add-revalidate-funct.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_ls0m4fg60>
-X-Attachment-Id: f_ls0m4fg60
-
-RnJvbSA2N2IzMWJiNTNlZjY1MTMyYTY1YmZiZTkxNTYyOGM0ODFhMzllNzNhIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRh
-dGlvbi5vcmc+CkRhdGU6IFR1ZSwgMzAgSmFuIDIwMjQgMDk6MDA6MTggLTA4MDAKU3ViamVjdDog
-W1BBVENIXSBldmVudGZzOiBjbGVhbiB1cCBkZW50cnkgb3BzIGFuZCBhZGQgcmV2YWxpZGF0ZSBm
-dW5jdGlvbgoKSW4gb3JkZXIgZm9yIHRoZSBkZW50cmllcyB0byBzdGF5IHVwLXRvLWRhdGUgd2l0
-aCB0aGUgZXZlbnRmcyBjaGFuZ2VzLApqdXN0IGFkZCBhICdkX3JldmFsaWRhdGUnIGZ1bmN0aW9u
-IHRoYXQgY2hlY2tzIHRoZSAnaXNfZnJlZWQnIGJpdC4KCkFsc28sIGNsZWFuIHVwIHRoZSBkZW50
-cnkgcmVsZWFzZSB0byBhY3R1YWxseSB1c2UgZF9yZWxlYXNlKCkgcmF0aGVyCnRoYW4gdGhlIHNs
-aWdodGx5IG9kZCBkX2lwdXQoKSBmdW5jdGlvbi4gIFdlIGRvbid0IGNhcmUgYWJvdXQgdGhlIGlu
-b2RlLAphbGwgd2Ugd2FudCB0byBkbyBpcyB0byBnZXQgcmlkIG9mIHRoZSByZWZjb3VudCB0byB0
-aGUgZXZlbnRmcyBkYXRhCmFkZGVkIGJ5IGRlbnRyeS0+ZF9mc2RhdGEuCgpJdCB3b3VsZCBwcm9i
-YWJseSBiZSBjbGVhbmVyIHRvIG1ha2UgZXZlbnRmcyBpdHMgb3duIGZpbGVzeXN0ZW0sIG9yIGF0
-CmxlYXN0IHNldCBpdHMgb3duIGRlbnRyeSBvcHMgd2hlbiBsb29raW5nIHVwIGV2ZW50ZnMgZmls
-ZXMuICBCdXQgYXMgaXQKaXMsIG9ubHkgZXZlbnRmcyBkZW50cmllcyB1c2UgZF9mc2RhdGEsIHNv
-IHdlIGRvbid0IHJlYWxseSBuZWVkIHRvIHNwbGl0CnRoZXNlIHRoaW5ncyB1cCBieSB1c2UuCgpB
-bm90aGVyIHRoaW5nIHRoYXQgbWlnaHQgYmUgd29ydGggZG9pbmcgaXMgdG8gbWFrZSBhbGwgZXZl
-bnRmcyBsb29rdXBzCm1hcmsgdGhlaXIgZGVudHJpZXMgYXMgbm90IHdvcnRoIGNhY2hpbmcuICBX
-ZSBjb3VsZCBkbyB0aGF0IHdpdGgKZF9kZWxldGUoKSwgYnV0IHRoZSBEQ0FDSEVfRE9OVENBQ0hF
-IGZsYWcgd291bGQgbGlrZWx5IGJlIGV2ZW4gYmV0dGVyLgoKQXMgaXQgaXMsIHRoZSBkZW50cmll
-cyBhcmUgYWxsIGZyZWVhYmxlLCBidXQgdGhleSBvbmx5IHRlbmQgdG8gZ2V0IGZyZWVkCmF0IG1l
-bW9yeSBwcmVzc3VyZSByYXRoZXIgdGhhbiBtb3JlIHByb2FjdGl2ZWx5LiAgQnV0IHRoYXQncyBh
-IHNlcGFyYXRlCmlzc3VlLgoKU2lnbmVkLW9mZi1ieTogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRz
-QGxpbnV4LWZvdW5kYXRpb24ub3JnPgotLS0KIGZzL3RyYWNlZnMvZXZlbnRfaW5vZGUuYyB8IDIx
-ICsrKysrLS0tLS0tLS0tLS0tLS0tLQogZnMvdHJhY2Vmcy9pbm9kZS5jICAgICAgIHwgMjcgKysr
-KysrKysrKysrKysrKysrLS0tLS0tLS0tCiBmcy90cmFjZWZzL2ludGVybmFsLmggICAgfCAgMyAr
-Ky0KIDMgZmlsZXMgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMjYgZGVsZXRpb25zKC0pCgpk
-aWZmIC0tZ2l0IGEvZnMvdHJhY2Vmcy9ldmVudF9pbm9kZS5jIGIvZnMvdHJhY2Vmcy9ldmVudF9p
-bm9kZS5jCmluZGV4IGEzN2RiMGRhYzMwMi4uYWNkYzc5N2JkOWMwIDEwMDY0NAotLS0gYS9mcy90
-cmFjZWZzL2V2ZW50X2lub2RlLmMKKysrIGIvZnMvdHJhY2Vmcy9ldmVudF9pbm9kZS5jCkBAIC00
-MTQsMjMgKzQxNCwxNCBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBldmVudGZzX2lub2RlICphbGxv
-Y19laShjb25zdCBjaGFyICpuYW1lKQogCiAKIC8qKgotICogZXZlbnRmc19zZXRfZWlfc3RhdHVz
-X2ZyZWUgLSByZW1vdmUgdGhlIGRlbnRyeSByZWZlcmVuY2UgZnJvbSBhbiBldmVudGZzX2lub2Rl
-Ci0gKiBAdGk6IHRoZSB0cmFjZWZzX2lub2RlIG9mIHRoZSBkZW50cnkKKyAqIGV2ZW50ZnNfZF9y
-ZWxlYXNlIC0gZGVudHJ5IGlzIGdvaW5nIGF3YXkKICAqIEBkZW50cnk6IGRlbnRyeSB3aGljaCBo
-YXMgdGhlIHJlZmVyZW5jZSB0byByZW1vdmUuCiAgKgogICogUmVtb3ZlIHRoZSBhc3NvY2lhdGlv
-biBiZXR3ZWVuIGEgZGVudHJ5IGZyb20gYW4gZXZlbnRmc19pbm9kZS4KICAqLwotdm9pZCBldmVu
-dGZzX3NldF9laV9zdGF0dXNfZnJlZShzdHJ1Y3QgdHJhY2Vmc19pbm9kZSAqdGksIHN0cnVjdCBk
-ZW50cnkgKmRlbnRyeSkKK3ZvaWQgZXZlbnRmc19kX3JlbGVhc2Uoc3RydWN0IGRlbnRyeSAqZGVu
-dHJ5KQogewotCXN0cnVjdCBldmVudGZzX2lub2RlICplaTsKLQotCW11dGV4X2xvY2soJmV2ZW50
-ZnNfbXV0ZXgpOwotCWVpID0gZGVudHJ5LT5kX2ZzZGF0YTsKLQlpZiAoZWkpIHsKLQkJZGVudHJ5
-LT5kX2ZzZGF0YSA9IE5VTEw7Ci0JCXB1dF9laShlaSk7Ci0JfQotCW11dGV4X3VubG9jaygmZXZl
-bnRmc19tdXRleCk7CisJcHV0X2VpKGRlbnRyeS0+ZF9mc2RhdGEpOwogfQogCiAvKioKQEAgLTUx
-Nyw5ICs1MDgsOCBAQCBzdGF0aWMgc3RydWN0IGRlbnRyeSAqZXZlbnRmc19yb290X2xvb2t1cChz
-dHJ1Y3QgaW5vZGUgKmRpciwKIAl9CiAKICBlbm9lbnQ6Ci0JLyogTm90aGluZyBmb3VuZD8gKi8K
-LQlkX2FkZChkZW50cnksIE5VTEwpOwotCXJlc3VsdCA9IE5VTEw7CisJLyogRG9uJ3QgY2FjaGUg
-bmVnYXRpdmUgbG9va3VwcywganVzdCByZXR1cm4gYW4gZXJyb3IgKi8KKwlyZXN1bHQgPSBFUlJf
-UFRSKC1FTk9FTlQpOwogCiAgb3V0OgogCW11dGV4X3VubG9jaygmZXZlbnRmc19tdXRleCk7CkBA
-IC04NTcsNiArODQ3LDUgQEAgdm9pZCBldmVudGZzX3JlbW92ZV9ldmVudHNfZGlyKHN0cnVjdCBl
-dmVudGZzX2lub2RlICplaSkKIAkgKiBzdGlja3MgYXJvdW5kIHdoaWxlIHRoZSBvdGhlciBlaS0+
-ZGVudHJ5IGFyZSBjcmVhdGVkCiAJICogYW5kIGRlc3Ryb3llZCBkeW5hbWljYWxseS4KIAkgKi8K
-LQlzaW1wbGVfcmVjdXJzaXZlX3JlbW92YWwoZGVudHJ5LCBOVUxMKTsKIAlkcHV0KGRlbnRyeSk7
-CiB9CmRpZmYgLS1naXQgYS9mcy90cmFjZWZzL2lub2RlLmMgYi9mcy90cmFjZWZzL2lub2RlLmMK
-aW5kZXggZTFiMTcyYzBlMDkxLi42NDEyMjc4N2U1ZDAgMTAwNjQ0Ci0tLSBhL2ZzL3RyYWNlZnMv
-aW5vZGUuYworKysgYi9mcy90cmFjZWZzL2lub2RlLmMKQEAgLTM3OSwyMSArMzc5LDMwIEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgc3VwZXJfb3BlcmF0aW9ucyB0cmFjZWZzX3N1cGVyX29wZXJhdGlv
-bnMgPSB7CiAJLnNob3dfb3B0aW9ucwk9IHRyYWNlZnNfc2hvd19vcHRpb25zLAogfTsKIAotc3Rh
-dGljIHZvaWQgdHJhY2Vmc19kZW50cnlfaXB1dChzdHJ1Y3QgZGVudHJ5ICpkZW50cnksIHN0cnVj
-dCBpbm9kZSAqaW5vZGUpCisvKgorICogSXQgd291bGQgYmUgY2xlYW5lciBpZiBldmVudGZzIGhh
-ZCBpdHMgb3duIGRlbnRyeSBvcHMuCisgKgorICogTm90ZSB0aGF0IGRfcmV2YWxpZGF0ZSBpcyBj
-YWxsZWQgcG90ZW50aWFsbHkgdW5kZXIgUkNVLAorICogc28gaXQgY2FuJ3QgdGFrZSB0aGUgZXZl
-bnRmcyBtdXRleCBldGMuIEl0J3MgZmluZSAtIGlmCisgKiB3ZSBvcGVuIGEgZmlsZSBqdXN0IGFz
-IGl0J3MgbWFya2VkIGRlYWQsIHRoaW5ncyB3aWxsCisgKiBzdGlsbCB3b3JrIGp1c3QgZmluZSwg
-YW5kIGp1c3Qgc2VlIHRoZSBvbGQgc3RhbGUgY2FzZS4KKyAqLworc3RhdGljIHZvaWQgdHJhY2Vm
-c19kX3JlbGVhc2Uoc3RydWN0IGRlbnRyeSAqZGVudHJ5KQogewotCXN0cnVjdCB0cmFjZWZzX2lu
-b2RlICp0aTsKKwlpZiAoZGVudHJ5LT5kX2ZzZGF0YSkKKwkJZXZlbnRmc19kX3JlbGVhc2UoZGVu
-dHJ5KTsKK30KIAotCWlmICghZGVudHJ5IHx8ICFpbm9kZSkKLQkJcmV0dXJuOworc3RhdGljIGlu
-dCB0cmFjZWZzX2RfcmV2YWxpZGF0ZShzdHJ1Y3QgZGVudHJ5ICpkZW50cnksIHVuc2lnbmVkIGlu
-dCBmbGFncykKK3sKKwlzdHJ1Y3QgZXZlbnRmc19pbm9kZSAqZWkgPSBkZW50cnktPmRfZnNkYXRh
-OwogCi0JdGkgPSBnZXRfdHJhY2Vmcyhpbm9kZSk7Ci0JaWYgKHRpICYmIHRpLT5mbGFncyAmIFRS
-QUNFRlNfRVZFTlRfSU5PREUpCi0JCWV2ZW50ZnNfc2V0X2VpX3N0YXR1c19mcmVlKHRpLCBkZW50
-cnkpOwotCWlwdXQoaW5vZGUpOworCXJldHVybiAhKGVpICYmIGVpLT5pc19mcmVlZCk7CiB9CiAK
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGVudHJ5X29wZXJhdGlvbnMgdHJhY2Vmc19kZW50cnlfb3Bl
-cmF0aW9ucyA9IHsKLQkuZF9pcHV0ID0gdHJhY2Vmc19kZW50cnlfaXB1dCwKKwkuZF9yZXZhbGlk
-YXRlID0gdHJhY2Vmc19kX3JldmFsaWRhdGUsCisJLmRfcmVsZWFzZSA9IHRyYWNlZnNfZF9yZWxl
-YXNlLAogfTsKIAogc3RhdGljIGludCB0cmFjZV9maWxsX3N1cGVyKHN0cnVjdCBzdXBlcl9ibG9j
-ayAqc2IsIHZvaWQgKmRhdGEsIGludCBzaWxlbnQpCmRpZmYgLS1naXQgYS9mcy90cmFjZWZzL2lu
-dGVybmFsLmggYi9mcy90cmFjZWZzL2ludGVybmFsLmgKaW5kZXggNzJkYjNiZGM0ZGZiLi5kNDE5
-NDQ2NmI2NDMgMTAwNjQ0Ci0tLSBhL2ZzL3RyYWNlZnMvaW50ZXJuYWwuaAorKysgYi9mcy90cmFj
-ZWZzL2ludGVybmFsLmgKQEAgLTc5LDYgKzc5LDcgQEAgc3RydWN0IGlub2RlICp0cmFjZWZzX2dl
-dF9pbm9kZShzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNiKTsKIHN0cnVjdCBkZW50cnkgKmV2ZW50ZnNf
-c3RhcnRfY3JlYXRpbmcoY29uc3QgY2hhciAqbmFtZSwgc3RydWN0IGRlbnRyeSAqcGFyZW50KTsK
-IHN0cnVjdCBkZW50cnkgKmV2ZW50ZnNfZmFpbGVkX2NyZWF0aW5nKHN0cnVjdCBkZW50cnkgKmRl
-bnRyeSk7CiBzdHJ1Y3QgZGVudHJ5ICpldmVudGZzX2VuZF9jcmVhdGluZyhzdHJ1Y3QgZGVudHJ5
-ICpkZW50cnkpOwotdm9pZCBldmVudGZzX3NldF9laV9zdGF0dXNfZnJlZShzdHJ1Y3QgdHJhY2Vm
-c19pbm9kZSAqdGksIHN0cnVjdCBkZW50cnkgKmRlbnRyeSk7CisKK3ZvaWQgZXZlbnRmc19kX3Jl
-bGVhc2Uoc3RydWN0IGRlbnRyeSAqZGVudHJ5KTsKIAogI2VuZGlmIC8qIF9UUkFDRUZTX0lOVEVS
-TkFMX0ggKi8KLS0gCjIuNDMuMC41LmczOGZiMTM3YmRiCgo=
---000000000000b536a306102cd2ec--
+FWIW, looking at git blame for fs/proc/meminfo.c, it seems like people
+have generally been adding items where it makes sense semantically, not
+at the end of the file. So maybe that's okay for userspace tools.
