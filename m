@@ -1,217 +1,249 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2049.outbound.protection.partner.outlook.cn [139.219.146.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBBF53E29
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706601367; cv=none; b=aEuxO6NtAmYaDSS11x9pbrfmPXmhQjyj8CcyVh9lywN1U3q2bnQ+5pjGoZecdPR1uG7ad6FNzGdLagxlmyTT2IpHLitJBdfQGThSB/TOcWnPKq+pc1x1CK5H5FDMwzFjhDfulLfrPjp4y6ewVh1HlTar/uP1A/E1zQFvr2MdhqE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706601367; c=relaxed/simple;
-	bh=wHR2CwdXVam+dMxen82xzir/2gKlgyfk9KNbt22I+O0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NUNXJK2RzEsAJ80h4+Ph+/RrcyPXW8Go3KM8xKgaQdze/+8a84Y5yOOOaAmzOhmnfZc/P46AFVuH9UHffIaV8TkVZ78cypZFhveFhnIiQFAd4vv+JHv04FUufHnZecmuH2sQNUFUCyL9l2zyOPoQQWvjrzH/XvjwR2+T6ww8iig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jabtirok; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jabtirok"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so3705147a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 23:56:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706601363; x=1707206163; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ngybv8O9iGjxqt6rcpROCs4pkncSLIQiKAAur4B+yfo=;
-        b=jabtirokNvFgtX1HOVMrgGHwJH+0S7lxe9NZTn1DjRFO4gecjR3R2pZSYoHJPloYNU
-         CdyGlgaPWP6eqQ4sRNSrfysD3OA3RR9pvA3GAbuq1yC9+da4/ZNImwEozpXd1wjaHEpV
-         WdLyCrJmy4bn6tyngxgS0DTuVv6GhyoeRuSJ4DwVTWBdmjRAKWq8/RLuik5nflLPXUuB
-         llEpwZetew2YJ0YlsgTYTdvMpciTxFH7tW5OqYVkSY1slDkskcJUQEQqGcNhxLDFimZs
-         S4dg3urJafwTRY4jbxLaTFLlanzNYTv1kLRHI9Sy2//51chJ/ZT1iUWxgae7UmiAM5+x
-         zTGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706601363; x=1707206163;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ngybv8O9iGjxqt6rcpROCs4pkncSLIQiKAAur4B+yfo=;
-        b=PpBQZqPQt10VAUJHU5qxymZClu8C1XVgrip5SCqrTTmRqc4egCvvo2Q0bJOJluBxLz
-         4XB/yKBmuFtHzfvYgzjpwiKHGE9qgDAPgPllel7HIU0DTID5hatChL1kwtwesgFL1v4r
-         g/epGE8RMj+imigZ8JwpR64EutAaypbMkwO+4LxUevbErY8niCWAIjrRtkFUjFBA6jHO
-         qMjSKIHOYHGQ0qduh9MGAScEM7FcGdp4d/CmsnMPmKj5Rb4i0vpq2l7Smj+b6Zc+kpfV
-         S7avlmz/+Vlh44Ptk8+ZjthXEgzfeE7xrnqQ8AVQbyTJiqFRl8+jmMrZHuZnuzNicgjK
-         suiA==
-X-Gm-Message-State: AOJu0YyqQzYLnR+Klo+0kx3dvl9sIgyf4nRNcufl4e1CbefzfQgCQUaZ
-	80+XB3lmgXKNAzpmJ87Nx0pHQKqaYPpE9Euj8hRsWXvxcsnUgJQ4D77aDt4znyA=
-X-Google-Smtp-Source: AGHT+IE46CauFpE6SAwlaWiivSPbB1RSG4Kax6PdpZuyNZjKAXh2tKtWGWtZ6rkn7MrohhkAUxxV+Q==
-X-Received: by 2002:a05:6402:17ce:b0:55f:1ae8:2f1d with SMTP id s14-20020a05640217ce00b0055f1ae82f1dmr2044451edy.11.1706601363429;
-        Mon, 29 Jan 2024 23:56:03 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id d15-20020a056402000f00b0055f1af929c2sm1205360edu.28.2024.01.29.23.56.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 23:56:03 -0800 (PST)
-Message-ID: <4c6a7898-d300-468c-9e2f-13f639ca4407@linaro.org>
-Date: Tue, 30 Jan 2024 08:56:01 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D0453E29
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706601485; cv=fail; b=qK9OP8a0pQAJ0QXQRorrA+LOXeGZ0327LL1jKRllFdNjXJxiVTRA3EEfgbuBZD6/DdUnbIrgi9XVCwKBOxP6GEcUj0ih02dj+bgah6WGJnIMrLq3WozH9ETNWGAwGr/qgC1g1MlEmoZEBrGLt9KUcTttjcOC8HrRlxwPLio9sBM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706601485; c=relaxed/simple;
+	bh=5syT/BxWaIKSWAPNdF6o4qcB98rXqgoqLqOFhfZ7qso=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LOaoh34KdfCbcQdu3HTLTdBWxr5/lFxyYYpmqaMjTFKIzMDk1CA3ZVh/bi5Gtq4RkTxb/TMvVhcWaBjqu7grPdWkiYXQ81NPcKGhoaWpduf3RssjgVzvWVC6oNDNP32HLbjeuqTVJZvl5ANfGoE/KYlf5bE56iN0tZ0KpROijhI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BbYw+kQ5GE0q+WeuQCd33+JAeeirzXiNKCgRin3FoNJ4cM1Y6C2riQZZ48V3ypEN5i3PTkvqT+nZxxgoxMc1GxvRVAoHPv8k+mtq1vjKZAqzG+5ir4LYOvpg40uf5kaUHotY03S4xTdBY1eXRNn56nLQQ5VnM/avCJIfOyyHrhtR+XZ4EQ6OPmT0ut0H3K18J3kT3ZRry/4yz4qrC0HC+02Ilq8BruqOUXRHlwhrxQfLhZxtSSWeBExd2dtPGLQ3LsKCAJmkrpfsT+vSaGOCl3uQ6mSxN9HtRmv6JU5vTx2uzZ+sP2XOUt7cZOsbCaVrm8MFPRD8Ky4hrnfsncGApg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8Pez1c1lUwBjJAz+4SfGUDfVzmHiQof580/knX/FjMk=;
+ b=co0xvAIPxGkSrCmCkvh7lLqawMAsiQ6MxPfK5vMmoeVylAL7qpMvswQ23Cy+gkgh8P9ODCNZUpma6H9eBTd+dZeyZCTH5FfQgS9v5EUnw3vFtwYUpLXPgEk4na2wT81bPvEIJl4c97EaPGaAVDZMHVl1BrZ0355l3IVUGWdCIw9z09Bo3LZRyADYx5zb2eRxr3Y4J2kBTaiaMFip1aVU2X27ozUj8dgAd9GE1ZpQjQSvHb8j2Bn+hFlFGkrXWE28KL7veovtBCfj03Zsy1hW2BP1Ynp844mp8A6NvpLLwXJ70JZ+hd+18iEt7Be25iHohDr+2ICeEboB9sDgHz9WSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:f::16) by BJSPR01MB0674.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:1e::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.31; Tue, 30 Jan
+ 2024 06:24:44 +0000
+Received: from BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+ ([fe80::3862:65b4:c857:c4a6]) by
+ BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn ([fe80::3862:65b4:c857:c4a6%4])
+ with mapi id 15.20.7228.029; Tue, 30 Jan 2024 06:24:44 +0000
+From: JeeHeng Sia <jeeheng.sia@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "palmer@dabbelt.com"
+	<palmer@dabbelt.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "robh@kernel.org"
+	<robh@kernel.org>, "conor.dooley@microchip.com" <conor.dooley@microchip.com>,
+	"suagrfillet@gmail.com" <suagrfillet@gmail.com>
+Subject: RE: [RFC v1 2/2] riscv: cacheinfo: Refactor populate_cache_leaves()
+Thread-Topic: [RFC v1 2/2] riscv: cacheinfo: Refactor populate_cache_leaves()
+Thread-Index: AQHaUok0xUbmLQ6q7k2OZq+prRHjuLDwuPSAgAEXBNA=
+Date: Tue, 30 Jan 2024 06:24:44 +0000
+Message-ID:
+ <BJSPR01MB05611B1A4DDB1F73FD9E0A829C7DA@BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn>
+References: <20240129075957.116033-1-jeeheng.sia@starfivetech.com>
+ <20240129075957.116033-3-jeeheng.sia@starfivetech.com>
+ <20240129-parrot-dropout-c4ece33a98da@spud>
+In-Reply-To: <20240129-parrot-dropout-c4ece33a98da@spud>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BJSPR01MB0561:EE_|BJSPR01MB0674:EE_
+x-ms-office365-filtering-correlation-id: 94bd6c0d-e34c-4e65-eb3b-08dc215c267b
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ jPXXUJn3+uQHd/FQWgCmcy8TCoSeuQ3lGIbZaIUnize5WS1ocywjdWcmu5kBDor20+u5P8kvHo7prU4O9VAgVHNTj0glCb38fZqFQF8kqiiqGPigYN5V89FLtwoZswV4soIYttyYAhbzEFZxT3kYIHOxtGiy25cgfQV+z6TeAaWaExHUmh5s+HbSdJZw+rPDFi+ILf/wjV/JFlYELHGfBXLsUcegCPpRlIpqCJ4Ndo+21ASAq61+e2EVSa7G3uehrEgikPN7a5SXSNKVKtcYCjCq8co7Fkx6jTs33AzeqiO0k1O42FQ2JFFy65nu94hsaT1TQwB0EuSdAcao/WYIBt+AWYqBdji7m0WciD6GJD1p2gazs2yDhZC3vtkTKVoaWzJjOLse81Q49XALAD9QQapZ5EM8P3pbD+524QYsGKdt/zozSUb0fNLBKeyf6mq3L97e5Np+X03Cflurd46Yn2lugK9k3xK3/+q2wZ4nhZOdpK2+wcjqCfpsdKkDDZ3xP+XbzA5peI+XEWVwWjsqM82pNGVLxVgYe/V/Nraag7OWi9XRgCeAnn9Gd/FcMYiU
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39830400003)(396003)(136003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(41320700001)(55016003)(7696005)(71200400001)(966005)(83380400001)(9686003)(53546011)(26005)(33656002)(40180700001)(38100700002)(122000001)(86362001)(40160700002)(38070700009)(2906002)(41300700001)(5660300002)(508600001)(7416002)(8676002)(66446008)(66946007)(6916009)(66556008)(64756008)(4326008)(66476007)(76116006)(54906003)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Kb8Zk6ie4sr7lcY+KFgdU5Xhzt9Hk/yTCJRdLjuSW4s4/CeYFn+f1JdNTkn1?=
+ =?us-ascii?Q?Bb58jtpGpDyI6FlRo83iQWWD7iRURpxzeeOgENTYffEFpXRSvdI1dCSiZop2?=
+ =?us-ascii?Q?H8kPMZhYbCPT7eJDC5he6Xcag/cYuHROseWTWy8vYRQqKTpBWGUGCSIuay7O?=
+ =?us-ascii?Q?gkymNJp72XJ64TY40GCSLMbml+u/0T6UqhSXFTmNVLEVuejuiXvtJXN2Ju+Z?=
+ =?us-ascii?Q?FpjEndeB5fbVM1ZaHE32hHXU9VRR4+x9Vb2QI7d84wl8Qn+oQnc4PH4gVQ0w?=
+ =?us-ascii?Q?TN6pSdMwPDz8wZ0stVzz7b/jp5h8ayWoMR61KWmx5jkgxUcfoT6O6u/TvVFm?=
+ =?us-ascii?Q?Yp0WG2QtO5mb7wwvmojzPcexc0iHVIHcUdVRlAQ1Q+xDXFK1oQofVgmUpsMw?=
+ =?us-ascii?Q?LAc/F/MAYl6nh7clcI4mXH4hbzDAqy2VTBr2p6j4xJtCv1CI3vnadyQ5/PKH?=
+ =?us-ascii?Q?JAufN9RUgur83ea2LsJTsnDOvtlSweUXzl7Ntc61wStB4bn9GdQJbkpS6X5r?=
+ =?us-ascii?Q?HpD7z1XVwOvG6I/kpPHEgu1lK0LbE81bBE946iOyYDviHMv15XaEKLlxCtLe?=
+ =?us-ascii?Q?ukJ4nS4r8PYRw8S02Cd9OvUH8z0hhWsY3Yjyi6ZSil42dVP4bFR45nNqR6Zj?=
+ =?us-ascii?Q?6xUgDvKe2APpzgPw6w1ucE/oMpTIfVqqmFbcIjz4M9QjSk1mtHOOxDJdLzTl?=
+ =?us-ascii?Q?5tV16BGKs377j2pegSBT3AsKtk1TSiB7CmM4J0sBJ1DtfNTzfXduCuYC5DBV?=
+ =?us-ascii?Q?5/8aUUfCnKtBs/b34xNUGG2jstJonCLkvLz4FOQWxW9JjCvJ/wVWCcoqb97Y?=
+ =?us-ascii?Q?2DGyO2qPoLxA9k7YCoKhgQ0mcDezzHCbzgTtfbE6wWUO0/wcGk3i6pJGle4C?=
+ =?us-ascii?Q?9WeODKbnziaaeBfyyPqROXRLRO1k0T1sy3qsag/4Ov0NHFYAY3euK/dMwqEJ?=
+ =?us-ascii?Q?ttmxN/zKrQGvnPeCh+DSYYhTg5sdWsXG2DBSL78S2D5BMd2nIxiTmoByBCQ2?=
+ =?us-ascii?Q?qU8xiyrQM/YHB9WPBeNcLxZQ5n8rlnjK5mbooRaNHtjBcAp7clxm2Cx3++Ob?=
+ =?us-ascii?Q?+0tXNnOSlqJ5P9NqvWO/n5cK7KOW9YKp8Q9MiUfkoir8RZTf+GYjJfSYxqi9?=
+ =?us-ascii?Q?wl4hHJjfZWKIWyKuR+uJRV1G69bPUOrlI/7XDMNc4NcIfM5WY+qDq3PfyyMs?=
+ =?us-ascii?Q?MkJVBYxpU9ywzdPAX0wIUT+sIdu0jaRBl6x5kKxjC9zMcVCn/tie0EzBo5hh?=
+ =?us-ascii?Q?TgYJvnaMnXZ0t97NKLY+N5TnJPpXPtIyzealNCkzqc1Y+unkCF/I4r0u8H0L?=
+ =?us-ascii?Q?whi8xaSY+/YNCC9LwqTo8SkQmRdijoAUSxHtmwqLqmhCK0cmhatk6XMI6/9x?=
+ =?us-ascii?Q?SXYU/LjMfoK6udOtqMcw2yFnrlnZ8wk2/xJGzNxzgmyf7cHfOaLkravnbSKF?=
+ =?us-ascii?Q?2HQkk8wS+pA7F0Oi6GQCpZvCcB9++TgvqMijdIIsniN+SkcaQsi1COv9n63t?=
+ =?us-ascii?Q?WLyCBroWcM1WBZ1qqcrU1dzqOlA6W58n/FC1dnUD1EgHn1J2fATY97KBgI2q?=
+ =?us-ascii?Q?Hursd3/GidCISvIXuFJQJQaoBAIPWGebsQ5xiCSzZC7y7HApWyWrzZi9KGbq?=
+ =?us-ascii?Q?sg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] fpga: xilinx-selectmap: add new driver
-Content-Language: en-US
-To: Charles Perry <charles.perry@savoirfairelinux.com>, mdf@kernel.org
-Cc: hao.wu@intel.com, yilun.xu@intel.com, trix@redhat.com,
- krzysztof.kozlowski+dt@linaro.org, bcody@markem-imaje.com,
- avandiver@markem-imaje.com, linux-fpga@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240129225602.3832449-1-charles.perry@savoirfairelinux.com>
- <20240129225602.3832449-3-charles.perry@savoirfairelinux.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240129225602.3832449-3-charles.perry@savoirfairelinux.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0561.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94bd6c0d-e34c-4e65-eb3b-08dc215c267b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2024 06:24:44.5543
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1kfmMXwoicdn4XDAdzvuTWvsA2uX+R8d3+Rg+i0nqWyYVA37XY6TEPTHCc201pRg+l4eFW3Y5iGujZVe+CyGrKqN2yzWkrzPaF2pSDvID1A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0674
 
-On 29/01/2024 23:56, Charles Perry wrote:
-> Xilinx 7 series FPGA can be programmed using a slave parallel port named
-> the SelectMAP interface in the datasheet. This slave interface is
-> compatible with the i.MX6 EIM bus controller but other types of external
-> memory mapped parallel bus might work.
-> 
-> xilinx-selectmap currently only supports the x8 mode where data is loaded
-> at one byte per rising edge of the clock, with the MSb of each byte
-> presented to the D0 pin.
-> 
-> The following DT fragment shows a valid configuration on a custom i.MX6
-> board (pinctrl not shown for readability):
-> 
-> &weim {
->     status = "okay";
->     ranges = <0 0 0x08000000 0x04000000>;
-> 
->     fpga_mgr: fpga_programmer@0,0 {
->         compatible = "xlnx,fpga-slave-selectmap";
->         reg = <0 0 0x4000000>;
->         fsl,weim-cs-timing = <0x00070031 0x00000142
->                               0x00020000 0x00000000
->                               0x0c000645 0x00000000>;
->         prog_b-gpios = <&gpio5 5 GPIO_ACTIVE_LOW>;
->         init-b-gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
->         done-gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
->         csi-b-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
->         rdwr-b-gpios = <&gpio3 10 GPIO_ACTIVE_LOW>;
->     };
-> };
 
-Drop that example. First, it is not correct. Second, a correct one in
-bindings is enough.
 
-> 
-> Signed-off-by: Charles Perry <charles.perry@savoirfairelinux.com>
-> ---
-
-...
-
-> +static int xilinx_selectmap_probe(struct platform_device *pdev)
-> +{
-> +	struct xilinx_selectmap_conf *conf;
-> +	struct resource *r;
-> +	void __iomem *base;
-> +
-> +	conf = devm_kzalloc(&pdev->dev, sizeof(*conf), GFP_KERNEL);
-> +	if (!conf)
-> +		return -ENOMEM;
-> +
-> +	base = devm_platform_get_and_ioremap_resource(pdev, 0, &r);
-> +	if (IS_ERR(base))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(base), "ioremap error\n");
-> +	conf->base = base;
-> +
-> +	/* CSI_B is active low */
-> +	conf->csi_b = devm_gpiod_get_optional(&pdev->dev, "csi-b", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(conf->csi_b))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(conf->csi_b),
-> +				     "Failed to get CSI_B gpio\n");
-> +
-> +	/* RDWR_B is active low */
-> +	conf->rdwr_b = devm_gpiod_get_optional(&pdev->dev, "rdwr-b", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(conf->rdwr_b))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(conf->rdwr_b),
-> +				     "Failed to get RDWR_B gpio\n");
-> +
-> +	return xilinx_core_probe(&conf->core, &pdev->dev,
-> +							xilinx_selectmap_write,
-> +							xilinx_selectmap_apply_padding);
-
-Totally messed indentation. Please run scripts/checkpatch.pl and fix
-reported warnings. Some warnings can be ignored, but the code here looks
-like it needs a fix. Feel free to get in touch if the warning is not clear.
-
-> +}
-> +
-> +static const struct of_device_id xlnx_selectmap_of_match[] = {
-> +		{ .compatible = "xlnx,fpga-slave-selectmap", },
-> +		{}
-> +};
-> +MODULE_DEVICE_TABLE(of, xlnx_selectmap_of_match);
-> +
-> +static struct platform_driver xilinx_slave_selectmap_driver = {
-> +	.driver = {
-> +		.name = "xilinx-slave-selectmap",
-> +		.of_match_table = of_match_ptr(xlnx_selectmap_of_match),
-
-Drop of_match_ptr, it leads to warnings.
-
-> +	},
-> +	.probe  = xilinx_selectmap_probe,
-> +};
-
-Best regards,
-Krzysztof
-
+> -----Original Message-----
+> From: Conor Dooley <conor@kernel.org>
+> Sent: Monday, January 29, 2024 8:31 PM
+> To: JeeHeng Sia <jeeheng.sia@starfivetech.com>
+> Cc: linux-kernel@vger.kernel.org; linux-riscv@lists.infradead.org; paul.w=
+almsley@sifive.com; palmer@dabbelt.com;
+> aou@eecs.berkeley.edu; sudeep.holla@arm.com; robh@kernel.org; conor.doole=
+y@microchip.com; suagrfillet@gmail.com
+> Subject: Re: [RFC v1 2/2] riscv: cacheinfo: Refactor populate_cache_leave=
+s()
+>=20
+> Hey,
+>=20
+> Firstly, the $subject should really mention that the motivation for the
+> refactoring is ACPI support.
+Noted. In fact, the main motivation is to support both DT and ACPI.
+>=20
+> On Sun, Jan 28, 2024 at 11:59:57PM -0800, Sia Jee Heng wrote:
+> > Refactoring the cache population function to support both DT and
+> > ACPI-based platforms.
+> >
+> > Signed-off-by: Sia Jee Heng <jeeheng.sia@starfivetech.com>
+> > ---
+> >  arch/riscv/kernel/cacheinfo.c | 47 ++++++++++++++---------------------
+> >  1 file changed, 19 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinf=
+o.c
+> > index 30a6878287ad..f10e26fb75b6 100644
+> > --- a/arch/riscv/kernel/cacheinfo.c
+> > +++ b/arch/riscv/kernel/cacheinfo.c
+> > @@ -74,36 +74,27 @@ int populate_cache_leaves(unsigned int cpu)
+> >  {
+> >  	struct cpu_cacheinfo *this_cpu_ci =3D get_cpu_cacheinfo(cpu);
+> >  	struct cacheinfo *this_leaf =3D this_cpu_ci->info_list;
+> > -	struct device_node *np =3D of_cpu_device_node_get(cpu);
+> > -	struct device_node *prev =3D NULL;
+> > -	int levels =3D 1, level =3D 1;
+> > -
+> > -	if (of_property_read_bool(np, "cache-size"))
+> > -		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> > -	if (of_property_read_bool(np, "i-cache-size"))
+> > -		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> > -	if (of_property_read_bool(np, "d-cache-size"))
+> > -		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+> > -
+> > -	prev =3D np;
+> > -	while ((np =3D of_find_next_cache_node(np))) {
+> > -		of_node_put(prev);
+> > -		prev =3D np;
+> > -		if (!of_device_is_compatible(np, "cache"))
+> > -			break;
+> > -		if (of_property_read_u32(np, "cache-level", &level))
+> > -			break;
+> > -		if (level <=3D levels)
+> > -			break;
+> > -		if (of_property_read_bool(np, "cache-size"))
+> > -			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> > -		if (of_property_read_bool(np, "i-cache-size"))
+> > -			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> > -		if (of_property_read_bool(np, "d-cache-size"))
+> > +	unsigned int level, idx;
+> > +
+> > +	for (idx =3D 0, level =3D 1; level <=3D this_cpu_ci->num_levels &&
+> > +	     idx < this_cpu_ci->num_leaves; idx++, level++) {
+> > +		/*
+> > +		 * Since the RISC-V architecture doesn't provide any register for de=
+tecting the
+> > +		 * Cache Level and Cache type, this assumes that:
+> > +		 * - There cannot be any split caches (data/instruction) above a uni=
+fied cache.
+> > +		 * - Data/instruction caches come in pairs.
+> > +		 * - Significant work is required elsewhere to fully support data/in=
+struction-only
+> > +		 *   type caches.
+> > +		 * - The above assumptions are based on conventional system design a=
+nd known
+> > +		 *   examples.
+>=20
+> I don't think this comment matches what you are doing.
+>=20
+> For example, the comment only requires that split caches cannot be above
+> unified ones, but the code will always make a level 1 cache be split and
+> higher level caches unified.
+>=20
+> The place you took the comment about the split caches from does not
+> enforce the type of cache layout that you do where the 1st level is
+> always split and anything else is unified.
+Correct, I meant to say 1st level is always split and anything else is unif=
+ied.
+But, do we agree with the statement?
+>=20
+> populate_cache_leaves() only gets called in a fallback path when the
+> information has not already been configured by other means (and as you
+> probably noticed on things like arm64 it uses some other means to fill
+> in the data).
+>=20
+> Is there a reason why we would not just return -ENOENT for ACPI systems
+I don't think that we should return -ENOENT otherwise the cacheinfo
+framework would failed.
+> if this has not been populated earlier in boot and leave the DT code
+> here alone?
+This function is shared by both ACPI and DT.
+>=20
+> Thanks,
+> Conor.
+>=20
+> > +		 */
+> > +		if (level =3D=3D 1) {
+> >  			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+> > -		levels =3D level;
+> > +			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+> > +		} else {
+> > +			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+> > +		}
+> >  	}
+> > -	of_node_put(np);
+> >
+> >  	return 0;
+> >  }
+> > --
+> > 2.34.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
