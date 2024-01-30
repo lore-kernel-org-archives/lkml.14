@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC3A557866;
-	Tue, 30 Jan 2024 08:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666F457888;
+	Tue, 30 Jan 2024 08:27:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706603250; cv=none; b=gDAKxIGz4/uqmZJB9crJPlr81VCzdauw4eq9079B4+FCz7kO+Z/y+o7aU1Bzp+3G3cCtezaddDMYPl4vKdHU+Mx2nWeQBPjxjawIuUx0vPQ2zbRUGjZmlfK9/WTI8mG2N90nlYDoRHAh9UFY3z/IA/9hVY97pmQY6C7s2ra9qm8=
+	t=1706603251; cv=none; b=c9jyHQi+FO6okyNzfjnjcmPMaH2Twf7ZUM2pHfj18DsqRaNqMjxm86Vz8lDfc5sn98o9DC2xzaXy65/ZfVsiL4y+yEScjisZd8nDq3bR/3iKWmNZVYo2mRVimNkU4hEkJRWctRjci2vId2A3NJx0tC+jyjceXZCQUmhCwB4iwt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706603250; c=relaxed/simple;
-	bh=j98IsQ8A2Z7MQ4f9OXygCnkweqIQTfvcNd9hW2MDvYs=;
+	s=arc-20240116; t=1706603251; c=relaxed/simple;
+	bh=OgP6r3a1KKrgPdfFzExpHkDCOOW2lLyqkMn9g951K7g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kyP1pPKg9Vz6QOF6+7xagF+/+swKhe3Ux7c+BsZ1nj2QY1kUIrYuEEv8DZU1bh0tWFXDHwZVoIWYBOy8KwRYiB+F8QNmp+HdQMDwwjG10qjyZrvVNKHVZtzwijNF80ghnMA7Z/CnoHCHm+ytQbJ4syofAxVMdlqwElTxiJnLyqo=
+	 MIME-Version; b=LB9FyRMKNVFIjX1pL6ilQK1HzdskmRam3yRxZFboN9eRsCNHesndFWWya5YxUG0sio26K+CgtMPKv7VPA5YbJYxT5bDeH5AcxbDRMa5CMDwHVvwGRRjuMs0juKNZNSd4ZVQC8c2Xoozl6J+DJIl53WnsFNoZKyJ10SNLQWkzUG4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxbOnusrhlZ0EIAA--.15199S3;
-	Tue, 30 Jan 2024 16:27:26 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxjuvwsrhlckEIAA--.25147S3;
+	Tue, 30 Jan 2024 16:27:28 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxHs_qsrhl4KcnAA--.23872S3;
-	Tue, 30 Jan 2024 16:27:25 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxHs_qsrhl4KcnAA--.23872S5;
+	Tue, 30 Jan 2024 16:27:26 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -25,11 +25,10 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	lvjianmin@loongson.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v5 1/3] irqchip/loongson-eiointc: Typo fix in function eiointc_domain_alloc
-Date: Tue, 30 Jan 2024 16:27:20 +0800
-Message-Id: <20240130082722.2912576-2-maobibo@loongson.cn>
+	lvjianmin@loongson.cn
+Subject: [PATCH v5 3/3] irqchip/loongson-eiointc: Refine irq affinity setting during resume
+Date: Tue, 30 Jan 2024 16:27:22 +0800
+Message-Id: <20240130082722.2912576-4-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240130082722.2912576-1-maobibo@loongson.cn>
 References: <20240130082722.2912576-1-maobibo@loongson.cn>
@@ -40,50 +39,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxHs_qsrhl4KcnAA--.23872S3
+X-CM-TRANSID:AQAAf8AxHs_qsrhl4KcnAA--.23872S5
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKF47tr4UArWDZw1xCryxCrX_yoWDtFc_uF
-	12ywnrGryaqr12q3Z7Wr1aqF9Fg3s8WFnY93Wq9F9xC34Utw18CrWaywnrJan7Kr4rAFn3
-	CrZ8JryfAryIyosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxU4AhLUUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoW7tFW8Ar1rZr4DWry3Ar1rZrc_yoW8Xr4rpF
+	W3A3ZFvr15GFyUXr9Yk3Wjq34ay39Y93y2qay3Wa93ZFs8Wa1DKF4FyFykZFW0k342yF1q
+	9F4Yq34ru3W5C3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07jz2NtUUUUU=
 
-There is small typo in function eiointc_domain_alloc(), and there is no
-definition about eiointc struct, instead its name should be eiointc_priv
-struct. It is strange that there is no warning with gcc compiler. This
-patch fixes the small typo issue.
+During suspend and resume, CPUs except CPU0 can be hot-unpluged and IRQs
+will be migrated to CPU0. So it is not necessary to restore irq affinity
+for eiointc irq controller when system resumes. This patch removes this
+piece of code about irq affinity restoring in function eiointc_resume().
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-eiointc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-loongson-eiointc.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
 diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index 1623cd779175..b3736bdd4b9f 100644
+index 6a71a8c29ac7..b64cbe3052e8 100644
 --- a/drivers/irqchip/irq-loongson-eiointc.c
 +++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -241,7 +241,7 @@ static int eiointc_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int ret;
- 	unsigned int i, type;
- 	unsigned long hwirq = 0;
--	struct eiointc *priv = domain->host_data;
-+	struct eiointc_priv *priv = domain->host_data;
+@@ -310,23 +310,7 @@ static int eiointc_suspend(void)
  
- 	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
- 	if (ret)
+ static void eiointc_resume(void)
+ {
+-	int i, j;
+-	struct irq_desc *desc;
+-	struct irq_data *irq_data;
+-
+ 	eiointc_router_init(0);
+-
+-	for (i = 0; i < nr_pics; i++) {
+-		for (j = 0; j < eiointc_priv[0]->vec_count; j++) {
+-			desc = irq_resolve_mapping(eiointc_priv[i]->eiointc_domain, j);
+-			if (desc && desc->handle_irq && desc->handle_irq != handle_bad_irq) {
+-				raw_spin_lock(&desc->lock);
+-				irq_data = irq_domain_get_irq_data(eiointc_priv[i]->eiointc_domain, irq_desc_get_irq(desc));
+-				eiointc_set_irq_affinity(irq_data, irq_data->common->affinity, 0);
+-				raw_spin_unlock(&desc->lock);
+-			}
+-		}
+-	}
+ }
+ 
+ static struct syscore_ops eiointc_syscore_ops = {
 -- 
 2.39.3
 
