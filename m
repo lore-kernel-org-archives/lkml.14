@@ -1,70 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB6267E79;
-	Tue, 30 Jan 2024 13:23:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2D066B51
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706621019; cv=none; b=txsk8KbiMNKH72QrhTxoAlccKun9HKrU16/7AAPcqoD4Q37quWe/qKL4+lg/yFI2SJVTpPsk2bImaMYGj2aNxOGjGUtxuuLqUu0YBSbWUcj6Vn3t5b7P2s4A15zNIJOVboJE0LHTaC3cvRxQhkRpcYp6IZPcQ6GXW+w+fNBrVyw=
+	t=1706621094; cv=none; b=Myx5g+DHeaYiiFp+/o6S9BsxiO1TvM5e0ricdNZfKfXw7c/CBDytZ9rqKTBiCDFlFmtCP27eyfnN0ystq2V15Q9ZEHZY4olppTM4pt1sV4SJxf/8Wijm7CkrLhdIVp8MGxAJjcHhFEXzi1xTqsFkoBFIw+ayPLkLgRcgrNeohrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706621019; c=relaxed/simple;
-	bh=RKCaoganjPDCgCyRbdn8LRljyVTeQzOhld1mynpH6IE=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=WfrpWsDhpDoLyF+wcFzIGmNVEaFMOcPyk88IirVEfDdrbr7n+D8n8dTjecL7uekwFGuoZSjsGNXrdWhaMQuF6Ty7VFAXrdX/vyagqvZZKbl3gL41EqMwggFfRVNRU1huUS30i7ImQ1f/v+f2t2MIF3T2GjS9gylQ58uhyQLwKeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfgaGVjx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706621094; c=relaxed/simple;
+	bh=u2/EtGgKHfzM35W18xHX1KvyJ0d2ZoEG7yO9aWLn5E0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uyGDN8N8U3Bx0y01MX9Pqvtjs5XorL5+A+AnF+yHS1XnKY3/f1Z8R8rGDKGjnll7Q2aDIUJwtIg6cU9z9K32NxSF0Erh6fXswSs2ccqo1aiJJZExcUNcZTu0exGU+zlKm+JOoXfZijF3BweMKDLvUTlpl4U1/eHgewUbrhPFa70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZaWbzdN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfgaGVjx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45888C433F1;
-	Tue, 30 Jan 2024 13:23:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZaWbzdN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC81C433F1;
+	Tue, 30 Jan 2024 13:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706621019;
-	bh=RKCaoganjPDCgCyRbdn8LRljyVTeQzOhld1mynpH6IE=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=hfgaGVjxcvyna3GhthcWEKWDqEORuAbjlOUPMeN2l7juh1cp9EYG+LISdbeEXoOVM
-	 cAp81Ln8FsBdK0r6dE85VTjxP7GKydDukJ5AeV4+MuTYtlHqBn0YKQETO2OWuCel2u
-	 QNl4kkCRQXztsPpboXwdTOWm4uKE+FQ9ec9pW9Ip0MkD3oXKIM/Wvpx+QCAZcQnOFe
-	 jujOfgXFbxyRZUzcw8zWf4M/miCP0hHuVXuaMu+QA5xAqkKoi9juFZrtgnryc1u1te
-	 O9TP265RGdK3L3X18iM0AhLZ+UlMj8QxLehrqX4MHq8eyTC7wNhg4SuAxx+kqrE8LI
-	 dvQUaBiEjzTOg==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1706621094;
+	bh=u2/EtGgKHfzM35W18xHX1KvyJ0d2ZoEG7yO9aWLn5E0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uZaWbzdNChbyXG+ahuq7EytUvzRdZGDvruqZR11EZP6KTpKu3lWN/qaKKHbKMmAac
+	 edrLPNAUV3JEw7LNJZYEtY41NODu+IuPpTTB+MXn0rcibGvRZZ6TSVZU/X1ajBNnK2
+	 yaVvQBdAQhPeoy2yJmanm0awSjpJSBJYJeMrGWBfDCsOmppHRgQBv927XnZtM62RLp
+	 H2qFTf/lKAOkPMRb027X03Vzmx9K2okqjDdgglg+LiVXFAEsmXtiA84jM77PTSXlvf
+	 fNrB4cxOyLO8nYqGR9iC8qKkkFJ35Eorggm/AWzX+Sd6Yb6jWtf6l2lS9tl6KuIveF
+	 M4SW6Z8UDW+ig==
+Date: Tue, 30 Jan 2024 21:12:03 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Matteo Croce <mcroce@microsoft.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/3] riscv: optimized memmove
+Message-ID: <Zbj1o6VAsk8Tn2ab@xhacker>
+References: <20240128111013.2450-1-jszhang@kernel.org>
+ <20240128111013.2450-3-jszhang@kernel.org>
+ <fa36b871-43d7-413c-82a2-0ecc0ebce9b4@ics.forth.gr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH net 1/9] wifi: fill in MODULE_DESCRIPTION()s for wlcore
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20240130104243.3025393-2-leitao@debian.org>
-References: <20240130104243.3025393-2-leitao@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
- edumazet@google.com, dsahern@kernel.org, weiwan@google.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, horms@kernel.org,
- andrew@lunn.ch, leit@fb.com,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Kees Cook <keescook@chromium.org>, Johannes Berg <johannes.berg@intel.com>,
- Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
- Justin Stitt <justinstitt@google.com>, Li Zetao <lizetao1@huawei.com>,
- Francois Romieu <romieu@fr.zoreil.com>, Rob Herring <robh@kernel.org>,
- Marc Kleine-Budde <mkl@pengutronix.de>, Ruan Jinjie <ruanjinjie@huawei.com>,
- linux-wireless@vger.kernel.org (open list:TI WILINK WIRELESS DRIVERS)
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <170662101207.2289851.7564186430529596261.kvalo@kernel.org>
-Date: Tue, 30 Jan 2024 13:23:34 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fa36b871-43d7-413c-82a2-0ecc0ebce9b4@ics.forth.gr>
 
-Breno Leitao <leitao@debian.org> wrote:
-
-> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> Add descriptions to the TI WLAN wlcore drivers.
+On Tue, Jan 30, 2024 at 01:39:10PM +0200, Nick Kossifidis wrote:
+> On 1/28/24 13:10, Jisheng Zhang wrote:
+> > From: Matteo Croce <mcroce@microsoft.com>
+> > 
+> > When the destination buffer is before the source one, or when the
+> > buffers doesn't overlap, it's safe to use memcpy() instead, which is
+> > optimized to use a bigger data size possible.
+> > 
+> > Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> I'd expect to have memmove handle both fw/bw copying and then memcpy being
+> an alias to memmove, to also take care when regions overlap and avoid
+> undefined behavior.
 
-These patches go to wireless-next, not net. But no need to resend because of this.
+Hi Nick,
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20240130104243.3025393-2-leitao@debian.org/
+Here is somthing from man memcpy:
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+"void *memcpy(void dest[restrict .n], const void src[restrict .n],
+                    size_t n);
 
+The  memcpy()  function copies n bytes from memory area src to memory area dest.
+The memory areas must not overlap.  Use memmove(3) if the memory areas do  over‐
+lap."
+
+IMHO, the "restrict" implies that there's no overlap. If overlap
+happens, the manual doesn't say what will happen.
+
+From another side, I have a concern: currently, other arch don't have
+this alias behavior, IIUC(at least, per my understanding of arm and arm64
+memcpy implementations)they just copy forward. I want to keep similar behavior
+for riscv.
+
+So I want to hear more before going towards alias-memcpy-to-memmove direction.
+
+Thanks
+> 
+> 
+> > --- a/arch/riscv/lib/string.c
+> > +++ b/arch/riscv/lib/string.c
+> > @@ -119,3 +119,28 @@ void *memcpy(void *dest, const void *src, size_t count) __weak __alias(__memcpy)
+> >   EXPORT_SYMBOL(memcpy);
+> >   void *__pi_memcpy(void *dest, const void *src, size_t count) __alias(__memcpy);
+> >   void *__pi___memcpy(void *dest, const void *src, size_t count) __alias(__memcpy);
+> > +
+> > +/*
+> > + * Simply check if the buffer overlaps an call memcpy() in case,
+> > + * otherwise do a simple one byte at time backward copy.
+> > + */
+> > +void *__memmove(void *dest, const void *src, size_t count)
+> > +{
+> > +	if (dest < src || src + count <= dest)
+> > +		return __memcpy(dest, src, count);
+> > +
+> > +	if (dest > src) {
+> > +		const char *s = src + count;
+> > +		char *tmp = dest + count;
+> > +
+> > +		while (count--)
+> > +			*--tmp = *--s;
+> > +	}
+> > +	return dest;
+> > +}
+> > +EXPORT_SYMBOL(__memmove);
+> > +
+> 
+> Here is an approach for the backwards case to get things started...
+> 
+> static void
+> copy_bw(void *dst_ptr, const void *src_ptr, size_t len)
+> {
+> 	union const_data src = { .as_bytes = src_ptr + len };
+> 	union data dst = { .as_bytes = dst_ptr + len };
+> 	size_t remaining = len;
+> 	size_t src_offt = 0;
+> 
+> 	if (len < 2 * WORD_SIZE)
+> 		goto trailing_bw;
+> 
+> 	for(; dst.as_uptr & WORD_MASK; remaining--)
+> 		*--dst.as_bytes = *--src.as_bytes;
+> 
+> 	src_offt = src.as_uptr & WORD_MASK;
+> 	if (!src_offt) {
+> 		for (; remaining >= WORD_SIZE; remaining -= WORD_SIZE)
+> 			*--dst.as_ulong = *--src.as_ulong;
+> 	} else {
+> 		unsigned long cur, prev;
+> 		src.as_bytes -= src_offt;
+> 		for (; remaining >= WORD_SIZE; remaining -= WORD_SIZE) {
+> 			cur = *src.as_ulong;
+> 			prev = *--src.as_ulong;
+> 			*--dst.as_ulong = cur << ((WORD_SIZE - src_offt) * 8) |
+> 					  prev >> (src_offt * 8);
+> 		}
+> 		src.as_bytes += src_offt;
+> 	}
+> 
+>  trailing_bw:
+> 	while (remaining-- > 0)
+> 		*--dst.as_bytes = *--src.as_bytes;
+> }
+> 
+> Regards,
+> Nick
