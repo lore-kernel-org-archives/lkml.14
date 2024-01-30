@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D79012F586;
-	Tue, 30 Jan 2024 22:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F0C512A155;
+	Tue, 30 Jan 2024 22:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706654252; cv=none; b=tsN8VdrVxrLYlcSHPS0KvWIf2aZy31vCPyKQTtO6ae/5zv/1vWcq/w6pH3YOcOuhig2U0N1DvvtG+/8g3PA66d94MtDnXtHycUKsN6GZxRYWqwTAnuUeOFrU1aSeM0IsWlPwJgwsXKk6HhEoHnD5ZZUrTRHx4D3ALM+KoSuUn88=
+	t=1706654250; cv=none; b=GJMjMEowuyJ1zhzL2BvFKhSBazg2m3Oy2TSiBJ4kEld8n3ddGmOorOUMj99zB2DeYGnAgBmTe4tvhr2lNMmZ7TUkmSpaVyFvlFSsjPrUpM9YMEP+MijyWuGraa3GEf55oLd65BYErIIr8tZgml6qng2ECXdsAEQijlyhWvfaYA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706654252; c=relaxed/simple;
-	bh=Why71ITgrYaaqvt7x4VBwFGoBfcnfEeid3tQu1KwRmI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=js5JF/jVDSJDDIQV8LJ7hjAil7rxO+ZoJe2PK2ry3ERXFrLe6HJkOUgGzo9XUCyZuG4QmJCNd6C4CBhUCAzHpw3CdIFZqI39iGRUkNT2Fs73axSxRTA24WlV0qLKLgOLhBskr9tG9h2m20oTkMOMoVyjGl4nK8cIG3DR5FrmGUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=C45FDi0Z; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1706654250; c=relaxed/simple;
+	bh=+ENZ+MfA2jg3AJxZ+5ZpKo5wklYiCgif0lE8XHED+4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=DLrSgY9FE38pnv/Ec47SsSsFoty+HKdi0N9NOcFAAP3GLhFNz4VrmgXv6j+HelnKj28AbaEtUj/cmGLdPbtbzje04wcWz0ebAqKXhWGFtrT8l6UaDPSArD56VOH2rnlLgBHUEsaEddrLr9ZxY8WkgTeNLjfrwX8hh5tLGb8B5pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VK0/Y3Vk; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C45FDi0Z"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VK0/Y3Vk"
 Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id B756020B2018; Tue, 30 Jan 2024 14:37:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B756020B2018
+	id 8A2C620B2013; Tue, 30 Jan 2024 14:37:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8A2C620B2013
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1706654242;
-	bh=nj/OxR4HUy4AqI4w0LzWjoX4XndB+bND6lYikuWog/c=;
+	bh=6Ecult7n7jN9f/scYLIUPo3TZzzRRE+1+AfaBu0wcPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C45FDi0ZUxIi6vxTCj5FnIxI3o2e7fI/+oph+zbieBOKFTEiT6iOZJdcNGlGbSZ08
-	 FYg2BfC9G5g02O/zg7jbRguQOUjpFmTUfM79tCdNRFrkGYJEOUfKVrwT+p4jRa8ls4
-	 E2JEVp2Td96mYkAvdG9znARWqqOqDF/ID7/Kj1tA=
+	b=VK0/Y3VkJTAknFtjLMzefaUQqoGOlBtr+vKhTv4TpUtAQUycsA0kpoBIAyHz49S9Z
+	 7pw5i/jBGrPhRY40bl3bMbQcKFOYnMBTHik3PnP0I0tvcOeO3kq/WvOXr+eiw7YXLQ
+	 ApLsCfstPrsV+XHwV20pguPG5MmGMYSK6JtllT+k=
 From: Fan Wu <wufan@linux.microsoft.com>
 To: corbet@lwn.net,
 	zohar@linux.ibm.com,
@@ -45,9 +45,9 @@ Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Deven Bowers <deven.desai@linux.microsoft.com>,
 	Fan Wu <wufan@linux.microsoft.com>
-Subject: [RFC PATCH v12 14/20] dm verity: consume root hash digest and signature data via LSM hook
-Date: Tue, 30 Jan 2024 14:37:02 -0800
-Message-Id: <1706654228-17180-15-git-send-email-wufan@linux.microsoft.com>
+Subject: [RFC PATCH v12 11/20] block|security: add LSM blob to block_device
+Date: Tue, 30 Jan 2024 14:36:59 -0800
+Message-Id: <1706654228-17180-12-git-send-email-wufan@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1706654228-17180-1-git-send-email-wufan@linux.microsoft.com>
 References: <1706654228-17180-1-git-send-email-wufan@linux.microsoft.com>
@@ -59,265 +59,340 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Deven Bowers <deven.desai@linux.microsoft.com>
 
-dm-verity provides a strong guarantee of a block device's integrity. As
-a generic way to check the integrity of a block device, it provides
-those integrity guarantees to its higher layers, including the filesystem
-level.
+Some block devices have valuable security properties that is only
+accessible during the creation time.
 
-An LSM that control access to a resource on the system based on the
-available integrity claims can use this transitive property of
-dm-verity, by querying the underlying block_device of a particular
-file.
+For example, when creating a dm-verity block device, the dm-verity's
+roothash and roothash signature, which are extreme important security
+metadata, are passed to the kernel. However, the roothash will be saved
+privately in dm-verity, which prevents the seucrity subsystem to easily
+access that information. Worse, in the current implementation the
+roothash signature will be discarded after the verification, making it
+impossible to utilize the roothash signature by the security subsystem.
 
-The digest and signature information need to be stored in the block
-device to fulfill the next requirement of authorization via LSM policy.
-This will enable the LSM to perform revocation of devices that are still
-mounted, prohibiting execution of files that are no longer authorized
-by the LSM in question.
+With this patch, an LSM blob is added to the block_device structure.
+This enables the security subsystem to store security-sensitive data
+related to block devices within the security blob. For example, LSM can
+use the new LSM blob to save the roothash signature of a dm-verity,
+and LSM can make access decision based on the data inside the signature,
+like the signer ceritificate.
 
-This patch added two security hook calls in dm-verity to save the
-dm-verity roothash and the roothash signature to the block device's
-LSM blobs. The hook calls are depended on CONFIG_IPE_PROP_DM_VERITY,
-which will be introduced in the next commit.
+The implementation follows the same approach used for security blobs in
+other structures like struct file, struct inode, and struct superblock.
+The initialization of the security blob occurs after the creation of the
+struct block_device, performed by the security subsystem. Similarly, the
+security blob is freed by the security subsystem before the struct
+block_device is deallocated or freed.
 
 Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
 Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+
 ---
 v2:
   + No Changes
 
 v3:
-  + No changes
+  + Minor style changes from checkpatch --strict
 
 v4:
-  + No changes
+  + No Changes
 
 v5:
-  + No changes
+  + Allow multiple callers to call security_bdev_setsecurity
 
 v6:
-  + Fix an improper cleanup that can result in
-    a leak
+  + Simplify security_bdev_setsecurity break condition
 
 v7:
-  + Squash patch 08/12, 10/12 to [11/16]
-  + Use part0 for block_device, to retrieve the block_device, when
-    calling security_bdev_setsecurity
+  + Squash all dm-verity related patches to two patches,
+    the additions to dm-verity/fs, and the consumption of
+    the additions.
 
 v8:
-  + Undo squash of 08/12, 10/12 - separating drivers/md/ from
-    security/ & block/
-  + Use common-audit function for dmverity_signature.
-  + Change implementation for storing the dm-verity digest to use the
-    newly introduced dm_verity_digest structure introduced in patch
-    14/20.
-  + Create new structure, dm_verity_digest, containing digest algorithm,
-    size, and digest itself to pass to the LSM layer. V7 was missing the
-    algorithm.
-  + Create an associated public header containing this new structure and
-    the key values for the LSM hook, specific to dm-verity.
-  + Additional information added to commit, discussing the layering of
-    the changes and how the information passed will be used.
+  + Split dm-verity related patches squashed in v7 to 3 commits based on
+    topic:
+      + New LSM hook
+      + Consumption of hook outside LSM
+      + Consumption of hook inside LSM.
+
+  + change return of security_bdev_alloc / security_bdev_setsecurity
+    to LSM_RET_DEFAULT instead of 0.
+
+  + Change return code to -EOPNOTSUPP, bring inline with other
+    setsecurity hooks.
 
 v9:
-  + No changes
+  + Add Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+  + Remove unlikely when calling LSM hook
+  + Make the security field dependent on CONFIG_SECURITY
 
 v10:
   + No changes
 
 v11:
-  + Add an optional field to save signature
-  + Move the security hook call to the new finalize hook
+  + No changes
 
 v12:
   + No changes
 ---
- drivers/md/dm-verity-target.c | 71 +++++++++++++++++++++++++++++++++++
- drivers/md/dm-verity.h        |  6 +++
- include/linux/dm-verity.h     | 19 ++++++++++
- 3 files changed, 96 insertions(+)
- create mode 100644 include/linux/dm-verity.h
+ block/bdev.c                  |  7 +++
+ include/linux/blk_types.h     |  3 ++
+ include/linux/lsm_hook_defs.h |  5 ++
+ include/linux/lsm_hooks.h     |  1 +
+ include/linux/security.h      | 22 ++++++++
+ security/security.c           | 99 +++++++++++++++++++++++++++++++++++
+ 6 files changed, 137 insertions(+)
 
-diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-index 66a850c02be4..a07409c680d9 100644
---- a/drivers/md/dm-verity-target.c
-+++ b/drivers/md/dm-verity-target.c
-@@ -13,6 +13,7 @@
-  * access behavior.
-  */
- 
-+#include "dm-core.h"
- #include "dm-verity.h"
- #include "dm-verity-fec.h"
- #include "dm-verity-verify-sig.h"
-@@ -22,6 +23,9 @@
- #include <linux/scatterlist.h>
- #include <linux/string.h>
- #include <linux/jump_label.h>
+diff --git a/block/bdev.c b/block/bdev.c
+index e9f1b12bd75c..c3bb5d6a030c 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -24,6 +24,7 @@
+ #include <linux/pseudo_fs.h>
+ #include <linux/uio.h>
+ #include <linux/namei.h>
 +#include <linux/security.h>
-+#include <linux/dm-verity.h>
-+#include <crypto/hash_info.h>
- 
- #define DM_MSG_PREFIX			"verity"
- 
-@@ -956,6 +960,17 @@ static void verity_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 	blk_limits_io_min(limits, limits->logical_block_size);
- }
- 
-+#ifdef CONFIG_IPE_PROP_DM_VERITY
-+static void verity_free_sig(struct dm_verity *v)
-+{
-+	kfree(v->root_digest_sig);
-+}
-+#else
-+static inline void verity_free_sig(struct dm_verity *v)
-+{
-+}
-+#endif /* CONFIG_IPE_PROP_DM_VERITY */
+ #include <linux/part_stat.h>
+ #include <linux/uaccess.h>
+ #include <linux/stat.h>
+@@ -307,6 +308,11 @@ static struct inode *bdev_alloc_inode(struct super_block *sb)
+ 	if (!ei)
+ 		return NULL;
+ 	memset(&ei->bdev, 0, sizeof(ei->bdev));
 +
- static void verity_dtr(struct dm_target *ti)
- {
- 	struct dm_verity *v = ti->private;
-@@ -970,6 +985,7 @@ static void verity_dtr(struct dm_target *ti)
- 	kfree(v->salt);
- 	kfree(v->root_digest);
- 	kfree(v->zero_digest);
-+	verity_free_sig(v);
- 
- 	if (v->tfm)
- 		crypto_free_ahash(v->tfm);
-@@ -1161,6 +1177,25 @@ static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
- 	return r;
++	if (security_bdev_alloc(&ei->bdev)) {
++		kmem_cache_free(bdev_cachep, ei);
++		return NULL;
++	}
+ 	return &ei->vfs_inode;
  }
  
-+#ifdef CONFIG_IPE_PROP_DM_VERITY
-+static int verity_init_sig(struct dm_verity *v, const void *sig,
-+			   size_t sig_size)
+@@ -316,6 +322,7 @@ static void bdev_free_inode(struct inode *inode)
+ 
+ 	free_percpu(bdev->bd_stats);
+ 	kfree(bdev->bd_meta_info);
++	security_bdev_free(bdev);
+ 
+ 	if (!bdev_is_partition(bdev)) {
+ 		if (bdev->bd_disk && bdev->bd_disk->bdi)
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index f288c94374b3..339647f8645a 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -69,6 +69,9 @@ struct block_device {
+ #endif
+ 	bool			bd_ro_warned;
+ 	int			bd_writers;
++#ifdef CONFIG_SECURITY
++	void			*security;
++#endif
+ 	/*
+ 	 * keep this out-of-line as it's both big and not needed in the fast
+ 	 * path
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index b247388786a9..480ea4e9892d 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -429,3 +429,8 @@ LSM_HOOK(int, 0, uring_cmd, struct io_uring_cmd *ioucmd)
+ #ifdef CONFIG_BLK_DEV_INITRD
+ LSM_HOOK(void, LSM_RET_VOID, unpack_initramfs_security, void)
+ #endif /* CONFIG_BLK_DEV_INITRD */
++
++LSM_HOOK(int, 0, bdev_alloc_security, struct block_device *bdev)
++LSM_HOOK(void, LSM_RET_VOID, bdev_free_security, struct block_device *bdev)
++LSM_HOOK(int, 0, bdev_setsecurity, struct block_device *bdev, const char *name,
++	 const void *value, size_t size)
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index a2ade0ffe9e7..f1692179aa56 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -78,6 +78,7 @@ struct lsm_blob_sizes {
+ 	int	lbs_msg_msg;
+ 	int	lbs_task;
+ 	int	lbs_xattr_count; /* number of xattr slots in new_xattrs array */
++	int	lbs_bdev;
+ };
+ 
+ /**
+diff --git a/include/linux/security.h b/include/linux/security.h
+index e994ac9cda91..75db557b5786 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -496,6 +496,11 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
+ int security_locked_down(enum lockdown_reason what);
+ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, size_t *uctx_len,
+ 		      void *val, size_t val_len, u64 id, u64 flags);
++int security_bdev_alloc(struct block_device *bdev);
++void security_bdev_free(struct block_device *bdev);
++int security_bdev_setsecurity(struct block_device *bdev,
++			      const char *name, const void *value,
++			      size_t size);
+ #else /* CONFIG_SECURITY */
+ 
+ static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
+@@ -1439,6 +1444,23 @@ static inline int lsm_fill_user_ctx(struct lsm_ctx __user *uctx,
+ {
+ 	return -EOPNOTSUPP;
+ }
++
++static inline int security_bdev_alloc(struct block_device *bdev)
 +{
-+	v->sig_size = sig_size;
-+	v->root_digest_sig = kmalloc(v->sig_size, GFP_KERNEL);
-+	if (!v->root_digest)
++	return 0;
++}
++
++static inline void security_bdev_free(struct block_device *bdev)
++{
++}
++
++static inline int security_bdev_setsecurity(struct block_device *bdev,
++					    const char *name,
++					    const void *value, size_t size)
++{
++	return 0;
++}
++
+ #endif	/* CONFIG_SECURITY */
+ 
+ #if defined(CONFIG_SECURITY) && defined(CONFIG_WATCH_QUEUE)
+diff --git a/security/security.c b/security/security.c
+index 2a527d4c69bc..6f898d8c52b5 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -30,6 +30,7 @@
+ #include <linux/string.h>
+ #include <linux/msg.h>
+ #include <net/flow.h>
++#include <linux/fs.h>
+ 
+ /* How many LSMs were built into the kernel? */
+ #define LSM_COUNT (__end_lsm_info - __start_lsm_info)
+@@ -231,6 +232,7 @@ static void __init lsm_set_blob_sizes(struct lsm_blob_sizes *needed)
+ 	lsm_set_blob_size(&needed->lbs_task, &blob_sizes.lbs_task);
+ 	lsm_set_blob_size(&needed->lbs_xattr_count,
+ 			  &blob_sizes.lbs_xattr_count);
++	lsm_set_blob_size(&needed->lbs_bdev, &blob_sizes.lbs_bdev);
+ }
+ 
+ /* Prepare LSM for initialization. */
+@@ -404,6 +406,7 @@ static void __init ordered_lsm_init(void)
+ 	init_debug("superblock blob size = %d\n", blob_sizes.lbs_superblock);
+ 	init_debug("task blob size       = %d\n", blob_sizes.lbs_task);
+ 	init_debug("xattr slots          = %d\n", blob_sizes.lbs_xattr_count);
++	init_debug("bdev blob size       = %d\n", blob_sizes.lbs_bdev);
+ 
+ 	/*
+ 	 * Create any kmem_caches needed for blobs
+@@ -736,6 +739,28 @@ static int lsm_msg_msg_alloc(struct msg_msg *mp)
+ 	return 0;
+ }
+ 
++/**
++ * lsm_bdev_alloc - allocate a composite block_device blob
++ * @bdev: the block_device that needs a blob
++ *
++ * Allocate the block_device blob for all the modules
++ *
++ * Returns 0, or -ENOMEM if memory can't be allocated.
++ */
++static int lsm_bdev_alloc(struct block_device *bdev)
++{
++	if (blob_sizes.lbs_bdev == 0) {
++		bdev->security = NULL;
++		return 0;
++	}
++
++	bdev->security = kzalloc(blob_sizes.lbs_bdev, GFP_KERNEL);
++	if (!bdev->security)
 +		return -ENOMEM;
 +
 +	return 0;
 +}
-+#else
-+static inline int verity_init_sig(struct dm_verity *v, const void *sig,
-+				  size_t sig_size)
++
+ /**
+  * lsm_early_task - during initialization allocate a composite task blob
+  * @task: the task that needs a blob
+@@ -5474,6 +5499,80 @@ int security_locked_down(enum lockdown_reason what)
+ }
+ EXPORT_SYMBOL(security_locked_down);
+ 
++/**
++ * security_bdev_alloc() - Allocate a block device LSM blob
++ * @bdev: block device
++ *
++ * Allocate and attach a security structure to @bdev->security.  The
++ * security field is initialized to NULL when the bdev structure is
++ * allocated.
++ *
++ * Return: Return 0 if operation was successful.
++ */
++int security_bdev_alloc(struct block_device *bdev)
 +{
-+	return 0;
++	int rc = 0;
++
++	rc = lsm_bdev_alloc(bdev);
++	if (unlikely(rc))
++		return rc;
++
++	rc = call_int_hook(bdev_alloc_security, 0, bdev);
++	if (unlikely(rc))
++		security_bdev_free(bdev);
++
++	return LSM_RET_DEFAULT(bdev_alloc_security);
 +}
-+#endif /* CONFIG_IPE_PROP_DM_VERITY */
++EXPORT_SYMBOL(security_bdev_alloc);
 +
- /*
-  * Target parameters:
-  *	<version>	The current format is version 1.
-@@ -1369,6 +1404,13 @@ static int verity_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 		ti->error = "Root hash verification failed";
- 		goto bad;
- 	}
++/**
++ * security_bdev_free() - Free a block device's LSM blob
++ * @bdev: block device
++ *
++ * Deallocate the bdev security structure and set @bdev->security to NULL.
++ */
++void security_bdev_free(struct block_device *bdev)
++{
++	if (!bdev->security)
++		return;
 +
-+	r = verity_init_sig(v, verify_args.sig, verify_args.sig_size);
-+	if (r < 0) {
-+		ti->error = "Cannot allocate root digest signature";
-+		goto bad;
++	call_void_hook(bdev_free_security, bdev);
++
++	kfree(bdev->security);
++	bdev->security = NULL;
++}
++EXPORT_SYMBOL(security_bdev_free);
++
++/**
++ * security_bdev_setsecurity() - Set a security property of a block device
++ * @bdev: block device
++ * @name: security property name
++ * @value: security property value
++ * @size: length of the property value
++ *
++ * Set the security property associated with @name for @bdev from the security
++ * property value @value. @size indicates the size of the @value in bytes.
++ * If a @name is not implemented for a hook, it should return -EOPNOTSUPP.
++ *
++ * Return: Returns 0 on success.
++ */
++int security_bdev_setsecurity(struct block_device *bdev,
++			      const char *name, const void *value,
++			      size_t size)
++{
++	int rc = 0;
++	struct security_hook_list *p;
++
++	hlist_for_each_entry(p, &security_hook_heads.bdev_setsecurity, list) {
++		rc = p->hook.bdev_setsecurity(bdev, name, value, size);
++		if (rc && rc != -EOPNOTSUPP)
++			return rc;
 +	}
 +
- 	v->hash_per_block_bits =
- 		__fls((1 << v->hash_dev_block_bits) / v->digest_size);
- 
-@@ -1505,6 +1547,32 @@ int dm_verity_get_root_digest(struct dm_target *ti, u8 **root_digest, unsigned i
- 	return 0;
- }
- 
-+#ifdef CONFIG_IPE_PROP_DM_VERITY
-+static int verity_finalize(struct dm_target *ti)
-+{
-+	struct block_device *bdev;
-+	struct dm_verity_digest root_digest;
-+	struct dm_verity *v;
-+	int r;
-+
-+	v = ti->private;
-+	bdev = dm_table_get_md(ti->table)->disk->part0;
-+	root_digest.digest = v->root_digest;
-+	root_digest.digest_len = v->digest_size;
-+	root_digest.alg = v->alg_name;
-+
-+	r = security_bdev_setsecurity(bdev, DM_VERITY_ROOTHASH_SEC_NAME, &root_digest,
-+				      sizeof(root_digest));
-+	if (r)
-+		return r;
-+
-+	return security_bdev_setsecurity(bdev,
-+					 DM_VERITY_SIGNATURE_SEC_NAME,
-+					 v->root_digest_sig,
-+					 v->sig_size);
++	return LSM_RET_DEFAULT(bdev_setsecurity);
 +}
-+#endif /* CONFIG_IPE_PROP_DM_VERITY */
++EXPORT_SYMBOL(security_bdev_setsecurity);
 +
- static struct target_type verity_target = {
- 	.name		= "verity",
- 	.features	= DM_TARGET_SINGLETON | DM_TARGET_IMMUTABLE,
-@@ -1517,6 +1585,9 @@ static struct target_type verity_target = {
- 	.prepare_ioctl	= verity_prepare_ioctl,
- 	.iterate_devices = verity_iterate_devices,
- 	.io_hints	= verity_io_hints,
-+#ifdef CONFIG_IPE_PROP_DM_VERITY
-+	.finalize	= verity_finalize,
-+#endif /* CONFIG_IPE_PROP_DM_VERITY */
- };
- module_dm(verity);
- 
-diff --git a/drivers/md/dm-verity.h b/drivers/md/dm-verity.h
-index f9d522c870e6..f41918e251f5 100644
---- a/drivers/md/dm-verity.h
-+++ b/drivers/md/dm-verity.h
-@@ -42,6 +42,9 @@ struct dm_verity {
- 	u8 *root_digest;	/* digest of the root block */
- 	u8 *salt;		/* salt: its size is salt_size */
- 	u8 *zero_digest;	/* digest for a zero block */
-+#ifdef CONFIG_IPE_PROP_DM_VERITY
-+	u8 *root_digest_sig;	/* digest signature of the root block */
-+#endif /* CONFIG_IPE_PROP_DM_VERITY */
- 	unsigned int salt_size;
- 	sector_t data_start;	/* data offset in 512-byte sectors */
- 	sector_t hash_start;	/* hash start in blocks */
-@@ -55,6 +58,9 @@ struct dm_verity {
- 	bool hash_failed:1;	/* set if hash of any block failed */
- 	bool use_tasklet:1;	/* try to verify in tasklet before work-queue */
- 	unsigned int digest_size;	/* digest size for the current hash algorithm */
-+#ifdef CONFIG_IPE_PROP_DM_VERITY
-+	unsigned int sig_size;	/* digest signature size */
-+#endif /* CONFIG_IPE_PROP_DM_VERITY */
- 	unsigned int ahash_reqsize;/* the size of temporary space for crypto */
- 	enum verity_mode mode;	/* mode for handling verification errors */
- 	unsigned int corrupted_errs;/* Number of errors for corrupted blocks */
-diff --git a/include/linux/dm-verity.h b/include/linux/dm-verity.h
-new file mode 100644
-index 000000000000..7d9753445534
---- /dev/null
-+++ b/include/linux/dm-verity.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_DM_VERITY_H
-+#define _LINUX_DM_VERITY_H
-+
-+#include <linux/types.h>
-+#include <crypto/hash_info.h>
-+#include <linux/device-mapper.h>
-+
-+struct dm_verity_digest {
-+	const char *alg;
-+	const u8 *digest;
-+	size_t digest_len;
-+};
-+
-+#define DM_VERITY_SIGNATURE_SEC_NAME DM_NAME	".verity-signature"
-+#define DM_VERITY_ROOTHASH_SEC_NAME  DM_NAME	".verity-roothash"
-+
-+#endif /* _LINUX_DM_VERITY_H */
+ #ifdef CONFIG_PERF_EVENTS
+ /**
+  * security_perf_event_open() - Check if a perf event open is allowed
 -- 
 2.43.0
 
