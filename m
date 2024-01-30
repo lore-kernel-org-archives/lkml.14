@@ -1,162 +1,89 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53FA376F7;
-	Tue, 30 Jan 2024 03:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706584779; cv=fail; b=U9SNgTYSqPEVt7TbowKe1gyq5tMrdLM7R5xWd8oG/0/rx8PIpx5bMcrCzH/mECynmEjzy4ULZDDEhc/PQ4/1SIcZTgKSmWQdrsBYGlQvJFp9pwtAmiN+mHjUv8uGGg6ADqo8IBDKkVoFMYXsp3ztbQ2q0/JAQbyd/fjdxAWJ7qs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706584779; c=relaxed/simple;
-	bh=612kO+TH6TlNm4ODdMrCES1Lkpwd9h1t0jXfRl79f10=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MUpheTD4qqy95g1UgBZharY4lLD9EmsEcbCaA6zKpwrNVf0vsxFQjgJmitwC3XuNB3al+xDtt1PAiSF2/d80xjpJWh/g+Y1iXMfdgLq4EZWztEtUfKB+hQIQU3v/3PLuz3w6cfF25IdOxbH3biQvjK+wJ7YHADEOLcq+pvGalJA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=K7MYwIUb; arc=fail smtp.client-ip=40.107.243.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EB944364
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 03:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706584783; cv=none; b=Wk/ZlCgQW8WOn/vMCm/T/QlJaYeUCS9VLelxrF4uSZzsvcdTpKl/f2QZkmkugGqPnCiMBPHYZ5oiIb+QW4akub7kqAtF29FXqbMDdgg6jQVS3J06II34fcY3liq0dfSIUh+8dxzHTq89+ziDbIkHfhnJHuVcamuiDuRjTlJ/DO8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706584783; c=relaxed/simple;
+	bh=xu8bS73WL64T/uCUK9ybQA3+ldl7TujgshbkdB9KNOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PWWLL1b2pxRsQk7JAlBl2p2XvdItOzKIHR6ChePLMRMINLf/O6mR9+HCDUN3BoivK3k1Py1pj+uZBvF5D6yzCaQswrxLQ+jSdNxXSDtjkMXn9Mpgidt/jlXuT/Hwsdkl2MRrkNS5RTOU7MsThzGeCqtwmL0j9PQ3aoNvDKJLZIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=bQxv+0Nd; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="K7MYwIUb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nA8TXJoiahZiooE+Wzuq8m7U+u6yMNeJdezPabK9Juo6iOuE/lpe4NA0zwHBsRvkFESUGqvdg0oB55z3LRxZZF1tiTOIf9S5TfaTU2bLzcGnDp2tsYtLk2skJAIxpYqRDL18LsurU0ZV053kPclxdAsEz9XG/NPPt1xwGoyYRtvVYvvNXEchlBzqyNA0oZSglm2uvC1xkTXIhcm2Lp9jepJV0awCLUUzX06XAJ/DRkylVXtYBHQaCPLOuQp6x2S1dStCSLTxeDKFPYW2dM1ZQ2Gx6FTupuMKJ3QYtng8oragJYBZlUm2AaHYtY5f3xvGm2VmFwLB+kpnevC4Rmex5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y51n67YWs6bh5EFkFdb8SW3bQKZLCzt2euRRQ7ae0J0=;
- b=VldaDBIXw/HRV+C+tEYycm45zJxWTf4583CE0bV3bMeTClHByTyg5d18aB+/YboRbv7kr8bPmypTd5amv4bT1xXV1xMi50ZgNBcU3hb7g6jMiR88mZ9EkBVKAt4/PIs2JxZ2iXZSA4+KMymwhuvdF3Ob3dk087yezVUdWUySQJnO/ZFJCIFK1GvvfhinWh+9EWSxRuECNid8ofG2DxBm8xMgFs/Ve3BuGLKCbI0QVYFBlSZbD0+lBN4q5WND2UdaSnAONQzLzbHwFzeFWmG0T4Zl10CrGssCawOCSazL2CwvNAPfAq1V+DtkKxkPG6KCnqjkYBQdKK8yuv0L37oDWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y51n67YWs6bh5EFkFdb8SW3bQKZLCzt2euRRQ7ae0J0=;
- b=K7MYwIUbCNszZOtkG/8jGEPvkJ7itLwzejUDuFI+xvGDtq8x9WutKwtZ3WcPu+OhO4Lld3D6p18n/DjuBfpeB8abVB6fy4OOdedIqLXa82YSJOI+V08PaMSu8A9bbJQjcA4hgzrIGPmIGcIBqEx8lJzAZrIDLJd2uA4JpgFkcPQ=
-Received: from CYZPR02CA0005.namprd02.prod.outlook.com (2603:10b6:930:a1::19)
- by BY5PR12MB4067.namprd12.prod.outlook.com (2603:10b6:a03:212::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
- 2024 03:19:35 +0000
-Received: from CY4PEPF0000E9D8.namprd05.prod.outlook.com
- (2603:10b6:930:a1:cafe::62) by CYZPR02CA0005.outlook.office365.com
- (2603:10b6:930:a1::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34 via Frontend
- Transport; Tue, 30 Jan 2024 03:19:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D8.mail.protection.outlook.com (10.167.241.83) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Tue, 30 Jan 2024 03:19:34 +0000
-Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Mon, 29 Jan 2024 21:19:31 -0600
-From: Perry Yuan <perry.yuan@amd.com>
-To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
-	<Borislav.Petkov@amd.com>, <viresh.kumar@linaro.org>, <Ray.Huang@amd.com>,
-	<gautham.shenoy@amd.com>
-CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
-	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 7/8] tools/power x86_energy_perf_policy: rename some perf output strings for AMD processors
-Date: Tue, 30 Jan 2024 11:18:35 +0800
-Message-ID: <c091264fa469a6f7e33a050463d229a31fd3bb59.1706583551.git.perry.yuan@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706583551.git.perry.yuan@amd.com>
-References: <cover.1706583551.git.perry.yuan@amd.com>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="bQxv+0Nd"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-42ab7522c75so985661cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 19:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1706584780; x=1707189580; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GdNltEfvc6hS96Sm8FriYdAybrLE7K4oc53Dd6d5CEA=;
+        b=bQxv+0NdHLglvxJUv9eIqFhXbVWX/tSDbeDU0WaCpFhvot941Sw7RpGbEa2H/kyPfY
+         zXsMPT+3CUPQreSfoOnAE7Q0Y+VYzVbjbW2H198l4Q4NtdIUdzxsb+71JRfp/pcGBuhA
+         7i64RP0TdKDSsD8AMKThnuP8gHFXpaGyUSg89v8Zm9hMmGVzQNE99bL8K3tsc+dl6YAf
+         ckSves7NsDDj5C3x1uvaqYHDbMPLpx7VnR50gdgdbrnFMl2LNibY5dKvD9EwYvIyTKPs
+         /o3wwpRbE42YtYqrp3S61co82Le07JXMqad1eDPVZUu8+CFyJLqlCOzzVwiJxwyXpfWt
+         g2WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706584780; x=1707189580;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GdNltEfvc6hS96Sm8FriYdAybrLE7K4oc53Dd6d5CEA=;
+        b=qWRmRsFZJfyLGu5E+XLlQ8t9xj21E+aTPdvJOt00xu01bkWMcGF0jsfBIlkNCxNRQ7
+         G//oYgfgf7m7hdAnq75iSIwyt5FUschG5KnNcjS/8PJh+/m/fZTrXc31LZ4aA3uS4X3j
+         83XJfh/dhREimjs28VAUn9giXyu7eXRv0XUs+JZ/yGnS1J4vmklgK4l2B9h4ujupHEds
+         h+MUSfpWYqE6Jz+i9D3onwbaDUIe/UXinME0I5Y9H8p38rk7KA5JjEP2j2Y1niSbN+h4
+         MG2Z+nHs2woU9eJopY2zN1vnav4S444jAPZD/0GPEy1IkTAaSdhvU9KIgxc4b2XOel52
+         0MuQ==
+X-Gm-Message-State: AOJu0Yy0CsNuT1vbK6jdrw9NaIZXg0Dyd7IxSXIYTxKAYiOw7MLCwDyM
+	kQ9va/D3QhC3LWWqzqJgt6LAuxBGijqAM8CNlaZsKNSPrIAlztShdi9kW3VEs+I=
+X-Google-Smtp-Source: AGHT+IEp11DmXSRvvRbGY7Eyv1n2THY0n8sBn20stFRADb8dLmCoEVEUvnNwIx2UxPtZH5FWRcwidw==
+X-Received: by 2002:a05:622a:5ce:b0:42a:7d81:2f2d with SMTP id d14-20020a05622a05ce00b0042a7d812f2dmr8649588qtb.86.1706584780239;
+        Mon, 29 Jan 2024 19:19:40 -0800 (PST)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id ge10-20020a05622a5c8a00b0042998676bc3sm3447924qtb.43.2024.01.29.19.19.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 19:19:39 -0800 (PST)
+Date: Mon, 29 Jan 2024 22:19:38 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Chengming Zhou <zhouchengming@bytedance.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Nhat Pham <nphamcs@gmail.com>, Yosry Ahmed <yosryahmed@google.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/20] mm: zswap: rename zswap_free_entry to
+ zswap_entry_free
+Message-ID: <20240130031938.GA772725@cmpxchg.org>
+References: <20240130014208.565554-1-hannes@cmpxchg.org>
+ <20240130014208.565554-2-hannes@cmpxchg.org>
+ <eceb2dc5-f13b-4c54-b2dd-0e4a199c1280@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D8:EE_|BY5PR12MB4067:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2a645851-a249-4932-c0c3-08dc2142489a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	208vpeKROjZcsS/8LPM1ILbaPdXbQ9mxQG0rQ6yGYFvtOPSfHldDYt2/Qm+XrdE9gVgFw8UNO2/NGFxobK7FQqqlW2XzLc4KGdq6NQVrPVNvDt2/k1DtLNp7ywkgg/FFmTEP9qQSoZpXP+/5DoAFcJTCyVg2xaKbjMEWk3yhGMdQstB9NQRxpRuebbh3cNqA4J1l5NaNZ0+ydUwHuzVQYuDCSN3KdOQHHhglUPc8UBpA+tHDTlwP1FLJiubc05LvoSPuamIa3bBd9p+PVTY5eBhAWpBOwyAABigq2C0q+8b0nQEw9fMkXJMVHBoC+FS1nCPRT3t3WsYzYFctMh8Y0tvgWDKuT23LU/Df8n1l5vOCPHfp6GfcgnVbqClidfRE+jemb0uzo+y0GScM7FO1Jce0362ebPimr9B3JiOaYluM0NCXRU3lGQpWKdGdFltQsAbtUh5VYOpVHBDCWVRAUwzvKdI/w+OirhU94xOCnUMk/ynbBnrtORKGkPH5aIkw0xmt2+Aix4pfBa6KATQjcXjjyGr9ZIIFXXQu2Ph21YwWoqF2g/XGRasm80rF6m6skn6TBRZcx2qe9lhhUTwIrIhBrJSrK0TtObP7Y96k/AUVeIIfEdgBZ5Tt9Fbd9Q0clAD33z51fWVud6qOaIvI/8D1ExCKAkAwa1gIKNA0TN/sztkDA/yKH2IAh3KYbJJgtydPEBuDzHNnZRCmEt2+q5NtlDXnZFVHodBpUcEOq3VPdGDDyITz7BTQ35ZX5izcURuTNv5spQ6Pf3WL+6I+ZQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(346002)(376002)(230922051799003)(82310400011)(186009)(1800799012)(451199024)(64100799003)(40470700004)(36840700001)(46966006)(36860700001)(36756003)(83380400001)(47076005)(70206006)(316002)(54906003)(6636002)(110136005)(70586007)(8936002)(8676002)(86362001)(478600001)(4326008)(26005)(16526019)(2906002)(7696005)(426003)(336012)(44832011)(5660300002)(2616005)(41300700001)(40480700001)(40460700003)(82740400003)(81166007)(356005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 03:19:34.8333
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a645851-a249-4932-c0c3-08dc2142489a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D8.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4067
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eceb2dc5-f13b-4c54-b2dd-0e4a199c1280@bytedance.com>
 
-rename some perf strings using same definition for AMD CPPC performance
-capabilities.
+On Tue, Jan 30, 2024 at 11:13:16AM +0800, Chengming Zhou wrote:
+> On 2024/1/30 09:36, Johannes Weiner wrote:
+> > There is a zswap_entry_ namespace with multiple functions already.
+> 
+> Another is zswap_invalidate_entry(), maybe zswap_entry_invalidate is better.
 
-cpu0: [AMD HWP_REQ]: lowest 12 highest 166 desired 0 epp 128 window
-0x131497d0 (80*10^7us) use_pkg 89
+You're right.
 
-cpu1: [AMD HWP_REQ]: lowest 12 highest 166 desired 0 epp 128 window
-0x131497d0 (80*10^7us) use_pkg 89
+I originally had a patch for that, but then dropped it because it is
+sort of also a tree operation and it looked a bit weird to me.
 
-Signed-off-by: Perry Yuan <perry.yuan@amd.com>
----
- .../x86_energy_perf_policy.c                  | 23 ++++++++++++++-----
- 1 file changed, 17 insertions(+), 6 deletions(-)
+But I could be persuaded to include it again, no strong preferences
+either way.
 
-diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-index ada1aaabad8c..845cfedab06e 100644
---- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-+++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-@@ -864,10 +864,15 @@ void print_hwp_request(int cpu, struct msr_hwp_request *h, char *str)
- 
- 	if (str)
- 		printf("%s", str);
-+	if (genuine_intel)
-+		printf("HWP_REQ: min %d max %d des %d epp %d window 0x%x (%d*10^%dus) use_pkg %d\n",
-+			h->hwp_min, h->hwp_max, h->hwp_desired, h->hwp_epp,
-+			h->hwp_window, h->hwp_window & 0x7F, (h->hwp_window >> 7) & 0x7, h->hwp_use_pkg);
-+	else if (authentic_amd)
-+		printf("[AMD HWP_REQ]: lowest %d highest %d desired %d epp %d window 0x%x (%d*10^%dus) use_pkg %d\n",
-+			h->hwp_min, h->hwp_max, h->hwp_desired, h->hwp_epp,
-+			h->hwp_window, h->hwp_window & 0x7F, (h->hwp_window >> 7) & 0x7, h->hwp_use_pkg);
- 
--	printf("HWP_REQ: min %d max %d des %d epp %d window 0x%x (%d*10^%dus) use_pkg %d\n",
--		h->hwp_min, h->hwp_max, h->hwp_desired, h->hwp_epp,
--		h->hwp_window, h->hwp_window & 0x7F, (h->hwp_window >> 7) & 0x7, h->hwp_use_pkg);
- }
- void print_hwp_request_pkg(int pkg, struct msr_hwp_request *h, char *str)
- {
-@@ -876,9 +881,15 @@ void print_hwp_request_pkg(int pkg, struct msr_hwp_request *h, char *str)
- 	if (str)
- 		printf("%s", str);
- 
--	printf("HWP_REQ_PKG: min %d max %d des %d epp %d window 0x%x (%d*10^%dus)\n",
--		h->hwp_min, h->hwp_max, h->hwp_desired, h->hwp_epp,
--		h->hwp_window, h->hwp_window & 0x7F, (h->hwp_window >> 7) & 0x7);
-+	if (genuine_intel) {
-+		printf("HWP_REQ_PKG: min %d max %d des %d epp %d window 0x%x (%d*10^%dus)\n",
-+			h->hwp_min, h->hwp_max, h->hwp_desired, h->hwp_epp,
-+			h->hwp_window, h->hwp_window & 0x7F, (h->hwp_window >> 7) & 0x7);
-+	} else if (authentic_amd) {
-+		printf("AMD HWP_REQ_PKG: lowest %d highest %d desired %d epp %d window 0x%x (%d*10^%dus)\n",
-+			h->hwp_min, h->hwp_max, h->hwp_desired, h->hwp_epp,
-+			h->hwp_window, h->hwp_window & 0x7F, (h->hwp_window >> 7) & 0x7);
-+	}
- }
- void read_hwp_request(int cpu, struct msr_hwp_request *hwp_req, unsigned int msr_offset)
- {
--- 
-2.34.1
-
+Thanks
