@@ -1,227 +1,164 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4C915B31C;
-	Tue, 30 Jan 2024 18:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565C215EA86
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 18:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706639498; cv=none; b=gvnA7f9JbeMrZkKCln/iqaPZLLOSRFSLPnjh/gRuDH7aT3X+S8LiBOdzt4x0Wq4x+5qmoQ2L+hXjbWbDQ6lGRcyuIYyPN+f9SzfaJeEW/YwxTjT8emRBl/BTUNztTN3nf5jyW2Y7TuB5MbxvAFlLxhRUeXa/Hvjx+A3l/CMpaPU=
+	t=1706639520; cv=none; b=GCL+wUZ9DbIIx3kb6JqEOxm953jB/YyiUrycjAPP5Y6Yq9MA/Q3RmWrX4D09VF71d4kl59vlNiWzFFZzNtcqIwxFjSBslULxm8ViFrgm1pyemxwR8kwgp5izy8PGLTMC35cp+ubCn49nJD8MM5Kq1eRiipQQVaDgg2/zyXiRIaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706639498; c=relaxed/simple;
-	bh=wmW5J1Tj/wtLsyHHDLI8FB1VAG3iyVs+j/yeBcTZHdw=;
+	s=arc-20240116; t=1706639520; c=relaxed/simple;
+	bh=iRpgRmHarH60GRDB5jVlAFnXl1prqJyytsKoq7Cs4Z8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HuY0ASqCBUBaHBrlzycdkh6fGNipcWRn7H/h0LWfx5mDX07FITlI3ZWy0AoLAh9irdlYtOgYQPIIMMz1lj6YY2T1zUtzooEFZ6ddxm82kFvqGr0qGX2Vp0y7TJAHpIoc7f4pT4NnMuWetZJSRPaIS2u+VMYT+jS2+bDYLne7+tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lZqUTkyy; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=t8aDVVEQzhcTG/B/8mTqToHcSwZMbCi1jvDM3IUagmB0tJkIDSSicYlJTlOwMrFFTRMMgZ7HhqilwhIxAAYILOBNaqV4Hi4iG98SOfbXJSfu7QACff5/fXZfEGUdBTbIUh0cgJNLCFmRCqL8CmnxJOqk7GQExqVxGBHHvMoJ9zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=TG4zboBz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZqUTkyy"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7baa8da5692so229109039f.0;
-        Tue, 30 Jan 2024 10:31:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706639496; x=1707244296; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w4BTRkkumRWS7a29JYn1bsYyn8iQweTdqX0+5Jq8L/I=;
-        b=lZqUTkyyUSAKj8mnLWNmRc4QSufDFiUzs9LjAea63JvpLwZKta34rczHEzsz49G+bb
-         MCEj9lseb8z36A4tn30hiBUYHisJp2kqVTwzJ14uGx1P968ADCkPOEwUcBU9In2oUPhb
-         985kxqvRlAQDtql6NDBAxE7rt3OPdMpEWtPumWwW9u8XHT+BIgIfKeiPAVBWSnPKaeI0
-         fMhND4pvFCS28uXte9O8Ni9+t1cKbHc8a0EJGhJOlAlxsmUSp4fDTzbgqzFTGyiKESew
-         d8kdjDdwphSM9yGyK8J7aO5hErJ41MPYt+PDp2eNoz1M0oyG9rI6/kmXL+9yn+1YXFOZ
-         Ft5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706639496; x=1707244296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w4BTRkkumRWS7a29JYn1bsYyn8iQweTdqX0+5Jq8L/I=;
-        b=qz5ipVyBdMedoCt9WVGfQAw3PTAFBY2dq+c+jVrQ1TyGK4/V6bZHxiuacOt8NE5c1e
-         JFsJWIJWZ1Gdl7QraxioamxanZmUwaa1195kCWjP9PH7ZOxDVNkShFqqxzpp29UPmDFj
-         Ii0SfIiJx3fwuAVc6zk44qDEAFIEpcoFf9MSgOr8EOlPfVyE1fOhtqnnwchOAt0E09UE
-         SqWpc/ynHvdiTCE5KxVyKMeAyt77IDtXSBBBSrRaM8U5tNrPMXCr1hg1GY+nijlk2Jdy
-         wORbTNrh0YGILQAN4yUBmUJovOwHpLrRovN8lNt8f47SL8k8jDl5V3hRs0CiaCSBnqNd
-         g87w==
-X-Gm-Message-State: AOJu0Yzt2tuvzEJHGNecug5G95mr9sYEPpjGaawKOXdSPvVotGi1FX7E
-	D3+/sqOzA920vOaAN4v3qChkd3jdTynzxEGSduIb1ZvWUbmj3mzZKeFa/bpQdazfDjJJDgNlVO2
-	kPpB43fnWJ1nynvuAVoBeK/JtCXJxPeLOMrQ6Zg==
-X-Google-Smtp-Source: AGHT+IGhQVQ3vc88KQYAMP/He0t9hm5odiWA9YrIXE2nGn/Cmcw+/qEXsVaCQBpT8FK5MgL1cc2PvU8T/ZJi5gRZ+sc=
-X-Received: by 2002:a05:6602:2f14:b0:7be:d961:6b0a with SMTP id
- q20-20020a0566022f1400b007bed9616b0amr14660719iow.18.1706639495901; Tue, 30
- Jan 2024 10:31:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TG4zboBz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D180C43390
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 18:31:59 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TG4zboBz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1706639516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tG7DptqGlrQotRRCL+fVetrdXEbeDlcaTep4/MHs0M8=;
+	b=TG4zboBzZKgvM2qVC9xqBRHPMsOz/xvuoWaqhoBU/X49AAAZqEdPmaSHEOk6rGb15KweKt
+	iLxP3dmIN/CWoIN0mRYjd0PMiy+Khc/CpFUxcgDvEWsHPn8ZI9c2IrTwxNAQDKif3lkKYr
+	lyu8qdZXh6HXcUdqEmGiKCFubG1m2as=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 7a764878 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+	for <linux-kernel@vger.kernel.org>;
+	Tue, 30 Jan 2024 18:31:56 +0000 (UTC)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed179f0faso68012276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:31:55 -0800 (PST)
+X-Gm-Message-State: AOJu0YwEEXVvQmVYZmGrMh64+pLTNl2F2jbrPOS96utDVvZByH3t0Yvx
+	DkZP7AHj6SFL4gV6f1NMbNy2oFrhqWXY7ViaYiG6DtUehB7+m7jn3Uuo+kOQRtY3GXE8gisTzYH
+	A6f1Kbiss5YWLRtqYSBaHm2JZQ84=
+X-Google-Smtp-Source: AGHT+IGRHdsBprwo6nL35R9Sk+xZZnX67yX7st+CY86TGoFFpkZ7BZtaClGjk3oFJVouonid2cvJWPfU8amnWFLjXAk=
+X-Received: by 2002:a25:c5c8:0:b0:dc3:6b67:9341 with SMTP id
+ v191-20020a25c5c8000000b00dc36b679341mr1497437ybe.37.1706639514684; Tue, 30
+ Jan 2024 10:31:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129224542.162599-1-nphamcs@gmail.com> <20240129224542.162599-4-nphamcs@gmail.com>
- <ZbhP0JkEe39g3yqk@google.com>
-In-Reply-To: <ZbhP0JkEe39g3yqk@google.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 30 Jan 2024 10:31:24 -0800
-Message-ID: <CAKEwX=Pj+ncE=wZTOBVzT8E-=YVbqr-1CtsMNuZWLAhuaf7wAg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] selftests: add test for zswapin
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: akpm@linux-foundation.org, shuah@kernel.org, hannes@cmpxchg.org, 
-	tj@kernel.org, lizefan.x@bytedance.com, linux-mm@kvack.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
+References: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com>
+ <20240130083007.1876787-2-kirill.shutemov@linux.intel.com>
+ <CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com>
+ <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com>
+ <Zbk6h0ogqeInLa_1@redhat.com>
+In-Reply-To: <Zbk6h0ogqeInLa_1@redhat.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Tue, 30 Jan 2024 19:31:42 +0100
+X-Gmail-Original-Message-ID: <CAHmME9p3AT+MYXD9G0NL0Ge+-eh4cOc7HVQmk4uzi7ZjXH3hww@mail.gmail.com>
+Message-ID: <CAHmME9p3AT+MYXD9G0NL0Ge+-eh4cOc7HVQmk4uzi7ZjXH3hww@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
+To: =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, "Reshetova, Elena" <elena.reshetova@intel.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	"Nakajima, Jun" <jun.nakajima@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	"Kalra, Ashish" <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2024 at 5:24=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
+On Tue, Jan 30, 2024 at 7:06=E2=80=AFPM Daniel P. Berrang=C3=A9 <berrange@r=
+edhat.com> wrote:
 >
-> On Mon, Jan 29, 2024 at 02:45:42PM -0800, Nhat Pham wrote:
-> > We recently encountered a kernel crash on the zswapin path in our
-> > internal kernel, which went undetected because of a lack of test
-> > coverage for this path. Add a selftest to cover this code path,
-> > allocating more memories than the cgroup limit to trigger
->
-> s/memories/memory
->
-> > swapout/zswapout, then reading the pages back in memories several times=
+> On Tue, Jan 30, 2024 at 06:49:15PM +0100, Jason A. Donenfeld wrote:
+> > On Tue, Jan 30, 2024 at 6:32=E2=80=AFPM Dave Hansen <dave.hansen@intel.=
+com> wrote:
+> > >
+> > > On 1/30/24 05:45, Reshetova, Elena wrote:
+> > > >> You're the Intel employee so you can find out about this with much
+> > > >> more assurance than me, but I understand the sentence above to be =
+_way
+> > > >> more_ true for RDRAND than for RDSEED. If your informed opinion is=
+,
+> > > >> "RDRAND failing can only be due to totally broken hardware"
+> > > > No, this is not the case per Intel SDM. I think we can live under a=
+ simple
+> > > > assumption that both of these instructions can fail not just due to=
+ broken
+> > > > HW, but also due to enough pressure put into the whole DRBG constru=
+ction
+> > > > that supplies random numbers via RDRAND/RDSEED.
+> > >
+> > > I don't think the SDM is the right thing to look at for guidance here=
 .
+> > >
+> > > Despite the SDM allowing it, we (software) need RDRAND/RDSEED failure=
+s
+> > > to be exceedingly rare by design.  If they're not, we're going to get
+> > > our trusty torches and pitchforks and go after the folks who built th=
+e
+> > > broken hardware.
+> > >
+> > > Repeat after me:
+> > >
+> > >         Regular RDRAND/RDSEED failures only occur on broken hardware
+> > >
+> > > If it's nice hardware that's gone bad, then we WARN() and try to make
+> > > the best of it.  If it turns out that WARN() was because of a broken
+> > > hardware _design_ then we go sharpen the pitchforks.
+> > >
+> > > Anybody disagree?
 > >
-> > Also add a variant of this test that runs with zswap disabled, to verif=
-y
-> > swapin correctness as well.
+> > Yes, I disagree. I made a trivial test that shows RDSEED breaks easily
+> > in a busy loop. So at the very least, your statement holds true only
+> > for RDRAND.
 > >
-> > Suggested-by: Rik van Riel <riel@surriel.com>
-> > Signed-off-by: Nhat Pham <nphamcs@gmail.com>
-> > ---
-> >  tools/testing/selftests/cgroup/test_zswap.c | 67 ++++++++++++++++++++-
-> >  1 file changed, 65 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/cgroup/test_zswap.c b/tools/testin=
-g/selftests/cgroup/test_zswap.c
-> > index 32ce975b21d1..86231c86dc89 100644
-> > --- a/tools/testing/selftests/cgroup/test_zswap.c
-> > +++ b/tools/testing/selftests/cgroup/test_zswap.c
-> > @@ -60,17 +60,39 @@ static long get_zswpout(const char *cgroup)
-> >       return cg_read_key_long(cgroup, "memory.stat", "zswpout ");
-> >  }
-> >
-> > -static int allocate_bytes(const char *cgroup, void *arg)
-> > +static int allocate_bytes_and_read(const char *cgroup, void *arg, bool=
- read)
-> >  {
-> >       size_t size =3D (size_t)arg;
-> >       char *mem =3D (char *)malloc(size);
-> > +     int ret =3D 0;
-> >
-> >       if (!mem)
-> >               return -1;
-> >       for (int i =3D 0; i < size; i +=3D 4095)
-> >               mem[i] =3D 'a';
-> > +
-> > +     if (read) {
-> > +             /* cycle through the allocated memory to (z)swap in and o=
-ut pages */
-> > +             for (int t =3D 0; t < 5; t++) {
+> > But, anyway, if the statement "RDRAND failures only occur on broken
+> > hardware" is true, then a WARN() in the failure path there presents no
+> > DoS potential of any kind, and so that's a straightforward conclusion
+> > to this discussion. However, that really hinges on  "RDRAND failures
+> > only occur on broken hardware" being a true statement.
 >
-> What benefit does the iteration serve here? I would guess one iteration
-> is enough to swap everything in at least once, no?
-
-There might be data races etc. that might not appear in one iteration.
-Running multiple iterations increases the probability of these bugs
-cropping up.
-
-Admittedly, the same effect could, perhaps, also be achieved by
-running the same test multiple times, so this is not a hill I will die
-on :) This is just a bit more convenient - CI infra often runs these
-tests once every time a new kernel is built.
-
+> There's a useful comment here from an Intel engineer
 >
-> > +                     for (int i =3D 0; i < size; i +=3D 4095) {
-> > +                             if (mem[i] !=3D 'a')
-> > +                                     ret =3D -1;
-> > +                     }
-> > +             }
-> > +     }
-> > +
-> >       free(mem);
-> > -     return 0;
-> > +     return ret;
-> > +}
-> > +
-> > +static int allocate_bytes(const char *cgroup, void *arg)
-> > +{
-> > +     return allocate_bytes_and_read(cgroup, arg, false);
-> > +}
-> > +
-> > +static int read_bytes(const char *cgroup, void *arg)
-> > +{
-> > +     return allocate_bytes_and_read(cgroup, arg, true);
-> >  }
+> https://web.archive.org/web/20190219074642/https://software.intel.com/en-=
+us/blogs/2012/11/17/the-difference-between-rdrand-and-rdseed
 >
-> I don't like how we reuse allocate_bytes_and_read(), we are not saving
-> much. Let's keep allocate_bytes() as-is and add a separate helper. Also,
-> I think allocate_and_read_bytes() is easier to read.
-
-Fair!
-
+>   "RDRAND is, indeed, faster than RDSEED because it comes
+>    from a hardware-based pseudorandom number generator.
+>    One seed value (effectively, the output from one RDSEED
+>    command) can provide up to 511 128-bit random values
+>    before forcing a reseed"
 >
-> >
-> >  static char *setup_test_group_1M(const char *root, const char *name)
-> > @@ -133,6 +155,45 @@ static int test_zswap_usage(const char *root)
-> >       return ret;
-> >  }
-> >
-> > +/* Simple test to verify the (z)swapin code paths */
-> > +static int test_zswapin_size(const char *root, char *zswap_size)
-> > +{
-> > +     int ret =3D KSFT_FAIL;
-> > +     char *test_group;
-> > +
-> > +     /* Set up */
-> > +     test_group =3D cg_name(root, "zswapin_test");
-> > +     if (!test_group)
-> > +             goto out;
-> > +     if (cg_create(test_group))
-> > +             goto out;
-> > +     if (cg_write(test_group, "memory.max", "8M"))
-> > +             goto out;
-> > +     if (cg_write(test_group, "memory.zswap.max", zswap_size))
-> > +             goto out;
-> > +
-> > +     /* Allocate and read more than memory.max to trigger (z)swap in *=
-/
-> > +     if (cg_run(test_group, read_bytes, (void *)MB(32)))
-> > +             goto out;
-> > +
-> > +     ret =3D KSFT_PASS;
-> > +
-> > +out:
-> > +     cg_destroy(test_group);
-> > +     free(test_group);
-> > +     return ret;
-> > +}
-> > +
-> > +static int test_swapin(const char *root)
-> > +{
-> > +     return test_zswapin_size(root, "0");
-> > +}
+> We know we can exhaust RDSEED directly pretty trivially. Making your
+> test program run in parallel across 20 cpus, I got a mere 3% success
+> rate from RDSEED.
 >
-> Why are we testing the no zswap case? I am all for testing but it seems
-> out of scope here. It would have been understandable if we are testing
-> memory.zswap.max itself, but we are not doing that.
-
-Eh it's just by convenience. We already have the workload - any test
-for zswap can pretty much be turned into a test for swap by disabling
-zswap (and enabling swap), so I was trying to kill two birds with one
-stone and cover a bit more of the codebase.
-
+> If RDRAND is reseeding every 511 values, RDRAND output would have
+> to be consumed significantly faster than RDSEED in order that the
+> reseed will happen frequently enough to exhaust the seeds.
 >
-> FWIW, I think the tests here should really be separated from cgroup
-> tests, but I understand why they were added here. There is a lot of
-> testing for memcg interface and control for zswap, and a lot of nice
-> helpers present.
+> This looks pretty hard, but maybe with a large enough CPU count
+> this will be possible in extreme load ?
 
-Yeah FWIW, I agree :) I wonder if there's an easy way to inherit
-helpers from one test suite to another. Some sort of kselftest
-dependency? Or maybe move these cgroup helpers up the hierarchy (so
-that it can be shared by multiple selftest suites).
+So what this suggests is that the guest-guest DoS caused by looping
+forever (or panic-on-warn'ing) is at least possible on large enough
+hardware for some non-zero amount of time, depending on whatever hard
+to hit environmental factors.
 
->
+Another approach would be to treat this as a hardware flaw, in that
+the RDRAND does not provide a universally reliable interface, and so
+something like CoCo doesn't work with the current design, and so Intel
+should issue some microcode updates that gives some separated pools
+and separated rate limiting on a per-VMX ring 0 basis. Or something
+like that. I dunno; maybe it's unrealistic to hope Intel will repair
+their interface. But I think we've got to acknowledge that it's sort
+of broken/irreliable.
+
+Jason
