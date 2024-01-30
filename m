@@ -1,92 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8728536102;
-	Tue, 30 Jan 2024 01:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871892E40E;
+	Tue, 30 Jan 2024 01:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706578835; cv=none; b=sA90cmOzcIWgOoVHZQOMW6vsnKCd6cQVCAmxHypRTbsaqfDvmilV/x4jVia3sqhoUhzKgLMvmXQwvrCaDx7mZxK6aDg6sQz7tkuXlutOFHWnEhuIQqDxnsIeCQQ0/wMhXT/jkjOaj2P6tG48g6Z1Vx2+uA/ThXlIY89Ne2fXl78=
+	t=1706578852; cv=none; b=XTVP1Re82e3HKlO+ws3k5BtnqsNIxw7a8I9PBMa6jT3+N4qdglbDfnozs2n3VP6zPrJZix+lax/L4GYz9H/4YasmlERcy5CnpOBQ/jtAG96omgMHUZ0IdnX8fflrjAYOJlDCpQI8mSRLPUS8GLeMYNEzq8HKbD7aA+PyGkunXSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706578835; c=relaxed/simple;
-	bh=9nLhA8tc2Ea4K4PEhVy6i7mywoj/BoVhDHAl5Sae9OU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YUAmvB9EBHelf/usMgVTrXBL0aH4RAkqT0WsobH9kr0w6oGFrwUxD/ZAdWHjM/SmVQd11wzuX9Xg8dwiWsR6BL42CfWD6sLE2RQt31I1abB+PlDXm+lJXUQIlRcyvK1ZFbzUSLrDGUTKQQyCu6/iTU4f+Ns4l37u0FR3BM2wtNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IdAnebLX; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IdAnebLX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706578833; x=1738114833;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9nLhA8tc2Ea4K4PEhVy6i7mywoj/BoVhDHAl5Sae9OU=;
-  b=IdAnebLXcSu1ECGugbZCJxkOnnhN5/jP2EyMYZPMl2cVvXdY055dnVjF
-   rIGPizZLZpZRcNVd5j7J/f7a/EdA8f3opbIQS3buFkzzsKqsK3cRaolGc
-   eqPvLlDbIXZguPZmy0ntcuVGxge/2SwyI8kOMAfBs/MBN3ovmCh9Zw6jk
-   cNyJ4SOsMHhUkIMA4dRmjUNcsNTFfHY5p+mIeClejA+WDpNbIzSPv3Zab
-   ZTmUU9Ii0d2DSGyUV8Pjy01nlsbT8cTu8j2g58Vm+GffoGmI36dg6A5Fk
-   3IRI0BkEL0Posgx+r36thM1eaRJzzdNeIJbSXMNtnXf5PjVTlhsGQ92Sz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="24613155"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="24613155"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 17:40:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="22276867"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by fmviesa002.fm.intel.com with ESMTP; 29 Jan 2024 17:40:32 -0800
-From: Fenghua Yu <fenghua.yu@intel.com>
-To: "Vinod Koul" <vkoul@kernel.org>,
-	"Dave Jiang" <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Lijun Pan <lijun.pan@intel.com>
-Subject: [PATCH] dmaengine: idxd: Avoid unnecessary destruction of file_ida
-Date: Mon, 29 Jan 2024 17:39:54 -0800
-Message-Id: <20240130013954.2024231-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.37.1
+	s=arc-20240116; t=1706578852; c=relaxed/simple;
+	bh=VbobI8i12wfdDT/0sDMvAjQ9Fb1PGwZp0fZRrbe0AJc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A2v1H6XURlUJrMDrVVrMT8jO8qk5yfZ1vUgMBygOk6KBra6S+jcU2xQQvkeV/ju5wzy4TAfmv5pUJsMaAlyHeEHwNKKz4EWGyERsbGpJrOeA89Vwi32XlV7+FLBgjp0Q82ESMXJwAl6H7Xk5sHYU6pcQJLnipqkoWtxkSEStvLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TP7BQ19ygzXgty;
+	Tue, 30 Jan 2024 09:39:26 +0800 (CST)
+Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
+	by mail.maildlp.com (Postfix) with ESMTPS id E29BF140132;
+	Tue, 30 Jan 2024 09:40:46 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemd100002.china.huawei.com
+ (7.221.188.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Tue, 30 Jan
+ 2024 09:40:46 +0800
+Date: Tue, 30 Jan 2024 09:40:38 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+CC: Changbin Du <changbin.du@huawei.com>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-modules@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Xiaoyi Su <suxiaoyi@huawei.com>
+Subject: Re: [RESEND PATCH v2] modules: wait do_free_init correctly
+Message-ID: <20240130014038.mawqxwoc34v6hztb@M910t>
+References: <20240129020304.1981372-1-changbin.du@huawei.com>
+ <ZbfmNiY52KdAet7_@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZbfmNiY52KdAet7_@bombadil.infradead.org>
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd100002.china.huawei.com (7.221.188.184)
 
-file_ida is allocated during cdev open and is freed accordingly
-during cdev release. This sequence is guaranteed by driver file
-operations. Therefore, there is no need to destroy an already empty
-file_ida when the WQ cdev is removed.
+On Mon, Jan 29, 2024 at 09:53:58AM -0800, Luis Chamberlain wrote:
+> On Mon, Jan 29, 2024 at 10:03:04AM +0800, Changbin Du wrote:
+> > The commit 1a7b7d922081 ("modules: Use vmalloc special flag") moves
+> > do_free_init() into a global workqueue instead of call_rcu(). So now
+> > rcu_barrier() can not ensure that do_free_init has completed. We should
+> > wait it via flush_work().
+> > 
+> > Without this fix, we still could encounter false positive reports in
+> > W+X checking, and rcu synchronization is unnecessary.
+> 
+> You didn't answer my question, which should be documented in the commit log.
+> 
+> Does this mean we never freed modules init because of this? If so then
+> your commit log should clearly explain that. It should also explain that
+> if true (you have to verify) then it means we were no longer saving
+> the memory we wished to save, and that is important for distributions
+> which do want to save anything on memory. You may want to do a general
+> estimate on how much that means these days on any desktop / server.
+>
+Actually, I have explained it in commit msg. It's not about saving memory. The
+synchronization here is just to ensure the module init's been freed before
+doing W+X checking. The problem is that the current implementation is wrong,
+rcu_barrier() cannot guarantee that. So we can encounter false positive reports.
+But anyway, the module init will be freed, and it's just a timing related issue.
 
-Worse, ida_free() in cdev release may happen after destruction of 
-file_ida per WQ cdev. This can lead to accessing an id in file_ida
-after it has been destroyed, resulting in a kernel panic.
+>   Luis
 
-Remove ida_destroy(&file_ida) to address these issues.
-
-Fixes: e6fd6d7e5f0f ("dmaengine: idxd: add a device to represent the file opened")
-Signed-off-by: Lijun Pan <lijun.pan@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- drivers/dma/idxd/cdev.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index baa51927675c..3311c920f47a 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -1272,7 +1272,6 @@ void idxd_wq_del_cdev(struct idxd_wq *wq)
- 	struct idxd_cdev *idxd_cdev;
- 
- 	idxd_cdev = wq->idxd_cdev;
--	ida_destroy(&file_ida);
- 	wq->idxd_cdev = NULL;
- 	cdev_device_del(&idxd_cdev->cdev, cdev_dev(idxd_cdev));
- 	put_device(cdev_dev(idxd_cdev));
 -- 
-2.37.1
-
+Cheers,
+Changbin Du
