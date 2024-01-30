@@ -1,77 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F3C6773C;
-	Tue, 30 Jan 2024 11:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41B46773C;
+	Tue, 30 Jan 2024 11:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706615426; cv=none; b=MoVpRRrSTPSrz2v3FM/aw9AxOr8dAm7gikp/s5M0plpDPhJ1eCrpoLgLoTesEpFBMhya2b23q7zad35xf0konN7zMcBxe4ZQG6jlEC+6TfLSO9bSvJiMZ9AAhGgdoQhndJF1BiGoFhqsjG6mgsbWP2PROaT7Rsisb61wAhF5C14=
+	t=1706615473; cv=none; b=n27x13tc7+wGm5lS11v5pcQh1Vs1INAlea0pbsf34gOw6Tp+r1L/Q8ErfNMAKJOYVOKQbQaAmQDjN+znnzZkq3FewEQJ0Tyd2NraOvUwDDco5nI055vGOpDy5+533CdjHiWstwwEbka60TB+fvT0wgtBdCvQ009ZuYuw+Bk6Ivc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706615426; c=relaxed/simple;
-	bh=hAbt0R3JyB9b9U8JpgKDOo3g3rIPK/9wxkAqo2FRgdI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=VgNIcAQflU+OPSjUMm10KVO2j9+xvBg0Rj2WZI5aVKEu7jT+m5D+EpSKvzADyJienmChU++QG6rXTHHq+x6zzKYZhrE02/nNz0I5CMMHj6LIbLkKS8bx+cBBXIHfxUdkKjUNZBDyEVDROxhEECdso5A5hbDq14nFahjOy6qZ6oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pej0mRpq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706615473; c=relaxed/simple;
+	bh=GzyZ6i9wOU8mgt3dmogPm1nmvgCFBIMDOc3j03O/1Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FRZNIMdCRqpLmwbxygbEVAIIIK/7+l2949z9C+WT0z54LpBEPt740iaV1Op0gD1xTrYP/m82T8xrR1sAKkNMEcAiAVFMRxhFWh95XjS/eJVAtKvfJi84vjyx45iYJ1ul6/HAmWZi93J8IlndykCJ1IixrcxOlPdmBcqZeF0IQL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bU/5/7L5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pej0mRpq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 84247C43390;
-	Tue, 30 Jan 2024 11:50:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bU/5/7L5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4DCC433F1;
+	Tue, 30 Jan 2024 11:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706615425;
-	bh=hAbt0R3JyB9b9U8JpgKDOo3g3rIPK/9wxkAqo2FRgdI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pej0mRpqiv4KgOQo96p1Y0Zv/DQhrgZAkZPGSGFZd/XlKJQm6JL40kcvWpcaZNcVi
-	 XlToj8+xOwgUtHBTVGfv/o12KznjPqcmvr5acDkVIYsQnIBz4J9pvpcI8PTcCO3c1O
-	 qs7fC/9/MC9IG3MbfsmvQwiaA1eRcT3RQeH9piY6tsOtPtQdv1VFWaS1lbi/EvMlVj
-	 VuN3nfWfbjDA6T7CbuGWVu4WqMZpC4N1cjzG/Y4DDioeaRMpr+glr5egLJfjI1BSMi
-	 jSrxii6jE4WKm2HWAXNLr3PAQDffAE9oDOuWMojka9CsPRJMQvRkl1aR/RlBzCKXzr
-	 3NOP5dps7gh7A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 68976C395F3;
-	Tue, 30 Jan 2024 11:50:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1706615472;
+	bh=GzyZ6i9wOU8mgt3dmogPm1nmvgCFBIMDOc3j03O/1Fc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bU/5/7L5ypIxbzkvi0inJ1C5X4qPFJfwKdrZzUOJji+S1+afxqmJzhU4alZpNhViW
+	 FcA5tW2WIhot2EU6cKqqW+U/rTk4XWia54IOfaTJXPgendq7QPWuAV4i9fBee3vwJ8
+	 VjE2oW6jtOXTklX7ZHhERJb1NnVLqYM6kct0RlkNogydWacV0R9q1Ulirb6JmyJbGK
+	 d3EBfIklvWgqtfTKbVNS320tT1QMzDfq/apJBsmTTUZz6mBC8wP24+LDCMtgvcUtrm
+	 ChoGH0Ra9h/O3vYbakSoQM6jbj+MXLxQKmMK1so6JoXR1qy53kBwuZy8x+8duGQMeq
+	 t3jaw7+3NrlkA==
+Date: Tue, 30 Jan 2024 11:51:07 +0000
+From: Will Deacon <will@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Martin <dave.martin@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] arm64/signal: Don't assume that TIF_SVE means we saved
+ SVE state
+Message-ID: <20240130115107.GB13551@willie-the-truck>
+References: <20240119-arm64-sve-signal-regs-v1-1-b9fd61b0289a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] [net] ipv6: Ensure natural alignment of const ipv6
- loopback and router addresses
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170661542542.16715.3965983655239127583.git-patchwork-notify@kernel.org>
-Date: Tue, 30 Jan 2024 11:50:25 +0000
-References: <ZbNuFM1bFqoH-UoY@p100>
-In-Reply-To: <ZbNuFM1bFqoH-UoY@p100>
-To: Helge Deller <deller@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, pabeni@redhat.com,
- linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240119-arm64-sve-signal-regs-v1-1-b9fd61b0289a@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Fri, 26 Jan 2024 09:32:20 +0100 you wrote:
-> On a parisc64 kernel I sometimes notice this kernel warning:
-> Kernel unaligned access to 0x40ff8814 at ndisc_send_skb+0xc0/0x4d8
+On Fri, Jan 19, 2024 at 12:29:13PM +0000, Mark Brown wrote:
+> When we are in a syscall we will only save the FPSIMD subset even though
+> the task still has access to the full register set, and on context switch
+> we will only remove TIF_SVE when loading the register state. This means
+> that the signal handling code should not assume that TIF_SVE means that
+> the register state is stored in SVE format, it should instead check the
+> format that was recorded during save.
 > 
-> The address 0x40ff8814 points to the in6addr_linklocal_allrouters
-> variable and the warning simply means that some ipv6 function tries to
-> read a 64-bit word directly from the not-64-bit aligned
-> in6addr_linklocal_allrouters variable.
+> Fixes: 8c845e273104 ("arm64/sve: Leave SVE enabled on syscall if we don't context switch")
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Cc:  <stable@vger.kernel.org>
+> ---
+>  arch/arm64/kernel/fpsimd.c | 2 +-
+>  arch/arm64/kernel/signal.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> [...]
+> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> index 1559c706d32d..80133c190136 100644
+> --- a/arch/arm64/kernel/fpsimd.c
+> +++ b/arch/arm64/kernel/fpsimd.c
+> @@ -1626,7 +1626,7 @@ void fpsimd_preserve_current_state(void)
+>  void fpsimd_signal_preserve_current_state(void)
+>  {
+>  	fpsimd_preserve_current_state();
+> -	if (test_thread_flag(TIF_SVE))
+> +	if (current->thread.fp_type == FP_STATE_SVE)
+>  		sve_to_fpsimd(current);
+>  }
 
-Here is the summary with links:
-  - [v2,net] ipv6: Ensure natural alignment of const ipv6 loopback and router addresses
-    https://git.kernel.org/netdev/net/c/60365049ccba
+I don't think this hunk applies on -rc2 ^^.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
+> index 0e8beb3349ea..425b1bc17a3f 100644
+> --- a/arch/arm64/kernel/signal.c
+> +++ b/arch/arm64/kernel/signal.c
+> @@ -242,7 +242,7 @@ static int preserve_sve_context(struct sve_context __user *ctx)
+>  		vl = task_get_sme_vl(current);
+>  		vq = sve_vq_from_vl(vl);
+>  		flags |= SVE_SIG_FLAG_SM;
+> -	} else if (test_thread_flag(TIF_SVE)) {
+> +	} else if (current->thread.fp_type == FP_STATE_SVE) {
+>  		vq = sve_vq_from_vl(vl);
+>  	}
+>  
+> @@ -878,7 +878,7 @@ static int setup_sigframe_layout(struct rt_sigframe_user_layout *user,
+>  	if (system_supports_sve() || system_supports_sme()) {
+>  		unsigned int vq = 0;
+>  
+> -		if (add_all || test_thread_flag(TIF_SVE) ||
+> +		if (add_all || current->thread.fp_type == FP_STATE_SVE ||
+>  		    thread_sm_enabled(&current->thread)) {
+>  			int vl = max(sve_max_vl(), sme_max_vl());
 
+I think this code is preemptible, so I'm struggling to understand what
+happens if the fp_type changes under our feet as a result of a context
+switch.
 
+Will
