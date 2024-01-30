@@ -1,100 +1,159 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09796BB54;
-	Tue, 30 Jan 2024 13:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5843C6BB24
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706622065; cv=none; b=reTrB8BEMGxGe3BjfJXQk19ulA71A6qBjGNi7aIEeuURG5Xy1UtHuLIS2/dED/Zs9D8v8O2yvAHpYptPmOY3E/+Csx6yJ3IBaqzrQXCrJWmyTULe00mXNXEdy76EUnG/u5v9+25fxV1eJFzPaGWFT5vRvzIx+gTB7JUEFiAIoQs=
+	t=1706622097; cv=none; b=g95ycuq6J2ft2FuafkyGP+vYu4IcMddTJzLXJZTrHIQMsS1jQsaHUVmrDI3+9XWNNA1hjjsIILP2R2i9RXovADFg3UsO50GPuFroh6tXw9+Mdmg6Z62fHjx/khye9N5dGh/1GzrBH1hgTzLBELb7icQbQj2qO95MEPb4VLCQzuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706622065; c=relaxed/simple;
-	bh=RiNHswsYrPk3kor4Gr8r0ain5u5aP5cCPnQ3TBQxNew=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HUdlv6pfrfUr9Tg/zVSlu0qiKVeqoLb+ZOSE436MlgE/wawsBmtVdgUrAX6qdm8Le4s/Qwtdwk0uZiYng4E8s0/oXBY6+i+SOyub+lLhK67nYeFxKP+uv4Tngmk6r8wDczF5wboyopcJK+QyXU9u4kzVVmId5VZ6JYCcK99ZG3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ddd19552e6so1922685b3a.1;
-        Tue, 30 Jan 2024 05:41:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706622063; x=1707226863;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=frJDUedpI3YTH8Ki9s8KdkIUfyDUhvcxZMMZkPB9gtA=;
-        b=F25CRAbFZaKg0ABrkpkG4pGRGalgtMoPBOM1itxRvfF2t0VBJLJxta35g/K97lHr5v
-         EPrdPp9cDG8COz7kd/Hf31zCCAoudv9fB+mO0Jkc6lEBMZ1jxuhaPVJnkH96eKDIJiyQ
-         RJ+iDfDWUDBos2+xhet5htR736OjvMdkZAl+FxT+CPEBUDCP9zPT5kVKw9wq8AUPA27V
-         IZUM/mXi3SGfwm3L5N8MnxMqc7W+a+NyWPjGqUJhHXXReFVBkD8iY7fUa8kXRlNiHJ+s
-         GIXUZjdsQEZvSvCEn/itQNwFOZnmL2/UnflioVLDeey8xPFF37FxCGX3C3ZqH+KbozJs
-         IrLw==
-X-Gm-Message-State: AOJu0YzMIB1Wi8VfnEZCp5jtv/SVxVMe8OYn1j6XvwcF+/RmGj8qXj/D
-	Ef7UK2bKf5bFH0N1y6zCO2atRSgof1nGnpqMr5Ec2KxDga4HiiDIbXGYZ+ixk08=
-X-Google-Smtp-Source: AGHT+IHHJCN/DA5nDwh/W1iGS9pLTv+8/BwgtjewsS/JVnv80HpaGXOBEGUKUqWzXskzFujFpvaFKg==
-X-Received: by 2002:a05:6a00:1805:b0:6db:cf34:8a96 with SMTP id y5-20020a056a00180500b006dbcf348a96mr8296734pfa.26.1706622062919;
-        Tue, 30 Jan 2024 05:41:02 -0800 (PST)
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com. [209.85.215.182])
-        by smtp.gmail.com with ESMTPSA id w18-20020a639352000000b005b458aa0541sm8089838pgm.15.2024.01.30.05.41.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 05:41:02 -0800 (PST)
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so2224411a12.1;
-        Tue, 30 Jan 2024 05:41:02 -0800 (PST)
-X-Received: by 2002:a25:b20c:0:b0:dc3:78d1:c5a3 with SMTP id
- i12-20020a25b20c000000b00dc378d1c5a3mr5877288ybj.13.1706621652312; Tue, 30
- Jan 2024 05:34:12 -0800 (PST)
+	s=arc-20240116; t=1706622097; c=relaxed/simple;
+	bh=TxMQzRnGQAh/kU243abLE8BjbwkcyiMJR581wTcweZc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lLw85mYZFtUfkb7oNcXpsiIex2eS57PeM9f3zZ9YrLM0PY78hOWHOpfraToycCCWPxbrY5aeVFju/66rlVAMEtgTtobJO5QNELMuF1+a0dq+/gqC6lzEMKeBM22YHk/jg7GcqPfuMiRG/3iMl6zjC6S0RTLQqqKRQBINi2fAzc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TPRBS0vRFzJpQM;
+	Tue, 30 Jan 2024 21:40:32 +0800 (CST)
+Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8B07B1400FF;
+	Tue, 30 Jan 2024 21:41:31 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 30 Jan 2024 21:41:29 +0800
+Message-ID: <d8cb8cec-5530-c0e7-3bd3-bcd47e9bf4e1@huawei.com>
+Date: Tue, 30 Jan 2024 21:41:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130111250.185718-1-angelogioacchino.delregno@collabora.com> <20240130111250.185718-7-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240130111250.185718-7-angelogioacchino.delregno@collabora.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 14:34:01 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXgT0g=0uky9FYDXk=KuC1HjkGEX8sCQdKbUMoBFQKDqQ@mail.gmail.com>
-Message-ID: <CAMuHMdXgT0g=0uky9FYDXk=KuC1HjkGEX8sCQdKbUMoBFQKDqQ@mail.gmail.com>
-Subject: Re: [PATCH v1 06/18] thermal/drivers/rcar: Migrate to thermal_zone_device_register()
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: daniel.lezcano@linaro.org, miquel.raynal@bootlin.com, rafael@kernel.org, 
-	rui.zhang@intel.com, lukasz.luba@arm.com, support.opensource@diasemi.com, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, linux-imx@nxp.com, andersson@kernel.org, 
-	konrad.dybcio@linaro.org, amitk@kernel.org, thara.gopinath@gmail.com, 
-	niklas.soderlund@ragnatech.se, srinivas.pandruvada@linux.intel.com, 
-	baolin.wang@linux.alibaba.com, u.kleine-koenig@pengutronix.de, 
-	hayashi.kunihiko@socionext.com, d-gole@ti.com, linus.walleij@linaro.org, 
-	DLG-Adam.Ward.opensource@dm.renesas.com, error27@gmail.com, heiko@sntech.de, 
-	hdegoede@redhat.com, jernej.skrabec@gmail.com, f.fainelli@gmail.com, 
-	bchihi@baylibre.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v10 3/6] arm64: add uaccess to machine check safe
+To: Mark Rutland <mark.rutland@arm.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>, Robin Murphy <robin.murphy@arm.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
+	<glider@google.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrey
+ Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
+ Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Aneesh Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
+References: <20240129134652.4004931-1-tongtiangen@huawei.com>
+ <20240129134652.4004931-4-tongtiangen@huawei.com>
+ <ZbfjvD1_yKK6IVVY@FVFF77S0Q05N>
+ <23795738-b86e-7709-bc2b-5abba2e77b68@huawei.com>
+ <ZbjlFXVC_ZPYbKhR@FVFF77S0Q05N>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <ZbjlFXVC_ZPYbKhR@FVFF77S0Q05N>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600017.china.huawei.com (7.193.23.234)
 
-On Tue, Jan 30, 2024 at 12:15=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
-> The thermal API has a new thermal_zone_device_register() function which
-> is deprecating the older thermal_zone_device_register_with_trips() and
-> thermal_tripless_zone_device_register().
->
-> Migrate to the new thermal zone device registration function.
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+在 2024/1/30 20:01, Mark Rutland 写道:
+> On Tue, Jan 30, 2024 at 07:14:35PM +0800, Tong Tiangen wrote:
+>> 在 2024/1/30 1:43, Mark Rutland 写道:
+>>> On Mon, Jan 29, 2024 at 09:46:49PM +0800, Tong Tiangen wrote:
+>>> Further, this change will also silently fixup unexpected kernel faults if we
+>>> pass bad kernel pointers to copy_{to,from}_user, which will hide real bugs.
+>>
+>> I think this is better than the panic kernel, because the real bugs
+>> belongs to the user process. Even if the wrong pointer is
+>> transferred, the page corresponding to the wrong pointer has a memroy
+>> error.
+> 
+> I think you have misunderstood my point; I'm talking about the case of a bad
+> kernel pointer *without* a memory error.
+> 
+> For example, consider some buggy code such as:
+> 
+> 	void __user *uptr = some_valid_user_pointer;
+> 	void *kptr = NULL; // or any other bad pointer
+> 
+> 	ret = copy_to_user(uptr, kptr, size);
+> 	if (ret)
+> 		return -EFAULT;
+> 
+> Before this patch, when copy_to_user() attempted to load from NULL it would
+> fault, there would be no fixup handler for the LDR, and the kernel would die(),
+> reporting the bad kernel access.
+> 
+> After this patch (which adds fixup handlers to all the LDR*s in
+> copy_to_user()), the fault (which is *not* a memory error) would be handled by
+> the fixup handler, and copy_to_user() would return an error without *any*
+> indication of the horrible kernel bug.
+> 
+> This will hide kernel bugs, which will make those harder to identify and fix,
+> and will also potentially make it easier to exploit the kernel: if the user
+> somehow gains control of the kernel pointer, they can rely on the fixup handler
+> returning an error, and can scan through memory rather than dying as soon as
+> they pas a bad pointer.
 
-                        Geert
+I should understand what you mean. I'll think about this and reply.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Many thanks.
+Tong.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+>> In addition, the panic information contains necessary information
+>> for users to check.
+> 
+> There is no panic() in the case I am describing.
+> 
+>>> So NAK to this change as-is; likewise for the addition of USER() to other ldr*
+>>> macros in copy_from_user.S and the addition of USER() str* macros in
+>>> copy_to_user.S.
+>>>
+>>> If we want to handle memory errors on some kaccesses, we need a new EX_TYPE_*
+>>> separate from the usual EX_TYPE_KACESS_ERR_ZERO that means "handle memory
+>>> errors, but treat other faults as fatal". That should come with a rationale and
+>>> explanation of why it's actually useful.
+>>
+>> This makes sense. Add kaccess types that can be processed properly.
+>>
+>>>
+>>> [...]
+>>>
+>>>> diff --git a/arch/arm64/mm/extable.c b/arch/arm64/mm/extable.c
+>>>> index 478e639f8680..28ec35e3d210 100644
+>>>> --- a/arch/arm64/mm/extable.c
+>>>> +++ b/arch/arm64/mm/extable.c
+>>>> @@ -85,10 +85,10 @@ bool fixup_exception_mc(struct pt_regs *regs)
+>>>>    	if (!ex)
+>>>>    		return false;
+>>>> -	/*
+>>>> -	 * This is not complete, More Machine check safe extable type can
+>>>> -	 * be processed here.
+>>>> -	 */
+>>>> +	switch (ex->type) {
+>>>> +	case EX_TYPE_UACCESS_ERR_ZERO:
+>>>> +		return ex_handler_uaccess_err_zero(ex, regs);
+>>>> +	}
+>>>
+>>> Please fold this part into the prior patch, and start ogf with *only* handling
+>>> errors on accesses already marked with EX_TYPE_UACCESS_ERR_ZERO. I think that
+>>> change would be relatively uncontroversial, and it would be much easier to
+>>> build atop that.
+>>
+>> OK, the two patches will be merged in the next release.
+> 
+> Thanks.
+> 
+> Mark.
+> .
