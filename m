@@ -1,89 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA009823A7
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6CE823B2;
+	Tue, 30 Jan 2024 15:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706628603; cv=none; b=n9XNvloDQTyOrHrgfvstgrteBLJKOmKQcL+h2E/2lyQ7/kSd7QBkjgQlqRE3zVH40Dfn5pJWJSCzPOdLdE44TTSmHAJnoiADEaZOYIQfDdAlpNtVdFShS3MHgZ5FnSSpGUwfyMwJRKgNNUoiQhUOhriAko+nsXYHBpfkHAjG1/g=
+	t=1706628702; cv=none; b=PeaFlqIsPujAaYmFB/9awAWcYwNtWihhdI3z39qFhjnZlXfsfcAwOl/nG0DI8jnY/m3u8BRcAtzSk/xpPouck6+0a3as3VvMSHBpObY+Oe8W8RVKjn2gUl1iGyvkk0QQgOMhszrxgJcrcMzLiTyAq69OLVfRmFhsDQl0EMX/s88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706628603; c=relaxed/simple;
-	bh=80jbZzlmEWIV6mLzBxKiN05mY7enQN9I6AWRUplkQ6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNki38YbUkeEx02vHX/SVwkKUnw7M9L/nys4p9V5x9wY9RkNJZzMGFHrK51jejvjk68K882JD1xir+HD2RvFop30itkqSmFlxrWBeisUUK6dGjC5CiWg1L4U0d4zhF2NdHw6m5Lco/A6hVBMbv6gSSwYimH+jMpY1vR/vMp9s5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qxur3Siw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706628702; c=relaxed/simple;
+	bh=VFfXaMuM13ijuWEdNiaaHRki070Tzjou8g7ItrpOecQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W3+cUJ+c5m+DAh+f9gicPOnb7lFk3G++DX4AAerE4jwQXDw2Rl086PLIDHEvuEzKk9G5wwhA8kTHJOsvguvcIVMrYqxjPYP4Q1iMi2Qat47jWR/faXWLZjUvvX6YaZNjStFkGESoL6hcqp6Ze9x6cFtaKncKe8juE6JF8vIOq38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MTdPSF9a; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qxur3Siw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D852AC433C7;
-	Tue, 30 Jan 2024 15:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706628602;
-	bh=80jbZzlmEWIV6mLzBxKiN05mY7enQN9I6AWRUplkQ6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qxur3Siw7jzRJYmcS60JgXwxJb0Sdpt8yptfeZyt473WUWurFT5547UMYRNrzsSv4
-	 kINJKoosiEtOq4nv+Y5sphQWwQ90lMMMd4DGOXfpwpWA4RS/1kjSZqEMUTDu7I88/z
-	 7EHxZBUtMks6fxeOE82IGq6eDLiZ30mKRYoa0oMsL3fFnrZbH+Xi1l6zxExCYf7E4D
-	 2nbGglx/IO8CHkyuARQrf60Usr3x/P47ixVuln64dq7rBxUVX9qjKvu3tH1cShJBKx
-	 gXv5/d6jYohnF48mx2EvpgjgOiVVE3W4OYFoxlVDQVgYTZ8jSvx7SCVbEUh0mqEe4o
-	 97RzP5ah24olw==
-Date: Tue, 30 Jan 2024 16:29:59 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Eric Dumazet <edumazet@google.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Arjan van de Ven <arjan@infradead.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sebastian Siewior <bigeasy@linutronix.de>,
-	Giovanni Gherdovich <ggherdovich@suse.cz>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [PATCH v10 18/20] timers: Implement the hierarchical pull model
-Message-ID: <ZbkV9wVxFhQxujb3@localhost.localdomain>
-References: <20240115143743.27827-1-anna-maria@linutronix.de>
- <20240115143743.27827-19-anna-maria@linutronix.de>
- <ZbJwol4QoSgz0QlH@lothringen>
- <877cjtcuv4.fsf@somnus>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MTdPSF9a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706628700; x=1738164700;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VFfXaMuM13ijuWEdNiaaHRki070Tzjou8g7ItrpOecQ=;
+  b=MTdPSF9aj0LkcJICMVwwWqTmh1G2vTU4moD2gwX+zdZAjSqK4QwPEvN/
+   HlJHQl+wZETDgmqeQ9f/3QJHH4P1nePUGqMl5JqZxYxQk/d95I0Ly5fDS
+   Be2RQ5eRpuguvXJcxlI/jaFJUL9UNsLbk6mXTIYJef4GU60SEp1KWRZms
+   wUIdODvHXduh2FvtLt0HTfRosHeOSNzRzjU9VotB063yxux/lLAWltJyN
+   qw+8fJ6k+sNouPXq4zKaanuitgc1kndnIEJBnZcaddbHnvBUu9l1h7Ejo
+   LXD8rj/cw+3a7V7CQLhD7ny4/qnQW5hr9j4EPA9noAMhvO6kAetAyFUZA
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10059014"
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="10059014"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:31:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
+   d="scan'208";a="3749601"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.217.15])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:31:32 -0800
+Message-ID: <e7d7a434-665b-4912-a2ae-a51e10e332d5@intel.com>
+Date: Tue, 30 Jan 2024 17:31:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <877cjtcuv4.fsf@somnus>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V14 16/21] mmc: sdhci-uhs2: add request() and others
+Content-Language: en-US
+To: Victor Shih <victorshihgli@gmail.com>, ulf.hansson@linaro.org
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benchuanggli@gmail.com, HL.Liu@genesyslogic.com.tw,
+ Greg.tu@genesyslogic.com.tw, takahiro.akashi@linaro.org,
+ dlunev@chromium.org, Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+ Victor Shih <victor.shih@genesyslogic.com.tw>
+References: <20240123062827.8525-1-victorshihgli@gmail.com>
+ <20240123062827.8525-17-victorshihgli@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240123062827.8525-17-victorshihgli@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le Sun, Jan 28, 2024 at 04:58:55PM +0100, Anna-Maria Behnsen a écrit :
-> Frederic Weisbecker <frederic@kernel.org> writes:
-> >> +
-> >> +			if (tmigr_check_lonely(topgroup))
-> >> +				return READ_ONCE(topgroup->next_expiry);
+On 23/01/24 08:28, Victor Shih wrote:
+> From: Victor Shih <victor.shih@genesyslogic.com.tw>
 > 
-> When I hand in tevt->global as a parameter, I'll need to compare the
-> first expiry of the toplevel group and the tevt->global value and return
-> the earlier expiry. Only a single child is active in top level, so it
-> might be that this CPU is the last active CPU in hierarchy.
+> This is a sdhci version of mmc's request operation.
+> It covers both UHS-I and UHS-II.
 > 
-> I didn't check all the way to the top whether all groups are
-> 'lonely'. So when the top level group has only a single active child, it
-> is also possible that the child of the top level group has two active
-> children... Then a return of KTIME_MAX would be also a more precise
-> forecast.
+> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+> ---
 > 
-> This quick check is there to keep the overhead minimal when checking
-> whether it might be possible to go idle. So I don't know, if we should
-> add this additional check per level (which is pretty simple when using
-> group->parent for walking the hierarchy). What do you think?
+> Updates in V14:
+>  - Use mmc_card_uhs2() to stead sdhci_uhs2_mode() in the
+>    sdhci_uhs2_request().
+> 
+> Updates in V13:
+>  - Re-order function to avoid declaration.
+>  - Remove unnecessary function.
+> 
+> Updates in V11:
+>  - Drop the check mmc_card_uhs2_hd_mode(host->mmc)
+>    in sdhci_uhs2_set_transfer_mode().
+> 
+> Updates in V10:
+>  - Use tmode_half_duplex to instead of uhs2_tmode0_flag
+>    in sdhci_uhs2_set_transfer_mode().
+> 
+> Updates in V9:
+>  - Modify the annotations in __sdhci_uhs2_send_command().
+> 
+> Updates in V8:
+>  - Adjust the position of matching brackets in
+>    sdhci_uhs2_send_command_retry().
+>  - Modify CameCase definition in __sdhci_uhs2_finish_command().
+>  - Modify error message in __sdhci_uhs2_finish_command().
+>  - sdhci_uhs2_send_command_retry() to instead of sdhci_uhs2_send_command()
+>    in sdhci_uhs2_request().
+>  - Use sdhci_uhs2_mode() to simplify code in sdhci_uhs2_request_atomic().
+>  - Add forward declaration for sdhci_send_command().
+> 
+> Updates in V7:
+>  - Cancel export state of some functions.
+>  - Remove unnecessary whitespace changes.
+> 
+> Updates in V6:
+>  - Add uhs2_dev_cmd() to simplify code.
+>  - Remove unnecessary functions.
+>  - Cancel export state of some functions.
+>  - Drop use CONFIG_MMC_DEBUG().
+>  - Wrap at 100 columns in some functions.
+> 
+> ---
+> 
+>  drivers/mmc/host/sdhci-uhs2.c | 379 +++++++++++++++++++++++++++++++++-
+>  drivers/mmc/host/sdhci.c      |  49 +++--
+>  drivers/mmc/host/sdhci.h      |   8 +
+>  3 files changed, 420 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-uhs2.c b/drivers/mmc/host/sdhci-uhs2.c
+> index 0c543899ed6c..b47bcf6f890f 100644
+> --- a/drivers/mmc/host/sdhci-uhs2.c
+> +++ b/drivers/mmc/host/sdhci-uhs2.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/module.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/mmc/mmc.h>
+> +#include <linux/mmc/host.h>
+>  
+>  #include "sdhci.h"
+>  #include "sdhci-uhs2.h"
+> @@ -29,6 +31,8 @@
+>  #define UHS2_INTERFACE_DETECT_TIMEOUT_100MS	100000
+>  #define UHS2_LANE_SYNC_TIMEOUT_150MS		150000
+>  
+> +#define UHS2_ARG_IOADR_MASK 0xfff
+> +
+>  void sdhci_uhs2_dump_regs(struct sdhci_host *host)
+>  {
+>  	if (!(mmc_card_uhs2(host->mmc)))
+> @@ -63,6 +67,11 @@ EXPORT_SYMBOL_GPL(sdhci_uhs2_dump_regs);
+>   *                                                                           *
+>  \*****************************************************************************/
+>  
+> +static inline u16 uhs2_dev_cmd(struct mmc_command *cmd)
+> +{
+> +	return be16_to_cpu((__be16)cmd->uhs2_cmd->arg) & UHS2_ARG_IOADR_MASK;
+> +}
+> +
+>  static inline int mmc_opt_regulator_set_ocr(struct mmc_host *mmc,
+>  					    struct regulator *supply,
+>  					    unsigned short vdd_bit)
+> @@ -140,7 +149,7 @@ static void sdhci_uhs2_set_power(struct sdhci_host *host, unsigned char mode, un
+>  
+>  static u8 sdhci_calc_timeout_uhs2(struct sdhci_host *host, u8 *cmd_res, u8 *dead_lock)
+>  {
+> -	/* timeout in us */
+> +	/* timeout in us */#define UHS2_ARG_IOADR_MASK 0xfff
 
-Not sure. Maybe if the tree never exceeds 3 levels (does it?) it's ok to
-do the walk?
+Extraneous "#define UHS2_ARG_IOADR_MASK 0xfff"
 
-Thanks.
+
