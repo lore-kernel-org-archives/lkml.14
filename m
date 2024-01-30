@@ -1,117 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F9236139;
-	Tue, 30 Jan 2024 01:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1B52CCD5
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706578284; cv=none; b=Wju+NxR9kHYqhxHswXyB2cPpA+eoLS3BgBul/+Dwr2bvbbDRaoBz/ao1qYbG12tjS5kON/jjBhVFKp8e+chv59a+i+Uz53rRCHe2JrlgH+frKX4xTNHP2IbrMbs3TkV7iIxfhL1DvtWkFDySzc4uuWENSszxbrd/qr9BJVe/VoQ=
+	t=1706578488; cv=none; b=h45+XpJjQXZ1Z8Nxt0oyYmpbBpK/PgUySkn5pXdCdEmfY89tZjFR3PxwRE+78UVC6d8l96t6q17MkYfmEaWZVLlZc5ws5xR1dY5oONAfAqA53lWj/hRJw6NNW0Ko5HbvdrfSOKNJ1NsvKrHSZR+MvG8j1a1g8HX8EMBnoMt6MvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706578284; c=relaxed/simple;
-	bh=pdiLzVVJ6IINEY+dX9MjF6XRC5ht/E67cJ1XtKl6k/k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SBsLNsLhkrMSZ5FBirV2E8GG9fNsXhcMiZkafhAG1P+cXGFYyHhMTkAiLtUxXkZ8lIE9syeFvnUJPfoZremJaIQRgcnQ8UQTNmjsiXf+udfA4YyKXpRvgGLr3txtfyJWnQ9HVRlQZ2ZJT5UegWmaK5mujKZK8pSKNNYxl7uN1gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ATsRK54z; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706578488; c=relaxed/simple;
+	bh=pjKF8tIho/v+IEph4zer3wh/eDSGzR3EZwX8YiJO+eM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZxReijmo/VpGGJdKFHPJtUbCRD7wxo5zI8abAnjsKJJK0gg/BZOFA80dAJGg/eacOu2c0mMHhV7MnpT2TdZ5RxpZIR0rrMeX8KSEcWtzIeNWJib1ANIcR/uyw3eU3nVShxXbD5B0Ra3l10nlr3Sv96UImeTVpx1Hfx6cjfs/Hmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=2Xb3lWu0; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ATsRK54z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706578282; x=1738114282;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=pdiLzVVJ6IINEY+dX9MjF6XRC5ht/E67cJ1XtKl6k/k=;
-  b=ATsRK54z78W/xVVkXARI+f6mmXmLAB4INi5rioaPWILICsKsZG1/mWyM
-   AC7SezX7p4GhlOzRNlweoROtAMr4rdk/T3oOVBXnm2apU4qhxk9UVb6GI
-   mKhQtQsldoGS3y2BuUKyPDZfklyeZZ4aFlcG7bTqAsqivWPeeUTtZO90W
-   RY8B70TIWPXyc9rK5I/T3IntsPh2iTcsFm+Eb6UJZJwqSwrr/cHHlb67O
-   rsIXSTj3kAq/xXjYp/QwgyPFSi6vGW83B5VgmeiJSeTsTmOZicTVNkcOD
-   qe4Cj6LM+pfC+5d7JfMmM8FmnGB3K2zdKuyOpONNsmJNlMtyrHtmliJFc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="402767516"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="402767516"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 17:31:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="788015350"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="788015350"
-Received: from sriramja-mobl.amr.corp.intel.com (HELO vcostago-mobl3) ([10.125.16.208])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 17:31:12 -0800
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Sai Krishna Gajula <saikrishnag@marvell.com>, "richardcochran@gmail.com"
- <richardcochran@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>,
- "kuba@kernel.org" <kuba@kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Sunil Kovvuri
- Goutham <sgoutham@marvell.com>, Geethasowjanya Akula <gakula@marvell.com>,
- Linu Cherian <lcherian@marvell.com>, Hariprasad Kelam
- <hkelam@marvell.com>, Subbaraya Sundeep Bhatta <sbhatta@marvell.com>
-Cc: Naveen Mamindlapalli <naveenm@marvell.com>
-Subject: Re: [net-next PATCH] octeontx2: Add PTP clock driver for Octeon PTM
- clock.
-In-Reply-To: <BY3PR18MB4707BB7ADFB58EC7032FBAF7A07E2@BY3PR18MB4707.namprd18.prod.outlook.com>
-References: <20240124064156.2577119-1-saikrishnag@marvell.com>
- <87h6j154yx.fsf@intel.com>
- <BY3PR18MB4707BB7ADFB58EC7032FBAF7A07E2@BY3PR18MB4707.namprd18.prod.outlook.com>
-Date: Mon, 29 Jan 2024 17:31:12 -0800
-Message-ID: <87jznrr4in.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="2Xb3lWu0"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78405c9a152so63222985a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:34:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1706578484; x=1707183284; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pt4QpYqiCKtezqoZ60BQzd+DA/EH8n3ps/uzvBONghI=;
+        b=2Xb3lWu0d4Zc4Y43nYe4ADjKg6/D7FK72J9crEkBZCOcPymT+cRsCsrkzLlvFICOJL
+         PXEhe1K1RV6STzuwSrnG7MemEIhi0XqesiXzg6RFLJs76tsy322j3jhSJrlsvwYFWwLP
+         AGwY9hdwdLJgrQj/Xc4YkdmRk5LSnxAX1Rb3BdPbsAJUF+4mtgWoaa6foT/8chFBB/5D
+         K45ZsjkXvMiCTtqTPhEztQpd4IehJGo8YJdqxECR41ayO5jOI4YAAIsOwNA27s8Wil/P
+         NfKwOURFGrZkUDbZyDl63t348tp9Q8g60pOtiqwt5ilwvKmzn1ih35Z0Blprs7EOyY7Y
+         tU3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706578484; x=1707183284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pt4QpYqiCKtezqoZ60BQzd+DA/EH8n3ps/uzvBONghI=;
+        b=lEpQqtXoCbxZV5qsWP4Sbp677BM/FmpmGDcbbE5so1AonEcWevjqC7rBU7e9rzxPAS
+         i5xTRp5u6EBebNUSlE1tJan3s0jAAqdcI8YNtLe+q6Gi8zVsz+6lnDcXOw5llbsdQw1J
+         oxEtWyk4nuTm9iEhWL+Vr6FYzsfkpak8ragm7fPL6frmN0Fk7YHWDVzkQmOvndICGrIu
+         Mra1X1th1mtcXpvgssSefgLkHDpVJsmq1CKFk9gfIoCpVV5IAGb1UrLmD1Fudv1O559r
+         ZvLXXgQCJtp3pvrKkaYSOzqN8TAMqznLsXSICqeaeLFdbwgCAXvb9Us76Kka4Jf5JjX1
+         BrJw==
+X-Gm-Message-State: AOJu0YzLpAGRaAHXORCjtwKMf+f+U6rrwYkq/aO9aonOkap02myv06V4
+	pEdBMxRhJM2EqotXs7O2NLGJ4aNIPAgrQhIoTxZAM9owHb3Cd0fvuUuc5DRMmx32+S5ePyGUKY3
+	a
+X-Google-Smtp-Source: AGHT+IEdaB1qwTqKaziaa6HRsPa2jrEC3sjEOrMYISc8fAwH2/VeWWl0i2SKtM6XAG5+P7O3eNWenA==
+X-Received: by 2002:a05:620a:1663:b0:783:de7c:e880 with SMTP id d3-20020a05620a166300b00783de7ce880mr5760345qko.6.1706578484027;
+        Mon, 29 Jan 2024 17:34:44 -0800 (PST)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id s18-20020ae9f712000000b00783f8693df1sm1799849qkg.37.2024.01.29.17.34.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 17:34:43 -0800 (PST)
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Nhat Pham <nphamcs@gmail.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	Chengming Zhou <zhouchengming@bytedance.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: zswap: fix objcg use-after-free in entry destruction
+Date: Mon, 29 Jan 2024 20:34:38 -0500
+Message-ID: <20240130013438.565167-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Sai Krishna Gajula <saikrishnag@marvell.com> writes:
+In the per-memcg LRU universe, LRU removal uses entry->objcg to
+determine which list count needs to be decreased. Drop the objcg
+reference after updating the LRU, to fix a possible use-after-free.
 
->> -----Original Message-----
->> From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
->> Sent: Friday, January 26, 2024 5:41 AM
->> To: Sai Krishna Gajula <saikrishnag@marvell.com>;
->> richardcochran@gmail.com; davem@davemloft.net; kuba@kernel.org;
->> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Sunil Kovvuri
->> Goutham <sgoutham@marvell.com>; Geethasowjanya Akula
->> <gakula@marvell.com>; Linu Cherian <lcherian@marvell.com>; Hariprasad
->> Kelam <hkelam@marvell.com>; Subbaraya Sundeep Bhatta
->> <sbhatta@marvell.com>
->> Cc: Sai Krishna Gajula <saikrishnag@marvell.com>; Naveen Mamindlapalli
->> <naveenm@marvell.com>
->> Subject: Re: [net-next PATCH] octeontx2: Add PTP clock driver for
->> Octeon PTM clock.
->> 
->> Sai Krishna <saikrishnag@marvell.com> writes:
->> 
->> > The PCIe PTM(Precision time measurement) protocol provides precise
->> > coordination of events across multiple components like PCIe host
->> > clock, PCIe EP PHC local clocks of PCIe devices. This patch adds
->> > support for ptp clock based PTM clock. We can use this PTP device to
->> > sync the PTM time with CLOCK_REALTIME or other PTP PHC devices using
->> > phc2sys.
->> >
->> > Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
->> > Signed-off-by: Naveen Mamindlapalli <naveenm@marvell.com>
->> > Signed-off-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
->> > ---
->> 
->> I can see that the same device id (PCI_DEVID_OCTEONTX2_PTP) is used by a
->> ethernet driver.
->> 
->> That brings me a question: why expose a different PTP chardev? In other
->> words, why can't you just implement .getcrosststamp() for that ethernet
->> device?
->
-> This driver runs on endpoint device and not on the host.
-> getcrosststamp() needs ART time, frequency details in case of x86 host
-> system. Our use case is to sync the host's PTP/PTM time to the
-> endpoint device via PTM interface.
+Fixes: a65b0e7607cc ("zswap: make shrinking memcg-aware")
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/zswap.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Ah! I see. This is for "the other side", cool :-)
-
-
-Cheers,
+diff --git a/mm/zswap.c b/mm/zswap.c
+index de68a5928527..7f88b3a77e4a 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -522,10 +522,6 @@ static struct zpool *zswap_find_zpool(struct zswap_entry *entry)
+  */
+ static void zswap_free_entry(struct zswap_entry *entry)
+ {
+-	if (entry->objcg) {
+-		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
+-		obj_cgroup_put(entry->objcg);
+-	}
+ 	if (!entry->length)
+ 		atomic_dec(&zswap_same_filled_pages);
+ 	else {
+@@ -534,6 +530,10 @@ static void zswap_free_entry(struct zswap_entry *entry)
+ 		atomic_dec(&entry->pool->nr_stored);
+ 		zswap_pool_put(entry->pool);
+ 	}
++	if (entry->objcg) {
++		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
++		obj_cgroup_put(entry->objcg);
++	}
+ 	zswap_entry_cache_free(entry);
+ 	atomic_dec(&zswap_stored_pages);
+ 	zswap_update_total_size();
 -- 
-Vinicius
+2.43.0
+
