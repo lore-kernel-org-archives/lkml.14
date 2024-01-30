@@ -1,137 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9383CF64;
-	Tue, 30 Jan 2024 06:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DF51172C
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706596187; cv=none; b=CJR7lirMbf4+uO3AmcYB1hpx5d8XMYbYRfWP9otLEdxcCWDCbXtgh9P7EWSUYfxQoT9+1anPrAD7jqVzWcL8bjOC+MHngZv5YXlQyGnDtxPIF8DP+D4Xu6Zn+An2JHCIyOtc2BrxOqldUwhIXYCbzTyHZOiYRBol5YGBsB0vzr4=
+	t=1706596264; cv=none; b=D/EZQdjHedj4gxCcdjaXenKai+VjfOn+usZvAkqX0qjyH96MxRImAJBNDZL8chrsWpwlYo9vxREQpw+gVfU3slO41yu3d67LxSVW0SluA7LQcsE123coxtZ5aTgOy3JJ4dEfO4vf4fhKyZPlCsFgoT/x+rt3NLxYoRletZ12McI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706596187; c=relaxed/simple;
-	bh=4RXiLjjCpdwVPEn44o+e/R+yfwydJCtTihSGXtdQwu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WBD4CsAHHIaVIKyLCGWaxSvmrp1ns4kMjunQwrOhuu9k+zJXvo81N9VcNbcaTwAwGxolhbAd5tjDdJUGPWvkB7dhvFXMC6dtyacqAntBych2bdLOIXIAjZEDdOPpYT3Kyn1qt9ZOOyYKahcZC2fuKOTk3lJqmfCHeSqKIG+zYDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qdNNbh7W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706596264; c=relaxed/simple;
+	bh=uwEkKH2wJSHeUP8JhuJ79HOvJUStRfChWk3uYCaa9Fc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XTR9XyQpaoDbotig8WqgcyNTPYgorImMvk7Sbu0qXeKtlskYOR18ASvs8rBIxxQy57HQxDNmqCjpodFLm69PAy4WXmCgV5keZ+Qm1P7Ou4RjSU6V4coPFLYjGC099cOxQ2EYCmG8kxhHCfnyCqTXy5KNr/aLyU6FvEw1VD3Otls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BAWyc6oC; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qdNNbh7W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0A1C433C7;
-	Tue, 30 Jan 2024 06:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706596187;
-	bh=4RXiLjjCpdwVPEn44o+e/R+yfwydJCtTihSGXtdQwu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qdNNbh7W2uOcizdj3SrTaKbXwq2095hJeN9iP9VBCdYuCFxLoDAheLVxBbBxXPtLo
-	 MlfBlJNZU+cqUxQTEfHiVJkhl7ly+9qXwpf26JqTKsWrE0TxRmE+Bb9BsVskd5Lqsz
-	 2s8rlz7v2xYmHntJIeDC+1yF/ognq0CbWR6OlmCkkxQh0Bti6iDKPcppl5om1mWq+X
-	 0kdlynLncDbPOw2ERhhXTjleaKT7PeV/WvR5/a78pedJJbGBJuNNkb3Al+Dsb+4PYF
-	 vRJfkegN7KzJlHijqo7r8+c/0/De/M1eFoTYWMUf0XziiCz+UzNkMMsmZF7k1IjqjC
-	 fXGqBXTlHgJiA==
-Date: Tue, 30 Jan 2024 11:59:38 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Niklas Cassel <Niklas.Cassel@wdc.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jon Mason <jdmason@kudzu.us>,
-	"open list:PCI DRIVER FOR SYNOPSYS DESIGNWARE" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
- complex reinit endpoint
-Message-ID: <20240130062938.GB32821@thinkpad>
-References: <20231219044844.1195294-1-Frank.Li@nxp.com>
- <ZYFrUWM7JXdv7rtb@x1-carbon>
- <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
- <ZYGq6RdCfdhXFF/9@x1-carbon>
- <ZZ1Pj3MvhQNMnP8M@x1-carbon>
- <ZbFEafUmqmE0nrPx@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BAWyc6oC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706596261; x=1738132261;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=uwEkKH2wJSHeUP8JhuJ79HOvJUStRfChWk3uYCaa9Fc=;
+  b=BAWyc6oCp/4uXoHrYhZ5LURDVZzmwg5IZ6WsPnlcbKExDJmVivBg7l+S
+   43LmUC2CnPWW+nWsYbXTtOTaUU5gX+v/iT4q8WkNLW11iTFVxhi281d6j
+   cF6uGv++HEBodwcV27286g1lu37KbMueMcCXJS1lO21b7kyOuMCyrtkRg
+   EpQiqC/tLw1odCix6+fCLlc+WqHC3M3vWocr73CIzvm19mHCgNXsW2h2R
+   a2khJVDA2kvaBPnnZ2ucybBsHFp5cvc16m44u6GJPeeFM9f+ixtlI7g8u
+   aBYJG4Mj+FmFcZokQFW5C/nn8LDMBloJsCrOp8mp/X+XngPuEoBbjZjW2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16716558"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="16716558"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:31:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="911336949"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="911336949"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:30:56 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org,  Kairui Song <kasong@tencent.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Chris Li <chrisl@kernel.org>,  Hugh Dickins
+ <hughd@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew Wilcox
+ <willy@infradead.org>,  Michal Hocko <mhocko@suse.com>,  Yosry Ahmed
+ <yosryahmed@google.com>,  David Hildenbrand <david@redhat.com>,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] mm/swap: introduce swapin_entry for unified
+ readahead policy
+In-Reply-To: <20240129175423.1987-5-ryncsn@gmail.com> (Kairui Song's message
+	of "Tue, 30 Jan 2024 01:54:19 +0800")
+References: <20240129175423.1987-1-ryncsn@gmail.com>
+	<20240129175423.1987-5-ryncsn@gmail.com>
+Date: Tue, 30 Jan 2024 14:29:00 +0800
+Message-ID: <87o7d3gwr7.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZbFEafUmqmE0nrPx@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=ascii
 
-On Wed, Jan 24, 2024 at 12:10:01PM -0500, Frank Li wrote:
-> On Tue, Jan 09, 2024 at 01:52:15PM +0000, Niklas Cassel wrote:
-> > Hello Frank,
-> > 
-> > On Tue, Dec 19, 2023 at 03:38:33PM +0100, Niklas Cassel wrote:
-> > > On Tue, Dec 19, 2023 at 09:20:21AM -0500, Frank Li wrote:
-> > > > On Tue, Dec 19, 2023 at 10:07:14AM +0000, Niklas Cassel wrote:
-> > > > > On Mon, Dec 18, 2023 at 11:48:43PM -0500, Frank Li wrote:
-> > > > > > dw_pcie_ep_inbound_atu()
-> > > > > > {
-> > > > > > 	...
-> > > > > > 	if (!ep->bar_to_atu[bar])
-> > > > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > > > > > 	else
-> > > > > > 		free_win = ep->bar_to_atu[bar];
-> > > > > > 	...
-> > > > > > }
-> > > > > > 
-> > > > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > > > > > will return 6 when second time call into this function if atu is 0. Suppose
-> > > > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > > > > > 
-> > > > > > Change 'bar_to_atu' to s8. Initialize bar_to_atu as -1 to indicate it have
-> > > > > > not allocate atu to the bar.
-> > > > > > 
-> > > > > > Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-> > > > > > Close: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T/#u
-> > > > > > Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
-> > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > > ---
-> > > > > > 
-> > > > > > Notes:
-> > > > > >     @Niklas:
-> > > > > >     	I have not test your case. I should be equal to previous's fix in
-> > > > > >     mail list.
-> > > > > 
-> > > > > Hello Frank,
-> > > > > 
-> > > > > Thank you for sending a proper fix for this!
-> > > > > 
-> > > > > Personally, I slightly prefer your fix that saves the iatu index + 1, and
-> > > > > keeps 0 to mean unused. That way, you don't need the memset, and you don't
-> > > > > need to change the type to signed, but either way is fine by me, so:
-> > > > 
-> > > > index + 1 don't match hardware iATU index. It will be confused because
-> > > > other parts is 0 based.
-> > > > 
-> > > > So I choose "-1" as free iATU.
-> > > 
-> > > A s8 can hold a max value of 127.
-> > > CX_ATU_NUM_OUTBOUND_REGIONS seems to be 0-255.
-> > > 
-> > > Since the DWC code can be synthesized with 256 iATUs,
-> > > your code will not work on systems with 128 or more iATUs.
-> > > 
-> > > If we continue to use a u8, and offset the saved value by one,
-> > > we will at least be able to support 255-1 == 254 iATUs.
-> > 
-> > Do you plan to send out a v2?
-> 
-> @mani:
-> 	Do you have any comments about this fixes except u8's problem?
+Kairui Song <ryncsn@gmail.com> writes:
 
-IMO, the core issue lies in the EPF driver. It calls set_bar() during init, but
-it is not clearing the BARs with clear_bar() during LINK_DOWN.
+> From: Kairui Song <kasong@tencent.com>
+>
+> Introduce swapin_entry which merges swapin_readahead and swapin_direct
+> making it the main entry for swapin pages, and use a unified swapin
+> readahead policy.
+>
+> This commit makes swapoff make use of this new helper and skip readahead
+> for SYNCHRONOUS_IO device since it's not helpful here. Now swapping
+> off a 10G ZRAM (lzo-rle) after same workload is faster since readahead
+> is skipped and overhead is reduced.
+>
+> Before:
+> time swapoff /dev/zram0
+> real    0m12.337s
+> user    0m0.001s
+> sys     0m12.329s
+>
+> After:
+> time swapoff /dev/zram0
+> real    0m9.728s
+> user    0m0.001s
+> sys     0m9.719s
+>
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>  mm/memory.c     | 18 +++---------------
+>  mm/swap.h       | 16 ++++------------
+>  mm/swap_state.c | 40 ++++++++++++++++++++++++----------------
+>  mm/swapfile.c   |  7 ++-----
+>  4 files changed, 33 insertions(+), 48 deletions(-)
+>
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 81dc9d467f4e..8711f8a07039 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3864,20 +3864,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  	swapcache = folio;
+>  
+>  	if (!folio) {
+> -		if (data_race(si->flags & SWP_SYNCHRONOUS_IO) &&
+> -		    __swap_count(entry) == 1) {
+> -			/* skip swapcache and readahead */
+> -			folio = swapin_direct(entry, GFP_HIGHUSER_MOVABLE, vmf);
+> -			if (folio)
+> -				page = &folio->page;
+> -		} else {
+> -			page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE,
+> -						vmf);
+> -			if (page)
+> -				folio = page_folio(page);
+> -			swapcache = folio;
+> -		}
+> -
+> +		folio = swapin_entry(entry, GFP_HIGHUSER_MOVABLE,
+> +				     vmf, &swapcache);
+>  		if (!folio) {
+>  			/*
+>  			 * Back out if somebody else faulted in this pte
+> @@ -3890,11 +3878,11 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  				ret = VM_FAULT_OOM;
+>  			goto unlock;
+>  		}
+> -
 
-If the BARs were cleared properly, then we would not see this issue.
+Change by accident?
 
-I'm planning to do a cleanup of the behavior of EPF with core_init_notifier and
-it should get addressed there.
+>  		/* Had to read the page from swap area: Major fault */
+>  		ret = VM_FAULT_MAJOR;
+>  		count_vm_event(PGMAJFAULT);
+>  		count_memcg_event_mm(vma->vm_mm, PGMAJFAULT);
+> +		page = folio_file_page(folio, swp_offset(entry));
 
-- Mani
+Better to move this line just after checking !folio.  This make it a
+little easier to associate page to folio.
 
--- 
-மணிவண்ணன் சதாசிவம்
+>  	} else if (PageHWPoison(page)) {
+>  		/*
+>  		 * hwpoisoned dirty swapcache pages are kept for killing
+> diff --git a/mm/swap.h b/mm/swap.h
+> index 83eab7b67e77..8f8185d3865c 100644
+> --- a/mm/swap.h
+> +++ b/mm/swap.h
+> @@ -54,10 +54,8 @@ struct folio *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_flags,
+>  		bool skip_if_exists);
+>  struct folio *swap_cluster_readahead(swp_entry_t entry, gfp_t flag,
+>  		struct mempolicy *mpol, pgoff_t ilx);
+> -struct page *swapin_readahead(swp_entry_t entry, gfp_t flag,
+> -			      struct vm_fault *vmf);
+> -struct folio *swapin_direct(swp_entry_t entry, gfp_t flag,
+> -			    struct vm_fault *vmf);
+> +struct folio *swapin_entry(swp_entry_t entry, gfp_t flag,
+> +			   struct vm_fault *vmf, struct folio **swapcached);
+>  
+>  static inline unsigned int folio_swap_flags(struct folio *folio)
+>  {
+> @@ -88,14 +86,8 @@ static inline struct folio *swap_cluster_readahead(swp_entry_t entry,
+>  	return NULL;
+>  }
+>  
+> -struct folio *swapin_direct(swp_entry_t entry, gfp_t flag,
+> -			struct vm_fault *vmf)
+> -{
+> -	return NULL;
+> -}
+> -
+> -static inline struct page *swapin_readahead(swp_entry_t swp, gfp_t gfp_mask,
+> -			struct vm_fault *vmf)
+> +static inline struct folio *swapin_entry(swp_entry_t swp, gfp_t gfp_mask,
+> +			struct vm_fault *vmf, struct folio **swapcached)
+>  {
+>  	return NULL;
+>  }
+> diff --git a/mm/swap_state.c b/mm/swap_state.c
+> index a450d09fc0db..5e06b2e140d4 100644
+> --- a/mm/swap_state.c
+> +++ b/mm/swap_state.c
+> @@ -870,8 +870,8 @@ static struct folio *swap_vma_readahead(swp_entry_t targ_entry, gfp_t gfp_mask,
+>   * Returns the struct folio for entry and addr after the swap entry is read
+>   * in.
+>   */
+> -struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
+> -			    struct vm_fault *vmf)
+> +static struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
+> +				  struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct folio *folio;
+> @@ -908,33 +908,41 @@ struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
+>  }
+>  
+>  /**
+> - * swapin_readahead - swap in pages in hope we need them soon
+> + * swapin_entry - swap in a folio from swap entry
+>   * @entry: swap entry of this memory
+>   * @gfp_mask: memory allocation flags
+>   * @vmf: fault information
+> + * @swapcache: set to the swapcache folio if swapcache is used
+>   *
+>   * Returns the struct page for entry and addr, after queueing swapin.
+>   *
+> - * It's a main entry function for swap readahead. By the configuration,
+> + * It's the main entry function for swap in. By the configuration,
+>   * it will read ahead blocks by cluster-based(ie, physical disk based)
+> - * or vma-based(ie, virtual address based on faulty address) readahead.
+> + * or vma-based(ie, virtual address based on faulty address) readahead,
+> + * or skip the readahead(ie, ramdisk based swap device).
+>   */
+> -struct page *swapin_readahead(swp_entry_t entry, gfp_t gfp_mask,
+> -				struct vm_fault *vmf)
+> +struct folio *swapin_entry(swp_entry_t entry, gfp_t gfp_mask,
+> +			   struct vm_fault *vmf, struct folio **swapcache)
+>  {
+>  	struct mempolicy *mpol;
+> -	pgoff_t ilx;
+>  	struct folio *folio;
+> +	pgoff_t ilx;
+
+ditto.
+
+Otherwise, looks good to me.  Thanks!
+
+Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+
+>  
+> -	mpol = get_vma_policy(vmf->vma, vmf->address, 0, &ilx);
+> -	folio = swap_use_vma_readahead() ?
+> -		swap_vma_readahead(entry, gfp_mask, mpol, ilx, vmf) :
+> -		swap_cluster_readahead(entry, gfp_mask, mpol, ilx);
+> -	mpol_cond_put(mpol);
+> +	if (data_race(swp_swap_info(entry)->flags & SWP_SYNCHRONOUS_IO) &&
+> +	    __swap_count(entry) == 1) {
+> +		folio = swapin_direct(entry, gfp_mask, vmf);
+> +	} else {
+> +		mpol = get_vma_policy(vmf->vma, vmf->address, 0, &ilx);
+> +		if (swap_use_vma_readahead())
+> +			folio = swap_vma_readahead(entry, gfp_mask, mpol, ilx, vmf);
+> +		else
+> +			folio = swap_cluster_readahead(entry, gfp_mask, mpol, ilx);
+> +		mpol_cond_put(mpol);
+> +		if (swapcache)
+> +			*swapcache = folio;
+> +	}
+>  
+> -	if (!folio)
+> -		return NULL;
+> -	return folio_file_page(folio, swp_offset(entry));
+> +	return folio;
+>  }
+>  
+>  #ifdef CONFIG_SYSFS
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 606d95b56304..1cf7e72e19e3 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1867,7 +1867,6 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+>  
+>  		folio = swap_cache_get_folio(entry, vma, addr);
+>  		if (!folio) {
+> -			struct page *page;
+>  			struct vm_fault vmf = {
+>  				.vma = vma,
+>  				.address = addr,
+> @@ -1875,10 +1874,8 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+>  				.pmd = pmd,
+>  			};
+>  
+> -			page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE,
+> -						&vmf);
+> -			if (page)
+> -				folio = page_folio(page);
+> +			folio = swapin_entry(entry, GFP_HIGHUSER_MOVABLE,
+> +					    &vmf, NULL);
+>  		}
+>  		if (!folio) {
+>  			/*
