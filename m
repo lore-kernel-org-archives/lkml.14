@@ -1,143 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC41E60ED9;
-	Tue, 30 Jan 2024 15:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB516BB2B
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706627040; cv=none; b=NeZzftfeqSVPzSb9bS9VV5UN+S19umwWER/4dxrE3iN/prTYlRwWg+KDZ3nVjEBVxH4I5cI/z7VN66dOw2e4zi37gazkvxd3tR7Y6tz/9yUsK+CwcpqyG32W/fy+SvA+Mk2CpnLBB4LzaHEu9aaiwnXi04MptKtiBoataz9Cxi8=
+	t=1706627098; cv=none; b=eMG6m/8ekHD04K+M48/NJBRFZSuFJ+P7fZjQTwGu9K0hixT6Dbi2Oneg/phNTHd/9hknph1iakb7f/6Ia/J76FGOLgXrMTp2isERxsrbrAQzAisk7pjK25YFBHpKUy1uNFyPpaiUATaAekG4Scj1FmNcrYrOxNX59vfvdfvibDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706627040; c=relaxed/simple;
-	bh=//kFKSouwAE4cOJHqMCMPzz68JKEdAOc+2/aJyyBShg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kvXDYBoXPQk0uz58oFJ8SPKEMAOo9gWIyFCGWx6CDJJZrOKGXg2mVX/nn9IrSh010SUofWe8kk2vxq5QJ6+pj/mjPfkqhG90IAKzblsAo42ilXERFZvB96R6RRia1iniCMVR9cznUJFnAnRUNKlJ+PZ62XwZTpOdmyeoo7hc054=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zc9UAHgY; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706627098; c=relaxed/simple;
+	bh=KxxppCtScPleTsQ2kw4mZIMAQ37g6r0K3U2qtG4xi28=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=as8W9zvkDpitK/+Yiu7/hVMTRFTawKjBkwdXgIsrbIfxjMKw0jk9tpM01MZnvT1sl++7omfNDzsFnHmLr4zc49ZGqVzdNPXHB0NDOaBV/jgrhXRFFwctgiylBHD1otGMLlv1ahQwIXiHojJ3N0/5ydg0goYY9OHg5+tXxJ1jGXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UvMgL+tr; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zc9UAHgY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706627038; x=1738163038;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=//kFKSouwAE4cOJHqMCMPzz68JKEdAOc+2/aJyyBShg=;
-  b=Zc9UAHgYXO5H5YGJDKCAZBhjsb+3IgMIbOZbsvYn2UGiqn664d9+Muh3
-   ilGokoDwLX4hf/B5XKFVoVcFq/HZszEFC6nb2dl4ReJRbZWx3YFG3wORX
-   6oepYk9i7gl6eQAncKFDdq4eJIl0Cxo/qJD9clKVLO7O8n0ImiALW4uxj
-   3F/rUCjCh48oqD+D0s01iFHZ2ZdABN6GxcgL8Ba7103GQgkPV8a9k9PD3
-   lJMEyUugp/N6V2SjQsrMk7qxYbDqFyhe98Kjg08JlvtjWck/1MTiMgRuf
-   55qQj/uYn/ekdnzyM42EFw8HhMnZuP3vSj3RmCnvz8FwlWF5j/E2RQ1OP
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="434478342"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="434478342"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:03:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="737803418"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="737803418"
-Received: from dcarleto-mobl.ger.corp.intel.com (HELO localhost) ([10.252.59.176])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:03:53 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Jonathan Corbet <corbet@lwn.net>, Breno Leitao <leitao@debian.org>,
- kuba@kernel.org, "David S. Miller" <davem@davemloft.net>
-Cc: linux-doc@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, pabeni@redhat.com, edumazet@google.com
-Subject: Re: [PATCH v3] Documentation: Document each netlink family
-In-Reply-To: <87jznqewa7.fsf@meer.lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20231121114831.3033560-1-leitao@debian.org>
- <874jevjgvo.fsf@intel.com> <87jznqewa7.fsf@meer.lwn.net>
-Date: Tue, 30 Jan 2024 17:03:50 +0200
-Message-ID: <87wmrqj221.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UvMgL+tr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706627095;
+	bh=KxxppCtScPleTsQ2kw4mZIMAQ37g6r0K3U2qtG4xi28=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UvMgL+trW/+tLi0dvGrqIsy2SfA/AI+pdWvP119oX0+1yc2WTLnlD4UM2xXuEt6CE
+	 3EdnWoFWNa+gmwBmmkAyzMkdPKV0SZuPVpfWinvPHXUmiCgb92v0+VOcOR7dF0G2lf
+	 1ca6XWe/GOiAEIhJ3T7YC//IzELVjjO0S8Tg1z0vcuFt2ZHHM4Cwopxc6JuHg/aNM3
+	 YaSd2DiXHmhIlNCUjnLVYFXvEA/IF6wp6hAut7hh325B4r/FwJ/iAjQ9AYuGquH/9q
+	 Zek91+t8CtkZFrEissD0I1hgMzkioc7ywVIqd3Pq01SDsaT2lZ6vjMF4G/PYne4OB/
+	 92lRVJ1Sh7fOA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8F5CD37811CF;
+	Tue, 30 Jan 2024 15:04:50 +0000 (UTC)
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: dri-devel@lists.freedesktop.org
+Cc: daniel@fooishbar.org,
+	helen.koike@collabora.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	david.heidelberg@collabora.com,
+	guilherme.gallo@collabora.com,
+	sergi.blanch.torne@collabora.com,
+	robdclark@gmail.com,
+	linux-mediatek@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/9] drm/ci: Add support for GPU and display testing
+Date: Tue, 30 Jan 2024 20:33:31 +0530
+Message-Id: <20240130150340.687871-1-vignesh.raman@collabora.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, 30 Jan 2024, Jonathan Corbet <corbet@lwn.net> wrote:
-> Jani Nikula <jani.nikula@linux.intel.com> writes:
->
->> On Tue, 21 Nov 2023, Breno Leitao <leitao@debian.org> wrote:
->>> This is a simple script that parses the Netlink YAML spec files
->>> (Documentation/netlink/specs/), and generates RST files to be rendered
->>> in the Network -> Netlink Specification documentation page.
->>
->> First of all, my boilerplate complaint: All extra processing for Sphinx
->> should really be done using Sphinx extensions instead of adding Makefile
->> hacks. I don't think it's sustainable to keep adding this stuff. We
->> chose Sphinx because it is extensible, and to avoid the Rube Goldberg
->> machine that the previous documentation build system was.
->
-> So I feel like we've (me included) have kind of sent Breno around in
-> circles on this one.  This *was* implemented as an extension once:
->
->   https://lore.kernel.org/netdev/20231103135622.250314-1-leitao@debian.org/
->
-> At that time it seemed too complex, and I thought that an external
-> script would lead to a simpler implementation overall.  Perhaps I was
-> wrong.
->
-> I worry that a proliferation of extensions adds its own sort of
-> complexity and hazards - look at the things Vegard has fixed recently,
-> for example.
+Some ARM SOCs have a separate display controller and GPU, each with
+different drivers. For mediatek mt8173, the GPU driver is powervr,
+and the display driver is mediatek. In the case of mediatek mt8183,
+the GPU driver is panfrost, and the display driver is mediatek.
+With rockchip rk3288/rk3399, the GPU driver is panfrost, while the
+display driver is rockchip. For amlogic meson, the GPU driver is
+panfrost, and the display driver is meson.
 
-If we're talking about the same things, I think one of the main problems
-there was shelling out to an external script while it could all have
-been trivially implemented directly in the extension. ;)
+IGT tests run various tests with different xfails and can test both
+GPU devices and KMS/display devices. Currently, in drm-ci for MediaTek,
+Rockchip, and Amlogic Meson platforms, only the GPU driver is tested.
+This leads to incomplete coverage since the display is never tested on
+these platforms. This commit series adds support in drm-ci to run tests
+for both GPU and display drivers for MediaTek, Rockchip, and Amlogic
+Meson platforms.
 
-> Relatively few people can work in that environment, and
-> extensions can make our version-support troubles worse.  So I'm not
-> fully sold on the idea that everything should be an extension,
-> especially if it can be expressed as a simple dependency and build step
-> in the makefile.
+Uprev mesa and IGT in drm-ci and add amd, v3d, vc4 and vgem specific
+tests to testlist. Have testlist.txt per driver and include a base
+testlist so that the driver specific tests will run only on those hardware.
 
-I think we're just going to have to agree to disagree here. And,
-ultimately, it's your call as the documentation maintainer.
+Vignesh Raman (9):
+  drm/ci: arm64.config: Enable CONFIG_DRM_ANALOGIX_ANX7625
+  drm/ci: mediatek: Rename exisitng job
+  drm/ci: mediatek: Add job to test panfrost and powervr GPU driver
+  drm/ci: meson: Rename exisitng job
+  drm/ci: meson: Add job to test panfrost GPU driver
+  drm/ci: rockchip: Rename existing job
+  drm/ci: rockchip: Add job to test panfrost GPU driver
+  drm/ci: uprev mesa version
+  drm/ci: uprev IGT and update testlist
 
-I'm sure some individual things are simple to put in the makefiles, but
-I believe overall the entire thing would be simpler if we avoided that.
-
-> Some of the uglier makefile stuff we have is a different story...
->
-> Anyway, I apologize for my role in making this particular addition
-> harder than it needed to be.  Perhaps, for the future, we should put
-> together and agree on a document (of all things) on how we think this
-> sort of functionality should be added.
-
-Perhaps. The problem at hand, though, is that after 'make
-O=/path/to/build htmldocs' I have this cruft in my source tree:
-
-$ git ls-files -oi --exclude-per-directory=.gitignore
-Documentation/networking/netlink_spec/devlink.rst
-Documentation/networking/netlink_spec/dpll.rst
-Documentation/networking/netlink_spec/ethtool.rst
-Documentation/networking/netlink_spec/fou.rst
-Documentation/networking/netlink_spec/handshake.rst
-Documentation/networking/netlink_spec/index.rst
-Documentation/networking/netlink_spec/mptcp_pm.rst
-Documentation/networking/netlink_spec/netdev.rst
-Documentation/networking/netlink_spec/nfsd.rst
-Documentation/networking/netlink_spec/ovs_datapath.rst
-Documentation/networking/netlink_spec/ovs_flow.rst
-Documentation/networking/netlink_spec/ovs_vport.rst
-Documentation/networking/netlink_spec/rt_addr.rst
-Documentation/networking/netlink_spec/rt_link.rst
-Documentation/networking/netlink_spec/rt_route.rst
-Documentation/networking/netlink_spec/tc.rst
-
-I'm not even sure what the best way to fix that would be. (Apart from
-turning it into an extension, of course. ;)
-
-
-BR,
-Jani.
-
+ MAINTAINERS                                   |   1 +
+ drivers/gpu/drm/ci/arm64.config               |   1 +
+ drivers/gpu/drm/ci/container.yml              |   6 +-
+ drivers/gpu/drm/ci/gitlab-ci.yml              |   8 +-
+ drivers/gpu/drm/ci/igt_runner.sh              |  34 ++--
+ drivers/gpu/drm/ci/image-tags.yml             |   3 +-
+ drivers/gpu/drm/ci/test.yml                   | 137 ++++++++++++----
+ drivers/gpu/drm/ci/testlist-amdgpu.txt        | 151 ++++++++++++++++++
+ drivers/gpu/drm/ci/testlist-msm.txt           |  50 ++++++
+ drivers/gpu/drm/ci/testlist-panfrost.txt      |  17 ++
+ drivers/gpu/drm/ci/testlist-v3d.txt           |  73 +++++++++
+ drivers/gpu/drm/ci/testlist-vc4.txt           |  49 ++++++
+ drivers/gpu/drm/ci/testlist.txt               |  84 ++++------
+ .../gpu/drm/ci/xfails/amdgpu-stoney-fails.txt |  24 ++-
+ .../drm/ci/xfails/amdgpu-stoney-flakes.txt    |   9 +-
+ .../gpu/drm/ci/xfails/amdgpu-stoney-skips.txt |  10 +-
+ ....txt => mediatek-mt8173-display-fails.txt} |  13 --
+ .../xfails/mediatek-mt8173-display-flakes.txt |  13 ++
+ .../xfails/mediatek-mt8183-display-fails.txt  |  16 ++
+ .../xfails/mediatek-mt8183-display-flakes.txt |   8 +
+ .../drm/ci/xfails/mediatek-mt8183-fails.txt   |  13 --
+ .../ci/xfails/mediatek-mt8183-gpu-skips.txt   |   2 +
+ ...fails.txt => meson-g12b-display-fails.txt} |   3 -
+ .../drm/ci/xfails/meson-g12b-gpu-fails.txt    |   1 +
+ .../drm/ci/xfails/meson-g12b-gpu-skips.txt    |   2 +
+ .../xfails/rockchip-rk3288-display-fails.txt  |  21 +++
+ .../xfails/rockchip-rk3288-display-flakes.txt |  17 ++
+ .../xfails/rockchip-rk3288-display-skips.txt  |   8 +
+ .../drm/ci/xfails/rockchip-rk3288-fails.txt   |  54 -------
+ .../ci/xfails/rockchip-rk3288-gpu-fails.txt   |   1 +
+ .../ci/xfails/rockchip-rk3288-gpu-skips.txt   |   2 +
+ .../drm/ci/xfails/rockchip-rk3288-skips.txt   |  52 ------
+ ....txt => rockchip-rk3399-display-fails.txt} |  38 +++--
+ .../xfails/rockchip-rk3399-display-flakes.txt |  23 +++
+ .../xfails/rockchip-rk3399-display-skips.txt  |   6 +
+ .../drm/ci/xfails/rockchip-rk3399-flakes.txt  |   7 -
+ .../ci/xfails/rockchip-rk3399-gpu-fails.txt   |   1 +
+ .../ci/xfails/rockchip-rk3399-gpu-skips.txt   |   2 +
+ .../drm/ci/xfails/rockchip-rk3399-skips.txt   |   5 -
+ 39 files changed, 686 insertions(+), 279 deletions(-)
+ create mode 100644 drivers/gpu/drm/ci/testlist-amdgpu.txt
+ create mode 100644 drivers/gpu/drm/ci/testlist-msm.txt
+ create mode 100644 drivers/gpu/drm/ci/testlist-panfrost.txt
+ create mode 100644 drivers/gpu/drm/ci/testlist-v3d.txt
+ create mode 100644 drivers/gpu/drm/ci/testlist-vc4.txt
+ rename drivers/gpu/drm/ci/xfails/{mediatek-mt8173-fails.txt => mediatek-mt8173-display-fails.txt} (59%)
+ create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8173-display-flakes.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-display-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-display-flakes.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/mediatek-mt8183-gpu-skips.txt
+ rename drivers/gpu/drm/ci/xfails/{meson-g12b-fails.txt => meson-g12b-display-fails.txt} (84%)
+ create mode 100644 drivers/gpu/drm/ci/xfails/meson-g12b-gpu-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/meson-g12b-gpu-skips.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-display-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-display-flakes.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-display-skips.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-gpu-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-gpu-skips.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3288-skips.txt
+ rename drivers/gpu/drm/ci/xfails/{rockchip-rk3399-fails.txt => rockchip-rk3399-display-fails.txt} (71%)
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3399-display-flakes.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3399-display-skips.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3399-flakes.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3399-gpu-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3399-gpu-skips.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/rockchip-rk3399-skips.txt
 
 -- 
-Jani Nikula, Intel
+2.40.1
+
