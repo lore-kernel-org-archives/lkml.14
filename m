@@ -1,139 +1,100 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475F36DCFB;
-	Tue, 30 Jan 2024 13:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAA06BB28
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706620242; cv=none; b=GtPC1DC88//ArBMwj4ZYg9hfRLcgS2jZs2e4+Kww+0kewJzZqms2bO+jNtB8WW4VlkKNA96T7JLv/8mQTQ7MNV/kDUoPChWZ+T5IZNU5fYAKTVyhrJLIEbjVM37tIRpLYgQexkNdsZXlJyItmLS+oTk/Wy9cKmW0Rjc2KGbdS9A=
+	t=1706620358; cv=none; b=o5AjDfxo7TZkq2JRcN9r1JJVHIlp16VT6LySZN725ACfsXIjkx9KmXGQT4T9b/2HrJ6LzyGSN3J0qjYSn9RtINjHaiew6OSqwzXIMnbLENOlSHCZEfxwBh78hifNe+WVs+D7mH2I2eUczdYSjPYQJGxK0mIG3lrdMRMFXNIdqMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706620242; c=relaxed/simple;
-	bh=IdFaHE5Ms+GEigRHXWpqWfKUWOfSZEiD+SvC+PEroMo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b9X8EH5NBaglE2mZEl8qk5WtXjezOvQ+WmGf9TxGtzxaYIGARVUGEvw/f25+vDLo+cKEfZH0TR/lv5c2aaszzwMjTTWcy7xu2uXzP28VzCzc1eUMI38zeK5lUyG+7L+ZEMlR1/4vw2xCvlbdIj6gClydImIGL7B4rPqVt5lIiNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EQI8WiiL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WqzEqxZp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EQI8WiiL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WqzEqxZp; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1706620358; c=relaxed/simple;
+	bh=A+ONNkJdbSKWp/DxO94Z/o0YVNM65s8QEU9vU5ojKCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aHBC4MmhCOAWNiHI+b11YCCPcgldGp9z85Bq/Y5LTPfMM3JdYhMdSWWi5SWqvsLbkQA4ng1/nUDk1dw2aQ6a/JBkzmA0cKufV8f4bOj6ih+p7FsdYqws4nbrTgchEH1ALAA4WUOvkq7GYXcxEQTp+epvcpyfM/d84BoqKfFdOeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CeXq6TeK; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EQI8WiiL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WqzEqxZp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EQI8WiiL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WqzEqxZp"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 666241F84B;
-	Tue, 30 Jan 2024 13:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706620239; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sLVoZRDpJbfql9mrOgoOatUxVxP6A8SBP4rtVDrSFDQ=;
-	b=EQI8WiiLfAOqqLSP3EPB52W08BdAhRiKNI05dlBSVYJyByLZiAcTaVf1r7lcR4cu4b6Szg
-	23yu0rnzfzg035uF3J22Upqy+8Gsj61cGlXkd6RE6AcPXPDFyRD+q5fuzKLAnEdKHLia0t
-	YWYeLct41T2jAB7h2JmhzSXLfd9ySCM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706620239;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sLVoZRDpJbfql9mrOgoOatUxVxP6A8SBP4rtVDrSFDQ=;
-	b=WqzEqxZpAHni5awvhZrQtIDycV2PsVJqug47hL9oeb09oQd9NoZ1FFLDnpN0KiX/KAeQMn
-	JVtC5e8zkBSQwSBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706620239; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sLVoZRDpJbfql9mrOgoOatUxVxP6A8SBP4rtVDrSFDQ=;
-	b=EQI8WiiLfAOqqLSP3EPB52W08BdAhRiKNI05dlBSVYJyByLZiAcTaVf1r7lcR4cu4b6Szg
-	23yu0rnzfzg035uF3J22Upqy+8Gsj61cGlXkd6RE6AcPXPDFyRD+q5fuzKLAnEdKHLia0t
-	YWYeLct41T2jAB7h2JmhzSXLfd9ySCM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706620239;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sLVoZRDpJbfql9mrOgoOatUxVxP6A8SBP4rtVDrSFDQ=;
-	b=WqzEqxZpAHni5awvhZrQtIDycV2PsVJqug47hL9oeb09oQd9NoZ1FFLDnpN0KiX/KAeQMn
-	JVtC5e8zkBSQwSBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 157BC12FF7;
-	Tue, 30 Jan 2024 13:10:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LUTEA0/1uGXHWAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 30 Jan 2024 13:10:39 +0000
-Date: Tue, 30 Jan 2024 14:10:38 +0100
-Message-ID: <87y1c72chd.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Chhayly Leang <clw.leang@gmail.com>
-Cc: Stefan Binding <sbinding@opensource.cirrus.com>,
-	Takashi Iwai <tiwai@suse.com>,
-	patches@opensource.cirrus.com,
-	James Schulman <james.schulman@cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda: cs35l41: Support ASUS Zenbook UM3402YAR
-In-Reply-To: <20240126080912.87422-1-clw.leang@gmail.com>
-References: <20240126080912.87422-1-clw.leang@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CeXq6TeK"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso490827666b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 05:12:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1706620353; x=1707225153; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NHNgqo2ejpHW782QEu4xpIQb0v6vpUHndrnJztXi/5Y=;
+        b=CeXq6TeKw0l5TQWmAxNDL8ZT2AYiKOAflGQJrm8jm2y79zslEbC11SgQ8JKWDFdhhK
+         RDyXm8NeAn6tEHlGkLtuIRakHdfEO3ar/Nykc5p81frl24gUylP0sSVvjAHoIp3P99Q0
+         Y2Jh2uxU2j3yoMAs0I735Isc/4uwgAxDpCYpLpzhJyipIELOtIXw0PF5uLlX28KvHvaX
+         qYpoqi8lTW2VvW8jW66tFWc5HhKWV/gMDJzGzralpcOD+qsFXJiyu1VsgnBKBxZV1DEA
+         +zApGFMFfYH0As72OAfU+sWWLLcnIbRW937jbaUidMOZHQzVJM89AcG/FM3BP2pdn9FX
+         qu7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706620353; x=1707225153;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NHNgqo2ejpHW782QEu4xpIQb0v6vpUHndrnJztXi/5Y=;
+        b=stZkyhsq+o2hGH8Ou99RmljTmlxOkZEYOkY4C18yWrULjgwua0FIRzTTdYQy6aK+n+
+         rJboNgS440QeXO+yN2jshdeVMoCcJRDfbXGPclq3nCldo0o9HYCdCgbUCgF1Z/j/PmSM
+         /12VParlfEEqT0+ypbrALqeeosxD1UcRbdYCpgMKqxe6AtQNFA6Cj2xZTfSxUcDLQdsE
+         FAMDAVC5eTP0bU3ZUniJIHoAmv1K2DFjfW9fnfkmm3Zi/S+daAmUGAF25bFUze1E7hhZ
+         qP59/+S7CmZXuk/MaftJ1CwZLBs4P/srPuRh2Vpm0PZG/XLRt5t9WsbFKNwbXxBOrc9F
+         d/YQ==
+X-Gm-Message-State: AOJu0YzwsvfswOYSA3Pezy17OkKUQrL3IAiKUwUxhUfOuI1CGylP7Zkq
+	t3Sdq1IcOhVlz3se+D/G0orD+zybpV7nb+2ufksYx2hlBITRjp14Z3TiUntAtuP30J4bl+8iyPb
+	q
+X-Google-Smtp-Source: AGHT+IGVsxfy6AcPEm4G3hK1VaRqmYqT5vMX9QHNlYuLQjyEKhJ783PAnYve61iT470I9ZGE9G7Z5A==
+X-Received: by 2002:a17:906:e098:b0:a2f:1817:2ef with SMTP id gh24-20020a170906e09800b00a2f181702efmr6568527ejb.70.1706620353194;
+        Tue, 30 Jan 2024 05:12:33 -0800 (PST)
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id l14-20020a170906a40e00b00a35de0619dbsm1694437ejz.200.2024.01.30.05.12.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 05:12:32 -0800 (PST)
+Date: Tue, 30 Jan 2024 14:12:31 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v3 05/14] printk: ringbuffer: Clarify special lpos
+ values
+Message-ID: <Zbj1vz5J1hgXaLf4@alley>
+References: <20231214214201.499426-1-john.ogness@linutronix.de>
+ <20231214214201.499426-6-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=EQI8WiiL;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WqzEqxZp
-X-Spamd-Result: default: False [-2.16 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_HAM(-2.85)[99.38%];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:97:from];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 666241F84B
-X-Spam-Level: 
-X-Spam-Score: -2.16
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231214214201.499426-6-john.ogness@linutronix.de>
 
-On Fri, 26 Jan 2024 09:09:12 +0100,
-Chhayly Leang wrote:
+On Thu 2023-12-14 22:47:52, John Ogness wrote:
+> For empty line records, no data blocks are created. Instead,
+> these valid records are identified by special logical position
+> values (in fields of @prb_desc.text_blk_lpos).
 > 
-> Adds sound support for ASUS Zenbook UM3402YAR with missing DSD
+> Currently the macro NO_LPOS is used for empty line records.
+> This name is confusing because it does not imply _why_ there is
+> no data block.
 > 
-> Signed-off-by: Chhayly Leang <clw.leang@gmail.com>
+> Rename NO_LPOS to EMPTY_LINE_LPOS so that it is clear why there
+> is no data block.
+> 
+> Also add comments explaining the use of EMPTY_LINE_LPOS as well
+> as clarification to the values used to represent data-less
+> blocks.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-Applied now.  Thanks.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
+Best Regards,
+Petr
 
-Takashi
+PS: Just for record. I had to make a pause in the review
+    because I have been on a sick leave last week and half.
+
