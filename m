@@ -1,77 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162531B59D;
-	Tue, 30 Jan 2024 00:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B7ED53C;
+	Tue, 30 Jan 2024 00:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706574941; cv=none; b=eZ7stavw9S/BZRjX3cWCHgM/gW3MWu3Z9EUBkhAXR/dbQKb1q3Wi+qDocUVdnhJlRtWjONrWH8uJYdgAN9j6DE2oRFBOdNsBrpt0xtjyXrfaIUJUsh7CzCUTZjyczLr76E0tLQj8I8pP/AmhcLZbXGARj1ivXHGlmmtE1o7qytg=
+	t=1706574964; cv=none; b=k74Si18KkK5duOtQJvdVnApRDZiCc7FKWCvP8XPEw0HtSoVJ0Dvcy/wrgMDeOGRbd3n+POIW8AxEzYPz2KnsQpuRP/sNJGrMulpYlDj0MXnkVaKHPzF2ejrZFCs7viWko3TetQMsk4mayvg0VEHysI2hAiuDhropmPo41mVW0SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706574941; c=relaxed/simple;
-	bh=JS9b4dljgl7LjUP6KCTkMBXE0p22YQkNx+HEl5sDoVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nCncRp+lCNiZ9NhfZWY0Zq7bcx0KcI8dC9q3W2cFfzKEPahIMUyYgSdHAbn7pL0DOvboPGo0+s2ywYHs46zv1W2sMQI5i7ETEjiSuveS98aEPB5m7iFHJ0uWyt86Gi1i4Z3uFzbjVnDK6iPleRCdRvzKWetSXzFxUnMnE7RCxeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520E3C433C7;
-	Tue, 30 Jan 2024 00:35:39 +0000 (UTC)
-Date: Mon, 29 Jan 2024 19:35:49 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
- <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
- <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [linus:master] [eventfs] 852e46e239:
- BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240129193549.265f32c8@gandalf.local.home>
-In-Reply-To: <CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
-References: <202401291043.e62e89dc-oliver.sang@intel.com>
-	<CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
-	<20240129120125.605e97af@gandalf.local.home>
-	<CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
-	<CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
-	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
-	<20240129152600.7587d1aa@gandalf.local.home>
-	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
-	<20240129172200.1725f01b@gandalf.local.home>
-	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
-	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
-	<20240129174950.5a17a86c@gandalf.local.home>
-	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706574964; c=relaxed/simple;
+	bh=Suw9KF5ktIVTK5uerX+D/DxxdHAK+pd3QV3U4IsNHGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mVWw7xkIzWYMkB5tZkz8X8cLfOB07CUtsLmVXXSvURX1Zw9WXuYWCwOrsHTTwIbxjblDJmZr8tdgp4kIh9/LFQMvBGlSdl2ei9l6ubJ+B70WbHQJGgiHvWD38FTns7RUFWzsjnV2mawncZPkt/JTtQGuEzmXY4PyC+w7K8LqEEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U7H1f7kt; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7H1f7kt"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33aeb088324so1239140f8f.2;
+        Mon, 29 Jan 2024 16:36:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706574961; x=1707179761; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TKfKNYMatjFN+InDvnfGVCOEtv8nXBV5jhJHJ4q+47M=;
+        b=U7H1f7ktTXjyAEv78fPV4xO4vS6e8Dk9kb3AVMEwztOGkuXDwerZrManR4N5gzt9Fy
+         PIsvU2gbm0p5+z7WwotfKTdfvsMVt+csSPIyq4NfjXWKHQvmTcDE1AgLr2PoKSJdVvhm
+         h1PF09vuQ3siRlfZkL6UdoXdI1lry7AvVs+TusggtbMp6N47jow0IBJwJvDM33wvVBoO
+         7EKBC9jIcQVVcwrslvalMWB7SlS+6WFHjtFQTGyPGsP8oqblAYbOp84FghBa8kBk43aR
+         1iW3Pg5u7VrMpNXuqTiQLh7IYTKRHoRBWqWo7vhuyHf0Cw8A4SsL19njr9GqBwpxhcGh
+         xC5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706574961; x=1707179761;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TKfKNYMatjFN+InDvnfGVCOEtv8nXBV5jhJHJ4q+47M=;
+        b=GdnEIoB4hetaMFadyBxMa+HeGdEascRgJIILbTBPKqfOu+bFormf8hs9kdGt4RnI69
+         BLO/lbA+rX/ki7n4WDETvXnw0k5upTl6b3PxXRuvwTtIO/ATO3YajlVhGhT2QeUhPf/H
+         eTD3yAQPISzRSfFEhJS1gSHzkMY7110AANJY5YhlTG1HfUe4aTM/BIylsfENsN4R5ww3
+         C4PW5C0YXYpF9SrCJ6kh3wh4hG/CDW53Rd9LxrYGKvW+iCG1qHXAnHYmlEnoYqgnatZw
+         xey419/xbzEDZUFFWf3UXeJ/zUMGv74DSoRIi/Mf8CTJgHFZjjmbkR1xbLbGSK/ytyni
+         jn+Q==
+X-Gm-Message-State: AOJu0Ywuj3+tX6NxBrlwcDZJZfXh6OTdY4Wp1LUgzY+jxyN6g6x0JzjG
+	49/rgZmw0YFFoVD+A8STaeScz1x7Xv1yeKK972Iuzt6RjGBpNfM9YFA/ABTs
+X-Google-Smtp-Source: AGHT+IGnxM/5A0fh67ZbMcGvRkzCWTBA5FTDG41xGcZ243wX66/qk48SoC+dJFNHI4/Vx9z2o1pV/A==
+X-Received: by 2002:a05:6000:dcb:b0:33a:ea63:90cb with SMTP id dw11-20020a0560000dcb00b0033aea6390cbmr4128799wrb.55.1706574960959;
+        Mon, 29 Jan 2024 16:36:00 -0800 (PST)
+Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.googlemail.com with ESMTPSA id l10-20020a056000022a00b0033af350fb88sm2542167wrz.25.2024.01.29.16.35.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 16:36:00 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Robert Marko <robert.marko@sartura.hr>,
+	linux-arm-msm@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jie Luo <quic_luoj@quicinc.com>
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [net-next PATCH v2 0/3] net: mdio-ipq4019: fix wrong default MDC rate
+Date: Tue, 30 Jan 2024 01:35:19 +0100
+Message-ID: <20240130003546.1546-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 29 Jan 2024 16:01:25 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+This was a long journey to arrive and discover this problem.
 
-> I'll go see what's up with the "create it again" case - I don't
-> immediately see what's wrong.
+To not waste too much char, there is a race problem with PHY and driver
+probe. This was observed with Aquantia PHY firmware loading.
 
-Interesting. I added a printk in the lookup, and just did this:
+With some hacks the race problem was workarounded but an interesting
+thing was notice. It took more than a minute for the firmware to load
+via MDIO.
 
- # cd /sys/kernel/tracing
- # ls events/kprobes
+This was strange as the same operation was done by UBoot in at max 5
+second and the same data was loaded.
 
-And it showed that it tried to see if "kprobes" existed in the lookup.
-Which it did not because I haven't created any kprobes yet.
+A similar problem was observed on a mtk board that also had an
+Aquantia PHY where the load was very slow. It was notice that the cause
+was the MDIO bus running at a very low speed and the firmware
+was missing a property (present in mtk sdk) that set the right frequency
+to the MDIO bus.
 
-Then I did:
+It was fun to find that THE VERY SAME PROBLEM is present on IPQ in a
+different form. The MDIO apply internally a division to the feed clock
+resulting in the bus running at 390KHz instead of 6.25Mhz.
 
- # echo 'p:sched schedule' >> /sys/kernel/tracing/kprobe_events
- # ls -l events/kprobes/
-ls: cannot access 'events/kprobes/': No such file or directory
+Searching around the web for some documentation and some include and
+analyzing the uboot codeflow resulted in the divider being set wrongly
+at /256 instead of /16 as the value was actually never set.
+Applying the value restore the original load time for the Aquantia PHY.
 
-Where it should now exist but doesn't. But the lookup code never triggered.
+This series mainly handle this by adding support for the "clock-frequency"
+property.
 
-If the lookup fails, does it cache the result?
+Changes v2:
+- Use DIV_ROUND_UP
+- Introduce logic to chose a default value for 802.3 spec 2.5MHz
 
--- Steve
+Christian Marangi (3):
+  dt-bindings: net: ipq4019-mdio: document now supported clock-frequency
+  net: mdio: ipq4019: add support for clock-frequency property
+  arm64: dts: qcom: ipq8074: add clock-frequency to MDIO node
+
+ .../bindings/net/qcom,ipq4019-mdio.yaml       |  15 +++
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi         |   2 +
+ drivers/net/mdio/mdio-ipq4019.c               | 109 +++++++++++++++++-
+ 3 files changed, 120 insertions(+), 6 deletions(-)
+
+-- 
+2.43.0
+
