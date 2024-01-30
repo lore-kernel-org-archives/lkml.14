@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA02762D6;
-	Tue, 30 Jan 2024 22:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB8DF7AE64;
+	Tue, 30 Jan 2024 22:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706654245; cv=none; b=OwoFrzWLGtcvPKXfh3lEyBCUNnagQZaVBVnoyfl44ERGkXvZO1auiMcp40qV7L5OGV2AHxWIY6OVooPJS2w8rfVjEDX7/1qTXA+bvxM1Suv8PEars+gPKOHKQ9fepbZPyICOEYLK/CQ+GpSuBpomN0m1ZhK/O7hoLMk7EGXUdBM=
+	t=1706654247; cv=none; b=Y+kN0W49NOARe4+3qVu0t03h0GEv6+6bFvdCib9hYSlXWl6IP+ew5HAkyTYhjyqwVDhnvuGRG5lOuODUScCVNv6OQb2/ZbnaEWGJ69QkBH6faj1MRnLfYhVasreztcqWTJx4nd/gkKevuXk2qRGUNfEBLbR1Mux/TzEtzGlnzS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706654245; c=relaxed/simple;
-	bh=XQVge2kj4rUWlB557kVzuiQGZDjqfWxqK2fdHkqWT8s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=O+gPNTJqzbdDaRwXR5Jvnpk2AEaiqv19SKV9YjCQnRlIPasjHR2HtogKooKvGC9hz0PzG7nL8ZIuDRRyRqoRxI0cqF+p09peZgizUVy/jJZ+3c1cEF8S0dchwthlmghO/vBWaU7UHjxfng4qkl/7A1gArCyBQW6ESZKpS5jP0UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HLyXhse+; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1706654247; c=relaxed/simple;
+	bh=gVHsfI1hdXwrv55SKZ9DjXOQ0gJJG8eF5axil3JDPBI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=pCkhd7h2Zi3YomvJYi7QY7a6ITm8UJuhv5ZxUGkSpI2+E6oZxk54lWfz3+J/9vWao10r7J4RCoXkpS8RI5fH9q3pGV9MmzvFJ/ycEdSolxei+9giQY/0RfblKmTnvIYMWAcJi3kFFczZf/fsFFYnm1yVw66WUl2+YPse6+2bsjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aad2sg6m; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HLyXhse+"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aad2sg6m"
 Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id 2664A20B2005; Tue, 30 Jan 2024 14:37:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2664A20B2005
+	id 41B9820B2009; Tue, 30 Jan 2024 14:37:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 41B9820B2009
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1706654242;
-	bh=hcYzKcvwL4kCnoiyUlMaq/OFhn9cfPHZcYXyIutYFE4=;
+	bh=Dj7s7TKXi7tggAz1EoYiw6d0qfj1qjT6bJT1M8cM8Js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HLyXhse+j1Q1od5rEgTWo/PxqexV7prjOK5Lbad488Id8I+0n6Pmhe+luYoH3VNUj
-	 HPqfV3dFQSGZ0o4POikB7QHoWES/F2Zzz13zxiF5MUOCYx3C8kYpr+7m83LUASnHXo
-	 21d+NWCelQqwa09FX5CxAgP/GI1M1onPT8Pt7+5I=
+	b=aad2sg6mVx63/2SuqPTZ+/kwX8UoafaWW8I8HcARCS0tENmj0EsigABKRd5dGUIp7
+	 3E0Ug4XwKU4lLcSzRgL7BRZ42vF/SG20nESiS8jdfsunJ2pmT83ociEPYNngZx8GQv
+	 0c1rzH9qY/ityAnsWul/qG2lsnq6iL3JHrG6RqG0=
 From: Fan Wu <wufan@linux.microsoft.com>
 To: corbet@lwn.net,
 	zohar@linux.ibm.com,
@@ -43,11 +43,11 @@ Cc: linux-doc@vger.kernel.org,
 	dm-devel@lists.linux.dev,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Deven Bowers <deven.desai@linux.microsoft.com>,
-	Fan Wu <wufan@linux.microsoft.com>
-Subject: [RFC PATCH v12 04/20] ipe: add LSM hooks on execution and kernel read
-Date: Tue, 30 Jan 2024 14:36:52 -0800
-Message-Id: <1706654228-17180-5-git-send-email-wufan@linux.microsoft.com>
+	Fan Wu <wufan@linux.microsoft.com>,
+	Deven Bowers <deven.desai@linux.microsoft.com>
+Subject: [RFC PATCH v12 06/20] ipe: introduce 'boot_verified' as a trust provider
+Date: Tue, 30 Jan 2024 14:36:54 -0800
+Message-Id: <1706654228-17180-7-git-send-email-wufan@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1706654228-17180-1-git-send-email-wufan@linux.microsoft.com>
 References: <1706654228-17180-1-git-send-email-wufan@linux.microsoft.com>
@@ -57,383 +57,354 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-From: Deven Bowers <deven.desai@linux.microsoft.com>
+IPE is designed to provide system level trust guarantees, this usually
+implies that trust starts from bootup with a hardware root of trust,
+which validates the bootloader. After this, the bootloader verifies
+the kernel and the initramfs.
 
-IPE's initial goal is to control both execution and the loading of
-kernel modules based on the system's definition of trust. It
-accomplishes this by plugging into the security hooks for
-bprm_check_security, file_mprotect, mmap_file, kernel_load_data,
-and kernel_read_data.
+As there's no currently supported integrity method for initramfs, and
+it's typically already verified by the bootloader. This patch introduces
+a new IPE property `boot_verified` which allows author of IPE policy to
+indicate trust for files from initramfs.
+
+The implementation of this feature utilizes the newly added
+`unpack_initramfs` hook. This hook marks the superblock of the rootfs
+after the initramfs has been unpacked into it.
+
+Since the rootfs is never unmounted during system operation, it is
+advised to switch to a different policy that doesn't rely on the
+`boot_verified` property after the real rootfs is in charge.
+This ensures that the trust policies remain relevant and effective
+throughout the system's operation.
 
 Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
 Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
 
 ---
 v2:
-  + Split evaluation loop, access control hooks,
-    and evaluation loop from policy parser and userspace
-    interface to pass mailing list character limit
+  +No Changes
 
 v3:
-  + Move ipe_load_properties to patch 04.
-  + Remove useless 0-initializations
-  + Prefix extern variables with ipe_
-  + Remove kernel module parameters, as these are
-    exposed through sysctls.
-  + Add more prose to the IPE base config option
-    help text.
-  + Use GFP_KERNEL for audit_log_start.
-  + Remove unnecessary caching system.
-  + Remove comments from headers
-  + Use rcu_access_pointer for rcu-pointer null check
-  + Remove usage of reqprot; use prot only.
-  + Move policy load and activation audit event to 03/12
+  + Remove useless caching system
+  + Move ipe_load_properties to this match
+  + Minor changes from checkpatch --strict warnings
 
 v4:
-  + Remove sysctls in favor of securityfs nodes
-  + Re-add kernel module parameters, as these are now
-    exposed through securityfs.
-  + Refactor property audit loop to a separate function.
+  + Remove comments from headers that was missed previously.
+  + Grammatical corrections.
 
 v5:
-  + fix minor grammatical errors
-  + do not group rule by curly-brace in audit record,
-    reconstruct the exact rule.
+  + No significant changes
 
 v6:
   + No changes
 
 v7:
-  + Further split lsm creation, the audit system, the evaluation loop
-    and access control hooks into separate commits.
+  + Reword and refactor patch 04/12 to [09/16], based on changes in
+the underlying system.
+  + Add common audit function for boolean values
+  + Use common audit function as implementation.
 
 v8:
-  + Rename hook functions to follow the lsmname_hook_name convention
-  + Remove ipe_hook enumeration, can be derived from correlation with
-    syscall audit record.
+  + No changes
 
 v9:
-  + Minor changes for adapting to the new parser
+  + No changes
 
 v10:
-  + Remove @reqprot part
+  + Replace struct file with struct super_block
 
 v11:
   + Fix code style issues
 
 v12:
-  + Correct WARN usages
+  + Switch to use unpack_initramfs hook and security blob
 ---
- security/ipe/Makefile |   1 +
- security/ipe/eval.c   |  14 ++++
- security/ipe/eval.h   |   3 +
- security/ipe/hooks.c  | 183 ++++++++++++++++++++++++++++++++++++++++++
- security/ipe/hooks.h  |  25 ++++++
- security/ipe/ipe.c    |   6 ++
- 6 files changed, 232 insertions(+)
- create mode 100644 security/ipe/hooks.c
- create mode 100644 security/ipe/hooks.h
+ security/ipe/eval.c          | 68 +++++++++++++++++++++++++++++++++++-
+ security/ipe/eval.h          |  9 +++++
+ security/ipe/hooks.c         |  8 +++++
+ security/ipe/hooks.h         |  4 +++
+ security/ipe/ipe.c           | 14 ++++++++
+ security/ipe/ipe.h           |  3 ++
+ security/ipe/policy.h        |  2 ++
+ security/ipe/policy_parser.c | 37 +++++++++++++++++++-
+ 8 files changed, 143 insertions(+), 2 deletions(-)
 
-diff --git a/security/ipe/Makefile b/security/ipe/Makefile
-index 57fe922cf1fc..d7f2870d7c09 100644
---- a/security/ipe/Makefile
-+++ b/security/ipe/Makefile
-@@ -7,6 +7,7 @@
- 
- obj-$(CONFIG_SECURITY_IPE) += \
- 	eval.o \
-+	hooks.o \
- 	ipe.o \
- 	policy.o \
- 	policy_parser.o \
 diff --git a/security/ipe/eval.c b/security/ipe/eval.c
-index af56815ed0fa..4f425afffcad 100644
+index 4f425afffcad..546bbc52a071 100644
 --- a/security/ipe/eval.c
 +++ b/security/ipe/eval.c
-@@ -16,6 +16,20 @@
+@@ -16,6 +16,24 @@
  
  struct ipe_policy __rcu *ipe_active_policy;
  
++#define FILE_SUPERBLOCK(f) ((f)->f_path.mnt->mnt_sb)
++
++#ifdef CONFIG_BLK_DEV_INITRD
 +/**
-+ * build_eval_ctx - Build an evaluation context.
++ * build_ipe_sb_ctx - Build from_initramfs field of an evaluation context.
 + * @ctx: Supplies a pointer to the context to be populated.
-+ * @file: Supplies a pointer to the file to associated with the evaluation.
-+ * @op: Supplies the IPE policy operation associated with the evaluation.
++ * @file: Supplies the file struct of the file triggered IPE event.
 + */
-+void build_eval_ctx(struct ipe_eval_ctx *ctx,
-+		    const struct file *file,
-+		    enum ipe_op_type op)
++static void build_ipe_sb_ctx(struct ipe_eval_ctx *ctx, const struct file *const file)
 +{
-+	ctx->file = file;
-+	ctx->op = op;
++	ctx->from_initramfs = ipe_sb(FILE_SUPERBLOCK(file))->is_initramfs;
 +}
++#else
++static void build_ipe_sb_ctx(struct ipe_eval_ctx *ctx, const struct file *const file)
++{
++}
++#endif /* CONFIG_BLK_DEV_INITRD */
++
+ /**
+  * build_eval_ctx - Build an evaluation context.
+  * @ctx: Supplies a pointer to the context to be populated.
+@@ -28,8 +46,49 @@ void build_eval_ctx(struct ipe_eval_ctx *ctx,
+ {
+ 	ctx->file = file;
+ 	ctx->op = op;
++
++	if (file)
++		build_ipe_sb_ctx(ctx, file);
++}
++
++#ifdef CONFIG_BLK_DEV_INITRD
++/**
++ * evaluate_boot_verified_true - Evaluate @ctx for the boot verified property.
++ * @ctx: Supplies a pointer to the context being evaluated.
++ *
++ * Return:
++ * * true	- The current @ctx match the @p
++ * * false	- The current @ctx doesn't match the @p
++ */
++static bool evaluate_boot_verified_true(const struct ipe_eval_ctx *const ctx)
++{
++	return ctx->from_initramfs;
+ }
+ 
++/**
++ * evaluate_boot_verified_false - Evaluate @ctx for the boot verified property.
++ * @ctx: Supplies a pointer to the context being evaluated.
++ *
++ * Return:
++ * * true	- The current @ctx match the @p
++ * * false	- The current @ctx doesn't match the @p
++ */
++static bool evaluate_boot_verified_false(const struct ipe_eval_ctx *const ctx)
++{
++	return !evaluate_boot_verified_true(ctx);
++}
++#else
++static bool evaluate_boot_verified_true(const struct ipe_eval_ctx *const ctx)
++{
++	return false;
++}
++
++static bool evaluate_boot_verified_false(const struct ipe_eval_ctx *const ctx)
++{
++	return false;
++}
++#endif /* CONFIG_BLK_DEV_INITRD */
 +
  /**
   * evaluate_property - Analyze @ctx against a property.
   * @ctx: Supplies a pointer to the context to be evaluated.
+@@ -42,7 +101,14 @@ void build_eval_ctx(struct ipe_eval_ctx *ctx,
+ static bool evaluate_property(const struct ipe_eval_ctx *const ctx,
+ 			      struct ipe_prop *p)
+ {
+-	return false;
++	switch (p->type) {
++	case IPE_PROP_BOOT_VERIFIED_FALSE:
++		return evaluate_boot_verified_false(ctx);
++	case IPE_PROP_BOOT_VERIFIED_TRUE:
++		return evaluate_boot_verified_true(ctx);
++	default:
++		return false;
++	}
+ }
+ 
+ /**
 diff --git a/security/ipe/eval.h b/security/ipe/eval.h
-index 6b434515968f..cfdf3c8dfe8a 100644
+index cfdf3c8dfe8a..7d79fdb63bbf 100644
 --- a/security/ipe/eval.h
 +++ b/security/ipe/eval.h
-@@ -11,6 +11,8 @@
+@@ -15,10 +15,19 @@
  
- #include "policy.h"
- 
-+#define IPE_EVAL_CTX_INIT ((struct ipe_eval_ctx){ 0 })
-+
  extern struct ipe_policy __rcu *ipe_active_policy;
  
++#ifdef CONFIG_BLK_DEV_INITRD
++struct ipe_sb {
++	bool is_initramfs;
++};
++#endif /* CONFIG_BLK_DEV_INITRD */
++
  struct ipe_eval_ctx {
-@@ -19,6 +21,7 @@ struct ipe_eval_ctx {
+ 	enum ipe_op_type op;
+ 
  	const struct file *file;
++#ifdef CONFIG_BLK_DEV_INITRD
++	bool from_initramfs;
++#endif /* CONFIG_BLK_DEV_INITRD */
  };
  
-+void build_eval_ctx(struct ipe_eval_ctx *ctx, const struct file *file, enum ipe_op_type op);
- int ipe_evaluate_event(const struct ipe_eval_ctx *const ctx);
- 
- #endif /* _IPE_EVAL_H */
+ void build_eval_ctx(struct ipe_eval_ctx *ctx, const struct file *file, enum ipe_op_type op);
 diff --git a/security/ipe/hooks.c b/security/ipe/hooks.c
-new file mode 100644
-index 000000000000..3aec88c074e1
---- /dev/null
+index 3aec88c074e1..8ee105bf7bad 100644
+--- a/security/ipe/hooks.c
 +++ b/security/ipe/hooks.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) Microsoft Corporation. All rights reserved.
-+ */
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <linux/fs.h>
++#include <linux/fs_struct.h>
+ #include <linux/types.h>
+ #include <linux/binfmts.h>
+ #include <linux/mman.h>
+@@ -181,3 +182,10 @@ int ipe_kernel_load_data(enum kernel_load_data_id id, bool contents)
+ 	build_eval_ctx(&ctx, NULL, op);
+ 	return ipe_evaluate_event(&ctx);
+ }
 +
-+#include <linux/fs.h>
-+#include <linux/types.h>
-+#include <linux/binfmts.h>
-+#include <linux/mman.h>
-+
-+#include "ipe.h"
-+#include "hooks.h"
-+#include "eval.h"
-+
-+/**
-+ * ipe_bprm_check_security - ipe security hook function for bprm check.
-+ * @bprm: Supplies a pointer to a linux_binprm structure to source the file
-+ *	  being evaluated.
-+ *
-+ * This LSM hook is called when a binary is loaded through the exec
-+ * family of system calls.
-+ * Return:
-+ * *0	- OK
-+ * *!0	- Error
-+ */
-+int ipe_bprm_check_security(struct linux_binprm *bprm)
++#ifdef CONFIG_BLK_DEV_INITRD
++void ipe_unpack_initramfs(void)
 +{
-+	struct ipe_eval_ctx ctx = IPE_EVAL_CTX_INIT;
-+
-+	build_eval_ctx(&ctx, bprm->file, IPE_OP_EXEC);
-+	return ipe_evaluate_event(&ctx);
++	ipe_sb(current->fs->root.mnt->mnt_sb)->is_initramfs = true;
 +}
-+
-+/**
-+ * ipe_mmap_file - ipe security hook function for mmap check.
-+ * @f: File being mmap'd. Can be NULL in the case of anonymous memory.
-+ * @reqprot: The requested protection on the mmap, passed from usermode.
-+ * @prot: The effective protection on the mmap, resolved from reqprot and
-+ *	  system configuration.
-+ * @flags: Unused.
-+ *
-+ * This hook is called when a file is loaded through the mmap
-+ * family of system calls.
-+ *
-+ * Return:
-+ * * 0	- OK
-+ * * !0	- Error
-+ */
-+int ipe_mmap_file(struct file *f, unsigned long reqprot __always_unused,
-+		  unsigned long prot, unsigned long flags)
-+{
-+	struct ipe_eval_ctx ctx = IPE_EVAL_CTX_INIT;
-+
-+	if (prot & PROT_EXEC) {
-+		build_eval_ctx(&ctx, f, IPE_OP_EXEC);
-+		return ipe_evaluate_event(&ctx);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ipe_file_mprotect - ipe security hook function for mprotect check.
-+ * @vma: Existing virtual memory area created by mmap or similar.
-+ * @reqprot: The requested protection on the mmap, passed from usermode.
-+ * @prot: The effective protection on the mmap, resolved from reqprot and
-+ *	  system configuration.
-+ *
-+ * This LSM hook is called when a mmap'd region of memory is changing
-+ * its protections via mprotect.
-+ *
-+ * Return:
-+ * * 0	- OK
-+ * * !0	- Error
-+ */
-+int ipe_file_mprotect(struct vm_area_struct *vma,
-+		      unsigned long reqprot __always_unused,
-+		      unsigned long prot)
-+{
-+	struct ipe_eval_ctx ctx = IPE_EVAL_CTX_INIT;
-+
-+	/* Already Executable */
-+	if (vma->vm_flags & VM_EXEC)
-+		return 0;
-+
-+	if (prot & PROT_EXEC) {
-+		build_eval_ctx(&ctx, vma->vm_file, IPE_OP_EXEC);
-+		return ipe_evaluate_event(&ctx);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ipe_kernel_read_file - ipe security hook function for kernel read.
-+ * @file: Supplies a pointer to the file structure being read in from disk.
-+ * @id: Supplies the enumeration identifying the purpose of the read.
-+ * @contents: Unused.
-+ *
-+ * This LSM hook is called when a file is being read in from disk from
-+ * the kernel.
-+ *
-+ * Return:
-+ * 0 - OK
-+ * !0 - Error
-+ */
-+int ipe_kernel_read_file(struct file *file, enum kernel_read_file_id id,
-+			 bool contents)
-+{
-+	enum ipe_op_type op;
-+	struct ipe_eval_ctx ctx = IPE_EVAL_CTX_INIT;
-+
-+	switch (id) {
-+	case READING_FIRMWARE:
-+		op = IPE_OP_FIRMWARE;
-+		break;
-+	case READING_MODULE:
-+		op = IPE_OP_KERNEL_MODULE;
-+		break;
-+	case READING_KEXEC_INITRAMFS:
-+		op = IPE_OP_KEXEC_INITRAMFS;
-+		break;
-+	case READING_KEXEC_IMAGE:
-+		op = IPE_OP_KEXEC_IMAGE;
-+		break;
-+	case READING_POLICY:
-+		op = IPE_OP_POLICY;
-+		break;
-+	case READING_X509_CERTIFICATE:
-+		op = IPE_OP_X509;
-+		break;
-+	default:
-+		op = IPE_OP_INVALID;
-+		WARN(1, "no rule setup for kernel_read_file enum %d", id);
-+	}
-+
-+	build_eval_ctx(&ctx, file, op);
-+	return ipe_evaluate_event(&ctx);
-+}
-+
-+/**
-+ * ipe_kernel_load_data - ipe security hook function for kernel load data.
-+ * @id: Supplies the enumeration identifying the purpose of the read.
-+ * @contents: Unused.
-+ *
-+ * This LSM hook is called when a buffer is being read in from disk.
-+ *
-+ * Return:
-+ * * 0	- OK
-+ * * !0	- Error
-+ */
-+int ipe_kernel_load_data(enum kernel_load_data_id id, bool contents)
-+{
-+	enum ipe_op_type op;
-+	struct ipe_eval_ctx ctx = IPE_EVAL_CTX_INIT;
-+
-+	switch (id) {
-+	case LOADING_FIRMWARE:
-+		op = IPE_OP_FIRMWARE;
-+		break;
-+	case LOADING_MODULE:
-+		op = IPE_OP_KERNEL_MODULE;
-+		break;
-+	case LOADING_KEXEC_INITRAMFS:
-+		op = IPE_OP_KEXEC_INITRAMFS;
-+		break;
-+	case LOADING_KEXEC_IMAGE:
-+		op = IPE_OP_KEXEC_IMAGE;
-+		break;
-+	case LOADING_POLICY:
-+		op = IPE_OP_POLICY;
-+		break;
-+	case LOADING_X509_CERTIFICATE:
-+		op = IPE_OP_X509;
-+		break;
-+	default:
-+		op = IPE_OP_INVALID;
-+		WARN(1, "no rule setup for kernel_load_data enum %d", id);
-+	}
-+
-+	build_eval_ctx(&ctx, NULL, op);
-+	return ipe_evaluate_event(&ctx);
-+}
++#endif /* CONFIG_BLK_DEV_INITRD */
 diff --git a/security/ipe/hooks.h b/security/ipe/hooks.h
-new file mode 100644
-index 000000000000..23205452f758
---- /dev/null
+index 23205452f758..3b1bb0a6e89c 100644
+--- a/security/ipe/hooks.h
 +++ b/security/ipe/hooks.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) Microsoft Corporation. All rights reserved.
-+ */
-+#ifndef _IPE_HOOKS_H
-+#define _IPE_HOOKS_H
+@@ -22,4 +22,8 @@ int ipe_kernel_read_file(struct file *file, enum kernel_read_file_id id,
+ 
+ int ipe_kernel_load_data(enum kernel_load_data_id id, bool contents);
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++void ipe_unpack_initramfs(void);
++#endif /* CONFIG_BLK_DEV_INITRD */
 +
-+#include <linux/fs.h>
-+#include <linux/binfmts.h>
-+#include <linux/security.h>
-+
-+int ipe_bprm_check_security(struct linux_binprm *bprm);
-+
-+int ipe_mmap_file(struct file *f, unsigned long reqprot, unsigned long prot,
-+		  unsigned long flags);
-+
-+int ipe_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
-+		      unsigned long prot);
-+
-+int ipe_kernel_read_file(struct file *file, enum kernel_read_file_id id,
-+			 bool contents);
-+
-+int ipe_kernel_load_data(enum kernel_load_data_id id, bool contents);
-+
-+#endif /* _IPE_HOOKS_H */
+ #endif /* _IPE_HOOKS_H */
 diff --git a/security/ipe/ipe.c b/security/ipe/ipe.c
-index b013aed15e73..22bd95116087 100644
+index 22bd95116087..ed3acf6174d8 100644
 --- a/security/ipe/ipe.c
 +++ b/security/ipe/ipe.c
-@@ -5,6 +5,7 @@
+@@ -5,9 +5,13 @@
  #include <uapi/linux/lsm.h>
  
  #include "ipe.h"
-+#include "hooks.h"
++#include "eval.h"
+ #include "hooks.h"
  
  static struct lsm_blob_sizes ipe_blobs __ro_after_init = {
- };
-@@ -15,6 +16,11 @@ static const struct lsm_id ipe_lsmid = {
++#ifdef CONFIG_BLK_DEV_INITRD
++	.lbs_superblock = sizeof(struct ipe_sb),
++#endif /* CONFIG_BLK_DEV_INITRD */
  };
  
- static struct security_hook_list ipe_hooks[] __ro_after_init = {
-+	LSM_HOOK_INIT(bprm_check_security, ipe_bprm_check_security),
-+	LSM_HOOK_INIT(mmap_file, ipe_mmap_file),
-+	LSM_HOOK_INIT(file_mprotect, ipe_file_mprotect),
-+	LSM_HOOK_INIT(kernel_read_file, ipe_kernel_read_file),
-+	LSM_HOOK_INIT(kernel_load_data, ipe_kernel_load_data),
+ static const struct lsm_id ipe_lsmid = {
+@@ -15,12 +19,22 @@ static const struct lsm_id ipe_lsmid = {
+ 	.id = LSM_ID_IPE,
  };
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++struct ipe_sb *ipe_sb(const struct super_block *sb)
++{
++	return sb->s_security + ipe_blobs.lbs_superblock;
++}
++#endif /* CONFIG_BLK_DEV_INITRD */
++
+ static struct security_hook_list ipe_hooks[] __ro_after_init = {
+ 	LSM_HOOK_INIT(bprm_check_security, ipe_bprm_check_security),
+ 	LSM_HOOK_INIT(mmap_file, ipe_mmap_file),
+ 	LSM_HOOK_INIT(file_mprotect, ipe_file_mprotect),
+ 	LSM_HOOK_INIT(kernel_read_file, ipe_kernel_read_file),
+ 	LSM_HOOK_INIT(kernel_load_data, ipe_kernel_load_data),
++#ifdef CONFIG_BLK_DEV_INITRD
++	LSM_HOOK_INIT(unpack_initramfs_security, ipe_unpack_initramfs),
++#endif /* CONFIG_BLK_DEV_INITRD */
+ };
+ 
+ /**
+diff --git a/security/ipe/ipe.h b/security/ipe/ipe.h
+index a1c68d0fc2e0..f1e7c3222b6d 100644
+--- a/security/ipe/ipe.h
++++ b/security/ipe/ipe.h
+@@ -12,5 +12,8 @@
+ #define pr_fmt(fmt) "IPE: " fmt
+ 
+ #include <linux/lsm_hooks.h>
++#ifdef CONFIG_BLK_DEV_INITRD
++struct ipe_sb *ipe_sb(const struct super_block *sb);
++#endif /* CONFIG_BLK_DEV_INITRD */
+ 
+ #endif /* _IPE_H */
+diff --git a/security/ipe/policy.h b/security/ipe/policy.h
+index fb906f41522b..fb48024bb63e 100644
+--- a/security/ipe/policy.h
++++ b/security/ipe/policy.h
+@@ -30,6 +30,8 @@ enum ipe_action_type {
+ #define IPE_ACTION_INVALID __IPE_ACTION_MAX
+ 
+ enum ipe_prop_type {
++	IPE_PROP_BOOT_VERIFIED_FALSE,
++	IPE_PROP_BOOT_VERIFIED_TRUE,
+ 	__IPE_PROP_MAX
+ };
+ 
+diff --git a/security/ipe/policy_parser.c b/security/ipe/policy_parser.c
+index 612839b405f4..cce15f0eb645 100644
+--- a/security/ipe/policy_parser.c
++++ b/security/ipe/policy_parser.c
+@@ -265,6 +265,14 @@ static enum ipe_action_type parse_action(char *t)
+ 	return match_token(t, action_tokens, args);
+ }
+ 
++static const match_table_t property_tokens = {
++#ifdef CONFIG_BLK_DEV_INITRD
++	{IPE_PROP_BOOT_VERIFIED_FALSE,	"boot_verified=FALSE"},
++	{IPE_PROP_BOOT_VERIFIED_TRUE,	"boot_verified=TRUE"},
++#endif /* CONFIG_BLK_DEV_INITRD */
++	{IPE_PROP_INVALID,		NULL}
++};
++
+ /**
+  * parse_property - Parse the property type given a token string.
+  * @t: Supplies the token string to be parsed.
+@@ -277,7 +285,34 @@ static enum ipe_action_type parse_action(char *t)
+  */
+ static int parse_property(char *t, struct ipe_rule *r)
+ {
+-	return -EBADMSG;
++	substring_t args[MAX_OPT_ARGS];
++	struct ipe_prop *p = NULL;
++	int rc = 0;
++	int token;
++
++	p = kzalloc(sizeof(*p), GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++
++	token = match_token(t, property_tokens, args);
++
++	switch (token) {
++	case IPE_PROP_BOOT_VERIFIED_FALSE:
++	case IPE_PROP_BOOT_VERIFIED_TRUE:
++		p->type = token;
++		break;
++	default:
++		rc = -EBADMSG;
++		break;
++	}
++	if (rc)
++		goto err;
++	list_add_tail(&p->next, &r->props);
++
++	return rc;
++err:
++	kfree(p);
++	return rc;
+ }
  
  /**
 -- 
