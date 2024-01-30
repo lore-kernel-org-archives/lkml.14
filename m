@@ -1,106 +1,83 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710D267740;
-	Tue, 30 Jan 2024 10:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9AEA67E61
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706612037; cv=none; b=SMa3dTidqb0UVWOgBlRZEGqJWt1HPg9ggQC8xQhEhQZS54qTwOLjclm7AxMSfiC1hzViJNlxVDuM1ndVB33s/wMv9vrNATjNwO6LcqveUacrRxIOVq71m/swHHgKPDPILW+hAtTX6l3iQi2SZZIkR0HC6QouSw0pFP/MKdkR0sg=
+	t=1706612053; cv=none; b=R7ErCzcguUMMZOqa7EgbkM+dld4N0auclcfY8MkvqCo0SmrQ3pkexVFI5sMU7oxshJdMT7Z9RaA+2dsTyNUnfzZgSQBiZ0Wc/aieMdFMaUzMfRyCQueqbehhh7N3VWpxwKeFoB6ZYao7ijsSoM0G5XjhK8NkmzgSiWJendFYtag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706612037; c=relaxed/simple;
-	bh=c9tOg96jjd1LYzpQtVgyPp0A7gtdbS1WwYmc3xRzXsA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G4fkI140GUg9XAxXX3MGQiho55a7EtwPYP5lDuZUfRYWaMNWJw7BPygae/q1v2fX6Db4X+UShKPGDfsoIdpuxXg5aSlX9mO6vCxKmtg/V5UwCVlsAcmNq295xXgsr/npstp3sXkiiTTCnJglKuwREuFVJ5BgTogSZqjqbsQj0jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp77t1706612016tco7no5s
-X-QQ-Originating-IP: sVtAEtWP2BlVI0gAQDFaEXd9/6kioAwv56yjNvYRZ40=
-Received: from localhost ( [183.209.108.228])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 30 Jan 2024 18:53:35 +0800 (CST)
-X-QQ-SSF: 01400000000000504000000A0000000
-X-QQ-FEAT: IcCSTr/hHjNqMNUvibW4KEATWHxQ7jO9cOlP29TxqqXeG+vbkkOJxRQ894o2P
-	J+1fVc8tsK7M6zdn5BDfzHcAsQNTloGw/RwDvaEcyhiUR5E3QLO/7YX7gLBiExmy+DsykVi
-	fexCB+3o8qvf7RlnV+VizBV81YsZpkkRQg/ZabEZ3romKKEG3C2PCf9bzeFfz9xgZqwFRpO
-	/2ziOVO93DKvIcM+vOiY/o1qwvr4CcmJMomRdzM5eYZ09gtkNcg4N2p77LkNSdCFI/7BR/P
-	QQOLBJfH7aKCXI4/yKhoEa8XzoHxBLpSc2obWldHeFRaNCrrVgS+GZ0fzhdEzGCjb30EPSc
-	llnGJCB5Hxfp+SWh2eMsbwW6jqYjSZE83iqhnalETRtgV5WOeDxB0U9YcsuFwTXbUlyYa0x
-	pBsab0rPFkI=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 10820603791902915855
-From: Dawei Li <dawei.li@shingroup.cn>
-To: robh+dt@kernel.org,
-	frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	set_pte_at@outlook.com,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH 2/2] of: Implment cache update operation on device node attach
-Date: Tue, 30 Jan 2024 18:52:36 +0800
-Message-Id: <20240130105236.3097126-3-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240130105236.3097126-1-dawei.li@shingroup.cn>
-References: <20240130105236.3097126-1-dawei.li@shingroup.cn>
+	s=arc-20240116; t=1706612053; c=relaxed/simple;
+	bh=Uf5lm/bBKl/t66RkGmw4DAaNnqHacgZqug2RRU8WVg4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvmlHakLH0c+MTChlW/SUqGdGBfPmEQl6ELdQgbnnMLW+HkFsJgqG7AxY/L/X9nHk2VyYUoDU2J26Z7gDGbZrmKVmb1wMVvTYiY2/g7nV9nGDmV7dyEuHRr2S6q9KfhXE1+sJMFZUC28CNogFYwr8O/10IxDbDGHuuY4KrhCVXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DCC4DA7;
+	Tue, 30 Jan 2024 02:54:53 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E77D3F5A1;
+	Tue, 30 Jan 2024 02:54:08 -0800 (PST)
+Date: Tue, 30 Jan 2024 10:54:06 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Jackson Cooper-Driver <Jackson.Cooper-Driver@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64/sme: Restore SMCR_EL1.EZT0 on exit from suspend
+Message-ID: <ZbjVTigk0YlGd3mA@e133380.arm.com>
+References: <20240130-arm64-sme-resume-v1-0-0e60ebba18df@kernel.org>
+ <20240130-arm64-sme-resume-v1-2-0e60ebba18df@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130-arm64-sme-resume-v1-2-0e60ebba18df@kernel.org>
 
-Use implemented __of_phandle_update_cache to update phandle cache on
-device node attachment.
+On Tue, Jan 30, 2024 at 12:02:49AM +0000, Mark Brown wrote:
+> The fields in SMCR_EL1 reset to an architecturally UNKNOWN value. Since we
+> do not otherwise manage the traps configured in this register at runtime we
+> need to reconfigure them after a suspend in case nothing else was kind
+> enough to preserve them for us. Do so for SMCR_EL1.EZT0.
+> 
+> Fixes: d4913eee152d (arm64/sme: Add basic enumeration for SME2)
+> Reported-by: Jackson Cooper-Driver <Jackson.Cooper-Driver@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  arch/arm64/kernel/fpsimd.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> index 69201208bb13..329782fe39c5 100644
+> --- a/arch/arm64/kernel/fpsimd.c
+> +++ b/arch/arm64/kernel/fpsimd.c
+> @@ -1320,6 +1320,8 @@ void sme_suspend_exit(void)
+>  
+>  	if (system_supports_fa64())
+>  		smcr |= SMCR_ELx_FA64;
 
-While at it, make explicit assertion on locking dependency for
-__of_phandle_cache_inv_entry.
+Ditto comments on patch 1.
 
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- drivers/of/base.c    | 6 ++++--
- drivers/of/dynamic.c | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+Unrelated to this patch, it is worth having a prctl for this?  The
+architecture seems to discourage software written for the SME ISA to
+implicitly rely on FA64, so it would useful to be able to run with it
+disabled even on hardware that supports it.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 8b7da27835eb..44e542b566e1 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -153,6 +153,8 @@ void __of_phandle_cache_inv_entry(phandle handle)
- 	u32 handle_hash;
- 	struct device_node *np;
- 
-+	lockdep_assert_held(&devtree_lock);
-+
- 	if (!handle)
- 		return;
- 
-@@ -195,8 +197,8 @@ void __init of_core_init(void)
- 	}
- 	for_each_of_allnodes(np) {
- 		__of_attach_node_sysfs(np);
--		if (np->phandle && !phandle_cache[of_phandle_cache_hash(np->phandle)])
--			phandle_cache[of_phandle_cache_hash(np->phandle)] = np;
-+
-+		__of_phandle_update_cache(np, false);
- 	}
- 	mutex_unlock(&of_mutex);
- 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 3bf27052832f..a68bf58f2c24 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -219,6 +219,8 @@ static void __of_attach_node(struct device_node *np)
- 			np->phandle = 0;
- 	}
- 
-+	__of_phandle_update_cache(np, true);
-+
- 	np->child = NULL;
- 	np->sibling = np->parent->child;
- 	np->parent->child = np;
--- 
-2.27.0
+> +	if (system_supports_sme2())
+> +		smcr |= SMCR_ELx_EZT0;
 
+Side question: since ZT0 is likely to be sporadically used, maybe it
+is worth having separate lazy restore for it versus the main SME state?
+(Not relevant for this series though, and probably best deferred until
+there is hardware to benchmark on.  Also, ZT0 is small compared with
+the SME state proper...)
+
+[...]
+
+Cheers
+---Dave
