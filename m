@@ -1,106 +1,88 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FD967A0F;
-	Tue, 30 Jan 2024 17:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7424376C6A;
+	Tue, 30 Jan 2024 17:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706634626; cv=none; b=YIebvrXXZDEHyDiA6qnYqz89RCmEL8vmPsAWmxNLfnxHbZ45N/LfB118o/5a0MLYpqI2rRaFWsbg3M6wVFW5OjY6q0VqaFXBevO0U3X/qcHxdkoK22UMFp48WJ010pawYKzRQWjw7rzu+Ba15ps1p5JnMt43O/2421z1rFfW8VU=
+	t=1706634626; cv=none; b=XvlbItcCjRPyN9wwlpHTqCEjkhJ2k88Kg3w984RLV9a4GlhM56huZn7k6dTfxqHF/RicnsIdhV3KVoqvZatIANTF/ffm5dGOOnd+DcZBcCPgAOJl9ZhQi34+/ZvxVZeXQB0z/abMrvLk09kRGH6Z410jKidSSxrk9aoWu29y5bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706634626; c=relaxed/simple;
-	bh=QOE3n4Szn+LSvifyAKQARBkvfKb6ykLiCedZCr70OAc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dG+Aih0qDVjW1iL1Bv6pIQRkW70fyrdbq6oSkKxFehIPDWy5rIUiu5/IIvRpkbg5+2m4/OIeKm0u3FetPhX+5cPwedFZetqxOOlX9PO4irqfewK7jun3swJn3QefjohsMqiPuc7vwACtGknJjIExMj1bWHRY8tcgB3uF+l/KiV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=J+6Fj07r; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	bh=og6jQJBHeHMmvk9NQZFiuw3bMyKwy04HOIksyUv5hDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXMABRkv0gU1o3EuZxJcfc6ZEK2Wd67UoykuAX1wHOsIovgsJzccq9jknpCM+SO4a0zSGlH0CPwYpknSTHZXKg7X4MqUkx1IHMV04rUges+9vnotDFjqmuaj2vU6gJeNsgwion1V3qSbMYOADtdWkx5zaYnYoNfMrCtGF/gSFhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uOAoU27o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="J+6Fj07r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1706634579; x=1707239379; i=markus.elfring@web.de;
-	bh=QOE3n4Szn+LSvifyAKQARBkvfKb6ykLiCedZCr70OAc=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=J+6Fj07r4h5QMBXDL3yWwpiIA4YuvymFHWYwCxF/fzliYafXYoOq3aQtKLmhjf0D
-	 bqX39felXEEv+IP0w3LMd51AMFBFbMm68ZYjTA4rFJ/Y+bIkojaWxHgbH0b1gsmBV
-	 4FMCqe1u0IeT84V+o0nPlPU1zn79Y0R2Aljqwqd1K0UQSbNT07Ns4FJx8G1gcVJAr
-	 ZYgrZnZAbW5LhqBB60wsFsQ3NUH2wEkJ+HXdM2l1tpoxjgPseDdcFQPDQXnwVPXNx
-	 e1YyzasYf+LFyKbvYztTq2wCkfJXpQyuUgCDqgndpNFtIJB4QQ7uilxtfgHmE+ORX
-	 1OnoxGHdYQBpRyCGHQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MPrLN-1riQNs2kRX-00N4Bk; Tue, 30
- Jan 2024 18:09:39 +0100
-Message-ID: <e760bd1b-30bf-489f-b745-128d05397feb@web.de>
-Date: Tue, 30 Jan 2024 18:09:14 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uOAoU27o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32125C43394;
+	Tue, 30 Jan 2024 17:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706634625;
+	bh=og6jQJBHeHMmvk9NQZFiuw3bMyKwy04HOIksyUv5hDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uOAoU27oTREcKJoZUokKd9l4sXYb/pYwbZ4/1YTK115qFzgbJylQ55n4pbUp7XYT9
+	 vdmaHDKn3EYlB0FGXAaYhiFC0Kzt2uEig3IBzhcEVmOrl7qr7vgslyTXBJqOTDexAT
+	 0jlVNHGkr6o1a19siVrDKDFcjGHcGIs+CyuXm6uSZsXO7GmVr2/i85cvDtwzxe4xu6
+	 97dYrEAyrvPizmIs85TtGQEn/oKh2kFKH1TSw4QnuK4EgmCotTKlocmKtPQNJgDFmi
+	 BAQjXot3dAvJJzPGNUjM/A566m4pe/Chcl/im1poUwww9YOhbXN/UXeuB8hbExi/X4
+	 zq1UKVgcxA+BQ==
+Date: Tue, 30 Jan 2024 22:40:21 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Vincent Shih <vincent.sunplus@gmail.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH] phy: sunplus: Fix a memory leak in update_disc_vol()
+Message-ID: <ZbktfWM3bzuRrMok@matsya>
+References: <451016052782f18c8b52ed0f836d7ab5c69bac3d.1706431643.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: fpga: dfl: fme: Return directly after a failed devm_kasprintf()
- call in fme_perf_pmu_register()
-To: Dan Carpenter <dan.carpenter@linaro.org>, linux-fpga@vger.kernel.org,
- kernel-janitors@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
- Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <chentao@kylinos.cn>
-References: <d94376b6-12e8-45bb-a9be-4887bb316d35@web.de>
- <b7e2e9d1-5e3e-44b2-a4b7-327d334b776d@moroto.mountain>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <b7e2e9d1-5e3e-44b2-a4b7-327d334b776d@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:s0VR/FQjS8xqSh6FSezEsTEJZaJ+Kbc9lwjc4qySvtM5vk5B9d5
- 1A86barTpJ5n2bgZDN5MoVCNBa80vBQkveD0xtfiR8zwKgJK17Fbiykcsn92243jpl5F1Sa
- yKrRaZrlnO42TK+fXz8ihIQJc4X+NNA8iDTgt+nMs9/N19uQrJ2SwdTalhBVDuYNLgtKltC
- b67oz431eomL1htQGsTZA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0Ig/6CYNJlQ=;YAvJJnUV3C50hnqV3RKw+y4p40z
- HRPxUrOm3NJcdxxv7ApPGPAiGPdYFa0TTdcXTYuT5M6ULSPUCcAdxaqLgxfOQ0YzyOh5NVpdk
- H7LqAPx3y9n3IUWIwhjJ5AofSXgatsrCYpUvZguDkQyhakpEtbiQJ8P1CN1KT721GpgRBs0hq
- HbB2mElLGM9EDcKw39u9UJyF3K+pknXdh6nh67D1O7bgsk0/HlPFjvnZY9FA6FgQg0M8QhsLt
- qPYzcvIwKOu0xzX6fcu15F3VlUK2Y2gut0MsuNGj7u2GIfgRjN056xO9sApZPoFen+T3MUgB4
- 70YdYfnJ+dq0q1pmfNjn0Dzh9Cc6QVGav3hYGfl5PtK/3nZ4KH/LiqZNb4zXLksOCOcanfQL+
- owOBCvM7lPv3gT7NP5cQ+DkeNoM32nRQOowc2LPzLuJjwf5lxC3zh6HnIH9oY+xhOSEwBxcIm
- rEOrosjz/LVz1Njifyoqayk01llh8mR5eXS1J6IjCSFUM3WbhlXi9nX3hh2YVpnsOpj7Ri/tT
- 7+ZD2L3VN8L5muWAcFWoaiS810RbMWNwtOeh7q7kR1cVb5wiFaEnhoRVBPnr18b6hoSgO+Tlm
- 6IZn/fwhMPi9lGyAMMHJMERQWFbMZbImjOgEyrGcVvDO8S3WN8x3YMXhqewLX5SUG5TLSnht7
- hi5fe+wCBTod7q+ft761AHmHUlO1b8Jec+vubhCQukeNunFE73Y0yS/ufAh1liv/XeoD4fjYd
- Y2tTa26NoK7l2OhHIIUyJ1X3bvg28A1bH41xx1vGpVTLwLejIHe2rvAkN5QmicoKkAwOQZpbT
- oL2IPYYLf9peo0nWNXD7M3Egz1Dc5i1tQkpyiKlv8AgTQutwpW0lpn5E++rrixJiiplUXNCdB
- rR/Se+9eXfFZdcJDM9Bdg54bZ3sGtG15+AAq4Mc2WISzEJPrAceGnMgufWE6O/Zqb0adxZYPJ
- hCOolA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <451016052782f18c8b52ed0f836d7ab5c69bac3d.1706431643.git.christophe.jaillet@wanadoo.fr>
 
->> Thus return directly after a failed devm_kasprintf() call.
->>
->> Fixes: 724142f8c42a7 ("fpga: dfl: fme: add performance reporting suppor=
-t")
->
-> This basically doesn't affect runtime because perf_pmu_register() checks
-> for NULL so no need for a Fixes tag.
+On 28-01-24, 09:47, Christophe JAILLET wrote:
+> 'otp_v', allocated by nvmem_cell_read(), is leaking.
+> It must be freed before leaving the function to avoid a leak.
+> 
+> Fixes: 99d9ccd97385 ("phy: usb: Add USB2.0 phy driver for Sunplus SP7021")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch is speculative and based on comparison on the usage of
+> nvmem_cell_read() in other driver.
+> 
+> Review with care.
+> ---
+>  drivers/phy/sunplus/phy-sunplus-usb2.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/phy/sunplus/phy-sunplus-usb2.c b/drivers/phy/sunplus/phy-sunplus-usb2.c
+> index 637a5fbae6d9..50f1f91ac052 100644
+> --- a/drivers/phy/sunplus/phy-sunplus-usb2.c
+> +++ b/drivers/phy/sunplus/phy-sunplus-usb2.c
+> @@ -105,6 +105,8 @@ static int update_disc_vol(struct sp_usbphy *usbphy)
+>  	val = (val & ~J_DISC) | set;
+>  	writel(val, usbphy->phy_regs + CONFIG7);
+>  
+> +	kfree(otp_v);
 
-I suggest to clarify this view a bit more also according to statements
-like the following.
+Looking at documentation, this should be nvmem_cell_put() see:
+Documentation/driver-api/nvmem.rst
 
-1. https://elixir.bootlin.com/linux/v6.8-rc2/source/kernel/events/core.c#L=
-11532
-   perf_pmu_register:
-   =E2=80=A6
-	pmu->name =3D name;
-   =E2=80=A6
+What do you suggest Srini?
 
-2. https://elixir.bootlin.com/linux/v6.8-rc2/source/kernel/events/core.c#L=
-11472
-   pmu_dev_alloc:
-   =E2=80=A6
-	ret =3D dev_set_name(pmu->dev, "%s", pmu->name);
-   =E2=80=A6
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.43.0
 
-
-Regards,
-Markus
+-- 
+~Vinod
