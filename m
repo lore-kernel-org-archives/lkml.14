@@ -1,97 +1,66 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7060A60DC7
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD1960DDB;
+	Tue, 30 Jan 2024 09:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606608; cv=none; b=uqHGLcBZpzzBgCylEoZ8CA9b4dHuZ7PG68r1DbSTDcGigSTuIciBSwqn3OKOPprZqrKC9VqJl5oEZq+QEn7JwQZA6GIOinvqaAEs5ITVD9rs2K2DRn0Ixg1YcweyZ584Ym19pd5gkXE8RK9C4DQ8ce7XEpD5Qc31yIus3JHc2Z0=
+	t=1706606610; cv=none; b=Tk1fzszdgKYrUVDV3glKNW2AcqOioh8nYelJcUZ5qsvVrGfW0UDY7c34FYJ1V6/NOpn1OKy2VJkAw5fs8EqxPcf5LB1lfi+1Ms0w7ZeY291iZbRbHGWz/Hp3B2LaR9JPjQaQsWsNmyaDKGMfVFkJvFtfE0w8TUfNi6EmB8czHcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606608; c=relaxed/simple;
-	bh=TjCsIPX1bEde3FLQslGPgZXu5fL0mcVt0GKZSwJSPBA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MUHyPFRHSUHTK9Cje9O7fBzCQtcLROhS4316DAhL6FOQln768SPhi7AFWO8geD+PxSSVapQ5RnBN0NjXKiK2urrvKBL9jEAg22qVk71gNJ2GkIbwoeQwlxMgGE9jbXi0ys4bwkgcxZtFBOxiIjEAwajilvyPlzEFjKwQJ/iaW7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1c5e949a4d1043aaa5c407e53585448b-20240130
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:28105e74-5369-4c3c-a842-f5d8ec487464,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.35,REQID:28105e74-5369-4c3c-a842-f5d8ec487464,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:5d391d7,CLOUDID:a4e06983-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:240130171800U5BLH98G,BulkQuantity:0,Recheck:0,SF:66|24|17|19|44|102,
-	TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: 1c5e949a4d1043aaa5c407e53585448b-20240130
-X-User: gehao@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw
-	(envelope-from <gehao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1414335610; Tue, 30 Jan 2024 17:17:57 +0800
-From: Hao Ge <gehao@kylinos.cn>
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Hao Ge <gehao@kylinos.cn>
-Subject: [PATCH] mm/vmscan: Change the calculation of the number of can reclaim anon pages in zone_reclaimable_pages
-Date: Tue, 30 Jan 2024 17:17:55 +0800
-Message-Id: <20240130091755.21363-1-gehao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1706606610; c=relaxed/simple;
+	bh=040hBLi3fQefc6K0iLapGpAkzbEy3B35S845VusT4+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HhKwDPSJ/15aGyhecbJjUfwacCHK9OR4WnZpnGvmpG+DKNMpfTGNivEpr6QZhmfmJt1SN4SRLtLPK8k29KpchkrSTgGq/dYGcj8N5N9Ptzt/D7CD0+2sI1W0Cqri+53eeu6N3rKSlrBZ3dlzzu/UBjLVddxCD8EH92eub3/SG+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a354408e6bfso456341066b.1;
+        Tue, 30 Jan 2024 01:23:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706606607; x=1707211407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OuijeB7kTKzPg88klh5RjExAWGmk5spjFKXjDZFHLFg=;
+        b=au3MXECgu+yARaByLeIonZbfHR/MruwGzjGiH8QUNKZV4E9nmRd53O7o8FUzCtQBFc
+         XmIygZPJOr9G64yVWtIYp+tg8sXGQqb1AoXu2N2Bx8i0R5DpM2gFesRmgmt/6+qstBI+
+         +JHsOX83vgokWnXt9Mu5ogOQo39AordnVGOTpAzyJXGXlEqdw44ehLa3UEUFsN6BFWE3
+         6AjydEA3iNjczO7NKtE4NZ/z3yqb3A8vP3VxPI7WcQczXPjj86m1pre18MGL0FguekBX
+         i5h/46r4Ck9vHxo3yG7lmRDHmedOBsFtNCK+4ObYxxzFCecAANqDlb/sFihcblBmUI1O
+         uJyA==
+X-Gm-Message-State: AOJu0Yy6rJ9S3inhYRFYyYVTvDyHikwCX9iLjtklfHMxQzKugFlpPXvv
+	2xd91bGrCRyC7ENcMJP2uwjvN+TsS83iLTvURfxx6dxTfR/qFbIj
+X-Google-Smtp-Source: AGHT+IELrXSVw+jDlDFKwJDA0VRFGH1LN4bAe38E5hOcm0xV2g9VuCNZHBnVvD4or/Q3DSewnlwObA==
+X-Received: by 2002:a17:906:1d42:b0:a35:15ea:3cc0 with SMTP id o2-20020a1709061d4200b00a3515ea3cc0mr874790ejh.26.1706606607259;
+        Tue, 30 Jan 2024 01:23:27 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-016.fbsv.net. [2a03:2880:31ff:10::face:b00c])
+        by smtp.gmail.com with ESMTPSA id ku17-20020a170907789100b00a32fb8e79e1sm4876258ejc.65.2024.01.30.01.23.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 01:23:27 -0800 (PST)
+Date: Tue, 30 Jan 2024 01:23:25 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Matthew Wood <thepacketgeek@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/8] net: netconsole: cleanup formatting lints
+Message-ID: <ZbjADdVvfHH2/yBa@gmail.com>
+References: <20240126231348.281600-1-thepacketgeek@gmail.com>
+ <20240126231348.281600-2-thepacketgeek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126231348.281600-2-thepacketgeek@gmail.com>
 
-The spaces of swap devices that can be set by the user
-are unpredictable values, so we take the minimum value between
-the anonymous page in the specified zone and the spaces of swap devices.
+On Fri, Jan 26, 2024 at 03:13:36PM -0800, Matthew Wood wrote:
+> Address checkpatch lint suggestions in preparation for later changes
+> 
+> Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
 
-Signed-off-by: Hao Ge <gehao@kylinos.cn>
----
- mm/vmscan.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 4f9c854ce6cc..2deae4232b83 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -341,14 +341,21 @@ static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
- unsigned long zone_reclaimable_pages(struct zone *zone)
- {
- 	unsigned long nr;
--
-+	unsigned long can_reclaim_anon = 0;
- 	nr = zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_FILE) +
- 		zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_FILE);
--	if (can_reclaim_anon_pages(NULL, zone_to_nid(zone), NULL))
--		nr += zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_ANON) +
-+	if (can_reclaim_anon_pages(NULL, zone_to_nid(zone), NULL)) {
-+		can_reclaim_anon = zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_ANON) +
- 			zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_ANON);
--
--	return nr;
-+	/*
-+	 * The spaces of swap devices that can be set by the user are unpredictable values,
-+	 * so we take the minimum value between the anonymous page in the specified zone and
-+	 * the spaces of swap devices
-+	 */
-+		if (!can_demote(zone_to_nid(zone), NULL))
-+			can_reclaim_anon = min_t(unsigned long, can_reclaim_anon, get_nr_swap_pages());
-+	}
-+	return nr + can_reclaim_anon;
- }
- 
- /**
--- 
-2.25.1
-
+Reviewed-by: Breno Leitao <leitao@debian.org>
