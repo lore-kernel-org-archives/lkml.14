@@ -1,140 +1,134 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2062.outbound.protection.partner.outlook.cn [139.219.146.62])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA93381B9;
-	Tue, 30 Jan 2024 06:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706595231; cv=fail; b=eVDvWdrtfK0Hl+0XS48yCPRu6tSkkNo91fe4EkmTAwQrQAUZpvE6fB2pArB7BIoK7/vKQUtvXniQ47FqFGy9415fprYs0m0t+6TgAu/acvT9ED6DX6eShyL+sp4sHjaoCBLP+z7r/nPASfW+57ffqFZoO8VmpU6KwsNhEX/ekZA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706595231; c=relaxed/simple;
-	bh=XWXzYI6vl5ZYgChcZMy9ItbC7fyoge158CXHYgZSw8Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=gsuB0DY/sMjwOYmpS3AdUR3Ra/lvUmBUKzsjAxNAEpxteSDSxKTLPKLkmZvQbXVZDSxlOcrvFhrQJ4Sa6KuF/Oz/9eoTLyixaj/vzi6ceUkUMfhJEbqr/4/i613kStDP8r2VtDKZ0MpxEGPhISNVMY5HlM5cQ3cEzSw9RjnlQJA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z/navuGbPP7XWKZbuB6IY2icveg4bhu/ysc0jNMX80mazLLTs7YDF55Knp8k+72hZ8exD4tv/HYF7yWTR7cZxppBsCubK+lKsZen174ib/klBT5surzD+3ztp28vZehz9URUirP7J1vcHZ+QzvS/XAwZ0UeyjPa7v5fCdbDgZAhScpF+mRiumPrqP2oO3qSU5Ha9i89Wt8K7b5Bjfjho2WePNEMKSkkomoMjS5+ns+/PqOZcKHklmKTH5+eaOe7RFuEGnmxmeV70AXOlljZXUL1JCyGEawhat3cl9hL2F9Y6ZuA2xNu67IjR9dVxEFDhKoAtFl2HIPLgywpRE7jeiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rn0g3fXf37W1YYXGaUPSZ/XI/w+jWMxSzQVT9xp/C1o=;
- b=QwRT32S469oZ9SdykLn68NC/RAmv+nnWUgJ3Q1Pmen9H23IGiRAu6A0VzpZ+mtd07flUGhzqt81omosmR5KP3QRpIbC7VHmTNTGR5i+Jd7Pq3jM2oSPKmruqhrv5HQBTTsAvUQKkR3cEbUYTrImNM0zoEt0yrWx939e1MvczuscVCWsUQW5ODCDG0VdYb9D/CBXwtYnEh6C9WCtsy5NIt7x8fZgG0zqtaRwKG5tP46pLSfq+jLEqZtsKWcg3zCvm2hGBmxuJ+NlKM2uWEcDuQ675wmxnwpX/VT27HoKfCpJeqLcbuH3MWUm6bcTOUjSVK0h6OUzyCUtDmx4Oevap/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0878.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1e::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.28; Tue, 30 Jan
- 2024 05:58:50 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::148c:e1dd:302a:196b]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::148c:e1dd:302a:196b%6])
- with mapi id 15.20.7228.022; Tue, 30 Jan 2024 05:58:50 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45353839C
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 06:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706595240; cv=none; b=S5ptesMRqvjWyWAiUz93gGduw2FdKRuhkOQw8ZH+fxuocJ/6tQ9zIANAEAuisRgzGHOdIbnImox36Hr+ZgltKTuxGUuuwUF9hviJ4cE1tecueBtaMUOFA6Iv8xTYeL4gqWK9nwhCaFOAWV+kn0IdYS7DAI3r2vocLILvPrM7aPU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706595240; c=relaxed/simple;
+	bh=mbAJ/zTviPWkO8LHJ1tHYgfZ4TkYmkoH7kPNS0Gfjmc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nCUVfSs7sBNxPMiu3YifVm4gjlXFnMCCpQgWs0upMXT5LRYlOzHszAKMBHDMtMVrp4uhECMnsUeYuZQfPDS4+xzWnLWkoC32YsEq6aHGw8ybdnAxpP/QZ8/47vpkfeb8KV8vxNbTUPDh6UdrVFtIZDc2Wpb5u47WQujRzOXNE/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTvbDsNF; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTvbDsNF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706595239; x=1738131239;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mbAJ/zTviPWkO8LHJ1tHYgfZ4TkYmkoH7kPNS0Gfjmc=;
+  b=hTvbDsNFCn/m7I7+0xP7Y77bZuaEssL2M9Aa43MYkbSGADHRhl9LAXY6
+   XJQCtzstH7vCJXUtDvqaiLft6pTCzTnTCMNx2ZYmzOc9qZj5YU3XPeBMH
+   U+WxA0kd5UuT49zpoHLiwlEObMB0jDfnNmkVnhPR1EhDR3UWG8YK8V/OB
+   6gtJN9l9pLbplSIbFWi7gP5jEFGrEMiT/VgWFP37Bqm2yyKsuB4NteveW
+   vuyNMASBUcFkE39q5ixyvJODRhg0ZlrNHsBNx0vJ/s858hmoJCJAiYy9T
+   vA0be23kvYJhzUP3Mfz2Iup5Ko1Lu6xh3lhLA7VfBzKKJEfVXaKF7HxeO
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10570669"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="10570669"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 22:13:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="3706925"
+Received: from allen-box.sh.intel.com ([10.239.159.127])
+  by orviesa004.jf.intel.com with ESMTP; 29 Jan 2024 22:13:54 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	iommu@lists.linux.dev,
+	intel-gfx@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 0/2] Add JH8100 external interrupt controller support
-Date: Mon, 29 Jan 2024 21:58:41 -0800
-Message-Id: <20240130055843.216342-1-changhuang.liang@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0006.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510::8) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10)
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 1/1] iommu/vt-d: Remove INTEL_IOMMU_BROKEN_GFX_WA
+Date: Tue, 30 Jan 2024 14:08:23 +0800
+Message-Id: <20240130060823.57990-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0878:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22e9ae80-66d9-423c-78a5-08dc215887b9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ET8UOhXokSdCnvkVVzUum6I0AeaqDfx1y5WhOaBulyAtU8q3Rd1LsCzWyooNQLakWI8JwYMa0pVklAYuTVolAUKCxgRlkczTbyzTWHdUufm++FjToEnTLdff+ssCVzFz2HSNs9WbBsTacswn6VP4H/1/gqfwdZAkgbO2Z2pdYhBpqpXaAetsofBSZMkqvSf0ndhEKMjHVbFbaiwtwuQ/OzdqktsE7I5aBeu87ujlv/Zzi0K570yMUUumYcqnLFzT10ZH6zDjczCyGlPKjYOcKj/DhBlpWZW6NhyXMa8oy+uKq2JFbs0Q6l6NP1qg91NVO2AYc56zTuybasvu+H0a1M46KwlWUcYtxV6tAwghZ27M0DdXk5StJvlGnYY32yc8GkRwCZFAHzAatLF1JTzVlY0O10J/iWSISP0JjBJtiIYwpYrrVBP3JS5TJgFeKdkjUNcrmgs9vwbacOxPwjhr9PUEun2EvP3p9VabagoKrHoDKxviZ7e9KTinyR0iDx6oHc+LeEu4VXcTJeTtpqlLlrlRJQxXQVAjSQ3sWYCZZ4N4h/aaKyLJzX+3ktM6DR+ilxCZLa+5v7ubSyPJHn/+2RtfKazhSKbTOghzRFBB9C8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(366004)(39830400003)(136003)(230273577357003)(230173577357003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(26005)(41300700001)(1076003)(41320700001)(36756003)(38350700005)(2616005)(508600001)(40160700002)(40180700001)(54906003)(52116002)(6666004)(966005)(38100700002)(8676002)(5660300002)(110136005)(86362001)(66556008)(66476007)(4326008)(44832011)(2906002)(66946007)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hqRzRXFkeHWCdanKmNwsiKmUUJPJFipk+dek6l1N6Z9W944xUGH+ZiB1+5Ud?=
- =?us-ascii?Q?4qRUmCQgvF7xqaa6o8/OOPP9Qu3hafmb1TFrfa+sRXjD4WrAHQzB0iAXUzB3?=
- =?us-ascii?Q?dRnozx5dDxLJ4Kq3xQCIGQ6bLZOordrKZM6kGuB7AhQY6abbuj8vrIRIyCvy?=
- =?us-ascii?Q?ocfncGojoKixLCJLYlJmUt1aqD/osI7GX50hWMBUJ5WVhdZ0Z8u3O4xWaYx7?=
- =?us-ascii?Q?pFSf4xywpE0p9UQbYeWAw++T3lBpQ7gcxX8exf1Ft2IsMMSYpycAH3m1qRvm?=
- =?us-ascii?Q?m8jA21z1HA6QaYfMLxSADLNOD2RWMh/p2KigBvwerRVCdYEkMiezOQeTwXRr?=
- =?us-ascii?Q?hYFBYMXLYitt9lhRBjdOXfAaVL/6+ZMRR0rRMl6/orIeBSLwYdWcpRz4o3LC?=
- =?us-ascii?Q?oWJ/7Z+yhzOGkUKcXFy/XAFksBGddd9l+2hqSxtrVSurEBnmidIPjzToW/CD?=
- =?us-ascii?Q?WlzPv9VZR4dITSh09C/nFG2tlfjUN2CDZaGsz04OJlacNLP2lAnW6fpeT2M4?=
- =?us-ascii?Q?FprT+VIvTUutAcQ0nhda/cREYAx111kCCJYu9ujVBKiQvqCp47p9fJwud9w1?=
- =?us-ascii?Q?/6MupDftY6hOG2E+WwloQrF/guMMLl0yx+8QBx4uoEcvB1z1/21df6DdMOW4?=
- =?us-ascii?Q?fqaEOZTBpRN2FQV1rW4cQ72hE91jOuDhKw5b8MqNw+cjjBSsHsUkBajKbwPb?=
- =?us-ascii?Q?A7dqOltjxaslTzmDwOFlyRlZvI1qx6Y1s2DDotVFEITPK2hrZwbKf4UzaneS?=
- =?us-ascii?Q?Oj8CsO2CeFArYcxh72qQDffcXKeNSNL5Y4qe0VGCaD3NWH88rjQD3Oy8jmDF?=
- =?us-ascii?Q?zh3SFAhjV41E4IeBBWQsGNxvit3QsjYv8a0KXrHzyiTv1MQwWUBdNatrw1jr?=
- =?us-ascii?Q?OipV6pVZZIhR0w2exr7wnKD1wjS9JZIL2g37zuwWDNp+BTPzzlnHc6zy68sC?=
- =?us-ascii?Q?xOE1G7y5nym5Tp+6crgYbTXV0Rr2Mz1srQ0q8TRR5FwEA7xfxpISgrDWtFxT?=
- =?us-ascii?Q?wLaXFMRppwmFhZKhIRKo/eshW2Oefpp7/x+b7xTEZ8I/Kl+0VdIFhx1HOOP6?=
- =?us-ascii?Q?Hi07rPw5+sXrL7HZaglmNxtyK9Fo8gBj7o3lxRteTOZSO0aVIvALOJAhD2S7?=
- =?us-ascii?Q?tIeidwBSUnElNGaYeb8kuVcfeUxPcxz50FK2MUvJ+Zr8WcU5vtP6N4zLCkbS?=
- =?us-ascii?Q?eQUwkqEyZVVR1/ksjD7V6keMgt38PBwPfr7A04IXT1stEj/JvxmYYwfUnIY0?=
- =?us-ascii?Q?YQl11FDsEQThD91fTC15LuH+/FrrwJ9HfJ4ae2zkEGri4Cf9HEh3Vkdfp0Yo?=
- =?us-ascii?Q?nDI9Es6qnmT4iGSGf40nAHbUkrJO0MZ63LbBQt161GSvioVZINeP5Vu5n7C5?=
- =?us-ascii?Q?BwXU+Dj2Jw816tYCDy3b1ahMsoBJCJChunnzgfLBAz4v8UbQQOEg23zUnqEQ?=
- =?us-ascii?Q?rI/LZYep4MHDiGxnaI+DYj16KwiSxmdTfC/EUN3XqZ1OSAyNVi/2ykqqZw0V?=
- =?us-ascii?Q?Ya+8wlVK+tIAD/m+Xu7NHHGr8kZ/P++Dj9ng0L6jVX72XvgAPaajvBvCStEC?=
- =?us-ascii?Q?gy5HxpxjRqga4XsJThuXM1pmdigE5Rt3wB+w+hTIY1VuGKRvFkT3whApDSeJ?=
- =?us-ascii?Q?6bBT6mnwwzP04izdBTXbHjw=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22e9ae80-66d9-423c-78a5-08dc215887b9
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 05:58:49.9324
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /TTkVStDfoMc9zQthib1HluZlkffTl7POHV7044Gg/BBFIhgljGr6XC09v/9UKq/sZaCax3L1p+QAZgKzc2nwwoInSVoCv4CL4GOiAfJeVv/yBTDQ1ZXpMDXZW2w6bS6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0878
+Content-Transfer-Encoding: 8bit
 
-This patchset adds external interrupt controller driver for the StarFive
-JH81000 SoC. It can be used to handle high-level input interrupt signals.
-It also send the output interrupt signal to RISC-V PLIC.
+Commit 62edf5dc4a524 ("intel-iommu: Restore DMAR_BROKEN_GFX_WA option for
+broken graphics drivers") was introduced 24 years ago as a temporary
+workaround for graphics drivers that used physical addresses for DMA and
+avoided DMA APIs. This workaround was disabled by default.
 
-changes since v1:
-- Rebased on tag v6.8-rc1.
-- Dropped store reset_contorl.
-- Replaced "of_reset_control_get_by_index" with of_reset_control_get_exclusive
-- Printed the error code via %pe
+As 24 years have passed, it is expected that graphics driver developers
+have migrated their drivers to use kernel DMA APIs. Therefore, this
+workaround is no longer required and could been removed.
 
-v1: https://lore.kernel.org/all/20240111023201.6187-1-changhuang.liang@starfivetech.com/
+The Intel iommu driver also provides a "igfx_off" option to turn off
+the DAM translation for the graphic dedicated IOMMU. Hence, there is
+really no good reason to keep this config option.
 
-Changhuang Liang (2):
-  dt-bindings: interrupt-controller: Add starfive,jh8100-intc
-  irqchip: Add StarFive external interrupt controller
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+---
+ drivers/iommu/intel/iommu.c |  4 ----
+ drivers/iommu/intel/Kconfig | 11 -----------
+ 2 files changed, 15 deletions(-)
 
- .../starfive,jh8100-intc.yaml                 |  61 ++++++
- MAINTAINERS                                   |   6 +
- drivers/irqchip/Kconfig                       |  11 ++
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-starfive-jh8100-intc.c    | 180 ++++++++++++++++++
- 5 files changed, 259 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/starfive,jh8100-intc.yaml
- create mode 100644 drivers/irqchip/irq-starfive-jh8100-intc.c
+Change log:
+v2:
+ - Add igfx_off option to commit message and Cc Intel graphic
+   maintainers.
 
---
-2.25.1
+v1: https://lore.kernel.org/linux-iommu/20240127064512.16744-1-baolu.lu@linux.intel.com/
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 6fb5f6fceea1..fc52fcd786aa 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -2660,10 +2660,6 @@ static int __init init_dmars(void)
+ 		iommu_set_root_entry(iommu);
+ 	}
+ 
+-#ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
+-	dmar_map_gfx = 0;
+-#endif
+-
+ 	if (!dmar_map_gfx)
+ 		iommu_identity_mapping |= IDENTMAP_GFX;
+ 
+diff --git a/drivers/iommu/intel/Kconfig b/drivers/iommu/intel/Kconfig
+index 012cd2541a68..d2d34eb28d94 100644
+--- a/drivers/iommu/intel/Kconfig
++++ b/drivers/iommu/intel/Kconfig
+@@ -64,17 +64,6 @@ config INTEL_IOMMU_DEFAULT_ON
+ 	  one is found. If this option is not selected, DMAR support can
+ 	  be enabled by passing intel_iommu=on to the kernel.
+ 
+-config INTEL_IOMMU_BROKEN_GFX_WA
+-	bool "Workaround broken graphics drivers (going away soon)"
+-	depends on BROKEN && X86
+-	help
+-	  Current Graphics drivers tend to use physical address
+-	  for DMA and avoid using DMA APIs. Setting this config
+-	  option permits the IOMMU driver to set a unity map for
+-	  all the OS-visible memory. Hence the driver can continue
+-	  to use physical addresses for DMA, at least until this
+-	  option is removed in the 2.6.32 kernel.
+-
+ config INTEL_IOMMU_FLOPPY_WA
+ 	def_bool y
+ 	depends on X86
+-- 
+2.34.1
+
