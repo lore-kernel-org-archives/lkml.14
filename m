@@ -1,174 +1,216 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A8658ABC;
-	Tue, 30 Jan 2024 08:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F4A57867;
+	Tue, 30 Jan 2024 08:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706604627; cv=none; b=RfG7naT1WQkaGGdNhhGKDlQwHU5RRfIu2xRkXFAe4DdSrPyZ3W+OzJ9XECgAi3B8K7vLx/J/XutS9wjyqOyaw2pDC8vvZ2sJV/YJu/uA6/DMFhZGjLPWuz2J8A0gf7PMvNTVr0N/CIsgTzb1u2HU1lKUfoXo0v7fUrPkPt3JkYY=
+	t=1706604756; cv=none; b=bD/EmtqHiEItGbw122ss8AwbTTiDjs23YE3dqXbMcFDvZRRDdCoUMqVpPU4e3KEriNRZrab0w8N7BVxdGVLOsVQ8oHNogGaVx5Rvn2GDU4NLfcjFMomaJmqa+EwwoCdMMxoi5IdOs87K+9UU7hk8fryAJHjKu1K7m8XwR8MSSSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706604627; c=relaxed/simple;
-	bh=L7g7UHjKNr5SvQAGpzc9mh21hs6JnAcMjRSyUdwAxPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mE1hnHM4dV9zVZk5sHr0zSvIcnaHAZZK4wlC4I+fJy8F6RMtB2PUPAwK9/mnsqIfCKmXkNqyZbMovr88YgLWpCCZKh8zXh8VkZi+zru6wEe5oFiQVmSnI9JHcCnCdAQALpynOmZkYI+jGiG8Cx0mAX742uTyoWiBsQSPly2c/lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nrqHLF4Y; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706604756; c=relaxed/simple;
+	bh=2h2lKDVDe0Qt6DafrcvNa34Fl+qhtWodrVVJ81QUTO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Be16AEyTrFS4cPh9mATSqZ3oiGoK4oD9aUfaWeqrvAJ9SiRCfdXrAat0a3ESzvFIeIPNoYojwwnqDjRweMN7wndH3jWOGOgf81zBBzaachc03BvYHxjD12ahl84t+VJYfrjCLIFo2nSXnBFGIV0ThAlilf8RTBIAiYaz+Fn5gME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AhAJ79Ld; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nrqHLF4Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706604623;
-	bh=L7g7UHjKNr5SvQAGpzc9mh21hs6JnAcMjRSyUdwAxPo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nrqHLF4Y2RIFvV3i1CagzTPMXnxRu8+Xec++UFZsM9uNUN0z1WjrHKVf4UrYt+sjF
-	 lpcqovqRbqjlmPeYKMlWMRfnb4QlLUz+znUbVbd5nLwENsRhgipQVvd+ElXcYvdQvG
-	 I7gwY7+k2ehLl86TGjghkWdIjrqrRwJ0W/IZG6LiWBR+uwwHCX06JrYXirg7nyEfWx
-	 xdUSydKlIsgHe+uzkethfqub9itVdFEjI/wGVaWmwMhHVWDN1SNUoQgOO2TFBBNN0m
-	 iMpqa+JPM57QDE5QdLjz0iFNw4iXIGJ0CJDseKKoq2FSt9g4MSPfimH2ApQQFJwNp0
-	 EZZVxjpXk6Y1A==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 99F213782076;
-	Tue, 30 Jan 2024 08:50:22 +0000 (UTC)
-Message-ID: <20fc5f3f-3c52-448c-979f-4b1fdcef10f3@collabora.com>
-Date: Tue, 30 Jan 2024 09:50:21 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AhAJ79Ld"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706604754; x=1738140754;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2h2lKDVDe0Qt6DafrcvNa34Fl+qhtWodrVVJ81QUTO0=;
+  b=AhAJ79LdFf6ZfRnWl5RZxjS/sEAauHD6ktHX10zQ4DhS3Ruvy++ZbdzE
+   h7yc8E4dr5V9owfHInxwLvNVt7stIUN0GXxyzI5ZCMTak9dSYckrt7frG
+   QwBUrz0i9DPwM4WOuCyWRMPhMgclPkJTy+MkZaeCqWj+f4NPJ9kHdJleh
+   /8Ib1QKVRT3idN1R7o9fCJR6oZz1mST3svFIdrWejT6R0BPg7TMsMaJGd
+   TkHgLj20RQIxsZa8X/YM4Sikn91n9fQOHHLCWE0aQapPSnGHSsrGYfXgd
+   Cl05RGkX1ZQgG4GXcmGmUInlaHNTSN6IBybZ+bBjK9fc8cwjAsipj98ik
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10602345"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="10602345"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 00:52:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="788126949"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="788126949"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 30 Jan 2024 00:52:17 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rUjou-00009I-0m;
+	Tue, 30 Jan 2024 08:50:34 +0000
+Date: Tue, 30 Jan 2024 16:48:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, Andrew Halaney <ahalaney@redhat.com>,
+	Simon Horman <simon.horman@corigine.com>,
+	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH net-next v4 08/11] stmmac: intel: configure SerDes
+ according to the interface mode
+Message-ID: <202401301610.XVvNEdG4-lkp@intel.com>
+References: <20240129130253.1400707-9-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2,1/2] media: mediatek: vcodec: adding lock to protect
- decoder context list
-Content-Language: en-US
-To: =?UTF-8?B?WXVuZmVpIERvbmcgKOiRo+S6kemjnik=?= <Yunfei.Dong@mediatek.com>,
- "nhebert@chromium.org" <nhebert@chromium.org>,
- "benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
- "nfraprado@collabora.com" <nfraprado@collabora.com>,
- "nicolas.dufresne@collabora.com" <nicolas.dufresne@collabora.com>,
- "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
- =?UTF-8?B?SXJ1aSBXYW5nICjnjovnkZ4p?= <Irui.Wang@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "frkoenig@chromium.org" <frkoenig@chromium.org>,
- "stevecho@chromium.org" <stevecho@chromium.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "daniel@ffwll.ch" <daniel@ffwll.ch>,
- Project_Global_Chrome_Upstream_Group
- <Project_Global_Chrome_Upstream_Group@mediatek.com>,
- "hsinyi@chromium.org" <hsinyi@chromium.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-References: <20240129023153.28521-1-yunfei.dong@mediatek.com>
- <df6c8b2b-df56-46c5-933d-e56bf704525f@collabora.com>
- <b0b32ef4fb6edb979840b49a3de0278089088f14.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <b0b32ef4fb6edb979840b49a3de0278089088f14.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129130253.1400707-9-yong.liang.choong@linux.intel.com>
 
-Il 30/01/24 07:29, Yunfei Dong (董云飞) ha scritto:
-> Hi AngeloGioacchino,
-> 
-> Thanks for your reviewing.
-> On Mon, 2024-01-29 at 12:19 +0100, AngeloGioacchino Del Regno wrote:
->> Il 29/01/24 03:31, Yunfei Dong ha scritto:
->>> The ctx_list will be deleted when scp getting unexpected behavior,
->>> then the
->>> ctx_list->next will be NULL, the kernel driver maybe access NULL
->>> pointer in
->>> function vpu_dec_ipi_handler when going through each context, then
->>> reboot.
->>>
->>> Need to add lock to protect the ctx_list to make sure the ctx_list-
->>>> next isn't
->>> NULL pointer.
->>>
->>> Hardware name: Google juniper sku16 board (DT)
->>> pstate: 20400005 (nzCv daif +PAN -UAO -TCO BTYPE=--)
->>> pc : vpu_dec_ipi_handler+0x58/0x1f8 [mtk_vcodec_dec]
->>> lr : scp_ipi_handler+0xd0/0x194 [mtk_scp]
->>> sp : ffffffc0131dbbd0
->>> x29: ffffffc0131dbbd0 x28: 0000000000000000
->>> x27: ffffff9bb277f348 x26: ffffff9bb242ad00
->>> x25: ffffffd2d440d3b8 x24: ffffffd2a13ff1d4
->>> x23: ffffff9bb7fe85a0 x22: ffffffc0133fbdb0
->>> x21: 0000000000000010 x20: ffffff9b050ea328
->>> x19: ffffffc0131dbc08 x18: 0000000000001000
->>> x17: 0000000000000000 x16: ffffffd2d461c6e0
->>> x15: 0000000000000242 x14: 000000000000018f
->>> x13: 000000000000004d x12: 0000000000000000
->>> x11: 0000000000000001 x10: fffffffffffffff0
->>> x9 : ffffff9bb6e793a8 x8 : 0000000000000000
->>> x7 : 0000000000000000 x6 : 000000000000003f
->>> x5 : 0000000000000040 x4 : fffffffffffffff0
->>> x3 : 0000000000000020 x2 : ffffff9bb6e79080
->>> x1 : 0000000000000010 x0 : ffffffc0131dbc08
->>> Call trace:
->>> vpu_dec_ipi_handler+0x58/0x1f8 [mtk_vcodec_dec (HASH:6c3f 2)]
->>> scp_ipi_handler+0xd0/0x194 [mtk_scp (HASH:7046 3)]
->>> mt8183_scp_irq_handler+0x44/0x88 [mtk_scp (HASH:7046 3)]
->>> scp_irq_handler+0x48/0x90 [mtk_scp (HASH:7046 3)]
->>> irq_thread_fn+0x38/0x94
->>> irq_thread+0x100/0x1c0
->>> kthread+0x140/0x1fc
->>> ret_from_fork+0x10/0x30
->>> Code: 54000088 f94ca50a eb14015f 54000060 (f9400108)
->>> ---[ end trace ace43ce36cbd5c93 ]---
->>> Kernel panic - not syncing: Oops: Fatal exception
->>> SMP: stopping secondary CPUs
->>> Kernel Offset: 0x12c4000000 from 0xffffffc010000000
->>> PHYS_OFFSET: 0xffffffe580000000
->>> CPU features: 0x08240002,2188200c
->>> Memory Limit: none
->>>
->>> 'Fixes: 655b86e52eac ("media: mediatek: vcodec: Fix possible
->>> invalid memory access for decoder")'
->>
->> Hello Yunfei,
->>
->> You've sent two patches as a v2, but:
->>    - The two patches are identical (!) apart from the commit message?!
->>    - It's Fixes: xxxx , not 'Fixes: xxxx' (please remove the quotes!)
->>    - There's no changelog from v1, so, what changed in v2?!
->>
-> 1> These two patch used to fix the same issue, just used to separate
-> encoder with decoder;
+Hi Choong,
 
-I just noticed that - I'm sorry.
+kernel test robot noticed the following build warnings:
 
-> 2> Will fix in next patch;
-> 3> patch 1 are the same for v1 and v2, just the patch 2 (encoder)
-> change something.
-> 
-Next time, can you please add a cover letter to your series?
+[auto build test WARNING on net-next/main]
 
-I think it would be easier for people to see what changed in the entire series,
-even if it is just two or three patches, as you'd be writing the changelog in
-there instead of writing it in each patch :-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Choong-Yong-Liang/net-phylink-publish-ethtool-link-modes-that-supported-and-advertised/20240129-211219
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240129130253.1400707-9-yong.liang.choong%40linux.intel.com
+patch subject: [PATCH net-next v4 08/11] stmmac: intel: configure SerDes according to the interface mode
+config: x86_64-kismet-CONFIG_INTEL_PMC_IPC-CONFIG_DWMAC_INTEL-0-0 (https://download.01.org/0day-ci/archive/20240130/202401301610.XVvNEdG4-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20240130/202401301610.XVvNEdG4-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401301610.XVvNEdG4-lkp@intel.com/
 
-> Best Regards,
-> Yunfei Dong
->> Cheers,
->> Angelo
->>
->>> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
->>> ---
->>>    .../platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c      | 4
->>> ++--
->>>    .../platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c    | 5
->>> +++++
->>>    .../platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h    | 2
->>> ++
->>>    drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c | 2
->>> ++
->>>    4 files changed, 11 insertions(+), 2 deletions(-)
->>>
->>
->>
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for INTEL_PMC_IPC when selected by DWMAC_INTEL
+   .config:21:warning: symbol value 'n' invalid for AIC79XX_DEBUG_MASK
+   .config:51:warning: symbol value 'n' invalid for BLK_DEV_LOOP_MIN_COUNT
+   .config:114:warning: symbol value 'n' invalid for SQUASHFS_FRAGMENT_CACHE_SIZE
+   .config:205:warning: symbol value 'n' invalid for FB_OMAP2_NUM_FBS
+   .config:209:warning: symbol value 'n' invalid for CMA_SIZE_MBYTES
+   .config:254:warning: symbol value 'n' invalid for SATA_MOBILE_LPM_POLICY
+   .config:337:warning: symbol value 'n' invalid for CFAG12864B_RATE
+   .config:351:warning: symbol value 'n' invalid for PSTORE_BLK_MAX_REASON
+   .config:355:warning: symbol value 'n' invalid for AIC79XX_CMDS_PER_DEVICE
+   .config:437:warning: symbol value 'n' invalid for PANEL_LCD_PIN_SDA
+   .config:459:warning: symbol value 'n' invalid for KFENCE_SAMPLE_INTERVAL
+   .config:574:warning: symbol value 'n' invalid for AIC7XXX_DEBUG_MASK
+   .config:646:warning: symbol value 'n' invalid for CRYPTO_DEV_QCE_SW_MAX_LEN
+   .config:653:warning: symbol value 'n' invalid for DRM_XE_JOB_TIMEOUT_MIN
+   .config:690:warning: symbol value 'n' invalid for FAT_DEFAULT_CODEPAGE
+   .config:752:warning: symbol value 'n' invalid for PANEL_LCD_CHARSET
+   .config:838:warning: symbol value 'n' invalid for SND_AC97_POWER_SAVE_DEFAULT
+   .config:868:warning: symbol value 'n' invalid for MAGIC_SYSRQ_DEFAULT_ENABLE
+   .config:885:warning: symbol value 'n' invalid for DRM_I915_MAX_REQUEST_BUSYWAIT
+   .config:919:warning: symbol value 'n' invalid for SND_AT73C213_TARGET_BITRATE
+   .config:957:warning: symbol value 'n' invalid for DRM_XE_PREEMPT_TIMEOUT_MIN
+   .config:969:warning: symbol value 'n' invalid for VMCP_CMA_SIZE
+   .config:1154:warning: symbol value 'n' invalid for NODES_SHIFT
+   .config:1224:warning: symbol value 'n' invalid for RCU_CPU_STALL_TIMEOUT
+   .config:1253:warning: symbol value 'n' invalid for MTDRAM_ERASE_SIZE
+   .config:1327:warning: symbol value 'n' invalid for SERIAL_UARTLITE_NR_UARTS
+   .config:1492:warning: symbol value 'n' invalid for INPUT_MOUSEDEV_SCREEN_Y
+   .config:1506:warning: symbol value 'n' invalid for LEGACY_PTY_COUNT
+   .config:1667:warning: symbol value 'n' invalid for AIC7XXX_RESET_DELAY_MS
+   .config:1833:warning: symbol value 'n' invalid for USB_GADGET_STORAGE_NUM_BUFFERS
+   .config:1883:warning: symbol value 'n' invalid for IBM_EMAC_POLL_WEIGHT
+   .config:1951:warning: symbol value 'n' invalid for PANEL_PROFILE
+   .config:1967:warning: symbol value 'n' invalid for DRM_I915_STOP_TIMEOUT
+   .config:2289:warning: symbol value 'n' invalid for SND_HDA_PREALLOC_SIZE
+   .config:2301:warning: symbol value 'n' invalid for PANEL_LCD_PIN_E
+   .config:2336:warning: symbol value 'n' invalid for SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST_NUM
+   .config:2339:warning: symbol value 'n' invalid for RCU_FANOUT_LEAF
+   .config:2443:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MAX
+   .config:2500:warning: symbol value 'n' invalid for PANEL_LCD_BWIDTH
+   .config:2763:warning: symbol value 'n' invalid for PANEL_PARPORT
+   .config:2773:warning: symbol value 'n' invalid for PSTORE_BLK_CONSOLE_SIZE
+   .config:2860:warning: symbol value 'n' invalid for NOUVEAU_DEBUG_DEFAULT
+   .config:2938:warning: symbol value 'n' invalid for BOOKE_WDT_DEFAULT_TIMEOUT
+   .config:3061:warning: symbol value 'n' invalid for KCSAN_REPORT_ONCE_IN_MS
+   .config:3171:warning: symbol value 'n' invalid for KCSAN_UDELAY_INTERRUPT
+   .config:3194:warning: symbol value 'n' invalid for PANEL_LCD_PIN_BL
+   .config:3216:warning: symbol value 'n' invalid for DEBUG_OBJECTS_ENABLE_DEFAULT
+   .config:3223:warning: symbol value 'n' invalid for INITRAMFS_ROOT_GID
+   .config:3345:warning: symbol value 'n' invalid for ATM_FORE200E_TX_RETRY
+   .config:3389:warning: symbol value 'n' invalid for FB_OMAP2_DSS_MIN_FCK_PER_PCK
+   .config:3450:warning: symbol value 'n' invalid for AIC79XX_RESET_DELAY_MS
+   .config:3538:warning: symbol value 'n' invalid for KCSAN_UDELAY_TASK
+   .config:3574:warning: symbol value 'n' invalid for STACK_MAX_DEFAULT_SIZE_MB
+   .config:3759:warning: symbol value 'n' invalid for MMC_BLOCK_MINORS
+   .config:3806:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_SYNC
+   .config:3894:warning: symbol value 'n' invalid for SERIAL_MCF_BAUDRATE
+   .config:3936:warning: symbol value 'n' invalid for UCLAMP_BUCKETS_COUNT
+   .config:3963:warning: symbol value 'n' invalid for X86_AMD_PSTATE_DEFAULT_MODE
+   .config:3985:warning: symbol value 'n' invalid for DE2104X_DSL
+   .config:3993:warning: symbol value 'n' invalid for BLK_DEV_RAM_COUNT
+   .config:4233:warning: symbol value 'n' invalid for IP_VS_SH_TAB_BITS
+   .config:4347:warning: symbol value 'n' invalid for SERIAL_ALTERA_UART_BAUDRATE
+   .config:4385:warning: symbol value 'n' invalid for USBIP_VHCI_HC_PORTS
+   .config:4492:warning: symbol value 'n' invalid for CMA_AREAS
+   .config:4493:warning: symbol value 'n' invalid for DUMMY_CONSOLE_ROWS
+   .config:4551:warning: symbol value 'n' invalid for INPUT_MOUSEDEV_SCREEN_X
+   .config:4670:warning: symbol value 'n' invalid for RIONET_RX_SIZE
+   .config:4736:warning: symbol value 'n' invalid for RADIO_TYPHOON_PORT
+   .config:4854:warning: symbol value 'n' invalid for SERIAL_TXX9_NR_UARTS
+   .config:4899:warning: symbol value 'n' invalid for MTRR_SANITIZER_SPARE_REG_NR_DEFAULT
+   .config:5001:warning: symbol value 'n' invalid for IBM_EMAC_TXB
+   .config:5148:warning: symbol value 'n' invalid for FTRACE_RECORD_RECURSION_SIZE
+   .config:5510:warning: symbol value 'n' invalid for DRM_I915_FENCE_TIMEOUT
+   .config:5532:warning: symbol value 'n' invalid for TTY_PRINTK_LEVEL
+   .config:5585:warning: symbol value 'n' invalid for CRYPTO_DEV_FSL_CAAM_INTC_TIME_THLD
+   .config:5701:warning: symbol value 'n' invalid for MIPS_EJTAG_FDC_KGDB_CHAN
+   .config:5772:warning: symbol value 'n' invalid for PPC_EARLY_DEBUG_EHV_BC_HANDLE
+   .config:5796:warning: symbol value 'n' invalid for KDB_DEFAULT_ENABLE
+   .config:5816:warning: symbol value 'n' invalid for SERIAL_ALTERA_UART_MAXPORTS
+   .config:5933:warning: symbol value 'n' invalid for IP_VS_MH_TAB_INDEX
+   .config:6101:warning: symbol value 'n' invalid for PANEL_LCD_HWIDTH
+   .config:6131:warning: symbol value 'n' invalid for LOCKDEP_CHAINS_BITS
+   .config:6230:warning: symbol value 'n' invalid for DRM_I915_HEARTBEAT_INTERVAL
+   .config:6236:warning: symbol value 'n' invalid for KCSAN_SKIP_WATCH
+   .config:6244:warning: symbol value 'n' invalid for EFI_MAX_FAKE_MEM
+   .config:6260:warning: symbol value 'n' invalid for PSTORE_BLK_KMSG_SIZE
+   .config:6358:warning: symbol value 'n' invalid for PANEL_LCD_PIN_RW
+   .config:6481:warning: symbol value 'n' invalid for SERIAL_8250_RUNTIME_UARTS
+   .config:6517:warning: symbol value 'n' invalid for KVM_MAX_NR_VCPUS
+   .config:6584:warning: symbol value 'n' invalid for ARCH_MMAP_RND_COMPAT_BITS
+   .config:6633:warning: symbol value 'n' invalid for SERIAL_SH_SCI_NR_UARTS
+   .config:6766:warning: symbol value 'n' invalid for RADIO_TRUST_PORT
+   .config:6852:warning: symbol value 'n' invalid for SND_MAX_CARDS
+   .config:7006:warning: symbol value 'n' invalid for RCU_BOOST_DELAY
+   .config:7177:warning: symbol value 'n' invalid for DVB_MAX_ADAPTERS
+   .config:7180:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_MAX_TAGS
+   .config:7187:warning: symbol value 'n' invalid for CMA_SIZE_PERCENTAGE
+   .config:7213:warning: symbol value 'n' invalid for SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
+   .config:7257:warning: symbol value 'n' invalid for ZSMALLOC_CHAIN_SIZE
+   .config:7354:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MIN
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
