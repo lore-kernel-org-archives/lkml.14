@@ -1,68 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6699B1272BA;
-	Tue, 30 Jan 2024 16:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C46B128388;
+	Tue, 30 Jan 2024 16:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706632697; cv=none; b=YSt2CRqgk1/ihKi9hfMjRxQ5w6TBjWd8ZtujmIEALiiDZg2RXNnms8nEOm1myWBR/dgNwvMdExiOTp+ZmJ/ckrvR4JXg046BfzekmnPGgEjGCgRR3Q4+y/q4zQnR2eluhULRav8eoMW/OVWoEu/1Kuk8zELCjiPPbWY7wQTjdkw=
+	t=1706632702; cv=none; b=cPkMig5llDg0pMilykzhr+u6+3eTk7nvT3QG99KubRg8DkQB0IRUkivD5scUBYxeKB+vZe0cLqi3VD6Qh60wpkLbGFG9T5aLBj8P5ymd189cMySlqkdIT8JOM3zzk7wPiNzEzdlByyDb2yJDTS9bNsQ901eZOY9ainrZeFGD7fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706632697; c=relaxed/simple;
-	bh=nxkTY64kn3vx0ZxOVuDzgl6Ifx+sox0ekL5shkpfVRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jeRKoYvqqPTRpcfpuZtN7Hj+42umcU5dT/tTO3YvsapWAWTO49YFb8Pg7nu6SgxShle2aWgTzcizcAG2/JuqajUmYF8IMG9eHsqjqy0H43B8CcWFdR1M4uSsszKMNfMuYpBbdZQLeLVQxRosiLmviqkWECJvpCx/+u4qysk/CQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ku+/KYPL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706632702; c=relaxed/simple;
+	bh=M2wO7sSvCPR2982vZ06PIUvIfGKMG54QQ49RvdvfJ4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u5bGL3U1v8nIb9taC0nv1lBGU9QxIxr0cMEbh7HFu7+ItShq5PtfKKtgceNWE+fiGBzICyCdbfVz1XYqUN7xgofgqNrb0hkgs/+HISMIhbI/4wt3KEfhlVE4EMEHH2M9Ftckjw9fNe6DT701Xd19ITyTF4WHySRgXYPDPze1P/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WJnGlYvs; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ku+/KYPL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC1FFC433F1;
-	Tue, 30 Jan 2024 16:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706632697;
-	bh=nxkTY64kn3vx0ZxOVuDzgl6Ifx+sox0ekL5shkpfVRE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ku+/KYPLHs5whcJsK1PPmUFRNk2CkjQG9ouTyx2VT3jhSakcZPee5xPYYgjHBexsZ
-	 9RkLDgh/1IQicIunWIT6KmQwsue8ZafyGuiviVKL6idccXDnHAMuIi7ZIL1fZzV4qr
-	 FEsVfEYAUvIWfxvWPT7rBlKWKKvx1gpFWq8++VTg=
-Date: Tue, 30 Jan 2024 08:38:16 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: torvalds@linux-foundation.org, mpatocka@redhat.com,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	msnitzer@redhat.com, ignat@cloudflare.com, damien.lemoal@wdc.com,
-	bob.liu@oracle.com, houtao1@huawei.com, peterz@infradead.org,
-	mingo@kernel.org, netdev@vger.kernel.org, allen.lkml@gmail.com,
-	kernel-team@meta.com, Alan Stern <stern@rowland.harvard.edu>,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH 5/8] usb: core: hcd: Convert from tasklet to BH workqueue
-Message-ID: <2024013008-throbbing-radiated-5644@gregkh>
-References: <20240130091300.2968534-1-tj@kernel.org>
- <20240130091300.2968534-6-tj@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WJnGlYvs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C932FF802;
+	Tue, 30 Jan 2024 16:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706632690;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TplrVwlT1KQQSHzhl19fkElU89ykPDWXpM5Ja8kRAJg=;
+	b=WJnGlYvsLktLg5YVEN9Gc1gRr1+qFsRheBxrdMHtKhX0EhYL6k098CAcruxMCEhyHXGutn
+	vFpG6qz/d4LOwRUl4ySVuhnkRWEaRDVB/weY8qLcaLhH4lVfe59poYOcxtBCfQLdIsQgsT
+	cr+TW103IMpfivL5fTtM6wDz2VB0cl1yixDpo0WKESic98lfwYdjvkOMTFxJCEyKvUEabW
+	mteGb4Ee6jVAsVdMafL7bmIXSQRjTkhrB4gIDXJQJNMh68dL2595yEmPLQCqqJYohbIpan
+	ibg0KXyFQrPgV/3vESu7rY8nQo9lUZ651P006nibWUVpZ+tGeyoBDKzZMv5Lvg==
+Message-ID: <3fa57200-4218-4ac8-86b9-3f86723d5cd8@bootlin.com>
+Date: Tue, 30 Jan 2024 17:38:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130091300.2968534-6-tj@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/15] mux: add mux_chip_resume() function
+Content-Language: en-US
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
+ <20240102-j7200-pcie-s2r-v2-4-8e4f7d228ec2@bootlin.com>
+ <CAHp75Ve2K=v=OrNPH0q+K6vp2283HSMBYYSh0hYbw56snGd+xg@mail.gmail.com>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAHp75Ve2K=v=OrNPH0q+K6vp2283HSMBYYSh0hYbw56snGd+xg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, Jan 29, 2024 at 11:11:52PM -1000, Tejun Heo wrote:
-> The only generic interface to execute asynchronously in the BH context is
-> tasklet; however, it's marked deprecated and has some design flaws. To
-> replace tasklets, BH workqueue support was recently added. A BH workqueue
-> behaves similarly to regular workqueues except that the queued work items
-> are executed in the BH context.
+On 1/26/24 22:28, Andy Shevchenko wrote:
+> On Fri, Jan 26, 2024 at 4:37 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+>>
+>> The mux_chip_resume() function restores a mux_chip using the cached state
+>> of each mux.
 > 
-> This patch converts usb hcd from tasklet to BH workqueue.
+> ...
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: linux-usb@vger.kernel.org
-> ---
->  drivers/usb/core/hcd.c  | 23 ++++++++++++-----------
->  include/linux/usb/hcd.h |  2 +-
->  2 files changed, 13 insertions(+), 12 deletions(-)
+>> +int mux_chip_resume(struct mux_chip *mux_chip)
+>> +{
+>> +       int ret, i;
+>> +
+>> +       for (i = 0; i < mux_chip->controllers; ++i) {
+>> +               struct mux_control *mux = &mux_chip->mux[i];
+> 
+>> +               if (mux->cached_state != MUX_CACHE_UNKNOWN) {
+> 
+>   if (_state == ...)
+>     continue;
+> 
+> ?
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Yes it makes the code easier to read.
+Fixed in next iteration.
+
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
