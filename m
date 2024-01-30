@@ -1,90 +1,126 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2D466B24
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9EE67A04;
+	Tue, 30 Jan 2024 09:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608660; cv=none; b=LcNAOCj6V9POIsJEGnoDYUQ2qlxQEWRbam8R80JbSZA2e7wNhAIMxp/GrIh1FkgeMbfTN+gFyLqyViGgf0OuqMFGEY+RoDA/Z86yrV1s+B1uf1xFKod0XcI/yUIB040i+m7R/3bLbgUZmd3+6eZ1LmgtG92wFSJ74UjOZDhhtwM=
+	t=1706608746; cv=none; b=VkjdOwuEanzc/M1FeL9qj65fKE5ylNqdH4+irtAmCVywH45jhVHBJq9CMYA8p5R3gXL3USoB17jcv0ID73k5gIO3AQlIoraTefiofaxmUzbDisgqqzORDQWmNy9N1H3sMAg5LPirAZuBtcU3wcJSrX0BLegxChqmeyLNFdJrFWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608660; c=relaxed/simple;
-	bh=YD2kWtvkZk3mAOQpGATJUTtc8GxT/nSj+syfnly8mH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m4tJQq/mtwCv54xgik7rJb27ETc/ARQ1yj7Z4ZumAsk2owr2fbAAHiepS9/z2I0Y8PF74HrgtDDQzWkgdwCIO2v6agbWsx+6ieV2VvfDcqBgp1XdeIrlfwrcGmKKxybpCBduIYFk9SBBKgf1KfftpGoX14+Kp4CJd7sZdB3IF7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TPLF26P6jz4f3nJd
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:57:26 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 5E8C41A0232
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:57:33 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP1 (Coremail) with SMTP id cCh0CgAHJQ4LyLhlP+O_CQ--.6931S2;
-	Tue, 30 Jan 2024 17:57:33 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	revest@chromium.org,
-	rostedt@goodmis.org,
-	mark.rutland@arm.com,
-	arnd@arndb.de,
-	pengdonglin@sangfor.com.cn
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	shikemeng@huaweicloud.com
-Subject: [PATCH] arm64: make member of struct pt_regs and it's offset macro in the same order
-Date: Wed, 31 Jan 2024 01:55:04 +0800
-Message-Id: <20240130175504.106364-1-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1706608746; c=relaxed/simple;
+	bh=NLufhWI/HuTT3DCLkEBOo/5dp1Sv2l5FbL/NzMCPhxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXE7zBLikr4Lc/1+FX4goAHBMrvnju+yM5oJWQ4fDc289anacWFvISaXYMETjQo8OG9YbH1CSqxzYvoEb341xzpxPAXJZNeVdBk9epU1VgBie5K1AsHStkeSJrBbqM8+B3V0FrRAbUGCNP7xlWq/AVWCGCvh9Cu+kDhbr3T/Vfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ge9fH80I; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ge9fH80I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706608745; x=1738144745;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NLufhWI/HuTT3DCLkEBOo/5dp1Sv2l5FbL/NzMCPhxI=;
+  b=Ge9fH80IP7rIRmkxnW0+PgeJdc1mG/0nlJkTHVvhUGDBL/iSnJ3nd87V
+   Hpc/h+kifprX8UtM2+HA8P6u6IltPUC8tUeqiEmyAWv5O4+K2ZDloRWFj
+   rA/vdlyF1wMeHT2nc++EG91c8lN2k3trq/IDnnwIOnYaSYLCYtlkx6LON
+   gmDWG8YSKop+OnfjwwgsBG1zK4Hjed7qtiR5klpDg0AuhZ/DwzzGP/S2d
+   sX6Q7U/injysfCWs+7D5nbFdAjB1Lk/7KOBOZ6f76HQdZc2R3Wd9uA6vq
+   FcxH2Yt2Ya70DglWECmBxrRiGrHQL7bwn7XFtOSYETiShnkt6v9XYcrX0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10334359"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="10334359"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:59:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="737720407"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="737720407"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orsmga003.jf.intel.com with ESMTP; 30 Jan 2024 01:59:00 -0800
+Date: Tue, 30 Jan 2024 17:55:35 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fpga: dfl: afu: support Rev 2 of DFL Port feature
+Message-ID: <ZbjHl8ptQG5FdHvC@yilunxu-OptiPlex-7050>
+References: <20240125233715.861883-1-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAHJQ4LyLhlP+O_CQ--.6931S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrur1rZw13tr15XF4kur45Jrb_yoWDKrXEyw
-	47ta4UGa1fK34Igw18t3yagrs2k3yrK34xurWxtrWkZFykXry0yw1xGrn3Kr1DWw17KrW7
-	A3sIqFyYkFy0yjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbaxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M28lY4IEw2IIxx
-	k0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK
-	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjc
-	xK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyU
-	JVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYx
-	BIdaVFxhVjvjDU0xZFpf9x0pRQo7tUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125233715.861883-1-matthew.gerlach@linux.intel.com>
 
-In struct pt_regs, member pstate is after member pc. Move offset macro
-of pstate after offset macro of pc to improve readability a little.
+On Thu, Jan 25, 2024 at 03:37:15PM -0800, Matthew Gerlach wrote:
+> Revision 2 of the Device Feature List (DFL) Port feature
+> adds support for connecting the contents of the port to
+> multiple PCIe Physical Functions (PF).
+> 
+> This new functionality requires changing the port reset
+> behavior during FPGA and software initialization from
+> revision 1 of the port feature. With revision 1, the initial
+> state of the logic inside the port was not guaranteed to
+> be valid until a port reset was performed by software during
+> driver initialization. With revision 2, the initial state
+> of the logic inside the port is guaranteed to be valid,
+> and a port reset is not required during driver initialization.
+> 
+> This change in port reset behavior avoids a potential race
+> condition during PCI enumeration when a port is connected to
+> multiple PFs. Problems can occur if the driver attached to
+> the PF managing the port asserts reset in its probe function
+> when a driver attached to another PF accesses the port in its
+> own probe function. The potential problems include failed or hung
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- arch/arm64/kernel/asm-offsets.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Only racing during probe functions? I assume any time port_reset()
+would fail TLPs for the other PF. And port_reset() could be triggered
+at runtime by ioctl().
 
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 5ff1942b04fc..865ba901c233 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -75,8 +75,8 @@ int main(void)
-   DEFINE(S_FP,			offsetof(struct pt_regs, regs[29]));
-   DEFINE(S_LR,			offsetof(struct pt_regs, regs[30]));
-   DEFINE(S_SP,			offsetof(struct pt_regs, sp));
--  DEFINE(S_PSTATE,		offsetof(struct pt_regs, pstate));
-   DEFINE(S_PC,			offsetof(struct pt_regs, pc));
-+  DEFINE(S_PSTATE,		offsetof(struct pt_regs, pstate));
-   DEFINE(S_SYSCALLNO,		offsetof(struct pt_regs, syscallno));
-   DEFINE(S_SDEI_TTBR1,		offsetof(struct pt_regs, sdei_ttbr1));
-   DEFINE(S_PMR_SAVE,		offsetof(struct pt_regs, pmr_save));
--- 
-2.30.0
+Thanks,
+Yilun
 
+> transaction layer packet (TLP) transactions and invalid data
+> being returned.
+> 
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> 
+> ---
+> v2:
+> - Update commit message for clarity
+> - Remove potentially confusing dev_info message.
+> ---
+>  drivers/fpga/dfl-afu-main.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index c0a75ca360d6..42fe27660ab7 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -417,7 +417,15 @@ static const struct attribute_group port_hdr_group = {
+>  static int port_hdr_init(struct platform_device *pdev,
+>  			 struct dfl_feature *feature)
+>  {
+> -	port_reset(pdev);
+> +	void __iomem *base;
+> +	u8 rev;
+> +
+> +	base = dfl_get_feature_ioaddr_by_id(&pdev->dev, PORT_FEATURE_ID_HEADER);
+> +
+> +	rev = dfl_feature_revision(base);
+> +
+> +	if (rev < 2)
+> +		port_reset(pdev);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+> 
+> 
