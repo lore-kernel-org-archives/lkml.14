@@ -1,158 +1,147 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B669E0E
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 18:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DB1762CE
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 18:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706639619; cv=none; b=g83lUqsik45xw/LeCHuEsvcIGchENMi9C6dHh6Cq2oznZ2myXT2p1aZdl3/kpWdZ00Y+trU7LkvpuWqx2Bb8Wa95a5CMOEWF9Jsb4pr2cbWKD3xvyv9kS3cfhE+nnYH19qvynI9OxArtRY0D3pyb70w2UoN054tvVfV4c/6n1zo=
+	t=1706639641; cv=none; b=ptk0n2KCozO+eYd7r8IL3WqWvzTkx48XLywK/qlNQdlfpHu17MkIc3SCtj0K+ITxiuJqXgt1OUQBnQUqK5HZBwF/piZPGLH71btb2XwrqU80c2Wj7b5/6HyJiHXM1n2WyI9wHEw8UvS9eERgyOM13M++nFpIi2Pg+38R7rJzazA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706639619; c=relaxed/simple;
-	bh=e6Em/YoU24DzfrgG1I3MeTPrdt0H0Tda436ZQlrVs44=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q8hqabd+mbpYMudOp3gbnP8BLjrFhChJZbn4VZBMlysO5ulKy3PESg4kf2IvjNu7pCexxThovQB+x33/evbtSLQk4hrL5N8TBJNGUd79np8N/HRwuNuKZKS2vIYfEjcKi/YUf4Lj/c2JWk6ICgGBx7L9VB+vOAqt0b+YfPrXcwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=uJ8MSHSC; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1706639641; c=relaxed/simple;
+	bh=lL5qdWL2PB4mhrehemlKORG0nbLblNVPf8HOOqtCxN4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Pvp5F4qSWIcMqZYjSfYx3HEB8fvt21FcQrb+Kn/c0YlevCPCJFDEdFWaH7FVocs8+BT1Pl6DcOw9YklohtSGbDmkWMaAJCSvDh+iYEnlVzoxya0XWrLfu/jBwPZrf9R35/rbjyng7alyOJrgaRHdJTNOQ4g/BWc2CGAMc5U3ZrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N1P/12Gm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uJ8MSHSC"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id UqblrV7cRTHHuUsvNrtWDe; Tue, 30 Jan 2024 18:33:33 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id UsvMrAvw5L3AmUsvMrKkDm; Tue, 30 Jan 2024 18:33:33 +0000
-X-Authority-Analysis: v=2.4 cv=Sdrky9du c=1 sm=1 tr=0 ts=65b940fd
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=7YfXLusrAAAA:8 a=WIj-IPmD8QUj2RxniLMA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dwMBQhKAPrdpeG07deWR0oT84VH23ARprvDaD8J62YM=; b=uJ8MSHSCsIUsxGqykVEA55n+V3
-	6mCCY8tYHJbdm9YTHC5fNd6sP8dvh31H/NILFDuLOJDnI6jvXxq0hP2VfSPmv7AADYm5pRpZxyMFw
-	UeypA0zLbJi9UxTXSBlnQDSnFTJWyYpcaD8pet80lVr3/rPueJiR1fnFMxFqkbWl+PWSG40xQ3aPf
-	ZEl2sVXOoVASg6qC5bdaRKlUdszbFa/f+6whfGbz+vNOgDNqufYKBMa6Uj+ApsZUxZ2oRHYT5GNk3
-	ws2lKbFPLtp7vH2jk/9sc7VytpiZPLO7jfCrdTOH1F0I99eHhasGDG1tXk2ne97Brn4366suqAszH
-	DBbmewqQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:52948 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rUsvL-0030Gq-2d;
-	Tue, 30 Jan 2024 12:33:31 -0600
-Message-ID: <114074ef-7021-4ca0-a5f7-b0ea37948f5d@embeddedor.com>
-Date: Tue, 30 Jan 2024 12:33:30 -0600
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1P/12Gm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706639639;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pPefEzI7IPB8Pl2sd/W5lhgO3NwL39dr5Md44erL9pY=;
+	b=N1P/12GmAJRt5gbJ9ND3JoCYoGaDo0gzkMhMI04MZRgeJ5r87TOq+ExnBxNAmy8jidFCUQ
+	QzCwjB54+lSilqtkEfnLKXERijSvkRoEVFhFppzOSLQ9DBX2SOPXo3d/pT8i3mqoGh/dMj
+	n4qe7jq2S1o0lTSmTz2PuNTkdIiV00s=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-ndeUQeKQNOqMBNfJxAS7pw-1; Tue,
+ 30 Jan 2024 13:33:57 -0500
+X-MC-Unique: ndeUQeKQNOqMBNfJxAS7pw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 091EA38562CA;
+	Tue, 30 Jan 2024 18:33:57 +0000 (UTC)
+Received: from llong.com (unknown [10.22.8.207])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9BC2640CD14B;
+	Tue, 30 Jan 2024 18:33:56 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Cestmir Kalina <ckalina@redhat.com>,
+	Alex Gladkov <agladkov@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [RFC PATCH 2/3] workqueue: Break out __queue_work_rcu_locked() from __queue_work()
+Date: Tue, 30 Jan 2024 13:33:35 -0500
+Message-Id: <20240130183336.511948-3-longman@redhat.com>
+In-Reply-To: <20240130183336.511948-1-longman@redhat.com>
+References: <20240130183336.511948-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: pl08x: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>, Vinod Koul <vkoul@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240128115236.4791-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240128115236.4791-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rUsvL-0030Gq-2d
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:52948
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfD60vF061QhTTMEdLo1m+I0nldcoi2uR93Q2rTFCwtROWLlaY3HrtP3qEPjmGNnyvS0rHUoDUDbaYSKShnaOuc8qSvRCMmoGFHoZwqJN0Tn4WO00e4Rv
- WP+3BcD7o4YAYYzIANFl9h/th/eNkBRrOgjiADrzvdHkHFVpnrDTD1ZKZ/uNLsPxYePKv9p1B6/ASIW3cXvQPfRlFjCY5rczwcb64HKgk5MO5x5MfOHVCHKs
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
+Break out the core __queue_work() code into a __queue_work_rcu_locked
+helper to be used by later patches.
 
+There is no functional change.
 
-On 1/28/24 05:52, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
-> 
-> Here the multiplication is obviously safe because the "channels"
-> member can only be 8 or 2. This value is set when the "vendor_data"
-> structs are initialized.
-> 
-> static struct vendor_data vendor_pl080 = {
-> 	[...]
-> 	.channels = 8,
-> 	[...]
-> };
-> 
-> static struct vendor_data vendor_nomadik = {
-> 	[...]
-> 	.channels = 8,
-> 	[...]
-> };
-> 
-> static struct vendor_data vendor_pl080s = {
-> 	[...]
-> 	.channels = 8,
-> 	[...]
-> };
-> 
-> static struct vendor_data vendor_pl081 = {
-> 	[...]
-> 	.channels = 2,
-> 	[...]
-> };
-> 
-> However, using kcalloc() is more appropriate [1] and improves
-> readability. This patch has no effect on runtime behavior.
-> 
-> Link: https://github.com/KSPP/linux/issues/162 [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/workqueue.c | 46 ++++++++++++++++++++++++++--------------------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 350179382667..98c741eb43af 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1702,32 +1702,14 @@ static int wq_select_unbound_cpu(int cpu)
+ 	return new_cpu;
+ }
+ 
+-static void __queue_work(int cpu, struct workqueue_struct *wq,
+-			 struct work_struct *work)
++static void __queue_work_rcu_locked(int cpu, struct workqueue_struct *wq,
++				    struct work_struct *work)
+ {
+ 	struct pool_workqueue *pwq;
+ 	struct worker_pool *last_pool, *pool;
+ 	unsigned int work_flags;
+ 	unsigned int req_cpu = cpu;
+ 
+-	/*
+-	 * While a work item is PENDING && off queue, a task trying to
+-	 * steal the PENDING will busy-loop waiting for it to either get
+-	 * queued or lose PENDING.  Grabbing PENDING and queueing should
+-	 * happen with IRQ disabled.
+-	 */
+-	lockdep_assert_irqs_disabled();
+-
+-
+-	/*
+-	 * For a draining wq, only works from the same workqueue are
+-	 * allowed. The __WQ_DESTROYING helps to spot the issue that
+-	 * queues a new work item to a wq after destroy_workqueue(wq).
+-	 */
+-	if (unlikely(wq->flags & (__WQ_DESTROYING | __WQ_DRAINING) &&
+-		     WARN_ON_ONCE(!is_chained_work(wq))))
+-		return;
+-	rcu_read_lock();
+ retry:
+ 	/* pwq which will be used unless @work is executing elsewhere */
+ 	if (req_cpu == WORK_CPU_UNBOUND) {
+@@ -1808,6 +1790,30 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
+ 
+ out:
+ 	raw_spin_unlock(&pool->lock);
++}
++
++static void __queue_work(int cpu, struct workqueue_struct *wq,
++			 struct work_struct *work)
++{
++	/*
++	 * While a work item is PENDING && off queue, a task trying to
++	 * steal the PENDING will busy-loop waiting for it to either get
++	 * queued or lose PENDING.  Grabbing PENDING and queueing should
++	 * happen with IRQ disabled.
++	 */
++	lockdep_assert_irqs_disabled();
++
++	/*
++	 * For a draining wq, only works from the same workqueue are
++	 * allowed. The __WQ_DESTROYING helps to spot the issue that
++	 * queues a new work item to a wq after destroy_workqueue(wq).
++	 */
++	if (unlikely(wq->flags & (__WQ_DESTROYING | __WQ_DRAINING) &&
++		     WARN_ON_ONCE(!is_chained_work(wq))))
++		return;
++
++	rcu_read_lock();
++	__queue_work_rcu_locked(cpu, wq, work);
+ 	rcu_read_unlock();
+ }
+ 
 -- 
-Gustavo
+2.39.3
 
-> ---
->   drivers/dma/amba-pl08x.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
-> index eea8bd33b4b7..e40766108787 100644
-> --- a/drivers/dma/amba-pl08x.c
-> +++ b/drivers/dma/amba-pl08x.c
-> @@ -2855,8 +2855,8 @@ static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
->   	}
-> 
->   	/* Initialize physical channels */
-> -	pl08x->phy_chans = kzalloc((vd->channels * sizeof(*pl08x->phy_chans)),
-> -			GFP_KERNEL);
-> +	pl08x->phy_chans = kcalloc(vd->channels, sizeof(*pl08x->phy_chans),
-> +				   GFP_KERNEL);
->   	if (!pl08x->phy_chans) {
->   		ret = -ENOMEM;
->   		goto out_no_phychans;
-> --
-> 2.25.1
-> 
