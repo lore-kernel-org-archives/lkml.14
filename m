@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F8412F58B;
-	Tue, 30 Jan 2024 16:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FB813343E;
+	Tue, 30 Jan 2024 16:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706631975; cv=none; b=iXKIYdaHH6CQU2GbOn6x5q8xHVHhnjE3cL0lhnpgKA+1wStEw0k5GpXg0f9kPk+6SaJrKzk5z4cMs3WxLbwGOpmeJxB31Z9t6Q5TilVDGBr1U07+Dd5VmkP8CEKvFqBP8mJdQi/H1eWu7JtxXnYauVW4AC6eCZn1TPPRY2Sg6eA=
+	t=1706631978; cv=none; b=g0uf7pgGkE+jRFMYGJDznqxm6QdPz3ogYDFJ4z6Yy1OQlqnXkqu1pKgeplTW1VON4FetuBs+WSzh5tioRAOepmOKfplcJmO98vHHtxYhhS6eMeKXTzd18+Jq/wk4/D6PE74S7FQ7AqtgvpU2gom7YGPXgxVPN/wp4V/GHI5ZkDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706631975; c=relaxed/simple;
-	bh=cUuqvnzPPxw/F12MtVIIFn2+TWCYnfQCdvc75QmtQDQ=;
+	s=arc-20240116; t=1706631978; c=relaxed/simple;
+	bh=B0h6aWvGJPn004tzOVelOWQ/cqMdt1JhDKgOfQBTOuo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mnOSVuSeQZpCLQkrf5TmtrOdozJ/IX7hXvxNNS2G0QukWgwfREEBLEmG85kzV+5ARRiFtdZTEHtcNWkQbvylMWKetOZbk2+TF8ub/nQtRmgfo3/hXhNYFZDN/Ul61qO895UI6KJHDLrKn4GECn5Sgfn16BOC70kIeh3LdC/gWac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t98YS5KW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rAbIqHAj; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JPEM/ZC3cpgBuouby/Zg0gixQESGlgcyfeGB2PMlg4e4E+kxkRq4bLguWF8I5/HJBR3YF3r6BBv44fAkpqQmL3yCnPSvg/89am32SxZxkucQWm0T34A2LfWtNGD49j1+RV6Ret+Lhx7G+PstgA6B0nXcLlclT7B86fdm9G1pjMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wt7sjOz4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+c2h1I56; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t98YS5KW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rAbIqHAj"
-Date: Tue, 30 Jan 2024 16:26:10 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wt7sjOz4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+c2h1I56"
+Date: Tue, 30 Jan 2024 16:26:13 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706631971;
+	s=2020; t=1706631974;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=idLqXTe/wwQB/igBLCGOH5+FLkHEWGOuPGcVMQiKXFA=;
-	b=t98YS5KWKJV3qCOy0LT/J8IrYzh3qByi14Oo6OzpKf4uuTSTIBfNUuKiUiyuYeiN7Y1BhU
-	uZEmJlL+51k++wtJZ18EdPTtkGbS1m7OQ0xbzog0WvrCvkJaMVNo1hCAWnsyvqpAO69bMZ
-	xb8uDKY1x/p03NW8kz2LJt7kR+BSW8Nibcc52trwZMiK5+NPTmQ1fZ6JAeTliEgiiz2Et+
-	T29aafNVVEKAoOZHZUi78HVQIbICxMvOySHe3qJexY1MJTD8DXgI7joJ58Yr8tWBoCC+Xb
-	LrrEq/00zAg1Pmk55qvT2TrDPWelJMMMF8oGsxLBUDtaj75tWnE7tmot7zn8Uw==
+	bh=mqvRhN/JExx8+Z5V9A9N5RTe7yanjkFdVmwkLfKJCYY=;
+	b=wt7sjOz4RSGQMq4opw2RDmStXFnO4RpZWZIwFK3Q0yfMbYK/T4+J2BWPxsWTJGj8GY/x6z
+	rJX1zTSejoox9aUHuOOZr+zX3hJkgC7Pr5U4xc9D6uVc+u+r186iCU8t75JIaWHn6xWQ/J
+	qssXOtisfHlV4E+8JUngc05JcpYX//fhxOUGiako1Nbt7+PDPVwyAIIfH/+Vcsav3M/+Hv
+	EktDJLe1LU3K78RHaHpn4Xq4CQMR+/aYB13021ZDjYGwdh2NnG8Wr6slDTQysAnsoPxpPz
+	6rNXvoprJa5MetbQ9nOUCtANJSNt7hg0WY49b2iVTFwN7M8n3ygNAx1CxvHPqw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706631971;
+	s=2020e; t=1706631974;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=idLqXTe/wwQB/igBLCGOH5+FLkHEWGOuPGcVMQiKXFA=;
-	b=rAbIqHAjkdxGpiP/dpP/CSwiQPjQP1nJFtnxoYHYr2VMdHj/L0spr4nAhz0RReFHFujMDI
-	XfRib1vmF9FjQZBw==
+	bh=mqvRhN/JExx8+Z5V9A9N5RTe7yanjkFdVmwkLfKJCYY=;
+	b=+c2h1I560F8XbPlbM3fo8jXKHNptWV9wZBG4tRakwxnvnselXBVJJ2zVjyT3+LckFFzyGh
+	qF+PdMH6ZYpQelDQ==
 From: "tip-bot2 for Brijesh Singh" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] x86/sev: Add SEV-SNP host initialization support
-Cc: Brijesh Singh <brijesh.singh@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
- Tom Lendacky <thomas.lendacky@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Michael Roth <michael.roth@amd.com>,
+Subject: [tip: x86/sev] x86/cpufeatures: Add SEV-SNP CPU feature
+Cc: Brijesh Singh <brijesh.singh@amd.com>,
+ Jarkko Sakkinen <jarkko@profian.com>, Ashish Kalra <Ashish.Kalra@amd.com>,
+ Michael Roth <michael.roth@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240126041126.1927228-5-michael.roth@amd.com>
-References: <20240126041126.1927228-5-michael.roth@amd.com>
+In-Reply-To: <20240126041126.1927228-2-michael.roth@amd.com>
+References: <20240126041126.1927228-2-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170663197063.398.16703424700997276557.tip-bot2@tip-bot2>
+Message-ID: <170663197324.398.18228422573623248861.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,383 +68,109 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/sev branch of tip:
 
-Commit-ID:     216d106c7ff7b3dcabacf2b5dc6c9c40eba7495c
-Gitweb:        https://git.kernel.org/tip/216d106c7ff7b3dcabacf2b5dc6c9c40eba7495c
+Commit-ID:     b6e0f6666f74f0794530e3557f5b0a4ce37bd556
+Gitweb:        https://git.kernel.org/tip/b6e0f6666f74f0794530e3557f5b0a4ce37bd556
 Author:        Brijesh Singh <brijesh.singh@amd.com>
-AuthorDate:    Thu, 25 Jan 2024 22:11:04 -06:00
+AuthorDate:    Thu, 25 Jan 2024 22:11:01 -06:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 29 Jan 2024 17:20:23 +01:00
+CommitterDate: Mon, 29 Jan 2024 17:13:16 +01:00
 
-x86/sev: Add SEV-SNP host initialization support
+x86/cpufeatures: Add SEV-SNP CPU feature
 
-The memory integrity guarantees of SEV-SNP are enforced through a new
-structure called the Reverse Map Table (RMP). The RMP is a single data
-structure shared across the system that contains one entry for every 4K
-page of DRAM that may be used by SEV-SNP VMs. The APM Volume 2 section
-on Secure Nested Paging (SEV-SNP) details a number of steps needed to
-detect/enable SEV-SNP and RMP table support on the host:
+Add CPU feature detection for Secure Encrypted Virtualization with
+Secure Nested Paging. This feature adds a strong memory integrity
+protection to help prevent malicious hypervisor-based attacks like
+data replay, memory re-mapping, and more.
 
- - Detect SEV-SNP support based on CPUID bit
- - Initialize the RMP table memory reported by the RMP base/end MSR
-   registers and configure IOMMU to be compatible with RMP access
-   restrictions
- - Set the MtrrFixDramModEn bit in SYSCFG MSR
- - Set the SecureNestedPagingEn and VMPLEn bits in the SYSCFG MSR
- - Configure IOMMU
+Since enabling the SNP CPU feature imposes a number of additional
+requirements on host initialization and handling legacy firmware APIs
+for SEV/SEV-ES guests, only introduce the CPU feature bit so that the
+relevant handling can be added, but leave it disabled via a
+disabled-features mask.
 
-RMP table entry format is non-architectural and it can vary by
-processor. It is defined by the PPR document for each respective CPU
-family. Restrict SNP support to CPU models/families which are compatible
-with the current RMP table entry format to guard against any undefined
-behavior when running on other system types. Future models/support will
-handle this through an architectural mechanism to allow for broader
-compatibility.
-
-SNP host code depends on CONFIG_KVM_AMD_SEV config flag which may be
-enabled even when CONFIG_AMD_MEM_ENCRYPT isn't set, so update the
-SNP-specific IOMMU helpers used here to rely on CONFIG_KVM_AMD_SEV
-instead of CONFIG_AMD_MEM_ENCRYPT.
+Once all the necessary changes needed to maintain legacy SEV/SEV-ES
+support are introduced in subsequent patches, the SNP feature bit will
+be unmasked/enabled.
 
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Co-developed-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Co-developed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Co-developed-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Co-developed-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Jarkko Sakkinen <jarkko@profian.com>
+Signed-off-by: Ashish Kalra <Ashish.Kalra@amd.com>
 Signed-off-by: Michael Roth <michael.roth@amd.com>
-Link: https://lore.kernel.org/r/20240126041126.1927228-5-michael.roth@amd.com
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20240126041126.1927228-2-michael.roth@amd.com
 ---
- arch/x86/Kbuild                  |   2 +-
- arch/x86/include/asm/msr-index.h |  11 +-
- arch/x86/include/asm/sev.h       |   6 +-
- arch/x86/kernel/cpu/amd.c        |  16 ++-
- arch/x86/virt/svm/Makefile       |   3 +-
- arch/x86/virt/svm/sev.c          | 216 ++++++++++++++++++++++++++++++-
- 6 files changed, 253 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/virt/svm/Makefile
- create mode 100644 arch/x86/virt/svm/sev.c
+ arch/x86/include/asm/cpufeatures.h       | 1 +
+ arch/x86/include/asm/disabled-features.h | 4 +++-
+ arch/x86/kernel/cpu/amd.c                | 5 +++--
+ tools/arch/x86/include/asm/cpufeatures.h | 1 +
+ 4 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/Kbuild b/arch/x86/Kbuild
-index 5a83da7..6a1f36d 100644
---- a/arch/x86/Kbuild
-+++ b/arch/x86/Kbuild
-@@ -28,5 +28,7 @@ obj-y += net/
- 
- obj-$(CONFIG_KEXEC_FILE) += purgatory/
- 
-+obj-y += virt/svm/
-+
- # for cleaning
- subdir- += boot tools
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index f1bd7b9..f482bc6 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -599,6 +599,8 @@
- #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
- #define MSR_AMD64_SEV_ES_ENABLED	BIT_ULL(MSR_AMD64_SEV_ES_ENABLED_BIT)
- #define MSR_AMD64_SEV_SNP_ENABLED	BIT_ULL(MSR_AMD64_SEV_SNP_ENABLED_BIT)
-+#define MSR_AMD64_RMP_BASE		0xc0010132
-+#define MSR_AMD64_RMP_END		0xc0010133
- 
- /* SNP feature bits enabled by the hypervisor */
- #define MSR_AMD64_SNP_VTOM			BIT_ULL(3)
-@@ -708,8 +710,15 @@
- #define MSR_K8_TOP_MEM1			0xc001001a
- #define MSR_K8_TOP_MEM2			0xc001001d
- #define MSR_AMD64_SYSCFG		0xc0010010
--#define MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT	23
-+#define MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT 23
- #define MSR_AMD64_SYSCFG_MEM_ENCRYPT	BIT_ULL(MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT)
-+#define MSR_AMD64_SYSCFG_SNP_EN_BIT	24
-+#define MSR_AMD64_SYSCFG_SNP_EN		BIT_ULL(MSR_AMD64_SYSCFG_SNP_EN_BIT)
-+#define MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT 25
-+#define MSR_AMD64_SYSCFG_SNP_VMPL_EN	BIT_ULL(MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT)
-+#define MSR_AMD64_SYSCFG_MFDM_BIT	19
-+#define MSR_AMD64_SYSCFG_MFDM		BIT_ULL(MSR_AMD64_SYSCFG_MFDM_BIT)
-+
- #define MSR_K8_INT_PENDING_MSG		0xc0010055
- /* C1E active bits in int pending message */
- #define K8_INTP_C1E_ACTIVE_MASK		0x18000000
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 5b4a1ce..1f59d8b 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -243,4 +243,10 @@ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
- static inline u64 sev_get_status(void) { return 0; }
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index fdf723b..0fa7026 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -440,6 +440,7 @@
+ #define X86_FEATURE_SEV			(19*32+ 1) /* AMD Secure Encrypted Virtualization */
+ #define X86_FEATURE_VM_PAGE_FLUSH	(19*32+ 2) /* "" VM Page Flush MSR is supported */
+ #define X86_FEATURE_SEV_ES		(19*32+ 3) /* AMD Secure Encrypted Virtualization - Encrypted State */
++#define X86_FEATURE_SEV_SNP		(19*32+ 4) /* AMD Secure Encrypted Virtualization - Secure Nested Paging */
+ #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
+ #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
+ #define X86_FEATURE_DEBUG_SWAP		(19*32+14) /* AMD SEV-ES full debug state swap support */
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index 702d93f..fc13bf7 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -117,6 +117,8 @@
+ #define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
  #endif
  
-+#ifdef CONFIG_KVM_AMD_SEV
-+bool snp_probe_rmptable_info(void);
-+#else
-+static inline bool snp_probe_rmptable_info(void) { return false; }
-+#endif
++#define DISABLE_SEV_SNP		(1 << (X86_FEATURE_SEV_SNP & 31))
 +
- #endif
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -141,7 +143,7 @@
+ 			 DISABLE_ENQCMD)
+ #define DISABLED_MASK17	0
+ #define DISABLED_MASK18	(DISABLE_IBT)
+-#define DISABLED_MASK19	0
++#define DISABLED_MASK19	(DISABLE_SEV_SNP)
+ #define DISABLED_MASK20	0
+ #define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
+ 
 diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 4baba69..ce89281 100644
+index f3abca3..4baba69 100644
 --- a/arch/x86/kernel/cpu/amd.c
 +++ b/arch/x86/kernel/cpu/amd.c
-@@ -20,6 +20,7 @@
- #include <asm/delay.h>
- #include <asm/debugreg.h>
- #include <asm/resctrl.h>
-+#include <asm/sev.h>
- 
- #ifdef CONFIG_X86_64
- # include <asm/mmconfig.h>
-@@ -587,6 +588,21 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
- 		break;
+@@ -605,8 +605,8 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 	 *	      SME feature (set in scattered.c).
+ 	 *	      If the kernel has not enabled SME via any means then
+ 	 *	      don't advertise the SME feature.
+-	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
+-	 *            SEV and SEV_ES feature (set in scattered.c).
++	 *   For SEV: If BIOS has not enabled SEV then don't advertise SEV and
++	 *	      any additional functionality based on it.
+ 	 *
+ 	 *   In all cases, since support for SME and SEV requires long mode,
+ 	 *   don't advertise the feature under CONFIG_X86_32.
+@@ -641,6 +641,7 @@ clear_all:
+ clear_sev:
+ 		setup_clear_cpu_cap(X86_FEATURE_SEV);
+ 		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
++		setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
  	}
+ }
  
-+	if (cpu_has(c, X86_FEATURE_SEV_SNP)) {
-+		/*
-+		 * RMP table entry format is not architectural and it can vary by processor
-+		 * and is defined by the per-processor PPR. Restrict SNP support on the
-+		 * known CPU model and family for which the RMP table entry format is
-+		 * currently defined for.
-+		 */
-+		if (!boot_cpu_has(X86_FEATURE_ZEN3) &&
-+		    !boot_cpu_has(X86_FEATURE_ZEN4) &&
-+		    !boot_cpu_has(X86_FEATURE_ZEN5))
-+			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
-+		else if (!snp_probe_rmptable_info())
-+			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
-+	}
-+
- 	return;
- 
- warn:
-diff --git a/arch/x86/virt/svm/Makefile b/arch/x86/virt/svm/Makefile
-new file mode 100644
-index 0000000..ef2a31b
---- /dev/null
-+++ b/arch/x86/virt/svm/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+obj-$(CONFIG_KVM_AMD_SEV) += sev.o
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-new file mode 100644
-index 0000000..575a9ff
---- /dev/null
-+++ b/arch/x86/virt/svm/sev.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AMD SVM-SEV Host Support.
-+ *
-+ * Copyright (C) 2023 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Ashish Kalra <ashish.kalra@amd.com>
-+ *
-+ */
-+
-+#include <linux/cc_platform.h>
-+#include <linux/printk.h>
-+#include <linux/mm_types.h>
-+#include <linux/set_memory.h>
-+#include <linux/memblock.h>
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
-+#include <linux/cpumask.h>
-+#include <linux/iommu.h>
-+#include <linux/amd-iommu.h>
-+
-+#include <asm/sev.h>
-+#include <asm/processor.h>
-+#include <asm/setup.h>
-+#include <asm/svm.h>
-+#include <asm/smp.h>
-+#include <asm/cpu.h>
-+#include <asm/apic.h>
-+#include <asm/cpuid.h>
-+#include <asm/cmdline.h>
-+#include <asm/iommu.h>
-+
-+/*
-+ * The RMP entry format is not architectural. The format is defined in PPR
-+ * Family 19h Model 01h, Rev B1 processor.
-+ */
-+struct rmpentry {
-+	u64	assigned	: 1,
-+		pagesize	: 1,
-+		immutable	: 1,
-+		rsvd1		: 9,
-+		gpa		: 39,
-+		asid		: 10,
-+		vmsa		: 1,
-+		validated	: 1,
-+		rsvd2		: 1;
-+	u64 rsvd3;
-+} __packed;
-+
-+/*
-+ * The first 16KB from the RMP_BASE is used by the processor for the
-+ * bookkeeping, the range needs to be added during the RMP entry lookup.
-+ */
-+#define RMPTABLE_CPU_BOOKKEEPING_SZ	0x4000
-+
-+static u64 probed_rmp_base, probed_rmp_size;
-+static struct rmpentry *rmptable __ro_after_init;
-+static u64 rmptable_max_pfn __ro_after_init;
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt)	"SEV-SNP: " fmt
-+
-+static int __mfd_enable(unsigned int cpu)
-+{
-+	u64 val;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+		return 0;
-+
-+	rdmsrl(MSR_AMD64_SYSCFG, val);
-+
-+	val |= MSR_AMD64_SYSCFG_MFDM;
-+
-+	wrmsrl(MSR_AMD64_SYSCFG, val);
-+
-+	return 0;
-+}
-+
-+static __init void mfd_enable(void *arg)
-+{
-+	__mfd_enable(smp_processor_id());
-+}
-+
-+static int __snp_enable(unsigned int cpu)
-+{
-+	u64 val;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+		return 0;
-+
-+	rdmsrl(MSR_AMD64_SYSCFG, val);
-+
-+	val |= MSR_AMD64_SYSCFG_SNP_EN;
-+	val |= MSR_AMD64_SYSCFG_SNP_VMPL_EN;
-+
-+	wrmsrl(MSR_AMD64_SYSCFG, val);
-+
-+	return 0;
-+}
-+
-+static __init void snp_enable(void *arg)
-+{
-+	__snp_enable(smp_processor_id());
-+}
-+
-+#define RMP_ADDR_MASK GENMASK_ULL(51, 13)
-+
-+bool snp_probe_rmptable_info(void)
-+{
-+	u64 max_rmp_pfn, calc_rmp_sz, rmp_sz, rmp_base, rmp_end;
-+
-+	rdmsrl(MSR_AMD64_RMP_BASE, rmp_base);
-+	rdmsrl(MSR_AMD64_RMP_END, rmp_end);
-+
-+	if (!(rmp_base & RMP_ADDR_MASK) || !(rmp_end & RMP_ADDR_MASK)) {
-+		pr_err("Memory for the RMP table has not been reserved by BIOS\n");
-+		return false;
-+	}
-+
-+	if (rmp_base > rmp_end) {
-+		pr_err("RMP configuration not valid: base=%#llx, end=%#llx\n", rmp_base, rmp_end);
-+		return false;
-+	}
-+
-+	rmp_sz = rmp_end - rmp_base + 1;
-+
-+	/*
-+	 * Calculate the amount the memory that must be reserved by the BIOS to
-+	 * address the whole RAM, including the bookkeeping area. The RMP itself
-+	 * must also be covered.
-+	 */
-+	max_rmp_pfn = max_pfn;
-+	if (PHYS_PFN(rmp_end) > max_pfn)
-+		max_rmp_pfn = PHYS_PFN(rmp_end);
-+
-+	calc_rmp_sz = (max_rmp_pfn << 4) + RMPTABLE_CPU_BOOKKEEPING_SZ;
-+
-+	if (calc_rmp_sz > rmp_sz) {
-+		pr_err("Memory reserved for the RMP table does not cover full system RAM (expected 0x%llx got 0x%llx)\n",
-+		       calc_rmp_sz, rmp_sz);
-+		return false;
-+	}
-+
-+	probed_rmp_base = rmp_base;
-+	probed_rmp_size = rmp_sz;
-+
-+	pr_info("RMP table physical range [0x%016llx - 0x%016llx]\n",
-+		probed_rmp_base, probed_rmp_base + probed_rmp_size - 1);
-+
-+	return true;
-+}
-+
-+/*
-+ * Do the necessary preparations which are verified by the firmware as
-+ * described in the SNP_INIT_EX firmware command description in the SNP
-+ * firmware ABI spec.
-+ */
-+static int __init snp_rmptable_init(void)
-+{
-+	void *rmptable_start;
-+	u64 rmptable_size;
-+	u64 val;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+		return 0;
-+
-+	if (!amd_iommu_snp_en)
-+		return 0;
-+
-+	if (!probed_rmp_size)
-+		goto nosnp;
-+
-+	rmptable_start = memremap(probed_rmp_base, probed_rmp_size, MEMREMAP_WB);
-+	if (!rmptable_start) {
-+		pr_err("Failed to map RMP table\n");
-+		return 1;
-+	}
-+
-+	/*
-+	 * Check if SEV-SNP is already enabled, this can happen in case of
-+	 * kexec boot.
-+	 */
-+	rdmsrl(MSR_AMD64_SYSCFG, val);
-+	if (val & MSR_AMD64_SYSCFG_SNP_EN)
-+		goto skip_enable;
-+
-+	memset(rmptable_start, 0, probed_rmp_size);
-+
-+	/* Flush the caches to ensure that data is written before SNP is enabled. */
-+	wbinvd_on_all_cpus();
-+
-+	/* MtrrFixDramModEn must be enabled on all the CPUs prior to enabling SNP. */
-+	on_each_cpu(mfd_enable, NULL, 1);
-+
-+	on_each_cpu(snp_enable, NULL, 1);
-+
-+skip_enable:
-+	rmptable_start += RMPTABLE_CPU_BOOKKEEPING_SZ;
-+	rmptable_size = probed_rmp_size - RMPTABLE_CPU_BOOKKEEPING_SZ;
-+
-+	rmptable = (struct rmpentry *)rmptable_start;
-+	rmptable_max_pfn = rmptable_size / sizeof(struct rmpentry) - 1;
-+
-+	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/rmptable_init:online", __snp_enable, NULL);
-+
-+	return 0;
-+
-+nosnp:
-+	setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
-+	return -ENOSYS;
-+}
-+
-+/*
-+ * This must be called after the IOMMU has been initialized.
-+ */
-+device_initcall(snp_rmptable_init);
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index f4542d2..e58bd69 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -437,6 +437,7 @@
+ #define X86_FEATURE_SEV			(19*32+ 1) /* AMD Secure Encrypted Virtualization */
+ #define X86_FEATURE_VM_PAGE_FLUSH	(19*32+ 2) /* "" VM Page Flush MSR is supported */
+ #define X86_FEATURE_SEV_ES		(19*32+ 3) /* AMD Secure Encrypted Virtualization - Encrypted State */
++#define X86_FEATURE_SEV_SNP		(19*32+ 4) /* AMD Secure Encrypted Virtualization - Secure Nested Paging */
+ #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
+ #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
+ #define X86_FEATURE_DEBUG_SWAP		(19*32+14) /* AMD SEV-ES full debug state swap support */
