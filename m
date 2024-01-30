@@ -1,89 +1,171 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5311060DF9;
-	Tue, 30 Jan 2024 09:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0D6664A9;
+	Tue, 30 Jan 2024 09:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608328; cv=none; b=B+7o2WFk3DGxMr5Er2fVvdEMZzYVOlFrAFuWrHPtAdgMOMY7xp+t015CbNHGYLCnxLvYz4F6Ef16rCK7PLCdKNPuI9Qjuh5xrWx+kdnNu5DayXw2Ix79mTkO/hLLLc26yPRQB5wncz+HuTP6QuseFDWXv1wklAd2MKf5/qYfHaw=
+	t=1706608348; cv=none; b=gUdNleFRJEFJzrKMbVP3bbqsyjbjuX1PjBjovDJFCqQmUJAzJ4ijzSzrmhcvFHazX+vJVVdOq94U6GeTuI9vwfh458x+9RKmaqkK0F/7QWrVudbp5AlpuQrsB+IGLSoFoKS5fIltuLHKHlwOuJsZ0amagEXl2+GrsESRVV9W3ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608328; c=relaxed/simple;
-	bh=nAmpW4z3loSWjgIoJ07UdUFNgOk6yJCSDOgKJ/GTdq8=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=RGwl3owoArM+4qxRVH67D23xc8Hh/60LdnBiobD1MxKtZ/HrthOPIbm9tjmGOAVThB0CI8KlLj7mPZLiXMSv75Y1WI5JD+WWID42E+dCb09I8NwNDXVVnVhT5NiILPveRxqF38q1UAvIFE16Kz2DVfrYzHfwuFOrX/XXLZ4uoDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from hamburger.collabora.co.uk (hamburger.collabora.co.uk [IPv6:2a01:4f8:1c1b:c794::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 046A037809D0;
-	Tue, 30 Jan 2024 09:52:01 +0000 (UTC)
-From: "Shreeya Patel" <shreeya.patel@collabora.com>
-In-Reply-To: <20240129165958.589924174@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240129165958.589924174@linuxfoundation.org>
-Date: Tue, 30 Jan 2024 09:52:01 +0000
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, "Gustavo Padovan" <gustavo.padovan@collabora.com>, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+	s=arc-20240116; t=1706608348; c=relaxed/simple;
+	bh=Kj7uKf/C4kWgSz8bKZaS0Cc4J2SRHT1aScYumeV+1Og=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rntOsnpQN+JXc69YFNeWEZpNdUGUVg1MWvEymJ2cN/V9dKXTBWnd5tpfFaqb8Sy3x8RfzdLXCeRpqCNyXGrCsHWpfEZpu7d7EBmzXzaFFUnsW1+mkgn1YypFMFBWx23UrTJT34DdzZhvjwgN6J9ysA9NadOeQMuZbz8xeNBtlXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXdOzw0G; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXdOzw0G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34906C43390;
+	Tue, 30 Jan 2024 09:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706608347;
+	bh=Kj7uKf/C4kWgSz8bKZaS0Cc4J2SRHT1aScYumeV+1Og=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KXdOzw0Ge+S0kxxUwX6xUO6wp/RQAOylY1MqtPueRi0QSlhyI/TZGBUzqDkIjKYXV
+	 1V62ElrAa0Ig2uLTmT9Dv/8k1IM1IxMAsXAAVmtHjXA7e+dnJWv2z/u06D6/Pfq19C
+	 TsALPLf65alRx3ngi7L/MSa8oieOEUQX9dsSDzlG+grFoH65UNxtEHmk7m7B61LvLT
+	 /AXIHtQZB9+QNpClqOUGK1BCRdX2qxq10yjSVxjii1ef37xtfoMgcc4wNghMmHort8
+	 aZfQ1FsnFf/2rJ7vYmsoaxuiQp2M/czFUG6MwvuPGB+sYmL//vRVHIF1r1MJvshsh0
+	 7qKjPGPNFHC3A==
+Date: Tue, 30 Jan 2024 10:52:22 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Cc: mszeredi@redhat.com, stgraber@stgraber.org, 
+	linux-fsdevel@vger.kernel.org, Seth Forshee <sforshee@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	Bernd Schubert <bschubert@ddn.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 6/9] fs/fuse: support idmapped ->setattr op
+Message-ID: <20240130-vielsagend-bauamt-282fd8bff38a@brauner>
+References: <20240108120824.122178-1-aleksandr.mikhalitsyn@canonical.com>
+ <20240108120824.122178-7-aleksandr.mikhalitsyn@canonical.com>
+ <20240120-zeitmanagement-abbezahlen-8a3e2b5de72a@brauner>
+ <20240129164849.f3f194a800d88fd26a373203@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <65ea-65b8c700-1-50c62b00@100317325>
-Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E1?= 000/185] 
- =?utf-8?q?6=2E1=2E76-rc1?= review
-User-Agent: SOGoMail 5.9.1
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240129164849.f3f194a800d88fd26a373203@canonical.com>
 
-On Monday, January 29, 2024 22:33 IST, Greg Kroah-Hartman <gregkh@linux=
-foundation.org> wrote:
+On Mon, Jan 29, 2024 at 04:48:49PM +0100, Alexander Mikhalitsyn wrote:
+> On Sat, 20 Jan 2024 16:23:38 +0100
+> Christian Brauner <brauner@kernel.org> wrote:
+> 
+> > On Mon, Jan 08, 2024 at 01:08:21PM +0100, Alexander Mikhalitsyn wrote:
+> > > Cc: Christian Brauner <brauner@kernel.org>
+> > > Cc: Seth Forshee <sforshee@kernel.org>
+> > > Cc: Miklos Szeredi <miklos@szeredi.hu>
+> > > Cc: Amir Goldstein <amir73il@gmail.com>
+> > > Cc: Bernd Schubert <bschubert@ddn.com>
+> > > Cc: <linux-fsdevel@vger.kernel.org>
+> > > Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+> > > ---
+> > >  fs/fuse/dir.c    | 32 +++++++++++++++++++++-----------
+> > >  fs/fuse/file.c   |  2 +-
+> > >  fs/fuse/fuse_i.h |  4 ++--
+> > >  3 files changed, 24 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> > > index f7c2c54f7122..5fbb7100ad1c 100644
+> > > --- a/fs/fuse/dir.c
+> > > +++ b/fs/fuse/dir.c
+> > > @@ -1739,17 +1739,27 @@ static bool update_mtime(unsigned ivalid, bool trust_local_mtime)
+> > >  	return true;
+> > >  }
+> > >  
+> > > -static void iattr_to_fattr(struct fuse_conn *fc, struct iattr *iattr,
+> > > -			   struct fuse_setattr_in *arg, bool trust_local_cmtime)
+> > > +static void iattr_to_fattr(struct mnt_idmap *idmap, struct fuse_conn *fc,
+> > > +			   struct iattr *iattr, struct fuse_setattr_in *arg,
+> > > +			   bool trust_local_cmtime)
+> > >  {
+> > >  	unsigned ivalid = iattr->ia_valid;
+> > >  
+> > >  	if (ivalid & ATTR_MODE)
+> > >  		arg->valid |= FATTR_MODE,   arg->mode = iattr->ia_mode;
+> > > -	if (ivalid & ATTR_UID)
+> > > -		arg->valid |= FATTR_UID,    arg->uid = from_kuid(fc->user_ns, iattr->ia_uid);
+> > > -	if (ivalid & ATTR_GID)
+> > > -		arg->valid |= FATTR_GID,    arg->gid = from_kgid(fc->user_ns, iattr->ia_gid);
+> > > +
+> > > +	if (ivalid & ATTR_UID) {
+> > > +		kuid_t fsuid = from_vfsuid(idmap, fc->user_ns, iattr->ia_vfsuid);
+> > > +		arg->valid |= FATTR_UID;
+> > > +		arg->uid = from_kuid(fc->user_ns, fsuid);
+> > > +	}
+> > > +
+> > > +	if (ivalid & ATTR_GID) {
+> > > +		kgid_t fsgid = from_vfsgid(idmap, fc->user_ns, iattr->ia_vfsgid);
+> > > +		arg->valid |= FATTR_GID;
+> > > +		arg->gid = from_kgid(fc->user_ns, fsgid);
+> > > +	}
+> > > +
+> > >  	if (ivalid & ATTR_SIZE)
+> > >  		arg->valid |= FATTR_SIZE,   arg->size = iattr->ia_size;
+> > >  	if (ivalid & ATTR_ATIME) {
+> > > @@ -1869,8 +1879,8 @@ int fuse_flush_times(struct inode *inode, struct fuse_file *ff)
+> > >   * vmtruncate() doesn't allow for this case, so do the rlimit checking
+> > >   * and the actual truncation by hand.
+> > >   */
+> > > -int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
+> > > -		    struct file *file)
+> > > +int fuse_do_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+> > > +		    struct iattr *attr, struct file *file)
+> > >  {
+> > >  	struct inode *inode = d_inode(dentry);
+> > >  	struct fuse_mount *fm = get_fuse_mount(inode);
+> > > @@ -1890,7 +1900,7 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
+> > >  	if (!fc->default_permissions)
+> > >  		attr->ia_valid |= ATTR_FORCE;
+> > >  
+> > > -	err = setattr_prepare(&nop_mnt_idmap, dentry, attr);
+> > > +	err = setattr_prepare(idmap, dentry, attr);
+> > >  	if (err)
+> > >  		return err;
+> > >  
+> > > @@ -1949,7 +1959,7 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
+> > >  
+> > >  	memset(&inarg, 0, sizeof(inarg));
+> > >  	memset(&outarg, 0, sizeof(outarg));
+> > > -	iattr_to_fattr(fc, attr, &inarg, trust_local_cmtime);
+> > > +	iattr_to_fattr(idmap, fc, attr, &inarg, trust_local_cmtime);
+> > >  	if (file) {
+> > >  		struct fuse_file *ff = file->private_data;
+> > >  		inarg.valid |= FATTR_FH;
+> > > @@ -2084,7 +2094,7 @@ static int fuse_setattr(struct mnt_idmap *idmap, struct dentry *entry,
+> > >  	if (!attr->ia_valid)
+> > >  		return 0;
+> > >  
+> > > -	ret = fuse_do_setattr(entry, attr, file);
+> > > +	ret = fuse_do_setattr(idmap, entry, attr, file);
+> > >  	if (!ret) {
+> > >  		/*
+> > >  		 * If filesystem supports acls it may have updated acl xattrs in
+> > > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> > > index a660f1f21540..e0fe5497a548 100644
+> > > --- a/fs/fuse/file.c
+> > > +++ b/fs/fuse/file.c
+> > > @@ -2870,7 +2870,7 @@ static void fuse_do_truncate(struct file *file)
+> > >  	attr.ia_file = file;
+> > >  	attr.ia_valid |= ATTR_FILE;
+> > >  
+> > > -	fuse_do_setattr(file_dentry(file), &attr, file);
+> > > +	fuse_do_setattr(&nop_mnt_idmap, file_dentry(file), &attr, file);
+> > 
+> > Same as for the other patch. Please leave a comment in the commit
+> > message that briefly explains why it's ok to pass &nop_mnt_idmap here.
+> > It'll help us later. :)
+> 
+> Sure, will be fixed in -v2 ;-)
+> 
+> Explanation here is that in this specific case attr.ia_valid = ATTR_SIZE | ATTR_FILE,
+> which but we only need an idmapping for ATTR_UID | ATTR_GID.
+> 
+> From the other side, having struct file pointer means that getting an idmapping as easy as file_mnt_idmap(file),
+> and probably it's easier to pass an idmapping in this specific case rather than skipping it for a valid reasons.
+> What do you think about this?
 
-> This is the start of the stable review cycle for the 6.1.76 release.
-> There are 185 patches in this series, all will be posted as a respons=
-e
-> to this one.  If anyone has any issues with these being applied, plea=
-se
-> let me know.
->=20
-> Responses should be made by Wed, 31 Jan 2024 16:59:28 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1=
-.76-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
-.git linux-6.1.y
-> and the diffstat can be found below.
->=20
-
-KernelCI report for stable-rc/linux-6.1.y for this week :-
-
-## stable-rc HEAD for linux-6.1.y:
-Date: 2024-01-30
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
-git/log/?h=3D1f00d9fd963ebf5b448c0a5666c4e83ac97d8f03
-
-## Build failures:
-
-arm64:
-    - defconfig (gcc-10) and defconfig+arm64-chromebook (gcc-10)
-    - Build details :- https://linux.kernelci.org/build/stable-rc/branc=
-h/linux-6.1.y/kernel/v6.1.75-186-g1f00d9fd963eb/
-    - Errors :-=20
-    drivers/net/ethernet/mellanox/mlx5/core/en/params.c:994:39: error: =
-=E2=80=98MLX5=5FIPSEC=5FCAP=5FCRYPTO=E2=80=99
-    undeclared (first use in this function)
-
-## Boot failures:
-
-No **new** boot failures seen for the stable-rc/linux-6.1.y commit head=
- \o/
-
-Tested-by: kernelci.org bot <bot@kernelci.org>
-
-Thanks,
-Shreeya Patel
-
+Yeah, I'd just pass it through because then we don't have to think about
+why we're not passing it through here.
