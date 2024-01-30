@@ -1,211 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B516BB2B
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 14:49:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3610F4EE;
+	Tue, 30 Jan 2024 14:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706626187; cv=none; b=O/gCkQsqBoIU4UQRaVLtjNSLfNKXl98Xg8kzH5gNC9zRceZqhrFB2fpF5tcxeFXjtiOaVCU0UujrOR4905vzFW1fVGYRDq41nGFGLzQZVT4q9PfYFY9uuE1izOno6DkUg3OgF9MDbukfjkMzmWFzrFrJ7guUc0lgeuz4e3VMK48=
+	t=1706626322; cv=none; b=qiWHgk//iB0rGQHd8u5fBvygsba2jO7e96/YCxHAD3STzZd249qGi5gWbxZOnXeNgEQSX+XLY/A8AhfNbVsHiKSUbxCatN7nej2r5+IfmYUbrSpDxvzv38CS9pOPjJQuhNatqY7hja5oh7ufMajbJrgZME5K7DxGB82DnjVkSmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706626187; c=relaxed/simple;
-	bh=B62oaFM0vBB+o7VxltDa38Ve4oQtWNobEnD6Wez7Ycg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=TcU6RcZ43YafsIFY1okfyXzZKsEr5aoskBaH+w3Lzyfn57qeaxkuK4YhBm5MZIUBFPE2656OUfJd+u9RON7168/n/qwEGvFDPw131T23Ch7U7Zi+lN/PoW9vDox+Sxgw25coNf/hI+x9gpgFcnbN6r+SCDuvsi070hV5Mo2em+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjaKvfM/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706626322; c=relaxed/simple;
+	bh=9d6ufwDAIf1A0UtOyTYk+Jf/Hs9vxaFZOyONWOgloa4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JMaCuTuS7tTpwNg+H4vbTVU/KZKADgEuedi7Ygl65t5vW9/QCA0p+puUmoeLjcaErHnHM+7u37dgk/W3aqwTGlNkMG+eljWz1pCjqpskcZPrqtIpuauBeSQQpID3cbqc2DMZdeAS73aChR1VwWCp5CrioDl48XpwLLdCzQhv2ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohmsW/G3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjaKvfM/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05099C43390;
-	Tue, 30 Jan 2024 14:49:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohmsW/G3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F70C43390;
+	Tue, 30 Jan 2024 14:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706626187;
-	bh=B62oaFM0vBB+o7VxltDa38Ve4oQtWNobEnD6Wez7Ycg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=CjaKvfM/j4hULH69Rq0aCR273Y9BsgX2+vr1lvcixGTAqFCfWScfGhVCGI4iAQ9kO
-	 Bsplxfh/4E0mPxzpcHruA5lWM95gd4imlu4+Cvp+RspnBuqh6eo9PWr+bnJOU6GmSJ
-	 j+Jk1oO6D2tCYMXNJrMFrm1Nse3Px6lLa5xzevtZp494wpbMOEU3Gfd6wuIjw927/4
-	 vO8+Zittp3GseHvwcJKWkbA5mQ36i7r3oa+yAb37wsvZwN1Vn26htyZ5kVHmj41R8N
-	 MXBCnvXMBfzWjIAT2tzBgHhuD/t3HcoB1SKQPnya6NfZmzkW2GI2mvJpo1n27G4DTH
-	 maqkFkUsQou3A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id 915A240441; Tue, 30 Jan 2024 11:49:44 -0300 (-03)
-Date: Tue, 30 Jan 2024 11:49:44 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Miklos Szeredi <mszeredi@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 1/1 fyi] tools include UAPI: Sync linux/mount.h copy with the
- kernel sources
-Message-ID: <ZbkMiB7ZcOsLP2V5@kernel.org>
+	s=k20201202; t=1706626322;
+	bh=9d6ufwDAIf1A0UtOyTYk+Jf/Hs9vxaFZOyONWOgloa4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ohmsW/G3JEHix0NoZqa8v5nmuoIoh507YfeX6swBcMOh4uOg8VP0o4S75Sz9TDrxM
+	 wwg/A7Bp3fZq2NhoeYjVpAmgbzRP22iiUg8eb74yk5C+xJNtsCco+dqyIQBR+G8yzs
+	 YC0V5n2YZrBGqDvjzVV6fHw1vRDAJtCzk8dAZBxQIzvoT3pVbznwtE8TxLWfCA/DW8
+	 BP2MKHECPidFfPjKJzYQvsQ1VfeywPDkyIvVBQ8mzGjIuEoKnIksltk38Jc4L+OCVR
+	 zeYYP/0m66lzg+QaGo5ctiPKbY5tfZgOtUQexXfiSA4YLlj5tpWM4emI33dLFmIYnw
+	 uQ26W30blw44w==
+Date: Tue, 30 Jan 2024 23:51:57 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Brian Norris <briannorris@chromium.org>, Pavel Machek <pavel@ucw.cz>,
+ Len Brown <len.brown@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
+ suleiman@google.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v7] PM: sleep: Expose last succeeded resumed timestamp
+ in sysfs
+Message-Id: <20240130235157.636ee1183e073cfba8d7d0b7@kernel.org>
+In-Reply-To: <CAJZ5v0jLLTETrMpXE3h=Q9GyhDEcZH5f7v+yvyxhzhW8yQKyTQ@mail.gmail.com>
+References: <170359668692.1864392.6909734045167510522.stgit@mhiramat.roam.corp.google.com>
+	<170359669607.1864392.5078004271237566637.stgit@mhiramat.roam.corp.google.com>
+	<20240117090706.3522d23763fab9dcea21aee1@kernel.org>
+	<CAJZ5v0gqWRsSGQZp7tz-0Kw6od+fjd_iof4Rj7fkBy80ySkcEQ@mail.gmail.com>
+	<CA+ASDXOwfUrqRDVx_Fi62ERCLRPF+ixD014vE21Sm4mLF_j12A@mail.gmail.com>
+	<20240125094320.13a0844614375deb8bb06db6@kernel.org>
+	<CAJZ5v0jLLTETrMpXE3h=Q9GyhDEcZH5f7v+yvyxhzhW8yQKyTQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+Hi Rafael,
 
-- Arnaldo
+Thanks for the comment!
 
-Full explanation:
+On Thu, 25 Jan 2024 21:19:07 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+> On Thu, Jan 25, 2024 at 1:43 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Mon, 22 Jan 2024 18:08:22 -0800
+> > Brian Norris <briannorris@chromium.org> wrote:
+> >
+> > > On Fri, Jan 19, 2024 at 1:08 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > On Wed, Jan 17, 2024 at 1:07 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > > >
+> > > > > Gently ping,
+> > > > >
+> > > > > I would like to know this is enough or I should add more info/update.
+> > > >
+> > > > I still am not sure what this is going to be useful for.
+> > > >
+> > > > Do you have a specific example?
+> > >
+> > > Since there seems to be some communication gap here, I'll give it a try.
+> > >
+> > > First, I'll paste the key phrase of its use case from the cover letter:
+> > >
+> > >   "we would like to know how long the resume processes are taken in kernel
+> > >   and in user-space"
+> > >
+> > > This is a "system measurement" question, for use in tests (e.g., in a
+> > > test lab for CI or for pre-release testing, where we suspend
+> > > Chromebooks, wake them back up, and measure how long the wakeup took)
+> > > or for user-reported metrics (e.g., similar statistics from real
+> > > users' systems, if they've agreed to automatically report usage
+> > > statistics, back to Google). We'd like to know how long it takes for a
+> > > system to wake up, so we can detect when there are problems that lead
+> > > to a slow system-resume experience. The user experience includes both
+> > > time spent in the kernel and time spent after user space has thawed
+> > > (and is spending time in potentially complex power and display manager
+> > > stacks) before a Chromebook's display lights back up.
+> >
+> > Thanks Brian for explaining, this is correctly explained how we are
+> > using this for measuring resume process duration.
+> >
+> > > If I understand the whole of Masami's work correctly, I believe we're
+> > > taking "timestamps parsed out of dmesg" (or potentially out of ftrace,
+> > > trace events, etc.) to measure the kernel side, plus "timestamp
+> > > provided here in CLOCK_MONOTONIC" and "timestamp determined in our
+> > > power/display managers" to measure user space.
+> >
+> > Yes, I decided to decouple the kernel and user space because the clock
+> > subsystem is adjusted when resuming. So for the kernel, we will use
+> > local clock (which is not exposed to user space), and use CLOCK_MONOTONIC
+> > for the user space.
+> 
+> The problem with this split is that you cannot know how much time
+> elapses between the "successful kernel resume time" and the time when
+> user space gets to resume.
 
-The way these headers are used in perf are not restricted to just
-including them to compile something.
+Hm, let me check why.
 
-There are sometimes used in scripts that convert defines into string
-tables, etc, so some change may break one of these scripts, or new MSRs
-may use some different #define pattern, etc.
+> 
+> As of this patch, the kernel timestamp is taken when the kernel is
+> about to thaw user space and some user space tasks may start running
+> right away.
 
-E.g.:
+Yes. But note that this just indicates the time when the "kernel"
+done the resuming process.
 
-  $ ls -1 tools/perf/trace/beauty/*.sh | head -5
-  tools/perf/trace/beauty/arch_errno_names.sh
-  tools/perf/trace/beauty/drm_ioctl.sh
-  tools/perf/trace/beauty/fadvise.sh
-  tools/perf/trace/beauty/fsconfig.sh
-  tools/perf/trace/beauty/fsmount.sh
-  $
-  $ tools/perf/trace/beauty/fadvise.sh
-  static const char *fadvise_advices[] = {
-  	[0] = "NORMAL",
-  	[1] = "RANDOM",
-  	[2] = "SEQUENTIAL",
-  	[3] = "WILLNEED",
-  	[4] = "DONTNEED",
-  	[5] = "NOREUSE",
-  };
-  $
+> 
+> Some other tasks, however, will wait for what happens next in the
+> kernel (because it is not done with resuming yet) and some of them
+> will wait until explicitly asked to resume by the resume process IIUC.
 
-The tools/perf/check-headers.sh script, part of the tools/ build
-process, points out changes in the original files.
+Yeah, those will be just restarted and may wait for a signal to e.g.
+re-draw, re-load etc. I think those are a part of user-space resuming.
 
-So its important not to touch the copies in tools/ when doing changes in
-the original kernel headers, that will be done later, when
-check-headers.sh inform about the change to the perf tools hackers.
+> 
+> Your results depend on which tasks participate in the "user
+> experience", so to speak.  If they are the tasks that wait to be
+> kicked by the resume process, the kernel timestamp taken as per the
 
----
+"kicked by the resume process" means thawing the tasks??
 
-To pick the changes from:
+> above is useless for them, because there is quite some stuff that
+> happens in the kernel before they will get kicked.
 
-  35e27a5744131996 ("fs: keep struct mnt_id_req extensible")
-  b4c2bea8ceaa50cd ("add listmount(2) syscall")
-  46eae99ef73302f9 ("add statmount(2) syscall")
+So your point might be, even after the timestamp, some kernel resume
+process will affect? Since the system(kernel+user) resuming state is
+continuously changing in parallel, it is hard to split the kernel
+and user resume process?
 
-That doesn't change anything in tools this time as nothing that is
-harvested by the beauty scripts got changed:
+> 
+> Moreover, some tasks will wait for certain device drivers to get ready
+> after the rest of the system resumes and that may still take some more
+> time after the kernel has returned to the process driving the system
+> suspend-resume.
 
-  $ ls -1 tools/perf/trace/beauty/*mount*sh
-  tools/perf/trace/beauty/fsmount.sh
-  tools/perf/trace/beauty/mount_flags.sh
-  tools/perf/trace/beauty/move_mount_flags.sh
-  $
+Oh, I thought driver resume will be done in the kernel before thawing.
+Of course some wifi/bt etc. will need to be re-connect again. And
+I don't care at this moment.
 
-This addresses this perf build warning.
+> 
+> I'm not sure if there is a single point which can be used as a "user
+> space resume start" time for every task, which is why I'm not
+> convinced about this patch.
 
-  Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/mount.h include/uapi/linux/mount.h
+Ah, OK. Yeah, that is a good point. I also think that is not useful
+for every cases, but we need some reference timestamp when we start
+resuming. And I think this is a better point to do. Of course if we
+observe some delay, we still need more comprehensive tracing not only
+application log, but this is the first step and I think the step we
+can not avoid (because we don't expose the local clock to user space)
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/uapi/linux/mount.h | 70 ++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+> 
+> BTW, there is a utility called sleepgraph that measures the kernel
+> part of the system suspend-resume.  It does its best to measure it
+> very precisely and uses different techniques for that.  Also, it is
+> included in the kernel source tree.  Can you please have a look at it
+> and see how much there is in common between it and your tools?  Maybe
+> there are some interfaces that can be used in common, or maybe it
+> could benefit from some interfaces that you are planning to add.
 
-diff --git a/tools/include/uapi/linux/mount.h b/tools/include/uapi/linux/mount.h
-index bb242fdcfe6b29bf..ad5478dbad007341 100644
---- a/tools/include/uapi/linux/mount.h
-+++ b/tools/include/uapi/linux/mount.h
-@@ -138,4 +138,74 @@ struct mount_attr {
- /* List of all mount_attr versions. */
- #define MOUNT_ATTR_SIZE_VER0	32 /* sizeof first published struct */
- 
-+
-+/*
-+ * Structure for getting mount/superblock/filesystem info with statmount(2).
-+ *
-+ * The interface is similar to statx(2): individual fields or groups can be
-+ * selected with the @mask argument of statmount().  Kernel will set the @mask
-+ * field according to the supported fields.
-+ *
-+ * If string fields are selected, then the caller needs to pass a buffer that
-+ * has space after the fixed part of the structure.  Nul terminated strings are
-+ * copied there and offsets relative to @str are stored in the relevant fields.
-+ * If the buffer is too small, then EOVERFLOW is returned.  The actually used
-+ * size is returned in @size.
-+ */
-+struct statmount {
-+	__u32 size;		/* Total size, including strings */
-+	__u32 __spare1;
-+	__u64 mask;		/* What results were written */
-+	__u32 sb_dev_major;	/* Device ID */
-+	__u32 sb_dev_minor;
-+	__u64 sb_magic;		/* ..._SUPER_MAGIC */
-+	__u32 sb_flags;		/* SB_{RDONLY,SYNCHRONOUS,DIRSYNC,LAZYTIME} */
-+	__u32 fs_type;		/* [str] Filesystem type */
-+	__u64 mnt_id;		/* Unique ID of mount */
-+	__u64 mnt_parent_id;	/* Unique ID of parent (for root == mnt_id) */
-+	__u32 mnt_id_old;	/* Reused IDs used in proc/.../mountinfo */
-+	__u32 mnt_parent_id_old;
-+	__u64 mnt_attr;		/* MOUNT_ATTR_... */
-+	__u64 mnt_propagation;	/* MS_{SHARED,SLAVE,PRIVATE,UNBINDABLE} */
-+	__u64 mnt_peer_group;	/* ID of shared peer group */
-+	__u64 mnt_master;	/* Mount receives propagation from this ID */
-+	__u64 propagate_from;	/* Propagation from in current namespace */
-+	__u32 mnt_root;		/* [str] Root of mount relative to root of fs */
-+	__u32 mnt_point;	/* [str] Mountpoint relative to current root */
-+	__u64 __spare2[50];
-+	char str[];		/* Variable size part containing strings */
-+};
-+
-+/*
-+ * Structure for passing mount ID and miscellaneous parameters to statmount(2)
-+ * and listmount(2).
-+ *
-+ * For statmount(2) @param represents the request mask.
-+ * For listmount(2) @param represents the last listed mount id (or zero).
-+ */
-+struct mnt_id_req {
-+	__u32 size;
-+	__u32 spare;
-+	__u64 mnt_id;
-+	__u64 param;
-+};
-+
-+/* List of all mnt_id_req versions. */
-+#define MNT_ID_REQ_SIZE_VER0	24 /* sizeof first published struct */
-+
-+/*
-+ * @mask bits for statmount(2)
-+ */
-+#define STATMOUNT_SB_BASIC		0x00000001U     /* Want/got sb_... */
-+#define STATMOUNT_MNT_BASIC		0x00000002U	/* Want/got mnt_... */
-+#define STATMOUNT_PROPAGATE_FROM	0x00000004U	/* Want/got propagate_from */
-+#define STATMOUNT_MNT_ROOT		0x00000008U	/* Want/got mnt_root  */
-+#define STATMOUNT_MNT_POINT		0x00000010U	/* Want/got mnt_point */
-+#define STATMOUNT_FS_TYPE		0x00000020U	/* Want/got fs_type */
-+
-+/*
-+ * Special @mnt_id values that can be passed to listmount
-+ */
-+#define LSMT_ROOT		0xffffffffffffffff	/* root mount */
-+
- #endif /* _UAPI_LINUX_MOUNT_H */
+Thanks for the info!  Yeah we also have some tracing tools (perfetto,
+trace-cmd etc.) for analysis. Note that this timestamp will kick those
+analysis tools if we find any delay based on the timestamp. I mean this
+will be used for "monitoring" the trend but not for precise "analysis".
+
+Thank you,
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
