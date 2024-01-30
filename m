@@ -1,112 +1,161 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DA766B37
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8821F67749
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 12:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706617090; cv=none; b=AWV8xzPYqOpxQ6T/7BoDppbe1mBaXhCECDGGtzXEzKHKy+XNDpip2QZk4x2er2z2L0AZ4ALpSZRtvhi9E8cF9g0YusYHfKm2xoJml190JWFvB9iasBzynTqv/dpWFfoBSRx5QDSw1NNhdqlL5XRpRolU9VrZKh29LQtEePiMOYI=
+	t=1706617162; cv=none; b=u2SgggNyqenSc+gCZ4NEvJZXK3TN6W3+aBpuKHWwsiz0Za/KraCuVrkFn/MOd8xOCyoBU1SRjIe6b2PxNXIOU6tAT5EJ5GUXgcRGk0YMBQAnTd7wYACDrYvV2XxPaUS/e5pJ16oRPf2OLEg6C/wSdPdL+1ssKQ0PGqCvAnaVY1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706617090; c=relaxed/simple;
-	bh=aap5r7ioaHBr3oZ1CL2DgTUN+lzMesYEoUhuwOS3e9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fsZS5aJBamBsE/L5u009TP9IE4p3nZGfHBm1y62fhmmtPVtxqJVYTWA5h6xw3nPsWRQD/P/74TAOG6XOuvynBqxaJ9jSPz4ai4nQbc/yl3i2DEqEgKBzdr+vqiWHDS1gwpKxTtMCrSbYgNnCFOC1lmQZNh3AxpYchmDDlaBBfXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=pqf8gJpx; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1706617162; c=relaxed/simple;
+	bh=Hd1RHTBtH/cnzQe4G9j54UYePvNcRisBiWelTnaOKz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pPya9pE7X+n0AjH1luVRW8SW2Q/JqFm42AjqziatuSqF2Yomuzm5bmnE9Hs38p76wk7Y24KLPjnnwMFgRXt6ZVHKnVycjIayYRjg5Gim53h+SAnUgQ5fRoojRwuZX7RSRMdh6y5YpDGpj+aaWacjVOmeaaBCwxVSmTeFPNhpWI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=FoN8UqId; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="pqf8gJpx"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51028acdcf0so4761886e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 04:18:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="FoN8UqId"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5110fae7af5so2397542e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 04:19:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1706617086; x=1707221886; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JVZ040pnszTJYS9ZApPN/ubynpN7vUyGZw+eMhwthB8=;
-        b=pqf8gJpxBhey654iwKbCow5Pf5c2ehDfd9kDaPDZsGMJis5z6yv9/By0uBJmQiydQ0
-         JzUP5Zc8v5oGKDrvvqYvZov9+RCo2TOXdU2GRotvjWJ5VSAuFR/nRU8HcgAhsI6LGlIz
-         XKyfq1vv57j6Jx/ujCUEKcQq1lox6KFhe2mDcKKUjACjFFw1C5PCvcawxl4fuauYnYd9
-         2Rx7zDRG+vJh1EtRt3sr/DRKHL06c+pzt+VvybreS7ukz5mWrkTpyHj0p07ptcOsS7E9
-         Z9oLWIZQ9SOpc20v8/LkR5plKqkzONhJT8X2BHKQKlhpSemgzlKC9Sgsu8CPtB1mRDtN
-         DJ2Q==
+        d=9elements.com; s=google; t=1706617157; x=1707221957; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G6xinykc8GRQgs0/mcWgeatG2se7xZDFQ9kexfXSaok=;
+        b=FoN8UqId3Ym2kjWJZqqv4dEG3yWxfkWXbMtEkBxrunAmzrVfCIu4ZsZGdd5on/IiuW
+         DAMyv/WUnzs3nWa+bV99D7wEiq/dYbgcMoKwrG81kV0gltEVVGGjQ/sJUlleMTE8b7M0
+         T9T4nX6DVKiQ4+4hyBGqz7VSejXVnQsHtDy9pRvT+SWD4iDaCJxCMv0IuBWgSyqJRoDf
+         gEio4g10qlObBox5K59Zf22qCL5OyuubIt996KCztl4z8AdzY+tYlz/PEwWtYcPysliA
+         EkOium8yYUBsbCLremhthoamavTGnxo3Zj7eKeTmT1F0W4Il1I440aLJMZZ4Eu+iifjO
+         quiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706617086; x=1707221886;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JVZ040pnszTJYS9ZApPN/ubynpN7vUyGZw+eMhwthB8=;
-        b=vU4uhvKND7FTVuXKROzEtnvfWqKsWIHMPEqNC5xTWhjApnIka+oSx5VdslHWqxVNMz
-         AGsRVEoWO5GRYBBfjhhS6WOwjnNogw7DwCBvUL2CrixIOnDIWA4RMh2r+4jDmBF9oVpn
-         9O/HOdAvmNcfrx8TJQqcVJauo9C7wR+dnT7gUlPb1z6HT11dCIz9Dh3/XH28LojOM7/K
-         H3RnBqx90C+uwDEE7JwShSljfs223WNLhxqoT3sREFN1UW2ST22hIHl7XePM6IVNM15j
-         k8o2j3X6CqJaKJhRkHSAPLhCbtSwvTtCQ7osEV5d6TXh+2r7M3biAiP6utbGZVMfQdVq
-         QlIA==
-X-Gm-Message-State: AOJu0YykvTZeyboaQHXHH1TAkTRcn6gjfy5WmnWcwYpGiwrSD4YSRjtH
-	wJiVYJystu5cudQ4dEeg8zSTWFGypAKyBIKESCTFG7+XBltBIUGhp0twbjbENRg=
-X-Google-Smtp-Source: AGHT+IHirGZCrIDHZGhiLejiH/5mnKA4eFh1BSnZ91z5ycddYmGjZebxLWFC21DK+0c7MDWsyG6VFw==
-X-Received: by 2002:a05:6512:2209:b0:510:24aa:ba7d with SMTP id h9-20020a056512220900b0051024aaba7dmr6919311lfu.38.1706617086169;
-        Tue, 30 Jan 2024 04:18:06 -0800 (PST)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id a20-20020aa7d754000000b0055efeee7722sm2079010eds.79.2024.01.30.04.18.05
+        d=1e100.net; s=20230601; t=1706617157; x=1707221957;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G6xinykc8GRQgs0/mcWgeatG2se7xZDFQ9kexfXSaok=;
+        b=q1nvPG9pOTsvuhuCiEtcOlqcySuhAMl4ZcPxk+41WIx4zJJAXVV2ex4ZOrh94v7EBt
+         nBWeSsMM+tKRFBBYIVYQxZi8Q5j8JZEjJUScKSv4i32G//nKrBOuJH364FUAZLaTHPwG
+         k3fowDDC5BcZHXMJHDkcoq6ng+O/44MCTBh4RYuLw+74xIHBppisrezGiH+nlIztgiPY
+         mk+O1GDTR7Bkpqw6EI//JOvNrJxJKrnlu/OqpqSVr6wmg2AlfBsxmHL67tzof/UiXdOJ
+         clir4Z6SWJQFIPXu5t4KolkDCg/M49BjsMvoPIsOWXkPzGZ8w9MqbcBlk3UdGCATkxtK
+         7PpA==
+X-Gm-Message-State: AOJu0YxtD0XXvL7cFdY7eLCk9ekpUnYBTC+kLGlaj8LNEL0uOkqRa3Ra
+	UBXtSyCN6hfxFV0nOTgV7oQO1FMhal6XnFMqCYV4ygCIPA2i/AtAA9eGwuJ2ag4=
+X-Google-Smtp-Source: AGHT+IFweCjsqiHYLJWwsAue42vx1B5R3jvo3j6Du0bPHaMEXysoP4buOT9c7/E9TkhblIoRX38pvg==
+X-Received: by 2002:a19:f716:0:b0:510:da7:bdbb with SMTP id z22-20020a19f716000000b005100da7bdbbmr5375617lfe.45.1706617157505;
+        Tue, 30 Jan 2024 04:19:17 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCU/tRUi6qNWTLscmYMoZE5cbSgq9p2WLkDFHlb1N+udx6tl3o0crFc+zRK/vtr1Qke1dqZQ7qfmMQtVhcTuOrbiFPrzJs7f6jv6onROzvzdsZmKdqvmfU/a3DxIFD1SdIBle0T9EjWMDF7d7KehwhO3mvvsNYM3C2o9T9bMg7bm1/KaLv050AGt1MA7vhi70G93NOWAqWQbDtjAi3zUYMmx70xGatkoufI6Pai+q2prRCl2H8cpvGSYQHIfB+Hq4QzIteoMpEUBehMMbncNGUzUfZwij4Dn0vC4gVvR7Zzj/CaMUga6Zjkq9caBgIGnfn95WlVljued1bdc6QvYvElotiZDk0n4IHgKatumc/dPFjJ6lvi6sCPeVBmok9Two7gqkNmcQW4E2P85wksAgTdl04ex1z25ZQ+CqcXDtoe07ow5z7YntiKznoeHPspwYFkiKuv4vG+j
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id n21-20020a05600c4f9500b0040efb503d58sm4049446wmq.28.2024.01.30.04.19.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 04:18:05 -0800 (PST)
-Date: Tue, 30 Jan 2024 13:18:04 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@rivosinc.com>
-Subject: Re: arch/riscv/kernel/paravirt.c:44:1: sparse: sparse: symbol
- '__pcpu_scope_steal_time' was not declared. Should it be static?
-Message-ID: <20240130-630542897176b3dbc536657a@orel>
-References: <202401301733.XLBqnyLY-lkp@intel.com>
+        Tue, 30 Jan 2024 04:19:17 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Peter Rosin <peda@axentia.se>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mazziesaccount@gmail.com,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v5 1/2] dt-bindings: i2c: pca954x: Add custom properties for MAX7357
+Date: Tue, 30 Jan 2024 17:49:00 +0530
+Message-ID: <20240130121902.462619-1-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202401301733.XLBqnyLY-lkp@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 30, 2024 at 05:18:30PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   861c0981648f5b64c86fd028ee622096eb7af05a
-> commit: fdf68acccfc6af9497c34ee411d89af13b6516ed RISC-V: paravirt: Implement steal-time support
-> date:   4 weeks ago
-> config: riscv-randconfig-r133-20240130 (https://download.01.org/0day-ci/archive/20240130/202401301733.XLBqnyLY-lkp@intel.com/config)
-> compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 4a39d08908942b2d415db405844cbe4af73e75d4)
-> reproduce: (https://download.01.org/0day-ci/archive/20240130/202401301733.XLBqnyLY-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202401301733.XLBqnyLY-lkp@intel.com/
-> 
-> sparse warnings: (new ones prefixed by >>)
-> >> arch/riscv/kernel/paravirt.c:44:1: sparse: sparse: symbol '__pcpu_scope_steal_time' was not declared. Should it be static?
->    arch/riscv/kernel/paravirt.c:106:19: sparse: sparse: cast to restricted __le32
->    arch/riscv/kernel/paravirt.c:107:30: sparse: sparse: restricted __le32 degrades to integer
->    arch/riscv/kernel/paravirt.c:102:26: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] sequence @@     got restricted __le32 @@
->    arch/riscv/kernel/paravirt.c:102:26: sparse:     expected unsigned int [usertype] sequence
->    arch/riscv/kernel/paravirt.c:102:26: sparse:     got restricted __le32
->    arch/riscv/kernel/paravirt.c:104:23: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long [usertype] steal @@     got restricted __le64 @@
->    arch/riscv/kernel/paravirt.c:104:23: sparse:     expected unsigned long long [usertype] steal
->    arch/riscv/kernel/paravirt.c:104:23: sparse:     got restricted __le64
->    arch/riscv/kernel/paravirt.c:109:16: sparse: sparse: cast to restricted __le64
-> 
-> vim +/__pcpu_scope_steal_time +44 arch/riscv/kernel/paravirt.c
-> 
->     43	
->   > 44	DEFINE_PER_CPU(struct sbi_sta_struct, steal_time) __aligned(64);
->     45	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+From: Patrick Rudolph <patrick.rudolph@9elements.com>
 
-I wrote patches for these almost a month ago, but somehow forgot to post
-them... I'll retest and post now.
+Maxim Max7357 has a configuration register to enable additional
+features. These features aren't enabled by default & its up to
+board designer to enable the same as it may have unexpected side effects.
 
-Thanks,
-drew
+These should be validated for proper functioning & detection of devices
+in secondary bus as sometimes it can cause secondary bus being disabled.
+
+Add booleans for:
+ - maxim,isolate-stuck-channel
+ - maxim,send-flush-out-sequence
+ - maxim,preconnection-wiggle-test-enable
+
+Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes in V5:
+- Append Reviewer-by
+Changes in V4:
+- Drop max7358.
+Changes in V3:
+- Update commit message
+Changes in V2:
+- Update properties.
+---
+ .../bindings/i2c/i2c-mux-pca954x.yaml         | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml
+index 2d7bb998b0e9..9aa0585200c9 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.yaml
+@@ -71,6 +71,23 @@ properties:
+     description: A voltage regulator supplying power to the chip. On PCA9846
+       the regulator supplies power to VDD2 (core logic) and optionally to VDD1.
+ 
++  maxim,isolate-stuck-channel:
++    type: boolean
++    description: Allows to use non faulty channels while a stuck channel is
++      isolated from the upstream bus. If not set all channels are isolated from
++      the upstream bus until the fault is cleared.
++
++  maxim,send-flush-out-sequence:
++    type: boolean
++    description: Send a flush-out sequence to stuck auxiliary buses
++      automatically after a stuck channel is being detected.
++
++  maxim,preconnection-wiggle-test-enable:
++    type: boolean
++    description: Send a STOP condition to the auxiliary buses when the switch
++      register activates a channel to detect a stuck high fault. On fault the
++      channel is isolated from the upstream bus.
++
+ required:
+   - compatible
+   - reg
+@@ -95,6 +112,19 @@ allOf:
+         "#interrupt-cells": false
+         interrupt-controller: false
+ 
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              enum:
++                - maxim,max7357
++    then:
++      properties:
++        maxim,isolate-stuck-channel: false
++        maxim,send-flush-out-sequence: false
++        maxim,preconnection-wiggle-test-enable: false
++
+ unevaluatedProperties: false
+ 
+ examples:
+
+base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+-- 
+2.42.0
+
