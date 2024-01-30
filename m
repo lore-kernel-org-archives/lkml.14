@@ -1,104 +1,143 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A7D811E2
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC41E60ED9;
+	Tue, 30 Jan 2024 15:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706626984; cv=none; b=q/SsLomWip/j8yfU/xELXAGoYR6gusLLCHMmycEOm5f60Sq/AwUfhHRb+ntCjxZmlNC/llQnvquaShV3NdJVxv5vxIaaOXTV/e+KTiSCewyi2aiuZ/crFsXvVGS8z5bLwNM/ZPwedbNxEWcoDUQ01QtWvCJnMWEwDcxuB0SCQXI=
+	t=1706627040; cv=none; b=NeZzftfeqSVPzSb9bS9VV5UN+S19umwWER/4dxrE3iN/prTYlRwWg+KDZ3nVjEBVxH4I5cI/z7VN66dOw2e4zi37gazkvxd3tR7Y6tz/9yUsK+CwcpqyG32W/fy+SvA+Mk2CpnLBB4LzaHEu9aaiwnXi04MptKtiBoataz9Cxi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706626984; c=relaxed/simple;
-	bh=e66UCmOx/jtyr6B4zzKxaiG4yuzE3yyOFRm+iNo6W9k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DNDMnNYUhcCGJGwbi+jEGVm6JxE+llomsLxABcw9fAcfLS0VurXd8bfX9199s7oVdh/38AWzJbZDYKP3EZtFUhzl0hYZNNE7L7ZA5sQSIEk5SlwrUzlHApSg3Lb3l6f1dRM6yOVzQQhRDzeS1yudQpviMmhXwgR5qi2qnYG5whQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=Njl6Vr7N; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1706627040; c=relaxed/simple;
+	bh=//kFKSouwAE4cOJHqMCMPzz68JKEdAOc+2/aJyyBShg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kvXDYBoXPQk0uz58oFJ8SPKEMAOo9gWIyFCGWx6CDJJZrOKGXg2mVX/nn9IrSh010SUofWe8kk2vxq5QJ6+pj/mjPfkqhG90IAKzblsAo42ilXERFZvB96R6RRia1iniCMVR9cznUJFnAnRUNKlJ+PZ62XwZTpOdmyeoo7hc054=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zc9UAHgY; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="Njl6Vr7N"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33af4b34e2cso1011670f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:03:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1706626981; x=1707231781; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YqgeOjLTrp275fXzSVIM2wvWsQ14s/UmjFxWLGZ8WQw=;
-        b=Njl6Vr7Nnc5i1YdAovMd6Q+tCyghoWem9DEDi1jVCKcevJPhENWi6lM01pvNZU4VZ2
-         H8hJYhg++7/iwjORbMA9Q4raTBgeIahHIFtHZYLhmzeKzskw+VP8AEkPPukGgYAERKqR
-         4mXe8RmEHMHMGUWcFSMx67MMJy636+qflTJWTr33+KXqC7NWKdByZiLHOloVtl+fG3iZ
-         JhsVpmeTNfYIvoyzO2O7cV4C4m+ej+dotmfNPwvQ1VovLRCdYJ6rz/GIvS6LM6+xJsaJ
-         NNahtqHZGlp5YwU23LnIoyuKvGxRzyPWnsINu5kHSzmvaK50UlkeoIwO/qmsaQmDnQmp
-         rD6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706626981; x=1707231781;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YqgeOjLTrp275fXzSVIM2wvWsQ14s/UmjFxWLGZ8WQw=;
-        b=luFfvKhgnVu0j0iy8fb7DWd8LSk8+cqZrqNcCLpWJZdghVj/clZYxCgXwMcxaLt6Br
-         N1VZUPZfZ+GoIBFFqyatxrDNgtbZZXNRTYCHUZa3E8MBtSHU+dskhQjkGq5EPyM4xpAq
-         B73FsOSayyClpVZvh9XVLNs6Q8lnTL3exCk5BNc/HjRbF+xBWJjYI+UeyVaxThEUGOcy
-         vZ3RF+INXQVz7k7jE3WauRrZgOWZ5z8jfOuTYCsU2sL8hOTj0meAuafIeUOfM2avn5YY
-         7lLwZIrr6NEA3N6dXvZ3BpUgzQaaS4jJ8sxDxRrOfa2liqJ3ffrjo4J1N52S2TXopRC9
-         Y0Hg==
-X-Gm-Message-State: AOJu0YwIDujS9IHtPDM6Yluah8a6Q7JxtqIn0lh/FOIJZDLowLFXIXJ4
-	c3GQQtSHVj6UfKnAsdueMAnLpr7iVVcuQXi9a6pdHGWKBF75q5oHaxAvGaS8S7Y=
-X-Google-Smtp-Source: AGHT+IFo+3io9ZclStyElATZa5w58n+SAeQR84TgpCIKUN+3SM6EpTEAtZob0myXjD8k4EQcBeqsAg==
-X-Received: by 2002:adf:f851:0:b0:336:c79d:7504 with SMTP id d17-20020adff851000000b00336c79d7504mr1933342wrq.2.1706626980965;
-        Tue, 30 Jan 2024 07:03:00 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVgO+p/Ww+pfMBpy2xKoWUuxucwFbV6RFbhYbCrLIxA5rYhv/NFEf8PNNpeSIRgQpgg/SJDagPAhsXgbPd9QWzibhp42mMYNxNFRpGbtx6ZnfOwfRs90nj6agBukBpa2/qrQNpWVBl1Weyof/hUJ4YPHMJEAnQsj7bW4YTDhQrEsD23QhA3jBvOBYGLvKwiHxaDogLmPAvjlFs+HydV
-Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id u17-20020adff891000000b0033ae55db108sm8395287wrp.20.2024.01.30.07.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 07:03:00 -0800 (PST)
-From: Naresh Solanki <naresh.solanki@9elements.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: mazziesaccount@gmail.com,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator (max5970): Fix IRQ handler
-Date: Tue, 30 Jan 2024 20:32:56 +0530
-Message-ID: <20240130150257.3643657-1-naresh.solanki@9elements.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zc9UAHgY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706627038; x=1738163038;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=//kFKSouwAE4cOJHqMCMPzz68JKEdAOc+2/aJyyBShg=;
+  b=Zc9UAHgYXO5H5YGJDKCAZBhjsb+3IgMIbOZbsvYn2UGiqn664d9+Muh3
+   ilGokoDwLX4hf/B5XKFVoVcFq/HZszEFC6nb2dl4ReJRbZWx3YFG3wORX
+   6oepYk9i7gl6eQAncKFDdq4eJIl0Cxo/qJD9clKVLO7O8n0ImiALW4uxj
+   3F/rUCjCh48oqD+D0s01iFHZ2ZdABN6GxcgL8Ba7103GQgkPV8a9k9PD3
+   lJMEyUugp/N6V2SjQsrMk7qxYbDqFyhe98Kjg08JlvtjWck/1MTiMgRuf
+   55qQj/uYn/ekdnzyM42EFw8HhMnZuP3vSj3RmCnvz8FwlWF5j/E2RQ1OP
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="434478342"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="434478342"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:03:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="737803418"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="737803418"
+Received: from dcarleto-mobl.ger.corp.intel.com (HELO localhost) ([10.252.59.176])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 07:03:53 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Jonathan Corbet <corbet@lwn.net>, Breno Leitao <leitao@debian.org>,
+ kuba@kernel.org, "David S. Miller" <davem@davemloft.net>
+Cc: linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pabeni@redhat.com, edumazet@google.com
+Subject: Re: [PATCH v3] Documentation: Document each netlink family
+In-Reply-To: <87jznqewa7.fsf@meer.lwn.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231121114831.3033560-1-leitao@debian.org>
+ <874jevjgvo.fsf@intel.com> <87jznqewa7.fsf@meer.lwn.net>
+Date: Tue, 30 Jan 2024 17:03:50 +0200
+Message-ID: <87wmrqj221.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+On Tue, 30 Jan 2024, Jonathan Corbet <corbet@lwn.net> wrote:
+> Jani Nikula <jani.nikula@linux.intel.com> writes:
+>
+>> On Tue, 21 Nov 2023, Breno Leitao <leitao@debian.org> wrote:
+>>> This is a simple script that parses the Netlink YAML spec files
+>>> (Documentation/netlink/specs/), and generates RST files to be rendered
+>>> in the Network -> Netlink Specification documentation page.
+>>
+>> First of all, my boilerplate complaint: All extra processing for Sphinx
+>> should really be done using Sphinx extensions instead of adding Makefile
+>> hacks. I don't think it's sustainable to keep adding this stuff. We
+>> chose Sphinx because it is extensible, and to avoid the Rube Goldberg
+>> machine that the previous documentation build system was.
+>
+> So I feel like we've (me included) have kind of sent Breno around in
+> circles on this one.  This *was* implemented as an extension once:
+>
+>   https://lore.kernel.org/netdev/20231103135622.250314-1-leitao@debian.org/
+>
+> At that time it seemed too complex, and I thought that an external
+> script would lead to a simpler implementation overall.  Perhaps I was
+> wrong.
+>
+> I worry that a proliferation of extensions adds its own sort of
+> complexity and hazards - look at the things Vegard has fixed recently,
+> for example.
 
-The max5970 datasheet gives the impression that IRQ status bits must
-be cleared by writing a one to set bits, as those are marked with 'R/C',
-however tests showed that a zero must be written.
+If we're talking about the same things, I think one of the main problems
+there was shelling out to an external script while it could all have
+been trivially implemented directly in the extension. ;)
 
-Fixes an IRQ storm as the interrupt handler actually clears the IRQ
-status bits.
+> Relatively few people can work in that environment, and
+> extensions can make our version-support troubles worse.  So I'm not
+> fully sold on the idea that everything should be an extension,
+> especially if it can be expressed as a simple dependency and build step
+> in the makefile.
 
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
-Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
----
- drivers/regulator/max5970-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think we're just going to have to agree to disagree here. And,
+ultimately, it's your call as the documentation maintainer.
 
-diff --git a/drivers/regulator/max5970-regulator.c b/drivers/regulator/max5970-regulator.c
-index bc88a40a88d4..830a1c4cd705 100644
---- a/drivers/regulator/max5970-regulator.c
-+++ b/drivers/regulator/max5970-regulator.c
-@@ -392,7 +392,7 @@ static int max597x_regmap_read_clear(struct regmap *map, unsigned int reg,
- 		return ret;
- 
- 	if (*val)
--		return regmap_write(map, reg, *val);
-+		return regmap_write(map, reg, 0);
- 
- 	return 0;
- }
+I'm sure some individual things are simple to put in the makefiles, but
+I believe overall the entire thing would be simpler if we avoided that.
 
-base-commit: 861c0981648f5b64c86fd028ee622096eb7af05a
+> Some of the uglier makefile stuff we have is a different story...
+>
+> Anyway, I apologize for my role in making this particular addition
+> harder than it needed to be.  Perhaps, for the future, we should put
+> together and agree on a document (of all things) on how we think this
+> sort of functionality should be added.
+
+Perhaps. The problem at hand, though, is that after 'make
+O=/path/to/build htmldocs' I have this cruft in my source tree:
+
+$ git ls-files -oi --exclude-per-directory=.gitignore
+Documentation/networking/netlink_spec/devlink.rst
+Documentation/networking/netlink_spec/dpll.rst
+Documentation/networking/netlink_spec/ethtool.rst
+Documentation/networking/netlink_spec/fou.rst
+Documentation/networking/netlink_spec/handshake.rst
+Documentation/networking/netlink_spec/index.rst
+Documentation/networking/netlink_spec/mptcp_pm.rst
+Documentation/networking/netlink_spec/netdev.rst
+Documentation/networking/netlink_spec/nfsd.rst
+Documentation/networking/netlink_spec/ovs_datapath.rst
+Documentation/networking/netlink_spec/ovs_flow.rst
+Documentation/networking/netlink_spec/ovs_vport.rst
+Documentation/networking/netlink_spec/rt_addr.rst
+Documentation/networking/netlink_spec/rt_link.rst
+Documentation/networking/netlink_spec/rt_route.rst
+Documentation/networking/netlink_spec/tc.rst
+
+I'm not even sure what the best way to fix that would be. (Apart from
+turning it into an extension, of course. ;)
+
+
+BR,
+Jani.
+
+
 -- 
-2.42.0
-
+Jani Nikula, Intel
