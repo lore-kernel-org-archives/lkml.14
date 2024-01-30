@@ -1,121 +1,99 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDB4128391;
-	Tue, 30 Jan 2024 16:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30D18612C;
+	Tue, 30 Jan 2024 16:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706632997; cv=none; b=fWQHKNl90SJZovR/qLBj9CiB7j/dxdOIb4Mhf7yat89nljpomHXGgFXuVSlRAgC8UyJNVL1A9R8+Ea4oSjJ+jT6jryQV7tqOZhPIelrI0V2BMnvLDAGZSq6P6NEa5R+IiYU2z3H+X/qIBguRT/zcAfPkWkm1rAOu3T/omNBFNd8=
+	t=1706633064; cv=none; b=FhPviy5DH9frOus/+4166bIHrGEq8scv3aDhgyi+HXB8otSsksi/RNXVeNqp/6D2pAQQb7BhY5bYia7Z4jNwq/LG4fYiDw/7gnHTnzi8g9gje3GUAbBfZPPkRNZrjoZPyrisWppdypcoHIAZQ6r0A1FcUPP5h6dFMv20v09RvDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706632997; c=relaxed/simple;
-	bh=k/cw4o9Nkg+vVVqsgUAubQVLjRvLodDejnegtuMIjIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mdbs74K3DphyOxczPHeVryUcFcT9z7ts7JSvaFxWL8U2RJD7HF2y9LlnIIsq4LS401ieEcapf/YRHr6JgBL5gOStQi8scZuK4P65SA94TTDQgJJHLJcpHXqM36e4LTdaz1CUAEjU7AztA0z0wjhkCh+XomVSXcIsgc/t/RZjy78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-602c91a76b1so50866077b3.2;
-        Tue, 30 Jan 2024 08:43:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706632995; x=1707237795;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jG9RI5gp4dsbVA0rgVD5sIOvmapDxiObHhaU7j767x0=;
-        b=ManDeQqSahSeO96sfkER4WvdJg/5l67hzIsU5mlkJx3GfHXUbWyuE8vucdSprRgAkD
-         gxSTMZH5A+fNBqk7oIZI30E97xvohg2Z/Ww7AIlDImDAeo0tmaALO8tLiZQGpR9OsmaI
-         Vqwws4xZHDkzhj4LcdoDJ7dir7PnXTIckJupj+CT1nu2/+quvTFulKStwP936JM784rF
-         AIQjobnxzIyUVfbQwDMROJC7Xz7WWEfuCQR7duAFK8ecG53fA48IdX53MUKlH6AXqzQ5
-         F/2Zf79BD5bxPpCOZxQOTGi4OnB4x5p4K971IuXweGeEjA/vniawUWx65MxeYC2fC0Rk
-         oq7g==
-X-Gm-Message-State: AOJu0YyLJr8pZFLSUUEQM4UzYjgMGXIX+EMUOJdcP+CbGaoIwTOhv64X
-	yluvVWJvMcwl3IiQlELQ/eSZ0cSeLqPy//zV+IEZ49+B19OmFAHtOAOWqLSPqYU=
-X-Google-Smtp-Source: AGHT+IHM2kLih245Lxq1nUdIxQnTza+R1zGhBTfH8dLrdFJF9CzQqLfT9d3tVcBLXxoOzR8B3uJpjA==
-X-Received: by 2002:a0d:f4c2:0:b0:5e2:2bfc:c6dd with SMTP id d185-20020a0df4c2000000b005e22bfcc6ddmr7716297ywf.23.1706632994912;
-        Tue, 30 Jan 2024 08:43:14 -0800 (PST)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id fp3-20020a05690c34c300b005a7d46770f2sm3235003ywb.83.2024.01.30.08.43.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 08:43:14 -0800 (PST)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-602c91a76b1so50865927b3.2;
-        Tue, 30 Jan 2024 08:43:14 -0800 (PST)
-X-Received: by 2002:a05:690c:830:b0:5ff:488c:9a6a with SMTP id
- by16-20020a05690c083000b005ff488c9a6amr7478186ywb.17.1706632994283; Tue, 30
- Jan 2024 08:43:14 -0800 (PST)
+	s=arc-20240116; t=1706633064; c=relaxed/simple;
+	bh=EPy2DHEQ00iX2uFBc2R24LC3RbnhR02Iau7wKPjhTc4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z6Ax20lsVb6A86M6Iozauy11gVSHVkTqayk5anDl+zvFhXPJm8qnhqjCHNKglUU780O194JvhhX/lEebd0FVOIB3VhSCNKhFU62yt5KyaxvzLgLKWaJHB60XAdh25jk2IUFaU2i84iU/8GnWxwrhEhEMLkXq2zW7id5qHecLO04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E1E53222E1;
+	Tue, 30 Jan 2024 16:44:20 +0000 (UTC)
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id CABEA13212;
+	Tue, 30 Jan 2024 16:44:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id /nLCJmMnuWXKWwAAn2gu4w
+	(envelope-from <leeman.duncan@gmail.com>); Tue, 30 Jan 2024 16:44:19 +0000
+From: Lee Duncan <leeman.duncan@gmail.com>
+To: linux-scsi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	hare@suse.de,
+	Lee Duncan <lduncan@suse.com>
+Subject: [PATCH 0/2] Ensure FCoE target interrupts work
+Date: Tue, 30 Jan 2024 08:42:20 -0800
+Message-Id: <cover.1706632031.git.lduncan@suse.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122111115.2861835-1-claudiu.beznea.uj@bp.renesas.com> <20240122111115.2861835-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240122111115.2861835-3-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 17:43:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX+AN6a0KSnUfTRU5rmCyJBW_nqoqRsU+9ui6uMG-WdGg@mail.gmail.com>
-Message-ID: <CAMuHMdX+AN6a0KSnUfTRU5rmCyJBW_nqoqRsU+9ui6uMG-WdGg@mail.gmail.com>
-Subject: Re: [PATCH 02/10] watchdog: rzg2l_wdt: Use pm_runtime_resume_and_get()
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com, 
-	sboyd@kernel.org, p.zabel@pengutronix.de, biju.das.jz@bp.renesas.com, 
-	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [4.40 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 FREEMAIL_FROM(0.50)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_ENVFROM(0.00)[gmail.com];
+	 TAGGED_FROM(0.00)[];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: ****
+X-Spam-Score: 4.40
+X-Spam-Flag: NO
 
-Hi Claudiu,
+From: Lee Duncan <lduncan@suse.com>
 
-On Mon, Jan 22, 2024 at 12:11=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev>=
- wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> pm_runtime_get_sync() may return with error. In case it returns with erro=
-r
-> dev->power.usage_count needs to be decremented. pm_runtime_resume_and_get=
-()
-> takes care of this. Thus use it.
->
-> Fixes: 2cbc5cd0b55f ("watchdog: Add Watchdog Timer driver for RZ/G2L")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Commit 1a1975551943 "scsi: fcoe: Fix potential deadlock on &fip->ctlr_lock"
+changed locking for fnic/FCoE, but it did so by disabling interrupts
+where they weren't disabled before, and this caused FCoE targets
+to go offline. Reverting that patch fixed the issue.
 
-Thanks for your patch!
+But to handle the problem originally addressed by the commit,
+instead of modifying the locking, move the work to be done
+into a work queue.
 
-> --- a/drivers/watchdog/rzg2l_wdt.c
-> +++ b/drivers/watchdog/rzg2l_wdt.c
-> @@ -123,8 +123,11 @@ static void rzg2l_wdt_init_timeout(struct watchdog_d=
-evice *wdev)
->  static int rzg2l_wdt_start(struct watchdog_device *wdev)
->  {
->         struct rzg2l_wdt_priv *priv =3D watchdog_get_drvdata(wdev);
-> +       int ret;
->
-> -       pm_runtime_get_sync(wdev->parent);
-> +       ret =3D pm_runtime_resume_and_get(wdev->parent);
-> +       if (ret)
-> +               return ret;
->
->         /* Initialize time out */
->         rzg2l_wdt_init_timeout(wdev);
+Lee Duncan (1):
+  Revert "scsi: fcoe: Fix potential deadlock on &fip->ctlr_lock"
 
-To actually handle this error condition, rzg2l_wdt_set_timeout() should
-be updated to propagate the error to its caller, too.
+Hannes Reinecke (1):
+  fnic: move fnic_fnic_flush_tx() to a work queue
 
-Anyway, most of this is moot, as pm_runtime_get_sync() won't ever
-fail on Renesas arm/risc-v systems...
+ drivers/scsi/fcoe/fcoe_ctlr.c | 20 ++++++++------------
+ drivers/scsi/fnic/fnic.h      |  3 ++-
+ drivers/scsi/fnic/fnic_fcs.c  |  3 ++-
+ drivers/scsi/fnic/fnic_main.c |  1 +
+ drivers/scsi/fnic/fnic_scsi.c |  4 ++--
+ 5 files changed, 15 insertions(+), 16 deletions(-)
 
-Gr{oetje,eeting}s,
+-- 
+2.43.0
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
