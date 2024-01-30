@@ -1,71 +1,97 @@
-Received: from zucker.schokokeks.org (zucker.schokokeks.org [178.63.68.96])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917B9605D6
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.68.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A07960BBA
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608261; cv=none; b=nTuyWSzlx0VSHbPtM+ATsdd0ZShPVhLFBPZgKd9CmXVX8FTGJdFb39eJF2luzisnrZLqkAkNbJAp9IVNXFeMfKf6j9gx+PGMMmOLEUEXV5CkXyAkr7dkumgW++foLng4E/CEvue2A0ft9sBsiZ7RCgzq/ddTLqiy0edn/EIyhqk=
+	t=1706608318; cv=none; b=Bgi38cRqWB6nH/pIjLRUXhpqAQfWgAIvtL/iFrfljExgXcdDZJHiqwaRwm30k1XACA+gRLtOna4bG1iDCjsBprdIQyBzWYjbQhc6L+OPiaxSX0aShv68LQhCQhfL3h1GacremLo3BypuCEkT3mZxrvmgexo8n/5ZTR7jR1PvrXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608261; c=relaxed/simple;
-	bh=ZQRIYuoVdGBY3FYjM+SKKH2fMwbpdB+uPgmzsErs/zg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FTV/xxKYBWC+0MXes60aXdzsDCViZwc+tfCbqkN1dGfw0qr3ZKw9vcd+BSy3e1unrEih5F81o/0qSLxpWQ4jw559WEDta2U+BQar0JitZINtt09DLhFVMx47dFD3IDZYYldTL5xDPSX4rupKz8npScXbbCZ59OvzLpO4iX8/VKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hboeck.de; spf=pass smtp.mailfrom=hboeck.de; dkim=pass (2048-bit key) header.d=hboeck.de header.i=@hboeck.de header.b=WS6HwZcH; arc=none smtp.client-ip=178.63.68.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hboeck.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hboeck.de
+	s=arc-20240116; t=1706608318; c=relaxed/simple;
+	bh=sUNr3myzPwzcEzPZLydh/Sxr+xAwn5eWM0IALXoUSC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LpRNgEjoaXo9rEovLzXevJNxXSR4n4Y6zFnlpPzhARG2xjXuPmLYTiBuoHC12Dw5ilMzu6dIURypTPV4vcMhe1ubeHVCsWRHcEzvk/qThmPWGL3hE6MUdlXPq1KES9eCqg6IlFRDq9QKTvWxxxs2mH/hH719s4WRwqsifYMZzeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uYnXincS; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hboeck.de header.i=@hboeck.de header.b="WS6HwZcH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hboeck.de; s=key1;
-	t=1706607945; bh=trYWNAUV0wSUcmXctj60BCLcFrht8FOcYWG35FtbyNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	b=WS6HwZcHIOtytoJP+WpQ2LDHfPR3at5pFhpIMhqc/I7l3Gw8MUFWhAMMV3uxb68L7
-	 n0EhK+TmQabxQwO6yXbiTHp5l00JC8aleaKudL7KvA4ljCk4gqTwiE+5bJSoAHhfHb
-	 zMm6Y0bHrWYPl2voMpBGpUluPtNbpRFtITJDNm6wcrH8ugR5ZHB32oxYWYN5KBiTMr
-	 yGAzyTsVeve+jremtgeVmdyuAtrrcRbidI/6CMDvDgqvBVBZCRKunfV+34xEtQzciB
-	 gAMSSp9hi/aS5DzTUpGmJlTvklzoj1Q6oyECUvwgnLOFaFNKOwQy602FvT+KqHYT68
-	 qGi/ANi/fUCag==
-Original-Subject: [PATCH] x86: Improve description of IA32_EMULATION_DEFAULT_DISABLED
-Author: Hanno =?UTF-8?B?QsO2Y2s=?= <hanno@hboeck.de>
-Original-Cc: x86@kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 30 Jan 2024 10:45:43 +0100
-From: Hanno =?UTF-8?B?QsO2Y2s=?= <hanno@hboeck.de>
-To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-  dave.hansen@linux.intel.com
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86: Improve description of IA32_EMULATION_DEFAULT_DISABLED
-Message-ID: <20240130104543.28840812.hanno@hboeck.de>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.40; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uYnXincS"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40e80046264so47084455e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:51:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706608314; x=1707213114; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UHvebLwHuRfKrhRhx4zUZc+osrZ3cO5ITZcXKlhy5f4=;
+        b=uYnXincSowyG+p9UEdPDnvxIzmU9GOBSzNhyzKWgWRsHxYxJsgmlN8l73pqeqMgJiH
+         W3FLzDp9V1a4NogDlV5H1k248SFmxfaAhFaGXvy+2xX1w0ghHvdHtyUoKilqpwW0kimv
+         irpXAEmjuNAD4/StG/16/I9RtqUQBH7xybZf4x+8WvJiIjR03h7Mg+Ju0ipADKFW0o6Y
+         UtGo5chTuX8tks8DceGJ2nErQ0g305MQvJkl4lTc3CXnzi2Dpd+8g0LSqtlkfRvLQBTa
+         h9yp2/x5R1D6Yus6NsAKqqqL9V7/KOfcBuEEQOWlRt+BxIoW2oB/IMNTXqdGY51W90E5
+         IVaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706608314; x=1707213114;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UHvebLwHuRfKrhRhx4zUZc+osrZ3cO5ITZcXKlhy5f4=;
+        b=jji/81bCnJNmCwpg/OAXuKKFnf/lybuiZ0xhzJujKFNCHRUufSSn7un08Ib+BZrkOt
+         dSbDOAlY5gO85OmDJ/kcqN0ajKPZd4C30fB+JKeIkvb+KGLr2DrsoVo3UkqABntD7ORk
+         bZKt91OdGd1P7uTz04PlQWljGwmQB5gZaLIxJbH3PKKBCPUGzTGhD5yFS7W4g0xLhrgl
+         F0DJu7PnZSWT32PDllfNB+0jHlpQG8LWQSsMl14LNTkYp/I0QgFlFAZunPjFs3fFVeBl
+         pM/DOkt39S/u+YnqK5xwdKYKx8Jj5wirMhI/IY0mW432vKSlW49XydvGzaRk3HY2ii4C
+         TERw==
+X-Gm-Message-State: AOJu0YyoVPNkUodn5I0hgoxklKF+m1LBKUfX7fwUrZ17lrtSi+BW1RgY
+	31O+j7suoEj51ahuYOG9SJLgLlieIy3pNB313jyBTEpmch73KLs6fmiA+fmNHG8=
+X-Google-Smtp-Source: AGHT+IF38u7/UMq2Ehe06B1hdRlnUG7cUccj6aYmXDUSxOCpUZXxCEPO+lNn+j1151l0KXe8fxwwHw==
+X-Received: by 2002:a05:600c:4d96:b0:40e:d319:4792 with SMTP id v22-20020a05600c4d9600b0040ed3194792mr6064680wmp.22.1706608314364;
+        Tue, 30 Jan 2024 01:51:54 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id u7-20020a05600c138700b0040d8ff79fd8sm12646748wmf.7.2024.01.30.01.51.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 01:51:54 -0800 (PST)
+Message-ID: <57a5ca95-9d79-45cb-89dd-fa7a3a6ad228@linaro.org>
+Date: Tue, 30 Jan 2024 10:51:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal/drivers/mediatek/lvts_thermal: Fix a memory leak
+ in an error handling path
+Content-Language: en-US
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Balsam CHIHI <bchihi@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <481d345233862d58c3c305855a93d0dbc2bbae7e.1706431063.git.christophe.jaillet@wanadoo.fr>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <481d345233862d58c3c305855a93d0dbc2bbae7e.1706431063.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The description of the option disables a default, but does not mention
-how to change that default. To make it easier to find out, mention boot
-parameter ia32_emulation.
+On 28/01/2024 09:38, Christophe JAILLET wrote:
+> If devm_krealloc() fails, then 'efuse' is leaking.
+> So free it to avoid a leak.
+> 
+> Fixes: f5f633b18234 ("thermal/drivers/mediatek: Add the Low Voltage Thermal Sensor driver")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
 
-Signed-off-by: Hanno B=C3=B6ck <hanno@hboeck.de>
----
+Applied, thanks
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5edec175b..a65ff33e0 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -3006,8 +3006,10 @@ config IA32_EMULATION_DEFAULT_DISABLED
- 	depends on IA32_EMULATION
- 	help
- 	  Make IA32 emulation disabled by default. This prevents loading 32-bit
--	  processes and access to 32-bit syscalls. If unsure, leave it to its
--	  default value.
-+	  processes and access to 32-bit syscalls. If set, IA32 emulation can be
-+	  re-enabled with the boot parameter ia32_emulation=3Dtrue.
-+
-+	  If unsure, leave it to its default value.
-=20
- config X86_X32_ABI
- 	bool "x32 ABI for 64-bit mode"
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
