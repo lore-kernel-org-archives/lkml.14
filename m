@@ -1,325 +1,228 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F9455E54
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5026F5786C;
+	Tue, 30 Jan 2024 08:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706602300; cv=none; b=RfEq11n6/VQADBnVCfIRcRexnjRV9tEQ81ZBAbNfsKLfRItendFPiYza/J5kgq9L84j+AtH2J4UNOEebL0re4E0tyYoCPni5MIlj33jd1vsb5DMuE11HI0opk/mqGSyi2ztBp+2AmGilA+Rd96t7gyo/XgN2A0m1MlXlLjb4WG0=
+	t=1706602321; cv=none; b=LsiKZlEIjM6ljkma2pdrmyLT4hYAhevxbQ52V25LyTn+bBW4J6UYHZuovtrx6cDvCzsZfpElbQ0n46i4GJ54MDWVV2vcsAj2P3OiPyg+I6H4kK/aPVGDirkTKwd38cIcLDEsYc8rFf2zDCrrUnoT/vHKO3xC8pP1yPLViRUQGg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706602300; c=relaxed/simple;
-	bh=qxBO+xfdJxeLPs2m+Hk3tR314kiIpG56LGPiGNflK0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bYnvvTfFtqvSr5cmJylQBY0yaC/qIA6fIyB1fq2bjhInXdBbBgopEIJyvdYrLsIghKyVuJEh+87dEObs06K4SFKU6GXjLzRQ4VcLijnMIlO3Jj4Ykn6yDCePZudQbjgs9DG+CdIGW+1kJ1h9fYNkQzx1SyM+8MYsyZP6QAAGDMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gslBihr3; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1706602321; c=relaxed/simple;
+	bh=8mFKFjYSUuOIu6xh7rNa3DzWL/XzU+Q5rtoh7P3ST+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pjr0TurKivak7dyMuFkqDYi/j83JSIqakR4WAbXvz1tmiRMJcOoZTbKj4HufVpCxTM40fMax9jx+1Vs0oCTKp/1AMqTKBTzc4kgUDQD46pGa3PQra9y93la4rtXAbCRZ1MeGUsxphVO6sD+lV3OI6buaVgim2+VyUAeeMHsiAmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zws7NfIT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gslBihr3"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d8da50bffaso9316495ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:11:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1706602297; x=1707207097; darn=vger.kernel.org;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=fHi5UwowVaUQ2teYz/sOYw/pAYhGyptQrR07MW5sEZs=;
-        b=gslBihr3t0chxjX4f5nJPtwHndDWt6iP9I3NgSl74GuieXF1LyGSR07BowFraiL0sm
-         ovxd93GRC1yM01KljlPa2Du4E4lCl0L+28WpFDbwkDn6B0798Yq20nUV+rJrPhpMwdLD
-         3elxvRXE98rF7pcg1s7JVzFqplG+BRsicPvTA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706602297; x=1707207097;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fHi5UwowVaUQ2teYz/sOYw/pAYhGyptQrR07MW5sEZs=;
-        b=TmDkV+S6Y+8MK0UR/LWXpZAAETxBnp2Tork/zui17K5gSnYdjpnU7T6UnYDFzLWMY5
-         vGlzbgnRgTID6aNEj8hI7ee02yLQ+VeVOWB3KXzUKCv2vwlM5uNJ8HyB70nYmAe4AtGE
-         7NZWn9JxrzDCRMQpwWOrIcxGStLTWn1TtZ8jcTfTwEU+/5haLA0LOa6v1KUaoFa3WsYP
-         IHOR65ezsFzPDbRGFVfRbtOgJtx9zH1ZQ+ayNowTnK96EV4CMFu3zGuSpLUUCAbaGe0K
-         v31o75ogFuQ8KDHgtqiAJw7QeVptDr2lDWwD+N1wcBJFkgeohjtJK2Nic6AUrKY4TgH6
-         0jXA==
-X-Gm-Message-State: AOJu0Yz+0nB4ctLPZGL8JXzrGRXKZTLEnmcdsT51YCqjzAnSxJOB2Re/
-	EVEYv0yanrpQ7znXuvemQPtIgHHF+Nou5Ogvf5UTB6VXxLi7bD5ILKSQKtd+Xw==
-X-Google-Smtp-Source: AGHT+IEcxqImwCqE/lLYqX6Zqlcv5ceRggfc3cR8GUhrMXHiRxUaI66sopvDFtFmUB5WKpsf2PVpWQ==
-X-Received: by 2002:a17:903:22c8:b0:1d7:6d49:c78a with SMTP id y8-20020a17090322c800b001d76d49c78amr6850809plg.58.1706602297023;
-        Tue, 30 Jan 2024 00:11:37 -0800 (PST)
-Received: from [192.168.52.129] ([192.19.222.250])
-        by smtp.gmail.com with ESMTPSA id a10-20020a170902ee8a00b001d8e93fe344sm2697941pld.143.2024.01.30.00.11.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 00:11:35 -0800 (PST)
-Message-ID: <2a3edcf5-7afc-410c-a402-3d8cd3feb1da@broadcom.com>
-Date: Tue, 30 Jan 2024 00:11:32 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zws7NfIT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B26C433F1;
+	Tue, 30 Jan 2024 08:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706602320;
+	bh=8mFKFjYSUuOIu6xh7rNa3DzWL/XzU+Q5rtoh7P3ST+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zws7NfITdtoBVI2DvHJmPPMvFvvGeg0CSOceSvNai57g0PBFHC4SMN3uNBvo3vwge
+	 /ReLfUwc9B4I6TvMFLDMCk+YuCfkEVdxjVG4EKaGXjqXr50Pp1fHdGi+x0l5rwdSYp
+	 InMpucqq63wWnrep6OKyQrcfGgEU0luOO9fK0ljc6xlvomqYZVDTOmG2WKJmAk41YU
+	 d2o8jLz8P5XRVY2zDA2C8i3z0kMuRAgzl0A4i5KIsffrSkB9rBycy17uimJGCoWX/c
+	 /hfFXib1ooW+GM/PPrKahrzq4MNkGrcbo2rUFhRoisoluDNjMonwAhzPpTr/qTEFnK
+	 qi9Q8TQ3LcBkA==
+Date: Tue, 30 Jan 2024 13:41:52 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+	quic_parass@quicinc.com
+Subject: Re: [PATCH v9] bus: mhi: host: Add tracing support
+Message-ID: <20240130081152.GH32821@thinkpad>
+References: <20240105-ftrace_support-v9-1-a2dca64cc6ea@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/10] mtd: rawnand: brcmnand: allow for on-die ecc
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
- David Regan <dregan@broadcom.com>
-Cc: dregan@mail.com, Richard Weinberger <richard@nod.at>,
- Vignesh Raghavendra <vigneshr@ti.com>, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- computersforpeace@gmail.com, kdasu.kdev@gmail.com,
- linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Joel Peshkin <joel.peshkin@broadcom.com>,
- Tomer Yacoby <tomer.yacoby@broadcom.com>,
- Dan Beygelman <dan.beygelman@broadcom.com>,
- Anand Gore <anand.gore@broadcom.com>, Kursad Oney
- <kursad.oney@broadcom.com>, Florian Fainelli
- <florian.fainelli@broadcom.com>, rafal@milecki.pl,
- bcm-kernel-feedback-list@broadcom.com, andre.przywara@arm.com,
- baruch@tkos.co.il, linux-arm-kernel@lists.infradead.org,
- Dan Carpenter <dan.carpenter@linaro.org>
-References: <20240124030458.98408-1-dregan@broadcom.com>
- <20240124030458.98408-11-dregan@broadcom.com>
- <20240124184027.712b1e47@xps-13>
- <CAA_RMS42FaiN+Za1iY12o0YUANH9rJarBTBa=9jNn8x6_g-Fng@mail.gmail.com>
- <20240126071913.699c3795@xps-13>
- <CAA_RMS5gX88v_Qt1csgSL_ffMNsqo2G8B164EB_Hg=hXd620eg@mail.gmail.com>
- <20240129115228.06dc2292@xps-13>
-From: William Zhang <william.zhang@broadcom.com>
-In-Reply-To: <20240129115228.06dc2292@xps-13>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b6f2f40610254fea"
-
---000000000000b6f2f40610254fea
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240105-ftrace_support-v9-1-a2dca64cc6ea@quicinc.com>
 
-Hi Miquel,
-
-On 1/29/24 02:52, Miquel Raynal wrote:
-> Hi David,
+On Fri, Jan 05, 2024 at 05:53:03PM +0530, Krishna chaitanya chundru wrote:
+> This change adds ftrace support for following functions which
+> helps in debugging the issues when there is Channel state & MHI
+> state change and also when we receive data and control events:
+> 1. mhi_intvec_mhi_states
+> 2. mhi_process_data_event_ring
+> 3. mhi_process_ctrl_ev_ring
+> 4. mhi_gen_tre
+> 5. mhi_update_channel_state
+> 6. mhi_tryset_pm_state
+> 7. mhi_pm_st_worker
 > 
-> dregan@broadcom.com wrote on Fri, 26 Jan 2024 11:57:39 -0800:
+> Change the implementation of the arrays which has enum to strings mapping
+> to make it consistent in both trace header file and other files.
 > 
->> Hi Miquèl,
->>
->> On Thu, Jan 25, 2024 at 10:19 PM Miquel Raynal
->> <miquel.raynal@bootlin.com> wrote:
->>>
->>> Hi David,
->>>
->>> dregan@broadcom.com wrote on Thu, 25 Jan 2024 11:47:46 -0800:
->>>   
->>>> Hi Miquèl,
->>>>
->>>> On Wed, Jan 24, 2024 at 9:40 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->>>>>
->>>>> Hi David,
->>>>>
->>>>> dregan@broadcom.com wrote on Tue, 23 Jan 2024 19:04:58 -0800:
->>>>>   
->>>>>> Allow settings for on-die ecc such that if on-die ECC is selected
->>>>>> don't error out but require ECC strap setting of zero
->>>>>>
->>>>>> Signed-off-by: David Regan <dregan@broadcom.com>
->>>>>> Reviewed-by: William Zhang <william.zhang@broadcom.com>
->>>>>> ---
->>>>>> Changes in v3: None
->>>>>> ---
->>>>>> Changes in v2:
->>>>>> - Added to patch series
->>>>>> ---
->>>>>>   drivers/mtd/nand/raw/brcmnand/brcmnand.c | 14 ++++++++++----
->>>>>>   1 file changed, 10 insertions(+), 4 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->>>>>> index a4e311b6798c..42526f3250c9 100644
->>>>>> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->>>>>> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->>>>>> @@ -2727,9 +2727,11 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
->>>>>>        cfg->blk_adr_bytes = get_blk_adr_bytes(mtd->size, mtd->writesize);
->>>>>>
->>>>>>        if (chip->ecc.engine_type != NAND_ECC_ENGINE_TYPE_ON_HOST) {
->>>>>> -             dev_err(ctrl->dev, "only HW ECC supported; selected: %d\n",
->>>>>> -                     chip->ecc.engine_type);
->>>>>> -             return -EINVAL;
->>>>>> +             if (chip->ecc.strength) {
->>>>>> +                     dev_err(ctrl->dev, "ERROR!!! HW ECC must be set to zero for non-hardware ECC; selected: %d\n",
->>>>>> +                             chip->ecc.strength);
->>>>>
->>>>> Can you use a more formal string? Also clarify it because I don't
->>>>> really understand what it leads to.
->>>>
->>>> How about:
->>>>
->>>> dev_err(ctrl->dev, "HW ECC set to %d, must be zero for on-die ECC\n",
->>>
->>> Actually I am wondering how legitimate this is. Just don't enable the
->>> on host ECC engine if it's not in use. No need to check the core's
->>> choice.
->>
->> Our chip ECC engine will either be on if it's needed or off if it's not.
->> Either I can do that in one place or put checks in before each
->> read/write to turn on/off the ECC engine, which seems a lot more
->> work and changes and possible issues/problems.
->> Turning it on/off as needed has not been explicitly tested and
->> could cause unforeseen consequences. This
->> is a minimal change which should have minimal impact.
->>
->>>   
->>>>   
->>>>>   
->>>>>> +                     return -EINVAL;
->>>>>> +             }
->>>>>>        }
->>>>>>
->>>>>>        if (chip->ecc.algo == NAND_ECC_ALGO_UNKNOWN) {
->>>>>> @@ -2797,7 +2799,11 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
->>>>>>        if (ret)
->>>>>>                return ret;
->>>>>>
->>>>>> -     brcmnand_set_ecc_enabled(host, 1);
->>>>>> +     if (chip->ecc.engine_type == NAND_ECC_ENGINE_TYPE_ON_DIE) {
->>>>>> +             dev_dbg(ctrl->dev, "Disable HW ECC for on-die ECC\n");
->>>>>
->>>>> Not needed.
->>>>
->>>> Will remove.
->>>>   
->>>>>   
->>>>>> +             brcmnand_set_ecc_enabled(host, 0);
->>>>>> +     } else
->>>>>> +             brcmnand_set_ecc_enabled(host, 1);
->>>>>
->>>>> Style is wrong, but otherwise I think ECC should be kept disabled while
->>>>> not in active use, so I am a bit surprised by this line.
->>>>
->>>> This is a double check to turn on/off our hardware ECC.
->>>
->>> I expect the engine to be always disabled. Enable it only when you
->>> need (may require an additional patch before this one).
->>
->> We are already turning on the ECC enable at this point,
->> this is just adding the option to turn it off if the NAND chip
->> itself will be doing the ECC instead of our controller.
+> Where ever the trace events are added, debug messages are removed.
 > 
-> Sorry if I have not been clear.
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+
+Few nitpicks below.
+
+> Reviewed-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> ---
+> Changes in v9:
+> - Change the implementations of some array so that the strings to enum mapping
+> - is same in both trace header and other files as suggested by steve.
+> - Link to v8: https://lore.kernel.org/r/20231207-ftrace_support-v8-1-7f62d4558555@quicinc.com
 > 
-> This sequence:
-> - init
-> - enable hw ECC engine
-> Is broken.
+> Changes in v8:
+> - Pass the structure and derefernce the variables in TP_fast_assign as suggested by steve
+> - Link to v7: https://lore.kernel.org/r/20231206-ftrace_support-v7-1-aca49a04268b@quicinc.com
 > 
-ECC engine is not enabled for all the cases. Here we only intended to 
-enable it for the nand chip that is set to use 
-NAND_ECC_ENGINE_TYPE_ON_HOST. The logic here should better change to:
-if (chip->ecc.engine_type == NAND_ECC_ENGINE_TYPE_ON_HOST)
-     brcmnand_set_ecc_enabled(host, 1);
-else
-     brcmnand_set_ecc_enabled(host, 0);
+> Changes in v7:
+> - change log format as pointed by mani.
+> - Link to v6: https://lore.kernel.org/r/20231204-ftrace_support-v6-1-9b206546dac2@quicinc.com
+> 
+> Changes in v6:
+> - use 'rp' directly as suggested by jeffrey.
+> - Link to v5: https://lore.kernel.org/r/20231127-ftrace_support-v5-1-eb67daead4f1@quicinc.com
+> 
+> Changes in v5:
+> - Use DECLARE_EVENT_CLASS for multiple events as suggested by steve.
+> - Instead of converting to u64 to print address, use %px to print the address to avoid
+> - warnings in some platforms.
+> - Link to v4: https://lore.kernel.org/r/20231111-ftrace_support-v4-1-c83602399461@quicinc.com
+> 
+> Changes in v4:
+> - Fix compilation issues in previous patch which happended due to rebasing.
+> - In the defconfig FTRACE config is not enabled due to that the compilation issue is not
+> - seen in my workspace.
+> - Link to v3: https://lore.kernel.org/r/20231111-ftrace_support-v3-1-f358d2911a74@quicinc.com
+> 
+> Changes in v3:
+> - move trace header file from include/trace/events to drivers/bus/mhi/host/ so that
+> - we can include driver header files.
+> - Use macros directly in the trace events as suggested Jeffrey Hugo.
+> - Reorder the structure in the events as suggested by steve to avoid holes in the buffer.
+> - removed the mhi_to_physical function as this can give security issues.
+> - removed macros to define strings as we can get those from driver headers.
+> - Link to v2: https://lore.kernel.org/r/20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com
+> 
+> Changes in v2:
+> - Passing the raw state into the trace event and using  __print_symbolic() as suggested by bjorn.
+> - Change mhi_pm_st_worker to mhi_pm_st_transition as suggested by bjorn.
+> - Fixed the kernel test rebot issues.
+> - Link to v1: https://lore.kernel.org/r/20231005-ftrace_support-v1-1-23a2f394fa49@quicinc.com
+> ---
+>  drivers/bus/mhi/common.h        |  38 +++---
+>  drivers/bus/mhi/host/init.c     |  63 +++++----
+>  drivers/bus/mhi/host/internal.h |  40 ++++++
+>  drivers/bus/mhi/host/main.c     |  19 ++-
+>  drivers/bus/mhi/host/pm.c       |   7 +-
+>  drivers/bus/mhi/host/trace.h    | 275 ++++++++++++++++++++++++++++++++++++++++
+>  6 files changed, 378 insertions(+), 64 deletions(-)
+> 
 
-> It *cannot* work as any operation going through exec_op now may
-> perform page reads which should be unmodified by the ECC engine. You > driver *must* follow the following sequence:
-> - init and disable (or keep disabled) the hw ECC engine
-> - when you perform a page operation with correction you need to
-> 	- enable the engine
-> 	- perform the operation
-> 	- disable the engine
-> Maybe I am missing something here but are you saying the exec_op can 
-have different ecc type for page read/write at run time on the same nand 
-chip? I don't see the op instr structure has the ecc type field and 
-thought it is only bind to the nand chip and won't change at run time. 
-So looks to me the init time setting to the engine based on 
-ecc.engine_type should be sufficient.
+[...]
 
-What you described here can work for the hw.ecc read path (ecc.read_page 
-= brcmnand_read_page) which always assumes ecc is enabled. Although it 
-is probably not too bad with these two extra operation, it would be 
-better if we don't have to add anything as our current code does. For 
-the brcmnand_read_page_raw,  we currently disable the engine and then 
-re-enable it(but we need to fix it to only enable it with hw ecc engine 
-type).  So it is just opposite of you logic but works the same with no 
-impact on the most performance critical path.
+> +TRACE_EVENT(mhi_gen_tre,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+> +		 struct mhi_ring_element *mhi_tre),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, mhi_tre),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, ch_num)
+> +		__field(void *, wp)
+> +		__field(__le64, tre_ptr)
+> +		__field(__le32, dword0)
+> +		__field(__le32, dword1)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->ch_num = mhi_chan->chan;
+> +		__entry->wp = mhi_tre;
+> +		__entry->tre_ptr = mhi_tre->ptr;
+> +		__entry->dword0 = mhi_tre->dword[0];
+> +		__entry->dword1 = mhi_tre->dword[1];
+> +	),
+> +
+> +	TP_printk("%s: Chan: %d Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1: 0x%08x\n",
 
+Use caps for printing the acronyms everywhere. Like TRE, DWORD etc...
 
-> Thanks,
-> Miquèl
+> +		  __get_str(name), __entry->ch_num, __entry->wp, __entry->tre_ptr,
+> +		  __entry->dword0, __entry->dword1)
+> +);
+> +
+> +TRACE_EVENT(mhi_intvec_states,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int dev_ee, int dev_state),
+> +
+> +	TP_ARGS(mhi_cntrl, dev_ee, dev_state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, local_ee)
+> +		__field(int, state)
+> +		__field(int, dev_ee)
+> +		__field(int, dev_state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->local_ee = mhi_cntrl->ee;
+> +		__entry->state = mhi_cntrl->dev_state;
+> +		__entry->dev_ee = dev_ee;
+> +		__entry->dev_state = dev_state;
+> +	),
+> +
+> +	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
 
---000000000000b6f2f40610254fea
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+"Local EE... State:...Device EE.."
 
-MIIQcAYJKoZIhvcNAQcCoIIQYTCCEF0CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg3HMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
-MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
-rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
-aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
-e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
-cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
-MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
-KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
-/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
-TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
-YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
-b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
-CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
-BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
-jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
-9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
-/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
-jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
-AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
-dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
-MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
-IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
-SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
-XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
-J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
-nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBU8wggQ3oAMCAQICDDG6HZcbcVdEvVYk4TANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMTMxNDVaFw0yNTA5MTAxMTMxNDVaMIGQ
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xFjAUBgNVBAMTDVdpbGxpYW0gWmhhbmcxKTAnBgkqhkiG9w0B
-CQEWGndpbGxpYW0uemhhbmdAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
-CgKCAQEAyKF+RmY29Wvfmfe3L8J4rZNmBIvRmrWKI5td5L0vlpPMCEzUkVhBdL2N9cDP0rPScvWL
-CX/9cI1a2BUy/6/ZT5j9PhcUn6A3kwKFGukLY2itfKaDrP3ANVJGhBXPVJ6sx55GF41PkiL2EMnY
-7LJGNpl9WHYrw8VqtRediPyXq8M6ZWGPZWxygsE6y1pOkEk9qLpvXTb2Epxk2JWcQFZQCDWVULue
-YDZuuBJwnyCzevMoPtVYPharioL5H3BRnQi8YoTXH7/uRo33dewYFm474yFjwwnt82TFtveVZkVq
-6h4WIQ4wTcwFfET8zMkELnGzS5SHCl8sPD+lNxxJ1JDZYwIDAQABo4IB2zCCAdcwDgYDVR0PAQH/
-BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9i
-YWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUF
-BzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAy
-MDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xv
-YmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRw
-Oi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAlBgNV
-HREEHjAcgRp3aWxsaWFtLnpoYW5nQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAf
-BgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUq65GzwZxydFHjjYEU/9h
-xHhPWlwwDQYJKoZIhvcNAQELBQADggEBAA2hGG3JPAdGPH0ZdohGUCIVjKz+U+EFuIDbS6A/5jqX
-VhYAxZlzj7tSjUIM7G7IhyfqPC46GKJ/4x+Amz1Z6YxNGy71L68kYD6hIbBcA5AM42QBUufly6Oa
-/ppSz3WoflVyFFQ5YXniZ+eU+2/cdnYZg4aVUnFjimOF5o3NfMLzOkhQNxbaDjFUfUYD8hKmU6v4
-0vUBj8KZ9Gi1LIagLKUREn8jku0lcLsRbnJ5Ey5ScajC/FESPyYWasOW8j8/1EoJksmhbYGKNS6C
-urb/KlmDGfVrIRYDbL0ckhGQIP5c6L+kSQZ2sHnQK0e0WgIaZYxaPYeY5u0GLCOze+3vyRMxggJt
-MIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYD
-VQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwxuh2XG3FXRL1W
-JOEwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIM2Vg6cGFkHIgPn6Tul1txXAtMbm
-1/W7efMiTY7s88mrMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0
-MDEzMDA4MTEzN1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
-CWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFl
-AwQCATANBgkqhkiG9w0BAQEFAASCAQATVOOWhCDyQ0pKBBLcrr56SEvlwt8K+m+7djY8xzT1dIcL
-shu5i9LGF2AR7ZRNnyofK8wDlxA8QXitLgqRlP07oKnzVUnHcv9NyNKJEFJDWj6HVNUIzVoEMFrw
-9V4NblQTFtgbWCZd0xOuBnfnuEYsc5ScV1Y5rEOM9PApT/TAyGmgd605ESRFvxJ0qg0KfFEs3sBl
-/b0P4exJFuim3pRPovXMumAHDRXPUv65fdC9RoknRW+mGabtAuE6UUTIrxaXzBnIE1jV4xZYEJw2
-NO7+ySS0jpHWESfmpmgIAGIfyPNTxshtp5eRq3gqzhbZezih06znHwSQ4eItr2O7EEMX
---000000000000b6f2f40610254fea--
+> +		  __get_str(name),
+> +		  __print_symbolic(__entry->local_ee, MHI_EE_LIST),
+> +		  __print_symbolic(__entry->state, MHI_STATE_LIST),
+> +		  __print_symbolic(__entry->dev_ee, MHI_EE_LIST),
+> +		  __print_symbolic(__entry->state, MHI_STATE_LIST))
+> +);
+> +
+
+[...]
+
+> +DECLARE_EVENT_CLASS(mhi_update_channel_state,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, ch_num)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->ch_num = mhi_chan->chan;
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: chan%d: Updating state to: %s\n",
+> +		  __get_str(name), __entry->ch_num,
+> +		  __print_symbolic(__entry->state, MHI_CH_STATE_TYPE_LIST))
+
+So same trace will get printed for both mhi_channel_command_start() and
+mhi_channel_command_end()?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
