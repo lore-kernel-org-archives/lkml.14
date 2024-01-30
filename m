@@ -1,115 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CD159169;
-	Tue, 30 Jan 2024 09:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7060A60DC7
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606597; cv=none; b=ui1zkAcull+E2MwxUYS0O+4xKPOFwz7SN5LMPsb3lC86mFbv5EHt9j7jmGp821Y4m/O28EEugPHmaSyriltEZGgTLnZNi1UcEsebqY6pYpBX7btiyBYK3+nuKzwExKGIA8w5Q3qdtrsVlUBlqE0m4NIDrAoGFe0fMmqi2OiK8l4=
+	t=1706606608; cv=none; b=uqHGLcBZpzzBgCylEoZ8CA9b4dHuZ7PG68r1DbSTDcGigSTuIciBSwqn3OKOPprZqrKC9VqJl5oEZq+QEn7JwQZA6GIOinvqaAEs5ITVD9rs2K2DRn0Ixg1YcweyZ584Ym19pd5gkXE8RK9C4DQ8ce7XEpD5Qc31yIus3JHc2Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606597; c=relaxed/simple;
-	bh=mkLHMPeFE3AGTkisCBI6lOVpOPvYousP3utuW4xr0FI=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=djNUbY/dX2MvYeJfS/UEvr16KZk8XWRHYMVSZkGhXe90dokKqYDipEr4Vnr8Onq/jS11nHbS/54Qe1fhnrOYEkaMXgOcAZlJp135PJwCkr9r8QuPs3/MsIykvZqQaeAqUK4EjeCWpQAuaqyc6ikcs6FPomvf2r/NcajdFZaXcvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfZbjuox; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfZbjuox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4277C43330;
-	Tue, 30 Jan 2024 09:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706606597;
-	bh=mkLHMPeFE3AGTkisCBI6lOVpOPvYousP3utuW4xr0FI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=UfZbjuoxeEKQ1yDpEs6cT2KdYKS1MyHe855wmBUbH+Qv6QALO+1xe9OoJ6Rl40j71
-	 KVkbqaxbxmUfq1+qZQAT446b0rLhoZ6JlVA3too9sRtj+uk9HNnktRF6qPnQh7MsLJ
-	 hydR9yKCMHxikdiKcQ4QWNvyaU3nnfeIYn3umGLRcupX99y5tSkHXDwsER4+fMJ7H3
-	 YkoaGgFGJyeZM7OVOxorvvwRDpMOakfLDsJ7QM+PIvdwMw86TfCeDGVGvwxQg1zTWw
-	 Hyo+lv4lgbm930YUPUymkQr9VOv8pE/kI5jV2J+sAEjIj0EE+Xaz0oTQcg2HqhwPaf
-	 pmtG0Yl6X87iw==
-Date: Tue, 30 Jan 2024 03:23:15 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1706606608; c=relaxed/simple;
+	bh=TjCsIPX1bEde3FLQslGPgZXu5fL0mcVt0GKZSwJSPBA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MUHyPFRHSUHTK9Cje9O7fBzCQtcLROhS4316DAhL6FOQln768SPhi7AFWO8geD+PxSSVapQ5RnBN0NjXKiK2urrvKBL9jEAg22qVk71gNJ2GkIbwoeQwlxMgGE9jbXi0ys4bwkgcxZtFBOxiIjEAwajilvyPlzEFjKwQJ/iaW7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 1c5e949a4d1043aaa5c407e53585448b-20240130
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:28105e74-5369-4c3c-a842-f5d8ec487464,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.35,REQID:28105e74-5369-4c3c-a842-f5d8ec487464,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:5d391d7,CLOUDID:a4e06983-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:240130171800U5BLH98G,BulkQuantity:0,Recheck:0,SF:66|24|17|19|44|102,
+	TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+	,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: 1c5e949a4d1043aaa5c407e53585448b-20240130
+X-User: gehao@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw
+	(envelope-from <gehao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1414335610; Tue, 30 Jan 2024 17:17:57 +0800
+From: Hao Ge <gehao@kylinos.cn>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH] mm/vmscan: Change the calculation of the number of can reclaim anon pages in zone_reclaimable_pages
+Date: Tue, 30 Jan 2024 17:17:55 +0800
+Message-Id: <20240130091755.21363-1-gehao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: "JiaLong.Yang" <jialong.yang@shingroup.cn>
-Cc: shenghui.qu@shingroup.cn, Rob Herring <robh+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- devicetree@vger.kernel.org, zhijie.ren@shingroup.cn, 
- Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- ke.zhao@shingroup.cn, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <20240130081745.13750-1-jialong.yang@shingroup.cn>
-References: <20240130081745.13750-1-jialong.yang@shingroup.cn>
-Message-Id: <170660659476.701701.9606670675803489364.robh@kernel.org>
-Subject: Re: [PATCH v1] perf/hx_arm_ni: Support uncore ARM NI-700 PMU
+Content-Transfer-Encoding: 8bit
 
+The spaces of swap devices that can be set by the user
+are unpredictable values, so we take the minimum value between
+the anonymous page in the specified zone and the spaces of swap devices.
 
-On Tue, 30 Jan 2024 16:17:43 +0800, JiaLong.Yang wrote:
-> This code is based on uncore PMUs arm_smmuv3_pmu and arm-cmn.
-> One ni-700 can have many clock domains. Each of them has only one PMU.
-> Here one PMU corresponds to one 'struct ni_pmu' instance.
-> PMU name will be ni_pmu_N_M, which N means different NI-700s and M means
-> different PMU in one NI-700. If only one NI-700 found in NI-700, name will
-> be ni_pmu_N.
-> Node interface event name will be xxni_N_eventname, such as asni_0_rdreq_any.
-> There are many kinds of type of nodes in one clock domain. Also means that
-> there are many kinds of that in one PMU. So we distinguish them by xxni string.
-> Besides, maybe there are many nodes have same type. So we have number N in
-> event name.
-> By ni_pmu_0_0/asni_0_rdreq_any/, we can pinpoint accurate bus traffic.
-> Example1: perf stat -a -e ni_pmu_0_0/asni_0_rdreq_any/,ni_pmu_0_0/cycles/
-> EXample2: perf stat -a -e ni_pmu_0_0/asni,id=0,event=0x0/
-> 
-> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
-> ---
-> If I should send Doc*/bindings/perf/*.yaml seperately?
-> 
->  .../bindings/perf/hx,c2000-arm-ni.yaml        |   58 +
->  .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
->  MAINTAINERS                                   |    6 +
->  drivers/perf/Kconfig                          |   10 +
->  drivers/perf/Makefile                         |    1 +
->  drivers/perf/hx_arm_ni.c                      | 1308 +++++++++++++++++
->  6 files changed, 1385 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml
->  create mode 100644 drivers/perf/hx_arm_ni.c
-> 
+Signed-off-by: Hao Ge <gehao@kylinos.cn>
+---
+ mm/vmscan.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml:54:1: [error] syntax error: found character '\t' that cannot start any token (syntax)
-
-dtschema/dtc warnings/errors:
-make[2]: *** Deleting file 'Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.example.dts'
-Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml:54:1: found a tab character where an indentation space is expected
-make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.example.dts] Error 1
-make[2]: *** Waiting for unfinished jobs....
-./Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml:54:1: found a tab character where an indentation space is expected
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml: ignoring, error parsing file
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240130081745.13750-1-jialong.yang@shingroup.cn
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 4f9c854ce6cc..2deae4232b83 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -341,14 +341,21 @@ static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
+ unsigned long zone_reclaimable_pages(struct zone *zone)
+ {
+ 	unsigned long nr;
+-
++	unsigned long can_reclaim_anon = 0;
+ 	nr = zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_FILE) +
+ 		zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_FILE);
+-	if (can_reclaim_anon_pages(NULL, zone_to_nid(zone), NULL))
+-		nr += zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_ANON) +
++	if (can_reclaim_anon_pages(NULL, zone_to_nid(zone), NULL)) {
++		can_reclaim_anon = zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_ANON) +
+ 			zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_ANON);
+-
+-	return nr;
++	/*
++	 * The spaces of swap devices that can be set by the user are unpredictable values,
++	 * so we take the minimum value between the anonymous page in the specified zone and
++	 * the spaces of swap devices
++	 */
++		if (!can_demote(zone_to_nid(zone), NULL))
++			can_reclaim_anon = min_t(unsigned long, can_reclaim_anon, get_nr_swap_pages());
++	}
++	return nr + can_reclaim_anon;
+ }
+ 
+ /**
+-- 
+2.25.1
 
