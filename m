@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D0C811E0;
-	Tue, 30 Jan 2024 15:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A6280058;
+	Tue, 30 Jan 2024 15:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706628057; cv=none; b=UwtSKguknxAqMot+rBfD2vTn+385Oo/vgYI8V/lqPrOpLHhOdPKpmoV1s/DnMNF552xW8fcL76x2wXwT4a4ecvGzQlDoxDEYtcihQeZHnIy1YZkH0zp4/15CWxJYdk9jBk5hrhBj8ZTYw4zLxYChQpIHNgZkQcC5q5mwc2ua8JM=
+	t=1706628057; cv=none; b=s8Mr3RnAvfzy50xB5s6OOTJLpoJbAApZRdxffObwj2IYsxqQnPVEVQwpx70nBtHCpdjKVk8+ZjMy/hP1EygQswzNVSN7hAEw/0RPhqQCTDxs4mi/6YEI44yHuuADuxMt+BLCDKHcR5WCEkN59G1bADcX5KfjXYrxbF2NpAxbL88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706628057; c=relaxed/simple;
-	bh=Mbj/3lKU288Yv0v6r0IvbWbLwZTL+8ODP93iUqv62yk=;
+	bh=rCvaDAdvVEPkc/5uSMACu9gWCQ1/fxBqVhcE39XQOQs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gUlfC7QU19k/7U/kne3hMCA0qCr7k7Y2xtcT6Q4jQe87V6VmhTVV9fGOZ+kmTAuTfP0Z6xUYt1pw038SaYwjHc+7Zr4x3p8odug2sgfGAdVyfaQ/5KYdqjrWIJHqMFHTiKb36dde5olqUPWpA7QT6Ea2qQkSc0gpDPEwLVPtZ3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUMdtXLX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=O8uc/MRHQ7GXt6OwmKBGBNWm+wod1HsHGp/IhkX0Qi8qviBAfckgVbSr/Mg4br+fDe9djF2uiZlcaLSYSmWWVy+YQRysJCSmawGhIeIz1Rzz/rSIGtP870EDJxoe279ieqs2KyqwBlLB1E/J938pFiPw+B6wWyNyU6YTwNw3nRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k10Ub8Ov; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUMdtXLX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BBB34C4160E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k10Ub8Ov"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B38CC43601;
 	Tue, 30 Jan 2024 15:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706628056;
-	bh=Mbj/3lKU288Yv0v6r0IvbWbLwZTL+8ODP93iUqv62yk=;
+	bh=rCvaDAdvVEPkc/5uSMACu9gWCQ1/fxBqVhcE39XQOQs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dUMdtXLXwcgJDUAL8o700Zv2Bps/BPuM6b6c8Pw4hjO442Ry4qx0fRJ9CtQRnWSab
-	 LundywQYM/CbtWGrVdtp5v3n+NJXbx7CuiYcb+Y7eC+3Y8wzTlgkW6/zKyPBE6oxpz
-	 rakjATlBC5wYWJq9gM68rvVloJbt4Q5/SQyR82aaOs1bKIpNDW7a3wa3BF0X5sqy4f
-	 iuNf9oq4eV+Qdw1kuaLUqwZvcAXVkVwgLULti0zd+ce4vwKDQ5Mv2pxBLZD/Bzu+Do
-	 qhQSKvtMBnenKzUdJT+wRsO8hWaLeg4DY4s97G5upZEnaglbCMUeC/0UunB+ywij6Q
-	 q7FR1819xP6pw==
+	b=k10Ub8OvODBXwsxKyHfJhxZtbARCjktM5OyR6iM8PpAk4nxLrPgJMnZ+g4Oa/Ecqt
+	 sGRPT1bgyDrs8AdTgWcRugWfqbzz+MqkdLURjeZHur3S+Ardtd69KZ5zoQYo3BAam7
+	 gPzsDw4N1uFlkrNp6lAM60VytQHY1LveJZOlqnJrEmElkfzG1oH1cDlEHPTCFh8b66
+	 cajYus1RUQ93kOHIfOZrnaDuXZ4NI5wT6OpUAUZ90J6AgzHL040hIcZmUDWXFgnhHK
+	 UtE++ApFiAHWjFhzzRfpXDSyIPteL5GtWkp/AjYUCluKpjO6nZ/mDj261wOiRhQQCE
+	 pr7puNSYS1yvw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63BCC47DDB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F0C46CD2;
 	Tue, 30 Jan 2024 15:20:56 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Tue, 30 Jan 2024 18:20:50 +0300
-Subject: [PATCH net-next v2 4/7] net: dsa: mt7530: move XTAL check to
- mt7530_setup()
+Date: Tue, 30 Jan 2024 18:20:47 +0300
+Subject: [PATCH net-next v2 1/7] net: dsa: mt7530: empty default case on
+ mt7530_setup_port5()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240130-for-netnext-mt7530-improvements-2-v2-4-ba06f5dd9eb0@arinc9.com>
+ <20240130-for-netnext-mt7530-improvements-2-v2-1-ba06f5dd9eb0@arinc9.com>
 References:
  <20240130-for-netnext-mt7530-improvements-2-v2-0-ba06f5dd9eb0@arinc9.com>
 In-Reply-To:
@@ -63,11 +63,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706628055; l=1500;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706628054; l=1561;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=tzbZi99DdeWCfP5IhTMb0r535zllNsHp9+oBk2Ev3sU=;
- b=81QB74To1EFcaLgCDUbcIeaODB1dUD926yB8SpRil+0D/Hk4Ol1AtOwVpzoojnmOpaIqVBemQ
- mWxTU3DRefkBe1gQyhp8zmj4GpO0vZXLByEsNmEJ2APJ83pOZbLyNfZ
+ bh=4iqmJSREOOSr69rzXZ9fMqbTsIjeBdURHVNrmhTA6EI=;
+ b=6SujO2PrKIZgF+6wBWfUvWWCIcvIYk1f93FV3BO1DcIVK8WneKIuOqxnJS4qGAesMcayw3uei
+ QVbA59r7qlBAGwZBjxrI/9IPvZ3M32jROVmYtJ1/Rd9L4qf5C2ho7zl
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -77,50 +77,54 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-The crystal frequency concerns the switch core. The frequency should be
-checked when the switch is being set up so the driver can reject the
-unsupported hardware earlier and without requiring port 6 to be used.
+There're two code paths for setting up port 5:
 
-Move it to mt7530_setup(). Drop the unnecessary function printing.
+mt7530_setup()
+-> mt7530_setup_port5()
+
+mt753x_phylink_mac_config()
+-> mt753x_mac_config()
+   -> mt7530_mac_config()
+      -> mt7530_setup_port5()
+
+On the first code path, priv->p5_intf_sel is either set to
+P5_INTF_SEL_PHY_P0 or P5_INTF_SEL_PHY_P4 when mt7530_setup_port5() is run.
+
+On the second code path, priv->p5_intf_sel is set to P5_INTF_SEL_GMAC5 when
+mt7530_setup_port5() is run.
+
+Empty the default case which will never run but is needed nonetheless to
+handle all the remaining enumeration values.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/mt7530.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/net/dsa/mt7530.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index fdaf65b58b72..c4d492e29fdf 100644
+index 68be38ae66e0..330e22abc076 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -422,13 +422,6 @@ mt7530_setup_port6(struct dsa_switch *ds, phy_interface_t interface)
- 
- 	xtal = mt7530_read(priv, MT7530_MHWTRAP) & HWTRAP_XTAL_MASK;
- 
--	if (xtal == HWTRAP_XTAL_20MHZ) {
--		dev_err(priv->dev,
--			"%s: MT7530 with a 20MHz XTAL is not supported!\n",
--			__func__);
--		return -EINVAL;
--	}
--
- 	switch (interface) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 		trgint = 0;
-@@ -2253,6 +2246,12 @@ mt7530_setup(struct dsa_switch *ds)
- 		return -ENODEV;
+@@ -943,9 +943,7 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 		val &= ~MHWTRAP_P5_DIS;
+ 		break;
+ 	default:
+-		dev_err(ds->dev, "Unsupported p5_intf_sel %d\n",
+-			priv->p5_intf_sel);
+-		goto unlock_exit;
++		break;
  	}
  
-+	if ((val & HWTRAP_XTAL_MASK) == HWTRAP_XTAL_20MHZ) {
-+		dev_err(priv->dev,
-+			"MT7530 with a 20MHz XTAL is not supported!\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Reset the switch through internal reset */
- 	mt7530_write(priv, MT7530_SYS_CTRL,
- 		     SYS_CTRL_PHY_RST | SYS_CTRL_SW_RST |
+ 	/* Setup RGMII settings */
+@@ -975,7 +973,6 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+ 	dev_dbg(ds->dev, "Setup P5, HWTRAP=0x%x, intf_sel=%s, phy-mode=%s\n",
+ 		val, p5_intf_modes(priv->p5_intf_sel), phy_modes(interface));
+ 
+-unlock_exit:
+ 	mutex_unlock(&priv->reg_mutex);
+ }
+ 
 
 -- 
 2.40.1
