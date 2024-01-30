@@ -1,291 +1,189 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C371E4B0;
-	Tue, 30 Jan 2024 00:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DC71E497
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706574967; cv=none; b=qvglEcdLfg5kpc4lp1WcgDSZetgRuy+60/nrFujZ9V+zDwPkxeAtjs3i6ZjhXZfbhHPztRU7DyyF8gBMF0+rxDnTKeRFfPMeEFbxLVo9kwSq67llMKBfx75sha3FAnA/rXtRJqadL+kdYck3VbqdQd3z23HTJf9pKWeovP46X/I=
+	t=1706575002; cv=none; b=VoXn0Ustmw4ILNsSPx/qs4lY1KckuPEkuv3SowX/jdwTSqMzosxKHHsTid2r8kXuPklLP1nV3MePxWEz0R7lRB+wcxc9PPMt9knNWGdlb2scsEg4/bs6hDvPuo4Fku2roAiQU9rBmKACv98L/JQ0S6+96U4NlhyU2Y4nEd8oH70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706574967; c=relaxed/simple;
-	bh=XNIJOEPWnTmJj95Bx/8HPnK1xXiD0h7JfWIOVnb2RKc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UpytobkBwfttb/HYZbfVAAPvGxgsqBRkjLrxOhKYZe7DgFXz5cxIBVhATJIFBMOs+ENIrJsQd2yXNZhJ/6Zx+yndEi9g91E0WVcQ+Os0qjBVqHfOoaYg34sIm7A8iXzI4ueY9r68qCV30WWrSpBFHPFCvcKDl3d+Yc2UUJjiByU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H/m/AFka; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706575002; c=relaxed/simple;
+	bh=TqR2eUglEQwdjXW91rVEcJp8ImbPKiEAgBGAh46CadI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mB/XYZ538eLtXxXt3A8rGD7P3GIj1uhXHrpE4hyIs4VKnv/2QmOZuTsEcFoKVBf8lC239TaTgD1YqFfGFQgt4SY+3uAVv8rHJT08iK888nWWdBucLEgPUp9WjofBnGCPE79z7sOJB6V939CMTpTXlm+MyDt9Ax07EoNnLSJEDvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=anqXGWUU; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/m/AFka"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40eb033c1b0so39522405e9.2;
-        Mon, 29 Jan 2024 16:36:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="anqXGWUU"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33aef64f702so790130f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 16:36:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706574963; x=1707179763; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oEsPKjtltYrRbUWdMt7dkeHTeW1XxA60FHbtu1eKACU=;
-        b=H/m/AFkact0OQdY6YVbE9mmVBfh90BAs0w/65Fo6bOVDjUx+IoD7L9wMzVJe2XkhQA
-         V4yNbQE4XTUyXjWIjUuTeRiPGJE/oEt7E0f9NSqA4UprQPSUqRMa5AmNjRGSV3mMNmCn
-         JyK1RlDSErCq25M+Z/W0sBOabjif70D0AE1TXqeb9EvOEmOF29aTQGIgvJhJgUL8YMzr
-         zqipIIcCJLdYk0DvWnTRoiiqyblvMhtx0Ie7WuymL3JozYcAdd+IWjpZJY+XCFCJrEUY
-         95fhl2CBxw2ALGVVIpYKjyQWoL9EI+vPC5D25jtejXk1YtVYBj3bPndZSQ41ozcPKTGU
-         tvaQ==
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1706574998; x=1707179798; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bqKM6STmm52HJ2nwWL/mUa9wVvNf8Up7PtiKbmg/qtQ=;
+        b=anqXGWUUeLiRCQzPE7pl3Adlb0q9Bg3sXa+FVL4SKsj/7s1FJLAW4R8IrAmUCaVx7c
+         BpxwFhQwaE5rgw8Jw63BNrYi+B3tCaukASUS4NJCNDrX+PBY1fxBDNITamRaoywZ8aOI
+         B6axdZ4EjtROeQM7/YpDlgj43ePMxHfM41XiidtxdzdLm0RktCZpn7ahXdFejpMkpoka
+         JYnsT57KK3NkvGzTxO5I+TREkM0t1miGwphtVOCcUCPEjP4yGsz24n/pNVHkV379s9eB
+         6vnYteOugHyiuHSV5VWLZBiCPdWR4xnNtvpgrjf6TgSup0ngfIuI44PdXII17ZyaX68P
+         mD4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706574963; x=1707179763;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oEsPKjtltYrRbUWdMt7dkeHTeW1XxA60FHbtu1eKACU=;
-        b=ZchRM9P0MOSmRzXnZT6gRjoDe/AuyemXvZvVOaLSKV0xg+JNZTkg8DNjqWN/HnusOP
-         hgwH1AEDzhZuPRI5i0xF68fP9JOVhBduRRfiF/tfYBIS41R1Bvturzhb/JKT2vivIYj0
-         y1CdWzLo6twDE3vd4HGA0m87SSN1A2yD7uHDoCyZJ+Zu116Ijc7MIWZafWzLQcjytfAa
-         ak+/B6H0xlWh5o2PIRjc3WVZYN0WJZ+9UNociAwadtZ0XWxTP/oP2XazT1HKnSou22Wt
-         wZqQXuja1fy9fwdiyopOGpmhWuOLoutEY27fWbkaNVMTKqx8AekEXyUEvenmuHdSe0Az
-         aKTg==
-X-Gm-Message-State: AOJu0Yz6j21zwzKtK44mrFF5jiv8bHGB6nYhwcQXq3bKJSMvN8OVYZ17
-	vDHx2UgAZGi4eCccsWLxxVJFqg16jXtVrAvcBJh+4F9wFYh+cQma
-X-Google-Smtp-Source: AGHT+IGGx7gZdVSfjnuzLzFyWRd3Hif+UNY23Ac8jx3YrFaupWgI6TLI4mA3MEesWvaz/tM4C/kA3Q==
-X-Received: by 2002:a05:600c:19cf:b0:40d:91fd:74e with SMTP id u15-20020a05600c19cf00b0040d91fd074emr5586072wmq.15.1706574963493;
-        Mon, 29 Jan 2024 16:36:03 -0800 (PST)
-Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.googlemail.com with ESMTPSA id l10-20020a056000022a00b0033af350fb88sm2542167wrz.25.2024.01.29.16.36.02
+        d=1e100.net; s=20230601; t=1706574998; x=1707179798;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bqKM6STmm52HJ2nwWL/mUa9wVvNf8Up7PtiKbmg/qtQ=;
+        b=jRDeCPCUz4b4Wn1yzU/f4+ht0VK0oD6RyJS9PJqMoBoe72M042njViw66Sk08qYKcf
+         48t6eqA8KE/biVha3Bm197gd670YtYy72dMTtWU/Tjwta7LIpG4CxocD/97YBXZ0sg1K
+         AL3fmmKynjTP8xQTRoj6rs7XaWm6RKBVfazOx0v6YKSQWkWwBh7RXHNISM8eyjfVYaIl
+         LO63z0OxbSiWdyUaMbGE6oWlSoceCg4xT87Ae7RQTkLkBZ4XilvanqhMawqIIf6iMjnA
+         w/0HZhq/A25OxnkZU+ymUI7Wbxj6oQx5W9T+UnS+T8gqp1dAax0cvlkBDbZw9VMXzQbM
+         Tr/Q==
+X-Gm-Message-State: AOJu0YyX1YdBC1RkOLCs+1X/tFDsIgHv7c/YkEq6rA+qPBvKnvvgi9ya
+	Y/CU50Vqu7l8kHoDz8Kdz2VnpWZSew0iaBOSL3nMjmWvuYuuvwnCcZKOnXum/iE=
+X-Google-Smtp-Source: AGHT+IHFRGkHKlZdVXlzOHtFexmDPQmMqF+AK8Fq0HHOoKcjqOrnWynGemLhYlr7ZVzURH6Al81GBw==
+X-Received: by 2002:a05:6000:930:b0:337:c872:7153 with SMTP id cx16-20020a056000093000b00337c8727153mr5001577wrb.46.1706574997649;
+        Mon, 29 Jan 2024 16:36:37 -0800 (PST)
+Received: from airbuntu ([213.122.231.14])
+        by smtp.gmail.com with ESMTPSA id d5-20020adffbc5000000b0033aedaea1b2sm3763339wrs.30.2024.01.29.16.36.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 16:36:03 -0800 (PST)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Robert Marko <robert.marko@sartura.hr>,
-	linux-arm-msm@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jie Luo <quic_luoj@quicinc.com>
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [net-next PATCH v2 2/3] net: mdio: ipq4019: add support for clock-frequency property
-Date: Tue, 30 Jan 2024 01:35:21 +0100
-Message-ID: <20240130003546.1546-3-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240130003546.1546-1-ansuelsmth@gmail.com>
-References: <20240130003546.1546-1-ansuelsmth@gmail.com>
+        Mon, 29 Jan 2024 16:36:37 -0800 (PST)
+Date: Tue, 30 Jan 2024 00:36:35 +0000
+From: Qais Yousef <qyousef@layalina.io>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org,
+	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	lukasz.luba@arm.com, rui.zhang@intel.com, mhiramat@kernel.org,
+	daniel.lezcano@linaro.org, amit.kachhap@gmail.com, corbet@lwn.net,
+	gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] sched/pelt: Remove shift of thermal clock
+Message-ID: <20240130003635.anipjhfdfld3xcil@airbuntu>
+References: <20240109164655.626085-1-vincent.guittot@linaro.org>
+ <20240109164655.626085-6-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240109164655.626085-6-vincent.guittot@linaro.org>
 
-The IPQ4019 MDIO internally divide the clock feed by AHB based on the
-MDIO_MODE reg. On reset or power up, the default value for the
-divider is 0xff that reflect the divider set to /256.
+On 01/09/24 17:46, Vincent Guittot wrote:
+> The optional shift of the clock used by thermal/hw load avg has been
+> introduced to handle case where the signal was not always a high frequency
+> hw signal. Now that cpufreq provides a signal for firmware and
+> SW pressure, we can remove this exception and always keep this PELT signal
+> aligned with other signals.
+> Mark sysctl_sched_migration_cost boot parameter as deprecated
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
 
-This makes the MDC run at a very low rate, that is, considering AHB is
-always fixed to 100Mhz, a value of 390KHz.
+Better without it, yes.
 
-This hasn't have been a problem as MDIO wasn't used for time sensitive
-operation, it is now that on IPQ807x is usually mounted with PHY that
-requires MDIO to load their firmware (example Aquantia PHY).
+Reviewed-by: Qais Yousef <qyousef@layalina.io>
 
-To handle this problem and permit to set the correct designed MDC
-frequency for the SoC add support for the standard "clock-frequency"
-property for the MDIO node.
-
-The divider supports value from /1 to /256 and the common value are to
-set it to /16 to reflect 6.25Mhz or to /8 on newer platform to reflect
-12.5Mhz.
-
-To scan if the requested rate is supported by the divider, loop with
-each supported divider and stop when the requested rate match the final
-rate with the current divider. An error is returned if the rate doesn't
-match any value.
-
-On MDIO reset, the divider is restored to the requested value to prevent
-any kind of downclocking caused by the divider reverting to a default
-value.
-
-To follow 802.3 spec of 2.5MHz of default value, if divider is set at
-/256 and "clock-frequency" is not set in DT, assume nobody set the
-divider and try to find the closest MDC rate to 2.5MHz. (in the case of
-AHB set to 100MHz, it's 1.5625MHz)
-
-While at is also document other bits of the MDIO_MODE reg to have a
-clear idea of what is actually applied there.
-
-Documentation of some BITs is skipped as they are marked as reserved and
-their usage is not clear (RES 11:9 GENPHY 16:13 RES1 19:17)
-
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/net/mdio/mdio-ipq4019.c | 109 ++++++++++++++++++++++++++++++--
- 1 file changed, 103 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/mdio/mdio-ipq4019.c b/drivers/net/mdio/mdio-ipq4019.c
-index abd8b508ec16..61638f25c184 100644
---- a/drivers/net/mdio/mdio-ipq4019.c
-+++ b/drivers/net/mdio/mdio-ipq4019.c
-@@ -14,6 +14,20 @@
- #include <linux/clk.h>
- 
- #define MDIO_MODE_REG				0x40
-+#define   MDIO_MODE_MDC_MODE			BIT(12)
-+/* 0 = Clause 22, 1 = Clause 45 */
-+#define   MDIO_MODE_C45				BIT(8)
-+#define   MDIO_MODE_DIV_MASK			GENMASK(7, 0)
-+#define     MDIO_MODE_DIV(x)			FIELD_PREP(MDIO_MODE_DIV_MASK, (x) - 1)
-+#define     MDIO_MODE_DIV_1			0x0
-+#define     MDIO_MODE_DIV_2			0x1
-+#define     MDIO_MODE_DIV_4			0x3
-+#define     MDIO_MODE_DIV_8			0x7
-+#define     MDIO_MODE_DIV_16			0xf
-+#define     MDIO_MODE_DIV_32			0x1f
-+#define     MDIO_MODE_DIV_64			0x3f
-+#define     MDIO_MODE_DIV_128			0x7f
-+#define     MDIO_MODE_DIV_256			0xff
- #define MDIO_ADDR_REG				0x44
- #define MDIO_DATA_WRITE_REG			0x48
- #define MDIO_DATA_READ_REG			0x4c
-@@ -26,9 +40,6 @@
- #define MDIO_CMD_ACCESS_CODE_C45_WRITE	1
- #define MDIO_CMD_ACCESS_CODE_C45_READ	2
- 
--/* 0 = Clause 22, 1 = Clause 45 */
--#define MDIO_MODE_C45				BIT(8)
--
- #define IPQ4019_MDIO_TIMEOUT	10000
- #define IPQ4019_MDIO_SLEEP		10
- 
-@@ -41,6 +52,7 @@ struct ipq4019_mdio_data {
- 	void __iomem	*membase;
- 	void __iomem *eth_ldo_rdy;
- 	struct clk *mdio_clk;
-+	unsigned int mdc_rate;
- };
- 
- static int ipq4019_mdio_wait_busy(struct mii_bus *bus)
-@@ -203,6 +215,38 @@ static int ipq4019_mdio_write_c22(struct mii_bus *bus, int mii_id, int regnum,
- 	return 0;
- }
- 
-+static int ipq4019_mdio_set_div(struct ipq4019_mdio_data *priv)
-+{
-+	unsigned long ahb_rate;
-+	int div;
-+	u32 val;
-+
-+	/* If we don't have a clock for AHB use the fixed value */
-+	ahb_rate = IPQ_MDIO_CLK_RATE;
-+	if (priv->mdio_clk)
-+		ahb_rate = clk_get_rate(priv->mdio_clk);
-+
-+	/* MDC rate is ahb_rate/(MDIO_MODE_DIV + 1)
-+	 * While supported, internal documentation doesn't
-+	 * assure correct functionality of the MDIO bus
-+	 * with divider of 1, 2 or 4.
-+	 */
-+	for (div = 8; div <= 256; div *= 2) {
-+		/* The requested rate is supported by the div */
-+		if (priv->mdc_rate == DIV_ROUND_UP(ahb_rate, div)) {
-+			val = readl(priv->membase + MDIO_MODE_REG);
-+			val &= ~MDIO_MODE_DIV_MASK;
-+			val |= MDIO_MODE_DIV(div);
-+			writel(val, priv->membase + MDIO_MODE_REG);
-+
-+			return 0;
-+		}
-+	}
-+
-+	/* The requested rate is not supported */
-+	return -EINVAL;
-+}
-+
- static int ipq_mdio_reset(struct mii_bus *bus)
- {
- 	struct ipq4019_mdio_data *priv = bus->priv;
-@@ -225,10 +269,58 @@ static int ipq_mdio_reset(struct mii_bus *bus)
- 		return ret;
- 
- 	ret = clk_prepare_enable(priv->mdio_clk);
--	if (ret == 0)
--		mdelay(10);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	mdelay(10);
-+
-+	/* Restore MDC rate */
-+	return ipq4019_mdio_set_div(priv);
-+}
-+
-+static void ipq4019_mdio_select_mdc_rate(struct platform_device *pdev,
-+					 struct ipq4019_mdio_data *priv)
-+{
-+	unsigned long ahb_rate;
-+	int div;
-+	u32 val;
-+
-+	/* MDC rate defined in DT, we don't have to decide a default value */
-+	if (!of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-+				  &priv->mdc_rate))
-+		return;
-+
-+	/* If we don't have a clock for AHB use the fixed value */
-+	ahb_rate = IPQ_MDIO_CLK_RATE;
-+	if (priv->mdio_clk)
-+		ahb_rate = clk_get_rate(priv->mdio_clk);
-+
-+	/* Check what is the current div set */
-+	val = readl(priv->membase + MDIO_MODE_REG);
-+	div = FIELD_GET(MDIO_MODE_DIV_MASK, val);
-+
-+	/* div is not set to the default value of /256
-+	 * Probably someone changed that (bootloader, other drivers)
-+	 * Keep this and doesn't overwrite it.
-+	 */
-+	if (div != MDIO_MODE_DIV_256) {
-+		priv->mdc_rate = DIV_ROUND_UP(ahb_rate, div + 1);
-+		return;
-+	}
-+
-+	/* If div is /256 assume nobody have set this value and
-+	 * try to find one MDC rate that is close the 802.3 spec of
-+	 * 2.5MHz
-+	 */
-+	for (div = 256; div >= 8; div /= 2) {
-+		/* Stop as soon as we found a divider that
-+		 * reached the closest value to 2.5MHz
-+		 */
-+		if (DIV_ROUND_UP(ahb_rate, div) > 2500000)
-+			break;
-+
-+		priv->mdc_rate = DIV_ROUND_UP(ahb_rate, div);
-+	}
- }
- 
- static int ipq4019_mdio_probe(struct platform_device *pdev)
-@@ -252,6 +344,11 @@ static int ipq4019_mdio_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->mdio_clk))
- 		return PTR_ERR(priv->mdio_clk);
- 
-+	ipq4019_mdio_select_mdc_rate(pdev, priv);
-+	ret = ipq4019_mdio_set_div(priv);
-+	if (ret)
-+		return ret;
-+
- 	/* The platform resource is provided on the chipset IPQ5018 */
- 	/* This resource is optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--- 
-2.43.0
-
+>  .../admin-guide/kernel-parameters.txt          |  1 +
+>  kernel/sched/core.c                            |  2 +-
+>  kernel/sched/fair.c                            | 10 ++--------
+>  kernel/sched/sched.h                           | 18 ------------------
+>  4 files changed, 4 insertions(+), 27 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 65731b060e3f..2ee15522b15d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5722,6 +5722,7 @@
+>  			but is useful for debugging and performance tuning.
+>  
+>  	sched_thermal_decay_shift=
+> +			[Deprecated]
+>  			[KNL, SMP] Set a decay shift for scheduler thermal
+>  			pressure signal. Thermal pressure signal follows the
+>  			default decay period of other scheduler pelt
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index a6f084bdf1c5..c68e47bfd5ae 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5670,7 +5670,7 @@ void scheduler_tick(void)
+>  
+>  	update_rq_clock(rq);
+>  	hw_pressure = arch_scale_hw_pressure(cpu_of(rq));
+> -	update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure);
+> +	update_hw_load_avg(rq_clock_task(rq), rq, hw_pressure);
+>  	curr->sched_class->task_tick(rq, curr, 0);
+>  	if (sched_feat(LATENCY_WARN))
+>  		resched_latency = cpu_resched_latency(rq);
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index f1c3d600d6d6..d5ba6cdb141c 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -78,15 +78,9 @@ static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
+>  
+>  const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+>  
+> -int sched_hw_decay_shift;
+>  static int __init setup_sched_thermal_decay_shift(char *str)
+>  {
+> -	int _shift = 0;
+> -
+> -	if (kstrtoint(str, 0, &_shift))
+> -		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
+> -
+> -	sched_hw_decay_shift = clamp(_shift, 0, 10);
+> +	pr_warn("Ignoring the deprecated sched_thermal_decay_shift= option\n");
+>  	return 1;
+>  }
+>  __setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
+> @@ -9247,7 +9241,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+>  
+>  	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+>  		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
+> -		  update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure) |
+> +		  update_hw_load_avg(now, rq, hw_pressure) |
+>  		  update_irq_load_avg(rq, 0);
+>  
+>  	if (others_have_blocked(rq))
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 677d24202eec..6fc6718a1060 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1520,24 +1520,6 @@ static inline u64 rq_clock_task(struct rq *rq)
+>  	return rq->clock_task;
+>  }
+>  
+> -/**
+> - * By default the decay is the default pelt decay period.
+> - * The decay shift can change the decay period in
+> - * multiples of 32.
+> - *  Decay shift		Decay period(ms)
+> - *	0			32
+> - *	1			64
+> - *	2			128
+> - *	3			256
+> - *	4			512
+> - */
+> -extern int sched_hw_decay_shift;
+> -
+> -static inline u64 rq_clock_hw(struct rq *rq)
+> -{
+> -	return rq_clock_task(rq) >> sched_hw_decay_shift;
+> -}
+> -
+>  static inline void rq_clock_skip_update(struct rq *rq)
+>  {
+>  	lockdep_assert_rq_held(rq);
+> -- 
+> 2.34.1
+> 
