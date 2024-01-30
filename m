@@ -1,82 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32486A32D;
-	Tue, 30 Jan 2024 15:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37998121A
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 15:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706629725; cv=none; b=SEjGAt9fj2Y4MptGW1mP8wyC94u6BdFxQfLzHMO35FlsjH9oFgQuEtTEgS9z75RhgQMXYi+rLwCzQ1ML40dtT9c/7RaxYa7MDTrZ6ofysrzI7Dfv8q3vorBsnCIrlYXo33/9NdO1hiAFTvQ7nQVa0RMVzKH3yW5z6r3M5CY6RYM=
+	t=1706629749; cv=none; b=RZmy02zIPNmwhlSDpJ4ry78Ipwfg/3xrjDPBDKOiBweOF/bPqFfxQwRF9dYdHf9soJOusOVrww9QiCecd6v5D8RHNpO1WruBj0otWYkGrTw0ueDHrDcAfhFPNUYH33QlKJv5j9byrRBErJgODVfLib1qPdRjdLwqM1xMlLBMX+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706629725; c=relaxed/simple;
-	bh=yTujMnql4yUMoznvweOoKBZMoA56VqLnJzwfD5oRz4s=;
+	s=arc-20240116; t=1706629749; c=relaxed/simple;
+	bh=pTA0YMokaA0OHcx03bR1lxoroP4wL9uAc1cyu07K0qw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=No91CywcAO4QA3Q52BDD5Z865tyFqQ+rcwvBpWH4u4yonu4YRLImjGo0rIQ0vQnq1yq89UtzPBi374t8stm2IAqvwzNgIyMSsu9zQexiHK3T6njbJkKyPvzJsqfPg/K2zbyEfQlIVaRqijfzg1Kos7mFBttQd+BYvDlAwWIE9BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUS5fZ58; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RTTd8FFx6ea8U8K0dPXpGiEBqO8lBPPBjquLP32oicznry5lB06vEPhT7T10OVu3LU/dKwOZappW4eMmpdRY5T39z1LhKcEzXzWHn0XAWrxnjx6W/c0uzQSCBwVzsCN3cO31EQBG8t4KSUhYtxKzdB4GNKHtlH5ewiPiCaCBCE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aEC0Ca5e; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUS5fZ58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C6EEC433C7;
-	Tue, 30 Jan 2024 15:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706629724;
-	bh=yTujMnql4yUMoznvweOoKBZMoA56VqLnJzwfD5oRz4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lUS5fZ58kdH7Ue/vpJzExyh9NPNINmBBRVTB8leklIHb9m7ocPsDE7B+FMOXGsmk8
-	 iv/5s3LSC6JGOSQlJR+mcWfwBWBs7EK2fyDLm7BorgPsE0NiFkSXgxY6tzbVdTQiW3
-	 Jvghi1vX+bwCCscsHDrzChvzctsFqkY7BRAWQJzUAwTGsvwyqZtPBTEa8WNxcs0yEO
-	 GLfKc7CyiLEojwb1iOFByB4qMuSgu1tsj5AMR9Yg0R8E/MfXPHcZ7YD4Wx9UMeZNSZ
-	 4HySbmInYgcgeUlcrCKWKTqHPEKpq7cQ38Z0icnWmeAJ8+7mgNaCvqnMON8yk0GViP
-	 CA9Ii6T6XRjrQ==
-Date: Tue, 30 Jan 2024 16:48:41 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.iitr10@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: Re: [PATCH 1/8] rcu/exp: Remove full barrier upon main thread wakeup
-Message-ID: <ZbkaWbpufZ6q-jLZ@localhost.localdomain>
-References: <20240129232349.3170819-1-boqun.feng@gmail.com>
- <20240129232349.3170819-2-boqun.feng@gmail.com>
- <ZbkaBO99-6ZuNCcR@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aEC0Ca5e"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40fafc8bd6dso3764055e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 07:49:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706629746; x=1707234546; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YilpzfeTkVydeu8rZL1Heb643X/Jk6q1uV/3UL6XRrw=;
+        b=aEC0Ca5ewNdtm92avr3pSba35A8/7klAspPfWi07KLSGMa6TjVtE18SnmcacTEMlXz
+         ggACP9qk3yuS1iGos21/fQYW3EV1Qblri8ixCiWrWfpy4Kc933+7mfyBOZ3m6UtySEZI
+         vGAXMPtawZKdsQW6v95OqMkxDq/7wFNYb2GqiQvzLhr7x3QtgdY8zstVKUBPrWCaW/Bp
+         MATMCF1LTctfTQwHHS+1nYYs/3ObnEEJscm1PaPB/VoFC4pXv8344S2VAsx5cXABSLfe
+         YGZ6NBVppppGOzaBYC25xOtQk8VhFa50/JksIJoP9W7uwYBkMp1XjA26Y9jl2GBrmprM
+         wVRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706629746; x=1707234546;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YilpzfeTkVydeu8rZL1Heb643X/Jk6q1uV/3UL6XRrw=;
+        b=JMU9V0DuM6GZ9ujzlQMMNx1lrrFoUCm/nUkW2cJ72/Ly5QOTKZV6JmpYMc3DPCQE/4
+         jOgkU+XdzKSgF5oDfTVjAin6WXQ+y7BCTXinYhoyDAMS4kIEnFagloHjHs30CBnDDL2C
+         s/ujZwd72H1F7zJtYIwp55vhVKbRymBPF8VZ1I2Owm5JmTZb7U44vFGULO+29ARLNUCD
+         0l2MOQonSlZ4Ul9jiHT91/9qt2jSXo4WMyQGyK2pX9IbQc8E6LlWMsYEkYWEY+DpR2sa
+         LfQz+IloHUazSKlQotNUf2OU9pGCN+bFeCMvAP+oTclTixAr28SdrT83H47GrZmWHQ8t
+         2w4w==
+X-Gm-Message-State: AOJu0YyLUIGFH3Vmz68CBh/vwQabjYjYJCsxY8lzC1Wpu1H1TWsaMrOJ
+	lZfBrJ5vcYucqD7+CpcVdsYaxJ3cud9S++Ttt77MdZKeIHDguB9O3AD2Gv0hZ+c=
+X-Google-Smtp-Source: AGHT+IFcHSOTOqrPAz8LjD4G2eREPrpkyWJ8wUJcJtLmYSq0P709L3wMWpvTQHOdkBEqjyVsfdwaVQ==
+X-Received: by 2002:adf:f489:0:b0:33a:e9d9:5e82 with SMTP id l9-20020adff489000000b0033ae9d95e82mr5041773wro.51.1706629745960;
+        Tue, 30 Jan 2024 07:49:05 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id ce6-20020a5d5e06000000b0033af3a43e91sm4434425wrb.46.2024.01.30.07.49.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 07:49:05 -0800 (PST)
+Date: Tue, 30 Jan 2024 18:49:02 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-fpga@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luwei Kang <luwei.kang@intel.com>, Moritz Fischer <mdf@kernel.org>,
+	Tom Rix <trix@redhat.com>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, LKML <linux-kernel@vger.kernel.org>,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH] fpga: dfl: fme: Return directly after a failed
+ devm_kasprintf() call in fme_perf_pmu_register()
+Message-ID: <b7e2e9d1-5e3e-44b2-a4b7-327d334b776d@moroto.mountain>
+References: <d94376b6-12e8-45bb-a9be-4887bb316d35@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZbkaBO99-6ZuNCcR@localhost.localdomain>
+In-Reply-To: <d94376b6-12e8-45bb-a9be-4887bb316d35@web.de>
 
-Le Tue, Jan 30, 2024 at 04:47:16PM +0100, Frederic Weisbecker a écrit :
-> Le Mon, Jan 29, 2024 at 03:23:39PM -0800, Boqun Feng a écrit :
-> > From: Frederic Weisbecker <frederic@kernel.org>
-> > 
-> > When an expedited grace period is ending, care must be taken so that all
-> > the quiescent states propagated up to the root are correctly ordered
-> > against the wake up of the main expedited grace period workqueue.
-> > 
-> > This ordering is already carried through the root rnp locking augmented
-> > by an smp_mb__after_unlock_lock() barrier.
-> > 
-> > Therefore the explicit smp_mb() placed before the wake up is not needed
-> > and can be removed.
-> > 
-> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+On Sat, Jan 27, 2024 at 03:55:19PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 27 Jan 2024 15:43:42 +0100
 > 
-> [Offlist]
+> The result from a call of the function â€œdevm_kasprintfâ€ was passed to
+> a subsequent function call without checking for a null pointer before
+> (according to a memory allocation failure).
+> This issue was detected by using the Coccinelle software.
+> 
+> Thus return directly after a failed devm_kasprintf() call.
+> 
+> Fixes: 724142f8c42a7 ("fpga: dfl: fme: add performance reporting support")
 
-And yes that was not offlist, my fingers betrayed me!
+This basically doesn't affect runtime because perf_pmu_register() checks
+for NULL so no need for a Fixes tag.
 
-> 
-> For further posting, don't forget to add your own SoB while posting patches :-)
-> 
-> Thanks!
-> 
+regards,
+dan carpenter
+
