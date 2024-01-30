@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C06D1128369;
-	Tue, 30 Jan 2024 22:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C1754276;
+	Tue, 30 Jan 2024 22:37:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706654248; cv=none; b=YHziBxP1rupKe9pBWvZCS1x3nJOo+vIYfkFAw8tRklJaRQUHb1Y2vB3abikyfeJZL+T+TvmhGx8MHCtQtT+RhfSSzfHcM2pXQ5N0UN/qbL2lLAIku6ath/bjne6E0jwXvBzEjgwxsHnNnJrCXJJzwmY7DbvMLpbg1/iZ5bzsL9A=
+	t=1706654252; cv=none; b=Trt4P+GqXJ5e5jSp+IG3+nZkuGEiBSlbgVrfEcwI6N0km06fJ27k/p4V4o0b56X4iXBb57SJy0AD2zbOJ6mH6tnp4r/lzeE5zi0zy7YWU8XbOBbjqJTjfm6tmuCXndw/b+p+6QClhHr2wRdMtWuz1kLKuEzGQcjKFubs1SKc5Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706654248; c=relaxed/simple;
-	bh=q2N90IkYiMhawf/EMMMNOfHILynY5K1y2kARX2muhOM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ZuBHJ9BpImyK2uvwiPWrle+jVZwnnmCFDlJ1EtcPk7ZIX91nP4OH3kKapoN+iTZwbGrga5UlrSOvAgePabzDD/4+FvwpWILFbaIS7Pl5wkhaao6kXruD4tAkr1TZeocO5CgUZN2zTK9s36B0iGT0/cnbL+pbW6rfuhalPquHM74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eKRU4ybE; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1706654252; c=relaxed/simple;
+	bh=Kcfy9Qwv8C4L75RA5qvC2WHH3goDIHw/rg7r56Zd5x8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=tW8/uo22vf02/lgC0GX1fwndQSGMRZORayWVqoZIPIt+FKQqFOR3P8Oj0dGSDeMySl+yB5vlT11F3kMqw9hm5VveBl+RsuhZn8kltBhCfSkmP77x6OrnkBTjVX6CEkUWXmTmMJe2kQbcAQ443Rg9G7hHes0Ex5iuUDQJAws6dQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iy7FvRaf; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eKRU4ybE"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iy7FvRaf"
 Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id 4F5A820B200B; Tue, 30 Jan 2024 14:37:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4F5A820B200B
+	id D415F20B201C; Tue, 30 Jan 2024 14:37:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D415F20B201C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1706654242;
-	bh=MZIUTiZ4IP2Ll7W/ScSzaJN4C5rYzK2zFEdobpZtunU=;
+	bh=tz4qfp1c6YSioITNH1+lWqu+wc3n3uiMlxKLW6y7ajU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eKRU4ybEEAYVTcJ+3CYfX0iOCDUSsbZcW3FFJC+xe1rwPE9+Smgh+Gr0aUgZg/sc9
-	 hb6VrsDZyQTIM9lmiRP0Mbr1Jcxaf9g6H4Wc/37pmxHnBLwtj5vUz3czZT46sESPQR
-	 4A/MnsVD/6mdpkqr2P01SZpSgi6iQC4Mtj2mkdCc=
+	b=iy7FvRafzFJ9bWkyJuugy+1SC0N9Tpmo1lx2fetxGSqHy2dhKtwfO/XBvrdhsuR5J
+	 lFo3bEOEATOpJ4qEZ0l0+myit/rwox5By6dtVDiTgSbS/w2oqi4nQ0N1t2V0aom1hB
+	 M0gFGUUqN6Y2AGSoSkYvw5Zar+Oi+bni8mybrRoA=
 From: Fan Wu <wufan@linux.microsoft.com>
 To: corbet@lwn.net,
 	zohar@linux.ibm.com,
@@ -43,10 +43,11 @@ Cc: linux-doc@vger.kernel.org,
 	dm-devel@lists.linux.dev,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Fan Wu <wufan@linux.microsoft.com>
-Subject: [RFC PATCH v12 07/20] security: add new securityfs delete function
-Date: Tue, 30 Jan 2024 14:36:55 -0800
-Message-Id: <1706654228-17180-8-git-send-email-wufan@linux.microsoft.com>
+	Fan Wu <wufan@linux.microsoft.com>,
+	Deven Bowers <deven.desai@linux.microsoft.com>
+Subject: [RFC PATCH v12 16/20] fsverity: consume builtin signature via LSM hook
+Date: Tue, 30 Jan 2024 14:37:04 -0800
+Message-Id: <1706654228-17180-17-git-send-email-wufan@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1706654228-17180-1-git-send-email-wufan@linux.microsoft.com>
 References: <1706654228-17180-1-git-send-email-wufan@linux.microsoft.com>
@@ -56,86 +57,147 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-When deleting a directory in the security file system, the existing
-securityfs_remove requires the directory to be empty, otherwise
-it will do nothing. This leads to a potential risk that the security
-file system might be in an unclean state when the intended deletion
-did not happen.
+fsverity represents a mechanism to support both integrity and
+authenticity protection of a file, supporting both signed and unsigned
+digests.
 
-This commit introduces a new function securityfs_recursive_remove
-to recursively delete a directory without leaving an unclean state.
+An LSM which controls access to a resource based on authenticity and
+integrity of said resource, can then use this data to make an informed
+decision on the authorization (provided by the LSM's policy) of said
+claim.
 
-Co-developed-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+This effectively allows the extension of a policy enforcement layer in
+LSM for fsverity, allowing for more granular control of how a
+particular authenticity claim can be used. For example, "all (built-in)
+signed fsverity files should be allowed to execute, but only these
+hashes are allowed to be loaded as kernel modules".
+
+This enforcement must be done in kernel space, as a userspace only
+solution would fail a simple litmus test: Download a self-contained
+malicious binary that never touches the userspace stack. This
+binary would still be able to execute.
+
+Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
 Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
 
 ---
-v1-v8:
+v1-v6:
   + Not present
 
+v7:
+  Introduced
+
+v8:
+  + Split fs/verity/ changes and security/ changes into separate patches
+  + Change signature of fsverity_create_info to accept non-const inode
+  + Change signature of fsverity_verify_signature to accept non-const inode
+  + Don't cast-away const from inode.
+  + Digest functionality dropped in favor of:
+    ("fs-verity: define a function to return the integrity protected
+      file digest")
+  + Reworded commit description and title to match changes.
+  + Fix a bug wherein no LSM implements the particular fsverity @name
+    (or LSM is disabled), and returns -EOPNOTSUPP, causing errors.
+
 v9:
-  + Introduced
+  + No changes
 
 v10:
-  + No changes
+  + Rename the signature blob key
+  + Cleanup redundant code
+  + Make the hook call depends on CONFIG_FS_VERITY_BUILTIN_SIGNATURES
 
 v11:
-  + Fix code style issues
+  + No changes
 
 v12:
-  + No changes
+  + Add constification to the hook call
 ---
- include/linux/security.h |  1 +
- security/inode.c         | 25 +++++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
+ fs/verity/fsverity_private.h |  2 +-
+ fs/verity/open.c             | 26 +++++++++++++++++++++++++-
+ include/linux/fsverity.h     |  2 ++
+ 3 files changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 1545c69edc1b..e994ac9cda91 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -2029,6 +2029,7 @@ struct dentry *securityfs_create_symlink(const char *name,
- 					 const char *target,
- 					 const struct inode_operations *iops);
- extern void securityfs_remove(struct dentry *dentry);
-+extern void securityfs_recursive_remove(struct dentry *dentry);
+diff --git a/fs/verity/fsverity_private.h b/fs/verity/fsverity_private.h
+index a6a6b2749241..84a3608f2f9b 100644
+--- a/fs/verity/fsverity_private.h
++++ b/fs/verity/fsverity_private.h
+@@ -118,7 +118,7 @@ int fsverity_init_merkle_tree_params(struct merkle_tree_params *params,
+ 				     unsigned int log_blocksize,
+ 				     const u8 *salt, size_t salt_size);
  
- #else /* CONFIG_SECURITYFS */
+-struct fsverity_info *fsverity_create_info(const struct inode *inode,
++struct fsverity_info *fsverity_create_info(struct inode *inode,
+ 					   struct fsverity_descriptor *desc);
  
-diff --git a/security/inode.c b/security/inode.c
-index 9e7cde913667..f21847badb7d 100644
---- a/security/inode.c
-+++ b/security/inode.c
-@@ -313,6 +313,31 @@ void securityfs_remove(struct dentry *dentry)
+ void fsverity_set_info(struct inode *inode, struct fsverity_info *vi);
+diff --git a/fs/verity/open.c b/fs/verity/open.c
+index 6c31a871b84b..f917023255c8 100644
+--- a/fs/verity/open.c
++++ b/fs/verity/open.c
+@@ -8,6 +8,7 @@
+ #include "fsverity_private.h"
+ 
+ #include <linux/mm.h>
++#include <linux/security.h>
+ #include <linux/slab.h>
+ 
+ static struct kmem_cache *fsverity_info_cachep;
+@@ -172,12 +173,28 @@ static int compute_file_digest(const struct fsverity_hash_alg *hash_alg,
+ 	return err;
  }
- EXPORT_SYMBOL_GPL(securityfs_remove);
  
-+static void remove_one(struct dentry *victim)
++#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
++static int fsverity_inode_setsecurity(struct inode *inode,
++				      const struct fsverity_descriptor *desc)
 +{
-+	simple_release_fs(&mount, &mount_count);
++	return security_inode_setsecurity(inode, FS_VERITY_INODE_SEC_NAME,
++					  desc->signature,
++					  le32_to_cpu(desc->sig_size), 0);
 +}
-+
-+/**
-+ * securityfs_recursive_remove - recursively removes a file or directory
-+ *
-+ * @dentry: a pointer to a the dentry of the file or directory to be removed.
-+ *
-+ * This function recursively removes a file or directory in securityfs that was
-+ * previously created with a call to another securityfs function (like
-+ * securityfs_create_file() or variants thereof.)
-+ */
-+void securityfs_recursive_remove(struct dentry *dentry)
++#else
++static inline int fsverity_inode_setsecurity(struct inode *inode,
++					     const struct fsverity_descriptor *desc)
 +{
-+	if (IS_ERR_OR_NULL(dentry))
-+		return;
-+
-+	simple_pin_fs(&fs_type, &mount, &mount_count);
-+	simple_recursive_removal(dentry, remove_one);
-+	simple_release_fs(&mount, &mount_count);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(securityfs_recursive_remove);
++#endif /* CONFIG_IPE_PROP_FS_VERITY*/
 +
- #ifdef CONFIG_SECURITY
- static struct dentry *lsm_dentry;
- static ssize_t lsm_read(struct file *filp, char __user *buf, size_t count,
+ /*
+  * Create a new fsverity_info from the given fsverity_descriptor (with optional
+  * appended builtin signature), and check the signature if present.  The
+  * fsverity_descriptor must have already undergone basic validation.
+  */
+-struct fsverity_info *fsverity_create_info(const struct inode *inode,
++struct fsverity_info *fsverity_create_info(struct inode *inode,
+ 					   struct fsverity_descriptor *desc)
+ {
+ 	struct fsverity_info *vi;
+@@ -242,6 +259,13 @@ struct fsverity_info *fsverity_create_info(const struct inode *inode,
+ 		spin_lock_init(&vi->hash_page_init_lock);
+ 	}
+ 
++	err = fsverity_inode_setsecurity(inode, desc);
++	if (err == -EOPNOTSUPP)
++		err = 0;
++
++	if (err)
++		goto fail;
++
+ 	return vi;
+ 
+ fail:
+diff --git a/include/linux/fsverity.h b/include/linux/fsverity.h
+index 1eb7eae580be..9666721baf15 100644
+--- a/include/linux/fsverity.h
++++ b/include/linux/fsverity.h
+@@ -319,4 +319,6 @@ static inline int fsverity_prepare_setattr(struct dentry *dentry,
+ 	return 0;
+ }
+ 
++#define FS_VERITY_INODE_SEC_NAME "fsverity.builtin-sig"
++
+ #endif	/* _LINUX_FSVERITY_H */
 -- 
 2.43.0
 
