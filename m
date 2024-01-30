@@ -1,152 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C38636AE5
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBC7364A9
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706580258; cv=none; b=VvP1f6oukD6q9VA/YxnJk3XWVNUged4els32fMQY/bL8rTG2LHl/IRN31kK4llK2rbPHLlJ/f52lvKN6wGohhKlaQldN5Lu/fOgWaa7MfADdWoTGrgGfjp6DVgzssdeSdPergcy0C5YclUliF9qstKbwqEDLWU1y0j1PFxXtDEM=
+	t=1706580275; cv=none; b=qDajZ8yRH12geJ3efUl6CnGrnKf6SVYC8UnLq3HcJRSNTQlrhhzhubrcFZg/5ti8MI17RRJ+V6cI7sKhifRto8ny/epf6lbBL6lk0sPyLfZdOCyVXBd1I5HOTuX2Xi8cx4zNlIf4CA2vw+fiyaHDwI7m8Xd3Uxjz7luR29noirc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706580258; c=relaxed/simple;
-	bh=ZCDi+CrC2xy3W0uwcFJBQ1sW5HEzmXNfG9w3CzByxBY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Kqo1RsyblkmY8uEVioe9/IUPtm5nkiospmD4H1g6EpKJ5ef8UTfhcR+TNHxCrCqBebV4WqWgYVeMszivCeLIixeFk9NjD2QBAut5lmT4+LbaeMDrOdb2yAaz5ZzpHAcq0gV4H1ZUAQeyqoY+BAgjA4+2eVXN/n8zhC//v60EZOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c1sIyWzT; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706580275; c=relaxed/simple;
+	bh=fmYpZB3M2nBmPApk3/XtOVDPplTZJfQqEPxd1EoQ35w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nk045gESaCwDh0zSGKxiigk3omQeWZgPhfGx3Rc4ddg25h/4J8IiXNpy3q7SJqG1DJTdgT3BC++/35WVXeHOFXXnSM1VH459bqICcEfPeasehXZMmWNY1Y7Fw65xSL9N9iTOR/qSmIlwIgzJiyzXbgvzLj7vLsxELmTuQyTl2n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=dVDG6GyA; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c1sIyWzT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706580257; x=1738116257;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=ZCDi+CrC2xy3W0uwcFJBQ1sW5HEzmXNfG9w3CzByxBY=;
-  b=c1sIyWzTPzywP6xNfuhKMLhyP80BXluznwWP7SLgpsCzDqq5KCzhab/J
-   XzsUbFS8UZ4QhSUd9C1Ac2u9uX0dJ/h0u9LkKUE5LydqWmwnW9wMN915O
-   tTY5gSfvX8awhZgc2dzE9M4D3q5f1qft0G7vqXoratOyoS/tXr4lopcKZ
-   lZz9ZryvW+jBXr1CYLJgdGsvj9+QMTR+H9BaFt9RrWuE8ozpDN7qoJKv3
-   t85LL8V9cHEg+hthq07apNkDtcXI7Eb8JD8eVgp202qnPtBKwC85IkYVb
-   Z75BMtIkabCae/6oXYPvOgqqJlalkG9g6VvEEvgM5hiLSqbnSfo3aUCdM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="3019574"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3019574"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 18:03:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="36337213"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 18:03:19 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm <linux-mm@kvack.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Chris Li <chrisl@kernel.org>,  Hugh Dickins
- <hughd@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew Wilcox
- <willy@infradead.org>,  Michal Hocko <mhocko@suse.com>,  Yosry Ahmed
- <yosryahmed@google.com>,  David Hildenbrand <david@redhat.com>,  LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 9/9] mm/swap, shmem: use new swapin helper to skip
- readahead conditionally
-In-Reply-To: <CAMgjq7ByEsYCj+YeQPS8g1tdKeJnwBhFyqPHCWufzLSfGJYr2A@mail.gmail.com>
-	(Kairui Song's message of "Tue, 30 Jan 2024 08:39:34 +0800")
-References: <20240102175338.62012-1-ryncsn@gmail.com>
-	<20240102175338.62012-10-ryncsn@gmail.com>
-	<871qar9sb2.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAMgjq7CkKZ9-ogkU52xwQ1YRj+-jwt4fpOLhtKkumVc8ky3OFQ@mail.gmail.com>
-	<CAMgjq7ByEsYCj+YeQPS8g1tdKeJnwBhFyqPHCWufzLSfGJYr2A@mail.gmail.com>
-Date: Tue, 30 Jan 2024 10:01:22 +0800
-Message-ID: <87h6ivinpp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="dVDG6GyA"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ce9555d42eso2868209a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:04:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706580272; x=1707185072; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Fim+674pGlDZqdWdDtQcmpj6hFXjEMlMtTI4Aqc3R8=;
+        b=dVDG6GyAS6V1ofGxl7GuOd37OmYmN8wWNxNGD+lKaLoAJOCFZFJwcIbW13UGEbvHR0
+         LJrAJUaB/b2rUerm3s90LPTYEneolKWpl2vAlafp4LXHYv/zGaAf4C7q3G4FaOwgdi7l
+         Ac6fr6o/FNmUonyaq/5Xd2J5d+Sjo/SljBtJoJMnqqU84tKGdcrdy7mTWG1b/GEwZxzd
+         n4nxQEsOwtMxUAMPlvGnVdT/5VpkTpFDI+zkJxOTDsSdXReVT3ykPPJCZ7JSC5eRs6bu
+         N+/Nz3WBVEZEVIfpb25kbYlOmZjFYnvhqR0a4VsRmXObdBcbdZ3FGls28t1HC185Xavc
+         t9QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706580272; x=1707185072;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Fim+674pGlDZqdWdDtQcmpj6hFXjEMlMtTI4Aqc3R8=;
+        b=AYxL16zT/ZZVYSPjbngskZxfa+XvXSH8E+lZFQwXWdyVEPcLKn1N+kt5w5N9xfmN+7
+         aV+p27m1EPxP6GS1hUmLcr1RS1zoErl3+NUHsLgpII1tjrLSXl586OaFpwztar9ampf2
+         RSmYR6atXoLQR07PAwFWc0t+dE6trJDS1lLdPSfJw0ulXW84ho3XSBnW7MfDz7q/0fp5
+         UfAh+LLhQbl/sQVXcmwF4OtgVaZHztvsVhr82D6y9tNHuvodqi41xZtijKt52mAAx1Yy
+         ct1lkzgFsAxY9fmGBl277Phr9L7MtadjmeYMncuyRQce3qnghXg8TQLOrj+jU2zgWDAj
+         h1IQ==
+X-Gm-Message-State: AOJu0YwX+x3VzZX6dE1oNKTwZDSpldC1THTLJlKl9G1Brre3V8cHQXOE
+	9ot5excUp0f6qprdYrjLHXo2AKNNp9gBjSZpIwXpT485SiMUIewkWy9vuL8TCRc=
+X-Google-Smtp-Source: AGHT+IFmSAptn8T/TsbpV8/fisKKcmE5PLrVBGvVUaObTd0DsSBuMD8xee55debl4plk5IqPBv7zLA==
+X-Received: by 2002:a05:6a20:ce48:b0:19c:9a25:118d with SMTP id id8-20020a056a20ce4800b0019c9a25118dmr8122763pzb.11.1706580272351;
+        Mon, 29 Jan 2024 18:04:32 -0800 (PST)
+Received: from ghost ([12.44.203.122])
+        by smtp.gmail.com with ESMTPSA id n18-20020a170902d2d200b001d6eed31a1bsm5983392plc.245.2024.01.29.18.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 18:04:32 -0800 (PST)
+Date: Mon, 29 Jan 2024 18:04:29 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Stefan O'Rear <sorear@fastmail.com>
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Yangyu Chen <cyy@cyyself.name>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/3] riscv: mm: Use hint address in mmap if available
+Message-ID: <ZbhZLewEscaayuaG@ghost>
+References: <20240129-use_mmap_hint_address-v1-0-4c74da813ba1@rivosinc.com>
+ <20240129-use_mmap_hint_address-v1-1-4c74da813ba1@rivosinc.com>
+ <46b90dbc-3b5f-4f52-8539-0f6fa7e28ce9@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46b90dbc-3b5f-4f52-8539-0f6fa7e28ce9@app.fastmail.com>
 
-Kairui Song <ryncsn@gmail.com> writes:
+On Mon, Jan 29, 2024 at 08:53:31PM -0500, Stefan O'Rear wrote:
+> On Mon, Jan 29, 2024, at 7:37 PM, Charlie Jenkins wrote:
+> > On riscv it is guaranteed that the address returned by mmap is less than
+> > the hint address. Allow mmap to return an address all the way up to
+> > addr, if provided, rather than just up to the lower address space.
+> >
+> > This provides a performance benefit as well, allowing mmap to exit after
+> > checking that the address is in range rather than searching for a valid
+> > address.
+> >
+> > It is possible to provide an address that uses at most the same number
+> > of bits, however it is significantly more computationally expensive to
+> > provide that number rather than setting the max to be the hint address.
+> > There is the instruction clz/clzw in Zbb that returns the highest set bit
+> > which could be used to performantly implement this, but it would still
+> > be slower than the current implementation. At worst case, half of the
+> > address would not be able to be allocated when a hint address is
+> > provided.
+> >
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  arch/riscv/include/asm/processor.h | 21 ++++++++-------------
+> >  1 file changed, 8 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/processor.h 
+> > b/arch/riscv/include/asm/processor.h
+> > index f19f861cda54..f3ea5166e3b2 100644
+> > --- a/arch/riscv/include/asm/processor.h
+> > +++ b/arch/riscv/include/asm/processor.h
+> > @@ -22,14 +22,11 @@
+> >  ({								\
+> >  	unsigned long mmap_end;					\
+> >  	typeof(addr) _addr = (addr);				\
+> > -	if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
+> > -		mmap_end = STACK_TOP_MAX;			\
+> 
+> Setting mmap_end in the no-hint case seems to have been lost?
+> 
+> -s
 
-> On Wed, Jan 10, 2024 at 11:35=E2=80=AFAM Kairui Song <ryncsn@gmail.com> w=
-rote:
->>
->> Huang, Ying <ying.huang@intel.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=889=E6=
-=97=A5=E5=91=A8=E4=BA=8C 10:05=E5=86=99=E9=81=93=EF=BC=9A
->> >
->> > Kairui Song <ryncsn@gmail.com> writes:
->> >
->> > > From: Kairui Song <kasong@tencent.com>
->> > >
->> > > Currently, shmem uses cluster readahead for all swap backends. Clust=
-er
->> > > readahead is not a good solution for ramdisk based device (ZRAM) at
-> all.
->> > >
->> > > After switching to the new helper, most benchmarks showed a good
-> result:
->> > >
->> > > - Single file sequence read:
->> > >   perf stat --repeat 20 dd if=3D/tmpfs/test of=3D/dev/null bs=3D1M
-> count=3D8192
->> > >   (/tmpfs/test is a zero filled file, using brd as swap, 4G memcg
-> limit)
->> > >   Before: 22.248 +- 0.549
->> > >   After:  22.021 +- 0.684 (-1.1%)
->> > >
->> > > - Random read stress test:
->> > >   fio -name=3Dtmpfs --numjobs=3D16 --directory=3D/tmpfs \
->> > >   --size=3D256m --ioengine=3Dmmap --rw=3Drandread
-> --random_distribution=3Drandom \
->> > >   --time_based --ramp_time=3D1m --runtime=3D5m --group_reporting
->> > >   (using brd as swap, 2G memcg limit)
->> > >
->> > >   Before: 1818MiB/s
->> > >   After:  1888MiB/s (+3.85%)
->> > >
->> > > - Zipf biased random read stress test:
->> > >   fio -name=3Dtmpfs --numjobs=3D16 --directory=3D/tmpfs \
->> > >   --size=3D256m --ioengine=3Dmmap --rw=3Drandread
-> --random_distribution=3Dzipf:1.2 \
->> > >   --time_based --ramp_time=3D1m --runtime=3D5m --group_reporting
->> > >   (using brd as swap, 2G memcg limit)
->> > >
->> > >   Before: 31.1GiB/s
->> > >   After:  32.3GiB/s (+3.86%)
->> > >
->> > > So cluster readahead doesn't help much even for single sequence read,
->> > > and for random stress test, the performance is better without it.
->> > >
->> > > Considering both memory and swap device will get more fragmented
->> > > slowly, and commonly used ZRAM consumes much more CPU than plain
->> > > ramdisk, false readahead could occur more frequently and waste
->> > > more CPU. Direct SWAP is cheaper, so use the new helper and skip
->> > > read ahead for SWP_SYNCHRONOUS_IO device.
->> >
->> > It's good to take advantage of swap_direct (no readahead).  I also hop=
-es
->> > we can take advantage of VMA based swapin if shmem is accessed via mma=
-p.
->> > That appears possible.
->>
->> Good idea, that should be doable, will update the series.
->
-> Hi Ying,
->
-> Turns out it's quite complex to do VMA bases swapin readhead for shmem: V=
-MA
-> address / Page Tables doesn't contain swapin entry for shmem. For anon pa=
-ge
-> simply read nearby page table is easy and good enough, but for shmem, it's
-> stored in the inode mapping so the readahead needs to walk the inode
-> mapping instead. That's doable but requires more work to make it actually
-> usable. I've sent V3 without this feature, worth another series for this
-> readahead extension.
+Thanks for catching that, will fix in v2.
 
-Got it.  Thanks for looking at this.
+- Charlie
 
---
-Best Regards,
-Huang, Ying
+> 
+> > -	else if ((_addr) >= VA_USER_SV57)			\
+> > -		mmap_end = STACK_TOP_MAX;			\
+> > -	else if ((((_addr) >= VA_USER_SV48)) && (VA_BITS >= VA_BITS_SV48)) \
+> > -		mmap_end = VA_USER_SV48;			\
+> > +	if ((_addr) == 0 ||					\
+> > +		(IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||	\
+> > +		((_addr + len) > BIT(VA_BITS - 1)))		\
+> >  	else							\
+> > -		mmap_end = VA_USER_SV39;			\
+> > +		mmap_end = (_addr + len);			\
+> >  	mmap_end;						\
+> >  })
+> > 
+> > @@ -39,14 +36,12 @@
+> >  	typeof(addr) _addr = (addr);				\
+> >  	typeof(base) _base = (base);				\
+> >  	unsigned long rnd_gap = DEFAULT_MAP_WINDOW - (_base);	\
+> > -	if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
+> > +	if ((_addr) == 0 ||					\
+> > +	    (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||	\
+> > +	    ((_addr + len) > BIT(VA_BITS - 1)))			\
+> >  		mmap_base = (_base);				\
+> > -	else if (((_addr) >= VA_USER_SV57) && (VA_BITS >= VA_BITS_SV57)) \
+> > -		mmap_base = VA_USER_SV57 - rnd_gap;		\
+> > -	else if ((((_addr) >= VA_USER_SV48)) && (VA_BITS >= VA_BITS_SV48)) \
+> > -		mmap_base = VA_USER_SV48 - rnd_gap;		\
+> >  	else							\
+> > -		mmap_base = VA_USER_SV39 - rnd_gap;		\
+> > +		mmap_base = (_addr + len) - rnd_gap;		\
+> >  	mmap_base;						\
+> >  })
+> > 
+> >
+> > -- 
+> > 2.43.0
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
