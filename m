@@ -1,63 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8C312CD8D;
-	Tue, 30 Jan 2024 16:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0DF12837D;
+	Tue, 30 Jan 2024 16:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706631972; cv=none; b=LyCt/9Qbtp9qy9JvzXxWviHAoQYqlJkBCOOh7fMz/TEekpLzSJVlm7U+hrMA81rW7ux46jwwtabT3F8kaNX+taorTCqJjAhSSpW7jy7TYPr4kXkAlf2o6FlvpKw0cUBUdHui+caH6HmCc2vhubMc6NY112oSGYONpDQ5ZB1QWmw=
+	t=1706631971; cv=none; b=av+fyisCugo3ECENdQc/bdmEMHBiDa+U/edI4C55PSAiPaA1xyDbgR7JYpTXMnoQjHPuM+1gHIrPxE+uU/1rK0PSOi1CXMTiifaPWGzJMdc6oRPoK5H1vENTc/07YYVwkQueaXXItGbevvFn6kVUHrpneLVfzHVF9xzbwgEnSbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706631972; c=relaxed/simple;
-	bh=WADDM1H92wETD+9wiEl2YfbHXXl8A+FMqf1KJYev7uk=;
+	s=arc-20240116; t=1706631971; c=relaxed/simple;
+	bh=sLy4E6DKd8D7+rCwgkqf4oLhWPS4ATr/5WPLXv65GBs=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=stDHiC4DDngyy7IN/1UQaHwPs4wTkS5MkNJ6qGae/51Q/X3aracb4RIDu77u2HRxz58H4RilDxSPzcIX4bHp9Dpyi3VWvPFrbs3rp9sHD59Afxl1vv4NXR+WdjOCSUt70iNvOIRlm03NdIEhUH1C+CQx8Y9nrsEkjkzB3lqlqzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tOwHBaff; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ukcV1/gE; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=vCmaOe/ci5DT540zYPSPuC85T8r+D/7xtyXXA69tpSouQGSBvQaeyEjJKeTT9BvfOyz/mRLnjrqP+IKXvMPJBH83rg8d7LbbdDSRVDpluz43QZSN02kxClWEU/j9PjD6yRp0v7XZJZVLcsQSdruO2Rfs+8+lfYLLBJIIin9Hwk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r8kfUcxk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BR3ZRU4n; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tOwHBaff";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ukcV1/gE"
-Date: Tue, 30 Jan 2024 16:26:08 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r8kfUcxk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BR3ZRU4n"
+Date: Tue, 30 Jan 2024 16:26:06 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706631969;
+	s=2020; t=1706631967;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AGPmg3bM0K0ziuVF/bpOWtTuv50Na0x4WowzmqJ4PB8=;
-	b=tOwHBaffiUlFO5kIuXr//hbLLmbnz6Ef+a2Fb8S8dzGgdB0SolG6VRtfR0GIM3XqHKZDKp
-	b4rXn/YHKOpgarsgraTIIEK1Yny6ecpGzNAXQ0F30cfRGhK0tfrD5QokfkGHmpiJA7YesQ
-	gtv6k6rNZf8CbRIpOw4a9uRzWJp9iDsJWvDtwar6CE5GqTPue+TiSuPng5N8GytcIPEvfp
-	N4K+7qDRpkZnm39GKeGhjJ4AP4zylSpNA4ipNJ2fT+9MMP3mF9b5Tlb0eWbkvDwa3QLVwX
-	KkuzrSBhV6nXneXAAijeHg1iFLyPUq9pQmK31LBEYiRQVWBESyNFmV5Q62sigQ==
+	bh=i9lKnbY6+TNZ8t5Y+8dClk+vxZwSottd+o6PRmwr4j8=;
+	b=r8kfUcxkVcjdI1aHH7dUMGyYU9L+QhMDF4VfGrIip9ueIAAaNWmJwsZYs8Fw/JmyXeC6kK
+	pAZSF76pSFUDAL2knGaSW0ulEVijsLnR6AoTCYuY8phYZhFwOecKhaWWMn+I4ytwmGIkI9
+	yH4sFuiszcJ68tuhwJ2Qbic8UoDxKYvlkX54UN3xYqN54dCAkVtQ6F6phm3jQ117T5XV4w
+	XocrUKuQSW8+QL7pW8fZKNqRuwDhmR1s1YSrg5lJ221lRhjOXrRj+9o56j37OBwA4y7s7m
+	qJw8VTQjQfxzn96zTzp8bkYE/Hu+UeBbC9Rr24gyEV9C9v9ZkbQfXNf9Tk3UOw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706631969;
+	s=2020e; t=1706631967;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AGPmg3bM0K0ziuVF/bpOWtTuv50Na0x4WowzmqJ4PB8=;
-	b=ukcV1/gEqMWEBII8uTbHIDJibiA837km17WChHzxaxGd5hy8S4dMG8R9/44J2aaSGEgiUk
-	wTbgUp0BTNqR8UDQ==
+	bh=i9lKnbY6+TNZ8t5Y+8dClk+vxZwSottd+o6PRmwr4j8=;
+	b=BR3ZRU4nRMWZL9TPO0KC7I49uCBM1Lxeb0zOFj+a7mdOOYfwfg+tx4nBiZKKsjEpDV8gin
+	B+WFFZYGVvdNk4Dw==
 From: "tip-bot2 for Brijesh Singh" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] x86/traps: Define RMP violation #PF error code
-Cc: Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240126041126.1927228-9-michael.roth@amd.com>
-References: <20240126041126.1927228-9-michael.roth@amd.com>
+Subject: [tip: x86/sev] x86/sev: Add helper functions for RMPUPDATE and PSMASH
+ instruction
+Cc: Brijesh Singh <brijesh.singh@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
+ Michael Roth <michael.roth@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Liam Merwick <liam.merwick@oracle.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240126041126.1927228-11-michael.roth@amd.com>
+References: <20240126041126.1927228-11-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170663196817.398.3820994161857678840.tip-bot2@tip-bot2>
+Message-ID: <170663196694.398.14714826975788265209.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,79 +69,188 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/sev branch of tip:
 
-Commit-ID:     54055344b232c917a9e492a8bf5864fed99ad6b8
-Gitweb:        https://git.kernel.org/tip/54055344b232c917a9e492a8bf5864fed99ad6b8
+Commit-ID:     2c35819ee00b8893626914b3384cdef2afea7dbd
+Gitweb:        https://git.kernel.org/tip/2c35819ee00b8893626914b3384cdef2afea7dbd
 Author:        Brijesh Singh <brijesh.singh@amd.com>
-AuthorDate:    Thu, 25 Jan 2024 22:11:08 -06:00
+AuthorDate:    Thu, 25 Jan 2024 22:11:10 -06:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 29 Jan 2024 17:26:56 +01:00
+CommitterDate: Mon, 29 Jan 2024 20:30:59 +01:00
 
-x86/traps: Define RMP violation #PF error code
+x86/sev: Add helper functions for RMPUPDATE and PSMASH instruction
 
-Bit 31 in the page fault-error bit will be set when processor encounters
-an RMP violation.
+The RMPUPDATE instruction updates the access restrictions for a page via
+its corresponding entry in the RMP Table. The hypervisor will use the
+instruction to enforce various access restrictions on pages used for
+confidential guests and other specialized functionality. See APM3 for
+details on the instruction operations.
 
-While at it, use the BIT() macro.
+The PSMASH instruction expands a 2MB RMP entry in the RMP table into a
+corresponding set of contiguous 4KB RMP entries while retaining the
+state of the validated bit from the original 2MB RMP entry. The
+hypervisor will use this instruction in cases where it needs to re-map a
+page as 4K rather than 2MB in a guest's nested page table.
+
+Add helpers to make use of these instructions.
+
+  [ mdr: add RMPUPDATE retry logic for transient FAIL_OVERLAP errors. ]
 
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 Signed-off-by: Michael Roth <michael.roth@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lore.kernel.org/r/20240126041126.1927228-9-michael.roth@amd.com
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+Link: https://lore.kernel.org/r/20240126041126.1927228-11-michael.roth@amd.com
 ---
- arch/x86/include/asm/trap_pf.h | 20 ++++++++++++--------
- arch/x86/mm/fault.c            |  1 +
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/sev.h | 23 +++++++++-
+ arch/x86/virt/svm/sev.c    | 92 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 115 insertions(+)
 
-diff --git a/arch/x86/include/asm/trap_pf.h b/arch/x86/include/asm/trap_pf.h
-index afa5243..a23a7b7 100644
---- a/arch/x86/include/asm/trap_pf.h
-+++ b/arch/x86/include/asm/trap_pf.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_TRAP_PF_H
- #define _ASM_X86_TRAP_PF_H
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 2c53e3d..57fd95a 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -87,10 +87,23 @@ extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
+ /* Software defined (when rFlags.CF = 1) */
+ #define PVALIDATE_FAIL_NOUPDATE		255
  
-+#include <linux/bits.h>
++/* RMUPDATE detected 4K page and 2MB page overlap. */
++#define RMPUPDATE_FAIL_OVERLAP		4
 +
- /*
-  * Page fault error code bits:
-  *
-@@ -13,16 +15,18 @@
-  *   bit 5 ==				1: protection keys block access
-  *   bit 6 ==				1: shadow stack access fault
-  *   bit 15 ==				1: SGX MMU page-fault
-+ *   bit 31 ==				1: fault was due to RMP violation
-  */
- enum x86_pf_error_code {
--	X86_PF_PROT	=		1 << 0,
--	X86_PF_WRITE	=		1 << 1,
--	X86_PF_USER	=		1 << 2,
--	X86_PF_RSVD	=		1 << 3,
--	X86_PF_INSTR	=		1 << 4,
--	X86_PF_PK	=		1 << 5,
--	X86_PF_SHSTK	=		1 << 6,
--	X86_PF_SGX	=		1 << 15,
-+	X86_PF_PROT	=		BIT(0),
-+	X86_PF_WRITE	=		BIT(1),
-+	X86_PF_USER	=		BIT(2),
-+	X86_PF_RSVD	=		BIT(3),
-+	X86_PF_INSTR	=		BIT(4),
-+	X86_PF_PK	=		BIT(5),
-+	X86_PF_SHSTK	=		BIT(6),
-+	X86_PF_SGX	=		BIT(15),
-+	X86_PF_RMP	=		BIT(31),
- };
+ /* RMP page size */
+ #define RMP_PG_SIZE_4K			0
+ #define RMP_PG_SIZE_2M			1
+ #define RMP_TO_PG_LEVEL(level)		(((level) == RMP_PG_SIZE_4K) ? PG_LEVEL_4K : PG_LEVEL_2M)
++#define PG_LEVEL_TO_RMP(level)		(((level) == PG_LEVEL_4K) ? RMP_PG_SIZE_4K : RMP_PG_SIZE_2M)
++
++struct rmp_state {
++	u64 gpa;
++	u8 assigned;
++	u8 pagesize;
++	u8 immutable;
++	u8 rsvd;
++	u32 asid;
++} __packed;
  
- #endif /* _ASM_X86_TRAP_PF_H */
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 679b09c..8805e2e 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -547,6 +547,7 @@ show_fault_oops(struct pt_regs *regs, unsigned long error_code, unsigned long ad
- 		 !(error_code & X86_PF_PROT) ? "not-present page" :
- 		 (error_code & X86_PF_RSVD)  ? "reserved bit violation" :
- 		 (error_code & X86_PF_PK)    ? "protection keys violation" :
-+		 (error_code & X86_PF_RMP)   ? "RMP violation" :
- 					       "permissions violation");
+ #define RMPADJUST_VMSA_PAGE_BIT		BIT(16)
  
- 	if (!(error_code & X86_PF_USER) && user_mode(regs)) {
+@@ -248,10 +261,20 @@ static inline u64 sev_get_status(void) { return 0; }
+ bool snp_probe_rmptable_info(void);
+ int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level);
+ void snp_dump_hva_rmpentry(unsigned long address);
++int psmash(u64 pfn);
++int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 asid, bool immutable);
++int rmp_make_shared(u64 pfn, enum pg_level level);
+ #else
+ static inline bool snp_probe_rmptable_info(void) { return false; }
+ static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level) { return -ENODEV; }
+ static inline void snp_dump_hva_rmpentry(unsigned long address) {}
++static inline int psmash(u64 pfn) { return -ENODEV; }
++static inline int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 asid,
++				   bool immutable)
++{
++	return -ENODEV;
++}
++static inline int rmp_make_shared(u64 pfn, enum pg_level level) { return -ENODEV; }
+ #endif
+ 
+ #endif
+diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
+index c74266e..dc18335 100644
+--- a/arch/x86/virt/svm/sev.c
++++ b/arch/x86/virt/svm/sev.c
+@@ -342,3 +342,95 @@ void snp_dump_hva_rmpentry(unsigned long hva)
+ 	paddr = PFN_PHYS(pte_pfn(*pte)) | (hva & ~page_level_mask(level));
+ 	dump_rmpentry(PHYS_PFN(paddr));
+ }
++
++/*
++ * PSMASH a 2MB aligned page into 4K pages in the RMP table while preserving the
++ * Validated bit.
++ */
++int psmash(u64 pfn)
++{
++	unsigned long paddr = pfn << PAGE_SHIFT;
++	int ret;
++
++	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
++		return -ENODEV;
++
++	if (!pfn_valid(pfn))
++		return -EINVAL;
++
++	/* Binutils version 2.36 supports the PSMASH mnemonic. */
++	asm volatile(".byte 0xF3, 0x0F, 0x01, 0xFF"
++		      : "=a" (ret)
++		      : "a" (paddr)
++		      : "memory", "cc");
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(psmash);
++
++/*
++ * It is expected that those operations are seldom enough so that no mutual
++ * exclusion of updaters is needed and thus the overlap error condition below
++ * should happen very rarely and would get resolved relatively quickly by
++ * the firmware.
++ *
++ * If not, one could consider introducing a mutex or so here to sync concurrent
++ * RMP updates and thus diminish the amount of cases where firmware needs to
++ * lock 2M ranges to protect against concurrent updates.
++ *
++ * The optimal solution would be range locking to avoid locking disjoint
++ * regions unnecessarily but there's no support for that yet.
++ */
++static int rmpupdate(u64 pfn, struct rmp_state *state)
++{
++	unsigned long paddr = pfn << PAGE_SHIFT;
++	int ret;
++
++	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
++		return -ENODEV;
++
++	do {
++		/* Binutils version 2.36 supports the RMPUPDATE mnemonic. */
++		asm volatile(".byte 0xF2, 0x0F, 0x01, 0xFE"
++			     : "=a" (ret)
++			     : "a" (paddr), "c" ((unsigned long)state)
++			     : "memory", "cc");
++	} while (ret == RMPUPDATE_FAIL_OVERLAP);
++
++	if (ret) {
++		pr_err("RMPUPDATE failed for PFN %llx, ret: %d\n", pfn, ret);
++		dump_rmpentry(pfn);
++		dump_stack();
++		return -EFAULT;
++	}
++
++	return 0;
++}
++
++/* Transition a page to guest-owned/private state in the RMP table. */
++int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 asid, bool immutable)
++{
++	struct rmp_state state;
++
++	memset(&state, 0, sizeof(state));
++	state.assigned = 1;
++	state.asid = asid;
++	state.immutable = immutable;
++	state.gpa = gpa;
++	state.pagesize = PG_LEVEL_TO_RMP(level);
++
++	return rmpupdate(pfn, &state);
++}
++EXPORT_SYMBOL_GPL(rmp_make_private);
++
++/* Transition a page to hypervisor-owned/shared state in the RMP table. */
++int rmp_make_shared(u64 pfn, enum pg_level level)
++{
++	struct rmp_state state;
++
++	memset(&state, 0, sizeof(state));
++	state.pagesize = PG_LEVEL_TO_RMP(level);
++
++	return rmpupdate(pfn, &state);
++}
++EXPORT_SYMBOL_GPL(rmp_make_shared);
