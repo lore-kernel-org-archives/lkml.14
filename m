@@ -1,172 +1,183 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24742376EC;
-	Tue, 30 Jan 2024 02:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3749A364DA
+	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706583001; cv=none; b=XLY/ca1r7CnPZG5Z3/wfNpIC4jkyPLyQTOsNpt5i9lRtZEBNZuuFEsBj63npOTvb/D6WLF2iT/ei3lKnq5wGZ8eJd/1SI/mlF+Y2J62A4uZmHHEdrwtTQmG/ykUiomCKvnPesrnfv+I+r/Y+5q8+31Ht0b8s9y6HrT1+lHhUDsE=
+	t=1706583049; cv=none; b=f0foVyhHaS+NZpFUWBRCX5/OkPF/Qm5eTwqJGPFv9pYfA+nUgJHfnFqQfHnkV0u+W9T0vFwf6JRgPM3kym1lxAFRMK2kH6iAZZHT2qcB1INkG5oKXr3DFRaLZzMBamv35GpYquhxLigCwFqsl3V1OGBAOpoTRhEynfujOqr97eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706583001; c=relaxed/simple;
-	bh=ItO9x5D6H9JYyGjTAgHUEiIFhOZPWAuezmni19/rk7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jvlirXO0j+PZojNrQUiIRmTydW44ACfDc35Xm5CRG4cFtBz9UFYfkFvBr/s4XSMIvVcqn/4dgo8zazGpNLXUC1/JJvUi5v9GnJiCtD/5e/k2FtP0fD69IbTfZPnIH13RCWO2SRbmjbCN6z9AXjhS4vcn8ryFyK/6PSkdSNZquK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=oedhXLvb; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1706583049; c=relaxed/simple;
+	bh=0TEm3/crCtPyfYZL8bXJs3aeXPqJ01LKo32QgDLoJlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vd3sU8Gm772whP+9MUwxmj/3KS88aAVyIi9pz2LdXYYr223iALT4oWMZoAEKtR5iA6KvqZQV+MLc4lgzWUOi2hAxDwZChE7b/aozOTa9rGCFLOTaZHEVT1Is+sAMKiR0TNyiT+sH8JPu6LsoxZp9C+4PtK9KIzVsDY/DHiIPoBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jWzdlt8t; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oedhXLvb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1706582996;
-	bh=nI4mBita6iA8xDpiKFKIuNj+Ycgew+KbDCEq7YIIirA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=oedhXLvbsLUho7iO9/TTjHDNXbywiqeYf+Mhql9Ma2/YwmvnupmcmBq4Z0COSATOa
-	 bqOKesBDOhFTsrhC58juBW6AvPR6ZdNbOMbZa23+gmadRGM6ltJ25FMzkv2XjlnDNy
-	 DeJTd2QBHS1IlMx/mX73+JEJ9dZJ+of6QuXZuexQr7ZAglYvGAWalsE5bHb5orHojU
-	 tcgm71Kq2fhEwF5nJdldugIyvwyNQYBeyMHtAYKBUgyUmV7Rl0igtzxOKI/IN5ytKl
-	 Ien9fRtZrBYiZLHY4l3jBm/VtcUx67W4aoty5AxZQWdRCr0uot0g+7bGqrkkByHgLr
-	 gqsB5LqPWfaCA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TP8ll3wZkz4wc3;
-	Tue, 30 Jan 2024 13:49:55 +1100 (AEDT)
-Date: Tue, 30 Jan 2024 13:49:54 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alex Deucher <alexdeucher@gmail.com>, Dave Airlie <airlied@redhat.com>,
- DRI <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Rodrigo Siqueira
- <Rodrigo.Siqueira@amd.com>
-Subject: linux-next: build warnings after merge of the amdgpu tree
-Message-ID: <20240130134954.04fcf763@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jWzdlt8t"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-59a146e8c85so1777096eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jan 2024 18:50:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706583046; x=1707187846; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=I4kmLD/ZHgJFQzacfvJ5aXtIPI3Q8g9U5l7cj/1gwss=;
+        b=jWzdlt8toQ2FsBo3S6a7Q7ROpdRBxUH1g9DN0DBiw+5bcGPLcII1V+07/+MAJPh/as
+         IdyJDSHpNjy9CnoruaeuvomdWmsnHlVcss8HoFDnG9y06nzI5K96t7oI1OlpWtDJx1p9
+         d7+7fti71HITHzK9uF0il7X6GyhEtrxo0nelCqvva5bsTP9AsVJifDhdBjU76nelvukU
+         4UJ+IAfgXm27CjvELFIJJZadv+r8lIESAbNtUgpH04BcX+L9yzjQyqZbvt67EuksbThd
+         /gR2I1yC+Eoo2aDo9Qh4gFvwggNM2+eJ+L42h7TGiamq96bqn9Ho/G+keTithdhdFb5p
+         6hVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706583046; x=1707187846;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I4kmLD/ZHgJFQzacfvJ5aXtIPI3Q8g9U5l7cj/1gwss=;
+        b=d8rWB9RzrPCDubqNgopxVq7/RZwPtKDFEnG5T339A2UJmTiHeQ7+0Ip+dGOpeER5JW
+         wTkzoKewpd/wrIRThk49hv1sDG7SR1ZTfA/wT+X2LjBCt52srUDyFwVzshheI32Ac3/D
+         15WmyB/vDll1u8h5rB1dacEUYhIagU8KEzkNVtVWIr2PgHk2Hbb+fZFvI/5BwryNCr9l
+         U00RTRYPgeTYVzKDltNgh9KkvChUOmZ7gUzsymT/h4dFqJ8LgTygUixPQxUyIvwtvFWW
+         5A4+pmwoPd7qSqV3zpY0fBQWXYDtG4U/Hfe8Khq2X4utBTYbtwiaEgBwzX6SMA9SHIH0
+         39jw==
+X-Gm-Message-State: AOJu0Ywndu812Arg0L6dxuIlAAsbalsz3CLYIoSGLrF1/+nBBLBbGGBf
+	iGkcbvYWuYj4X1hDEto1SN2rdD7hBrZdNs4UacEcVuFMy6TD5bic4omxVlppm94=
+X-Google-Smtp-Source: AGHT+IHVIhbQGSEna5MN4n3vgllTv+oL5jn7aTe6nq6Ie2BpSyHZw7jYc/tSHXwtTS+M7cDDGwEHmw==
+X-Received: by 2002:a05:6358:796:b0:178:76b3:58d8 with SMTP id n22-20020a056358079600b0017876b358d8mr3227466rwj.38.1706583046256;
+        Mon, 29 Jan 2024 18:50:46 -0800 (PST)
+Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
+        by smtp.gmail.com with ESMTPSA id y12-20020aa7854c000000b006dbd3aec001sm6794293pfn.146.2024.01.29.18.50.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 18:50:45 -0800 (PST)
+Date: Mon, 29 Jan 2024 18:50:41 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/3] riscv: mm: Use hint address in mmap if available
+Message-ID: <ZbhkAUf+h7sK71Rs@ghost>
+References: <20240129-use_mmap_hint_address-v1-0-4c74da813ba1@rivosinc.com>
+ <20240129-use_mmap_hint_address-v1-1-4c74da813ba1@rivosinc.com>
+ <tencent_F34C3BC7F1077728A62E84A7D183EF5BF005@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6mX_kiWSiCoFKiVsyRduY3I";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <tencent_F34C3BC7F1077728A62E84A7D183EF5BF005@qq.com>
 
---Sig_/6mX_kiWSiCoFKiVsyRduY3I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 30, 2024 at 10:34:03AM +0800, Yangyu Chen wrote:
+> 
+> > On Jan 30, 2024, at 08:37, Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > 
+> > On riscv it is guaranteed that the address returned by mmap is less than
+> > the hint address. Allow mmap to return an address all the way up to
+> > addr, if provided, rather than just up to the lower address space.
+> > 
+> > This provides a performance benefit as well, allowing mmap to exit after
+> > checking that the address is in range rather than searching for a valid
+> > address.
+> > 
+> > It is possible to provide an address that uses at most the same number
+> > of bits, however it is significantly more computationally expensive to
+> > provide that number rather than setting the max to be the hint address.
+> > There is the instruction clz/clzw in Zbb that returns the highest set bit
+> > which could be used to performantly implement this, but it would still
+> > be slower than the current implementation. At worst case, half of the
+> > address would not be able to be allocated when a hint address is
+> > provided.
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> > arch/riscv/include/asm/processor.h | 21 ++++++++-------------
+> > 1 file changed, 8 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+> > index f19f861cda54..f3ea5166e3b2 100644
+> > --- a/arch/riscv/include/asm/processor.h
+> > +++ b/arch/riscv/include/asm/processor.h
+> > @@ -22,14 +22,11 @@
+> > ({ \
+> > unsigned long mmap_end; \
+> > typeof(addr) _addr = (addr); \
+> > - if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
+> > - mmap_end = STACK_TOP_MAX; \
+> > - else if ((_addr) >= VA_USER_SV57) \
+> > - mmap_end = STACK_TOP_MAX; \
+> > - else if ((((_addr) >= VA_USER_SV48)) && (VA_BITS >= VA_BITS_SV48)) \
+> > - mmap_end = VA_USER_SV48; \
+> > + if ((_addr) == 0 || \
+> > + (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) || \
+> > + ((_addr + len) > BIT(VA_BITS - 1))) \
+> 
+> How about replacing BIT(VA_BITS-1) to DEFAULT_MAP_WINDOW to make the code
+> more general.
+> 
+> > else \
+> > - mmap_end = VA_USER_SV39; \
+> > + mmap_end = (_addr + len); \
+> > mmap_end; \
+> > })
+> > 
+> > @@ -39,14 +36,12 @@
+> > typeof(addr) _addr = (addr); \
+> > typeof(base) _base = (base); \
+> > unsigned long rnd_gap = DEFAULT_MAP_WINDOW - (_base); \
+> > - if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
+> > + if ((_addr) == 0 || \
+> > +    (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) || \
+> > +    ((_addr + len) > BIT(VA_BITS - 1))) \
+> 
+> Same here.
+> 
+> > mmap_base = (_base); \
+> > - else if (((_addr) >= VA_USER_SV57) && (VA_BITS >= VA_BITS_SV57)) \
+> > - mmap_base = VA_USER_SV57 - rnd_gap; \
+> > - else if ((((_addr) >= VA_USER_SV48)) && (VA_BITS >= VA_BITS_SV48)) \
+> > - mmap_base = VA_USER_SV48 - rnd_gap; \
+> > else \
+> > - mmap_base = VA_USER_SV39 - rnd_gap; \
+> > + mmap_base = (_addr + len) - rnd_gap; \
+> > mmap_base; \
+> > })
+> > 
+> > 
+> 
+> What about not setting the upper bound as x86/arm/powerpc as [1] did?
+> In this case, user space can directly pass a constant hint address >
+> BIT(47) to get a mapping in sv57. If you want this, this code also allows
+> user-space to pass any address larger than TASK_SIZE. You should also
+> limit the mmap_base to (base) + TASK_SIZE - DEFAULT_MAP_WINDOW.
 
-Hi all,
+No. This suggestion causes a random address to be used if the hint
+address is not available. That is why I didn't simply go with your
+patch.
 
-After merging the amdgpu tree, today's linux-next build (htmldocs)
-produced these warnings:
+This patch both gives your application the benefit of being able to use
+a hint address in the hopes that the address is available, as well as
+continuing to support the guarantee that an address using more bits than
+the hint address is not returned.
 
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use of =
-kernel-doc format:          * @@overlap_only: Whether overlapping of differ=
-ent planes is allowed.
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use of =
-kernel-doc format:          * @@overlap_only: Whether overlapping of differ=
-ent planes is allowed.
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1: warning: no structured comme=
-nts found
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use of =
-kernel-doc format:          * @@overlap_only: Whether overlapping of differ=
-ent planes is allowed.
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:162: warning: Function paramete=
-r or struct member 'pre_multiplied_alpha' not described in 'mpcc_blnd_cfg'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:162: warning: Function paramete=
-r or struct member 'overlap_only' not described in 'mpcc_blnd_cfg'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'read_mpcc_state' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'mpc_init_single_inst' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'get_mpcc_for_dpp_from_secondary' not described in 'mpc_=
-funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'get_mpcc_for_dpp' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'wait_for_idle' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'assert_mpcc_idle_before_connect' not described in 'mpc_=
-funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'init_mpcc_list_from_hw' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_denorm' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_denorm_clamp' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_output_csc' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_ocsc_default' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_output_gamma' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'power_on_mpc_mem_pwr' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_dwb_mux' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'disable_dwb_mux' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'is_dwb_idle' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_out_rate_control' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_gamut_remap' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'program_1dlut' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'program_shaper' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'acquire_rmu' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'program_3dlut' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'release_rmu' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'get_mpc_out_mux' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_bg_color' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:548: warning: Function paramete=
-r or struct member 'set_mpc_mem_lp_mode' not described in 'mpc_funcs'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use of =
-kernel-doc format:          * @@overlap_only: Whether overlapping of differ=
-ent planes is allowed.
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:162: warning: Function paramete=
-r or struct member 'pre_multiplied_alpha' not described in 'mpcc_blnd_cfg'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:162: warning: Function paramete=
-r or struct member 'overlap_only' not described in 'mpcc_blnd_cfg'
-drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:132: warning: Incorrect use of =
-kernel-doc format:          * @@overlap_only: Whether overlapping of differ=
-ent planes is allowed.
-Documentation/gpu/amdgpu/display/display-manager:134: drivers/gpu/drm/amd/d=
-isplay/dc/inc/hw/mpc.h:3: WARNING: Duplicate C declaration, also defined at=
- gpu/amdgpu/display/dcn-blocks:100.
-Documentation/gpu/amdgpu/display/display-manager:146: drivers/gpu/drm/amd/d=
-isplay/dc/inc/hw/mpc.h:3: WARNING: Duplicate C declaration, also defined at=
- gpu/amdgpu/display/dcn-blocks:3.
+- Charlie
 
-Introduced by commit
-
-  b8c1c3a82e75 ("Documentation/gpu: Add kernel doc entry for MPC")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6mX_kiWSiCoFKiVsyRduY3I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmW4Y9IACgkQAVBC80lX
-0Gw4XQf/Rq+HoNJdEzy50YbklXtbrHfZWcovvUP25Ov2KbjaEvw5mqb9aJGeCA2n
-Ynadi0JpBtSp/YoJnUxK/J6BJdLV+Xp+FDEuZ132GWMUGoS4USETaMLi8mi91f5A
-KS6o6uA90bxUchztNbdgvlLG7YdjGHKAmVbNyxU42s0TJ52mjt19N4KxlBHjWsOr
-rmQ3eLwxPvFtNWisu7wMPeSaHbbJFRvVgMWrEsf8PA+81yfd03J5Chm3ROmgKc9x
-HspOGJNycgvsdA8eusTs/Yj0BGg+B3NUj9/7nSld3geUyq+jikRffthG/yJVbEJ+
-gjABTJKFxNXPD4p0xKVyoaEdQua5NQ==
-=wJtR
------END PGP SIGNATURE-----
-
---Sig_/6mX_kiWSiCoFKiVsyRduY3I--
+> 
+> I’m also aware of the rnd_gap if it is not 0, then we will not get
+> address mapped to VA_USER_SV39 - rnd_gap.
+> 
+> [1]. https://lore.kernel.org/linux-riscv/tencent_2683632BEE438C6D4854E30BDF9CA0843606@qq.com/
+> 
+> > -- 
+> > 2.43.0
+> > 
+> 
