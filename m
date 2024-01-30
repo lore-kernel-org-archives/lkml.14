@@ -1,87 +1,131 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932D066B5F
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 11:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BCA679E4;
+	Tue, 30 Jan 2024 11:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706615494; cv=none; b=EM0iuNleMeBkUHGFkRnVmy/WUMZiEf5WMTmjySC0gloV21Z5VGzw7lsxQWuwvV+xx/Bv/dP1GdXqOKLJp7+4ItGPre3Snqm+7IQWCKv2M368xcQgVXOMMpxsHO50XJlytvj/Y/sInc034pa6rsYIkSXTK6dwVf7a1J/ptKBNdqA=
+	t=1706615552; cv=none; b=twrCa2Woe02fqTrpcNeEAore2k6/mAWhbGp8bs/e0o7CqcKMKgQeFJdUM3SkeW5WpSArhUHYiAMPTYBQOQONN8Vx5CaQDefXxahoKksPo39hxexemYpYcOPanot8xZfNVH+H2Xx+ewVw9J319iCt67Mwad2424cdgDIXUIN9ZwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706615494; c=relaxed/simple;
-	bh=30nEctjwaKxxAswJg2GaQfi9q6VRb2fckRavbZGSWPk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=TcIcv0KD/QoF6GLw7tq8aSDVBXs+oEInvZ61H5TZsQJwGaVSlrIlf4vX/8l1+o46/k9k7GwIPxYYbLDINvch6+np8OJRd0P7Fdih+i7FLzIDlHoQ94OJ60UDAbbopI40BgsIZavDmDCiYT8raH5x6Kp2NVpmXghnKBGW+OJxifU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-241-VzaTdC0ENPqj-j_pQMBvdA-1; Tue, 30 Jan 2024 11:51:24 +0000
-X-MC-Unique: VzaTdC0ENPqj-j_pQMBvdA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 30 Jan
- 2024 11:51:05 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Tue, 30 Jan 2024 11:51:05 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Jisheng Zhang' <jszhang@kernel.org>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matteo Croce
-	<mcroce@microsoft.com>, kernel test robot <lkp@intel.com>
-Subject: RE: [PATCH 2/3] riscv: optimized memmove
-Thread-Topic: [PATCH 2/3] riscv: optimized memmove
-Thread-Index: AQHaUdxjAvIJPrdYsUmtWfJZGIT/drDvKbzwgAMSEICAAAQ2IA==
-Date: Tue, 30 Jan 2024 11:51:05 +0000
-Message-ID: <2391e924440d4e59b7859b8ede8f0954@AcuMS.aculab.com>
-References: <20240128111013.2450-1-jszhang@kernel.org>
- <20240128111013.2450-3-jszhang@kernel.org>
- <59bed43df37b4361a8a1cb31b8582e9b@AcuMS.aculab.com>
- <Zbjd43y3s6PDfQE0@xhacker>
-In-Reply-To: <Zbjd43y3s6PDfQE0@xhacker>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1706615552; c=relaxed/simple;
+	bh=DMspNHe+PyuwZG/IydiW/Wdtvh3uR5JF2oe/i9uuk5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q6veGF+Xb+q5G1IsBvw+qQndDBnTwhcIcQSBAKBAZkKar9JeyAo+YWe9guO+dvxSLwEbWelE3UlBiC4ewSn6ec7B55ncQ8Da9JPZGNdgvWzsJvfGJXo8RHMUS89RhGHTGMxc4n9Qz5x62tBAVpwzPhLBdSMd+Sr6HROk5v8Rrk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tLd3MiRr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tLd3MiRr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BD77C433F1;
+	Tue, 30 Jan 2024 11:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706615551;
+	bh=DMspNHe+PyuwZG/IydiW/Wdtvh3uR5JF2oe/i9uuk5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tLd3MiRrPCcMgjVjHBWZko6Az5rZSFR1TS04dBkF6SIlhgzavZ2stqYFKUjlYdcgz
+	 CUm7cZDSLxFrXzePWm05avfoOHKiqK3DWlv/ZpMl4Fbk24sTIvCe9Ad7MmJZ7Huvvi
+	 JK1VLQEXMckAltshWu+H0x/ncIpjIlmb5TTFb6OVzHS8xm9VPhnBxdPSJwFZ7kx29b
+	 O4hDrkrHy1F2o3o8FdBROYbPGiljw4vd+CDssP8WvjexD/SSs6VTTDk/bMsGGQ/WhM
+	 +yAfrdEE4Gke6UPP5de/5dsmvbanSxCQT9o+813w0EqxCvGItuM9kUDGYXnlZQog6a
+	 j5Pwxm/sKwtkg==
+Date: Tue, 30 Jan 2024 19:39:35 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	"open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>,
+	"moderated list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
+	"moderated list:ARM/STM32 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>,
+	Marc Haber <mh+netdev@zugschlus.de>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH net v2] net: stmmac: protect updates of 64-bit statistics
+ counters
+Message-ID: <Zbjf9yQRV26EO7le@xhacker>
+References: <20240128193529.24677-1-petr@tesarici.cz>
+ <ZbiCWtY8ODrroHIq@xhacker>
+ <20240130083539.4ea26a8d@meshulam.tesarici.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240130083539.4ea26a8d@meshulam.tesarici.cz>
 
-RnJvbTogSmlzaGVuZyBaaGFuZw0KPiBTZW50OiAzMCBKYW51YXJ5IDIwMjQgMTE6MzENCj4gDQo+
-IE9uIFN1biwgSmFuIDI4LCAyMDI0IGF0IDEyOjQ3OjAwUE0gKzAwMDAsIERhdmlkIExhaWdodCB3
-cm90ZToNCj4gPiBGcm9tOiBKaXNoZW5nIFpoYW5nDQo+ID4gPiBTZW50OiAyOCBKYW51YXJ5IDIw
-MjQgMTE6MTANCj4gPiA+DQo+ID4gPiBXaGVuIHRoZSBkZXN0aW5hdGlvbiBidWZmZXIgaXMgYmVm
-b3JlIHRoZSBzb3VyY2Ugb25lLCBvciB3aGVuIHRoZQ0KPiA+ID4gYnVmZmVycyBkb2Vzbid0IG92
-ZXJsYXAsIGl0J3Mgc2FmZSB0byB1c2UgbWVtY3B5KCkgaW5zdGVhZCwgd2hpY2ggaXMNCj4gPiA+
-IG9wdGltaXplZCB0byB1c2UgYSBiaWdnZXIgZGF0YSBzaXplIHBvc3NpYmxlLg0KPiA+ID4NCj4g
-PiAuLi4NCj4gPiA+ICsgKiBTaW1wbHkgY2hlY2sgaWYgdGhlIGJ1ZmZlciBvdmVybGFwcyBhbiBj
-YWxsIG1lbWNweSgpIGluIGNhc2UsDQo+ID4gPiArICogb3RoZXJ3aXNlIGRvIGEgc2ltcGxlIG9u
-ZSBieXRlIGF0IHRpbWUgYmFja3dhcmQgY29weS4NCj4gPg0KPiA+IEknZCBhdCBsZWFzdCBkbyBh
-IDY0Yml0IGNvcHkgbG9vcCBpZiB0aGUgYWRkcmVzc2VzIGFyZSBhbGlnbmVkLg0KPiA+DQo+ID4g
-VGhpbmtzIGEgYml0IG1vcmUuLi4uDQo+ID4NCj4gPiBQdXQgdGhlIGNvcHkgNjQgYnl0ZXMgY29k
-ZSAodGhlIGJvZHkgb2YgdGhlIG1lbWNweSgpIGxvb3ApDQo+ID4gaW50byBpdCBhbiBpbmxpbmUg
-ZnVuY3Rpb24gYW5kIGNhbGwgaXQgd2l0aCBpbmNyZWFzaW5nIGFkZHJlc3Nlcw0KPiA+IGluIG1l
-bWNweSgpIGFyZSBkZWNyZW1lbnRpbmcgYWRkcmVzc2VzIGluIG1lbW1vdmUuDQo+IA0KPiBIaSBE
-YXZpZCwNCj4gDQo+IEJlc2lkZXMgdGhlIDY0IGJ5dGVzIGNvcHksIHRoZXJlJ3MgYW5vdGhlciBv
-cHRpbWl6YXRpb24gaW4gX19tZW1jcHk6DQo+IHdvcmQtYnktd29yZCBjb3B5IGV2ZW4gaWYgcyBh
-bmQgZCBhcmUgbm90IGFsaWduZWQuDQo+IFNvIGlmIHdlIG1ha2UgdGhlIHR3byBvcHRpbWl6ZCBj
-b3B5IGFzIGlubGluZSBmdW5jdGlvbnMgYW5kIGNhbGwgdGhlbQ0KPiBpbiBtZW1tb3ZlKCksIHdl
-IGFsbW9zdCBkdXBsaWNhdGUgdGhlIF9fbWVtY3B5IGNvZGUsIHNvIEkgdGhpbmsNCj4gZGlyZWN0
-bHkgY2FsbGluZyBfX21lbWNweSBpcyBhIGJpdCBiZXR0ZXIuDQoNCklmIGEgZm9yd2FyZHMgY29w
-eSBpcyB2YWxpZCBjYWxsIG1lbWNweSgpIC0gd2hpY2ggSSB0aGluayB5b3UgZG8uDQpJZiBub3Qg
-eW91IGNhbiBzdGlsbCB1c2UgdGhlIHNhbWUgJ2NvcHkgOCByZWdpc3RlcicgY29kZQ0KdGhhdCBt
-ZW1jcHkoKSB1c2VzIC0ganVzdCB3aXRoIGEgZGVjcmVtZW50aW5nIGJsb2NrIGFkZHJlc3MuDQoN
-CglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwg
-TW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzog
-MTM5NzM4NiAoV2FsZXMpDQo=
+On Tue, Jan 30, 2024 at 08:35:39AM +0100, Petr Tesařík wrote:
+> On Tue, 30 Jan 2024 13:00:10 +0800
+> Jisheng Zhang <jszhang@kernel.org> wrote:
+> 
+> > On Sun, Jan 28, 2024 at 08:35:29PM +0100, Petr Tesarik wrote:
+> > > As explained by a comment in <linux/u64_stats_sync.h>, write side of struct
+> > > u64_stats_sync must ensure mutual exclusion, or one seqcount update could
+> > > be lost on 32-bit platforms, thus blocking readers forever. Such lockups
+> > > have been observed in real world after stmmac_xmit() on one CPU raced with
+> > > stmmac_napi_poll_tx() on another CPU.
+> > > 
+> > > To fix the issue without introducing a new lock, split the statics into
+> > > three parts:
+> > > 
+> > > 1. fields updated only under the tx queue lock,
+> > > 2. fields updated only during NAPI poll,
+> > > 3. fields updated only from interrupt context,
+> > > 
+> > > Updates to fields in the first two groups are already serialized through
+> > > other locks. It is sufficient to split the existing struct u64_stats_sync
+> > > so that each group has its own.
+> > > 
+> > > Note that tx_set_ic_bit is updated from both contexts. Split this counter
+> > > so that each context gets its own, and calculate their sum to get the total
+> > > value in stmmac_get_ethtool_stats().
+> > > 
+> > > For the third group, multiple interrupts may be processed by different CPUs
+> > > at the same time, but interrupts on the same CPU will not nest. Move fields
+> > > from this group to a newly created per-cpu struct stmmac_pcpu_stats.
+> > > 
+> > > Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statistics where necessary")
+> > > Link: https://lore.kernel.org/netdev/Za173PhviYg-1qIn@torres.zugschlus.de/t/
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Petr Tesarik <petr@tesarici.cz>  
+> > 
+> > Thanks for the fix patch. One trivial improviement below
+> > s/netdev_alloc_pcpu_stats/devm_netdev_alloc_pcpu_stats to simplify
+> > error and exit code path.
+> 
+> Thanks for your review.
+> 
+> In fact, many other allocations in stmmac could be converted to devm_*.
+> I wanted to stay consistent with the existing code, but hey, you're
 
+there's already devm_* usage in stmmac_dvr_probe(), eg. devm_alloc_etherdev_mqs
+I believe other parts are from the old days when there's no devm_* APIs
+
+> right there's no good reason for it.
+> 
+> Plus, I can send convert the other places with another patch.
+> 
+> > With that:
+> > Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
+> > 
+> > PS: when I sent the above "net: stmmac: use per-queue 64 bit statistics
+> > where necessary", I had an impression: there are too much statistics in
+> > stmmac driver, I didn't see so many statistics in other eth drivers, is
+> > it possible to remove some useless or not that useful statistic members?
+> 
+> I don't feel authorized to make the decision. But I also wonder about
+> some counters. For example, why is there tx_packets and tx_pkt_n? The
+> former is shown as RX packets by "ip stats show dev end0", the latter
+> is shown by as tx_pkt_n by "ethtools -S end0". The values do differ,
+> but I have no clue why, and if they are even expected to be different
+> or if it's a bug.
+> 
+> Petr T
