@@ -1,159 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2D066B51
-	for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 13:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8087166B51;
+	Tue, 30 Jan 2024 13:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706621094; cv=none; b=Myx5g+DHeaYiiFp+/o6S9BsxiO1TvM5e0ricdNZfKfXw7c/CBDytZ9rqKTBiCDFlFmtCP27eyfnN0ystq2V15Q9ZEHZY4olppTM4pt1sV4SJxf/8Wijm7CkrLhdIVp8MGxAJjcHhFEXzi1xTqsFkoBFIw+ayPLkLgRcgrNeohrM=
+	t=1706621187; cv=none; b=h6D5osBGsQpBTS3PmZW7D/b3KPqRwiHNjubfadIcVYh8G/8j3ooGXWKuAPgac1ZWSFwhz9web3KD3WSIMp1eSSGoEsvS6tzv5LY7O19afvzhcibkC5QgqDzDom3t5qvskKAXWSWkm+aLMdhKciPYIqw6ReEQ0Rcl+6N5Sh1AXV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706621094; c=relaxed/simple;
-	bh=u2/EtGgKHfzM35W18xHX1KvyJ0d2ZoEG7yO9aWLn5E0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyGDN8N8U3Bx0y01MX9Pqvtjs5XorL5+A+AnF+yHS1XnKY3/f1Z8R8rGDKGjnll7Q2aDIUJwtIg6cU9z9K32NxSF0Erh6fXswSs2ccqo1aiJJZExcUNcZTu0exGU+zlKm+JOoXfZijF3BweMKDLvUTlpl4U1/eHgewUbrhPFa70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZaWbzdN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZaWbzdN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC81C433F1;
-	Tue, 30 Jan 2024 13:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706621094;
-	bh=u2/EtGgKHfzM35W18xHX1KvyJ0d2ZoEG7yO9aWLn5E0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uZaWbzdNChbyXG+ahuq7EytUvzRdZGDvruqZR11EZP6KTpKu3lWN/qaKKHbKMmAac
-	 edrLPNAUV3JEw7LNJZYEtY41NODu+IuPpTTB+MXn0rcibGvRZZ6TSVZU/X1ajBNnK2
-	 yaVvQBdAQhPeoy2yJmanm0awSjpJSBJYJeMrGWBfDCsOmppHRgQBv927XnZtM62RLp
-	 H2qFTf/lKAOkPMRb027X03Vzmx9K2okqjDdgglg+LiVXFAEsmXtiA84jM77PTSXlvf
-	 fNrB4cxOyLO8nYqGR9iC8qKkkFJ35Eorggm/AWzX+Sd6Yb6jWtf6l2lS9tl6KuIveF
-	 M4SW6Z8UDW+ig==
-Date: Tue, 30 Jan 2024 21:12:03 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Matteo Croce <mcroce@microsoft.com>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 2/3] riscv: optimized memmove
-Message-ID: <Zbj1o6VAsk8Tn2ab@xhacker>
-References: <20240128111013.2450-1-jszhang@kernel.org>
- <20240128111013.2450-3-jszhang@kernel.org>
- <fa36b871-43d7-413c-82a2-0ecc0ebce9b4@ics.forth.gr>
+	s=arc-20240116; t=1706621187; c=relaxed/simple;
+	bh=PF8CAVL4rEFi9w1ZE/f1iolLbWvY7zhJk9STs3r80is=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N0yvkbiH163MfGwzMAG02tBzSRNBrhNVgWY2VMX7Vi1Xw9VcLgPEvZzB7F6rKakLEd8uBrxHvHE/a+HdUytPbSyrrVIPI/OTp7Solbxj+6UKucSm5pkUjqk/E/Zlq9a9WAnZkoPhBeHVxr6+2apCmW9ZB2BcRE/5gyQlPF9EWZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-20536d5c5c7so2476396fac.2;
+        Tue, 30 Jan 2024 05:26:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706621184; x=1707225984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=twRUHDzS8w4WKfQKLf30GrMRPHMUcxhF058BULLzw1Q=;
+        b=T6Cbm5Ook6mzsNmevwT8X4ViTMwLLVkIH0jpqoJ/aPWw1vluaiHZtpervNJaen8zcm
+         y7Efb7Xb2Vkhub8H6rKHu6MlvhKDuADkh5Rd1patBG8UmmQb/oVO3+1Z2qJNnoEgMIT2
+         oTf2/N+RwjflCSfPRKOkBwD8p4mGUACjTaJnp31A86EFu4bGBcTta8XNs+YgZlIChcjl
+         pOT6mMHsGtLk1gAjOHLN1//0jGexPdprqSjhybqPGBYZ4aKtk6TM6Zp37oG7Lx3CKyII
+         LMpuqCF7v9GGpbGf72DmfkSblZI5nWUaq4MnLvaD3qkA/X0qexTcz8vzqD0hAAMvsnB/
+         8SjA==
+X-Gm-Message-State: AOJu0YwtLR6zeQFQ/D4pXEeu0G868bKNtBkuK1ms1DEUVj2KzvDDxzP7
+	xICod1VpcLWfWNGK0SwPTn0WOkLAMRDK8YUCJKVePsSSac7wozFDKJaZucMj8KY=
+X-Google-Smtp-Source: AGHT+IGgq38bhoeG59BH65Ja8KFWXHL5iTihljLt3Fjpux1S3N8uNoMeFoWUPjhw0kO2fb2gO1QH5A==
+X-Received: by 2002:a05:6871:8191:b0:218:61af:1c75 with SMTP id so17-20020a056871819100b0021861af1c75mr5223962oab.37.1706621184274;
+        Tue, 30 Jan 2024 05:26:24 -0800 (PST)
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com. [209.85.210.41])
+        by smtp.gmail.com with ESMTPSA id n13-20020a9d4d0d000000b006e11d51d04csm1292201otf.18.2024.01.30.05.26.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 05:26:23 -0800 (PST)
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6dde5d308c6so2643387a34.0;
+        Tue, 30 Jan 2024 05:26:23 -0800 (PST)
+X-Received: by 2002:a9d:6a8e:0:b0:6dd:e8d5:9afb with SMTP id
+ l14-20020a9d6a8e000000b006dde8d59afbmr5897353otq.3.1706621183706; Tue, 30 Jan
+ 2024 05:26:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fa36b871-43d7-413c-82a2-0ecc0ebce9b4@ics.forth.gr>
+References: <20240130111250.185718-1-angelogioacchino.delregno@collabora.com> <20240130111250.185718-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240130111250.185718-3-angelogioacchino.delregno@collabora.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 30 Jan 2024 14:26:12 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUKXwxAKgtmgMxj+y-8GBWBLWC=ROP31uStTnfLDx6OLQ@mail.gmail.com>
+Message-ID: <CAMuHMdUKXwxAKgtmgMxj+y-8GBWBLWC=ROP31uStTnfLDx6OLQ@mail.gmail.com>
+Subject: Re: [PATCH v1 02/18] thermal: Add new structures and thermal_zone_device_register()
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: daniel.lezcano@linaro.org, miquel.raynal@bootlin.com, rafael@kernel.org, 
+	rui.zhang@intel.com, lukasz.luba@arm.com, support.opensource@diasemi.com, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, linux-imx@nxp.com, andersson@kernel.org, 
+	konrad.dybcio@linaro.org, amitk@kernel.org, thara.gopinath@gmail.com, 
+	niklas.soderlund@ragnatech.se, srinivas.pandruvada@linux.intel.com, 
+	baolin.wang@linux.alibaba.com, u.kleine-koenig@pengutronix.de, 
+	hayashi.kunihiko@socionext.com, d-gole@ti.com, linus.walleij@linaro.org, 
+	DLG-Adam.Ward.opensource@dm.renesas.com, error27@gmail.com, heiko@sntech.de, 
+	hdegoede@redhat.com, jernej.skrabec@gmail.com, f.fainelli@gmail.com, 
+	bchihi@baylibre.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 30, 2024 at 01:39:10PM +0200, Nick Kossifidis wrote:
-> On 1/28/24 13:10, Jisheng Zhang wrote:
-> > From: Matteo Croce <mcroce@microsoft.com>
-> > 
-> > When the destination buffer is before the source one, or when the
-> > buffers doesn't overlap, it's safe to use memcpy() instead, which is
-> > optimized to use a bigger data size possible.
-> > 
-> > Signed-off-by: Matteo Croce <mcroce@microsoft.com>
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> 
-> I'd expect to have memmove handle both fw/bw copying and then memcpy being
-> an alias to memmove, to also take care when regions overlap and avoid
-> undefined behavior.
+Hi Angelo,
 
-Hi Nick,
+On Tue, Jan 30, 2024 at 12:13=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+> In preparation for extending the thermal zone devices to actually
+> have a name and disambiguate thermal zone types/names, and to do
+> a reorganization in thermal_zone_device, add some new Thermal Zone
+> structures:
+>
+> Introduce new thermal_governor_params, thermal_zone_platform_params
+> and thermal_zone_device_params structures which are meant to hold
+> the parameters for thermal zone registration and, in the future, to
+> stop having a catch-all thermal_zone_device structure.
+>
+> While at it, also add a new thermal_zone_device_register() function
+> which uses the new structure(s) for registration;
+> the now old functions thermal_tripless_zone_device_register() and
+> thermal_zone_device_register_with_trips() are now advertised as
+> being deprecated and changed to instead act as wrappers around the
+> new thermal_zone_device_register().
+>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
 
-Here is somthing from man memcpy:
+Thanks for your patch!
 
-"void *memcpy(void dest[restrict .n], const void src[restrict .n],
-                    size_t n);
+> ---
+>  drivers/thermal/gov_power_allocator.c |  38 +++----
+>  drivers/thermal/qcom/tsens.c          |   4 +-
+>  drivers/thermal/thermal_core.c        | 146 ++++++++++++++++++--------
+>  drivers/thermal/thermal_helpers.c     |   8 +-
+>  drivers/thermal/thermal_sysfs.c       |  16 +--
+>  include/linux/thermal.h               |  73 +++++++++++--
+>  6 files changed, 202 insertions(+), 83 deletions(-)
 
-The  memcpy()  function copies n bytes from memory area src to memory area dest.
-The memory areas must not overlap.  Use memmove(3) if the memory areas do  over‐
-lap."
+This also needs an update to the documentation, which still refers to
+the old function removed in commit edd220b33f479cf9 ("thermal: core:
+Drop thermal_zone_device_register()") in v6.6.:
 
-IMHO, the "restrict" implies that there's no overlap. If overlap
-happens, the manual doesn't say what will happen.
+Documentation/driver-api/thermal/power_allocator.rst:`thermal_zone_device_r=
+egister()`
+Documentation/driver-api/thermal/power_allocator.rst:`thermal_zone_device_r=
+egister()`
+(i.e., platform code), then weights
+Documentation/driver-api/thermal/sysfs-api.rst:
+*thermal_zone_device_register(char *type,
 
-From another side, I have a concern: currently, other arch don't have
-this alias behavior, IIUC(at least, per my understanding of arm and arm64
-memcpy implementations)they just copy forward. I want to keep similar behavior
-for riscv.
+Gr{oetje,eeting}s,
 
-So I want to hear more before going towards alias-memcpy-to-memmove direction.
+                        Geert
 
-Thanks
-> 
-> 
-> > --- a/arch/riscv/lib/string.c
-> > +++ b/arch/riscv/lib/string.c
-> > @@ -119,3 +119,28 @@ void *memcpy(void *dest, const void *src, size_t count) __weak __alias(__memcpy)
-> >   EXPORT_SYMBOL(memcpy);
-> >   void *__pi_memcpy(void *dest, const void *src, size_t count) __alias(__memcpy);
-> >   void *__pi___memcpy(void *dest, const void *src, size_t count) __alias(__memcpy);
-> > +
-> > +/*
-> > + * Simply check if the buffer overlaps an call memcpy() in case,
-> > + * otherwise do a simple one byte at time backward copy.
-> > + */
-> > +void *__memmove(void *dest, const void *src, size_t count)
-> > +{
-> > +	if (dest < src || src + count <= dest)
-> > +		return __memcpy(dest, src, count);
-> > +
-> > +	if (dest > src) {
-> > +		const char *s = src + count;
-> > +		char *tmp = dest + count;
-> > +
-> > +		while (count--)
-> > +			*--tmp = *--s;
-> > +	}
-> > +	return dest;
-> > +}
-> > +EXPORT_SYMBOL(__memmove);
-> > +
-> 
-> Here is an approach for the backwards case to get things started...
-> 
-> static void
-> copy_bw(void *dst_ptr, const void *src_ptr, size_t len)
-> {
-> 	union const_data src = { .as_bytes = src_ptr + len };
-> 	union data dst = { .as_bytes = dst_ptr + len };
-> 	size_t remaining = len;
-> 	size_t src_offt = 0;
-> 
-> 	if (len < 2 * WORD_SIZE)
-> 		goto trailing_bw;
-> 
-> 	for(; dst.as_uptr & WORD_MASK; remaining--)
-> 		*--dst.as_bytes = *--src.as_bytes;
-> 
-> 	src_offt = src.as_uptr & WORD_MASK;
-> 	if (!src_offt) {
-> 		for (; remaining >= WORD_SIZE; remaining -= WORD_SIZE)
-> 			*--dst.as_ulong = *--src.as_ulong;
-> 	} else {
-> 		unsigned long cur, prev;
-> 		src.as_bytes -= src_offt;
-> 		for (; remaining >= WORD_SIZE; remaining -= WORD_SIZE) {
-> 			cur = *src.as_ulong;
-> 			prev = *--src.as_ulong;
-> 			*--dst.as_ulong = cur << ((WORD_SIZE - src_offt) * 8) |
-> 					  prev >> (src_offt * 8);
-> 		}
-> 		src.as_bytes += src_offt;
-> 	}
-> 
->  trailing_bw:
-> 	while (remaining-- > 0)
-> 		*--dst.as_bytes = *--src.as_bytes;
-> }
-> 
-> Regards,
-> Nick
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
