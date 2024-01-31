@@ -1,345 +1,99 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B04C3DB8C;
-	Wed, 31 Jan 2024 05:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B953DBBF
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706680653; cv=none; b=u6gs9g/cGGgwIkv8Rm1t9e/uT4Ad3vF1ID79U8S5CO7ydWUBjs7+OVYPPVDDJS3MkcCZRHonMqhhwqqtjrXRAkP29LXcGamf86lWsYlpG7WPHSSSH/3vXx8hoLLoy/i/JMUeh0uOCe0nag1R0lolEBhkqZzVFBOXMy8xrg79gFU=
+	t=1706680667; cv=none; b=sC8FgBnt+3Ka7IjcPiyyfFRQD1SOIpp/+Ma6oMqZr8iZtG39mdH1fD1PMCEqXoDAbOsh2TkTImjF7rw24RQtgEr0fX1JBaslV0dvsrWzPU8A9j9GzlK2Y900s3nvlE5DGsdsd8Jrroab4CxPZhGFmdV2jC4m6JwD36piqTMcT6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706680653; c=relaxed/simple;
-	bh=yExbTaxNujpw4MVvw6DMvGP2n9jHMUjfnafp46vGVVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sRPSwU2TcO03mdOvYmvTo3PBa2aHGTGFLS3ETsLhh2akeCkTMJ+CnnkYOJYZpxAM9zA4IGxEUNeO82t/FYBWi0LNwtWtNfzMvnEWUf7ffmPsZga7ohoVdnlx4VawBqRV3r2eCLUd6rM1L3/kbll8b+ETEMLu65mxILijjwvkWv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gm7KvZNk; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706680667; c=relaxed/simple;
+	bh=vOyih3ICf+cC/rEztfmfpM3LdNIl0b2I9wSmpv/NLFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QIbQzBTqAp16ljZ/NVSKi+NHWSgZxc+1K9UkaIEgvggdBUk0w7fDIFcQ2m4apYJw04ngSMJVE9OpndXHzNz9IzZmC+TIzYQl1bIF7wIdIxdHEoualQK8ZYN7sQp8tYKMRC1MDjxtTyrDsdTzFyIx7dIGh5kgZtPcHv5WRtW64sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cBPK5zEU; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gm7KvZNk"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6de0ba30994so400853b3a.1;
-        Tue, 30 Jan 2024 21:57:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cBPK5zEU"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a35385da5bbso632340566b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:57:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706680651; x=1707285451; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DwfM1rJCcQryVjF8O0WNubhcGyoUuP04qt8oaDsGtxo=;
-        b=Gm7KvZNkpb2JQY+2Wx8+IdWD97aI0tLgCglD24Q0xq0xiGpOiQblALbjqhvUyRyNNw
-         +sVprWLFNr3kvZxs268dOP+7N2gCiHQmkBVhiu0wE/RmwIXeF6hTzPqW3pPZ7Gy8dXgz
-         8RVkiDluP4v4N/O/yfXhF8PVa8j5WCo1S4r19ks+/MlqEO1KE9VTSIMFYlp97keV8qls
-         hrcitQXb+MNMxkolLCH4gpidPJ/K0AH4fwcGcJuz8CYIlor/PGix+xVCbL+k/8Ec3h2f
-         sHemtFfYO+Np2Cwl8qgURgb0BM4R3udNyDTMtaXKYKabnn65mymufpaHHIjg7LfIGGKo
-         sELg==
+        d=linux-foundation.org; s=google; t=1706680664; x=1707285464; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DJmhQWnMdv5xPINffOj6QDTUCMF7DMEzkKe7lbx6KIE=;
+        b=cBPK5zEUQs9ZGjlwe0sQxa8pWCYVhR/pb0wKhpLAkfs9O9yK8E7q1fKltCbD3nHaBI
+         uL6V7bHSbSnzmN2ZQF+zojIHIIsbQ8j+qyzNpbue9ZjQtCKo1tV74q2nf8jXmAaQTV4+
+         FwEKEMyxTWcgDFB/IXT8G1Ra67gNVqobnr8Zo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706680651; x=1707285451;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1706680664; x=1707285464;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DwfM1rJCcQryVjF8O0WNubhcGyoUuP04qt8oaDsGtxo=;
-        b=MuRkhPFI8c+QnQxVKTSJamW5UXYxyF556FZ9thc6YYSG2N927fGEZkOs1tRZEYuX8+
-         Fzi/FNBxoCHbjNYMDbatPP2uDyErrJ4h4eLgu+DcI3ZmlaZzHQ1oeUFqKy7BC869/zXZ
-         U8TwPZoywaJeZzvXHPfmnsczogxtZ7od5ZIzElyRE3GnWYlU7qj4ruNRRVvr8FcCDd+2
-         S97gM8UqVXbZTaHaZTnKE7nCPUeLmzvSahksWJwH7b1W1wLwd0kPxgNsddF6XoO+v6Zc
-         +DiPj1G3XXQu4JyD1qADIxMgvB7jkB/WIL2xJrFoebtAgbYkWSLV70r0nFO8BZnbW6Pk
-         Y4bA==
-X-Gm-Message-State: AOJu0Ywkr9N2ahXZj+VPMjzGcbkTHkmkdCBeGcL0EvTFp51U+G970zMl
-	NDN9zdRFzhnBjgWibLkWOUyg11nC15pv/Yf5me9+5weqtGyOcgj5
-X-Google-Smtp-Source: AGHT+IGyY4WvXEhqhD6fYTqwlagg2XzApmRAkpxMfsTtKj47HL+X08KbKcSgirmJSNLfug0CcR+9PA==
-X-Received: by 2002:a05:6a00:981:b0:6d9:a074:659f with SMTP id u1-20020a056a00098100b006d9a074659fmr4506003pfg.13.1706680651313;
-        Tue, 30 Jan 2024 21:57:31 -0800 (PST)
-Received: from charles-System-Product-Name.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id r20-20020aa78b94000000b006ddddc7701fsm8904385pfd.4.2024.01.30.21.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 21:57:31 -0800 (PST)
-From: Charles Hsu <ythsu0511@gmail.com>
-To: jdelvare@suse.com,
-	linux@roeck-us.net,
-	corbet@lwn.net,
-	Delphine_CC_Chiu@Wiwynn.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Charles Hsu <ythsu0511@gmail.com>
-Subject: [PATCH v3 1/2] hwmon: Add driver for MPS MPQ8785 Synchronous Step-Down Converter
-Date: Wed, 31 Jan 2024 13:55:25 +0800
-Message-Id: <20240131055526.2700452-1-ythsu0511@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        bh=DJmhQWnMdv5xPINffOj6QDTUCMF7DMEzkKe7lbx6KIE=;
+        b=soZYCfAJPjYxAwFvbUM79dItiJWakbxf9fuwthFBYaKlBlc73YA0FW9En7onJrcQto
+         FSHxv7Y2PqeNIHtPnPV1hFujP1uQu/5f0CvDw566eIiOYQL2SnY5VyWUET1G8l4OfjGM
+         sFSrXoXsKuI8INvTl3pQ5JexvDGq4j0u6neeFi4imBMOH8VSRDMkYTWnAgC05V8kQg6B
+         R0beTpLiGCb4t17JFyxrt+4MhZ/Jc2jN8jYpH1IgRVB2H079sGIiHDHGN3tKGBDAQyIn
+         9CubZTDXEddzBHgfQ9lWNb1de9dm0hK+bbnKjPeQgQEPXVn5GWxVH2W0uF8d9FUa7SSq
+         1EZg==
+X-Gm-Message-State: AOJu0Yz/qsUME4usOTQ9b1MEONJ0pBbi0KdpkvAqgqnAZgvlgfB9vqHO
+	KMAg4zgTyY1EghscqapJn0l8VFJZerLsPlkwdmiL7MWyVXfMhGtJYjdil9X0ym3QVj2Irc2rI8l
+	aGplJiQ==
+X-Google-Smtp-Source: AGHT+IGbRbGiu4f/WIKa1Rl6P5/oSPIPIKx0utpggoYHWfRPlazQ0PgDLOu8TGgi/ECTLhJGpVzvtA==
+X-Received: by 2002:a17:906:4c54:b0:a34:d426:1b86 with SMTP id d20-20020a1709064c5400b00a34d4261b86mr368990ejw.9.1706680663974;
+        Tue, 30 Jan 2024 21:57:43 -0800 (PST)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id zh11-20020a170906880b00b00a359c588d31sm3442074ejb.100.2024.01.30.21.57.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 21:57:43 -0800 (PST)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55f0367b15fso3661704a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:57:43 -0800 (PST)
+X-Received: by 2002:aa7:ca47:0:b0:55e:eade:fcba with SMTP id
+ j7-20020aa7ca47000000b0055eeadefcbamr342103edt.5.1706680663061; Tue, 30 Jan
+ 2024 21:57:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+ <20240130190355.11486-5-torvalds@linux-foundation.org> <20240131000956.3dbc0fc0@gandalf.local.home>
+ <CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com> <20240131003317.7a63e799@gandalf.local.home>
+In-Reply-To: <20240131003317.7a63e799@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 30 Jan 2024 21:57:26 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
+Message-ID: <CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
+Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without refcounts
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for mpq8785 device from Monolithic Power Systems, Inc.
-(MPS) vendor. This is synchronous step-down controller.
+On Tue, 30 Jan 2024 at 21:33, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> With even the last patch included, without the d_invalidate() I get errors
+> with simply doing:
+>
+>  # cd /sys/kernel/tracing
+>  # mkdir instances/foo
+>  # ls instances/foo/events
+>  # rmdir instances/foo
+>
+> As the rmdir calls tracefs_remove() that calls simple_recursive_removal()
+> that then walks into the "events" directory. Without that d_invalidate, it
+> walks beyond just the top directory and then splats on the dentries that
+> are cached.
 
-Signed-off-by: Charles Hsu <ythsu0511@gmail.com>
+Ugh.
 
----
-Change in v1:
-    Initial patchset.
-Change in v2:
-    1.Add pmbus support status registers.
-    2.Add mpq8785 in trivial-devices.yaml.
-    3.Remove format[PSC_VOLTAGE_OUT].
-    4.Fix MODULE_DESCRIPTION.
-Change in v3:
-    1.Identify vout_mode.
-    2.Separate dt-binding.
----
- Documentation/hwmon/index.rst   |  1 +
- Documentation/hwmon/mpq8785.rst | 94 +++++++++++++++++++++++++++++++++
- drivers/hwmon/pmbus/Kconfig     |  9 ++++
- drivers/hwmon/pmbus/Makefile    |  1 +
- drivers/hwmon/pmbus/mpq8785.c   | 91 +++++++++++++++++++++++++++++++
- 5 files changed, 196 insertions(+)
- create mode 100644 Documentation/hwmon/mpq8785.rst
- create mode 100644 drivers/hwmon/pmbus/mpq8785.c
+This is only an issue for that "events" dir, right? The one that has a
+proper refcount on the dentry in 'ei->events_dir'?
 
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index c7ed1f73ac06..085ad6ca9b05 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -163,6 +163,7 @@ Hardware Monitoring Kernel Drivers
-    mp2975
-    mp5023
-    mp5990
-+   mpq8785
-    nct6683
-    nct6775
-    nct7802
-diff --git a/Documentation/hwmon/mpq8785.rst b/Documentation/hwmon/mpq8785.rst
-new file mode 100644
-index 000000000000..bf8176b87086
---- /dev/null
-+++ b/Documentation/hwmon/mpq8785.rst
-@@ -0,0 +1,94 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+Kernel driver mpq8785
-+=======================
-+
-+Supported chips:
-+
-+  * MPS MPQ8785
-+
-+    Prefix: 'mpq8785'
-+
-+Author: Charles Hsu <ythsu0511@gmail.com>
-+
-+Description
-+-----------
-+
-+The MPQ8785 is a fully integrated, PMBus-compatible, high-frequency, synchronous
-+buck converter. The MPQ8785 offers a very compact solution that achieves up to
-+40A output current per phase, with excellent load and line regulation over a
-+wide input supply range. The MPQ8785 operates at high efficiency over a wide
-+output current load range.
-+
-+The PMBus interface provides converter configurations and key parameters
-+monitoring.
-+
-+The MPQ8785 adopts MPS's proprietary multi-phase digital constant-on-time (MCOT)
-+control, which provides fast transient response and eases loop stabilization.
-+The MCOT scheme also allows multiple MPQ8785 devices to be connected in parallel
-+with excellent current sharing and phase interleaving for high-current
-+applications.
-+
-+Fully integrated protection features include over-current protection (OCP),
-+over-voltage protection (OVP), under-voltage protection (UVP), and
-+over-temperature protection (OTP).
-+
-+The MPQ8785 requires a minimal number of readily available, standard external
-+components, and is available in a TLGA (5mmx6mm) package.
-+
-+Device compliant with:
-+
-+- PMBus rev 1.3 interface.
-+
-+The driver exports the following attributes via the 'sysfs' files
-+for input voltage:
-+
-+**in1_input**
-+
-+**in1_label**
-+
-+**in1_max**
-+
-+**in1_max_alarm**
-+
-+**in1_min**
-+
-+**in1_min_alarm**
-+
-+**in1_crit**
-+
-+**in1_crit_alarm**
-+
-+The driver provides the following attributes for output voltage:
-+
-+**in2_input**
-+
-+**in2_label**
-+
-+**in2_alarm**
-+
-+The driver provides the following attributes for output current:
-+
-+**curr1_input**
-+
-+**curr1_label**
-+
-+**curr1_max**
-+
-+**curr1_max_alarm**
-+
-+**curr1_crit**
-+
-+**curr1_crit_alarm**
-+
-+The driver provides the following attributes for temperature:
-+
-+**temp1_input**
-+
-+**temp1_max**
-+
-+**temp1_max_alarm**
-+
-+**temp1_crit**
-+
-+**temp1_crit_alarm**
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index 294808f5240a..557ae0c414b0 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -377,6 +377,15 @@ config SENSORS_MPQ7932
- 	  This driver can also be built as a module. If so, the module will
- 	  be called mpq7932.
- 
-+config SENSORS_MPQ8785
-+	tristate "MPS MPQ8785"
-+	help
-+	  If you say yes here you get hardware monitoring functionality support
-+	  for power management IC MPS MPQ8785.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called mpq8785.
-+
- config SENSORS_PIM4328
- 	tristate "Flex PIM4328 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index cf8a76744545..f14ecf03ad77 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_SENSORS_MP2975)	+= mp2975.o
- obj-$(CONFIG_SENSORS_MP5023)	+= mp5023.o
- obj-$(CONFIG_SENSORS_MP5990)	+= mp5990.o
- obj-$(CONFIG_SENSORS_MPQ7932)	+= mpq7932.o
-+obj-$(CONFIG_SENSORS_MPQ8785)	+= mpq8785.o
- obj-$(CONFIG_SENSORS_PLI1209BC)	+= pli1209bc.o
- obj-$(CONFIG_SENSORS_PM6764TR)	+= pm6764tr.o
- obj-$(CONFIG_SENSORS_PXE1610)	+= pxe1610.o
-diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
-new file mode 100644
-index 000000000000..b5bfc5d8a96b
---- /dev/null
-+++ b/drivers/hwmon/pmbus/mpq8785.c
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Driver for MPS MPQ8785 Step-Down Converter
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include "pmbus.h"
-+
-+static int mpq8785_identify(struct i2c_client *client,
-+			    struct pmbus_driver_info *info)
-+{
-+	int vout_mode;
-+
-+	vout_mode = pmbus_read_byte_data(client, 0, PMBUS_VOUT_MODE);
-+	if (vout_mode >= 0 && vout_mode != 0xff) {
-+		switch (vout_mode >> 5) {
-+		case 0:
-+			info->format[PSC_VOLTAGE_OUT] = linear;
-+			break;
-+		case 1:
-+		case 2:
-+			/* Direct mode or VID mode: Vout_Actual = READ_VOUT*LSB,
-+			   LSB = 1.5625 mV/LSB */
-+			info->format[PSC_VOLTAGE_OUT] = direct,
-+			info->m[PSC_VOLTAGE_OUT] = 64;
-+			info->b[PSC_VOLTAGE_OUT] = 0;
-+			info->R[PSC_VOLTAGE_OUT] = 1;
-+			break;
-+		default:
-+			return -ENODEV;
-+		}
-+	}
-+
-+	return 0;
-+};
-+
-+static struct pmbus_driver_info mpq8785_info = {
-+	.pages = 1,
-+	.format[PSC_VOLTAGE_IN] = direct,
-+	.format[PSC_CURRENT_OUT] = direct,
-+	.format[PSC_TEMPERATURE] = direct,
-+	.m[PSC_VOLTAGE_IN] = 4,
-+	.b[PSC_VOLTAGE_IN] = 0,
-+	.R[PSC_VOLTAGE_IN] = 1,
-+	.m[PSC_CURRENT_OUT] = 16,
-+	.b[PSC_CURRENT_OUT] = 0,
-+	.R[PSC_CURRENT_OUT] = 0,
-+	.m[PSC_TEMPERATURE] = 1,
-+	.b[PSC_TEMPERATURE] = 0,
-+	.R[PSC_TEMPERATURE] = 0,
-+	.func[0] =
-+		PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT |
-+		PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-+		PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
-+		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
-+	.identify = mpq8785_identify,
-+};
-+
-+static int mpq8785_probe(struct i2c_client *client)
-+{
-+	return pmbus_do_probe(client, &mpq8785_info);
-+};
-+
-+static const struct i2c_device_id mpq8785_id[] = {
-+	{ "mpq8785", 0 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, mpq8785_id);
-+
-+static const struct of_device_id __maybe_unused mpq8785_of_match[] = {
-+	{ .compatible = "mps,mpq8785" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mpq8785_of_match);
-+
-+static struct i2c_driver mpq8785_driver = {
-+	.driver = {
-+		   .name = "mpq8785",
-+		   .of_match_table = of_match_ptr(mpq8785_of_match),
-+	},
-+	.probe_new = mpq8785_probe,
-+	.id_table = mpq8785_id,
-+};
-+
-+module_i2c_driver(mpq8785_driver);
-+
-+MODULE_AUTHOR("Charles Hsu <ythsu0511@gmail.com>");
-+MODULE_DESCRIPTION("PMBus driver for MPS MPQ8785");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+Because yes, then doing d_invalidate() looks like the right thing.
 
+           Linus
