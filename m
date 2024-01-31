@@ -1,235 +1,249 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A4012A143
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D90784A2D
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706717162; cv=none; b=bJ6nfe+WoNgka3v5EYfchR2YId+bKsOqqijJ2Q9oap2bSHYhwchovW4lOHxbgLRQfQijqYIDFOq0hpsqbI0PQ2GfrogVQRm/FvBJ8bEePztggfFOtbapJzr40YbrWoYy9fHv511hW3NoEq1cVanPmC6houTidtEXrKHTVmLQL+Q=
+	t=1706717210; cv=none; b=f9GFC0a7JOFJ4RqcNAdzM5wZpkXLxokLCJ+oc3w3XU+Ma+TwqGXyWPWI02Va+aIYd2OajcYDBeEwX99U7y3lTLGPKBkGRd+GW2eqdxPFrzlCcclOXb1zX3kpPFqA/81l9jKDPR4P8eHF+fGxYrElyDlABb/TikgrsoXdi9sgNqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706717162; c=relaxed/simple;
-	bh=9FHeNdla+jIOOK2A7eSE1AfIOgvA+iOX0COwE66UVmE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DdMBuI7r/m/m85RZ3OI33XwvYD5qmmj+sYelv6TOp3gqofIWvVgMss73MWMpjnIOikj4FXXafuurpsmzuOvG042BwsC90WV9L2cD1LDmegVPw8OIHaqZbWXrlyKfzaaifsE+n/rMXaRSppRtjBVEzmNsVLa3WGh/0cvq/iSBrJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=r4+Rw7T7; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1706717210; c=relaxed/simple;
+	bh=9XerCSIrO3MZAQg9oUAxkEq/vXCPX3FtEmSyOwTW9LA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lxDWbw5u46mYpFD2RaW8+d9waPMwlLga6xYFXAYQmM+1M7tM9aWBYhkH+g93VAye6OBcCLhSJFTYkG5mEMvhjYozJkxOgbGmcojcdE7Q0cEBJaS6fLROKzQxkHD+KttddDw9xMWMerUnXnJwCXoqTltFguCUQhYIzgmFmRYZqLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=PlVuM9Bk; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="r4+Rw7T7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1706717154; bh=N7Wf1cp0fO57Z9uDiMvCuo//pFaOGnfEQuJkfrl9Odo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=r4+Rw7T7KFY+hILa7fFtjWIy/lx5T39lImBK3LpCkegYbMVwjfKut1k0+F1aRYVAA
-	 by0PaEJwEk8Pmh+6ylG/Aydx3dlbGKF7jua6MBNqJDy5F/3JxMs0o+sp9eK1l79Jco
-	 YxDejBqgXGni7tCCPsi9RUyfieLjdyDQDOAdYnZc=
-Received: from [127.0.0.1] ([240e:379:2245:2000:e9ce:4171:6217:836b])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id EEB9DCEF; Wed, 31 Jan 2024 23:59:43 +0800
-X-QQ-mid: xmsmtpt1706716783t1k17n6nr
-Message-ID: <tencent_068B3B7AE01AC67885E4369AF14109CE6A0A@qq.com>
-X-QQ-XMAILINFO: OSwzSWs0onYP0SSh2k2Rfo1G0GlEZlxvjYKSVqlBi++K8IwPuekaD6GJRMsdEW
-	 wncHhTMAXNfnj3f8dAEFCu5e+jSDlcxlgzEN7Hg1Sir8o/E/l3MP8tXbmb1lRjx/5ZzdL8nbpYDb
-	 sgzWCXhLxTEBWTR65p5q5q1lAoe3cBFQQzFX9MHE/BIlDOU2OqKEpQgqB4lfoJx89oIRqJVrwdz9
-	 XuOR3/Q//BHoM0VplG0+Dx/5w70QDofz5iglvPCGbxZsFjY4e+MPRNkbcS6+jeGlYuY4Nkbida+y
-	 8Etf1g58JgzfTXdfNtpcoekxVyON/bQ/IoATIg8dwVbJ5jHBg747SFdSMRj14NQTyzqeCFOKHut8
-	 CzKoOTZMmsx3b0TTfvI9sXUTOsnYcz8Y+s1plTx1qUwnnRrt9Y9kO5iYJIdPUnHzrRbLSpu2/7zp
-	 2iHT0dale0BhAx/wcHjKq5zBSsDirvFbVI7USZS/7iSS3ojf+eml9tTkXMh9wzvwU95TAAy5ry9M
-	 rS9qRgtd/CV7AmhKwvlVfEzYV4+uXyiB7AazXK28HFdyazblG+Ph5eK3oU7NpwxYKcm9oUJXRnoM
-	 +92ATLQ9iSmqESB8qiAx5NEUc3Q7PID5TRBsFY6CSbVogcltLdlkJZxVrdoCQ8qHtjVezuAqM2wI
-	 jBaEX6pznqdOTRdOLcwmagclBGilMvk7JfFq+hgJDy1FPlb7inh0thZaZtl7/hL/ppK2+VMb5INO
-	 k+ZpnNXC5s7gyKgltO3ol8iBPDzEc3TG0hqgmQMfL8e/IXNp4wKiXu4r4owo6Bz5cKfLzCBStSeo
-	 85Jcf6Rbsh2HDVMFddxScr6VOd4jJoP/QxpkfKqELYHBW8yY81I3eMUxOoRUhMtWqWFRpImoFxHN
-	 C8lJgcIzeGL226kH111Ha4L1TVMwA5wXmLkX1i2HKk7ZPd1fKDDyu3yilEGbplvG+3/VSUde9oBQ
-	 Egwc56rOmrTnVjqyVbEDaWjfy6rz56Mcub5NGph9GfktqC4MID5Y7MXfdK2vw1MKENoD2WWidznO
-	 OfEBzMomYQMHS7zuyIE41bg8zZ2pme7YyzihBpEw==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-OQ-MSGID: <c35f3079f1c2b949cf1e7c17908ade5f7c46169e.camel@cyyself.name>
-Subject: Re: [PATCH v3 1/3] riscv: mm: Use hint address in mmap if available
-From: Yangyu Chen <cyy@cyyself.name>
-To: Charlie Jenkins <charlie@rivosinc.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Shuah Khan
- <shuah@kernel.org>,  Jonathan Corbet <corbet@lwn.net>
-Cc: linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Date: Wed, 31 Jan 2024 23:59:43 +0800
-In-Reply-To: <tencent_83E0AB36A9A3032E5A4C4AC864A311DF9406@qq.com>
-References: <20240130-use_mmap_hint_address-v3-0-8a655cfa8bcb@rivosinc.com>
-	 <20240130-use_mmap_hint_address-v3-1-8a655cfa8bcb@rivosinc.com>
-	 <tencent_83E0AB36A9A3032E5A4C4AC864A311DF9406@qq.com>
-Autocrypt: addr=cyy@cyyself.name; prefer-encrypt=mutual;
- keydata=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
-	0mslfht1JyMf5dUi38RQI/fOO0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3-1 
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PlVuM9Bk"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7c00ce1e005so66599639f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:06:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1706717208; x=1707322008; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/mOJLbseLPsvIbhLzLVD0YPyGdIC7j3P6ckn0xZuSAs=;
+        b=PlVuM9BkHNgtvU+guqSm+4RFsZ/1pk5szYcqu5isIxlxjoHUhms4yywxNAKTkxalNO
+         mX7WBVC3MlEV5dQ3BQZvzK7Bqdsq0zXHAGzVIqKTliQfcoCIH9yIU1avrBb+Ff9UTd2s
+         5uWhO+QDF8BnSD+euIq06rdbzlDdqLnvPLFG9CDTDeckep4v4EcDQG10LQZ2SeaCyIdR
+         L7SOB7VNFZ82xHVjp40L5KGSr1Osi3DCzGnvhnjtrjiFDrRql9chnlpSwFZ0WDSYbPIb
+         udxuUr1O05CMntr37JI7bdtSqRMnD2OfSXvRGV1HgGSYbT1DrpOPqclUbh7VMaBHjkd4
+         QwvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706717208; x=1707322008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/mOJLbseLPsvIbhLzLVD0YPyGdIC7j3P6ckn0xZuSAs=;
+        b=SmhYT9vrJkWvS6auD66KvFKyvPBVLSyg7v5H7Afysw/DWOjxUgZ56wTEfOXu4+1PBt
+         jw+zA6m/AHhmpzObKpjOmtDs5M6XmFt/sE/TvzG+QNu87j6xcPYFJofDSS2ws6vvZMKE
+         T+N6wsRnvt/oGvMyQ3GlXLyRYgbzlNVEfINsukWxEFmyiFRiCGNeSV9tfHO1O4pIGceg
+         I5mw/O9ieuGHU5tfHdg7dZwWnhU+BuTIh6ZUT221Wzf240anp//Oa6OTzZgVKcKmDf1C
+         2Gg6HEX+Rfa+wAtLBuP8facXYe28uw9kMSEyAUd7iowj5MBhPvAU3046j0iMGhSQ87aM
+         vKuw==
+X-Gm-Message-State: AOJu0Yx2LxVsSeH5oaOKU3yqXpkBOPTPORNUGVSF6LI9+psoLeodat5W
+	tOQWvkuz00KtMU1+f7Vtwsnvy9ghdKDPm66lktUtNKtt4eh+7jQerp9NOI0SFFJAM8gbbdunDRe
+	gIpjp6jKAQLfv0pAkfWczC+w+EvGw6xgMikdMbg==
+X-Google-Smtp-Source: AGHT+IEl1wgTaicH/lywZEqksedrylK3qXk0XQIBiRAjl1TMWqSsoPkVo2//eTIJ77dWGhid47jFcTSpFMPuBuGRM80=
+X-Received: by 2002:a6b:6513:0:b0:7c0:2579:1a2f with SMTP id
+ z19-20020a6b6513000000b007c025791a2fmr1495741iob.11.1706717207711; Wed, 31
+ Jan 2024 08:06:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231205085959.32177-1-zong.li@sifive.com> <CANXhq0r6A48q+ehayaURLO6snDEjzVJO6Ti+1we-57i0ORT9yg@mail.gmail.com>
+ <CANXhq0qqv3MBEt8zsWBT+gkdyt1PD4ZjDSrznEotdFM7M7K+yQ@mail.gmail.com>
+ <CANXhq0qNA5JO1xZLbuL6ig1Ddws0m2azMwCyqLFgN3B0VZmvEw@mail.gmail.com>
+ <CANXhq0o-MaEQY3m+0CNWK2Jv_pxqsjhhSJWtVR396wgKUzcbQw@mail.gmail.com> <25e2faa5-908c-4391-87db-8540d1f0e904@ghiti.fr>
+In-Reply-To: <25e2faa5-908c-4391-87db-8540d1f0e904@ghiti.fr>
+From: Zong Li <zong.li@sifive.com>
+Date: Thu, 1 Feb 2024 00:06:37 +0800
+Message-ID: <CANXhq0qt8R2+zFx5pPiassNjb2JtGcFb5RRcdK+15PxhuSS1Ng@mail.gmail.com>
+Subject: Re: [PATCH] riscv: add CALLER_ADDRx support
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: palmer@dabbelt.com, Palmer Dabbelt <palmer@rivosinc.com>, paul.walmsley@sifive.com, 
+	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-01-31 at 22:41 +0800, Yangyu Chen wrote:
-> On Tue, 2024-01-30 at 17:07 -0800, Charlie Jenkins wrote:
-> > On riscv it is guaranteed that the address returned by mmap is less
-> > than
-> > the hint address. Allow mmap to return an address all the way up to
-> > addr, if provided, rather than just up to the lower address space.
-> >=20
-> > This provides a performance benefit as well, allowing mmap to exit
-> > after
-> > checking that the address is in range rather than searching for a
-> > valid
-> > address.
-> >=20
-> > It is possible to provide an address that uses at most the same
-> > number
-> > of bits, however it is significantly more computationally expensive
-> > to
-> > provide that number rather than setting the max to be the hint
-> > address.
-> > There is the instruction clz/clzw in Zbb that returns the highest
-> > set
-> > bit
-> > which could be used to performantly implement this, but it would
-> > still
-> > be slower than the current implementation. At worst case, half of
-> > the
-> > address would not be able to be allocated when a hint address is
-> > provided.
-> >=20
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> > =C2=A0arch/riscv/include/asm/processor.h | 27 +++++++++++--------------=
--
-> > -
-> > =C2=A01 file changed, 11 insertions(+), 16 deletions(-)
-> >=20
-> > diff --git a/arch/riscv/include/asm/processor.h
-> > b/arch/riscv/include/asm/processor.h
-> > index f19f861cda54..8ece7a8f0e18 100644
-> > --- a/arch/riscv/include/asm/processor.h
-> > +++ b/arch/riscv/include/asm/processor.h
-> > @@ -14,22 +14,16 @@
-> > =C2=A0
-> > =C2=A0#include <asm/ptrace.h>
-> > =C2=A0
-> > -#ifdef CONFIG_64BIT
-> > -#define DEFAULT_MAP_WINDOW	(UL(1) << (MMAP_VA_BITS - 1))
-> > -#define STACK_TOP_MAX		TASK_SIZE_64
-> > -
-> > =C2=A0#define arch_get_mmap_end(addr, len, flags)			\
-> > =C2=A0({								\
-> > =C2=A0	unsigned long
-> > mmap_end;					\
-> > =C2=A0	typeof(addr) _addr =3D (addr);				\
-> > -	if ((_addr) =3D=3D 0 || (IS_ENABLED(CONFIG_COMPAT) &&
-> > is_compat_task())) \
-> > +	if ((_addr) =3D=3D 0 ||					\
-> > +	=C2=A0=C2=A0=C2=A0 (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||=
-	\
-> > +	=C2=A0=C2=A0=C2=A0 ((_addr + len) > BIT(VA_BITS -
-> > 1)))			\
-> > =C2=A0		mmap_end =3D STACK_TOP_MAX;			\
-> > -	else if ((_addr) >=3D VA_USER_SV57)			\
-> > -		mmap_end =3D STACK_TOP_MAX;			\
-> > -	else if ((((_addr) >=3D VA_USER_SV48)) && (VA_BITS >=3D
-> > VA_BITS_SV48)) \
-> > -		mmap_end =3D VA_USER_SV48;			\
-> > =C2=A0	else							\
-> > -		mmap_end =3D VA_USER_SV39;			\
-> > +		mmap_end =3D (_addr + len);			\
-> > =C2=A0	mmap_end;						\
-> > =C2=A0})
-> > =C2=A0
-> > @@ -39,17 +33,18 @@
-> > =C2=A0	typeof(addr) _addr =3D (addr);				\
-> > =C2=A0	typeof(base) _base =3D (base);				\
-> > =C2=A0	unsigned long rnd_gap =3D DEFAULT_MAP_WINDOW - (_base);	\
-> > -	if ((_addr) =3D=3D 0 || (IS_ENABLED(CONFIG_COMPAT) &&
-> > is_compat_task())) \
-> > +	if ((_addr) =3D=3D 0 ||					\
-> > +	=C2=A0=C2=A0=C2=A0 (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||=
-	\
-> > +	=C2=A0=C2=A0=C2=A0 ((_addr + len) > BIT(VA_BITS -
-> > 1)))			\
-> > =C2=A0		mmap_base =3D (_base);				\
-> > -	else if (((_addr) >=3D VA_USER_SV57) && (VA_BITS >=3D
-> > VA_BITS_SV57)) \
-> > -		mmap_base =3D VA_USER_SV57 - rnd_gap;		\
-> > -	else if ((((_addr) >=3D VA_USER_SV48)) && (VA_BITS >=3D
-> > VA_BITS_SV48)) \
-> > -		mmap_base =3D VA_USER_SV48 - rnd_gap;		\
-> > =C2=A0	else							\
-> > -		mmap_base =3D VA_USER_SV39 - rnd_gap;		\
-> > +		mmap_base =3D (_addr + len) - rnd_gap;		\
-> > =C2=A0	mmap_base;						\
-> > =C2=A0})
-> > =C2=A0
-> > +#ifdef CONFIG_64BIT
-> > +#define DEFAULT_MAP_WINDOW	(UL(1) << (MMAP_VA_BITS - 1))
-> > +#define STACK_TOP_MAX		TASK_SIZE_64
-> > =C2=A0#else
-> > =C2=A0#define DEFAULT_MAP_WINDOW	TASK_SIZE
-> > =C2=A0#define STACK_TOP_MAX		TASK_SIZE
-> >=20
->=20
-> I have carefully tested your patch on qemu with sv57. A bug that
-> needs
-> to be solved is that mmap with the same hint address without
-> MAP_FIXED
-> set will fail the second time.
->=20
-> Userspace code to reproduce the bug:
->=20
-> #include <sys/mman.h>
-> #include <stdio.h>
-> #include <stdint.h>
->=20
-> void test(char *addr) {
-> =C2=A0=C2=A0=C2=A0 char *res =3D mmap(addr, 4096, PROT_READ | PROT_WRITE,
-> MAP_ANONYMOUS
-> > MAP_PRIVATE, -1, 0);
-> =C2=A0=C2=A0=C2=A0 printf("hint %p got %p.\n", addr, res);
-> }
->=20
-> int main (void) {
-> =C2=A0=C2=A0=C2=A0 test(1<<30);
-> =C2=A0=C2=A0=C2=A0 test(1<<30);
-> =C2=A0=C2=A0=C2=A0 test(1<<30);
-> =C2=A0=C2=A0=C2=A0 return 0;
-> }
->=20
-> output:
->=20
-> hint 0x40000000 got 0x40000000.
-> hint 0x40000000 got 0xffffffffffffffff.
-> hint 0x40000000 got 0xffffffffffffffff.
->=20
-> output on x86:
->=20
-> hint 0x40000000 got 0x40000000.
-> hint 0x40000000 got 0x7f9171363000.
-> hint 0x40000000 got 0x7f9171362000.
->=20
-> It may need to implement a special arch_get_unmapped_area and
-> arch_get_unmapped_area_topdown function.
->=20
+On Wed, Jan 31, 2024 at 10:46=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wr=
+ote:
+>
+> Hi Zong,
+>
+> On 31/01/2024 15:24, Zong Li wrote:
+> > On Thu, Jan 18, 2024 at 8:50=E2=80=AFAM Zong Li <zong.li@sifive.com> wr=
+ote:
+> >> On Wed, Jan 10, 2024 at 11:33=E2=80=AFAM Zong Li <zong.li@sifive.com> =
+wrote:
+> >>> On Fri, Dec 29, 2023 at 2:34=E2=80=AFPM Zong Li <zong.li@sifive.com> =
+wrote:
+> >>>> On Tue, Dec 5, 2023 at 5:00=E2=80=AFPM Zong Li <zong.li@sifive.com> =
+wrote:
+> >>>>> CALLER_ADDRx returns caller's address at specified level, they are =
+used
+> >>>>> for several tracers. These macros eventually use
+> >>>>> __builtin_return_address(n) to get the caller's address if arch doe=
+sn't
+> >>>>> define their own implementation.
+> >>>>>
+> >>>>> In RISC-V, __builtin_return_address(n) only works when n =3D=3D 0, =
+we need
+> >>>>> to walk the stack frame to get the caller's address at specified le=
+vel.
+> >>>>>
+> >>>>> data.level started from 'level + 3' due to the call flow of getting
+> >>>>> caller's address in RISC-V implementation. If we don't have additio=
+nal
+> >>>>> three iteration, the level is corresponding to follows:
+> >>>>>
+> >>>>> callsite -> return_address -> arch_stack_walk -> walk_stackframe
+> >>>>> |           |                 |                  |
+> >>>>> level 3     level 2           level 1            level 0
+> >>>>>
+> >>>>> Signed-off-by: Zong Li <zong.li@sifive.com>
+> >>>>> ---
+> >>>>>   arch/riscv/include/asm/ftrace.h    |  5 ++++
+> >>>>>   arch/riscv/kernel/Makefile         |  2 ++
+> >>>>>   arch/riscv/kernel/return_address.c | 48 +++++++++++++++++++++++++=
++++++
+> >>>>>   3 files changed, 55 insertions(+)
+> >>>>>   create mode 100644 arch/riscv/kernel/return_address.c
+> >>>>>
+> >>>>> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/a=
+sm/ftrace.h
+> >>>>> index 2b2f5df7ef2c..42777f91a9c5 100644
+> >>>>> --- a/arch/riscv/include/asm/ftrace.h
+> >>>>> +++ b/arch/riscv/include/asm/ftrace.h
+> >>>>> @@ -25,6 +25,11 @@
+> >>>>>
+> >>>>>   #define ARCH_SUPPORTS_FTRACE_OPS 1
+> >>>>>   #ifndef __ASSEMBLY__
+> >>>>> +
+> >>>>> +extern void *return_address(unsigned int level);
+> >>>>> +
+> >>>>> +#define ftrace_return_address(n) return_address(n)
+> >>>>> +
+> >>>>>   void MCOUNT_NAME(void);
+> >>>>>   static inline unsigned long ftrace_call_adjust(unsigned long addr=
+)
+> >>>>>   {
+> >>>>> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefil=
+e
+> >>>>> index fee22a3d1b53..40d054939ae2 100644
+> >>>>> --- a/arch/riscv/kernel/Makefile
+> >>>>> +++ b/arch/riscv/kernel/Makefile
+> >>>>> @@ -7,6 +7,7 @@ ifdef CONFIG_FTRACE
+> >>>>>   CFLAGS_REMOVE_ftrace.o =3D $(CC_FLAGS_FTRACE)
+> >>>>>   CFLAGS_REMOVE_patch.o  =3D $(CC_FLAGS_FTRACE)
+> >>>>>   CFLAGS_REMOVE_sbi.o    =3D $(CC_FLAGS_FTRACE)
+> >>>>> +CFLAGS_REMOVE_return_address.o =3D $(CC_FLAGS_FTRACE)
+> >>>>>   endif
+> >>>>>   CFLAGS_syscall_table.o +=3D $(call cc-option,-Wno-override-init,)
+> >>>>>   CFLAGS_compat_syscall_table.o +=3D $(call cc-option,-Wno-override=
+-init,)
+> >>>>> @@ -46,6 +47,7 @@ obj-y +=3D irq.o
+> >>>>>   obj-y  +=3D process.o
+> >>>>>   obj-y  +=3D ptrace.o
+> >>>>>   obj-y  +=3D reset.o
+> >>>>> +obj-y  +=3D return_address.o
+> >>>>>   obj-y  +=3D setup.o
+> >>>>>   obj-y  +=3D signal.o
+> >>>>>   obj-y  +=3D syscall_table.o
+> >>>>> diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel=
+/return_address.c
+> >>>>> new file mode 100644
+> >>>>> index 000000000000..c2008d4aa6e5
+> >>>>> --- /dev/null
+> >>>>> +++ b/arch/riscv/kernel/return_address.c
+> >>>>> @@ -0,0 +1,48 @@
+> >>>>> +// SPDX-License-Identifier: GPL-2.0-only
+> >>>>> +/*
+> >>>>> + * This code come from arch/arm64/kernel/return_address.c
+> >>>>> + *
+> >>>>> + * Copyright (C) 2023 SiFive.
+> >>>>> + */
+> >>>>> +
+> >>>>> +#include <linux/export.h>
+> >>>>> +#include <linux/kprobes.h>
+> >>>>> +#include <linux/stacktrace.h>
+> >>>>> +
+> >>>>> +struct return_address_data {
+> >>>>> +       unsigned int level;
+> >>>>> +       void *addr;
+> >>>>> +};
+> >>>>> +
+> >>>>> +static bool save_return_addr(void *d, unsigned long pc)
+> >>>>> +{
+> >>>>> +       struct return_address_data *data =3D d;
+> >>>>> +
+> >>>>> +       if (!data->level) {
+> >>>>> +               data->addr =3D (void *)pc;
+> >>>>> +               return false;
+> >>>>> +       }
+> >>>>> +
+> >>>>> +       --data->level;
+> >>>>> +
+> >>>>> +       return true;
+> >>>>> +}
+> >>>>> +NOKPROBE_SYMBOL(save_return_addr);
+> >>>>> +
+> >>>>> +void *return_address(unsigned int level)
+> >>>>> +{
+> >>>>> +       struct return_address_data data;
+> >>>>> +
+> >>>>> +       data.level =3D level + 3;
+> >>>>> +       data.addr =3D NULL;
+> >>>>> +
+> >>>>> +       arch_stack_walk(save_return_addr, &data, current, NULL);
+> >>>>> +
+> >>>>> +       if (!data.level)
+> >>>>> +               return data.addr;
+> >>>>> +       else
+> >>>>> +               return NULL;
+> >>>>> +
+> >>>>> +}
+> >>>>> +EXPORT_SYMBOL_GPL(return_address);
+> >>>>> +NOKPROBE_SYMBOL(return_address);
+> >>>>> --
+> >>>>> 2.17.1
+> >>>>>
+> >>>> Hi Palmer and all,
+> >>>> I was wondering whether this patch is good for everyone? Thanks
+> >>> Hi Palmer,
+> >>> Is there any chance to include this patch in 6.8-rc1? Thanks
+> >> Hi Palmer,
+> >> I'm not sure if this patch is a feature or bug fix, would you consider
+> >> it for 6.8-rcX? Thanks
+> > Hi Palmer,
+> > Sorry for pinging you again. I'm not sure if you saw this patch. The
+> > irqsoff and wakeup tracer will use CALLER_ADDR1 and CALLER_ADDR2 to
+> > obtain the caller's return address, but we are currently encountering
+> > an issue in the RISC-V port where the wrong caller is identified. I
+> > guess you can easily reproduce the situation using ftrace. Could you
+> > share your thoughts on this when you have the time to take a look?
+> > Thanks
+>
+>
+> I'm not Palmer but I'll take a look at your patch today :)
+>
 
-This is because hint address < rnd_gap. I have tried to let mmap_base =3D
-min((_addr + len), (base) + TASK_SIZE - DEFAULT_MAP_WINDOW). However it
-does not work for bottom-up while ulimit -s is unlimited. You said this
-behavior is expected from patch v2 review.=C2=A0However it brings a new
-regression even on sv39 systems.
+Hi Alexandre,
 
-I still don't know the reason why use addr+len as the upper-bound. I
-think solution like x86/arm64/powerpc provide two address space switch
-based on whether hint address above the default map window is enough.
+I appreciate your assistance in reviewing this patch, Thanks a lot. :)
 
+> Thanks,
+>
+> Alex
+>
+>
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
