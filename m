@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873DB3FB10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874163FB1E;
 	Wed, 31 Jan 2024 20:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706732649; cv=none; b=IQmyLNfK9s9rhVpHtAGXds34McCkaZZPm+KENdXXKQLQMToDeLdupaeq+unKBuskKmPNDeZUx9w5LxIeG4p89htXxFRePWWix41l0vOsgRl7LRRPdpkMBhxTVDMpGcG+v1K44px5wKs7BBuyAwUP6zTQane3/kTpYYXs1tczJB4=
+	t=1706732649; cv=none; b=bGq16jAkYXFMXXX2FCwGkrL7mkeXaGoCcUoicEU8m5ekzsmHbquMvxV1VWSKV4Kgd6gdmz3Hqo+2iYhQ35NNpdS2pQNc1DSdi3dFVtj6XAkG/loytiiIVywXqTPGSzY4hoRYbCKeLPa49diN2yS93P1ojlBfrJwzzVK0i7gpEyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706732649; c=relaxed/simple;
-	bh=qvu+Ox0zu6pevZi9vcwFq2laTuQ829Sreeg9+Gf9HMA=;
+	bh=kdmvq8FHVvrhi/nhman0CJ4rcR5nU6JHLMJSECky02U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ha4CUTaAZ9GRhvTUOGYHn50lLJ0SL1CzkQxkyEr4GUYhdObWtpIGS8AKYKzQei2HM5oFHWcZbh+feRwT6ddaekj7EFJjtBmAO4R1x0Fome5NXwfdomW9tUxNu5xkB17a6vr/5IkG4VvkWpQYCAH6ae2gTaVUqXwepAk/W6gQBIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OuwgKaRI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=X0obyrUKO1zH/hsKu8UlJjR9/tOWj74XQHHbzVfakCeL9o9K5280UgfDo9IOtcWUrm51zGz9gzSbVjWzjACrNb13+1Xu1r8deh18MYO+RaUqi3Vk/EokpmauoEL2LR+MjNWr0njfRwbOxSoU8QTj2uLZxG6kCJKWt0l0cPGQYdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mf8FNPTV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OuwgKaRI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0167CC43609;
-	Wed, 31 Jan 2024 20:24:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mf8FNPTV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E4FF6C433B1;
+	Wed, 31 Jan 2024 20:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706732649;
-	bh=qvu+Ox0zu6pevZi9vcwFq2laTuQ829Sreeg9+Gf9HMA=;
+	bh=kdmvq8FHVvrhi/nhman0CJ4rcR5nU6JHLMJSECky02U=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=OuwgKaRINXpUT2P3BU1WdF1vAyAXW3peXAdlYywNwt14Min7HHn7HD+6DU52/R/Z+
-	 S/46KIJhqMw0JQsMvCD/rAVXWkthWfTH7thRZDYiG1tZwwITgxXRjmGUWYJKpN87og
-	 R6linx8xN+ucJpMVLwgW1eWRb5AAZ4JIM5y8KnK0KNS+o0nt7JEewgL0tzAVUnXqLb
-	 wU823bsaRnkJ3utxA0se8DmZ2RrdEcUJxcBisNyDL3fRPs3Y8gEFCoIpYnB4109SeV
-	 JqItdzw8Rq4kdq8m2RczMbzW3Zjlj4boiKzmnFhf68w7YS7+nK2mq2SXQfUtDViM3h
-	 4q5o4Cke4OxOw==
+	b=mf8FNPTVEHtCFME3wbDfqX8jnVZPnLquQ0k0gghT4YZgFFDRo4r8sJ5jR7RDhQKLM
+	 sKRr1cvgO8gW5G7tY9VEB9rUHHlQVQjjXNttVeTefEMNoTzJNr9XZgeCa6pZg9VGqz
+	 NVnka9Y7Jib63yQlyvCdgfKrb+0CCxvS0YzyfG0zRKjk2QyjVVc3m5vcSjm92xHpot
+	 9JWRqyW9p8fJtwpAxHwbaSR6QbBU9/X7OsWhpNxhgHk4S/ggOIPfxrsUWzXhw/7pH7
+	 dM3ZBL4Q/k3KSQGz3WRnVxw3asICcsw32ztX8pOy+ayUeXXEBQ5OqpoCNW02ugz6RW
+	 P4sjJ/CDb/6eA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D52C47258;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD724C4828D;
 	Wed, 31 Jan 2024 20:24:08 +0000 (UTC)
 From: Valentin Obst via B4 Relay <devnull+kernel.valentinobst.de@kernel.org>
-Date: Wed, 31 Jan 2024 21:23:28 +0100
-Subject: [PATCH v3 06/12] rust: str: move SAFETY comment in front of unsafe
- block
+Date: Wed, 31 Jan 2024 21:23:26 +0100
+Subject: [PATCH v3 04/12] rust: kernel: add srctree-relative doclinks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,8 +39,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240131-doc-fixes-v3-v3-6-0c8af94ed7de@valentinobst.de>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240131-doc-fixes-v3-v3-4-0c8af94ed7de@valentinobst.de>
 References: <20240131-doc-fixes-v3-v3-0-0c8af94ed7de@valentinobst.de>
 In-Reply-To: <20240131-doc-fixes-v3-v3-0-0c8af94ed7de@valentinobst.de>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -55,11 +54,11 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  Valentin Obst <kernel@valentinobst.de>, Trevor Gross <tmgross@umich.edu>, 
  Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706732646; l=1018;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706732646; l=1495;
  i=kernel@valentinobst.de; s=20240131; h=from:subject:message-id;
- bh=DDoG48Qq56LKmbADR58N8ly1qfgI3wpt9bk2atcwP2I=;
- b=MZe2Hxv9roGYl7lqeSTsKZTqoSJKgkFsgca/PD3aFOr4ulKBTBblhv38PbvagOpZGWXWbWtyj
- YNvZipM8WUGDw3pFzMQXX3OxChgETuOQVPLM3td+l4AGy5t/ZaHB/O5
+ bh=kLgaqmllmKNEoPT8KkSdoCC7kj+DdGrDcoL6QfU76KA=;
+ b=7S3b+DjY5YBQva6+YSgVQsa22uB6Rj3uPyuLUNr8VssbgZuwJb/abEN7dWypql8P+MEF2keoc
+ weVwL3OLTgqDx5AquVTxmPWwyq1xxyVqvm6sbHhS8rgqT9XMEwXLPWG
 X-Developer-Key: i=kernel@valentinobst.de; a=ed25519;
  pk=3s7U8y0mqkaiurgHSQQTYWOo2tw5HgzCg5vnJVfw37Y=
 X-Endpoint-Received:
@@ -69,32 +68,44 @@ Reply-To: <kernel@valentinobst.de>
 
 From: Valentin Obst <kernel@valentinobst.de>
 
-SAFETY comments should immediately precede the unsafe block they
-justify. Move assignment to `bar` past comment as it is safe.
+Convert existing references to C header files to make use of
+Commit bc2e7d5c298a ("rust: support `srctree`-relative links").
 
 Signed-off-by: Valentin Obst <kernel@valentinobst.de>
 Reviewed-by: Trevor Gross <tmgross@umich.edu>
 Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/str.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ rust/kernel/lib.rs          | 2 +-
+ rust/kernel/sync/condvar.rs | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 843ffeec9b3e..fec5c4314758 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -191,9 +191,9 @@ pub fn to_str(&self) -> Result<&str, core::str::Utf8Error> {
-     /// ```
-     /// # use kernel::c_str;
-     /// # use kernel::str::CStr;
-+    /// let bar = c_str!("ツ");
-     /// // SAFETY: String literals are guaranteed to be valid UTF-8
-     /// // by the Rust compiler.
--    /// let bar = c_str!("ツ");
-     /// assert_eq!(unsafe { bar.as_str_unchecked() }, "ツ");
-     /// ```
-     #[inline]
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index b89ecf4e97a0..74581c958a6c 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -78,7 +78,7 @@ pub trait Module: Sized + Sync {
+ 
+ /// Equivalent to `THIS_MODULE` in the C API.
+ ///
+-/// C header: `include/linux/export.h`
++/// C header: [`include/linux/export.h`](srctree/include/linux/export.h)
+ pub struct ThisModule(*mut bindings::module);
+ 
+ // SAFETY: `THIS_MODULE` may be used from all threads within a module.
+diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
+index 9f1d83589beb..fa1794972aa0 100644
+--- a/rust/kernel/sync/condvar.rs
++++ b/rust/kernel/sync/condvar.rs
+@@ -87,6 +87,8 @@ pub struct CondVar {
+ 
+     /// A condvar needs to be pinned because it contains a [`struct list_head`] that is
+     /// self-referential, so it cannot be safely moved once it is initialised.
++    ///
++    /// [`struct list_head`]: srctree/include/linux/types.h
+     #[pin]
+     _pin: PhantomPinned,
+ }
 
 -- 
 2.43.0
