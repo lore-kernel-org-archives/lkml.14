@@ -1,225 +1,178 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BC87F47D;
-	Wed, 31 Jan 2024 10:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1727F479
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706698755; cv=none; b=XW9ItN9ZAbIPo324KGrT0I7Vz7LVZmJ2I2WxOSMUKetUU46A3R9KgA+4UPjt4ufGoPigl8pD8jMiWC3x3BhlnPsSu9KHUFMIEyPqoXY1TPrwpkoOqnKOUlWBPuEh8D5yMhXpIy1Ip2unX1QezOYyMIFlb3wm0Wc88BOUX1Cc0Tg=
+	t=1706698755; cv=none; b=qntuFQfBpKCYSgGerHc2EWI7ikMtk6I81LEI6NhmAfbjjg7vgoz47K2vnmcK/iGl8pVw1K+vu1E9HQgBCpxrdvauFB6TfGdzkb1L2hpUyCn7BtK0LEDQVTxnGetEOxPValWwwx/Y+bwyLMmw56cV1EBKz9LNC3WkPRl6DimVhj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706698755; c=relaxed/simple;
-	bh=F8ej+RfKy5uRlP3BtIE6c20cYRN6falVBUA+PQCrR74=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GjH894GUXW0ow52wSSoys7/PH/hggRbl9a36JwE4ZUC75uhXyk6qZsMKX7gq6T8laCgZENMvii98YXxqCHmmvtKEd5602bRBC7Y4/YwlSIsEHcqtNv0fAmJ8H96/ccwg88cz+j2ysFXYTdqoSuLeWF8drPZfupZWZZ1Z3Gr0HS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S1LkaQXJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	bh=+HH4T5gCCW7B6/O11DJ1e0ynoAupK45aqEDlcF2lKb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KL+Mvekrpn3D7Pfo96EXtCScQHlWUzRBDPESQa8E5jDFKSZygZc2ZTDLOtlFc9n5woOhzJGObNHZGuD8r1eYPfLBFzkN8jvgTskVfQU6hgeBtiPTRaUKcdpik+pKC99I4tTs2xqsYxP76Ww3oSTk2qS8KH1fWJBFwDhLuwtrc4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l/2AYQfw; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S1LkaQXJ"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40VAHrd8012122;
-	Wed, 31 Jan 2024 10:58:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=OdVX0vbjRwNHZr0+EmbFNFjxgdY3hDawnsBgwICg6LI=; b=S1
-	LkaQXJgNdTCZlvAu8gSxrB5vv45OZKyZw6++LZT8JPBbekoxUqpNRHO76eGpjT9M
-	RdANaGmT6yt0nd+rsLElYecbE09BZ9coVa+zKTsedar8lgbniAajcuSiR+bB5KgJ
-	dJxlPgZK2Nvx1MRbRmEtE+6c9McADKfa1PBob6C4o9S7M7hYHvkafHC/F707eCPR
-	JGTkANboDW5kXgaqj26hA8tSLr7XqF24hytQ53HHrNKCurWORgB22d5sUeHKtwrC
-	HkIEzViSea4+ERFWzDme0aLw7RnSRTHMOe+Ljk8Nbo/5/thBQLPF1Y/odVswukgb
-	H4W0Mztru2Y/olx9tw5A==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vygp7gs3a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 10:58:55 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40VAws2x017997
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 10:58:54 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 31 Jan 2024 02:58:49 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <corbet@lwn.net>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>, <vigneshr@ti.com>,
-        <nm@ti.com>, <matthias.bgg@gmail.com>, <kgene@kernel.org>,
-        <alim.akhtar@samsung.com>, <bmasney@redhat.com>
-CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mukesh Ojha
-	<quic_mojha@quicinc.com>
-Subject: [PATCH v8 10/10] soc: qcom: register ramoops region with APSS minidump
-Date: Wed, 31 Jan 2024 16:27:34 +0530
-Message-ID: <20240131105734.13090-11-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.43.0.254.ga26002b62827
-In-Reply-To: <20240131105734.13090-1-quic_mojha@quicinc.com>
-References: <20240131105734.13090-1-quic_mojha@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l/2AYQfw"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a315f43ecc3so523893866b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 02:59:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706698751; x=1707303551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8daxsfgFAdPln+pSh5rU6HQsvWnE80v2yJ8udP+jUgI=;
+        b=l/2AYQfwBSzNqbxdsaP2kVJvT8ZIAMxWdbA6Mzr6JjH7hvnI74BwrD1raCAA971bsj
+         XdvQY4M7JXky6Bh1gVuapmYXbHJRxhOhr1t33pXwFOujXMCsz8MF8DAhbaDpln8DHbtR
+         MeGcw7Y1BLohHkkyeQs0bnP5Gr1BI5j5W0iTBAvNJzf3PfcP6pgM3ZIPc1BOG4oi0M0j
+         0ksOfNub4IK254waB301pwisgEYuEaKwo/3VQxsUv8cX4elaWUrh1x2v8U6kIgWh3C4X
+         AkMEsfaELJhHxF/51eqgnGDQmi36qZm8IZAAj9MYGTXmgd9BY+QvIyOGbT+rCmXiIRtj
+         xrqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706698751; x=1707303551;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8daxsfgFAdPln+pSh5rU6HQsvWnE80v2yJ8udP+jUgI=;
+        b=T4Ck5Ik88/UVAKFhY+qbXWEMUCR6N9sUni00BDWUcAILveWgiBMrWQb5pFX4ek6PMt
+         8UZ4Zcx/x2nUwVf62WNy2YhCCggNP/gu8XcoALiNRtavmVQWNOiSIQ5LIJF0je0NIua+
+         5IQhKEE1wkNeHFWWN6sKCVjCC2t8kE/q49BPeOn2TZP/nGcs8DuBFMoxeTopNxcsYFFn
+         Bq1Y5JN3jlrMFfXKi/v08tY5dMvGW2Jk+qnIbqNmFHwYiMV8pLhhoLvQ6B11YxvGOkVN
+         xq75TNAxioxSzMc+bI2lsLv5WJw3V1jzpmTtBCguvpH2RdHMoeQipIe8+WbQ6TNru55n
+         83KA==
+X-Gm-Message-State: AOJu0Yz6oNWV3dDTVRPpf2RJeLsHKJ3Xy89XR1S1cffLzNx97zpSjJri
+	P4rtx9I2g6493qkNdBB0N9Z2VsHFwtVUU70rRcJxzVTpeg64N1JHZdajHG19p7A=
+X-Google-Smtp-Source: AGHT+IGjjVldnBQDUYLgFnpa7q/CgYzqbCS/pXV8RvKfq5UFsY2R8HJq/5hgUc8oSMFJsNTaG/qHvQ==
+X-Received: by 2002:a17:906:7cf:b0:a36:5dd3:6126 with SMTP id m15-20020a17090607cf00b00a365dd36126mr948578ejc.41.1706698751437;
+        Wed, 31 Jan 2024 02:59:11 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX5qlE/FjXIH6HPQXuhaMoBmoz78ws/YoqZ6+PxH+fsKbDCkN1t/ApHlU+lYpNhK64RDKP50ewZLknSNfh5RNFP2v1ZmzTsFU+h+KObUMgOOmGRTco+mCEVl5rGSZ4IQF8mV+Zh6u/MmzUUif3GC0p121DGv8GicaR9fmE/btRToxTFvu2gQjHAXdAh3JbpKom1eeTuiRPKUpQ9u1vP2O3zSjMeiXx/mjTJToMaGxqbTerP+Bvwscf9e/1h353xupADGsccL3Mtx86yd8cZToniLK1V73Ja4bMa+0u3rD6auDTQTbHp1xuVfjFBXt6u2i0rsQMlmsdjQ5aCAYxIMCMm+yvFsB0ng6XiGyqmynZxgPJAtGkUkMAHvh8TctorJynRuv/z33TZgZrpBKgwAdnQ+DySFF8v07z1koPGqOKNlCsKAfemGCKMnKCPlFzJF3FymWzmj7HhwyUmVlwGdge7Cew7dODxzCtmYziZNpLuRZRce/cIt+wA+3XE9lRmThovBwNyRRxGu3f91qFtTGRhepddPN/UpfquCS8Zx14R8GsBToZf0Zv09BDik2LSHAziDMQwb5UkRCUntPpq4uPv2e4g4Rv4
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id vs6-20020a170907a58600b00a3542a13eb3sm4908793ejc.138.2024.01.31.02.59.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 02:59:10 -0800 (PST)
+Message-ID: <94bf91fc-9f6e-491f-b332-d60e69ebd9d6@linaro.org>
+Date: Wed, 31 Jan 2024 11:59:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: hPabgsbsaFj4Yv1f4zb9b2cxjr3qwjDP
-X-Proofpoint-GUID: hPabgsbsaFj4Yv1f4zb9b2cxjr3qwjDP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_06,2024-01-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015 adultscore=0
- mlxscore=0 suspectscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401190000
- definitions=main-2401310083
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] dt-bindings: input: Add TouchNetix axiom
+ touchscreen
+Content-Language: en-US
+To: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+ Jeff LaBundy <jeff@labundy.com>, catalin.popescu@leica-geosystems.com,
+ mark.satterthwaite@touchnetix.com,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ bsp-development.geo@leica-geosystems.com
+References: <20240125165823.996910-1-kamel.bouhara@bootlin.com>
+ <20240125165823.996910-3-kamel.bouhara@bootlin.com>
+ <2c8961ff-9fcc-402c-b048-744ae9473164@linaro.org>
+ <20240130222844.GA2527859-robh@kernel.org>
+ <f07d7557-c190-4154-8fc7-6a3850b1d162@linaro.org>
+ <20240131090652.GB3004909@kb-xps>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240131090652.GB3004909@kb-xps>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Register ramoops region with APSS minidump via ramoops
-info notifier so that these region gets captured on
-system crash.
+On 31/01/2024 10:06, Kamel Bouhara wrote:
+> Hello,
+> 
+> On Wed, Jan 31, 2024 at 08:28:43AM +0100, Krzysztof Kozlowski wrote:
+>> On 30/01/2024 23:28, Rob Herring wrote:
+>>> On Fri, Jan 26, 2024 at 12:46:16PM +0100, Krzysztof Kozlowski wrote:
+>>>> On 25/01/2024 17:58, Kamel Bouhara wrote:
+>>>>> +  reset-gpios:
+>>>>> +    maxItems: 1
+>>>>> +
+>>>>> +  vdda-supply:
+>>>>> +    description: Analog power supply regulator on VDDA pin
+>>>>> +
+>>>>> +  vddi-supply:
+>>>>> +    description: I/O power supply regulator on VDDI pin
+>>>>> +
+>>>>> +  startup-time-ms:
+>>>>> +    description: delay after power supply regulator is applied in ms
+>>>>
+>>>> That's a regulator property - ramp up time.
+>>>
+>>> I'm sure there's an existing property name that could be used.
+>>>
+>>> But why is it needed? Is it variable per board with the same device? If
+>>> not, it should be implied by the compatible.
+>>
+>> I meant, that regulators have such property. Unless this is coming from
+>> the device needs, not from the regulator?
+>>
+> 
+> After looking again into the device's datasheet [1], the delay (startup
+> time) is not really optional and it shouldn't be set through devicetree.
+> 
+> IIUC, it have to be set unconditionally after a device reset or
+> a vdda assertion.
+> 
+> [1]: https://www.touchnetix.com/media/dgnjohor/tnxd00394-a3-axiom_ax54a_2d_touch_controller_datasheet.pdf
+> --
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/soc/qcom/qcom_minidump.c | 84 ++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+OK, then it's not a regulator ramp up, but rather part of device driver
+(deduced from compatible).
 
-diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
-index c0f76a51d0e8..7ca43d938b13 100644
---- a/drivers/soc/qcom/qcom_minidump.c
-+++ b/drivers/soc/qcom/qcom_minidump.c
-@@ -18,8 +18,10 @@
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/printk.h>
-+#include <linux/pstore_ram.h>
- #include <linux/soc/qcom/smem.h>
- #include <linux/string.h>
-+#include <linux/workqueue.h>
- #include <soc/qcom/qcom_minidump.h>
- 
- #include "qcom_minidump_internal.h"
-@@ -56,12 +58,22 @@ struct minidump_elfhdr {
-  * @dev: Minidump backend device
-  * @apss_data: APSS driver data
-  * @md_lock: Lock to protect access to APSS minidump table
-+ * @work: Minidump work for any required execution in process context.
-+ * @nb_cookie: Save the cookie, will be used for unregistering the callback.
-  */
- struct minidump {
- 	struct minidump_elfhdr	 elf;
- 	struct device		 *dev;
- 	struct minidump_ss_data	 *apss_data;
- 	struct mutex		 md_lock;
-+	struct work_struct	 work;
-+	void			 *nb_cookie;
-+};
-+
-+static LIST_HEAD(apss_md_rlist);
-+struct md_region_list {
-+	struct qcom_minidump_region md_region;
-+	struct list_head list;
- };
- 
- /*
-@@ -530,6 +542,58 @@ static int qcom_apss_md_table_init(struct minidump *md,
- 	return 0;
- }
- 
-+static int register_ramoops_region(const char *name, int id, void *vaddr,
-+				   phys_addr_t paddr, size_t size)
-+{
-+	struct qcom_minidump_region *md_region;
-+	struct md_region_list *mdr_list;
-+	int ret;
-+
-+	mdr_list = kzalloc(sizeof(*mdr_list), GFP_KERNEL);
-+	if (!mdr_list)
-+		return -ENOMEM;
-+
-+	md_region = &mdr_list->md_region;
-+	scnprintf(md_region->name, sizeof(md_region->name), "K%s%d", name, id);
-+	md_region->virt_addr = vaddr;
-+	md_region->phys_addr = paddr;
-+	md_region->size = size;
-+	ret = qcom_minidump_region_register(md_region);
-+	if (ret < 0) {
-+		pr_err("failed to register region in minidump: err: %d\n", ret);
-+		return ret;
-+	}
-+
-+	list_add(&mdr_list->list, &apss_md_rlist);
-+
-+	return 0;
-+}
-+
-+static void register_ramoops_minidump_cb(struct work_struct *work)
-+{
-+	struct minidump *md = container_of(work, struct minidump, work);
-+
-+	md->nb_cookie = register_ramoops_info_notifier(register_ramoops_region);
-+	if (IS_ERR_OR_NULL(md->nb_cookie)) {
-+		pr_err("Fail to register ramoops info notifier\n");
-+		md->nb_cookie = NULL;
-+	}
-+}
-+
-+static void qcom_ramoops_minidump_unregister(void)
-+{
-+	struct md_region_list *mdr_list;
-+	struct md_region_list *tmp;
-+
-+	list_for_each_entry_safe(mdr_list, tmp, &apss_md_rlist, list) {
-+		struct qcom_minidump_region *region;
-+
-+		region = &mdr_list->md_region;
-+		qcom_minidump_region_unregister(region);
-+		list_del(&mdr_list->list);
-+	}
-+}
-+
- static void qcom_apss_md_table_exit(struct minidump_ss_data *mdss_data)
- {
- 	memset(mdss_data->md_ss_toc, cpu_to_le32(0), sizeof(*mdss_data->md_ss_toc));
-@@ -575,6 +639,22 @@ static int qcom_apss_minidump_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, md);
- 
-+	/*
-+	 * Use separate context for registering ramoops region via workqueue
-+	 * as minidump probe can get called in same context of platform device
-+	 * register call from smem driver and further call to qcom_smem_minidump_ready()
-+	 * can return -EPROBE_DEFER as __smem->minidump is not yet initialized because
-+	 * of same context and it can only initialized after return from probe.
-+	 *
-+	 * qcom_apss_minidump_probe()
-+	 *   register_ramoops_minidump_cb()
-+	 *     register_ramoops_region()
-+	 *       qcom_minidump_region_register()
-+	 *         qcom_smem_minidump_ready()
-+	 */
-+	INIT_WORK(&md->work, register_ramoops_minidump_cb);
-+	schedule_work(&md->work);
-+
- 	return ret;
- }
- 
-@@ -582,6 +662,10 @@ static void qcom_apss_minidump_remove(struct platform_device *pdev)
- {
- 	struct minidump *md = platform_get_drvdata(pdev);
- 
-+	flush_work(&md->work);
-+	qcom_ramoops_minidump_unregister();
-+	if (md->nb_cookie)
-+		unregister_ramoops_info_notifier(md->nb_cookie);
- 	qcom_apss_md_table_exit(md->apss_data);
- }
- 
--- 
-2.43.0.254.ga26002b62827
+Best regards,
+Krzysztof
 
