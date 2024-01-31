@@ -1,216 +1,65 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0F412DD88
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 18:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649E4131750;
+	Wed, 31 Jan 2024 18:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706725428; cv=none; b=eXF4QBurO198wvEGOZ/PZtXXRN0TF/+x5SKBPxDCGbhS35oPP9l+Xdv65aQGbalKG1N9T97XbhHzebDXB3J67JHriE7YKCvICTNqeZMEh4xRJ+VHQcQ9ywCuJwxLqZe9WqI0XkKWJzbWfxiQRbkc3RMNidPxiaSfxe8KPa+NaeI=
+	t=1706725628; cv=none; b=UQb+xgSuWtx95kYcW58ag+3Hb/aSQnmPrfMKqweNQrwVQzXbxmhBNtXzJv9Uts862fDBJJrfbV9WMu2x2BI5qzs74t9ODt971Gd1u8v4JLsBAIS1Bso0QGC1bGOIRsms92AYUQEOo3cGWvVNm3y/b7TGmOykDotXbfILqgm81Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706725428; c=relaxed/simple;
-	bh=4HCr47Vl9ejjJTGVqxYRuHlMCbACMsJs01W7MS7B4yE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o4VG2X9dfSGvVX5GrXJkGKt7K2E1FJviPrKVVJt6BvUyIfT0NFwYzwkR2P9CHcd6w4GM/hgfWBrnwPYlrglooOE9NzeqkAWirOXzUzN1s4LifFotArVwrHrZOEdH/9p/5dNNjmYbWaDr/A0+JeibkdLyG0yDumRya34jSuGjCS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WRCR0Nvr; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706725628; c=relaxed/simple;
+	bh=yG5pKXzI2U9TEh+X2crF1nYSTpS7SIx9dKJxseUsNn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7xviBmGCI3Vev/5JIXRJRdHNAS9iSz2/yCnqXbinbHrcFs64Z7hwvEZNZWp2QHjnDrEUNVRdM+iJDEXPlHs7tCuZ7DfPyQZZ4sQg6w/UlH+ng4pkyLFlqVc/AUpoJRA1tPPTSZbt0gBiKh0CU1Fo4zuukzaf+OzRPPqjqUew9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zr0I78bw; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRCR0Nvr"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55f5d62d024so430a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:23:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706725424; x=1707330224; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=viHzef10mQ/Ow5P/nhdwkaiORLJDs/5vxR6NgT9S6MQ=;
-        b=WRCR0Nvr4E4SFem8QNCrcx00+V9bOor0i69r/PruSbY0rt2Nt80CVas+q5pc77uUPX
-         ttGuKn6VbgR4iLUpDR5DbZJmHHR+9myJ+WMvIbDZnFk7GRJzbLV5dXrzzjX9pHBMaabr
-         gykprDCMHpxFsHpv9md5ca2IVvaDwrmwmj63zKN1HkhF2TD4L+GA9h91uTenlraQUku7
-         57MLY1IgvfEJLoucdqlxA/M1fNqYPuZLc2CPg02yOFVlIS00sbO+J9f+3GbFBMf382td
-         3g0io/0WkhwESio+oqPjBJkWDhSDhXXmv25DFzM+pnK6sJefXxbQ/lR8LPlm4ZssCo3A
-         9tpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706725424; x=1707330224;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=viHzef10mQ/Ow5P/nhdwkaiORLJDs/5vxR6NgT9S6MQ=;
-        b=LMOe808SdyfBvtWyf1MPy09cUEwpyVURUBXXYi0ICH2iPOnc5meeCVhc9Rv2UVH9Ly
-         YeAAsyNskl2h9wKOZ53nBJR8ezsL5sVO08vBefvIfiKlu94vM0aKbhpubsyeS7ooW8pU
-         WaQgc14YJ0mRqWkp5Pve4hkw2TLL3dtN0Nvl7iPqa0QiJpZ+S92GTnsdHYtbM/aARSMf
-         /21Te7tC8EkmSlh57z7D4w4HhyA75GdNCkTLEM/Y01kkVqGxwSmtZ7+RGRkNC6yR5Ego
-         kN12VZPcAskGupbHTLWOQAor0Hx31zZZSApP4coZ8+IPZ5viobfMI7KoKCg8EiLFFiNS
-         jRdQ==
-X-Gm-Message-State: AOJu0YwMYN2JSPO6tpN+jDsEnxkQWGrI1nPrarDskDd5sa9Y/8PNurQi
-	3G/ydzKyj0dTp8/EgW21odUPRrZWhRMph6TGpgzvbkMYLZkSWjfqXsfVKSFQe3fVDtiokyMeMsP
-	kwSyC3lZqBQ5vPidTowVKWQB8AufNgNZ9IIJE
-X-Google-Smtp-Source: AGHT+IEZOW3QqAu7mnXOmcMRt5GjQ873Ib0bNlhUhCJVB0evLECVTZoQsY7Qlsm6r+daSN6IqJif/WFzAH/AHADonQ8=
-X-Received: by 2002:a50:9998:0:b0:55f:9918:dadd with SMTP id
- m24-20020a509998000000b0055f9918daddmr19957edb.2.1706725423409; Wed, 31 Jan
- 2024 10:23:43 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zr0I78bw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=hg9/xopq1B8VMQX5winCbXo7MK2kcXX1CEYYe/IOgTw=; b=zr0I78bwzf/kHL9GgaOT8aPq0V
+	AOfR+UzbbbpIqbLyGVcv+3rSQvj4d47+7QwE1iELR1HWRC3VaC13bQ9rg8cihasNKHAOry6OkWvWx
+	2qyZLxoxrVtMEU+W85giReSnveU4jQ8EP6d0uOtdUmOFn5Q+jZeADlsriC+URF1kwUVA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rVFIO-006bdb-Q5; Wed, 31 Jan 2024 19:26:48 +0100
+Date: Wed, 31 Jan 2024 19:26:48 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/8] Improve GbEth performance on Renesas RZ/G2L
+ and related SoCs
+Message-ID: <953f6b82-c4b1-43f7-af68-e504d663f070@lunn.ch>
+References: <20240131170523.30048-1-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240127004321.1902477-1-davidai@google.com> <20240127004321.1902477-2-davidai@google.com>
- <20240131170608.GA1441369-robh@kernel.org>
-In-Reply-To: <20240131170608.GA1441369-robh@kernel.org>
-From: Saravana Kannan <saravanak@google.com>
-Date: Wed, 31 Jan 2024 10:23:03 -0800
-Message-ID: <CAGETcx8S0oS67oMZsPKk6_MGAtygoHEf_LN1gbcNDEBqRJ4PPg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: cpufreq: add virtual cpufreq device
-To: Rob Herring <robh@kernel.org>
-Cc: David Dai <davidai@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Quentin Perret <qperret@google.com>, 
-	Masami Hiramatsu <mhiramat@google.com>, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Pavan Kondeti <quic_pkondeti@quicinc.com>, 
-	Gupta Pankaj <pankaj.gupta@amd.com>, Mel Gorman <mgorman@suse.de>, kernel-team@android.com, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131170523.30048-1-paul.barker.ct@bp.renesas.com>
 
-On Wed, Jan 31, 2024 at 9:06=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Fri, Jan 26, 2024 at 04:43:15PM -0800, David Dai wrote:
-> > Adding bindings to represent a virtual cpufreq device.
-> >
-> > Virtual machines may expose MMIO regions for a virtual cpufreq device
-> > for guests to read frequency information or to request frequency
-> > selection. The virtual cpufreq device has an individual controller for
-> > each frequency domain. Performance points for a given domain can be
-> > normalized across all domains for ease of allowing for virtual machines
-> > to migrate between hosts.
-> >
-> > Co-developed-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: David Dai <davidai@google.com>
-> > ---
-> >  .../cpufreq/qemu,cpufreq-virtual.yaml         | 110 ++++++++++++++++++
->
-> > +    const: qemu,virtual-cpufreq
->
-> Well, the filename almost matches the compatible.
->
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description:
-> > +      Address and size of region containing frequency controls for eac=
-h of the
-> > +      frequency domains. Regions for each frequency domain is placed
-> > +      contiguously and contain registers for controlling DVFS(Dynamic =
-Frequency
-> > +      and Voltage) characteristics. The size of the region is proporti=
-onal to
-> > +      total number of frequency domains. This device also needs the CP=
-Us to
-> > +      list their OPPs using operating-points-v2 tables. The OPP tables=
- for the
-> > +      CPUs should use normalized "frequency" values where the OPP with=
- the
-> > +      highest performance among all the vCPUs is listed as 1024 KHz. T=
-he rest
-> > +      of the frequencies of all the vCPUs should be normalized based o=
-n their
-> > +      performance relative to that 1024 KHz OPP. This makes it much ea=
-sier to
-> > +      migrate the VM across systems which might have different physica=
-l CPU
-> > +      OPPs.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    // This example shows a two CPU configuration with a frequency dom=
-ain
-> > +    // for each CPU showing normalized performance points.
-> > +    cpus {
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <0>;
-> > +
-> > +      cpu@0 {
-> > +        compatible =3D "arm,armv8";
-> > +        device_type =3D "cpu";
-> > +        reg =3D <0x0>;
-> > +        operating-points-v2 =3D <&opp_table0>;
-> > +      };
-> > +
-> > +      cpu@1 {
-> > +        compatible =3D "arm,armv8";
-> > +        device_type =3D "cpu";
-> > +        reg =3D <0x0>;
-> > +        operating-points-v2 =3D <&opp_table1>;
-> > +      };
-> > +    };
-> > +
-> > +    opp_table0: opp-table-0 {
-> > +      compatible =3D "operating-points-v2";
-> > +
-> > +      opp64000 { opp-hz =3D /bits/ 64 <64000>; };
->
-> opp-64000 is the preferred form.
->
-> > +      opp128000 { opp-hz =3D /bits/ 64 <128000>; };
-> > +      opp192000 { opp-hz =3D /bits/ 64 <192000>; };
-> > +      opp256000 { opp-hz =3D /bits/ 64 <256000>; };
-> > +      opp320000 { opp-hz =3D /bits/ 64 <320000>; };
-> > +      opp384000 { opp-hz =3D /bits/ 64 <384000>; };
-> > +      opp425000 { opp-hz =3D /bits/ 64 <425000>; };
-> > +    };
-> > +
-> > +    opp_table1: opp-table-1 {
-> > +      compatible =3D "operating-points-v2";
-> > +
-> > +      opp64000 { opp-hz =3D /bits/ 64 <64000>; };
-> > +      opp128000 { opp-hz =3D /bits/ 64 <128000>; };
-> > +      opp192000 { opp-hz =3D /bits/ 64 <192000>; };
-> > +      opp256000 { opp-hz =3D /bits/ 64 <256000>; };
-> > +      opp320000 { opp-hz =3D /bits/ 64 <320000>; };
-> > +      opp384000 { opp-hz =3D /bits/ 64 <384000>; };
-> > +      opp448000 { opp-hz =3D /bits/ 64 <448000>; };
-> > +      opp512000 { opp-hz =3D /bits/ 64 <512000>; };
-> > +      opp576000 { opp-hz =3D /bits/ 64 <576000>; };
-> > +      opp640000 { opp-hz =3D /bits/ 64 <640000>; };
-> > +      opp704000 { opp-hz =3D /bits/ 64 <704000>; };
-> > +      opp768000 { opp-hz =3D /bits/ 64 <768000>; };
-> > +      opp832000 { opp-hz =3D /bits/ 64 <832000>; };
-> > +      opp896000 { opp-hz =3D /bits/ 64 <896000>; };
-> > +      opp960000 { opp-hz =3D /bits/ 64 <960000>; };
-> > +      opp1024000 { opp-hz =3D /bits/ 64 <1024000>; };
-> > +
-> > +    };
->
-> I don't recall your prior versions having an OPP table. Maybe it was
-> incomplete. You are designing the "h/w" interface. Why don't you make it
-> discoverable or implicit (fixed for the h/w)?
+> Changes are made specific to the GbEth IP, avoiding potential impact on
+> the other Renesas R-Car based SoCs which also use the ravb driver. This
+> follows the principle of only submitting patches that we can fully test.
+ 
+Are you saying that Renesas does not have access to all Renesas RDKs?
 
-We also need the OPP tables to indicate which CPUs are part of the
-same cluster, etc. Don't want to invent a new "protocol" and just use
-existing DT bindings.
+I don't particularly like the way your first patch makes a copy of
+shared functions. Is it not likely that R-Car would also benefit from
+this?
 
-> Do you really need it if the frequency is normalized?
-
-Yeah, we can have little and big CPUs and want to emulate different
-performance levels. So while the Fmax on big is 1024, we still want to
-be able to say little is 425. So we definitely need frequency tables.
-
-> Also, we have "opp-level" for opaque values that aren't Hz.
-
-Still want to keep it Hz to be compatible with arch_freq_scale and
-when virtualized CPU perf counters are available.
-
--Saravana
+	Andrew
