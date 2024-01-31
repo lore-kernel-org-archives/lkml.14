@@ -1,90 +1,136 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B954B6DD12
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367A16DD12
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706691619; cv=none; b=GvkcFdA+lwkjbzlH0f+48Mlw07dsKUjH8Q2Prhvub7DNJZUSDRyIYrNIVLUGtl78wAQKsm6WAI1RF7EuBltN/xnNNj0+js/PXjLJWQ6Okfn5j8aPqFQiXDjj3r7gw4pVW9Q5KQ6+iSe/Xz5TFwbqc5mQN0WGh3uBFVJdS7PXWEU=
+	t=1706691652; cv=none; b=mkAPMAf28L4ByhOprH6GRkw8Q0MFHKraarFctNHa+whC5bMxKuUs4BbIxC67XWJGMzcX4GWYXoYRaFYfkgpOtmny/NCTdZv+jaGW1B9/jP1OSJpwM/ce9KUnHYWmG8/EIzLjkudSI8txVSb2KVpHBMcq0OI+7DagvpOtMQ/d1JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706691619; c=relaxed/simple;
-	bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WE09jEDJMvddECEHROJXDizZJVviDQrQypgHRkG0A/aWf97DoIVewP89bOFOGzCbqDyc5V7WpAM7augJNUQBzDBNwSBX26eVm4BJ9EQrWtb6do1diXeOuTg4r+LYIAyFclWAiBvnQsVQRwbHdfXq8hrfUdvOYI7zAnPGoW+kRYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q+Fa4+xk; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706691652; c=relaxed/simple;
+	bh=vH3oPgaI8JxuUuwWch/HQ93o84vdfvLqDCcNgnv6A3Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YpvfOe4PTyvsW3RgvMXszg/BNPzTNzPgue/aNIJKLqVSst1LUpVyQaKFnh7VFHcBLDWyLZ3BlbnAFoSaYXTglPszT/oGdz4t+FGLCipWJU+szf1pUdzrhh3v/rX59aiJN7NGU4oB7iRL//ikruwpAZAJGoqCHSzACbYqvuRJt1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VfVOq0DW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q+Fa4+xk"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ff7a8b5e61so45972817b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 01:00:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706691616; x=1707296416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
-        b=Q+Fa4+xknqGuZ1jER6gHM0aX/zbkOIh0YiJ+8zfTalq208itEMP9X2/C53ym14Owmn
-         qcfYTBF1sSYpBR1fcivEyZVD2k4QoDWK8mJAgGiNkUNmxdg88wz1l3tvSJy0uW8T3uq+
-         L2yB/lpLwjGc48eD9ExRg9UMnbZfJqydDoTLHyRB5L6MUI5QVNgNO6/VFOs4qdU5Hlyo
-         VUGZeOC7GnOaLcJRQdlR/Pm5LcgH2LcE8KGlXGhzO+bBYtz9KUl1cy2gjtWkjC3LHyrO
-         brGFTg1rsnZQiSgoNlOejRqpLExbszszXpoBd/lQW0R4INJrrWK9gMflsOe6I0s0/DSI
-         vwyA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VfVOq0DW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706691649;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7vzi2j4G3178It/+rST4Ai2Ba1aZ21wL7YawLdngYBs=;
+	b=VfVOq0DWaVGwz4S8ZrqOv1yh0dPziEyx6ceMt6dXpMX+qVhGC7+GoVmUvPd3oohkU6mldd
+	5YDCfcoaCqvoumekNFZHvyvCAL4o+HStw9IXw11vK+k25smFS8kWhH6tDZTngT+0lY7TJ/
+	z1Fbe+ZZwj10mAA+FG4GjHEOXvBgN/A=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-537-TiYa8bbFO2KIVEWvpCF5CA-1; Wed, 31 Jan 2024 04:00:47 -0500
+X-MC-Unique: TiYa8bbFO2KIVEWvpCF5CA-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-51025633d3cso554868e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 01:00:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706691616; x=1707296416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1706691646; x=1707296446;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
-        b=A/7kmQ2rwoW+evAr726CBLZfKjwPtGt+y9JKumEZLin5dpBqMsGPbl6LmABXMZ6Zyh
-         CwoifOPvya/w6hbDOdGRJAxSShVDot3e6Nub5ZYwqCXExDxrDvWXtymdZtRSeeodpQEQ
-         QWDjejwRb4LowqC7sz35ikZgbv8T+/9ctjHBCs5CfElcSacrctJ1ebf8aOm+mYR9NuHG
-         sT96cUUxCyvCs+KoqH412TMUxgfh/avdv98jojLkjF0qx8Ph8TZ+cWPRDTb900CnLfEy
-         xODDHdD1uyez2uMcAc83hRjE5pUE2pdmAV7uVH6gpHAvMkh/KLzvWNWD6a+UMA8CIRjo
-         cTXQ==
-X-Gm-Message-State: AOJu0YxQsg3suSaJnF4fRIcsLxzOzfLpx/wu/zHe81mSg19zmZdWiHMn
-	IyfRmsGmQt+VbvXcuILjtqfTmHlcYbpi/ov3uKvrlJpgMVJzODP/K2YNo4bjZlLY+a9QHuzF7YX
-	mrzHbfW6A8Pn1qs8jFerF+iMcBgVAG2WhV6L7eA==
-X-Google-Smtp-Source: AGHT+IEvB7JEzDy/bd9wdN/APqpYnJcD2om3sihib43VyDrw9Rp4bAVf9j6uDJjuR1z5asPY3/CLOdSDCQOVGQayMGA=
-X-Received: by 2002:a0d:eb16:0:b0:603:fd33:8b81 with SMTP id
- u22-20020a0deb16000000b00603fd338b81mr708880ywe.21.1706691616679; Wed, 31 Jan
- 2024 01:00:16 -0800 (PST)
+        bh=7vzi2j4G3178It/+rST4Ai2Ba1aZ21wL7YawLdngYBs=;
+        b=DGZK/9GNdCElC1uAMz2vS0YZYp/qAjoai7KMH2ZIA/MBwTWcYDlg8uSYwLw/3SQMTR
+         oyu/hrZmkZ2kmjWdxTinVidpH7tk5AQLpGDdw2XMmpxwSWLN4mTXRcjBoU2oMV34ExJp
+         RGoHkl1ubwfrXj2x26BP84TlGJlq0zJ4D8oHaXUsviCFAv7idXAiodTvGp3aBJkTnG4w
+         Ore2ygkfC9ovbOZlobLRDcqsk9lyjJrl44V0Fd5ixCW9b3yJH6cE+jn/rI8zlsjcNWmB
+         UYa4AflP9o1tcVut0exaT3lXiz6rKaWmKPN5qDRbTibghK4M54XybN1AfsX51jXqLSuf
+         B1jw==
+X-Gm-Message-State: AOJu0YynOlQiZnf5LCdGXGr/mDsrxxOFgwRLd5uA3k+KVjShvbLfmJtw
+	i4+vLfXXNzWKwA+Q+WA9ka4X7a6wtqJe9ubO5H4tZI2bT5h2w4yp9ilef8yy3euSOZGCTjs3d0Y
+	XPJV7qR9XFglVo4558p+lb8MI7QArlnjK3spm9NDy8PzbyHKeEBe/E1ek3c6FIA==
+X-Received: by 2002:a19:8c4b:0:b0:50e:337b:f316 with SMTP id i11-20020a198c4b000000b0050e337bf316mr713631lfj.1.1706691646096;
+        Wed, 31 Jan 2024 01:00:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHlzIWl97OR7xsdMRKZGvN84dU1MtwIX5ZbxjHka1V7daDCGV1BWKKGhihNsakGU8cfez3rsQ==
+X-Received: by 2002:a19:8c4b:0:b0:50e:337b:f316 with SMTP id i11-20020a198c4b000000b0050e337bf316mr713612lfj.1.1706691645825;
+        Wed, 31 Jan 2024 01:00:45 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id t15-20020a05600c198f00b0040ee51f1025sm940261wmq.43.2024.01.31.01.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 01:00:45 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>,
+	Kent Overstreet <kent.overstreet@gmail.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Uladzislau Koshchanka <koshchanka@gmail.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	dakr@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	stable@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>
+Subject: [PATCH v6 1/4] lib/pci_iomap.c: fix cleanup bug in pci_iounmap()
+Date: Wed, 31 Jan 2024 10:00:20 +0100
+Message-ID: <20240131090023.12331-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240131090023.12331-1-pstanner@redhat.com>
+References: <20240131090023.12331-1-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125081601.118051-1-krzysztof.kozlowski@linaro.org>
- <CAMRc=MesG1nYSxx0osmQEEXCvs-6B4s4=TFYW5wD8pOXpV+OcQ@mail.gmail.com> <a3d24e7d-404e-4c02-99a2-8838ee7028c9@linaro.org>
-In-Reply-To: <a3d24e7d-404e-4c02-99a2-8838ee7028c9@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 10:00:05 +0100
-Message-ID: <CACRpkdaus1oRCiafiJjqTkARcKBuxvNfeqDrve7ZdG4UqnNX5A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpiolib: add gpiod_to_gpio_device() stub for !GPIOLIB
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Philipp Zabel <p.zabel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 9:59=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+The #ifdef for the ioport-ranges accidentally also guards iounmap(),
+potentially compiling an empty function. This would cause the mapping to
+be leaked.
 
-> [Bart]
-> > Why is this needed? Users of gpio/driver.h should select GPIOLIB.
->
-> The third patch shows you the user which will not select GPIOLIB. Why?
-> Because there is no hard dependency between one core framework (RESET)
-> on other core framework (GPIOLIB).
->
-> The first two patches are added for the same purpose, even though there
-> is no need currently.
+Move the guard so that iounmap() will always be part of the function.
 
-That reset driver implementing a GPIO chip has not been reviewed by the
-GPIO maintainers so I looked up the patch and replied, we have
-review comments.
+CC: <stable@vger.kernel.org> # v5.15+
+Fixes: 316e8d79a095 ("pci_iounmap'2: Electric Boogaloo: try to make sense of it all")
+Reported-by: Danilo Krummrich <dakr@redhat.com>
+Suggested-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+---
+ lib/pci_iomap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
+index ce39ce9f3526..2829ddb0e316 100644
+--- a/lib/pci_iomap.c
++++ b/lib/pci_iomap.c
+@@ -170,8 +170,8 @@ void pci_iounmap(struct pci_dev *dev, void __iomem *p)
+ 
+ 	if (addr >= start && addr < start + IO_SPACE_LIMIT)
+ 		return;
+-	iounmap(p);
+ #endif
++	iounmap(p);
+ }
+ EXPORT_SYMBOL(pci_iounmap);
+ 
+-- 
+2.43.0
+
