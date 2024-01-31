@@ -1,149 +1,148 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2089.outbound.protection.outlook.com [40.107.93.89])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8C769956;
-	Wed, 31 Jan 2024 09:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706692200; cv=fail; b=be1GI6PeGXDmZ5iEtrr2reGf2bD5osK457kbMmZmzfOcAW5XQhqw4C3GY8KpdI+5LBIktbmvYfTOJLtV7XWgcJMbZf/tXn7FEXy1HyyHWnGzlbit5xduvKhvItw6n1G2uSE7ZxxCOzxSmw4+9Y5iaqNLfHHFbc8GRv0g2N9gBrU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706692200; c=relaxed/simple;
-	bh=C8FMhKmTZpkrqzX0CDk9XULPqMDW3grBNjFG86VBBYg=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=hgKNxnFPUZlcySm3pWsLPRj9vASS7Ez5j4hybZsm09A8iyoP2ThOxcKpfMzMQI+eA6lfxtC0dlep/26OsWXJSzERNsx3aN8whfufXKXB0xJXuy616EnFbvm7DGQqNtp/VQI5kWG1588fUUcD0g2VFCkDfA/P2SRDCFMy+fL1gfU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LTnsVnkH; arc=fail smtp.client-ip=40.107.93.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LTnsVnkH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ABNRELBtnU6fNbfk2cZK403qB0IEo9UTuKg3D3zYz3Jsvk9uWa6ggj4R/BXHipu0VwsECm+vWVViNejtOTVSgAxlQIzvV9bmVI4tFg6W2u3pUqYwNb+0cs+cig/HXMkJ+9nVZucn9s6sybmMaK/8Ts4twll0M7Sdxr9E34K/iTjAuJA7DcTMTvN/lD/0siAYe4oiAInvMe5JdPZUhvmYNIj0gZODISXCK/9fNYhBJMZgPoCnGsi3i4PREpNP3P6IFX2tqS1ITc1uYAKjt2NZSpF9OiOuBzLYTYQSFyecHZDL/1BT28TpJifMKgS+khJDvOLqzOMgM2rOqog8gsrlpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KMsD9HdexhnzY16tUo+u9w2N6M/OmEgWMA8g7vKnSeI=;
- b=keQVA/hh/dYcgbnAKeYmzHzSaZynDTCFDqQ7NjaKTu8J5jvai6i8t5K8E7FAuP8g0dSlw0kISN4rjYrMuBqXMdcbY132piDrCcT/QVezS8HBM5PAHfOuobqWTygmy4yHZtqRW1yyiENep7HpgCN61YyCgnbd8M+5U/T/eBddsNJO5jtPI2Cg0KQngxb3eg7Z/ZtpNZ8s8mShqR/Kj/EdvyAkKSSk1pudqJuG4/3ulVURgBKVHzRIq41MrNnkGksKdJQTG0ohS5tlQV1PL1PaiZXqq/pWR6hBb/da9AUxdao9uysZxssKBXlA22mwx2AOmB2PKSv10dK/BItpd3dXUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KMsD9HdexhnzY16tUo+u9w2N6M/OmEgWMA8g7vKnSeI=;
- b=LTnsVnkHmb0ywPO5VWi6kIhJqbmzOXIhdv8NNH/UrRQ2yY2Xo+4yQGtftXrSTgRF0KDMIBq/3ZSsLrPTFHx3L5FpilYFlOoF4Spifx4Ec3gG9VuSjtNatzTXbJlzzhwstKIYVqeD3RXYJNbxQB+5MPrembJGb+cmlvfw6gtScZNYI/PN7oiQsLBjurIY9EzoSBSRq7G8Hq2DQ0snFEZbyZISXCGPRa7dCh6sBTDjcWARarLY4/I14xu2G/9GuwLl5OyrzlmWhzqQW5mbkHp50enMdzQ9SCTrwJL/sTtg2CQ+el7X1iAOAmQn01WDNmnMV2tHJZkKVP81ubzsEilKLQ==
-Received: from BY3PR03CA0016.namprd03.prod.outlook.com (2603:10b6:a03:39a::21)
- by BL1PR12MB5731.namprd12.prod.outlook.com (2603:10b6:208:386::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
- 2024 09:09:55 +0000
-Received: from CO1PEPF000042AC.namprd03.prod.outlook.com
- (2603:10b6:a03:39a:cafe::da) by BY3PR03CA0016.outlook.office365.com
- (2603:10b6:a03:39a::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24 via Frontend
- Transport; Wed, 31 Jan 2024 09:09:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1PEPF000042AC.mail.protection.outlook.com (10.167.243.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.19 via Frontend Transport; Wed, 31 Jan 2024 09:09:54 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 31 Jan
- 2024 01:09:40 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 31 Jan
- 2024 01:09:40 -0800
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41 via Frontend
- Transport; Wed, 31 Jan 2024 01:09:39 -0800
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <allen.lkml@gmail.com>,
-	<linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.1 000/186] 6.1.76-rc2 review
-In-Reply-To: <20240130183318.454044155@linuxfoundation.org>
-References: <20240130183318.454044155@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF0169965
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706692255; cv=none; b=iSZ442yQj9w1epGMOfnbKoamvNZ+elZiKz2ff8uvmnTE3WRUO5UkjZGC3268M3LC3huRAGJQ5i8Tus8URYvb2DmPzXqdTXn0ohBoFxNdvJ505oKqrQsp6U5i3Xlj2ucSjTO4orOo9KaPQB0E8gpQbwBKuo8qYtdjUqvsCkQXRMM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706692255; c=relaxed/simple;
+	bh=tZ2Kkk4OTFSJm493uk6H8hT3BpCU0VrAwNM5XClLaCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jhs1pGxIOrf2ESjBeyvFV3Eh+GG9StGPnK6gQe02SJafTcHqnjgM4LLo/5V1hc5Ba+4ymj7DyfgIy/PViMdAdlGWYhQ7PA28mgw5SO9ECnSjNL6VMqnn8C0BtlhywgWUh74mG5jNSW1zZq54K6Nhs/UEXP85wk/gKoAW397J26U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1706691568-086e230f2933e90001-xx1T2L
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id CpJE2AnaHniHCIlk (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 31 Jan 2024 16:59:28 +0800 (CST)
+X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
+ 2024 16:59:28 +0800
+Received: from [10.32.57.248] (10.32.57.248) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
+ 2024 16:59:25 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Message-ID: <4ef18ceb-68ae-4e09-a04a-b268c7442c52@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.32.57.248
+Date: Wed, 31 Jan 2024 16:59:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3d2829cd-4773-43f5-a231-c9dab2542fd3@rnnvmail202.nvidia.com>
-Date: Wed, 31 Jan 2024 01:09:39 -0800
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042AC:EE_|BL1PR12MB5731:EE_
-X-MS-Office365-Filtering-Correlation-Id: cec77802-b39d-4d1b-316f-08dc223c63ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	zp77Mf3fIP3N0P8NhbVebnnlDZxbzdVUuxFKF2Nvsoe104Z5ORDppqzUytHV9PsN7VQdRJaJ/WK75AiBj8xxoDe+CvOfZeSd+DkodAGpoIbo9ZdA+3QrYVqlicdD+an9iYff9UeiZqH7k2IDCuDRJi5PMnoiCQ0cRAGnxdFmeGs8vP/x8p7pkIwswaFcVdQvUi5BTxDSy7yijonMOBs2CQpRSsGF7FqfSrhX0DxRx6Tt4u6M6MuMIDMnFJEcwp+4MYqDRmRH9nmUoKYzRWZ2O8vYpXLXVPeurZrnyfmZ6+beFofMtcNUv1JaLDlI+XY5PrjFB4hhtaB6UPuSBTGIHKt98tp0z7iY+Gf6faNGQXMb8cokysiv0xxeRWyq21lpVhipsmLwxKRLKWTKrJgtjmH2fE0bah3819zbQh0CarLr7mjULFa7DQroSfYl+TzC+NQ0gKRD1M3/bVllTGvoh21Ze+3FXAaN/lnMnVoBPv6wUYss4VF90PuG6rewucUI6GAlmA3LcyKW0a+5wmCTAzlhN/67MvGoyQu6hkQWJmDla4JA2REkOiMFhWat3F4gTuKw1eGpbDVeqE+91/oers1Ikk0WwOxM0Z9MDbSabRqyk2SZxjfECVBFqgY2mFt2oYyDQHTHyPOlQ0Ea7JGyHA4I3AvAgJXT/lYosoVLq2JpKugiczQH4jW+D8EjlP+j3qT/ApWtLGuWf/fMlA8IxpLEHi5/R4ER60QuH95QM0HWgWcw5RTPRRnrex6ivfcSILGxN8RIwqDruZVaHUgJxtKD5nfBxhq3opAtwt4kzOs=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(396003)(136003)(346002)(230922051799003)(1800799012)(186009)(82310400011)(451199024)(64100799003)(40470700004)(46966006)(36840700001)(41300700001)(336012)(426003)(26005)(31686004)(40480700001)(40460700003)(966005)(47076005)(36860700001)(478600001)(82740400003)(7636003)(356005)(316002)(86362001)(7416002)(2906002)(31696002)(5660300002)(70586007)(54906003)(6916009)(70206006)(8936002)(4326008)(8676002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 09:09:54.4376
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cec77802-b39d-4d1b-316f-08dc223c63ab
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042AC.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5731
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] x86/cpufeatures: Add CPU feature flags for Zhaoxin
+ Hash Engine
+Content-Language: en-US
+X-ASG-Orig-Subj: Re: [PATCH v2 2/3] x86/cpufeatures: Add CPU feature flags for Zhaoxin
+ Hash Engine
+To: "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>
+CC: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <seanjc@google.com>, <kim.phillips@amd.com>,
+	<kirill.shutemov@linux.intel.com>, <jmattson@google.com>,
+	<babu.moger@amd.com>, <kai.huang@intel.com>, <acme@redhat.com>,
+	<aik@amd.com>, <namhyung@kernel.org>, <CobeChen@zhaoxin.com>,
+	<TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>, <GeorgeXue@zhaoxin.com>
+References: <20240123022852.2475-1-TonyWWang-oc@zhaoxin.com>
+ <20240123022852.2475-3-TonyWWang-oc@zhaoxin.com>
+ <20240123094427.GAZa-Ke5d2Kwyk2nSU@fat_crate.local>
+ <AADBA4D3-3D36-4AB6-B0D1-510DD5347430@zytor.com>
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+In-Reply-To: <AADBA4D3-3D36-4AB6-B0D1-510DD5347430@zytor.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1706691568
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 3419
+X-Barracuda-BRTS-Status: 0
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.120182
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On Tue, 30 Jan 2024 10:47:38 -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.76 release.
-> There are 186 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 01 Feb 2024 18:32:32 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.76-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
 
-All tests passing for Tegra ...
+On 2024/1/23 23:42, H. Peter Anvin wrote:
+>
+> [这封邮件来自外部发件人 谨防风险]
+>
+> On January 23, 2024 1:44:27 AM PST, Borislav Petkov <bp@alien8.de> wrote:
+>> On Tue, Jan 23, 2024 at 10:28:51AM +0800, Tony W Wang-oc wrote:
+>>> Zhaoxin CPUs have implemented the SHA(Secure Hash Algorithm) as its
+>>> instrucions.
+>>> Add two CPU feature flags indicated by CPUID.(EAX=C0000001,ECX=0):EDX
+>>> bit 25/26 which will be used by Zhaoxin SHA driver.
+>>>
+>>> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+>>> ---
+>>>   arch/x86/include/asm/cpufeatures.h       | 4 +++-
+>>>   tools/arch/x86/include/asm/cpufeatures.h | 4 +++-
+>>>   2 files changed, 6 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+>>> index 29cb275a219d..28b0e62dbdf5 100644
+>>> --- a/arch/x86/include/asm/cpufeatures.h
+>>> +++ b/arch/x86/include/asm/cpufeatures.h
+>>> @@ -145,7 +145,7 @@
+>>>   #define X86_FEATURE_RDRAND          ( 4*32+30) /* RDRAND instruction */
+>>>   #define X86_FEATURE_HYPERVISOR              ( 4*32+31) /* Running on a hypervisor */
+>>>
+>>> -/* VIA/Cyrix/Centaur-defined CPU features, CPUID level 0xC0000001, word 5 */
+>>> +/* VIA/Cyrix/Centaur/Zhaoxin-defined CPU features, CPUID level 0xC0000001, word 5 */
+>> Does that mean that all those companies agree on the contents of this
+>> CPUID leaf?
+>>
+>>>   #define X86_FEATURE_XSTORE          ( 5*32+ 2) /* "rng" RNG present (xstore) */
+>>>   #define X86_FEATURE_XSTORE_EN               ( 5*32+ 3) /* "rng_en" RNG enabled */
+>>>   #define X86_FEATURE_XCRYPT          ( 5*32+ 6) /* "ace" on-CPU crypto (xcrypt) */
+>>> @@ -156,6 +156,8 @@
+>>>   #define X86_FEATURE_PHE_EN          ( 5*32+11) /* PHE enabled */
+>>>   #define X86_FEATURE_PMM                     ( 5*32+12) /* PadLock Montgomery Multiplier */
+>>>   #define X86_FEATURE_PMM_EN          ( 5*32+13) /* PMM enabled */
+>>> +#define X86_FEATURE_PHE2            ( 5*32+25) /* "phe2" Zhaoxin Hash Engine */
+>>> +#define X86_FEATURE_PHE2_EN         ( 5*32+26) /* "phe2_en" PHE2 enabled */
+>>                                                      ^^^^^^^^^
+>>
+>> From: Documentation/arch/x86/cpuinfo.rst
+>>
+>> "a: Feature flags can be derived from the contents of CPUID leaves.
+>> ------------------------------------------------------------------
+>> These feature definitions are organized mirroring the layout of CPUID
+>> leaves and grouped in words with offsets as mapped in enum cpuid_leafs
+>> in cpufeatures.h (see arch/x86/include/asm/cpufeatures.h for details).
+>> If a feature is defined with a X86_FEATURE_<name> definition in
+>> cpufeatures.h, and if it is detected at run time, the flags will be
+>> displayed accordingly in /proc/cpuinfo. For example, the flag "avx2"
+>> comes from X86_FEATURE_AVX2 in cpufeatures.h."
+>>
+>> Is your grep broken?
+>>
+> Well, Centaur bought Cyrix, and then VIA bought Centaur. I think Zhaoxin is a joint venture between VIA and the City of Shanghai, or something like that?
 
-Test results for stable-v6.1:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    116 tests:	116 pass, 0 fail
+Yes, Zhaoxin is a joint venture including VIA and Shanghai Alliance 
+Investment Ltd.
 
-Linux version:	6.1.76-rc2-gce3f6cd9e4cd
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
+VIA has not designed new CPU products for a long time, nor maintained 
+the previous products.
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Zhaoxin is currently designing and releasing new CPU products, and VIA 
+understands and agrees that Zhaoxin uses the contents of this CPUID leaf.
 
-Jon
+Sorry for late!
+
+
