@@ -1,139 +1,119 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AEB39851
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 21:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EACE39847
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 21:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706736966; cv=none; b=AqbE3Glrhs6L6Sc+Ya/Clef7NsYc642MC7hbP1q0oSxToN9tCqR1oElYZKnZz6/LxIxnxT+dhdbZfeSsd6QuUoNkDCH+Qb4wNgThBEGFQaByiazktkd2/OcKKDIREm2oO3HQUaPlXXLs3zMjmcLcrUmswAUNHzcf/e7MMM9ps+M=
+	t=1706737005; cv=none; b=k9t2j/INE+YfrIqAlc763ghfonk675zervlwB6LMEY4LPhrDSj96+O7O9rWgKpav2i6aSPLmmxQ6SNJ/OQWavzK+JCPZzBbA3Zma4mFzoItJi/MyV+tNk4gWX/VPPwt8B0UMZn0D0BC2OfJn+T0OwH0rvZR/t3xGkqlHCjU/NjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706736966; c=relaxed/simple;
-	bh=GYAGK+6wZfDEd17X7XEyJShO8IyOKnBNgDDgZrd+0FQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=QTgvuLP9PRFRWEB/7s0tXOU26yKk3WhIFkY8ClJQxHlHiRDpjH0HCQHsNWKcjzLq1eNRDrDI2Y7il0aiX4sfdEXzxSVjjpgUnpjhLzhZDRRDqo0GlWKy9zJ+csO4FOQcSFS/ApfNeWo7fdAd2s65BtyRnD21zEfeivbCwEyhEjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=l55pmr8W; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1706737005; c=relaxed/simple;
+	bh=YOr5p7OqhyyhW5TZ0msg6DHQwIpWUrFc8I5/ZuxT8lM=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=f8f388QWKFbyTQ6ALUm63/G6dmHgqmaJga/gGLpcR3ePHMpPW5Ro4D1bYdvnbAttLvF/y5USTDueH3IzXC4iaI/J8zZNGnt1Pasv63Evvn1rkNpu04UE+RW8dVnX4s7a1YJpxR80yLIKRMK0i7XVF8xSgBTalGKEH3VDvZdbL00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WoTMNNjW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l55pmr8W"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240131213601euoutp0100cfa8246f2425ed167aa9f5c92b04e6~vjDlZxJ3_2999029990euoutp01o
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 21:36:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240131213601euoutp0100cfa8246f2425ed167aa9f5c92b04e6~vjDlZxJ3_2999029990euoutp01o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1706736961;
-	bh=8FhZbSfgegnhtR5RRbzkCWHX3gwqerDw8YHUYMMgLLU=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=l55pmr8WGjkxb3Eps7kASjkcNOd4u8QwI2kfDCeUqhcKMBq52IpEk1NiyBKJfjgm3
-	 XMUrYBnfUlOZtu3kyohqLL7KYg5oNO1MD0RkkOFyGIXZoPNceF+DuyWgXB5TfpdAQo
-	 mMRPzUKoIDqWVHX/ogi5Z5VGiWNliB5UYb9qPHKc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240131213600eucas1p1a787991b50fedee0e5395b279a7b9e04~vjDkaB_aE2300223002eucas1p1M;
-	Wed, 31 Jan 2024 21:36:00 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 5B.C5.09539.04DBAB56; Wed, 31
-	Jan 2024 21:36:00 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240131213600eucas1p12ecf4d6fb101425fa35e50f45a241c84~vjDjzz3j10038700387eucas1p11;
-	Wed, 31 Jan 2024 21:36:00 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240131213600eusmtrp102440985bac7556b0bfdd79be958b15c~vjDjzUe-32141021410eusmtrp1z;
-	Wed, 31 Jan 2024 21:36:00 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-f6-65babd40b7f5
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id D3.F6.09146.F3DBAB56; Wed, 31
-	Jan 2024 21:35:59 +0000 (GMT)
-Received: from AMDC4653.digital.local (unknown [106.120.51.32]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240131213559eusmtip270d3feb5e5693eb26f3204cedd337576~vjDjVkA3G2026720267eusmtip2S;
-	Wed, 31 Jan 2024 21:35:59 +0000 (GMT)
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-To: linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Russell King
-	<linux@armlinux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH] tty: serial: amba-pl011: Fix removal of the QDF2xxx
- workarounds
-Date: Wed, 31 Jan 2024 22:35:43 +0100
-Message-Id: <20240131213543.958051-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WoTMNNjW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706737003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2IICm0xc8cHxl8ntw7Ux3EV0imOL/Y1QKA8M5sz6CME=;
+	b=WoTMNNjWNl84eV853a4InTC8yK9moKfSO6EubBB48PjoEO+4IXK4osaOABvupC7ProaPl+
+	9LuhqElzs8a4McEO58v9NNCJ2qGCjHT5s+y9r0lpqlacKHuEgF3M+wNbvqTy7Fou2OsYuM
+	GGx2fNNCMBDDRy9kjw6BTYLPeBZlcZ8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-335-7StyiotBP7OD_JLc19Iwxg-1; Wed, 31 Jan 2024 16:36:41 -0500
+X-MC-Unique: 7StyiotBP7OD_JLc19Iwxg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EC83A88B7A5;
+	Wed, 31 Jan 2024 21:36:40 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D5A9E1121312;
+	Wed, 31 Jan 2024 21:36:40 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH] kvm: move "select IRQ_BYPASS_MANAGER" to common code
+Date: Wed, 31 Jan 2024 16:36:40 -0500
+Message-Id: <20240131213640.409682-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduzneV2HvbtSDSa9U7VoXryezeLdXBmL
-	jsnbWSwu75rDZnFo6l5Gi7VH7rI7sHlcvnaR2WPTqk42jzvX9rB57J+7ht2jb8sqRo/Pm+QC
-	2KK4bFJSczLLUov07RK4Mm5vKC74x1HRdXc5cwPjGfYuRk4OCQETiWcnZwHZXBxCAisYJeZc
-	/sMK4XxhlFi6bxorSJWQwGdGifZ3EjAdX2Yfgipazijx7u46FriOo5MfMINUsQkYSnS97WID
-	sUUEFCQ29z4D62AWuM4ocWzdBcYuRg4OYYEgiYNLI0BqWARUJV6dWQd2E6+AncT5O7OYIbbJ
-	S+w/eJYZIi4ocXLmExYQmxko3rx1NlTNTA6JjcfkIGwXic9XpjBB2MISr45vgfpTRuL05B6w
-	QyUE2hklFvy+zwThTGCUaHh+ixGiylrizrlfbCDHMQtoSqzfpQ8RdpT4MWc+K0hYQoBP4sZb
-	QYgb+CQmbZvODBHmlehoE4KoVpOYdXwd3NqDFy5BnekhsXzvYyZIgMZKnFvZzzKBUWEWks9m
-	IflsFsINCxiZVzGKp5YW56anFhvmpZbrFSfmFpfmpesl5+duYgSmmdP/jn/awTj31Ue9Q4xM
-	HIyHGCU4mJVEeFfK7UwV4k1JrKxKLcqPLyrNSS0+xCjNwaIkzquaIp8qJJCeWJKanZpakFoE
-	k2Xi4JRqYKr99ZTBxn5/2F7R7KQnysbcPT9jplq+0NA8Oyty0uOOy4r/23oEXF40W1lHreNo
-	L3vvGr81uCRF8MDBJbsWT5t+SqH05YokrZOPThcWbSxSvHZ4sqSAzDs2m7Uz4ti/rJS8/uqO
-	wT6NIN0NhS0bj/muTcsqkno5mUlx6jpRhtnfGyc94F7/t2LPsZxZnkvuRiq/vNO/L+dTU9uz
-	My5ea5t4bp10iZ24r2Gn1tHIjNwZFXPffpQ0uJA0k+n7+8hpUX+zXh+eO3vrdMGAVy4bcryW
-	rl/9jdGvobKT/9QXRqm3udGOikouDb8UI0ymTOTJOaP1acUO6zqpub+KP2xf6Nb3gLW60HjJ
-	t5WsMtX3/+UrsRRnJBpqMRcVJwIAvqPq46IDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsVy+t/xe7r2e3elGuxfbm7RvHg9m8W7uTIW
-	HZO3s1hc3jWHzeLQ1L2MFmuP3GV3YPO4fO0is8emVZ1sHneu7WHz2D93DbtH35ZVjB6fN8kF
-	sEXp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZdze
-	UFzwj6Oi6+5y5gbGM+xdjJwcEgImEl9mH2LtYuTiEBJYyiix4u4HRoiEjMTJaQ2sELawxJ9r
-	XWwQRZ8YJV5+XcsMkmATMJToeguS4OQQEVCQ2Nz7DGwSs8BtRonmJ6fAJgkLBEisfbwRbB2L
-	gKrEqzPrwGxeATuJ83dmMUNskJfYf/AsM0RcUOLkzCcsIDYzULx562zmCYx8s5CkZiFJLWBk
-	WsUoklpanJueW2yoV5yYW1yal66XnJ+7iREY4tuO/dy8g3Heq496hxiZOBgPMUpwMCuJ8K6U
-	25kqxJuSWFmVWpQfX1Sak1p8iNEU6L6JzFKiyfnAKMsriTc0MzA1NDGzNDC1NDNWEuf1LOhI
-	FBJITyxJzU5NLUgtgulj4uCUamA6bLrrROk75hXF0yqf5NZv+iNd2viwIVlO7y/rl/VWrVU+
-	jlqyjvpyGn02jjuSZtTciL21Y8nrwkQRTSmmn1Lr/h9jLRMzL5s4edEb8VKxjKWO/02Kszun
-	i9arRFb53uUO/zVhUutCme0RLNrLf1dE/J8S38ZV2l5/Me9xg1Hkgiav9edVc7w/8QlfXZXv
-	eV/d1ojvXeKqfc5f3+2afOFrq9Sre/VhE3b3ex+Z2iMQ/HDWT1N5U3G+k+k3pnnv7M2KNRUN
-	OP0tvuBnS+7h1FfuEfIcN3fICgreDzF7yeOWteOeU2e+8Z83+42eHz2WU1F1889szk3cDXeO
-	N2SxLradoDKDkWm3+jW2P5Vcr5RYijMSDbWYi4oTAZesJiT6AgAA
-X-CMS-MailID: 20240131213600eucas1p12ecf4d6fb101425fa35e50f45a241c84
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20240131213600eucas1p12ecf4d6fb101425fa35e50f45a241c84
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240131213600eucas1p12ecf4d6fb101425fa35e50f45a241c84
-References: <CGME20240131213600eucas1p12ecf4d6fb101425fa35e50f45a241c84@eucas1p1.samsung.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Commit 196f34af2bf4 ("tty: serial: amba-pl011: Remove QDF2xxx
-workarounds") removed some quirks specific to QDF2xxx SoC family.
-Unfortunately it removed a bit too much code from the
-pl011_console_match() function, what broke console operation on QEMU's
-'virt' ARM/ARM64 machines. Restore the "pl011" related string check as it
-was originally introduced in the commit 10879ae5f12e ("serial: pl011: add
-console matching function").
+CONFIG_IRQ_BYPASS_MANAGER is a dependency of the common code included by
+CONFIG_HAVE_KVM_IRQ_BYPASS.  There is no advantage in adding the corresponding
+"select" directive to each architecture.
 
-Fixes: 196f34af2bf4 ("tty: serial: amba-pl011: Remove QDF2xxx workarounds")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/tty/serial/amba-pl011.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/kvm/Kconfig   | 1 -
+ arch/powerpc/kvm/Kconfig | 1 -
+ arch/x86/kvm/Kconfig     | 1 -
+ virt/kvm/Kconfig         | 1 +
+ 4 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index c4df9cbc264b..33d559fa10a6 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2451,6 +2451,9 @@ static int pl011_console_match(struct console *co, char *name, int idx,
- 	resource_size_t addr;
- 	int i;
+diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+index 6c3c8ca73e7f..46bdbd852857 100644
+--- a/arch/arm64/kvm/Kconfig
++++ b/arch/arm64/kvm/Kconfig
+@@ -34,7 +34,6 @@ menuconfig KVM
+ 	select HAVE_KVM_MSI
+ 	select HAVE_KVM_IRQCHIP
+ 	select HAVE_KVM_IRQ_ROUTING
+-	select IRQ_BYPASS_MANAGER
+ 	select HAVE_KVM_IRQ_BYPASS
+ 	select HAVE_KVM_VCPU_RUN_PID_CHANGE
+ 	select SCHED_INFO
+diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
+index 074263429faf..dbfdc126bf14 100644
+--- a/arch/powerpc/kvm/Kconfig
++++ b/arch/powerpc/kvm/Kconfig
+@@ -22,7 +22,6 @@ config KVM
+ 	select KVM_COMMON
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select KVM_VFIO
+-	select IRQ_BYPASS_MANAGER
+ 	select HAVE_KVM_IRQ_BYPASS
  
-+	if (strcmp(name, "pl011") != 0)
-+		return -ENODEV;
-+
- 	if (uart_parse_earlycon(options, &iotype, &addr, &options))
- 		return -ENODEV;
+ config KVM_BOOK3S_HANDLER
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 87e3da7b0439..e7cbf011d766 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -29,7 +29,6 @@ config KVM
+ 	select HAVE_KVM_PFNCACHE
+ 	select HAVE_KVM_DIRTY_RING_TSO
+ 	select HAVE_KVM_DIRTY_RING_ACQ_REL
+-	select IRQ_BYPASS_MANAGER
+ 	select HAVE_KVM_IRQ_BYPASS
+ 	select HAVE_KVM_IRQ_ROUTING
+ 	select KVM_ASYNC_PF
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index 184dab4ee871..6408bc5dacd1 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -73,6 +73,7 @@ config KVM_COMPAT
  
+ config HAVE_KVM_IRQ_BYPASS
+        bool
++       select IRQ_BYPASS_MANAGER
+ 
+ config HAVE_KVM_VCPU_ASYNC_IOCTL
+        bool
 -- 
-2.34.1
+2.39.0
 
