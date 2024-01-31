@@ -1,70 +1,95 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE75228E11
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A9669DE2;
+	Wed, 31 Jan 2024 11:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706699827; cv=none; b=hL+NnQCbOdfMVtC54sbsfUDhGrHEnIHX8zjZD6Sgs+KcVD9OsFXiZEydVh59JEsD1HvA26lgTBtBOhiltRnA9r+FETs2Q7LWKyiPCFXI3gir428mNhk5Mubc84gMAUDTYhVXM62wx8MCXj5y10SZln8X5fnfJ+X07iry8zOJVPw=
+	t=1706699829; cv=none; b=ldXmZa35+vcLqNdWRQpl2P6qsR+wEn+8oytcrkIAexPB4aRz3J4o+TQ27SSS2POuHoslecf8X0tBZLLb1GzwOTsoSuQeJQMROfPYuvG5iLYIkHswvO57evWduvk6NI7MUrCV9AFgRo2jPpG4L8yuNOMnO2NrnpHtR9ieKxVeH1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706699827; c=relaxed/simple;
-	bh=L+QnCjnL887B7BrRIhtZ0TPT9qAj8r39GthSxIeoOyg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Zh8Oyl224dt2p2zvnkspClrJLIT0JW3ashcrcdDTiTazIkmXLpjPPwrYlBOQPJ6LFhf7ln1iK+gXvSNuphp8SHzu3vMZqzVYWGcA3OJwh9NwVqMcA6tSPNQpXy/hSTyEuweXEjPVERrQwKQgMi0MGBrwRh9zxZIvaRdiF5A7zhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3637aa8a40dso20687205ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 03:17:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706699825; x=1707304625;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i6c976If224TYeuwzTSuYKEv2LPA0nMDbHWz8hCyihE=;
-        b=NyHoBqGMQHiqyaFrbJNQChpI7euQaWBYmpmntV21j8ihwtm2x4K/8fOKgSmKMBxMBR
-         K84iZLk87gNxQVRvpaNMWxp84lCZc4RwEYKt9KOnIc9qhTD0VxWdwb101sAafnljRaH9
-         YXIXE0ahSezMrGuMjmiRvyaw0pDw03PBtcUsU/aw+QSOkkGZ0r1y/WGXzV2LGeKmFzhn
-         wSGZpfPpfadnOvDukHnmh4z8WBjW7eVGmanCngRIojxkAByvnV7AfO+usFEIEtQLqgyK
-         l7qgvnImCYPP1XtIP+uN0D5XDZzEI/eomFjicBgktMZUzahhU4iytbyZavuQDTg3u7rt
-         AsGA==
-X-Gm-Message-State: AOJu0YwwbZ4scSewR2xJogOLyQer45xerAPu0LCy+LmjKM1RGPWa8q1T
-	TNUtHQe5Y3YagFhl8dGwclxexenxoQbNSYrAkNY9u/5F0BbUZ3HE7NDSS4V+6KNYgUn3/cFr8gI
-	S0Rfpo/ad4yqv1FeloCwcRo6546Wg/OPyajzSS4u5vIOkYLt6vb2XCTI=
-X-Google-Smtp-Source: AGHT+IFP0lv1qI4rBu3ZRWPdBMeZQhknUNUj5MbszY0pqDASsotFmOnrd/REEEbZLUpCq+7tQs4ZgMBdYpKTuRIDh3smo6YkTot+
+	s=arc-20240116; t=1706699829; c=relaxed/simple;
+	bh=ezyJ3RAWthEoMiSHE2pyK7llcs3x4Wbbh8fvvEw11/Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ogR5U0vg0KGlJoSbwR5FGfYd2Jnn0VEwL7Q4CUoJMl2A1wtUmjNwaLoxEmvM0+T3HEVGQMXygfN6+I0wzxXj+jjI8yAT5sRIQ16XcaLSHZpgowN3b2EpkHsH9Yw43WnlAkEgzyRUw/++90vSKc9s0vyUw3UdmvZJhFyGERFRJXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=iO3RmPxz; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="iO3RmPxz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1706699814; x=1707304614; i=w_armin@gmx.de;
+	bh=ezyJ3RAWthEoMiSHE2pyK7llcs3x4Wbbh8fvvEw11/Y=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=iO3RmPxzHQHJNCGLQNTWXxt8ep0NgqSJGMLExWu7uPc+H6rHPRj0wNTMrXs0Aiy5
+	 Iu6eEJxI86HryZxWErADo3WI2FFONPOoSyIw1Q8jDvmgXeIq3EPlAxuIBWQh+OTc7
+	 WM+HUXqqQ2LU5tcXJHb+uwStvERHre1N0xvfD0oo1ydXdWx+Qi4CMLJAGeT00cVr/
+	 q8XRpdtPmn4423dF7yjyZii0kYCwThCrYW8U6P3KNpGBhuUf/TgZS6XdCmiogXc2e
+	 GsXQjgnnKDr7wgvm6mIFwIoqOyiA3kGfXCtWWn6Xvzms8xZrF02RiNSj9D3jtO8S5
+	 nyP18Fpd8miN7qSOCw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-inspiron.fritz.box ([91.137.126.34]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MA7GS-1rJXzg09Os-00BeIZ; Wed, 31 Jan 2024 12:16:54 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: dennisn@dennisn.mooo.com,
+	lkml@vorpal.se,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: coproscefalo@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
+Date: Wed, 31 Jan 2024 12:16:39 +0100
+Message-Id: <20240131111641.4418-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1807:b0:363:819c:926d with SMTP id
- a7-20020a056e02180700b00363819c926dmr131935ilv.1.1706699824966; Wed, 31 Jan
- 2024 03:17:04 -0800 (PST)
-Date: Wed, 31 Jan 2024 03:17:04 -0800
-In-Reply-To: <tencent_7E79026C382CE16C5C96ACE81EEE26CF580A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ce367506103c045c@google.com>
-Subject: Re: [syzbot] [xfs?] [ext4?] general protection fault in jbd2__journal_start
-From: syzbot <syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jDTwPO5c5zM8j2a+DiDZVYT/c6PVwOnwm+ivKNBWn/eRJQUQC+V
+ 2Tm20vOECym+JDUKfVAEQfChSfMLtE1KaBvy/YtDihwbqd2WnnShVpLDytHXLWCHlXwtjyJ
+ J6LrUPicbauqi12kB8An+7s1MZ0HcctRhiSYj8+M+cT/dkSzcFS2YQwe+IaQd5VyS/twuc0
+ VZV5BOLiK/azJFiFoWy9w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:51xwPc6pxrQ=;09rD8X1Kl+pTpBqHI54ESR6b7pS
+ wxaY5w8MsjK1ZSLJBo86dFj+A1qfH9pYTlH+pveQY/M+UlJCN/fRZU+PMJOUR2jK5IcZZU5Tp
+ 3bF+ml1uz84OQMWcKCCVNpWo5NPDPYfbH4owAThYTVIJipzmUtoktLuH/7cGB9m0gJqRGEZ4V
+ vlvV1axIxh2Jq0Fizxt3fKHtQ/D5BsfKt64UgSQnZCw8H6Dj1WRrTDe8FmcvPhSvXks9144tz
+ tTDSGLQeIn8UmA83BkqUdHS0VfVbc/3W7LEPm6rApqtOWDvs2X++vrJQwjmC61oB2TWndgBjJ
+ ZH9Y0T5tPPxRtLAC6AW6XjGgYqfonKPqCh1B1NDPI62pX2MH72Ift0WIRga79fP11KZeC+yrJ
+ DT6iGW9I8PGhlaOq7YLJz+OnRej7dAeqtPv3IObY9DsO9xf91ZJihEF9jkmHD6AQxIN68MzS3
+ mOXrhjsGAOEa50C/mqqaVn8uqcKs/sai10XNvvBAcA6QSR2miEwh8xvj7jsLcY+BmqhxXctdZ
+ y7ICFhgxpp+fkOqwmUE1DjzU3/EcSfrr1Y4ZqWjH63GbC8OQltAO1hTnJ2Xz4nkNA+ZxKQf73
+ YHQqceK2iYrNdN5RJkP/JBKGsd9VZKh8o+Zpi34k/VT/m2TkkmlzPuQZH25tnuVWQi92ilQwE
+ aCrQhiTVHPbTggRibAb1GWzNmbi9rik3sKcW5G6jqGrao4gGZMKIzpeqKpw4VtBxUfJxyYEKi
+ aweubdzaFLNa7GqIjF2HN3eY7YggVT5ebD1M1V1pcG/PG9aTv4J80uHs3f1ogpcvuHcGWftuW
+ xOdoEi+t85LId3e1ibVlA9eY+poMOF9a1f7Tc7ZVaS31AEzlYQsqGggUAXrvtu9HXiQUNsHF3
+ v8zVXdK/m1gDQKrI6jcknshJeCrhuqbibtkfUHT2Ermxz3oPZj4KaVgaq6aLppzDpKzdKPTPI
+ yVW2/IeZzUXYVvfk736kol7QcBY=
 
-Hello,
+This patch series adds support for the ACPI PNP0C32 device as
+proposed in 2022 by Arvid Norlander. The first patch adds support
+for the device itself, while the second patch was taken from the
+original series.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Both patches are compile-tested only.
 
-Reported-and-tested-by: syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com
+Armin Wolf (1):
+  platform/x86: Add ACPI quickstart button (PNP0C32) driver
 
-Tested on:
+Arvid Norlander (1):
+  platform/x86: toshiba_acpi: Add quirk for buttons on Z830
 
-commit:         1bbb19b6 Merge tag 'erofs-for-6.8-rc3-fixes' of git://..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=16f6172fe80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b0b9993d7d6d1990
-dashboard link: https://syzkaller.appspot.com/bug?extid=cdee56dbcdf0096ef605
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17477cb0180000
+ MAINTAINERS                         |   6 +
+ drivers/platform/x86/Kconfig        |  13 ++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
+ drivers/platform/x86/toshiba_acpi.c |  36 ++++-
+ 5 files changed, 280 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/platform/x86/quickstart.c
 
-Note: testing is done by a robot and is best-effort only.
+=2D-
+2.39.2
+
