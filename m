@@ -1,117 +1,158 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F047120DE8;
-	Wed, 31 Jan 2024 18:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3604D20DE2;
+	Wed, 31 Jan 2024 18:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706726349; cv=none; b=cW9yobSF0Rs+V9NhmZ7uBlthuuuUWhjHkrihLcYQUNZlnPM5uJLPQuNIYtn4AqHkL5VUcD7iKvdsESVL3lm+2hYHwViRiSPmtnS1by1T5C7PEMjJy018OkJWeTGDMzQbplCT/HuQs//GPmr2grZm5jx12zaQ61W02+RNhJ32RVU=
+	t=1706726370; cv=none; b=HBVvgzx6w2ymfokYB+c2EQ7pGsvBaCU7j1y31UDtucV53IjGZLYvcMuQYiK963+Whv9vNvASW+8laK7EAUZSHo9Zt+26TS7OUUJ81LSYtnArQgEOJ0+FSCEs4kIgdMvA12k3kb0yzgBwr+IhZjh9mjs7/CR94j4DyuzZLU69lh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706726349; c=relaxed/simple;
-	bh=rXcfpzQ9QFkg2aC41Y07F7sa4N5JX3LOM+ObY03VVYY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=t5AQ7QXiyHOi+JPiCnP7c5u+8/LcE77eThpVK1wY52voybOrjeLtniY5+p8fKWhngf4hZMYrKq2udwcYeaxNF9RewieCSyMX6lIsybTuHj1L5qIKIEr8TCP7x53R7Rq9Reg/Rf8VFfNk7RqyvXS/74I23ROULvfS0FTamla0zic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (31.173.81.146) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 31 Jan
- 2024 21:38:51 +0300
-Subject: Re: [PATCH net-next v5 07/15] net: ravb: Move reference clock
- enable/disable on runtime PM APIs
-To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<richardcochran@gmail.com>, <p.zabel@pengutronix.de>,
-	<geert+renesas@glider.be>
-CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>
-References: <20240131084133.1671440-1-claudiu.beznea.uj@bp.renesas.com>
- <20240131084133.1671440-8-claudiu.beznea.uj@bp.renesas.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <518b6105-b09a-bd07-e6b1-026f73366a35@omp.ru>
-Date: Wed, 31 Jan 2024 21:38:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1706726370; c=relaxed/simple;
+	bh=wG3Hn51lXiqqGTEQgHWDBCOpRQh7/FE2IhWysyt/Vb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h3xua7a8M/7IFJzofivSF7SMi56ddBTDY6Vhyse8R97fMdpnMSk/C4if51Tk1hR/qnu2Z1dHuQT7vZ4q22d7UvaWJ1JhQkUNpi6iczgw7/E5N3IDrK4hKp+zgMUeq9D4wbuLTq9HDIm0pwm/EuXOu4vVUt0htqLTfXbl3YFbal4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65216C433F1;
+	Wed, 31 Jan 2024 18:39:29 +0000 (UTC)
+Date: Wed, 31 Jan 2024 13:39:43 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
+ refcounts
+Message-ID: <20240131133943.0a6e0e1d@gandalf.local.home>
+In-Reply-To: <CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+	<20240130190355.11486-5-torvalds@linux-foundation.org>
+	<20240131000956.3dbc0fc0@gandalf.local.home>
+	<CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
+	<20240131003317.7a63e799@gandalf.local.home>
+	<CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
+	<CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
+	<20240131075740.660e7634@rorschach.local.home>
+	<20240131081449.6e917b71@rorschach.local.home>
+	<CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240131084133.1671440-8-claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/31/2024 18:18:05
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 183089 [Jan 31 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.81.146 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.81.146
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 01/31/2024 18:23:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 1/31/2024 10:54:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On 1/31/24 11:41 AM, Claudiu wrote:
+On Wed, 31 Jan 2024 10:08:37 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> On Wed, 31 Jan 2024 at 05:14, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > If you also notice, tracefs only allows mkdir/rmdir to be assigned to
+> > one directory. Once it is assigned, no other directories can have mkdir
+> > rmdir functionality.  
 > 
-> Reference clock could be or not be part of the power domain. If it is part
-> of the power domain, the power domain takes care of properly setting it. In
-> case it is not part of the power domain and full runtime PM support is
-> available in driver the clock will not be propertly disabled/enabled at
-> runtime. For this, keep the prepare/unprepare operations in the driver's
-> probe()/remove() functions and move the enable/disable in runtime PM
-> functions.
+> I think that does limit the damage, but it's not clear that it is actually safe.
 > 
-> By doing this, the previous ravb_runtime_nop() function was renamed
-> ravb_runtime_suspend() and the comment was removed. A proper runtime PM
-> resume function was added (ravb_runtime_resume()). The current driver
-> still don't need to make any register settings on runtime suspend/resume
-> (as expressed in the removed comment) because, currently,
-> pm_runtime_put_sync() is called on the driver remove function. This will be
-> changed in the next commits (that extends the runtime PM support) such
-> that proper register settings (along with runtime resume/suspend) will be
-> done on ravb_open()/ravb_close().
+> Because you don't hold the inode lock, somebody could come in and do a
+> mkdir inside the other one that is being removed, ie something like
 > 
-> Along with it, the other clock request operations were moved close to
-> reference clock request and prepare to have all the clock requests
-> specific code grouped together.
+>  - thread 1 does took the inode lock, called ->rmdir
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>  - it then drops the inode lock (both parent and the directory that is
+> getting removed) and gets the event lock
+> 
+>  - but thread 2 can come in between that inode lock drop and event lock
+> 
+> Notice: thread 2 comes in where there is *no* locking. Nada. Zilch.
+> 
+> This is what worries me.
 
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Yep, and that was my biggest concern too, which is why I have stress tests
+that try to hit that above scenario. Well, rmdir and other accesses
+including other mkdir's of the same name.
 
-[...]
+As my knowledge on the inode life time is still limited, my main concern
+was just corruption of the dentry/inodes themselves. But the first one to
+get the event_mutex determines the state of the file system.
 
-MBR, Sergey
+If thread 1 is doing rmdir, what would thread 2 do that can harm it?
+
+The rmdir calls trace_remove() which is basically retrying to remove the
+directory again, and hopefully has the proper locking just like removing
+the kprobe trace event that deletes directories. It can have references on
+it.
+
+Now if something were to get a reference, and a valid dentry, as soon as
+the open function is called, the tracing logic will see that the
+trace_array no longer exists and returns an error.
+
+All the open functions for files that are created in an instance (and that
+includes eventfs files) have a check to see if the inode->i_private data is
+still valid. The trace_array structure represents the directory, and
+there's a link list of all the trace_array structures that is protected by
+the trace_types_lock. It grabs that lock, iterates the array to see if the
+passed in trace_array is on it, if it is, it ups the ref count (preventing
+a rmdir from succeeding) and returns it. If it is not, it returns NULL and
+the open call fails as if it opened a nonexistent file.
+
+> 
+> But it does help that it's all only in *one* directory.  At least
+> another mkdir cannot happen *inside* the one that is going away while
+> the locks are not held. So the good news is that it does mean that
+> there's only one point that is being protected.
+> 
+> But I do worry about things like this (in vfs_rmdir()):
+> 
+>         inode_lock(dentry->d_inode);
+> 
+>         error = -EBUSY;
+>         if (is_local_mountpoint(dentry) ||
+>             (dentry->d_inode->i_flags & S_KERNEL_FILE))
+>                 goto out;
+> 
+>         error = security_inode_rmdir(dir, dentry);
+>         if (error)
+>                 goto out;
+> 
+>         error = dir->i_op->rmdir(dir, dentry);
+>         if (error)
+>                 goto out;
+> 
+> notice how it does that "is this a mount point" test atomically wrt
+> the rmdir before it is allowed to proceed.
+
+You mean if someone did:
+
+ # mkdir instances/foo
+ # rmdir instances/foo
+
+and at the same time, someone else did
+
+ # mount -t ext4 /dev/sda instances/foo
+
+?
+
+OK, I never thought of that use case. Although, I think if someone is
+trying to mount anything in tracefs, they can keep the pieces. ;-)
+
+> 
+> And I do think that the inode lock is what also protects it from
+> concurrent mounts. So now what happens when that "thread 2" above
+> comes in while there is *no* locking, and mounts something there?
+> 
+> Now, I'm not saying this is a huge problem. But it's very much an
+> example of a thing that *could* be a problem. Dropping locks in the
+> middle is just very scary.
+
+No arguments from me. I really didn't like the dropping of the locks, and
+tried hard to avoid it. If switching over to kernfs can solve that, I'd let
+that conversion happen.
+
+I'm all for someone switching tracefs over to kernfs if it solves all these
+unknown bugs, as long as it doesn't hurt the memory savings of eventfs. But
+again, I'm also willing to make eventfs its own file system (although I
+don't have the time yet to do that) where tracefs isn't burdened by it.
+
+-- Steve
