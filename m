@@ -1,51 +1,51 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57E93C468
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707393C06B
 	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 23:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706743862; cv=none; b=XFTCZlMg2yOLAqpCUMP5q0JJPt7tlV3XY8RppaxjKj7IRm9byrG5azcdNGlRk3DE5jpV9hkFmXPKheBEJXVvrxKF6stOtSLCcP6bDrsqvo+MYQTutM2mopaZJ1E4hT6VmRnOkiWOfLmamr0Gfdkylcbhm5mhF8fY1Ryw0BIfok4=
+	t=1706743863; cv=none; b=Tcm7rp3rP2GT/+YXSKmT2qCqSvQH4X8oE6QY6gQf2f3rajonHB+PT57Ozolqf5REyG5OZBynDjVj5X9128d6h6unlFb+dH7rRRG8WpKNzmdGsk/8racIres5e2AllXQb5ZMOW7pyLtOvwUGRo79T/kQfOkNTSCnxyIN95H8Kupc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706743862; c=relaxed/simple;
-	bh=egLDFiRNJB+gLZ9vOhV8oqUV2GakvOlt+YHEeaEXTHo=;
+	s=arc-20240116; t=1706743863; c=relaxed/simple;
+	bh=Ux18IXW0DZHPKhYAMzyZDNK2COUwdRVoZU6iY0lsftQ=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mdtNuXE9DK81kY6TVykbPKt7aDfB1RNzupIqjM0Ou5GU8ElbgYpXpCHg39ZWL3xl4pLc5yVl0O6nqWxZgCdDc2pmS2Is8JpbUFpO05vKaGNz1aAzFMiA/jqvgF5ZOnTHq5mh/CPY9eBjAaM6yILqHTmEMXyruHNrXUAlNoEaxDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NkdNjZxe; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=u4tK4Y1YyyyMwKSj86FjdKsLeeJn8p2ksKh3VHyz4zDyIwEWd+pHtlsgH3Qc9Wt8bl+sEsGv4jaoMol8zMcOHmu/7jSbEunldZVCjFMh0BcI+mEGyEeAbqEPXmNanoC4DLfmhoxUrzfNFVcncycdvtT5FHYD2uD528UD0RhzWgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QmYzDbIu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NkdNjZxe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QmYzDbIu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1706743859;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iYdr1te2ILd/6IkmSv7D89eUotSlyqhI35b5jGhDKoM=;
-	b=NkdNjZxelVWMAhl3WdMjCq5kzkq77a+wkY1GUpq3bFAXe2nZA1e6U5fICkm7ypDHpbexOg
-	PQTVaZlHGrqI44XNoNCLH81y9Itac1Zlb5Ns5P175MzMsbyfizYSn89zsH7AO8h00Ld6tp
-	NbQ2rW0k5A036/zEY8j/i3fpVRDSE9c=
+	bh=s+BWRqwRbbb0ZjiffCmlWuwED5KeVg2ZZ25OkfKH+sE=;
+	b=QmYzDbIu+OKChkYQbK5FdVUUhG+euspl7sMLhTEnFLYSX0JwiY97kwQtR7Ao5pzd41vjIn
+	IDVX7n9vBJseTpQf5ycbER+K0d8RAgxZqkYA4j8eqYPa6AWu/rPGAyFBelDXrZLndViMFp
+	kpR92fKBdw/TKfwStA45kpoH1EqPnZY=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-204-YRnxORxcPxeonId5K0r4iQ-1; Wed, 31 Jan 2024 18:30:57 -0500
-X-MC-Unique: YRnxORxcPxeonId5K0r4iQ-1
+ us-mta-682-sW8m4aLfOom1O4KLKvp6RA-1; Wed, 31 Jan 2024 18:30:57 -0500
+X-MC-Unique: sW8m4aLfOom1O4KLKvp6RA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CF97867944;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D9D212501E1;
 	Wed, 31 Jan 2024 23:30:57 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 85273C2590D;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 466B5C2590D;
 	Wed, 31 Jan 2024 23:30:57 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Subject: [PATCH 7/8] KVM: define __KVM_HAVE_GUEST_DEBUG unconditionally
-Date: Wed, 31 Jan 2024 18:30:55 -0500
-Message-Id: <20240131233056.10845-8-pbonzini@redhat.com>
+Subject: [PATCH 5/8] KVM: arm64: move ARM-specific defines to uapi/asm/kvm.h
+Date: Wed, 31 Jan 2024 18:30:53 -0500
+Message-Id: <20240131233056.10845-6-pbonzini@redhat.com>
 In-Reply-To: <20240131233056.10845-1-pbonzini@redhat.com>
 References: <20240131233056.10845-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -58,96 +58,51 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Since all architectures (for historical reasons) have to define
-struct kvm_guest_debug_arch, and since userspace has to check
-KVM_CHECK_EXTENSION(KVM_CAP_SET_GUEST_DEBUG) anyway, there is
-no advantage in masking the capability #define itself.  Remove
-the #define __KVM_HAVE_GUEST_DEBUG from architecture-specific
-headers.
+While this in principle breaks userspace code that mentions KVM_ARM_DEV_*
+on architectures other than aarch64, this seems unlikely to be
+a problem considering that run->s.regs.device_irq_level is only
+defined on that architecture.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/arm64/include/uapi/asm/kvm.h   | 1 -
- arch/powerpc/include/uapi/asm/kvm.h | 1 -
- arch/s390/include/uapi/asm/kvm.h    | 1 -
- arch/x86/include/uapi/asm/kvm.h     | 1 -
- include/uapi/linux/kvm.h            | 3 +--
- 5 files changed, 1 insertion(+), 6 deletions(-)
+ arch/arm64/include/uapi/asm/kvm.h | 5 +++++
+ include/uapi/linux/kvm.h          | 7 -------
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index 9c1040dad4eb..964df31da975 100644
+index 6b8b57b97228..75809c8dc2f0 100644
 --- a/arch/arm64/include/uapi/asm/kvm.h
 +++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -37,7 +37,6 @@
- #include <asm/ptrace.h>
- #include <asm/sve_context.h>
+@@ -162,6 +162,11 @@ struct kvm_sync_regs {
+ 	__u64 device_irq_level;
+ };
  
--#define __KVM_HAVE_GUEST_DEBUG
- #define __KVM_HAVE_IRQ_LINE
- #define __KVM_HAVE_VCPU_EVENTS
- 
-diff --git a/arch/powerpc/include/uapi/asm/kvm.h b/arch/powerpc/include/uapi/asm/kvm.h
-index a96ef6b36bba..1691297a766a 100644
---- a/arch/powerpc/include/uapi/asm/kvm.h
-+++ b/arch/powerpc/include/uapi/asm/kvm.h
-@@ -28,7 +28,6 @@
- #define __KVM_HAVE_PPC_SMT
- #define __KVM_HAVE_IRQCHIP
- #define __KVM_HAVE_IRQ_LINE
--#define __KVM_HAVE_GUEST_DEBUG
- 
- /* Not always available, but if it is, this is the correct offset.  */
- #define KVM_COALESCED_MMIO_PAGE_OFFSET 1
-diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
-index fee712ff1cf8..05eaf6db3ad4 100644
---- a/arch/s390/include/uapi/asm/kvm.h
-+++ b/arch/s390/include/uapi/asm/kvm.h
-@@ -12,7 +12,6 @@
- #include <linux/types.h>
- 
- #define __KVM_S390
--#define __KVM_HAVE_GUEST_DEBUG
- 
- struct kvm_s390_skeys {
- 	__u64 start_gfn;
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index c5e682ee7726..0ad6bda1fc39 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -42,7 +42,6 @@
- #define __KVM_HAVE_IRQ_LINE
- #define __KVM_HAVE_MSI
- #define __KVM_HAVE_USER_NMI
--#define __KVM_HAVE_GUEST_DEBUG
- #define __KVM_HAVE_MSIX
- #define __KVM_HAVE_MCE
- #define __KVM_HAVE_PIT_STATE2
++/* Bits for run->s.regs.device_irq_level */
++#define KVM_ARM_DEV_EL1_VTIMER		(1 << 0)
++#define KVM_ARM_DEV_EL1_PTIMER		(1 << 1)
++#define KVM_ARM_DEV_PMU			(1 << 2)
++
+ /*
+  * PMU filter structure. Describe a range of events with a particular
+  * action. To be used with KVM_ARM_VCPU_PMU_V3_FILTER.
 diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 00d5cecd057d..fd5aa4bf77f7 100644
+index b7c8054e9d14..00d5cecd057d 100644
 --- a/include/uapi/linux/kvm.h
 +++ b/include/uapi/linux/kvm.h
-@@ -16,6 +16,11 @@
+@@ -1384,13 +1384,6 @@ struct kvm_enc_region {
+ #define KVM_GET_SREGS2             _IOR(KVMIO,  0xcc, struct kvm_sregs2)
+ #define KVM_SET_SREGS2             _IOW(KVMIO,  0xcd, struct kvm_sregs2)
  
- #define KVM_API_VERSION 12
+-/* Available with KVM_CAP_ARM_USER_IRQ */
+-
+-/* Bits for run->s.regs.device_irq_level */
+-#define KVM_ARM_DEV_EL1_VTIMER		(1 << 0)
+-#define KVM_ARM_DEV_EL1_PTIMER		(1 << 1)
+-#define KVM_ARM_DEV_PMU			(1 << 2)
+-
+ #define KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE    (1 << 0)
+ #define KVM_DIRTY_LOG_INITIALLY_SET            (1 << 1)
  
-+/*
-+ * Backwards-compatible definitions.
-+ */
-+#define __KVM_HAVE_GUEST_DEBUG
-+
- /* for KVM_SET_USER_MEMORY_REGION */
- struct kvm_userspace_memory_region {
- 	__u32 slot;
-@@ -689,9 +690,7 @@ struct kvm_enable_cap {
- /* Bug in KVM_SET_USER_MEMORY_REGION fixed: */
- #define KVM_CAP_DESTROY_MEMORY_REGION_WORKS 21
- #define KVM_CAP_USER_NMI 22
--#ifdef __KVM_HAVE_GUEST_DEBUG
- #define KVM_CAP_SET_GUEST_DEBUG 23
--#endif
- #ifdef __KVM_HAVE_PIT
- #define KVM_CAP_REINJECT_CONTROL 24
- #endif
 -- 
 2.39.0
 
