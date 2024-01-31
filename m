@@ -1,24 +1,24 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F2212C54B;
-	Wed, 31 Jan 2024 17:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C8FD12C539;
+	Wed, 31 Jan 2024 17:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706720763; cv=none; b=AtufSdndp6l9i5r5gQavEKklXszUJ7oidqFxo/CtlnOMWk3y/0QWZZhDH/CJ0TKsPr/jFV3DSjp5UO4GQo7cWbt0xaZNr/cHq8Kup0nfktEPChFJj9yiW7EwA/wlskcrTcFkw9ryv6eUHAIJG2LcHwNuXaaPuiBoBobzGrA11rc=
+	t=1706720765; cv=none; b=iOtmyN/0tHfJRBFDCcQYC59Ei4E5pzwLujs381fTRpnubc3pyhuc/8kNsFivWbMNnpydy1ypMFNVwbaj6LmD9HGwNkE+e0QefBm1x9mjbl+VR6PTxW7YEL6Swm0IKZPF6ZbJZlK4KZWLtjCjxrTr3YCB2CO/xSpt/VosaZTCyys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706720763; c=relaxed/simple;
-	bh=Xm80ToVUWKO7Ssi3UnhJlGbnKtKdlIZTdxjYk0JSBdo=;
+	s=arc-20240116; t=1706720765; c=relaxed/simple;
+	bh=mvngnWhUGFgDKAimI+Ks/pS3pEFP764zRzb5IWxzsLU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ktrq3fxNTzsJ2/lH4HXCc6PUNP0XH4v4bh5z2VxPmaFsbtj8rPBhKQPQ4K79wsyms6JbDgA0vCZAEipS1MWEH7gFn2DV+WnwFl+cR0fD3dyLUFBMWXK5fNpDFhIXI0JuqrtUmR/2UrThLlkgnkk/4ckKhDmEVWuay6AmwmW9Zcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+	 MIME-Version; b=XO+6qYdeew1F24THDOJuzp84Xr1HlaLzHQy5+WshAMjEolSPKBshv3LV6hcGYTS6v+3Ophnd+dhi9meUNvV1ZRsqDi3uFqZRW2lrBJuQ4h2qds7dHXym7dyRumRCcQqENNjXN5Mz37qKPJR+tB3UOw+ftLMuJtMcRThuEUBEM8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 X-IronPort-AV: E=Sophos;i="6.05,231,1701097200"; 
-   d="scan'208";a="192404880"
+   d="scan'208";a="196315533"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 01 Feb 2024 02:05:54 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 01 Feb 2024 02:06:03 +0900
 Received: from GBR-5CG2373LKG.adwin.renesas.com (unknown [10.226.92.158])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 1F16940344F5;
-	Thu,  1 Feb 2024 02:05:50 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 760E440344FE;
+	Thu,  1 Feb 2024 02:05:59 +0900 (JST)
 From: Paul Barker <paul.barker.ct@bp.renesas.com>
 To: Sergey Shtylyov <s.shtylyov@omp.ru>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -31,9 +31,9 @@ Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
 	netdev@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/8] net: ravb: Simplify GbEth poll & receive functions
-Date: Wed, 31 Jan 2024 17:05:16 +0000
-Message-Id: <20240131170523.30048-3-paul.barker.ct@bp.renesas.com>
+Subject: [PATCH net-next 4/8] net: ravb: Always process TX descriptor ring in GbEth poll
+Date: Wed, 31 Jan 2024 17:05:18 +0000
+Message-Id: <20240131170523.30048-5-paul.barker.ct@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240131170523.30048-1-paul.barker.ct@bp.renesas.com>
 References: <20240131170523.30048-1-paul.barker.ct@bp.renesas.com>
@@ -45,104 +45,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We don't need to pass the work budget to ravb_rx_gbeth() by reference,
-it's cleaner to pass this by value and return the amount of work done.
-This allows us to simplify the ravb_poll_gbeth() function and use the
-common `work_done` variable name seen in other network drivers for
-consistency and ease of understanding.
-
-In ravb_rx_gbeth(), we can also drop the confusingly named `boguscnt`
-variable and use a for loop to iterate through descriptors.
-
-This is a pure refactor and should not affect behaviour.
+The TX queue should be serviced each time the poll function is called,
+even if the full RX work budget has been consumed. This prevents
+starvation of the TX queue when RX bandwidth usage is high.
 
 Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 25 ++++++++++--------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index c9464c1731b4..5a6a2a7a9e7a 100644
+index 077c189bcc6f..9b0ed269e69b 100644
 --- a/drivers/net/ethernet/renesas/ravb_main.c
 +++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -822,7 +822,7 @@ static struct sk_buff *ravb_get_skb_gbeth(struct net_device *ndev, int entry,
- }
- 
- /* Packet receive function for Gigabit Ethernet */
--static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
-+static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
- {
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
-@@ -831,28 +831,24 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 	struct sk_buff *skb;
- 	dma_addr_t dma_addr;
- 	u8  desc_status;
--	int boguscnt;
- 	u16 pkt_len;
- 	u8  die_dt;
- 	int entry;
- 	int limit;
-+	int i;
- 
- 	entry = priv->cur_rx[q] % priv->num_rx_ring[q];
--	boguscnt = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
-+	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
- 	stats = &priv->stats[q];
- 
--	boguscnt = min(boguscnt, *quota);
--	limit = boguscnt;
-+	limit = min(limit, budget);
- 	desc = &priv->gbeth_rx_ring[entry];
--	while (desc->die_dt != DT_FEMPTY) {
-+	for (i = 0; i < limit && desc->die_dt != DT_FEMPTY; i++) {
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
- 		pkt_len = le16_to_cpu(desc->ds_cc) & RX_DS;
- 
--		if (--boguscnt < 0)
--			break;
--
- 		/* We use 0-byte descriptors to mark the DMA mapping errors */
- 		if (!pkt_len)
- 			continue;
-@@ -949,9 +945,7 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 		desc->die_dt = DT_FEMPTY;
- 	}
- 
--	*quota -= limit - (++boguscnt);
--
--	return boguscnt <= 0;
-+	return i;
- }
- 
- /* Packet receive function for Ethernet AVB */
-@@ -1344,12 +1338,13 @@ static int ravb_poll_gbeth(struct napi_struct *napi, int budget)
- 	unsigned long flags;
- 	int q = napi - priv->napi;
- 	int mask = BIT(q);
--	int quota = budget;
-+	int work_done;
- 
- 	/* Processing RX Descriptor Ring */
+@@ -1345,8 +1345,6 @@ static int ravb_poll_gbeth(struct napi_struct *napi, int budget)
  	/* Clear RX interrupt */
  	ravb_write(ndev, ~(mask | RIS0_RESERVED), RIS0);
--	if (ravb_rx_gbeth(ndev, &quota, q))
-+	work_done = ravb_rx_gbeth(ndev, budget, q);
-+	if (work_done == budget)
- 		goto out;
+ 	work_done = ravb_rx_gbeth(ndev, budget, q);
+-	if (work_done == budget)
+-		goto out;
  
  	/* Processing TX Descriptor Ring */
-@@ -1382,7 +1377,7 @@ static int ravb_poll_gbeth(struct napi_struct *napi, int budget)
- 	if (priv->rx_fifo_errors != ndev->stats.rx_fifo_errors)
- 		ndev->stats.rx_fifo_errors = priv->rx_fifo_errors;
- out:
--	return budget - quota;
-+	return work_done;
- }
+ 	spin_lock_irqsave(&priv->lock, flags);
+@@ -1356,6 +1354,9 @@ static int ravb_poll_gbeth(struct napi_struct *napi, int budget)
+ 	netif_wake_subqueue(ndev, q);
+ 	spin_unlock_irqrestore(&priv->lock, flags);
  
- static int ravb_poll_rcar(struct napi_struct *napi, int budget)
++	if (work_done == budget)
++		goto out;
++
+ 	napi_complete(napi);
+ 
+ 	/* Re-enable RX/TX interrupts */
 -- 
 2.39.2
 
