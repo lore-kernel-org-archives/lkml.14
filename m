@@ -1,97 +1,113 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AD839AE6
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2696374F1
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706738443; cv=none; b=fns72emgP62LH4lnytf9dBsvXH4sU4uTRcigJ/zWsHZHg8CVBQy7EMS3ZPjXrlNlE+zVTZEjqTE660xUxQc5Z54Bk9wBhAKnWWELuC1NoECniye6WTFjXaX6VChsBdvPk/9fruXM+yR8v0DBQm09O1W0K1KgEwpi3+U1csNWEyA=
+	t=1706738570; cv=none; b=XXnu5aAUpku3erGm8ACtgbaQz0weUpr5yVBPOsx/6IMeNzwCusuTY5rCjurQw1lWqFuFnGAPpZ+rmieWxMuT8FWt928trzr/St2Pv3/GwRW7AO6KhgrAjSKP05LPeeUuS4PxI3/W0YTXIy63R7cylWA+JLFpdl7ywvtxRPPRhA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706738443; c=relaxed/simple;
-	bh=MAx2AM1ui04J6QtPnwU/a2AiNiYAg3CwRR9lCwmLQr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qzY4XyDnA95cSZceSp9PRgnHg4OFf1SAl3e9PLtDJBwccKwjEZCGjwO911VHzH1Pg2M47oOm0h6NrUwjo3J9yoCZZeCDsoerr06jH1snw1poqutZV+KXMnZRhVf0YTqMvcS3n/oz3cPc/iO64QRBjx+hutTpuoEPe5K+Gk2R/3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Sk58nSeF; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1706738570; c=relaxed/simple;
+	bh=zYpL4lqLZcMZwHPGsHutXjfMxMqLdIP4q+lWTgr3/5g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kjFL5eSkAy6Ukb78/0lisD0/ROL30P0jNo1ctZ9Ek22Oj9gP/lrQa4EKUcWHn0j1RllzC8gG1x+Bi6fM/fkGeSm+UcAXyDF7D9+1wm1An20MRvv5CHfu68uoefT4p9OYP5GW0elLDXM0F0j7InXDm2dDmGew/iUSBy3jFTc3QJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WbWcdndM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Sk58nSeF"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d043160cd1so3926771fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:00:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1706738438; x=1707343238; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MAx2AM1ui04J6QtPnwU/a2AiNiYAg3CwRR9lCwmLQr8=;
-        b=Sk58nSeFoIZ1TCxIJ1biAxCUI/xTFOm7Yz1hUogcBzWFbMZy4sI4TqIhGRkDzzLpqw
-         2s6qvZH3s/8P3r2HXffx/9fN2a6k3J3KxrI2SuHdhq+8BwNYfdsXEZd3o7jeUpluskrk
-         Y9vLCJAO0puMzftKobdMgiILHTd8u/iPOqTdFm683tx+FwDup03q4VAExkha66G2qwnt
-         PAWjKxup2JdegfheK3OedZw2fvT4dEhjqXBRMGZTL3lGKsrwM3laLbjTnTHOt1q7WyUM
-         KivR19aQyQKLZ9pah8dct/w3wyCjQNfUU13O5SeObjCrfvsbM946uNxQ9u2jEolWpmYb
-         qHdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706738438; x=1707343238;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MAx2AM1ui04J6QtPnwU/a2AiNiYAg3CwRR9lCwmLQr8=;
-        b=OgzbEj4OuGfs8NKy8a26t8s5tzxKj4ccceLRyZ5dMpsBlQQyT3yzbmyDxDRnJBItQ0
-         pQGjHXiehMpJmAV0Vr0239QX8IwlJkxcM+OWQzVeJr8w7TLpbb6OqWYskKwA4l4Oq8mI
-         /A3L9jilKiPrKx7rXWIo6/n3xpxyvBy3IdF5mOeulrosuzrzyTOxNG3ijJ29jAorrQGF
-         d9co01dK9peld04P5kusMBOPOps7FdTqeNIdPsLqz23AJAeL6z4HC3R5YWLfVOs0svYh
-         aykBlabe3jTD4Qx60Pb+UbfOyYFEa0+uzcRJc7SzFNuoc7H33Dm2mZH+JokWVaqSutkL
-         6vEg==
-X-Gm-Message-State: AOJu0YyiviY7NHhNDiU4E2pfL2pabr2Mehwy+upLDONyWT6YqgMtBXOS
-	GclM1xGZlwPjtdCKj7D8y+HUiVh2GvTzFU357P0nqOqm2xOCR3BB0AhWmk+qJgiDCISLNzKkrXL
-	V9g5rSdo95YVwvwL3leD2dqrG47k4UchCM+K2kOl+qAadf+rx
-X-Google-Smtp-Source: AGHT+IEzf92DpVDPx1aZr0SaJKqyjhXJ1ItLJLPkjWmQ8MBpb4F7RDiorzXx1a8ajHes70qTufhI7MH9FGG+8eRTBVQ=
-X-Received: by 2002:a2e:a499:0:b0:2ce:708:ae85 with SMTP id
- h25-20020a2ea499000000b002ce0708ae85mr1957030lji.47.1706738438608; Wed, 31
- Jan 2024 14:00:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WbWcdndM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706738568;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fdbEKrpyLSr/XfltsGu0Y6emup0IET0jljTchC3c+Yk=;
+	b=WbWcdndMJehrT+L/tP7GJeC/Q5isShjuDt/AarCHDhavjRsCULOcNVnn4wJAxvgDjTOxqC
+	ts/4JatOc+DFq3wL2DLiL50ZnJgzLpHZQdlBtAT81N23TtEMSXf404XxReFxjIiViEgoEH
+	lF+t8sJizfz6Rxp3MXO59R8K1oMNENo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-173-HIqzZnzXPwy0fqocRmRlKw-1; Wed, 31 Jan 2024 17:02:44 -0500
+X-MC-Unique: HIqzZnzXPwy0fqocRmRlKw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E29BD85A58C;
+	Wed, 31 Jan 2024 22:02:43 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9776F40C1231;
+	Wed, 31 Jan 2024 22:02:43 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id 7F50730C14EB; Wed, 31 Jan 2024 22:02:43 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 7CA4A3F7DC;
+	Wed, 31 Jan 2024 23:02:43 +0100 (CET)
+Date: Wed, 31 Jan 2024 23:02:43 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Tejun Heo <tj@kernel.org>
+cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, 
+    dm-devel@lists.linux.dev, msnitzer@redhat.com, ignat@cloudflare.com, 
+    damien.lemoal@wdc.com, bob.liu@oracle.com, houtao1@huawei.com, 
+    peterz@infradead.org, mingo@kernel.org, netdev@vger.kernel.org, 
+    allen.lkml@gmail.com, kernel-team@meta.com, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>
+Subject: Re: [PATCH 8/8] dm-verity: Convert from tasklet to BH workqueue
+In-Reply-To: <Zbq8cE3Y2ZL6dl8r@slm.duckdns.org>
+Message-ID: <f48626b7-d1c-d696-7138-39fbc1c9cebd@redhat.com>
+References: <20240130091300.2968534-1-tj@kernel.org> <20240130091300.2968534-9-tj@kernel.org> <c2539f87-b4fe-ac7d-64d9-cbf8db929c7@redhat.com> <Zbq8cE3Y2ZL6dl8r@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131145008.1345531-1-max.kellermann@ionos.com> <28b1d750-fa74-4279-b292-e36cea995e80@infradead.org>
-In-Reply-To: <28b1d750-fa74-4279-b292-e36cea995e80@infradead.org>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Wed, 31 Jan 2024 23:00:27 +0100
-Message-ID: <CAKPOu+8QQnMaZG33wyR1EzoifHD5kjSmjf2FQ9Y9gGdYN9dgJw@mail.gmail.com>
-Subject: Re: [PATCH 00/28] Fast kernel headers: reduce header dependencies
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Wed, Jan 31, 2024 at 10:44=E2=80=AFPM Randy Dunlap <rdunlap@infradead.or=
-g> wrote:
-> How were these (a) missing and (b) unnecessary includes
-> found or determined?
-> Did you use some tool for that? If so, which one?
 
-No tool, just stgit to edit the patches (in arbitrary order). I
-reduced header dependencies, but got lots of build errors because
-symbols were missing in different sources, which were previously
-fulfilled by indirect includes that were now removed. I fixed all
-those build errors by adding missing includes to those headers, moving
-those changes to the first patch.
 
-I found the unnecessary includes manually along the way by using "git
-grep" to find all include directives for a certain header; I checked
-the source for the reason why this header was included, and whether
-the include could be replaced with "X_types.h" instead. Sometimes, I
-found that not even "X_types.h" was necessary, but no include at all,
-so I removed the include completely and had those changes in the
-second patch.
+On Wed, 31 Jan 2024, Tejun Heo wrote:
 
-The first two patches grew along the way. It was refreshed over and
-over (with stgit), while I was editing the other patches.
+> Hello,
+> 
+> On Wed, Jan 31, 2024 at 10:19:07PM +0100, Mikulas Patocka wrote:
+> > > @@ -83,7 +83,7 @@ struct dm_verity_io {
+> > >  	struct bvec_iter iter;
+> > >  
+> > >  	struct work_struct work;
+> > > -	struct tasklet_struct tasklet;
+> > > +	struct work_struct bh_work;
+> > >  
+> > >  	/*
+> > >  	 * Three variably-size fields follow this struct:
+> > 
+> > Do we really need two separate work_structs here? They are never submitted 
+> > concurrently, so I think that one would be enough. Or, am I missing 
+> > something?
+> 
+> I don't know, so just did the dumb thing. If the caller always guarantees
+> that the work items are never queued at the same time, reusing is fine.
+> However, the followings might be useful to keep on mind:
+> 
+> - work_struct is pretty small - 4 pointers.
+> 
+> - INIT_WORK() on a queued work item isn't gonna be pretty.
+> 
+> - Flushing and no-concurrent-execution guarantee are broken on INIT_WORK().
+>   e.g. If you queue_work(), INIT_WORK(), flush_work(), the flush isn't
+>   actually going to wait for the work item to finish. Also, if you do
+>   queue_work(), INIT_WORK(), queue_work(), the two queued work item
+>   instances may end up running concurrently.
+> 
+> Muxing a single work item carries more risks of subtle bugs, but in some
+> cases, the way it's used is clear (e.g. sequential chaining) and that's
+> fine.
 
-I know there's the "iwyu" tool, and it may be helpful eventually, but
-there's so much low-hanging fruit in the kernel, iwyu is not useful
-yet I think.
+The code doesn't call INIT_WORK() on a queued work item and it doesn't 
+flush the workqueue (it destroys it only in a situation when there are no 
+work items running) so I think it's safe to use just one work_struct.
 
-Max
+Mikulas
+
