@@ -1,87 +1,72 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81FA3D550
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED163D54C
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706678620; cv=none; b=qiz4+o2wIVmqDz+UVbxa1F4RNbmdb7L9Zh38HXakIOsE1G4/+vlH8QHSci4b3VUgQ9LhZps+Dj67O00Vdc9Znlz+fA8JroYxzFRBdTmzPtUHBSN0NbZfJipDDJxeIm2PE83f2p9R8HqgeK382EIUkvmIs3Aef19QkmK3oLilwBM=
+	t=1706678733; cv=none; b=aX30ovJngxvcYEUPk6OChT+Q6g2usQrUsijx07sAR1DTn0mntppp+iNAoxKj5yICg9/kWwBSWiaW66QJmNqNvwopfOa5NzTByHVMQTDT0x3nZrkic3jZAkszxIRC7D+oQZJ1RLxwe7nXjRSvwecH4fHU4rQrbRwB3zRnHdw3uMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706678620; c=relaxed/simple;
-	bh=L0p7ixoYzTuLRVQ7tvm91KGfjN08Kl6GBFk8OqLI6OE=;
+	s=arc-20240116; t=1706678733; c=relaxed/simple;
+	bh=KrJkwg/Yk/VDDPMR1EDcBt7+8G59kzjP1vjjfPRVmeY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qzL3Mq5vyh3KiZW5A8gF+tE6fR72cs/+GrP5yE1oWDeCTw6ybUdqzCpIAhgzM/T7ND6un0xzHheDwx8fOBgX0EAyjTjPF7kCHbTeElwLRf/arKDLnahI8Gam6jAMfqyPu6lHnk+AYLp9qvkswQaF9TPD47nWHxCWki0qb7nuFBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yzzl1MsB; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJcEnSs9wmsNb5+8z5Iy7dIWjla2SNKVBVjSqEzG9W/ltJfRh8aKZolj67P9qDcpcbcAG4wKVEg9Yzr8qc3WnRoTAxD4NW6eDjBH8LDlQqfAA+2GuxboqPh4DsQ48FvfPYXQBQ4r6W8q2VKnXWgRHcrl5loe2gFgSSu2NTamm/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJP1/CVT; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yzzl1MsB"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-295d22bd625so526671a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:23:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJP1/CVT"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d9198034acso6825435ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:25:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706678618; x=1707283418; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706678730; x=1707283530; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cB/uX9Ocu3GZVsO7k6nFsrnvwZVXV/HVGYWM4rZmpjk=;
-        b=Yzzl1MsBjGDQhRf1Dxixh/bOPYher167GDaQePCdnp9NSjqghUeBE8t88T0NYzOETv
-         Akm9YZxh5tBZQbKeTFge/lPlbtj2lBuxZBY3vIJCL9SdkC2AME1nMNJRIcVmkcISIqPs
-         kQzVZllpW/bmjsEKKsEc3+CeNKmakaiM0+di5WpTKiaRrvP9R0KZm1O0kxOKL0Jf0zf0
-         6vEQcrmwCDSUWEgTYVbXgixe1RJ1OpSHmMb5D5iTVGZBjZljmzTJkRwWR8irhntnDlX5
-         H2xQA8dPggf4KQoB5DEq4UOYyfBe82s0rhcxaNOFu7DABBdIbvnx+lpvRGot3es/beDr
-         4xAg==
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TTXpXgtPeeVhrdOdhIk8nNLkr9CBMpKYwR4zxmHgbns=;
+        b=aJP1/CVTW0zo/ZusLP0CkYBM4zFijXTGq41iAYBDnH0MKW0QbcuKEEEBdnK+vwVnyT
+         0mOPlwLNKjwEOnnctuasU2Fhm4AuKLn2LdYHR8Hy5UsSHEEUFZBNZlCzGPkEYJShstab
+         Ye0Bpf2lA0e3FVIShcFhsM285b8a9GrsF9ukavkWki120a3it3aCIISuAYQ4HCwrmJpm
+         OgRQLEueT0GSxvOIjkJBDndcXAaO8b8yuxulfzHdRbJLOz8MhbL3jq6ftHt0dz8CrzY4
+         TrOqTlFl0/O/6LNBBR+SPlXyiIBqSjRUTHBm7Q7j9fCfIuuI+iKqrIRykC7zla/GEevh
+         wBug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706678618; x=1707283418;
+        d=1e100.net; s=20230601; t=1706678730; x=1707283530;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cB/uX9Ocu3GZVsO7k6nFsrnvwZVXV/HVGYWM4rZmpjk=;
-        b=wDilZ8N4VSzlnyIUptZ4vCQ706+hJPofxv1Vz9V+Xv+bCx7ZBarg8gIyBpBpPaFzqL
-         IxYP/0mmi067U4tq2YFWPu7R7nDFB034I5ZhOt7PNBsSLhCz0Dq7cHbs93V5T7PCAFQa
-         5LnSyOvBjjqeB3bWiwz0nUU1YpnfdlwuALB0J6hhnf5mxns7LIHZwkF9uTcLXLU7+3Ax
-         n9UtcpukTLb/zSb1NwTxX8WvI1LPLMSa2NM8K6mD+w3meoy7Ww/bKTPRnaFZUFdj0YhZ
-         VqCtHQX2aeWlrP13v+JCsjLC2zShpzeWnJY6LGQLK7Zxw5VayrbI2uxRRVEHYMRKu1Ju
-         l75g==
-X-Gm-Message-State: AOJu0YwesBmtgkOJy5M3p5WpsOeJedRnbI/NiCRuW6HA7/FkxytA12dI
-	fZWsfu8+GnxTeh/6bS83kBD6bOUI73O9azx9/dAnNWw8/JcIRt6Er/7FebBOWzI=
-X-Google-Smtp-Source: AGHT+IFVUXicyliLtZJ8DOMkazOx8shXzWZk/TfrCAd+7gzTLSrdbtiAadd8bgzl+WwpG8GaYqrLiw==
-X-Received: by 2002:a17:90b:507:b0:295:bea4:a16e with SMTP id r7-20020a17090b050700b00295bea4a16emr723201pjz.23.1706678617971;
-        Tue, 30 Jan 2024 21:23:37 -0800 (PST)
-Received: from localhost ([122.172.83.95])
-        by smtp.gmail.com with ESMTPSA id rm13-20020a17090b3ecd00b0029494384eaasm393119pjb.43.2024.01.30.21.23.37
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TTXpXgtPeeVhrdOdhIk8nNLkr9CBMpKYwR4zxmHgbns=;
+        b=uvD8+8Cr+3mNgb49kIdSmvP5REoebf6cwoaPDyTtpbsEuzbCYOZcpUve5+xtxu1BCi
+         qfSo1gTjUwMjQpqepFOIwm6rgzlVycbYWsCTdovnQTeaVpu00qxgCb126hQ7q1CwmrUo
+         7nw47p3jqCUY8H6XdH/VCLSuDYsM3xtuveoaOWPNafYOmIFJ3WUKcFWIVL3nAE2u97c0
+         3bcuyoeR6v0KUJFN+TPNncnovGNC0GLOsDf8eIOw9UONvYhtz+cX0jhuel2QlpPLTsD8
+         v4m0YNL7fwdrLctqR3rlw2PEqIE3bZqwVnJ+rXMJy2SjmYcRQrpiIUOXoT34ICsv8wjq
+         W0+w==
+X-Gm-Message-State: AOJu0Yz7XYiMUtrV5Q3yNjD1oa2t98tLrRTL3VBM5HQ/ALeeq6HENpc8
+	qJZo4hc2tSPJshtf3SAO0JXyvrymF5W0owmG4joClLUvVJf10aLJX61XMkn9QkY=
+X-Google-Smtp-Source: AGHT+IGDwO3DEwqMO6tJLZPp3eo4iJSo/rCt8hdwQh9YYLJIFWCo7Wq4ZYcP57iDlxj6DLBPbz4w1Q==
+X-Received: by 2002:a17:903:234c:b0:1d8:f4d4:9aa4 with SMTP id c12-20020a170903234c00b001d8f4d49aa4mr864053plh.16.1706678730273;
+        Tue, 30 Jan 2024 21:25:30 -0800 (PST)
+Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
+        by smtp.gmail.com with ESMTPSA id mi3-20020a170902fcc300b001d8ef6eea72sm4027355plb.209.2024.01.30.21.25.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 21:23:37 -0800 (PST)
-Date: Wed, 31 Jan 2024 10:53:35 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	vireshk@kernel.org, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: sm8450: Add opp table support
- to PCIe
-Message-ID: <20240131052335.6nqpmccgr64voque@vireshk-i7>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-5-77bbf7d0cc37@quicinc.com>
- <20240129160420.GA27739@thinkpad>
- <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
- <20240130071449.GG32821@thinkpad>
- <20240130083619.lqbj47fl7aa5j3k5@vireshk-i7>
- <20240130094804.GD83288@thinkpad>
- <20240130095508.zgufudflizrpxqhy@vireshk-i7>
- <20240130131625.GA2554@thinkpad>
+        Tue, 30 Jan 2024 21:25:29 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 30 Jan 2024 19:25:28 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org,
+	Naohiro.Aota@wdc.com, kernel-team@meta.com
+Subject: [PATCH wq/for-6.9] workqueue: Avoid premature init of
+ wq->node_nr_active[].max
+Message-ID: <ZbnZyEKH99TIyPGx@slm.duckdns.org>
+References: <20240125170628.2017784-1-tj@kernel.org>
+ <20240125170628.2017784-10-tj@kernel.org>
+ <CAJhGHyAuoGNmaaDa0p+wiJMprXYVYnVV75PS4+kPy-fsPJVH8w@mail.gmail.com>
+ <ZbfrEx9nnkr0FnZE@slm.duckdns.org>
+ <CGME20240130223021eucas1p1172b060d53847b8b77f6455d6257528e@eucas1p1.samsung.com>
+ <91eacde0-df99-4d5c-a980-91046f66e612@samsung.com>
+ <ZbnGbC8YM0rcI8Jm@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,34 +75,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130131625.GA2554@thinkpad>
+In-Reply-To: <ZbnGbC8YM0rcI8Jm@slm.duckdns.org>
 
-On 30-01-24, 18:46, Manivannan Sadhasivam wrote:
-> Agree. But what I'm saying is, right now there is no DT property in the
-> interconnect consumer nodes to specificy the bw requirements. This is all
-> hardcoded in the respective ICC consumer drivers.
+From 28596c7850a72ee82dc33758f81b71b4e8954c73 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Tue, 30 Jan 2024 19:06:43 -1000
 
-I thought there are a lot of users already in there..
+System workqueues are allocated early during boot from
+workqueue_init_early(). While allocating unbound workqueues,
+wq_update_node_max_active() is invoked from apply_workqueue_attrs() and
+accesses NUMA topology to initialize wq->node_nr_active[].max.
 
-$ git grep -i opp.*bps arch/arm64/boot/dts/ | wc -l
-864
+However, topology information may not be set up at this point.
+wq_update_node_max_active() is explicitly invoked from
+workqueue_init_topology() later when topology information is known to be
+available.
 
-> But when we use OPP to control bw, the bw requirements come from DT. This is
-> what I see as a difference. Because, only nodes making use of OPP will specify
-> bw in DT and other nodes making use of just ICC will not.
-> 
-> Maybe I'm worrying too much about these details... But it looks like
-> inconsistency to me.
+This doesn't seem to crash anything but it's doing useless work with dubious
+data. Let's skip the premature and duplicate node_max_active updates by
+initializing the field to WQ_DFL_MIN_ACTIVE on allocation and making
+wq_update_node_max_active() noop until workqueue_init_topology().
 
-Right. So is there inconsistency right now ? Yes, there is.
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+Hello,
 
-The important question we need to answer is where do we want to see
-all these drivers (specially new ones) in the future. What's the right
-thing to do eventually ? Hardcode stuff ? Or Move it to DT ?
+This doesn't seem to be causing immediate problems but let's nip it in the
+bud. Applied to wq/for-6.9.
 
-The answer is DT for me, so the code can be generic enough to be
-reused. This is just one step in the right direction I guess.
-Eventually the drivers must get simplified, which they are I guess.
+Thanks.
 
+ kernel/workqueue.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 31c1373505d8..ffb625db9771 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -386,6 +386,8 @@ static const char *wq_affn_names[WQ_AFFN_NR_TYPES] = {
+ 	[WQ_AFFN_SYSTEM]		= "system",
+ };
+ 
++static bool wq_topo_initialized __read_mostly = false;
++
+ /*
+  * Per-cpu work items which run for longer than the following threshold are
+  * automatically considered CPU intensive and excluded from concurrency
+@@ -1510,6 +1512,9 @@ static void wq_update_node_max_active(struct workqueue_struct *wq, int off_cpu)
+ 
+ 	lockdep_assert_held(&wq->mutex);
+ 
++	if (!wq_topo_initialized)
++		return;
++
+ 	if (off_cpu >= 0 && !cpumask_test_cpu(off_cpu, effective))
+ 		off_cpu = -1;
+ 
+@@ -4356,6 +4361,7 @@ static void free_node_nr_active(struct wq_node_nr_active **nna_ar)
+ 
+ static void init_node_nr_active(struct wq_node_nr_active *nna)
+ {
++	nna->max = WQ_DFL_MIN_ACTIVE;
+ 	atomic_set(&nna->nr, 0);
+ 	raw_spin_lock_init(&nna->lock);
+ 	INIT_LIST_HEAD(&nna->pending_pwqs);
+@@ -7400,6 +7406,8 @@ void __init workqueue_init_topology(void)
+ 	init_pod_type(&wq_pod_types[WQ_AFFN_CACHE], cpus_share_cache);
+ 	init_pod_type(&wq_pod_types[WQ_AFFN_NUMA], cpus_share_numa);
+ 
++	wq_topo_initialized = true;
++
+ 	mutex_lock(&wq_pool_mutex);
+ 
+ 	/*
 -- 
-viresh
+2.43.0
+
