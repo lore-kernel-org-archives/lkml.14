@@ -1,121 +1,131 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D52B20DE0;
-	Wed, 31 Jan 2024 20:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C57374FA
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 20:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706733741; cv=none; b=E6w6elcYy/RIG2g0PX2QhBGV4J6cQCptEBTX2t4HHbM7v677IPOLQrWhPo7O/RJ8yJmkfppQZTJO2IlTITrhEVG/IT9pVlJL4VgW8I50YQHCDcJuqcg8Xc2h6hPUE58aKW36aljjmas3bs/G1uyN0MnJe5jFOJgvqZRZN1AS+vs=
+	t=1706733773; cv=none; b=T7maYDew5pGVEaSlmfSvvFt71/Ayy9WXvoc8crSg/sh4znCTHRlVF+I3QJUCxMOv7m+tLEF+InMi/xTIHri+eQkvuBD4NwMdlfRIFBSPSXlfp7DZp8z8wnhda+QYXkwa6lDT7OGOR5FIJDO2uNFx9WEMdaL5S3SZoi6K/10wVZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706733741; c=relaxed/simple;
-	bh=iCd/z3ZhJiwbvZDbjGrTq6Xj86/HS7Uqec1TZyUbpnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uefJ+hFZ7236WwtgQsdsxOLuye9KrNSGtafFhyIVyLXI+fOQdXcvCiupo5XAHKX0+/tQqcAt3GJp2SOfNbufJ0PI5OjVuK5Sxo+5vKBCM/wC10c5MT4+oZEBR+VImqUfi6nvxzVZbtvFnNJTfBA7WTcP6mJs6W8OtYj+IyJPyGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ARBz+MSp; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1706733773; c=relaxed/simple;
+	bh=0ttANtOrcttr7NXaqt/G0w+9AjfKy+c5thEW3pDhz3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/YhhAZ3jIvhhjmytvrWPtqamno6G81l0RP5tnhCwtgEBS8qpQE29yK9ynBvtb1vpCSdfaD5IStmDWOYZNK6fO4o584Un77Xz2b5gjiUBXUXE/B+qqbmLIu2HCgV1s7TJ575oAHeGO12g9PtPvOyJOsf2qrHTWEFUzehjAQ2Ca0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=ENa2o3JK; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ARBz+MSp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1706733735;
-	bh=4rdtf4LuoZzh7J5jcGE4PvRQ08J1Kn0j1es+qeP3Of4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ARBz+MSp5QPT0RVndSxMgeU2dfJxNe60FDNIwoySbxY4Manme7xiSRRr481PblJOJ
-	 mn5yrv91BlDfUNsWk9vQtvNBQOe5S4Ht1tBCcFsGsLgVkPtzgM3uI/uLAskcOuO8WC
-	 /qOQUdT23ShdbnkG8AqDccZsxYJLminfZ1H/S5yOatd60sWC6jc3dCc7PgM7fhz0er
-	 wwMgx1lMvXZSmf3XZNjTAlhivUd/2ugUXYcJYssT3gb6QEldbNB9V/B1MZJcM+BCeV
-	 GWNPRSNoj5LSLnhjQOomtFzpOTm5CY4GY1Q1Klpb1KHAVwMiBvL707lDYEkioFHIks
-	 uit9wDzCkU+aw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TQDVX75lPz4x1v;
-	Thu,  1 Feb 2024 07:42:12 +1100 (AEDT)
-Date: Thu, 1 Feb 2024 07:41:33 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20240201074102.00726258@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="ENa2o3JK"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2909a632e40so120713a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:42:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706733772; x=1707338572; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4HikurBEOhu9euC7gl0ui3GG6XowXvyoYxK7m1zGW+s=;
+        b=ENa2o3JK8jYa1RYoybqHhhajN7vXPeDGVwnPgMOyLNp2438iHE1aLCfbGsoBoRlcMr
+         dk6dT2YyrH45ZE7R1Uz323TWe/Tcclgb8Q9er/zT2Mlmpy8wO8+92J+8F5Im4EBUzxKe
+         14rf7XmzyXt9kUR2vEqHE8YYI5EZc24XCEi+0hSc0qQi0G/mAvR++ZyCA4cd/rN5iBIK
+         Rge4ciJ0yNpP/tgYTHXGYiIeW/QwlbhRhXBBSRfJ09rSLVDaq0TqOOUYncnxfsPaY1Xy
+         W9w50vs6qqh3wW476TzMrblmvTqMv5SAbrN9tcBohaB+Mh4cpGDLLcXwBEDzB+Fv+5lZ
+         2Kxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706733772; x=1707338572;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4HikurBEOhu9euC7gl0ui3GG6XowXvyoYxK7m1zGW+s=;
+        b=v6cyf5wadXpnUuRdNGrEPJS+nCNFVVWsx5mCN0JUlNNhS8PMGRG+/qZsLLaen2j1GX
+         1rPVBRThFOehVn+oSuRhBsApjsiBfMc5NBO+iLVhuJfU8ZRaIclzpUu5IqEJXxcw3MdO
+         /GmPI9KxCpVRxmxc0wzDVE3/GJeVNUq43LQJKOJ0jjLsvEEKkpoXeBzCFSHfazvBBAwb
+         c9VLMSj56DS8c23xAdZ7KsS9Oh5M0GxpMxbE5nWdSYIBKClK+Rz56scGlAjlV3zmvOlQ
+         SEeE4hligfYIDOCs2mXkz3ppev37fLIg9xgg3jcqdOJrlWjxrfvgIXfTGI526x/GKLpy
+         6Ruw==
+X-Gm-Message-State: AOJu0YyuNz6HNU5iabDfQAyNxUt6Fkc0nR1cnymJj97cBSJbLOX8ZbRw
+	izVBJPI3PvCjEV73Scbf7hWg/RQTx1FcYtSYTHw6MyS07NI+riNQwR521Xk7MTs=
+X-Google-Smtp-Source: AGHT+IFKgnjyHOHXjb8FWpmberef1nwD4qkIyOp+/vPJjvOfE+QEc5Mj2C0M+Fe+UDPDMwl9iwoIbw==
+X-Received: by 2002:a17:90b:2406:b0:295:cf9f:a1de with SMTP id nr6-20020a17090b240600b00295cf9fa1demr2928435pjb.12.1706733771727;
+        Wed, 31 Jan 2024 12:42:51 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id db16-20020a17090ad65000b0029608793122sm225215pjb.20.2024.01.31.12.42.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 12:42:51 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rVHPz-000JNE-2o;
+	Thu, 01 Feb 2024 07:42:47 +1100
+Date: Thu, 1 Feb 2024 07:42:47 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
+	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-xfs@vger.kernel.org
+Subject: Re: [RFC PATCH v2 7/8] Introduce dcache_is_aliasing() across all
+ architectures
+Message-ID: <Zbqwx12WfXvZ6kk2@dread.disaster.area>
+References: <20240130165255.212591-1-mathieu.desnoyers@efficios.com>
+ <20240130165255.212591-8-mathieu.desnoyers@efficios.com>
+ <Zbm1CLy+YZWx2IuO@dread.disaster.area>
+ <d30a890a-f64e-4082-8d8e-864bfb3c3800@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dktiJloPzo_9TMacUSWcm3n";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d30a890a-f64e-4082-8d8e-864bfb3c3800@efficios.com>
 
---Sig_/dktiJloPzo_9TMacUSWcm3n
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 31, 2024 at 09:58:21AM -0500, Mathieu Desnoyers wrote:
+> On 2024-01-30 21:48, Dave Chinner wrote:
+> > On Tue, Jan 30, 2024 at 11:52:54AM -0500, Mathieu Desnoyers wrote:
+> > > Introduce a generic way to query whether the dcache is virtually aliased
+> > > on all architectures. Its purpose is to ensure that subsystems which
+> > > are incompatible with virtually aliased data caches (e.g. FS_DAX) can
+> > > reliably query this.
+> > > 
+> > > For dcache aliasing, there are three scenarios dependending on the
+> > > architecture. Here is a breakdown based on my understanding:
+> > > 
+> > > A) The dcache is always aliasing:
+> > > 
+> > > * arc
+> > > * csky
+> > > * m68k (note: shared memory mappings are incoherent ? SHMLBA is missing there.)
+> > > * sh
+> > > * parisc
+> > 
+> > /me wonders why the dentry cache aliasing has problems on these
+> > systems.
+> > 
+> > Oh, dcache != fs/dcache.c (the VFS dentry cache).
+> > 
+> > Can you please rename this function appropriately so us dumb
+> > filesystem people don't confuse cpu data cache configurations with
+> > the VFS dentry cache aliasing when we read this code? Something like
+> > cpu_dcache_is_aliased(), perhaps?
+> 
+> Good point, will do. I'm planning go rename as follows for v3 to
+> eliminate confusion with dentry cache (and with "page cache" in
+> general):
+> 
+> ARCH_HAS_CACHE_ALIASING -> ARCH_HAS_CPU_CACHE_ALIASING
+> dcache_is_aliasing() -> cpu_dcache_is_aliasing()
+> 
+> I noticed that you suggested "aliased" rather than "aliasing",
+> but I followed what arm64 did for icache_is_aliasing(). Do you
+> have a strong preference one way or another ?
 
-Hi all,
+Not really.
 
-Commits
-
-  b564b0111a3f ("x86/fred: Invoke FRED initialization code to enable FRED")
-  43ca697baecf ("x86/fred: Add FRED initialization functions")
-  ae46f3978ae4 ("x86/syscall: Split IDT syscall setup code into idt_syscall=
-_init()")
-  cb5429aaa0c5 ("KVM: VMX: Call fred_entry_from_kvm() for IRQ/NMI handling")
-  d8fbd0496286 ("x86/entry: Add fred_entry_from_kvm() for VMX to handle IRQ=
-/NMI")
-  8c968f4df73c ("x86/entry/calling: Allow PUSH_AND_CLEAR_REGS being used be=
-yond actual entry code")
-  ed63bc7d4953 ("x86/fred: Fixup fault on ERETU by jumping to fred_entrypoi=
-nt_user")
-  531ff17a705a ("x86/fred: Let ret_from_fork_asm() jmp to asm_fred_exit_use=
-r when FRED is enabled")
-  db7c787d8ba2 ("x86/traps: Add sysvec_install() to install a system interr=
-upt handler")
-  5dd56c94ca2f ("x86/fred: Add a machine check entry stub for FRED")
-  3e91abaa5673 ("x86/fred: Add a NMI entry stub for FRED")
-  4af12f6a393c ("x86/fred: Add a debug fault entry stub for FRED")
-  2ad2917c6f50 ("x86/idtentry: Incorporate definitions/declarations of the =
-FRED entries")
-  9f6870bafc18 ("x86/fred: Make exc_page_fault() work for FRED")
-  f102fe126d28 ("x86/fred: Allow single-step trap and NMI when starting a n=
-ew task")
-  d0fb796dc347 ("x86/fred: No ESPFIX needed when FRED is enabled")
-  5710910a6c94 ("x86/fred: Disallow the swapgs instruction when FRED is ena=
-bled")
-  f393835cbab6 ("x86/fred: Update MSR_IA32_FRED_RSP0 during task switch")
-  fcd06abf6de2 ("x86/fred: Reserve space for the FRED stack frame")
-  c413db75cb7d ("x86/fred: Add a new header file for FRED definitions")
-  c125443456e9 ("x86/ptrace: Add FRED additional information to the pt_regs=
- structure")
-  ed262541af19 ("x86/ptrace: Cleanup the definition of the pt_regs structur=
-e")
-  0b2e6c1c724f ("x86/cpu: Add MSR numbers for FRED configuration")
-  95d34efac1a0 ("x86/cpu: Add X86_CR4_FRED macro")
-  379ae086a73c ("x86/objtool: Teach objtool about ERET[US]")
-  567f7205dd7a ("x86/opcode: Add ERET[US] instructions to the x86 opcode ma=
-p")
-
-are missing a Signed-off-by from their committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dktiJloPzo_9TMacUSWcm3n
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmW6sH0ACgkQAVBC80lX
-0GwOzwf/ZlD0dCYGex2yyQcDWd8K3JmimV7jZBIKLFZW1h7DLaCuqJoEQY1eOrzT
-26eFaHFCM/Ied3NXdV08l/e2X+JcxOXNqIvzE4gG8b+JTwIX8BC6ydsRZQSY/S1O
-Q4IHixG1n69+hIkHLO9vw1k/hUuxJdo0JZ32b+MNguXBi/i8ysrAqpH+N2Wm/eVE
-r4C3EOA/4fp4LBr0jMlDP1uxIuPwEY6L8mRFFjI8aTErdPyEKK3f2PZZnh8EV+iM
-fGYUP7Do9SzAvD79zB3bEoun8lkjD7quig+w2CB4hWiPkUG4SNYn9S4B+wAPZhsM
-gHdPYH9IRZ76sVxgNwXH5CkTN2uT4w==
-=g9ed
------END PGP SIGNATURE-----
-
---Sig_/dktiJloPzo_9TMacUSWcm3n--
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
