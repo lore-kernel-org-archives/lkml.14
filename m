@@ -1,174 +1,296 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2049.outbound.protection.outlook.com [40.107.95.49])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD481292FA;
-	Wed, 31 Jan 2024 15:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706716132; cv=fail; b=FWYIhGyHBezxc4Ue/ouc1ic0aLqinyhqdTg8Mq9rahXuvSUa8JfQfxDzs8q5P2A8lER94F/cCVzl1sdtePS9CgXsiAYoEqnIqSEGuakF6qGoXDRmRjPcHz9+cEzaN6OJhWeCGz8rzgAK9G1f1tKYctD8DbVqRcvzNYJ57xSVDVM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706716132; c=relaxed/simple;
-	bh=kkz5vIN+fBQgAqzVWM2i5COZ3wyGFm08BNmCKpm7p5w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=q9uzpD3SvO7eyunaOJ7IlgZsTxgGrREnMGYQg4QEtlwQrMfhz7voix2Hxd5NIa2SeG2aP8lhIXWuB98gK5+6P78k6V0gvld7ubZE4MpeBxV7pyKF7YKPEOwSQhiB5fslnF2fdxCHDPM14+Ltbo8s6ky2SO5oOYWRAM05Hgggk+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e0FRHy+1; arc=fail smtp.client-ip=40.107.95.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE95F80BEF;
+	Wed, 31 Jan 2024 15:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706716247; cv=none; b=tsVdjDhtu36PPbtNimPPxSfQChNWCzM+m1vimOhBjSIUIVFRweCNdDzGFCpp+/L2bX/hWYjw0SoUBLH07ffRaTpeQG3c+4ERuveqURps7fKJQ24Op8ihGAjMyiZ4pPWhCT8QR8r5kJwO0E3o7DcH3pX3RsDZdplWR8y2B9hXkA0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706716247; c=relaxed/simple;
+	bh=E+hfaCnjYnWUeiF1GWw1Zb86fcz99OlNmZP41qV/H/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZRGik5lvW7WvHnY3tRxl4gDZ4fcWwLDkDE4Xj8zxmlbzWB6XXSMyJd8dWKieg4p43S7qM4DPXJVnzCAxZS25sVRTIzhlMNcreHPp2HMrOkhybICXqqy7ZJze5WkownvNkO0nJX3/lpeRKsShXG9948B8sbowGfCKpcKA3fhRS7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lPRzQDBq; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e0FRHy+1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=la/byDaFn8/hG3hZLqubf+MrnkzXPacw/AtOXmjlbEn4LV7gN18A90vPlDDG7qCB9oQ266mlm6yED+2KlvmmHELZcoyfOLl4a9NoCUN9P6U3ciM8qOY6U+xTY95U13yluAhZBJWJXCn2YuYIUVtwgN4aP2tTjOas3l7KVxKFRX3xf0nPzi652NdQihdqnl2Hn/sznd4ePY8aln9QPYMrT0jA2rPqkdOkkJrFF7f8yWltb2genZNzjvVcGXiqNys+4m5LUxLR6BvUooEqFUqh/6arTHgjOphqzvDZdg31VUU4juGg+KXFD3LA6KCTQEOK+5n8d+9f+crMZ4zl/oHswQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kkz5vIN+fBQgAqzVWM2i5COZ3wyGFm08BNmCKpm7p5w=;
- b=W+IKqb8Z28fTurZBKwk2N21a/DsCOI2kId3n0CZKUAnwFICyHN9W8OxR1gwOCaBy5zKKYZ5n5xX+XvXw2oxRMqtK9vcGvnRg1hExXyoeXAoujtZnRPHGCdaTbWbaKLpds2le/1k7vQw3IebRFU/S4huvNFJ+TnTFvjGOlImKX8IZMp5fVdk7RejInUUP1HKKCZ0aymSZVJ510Q1kZIDgqlMrWP85dTcdu4G5ENVRjHVd/FKtTrSswDmRog/hN79VXbft6h/uuZlbXBPTn+8quCfttMNL/iaf/vKy2Edfi2LQkec3Zb0NV4auRmNaXSQZCxAKlK4HsC5zMZzq7uuxHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kkz5vIN+fBQgAqzVWM2i5COZ3wyGFm08BNmCKpm7p5w=;
- b=e0FRHy+1K7buLKEI9WpvvS/QOx/uH0qraEuOIw2xjaL8DsjhL35S5Gv2NOnggQ5t+WixmAbokOSpRvH6ujdsRL2C2LTOya1dB7gbepooT2jmQ3j6/yrEMhUFCW+QntBtjJH5r4yRzQ5rSAm9zwKpGsblodUqjNYC6rOkTorhPxjfVE+jTCXrLs7zZteeZEbSYs+jEo94mTm1RbL5FHYTbVJN+0xGbjLBcuGC3gMMkzChc4l61spjODxvbQOb4IykpVRd/B27TmdTSU/zgkqebHv1+HqY634SKv2LDxezorjEywWonHN9ciJIqANw/Q6A+edatpJyqqzk58asb6jBEA==
-Received: from DM6PR12MB4516.namprd12.prod.outlook.com (2603:10b6:5:2ac::20)
- by DM8PR12MB5399.namprd12.prod.outlook.com (2603:10b6:8:34::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.36; Wed, 31 Jan 2024 15:48:47 +0000
-Received: from DM6PR12MB4516.namprd12.prod.outlook.com
- ([fe80::fa7e:d2b7:5f80:2dd4]) by DM6PR12MB4516.namprd12.prod.outlook.com
- ([fe80::fa7e:d2b7:5f80:2dd4%5]) with mapi id 15.20.7228.029; Wed, 31 Jan 2024
- 15:48:47 +0000
-From: Danielle Ratson <danieller@nvidia.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "davem@davemloft.net"
-	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk"
-	<linux@armlinux.org.uk>, "sdf@google.com" <sdf@google.com>,
-	"kory.maincent@bootlin.com" <kory.maincent@bootlin.com>,
-	"maxime.chevallier@bootlin.com" <maxime.chevallier@bootlin.com>,
-	"vladimir.oltean@nxp.com" <vladimir.oltean@nxp.com>,
-	"przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>,
-	"ahmed.zaki@intel.com" <ahmed.zaki@intel.com>, "richardcochran@gmail.com"
-	<richardcochran@gmail.com>, "shayagr@amazon.com" <shayagr@amazon.com>,
-	"paul.greenwalt@intel.com" <paul.greenwalt@intel.com>, "jiri@resnulli.us"
-	<jiri@resnulli.us>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mlxsw
-	<mlxsw@nvidia.com>, Petr Machata <petrm@nvidia.com>, Ido Schimmel
-	<idosch@nvidia.com>
-Subject: RE: [RFC PATCH net-next 9/9] ethtool: Add ability to flash
- transceiver modules' firmware
-Thread-Topic: [RFC PATCH net-next 9/9] ethtool: Add ability to flash
- transceiver modules' firmware
-Thread-Index: AQHaTQ+QQZNGrHyNcEuTxxeyuUrKM7DrCc6AgAb9nvA=
-Date: Wed, 31 Jan 2024 15:48:47 +0000
-Message-ID:
- <DM6PR12MB45161C82F43B67AD8EDB950BD87C2@DM6PR12MB4516.namprd12.prod.outlook.com>
-References: <20240122084530.32451-1-danieller@nvidia.com>
- <20240122084530.32451-10-danieller@nvidia.com>
- <5bf6b526-02c4-4940-b8ec-bf858f9d4a58@lunn.ch>
-In-Reply-To: <5bf6b526-02c4-4940-b8ec-bf858f9d4a58@lunn.ch>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR12MB4516:EE_|DM8PR12MB5399:EE_
-x-ms-office365-filtering-correlation-id: 78dadc55-774a-4db0-02b4-08dc22741d03
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- d1x/NpgSWVOwabIXOGxrkyWh8mKhJfp0RoY68Gb8knkZamt/VmrrxL7ojXqwTJ/6UpzhQpPGdEapjB4YwusGPs5U5aGtuUFhiEALaxEBJwS/w8gGdSNb90ZAgWnwczmw9UFSS5kWD1FKRdJNnwWlmYO2uh7x0ap4a6fAxQvSRdGcDkiScxYiWf5bcUW4IjsisuTkz4X8I0jIr75T9MY/sFxWEdgrjpowwpZa+zoSTQn3IxJJOgf2s17G4HSh0rmcHQC4wT6n6v6pzFQVt8sZ4nKq+ErOIyxMFN/vvjf23JL1GIHqb9ZmeN4Tw1pwmGGVqSiEzeQ+o68M5Mr1eyClAtxdL/sOScOFODlB1Ax/OSltcmAJwAyWwFf9hSzBvg8RdyDwNT5ahKDCuINlJvsxQtXa4NJjT7yg/qruoWAzPRfqqnBm/HN2HVBoFWcY03/64hGjB/R7DsMH4ToT9ZJ4CBUorW5HQnPlqK+k1+1EYXnFLE/iU5xRLPEzQ2UtSEVXC2PGyXzTexPkhPMgzeLebgvf6c7j3bg9hTU6dYKJD9LLkFteOmSVrHbA/2RkCQheC5vYih68TN99qMflb+8V4/rdUJJo8lZTX7GfWjiCicUys+OyJ4fPOtjRN8aTXTnP
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4516.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(346002)(136003)(39860400002)(366004)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(316002)(66899024)(54906003)(66446008)(6916009)(64756008)(66476007)(8676002)(76116006)(66946007)(38070700009)(8936002)(66556008)(478600001)(4326008)(86362001)(7416002)(33656002)(5660300002)(2906002)(41300700001)(52536014)(83380400001)(55016003)(26005)(107886003)(122000001)(38100700002)(71200400001)(6506007)(7696005)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Vmo0RmlFdDZ1RWowcURIaEJDRTk4dFNCQTlQUGhiUTVTL2V6bW8rREh6elM5?=
- =?utf-8?B?S202ckZjMnkyYjJ4Y3JuZUlWODVUZDRWV05kVUFrOVMvY2lDdC9QRU1nYUx2?=
- =?utf-8?B?bHhuWG9QejVTMG9TNm11ZEVoTmVDRmswbDFzRFUxQXA5c0pRV0ZkaUxFNDI3?=
- =?utf-8?B?ZEk0cFpZUkY0QUJTUnh1cU9yUnFLQndZTnZjSnNBd04yYTZqbEZCN2JCMzBo?=
- =?utf-8?B?M3VuKzRxYjJDY3pPaTFRVTJldEs0TE5FOUx1Tkh1N2RXbENqYm9UM1dZVlNC?=
- =?utf-8?B?cVlwQXUxTVFBTkh1azR1cUc0NEVrSmpwUm5CS3JiVGpCUmFEK1ZQYXlZU0dN?=
- =?utf-8?B?QzRpVkU4YmwwOHYxeHpjakdNOS8zSWVvUkk2RmJkMkdGRnJpMUxodVo2WFFW?=
- =?utf-8?B?Q1gwVlIzbEU2ajdJNVpCbjVySHFteTdXcXR0d3FHTVVyTkFXYUFBUmhRazBy?=
- =?utf-8?B?YnZkb1VNSXNITEgyQU9GOU9sSE0rcjFDREhMbmdhdWtqNi9QN0dvQ0Roek1j?=
- =?utf-8?B?enFJSU5HenZDVVJTZS9aY2JkMzlnRzRMY2RXajd3M0g3QnRuaEZhMnhZK2Ux?=
- =?utf-8?B?SUVFSUVHeUN1VWZPNVBCcXRzRmlOYVZidFc0cG1MTkhxUVZCSlVObERGNXdw?=
- =?utf-8?B?T05tTGtuYXN0RXlVaGVESnlSbk54dmt0SmJNcmdJVUltL2JkeUgvdG5rTS9v?=
- =?utf-8?B?eCs3RlBqNk1qVWtGeUNyaDI3eTVlT2lPQ2loV2ZYUXZTb29SclJ3UElCRmJq?=
- =?utf-8?B?clBhMk1zV1JvdVlpcTlFZUZ0UzZ1V2ZCWms0WWI5c1BQSnpVSVZTR2Q3OEpL?=
- =?utf-8?B?dTMxcThqWCtOL1I1TG91NU96OU5SNUVaMzlXMHZ2UFVKQnRQODNrdG5HNjRC?=
- =?utf-8?B?Sy9PQUVXOEcyb0dGUGwvSGxEclB0ZmliNDMrZTJDdmNPWmdjQWRCUks3YS96?=
- =?utf-8?B?SmVvY29rMTUxRnkxeTluS0N4RzVka2NUUUxoc0tLZnBsMjh4citqME0yQVJj?=
- =?utf-8?B?ditmWFNWejh2REc0cVd5bzJ6Vmw5bmRKSWRhd3VGeG44OHdWZ1BmQ2QyR3Bo?=
- =?utf-8?B?bXQ0TlRiZkgzRlR4SGx6SG1PdURmM01tcFdZQnEydStPVE5TdW1SNC83SU5i?=
- =?utf-8?B?QnRGRGxmclRTb3lOd0hvT2pocXRtL0xTa3ZKa3FBNUNDOFp3M3NXMno3T3V5?=
- =?utf-8?B?RFRPZG41bVQ0bytJOTVmUmdlczg1bENYQ1dNeEJTcEg2SlYvRzhFRTRIQVNZ?=
- =?utf-8?B?M1RxQ0llR0NWai9kT0JPSkZhWmRVaGdMbFZoS2t0RUsyQnhDR1hVcW9mVjdm?=
- =?utf-8?B?WGRsY1E2bW9UbmFiTkUwb3A1WFlsOHNsaStTNDVWb2x3QUpTZElxMCtmTS9i?=
- =?utf-8?B?LzVybjlJZE1yOVdlRENJVy85TGR1eWtNakZSdmtwaHN5TXIrTTNxSjVIK3BZ?=
- =?utf-8?B?Z2Irc1ZzL2VGcHBEbEdCREw5RnFCODdJQzhZaklUdXFrdUlXS0FnYkVrTy9G?=
- =?utf-8?B?a3JRdllZY01TN01vRTl2QUxvQ25KcTkvejFWY0I2MDBxeGJOL2JWRkZWZ2l4?=
- =?utf-8?B?ME43Z05RN0ZPY2dHY0g1RElZRSsxSGpZNzh3MytYM2pobTRDcG1MdEdtSmRZ?=
- =?utf-8?B?V0hCVldYcnI3YnI4TFVnTC80M1dpUndhM3F0MkM2blkvU29qOG1YbW5UUkVm?=
- =?utf-8?B?bVU5N2lSeFZxci9wSWdLYmtPdlJCWEdiVXVRT1FpRnRpeU1GRFQ2MDhVellB?=
- =?utf-8?B?U056YmlSSE8vMkM3N2p4bm1TdHErbmxSSWttcUtHSDBCTlU4UjJJZngxWnNP?=
- =?utf-8?B?RW9ueWFlcCtMMklMMmNKYXJYZytUMkIrL3lDZTdlTnM4RGJnSDMyWFgvbmZp?=
- =?utf-8?B?N1p4Q0kzc0Z2eHJOWlozcnJCWmtKYlFxc1lnOFU4RG5uczQ5TStqbVZiOURx?=
- =?utf-8?B?b3Q5ckM2NDNKaXZkM24rSGRNV1FmRVVuQzNxRmhpaHJPeHRweDZVRWlCNUNW?=
- =?utf-8?B?K0ExSWxJYjRsRWdJUzR3ZVdkQ3FSa0RyZTI1bkFWbGtab2U1OVlTZUplWlcy?=
- =?utf-8?B?eXczNWdKREZoRnV0S1IvN2tRRmFqUjJjaUlWQW5qUjBBWFJ5UXBneXFrdXB0?=
- =?utf-8?Q?tFjI8ODJ8U9q9nrTRP3YBODU8?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lPRzQDBq"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40VFoYjP028165;
+	Wed, 31 Jan 2024 09:50:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706716234;
+	bh=eo2a9h9d106rwWnothXcXxppgha4+4M+dxNlXACyeM8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=lPRzQDBqPO5QjYovrZSKbsimS7RJqlwTLTlsrDM/FwdVMMFIymxoBMmLHtsE01bZv
+	 3tJTy4J+NT8pjtYSNE5xolqo9Q5ssPHit1aMkaIwOEGAX4G6T5ZEtoyCRQ8gv8D5do
+	 LD4loilZTLzMMAH/szd9oSmaKZui6ppMvDHHVOeY=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40VFoYfA061222
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 31 Jan 2024 09:50:34 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
+ Jan 2024 09:50:34 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 31 Jan 2024 09:50:34 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40VFoXHv036696;
+	Wed, 31 Jan 2024 09:50:33 -0600
+Message-ID: <7960af47-5d6a-4e54-9d58-a145311321f6@ti.com>
+Date: Wed, 31 Jan 2024 09:50:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4516.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78dadc55-774a-4db0-02b4-08dc22741d03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 15:48:47.8030
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kgm0K7Zce2PRFMQFH975PioaHHIaT0tVEC1GrekOA5JeSGSk91Fu1iNcDsIzDyjTQ/FNSTkX2AMQ0xPRa4KGMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR12MB5399
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] arm64: dts: ti: k3-j784s4: Add overlay to enable
+ QSGMII mode with CPSW9G
+Content-Language: en-US
+To: Chintan Vankar <c-vankar@ti.com>, Peter Rosin <peda@axentia.se>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>
+References: <20240131101441.1362409-1-c-vankar@ti.com>
+ <20240131101441.1362409-6-c-vankar@ti.com>
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20240131101441.1362409-6-c-vankar@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-PiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCBuZXQtbmV4dCA5LzldIGV0aHRvb2w6IEFkZCBhYmls
-aXR5IHRvIGZsYXNoIHRyYW5zY2VpdmVyDQo+IG1vZHVsZXMnIGZpcm13YXJlDQo+IA0KPiA+ICtz
-dGF0aWMgaW50DQo+ID4gK21vZHVsZV9mbGFzaF9md19zY2hlZHVsZShzdHJ1Y3QgbmV0X2Rldmlj
-ZSAqZGV2LA0KPiA+ICsJCQkgc3RydWN0IGV0aHRvb2xfbW9kdWxlX2Z3X2ZsYXNoX3BhcmFtcyAq
-cGFyYW1zLA0KPiA+ICsJCQkgc3RydWN0IG5ldGxpbmtfZXh0X2FjayAqZXh0YWNrKQ0KPiA+ICt7
-DQo+ID4gKwljb25zdCBzdHJ1Y3QgZXRodG9vbF9vcHMgKm9wcyA9IGRldi0+ZXRodG9vbF9vcHM7
-DQo+ID4gKwlzdHJ1Y3QgZXRodG9vbF9tb2R1bGVfZndfZmxhc2ggKm1vZHVsZV9mdzsNCj4gPiAr
-CWludCBlcnI7DQo+ID4gKw0KPiA+ICsJaWYgKCFvcHMtPnNldF9tb2R1bGVfZWVwcm9tX2J5X3Bh
-Z2UgfHwNCj4gPiArCSAgICAhb3BzLT5nZXRfbW9kdWxlX2VlcHJvbV9ieV9wYWdlKSB7DQo+ID4g
-KwkJTkxfU0VUX0VSUl9NU0coZXh0YWNrLA0KPiA+ICsJCQkgICAgICAgIkZsYXNoaW5nIG1vZHVs
-ZSBmaXJtd2FyZSBpcyBub3Qgc3VwcG9ydGVkIGJ5DQo+IHRoaXMgZGV2aWNlIik7DQo+ID4gKwkJ
-cmV0dXJuIC1FT1BOT1RTVVBQOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWlmIChkZXYtPm1vZHVs
-ZV9md19mbGFzaF9pbl9wcm9ncmVzcykgew0KPiA+ICsJCU5MX1NFVF9FUlJfTVNHKGV4dGFjaywg
-Ik1vZHVsZSBmaXJtd2FyZSBmbGFzaGluZyBhbHJlYWR5DQo+IGluIHByb2dyZXNzIik7DQo+ID4g
-KwkJcmV0dXJuIC1FQlVTWTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwltb2R1bGVfZncgPSBremFs
-bG9jKHNpemVvZigqbW9kdWxlX2Z3KSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoIW1vZHVsZV9m
-dykNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4gKwltb2R1bGVfZnctPnBhcmFt
-cyA9ICpwYXJhbXM7DQo+ID4gKwllcnIgPSByZXF1ZXN0X2Zpcm13YXJlKCZtb2R1bGVfZnctPmZ3
-LCBtb2R1bGVfZnctDQo+ID5wYXJhbXMuZmlsZV9uYW1lLA0KPiA+ICsJCQkgICAgICAgJmRldi0+
-ZGV2KTsNCj4gDQo+IEhvdyBiaWcgYXJlIHRoZXNlIGZpcm13YXJlIGJsb2JzPw0KPiANCj4gSWRl
-YWxseSB3ZSB3YW50IHRvIGJlIGFibGUgdG8gdXNlIHRoZSBzYW1lIEFQSSB0byB1cGdyYWRlIHRo
-aW5ncyBsaWtlIEdQT04NCj4gbW9kdWxlcywgd2hpY2ggb2Z0ZW4gcnVuIGFuIG9wZW53cnQgaW1h
-Z2UsIGFuZCB0aGV5IGFyZSBwbHVnZ2VkIGludG8gYSBjYWJsZQ0KPiBtb2RlbSB3aGljaCBkb2Vz
-IG5vdCBoYXZlIHRvbyBtdWNoIFJBTS4NCj4gDQo+IEdpdmVuIHRoYXQgdGhlIGludGVyZmFjZSB0
-byB0aGUgRUVQUk9NIGlzIHVzaW5nIDEyOCBieXRlIDEvMiBwYWdlcywgd291bGQgaXQNCj4gYmUg
-cG9zc2libGUgdG8gdXNlIHJlcXVlc3RfcGFydGlhbF9maXJtd2FyZV9pbnRvX2J1ZigpIHRvIHJl
-YWQgaXQgb24gZGVtYW5kLA0KPiByYXRoZXIgdGhhbiBhbGwgYXQgb25jZT8NCj4gDQo+ICAgICAg
-QW5kcmV3DQoNCk9LLCBJbGwgaGFuZGxlIHRoYXQgaW4gdGhlIGFjdHVhbCB2ZXJzaW9uLg0KVGhh
-bmtzLg0K
+On 1/31/24 4:14 AM, Chintan Vankar wrote:
+> From: Siddharth Vadapalli <s-vadapalli@ti.com>
+> 
+> The J7 Quad Port Add-On Ethernet Card for J784S4 EVM supports
+> QSGMII mode. Use the overlay to configure CPSW9G ports in QSGMII
+> mode with the Add-On Ethernet Card connected to the ENET Expansion
+> 1 slot on the EVM.
+> 
+> Add support to reset the PHY from kernel by using gpio-hog and
+> gpio-reset.
+> 
+> Add aliases for CPSW9G ports to enable kernel to fetch MAC Addresses
+> directly from U-Boot.
+> 
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/Makefile               |   7 +-
+>   .../ti/k3-j784s4-evm-quad-port-eth-exp1.dtso  | 147 ++++++++++++++++++
+>   2 files changed, 153 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
+> 
+> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+> index 52c1dc910308..836bc197d932 100644
+> --- a/arch/arm64/boot/dts/ti/Makefile
+> +++ b/arch/arm64/boot/dts/ti/Makefile
+> @@ -81,6 +81,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm-pcie1-ep.dtbo
+>   # Boards with J784s4 SoC
+>   dtb-$(CONFIG_ARCH_K3) += k3-am69-sk.dtb
+>   dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
+> +dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-quad-port-eth-exp1.dtbo
+>   
+>   # Build time test only, enabled by CONFIG_OF_ALL_DTBS
+>   k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
+> @@ -109,6 +110,8 @@ k3-j721e-evm-pcie0-ep-dtbs := k3-j721e-common-proc-board.dtb \
+>   	k3-j721e-evm-pcie0-ep.dtbo
+>   k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
+>   	k3-j721s2-evm-pcie1-ep.dtbo
+> +k3-j784s4-evm-quad-port-eth-exp1-dtbs := k3-j784s4-evm.dtb \
+> +	k3-j784s4-evm-quad-port-eth-exp1.dtbo
+>   dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
+>   	k3-am625-beagleplay-csi2-tevi-ov5640.dtb \
+>   	k3-am625-sk-csi2-imx219.dtb \
+> @@ -121,7 +124,8 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
+>   	k3-am642-tqma64xxl-mbax4xxl-sdcard.dtb \
+>   	k3-am642-tqma64xxl-mbax4xxl-wlan.dtb \
+>   	k3-j721e-evm-pcie0-ep.dtb \
+> -	k3-j721s2-evm-pcie1-ep.dtb
+> +	k3-j721s2-evm-pcie1-ep.dtb \
+> +	k3-j784s4-evm-quad-port-eth-exp1.dtb
+>   
+>   # Enable support for device-tree overlays
+>   DTC_FLAGS_k3-am625-beagleplay += -@
+> @@ -132,3 +136,4 @@ DTC_FLAGS_k3-am642-tqma64xxl-mbax4xxl += -@
+>   DTC_FLAGS_k3-am6548-iot2050-advanced-m2 += -@
+>   DTC_FLAGS_k3-j721e-common-proc-board += -@
+>   DTC_FLAGS_k3-j721s2-common-proc-board += -@
+> +DTC_FLAGS_k3-j784s4-evm += -@
+> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso b/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
+> new file mode 100644
+> index 000000000000..0667389b07be
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
+> @@ -0,0 +1,147 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
+> +/**
+> + * DT Overlay for CPSW9G in QSGMII mode using J7 Quad Port ETH EXP Add-On Ethernet Card with
+> + * J784S4 EVM. The Add-On Ethernet Card has to be connected to ENET Expansion 1 slot on the
+> + * board.
+> + *
+> + * Product Datasheet: https://www.ti.com/lit/ug/spruj74/spruj74.pdf
+> + *
+> + * Link to QSGMII Daughtercard: https://www.ti.com/tool/J721EXENETXPANEVM
+> + *
+> + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/phy/phy-cadence.h>
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +#include "k3-pinctrl.h"
+> +#include "k3-serdes.h"
+> +
+> +&{/} {
+> +	aliases {
+> +		ethernet1 = "/bus@100000/ethernet@c000000/ethernet-ports/port@5";
+
+Didn't you already set ethernet1 to be main_cpsw1_port1 in the base, does this
+actually behave the way you want?
+
+Otherwise looks okay,
+
+Reviewed-by: Andrew Davis <afd@ti.com>
+
+> +		ethernet2 = "/bus@100000/ethernet@c000000/ethernet-ports/port@6";
+> +		ethernet3 = "/bus@100000/ethernet@c000000/ethernet-ports/port@7";
+> +		ethernet4 = "/bus@100000/ethernet@c000000/ethernet-ports/port@8";
+> +		ethernet5 = "/bus@100000/ethernet@c200000/ethernet-ports/port@1";
+> +	};
+> +};
+> +
+> +&main_cpsw0 {
+> +	status = "okay";
+> +};
+> +
+> +&main_cpsw0_port5 {
+> +	status = "okay";
+> +	phy-handle = <&cpsw9g_phy1>;
+> +	phy-mode = "qsgmii";
+> +	mac-address = [00 00 00 00 00 00];
+> +	phys = <&cpsw0_phy_gmii_sel 5>, <&serdes2_qsgmii_link>;
+> +	phy-names = "mac", "serdes";
+> +};
+> +
+> +&main_cpsw0_port6 {
+> +	status = "okay";
+> +	phy-handle = <&cpsw9g_phy2>;
+> +	phy-mode = "qsgmii";
+> +	mac-address = [00 00 00 00 00 00];
+> +	phys = <&cpsw0_phy_gmii_sel 6>, <&serdes2_qsgmii_link>;
+> +	phy-names = "mac", "serdes";
+> +};
+> +
+> +&main_cpsw0_port7 {
+> +	status = "okay";
+> +	phy-handle = <&cpsw9g_phy0>;
+> +	phy-mode = "qsgmii";
+> +	mac-address = [00 00 00 00 00 00];
+> +	phys = <&cpsw0_phy_gmii_sel 7>, <&serdes2_qsgmii_link>;
+> +	phy-names = "mac", "serdes";
+> +};
+> +
+> +&main_cpsw0_port8 {
+> +	status = "okay";
+> +	phy-handle = <&cpsw9g_phy3>;
+> +	phy-mode = "qsgmii";
+> +	mac-address = [00 00 00 00 00 00];
+> +	phys = <&cpsw0_phy_gmii_sel 8>, <&serdes2_qsgmii_link>;
+> +	phy-names = "mac", "serdes";
+> +};
+> +
+> +&main_cpsw0_mdio {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mdio0_default_pins>;
+> +	bus_freq = <1000000>;
+> +	reset-gpios = <&exp2 17 GPIO_ACTIVE_LOW>;
+> +	reset-post-delay-us = <120000>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	cpsw9g_phy0: ethernet-phy@16 {
+> +		reg = <16>;
+> +	};
+> +	cpsw9g_phy1: ethernet-phy@17 {
+> +		reg = <17>;
+> +	};
+> +	cpsw9g_phy2: ethernet-phy@18 {
+> +		reg = <18>;
+> +	};
+> +	cpsw9g_phy3: ethernet-phy@19 {
+> +		reg = <19>;
+> +	};
+> +};
+> +
+> +&exp2 {
+> +	/* Power-up ENET1 EXPANDER PHY. */
+> +	qsgmii-line-hog {
+> +		gpio-hog;
+> +		gpios = <16 GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +	};
+> +
+> +	/* Toggle MUX2 for MDIO lines */
+> +	mux-sel-hog {
+> +		gpio-hog;
+> +		gpios = <13 GPIO_ACTIVE_HIGH>, <14 GPIO_ACTIVE_HIGH>, <15 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +	};
+> +};
+> +
+> +&main_pmx0 {
+> +	mdio0_default_pins: mdio0-default-pins {
+> +		pinctrl-single,pins = <
+> +			J784S4_IOPAD(0x05c, PIN_INPUT, 4) /* (AC36) MCASP2_AXR0.MDIO1_MDIO */
+> +			J784S4_IOPAD(0x058, PIN_INPUT, 4) /* (AE37) MCASP2_AFSX.MDIO1_MDC */
+> +		>;
+> +	};
+> +};
+> +
+> +&serdes_ln_ctrl {
+> +	idle-states = <J784S4_SERDES0_LANE0_PCIE1_LANE0>, <J784S4_SERDES0_LANE1_PCIE1_LANE1>,
+> +		      <J784S4_SERDES0_LANE2_IP3_UNUSED>, <J784S4_SERDES0_LANE3_USB>,
+> +		      <J784S4_SERDES1_LANE0_PCIE0_LANE0>, <J784S4_SERDES1_LANE1_PCIE0_LANE1>,
+> +		      <J784S4_SERDES1_LANE2_PCIE0_LANE2>, <J784S4_SERDES1_LANE3_PCIE0_LANE3>,
+> +		      <J784S4_SERDES2_LANE0_QSGMII_LANE5>, <J784S4_SERDES2_LANE1_QSGMII_LANE6>,
+> +		      <J784S4_SERDES2_LANE2_QSGMII_LANE7>, <J784S4_SERDES2_LANE3_QSGMII_LANE8>;
+> +};
+> +
+> +&serdes_wiz2 {
+> +	status = "okay";
+> +};
+> +
+> +&serdes2 {
+> +	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	serdes2_qsgmii_link: phy@0 {
+> +		reg = <2>;
+> +		cdns,num-lanes = <1>;
+> +		#phy-cells = <0>;
+> +		cdns,phy-type = <PHY_TYPE_QSGMII>;
+> +		resets = <&serdes_wiz2 3>;
+> +	};
+> +};
