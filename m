@@ -1,322 +1,235 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D4D12A15C
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A4012A143
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706717115; cv=none; b=b6ZspaU1NFbAmyLVCbBgr+XODtyc6fmpVu7EEN/YGiXPibczWWpkd3rfg85MNSZPUv89r3eIT8ytEhOHHfWmJb1x/Jt2qWQbOa8RK03tTQpDQ/4fuQsAZd9hhIFH9jfXxqPxk82RF612ETBVMBFQoRvLrIryNmZKcZEgafCkk0E=
+	t=1706717162; cv=none; b=bJ6nfe+WoNgka3v5EYfchR2YId+bKsOqqijJ2Q9oap2bSHYhwchovW4lOHxbgLRQfQijqYIDFOq0hpsqbI0PQ2GfrogVQRm/FvBJ8bEePztggfFOtbapJzr40YbrWoYy9fHv511hW3NoEq1cVanPmC6houTidtEXrKHTVmLQL+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706717115; c=relaxed/simple;
-	bh=7mKW+OHj3yGbTswJBa10dhFZoNBsPYh0fy7RTmxx1eE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jxaK+CkxMYR87UVA9qFEpZ+kH974Jcu3y0j0DTd9W37cOzubHKP53rL21kghFk2wHIb0zJdiP2a1rfLp37uYD/hFaMY9K+ftz5rLXTCYjilPkVLzt1bYNoEHIzc5MlZG433qcN4/SE3Kj/ynULBxWWtGRConRK2Jm90zkkYfASA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-59a24bf7cadso1087311eaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:05:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706717113; x=1707321913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g7OaZiinwbzng/0HgaGMCW4qacoR+2u1bX4wvl4xbCg=;
-        b=c5mceaPespC/ex59vMBoXPCyaaPEPwgRcMJYagldjI0ACrEpUXx9sv3MdwEKjZ24Ve
-         ZLds1WoyjB9+/Ro0sgO9z8DNyoMnd3yFR4rbMfg3n7jbznd4Gy9/xLRpg/l809pm8FQ8
-         n3lbFu36rEmyy0hAvDf6RjtiYdE0pfe9R/4nQjlQq078ESBBzX34ESkiG0eYlZfOS4br
-         kk6H7x14J3pO1FkiFnzXQTrj/m+8tNL6qdBXANZwBvJwM4N3BHdW1mHPDmx4YGIpP0ZV
-         t0veeUL5pSbyilI1TmrEvQyjRx9KwRufAZUsN+Pwo6GJSGoRccOUf1l+2gKcOFeDatqI
-         /Svg==
-X-Forwarded-Encrypted: i=0; AJvYcCUZJwOcO0m8epfebZCwKe/6v2del94SkQMJ8KHQkNKenqXxHiAcCqUYrTBdfdhw8SM29l1aqfIW3m8N6fXAEFBs4BNu3rUcO0EfaD48
-X-Gm-Message-State: AOJu0Yx8XWmmBdB7skHWuq2yycr1uGdznSgx02C11Qa/iD5ueUGoA2N9
-	zcI7plBUcn6FeX0rGBov1tcJ5q+gT2SUaOtiuVHNvNv1WR8v9MCKH6HVY5F2Jq6Mv0MJM9gS5jj
-	8Bix6BEd29bKmyFK1u7HaBDx5ft0=
-X-Google-Smtp-Source: AGHT+IErDYoefTwYsWl+oj3VgNhS6W7vgBMPp2AVhj8HRfc7hSQ3tU4b0G/pFN4T2E3Muyl+8CItGNPZg1LtdmK/YTc=
-X-Received: by 2002:a05:6820:1c96:b0:59a:bf5:a0da with SMTP id
- ct22-20020a0568201c9600b0059a0bf5a0damr51991oob.0.1706717112759; Wed, 31 Jan
- 2024 08:05:12 -0800 (PST)
+	s=arc-20240116; t=1706717162; c=relaxed/simple;
+	bh=9FHeNdla+jIOOK2A7eSE1AfIOgvA+iOX0COwE66UVmE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DdMBuI7r/m/m85RZ3OI33XwvYD5qmmj+sYelv6TOp3gqofIWvVgMss73MWMpjnIOikj4FXXafuurpsmzuOvG042BwsC90WV9L2cD1LDmegVPw8OIHaqZbWXrlyKfzaaifsE+n/rMXaRSppRtjBVEzmNsVLa3WGh/0cvq/iSBrJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=r4+Rw7T7; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="r4+Rw7T7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706717154; bh=N7Wf1cp0fO57Z9uDiMvCuo//pFaOGnfEQuJkfrl9Odo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=r4+Rw7T7KFY+hILa7fFtjWIy/lx5T39lImBK3LpCkegYbMVwjfKut1k0+F1aRYVAA
+	 by0PaEJwEk8Pmh+6ylG/Aydx3dlbGKF7jua6MBNqJDy5F/3JxMs0o+sp9eK1l79Jco
+	 YxDejBqgXGni7tCCPsi9RUyfieLjdyDQDOAdYnZc=
+Received: from [127.0.0.1] ([240e:379:2245:2000:e9ce:4171:6217:836b])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id EEB9DCEF; Wed, 31 Jan 2024 23:59:43 +0800
+X-QQ-mid: xmsmtpt1706716783t1k17n6nr
+Message-ID: <tencent_068B3B7AE01AC67885E4369AF14109CE6A0A@qq.com>
+X-QQ-XMAILINFO: OSwzSWs0onYP0SSh2k2Rfo1G0GlEZlxvjYKSVqlBi++K8IwPuekaD6GJRMsdEW
+	 wncHhTMAXNfnj3f8dAEFCu5e+jSDlcxlgzEN7Hg1Sir8o/E/l3MP8tXbmb1lRjx/5ZzdL8nbpYDb
+	 sgzWCXhLxTEBWTR65p5q5q1lAoe3cBFQQzFX9MHE/BIlDOU2OqKEpQgqB4lfoJx89oIRqJVrwdz9
+	 XuOR3/Q//BHoM0VplG0+Dx/5w70QDofz5iglvPCGbxZsFjY4e+MPRNkbcS6+jeGlYuY4Nkbida+y
+	 8Etf1g58JgzfTXdfNtpcoekxVyON/bQ/IoATIg8dwVbJ5jHBg747SFdSMRj14NQTyzqeCFOKHut8
+	 CzKoOTZMmsx3b0TTfvI9sXUTOsnYcz8Y+s1plTx1qUwnnRrt9Y9kO5iYJIdPUnHzrRbLSpu2/7zp
+	 2iHT0dale0BhAx/wcHjKq5zBSsDirvFbVI7USZS/7iSS3ojf+eml9tTkXMh9wzvwU95TAAy5ry9M
+	 rS9qRgtd/CV7AmhKwvlVfEzYV4+uXyiB7AazXK28HFdyazblG+Ph5eK3oU7NpwxYKcm9oUJXRnoM
+	 +92ATLQ9iSmqESB8qiAx5NEUc3Q7PID5TRBsFY6CSbVogcltLdlkJZxVrdoCQ8qHtjVezuAqM2wI
+	 jBaEX6pznqdOTRdOLcwmagclBGilMvk7JfFq+hgJDy1FPlb7inh0thZaZtl7/hL/ppK2+VMb5INO
+	 k+ZpnNXC5s7gyKgltO3ol8iBPDzEc3TG0hqgmQMfL8e/IXNp4wKiXu4r4owo6Bz5cKfLzCBStSeo
+	 85Jcf6Rbsh2HDVMFddxScr6VOd4jJoP/QxpkfKqELYHBW8yY81I3eMUxOoRUhMtWqWFRpImoFxHN
+	 C8lJgcIzeGL226kH111Ha4L1TVMwA5wXmLkX1i2HKk7ZPd1fKDDyu3yilEGbplvG+3/VSUde9oBQ
+	 Egwc56rOmrTnVjqyVbEDaWjfy6rz56Mcub5NGph9GfktqC4MID5Y7MXfdK2vw1MKENoD2WWidznO
+	 OfEBzMomYQMHS7zuyIE41bg8zZ2pme7YyzihBpEw==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-OQ-MSGID: <c35f3079f1c2b949cf1e7c17908ade5f7c46169e.camel@cyyself.name>
+Subject: Re: [PATCH v3 1/3] riscv: mm: Use hint address in mmap if available
+From: Yangyu Chen <cyy@cyyself.name>
+To: Charlie Jenkins <charlie@rivosinc.com>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Shuah Khan
+ <shuah@kernel.org>,  Jonathan Corbet <corbet@lwn.net>
+Cc: linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Date: Wed, 31 Jan 2024 23:59:43 +0800
+In-Reply-To: <tencent_83E0AB36A9A3032E5A4C4AC864A311DF9406@qq.com>
+References: <20240130-use_mmap_hint_address-v3-0-8a655cfa8bcb@rivosinc.com>
+	 <20240130-use_mmap_hint_address-v3-1-8a655cfa8bcb@rivosinc.com>
+	 <tencent_83E0AB36A9A3032E5A4C4AC864A311DF9406@qq.com>
+Autocrypt: addr=cyy@cyyself.name; prefer-encrypt=mutual;
+ keydata=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
+	0mslfht1JyMf5dUi38RQI/fOO0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com>
- <dcb1b6dbc2172dd66bfdcc0c8135e0d98f1c22dd.camel@gmail.com>
- <CAJZ5v0gAK9CChRPSx7Lu=BrGQo22q4swpvvN3__wFw68NfqKPA@mail.gmail.com>
- <25d3cfd74b26eb6a4aa07f1da93ccf4815b0b1c6.camel@gmail.com>
- <CAJZ5v0hX4Yv7UVng=O4tZyb_O7D2EcymdEDdSUrVDPk6h51VjA@mail.gmail.com>
- <8682d7f7ee1a60902b1f3e5529a4adbaf4846aa0.camel@gmail.com>
- <CAJZ5v0hW60++hhKG=yBE7+rB9qt2m+tO_WAf=YFhNU2-y3VHFw@mail.gmail.com> <9a4b4dd60c35dd4e00b97e19fced0e79a86f6eef.camel@gmail.com>
-In-Reply-To: <9a4b4dd60c35dd4e00b97e19fced0e79a86f6eef.camel@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 31 Jan 2024 17:05:01 +0100
-Message-ID: <CAJZ5v0hbGF6u5D8iyiziWMceph124wnC6KOH+V9Y2xqQgkZu5g@mail.gmail.com>
-Subject: Re: [PATCH RESEND RFC] driver: core: don't queue device links removal
- for dt overlays
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, nuno.sa@analog.com, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 4:46=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
-> wrote:
->
-> On Wed, 2024-01-31 at 16:10 +0100, Rafael J. Wysocki wrote:
-> > On Wed, Jan 31, 2024 at 3:52=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail=
-.com> wrote:
-> > >
-> > > On Wed, 2024-01-31 at 15:28 +0100, Rafael J. Wysocki wrote:
-> > > > On Wed, Jan 31, 2024 at 3:18=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@g=
-mail.com> wrote:
-> > > > >
-> > > > > On Wed, 2024-01-31 at 14:30 +0100, Rafael J. Wysocki wrote:
-> > > > > > On Wed, Jan 31, 2024 at 1:20=E2=80=AFPM Nuno S=C3=A1 <noname.nu=
-no@gmail.com> wrote:
-> > > > > > >
-> > > > > > > On Tue, 2024-01-23 at 16:40 +0100, Nuno Sa via B4 Relay wrote=
-:
-> > > > > > > > From: Nuno Sa <nuno.sa@analog.com>
-> > > > > > > >
-> > > > > > > > For device links, releasing the supplier/consumer devices
-> > > > > > > > references
-> > > > > > > > happens asynchronously in device_link_release_fn(). Hence, =
-the
-> > > > > > > > possible
-> > > > > > > > release of an of_node is also asynchronous. If these nodes =
-were
-> > > > > > > > added
-> > > > > > > > through overlays we have a problem because this does not re=
-spect
-> > > > > > > > the
-> > > > > > > > devicetree overlays assumptions that when a changeset is
-> > > > > > > > being removed in __of_changeset_entry_destroy(), it must ho=
-ld the
-> > > > > > > > last
-> > > > > > > > reference to that node. Due to the async nature of device l=
-inks
-> > > > > > > > that
-> > > > > > > > cannot be guaranteed.
-> > > > > > > >
-> > > > > > > > Given the above, in case one of the link consumer/supplier =
-is part
-> > > > > > > > of
-> > > > > > > > an overlay node we call directly device_link_release_fn() i=
-nstead
-> > > > > > > > of
-> > > > > > > > queueing it. Yes, it might take some significant time for
-> > > > > > > > device_link_release_fn() to complete because of synchronize=
-_srcu()
-> > > > > > > > but
-> > > > > > > > we would need to, anyways, wait for all OF references to be
-> > > > > > > > released
-> > > > > > > > if
-> > > > > > > > we want to respect overlays assumptions.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-> > > > > > > > ---
-> > > > > > > > This RFC is a follow up of a previous one that I sent to th=
-e
-> > > > > > > > devicetree
-> > > > > > > > folks [1]. It got rejected because it was not really fixing=
- the
-> > > > > > > > root
-> > > > > > > > cause of the issue (which I do agree). Please see the link =
-where I
-> > > > > > > > fully explain what the issue is.
-> > > > > > > >
-> > > > > > > > I did also some git blaming and did saw that commit
-> > > > > > > > 80dd33cf72d1 ("drivers: base: Fix device link removal") int=
-roduced
-> > > > > > > > queue_work() as we could be releasing the last device refer=
-ence
-> > > > > > > > and
-> > > > > > > > hence
-> > > > > > > > sleeping which is against SRCU callback requirements. Howev=
-er,
-> > > > > > > > that
-> > > > > > > > same
-> > > > > > > > commit is now making use of synchronize_srcu() which may ta=
-ke
-> > > > > > > > significant time (and I think that's the reason for the wor=
-k
-> > > > > > > > item?).
-> > > > > > > >
-> > > > > > > > However, given the dt overlays requirements, I'm not seeing=
- any
-> > > > > > > > reason to not be able to run device_link_release_fn()
-> > > > > > > > synchronously if
-> > > > > > > > we
-> > > > > > > > detect an OVERLAY node is being released. I mean, even if w=
-e come
-> > > > > > > > up
-> > > > > > > > (and I did some experiments in this regard) with some async
-> > > > > > > > mechanism
-> > > > > > > > to
-> > > > > > > > release the OF nodes refcounts, we still need a synchroniza=
-tion
-> > > > > > > > point
-> > > > > > > > somewhere.
-> > > > > > > >
-> > > > > > > > Anyways, I would like to have some feedback on how acceptab=
-le
-> > > > > > > > would
-> > > > > > > > this
-> > > > > > > > be or what else could I do so we can have a "clean" dt over=
-lay
-> > > > > > > > removal.
-> > > > > > > >
-> > > > > > > > I'm also including dt folks so they can give some comments =
-on the
-> > > > > > > > new
-> > > > > > > > device_node_overlay_removal() function. My goal is to try t=
-o
-> > > > > > > > detect
-> > > > > > > > when
-> > > > > > > > an
-> > > > > > > > overlay is being removed (maybe we could even have an expli=
-cit
-> > > > > > > > flag
-> > > > > > > > for
-> > > > > > > > it?) and only directly call device_link_release_fn() in tha=
-t case.
-> > > > > > > >
-> > > > > > > > [1]:
-> > > > > > > > https://lore.kernel.org/linux-devicetree/20230511151047.177=
-9841-1-nuno.sa@analog.com/
-> > > > > > > > ---
-> > > > > > > >  drivers/base/core.c | 25 ++++++++++++++++++++++++-
-> > > > > > > >  1 file changed, 24 insertions(+), 1 deletion(-)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > > > > > index 14d46af40f9a..31ea001f6142 100644
-> > > > > > > > --- a/drivers/base/core.c
-> > > > > > > > +++ b/drivers/base/core.c
-> > > > > > > > @@ -497,6 +497,18 @@ static struct attribute *devlink_attrs=
-[] =3D {
-> > > > > > > >  };
-> > > > > > > >  ATTRIBUTE_GROUPS(devlink);
-> > > > > > > >
-> > > > > > > > +static bool device_node_overlay_removal(struct device *dev=
-)
-> > > > > > > > +{
-> > > > > > > > +     if (!dev_of_node(dev))
-> > > > > > > > +             return false;
-> > > > > > > > +     if (!of_node_check_flag(dev->of_node, OF_DETACHED))
-> > > > > > > > +             return false;
-> > > > > > > > +     if (!of_node_check_flag(dev->of_node, OF_OVERLAY))
-> > > > > > > > +             return false;
-> > > > > > > > +
-> > > > > > > > +     return true;
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > >  static void device_link_release_fn(struct work_struct *wor=
-k)
-> > > > > > > >  {
-> > > > > > > >       struct device_link *link =3D container_of(work, struc=
-t
-> > > > > > > > device_link,
-> > > > > > > > rm_work);
-> > > > > > > > @@ -532,8 +544,19 @@ static void devlink_dev_release(struct=
- device
-> > > > > > > > *dev)
-> > > > > > > >        * synchronization in device_link_release_fn() and if=
- the
-> > > > > > > > consumer
-> > > > > > > > or
-> > > > > > > >        * supplier devices get deleted when it runs, so put =
-it into
-> > > > > > > > the
-> > > > > > > > "long"
-> > > > > > > >        * workqueue.
-> > > > > > > > +      *
-> > > > > > > > +      * However, if any of the supplier, consumer nodes is=
- being
-> > > > > > > > removed
-> > > > > > > > +      * through overlay removal, the expectation in
-> > > > > > > > +      * __of_changeset_entry_destroy() is for the node 'kr=
-ef' to
-> > > > > > > > be 1
-> > > > > > > > which
-> > > > > > > > +      * cannot be guaranteed with the async nature of
-> > > > > > > > +      * device_link_release_fn(). Hence, do it synchronous=
-ly for
-> > > > > > > > the
-> > > > > > > > overlay
-> > > > > > > > +      * case.
-> > > > > > > >        */
-> > > > > > > > -     queue_work(system_long_wq, &link->rm_work);
-> > > > > > > > +     if (device_node_overlay_removal(link->consumer) ||
-> > > > > > > > +         device_node_overlay_removal(link->supplier))
-> > > > > > > > +             device_link_release_fn(&link->rm_work);
-> > > > > > > > +     else
-> > > > > > > > +             queue_work(system_long_wq, &link->rm_work);
-> > > > > > > >  }
-> > > > > > > >
-> > > > > > > >  static struct class devlink_class =3D {
-> > > > > > > >
-> > > > > > > > ---
-> >
-> > [cut]
-> >
-> > > > No, IMV devlink_dev_release() needs to be called via
-> > > > device_link_put_kref(), but it may run device_link_release_fn()
-> > > > directly if the link is marked in a special way or something like
-> > > > this.
-> > >
-> > > Sorry, I'm not totally getting this. I'm directly calling
-> > > device_link_release_fn() from  devlink_dev_release(). We should only =
-get
-> > > into
-> > > devlink_dev_release() after all the references are dropped right (bei=
-ng it
-> > > the
-> > > release callback for the link class)?
-> >
-> > OK, I got confused somehow, sorry.
-> >
-> > It should work.
-> >
-> > I kind of don't like adding OF-specific code to the driver core, but
-> > if this is fine with Greg, it can be done.  It should depend on
->
-> Not perfect but I'm not seeing any other way. We need to somehow see if t=
-he node
-> is part of an OVERLAY and AFAIK, the only way is looking at the node flag=
-s. I'll
-> wait on Greg's feedback.
->
-> > CONFIG_OF_OVERLAY, though.
->
-> I guess that should be already indirectly implied. I mean if CONFIG_OF_OV=
-ERLAY
-> is not set, I guess there's not way for
-> of_node_check_flag(dev->of_node, OF_OVERLAY)) return true. But yeah, I ca=
-n bail
-> out right away if IS_ENABLED(CONFIG_OF_OVERLAY) is not set.
->
-> > I would like a comment to be added to device_link_release_fn() to
-> > explain why the overlay case needs synchronous execution in there.
->
-> I do have the following comment before checking device_node_overlay_remov=
-al():
->
->
-> "* However, if any of the supplier, consumer nodes is being removed
->  * through overlay removal, the expectation in
->  * __of_changeset_entry_destroy() is for the node 'kref' to be 1 which
->  * cannot be guaranteed with the async nature of
->  * device_link_release_fn(). Hence, do it synchronously for the overlay
->  * case."
->
-> I can elaborate more if you prefer...
+On Wed, 2024-01-31 at 22:41 +0800, Yangyu Chen wrote:
+> On Tue, 2024-01-30 at 17:07 -0800, Charlie Jenkins wrote:
+> > On riscv it is guaranteed that the address returned by mmap is less
+> > than
+> > the hint address. Allow mmap to return an address all the way up to
+> > addr, if provided, rather than just up to the lower address space.
+> >=20
+> > This provides a performance benefit as well, allowing mmap to exit
+> > after
+> > checking that the address is in range rather than searching for a
+> > valid
+> > address.
+> >=20
+> > It is possible to provide an address that uses at most the same
+> > number
+> > of bits, however it is significantly more computationally expensive
+> > to
+> > provide that number rather than setting the max to be the hint
+> > address.
+> > There is the instruction clz/clzw in Zbb that returns the highest
+> > set
+> > bit
+> > which could be used to performantly implement this, but it would
+> > still
+> > be slower than the current implementation. At worst case, half of
+> > the
+> > address would not be able to be allocated when a hint address is
+> > provided.
+> >=20
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> > =C2=A0arch/riscv/include/asm/processor.h | 27 +++++++++++--------------=
+-
+> > -
+> > =C2=A01 file changed, 11 insertions(+), 16 deletions(-)
+> >=20
+> > diff --git a/arch/riscv/include/asm/processor.h
+> > b/arch/riscv/include/asm/processor.h
+> > index f19f861cda54..8ece7a8f0e18 100644
+> > --- a/arch/riscv/include/asm/processor.h
+> > +++ b/arch/riscv/include/asm/processor.h
+> > @@ -14,22 +14,16 @@
+> > =C2=A0
+> > =C2=A0#include <asm/ptrace.h>
+> > =C2=A0
+> > -#ifdef CONFIG_64BIT
+> > -#define DEFAULT_MAP_WINDOW	(UL(1) << (MMAP_VA_BITS - 1))
+> > -#define STACK_TOP_MAX		TASK_SIZE_64
+> > -
+> > =C2=A0#define arch_get_mmap_end(addr, len, flags)			\
+> > =C2=A0({								\
+> > =C2=A0	unsigned long
+> > mmap_end;					\
+> > =C2=A0	typeof(addr) _addr =3D (addr);				\
+> > -	if ((_addr) =3D=3D 0 || (IS_ENABLED(CONFIG_COMPAT) &&
+> > is_compat_task())) \
+> > +	if ((_addr) =3D=3D 0 ||					\
+> > +	=C2=A0=C2=A0=C2=A0 (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||=
+	\
+> > +	=C2=A0=C2=A0=C2=A0 ((_addr + len) > BIT(VA_BITS -
+> > 1)))			\
+> > =C2=A0		mmap_end =3D STACK_TOP_MAX;			\
+> > -	else if ((_addr) >=3D VA_USER_SV57)			\
+> > -		mmap_end =3D STACK_TOP_MAX;			\
+> > -	else if ((((_addr) >=3D VA_USER_SV48)) && (VA_BITS >=3D
+> > VA_BITS_SV48)) \
+> > -		mmap_end =3D VA_USER_SV48;			\
+> > =C2=A0	else							\
+> > -		mmap_end =3D VA_USER_SV39;			\
+> > +		mmap_end =3D (_addr + len);			\
+> > =C2=A0	mmap_end;						\
+> > =C2=A0})
+> > =C2=A0
+> > @@ -39,17 +33,18 @@
+> > =C2=A0	typeof(addr) _addr =3D (addr);				\
+> > =C2=A0	typeof(base) _base =3D (base);				\
+> > =C2=A0	unsigned long rnd_gap =3D DEFAULT_MAP_WINDOW - (_base);	\
+> > -	if ((_addr) =3D=3D 0 || (IS_ENABLED(CONFIG_COMPAT) &&
+> > is_compat_task())) \
+> > +	if ((_addr) =3D=3D 0 ||					\
+> > +	=C2=A0=C2=A0=C2=A0 (IS_ENABLED(CONFIG_COMPAT) && is_compat_task()) ||=
+	\
+> > +	=C2=A0=C2=A0=C2=A0 ((_addr + len) > BIT(VA_BITS -
+> > 1)))			\
+> > =C2=A0		mmap_base =3D (_base);				\
+> > -	else if (((_addr) >=3D VA_USER_SV57) && (VA_BITS >=3D
+> > VA_BITS_SV57)) \
+> > -		mmap_base =3D VA_USER_SV57 - rnd_gap;		\
+> > -	else if ((((_addr) >=3D VA_USER_SV48)) && (VA_BITS >=3D
+> > VA_BITS_SV48)) \
+> > -		mmap_base =3D VA_USER_SV48 - rnd_gap;		\
+> > =C2=A0	else							\
+> > -		mmap_base =3D VA_USER_SV39 - rnd_gap;		\
+> > +		mmap_base =3D (_addr + len) - rnd_gap;		\
+> > =C2=A0	mmap_base;						\
+> > =C2=A0})
+> > =C2=A0
+> > +#ifdef CONFIG_64BIT
+> > +#define DEFAULT_MAP_WINDOW	(UL(1) << (MMAP_VA_BITS - 1))
+> > +#define STACK_TOP_MAX		TASK_SIZE_64
+> > =C2=A0#else
+> > =C2=A0#define DEFAULT_MAP_WINDOW	TASK_SIZE
+> > =C2=A0#define STACK_TOP_MAX		TASK_SIZE
+> >=20
+>=20
+> I have carefully tested your patch on qemu with sv57. A bug that
+> needs
+> to be solved is that mmap with the same hint address without
+> MAP_FIXED
+> set will fail the second time.
+>=20
+> Userspace code to reproduce the bug:
+>=20
+> #include <sys/mman.h>
+> #include <stdio.h>
+> #include <stdint.h>
+>=20
+> void test(char *addr) {
+> =C2=A0=C2=A0=C2=A0 char *res =3D mmap(addr, 4096, PROT_READ | PROT_WRITE,
+> MAP_ANONYMOUS
+> > MAP_PRIVATE, -1, 0);
+> =C2=A0=C2=A0=C2=A0 printf("hint %p got %p.\n", addr, res);
+> }
+>=20
+> int main (void) {
+> =C2=A0=C2=A0=C2=A0 test(1<<30);
+> =C2=A0=C2=A0=C2=A0 test(1<<30);
+> =C2=A0=C2=A0=C2=A0 test(1<<30);
+> =C2=A0=C2=A0=C2=A0 return 0;
+> }
+>=20
+> output:
+>=20
+> hint 0x40000000 got 0x40000000.
+> hint 0x40000000 got 0xffffffffffffffff.
+> hint 0x40000000 got 0xffffffffffffffff.
+>=20
+> output on x86:
+>=20
+> hint 0x40000000 got 0x40000000.
+> hint 0x40000000 got 0x7f9171363000.
+> hint 0x40000000 got 0x7f9171362000.
+>=20
+> It may need to implement a special arch_get_unmapped_area and
+> arch_get_unmapped_area_topdown function.
+>=20
 
-No, that should suffice IMV, thanks.
+This is because hint address < rnd_gap. I have tried to let mmap_base =3D
+min((_addr + len), (base) + TASK_SIZE - DEFAULT_MAP_WINDOW). However it
+does not work for bottom-up while ulimit -s is unlimited. You said this
+behavior is expected from patch v2 review.=C2=A0However it brings a new
+regression even on sv39 systems.
 
-Now that I think of it there is one more possibility: A dedicated
-workqueue can be used for running device_link_release_fn() and the DT
-overlay code can flush it after the device link deletion.
+I still don't know the reason why use addr+len as the upper-bound. I
+think solution like x86/arm64/powerpc provide two address space switch
+based on whether hint address above the default map window is enough.
+
