@@ -1,103 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735CE3C06B;
-	Wed, 31 Jan 2024 21:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706737849; cv=none; b=ZTbuH0gqeGjKmW+NdaSFoKphDOMagxQ7u4HuYTXWNY6qIyEiE5W2cGegIARNud01nJQG4E1btyuGyeSDsajQxvVoFKk5mLxpv5anz2axVKfeGHd2GG/GwbyFjOj9R7NNR4ze/u9GTrleOmj+ZQYjWhLqFwriSL2UhEX/VdYiJsA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706737849; c=relaxed/simple;
-	bh=3E5/P7Z5DrvNOzf9PuQQ34OuKSGwwV8XI0lmvwYqA1U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=syye0ulMtXEI0Ffhij40PjC7z66letBaCTTCAxb/jQ4iml98A3gu4YVJdvyC4ZQbKa1oW17uTvefolcmE9EdKIyvW0DVn2ii8mJR+/w772rDgJrUmtIcveOIBYft9lqtithkma+GnSj9TwQP4mx6LUNPGu6umaO2PoRDbBUYyDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gm+evdqM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gm+evdqM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526B8C433F1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192C43B7A1;
 	Wed, 31 Jan 2024 21:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706737848;
-	bh=3E5/P7Z5DrvNOzf9PuQQ34OuKSGwwV8XI0lmvwYqA1U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Gm+evdqMoXSW09/HxZglSxeyd+zmBrVkCm9crYPm+Xw3wV7DoqyC22sZ4ciyU+Wbz
-	 TY+9TwYByRnoQ+wLf9Q1lkWKt0h32ir3OCY3n6pawsJCMNK6vn8PlMxc12s4N137sl
-	 X7qx1yqolEP0yUHNiT2bYo0K9gC8IjJso3O5iAilfouNHpESpmyKHXk3AaO3XVF1Sh
-	 jBG3WWo5nC4J06dLSUxfTKp0SKYMOJZTlhYcwl3SqnAuEvNZJavkCKsSWl0g8Gg8KZ
-	 3zmg8MGY7qqevCk+YGgAikGKfO07wjf1dpAAiYnMV9xAS8qXs9rY0trJ13Z+BECYpq
-	 5NIUuvud9lmTw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 31 Jan 2024 22:49:52 +0100
-Subject: [PATCH net 7/9] selftests: mptcp: allow changing subtests prefix
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706737850; cv=none; b=tHs063usNkKSsr1mvXWCFb8HywWB1X7RtnEngrP2sKb8v9vIbgEHD9uT3Jfyu2JjAu4bjGRbW2NCKOc1T1oAvAP+sPDzDB+fFLKXwOHjrZWyjoumx9u1R43e1f7bbVF/WWH30gBdzyv+bpEMORGVrZsVSeG0CB/s2lhzK427HW0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706737850; c=relaxed/simple;
+	bh=AJ7CHvndAYS2a3l/+9EVCWRU12fx/Hr9/yeThq5Bej0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SoiYJ2hcET+nJX67fbCQ3qgZ+mYNe4IshhNK4E4K6fJaZzHy0DLMtHiZWo3q5rJ028JDvJcmL5jYgaDUJD68lwiXBDKsTeNe1+uT8H+X17W+pUUC13A1ES2NqDC9JE/WkBkTSJHRR17wY2CAybqy0YBv9XkKJ97cjqAorw+jKHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aCBlxTj6; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aCBlxTj6"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40VLojIm123740;
+	Wed, 31 Jan 2024 15:50:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706737845;
+	bh=JQQNLrzTHBVd/MJigjdcPGt25xZhhB98X0xrCURyJCk=;
+	h=From:To:CC:Subject:Date;
+	b=aCBlxTj6pSQ5/+uBH2SH6xMedU3r4a78+WKJnWP1UMKr2IPAQp9B2nCo0a2LxXpHZ
+	 mfl5tcTv69ch1PVlxKvHsjUlBWicxUKQMc4CQwGwIoV2esoWg9SIK9QbFKR8oqr+cc
+	 ZvkovStHGfu8M/pOd3tN/mAgSFazbNh3wNqFXYbI=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40VLoj50006408
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 31 Jan 2024 15:50:45 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
+ Jan 2024 15:50:44 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 31 Jan 2024 15:50:44 -0600
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40VLoig2062479;
+	Wed, 31 Jan 2024 15:50:44 -0600
+From: Judith Mendez <jm@ti.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Adrian Hunter <adrian.hunter@intel.com>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Randolph Sapp <rs@ti.com>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v1 0/5] Add tuning algorithm for delay chain
+Date: Wed, 31 Jan 2024 15:50:39 -0600
+Message-ID: <20240131215044.3163469-1-jm@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240131-upstream-net-20240131-mptcp-ci-issues-v1-7-4c1c11e571ff@kernel.org>
-References: <20240131-upstream-net-20240131-mptcp-ci-issues-v1-0-4c1c11e571ff@kernel.org>
-In-Reply-To: <20240131-upstream-net-20240131-mptcp-ci-issues-v1-0-4c1c11e571ff@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang.tang@linux.dev>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1287; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=3E5/P7Z5DrvNOzf9PuQQ34OuKSGwwV8XI0lmvwYqA1U=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBlusCgVP/RyFJqdfuGCRCnqm7Lf+FC6U1XH1yrJ
- zwwxFX8ZHaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZbrAoAAKCRD2t4JPQmmg
- c2SOD/9Hf8EGy9fMdNRAEz3WHV6h5wtRScF/MbzimcqOMo82x+yjfx89KxHNd63DeJ4lxmnpohT
- cMV36JMIRnXr2xjs4FBF3blrI4jAWj12Z2bvAAGgfEJy1XFVaTe1gi3iS3+bzGmKXQb0KTNBd9a
- Rae3lTAsd3zh9TpHa4c3Hk71V3LtRc57JFESeulQ3XoKv9uV3FWR4bhlVXV0BfZjfup0/qD3Fc3
- wYqdSR/dSeTxGYBZK5npQpiH39joQAA/xn0TWbHWDSBZjvr7HV6vzmvNm5Z/XSKITUGUpV2GFaY
- ZSZJjP+/qVeIH/ks08wq164J6wntPEirzl3TPV9alPNE8U+UwYgqlYyphvzffCpJ5w0VB9M+I/8
- koAx3YO7Es8uqEU84jDa4pIlIWoKZF4ko6NTj+uMamxTH1ybTK2cTJCD6rdIQ3sNCBJFdxDB3PK
- CUieisApoLF1b/yvpcm5Eq4WJMLNiFRYWWenHvvki1KRAm82gfq/kysu7534D16Ts6gyfvyRXA8
- hrFz7Y79FVFNQqaUbB2koRav7qbseBkEb6GaiZdfOyBnk9No8gU1psHqEiDvQi4FfYIE1UHLWiD
- oE5lqPFfwT6WKHpBYrlD7gfHzxKzdY3qojP5DXBrolHQdIYz0pPzIZEzwl7FPhgMJ/4jzDZX5mR
- 2u/nWeaKXbQrT+g==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-If a CI executes the same selftest multiple times with different
-options, all results from the same subtests will have the same title,
-which confuse the CI. With the same title printed in TAP, the tests are
-considered as the same ones.
+This patch series introduces a new tuning algorithm for
+mmc. The new algorithm should be used when delay chain is
+enabled. The ITAPDLY is selected from the largest passing
+window and the buffer is not viewed as a circular buffer.
+The new tuning algorithm is implemented as per the paper
+published here [0] and has been tested on the following
+platforms: AM62x SK, AM62A SK, AM62p SK, AM64x SK, and AM64x
+EVM.
 
-Now, it is possible to override this prefix by using MPTCP_LIB_KSFT_TEST
-env var, and have a different title.
+The series also includes a few fixes in the sdhci_am654
+driver on OTAPDLYEN/ITAPDLYEN and ITAPDELSEL.
 
-While at it, use 'basename' to remove the suffix as well instead of
-using an extra 'sed'.
+[0] https://www.ti.com/lit/an/spract9/spract9.pdf
 
-Fixes: c4192967e62f ("selftests: mptcp: lib: format subtests results in TAP")
-Cc: stable@vger.kernel.org
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Judith Mendez (5):
+  mmc: sdhci_am654: Add tuning algorithm for delay chain
+  mmc: sdhci_am654: Write ITAPDLY for DDR52 timing
+  mmc: sdhci_am654: Add missing OTAP/ITAP enable
+  mmc: sdhci_am654: Add ITAPDLYSEL in sdhci_j721e_4bit_set_clock
+  mmc: sdhci_am654: Fix ITAPDLY for HS400 timing
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 022262a2cfe0..3a2abae5993e 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -6,7 +6,7 @@ readonly KSFT_FAIL=1
- readonly KSFT_SKIP=4
- 
- # shellcheck disable=SC2155 # declare and assign separately
--readonly KSFT_TEST=$(basename "${0}" | sed 's/\.sh$//g')
-+readonly KSFT_TEST="${MPTCP_LIB_KSFT_TEST:-$(basename "${0}" .sh)}"
- 
- MPTCP_LIB_SUBTESTS=()
- 
+ drivers/mmc/host/sdhci_am654.c | 215 +++++++++++++++++++++++++--------
+ 1 file changed, 165 insertions(+), 50 deletions(-)
 
 -- 
-2.43.0
+2.34.1
 
