@@ -1,86 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C7383CA6
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB6D8288D
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706711945; cv=none; b=s+cKRKFQ+ybr6iqSMYGfgNqq+A2ZfA9I1OKl0N8R1ylnKra/InZF/S9/sBNV1mbHF2NPet0zuqVnx7JAohaodfNIhUX3XHhmZG84JLcB1j0U044y2onYcxslcx7FYxf2kgaIDeMcBa8cxCh5ue6NZ0hN0Vhh32bQKD/yREHTVT4=
+	t=1706711954; cv=none; b=pevmlxmkCr7Za18tD8NpOVTYDJNejn6LsEi5hHaMMAt06L9s69YGxOgUwkvnUa9B3JObdPbD7Ze8/VGpHlyd1S8JfGHckW72cxF28ETkFdj/iw+UoAFDN8tv5cjPAwacAOrXwKwt08pTPLYmBsMFxHZVW7b1zvz+v35/QdCd64s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706711945; c=relaxed/simple;
-	bh=IFUWShPBA+aoz+kyGKyOGFJSwIc+vqjvZgQ2cu7Ce6M=;
+	s=arc-20240116; t=1706711954; c=relaxed/simple;
+	bh=kPVuRNBlbzCQ8svyAWwrt4hdHVJyuCK8Z2Wnf0wDU8E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S+4yvKECuoJDtNDF+d9kqDV63dOz5EAfYWB2HxdvhgH1uAeknCTlxbzcMt2PPWbyHuQHKH9qyWpiHl8h50Klw+baX8YuJTB9aZgtW5UfI+F9WRY/Q1HxvifC+kyZ/AFy3F0yfoi014SFbW1JsH2LdtNozUte1+/t4MlogxH3asU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=km9NPWGD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QgICSkthN+eqD7KC+iscusZzCWkDtc4v3Mwzca5oWBn5eo9ofY7j7qIGYBOBHnFjMf4bSXvPD9noDXaoFQk/lqGtHLUkNLb4MaxqUT1UY3b1DJVcdgDusZ9aMgm1mzK8QJ/hhLw3cHpx11mH7YufPAcAgoxhfKlXu23Iq4K60Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rj4FB7cg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="km9NPWGD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C223C433C7;
-	Wed, 31 Jan 2024 14:39:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rj4FB7cg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55899C433B2;
+	Wed, 31 Jan 2024 14:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706711944;
-	bh=IFUWShPBA+aoz+kyGKyOGFJSwIc+vqjvZgQ2cu7Ce6M=;
+	s=k20201202; t=1706711954;
+	bh=kPVuRNBlbzCQ8svyAWwrt4hdHVJyuCK8Z2Wnf0wDU8E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=km9NPWGDUYDytisHiwr1MjgrvdxQ5nEpdBOqx5vHLx+ADgAz4SW3bBc/ZOh5P8TR2
-	 eyWqjXs2iyRCCuRmcvzAoqihqjk3M68mnmWZMyVuZjWuzh+Ab1WYXM8fRfn5ZuZKaA
-	 k5dwF91w062jQudABkFntFXwoVAebsxOM5oKgBLUIcpOoiuHgJxHzDhDCdGbDR9zA2
-	 rVDMDMMw43X5sHx64f/FHN6VGBqAie8LW+zACSrSQ+kWeeoij5tDhSgaLEMfyuKsiB
-	 +wMKU6CmPee8BtQqaHSC+yRP8ik/ixAST6VVJ7QH9oxEnR8ZIs5A1pzYZrc0xWdL4s
-	 v/NiHlRkT2paw==
-Date: Wed, 31 Jan 2024 15:39:00 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, 
-	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/1] pidfd: implement PIDFD_THREAD flag for
- pidfd_open()
-Message-ID: <20240131-engel-entern-9b5c96659948@brauner>
-References: <20240131132541.GA23632@redhat.com>
- <20240131141204.GA24130@redhat.com>
+	b=Rj4FB7cg6MVpGG4kOsX6275iESuieAs7+JGNjuERRZAWT2Q6HiQna0FS2YsD7/cz6
+	 3lqYCRdJLm31w7eMhpb0VHlsz7rmoT4fuQbjQoSzLzj2j+aywq//j3ZxdzacMjZBMB
+	 F2t6pzAsNtC9JODfDTVMoyg8XM4Vy3tcDahULpWKbmEZZGPGJuGADyeyvkC1IzuY2I
+	 Zoq950v5yYLAu7x4gZwKVEbsbTBxaXV6ckvAoOqjWhegAOEKttwImu0iIonlTw0Ryr
+	 jDxithQzDIRpRu8xED5pgIAp//jM6M+SE9kJOjcJhB+ng9fqc3YF8On/oriujnBkeS
+	 KZFtD1y49Cvow==
+Date: Wed, 31 Jan 2024 14:39:10 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Chao Wei <chao.wei@sophgo.com>, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2] MAINTAINERS: Setup proper info for SOPHGO vendor
+ support
+Message-ID: <20240131-uneven-grinch-79e678a2e995@spud>
+References: <IA1PR20MB4953B158F6F575840F3D4267BB7D2@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4CLUouC3q9dmuLiV"
 Content-Disposition: inline
-In-Reply-To: <20240131141204.GA24130@redhat.com>
+In-Reply-To: <IA1PR20MB4953B158F6F575840F3D4267BB7D2@IA1PR20MB4953.namprd20.prod.outlook.com>
 
-On Wed, Jan 31, 2024 at 03:12:04PM +0100, Oleg Nesterov wrote:
-> Before I forget this...
-> 
-> After this patch we can easily add another feature, pidfd_poll()
-> can add, say, POLLHUP to poll_flags if the pid is "dead".
-> 
-> So the user can do
-> 
-> 	poll(pidfd, { .revents = POLLHUP });
-> 
-> and it will block until release_task() is called and this pid is
-> no longer in use (pid_task() == NULL).
-> 
-> Do you think this can be useful?
 
-Yeah, I think this is something that people would find useful. IIUC, it
-would essentially allow them to do things like wait until a task has
-been waited upon which for service managers is very useful information.
+--4CLUouC3q9dmuLiV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
+On Tue, Jan 30, 2024 at 09:40:42AM +0800, Inochi Amaoto wrote:
+> Add git tree that maintaines sophgo vendor code.
+> Also replace Chao Wei with myself, since he does not have enough time.
+> Since sophgo vendor code is maintained, remove itself from
+> `RISC-V MISC SOC`
+>=20
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> Acked-by: Chao Wei <chao.wei@sophgo.com>
 
-Btw, bigger picture for a second. You probably haven't kept track of
-this but the fact that we got pidfds - thanks a lot to your review and
-help - has made quite a huge difference in userspace. Since we last did
-any meaningful work we got:
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-* systemd completely relying on pidfds to manage services to guard
-  against any pid races.
-* Extended dbus to allow authentication via pidfds.
-* Extended policy kit to enable secure authentication of processes via pidfds.
-* Language support for pidfds: Go, Rust etc.
-* An endless number of tools that added support for them.
-* glibc support for pidfd apis.
+I assume you guys will take this in your tree.
 
-There's a bunch more. That literally obliterated whole bug classes.
+Cheers,
+Conor.
 
-I think with PIDFD_THREAD support it might make it interesting to use it
-for some pthread management as well.
+> ---
+>  MAINTAINERS | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 39219b144c23..125debc7d755 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18848,6 +18848,7 @@ F:	Documentation/devicetree/bindings/riscv/
+>  F:	arch/riscv/boot/dts/
+>  X:	arch/riscv/boot/dts/allwinner/
+>  X:	arch/riscv/boot/dts/renesas/
+> +X:	arch/riscv/boot/dts/sophgo/
+>=20
+>  RISC-V PMU DRIVERS
+>  M:	Atish Patra <atishp@atishpatra.org>
+> @@ -20446,12 +20447,13 @@ F:	drivers/char/sonypi.c
+>  F:	drivers/platform/x86/sony-laptop.c
+>  F:	include/linux/sony-laptop.h
+>=20
+> -SOPHGO DEVICETREES
+> -M:	Chao Wei <chao.wei@sophgo.com>
+> +SOPHGO DEVICETREES and DRIVERS
+>  M:	Chen Wang <unicorn_wang@outlook.com>
+> +M:	Inochi Amaoto <inochiama@outlook.com>
+> +T:	git https://github.com/sophgo/linux.git
+>  S:	Maintained
+> -F:	arch/riscv/boot/dts/sophgo/
+> -F:	Documentation/devicetree/bindings/riscv/sophgo.yaml
+> +N:	sophgo
+> +K:	sophgo
+>=20
+>  SOUND
+>  M:	Jaroslav Kysela <perex@perex.cz>
+> --
+> 2.43.0
+>=20
+
+--4CLUouC3q9dmuLiV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbpbjQAKCRB4tDGHoIJi
+0jpXAP9uGodd2YeCPx+ouxY8zU/sUXURwKAb9IO8UXPFQDq6SAEAvJFHhGrZ8qai
+KQA26Es1UGjNKAgoszwpNmGQqXt4jwY=
+=eYUb
+-----END PGP SIGNATURE-----
+
+--4CLUouC3q9dmuLiV--
