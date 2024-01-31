@@ -1,69 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CE363B9;
-	Wed, 31 Jan 2024 02:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9600E5258;
+	Wed, 31 Jan 2024 02:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706667282; cv=none; b=NoxWp57mQdxr8yoHqtxEmRvAGH951EnSXIb8rz/DH8br4oRpIyeOvER+bNO5j/weMwaebG7OGrcVYzULVbuT7CXCOFTXYNkWN5shnGurYA/IzyMb3K1ON19zp79zRPu3sV1t3gW+q+rpN7DPhwkD9WqfKMsvxjOgkjbOC7pGwpo=
+	t=1706667365; cv=none; b=Zj/VAjrdX4lh3kZSQxc8PgRNJ65dXyvrYgCSeLDzvCvMHyq2osjDznZHTLa4xc2ljrLy/kP/ztYANdwAiY8dC5FKDZg7d8WFpPiAppp3x78Hns6T8e8XbkYy7E4QsP+EQN/6zy/DZJgcF0hB3crc77c0+ycMN17WMglJBf+hKRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706667282; c=relaxed/simple;
-	bh=Q4yhgEhtIEYSfwUmAoh8WuwX6zuMgT7HY8EbWFZ9mL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SdaVpf5BjAMJbVv8h9EMNmuwjmj+8VNDnTnsdEPxHKuYP5uzzP3EDkZ4DEk2oE5REY3P7P8/kpTLlbUDZtlb0lAuo0hHhRXzJ9sJOg3eaPLb2Lmt2eeq+8tq4PUHNUs7lYwQKi/p0JBuLH4za7qyieHluHl7oU7EtqxSIZppDvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZouvvPjc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706667365; c=relaxed/simple;
+	bh=2odIObPUB+D6zv4g+F9ZVLeovm0W2e6pr8HGw+xbkuI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GN6tJ3E+t7HheCsjRy9qYkiVuHJb2Xq5mqjy9cPP4jEap/sClO0U5YcAFqI8MDQdzJ1lHSnIkZnkiItjEgdBTfyVdV0MJt7HXIeOFpkOv9BzzvfQYTWEGiBAvxw+XpQmaGz78zCTs3BFd4xoFc9fy2ia3K6rCy9fipOKataxQRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=j46SZs9h; arc=none smtp.client-ip=4.36.192.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZouvvPjc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2C0C433F1;
-	Wed, 31 Jan 2024 02:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706667282;
-	bh=Q4yhgEhtIEYSfwUmAoh8WuwX6zuMgT7HY8EbWFZ9mL0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZouvvPjc55LPYVq7D+8n2VVtEE46cd2K4RLI5fk2oQVuXC7M3Sr4ciVhXfckl+Pdk
-	 9EeqstGFq40zspfS6n8S10oi965QJXs5Yl+5/ZWnqk/6WfJTRE0U6gnjqULVO0FcF3
-	 CDyvKfFjBJyUai090LbPOiR4cnyvFki1yv4FhM5c+x5MtzP/XvT/s5Bme5Wn7d+aqN
-	 tEr386Wfig6WBd0zfjydPUqJ/4hdJkbDyccCoRKYm2RbiSxGYmdbvQBEwd1fdnhet8
-	 5uyKreGGWETzgPzRpnTicqeQ7AwA2kQ8JQP+PvKrSNTCUUSRsQ+p4qJnVXfHIB2p9v
-	 lhGY4sOltTGsQ==
-Date: Tue, 30 Jan 2024 18:14:35 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, davem@davemloft.net,
- pabeni@redhat.com, edumazet@google.com, dsahern@kernel.org,
- weiwan@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- horms@kernel.org, andrew@lunn.ch, leit@fb.com, Uwe =?UTF-8?B?S2xlaW5lLUs=?=
- =?UTF-8?B?w7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Kees Cook
- <keescook@chromium.org>, Johannes Berg <johannes.berg@intel.com>, Emmanuel
- Grumbach <emmanuel.grumbach@intel.com>, Justin Stitt
- <justinstitt@google.com>, Li Zetao <lizetao1@huawei.com>, Francois Romieu
- <romieu@fr.zoreil.com>, Rob Herring <robh@kernel.org>, Marc Kleine-Budde
- <mkl@pengutronix.de>, Ruan Jinjie <ruanjinjie@huawei.com>,
- linux-wireless@vger.kernel.org (open list:TI WILINK WIRELESS DRIVERS)
-Subject: Re: [PATCH net 1/9] wifi: fill in MODULE_DESCRIPTION()s for wlcore
-Message-ID: <20240130181435.13f6e2cc@kernel.org>
-In-Reply-To: <170662101207.2289851.7564186430529596261.kvalo@kernel.org>
-References: <20240130104243.3025393-2-leitao@debian.org>
-	<170662101207.2289851.7564186430529596261.kvalo@kernel.org>
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="j46SZs9h"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
+	bh=Bu0ZiIo7Hs1vPWly90g3amII2kYFsaEWUlUodmN8Ds0=; b=j46SZs9homq/UDMpGZ5FPOXWd7
+	BWj7ilgWch/meWOIb77O4Gt9ic5h2vh0oAYO0RKKw3YJr6s4xcXbNBhmPt3kvZX2g1j+iptDH5vfh
+	mRkDNln26e240cmIgJOlOBvI3ezuFczhN9VBqcGRh9W95FCtQmHtlbK9Pio+/FrhUkxbXUnrQIbFL
+	S0dZz2anXZsGa/utyQAV7UulNUJ1OAxUqH+VruNsFoflwz3u6okQUk0ts1rbRAXgjA+GnOpFdMRdo
+	5pxBGKPz52A7n95KOw7l9tmySRjdGq/WC3pBvED5FtSbZjZyO8ah1tt7AVf7tceMIZSVXE45VIgF7
+	7AoRwgvw==;
+Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <zfigura@codeweavers.com>)
+	id 1rV08n-0038Kv-38;
+	Tue, 30 Jan 2024 20:15:54 -0600
+From: Elizabeth Figura <zfigura@codeweavers.com>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	wine-devel@winehq.org,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Arkadiusz Hiler <ahiler@codeweavers.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Elizabeth Figura <zfigura@codeweavers.com>
+Subject: [RFC PATCH v2 11/29] ntsync: Introduce NTSYNC_IOC_EVENT_RESET.
+Date: Tue, 30 Jan 2024 20:13:38 -0600
+Message-ID: <20240131021356.10322-12-zfigura@codeweavers.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240131021356.10322-1-zfigura@codeweavers.com>
+References: <20240131021356.10322-1-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 30 Jan 2024 13:23:34 +0000 (UTC) Kalle Valo wrote:
-> > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> > Add descriptions to the TI WLAN wlcore drivers.
-> > 
-> > Signed-off-by: Breno Leitao <leitao@debian.org>  
-> 
-> These patches go to wireless-next, not net. But no need to resend because of this.
+This corresponds to the NT syscall NtResetEvent().
 
-FWIW I've been taking these thru net (or wireless in your case)
-rather than the -next tree. There's zero chance of regression
-here and the warnings are annoying. But up to you.
+This sets the event to the unsignaled state, and returns its previous state.
+
+Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
+---
+ drivers/misc/ntsync.c       | 22 ++++++++++++++++++++++
+ include/uapi/linux/ntsync.h |  1 +
+ 2 files changed, 23 insertions(+)
+
+diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
+index b2da50989953..009d927739b8 100644
+--- a/drivers/misc/ntsync.c
++++ b/drivers/misc/ntsync.c
+@@ -482,6 +482,26 @@ static int ntsync_event_set(struct ntsync_obj *event, void __user *argp)
+ 	return 0;
+ }
+ 
++static int ntsync_event_reset(struct ntsync_obj *event, void __user *argp)
++{
++	__u32 prev_state;
++
++	if (event->type != NTSYNC_TYPE_EVENT)
++		return -EINVAL;
++
++	spin_lock(&event->lock);
++
++	prev_state = event->u.event.signaled;
++	event->u.event.signaled = false;
++
++	spin_unlock(&event->lock);
++
++	if (put_user(prev_state, (__u32 __user *)argp))
++		return -EFAULT;
++
++	return 0;
++}
++
+ static int ntsync_obj_release(struct inode *inode, struct file *file)
+ {
+ 	struct ntsync_obj *obj = file->private_data;
+@@ -507,6 +527,8 @@ static long ntsync_obj_ioctl(struct file *file, unsigned int cmd,
+ 		return ntsync_mutex_kill(obj, argp);
+ 	case NTSYNC_IOC_EVENT_SET:
+ 		return ntsync_event_set(obj, argp);
++	case NTSYNC_IOC_EVENT_RESET:
++		return ntsync_event_reset(obj, argp);
+ 	default:
+ 		return -ENOIOCTLCMD;
+ 	}
+diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
+index 782057552483..f2d7507d8438 100644
+--- a/include/uapi/linux/ntsync.h
++++ b/include/uapi/linux/ntsync.h
+@@ -49,5 +49,6 @@ struct ntsync_wait_args {
+ #define NTSYNC_IOC_MUTEX_UNLOCK		_IOWR('N', 0x85, struct ntsync_mutex_args)
+ #define NTSYNC_IOC_MUTEX_KILL		_IOW ('N', 0x86, __u32)
+ #define NTSYNC_IOC_EVENT_SET		_IOR ('N', 0x88, __u32)
++#define NTSYNC_IOC_EVENT_RESET		_IOR ('N', 0x89, __u32)
+ 
+ #endif
 -- 
-pw-bot: au
+2.43.0
+
