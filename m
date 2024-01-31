@@ -1,118 +1,114 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146D839AF0
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 21:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0355F39AC3
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 21:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706738034; cv=none; b=Ka6IQPFboOPCMQ4cqdy9kLsC037yZLGCLEX6zenU6X1UZgTMU9RqGpc7BscnjCRztnB3HqTFb0N5ee/XDWvDHnIJVbN4WFPCwNVnEZ0ADn2hBUWutbuJsomILVvA99q2xJsURZ4eAO9YD+ZecnIgrJZJdkaMOTvi2LTDCCalOnE=
+	t=1706738251; cv=none; b=dvI45yp2MOq7ind2VBI5ku64i0oQaXf3QvPeo01XS+o9ImXB5/Uh+yECto1DNqy1D5JRpyYNX8PvxmN6NTY6SqfPhRTSWe4rzf8QIaycyzGFe33JFklJ4JrsIzXadZ6LH7W/DwLjA954bQdnq3+nvZnTZ+anGcynGZQNYw60y60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706738034; c=relaxed/simple;
-	bh=4xLkjEkNsl/vSzQQL56AarzQ/fTqiFXmSV0hiQdMmlk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=St6Mtq1yusDQ7PU7+ZYiCBVsplk6Al1OFaZmkkikcJSgDv+vB58DH8MjotfXD9G9M42e7aTZ5Ua8bjHzCRxQXrYLZcwiYvpzeV7Rd5aoDhj0h8aO8dc92bRYFh4r/fQ3ZbOnIFkVqU6RM8SL7azWgYex2cj0Ck7xg61HCkbZUpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ts7Dp+dE; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
+	s=arc-20240116; t=1706738251; c=relaxed/simple;
+	bh=gC0lXf7I3SZcZiIxOmuaTz2uCZpWqFRp2MIZZXqsmkU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=I2zT+1HM1jhEllJkBYkpXsajri/KC6xT1D+DBX/uj+GrywsZG+rwpIxl5iJ3uADOSqLgOwbjxZzkqbedb2TgKw+psUYnhPDOotUxnfsyStQbdWge2Uqr4EEeJSu2CBTuFrjvpjPX39PxA1NC1WMRKy+rZGgSpCvi0JkA9bEhDPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YWKswDPH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ts7Dp+dE"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5cec090b2bdso284537a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:53:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706738032; x=1707342832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AnAFDV1t3aX3RqRk7DxFRUBw8cn5gMxBfRf2X8ihrDQ=;
-        b=ts7Dp+dEbWqxSHWt3fm+nmu7jkU4nnsqztFMCRfiJ1+VDtrh1TGu/9f4BAt+BTuJfR
-         tfdarsz1Gr2RZ4bbH8yoRSNoxKLOqz0XzwEmpALjOHHg6lhDR/HMR1w9q9bphBFdWdFO
-         H+AuEdPA0ZWdVEVTNUN4LwFNDBlOTH+jpfmMFxDd38rNsFkq0tEWl4kKDoCIXJHETA+Q
-         axfBK+z7jhOIp/QBKGcumzrkxGPadja3c9+xI11Shf279v60pkNcmwyi4UbM3BEorqhD
-         +kxgCst6bTAvbOi2pcY52txZN4qGOpCvl2CBZGmdhXGhUFek2VIPNC+d7CGR8jY+JTiG
-         ZKMw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWKswDPH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706738247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O5fW+pR0Od9wClLuo3WHp1P1SzDvmkG9A4Voix2JXDE=;
+	b=YWKswDPHHk9FPRSX7dJuXuJNaXeLfNKyqC+dFm8txpGZzNvnt4dXh/CcHpRGaaRRjqNJqz
+	fGHGCPXJ+ZhnB/ZILjaj7pZQ6BfzSpjr7q6+i1UV4KtfvFDFn7JzomWvfIROwo5HxmsMSD
+	Y+YnAIC+KpkO71gvq93PwVzOij8CY8E=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-125-ysbqdaHYMD6D5-ckay1BDg-1; Wed, 31 Jan 2024 16:57:25 -0500
+X-MC-Unique: ysbqdaHYMD6D5-ckay1BDg-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33afc5a3f40so76658f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:57:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706738032; x=1707342832;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AnAFDV1t3aX3RqRk7DxFRUBw8cn5gMxBfRf2X8ihrDQ=;
-        b=heMhG9XTHgU2IRajVEc32oeviCdxxkiksavmkNnjft0Q/hdQNGWJWbkapDvi8WJlps
-         4nXd1ff3I6am2W5r9/s3mNWP946dSYryVVcHFJ+Ri7gRt3u3IiJ9w+XDMnh5fwtY5Xns
-         S1CEAX15klRlN7gA1PjChSVpsvfWyUqTi5WXlUav4LM6C3a5CENyKvcJa0aSYSGzoi0N
-         41szQJpoJT1zY/0HHSrPS8AnA8RRSVzi9X4IszZcvrRNY137vBo6DnLfLhgruloRTAjF
-         JdcmOs3kXh6wBuwjfBFw/fqWnp+63xrOiIxpW5xWBijQnfEYMVMxvBKa/QfKVSPy9qRa
-         xZVA==
-X-Gm-Message-State: AOJu0YxMP29XsdAGbGoQ0S7eNxZ4G99ZS9K9QVY4kpLWoRLBrxsdxQ9r
-	bLBhBqVf+PnNMXCfY4KhO4vq8ERLpRHKkFfeiMo5e7MCvif/3I/HAY+v6Y4l+TcbLDLExH5l086
-	Na1rOiUtHZg==
-X-Google-Smtp-Source: AGHT+IFw6WY4nDhnNbNIWITwqwDxfY1lJTf1DEXlQdSElsdLgqA96aMQvdRmrPsG2L2Y4tLmcXzdBHByoz4zCA==
-X-Received: from xllamas.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5070])
- (user=cmllamas job=sendgmr) by 2002:a65:68c5:0:b0:5d8:51e2:c8ca with SMTP id
- k5-20020a6568c5000000b005d851e2c8camr636pgt.2.1706738032095; Wed, 31 Jan 2024
- 13:53:52 -0800 (PST)
-Date: Wed, 31 Jan 2024 21:53:46 +0000
+        d=1e100.net; s=20230601; t=1706738244; x=1707343044;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O5fW+pR0Od9wClLuo3WHp1P1SzDvmkG9A4Voix2JXDE=;
+        b=l5Bs+SQp/XVyONzd7YI2FnGmPQxSYYyBUKc9Z/q2aAoai3LLpL165Q9Ypsmxjkhg/r
+         qsVz/jcJTPOOJioY2karX7sYEvhrRdAFig5+eLChANIFPZ+wtSdYK0NrTSKJJ79fmP35
+         TmtvlJ1fl0AM/CB+3JwINqLW7aUVwOzbL7hI4qqqlL/0K+AINNcivq4pvcbpil9vMRw1
+         4Ys0sv09+ibGa7VCEmtn5d4ZijxWgVKpjUwfN9e1zo/GXrm+URbTHx95SD4WqK4Qrrmr
+         sME2rkZIajHkT/pwJPibphaPPpJJ4lqbWuS7GIa/B7Aowua0RJ36t5nxfRJCtwNXAvId
+         DGTw==
+X-Gm-Message-State: AOJu0Yy7Mg5/TbSIxdNxM14oL7CjHoEWBwJoMjTQsZOj07/ufatdwee5
+	RF/eOLDJnvb6AZtbzAEyeEdOp6HERThmeafu7FO/k+Tvdn5o8EOnbDZ0uvhErLkVxO9Twu61f3a
+	shL44x0ElpIzeLSMj8sRTPfeKW07g5bsZ77FY6TefzTWc8uS/lBtbHBvqY/spc9UmHzKJ3RNLMs
+	jMJeqFp67a8OsFPrPY+pb0cFO5WtCit3VMkSlnQLXl7v4U
+X-Received: by 2002:adf:f98d:0:b0:33b:998:3643 with SMTP id f13-20020adff98d000000b0033b09983643mr248807wrr.34.1706738244227;
+        Wed, 31 Jan 2024 13:57:24 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEvq6Klk32tuusUbUXszcqh0e5W5OiGe4KfWf4z08Djrb6F1s6ICn5hYUcrjCqeJicorPvnA82CO8a4mLBNIjY=
+X-Received: by 2002:adf:f98d:0:b0:33b:998:3643 with SMTP id
+ f13-20020adff98d000000b0033b09983643mr248789wrr.34.1706738243932; Wed, 31 Jan
+ 2024 13:57:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240131215347.1808751-1-cmllamas@google.com>
-Subject: [PATCH] binder: signal epoll threads of self-work
-From: Carlos Llamas <cmllamas@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Brian Swetland <swetland@google.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Alice Ryhl <aliceryhl@google.com>, Steven Moreland <smoreland@google.com>, stable@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@suse.de>
+MIME-Version: 1.0
+References: <170663397812.1314437.1686905275956809283@demetrius>
+In-Reply-To: <170663397812.1314437.1686905275956809283@demetrius>
+From: Clark Williams <williams@redhat.com>
+Date: Wed, 31 Jan 2024 21:57:12 +0000
+Message-ID: <CAMLffL_XZqBwoq8WivEyAU46TrTas+x4h5n4H=fFRq3ODWmEpw@mail.gmail.com>
+Subject: Re: [ANNOUNCE] 6.1.75-rt23
+To: LKML <linux-kernel@vger.kernel.org>, 
+	linux-rt-users <linux-rt-users@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Carsten Emde <C.Emde@osadl.org>, John Kacur <jkacur@redhat.com>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Daniel Wagner <daniel.wagner@suse.com>, 
+	Tom Zanussi <tom.zanussi@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+	Pavel Machek <pavel@denx.de>, Joseph Salisbury <joseph.salisbury@canonical.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-In (e)poll mode, threads often depend on I/O events to determine when
-data is ready for consumption. Within binder, a thread may initiate a
-command via BINDER_WRITE_READ without a read buffer and then make use
-of epoll_wait() or similar to consume any responses afterwards.
+Wow, that'll teach me to do two releases back to back. I fat fingered
+my release announcement for 6.6 and did the 6.1 instead.
 
-It is then crucial that epoll threads are signaled via wakeup when they
-queue their own work. Otherwise, they risk waiting indefinitely for an
-event leaving their work unhandled. What is worse, subsequent commands
-won't trigger a wakeup either as the thread has pending work.
+Sorry for the noise, the v6.6.14 announce will be out shortly
 
-Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
-Cc: Arve Hj=C3=B8nnev=C3=A5g <arve@android.com>
-Cc: Martijn Coenen <maco@android.com>
-Cc: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Moreland <smoreland@google.com>
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Carlos Llamas <cmllamas@google.com>
----
- drivers/android/binder.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Clark
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 8dd23b19e997..eca24f41556d 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -478,6 +478,16 @@ binder_enqueue_thread_work_ilocked(struct binder_threa=
-d *thread,
- {
- 	WARN_ON(!list_empty(&thread->waiting_thread_node));
- 	binder_enqueue_work_ilocked(work, &thread->todo);
-+
-+	/* (e)poll-based threads require an explicit wakeup signal when
-+	 * queuing their own work; they rely on these events to consume
-+	 * messages without I/O block. Without it, threads risk waiting
-+	 * indefinitely without handling the work.
-+	 */
-+	if (thread->looper & BINDER_LOOPER_STATE_POLL &&
-+	    thread->pid =3D=3D current->pid && !thread->process_todo)
-+		wake_up_interruptible_sync(&thread->wait);
-+
- 	thread->process_todo =3D true;
- }
-=20
---=20
-2.43.0.594.gd9cf4e227d-goog
+On Tue, Jan 30, 2024 at 5:00=E2=80=AFPM Clark Williams <williams@redhat.com=
+> wrote:
+>
+> Hello RT-list!
+>
+> I'm pleased to announce the 6.1.75-rt23 stable release.
+>
+> You can get this release via the git tree at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+>
+>   branch: v6.1-rt
+>   Head SHA1: feaccee7987b202020fb8e13d33a793930a55045
+>
+> Or to build 6.1.75-rt23 directly, the following patches should be applied=
+:
+>
+>   https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.1.tar.xz
+>
+>   https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.1.75.xz
+>
+>   https://www.kernel.org/pub/linux/kernel/projects/rt/6.1/patch-6.1.75-rt=
+23.patch.xz
+>
+>
+> Enjoy!
+> Clark
+>
 
