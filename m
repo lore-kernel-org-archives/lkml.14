@@ -1,280 +1,228 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2071.outbound.protection.outlook.com [40.95.110.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13973A278;
-	Wed, 31 Jan 2024 23:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.110.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706742077; cv=fail; b=n3uS/njCo8I7lw8ZZH5d388CEk1g2FRdbgj9REA5r3mHSrzzpZ4N29wFQIMbo8cppTtU5Qfc7qo3ESU+ODVmoWjoyYNMV8FdLK7zELeOs7uMa5q+ZMVO3puXEpFRrJIiUSgdngZDpQOaDKvUGq7q2dB4/0/uSxoLtiLiEj28NxM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706742077; c=relaxed/simple;
-	bh=HOIk5hOyCVFgOSj4e6/gfavrpPbVrh75/J9NSBoyED4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bPPltNrbrV8EtpAuB5tEURFVx+Q3WejjNDSezN2yEy1/8Fmpi2vMAdJYbFHssIWv++Pw6rrkag3miiuNIjsUmBRaBKIL/9U+Nt0FDmUcFWHmaG7xPRLows++Zz8PLFLXFF4tl9+4xtdq99BiRKFlJg+QojZJHw0rD96JvjzV0nI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=QpMSWLOs; arc=fail smtp.client-ip=40.95.110.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14FB39ACA;
+	Wed, 31 Jan 2024 23:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706742137; cv=none; b=Hhi3wtisvX4PFmePI93TNrZOnqik8663/+3uGwpnAX/3MDR5+jz/xLOsZhlgrwA4L60qdSVwmmdq3PuoLruQQGFo8Af4p+u2zOCkn7dlbgr6lkKQWFbXUqyiKVzKsrYHpgYUa6BzC60CHr9m+qZYKoEQP5GzLE24sWsOs8WH89c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706742137; c=relaxed/simple;
+	bh=1ymBo0INWu+oPCIXg5dFg0fy8TzeUnBhzt2lS0EtzoY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pKt7SoQv5cZno2fXZZyaIHzng+PvdkKGRltYFWsrHziqUcXhz/pJUFNPwQNvwFlDwGebcj/ylbeTaj+oLlbEbVjxOBZpWV9Pbg5IWcIf0MgWS/47uP6fpG80llU+yhYdmwumKJN1hU+H9lI5drTUcHmgXB0pywpCzGfDhcxCrm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhirEnt1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="QpMSWLOs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dlCT5+TU0R8VDaSXvDJszf02MouMXYi1s61TsuXMYCsqj/b79+lNjfm6Y5fmoL1ixQYSliSvBYi/0f3qkromOW5GpPaV/YuKhR3yc1tCxZEbtwWvkZ4f1J5JoA8rctPGDaksDCu719H7jB9hoXtAGMLZnEhCi8UfyN/woSsVHNKQsGjBJsfzCk7TgtEgp86WOaOod3WNrfDtNv8hi49sAYLaNkRQxke/fEc8KSLHTSK67PbaOhhoz11OjZwRJtu3jcSWAyodQ5ps70rXrYUxhL9KaPmZETQcKlBpERmtftiqw72C6vQwLVf0oTbfWNVh3irT+icYoNGxVOWacy7MnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fcf7HEaWwTnjxtqPtzrQ0yutuH/a9ktuQHkZWeTUwno=;
- b=DAOsqPtsi1Caq0utXC1WoWj9WIVzT+y6KsCDauZyc/TDEBtqeVSN5LXrAN3o9kkvOiyqpPPjn2F/BPuOzU0Xh+pYn0Q5uzkUwGWjL8uyhT363aVYz3gJ0OBiRzXPP86gE33I7Uqxc7AtPVS9iNW50OA0rR/S3bAtoohJQ2+pSqJKdyKmiy09REUYTVpJe+W193LwzZoECOjhVUwbMJzZkWjuAQ95/DswV7rvS+Z/ZVvDRf0nmi52QlxmHgy2tX4ZZaVVb7nujKNG0Ekbq5BcSoxelZiCsfX8BWW3MQWqvgFNEZJ4LNy83lX3rCM/WxorlZ6K/hwUTU7ygsD8XGSa8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 175.98.123.7) smtp.rcpttodomain=baylibre.com
- smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
- action=none header.from=gmail.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fcf7HEaWwTnjxtqPtzrQ0yutuH/a9ktuQHkZWeTUwno=;
- b=QpMSWLOscg+oe1nnuVc9/6Kuh4PWfvnZATRReXbb9L9+u9yVlMf13cj4UViGSvYwg/8Q3pN7DF/XMJtwrJY2fiOrWUunEnCOl+lfArTBSofmgXf19qR11ajnho6NvfJ/ER2u3vPjZ240RNAFOgDPzjZlUXBRgv5QRy6sQg8Ijw0=
-Received: from PU1PR06CA0009.apcprd06.prod.outlook.com (2603:1096:803:2a::21)
- by KL1PR03MB7872.apcprd03.prod.outlook.com (2603:1096:820:ef::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.23; Wed, 31 Jan
- 2024 18:27:11 +0000
-Received: from HK2PEPF00006FB0.apcprd02.prod.outlook.com
- (2603:1096:803:2a:cafe::3e) by PU1PR06CA0009.outlook.office365.com
- (2603:1096:803:2a::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.26 via Frontend
- Transport; Wed, 31 Jan 2024 18:27:11 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
- smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
- designate permitted sender hosts)
-Received: from NTHCCAS04.nuvoton.com (175.98.123.7) by
- HK2PEPF00006FB0.mail.protection.outlook.com (10.167.8.6) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.7181.14 via Frontend Transport; Wed, 31 Jan 2024 18:27:09 +0000
-Received: from NTHCML01B.nuvoton.com (10.1.8.178) by NTHCCAS04.nuvoton.com
- (10.1.8.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.14; Thu, 1
- Feb 2024 02:27:07 +0800
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCML01B.nuvoton.com
- (10.1.8.178) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.14; Thu, 1 Feb
- 2024 02:27:07 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Thu, 1 Feb 2024 02:27:07 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id 9AA2B5F612;
-	Wed, 31 Jan 2024 20:27:06 +0200 (IST)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id 79F9ADC08DB; Wed, 31 Jan 2024 20:27:06 +0200 (IST)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <tali.perry1@gmail.com>,
-	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
-	<benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
-	<tmaimon77@gmail.com>
-Subject: [PATCH v23 0/3] Introduce Nuvoton Arbel NPCM8XX BMC SoC
-Date: Wed, 31 Jan 2024 20:26:50 +0200
-Message-ID: <20240131182653.2673554-1-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhirEnt1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922D9C433F1;
+	Wed, 31 Jan 2024 23:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706742136;
+	bh=1ymBo0INWu+oPCIXg5dFg0fy8TzeUnBhzt2lS0EtzoY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YhirEnt1Zyoo4luUVzDdhSoDLVYvWigAqZF0B6hVmStfBkJ81ZoY39zwG3iBO9dS3
+	 UYBF0Q8RcOdj4DLYqYcLH9+HwFhRPqM8sr4l+4Il/5FK5xaENi8BPZzoQ3LTc/ySys
+	 Y4fu6SPpYhOe8o4BbIfWndzP03DZi1TDZo3BkgcEoqnW1M841wkkTaIjktr55VVGnH
+	 6j46ERLyOG+jxpZy48Kyyx/spWmdM5QedwoaChlR9qlOraUOKjp69/lHRqhu5ydVI0
+	 RQ37ndFqeTkfovRnE0B+DYp/FMolc046xp3Tq9jE5seO5eqxXw2ryDiMg2kMBQ0z8c
+	 dIzjdHR4VqszA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v3 00/47] filelock: split file leases out of struct
+ file_lock
+Date: Wed, 31 Jan 2024 18:01:41 -0500
+Message-Id: <20240131-flsplit-v3-0-c6129007ee8d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB0:EE_|KL1PR03MB7872:EE_
-X-MS-Office365-Filtering-Correlation-Id: a804c1e2-5b8d-4618-ad92-08dc228a3c8d
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	zl85MkL7JxQwC6QUAyuQ3q5H/OYqMVHHms8/O52RsF8ljlYCFynxfI2xaTm1G8eoN9xAbPXcrcVrzcg9Cul7Ccc/58vu98sMPvljOSjX3dZDJOiL9sMiYHcxMBL+71JBWa2sp1JBXqSEZ7+uIl7b0V2crAoHtKTiT/wSpujjHM3jycF3qvh6qTsPixa6pR3IomQZ96IFjPn7i9sHJeN+nBaXcHyVPOj0gQbtoEkRyy7JuwE5QqVFWz+t3pG9pO45yGM59zYN0s9UndnG24FETKS16kwHn5iho3c7ZB7hV0Yx3ElX928+aH5JCwySOl4rKjQrFs55FLlSY6naXv9o7cNVp6kEODR2ifPuQWkk/d0d+BqhPWNc6+i/EAJrxD8zxppCAjaqjmzP9GpTvNRLGpmA//ak7CZT5JgsleCE7JGzy1PH1P3kuj+IhCXfCXuh3CvuvYc4q3yJ+Ipq7qbASkIX1vPf1NjzRPcK8BKySw1Ie12AKC0o+mICPhUU886ZIXMJoGmYi6/aiiwTlfGaJEeosgZ9V37nUQIOIcNBRDL+LryFlJvk3p6qydRmArkdrtGPAd4vNG99KlE2Ggxc54gmdwJn1D93m46T45Tk/XVuzGILzLvQd2V2whIV9L+8KhxeV6z9k4fLCGYS+6p6KvWLwYl3ee6RtF1hWDAF/1JeYcFli9PmFMxRHUzGLAh7H8SX8hy18E7HN1tibPQNYuaNt1i86kd54QaoBSDeWt4OvUQDuAal9Hmd0qaEWXv5F72iacQYvQwqsLzxVNjmTrWSlZIbCoSQunOeGfNMqrfsgQvvmYTFAYyITrhn7kj/ktPpRLf/YVku2Uy972PfaMxdmqTVpeuvR9hiLvlHB5E=
-X-Forefront-Antispam-Report:
-	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS04.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(346002)(136003)(396003)(230922051799003)(230273577357003)(230173577357003)(64100799003)(451199024)(48200799006)(82310400011)(61400799012)(46966006)(40470700004)(73392003)(26005)(6266002)(336012)(42882007)(2616005)(1076003)(82202003)(83380400001)(966005)(41300700001)(6666004)(498600001)(36756003)(8936002)(4326008)(8676002)(356005)(316002)(42186006)(54906003)(40460700003)(40480700001)(2906002)(81166007)(83170400001)(70206006)(5660300002)(7416002)(82740400003)(110136005)(70586007)(76482006)(55446002)(47076005)(35950700001)(45356006)(32563001)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 18:27:09.6048
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a804c1e2-5b8d-4618-ad92-08dc228a3c8d
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS04.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FB0.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7872
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFbRumUC/2WMQQ6CMBBFr2JmbU07lIKuvIdxQekAEwmQljQaw
+ t0tbNS4fD//vQUCeaYAl8MCniIHHocE2fEAdVcNLQl2iQElaqmUEU0fpp5nYZ3VpkTtrCkhvSd
+ PDT/30u2euOMwj/61h6Pa1v9GVEKK+uxko7NCVrm7PsgP1J9G38IWifglYv4RMYmFLvMM0Rqsi
+ x9xXdc3cRWMZtgAAAA=
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Dominique Martinet <asmadeus@codewreck.org>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
+ Andreas Gruenbacher <agruenba@redhat.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, v9fs@lists.linux.dev, 
+ linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
+ gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, 
+ ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6354; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=1ymBo0INWu+oPCIXg5dFg0fy8TzeUnBhzt2lS0EtzoY=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlutFn5pVegv7wNPnRDWvz5ftMiiWf6qEKdb/80
+ QHt3K4JatCJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbrRZwAKCRAADmhBGVaC
+ FaDtD/45qGT25WHA6zNfMY4o5AjgAKZZlcUtRncdLVT81F2yreqMOIaNjye9MC055FEkD5eD/yn
+ 5qGUPayFTJnbXrWOJ6qCHgdWPvOC+N0uF/REAlEvKvDfNrVSZcytjZJjZ7EiN+Wo3hJ0YVgaR85
+ yObKm+iEt+pVQGn7ZjEpowyjMZHFB0rg992VC3+gMVpVg3f+2Brk6AvoUkVt37xDoykVj+XWyU2
+ A9uEpvwZArHybQTiLDX6sAHTAwFII4CZ3SdtcW3If/O8fbZfrj7wUxLx8W6me8AbdJhZ9+Ftq1b
+ V4WznhWm6dPkSSM5+85TLMhwZZ7UHdFau30VG+1Hng4D1KKqIZeFRvG0LYHXI+BXIpysYSf975R
+ X6URKIL/rU4sXiADc3XwbFr1uB/rK8vMsqMtFzjeikeUUJwUMtPtH4kboUFPoYpLCJNIWCFW5St
+ aMvmAS6pP0qiBuiD1Ys9qPFFJ6+7bVEp52AbjgfGNcr4DrXOSbIgZgFNLvhfmnBlVl3fVINHljH
+ dyaKRXELg73UFp9S2NpQg86UFtLiNfn/eJcFPCdiQrpTYlU3QP1glBfaInAaqLEUK16Kqjoy3SO
+ vPsEegggG3uCfKeIk0PPW4Cyv6BILX88fkRb9jRlEW8PriwPL7iQSJz/2pydIb6xuEYI3qqvdQ2
+ EUZuYzpqa6UbpxQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This patchset adds clock support for the Nuvoton 
-Arbel NPCM8XX Board Management controller (BMC) SoC family.
+I'm not sure this is much prettier than the last, but contracting
+"fl_core" to "c", as Neil suggested is a bit easier on the eyes.
 
-This patchset cover letter is based from the initial support for NPCM8xx BMC to
-keep tracking the version history.
+I also added a few small helpers and converted several users over to
+them. That reduces the size of the per-fs conversion patches later in
+the series. I played with some others too, but they were too awkward
+or not frequently used enough to make it worthwhile.
 
-for your note:
- 1. dt-bindings clock modification started from v22 since the upstream npcm8xx 
-    clock driver haven't merged yet and requires dt binding update according to 
-    the new npcm8xx clock driver.
+Many thanks to Chuck and Neil for the earlier R-b's and comments. I've
+dropped those for now since this set is a bit different from the last.
 
- 2. all the other initial support patches had been applied to Linux kernel 6.0.
+I'd like to get this into linux-next soon and we can see about merging
+it for v6.9, unless anyone has major objections.
 
-This patchset was tested on the Arbel NPCM8XX evaluation board.
+Thanks!
 
-Addressed comments from:
- - Rob Herring: https://www.spinics.net/lists/devicetree/msg663403.html
- - Krzysztof Kozlowski: https://www.spinics.net/lists/devicetree/msg665206.html
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v3:
+- Rename "flc_core" fields in file_lock and file_lease to "c"
+- new helpers: locks_wake_up, for_each_file_lock, and lock_is_{unlock,read,write}
+- Link to v2: https://lore.kernel.org/r/20240125-flsplit-v2-0-7485322b62c7@kernel.org
 
-Changes since version 22:
- - Modify commit message to explain broken ABI in dt-binding
- - Using regmap parenet regmap memory therefore remove use of npcm8xx rst-clock patch.
- - Leave npcm7xx rst node as is
- 
-Changes since version 21:
- - Since using regmap instead of ioremap replace reg to syscon 
-   property in dt-bindings and dts.
- - Add reference clock property to the dt-bindings and dts.
- - Using .index instead of .name in clk_parent_data structures.
- - Using string where any macros are used once.
+Changes in v2:
+- renamed file_lock_core fields to have "flc_" prefix
+- used macros to more easily do the change piecemeal
+- broke up patches into per-subsystem ones
+- Link to v1: https://lore.kernel.org/r/20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org
 
-Changes since version 20:
- - Using regmap instead of ioremap.
-   the clock and reset modules are sharing the same memory region 
-   and cause failure when using devm_platform_ioremap_resource
-   function, this version uses regmap to handle shared 
-   reset and clock memory region, in case it is approved I will
-   modify the reset driver to use the regmap as well.
- - Using clk_hw instead of clk_parent_data structre.
- - Divider clock definition to one line
+---
+Jeff Layton (47):
+      filelock: fl_pid field should be signed int
+      filelock: rename some fields in tracepoints
+      filelock: rename fl_pid variable in lock_get_status
+      filelock: add some new helper functions
+      9p: rename fl_type variable in v9fs_file_do_lock
+      afs: convert to using new filelock helpers
+      ceph: convert to using new filelock helpers
+      dlm: convert to using new filelock helpers
+      gfs2: convert to using new filelock helpers
+      lockd: convert to using new filelock helpers
+      nfs: convert to using new filelock helpers
+      nfsd: convert to using new filelock helpers
+      ocfs2: convert to using new filelock helpers
+      smb/client: convert to using new filelock helpers
+      smb/server: convert to using new filelock helpers
+      filelock: drop the IS_* macros
+      filelock: split common fields into struct file_lock_core
+      filelock: have fs/locks.c deal with file_lock_core directly
+      filelock: convert more internal functions to use file_lock_core
+      filelock: make posix_same_owner take file_lock_core pointers
+      filelock: convert posix_owner_key to take file_lock_core arg
+      filelock: make locks_{insert,delete}_global_locks take file_lock_core arg
+      filelock: convert locks_{insert,delete}_global_blocked
+      filelock: make __locks_delete_block and __locks_wake_up_blocks take file_lock_core
+      filelock: convert __locks_insert_block, conflict and deadlock checks to use file_lock_core
+      filelock: convert fl_blocker to file_lock_core
+      filelock: clean up locks_delete_block internals
+      filelock: reorganize locks_delete_block and __locks_insert_block
+      filelock: make assign_type helper take a file_lock_core pointer
+      filelock: convert locks_wake_up_blocks to take a file_lock_core pointer
+      filelock: convert locks_insert_lock_ctx and locks_delete_lock_ctx
+      filelock: convert locks_translate_pid to take file_lock_core
+      filelock: convert seqfile handling to use file_lock_core
+      9p: adapt to breakup of struct file_lock
+      afs: adapt to breakup of struct file_lock
+      ceph: adapt to breakup of struct file_lock
+      dlm: adapt to breakup of struct file_lock
+      gfs2: adapt to breakup of struct file_lock
+      fuse: adapt to breakup of struct file_lock
+      lockd: adapt to breakup of struct file_lock
+      nfs: adapt to breakup of struct file_lock
+      nfsd: adapt to breakup of struct file_lock
+      ocfs2: adapt to breakup of struct file_lock
+      smb/client: adapt to breakup of struct file_lock
+      smb/server: adapt to breakup of struct file_lock
+      filelock: remove temporary compatibility macros
+      filelock: split leases out of struct file_lock
 
-Changes since version 19:
- - Remove unnecessary free command.
- - Defining pr_fmt().
- - Using dev_err_probe.
- - Return zero in the end of the probe function.
+ fs/9p/vfs_file.c                |  40 +-
+ fs/afs/flock.c                  |  60 +--
+ fs/ceph/locks.c                 |  74 ++--
+ fs/dlm/plock.c                  |  44 +--
+ fs/fuse/file.c                  |  14 +-
+ fs/gfs2/file.c                  |  16 +-
+ fs/libfs.c                      |   2 +-
+ fs/lockd/clnt4xdr.c             |  14 +-
+ fs/lockd/clntlock.c             |   2 +-
+ fs/lockd/clntproc.c             |  65 +--
+ fs/lockd/clntxdr.c              |  14 +-
+ fs/lockd/svc4proc.c             |  10 +-
+ fs/lockd/svclock.c              |  64 +--
+ fs/lockd/svcproc.c              |  10 +-
+ fs/lockd/svcsubs.c              |  24 +-
+ fs/lockd/xdr.c                  |  14 +-
+ fs/lockd/xdr4.c                 |  14 +-
+ fs/locks.c                      | 851 ++++++++++++++++++++++------------------
+ fs/nfs/delegation.c             |   4 +-
+ fs/nfs/file.c                   |  22 +-
+ fs/nfs/nfs3proc.c               |   2 +-
+ fs/nfs/nfs4_fs.h                |   2 +-
+ fs/nfs/nfs4file.c               |   2 +-
+ fs/nfs/nfs4proc.c               |  39 +-
+ fs/nfs/nfs4state.c              |  22 +-
+ fs/nfs/nfs4trace.h              |   4 +-
+ fs/nfs/nfs4xdr.c                |   8 +-
+ fs/nfs/write.c                  |   8 +-
+ fs/nfsd/filecache.c             |   4 +-
+ fs/nfsd/nfs4callback.c          |   2 +-
+ fs/nfsd/nfs4layouts.c           |  34 +-
+ fs/nfsd/nfs4state.c             | 120 +++---
+ fs/ocfs2/locks.c                |  12 +-
+ fs/ocfs2/stack_user.c           |   2 +-
+ fs/open.c                       |   2 +-
+ fs/posix_acl.c                  |   4 +-
+ fs/smb/client/cifsfs.c          |   2 +-
+ fs/smb/client/cifssmb.c         |   8 +-
+ fs/smb/client/file.c            |  78 ++--
+ fs/smb/client/smb2file.c        |   2 +-
+ fs/smb/server/smb2pdu.c         |  44 +--
+ fs/smb/server/vfs.c             |  14 +-
+ include/linux/filelock.h        | 103 +++--
+ include/linux/fs.h              |   5 +-
+ include/linux/lockd/lockd.h     |   8 +-
+ include/linux/lockd/xdr.h       |   2 +-
+ include/trace/events/afs.h      |   4 +-
+ include/trace/events/filelock.h | 102 ++---
+ 48 files changed, 1064 insertions(+), 933 deletions(-)
+---
+base-commit: e96efe9f69ebb12b38c722c159413fd6850b782c
+change-id: 20240116-flsplit-bdb46824db68
 
-Changes since version 18:
- - NPCM8XX clock driver did not changed from version 18 only build and tested under kernel 6.6-rc1.
-
-Changes since version 17:
- - NPCM8XX clock driver did not changed from version 17 only build and tested under kernel 6.5-rc3.
-
-Changes since version 16:
- - NPCM8XX clock driver
-	- Using devm_kzalloc instead kzalloc.
-	- Remove unnecessary parenthesis.
-	- Modify incorrect spelling.
-
-Changes since version 15:
- - NPCM8XX clock driver
-	- Remove unused regs parameter from npcm8xx_pll_data structure.
-	- Using index and clk_hw parameters to set the clock parent in the clock structures.
-
-Changes since version 14:
- - NPCM8XX clock driver
-	- Remove unnecessary register definitions.
-	- Remove the internal reference clock, instead use the external DT reference clock.
-	- rearrange the driver.
-	- using .names parameter in DT to define clock (refclk).
-
-Changes since version 13:
- - NPCM8XX clock driver
-	- Remove unnecessary definitions and add module.h define
-	- Use in clk_parent_data struct.fw_name and .name.
-	- Add module_exit function.
-	- Add const to divider clock names.
-	- Add MODULE_DESCRIPTION and MODULE_LICENSE
-
-Changes since version 12:
- - NPCM8XX clock driver
-	- Use clk_parent_data in mux and div clock structure.
-	- Add const to mux tables.
-	- Using devm_clk_hw_register_fixed_rate function.
-	- use only .name clk_parent_data instead .name and .fw_name.
-	- Modify mask values in mux clocks. 
-
-Changes since version 11:
- - NPCM8XX clock driver
-	- Modify Kconfig help.
-	- Modify loop variable to unsigned int.
-
-Changes since version 11:
- - NPCM8XX clock driver
-	- Modify Kconfig help.
-	- Modify loop variable to unsigned int.
-
-Changes since version 10:
- - NPCM8XX clock driver
-	- Fix const warning.
-
-Changes since version 9:
- - NPCM8XX clock driver
-	- Move configuration place.
-	- Using clk_parent_data instead of parent_name
-	- using devm_ioremap instead of ioremap. deeply sorry, I know we had
-	 a long discussion on what should the driver use, from other examples 
-	 (also in other clock drivers) I see the combination of 
-	 platform_get_resource and devm_ioremap are commonly used and it answer
-	 the reset and clock needs.
-
-Changes since version 8:
- - NPCM8XX clock driver
-	- Move configuration place.
-	- Add space before and aftre '{' '}'.
-	- Handle devm_of_clk_add_hw_provider function error.
-
-Changes since version 7:
- - NPCM8XX clock driver
-	- The clock and reset registers using the same memory region, 
-	  due to it the clock driver should claim the ioremap directly 
-	  without checking the memory region.
-
-Changes since version 5:
- - NPCM8XX clock driver
-	- Remove refclk if devm_of_clk_add_hw_provider function failed.
-
-Changes since version 4:
- - NPCM8XX clock driver
-	- Use the same quote in the dt-binding file.
-
-Changes since version 3:
- - NPCM8XX clock driver
-	- Rename NPCM8xx clock dt-binding header file.
-	- Remove unused structures.
-	- Improve Handling the clocks registration.
-
-Changes since version 2:
- - NPCM8XX clock driver
-	- Add debug new line.
-	- Add 25M fixed rate clock.
-	- Remove unused clocks and clock name from dt-binding.
-
-Changes since version 1:
- - NPCM8XX clock driver
-	- Modify dt-binding.
-	- Remove unsed definition and include.
-	- Include alphabetically.
-	- Use clock devm.
-
-Tomer Maimon (3):
-  dt-bindings: clock: npcm845: Add reference 25m clock property
-  arm64: dts: nuvoton: npcm8xx: add reference 25m clock
-  clk: npcm8xx: add clock controller
-
- .../bindings/clock/nuvoton,npcm845-clk.yaml   |  12 +
- .../dts/nuvoton/nuvoton-common-npcm8xx.dtsi   |   2 +
- .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts  |   6 +
- drivers/clk/Kconfig                           |   8 +
- drivers/clk/Makefile                          |   1 +
- drivers/clk/clk-npcm8xx.c                     | 509 ++++++++++++++++++
- 6 files changed, 538 insertions(+)
- create mode 100644 drivers/clk/clk-npcm8xx.c
-
+Best regards,
 -- 
-2.34.1
+Jeff Layton <jlayton@kernel.org>
 
