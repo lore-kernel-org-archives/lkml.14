@@ -1,133 +1,146 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282A738F8F;
-	Wed, 31 Jan 2024 21:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC94C39AD1;
+	Wed, 31 Jan 2024 21:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706735789; cv=none; b=qNJjk3i/moYHXyOY2fp6rFraFkHFoJ6byK8IaKISnSt8Rg91YEVx93Jol7+pCJvpME6xrJNP6Ts20cy2FRCpWZgS/xVtlsOdu4mooxl/NPH6XniI+wL0VcaWY3KvKfsITaokrWwfx3/iRbw1rLMc7jdYqmaNmqqLYv3UwaNROrs=
+	t=1706735798; cv=none; b=EGDJQDCC36cxRHGMWcxss7Yz1He67aPiraP0z7c2LZc9RptqrDLEITx4uJ1mi2/bkNjYUxvdvNKRjDFucOYSzM1Y9jJ71/TqoSU0vraD+XbcldE5LEobrYblIKQy5TDBWZGCQElZJxsK8D2kbobKXlw1WknigZNV1LpYWp54bRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706735789; c=relaxed/simple;
-	bh=VxIVD2Uu8YJWcT8mNEh5Gm55vkRnDKI5CB+olARhzR8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tTwToJITx2ntiIyV57SW1A5mj0v86snuum3/rHfdikjYkkOTpmpJehYOv4DbfG8IPU9F0Z419+3C+4RapI+LhroRd1jwBqAQiBEV8r0PhmEcDyEvGfI3LIb6lDRgyAdfOrr/P0cLnBjm4eZ3Y3hG9VfOHWhn2ZD2T18Bbvr+WAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YgdTdw7t; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgdTdw7t"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a271a28aeb4so20899466b.2;
-        Wed, 31 Jan 2024 13:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706735786; x=1707340586; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7WAHmXqhwFGwnUoVVTvOT31zVVDiv5ormXLbiLzvJr0=;
-        b=YgdTdw7tqPeP5yMJ13eO5y6/QSzG7Yc0MdvCDNgQ4OEm0RjkjAoRJOynUAsfgU23Es
-         5RU2Nhaw5YoAGSeHjeQ0xSYj3MBLC1RAROoFbBTVT/APC2KeHo1tQBnLtCFyE3d/EqiF
-         tLMRTrbJFI8CaiE4GC75nKxoljD3laE+1OVVeCDqwZSXkvzrBJqdzK6EGrucRhhdpL6k
-         LGgwO2azKskmFHH6W+9rKQ2pjlBDx92EE+pUYNlRWwHvyMGYRBiBWbIa9nzaXUcwnVcg
-         4/FIjo688bZiV0MYXv+O0oyzo9k3ItBEdrpjbWb0Sm5HNcFNh6HAQzJ2dRut02/rOMAy
-         eKvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706735786; x=1707340586;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7WAHmXqhwFGwnUoVVTvOT31zVVDiv5ormXLbiLzvJr0=;
-        b=lzQ3Azn7mwLwI4uTIUYvArKh+nYcIAc4W8A6gM6l5eVwFfLFMYmvrbVLMv7aFNUt2f
-         WoZRs4jIMsLuF9nmT+EKjkKCt7PiJjJznGrtVB/wzfu/fzpqpBX86di6Om5rPkic1SpB
-         8mdz5B0PLo5Yn/tnwb4RDWKuVIiT84BmgsSvqKYFsKSi8+0K1iUY70Z0KUOEaW/K4f5N
-         0NoBSx6ZY2HttZEH4hip21gSgx3cnnU7rBzfeI1R2ePf60lwNP72kZokleO0RgAiSvPI
-         J1fUjaW+PlImXE3OR1s6YTUK2RSgYd/qJoTnq9zQX70q73GOS0WN+xeR5iYvfbEX/FxM
-         Bbsg==
-X-Gm-Message-State: AOJu0YyKR8R8C0axQXFOd/tkNpt1oZIZp3BioeBwnxcWevOZABJRV7Wv
-	e9GCT7o7wxr/I7JwYwR5OSoeCcdDRv2FACZMC1iX1zP7KrKBR0FL
-X-Google-Smtp-Source: AGHT+IG1BFq7Pp2hw0FCVuWw6rIJcYrAM9nq28Kr5azCiS9LKzq/m7hwGTr5nk2ETTNoY9f8m7yc6A==
-X-Received: by 2002:a17:906:da06:b0:a35:edda:ca8b with SMTP id fi6-20020a170906da0600b00a35eddaca8bmr1992854ejb.76.1706735786182;
-        Wed, 31 Jan 2024 13:16:26 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVc2fs4IrBG2YWUC5LcZZStHjB+RqDtXVILboDRP8Y2Xm1IoMKnaO2pMi/h4SQUCrAruBblHzoOgDf+Aud6ulOos3QKpvTrOPDbWDrqrs4HoncHMRv6melTKIpllEW8OtFwnN33yPaEFX9kPiIJVFaz94d8Y4gJLNprrxIiTqgEwAzZF7DeO5/IO+fEX+0/dhCvlliQGm9DqOzAUU99bBQXn8o6SMzo0Hgoqm5QeA2k8zgHOry8CgP0VBNfmF6GRhoZHfwmUaL8uBJq2XbfcWxvunXQBbU7jqJRykZJI7KloTyZpPzrwxL2fFFCF6Bhxt2IUP/Th38ZoCpdRzQ6aMCLFa2oh+q58pPry2SEjx389pdHUxDhLD1zBehNndrSw2rsYkLQxOTTyGj1urAZFRt7Si96ewe9IW1EE5T+1hm6QZu0b3o05WuKCL0qn+GsDGuC/NhYfkqoWV0flggiV7whpyZ47IjqSXr14Zgh9zg3S1LmTND+9p305Lhk7uaXtn3un3AdZ6x3agLqjRDz/BlXoxQTGjcJ4DNSh7kyURpMcQ7mZNxtPNxNIrdB1QW1nlxVxlpJ1FUsiiLxuuc=
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id ty5-20020a170907c70500b00a35a8571419sm4040634ejc.135.2024.01.31.13.16.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jan 2024 13:16:25 -0800 (PST)
-Message-ID: <5c45527a-e218-40a3-8e71-a5815417e5f7@gmail.com>
-Date: Wed, 31 Jan 2024 22:16:24 +0100
+	s=arc-20240116; t=1706735798; c=relaxed/simple;
+	bh=JjwjKb8sW4Z+jJBf9W2XGorWIH0Ek1LmoLb1Pq5zm9Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ONGLd5r3KUQagaifgP2RmnK2421RQHCNN+mTTH15V80OZ5qOj5o6VjZpztMlWthmj6h1UzTPHM7bMDNNXwt8rAf0V+mjKPedI6YeRG97/PO4JI5Da6G0fHVw1SpZxMp87S2TIkvM3d/CjoMGiYBbj1UastdXd4FerNf9b+Z/ttg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 804D685438;
+	Wed, 31 Jan 2024 22:08:52 +0100 (CET)
+From: Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
+To: Rob Herring <robh@kernel.org>
+Cc: Conor Dooley <conor@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mmp-dma: convert to YAML
+Date: Wed, 31 Jan 2024 22:08:07 +0100
+Message-ID: <4894227.31r3eYUQgx@radijator>
+In-Reply-To: <20240131171857.GA1531631-robh@kernel.org>
+References:
+ <20240127-pxa-dma-yaml-v1-1-573bafe86454@skole.hr>
+ <2924724.e9J7NaK4W3@radijator> <20240131171857.GA1531631-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v2 2/6] dt-bindings: display: rockchip,dw-hdmi: add
- power-domains property
-To: robh+dt@kernel.org
-Cc: hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, airlied@gmail.com,
- daniel@ffwll.ch, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
- mripard@kernel.org, markyao0591@gmail.com, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <a493c65e-7cf9-455f-95d5-8c98cad35710@gmail.com>
-Content-Language: en-US
-In-Reply-To: <a493c65e-7cf9-455f-95d5-8c98cad35710@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Autocrypt: addr=duje.mihanovic@skole.hr;
+ keydata=
+ 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
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Most Rockchip hdmi nodes are part of a power domain.
-Add a power-domains property and include it to the example
-with some reordering to align with the (new) documentation
-about property ordering.
+On Wednesday, January 31, 2024 6:18:57 PM CET Rob Herring wrote:
+> On Sun, Jan 28, 2024 at 07:01:36PM +0100, Duje Mihanovi=C4=87 wrote:
+> > On Sunday, January 28, 2024 6:28:03 PM CET Conor Dooley wrote:
+> > > That said, for properties that are only usable on some platforms, ple=
+ase
+> > > define them at the top level and conditionally permit/constrain them.
+> >=20
+> > Could you please point me to how to do so if this if/then does not do it
+> > properly?
+>=20
+> Negate the if and then:
+>=20
+> then:
+>   properties:
+>     asram: false
+>=20
+> There are lots of examples in the tree.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
+This works as expected, thanks.
 
-Changed V2:
-  keep reg-io-width together with reg
-  explain reordering
----
- .../bindings/display/rockchip/rockchip,dw-hdmi.yaml      | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+> > > > +unevaluatedProperties: false
+> > > > +
+> > > > +examples:
+> > > > +  # Peripheral controller
+> > > > +  - |
+> > > > +    pdma0: dma-controller@d4000000 {
+> > >=20
+> > > The label is not needed here or below.
+> > > In fact, I'd probably delete the second example as it shows nothing t=
+hat
+> > > the first one does not.
+> >=20
+> > I'd rather add the asram property in the second node (adding onto the=20
+above
+> > comment, I now see that it shouldn't have even passed dt_binding_check
+> > because of the missing asram, but it did).
+>=20
+> It passed because 'required' is what checks for property presence and
+> nowhere is asram required. It is missing a type definition which should
+> have warned, but may not since it is under an 'if'.
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-index 391c2a7e79de..af638b6c0d21 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-@@ -94,6 +94,9 @@ properties:
-       - const: default
-       - const: unwedge
+I thought specifying minItems would have the same effect, but that turned o=
+ut=20
+not to be the case. Also, the 'if' did indeed suppress the missing type=20
+warning.
 
-+  power-domains:
-+    maxItems: 1
-+
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
+Regards,
+=2D-=20
+Duje
 
-@@ -138,16 +141,18 @@ examples:
-     #include <dt-bindings/clock/rk3288-cru.h>
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/power/rk3288-power.h>
 
-     hdmi: hdmi@ff980000 {
-         compatible = "rockchip,rk3288-dw-hdmi";
-         reg = <0xff980000 0x20000>;
-         reg-io-width = <4>;
--        ddc-i2c-bus = <&i2c5>;
--        rockchip,grf = <&grf>;
-         interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-         clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
-         clock-names = "iahb", "isfr";
-+        ddc-i2c-bus = <&i2c5>;
-+        power-domains = <&power RK3288_PD_VIO>;
-+        rockchip,grf = <&grf>;
-
-         ports {
-             #address-cells = <1>;
---
-2.39.2
 
