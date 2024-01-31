@@ -1,132 +1,76 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72576762CD
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B655E7F493
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706708539; cv=none; b=ZDuBFqlQ57+it5I59XIghNAYBxzTtp4WLh7bnSOfuPADJePxZtE4umyBk58LWd8iiSU/Q5KD8H+4pAmUx02k63rz5+nDRn7W4whkHkLj5qsx+taQx627cj4wJquoZ/HSEWykfo2aRfxEfYwcN9O7q6RT8ZD+jEpB4KmBFbLAEI8=
+	t=1706708549; cv=none; b=JYaulIozQyppREDHbBkDkzz1/wZShTiz8bcBfEC/0HLvrW15JaUUCdsUQ8xm6yrAmaWc86JLEDAP+iTDbBuDlAjHFDIiOIts+B9dmiuKMdT7vD9Ick6hsQkP7WsLsSArHgpm0E8pZy9DVB3dSNPZhbKidSrv+rrH2e6LSoDSqRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706708539; c=relaxed/simple;
-	bh=8FInsLgoFCZG8DOXI+LB/CtHOBA/FQrXnVs/H9H+9L0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EshjbVcOF9wVdikWuOdTKHPFqV4MuTv9VSGwHXkL57nyRVOtzfJfP9rY8F7/x3fLrzBwpM/cAMVOenGuuE5OkbaGnGH0vbRvmLXCjXihwQb9JBAIlq5s1lAEcx3odnm6BKAWtiIo/tmg5V1c29QnrqUAsC9vTYGs2mmYV+1mr84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rVAqb-0003wn-BI; Wed, 31 Jan 2024 14:41:49 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rVAqY-003e3x-Ln; Wed, 31 Jan 2024 14:41:46 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rVAqT-0008vC-1l;
-	Wed, 31 Jan 2024 14:41:41 +0100
-Message-ID: <8dd1fe2d040db3e79ef94a5b2c70c51108e56c39.camel@pengutronix.de>
-Subject: Re: [PATCH v8 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Aleksandr Shubin <privatesub2@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Brandon Cheo Fusi <fusibrandon13@gmail.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Rob
- Herring <robh+dt@kernel.org>,  Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>,  Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Cristian Ciocaltea
- <cristian.ciocaltea@collabora.com>,  John Watts <contact@jookia.org>, Marc
- Kleine-Budde <mkl@pengutronix.de>, Maksim Kiselev <bigunclemax@gmail.com>,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- linux-riscv@lists.infradead.org
-Date: Wed, 31 Jan 2024 14:41:41 +0100
-In-Reply-To: <20240131125920.2879433-3-privatesub2@gmail.com>
-References: <20240131125920.2879433-1-privatesub2@gmail.com>
-	 <20240131125920.2879433-3-privatesub2@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1706708549; c=relaxed/simple;
+	bh=fd1t+MLIGSo6+wlh3RIVbOHWgyBs2x0wMqT9re9kEy4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b5NA3iXKPNvXP4/2kqKpZUfXV9Bimlptl5k+ENZxALmk4d1hC75CKa15vzt/dDYAEaPVSISlQz4K9eiKU7xypxqPiadw1UccBc/rZ+CAJhGjQ9hvB0mauNfQ5av70eNFJFYH3ADdzE7Q4H9t8h9QzV1wmADbe7x89La0Dif9P1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1WwKLt0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1WwKLt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB81C433B1;
+	Wed, 31 Jan 2024 13:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706708549;
+	bh=fd1t+MLIGSo6+wlh3RIVbOHWgyBs2x0wMqT9re9kEy4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=s1WwKLt03TqdOnpUjf1cXTHb1alrPuAU0pt3A9l75Oy88IpWm+ZkD0BU+d+99LOui
+	 broJoYdx5EgMwcfpDwbhe8sQ0ZG6t0HBgWeEalnseiKQWTM+9RjZmzXBbIkZMWe4Pv
+	 dD0cD1CHmgdFf2bNq1nZy7L0JZu938BiYQVS9FaoU7HfxvdjTADeUhX+Tu2bLg4KvX
+	 QdLsy7ebU0AgusZ26ywXmFiYGAdAKP3kLPgZU7j+TFf5akTwXVrYk4mrMc/A7uA7n9
+	 BDC69K1BBDLb7l80rOGZRjWQFdC2CpvhyxrQxuA8T7IPA57OPtlpE8/XibTCQ0fqQ7
+	 fDsPC+2vK6xrg==
+From: Christian Brauner <brauner@kernel.org>
+To: Wang Jinchao <wangjinchao@xfusion.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	stone.xulei@xfusion.com,
+	viro@zeniv.linux.org.uk,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fork: Using clone_flags for legacy clone check
+Date: Wed, 31 Jan 2024 14:42:10 +0100
+Message-ID: <20240131-skeptiker-bahnstation-a6bc73ed780e@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <202401311054+0800-wangjinchao@xfusion.com>
+References: <202401311054+0800-wangjinchao@xfusion.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1043; i=brauner@kernel.org; h=from:subject:message-id; bh=fd1t+MLIGSo6+wlh3RIVbOHWgyBs2x0wMqT9re9kEy4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTu8rO9vlqLM+zlXoGd29Wfrr714tmfC5LTd9gr3xU+8 uaWnBd7dkcpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBEenYy/M+Zyqi23uioTYZd +4+VrBc1w/uiAtinNkg+tp/34EtfzUNGht9xMYfX+FVuXKDZE74w/vH3yMJlNT2vK0IDF6XvP/R 8NRsA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Mi, 2024-01-31 at 15:59 +0300, Aleksandr Shubin wrote:
-> Allwinner's D1, T113-S3 and R329 SoCs have a quite different PWM
-> controllers with ones supported by pwm-sun4i driver.
->=20
-> This patch adds a PWM controller driver for Allwinner's D1,
-> T113-S3 and R329 SoCs. The main difference between these SoCs
-> is the number of channels defined by the DT property.
->=20
-> Co-developed-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> Signed-off-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
-> ---
->  drivers/pwm/Kconfig      |  10 ++
->  drivers/pwm/Makefile     |   1 +
->  drivers/pwm/pwm-sun20i.c | 380 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 391 insertions(+)
->  create mode 100644 drivers/pwm/pwm-sun20i.c
->=20
-[...]
-> diff --git a/drivers/pwm/pwm-sun20i.c b/drivers/pwm/pwm-sun20i.c
-> new file mode 100644
-> index 000000000000..19bf3f495155
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sun20i.c
-> @@ -0,0 +1,380 @@
-[...]
-> +static int sun20i_pwm_probe(struct platform_device *pdev)
-> +{
-[...]
-> +	sun20i_chip->rst =3D devm_reset_control_get_exclusive(&pdev->dev, NULL)=
-;
-> +	if (IS_ERR(sun20i_chip->rst))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->rst),
-> +				     "failed to get bus reset\n");
-> +
-> +	ret =3D of_property_read_u32(pdev->dev.of_node, "allwinner,pwm-channels=
-",
-> +				   &sun20i_chip->chip.npwm);
-> +	if (ret)
-> +		sun20i_chip->chip.npwm =3D 8;
-> +
-> +	if (sun20i_chip->chip.npwm > 16)
-> +		sun20i_chip->chip.npwm =3D 16;
-> +
-> +	/* Deassert reset */
-> +	ret =3D reset_control_deassert(sun20i_chip->rst);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to deassert reset\n");
+On Wed, 31 Jan 2024 10:54:41 +0800, Wang Jinchao wrote:
+> In the current implementation of clone(), there is a line that
+> initializes `u64 clone_flags = args->flags` at the top.
+> This means that there is no longer a need to use args->flags
+> for the legacy clone check.
+> 
+> 
 
-Consider using devm_add_action_or_reset() to automatically assert the
-reset control again on error or driver unbind ...
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-> +
-> +	sun20i_chip->chip.dev =3D &pdev->dev;
-> +	sun20i_chip->chip.ops =3D &sun20i_pwm_ops;
-> +
-> +	mutex_init(&sun20i_chip->mutex);
-> +
-> +	ret =3D pwmchip_add(&sun20i_chip->chip);
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-... and devm_pwmchip_add() here. Together, this would allow to drop
-sun20i_pwm_remove().
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-regards
-Philipp
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] fork: Using clone_flags for legacy clone check
+      https://git.kernel.org/vfs/vfs/c/b473491b6cf8
