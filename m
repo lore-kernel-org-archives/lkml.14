@@ -1,49 +1,50 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EEB82869;
-	Wed, 31 Jan 2024 14:05:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0814083CC3;
+	Wed, 31 Jan 2024 14:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706709926; cv=none; b=Dw/uLHoqpsqvaY5SBG7G8h2BdKUohXP5Q6AfspuOl6jLX2omiUSLKnpytXVwJU3pkfT5w2/N45kQSEu0squDISi242QGD4SjQk0rjRNA7cHOpiEcrNsy/eGMvHX9T71jFIS1mJxGIT9/THxv0w33RamSj+IzATQde+Zv/k9CaDs=
+	t=1706709931; cv=none; b=HBCrxsymG7DdWkd4AAwM2F2g8sfc4tgJjAri+jGLqay3krbeVMJW81wThYkuW6ACzhvZxZ9YMTT0vRLIm9jfI9o5Czok8fzCSIQBshxKDVJZbZtjiMYOLxOpd2wPqJOKykEmJIusXnrKHhI2E5XTjffNlkD+RmC5NSDT+JKLBa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706709926; c=relaxed/simple;
-	bh=AYYPiG5/eQFpT9F2zXPDgcKcsgIGjoY5wyEFVeBzakA=;
+	s=arc-20240116; t=1706709931; c=relaxed/simple;
+	bh=CPJegAn2jct8qTIbcEKKHIZ5byMY8HScpq2uBuAZ1YA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e3mYtxtEW4AiB3S7tJjrH4r8dGGuXmlSCUK4nB5gtsA1n4VI3fcIL319vMtD7mmXbl6TQKYiD+O5PtqHoRyZEuDJD6TeuK8MyluJP2HlNBkrr6MC6iMedsaXcDry64ZYdkmUpUF5CqE7L0b6fAymacsrQwuN9kheOk1RGrZzjFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MACRpNQR; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=LFi+24ZAVDDCQMLNxj2t1RhNSr1H2MZSlLJB4KNqlKkjcaCKmt+5Iss3nKyIkTbxesBRtZVoDkdTcugfas4RVPayu0WR7NUD4tCt74RHFFq5z1eixbf2sO4TD01d3im19XLQkLmjZbwlmB5GII0oFi6q+M1g6sEuowOvxcQgPXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZrDnzEY3; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MACRpNQR"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZrDnzEY3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706709923;
-	bh=AYYPiG5/eQFpT9F2zXPDgcKcsgIGjoY5wyEFVeBzakA=;
+	s=mail; t=1706709928;
+	bh=CPJegAn2jct8qTIbcEKKHIZ5byMY8HScpq2uBuAZ1YA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MACRpNQRni2hxNtFtl0XFeCH9MObYnCAvaART/lNidK151skysiHjPaR4MZboLENO
-	 kSiZzJkI2kq3aACjopN5pOvZ07EYablIQQ8ZbPv1J5rVeVKClSoDDoqqabEv8hKQNe
-	 tJwrEM+7F7Aow/nmgzl5c2D3G5Vk03PKnxPylQsEqm2R0DUzvZfxEfpuTFzzHWJ9iX
-	 4p3Zl8ns1zYYh5d93xBE6QgQRca+dM+UixWexBKSRzQp+LckUG8PPvV0d7o3hSwCWe
-	 GZ9zqxWUgp9pbf8g46q3WGpnY/14HJYTjCZUvXRjDDlQ8fyb8uf6B4d9/ixrxI9tXo
-	 JHuSSK3zpAelQ==
+	b=ZrDnzEY3rzWcjZkSa3uAcAd9BGqFqhU2OHdHPsNsJbhysLzQzaE7YLsDLyB+7FYWS
+	 Xoz0pswOQGcJE1Tau57YwdpSq1a439eI86rf3V8kch+DhoDmPAo0LJBkuDSea0mUWW
+	 I8fh0ntBg97aZHyjSrQwYDpBhAWHVhczZ95HPMiN+wnTDusYfdWvfQxuyD24FpKu7/
+	 pua8hdFYFKUxHkTDIOaYvVQEacnCKixrqEjVsachpClsphQqL2h33y0g8tFupsmc6N
+	 8Ih09s0cBS4PokvOsM6QONYqIWL0bU6pzbZrGsIO5FiXA5t8Y11VY33C/dUw8P5ccK
+	 Js/k2cnu2zqdw==
 Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9F8E23782084;
-	Wed, 31 Jan 2024 14:05:21 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A0B44378200E;
+	Wed, 31 Jan 2024 14:05:26 +0000 (UTC)
 From: Muhammad Usama Anjum <usama.anjum@collabora.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>
+	Shuah Khan <shuah@kernel.org>,
+	Christian Brauner <brauner@kernel.org>
 Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
 	kernel@collabora.com,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 04/12] selftests/mm: mlock-random-test: conform test to TAP format output
-Date: Wed, 31 Jan 2024 19:05:14 +0500
-Message-ID: <20240131140528.320252-4-usama.anjum@collabora.com>
+Subject: [PATCH 06/12] selftests/mm: mrelease_test: conform test to TAP format output
+Date: Wed, 31 Jan 2024 19:05:16 +0500
+Message-ID: <20240131140528.320252-6-usama.anjum@collabora.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240131140528.320252-1-usama.anjum@collabora.com>
 References: <20240131140528.320252-1-usama.anjum@collabora.com>
@@ -60,269 +61,177 @@ functional change is intended other than the layout of output messages.
 
 Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- .../testing/selftests/mm/mlock-random-test.c  | 136 +++++++-----------
- 1 file changed, 54 insertions(+), 82 deletions(-)
+ tools/testing/selftests/mm/mrelease_test.c | 80 +++++++++-------------
+ 1 file changed, 33 insertions(+), 47 deletions(-)
 
-diff --git a/tools/testing/selftests/mm/mlock-random-test.c b/tools/testing/selftests/mm/mlock-random-test.c
-index 1fba77df7f628..1cd80b0f76c33 100644
---- a/tools/testing/selftests/mm/mlock-random-test.c
-+++ b/tools/testing/selftests/mm/mlock-random-test.c
-@@ -13,6 +13,7 @@
- #include <sys/ipc.h>
- #include <sys/shm.h>
- #include <time.h>
-+#include "../kselftest.h"
- #include "mlock2.h"
+diff --git a/tools/testing/selftests/mm/mrelease_test.c b/tools/testing/selftests/mm/mrelease_test.c
+index d822004a374e9..100370a7111df 100644
+--- a/tools/testing/selftests/mm/mrelease_test.c
++++ b/tools/testing/selftests/mm/mrelease_test.c
+@@ -26,19 +26,15 @@ static int alloc_noexit(unsigned long nr_pages, int pipefd)
  
- #define CHUNK_UNIT (128 * 1024)
-@@ -31,14 +32,14 @@ int set_cap_limits(rlim_t max)
- 	new.rlim_cur = max;
- 	new.rlim_max = max;
- 	if (setrlimit(RLIMIT_MEMLOCK, &new)) {
--		perror("setrlimit() returns error\n");
-+		ksft_perror("setrlimit() returns error\n");
- 		return -1;
- 	}
- 
- 	/* drop capabilities including CAP_IPC_LOCK */
- 	if (cap_set_proc(cap)) {
--		perror("cap_set_proc() returns error\n");
--		return -2;
-+		ksft_perror("cap_set_proc() returns error\n");
-+		return -1;
- 	}
- 
- 	return 0;
-@@ -52,27 +53,24 @@ int get_proc_locked_vm_size(void)
- 	unsigned long lock_size = 0;
- 
- 	f = fopen("/proc/self/status", "r");
--	if (!f) {
--		perror("fopen");
--		return -1;
+ 	buf = (char *)mmap(NULL, nr_pages * psize(), PROT_READ | PROT_WRITE,
+ 			   MAP_PRIVATE | MAP_ANON, 0, 0);
+-	if (buf == MAP_FAILED) {
+-		perror("mmap failed, halting the test");
+-		return KSFT_FAIL;
 -	}
-+	if (!f)
-+		ksft_exit_fail_msg("fopen: %s\n", strerror(errno));
++	if (buf == MAP_FAILED)
++		ksft_exit_fail_msg("mmap failed, halting the test: %s\n", strerror(errno));
  
- 	while (fgets(line, 1024, f)) {
- 		if (strstr(line, "VmLck")) {
- 			ret = sscanf(line, "VmLck:\t%8lu kB", &lock_size);
- 			if (ret <= 0) {
--				printf("sscanf() on VmLck error: %s: %d\n",
--						line, ret);
- 				fclose(f);
--				return -1;
-+				ksft_exit_fail_msg("sscanf() on VmLck error: %s: %d\n",
-+						   line, ret);
- 			}
- 			fclose(f);
- 			return (int)(lock_size << 10);
- 		}
- 	}
+ 	for (i = 0; i < nr_pages; i++)
+ 		*((unsigned long *)(buf + (i * psize()))) = i;
  
--	perror("cannot parse VmLck in /proc/self/status\n");
- 	fclose(f);
-+	ksft_exit_fail_msg("cannot parse VmLck in /proc/self/status: %s\n", strerror(errno));
- 	return -1;
- }
- 
-@@ -91,10 +89,8 @@ int get_proc_page_size(unsigned long addr)
- 	size_t size;
- 
- 	smaps = seek_to_smaps_entry(addr);
--	if (!smaps) {
--		printf("Unable to parse /proc/self/smaps\n");
--		return 0;
+ 	/* Signal the parent that the child is ready */
+-	if (write(pipefd, "", 1) < 0) {
+-		perror("write");
+-		return KSFT_FAIL;
 -	}
-+	if (!smaps)
-+		ksft_exit_fail_msg("Unable to parse /proc/self/smaps\n");
++	if (write(pipefd, "", 1) < 0)
++		ksft_exit_fail_msg("write: %s\n", strerror(errno));
  
- 	while (getline(&line, &size, smaps) > 0) {
- 		if (!strstr(line, "MMUPageSize")) {
-@@ -105,12 +101,9 @@ int get_proc_page_size(unsigned long addr)
- 		}
- 
- 		/* found the MMUPageSize of this section */
--		if (sscanf(line, "MMUPageSize:    %8lu kB",
--					&mmupage_size) < 1) {
--			printf("Unable to parse smaps entry for Size:%s\n",
--					line);
--			break;
--		}
-+		if (sscanf(line, "MMUPageSize:    %8lu kB", &mmupage_size) < 1)
-+			ksft_exit_fail_msg("Unable to parse smaps entry for Size:%s\n",
-+					   line);
- 
- 	}
- 	free(line);
-@@ -136,7 +129,7 @@ int get_proc_page_size(unsigned long addr)
-  *    return value: 0 - success
-  *    else: failure
-  */
--int test_mlock_within_limit(char *p, int alloc_size)
-+static void test_mlock_within_limit(char *p, int alloc_size)
+ 	/* Wait to be killed (when reparenting happens) */
+ 	while (getppid() == ppid && timeout > 0) {
+@@ -54,23 +50,17 @@ static int alloc_noexit(unsigned long nr_pages, int pipefd)
+ /* The process_mrelease calls in this test are expected to fail */
+ static void run_negative_tests(int pidfd)
  {
- 	int i;
- 	int ret = 0;
-@@ -145,11 +138,9 @@ int test_mlock_within_limit(char *p, int alloc_size)
- 	int page_size = 0;
- 
- 	getrlimit(RLIMIT_MEMLOCK, &cur);
--	if (cur.rlim_cur < alloc_size) {
--		printf("alloc_size[%d] < %u rlimit,lead to mlock failure\n",
--				alloc_size, (unsigned int)cur.rlim_cur);
--		return -1;
--	}
-+	if (cur.rlim_cur < alloc_size)
-+		ksft_exit_fail_msg("alloc_size[%d] < %u rlimit,lead to mlock failure\n",
-+				   alloc_size, (unsigned int)cur.rlim_cur);
- 
- 	srand(time(NULL));
- 	for (i = 0; i < TEST_LOOP; i++) {
-@@ -169,13 +160,11 @@ int test_mlock_within_limit(char *p, int alloc_size)
- 			ret = mlock2_(p + start_offset, lock_size,
- 				       MLOCK_ONFAULT);
- 
--		if (ret) {
--			printf("%s() failure at |%p(%d)| mlock:|%p(%d)|\n",
--					is_mlock ? "mlock" : "mlock2",
--					p, alloc_size,
--					p + start_offset, lock_size);
--			return ret;
--		}
-+		if (ret)
-+			ksft_exit_fail_msg("%s() failure at |%p(%d)| mlock:|%p(%d)|\n",
-+					   is_mlock ? "mlock" : "mlock2",
-+					   p, alloc_size,
-+					   p + start_offset, lock_size);
+-	int res;
+ 	/* Test invalid flags. Expect to fail with EINVAL error code. */
+ 	if (!syscall(__NR_process_mrelease, pidfd, (unsigned int)-1) ||
+ 			errno != EINVAL) {
+-		res = (errno == ENOSYS ? KSFT_SKIP : KSFT_FAIL);
+-		perror("process_mrelease with wrong flags");
+-		exit(res);
++		ksft_exit_fail_msg("process_mrelease with wrong flags: %s\n", strerror(errno));
  	}
- 
  	/*
-@@ -183,18 +172,12 @@ int test_mlock_within_limit(char *p, int alloc_size)
+ 	 * Test reaping while process is alive with no pending SIGKILL.
+ 	 * Expect to fail with EINVAL error code.
  	 */
- 	locked_vm_size = get_proc_locked_vm_size();
- 	page_size = get_proc_page_size((unsigned long)p);
--	if (page_size == 0) {
--		printf("cannot get proc MMUPageSize\n");
--		return -1;
+-	if (!syscall(__NR_process_mrelease, pidfd, 0) || errno != EINVAL) {
+-		res = (errno == ENOSYS ? KSFT_SKIP : KSFT_FAIL);
+-		perror("process_mrelease on a live process");
+-		exit(res);
 -	}
- 
--	if (locked_vm_size > PAGE_ALIGN(alloc_size, page_size) + page_size) {
--		printf("test_mlock_within_limit() left VmLck:%d on %d chunk\n",
--				locked_vm_size, alloc_size);
--		return -1;
--	}
-+	if (locked_vm_size > PAGE_ALIGN(alloc_size, page_size) + page_size)
-+		ksft_exit_fail_msg("%s left VmLck:%d on %d chunk\n",
-+				   __func__, locked_vm_size, alloc_size);
- 
--	return 0;
-+	ksft_test_result_pass("%s\n", __func__);
++	if (!syscall(__NR_process_mrelease, pidfd, 0) || errno != EINVAL)
++		ksft_exit_fail_msg("process_mrelease on a live process: %s\n", strerror(errno));
  }
  
+ static int child_main(int pipefd[], size_t size)
+@@ -93,11 +83,18 @@ int main(void)
+ 	char byte;
+ 	int res;
  
-@@ -213,7 +196,7 @@ int test_mlock_within_limit(char *p, int alloc_size)
-  *    return value: 0 - success
-  *    else: failure
-  */
--int test_mlock_outof_limit(char *p, int alloc_size)
-+static void test_mlock_outof_limit(char *p, int alloc_size)
- {
- 	int i;
- 	int ret = 0;
-@@ -221,11 +204,9 @@ int test_mlock_outof_limit(char *p, int alloc_size)
- 	struct rlimit cur;
- 
- 	getrlimit(RLIMIT_MEMLOCK, &cur);
--	if (cur.rlim_cur >= alloc_size) {
--		printf("alloc_size[%d] >%u rlimit, violates test condition\n",
--				alloc_size, (unsigned int)cur.rlim_cur);
--		return -1;
--	}
-+	if (cur.rlim_cur >= alloc_size)
-+		ksft_exit_fail_msg("alloc_size[%d] >%u rlimit, violates test condition\n",
-+				   alloc_size, (unsigned int)cur.rlim_cur);
- 
- 	old_locked_vm_size = get_proc_locked_vm_size();
- 	srand(time(NULL));
-@@ -240,56 +221,47 @@ int test_mlock_outof_limit(char *p, int alloc_size)
- 		else
- 			ret = mlock2_(p + start_offset, lock_size,
- 					MLOCK_ONFAULT);
--		if (ret == 0) {
--			printf("%s() succeeds? on %p(%d) mlock%p(%d)\n",
--					is_mlock ? "mlock" : "mlock2",
--					p, alloc_size,
--					p + start_offset, lock_size);
--			return -1;
--		}
-+		if (ret == 0)
-+			ksft_exit_fail_msg("%s() succeeds? on %p(%d) mlock%p(%d)\n",
-+					   is_mlock ? "mlock" : "mlock2",
-+					   p, alloc_size, p + start_offset, lock_size);
++	ksft_print_header();
++	ksft_set_plan(1);
++
+ 	/* Test a wrong pidfd */
+ 	if (!syscall(__NR_process_mrelease, -1, 0) || errno != EBADF) {
+-		res = (errno == ENOSYS ? KSFT_SKIP : KSFT_FAIL);
+-		perror("process_mrelease with wrong pidfd");
+-		exit(res);
++		if (errno == ENOSYS) {
++			ksft_test_result_skip("process_mrelease not implemented\n");
++			ksft_finished();
++		} else {
++			ksft_exit_fail_msg("process_mrelease with wrong pidfd: %s",
++					   strerror(errno));
++		}
  	}
  
- 	locked_vm_size = get_proc_locked_vm_size();
--	if (locked_vm_size != old_locked_vm_size) {
--		printf("tests leads to new mlocked page: old[%d], new[%d]\n",
--				old_locked_vm_size,
--				locked_vm_size);
--		return -1;
+ 	/* Start the test with 1MB child memory allocation */
+@@ -107,16 +104,14 @@ int main(void)
+ 	 * Pipe for the child to signal when it's done allocating
+ 	 * memory
+ 	 */
+-	if (pipe(pipefd)) {
+-		perror("pipe");
+-		exit(KSFT_FAIL);
 -	}
-+	if (locked_vm_size != old_locked_vm_size)
-+		ksft_exit_fail_msg("tests leads to new mlocked page: old[%d], new[%d]\n",
-+				   old_locked_vm_size,
-+				   locked_vm_size);
- 
--	return 0;
-+	ksft_test_result_pass("%s\n", __func__);
- }
- 
- int main(int argc, char **argv)
- {
- 	char *p = NULL;
--	int ret = 0;
++	if (pipe(pipefd))
++		ksft_exit_fail_msg("pipe: %s\n", strerror(errno));
 +
-+	ksft_print_header();
+ 	pid = fork();
+ 	if (pid < 0) {
+-		perror("fork");
+ 		close(pipefd[0]);
+ 		close(pipefd[1]);
+-		exit(KSFT_FAIL);
++		ksft_exit_fail_msg("fork: %s\n", strerror(errno));
+ 	}
  
- 	if (set_cap_limits(MLOCK_RLIMIT_SIZE))
--		return -1;
-+		ksft_finished();
-+
-+	ksft_set_plan(2);
+ 	if (pid == 0) {
+@@ -134,28 +129,23 @@ int main(void)
+ 	res = read(pipefd[0], &byte, 1);
+ 	close(pipefd[0]);
+ 	if (res < 0) {
+-		perror("read");
+ 		if (!kill(pid, SIGKILL))
+ 			waitpid(pid, NULL, 0);
+-		exit(KSFT_FAIL);
++		ksft_exit_fail_msg("read: %s\n", strerror(errno));
+ 	}
  
- 	p = malloc(MLOCK_WITHIN_LIMIT_SIZE);
--	if (p == NULL) {
--		perror("malloc() failure\n");
--		return -1;
+ 	pidfd = syscall(__NR_pidfd_open, pid, 0);
+ 	if (pidfd < 0) {
+-		perror("pidfd_open");
+ 		if (!kill(pid, SIGKILL))
+ 			waitpid(pid, NULL, 0);
+-		exit(KSFT_FAIL);
++		ksft_exit_fail_msg("pidfd_open: %s\n", strerror(errno));
+ 	}
+ 
+ 	/* Run negative tests which require a live child */
+ 	run_negative_tests(pidfd);
+ 
+-	if (kill(pid, SIGKILL)) {
+-		res = (errno == ENOSYS ? KSFT_SKIP : KSFT_FAIL);
+-		perror("kill");
+-		exit(res);
 -	}
--	ret = test_mlock_within_limit(p, MLOCK_WITHIN_LIMIT_SIZE);
--	if (ret)
--		return ret;
-+	if (p == NULL)
-+		ksft_exit_fail_msg("malloc() failure: %s\n", strerror(errno));
-+
-+	test_mlock_within_limit(p, MLOCK_WITHIN_LIMIT_SIZE);
- 	munlock(p, MLOCK_WITHIN_LIMIT_SIZE);
- 	free(p);
++	if (kill(pid, SIGKILL))
++		ksft_exit_fail_msg("kill: %s\n", strerror(errno));
  
--
- 	p = malloc(MLOCK_OUTOF_LIMIT_SIZE);
--	if (p == NULL) {
--		perror("malloc() failure\n");
--		return -1;
+ 	success = (syscall(__NR_process_mrelease, pidfd, 0) == 0);
+ 	if (!success) {
+@@ -169,18 +159,15 @@ int main(void)
+ 		if (errno == ESRCH) {
+ 			retry = (size <= MAX_SIZE_MB);
+ 		} else {
+-			res = (errno == ENOSYS ? KSFT_SKIP : KSFT_FAIL);
+-			perror("process_mrelease");
+ 			waitpid(pid, NULL, 0);
+-			exit(res);
++			ksft_exit_fail_msg("process_mrelease: %s\n", strerror(errno));
+ 		}
+ 	}
+ 
+ 	/* Cleanup to prevent zombies */
+-	if (waitpid(pid, NULL, 0) < 0) {
+-		perror("waitpid");
+-		exit(KSFT_FAIL);
 -	}
--	ret = test_mlock_outof_limit(p, MLOCK_OUTOF_LIMIT_SIZE);
--	if (ret)
--		return ret;
-+	if (p == NULL)
-+		ksft_exit_fail_msg("malloc() failure: %s\n", strerror(errno));
++	if (waitpid(pid, NULL, 0) < 0)
++		ksft_exit_fail_msg("waitpid: %s\n", strerror(errno));
 +
-+	test_mlock_outof_limit(p, MLOCK_OUTOF_LIMIT_SIZE);
- 	munlock(p, MLOCK_OUTOF_LIMIT_SIZE);
- 	free(p);
+ 	close(pidfd);
  
--	return 0;
+ 	if (!success) {
+@@ -188,11 +175,10 @@ int main(void)
+ 			size *= 2;
+ 			goto retry;
+ 		}
+-		printf("All process_mrelease attempts failed!\n");
+-		exit(KSFT_FAIL);
++		ksft_exit_fail_msg("All process_mrelease attempts failed!\n");
+ 	}
+ 
+-	printf("Success reaping a child with %zuMB of memory allocations\n",
+-	       size);
+-	return KSFT_PASS;
++	ksft_test_result_pass("Success reaping a child with %zuMB of memory allocations\n",
++			      size);
 +	ksft_finished();
  }
 -- 
