@@ -1,232 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB596657DD;
-	Wed, 31 Jan 2024 08:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B954B6DD12
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706691530; cv=none; b=sTn9LYaJfLLX4pBBTDQvt4ehMSMxODfO05EC6zbZVZaYOmvAf6zPo9zytOpW21XLw8nal790Z9sVigjH59QAHwnyShUu0+vWghODE4XjeJPz6gWnhIVgO77MmJNRpAw5Q6SZ0ZW3WoS3NYwOtI/nDZiXm5eqS75fYHTCDmc1dUs=
+	t=1706691619; cv=none; b=GvkcFdA+lwkjbzlH0f+48Mlw07dsKUjH8Q2Prhvub7DNJZUSDRyIYrNIVLUGtl78wAQKsm6WAI1RF7EuBltN/xnNNj0+js/PXjLJWQ6Okfn5j8aPqFQiXDjj3r7gw4pVW9Q5KQ6+iSe/Xz5TFwbqc5mQN0WGh3uBFVJdS7PXWEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706691530; c=relaxed/simple;
-	bh=UqpO+ZTsRWdC3QcNmOmOQIsAqQNQt/nfOlLpfSk+jHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnlDxnHMe/5ofJLL7YmlUnXjgOudZ5OQhpJuSCk40cDFfLNX5mWf5vWM2qTpOqZ8b7wNkwAU3hh00wbGYhw83/9xOZoFhWAqw9s7SmlZSB12qFmihU2tLFBc53nsOjVE6+cpk14jzlYDfqfPBee+RlUtGzksczBmUJiT13Wmpfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjYAplxZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706691619; c=relaxed/simple;
+	bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WE09jEDJMvddECEHROJXDizZJVviDQrQypgHRkG0A/aWf97DoIVewP89bOFOGzCbqDyc5V7WpAM7augJNUQBzDBNwSBX26eVm4BJ9EQrWtb6do1diXeOuTg4r+LYIAyFclWAiBvnQsVQRwbHdfXq8hrfUdvOYI7zAnPGoW+kRYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q+Fa4+xk; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjYAplxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0084BC433C7;
-	Wed, 31 Jan 2024 08:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706691529;
-	bh=UqpO+ZTsRWdC3QcNmOmOQIsAqQNQt/nfOlLpfSk+jHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sjYAplxZycro68aVGkGnlUXGB1CpvGk9JPfk7VmwOq/Y2DF4JGEdSYdHzYEgWYB4i
-	 jxBgPnIVQD2G6jRoXgQfY7k4zcu3iUxluP4XCCLsBqUCmPFbNVSOOUH7O9vL8JfbPe
-	 gd6sx91ioayc2L5qv0E+6oC5lAlMHiYJg7rfv0CEu/TY2hyX4HE9cmUfk3aTt9gL/l
-	 BnS4/yXPOvJQOqo1IvsBbJjoBHJh2cnOxuajl7dr7pwx50MDNV19ucyqi9P2sLM4oD
-	 6Jobsi4BfgxYq3sM2lv0wWYojAOGasxupa0R5XICEUNgvgrbV6EQhD/7LjMFvX0SMG
-	 AHAG3mRZX4JaA==
-Date: Wed, 31 Jan 2024 08:58:42 +0000
-From: Lee Jones <lee@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
-	thierry.reding@gmail.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	agross@kernel.org, luca.weiss@fairphone.com,
-	konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
-	quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v8 3/7] soc: qcom: add QCOM PBS driver
-Message-ID: <20240131085842.GF8551@google.com>
-References: <20231221185838.28440-1-quic_amelende@quicinc.com>
- <20231221185838.28440-4-quic_amelende@quicinc.com>
- <ut6jbawqqdgfyoxmt76hm67rbnv67x54eho3nae2dd2szbejfb@7joy57g4i3qt>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q+Fa4+xk"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ff7a8b5e61so45972817b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 01:00:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706691616; x=1707296416; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
+        b=Q+Fa4+xknqGuZ1jER6gHM0aX/zbkOIh0YiJ+8zfTalq208itEMP9X2/C53ym14Owmn
+         qcfYTBF1sSYpBR1fcivEyZVD2k4QoDWK8mJAgGiNkUNmxdg88wz1l3tvSJy0uW8T3uq+
+         L2yB/lpLwjGc48eD9ExRg9UMnbZfJqydDoTLHyRB5L6MUI5QVNgNO6/VFOs4qdU5Hlyo
+         VUGZeOC7GnOaLcJRQdlR/Pm5LcgH2LcE8KGlXGhzO+bBYtz9KUl1cy2gjtWkjC3LHyrO
+         brGFTg1rsnZQiSgoNlOejRqpLExbszszXpoBd/lQW0R4INJrrWK9gMflsOe6I0s0/DSI
+         vwyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706691616; x=1707296416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
+        b=A/7kmQ2rwoW+evAr726CBLZfKjwPtGt+y9JKumEZLin5dpBqMsGPbl6LmABXMZ6Zyh
+         CwoifOPvya/w6hbDOdGRJAxSShVDot3e6Nub5ZYwqCXExDxrDvWXtymdZtRSeeodpQEQ
+         QWDjejwRb4LowqC7sz35ikZgbv8T+/9ctjHBCs5CfElcSacrctJ1ebf8aOm+mYR9NuHG
+         sT96cUUxCyvCs+KoqH412TMUxgfh/avdv98jojLkjF0qx8Ph8TZ+cWPRDTb900CnLfEy
+         xODDHdD1uyez2uMcAc83hRjE5pUE2pdmAV7uVH6gpHAvMkh/KLzvWNWD6a+UMA8CIRjo
+         cTXQ==
+X-Gm-Message-State: AOJu0YxQsg3suSaJnF4fRIcsLxzOzfLpx/wu/zHe81mSg19zmZdWiHMn
+	IyfRmsGmQt+VbvXcuILjtqfTmHlcYbpi/ov3uKvrlJpgMVJzODP/K2YNo4bjZlLY+a9QHuzF7YX
+	mrzHbfW6A8Pn1qs8jFerF+iMcBgVAG2WhV6L7eA==
+X-Google-Smtp-Source: AGHT+IEvB7JEzDy/bd9wdN/APqpYnJcD2om3sihib43VyDrw9Rp4bAVf9j6uDJjuR1z5asPY3/CLOdSDCQOVGQayMGA=
+X-Received: by 2002:a0d:eb16:0:b0:603:fd33:8b81 with SMTP id
+ u22-20020a0deb16000000b00603fd338b81mr708880ywe.21.1706691616679; Wed, 31 Jan
+ 2024 01:00:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ut6jbawqqdgfyoxmt76hm67rbnv67x54eho3nae2dd2szbejfb@7joy57g4i3qt>
+References: <20240125081601.118051-1-krzysztof.kozlowski@linaro.org>
+ <CAMRc=MesG1nYSxx0osmQEEXCvs-6B4s4=TFYW5wD8pOXpV+OcQ@mail.gmail.com> <a3d24e7d-404e-4c02-99a2-8838ee7028c9@linaro.org>
+In-Reply-To: <a3d24e7d-404e-4c02-99a2-8838ee7028c9@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 31 Jan 2024 10:00:05 +0100
+Message-ID: <CACRpkdaus1oRCiafiJjqTkARcKBuxvNfeqDrve7ZdG4UqnNX5A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpiolib: add gpiod_to_gpio_device() stub for !GPIOLIB
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Intentional generic top-post reply.
+On Thu, Jan 25, 2024 at 9:59=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Please work quickly to resolve Bjorn's comments.
+> [Bart]
+> > Why is this needed? Users of gpio/driver.h should select GPIOLIB.
+>
+> The third patch shows you the user which will not select GPIOLIB. Why?
+> Because there is no hard dependency between one core framework (RESET)
+> on other core framework (GPIOLIB).
+>
+> The first two patches are added for the same purpose, even though there
+> is no need currently.
 
-I'm being hounded over a broken LEDs tree due to the missing headerfile.
+That reset driver implementing a GPIO chip has not been reviewed by the
+GPIO maintainers so I looked up the patch and replied, we have
+review comments.
 
-/end
-
-On Tue, 30 Jan 2024, Bjorn Andersson wrote:
-
-> On Thu, Dec 21, 2023 at 10:58:33AM -0800, Anjelique Melendez wrote:
-> > diff --git a/drivers/soc/qcom/qcom-pbs.c b/drivers/soc/qcom/qcom-pbs.c
-> [..]
-> > +static int qcom_pbs_wait_for_ack(struct pbs_dev *pbs, u8 bit_pos)
-> > +{
-> > +	int ret, retries = 2000, delay = 1100;
-> 
-> retries and delay are not variable, please use defines instead.
-> 
-> > +	unsigned int val;
-> > +
-> > +	ret = regmap_read_poll_timeout(pbs->regmap,  pbs->base + PBS_CLIENT_SCRATCH2,
-> > +					val, val & BIT(bit_pos), delay, delay * retries);
-> > +
-> > +	if (ret < 0) {
-> > +		dev_err(pbs->dev, "Timeout for PBS ACK/NACK for bit %u\n", bit_pos);
-> > +		return -ETIMEDOUT;
-> > +	}
-> > +
-> > +	if (val == PBS_CLIENT_SCRATCH2_ERROR) {
-> > +		ret = regmap_write(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, 0);
-> > +		dev_err(pbs->dev, "NACK from PBS for bit %u\n", bit_pos);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	dev_dbg(pbs->dev, "PBS sequence for bit %u executed!\n", bit_pos);
-> > +	return 0;
-> > +}
-> > +
-> > +/**
-> > + * qcom_pbs_trigger_event() - Trigger the PBS RAM sequence
-> > + * @pbs: Pointer to PBS device
-> > + * @bitmap: bitmap
-> > + *
-> > + * This function is used to trigger the PBS RAM sequence to be
-> > + * executed by the client driver.
-> > + *
-> > + * The PBS trigger sequence involves
-> > + * 1. setting the PBS sequence bit in PBS_CLIENT_SCRATCH1
-> > + * 2. Initiating the SW PBS trigger
-> > + * 3. Checking the equivalent bit in PBS_CLIENT_SCRATCH2 for the
-> > + *    completion of the sequence.
-> > + * 4. If PBS_CLIENT_SCRATCH2 == 0xFF, the PBS sequence failed to execute
-> > + *
-> > + * Returns: 0 on success, < 0 on failure
-> 
-> Return: without the 's' is the appropriate form here.
-> 
-> > + */
-> > +int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap)
-> > +{
-> > +	unsigned int val;
-> > +	u16 bit_pos;
-> > +	int ret;
-> > +
-> > +	if (!bitmap) {
-> > +		dev_err(pbs->dev, "Invalid bitmap passed by client\n");
-> 
-> No one is going to spot that hidden in the kernel log, and if someone
-> sees it it does not give an indication to which client it is that's
-> broken (if there are multiple clients...)
-> 
-> Instead do:
-> 
-> 	if (WARN_ON(!bitmap))
-> 		return -EINVAL;
-> 
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (IS_ERR_OR_NULL(pbs))
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&pbs->lock);
-> > +	ret = regmap_read(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, &val);
-> > +	if (ret < 0)
-> > +		goto out;
-> > +
-> > +	if (val == PBS_CLIENT_SCRATCH2_ERROR) {
-> > +		/* PBS error - clear SCRATCH2 register */
-> > +		ret = regmap_write(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, 0);
-> > +		if (ret < 0)
-> > +			goto out;
-> > +	}
-> > +
-> > +	for (bit_pos = 0; bit_pos < 8; bit_pos++) {
-> > +		if (!(bitmap & BIT(bit_pos)))
-> > +			continue;
-> > +
-> > +		/* Clear the PBS sequence bit position */
-> > +		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2,
-> > +					BIT(bit_pos), 0);
-> > +		if (ret < 0)
-> > +			goto error;
-> > +
-> > +		/* Set the PBS sequence bit position */
-> > +		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1,
-> > +					BIT(bit_pos), BIT(bit_pos));
-> > +		if (ret < 0)
-> > +			goto error;
-> > +
-> > +		/* Initiate the SW trigger */
-> > +		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_TRIG_CTL,
-> > +					PBS_CLIENT_SW_TRIG_BIT, PBS_CLIENT_SW_TRIG_BIT);
-> > +		if (ret < 0)
-> > +			goto error;
-> > +
-> > +		ret = qcom_pbs_wait_for_ack(pbs, bit_pos);
-> > +		if (ret < 0)
-> > +			goto error;
-> 
-> In the case that this fails, you're jumping to error, which clears all
-> of SCRATCH1, but you're leaving SCRATCH2 untouched.
-> 
-> > +
-> > +		/* Clear the PBS sequence bit position */
-> > +		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1,
-> > +					BIT(bit_pos), 0);
-> > +		if (ret < 0)
-> > +			goto error;
-> 
-> Does it make sense to handle this error by jumping to error and trying
-> to clear it once more - while leaving SCRATCH2?
-> 
-> Perhaps you should just ignore the errors from clearing SCRATCH1 and
-> SCRATCH2? You where able to trigger the PBS and you got your ack...
-> 
-> > +
-> > +		/* Clear the PBS sequence bit position */
-> > +		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2,
-> > +					BIT(bit_pos), 0);
-> > +		if (ret < 0)
-> > +			goto error;
-> > +	}
-> > +
-> > +error:
-> 
-> We're passing "error" in the successful case as well, please name this
-> "out_clear_scratch1" (or something) instead, to not confuse the reader.
-> 
-> > +	/* Clear all the requested bitmap */
-> > +	ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1, bitmap, 0);
-> > +
-> > +out:
-> > +	mutex_unlock(&pbs->lock);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(qcom_pbs_trigger_event);
-> > +
-> > +/**
-> > + * get_pbs_client_device() - Get the PBS device used by client
-> > + * @dev: Client device
-> > + *
-> > + * This function is used to get the PBS device that is being
-> > + * used by the client.
-> > + *
-> > + * Returns: pbs_dev on success, ERR_PTR on failure
-> 
-> Return:
-> 
-> Regards,
-> Bjorn
-
--- 
-Lee Jones [李琼斯]
+Yours,
+Linus Walleij
