@@ -1,318 +1,176 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20877D3F5;
-	Wed, 31 Jan 2024 11:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B6C6A320
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706699437; cv=none; b=gwNSMPzvwsjp/XiJMfwWHFQ3JUbSr6j8OrWZe+xG4ARKgK3Nh7wA8WJZEBr3OPfivTlUsjoB+s1r7hjex4n133+nayVAZM3jOxAjpaRgA3KHVxtUGb9+HkPsU06bCNN206gJywAsMChxJMoAsxh8wjsgZgNjXZzG/Ds5HNuq2ME=
+	t=1706699592; cv=none; b=bm+bd1cOxfElMsgzeYvI7Uf0QpePL/gxkve/FtD9EB3d+IAWrk2F8HxaH7t2SL7u22RdDq+rMXHofWDmVSK14GCrFtpL3ri0irm+ihtZmeCxIiwcOUW+z280FEYc7PMfq+w8sYnoVGkfpmfLoFpE3i4T+GaoQqW8wbjjCJ5RcWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706699437; c=relaxed/simple;
-	bh=1ZxZNZCM1dcA+Ma7AiD7q3Mt0qj7DACwdROPA6/w67o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nFhFK022H0fgiMtEsILCLH+Do0dLUdT5UhJ8KeawHYhIXbGN9ZjLsMBCgjUO7K2N0XnuzHz/I3SxTa1go8/BJI6aI4kHDsVe19r25ahWYAvZJSxCv87372PQQXHaukHfn5oXSFbkqQj2VAWAFPVQtzHlf1yuoI0CvdrnR+Ya6r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XEYs3V5f; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706699592; c=relaxed/simple;
+	bh=Mce+eEpIDdFmJH+2I/iAep3MNohyZGT7W5JKBIXadvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a91HzgX/Bnc5f1IO1q4cPmlowNllHjfGyKpcSiOLt+H2cOlwAcU2di51XRHyxjMm74RuglYuCkXC0bceT+UXfZVuFKWZjDIeTpgKoRtfd7xZ6ZgdrQkQpwyglNxpWuPraPhAMLJlTpGoyH9PHPCVq1sBrqhGU5Ldmk3K6/V8qQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bLX8t9qM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XEYs3V5f"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40V77Ptj006138;
-	Wed, 31 Jan 2024 11:09:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=+9dhGTuTrvDtNIxH7q5czr/K4CZ1+Dif8CoPgq5i65c=; b=XE
-	Ys3V5fea3aPXd0nlGhRr8D6HJynYVcwwTObEOhqXL6gK9aCbZlnAGcLXf/M3QMAx
-	Ha/0WFeMThoorYL0kvK0uBJUAMuY3hdhyohhIcjzlQDpXzXReyTqsbwkgFoatMaT
-	MUQ47QaA4KQte4UYYEQczEC9RDbtU4f6iGdRjEGDgKBs6fC8gOn1LzLTsBRN1QF4
-	R+pGUfClGSL7KN4TCdYbm9Je6+9HpUUgFu3OnswnJLaZLJ91mkmlL70ghuLn43aS
-	owHbS7xefK0xOeSfCaWUzBxGsXFFm7k26OFnXKO6Q76P5K58H5fAzwBRts/NIHfS
-	/TYTQ8orDjg+nhhj6lWg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vy9nk9myw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 11:09:58 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40VB9vEV029469
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 11:09:57 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 31 Jan 2024 03:09:48 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <corbet@lwn.net>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>, <vigneshr@ti.com>,
-        <nm@ti.com>, <matthias.bgg@gmail.com>, <kgene@kernel.org>,
-        <alim.akhtar@samsung.com>, <bmasney@redhat.com>
-CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_mojha@quicinc.com>
-Subject: [PATCH v8 08/10] pstore/ram: Add dynamic ramoops region support through commandline
-Date: Wed, 31 Jan 2024 16:38:35 +0530
-Message-ID: <20240131110837.14218-9-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.43.0.254.ga26002b62827
-In-Reply-To: <20240131110837.14218-1-quic_mojha@quicinc.com>
-References: <20240131110837.14218-1-quic_mojha@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLX8t9qM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706699589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=d4ma9zbE8mjb8i+FauSpNHy+FN/rZ5fB2oL3RLjV6rs=;
+	b=bLX8t9qM4WUR8REWg+0XkfWUSQK09h+hi9UWdax3f5UNM9Qc1Tj8CrjzSs/VkA/AKyJYL2
+	IDZOuaEl1tczJltgyUs5jAa+ciqy9UIb/YYCBCwPsN9nBIPPyjrljmhGGpKr6C4SOycd/D
+	IrOS1PCi+JUkz41Y0r8mDvT9ynhc9pI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-231-P_DBg_5xP8OwaAtTvGg81Q-1; Wed, 31 Jan 2024 06:13:08 -0500
+X-MC-Unique: P_DBg_5xP8OwaAtTvGg81Q-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40eb06001c2so39763135e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 03:13:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706699587; x=1707304387;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d4ma9zbE8mjb8i+FauSpNHy+FN/rZ5fB2oL3RLjV6rs=;
+        b=cYmMEZ5gLWa23//nqf7usOu792+D8BetJefUQspDUscYJ2vNiUpdRhgoVlcJAnYTDD
+         VBGFHazFoRYZ7JPZ6TWtUUteBPRjWqT9aGUrgrSwr/IAN8gmfviyP2KJvNTfEv6oQ0pE
+         ndTaZY4LM8ruu/qX5xj+VvwWeGsHVORk4ogkt6cX/LtI7UkmuT9wJJ9UbutlSG1oJ7d0
+         uIEzP1vjTj0rW8QY21ye77IRuakYFxNr8ZTBbjxlePqSvWaWBg7wgwjx0Sxw6sNq8HAE
+         lv9xkrhptkgOSL3jK5UzTab6lb/0PaxBtwYEffxFJbtWBpL8P+ocbAdVHOFrWTKi1Fve
+         6OPA==
+X-Gm-Message-State: AOJu0YyxxmtfCIZdBsLOPAqDHJ5HFJSd05FVuLlpGmEJr3RWyYVCDU+S
+	yTJAxI4kt5VWHTeoGZ42wk9b3whp3MYjl4yNT9pxG8z6xJOPt513JMzEmTsc8NcywPstmOXJ7Tp
+	Ptko6MY9bbxxm81b4VHHy5Z22VGucg1uVubyeVWCeRImV9WHwWxblM2K34mgZJQ==
+X-Received: by 2002:a05:600c:470d:b0:40e:f656:39f with SMTP id v13-20020a05600c470d00b0040ef656039fmr1018336wmo.6.1706699586973;
+        Wed, 31 Jan 2024 03:13:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFqBwS6p6bJR9z+v39DGZKJ94gGFj7YXuQe4rd8sPOmEQeUSMAmCXotFvLHcNalUBQDlimQJQ==
+X-Received: by 2002:a05:600c:470d:b0:40e:f656:39f with SMTP id v13-20020a05600c470d00b0040ef656039fmr1018321wmo.6.1706699586591;
+        Wed, 31 Jan 2024 03:13:06 -0800 (PST)
+Received: from [10.32.64.237] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id cl3-20020a5d5f03000000b0033afd49cac7sm3390196wrb.43.2024.01.31.03.13.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 03:13:06 -0800 (PST)
+Message-ID: <fbf08467-fbca-4b97-a1aa-046e0f17fdb8@redhat.com>
+Date: Wed, 31 Jan 2024 12:13:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 9/9] mm/memory: optimize unmap/zap with PTE-mapped THP
+Content-Language: en-US
+To: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+ linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org
+References: <20240129143221.263763-1-david@redhat.com>
+ <20240129143221.263763-10-david@redhat.com>
+ <bec84017-b1c9-48e7-a206-c4c8a651ee83@arm.com>
+ <cf9adefc-8508-49a4-a7f0-784e345c5d80@redhat.com>
+ <424115a2-a924-4c28-8027-32db6ab9278d@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <424115a2-a924-4c28-8027-32db6ab9278d@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pJms8reXROJQi96M27V1G5W0C5FueIDu
-X-Proofpoint-ORIG-GUID: pJms8reXROJQi96M27V1G5W0C5FueIDu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_06,2024-01-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 spamscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999 clxscore=1015
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401310085
 
-The reserved memory region for ramoops is assumed to be at a fixed
-and known location when read from the devicetree. This may not be
-required for something like Qualcomm's minidump which is interested
-in knowing addresses of ramoops region but it does not put hard
-requirement of address being fixed as most of its SoC does not
-support warm reset and does not use pstorefs at all instead it has
-firmware way of collecting ramoops region if it gets to know the
-address and register it with apss minidump table which is sitting
-in shared memory region in DDR and firmware will have access to
-these table during reset and collects it on crash of SoC.
+>>>> -        folio_remove_rmap_pte(folio, page, vma);
+>>>> +        folio_remove_rmap_ptes(folio, page, nr, vma);
+>>>> +
+>>>> +        /* Only sanity-check the first page in a batch. */
+>>>>            if (unlikely(page_mapcount(page) < 0))
+>>>>                print_bad_pte(vma, addr, ptent, page);
+>>>
+>>> Is there a case for either removing this all together or moving it into
+>>> folio_remove_rmap_ptes()? It seems odd to only check some pages.
+>>>
+>>
+>> I really wanted to avoid another nasty loop here.
+>>
+>> In my thinking, for 4k folios, or when zapping subpages of large folios, we
+>> still perform the exact same checks. Only when batching we don't. So if there is
+>> some problem, there are ways to get it triggered. And these problems are barely
+>> ever seen.
+>>
+>> folio_remove_rmap_ptes() feels like the better place -- especially because the
+>> delayed-rmap handling is effectively unchecked. But in there, we cannot
+>> "print_bad_pte()".
+>>
+>> [background: if we had a total mapcount -- iow cheap folio_mapcount(), I'd check
+>> here that the total mapcount does not underflow, instead of checking per-subpage]
+> 
+> All good points... perhaps extend the comment to describe how this could be
+> solved in future with cheap total_mapcount()? Or in the commit log if you prefer?
 
-So, add the support of reserving ramoops region to be dynamically
-allocated early during boot if it is request through command line
-via 'dyn_ramoops_size=<size>' and fill up reserved resource structure
-and export the structure, so that it can be read by ramoops driver.
+I'll add more meat to the cover letter, thanks!
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- Documentation/admin-guide/ramoops.rst | 23 +++++++++-
- fs/pstore/Kconfig                     | 15 ++++++
- fs/pstore/ram.c                       | 66 +++++++++++++++++++++++++--
- include/linux/pstore_ram.h            |  5 ++
- init/main.c                           |  3 ++
- 5 files changed, 108 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
-index e9f85142182d..6de61002f9e9 100644
---- a/Documentation/admin-guide/ramoops.rst
-+++ b/Documentation/admin-guide/ramoops.rst
-@@ -33,6 +33,13 @@ memory are implementation defined, and won't work on many ARMs such as omaps.
- Setting ``mem_type=2`` attempts to treat the memory region as normal memory,
- which enables full cache on it. This can improve the performance.
- 
-+Ramoops supports its memory to be allocated dynamically during early boot
-+for plaforms that do not have support for warm boot i.e., no assurance
-+that Ram content will be preserved across boot and for these platforms
-+giving static Ramoops memory is not necessary as it has separate backend
-+mechanism to retrieve ramoops content on system failure. More about
-+how to enable Dynamic ramoops in ``Setting the parameters`` A.b section.
-+
- The memory area is divided into ``record_size`` chunks (also rounded down to
- power of two) and each kmesg dump writes a ``record_size`` chunk of
- information.
-@@ -59,7 +66,7 @@ Setting the parameters
- 
- Setting the ramoops parameters can be done in several different manners:
- 
-- A. Use the module parameters (which have the names of the variables described
-+ A.a  Use the module parameters (which have the names of the variables described
-  as before). For quick debugging, you can also reserve parts of memory during
-  boot and then use the reserved memory for ramoops. For example, assuming a
-  machine with > 128 MB of memory, the following kernel command line will tell
-@@ -68,6 +75,20 @@ Setting the ramoops parameters can be done in several different manners:
- 
- 	mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1
- 
-+ A.b  Ramoops memory can be also be dynamically reserved by Kernel and in such
-+ scenario ``mem_address`` i.e., Ramoops base address can be anywhere in the RAM
-+ instead of being fixed and predefined. A separate command line option
-+ ``dyn_ramoops_size=<size>`` and kernel config CONFIG_PSTORE_DYNAMIC_RAMOOPS
-+ are provided to facilitate Dynamic Ramoops memory reservation during early boot.
-+ The command line option and the config should only be used in the presence of
-+ separate backend which knows how to recover Dynamic Ramoops region otherwise
-+ regular ramoops functionality will be impacted.
-+ ``mem_size`` should not be used if Dynamic Ramoops support is requested and if
-+ both are given ``mem_size`` value is overwritten with ``dyn_ramoops_size`` value
-+ i.e., Dynamic Ramoops takes precedence::
-+
-+	dyn_ramoops_size=2M ramoops.console_size=2097152
-+
-  B. Use Device Tree bindings, as described in
-  ``Documentation/devicetree/bindings/reserved-memory/ramoops.yaml``.
-  For example::
-diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index 3acc38600cd1..b8bdbd2f0e73 100644
---- a/fs/pstore/Kconfig
-+++ b/fs/pstore/Kconfig
-@@ -81,6 +81,21 @@ config PSTORE_RAM
- 
- 	  For more information, see Documentation/admin-guide/ramoops.rst.
- 
-+config PSTORE_DYNAMIC_RAMOOPS
-+	bool "Reserve ramoops region dynamically"
-+	select PSTORE_RAM
-+	help
-+	  This enables the dynamic reservation of ramoops region for a special case
-+	  where there is no need to access the logs from pstorefs on next boot;
-+	  instead there is separate backend mechanism like minidump present which has
-+	  awareness about the dynamic ramoops region and can recover the logs. This is
-+	  enabled via command line parameter dyn_ramoops_size=<size> and should not be
-+	  used in absence of separate backend which knows how to recover this dynamic
-+	  region.
-+
-+	  Note whenever this config is selected ramoops driver will be built statically
-+	  into kernel.
-+
- config PSTORE_ZONE
- 	tristate
- 	depends on PSTORE
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 88b34fdbf759..1faf0835700b 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -20,6 +20,7 @@
- #include <linux/compiler.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/memblock.h>
- #include <linux/mm.h>
- 
- #include "internal.h"
-@@ -103,6 +104,59 @@ struct ramoops_context {
- };
- 
- static struct platform_device *dummy;
-+static struct resource dyn_ramoops_res = {
-+	.name  = "ramoops",
-+	.start = 0,
-+	.end   = 0,
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_NONE,
-+};
-+static int dyn_ramoops_size;
-+
-+#ifdef CONFIG_PSTORE_DYNAMIC_RAMOOPS
-+static int __init parse_dyn_ramoops_size(char *p)
-+{
-+	char *tmp;
-+
-+	dyn_ramoops_size = memparse(p, &tmp);
-+	if (p == tmp) {
-+		pr_err("ramoops: memory size expected\n");
-+		dyn_ramoops_size = 0;
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+early_param("dyn_ramoops_size", parse_dyn_ramoops_size);
-+
-+/*
-+ * setup_dynamic_ramoops() - Reserve memory for dynamic ramoops
-+ *
-+ * Enables dynamic reserve memory support for ramoops through
-+ * command line.
-+ */
-+void __init setup_dynamic_ramoops(void)
-+{
-+	unsigned long long ramoops_base;
-+	unsigned long long ramoops_size;
-+
-+	if (!dyn_ramoops_size)
-+		return;
-+
-+	ramoops_base = memblock_phys_alloc_range(dyn_ramoops_size, SMP_CACHE_BYTES,
-+						 0, MEMBLOCK_ALLOC_NOLEAKTRACE);
-+	if (!ramoops_base) {
-+		pr_err("cannot allocate ramoops dynamic memory (size:0x%llx).\n",
-+			ramoops_size);
-+		dyn_ramoops_size = 0;
-+		return;
-+	}
-+
-+	dyn_ramoops_res.start = ramoops_base;
-+	dyn_ramoops_res.end = ramoops_base + dyn_ramoops_size - 1;
-+	insert_resource(&iomem_resource, &dyn_ramoops_res);
-+}
-+#endif
- 
- static int ramoops_pstore_open(struct pstore_info *psi)
- {
-@@ -915,13 +969,19 @@ static void __init ramoops_register_dummy(void)
- 
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
--	 * parameters. If mem_size isn't set, then there are no module
--	 * parameters, and we can skip this.
-+	 * parameters.
-+	 *
-+	 * dyn_ramoops_size takes precedence over mem_size if it is
-+	 * enabled and valid.
- 	 */
--	if (!mem_size)
-+	if (!dyn_ramoops_size && !mem_size)
- 		return;
- 
- 	pr_info("using module parameters\n");
-+	if (dyn_ramoops_size) {
-+		mem_size = dyn_ramoops_size;
-+		mem_address = dyn_ramoops_res.start;
-+	}
- 
- 	memset(&pdata, 0, sizeof(pdata));
- 	pdata.mem_size = mem_size;
-diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
-index 9d65ff94e216..1efff7a38333 100644
---- a/include/linux/pstore_ram.h
-+++ b/include/linux/pstore_ram.h
-@@ -39,4 +39,9 @@ struct ramoops_platform_data {
- 	struct persistent_ram_ecc_info ecc_info;
- };
- 
-+#ifdef CONFIG_PSTORE_DYNAMIC_RAMOOPS
-+void __init setup_dynamic_ramoops(void);
-+#else
-+static inline void __init setup_dynamic_ramoops(void) {}
-+#endif
- #endif
-diff --git a/init/main.c b/init/main.c
-index ef3ce41b8fc5..3d74241bcb2b 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -99,6 +99,8 @@
- #include <linux/init_syscalls.h>
- #include <linux/stackdepot.h>
- #include <linux/randomize_kstack.h>
-+#include <linux/moduleloader.h>
-+#include <linux/pstore_ram.h>
- #include <net/net_namespace.h>
- 
- #include <asm/io.h>
-@@ -890,6 +892,7 @@ void start_kernel(void)
- 	pr_notice("%s", linux_banner);
- 	early_security_init();
- 	setup_arch(&command_line);
-+	setup_dynamic_ramoops();
- 	setup_boot_config();
- 	setup_command_line(command_line);
- 	setup_nr_cpu_ids();
 -- 
-2.43.0.254.ga26002b62827
+Cheers,
+
+David / dhildenb
 
