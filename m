@@ -1,134 +1,166 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D7956B9D;
-	Wed, 31 Jan 2024 14:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3C07BB15;
+	Wed, 31 Jan 2024 14:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706709835; cv=none; b=KqnzXkBtc3Q43GTitseB39PWa172hE4w13j6sikBANWgrCUeAXjNSoZH9Q3RtKX+hImiXPisqnPeVSgGqnKfKDNOKLB0ik5nMcIbb21Dx7Tne0uWZwklqMsru/jX5UA29qk4Y1GrDnBY3D9IDtWxG0uo0bZC8g0USShOGJZZzZ8=
+	t=1706709923; cv=none; b=h7olNyBX3169rbdivXDuSuINM0mSee4DZHWdomZl/i33hcviyP1OH17+/08hBc2eBdyN9R6N3EcaZIvYgHrIo7C1xH3oT9uiMkedqUzJSd/t4tysHAPy0HuMPnku99tLAQOfgLSFOasMv3N2OgAY18hZh06iy4ucJR1TX3RL7Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706709835; c=relaxed/simple;
-	bh=yK5tDuzjN62NKpY1IUEhVf1AyPpCBKY++LbxRsHYWaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJmhGH16zyr2Pzj47wm/QsITtiIBca4LC2cejiipW1OLciE7ZbBu4wV1rPTjSEAJnuUetoPdFtB2YL8j0X7FeTc4BeiZVIlJBgCmvohhnac7z6Dj4X2N7NAHyiZdANr7ThviBhrDpibv2W07p0+bsxy/98JO/QUbqJ5v3uzDgyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WLhYD4V/; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WLhYD4V/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1706709923; c=relaxed/simple;
+	bh=svTlCA3lz9tOssty2sVCUQ4b7cMa6+0k/VLIT1J7+9U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UbMujybhC7yIF4F8OOiJRlszpriwfQUr55d1vbFzXOjj2+cMg35va9ELn4kYOxla/pue3JJdFN6QfFJbI2eiX+UeZRFx+pxfe9cKCbpu/wRFqtDQMveP8LOiGvb3xsocCyRRO6BL6zqEm2FI/wpxHYhmE5BVDJt352C7GpMVHQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=h5UcZbpz; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WLhYD4V/";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WLhYD4V/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="h5UcZbpz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706709918;
+	bh=svTlCA3lz9tOssty2sVCUQ4b7cMa6+0k/VLIT1J7+9U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=h5UcZbpzz5WlVb6jsielorPLdi7v9/5hx+xUipMprgD+tt9/1YkFLdd7AoC6TPQD2
+	 NcHFBo3gJQVxh7DMj5VVABkH8bWv78M2C/pj4/9cYseG2EGjirR5Ge6NtKUmIO+Lk1
+	 HJDbWdNJx/ipBXngFurJcHtqlDx+MnfotdHuxskbV+P5KCqGTnzjfR2vaV2sqXjP2s
+	 XkvGMKGKGgioz+Yto7G22wbUCJKIJ629n4HIFURwALHAb7kBdlNkoMlOwxXwwixab4
+	 mqjs6T3SNxuWD0Xuz5r8aX3sdSIZmlPHXu+180DZ14ycRcfzHfHHRyh18Rw+hDbzYD
+	 gmQBMl4TqlH1Q==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E1AE41FB8A;
-	Wed, 31 Jan 2024 14:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706709827; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m2cxDnakp497+YroEa+q5vx8Sh99BmyBojVBJFGfpzs=;
-	b=WLhYD4V/x/UZrHhY+6rCUJyqgymCrrsKeuLtGDQJmSHaoC3k23j7X0NG3vOMfDtXnIsMtY
-	jZ5h10f3ZWcsECbVFDV7u/QcfFFmgBDZc+aS1k+0Rtk506F6YwOW9pHPE/hJ/vKoBvOmPc
-	ryDw7jWI4W009OBH2S6hA4+jm0itigA=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706709827; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m2cxDnakp497+YroEa+q5vx8Sh99BmyBojVBJFGfpzs=;
-	b=WLhYD4V/x/UZrHhY+6rCUJyqgymCrrsKeuLtGDQJmSHaoC3k23j7X0NG3vOMfDtXnIsMtY
-	jZ5h10f3ZWcsECbVFDV7u/QcfFFmgBDZc+aS1k+0Rtk506F6YwOW9pHPE/hJ/vKoBvOmPc
-	ryDw7jWI4W009OBH2S6hA4+jm0itigA=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BDC6F1347F;
-	Wed, 31 Jan 2024 14:03:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mJp5LENTumVaDwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 31 Jan 2024 14:03:47 +0000
-Date: Wed, 31 Jan 2024 15:03:47 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Yin Fengwei <fengwei.yin@intel.com>, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-	Nick Piggin <npiggin@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>
-Subject: Re: [PATCH v1 0/9] mm/memory: optimize unmap/zap with PTE-mapped THP
-Message-ID: <ZbpTQ80ebCUnAXW0@tiehlicka>
-References: <20240129143221.263763-1-david@redhat.com>
- <4ef64fd1-f605-4ddf-82e6-74b5e2c43892@intel.com>
- <ee94b8ca-9723-44c0-aa17-75c9678015c6@redhat.com>
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D3794378200E;
+	Wed, 31 Jan 2024 14:05:16 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 02/12] selftests/mm: map_hugetlb: conform test to TAP format output
+Date: Wed, 31 Jan 2024 19:05:12 +0500
+Message-ID: <20240131140528.320252-2-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240131140528.320252-1-usama.anjum@collabora.com>
+References: <20240131140528.320252-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee94b8ca-9723-44c0-aa17-75c9678015c6@redhat.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [0.40 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 R_RATELIMIT(0.00)[to_ip_from(RLmz57jmx331iqhbrcj9q94ym8)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_TWELVE(0.00)[26];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[intel.com,vger.kernel.org,linux-foundation.org,kvack.org,infradead.org,arm.com,kernel.org,linux.ibm.com,gmail.com,ellerman.id.au,csgroup.eu,arndb.de,lists.ozlabs.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[28.90%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: 0.40
+Content-Transfer-Encoding: 8bit
 
-On Wed 31-01-24 11:16:01, David Hildenbrand wrote:
-[...]
-> This 10000 pages limit was introduced in 53a59fc67f97 ("mm: limit mmu_gather
-> batching to fix soft lockups on !CONFIG_PREEMPT") where we wanted to handle
-> soft-lockups.
+Conform the layout, informational and status messages to TAP. No
+functional change is intended other than the layout of output messages.
 
-AFAIR at the time of this patch this was mostly just to put some cap on
-the number of batches to collect and free at once. If there is a lot of
-free memory and a large process exiting this could grow really high. Now
-that those pages^Wfolios can represent larger memory chunks it could
-mean more physical memory being freed but from which might make the
-operation take longer but still far from soft lockup triggering.
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+ tools/testing/selftests/mm/map_hugetlb.c | 42 +++++++++++-------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-Now latency might suck on !PREEMPT kernels with too many pages to
-free in a single batch but I guess this is somehow expected for this
-preemption model. The soft lockup has to be avoided because this can
-panic the machine in some configurations.
-
+diff --git a/tools/testing/selftests/mm/map_hugetlb.c b/tools/testing/selftests/mm/map_hugetlb.c
+index 86e8f2048a409..a1f005a90a4f0 100644
+--- a/tools/testing/selftests/mm/map_hugetlb.c
++++ b/tools/testing/selftests/mm/map_hugetlb.c
+@@ -16,6 +16,7 @@
+ #include <sys/mman.h>
+ #include <fcntl.h>
+ #include "vm_util.h"
++#include "../kselftest.h"
+ 
+ #define LENGTH (256UL*1024*1024)
+ #define PROTECTION (PROT_READ | PROT_WRITE)
+@@ -31,7 +32,7 @@
+ 
+ static void check_bytes(char *addr)
+ {
+-	printf("First hex is %x\n", *((unsigned int *)addr));
++	ksft_print_msg("First hex is %x\n", *((unsigned int *)addr));
+ }
+ 
+ static void write_bytes(char *addr, size_t length)
+@@ -42,23 +43,21 @@ static void write_bytes(char *addr, size_t length)
+ 		*(addr + i) = (char)i;
+ }
+ 
+-static int read_bytes(char *addr, size_t length)
++static void read_bytes(char *addr, size_t length)
+ {
+ 	unsigned long i;
+ 
+ 	check_bytes(addr);
+ 	for (i = 0; i < length; i++)
+-		if (*(addr + i) != (char)i) {
+-			printf("Mismatch at %lu\n", i);
+-			return 1;
+-		}
+-	return 0;
++		if (*(addr + i) != (char)i)
++			ksft_exit_fail_msg("Mismatch at %lu\n", i);
++
++	ksft_test_result_pass("Read correct data\n");
+ }
+ 
+ int main(int argc, char **argv)
+ {
+ 	void *addr;
+-	int ret;
+ 	size_t hugepage_size;
+ 	size_t length = LENGTH;
+ 	int flags = FLAGS;
+@@ -69,6 +68,9 @@ int main(int argc, char **argv)
+ 	if (hugepage_size > length)
+ 		length = hugepage_size;
+ 
++	ksft_print_header();
++	ksft_set_plan(1);
++
+ 	if (argc > 1)
+ 		length = atol(argv[1]) << 20;
+ 	if (argc > 2) {
+@@ -78,27 +80,23 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	if (shift)
+-		printf("%u kB hugepages\n", 1 << (shift - 10));
++		ksft_print_msg("%u kB hugepages\n", 1 << (shift - 10));
+ 	else
+-		printf("Default size hugepages\n");
+-	printf("Mapping %lu Mbytes\n", (unsigned long)length >> 20);
++		ksft_print_msg("Default size hugepages\n");
++	ksft_print_msg("Mapping %lu Mbytes\n", (unsigned long)length >> 20);
+ 
+ 	addr = mmap(ADDR, length, PROTECTION, flags, -1, 0);
+-	if (addr == MAP_FAILED) {
+-		perror("mmap");
+-		exit(1);
+-	}
++	if (addr == MAP_FAILED)
++		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
+ 
+-	printf("Returned address is %p\n", addr);
++	ksft_print_msg("Returned address is %p\n", addr);
+ 	check_bytes(addr);
+ 	write_bytes(addr, length);
+-	ret = read_bytes(addr, length);
++	read_bytes(addr, length);
+ 
+ 	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
+-	if (munmap(addr, length)) {
+-		perror("munmap");
+-		exit(1);
+-	}
++	if (munmap(addr, length))
++		ksft_exit_fail_msg("munmap: %s\n", strerror(errno));
+ 
+-	return ret;
++	ksft_finished();
+ }
 -- 
-Michal Hocko
-SUSE Labs
+2.42.0
+
