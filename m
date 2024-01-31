@@ -1,124 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1945581ADE
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C597F491
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706709235; cv=none; b=DOngc6gdQrIJQB/Pug+TS/1nVECG886onGOzcYUDeZTUrGflEzIr3k8D7Vm4uWQc806samBeQ8P3kl5YkxLXK+hFFrKZKrTvn9F63Rdx8ogmnx0mIH9hq8Z5uMqhUXzH8XEDHO1NvOzC3X5AOahuMmA3u0fxdDVgmMPYkGKrXbM=
+	t=1706709344; cv=none; b=VSmmZzZtJnsA0h54+kggy7qJDPbHnvyqUSO0nlm4MHbX2lQZcdK6HQHHVwZcHsykyKb+Fj8qMjcHcIuE2czMBioJs3kB9T7HlnZZ49I6DoIaTs74NmwWKmz7hV2fP1CLreKSx4RvtcqEtzRmwCfk0C3/6N5m4Bv6/ddXZrumecM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706709235; c=relaxed/simple;
-	bh=uakhvgKxjPNFgke93mN0JdxLjWrSFUxLbgu+RZRmEiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFBxgyxDt0MLdVIb1i27WCVslzKU0ad8f5VV7JMqw+axI2f/sxkMfo0kjItdXpJ//e7m2LXTbmbYYEFaL4Wac5/+PaOqnTpH+KVfbCVE6EafAmBLoaBA+5GE9nrGF2VNdVLe1SYhQ5NgDY71VxMsYm8eUkLvN7p4RBUDHqV8nuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IQ/r2fAj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706709344; c=relaxed/simple;
+	bh=lP/iCDT0hUnPesKrb7hWD3dW8NEUrJgALKt9dBmUD4c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=De6R/T9vDU5YUCQFPaZymwvytM+3nysLLOANLszq5oTEo+STk+1JZeabBDKYLYTbXhJpNmWpNHbwzXake7IAbG+ts5XZPUAyDyMpdWjEFu1doXut3VktI4xPiGxJZvF+XXN3+FX7JAdibvaO0eDUb5cy96wFzp5v2DuTiXK/AhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BmcX4Yg+; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQ/r2fAj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706709233;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E4i0Tk4JbtiIv1UU4oy6keRyKO0PtP4NeohxR4ZpA+c=;
-	b=IQ/r2fAjl+P61E93C3G/3QGAtPH1pznmy6HydfOvkCoCwmGrzPT2S+L/wQsL3fjgG6N8/L
-	TNfV4uk8mbVsq57fDqQ+lfjDw0L0zng7JX6r/tgWrcYmTJbViVjB5D8Wxif3yQfrMKqaif
-	oHU1Ri4wplmiYNObmacCAUMOWH8rfsA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495-_-stHLIRM3mmrNXR4w-Rug-1; Wed, 31 Jan 2024 08:53:49 -0500
-X-MC-Unique: _-stHLIRM3mmrNXR4w-Rug-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 23E71848A69;
-	Wed, 31 Jan 2024 13:53:49 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.249])
-	by smtp.corp.redhat.com (Postfix) with SMTP id DF2FA2166B31;
-	Wed, 31 Jan 2024 13:53:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 31 Jan 2024 14:52:34 +0100 (CET)
-Date: Wed, 31 Jan 2024 14:52:32 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pidfd: implement PIDFD_THREAD flag for pidfd_open()
-Message-ID: <20240131135232.GA2609@redhat.com>
-References: <20240130112638.GA29773@redhat.com>
- <20240130113409.GA29849@redhat.com>
- <ZbmwJiIS4ei64u6R@tycho.pizza>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BmcX4Yg+"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so3112151a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:55:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706709342; x=1707314142; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lP/iCDT0hUnPesKrb7hWD3dW8NEUrJgALKt9dBmUD4c=;
+        b=BmcX4Yg+C7DnGCekgTcpfKgtpNaYG3sMswR5oyrzm3Yej5sFUxLENwbqQ2QQceDZC8
+         KohnmWwvBr4jPzl8WOUyfoa5V2th3hf8YEoocKXLILmIw+UfHozjm3NEZ8ZCYfW/mQXI
+         2/u2HbOURlIgTjgd8+rNAa63aVDMF9eraA0J7kvoXXpBVJi4H6sNhp6rtk6vM2oxuups
+         vXHsnA38hDBVupLTcNjfgpRj8FwOZj8j958bSf9d2MNvEDOiG2zazmlaqc9kET4D+8/t
+         FDyepQ/jGaBEoxNrPLFoe36++u1x3rLqZ7/Gd6IgynYPv5rE1sjNlBpNmDgRym1WMGt6
+         fEZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706709342; x=1707314142;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lP/iCDT0hUnPesKrb7hWD3dW8NEUrJgALKt9dBmUD4c=;
+        b=Cxro5qqZH1DhvfW3J7knIgNV8oUU2DnxJkqN0iAYH0tKDcfd6Xke2B4qDULb2olu1R
+         Og2fJ9Tj4Hgp63gbSe2gT88FU0maFNkSOpitXBb2sBavoC4gNhTfaEjDRMx5nD2jN3s9
+         3IFmVMqVSvz8dZ3CcHeR0zSzOFs64Oba1jARyt8nqt933yuwFTJn748dEZ6qVyFwTkVW
+         tEicKttiH3QXu21XqSb2H6C4rasMaw0KXzxDwUv6ZAaOdg1o5ia9c9WXBwtAwWuE0+JX
+         6uomDj1rb2kzjWA1owsbDbuhrWW1HYuvqKoAo3iRauzMCwOX+QQiPOsFvcJkXpt8YHz/
+         +rCQ==
+X-Gm-Message-State: AOJu0YwEquwNGfcE6bGrn9XxqCtRAkko3mFjru/wafRg/a7+Erip1VeY
+	dJnmA1ffdiChl3BHl57lkjiVBuXi2kxQi/s1ArI4W8FlUFZAtNRXmgBKECZjI0UnDWuNcvRjGfG
+	WpNgdZZOmrdvzXD9/OVRCdxbeWv4gJRVNN1oe3akV2aNvdSpDGuw=
+X-Google-Smtp-Source: AGHT+IFHMc9NoAOmBIbFCuBZRsmIAQEKzd9i4Nh5py0aHA68IqRt2eTTIhkUs5M0S/JguzNWdnTnmmTWl60YIdJhujE=
+X-Received: by 2002:a17:90b:e8a:b0:293:f625:1b0b with SMTP id
+ fv10-20020a17090b0e8a00b00293f6251b0bmr1531667pjb.5.1706709342129; Wed, 31
+ Jan 2024 05:55:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbmwJiIS4ei64u6R@tycho.pizza>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+References: <20240105222014.1025040-1-qyousef@layalina.io> <20240105222014.1025040-2-qyousef@layalina.io>
+ <CAKfTPtBYcVWxYOhWZjzcQUB1ebUBA-B30hvToqGBq6JnfRUZNg@mail.gmail.com>
+ <20240124222959.ikwnbxkcjaxuiqp2@airbuntu> <CAKfTPtDxqcrf0kaBQG_zpFx-DEZTMKfyxBu_bzCuZ_UZhJwOnA@mail.gmail.com>
+ <20240126014602.wdcro3ajffpna4fp@airbuntu> <CAKfTPtDqABnPDmt0COqyRpYSuj_WWwLrqL+Tbfa8J8b5u5eQtQ@mail.gmail.com>
+ <20240128235005.txztdbdq2obyi4n6@airbuntu> <CAKfTPtC0=MH7bCypeY1QFxt=pFbPxY9YLuuS8_dhkF31nR6ZWQ@mail.gmail.com>
+ <20240130235727.wj3texzo4lpbba6b@airbuntu>
+In-Reply-To: <20240130235727.wj3texzo4lpbba6b@airbuntu>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 31 Jan 2024 14:55:31 +0100
+Message-ID: <CAKfTPtCAETf3F-dkMimqt6VC9TWHseiQyywyuq6BQqxVMWxXRw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] sched/fair: Check a task has a fitting cpu when
+ updating misfit
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-kernel@vger.kernel.org, 
+	Pierre Gondois <Pierre.Gondois@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 01/30, Tycho Andersen wrote:
+On Wed, 31 Jan 2024 at 00:57, Qais Yousef <qyousef@layalina.io> wrote:
 >
-> On Tue, Jan 30, 2024 at 12:34:09PM +0100, Oleg Nesterov wrote:
-> > Damn. Self-NACK.
+> On 01/30/24 10:41, Vincent Guittot wrote:
+> > On Mon, 29 Jan 2024 at 00:50, Qais Yousef <qyousef@layalina.io> wrote:
+> > >
+> > > On 01/26/24 15:08, Vincent Guittot wrote:
+> > >
+> > > > > TBH I had a bit of confirmation bias that this is a problem based on the fix
+> > > > > (0ae78eec8aa6) that we had in the past. So on verification I looked at
+> > > > > balance_interval and this reproducer which is a not the same as the original
+> > > > > one and it might be exposing another problem and I didn't think twice about it.
+> > > >
+> > > > I checked the behavior more deeply and I confirm that I don't see
+> > > > improvement for the use case described above. I would say that it's
+> > > > even worse as I can see some runs where the task stays on little
+> > > > whereas a big core has been added in the affinity. Having in mind that
+> > > > my system is pretty idle which means that there is almost no other
+> > > > reason to trigger an ilb than the misfit task, the change in
+> > > > check_misfit_status() is probably the reason for never kicking an ilb
+> > > > for such case
+> > >
+> > > It seems I reproduced another problem while trying to reproduce the original
+> > > issue, eh.
+> > >
+> > > I did dig more and from what I see the issue is that the rd->overload is not
+> > > being set correctly. Which I believe what causes the delays (see attached
+> > > picture how rd.overloaded is 0 with some spikes). Only when CPU7
+> > > newidle_balance() coincided with rd->overload being 1 that the migration
+> > > happens. With the below hack I can see that rd->overload is 1 all the time
 > >
-> > I forgot (we all ;) about mt-exec, and there are 2 problems.
-> >
-> > 1. The "if (!thread_group_leader(tsk))" block in de_thread() needs
-> >    do_notify_pidfd() too, the execing non-leader thread looses its
-> >    old pid, pidfd_poll(PIDFD_THREAD, pid-of-execing-sub-thread)
-> >    should succeed. Must be fixed, I think.
+> > But here you rely on another activity happening in CPU7 whereas the
 >
-> I think the `test_non_tgl_exec` from my tests exercises the scenario
-> you're describing, and it works.
-
-This means your test is racy, I guess.
-
-Look. We have a leader L, its sub-thtread T with the pid TPID, and
-another process X which sleeps in pidfd_poll(PIDFD_THREAD, TPID).
-
-T starts de_thread and kills the leader L. The leader exits and wakes
-X up.
-
-Then T does de_thread() -> exchange_tids() so we have
-
-	// BEFORE:
-	// pid_task(TPID, PIDTYPE_PID) == T
-	exchange_tids(tsk, leader);
-	// AFTER:
-	// pid_task(TPID, PIDTYPE_PID) == L
-
-Now. If X calls pidfd_task_exited(TPID, true) "AFTER" then we are
-fine, pidfd_task_exited() will return true. OK, this is not exactly
-true, leader->exit_state == 0 right after exchange_tids(), but lets
-ignore.
-
-However. If X calls pidfd_task_exited(TPID, true) "BEFORE" it will
-return false: pid_task(TPID) == T and T is not going to die. So
-pidfd_poll() will block again forever, TPID is going to die.
-
-See?
-
-Fixed in v3.
-
-> > 2. pidfd_poll(PIDFD_THREAD, pid-of-group-leader) should not succeed
-> >    when its sub-thread execs, the execing thread inherits the leader's
-> >    pid. Perhaps pidfd_task_exited() can check sig->group_exec_task,
+> I don't want to rely on that. I think this is a problem too. And this is what
+> ends up happening from what I see, sometimes at least.
 >
-> I didn't have an explicit test for this, but I hacked one up, and
-> pidfd_poll(PIDFD_THREAD, pid-of-group-leader) doesn't return after
-> exec.
+> When is it expected for newidle_balance to pull anyway? I agree we shouldn't
+> rely on it to randomly happen, but if it happens sooner, it should pull, no?
+>
+> > misfit should trigger by itself the load balance and not expect
+> > another task waking up then sleeping on cpu7 to trigger a newidle
+> > balance. We want a normal idle load balance not a newidle_balance
+>
+> I think there's a terminology problems. I thought you mean newidle_balnce() by
+> ilb. It seems you're referring to load_balance() called from
+> rebalance_domains() when tick happens at idle?
 
-See above, this depends on timing.
+newidle_balance is different from idle load balance. newidle_balance
+happens when the cpu becomes idle whereas busy and idle load balance
+happen at tick.
 
-See also v3 I've sent, I tried to document the problems with mt-exec.
+>
+> I thought this is not kicking. But I just double checked in my traces and I was
+> getting confused because I was looking at where run_rebalance_domains() would
+> happen, for example, on CPU2 but the balance would actually be for CPU7.
 
-Oleg.
+An idle load balance happens either on the target CPU if its tick is
+not stopped or we kick one idle CPU to run the idle load balance on
+behalf of all idle CPUs. This is the latter case that doesn't happen
+anymore with your patch and the change in check_misfit_status.
 
+>
+> No clue why it fails to pull.. I can see actually we call load_balance() twice
+> for some (not all) entries to rebalance_domains(). So we don't always operate
+> on the two domains. But that's not necessarily a problem.
+
+We have 3 different reasons for kicking an idle load balance :
+- to do an actual balance of tasks
+- to update stats ie blocked load
+- to update nohz.next_balance
+
+You are interested by the 1st one but it's most probably for the 2
+last reasons that this happen
+
+>
+> I think it's a good opportunity to add some tracepoints to help break this path
+> down. If you have suggestions of things to record that'd be helpful.
