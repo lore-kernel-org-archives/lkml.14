@@ -1,35 +1,25 @@
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD5D69965
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6CF469DEF;
+	Wed, 31 Jan 2024 10:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706695369; cv=none; b=Fe11K29/B3URDTAIn8RtB9db+VtZgXqssg3gwRz7PM35Rd+SepcV8ps9dUrfY1/i54d4w9oUXLaG0aQ+x9dMYvfWz6hLftlM9oThhr7vAX4+uCtVCO5JFdZiXJqeitptLctzPaXM9oGcWsLpJYuLdyHyN1L+kZzyc1qH5fq3I4Y=
+	t=1706695386; cv=none; b=S/m83gQzufaRZa135PX9OvGrOSjBxZVD58EKAGtPmw2UG9qFUl+O0QJej6oQTPZA1Xi/Nk4YGIYq1p8/RE7DUqcuKeZS4xMyXegx1+SMaurTiOXxce0Ci1D8TVqDS/n0s4H9avl8Ci+jW8Df35OV47d/1JLdWOY8YaBTtShvjlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706695369; c=relaxed/simple;
-	bh=F5mGUoW48xzXAZjc5e38EOEQmw7xZuGlse21UFTk0ZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XV0yp+PzntZ46r10Ax0g9E1yKP3q/5dAJUopq71Nk9WyGr3G/olXlHmv8NSxCx1R4Qj9kA6fF9QfADMpJAt1LD41CJg/agEVyksqQA12qJuqmhQ4y5PqYBBYpgcyw1fdTZNYJr73QMksEFzH3knmuy/+gJ2KV6gK8CC6UHUQcEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1706694341-1eb14e0c7f32630001-xx1T2L
-Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id 9Am2KIjGkuhD23mh (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 31 Jan 2024 17:45:41 +0800 (CST)
-X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX1.zhaoxin.com
- (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
- 2024 17:45:41 +0800
-Received: from [10.32.57.248] (10.32.57.248) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
- 2024 17:45:38 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Message-ID: <40e74749-fa9d-4089-ae23-e9aefdd3549f@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.32.57.248
-Date: Wed, 31 Jan 2024 17:45:37 +0800
+	s=arc-20240116; t=1706695386; c=relaxed/simple;
+	bh=UMIgl0KfJFBZGMBoXXERCp/2jBmM9yJsvbpc5M33A6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YOgGgbi4hlNa/1AUCmNysDTa8iR7i75jev+rDKvLr8QZ3UCVE+gSyOLOkyjA4Zr7ApxOfoh5NbeGaQkpcZ3N2hTj6BBNNfKkLuL6TBljzraIRKDazZsK7E4llLlxqTa+bKHciV8jlNBuarUG/6sA5NWGlVrRD1L7oJBAefbLCU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B1EFDA7;
+	Wed, 31 Jan 2024 02:03:47 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5901D3F5A1;
+	Wed, 31 Jan 2024 02:02:59 -0800 (PST)
+Message-ID: <1f5a7c7b-56de-4f19-9d48-652ae6efe50f@arm.com>
+Date: Wed, 31 Jan 2024 10:02:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,80 +27,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] crypto: padlock-sha: Matches CPU with Family with
- 6 explicitly
+Subject: Re: [PATCH v5 05/10] coresight-tpda: Add support to configure CMB
+ element
 Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH v2 1/3] crypto: padlock-sha: Matches CPU with Family with
- 6 explicitly
-To: Dave Hansen <dave.hansen@intel.com>, <herbert@gondor.apana.org.au>,
-	<davem@davemloft.net>, <linux-crypto@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <seanjc@google.com>, <kim.phillips@amd.com>,
-	<kirill.shutemov@linux.intel.com>, <jmattson@google.com>,
-	<babu.moger@amd.com>, <kai.huang@intel.com>, <acme@redhat.com>,
-	<aik@amd.com>, <namhyung@kernel.org>
-CC: <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>,
-	<GeorgeXue@zhaoxin.com>
-References: <20240123022852.2475-1-TonyWWang-oc@zhaoxin.com>
- <20240123022852.2475-2-TonyWWang-oc@zhaoxin.com>
- <54d4fe7f-2e36-4bb3-8b51-4a68510010d5@intel.com>
-From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-In-Reply-To: <54d4fe7f-2e36-4bb3-8b51-4a68510010d5@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Tao Zhang <quic_taozha@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Konrad Dybcio <konradybcio@gmail.com>, Mike Leach <mike.leach@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Song Chai <quic_songchai@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, andersson@kernel.org
+References: <1706605366-31705-1-git-send-email-quic_taozha@quicinc.com>
+ <1706605366-31705-6-git-send-email-quic_taozha@quicinc.com>
+ <6ccb98f2-2f68-45db-9941-1c7b05da84d0@arm.com>
+ <6fff5991-01ed-44ea-aa08-9f302d2465e8@quicinc.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <6fff5991-01ed-44ea-aa08-9f302d2465e8@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
-X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
-X-Barracuda-Start-Time: 1706694341
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1370
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.120184
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
 
-
-On 2024/1/24 00:33, Dave Hansen wrote:
->
-> [这封邮件来自外部发件人 谨防风险]
->
-> On 1/22/24 18:28, Tony W Wang-oc wrote:
->> Updates the supporting qualification for packlock-sha driver, making
->> it support CPUs whose vendor ID is Centaur and Famliy is 6.
-> This changelog isn't telling us very much.  *Why* is this a good change?
->
->> diff --git a/drivers/crypto/padlock-sha.c b/drivers/crypto/padlock-sha.c
->> index 6865c7f1fc1a..2e82c5e77f7a 100644
->> --- a/drivers/crypto/padlock-sha.c
->> +++ b/drivers/crypto/padlock-sha.c
->> @@ -491,7 +491,7 @@ static struct shash_alg sha256_alg_nano = {
->>   };
+On 31/01/2024 01:39, Tao Zhang wrote:
+> 
+> On 1/30/2024 8:35 PM, Suzuki K Poulose wrote:
+>> On 30/01/2024 09:02, Tao Zhang wrote:
+>>> Read the CMB element size from the device tree. Set the register
+>>> bit that controls the CMB element size of the corresponding port.
+>>>
+>>> Reviewed-by: James Clark <james.clark@arm.com>
+>>> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
+>>> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+>>> ---
+>>>   drivers/hwtracing/coresight/coresight-tpda.c | 123 +++++++++++--------
+>>>   drivers/hwtracing/coresight/coresight-tpda.h |   6 +
+>>>   2 files changed, 79 insertions(+), 50 deletions(-)
+>>>
+>>> diff --git a/drivers/hwtracing/coresight/coresight-tpda.c 
+>>> b/drivers/hwtracing/coresight/coresight-tpda.c
+>>> index 4ac954f4bc13..fcddff3ded81 100644
+>>> --- a/drivers/hwtracing/coresight/coresight-tpda.c
+>>> +++ b/drivers/hwtracing/coresight/coresight-tpda.c
+>>> @@ -18,6 +18,7 @@
+>>>   #include "coresight-priv.h"
+>>>   #include "coresight-tpda.h"
+>>>   #include "coresight-trace-id.h"
+>>> +#include "coresight-tpdm.h"
+>>>     DEFINE_CORESIGHT_DEVLIST(tpda_devs, "tpda");
+>>>   @@ -28,24 +29,57 @@ static bool coresight_device_is_tpdm(struct 
+>>> coresight_device *csdev)
+>>>               CORESIGHT_DEV_SUBTYPE_SOURCE_TPDM);
+>>>   }
+>>>   +static void tpdm_clear_element_size(struct coresight_device *csdev)
+>>> +{
+>>> +    struct tpda_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+>>> +
+>>> +    drvdata->dsb_esize = 0;
+>>> +    drvdata->cmb_esize = 0;
+>>> +}
+>>> +
+>>> +static void tpda_set_element_size(struct tpda_drvdata *drvdata, u32 
+>>> *val)
+>>> +{
+>>> +
 >>
->>   static const struct x86_cpu_id padlock_sha_ids[] = {
->> -     X86_MATCH_FEATURE(X86_FEATURE_PHE, NULL),
->> +     X86_MATCH_VENDOR_FAM_FEATURE(CENTAUR, 6, X86_FEATURE_PHE, NULL),
->>        {}
->>   };
-> Logically, this is saying that there are non-CENTAUR or non-family-6
-> CPUs that set X86_FEATURE_PHE, but don't support X86_FEATURE_PHE.  Is
-> that the case?
+>>
+>>
+>>> +    if (drvdata->dsb_esize == 64)
+>>> +        *val |= TPDA_Pn_CR_DSBSIZE;
+>>
+>> We don't seem to be clearing the fields we modify, before updating 
+>> them. This may be OK in real world where the device connected to TPDA 
+>> port
+>> may not change. But it is always safer to clear the bits and set it.
+>>
+>> e.g.:
+>>     *val &= ~(TPDA_Pn_CR_DSBSIZE | TPDA_Pn_CR_CMBSIZE);
+>>
+>>
+>>
+>>> +    else if (drvdata->dsb_esize == 32)
+>>> +        *val &= ~TPDA_Pn_CR_DSBSIZE;
+>>> +
+>>> +    if (drvdata->cmb_esize == 64)
+>>> +        *val |= FIELD_PREP(TPDA_Pn_CR_CMBSIZE, 0x2);
+>>> +    else if (drvdata->cmb_esize == 32)
+>>> +        *val |= FIELD_PREP(TPDA_Pn_CR_CMBSIZE, 0x1);
+>>
+>> Similarly here ^^^. I am happy to fix it up if you are OK with it 
+>> (unless there are other changes that need a respin)
+> 
+> Thank you. I would be very grateful if you could help for this.
 
-Not exactly.
+Given, you need to respin, please incorporate this change too.
 
-Zhaoxin CPU supports X86_FEATURE_PHE and X86_FEATURE_PHE2.
-
-We expect the Zhaoxin CPU to use the zhaoxin_sha driver introduced in 
-the third patch of this patch set.
-
-Without this patch Zhaoxin CPU will also match the padlock-sha driver too.
+Suzuki
 
 
-> The one Intel use of X86_MATCH_VENDOR_FAM_FEATURE() also looks a bit
-> suspect, btw.
+
