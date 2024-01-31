@@ -1,79 +1,291 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D513D550;
-	Wed, 31 Jan 2024 05:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8F83E462;
+	Wed, 31 Jan 2024 05:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706677862; cv=none; b=Jitu8CVRFckuDHIW95uERzjdo5Aos5qRWkIShfReFJmU1rBIhauTgpVpb8E6L/QQM35yArY4DHRx0IS5BzKBMSgAJyScJn3kd85jgYO5WpEMGx5dzhyO7T1eU9Uu/up16H+ASd0fugFssQfa1nUB7zlIScmgkgwHpT3pXUAtjro=
+	t=1706677906; cv=none; b=Da3YOaE7G6aHUJK/6sDpl1hxtnjYqpUn6cfzn7ocCgSqqBGTt9ta7R3Q0DpgEK0XwB/r+Ep4F5cWBK+OcBzH4Z+jUPuerxJUa+KVDD9ru0ObfUgg0cmILhZzZnHB8vEBVocaC33URmrTacAODCkqA6hPrZn185kiWnkSfGV7foo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706677862; c=relaxed/simple;
-	bh=xrcGrwHhitnih9E8v9UQ+w1w2AvDKYiVY78bIEM1OfU=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=U2LMKTyu0ujFnnLKeo3c7T6Thai9c9PvpPF7gldfHiqj9LL5Kh3gDcXn9qQHmZjY4mtRnID+5c3J5Wyu73NF/mW/mH4RhASv9cPY59GLl9F0v7fPiXCGn160rzk5E+4TLiRhhCXoE9X49tLknfHruO72Wwh1mJUHPvBIBurUBus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gV37/hIF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706677906; c=relaxed/simple;
+	bh=pHldmmmXeB3bgwA/jDNWCRiXWea/YKy5KgDoDiSWmTw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=cqHPiWHErtPhHE4CLhT9/9/pL6kAAH1tqx43QS0fsyyyD25vOLxL2JKnlyraem6ysR9V9jmBFqn3dG5407Vij9E8hFKI91FdbavB9zmb3XYNbGOFJmrgZRTjJ8DZRSKkXO+2u5pHLXTCVQa5BkQpnTCe6cw16qB9tZwIgziUBw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=eK1WUb4+; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gV37/hIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B728C433F1;
-	Wed, 31 Jan 2024 05:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706677861;
-	bh=xrcGrwHhitnih9E8v9UQ+w1w2AvDKYiVY78bIEM1OfU=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=gV37/hIFfWJQ2Y6bf0lACNqLo0bKasPahlBztYPNgvksqUGAX8CgQq99fvvn91Cvw
-	 JYbKYeRH6cuFoeDzc7WhJ2CoCe0rJXAFaDvU2PrLBeAkBDbq02x9yorLAVZXhWC9yA
-	 XfEQWvQTKz0QSHWaQujfvHmytIr9spTbtx1Iif8a1RkhszgeFABGbvUrMa1GD1FtU4
-	 QwyhgLjQmtRSGen9pFqqAvdHtJpAjSQfHaDGRYlUE9cKEDw48GpV5yhTqkBQb12/xR
-	 f/fVcG4h8LJ9EMqdGisIE1qoKJ6uXXoMkxvZFZWNqqUdDpgZzbGeWVzKHZdai80qXg
-	 sy0N9UpvdOlMg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>,  davem@davemloft.net,
-  pabeni@redhat.com,  edumazet@google.com,  dsahern@kernel.org,
-  weiwan@google.com,  netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  horms@kernel.org,  andrew@lunn.ch,
-  leit@fb.com,  Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>,  Kees
- Cook <keescook@chromium.org>,  Johannes Berg <johannes.berg@intel.com>,
-  Emmanuel Grumbach <emmanuel.grumbach@intel.com>,  Justin Stitt
- <justinstitt@google.com>,  Li Zetao <lizetao1@huawei.com>,  Francois
- Romieu <romieu@fr.zoreil.com>,  Rob Herring <robh@kernel.org>,  Marc
- Kleine-Budde <mkl@pengutronix.de>,  Ruan Jinjie <ruanjinjie@huawei.com>,
-  linux-wireless@vger.kernel.org (open list:TI WILINK WIRELESS DRIVERS)
-Subject: Re: [PATCH net 1/9] wifi: fill in MODULE_DESCRIPTION()s for wlcore
-References: <20240130104243.3025393-2-leitao@debian.org>
-	<170662101207.2289851.7564186430529596261.kvalo@kernel.org>
-	<20240130181435.13f6e2cc@kernel.org>
-Date: Wed, 31 Jan 2024 07:10:54 +0200
-In-Reply-To: <20240130181435.13f6e2cc@kernel.org> (Jakub Kicinski's message of
-	"Tue, 30 Jan 2024 18:14:35 -0800")
-Message-ID: <87y1c6uly9.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="eK1WUb4+"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1706677554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YS6JbNQ2jaewqZUbnCIKLMUYy9mmoZ8lFT9ULydhMQE=;
+	b=eK1WUb4+QyGsy4bpZNRl2rbt2HABjdXw6syrhVwQFknOh2moxoPxEeYF4qC3jDZjGLH/7j
+	M6YlkgoxF+UF05QRQ6w3GA4wb9Jl6LiO9Vjxu7ShGoVbOBaFCbGUanXIVHN89SMLvmuCWb
+	t8upFOyV1gZULjm9QhkiTHEJBbbNqNqHCAqLWorHuQbprmx2jz54BkV9MhpslteYMC5weV
+	9TNfiiQmi9Dmf/TDi/lTUVFH692PhIArqpdjBraLpxn0Hc5BA9le4BIAVNlfWBuwJhE4f2
+	bVGh4bQ2bkO+3WdVIUABbERl9te+jIGmqK0voxCN+j6Zhuc+J9SsxuOgSInNdw==
+Date: Wed, 31 Jan 2024 06:05:53 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: enable built-in thermal
+ monitoring on rk3588
+In-Reply-To: <20240130-rk-dts-additions-v2-1-c6222c4c78df@gmail.com>
+References: <20240130-rk-dts-additions-v2-0-c6222c4c78df@gmail.com>
+ <20240130-rk-dts-additions-v2-1-c6222c4c78df@gmail.com>
+Message-ID: <0702542c8d7dc4139ba5da690fd98e67@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Jakub Kicinski <kuba@kernel.org> writes:
+Hello Alexey,
 
-> On Tue, 30 Jan 2024 13:23:34 +0000 (UTC) Kalle Valo wrote:
->> > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
->> > Add descriptions to the TI WLAN wlcore drivers.
->> > 
->> > Signed-off-by: Breno Leitao <leitao@debian.org>  
->> 
->> These patches go to wireless-next, not net. But no need to resend because of this.
->
-> FWIW I've been taking these thru net (or wireless in your case)
-> rather than the -next tree. There's zero chance of regression
-> here and the warnings are annoying. But up to you.
+Some small nitpicks below, please have a look.
 
-Good point, I'll take them to wireless. Thanks.
+On 2024-01-30 19:21, Alexey Charkov wrote:
+> Include thermal zones information in device tree for rk3588 variants
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Please use "RK3588" instead of "rk3588", both here and in the
+patch subject.  Looks much better.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 162 
+> ++++++++++++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> index 36b1b7acfe6a..696cb72d75d0 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/reset/rockchip,rk3588-cru.h>
+>  #include <dt-bindings/phy/phy.h>
+>  #include <dt-bindings/ata/ahci.h>
+> +#include <dt-bindings/thermal/thermal.h>
+> 
+>  / {
+>  	compatible = "rockchip,rk3588";
+> @@ -2228,6 +2229,167 @@ tsadc: tsadc@fec00000 {
+>  		status = "disabled";
+>  	};
+> 
+> +	thermal_zones: thermal-zones {
+> +		/* sensor near the center of the whole chip */
+
+It would be good to replace "whole chip" with "SoC".  Simpler and
+IIRC closer to the official description of the sensor.
+
+> +		package_thermal: package-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&tsadc 0>;
+> +
+> +			trips {
+> +				package_crit: package-crit {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		/* sensor between A76 cores 0 and 1 */
+> +		bigcore0_thermal: bigcore0-thermal {
+> +			polling-delay-passive = <100>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&tsadc 1>;
+> +
+> +			trips {
+
+Please add the following comment here, to make it clear what's
+the purpose of this thermal trip when the IPA thermal governor
+is used (more similar comments below):
+
+                                 /* IPA threshold */
+
+> +				bigcore0_alert0: bigcore0-alert0 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+
+Please add the following comment here:
+
+                                 /* IPA target */
+
+> +				bigcore0_alert1: bigcore0-alert1 {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				bigcore0_crit: bigcore0-crit {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&bigcore0_alert1>;
+> +					cooling-device =
+> +						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +
+> +		/* sensor between A76 cores 2 and 3 */
+> +		bigcore2_thermal: bigcore2-thermal {
+> +			polling-delay-passive = <100>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&tsadc 2>;
+> +
+> +			trips {
+
+Please add the following comment here:
+
+                                 /* IPA threshold */
+
+> +				bigcore2_alert0: bigcore2-alert0 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+
+Please add the following comment here:
+
+                                 /* IPA target */
+
+> +				bigcore2_alert1: bigcore2-alert1 {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				bigcore2_crit: bigcore2-crit {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&bigcore2_alert1>;
+> +					cooling-device =
+> +						<&cpu_b2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu_b3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +
+> +		/* sensor between the four A55 cores */
+> +		little_core_thermal: littlecore-thermal {
+> +			polling-delay-passive = <100>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&tsadc 3>;
+> +
+> +			trips {
+
+Please add the following comment here:
+
+                                 /* IPA threshold */
+
+> +				littlecore_alert0: littlecore-alert0 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+
+Please add the following comment here:
+
+                                 /* IPA target */
+
+> +				littlecore_alert1: littlecore-alert1 {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				littlecore_crit: littlecore-crit {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&littlecore_alert1>;
+> +					cooling-device =
+> +						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu_l1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu_l2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&cpu_l3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +
+> +		/* sensor near the PD_CENTER power domain */
+> +		center_thermal: center-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&tsadc 4>;
+> +
+> +			trips {
+> +				center_crit: center-crit {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		gpu_thermal: gpu-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&tsadc 5>;
+> +
+> +			trips {
+> +				gpu_crit: gpu-crit {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		npu_thermal: npu-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&tsadc 6>;
+> +
+> +			trips {
+> +				npu_crit: npu-crit {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	saradc: adc@fec10000 {
+>  		compatible = "rockchip,rk3588-saradc";
+>  		reg = <0x0 0xfec10000 0x0 0x10000>;
