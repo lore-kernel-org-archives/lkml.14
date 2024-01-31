@@ -1,79 +1,130 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C171C3B195
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 23:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8673BB53
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 23:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706743543; cv=none; b=hxTfHLXrqLG4ec2t7UiyEdxi0gFUmTd7uOwVCfUbEcQEtCUvBj70Ayx5oBumFLQH6eol8u+RNkCdYckgqHo3Tomn8qbVJCspkC7U+W1CuMRK8llLT7r3C4DFojsqNEcSnD9zThVLzO9prrH4ht1kgn5xhcRfsYT2Y3CntPg1QCU=
+	t=1706743862; cv=none; b=ZUZ8S7eolkqMu5jnplgLru/ydedPOK/bKOBaQGByIJb5A1i8iu5Yh4rQcUt2V4tuUFXKYzyNRMBjJYIwKL9LzAotZ3xkLYFltxJlc7H3dk0IJ/xCaXKwqPlxHSagRGCwLng7xHzQfyJ1EHtK8yvKwFLhfjGoPp4JRm9N09O/ivc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706743543; c=relaxed/simple;
-	bh=SRM+ZkTQopoKjEIsOT0GRbY/yEckJ1SCXR2I6jeUaqk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BwDetnutfxAaESY/j7H/bEJmSNI9LvYQSgKGXC+yGth5ITNhb35BeIbZDB3V2DsUC4FVuKT0hYquHB4R1rfmKtYLUbM1kp4iBstXaPV1UWVD4nkdyifZ7NFfE142P+bjhk5YAQyE7PbUs4UpvrtaKpCm5XYDyGRGB/vMAoWwsUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mhgnv3KH; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706743862; c=relaxed/simple;
+	bh=BDJaHPvofpfiISPE/qEiQQf3zc6+15Xz8vueMizXKGs=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JQLZWiQ+3J/99rvzZU5THdhYuogFdjZaLxNT/87NoZIsl77UF/T+LqNTu3e4NLzplmGjfiQU1EGMY5mj2cqIYdauUWJkcFaSO8vtPAfSTTq0zHntEFXu/NlNpR+QPH4FCu0Ig5PDRzKZ5FTPhL5El4XodmzebU6CTHRj66Nkcx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F+4V8kwc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mhgnv3KH"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7bed8faf6ebso13621639f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 15:25:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706743541; x=1707348341; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SRM+ZkTQopoKjEIsOT0GRbY/yEckJ1SCXR2I6jeUaqk=;
-        b=Mhgnv3KHFMLUVgP2YJxrdiiuA0BPCnQzQkgKndiJWhSHTwmdlZaWvMTX/Y/+rYoVSl
-         DntqYZvFvusNXX1YPzz/bG3d4lDYadcJhgqFto1uGO8hPXjWqUR8TDp4p+9/G3QQXkbo
-         cIsGk76Epok0nOP0LDR1jOBnyKwrNmasV1YkhYDgBJDcGwziAdtNnsGgbU56vomawlem
-         C7Yjh95uj+bOUlcCvCAJqqj/qYEjB4b7yN+jN/+Pv6yJZiyQg+SpUIIUpk6LYDi4OZu4
-         kxBYRpXTLGEcMM3CdlN4js3sJ305e3HJm21cVbzLCC10/AwaZbWV8kgjt/NygKBwyVhK
-         IOqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706743541; x=1707348341;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SRM+ZkTQopoKjEIsOT0GRbY/yEckJ1SCXR2I6jeUaqk=;
-        b=HhjQ7wsPiMHkYmMO64YxC8s9H1WJ9NignKZqYIIbc212gXXtsqJi6kidwLjzrhlKUR
-         HpIE2a1C/FCnqvMEWJY6i4TWFxs2m05C6+2EjexhiyDEzMa6IDhCdFq5AYjFgq6mJ/1x
-         xMaa9zkqBC7ZZp8OpqUJGEhrUsGPEntlb1q+8e0z1h1OmS+63fLG4Ekr2o92Gw5X20kA
-         iS1lwpMz2PDE27pI8zI93pxJ7kPsDKITDeRf5iVM+WqqMiCCKiD6RKRNl1QXfE7aswkB
-         ui2pWGEM1Mh16FP1wkLgF8nrk7yScx0+ofFG2p7RF3ik3x8BEqo4TqhGsTlLxIL/suzg
-         sGRw==
-X-Gm-Message-State: AOJu0Yz0LrZU+8U+3zB0ZhVvHsE3CtazSXqCzgtPWclD+yiNIL1RGy8B
-	cNTIJ5Pb+zPIBqiXVBkpcJOD9yNZix2/lQnfo0k1cfYten4v0nHv+3uvbQxJhFLsALDeZvs2GUU
-	0P09VuZB/vYTCKNwOJxMtY2Fph5c=
-X-Google-Smtp-Source: AGHT+IHHB5rKGYSU3G+AkhflStdCFi9mNkjtblISqCLN96KfF2VhLpJm1Wz6sWJ9EK+jYXFhZxvDRVA+RGKu7canjQA=
-X-Received: by 2002:a05:6602:3143:b0:7c0:26d5:8a68 with SMTP id
- m3-20020a056602314300b007c026d58a68mr2803806ioy.8.1706743540796; Wed, 31 Jan
- 2024 15:25:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F+4V8kwc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706743859;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aEh+wFpUinJIaznT4QZk7JIQDrVHQazll8Aw7qFD9DI=;
+	b=F+4V8kwcmW1cist3BzLtFC9kyaCxE0J1PPoS2EBL6WLoxqcjAQEw0VMouJ3etDpjVvWMYf
+	VDXwBfRwJt8ADvU3BzCO84ToFbadfkKVPvi2MCdf04o63TLE4BJEX83iw7NKDOxfZMiPKm
+	SUw0KQ20+WszbqffJa53EGi7VZNx/F8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-682-wQOvrYrqMeeO4c6k-EyjNA-1; Wed,
+ 31 Jan 2024 18:30:57 -0500
+X-MC-Unique: wQOvrYrqMeeO4c6k-EyjNA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CEE213C0C102;
+	Wed, 31 Jan 2024 23:30:56 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B6F65C2590D;
+	Wed, 31 Jan 2024 23:30:56 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH 1/8] KVM: remove more traces of device assignment UAPI
+Date: Wed, 31 Jan 2024 18:30:49 -0500
+Message-Id: <20240131233056.10845-2-pbonzini@redhat.com>
+In-Reply-To: <20240131233056.10845-1-pbonzini@redhat.com>
+References: <20240131233056.10845-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130014208.565554-1-hannes@cmpxchg.org> <20240130014208.565554-18-hannes@cmpxchg.org>
-In-Reply-To: <20240130014208.565554-18-hannes@cmpxchg.org>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 31 Jan 2024 15:25:30 -0800
-Message-ID: <CAKEwX=Mh7_iTUesMH_tpRMCJtmjFHsWS_h89XLyk80=T6j40=w@mail.gmail.com>
-Subject: Re: [PATCH 17/20] mm: zswap: function ordering: compress & decompress functions
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Mon, Jan 29, 2024 at 5:42=E2=80=AFPM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> Writeback needs to decompress. Move the (de)compression API above what
-> will be the consolidated shrinking/writeback code.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ include/uapi/linux/kvm.h | 50 ----------------------------------------
+ 1 file changed, 50 deletions(-)
 
-Reviewed-by: Nhat Pham <nphamcs@gmail.com>
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index c3308536482b..e107ea953585 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1965,56 +1965,6 @@ struct kvm_sev_receive_update_data {
+ 	__u32 trans_len;
+ };
+ 
+-#define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
+-#define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
+-#define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
+-
+-struct kvm_assigned_pci_dev {
+-	__u32 assigned_dev_id;
+-	__u32 busnr;
+-	__u32 devfn;
+-	__u32 flags;
+-	__u32 segnr;
+-	union {
+-		__u32 reserved[11];
+-	};
+-};
+-
+-#define KVM_DEV_IRQ_HOST_INTX    (1 << 0)
+-#define KVM_DEV_IRQ_HOST_MSI     (1 << 1)
+-#define KVM_DEV_IRQ_HOST_MSIX    (1 << 2)
+-
+-#define KVM_DEV_IRQ_GUEST_INTX   (1 << 8)
+-#define KVM_DEV_IRQ_GUEST_MSI    (1 << 9)
+-#define KVM_DEV_IRQ_GUEST_MSIX   (1 << 10)
+-
+-#define KVM_DEV_IRQ_HOST_MASK	 0x00ff
+-#define KVM_DEV_IRQ_GUEST_MASK   0xff00
+-
+-struct kvm_assigned_irq {
+-	__u32 assigned_dev_id;
+-	__u32 host_irq; /* ignored (legacy field) */
+-	__u32 guest_irq;
+-	__u32 flags;
+-	union {
+-		__u32 reserved[12];
+-	};
+-};
+-
+-struct kvm_assigned_msix_nr {
+-	__u32 assigned_dev_id;
+-	__u16 entry_nr;
+-	__u16 padding;
+-};
+-
+-#define KVM_MAX_MSIX_PER_DEV		256
+-struct kvm_assigned_msix_entry {
+-	__u32 assigned_dev_id;
+-	__u32 gsi;
+-	__u16 entry; /* The index of entry in the MSI-X table */
+-	__u16 padding[3];
+-};
+-
+ #define KVM_X2APIC_API_USE_32BIT_IDS            (1ULL << 0)
+ #define KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK  (1ULL << 1)
+ 
+-- 
+2.39.0
+
+
