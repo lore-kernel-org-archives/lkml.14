@@ -1,111 +1,118 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52A010A16;
-	Wed, 31 Jan 2024 16:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE49F63B3;
+	Wed, 31 Jan 2024 16:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706718617; cv=none; b=mKzsT6QyZZtVmQFiqG9LJWRWjYDIMCpvbYTPV6Op1mtTmddzXQPrhj7sNZO9GnMZT8B3D5gBC4CSS1rg8GLVIoixhYSmIAALBTeg+tjIHT0J5GHDq3nfRaTLVfHZT/HTPVo+ajMEjgWiJh5TO9HH7oQv6pivLRFGeovoybAk8cM=
+	t=1706718653; cv=none; b=QqwXEfFfRxLHDobd89CapdLxlxQWHXELAY2+9cRdz2qMF8L1pre9+FyQDuBTDU1kByNGFPHQDxea8DW65EgrQNeSCbLDGzywAzYaIiJej0/Z4PmMvebxT5aOeekJ7NJ0swpw1wIwu/jTwNX3qvFIRU31KFfTM2Ql4Yr7E9JpgEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706718617; c=relaxed/simple;
-	bh=7V1fSgM4dCw5mlPpFTAU48pNl+7Y50/umf6DNk56DA0=;
+	s=arc-20240116; t=1706718653; c=relaxed/simple;
+	bh=jV+IW1BRHUg+D+REntsLJtRkUxqONiKUmtqDsV82itI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sHMdwxjSi0DAd594tgdjm9JZGu3asSkLrXSl+1+QGA5I39orG7tZUCImTjeniTHI+LXgS3oXaBkoUtZGTYW4R3vfsCS39FIV5Ftkb4DCdcftTQNVEKqSXH9kuL2NlWadlv1O8yZ8XlqAlcq8MO0ps5Izw30Xo7E7NJIUGGX+NRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FT0Fzc15; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=bskAIB6wDaTqYfqQcaRA0l8TjTgtMzYGnG3BXwoStQsYioHzQQfgYxF/Jkl2bibfGQy4eACqUd5Jtn0rWpLcQPP8pUeJVHrEyIuoErasPb1+zKYr7l4B0q8nlI14Zhl+YxKa5hYSrC34vZzI0+McXJqiFUJ/RWhVDK5G1z4Pcyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udG2ZcRD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FT0Fzc15"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6290E40E0177;
-	Wed, 31 Jan 2024 16:30:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 7GQ7zRmXTudR; Wed, 31 Jan 2024 16:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706718611; bh=CwEErEB3kf4RV79ZYL4VTQTVVr1r+pmwOOZjB2GqHX8=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udG2ZcRD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C1BEC433C7;
+	Wed, 31 Jan 2024 16:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706718652;
+	bh=jV+IW1BRHUg+D+REntsLJtRkUxqONiKUmtqDsV82itI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FT0Fzc15Ik8qxsIJb/DkO7GGIGwKyf5+d/2niv86eGi9vZs09M+9SRHZ0CaxTAkew
-	 qQX/Hc0GsOcQDyshkSAOGiYxmlWV79/k8hs22cMauUhYQI3hfQ4DnCg3sC9ZYyLrGM
-	 ot4jMX0I7B2caZfGD+YRNt6C3gDweittOAm1YTBM9fYGznDfpbyX4vKXd8AByNK3E8
-	 ne8iXgwIhTDXWV7uyMN2ozEA+uoLzz6oXQtFyOlhjz7XTiCdbM5d/r2+Drq6gdjPsw
-	 yak8/RlmQKstxU3LjZrjIG7aN6Hb7ENIsHb+Oaa5rOFq0P3wNnTQ7NxF3mVCcqEeWL
-	 1N2yJ6/9axAyvjKOGeJORYRPMYrHxGKgTGgDID+IwbW9/RRDfY6Zjo6C+JNrE7eTP4
-	 DJyST6GQnuc/DVlJlNSmM4yf++toYjZ0BxgbqQ3Vt1htYp81aA4wWm0X4vKMjpD2Oh
-	 fGLKEvRC4hYYdUpIOGQ1xZCw/T8PcjY8Clue4YWYr6YAGwpl3iag6KLy4vQGZIDhhC
-	 PMajdU1cEQI2GKS4LAN1OzKGjTisOLQlXeSSQNf5fS2sLGgLtMLUGaTU2MEu+bC8rv
-	 sPTFWWpxh8qzdcTIUe55IWH3RxALfhpJwe/HewWL4t7b5komTAU5tKAoY6QHBYMe2s
-	 rjlBaZ71WYEFlOQNT+aA6+fQ=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 256DC40E00C5;
-	Wed, 31 Jan 2024 16:29:53 +0000 (UTC)
-Date: Wed, 31 Jan 2024 17:29:52 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>,
-	linux-arch@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 03/19] x86/startup_64: Drop long return to
- initial_code pointer
-Message-ID: <20240131162952.GHZbp1gH7C7lNMRUru@fat_crate.local>
-References: <20240129180502.4069817-21-ardb+git@google.com>
- <20240129180502.4069817-24-ardb+git@google.com>
- <20240131134431.GJZbpOvz3Ibhg4VhCl@fat_crate.local>
- <CAMj1kXF7T4morB+Z3BDy-UaeHoeU6fHtnaa-7HJY_NR3RVC5sg@mail.gmail.com>
- <CAMj1kXGk1QivyoK4H5CVp7p-tfYoQSTuethpkm8bWBcTO_UMGw@mail.gmail.com>
+	b=udG2ZcRDmMPjbK6aF+4k7fsWHwlpGxyg8XCxDbLkppGdsq6L73vhfSAYtMyv4wK6H
+	 IYkOX8GbR9Mm0ccp4sIcyKJzgdetiCpZ/Z2qrVrvhSBxihAI1IJ7T0cZIX/k+Bs2Yf
+	 Avm64pVoXKnvHC6NT3YcaUAfhj6DkPmYYt4zR/D3jgBMlB9r86XcS/7T75NP86FSRy
+	 tAhMSWdH528agAjz7fh/aVEVoAVzqx5x/+cU048NmS9NZSgOzWOLX3Evk2rr0S8uQs
+	 4AzUMKoulmjNSNkA08hpSTv7lQGII9EXVs4w7dVCIZ1gMPxSkaO6KLlfRgDLfV8FZF
+	 f0rEik7hgaleA==
+Date: Wed, 31 Jan 2024 17:30:49 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Keith Zhao <keith.zhao@starfivetech.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>, 
+	"airlied@gmail.com" <airlied@gmail.com>, 
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, William Qiu <william.qiu@starfivetech.com>, 
+	Xingyu Wu <xingyu.wu@starfivetech.com>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, 
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, Shengyang Chen <shengyang.chen@starfivetech.com>, 
+	Jack Zhu <jack.zhu@starfivetech.com>, Changhuang Liang <changhuang.liang@starfivetech.com>, 
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>
+Subject: Re: =?utf-8?B?5Zue5aSNOg==?= [v3 4/6] drm/vs: Add KMS crtc&plane
+Message-ID: <e2spje6iew6skzrhrcgr23g4dc7l7rjoq77ki6oupqborfl22b@owmd2sdzcdaj>
+References: <20231204123315.28456-1-keith.zhao@starfivetech.com>
+ <20231204123315.28456-5-keith.zhao@starfivetech.com>
+ <o4ica2jg2rqfx6znir6j7mkoojoqzejjuqvlwcnehanw5mvop6@a3t6vi7c55tz>
+ <NTZPR01MB1050AC99C38D2136D0354F3DEE7CA@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xv7z5ay3ishmxaq2"
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGk1QivyoK4H5CVp7p-tfYoQSTuethpkm8bWBcTO_UMGw@mail.gmail.com>
+In-Reply-To: <NTZPR01MB1050AC99C38D2136D0354F3DEE7CA@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
 
-On Wed, Jan 31, 2024 at 03:07:50PM +0100, Ard Biesheuvel wrote:
-> > s/int3/RET seems to do the trick.
-> >
-> or ud2, even better,
 
-Yap, that does it. And yes, we don't return here. I guess objtool
-complains because
+--xv7z5ay3ishmxaq2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"7. file: warning: objtool: func()+0x5c: stack state mismatch
+On Wed, Jan 31, 2024 at 08:57:21AM +0000, Keith Zhao wrote:
+> > > +static const struct vs_dc_info dc8200_info =3D {
+> > > +	.name			=3D "DC8200",
+> > > +	.panel_num		=3D 2,
+> > > +	.plane_num		=3D 8,
+> > > +	.planes			=3D dc_hw_planes_rev0,
+> > > +	.layer_num		=3D 6,
+> > > +	.max_bpc		=3D 10,
+> > > +	.color_formats		=3D DRM_COLOR_FORMAT_RGB444 |
+> > > +				  DRM_COLOR_FORMAT_YCBCR444 |
+> > > +				  DRM_COLOR_FORMAT_YCBCR422 |
+> > > +				  DRM_COLOR_FORMAT_YCBCR420,
+> > > +	.gamma_size		=3D GAMMA_EX_SIZE,
+> > > +	.gamma_bits		=3D 12,
+> > > +	.pitch_alignment	=3D 128,
+> > > +	.pipe_sync		=3D false,
+> > > +	.background		=3D true,
+> > > +	.panel_sync		=3D true,
+> > > +	.cap_dec		=3D true,
+> > > +};
+> >=20
+> > I really think that entire thing is to workaround a suboptimal device t=
+ree binding.
+> > You should have two CRTCs in the device tree, you'll probe twice, and y=
+ou won't
+> > get to do that whole dance.
+> >=20
+> Hi Maxime:
+> I tried to modify it according to this idea Found it too difficult In ter=
+ms of hardware,=20
+> the two crtc designs are too close to separate, and they are even designe=
+d into the same reg with different bits representing crtc0 and crtc1.
+> It seems not easy to described the 2 ctrc hardware by 2 device nodes
+>=20
+> The idea is to avoid a whole dance
+> I don't know if I understand correctly about whole dance.
+> Is it means I create 2 ctrc and 8 plane in the dc_bind?
 
-   The instruction's frame pointer state is inconsistent, depending on
-   which execution path was taken to reach the instruction.
+It looks like you just sent the same mail?
 
-   ...
+Maxime
 
-   Another possibility is that the code has some asm or inline asm which
-   does some unusual things to the stack or the frame pointer.  In such
-   cases it's probably appropriate to use the unwind hint macros in
-   asm/unwind_hints.h.
-"
+--xv7z5ay3ishmxaq2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Lemme test this one a bit on my machines and queue it.
+-----BEGIN PGP SIGNATURE-----
 
-Thx.
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZbp1uQAKCRDj7w1vZxhR
+xTVnAQCPu+rxm42307fHf03GbrgNfJK7FjrljEfpxkkKMR2KHgD/TaZnj2hQnMsv
+I3q4pY+SX55x7qpgGeeIIDvyLXESOQE=
+=S6wD
+-----END PGP SIGNATURE-----
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--xv7z5ay3ishmxaq2--
