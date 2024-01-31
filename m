@@ -1,157 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A336A03E;
-	Wed, 31 Jan 2024 10:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB7E69DFD
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706698515; cv=none; b=iMWMGKakaj9I4IpZIy8lwsWwmwO2QfdiVUQDFSidgScTRvga4MI2/127F8askKouNm/kUHD4/PS2cz2Bn457r6qViJHhDayOCAaCeHLkb8hn67fd0cxfVXXmISYZw25+BnjdcV8gpk8HNVqqxvbCjw3HY0nASa3A/cytIKPiqrY=
+	t=1706698535; cv=none; b=C+uSXEAAKb2tZ+BgGuRArmhE1RpFpAas/Ycf2g3eI5K7rwIc3Zno7hGBKTNc4wNZWj0/pnTB6320ZGA2TjQrGO8Dm8BJCMYzzketWG4NdUBOwZf73HFZk6WK4YKmBC/jsjUTV+O4tCIzpOJ1IhZ3RcoDeMsTqLYzi6yBRVJNTpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706698515; c=relaxed/simple;
-	bh=eubTaO2Xn3E5tDtt+RwQYETkethSKNEFLYxSws5vnIE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=i+8XoTzffanln3Uhl2E5+rZy6Faov4U6lKLE1Nl11Z3IRqIs/OkT4/PEXsIvGb9hnbFoQlEaKq8GiEESfiw/Qy4qdLyYCTDJ/+D7OtHkXav5Lr8vYnq3fEoTiIHakae5EIkbTqZQuswnDUNecp5VAb470VM4kjCM+xoLWJzHh0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uo4hb0y+; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uo4hb0y+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706698514; x=1738234514;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=eubTaO2Xn3E5tDtt+RwQYETkethSKNEFLYxSws5vnIE=;
-  b=Uo4hb0y+sPjv/Y/sL98dG4HkiTCqL4Pjn4c2r+6F9Htnen2GCi4t+4Is
-   9RjlPI1fBoRx0HA8RFBPNLAr8pD+/M/UQY6KUBSdEkyV0GVh3ylNruRY4
-   d+WglQbH63q+TSM5esVFFSczrTglmXohSq67j9SKS2B/GxvbXJR8k0U2k
-   HEaHbcL8KLsmCXttD+Ma7eL2vU5imgxFCu9nVJ0ThK1VqsMsFVvTbrp7/
-   Ax0qows7PvBtjq53yr09RXlMiCALZouQkDd9V4ourEj9mGevpwVklN6gf
-   2LkZ+SEKjIo0xo6NC5N3JkAZ+O2RDfomu/a8Zj1JYwLu9hxtJ4y6Lo0rh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10666997"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="10666997"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:55:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="4009100"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.35.167])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:55:03 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 31 Jan 2024 12:54:58 +0200 (EET)
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
-    David E Box <david.e.box@linux.intel.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>, 
-    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-    Jose Abreu <Jose.Abreu@synopsys.com>, 
-    "David S . Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, 
-    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-    Richard Cochran <richardcochran@gmail.com>, 
-    Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>, 
-    Daniel Borkmann <daniel@iogearbox.net>, 
-    Jesper Dangaard Brouer <hawk@kernel.org>, 
-    John Fastabend <john.fastabend@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
-    Heiner Kallweit <hkallweit1@gmail.com>, 
-    Philipp Zabel <p.zabel@pengutronix.de>, 
-    Andrew Halaney <ahalaney@redhat.com>, 
-    Simon Horman <simon.horman@corigine.com>, 
-    Serge Semin <fancer.lancer@gmail.com>, Netdev <netdev@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    linux-stm32@st-md-mailman.stormreply.com, 
-    linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, bpf@vger.kernel.org, 
-    Voon Wei Feng <weifeng.voon@intel.com>, 
-    Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>, 
-    Lai Peter Jun Ann <jun.ann.lai@intel.com>, 
-    Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
-Subject: Re: [PATCH net-next v4 07/11] arch: x86: Add IPC mailbox accessor
- function and add SoC register access
-In-Reply-To: <20240129130253.1400707-8-yong.liang.choong@linux.intel.com>
-Message-ID: <1fccbf0d-5b96-447b-80f1-19af70628edc@linux.intel.com>
-References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com> <20240129130253.1400707-8-yong.liang.choong@linux.intel.com>
+	s=arc-20240116; t=1706698535; c=relaxed/simple;
+	bh=aG8P/MkBiA/Gv0nPUKkQbjHE1IRLe9SjeeOS0X57tks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eoQdS5wAAPsPkD99Iqe3xMaUUGCIEES6MdzrX5+e0Vxt3BOUXTKiV7VKXKbLo/gLeOobKq/Z4k6W4uxQVFVYZhH15YNkFGPHPmWHbzHCkaAnZZx1TZ5861rlk1MMTWrPrbzo9f5u6k2fY1uDGF16wtz8WGeNZg12ibiemvRc6rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1706698529-1eb14e0c7e326a0001-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id YFLiBZ57oHCTKoq5 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 31 Jan 2024 18:55:29 +0800 (CST)
+X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
+ 2024 18:55:29 +0800
+Received: from [10.32.57.248] (10.32.57.248) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
+ 2024 18:55:26 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Message-ID: <7f869bc1-9129-48b2-b0fd-483c790a8d1b@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.32.57.248
+Date: Wed, 31 Jan 2024 18:55:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-
-On Mon, 29 Jan 2024, Choong Yong Liang wrote:
-
-> From: "David E. Box" <david.e.box@linux.intel.com>
-> 
-> - Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
-> - Add support to use IPC command allows host to access SoC registers
-> through PMC firmware that are otherwise inaccessible to the host due to
-> security policies.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Chao Qin <chao.qin@intel.com>
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> ---
->  MAINTAINERS                                   |  2 +
->  arch/x86/Kconfig                              |  9 +++
->  arch/x86/platform/intel/Makefile              |  1 +
->  arch/x86/platform/intel/pmc_ipc.c             | 75 +++++++++++++++++++
->  .../linux/platform_data/x86/intel_pmc_ipc.h   | 34 +++++++++
->  5 files changed, 121 insertions(+)
->  create mode 100644 arch/x86/platform/intel/pmc_ipc.c
->  create mode 100644 include/linux/platform_data/x86/intel_pmc_ipc.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8709c7cd3656..441eb921edef 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10973,8 +10973,10 @@ M:	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
->  M:	David E Box <david.e.box@intel.com>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
-> +F:	arch/x86/platform/intel/pmc_ipc.c
->  F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
->  F:	drivers/platform/x86/intel/pmc/
-> +F:	linux/platform_data/x86/intel_pmc_ipc.h
->  
->  INTEL PMIC GPIO DRIVERS
->  M:	Andy Shevchenko <andy@kernel.org>
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 5edec175b9bf..bceae28b9381 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -666,6 +666,15 @@ config X86_AMD_PLATFORM_DEVICE
->  	  I2C and UART depend on COMMON_CLK to set clock. GPIO driver is
->  	  implemented under PINCTRL subsystem.
->  
-> +config INTEL_PMC_IPC
-> +	tristate "Intel Core SoC Power Management Controller IPC mailbox"
-> +	depends on ACPI
-> +	help
-> +	  This option enables sideband register access support for Intel SoC
-> +	  power management controller IPC mailbox.
-> +
-> +	  If you don't require the option or are in doubt, say N.
-> +
->  config IOSF_MBI
->  	tristate "Intel SoC IOSF Sideband support for SoC platforms"
->  	depends on PCI
-> diff --git a/arch/x86/platform/intel/Makefile b/arch/x86/platform/intel/Makefile
-> index dbee3b00f9d0..470fc68de6ba 100644
-> --- a/arch/x86/platform/intel/Makefile
-> +++ b/arch/x86/platform/intel/Makefile
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_IOSF_MBI)			+= iosf_mbi.o
-> +obj-$(CONFIG_INTEL_PMC_IPC)		+= pmc_ipc.o
-> \ No newline at end of file
-
-New line missing.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] ACPI: cpufreq: Add ITMT support when CPPC enabled for
+ Zhaoxin CPUs
+Content-Language: en-US
+X-ASG-Orig-Subj: Re: [PATCH 3/3] ACPI: cpufreq: Add ITMT support when CPPC enabled for
+ Zhaoxin CPUs
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <robert.moore@intel.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<acpica-devel@lists.linux.dev>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <mcgrof@kernel.org>, <peterz@infradead.org>,
+	<j.granados@samsung.com>, <viresh.kumar@linaro.org>,
+	<linux-pm@vger.kernel.org>, <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>,
+	<LeoLiu-oc@zhaoxin.com>, <LindaChai@zhaoxin.com>
+References: <20231228075705.26652-1-TonyWWang-oc@zhaoxin.com>
+ <20231228075705.26652-4-TonyWWang-oc@zhaoxin.com>
+ <20240117225158.GD13777@ranerica-svr.sc.intel.com>
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+In-Reply-To: <20240117225158.GD13777@ranerica-svr.sc.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1706698529
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 3710
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.120187
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
 
--- 
- i.
+On 2024/1/18 06:51, Ricardo Neri wrote:
+>
+> [这封邮件来自外部发件人]
+>
+> On Thu, Dec 28, 2023 at 03:57:05PM +0800, Tony W Wang-oc wrote:
+>> For Zhaoxin CPUs, the cores' highest frequencies may be different, which
+>> means that cores may run at different max frequencies,
+>>
+>> According to ACPI-spec6 chapter 8.4.7, the per-core highest frequency
+>> value can be obtained via cppc.
+>>
+>> The core with the higher frequency have better performance, which can be
+>> called as preferred core. And better performance can be achieved by
+>> making the scheduler to run tasks on these preferred cores.
+>>
+>> The cpufreq driver can use the highest frequency value as the prioriy of
+>> core to make the scheduler try to get better performace. More specifically,
+>> in the acpi-cpufreq driver use cppc_get_highest_perf() to get highest
+>> frequency value of each core, use sched_set_itmt_core_prio() to set
+>> highest frequency value as core priority, and use sched_set_itmt_support()
+>> provided by ITMT to tell the scheduler to favor on the preferred cores.
+>>
+>> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+>> ---
+>>   drivers/cpufreq/acpi-cpufreq.c | 56 +++++++++++++++++++++++++++++++++-
+>>   1 file changed, 55 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+>> index 37f1cdf46d29..f4c1ff9e4bb0 100644
+>> --- a/drivers/cpufreq/acpi-cpufreq.c
+>> +++ b/drivers/cpufreq/acpi-cpufreq.c
+>> @@ -663,8 +663,56 @@ static u64 get_max_boost_ratio(unsigned int cpu)
+>>
+>>        return div_u64(highest_perf << SCHED_CAPACITY_SHIFT, nominal_perf);
+>>   }
+>> +
+>> +/* The work item is needed to avoid CPU hotplug locking issues */
+>> +static void sched_itmt_work_fn(struct work_struct *work)
+>> +{
+>> +     sched_set_itmt_support();
+>> +}
+>> +
+>> +static DECLARE_WORK(sched_itmt_work, sched_itmt_work_fn);
+>> +
+>> +static void set_itmt_prio(int cpu)
+>> +{
+>> +     static bool cppc_highest_perf_diff;
+>> +     static struct cpumask core_prior_mask;
+>> +     u64 highest_perf;
+>> +     static u64 max_highest_perf = 0, min_highest_perf = U64_MAX;
+>> +     int ret;
+>> +
+>> +     ret = cppc_get_highest_perf(cpu, &highest_perf);
+>> +     if (ret)
+>> +             return;
+>> +
+>> +     sched_set_itmt_core_prio(highest_perf, cpu);
+>> +     cpumask_set_cpu(cpu, &core_prior_mask);
+>> +
+>> +     if (max_highest_perf <= min_highest_perf) {
+>> +             if (highest_perf > max_highest_perf)
+>> +                     max_highest_perf = highest_perf;
+>> +
+>> +             if (highest_perf < min_highest_perf)
+>> +                     min_highest_perf = highest_perf;
+>> +
+>> +             if (max_highest_perf > min_highest_perf) {
+>> +                     /*
+>> +                      * This code can be run during CPU online under the
+>> +                      * CPU hotplug locks, so sched_set_itmt_support()
+>> +                      * cannot be called from here.  Queue up a work item
+>> +                      * to invoke it.
+>> +                      */
+>> +                     cppc_highest_perf_diff = true;
+>> +             }
+>> +     }
+>> +
+>> +     if (cppc_highest_perf_diff && cpumask_equal(&core_prior_mask, cpu_online_mask)) {
+>> +             pr_debug("queue a work to set itmt enabled\n");
+>> +             schedule_work(&sched_itmt_work);
+>> +     }
+>> +}
+> sched_itmt_work and this function is a duplicate of what the intel_pstate
+> driver already does. It might be good if consolidate in a single place
+> if you are going to pursue this approach.
+
+Thanks for your suggestion, will change the patch code in v2.
+
+Sorry for late.
 
