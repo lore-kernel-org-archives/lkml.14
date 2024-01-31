@@ -1,56 +1,56 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832F73B19B
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 23:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F083AC34
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 23:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706745376; cv=none; b=bmPwlf2Z+HPBdlREXK4r48UkAMU3RCJnlsU3rpkXiyFQxek+hG6mO5VTuSPufhqX7ZcG02BEpLSmAoAW9WFZzg0OLLVE7hLrcdtQ3OdNYpLH3kFH5uh1Ef6K7OYI22CLoESiviI7TsjCLWv1+60enkGCFfxjZI8A8HeGwQunZ4s=
+	t=1706745379; cv=none; b=GEfr3aHvhSG7D1JWvqsQqINZLU3M8aAVbNtS0T7RtXpes2Jr9glFGmvx02yW7kJslsdcRUsiGXt8EVPSe/vXigYju91oE1DV5VpgWQEihER597CEZwdf2LqLACFjyJ9hwZ/3I3oxu6/6oUakceRP7GMVsrU0o1NsWKdvZzyIoHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706745376; c=relaxed/simple;
-	bh=C2Mp5wDF+w5HYei1nLihykDqJ+peIrgUvLAyytBwPBU=;
+	s=arc-20240116; t=1706745379; c=relaxed/simple;
+	bh=D1nog3XCAS5QFsKZW5HVf+ENkuPBa0MU2IJSYf8wk+o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=shkvWmUSeqtHwMaAEJjkeyd8+7h0HENR8YdQIbEuf26g/MkLBYViD697QP//3ym4hWa46VhN9DbQxwZ/8FzHe7/gsALBs8/McWltMD/pvXXsyfLKp5az+vZsbVZyF9nwD62GBypvyDrS7wcwYrDmg00O67uBl5qofud4zRexzMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QdSWPBrH; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=ZXcFHfbmHODjjZOi8juaeSF/9EXhrm5fMGi6CRvG5DWTltTij9mchDKkMDnBmKZo6XFhkj01iK3GuN4fu4mRu/S/qE9f4RTjnfJQJj6ebmBfx9AE/JPTwCWc3v9/OtZXazQT7p4eOTkpiuS5SZAjFnRaKTFXaZDHnj9JrPO99PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sahZiboW; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QdSWPBrH"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60406626b50so7863977b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 15:56:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sahZiboW"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5d63c7c4248so1295438a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 15:56:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706745373; x=1707350173; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706745377; x=1707350177; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQD8xVAMwqMOWi6PTJB0HJDtmdm31D4WNpxMiUSqPiQ=;
-        b=QdSWPBrHomk20lzUGbh0sGV4DlQIZgWvcIOlSeU+SvoGq4ZqXlm3BAeLhfaA8+1lv8
-         mMJ2JM9bYLHtBdN4+utWr47sJlauQ8DZjxoadFqKfIv/SGjfd53gidHQU1itQuBygbYq
-         21AC1wKE/mv0pxC4S1u8z521kI9bg8UJFljJdyzhCr6OJ6Si2ZSAtklEO28JduH8XJOc
-         6F+bljjU5K7OqwB+N+IFWxZAFqI9+FpEHv/9YJiEFDjw73kU07ADdG5AR77DAU2//z5l
-         tdPPHsaa/KdYvbLrzWufCdkIdk8Q8ODIUU9HBsFWn6NYu341dvpFT7LTTvOS76FUzErK
-         epzw==
+        bh=/WObf82Vf/Y5MR7jXp0Gt7NYNHTt/4hLoEW6luDmRxk=;
+        b=sahZiboWzyFipkcxsmrChqjVG6r4CmV41tCxJfv66ChItU88vt2YhWaAf3BEfazat/
+         ks33WPMLlJcvZ+7xrnd3VxpkmT3n2hyNPBe3Ze0oYDuLB0NLqgxD3Bva/ke1oSUpl5G5
+         KjyVltb07236dh33TY80r3vr1ygh0JKOAIPaKW1Ear7X+qIjzVEWpKMJrmo6POaxlGyG
+         vYLPzGygHwJayxw5nMLaPq9bI02ODUrkai9Sz8GJm4BZxcL8x8A6IT/1VPxrLrJWNq20
+         56pun4w47b6HnckQE7LytsdHAS6HzwPvAdKP48oTs8b8sGTpf04mCHh/HSoSxwNHIlrG
+         0gvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706745373; x=1707350173;
+        d=1e100.net; s=20230601; t=1706745377; x=1707350177;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CQD8xVAMwqMOWi6PTJB0HJDtmdm31D4WNpxMiUSqPiQ=;
-        b=ND1ZEw5w6HnTojVUCOX7YQTK/lYhF/L6lP4swI3EXtgjM79UC12EQJ31N65RWMTYcY
-         jFvCSxvWpI6dW8CpC6+Z+xfa3Fvyp59cYeJhTvfRdxeVEm9fvyFot/kE07ttiM6dZ7+W
-         g70zPLR1eyT6U/x4qV/+n/MRBYuXcTtqO+z/vEaeld1eJJS9znrZf6BzXMp+I/OvUtUx
-         sCUMWq0Ddy1bLpQS/ndDNbDM6RpVEMik3JC9/TQ93cPXERVF1NQ6vD8MGAanFh+4/826
-         /oxuhGIXCU7NWY7H3C2b96vM+bLFjUCqbFW3rWgieZ8m+WRjE9etvf7aBhRFKK3HnIkL
-         X7oA==
-X-Gm-Message-State: AOJu0Yxg7Ix/DN29O6Ulgg3kFiWpcHCQ94lsfUSqoErhk0WTNX3V0VuD
-	F5vyrCTMYPif4rT/G6s6mWevKjvsso9625rv92BSoD0pU+RxkR/bI1Tq+dQiWBlZ97lttyPnArd
-	opQ==
-X-Google-Smtp-Source: AGHT+IFEng8Bm/KBVwygkVXasRuf80ylGucwfbCrR5PDNSdg9SWzRiLInuFRXQK/bBefwUgzcl0fGDldrs0=
+        bh=/WObf82Vf/Y5MR7jXp0Gt7NYNHTt/4hLoEW6luDmRxk=;
+        b=HUnDBD3pVPB8vBQkWr8PNA0rkUj3LOPWkE+YJI5HjWA9xY0l3ib/sWTl5ludDCjLg2
+         jZDOsbyp/MwzNSzhO8KbT3ppKhMF3KAEJzdCUGZ+9xa4IIvL7x59YDRxkEHRUu6bLh1g
+         tNTVz47OJpaliO4gOHrQJvTGuUnQQEyy9iZnLTx1d42xvYNdftLisVdzsGQVH5fgLUjT
+         sUZLNvk/Bas5GCU1Zs7FldBpLvIf9SrhEXhPmS5W6FUfgSGpK7XtCiZkKHPbmwefuL2F
+         cXM9UF9XpPGpemgeuHmxhlzYTw+ObW5wRa16sGjjbxPPeqC4QgF3yR8273Y8iXM2w0hT
+         kELA==
+X-Gm-Message-State: AOJu0YzzI3/ztfzxHKl8yoCMM/dqE/n8wE/01mwDK7GV6YgdXo8v5Bxg
+	2Dijgsw2goRx3QOpUk1saQKBkcXkEfULLfYZ8a5042henc7oYK79Fc8U4MVaYMMFFGgsTR5pEMC
+	sRg==
+X-Google-Smtp-Source: AGHT+IGxjHZzt/t+Dce4AiwHDsCE0srigSTG6h90tg/UdTQyeP4Eje8UyXCDHFlKD+UuEx9RsI3H0LiAjwQ=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1385:b0:dc2:3441:897f with SMTP id
- x5-20020a056902138500b00dc23441897fmr859913ybu.6.1706745373557; Wed, 31 Jan
- 2024 15:56:13 -0800 (PST)
+ (user=seanjc job=sendgmr) by 2002:a17:90a:2bc8:b0:295:6834:b941 with SMTP id
+ n8-20020a17090a2bc800b002956834b941mr45398pje.1.1706745377422; Wed, 31 Jan
+ 2024 15:56:17 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 31 Jan 2024 15:56:06 -0800
+Date: Wed, 31 Jan 2024 15:56:08 -0800
 In-Reply-To: <20240131235609.4161407-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,63 +60,104 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240131235609.4161407-1-seanjc@google.com>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240131235609.4161407-2-seanjc@google.com>
-Subject: [PATCH v4 1/4] KVM: SVM: Set sev->asid in sev_asid_new() instead of
- overloading the return
+Message-ID: <20240131235609.4161407-4-seanjc@google.com>
+Subject: [PATCH v4 3/4] KVM: SVM: Add support for allowing zero SEV ASIDs
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Ashish Kalra <ashish.kalra@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Explicitly set sev->asid in sev_asid_new() when a new ASID is successfully
-allocated, and return '0' to indicate success instead of overloading the
-return value to multiplex the ASID with error codes.  There is exactly one
-caller of sev_asid_new(), and sev_asid_free() already consumes sev->asid,
-i.e. returning the ASID isn't necessary for flexibility, nor does it
-provide symmetry between related APIs.
+From: Ashish Kalra <ashish.kalra@amd.com>
 
+Some BIOSes allow the end user to set the minimum SEV ASID value
+(CPUID 0x8000001F_EDX) to be greater than the maximum number of
+encrypted guests, or maximum SEV ASID value (CPUID 0x8000001F_ECX)
+in order to dedicate all the SEV ASIDs to SEV-ES or SEV-SNP.
+
+The SEV support, as coded, does not handle the case where the minimum
+SEV ASID value can be greater than the maximum SEV ASID value.
+As a result, the following confusing message is issued:
+
+[   30.715724] kvm_amd: SEV enabled (ASIDs 1007 - 1006)
+
+Fix the support to properly handle this case.
+
+Fixes: 916391a2d1dc ("KVM: SVM: Add support for SEV-ES capability in KVM")
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Cc: stable@vger.kernel.org
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lore.kernel.org/r/20240104190520.62510-1-Ashish.Kalra@amd.com
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/sev.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kvm/svm/sev.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index f760106c31f8..7c000088bca6 100644
+index 04c4c14473fd..38e40fbc7ea0 100644
 --- a/arch/x86/kvm/svm/sev.c
 +++ b/arch/x86/kvm/svm/sev.c
-@@ -179,7 +179,8 @@ static int sev_asid_new(struct kvm_sev_info *sev)
+@@ -144,10 +144,21 @@ static void sev_misc_cg_uncharge(struct kvm_sev_info *sev)
  
- 	mutex_unlock(&sev_bitmap_lock);
- 
--	return asid;
-+	sev->asid = asid;
-+	return 0;
- e_uncharge:
- 	sev_misc_cg_uncharge(sev);
- 	put_misc_cg(sev->misc_cg);
-@@ -246,7 +247,7 @@ static void sev_unbind_asid(struct kvm *kvm, unsigned int handle)
- static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ static int sev_asid_new(struct kvm_sev_info *sev)
  {
- 	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
--	int asid, ret;
-+	int ret;
+-	unsigned int asid, min_asid, max_asid;
++	/*
++	 * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
++	 * SEV-ES-enabled guest can use from 1 to min_sev_asid - 1.
++	 * Note: min ASID can end up larger than the max if basic SEV support is
++	 * effectively disabled by disallowing use of ASIDs for SEV guests.
++	 */
++	unsigned int min_asid = sev->es_active ? 1 : min_sev_asid;
++	unsigned int max_asid = sev->es_active ? min_sev_asid - 1 : max_sev_asid;
++	unsigned int asid;
+ 	bool retry = true;
+ 	int ret;
  
- 	if (kvm->created_vcpus)
- 		return -EINVAL;
-@@ -257,10 +258,9 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
++	if (min_asid > max_asid)
++		return -ENOTTY;
++
+ 	WARN_ON(sev->misc_cg);
+ 	sev->misc_cg = get_current_misc_cg();
+ 	ret = sev_misc_cg_try_charge(sev);
+@@ -159,12 +170,6 @@ static int sev_asid_new(struct kvm_sev_info *sev)
  
- 	sev->active = true;
- 	sev->es_active = argp->id == KVM_SEV_ES_INIT;
--	asid = sev_asid_new(sev);
--	if (asid < 0)
-+	ret = sev_asid_new(sev);
-+	if (ret)
- 		goto e_no_asid;
--	sev->asid = asid;
+ 	mutex_lock(&sev_bitmap_lock);
  
- 	ret = sev_platform_init(&argp->error);
- 	if (ret)
+-	/*
+-	 * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
+-	 * SEV-ES-enabled guest can use from 1 to min_sev_asid - 1.
+-	 */
+-	min_asid = sev->es_active ? 1 : min_sev_asid;
+-	max_asid = sev->es_active ? min_sev_asid - 1 : max_sev_asid;
+ again:
+ 	asid = find_next_zero_bit(sev_asid_bitmap, max_asid + 1, min_asid);
+ 	if (asid > max_asid) {
+@@ -2234,8 +2239,10 @@ void __init sev_hardware_setup(void)
+ 		goto out;
+ 	}
+ 
+-	sev_asid_count = max_sev_asid - min_sev_asid + 1;
+-	WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
++	if (min_sev_asid <= max_sev_asid) {
++		sev_asid_count = max_sev_asid - min_sev_asid + 1;
++		WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
++	}
+ 	sev_supported = true;
+ 
+ 	/* SEV-ES support requested? */
+@@ -2266,7 +2273,9 @@ void __init sev_hardware_setup(void)
+ out:
+ 	if (boot_cpu_has(X86_FEATURE_SEV))
+ 		pr_info("SEV %s (ASIDs %u - %u)\n",
+-			sev_supported ? "enabled" : "disabled",
++			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
++								       "unusable" :
++								       "disabled",
+ 			min_sev_asid, max_sev_asid);
+ 	if (boot_cpu_has(X86_FEATURE_SEV_ES))
+ 		pr_info("SEV-ES %s (ASIDs %u - %u)\n",
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
