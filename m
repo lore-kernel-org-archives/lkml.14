@@ -1,63 +1,63 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5905E12DDAC
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6888212F5BB
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706712647; cv=none; b=B2a6ga/2JEF9sp74SEiFwyXWUKJIMa10whzXutFKuDRNOqDiNNOselpPHmapOO0NOMCnFgwqqqcH3PvkRcNFHSGrXJEIc3dlkve7FyleaO79e6GlXtIM6HROJsg7QA3NZIda4Gt/6i1l3/CwuvzF2UcYJ1LZR5B1Lyg1/1PDEcw=
+	t=1706712655; cv=none; b=JSwAP9cCoRHS7KTfP6iFyqSERHGUrnAevm+trwRMPt7t+mSA+jv8WFvjbKCnKpeI+oDAtkdhEXk4MmFH+P2v+5IdRcU0exHmch47L3dGa8YSDnAGraEbuaRVCpCjE7sRF0RB+6YSzdgBnYqjbCPk/iovImjkdlPpjk5xWjPhLVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706712647; c=relaxed/simple;
-	bh=vnpHwrQqTGh83jGF/mOVjN3+jGO3XbGrHiR+lyiDEhI=;
+	s=arc-20240116; t=1706712655; c=relaxed/simple;
+	bh=hSsM26x/M68xyIOqeMb/kkc3q30JYF5blcQULY3DUt8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iBazvxKuUF6dcrQmfEWVsUuAiRoMYMihOpNbgFHGa3ClqGvsmNoHHFQ7JT27RHR4AxAJ/qI4ZbB1dwOO8ZXXcCL/v7ZmszQgc4tLSTpp5RBokPX0T1mZm2wV+3RF4NgiJoQgs0szrlpXxrEizlWjhdji9awM4RBBFtqT4FOBna8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=BTJlKvs5; arc=none smtp.client-ip=209.85.167.53
+	 MIME-Version; b=HgTE57+TpwxqHT0DqoSLC/dxUd2vOB+/juwcHqHc73oS54DjNPLDUvTx1h9+Cn8iF9fcsrafj8bjCnHniXEnr9ZIuiPXctjfTNPp3ukEir/P5vzjIjU/DuJg1esbmFSFSBqmiyaUZgyCFWHbFN6qJz5zcq9NcDSPTd3shAaCeGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=dW8MgYvP; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="BTJlKvs5"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5100cb238bcso9591178e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:50:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="dW8MgYvP"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40fafae5532so13539775e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:50:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1706712634; x=1707317434; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1706712638; x=1707317438; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1wz2gqR1nPObBws/2+IzSMmJxUoIVsWcR8/Agl6zU7c=;
-        b=BTJlKvs5nbQT6nRdhAjXGkQd9Q6fwGCJQvuPdQFPmnJS8d+a2sHfzlJeV8pn6kAMhS
-         oHExKIDFzj4LPtsCUJtm4o+wzWlp3RQda0f8ncEQ/8xMrc+ewDHFV6ZdbHw5B0GJG+DH
-         j8A5AoU8ikGEOnTl1xoEvCT1Wr4fcXycFyY7HCt9cgK3xXHWWEOGdvsuuDFv+m/8K9a4
-         DretvJrMN4zMDlVtvqbzydbT9RjH6Shcyz5WLucr5JAQtCEyKBoWMvMOTkpPRFPK45UX
-         IencXlHe9Aq3ctfBxdc8A4TmE8cdjSmo8fVDJBVqSUkafKf8tbivwQGI2GtcE3A7PC62
-         BP/g==
+        bh=KWHYXiDL1OrdEycxkXg7bf3FpkdrqXb6tQSgGherWsY=;
+        b=dW8MgYvPr2mgbOgjXycaWwjHWtuF273znyUFcd+W6/0d4mSfqaG/JuRAEuzFM8jdxv
+         XXmS3p6fCSesQar51vqw1JVbBAOBhV+3kxh6jejVIrgXb84knG4WhETE4c1VLvKPMGpQ
+         91A9x76dPQCxLwu/aXx145+tlGkkNw+hnw0jhUqrLqH4IwAkIGM3E/MY3Blybq1/bQGc
+         RWUvnIBH4SUEh41rbBEteUiu1DSMTsk4tbVVdpzMxsnpvjk9VenRVCmSO5Mb+7jR1D/I
+         4TLT96i5/tB/ko5zaHT9QAYkXK1LtQgQ7J/QxRwnc9h88TIdvIpf4apu+jZiPz5h3SZR
+         Bw8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706712634; x=1707317434;
+        d=1e100.net; s=20230601; t=1706712638; x=1707317438;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1wz2gqR1nPObBws/2+IzSMmJxUoIVsWcR8/Agl6zU7c=;
-        b=ddtW0C+tdvK3geL0j33SSj2fCQOD4R9i+nPAfdDgx69NSaeR5eHJIBeN9ysqx7l3bW
-         bMmPZ0LuwbnBNkOM4SkDW0BitrbOEkG2Oh8GnDHu5WawvlEX7mco7+PU0oHQZNl7IkHT
-         BA78S2Cjx/tVr2CRltVSq0XEACz9Jw1eDwHHrjrY1xzhLm14d+vLW110oD+fJ8NC9Qto
-         bKNBCzsex9pavA9BJ7mNfMgZmBXCmj25JZ8QyHIi2/BeVplxfg5wnhC+vKqHVWh+F59P
-         p2IJBEokt8R9gKYiS0RhtG3i8d/42eP/rgDA2YvcYA9XWrfBxbKo0zlqHyAjY3Anfyfq
-         UM2g==
-X-Gm-Message-State: AOJu0YzxYZSmIFD3ShKHd+L9z+tHRVMhFF6a3QHert7wcInAFMXYKEE5
-	8aQy/yTKrkN901h/g/xXLYpZ8Rrt9FGcwkWp4G2hSSnzURAGmcfoLPGQjKRWqUM2YsfXHovYZCc
-	s
-X-Google-Smtp-Source: AGHT+IFTogmGPaDg22Z/MWClfa0tHiLONNGZpAQCPNxgB4YYGYyC8m+ZLtvwDMhfaW64JZFzW4PRyg==
-X-Received: by 2002:ac2:4c41:0:b0:510:1ac1:652a with SMTP id o1-20020ac24c41000000b005101ac1652amr1669567lfk.53.1706712634666;
-        Wed, 31 Jan 2024 06:50:34 -0800 (PST)
+        bh=KWHYXiDL1OrdEycxkXg7bf3FpkdrqXb6tQSgGherWsY=;
+        b=PWUMIA4Sh7P36yA+u3TmS5Ii3b3xCsW4fLdGnojAiFc0X9b1JBpocqGiOsi1BFLPu6
+         1pbAcVWLoVOnpSB8P/Rm6M8EJiyxmI+AY495UN/OD3wpc2uV4/DsZpw0fbimKvPBTAvv
+         BFc9gB/pRjAjEm36c8jLMd3n7vQpRnksCJyd1QtdiRL+6vHux9diBURlrMJNAgPB7g3M
+         L7fStVAdAppcO92Kwih+6SlxVsk2dtadge7LP1WPsUQdpqJf+qZuaol5VrFagCUs9U+k
+         esftOQUeS/hNlhkJs3gS3s6QVzh7fqYfqRkOBOLTMNF9FUG+GnUiQQoAsmUDslTmdYag
+         Y1gw==
+X-Gm-Message-State: AOJu0Yxh1jIOnKrYh1yqswGZRw55Q+KT9vE7citBKqbAEXVoz2l1JMSv
+	A8je1gHcE0C7ryESxDntE2hA9O887FIEC2SUN8WAwXhAPZ4irCSioF9WRfbIKl31OJrVsbfFm1K
+	j
+X-Google-Smtp-Source: AGHT+IGWsfks2ReZlxwNm2oWkW1i6NDxQWIPKjVQE2zCaxYGGvw186aZPnveFBpkJ0ms3uUXrma2EQ==
+X-Received: by 2002:a5d:630b:0:b0:33a:e715:34df with SMTP id i11-20020a5d630b000000b0033ae71534dfmr1375527wru.45.1706712637752;
+        Wed, 31 Jan 2024 06:50:37 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f2f5c00023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f2f:5c00:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id ch15-20020a5d5d0f000000b0033905a60689sm13850173wrb.45.2024.01.31.06.50.34
+        by smtp.gmail.com with ESMTPSA id ch15-20020a5d5d0f000000b0033905a60689sm13850173wrb.45.2024.01.31.06.50.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 06:50:34 -0800 (PST)
+        Wed, 31 Jan 2024 06:50:37 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH 23/28] sbitmap.h: move declarations to sbitmap_types.h
-Date: Wed, 31 Jan 2024 15:50:03 +0100
-Message-Id: <20240131145008.1345531-24-max.kellermann@ionos.com>
+Subject: [PATCH 27/28] quota.h: move declarations to quota_types.h
+Date: Wed, 31 Jan 2024 15:50:07 +0100
+Message-Id: <20240131145008.1345531-28-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240131145008.1345531-1-max.kellermann@ionos.com>
 References: <20240131145008.1345531-1-max.kellermann@ionos.com>
@@ -74,321 +74,252 @@ dependencies.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- block/blk-mq.h                |   1 +
- include/linux/blk-mq.h        |   2 +-
- include/linux/sbitmap.h       | 124 +-------------------------------
- include/linux/sbitmap_types.h | 129 ++++++++++++++++++++++++++++++++++
- 4 files changed, 132 insertions(+), 124 deletions(-)
- create mode 100644 include/linux/sbitmap_types.h
+ fs/gfs2/incore.h            |  1 +
+ fs/xfs/xfs_qm.h             |  1 +
+ fs/xfs/xfs_qm_syscalls.c    |  2 ++
+ fs/xfs/xfs_quotaops.c       |  1 +
+ fs/xfs/xfs_super.c          |  1 +
+ fs/xfs/xfs_trans_dquot.c    |  2 ++
+ include/linux/fs.h          |  2 +-
+ include/linux/quota.h       | 33 +-----------------
+ include/linux/quota_types.h | 68 +++++++++++++++++++++++++++++++++++++
+ 9 files changed, 78 insertions(+), 33 deletions(-)
+ create mode 100644 include/linux/quota_types.h
 
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index f75a9ecfebde..cc8e690171db 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -3,6 +3,7 @@
- #define INT_BLK_MQ_H
- 
- #include <linux/blk-mq.h>
-+#include <linux/sbitmap.h>
- #include "blk-stat.h"
- 
- struct blk_mq_tag_set;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index ed3760b04baa..201ee354a3d5 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/bio.h>
- #include <linux/blkdev.h>
--#include <linux/sbitmap.h>
-+#include <linux/sbitmap_types.h>
- #include <linux/lockdep_types.h>
- #include <linux/scatterlist.h>
- #include <linux/prefetch.h>
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index f7279f7632fe..c43d1c0eafbb 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -9,142 +9,20 @@
- #ifndef __LINUX_SCALE_BITMAP_H
- #define __LINUX_SCALE_BITMAP_H
- 
-+#include <linux/sbitmap_types.h>
- #include <linux/atomic.h>
- #include <linux/bitops.h>
--#include <linux/cache.h>
- #include <linux/list.h>
- #include <linux/log2.h>
- #include <linux/minmax.h>
+diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
+index e1343fd0a5b1..3cf177dd201c 100644
+--- a/fs/gfs2/incore.h
++++ b/fs/gfs2/incore.h
+@@ -18,6 +18,7 @@
+ #include <linux/rbtree.h>
+ #include <linux/ktime.h>
  #include <linux/percpu.h>
- #include <linux/slab.h>
--#include <linux/types.h>
--#include <linux/wait_types.h>
++#include <linux/quota.h>
+ #include <linux/lockref.h>
+ #include <linux/rhashtable.h>
+ #include <linux/mutex.h>
+diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
+index d5c9fc4ba591..bb111cbc3567 100644
+--- a/fs/xfs/xfs_qm.h
++++ b/fs/xfs/xfs_qm.h
+@@ -9,6 +9,7 @@
+ #include "xfs_dquot_item.h"
+ #include "xfs_dquot.h"
  
- struct seq_file;
++struct qc_dqblk;
+ struct xfs_inode;
  
--/**
-- * struct sbitmap_word - Word in a &struct sbitmap.
+ extern struct kmem_cache	*xfs_dqtrx_cache;
+diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
+index 392cb39cc10c..1de4443bed40 100644
+--- a/fs/xfs/xfs_qm_syscalls.c
++++ b/fs/xfs/xfs_qm_syscalls.c
+@@ -19,6 +19,8 @@
+ #include "xfs_qm.h"
+ #include "xfs_icache.h"
+ 
++#include <linux/quota.h>
++
+ int
+ xfs_qm_scall_quotaoff(
+ 	xfs_mount_t		*mp,
+diff --git a/fs/xfs/xfs_quotaops.c b/fs/xfs/xfs_quotaops.c
+index 9c162e69976b..eda56d032734 100644
+--- a/fs/xfs/xfs_quotaops.c
++++ b/fs/xfs/xfs_quotaops.c
+@@ -15,6 +15,7 @@
+ #include "xfs_icache.h"
+ #include "xfs_qm.h"
+ 
++#include <linux/quota.h>
+ 
+ static void
+ xfs_qm_fill_state(
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 5a2512d20bd0..1f893c99b956 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -48,6 +48,7 @@
+ #include <linux/magic.h>
+ #include <linux/fs_context.h>
+ #include <linux/fs_parser.h>
++#include <linux/quota.h>
+ 
+ static const struct super_operations xfs_super_operations;
+ 
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index aa00cf67ad72..94214f0baa2b 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -18,6 +18,8 @@
+ #include "xfs_trace.h"
+ #include "xfs_error.h"
+ 
++#include <linux/quota.h>
++
+ STATIC void	xfs_trans_alloc_dqinfo(xfs_trans_t *);
+ 
+ /*
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 06eda3a4fb52..abe97d31849b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -261,7 +261,7 @@ struct iattr {
+ /*
+  * Includes for diskquotas.
+  */
+-#include <linux/quota.h>
++#include <linux/quota_types.h>
+ 
+ /*
+  * Maximum number of layers of fs stack.  Needs to be limited to
+diff --git a/include/linux/quota.h b/include/linux/quota.h
+index 956281c84850..2a3040e61072 100644
+--- a/include/linux/quota.h
++++ b/include/linux/quota.h
+@@ -32,9 +32,8 @@
+ #ifndef _LINUX_QUOTA_
+ #define _LINUX_QUOTA_
+ 
+-#include <linux/list.h>
++#include <linux/quota_types.h>
+ #include <linux/mutex_types.h>
+-#include <linux/rwsem_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/percpu_counter.h>
+ 
+@@ -45,7 +44,6 @@
+ #include <linux/atomic.h>
+ #include <linux/uidgid_types.h>
+ #include <linux/projid.h>
+-#include <uapi/linux/quota.h>
+ 
+ #undef USRQUOTA
+ #undef GRPQUOTA
+@@ -61,9 +59,6 @@ enum quota_type {
+ #define QTYPE_MASK_GRP (1 << GRPQUOTA)
+ #define QTYPE_MASK_PRJ (1 << PRJQUOTA)
+ 
+-typedef __kernel_uid32_t qid_t; /* Type in which we store ids in memory */
+-typedef long long qsize_t;	/* Type in which we store sizes */
+-
+ struct kqid {			/* Type in which we store the quota identifier */
+ 	union {
+ 		kuid_t uid;
+@@ -213,24 +208,6 @@ struct mem_dqblk {
+ 	time64_t dqb_itime;	/* time limit for excessive inode use */
+ };
+ 
+-/*
+- * Data for one quotafile kept in memory
 - */
--struct sbitmap_word {
--	/**
--	 * @word: word holding free bits
--	 */
--	unsigned long word;
+-struct quota_format_type;
 -
--	/**
--	 * @cleared: word holding cleared bits
--	 */
--	unsigned long cleared ____cacheline_aligned_in_smp;
--} ____cacheline_aligned_in_smp;
--
--/**
-- * struct sbitmap - Scalable bitmap.
-- *
-- * A &struct sbitmap is spread over multiple cachelines to avoid ping-pong. This
-- * trades off higher memory usage for better scalability.
-- */
--struct sbitmap {
--	/**
--	 * @depth: Number of bits used in the whole bitmap.
--	 */
--	unsigned int depth;
--
--	/**
--	 * @shift: log2(number of bits used per word)
--	 */
--	unsigned int shift;
--
--	/**
--	 * @map_nr: Number of words (cachelines) being used for the bitmap.
--	 */
--	unsigned int map_nr;
--
--	/**
--	 * @round_robin: Allocate bits in strict round-robin order.
--	 */
--	bool round_robin;
--
--	/**
--	 * @map: Allocated bitmap.
--	 */
--	struct sbitmap_word *map;
--
--	/*
--	 * @alloc_hint: Cache of last successfully allocated or freed bit.
--	 *
--	 * This is per-cpu, which allows multiple users to stick to different
--	 * cachelines until the map is exhausted.
--	 */
--	unsigned int __percpu *alloc_hint;
+-struct mem_dqinfo {
+-	struct quota_format_type *dqi_format;
+-	int dqi_fmt_id;		/* Id of the dqi_format - used when turning
+-				 * quotas on after remount RW */
+-	struct list_head dqi_dirty_list;	/* List of dirty dquots [dq_list_lock] */
+-	unsigned long dqi_flags;	/* DFQ_ flags [dq_data_lock] */
+-	unsigned int dqi_bgrace;	/* Space grace time [dq_data_lock] */
+-	unsigned int dqi_igrace;	/* Inode grace time [dq_data_lock] */
+-	qsize_t dqi_max_spc_limit;	/* Maximum space limit [static] */
+-	qsize_t dqi_max_ino_limit;	/* Maximum inode limit [static] */
+-	void *dqi_priv;
 -};
 -
- #define SBQ_WAIT_QUEUES 8
- #define SBQ_WAKE_BATCH 8
+ struct super_block;
  
--/**
-- * struct sbq_wait_state - Wait queue in a &struct sbitmap_queue.
-- */
--struct sbq_wait_state {
--	/**
--	 * @wait: Wait queue.
--	 */
--	wait_queue_head_t wait;
--} ____cacheline_aligned_in_smp;
--
--/**
-- * struct sbitmap_queue - Scalable bitmap with the added ability to wait on free
-- * bits.
-- *
-- * A &struct sbitmap_queue uses multiple wait queues and rolling wakeups to
-- * avoid contention on the wait queue spinlock. This ensures that we don't hit a
-- * scalability wall when we run out of free bits and have to start putting tasks
-- * to sleep.
-- */
--struct sbitmap_queue {
--	/**
--	 * @sb: Scalable bitmap.
--	 */
--	struct sbitmap sb;
--
--	/**
--	 * @wake_batch: Number of bits which must be freed before we wake up any
--	 * waiters.
--	 */
--	unsigned int wake_batch;
--
--	/**
--	 * @wake_index: Next wait queue in @ws to wake up.
--	 */
--	atomic_t wake_index;
--
--	/**
--	 * @ws: Wait queues.
--	 */
--	struct sbq_wait_state *ws;
--
--	/*
--	 * @ws_active: count of currently active ws waitqueues
--	 */
--	atomic_t ws_active;
--
--	/**
--	 * @min_shallow_depth: The minimum shallow depth which may be passed to
--	 * sbitmap_queue_get_shallow()
--	 */
--	unsigned int min_shallow_depth;
--
--	/**
--	 * @completion_cnt: Number of bits cleared passed to the
--	 * wakeup function.
--	 */
--	atomic_t completion_cnt;
--
--	/**
--	 * @wakeup_cnt: Number of thread wake ups issued.
--	 */
--	atomic_t wakeup_cnt;
+ /* Mask for flags passed to userspace */
+@@ -517,14 +494,6 @@ static inline void quota_send_warning(struct kqid qid, dev_t dev,
+ }
+ #endif /* CONFIG_QUOTA_NETLINK_INTERFACE */
+ 
+-struct quota_info {
+-	unsigned int flags;			/* Flags for diskquotas on this device */
+-	struct rw_semaphore dqio_sem;		/* Lock quota file while I/O in progress */
+-	struct inode *files[MAXQUOTAS];		/* inodes of quotafiles */
+-	struct mem_dqinfo info[MAXQUOTAS];	/* Information for each quota type */
+-	const struct quota_format_ops *ops[MAXQUOTAS];	/* Operations for each type */
 -};
 -
- /**
-  * sbitmap_init_node() - Initialize a &struct sbitmap on a specific memory node.
-  * @sb: Bitmap to initialize.
-diff --git a/include/linux/sbitmap_types.h b/include/linux/sbitmap_types.h
+ int register_quota_format(struct quota_format_type *fmt);
+ void unregister_quota_format(struct quota_format_type *fmt);
+ 
+diff --git a/include/linux/quota_types.h b/include/linux/quota_types.h
 new file mode 100644
-index 000000000000..078c7859905c
+index 000000000000..7f52ee2604bb
 --- /dev/null
-+++ b/include/linux/sbitmap_types.h
-@@ -0,0 +1,129 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __LINUX_SCALE_BITMAP_TYPES_H
-+#define __LINUX_SCALE_BITMAP_TYPES_H
-+
-+#include <linux/cache.h>
-+#include <linux/types.h>
-+#include <linux/wait_types.h>
-+
-+/**
-+ * struct sbitmap_word - Word in a &struct sbitmap.
-+ */
-+struct sbitmap_word {
-+	/**
-+	 * @word: word holding free bits
-+	 */
-+	unsigned long word;
-+
-+	/**
-+	 * @cleared: word holding cleared bits
-+	 */
-+	unsigned long cleared ____cacheline_aligned_in_smp;
-+} ____cacheline_aligned_in_smp;
-+
-+/**
-+ * struct sbitmap - Scalable bitmap.
++++ b/include/linux/quota_types.h
+@@ -0,0 +1,68 @@
++/*
++ * Copyright (c) 1982, 1986 Regents of the University of California.
++ * All rights reserved.
 + *
-+ * A &struct sbitmap is spread over multiple cachelines to avoid ping-pong. This
-+ * trades off higher memory usage for better scalability.
++ * This code is derived from software contributed to Berkeley by
++ * Robert Elz at The University of Melbourne.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. Neither the name of the University nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
 + */
-+struct sbitmap {
-+	/**
-+	 * @depth: Number of bits used in the whole bitmap.
-+	 */
-+	unsigned int depth;
++#ifndef _LINUX_QUOTA_TYPES_
++#define _LINUX_QUOTA_TYPES_
 +
-+	/**
-+	 * @shift: log2(number of bits used per word)
-+	 */
-+	unsigned int shift;
++#include <linux/list.h>
++#include <linux/rwsem_types.h>
++#include <uapi/linux/quota.h>
 +
-+	/**
-+	 * @map_nr: Number of words (cachelines) being used for the bitmap.
-+	 */
-+	unsigned int map_nr;
++typedef __kernel_uid32_t qid_t; /* Type in which we store ids in memory */
++typedef long long qsize_t;	/* Type in which we store sizes */
 +
-+	/**
-+	 * @round_robin: Allocate bits in strict round-robin order.
-+	 */
-+	bool round_robin;
++/*
++ * Data for one quotafile kept in memory
++ */
++struct quota_format_type;
 +
-+	/**
-+	 * @map: Allocated bitmap.
-+	 */
-+	struct sbitmap_word *map;
-+
-+	/*
-+	 * @alloc_hint: Cache of last successfully allocated or freed bit.
-+	 *
-+	 * This is per-cpu, which allows multiple users to stick to different
-+	 * cachelines until the map is exhausted.
-+	 */
-+	unsigned int __percpu *alloc_hint;
++struct mem_dqinfo {
++	struct quota_format_type *dqi_format;
++	int dqi_fmt_id;		/* Id of the dqi_format - used when turning
++				 * quotas on after remount RW */
++	struct list_head dqi_dirty_list;	/* List of dirty dquots [dq_list_lock] */
++	unsigned long dqi_flags;	/* DFQ_ flags [dq_data_lock] */
++	unsigned int dqi_bgrace;	/* Space grace time [dq_data_lock] */
++	unsigned int dqi_igrace;	/* Inode grace time [dq_data_lock] */
++	qsize_t dqi_max_spc_limit;	/* Maximum space limit [static] */
++	qsize_t dqi_max_ino_limit;	/* Maximum inode limit [static] */
++	void *dqi_priv;
 +};
 +
-+/**
-+ * struct sbq_wait_state - Wait queue in a &struct sbitmap_queue.
-+ */
-+struct sbq_wait_state {
-+	/**
-+	 * @wait: Wait queue.
-+	 */
-+	wait_queue_head_t wait;
-+} ____cacheline_aligned_in_smp;
-+
-+/**
-+ * struct sbitmap_queue - Scalable bitmap with the added ability to wait on free
-+ * bits.
-+ *
-+ * A &struct sbitmap_queue uses multiple wait queues and rolling wakeups to
-+ * avoid contention on the wait queue spinlock. This ensures that we don't hit a
-+ * scalability wall when we run out of free bits and have to start putting tasks
-+ * to sleep.
-+ */
-+struct sbitmap_queue {
-+	/**
-+	 * @sb: Scalable bitmap.
-+	 */
-+	struct sbitmap sb;
-+
-+	/**
-+	 * @wake_batch: Number of bits which must be freed before we wake up any
-+	 * waiters.
-+	 */
-+	unsigned int wake_batch;
-+
-+	/**
-+	 * @wake_index: Next wait queue in @ws to wake up.
-+	 */
-+	atomic_t wake_index;
-+
-+	/**
-+	 * @ws: Wait queues.
-+	 */
-+	struct sbq_wait_state *ws;
-+
-+	/*
-+	 * @ws_active: count of currently active ws waitqueues
-+	 */
-+	atomic_t ws_active;
-+
-+	/**
-+	 * @min_shallow_depth: The minimum shallow depth which may be passed to
-+	 * sbitmap_queue_get_shallow()
-+	 */
-+	unsigned int min_shallow_depth;
-+
-+	/**
-+	 * @completion_cnt: Number of bits cleared passed to the
-+	 * wakeup function.
-+	 */
-+	atomic_t completion_cnt;
-+
-+	/**
-+	 * @wakeup_cnt: Number of thread wake ups issued.
-+	 */
-+	atomic_t wakeup_cnt;
++struct quota_info {
++	unsigned int flags;			/* Flags for diskquotas on this device */
++	struct rw_semaphore dqio_sem;		/* Lock quota file while I/O in progress */
++	struct inode *files[MAXQUOTAS];		/* inodes of quotafiles */
++	struct mem_dqinfo info[MAXQUOTAS];	/* Information for each quota type */
++	const struct quota_format_ops *ops[MAXQUOTAS];	/* Operations for each type */
 +};
 +
-+#endif /* __LINUX_SCALE_BITMAP_TYPES_H */
++#endif /* _LINUX_QUOTA_TYPES_ */
 -- 
 2.39.2
 
