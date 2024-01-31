@@ -1,174 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D981569941;
-	Wed, 31 Jan 2024 09:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA91467E86
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706693863; cv=none; b=N3B+pbgxdKal+mgOHIVTTm+uu3mojHSK4HKlJSTatsJaHeRHcp39fOCVzKOwwL5JIWN462uU4mRVVGM0ozdqhQxoaCTS3t+pfixrApLDgQ028mmzkjh8oYlmNTF8VMs4KYMe786lJU0q2jSbwOl3d3zr5xexpqAuP/1fu22X0v4=
+	t=1706693864; cv=none; b=So2graLUdxX6qI/7Nbwq6G+ZjPT8Q4vuoqfghbGHzAsuPIdihWHj3nm70V+xwycpwO/EtmrdTaQTsPkWG8052uagTsPLwOCMBzXywnILcyl921cDDDJgG8iFGOsIlWPp1bAd69XvR/dmOaKShsTgmk0c3ATyUA19GRFaEqSEdj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706693863; c=relaxed/simple;
-	bh=hR3CBMAREr/xNcwJYK+yDVMcP8chuolAWpvStyy2ikE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPnyUaj18zOtHphHOtRTbObak9RfrknEOYtytWPyP2h68ZBbEb+zZTGnsrIgjTFQnv843uhEKJybVs2LNHAiLfNeHon45oQRqYno/VN2y8yByrmYZGk6lnZvkHgxI2BLwNcYtW75yY3CC7SZ+EDxkS5KsfGe3WazDIpIRfYh3oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEvgYj1D; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706693864; c=relaxed/simple;
+	bh=6g/9wBTl6BPCWec9Q4PfBb1jAfx/QsrhO21o+nVjTVw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XVnb0GTGJCrhD9SVCR7ps5njoEwhwgzZOviuNb0G+JccYLIqreVafip2VO1528miIoOFRzcVWgzGWg9cX3z4CboWjncdZvWDHhU14j1IXOVjKshbOuJDmP7Y9tRzUsmzmLpqE+9pbCzUdjTa85k76m1NCqGsxJFz1rMNwh99uMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xBkCE3xf; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEvgYj1D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706693862; x=1738229862;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hR3CBMAREr/xNcwJYK+yDVMcP8chuolAWpvStyy2ikE=;
-  b=CEvgYj1DcCHR6cz9PD23/7+gsgU4jpcnPtu+dUOzhDrB1cGy/0/EasHz
-   x6MU7Hb8kPxxNXb4hR917YsU95KyNS5j8O+Rh8ZpQUD03J1THRMfb4fAN
-   HftU1QK7bCpwG9PNWJ3rNfFPoH/oyX/w//6o9Pjd1WIykjzzDZhz2k0Xo
-   5P/uz3+uEYPvuGeL86DHFef5OZZLwLEN7odCT6ozjaMhYwZMY9sUXjv4B
-   boc6zYpX/Hj1LJcq5lTiLEzLNw9SBR2ac3GwaCABPMO2C7nGt16+kTCoc
-   ndreAYypOfyyVI3uEGMGSo5jK40bCoHVMk2tmJ7l9ykVihdC2nLSH756R
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10215277"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="10215277"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 01:37:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822505467"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="822505467"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 31 Jan 2024 01:37:37 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rV72C-0001PK-1K;
-	Wed, 31 Jan 2024 09:37:33 +0000
-Date: Wed, 31 Jan 2024 17:34:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa-dev@sang-engineering.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 01/22] gpio: protect the list of GPIO devices with SRCU
-Message-ID: <202401311746.be3dlVTg-lkp@intel.com>
-References: <20240130124828.14678-2-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xBkCE3xf"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4bd91d89fbeso1391829e0c.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 01:37:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706693861; x=1707298661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DmHeh0AnnU8R6/8VaEZIi+vqbQkcVNAn6pqy7RHvRQI=;
+        b=xBkCE3xfgEp8qPGMcW2d28LiFylg+yIZOldTOmpHe5lUFK6l5+DI497ZIMUvKHvR3j
+         5vOhoZK9QoLFDxfTn4kYxFh/FX3o8o25S/D6Sv8wZeP18QQPnyWKphT1Bh7/ezCzu4Wr
+         s95RpLWANK4vYXBZrbepdIn0wldP0HdC2BxO0HdJ+8ZawP2n58lqMjREM5faykWBjJ45
+         EtBMY2xpQgjmRDSFw9hHxeb8YH3+3DWp7ciglNRhkeikLvefwq2ngMcoIKg2ocnq/ql2
+         RL8HFjKkqdVJR+bPWl1Add/iTs6kyaHX4qQGGvRX+gUYzPDz0BBz9JoiBd75cdYvLfG+
+         ZdBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706693861; x=1707298661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DmHeh0AnnU8R6/8VaEZIi+vqbQkcVNAn6pqy7RHvRQI=;
+        b=mwAuWKThEQfRwUWQQ53hGN3F8G6zQFlmmeBhgk8mss/msbZGdYzGP8mXCGUHQDKR9w
+         bNBYPMn7uNQtjR6uoPFJJI1iu77tjCB8ZROFtZylFtowBMRByNagi9WYp858NHAHPxEs
+         HHrgiZaAc9H5bqNy+xgM8u7Teql3KfJd+FRtEOuziUQ6cGyla8GPlENlScfw0T49htCq
+         xADldZD+QP+E1Ms58x/PKR4xXpEBnXHSlW2/KXZq/lRMgvLwSC2Xw3rKFkJP8MrVQBLR
+         JtgTvFyhuigym4USWGRLA0paTSEuBn4lfKnaDSkIlrbF6s18NlMldhKVQaQ1Vtqp9wAn
+         vVSw==
+X-Gm-Message-State: AOJu0YwX9o/yKVjr6HJxY3TkZK7P0LmVVjkUkxnwTZkv9wdU3+g/lHsi
+	nePSCYAMS1pnYu/V9MakbPmlnQ1LS9qnVOYNfOcSy15OwWNWHwX4vp84+otkTaqQQqha8LPT50a
+	GZsAca9tI3O+h6WCxBIm6N2uYp0mHQ4v0DRJpVw==
+X-Google-Smtp-Source: AGHT+IGYiHwBdTOPDnoFpMk4wG2qn9o70lLB7qc/tMqoiGXQQ1hR03EibuQ3mFexsetD4ArcCOazY4KDA9aeRUgU3NE=
+X-Received: by 2002:a05:6122:4693:b0:4bf:dbbd:37aa with SMTP id
+ di19-20020a056122469300b004bfdbbd37aamr937831vkb.15.1706693860441; Wed, 31
+ Jan 2024 01:37:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130124828.14678-2-brgl@bgdev.pl>
+References: <20240129115216.96479-1-krzysztof.kozlowski@linaro.org>
+ <20240129115216.96479-5-krzysztof.kozlowski@linaro.org> <CACRpkdYf4HUaV-Pjr81WjLbzy9zdAnyFWs9gPayPC6-3OjHQwA@mail.gmail.com>
+In-Reply-To: <CACRpkdYf4HUaV-Pjr81WjLbzy9zdAnyFWs9gPayPC6-3OjHQwA@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 31 Jan 2024 10:37:29 +0100
+Message-ID: <CAMRc=Mc1SGLeUOWmKg=fvCdM+RR6FSu2QkFuR17s7L99eRMGug@mail.gmail.com>
+Subject: Re: [PATCH v6 4/6] reset: Instantiate reset GPIO controller for
+ shared reset-gpios
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, 
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, 
+	Sean Anderson <sean.anderson@seco.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
+On Wed, Jan 31, 2024 at 9:57=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> Hi Krzysztof,
+>
+> something is odd with the addresses on this patch, because neither GPIO
+> maintainer is on CC nor linux-gpio@vger, and it's such a GPIO-related
+> patch. We only saw it through side effects making <linux/gpio/driver.h>
+> optional, as required by this patch.
+>
+> Please also CC Geert Uytterhoeven, the author of the GPIO aggregator.
+>
+> i.e. this:
+> > 2. !GPIOLIB stub:
+> >    https://lore.kernel.org/all/20240125081601.118051-3-krzysztof.kozlow=
+ski@linaro.org/
+>
+> On Mon, Jan 29, 2024 at 12:53=E2=80=AFPM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>
+> > Devices sharing a reset GPIO could use the reset framework for
+> > coordinated handling of that shared GPIO line.  We have several cases o=
+f
+> > such needs, at least for Devicetree-based platforms.
+> >
+> > If Devicetree-based device requests a reset line, while "resets"
+> > Devicetree property is missing but there is a "reset-gpios" one,
+> > instantiate a new "reset-gpio" platform device which will handle such
+> > reset line.  This allows seamless handling of such shared reset-gpios
+> > without need of changing Devicetree binding [1].
+> >
+> > To avoid creating multiple "reset-gpio" platform devices, store the
+> > Devicetree "reset-gpios" GPIO specifiers used for new devices on a
+> > linked list.  Later such Devicetree GPIO specifier (phandle to GPIO
+> > controller, GPIO number and GPIO flags) is used to check if reset
+> > controller for given GPIO was already registered.
+> >
+> > If two devices have conflicting "reset-gpios" property, e.g. with
+> > different ACTIVE_xxx flags, this would allow to spawn two separate
+> > "reset-gpio" devices, where the second would fail probing on busy GPIO
+> > request.
+> >
+> > Link: https://lore.kernel.org/all/YXi5CUCEi7YmNxXM@robh.at.kernel.org/ =
+[1]
+> > Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > Cc: Sean Anderson <sean.anderson@seco.com>
+> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> (...)
+>
+> In my naive view, this implements the following:
+>
+> reset -> virtual "gpio" -> many physical gpios[0..n]
 
-kernel test robot noticed the following build warnings:
+This is a different problem: it supports many users enabling the same
+GPIO (in Krzysztof's patch it's one but could be more if needed) but -
+unlike the broken NONEXCLUSIVE GPIOs in GPIOLIB - it counts the number
+of users and doesn't disable the GPIO for as long as there's at least
+one.
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.8-rc2 next-20240131]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Bart
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-protect-the-list-of-GPIO-devices-with-SRCU/20240130-205537
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240130124828.14678-2-brgl%40bgdev.pl
-patch subject: [PATCH 01/22] gpio: protect the list of GPIO devices with SRCU
-config: i386-randconfig-141-20240131 (https://download.01.org/0day-ci/archive/20240131/202401311746.be3dlVTg-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401311746.be3dlVTg-lkp@intel.com/
-
-New smatch warnings:
-drivers/gpio/gpiolib.c:4167 gpiod_find_and_request() error: uninitialized symbol 'ret'.
-drivers/gpio/gpiolib.c:4181 gpiod_find_and_request() error: uninitialized symbol 'desc'.
-
-Old smatch warnings:
-drivers/gpio/gpiolib.c:4184 gpiod_find_and_request() error: uninitialized symbol 'desc'.
-
-vim +/ret +4167 drivers/gpio/gpiolib.c
-
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4128  
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4129  static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4130  						struct fwnode_handle *fwnode,
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4131  						const char *con_id,
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4132  						unsigned int idx,
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4133  						enum gpiod_flags flags,
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4134  						const char *label,
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4135  						bool platform_lookup_allowed)
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4136  {
-ba2dc1cb5491712 Hans de Goede       2022-12-29  4137  	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
-c122f461ccac0e7 Andy Shevchenko     2023-03-09  4138  	struct gpio_desc *desc;
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4139  	int ret;
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4140  
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4141  	scoped_guard(srcu, &gpio_devices_srcu) {
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4142  		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx,
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4143  					    &flags, &lookupflags);
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4144  		if (gpiod_not_found(desc) && platform_lookup_allowed) {
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4145  			/*
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4146  			 * Either we are not using DT or ACPI, or their lookup
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4147  			 * did not return a result. In that case, use platform
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4148  			 * lookup as a fallback.
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4149  			 */
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4150  			dev_dbg(consumer,
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4151  				"using lookup tables for GPIO lookup\n");
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4152  			desc = gpiod_find(consumer, con_id, idx, &lookupflags);
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4153  		}
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4154  
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4155  		if (IS_ERR(desc)) {
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4156  			dev_dbg(consumer, "No GPIO consumer %s found\n",
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4157  				con_id);
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4158  			return desc;
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4159  		}
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4160  
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4161  		/*
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4162  		 * If a connection label was passed use that, else attempt to use
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4163  		 * the device name as label
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4164  		 */
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4165  		ret = gpiod_request(desc, label);
-1fe5210a1bfba00 Bartosz Golaszewski 2024-01-30  4166  	}
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11 @4167  	if (ret) {
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4168  		if (!(ret == -EBUSY && flags & GPIOD_FLAGS_BIT_NONEXCLUSIVE))
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4169  			return ERR_PTR(ret);
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4170  
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4171  		/*
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4172  		 * This happens when there are several consumers for
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4173  		 * the same GPIO line: we just return here without
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4174  		 * further initialization. It is a bit of a hack.
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4175  		 * This is necessary to support fixed regulators.
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4176  		 *
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4177  		 * FIXME: Make this more sane and safe.
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4178  		 */
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4179  		dev_info(consumer,
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4180  			 "nonexclusive access to GPIO for %s\n", con_id);
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11 @4181  		return desc;
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4182  	}
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4183  
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4184  	ret = gpiod_configure_flags(desc, con_id, lookupflags, flags);
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4185  	if (ret < 0) {
-8eb1f71e7acca4f Dmitry Torokhov     2022-11-11  4186  		dev_dbg(consumer, "setup of GPIO %s failed\n", con_id);
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4187  		gpiod_put(desc);
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4188  		return ERR_PTR(ret);
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4189  	}
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4190  
-9ce4ed5b4db1363 Bartosz Golaszewski 2023-08-21  4191  	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_REQUESTED);
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4192  
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4193  	return desc;
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4194  }
-0eadd36d9123745 Dmitry Torokhov     2022-09-03  4195  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> So if there was already a way in the kernel to map one GPIO to
+> many GPIOs, the framework could just use that with a simple
+> single GPIO?
+>
+> See the bindings in:
+> Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+>
+> This is handled by drivers/gpio/gpio-aggregator.c.
+>
+> This supports a 1-to-1 map: one GPIO in, one GPIO out, same offset.
+> So if that is extended to support 1-to-many, this problem is solved.
+>
+> Proposed solution: add a single boolean property such as
+> aggregate-all-gpios; to the gpio-delay node, making it provide
+> one single gpio at offset 0 on the consumer side, and refuse any
+> more consumers.
+>
+> This will also solve the problem with induced delays on
+> some GPIO lines as I can see was discussed in the bindings,
+> the gpio aggregator already supports that, but it would work
+> fine with a delay being zero as well.
+>
+> This avoids all the hackery with driver stubs etc as well.
+>
+> Yours,
+> Linus Walleij
