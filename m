@@ -1,35 +1,35 @@
 Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965CB5672;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961D05394;
 	Wed, 31 Jan 2024 02:16:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706667368; cv=none; b=qbornavIPhx1ljnVfDBXoq5iSEpe80mO+JrqZoS0YvWN9Zlez40X8fUaZtmFp05doUw96A8srxi8MW3VEkT37Ropj4qIMZ4mpnA9qTrddxY2+Idqnj9Bc1RfQnJrxAvQFycp+wSQ5ZA6JBwQjXWZ8TqiWTI9b49rWbcVxWuBKu4=
+	t=1706667368; cv=none; b=SKS+kiLgsNDXrMECF40owruN6ivU3pJIOnYkR4Ii0Mv36xnEjtOLBA5Yw49nfW1SWVIP89lwAmmIC3IPCGMydUIqKPO2M7UcRH3e8fVUSoukRzIVR503HMZsiMs4FThBrLGJQo8Rl89Ek8jwhykn4sa0Ws1tRnN5YEoIjFufWG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706667368; c=relaxed/simple;
-	bh=9wT+B7+F1Vv/UHIWNs5HiJCid1GsqOvXjQ+iDzWwuzg=;
+	bh=HCJDXrbbClLe54itl4O3me4eGm27hgSAHGhToE6sjJA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K83Hu/NphHFJn0r/wGcD1LZBSAdahGrAVHg9b4x4KUmmN9+by3o5WSof1yIuqOBeUaHOIIsfFS8t58eIsZrUyDl0DtTp4KZpsKsXqW9LteXHjB5rTcQEAE+oyE6iQ2tDHIwL/a89a6Dn9eSgRVS43crJT3NZXr1RHiaqvahFsGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=PPni3DAK; arc=none smtp.client-ip=4.36.192.163
+	 MIME-Version; b=TMSkGJpPyqfaY/LD//lwg5hjR3/Fey7Y5sXE18a171cBns6MNjzJbAXONZ+7LEmtf8TXQn9QNpNsPInEa7TRbD4MX/sbixe1AViKA9fg6Q5YNvfA51/639O5hAl4bzlb9q59FDAiOuEe3o5OdIFV8Y4LUAB92VPWnXmfljOUN0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=b/wDzQH6; arc=none smtp.client-ip=4.36.192.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="PPni3DAK"
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="b/wDzQH6"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=P3QYzBA4EV4T10nQsEVxMllwkWrG/Pg5gVd9g6PO8jQ=; b=PPni3DAKGSUoK7BXRjdWNHpeBL
-	54ckrLRisbmRDYFHO/ZczaH9HL2BMd+yCcG7TCPzdE1vSys0KSDbB+B3xTikGyATyLH6C7QH1R7ie
-	HcJ81uHAOre+bjwvAbfzg2XYiGyo9NEH9MqaJxD1+nyGa/oVDMkc1H6DI2lEtl4ModNOQE2yb9plf
-	jbHpRCYAGcL+3GcUihUpnjrRBOUj4SOSz0d7BDXpy9COvSvorfLA2yHQVpYeUleZ/FzziTd79Ymub
-	6f61LhVacFnD2GPTn/e8/N2qUoTZ5HeV/gTucyOw6SikwPnK9QuGtE8rA1wsHXb72t6GjGkoNUb2h
-	A0LIUyvw==;
+	bh=R39lGOqTNBMRXbRmwXOtAWXBwOD9NggROFCJWXViCO4=; b=b/wDzQH6Mzut/tAITEPLUTaKVE
+	k9IamG8XOeeE3ntHS0bXtYmBvDn97GUEB/LVGXkFeCg0/6Rzb2j+YrUrg1+RUD2pskQOLaGMKA775
+	hjqKMmHp/Z15IzDSmXc9Hd16oW8zqJxgwF3fS7cVoeppiyvFvclwsfBUo2IykJkzjoxmVchrLxyaM
+	Ds3s6WMIULYiGME82YQS/MHw/rqV236Z/EhhefrGN63zbwnhhtN+kllp/K1EZh8RXU+5Fo19E+W7+
+	jXAbN2VLiPjFRxpwvHjMccMdMbO/iVZrsND7y3hWzSDk+iP9Wiz2bXQRhyRheboNYWLmI2SRMdJfp
+	yRew08zw==;
 Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
 	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <zfigura@codeweavers.com>)
-	id 1rV08n-0038Kv-1L;
-	Tue, 30 Jan 2024 20:15:53 -0600
+	id 1rV08o-0038Kv-0p;
+	Tue, 30 Jan 2024 20:15:54 -0600
 From: Elizabeth Figura <zfigura@codeweavers.com>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	Elizabeth Figura <zfigura@codeweavers.com>
-Subject: [RFC PATCH v2 07/29] ntsync: Introduce NTSYNC_IOC_MUTEX_UNLOCK.
-Date: Tue, 30 Jan 2024 20:13:34 -0600
-Message-ID: <20240131021356.10322-8-zfigura@codeweavers.com>
+Subject: [RFC PATCH v2 13/29] ntsync: Introduce NTSYNC_IOC_SEM_READ.
+Date: Tue, 30 Jan 2024 20:13:40 -0600
+Message-ID: <20240131021356.10322-14-zfigura@codeweavers.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240131021356.10322-1-zfigura@codeweavers.com>
 References: <20240131021356.10322-1-zfigura@codeweavers.com>
@@ -60,109 +60,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This corresponds to the NT syscall NtReleaseMutant().
+This corresponds to the NT syscall NtQuerySemaphore().
 
-This syscall decrements the mutex's recursion count by one, and returns the
-previous value. If the mutex is not owned by the given owner ID, the function
-instead fails and returns -EPERM.
+This returns the current count and maximum count of the semaphore.
 
 Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
 ---
- drivers/misc/ntsync.c       | 64 +++++++++++++++++++++++++++++++++++++
+ drivers/misc/ntsync.c       | 21 +++++++++++++++++++++
  include/uapi/linux/ntsync.h |  1 +
- 2 files changed, 65 insertions(+)
+ 2 files changed, 22 insertions(+)
 
 diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
-index 484219a266ae..1770ec4008af 100644
+index 240ae858fa96..6dccfbfb2512 100644
 --- a/drivers/misc/ntsync.c
 +++ b/drivers/misc/ntsync.c
-@@ -290,6 +290,68 @@ static int ntsync_sem_post(struct ntsync_obj *sem, void __user *argp)
- 	return ret;
+@@ -506,6 +506,25 @@ static int ntsync_event_reset(struct ntsync_obj *event, void __user *argp)
+ 	return 0;
  }
  
-+/*
-+ * Actually change the mutex state, returning -EPERM if not the owner.
-+ */
-+static int unlock_mutex_state(struct ntsync_obj *mutex,
-+			      const struct ntsync_mutex_args *args)
++static int ntsync_sem_read(struct ntsync_obj *sem, void __user *argp)
 +{
-+	lockdep_assert_held(&mutex->lock);
++	struct ntsync_sem_args __user *user_args = argp;
++	struct ntsync_sem_args args;
 +
-+	if (mutex->u.mutex.owner != args->owner)
-+		return -EPERM;
++	if (sem->type != NTSYNC_TYPE_SEM)
++		return -EINVAL;
 +
-+	if (!--mutex->u.mutex.count)
-+		mutex->u.mutex.owner = 0;
-+	return 0;
-+}
++	args.sem = 0;
++	spin_lock(&sem->lock);
++	args.count = sem->u.sem.count;
++	args.max = sem->u.sem.max;
++	spin_unlock(&sem->lock);
 +
-+static int ntsync_mutex_unlock(struct ntsync_obj *mutex, void __user *argp)
-+{
-+	struct ntsync_mutex_args __user *user_args = argp;
-+	struct ntsync_device *dev = mutex->dev;
-+	struct ntsync_mutex_args args;
-+	__u32 prev_count;
-+	int ret;
-+
-+	if (copy_from_user(&args, argp, sizeof(args)))
++	if (copy_to_user(user_args, &args, sizeof(args)))
 +		return -EFAULT;
-+	if (!args.owner)
-+		return -EINVAL;
-+
-+	if (mutex->type != NTSYNC_TYPE_MUTEX)
-+		return -EINVAL;
-+
-+	if (atomic_read(&mutex->all_hint) > 0) {
-+		spin_lock(&dev->wait_all_lock);
-+		spin_lock_nest_lock(&mutex->lock, &dev->wait_all_lock);
-+
-+		prev_count = mutex->u.mutex.count;
-+		ret = unlock_mutex_state(mutex, &args);
-+		if (!ret) {
-+			try_wake_all_obj(dev, mutex);
-+			try_wake_any_mutex(mutex);
-+		}
-+
-+		spin_unlock(&mutex->lock);
-+		spin_unlock(&dev->wait_all_lock);
-+	} else {
-+		spin_lock(&mutex->lock);
-+
-+		prev_count = mutex->u.mutex.count;
-+		ret = unlock_mutex_state(mutex, &args);
-+		if (!ret)
-+			try_wake_any_mutex(mutex);
-+
-+		spin_unlock(&mutex->lock);
-+	}
-+
-+	if (!ret && put_user(prev_count, &user_args->count))
-+		ret = -EFAULT;
-+
-+	return ret;
++	return 0;
 +}
 +
  static int ntsync_obj_release(struct inode *inode, struct file *file)
  {
  	struct ntsync_obj *obj = file->private_data;
-@@ -309,6 +371,8 @@ static long ntsync_obj_ioctl(struct file *file, unsigned int cmd,
+@@ -525,6 +544,8 @@ static long ntsync_obj_ioctl(struct file *file, unsigned int cmd,
  	switch (cmd) {
  	case NTSYNC_IOC_SEM_POST:
  		return ntsync_sem_post(obj, argp);
-+	case NTSYNC_IOC_MUTEX_UNLOCK:
-+		return ntsync_mutex_unlock(obj, argp);
- 	default:
- 		return -ENOIOCTLCMD;
- 	}
++	case NTSYNC_IOC_SEM_READ:
++		return ntsync_sem_read(obj, argp);
+ 	case NTSYNC_IOC_MUTEX_UNLOCK:
+ 		return ntsync_mutex_unlock(obj, argp);
+ 	case NTSYNC_IOC_MUTEX_KILL:
 diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
-index d68f24fd75a2..a3f5f4f13798 100644
+index 598f894f868d..6017f621687e 100644
 --- a/include/uapi/linux/ntsync.h
 +++ b/include/uapi/linux/ntsync.h
-@@ -39,5 +39,6 @@ struct ntsync_wait_args {
- #define NTSYNC_IOC_CREATE_MUTEX		_IOWR('N', 0x84, struct ntsync_sem_args)
- 
- #define NTSYNC_IOC_SEM_POST		_IOWR('N', 0x81, __u32)
-+#define NTSYNC_IOC_MUTEX_UNLOCK		_IOWR('N', 0x85, struct ntsync_mutex_args)
+@@ -51,5 +51,6 @@ struct ntsync_wait_args {
+ #define NTSYNC_IOC_EVENT_SET		_IOR ('N', 0x88, __u32)
+ #define NTSYNC_IOC_EVENT_RESET		_IOR ('N', 0x89, __u32)
+ #define NTSYNC_IOC_EVENT_PULSE		_IOR ('N', 0x8a, __u32)
++#define NTSYNC_IOC_SEM_READ		_IOR ('N', 0x8b, struct ntsync_sem_args)
  
  #endif
 -- 
