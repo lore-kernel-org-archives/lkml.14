@@ -1,81 +1,230 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1725539FEB
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A27A3A1CF
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706739727; cv=none; b=YQ9PQLSQxLDii3QDqrRWckK/4nQTU0mjgUbbkbxVTZlL77aWNqTcUZ0j5wxWA4buw9BK4Av0z15yml6/6phMA3Zxc0ch19+lpaptZriEjRitY3pW1N0B21IFlMIkAu7QvgHj98D1KMOUQJ0PDNzeZMWVNAS4JeIfBGWeIfhUkcU=
+	t=1706739789; cv=none; b=io8R8CN77Z+TORfh3ATVzl182RgwDcz8i3W8/ANJWTxyDrmrUbEz0kNG1wJwMnxeMwuQkxl357Qf+tkQa9G8bPq1w8+F3dxqb2nfXi6rYddM4dvt+N0RZNkgZWFcmogoYk1Cd9PiXccQH4Ga2d6BZ+uoTRQlFRXV8fpJJRRIaMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706739727; c=relaxed/simple;
-	bh=vcScM3cpdf7Pja37NGeK6Yly0/J61B5EtMzfdpq0CFg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=P7EtdQ27KDFgo1uuCLaaPcfhMTA6p0hPOFiiyzbUSxen9emb47uero/hymFuV9n55CjsOmiythWvlqDbnKRuMaVPml8j1D0s5fEP9sL7Gq7bPMmJSfOjhE1FPcJMIkXTaRhw4llICiAGMentAmlycpo+iLsvWT7Dj6+dQPzx8Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=a0IxyXcY; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
+	s=arc-20240116; t=1706739789; c=relaxed/simple;
+	bh=6+8ttMZH+a1iPHq99hGjUHdtQF7PaS1+G02SVxU80DE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=JRWHcRs2qrIHN5rxPmFhfYYCEKTFmmXnj3GpoQtklieJi7Jf/GLXt2CXRFMsh/izmCSHaHWvLpgnDuCktUxnViGkc54ObUW/61t0oIOvonm4qLGOVMWkHKHWG27fsPmKzkLtTUCZ3gMlMdGBAVBYH5aiCY4SBjLCN1gH0CypAjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ti5dhSzs; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="a0IxyXcY"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42a4516ec46so2270461cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:22:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ti5dhSzs"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d5ce88b51cso64575ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:23:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iwanders.net; s=google; t=1706739725; x=1707344525; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vcScM3cpdf7Pja37NGeK6Yly0/J61B5EtMzfdpq0CFg=;
-        b=a0IxyXcYWUS0UrNbcJkKcy0kjVdzpNm2qnbggSJj3XN8vuN3WRoVmVp6dWoim0I08b
-         i54pYRG/sKToEfVwg2LTGWrMU8lt/YKiNTpyxZQ/dS6cw5TqmvXFVDHS6OJQL0TPJA1l
-         18nT4JpW5Hf+cNO5LPKtLHg1GVPdabkI542vY=
+        d=google.com; s=20230601; t=1706739787; x=1707344587; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VLZjnnQr1hSsjDpZ3P3+76TqgNoCqvXQ4Y9R9TvsEfc=;
+        b=Ti5dhSzsmScIcVuDKx/VlZ4+KbmyKophgSBwGylHVrEdh5qC65W1iUJ/ywfPfmxq2P
+         tAg2dxoIaloo4VVT4fYLoyMUnXG0Vc1GQO+7WI4e8wIVGUuDwdCnL9bP7+o/dQC8ys1J
+         ZNyWzcHZ+sCRVQRQLCeNZQH5wy+ksd+6NPMI6UZ+2WcZydov/uqh+PeLIHCjdJsLxlpH
+         2dQD8ogbOdRDDyNece6ag0dnAT+XpaQxye2OUgOlLIDRApuA1k6nwmJLcPOo8J48NpHF
+         pLyF0RARpYECAGkPCC4mjTC61vcL1A2RxO2Marzy5Fr0uCCu71xd1e/DSCKG2+DmtOhH
+         MpGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706739725; x=1707344525;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vcScM3cpdf7Pja37NGeK6Yly0/J61B5EtMzfdpq0CFg=;
-        b=Qvo8+9Kp13hDCGi3/koqLbf6g71sk2gEa4roo1SGIuVft79Xg/hsIwl79s/WAvxIwN
-         fZDTcSW1QJ87P6sd+MSCftiKTHS4xI6Sw+BuZYyWeKo9vNVF1Dec8QljPC6RJnSHrtiL
-         7leJg4SZif2+2yGeYCqbd3eqEwLxt0gxBUxzOJ78s0TJDIdXrehiQaCLFVKoCIYT0ntW
-         yckUMv2ij+1yhQ738OPj9SEdeEJwHyA0/6al1Z2+fVCOBmQUW98rgNCE5Aj0X4Aw9Wig
-         MDfkAc5EreYLIP0Uitu6kLpVoW5F2LG50hRL0F1Td2eDjOMdxTCTQ98WrkvsSD5N0YBT
-         vXOw==
-X-Gm-Message-State: AOJu0YyM6OVOZUdA4/3mWNw6c0MlrYQOaGSauqMo+lkRcZ1bPibt46Js
-	X6OnMfjCgBNuLjD44KoJf4O8Z2d0C4+RA9cfQCaSd5NTgXolo+bMLZYmFeJdls0=
-X-Google-Smtp-Source: AGHT+IHT6U2Z6r+BnwKmbGRGJKdtoLhCF94IFwTmfyoXINLyl1O7n6F0NJF3d2P84mNPLywdHvL9eg==
-X-Received: by 2002:ac8:5a04:0:b0:42a:9d70:7f58 with SMTP id n4-20020ac85a04000000b0042a9d707f58mr6949131qta.49.1706739724907;
-        Wed, 31 Jan 2024 14:22:04 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVNPF3itdhRp04csr0g5GO3JreHvCYGEIEA/une96Tw0FryJ0AUsks6nkPc9NxQycBHkdbMDKYBVjTcz2IjRJuyJkHgxNyySC5weAtSxjO5EEaYMVghfNH7nKD4OL1lxjiGUjUEI7dg4/tfEA2tPW06FBT06l8h5qTN/ZKeRaBEiSsjKlk/w8lTGiQA7XkPmaR6priWatn7TyQuVpp3HuVi7JRILUR0tzT73HALyiZHrMrUYSL6iJ59uXeozc9BZprHUPJ3nr0SnhhiPljScq+3grTguB6aez9TEeN+149b7uSCpWNPtbIx8KEoBFtMBaboVIJrCAZbJ/hfkzNfAWBjTQ+9QfVsmuYbogN8Hz0VnU9yp7Y5/WBWK5TAX/hi841Njiv6orz8GwTLsOAH
-Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
-        by smtp.gmail.com with ESMTPSA id ci13-20020a05622a260d00b0042a729d17dcsm1896082qtb.86.2024.01.31.14.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 14:22:04 -0800 (PST)
-From: Ivor Wanders <ivor@iwanders.net>
-To: luzmaximilian@gmail.com
-Cc: corbet@lwn.net,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	ivor@iwanders.net,
-	jdelvare@suse.com,
-	linux-doc@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	markgross@kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] platform/surface: aggregator_registry: add entry for fan speed
-Date: Wed, 31 Jan 2024 17:21:45 -0500
-Message-Id: <20240131222145.3320-1-ivor@iwanders.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <8552a795-9ce4-417a-bc71-593571a6b363@gmail.com>
-References: <8552a795-9ce4-417a-bc71-593571a6b363@gmail.com>
+        d=1e100.net; s=20230601; t=1706739787; x=1707344587;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VLZjnnQr1hSsjDpZ3P3+76TqgNoCqvXQ4Y9R9TvsEfc=;
+        b=ayetz4na01XSiF5a4vsWYAAoOg4tcPsbwuvk+AmOttSDKebhVXOTQobG+OQI9RGzlu
+         nqgOlck5L3lwJ4sAjP42FJmN07nRx2nF/s6XJwv5HYP1Fl73dVWi1dG4jN1atCFkfTiX
+         Egy2H91cF2gtfD/BlW5FKjYQdQ/AAfXvOBK+iYpwyfQK0/rH6e2wQtkEUQ9MAyjcYbMo
+         Wf3/Nm9ta4ppJyAd0vAOBb+Xw+ZwoBejBY50LvxmErEmztbnbNr18PxOU3if/g6i/lf/
+         hi1AoNBjPCR/b7inQBj4W2oi2ONEBj6S5RcnffGwmvNJbPy8vfGs7XTOoexkZkuzss9k
+         fyJg==
+X-Gm-Message-State: AOJu0YwHFXa0iDlKSHLLd8I6eo9BhXqA5uLjEoNlHfpu2iC7+dMYgUB4
+	2wfU/nc/DdmRrcfpym0OjhN5+5dIDU53EnYFyDVmMnf2awqfSWa3U3n+MZagxSKV/OZOSRggvuJ
+	gA9vwUNa8tcEdrVQ7INMEH35xa5Tv/YtzRKM9
+X-Google-Smtp-Source: AGHT+IESkS6TrhOS6lYf62UWcE3qIGRmQGUnqsw+Dky0H/SLbbYVBJ8sL7NPCGG71xw7pMkaike3pJgrfm6D4Wo3seA=
+X-Received: by 2002:a17:902:ecc5:b0:1d5:7463:523a with SMTP id
+ a5-20020a170902ecc500b001d57463523amr32635plh.5.1706739787124; Wed, 31 Jan
+ 2024 14:23:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240103050635.391888-1-irogers@google.com>
+In-Reply-To: <20240103050635.391888-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 31 Jan 2024 14:22:55 -0800
+Message-ID: <CAP-5=fVnWKiHNLXbNgseabcVHXp9PkukmOGSD9SFnUQCYhk8Og@mail.gmail.com>
+Subject: Re: [PATCH v7 00/25] maps/threads/dsos memory improvements and fixes
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Nick Terrell <terrelln@fb.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Vincent Whitchurch <vincent.whitchurch@axis.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Colin Ian King <colin.i.king@gmail.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Ming Wang <wangming01@loongson.cn>, 
+	James Clark <james.clark@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Leo Yan <leo.yan@linaro.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, German Gomez <german.gomez@arm.com>, 
+	Changbin Du <changbin.du@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Li Dong <lidong@vivo.com>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Guilherme Amadio <amadio@gentoo.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> I assume because of an older MAINTAINERS list. Ivor, please add him for
-> any next submissions to platform/surface.
+On Tue, Jan 2, 2024 at 9:06=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> Modify the implementation of maps to not use an rbtree as the
+> container for maps, instead use a sorted array. Improve locking and
+> reference counting issues.
+>
+> Similar to maps separate out and reimplement threads to use a hashmap
+> for lower memory consumption and faster look up. The fixes a
+> regression in memory usage where reference count checking switched to
+> using non-invasive tree nodes.  Reduce its default size by 32 times
+> and improve locking discipline. Also, fix regressions where tids had
+> become unordered to make `perf report --tasks` and
+> `perf trace --summary` output easier to read.
+>
+> Better encapsulate the dsos abstraction. Remove the linked list and
+> rbtree used for faster iteration and log(n) lookup to a sorted array
+> for similar performance but half the memory usage per dso. Improve
+> reference counting and locking discipline, adding reference count
+> checking to dso.
+>
+> v7:
+>  - rebase to latest perf-tools-next where 22 patches were applied by Arna=
+ldo.
+>  - resolve merge conflicts, in particular with fc044c53b99f ("perf
+>    annotate-data: Add dso->data_types tree") that required more dso
+>    accessor functions.
 
-Yes, mea culpa. Guenter also ran into trouble applying the v4 version of
-the patch yesterday. I'm sorry I didn't base this off the correct branch
-everyone, will be sure to do so in the future!
+Ping. No review comments:
+https://lore.kernel.org/lkml/20240103050635.391888-1-irogers@google.com/
 
-~Ivor
+This may start to conflict with Adrian's work:
+https://lore.kernel.org/lkml/20240131192416.16387-1-adrian.hunter@intel.com=
+/
+but should just need minor get/put cleanup.
+
+Thanks,
+Ian
+
+
+> v6 series is here:
+> https://lore.kernel.org/lkml/20231207011722.1220634-1-irogers@google.com/
+>
+> Ian Rogers (25):
+>   perf maps: Switch from rbtree to lazily sorted array for addresses
+>   perf maps: Get map before returning in maps__find
+>   perf maps: Get map before returning in maps__find_by_name
+>   perf maps: Get map before returning in maps__find_next_entry
+>   perf maps: Hide maps internals
+>   perf maps: Locking tidy up of nr_maps
+>   perf dso: Reorder variables to save space in struct dso
+>   perf report: Sort child tasks by tid
+>   perf trace: Ignore thread hashing in summary
+>   perf machine: Move fprintf to for_each loop and a callback
+>   perf threads: Move threads to its own files
+>   perf threads: Switch from rbtree to hashmap
+>   perf threads: Reduce table size from 256 to 8
+>   perf dsos: Attempt to better abstract dsos internals
+>   perf dsos: Tidy reference counting and locking
+>   perf dsos: Add dsos__for_each_dso
+>   perf dso: Move dso functions out of dsos
+>   perf dsos: Switch more loops to dsos__for_each_dso
+>   perf dsos: Switch backing storage to array from rbtree/list
+>   perf dsos: Remove __dsos__addnew
+>   perf dsos: Remove __dsos__findnew_link_by_longname_id
+>   perf dsos: Switch hand code to bsearch
+>   perf dso: Add reference count checking and accessor functions
+>   perf dso: Reference counting related fixes
+>   perf dso: Use container_of to avoid a pointer in dso_data
+>
+>  tools/perf/arch/x86/tests/dwarf-unwind.c      |    1 +
+>  tools/perf/builtin-annotate.c                 |    8 +-
+>  tools/perf/builtin-buildid-cache.c            |    2 +-
+>  tools/perf/builtin-buildid-list.c             |   18 +-
+>  tools/perf/builtin-inject.c                   |   96 +-
+>  tools/perf/builtin-kallsyms.c                 |    2 +-
+>  tools/perf/builtin-mem.c                      |    4 +-
+>  tools/perf/builtin-record.c                   |    2 +-
+>  tools/perf/builtin-report.c                   |  209 +--
+>  tools/perf/builtin-script.c                   |    8 +-
+>  tools/perf/builtin-top.c                      |    4 +-
+>  tools/perf/builtin-trace.c                    |   43 +-
+>  tools/perf/tests/code-reading.c               |    8 +-
+>  tools/perf/tests/dso-data.c                   |   67 +-
+>  tools/perf/tests/hists_common.c               |    6 +-
+>  tools/perf/tests/hists_cumulate.c             |    4 +-
+>  tools/perf/tests/hists_output.c               |    2 +-
+>  tools/perf/tests/maps.c                       |    7 +-
+>  tools/perf/tests/symbols.c                    |    2 +-
+>  tools/perf/tests/thread-maps-share.c          |    8 +-
+>  tools/perf/tests/vmlinux-kallsyms.c           |   16 +-
+>  tools/perf/ui/browsers/annotate.c             |    6 +-
+>  tools/perf/ui/browsers/hists.c                |    8 +-
+>  tools/perf/ui/browsers/map.c                  |    4 +-
+>  tools/perf/util/Build                         |    1 +
+>  tools/perf/util/annotate-data.c               |    6 +-
+>  tools/perf/util/annotate.c                    |   45 +-
+>  tools/perf/util/auxtrace.c                    |    2 +-
+>  tools/perf/util/block-info.c                  |    2 +-
+>  tools/perf/util/bpf-event.c                   |    9 +-
+>  tools/perf/util/bpf_lock_contention.c         |    8 +-
+>  tools/perf/util/build-id.c                    |  136 +-
+>  tools/perf/util/build-id.h                    |    2 -
+>  tools/perf/util/callchain.c                   |    4 +-
+>  tools/perf/util/data-convert-json.c           |    2 +-
+>  tools/perf/util/db-export.c                   |    6 +-
+>  tools/perf/util/dlfilter.c                    |   12 +-
+>  tools/perf/util/dso.c                         |  469 +++---
+>  tools/perf/util/dso.h                         |  549 +++++--
+>  tools/perf/util/dsos.c                        |  529 ++++---
+>  tools/perf/util/dsos.h                        |   40 +-
+>  tools/perf/util/event.c                       |   12 +-
+>  tools/perf/util/header.c                      |    8 +-
+>  tools/perf/util/hist.c                        |    4 +-
+>  tools/perf/util/intel-pt.c                    |   22 +-
+>  tools/perf/util/machine.c                     |  570 +++-----
+>  tools/perf/util/machine.h                     |   32 +-
+>  tools/perf/util/map.c                         |   73 +-
+>  tools/perf/util/maps.c                        | 1280 +++++++++++------
+>  tools/perf/util/maps.h                        |   65 +-
+>  tools/perf/util/probe-event.c                 |   26 +-
+>  tools/perf/util/rb_resort.h                   |    5 -
+>  .../util/scripting-engines/trace-event-perl.c |    6 +-
+>  .../scripting-engines/trace-event-python.c    |   21 +-
+>  tools/perf/util/session.c                     |   21 +
+>  tools/perf/util/session.h                     |    2 +
+>  tools/perf/util/sort.c                        |   19 +-
+>  tools/perf/util/srcline.c                     |   65 +-
+>  tools/perf/util/symbol-elf.c                  |  132 +-
+>  tools/perf/util/symbol.c                      |  217 +--
+>  tools/perf/util/symbol_fprintf.c              |    4 +-
+>  tools/perf/util/synthetic-events.c            |   24 +-
+>  tools/perf/util/thread.c                      |    8 +-
+>  tools/perf/util/thread.h                      |    6 -
+>  tools/perf/util/threads.c                     |  186 +++
+>  tools/perf/util/threads.h                     |   35 +
+>  tools/perf/util/unwind-libunwind-local.c      |   20 +-
+>  tools/perf/util/unwind-libunwind.c            |    9 +-
+>  tools/perf/util/vdso.c                        |   56 +-
+>  69 files changed, 3127 insertions(+), 2158 deletions(-)
+>  create mode 100644 tools/perf/util/threads.c
+>  create mode 100644 tools/perf/util/threads.h
+>
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
