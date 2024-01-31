@@ -1,170 +1,87 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4994F608;
-	Wed, 31 Jan 2024 07:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFBE4E1C7;
+	Wed, 31 Jan 2024 07:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706684458; cv=none; b=K1y0n9nFT46aOBNITcBZRhmrMF6w+p9esp8PiWkxOwlzd0m4UcpN+RqVWJb/JI/KsfJRaRBfWu66h3j1nJCMc02Mx4fjAZDU0e8HFCLH5K9rmDtn19/6ieFwfdTitASRwSu2Xn1BvhZsX8xXl9o7/Vh/XxvQA5ZZ1dZ1ZwEfI7Y=
+	t=1706684614; cv=none; b=l67TZkDWxFIjuroKS9u9kfbxX8oWdnAGn6Gqx95WSRiMnIdX7K14dLuZ+xtiMnNG/6jPYdo1iKpexRcEYcYaQmNKXrnBchirAX6ThdCAwAvLZ/9KYSgWn650R7vuIprBXWtyYswYzpIP6qA+kIUNQQL0CKki6fLe7hP7OT0Ij90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706684458; c=relaxed/simple;
-	bh=B/ElHGjxCkLeMBY823z+y/Hl28wrPRCDlTkzZXoSwIo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LipaPYPdeptHoG7L/3mI7EL+QTdYgZlcHTFFRW4BgG9MM3sAWL4hrpRyQGui4yMjaPLw8tUa1OYvpkHYAAPL4k4ezXpabxyMCD7jBl9AsoIeLeaZh4d9aeQF4R0GbDcg6/9OTaKSdwHLcodJKzporTqLnAZzxgHiKmbUq71MCGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp89t1706684405tzxcwwhw
-X-QQ-Originating-IP: 7tQsAHQX4BoX3xLqOMeHuWcg7OvaXJdXcdN0YcqngNY=
-Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 31 Jan 2024 15:00:03 +0800 (CST)
-X-QQ-SSF: 01400000000000B0B000000A0000000
-X-QQ-FEAT: RqEkWZU95OHUMMbnP5O7pi75yccQvoLOKSaRKuHaOOzptfT2R6XrK9l9iFErh
-	G3/j+PxM/liXJH0nqhRZ7VhsiFeY22Ba8lOlwB22/kko4VeFXGWGgppbHYNavC7ZDPLH6hH
-	1max6ZXzbeON1oXvsTysh3W2jihhIBq2T6bSLK+DBcNfT4lsu1OVXInznr4kH9pU5SoGQ5x
-	UZpXpTVQdSSm/5yUjPwNLblojd9HpX1PRaMXy9GT4tcOvoidoXks3UEJDKoq4QbQ3c0ya68
-	5VzbOCx03O/g7udQePvBN4fg2cx3RucyiydnkNR6givjCyc/uL+IwMhfhlIU97FWpKSkfUF
-	iQ7QkzuUvnsiqDFejouCciTzwOpN0+SQl2ZX9cGoSioEfaRmGDo5pcLoTdORLcV5E5CSNZQ
-	CgkloBQaORjMcX66yVMiCA==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 16691829228007298276
-From: "JiaLong.Yang" <jialong.yang@shingroup.cn>
-To: Jialong Yang <jialong.yang@shingroup.cn>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: shenghui.qu@shingroup.cn,
-	ke.zhao@shingroup.cn,
-	zhijie.ren@shingroup.cn,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bingdings: perf: Support uncore ARM NI-700 PMU
-Date: Wed, 31 Jan 2024 14:59:53 +0800
-Message-Id: <20240131065953.9634-1-jialong.yang@shingroup.cn>
+	s=arc-20240116; t=1706684614; c=relaxed/simple;
+	bh=5itVcZvJGL/hDqK27tMy8SfbPP90T+bCnU7FBMbyvXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYZgXxJdTWZIbEyKy2t0c8Y5LhdAYKXH3E63yC0H8HiIp7UiNbpkTqACLOnXndxROIF6iFtFCS2BKRoaIfAD0iiAO1rNclaaK528nbNqE/gEfiOeT4y+j1tay0LoxzOQOYDEjWeo1xKkB0bilNt7B3yp8wiIP7G7hNNATMZfmuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=T5g/Z/H6; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="T5g/Z/H6"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3014140E01B0;
+	Wed, 31 Jan 2024 07:03:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Ib3tZYV1kXao; Wed, 31 Jan 2024 07:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706684601; bh=y1ZSshQgQ9DfksLhtLrUmW9w879xcK84syg8TCitOBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T5g/Z/H65Hn/vMu8N7w7lLAoaWQ6/dyzNc2qaWh1LxPuQWma6iXnbEfVZoAA/luVv
+	 GlBSmZtelrWQEdxZffKucvpiQLVufGKT/gq35OHqXm5pySsAaz/5JKI0WuogH/T1dd
+	 fUUasjzreZr8ikYUCsi+UhVzy4bAFcp72SaNDXtIfX3LCsfjZSjOwXid8LEGQ0yIIy
+	 4I5sm2kX2S4IoFLYJmgxskYJuZmYhnUaRqYdJRoZsVa+69lq0opmx1d9OsWHAd2Gdm
+	 l8zYFIPZQZhEwR1sIN/oPHbiQzoEQ9agncL20Ey+0RZlOtpjJeIK6VSa1AJ22DuQek
+	 kVs5H7gGMFFYC/dh6qiC/c4XbV8sJYf9uUXR0V/KnleqpcmyiWqwjd4fF57hI0Xsx3
+	 0Z7/Fj1hveWHGVifQn/Na1WkHgN4L1N2pcqjY80YcGSta9zEuqKATv0UaeG2XRGUZL
+	 MwLs1fzbM0dG9eYB798gjzt0xOwGJ5k20S4dN2KVoolkToWw04iQKUGURzH+4Ky33N
+	 mTSb6t5IXVypD/VmV4a1yzlWRWq32B+I4sf7Lwl3o8tjA9v8o5PapqAJ0TQQHhPZFG
+	 rfWunHOIPA0Y8fb8bzvcpKX0YtmP3KbBTZpZCAShB7SdJHwCnuv0G7B8/pr4EaA51u
+	 WiCh81Y+Z0tdNtavLAq5yiY8=
+Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AE21B40E016C;
+	Wed, 31 Jan 2024 07:03:05 +0000 (UTC)
+Date: Wed, 31 Jan 2024 08:02:58 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Tong Tiangen <tongtiangen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	wangkefeng.wang@huawei.com,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Naoya Horiguchi <naoya.horiguchi@nec.com>,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-mm@kvack.org, Guohanjun <guohanjun@huawei.com>
+Subject: Re: [PATCH -next v4 2/3] x86/mce: rename MCE_IN_KERNEL_COPYIN to
+ MCE_IN_KERNEL_COPY_MC
+Message-ID: <20240131070258.GGZbnwov0g918F-FGz@fat_crate.local>
+References: <20240111135548.3207437-1-tongtiangen@huawei.com>
+ <20240111135548.3207437-3-tongtiangen@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240111135548.3207437-3-tongtiangen@huawei.com>
 
-Add file corresponding to hx_arm_ni.c introducing ARM NI-700 PMU driver
-for HX.
+On Thu, Jan 11, 2024 at 09:55:47PM +0800, Tong Tiangen wrote:
+> Currently, there are some kernel memory copy scenarios is also mc safe
+> which use copy_mc_to_kernel() or copy_mc_user_highpage().
 
-Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
----
-v1 --> v2:
-1. Submit dt-bindings file Seperately.
-2. Do some check:
-   ~ #: make dt_binding_check DT_SCHEMA_FILES=perf
-   LINT    Documentation/devicetree/bindings
-   CHKDT   Documentation/devicetree/bindings/processed-schema.json
-   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-   DTEX    Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.example.dts
-   DTC_CHK Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.example.dtb
+Both of those end up in copy_mc_enhanced_fast_string() which does
+EX_TYPE_DEFAULT_MCE_SAFE.
 
- .../bindings/perf/hx,c2000-arm-ni.yaml        | 53 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- MAINTAINERS                                   |  6 +++
- 3 files changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml
-
-diff --git a/Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml b/Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml
-new file mode 100644
-index 000000000000..de50c79a5f23
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/perf/hx,c2000-arm-ni.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HX-C2000 NI (Network-on-chip Interconnect) Performance Monitors
-+
-+maintainers:
-+  - Jialong Yang <jialong.yang@shingroup.cn>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - hx,c2000-arm-ni
-+
-+  reg:
-+    items:
-+      - description: Physical address of the base (PERIPHBASE) and
-+          size of the whole NI configuration address space.
-+
-+  interrupts:
-+    minItems: 1
-+    items:
-+      - description: Overflow interrupt for clock domain 0
-+      - description: Overflow interrupt for clock domain 1
-+      - description: Overflow interrupt for clock domain 2
-+      - description: Generally, one interrupt line for one PMU. But this also
-+          support one interrupt line for a NI if merged.
-+
-+  pccs-id:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Used to identify NIs in system which has more than
-+      one NI.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    pmu@23ff0000 {
-+            compatible = "hx,c2000-arm-ni";
-+            reg = <0x2b420000 0x10000>;
-+            pccs-id = <0>;
-+            interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 1a0dc04f1db4..f6b4103ef436 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -617,6 +617,8 @@ patternProperties:
-     description: Shenzhen Hugsun Technology Co. Ltd.
-   "^hwacom,.*":
-     description: HwaCom Systems Inc.
-+  "^hx,.*":
-+    description: HEXIN Technologies Co., Ltd.
-   "^hxt,.*":
-     description: HXT Semiconductor
-   "^hycon,.*":
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8999497011a2..101974780710 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18866,6 +18866,12 @@ L:	linux-riscv@lists.infradead.org
- S:	Maintained
- F:	arch/riscv/boot/dts/thead/
- 
-+HX ARM-NI-700 PMU DRIVERS
-+M:	Jialong Yang <jialong.yang@shingroup.cn>
-+S:	Supported
-+F:	Documentation/devicetree/bindings/perf/hx,c2000-arm-ni.yaml
-+F:	drivers/perf/hx_arm_ni.c
-+
- RNBD BLOCK DRIVERS
- M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
- M:	Jack Wang <jinpu.wang@ionos.com>
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
