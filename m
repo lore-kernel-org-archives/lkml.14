@@ -1,42 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F0212C52C
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFF112CDAA;
+	Wed, 31 Jan 2024 16:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706718655; cv=none; b=AZGbmP5emsCiQ7lJJYYL35sbhrA6DhGBnfgAEYbRSLaOYPp+P0GoiDIBriT7U49DFtfBJE4Puq1v1IiNPEHrmq/vcj/oODOh1iOij7Nh9AMw1kD3NPdbyzgbE6y/rT+BFzBneib1PvUjPsYNOk3yky38Mujp13x1FTsbyIDZ4LQ=
+	t=1706718676; cv=none; b=b/71f2ro/pLF6OhCeD6GpdElsx7euTFbeNEEHnRrMCIgq6qFAd6zoe/4jfCORFIFSXB7uMisY1pHM6otP2Qc0dM2lgVlEXOhFyLiTPx9r7NTM/GsLaeIhiPYafnGRT1YZ3CZfoPm33FBCBlTGks+ZZg9TDPHezCxCdbPvIqCeP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706718655; c=relaxed/simple;
-	bh=EK6mQSU0rXidzQqllRwP/i4twW+fkBaD850m2dD4R6Y=;
+	s=arc-20240116; t=1706718676; c=relaxed/simple;
+	bh=FQk80lx6LBU/vGzS3KvVOXF8bV761X7qqWnO6O3DsnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RUKSz8KMZy2a4inl+FjQ1pU8qUDOJe7Qw1T9JdBqgSHX0Oa+X64VYQMeZUH/NEKJN8gsY6yv1b3ddZ+PRM6sZVqnR3nQYGEIhplIr34tDyPG+Gm5+mzCeNRNIhqNhmqrGE124xAYV4iqC4srmoCUMYWX6n7/Zm5ZMj5uzp4PglI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GL+2WMA3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FVLmJiqMPQ2wkMvpUw4fxuMitboyGFYdRpBqV+o0+ZB1Fsr2IeBYTBVpj8H7zm6aq0uYMJOS7SOkrLyivoyImBiKQ/kmneZ0MP8Mvzfpm+2llrK+Joh7IYNqE66rTohQ/AeXSzD/cOAaR/71evKHDaRROOnsQ4Idli/H1juT6WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iDNSeBwD; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GL+2WMA3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64931C43399;
-	Wed, 31 Jan 2024 16:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706718654;
-	bh=EK6mQSU0rXidzQqllRwP/i4twW+fkBaD850m2dD4R6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GL+2WMA36zNaEzVS4UtwxtwU87UtEAZBZuoua1+MclmG0EvDU5inUx5xPgWlQhCx+
-	 tKugeGg8DdA7+H8g4Mepz8bunlb4c0wF/Pr0qr4f3jJkorpgNAn6azaNsOIaOJ6UPE
-	 LIF4d4pVZs/ptNasV6jTOPtZAMkLI0nblUby8KQA=
-Date: Wed, 31 Jan 2024 08:30:53 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 1/6] sysfs: Introduce a mechanism to hide static
- attribute_groups
-Message-ID: <2024013139-thermal-eaten-f179@gregkh>
-References: <2024013025-spoiling-exact-ad20@gregkh>
- <2024013028-deflator-flaring-ec62@gregkh>
- <b93ec9c2-23f5-486b-a3dc-ed9b960df359@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iDNSeBwD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=kjk4r4IOpDJAInBw9oQcvbcWlzWkItt0uplMKw74Lkk=; b=iDNSeBwDEwR6AhvBychY0Uo9zA
+	TxBMH/wwrLaFa4WAqlJqrZox7kraISilV/Ol53k3JphW0L+kDp/u8iL+b0WRn0q8eManrxukhJF6j
+	NITQzNf15WeVSKljl8V3bH8TDNe5+1glCwUt77XqK2iowopWnMPQ/FMXUPVOYXjkiovk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rVDU8-006bAp-Tk; Wed, 31 Jan 2024 17:30:48 +0100
+Date: Wed, 31 Jan 2024 17:30:48 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Danielle Ratson <danieller@nvidia.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"sdf@google.com" <sdf@google.com>,
+	"kory.maincent@bootlin.com" <kory.maincent@bootlin.com>,
+	"maxime.chevallier@bootlin.com" <maxime.chevallier@bootlin.com>,
+	"vladimir.oltean@nxp.com" <vladimir.oltean@nxp.com>,
+	"przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>,
+	"ahmed.zaki@intel.com" <ahmed.zaki@intel.com>,
+	"richardcochran@gmail.com" <richardcochran@gmail.com>,
+	"shayagr@amazon.com" <shayagr@amazon.com>,
+	"paul.greenwalt@intel.com" <paul.greenwalt@intel.com>,
+	"jiri@resnulli.us" <jiri@resnulli.us>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	mlxsw <mlxsw@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+	Ido Schimmel <idosch@nvidia.com>
+Subject: Re: [RFC PATCH net-next 9/9] ethtool: Add ability to flash
+ transceiver modules' firmware
+Message-ID: <7039bd68-d972-46f6-8d8d-5388d9cff109@lunn.ch>
+References: <20240122084530.32451-1-danieller@nvidia.com>
+ <20240122084530.32451-10-danieller@nvidia.com>
+ <5bf6b526-02c4-4940-b8ec-bf858f9d4a58@lunn.ch>
+ <DM6PR12MB45161C82F43B67AD8EDB950BD87C2@DM6PR12MB4516.namprd12.prod.outlook.com>
+ <DM6PR12MB4516BC80DBF383A186707F19D87C2@DM6PR12MB4516.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,91 +67,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b93ec9c2-23f5-486b-a3dc-ed9b960df359@linux.intel.com>
+In-Reply-To: <DM6PR12MB4516BC80DBF383A186707F19D87C2@DM6PR12MB4516.namprd12.prod.outlook.com>
 
-On Wed, Jan 31, 2024 at 02:05:04PM +0100, Pierre-Louis Bossart wrote:
+> > > How big are these firmware blobs?
+> > >
 > 
-> 
-> On 1/30/24 19:46, Greg Kroah-Hartman wrote:
-> > From: Dan Williams <dan.j.williams@intel.com>
-> > 
-> > Add a mechanism for named attribute_groups to hide their directory at
-> > sysfs_update_group() time, or otherwise skip emitting the group
-> > directory when the group is first registered. It piggybacks on
-> > is_visible() in a similar manner as SYSFS_PREALLOC, i.e. special flags
-> > in the upper bits of the returned mode. To use it, specify a symbol
-> > prefix to DEFINE_SYSFS_GROUP_VISIBLE(), and then pass that same prefix
-> > to SYSFS_GROUP_VISIBLE() when assigning the @is_visible() callback:
-> > 
-> > 	DEFINE_SYSFS_GROUP_VISIBLE($prefix)
-> > 
-> > 	struct attribute_group $prefix_group = {
-> > 		.name = $name,
-> > 		.is_visible = SYSFS_GROUP_VISIBLE($prefix),
-> > 	};
-> > 
-> > SYSFS_GROUP_VISIBLE() expects a definition of $prefix_group_visible()
-> > and $prefix_attr_visible(), where $prefix_group_visible() just returns
-> > true / false and $prefix_attr_visible() behaves as normal.
-> > 
-> > The motivation for this capability is to centralize PCI device
-> > authentication in the PCI core with a named sysfs group while keeping
-> > that group hidden for devices and platforms that do not meet the
-> > requirements. In a PCI topology, most devices will not support
-> > authentication, a small subset will support just PCI CMA (Component
-> > Measurement and Authentication), a smaller subset will support PCI CMA +
-> > PCIe IDE (Link Integrity and Encryption), and only next generation
-> > server hosts will start to include a platform TSM (TEE Security
-> > Manager).
-> > 
-> > Without this capability the alternatives are:
-> > 
-> > * Check if all attributes are invisible and if so, hide the directory.
-> >   Beyond trouble getting this to work [1], this is an ABI change for
-> >   scenarios if userspace happens to depend on group visibility absent any
-> >   attributes. I.e. this new capability avoids regression since it does
-> >   not retroactively apply to existing cases.
-> > 
-> > * Publish an empty /sys/bus/pci/devices/$pdev/tsm/ directory for all PCI
-> >   devices (i.e. for the case when TSM platform support is present, but
-> >   device support is absent). Unfortunate that this will be a vestigial
-> >   empty directory in the vast majority of cases.
-> > 
-> > * Reintroduce usage of runtime calls to sysfs_{create,remove}_group()
-> >   in the PCI core. Bjorn has already indicated that he does not want to
-> >   see any growth of pci_sysfs_init() [2].
-> > 
-> > * Drop the named group and simulate a directory by prefixing all
-> >   TSM-related attributes with "tsm_". Unfortunate to not use the naming
-> >   capability of a sysfs group as intended.
-> > 
-> > In comparison, there is a small potential for regression if for some
-> > reason an @is_visible() callback had dependencies on how many times it
-> > was called. Additionally, it is no longer an error to update a group
-> > that does not have its directory already present, and it is no longer a
-> > WARN() to remove a group that was never visible.
-> > 
-> > Link: https://lore.kernel.org/all/2024012321-envious-procedure-4a58@gregkh/ [1]
-> > Link: https://lore.kernel.org/linux-pci/20231019200110.GA1410324@bhelgaas/ [2]
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> This patch seems to introduce a regression on our Lunar Lake test
-> devices, where we can't boot to an ssh shell. No issues on older devices
-> [1]. Bard Liao and I reproduced the same results on different boards.
-> 
-> We'll need to find someone with direct device access to provide more
-> information on the problem, remote testing without ssh is a
-> self-negating proposition.
-> 
-> Is there a dependency on other patches? Our tests are still based on
-> 6.7.0-rc3 due to other upstream issues we're currently working through.
+> The largest file I came across is 400K.
 
-This should be totally stand-alone and not cause any problems,
-especially if you don't have any other patches applied.
+https://hack-gpon.org/ont-fs-com-gpon-onu-stick-with-mac/
 
-I did make this against 6.8-rc2, perhaps that's the issue?
+Suggests that some GPON devices have 16MB of flash. Ideally we don't
+want to map a 16MB firmware image into the kernel address space. A
+high end switch could do it, but a typical OpenWRT 'cable modem' is
+likely to have trouble.
 
-thanks,
-
-greg k-h
+     Andrew
