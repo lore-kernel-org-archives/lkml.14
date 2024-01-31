@@ -1,256 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2049.outbound.protection.outlook.com [40.107.244.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10F96BB5F
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706692518; cv=none; b=RR5j645Kn1Uj6Pj0hvkpFlRhneR+kWd8rIkUeDsPMxvJE/OBlnZBHvVNujuydnoZ5+RgDOQFJT5nBUr+ttpH06rxTsV8s3EB1lNrhuKJtvAek3IvTPTAgf4JQxSO4D1EJ088Mo/WqYCKXMSyP0DpSO9gJJazBErcPmI0X/g9PUo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706692518; c=relaxed/simple;
-	bh=rel9kp2wCfHethVLtNU+XogRWEnxAQDGHmynpr6/DiU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bfphTsR3CPkSKZoXWnbRV+yIGfLx67JzekKd/PHTjTWBw149isnKaWB4jSp59HPUZ3+kulQ/HNgt4oqeFAKGq/L5s0Qc+uZJSu6n8yuVdFRsP85wJWAVtwFGav2BGePc5IFXMMgbxVMEtDatxvQsfs8y+XJ15FXNQuQqyWArVZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HwnoMehK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E376027F;
+	Wed, 31 Jan 2024 09:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706692659; cv=fail; b=k4vZZJBoO2bfFV9zfb9GXQyc/aoNLOLl7m/iqMUZCiTCRmqJQ/UBRwPFTB5EkrCZXalngN8jvGnLe0wHH6y6noCgPb2x69ZEecGQKuakwDdGMyikK3QpGpVZQismEJmXYF14xOfmShHaCNjPVa8e4a7JgnzewdEZHdE9Gt5NtTo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706692659; c=relaxed/simple;
+	bh=d+ODgJKrStgTLpcjMm9Mznyo/4Vb32vhrPjgHECpRg8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tYOlvrfchWkjsvYzmwWqE3Y50uMEObne5Ww2Jsj6xHhg653vDcjle+ddbVXhxGUw3SQKatCWDEKdl7AK016+o1OKU1mcPqi23HJVwLVP/PLRIU8TIZ7Fe+CiyvDiTyPB5LtsvzI69Pu7dA3RF9wC6xSKkHFrA2BGtMjmb9UZUzw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RuuwBUFE; arc=fail smtp.client-ip=40.107.244.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HwnoMehK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706692516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zVE9X83gqobsrB0a/mw410bQ65+c1o8t1YRdIwGIX+U=;
-	b=HwnoMehKt+fyvZj1RCInvzGfW8sJNTYCpJBZwpR+rZn8XZPwUk3Ce5/ocRHPyFsHMTWwbw
-	KKhAWRgq/YXyCKj+eiJDFcIzG+8aD94uNFiXs8T+TLsmSglypw1uyqxVRDfzr32YoOG95+
-	XBSZ1v0eS/JSGBhZN62JBLhHNsY1oiA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-328-PtAbY4I0OyKq-pcbXd3rPg-1; Wed, 31 Jan 2024 04:15:14 -0500
-X-MC-Unique: PtAbY4I0OyKq-pcbXd3rPg-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33ae7046cd0so1621033f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 01:15:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706692513; x=1707297313;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zVE9X83gqobsrB0a/mw410bQ65+c1o8t1YRdIwGIX+U=;
-        b=RcTdc7USv4F1cbBWClDPqU9TdXGv98n5SbnG0nrG67R2rn8shTX31Dqb7saj4Il4HW
-         XcZNH1cpkFFii3Ke2/TEp8uOfJNj4HpoeKi9/5DXexV6V2YQCmsLN7NzqkxMGr/utUcv
-         eyiDqCyaQJBiXOY3bTYtTmNfoYo5teFVkrbpdnplTHaScwMKOOq3vKzn31Q/4ambsE3d
-         7I7in5gNfuJbw/cU6YiQtrpi+mId9Aau0WepAeucK+8CKeEJgeheyYca30cv1cIWUSMG
-         t3ITng94GzLEl8g273pBHrlzhgpQc0DOLvhHQeBG0fqP4lp/xKmkGkA4+1+6ePAnbCof
-         5fdQ==
-X-Gm-Message-State: AOJu0Yyq65op/vQdtgpbiIoqEDaQBoZRPRM3C7Ud9WYWwr4QY2AwRxpO
-	AlU+vDPQ98KW+yyElS6yeGCk+uZDlL3ykOlaOCh+5zeSbuc+78iGd2J2obHMx+z1J4ijbMAgAwv
-	rdyUMhKavcVrsah4Iiqawt75328LltlJL50SlWpTkhrXTUVdW4h4XV69+AILGdA==
-X-Received: by 2002:a5d:610b:0:b0:337:9d3b:c180 with SMTP id v11-20020a5d610b000000b003379d3bc180mr757153wrt.4.1706692512850;
-        Wed, 31 Jan 2024 01:15:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGWszE55Z6tFi55TgjuN2dhhiLGrelmBc2a2c4PtEq5/nmxBvW1b/Zmqj9lX2zBaGIX6bV6jA==
-X-Received: by 2002:a5d:610b:0:b0:337:9d3b:c180 with SMTP id v11-20020a5d610b000000b003379d3bc180mr757127wrt.4.1706692512356;
-        Wed, 31 Jan 2024 01:15:12 -0800 (PST)
-Received: from [10.32.64.237] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id by5-20020a056000098500b0033afef9bdfbsm2098982wrb.8.2024.01.31.01.15.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jan 2024 01:15:11 -0800 (PST)
-Message-ID: <ff3058bc-e683-4aa6-833e-6dd6aa92d2bf@redhat.com>
-Date: Wed, 31 Jan 2024 10:15:11 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RuuwBUFE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DH21Y831UYLJ46cWWegCpp3q0hBok013YU/uE9LR3jPCUFwPB8+jFaTbpEaaXyxf1b2gtWFkaz5GDaBgiBKHp4bJS0F3rjTnu047hdEzOCi7fdjqIRVtVtuLHsv71bj6bc30VQmSwlJESGnku6+fiFytrzwJr+wFhggahROHrvAD9yuSVldlejrm+aZoB5E7bgcPox10NHpXypZP3pwLYgidIYSNJ/uxpeWYU9JbZrSW3sv+uelFOHLYyw6GUa2UAscPSiAFj1J3IKJrThGziGJDKwu8FVa1daQPO7PbGI9Bt9hQXYdDwZcSeITlOk7wA9IOogwfbztWERFXYDwc6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gC+uqyT+WDDXNVqRGJu/WJTb7DZlXBEh7qU3MjQy7Q0=;
+ b=kXqg8Hl4VYcn6iZkL+YBOKqHl4Eb056CMo6GxJOOuRLkUN//+pxcTD4x8THCvnWORbCuDnwv/JF39vxFEqG0Kd/HzHr14PbJD3rLf/5XdCBtLoSmgMIIQS/JCw/qpNAygLCh6qKsi7lhsH6lWE7GG+EoWccn0llYp9TY9zAEzHkpTN3P6ahx4haxC6EnpreuRilrw+SinPKuZDXI3jVTm4TZZNIt1406bVlv1ZVjqW7ZrPEfaEhwypDkhIdAatZXn/dRthclRVudeHKpfXwyy32jwJG6BOXD3+S6+nGJhA/xUWTZ4g4kbaZVQ65SeQ5J5eEsBPhp2CEjGoOZleEr0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gC+uqyT+WDDXNVqRGJu/WJTb7DZlXBEh7qU3MjQy7Q0=;
+ b=RuuwBUFEBm4tE0kgRK3yhaWEJSJSRzyrh0U5hPe4V04Uoh17LWnFZaTHiR1O/AJgGJ+2Fb+oWt2JqRUXgRxUWQf1c26BqDQGOpUGM71s49fAQ6BxNtdOiFJD7fX8YPS+B4BpPn6VvBFEx22ZcsbSxePLDORv8h83ZyUtCNKXqL8=
+Received: from BN0PR02CA0019.namprd02.prod.outlook.com (2603:10b6:408:e4::24)
+ by DS0PR12MB8785.namprd12.prod.outlook.com (2603:10b6:8:14c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
+ 2024 09:17:35 +0000
+Received: from BN2PEPF000044AB.namprd04.prod.outlook.com
+ (2603:10b6:408:e4:cafe::4d) by BN0PR02CA0019.outlook.office365.com
+ (2603:10b6:408:e4::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22 via Frontend
+ Transport; Wed, 31 Jan 2024 09:17:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044AB.mail.protection.outlook.com (10.167.243.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Wed, 31 Jan 2024 09:17:35 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 31 Jan
+ 2024 03:17:31 -0600
+From: Michal Simek <michal.simek@amd.com>
+To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+	<michal.simek@xilinx.com>, <git@xilinx.com>
+CC: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+	<devicetree@vger.kernel.org>, kishore Manne <nava.kishore.manne@amd.com>,
+	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2] dt-bindings: firmware: xilinx: Describe soc-nvmem subnode
+Date: Wed, 31 Jan 2024 10:17:28 +0100
+Message-ID: <24fe6adbf2424360618e8f5ca541ebfd8bb0723e.1706692641.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Syzkaller & bisect] There is BUG: unable to handle kernel paging
- request in fuse_copy_one in intel-6.8-rc2
-To: Pengfei Xu <pengfei.xu@intel.com>, rppt@kernel.org
-Cc: rdunlap@infradead.org, akpm@linux-foundation.org, heng.su@intel.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, lkp@intel.com
-References: <ZbmqEy+8iOREMPmU@xpf.sh.intel.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ZbmqEy+8iOREMPmU@xpf.sh.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2195; i=michal.simek@amd.com; h=from:subject:message-id; bh=d+ODgJKrStgTLpcjMm9Mznyo/4Vb32vhrPjgHECpRg8=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtRdAkqy/iWTfdyM2pN6z7U+Efl925TPeEOgSwHn0Qq5g OkLtnzsiGVhEGRikBVTZJG2uXJmb+WMKcIXD8vBzGFlAhnCwMUpABNhaGZY0MDk151mf5Dn09Yd 0Qt/J8ziyz/5g2Ge1h9d08BDXwt31F7/KPRzQZnTtzuTAA==
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AB:EE_|DS0PR12MB8785:EE_
+X-MS-Office365-Filtering-Correlation-Id: d2be985f-c7b7-48d8-00a0-08dc223d763c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	j7QxIZSETSYcqgXh/dmMqLFbw8AxH7DV6TxbCzguGIQOeX3+UcA+BU/c8YHOT7+lDN/N6BxUpMu+VNL1H+raTeXCQGduNU2nZ0BAZW+sVs6ZgF+V0UCsJBXJSGT2415+GpPKP174ljV3STYuksGZxJ1ncqYHaikvFAMgaNXpSAvqG5bXKaibW2eSNrdyeNFSZjc3xhJJVcQf7XXMN+LUC30SEnP5+7e/iZUniU6gW+Am1hjR60ZiGaYG6c2wrFDAGfHtCypjxRdT4Y/TbzMy2LpZHqFDmLZv838AoKB4qkfTFJahQeaRIStXVnMOIoV6lcVYL/TPVJGqxWRlcvC5Sglo8GmjY8kuNf9arrBvQ5WNdqP9ywDb0O4ggYir2JREgC44HOj/+qGQOUwtl6ap+fvv2YzG2WHvvHiJxDU379F7VU7SaS8OHvEtQI4an8sCDEL5GIFzXNGBO0XWkADacdwaOzyY3feGj8D0fhK90Sauc2vJlEhbjt0zWTysDHO2jfqVWBgfoBhgKdaZAVJd54N9zxvck98nPkg9LrZUxlG7FASOPxDtgJtc+bLTnLun+SUAxhZYZ/OeMlPw6Bi0PAdM5CwdGWBlrnmoPEKwCaOXZRBaDj+SCpPTFOdDR2dWYEaehGRXz2hdRSDo2eNI2nIJnuyXWYehDhgSU4dE0G3HFi6CokFK2huiOZTk/rKZrLb/VyK5zEZdfOqHdl0G/oi0sSnmXIBwX9UnflpNtBGt0yszuDXmBs/U9FnxiQAqMe10y00CJiTNUB7qI0YkfaueSDY86UV9ly2IBXp0OrZz1xQr3CU9iOODlbNowXRy
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(396003)(136003)(39860400002)(230922051799003)(451199024)(186009)(82310400011)(64100799003)(1800799012)(46966006)(40470700004)(36840700001)(36756003)(4326008)(8676002)(8936002)(44832011)(5660300002)(966005)(86362001)(2906002)(70586007)(70206006)(316002)(54906003)(110136005)(36860700001)(47076005)(82740400003)(81166007)(356005)(478600001)(6666004)(83380400001)(2616005)(16526019)(26005)(336012)(426003)(41300700001)(40480700001)(40460700003)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 09:17:35.1449
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2be985f-c7b7-48d8-00a0-08dc223d763c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044AB.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8785
 
-On 31.01.24 03:01, Pengfei Xu wrote:
-> Hi Mike,
-> 
-> Greeting!
-> 
-> There is "unable to handle kernel paging request in fuse_copy_one" BUG in
-> intel-6.8-rc2:
-> 
-> All detailed info: https://github.com/xupengfe/syzkaller_logs/tree/main/240130_184751_fuse_copy_one
-> Syzkaller reproduced code: https://github.com/xupengfe/syzkaller_logs/blob/main/240130_184751_fuse_copy_one/repro.c
-> Syzkaller repro syscall steps: https://github.com/xupengfe/syzkaller_logs/blob/main/240130_184751_fuse_copy_one/repro.prog
-> Bisect info: https://github.com/xupengfe/syzkaller_logs/blob/main/240130_184751_fuse_copy_one/bisect_info.log
-> Issue dmesg: https://github.com/xupengfe/syzkaller_logs/blob/main/240130_184751_fuse_copy_one/41bccc98fb7931d63d03f326a746ac4d429c1dd3_dmesg.log
-> bzImage: https://github.com/xupengfe/syzkaller_logs/raw/main/240130_184751_fuse_copy_one/bzImage_v6.8-rc2.tar.gz
-> Kconfig(make olddefconfig): https://github.com/xupengfe/syzkaller_logs/blob/main/240130_184751_fuse_copy_one/kconfig_origin
-> 
-> Bisected and found first bad commit is:
-> b758fe6df50da mm/secretmem: make it on by default
+Describe soc-nvmem subnode as the part of firmware node. The name can't be
+pure nvmem because dt-schema already defines it as array property that's
+why different name should be used.
 
-Sounds like we manage to access a page that has its direct map removed 
--- either because it's actual secretmem memory, or because we fail to 
-restore the direct map.
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-> 
-> Reverted above commit on top of v6.8-rc2, above issue was gone.
-> 
-> Syzkaller rpro.report: https://github.com/xupengfe/syzkaller_logs/blob/main/240130_184751_fuse_copy_one/repro.report
-> BUG: unable to handle page fault for address: ffff8880119a5040
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 9c01067 P4D 9c01067 PUD 9c02067 PMD 11d62063 PTE 800fffffee65a060
-> Oops: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> CPU: 1 PID: 751 Comm: syz-executor148 Not tainted 6.8.0-rc1-2024-01-22-intel-next-e32989111619+ #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:memcpy+0xc/0x20 arch/x86/lib/memcpy_64.S:38
-> Code: f7 e7 49 01 d5 eb ba 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 48 89 f8 48 89 d1 <f3> a4 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 90 90
-> RSP: 0018:ffff88800e2af878 EFLAGS: 00010293
-> RAX: ffff88800e2afa80 RBX: 0000000000000010 RCX: 0000000000000010
-> RDX: 0000000000000010 RSI: ffff8880119a5040 RDI: ffff88800e2afa80
-> RBP: ffff88800e2af8c0 R08: ffff888013b14a00 R09: 0000000000000001
-> R10: fffffbfff0ef68c4 R11: ffffffff877b4627 R12: ffff88800e2af8f8
-> R13: ffff88800e2af938 R14: ffff88800e2afc38 R15: 0000000000000010
-> FS:  000000000100c480(0000) GS:ffff88806cd00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffff8880119a5040 CR3: 000000000f6ca000 CR4: 0000000000750ef0
-> PKRU: 55555554
-> Call Trace:
->   <TASK>
->   fuse_copy_one+0x11e/0x1a0 fs/fuse/dev.c:1007
->   fuse_dev_do_write+0x186/0x26b0 fs/fuse/dev.c:1863
->   fuse_dev_write+0x15f/0x200 fs/fuse/dev.c:1960
->   call_write_iter include/linux/fs.h:2085 [inline]
->   new_sync_write fs/read_write.c:497 [inline]
->   vfs_write fs/read_write.c:590 [inline]
->   vfs_write+0xa5a/0x1120 fs/read_write.c:570
->   ksys_write+0x13a/0x270 fs/read_write.c:643
->   __do_sys_write fs/read_write.c:655 [inline]
->   __se_sys_write fs/read_write.c:652 [inline]
->   __x64_sys_write+0x7c/0xc0 fs/read_write.c:652
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0x74/0x150 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> RIP: 0033:0x4504ed
-> Code: db 48 89 d8 5b 5d 41 5c 41 5d 41 5e c3 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fff15c70d68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004504ed
-> RDX: 0000000000000050 RSI: 0000000020000040 RDI: 0000000000000003
-> RBP: 00000000ffffffff R08: 00000000ffffffff R09: 0000000000000000
-> R10: 00007fff15c70d70 R11: 0000000000000246 R12: 0000000000412190
-> R13: 0000000000000000 R14: 00000000004004e8 R15: 0000000000000000
->   </TASK>
-> Modules linked in:
-> CR2: ffff8880119a5040
-> ---[ end trace 0000000000000000 ]---
-> 
-> 
-> Hope it's helpful.
-> 
-> ---
-> 
-> If you don't need the following environment to reproduce the problem or if you
-> already have one reproduced environment, please ignore the following information.
-> 
-> How to reproduce:
-> git clone https://gitlab.com/xupengfe/repro_vm_env.git
-> cd repro_vm_env
-> tar -xvf repro_vm_env.tar.gz
-> cd repro_vm_env; ./start3.sh  // it needs qemu-system-x86_64 and I used v7.1.0
->    // start3.sh will load bzImage_2241ab53cbb5cdb08a6b2d4688feb13971058f65 v6.2-rc5 kernel
->    // You could change the bzImage_xxx as you want
->    // Maybe you need to remove line "-drive if=pflash,format=raw,readonly=on,file=./OVMF_CODE.fd \" for different qemu version
-> You could use below command to log in, there is no password for root.
-> ssh -p 10023 root@localhost
-> 
-> After login vm(virtual machine) successfully, you could transfer reproduced
-> binary to the vm by below way, and reproduce the problem in vm:
-> gcc -pthread -o repro repro.c
-> scp -P 10023 repro root@localhost:/root/
-> 
-> Get the bzImage for target kernel:
-> Please use target kconfig and copy it to kernel_src/.config
-> make olddefconfig
-> make -jx bzImage           //x should equal or less than cpu num your pc has
-> 
-> Fill the bzImage file into above start3.sh to load the target kernel in vm.
-> 
-> 
-> Tips:
-> If you already have qemu-system-x86_64, please ignore below info.
-> If you want to install qemu v7.1.0 version:
-> git clone https://github.com/qemu/qemu.git
-> cd qemu
-> git checkout -f v7.1.0
-> mkdir build
-> cd build
-> yum install -y ninja-build.x86_64
-> yum -y install libslirp-devel.x86_64
-> ../configure --target-list=x86_64-softmmu --enable-kvm --enable-vnc --enable-gtk --enable-sdl --enable-usb-redir --enable-slirp
-> make
-> make install
-> 
-> Best Regards,
-> Thanks!
-> 
+Changes in v2:
+- Fix typo in subject
+- Make example bigger requested by Conor
 
+Dt binding for nvmem node has been already merged and it is the part of
+linux-next tree.
+Here is the reference to it just in case:
+https://lore.kernel.org/r/170635581622.41421.8980881999042944764.b4-ty@linaro.org
+
+v1 available here:
+https://lore.kernel.org/r/3869498c995cbb123127122f429e90de0a3f4014.1706531104.git.michal.simek@amd.com
+
+---
+ .../firmware/xilinx/xlnx,zynqmp-firmware.yaml  | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml
+index 870b94813a43..741f17c830f4 100644
+--- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml
++++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml
+@@ -62,6 +62,12 @@ properties:
+       interface.
+     type: object
+ 
++  soc-nvmem:
++    $ref: /schemas/nvmem/xlnx,zynqmp-nvmem.yaml#
++    description: The ZynqMP MPSoC provides access to the hardware related data
++      like SOC revision, IDCODE and specific purpose efuses.
++    type: object
++
+   pcap:
+     $ref: /schemas/fpga/xlnx,zynqmp-pcap-fpga.yaml#
+     description: The ZynqMP SoC uses the PCAP (Processor Configuration Port) to
+@@ -110,6 +116,18 @@ examples:
+     firmware {
+       zynqmp_firmware: zynqmp-firmware {
+         #power-domain-cells = <1>;
++        soc-nvmem {
++          compatible = "xlnx,zynqmp-nvmem-fw";
++          nvmem-layout {
++            compatible = "fixed-layout";
++            #address-cells = <1>;
++            #size-cells = <1>;
++
++            soc_revision: soc-revision@0 {
++                reg = <0x0 0x4>;
++            };
++          };
++        };
+         gpio {
+           compatible = "xlnx,zynqmp-gpio-modepin";
+           gpio-controller;
 -- 
-Cheers,
-
-David / dhildenb
+2.36.1
 
