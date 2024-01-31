@@ -1,106 +1,64 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACF839AFA;
-	Wed, 31 Jan 2024 21:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF82539843;
+	Wed, 31 Jan 2024 21:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706736473; cv=none; b=dskhsX/ybd9yinMUwV4C/LJRoQ8cTwYInWBiscalvkKxCm1zLcCkf8z3f9FIl94WqrtqFpYsTlXoJRL1zcDZw2Kq8Ax7P+Wjdve5bxkwgoS+qwN9/bMhcfeqXowgQcTnI2wPmwO7pZcQzOAeIx5PK70/kpv8lWKyRRSHCYDn+b8=
+	t=1706736534; cv=none; b=VbTsfb8H2TUXhPe8eE7wx5E5Bow2KQ/Vexki0QrVsFwYTBzc9cVkZ2JNpXLQg2ERZEmFyxU3ILVWyfBpDwpu+PQOl25AWN1jRthghut67W1WLbDTDGiVhQ9IxTkeW7c0xny0DP6rCPQpZvGLpxl3GYUDjRhMeeSnttv8aDJyeNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706736473; c=relaxed/simple;
-	bh=Ge+c/YoNdcr+yD0d6ZRyQDVYohyutAjruaI/1BUJy6Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nWic9o/+R2163m6QiAL6/+2FK6hEu1g6vAG1B+YBUX9X41iLVaMkUPZvE4nnK5CY2N8CtIyuX4jvamUHgj2HEV5Eb0d6zSb+5Ak38lCJPg/YpiLV5IsHV0vkpZcu9tAhKchd4Wtvjt0PZMPtGfT5crddNaTDF3YDptkYSCGBS/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mLs2HmJu; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706736534; c=relaxed/simple;
+	bh=wuWxeCOodCyEvRLOOFJJptfo/uX+q6W7Z6Zj+MRADO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9l9ZIL8em6cLHKOE1BygKozfWhpPwf50pA3BMOIXM/iDTXX1dY1e4azG5wexJbP4EsGTjF3S2fmYcUq7maCIpsI+LA9RI+jGcjOJB6RYehkb0bKrBAQPuKuM207msPBqRLCN+sM8C4Kp2xto2HmRGkv4JNQ7g77TYGsyn7Ogug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YOiz0P0j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mLs2HmJu"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40VLR4ZI051146;
-	Wed, 31 Jan 2024 15:27:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706736424;
-	bh=/taX/vbVBK4EfWZBBJQqrB2fiuRJIV/1GUJde9c7V38=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=mLs2HmJuaiLTW8VYNM34I8GOQv8TxMDTK5qWZrXWlhuOxXKAwENQZYV1N/39/mibR
-	 jyCUJtiXBpeHKGyvrSRrrNfwAOsHoLbbaR8I+dSmmtEhaH4p6DaLktnT07o6sb/4mU
-	 AFPevrgUeIsaGXnA9dd3HFpqZvuBfcDZPU/oabVY=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40VLR4SY041240
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 31 Jan 2024 15:27:04 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
- Jan 2024 15:27:04 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 31 Jan 2024 15:27:03 -0600
-Received: from udba0500997.dhcp.ti.com (udba0500997.dhcp.ti.com [128.247.81.249])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40VLQfKT028966;
-	Wed, 31 Jan 2024 15:27:03 -0600
-From: Brandon Brnich <b-brnich@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon
-	<will@kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Geert
- Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Darren Etheridge <detheridge@ti.com>
-CC: Brandon Brnich <b-brnich@ti.com>
-Subject: [PATCH v3 4/6] arm64: dts: ti: k3-am68-sk: Enable Wave5 Video Encoder/Decoder
-Date: Wed, 31 Jan 2024 15:26:23 -0600
-Message-ID: <20240131212625.1862775-5-b-brnich@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240131212625.1862775-1-b-brnich@ti.com>
-References: <20240131212625.1862775-1-b-brnich@ti.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YOiz0P0j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8D8C433F1;
+	Wed, 31 Jan 2024 21:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706736533;
+	bh=wuWxeCOodCyEvRLOOFJJptfo/uX+q6W7Z6Zj+MRADO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YOiz0P0jCd9M3sT8Cad6kK0UQgMSOkgPCJxB3lLHQ96OTe5rVfa0Xv7uVDGHAYUS3
+	 pxF09V64Mm37vzfzvManF8AANRNtw82zoniaS0cU9f7Q3DviZ+vmh8Cv0gxexoMCC5
+	 g/hKKFTZpZDLfVTqn2XodgEeBsts2AIXM1I4dbfw=
+Date: Wed, 31 Jan 2024 13:28:53 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Chris Leech <cleech@redhat.com>
+Cc: Nilesh Javali <njavali@marvell.com>, Christoph Hellwig <hch@lst.de>,
+	John Meneghini <jmeneghi@redhat.com>, Lee Duncan <lduncan@suse.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	Hannes Reinecke <hare@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH 1/2] uio: introduce UIO_MEM_DMA_COHERENT type
+Message-ID: <2024013110-greasily-juvenile-73fc@gregkh>
+References: <20240131191732.3247996-1-cleech@redhat.com>
+ <20240131191732.3247996-2-cleech@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131191732.3247996-2-cleech@redhat.com>
 
-Update status for Wave5 VPU on AM68.
+On Wed, Jan 31, 2024 at 11:17:31AM -0800, Chris Leech wrote:
+> Add a UIO memtype specifically for sharing dma_alloc_coherent
+> memory with userspace, backed by dma_mmap_coherent.
+> 
+> This is mainly for the bnx2/bnx2x/bnx2i "cnic" interface, although there
+> are a few other uio drivers which map dma_alloc_coherent memory and
+> could be converted to use dma_mmap_coherent as well.
 
-Signed-off-by: Brandon Brnich <b-brnich@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+What other drivers could use this?  Patches doing the conversion would
+be welcome, otherwise, again, I am very loath to take this
+one-off-change for just a single driver that shouldn't be doing this in
+the first place :)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-index d0cfdeac21fb..b4f8e50bc40f 100644
---- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-@@ -610,3 +610,7 @@ &usb0 {
- 	phys = <&serdes0_usb_link>;
- 	phy-names = "cdns3,usb3-phy";
- };
-+
-+&vpu {
-+	status = "okay";
-+};
--- 
-2.34.1
+thanks,
 
+greg k-h
