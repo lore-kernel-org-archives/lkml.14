@@ -1,117 +1,162 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD131605BC;
-	Wed, 31 Jan 2024 08:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1275F42055
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706689936; cv=none; b=VBxs4obNH1V4NTLywM2H/E5jNXxfM4KAWQZUeoFI38XLPebDyQzgEL6AsrkgK8r/OxTWdcTCAUWy8UcXsbjgN7agQuvwRxjX2w+TZh8Xckong1t1SWaQGjzWZPzNINN2NWWT1XA2QBb4M9S5QqljNqxkk1x+D73791jBjpE7m1o=
+	t=1706689973; cv=none; b=ZC5/pfoksk+nZxg9U2+mCMqAoL5gK2a+LjxGkEF9tuAt6Xk3Lp0Y7lJdJ6/yQatm9fDtlqHXjfDi4OaBrKa1INvGp6KYHL1qXPoJU6LJakxD6E6AB5FC0y4JeWLyPp3TL/+8uDlr17uy+tWSqP0X5boMc0rI9w0Zk1XDW7KhsA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706689936; c=relaxed/simple;
-	bh=e7dvQjwqFRwb3yH8ZkmC8GnrowrIE8yR8j2TvVp4rFM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kR8OWMT4qF3VD7ZGPo2GgcWqCIJ9splr5X5SK1t6yqunCEAdbJr8FFBMuLWp4tp/e87MN1Kr+JvEXP5EIEN0K63IodF2251lAlULBXuzM5gIpivhnoTpgDn+fP0ZudNR5dTPTxpVoNq+T7FGO+DMH5z0dQovW0uXY/13oQbxZUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=e7I8vR8t; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706689973; c=relaxed/simple;
+	bh=yw1eN8wIAGgmVr2d0+fFa0ALsi18715HRVLMQJvxpbo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l+rDZNy0GjZysFAKySx/i7PAYFDcyqwJZFdOiXHKIlNCGwtObmazZoEpjmlUjD+orxstohh6ASNgfqC/lHoBkwLwR8P516I0UR/IN3XuqhGUyeCwhaQlKvNlc0vxpNlwZpmiYtku1WR2jGUWhrW5RNNlVMqc0ZfNpjMIWlsFGv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q37RelVY; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e7I8vR8t"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40V8W2jK036364;
-	Wed, 31 Jan 2024 02:32:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706689922;
-	bh=e7dvQjwqFRwb3yH8ZkmC8GnrowrIE8yR8j2TvVp4rFM=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=e7I8vR8tNMj2NlPyfWEmx5YjCKhsswF1rWeZp6MyXAba4LyPRFjYoYmCieRKXPDQD
-	 VY4C3ak8xkhVTLuTX4Qy2nE/Mdcp3QI9X80Lztv1ye0W3um0+gLG6s0qyIHQZS67el
-	 LL74yOaxiwlTeR/eziyXHMklyJH7FwZQFkbeSO9E=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40V8W2Ke000454
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 31 Jan 2024 02:32:02 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
- Jan 2024 02:32:02 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 31 Jan 2024 02:32:02 -0600
-Received: from localhost (jluthra.dhcp.ti.com [172.24.227.217])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40V8W1xM096019;
-	Wed, 31 Jan 2024 02:32:02 -0600
-Date: Wed, 31 Jan 2024 14:02:01 +0530
-From: Jai Luthra <j-luthra@ti.com>
-To: Vaishnav Achath <vaishnav.a@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <kernel@pengutronix.de>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, <j-choudhary@ti.com>
-Subject: Re: [PATCH 3/9] arm64: dts: ti: k3-am68-sk-base-board: Enable camera
- peripherals
-Message-ID: <k57wzv77bhxuzowbmksxndjjle34almtdcub73dldgro3oowwh@veomcdtt4dkw>
-References: <20240129132742.1189783-1-vaishnav.a@ti.com>
- <20240129132742.1189783-4-vaishnav.a@ti.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q37RelVY"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a35e9161b8cso368457866b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706689969; x=1707294769; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GR5aVhZneHFyoFCB3oZIB9MTp0pKwfBVVrj0ITj8IUI=;
+        b=q37RelVYMYsXbL4Na3d/CvjF3lKTYsVBl7pKVPuVIJ4y7hVjoVmirsJDr7atN1nggP
+         mcAsskXGAoYuDyP4giBdsrq8/VIARebgm6A53V01mzVPDXp0FjVcTYCAyVskY0EAQ8/a
+         9Kept401eB0netH9SXJLQgkg/ooZK7Wx/IDLiFKXqR2roc341zYCL32mcrHSkRKRKSJK
+         jPSWJtuRys59lRYxXKIiDIHnMtSngOzSuLL0rsWNwthJC15z0GSMViGDKDUgQ+j7oF/+
+         v6I/XAnz4QrGH5ClnL16rDTaVdksldm6mae+hzNLAh8YPp9w6X2SZIsiWf1NmY4OMryp
+         xUyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706689969; x=1707294769;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GR5aVhZneHFyoFCB3oZIB9MTp0pKwfBVVrj0ITj8IUI=;
+        b=GuW2R+HJT0DUqSa021PehXK4zACGirPSk7atJ8jeB9/7e41Ntp1DFsqH/38g7l2tms
+         xutNS/O4EM4FhsilmE84xkKXgGCV1pp6bur51zkzgTUHNK00LgY1C5uyYEAldcS1h5D5
+         hwsPz5w7H3YkEKAFESDmN+CaAHt2xX+YrQHycRLq3EyrDXS546QTzLxn2kjg1LaPXRS3
+         pzvmv5pY6i1z/dGu2xJZOX4hGatS4cKVgclH3KChkoGd5/S865bvcpWvmZ7t4HHS84xk
+         cuI0m7oqXm6dGyQ4SKFUsPNedQiImI2URBwy8jJo9qXJ/IE7/6hcXhRaib95ZsUO4y0U
+         mQSQ==
+X-Gm-Message-State: AOJu0YytYN43NN+7Kpe56X3PYsmIfznp4xyr0ElsSCT2IdZR8FwVITuM
+	P7zZtAp/KVBTn3ddn2TH3gyaseQeEN8n6ayjNUO7r8mMFSBn0jC1KpNu2yALnNE=
+X-Google-Smtp-Source: AGHT+IFtfkA+EybiR1YliXWZqbPQSODeYreUd/8yXXZ+CVtwwanRt4sorZZtf8JuHr1umBgaXB3V4w==
+X-Received: by 2002:a17:906:faec:b0:a2c:3596:b0c1 with SMTP id lu44-20020a170906faec00b00a2c3596b0c1mr619576ejb.75.1706689969055;
+        Wed, 31 Jan 2024 00:32:49 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW5zJk84D6Kq0omYtneabIPmgjgoTzDs/mbrRpRaDhq6H6VOCcHjNpUbhsBOZ/M8CyH603jQQxrrm1MhLmaXeZ7O8eV0RT3DNSg+DS8/IRKCE+Q2HEOQZ7onJSGL5fZ4Lz4Vpl6LLo240x9FfHBo0RYS561vhsArl1KtpRaxmu7GdCZqZ9cec8DAR4K5F8bQHQ9sT5nhnMRO7UOkZ6Nu9SVgyCFyOppHYrkb7QiUcWTRQtXeMPdxbeSlhA+XloD2I7YhKYI7vJzidJdXjTUETAuKdvh8ie3BCSUd0bGmyPS/h8I3tKlMaMmcwFYmrEytSrmQbPqgbgIC7cZ2SqXexVQxfkT1CycUcuqOmNYJA6y88cYGYoH8ZQjA0FiiGxKP6dstXOc/+H2Ufr26ipg66DZo6HymYXDQiDGj0qN3+EPgzjaNA==
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id vb1-20020a170907d04100b00a34c07816e3sm5919866ejc.73.2024.01.31.00.32.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 00:32:48 -0800 (PST)
+Message-ID: <69783a3d-a158-4582-93d2-3f120e2e9ea6@linaro.org>
+Date: Wed, 31 Jan 2024 09:32:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6jcnme2yix7qaffo"
-Content-Disposition: inline
-In-Reply-To: <20240129132742.1189783-4-vaishnav.a@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] ARM: dts: samsung: exynos5420-galaxy-tab-common: sort
+ node properties
+Content-Language: en-US
+To: Henrik Grimler <henrik@grimler.se>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20240130-galaxy-tab-s-cleanup-v1-0-d4e17857241d@grimler.se>
+ <20240130-galaxy-tab-s-cleanup-v1-1-d4e17857241d@grimler.se>
+ <a04aa883-d9b8-480b-a9df-8c31bef1165c@linaro.org>
+ <20240131082401.GA6710@samsung-a5>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240131082401.GA6710@samsung-a5>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---6jcnme2yix7qaffo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 31/01/2024 09:25, Henrik Grimler wrote:
+> Hi Krzysztof,
+> 
+> On Wed, Jan 31, 2024 at 08:19:39AM +0100, Krzysztof Kozlowski wrote:
+>> On 30/01/2024 21:40, Henrik Grimler wrote:
+>>> Sort all node properties according to dts coding style guidelines, to
+>>> make dtsi easier to follow.
+>>>
+>>> Signed-off-by: Henrik Grimler <henrik@grimler.se>
+>>> ---
+>>>  .../dts/samsung/exynos5420-galaxy-tab-common.dtsi  | 23 +++++++++++-----------
+>>>  1 file changed, 11 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi b/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi
+>>> index f525b2f5e4e0..0c1aeafc025b 100644
+>>> --- a/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi
+>>> +++ b/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi
+>>> @@ -103,8 +103,8 @@ &cpu4 {
+>>>  };
+>>>  
+>>>  &gpu {
+>>> -	status = "okay";
+>>>  	mali-supply = <&buck4_reg>;
+>>> +	status = "okay";
+>>
+>> Such changes should come from a tool, but since we do not have them, I
+>> don't want to bother with properties re-shuffling.
+> 
+> Noted, thanks. I will drop this patch and send a v2 in a few hours.
 
-Hi Vaishnav,
+No need for v2, unless some other comments pop up. I will just apply #2
+and #3 from this set.
 
-Thanks for the patch.
+Best regards,
+Krzysztof
 
-On Jan 29, 2024 at 18:57:36 +0530, Vaishnav Achath wrote:
-> CSI cameras are controlled using I2C. On AM68 Starter Kit, this is routed
-> to I2C-1, so enable the instance and the TCA9543 I2C switch on the bus.
->=20
-
-Can you Link: to the public schematics of the board here? (And on other=20
-patches as well)
-
-> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-> ---
-> [...]
->=20
-
---=20
-Thanks,
-Jai
-
-GPG Fingerprint: 4DE0 D818 E5D5 75E8 D45A AFC5 43DE 91F9 249A 7145
-
---6jcnme2yix7qaffo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmW6BYAACgkQQ96R+SSa
-cUViUBAAy4nPtECzBOXadDK9PDCN02T/vdGHWloQreIB5H3eKBWQED2XtZmQEDEZ
-bj2RhR15w1ss9NmLZOGF0/qA0GsqtRzf4awH9yAGwvDIgTEwSxD0Ykk/bqo86sH0
-qszEJDJ2vQisQ2rCMMdp9U/sVXMCYYRYzmxt6FxX7sacy85pwHmEiTfcc6FMF8U0
-alUubQ2+clKnvZXOdgbZKZsdAQg2fwatFe5xH+1ePg5NKagVBcRdy6pKdNt/3uio
-W0TbXm4SZD3QagBNNNhktet/sfNChgPHasbQCmkobG6NmVMsayB78LK0RbOqKTlT
-pEgb2MNKQ/LKP0IRyQR/aA1ipGDfRNeD4CeT3IJmVvJc8jdBVDuS5TxO50e+e0Fh
-95M155nauH6NBV8dIz6y3T0n/IdL+y2+VGHbxe5kYfU3qUysvKANw+ymGHvNr1J0
-xQYX/Ru4LnpsUKxJ9XatL5Ofag2lE3yVaGxSus70n4kIld0bPJ3gPv410OXJq5uV
-P67eJb5pWBkd+RAZtTZ9T9EEyzqiUsa/ygDIC73CH2SRYLELe/zFzblmW/H2PefX
-/y1C/h8NN4npwyWWRjKKDXgBLSg47ZrWq6mPbTBSYfc/01xfbqUXvnl+LfUiR800
-tlnGcVNybEwUiCP/aa8ekOW5b8Bl8hQyoTYb5TS5q0TM4OuVRi0=
-=vwtF
------END PGP SIGNATURE-----
-
---6jcnme2yix7qaffo--
