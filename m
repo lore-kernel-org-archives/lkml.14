@@ -1,97 +1,96 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662D179DA0
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48578286D
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706710140; cv=none; b=E9VwOmzhpH7O8aUKouFHvnz8JzmQJ4thEAyg2EAoBqlk//od6CN2alfUifr2gJY6/KqAZceXetUlsj+od6CE0kbQCdJtQbMkWElWD9b2XY8C21eTU1KZODXpQCk6euh4JB3n2f+6b9D6QPx0gw8mTsZKUQTuog86x06Tc/hQCoQ=
+	t=1706710225; cv=none; b=ao1OFCgQYn6EEIVO0l/oyaZNbvBx1sFKOs9L3RYRdJfq4VaPjOM2gM4c1KN1Gg6mSaxDPDg8gSVeukaDxAXA3UZEZyZpxiEvsEsQ2FY7RmL0mAwoBaQKZVrXFgNH6Ust6iwSsHHUmXYScw1VYh0C4tq/w5SfQvtuwimXg0NF8jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706710140; c=relaxed/simple;
-	bh=hJTI6Oqt+tvrDrRCKdy4Fv4/v/exHoBoefP7wGq2GPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ptil/yM9ux/AZluxnVidSVVOHLRNBI4iXkhYKo/AGiyjIBYfYXrPGYTeFHWxBW/u+Ih9T6oqymdZRpauGl53By0qAwoCWnrDR4Q/QkYCWa+iYXu7y4Iau+WUVXArhyxy5+Kw/VLMVbsLLfsR10FfrhAR8nnm6hL+lt2T9JsNcY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=L6G1T/Sp; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1706710225; c=relaxed/simple;
+	bh=ChnpHtzhwwEksEpZfUG5N45CvS33hPCxhPKxVI52Zr0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nwvz1X9RYpcj8p6FDiEHdNlBZ7Bfx3ZSEKESOQR9oenb9jsckctvesc9LhcjsRExWFqR/Md5PiwWFgYtSwugraXmFVZlHuOYfEyhnIhESUakVgHaPh7GbVMolJIfyhnoWVUon62oD5uHCL+0T8lcS96xCp+WbrVfgZZkNAs2tAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5L9qlvb; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="L6G1T/Sp"
-Received: from cwcc.thunk.org (pool-173-48-116-252.bstnma.fios.verizon.net [173.48.116.252])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 40VE7u72016816
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 09:07:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1706710083; bh=3jBxU9JGxDt+piXZr4pBKK0kAm/pYnikufO2RLtXeAM=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=L6G1T/SpkbuN99nevYXm2O9FspvsdZWzSBUmHtyziTUUOC8ZGozpeC4J+UE2j7blo
-	 GKhQx+DpJEKT2lE2S9NiUt8tckt8Za5Mj7AHUP2Jn8z5xAaE8cV9ga3i7+hGqbfw2p
-	 LUJ0ug7Fi3yFZkM3DcNsdivyLraGFNVLeKgLhLblAxffEux+yb2lZZyqLPKjQv46rq
-	 MzyxXf0jneqVNrHe5HYEMIS+MsZfchuD4GE6iO8BDdJ4ye7wwuQvU6m155FAUsXax1
-	 ut4S6IvT+kHVmrmSi3ejB9cJYwgE5bNXzhlRVE1kwBetkZ231gQMVkmxmZHJGVH7lL
-	 4jgq6EMGBKmSg==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id C5F0D15C0667; Wed, 31 Jan 2024 09:07:56 -0500 (EST)
-Date: Wed, 31 Jan 2024 09:07:56 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Nakajima, Jun" <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
-Message-ID: <20240131140756.GB2356784@mit.edu>
-References: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com>
- <CAHmME9pOt=uEmuBzBpgUHw9DqAD2FZTZ3v53AOZbQ3Cd2p97xQ@mail.gmail.com>
- <DM8PR11MB5750E38A8B2BCE66AF7F9812E77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9qMO7=RDR60bKJvpDTRokcKed_i0+7BbFD53_7o2OJ6-g@mail.gmail.com>
- <CAHmME9rum4uwSNFd_GkD9p_+vN4DBxA=feZX7k9RvugFZsZNJg@mail.gmail.com>
- <DM8PR11MB5750797D0B9B8EB32740F55DE77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9oC=GE-7QS2m9FA5cs_ss+tQgB9Pj3tKnTtMMFpQmUshg@mail.gmail.com>
- <DM8PR11MB5750B861F7A105886AA5FCE4E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5L9qlvb"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-40f00a86728so10884645e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:10:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706710222; x=1707315022; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IzlY9A2R0kaKV7lZ2foiFIkkQaUNsuvTSg8191v0PRY=;
+        b=G5L9qlvbrgeEzuu8K91kPMG3uNbkzYRxHwQWzmvdkPU5xLF6llFz3M/xh7eKz70YVW
+         dW0Tr2HtcGRyxDjA62jfVd4KiG2GOCzIpk9JBq5dvXZ+sh+EdJPTxqymeMhy50SZ34s1
+         cqCaFxXkrBoOtVhO7kCa4J0rHAN1iidnDlQ2R5C8tZkh67ylbcW3A8bbVO/rADb6dIs/
+         suHKZs2k0N1IvdRdh5UlYZ/Do5wZWujlWNZRkWyR2kITzCb1DUVfJ8SiuRpVz2N81wYP
+         +C8oTIgirDYZLBX5BGKrOVUUSnYNpAwEfXEF7txxAaf0L8iasZgoG4Er3YIsaNCxukUS
+         kJSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706710222; x=1707315022;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IzlY9A2R0kaKV7lZ2foiFIkkQaUNsuvTSg8191v0PRY=;
+        b=Wrv6dpZ16dW8sqwkkfVxA7WN5DoixFVZsBMiAZCGw2oUFlWbLDokOoOZz6RsBBMS8u
+         Db5vnjTGbitNNLdPrxgObYOgwuhE39pL2r10b09wXgz3qnULKUoyUvyrUHRwjKexXFtz
+         2nDwzNy+TkA9xIm2u9GGqtOmmA6kTcUUz7jWE6RLveQSKcUb7MHojEcTylgy3TiK0SsN
+         MXFi9HiPADx+e1+0teljYQuHmPHyQkAtwjfZEjG2CMxKpPVmyn3y+rYqhPc8UzMgB4G8
+         8UcpySVC63BI8pPbqACOsnFWNCOWD2PIPqREijGYEU6mZAdpWPb7imfv9TgIppQFNa9y
+         GbJQ==
+X-Gm-Message-State: AOJu0YxLv3R14v1lFWQv/VqvivvQwpfJr/9y2h/Ql5C1q0HwgKgt4cGu
+	dS8CijaGvewK1nUkxfKmWwzvyZkUmu9YxE5+bLFZQQ7cuvPXCcdSzdQTfoW6apEjYOUDLonDOOF
+	0hL4auw6rymw1Dw5R1w==
+X-Google-Smtp-Source: AGHT+IFoIzm7UlztHyR94RuKhnD6orBc64DUoMgvOKfcrGZ0sM+BqGYm3tBri/8v96og+cTTxoB4iflBZRGHIEUL
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:3d8e:b0:40e:f5d0:7002 with
+ SMTP id bi14-20020a05600c3d8e00b0040ef5d07002mr5457wmb.8.1706710221712; Wed,
+ 31 Jan 2024 06:10:21 -0800 (PST)
+Date: Wed, 31 Jan 2024 14:09:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Message-ID: <20240131140955.3322792-1-vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Clean ring_buffer_poll_wait() error return
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-What about simply treating boot-time initialization of the /dev/random
-state as special.  That is, on x86, if the hardware promises that
-RDSEED or RDRAND is available, we use them to initialization our RNG
-state at boot.  On bare metal, there can't be anyone else trying to
-exhaust the on-chip RNG's entropy supply, so if RDSEED or RDRAND
-aren't working available --- panic, since the hardware is clearly
-busted.
+The return type for ring_buffer_poll_wait() is __poll_t. This is behind
+the scenes an unsigned where we can set event bits. In case of a
+non-allocated CPU, we do return instead -EINVAL (0xffffffea). Lucky us,
+this ends up setting few error bits (EPOLLERR | EPOLLHUP | EPOLLNVAL), so
+user-space at least is aware something went wrong.
 
-On a guest OS, if confidential compute is enabled, and if RDSEED and
-RDRAND don't work after N retries, and we know CC is enabled, panic,
-since the kernel can't provide the promised security gaurantees, and
-the CC developers and users are cordially invited to sharpen their
-pitchforks and to send their tender regards to the Intel RNG
-engineers.
+Nonetheless, this is an incorrect code. Replace that -EINVAL with a
+proper EPOLLERR to clean that output. As this doesn't change the
+behaviour, there's no need to treat this change as a bug fix.
 
-For non-confidential compute guests, the question is what is the
-appropriate reaction if another VM, possibly belonging to a different
-user/customer, is carrying out a RDRAND DOS attack.  I'd argue that in
-these cases, if the guest VM is using virtio-random, then the host's
-/dev/random should be able to cover for cases of Intel RNG exhaustion,
-and allowing other customer to be able to prevent other user's VM's
-from being able to boot is the the greater evil, so we shouldn't treat
-boot-time RDRAND/RDSEED failures as panic-worthy.
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-						- Ted
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 13aaf5e85b81..fd4bfe3ecf01 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -944,7 +944,7 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+ 		full = 0;
+ 	} else {
+ 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+-			return -EINVAL;
++			return EPOLLERR;
+ 
+ 		cpu_buffer = buffer->buffers[cpu];
+ 		work = &cpu_buffer->irq_work;
+
+base-commit: 29142dc92c37d3259a33aef15b03e6ee25b0d188
+-- 
+2.43.0.429.g432eaa2c6b-goog
+
