@@ -1,59 +1,59 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57275C5E5
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E61168A3
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706689804; cv=none; b=FO4BNjIAV30vnVY1hKJGI9CEUGBe6xwLZCHB0L8YLGH5EN7gQVPbIw8Mc5suy6v3+Q2UFsRPGJi0aGTB83PsR6NleD4jMgizr65ntTJApQOfuePg/4cpeQLocQICuEC3t9wsbQ624VThQHO33WbH37LNsvX3Hdm1xztzyMLYhF0=
+	t=1706689930; cv=none; b=n4tEJXU4mAoR+mUmgSCIvoJxE1GZNya7zqz2n8uDDzludz2uSePyHpnN5H3aamMao3KoWbu5yTDbrW6/SADNEo9Us53iVYImUx3y25Lce916kS2+VjQ2WINQMW8x77pgm7dMgzXqazHfmqc8Arey2oEiaoWBB+eAi5d4amNt4Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706689804; c=relaxed/simple;
-	bh=MMgAnois95dMQZI8y+adGDKSoodHSzQYOg5nGSvs3UA=;
+	s=arc-20240116; t=1706689930; c=relaxed/simple;
+	bh=uW2qWG9f4i8dbiyjx/KoeHEpStHxMUg4GXRKzOVY26Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FOYRZG7HKpJ4QwpMim19VmwE0UNR7wJ/tObsEeCAzH74sDzMpO5USwZHDQj7CElgp7q1Q+bpu+jI96A/20GmF1/76Uw51UYwyzZy/2fK9EG5qQqa2uPZZrBX0Neadm6ZAO0D4dTFG/UIvE13E+ZjwqVePmR+8UUDAabs2tBiRY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TESHtNeB; arc=none smtp.client-ip=209.85.208.45
+	 In-Reply-To:Content-Type; b=jwqZwVOJ4cfCa7JdNQxIZ0b7z5s/qII9PGqOsi0smlzuduiHNdaIEneq3TqFewRkMRzng0ATsKGlUQ5TinpRB96GxMgYXXOAEdbqKLBdk1URzVwtho0dpLdlMdaDDO8zwflUnOVVzdz/WdmyQQV5cJ7IOcoAfZkZt7iI1o0XlPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VJ9j0a/T; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TESHtNeB"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-55f279dca99so3437162a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:30:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VJ9j0a/T"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a29c4bbb2f4so522870266b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:32:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706689801; x=1707294601; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706689926; x=1707294726; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ezcPCCIAe0fcA0KIIj48VIrjnao3+w50MLkr/bJwMCs=;
-        b=TESHtNeB8l7t8PrLEJEzVDwgS6MS5AHTuZBKEnUl9MOlTg4H9tFQjXbEddlj7Hrz7W
-         w5Ps4i1lfn3lIVnJqINKCeGNm3ySlJASdCBcuGSZDo5bQyd7jxyVCM3/q3yEDRcj06x1
-         6XkpEYIdFOKfzvSRmnO3DM8bx+0SZLQDhtf/mp0kKcETDO0AoaJGdOd5/ejCfog2D69W
-         G5XpWpVuVRkWtWr3Z96mBQzaSKZe9dv0+9xfC9xJfvRI9pw2TvNwSSKD3crV1GGRtMnK
-         LgL0L5Vr2p332mpYlDXxvSF1xaEB5qlcamQLwqjS5I+Soy65KaAtLPyfMXatwYOHraaw
-         UyFg==
+        bh=hKqI+ex6kcefYsSc13l7kLpM/i1M6RfFSyL6Vm7tWxU=;
+        b=VJ9j0a/T1xNiD/kIBapBtVnHZynt7aIdqnkyYNKllPxkuGQF7FXV1YuH/ACmBPOk+A
+         mpuDVAdpIirDfX6UXlw6N7mXHdxJBKmZAIhHsGQhkX4BS/lyULzn+xvaqSvK5nOXAcFd
+         SnMhesdWlt+J8RTBVAl5BIboUXKyUJGRTXQYlgT9M6klJ4taGr+BhxFwpRZWWhgb2BQE
+         CQ+U4RuvkASa62z02hTGLuBN3+k3PkTRCC/X6So2DrxM+1IV8aGr6b2HWfyblha6iOn6
+         2UZLFFmU+PDBfdvj/ZM/SHpIf47L/DOdL4zYylqCVEDJv+vpLuC3XWw7zp29FS29bK//
+         9Eww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706689801; x=1707294601;
+        d=1e100.net; s=20230601; t=1706689926; x=1707294726;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ezcPCCIAe0fcA0KIIj48VIrjnao3+w50MLkr/bJwMCs=;
-        b=CLpumJ9z/izcjKC0TG1VLZNH70K5PYNkphVr7SSAnB+NHuYbcMqZ+ss/G4ZFYJqvex
-         I4rChC9CbGRJE/G5xP+Spxke9vl7ZHq5hMq3w2DDtTXi1RPh+2Lq7/tPQnI4pYMq5Tv+
-         F0dHTpbxWu8OkQsChSuXQBb3CWgEXtMo0PocwZZQUfZ/PXyygYzLOQijNvhEWE3OGwC7
-         dmXG0OTUn3Yy3Y6C7Z50FtZ1jUc6qiCA1VN8ZS1acgk1fzJeMr8gH//SQbPn0h3ugHJ+
-         9wc4yff58kMLiBpMfmDz1j8BYf0k3MY7/qADWq3/LA9wNTuYf72KYZH1fwcqspDZgLEz
-         KKDA==
-X-Gm-Message-State: AOJu0YwG2LSiZpyfrtU6JFxT6FxARAOzssNedaEHNWY0e0y2hS4vBkWi
-	cuvfdE7pJO0OC4dY+znkUUYyXEr701ZjrHp0WlxPE2BXAEpB9V0vIshOge/lYDA=
-X-Google-Smtp-Source: AGHT+IHJKU4f29LwgIJn6IbHoSiEI8ZefbDvhr8uqXmqOeWKXP1eA7yKFr+hrwRIERelJ5ZA4cMCmw==
-X-Received: by 2002:aa7:cfc1:0:b0:55e:f4fb:66f6 with SMTP id r1-20020aa7cfc1000000b0055ef4fb66f6mr488284edy.18.1706689801145;
-        Wed, 31 Jan 2024 00:30:01 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV2m+Fm1nP2/pXHPXGW4Q5TO8+LaL1AnNfLipe7KKQ/ixqtg6pZUunT1EJGtbYLE3h6BUuKAOe3AAyUYwsoyHlG1XWXsaVPbZ6wSr8uuzwKZXQMctWS+WhJBxE7gn3+r6vUix64pcIP9td3eNvgJvrefdvNnXqsErP8HtDBb2APi5PJvclY4mPvEBHuAv8niK6xyzYHUcH6RaWpafAcCjbeqcMBTMHsbTaEDgE8ORMLDsyTHbsVbHgJu6H+8KiGIxpTLRCck6jrjJusNm1gAa5AHwbxwvrVw2M9gz3z50GKoeFCrnpTwiHi3ym3oeXIxXlyEg9J75OkgTVjT5n2Dx/InP5U
+        bh=hKqI+ex6kcefYsSc13l7kLpM/i1M6RfFSyL6Vm7tWxU=;
+        b=tQKLeUIzsJZsZZcNxcxlgq5Bc76eodxW8NsQdZ/IGMx0QyeUTB00P8zCl/lTubRDkJ
+         ImYzHvdN2ZNNkowaksuxrMzkVtPvWHDPfcKfyYoPZUccqxhHLMtuefME/GooIaiJ3HZc
+         g+2Dlq67jv8f8Sve91TyKAu/ZQ994Ia5V7m7+zSZzHVae8mZGsdRe/wvEaMJCF8vMglv
+         sB04kwPjxj02DxwfrLSjLS4zksPlFDZpa75rTt2cLBzVqbSI8/PvKZlSZzDMjqUHXuXq
+         648dNgyARaLJWLWGEhtpA/+KTTG2Yo6qSTo0e/SfrV6aTV7uz9mdwJ+Ppe7qict1Nigd
+         +lFQ==
+X-Gm-Message-State: AOJu0YxdmKn0msBipuGE+CamiZIhMd1izSSrt7f2TBFUP+6DzKDuTIHT
+	2owJFyOnk4wDvclzkqC3/ulVKLNs58h0hrHuXQCwkT8lFosKAwHtlgUyBhJvnVI=
+X-Google-Smtp-Source: AGHT+IFwIdjNb2fXwv4JhM+chfZh206ZDHeUAv0mOI3XqXYqDj0+8KPriicjL4LSfixqTqt/TAeN5w==
+X-Received: by 2002:a17:906:28cd:b0:a36:600d:8911 with SMTP id p13-20020a17090628cd00b00a36600d8911mr565720ejd.10.1706689925683;
+        Wed, 31 Jan 2024 00:32:05 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWvEnQ0I6KVpTKGVxXiAJkhJ/m9JcbKiiwVjBDe1jMuIJXVkIwsySjB4CyuZO4OYj8dgVUdqG9guadmgpDAE4ojOrvss3JdC8jNPjs5CpaZFMyRScDyy8JKnWoOy/vk53AjTpO6VBY2xI0ETiWnhdJTxmmLJGeVM65Luia3uZ7PdrTAz62D2SWcdnbQYNY7WPO4I1M8aKf/vG7T9MvhAYHkmb/NDw8oraI5wclzIZ0CJayvcfmS4G15ZTwJvUqbz5i/o4tEbJep8Uo41jSiYXCDNCi+Pvwg+io+fr5c9Lyi3nuUAmos7rxiNeluTJ97gdrjvLjko0JV0BoK1sWWtedYDDGdnIv40beE
 Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id x6-20020a056402414600b0055d36e6f1a7sm5442819eda.82.2024.01.31.00.29.59
+        by smtp.gmail.com with ESMTPSA id vb1-20020a170907d04100b00a34c07816e3sm5919866ejc.73.2024.01.31.00.32.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jan 2024 00:30:00 -0800 (PST)
-Message-ID: <1c855a34-8a0d-491e-bfd2-24635b41c86f@linaro.org>
-Date: Wed, 31 Jan 2024 09:29:59 +0100
+        Wed, 31 Jan 2024 00:32:04 -0800 (PST)
+Message-ID: <52f1e76e-0953-4625-94ae-2208600f5729@linaro.org>
+Date: Wed, 31 Jan 2024 09:32:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,17 +61,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: iio: afe: voltage-divider: Add
- io-channel-cells
+Subject: Re: [PATCH v3] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
 Content-Language: en-US
 To: Naresh Solanki <naresh.solanki@9elements.com>,
- Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: mazziesaccount@gmail.com, linux-iio@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: mazziesaccount@gmail.com, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240130115651.457800-1-naresh.solanki@9elements.com>
+References: <20240130125602.568719-1-naresh.solanki@9elements.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -117,52 +116,99 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240130115651.457800-1-naresh.solanki@9elements.com>
+In-Reply-To: <20240130125602.568719-1-naresh.solanki@9elements.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/01/2024 12:56, Naresh Solanki wrote:
-> voltage-divider is always an iio consumer at the same time it is
-> optionally an iio provider.
-> Hence add #io-channel-cells
-> Also update example.
+On 30/01/2024 13:56, Naresh Solanki wrote:
+> Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
+
+Subject: everything can be a fix and everything is update. Write
+something useful.
+
+> reserved ranges.
+> Add input-enable property to allow configuring a pin as input.
+> Update example & fix alignment.
 > 
-
-Fix
-wrapping
-and
-proper
-sentences. Each sentence finishes with full stop.
-
-...
->    output-ohms:
->      description:
->        Resistance Rout over which the output voltage is measured. See full-ohms.
-> @@ -75,12 +82,17 @@ examples:
->              spi-max-frequency = <1000000>;
->          };
->      };
-> -    sysv {
-> +    p12v_vd: sysv {
-
-No, drop label.
-
->          compatible = "voltage-divider";
->          io-channels = <&maxadc 1>;
-> +        #io-channel-cells = <1>;
+> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+> ---
+>  .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 38 ++++++++++++++-----
+>  1 file changed, 28 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> index 7f30ec2f1e54..90dda5d3cc55 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> @@ -45,7 +45,8 @@ properties:
+>      maxItems: 1
 >  
->          /* Scale the system voltage by 22/222 to fit the ADC range. */
->          output-ohms = <22>;
->          full-ohms = <222>; /* 200 + 22 */
+>    gpio-reserved-ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 60
+>  
+>    vdd-supply:
+>      description:
+> @@ -85,6 +86,8 @@ patternProperties:
+>  
+>        bias-disable: true
+>  
+> +      input-enable: true
+> +
+>        output-high: true
+>  
+>        output-low: true
+> @@ -125,14 +128,29 @@ examples:
+>        #size-cells = <0>;
+>  
+>        pinctrl@20 {
+> -        compatible = "cypress,cy8c9520";
+> -        reg = <0x20>;
+> -        gpio-controller;
+> -        #gpio-cells = <2>;
+> -        #interrupt-cells = <2>;
+> -        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> -        interrupt-controller;
+> -        vdd-supply = <&p3v3>;
+> -        gpio-reserved-ranges = <5 1>;
+> +          compatible = "cypress,cy8c9520";
+
+I don't understand why you change from correct indentation to mixed one
+(2 and 4 spaces). It does not make sense.
+
+
+> +          reg = <0x20>;
+> +          gpio-controller;
+> +          #gpio-cells = <2>;
+> +          #interrupt-cells = <2>;
+> +          interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> +          interrupt-controller;
+> +          vdd-supply = <&p3v3>;
+> +          gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
+> +
+> +          pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
+> +          pinctrl-names = "default";
+
+Missing blank line.
+
+> +          U62160_pins: cfg-pins {
+> +              pins = "gp03", "gp16", "gp20", "gp50", "gp51";
+> +              function = "gpio";
+> +              input-enable;
+> +              bias-pull-up;
+> +          };
+
+Missing blank line.
+
+
+> +          U62160_ipins: icfg-pins {
+> +              pins = "gp04", "gp17", "gp21", "gp52", "gp53";
+> +              function = "gpio";
+> +              input-enable;
+> +              bias-pull-up;
+> +          };
+>        };
 >      };
-> +    iio-hwmon {
-> +        compatible = "iio-hwmon";
-> +        io-channels = <&p12v_vd 0>;
-
-The same question as for v2. Drop unrelated example.
-
-Also, remember about rule of posting only one version per day, so people
-actually have some chance to look at your patch.
 
 Best regards,
 Krzysztof
