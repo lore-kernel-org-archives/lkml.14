@@ -1,109 +1,126 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56646605AE;
-	Wed, 31 Jan 2024 08:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2476453E3D
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706690339; cv=none; b=JhYK1jQXn+Vc/60kH+HcFcI11r9/fvYzKjFmBlhjBV7OTm6eAB0OfUsYd6Wp8NUtRjhn8TWJPsFcfR661CpebuQCQNm6nbv2tbIeTPGkJDivhVrsv77BcXD0bTSlDebwBJ/1JKL+45Uw4dWVHy1QPazpPKZ+AmVRwWv3ck/IrxE=
+	t=1706690418; cv=none; b=qPUbqSyYUIVm9OW/w1jcR4W+NY3Twtwh1MafUuqW15LEIpUEsA1Dpfbm+IBVcyTOuzSZA0eX1MztZir0JM9d1tGSLRPlRwir9+QeTkTXlum6zrQzEsFC9LeHba45hsup5rA9IwBIOAn+mn4i8MI/Ojr7F06zBZjEFejSwoURaZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706690339; c=relaxed/simple;
-	bh=2ZBAflDXD3zJXqpjp+crMkG8/SPmbN2N4SU1DhttT0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lyN1aGNWXnZRuVrKbN/oyoP0XxVAfpN5WIOx5VobbSkozIK8qT97xe07hWeGfqtY3m7raAA5s/4tVr2jbn1zL0ljcTGHlYj2B2vffKOr0Iepkct6FxQy7BvJtK9Qr0O4nS+sZiC4SUpKlRVXaw5yUPrd8vP84cQsdD9TP4cfMM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JIhxhFEv; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706690418; c=relaxed/simple;
+	bh=b6KvYye15yUeepIZfIQKcQ7MF23r5fOL3OVwtXZYmv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VVCJ1w5dLxmKagxfouvH6+/yXIxxwuIs6/sHrlfA9IZmDPXkb2R+4C4gx1v0/3LS8KlWyOmkeK6/lVJLjyROtzre//VOwey6Wl+9cQA1nXGmO0oHRL0Mt74QaM3dCyIKqyKHHp5gmdfBSvsaprAmFgwpnxlM5fiaeZ1fbww0dT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dNiZ4tXs; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JIhxhFEv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706690329;
-	bh=2ZBAflDXD3zJXqpjp+crMkG8/SPmbN2N4SU1DhttT0c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JIhxhFEve28QOybjkrgd6475Ry0AThAhxYNPmxNdIA0aF0YKe+vANGHhTCjnzj3Et
-	 o3SLESKxHEl40PGpvPZnjaMueno8mKiWOL4QDP7wBGhcGRsss407F80oWxm2P7EJn/
-	 AMs+A5c05xo/q12gwzIVDjsvU/08BwjyMOZjcVnvv7YmBbPW9kPcd82F5yDtC9PJyT
-	 5Qlc7hgpZYSi+hyR8VhTqQf1zLAnrb7vogRkZA3l/UKNCjYg0RZ9aK2UW/4QaDOSZz
-	 LfqmxbKFb0ylBAr1fZNv8gYalLBkvSnZ3SN1IzIG2D26R4wy+MJi8FLlK+E1pFgTU7
-	 KOFb5xI3tDBmg==
-Received: from [100.109.49.129] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dmitry.osipenko)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E35B937803EE;
-	Wed, 31 Jan 2024 08:38:48 +0000 (UTC)
-Message-ID: <ee039551-ffb0-4ebe-88d1-5953f347cde0@collabora.com>
-Date: Wed, 31 Jan 2024 11:38:46 +0300
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dNiZ4tXs"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-29041136f73so2610644a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:40:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706690416; x=1707295216; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qlp2sty3dR9Sx4BVXNTcLCm3HU4Y5f/yXJCeA8/jKio=;
+        b=dNiZ4tXsqs9xOA0FWONckhb72uT841I+WqebwHaW3eY5n8IO2eKxPRmME06uV/b4CG
+         c2HkxvVplfvvI2z+4JjhFhYD2KSw3fOipuI4wuqst5opg69iw9At+tFS/wlC10LKkfkR
+         lTcSmIo2t+eu5vvUv3jQpAhgXO1mn2YIWlbag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706690416; x=1707295216;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qlp2sty3dR9Sx4BVXNTcLCm3HU4Y5f/yXJCeA8/jKio=;
+        b=plA8eXUpAaodEii/nTYlbNx/QXiQuFUo9ml70/TGzcHVJ2zZ/ekl5FDJg44nGf/mCD
+         poPr5z3fh95y19TlI2y62yteT9DFxjN5NRIlhHM0LdIucqzbOfGzlZ4At/h0PjAm+qvL
+         /zzFplh872wGhqv17xd60W10zIb9CI5eJzYNQQ5WrSJBV7c+grD9VmY3dHbO3OfjdxXP
+         oQyQ4ivoYIesUwrUJdFGniqokJJSDo5+22jJ+dLaEllWEM57ZXQlk6lkQhbD20NVtXpI
+         vGIH7PDYEyQJnR+H3X8CnKP8BAsgqYam7HlX9gr2aqPtnYbgJHP1GRGEmRRQv/4WHpx7
+         kRvQ==
+X-Gm-Message-State: AOJu0YxFbuEVocqWj9XUlpwVW1t60x0uyZ22FKOlNvOvu0rZ5nYcdF+b
+	69aZtFZPAK7ZqHbzKORhkrbkL4Js0uuuXttX0LihJ4HkWhP9kLxeruBiMxVAqg==
+X-Google-Smtp-Source: AGHT+IGeOC1b4+fEfR2BiaeqQXuckhfl4EogvEOKld9sN382hSLr+AIdEJ0dHzu5M2ho8pU3UVp7/A==
+X-Received: by 2002:a17:90b:182:b0:290:e010:2f90 with SMTP id t2-20020a17090b018200b00290e0102f90mr1002677pjs.30.1706690416436;
+        Wed, 31 Jan 2024 00:40:16 -0800 (PST)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:74d3:dadd:270b:194a])
+        by smtp.gmail.com with ESMTPSA id pq9-20020a17090b3d8900b0029051dad730sm887800pjb.26.2024.01.31.00.40.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 00:40:15 -0800 (PST)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	devicetree@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: [PATCH] arm64: dts: mediatek: mt8183-kukui-jacuzzi: Add ports node for anx7625
+Date: Wed, 31 Jan 2024 16:39:29 +0800
+Message-ID: <20240131083931.3970388-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/msm/gem: Fix double resv lock aquire
-Content-Language: en-US
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- Rob Clark <robdclark@chromium.org>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240131011537.31049-1-robdclark@gmail.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20240131011537.31049-1-robdclark@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/31/24 04:15, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> Since commit 56e5abba8c3e ("dma-buf: Add unlocked variant of vmapping
-> functions"), the resv lock is already held in the prime vmap path, so
-> don't try to grab it again.
-> 
-> v2: This applies to vunmap path as well
-> 
-> Fixes: 56e5abba8c3e ("dma-buf: Add unlocked variant of vmapping functions")
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+The anx7625 binding requires a "ports" node as a container for the
+"port" nodes. The jacuzzi dtsi file is missing it.
 
-Nit: the offending commit should be 79e2cf2e7a19 ("drm/gem: Take
-reservation lock for vmap/vunmap operations")
+Add a "ports" node under the anx7625 node, and move the port related
+nodes and properties under it.
 
-> ---
->  drivers/gpu/drm/msm/msm_gem_prime.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_gem_prime.c b/drivers/gpu/drm/msm/msm_gem_prime.c
-> index 5f68e31a3e4e..0915f3b68752 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_prime.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_prime.c
-> @@ -26,7 +26,7 @@ int msm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
->  {
->  	void *vaddr;
->  
-> -	vaddr = msm_gem_get_vaddr(obj);
-> +	vaddr = msm_gem_get_vaddr_locked(obj);
->  	if (IS_ERR(vaddr))
->  		return PTR_ERR(vaddr);
->  	iosys_map_set_vaddr(map, vaddr);
-> @@ -36,7 +36,7 @@ int msm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map)
->  
->  void msm_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map)
->  {
-> -	msm_gem_put_vaddr(obj);
-> +	msm_gem_put_vaddr_locked(obj);
->  }
->  
->  struct drm_gem_object *msm_gem_prime_import_sg_table(struct drm_device *dev,
+Fixes: cabc71b08eb5 ("arm64: dts: mt8183: Add kukui-jacuzzi-damu board")
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+ .../dts/mediatek/mt8183-kukui-jacuzzi.dtsi    | 25 +++++++++++--------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-Looks good otherwise
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
+index 6d4b225a592b..783c333107bc 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
+@@ -150,21 +150,24 @@ anx_bridge: anx7625@58 {
+ 		vdd18-supply = <&pp1800_mipibrdg>;
+ 		vdd33-supply = <&vddio_mipibrdg>;
+ 
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		port@0 {
+-			reg = <0>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 
+-			anx7625_in: endpoint {
+-				remote-endpoint = <&dsi_out>;
++			port@0 {
++				reg = <0>;
++
++				anx7625_in: endpoint {
++					remote-endpoint = <&dsi_out>;
++				};
+ 			};
+-		};
+ 
+-		port@1 {
+-			reg = <1>;
++			port@1 {
++				reg = <1>;
+ 
+-			anx7625_out: endpoint {
+-				remote-endpoint = <&panel_in>;
++				anx7625_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
+ 			};
+ 		};
+ 
 -- 
-Best regards,
-Dmitry
+2.43.0.429.g432eaa2c6b-goog
 
