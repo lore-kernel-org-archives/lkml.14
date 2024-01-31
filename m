@@ -1,90 +1,130 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA2B17F8
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF0215D0;
+	Wed, 31 Jan 2024 00:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706662771; cv=none; b=QBiBUCJOHs8w/W0Cef5HOLIfvM3g2lIHrZrZ3J/XM7DK6UNxOPdFvdYgg8mY9zgdkBGevuGnqjGi90j+rPIz51kNTaSVpIy1nmqRNCdYfMM6rymlqQhEcnlwNEIKZSelwgJpKerrnGSctmSOkyu13TC49HgATcKj9EroSiHdJc8=
+	t=1706662775; cv=none; b=scjTu/22tU1hx7UV8NUQxbIDy4Aapael611lhe+duXaffIbmmPG5s1c4dSYudqjfM2MGFZ/8wvuj97189WrqFqXh6pr2g3imWabr+7W1+7dFlJI7HalqmTyBRNNlzDMXrVWC+AGcvJa2U3nt0hXhdpO9JVR5gUp0IaoNkV9ZXF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706662771; c=relaxed/simple;
-	bh=k3UJtZ2zdXlpKfmUISRN9bJoOsCVfPi9X4p4h+DW8jo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MhxL7kOYhP2e5yidITi487FRk2ULsM2BppPJ2CTvPeo347u2rhbE59PkbEUME94lhqTSK7qOZHO9G1SsnjcSjqBISwlk23DfL2Jf4FRjLZwsbEsvlNqmxEnZwfJl4Y4YREeozN8GOS1+XY/xXzl6k2ekJXVNYQa3cfD0G9Z+5/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TUqpHVWg; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1706662775; c=relaxed/simple;
+	bh=QiAGZ5YlDQ9/BN4wTc+dq6HR05vGiESwMYzkZwr6Q5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TqYELSdMjTgiEuka8JaC1s44XBy5nfPTAx0vixQZeXWipwlgqZCEsF9yTJZBF/H2fYz4toV9lYaUV6Vv9GnkUcUrLxpyqqv9Ha+w/UrLPp6tMV+ZDFT2Q+/zR08nXhQ92cgRgKrSDNkGg0XyVeWRCUjfHdp671ewpfs16zUTLyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=BcR4dqQL; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TUqpHVWg"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5cf35636346so2666208a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 16:59:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706662769; x=1707267569; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DRYWEyJ8nP7GDr/8zEO30BzEfVkSVrMjTBb0exa158c=;
-        b=TUqpHVWgZDMCfkQNVrWqEWS9UJmGmbbZQWNHl4en59He7sV8+0osELWQ5eKAPZYu5L
-         b7W+Qh4E1s4KEIZWeNNTNRbua2MHX6JQzAXnF6YID9zJcJvfdwJgX8y8cXZSSisP7Ab4
-         FSl122Gp2TE78/j2carXDkwd66VKUpOgw2h3te5q41ZnIv/B0xE13z6GqS835FH4PZxU
-         NVmAbizP3zmnBavun9vPYx+DsUXZKdw73CemLqRtWznpAA542RemNvNxOesMsowkgirn
-         ldKDTS69TTk4nIpXkqdQJRfmK2MyMRLcfy3rj6JKdUsv9hYoaXzJEdZNt02D80d0KXei
-         bewQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706662769; x=1707267569;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DRYWEyJ8nP7GDr/8zEO30BzEfVkSVrMjTBb0exa158c=;
-        b=rFLKC84oFxb+CTmhAmNNs/rHyhQtTMehUaBhV+skXi4Kv47SO1fOyawQYdqw/g8wKu
-         EvY+DpOUPuevqn0k8OsgaBmMHZHJ+/42F7oEAxLXCffjYUf784oOOJqIeQ7HlLRSr+Z2
-         OPQLDHplFXmDqSYDS2pDCSmdowPTF5eMEHsyCP7bEP/Uwo+bDwjaYpBCJvybY550+rEH
-         8W7oEccycSj71o2UNEBmw5FExgFndCZqELZQDBX4vZ2FhV2pgI2OVVe/73gksG5BFS0D
-         CpGzOPBHIWFXIrrnn7MPTAzkj95IwQ/BQlSDRbM41Nqpw1TCkHeq4mGyi6KyJ+jJudxc
-         szkw==
-X-Gm-Message-State: AOJu0YxWcxa58TH8+noUYOEUhSboZsvlKZVXXJdpkTTff8kPrJYGx8pm
-	ZJAf4tIgwkBXhDRlc1IsXXuUFfKvcMCVhs/3V5U3CnZiMqFDKhb/kip6dEPshUBlz9CYvWRi2xX
-	ShA==
-X-Google-Smtp-Source: AGHT+IFEI3SoLvPTNxPIT/3ZKANZjSVRIrD9gcH2Sle4VroShAJW+tvxcqtoldxoSebPtI3krvwO+r+o2e8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a02:48f:b0:5db:d9b6:2d52 with SMTP id
- bw15-20020a056a02048f00b005dbd9b62d52mr3335pgb.5.1706662769550; Tue, 30 Jan
- 2024 16:59:29 -0800 (PST)
-Date: Tue, 30 Jan 2024 16:59:15 -0800
-In-Reply-To: <20240110004239.491290-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BcR4dqQL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1706662767;
+	bh=wjVD1WbRSrw5Ycre1uFpDlv9VdOGrAXKq18adQUu1sM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=BcR4dqQLIyYWEgm9s8Df6TLz1Tz2oHgYRLJYGlzny3WgI5XZl9TTDDDt40cKRtSTc
+	 PoaFTwwLHXjyZo5OyS1Vc1snNlCBnLWF7mHqgtjDdaZOBxet9y5yACtX+KJMZR+2fL
+	 XJEq6r3dYpn6TYqr73Hgkajy7qz01Nl3S6XTrRHDntgykODed28fisR4h6fllUB7xC
+	 btXaVaQq/yOdlpiMC7rV4XOxiqw5pJ4FSWczhiYnDwQAOfCwl0Hn3gIbeZEAmwKsw6
+	 dvyC7afOvs+TKRkj4osA7xEqJ/4TuRVbQsRtoVtTdB4MgQ5az7QNZdMGT0nTcfJsVg
+	 OzvA47YKMa4cw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TPkFp16Wlz4x5k;
+	Wed, 31 Jan 2024 11:59:25 +1100 (AEDT)
+Date: Wed, 31 Jan 2024 11:59:25 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson
+ <warthog618@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the gpio-brgl tree with the jc_docs
+ tree
+Message-ID: <20240131115838.4af8131c@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240110004239.491290-1-seanjc@google.com>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <170629112001.3098038.14027986117394347629.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: Harden against unpaired kvm_mmu_notifier_invalidate_range_end()
- calls
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_//GV3tRzduIQsP/48FN8=t1R";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, 09 Jan 2024 16:42:39 -0800, Sean Christopherson wrote:
-> When handling the end of an mmu_notifier invalidation, WARN if
-> mn_active_invalidate_count is already 0 do not decrement it further, i.e.
-> avoid causing mn_active_invalidate_count to underflow/wrap.  In the worst
-> case scenario, effectively corrupting mn_active_invalidate_count could
-> cause kvm_swap_active_memslots() to hang indefinitely.
-> 
-> end() calls are *supposed* to be paired with start(), i.e. underflow can
-> only happen if there is a bug elsewhere in the kernel, but due to lack of
-> lockdep assertions in the mmu_notifier helpers, it's all too easy for a
-> bug to go unnoticed for some time, e.g. see the recently introduced
-> PAGEMAP_SCAN ioctl().
-> 
-> [...]
+--Sig_//GV3tRzduIQsP/48FN8=t1R
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied to kvm-x86 generic, thanks!
+Hi all,
 
-[1/1] KVM: Harden against unpaired kvm_mmu_notifier_invalidate_range_end() calls
-      https://github.com/kvm-x86/linux/commit/d489ec956583
+Today's linux-next merge of the gpio-brgl tree got a conflict in:
 
---
-https://github.com/kvm-x86/linux/tree/next
+  Documentation/userspace-api/index.rst
+
+between commit:
+
+  8722435d325b ("docs: rework the userspace-api top page")
+
+from the jc_docs tree and commit:
+
+  32a0a0da530e ("Documentation: gpio: add chardev userspace API documentati=
+on")
+
+from the gpio-brgl tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/userspace-api/index.rst
+index 67d663cf2ff2,ee58d92c53c7..000000000000
+--- a/Documentation/userspace-api/index.rst
++++ b/Documentation/userspace-api/index.rst
+@@@ -30,18 -16,14 +30,19 @@@ Security-related interface
+     no_new_privs
+     seccomp_filter
+     landlock
+ -   unshare
+ +   lsm
+     spec_ctrl
+ +   tee
+ +
+ +Devices and I/O
+ +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ +
+ +.. toctree::
+ +   :maxdepth: 1
+ +
+     accelerators/ocxl
+     dma-buf-alloc-exchange
+ -   ebpf/index
+ -   ELF
++    gpio/index
+ -   ioctl/index
+     iommu
+     iommufd
+     media/index
+
+--Sig_//GV3tRzduIQsP/48FN8=t1R
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmW5m20ACgkQAVBC80lX
+0GxmJQf/X27uqDCsReg6kOGUW5yAlTI5Ztve+TFrmGuerAU7cJVqaXG/LIF00gC8
+JavzYBGMEAfpmU8l37Ek0A/C8DI8/nnpQCTC/ICM0qupMuz1hg6lQx/+E0oYkwwB
+LzSCGNd4eFpDSQ0rueAmo3z3m16ESfMpO87cLWoIBvvvD9yXk+tt5CRIJXxgWFMf
+zSDQ2mC6HRnVb7K5HfB55jFhsoGjH4PwJqLP7dvB3Q5iEKkcCEma2eQ6hVj7uPQz
+2A1Vo1hdca/xBALXF84ZdRls0+kFE4UVtm+KyT0LF8SlxqMPaAW1Rq+bIBIBkb3f
+VFlQGLPy7eFTFCEysi4ewFvB7hUGxg==
+=p+Ag
+-----END PGP SIGNATURE-----
+
+--Sig_//GV3tRzduIQsP/48FN8=t1R--
