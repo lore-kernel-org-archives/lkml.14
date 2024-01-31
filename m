@@ -1,71 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971077BB00
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7243F7A716;
+	Wed, 31 Jan 2024 13:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706706083; cv=none; b=c+TE8MLkTy7c/zL2p9CJmBSDjtxSQXPHUx+8oVhhcVmStYaq6yhk56PIHXey/4hid/Ow3WXToYgT79nQpcmAXEPFlleG0xXh5wEK0AZxh0FaXz1ixMCfrSHvvWuxEXpYSOe2gDsHntEsfal9eYtsAnwZAGfP3T4iutGBLqPwjME=
+	t=1706706103; cv=none; b=YZfXwGHDsrE4tJ54pXP7ExG01MsbGijNPp6b1iIYmMUnXiZyhLt+jz3qpOakjvjA6uNKUi2j/A/pHpCJS2fe/1iYgFOKkWbgahAaH9kfvJuNBS8fHseJad36PRLVH8IY9huGb/4a0XxjxbTWXHf1V7le5VJ7Ep55XepsbzzT3lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706706083; c=relaxed/simple;
-	bh=iuYZLMjnUbawOeR31xImNNYkq3C/7t4cRKUneiauhwQ=;
+	s=arc-20240116; t=1706706103; c=relaxed/simple;
+	bh=A2HkjWs/uqyXRaWNFEgz3xTTLEQ3Q1Ks7F/RFXEiUUc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WvZ8X/ky1w0CMslEfqE8EzHurEFnIBuSL4JCvBTijEWbW2ONh3gWvVz/0CXYau4XiPQ+cdOfJp/0iSNQ1IzwyaxN2s+gUT/B5dnPUAlcfPDKvMa3qC4+1aIWYVNjkUvo7h97t3Z1sjlCwKw29xVy4mWd9L6MtJi7s15d9AlXrRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bE50ISoq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bE50ISoq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706706075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qn+iYS2LlFcVqPLusRdTgDr/wHRlQ/SFpOgOHT1uyag=;
-	b=bE50ISoqj0zymb0me/39Jhp5gXx0sMXMk1nGFGwF5j1Y8j4TJM4CxjTvNTJYUMUSR+VOlJ
-	M8LhAJEZ16EV/7madZ4EglSF0y3P04xYQuQLHSCD2KluOtgSQAEBnuTFoezSl8Gy84H69T
-	7lGJ5ArgOljWFo22aw5bBAi9eXUm5qY=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-264-cc3A9somNTiWN3t6zQReMQ-1; Wed, 31 Jan 2024 08:01:13 -0500
-X-MC-Unique: cc3A9somNTiWN3t6zQReMQ-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d06d6974f4so2923911fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:01:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706706072; x=1707310872;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qn+iYS2LlFcVqPLusRdTgDr/wHRlQ/SFpOgOHT1uyag=;
-        b=HODrv79+gHzxW+QZZNstIUp4MKarGx/iy848r9vydgIYzwzuJNltBFn3Do2FqgmIvj
-         NkFiXe7BDXMBDK5pc2QhEPXSAyxREKyI8bCd+bDXwOqeLmhEkMsrRhscEccAUNXUUaqM
-         Z5df8eWpjVTbt3rUbYZYIvqe/HHl2rV8OOFC/Wz8xUg/YQUsHhM3hm0p3BLuQCy5C7EH
-         O6YTgsh0fljF32W+96uvxWKff8tVTAw25kJJwjX5B2ToR5LClmqIFhUwfupfTfVE5STm
-         kOBAdOOm/aLYwDrlPsQHnjsjBbpgoo9t+g6TtXOhHp7a7vNxc5XiR/nv5yQJXSnKV5Kf
-         smSg==
-X-Gm-Message-State: AOJu0YxE47tYc6+cZdPMslA3PLaUSIV+E8V7aoZznwZRPJfxyzO7BYuS
-	5x4VAfdCaL1sDqktj3qr4vys10ieMn+3tzu7e/GyJwv34NisTO296XL0qA11ugBAaEXUtM9cd8n
-	8zAiZgImKZPZAPUduuAjKNZsMkptzroB2Dzcg4WwvEIJ4c4O9ItnYQw8k2KkuaQ==
-X-Received: by 2002:a2e:9e17:0:b0:2d0:41be:9eec with SMTP id e23-20020a2e9e17000000b002d041be9eecmr1035481ljk.6.1706706072141;
-        Wed, 31 Jan 2024 05:01:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHGd10SIDbQpNCUKVs442JD5KhAj1sVBAgs+wQitBw7307bQExUlPBMAPUZxnN2YGMnlXVZ5A==
-X-Received: by 2002:a2e:9e17:0:b0:2d0:41be:9eec with SMTP id e23-20020a2e9e17000000b002d041be9eecmr1035460ljk.6.1706706071751;
-        Wed, 31 Jan 2024 05:01:11 -0800 (PST)
-Received: from localhost.localdomain ([151.29.75.172])
-        by smtp.gmail.com with ESMTPSA id m12-20020a056000180c00b0033b08f52d46sm473547wrh.116.2024.01.31.05.01.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 05:01:11 -0800 (PST)
-Date: Wed, 31 Jan 2024 14:01:09 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org, Cestmir Kalina <ckalina@redhat.com>,
-	Alex Gladkov <agladkov@redhat.com>
-Subject: Re: [RFC PATCH 0/3] workqueue: Enable unbound cpumask update on
- ordered workqueues
-Message-ID: <ZbpElS5sQV_o9NG1@localhost.localdomain>
-References: <20240130183336.511948-1-longman@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RFU+SNOdM2bb0tbVTZmRKuJSA/oDF1HF1C8DvouYYPFBi6/P7SjHehnLbraN59OIez8Q6PhPNhWS8L4S1yxsRu9qOvNPePZSCbbzMRqyWCNKLRbZrIHIVUYXraShw5epX6KowaMa4UtuJuQgZCZr7STdzLrX5T+hAcFauqjXyz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id AEAFC68BEB; Wed, 31 Jan 2024 14:01:33 +0100 (CET)
+Date: Wed, 31 Jan 2024 14:01:33 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Brian Foster <bfoster@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+	linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/19] writeback: simplify writeback iteration
+Message-ID: <20240131130133.GA25391@lst.de>
+References: <20240125085758.2393327-1-hch@lst.de> <20240125085758.2393327-20-hch@lst.de> <20240130104605.2i6mmdncuhwwwfin@quack3> <20240130141601.GA31330@lst.de> <20240130215016.npofgza5nmoxuw6m@quack3> <20240131071437.GA17336@lst.de> <ZbpCEagJOh61eH6M@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,59 +36,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130183336.511948-1-longman@redhat.com>
+In-Reply-To: <ZbpCEagJOh61eH6M@bfoster>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hi Waiman,
-
-Thanks for working on this!
-
-On 30/01/24 13:33, Waiman Long wrote:
-> Ordered workqueues does not currently follow changes made to the
-> global unbound cpumask because per-pool workqueue changes may break
-> the ordering guarantee. IOW, a work function in an ordered workqueue
-> may run on a cpuset isolated CPU.
+On Wed, Jan 31, 2024 at 07:50:25AM -0500, Brian Foster wrote:
+> The implied field initialization via !folio feels a little wonky to me
+> just because it's not clear from the client code that both fields must
+> be initialized. Even though the interface is simpler, I wonder if it's
+> still worth having a dumb/macro type init function that at least does
+> the batch and error field initialization.
 > 
-> This series enables ordered workqueues to follow changes made to the
-> global unbound cpumask by temporaily saving the work items in an
-> internal queue until the old pwq has been properly flushed and to be
-> freed. At that point, those work items, if present, are queued back to
-> the new pwq to be executed.
+> Or on second thought maybe having writeback_iter() reset *error as well
+> on folio == NULL might be a little cleaner without changing the
+> interface....
 
-I took it for a quick first spin (on top of wq/for-6.9) and this is what
-I'm seeing.
-
-Let's take edac-poller ordered wq, as the behavior seems to be the same
-for the rest.
-
-Initially we have (using wq_dump.py)
-
-wq_unbound_cpumask=0xffffffff 000000ff
-...
-pool[80] ref= 44 nice=  0 idle/workers=  2/  2 cpus=0xffffffff 000000ff pod_cpus=0xffffffff 000000ff
-...
-edac-poller                      ordered    80 80 80 80 80 80 80 80 ...
-...
-edac-poller                      0xffffffff 000000ff    345 0xffffffff 000000ff
-
-after I
-
-# echo 3 >/sys/devices/virtual/workqueue/cpumask
-
-I get
-
-wq_unbound_cpumask=00000003
-...
-pool[86] ref= 44 nice=  0 idle/workers=  2/  2 cpus=00000003 pod_cpus=00000003
-...
-edac-poller                      ordered    86 86 86 86 86 86 86 86 86 86 ...
-...
-edac-poller                      0xffffffff 000000ff    345 0xffffffff 000000ff
-
-So, IIUC, the pool and wq -> pool settings are updated correctly, but
-the wq.unbound_cpus (and its associated rescure affinity) are left
-untouched. Is this expected or are we maybe still missing an additional
-step?
-
-Best,
-Juri
-
+I like that second idea.  An initialization helper I could live with,
+but if only folio needs a defined state, that seems superflous.
