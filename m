@@ -1,58 +1,59 @@
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984BF6EB62
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401E0762C3;
+	Wed, 31 Jan 2024 10:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706696524; cv=none; b=pBuAw8i7L6sofX0bUERspwVobLEAAXmUfb9BmfJESOpCXmnm2OnFC19AJ2eEDFZXPdju0jY2WE6ehXOni4AboWlT5ipElKBV7YQOCbTC8SWRwIhzlx8ppXTIYXowS1CdoOZCEXrihDAwDVburCNky337ubjGa3iiXf/FcaGGg74=
+	t=1706696526; cv=none; b=nYeQcZi+vsp3qc2t6eDzxTOYux0h6+TAK2hJMQ1yppEBLhbwZdhD9r5fCiPfAwEqa8voKimplD08x0b7ox5K+nz+O4FKDBm+TOzKBZEA5fNaoCzvqRH+bJR95+3VERRWJ4rxonhcP+quSXWUmka+9wYx8dXmutphG5Ga6kmxHdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706696524; c=relaxed/simple;
-	bh=IQJR9u2rNKDpt6G+jJ53eyh2w8ADSqCJU5PuAAAXG1o=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=JEMHhDcBvayl34loVHiGO8hZJwYMKAao2neEa6FfQdQA8QN2zhyxQvFrVZaCOcZ2m1CXsJ6RwbxJv7gVL87JI9VQhsbJV9ausuE97NCj/gEHRU00KaVy+BUBV6b6aE888qQTxq3LwQHN8OoEYfYEwlt8xwoqWFBFnLI6Nm9aH5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Sy2okhQh; arc=none smtp.client-ip=203.205.221.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Sy2okhQh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1706696518; bh=FZTLuzXLAQaVeDF3PgltHoTihh7oZGiR3nlsk5D/9SY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Sy2okhQhfwRjmSwidCsB9HEP+7/yWmAI8tLlm0DsL5V8uZy+PCuP/zDkNOrW5bb4o
-	 urC6GB4rjdfmH3pMXXmldknGHAiY8fzLq1uwWE4NZ+YTY0gG/HwS5w0XdG/vurzFBu
-	 dxOGW5tdccthCSqBf8CGscXVrfRn0NlgOM4ZTgn8=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 36FA1441; Wed, 31 Jan 2024 18:13:47 +0800
-X-QQ-mid: xmsmtpt1706696027tp6rmpcp8
-Message-ID: <tencent_E65689B9AEDBAEC48C92A7D306C0D2EE4606@qq.com>
-X-QQ-XMAILINFO: MB5+LsFw85NotdNI22+XGZPnNfUgGUiybdWJ8Eo2uGqD1sAOzjS+K3zrl/MabL
-	 epBHkLl59UKb809tdsgtCjG3f5+BG6MfUutWfga2YsYw+WUuhPUnZeLSXWA/JPRsWcN6ztcZQ4hY
-	 mygHz2YtFLxNzkFaooc27HJM4ZTMtXaHgxa6SUWskrpww65vWE9S7kFOLJyvJLdxMD2s3QAaDrt9
-	 y5H79TPOKJ5nA//K5A0b2l+0wN3VeOwSUOLN6UOKnay+XMUPKhSdSR1hj2uXumc+JVnqOgI9yJKn
-	 SiKMLKhEPEGvaaWQIlk37AW7mvkY6L28yGs4TSm6sUwktXVw11UDXUrc6KTGrV0bd52x3a3OERqA
-	 xA5MvsYR44Tzzchh6l7NFryMvPJdDQ9w7NZKjMLp/IchHVT7drtipkgfW1g4J9OH0FqMpM3W/e7J
-	 AFDXrSdRXggl+z+V6dtldhsdmEujZcMMKmgeXe+T7Vz0zftdVipZlil78aPOX9KliHJezxbMZrA8
-	 cEjWVvSLelR5zDtznR/Kn5b8aQrr8jXX8I2GJ00yRzpBceS9IcGucKGr6F8xbEudidhUCvuhXd6M
-	 NMedN4uGW2ntUTadODyTtRRq3RQXTMq6GZPqCnJ3Ra5i/h/5jxoN2IbYnggftNRGWhC9wRlVWUj+
-	 cldxN3hS5TL9p1PERGDVqOkKdBejo0NmUiHuNEELOYFRFcr737GDlOqosuofTfFXD2FnwebQJkSv
-	 Ryx+pVJGoA0nNp+TALRO27g3OsNRFoOltdptw64OcsDZgPsWxdv8fBDQZQRZhKRB8bbSPsF7cODD
-	 SNw4XDpbeUDXazeBYzoaVcYehqU0JMT8WTXYddGS4kFsZv5CWumSkFSgzN5F+5dzIjVMM2eA2Pik
-	 KLKc+pnG6r/hfZ1h32VaA+Q6SwMIOur6XT6dl+8J1g5miwwXYPTmgNangcmKVkAo/a3ZrTShyvuh
-	 ucvKgoQ7cJ+/u1mrIVHdswBEoDGnhCIghaJfY2XNNOEBQuT+xmvRKEusdhTK6VjVyDfmZuL0ype2
-	 jm0U0erWAiIsr7a0mOYpiBb83mhNQ=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
-Date: Wed, 31 Jan 2024 18:13:48 +0800
-X-OQ-MSGID: <20240131101347.1111131-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000002b1fc7060fca3adf@google.com>
-References: <0000000000002b1fc7060fca3adf@google.com>
+	s=arc-20240116; t=1706696526; c=relaxed/simple;
+	bh=Ew3jG/iqdLrRFnqrV7+TDchfiZaOrt/C9SUF3rcAj1Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fg3bbykBx2fh/D4qSplcnH2sSKzhgngg2KfUMrJD72vxrsF6pkJKnr4pr6BE8WQ0juqW07YEtaklH9RjZDjnDFVbDLQTEyD/YjdFZfsXFjR9NvYZiDpgw9sZ7IkFQtccGwwWdi9mB95hLF53qTi60UNh3lAMVeimw81p+ckh6+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d057b6df2aso23783821fa.3;
+        Wed, 31 Jan 2024 02:22:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706696522; x=1707301322;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dzz8XfgMT6sJFwrMg84o7ZbqmGEnX1hEApi1gdyPgqI=;
+        b=wodxfXvSsuJaaSUn52h9Seoq7I27FCy2E7UGvol8YViRSk++EXKay/ooOCaM/mhgaS
+         yrOij6nkOjAk3UM4rAkzTw7qPW8uV0/X4qbCsLTQgP3vKY3c+SG82XV+T15ZXYkWr+bs
+         0Z2xAnLi7OmTrJwI6X6NOqkjVf1KuDm7LR7mT+wPD6t2asKrmupuBZmjUvgNMQiv6I92
+         Egnhvjuzl29oDd4y5Lc1UdLHoC7+r7nGtapd25egWgVOeD0PWmA/LPmq9RWz4AeYcyfE
+         5BtEhA7sW9xNlJ2dEyX2kr4U+DVi2qlpoCzhfci6Glq3sQsq/m2SJ34MmsC3oN8EzXJA
+         kKCQ==
+X-Gm-Message-State: AOJu0YzPgGpSA3Gi4Yoo54xSJ9JxdBa4ZOW901pI55/YJn7mvFgXqi//
+	74+ho3e3iHjHKSo/0b6tIA6FuHUcBrXtYAOrLrK2iwOSZNjheJ3J
+X-Google-Smtp-Source: AGHT+IGLJnPF79NwqQqwRXGgWQ/zUEECK2Qh/BDgCMJ5mHWScDQYsl5t7RNpOfZ7+OI03tArUNLnRA==
+X-Received: by 2002:a2e:be28:0:b0:2d0:5a6c:7095 with SMTP id z40-20020a2ebe28000000b002d05a6c7095mr1006031ljq.35.1706696521851;
+        Wed, 31 Jan 2024 02:22:01 -0800 (PST)
+Received: from localhost (fwdproxy-cln-002.fbsv.net. [2a03:2880:31ff:2::face:b00c])
+        by smtp.gmail.com with ESMTPSA id q11-20020a5085cb000000b0055d15d938e6sm5596917edh.11.2024.01.31.02.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 02:22:01 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH net v2 1/2] net: sysfs: Fix /sys/class/net/<iface> path
+Date: Wed, 31 Jan 2024 02:21:49 -0800
+Message-Id: <20240131102150.728960-2-leitao@debian.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240131102150.728960-1-leitao@debian.org>
+References: <20240131102150.728960-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,81 +62,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test task hung in blk_trace_remove
+The documentation is pointing to the wrong path for the interface.
+Documentation is pointing to /sys/class/<iface>, instead of
+/sys/class/net/<iface>.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+Fix it by adding the `net/` directory before the interface.
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d5d94510afd3..1af3c8aa78a3 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -311,7 +311,7 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
- 	local_irq_restore(flags);
- }
+Fixes: 1a02ef76acfa ("net: sysfs: add documentation entries for /sys/class/<iface>/queues")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ .../ABI/testing/sysfs-class-net-queues        | 22 +++++++++----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-net-queues b/Documentation/ABI/testing/sysfs-class-net-queues
+index 906ff3ca928a..5bff64d256c2 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-queues
++++ b/Documentation/ABI/testing/sysfs-class-net-queues
+@@ -1,4 +1,4 @@
+-What:		/sys/class/<iface>/queues/rx-<queue>/rps_cpus
++What:		/sys/class/net/<iface>/queues/rx-<queue>/rps_cpus
+ Date:		March 2010
+ KernelVersion:	2.6.35
+ Contact:	netdev@vger.kernel.org
+@@ -8,7 +8,7 @@ Description:
+ 		network device queue. Possible values depend on the number
+ 		of available CPU(s) in the system.
  
--static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
-+static void blk_trace_free_top(struct request_queue *q, struct blk_trace *bt)
- {
- 	relay_close(bt->rchan);
+-What:		/sys/class/<iface>/queues/rx-<queue>/rps_flow_cnt
++What:		/sys/class/net/<iface>/queues/rx-<queue>/rps_flow_cnt
+ Date:		April 2010
+ KernelVersion:	2.6.35
+ Contact:	netdev@vger.kernel.org
+@@ -16,7 +16,7 @@ Description:
+ 		Number of Receive Packet Steering flows being currently
+ 		processed by this particular network device receive queue.
  
-@@ -325,11 +325,21 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
- 	} else {
- 		debugfs_remove(bt->dir);
- 	}
-+}
-+
-+static void blk_trace_free_bt(struct blk_trace *bt)
-+{
- 	free_percpu(bt->sequence);
- 	free_percpu(bt->msg_data);
- 	kfree(bt);
- }
+-What:		/sys/class/<iface>/queues/tx-<queue>/tx_timeout
++What:		/sys/class/net/<iface>/queues/tx-<queue>/tx_timeout
+ Date:		November 2011
+ KernelVersion:	3.3
+ Contact:	netdev@vger.kernel.org
+@@ -24,7 +24,7 @@ Description:
+ 		Indicates the number of transmit timeout events seen by this
+ 		network interface transmit queue.
  
-+static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
-+{
-+	blk_trace_free_top(q, bt);
-+	blk_trace_free_bt(bt);
-+}
-+
- static void get_probe_ref(void)
- {
- 	mutex_lock(&blk_probe_mutex);
-@@ -377,12 +387,23 @@ static int blk_trace_stop(struct blk_trace *bt)
- 	return 0;
- }
+-What:		/sys/class/<iface>/queues/tx-<queue>/tx_maxrate
++What:		/sys/class/net/<iface>/queues/tx-<queue>/tx_maxrate
+ Date:		March 2015
+ KernelVersion:	4.1
+ Contact:	netdev@vger.kernel.org
+@@ -32,7 +32,7 @@ Description:
+ 		A Mbps max-rate set for the queue, a value of zero means disabled,
+ 		default is disabled.
  
-+static void blk_trace_rcu_free(struct rcu_head *rcu)
-+{
-+	struct blk_trace *bt;
-+
-+	bt = container_of(rcu, struct blk_trace, rcu);
-+	if (bt)
-+		blk_trace_free_bt(bt);
-+}
-+
- static void blk_trace_cleanup(struct request_queue *q, struct blk_trace *bt)
- {
- 	blk_trace_stop(bt);
--	synchronize_rcu();
--	blk_trace_free(q, bt);
-+	mutex_unlock(&q->debugfs_mutex);
-+	blk_trace_free_top(q, bt);
- 	put_probe_ref();
-+	call_rcu(&bt->rcu, blk_trace_rcu_free);
-+	mutex_lock(&q->debugfs_mutex);
- }
+-What:		/sys/class/<iface>/queues/tx-<queue>/xps_cpus
++What:		/sys/class/net/<iface>/queues/tx-<queue>/xps_cpus
+ Date:		November 2010
+ KernelVersion:	2.6.38
+ Contact:	netdev@vger.kernel.org
+@@ -42,7 +42,7 @@ Description:
+ 		network device transmit queue. Possible values depend on the
+ 		number of available CPU(s) in the system.
  
- static int __blk_trace_remove(struct request_queue *q)
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 122c62e561fc..5f927328b7e6 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -26,6 +26,7 @@ struct blk_trace {
- 	struct dentry *dir;
- 	struct list_head running_list;
- 	atomic_t dropped;
-+	struct rcu_head rcu;
- };
+-What:		/sys/class/<iface>/queues/tx-<queue>/xps_rxqs
++What:		/sys/class/net/<iface>/queues/tx-<queue>/xps_rxqs
+ Date:		June 2018
+ KernelVersion:	4.18.0
+ Contact:	netdev@vger.kernel.org
+@@ -53,7 +53,7 @@ Description:
+ 		number of available receive queue(s) in the network device.
+ 		Default is disabled.
  
- extern int blk_trace_ioctl(struct block_device *, unsigned, char __user *);
+-What:		/sys/class/<iface>/queues/tx-<queue>/byte_queue_limits/hold_time
++What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/hold_time
+ Date:		November 2011
+ KernelVersion:	3.3
+ Contact:	netdev@vger.kernel.org
+@@ -62,7 +62,7 @@ Description:
+ 		of this particular network device transmit queue.
+ 		Default value is 1000.
+ 
+-What:		/sys/class/<iface>/queues/tx-<queue>/byte_queue_limits/inflight
++What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/inflight
+ Date:		November 2011
+ KernelVersion:	3.3
+ Contact:	netdev@vger.kernel.org
+@@ -70,7 +70,7 @@ Description:
+ 		Indicates the number of bytes (objects) in flight on this
+ 		network device transmit queue.
+ 
+-What:		/sys/class/<iface>/queues/tx-<queue>/byte_queue_limits/limit
++What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/limit
+ Date:		November 2011
+ KernelVersion:	3.3
+ Contact:	netdev@vger.kernel.org
+@@ -79,7 +79,7 @@ Description:
+ 		on this network device transmit queue. This value is clamped
+ 		to be within the bounds defined by limit_max and limit_min.
+ 
+-What:		/sys/class/<iface>/queues/tx-<queue>/byte_queue_limits/limit_max
++What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/limit_max
+ Date:		November 2011
+ KernelVersion:	3.3
+ Contact:	netdev@vger.kernel.org
+@@ -88,7 +88,7 @@ Description:
+ 		queued on this network device transmit queue. See
+ 		include/linux/dynamic_queue_limits.h for the default value.
+ 
+-What:		/sys/class/<iface>/queues/tx-<queue>/byte_queue_limits/limit_min
++What:		/sys/class/net/<iface>/queues/tx-<queue>/byte_queue_limits/limit_min
+ Date:		November 2011
+ KernelVersion:	3.3
+ Contact:	netdev@vger.kernel.org
+-- 
+2.34.1
 
