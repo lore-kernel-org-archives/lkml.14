@@ -1,170 +1,80 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2073.outbound.protection.outlook.com [40.107.20.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7735DF63;
-	Wed, 31 Jan 2024 02:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706668801; cv=fail; b=b1WtiFfv3wU9yDMPQQm5rku3JnSsTDF4keoiBCuv85PjyPGaHvx49cXfB7VkH8eOqr23BY6hkabYyv/A/d4x1F58xsJdEPKxNQs+DoXI/Dwy/v2b27JyTZljC36hjt+yhq6EhmHHfGqYeSavw5bwJ06POqE9cYRh4Hj57CONjLY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706668801; c=relaxed/simple;
-	bh=G5ElJpWhT3pGReeJcp0jbPVl6KbZZVlPy1UNIYo6Pek=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Npjmoo355Vf6HYaCuRl7GRjv0orFCnMAiWhMxyGVbqwMO/onVYbcv4SvjNAGsejeHI2LUT2ieSVOFPUSw190SN76xAshuNpqleSFdI+dwAMzmZKcE78dmMOuT9/cLWSnVqA0gV8LHWdmXcFZiBjTcopbPPW75dTcu3UhLLijDHo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=WOySVxoM; arc=fail smtp.client-ip=40.107.20.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC52FE545;
+	Wed, 31 Jan 2024 02:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706668827; cv=none; b=UBgdt7mxlWMloboedqBbFQTPkHhEzRh3F/3GvQl3I6JuGcNqH2XlqirTh94NPFpKADKk9GA4st8L5nBvuA2atIyenCdmmvFKllMzK9uZ+i/r/WaEZFy3TT9JOLendNRrPvD/c/ivdFehlQ1VRj8NNuhAiil1MIWfiQLZtXP+Aa0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706668827; c=relaxed/simple;
+	bh=ri+xtdqHDdAedu6sRg/n0UlatJBbNJKunWM840Atne4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=kW2M7u1l7SYNPaPvfT6/8M6cFZCQGP9b+PTY1Sfr+uS5yhuTjwt0b1H1jy3XwzWoCRtlUfIX9cYBGJ7sUudUvNeHQuywHrM6Y306cDA3EGkfRVq0qaDHbKRdxFBR/BwGhyNq0x4Fa3i31GLVgCzSeu/wtNh0Yovi+PPSJM40/gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6iY/pv9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WOySVxoM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F7ecObvEH3GHApKPh25F8Iqf/qAOqPGL4Y6IRKU1a+l7NmHDij7kUmt+3IQ85ROS149BxDr2cl6rtBYCpD7Jk2OPtbkxzT/OwxDvgeB9qmE7ICzJyVGMR3qD2EEbr8XYiQUkQy65n2BSVCrDwHmUZXOsxdGB9v3D9KVvAjpcEBOYz/II60N43GZ0ajMtKalpb6UmzwdpzwQxnXbnn2dsKW4ymuGlO7upyOt5erNT/2otTyTYCbT1nnO+hUl4p8S7IBom7iowGPL6wuhZa85P4OwFEdpEla4MApoewAgX2Djo9mKnQg0T+GdJm5/AslnPXC17bIxCxyY/YVWMhhF6wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vUnnXqxbCRxxx8DRUxCr8ZqF09IqFIpC2RZMYl+rsiA=;
- b=c8hoijOI/N+S+NWylaLsMx18JTONsyO2OWzi0EIRB7NJOVw5eEFKoZxMVfBkteIPu1+ixcI61SBfwWqs2s/qzsTTeosh0B9mQLLTDoMU/pesLAgnXil93XZdHH0Ara3q6/9nUYkQe4/2uSDL13FqMkaAL2evq7f22PRRRkkSByG+pQ7FgqHUOzQjINQ0z7hFAHJFS6l0p7JViU1oTRgmobKq7LoCums3JOdJuOnWujwlirtU9atOMIMZSiIBskEmJoTbCuOtClSRBnaxiMuYsLvgPgpcTJmItXd+lEqg56S7DPnSsGNs5iCciUffK9MeVCZpjXsMipEbCEdxu4c/8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vUnnXqxbCRxxx8DRUxCr8ZqF09IqFIpC2RZMYl+rsiA=;
- b=WOySVxoMmESw4+18AKGDT1+UmWZ+p7MWVuGgisp/QtvFfFmdJzEFll1Rc6GoTKRPnNDK5Z7oc+/RJ2w+K81VhvOuLzKDiW/n/1CxtmNiuO80qPZRoQ7oCreGK4uQN8SOkSdKx6t0fqBJxAMTqq4p+0wDLhnU2iim2UAGER/B2nQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30)
- by PAXPR04MB8527.eurprd04.prod.outlook.com (2603:10a6:102:20f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
- 2024 02:39:57 +0000
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::f702:c85a:d3f2:ffa1]) by VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::f702:c85a:d3f2:ffa1%4]) with mapi id 15.20.7202.035; Wed, 31 Jan 2024
- 02:39:57 +0000
-From: carlos.song@nxp.com
-To: broonie@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	linux-imx@nxp.com,
-	benjamin@bigler.one,
-	stefanmoring@gmail.com
-Cc: linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: imx: fix the burst length at DMA mode and CPU mode
-Date: Wed, 31 Jan 2024 10:46:23 +0800
-Message-Id: <20240131024623.329240-1-carlos.song@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0187.apcprd04.prod.outlook.com
- (2603:1096:4:14::25) To VI1PR04MB5005.eurprd04.prod.outlook.com
- (2603:10a6:803:57::30)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6iY/pv9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E99AC43390;
+	Wed, 31 Jan 2024 02:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706668826;
+	bh=ri+xtdqHDdAedu6sRg/n0UlatJBbNJKunWM840Atne4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=g6iY/pv9E9iheFF3QaNJfoym3PlztBxYNWx1crzr5v6vk32yc9KKET2axhPJYpWOP
+	 4h4MYp0FlTHtGsgmkpTbxIYRnoVY+5gJ7kr9gdJoxke1MJdqlw1Roy5ev4ZWCriV3N
+	 P3+okxs7wbEmjbXIalOYHwCjkp3UER+pkll1gkfAsdSW2a0hgxjghlW7nyOzFQjhc2
+	 s/jHOmVaJqFOGdhlTFmxkhsJYHzmMKAZa8/p56Kke1VETRj7C0si6tUNniarNnVrUD
+	 W5p7mQaN96um2NhapXfN0Ki/9RABZuYylgPaOOExfgwMYmGA2NTX5qZN5h8mX6Lu+u
+	 BK4UsBS5WJT6w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 62EC6E3237E;
+	Wed, 31 Jan 2024 02:40:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5005:EE_|PAXPR04MB8527:EE_
-X-MS-Office365-Filtering-Correlation-Id: b695d28a-0f24-4811-b527-08dc2205e990
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	X6U+q3g6q3XfcWP/FuDIRJerJ0xw0mRY1sDAfghtfEY01Q+Gq+jgDnB205T9Z+OrlNecfVJ7C8tRLsT+9zwwu/CQg9mzmSSv3GCyn9x6yYEo+RZq2cyXbLik6WSd4j6BrH8oOw07mckJ68RG7Id1PoZf/cKfcgV7WDg8fK9U1lHEQVT/yS38HDsskD3gtDFkhILtYAHKdWSCxhZhQAiCB9LkD6Ue/7E9BnqANIxe1Qhk08w1CEEZOiTPMaSG7+aLam5koxr8SHfv5w5URrqPgaZaXhYFQiK8JCGvJ9lPDnfO97gw99Ni0K6QEzpVBipnco2sJy60VnGzILtRPTPyKxpnmfDCe8DMRohjH/BC9BJbgL3BDp7vJku7AYnAFiJRMKtKp/TzVvBWIc50+wWzJLlBiqWmz9GS9ns6wNQnxjchN69VrHWkNdN8YFDQMy14tmPEnAiKo9f3ETKv7QcL0u/vbedKvQPEJxm6bbIQIkC9xZ+8hcDDjw3Y4cqnh/0d2cWhENzyR5abndnH2InykbyoOEjsBooZ/nKc1Y3AaV8jgjp6rZCwB3YMxdytc708ZB9ULHhNL9jFKN/tcBAwPtY8m/Rev8BaeGfJyo5FLpSLzQRzr3g8mpMGN/+hzmEK
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5005.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(346002)(39860400002)(136003)(366004)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(8936002)(6486002)(4326008)(5660300002)(316002)(86362001)(8676002)(2906002)(66476007)(66946007)(66556008)(38350700005)(478600001)(36756003)(52116002)(38100700002)(6666004)(6512007)(6506007)(9686003)(41300700001)(83380400001)(26005)(2616005)(1076003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zai85eAztl8/OMN9Rpi/SdudsHK4eIgmILxKJM6RisQhQfyUCtRe5/VYhrAZ?=
- =?us-ascii?Q?dj/PVvNHkTkeKOaLeLqRAiP2gQCzOPUS3RFhe5d+KXfGiJ+s8FC6iWJf61TQ?=
- =?us-ascii?Q?cDbVFTSXjXNVvfTDaEsnBn7dWrDwcQcPu4teAdSygnm4vWYYmDtHjfa3CgKn?=
- =?us-ascii?Q?piZyGcA/H07mTESSObUSPIcS+zYF6Bx6pfr5XvcaRbboNJtOLGmQEloq2h0d?=
- =?us-ascii?Q?iIpPr8GLSAkeBiRuKfj9NbNG1yw6aqh0/sy/ydFGMZuwHVLGwzhDod8U0H9z?=
- =?us-ascii?Q?9O9Ig6KBvCnVr7LYkehfBGaDvt96GEGS8vJ+qDk4hPdCV683lv7N+Odl3630?=
- =?us-ascii?Q?v0VYaSZCq01fUwraEplUuH1J6sUeLmTBPpdB8FNy6EJN6VFmaU/2sjJdarCO?=
- =?us-ascii?Q?UL0S//YIphtXnJD3TzQmxaF4y8VGtSwxRcsCmlR6ZrZE+FaSERY6gtSIgiUk?=
- =?us-ascii?Q?r6sBitiKbZknWxwQqDnar8VfQ5e4T7Fkyu1vbr0lh9s9cgLKZbhHWaMV0Nsw?=
- =?us-ascii?Q?A/d0e4M+q4L9r7Ub4v5sDn5mBfgI+7CSFd0oc9kw30X/8k0Vo64lV6p6YkBD?=
- =?us-ascii?Q?TUuwfWiqpBAoCMNfr0DWSuzW1LTy+1Tg5uEPcO2hHc+KLm+gP6xcFGPsWlb3?=
- =?us-ascii?Q?fssASO8j9SISZ22Jl+pLHFL8g7RGrKJkZnYuWngFfNa2FK7sUGBcljfdFuDF?=
- =?us-ascii?Q?+VpDxhumcvQX3Wc9Cv0K1GKTiQ8+3OI0BBnOupO9ULcm5uITI4VNQpPkxXIF?=
- =?us-ascii?Q?/mwPdy/yQEnTmeA7gAqvcs2t3/Xj+wGEqQbuW0iFV6LmaXbIC1xz0lWjlA2j?=
- =?us-ascii?Q?PJlcET5Xzg2laJME2fSdRu/X9IVK2YGuyl2/nNmRogdrQJNh2pJWFH14EmnA?=
- =?us-ascii?Q?HRrLMLz3BJlQlWp3flZ7kwiiQ7nBCWu5NHkItczVYpbo/K4Tt3FwGVWY1wXa?=
- =?us-ascii?Q?LerJ12TIfCUjdkOBGDQYYvlRaESMekCUDYlumSS4HS5UlgEjxUFXJhGaYreo?=
- =?us-ascii?Q?UtDcHPILOJSYNK34NpZMv9kTFTKMeqY7gBfFwg8TQAg5N/MwTzrl6oEog7YO?=
- =?us-ascii?Q?b5wfBkl51C4anrZ6ObFxL1AP8G7coW1lB0NGWwCsINDlbX8hWV42bga38GAk?=
- =?us-ascii?Q?jqiqlQ9DxUdhpd0qy9AvpYkan4ZY8d0XDed8BLcFrAkZzRwnYHQ6gYuSR8Xy?=
- =?us-ascii?Q?LlDlx5nxciGw2ctxxZS5/vF8H2YkPMp8GyFew7yN+QrAjUipEqLhSDx0qJEl?=
- =?us-ascii?Q?xBIedn9p1i9uLLJ0YxQijLcokgkMXcpgu8J5f/XMG+bB8b50Fncq/3lTWJZs?=
- =?us-ascii?Q?XhAvFFabod7M+dwfZ+kamEi3YVB94g3DBqrCTr81leOv3eKt+Jvb5/DPczLY?=
- =?us-ascii?Q?yXrib8WOBJCeT2mwAeH0QQXJKwedmfKPcU5jz5Q4KaV1aAZMx1KjBpittSvH?=
- =?us-ascii?Q?PSOwztqppbTMNGAdOd2iRpy2Eimz1CyL7nvlMI/ZzRQc7zUobZ0zu993gb1o?=
- =?us-ascii?Q?7RWyY1DpBD89mYpxm/3GMede11wCqhowewH0Xcrw+UJvJKnDBOo1RQGQ/mk3?=
- =?us-ascii?Q?tWQAjApd51Q1f9OUHNZkHkfdX+GCCQ2NP3DOSU0x?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b695d28a-0f24-4811-b527-08dc2205e990
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5005.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 02:39:57.0786
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OrcCP34wVwrtNK+7m83VNxTZgcSVL3sUADGnEbUPZ5+qclf+rHLh31CHutF9U+Pca6Oa8JFUHLA/Xv5M5CP6rQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8527
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] bridge: mcast: fix disabled snooping after long uptime
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170666882640.24091.16393026544437992064.git-patchwork-notify@kernel.org>
+Date: Wed, 31 Jan 2024 02:40:26 +0000
+References: <20240127175033.9640-1-linus.luessing@c0d3.blue>
+In-Reply-To: <20240127175033.9640-1-linus.luessing@c0d3.blue>
+To: =?utf-8?q?Linus_L=C3=BCssing_=3Clinus=2Eluessing=40c0d3=2Eblue=3E?=@ci.codeaurora.org
+Cc: netdev@vger.kernel.org, bridge@lists.linux.dev,
+ b.a.t.m.a.n@lists.open-mesh.org, linux-kernel@vger.kernel.org,
+ roopa@nvidia.com, razor@blackwall.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
 
-From: Carlos Song <carlos.song@nxp.com>
+Hello:
 
-For DMA mode, the bus width of the DMA is equal to the size of data
-word, so burst length should be configured as bits per word.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-For CPU mode, because of the spi transfer len is in byte, so burst
-length should be configured as bits per byte * spi_imx->count.
+On Sat, 27 Jan 2024 18:50:32 +0100 you wrote:
+> The original idea of the delay_time check was to not apply multicast
+> snooping too early when an MLD querier appears. And to instead wait at
+> least for MLD reports to arrive before switching from flooding to group
+> based, MLD snooped forwarding, to avoid temporary packet loss.
+> 
+> However in a batman-adv mesh network it was noticed that after 248 days of
+> uptime 32bit MIPS based devices would start to signal that they had
+> stopped applying multicast snooping due to missing queriers - even though
+> they were the elected querier and still sending MLD queries themselves.
+> 
+> [...]
 
-Signed-off-by: Carlos Song <carlos.song@nxp.com>
-Reviewed-by: Clark Wang <xiaoning.wang@nxp.com>
-Fixes: e9b220aeacf1 ("spi: spi-imx: correctly configure burst length when using dma")
-Fixes: 5f66db08cbd3 ("spi: imx: Take in account bits per word instead of assuming 8-bits")
----
- drivers/spi/spi-imx.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Here is the summary with links:
+  - [net,v2] bridge: mcast: fix disabled snooping after long uptime
+    https://git.kernel.org/netdev/net/c/f5c3eb4b7251
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 546cdce525fc..b4ade2d53fef 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -54,7 +54,7 @@ MODULE_PARM_DESC(polling_limit_us,
- #define MX51_ECSPI_CTRL_MAX_BURST	512
- /* The maximum bytes that IMX53_ECSPI can transfer in target mode.*/
- #define MX53_MAX_TRANSFER_BYTES		512
--
-+#define BITS_PER_BYTE	8
- enum spi_imx_devtype {
- 	IMX1_CSPI,
- 	IMX21_CSPI,
-@@ -660,15 +660,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
- 			<< MX51_ECSPI_CTRL_BL_OFFSET;
- 	else {
- 		if (spi_imx->usedma) {
--			ctrl |= (spi_imx->bits_per_word *
--				spi_imx_bytes_per_word(spi_imx->bits_per_word) - 1)
-+			ctrl |= (spi_imx->bits_per_word - 1)
- 				<< MX51_ECSPI_CTRL_BL_OFFSET;
- 		} else {
- 			if (spi_imx->count >= MX51_ECSPI_CTRL_MAX_BURST)
--				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST - 1)
-+				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST * BITS_PER_BYTE - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 			else
--				ctrl |= (spi_imx->count * spi_imx->bits_per_word - 1)
-+				ctrl |= (spi_imx->count * BITS_PER_BYTE - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 		}
- 	}
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
