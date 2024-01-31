@@ -1,87 +1,75 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A879512DD8C
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31E9129A97;
+	Wed, 31 Jan 2024 17:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706722783; cv=none; b=WOqrjZ4UDMHiMQ70EfrkpnsK3Af/sQxfVy93JozAufr+HeduHqNx+k1QVtgYmFARPZ17Ztjm57frXCT/zI4SmHQprHNXbUBpTXupk7eTgFkFUpLiE7RgrNjR2GaIunuW31O8dy1XBoXZGgRPLT8hx/71+VgyLL2y/3RKlQ6fJho=
+	t=1706722825; cv=none; b=SM+JH/b4HmeNaHLn4eely1rG96F+Elj8O8QjftTW0y519jQK2qLEfU47F7c+CMKW0z8cEnHIZlwfFJqD3FToWHeUjcEBDibUzgHGUphKjt0VqNXjO+FmMEL0YSyQkbdIwK/s+vQWpuljvCTOmrPq598yiUbr53ctKJxU2X3CRJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706722783; c=relaxed/simple;
-	bh=Wmr6FwUgKE8e2RtVUlgvM+N2G0P0c9ELvtsRNvj36p8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ff8cA7WQqkXlxm+BNl9o0aKHb2MwtdJVVzbB5JHwlxDnw8GIUAp2qKGzwsRXZN8AiJ/p67EBhxqeEerDgA1oANu08jnYAcL6iCNJ67qlDqieDfDqx1cQiQW0wNR1G4G4UCM/xXby5OwDK7R+VV0uRQ9wa1lPbedljdd7IeUNoPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jlJJHXig; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jlJJHXig"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6040d33380cso71487b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:39:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706722780; x=1707327580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wmr6FwUgKE8e2RtVUlgvM+N2G0P0c9ELvtsRNvj36p8=;
-        b=jlJJHXigVIcPFK7gTRT8HMuvAeP55PvCoSx0RKQLr8BAFVxhwtTFBl3EsXDXJFzasl
-         yV1ZCc+WU2XU+YJrKnnvJmFaoXw0q65WAaVeCFyo8uORpX/98UveRSRV4FkP6UY9+wq8
-         7C0eOLc+eMI6v89o01764spa6Vm8QOs9SkTgyT9T+EW1WelhtdgJdaR3S1RolpxQTYdO
-         5i2d03qdzqdRXngsyRrLyKo3hZ7HWhtwcy0dlJO2KQYOiZ3ma3glMik1MFPZIJ6ssHDP
-         Sr/1mv98H9Za0FCEWomYBb25tZXBf1KA87KQaqrBOgb3oRtuubxdSg6WUTTB8LsP5YBU
-         rSyQ==
+	s=arc-20240116; t=1706722825; c=relaxed/simple;
+	bh=WVQUYt7nObgji6RFwgn4j76fQwqbn8mFnobCYg5rFBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Wfb/YLA+iUJ/iH6SNGlzlEhYBbXgA28x/tARCoqvxa7itLXN8SSFbuxP/hiTrM5Y+kBcwQjUywQE2E+LD8841+OqjyKpP60bBdcygrxmPxZjq9ybt4x5oOx5/BT1dsWIDQU0DPFsJdgnqGQExcW5QDqh16b05J/oDRnqUt3iHkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d9b37f4804so878622b3a.1;
+        Wed, 31 Jan 2024 09:40:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706722780; x=1707327580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wmr6FwUgKE8e2RtVUlgvM+N2G0P0c9ELvtsRNvj36p8=;
-        b=OUBMzjPN55WwyFgXRe3gayTm/qg5rS/3m0bf/bxUgubXEsYdwovAegyLMVqyMXSonS
-         j3x2E49TOumULn5K+0+bQswJLi/36mRmLnLsRU+uBo3SfuAlkxb4v3rUgnHiZOzn9jED
-         w7pCWzcI7IHDZVJ/1R65qdmg0CjPQrlQpzl7fPZRIy7s812Rivto3ixfF1ME3O3GwoHj
-         ggjXe1FJP0gJjYztat2khLcibsfYEludTT1aWrjqVveh7BMG8X4VB8ggzEQsUjXUP5iq
-         kkNaZKg84+QCOBNxBHPwPX3Y5SHTVv4P+S0rEvN0JdMg3RHcucjwCQo33sBFc9t3b2eF
-         gE1Q==
-X-Gm-Message-State: AOJu0YyWKLq+RNP71guSh3YJaFfXMPUJZ3XiWIThZTYOhcc5Nkp6GQA3
-	wIBTCOIG7jvsq0aMGFHglYkOV137gj51ij4PsPiltsrw5fPHKJ1CiKQoT+sUocOC6HQELmV4ZkU
-	auanXNzZRSa4NYYzhNb+JeIhy9AAEzVermldO0Q==
-X-Google-Smtp-Source: AGHT+IHe6uZTnZBFqy29JxxD8jZ18K9pm4CFaqrzg9KcFhM7UsJcIsDHdUFfaVm5bEAJs/0FTd3gLJSWuL2GLPeEcmc=
-X-Received: by 2002:a81:4318:0:b0:5f7:992:b018 with SMTP id
- q24-20020a814318000000b005f70992b018mr2190237ywa.5.1706722780568; Wed, 31 Jan
- 2024 09:39:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706722823; x=1707327623;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WVQUYt7nObgji6RFwgn4j76fQwqbn8mFnobCYg5rFBM=;
+        b=quolsnTQu8P2p9+PcIT8G9W72GbvbnR/tlhazx3PcWIP4ALFk+WjlWEPEJYxFGdA5/
+         44Apj9pc8XqF7Y9BNaI77qL0XF67kvii6rg8oytf77PimSTgSv6wr81IkGHQa716YtpT
+         mkGm/6+TennbY4ptD8CJi8pUI72LCKlJgFNMtyXL6xKaI327evVWTAkm4tc0UPlyTBlM
+         lX0O9w4O0CUGVXto9aJ+c/S9V3LJ+muaXc5Qy+iESTdLGMVsvV5ZurWv5qGBtZ5sMPyD
+         MIU1DWZugXuh5LopK/XSUBiZnfsk0yw/Mj+dqju1vmOZKykZX3PjVre7XuKiPfkl+YdD
+         jRTQ==
+X-Gm-Message-State: AOJu0YxDKGguB1mIOqR2fn0DuckXghCzCHfRLVMFLeT8V5TViLoQ1DzH
+	X31D+l9Dja9pBr5mCYg+JXIb+vdfLnEdxeWXaSKqFWuwXvx0Vmp3
+X-Google-Smtp-Source: AGHT+IG3sN7FENJhtQosKxqrU/9yRjZ4zCCxV5eRAx8N5SW8oU49klZibVnon9HTej0Alj50otyPbA==
+X-Received: by 2002:aa7:92c8:0:b0:6db:b1f3:fb66 with SMTP id k8-20020aa792c8000000b006dbb1f3fb66mr2494676pfa.8.1706722822627;
+        Wed, 31 Jan 2024 09:40:22 -0800 (PST)
+Received: from ?IPV6:2620:0:1000:8411:1d95:ca94:1cbe:1409? ([2620:0:1000:8411:1d95:ca94:1cbe:1409])
+        by smtp.gmail.com with ESMTPSA id y12-20020aa7854c000000b006dbd3aec001sm10508915pfn.146.2024.01.31.09.40.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 09:40:21 -0800 (PST)
+Message-ID: <2e1ce85f-9397-4d67-a847-eba8b8c05594@acm.org>
+Date: Wed, 31 Jan 2024 09:40:19 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-4-brgl@bgdev.pl>
-In-Reply-To: <20240130124828.14678-4-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 18:39:29 +0100
-Message-ID: <CACRpkdY_9=2Uqo9=ZEDrn+RFGdPkq73ZRYLVCbh6BLMzU9LZ_A@mail.gmail.com>
-Subject: Re: [PATCH 03/22] gpio: remove unused logging helpers
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] scsi: ufs: core: Remove the ufshcd_release in
+ ufshcd_err_handling_prepare
+Content-Language: en-US
+To: hoyoung seo <hy50.seo@samsung.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+ jejb@linux.ibm.com, martin.petersen@oracle.com, beanhuo@micron.com,
+ kwangwon.min@samsung.com, kwmad.kim@samsung.com, sh425.lee@samsung.com,
+ sc.suh@samsung.com, quic_nguyenb@quicinc.com, cpgs@samsung.com,
+ grant.jung@samsung.com, junwoo80.lee@samsung.com
+References: <CGME20240122083204epcas2p26a1bca522e201972ca072e0b24d23a52@epcas2p2.samsung.com>
+ <20240122083324.11797-1-hy50.seo@samsung.com>
+ <06e0ae57-f567-4b90-ad68-4ae73909c29e@acm.org>
+ <017501da4da5$405e5ec0$c11b1c40$@samsung.com>
+ <92463403-ea32-4545-a466-21243cd454e2@acm.org>
+ <000001da541e$bb358590$31a090b0$@samsung.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <000001da541e$bb358590$31a090b0$@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On 1/31/24 00:23, hoyoung seo wrote:
+> I do not understand. why you said my patch is wrong.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> The general rule of the kernel is to not provide symbols that have no
-> users upstream. Let's remove logging helpers that are not used anywhere.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+My apologies - I misread the patch.
 
-Seems unrelated to the rest of the patches but OK.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Bart.
 
-Yours,
-Linus Walleij
