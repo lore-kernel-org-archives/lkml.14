@@ -1,102 +1,150 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C484C12DD99
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279F112BF0E
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706721087; cv=none; b=l3WsmIx3lYGkFSYd/uaeDe103gh1+F+pG0flcTEjW8oCkhzlBGdWEJ2fmbzZu44yjT2noW0ynISnc/Z7rcGaISr5YeoDEDlJoODHI1S7SGHjpYZyS0sXeLX2pBwCSjAAlKVSAE49XhQELz12vXfYNnMelbSAd/PwGyM60WweYtA=
+	t=1706721232; cv=none; b=lVfFTlvs/0tyQOrSuJ+WFkl8rV3HNFG2Vu4Bid0ua2QJkmoRbOPTCAAYXXTlph+0AO3qkSK9qBelPaEH4v/DV4H1eqCb4NSpaVajJdtH6sr3fvyAFeOab0kuBDsIRSZ+2F0rZNzjrQEPgttXsVmjlVv769zYC5QomP5apHt6VIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706721087; c=relaxed/simple;
-	bh=tozDlWWoHJlBWRSsavVjeW3OOgiv9gnUfCqGWWzjZro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MYFui5Ax4MxDJnOq+2Z7yJnuTpH/QET7XF/EOy9tSnqUNj3Bi02nNU6BJRZgohB4p2Xhbvk9b8zFsLyP/XimAHwOjlo0SyLmRQRFprLiKPG1UeF9vykF9XoTz7yNSRKajL/r0xe9YRyxsaxopqkO0jGuBZSOYRX5bahb+S7caCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=giYx9HtT; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1706721232; c=relaxed/simple;
+	bh=nwZYaGiDC0dt4XMiU2uVseTseF4erfN8KXvD37w3q2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LzmW++tBuFJw1q5K/0TMCPsKVQG+OKTzYY0cQMdhMZw3udZWihwSI8phNrNpxOrMwvk5zx7Nx5CKxk8E9hpNa5oIfHPoLgjLTY7wo4/60c0ZMsc4kW35K4e2LvAfw+Dmaqqu4+fYKCLhMcdBslyGNTEE4u+2wuo/V+3M7pQH5ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C/sNkXvR; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="giYx9HtT"
-Received: from cwcc.thunk.org (pool-173-48-116-252.bstnma.fios.verizon.net [173.48.116.252])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 40VHAgLW030230
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 12:10:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1706721048; bh=c1wII69E6ZxWvvPsnKwrgulp70ifnQl9OU32+K8hAVk=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=giYx9HtT83tHpzmgsba5unHIRE0RvVcYbR2/jWs5DgCz3JJ4tl/Q+9vjp3vcO0rcH
-	 fVqZvhx0TzkguaoAhZt7Oi4EDw19LBSYEgrCKrRXSMxj+1C3qnjdqYAJmjh7ek83P4
-	 ctMvyfUM8hS32E5UK1jxOowr3Io9+jH9qtVj3142mDoUtapfv2wVuFaz2a4w4qHuJE
-	 SA+NRtIiLDaYiCQ8bHL2krvVJcdWWaIezNb9xpshoS12IRUbdv0tS2EusU9wDbBS4x
-	 noS/DRV0pkKaEvgxv4BarmWz8+0te1TF2nSQ2g/dHN3h7bBMJI6N6iOzhS1Vd1nlou
-	 iIQDb4rG3W4bQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 0C01215C0667; Wed, 31 Jan 2024 12:10:42 -0500 (EST)
-Date: Wed, 31 Jan 2024 12:10:42 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Nakajima, Jun" <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
-Message-ID: <20240131171042.GA2371371@mit.edu>
-References: <CAHmME9pOt=uEmuBzBpgUHw9DqAD2FZTZ3v53AOZbQ3Cd2p97xQ@mail.gmail.com>
- <DM8PR11MB5750E38A8B2BCE66AF7F9812E77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9qMO7=RDR60bKJvpDTRokcKed_i0+7BbFD53_7o2OJ6-g@mail.gmail.com>
- <CAHmME9rum4uwSNFd_GkD9p_+vN4DBxA=feZX7k9RvugFZsZNJg@mail.gmail.com>
- <DM8PR11MB5750797D0B9B8EB32740F55DE77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9oC=GE-7QS2m9FA5cs_ss+tQgB9Pj3tKnTtMMFpQmUshg@mail.gmail.com>
- <DM8PR11MB5750B861F7A105886AA5FCE4E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
- <20240131140756.GB2356784@mit.edu>
- <Zbpc8tppxuKr-hnN@zx2c4.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C/sNkXvR"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-68c4300518bso21356d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:13:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706721230; x=1707326030; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8IJlALPOP0m94SbFgDUPXzZQCU+Ot6RdR1/m5iPTGnU=;
+        b=C/sNkXvR9LbaDAKrqweFi/Np6TF+HAKYCw/PC/UknGa7yedzHAm67GtNU/wzs1gZMz
+         xtDj3dIgkpr5G7GvgP3wIu2lPCsYbfQmc09vIwcy7PCz+v1tIKHoyj4t44UqF9Taz9iU
+         jET8s03VV3czPn/pWm2T5TLoGl3aqAujbbde7tDdlzBGEiFPwOLRZU13NDcszPj9stn0
+         F/OjXEhgD78vyq860zepwMlX0kk+a7Re7qWCwb42G1oWlRYUP9KHGftMTuxo3JrQqrbG
+         j4NYGKpnM/FAWXkXxpq4+PxR024MqZyBQF2ypeEtc1isL9z/aJP0QVK1CEjIgjCDJcvQ
+         2Eug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706721230; x=1707326030;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8IJlALPOP0m94SbFgDUPXzZQCU+Ot6RdR1/m5iPTGnU=;
+        b=D24fhCdJz2aObn3UtSCOb9/ZQbTusj3wSIcdde+321/iEuHUHK8LwYxWzNh1DckqSM
+         /0L+S0cwenNFzPy74ESlLhnaHi0ynuAW8l2y18kXW5TWoYVTp4CH6QJVSuiYhZ6dRTZt
+         W0sJuU38MeV/RZh5FkIHWPCkSKHCMVu8QRJBVAANfrgTJqgcL5aupGIO7782UDpSKFvb
+         irrtCwr8xLecGcCVHbjr5px+4bBMHZg8MjT00Eh8S1Snn4sz+r9bcvX7c2YTSFdBog3s
+         fxRCA5LOd8Rik5EN6MnLDCakkdadUwaQPTlU7Q1SGLkpTrRkYmAgK3p5RBpnoaCAQsyk
+         tWYw==
+X-Gm-Message-State: AOJu0YyvoaSslZJfs9XxHQkqaavne4N3rz2uU9BSQhDlNeNxd+9vhrHZ
+	Vm1xsJ60wydkCYM/XVVaoDBDaO+tsNVkqwkISXp/I4bd+itbCy0Xo5uFQoqxEH4ODd+fnGYybtv
+	WuhJmttaE9tStAxibIWYP4n7r85uN8v5uXrWs
+X-Google-Smtp-Source: AGHT+IGeL+lnDarNegE01H/3A8DwfzXHmFLBjWvwqbfeIkhfoVvb3X9wjzl1nkLPqvdpUhEabGteBvw88WkwVVRQcpU=
+X-Received: by 2002:a05:6214:f6a:b0:68c:45d2:354a with SMTP id
+ iy10-20020a0562140f6a00b0068c45d2354amr2529358qvb.18.1706721229715; Wed, 31
+ Jan 2024 09:13:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zbpc8tppxuKr-hnN@zx2c4.com>
+References: <20240123221220.3911317-1-mizhang@google.com> <ZbpqoU49k44xR4zB@google.com>
+ <368248d0-d379-23c8-dedf-af7e1e8d23c7@oracle.com>
+In-Reply-To: <368248d0-d379-23c8-dedf-af7e1e8d23c7@oracle.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Wed, 31 Jan 2024 09:13:13 -0800
+Message-ID: <CAL715WJDesggP0S0M0SWX2QaFfjBNdqD1j1tDU10Qxk6h7O0pA@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86/pmu: Fix type length error when reading pmu->fixed_ctr_ctrl
+To: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 03:45:06PM +0100, Jason A. Donenfeld wrote:
-> On Wed, Jan 31, 2024 at 09:07:56AM -0500, Theodore Ts'o wrote:
-> > What about simply treating boot-time initialization of the /dev/random
-> > state as special.  That is, on x86, if the hardware promises that
-> > RDSEED or RDRAND is available, we use them to initialization our RNG
-> > state at boot.  On bare metal, there can't be anyone else trying to
-> > exhaust the on-chip RNG's entropy supply, so if RDSEED or RDRAND
-> > aren't working available --- panic, since the hardware is clearly
-> > busted.
-> 
-> This is the first thing I suggested here: https://lore.kernel.org/all/CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com/
-> 
-> But Elena found this dissatisfying because we still can't guarantee new
-> material later.
+On Wed, Jan 31, 2024 at 9:02=E2=80=AFAM Dongli Zhang <dongli.zhang@oracle.c=
+om> wrote:
+>
+>
+>
+> On 1/31/24 07:43, Sean Christopherson wrote:
+> > On Tue, Jan 23, 2024, Mingwei Zhang wrote:
+> >> Fix type length error since pmu->fixed_ctr_ctrl is u64 but the local
+> >> variable old_fixed_ctr_ctrl is u8. Truncating the value leads to
+> >> information loss at runtime. This leads to incorrect value in old_ctrl
+> >> retrieved from each field of old_fixed_ctr_ctrl and causes incorrect c=
+ode
+> >> execution within the for loop of reprogram_fixed_counters(). So fix th=
+is
+> >> type to u64.
+> >
+> > But what is the actual fallout from this?  Stating that the bug causes =
+incorrect
+> > code execution isn't helpful, that's akin to saying water is wet.
+> >
+> > If I'm following the code correctly, the only fallout is that KVM may u=
+nnecessarily
+> > mark a fixed PMC as in use and reprogram it.  I.e. the bug can result i=
+n (minor?)
+> > performance issues, but it won't cause functional problems.
+>
+> My this issue cause "Uhhuh. NMI received for unknown reason XX on CPU XX.=
+" at VM side?
+>
+> The PMC is still active while the VM side handle_pmi_common() is not goin=
+g to handle it?
 
-Right, but this is good enough that modulo in-kernel RNG state
-compromise, or the ability to attack the underlying cryptographic
-primitives (in which case we have much bigger vulnerabilities than
-this largely theoretical one), even if we don't have new material
-later, the in-kernel RNG for the CC VM should be sufficiently
-trustworthy for government work.
+hmm, so the new value is '0', but the old value is non-zero, KVM is
+supposed to zero out (stop) the fix counter), but it skips it. This
+leads to the counter continuously increasing until it overflows, but
+guest PMU thought it had disabled it. That's why you got this warning?
 
-> Yea, maybe bubbling the RDRAND DoS up to another DoS in the CoCo case is
-> a good tradeoff that will produce the right pitchforkers without
-> breaking anything real.
+I did not see this warning on my side, but it seems possible.
 
-<Evil Grin>
-
-					- Ted
+Thanks.
+-Mingwei
+>
+> Thank you very much!
+>
+> Dongli Zhang
+>
+> >
+> > Understanding what actually goes wrong matters, because I'm trying to d=
+etermine
+> > whether or not this needs to be fixed in 6.8 and backported to stable t=
+rees.  If
+> > the bug is relatively benign, then this is fodder for 6.9.
+> >
+> >> Fixes: 76d287b2342e ("KVM: x86/pmu: Drop "u8 ctrl, int idx" for reprog=
+ram_fixed_counter()")
+> >> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> >> ---
+> >>  arch/x86/kvm/vmx/pmu_intel.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel=
+.c
+> >> index a6216c874729..315c7c2ba89b 100644
+> >> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> >> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> >> @@ -71,7 +71,7 @@ static int fixed_pmc_events[] =3D {
+> >>  static void reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
+> >>  {
+> >>      struct kvm_pmc *pmc;
+> >> -    u8 old_fixed_ctr_ctrl =3D pmu->fixed_ctr_ctrl;
+> >> +    u64 old_fixed_ctr_ctrl =3D pmu->fixed_ctr_ctrl;
+> >>      int i;
+> >>
+> >>      pmu->fixed_ctr_ctrl =3D data;
+> >>
+> >> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> >> --
+> >> 2.43.0.429.g432eaa2c6b-goog
+> >>
+> >
