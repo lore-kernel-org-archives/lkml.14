@@ -1,428 +1,160 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2727C7AE75;
-	Wed, 31 Jan 2024 13:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3FB79DD0
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706706660; cv=none; b=E1g8A88Mbt8j9zXYYaaUYsIvEkXxrFYOWgrgus07PJYi2YGAh010hdqRlxnXrHqkwCDmtLI2pTwTrK49Om3qjP5KwF9gQcnndXWJlUmvHxG8KJWb92thbiBRHjMlecrHxwY4eGUyZSexAQu9MnjhPNu5cqLByBVHwq3c9PdJ3hM=
+	t=1706706689; cv=none; b=iTGRHLH5lJgPI8dz6wW0ctJy7+ASXJnCiRUxBRDu3L++FAmSYrEHCMd686ETjrC9waxViXDg7TZfa49ZCjQT+HBFzZRVonVBN8H7UPr4w4ENDxM0vtTrym6/OmDvsC9Zu5yHpQu1DZuC2sHmSaorf9eIydEXLqTcTGpdKNzgkec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706706660; c=relaxed/simple;
-	bh=hTJ5Jfyqvc8dT8mwTKGoDdaBJXzTLBZEhnRlLgQt3Bs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tkmXimdQw9w5NNSk1RffdntKN0pNBUzDgrBQyQw7PMRYNwyq2PwMxCrZU5DhNW3gFgNHEbEgN93Q/rgKzQNYM8Zsm0Zl035LVdnxTluzI8YHr8dMoOOMPacCmBKclxu8HkTHcABnG0A/WYt9CLxhnJYzWlrw+2Sh6YZWyzlm/Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=BN8fCIM2; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1706706689; c=relaxed/simple;
+	bh=0WbDnoSZ6lV8Nbook1KESp/4NQpmY0I7J1zh1rgAiGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h6g9mYEDlEp1Vp5q36hGehJd33zAdn5PjTgDq7nzvBgPDhpdLBWWDry5YLsIHg+TKtJaqdjxuEfKBRPcW03SnRlOVDzNV4dxvgWesaa9e9NJyBKf6IVOuHtM/SomLWFA/tM6lktrzecOpZXud8vc2fKB8JVhNZmKGnJsff2QGRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=apy6vTQ/; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BN8fCIM2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="apy6vTQ/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1706706657; x=1738242657;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hTJ5Jfyqvc8dT8mwTKGoDdaBJXzTLBZEhnRlLgQt3Bs=;
-  b=BN8fCIM2+WXozvgEyl+J6r5V1gVqDyhNGKE8gpWYbcYAwjOCrgrHWdlU
-   kqYf9Rj9AHJ9cjAdcwC97EpCpYOwArOpO440DpJfD2MNonrtsgnTKX6hR
-   I+HDCHhERXaQV8aANSw4oc/bgsZ7nuwtmrzFb+6hK3Z/+Q6SGGUMuyQn+
-   +sjpmUv1yjVcVgXUIPL5Hh86NiuHVeGsBS+LNLUIdeY1+SFYgICqtiW9L
-   QpI4H6uEO6Ce9PiW2A+G1wXhrLTyx+zLqcYRT7UXs0Wg4D+vo0BjXyxQY
-   AamQg/ZkxdY09nGty+nkWTcBuO8WYgraU1oyQlnrf4yurC4TCKuEIRwHo
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706706688; x=1738242688;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0WbDnoSZ6lV8Nbook1KESp/4NQpmY0I7J1zh1rgAiGU=;
+  b=apy6vTQ/J8uTufYCR3Mnn0oM1uEIIL6487rkWNq8vkbKEWXIy0TePKqH
+   0dk4OGqCFbOEJKOxLzyrpHE4Mu8bXw5tQPaUidSiI2LRIhvjc5Q2J9en2
+   f5dTNvKmEwJoqD4jbGNeVpHu5C7gU95YndAkQDtlOUuhmc9dDyf14K/T1
+   LDT8ByUMXEzq9nt4dMqgfTWwzGyparqty9OCj3gZ+9GYGA3g5w0Fj8mZl
+   FZ64eOW8vebaDhmV1gNyRbZHlmK7EWqJSVlCIf3POLPl/cHzYUB1GZo29
+   Rm0PdDwzIP0LFMIa/y9n7lnDzDCY1fnC7sf4V/YTKjeaimd7a7w+4GpLt
    A==;
-X-CSE-ConnectionGUID: 6uqJ7xMuQ7i40dAZZRAGXA==
-X-CSE-MsgGUID: XpggByL4QcGhPJjdj505CA==
-X-IronPort-AV: E=Sophos;i="6.05,231,1701154800"; 
-   d="scan'208";a="16878377"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 31 Jan 2024 06:10:50 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 31 Jan 2024 06:10:32 -0700
-Received: from ROB-ULT-M76677.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 31 Jan 2024 06:10:30 -0700
-From: Andrei Simion <andrei.simion@microchip.com>
-To: <krzysztof.kozlowski+dt@linaro.org>, <robh+dt@kernel.org>,
-	<conor+dt@kernel.org>, <claudiu.beznea@tuxon.dev>, <lgirdwood@gmail.com>,
-	<broonie@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, Andrei Simion <andrei.simion@microchip.com>
-Subject: [PATCH v3] regulator: dt-bindings: microchip,mcp16502: convert to YAML
-Date: Wed, 31 Jan 2024 15:07:27 +0200
-Message-ID: <20240131130727.447738-1-andrei.simion@microchip.com>
-X-Mailer: git-send-email 2.34.1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="434770733"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="434770733"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 05:11:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119616228"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="1119616228"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.21.82])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 05:11:12 -0800
+From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+To: linux-kernel@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [RFC PATCH v2] cleanup: Add cond_guard() to conditional guards
+Date: Wed, 31 Jan 2024 14:11:09 +0100
+Message-ID: <3335653.aeNJFYEL58@fdefranc-mobl3>
+Organization: intel
+In-Reply-To:
+ <65b938c1ad435_5cc6f294eb@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References:
+ <20240130164059.25130-1-fabio.maria.de.francesco@linux.intel.com>
+ <22169722.EfDdHjke4D@fdefranc-mobl3>
+ <65b938c1ad435_5cc6f294eb@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Convert devicetree binding mcp16502-regulator.txt to YAML format.
+On Tuesday, 30 January 2024 18:58:25 CET Dan Williams wrote:
+> Fabio M. De Francesco wrote:
+> > On Tuesday, 30 January 2024 18:02:09 CET Dan Williams wrote:
+> > > Fabio M. De Francesco wrote:
+> > > > Add cond_guard() to conditional guards.
+> > > > 
+> > > > cond_guard() is used for the _interruptible(), _killable(), and _try
+> > > > versions of locks. It expects a block where the failure can be handled
+> > > > (e.g., calling printk() and returning -EINTR in case of failure).
+> > > > 
+> > > > As the other guards, it avoids to open code the release of the lock
+> > > > after a goto to an 'out' label.
+> > > > 
+> > > > This remains an RFC because Dan suggested a slightly different syntax:
+> > > > 	if (cond_guard(...))
+> > > > 	
+> > > > 		return -EINTR;
+> > > > 
+> > > > But the scoped_cond_guard() macro omits the if statement:
+> > > >     	scoped_cond_guard (...) {
+> > > >     	}
+> > > > 
+> > > > Thus define cond_guard() similarly to scoped_cond_guard() but with a
+> > > > block
+> > > > 
+> > > > to handle the failure case:
+> > > > 	cond_guard(...)
+> > > > 	
+> > > > 		return -EINTR;
+> > > 
+> > > That's too subtle for me, because of the mistakes that can be made with
+> > > 
+> > > brackets how about a syntax like:
+> > >  	cond_guard(..., return -EINTR, ...)
+> > > 
+> > > ...to make it clear what happens if the lock acquisition fails without
+> > > having to remember there is a hidden incomplete "if ()" statement in
+> > > that macro? More below...
+> > 
+> > As you propose I can't see how to handle multi-line error path like in:
+> > 	cond_guard(...) {
+> > 	
+> > 		dev_dbg(...);
+> > 		return -EINTR;
+> > 	
+> > 	}
+> 
+> The _fail argument is a statement, to make it a compound statement maybe
+> just add braces, something like:
+> 
+>     cond_guard(..., { dev_dbg(...); return -EINTR; }, ...)
+> 
+> ...another possibility is something like
+> 
+>     int rc = 0;
+> 
+>     cond_guard(..., rc = -EINTR, ...)
+>     if (rc) {
+>         ...
+>         return rc;
+>     }
 
-Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
----
-Changes v2 -> v3:
-- keep one line of regulators description
-- add additionalProperties: false for regulators
-- "description:" at the end for each properties
+I had tried this before sending this patch. It looked the most obvious 
+solution. But it fails my tests: it always return -EINTR, regardless of the 
+successful down.
 
-Changes v1 -> v2:
-- reverse subject prefixes
-- line break after file "description:"
-- drop description for reg
-- drop regulator-name
-- add regulator-initial-mode
-- unevaluatedProperties just after $ref: regulator.yaml#
-- additionalProperties  just before "required"
-- node names generic in example
-- drop reg property from i2c
-- use 4 spaces for example indentation
----
- .../bindings/regulator/mcp16502-regulator.txt | 144 --------------
- .../regulator/microchip,mcp16502.yaml         | 179 ++++++++++++++++++
- 2 files changed, 179 insertions(+), 144 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml
+It looks like it was not expanded as I was expecting.
 
-diff --git a/Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt b/Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt
-deleted file mode 100644
-index 451cc4e86b01..000000000000
---- a/Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt
-+++ /dev/null
-@@ -1,144 +0,0 @@
--MCP16502 PMIC
--
--Required properties:
--- compatible: "microchip,mcp16502"
--- reg: I2C slave address
--- lpm-gpios: GPIO for LPM pin. Note that this GPIO *must* remain high during
--	     suspend-to-ram, keeping the PMIC into HIBERNATE mode; this
--	     property is optional;
--- regulators: A node that houses a sub-node for each regulator within
--              the device. Each sub-node is identified using the node's
--              name. The content of each sub-node is defined by the
--              standard binding for regulators; see regulator.txt.
--
--Regulators of MCP16502 PMIC:
--1) VDD_IO	- Buck (1.2 - 3.7 V)
--2) VDD_DDR	- Buck (0.6 - 1.85 V)
--3) VDD_CORE	- Buck (0.6 - 1.85 V)
--4) VDD_OTHER	- BUCK (0.6 - 1.85 V)
--5) LDO1		- LDO  (1.2 - 3.7 V)
--6) LDO2		- LDO  (1.2 - 3.7 V)
--
--Regulator modes:
--2 - FPWM: higher precision, higher consumption
--4 - AutoPFM: lower precision, lower consumption
--
--Each regulator is defined using the standard binding for regulators.
--
--Example:
--
--mcp16502@5b {
--	compatible = "microchip,mcp16502";
--	reg = <0x5b>;
--	status = "okay";
--	lpm-gpios = <&pioBU 7 GPIO_ACTIVE_HIGH>;
--
--	regulators {
--		VDD_IO {
--			regulator-name = "VDD_IO";
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <3700000>;
--			regulator-initial-mode = <2>;
--			regulator-allowed-modes = <2>, <4>;
--			regulator-always-on;
--
--			regulator-state-standby {
--				regulator-on-in-suspend;
--				regulator-mode = <4>;
--			};
--
--			regulator-state-mem {
--				regulator-off-in-suspend;
--				regulator-mode = <4>;
--			};
--		};
--
--		VDD_DDR {
--			regulator-name = "VDD_DDR";
--			regulator-min-microvolt = <600000>;
--			regulator-max-microvolt = <1850000>;
--			regulator-initial-mode = <2>;
--			regulator-allowed-modes = <2>, <4>;
--			regulator-always-on;
--
--			regulator-state-standby {
--				regulator-on-in-suspend;
--				regulator-mode = <4>;
--			};
--
--			regulator-state-mem {
--				regulator-on-in-suspend;
--				regulator-mode = <4>;
--			};
--		};
--
--		VDD_CORE {
--			regulator-name = "VDD_CORE";
--			regulator-min-microvolt = <600000>;
--			regulator-max-microvolt = <1850000>;
--			regulator-initial-mode = <2>;
--			regulator-allowed-modes = <2>, <4>;
--			regulator-always-on;
--
--			regulator-state-standby {
--				regulator-on-in-suspend;
--				regulator-mode = <4>;
--			};
--
--			regulator-state-mem {
--				regulator-off-in-suspend;
--				regulator-mode = <4>;
--			};
--		};
--
--		VDD_OTHER {
--			regulator-name = "VDD_OTHER";
--			regulator-min-microvolt = <600000>;
--			regulator-max-microvolt = <1850000>;
--			regulator-initial-mode = <2>;
--			regulator-allowed-modes = <2>, <4>;
--			regulator-always-on;
--
--			regulator-state-standby {
--				regulator-on-in-suspend;
--				regulator-mode = <4>;
--			};
--
--			regulator-state-mem {
--				regulator-off-in-suspend;
--				regulator-mode = <4>;
--			};
--		};
--
--		LDO1 {
--			regulator-name = "LDO1";
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <3700000>;
--			regulator-always-on;
--
--			regulator-state-standby {
--				regulator-on-in-suspend;
--			};
--
--			regulator-state-mem {
--				regulator-off-in-suspend;
--			};
--		};
--
--		LDO2 {
--			regulator-name = "LDO2";
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <3700000>;
--			regulator-always-on;
--
--			regulator-state-standby {
--				regulator-on-in-suspend;
--			};
--
--			regulator-state-mem {
--				regulator-off-in-suspend;
--			};
--		};
--
--	};
--};
-diff --git a/Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml b/Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml
-new file mode 100644
-index 000000000000..ed90fe723290
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml
-@@ -0,0 +1,179 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/microchip,mcp16502.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MCP16502 - High-Performance PMIC
-+
-+maintainers:
-+  - Andrei Simion <andrei.simion@microchip.com>
-+
-+description:
-+  The MCP16502 is an optimally integrated PMIC compatible
-+  with Microchip's eMPUs(Embedded Microprocessor Units), requiring
-+  Dynamic Voltage Scaling (DVS) with the use of High-Performance mode (HPM).
-+
-+properties:
-+  compatible:
-+    const: microchip,mcp16502
-+
-+  lpm-gpios:
-+    maxItems: 1
-+    description: GPIO for LPM pin.
-+      Note that this GPIO must remain high during
-+      suspend-to-ram, keeping the PMIC into HIBERNATE mode.
-+
-+  reg:
-+    maxItems: 1
-+
-+  regulators:
-+    type: object
-+    additionalProperties: false
-+    description: List of regulators and its properties.
-+
-+    patternProperties:
-+      "^(VDD_(IO|CORE|DDR|OTHER)|LDO[1-2])$":
-+        type: object
-+        $ref: regulator.yaml#
-+        unevaluatedProperties: false
-+
-+        properties:
-+          regulator-initial-mode:
-+            enum: [2, 4]
-+            default: 2
-+            description: Initial operating mode
-+
-+          regulator-allowed-modes:
-+            items:
-+              enum: [2, 4]
-+            description: Supported modes
-+              2 - FPWM higher precision, higher consumption
-+              4 - AutoPFM lower precision, lower consumption
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - regulators
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@5b {
-+            compatible = "microchip,mcp16502";
-+            reg = <0x5b>;
-+
-+            regulators {
-+                VDD_IO {
-+                    regulator-name = "VDD_IO";
-+                    regulator-min-microvolt = <3300000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-initial-mode = <2>;
-+                    regulator-allowed-modes = <2>, <4>;
-+                    regulator-always-on;
-+
-+                    regulator-state-standby {
-+                        regulator-on-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+
-+                    regulator-state-mem {
-+                        regulator-off-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+                };
-+
-+                VDD_DDR {
-+                    regulator-name = "VDD_DDR";
-+                    regulator-min-microvolt = <1350000>;
-+                    regulator-max-microvolt = <1350000>;
-+                    regulator-initial-mode = <2>;
-+                    regulator-allowed-modes = <2>, <4>;
-+                    regulator-always-on;
-+
-+                    regulator-state-standby {
-+                        regulator-on-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+
-+                    regulator-state-mem {
-+                        regulator-on-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+                };
-+
-+                VDD_CORE {
-+                    regulator-name = "VDD_CORE";
-+                    regulator-min-microvolt = <1150000>;
-+                    regulator-max-microvolt = <1150000>;
-+                    regulator-initial-mode = <2>;
-+                    regulator-allowed-modes = <2>, <4>;
-+                    regulator-always-on;
-+
-+                    regulator-state-standby {
-+                        regulator-on-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+
-+                    regulator-state-mem {
-+                        regulator-off-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+                };
-+
-+                VDD_OTHER {
-+                    regulator-name = "VDD_OTHER";
-+                    regulator-min-microvolt = <1050000>;
-+                    regulator-max-microvolt = <1250000>;
-+                    regulator-initial-mode = <2>;
-+                    regulator-allowed-modes = <2>, <4>;
-+                    regulator-always-on;
-+
-+                    regulator-state-standby {
-+                        regulator-on-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+
-+                    regulator-state-mem {
-+                        regulator-off-in-suspend;
-+                        regulator-mode = <4>;
-+                    };
-+                };
-+
-+                LDO1 {
-+                    regulator-name = "LDO1";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <1800000>;
-+                    regulator-always-on;
-+
-+                    regulator-state-standby {
-+                        regulator-on-in-suspend;
-+                    };
-+
-+                    regulator-state-mem {
-+                        regulator-off-in-suspend;
-+                    };
-+                };
-+
-+                LDO2 {
-+                    regulator-name = "LDO2";
-+                    regulator-min-microvolt = <1200000>;
-+                    regulator-max-microvolt = <3700000>;
-+                    regulator-always-on;
-+
-+                    regulator-state-standby {
-+                        regulator-on-in-suspend;
-+                    };
-+
-+                    regulator-state-mem {
-+                        regulator-off-in-suspend;
-+                    };
-+                };
-+            };
-+        };
-+    };
--- 
-2.34.1
+Or my tests are wrong, but I can't see any obvious mistake.
+
+BTW, it's interesting to notice that the following instead works. I guess that 
+it is due to the same fact that required me to pass a pointer to 'rc' in the 
+first version of this patch to (mistakenly) store the boolean of whether the 
+constructor succeeded or failed.
+
+	int rc;
+	int *rcp = &rc;
+
+	cond_guard(..., *rcp = -EINTR, ...)
+	if (rc) {
+		dev_dbg(...);
+		return rc;
+	}
+
+This works but I think nobody wants to see anything like this.
+
+Fabio
+ 
+> 
+> ...so, I don't think we need separate macros for the multi-statement
+> case.
+
+
 
