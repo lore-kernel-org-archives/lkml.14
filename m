@@ -1,97 +1,123 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B283E477;
-	Wed, 31 Jan 2024 06:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA093F8C7;
+	Wed, 31 Jan 2024 06:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706682177; cv=none; b=lQlW6CCKWzcLs6x5cpojbJfH72QxF8RO2pH9oGxBragN2P6tbycZQchjWtrbTnmrqsuTg0i1QfdHbdnUcju1MyeXbHpxVDddnyxJDQMioewMDh5KGYG3/Fi1xzUV+DEQjiU2WU6FGY7f4HQdI+huPbKjcnXWnJnzKAWIFurEsDs=
+	t=1706682273; cv=none; b=Ba5O+mAcerI/js1cdBQBIc27u3S9eRKCu+xfQKvLDI2/Xsdkh52zoSVrZxeVUKSps1q6kNzEMD1sYpzQi1w9Ipjc7Ym1WwvYswFK4eZZT+924uithDYjhm3LTFPe6wdRJ0ELjL2FPI9RwQDJB8LBv6TqCLIM8X34eDTqueEzCko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706682177; c=relaxed/simple;
-	bh=BNG1PYjlKq0dn1rf9742m7PS1TbxWNZTEf/7YFKPEmM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lvksGN7pkWvBIfsWQ6m7DXNYDrdRm7CzLz7MTGo8AqgpIkRymPDvIEHO37dI8m+XIZFVVEvSKTj0G2nEzYeNHIzO49bmC0t44+l2/vAYHXW2+HpToITh8M6aDCrDxT1wVErZXCL0d3Qk0j3QdKinwQQulXF7BL6hkNHBRb97aKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 8668ff10992f427390129c709937f690-20240131
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:f7b5f210-4503-4c84-acc9-7e554c948385,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.35,REQID:f7b5f210-4503-4c84-acc9-7e554c948385,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:5d391d7,CLOUDID:f94058fe-c16b-4159-a099-3b9d0558e447,B
-	ulkID:2401311422466YU4ZA4Z,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 8668ff10992f427390129c709937f690-20240131
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1747670609; Wed, 31 Jan 2024 14:22:43 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 66CF8E000EB9;
-	Wed, 31 Jan 2024 14:22:43 +0800 (CST)
-X-ns-mid: postfix-65B9E733-157518213
-Received: from kernel.. (unknown [172.20.15.254])
-	by mail.kylinos.cn (NSMail) with ESMTPA id CF8CEE000EB9;
-	Wed, 31 Jan 2024 14:22:41 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	kolga@netapp.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] nfsd: Simplify the allocation of slab caches in nfsd4_init_pnfs
-Date: Wed, 31 Jan 2024 14:22:27 +0800
-Message-Id: <20240131062227.130725-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1706682273; c=relaxed/simple;
+	bh=Uiy2jl+TmsXsize8jHqdUqySPdi0wRe5XPyM63wYQ+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MiJDIuHjX5w41KA+00TboYRpUhV8PKoetK0ZPIcf3iD0w24S+AR29uSE1pe66v4ae2lFddhNuHLwtIP/fO+xChI3UFY5jzAP4IW2L6Oijxq56gZW70WFZd5d4ZZ+cWmJlc8RE9uRqW32kB4XA+i/CWjNookkV6HcTBrDnKLv/KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C95BCDA7;
+	Tue, 30 Jan 2024 22:25:13 -0800 (PST)
+Received: from [10.163.41.195] (unknown [10.163.41.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 307963F738;
+	Tue, 30 Jan 2024 22:24:18 -0800 (PST)
+Message-ID: <d22f63a0-f6de-44e1-874b-24d707907858@arm.com>
+Date: Wed, 31 Jan 2024 11:54:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 08/35] mm: cma: Introduce cma_alloc_range()
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+ maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+ pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-9-alexandru.elisei@arm.com>
+ <61a3dbb7-25b6-4f49-aa70-9a8aaeb53365@arm.com> <ZbjfEzlNgprdxfxX@raptor>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZbjfEzlNgprdxfxX@raptor>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-commit 0a31bd5f2bbb ("KMEM_CACHE(): simplify slab cache creation")
-introduces a new macro.
-Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
-to simplify the creation of SLAB caches.
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- fs/nfsd/nfs4layouts.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 5e8096bc5eaa..4116695e6aa3 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -756,13 +756,11 @@ nfsd4_init_pnfs(void)
- 	for (i =3D 0; i < DEVID_HASH_SIZE; i++)
- 		INIT_LIST_HEAD(&nfsd_devid_hash[i]);
-=20
--	nfs4_layout_cache =3D kmem_cache_create("nfs4_layout",
--			sizeof(struct nfs4_layout), 0, 0, NULL);
-+	nfs4_layout_cache =3D KMEM_CACHE(nfs4_layout, 0);
- 	if (!nfs4_layout_cache)
- 		return -ENOMEM;
-=20
--	nfs4_layout_stateid_cache =3D kmem_cache_create("nfs4_layout_stateid",
--			sizeof(struct nfs4_layout_stateid), 0, 0, NULL);
-+	nfs4_layout_stateid_cache =3D KMEM_CACHE(nfs4_layout_stateid, 0);
- 	if (!nfs4_layout_stateid_cache) {
- 		kmem_cache_destroy(nfs4_layout_cache);
- 		return -ENOMEM;
---=20
-2.39.2
+On 1/30/24 17:05, Alexandru Elisei wrote:
+> Hi,
+> 
+> On Tue, Jan 30, 2024 at 10:50:00AM +0530, Anshuman Khandual wrote:
+>>
+>> On 1/25/24 22:12, Alexandru Elisei wrote:
+>>> Today, cma_alloc() is used to allocate a contiguous memory region. The
+>>> function allows the caller to specify the number of pages to allocate, but
+>>> not the starting address. cma_alloc() will walk over the entire CMA region
+>>> trying to allocate the first available range of the specified size.
+>>>
+>>> Introduce cma_alloc_range(), which makes CMA more versatile by allowing the
+>>> caller to specify a particular range in the CMA region, defined by the
+>>> start pfn and the size.
+>>>
+>>> arm64 will make use of this function when tag storage management will be
+>>> implemented: cma_alloc_range() will be used to reserve the tag storage
+>>> associated with a tagged page.
+>> Basically, you would like to pass on a preferred start address and the
+>> allocation could just fail if a contig range is not available from such
+>> a starting address ?
+>>
+>> Then why not just change cma_alloc() to take a new argument 'start_pfn'.
+>> Why create a new but almost similar allocator ?
+> I tried doing that, and I gave up because:
+> 
+> - It made cma_alloc() even more complex and hard to follow.
+> 
+> - What value should 'start_pfn' be to tell cma_alloc() that it should be
+>   ignored? Or, to put it another way, what pfn number is invalid on **all**
+>   platforms that Linux supports?
+> 
+> I can give it another go if we can come up with an invalid value for
+> 'start_pfn'.
 
+Something negative might work. How about -1/-1UL ? A quick search gives
+some instances such as ...
+
+git grep "pfn == -1"
+
+mm/mm_init.c:   if (*start_pfn == -1UL)
+mm/vmscan.c:            if (pfn == -1)
+mm/vmscan.c:            if (pfn == -1)
+mm/vmscan.c:            if (pfn == -1)
+tools/testing/selftests/mm/hugepage-vmemmap.c:  if (pfn == -1UL) {
+
+Could not -1UL be abstracted as common macro MM_INVALID_PFN to be used in
+such scenarios including here ?
+
+> 
+>> But then I am wondering why this could not be done in the arm64 platform
+>> code itself operating on a CMA area reserved just for tag storage. Unless
+>> this new allocator has other usage beyond MTE, this could be implemented
+>> in the platform itself.
+> I had the same idea in the previous iteration, David Hildenbrand suggested
+> this approach [1].
+> 
+> [1] https://lore.kernel.org/linux-fsdevel/2aafd53f-af1f-45f3-a08c-d11962254315@redhat.com/
+
+There are two different cma_alloc() proposals here - including the next
+patch i.e mm: cma: Fast track allocating memory when the pages are free
+
+1) Augment cma_alloc() or add cma_alloc_range() with start_pfn parameter
+2) Speed up cma_alloc() for small allocation requests when pages are free
+
+The second one if separated out from this series could be considered on
+its own as it will help all existing cma_alloc() callers. The first one
+definitely needs an use case as provided in this series.
