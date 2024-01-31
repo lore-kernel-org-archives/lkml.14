@@ -1,132 +1,156 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C4412C52E
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096EA12DD92;
+	Wed, 31 Jan 2024 17:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706721841; cv=none; b=IgBJEV+tnU+uMZC7Pe+0EqEIDYGHK9wtERHwvdR2WD55XFSOnBtwhQY2UjKmmL+4t/aWEUjKc7qwWSCGbS0XyjeVbc4Dw0iG6CdaFCOGp+o5Bm5zeu3CC6kumw2B2YPHT6rKr0vSCCWDSK0C9niBz0amqf47LpP+Yw0rihJUvr8=
+	t=1706721966; cv=none; b=QzZGYEdJqavkEkYGG0Bq2su81RinyaUr2vDCX+FUZBXmAjre02HlyyVpTX3IJ8s67b+lp1vrQwJI+vQ5/187VWnwB+IGpiU7G+TkHe+gadptBdAt4abh7RxnYjoFrDWBF63b3ChIR9mO7/mbM3X0TsWLl+ME++PsOIAEfQGhoDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706721841; c=relaxed/simple;
-	bh=j+Bbez0gzj6+f+YJhhb/ozw9CFQoNu8iD9ScjEsL1JA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EMXJCKJL5L+OIdUMjdYdJvzg52pZ5z8gc+RR0kzGSzR0UMw4trL5P1vPUqGPyST+qKkocR6NQwd3FcptlXQT3GosnaB3InisoW8I+WjochzsFkLdOTXdCC7wyxfSLurVtXuUdRg5+QC2ijNUUoMJn2l3omS1UySewh6TTBYBC8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=FdgYdwWY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vwNnU0A9; arc=none smtp.client-ip=64.147.123.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="FdgYdwWY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vwNnU0A9"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.west.internal (Postfix) with ESMTP id D88AF3200564;
-	Wed, 31 Jan 2024 12:23:57 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 31 Jan 2024 12:23:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1706721837; x=1706808237; bh=zMKGJxHDLh
-	y9XiJ/65aFtBKWBCwquZ0HqRnigxHPmzQ=; b=FdgYdwWYm8m9HkTbaWdKBsylST
-	z0y5qnTQ+EfzjRWQEca94JPF5VLWGMyb1y4BbSd7kdL+XQ4wHWATPRJiLH+RMnb5
-	16BlZ2r9RH9A8+opNvMb4U4/Leiwjyq/fj7iA//cpRVEyh9ZmsMTVIwyfpvGwlqK
-	Gf0wJjMO5fLVJunY+6tCx6gIsQqZ2BI/EK7fblJEpKi3MDKL0zx8Vk9irlYfVpxE
-	zrmj1Rj6HCIf3ky9aL3IdWf7Ow1tmEdAmx7y6pBhsNrFSQHvHiS2oM8z8n+M6X1p
-	l1oNPberumR5Fi7pCtoji5DJ0BFv3Zl/9OlViemJg9BHgN3q9IXHJdSqUslQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706721837; x=1706808237; bh=zMKGJxHDLhy9XiJ/65aFtBKWBCwq
-	uZ0HqRnigxHPmzQ=; b=vwNnU0A9C9Yai7toKg6f1Q0bMNdpPKCQ3uYzbup8sB/0
-	pvFltR2plitNjjOOQwDX7iNsgtpT8BYJaCc8WrQ1byVvB6y0/+Aa+4vy9OpqDrhy
-	pmtcDg8dzzDpgBik7htIkJ/xygD2T8J3mjaXQhQj3mYZNk6FH7xmIR5Qp3wPHxL6
-	HlhsOCgJH7kTFASSWkEbkgs+aVSxQhiY56qmcUT74a5zZTtj2b2H4AL+JjlkHWRy
-	6E6fKu9nUDeXSiItbWuEoDIyWV0vM4coix058jVTaYxCeLlMbXlNwdeiXp/7vmBO
-	dJfBvjg5EbwnqZ0BCeEDKm/GimryNFsPkstjxFX2Ng==
-X-ME-Sender: <xms:LYK6ZaBBMkmwlwPNxdsG6xdlaRJdltfxShKPIvhepwVmHH4DpEJixg>
-    <xme:LYK6ZUjN0djRJ_xEzOpKSKzH_j88DZJAmV7EMMcPHo0GJkcVEFnEnVsSWM9guu-mF
-    Og446a5WflITA8TYPQ>
-X-ME-Received: <xmr:LYK6Zdlvg3XKdLq07cHBcOu6AiJ1Uk0z9LCjKNY4GOv9ig5EnAUXi18ztNE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtledgleekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
-    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
-    grthhtvghrnhepueettdetgfejfeffheffffekjeeuveeifeduleegjedutdefffetkeel
-    hfelleetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epthihtghhohesthihtghhohdrphhiiiiirg
-X-ME-Proxy: <xmx:LYK6ZYwBY64OcbLVDUjObWlBBqXVzekfd1Snc1OZPQBac_Ey3RXjRA>
-    <xmx:LYK6ZfQ030T4RhIJ2Ki1rDnEPSxJh7USfIM0zagZsZVBvdQtxc29bw>
-    <xmx:LYK6ZTZgc8YXJRoRuZp6v2sjZ8pRPssG6CsdIUQvtunzgpDHB8edBg>
-    <xmx:LYK6ZZdWF5Uz_YnojNVodBaD1Cv0EZkAKLCGUmJLPcuvqmaenhxKxQ>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 31 Jan 2024 12:23:56 -0500 (EST)
-Date: Wed, 31 Jan 2024 10:23:54 -0700
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] pidfd: implement PIDFD_THREAD flag for
- pidfd_open()
-Message-ID: <ZbqCKgTuP/IaEbMM@tycho.pizza>
-References: <20240131132541.GA23632@redhat.com>
- <20240131132602.GA23641@redhat.com>
+	s=arc-20240116; t=1706721966; c=relaxed/simple;
+	bh=Tv/OIdhU0ncVmP7nGCQx/bdXuPecUNW1V8ksBVTdZoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EyyxenD+Sk5MuPmIATCrVeU8zGQdOQZiFyCFRpDhYex0bm1cxWMZL+wZWB22PJ9SIhyhiSRDteXAivesHaTxMU2IKMoDe3Ot+c88SvzxtVSVBhXH0UjfbeuXdiBaIyZqHycl5nXgdirPmdtcbW5mJCdHHAe+EBjpPmktd7eesM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1A4C433F1;
+	Wed, 31 Jan 2024 17:26:04 +0000 (UTC)
+Date: Wed, 31 Jan 2024 12:26:18 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
+ <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [linus:master] [eventfs] 852e46e239:
+ BUG:unable_to_handle_page_fault_for_address
+Message-ID: <20240131122618.7c533387@gandalf.local.home>
+In-Reply-To: <20240131105847.3e9afcb8@gandalf.local.home>
+References: <202401291043.e62e89dc-oliver.sang@intel.com>
+	<20240129152600.7587d1aa@gandalf.local.home>
+	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
+	<20240129172200.1725f01b@gandalf.local.home>
+	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
+	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+	<20240129174950.5a17a86c@gandalf.local.home>
+	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
+	<20240129193549.265f32c8@gandalf.local.home>
+	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
+	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+	<20240130132319.022817e8@gandalf.local.home>
+	<CAHk-=wiGb2aDbtq2+mYv6C=pYRKmo_iOu9feL9o52iRT8cuh6Q@mail.gmail.com>
+	<20240130143734.31b9b3f1@gandalf.local.home>
+	<CAHk-=whMJgqu2v1_Uopg5NBschGFa_BK1Ct=s7ehwnzPpPi6nQ@mail.gmail.com>
+	<20240131105847.3e9afcb8@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131132602.GA23641@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Oleg,
+On Wed, 31 Jan 2024 10:58:47 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Wed, Jan 31, 2024 at 02:26:02PM +0100, Oleg Nesterov wrote:
-> With this flag:
+> BTW, I ran my full test suite on your patches with the below updates and it
+> all passed. Note, I did not run the "bisectable" portion of my test. That
+> is, the part that runs tests on each patch in the series. Because I know
+> that fails. I just ran the tests on the last applied patch.
 > 
-> 	- pidfd_open() doesn't require that the target task must be
-> 	  a thread-group leader
-> 
-> 	- pidfd_poll() succeeds when the task exits and becomes a
-> 	  zombie (iow, passes exit_notify()), even if it is a leader
-> 	  and thread-group is not empty.
-> 
-> 	  This means that the behaviour of pidfd_poll(PIDFD_THREAD,
-> 	  pid-of-group-leader) is not well defined if it races with
-> 	  exec() from its sub-thread; pidfd_poll() can succeed or not
-> 	  depending on whether pidfd_task_exited() is called before
-> 	  or after exchange_tids().
-> 
-> 	  Perhaps we can improve this behaviour later, pidfd_poll()
-> 	  can probably take sig->group_exec_task into account. But
-> 	  this doesn't really differ from the case when the leader
-> 	  exits before other threads (so pidfd_poll() succeeds) and
-> 	  then another thread execs and pidfd_poll() will block again.
+> I can break up and clean up the patches so that they are bisectable, and if
+> that passes the bisectable portion of my tests, I can still send them to
+> you for 6.8. I think this does fix a lot of hidden bugs, and would like all
+> this to go back to 6.6 when the eventfs was first introduced.
 
-I don't have a strong opinion here; leaving it "undefined" for now is
-fine with me.
+So I swapped the order of patch 5 and patch 6, and it appears that patch 6
+works without 5 (with some massaging).
 
-> @@ -2173,7 +2195,9 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
->   */
->  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
->  {
-> -	if (!pid || !pid_has_task(pid, PIDTYPE_TGID))
-> +	bool thread = flags & PIDFD_THREAD;
-> +
-> +	if (!pid || !pid_has_task(pid, thread ? PIDTYPE_PID : PIDTYPE_TGID));
+Here's the new patch 6 without patch 5, and now patch 5 just finishes the
+rest of the changes.
 
-Small typo here, trailing ;. When I fix that, tests pass for me.
+I'll post this series, pull it in through my normal work flow, and rerun
+the full test suite with the bisecting check as well.
 
-Assuming that's fixed up:
+-- Steve
 
-Reviewed-by: Tycho Andersen <tandersen@netflix.com>
-Tested-by: Tycho Andersen <tandersen@netflix.com>
-
-Thanks for your help!
-
-Tycho
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 0289ec787367..0213a3375d53 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -378,13 +378,12 @@ static void free_ei(struct eventfs_inode *ei)
+ }
+ 
+ /**
+- * eventfs_set_ei_status_free - remove the dentry reference from an eventfs_inode
+- * @ti: the tracefs_inode of the dentry
++ * eventfs_d_release - dentry is going away
+  * @dentry: dentry which has the reference to remove.
+  *
+  * Remove the association between a dentry from an eventfs_inode.
+  */
+-void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
++void eventfs_d_release(struct dentry *dentry)
+ {
+ 	struct eventfs_inode *ei;
+ 	int i;
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index f403d32bd7cd..cf90ea86baf8 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -377,21 +377,30 @@ static const struct super_operations tracefs_super_operations = {
+ 	.show_options	= tracefs_show_options,
+ };
+ 
+-static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
++/*
++ * It would be cleaner if eventfs had its own dentry ops.
++ *
++ * Note that d_revalidate is called potentially under RCU,
++ * so it can't take the eventfs mutex etc. It's fine - if
++ * we open a file just as it's marked dead, things will
++ * still work just fine, and just see the old stale case.
++ */
++static void tracefs_d_release(struct dentry *dentry)
+ {
+-	struct tracefs_inode *ti;
++	if (dentry->d_fsdata)
++		eventfs_d_release(dentry);
++}
+ 
+-	if (!dentry || !inode)
+-		return;
++static int tracefs_d_revalidate(struct dentry *dentry, unsigned int flags)
++{
++	struct eventfs_inode *ei = dentry->d_fsdata;
+ 
+-	ti = get_tracefs(inode);
+-	if (ti && ti->flags & TRACEFS_EVENT_INODE)
+-		eventfs_set_ei_status_free(ti, dentry);
+-	iput(inode);
++	return !(ei && ei->is_freed);
+ }
+ 
+ static const struct dentry_operations tracefs_dentry_operations = {
+-	.d_iput = tracefs_dentry_iput,
++	.d_revalidate = tracefs_d_revalidate,
++	.d_release = tracefs_d_release,
+ };
+ 
+ static int trace_fill_super(struct super_block *sb, void *data, int silent)
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 9e64ca4829c7..687faba9807b 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -77,6 +77,7 @@ struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
+ struct dentry *tracefs_end_creating(struct dentry *dentry);
+ struct dentry *tracefs_failed_creating(struct dentry *dentry);
+ struct inode *tracefs_get_inode(struct super_block *sb);
+-void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry);
++
++void eventfs_d_release(struct dentry *dentry);
+ 
+ #endif /* _TRACEFS_INTERNAL_H */
