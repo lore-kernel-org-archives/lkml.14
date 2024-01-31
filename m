@@ -1,63 +1,63 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEECB1272A1
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018B01292DB
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706712623; cv=none; b=TOXg8qrZzz7mdJldvX8V+AXqTdmmWnSsLzcNPzr/fiawn1qtM7rZCwog6k7bncvs1V0vv0KXzzMkq+wU/D9nPS4NnfGb9s6VYoWgS5s9nNS6CmbKxJ044HcIc3asmttzDP3+OM77LgK7n4M35WIPVLhZKLxTmsI5KA1YlerSmq8=
+	t=1706712628; cv=none; b=fYAnegRiHFhuJ7nq5u/H9yCUkxQq9P3D1/10ElcLEIgA4f5CMBGj51ItxM5VlWIVJk21m6oRZunkPGNJsd4t989VOo4AItlWjhEVJ9/gnteeccY/aX4GueKt3RcloOztnYQsvyaDm3oodOVsZXnXmtXKCDGtiWx4KVAIAAxHiis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706712623; c=relaxed/simple;
-	bh=nkgyan5LRRzY0GtyCyWAwyMvzfoxhtTb69KUThlaJQU=;
+	s=arc-20240116; t=1706712628; c=relaxed/simple;
+	bh=XoUdoV8nwLdpCq8l/Djd6XL5UG+SLJHzKVf5oAlWybg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L9Uh0kBItqtjfgVj2LB/5J+3gdvmuQgAjpZZ5ULzugRY7m9q7Hk+AdypTgVfbIk6/bGz1IbPgldcmF4uk7lYWuGxrJuCisCxNJ3he+RGXWxwg67slIGremnE/8Wub64JBfgq69XY04X7K/7e6hcsD2Tt5bHojTkr/WODXFwP9TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=PHJrsEtX; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version; b=CNk4bQc7exMV2VwaPD9bdk8hTlBdX9aSW1Nc/AKyNDyp93RlS6yX4okJfs9NTKVK0RHCjLYDVVrVh3KtGRBuWiWEK8AgxkA8ZvsCuIIpxm4/vwB+2nHYUtetkQGPJ2XLZoDnY2Uj3yYawUJIso8mNk+Ghf+ojfg/j2Lzd5KyRig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Ljqdmiyt; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="PHJrsEtX"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40fb0c4bb9fso10062745e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:50:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Ljqdmiyt"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33b0e5d1e89so74522f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:50:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1706712613; x=1707317413; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1706712614; x=1707317414; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JL25gfVD+Xh66b0Oiy5suGokKHBCK7lCSd/6cabj4sY=;
-        b=PHJrsEtXw/Ldz/5wH3wVuygwmbvBCFZFM+47skoJ7sFNDuZUUJdam6GvwtAAWWyTYZ
-         3KriHNxfspYL7lkSR37sEMzDvN011SUCc9I6MPY8MLE7Zi5Vimeiec24L0hN2AdQqe5M
-         t8HlxSKLvYhivr8TZZYx4NjY+Xxr5Ybcxtn7a/XXMlwNETNEL5efJnttgTyukEJCQUHL
-         Q/9aj1Av/NaKOIlM2Yw4Q9ERLvRyz+Qw+y2NXoT0ALVcQNe+vC5kp3f6oqC4RHKBLTGb
-         nVyTrPnItH+gbEXfglPAnPcdkTlEs++kxW0aFdm5DUAVkLD+/lNP3hVgNQuoqGkWWV94
-         UNdQ==
+        bh=tApzrZoTt+BM/oLWX089627jbzMyhdT56PiPpeMgEbE=;
+        b=LjqdmiytAF0+LJdyYWgZH0YaYhf3JONzw3KuoiLieAR2/zMD1OQmn4CIgmdyGOoCOV
+         JqO1Xljwx7KRfqAIHAZJ8Xeb5YAagk5DKzXD6qEnmxawPNw7BJhW81Xjia+UjvCP8pSB
+         qKIz03n4fkKJI8p9fO3r7vcMVtaGcW+QLXnaUS44QQ9yHULZbci4/BbsLWtni63lkPQY
+         qZ4QzxCTzuk7SG2d8oarPuiMTk1jZHk/QB4Rn5YRT5YrmQLmexjkvxVw6Mvz052UGQX9
+         6jAPqHCdq/+f6vtMzxz//BFGQB59rbzHUPRxYsAfH1LFVuDbvYJFboDB4AZv6UWJvoa8
+         yNcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706712613; x=1707317413;
+        d=1e100.net; s=20230601; t=1706712614; x=1707317414;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JL25gfVD+Xh66b0Oiy5suGokKHBCK7lCSd/6cabj4sY=;
-        b=cUHjT12RIT/gOZ9lIvQrhKtKyc/HhLfehfYlFswCCcanHW4Jtie69SLd24dQrtAFK1
-         vH5RY7IeLfKK2Ki8n5hvMS1IoznBfUMzS/2IIJ1u4qXxUt0ISauU7iezl4Yr1y7HT1pr
-         QfgMcJk8NvYoS/OlqeNaddeZnpPD8Lreu5Cd5rOGHy7LN0Me7zOwWJdCuznqEb3r94UF
-         oqpBie1KWloaDSwhBscgO48kN8MiIOkktnSjbJ3DXhdjk0DPKDdzsCDV0iBJvO37mzKd
-         DTYDpqoS/n89PsN9/h3Q6eWm0NvxPJkgNQZI5y5AUdlNA7O8kgXiJrG5Us1urpRDEIVY
-         NCyw==
-X-Gm-Message-State: AOJu0YziAKb0gGUz1S4mR/fF6VVM2gJxSmWEC4W+ysxt0HbWwNPAzllA
-	i8cw0EblU+n74JUGTEYRViBdzLIyNLTN9l8WDCIsZxmwzf03VcyMz6y9+d64tIGFB/6Hd64XJbo
-	X
-X-Google-Smtp-Source: AGHT+IFPx5b6xQz3cIkxGadIgDA3Qo8ZZ1Vc77lOPoJl5LFhvjLxaeCCW6NotZEsIQULkRqgROiL/w==
-X-Received: by 2002:a05:600c:5487:b0:40e:6193:b1a5 with SMTP id iv7-20020a05600c548700b0040e6193b1a5mr1403691wmb.39.1706712611835;
-        Wed, 31 Jan 2024 06:50:11 -0800 (PST)
+        bh=tApzrZoTt+BM/oLWX089627jbzMyhdT56PiPpeMgEbE=;
+        b=UFj7O3kyQg7cbgDCwu791XBcMUxwqXKEwh5MJDiJXl/jbC2RtcjHkpcvJiBTH/P40e
+         Bk1tQuPNZn5m2A/uoP8OMpXJA6E0c4mqvJ3r/rZZ88QQE1xPVtwbET1WrnaFBA9M6CNM
+         VG5wZgZT+1hENURT73+jXG4HE8cE/S+tz9n/KIWUka5PuD6AkMdpkmtdMxJw7lghYKK3
+         vqcNlWDC882l6RFS50U88zOTwOpVLhY0hjSqK9qIwVpcjQuB/+WEik4TQvL6/3aIU/M8
+         vp3LX9IexwZwNHZVholqP/0QJN6/uh40Ng9tHHV/9h5iGSMDpPFkBScy9u2+O0/tSXfM
+         Q91w==
+X-Gm-Message-State: AOJu0Yw2kv5u8PTGRhjpg1KMlAOalzt17CbHA4Egbyu4lrAKieKKvsoN
+	Rdm2HwUUDQug2HdurtWBQ5FaIblXh3/A1U6FgArYvgU70gw7pcwsgpRt2lTfeIS675z93lXXpBf
+	y
+X-Google-Smtp-Source: AGHT+IFexwllkKiqCtO18UsQTFvBS6vIHM3YdmxLYRK4nWSvfJC2YfLqdRDOMUEA3GWeX4UrfUTg+g==
+X-Received: by 2002:a5d:4579:0:b0:33b:3b3:f486 with SMTP id a25-20020a5d4579000000b0033b03b3f486mr1386554wrc.35.1706712613464;
+        Wed, 31 Jan 2024 06:50:13 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f2f5c00023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f2f:5c00:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id ch15-20020a5d5d0f000000b0033905a60689sm13850173wrb.45.2024.01.31.06.50.11
+        by smtp.gmail.com with ESMTPSA id ch15-20020a5d5d0f000000b0033905a60689sm13850173wrb.45.2024.01.31.06.50.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 06:50:11 -0800 (PST)
+        Wed, 31 Jan 2024 06:50:13 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH 01/28] include: add missing includes
-Date: Wed, 31 Jan 2024 15:49:41 +0100
-Message-Id: <20240131145008.1345531-2-max.kellermann@ionos.com>
+Subject: [PATCH 03/28] include: reduce header dependencies by using "*_types.h"
+Date: Wed, 31 Jan 2024 15:49:43 +0100
+Message-Id: <20240131145008.1345531-4-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240131145008.1345531-1-max.kellermann@ionos.com>
 References: <20240131145008.1345531-1-max.kellermann@ionos.com>
@@ -67,4845 +67,5133 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This adds `#include` directives that are necessary, but missing, which
-previously went unnnoticed because the missing headers were included
-indirectly by other headers somewhere.
+These headers are lighter because they only contain declarations and
+do not include many other headers.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- arch/arm64/kernel/cpufeature.c                               | 1 +
- arch/arm64/kernel/cpuinfo.c                                  | 1 +
- arch/arm64/kernel/ftrace.c                                   | 1 +
- arch/arm64/kernel/mte.c                                      | 2 ++
- arch/arm64/kvm/arch_timer.c                                  | 2 ++
- arch/arm64/kvm/hypercalls.c                                  | 1 +
- arch/arm64/kvm/vgic/vgic-mmio-v3.c                           | 1 +
- arch/arm64/kvm/vgic/vgic-mmio.c                              | 1 +
- arch/arm64/kvm/vgic/vgic-v2.c                                | 1 +
- arch/arm64/kvm/vgic/vgic-v3.c                                | 1 +
- arch/arm64/kvm/vgic/vgic-v4.c                                | 1 +
- arch/x86/events/amd/uncore.c                                 | 1 +
- arch/x86/events/intel/uncore.c                               | 1 +
- arch/x86/events/rapl.c                                       | 1 +
- arch/x86/kernel/cpu/intel.c                                  | 1 +
- arch/x86/kernel/cpu/umwait.c                                 | 1 +
- arch/x86/kvm/vmx/nested.c                                    | 1 +
- arch/x86/kvm/xen.c                                           | 1 +
- arch/x86/platform/efi/runtime-map.c                          | 1 +
- block/blk-cgroup.c                                           | 1 +
- block/blk-crypto-sysfs.c                                     | 1 +
- block/blk-ia-ranges.c                                        | 1 +
- block/blk-iocost.c                                           | 1 +
- block/bsg.c                                                  | 1 +
- block/elevator.h                                             | 1 +
- block/holder.c                                               | 1 +
- block/kyber-iosched.c                                        | 1 +
- block/mq-deadline.c                                          | 1 +
- drivers/accel/ivpu/ivpu_pm.c                                 | 1 +
- drivers/acpi/pfr_telemetry.c                                 | 1 +
- drivers/acpi/sbs.c                                           | 1 +
- drivers/ata/pata_parport/pata_parport.c                      | 1 +
- drivers/base/base.h                                          | 5 +++++
- drivers/base/container.c                                     | 1 +
- drivers/base/firmware_loader/builtin/main.c                  | 1 +
- drivers/base/soc.c                                           | 1 +
- drivers/base/swnode.c                                        | 1 +
- drivers/base/topology.c                                      | 2 ++
- drivers/base/transport_class.c                               | 3 +++
- drivers/block/null_blk/main.c                                | 1 +
- drivers/block/virtio_blk.c                                   | 1 +
- drivers/block/xen-blkback/blkback.c                          | 2 ++
- drivers/block/zram/zcomp.c                                   | 1 +
- drivers/bus/mhi/ep/main.c                                    | 1 +
- drivers/char/hw_random/virtio-rng.c                          | 1 +
- drivers/char/ipmi/ipmi_msghandler.c                          | 1 +
- drivers/char/misc.c                                          | 1 +
- drivers/char/ppdev.c                                         | 1 +
- drivers/char/tpm/tpm-chip.c                                  | 1 +
- drivers/clk/qcom/clk-regmap-mux-div.h                        | 1 +
- drivers/clk/qcom/gdsc.c                                      | 1 +
- drivers/clk/samsung/clk-cpu.h                                | 2 ++
- drivers/clk/sunxi-ng/ccu_common.h                            | 1 +
- drivers/cpufreq/apple-soc-cpufreq.c                          | 1 +
- drivers/cpufreq/cpufreq_governor.h                           | 1 +
- drivers/cpufreq/freq_table.c                                 | 1 +
- drivers/cxl/cxl.h                                            | 3 +++
- drivers/cxl/cxlmem.h                                         | 1 +
- drivers/devfreq/event/rockchip-dfi.c                         | 1 +
- drivers/dma-buf/st-dma-fence.c                               | 1 +
- drivers/dma/ioat/sysfs.c                                     | 1 +
- drivers/eisa/eisa-bus.c                                      | 1 +
- drivers/extcon/devres.c                                      | 1 +
- drivers/extcon/extcon.h                                      | 1 +
- drivers/firmware/arm_ffa/bus.c                               | 1 +
- drivers/firmware/arm_scmi/bus.c                              | 1 +
- drivers/firmware/edd.c                                       | 1 +
- drivers/firmware/efi/libstub/efi-stub-helper.c               | 1 +
- drivers/firmware/google/gsmi.c                               | 1 +
- drivers/fpga/dfl.c                                           | 2 ++
- drivers/gpio/gpio-tegra.c                                    | 1 +
- drivers/gpio/gpio-tegra186.c                                 | 1 +
- drivers/gpio/gpio-thunderx.c                                 | 1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.h                      | 1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c                   | 1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h                       | 3 +++
- drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c       | 2 ++
- drivers/gpu/drm/i915/i915_perf.c                             | 1 +
- drivers/gpu/drm/i915/i915_perf_types.h                       | 1 +
- drivers/gpu/drm/i915/i915_scatterlist.h                      | 1 +
- drivers/gpu/drm/msm/msm_drv.h                                | 1 +
- drivers/gpu/drm/nouveau/dispnv50/disp.c                      | 1 +
- drivers/gpu/drm/xe/xe_gpu_scheduler.c                        | 2 ++
- drivers/gpu/drm/xe/xe_guc_ct.h                               | 2 ++
- drivers/hid/intel-ish-hid/ishtp/bus.c                        | 1 +
- drivers/hwmon/coretemp.c                                     | 1 +
- drivers/hwmon/nct6775-core.c                                 | 1 +
- drivers/iio/adc/ti-tsc2046.c                                 | 1 +
- drivers/infiniband/hw/hfi1/rc.c                              | 1 +
- drivers/infiniband/hw/qib/qib_file_ops.c                     | 1 +
- drivers/infiniband/hw/usnic/usnic_ib_main.c                  | 1 +
- drivers/infiniband/hw/usnic/usnic_ib_sysfs.c                 | 1 +
- drivers/infiniband/sw/rdmavt/cq.c                            | 1 +
- drivers/infiniband/sw/rdmavt/qp.c                            | 1 +
- drivers/infiniband/ulp/srp/ib_srp.c                          | 1 +
- drivers/iommu/virtio-iommu.c                                 | 1 +
- drivers/mailbox/mailbox.c                                    | 1 +
- drivers/md/bcache/bset.c                                     | 1 +
- drivers/md/bcache/sysfs.h                                    | 2 ++
- drivers/media/cec/core/cec-pin.c                             | 1 +
- drivers/media/pci/pt3/pt3.c                                  | 1 +
- drivers/memory/tegra/tegra234.c                              | 1 +
- drivers/mfd/abx500-core.c                                    | 1 +
- drivers/misc/cardreader/alcor_pci.c                          | 1 +
- drivers/misc/dw-xdata-pcie.c                                 | 1 +
- drivers/misc/lkdtm/heap.c                                    | 1 +
- drivers/misc/mei/bus.c                                       | 1 +
- drivers/misc/mei/client.c                                    | 1 +
- drivers/misc/mei/debugfs.c                                   | 1 +
- drivers/misc/mei/main.c                                      | 1 +
- drivers/misc/pci_endpoint_test.c                             | 1 +
- drivers/misc/vcpu_stall_detector.c                           | 1 +
- drivers/misc/xilinx_sdfec.c                                  | 1 +
- drivers/mtd/mtd_blkdevs.c                                    | 1 +
- drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c               | 1 +
- drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c               | 2 ++
- drivers/net/can/spi/mcp251xfd/mcp251xfd-rx.c                 | 1 +
- drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c                | 1 +
- drivers/net/ethernet/cortina/gemini.c                        | 1 +
- drivers/net/ethernet/freescale/fec_ptp.c                     | 1 +
- drivers/net/ethernet/hisilicon/hip04_eth.c                   | 1 +
- drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c         | 1 +
- drivers/net/ethernet/ti/am65-cpsw-nuss.c                     | 1 +
- drivers/net/mdio/mdio-mux-meson-gxl.c                        | 1 +
- drivers/net/mdio/mdio-mux-multiplexer.c                      | 1 +
- drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c        | 2 ++
- drivers/net/wireless/virtual/mac80211_hwsim.c                | 1 +
- drivers/net/wwan/iosm/iosm_ipc_imem.c                        | 1 +
- drivers/nvme/host/nvme.h                                     | 1 +
- drivers/nvme/target/fc.c                                     | 1 +
- drivers/nvme/target/nvmet.h                                  | 1 +
- drivers/of/of_numa.c                                         | 1 +
- drivers/pci/controller/vmd.c                                 | 1 +
- drivers/pci/pci.c                                            | 1 +
- drivers/pci/switch/switchtec.c                               | 1 +
- drivers/perf/thunderx2_pmu.c                                 | 1 +
- drivers/platform/chrome/wilco_ec/telemetry.c                 | 1 +
- drivers/platform/x86/amd/pmf/tee-if.c                        | 1 +
- .../platform/x86/dell/dell-wmi-sysman/biosattr-interface.c   | 1 +
- drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c  | 2 ++
- drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c   | 2 ++
- .../platform/x86/dell/dell-wmi-sysman/passobj-attributes.c   | 3 +++
- .../x86/dell/dell-wmi-sysman/passwordattr-interface.c        | 1 +
- .../platform/x86/dell/dell-wmi-sysman/string-attributes.c    | 2 ++
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c           | 1 +
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c                 | 1 +
- drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c         | 3 +++
- drivers/platform/x86/hp/hp-bioscfg/int-attributes.c          | 3 +++
- drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c   | 2 ++
- drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c    | 3 +++
- drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c       | 2 ++
- drivers/platform/x86/hp/hp-bioscfg/string-attributes.c       | 3 +++
- drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c    | 2 ++
- drivers/platform/x86/intel/pmt/telemetry.c                   | 1 +
- .../x86/intel/uncore-frequency/uncore-frequency-common.c     | 1 +
- .../x86/intel/uncore-frequency/uncore-frequency-common.h     | 1 +
- drivers/platform/x86/think-lmi.c                             | 1 +
- drivers/platform/x86/wmi.c                                   | 1 +
- drivers/pmdomain/governor.c                                  | 1 +
- drivers/power/reset/ltc2952-poweroff.c                       | 1 +
- drivers/powercap/dtpm.c                                      | 1 +
- drivers/pps/clients/pps-ktimer.c                             | 1 +
- drivers/pps/clients/pps-ldisc.c                              | 1 +
- drivers/pps/clients/pps_parport.c                            | 1 +
- drivers/pps/kapi.c                                           | 1 +
- drivers/pps/pps.c                                            | 1 +
- drivers/rtc/class.c                                          | 1 +
- drivers/rtc/interface.c                                      | 1 +
- drivers/scsi/isci/isci.h                                     | 1 +
- drivers/scsi/lpfc/lpfc_init.c                                | 1 +
- drivers/slimbus/slimbus.h                                    | 1 +
- drivers/soc/nuvoton/wpcm450-soc.c                            | 1 +
- drivers/soundwire/bus.c                                      | 1 +
- drivers/soundwire/intel_auxdevice.c                          | 1 +
- drivers/spi/spi-stm32.c                                      | 1 +
- drivers/staging/fbtft/fb_ssd1351.c                           | 1 +
- drivers/target/target_core_fabric_configfs.c                 | 1 +
- drivers/target/target_core_file.c                            | 1 +
- drivers/thermal/devfreq_cooling.c                            | 1 +
- drivers/thermal/intel/intel_powerclamp.c                     | 1 +
- drivers/thermal/intel/therm_throt.c                          | 1 +
- drivers/tty/rpmsg_tty.c                                      | 1 +
- drivers/tty/serial/8250/8250_bcm7271.c                       | 1 +
- drivers/tty/serial/8250/8250_port.c                          | 1 +
- drivers/tty/serial/imx.c                                     | 1 +
- drivers/tty/serial/serial_base.h                             | 2 ++
- drivers/tty/serial/sh-sci.c                                  | 1 +
- drivers/tty/serial/xilinx_uartps.c                           | 1 +
- drivers/usb/chipidea/otg_fsm.c                               | 1 +
- drivers/usb/dwc2/hcd_queue.c                                 | 1 +
- drivers/usb/gadget/function/f_ncm.c                          | 1 +
- drivers/usb/gadget/udc/max3420_udc.c                         | 1 +
- drivers/usb/typec/class.h                                    | 1 +
- drivers/usb/typec/pd.c                                       | 1 +
- drivers/vfio/group.c                                         | 1 +
- drivers/video/fbdev/omap2/omapfb/dss/dsi.c                   | 1 +
- drivers/video/fbdev/omap2/omapfb/dss/pll.c                   | 1 +
- drivers/virt/coco/tsm.c                                      | 1 +
- fs/aio.c                                                     | 1 +
- fs/bcachefs/chardev.c                                        | 1 +
- fs/bcachefs/fs.c                                             | 1 +
- fs/btrfs/qgroup.c                                            | 1 +
- fs/btrfs/sysfs.c                                             | 1 +
- fs/buffer.c                                                  | 1 +
- fs/ceph/metric.h                                             | 2 ++
- fs/ceph/super.h                                              | 1 +
- fs/configfs/mount.c                                          | 1 +
- fs/crypto/bio.c                                              | 1 +
- fs/debugfs/inode.c                                           | 1 +
- fs/erofs/data.c                                              | 1 +
- fs/erofs/internal.h                                          | 1 +
- fs/erofs/super.c                                             | 1 +
- fs/eventpoll.c                                               | 1 +
- fs/exec.c                                                    | 1 +
- fs/ext4/sysfs.c                                              | 1 +
- fs/f2fs/f2fs.h                                               | 1 +
- fs/gfs2/recovery.c                                           | 1 +
- fs/gfs2/sys.c                                                | 1 +
- fs/hfsplus/wrapper.c                                         | 1 +
- fs/iomap/buffered-io.c                                       | 1 +
- fs/iomap/direct-io.c                                         | 1 +
- fs/namespace.c                                               | 1 +
- fs/nfs/nfs42xattr.c                                          | 1 +
- fs/ntfs3/fsntfs.c                                            | 3 ++-
- fs/ntfs3/super.c                                             | 1 +
- fs/pnode.c                                                   | 1 +
- fs/proc/uptime.c                                             | 1 +
- fs/pstore/inode.c                                            | 1 +
- fs/reiserfs/reiserfs.h                                       | 1 +
- fs/sysctls.c                                                 | 1 +
- fs/sysfs/mount.c                                             | 1 +
- fs/tracefs/inode.c                                           | 1 +
- fs/ubifs/io.c                                                | 1 +
- fs/ubifs/super.c                                             | 1 +
- fs/xfs/xfs_error.c                                           | 1 +
- fs/xfs/xfs_sysfs.c                                           | 1 +
- fs/zonefs/sysfs.c                                            | 1 +
- include/drm/drm_color_mgmt.h                                 | 1 +
- include/drm/drm_modeset_lock.h                               | 1 +
- include/drm/gpu_scheduler.h                                  | 1 +
- include/linux/backing-dev-defs.h                             | 5 +++++
- include/linux/bio.h                                          | 1 +
- include/linux/blk-integrity.h                                | 1 +
- include/linux/blk-mq.h                                       | 1 +
- include/linux/blkdev.h                                       | 2 ++
- include/linux/can/dev.h                                      | 1 +
- include/linux/dev_printk.h                                   | 1 +
- include/linux/device.h                                       | 1 +
- include/linux/device/bus.h                                   | 1 +
- include/linux/device/class.h                                 | 1 +
- include/linux/dmaengine.h                                    | 1 +
- include/linux/dtpm.h                                         | 2 ++
- include/linux/extcon.h                                       | 3 +++
- include/linux/firmware.h                                     | 1 +
- include/linux/flex_proportions.h                             | 1 +
- include/linux/framer/framer-provider.h                       | 1 +
- include/linux/futex.h                                        | 1 +
- include/linux/hisi_acc_qm.h                                  | 1 +
- include/linux/hrtimer.h                                      | 2 ++
- include/linux/iio/iio.h                                      | 1 +
- include/linux/ipc.h                                          | 2 ++
- include/linux/memory_hotplug.h                               | 1 +
- include/linux/mm.h                                           | 3 +++
- include/linux/module.h                                       | 1 +
- include/linux/mtd/blktrans.h                                 | 1 +
- include/linux/ndctl.h                                        | 2 ++
- include/linux/node.h                                         | 2 ++
- include/linux/notifier.h                                     | 1 +
- include/linux/ns_common.h                                    | 1 +
- include/linux/pm.h                                           | 4 ++++
- include/linux/quotaops.h                                     | 1 +
- include/linux/raid_class.h                                   | 2 ++
- include/linux/slab.h                                         | 1 +
- include/linux/socket.h                                       | 2 +-
- include/linux/soundwire/sdw.h                                | 1 +
- include/linux/spi/spi_bitbang.h                              | 2 ++
- include/linux/srcutree.h                                     | 2 ++
- include/linux/stackdepot.h                                   | 1 +
- include/linux/sunrpc/rpc_pipe_fs.h                           | 3 +++
- include/linux/trace_recursion.h                              | 1 +
- include/linux/tty_port.h                                     | 2 +-
- include/linux/u64_stats_sync.h                               | 2 ++
- include/linux/wait_bit.h                                     | 3 +++
- include/linux/writeback.h                                    | 1 +
- include/linux/ww_mutex.h                                     | 1 +
- include/media/media-device.h                                 | 1 +
- include/net/netns/ipv6.h                                     | 4 ++++
- include/net/netns/mctp.h                                     | 1 +
- include/net/netns/xdp.h                                      | 1 +
- include/net/tcp.h                                            | 1 +
- include/sound/core.h                                         | 1 +
- include/sound/util_mem.h                                     | 1 +
- include/trace/events/iommu.h                                 | 3 +--
- include/trace/events/power.h                                 | 1 +
- init/init_task.c                                             | 1 +
- init/main.c                                                  | 1 +
- io_uring/cancel.c                                            | 1 +
- io_uring/io_uring.c                                          | 1 +
- io_uring/timeout.h                                           | 2 ++
- ipc/mq_sysctl.c                                              | 1 +
- ipc/mqueue.c                                                 | 1 +
- ipc/namespace.c                                              | 1 +
- ipc/sem.c                                                    | 1 +
- kernel/bpf/helpers.c                                         | 1 +
- kernel/cpu.c                                                 | 1 +
- kernel/events/core.c                                         | 1 +
- kernel/exit.c                                                | 1 +
- kernel/fork.c                                                | 1 +
- kernel/futex/core.c                                          | 1 +
- kernel/futex/pi.c                                            | 1 +
- kernel/futex/requeue.c                                       | 1 +
- kernel/futex/syscalls.c                                      | 1 +
- kernel/futex/waitwake.c                                      | 1 +
- kernel/livepatch/core.c                                      | 2 ++
- kernel/livepatch/transition.c                                | 1 +
- kernel/locking/rtmutex.c                                     | 1 +
- kernel/locking/rtmutex_common.h                              | 1 +
- kernel/padata.c                                              | 1 +
- kernel/panic.c                                               | 1 +
- kernel/power/energy_model.c                                  | 1 +
- kernel/reboot.c                                              | 1 +
- kernel/signal.c                                              | 1 +
- kernel/smpboot.c                                             | 1 +
- kernel/time/hrtimer.c                                        | 1 +
- kernel/time/namespace.c                                      | 1 +
- kernel/time/posix-timers.c                                   | 1 +
- kernel/time/timer_list.c                                     | 1 +
- kernel/trace/trace_osnoise.c                                 | 1 +
- kernel/tsacct.c                                              | 1 +
- kernel/ucount.c                                              | 1 +
- kernel/user.c                                                | 2 ++
- kernel/watchdog.c                                            | 1 +
- kernel/workqueue.c                                           | 1 +
- lib/cpu_rmap.c                                               | 2 ++
- lib/flex_proportions.c                                       | 2 ++
- lib/group_cpus.c                                             | 1 +
- lib/kobject.c                                                | 2 ++
- lib/lockref.c                                                | 2 ++
- lib/objpool.c                                                | 2 ++
- lib/test_lockup.c                                            | 1 +
- mm/damon/sysfs-common.c                                      | 1 +
- mm/damon/sysfs-schemes.c                                     | 1 +
- mm/damon/sysfs.c                                             | 1 +
- mm/folio-compat.c                                            | 1 +
- mm/khugepaged.c                                              | 1 +
- mm/ksm.c                                                     | 2 ++
- mm/memory-tiers.c                                            | 1 +
- mm/memory_hotplug.c                                          | 1 +
- mm/mempolicy.c                                               | 1 +
- mm/workingset.c                                              | 1 +
- net/can/j1939/bus.c                                          | 2 ++
- net/can/j1939/transport.c                                    | 1 +
- net/ceph/string_table.c                                      | 1 +
- net/sched/act_gate.c                                         | 1 +
- net/xfrm/xfrm_state.c                                        | 1 +
- samples/vfio-mdev/mtty.c                                     | 1 +
- security/integrity/ima/ima_mok.c                             | 1 +
- security/keys/proc.c                                         | 1 +
- sound/soc/intel/avs/avs.h                                    | 1 +
- sound/soc/qcom/qdsp6/q6apm.h                                 | 1 +
- sound/soc/sof/sof-audio.h                                    | 1 +
- 361 files changed, 440 insertions(+), 5 deletions(-)
+ fs/fs_struct.c                                  |  1 +
+ include/clocksource/samsung_pwm.h               |  2 +-
+ include/crypto/algapi.h                         |  2 +-
+ include/crypto/drbg.h                           |  2 +-
+ include/crypto/internal/geniv.h                 |  2 +-
+ include/drm/drm_bridge.h                        |  2 +-
+ include/drm/drm_client.h                        |  2 +-
+ include/drm/drm_crtc.h                          |  2 +-
+ include/drm/drm_device.h                        |  2 +-
+ include/drm/drm_flip_work.h                     |  4 ++--
+ include/drm/drm_gem.h                           |  2 +-
+ include/drm/drm_gpuvm.h                         |  2 +-
+ include/drm/drm_managed.h                       |  2 +-
+ include/drm/drm_mipi_dbi.h                      |  2 +-
+ include/drm/drm_mm.h                            |  2 +-
+ include/drm/drm_mode_config.h                   |  4 ++--
+ include/drm/drm_panel.h                         |  2 +-
+ include/drm/drm_prime.h                         |  4 ++--
+ include/drm/drm_privacy_screen_driver.h         |  2 +-
+ include/drm/drm_vblank.h                        |  2 +-
+ include/drm/drm_writeback.h                     |  2 +-
+ include/drm/gpu_scheduler.h                     |  2 +-
+ include/drm/i915_hdcp_interface.h               |  2 +-
+ include/drm/i915_pxp_tee_interface.h            |  2 +-
+ include/drm/ttm/ttm_pool.h                      |  2 +-
+ include/kunit/test.h                            |  2 +-
+ include/kvm/arm_arch_timer.h                    |  2 +-
+ include/kvm/arm_vgic.h                          |  4 ++--
+ include/linux/acpi.h                            |  2 +-
+ include/linux/agpgart.h                         |  2 +-
+ include/linux/alarmtimer.h                      |  2 +-
+ include/linux/backing-dev-defs.h                |  8 ++++----
+ include/linux/badblocks.h                       |  2 +-
+ include/linux/balloon_compaction.h              |  2 +-
+ include/linux/bcm47xx_wdt.h                     |  2 +-
+ include/linux/blk-crypto.h                      |  2 +-
+ include/linux/blk-mq.h                          |  2 +-
+ include/linux/blkdev.h                          |  6 +++---
+ include/linux/bpf-cgroup-defs.h                 |  2 +-
+ include/linux/bpf-cgroup.h                      |  2 +-
+ include/linux/bpf.h                             |  4 ++--
+ include/linux/bpf_mem_alloc.h                   |  2 +-
+ include/linux/bsg-lib.h                         |  2 +-
+ include/linux/capability.h                      |  2 +-
+ include/linux/cb710.h                           |  2 +-
+ include/linux/ccp.h                             |  2 +-
+ include/linux/ceph/libceph.h                    |  2 +-
+ include/linux/ceph/messenger.h                  |  4 ++--
+ include/linux/ceph/mon_client.h                 |  2 +-
+ include/linux/ceph/osd_client.h                 |  4 ++--
+ include/linux/ceph/osdmap.h                     |  2 +-
+ include/linux/ceph/pagelist.h                   |  2 +-
+ include/linux/ceph/string_table.h               |  2 +-
+ include/linux/cgroup-defs.h                     |  4 ++--
+ include/linux/clk/zynq.h                        |  2 +-
+ include/linux/comedi/comedidev.h                |  2 +-
+ include/linux/configfs.h                        |  2 +-
+ include/linux/connector.h                       |  2 +-
+ include/linux/console_struct.h                  |  2 +-
+ include/linux/counter.h                         |  2 +-
+ include/linux/cpu_rmap.h                        |  2 +-
+ include/linux/cpufreq.h                         |  2 +-
+ include/linux/cpuset.h                          |  2 +-
+ include/linux/cred.h                            |  2 +-
+ include/linux/crush/crush.h                     |  2 +-
+ include/linux/crypto.h                          |  2 +-
+ include/linux/damon.h                           |  2 +-
+ include/linux/dcache.h                          |  2 +-
+ include/linux/dev_printk.h                      |  2 +-
+ include/linux/device-mapper.h                   |  1 -
+ include/linux/device.h                          |  4 ++--
+ include/linux/dim.h                             |  2 +-
+ include/linux/dm-bufio.h                        |  2 +-
+ include/linux/edac.h                            |  2 +-
+ include/linux/fault-inject.h                    |  2 +-
+ include/linux/fb.h                              |  4 ++--
+ include/linux/fdtable.h                         |  2 +-
+ include/linux/firewire.h                        |  8 ++++----
+ include/linux/firmware.h                        |  2 +-
+ include/linux/flex_proportions.h                |  6 +++---
+ include/linux/fpga/fpga-mgr.h                   |  2 +-
+ include/linux/framer/framer.h                   |  4 ++--
+ include/linux/fs.h                              |  8 ++++----
+ include/linux/fs_context.h                      |  4 ++--
+ include/linux/fs_struct.h                       |  2 +-
+ include/linux/fsl/bestcomm/bestcomm_priv.h      |  2 +-
+ include/linux/fsl/bestcomm/sram.h               |  2 +-
+ include/linux/gameport.h                        |  2 +-
+ include/linux/gfp_api.h                         |  2 +-
+ include/linux/gnss.h                            |  2 +-
+ include/linux/gpio/driver.h                     |  2 +-
+ include/linux/greybus/operation.h               |  4 ++--
+ include/linux/hid.h                             |  5 ++---
+ include/linux/hp_sdc.h                          |  2 +-
+ include/linux/hrtimer.h                         |  4 ++--
+ include/linux/hsi/hsi.h                         |  2 +-
+ include/linux/hugetlb.h                         |  2 +-
+ include/linux/i2c.h                             |  2 +-
+ include/linux/i3c/master.h                      |  2 +-
+ include/linux/i8253.h                           |  2 +-
+ include/linux/idr.h                             |  2 +-
+ include/linux/if_eql.h                          |  4 ++--
+ include/linux/if_pppox.h                        |  2 +-
+ include/linux/igmp.h                            |  4 ++--
+ include/linux/iio/buffer-dma.h                  |  4 ++--
+ include/linux/inetdevice.h                      |  2 +-
+ include/linux/input.h                           |  2 +-
+ include/linux/interrupt.h                       |  2 +-
+ include/linux/interval_tree.h                   |  3 ++-
+ include/linux/iocontext.h                       |  2 +-
+ include/linux/iomap.h                           |  2 +-
+ include/linux/iova.h                            |  2 +-
+ include/linux/ipc.h                             |  4 ++--
+ include/linux/irqdesc.h                         |  2 +-
+ include/linux/irqdomain.h                       |  2 +-
+ include/linux/jbd2.h                            |  4 ++--
+ include/linux/journal-head.h                    |  2 +-
+ include/linux/kernfs.h                          |  4 ++--
+ include/linux/key.h                             |  5 +++--
+ include/linux/klist.h                           |  2 +-
+ include/linux/kmod.h                            |  2 +-
+ include/linux/kmsan.h                           |  2 +-
+ include/linux/kobject.h                         |  4 ++--
+ include/linux/kprobes.h                         |  2 +-
+ include/linux/kref.h                            |  1 -
+ include/linux/kvm_host.h                        |  4 ++--
+ include/linux/kvm_types.h                       |  2 +-
+ include/linux/leds-pca9532.h                    |  2 +-
+ include/linux/leds.h                            |  6 +++---
+ include/linux/libata.h                          |  2 +-
+ include/linux/libnvdimm.h                       |  2 +-
+ include/linux/libps2.h                          |  2 +-
+ include/linux/lockd/lockd.h                     |  2 +-
+ include/linux/lockref.h                         |  2 +-
+ include/linux/lp.h                              |  2 +-
+ include/linux/mISDNhw.h                         |  2 +-
+ include/linux/mailbox_controller.h              |  2 +-
+ include/linux/mc146818rtc.h                     |  2 +-
+ include/linux/mdio/mdio-xgene.h                 |  2 +-
+ include/linux/memory-tiers.h                    |  2 +-
+ include/linux/memory.h                          |  2 +-
+ include/linux/mempolicy.h                       |  4 ++--
+ include/linux/memstick.h                        |  2 +-
+ include/linux/mfd/abx500/ab8500.h               |  2 +-
+ include/linux/mfd/cs42l43.h                     |  4 ++--
+ include/linux/mfd/ipaq-micro.h                  |  2 +-
+ include/linux/mfd/lochnagar.h                   |  2 +-
+ include/linux/mfd/madera/core.h                 |  2 +-
+ include/linux/mfd/max8907.h                     |  2 +-
+ include/linux/mfd/mt6397/core.h                 |  2 +-
+ include/linux/mfd/mt6397/rtc.h                  |  2 +-
+ include/linux/mfd/pcf50633/core.h               |  3 +--
+ include/linux/mfd/rc5t583.h                     |  2 +-
+ include/linux/mfd/stmpe.h                       |  2 +-
+ include/linux/mfd/ucb1x00.h                     |  2 +-
+ include/linux/mfd/wm8350/core.h                 |  2 +-
+ include/linux/mhi.h                             |  6 +++---
+ include/linux/mlx5/driver.h                     |  6 +++---
+ include/linux/mm.h                              |  2 +-
+ include/linux/mm_types.h                        |  8 ++++----
+ include/linux/mmzone.h                          |  7 +++++--
+ include/linux/moxtet.h                          |  2 +-
+ include/linux/mroute_base.h                     |  2 +-
+ include/linux/msi.h                             |  2 +-
+ include/linux/mtd/blktrans.h                    |  2 +-
+ include/linux/mtd/doc2000.h                     |  2 +-
+ include/linux/mtd/flashchip.h                   |  2 +-
+ include/linux/mtd/onenand.h                     |  2 +-
+ include/linux/mtd/spinand.h                     |  2 +-
+ include/linux/mutex.h                           |  2 +-
+ include/linux/netdevice.h                       |  4 ++--
+ include/linux/netfs.h                           |  2 +-
+ include/linux/netpoll.h                         |  2 +-
+ include/linux/nfs4.h                            |  2 +-
+ include/linux/nfs_fs.h                          |  4 ++--
+ include/linux/nfs_fs_sb.h                       |  2 +-
+ include/linux/ns_common.h                       |  2 +-
+ include/linux/objpool.h                         |  2 +-
+ include/linux/oom.h                             |  2 +-
+ include/linux/padata.h                          |  6 +++---
+ include/linux/pagemap.h                         |  2 +-
+ include/linux/parport.h                         |  2 +-
+ include/linux/part_stat.h                       |  2 +-
+ include/linux/peci.h                            |  2 +-
+ include/linux/percpu-refcount.h                 |  2 +-
+ include/linux/percpu_counter.h                  |  2 +-
+ include/linux/perf_event.h                      | 10 +++++-----
+ include/linux/phy.h                             |  4 ++--
+ include/linux/pktcdvd.h                         |  2 +-
+ include/linux/platform_data/cros_ec_proto.h     |  2 +-
+ include/linux/platform_data/cros_ec_sensorhub.h |  2 +-
+ include/linux/platform_data/wilco-ec.h          |  2 +-
+ include/linux/platform_data/xilinx-ll-temac.h   |  2 +-
+ include/linux/pm.h                              |  6 +++---
+ include/linux/pm_domain.h                       |  4 ++--
+ include/linux/posix-timers.h                    |  2 +-
+ include/linux/power_supply.h                    |  4 ++--
+ include/linux/pruss_driver.h                    |  2 +-
+ include/linux/psi_types.h                       |  2 +-
+ include/linux/pstore.h                          |  4 ++--
+ include/linux/qed/qede_rdma.h                   |  2 +-
+ include/linux/quota.h                           |  6 +++---
+ include/linux/radix-tree.h                      |  1 -
+ include/linux/raid/pq.h                         |  2 +-
+ include/linux/regmap.h                          |  2 +-
+ include/linux/remoteproc.h                      |  2 +-
+ include/linux/resctrl.h                         |  5 ++++-
+ include/linux/reset/reset-simple.h              |  2 +-
+ include/linux/rhashtable-types.h                |  2 +-
+ include/linux/rpmsg.h                           |  2 +-
+ include/linux/rslib.h                           |  2 +-
+ include/linux/rtc.h                             |  2 +-
+ include/linux/sched/signal.h                    |  2 +-
+ include/linux/sched/user.h                      |  4 ++--
+ include/linux/scs.h                             |  2 +-
+ include/linux/seq_file.h                        |  2 +-
+ include/linux/serial_core.h                     |  1 -
+ include/linux/serio.h                           |  2 +-
+ include/linux/slab.h                            |  2 +-
+ include/linux/soc/qcom/apr.h                    |  2 +-
+ include/linux/soc/qcom/qmi.h                    |  2 +-
+ include/linux/ssb/ssb.h                         |  2 +-
+ include/linux/ssb/ssb_driver_gige.h             |  2 +-
+ include/linux/stackdepot.h                      |  2 +-
+ include/linux/stat.h                            |  2 +-
+ include/linux/sunrpc/auth_gss.h                 |  2 +-
+ include/linux/sunrpc/clnt.h                     |  2 +-
+ include/linux/sunrpc/metrics.h                  |  2 +-
+ include/linux/sunrpc/sched.h                    |  4 ++--
+ include/linux/sunrpc/types.h                    |  4 ++--
+ include/linux/swait.h                           |  2 +-
+ include/linux/swap.h                            |  2 +-
+ include/linux/swap_slots.h                      |  4 ++--
+ include/linux/swiotlb.h                         |  4 ++--
+ include/linux/sysctl.h                          |  4 ++--
+ include/linux/sysfs.h                           |  2 +-
+ include/linux/thermal.h                         |  2 +-
+ include/linux/thunderbolt.h                     |  2 +-
+ include/linux/tifm.h                            |  4 ++--
+ include/linux/tty.h                             |  4 ++--
+ include/linux/tty_buffer.h                      |  4 ++--
+ include/linux/tty_ldisc.h                       |  2 +-
+ include/linux/tty_port.h                        |  2 +-
+ include/linux/umh.h                             |  4 ++--
+ include/linux/usb.h                             |  2 +-
+ include/linux/usb/gadget.h                      |  2 +-
+ include/linux/usb/ljca.h                        |  2 +-
+ include/linux/usb/otg-fsm.h                     |  2 +-
+ include/linux/usb/serial.h                      |  2 +-
+ include/linux/user_namespace.h                  |  2 +-
+ include/linux/vfio.h                            |  2 +-
+ include/linux/vfio_pci_core.h                   |  2 +-
+ include/linux/via-core.h                        |  2 +-
+ include/linux/virtio.h                          |  4 ++--
+ include/linux/vmalloc.h                         |  2 +-
+ include/linux/vmpressure.h                      |  6 +++---
+ include/linux/vmw_vmci_api.h                    |  2 +-
+ include/linux/xarray.h                          |  2 +-
+ include/media/dmxdev.h                          |  6 +++---
+ include/media/drv-intf/saa7146.h                |  2 +-
+ include/media/dvb_demux.h                       |  4 ++--
+ include/media/dvb_frontend.h                    |  2 +-
+ include/media/dvb_ringbuffer.h                  |  2 +-
+ include/media/dvb_vb2.h                         |  2 +-
+ include/media/i2c/adp1653.h                     |  2 +-
+ include/media/media-device.h                    |  2 +-
+ include/media/rc-core.h                         |  2 +-
+ include/media/v4l2-dev.h                        |  2 +-
+ include/media/videobuf2-core.h                  |  2 +-
+ include/net/af_unix.h                           |  4 ++--
+ include/net/af_vsock.h                          |  2 +-
+ include/net/atmclip.h                           |  2 +-
+ include/net/ax25.h                              |  4 ++--
+ include/net/cfg802154.h                         |  2 +-
+ include/net/devlink.h                           |  8 ++++----
+ include/net/dst.h                               |  2 +-
+ include/net/flow.h                              |  2 +-
+ include/net/fq.h                                |  2 +-
+ include/net/hwbm.h                              |  2 +-
+ include/net/inet_connection_sock.h              |  2 +-
+ include/net/inet_hashtables.h                   |  2 +-
+ include/net/inet_timewait_sock.h                |  2 +-
+ include/net/ip6_fib.h                           |  2 +-
+ include/net/ip_vs.h                             |  6 +++---
+ include/net/lib80211.h                          |  2 +-
+ include/net/llc.h                               |  2 +-
+ include/net/llc_conn.h                          |  2 +-
+ include/net/neighbour.h                         |  2 +-
+ include/net/netfilter/nf_conntrack_count.h      |  2 +-
+ include/net/netns/can.h                         |  4 ++--
+ include/net/netns/conntrack.h                   |  1 -
+ include/net/netns/ipv4.h                        |  4 ++--
+ include/net/netns/mctp.h                        |  2 +-
+ include/net/netns/nexthop.h                     |  2 +-
+ include/net/netns/packet.h                      |  2 +-
+ include/net/netns/sctp.h                        |  2 +-
+ include/net/netns/smc.h                         |  2 +-
+ include/net/netns/unix.h                        |  2 +-
+ include/net/netns/xdp.h                         |  2 +-
+ include/net/netns/xfrm.h                        |  2 +-
+ include/net/phonet/pn_dev.h                     |  2 +-
+ include/net/sch_generic.h                       |  2 +-
+ include/net/sctp/sctp.h                         |  2 +-
+ include/net/sctp/structs.h                      |  2 +-
+ include/net/smc.h                               |  2 +-
+ include/net/sock.h                              |  4 ++--
+ include/net/sock_reuseport.h                    |  2 +-
+ include/net/tls.h                               |  2 +-
+ include/net/xdp_sock.h                          |  6 +++---
+ include/net/xfrm.h                              |  2 +-
+ include/pcmcia/ss.h                             |  2 +-
+ include/rdma/ib_verbs.h                         |  2 +-
+ include/rdma/rdma_counter.h                     |  2 +-
+ include/rdma/rdma_vt.h                          |  2 +-
+ include/scsi/libfc.h                            |  2 +-
+ include/scsi/libfcoe.h                          |  2 +-
+ include/scsi/libiscsi.h                         |  6 +++---
+ include/scsi/libsas.h                           |  2 +-
+ include/scsi/scsi_cmnd.h                        |  2 +-
+ include/scsi/scsi_device.h                      |  4 ++--
+ include/scsi/scsi_host.h                        |  4 ++--
+ include/scsi/scsi_tcq.h                         |  2 +-
+ include/scsi/scsi_transport.h                   |  2 +-
+ include/scsi/scsi_transport_iscsi.h             |  2 +-
+ include/scsi/scsi_transport_sas.h               |  2 +-
+ include/scsi/scsi_transport_spi.h               |  2 +-
+ include/scsi/scsi_transport_srp.h               |  2 +-
+ include/soc/fsl/qe/qe.h                         |  2 +-
+ include/sound/ac97_codec.h                      |  2 +-
+ include/sound/core.h                            |  2 +-
+ include/sound/emu10k1.h                         |  2 +-
+ include/sound/rawmidi.h                         |  6 +++---
+ include/sound/util_mem.h                        |  2 +-
+ include/target/iscsi/iscsi_target_stat.h        |  2 +-
+ include/trace/events/block.h                    |  2 +-
+ include/trace/events/kyber.h                    |  2 +-
+ include/trace/events/lock.h                     |  2 +-
+ include/trace/events/mmc.h                      |  2 +-
+ include/trace/events/workqueue.h                |  2 +-
+ 339 files changed, 441 insertions(+), 439 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 8d1a634a403e..dc0642d35f5e 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -65,6 +65,7 @@
- #include <linux/bsearch.h>
- #include <linux/cpumask.h>
- #include <linux/crash_dump.h>
-+#include <linux/device.h>
- #include <linux/kstrtox.h>
- #include <linux/sort.h>
- #include <linux/stop_machine.h>
-diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-index 47043c0d95ec..d30ad1215ab8 100644
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -23,6 +23,7 @@
- #include <linux/seq_file.h>
- #include <linux/sched.h>
- #include <linux/smp.h>
-+#include <linux/sysfs.h> // for __ATTR_RO()
- #include <linux/delay.h>
+diff --git a/fs/fs_struct.c b/fs/fs_struct.c
+index 64c2d0814ed6..42f5072413c0 100644
+--- a/fs/fs_struct.c
++++ b/fs/fs_struct.c
+@@ -4,6 +4,7 @@
+ #include <linux/sched/task.h>
+ #include <linux/fs.h>
+ #include <linux/path.h>
++#include <linux/seqlock.h>
+ #include <linux/slab.h>
+ #include <linux/fs_struct.h>
+ #include "internal.h"
+diff --git a/include/clocksource/samsung_pwm.h b/include/clocksource/samsung_pwm.h
+index 9b435caa95fe..a33c84f9bf32 100644
+--- a/include/clocksource/samsung_pwm.h
++++ b/include/clocksource/samsung_pwm.h
+@@ -5,7 +5,7 @@
+ #ifndef __CLOCKSOURCE_SAMSUNG_PWM_H
+ #define __CLOCKSOURCE_SAMSUNG_PWM_H
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ #define SAMSUNG_PWM_NUM		5
+ 
+diff --git a/include/crypto/algapi.h b/include/crypto/algapi.h
+index 7a4a71af653f..6898af8cf182 100644
+--- a/include/crypto/algapi.h
++++ b/include/crypto/algapi.h
+@@ -12,7 +12,7 @@
+ #include <linux/cache.h>
+ #include <linux/crypto.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
  
  /*
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index a650f5e11fc5..f6c271405c12 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/swab.h>
- #include <linux/uaccess.h>
-+#include <linux/ratelimit.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/debug-monitors.h>
-diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-index a41ef3213e1e..2b8abe086445 100644
---- a/arch/arm64/kernel/mte.c
-+++ b/arch/arm64/kernel/mte.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/cpu.h>
-+#include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/prctl.h>
-@@ -13,6 +14,7 @@
- #include <linux/string.h>
- #include <linux/swap.h>
- #include <linux/swapops.h>
-+#include <linux/sysfs.h>
- #include <linux/thread_info.h>
- #include <linux/types.h>
- #include <linux/uaccess.h>
-diff --git a/arch/arm64/kvm/arch_timer.c b/arch/arm64/kvm/arch_timer.c
-index 9dec8c419bf4..a5b47b400dfc 100644
---- a/arch/arm64/kvm/arch_timer.c
-+++ b/arch/arm64/kvm/arch_timer.c
-@@ -11,6 +11,8 @@
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/uaccess.h>
-+#include <linux/hrtimer.h>
-+#include <linux/ratelimit.h>
- 
- #include <clocksource/arm_arch_timer.h>
- #include <asm/arch_timer.h>
-diff --git a/arch/arm64/kvm/hypercalls.c b/arch/arm64/kvm/hypercalls.c
-index 5763d979d8ca..5aa0b3c106fd 100644
---- a/arch/arm64/kvm/hypercalls.c
-+++ b/arch/arm64/kvm/hypercalls.c
-@@ -3,6 +3,7 @@
- 
- #include <linux/arm-smccc.h>
- #include <linux/kvm_host.h>
-+#include <linux/ratelimit.h>
- 
- #include <asm/kvm_emulate.h>
- 
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index c15ee1df036a..1dacc5612804 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -8,6 +8,7 @@
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
- #include <linux/interrupt.h>
-+#include <linux/ratelimit.h>
- #include <kvm/iodev.h>
- #include <kvm/arm_vgic.h>
- 
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio.c b/arch/arm64/kvm/vgic/vgic-mmio.c
-index cf76523a2194..bde2110e140f 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio.c
-@@ -9,6 +9,7 @@
- #include <linux/irq.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/ratelimit.h>
- #include <kvm/iodev.h>
- #include <kvm/arm_arch_timer.h>
- #include <kvm/arm_vgic.h>
-diff --git a/arch/arm64/kvm/vgic/vgic-v2.c b/arch/arm64/kvm/vgic/vgic-v2.c
-index 7e9cdb78f7ce..28adaf9ddf34 100644
---- a/arch/arm64/kvm/vgic/vgic-v2.c
-+++ b/arch/arm64/kvm/vgic/vgic-v2.c
-@@ -6,6 +6,7 @@
- #include <linux/irqchip/arm-gic.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/ratelimit.h>
- #include <kvm/arm_vgic.h>
- #include <asm/kvm_mmu.h>
- 
-diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
-index 9465d3706ab9..dc6b5f5008fb 100644
---- a/arch/arm64/kvm/vgic/vgic-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-v3.c
-@@ -6,6 +6,7 @@
- #include <linux/kstrtox.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/ratelimit.h>
- #include <kvm/arm_vgic.h>
- #include <asm/kvm_hyp.h>
- #include <asm/kvm_mmu.h>
-diff --git a/arch/arm64/kvm/vgic/vgic-v4.c b/arch/arm64/kvm/vgic/vgic-v4.c
-index 74a67ad87f29..40ff8cc2b659 100644
---- a/arch/arm64/kvm/vgic/vgic-v4.c
-+++ b/arch/arm64/kvm/vgic/vgic-v4.c
-@@ -9,6 +9,7 @@
- #include <linux/irqdomain.h>
- #include <linux/kvm_host.h>
- #include <linux/irqchip/arm-gic-v3.h>
-+#include <linux/ratelimit.h>
- 
- #include "vgic.h"
- 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 5bf03c575812..5c7af7dcff2c 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -13,6 +13,7 @@
- #include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/cpufeature.h>
-+#include <linux/device.h>
- #include <linux/smp.h>
- 
- #include <asm/perf_event.h>
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 7927c0b832fa..e1f6a2f3840d 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/hrtimer.h>
- #include <linux/module.h>
- 
- #include <asm/cpu_device_id.h>
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 8d98d468b976..030629d12298 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -55,6 +55,7 @@
- 
- #define pr_fmt(fmt) "RAPL PMU: " fmt
- 
-+#include <linux/hrtimer.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/perf_event.h>
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index a927a8fc9624..7c43587e56a4 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -11,6 +11,7 @@
- #include <linux/thread_info.h>
- #include <linux/init.h>
- #include <linux/uaccess.h>
-+#include <linux/ratelimit.h>
- #include <linux/workqueue.h>
- #include <linux/delay.h>
- #include <linux/cpuhotplug.h>
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index 2293efd6ffa6..39bba722a42b 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -2,6 +2,7 @@
- #include <linux/syscore_ops.h>
- #include <linux/suspend.h>
- #include <linux/cpu.h>
-+#include <linux/device.h>
- 
- #include <asm/msr.h>
- #include <asm/mwait.h>
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 6329a306856b..035fca6e5ee0 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/hrtimer.h>
- #include <linux/objtool.h>
- #include <linux/percpu.h>
- 
-diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
-index 4b4e738c6f1b..d2056ae8f34d 100644
---- a/arch/x86/kvm/xen.c
-+++ b/arch/x86/kvm/xen.c
-@@ -13,6 +13,7 @@
- #include "lapic.h"
- 
- #include <linux/eventfd.h>
-+#include <linux/hrtimer.h>
- #include <linux/kvm_host.h>
- #include <linux/sched/stat.h>
- 
-diff --git a/arch/x86/platform/efi/runtime-map.c b/arch/x86/platform/efi/runtime-map.c
-index a6f02cef3ca2..a6c7a3480d1a 100644
---- a/arch/x86/platform/efi/runtime-map.c
-+++ b/arch/x86/platform/efi/runtime-map.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/string.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/module.h>
- #include <linux/types.h>
- #include <linux/efi.h>
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index bdbb557feb5a..2e99ac6d0c21 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -29,6 +29,7 @@
- #include <linux/resume_user_mode.h>
- #include <linux/psi.h>
- #include <linux/part_stat.h>
-+#include <linux/hrtimer.h>
- #include "blk.h"
- #include "blk-cgroup.h"
- #include "blk-ioprio.h"
-diff --git a/block/blk-crypto-sysfs.c b/block/blk-crypto-sysfs.c
-index a304434489ba..233d04b9116b 100644
---- a/block/blk-crypto-sysfs.c
-+++ b/block/blk-crypto-sysfs.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/blk-crypto-profile.h>
-+#include <linux/sysfs.h>
- 
- #include "blk-crypto-internal.h"
- 
-diff --git a/block/blk-ia-ranges.c b/block/blk-ia-ranges.c
-index c9eb4241e048..4a6bb87a0143 100644
---- a/block/blk-ia-ranges.c
-+++ b/block/blk-ia-ranges.c
-@@ -7,6 +7,7 @@
- #include <linux/kernel.h>
- #include <linux/blkdev.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- #include <linux/init.h>
- 
- #include "blk.h"
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 4b0b483a9693..d154161b906a 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -178,6 +178,7 @@
- #include <linux/time64.h>
- #include <linux/parser.h>
- #include <linux/sched/signal.h>
-+#include <linux/hrtimer.h>
- #include <asm/local.h>
- #include <asm/local64.h>
- #include "blk-rq-qos.h"
-diff --git a/block/bsg.c b/block/bsg.c
-index 72157a59b788..9e6635f423a0 100644
---- a/block/bsg.c
-+++ b/block/bsg.c
-@@ -7,6 +7,7 @@
- #include <linux/file.h>
- #include <linux/blkdev.h>
- #include <linux/cdev.h>
-+#include <linux/device.h>
- #include <linux/jiffies.h>
- #include <linux/percpu.h>
- #include <linux/idr.h>
-diff --git a/block/elevator.h b/block/elevator.h
-index 7ca3d7b6ed82..6c107132d536 100644
---- a/block/elevator.h
-+++ b/block/elevator.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/percpu.h>
- #include <linux/hashtable.h>
-+#include <linux/module.h>
- #include "blk-mq.h"
- 
- struct io_cq;
-diff --git a/block/holder.c b/block/holder.c
-index 37d18c13d958..a9affd4757cd 100644
---- a/block/holder.c
-+++ b/block/holder.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #include <linux/blkdev.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- 
- struct bd_holder_disk {
- 	struct list_head	list;
-diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-index 4155594aefc6..68fe2b6c12de 100644
---- a/block/kyber-iosched.c
-+++ b/block/kyber-iosched.c
-@@ -10,6 +10,7 @@
- #include <linux/blkdev.h>
- #include <linux/module.h>
- #include <linux/sbitmap.h>
-+#include <linux/sysfs.h>
- 
- #include <trace/events/block.h>
- 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 1b0de4fc3958..25dee768d2ba 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -15,6 +15,7 @@
- #include <linux/compiler.h>
- #include <linux/rbtree.h>
- #include <linux/sbitmap.h>
-+#include <linux/sysfs.h>
- 
- #include <trace/events/block.h>
- 
-diff --git a/drivers/accel/ivpu/ivpu_pm.c b/drivers/accel/ivpu/ivpu_pm.c
-index f501f27ebafd..8484f7d3bb4d 100644
---- a/drivers/accel/ivpu/ivpu_pm.c
-+++ b/drivers/accel/ivpu/ivpu_pm.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/highmem.h>
-+#include <linux/kobject.h>
- #include <linux/moduleparam.h>
- #include <linux/pci.h>
- #include <linux/pm_runtime.h>
-diff --git a/drivers/acpi/pfr_telemetry.c b/drivers/acpi/pfr_telemetry.c
-index 843f678ade0c..c7d9208e78c0 100644
---- a/drivers/acpi/pfr_telemetry.c
-+++ b/drivers/acpi/pfr_telemetry.c
-@@ -15,6 +15,7 @@
- #include <linux/errno.h>
- #include <linux/file.h>
- #include <linux/fs.h>
-+#include <linux/idr.h>
- #include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/mm.h>
-diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
-index 94e3c000df2e..003faea3ad4d 100644
---- a/drivers/acpi/sbs.c
-+++ b/drivers/acpi/sbs.c
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- 
- #include <linux/acpi.h>
- #include <linux/timer.h>
-diff --git a/drivers/ata/pata_parport/pata_parport.c b/drivers/ata/pata_parport/pata_parport.c
-index a7adfdcb5e27..b21ced9e0a3c 100644
---- a/drivers/ata/pata_parport/pata_parport.c
-+++ b/drivers/ata/pata_parport/pata_parport.c
-@@ -3,6 +3,7 @@
-  * Copyright 2023 Ondrej Zary
-  * based on paride.c by Grant R. Guenther <grant@torque.net>
-  */
-+#include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/parport.h>
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index eb4c0ace9242..344e7e4012ab 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -10,7 +10,12 @@
-  * shared outside of the drivers/base/ directory.
-  *
-  */
-+
-+#include <linux/klist.h>
-+#include <linux/kobject.h>
- #include <linux/notifier.h>
-+#include <linux/device/bus.h>
-+#include <linux/device/driver.h>
- 
- /**
-  * struct subsys_private - structure to hold the private to the driver core portions of the bus_type/class structure.
-diff --git a/drivers/base/container.c b/drivers/base/container.c
-index f40588ebc3f5..8ef783dfd76d 100644
---- a/drivers/base/container.c
-+++ b/drivers/base/container.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/container.h>
-+#include <linux/device.h>
- 
- #include "base.h"
- 
-diff --git a/drivers/base/firmware_loader/builtin/main.c b/drivers/base/firmware_loader/builtin/main.c
-index a065c3150897..13bb529ddadf 100644
---- a/drivers/base/firmware_loader/builtin/main.c
-+++ b/drivers/base/firmware_loader/builtin/main.c
-@@ -2,6 +2,7 @@
- /* Builtin firmware support */
- 
- #include <linux/firmware.h>
-+#include <linux/string.h> // for memcpy()
- #include "../firmware.h"
- 
- /* Only if FW_LOADER=y */
-diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-index 282c38aece0d..45365cf04fcd 100644
---- a/drivers/base/soc.c
-+++ b/drivers/base/soc.c
-@@ -13,6 +13,7 @@
- #include <linux/idr.h>
- #include <linux/spinlock.h>
- #include <linux/sys_soc.h>
-+#include <linux/device.h>
- #include <linux/err.h>
- #include <linux/glob.h>
- 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 36512fb75a20..9ee5b270affc 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/device.h>
-+#include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-diff --git a/drivers/base/topology.c b/drivers/base/topology.c
-index 89f98be5c5b9..0526c0ee6640 100644
---- a/drivers/base/topology.c
-+++ b/drivers/base/topology.c
-@@ -10,8 +10,10 @@
-  */
- #include <linux/mm.h>
- #include <linux/cpu.h>
-+#include <linux/device.h>
- #include <linux/module.h>
- #include <linux/hardirq.h>
-+#include <linux/sysfs.h>
- #include <linux/topology.h>
- 
- #define define_id_show_func(name, fmt)					\
-diff --git a/drivers/base/transport_class.c b/drivers/base/transport_class.c
-index 09ee2a1e35bb..902b2d74cad8 100644
---- a/drivers/base/transport_class.c
-+++ b/drivers/base/transport_class.c
-@@ -26,9 +26,12 @@
-  * transport class is framed entirely in terms of generic devices to
-  * allow it to be used by any physical HBA in the system.
-  */
-+
-+#include <linux/device.h>
- #include <linux/export.h>
- #include <linux/attribute_container.h>
- #include <linux/transport_class.h>
-+#include <linux/sysfs.h>
- 
- static int transport_remove_classdev(struct attribute_container *cont,
- 				     struct device *dev,
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index 293f24cc4122..6de94c111f72 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -8,6 +8,7 @@
- #include <linux/moduleparam.h>
- #include <linux/sched.h>
- #include <linux/fs.h>
-+#include <linux/idr.h>
- #include <linux/init.h>
- #include "null_blk.h"
- 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 5bf98fd6a651..64df47bbe6f2 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -3,6 +3,7 @@
- #include <linux/spinlock.h>
- #include <linux/slab.h>
- #include <linux/blkdev.h>
-+#include <linux/bvec.h>
- #include <linux/hdreg.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index 4defd7f387c7..cd4b4819825b 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -37,11 +37,13 @@
- #define pr_fmt(fmt) "xen-blkback: " fmt
- 
- #include <linux/spinlock.h>
-+#include <linux/highmem.h>
- #include <linux/kthread.h>
+  * Maximum values for blocksize and alignmask, used to allocate
+diff --git a/include/crypto/drbg.h b/include/crypto/drbg.h
+index e78a671a9e76..35dd65e37c8d 100644
+--- a/include/crypto/drbg.h
++++ b/include/crypto/drbg.h
+@@ -50,7 +50,7 @@
+ #include <crypto/internal/rng.h>
+ #include <crypto/rng.h>
+ #include <linux/fips.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
  #include <linux/list.h>
- #include <linux/delay.h>
- #include <linux/freezer.h>
- #include <linux/bitmap.h>
-+#include <linux/bio.h>
  
- #include <xen/events.h>
- #include <xen/page.h>
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index 55af4efd7983..bc1dcf40fd93 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -11,6 +11,7 @@
- #include <linux/sched.h>
- #include <linux/cpu.h>
- #include <linux/crypto.h>
-+#include <linux/gfp.h> // for free_pages()
+ /*
+diff --git a/include/crypto/internal/geniv.h b/include/crypto/internal/geniv.h
+index 7fd7126f593a..3228b4a34c52 100644
+--- a/include/crypto/internal/geniv.h
++++ b/include/crypto/internal/geniv.h
+@@ -9,7 +9,7 @@
+ #define _CRYPTO_INTERNAL_GENIV_H
  
- #include "zcomp.h"
- 
-diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-index 65fc1d738bec..e358d192f0d8 100644
---- a/drivers/bus/mhi/ep/main.c
-+++ b/drivers/bus/mhi/ep/main.c
-@@ -9,6 +9,7 @@
- #include <linux/bitfield.h>
- #include <linux/delay.h>
- #include <linux/dma-direction.h>
-+#include <linux/idr.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index 7a4b45393acb..8a1bf80b5259 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -6,6 +6,7 @@
- 
- #include <asm/barrier.h>
- #include <linux/err.h>
-+#include <linux/idr.h> // for DEFINE_IDA
- #include <linux/hw_random.h>
- #include <linux/scatterlist.h>
- #include <linux/spinlock.h>
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index b0eedc4595b3..a35d6487867c 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -23,6 +23,7 @@
- #include <linux/spinlock.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
-+#include <linux/idr.h> // for DEFINE_IDA
- #include <linux/ipmi.h>
- #include <linux/ipmi_smi.h>
- #include <linux/notifier.h>
-diff --git a/drivers/char/misc.c b/drivers/char/misc.c
-index 541edc26ec89..d141e0d4dc94 100644
---- a/drivers/char/misc.c
-+++ b/drivers/char/misc.c
-@@ -45,6 +45,7 @@
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/stat.h>
-+#include <linux/idr.h>
- #include <linux/init.h>
- #include <linux/device.h>
- #include <linux/tty.h>
-diff --git a/drivers/char/ppdev.c b/drivers/char/ppdev.c
-index ee951b265213..cb9546eac6cc 100644
---- a/drivers/char/ppdev.c
-+++ b/drivers/char/ppdev.c
-@@ -53,6 +53,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/idr.h>
- #include <linux/init.h>
- #include <linux/sched/signal.h>
- #include <linux/device.h>
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 42b1062e33cd..9fab186d60ef 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -20,6 +20,7 @@
- #include <linux/mutex.h>
- #include <linux/spinlock.h>
- #include <linux/freezer.h>
-+#include <linux/idr.h>
- #include <linux/major.h>
- #include <linux/tpm_eventlog.h>
- #include <linux/hw_random.h>
-diff --git a/drivers/clk/qcom/clk-regmap-mux-div.h b/drivers/clk/qcom/clk-regmap-mux-div.h
-index 4df6c8d24c24..49417def20de 100644
---- a/drivers/clk/qcom/clk-regmap-mux-div.h
-+++ b/drivers/clk/qcom/clk-regmap-mux-div.h
-@@ -8,6 +8,7 @@
- #define __QCOM_CLK_REGMAP_MUX_DIV_H__
- 
- #include <linux/clk-provider.h>
-+#include <linux/notifier.h>
- #include "clk-regmap.h"
- 
- /**
-diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-index 5358e28122ab..8860d7726fdc 100644
---- a/drivers/clk/qcom/gdsc.c
-+++ b/drivers/clk/qcom/gdsc.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/err.h>
- #include <linux/export.h>
- #include <linux/jiffies.h>
-diff --git a/drivers/clk/samsung/clk-cpu.h b/drivers/clk/samsung/clk-cpu.h
-index 0164bd9ad021..39ddf58a0172 100644
---- a/drivers/clk/samsung/clk-cpu.h
-+++ b/drivers/clk/samsung/clk-cpu.h
-@@ -10,6 +10,8 @@
- 
- #include "clk.h"
- 
-+#include <linux/notifier.h>
-+
- /**
-  * struct exynos_cpuclk_cfg_data - config data to setup cpu clocks
-  * @prate: frequency of the primary parent clock (in KHz)
-diff --git a/drivers/clk/sunxi-ng/ccu_common.h b/drivers/clk/sunxi-ng/ccu_common.h
-index 942a72c09437..2edb4a23283c 100644
---- a/drivers/clk/sunxi-ng/ccu_common.h
-+++ b/drivers/clk/sunxi-ng/ccu_common.h
-@@ -8,6 +8,7 @@
- 
- #include <linux/compiler.h>
- #include <linux/clk-provider.h>
-+#include <linux/notifier.h>
- 
- #define CCU_FEATURE_FRACTIONAL		BIT(0)
- #define CCU_FEATURE_VARIABLE_PREDIV	BIT(1)
-diff --git a/drivers/cpufreq/apple-soc-cpufreq.c b/drivers/cpufreq/apple-soc-cpufreq.c
-index 021f423705e1..f1bb29fc6182 100644
---- a/drivers/cpufreq/apple-soc-cpufreq.c
-+++ b/drivers/cpufreq/apple-soc-cpufreq.c
-@@ -13,6 +13,7 @@
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-diff --git a/drivers/cpufreq/cpufreq_governor.h b/drivers/cpufreq/cpufreq_governor.h
-index 168c23fd7fca..e67d33d3acb7 100644
---- a/drivers/cpufreq/cpufreq_governor.h
-+++ b/drivers/cpufreq/cpufreq_governor.h
-@@ -18,6 +18,7 @@
- #include <linux/irq_work.h>
- #include <linux/cpufreq.h>
- #include <linux/sched/cpufreq.h>
-+#include <linux/sysfs.h>
- #include <linux/kernel_stat.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
-index c4d4643b6ca6..d5f140c2b95e 100644
---- a/drivers/cpufreq/freq_table.c
-+++ b/drivers/cpufreq/freq_table.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/cpufreq.h>
- #include <linux/module.h>
-+#include <linux/sysfs.h>
- 
- /*********************************************************************
-  *                     FREQUENCY TABLE HELPERS                       *
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b6017c0c57b4..784bcd943215 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -7,9 +7,12 @@
- #include <linux/libnvdimm.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
-+#include <linux/device/driver.h>
- #include <linux/log2.h>
- #include <linux/node.h>
-+#include <linux/idr.h>
- #include <linux/io.h>
-+#include <linux/range.h>
- 
- /**
-  * DOC: cxl objects
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 5303d6942b88..25081f2cf5c4 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -7,6 +7,7 @@
- #include <linux/uuid.h>
- #include <linux/rcuwait.h>
- #include <linux/cxl-event.h>
-+#include <linux/ioport.h>
- #include <linux/node.h>
- #include "cxl.h"
- 
-diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event/rockchip-dfi.c
-index e2a1e4463b6f..35eeb63180f7 100644
---- a/drivers/devfreq/event/rockchip-dfi.c
-+++ b/drivers/devfreq/event/rockchip-dfi.c
-@@ -22,6 +22,7 @@
- #include <linux/bitfield.h>
- #include <linux/bits.h>
- #include <linux/perf_event.h>
-+#include <linux/hrtimer.h>
- 
- #include <soc/rockchip/rockchip_grf.h>
- #include <soc/rockchip/rk3399_grf.h>
-diff --git a/drivers/dma-buf/st-dma-fence.c b/drivers/dma-buf/st-dma-fence.c
-index b7c6f7ea9e0c..28e5f4cebf5c 100644
---- a/drivers/dma-buf/st-dma-fence.c
-+++ b/drivers/dma-buf/st-dma-fence.c
-@@ -11,6 +11,7 @@
- #include <linux/sched/signal.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-+#include <linux/timer.h>
- 
- #include "selftest.h"
- 
-diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
-index 168adf28c5b1..32a0be07b034 100644
---- a/drivers/dma/ioat/sysfs.c
-+++ b/drivers/dma/ioat/sysfs.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/kobject.h>
- #include <linux/module.h>
- #include <linux/dmaengine.h>
- #include <linux/pci.h>
-diff --git a/drivers/eisa/eisa-bus.c b/drivers/eisa/eisa-bus.c
-index 33f0ba11c6ad..40c5f7cecd6b 100644
---- a/drivers/eisa/eisa-bus.c
-+++ b/drivers/eisa/eisa-bus.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/device.h>
- #include <linux/eisa.h>
-+#include <linux/kobject.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/init.h>
-diff --git a/drivers/extcon/devres.c b/drivers/extcon/devres.c
-index f9d52e8ec5cf..a22c2374fd7a 100644
---- a/drivers/extcon/devres.c
-+++ b/drivers/extcon/devres.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include "extcon.h"
-+#include <linux/device.h>
- 
- static int devm_extcon_dev_match(struct device *dev, void *res, void *data)
- {
-diff --git a/drivers/extcon/extcon.h b/drivers/extcon/extcon.h
-index 946182687786..b2e0f715d81c 100644
---- a/drivers/extcon/extcon.h
-+++ b/drivers/extcon/extcon.h
-@@ -2,6 +2,7 @@
- #ifndef __LINUX_EXTCON_INTERNAL_H__
- #define __LINUX_EXTCON_INTERNAL_H__
- 
-+#include <linux/device.h>
- #include <linux/extcon-provider.h>
- 
- /**
-diff --git a/drivers/firmware/arm_ffa/bus.c b/drivers/firmware/arm_ffa/bus.c
-index 1c7940ba5539..50914dd5afd6 100644
---- a/drivers/firmware/arm_ffa/bus.c
-+++ b/drivers/firmware/arm_ffa/bus.c
-@@ -8,6 +8,7 @@
- #include <linux/arm_ffa.h>
- #include <linux/device.h>
- #include <linux/fs.h>
-+#include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
-index c15928b8c5cc..4e63209e35de 100644
---- a/drivers/firmware/arm_scmi/bus.c
-+++ b/drivers/firmware/arm_scmi/bus.c
-@@ -8,6 +8,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/atomic.h>
-+#include <linux/idr.h>
- #include <linux/types.h>
- #include <linux/module.h>
- #include <linux/of.h>
-diff --git a/drivers/firmware/edd.c b/drivers/firmware/edd.c
-index 55dec4eb2c00..1971ff720078 100644
---- a/drivers/firmware/edd.c
-+++ b/drivers/firmware/edd.c
-@@ -20,6 +20,7 @@
-  * the list of BIOSs which have been reported to implement EDD.
-  */
- 
-+#include <linux/kobject.h>
- #include <linux/module.h>
- #include <linux/string.h>
- #include <linux/types.h>
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index bfa30625f5d0..944c69ab4683 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/stdarg.h>
- 
-+#include <linux/ctype.h>
- #include <linux/efi.h>
- #include <linux/kernel.h>
- #include <asm/efi.h>
-diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-index 96ea1fa76d35..ef6168516236 100644
---- a/drivers/firmware/google/gsmi.c
-+++ b/drivers/firmware/google/gsmi.c
-@@ -26,6 +26,7 @@
- #include <linux/uaccess.h>
- #include <linux/dmi.h>
- #include <linux/kdebug.h>
-+#include <linux/kobject.h>
- #include <linux/reboot.h>
- #include <linux/efi.h>
- #include <linux/module.h>
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index e6d12fbab653..ad5b11ac54df 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -12,6 +12,8 @@
-  */
- #include <linux/dfl.h>
- #include <linux/fpga-dfl.h>
-+#include <linux/idr.h>
-+#include <linux/kobject.h>
- #include <linux/module.h>
- #include <linux/overflow.h>
- #include <linux/uaccess.h>
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index ea5f9cc14bc4..c632bd6d1adf 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -23,6 +23,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm.h>
-+#include <linux/ratelimit.h>
- 
- #define GPIO_BANK(x)		((x) >> 5)
- #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index d87dd06db40d..02d138cf9e59 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/ratelimit.h>
- #include <linux/seq_file.h>
- 
- #include <dt-bindings/gpio/tegra186-gpio.h>
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 8521c6aacace..cd439802a552 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/spinlock.h>
-+#include <linux/ratelimit.h>
- 
- #define GPIO_RX_DAT	0x0
- #define GPIO_TX_SET	0x8
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.h
-index 85376baaa92f..441cf05fcd6a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.h
-@@ -23,6 +23,7 @@
- #ifndef __AMDGPU_CTX_H__
- #define __AMDGPU_CTX_H__
- 
-+#include <linux/idr.h>
- #include <linux/ktime.h>
+ #include <crypto/internal/aead.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
  #include <linux/types.h>
  
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 6a930c98387f..c195166a923b 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -34,6 +34,7 @@
- #include <linux/pci.h>
- #include <linux/pci-p2pdma.h>
- #include <linux/apple-gmux.h>
-+#include <linux/ratelimit.h>
+ struct aead_geniv_ctx {
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index e39da5807ba7..a853bfbf5d94 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -25,7 +25,7 @@
  
- #include <drm/drm_aperture.h>
- #include <drm/drm_atomic_helper.h>
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-index 508f02eb0cf8..59a5bc9b1120 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-@@ -24,6 +24,9 @@
- #ifndef __AMDGPU_IH_H__
- #define __AMDGPU_IH_H__
- 
-+#include <linux/types.h>
-+#include <linux/wait.h>
-+
- /* Maximum number of IVs processed at once */
- #define AMDGPU_IH_MAX_NUM_IVS	32
- 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c b/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
-index d8e449e6ebda..28df5859897c 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
-@@ -7,6 +7,8 @@
- 
- #include "komeda_color_mgmt.h"
- 
-+#include <linux/array_size.h> // for ARRAY_SIZE()
-+
- /* 10bit precision YUV2RGB matrix */
- static const s32 yuv2rgb_bt601_narrow[KOMEDA_N_YUV2RGB_COEFFS] = {
- 	1192,    0, 1634,
-diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
-index 2d695818f006..27f9be67514f 100644
---- a/drivers/gpu/drm/i915/i915_perf.c
-+++ b/drivers/gpu/drm/i915/i915_perf.c
-@@ -193,6 +193,7 @@
- 
- #include <linux/anon_inodes.h>
- #include <linux/nospec.h>
-+#include <linux/ratelimit.h>
- #include <linux/sizes.h>
- #include <linux/uuid.h>
- 
-diff --git a/drivers/gpu/drm/i915/i915_perf_types.h b/drivers/gpu/drm/i915/i915_perf_types.h
-index 46445248d193..403caa12cc86 100644
---- a/drivers/gpu/drm/i915/i915_perf_types.h
-+++ b/drivers/gpu/drm/i915/i915_perf_types.h
-@@ -9,6 +9,7 @@
- #include <linux/atomic.h>
- #include <linux/device.h>
- #include <linux/hrtimer.h>
-+#include <linux/kobject.h>
- #include <linux/llist.h>
- #include <linux/poll.h>
- #include <linux/sysfs.h>
-diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h b/drivers/gpu/drm/i915/i915_scatterlist.h
-index 6cf8a298849f..716e5ab11ce3 100644
---- a/drivers/gpu/drm/i915/i915_scatterlist.h
-+++ b/drivers/gpu/drm/i915/i915_scatterlist.h
-@@ -7,6 +7,7 @@
- #ifndef I915_SCATTERLIST_H
- #define I915_SCATTERLIST_H
- 
-+#include <linux/kref.h>
- #include <linux/pfn.h>
- #include <linux/scatterlist.h>
- #include <linux/dma-mapping.h>
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index 16a7cbc0b7dd..e7a2d2c3145a 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -25,6 +25,7 @@
- #include <linux/of_device.h>
- #include <linux/sizes.h>
- #include <linux/kthread.h>
-+#include <linux/hrtimer.h>
+ #include <linux/ctype.h>
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
  
  #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 8d37a694b772..0c3d88ad0b0e 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -28,6 +28,7 @@
- #include "wndw.h"
- #include "handles.h"
+ #include <drm/drm_encoder.h>
+diff --git a/include/drm/drm_client.h b/include/drm/drm_client.h
+index d47458ecdac4..2af71d481957 100644
+--- a/include/drm/drm_client.h
++++ b/include/drm/drm_client.h
+@@ -5,7 +5,7 @@
  
-+#include <linux/backlight.h>
- #include <linux/dma-mapping.h>
- #include <linux/hdmi.h>
- #include <linux/component.h>
-diff --git a/drivers/gpu/drm/xe/xe_gpu_scheduler.c b/drivers/gpu/drm/xe/xe_gpu_scheduler.c
-index e4ad1d6ce1d5..0f263dc0dc19 100644
---- a/drivers/gpu/drm/xe/xe_gpu_scheduler.c
-+++ b/drivers/gpu/drm/xe/xe_gpu_scheduler.c
-@@ -5,6 +5,8 @@
- 
- #include "xe_gpu_scheduler.h"
- 
-+#include <linux/workqueue.h>
-+
- static void xe_sched_process_msg_queue(struct xe_gpu_scheduler *sched)
- {
- 	if (!READ_ONCE(sched->base.pause_submit))
-diff --git a/drivers/gpu/drm/xe/xe_guc_ct.h b/drivers/gpu/drm/xe/xe_guc_ct.h
-index f15f8a4857e0..31b2fbe4c264 100644
---- a/drivers/gpu/drm/xe/xe_guc_ct.h
-+++ b/drivers/gpu/drm/xe/xe_guc_ct.h
-@@ -8,6 +8,8 @@
- 
- #include "xe_guc_ct_types.h"
- 
-+#include <linux/workqueue.h>
-+
- struct drm_printer;
- 
- int xe_guc_ct_init(struct xe_guc_ct *ct);
-diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
-index aa6cb033bb06..4ca13f42e44f 100644
---- a/drivers/hid/intel-ish-hid/ishtp/bus.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
-@@ -8,6 +8,7 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/device.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
-index ba82d1e79c13..457994a41b13 100644
---- a/drivers/hwmon/coretemp.c
-+++ b/drivers/hwmon/coretemp.c
-@@ -10,6 +10,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/module.h>
-+#include <linux/idr.h>
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/jiffies.h>
-diff --git a/drivers/hwmon/nct6775-core.c b/drivers/hwmon/nct6775-core.c
-index 8d2ef3145bca..36f7efa05085 100644
---- a/drivers/hwmon/nct6775-core.c
-+++ b/drivers/hwmon/nct6775-core.c
-@@ -51,6 +51,7 @@
- #include <linux/err.h>
- #include <linux/mutex.h>
- #include <linux/bitops.h>
-+#include <linux/device.h>
- #include <linux/nospec.h>
- #include <linux/regmap.h>
- #include "lm75.h"
-diff --git a/drivers/iio/adc/ti-tsc2046.c b/drivers/iio/adc/ti-tsc2046.c
-index 1bbb51a6683c..d388673500a1 100644
---- a/drivers/iio/adc/ti-tsc2046.c
-+++ b/drivers/iio/adc/ti-tsc2046.c
-@@ -11,6 +11,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/spi/spi.h>
- #include <linux/units.h>
-+#include <linux/hrtimer.h>
- 
- #include <asm/unaligned.h>
- 
-diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
-index b36242c9d42c..d5a94a2d144f 100644
---- a/drivers/infiniband/hw/hfi1/rc.c
-+++ b/drivers/infiniband/hw/hfi1/rc.c
-@@ -3,6 +3,7 @@
-  * Copyright(c) 2015 - 2018 Intel Corporation.
-  */
- 
-+#include <linux/hrtimer.h>
- #include <linux/io.h>
- #include <rdma/rdma_vt.h>
- #include <rdma/rdmavt_qp.h>
-diff --git a/drivers/infiniband/hw/qib/qib_file_ops.c b/drivers/infiniband/hw/qib/qib_file_ops.c
-index 29e4c59aa23b..dfa4ab446427 100644
---- a/drivers/infiniband/hw/qib/qib_file_ops.c
-+++ b/drivers/infiniband/hw/qib/qib_file_ops.c
-@@ -40,6 +40,7 @@
- #include <linux/highmem.h>
- #include <linux/io.h>
- #include <linux/jiffies.h>
-+#include <linux/kobject.h>
- #include <linux/delay.h>
- #include <linux/export.h>
- #include <linux/uio.h>
-diff --git a/drivers/infiniband/hw/usnic/usnic_ib_main.c b/drivers/infiniband/hw/usnic/usnic_ib_main.c
-index 13b654ddd3cc..632f2a171f60 100644
---- a/drivers/infiniband/hw/usnic/usnic_ib_main.c
-+++ b/drivers/infiniband/hw/usnic/usnic_ib_main.c
-@@ -39,6 +39,7 @@
-  *
-  */
- 
-+#include <linux/kref.h>
- #include <linux/module.h>
- #include <linux/inetdevice.h>
- #include <linux/init.h>
-diff --git a/drivers/infiniband/hw/usnic/usnic_ib_sysfs.c b/drivers/infiniband/hw/usnic/usnic_ib_sysfs.c
-index fdb63a8fb997..82e761bff7d5 100644
---- a/drivers/infiniband/hw/usnic/usnic_ib_sysfs.c
-+++ b/drivers/infiniband/hw/usnic/usnic_ib_sysfs.c
-@@ -33,6 +33,7 @@
- 
- #include <linux/init.h>
- #include <linux/errno.h>
-+#include <linux/kref.h>
- 
- #include <rdma/ib_user_verbs.h>
- #include <rdma/ib_addr.h>
-diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
-index 82c3f5932249..ba136ac88abc 100644
---- a/drivers/infiniband/sw/rdmavt/cq.c
-+++ b/drivers/infiniband/sw/rdmavt/cq.c
-@@ -3,6 +3,7 @@
-  * Copyright(c) 2016 - 2018 Intel Corporation.
-  */
- 
-+#include <linux/kref.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include "cq.h"
-diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-index e6203e26cc06..49f74b7c6de8 100644
---- a/drivers/infiniband/sw/rdmavt/qp.c
-+++ b/drivers/infiniband/sw/rdmavt/qp.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/hash.h>
- #include <linux/bitops.h>
-+#include <linux/hrtimer.h>
+ #include <linux/iosys-map.h>
  #include <linux/lockdep.h>
- #include <linux/vmalloc.h>
- #include <linux/slab.h>
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 2916e77f589b..8a9b99ad671f 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -39,6 +39,7 @@
- #include <linux/string.h>
- #include <linux/parser.h>
- #include <linux/random.h>
-+#include <linux/kobject_ns.h>
- #include <linux/jiffies.h>
- #include <linux/lockdep.h>
- #include <linux/inet.h>
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index 34db37fd9675..6e782f9a29ec 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -10,6 +10,7 @@
- #include <linux/delay.h>
- #include <linux/dma-map-ops.h>
- #include <linux/freezer.h>
-+#include <linux/idr.h>
- #include <linux/interval_tree.h>
- #include <linux/iommu.h>
- #include <linux/module.h>
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index ebff3baf3045..3452fa6784ae 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -18,6 +18,7 @@
- #include <linux/mailbox_client.h>
- #include <linux/mailbox_controller.h>
- #include <linux/of.h>
-+#include <linux/hrtimer.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
  
- #include "mailbox.h"
+ #include <drm/drm_connector.h>
+diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+index 8b48a1974da3..a73d94b1c2fd 100644
+--- a/include/drm/drm_crtc.h
++++ b/include/drm/drm_crtc.h
+@@ -25,7 +25,7 @@
+ #ifndef __DRM_CRTC_H__
+ #define __DRM_CRTC_H__
  
-diff --git a/drivers/md/bcache/bset.c b/drivers/md/bcache/bset.c
-index 2bba4d6aaaa2..8460b8d543d8 100644
---- a/drivers/md/bcache/bset.c
-+++ b/drivers/md/bcache/bset.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/console.h>
- #include <linux/sched/clock.h>
-+#include <linux/mm.h> // for page_address()
- #include <linux/random.h>
- #include <linux/prefetch.h>
- 
-diff --git a/drivers/md/bcache/sysfs.h b/drivers/md/bcache/sysfs.h
-index 65b8bd975ab1..2e06366b7b0b 100644
---- a/drivers/md/bcache/sysfs.h
-+++ b/drivers/md/bcache/sysfs.h
-@@ -2,6 +2,8 @@
- #ifndef _BCACHE_SYSFS_H_
- #define _BCACHE_SYSFS_H_
- 
-+#include <linux/sysfs.h>
-+
- #define KTYPE(type)							\
- const struct kobj_type type ## _ktype = {					\
- 	.release	= type ## _release,				\
-diff --git a/drivers/media/cec/core/cec-pin.c b/drivers/media/cec/core/cec-pin.c
-index 330d5d5d86ab..262870863e0a 100644
---- a/drivers/media/cec/core/cec-pin.c
-+++ b/drivers/media/cec/core/cec-pin.c
-@@ -6,6 +6,7 @@
- #include <linux/delay.h>
- #include <linux/slab.h>
- #include <linux/sched/types.h>
-+#include <linux/hrtimer.h>
- 
- #include <media/cec-pin.h>
- #include "cec-pin-priv.h"
-diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c
-index 246f73b8a9e7..e47d8fa88d5e 100644
---- a/drivers/media/pci/pt3/pt3.c
-+++ b/drivers/media/pci/pt3/pt3.c
-@@ -13,6 +13,7 @@
- #include <linux/pci.h>
- #include <linux/string.h>
- #include <linux/sched/signal.h>
-+#include <linux/hrtimer.h>
- 
- #include <media/dmxdev.h>
- #include <media/dvbdev.h>
-diff --git a/drivers/memory/tegra/tegra234.c b/drivers/memory/tegra/tegra234.c
-index abff87f917cb..cf595c6460ed 100644
---- a/drivers/memory/tegra/tegra234.c
-+++ b/drivers/memory/tegra/tegra234.c
-@@ -6,6 +6,7 @@
- #include <soc/tegra/mc.h>
- 
- #include <dt-bindings/memory/tegra234-mc.h>
-+#include <linux/device.h>
- #include <linux/interconnect.h>
- #include <linux/tegra-icc.h>
- 
-diff --git a/drivers/mfd/abx500-core.c b/drivers/mfd/abx500-core.c
-index e896531d0354..db2e1706d987 100644
---- a/drivers/mfd/abx500-core.c
-+++ b/drivers/mfd/abx500-core.c
-@@ -7,6 +7,7 @@
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/types.h>
+ #include <drm/drm_modeset_lock.h>
+ #include <drm/drm_mode_object.h>
+diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+index 63767cf24371..6a1bbdd515cd 100644
+--- a/include/drm/drm_device.h
++++ b/include/drm/drm_device.h
+@@ -3,7 +3,7 @@
  
  #include <linux/list.h>
- #include <linux/slab.h>
-+#include <linux/device.h> // for devm_kzalloc()
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/export.h>
-diff --git a/drivers/misc/cardreader/alcor_pci.c b/drivers/misc/cardreader/alcor_pci.c
-index 0142c4bf4f42..d10a81756fe9 100644
---- a/drivers/misc/cardreader/alcor_pci.c
-+++ b/drivers/misc/cardreader/alcor_pci.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/delay.h>
-+#include <linux/idr.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-diff --git a/drivers/misc/dw-xdata-pcie.c b/drivers/misc/dw-xdata-pcie.c
-index efd0ca8cc925..fb9b65d7730b 100644
---- a/drivers/misc/dw-xdata-pcie.c
-+++ b/drivers/misc/dw-xdata-pcie.c
-@@ -9,6 +9,7 @@
- #include <linux/miscdevice.h>
- #include <linux/bitfield.h>
- #include <linux/pci-epf.h>
-+#include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/device.h>
-diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
-index b1b316f99703..2ea3574de879 100644
---- a/drivers/misc/lkdtm/heap.c
-+++ b/drivers/misc/lkdtm/heap.c
-@@ -8,6 +8,7 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/sched.h>
-+#include <linux/jiffies.h>
- 
- static struct kmem_cache *double_free_cache;
- static struct kmem_cache *a_cache;
-diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
-index f9bcff197615..71251ee2ffdc 100644
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/sched/signal.h>
- #include <linux/init.h>
- #include <linux/errno.h>
-diff --git a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c
-index 9d090fa07516..e7886e1816da 100644
---- a/drivers/misc/mei/client.c
-+++ b/drivers/misc/mei/client.c
-@@ -7,6 +7,7 @@
- #include <linux/sched/signal.h>
- #include <linux/wait.h>
- #include <linux/delay.h>
-+#include <linux/kref.h>
- #include <linux/slab.h>
- #include <linux/pm_runtime.h>
- #include <linux/dma-mapping.h>
-diff --git a/drivers/misc/mei/debugfs.c b/drivers/misc/mei/debugfs.c
-index 3b098d4c8e3d..f7a3ea46561a 100644
---- a/drivers/misc/mei/debugfs.c
-+++ b/drivers/misc/mei/debugfs.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/slab.h>
- #include <linux/kernel.h>
-+#include <linux/kref.h>
- #include <linux/device.h>
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
-index 79e6f3c1341f..36707eaf7be0 100644
---- a/drivers/misc/mei/main.c
-+++ b/drivers/misc/mei/main.c
-@@ -14,6 +14,7 @@
- #include <linux/types.h>
- #include <linux/fcntl.h>
- #include <linux/poll.h>
-+#include <linux/idr.h>
- #include <linux/init.h>
- #include <linux/ioctl.h>
- #include <linux/cdev.h>
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index c38a6083f0a7..fe65f26da400 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -9,6 +9,7 @@
- #include <linux/crc32.h>
- #include <linux/delay.h>
- #include <linux/fs.h>
-+#include <linux/idr.h>
- #include <linux/io.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-diff --git a/drivers/misc/vcpu_stall_detector.c b/drivers/misc/vcpu_stall_detector.c
-index 6479c962da1a..be69d9c4a993 100644
---- a/drivers/misc/vcpu_stall_detector.c
-+++ b/drivers/misc/vcpu_stall_detector.c
-@@ -17,6 +17,7 @@
- #include <linux/percpu.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/hrtimer.h>
- 
- #define VCPU_STALL_REG_STATUS		(0x00)
- #define VCPU_STALL_REG_LOAD_CNT		(0x04)
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 94a0ee19bf20..03d0abf740c8 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -11,6 +11,7 @@
-  */
- 
- #include <linux/miscdevice.h>
-+#include <linux/idr.h>
- #include <linux/io.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
-diff --git a/drivers/mtd/mtd_blkdevs.c b/drivers/mtd/mtd_blkdevs.c
-index f0526dcc2162..7e52f6cd0cc2 100644
---- a/drivers/mtd/mtd_blkdevs.c
-+++ b/drivers/mtd/mtd_blkdevs.c
-@@ -5,6 +5,7 @@
-  * Copyright © 2003-2010 David Woodhouse <dwmw2@infradead.org>
-  */
- 
-+#include <linux/highmem.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-index eebf967f4711..230d14500ae7 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-@@ -20,6 +20,7 @@
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
- #include <linux/property.h>
-+#include <linux/hrtimer.h>
- 
- #include "mcp251xfd.h"
- 
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c
-index bfe4caa0c99d..1182bc8dd529 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c
-@@ -17,6 +17,8 @@
- #include "mcp251xfd.h"
- #include "mcp251xfd-ram.h"
- 
-+#include <linux/hrtimer.h>
-+
- static inline u8
- mcp251xfd_cmd_prepare_write_reg(const struct mcp251xfd_priv *priv,
- 				union mcp251xfd_write_reg_buf *write_reg_buf,
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-rx.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-rx.c
-index ced8d9c81f8c..1cfdd6ec3a12 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-rx.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-rx.c
-@@ -13,6 +13,7 @@
- //
- 
- #include <linux/bitfield.h>
-+#include <linux/hrtimer.h>
- 
- #include "mcp251xfd.h"
- 
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c
-index e5bd57b65aaf..75b226a868be 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c
-@@ -13,6 +13,7 @@
- //
- 
- #include <linux/bitfield.h>
-+#include <linux/hrtimer.h>
- 
- #include "mcp251xfd.h"
- 
-diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
-index 705c3eb19cd3..6ae699443a1b 100644
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -36,6 +36,7 @@
- #include <linux/ethtool.h>
- #include <linux/tcp.h>
- #include <linux/u64_stats_sync.h>
-+#include <linux/hrtimer.h>
- 
- #include <linux/in.h>
- #include <linux/ip.h>
-diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
-index 181d9bfbee22..6f36d1ffbc61 100644
---- a/drivers/net/ethernet/freescale/fec_ptp.c
-+++ b/drivers/net/ethernet/freescale/fec_ptp.c
-@@ -32,6 +32,7 @@
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/of_net.h>
-+#include <linux/hrtimer.h>
- 
- #include "fec.h"
- 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index b91e7a06b97f..4b75a40daa7f 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -15,6 +15,7 @@
- #include <linux/of_net.h>
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
-+#include <linux/hrtimer.h>
- 
- #define SC_PPE_RESET_DREQ		0x026C
- 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-index a5e3d1a88305..1c06334a38db 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-@@ -9,6 +9,7 @@
- #include <linux/ipv6.h>
- #include <net/ip6_checksum.h>
- #include <linux/bitfield.h>
-+#include <linux/hrtimer.h>
- #include "rmnet_config.h"
- #include "rmnet_map.h"
- #include "rmnet_private.h"
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 9d2f4ac783e4..45e4d70ad021 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -30,6 +30,7 @@
- #include <linux/sys_soc.h>
- #include <linux/dma/ti-cppi5.h>
- #include <linux/dma/k3-udma-glue.h>
-+#include <linux/hrtimer.h>
- #include <net/switchdev.h>
- 
- #include "cpsw_ale.h"
-diff --git a/drivers/net/mdio/mdio-mux-meson-gxl.c b/drivers/net/mdio/mdio-mux-meson-gxl.c
-index 89554021b5cc..b3e680d27e2b 100644
---- a/drivers/net/mdio/mdio-mux-meson-gxl.c
-+++ b/drivers/net/mdio/mdio-mux-meson-gxl.c
-@@ -9,6 +9,7 @@
- #include <linux/io.h>
- #include <linux/mdio-mux.h>
- #include <linux/module.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
- 
- #define ETH_REG2		0x0
-diff --git a/drivers/net/mdio/mdio-mux-multiplexer.c b/drivers/net/mdio/mdio-mux-multiplexer.c
-index 569b13383191..97e307d946a8 100644
---- a/drivers/net/mdio/mdio-mux-multiplexer.c
-+++ b/drivers/net/mdio/mdio-mux-multiplexer.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/mdio-mux.h>
- #include <linux/module.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/mux/consumer.h>
- #include <linux/platform_device.h>
- 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c b/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
-index 85a78dea4085..b11bc7ab80a8 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
-@@ -5,6 +5,8 @@
- 
- #include "mt76x02_usb.h"
- 
-+#include <linux/hrtimer.h>
-+
- static void mt76x02u_remove_dma_hdr(struct sk_buff *skb)
- {
- 	int hdr_len;
-diff --git a/drivers/net/wireless/virtual/mac80211_hwsim.c b/drivers/net/wireless/virtual/mac80211_hwsim.c
-index a84340c2075f..914c3b63430f 100644
---- a/drivers/net/wireless/virtual/mac80211_hwsim.c
-+++ b/drivers/net/wireless/virtual/mac80211_hwsim.c
-@@ -23,6 +23,7 @@
- #include <net/ieee80211_radiotap.h>
- #include <linux/if_arp.h>
- #include <linux/rtnetlink.h>
-+#include <linux/hrtimer.h>
- #include <linux/etherdevice.h>
- #include <linux/platform_device.h>
- #include <linux/debugfs.h>
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_imem.c b/drivers/net/wwan/iosm/iosm_ipc_imem.c
-index 829515a601b3..d11ca25b07bd 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_imem.c
-+++ b/drivers/net/wwan/iosm/iosm_ipc_imem.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/delay.h>
-+#include <linux/hrtimer.h>
- 
- #include "iosm_ipc_chnl_cfg.h"
- #include "iosm_ipc_devlink.h"
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 030c80818240..0256c21a9243 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -13,6 +13,7 @@
- #include <linux/blk-mq.h>
- #include <linux/sed-opal.h>
- #include <linux/fault-inject.h>
-+#include <linux/idr.h>
- #include <linux/rcupdate.h>
- #include <linux/wait.h>
- #include <linux/t10-pi.h>
-diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
-index bda7a3009e85..5fcd8e9619f1 100644
---- a/drivers/nvme/target/fc.c
-+++ b/drivers/nvme/target/fc.c
-@@ -6,6 +6,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/blk-mq.h>
-+#include <linux/idr.h>
- #include <linux/parser.h>
- #include <linux/random.h>
- #include <uapi/scsi/fc/fc_fs.h>
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 6c8acebe1a1a..cd1b2ae40656 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -8,6 +8,7 @@
- 
- #include <linux/dma-mapping.h>
- #include <linux/types.h>
-+#include <linux/bio.h>
- #include <linux/device.h>
  #include <linux/kref.h>
- #include <linux/percpu-refcount.h>
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index 5949829a1b00..9681c4dd5d82 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -10,6 +10,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/nodemask.h>
-+#include <linux/topology.h> // for LOCAL_DISTANCE
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/idr.h>
  
- #include <asm/numa.h>
+ #include <drm/drm_mode_config.h>
+diff --git a/include/drm/drm_flip_work.h b/include/drm/drm_flip_work.h
+index 1eef3283a109..380720e0963e 100644
+--- a/include/drm/drm_flip_work.h
++++ b/include/drm/drm_flip_work.h
+@@ -25,8 +25,8 @@
+ #define DRM_FLIP_WORK_H
  
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 87b7856f375a..59291addaeb3 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -7,6 +7,7 @@
- #include <linux/device.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/msi.h>
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9ab9b1008d8b..ad0d6194f074 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -24,6 +24,7 @@
- #include <linux/log2.h>
- #include <linux/logic_pio.h>
- #include <linux/pm_wakeup.h>
-+#include <linux/idr.h> // for DEFINE_IDA
- #include <linux/interrupt.h>
- #include <linux/device.h>
- #include <linux/pm_runtime.h>
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 1804794d0e68..eea031b3f0ef 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -7,6 +7,7 @@
- #include <linux/switchtec.h>
- #include <linux/switchtec_ioctl.h>
- 
-+#include <linux/idr.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/fs.h>
-diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index 1edb9c03704f..64a06867616d 100644
---- a/drivers/perf/thunderx2_pmu.c
-+++ b/drivers/perf/thunderx2_pmu.c
-@@ -9,6 +9,7 @@
- #include <linux/cpuhotplug.h>
- #include <linux/perf_event.h>
- #include <linux/platform_device.h>
-+#include <linux/hrtimer.h>
- 
- /* Each ThunderX2(TX2) Socket has a L3C and DMC UNCORE PMU device.
-  * Each UNCORE PMU device consists of 4 independent programmable counters.
-diff --git a/drivers/platform/chrome/wilco_ec/telemetry.c b/drivers/platform/chrome/wilco_ec/telemetry.c
-index b7c616f3d179..4031fc6dd4ad 100644
---- a/drivers/platform/chrome/wilco_ec/telemetry.c
-+++ b/drivers/platform/chrome/wilco_ec/telemetry.c
-@@ -30,6 +30,7 @@
- #include <linux/cdev.h>
- #include <linux/device.h>
- #include <linux/fs.h>
-+#include <linux/idr.h>
- #include <linux/module.h>
- #include <linux/platform_data/wilco-ec.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index f8c0177afb0d..c74eed457982 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/debugfs.h>
-+#include <linux/kobject.h>
- #include <linux/tee_drv.h>
- #include <linux/uuid.h>
- #include "pmf.h"
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
-index c2dd2de6bc20..3114a7f5b5ee 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
-@@ -6,6 +6,7 @@
-  *  Copyright (c) 2020 Dell Inc.
-  */
- 
-+#include <linux/kobject.h>
- #include <linux/wmi.h>
- #include "dell-wmi-sysman.h"
- 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
-index 8cc212c85266..388844b02777 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
-@@ -8,6 +8,8 @@
- 
- #include "dell-wmi-sysman.h"
- 
-+#include <linux/kobject.h>
-+
- get_instance_id(enumeration);
- 
- static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
-index 951e75b538fa..3adb2e17d786 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
-@@ -8,6 +8,8 @@
- 
- #include "dell-wmi-sysman.h"
- 
-+#include <linux/kobject.h>
-+
- enum int_properties {MIN_VALUE = 6, MAX_VALUE, SCALAR_INCR};
- 
- get_instance_id(integer);
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-index 230e6ee96636..1b2dfc8abbaa 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-@@ -8,6 +8,9 @@
- 
- #include "dell-wmi-sysman.h"
- 
-+#include <linux/kobject.h>
-+#include <linux/sysfs.h>
-+
- enum po_properties {IS_PASS_SET = 1, MIN_PASS_LEN, MAX_PASS_LEN};
- 
- get_instance_id(po);
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
-index 86ec962aace9..c6ea8dbbded3 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
-@@ -5,6 +5,7 @@
-  *  Copyright (c) 2020 Dell Inc.
-  */
- 
-+#include <linux/kobject.h>
- #include <linux/wmi.h>
- #include "dell-wmi-sysman.h"
- 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
-index c392f0ecf8b5..a331f9433db5 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
-@@ -8,6 +8,8 @@
- 
- #include "dell-wmi-sysman.h"
- 
-+#include <linux/kobject.h>
-+
- enum string_properties {MIN_LEN = 6, MAX_LEN};
- 
- get_instance_id(str);
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index b929b4f82420..02041b2dd7fa 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -11,6 +11,7 @@
- #include <linux/dmi.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/wmi.h>
- #include "dell-wmi-sysman.h"
- #include "../../firmware_attributes_class.h"
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 8c9f4f3227fc..c5c73c8aac9f 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -10,6 +10,7 @@
- #include <linux/fs.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/wmi.h>
- #include "bioscfg.h"
- #include "../../firmware_attributes_class.h"
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-index a2402d31c146..b6288aec7b1d 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -8,6 +8,9 @@
- 
- #include "bioscfg.h"
- 
-+#include <linux/kobject.h>
-+#include <linux/sysfs.h>
-+
- GET_INSTANCE_ID(enumeration);
- 
- static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-index 86b7ac63fec2..5aa009b396d7 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-@@ -8,6 +8,9 @@
- 
- #include "bioscfg.h"
- 
-+#include <linux/kobject.h>
-+#include <linux/sysfs.h>
-+
- GET_INSTANCE_ID(integer);
- 
- static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-index 1ff09dfb7d7e..e8b8ccc1cf7c 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-@@ -8,6 +8,8 @@
- 
- #include "bioscfg.h"
- 
-+#include <linux/kobject.h>
-+
- GET_INSTANCE_ID(ordered_list);
- 
- static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-index f7efe217a4bb..2e05200eb595 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-@@ -8,6 +8,9 @@
- 
- #include "bioscfg.h"
- 
-+#include <linux/kobject.h>
-+#include <linux/sysfs.h>
-+
- GET_INSTANCE_ID(password);
- /*
-  * Clear all passwords copied to memory for a particular
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-index 86f90238750c..0ace0adaabf0 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-@@ -8,6 +8,8 @@
- 
- #include "bioscfg.h"
- 
-+#include <linux/kobject.h>
-+
- static const char * const spm_state_types[] = {
- 	"not provisioned",
- 	"provisioned",
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-index f0c20070094d..038e6e9deddf 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-@@ -8,6 +8,9 @@
- 
- #include "bioscfg.h"
- 
-+#include <linux/kobject.h>
-+#include <linux/sysfs.h>
-+
- #define WMI_STRING_TYPE "HPBIOS_BIOSString"
- 
- GET_INSTANCE_ID(string);
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-index b57e42f29282..3195365be1de 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-@@ -7,6 +7,8 @@
-  */
- 
- #include "bioscfg.h"
-+
-+#include <linux/kobject.h>
- #include <linux/types.h>
- 
- /* Maximum number of log entries supported when log entry size is 16
-diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-index 09258564dfc4..4c16360ed2af 100644
---- a/drivers/platform/x86/intel/pmt/telemetry.c
-+++ b/drivers/platform/x86/intel/pmt/telemetry.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/auxiliary_bus.h>
- #include <linux/kernel.h>
-+#include <linux/kref.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-index 33bb58dc3f78..e9f18a868911 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -6,6 +6,7 @@
-  *
-  */
- #include <linux/cpu.h>
-+#include <linux/idr.h>
- #include <linux/module.h>
- #include "uncore-frequency-common.h"
- 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-index 0e5bf507e555..fe37efcf0801 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-@@ -10,6 +10,7 @@
- #define __INTEL_UNCORE_FREQ_COMMON_H
- 
- #include <linux/device.h>
-+#include <linux/kobject.h>
+ #include <linux/kfifo.h>
+-#include <linux/spinlock.h>
+-#include <linux/workqueue.h>
++#include <linux/spinlock_types.h>
++#include <linux/workqueue_types.h>
  
  /**
-  * struct uncore_data - Encapsulate all uncore data
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 3a396b763c49..77c35f1b0a81 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -14,6 +14,7 @@
- #include <linux/acpi.h>
- #include <linux/errno.h>
- #include <linux/fs.h>
-+#include <linux/kobject.h>
- #include <linux/mutex.h>
- #include <linux/string_helpers.h>
- #include <linux/types.h>
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 885a16bc059e..b87f397730b9 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -22,6 +22,7 @@
- #include <linux/device.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
+  * DOC: flip utils
+diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+index 369505447acd..e2257ca92bec 100644
+--- a/include/drm/drm_gem.h
++++ b/include/drm/drm_gem.h
+@@ -37,7 +37,7 @@
+ #include <linux/kref.h>
+ #include <linux/dma-resv.h>
  #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/pmdomain/governor.c b/drivers/pmdomain/governor.c
-index d1a10eeebd16..8e37c65f5084 100644
---- a/drivers/pmdomain/governor.c
-+++ b/drivers/pmdomain/governor.c
-@@ -10,6 +10,7 @@
- #include <linux/hrtimer.h>
- #include <linux/cpuidle.h>
- #include <linux/cpumask.h>
-+#include <linux/device.h>
- #include <linux/ktime.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
  
- static int dev_update_qos_constraint(struct device *dev, void *data)
-diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/ltc2952-poweroff.c
-index fa25fbd53934..f94401ed1539 100644
---- a/drivers/power/reset/ltc2952-poweroff.c
-+++ b/drivers/power/reset/ltc2952-poweroff.c
-@@ -57,6 +57,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/reboot.h>
- #include <linux/property.h>
-+#include <linux/hrtimer.h>
+ #include <drm/drm_vma_manager.h>
  
- struct ltc2952_poweroff {
- 	struct hrtimer timer_trigger;
-diff --git a/drivers/powercap/dtpm.c b/drivers/powercap/dtpm.c
-index ce920f17f45f..bd8127edd8a8 100644
---- a/drivers/powercap/dtpm.c
-+++ b/drivers/powercap/dtpm.c
-@@ -18,6 +18,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
+index 9060f9fae6f1..1fb6e2dfbc65 100644
+--- a/include/drm/drm_gpuvm.h
++++ b/include/drm/drm_gpuvm.h
+@@ -27,7 +27,7 @@
  
- #include <linux/dtpm.h>
-+#include <linux/export.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/powercap.h>
-diff --git a/drivers/pps/clients/pps-ktimer.c b/drivers/pps/clients/pps-ktimer.c
-index d33106bd7a29..7bb83872bb87 100644
---- a/drivers/pps/clients/pps-ktimer.c
-+++ b/drivers/pps/clients/pps-ktimer.c
-@@ -7,6 +7,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-diff --git a/drivers/pps/clients/pps-ldisc.c b/drivers/pps/clients/pps-ldisc.c
-index 443d6bae19d1..4c2bd74399bc 100644
---- a/drivers/pps/clients/pps-ldisc.c
-+++ b/drivers/pps/clients/pps-ldisc.c
-@@ -7,6 +7,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/device.h>
- #include <linux/module.h>
- #include <linux/serial_core.h>
- #include <linux/tty.h>
-diff --git a/drivers/pps/clients/pps_parport.c b/drivers/pps/clients/pps_parport.c
-index 42f93d4c6ee3..9f9389158042 100644
---- a/drivers/pps/clients/pps_parport.c
-+++ b/drivers/pps/clients/pps_parport.c
-@@ -15,6 +15,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/idr.h>
- #include <linux/init.h>
- #include <linux/irqnr.h>
- #include <linux/time.h>
-diff --git a/drivers/pps/kapi.c b/drivers/pps/kapi.c
-index d9d566f70ed1..1df337bf5e7b 100644
---- a/drivers/pps/kapi.c
-+++ b/drivers/pps/kapi.c
-@@ -7,6 +7,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
-index 5d19baae6a38..a689fd42ccaa 100644
---- a/drivers/pps/pps.c
-+++ b/drivers/pps/pps.c
-@@ -15,6 +15,7 @@
- #include <linux/idr.h>
- #include <linux/mutex.h>
- #include <linux/cdev.h>
-+#include <linux/device.h>
- #include <linux/poll.h>
- #include <linux/pps_kernel.h>
- #include <linux/slab.h>
-diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-index 921ee1827974..0a4853d45ec0 100644
---- a/drivers/rtc/class.c
-+++ b/drivers/rtc/class.c
-@@ -14,6 +14,7 @@
- #include <linux/of.h>
- #include <linux/rtc.h>
- #include <linux/kdev_t.h>
-+#include <linux/hrtimer.h>
- #include <linux/idr.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-index 1b63111cdda2..58f7d3a19dfe 100644
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/rtc.h>
-+#include <linux/hrtimer.h>
- #include <linux/sched.h>
- #include <linux/module.h>
- #include <linux/log2.h>
-diff --git a/drivers/scsi/isci/isci.h b/drivers/scsi/isci/isci.h
-index 4e6b1decbca7..4b9d92bff598 100644
---- a/drivers/scsi/isci/isci.h
-+++ b/drivers/scsi/isci/isci.h
-@@ -57,6 +57,7 @@
- #define __ISCI_H__
- 
- #include <linux/interrupt.h>
-+#include <linux/timer.h>
+ #include <linux/dma-resv.h>
+ #include <linux/list.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
  #include <linux/types.h>
  
- #define DRV_NAME "isci"
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 70bcee64bc8c..ee966d95b470 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -41,6 +41,7 @@
- #include <linux/crash_dump.h>
- #include <linux/cpu.h>
- #include <linux/cpuhotplug.h>
-+#include <linux/hrtimer.h>
+ #include <drm/drm_device.h>
+diff --git a/include/drm/drm_managed.h b/include/drm/drm_managed.h
+index ad08f834af40..3b96f8103827 100644
+--- a/include/drm/drm_managed.h
++++ b/include/drm/drm_managed.h
+@@ -3,7 +3,7 @@
+ #ifndef _DRM_MANAGED_H_
+ #define _DRM_MANAGED_H_
  
- #include <scsi/scsi.h>
- #include <scsi/scsi_device.h>
-diff --git a/drivers/slimbus/slimbus.h b/drivers/slimbus/slimbus.h
-index 00a7f112574b..29e9229a683c 100644
---- a/drivers/slimbus/slimbus.h
-+++ b/drivers/slimbus/slimbus.h
-@@ -7,6 +7,7 @@
- #define _DRIVERS_SLIMBUS_H
- #include <linux/module.h>
- #include <linux/device.h>
-+#include <linux/idr.h>
- #include <linux/mutex.h>
- #include <linux/completion.h>
- #include <linux/slimbus.h>
-diff --git a/drivers/soc/nuvoton/wpcm450-soc.c b/drivers/soc/nuvoton/wpcm450-soc.c
-index c5e0d11c383b..d4a0cd4b406d 100644
---- a/drivers/soc/nuvoton/wpcm450-soc.c
-+++ b/drivers/soc/nuvoton/wpcm450-soc.c
-@@ -6,6 +6,7 @@
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/overflow.h>
+ #include <linux/types.h>
+ 
+diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
+index e8e0f8d39f3a..4cbc82e23320 100644
+--- a/include/drm/drm_mipi_dbi.h
++++ b/include/drm/drm_mipi_dbi.h
+@@ -8,7 +8,7 @@
+ #ifndef __LINUX_MIPI_DBI_H
+ #define __LINUX_MIPI_DBI_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <drm/drm_device.h>
+ #include <drm/drm_simple_kms_helper.h>
+ 
+diff --git a/include/drm/drm_mm.h b/include/drm/drm_mm.h
+index abc1d1d48142..963656c94507 100644
+--- a/include/drm/drm_mm.h
++++ b/include/drm/drm_mm.h
+@@ -38,7 +38,7 @@
+  * Generic range manager structs
   */
- 
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index f3fec15c3112..4165f8b52804 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -3,6 +3,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/delay.h>
-+#include <linux/idr.h>
- #include <linux/mod_devicetable.h>
- #include <linux/pm_runtime.h>
- #include <linux/soundwire/sdw_registers.h>
-diff --git a/drivers/soundwire/intel_auxdevice.c b/drivers/soundwire/intel_auxdevice.c
-index 93698532deac..724e9ed2f537 100644
---- a/drivers/soundwire/intel_auxdevice.c
-+++ b/drivers/soundwire/intel_auxdevice.c
-@@ -9,6 +9,7 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/module.h>
-+#include <linux/idr.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/auxiliary_bus.h>
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index e61302ef3c21..aeb009a79ba6 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -17,6 +17,7 @@
- #include <linux/platform_device.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm_runtime.h>
-+#include <linux/ratelimit.h>
- #include <linux/reset.h>
- #include <linux/spi/spi.h>
- 
-diff --git a/drivers/staging/fbtft/fb_ssd1351.c b/drivers/staging/fbtft/fb_ssd1351.c
-index b8d55aa8c5c7..ca4145ee1f67 100644
---- a/drivers/staging/fbtft/fb_ssd1351.c
-+++ b/drivers/staging/fbtft/fb_ssd1351.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <linux/backlight.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-diff --git a/drivers/target/target_core_fabric_configfs.c b/drivers/target/target_core_fabric_configfs.c
-index 7156a4dc1ca7..2d208da07163 100644
---- a/drivers/target/target_core_fabric_configfs.c
-+++ b/drivers/target/target_core_fabric_configfs.c
-@@ -24,6 +24,7 @@
- #include <linux/unistd.h>
- #include <linux/string.h>
- #include <linux/syscalls.h>
-+#include <linux/sysfs.h>
- #include <linux/configfs.h>
- 
- #include <target/target_core_base.h>
-diff --git a/drivers/target/target_core_file.c b/drivers/target/target_core_file.c
-index 4d447520bab8..a907e646f45c 100644
---- a/drivers/target/target_core_file.c
-+++ b/drivers/target/target_core_file.c
-@@ -14,6 +14,7 @@
- #include <linux/parser.h>
- #include <linux/timer.h>
- #include <linux/blkdev.h>
-+#include <linux/bvec.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/module.h>
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index 262e62ab6cf2..6593679a7304 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -10,6 +10,7 @@
-  *      registered, the devfreq cooling won't react to it.
-  */
- 
-+#include <linux/device.h>
- #include <linux/devfreq.h>
- #include <linux/devfreq_cooling.h>
- #include <linux/energy_model.h>
-diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
-index bc6eb0dd66a4..9266874463b4 100644
---- a/drivers/thermal/intel/intel_powerclamp.c
-+++ b/drivers/thermal/intel/intel_powerclamp.c
-@@ -31,6 +31,7 @@
- #include <linux/thermal.h>
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-+#include <linux/sysfs.h>
- #include <linux/idle_inject.h>
- 
- #include <asm/msr.h>
-diff --git a/drivers/thermal/intel/therm_throt.c b/drivers/thermal/intel/therm_throt.c
-index e69868e868eb..62e13a1b2dea 100644
---- a/drivers/thermal/intel/therm_throt.c
-+++ b/drivers/thermal/intel/therm_throt.c
-@@ -14,6 +14,7 @@
-  * Credits: Adapted from Zwane Mwaikambo's original code in mce_intel.c.
-  *          Inspired by Ross Biro's and Al Borchers' counter code.
-  */
-+#include <linux/device.h>
- #include <linux/interrupt.h>
- #include <linux/notifier.h>
- #include <linux/jiffies.h>
-diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
-index 60a2915f5cfe..8a936c72ecd6 100644
---- a/drivers/tty/rpmsg_tty.c
-+++ b/drivers/tty/rpmsg_tty.c
-@@ -12,6 +12,7 @@
- 
- #define pr_fmt(fmt)		KBUILD_MODNAME ": " fmt
- 
-+#include <linux/idr.h>
- #include <linux/module.h>
- #include <linux/rpmsg.h>
- #include <linux/slab.h>
-diff --git a/drivers/tty/serial/8250/8250_bcm7271.c b/drivers/tty/serial/8250/8250_bcm7271.c
-index 504c4c020857..f4af9373ff05 100644
---- a/drivers/tty/serial/8250/8250_bcm7271.c
-+++ b/drivers/tty/serial/8250/8250_bcm7271.c
-@@ -22,6 +22,7 @@
- #include <linux/delay.h>
- #include <linux/clk.h>
- #include <linux/debugfs.h>
-+#include <linux/hrtimer.h>
- 
- #include "8250.h"
- 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index c37905ea3cae..16c483d4ecf1 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -32,6 +32,7 @@
- #include <linux/uaccess.h>
- #include <linux/pm_runtime.h>
- #include <linux/ktime.h>
-+#include <linux/hrtimer.h>
- 
- #include <asm/io.h>
- #include <asm/irq.h>
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 4aa72d5aeafb..87100d28fc92 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -27,6 +27,7 @@
- #include <linux/of.h>
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
-+#include <linux/hrtimer.h>
- 
- #include <asm/irq.h>
- #include <linux/dma/imx-dma.h>
-diff --git a/drivers/tty/serial/serial_base.h b/drivers/tty/serial/serial_base.h
-index c74c548f0db6..27c260e08205 100644
---- a/drivers/tty/serial/serial_base.h
-+++ b/drivers/tty/serial/serial_base.h
-@@ -6,6 +6,8 @@
-  * Author: Tony Lindgren <tony@atomide.com>
-  */
- 
-+#include <linux/idr.h>
-+
- #define to_serial_base_ctrl_device(d) container_of((d), struct serial_ctrl_device, dev)
- #define to_serial_base_port_device(d) container_of((d), struct serial_port_device, dev)
- 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index a85e7b9a2e49..1398cef67446 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -48,6 +48,7 @@
- #include <linux/timer.h>
- #include <linux/tty.h>
- #include <linux/tty_flip.h>
-+#include <linux/hrtimer.h>
- 
- #ifdef CONFIG_SUPERH
- #include <asm/sh_bios.h>
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 5f48ec37cb25..1f07145e5a68 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -25,6 +25,7 @@
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/delay.h>
-+#include <linux/hrtimer.h>
- 
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
-diff --git a/drivers/usb/chipidea/otg_fsm.c b/drivers/usb/chipidea/otg_fsm.c
-index c17516c29b63..522a5f3c0eb9 100644
---- a/drivers/usb/chipidea/otg_fsm.c
-+++ b/drivers/usb/chipidea/otg_fsm.c
-@@ -21,6 +21,7 @@
- #include <linux/usb/hcd.h>
- #include <linux/usb/chipidea.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/hrtimer.h>
- 
- #include "ci.h"
- #include "bits.h"
-diff --git a/drivers/usb/dwc2/hcd_queue.c b/drivers/usb/dwc2/hcd_queue.c
-index 0d4495c6b9f7..e539dcce7b55 100644
---- a/drivers/usb/dwc2/hcd_queue.c
-+++ b/drivers/usb/dwc2/hcd_queue.c
-@@ -18,6 +18,7 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/usb.h>
-+#include <linux/hrtimer.h>
- 
- #include <linux/usb/hcd.h>
- #include <linux/usb/ch11.h>
-diff --git a/drivers/usb/gadget/function/f_ncm.c b/drivers/usb/gadget/function/f_ncm.c
-index ca5d5f564998..96a5084a0a4f 100644
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -17,6 +17,7 @@
- #include <linux/device.h>
- #include <linux/etherdevice.h>
- #include <linux/crc32.h>
-+#include <linux/hrtimer.h>
- 
- #include <linux/usb/cdc.h>
- 
-diff --git a/drivers/usb/gadget/udc/max3420_udc.c b/drivers/usb/gadget/udc/max3420_udc.c
-index 89e8cf2a2a7d..f92b914a5c04 100644
---- a/drivers/usb/gadget/udc/max3420_udc.c
-+++ b/drivers/usb/gadget/udc/max3420_udc.c
-@@ -26,6 +26,7 @@
- #include <linux/usb/gadget.h>
- #include <linux/spi/spi.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/hrtimer.h>
- 
- #define MAX3420_MAX_EPS		4
- #define MAX3420_EP_MAX_PACKET		64  /* Same for all Endpoints */
-diff --git a/drivers/usb/typec/class.h b/drivers/usb/typec/class.h
-index 759b98355eeb..f57abf701dc5 100644
---- a/drivers/usb/typec/class.h
-+++ b/drivers/usb/typec/class.h
-@@ -4,6 +4,7 @@
- #define __USB_TYPEC_CLASS__
- 
- #include <linux/device.h>
-+#include <linux/idr.h>
- #include <linux/usb/typec.h>
- 
- struct typec_mux;
-diff --git a/drivers/usb/typec/pd.c b/drivers/usb/typec/pd.c
-index b9cca2be76fc..aa73642e104c 100644
---- a/drivers/usb/typec/pd.c
-+++ b/drivers/usb/typec/pd.c
-@@ -6,6 +6,7 @@
-  * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-  */
- 
-+#include <linux/idr.h>
- #include <linux/slab.h>
- #include <linux/usb/pd.h>
- 
-diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
-index 610a429c6191..2fc062fc13c7 100644
---- a/drivers/vfio/group.c
-+++ b/drivers/vfio/group.c
-@@ -11,6 +11,7 @@
-  */
- 
- #include <linux/vfio.h>
-+#include <linux/idr.h>
- #include <linux/iommufd.h>
- #include <linux/anon_inodes.h>
- #include "vfio.h"
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-index b7eb17a16ec4..c20a184acb1a 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-@@ -30,6 +30,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/component.h>
-+#include <linux/hrtimer.h>
- 
- #include <video/omapfb_dss.h>
- #include <video/mipi_display.h>
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/pll.c b/drivers/video/fbdev/omap2/omapfb/dss/pll.c
-index 725194d52445..1fc0ebe2622f 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/pll.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/pll.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/regulator/consumer.h>
- #include <linux/sched.h>
-+#include <linux/hrtimer.h>
- 
- #include <video/omapfb_dss.h>
- 
-diff --git a/drivers/virt/coco/tsm.c b/drivers/virt/coco/tsm.c
-index d1c2db83a8ca..69ab9595c9f3 100644
---- a/drivers/virt/coco/tsm.c
-+++ b/drivers/virt/coco/tsm.c
-@@ -8,6 +8,7 @@
- #include <linux/slab.h>
- #include <linux/rwsem.h>
- #include <linux/string.h>
-+#include <linux/sysfs.h>
- #include <linux/module.h>
- #include <linux/cleanup.h>
- #include <linux/configfs.h>
-diff --git a/fs/aio.c b/fs/aio.c
-index bb2ff48991f3..c347a2660c2b 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -45,6 +45,7 @@
- 
- #include <linux/uaccess.h>
- #include <linux/nospec.h>
-+#include <linux/hrtimer.h>
- 
- #include "internal.h"
- 
-diff --git a/fs/bcachefs/chardev.c b/fs/bcachefs/chardev.c
-index 226b39c17667..a2aa142a8b15 100644
---- a/fs/bcachefs/chardev.c
-+++ b/fs/bcachefs/chardev.c
-@@ -16,6 +16,7 @@
- #include <linux/cdev.h>
- #include <linux/device.h>
- #include <linux/fs.h>
-+#include <linux/idr.h>
- #include <linux/ioctl.h>
- #include <linux/major.h>
- #include <linux/sched/task.h>
-diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-index ec419b8e2c43..1eee24840245 100644
---- a/fs/bcachefs/fs.c
-+++ b/fs/bcachefs/fs.c
-@@ -34,6 +34,7 @@
- #include <linux/module.h>
- #include <linux/pagemap.h>
- #include <linux/posix_acl.h>
-+#include <linux/quota.h>
- #include <linux/random.h>
- #include <linux/seq_file.h>
- #include <linux/statfs.h>
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 63b426cc7798..c72f5246430a 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -11,6 +11,7 @@
- #include <linux/slab.h>
- #include <linux/workqueue.h>
- #include <linux/btrfs.h>
-+#include <linux/ratelimit.h>
- #include <linux/sched/mm.h>
- 
- #include "ctree.h"
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index 84c05246ffd8..dcae20d156ef 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -7,6 +7,7 @@
- #include <linux/sched/mm.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-+#include <linux/sysfs.h>
- #include <linux/completion.h>
  #include <linux/bug.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/limits.h>
+ #include <linux/mm_types.h>
  #include <linux/list.h>
-diff --git a/fs/buffer.c b/fs/buffer.c
-index b55dea034a5d..f32a7da32c7b 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -50,6 +50,7 @@
- #include <linux/fscrypt.h>
- #include <linux/fsverity.h>
- #include <linux/sched/isolation.h>
-+#include <linux/ratelimit.h>
+diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
+index 973119a9176b..526c57657fb6 100644
+--- a/include/drm/drm_mode_config.h
++++ b/include/drm/drm_mode_config.h
+@@ -23,10 +23,10 @@
+ #ifndef __DRM_MODE_CONFIG_H__
+ #define __DRM_MODE_CONFIG_H__
  
- #include "internal.h"
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ #include <linux/idr.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/llist.h>
  
-diff --git a/fs/ceph/metric.h b/fs/ceph/metric.h
-index 0d0c44bd3332..37cc17f667bc 100644
---- a/fs/ceph/metric.h
-+++ b/fs/ceph/metric.h
-@@ -5,6 +5,8 @@
- #include <linux/ceph/types.h>
- #include <linux/percpu_counter.h>
- #include <linux/ktime.h>
-+#include <linux/timer.h> // for round_jiffies_relative()
-+#include <linux/workqueue.h> // for struct delayed_work
- 
- extern bool disable_send_metrics;
- 
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index b06e2bc86221..8793926ed89d 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -21,6 +21,7 @@
- #include <linux/netfs.h>
- #include <linux/fscache.h>
- #include <linux/hashtable.h>
-+#include <linux/ratelimit.h>
- 
- #include <linux/ceph/libceph.h>
- #include "crypto.h"
-diff --git a/fs/configfs/mount.c b/fs/configfs/mount.c
-index c2d820063ec4..57a6ab996950 100644
---- a/fs/configfs/mount.c
-+++ b/fs/configfs/mount.c
-@@ -15,6 +15,7 @@
- #include <linux/pagemap.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- 
- #include <linux/configfs.h>
- #include "configfs_internal.h"
-diff --git a/fs/crypto/bio.c b/fs/crypto/bio.c
-index 0ad8c30b8fa5..27216aa18ad4 100644
---- a/fs/crypto/bio.c
-+++ b/fs/crypto/bio.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/bio.h>
- #include <linux/namei.h>
-+#include <linux/blkdev.h> // errno_to_blk_status()
- #include "fscrypt_private.h"
- 
- /**
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index 034a617cb1a5..54123210b6c4 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -27,6 +27,7 @@
- #include <linux/magic.h>
- #include <linux/slab.h>
- #include <linux/security.h>
-+#include <linux/sysfs.h>
- 
- #include "internal.h"
- 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index c98aeda8abb2..193967a686aa 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2021, Alibaba Cloud
-  */
- #include "internal.h"
-+#include <linux/blkdev.h>
- #include <linux/sched/mm.h>
- #include <trace/events/erofs.h>
- 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index b0409badb017..c1138b2bd6ec 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -10,6 +10,7 @@
- #include <linux/fs.h>
- #include <linux/dax.h>
- #include <linux/dcache.h>
-+#include <linux/idr.h>
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/pagemap.h>
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 5f60f163bd56..31bd221b72a2 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -10,6 +10,7 @@
- #include <linux/fs_context.h>
- #include <linux/fs_parser.h>
- #include <linux/exportfs.h>
-+#include <linux/blkdev.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 3534d36a1474..4918d180b4a1 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -37,6 +37,7 @@
- #include <linux/seq_file.h>
- #include <linux/compat.h>
- #include <linux/rculist.h>
-+#include <linux/hrtimer.h>
- #include <net/busy_poll.h>
- 
- /*
-diff --git a/fs/exec.c b/fs/exec.c
-index af4fbb61cd53..64cf1dc62696 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -67,6 +67,7 @@
- #include <linux/time_namespace.h>
- #include <linux/user_events.h>
- #include <linux/rseq.h>
-+#include <linux/posix-timers.h> // for posix_cpu_timers_exit()
- 
- #include <linux/uaccess.h>
- #include <asm/mmu_context.h>
-diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
-index 6d332dff79dd..a982ea569b9d 100644
---- a/fs/ext4/sysfs.c
-+++ b/fs/ext4/sysfs.c
-@@ -12,6 +12,7 @@
- #include <linux/fs.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- #include <linux/proc_fs.h>
- #include <linux/part_stat.h>
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 84c9fead3ad4..3f59adf156a3 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -16,6 +16,7 @@
- #include <linux/crc32.h>
- #include <linux/magic.h>
- #include <linux/kobject.h>
-+#include <linux/radix-tree.h>
- #include <linux/sched.h>
- #include <linux/cred.h>
- #include <linux/sched/mm.h>
-diff --git a/fs/gfs2/recovery.c b/fs/gfs2/recovery.c
-index 4db3ca9c3b02..8d8bdf892b8d 100644
---- a/fs/gfs2/recovery.c
-+++ b/fs/gfs2/recovery.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/blkdev.h> // for bdev_read_only()
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/completion.h>
-diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-index 250f340cb44d..15e89ab6acbd 100644
---- a/fs/gfs2/sys.c
-+++ b/fs/gfs2/sys.c
-@@ -9,6 +9,7 @@
- #include <linux/sched.h>
- #include <linux/cred.h>
- #include <linux/spinlock.h>
-+#include <linux/sysfs.h>
- #include <linux/completion.h>
- #include <linux/buffer_head.h>
- #include <linux/module.h>
-diff --git a/fs/hfsplus/wrapper.c b/fs/hfsplus/wrapper.c
-index b0cb70400996..89f880abf598 100644
---- a/fs/hfsplus/wrapper.c
-+++ b/fs/hfsplus/wrapper.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/fs.h>
-+#include <linux/bio.h>
- #include <linux/blkdev.h>
- #include <linux/cdrom.h>
- #include <asm/unaligned.h>
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 093c4515b22a..cd0d007ba4a1 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -17,6 +17,7 @@
- #include <linux/bio.h>
- #include <linux/sched/signal.h>
- #include <linux/migrate.h>
-+#include <linux/blkdev.h>
- #include "trace.h"
- 
- #include "../internal.h"
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index bcd3f8cf5ea4..c7d017953468 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -12,6 +12,7 @@
- #include <linux/backing-dev.h>
- #include <linux/uio.h>
- #include <linux/task_io_accounting_ops.h>
-+#include <linux/blkdev.h>
- #include "trace.h"
- 
- #include "../internal.h"
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 437f60e96d40..d80479bcf76c 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -31,6 +31,7 @@
- #include <uapi/linux/mount.h>
- #include <linux/fs_context.h>
- #include <linux/shmem_fs.h>
-+#include <linux/sysfs.h>
- #include <linux/mnt_idmapping.h>
- #include <linux/nospec.h>
- 
-diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
-index 49aaf28a6950..94fd57d7d930 100644
---- a/fs/nfs/nfs42xattr.c
-+++ b/fs/nfs/nfs42xattr.c
-@@ -10,6 +10,7 @@
+ #include <drm/drm_modeset_lock.h>
+diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+index 10015891b056..23d3b88a50e3 100644
+--- a/include/drm/drm_panel.h
++++ b/include/drm/drm_panel.h
+@@ -27,7 +27,7 @@
+ #include <linux/err.h>
  #include <linux/errno.h>
- #include <linux/nfs_fs.h>
- #include <linux/hashtable.h>
-+#include <linux/list_lru.h>
- #include <linux/refcount.h>
- #include <uapi/linux/xattr.h>
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
  
-diff --git a/fs/ntfs3/fsntfs.c b/fs/ntfs3/fsntfs.c
-index ae2ef5c11868..a2cb4532f7e3 100644
---- a/fs/ntfs3/fsntfs.c
-+++ b/fs/ntfs3/fsntfs.c
-@@ -5,6 +5,7 @@
-  *
-  */
+ struct backlight_device;
+ struct dentry;
+diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
+index 2a1d01e5b56b..057491baf262 100644
+--- a/include/drm/drm_prime.h
++++ b/include/drm/drm_prime.h
+@@ -32,8 +32,8 @@
+ #ifndef __DRM_PRIME_H__
+ #define __DRM_PRIME_H__
  
-+#include <linux/bio.h>
- #include <linux/blkdev.h>
- #include <linux/buffer_head.h>
- #include <linux/fs.h>
-@@ -2698,4 +2699,4 @@ int ntfs_set_label(struct ntfs_sb_info *sbi, u8 *label, int len)
- out:
- 	__putname(uni);
- 	return err;
--}
-\ No newline at end of file
-+}
-diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-index cef5467fd928..e0fc4805e21a 100644
---- a/fs/ntfs3/super.c
-+++ b/fs/ntfs3/super.c
-@@ -60,6 +60,7 @@
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/statfs.h>
-+#include <linux/ratelimit.h>
- 
- #include "debug.h"
- #include "ntfs.h"
-diff --git a/fs/pnode.c b/fs/pnode.c
-index a799e0315cc9..c2f92e5a28fa 100644
---- a/fs/pnode.c
-+++ b/fs/pnode.c
-@@ -9,6 +9,7 @@
- #include <linux/mount.h>
- #include <linux/fs.h>
- #include <linux/nsproxy.h>
-+#include <linux/seqlock.h>
- #include <uapi/linux/mount.h>
- #include "internal.h"
- #include "pnode.h"
-diff --git a/fs/proc/uptime.c b/fs/proc/uptime.c
-index b5343d209381..59ff141a3d4b 100644
---- a/fs/proc/uptime.c
-+++ b/fs/proc/uptime.c
-@@ -7,6 +7,7 @@
- #include <linux/time.h>
- #include <linux/time_namespace.h>
- #include <linux/kernel_stat.h>
-+#include <linux/timekeeping.h> // for ktime_get_boottime_ts64()
- #include "internal.h"
- 
- static int uptime_proc_show(struct seq_file *m, void *v)
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index d0d9bfdad30c..98a136f26d4c 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -22,6 +22,7 @@
- #include <linux/magic.h>
- #include <linux/pstore.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- #include <linux/uaccess.h>
- #include <linux/cleanup.h>
- 
-diff --git a/fs/reiserfs/reiserfs.h b/fs/reiserfs/reiserfs.h
-index 725667880e62..335758395ee4 100644
---- a/fs/reiserfs/reiserfs.h
-+++ b/fs/reiserfs/reiserfs.h
-@@ -14,6 +14,7 @@
- #include <asm/unaligned.h>
- #include <linux/bitops.h>
- #include <linux/proc_fs.h>
-+#include <linux/quota.h>
- #include <linux/buffer_head.h>
- 
- /* the 32 bit compat definitions with int argument */
-diff --git a/fs/sysctls.c b/fs/sysctls.c
-index 8dbde9a802fa..90894bb067dd 100644
---- a/fs/sysctls.c
-+++ b/fs/sysctls.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/init.h>
- #include <linux/sysctl.h>
-+#include <linux/highuid.h>
- 
- static struct ctl_table fs_shared_sysctls[] = {
- 	{
-diff --git a/fs/sysfs/mount.c b/fs/sysfs/mount.c
-index 98467bb76737..2380a3f6f328 100644
---- a/fs/sysfs/mount.c
-+++ b/fs/sysfs/mount.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/fs.h>
-+#include <linux/kobject_ns.h>
- #include <linux/magic.h>
- #include <linux/mount.h>
- #include <linux/init.h>
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index e1b172c0e091..1b46d6a7d3e9 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -21,6 +21,7 @@
- #include <linux/parser.h>
- #include <linux/magic.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- #include "internal.h"
- 
- #define TRACEFS_DEFAULT_MODE	0700
-diff --git a/fs/ubifs/io.c b/fs/ubifs/io.c
-index 01d8eb170382..56e95da4f7ef 100644
---- a/fs/ubifs/io.c
-+++ b/fs/ubifs/io.c
-@@ -60,6 +60,7 @@
- 
- #include <linux/crc32.h>
- #include <linux/slab.h>
-+#include <linux/hrtimer.h>
- #include "ubifs.h"
+-#include <linux/mutex.h>
+-#include <linux/rbtree.h>
++#include <linux/mutex_types.h>
++#include <linux/rbtree_types.h>
+ #include <linux/scatterlist.h>
  
  /**
-diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
-index 09e270d6ed02..a9c286b8c373 100644
---- a/fs/ubifs/super.c
-+++ b/fs/ubifs/super.c
-@@ -24,6 +24,7 @@
- #include <linux/mount.h>
- #include <linux/math64.h>
- #include <linux/writeback.h>
-+#include <linux/hrtimer.h>
- #include "ubifs.h"
+diff --git a/include/drm/drm_privacy_screen_driver.h b/include/drm/drm_privacy_screen_driver.h
+index 4ef246d5706f..88097a1d7b99 100644
+--- a/include/drm/drm_privacy_screen_driver.h
++++ b/include/drm/drm_privacy_screen_driver.h
+@@ -11,7 +11,7 @@
  
- static int ubifs_default_version_set(const char *val, const struct kernel_param *kp)
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index b2cbbba3e15a..c64fb632718d 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -14,6 +14,7 @@
- #include "xfs_error.h"
- #include "xfs_sysfs.h"
- #include "xfs_inode.h"
-+#include <linux/sysfs.h>
+ #include <linux/device.h>
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <drm/drm_connector.h>
  
- #ifdef DEBUG
+ struct drm_privacy_screen;
+diff --git a/include/drm/drm_vblank.h b/include/drm/drm_vblank.h
+index 7f3957943dd1..1a031507c128 100644
+--- a/include/drm/drm_vblank.h
++++ b/include/drm/drm_vblank.h
+@@ -24,7 +24,7 @@
+ #ifndef _DRM_VBLANK_H_
+ #define _DRM_VBLANK_H_
  
-diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
-index 17485666b672..09b2a05c802f 100644
---- a/fs/xfs/xfs_sysfs.c
-+++ b/fs/xfs/xfs_sysfs.c
-@@ -13,6 +13,7 @@
- #include "xfs_log.h"
- #include "xfs_log_priv.h"
- #include "xfs_mount.h"
-+#include <linux/sysfs.h>
+-#include <linux/seqlock.h>
++#include <linux/seqlock_types.h>
+ #include <linux/idr.h>
+ #include <linux/poll.h>
+ #include <linux/kthread.h>
+diff --git a/include/drm/drm_writeback.h b/include/drm/drm_writeback.h
+index 17e576c80169..826b348e2c95 100644
+--- a/include/drm/drm_writeback.h
++++ b/include/drm/drm_writeback.h
+@@ -13,7 +13,7 @@
+ #define __DRM_WRITEBACK_H__
+ #include <drm/drm_connector.h>
+ #include <drm/drm_encoder.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
  
- struct xfs_sysfs_attr {
- 	struct attribute attr;
-diff --git a/fs/zonefs/sysfs.c b/fs/zonefs/sysfs.c
-index 8ccb65c2b419..49f79f338550 100644
---- a/fs/zonefs/sysfs.c
-+++ b/fs/zonefs/sysfs.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/fs.h>
- #include <linux/seq_file.h>
-+#include <linux/sysfs.h>
- #include <linux/blkdev.h>
- 
- #include "zonefs.h"
-diff --git a/include/drm/drm_color_mgmt.h b/include/drm/drm_color_mgmt.h
-index ed81741036d7..b5e183358bee 100644
---- a/include/drm/drm_color_mgmt.h
-+++ b/include/drm/drm_color_mgmt.h
-@@ -23,6 +23,7 @@
- #ifndef __DRM_COLOR_MGMT_H__
- #define __DRM_COLOR_MGMT_H__
- 
-+#include <linux/bits.h>
- #include <linux/ctype.h>
- #include <linux/math64.h>
- #include <drm/drm_property.h>
-diff --git a/include/drm/drm_modeset_lock.h b/include/drm/drm_modeset_lock.h
-index ec4f543c3d95..f901d4ad0c54 100644
---- a/include/drm/drm_modeset_lock.h
-+++ b/include/drm/drm_modeset_lock.h
-@@ -27,6 +27,7 @@
- #include <linux/types.h> /* stackdepot.h is not self-contained */
- #include <linux/stackdepot.h>
- #include <linux/ww_mutex.h>
-+#include <linux/lockdep.h>
- 
- struct drm_modeset_lock;
- 
+ /**
+  * struct drm_writeback_connector - DRM writeback connector
 diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-index 5acc64954a88..4c598cfc2af3 100644
+index 4c598cfc2af3..4edd7ac64b62 100644
 --- a/include/drm/gpu_scheduler.h
 +++ b/include/drm/gpu_scheduler.h
-@@ -28,6 +28,7 @@
- #include <linux/dma-fence.h>
+@@ -29,7 +29,7 @@
  #include <linux/completion.h>
  #include <linux/xarray.h>
-+#include <linux/wait.h>
- #include <linux/workqueue.h>
+ #include <linux/wait.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
  
  #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index ae12696ec492..721659b4edd7 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -10,10 +10,15 @@
- #include <linux/percpu-refcount.h>
- #include <linux/flex_proportions.h>
- #include <linux/timer.h>
-+#include <linux/wait.h>
- #include <linux/workqueue.h>
- #include <linux/kref.h>
- #include <linux/refcount.h>
  
-+#ifdef CONFIG_CGROUP_WRITEBACK
-+#include <linux/rwsem.h>
-+#endif
-+
- struct page;
- struct device;
- struct dentry;
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 875d792bffff..afae5a73b7cd 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -8,6 +8,7 @@
- #include <linux/mempool.h>
- /* struct bio, bio_vec and BIO_* flags are defined in blk_types.h */
- #include <linux/blk_types.h>
-+#include <linux/bvec.h>
- #include <linux/uio.h>
+diff --git a/include/drm/i915_hdcp_interface.h b/include/drm/i915_hdcp_interface.h
+index 4c9c8167c2d5..a8237d271ad8 100644
+--- a/include/drm/i915_hdcp_interface.h
++++ b/include/drm/i915_hdcp_interface.h
+@@ -9,7 +9,7 @@
+ #ifndef _I915_HDCP_INTERFACE_H_
+ #define _I915_HDCP_INTERFACE_H_
  
- #define BIO_MAX_VECS		256U
-diff --git a/include/linux/blk-integrity.h b/include/linux/blk-integrity.h
-index 378b2459efe2..d91d3363d8b3 100644
---- a/include/linux/blk-integrity.h
-+++ b/include/linux/blk-integrity.h
-@@ -3,6 +3,7 @@
- #define _LINUX_BLK_INTEGRITY_H
- 
- #include <linux/blk-mq.h>
-+#include <linux/bio.h>
- 
- struct request;
- 
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 7a8150a5f051..d3e9e69aaa3c 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -2,6 +2,7 @@
- #ifndef BLK_MQ_H
- #define BLK_MQ_H
- 
-+#include <linux/bio.h>
- #include <linux/blkdev.h>
- #include <linux/sbitmap.h>
- #include <linux/lockdep.h>
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index d7cac3de65b3..09e7268bc590 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -6,6 +6,7 @@
- #define _LINUX_BLKDEV_H
- 
- #include <linux/types.h>
-+#include <linux/fs.h> // for inode_unhashed()
- #include <linux/blk_types.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
  #include <linux/device.h>
- #include <linux/list.h>
-@@ -22,6 +23,7 @@
- #include <linux/blkzoned.h>
- #include <linux/sched.h>
- #include <linux/sbitmap.h>
-+#include <linux/uio.h> // for iov_iter_is_aligned()
- #include <linux/uuid.h>
- #include <linux/xarray.h>
+ #include <drm/display/drm_hdcp.h>
  
-diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
-index 1b92aed49363..332ece824fde 100644
---- a/include/linux/can/dev.h
-+++ b/include/linux/can/dev.h
-@@ -22,6 +22,7 @@
- #include <linux/can/skb.h>
- #include <linux/ethtool.h>
- #include <linux/netdevice.h>
-+#include <linux/workqueue.h> // for struct delayed_work
+diff --git a/include/drm/i915_pxp_tee_interface.h b/include/drm/i915_pxp_tee_interface.h
+index 7d96985f2d05..4639d9fba19a 100644
+--- a/include/drm/i915_pxp_tee_interface.h
++++ b/include/drm/i915_pxp_tee_interface.h
+@@ -6,7 +6,7 @@
+ #ifndef _I915_PXP_TEE_INTERFACE_H_
+ #define _I915_PXP_TEE_INTERFACE_H_
  
- /*
-  * CAN mode
-diff --git a/include/linux/dev_printk.h b/include/linux/dev_printk.h
-index 6bfe70decc9f..a5151e4b9bde 100644
---- a/include/linux/dev_printk.h
-+++ b/include/linux/dev_printk.h
-@@ -12,6 +12,7 @@
- #define _DEVICE_PRINTK_H_
- 
- #include <linux/compiler.h>
-+#include <linux/stdarg.h>
- #include <linux/types.h>
- #include <linux/ratelimit.h>
- 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 97c4b046c09d..ddba2d30c541 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -31,6 +31,7 @@
- #include <linux/device/class.h>
- #include <linux/device/driver.h>
- #include <linux/cleanup.h>
-+#include <linux/sysfs.h> // for __ATTR_*
- #include <asm/device.h>
- 
- struct device;
-diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-index 5ef4ec1c36c3..76826d165298 100644
---- a/include/linux/device/bus.h
-+++ b/include/linux/device/bus.h
-@@ -17,6 +17,7 @@
- #include <linux/kobject.h>
- #include <linux/klist.h>
- #include <linux/pm.h>
-+#include <linux/sysfs.h> // for struct attribute
- 
- struct device_driver;
- struct fwnode_handle;
-diff --git a/include/linux/device/class.h b/include/linux/device/class.h
-index c576b49c55c2..6b1cebe43f8e 100644
---- a/include/linux/device/class.h
-+++ b/include/linux/device/class.h
-@@ -17,6 +17,7 @@
- #include <linux/kobject.h>
- #include <linux/klist.h>
- #include <linux/pm.h>
-+#include <linux/uidgid_types.h>
- #include <linux/device/bus.h>
- 
- struct device;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 752dbde4cec1..1a202761599a 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -7,6 +7,7 @@
- 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
  #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/idr.h> // for struct ida
- #include <linux/uio.h>
- #include <linux/bug.h>
- #include <linux/scatterlist.h>
-diff --git a/include/linux/dtpm.h b/include/linux/dtpm.h
-index a4a13514b730..eae69f6e4042 100644
---- a/include/linux/dtpm.h
-+++ b/include/linux/dtpm.h
-@@ -12,6 +12,8 @@
- #define MAX_DTPM_DESCR 8
- #define MAX_DTPM_CONSTRAINTS 1
+ struct scatterlist;
  
-+struct of_device_id;
-+
- struct dtpm {
- 	struct powercap_zone zone;
- 	struct dtpm *parent;
-diff --git a/include/linux/extcon.h b/include/linux/extcon.h
-index e596a0abcb27..0fd2ca917549 100644
---- a/include/linux/extcon.h
-+++ b/include/linux/extcon.h
-@@ -19,6 +19,9 @@
- #define __LINUX_EXTCON_H__
- 
- #include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/notifier.h>
-+#include <linux/types.h>
- 
- /*
-  * Define the type of supported external connectors
-diff --git a/include/linux/firmware.h b/include/linux/firmware.h
-index 0311858b46ce..d45acd8c1e84 100644
---- a/include/linux/firmware.h
-+++ b/include/linux/firmware.h
-@@ -2,6 +2,7 @@
- #ifndef _LINUX_FIRMWARE_H
- #define _LINUX_FIRMWARE_H
- 
-+#include <linux/err.h>
- #include <linux/types.h>
- #include <linux/compiler.h>
- #include <linux/gfp.h>
-diff --git a/include/linux/flex_proportions.h b/include/linux/flex_proportions.h
-index e9a72fd0bfe7..b5d8c1a1b2a9 100644
---- a/include/linux/flex_proportions.h
-+++ b/include/linux/flex_proportions.h
-@@ -12,6 +12,7 @@
- #include <linux/spinlock.h>
- #include <linux/seqlock.h>
- #include <linux/gfp.h>
-+#include <linux/irqflags.h> // for local_irq_save()
- 
- /*
-  * When maximum proportion of some event type is specified, this is the
-diff --git a/include/linux/framer/framer-provider.h b/include/linux/framer/framer-provider.h
-index 782cd5fc83d5..0519dfe6f61c 100644
---- a/include/linux/framer/framer-provider.h
-+++ b/include/linux/framer/framer-provider.h
-@@ -10,6 +10,7 @@
- #ifndef __DRIVERS_PROVIDER_FRAMER_H
- #define __DRIVERS_PROVIDER_FRAMER_H
- 
-+#include <linux/device.h>
- #include <linux/export.h>
- #include <linux/framer/framer.h>
- #include <linux/types.h>
-diff --git a/include/linux/futex.h b/include/linux/futex.h
-index b70df27d7e85..9fe23f0681ca 100644
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/sched.h>
- #include <linux/ktime.h>
-+#include <linux/mutex.h>
- 
- #include <uapi/linux/futex.h>
- 
-diff --git a/include/linux/hisi_acc_qm.h b/include/linux/hisi_acc_qm.h
-index 5f4c74facf6a..33e3caa400de 100644
---- a/include/linux/hisi_acc_qm.h
-+++ b/include/linux/hisi_acc_qm.h
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/debugfs.h>
-+#include <linux/idr.h>
- #include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 991c83e929b4..ba795d668766 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -20,7 +20,9 @@
- #include <linux/rbtree.h>
- #include <linux/seqlock.h>
- #include <linux/timer.h>
-+#include <asm/processor.h>  /* for cpu_relax() */
- 
-+struct restart_block;
- struct hrtimer_clock_base;
- struct hrtimer_cpu_base;
- 
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index c5b36d2c1e73..6dafef342e91 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -9,6 +9,7 @@
- 
- #include <linux/device.h>
- #include <linux/cdev.h>
-+#include <linux/device.h>
- #include <linux/slab.h>
- #include <linux/iio/types.h>
- /* IIO TODO LIST */
-diff --git a/include/linux/ipc.h b/include/linux/ipc.h
-index 9b1434247aab..12f6839fad5b 100644
---- a/include/linux/ipc.h
-+++ b/include/linux/ipc.h
-@@ -7,6 +7,8 @@
- #include <linux/rhashtable-types.h>
- #include <uapi/linux/ipc.h>
- #include <linux/refcount.h>
-+#include <linux/cache.h> // for ____cacheline_aligned_in_smp
-+#include <linux/compiler_types.h> // for __randomize_layout
- 
- /* used by in-kernel data structures */
- struct kern_ipc_perm {
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 7a9ff464608d..ace4e4e48315 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -3,6 +3,7 @@
- #define __LINUX_MEMORY_HOTPLUG_H
+diff --git a/include/drm/ttm/ttm_pool.h b/include/drm/ttm/ttm_pool.h
+index 4490d43c63e3..b5038049062a 100644
+--- a/include/drm/ttm/ttm_pool.h
++++ b/include/drm/ttm/ttm_pool.h
+@@ -28,7 +28,7 @@
  
  #include <linux/mmzone.h>
-+#include <linux/seqlock.h>
- #include <linux/spinlock.h>
- #include <linux/notifier.h>
- #include <linux/bug.h>
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index e442fd0efdd9..b111daecd173 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -23,6 +23,8 @@
- #include <linux/err.h>
- #include <linux/page-flags.h>
- #include <linux/page_ref.h>
-+#include <linux/percpu_counter.h>
-+#include <linux/rwsem.h>
- #include <linux/overflow.h>
- #include <linux/sizes.h>
- #include <linux/sched.h>
-@@ -30,6 +32,7 @@
- #include <linux/kasan.h>
- #include <linux/memremap.h>
- #include <linux/slab.h>
-+#include <linux/seqlock.h>
+ #include <linux/llist.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <drm/ttm/ttm_caching.h>
  
- struct mempolicy;
- struct anon_vma;
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 1153b0d99a80..fd3c85e4d95f 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -27,6 +27,7 @@
- #include <linux/tracepoint-defs.h>
- #include <linux/srcu.h>
- #include <linux/static_call_types.h>
-+#include <linux/sysfs.h> // for struct attribute
- #include <linux/dynamic_debug.h>
- 
- #include <linux/percpu.h>
-diff --git a/include/linux/mtd/blktrans.h b/include/linux/mtd/blktrans.h
-index 6e471436bba5..92a7c94777b7 100644
---- a/include/linux/mtd/blktrans.h
-+++ b/include/linux/mtd/blktrans.h
-@@ -8,6 +8,7 @@
- 
- #include <linux/mutex.h>
- #include <linux/kref.h>
-+#include <linux/list.h>
- #include <linux/sysfs.h>
- 
- struct hd_geometry;
-diff --git a/include/linux/ndctl.h b/include/linux/ndctl.h
-index cd5a293ce3ae..4f21118ae7b1 100644
---- a/include/linux/ndctl.h
-+++ b/include/linux/ndctl.h
-@@ -13,6 +13,8 @@
- #ifndef _LINUX_NDCTL_H
- #define _LINUX_NDCTL_H
- 
-+#include <asm/page.h> // for PAGE_SIZE
-+
- #include <uapi/linux/ndctl.h>
- 
- enum {
-diff --git a/include/linux/node.h b/include/linux/node.h
-index 25b66d705ee2..c4c17037c954 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -18,6 +18,8 @@
- #include <linux/device.h>
- #include <linux/cpumask.h>
+ struct device;
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index febd48635ab1..26b2e4cfafa1 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -22,7 +22,7 @@
  #include <linux/list.h>
-+#include <linux/mmzone.h> // for enum meminit_context
-+#include <linux/nodemask.h> // for node_online()
+ #include <linux/module.h>
+ #include <linux/slab.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
  
- /**
-  * struct access_coordinate - generic performance coordinates container
-diff --git a/include/linux/notifier.h b/include/linux/notifier.h
-index 45702bdcbceb..96fb0b489d8a 100644
---- a/include/linux/notifier.h
-+++ b/include/linux/notifier.h
-@@ -13,6 +13,7 @@
- #include <linux/errno.h>
- #include <linux/mutex.h>
- #include <linux/rwsem.h>
-+#include <linux/spinlock.h>
- #include <linux/srcu.h>
+diff --git a/include/kvm/arm_arch_timer.h b/include/kvm/arm_arch_timer.h
+index c819c5d16613..c271865175b0 100644
+--- a/include/kvm/arm_arch_timer.h
++++ b/include/kvm/arm_arch_timer.h
+@@ -8,7 +8,7 @@
+ #define __ASM_ARM_KVM_ARCH_TIMER_H
  
- /*
-diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
-index 0f1d024bd958..241cef0bfaed 100644
---- a/include/linux/ns_common.h
-+++ b/include/linux/ns_common.h
-@@ -2,6 +2,7 @@
- #ifndef _LINUX_NS_COMMON_H
- #define _LINUX_NS_COMMON_H
+ #include <linux/clocksource.h>
+-#include <linux/hrtimer.h>
++#include <linux/hrtimer_types.h>
  
-+#include <linux/atomic.h>
- #include <linux/refcount.h>
- 
- struct proc_ns_operations;
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index 97b0e23363c8..e0014edba850 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -17,6 +17,10 @@
- #include <linux/hrtimer.h>
- #include <linux/completion.h>
- 
-+#ifdef CONFIG_PM_CLK
+ enum kvm_arch_timers {
+ 	TIMER_PTIMER,
+diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+index 8cc38e836f54..c1c4a6266b58 100644
+--- a/include/kvm/arm_vgic.h
++++ b/include/kvm/arm_vgic.h
+@@ -9,8 +9,8 @@
+ #include <linux/kvm.h>
+ #include <linux/irqreturn.h>
+ #include <linux/kref.h>
+-#include <linux/mutex.h>
+-#include <linux/spinlock.h>
 +#include <linux/mutex_types.h>
-+#endif
-+
- /*
-  * Callbacks for platform drivers to implement.
++#include <linux/spinlock_types.h>
+ #include <linux/static_key.h>
+ #include <linux/types.h>
+ #include <kvm/iodev.h>
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index b7165e52b3c6..3beab76d31d4 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -30,7 +30,7 @@ struct irq_domain_ops;
+ #include <linux/list.h>
+ #include <linux/dynamic_debug.h>
+ #include <linux/module.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/fw_table.h>
+ 
+ #include <acpi/acpi_bus.h>
+diff --git a/include/linux/agpgart.h b/include/linux/agpgart.h
+index 21b34a96cfd8..56d8db3784c1 100644
+--- a/include/linux/agpgart.h
++++ b/include/linux/agpgart.h
+@@ -26,7 +26,7 @@
+ #ifndef _AGP_H
+ #define _AGP_H 1
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/agp_backend.h>
+ #include <uapi/linux/agpgart.h>
+ 
+diff --git a/include/linux/alarmtimer.h b/include/linux/alarmtimer.h
+index 05e758b8b894..92d10358e2f0 100644
+--- a/include/linux/alarmtimer.h
++++ b/include/linux/alarmtimer.h
+@@ -3,7 +3,7 @@
+ #define _LINUX_ALARMTIMER_H
+ 
+ #include <linux/time.h>
+-#include <linux/hrtimer.h>
++#include <linux/hrtimer_types.h>
+ #include <linux/timerqueue.h>
+ 
+ struct rtc_device;
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 7bf50450cd69..977f0323383d 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -4,14 +4,14 @@
+ 
+ #include <linux/list.h>
+ #include <linux/radix-tree.h>
+-#include <linux/rbtree.h>
+-#include <linux/spinlock.h>
++#include <linux/rbtree_types.h>
++#include <linux/spinlock_types.h>
+ #include <linux/percpu_counter.h>
+ #include <linux/percpu-refcount.h>
+ #include <linux/flex_proportions.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/wait.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/kref.h>
+ 
+ #ifdef CONFIG_CGROUP_WRITEBACK
+diff --git a/include/linux/badblocks.h b/include/linux/badblocks.h
+index 670f2dae692f..bd14c9de160a 100644
+--- a/include/linux/badblocks.h
++++ b/include/linux/badblocks.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_BADBLOCKS_H
+ #define _LINUX_BADBLOCKS_H
+ 
+-#include <linux/seqlock.h>
++#include <linux/seqlock_types.h>
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+ #include <linux/stddef.h>
+diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
+index 5ca2d5699620..6538ca2674a9 100644
+--- a/include/linux/balloon_compaction.h
++++ b/include/linux/balloon_compaction.h
+@@ -39,7 +39,7 @@
+ #include <linux/pagemap.h>
+ #include <linux/page-flags.h>
+ #include <linux/migrate.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/err.h>
+ #include <linux/fs.h>
+ #include <linux/list.h>
+diff --git a/include/linux/bcm47xx_wdt.h b/include/linux/bcm47xx_wdt.h
+index fc9dcdb4b979..4198a11e2077 100644
+--- a/include/linux/bcm47xx_wdt.h
++++ b/include/linux/bcm47xx_wdt.h
+@@ -2,7 +2,7 @@
+ #ifndef LINUX_BCM47XX_WDT_H_
+ #define LINUX_BCM47XX_WDT_H_
+ 
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/types.h>
+ #include <linux/watchdog.h>
+ 
+diff --git a/include/linux/blk-crypto.h b/include/linux/blk-crypto.h
+index 5e5822c18ee4..c1463dcedc84 100644
+--- a/include/linux/blk-crypto.h
++++ b/include/linux/blk-crypto.h
+@@ -70,7 +70,7 @@ struct bio_crypt_ctx {
+ };
+ 
+ #include <linux/blk_types.h>
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ 
+ #ifdef CONFIG_BLK_INLINE_ENCRYPTION
+ 
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index d3e9e69aaa3c..ed3760b04baa 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -5,7 +5,7 @@
+ #include <linux/bio.h>
+ #include <linux/blkdev.h>
+ #include <linux/sbitmap.h>
+-#include <linux/lockdep.h>
++#include <linux/lockdep_types.h>
+ #include <linux/scatterlist.h>
+ #include <linux/prefetch.h>
+ #include <linux/srcu.h>
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index a98a9f1d21a0..ec4940fcc489 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -11,11 +11,11 @@
+ #include <linux/device.h>
+ #include <linux/list.h>
+ #include <linux/minmax.h>
+-#include <linux/timer.h>
+-#include <linux/workqueue.h>
++#include <linux/timer_types.h>
++#include <linux/workqueue_types.h>
+ #include <linux/wait.h>
+ #include <linux/bio.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/kdev_t.h>
+ #include <linux/rcupdate.h>
+ #include <linux/percpu-refcount.h>
+diff --git a/include/linux/bpf-cgroup-defs.h b/include/linux/bpf-cgroup-defs.h
+index 0985221d5478..f3b400858129 100644
+--- a/include/linux/bpf-cgroup-defs.h
++++ b/include/linux/bpf-cgroup-defs.h
+@@ -6,7 +6,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/percpu-refcount.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ struct bpf_prog_array;
+ 
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index a789266feac3..4b214fa7da47 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -7,7 +7,7 @@
+ #include <linux/errno.h>
+ #include <linux/jump_label.h>
+ #include <linux/percpu.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <net/sock.h>
+ #include <uapi/linux/bpf.h>
+ 
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 5f2ee4e017db..40fce6ce3de9 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -7,14 +7,14 @@
+ #include <uapi/linux/bpf.h>
+ #include <uapi/linux/filter.h>
+ 
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/file.h>
+ #include <linux/percpu.h>
+ #include <linux/err.h>
+ #include <linux/rbtree_latch.h>
+ #include <linux/numa.h>
+ #include <linux/mm_types.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/mutex.h>
+ #include <linux/module.h>
+ #include <linux/kallsyms.h>
+diff --git a/include/linux/bpf_mem_alloc.h b/include/linux/bpf_mem_alloc.h
+index aaf004d94322..7512e136ad5f 100644
+--- a/include/linux/bpf_mem_alloc.h
++++ b/include/linux/bpf_mem_alloc.h
+@@ -3,7 +3,7 @@
+ #ifndef _BPF_MEM_ALLOC_H
+ #define _BPF_MEM_ALLOC_H
+ #include <linux/compiler_types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ struct bpf_mem_cache;
+ struct bpf_mem_caches;
+diff --git a/include/linux/bsg-lib.h b/include/linux/bsg-lib.h
+index 9e97ced2896d..2f7a68344e42 100644
+--- a/include/linux/bsg-lib.h
++++ b/include/linux/bsg-lib.h
+@@ -9,7 +9,7 @@
+ #ifndef _BLK_BSG_
+ #define _BLK_BSG_
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ 
+ struct bsg_job;
+ struct request;
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index 0c356a517991..da2aa81391f6 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -14,7 +14,7 @@
+ #define _LINUX_CAPABILITY_H
+ 
+ #include <uapi/linux/capability.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <linux/bits.h>
+ 
+ #define _KERNEL_CAPABILITY_VERSION _LINUX_CAPABILITY_VERSION_3
+diff --git a/include/linux/cb710.h b/include/linux/cb710.h
+index 405657a9a0d5..6ad1ccf3b79c 100644
+--- a/include/linux/cb710.h
++++ b/include/linux/cb710.h
+@@ -9,7 +9,7 @@
+ 
+ #include <linux/io.h>
+ #include <linux/interrupt.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/mmc/host.h>
+diff --git a/include/linux/ccp.h b/include/linux/ccp.h
+index 868924dec5a1..d3635efdbdef 100644
+--- a/include/linux/ccp.h
++++ b/include/linux/ccp.h
+@@ -12,7 +12,7 @@
+ #define __CCP_H__
+ 
+ #include <linux/scatterlist.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/list.h>
+ #include <crypto/aes.h>
+ #include <crypto/sha1.h>
+diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
+index b86a567e9493..d01be9103e56 100644
+--- a/include/linux/ceph/libceph.h
++++ b/include/linux/ceph/libceph.h
+@@ -14,7 +14,7 @@
+ #include <linux/wait.h>
+ #include <linux/writeback.h>
+ #include <linux/slab.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ #include <linux/ceph/types.h>
+ #include <linux/ceph/messenger.h>
+diff --git a/include/linux/ceph/messenger.h b/include/linux/ceph/messenger.h
+index e1a440f6c353..908b4a7fcb45 100644
+--- a/include/linux/ceph/messenger.h
++++ b/include/linux/ceph/messenger.h
+@@ -5,10 +5,10 @@
+ #include <linux/bvec.h>
+ #include <linux/crypto.h>
+ #include <linux/kref.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/net.h>
+ #include <linux/uio.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <net/net_namespace.h>
+ 
+ #include <linux/ceph/types.h>
+diff --git a/include/linux/ceph/mon_client.h b/include/linux/ceph/mon_client.h
+index 7a9a40163c0f..8226ea42fc78 100644
+--- a/include/linux/ceph/mon_client.h
++++ b/include/linux/ceph/mon_client.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/completion.h>
+ #include <linux/kref.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ 
+ #include <linux/ceph/messenger.h>
+ 
+diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+index fa018d5864e7..b27b9faeabf7 100644
+--- a/include/linux/ceph/osd_client.h
++++ b/include/linux/ceph/osd_client.h
+@@ -6,8 +6,8 @@
+ #include <linux/completion.h>
+ #include <linux/kref.h>
+ #include <linux/mempool.h>
+-#include <linux/rbtree.h>
+-#include <linux/refcount.h>
++#include <linux/rbtree_types.h>
++#include <linux/refcount_types.h>
+ #include <linux/ktime.h>
+ 
+ #include <linux/ceph/types.h>
+diff --git a/include/linux/ceph/osdmap.h b/include/linux/ceph/osdmap.h
+index 5553019c3f07..44ba159f56e7 100644
+--- a/include/linux/ceph/osdmap.h
++++ b/include/linux/ceph/osdmap.h
+@@ -2,7 +2,7 @@
+ #ifndef _FS_CEPH_OSDMAP_H
+ #define _FS_CEPH_OSDMAP_H
+ 
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/ceph/types.h>
+ #include <linux/ceph/decode.h>
+ #include <linux/crush/crush.h>
+diff --git a/include/linux/ceph/pagelist.h b/include/linux/ceph/pagelist.h
+index 5dead8486fd8..2eaa150695d7 100644
+--- a/include/linux/ceph/pagelist.h
++++ b/include/linux/ceph/pagelist.h
+@@ -3,7 +3,7 @@
+ #define __FS_CEPH_PAGELIST_H
+ 
+ #include <asm/byteorder.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/list.h>
+ #include <linux/types.h>
+ 
+diff --git a/include/linux/ceph/string_table.h b/include/linux/ceph/string_table.h
+index a4a9962d1e14..c016ca326f35 100644
+--- a/include/linux/ceph/string_table.h
++++ b/include/linux/ceph/string_table.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/kref.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/rcupdate.h>
+ 
+ struct ceph_string {
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index ea48c861cd36..380a59b31624 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -12,9 +12,9 @@
+ #include <linux/list.h>
+ #include <linux/idr.h>
+ #include <linux/wait.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/rcupdate.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/percpu-refcount.h>
+ #include <linux/percpu-rwsem.h>
+ #include <linux/u64_stats_sync.h>
+diff --git a/include/linux/clk/zynq.h b/include/linux/clk/zynq.h
+index a198dd9255a4..c8feff296da2 100644
+--- a/include/linux/clk/zynq.h
++++ b/include/linux/clk/zynq.h
+@@ -7,7 +7,7 @@
+ #ifndef __LINUX_CLK_ZYNQ_H_
+ #define __LINUX_CLK_ZYNQ_H_
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ void zynq_clock_init(void);
+ 
+diff --git a/include/linux/comedi/comedidev.h b/include/linux/comedi/comedidev.h
+index c08416a7364b..bde0255d4406 100644
+--- a/include/linux/comedi/comedidev.h
++++ b/include/linux/comedi/comedidev.h
+@@ -11,7 +11,7 @@
+ #define _COMEDIDEV_H
+ 
+ #include <linux/dma-mapping.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/rwsem.h>
+ #include <linux/kref.h>
+diff --git a/include/linux/configfs.h b/include/linux/configfs.h
+index 2606711adb18..4a8326e7342b 100644
+--- a/include/linux/configfs.h
++++ b/include/linux/configfs.h
+@@ -23,7 +23,7 @@
+ #include <linux/types.h>  /* ssize_t */
+ #include <linux/list.h>   /* struct list_head */
+ #include <linux/kref.h>   /* struct kref */
+-#include <linux/mutex.h>  /* struct mutex */
++#include <linux/mutex_types.h> /* struct mutex */
+ 
+ #define CONFIGFS_ITEM_NAME_LEN	20
+ 
+diff --git a/include/linux/connector.h b/include/linux/connector.h
+index c85ddfc2094e..34fc5023782c 100644
+--- a/include/linux/connector.h
++++ b/include/linux/connector.h
+@@ -9,7 +9,7 @@
+ #define __CONNECTOR_H
+ 
+ 
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ #include <linux/list.h>
+ 
+diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
+index 20f564e98552..a0142b93eaf9 100644
+--- a/include/linux/console_struct.h
++++ b/include/linux/console_struct.h
+@@ -15,7 +15,7 @@
+ 
+ #include <linux/wait.h>
+ #include <linux/vt.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ struct uni_pagedict;
+ 
+diff --git a/include/linux/counter.h b/include/linux/counter.h
+index b767b5c821f5..846b94517c5b 100644
+--- a/include/linux/counter.h
++++ b/include/linux/counter.h
+@@ -10,7 +10,7 @@
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+ #include <linux/kfifo.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/spinlock_types.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
+diff --git a/include/linux/cpu_rmap.h b/include/linux/cpu_rmap.h
+index cae324d10965..effe8bef0a3a 100644
+--- a/include/linux/cpu_rmap.h
++++ b/include/linux/cpu_rmap.h
+@@ -8,7 +8,7 @@
   */
-diff --git a/include/linux/quotaops.h b/include/linux/quotaops.h
-index 06cc8888199e..96ea5444b4a3 100644
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -9,6 +9,7 @@
- #define _LINUX_QUOTAOPS_
+ 
+ #include <linux/cpumask.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/slab.h>
+ #include <linux/kref.h>
+ 
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index 8ff3e79727d8..25658fe36a9b 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -17,7 +17,7 @@
+ #include <linux/of.h>
+ #include <linux/pm_opp.h>
+ #include <linux/pm_qos.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/sysfs.h>
+ #include <linux/minmax.h>
+ 
+diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+index 875d12598bd2..38370bd20f2f 100644
+--- a/include/linux/cpuset.h
++++ b/include/linux/cpuset.h
+@@ -13,7 +13,7 @@
+ #include <linux/sched/topology.h>
+ #include <linux/sched/task.h>
+ #include <linux/cpumask.h>
+-#include <linux/nodemask.h>
++#include <linux/nodemask_types.h>
+ #include <linux/mm.h>
+ #include <linux/mmu_context.h>
+ #include <linux/jump_label.h>
+diff --git a/include/linux/cred.h b/include/linux/cred.h
+index 2976f534a7a3..0c35c0e3084e 100644
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -13,7 +13,7 @@
+ #include <linux/key.h>
+ #include <linux/atomic.h>
+ #include <linux/refcount.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <linux/sched.h>
+ #include <linux/sched/user.h>
+ 
+diff --git a/include/linux/crush/crush.h b/include/linux/crush/crush.h
+index 30dba392b730..e32c10fb647a 100644
+--- a/include/linux/crush/crush.h
++++ b/include/linux/crush/crush.h
+@@ -3,7 +3,7 @@
+ #define CEPH_CRUSH_CRUSH_H
+ 
+ #ifdef __KERNEL__
+-# include <linux/rbtree.h>
++# include <linux/rbtree_types.h>
+ # include <linux/types.h>
+ #else
+ # include "crush_compat.h"
+diff --git a/include/linux/crypto.h b/include/linux/crypto.h
+index b164da5e129e..5c82ca3ab80d 100644
+--- a/include/linux/crypto.h
++++ b/include/linux/crypto.h
+@@ -13,7 +13,7 @@
+ #define _LINUX_CRYPTO_H
+ 
+ #include <linux/completion.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index 5881e4ac30be..584cbafda006 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -9,7 +9,7 @@
+ #define _DAMON_H_
+ 
+ #include <linux/memcontrol.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/time64.h>
+ #include <linux/types.h>
+ #include <linux/random.h>
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index 1666c387861f..a2d39fef6a4a 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -8,7 +8,7 @@
+ #include <linux/rculist.h>
+ #include <linux/rculist_bl.h>
+ #include <linux/spinlock.h>
+-#include <linux/seqlock.h>
++#include <linux/seqlock_types.h>
+ #include <linux/cache.h>
+ #include <linux/rcupdate.h>
+ #include <linux/lockref.h>
+diff --git a/include/linux/dev_printk.h b/include/linux/dev_printk.h
+index a5151e4b9bde..dc1f1f83692e 100644
+--- a/include/linux/dev_printk.h
++++ b/include/linux/dev_printk.h
+@@ -14,7 +14,7 @@
+ #include <linux/compiler.h>
+ #include <linux/stdarg.h>
+ #include <linux/types.h>
+-#include <linux/ratelimit.h>
++#include <linux/ratelimit_types.h>
+ 
+ #ifndef dev_fmt
+ #define dev_fmt(fmt) fmt
+diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+index 772ab4d74d94..00af37767301 100644
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -13,7 +13,6 @@
+ #include <linux/blkdev.h>
+ #include <linux/dm-ioctl.h>
+ #include <linux/math64.h>
+-#include <linux/ratelimit.h>
+ 
+ struct dm_dev;
+ struct dm_target;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 5e47c9b5d0fa..235c780b5b65 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -22,8 +22,8 @@
+ #include <linux/compiler.h>
+ #include <linux/types.h>
+ #include <linux/mutex.h>
+-#include <linux/uidgid.h>
+-#include <linux/gfp.h>
++#include <linux/uidgid_types.h>
++#include <linux/gfp_types.h>
+ #include <linux/overflow.h>
+ #include <linux/device/bus.h>
+ #include <linux/device/class.h>
+diff --git a/include/linux/dim.h b/include/linux/dim.h
+index f343bc9aa2ec..e4ff5829963f 100644
+--- a/include/linux/dim.h
++++ b/include/linux/dim.h
+@@ -8,7 +8,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ /*
+  * Number of events between DIM iterations.
+diff --git a/include/linux/dm-bufio.h b/include/linux/dm-bufio.h
+index 75e7d8cbb532..3f909b2d1f0c 100644
+--- a/include/linux/dm-bufio.h
++++ b/include/linux/dm-bufio.h
+@@ -10,7 +10,7 @@
+ #ifndef _LINUX_DM_BUFIO_H
+ #define _LINUX_DM_BUFIO_H
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <linux/types.h>
+ 
+ /*----------------------------------------------------------------*/
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index b4ee8961e623..f939d5fad491 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -15,7 +15,7 @@
+ #include <linux/atomic.h>
+ #include <linux/device.h>
+ #include <linux/completion.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/debugfs.h>
+ #include <linux/numa.h>
+ 
+diff --git a/include/linux/fault-inject.h b/include/linux/fault-inject.h
+index 6d5edef09d45..04992b2732f1 100644
+--- a/include/linux/fault-inject.h
++++ b/include/linux/fault-inject.h
+@@ -7,7 +7,7 @@
+ #include <linux/types.h>
+ #include <linux/debugfs.h>
+ #include <linux/configfs.h>
+-#include <linux/ratelimit.h>
++#include <linux/ratelimit_types.h>
+ #include <linux/atomic.h>
+ 
+ /*
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 2bbad4a85a5d..66d6f3974d4d 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_FB_H
+ #define _LINUX_FB_H
+ 
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/kgdb.h>
+ #include <uapi/linux/fb.h>
+ 
+@@ -10,7 +10,7 @@
  
  #include <linux/fs.h>
-+#include <linux/quota.h>
+ #include <linux/init.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/notifier.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
+index 78c8326d74ae..2d37e4d071e9 100644
+--- a/include/linux/fdtable.h
++++ b/include/linux/fdtable.h
+@@ -8,7 +8,7 @@
  
- #define DQUOT_SPACE_WARN	0x1
- #define DQUOT_SPACE_RESERVE	0x2
-diff --git a/include/linux/raid_class.h b/include/linux/raid_class.h
-index e50416ba9cd9..095e1c91edb4 100644
---- a/include/linux/raid_class.h
-+++ b/include/linux/raid_class.h
-@@ -4,6 +4,8 @@
-  *
-  * Copyright (c) 2005 - James Bottomley <James.Bottomley@steeleye.com>
-  */
-+
-+#include <linux/device.h>
- #include <linux/transport_class.h>
- 
- struct raid_template {
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index b5f5ee8308d0..12a62a17e893 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -20,6 +20,7 @@
- #include <linux/percpu-refcount.h>
- #include <linux/cleanup.h>
- #include <linux/hash.h>
-+#include <linux/mmzone.h>
- 
- 
- /*
-diff --git a/include/linux/socket.h b/include/linux/socket.h
-index cfcb7e2c3813..681bd2626f1e 100644
---- a/include/linux/socket.h
-+++ b/include/linux/socket.h
-@@ -8,6 +8,7 @@
- #include <linux/uio.h>			/* iovec support		*/
- #include <linux/types.h>		/* pid_t			*/
- #include <linux/compiler.h>		/* __user			*/
-+#include <linux/time64.h>		/* timespec64			*/
- #include <uapi/linux/socket.h>
- 
- struct file;
-@@ -391,7 +392,6 @@ struct ucred {
- extern int move_addr_to_kernel(void __user *uaddr, int ulen, struct sockaddr_storage *kaddr);
- extern int put_cmsg(struct msghdr*, int level, int type, int len, void *data);
- 
--struct timespec64;
- struct __kernel_timespec;
- struct old_timespec32;
- 
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 66f814b63a43..4546af80247d 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -5,6 +5,7 @@
- #define __SOUNDWIRE_H
- 
- #include <linux/bug.h>
-+#include <linux/device.h>
- #include <linux/lockdep_types.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-diff --git a/include/linux/spi/spi_bitbang.h b/include/linux/spi/spi_bitbang.h
-index 4444c2a992cb..0bd120e2c701 100644
---- a/include/linux/spi/spi_bitbang.h
-+++ b/include/linux/spi/spi_bitbang.h
-@@ -2,6 +2,8 @@
- #ifndef	__SPI_BITBANG_H
- #define	__SPI_BITBANG_H
- 
-+#include <linux/mutex.h>
-+#include <linux/types.h>
- #include <linux/workqueue.h>
- 
- struct spi_bitbang {
-diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
-index 8f3f72480e78..74edc15cfcf3 100644
---- a/include/linux/srcutree.h
-+++ b/include/linux/srcutree.h
-@@ -13,6 +13,8 @@
- 
- #include <linux/rcu_node_tree.h>
- #include <linux/completion.h>
-+#include <linux/mutex_types.h>
-+#include <linux/workqueue.h>
- 
- struct srcu_node;
- struct srcu_struct;
-diff --git a/include/linux/stackdepot.h b/include/linux/stackdepot.h
-index adcbb8f23600..a6aa21393755 100644
---- a/include/linux/stackdepot.h
-+++ b/include/linux/stackdepot.h
-@@ -21,6 +21,7 @@
- #define _LINUX_STACKDEPOT_H
- 
- #include <linux/gfp.h>
-+#include <linux/init.h>
- 
- typedef u32 depot_stack_handle_t;
- 
-diff --git a/include/linux/sunrpc/rpc_pipe_fs.h b/include/linux/sunrpc/rpc_pipe_fs.h
-index 3b35b6f6533a..5438de45300d 100644
---- a/include/linux/sunrpc/rpc_pipe_fs.h
-+++ b/include/linux/sunrpc/rpc_pipe_fs.h
-@@ -2,6 +2,9 @@
- #ifndef _LINUX_SUNRPC_RPC_PIPE_FS_H
- #define _LINUX_SUNRPC_RPC_PIPE_FS_H
- 
-+#include <linux/list.h>
+ #include <linux/posix_types.h>
+ #include <linux/compiler.h>
+-#include <linux/spinlock.h>
 +#include <linux/spinlock_types.h>
-+#include <linux/wait.h>
+ #include <linux/rcupdate.h>
+ #include <linux/nospec.h>
+ #include <linux/types.h>
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index c325e3523f93..feef7e09b60a 100644
+--- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -8,11 +8,11 @@
+ #include <linux/kernel.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
+-#include <linux/mutex.h>
+-#include <linux/spinlock.h>
+-#include <linux/timer.h>
++#include <linux/mutex_types.h>
++#include <linux/spinlock_types.h>
++#include <linux/timer_types.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ #include <linux/atomic.h>
+ #include <asm/byteorder.h>
+diff --git a/include/linux/firmware.h b/include/linux/firmware.h
+index d45acd8c1e84..ee745b260b7e 100644
+--- a/include/linux/firmware.h
++++ b/include/linux/firmware.h
+@@ -5,7 +5,7 @@
+ #include <linux/err.h>
+ #include <linux/types.h>
+ #include <linux/compiler.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ 
+ #define FW_ACTION_NOUEVENT 0
+ #define FW_ACTION_UEVENT 1
+diff --git a/include/linux/flex_proportions.h b/include/linux/flex_proportions.h
+index b5d8c1a1b2a9..35204b64addf 100644
+--- a/include/linux/flex_proportions.h
++++ b/include/linux/flex_proportions.h
+@@ -9,9 +9,9 @@
+ #define _LINUX_FLEX_PROPORTIONS_H
+ 
+ #include <linux/percpu_counter.h>
+-#include <linux/spinlock.h>
+-#include <linux/seqlock.h>
+-#include <linux/gfp.h>
++#include <linux/spinlock_types.h>
++#include <linux/seqlock_types.h>
++#include <linux/gfp_types.h>
+ #include <linux/irqflags.h> // for local_irq_save()
+ 
+ /*
+diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
+index 54f63459efd6..c141f396b210 100644
+--- a/include/linux/fpga/fpga-mgr.h
++++ b/include/linux/fpga/fpga-mgr.h
+@@ -8,7 +8,7 @@
+ #ifndef _LINUX_FPGA_MGR_H
+ #define _LINUX_FPGA_MGR_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/platform_device.h>
+ 
+ struct fpga_manager;
+diff --git a/include/linux/framer/framer.h b/include/linux/framer/framer.h
+index 9a9b88962c29..2352a52d7d0f 100644
+--- a/include/linux/framer/framer.h
++++ b/include/linux/framer/framer.h
+@@ -11,11 +11,11 @@
+ #define __DRIVERS_FRAMER_H
+ 
+ #include <linux/err.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/notifier.h>
+ #include <linux/of.h>
+ #include <linux/device.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ /**
+  * enum framer_iface - Framer interface
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 4048cf6ebb4f..7b37a22c9513 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -15,9 +15,9 @@
+ #include <linux/xarray.h>
+ #include <linux/rbtree.h>
+ #include <linux/init.h>
+-#include <linux/pid.h>
++#include <linux/pid_types.h>
+ #include <linux/bug.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/rwsem.h>
+ #include <linux/mm_types.h>
+ #include <linux/capability.h>
+@@ -27,10 +27,10 @@
+ #include <linux/atomic.h>
+ #include <linux/shrinker.h>
+ #include <linux/migrate_mode.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <linux/lockdep.h>
+ #include <linux/percpu-rwsem.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/delayed_call.h>
+ #include <linux/uuid.h>
+ #include <linux/errseq.h>
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index c13e99cbbf81..34ad2597640e 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -9,10 +9,10 @@
+ #define _LINUX_FS_CONTEXT_H
+ 
+ #include <linux/kernel.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/errno.h>
+ #include <linux/security.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ struct cred;
+ struct dentry;
+diff --git a/include/linux/fs_struct.h b/include/linux/fs_struct.h
+index 783b48dedb72..dd4d675cfe04 100644
+--- a/include/linux/fs_struct.h
++++ b/include/linux/fs_struct.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/path.h>
+ #include <linux/spinlock.h>
+-#include <linux/seqlock.h>
++#include <linux/seqlock_types.h>
+ 
+ struct fs_struct {
+ 	int users;
+diff --git a/include/linux/fsl/bestcomm/bestcomm_priv.h b/include/linux/fsl/bestcomm/bestcomm_priv.h
+index 3b52f3ffbdf8..e544c26f842e 100644
+--- a/include/linux/fsl/bestcomm/bestcomm_priv.h
++++ b/include/linux/fsl/bestcomm/bestcomm_priv.h
+@@ -19,7 +19,7 @@
+ #ifndef __BESTCOMM_PRIV_H__
+ #define __BESTCOMM_PRIV_H__
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/of.h>
+ #include <asm/io.h>
+ #include <asm/mpc52xx.h>
+diff --git a/include/linux/fsl/bestcomm/sram.h b/include/linux/fsl/bestcomm/sram.h
+index b6d668963cce..557c62706bd5 100644
+--- a/include/linux/fsl/bestcomm/sram.h
++++ b/include/linux/fsl/bestcomm/sram.h
+@@ -14,7 +14,7 @@
+ 
+ #include <asm/rheap.h>
+ #include <asm/mmu.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ 
+ /* Structure used internally */
+diff --git a/include/linux/gameport.h b/include/linux/gameport.h
+index 07e370113b2b..2d2dbf29c775 100644
+--- a/include/linux/gameport.h
++++ b/include/linux/gameport.h
+@@ -9,7 +9,7 @@
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/device.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/slab.h>
+ #include <uapi/linux/gameport.h>
+ 
+diff --git a/include/linux/gfp_api.h b/include/linux/gfp_api.h
+index 5a05a2764a86..d4ea4f638050 100644
+--- a/include/linux/gfp_api.h
++++ b/include/linux/gfp_api.h
+@@ -1 +1 @@
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+diff --git a/include/linux/gnss.h b/include/linux/gnss.h
+index 36968a0f33e8..8fc4bdd38dc6 100644
+--- a/include/linux/gnss.h
++++ b/include/linux/gnss.h
+@@ -11,7 +11,7 @@
+ #include <linux/cdev.h>
+ #include <linux/device.h>
+ #include <linux/kfifo.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/rwsem.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 3a37d058cfcf..801357469a3d 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -8,7 +8,7 @@
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/irqhandler.h>
+-#include <linux/lockdep.h>
++#include <linux/lockdep_types.h>
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/property.h>
+diff --git a/include/linux/greybus/operation.h b/include/linux/greybus/operation.h
+index cb8e4ef45222..ba5f09816035 100644
+--- a/include/linux/greybus/operation.h
++++ b/include/linux/greybus/operation.h
+@@ -11,9 +11,9 @@
+ 
+ #include <linux/completion.h>
+ #include <linux/kref.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ struct gb_host_device;
+ struct gb_operation;
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index 7c26db874ff0..68a160859e3e 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -19,11 +19,10 @@
+ #include <linux/slab.h>
+ #include <linux/list.h>
+ #include <linux/mod_devicetable.h> /* hid_device_id */
+-#include <linux/timer.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/input.h>
+ #include <linux/semaphore.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/power_supply.h>
+ #include <uapi/linux/hid.h>
+ #include <linux/hid_bpf.h>
+diff --git a/include/linux/hp_sdc.h b/include/linux/hp_sdc.h
+index 9be8704e2d38..63e74e315a85 100644
+--- a/include/linux/hp_sdc.h
++++ b/include/linux/hp_sdc.h
+@@ -41,7 +41,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/types.h>
+ #include <linux/time.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #if defined(__hppa__)
+ #include <asm/hardware.h>
+ #endif
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index d31dd0be881b..dad968b60b55 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -17,8 +17,8 @@
+ #include <linux/init.h>
+ #include <linux/list.h>
+ #include <linux/percpu-defs.h>
+-#include <linux/seqlock.h>
+-#include <linux/timer.h>
++#include <linux/seqlock_types.h>
++#include <linux/timerqueue_types.h>
+ #include <asm/processor.h>  /* for cpu_relax() */
+ 
+ struct restart_block;
+diff --git a/include/linux/hsi/hsi.h b/include/linux/hsi/hsi.h
+index 6ca92bff02c6..42c18904c480 100644
+--- a/include/linux/hsi/hsi.h
++++ b/include/linux/hsi/hsi.h
+@@ -11,7 +11,7 @@
+ #define __LINUX_HSI_H__
+ 
+ #include <linux/device.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/scatterlist.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 77b30a8c6076..444d509c2647 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -12,7 +12,7 @@
+ #include <linux/list.h>
+ #include <linux/kref.h>
+ #include <linux/pgtable.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/userfaultfd_k.h>
+ 
+ struct ctl_table;
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 652ecb7abeda..4c868e8d5bec 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -15,7 +15,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/device.h>	/* for struct device */
+ #include <linux/sched.h>	/* for completion */
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/rtmutex.h>
+ #include <linux/irqdomain.h>		/* for Host Notify IRQ */
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index 7fc1e0bb4122..16cc81e55b12 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -15,7 +15,7 @@
+ #include <linux/i3c/ccc.h>
+ #include <linux/i3c/device.h>
+ #include <linux/rwsem.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ #define I3C_HOT_JOIN_ADDR		0x2
+ #define I3C_BROADCAST_ADDR		0x7e
+diff --git a/include/linux/i8253.h b/include/linux/i8253.h
+index 8336b2f6f834..3be75bc72626 100644
+--- a/include/linux/i8253.h
++++ b/include/linux/i8253.h
+@@ -10,7 +10,7 @@
+ #define __LINUX_I8253_H
+ 
+ #include <linux/param.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/timex.h>
+ 
+ /* i8253A PIT registers */
+diff --git a/include/linux/idr.h b/include/linux/idr.h
+index da5f5fa4a3a6..066fd41aaab7 100644
+--- a/include/linux/idr.h
++++ b/include/linux/idr.h
+@@ -13,7 +13,7 @@
+ #define __IDR_H__
+ 
+ #include <linux/radix-tree.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/percpu.h>
+ 
+ struct idr {
+diff --git a/include/linux/if_eql.h b/include/linux/if_eql.h
+index 07f9b660b741..eb34161956a7 100644
+--- a/include/linux/if_eql.h
++++ b/include/linux/if_eql.h
+@@ -19,8 +19,8 @@
+ #define _LINUX_IF_EQL_H
+ 
+ 
+-#include <linux/timer.h>
+-#include <linux/spinlock.h>
++#include <linux/timer_types.h>
++#include <linux/spinlock_types.h>
+ #include <net/net_trackers.h>
+ #include <uapi/linux/if_eql.h>
+ 
+diff --git a/include/linux/if_pppox.h b/include/linux/if_pppox.h
+index ff3beda1312c..c0dd367ca9b0 100644
+--- a/include/linux/if_pppox.h
++++ b/include/linux/if_pppox.h
+@@ -13,7 +13,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/ppp_channel.h>
+ #include <linux/skbuff.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <uapi/linux/if_pppox.h>
+ 
+ static inline struct pppoe_hdr *pppoe_hdr(const struct sk_buff *skb)
+diff --git a/include/linux/igmp.h b/include/linux/igmp.h
+index 5171231f70a8..283716e25e6c 100644
+--- a/include/linux/igmp.h
++++ b/include/linux/igmp.h
+@@ -11,10 +11,10 @@
+ #define _LINUX_IGMP_H
+ 
+ #include <linux/skbuff.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/in.h>
+ #include <linux/ip.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/sockptr.h>
+ #include <uapi/linux/igmp.h>
+ 
+diff --git a/include/linux/iio/buffer-dma.h b/include/linux/iio/buffer-dma.h
+index 18d3702fa95d..395762ed9bf1 100644
+--- a/include/linux/iio/buffer-dma.h
++++ b/include/linux/iio/buffer-dma.h
+@@ -9,8 +9,8 @@
+ 
+ #include <linux/list.h>
+ #include <linux/kref.h>
+-#include <linux/spinlock.h>
+-#include <linux/mutex.h>
++#include <linux/spinlock_types.h>
++#include <linux/mutex_types.h>
+ #include <linux/iio/buffer_impl.h>
+ 
+ struct iio_dma_buffer_queue;
+diff --git a/include/linux/inetdevice.h b/include/linux/inetdevice.h
+index ddb27fc0ee8c..17f92f8b77c1 100644
+--- a/include/linux/inetdevice.h
++++ b/include/linux/inetdevice.h
+@@ -9,7 +9,7 @@
+ #include <linux/ip.h>
+ #include <linux/netdevice.h>
+ #include <linux/rcupdate.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/sysctl.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/refcount.h>
+diff --git a/include/linux/input.h b/include/linux/input.h
+index de6503c0edb8..735b32eee9b4 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -18,7 +18,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/fs.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/mod_devicetable.h>
+ 
+ struct input_dev_poller;
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 6322804d7534..2ac9e5f9af3d 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -11,7 +11,7 @@
+ #include <linux/hardirq.h>
+ #include <linux/irqflags.h>
+ #include <linux/kref.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/jump_label.h>
+ 
+ #include <linux/atomic.h>
+diff --git a/include/linux/interval_tree.h b/include/linux/interval_tree.h
+index 2b8026a39906..684f713d962f 100644
+--- a/include/linux/interval_tree.h
++++ b/include/linux/interval_tree.h
+@@ -2,7 +2,8 @@
+ #ifndef _LINUX_INTERVAL_TREE_H
+ #define _LINUX_INTERVAL_TREE_H
+ 
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
++#include <linux/types.h>
+ 
+ struct interval_tree_node {
+ 	struct rb_node rb;
+diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
+index 14f7eaf1b443..a05d8a45cce5 100644
+--- a/include/linux/iocontext.h
++++ b/include/linux/iocontext.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/radix-tree.h>
+ #include <linux/rcupdate.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ enum {
+ 	ICQ_EXITED		= 1 << 2,
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 96dd0acbba44..d1398f46a86f 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -8,7 +8,7 @@
+ #include <linux/mm.h>
+ #include <linux/types.h>
+ #include <linux/mm_types.h>
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ 
+ struct address_space;
+ struct fiemap_extent_info;
+diff --git a/include/linux/iova.h b/include/linux/iova.h
+index 83c00fac2acb..ee656a0490ed 100644
+--- a/include/linux/iova.h
++++ b/include/linux/iova.h
+@@ -11,7 +11,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/kernel.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/dma-mapping.h>
+ 
+ /* iova structure */
+diff --git a/include/linux/ipc.h b/include/linux/ipc.h
+index 12f6839fad5b..4c024fcdea56 100644
+--- a/include/linux/ipc.h
++++ b/include/linux/ipc.h
+@@ -3,10 +3,10 @@
+ #define _LINUX_IPC_H
+ 
+ #include <linux/spinlock_types.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <linux/rhashtable-types.h>
+ #include <uapi/linux/ipc.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/cache.h> // for ____cacheline_aligned_in_smp
+ #include <linux/compiler_types.h> // for __randomize_layout
+ 
+diff --git a/include/linux/irqdesc.h b/include/linux/irqdesc.h
+index d9451d456a73..1f2c9b81baae 100644
+--- a/include/linux/irqdesc.h
++++ b/include/linux/irqdesc.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/rcupdate.h>
+ #include <linux/kobject.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ /*
+  * Core internal functions to deal with irq descriptors
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index ee0a82c60508..0503bd4ea55b 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -34,7 +34,7 @@
+ #include <linux/irqdomain_defs.h>
+ #include <linux/irqhandler.h>
+ #include <linux/of.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/radix-tree.h>
+ 
+ struct device_node;
+diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+index 971f3e826e15..498a7dabe4cf 100644
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -23,8 +23,8 @@
+ #include <linux/buffer_head.h>
+ #include <linux/journal-head.h>
+ #include <linux/stddef.h>
+-#include <linux/mutex.h>
+-#include <linux/timer.h>
++#include <linux/mutex_types.h>
++#include <linux/timer_types.h>
+ #include <linux/slab.h>
+ #include <linux/bit_spinlock.h>
+ #include <linux/blkdev.h>
+diff --git a/include/linux/journal-head.h b/include/linux/journal-head.h
+index 75bc56109031..427a57eee5eb 100644
+--- a/include/linux/journal-head.h
++++ b/include/linux/journal-head.h
+@@ -11,7 +11,7 @@
+ #ifndef JOURNAL_HEAD_H_INCLUDED
+ #define JOURNAL_HEAD_H_INCLUDED
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ typedef unsigned int		tid_t;		/* Unique transaction ID */
+ typedef struct transaction_s	transaction_t;	/* Compound transaction type */
+diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
+index 5d16cb9c2d02..7aba4eed9270 100644
+--- a/include/linux/kernfs.h
++++ b/include/linux/kernfs.h
+@@ -8,8 +8,8 @@
+ 
+ #include <linux/err.h>
+ #include <linux/list.h>
+-#include <linux/mutex.h>
+-#include <linux/lockdep.h>
++#include <linux/mutex_types.h>
++#include <linux/lockdep_types.h>
+ #include <linux/rbtree.h>
+ #include <linux/bug.h>
+ #include <linux/types.h>
+diff --git a/include/linux/key.h b/include/linux/key.h
+index 943a432da3ae..10649fec6004 100644
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@ -12,7 +12,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/list.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/rcupdate.h>
+ #include <linux/sysctl.h>
+ #include <linux/rwsem.h>
+@@ -22,7 +22,7 @@
+ #include <linux/time64.h>
+ 
+ #ifdef __KERNEL__
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ 
+ /* key handle serial number */
+ typedef int32_t key_serial_t;
+@@ -32,6 +32,7 @@ typedef uint32_t key_perm_t;
+ 
+ struct key;
+ struct net;
++struct user_namespace;
+ 
+ #ifdef CONFIG_KEYS
+ 
+diff --git a/include/linux/klist.h b/include/linux/klist.h
+index b0f238f20dbb..632ae9c720ac 100644
+--- a/include/linux/klist.h
++++ b/include/linux/klist.h
+@@ -10,7 +10,7 @@
+ #ifndef _LINUX_KLIST_H
+ #define _LINUX_KLIST_H
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
+ 
+diff --git a/include/linux/kmod.h b/include/linux/kmod.h
+index 68f69362d427..c46c65b5fb25 100644
+--- a/include/linux/kmod.h
++++ b/include/linux/kmod.h
+@@ -7,7 +7,7 @@
+  */
+ 
+ #include <linux/umh.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/stddef.h>
+ #include <linux/errno.h>
+ #include <linux/compiler.h>
+diff --git a/include/linux/kmsan.h b/include/linux/kmsan.h
+index e0c23a32cdf0..2217a29a8d02 100644
+--- a/include/linux/kmsan.h
++++ b/include/linux/kmsan.h
+@@ -10,7 +10,7 @@
+ #define _LINUX_KMSAN_H
+ 
+ #include <linux/dma-direction.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/kmsan-checks.h>
+ #include <linux/types.h>
+ 
+diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+index b02c756fc4f2..1d58fc9f6ffb 100644
+--- a/include/linux/kobject.h
++++ b/include/linux/kobject.h
+@@ -20,11 +20,11 @@
+ #include <linux/sysfs.h>
+ #include <linux/compiler.h>
+ #include <linux/container_of.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/kref.h>
+ #include <linux/kobject_ns.h>
+ #include <linux/workqueue.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ 
+ #define UEVENT_HELPER_PATH_LEN		256
+ #define UEVENT_NUM_ENVP			64	/* number of env pointers */
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index b0511d1090ed..63b981edcffa 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -22,7 +22,7 @@
+ #include <linux/bug.h>
+ #include <linux/percpu.h>
+ #include <linux/rcupdate.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/ftrace.h>
+ #include <linux/objpool.h>
+ #include <linux/rethook.h>
+diff --git a/include/linux/kref.h b/include/linux/kref.h
+index d32e21a2538c..536ada1a1bc4 100644
+--- a/include/linux/kref.h
++++ b/include/linux/kref.h
+@@ -13,7 +13,6 @@
+ #ifndef _KREF_H_
+ #define _KREF_H_
+ 
+-#include <linux/spinlock.h>
+ #include <linux/refcount.h>
+ 
+ struct kref {
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index c5c00ecaf27e..91193e4eb718 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -6,8 +6,8 @@
+ #include <linux/types.h>
+ #include <linux/hardirq.h>
+ #include <linux/list.h>
+-#include <linux/mutex.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex_types.h>
++#include <linux/spinlock_types.h>
+ #include <linux/signal.h>
+ #include <linux/sched.h>
+ #include <linux/sched/stat.h>
+diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
+index 9d1f7835d8c1..267616d24ac3 100644
+--- a/include/linux/kvm_types.h
++++ b/include/linux/kvm_types.h
+@@ -20,7 +20,7 @@ struct kvm_memslots;
+ enum kvm_mr_change;
+ 
+ #include <linux/bits.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ #include <linux/spinlock_types.h>
+ 
+diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
+index f4796d333974..07b1a4d6c071 100644
+--- a/include/linux/leds-pca9532.h
++++ b/include/linux/leds-pca9532.h
+@@ -11,7 +11,7 @@
+ #define __LINUX_PCA9532_H
+ 
+ #include <linux/leds.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <dt-bindings/leds/leds-pca9532.h>
+ 
+ enum pca9532_state {
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index 4754b02d3a2c..71385b333f25 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -10,10 +10,10 @@
+ 
+ #include <dt-bindings/leds/common.h>
+ #include <linux/device.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/rwsem.h>
+-#include <linux/spinlock.h>
+-#include <linux/timer.h>
++#include <linux/spinlock_types.h>
++#include <linux/timer_types.h>
+ #include <linux/types.h>
  #include <linux/workqueue.h>
  
- struct rpc_pipe_dir_head {
-diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
-index d48cd92d2364..19bf980b039f 100644
---- a/include/linux/trace_recursion.h
-+++ b/include/linux/trace_recursion.h
-@@ -136,6 +136,7 @@ extern void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip);
- #endif
- 
- #ifdef CONFIG_ARCH_WANTS_NO_INSTR
-+#include <linux/rcutree.h> // for rcu_is_watching()
- # define trace_warn_on_no_rcu(ip)					\
- 	({								\
- 		bool __ret = !rcu_is_watching();			\
-diff --git a/include/linux/tty_port.h b/include/linux/tty_port.h
-index 1b861f2100b6..2de08c8d2584 100644
---- a/include/linux/tty_port.h
-+++ b/include/linux/tty_port.h
-@@ -6,7 +6,7 @@
- #include <linux/kref.h>
- #include <linux/mutex.h>
- #include <linux/tty_buffer.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct attribute_group;
- struct tty_driver;
-diff --git a/include/linux/u64_stats_sync.h b/include/linux/u64_stats_sync.h
-index ffe48e69b3f3..cf4b090e799a 100644
---- a/include/linux/u64_stats_sync.h
-+++ b/include/linux/u64_stats_sync.h
-@@ -59,6 +59,8 @@
-  * Example of use in drivers/net/loopback.c, using per_cpu containers,
-  * in BH disabled context.
-  */
-+
-+#include <asm/bitsperlong.h>
- #include <linux/seqlock.h>
- 
- struct u64_stats_sync {
-diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
-index 7725b7579b78..96c90fbcf652 100644
---- a/include/linux/wait_bit.h
-+++ b/include/linux/wait_bit.h
-@@ -5,6 +5,9 @@
- /*
-  * Linux wait-bit related types and methods:
-  */
-+#include <linux/bitops.h>
-+#include <linux/init.h> // for __init
-+#include <linux/kernel.h> // for might_sleep()
- #include <linux/wait.h>
- 
- struct wait_bit_key {
-diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-index 453736fd1d23..9a7a3d2b543f 100644
---- a/include/linux/writeback.h
-+++ b/include/linux/writeback.h
-@@ -11,6 +11,7 @@
- #include <linux/flex_proportions.h>
- #include <linux/backing-dev-defs.h>
- #include <linux/blk_types.h>
-+#include <linux/wait_bit.h>
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index 26d68115afb8..7d8a0afbac63 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -17,7 +17,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/io.h>
+ #include <linux/ata.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <scsi/scsi_host.h>
+ #include <linux/acpi.h>
+ #include <linux/cdrom.h>
+diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+index f8ab7da9cc28..04be45d6a9ab 100644
+--- a/include/linux/libnvdimm.h
++++ b/include/linux/libnvdimm.h
+@@ -10,7 +10,7 @@
+ #include <linux/sizes.h>
+ #include <linux/types.h>
+ #include <linux/uuid.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
  
  struct bio;
  
-diff --git a/include/linux/ww_mutex.h b/include/linux/ww_mutex.h
-index bb763085479a..f5b141b085ba 100644
---- a/include/linux/ww_mutex.h
-+++ b/include/linux/ww_mutex.h
-@@ -19,6 +19,7 @@
+diff --git a/include/linux/libps2.h b/include/linux/libps2.h
+index 9ca9ce4e6e64..006c38667e75 100644
+--- a/include/linux/libps2.h
++++ b/include/linux/libps2.h
+@@ -9,7 +9,7 @@
  
- #include <linux/mutex.h>
- #include <linux/rtmutex.h>
-+#include <linux/lockdep.h>
+ #include <linux/bitops.h>
+ #include <linux/interrupt.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
  
- #if defined(CONFIG_DEBUG_MUTEXES) || \
-    (defined(CONFIG_PREEMPT_RT) && defined(CONFIG_DEBUG_RT_MUTEXES))
-diff --git a/include/media/media-device.h b/include/media/media-device.h
-index 2c146d0b2b1c..b1b5b6dac4ff 100644
---- a/include/media/media-device.h
-+++ b/include/media/media-device.h
-@@ -11,6 +11,7 @@
- #ifndef _MEDIA_DEVICE_H
- #define _MEDIA_DEVICE_H
- 
-+#include <linux/idr.h> // for struct ida
- #include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/pci.h>
-diff --git a/include/net/netns/ipv6.h b/include/net/netns/ipv6.h
-index 5f2cfd84570a..858ee28e73f9 100644
---- a/include/net/netns/ipv6.h
-+++ b/include/net/netns/ipv6.h
-@@ -3,6 +3,10 @@
-  * ipv6 in net namespaces
+diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
+index 9f565416d186..81432629646d 100644
+--- a/include/linux/lockd/lockd.h
++++ b/include/linux/lockd/lockd.h
+@@ -17,7 +17,7 @@
+ #include <net/ipv6.h>
+ #include <linux/fs.h>
+ #include <linux/kref.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/utsname.h>
+ #include <linux/lockd/bind.h>
+ #include <linux/lockd/xdr.h>
+diff --git a/include/linux/lockref.h b/include/linux/lockref.h
+index c3a1f78bc884..79c8402c7079 100644
+--- a/include/linux/lockref.h
++++ b/include/linux/lockref.h
+@@ -15,7 +15,7 @@
+  * example).
   */
  
-+#include <linux/list.h>
+-#include <linux/spinlock.h>
 +#include <linux/spinlock_types.h>
-+#include <linux/rwlock_types.h>
-+#include <linux/workqueue.h> // for struct delayed_work
- #include <net/inet_frag.h>
+ #include <generated/bounds.h>
  
- #ifndef __NETNS_IPV6_H__
-diff --git a/include/net/netns/mctp.h b/include/net/netns/mctp.h
-index 1db8f9aaddb4..6c5039374021 100644
---- a/include/net/netns/mctp.h
-+++ b/include/net/netns/mctp.h
-@@ -6,6 +6,7 @@
- #ifndef __NETNS_MCTP_H__
- #define __NETNS_MCTP_H__
+ #define USE_CMPXCHG_LOCKREF \
+diff --git a/include/linux/lp.h b/include/linux/lp.h
+index be8a07eb2083..337573412852 100644
+--- a/include/linux/lp.h
++++ b/include/linux/lp.h
+@@ -10,7 +10,7 @@
  
-+#include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/types.h>
  
-diff --git a/include/net/netns/xdp.h b/include/net/netns/xdp.h
-index 21a4f25a187a..06d06cf2b966 100644
---- a/include/net/netns/xdp.h
-+++ b/include/net/netns/xdp.h
-@@ -2,6 +2,7 @@
- #ifndef __NETNS_XDP_H__
- #define __NETNS_XDP_H__
+ #include <linux/wait.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <uapi/linux/lp.h>
  
-+#include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/types.h>
+ /* Magic numbers for defining port-device mappings */
+diff --git a/include/linux/mISDNhw.h b/include/linux/mISDNhw.h
+index ef4f8eb02eac..9d65caceebc8 100644
+--- a/include/linux/mISDNhw.h
++++ b/include/linux/mISDNhw.h
+@@ -11,7 +11,7 @@
+ #ifndef MISDNHW_H
+ #define MISDNHW_H
+ #include <linux/mISDNif.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
  
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 58e65af74ad1..140e012260a8 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -26,6 +26,7 @@
- #include <linux/kref.h>
- #include <linux/ktime.h>
- #include <linux/indirect_call_wrapper.h>
-+#include <linux/hrtimer.h> // for hrtimer_try_to_cancel()
- 
- #include <net/inet_connection_sock.h>
- #include <net/inet_timewait_sock.h>
-diff --git a/include/sound/core.h b/include/sound/core.h
-index dfef0c9d4b9f..eaae6da1e0b0 100644
---- a/include/sound/core.h
-+++ b/include/sound/core.h
-@@ -14,6 +14,7 @@
- #include <linux/pm.h>			/* pm_message_t */
- #include <linux/stringify.h>
- #include <linux/printk.h>
-+#include <linux/wait.h>
- #include <linux/xarray.h>
- 
- /* number of supported soundcards */
-diff --git a/include/sound/util_mem.h b/include/sound/util_mem.h
-index 01310e089143..3403b8f4dc86 100644
---- a/include/sound/util_mem.h
-+++ b/include/sound/util_mem.h
-@@ -2,6 +2,7 @@
- #ifndef __SOUND_UTIL_MEM_H
- #define __SOUND_UTIL_MEM_H
- 
-+#include <linux/list.h>
- #include <linux/mutex.h>
  /*
-  *  Copyright (C) 2000 Takashi Iwai <tiwai@suse.de>
-diff --git a/include/trace/events/iommu.h b/include/trace/events/iommu.h
-index 70743db1fb75..4a438395759c 100644
---- a/include/trace/events/iommu.h
-+++ b/include/trace/events/iommu.h
-@@ -11,10 +11,9 @@
- #if !defined(_TRACE_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
- #define _TRACE_IOMMU_H
+  * HW DEBUG 0xHHHHGGGG
+diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
+index 254b329f7699..fec4affa1543 100644
+--- a/include/linux/mailbox_controller.h
++++ b/include/linux/mailbox_controller.h
+@@ -5,7 +5,7 @@
  
-+#include <linux/device.h> // for dev_driver_string()
- #include <linux/tracepoint.h>
+ #include <linux/of.h>
+ #include <linux/types.h>
+-#include <linux/hrtimer.h>
++#include <linux/hrtimer_types.h>
+ #include <linux/completion.h>
  
--struct device;
--
- DECLARE_EVENT_CLASS(iommu_group_event,
+ struct device;
+diff --git a/include/linux/mc146818rtc.h b/include/linux/mc146818rtc.h
+index 34dfcc77f505..000edef612e1 100644
+--- a/include/linux/mc146818rtc.h
++++ b/include/linux/mc146818rtc.h
+@@ -19,7 +19,7 @@
+ #include <linux/pm-trace.h>
  
- 	TP_PROTO(int group_id, struct device *dev),
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index 77f14f7a11d4..db197c8e93d9 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -6,6 +6,7 @@
- #define _TRACE_POWER_H
+ #ifdef __KERNEL__
+-#include <linux/spinlock.h>		/* spinlock_t */
++#include <linux/spinlock_types.h>	/* spinlock_t */
+ extern spinlock_t rtc_lock;		/* serialize CMOS RAM access */
  
- #include <linux/cpufreq.h>
-+#include <linux/device.h>
- #include <linux/ktime.h>
- #include <linux/pm_qos.h>
- #include <linux/tracepoint.h>
-diff --git a/init/init_task.c b/init/init_task.c
-index 4daee6d761c8..28aa0031f42b 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -13,6 +13,7 @@
- #include <linux/numa.h>
- #include <linux/scs.h>
- #include <linux/plist.h>
-+#include <linux/posix-timers.h> // for INIT_CPU_TIMERS()
+ /* Some RTCs extend the mc146818 register set to support alarms of more
+diff --git a/include/linux/mdio/mdio-xgene.h b/include/linux/mdio/mdio-xgene.h
+index 9e588965dc83..90e8b780de96 100644
+--- a/include/linux/mdio/mdio-xgene.h
++++ b/include/linux/mdio/mdio-xgene.h
+@@ -9,7 +9,7 @@
+ #define __MDIO_XGENE_H__
  
- #include <linux/uaccess.h>
+ #include <linux/bits.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/types.h>
  
-diff --git a/init/main.c b/init/main.c
-index 521f40770e67..67af889b2f70 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -99,6 +99,7 @@
- #include <linux/init_syscalls.h>
- #include <linux/stackdepot.h>
- #include <linux/randomize_kstack.h>
-+#include <linux/hrtimer.h>
- #include <net/net_namespace.h>
+ #define BLOCK_XG_MDIO_CSR_OFFSET	0x5000
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index 69e781900082..f3f91280d20b 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -3,7 +3,7 @@
+ #define _LINUX_MEMORY_TIERS_H
  
- #include <asm/io.h>
-diff --git a/io_uring/cancel.c b/io_uring/cancel.c
-index 8a8b07dfc444..0288bf4d015b 100644
---- a/io_uring/cancel.c
-+++ b/io_uring/cancel.c
-@@ -8,6 +8,7 @@
- #include <linux/namei.h>
- #include <linux/nospec.h>
- #include <linux/io_uring.h>
-+#include <linux/hrtimer.h>
+ #include <linux/types.h>
+-#include <linux/nodemask.h>
++#include <linux/nodemask_types.h>
+ #include <linux/kref.h>
+ #include <linux/mmzone.h>
+ #include <linux/notifier.h>
+diff --git a/include/linux/memory.h b/include/linux/memory.h
+index 939a16bd5cea..3979b05e7979 100644
+--- a/include/linux/memory.h
++++ b/include/linux/memory.h
+@@ -18,7 +18,7 @@
  
- #include <uapi/linux/io_uring.h>
+ #include <linux/node.h>
+ #include <linux/compiler.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
  
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index cd9a137ad6ce..49db7fa2cebd 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -72,6 +72,7 @@
- #include <linux/io_uring/cmd.h>
- #include <linux/audit.h>
- #include <linux/security.h>
-+#include <linux/hrtimer.h>
- #include <asm/shmparam.h>
+ #define MIN_MEMORY_BLOCK_SIZE     (1UL << SECTION_SIZE_BITS)
  
- #define CREATE_TRACE_POINTS
-diff --git a/io_uring/timeout.h b/io_uring/timeout.h
-index a6939f18313e..1421625053da 100644
---- a/io_uring/timeout.h
-+++ b/io_uring/timeout.h
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <linux/hrtimer.h>
-+
- struct io_timeout_data {
- 	struct io_kiocb			*req;
- 	struct hrtimer			timer;
-diff --git a/ipc/mq_sysctl.c b/ipc/mq_sysctl.c
-index 21fba3a6edaf..2486dd36af57 100644
---- a/ipc/mq_sysctl.c
-+++ b/ipc/mq_sysctl.c
-@@ -13,6 +13,7 @@
- #include <linux/capability.h>
+diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
+index 8128706b9ea0..f32a9bb497af 100644
+--- a/include/linux/mempolicy.h
++++ b/include/linux/mempolicy.h
+@@ -9,8 +9,8 @@
+ #include <linux/sched.h>
+ #include <linux/mmzone.h>
  #include <linux/slab.h>
- #include <linux/cred.h>
-+#include <linux/uidgid.h>
+-#include <linux/rbtree.h>
+-#include <linux/nodemask.h>
++#include <linux/rbtree_types.h>
++#include <linux/nodemask_types.h>
+ #include <linux/pagemap.h>
+ #include <uapi/linux/mempolicy.h>
  
- static int msg_max_limit_min = MIN_MSGMAX;
- static int msg_max_limit_max = HARD_MSGMAX;
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 5eea4dc0509e..e27c7512e7b1 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -39,6 +39,7 @@
- #include <linux/sched/wake_q.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/user.h>
-+#include <linux/hrtimer.h>
+diff --git a/include/linux/memstick.h b/include/linux/memstick.h
+index ebf73d4ee969..8e1c7daa7c3b 100644
+--- a/include/linux/memstick.h
++++ b/include/linux/memstick.h
+@@ -8,7 +8,7 @@
+ #ifndef _MEMSTICK_H
+ #define _MEMSTICK_H
  
- #include <net/sock.h>
- #include "util.h"
-diff --git a/ipc/namespace.c b/ipc/namespace.c
-index 6ecc30effd3e..8df3cda0b6ee 100644
---- a/ipc/namespace.c
-+++ b/ipc/namespace.c
-@@ -16,6 +16,7 @@
- #include <linux/user_namespace.h>
- #include <linux/proc_ns.h>
- #include <linux/sched/task.h>
-+#include <linux/workqueue.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/scatterlist.h>
+ #include <linux/device.h>
  
- #include "util.h"
- 
-diff --git a/ipc/sem.c b/ipc/sem.c
-index a39cdc7bf88f..a2cdd57ab140 100644
---- a/ipc/sem.c
-+++ b/ipc/sem.c
-@@ -87,6 +87,7 @@
- #include <linux/sched/wake_q.h>
- #include <linux/nospec.h>
- #include <linux/rhashtable.h>
-+#include <linux/hrtimer.h>
- 
- #include <linux/uaccess.h>
- #include "util.h"
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index bcb951a2ecf4..ee230f61b6de 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -23,6 +23,7 @@
- #include <linux/btf_ids.h>
- #include <linux/bpf_mem_alloc.h>
- #include <linux/kasan.h>
-+#include <linux/hrtimer.h>
- 
- #include "../../lib/kstrtox.h"
- 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index ad7d0b00bce9..5b8319c849a7 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -37,6 +37,7 @@
- #include <linux/cpuset.h>
- #include <linux/random.h>
- #include <linux/cc_platform.h>
-+#include <linux/hrtimer.h>
- 
- #include <trace/events/power.h>
- #define CREATE_TRACE_POINTS
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5ecfa57e3b97..1814755cf94f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -55,6 +55,7 @@
- #include <linux/pgtable.h>
- #include <linux/buildid.h>
- #include <linux/task_work.h>
-+#include <linux/hrtimer.h>
- 
- #include "internal.h"
- 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index dfb963d2f862..9b4f638322b0 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -70,6 +70,7 @@
- #include <linux/sysfs.h>
- #include <linux/user_events.h>
- #include <linux/uaccess.h>
-+#include <linux/hrtimer.h>
- 
- #include <uapi/linux/wait.h>
- 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 83613bb3e66f..b7389080795e 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -49,6 +49,7 @@
- #include <linux/cpu.h>
- #include <linux/cgroup.h>
- #include <linux/security.h>
-+#include <linux/hrtimer.h>
- #include <linux/hugetlb.h>
- #include <linux/seccomp.h>
- #include <linux/swap.h>
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 1e78ef24321e..fce9cabf8c98 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -38,6 +38,7 @@
- #include <linux/memblock.h>
- #include <linux/fault-inject.h>
- #include <linux/slab.h>
-+#include <linux/hrtimer.h>
- 
- #include "futex.h"
- #include "../locking/rtmutex_common.h"
-diff --git a/kernel/futex/pi.c b/kernel/futex/pi.c
-index 5722467f2737..3247e11341b3 100644
---- a/kernel/futex/pi.c
-+++ b/kernel/futex/pi.c
-@@ -3,6 +3,7 @@
- #include <linux/slab.h>
- #include <linux/sched/rt.h>
- #include <linux/sched/task.h>
-+#include <linux/hrtimer.h>
- 
- #include "futex.h"
- #include "../locking/rtmutex_common.h"
-diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
-index b47bb764b352..cc8bfc20d6a2 100644
---- a/kernel/futex/requeue.c
-+++ b/kernel/futex/requeue.c
-@@ -2,6 +2,7 @@
- 
- #include <linux/plist.h>
- #include <linux/sched/signal.h>
-+#include <linux/hrtimer.h>
- 
- #include "futex.h"
- #include "../locking/rtmutex_common.h"
-diff --git a/kernel/futex/syscalls.c b/kernel/futex/syscalls.c
-index 4b6da9116aa6..3841d40a7928 100644
---- a/kernel/futex/syscalls.c
-+++ b/kernel/futex/syscalls.c
-@@ -2,6 +2,7 @@
- 
- #include <linux/syscalls.h>
- #include <linux/time_namespace.h>
-+#include <linux/hrtimer.h>
- 
- #include "futex.h"
- 
-diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-index 3a10375d9521..2ec8b7403ef3 100644
---- a/kernel/futex/waitwake.c
-+++ b/kernel/futex/waitwake.c
-@@ -4,6 +4,7 @@
- #include <linux/sched/task.h>
- #include <linux/sched/signal.h>
- #include <linux/freezer.h>
-+#include <linux/hrtimer.h>
- 
- #include "futex.h"
- 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index ecbc9b6aba3a..0bf5c70e1cde 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -10,8 +10,10 @@
- 
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- #include <linux/list.h>
- #include <linux/kallsyms.h>
- #include <linux/livepatch.h>
-diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-index e54c3d60a904..b60b6dc439c1 100644
---- a/kernel/livepatch/transition.c
-+++ b/kernel/livepatch/transition.c
-@@ -8,6 +8,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/cpu.h>
-+#include <linux/sched/idle.h>
- #include <linux/stacktrace.h>
- #include <linux/static_call.h>
- #include "core.h"
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 4a10e8c16fd2..4038acd3cf71 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -23,6 +23,7 @@
- #include <linux/sched/rt.h>
- #include <linux/sched/wake_q.h>
- #include <linux/ww_mutex.h>
-+#include <linux/hrtimer.h>
- 
- #include <trace/events/lock.h>
- 
-diff --git a/kernel/locking/rtmutex_common.h b/kernel/locking/rtmutex_common.h
-index 1162e07cdaea..5ecdef2d8383 100644
---- a/kernel/locking/rtmutex_common.h
-+++ b/kernel/locking/rtmutex_common.h
-@@ -14,6 +14,7 @@
- #define __KERNEL_RTMUTEX_COMMON_H
- 
- #include <linux/debug_locks.h>
-+#include <linux/rbtree.h>
- #include <linux/rtmutex.h>
- #include <linux/sched/wake_q.h>
- 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index e3f639ff1670..9d051ab75dad 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/rcupdate.h>
-+#include <linux/refcount.h>
- 
- #define	PADATA_WORK_ONSTACK	1	/* Work's memory is on stack */
- 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index d49b68184c56..29b49d03b73e 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -34,6 +34,7 @@
- #include <linux/ratelimit.h>
- #include <linux/debugfs.h>
- #include <linux/sysfs.h>
-+#include <linux/hrtimer.h> //for sysrq_timer_list_show()
- #include <linux/context_tracking.h>
- #include <trace/events/error_report.h>
- #include <asm/sections.h>
-diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
-index 7b44f5b89fa1..af6fb88f69dc 100644
---- a/kernel/power/energy_model.c
-+++ b/kernel/power/energy_model.c
-@@ -13,6 +13,7 @@
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
- #include <linux/debugfs.h>
-+#include <linux/device.h>
- #include <linux/energy_model.h>
- #include <linux/sched/topology.h>
- #include <linux/slab.h>
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index 22c16e2564cc..ec96587c78cd 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -9,6 +9,7 @@
+diff --git a/include/linux/mfd/abx500/ab8500.h b/include/linux/mfd/abx500/ab8500.h
+index 76d326ea8eba..7542f6692de2 100644
+--- a/include/linux/mfd/abx500/ab8500.h
++++ b/include/linux/mfd/abx500/ab8500.h
+@@ -8,7 +8,7 @@
+ #define MFD_AB8500_H
  
  #include <linux/atomic.h>
- #include <linux/ctype.h>
-+#include <linux/device.h>
- #include <linux/export.h>
- #include <linux/kexec.h>
- #include <linux/kmod.h>
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 9561a3962ca6..bcab6ee3cd26 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -47,6 +47,7 @@
- #include <linux/cgroup.h>
- #include <linux/audit.h>
- #include <linux/sysctl.h>
-+#include <linux/hrtimer.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/irqdomain.h>
  
- #define CREATE_TRACE_POINTS
- #include <trace/events/signal.h>
-diff --git a/kernel/smpboot.c b/kernel/smpboot.c
-index 1992b62e980b..19f25456254b 100644
---- a/kernel/smpboot.c
-+++ b/kernel/smpboot.c
-@@ -15,6 +15,7 @@
- #include <linux/percpu.h>
- #include <linux/kthread.h>
- #include <linux/smpboot.h>
-+#include <linux/topology.h> // for cpu_to_node()
+ struct device;
+diff --git a/include/linux/mfd/cs42l43.h b/include/linux/mfd/cs42l43.h
+index cf8263aab41b..7649f2770697 100644
+--- a/include/linux/mfd/cs42l43.h
++++ b/include/linux/mfd/cs42l43.h
+@@ -9,11 +9,11 @@
+ #include <linux/completion.h>
+ #include <linux/device.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/soundwire/sdw.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
  
- #include "smpboot.h"
+ #ifndef CS42L43_CORE_EXT_H
+ #define CS42L43_CORE_EXT_H
+diff --git a/include/linux/mfd/ipaq-micro.h b/include/linux/mfd/ipaq-micro.h
+index d5caa4c86ecc..b40311799346 100644
+--- a/include/linux/mfd/ipaq-micro.h
++++ b/include/linux/mfd/ipaq-micro.h
+@@ -6,7 +6,7 @@
+ #ifndef _MFD_IPAQ_MICRO_H_
+ #define _MFD_IPAQ_MICRO_H_
  
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index edb0f821dcea..8ae50f900e4c 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -39,6 +39,7 @@
- #include <linux/sched/nohz.h>
- #include <linux/sched/debug.h>
- #include <linux/timer.h>
-+#include <linux/timerqueue.h>
- #include <linux/freezer.h>
- #include <linux/compat.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/completion.h>
+ #include <linux/list.h>
  
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index 0775b9ec952a..b37f8e91323d 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -17,6 +17,7 @@
- #include <linux/cred.h>
- #include <linux/err.h>
- #include <linux/mm.h>
-+#include <linux/ktime.h> //for timespec64_to_ktime()
- 
- #include <vdso/datapage.h>
- 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index b924f0f096fa..9b138586cd29 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -31,6 +31,7 @@
- #include <linux/compat.h>
- #include <linux/nospec.h>
- #include <linux/time_namespace.h>
-+#include <linux/hrtimer.h>
- 
- #include "timekeeping.h"
- #include "posix-timers.h"
-diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-index ed7d6ad694fb..99ae83f3f646 100644
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -10,6 +10,7 @@
- #include <linux/spinlock.h>
- #include <linux/sched.h>
- #include <linux/seq_file.h>
-+#include <linux/timerqueue.h>
- #include <linux/kallsyms.h>
- #include <linux/nmi.h>
- 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index bd0d01d00fb9..e9ca204afd28 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -21,6 +21,7 @@
- #include <linux/uaccess.h>
- #include <linux/cpumask.h>
- #include <linux/delay.h>
-+#include <linux/hrtimer.h>
- #include <linux/sched/clock.h>
- #include <uapi/linux/sched/types.h>
- #include <linux/sched.h>
-diff --git a/kernel/tsacct.c b/kernel/tsacct.c
-index 4252f0645b9e..6b80f9db0c23 100644
---- a/kernel/tsacct.c
-+++ b/kernel/tsacct.c
-@@ -13,6 +13,7 @@
- #include <linux/acct.h>
- #include <linux/jiffies.h>
- #include <linux/mm.h>
-+#include <linux/timekeeping.h> // for ktime_get_ns()
- 
- /*
-  * fill in basic accounting fields
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index 4aa6166cb856..74fb8c0c5126 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -7,6 +7,7 @@
- #include <linux/hash.h>
- #include <linux/kmemleak.h>
- #include <linux/user_namespace.h>
-+#include <linux/uidgid.h>
- 
- struct ucounts init_ucounts = {
- 	.ns    = &init_user_ns,
-diff --git a/kernel/user.c b/kernel/user.c
-index 03cedc366dc9..28da71ea1e74 100644
---- a/kernel/user.c
-+++ b/kernel/user.c
-@@ -20,6 +20,8 @@
- #include <linux/user_namespace.h>
- #include <linux/binfmts.h>
- #include <linux/proc_ns.h>
-+#include <linux/ratelimit.h>
-+#include <linux/uidgid.h>
- 
- #if IS_ENABLED(CONFIG_BINFMT_MISC)
- struct binfmt_misc init_binfmt_misc = {
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 81a8862295d6..984a954808b0 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -23,6 +23,7 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/isolation.h>
- #include <linux/stop_machine.h>
-+#include <linux/hrtimer.h>
- 
- #include <asm/irq_regs.h>
- #include <linux/kvm_para.h>
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 9221a4c57ae1..8d3781af4396 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -40,6 +40,7 @@
- #include <linux/mempolicy.h>
- #include <linux/freezer.h>
- #include <linux/debug_locks.h>
-+#include <linux/device.h>
- #include <linux/lockdep.h>
- #include <linux/idr.h>
- #include <linux/jhash.h>
-diff --git a/lib/cpu_rmap.c b/lib/cpu_rmap.c
-index 4c348670da31..6beb8632304e 100644
---- a/lib/cpu_rmap.c
-+++ b/lib/cpu_rmap.c
-@@ -7,6 +7,8 @@
- #include <linux/cpu_rmap.h>
- #include <linux/interrupt.h>
- #include <linux/export.h>
-+#include <linux/kref.h>
-+#include <linux/topology.h>
- 
- /*
-  * These functions maintain a mapping from CPUs to some ordered set of
-diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
-index 84ecccddc771..35784f94f0a7 100644
---- a/lib/flex_proportions.c
-+++ b/lib/flex_proportions.c
-@@ -34,6 +34,8 @@
-  * which something happened with proportion of type j.
+diff --git a/include/linux/mfd/lochnagar.h b/include/linux/mfd/lochnagar.h
+index ff9e64cfc9fb..056f1f9dc2bd 100644
+--- a/include/linux/mfd/lochnagar.h
++++ b/include/linux/mfd/lochnagar.h
+@@ -9,7 +9,7 @@
   */
- #include <linux/flex_proportions.h>
-+#include <linux/math64.h>
-+#include <linux/seqlock.h>
  
- int fprop_global_init(struct fprop_global *p, gfp_t gfp)
- {
-diff --git a/lib/group_cpus.c b/lib/group_cpus.c
-index ee272c4cefcc..27e49db5cfa2 100644
---- a/lib/group_cpus.c
-+++ b/lib/group_cpus.c
-@@ -8,6 +8,7 @@
- #include <linux/cpu.h>
- #include <linux/sort.h>
- #include <linux/group_cpus.h>
-+#include <linux/topology.h> // for cpu_to_node()
+ #include <linux/device.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/regmap.h>
  
- #ifdef CONFIG_SMP
+ #ifndef CIRRUS_LOCHNAGAR_H
+diff --git a/include/linux/mfd/madera/core.h b/include/linux/mfd/madera/core.h
+index 03a8a788424a..a62b13a954b8 100644
+--- a/include/linux/mfd/madera/core.h
++++ b/include/linux/mfd/madera/core.h
+@@ -12,7 +12,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/mfd/madera/pdata.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/notifier.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+diff --git a/include/linux/mfd/max8907.h b/include/linux/mfd/max8907.h
+index db4de95d3b9e..38600988cc89 100644
+--- a/include/linux/mfd/max8907.h
++++ b/include/linux/mfd/max8907.h
+@@ -9,7 +9,7 @@
+ #ifndef __LINUX_MFD_MAX8907_H
+ #define __LINUX_MFD_MAX8907_H
  
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 59dbcbdb1c91..3375f5b92baf 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -18,6 +18,8 @@
- #include <linux/stat.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #define MAX8907_GEN_I2C_ADDR		(0x78 >> 1)
+ #define MAX8907_ADC_I2C_ADDR		(0x8e >> 1)
+diff --git a/include/linux/mfd/mt6397/core.h b/include/linux/mfd/mt6397/core.h
+index 627487e26287..30fa2a63f3a0 100644
+--- a/include/linux/mfd/mt6397/core.h
++++ b/include/linux/mfd/mt6397/core.h
+@@ -7,7 +7,7 @@
+ #ifndef __MFD_MT6397_CORE_H__
+ #define __MFD_MT6397_CORE_H__
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/notifier.h>
+ 
+ enum chip_id {
+diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
+index 068ae1c0f0e8..763f38cdc6af 100644
+--- a/include/linux/mfd/mt6397/rtc.h
++++ b/include/linux/mfd/mt6397/rtc.h
+@@ -10,7 +10,7 @@
+ #define _LINUX_MFD_MT6397_RTC_H_
+ 
+ #include <linux/jiffies.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/regmap.h>
+ #include <linux/rtc.h>
+ 
+diff --git a/include/linux/mfd/pcf50633/core.h b/include/linux/mfd/pcf50633/core.h
+index 539f27f8bd89..b088002b27a0 100644
+--- a/include/linux/mfd/pcf50633/core.h
++++ b/include/linux/mfd/pcf50633/core.h
+@@ -10,10 +10,9 @@
+ #define __LINUX_MFD_PCF50633_CORE_H
+ 
+ #include <linux/i2c.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+-#include <linux/pm.h>
+ #include <linux/power_supply.h>
+ #include <linux/mfd/pcf50633/backlight.h>
+ 
+diff --git a/include/linux/mfd/rc5t583.h b/include/linux/mfd/rc5t583.h
+index 4f220146cc02..485668f64dc8 100644
+--- a/include/linux/mfd/rc5t583.h
++++ b/include/linux/mfd/rc5t583.h
+@@ -12,7 +12,7 @@
+ #ifndef __LINUX_MFD_RC5T583_H
+ #define __LINUX_MFD_RC5T583_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ #include <linux/regmap.h>
+ 
+diff --git a/include/linux/mfd/stmpe.h b/include/linux/mfd/stmpe.h
+index 87e29d561e22..3f184efc0d5b 100644
+--- a/include/linux/mfd/stmpe.h
++++ b/include/linux/mfd/stmpe.h
+@@ -8,7 +8,7 @@
+ #ifndef __LINUX_MFD_STMPE_H
+ #define __LINUX_MFD_STMPE_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #define STMPE_SAMPLE_TIME(x)	((x & 0xf) << 4)
+ #define STMPE_MOD_12B(x)	((x & 0x1) << 3)
+diff --git a/include/linux/mfd/ucb1x00.h b/include/linux/mfd/ucb1x00.h
+index ede237384723..52fea8405c81 100644
+--- a/include/linux/mfd/ucb1x00.h
++++ b/include/linux/mfd/ucb1x00.h
+@@ -11,7 +11,7 @@
+ #include <linux/mfd/mcp.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio/driver.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #define UCB_IO_DATA	0x00
+ #define UCB_IO_DIR	0x01
+diff --git a/include/linux/mfd/wm8350/core.h b/include/linux/mfd/wm8350/core.h
+index a3241e4d7548..dc6ff85cb5b0 100644
+--- a/include/linux/mfd/wm8350/core.h
++++ b/include/linux/mfd/wm8350/core.h
+@@ -9,7 +9,7 @@
+ #define __LINUX_MFD_WM8350_CORE_H_
+ 
+ #include <linux/kernel.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/interrupt.h>
+ #include <linux/completion.h>
+ #include <linux/regmap.h>
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index 474d32cb0520..bd99f47726dc 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -8,12 +8,12 @@
+ 
+ #include <linux/device.h>
+ #include <linux/dma-direction.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/skbuff.h>
  #include <linux/slab.h>
- #include <linux/random.h>
-+#include <linux/uidgid.h>
-+#include <linux/workqueue.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/wait.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ #define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
+ 
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index 41f03b352401..7d47499ce75a 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -42,14 +42,14 @@
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include <linux/xarray.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/mempool.h>
+ #include <linux/interrupt.h>
+ #include <linux/idr.h>
+ #include <linux/notifier.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/auxiliary_bus.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #include <linux/mlx5/device.h>
+ #include <linux/mlx5/doorbell.h>
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 3a47847b0db4..9338b6217e3c 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -8,7 +8,7 @@
+ #include <linux/bug.h>
+ #include <linux/list.h>
+ #include <linux/mmzone.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/atomic.h>
+ #include <linux/debug_locks.h>
+ #include <linux/mm_types.h>
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 05556012321f..81d042c00018 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -7,16 +7,16 @@
+ #include <linux/auxvec.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
+-#include <linux/spinlock.h>
+-#include <linux/rbtree.h>
++#include <linux/spinlock_types.h>
++#include <linux/rbtree_types.h>
+ #include <linux/maple_tree.h>
+ #include <linux/rwsem.h>
+ #include <linux/cpumask.h>
+ #include <linux/uprobes.h>
+ #include <linux/rcupdate.h>
+ #include <linux/page-flags-layout.h>
+-#include <linux/workqueue.h>
+-#include <linux/seqlock.h>
++#include <linux/workqueue_types.h>
++#include <linux/seqlock_types.h>
+ #include <linux/percpu_counter.h>
+ 
+ #include <asm/mmu.h>
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index a497f189d988..ce11c2dab2bc 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -5,7 +5,7 @@
+ #ifndef __ASSEMBLY__
+ #ifndef __GENERATING_BOUNDS_H
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/list.h>
+ #include <linux/list_nulls.h>
+ #include <linux/wait.h>
+@@ -14,7 +14,6 @@
+ #include <linux/threads.h>
+ #include <linux/numa.h>
+ #include <linux/init.h>
+-#include <linux/seqlock.h>
+ #include <linux/nodemask.h>
+ #include <linux/pageblock-flags.h>
+ #include <linux/page-flags-layout.h>
+@@ -25,6 +24,10 @@
+ #include <linux/zswap.h>
+ #include <asm/page.h>
+ 
++#ifdef CONFIG_MEMORY_HOTPLUG
++#include <linux/seqlock_types.h>
++#endif
++
+ /* Free memory management - zoned buddy allocator.  */
+ #ifndef CONFIG_ARCH_FORCE_MAX_ORDER
+ #define MAX_PAGE_ORDER 10
+diff --git a/include/linux/moxtet.h b/include/linux/moxtet.h
+index ac577699edfd..ab8112dc4bf9 100644
+--- a/include/linux/moxtet.h
++++ b/include/linux/moxtet.h
+@@ -11,7 +11,7 @@
+ #include <linux/device.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #define TURRIS_MOX_MAX_MODULES	10
+ 
+diff --git a/include/linux/mroute_base.h b/include/linux/mroute_base.h
+index 9dd4bf157255..f3dc964ae4e9 100644
+--- a/include/linux/mroute_base.h
++++ b/include/linux/mroute_base.h
+@@ -3,7 +3,7 @@
+ 
+ #include <linux/netdevice.h>
+ #include <linux/rhashtable-types.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <net/net_namespace.h>
+ #include <net/sock.h>
+ #include <net/fib_notifier.h>
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index ddace8c34dcf..04fd2c856287 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -22,7 +22,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/msi_api.h>
+ #include <linux/xarray.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/list.h>
+ #include <linux/irq.h>
+ #include <linux/bits.h>
+diff --git a/include/linux/mtd/blktrans.h b/include/linux/mtd/blktrans.h
+index 0aa2f072d2a1..7be6117fad23 100644
+--- a/include/linux/mtd/blktrans.h
++++ b/include/linux/mtd/blktrans.h
+@@ -6,7 +6,7 @@
+ #ifndef __MTD_TRANS_H__
+ #define __MTD_TRANS_H__
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
+ 
+diff --git a/include/linux/mtd/doc2000.h b/include/linux/mtd/doc2000.h
+index 1b7b0ee070ca..0bd3fdacec09 100644
+--- a/include/linux/mtd/doc2000.h
++++ b/include/linux/mtd/doc2000.h
+@@ -12,7 +12,7 @@
+ #define __MTD_DOC2000_H__
+ 
+ #include <linux/mtd/mtd.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #define DoC_Sig1 0
+ #define DoC_Sig2 1
+diff --git a/include/linux/mtd/flashchip.h b/include/linux/mtd/flashchip.h
+index c04f690871ca..b8f44f7cda2b 100644
+--- a/include/linux/mtd/flashchip.h
++++ b/include/linux/mtd/flashchip.h
+@@ -12,7 +12,7 @@
+  * has asm/spinlock.h, or 2.4, which has linux/spinlock.h
+  */
+ #include <linux/sched.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ typedef enum {
+ 	FL_READY,
+diff --git a/include/linux/mtd/onenand.h b/include/linux/mtd/onenand.h
+index 1e517961d0ba..7ebd8180c617 100644
+--- a/include/linux/mtd/onenand.h
++++ b/include/linux/mtd/onenand.h
+@@ -9,7 +9,7 @@
+ #ifndef __LINUX_MTD_ONENAND_H
+ #define __LINUX_MTD_ONENAND_H
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/completion.h>
+ #include <linux/mtd/flashchip.h>
+ #include <linux/mtd/onenand_regs.h>
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index badb4c1ac079..61af006d8acd 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -8,7 +8,7 @@
+ #ifndef __LINUX_MTD_SPINAND_H
+ #define __LINUX_MTD_SPINAND_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+ #include <linux/mtd/mtd.h>
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index 7e208d46ba5b..08aac9a432ea 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -14,7 +14,7 @@
+ #include <asm/current.h>
+ #include <linux/list.h>
+ #include <linux/spinlock_types.h>
+-#include <linux/lockdep.h>
++#include <linux/lockdep_types.h>
+ #include <linux/atomic.h>
+ #include <asm/processor.h>
+ #include <linux/osq_lock.h>
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index bf5a43616e1d..a50f57b3d1ba 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -21,7 +21,7 @@
+ #ifndef _LINUX_NETDEVICE_H
+ #define _LINUX_NETDEVICE_H
+ 
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/bug.h>
+ #include <linux/delay.h>
+ #include <linux/atomic.h>
+@@ -47,7 +47,7 @@
+ #include <uapi/linux/pkt_cls.h>
+ #include <uapi/linux/netdev.h>
+ #include <linux/hashtable.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <net/net_trackers.h>
+ #include <net/net_debug.h>
+ #include <net/dropreason-core.h>
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 100cbb261269..1542bd9dabc8 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -14,7 +14,7 @@
+ #ifndef _LINUX_NETFS_H
+ #define _LINUX_NETFS_H
+ 
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/fs.h>
+ #include <linux/pagemap.h>
+ #include <linux/uio.h>
+diff --git a/include/linux/netpoll.h b/include/linux/netpoll.h
+index bd19c4b91e31..488695d7480f 100644
+--- a/include/linux/netpoll.h
++++ b/include/linux/netpoll.h
+@@ -12,7 +12,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/rcupdate.h>
+ #include <linux/list.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ union inet_addr {
+ 	__u32		all[4];
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index ef8d2d618d5b..657d24529fde 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -14,7 +14,7 @@
+ #define _LINUX_NFS4_H
+ 
+ #include <linux/list.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <uapi/linux/nfs4.h>
+ #include <linux/sunrpc/msg_prot.h>
+ 
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index a832e18f6347..4511d8a50e15 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -22,8 +22,8 @@
+ #include <linux/in.h>
+ #include <linux/mm.h>
+ #include <linux/pagemap.h>
+-#include <linux/rbtree.h>
+-#include <linux/refcount.h>
++#include <linux/rbtree_types.h>
++#include <linux/refcount_types.h>
+ #include <linux/rwsem.h>
+ 
+ #include <linux/sunrpc/debug.h>
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index cd797e00fe35..08860ceda787 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -10,7 +10,7 @@
+ #include <linux/sunrpc/xprt.h>
+ 
+ #include <linux/atomic.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ struct nfs4_session;
+ struct nfs_iostats;
+diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
+index 241cef0bfaed..9767df7d354b 100644
+--- a/include/linux/ns_common.h
++++ b/include/linux/ns_common.h
+@@ -3,7 +3,7 @@
+ #define _LINUX_NS_COMMON_H
+ 
+ #include <linux/atomic.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ struct proc_ns_operations;
+ 
+diff --git a/include/linux/objpool.h b/include/linux/objpool.h
+index 15aff4a17f0c..f0d5ce50753f 100644
+--- a/include/linux/objpool.h
++++ b/include/linux/objpool.h
+@@ -4,7 +4,7 @@
+ #define _LINUX_OBJPOOL_H
+ 
+ #include <linux/types.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ /*
+  * objpool: ring-array based lockless MPMC queue
+diff --git a/include/linux/oom.h b/include/linux/oom.h
+index 7d0c9c48a0c5..66d20654c96c 100644
+--- a/include/linux/oom.h
++++ b/include/linux/oom.h
+@@ -5,7 +5,7 @@
+ 
+ #include <linux/sched/signal.h>
+ #include <linux/types.h>
+-#include <linux/nodemask.h>
++#include <linux/nodemask_types.h>
+ #include <uapi/linux/oom.h>
+ #include <linux/sched/coredump.h> /* MMF_* */
+ #include <linux/mm.h> /* VM_FAULT* */
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index 8f418711351b..d00a89e41518 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -12,10 +12,10 @@
+ #ifndef PADATA_H
+ #define PADATA_H
+ 
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/compiler_types.h>
+-#include <linux/workqueue.h>
+-#include <linux/spinlock.h>
++#include <linux/workqueue_types.h>
++#include <linux/spinlock_types.h>
+ #include <linux/list.h>
+ #include <linux/kobject.h>
+ 
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 431b12a23299..186d5a9fb956 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -11,7 +11,7 @@
+ #include <linux/highmem.h>
+ #include <linux/compiler.h>
+ #include <linux/uaccess.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/bitops.h>
+ #include <linux/hardirq.h> /* for in_interrupt() */
+ #include <linux/hugetlb_inline.h>
+diff --git a/include/linux/parport.h b/include/linux/parport.h
+index fff39bc30629..c8e3b71a3b49 100644
+--- a/include/linux/parport.h
++++ b/include/linux/parport.h
+@@ -9,7 +9,7 @@
+ 
+ #include <linux/jiffies.h>
+ #include <linux/proc_fs.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/wait.h>
+ #include <linux/irqreturn.h>
+ #include <linux/semaphore.h>
+diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
+index abeba356bc3f..d4697dc35b02 100644
+--- a/include/linux/part_stat.h
++++ b/include/linux/part_stat.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_PART_STAT_H
+ #define _LINUX_PART_STAT_H
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <asm/local.h>
+ 
+ struct disk_stats {
+diff --git a/include/linux/peci.h b/include/linux/peci.h
+index 9b3d36aff431..ad3ea1371680 100644
+--- a/include/linux/peci.h
++++ b/include/linux/peci.h
+@@ -6,7 +6,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ 
+ /*
+diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
+index d73a1c08c3e3..dd2f19ea08bd 100644
+--- a/include/linux/percpu-refcount.h
++++ b/include/linux/percpu-refcount.h
+@@ -54,7 +54,7 @@
+ #include <linux/percpu.h>
+ #include <linux/rcupdate.h>
+ #include <linux/types.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ 
+ struct percpu_ref;
+ typedef void (percpu_ref_func_t)(struct percpu_ref *);
+diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+index 231e75ec1d83..8d45785b3448 100644
+--- a/include/linux/percpu_counter.h
++++ b/include/linux/percpu_counter.h
+@@ -7,7 +7,7 @@
+  * WARNING: these things are HUGE.  4 kbytes per counter on 32-way P4.
+  */
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/list.h>
+ #include <linux/threads.h>
+ #include <linux/percpu.h>
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d2a15c0c6f8a..eaf5d5f76e0e 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -41,14 +41,14 @@ struct perf_guest_info_callbacks {
+ #endif
+ 
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+-#include <linux/spinlock.h>
+-#include <linux/hrtimer.h>
++#include <linux/spinlock_types.h>
++#include <linux/hrtimer_types.h>
+ #include <linux/fs.h>
+ #include <linux/pid_namespace.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/ftrace.h>
+ #include <linux/cpu.h>
+ #include <linux/irq_work.h>
+@@ -58,7 +58,7 @@ struct perf_guest_info_callbacks {
+ #include <linux/sysfs.h>
+ #include <linux/perf_regs.h>
+ #include <linux/cgroup.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/security.h>
+ #include <linux/static_call.h>
+ #include <linux/lockdep.h>
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 468371b1f508..053037f62157 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -20,12 +20,12 @@
+ #include <linux/mii.h>
+ #include <linux/mii_timestamper.h>
+ #include <linux/module.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/u64_stats_sync.h>
+ #include <linux/irqreturn.h>
+ #include <linux/iopoll.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ #include <linux/atomic.h>
+ 
+diff --git a/include/linux/pktcdvd.h b/include/linux/pktcdvd.h
+index 00141d9ca4b9..4167503eb54c 100644
+--- a/include/linux/pktcdvd.h
++++ b/include/linux/pktcdvd.h
+@@ -12,7 +12,7 @@
+ #ifndef __PKTCDVD_H
+ #define __PKTCDVD_H
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <linux/cdrom.h>
+ #include <linux/mempool.h>
+ #include <uapi/linux/pktcdvd.h>
+diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+index 8865e350c12a..dec873a7d38e 100644
+--- a/include/linux/platform_data/cros_ec_proto.h
++++ b/include/linux/platform_data/cros_ec_proto.h
+@@ -10,7 +10,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/lockdep_types.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/notifier.h>
+ 
+ #include <linux/platform_data/cros_ec_commands.h>
+diff --git a/include/linux/platform_data/cros_ec_sensorhub.h b/include/linux/platform_data/cros_ec_sensorhub.h
+index 0ecce6aa69d5..693337bd4d27 100644
+--- a/include/linux/platform_data/cros_ec_sensorhub.h
++++ b/include/linux/platform_data/cros_ec_sensorhub.h
+@@ -9,7 +9,7 @@
+ #define __LINUX_PLATFORM_DATA_CROS_EC_SENSORHUB_H
+ 
+ #include <linux/ktime.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/notifier.h>
+ #include <linux/platform_data/cros_ec_commands.h>
+ 
+diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+index 3e268e636b5b..40651d9d099f 100644
+--- a/include/linux/platform_data/wilco-ec.h
++++ b/include/linux/platform_data/wilco-ec.h
+@@ -8,7 +8,7 @@
+ #ifndef WILCO_EC_H
+ #define WILCO_EC_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ 
+ /* Message flags for using the mailbox() interface */
+diff --git a/include/linux/platform_data/xilinx-ll-temac.h b/include/linux/platform_data/xilinx-ll-temac.h
+index f4a68136afa6..2ca6792821c7 100644
+--- a/include/linux/platform_data/xilinx-ll-temac.h
++++ b/include/linux/platform_data/xilinx-ll-temac.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/if_ether.h>
+ #include <linux/phy.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ struct ll_temac_platform_data {
+ 	bool txcsum;		/* Enable/disable TX checksum */
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index abad6899e642..f94a78728f1e 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -10,10 +10,10 @@
+ 
+ #include <linux/export.h>
+ #include <linux/list.h>
+-#include <linux/workqueue.h>
+-#include <linux/spinlock.h>
++#include <linux/workqueue_types.h>
++#include <linux/spinlock_types.h>
+ #include <linux/wait.h>
+-#include <linux/hrtimer.h>
++#include <linux/hrtimer_types.h>
+ #include <linux/completion.h>
+ 
+ #ifdef CONFIG_PM_CLK
+diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+index b97c5e9820f9..5b01ebf9c254 100644
+--- a/include/linux/pm_domain.h
++++ b/include/linux/pm_domain.h
+@@ -10,12 +10,12 @@
+ 
+ #include <linux/device.h>
+ #include <linux/ktime.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/pm.h>
+ #include <linux/err.h>
+ #include <linux/of.h>
+ #include <linux/notifier.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/cpumask.h>
+ #include <linux/time64.h>
+ 
+diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
+index c88ceca7cb6e..b6b0231ddf44 100644
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -5,7 +5,7 @@
+ #include <linux/alarmtimer.h>
+ #include <linux/list.h>
+ #include <linux/posix-timers_types.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/timerqueue.h>
+ 
+ struct kernel_siginfo;
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index c0992a77feea..2bcf998da2a7 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -13,9 +13,9 @@
+ #define __LINUX_POWER_SUPPLY_H__
+ 
+ #include <linux/device.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/leds.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/notifier.h>
+ 
+ /*
+diff --git a/include/linux/pruss_driver.h b/include/linux/pruss_driver.h
+index c9a31c567e85..954c713fbf44 100644
+--- a/include/linux/pruss_driver.h
++++ b/include/linux/pruss_driver.h
+@@ -9,7 +9,7 @@
+ #ifndef _PRUSS_DRIVER_H_
+ #define _PRUSS_DRIVER_H_
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/remoteproc/pruss.h>
+ #include <linux/types.h>
+ #include <linux/err.h>
+diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
+index 7b1c9167f756..8af6452b36e2 100644
+--- a/include/linux/psi_types.h
++++ b/include/linux/psi_types.h
+@@ -3,7 +3,7 @@
+ #define _LINUX_PSI_TYPES_H
+ 
+ #include <linux/kthread.h>
+-#include <linux/seqlock.h>
++#include <linux/seqlock_types.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
+ 
+diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+index 638507a3c8ff..cc64b4df980f 100644
+--- a/include/linux/pstore.h
++++ b/include/linux/pstore.h
+@@ -13,8 +13,8 @@
+ #include <linux/compiler.h>
+ #include <linux/errno.h>
+ #include <linux/kmsg_dump.h>
+-#include <linux/mutex.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex_types.h>
++#include <linux/spinlock_types.h>
+ #include <linux/time.h>
+ #include <linux/types.h>
+ 
+diff --git a/include/linux/qed/qede_rdma.h b/include/linux/qed/qede_rdma.h
+index 0d5564a59a59..4daca0b20edc 100644
+--- a/include/linux/qed/qede_rdma.h
++++ b/include/linux/qed/qede_rdma.h
+@@ -10,7 +10,7 @@
+ #include <linux/pci.h>
+ #include <linux/netdevice.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ struct qedr_dev;
+ struct qed_dev;
+diff --git a/include/linux/quota.h b/include/linux/quota.h
+index 72a2efc77fb5..bf16d9d2866c 100644
+--- a/include/linux/quota.h
++++ b/include/linux/quota.h
+@@ -33,9 +33,9 @@
+ #define _LINUX_QUOTA_
+ 
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/rwsem.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/percpu_counter.h>
+ 
+ #include <linux/dqblk_xfs.h>
+@@ -43,7 +43,7 @@
+ #include <linux/dqblk_v2.h>
+ 
+ #include <linux/atomic.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <linux/projid.h>
+ #include <uapi/linux/quota.h>
+ 
+diff --git a/include/linux/radix-tree.h b/include/linux/radix-tree.h
+index eae67015ce51..231c526ec9b8 100644
+--- a/include/linux/radix-tree.h
++++ b/include/linux/radix-tree.h
+@@ -16,7 +16,6 @@
+ #include <linux/percpu.h>
+ #include <linux/preempt.h>
+ #include <linux/rcupdate.h>
+-#include <linux/spinlock.h>
+ #include <linux/types.h>
+ #include <linux/xarray.h>
+ #include <linux/local_lock.h>
+diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
+index 98030accf641..58d2f9e8726e 100644
+--- a/include/linux/raid/pq.h
++++ b/include/linux/raid/pq.h
+@@ -10,7 +10,7 @@
+ 
+ #ifdef __KERNEL__
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ 
+ extern const char raid6_empty_zero_page[PAGE_SIZE];
+ 
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index f0938b59600a..e2fbb34bb33a 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -15,7 +15,7 @@
+ #include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/bug.h>
+-#include <linux/lockdep.h>
++#include <linux/lockdep_types.h>
+ #include <linux/iopoll.h>
+ #include <linux/fwnode.h>
+ 
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index a924a7d5b44a..b9576d956584 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -36,7 +36,7 @@
+ #define REMOTEPROC_H
+ 
+ #include <linux/types.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/virtio.h>
+ #include <linux/cdev.h>
+ #include <linux/idr.h>
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 66942d7fba7f..c62f0be16fa2 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -4,10 +4,13 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+-#include <linux/pid.h>
+ 
+ #ifdef CONFIG_PROC_CPU_RESCTRL
+ 
++#include <linux/pid_types.h>
++
++struct pid;
++
+ int proc_resctrl_show(struct seq_file *m,
+ 		      struct pid_namespace *ns,
+ 		      struct pid *pid,
+diff --git a/include/linux/reset/reset-simple.h b/include/linux/reset/reset-simple.h
+index c3e44f45b0f7..9524a673707a 100644
+--- a/include/linux/reset/reset-simple.h
++++ b/include/linux/reset/reset-simple.h
+@@ -14,7 +14,7 @@
+ 
+ #include <linux/io.h>
+ #include <linux/reset-controller.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
  
  /**
-  * kobject_namespace() - Return @kobj's namespace tag.
-diff --git a/lib/lockref.c b/lib/lockref.c
-index 2afe4c5d8919..cf8795d78540 100644
---- a/lib/lockref.c
-+++ b/lib/lockref.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/export.h>
- #include <linux/lockref.h>
-+#include <linux/build_bug.h>
-+#include <linux/spinlock.h>
+  * struct reset_simple_data - driver data for simple reset controllers
+diff --git a/include/linux/rhashtable-types.h b/include/linux/rhashtable-types.h
+index b6f3797277ff..154dfe4f0508 100644
+--- a/include/linux/rhashtable-types.h
++++ b/include/linux/rhashtable-types.h
+@@ -11,7 +11,7 @@
  
- #if USE_CMPXCHG_LOCKREF
+ #include <linux/atomic.h>
+ #include <linux/compiler.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/workqueue_types.h>
  
-diff --git a/lib/objpool.c b/lib/objpool.c
-index cfdc02420884..bce25547f931 100644
---- a/lib/objpool.c
-+++ b/lib/objpool.c
-@@ -7,6 +7,8 @@
- #include <linux/irqflags.h>
- #include <linux/cpumask.h>
- #include <linux/log2.h>
-+#include <linux/refcount.h>
-+#include <linux/topology.h>
+ struct rhash_head {
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index 90d8e4475f80..cdc3574fd712 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -15,7 +15,7 @@
+ #include <linux/err.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/kref.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/poll.h>
+ #include <linux/rpmsg/byteorder.h>
+ #include <uapi/linux/rpmsg.h>
+diff --git a/include/linux/rslib.h b/include/linux/rslib.h
+index a04dacbdc8ae..8278223e606f 100644
+--- a/include/linux/rslib.h
++++ b/include/linux/rslib.h
+@@ -11,7 +11,7 @@
+ #define _RSLIB_H_
+ 
+ #include <linux/types.h>	/* for gfp_t */
+-#include <linux/gfp.h>		/* for GFP_KERNEL */
++#include <linux/gfp_types.h>	/* for GFP_KERNEL */
+ 
+ /**
+  * struct rs_codec - rs codec data
+diff --git a/include/linux/rtc.h b/include/linux/rtc.h
+index 5f8e438a0312..98401e771e75 100644
+--- a/include/linux/rtc.h
++++ b/include/linux/rtc.h
+@@ -40,7 +40,7 @@ static inline time64_t rtc_tm_sub(struct rtc_time *lhs, struct rtc_time *rhs)
+ #include <linux/poll.h>
+ #include <linux/mutex.h>
+ #include <linux/timerqueue.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ extern struct class *rtc_class;
+ 
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 8a2d65337c48..0fe856628e60 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -11,7 +11,7 @@
+ #include <linux/cred.h>
+ #include <linux/refcount.h>
+ #include <linux/pid.h>
+-#include <linux/posix-timers.h>
++#include <linux/posix-timers_types.h>
+ #include <linux/mm_types.h>
+ #include <asm/ptrace.h>
+ 
+diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
+index 4cc52698e214..671ecee08d23 100644
+--- a/include/linux/sched/user.h
++++ b/include/linux/sched/user.h
+@@ -2,11 +2,11 @@
+ #ifndef _LINUX_SCHED_USER_H
+ #define _LINUX_SCHED_USER_H
+ 
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <linux/atomic.h>
+ #include <linux/percpu_counter.h>
+ #include <linux/refcount.h>
+-#include <linux/ratelimit.h>
++#include <linux/ratelimit_types.h>
  
  /*
-  * objpool: ring-array based lockless MPMC/FIFO queues
-diff --git a/lib/test_lockup.c b/lib/test_lockup.c
-index c3fd87d6c2dd..3e41fc7174be 100644
---- a/lib/test_lockup.c
-+++ b/lib/test_lockup.c
-@@ -15,6 +15,7 @@
- #include <linux/mm.h>
- #include <linux/uaccess.h>
- #include <linux/file.h>
-+#include <linux/hrtimer.h>
+  * Some day this will be a full-fledged user tracking system..
+diff --git a/include/linux/scs.h b/include/linux/scs.h
+index 4ab5bdc898cf..3917d6919c99 100644
+--- a/include/linux/scs.h
++++ b/include/linux/scs.h
+@@ -8,7 +8,7 @@
+ #ifndef _LINUX_SCS_H
+ #define _LINUX_SCS_H
  
- static unsigned int time_secs;
- module_param(time_secs, uint, 0600);
-diff --git a/mm/damon/sysfs-common.c b/mm/damon/sysfs-common.c
-index 70edf45c2174..9217de9eb813 100644
---- a/mm/damon/sysfs-common.c
-+++ b/mm/damon/sysfs-common.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- 
- #include "sysfs-common.h"
- 
-diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
-index 8dbaac6e5c2d..17dfd8cf7a36 100644
---- a/mm/damon/sysfs-schemes.c
-+++ b/mm/damon/sysfs-schemes.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- 
- #include "sysfs-common.h"
- 
-diff --git a/mm/damon/sysfs.c b/mm/damon/sysfs.c
-index 1f891e18b4ee..05962d593810 100644
---- a/mm/damon/sysfs.c
-+++ b/mm/damon/sysfs.c
-@@ -8,6 +8,7 @@
- #include <linux/pid.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/poison.h>
  #include <linux/sched.h>
- #include <linux/slab.h>
-+#include <linux/sysfs.h>
- 
- #include "sysfs-common.h"
- 
-diff --git a/mm/folio-compat.c b/mm/folio-compat.c
-index 50412014f16f..97bcd7ea5423 100644
---- a/mm/folio-compat.c
-+++ b/mm/folio-compat.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/migrate.h>
- #include <linux/pagemap.h>
-+#include <linux/ratelimit.h>
- #include <linux/rmap.h>
- #include <linux/swap.h>
- #include "internal.h"
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index fe43fbc44525..d61fcca99c02 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -2,6 +2,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/mm.h>
-+#include <linux/device.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
- #include <linux/sched/coredump.h>
-diff --git a/mm/ksm.c b/mm/ksm.c
-index 8c001819cf10..0ba82b05dd3f 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -35,6 +35,8 @@
- #include <linux/memory.h>
- #include <linux/mmu_notifier.h>
- #include <linux/swap.h>
-+#include <linux/sysfs.h>
-+#include <linux/kobject.h>
- #include <linux/ksm.h>
- #include <linux/hashtable.h>
- #include <linux/freezer.h>
-diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-index 5462d9e3c84c..58636ccd0494 100644
---- a/mm/memory-tiers.c
-+++ b/mm/memory-tiers.c
-@@ -6,6 +6,7 @@
- #include <linux/memory.h>
- #include <linux/memory-tiers.h>
- #include <linux/notifier.h>
-+#include <linux/device.h>
- 
- #include "internal.h"
- 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index a444e2d7dd2b..eb5098ea86c4 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -23,6 +23,7 @@
- #include <linux/vmalloc.h>
- #include <linux/ioport.h>
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/migrate.h>
- #include <linux/page-isolation.h>
- #include <linux/pfn.h>
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index d11dea7c5536..2bfa7f1dd9a3 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -97,6 +97,7 @@
- #include <linux/compat.h>
- #include <linux/ptrace.h>
- #include <linux/swap.h>
-+#include <linux/sysfs.h>
- #include <linux/seq_file.h>
- #include <linux/proc_fs.h>
- #include <linux/migrate.h>
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 226012974328..b1f6a8ad85ec 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -11,6 +11,7 @@
- #include <linux/shmem_fs.h>
- #include <linux/pagemap.h>
- #include <linux/atomic.h>
-+#include <linux/list_lru.h>
- #include <linux/module.h>
- #include <linux/swap.h>
- #include <linux/dax.h>
-diff --git a/net/can/j1939/bus.c b/net/can/j1939/bus.c
-index 486687901602..da77a8940325 100644
---- a/net/can/j1939/bus.c
-+++ b/net/can/j1939/bus.c
-@@ -11,6 +11,8 @@
-  */
- 
- #include <net/sock.h>
-+#include <linux/hrtimer.h>
-+#include <linux/kref.h>
- 
- #include "j1939-priv.h"
- 
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index fe3df23a2595..fba7d1a0bd5c 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -9,6 +9,7 @@
- //                         Oleksij Rempel <kernel@pengutronix.de>
- 
- #include <linux/can/skb.h>
-+#include <linux/hrtimer.h>
- 
- #include "j1939-priv.h"
- 
-diff --git a/net/ceph/string_table.c b/net/ceph/string_table.c
-index 3191d9d160a2..ebdd605bb940 100644
---- a/net/ceph/string_table.c
-+++ b/net/ceph/string_table.c
-@@ -4,6 +4,7 @@
+ #include <linux/sizes.h>
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index 96d595cd7659..9e2e0076327d 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -6,7 +6,7 @@
  #include <linux/string.h>
- #include <linux/spinlock.h>
- #include <linux/ceph/string_table.h>
-+#include <linux/rbtree.h>
- 
- static DEFINE_SPINLOCK(string_tree_lock);
- static struct rb_root string_tree = RB_ROOT;
-diff --git a/net/sched/act_gate.c b/net/sched/act_gate.c
-index c681cd011afd..08cf6001286a 100644
---- a/net/sched/act_gate.c
-+++ b/net/sched/act_gate.c
-@@ -10,6 +10,7 @@
- #include <linux/rtnetlink.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include <linux/hrtimer.h>
- #include <net/act_api.h>
- #include <net/netlink.h>
- #include <net/pkt_cls.h>
-diff --git a/net/xfrm/xfrm_state.c b/net/xfrm/xfrm_state.c
-index bda5327bf34d..209a82d8f1cc 100644
---- a/net/xfrm/xfrm_state.c
-+++ b/net/xfrm/xfrm_state.c
-@@ -27,6 +27,7 @@
- #include <linux/slab.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
-+#include <linux/hrtimer.h>
- 
- #include <crypto/aead.h>
- 
-diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-index 2284b3751240..c2c9b09b0cf9 100644
---- a/samples/vfio-mdev/mtty.c
-+++ b/samples/vfio-mdev/mtty.c
-@@ -20,6 +20,7 @@
- #include <linux/sched.h>
- #include <linux/wait.h>
- #include <linux/vfio.h>
-+#include <linux/idr.h>
- #include <linux/iommu.h>
- #include <linux/sysfs.h>
- #include <linux/ctype.h>
-diff --git a/security/integrity/ima/ima_mok.c b/security/integrity/ima/ima_mok.c
-index 95cc31525c57..2d770de15b62 100644
---- a/security/integrity/ima/ima_mok.c
-+++ b/security/integrity/ima/ima_mok.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include <linux/uidgid.h>
- #include <keys/system_keyring.h>
- 
- 
-diff --git a/security/keys/proc.c b/security/keys/proc.c
-index 4f4e2c1824f1..fc605b959656 100644
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -10,6 +10,7 @@
+ #include <linux/string_helpers.h>
+ #include <linux/bug.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/cpumask.h>
  #include <linux/fs.h>
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
-+#include <linux/timekeeping.h> // for ktime_get_real_seconds()
- #include <asm/errno.h>
- #include "internal.h"
- 
-diff --git a/sound/soc/intel/avs/avs.h b/sound/soc/intel/avs/avs.h
-index d694e08e44e1..2bbe43eb4cdd 100644
---- a/sound/soc/intel/avs/avs.h
-+++ b/sound/soc/intel/avs/avs.h
-@@ -12,6 +12,7 @@
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/firmware.h>
-+#include <linux/idr.h>
- #include <linux/kfifo.h>
- #include <sound/hda_codec.h>
- #include <sound/hda_register.h>
-diff --git a/sound/soc/qcom/qdsp6/q6apm.h b/sound/soc/qcom/qdsp6/q6apm.h
-index c248c8d2b1ab..5aa572a04a63 100644
---- a/sound/soc/qcom/qdsp6/q6apm.h
-+++ b/sound/soc/qcom/qdsp6/q6apm.h
-@@ -4,6 +4,7 @@
- #include <linux/types.h>
- #include <linux/slab.h>
- #include <linux/wait.h>
-+#include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
+ #include <linux/cred.h>
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 536b2581d3e2..8246c0aae3be 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -15,7 +15,6 @@
+ #include <linux/spinlock.h>
  #include <linux/sched.h>
-diff --git a/sound/soc/sof/sof-audio.h b/sound/soc/sof/sof-audio.h
-index 8874ee5f557f..436c95eee19c 100644
---- a/sound/soc/sof/sof-audio.h
-+++ b/sound/soc/sof/sof-audio.h
-@@ -11,6 +11,7 @@
- #ifndef __SOUND_SOC_SOF_AUDIO_H
- #define __SOUND_SOC_SOF_AUDIO_H
+ #include <linux/tty.h>
+-#include <linux/mutex.h>
+ #include <linux/sysrq.h>
+ #include <uapi/linux/serial_core.h>
  
-+#include <linux/idr.h>
+diff --git a/include/linux/serio.h b/include/linux/serio.h
+index 6c27d413da92..c7b0bed2242e 100644
+--- a/include/linux/serio.h
++++ b/include/linux/serio.h
+@@ -10,7 +10,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
+ #include <linux/spinlock.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <uapi/linux/serio.h>
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index b9716534a678..63c8b1ce6133 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -13,7 +13,7 @@
+ #define	_LINUX_SLAB_H
+ 
+ #include <linux/cache.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/overflow.h>
+ #include <linux/types.h>
+ #include <linux/percpu-refcount.h>
+diff --git a/include/linux/soc/qcom/apr.h b/include/linux/soc/qcom/apr.h
+index be98aebcb3e1..5ca38308b088 100644
+--- a/include/linux/soc/qcom/apr.h
++++ b/include/linux/soc/qcom/apr.h
+@@ -3,7 +3,7 @@
+ #ifndef __QCOM_APR_H_
+ #define __QCOM_APR_H_
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <dt-bindings/soc/qcom,apr.h>
+diff --git a/include/linux/soc/qcom/qmi.h b/include/linux/soc/qcom/qmi.h
+index 469e02d2aa0d..900c4b3540cc 100644
+--- a/include/linux/soc/qcom/qmi.h
++++ b/include/linux/soc/qcom/qmi.h
+@@ -11,7 +11,7 @@
+ #include <linux/list.h>
+ #include <linux/qrtr.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ struct socket;
+ 
+diff --git a/include/linux/ssb/ssb.h b/include/linux/ssb/ssb.h
+index 1f326da289d3..0b68aeed6c7a 100644
+--- a/include/linux/ssb/ssb.h
++++ b/include/linux/ssb/ssb.h
+@@ -5,7 +5,7 @@
+ #include <linux/device.h>
+ #include <linux/list.h>
+ #include <linux/types.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/pci.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/mod_devicetable.h>
+diff --git a/include/linux/ssb/ssb_driver_gige.h b/include/linux/ssb/ssb_driver_gige.h
+index 28c145a51e57..a45d5ab789b8 100644
+--- a/include/linux/ssb/ssb_driver_gige.h
++++ b/include/linux/ssb/ssb_driver_gige.h
+@@ -5,7 +5,7 @@
+ #include <linux/ssb/ssb.h>
+ #include <linux/bug.h>
+ #include <linux/pci.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ 
+ #ifdef CONFIG_SSB_DRIVER_GIGE
+diff --git a/include/linux/stackdepot.h b/include/linux/stackdepot.h
+index a6aa21393755..13948903a8b1 100644
+--- a/include/linux/stackdepot.h
++++ b/include/linux/stackdepot.h
+@@ -20,7 +20,7 @@
+ #ifndef _LINUX_STACKDEPOT_H
+ #define _LINUX_STACKDEPOT_H
+ 
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/init.h>
+ 
+ typedef u32 depot_stack_handle_t;
+diff --git a/include/linux/stat.h b/include/linux/stat.h
+index 52150570d37a..a446d65f1082 100644
+--- a/include/linux/stat.h
++++ b/include/linux/stat.h
+@@ -17,7 +17,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/time.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ 
+ struct kstat {
+ 	u32		result_mask;	/* What fields the user got */
+diff --git a/include/linux/sunrpc/auth_gss.h b/include/linux/sunrpc/auth_gss.h
+index 43e481aa347a..4cb7ccf9a622 100644
+--- a/include/linux/sunrpc/auth_gss.h
++++ b/include/linux/sunrpc/auth_gss.h
+@@ -13,7 +13,7 @@
+ #ifndef _LINUX_SUNRPC_AUTH_GSS_H
+ #define _LINUX_SUNRPC_AUTH_GSS_H
+ 
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/sunrpc/auth.h>
+ #include <linux/sunrpc/svc.h>
+ #include <linux/sunrpc/gss_api.h>
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 5e9d1469c6fa..182fa9c4f805 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -14,7 +14,7 @@
+ #include <linux/socket.h>
+ #include <linux/in.h>
+ #include <linux/in6.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ 
+ #include <linux/sunrpc/msg_prot.h>
+ #include <linux/sunrpc/sched.h>
+diff --git a/include/linux/sunrpc/metrics.h b/include/linux/sunrpc/metrics.h
+index 6bfed383ed63..d4bc7fa5f5c1 100644
+--- a/include/linux/sunrpc/metrics.h
++++ b/include/linux/sunrpc/metrics.h
+@@ -27,7 +27,7 @@
+ #define _LINUX_SUNRPC_METRICS_H
+ 
+ #include <linux/ktime.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ #define RPC_IOSTATS_VERS	"1.1"
+ 
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index b568e439c6cf..17ffc4e981ff 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -12,9 +12,9 @@
+ 
+ #include <linux/ktime.h>
+ #include <linux/sunrpc/types.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/wait_bit.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/sunrpc/xdr.h>
+ 
+ /*
+diff --git a/include/linux/sunrpc/types.h b/include/linux/sunrpc/types.h
+index bd3c8e05632b..aedb29de774a 100644
+--- a/include/linux/sunrpc/types.h
++++ b/include/linux/sunrpc/types.h
+@@ -10,9 +10,9 @@
+ #ifndef _LINUX_SUNRPC_TYPES_H_
+ #define _LINUX_SUNRPC_TYPES_H_
+ 
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/sched/signal.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/sunrpc/debug.h>
+ #include <linux/list.h>
+ 
+diff --git a/include/linux/swait.h b/include/linux/swait.h
+index 535637f3bf32..988ff0f0f84d 100644
+--- a/include/linux/swait.h
++++ b/include/linux/swait.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/stddef.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <asm/current.h>
+ 
+ /*
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 41e4b484bc34..79528ac76492 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_SWAP_H
+ #define _LINUX_SWAP_H
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/linkage.h>
+ #include <linux/mmzone.h>
+ #include <linux/list.h>
+diff --git a/include/linux/swap_slots.h b/include/linux/swap_slots.h
+index 15adfb8c813a..c17594871e29 100644
+--- a/include/linux/swap_slots.h
++++ b/include/linux/swap_slots.h
+@@ -3,8 +3,8 @@
+ #define _LINUX_SWAP_SLOTS_H
+ 
+ #include <linux/swap.h>
+-#include <linux/spinlock.h>
+-#include <linux/mutex.h>
++#include <linux/spinlock_types.h>
++#include <linux/mutex_types.h>
+ 
+ #define SWAP_SLOTS_CACHE_SIZE			SWAP_BATCH
+ #define THRESHOLD_ACTIVATE_SWAP_SLOTS_CACHE	(5*SWAP_SLOTS_CACHE_SIZE)
+diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+index ecde0312dd52..c37473373649 100644
+--- a/include/linux/swiotlb.h
++++ b/include/linux/swiotlb.h
+@@ -7,8 +7,8 @@
+ #include <linux/init.h>
+ #include <linux/types.h>
+ #include <linux/limits.h>
+-#include <linux/spinlock.h>
+-#include <linux/workqueue.h>
++#include <linux/spinlock_types.h>
++#include <linux/workqueue_types.h>
+ 
+ struct device;
+ struct page;
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index ee7d33b89e9e..4eb7751d485c 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -25,8 +25,8 @@
+ #include <linux/list.h>
+ #include <linux/rcupdate.h>
+ #include <linux/wait.h>
+-#include <linux/rbtree.h>
+-#include <linux/uidgid.h>
++#include <linux/rbtree_types.h>
++#include <linux/uidgid_types.h>
+ #include <uapi/linux/sysctl.h>
+ 
+ /* For the /proc/sys support */
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 601ff20acc20..34e29761d125 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -16,7 +16,7 @@
+ #include <linux/kernfs.h>
+ #include <linux/compiler.h>
+ #include <linux/list.h>
+-#include <linux/lockdep.h>
++#include <linux/lockdep_types.h>
+ 
+ struct kobject;
+ struct module;
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index b7a3deb372fd..db474472e982 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -14,7 +14,7 @@
+ #include <linux/idr.h>
+ #include <linux/device.h>
+ #include <linux/sysfs.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <uapi/linux/thermal.h>
+ 
+ /* invalid cooling state */
+diff --git a/include/linux/thunderbolt.h b/include/linux/thunderbolt.h
+index 2c835e5c41f6..a001233b9359 100644
+--- a/include/linux/thunderbolt.h
++++ b/include/linux/thunderbolt.h
+@@ -18,7 +18,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/pci.h>
+ #include <linux/uuid.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ enum tb_cfg_pkg_type {
+ 	TB_CFG_PKG_READ = 1,
+diff --git a/include/linux/tifm.h b/include/linux/tifm.h
+index 44073d06710f..7679cef63b5a 100644
+--- a/include/linux/tifm.h
++++ b/include/linux/tifm.h
+@@ -8,11 +8,11 @@
+ #ifndef _TIFM_H
+ #define _TIFM_H
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+ #include <linux/pci.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ /* Host registers (relative to pci base address): */
+ enum {
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index 8c76fd97d4ad..5a3815e7d73d 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -5,12 +5,12 @@
+ #include <linux/fs.h>
+ #include <linux/major.h>
+ #include <linux/termios.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/tty_buffer.h>
+ #include <linux/tty_driver.h>
+ #include <linux/tty_ldisc.h>
+ #include <linux/tty_port.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/tty_flags.h>
+ #include <uapi/linux/tty.h>
+ #include <linux/rwsem.h>
+diff --git a/include/linux/tty_buffer.h b/include/linux/tty_buffer.h
+index 31125e3be3c5..752bad9367b8 100644
+--- a/include/linux/tty_buffer.h
++++ b/include/linux/tty_buffer.h
+@@ -4,8 +4,8 @@
+ 
+ #include <linux/atomic.h>
+ #include <linux/llist.h>
+-#include <linux/mutex.h>
+-#include <linux/workqueue.h>
++#include <linux/mutex_types.h>
++#include <linux/workqueue_types.h>
+ 
+ struct tty_buffer {
+ 	union {
+diff --git a/include/linux/tty_ldisc.h b/include/linux/tty_ldisc.h
+index 3a6f70f2f41e..df79a9433ddd 100644
+--- a/include/linux/tty_ldisc.h
++++ b/include/linux/tty_ldisc.h
+@@ -7,7 +7,7 @@ struct tty_struct;
+ #include <linux/fs.h>
+ #include <linux/atomic.h>
+ #include <linux/list.h>
+-#include <linux/lockdep.h>
++#include <linux/lockdep_types.h>
+ 
+ /*
+  * the semaphore definition
+diff --git a/include/linux/tty_port.h b/include/linux/tty_port.h
+index 1b861f2100b6..a76a5b6a5cf2 100644
+--- a/include/linux/tty_port.h
++++ b/include/linux/tty_port.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/kfifo.h>
+ #include <linux/kref.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/tty_buffer.h>
+ #include <linux/wait.h>
+ 
+diff --git a/include/linux/umh.h b/include/linux/umh.h
+index daa6a7048c11..d3693076b830 100644
+--- a/include/linux/umh.h
++++ b/include/linux/umh.h
+@@ -1,11 +1,11 @@
+ #ifndef __LINUX_UMH_H__
+ #define __LINUX_UMH_H__
+ 
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/stddef.h>
+ #include <linux/errno.h>
+ #include <linux/compiler.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/sysctl.h>
+ 
+ struct cred;
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index 9e52179872a5..311a30c69a89 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -20,7 +20,7 @@
+ #include <linux/fs.h>		/* for struct file_operations */
+ #include <linux/completion.h>	/* for struct completion */
+ #include <linux/sched.h>	/* for current && schedule_timeout */
+-#include <linux/mutex.h>	/* for struct mutex */
++#include <linux/mutex_types.h>	/* for struct mutex */
+ #include <linux/pm_runtime.h>	/* for runtime PM */
+ 
+ struct usb_device;
+diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+index a771ccc038ac..0d914c49fed3 100644
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -23,7 +23,7 @@
+ #include <linux/slab.h>
+ #include <linux/scatterlist.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/usb/ch9.h>
+ 
+ #define UDC_TRACE_STR_MAX	512
+diff --git a/include/linux/usb/ljca.h b/include/linux/usb/ljca.h
+index 47661feda96c..9e6b05962c95 100644
+--- a/include/linux/usb/ljca.h
++++ b/include/linux/usb/ljca.h
+@@ -7,7 +7,7 @@
+ 
+ #include <linux/auxiliary_bus.h>
+ #include <linux/list.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/types.h>
+ 
+ #define LJCA_MAX_GPIO_NUM 64
+diff --git a/include/linux/usb/otg-fsm.h b/include/linux/usb/otg-fsm.h
+index 6135d076c53d..c4adc146d754 100644
+--- a/include/linux/usb/otg-fsm.h
++++ b/include/linux/usb/otg-fsm.h
+@@ -6,7 +6,7 @@
+ #ifndef __LINUX_USB_OTG_FSM_H
+ #define __LINUX_USB_OTG_FSM_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/errno.h>
+ 
+ #define PROTO_UNDEF	(0)
+diff --git a/include/linux/usb/serial.h b/include/linux/usb/serial.h
+index 1a0a4dc87980..2d47c0ae9d64 100644
+--- a/include/linux/usb/serial.h
++++ b/include/linux/usb/serial.h
+@@ -10,7 +10,7 @@
+ #define __LINUX_USB_SERIAL_H
+ 
+ #include <linux/kref.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/serial.h>
+ #include <linux/kfifo.h>
+ 
+diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
+index a9cee5a7b8af..7d0e3418d497 100644
+--- a/include/linux/user_namespace.h
++++ b/include/linux/user_namespace.h
+@@ -5,7 +5,7 @@
+ #include <linux/nsproxy.h>
+ #include <linux/ns_common.h>
+ #include <linux/sched.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/rwsem.h>
+ #include <linux/sysctl.h>
+ #include <linux/err.h>
+diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+index 89b265bc6ec3..e8959e50d44b 100644
+--- a/include/linux/vfio.h
++++ b/include/linux/vfio.h
+@@ -11,7 +11,7 @@
+ 
+ #include <linux/iommu.h>
+ #include <linux/mm.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/poll.h>
+ #include <linux/cdev.h>
+ #include <uapi/linux/vfio.h>
+diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+index a3075d00675a..92b00a151e5c 100644
+--- a/include/linux/vfio_pci_core.h
++++ b/include/linux/vfio_pci_core.h
+@@ -8,7 +8,7 @@
+  * Author: Tom Lyon, pugs@cisco.com
+  */
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/pci.h>
+ #include <linux/vfio.h>
+ #include <linux/irqbypass.h>
+diff --git a/include/linux/via-core.h b/include/linux/via-core.h
+index 8737599b9148..0cb35d8f2527 100644
+--- a/include/linux/via-core.h
++++ b/include/linux/via-core.h
+@@ -10,7 +10,7 @@
+ #define __VIA_CORE_H__
+ #include <linux/types.h>
+ #include <linux/io.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/pci.h>
+ 
+ /*
+diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+index b0201747a263..a677e86a6305 100644
+--- a/include/linux/virtio.h
++++ b/include/linux/virtio.h
+@@ -5,10 +5,10 @@
+  * implementation. */
+ #include <linux/types.h>
+ #include <linux/scatterlist.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/dma-mapping.h>
+ 
+ /**
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 77054ddd7eac..7a76c86cca60 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -6,7 +6,7 @@
+ #include <linux/list.h>
+ #include <linux/llist.h>
+ #include <asm/page.h>		/* pgprot_t */
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/overflow.h>
+ 
+ #include <asm/vmalloc.h>
+diff --git a/include/linux/vmpressure.h b/include/linux/vmpressure.h
+index 6a2f51ebbfd3..62e144fcce72 100644
+--- a/include/linux/vmpressure.h
++++ b/include/linux/vmpressure.h
+@@ -2,10 +2,10 @@
+ #ifndef __LINUX_VMPRESSURE_H
+ #define __LINUX_VMPRESSURE_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/list.h>
+-#include <linux/workqueue.h>
+-#include <linux/gfp.h>
++#include <linux/workqueue_types.h>
++#include <linux/gfp_types.h>
+ #include <linux/types.h>
+ #include <linux/cgroup.h>
+ #include <linux/eventfd.h>
+diff --git a/include/linux/vmw_vmci_api.h b/include/linux/vmw_vmci_api.h
+index f28907345c80..3a9112f68735 100644
+--- a/include/linux/vmw_vmci_api.h
++++ b/include/linux/vmw_vmci_api.h
+@@ -8,7 +8,7 @@
+ #ifndef __VMW_VMCI_API_H__
+ #define __VMW_VMCI_API_H__
+ 
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <linux/vmw_vmci_defs.h>
+ 
+ #undef  VMCI_KERNEL_API_VERSION
+diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+index cb571dfcf4b1..0983c697648a 100644
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -12,7 +12,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/bug.h>
+ #include <linux/compiler.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/kconfig.h>
+ #include <linux/kernel.h>
+ #include <linux/rcupdate.h>
+diff --git a/include/media/dmxdev.h b/include/media/dmxdev.h
+index 4f48ed5ceda7..f64a4ecb48ed 100644
+--- a/include/media/dmxdev.h
++++ b/include/media/dmxdev.h
+@@ -20,12 +20,12 @@
+ #define _DMXDEV_H_
+ 
+ #include <linux/types.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/time.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/fs.h>
+ #include <linux/string.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/slab.h>
+ 
+ #include <linux/dvb/dmx.h>
+diff --git a/include/media/drv-intf/saa7146.h b/include/media/drv-intf/saa7146.h
+index 71ce63c99cb4..0e150676ec2e 100644
+--- a/include/media/drv-intf/saa7146.h
++++ b/include/media/drv-intf/saa7146.h
+@@ -11,7 +11,7 @@
+ #include <linux/i2c.h>		/* for i2c subsystem */
+ #include <asm/io.h>		/* for accessing devices */
+ #include <linux/stringify.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/scatterlist.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ctrls.h>
+diff --git a/include/media/dvb_demux.h b/include/media/dvb_demux.h
+index 8f90330274d5..c091699c70bc 100644
+--- a/include/media/dvb_demux.h
++++ b/include/media/dvb_demux.h
+@@ -20,8 +20,8 @@
+ #define _DVB_DEMUX_H_
+ 
+ #include <linux/time.h>
+-#include <linux/spinlock.h>
+-#include <linux/mutex.h>
++#include <linux/spinlock_types.h>
++#include <linux/mutex_types.h>
+ 
+ #include <media/demux.h>
+ 
+diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
+index e7c44870f20d..5f03e0ad04b8 100644
+--- a/include/media/dvb_frontend.h
++++ b/include/media/dvb_frontend.h
+@@ -39,7 +39,7 @@
+ #include <linux/module.h>
+ #include <linux/errno.h>
+ #include <linux/delay.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/slab.h>
+ #include <linux/bitops.h>
+ 
+diff --git a/include/media/dvb_ringbuffer.h b/include/media/dvb_ringbuffer.h
+index 029c8b615e49..131997d1f131 100644
+--- a/include/media/dvb_ringbuffer.h
++++ b/include/media/dvb_ringbuffer.h
+@@ -23,7 +23,7 @@
+ #ifndef _DVB_RINGBUFFER_H_
+ #define _DVB_RINGBUFFER_H_
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/wait.h>
+ 
+ /**
+diff --git a/include/media/dvb_vb2.h b/include/media/dvb_vb2.h
+index 8cb88452cd6c..d9e6cf91521d 100644
+--- a/include/media/dvb_vb2.h
++++ b/include/media/dvb_vb2.h
+@@ -15,7 +15,7 @@
+ #ifndef _DVB_VB2_H
+ #define _DVB_VB2_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/poll.h>
+ #include <linux/dvb/dmx.h>
+ #include <media/videobuf2-core.h>
+diff --git a/include/media/i2c/adp1653.h b/include/media/i2c/adp1653.h
+index 096de9130da8..6b2542da4162 100644
+--- a/include/media/i2c/adp1653.h
++++ b/include/media/i2c/adp1653.h
+@@ -15,7 +15,7 @@
+ #define ADP1653_H
+ 
+ #include <linux/i2c.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/videodev2.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-subdev.h>
+diff --git a/include/media/media-device.h b/include/media/media-device.h
+index b1b5b6dac4ff..0866de60e5b5 100644
+--- a/include/media/media-device.h
++++ b/include/media/media-device.h
+@@ -13,7 +13,7 @@
+ 
+ #include <linux/idr.h> // for struct ida
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+ 
+diff --git a/include/media/rc-core.h b/include/media/rc-core.h
+index eabb19016fec..106fe85ee777 100644
+--- a/include/media/rc-core.h
++++ b/include/media/rc-core.h
+@@ -8,7 +8,7 @@
+ #ifndef _RC_CORE
+ #define _RC_CORE
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/cdev.h>
+ #include <linux/kfifo.h>
+ #include <linux/time.h>
+diff --git a/include/media/v4l2-dev.h b/include/media/v4l2-dev.h
+index d82dfdbf6e58..cd9f633bf351 100644
+--- a/include/media/v4l2-dev.h
++++ b/include/media/v4l2-dev.h
+@@ -14,7 +14,7 @@
+ #include <linux/fs.h>
+ #include <linux/device.h>
+ #include <linux/cdev.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/videodev2.h>
+ 
+ #include <media/media-entity.h>
+diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+index 56719a26a46c..81005326d480 100644
+--- a/include/media/videobuf2-core.h
++++ b/include/media/videobuf2-core.h
+@@ -13,7 +13,7 @@
+ #define _MEDIA_VIDEOBUF2_CORE_H
+ 
+ #include <linux/mm_types.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/poll.h>
+ #include <linux/dma-buf.h>
+ #include <linux/bitops.h>
+diff --git a/include/net/af_unix.h b/include/net/af_unix.h
+index f045bbd9017d..5b29b3d44614 100644
+--- a/include/net/af_unix.h
++++ b/include/net/af_unix.h
+@@ -4,8 +4,8 @@
+ 
+ #include <linux/socket.h>
+ #include <linux/un.h>
+-#include <linux/mutex.h>
+-#include <linux/refcount.h>
++#include <linux/mutex_types.h>
++#include <linux/refcount_types.h>
+ #include <net/sock.h>
+ 
+ #if IS_ENABLED(CONFIG_UNIX)
+diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+index 535701efc1e5..7eca98931e25 100644
+--- a/include/net/af_vsock.h
++++ b/include/net/af_vsock.h
+@@ -9,7 +9,7 @@
+ #define __AF_VSOCK_H__
+ 
+ #include <linux/kernel.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <net/sock.h>
+ #include <uapi/linux/vm_sockets.h>
+ 
+diff --git a/include/net/atmclip.h b/include/net/atmclip.h
+index 70e350e0db3d..e2549b61f707 100644
+--- a/include/net/atmclip.h
++++ b/include/net/atmclip.h
+@@ -11,7 +11,7 @@
+ #include <linux/atm.h>
+ #include <linux/atmdev.h>
+ #include <linux/atmarp.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <net/neighbour.h>
+ 
+ 
+diff --git a/include/net/ax25.h b/include/net/ax25.h
+index 8c5d4698cf29..a57271b1ba7b 100644
+--- a/include/net/ax25.h
++++ b/include/net/ax25.h
+@@ -8,8 +8,8 @@
+ #define _AX25_H 
+ 
+ #include <linux/ax25.h>
+-#include <linux/spinlock.h>
+-#include <linux/timer.h>
++#include <linux/spinlock_types.h>
++#include <linux/timer_types.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ #include <linux/refcount.h>
+diff --git a/include/net/cfg802154.h b/include/net/cfg802154.h
+index cd95711b12b8..7d5fb857ce96 100644
+--- a/include/net/cfg802154.h
++++ b/include/net/cfg802154.h
+@@ -11,7 +11,7 @@
+ 
+ #include <linux/ieee802154.h>
+ #include <linux/netdevice.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/bug.h>
+ 
+ #include <net/nl802154.h>
+diff --git a/include/net/devlink.h b/include/net/devlink.h
+index 7905d55ed0d4..2a41f07cf84c 100644
+--- a/include/net/devlink.h
++++ b/include/net/devlink.h
+@@ -8,12 +8,12 @@
+ #define _NET_DEVLINK_H_
+ 
+ #include <linux/slab.h>
+-#include <linux/gfp.h>
++#include <linux/gfp_types.h>
+ #include <linux/list.h>
+ #include <linux/netdevice.h>
+-#include <linux/spinlock.h>
+-#include <linux/workqueue.h>
+-#include <linux/refcount.h>
++#include <linux/spinlock_types.h>
++#include <linux/workqueue_types.h>
++#include <linux/refcount_types.h>
+ #include <net/net_namespace.h>
+ #include <net/flow_offload.h>
+ #include <uapi/linux/devlink.h>
+diff --git a/include/net/dst.h b/include/net/dst.h
+index f5dfc8fb7b37..dadabbd7d087 100644
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -15,7 +15,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/bug.h>
+ #include <linux/jiffies.h>
+-#include <linux/refcount.h>
++#include <linux/refcount_types.h>
+ #include <linux/rcuref.h>
+ #include <net/neighbour.h>
+ #include <asm/processor.h>
+diff --git a/include/net/flow.h b/include/net/flow.h
+index 335bbc52171c..836ef37c85de 100644
+--- a/include/net/flow.h
++++ b/include/net/flow.h
+@@ -11,7 +11,7 @@
+ #include <linux/in6.h>
+ #include <linux/atomic.h>
+ #include <linux/container_of.h>
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ 
+ struct flow_keys;
+ 
+diff --git a/include/net/fq.h b/include/net/fq.h
+index 99fbe4127b95..c8d44ae1cb65 100644
+--- a/include/net/fq.h
++++ b/include/net/fq.h
+@@ -8,7 +8,7 @@
+ #define __NET_SCHED_FQ_H
+ 
+ #include <linux/skbuff.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/types.h>
+ 
+ struct fq_tin;
+diff --git a/include/net/hwbm.h b/include/net/hwbm.h
+index aa495decec35..7352b01c100d 100644
+--- a/include/net/hwbm.h
++++ b/include/net/hwbm.h
+@@ -2,7 +2,7 @@
+ #ifndef _HWBM_H
+ #define _HWBM_H
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ struct hwbm_pool {
+ 	/* Capacity of the pool */
+diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
+index 9ab4bf704e86..4e62121e1cb6 100644
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -13,7 +13,7 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/string.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/poll.h>
+ #include <linux/kernel.h>
+ #include <linux/sockptr.h>
+diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
+index 5c69fcd3e80e..63fb7bcbda92 100644
+--- a/include/net/inet_hashtables.h
++++ b/include/net/inet_hashtables.h
+@@ -17,7 +17,7 @@
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ #include <linux/socket.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/types.h>
+ 
+ #include <net/inet_connection_sock.h>
+diff --git a/include/net/inet_timewait_sock.h b/include/net/inet_timewait_sock.h
+index b7f313b277ea..b2fb3a0851c9 100644
+--- a/include/net/inet_timewait_sock.h
++++ b/include/net/inet_timewait_sock.h
+@@ -12,7 +12,7 @@
+ #define _INET_TIMEWAIT_SOCK_
+ 
+ #include <linux/list.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/types.h>
+ 
+ #include <net/inet_sock.h>
+diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+index 360b12e61850..c961bab02f02 100644
+--- a/include/net/ip6_fib.h
++++ b/include/net/ip6_fib.h
+@@ -11,7 +11,7 @@
+ 
+ #include <linux/ipv6_route.h>
+ #include <linux/rtnetlink.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/notifier.h>
+ #include <net/dst.h>
+ #include <net/flow.h>
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index ff406ef4fd4a..516586a7eeea 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -11,13 +11,13 @@
+ #include <asm/types.h>                  /* for __uXX types */
+ 
+ #include <linux/list.h>                 /* for struct list_head */
+-#include <linux/spinlock.h>             /* for struct rwlock_t */
++#include <linux/spinlock_types.h>       /* for struct rwlock_t */
+ #include <linux/atomic.h>               /* for struct atomic_t */
+-#include <linux/refcount.h>             /* for struct refcount_t */
++#include <linux/refcount_types.h>       /* for struct refcount_t */
  #include <linux/workqueue.h>
  
- #include <sound/soc.h>
+ #include <linux/compiler.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/bug.h>
+ 
+ #include <net/checksum.h>
+diff --git a/include/net/lib80211.h b/include/net/lib80211.h
+index 973049cb0453..308a352be51f 100644
+--- a/include/net/lib80211.h
++++ b/include/net/lib80211.h
+@@ -30,7 +30,7 @@
+ #include <linux/if.h>
+ #include <linux/skbuff.h>
+ #include <linux/ieee80211.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ 
+ struct seq_file;
+ 
+diff --git a/include/net/llc.h b/include/net/llc.h
+index e250dca03963..3fc0c5ac053f 100644
+--- a/include/net/llc.h
++++ b/include/net/llc.h
+@@ -15,7 +15,7 @@
+ #include <linux/if.h>
+ #include <linux/if_ether.h>
+ #include <linux/list.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/rculist_nulls.h>
+ #include <linux/hash.h>
+ #include <linux/jhash.h>
+diff --git a/include/net/llc_conn.h b/include/net/llc_conn.h
+index 374411b3066c..03843a4738bf 100644
+--- a/include/net/llc_conn.h
++++ b/include/net/llc_conn.h
+@@ -11,7 +11,7 @@
+  *
+  * See the GNU General Public License for more details.
+  */
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <net/llc_if.h>
+ #include <net/sock.h>
+ #include <linux/llc.h>
+diff --git a/include/net/neighbour.h b/include/net/neighbour.h
+index 1197433b3315..2f712abacb09 100644
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -26,7 +26,7 @@
+ 
+ #include <linux/err.h>
+ #include <linux/sysctl.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <net/rtnetlink.h>
+ 
+ struct seq_file;
+diff --git a/include/net/netfilter/nf_conntrack_count.h b/include/net/netfilter/nf_conntrack_count.h
+index e227d997fc71..5dab047e14b2 100644
+--- a/include/net/netfilter/nf_conntrack_count.h
++++ b/include/net/netfilter/nf_conntrack_count.h
+@@ -2,7 +2,7 @@
+ #define _NF_CONNTRACK_COUNT_H
+ 
+ #include <linux/list.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <net/netfilter/nf_conntrack_tuple.h>
+ #include <net/netfilter/nf_conntrack_zones.h>
+ 
+diff --git a/include/net/netns/can.h b/include/net/netns/can.h
+index 48b79f7e6236..f734fe7d5a1c 100644
+--- a/include/net/netns/can.h
++++ b/include/net/netns/can.h
+@@ -6,8 +6,8 @@
+ #ifndef __NETNS_CAN_H__
+ #define __NETNS_CAN_H__
+ 
+-#include <linux/spinlock.h>
+-#include <linux/timer.h>
++#include <linux/spinlock_types.h>
++#include <linux/timer_types.h>
+ 
+ struct can_dev_rcv_lists;
+ struct can_pkg_stats;
+diff --git a/include/net/netns/conntrack.h b/include/net/netns/conntrack.h
+index e2caf55de629..337381866371 100644
+--- a/include/net/netns/conntrack.h
++++ b/include/net/netns/conntrack.h
+@@ -12,7 +12,6 @@
+ #ifdef CONFIG_NF_CT_PROTO_SCTP
+ #include <linux/netfilter/nf_conntrack_sctp.h>
+ #endif
+-#include <linux/seqlock.h>
+ 
+ struct ctl_table_header;
+ struct nf_conntrack_ecache;
+diff --git a/include/net/netns/ipv4.h b/include/net/netns/ipv4.h
+index c356c458b340..1794406d0b84 100644
+--- a/include/net/netns/ipv4.h
++++ b/include/net/netns/ipv4.h
+@@ -6,10 +6,10 @@
+ #ifndef __NETNS_IPV4_H__
+ #define __NETNS_IPV4_H__
+ 
+-#include <linux/uidgid.h>
++#include <linux/uidgid_types.h>
+ #include <net/inet_frag.h>
+ #include <linux/rcupdate.h>
+-#include <linux/seqlock.h>
++#include <linux/seqlock_types.h>
+ #include <linux/siphash.h>
+ 
+ struct ctl_table_header;
+diff --git a/include/net/netns/mctp.h b/include/net/netns/mctp.h
+index 6c5039374021..553a610bc29d 100644
+--- a/include/net/netns/mctp.h
++++ b/include/net/netns/mctp.h
+@@ -7,7 +7,7 @@
+ #define __NETNS_MCTP_H__
+ 
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ 
+ struct netns_mctp {
+diff --git a/include/net/netns/nexthop.h b/include/net/netns/nexthop.h
+index 434239b37014..a1b4587af203 100644
+--- a/include/net/netns/nexthop.h
++++ b/include/net/netns/nexthop.h
+@@ -7,7 +7,7 @@
+ #define __NETNS_NEXTHOP_H__
+ 
+ #include <linux/notifier.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ 
+ struct netns_nexthop {
+ 	struct rb_root		rb_root;	/* tree of nexthops by id */
+diff --git a/include/net/netns/packet.h b/include/net/netns/packet.h
+index aae69bb43cde..babbcff61771 100644
+--- a/include/net/netns/packet.h
++++ b/include/net/netns/packet.h
+@@ -6,7 +6,7 @@
+ #define __NETNS_PACKET_H__
+ 
+ #include <linux/rculist.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ struct netns_packet {
+ 	struct mutex		sklist_lock;
+diff --git a/include/net/netns/sctp.h b/include/net/netns/sctp.h
+index 7eff3d981b89..5f23768e26e5 100644
+--- a/include/net/netns/sctp.h
++++ b/include/net/netns/sctp.h
+@@ -2,7 +2,7 @@
+ #ifndef __NETNS_SCTP_H__
+ #define __NETNS_SCTP_H__
+ 
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <net/snmp.h>
+ 
+ struct sock;
+diff --git a/include/net/netns/smc.h b/include/net/netns/smc.h
+index fc752a50f91b..ef019b1c3b8b 100644
+--- a/include/net/netns/smc.h
++++ b/include/net/netns/smc.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef __NETNS_SMC_H__
+ #define __NETNS_SMC_H__
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/percpu.h>
+ 
+ struct smc_stats_rsn;
+diff --git a/include/net/netns/unix.h b/include/net/netns/unix.h
+index 9859d134d5a8..d5f85c9d7dc7 100644
+--- a/include/net/netns/unix.h
++++ b/include/net/netns/unix.h
+@@ -5,7 +5,7 @@
+ #ifndef __NETNS_UNIX_H__
+ #define __NETNS_UNIX_H__
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ 
+ struct unix_table {
+ 	spinlock_t		*locks;
+diff --git a/include/net/netns/xdp.h b/include/net/netns/xdp.h
+index 06d06cf2b966..412312dbb2fb 100644
+--- a/include/net/netns/xdp.h
++++ b/include/net/netns/xdp.h
+@@ -3,7 +3,7 @@
+ #define __NETNS_XDP_H__
+ 
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/types.h>
+ 
+ struct netns_xdp {
+diff --git a/include/net/netns/xfrm.h b/include/net/netns/xfrm.h
+index 79d382d72ede..8229a19f678c 100644
+--- a/include/net/netns/xfrm.h
++++ b/include/net/netns/xfrm.h
+@@ -3,7 +3,7 @@
+ #define __NETNS_XFRM_H
+ 
+ #include <linux/list.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/rhashtable-types.h>
+ #include <linux/xfrm.h>
+ #include <net/dst_ops.h>
+diff --git a/include/net/phonet/pn_dev.h b/include/net/phonet/pn_dev.h
+index e9dc8dca5817..0539fe45207a 100644
+--- a/include/net/phonet/pn_dev.h
++++ b/include/net/phonet/pn_dev.h
+@@ -11,7 +11,7 @@
+ #define PN_DEV_H
+ 
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ struct net;
+ 
+diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
+index da96e966c807..bab44a435a62 100644
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -11,7 +11,7 @@
+ #include <linux/dynamic_queue_limits.h>
+ #include <linux/list.h>
+ #include <linux/refcount.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/rwsem.h>
+ #include <linux/atomic.h>
+ #include <linux/hashtable.h>
+diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
+index a2310fa995f6..fa4e4861ba8b 100644
+--- a/include/net/sctp/sctp.h
++++ b/include/net/sctp/sctp.h
+@@ -45,7 +45,7 @@
+ #include <linux/in.h>
+ #include <linux/tty.h>
+ #include <linux/proc_fs.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/jiffies.h>
+ #include <linux/idr.h>
+ 
+diff --git a/include/net/sctp/structs.h b/include/net/sctp/structs.h
+index 5a24d6d8522a..5ce02259dfd9 100644
+--- a/include/net/sctp/structs.h
++++ b/include/net/sctp/structs.h
+@@ -42,7 +42,7 @@
+ #include <asm/param.h>		/* We get MAXHOSTNAMELEN.     */
+ #include <linux/atomic.h>		/* This gets us atomic counters.  */
+ #include <linux/skbuff.h>	/* We need sk_buff_head. */
+-#include <linux/workqueue.h>	/* We need tq_struct.	 */
++#include <linux/workqueue_types.h>	/* We need tq_struct.	 */
+ #include <linux/sctp.h>		/* We need sctp* header structs.  */
+ #include <net/sctp/auth.h>	/* We need auth specific structs */
+ #include <net/ip.h>		/* For inet_skb_parm */
+diff --git a/include/net/smc.h b/include/net/smc.h
+index da590f95811e..44a01bd3da10 100644
+--- a/include/net/smc.h
++++ b/include/net/smc.h
+@@ -11,7 +11,7 @@
+ #ifndef _SMC_H
+ #define _SMC_H
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
+ #include "linux/ism.h"
+diff --git a/include/net/sock.h b/include/net/sock.h
+index a9d99a9c583f..bebdc45cf622 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -39,7 +39,7 @@
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/list_nulls.h>
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/cache.h>
+ #include <linux/bitops.h>
+ #include <linux/lockdep.h>
+@@ -55,7 +55,7 @@
+ #include <linux/sched.h>
+ #include <linux/wait.h>
+ #include <linux/cgroup-defs.h>
+-#include <linux/rbtree.h>
++#include <linux/rbtree_types.h>
+ #include <linux/rculist_nulls.h>
+ #include <linux/poll.h>
+ #include <linux/sockptr.h>
+diff --git a/include/net/sock_reuseport.h b/include/net/sock_reuseport.h
+index 6ec140b0a61b..f7e324bdbb1b 100644
+--- a/include/net/sock_reuseport.h
++++ b/include/net/sock_reuseport.h
+@@ -5,7 +5,7 @@
+ #include <linux/filter.h>
+ #include <linux/skbuff.h>
+ #include <linux/types.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <net/sock.h>
+ 
+ extern spinlock_t reuseport_lock;
+diff --git a/include/net/tls.h b/include/net/tls.h
+index 962f0c501111..816b9978bcdc 100644
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -39,7 +39,7 @@
+ #include <linux/crypto.h>
+ #include <linux/socket.h>
+ #include <linux/tcp.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/netdevice.h>
+ #include <linux/rcupdate.h>
+ 
+diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+index 3cb4dc9bd70e..cdb0fcce3b89 100644
+--- a/include/net/xdp_sock.h
++++ b/include/net/xdp_sock.h
+@@ -7,10 +7,10 @@
+ #define _LINUX_XDP_SOCK_H
+ 
+ #include <linux/bpf.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/if_xdp.h>
+-#include <linux/mutex.h>
+-#include <linux/spinlock.h>
++#include <linux/mutex_types.h>
++#include <linux/spinlock_types.h>
+ #include <linux/mm.h>
+ #include <net/sock.h>
+ 
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 21d4f49cd83f..21beecf0d281 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/xfrm.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/list.h>
+ #include <linux/skbuff.h>
+ #include <linux/socket.h>
+diff --git a/include/pcmcia/ss.h b/include/pcmcia/ss.h
+index 7cf7dbbfa131..694e5ae0f245 100644
+--- a/include/pcmcia/ss.h
++++ b/include/pcmcia/ss.h
+@@ -14,7 +14,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/sched.h>	/* task_struct, completion */
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #ifdef CONFIG_CARDBUS
+ #include <linux/pci.h>
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index b7b6b58dd348..3800bb8b9c14 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -19,7 +19,7 @@
+ #include <linux/kref.h>
+ #include <linux/list.h>
+ #include <linux/rwsem.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/irq_poll.h>
+ #include <uapi/linux/if_ether.h>
+ #include <net/ipv6.h>
+diff --git a/include/rdma/rdma_counter.h b/include/rdma/rdma_counter.h
+index 45d5481a7846..5da9a9918d62 100644
+--- a/include/rdma/rdma_counter.h
++++ b/include/rdma/rdma_counter.h
+@@ -6,7 +6,7 @@
+ #ifndef _RDMA_COUNTER_H_
+ #define _RDMA_COUNTER_H_
+ 
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/pid_namespace.h>
+ 
+ #include <rdma/restrack.h>
+diff --git a/include/rdma/rdma_vt.h b/include/rdma/rdma_vt.h
+index c429d6ddb129..5f8ec8cafa90 100644
+--- a/include/rdma/rdma_vt.h
++++ b/include/rdma/rdma_vt.h
+@@ -11,7 +11,7 @@
+  * rdmavt layer.
+  */
+ 
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/list.h>
+ #include <linux/hash.h>
+ #include <rdma/ib_verbs.h>
+diff --git a/include/scsi/libfc.h b/include/scsi/libfc.h
+index eca6fd42d7f7..f0ba69c853ee 100644
+--- a/include/scsi/libfc.h
++++ b/include/scsi/libfc.h
+@@ -8,7 +8,7 @@
+ #ifndef _LIBFC_H_
+ #define _LIBFC_H_
+ 
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/if.h>
+ #include <linux/percpu.h>
+ #include <linux/refcount.h>
+diff --git a/include/scsi/libfcoe.h b/include/scsi/libfcoe.h
+index 8300ef1a982e..f62c686ab43c 100644
+--- a/include/scsi/libfcoe.h
++++ b/include/scsi/libfcoe.h
+@@ -13,7 +13,7 @@
+ #include <linux/if_ether.h>
+ #include <linux/netdevice.h>
+ #include <linux/skbuff.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <linux/local_lock.h>
+ #include <linux/random.h>
+ #include <scsi/fc/fc_fcoe.h>
+diff --git a/include/scsi/libiscsi.h b/include/scsi/libiscsi.h
+index 7282555adfd5..01f13729ad24 100644
+--- a/include/scsi/libiscsi.h
++++ b/include/scsi/libiscsi.h
+@@ -12,9 +12,9 @@
+ 
+ #include <linux/types.h>
+ #include <linux/wait.h>
+-#include <linux/mutex.h>
+-#include <linux/timer.h>
+-#include <linux/workqueue.h>
++#include <linux/mutex_types.h>
++#include <linux/timer_types.h>
++#include <linux/workqueue_types.h>
+ #include <linux/kfifo.h>
+ #include <linux/refcount.h>
+ #include <scsi/iscsi_proto.h>
+diff --git a/include/scsi/libsas.h b/include/scsi/libsas.h
+index f5257103fdb6..943b850a5981 100644
+--- a/include/scsi/libsas.h
++++ b/include/scsi/libsas.h
+@@ -10,7 +10,7 @@
+ #define _LIBSAS_H_
+ 
+ 
+-#include <linux/timer.h>
++#include <linux/timer_types.h>
+ #include <linux/pci.h>
+ #include <scsi/sas.h>
+ #include <linux/libata.h>
+diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
+index b1569693da53..810bd80b4f2c 100644
+--- a/include/scsi/scsi_cmnd.h
++++ b/include/scsi/scsi_cmnd.h
+@@ -3,7 +3,7 @@
+ #define _SCSI_SCSI_CMND_H
+ 
+ #include <linux/dma-mapping.h>
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <linux/t10-pi.h>
+ #include <linux/list.h>
+ #include <linux/types.h>
+diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+index 4dceabb9dbe1..c70aafd415b5 100644
+--- a/include/scsi/scsi_device.h
++++ b/include/scsi/scsi_device.h
+@@ -3,8 +3,8 @@
+ #define _SCSI_SCSI_DEVICE_H
+ 
+ #include <linux/list.h>
+-#include <linux/spinlock.h>
+-#include <linux/workqueue.h>
++#include <linux/spinlock_types.h>
++#include <linux/workqueue_types.h>
+ #include <linux/blk-mq.h>
+ #include <scsi/scsi.h>
+ #include <linux/atomic.h>
+diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+index 2e6aaee6042d..7a05536ea238 100644
+--- a/include/scsi/scsi_host.h
++++ b/include/scsi/scsi_host.h
+@@ -5,8 +5,8 @@
+ #include <linux/device.h>
+ #include <linux/list.h>
+ #include <linux/types.h>
+-#include <linux/workqueue.h>
+-#include <linux/mutex.h>
++#include <linux/workqueue_types.h>
++#include <linux/mutex_types.h>
+ #include <linux/seq_file.h>
+ #include <linux/blk-mq.h>
+ #include <scsi/scsi.h>
+diff --git a/include/scsi/scsi_tcq.h b/include/scsi/scsi_tcq.h
+index ea7848e74d25..ad7ba7fa465f 100644
+--- a/include/scsi/scsi_tcq.h
++++ b/include/scsi/scsi_tcq.h
+@@ -2,7 +2,7 @@
+ #ifndef _SCSI_SCSI_TCQ_H
+ #define _SCSI_SCSI_TCQ_H
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <scsi/scsi_cmnd.h>
+ #include <scsi/scsi_device.h>
+ #include <scsi/scsi_host.h>
+diff --git a/include/scsi/scsi_transport.h b/include/scsi/scsi_transport.h
+index a0458bda3148..f417e402cfa7 100644
+--- a/include/scsi/scsi_transport.h
++++ b/include/scsi/scsi_transport.h
+@@ -8,7 +8,7 @@
+ #define SCSI_TRANSPORT_H
+ 
+ #include <linux/transport_class.h>
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <linux/bug.h>
+ #include <scsi/scsi_host.h>
+ #include <scsi/scsi_device.h>
+diff --git a/include/scsi/scsi_transport_iscsi.h b/include/scsi/scsi_transport_iscsi.h
+index fb3399e4cd29..ea2c9da4c05e 100644
+--- a/include/scsi/scsi_transport_iscsi.h
++++ b/include/scsi/scsi_transport_iscsi.h
+@@ -12,7 +12,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <scsi/iscsi_if.h>
+ 
+ struct scsi_transport_template;
+diff --git a/include/scsi/scsi_transport_sas.h b/include/scsi/scsi_transport_sas.h
+index 0e75b9277c8c..32c73326d34b 100644
+--- a/include/scsi/scsi_transport_sas.h
++++ b/include/scsi/scsi_transport_sas.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/transport_class.h>
+ #include <linux/types.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <scsi/sas.h>
+ #include <linux/bsg-lib.h>
+ 
+diff --git a/include/scsi/scsi_transport_spi.h b/include/scsi/scsi_transport_spi.h
+index 78324502b1c9..a5689b9423e8 100644
+--- a/include/scsi/scsi_transport_spi.h
++++ b/include/scsi/scsi_transport_spi.h
+@@ -8,7 +8,7 @@
+ #define SCSI_TRANSPORT_SPI_H
+ 
+ #include <linux/transport_class.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ struct scsi_transport_template;
+ struct scsi_target;
+diff --git a/include/scsi/scsi_transport_srp.h b/include/scsi/scsi_transport_srp.h
+index dfc78aa112ad..b3619dcb795b 100644
+--- a/include/scsi/scsi_transport_srp.h
++++ b/include/scsi/scsi_transport_srp.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/transport_class.h>
+ #include <linux/types.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ 
+ #define SRP_RPORT_ROLE_INITIATOR 0
+ #define SRP_RPORT_ROLE_TARGET 1
+diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
+index af793f2a0ec4..768caf98b023 100644
+--- a/include/soc/fsl/qe/qe.h
++++ b/include/soc/fsl/qe/qe.h
+@@ -14,7 +14,7 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/genalloc.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/errno.h>
+ #include <linux/err.h>
+ #include <soc/fsl/cpm.h>
+diff --git a/include/sound/ac97_codec.h b/include/sound/ac97_codec.h
+index 4bd3be3a3192..9891d4ec33ee 100644
+--- a/include/sound/ac97_codec.h
++++ b/include/sound/ac97_codec.h
+@@ -12,7 +12,7 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ #include <sound/ac97/regs.h>
+ #include <sound/pcm.h>
+ #include <sound/control.h>
+diff --git a/include/sound/core.h b/include/sound/core.h
+index a4d06410638b..0c512acac050 100644
+--- a/include/sound/core.h
++++ b/include/sound/core.h
+@@ -9,7 +9,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/sched.h>		/* wake_up() */
+-#include <linux/mutex.h>		/* struct mutex */
++#include <linux/mutex_types.h>		/* struct mutex */
+ #include <linux/rwsem.h>		/* struct rw_semaphore */
+ #include <linux/stringify.h>
+ #include <linux/printk.h>
+diff --git a/include/sound/emu10k1.h b/include/sound/emu10k1.h
+index 1af9e6819392..96fb32cbeb7b 100644
+--- a/include/sound/emu10k1.h
++++ b/include/sound/emu10k1.h
+@@ -16,7 +16,7 @@
+ #include <sound/pcm-indirect.h>
+ #include <sound/timer.h>
+ #include <linux/interrupt.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ #include <linux/firmware.h>
+ #include <linux/io.h>
+ 
+diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
+index f31cabf0158c..46678a38dbb9 100644
+--- a/include/sound/rawmidi.h
++++ b/include/sound/rawmidi.h
+@@ -9,10 +9,10 @@
+ 
+ #include <sound/asound.h>
+ #include <linux/interrupt.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/wait.h>
+-#include <linux/mutex.h>
+-#include <linux/workqueue.h>
++#include <linux/mutex_types.h>
++#include <linux/workqueue_types.h>
+ #include <linux/device.h>
+ 
+ #if IS_ENABLED(CONFIG_SND_SEQUENCER)
+diff --git a/include/sound/util_mem.h b/include/sound/util_mem.h
+index 3403b8f4dc86..ad9858a16c0e 100644
+--- a/include/sound/util_mem.h
++++ b/include/sound/util_mem.h
+@@ -3,7 +3,7 @@
+ #define __SOUND_UTIL_MEM_H
+ 
+ #include <linux/list.h>
+-#include <linux/mutex.h>
++#include <linux/mutex_types.h>
+ /*
+  *  Copyright (C) 2000 Takashi Iwai <tiwai@suse.de>
+  *
+diff --git a/include/target/iscsi/iscsi_target_stat.h b/include/target/iscsi/iscsi_target_stat.h
+index ff6a47209313..007a0364281e 100644
+--- a/include/target/iscsi/iscsi_target_stat.h
++++ b/include/target/iscsi/iscsi_target_stat.h
+@@ -3,7 +3,7 @@
+ #define ISCSI_TARGET_STAT_H
+ 
+ #include <linux/types.h>
+-#include <linux/spinlock.h>
++#include <linux/spinlock_types.h>
+ #include <linux/socket.h>
+ 
+ /*
+diff --git a/include/trace/events/block.h b/include/trace/events/block.h
+index 0e128ad51460..6d50561a8422 100644
+--- a/include/trace/events/block.h
++++ b/include/trace/events/block.h
+@@ -6,7 +6,7 @@
+ #define _TRACE_BLOCK_H
+ 
+ #include <linux/blktrace_api.h>
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <linux/buffer_head.h>
+ #include <linux/tracepoint.h>
+ 
+diff --git a/include/trace/events/kyber.h b/include/trace/events/kyber.h
+index 9d44781efc1c..d5aca7d40514 100644
+--- a/include/trace/events/kyber.h
++++ b/include/trace/events/kyber.h
+@@ -5,7 +5,7 @@
+ #if !defined(_TRACE_KYBER_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_KYBER_H
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <linux/tracepoint.h>
+ 
+ #define DOMAIN_LEN		16
+diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
+index 9ebd081e057e..734c28f009a5 100644
+--- a/include/trace/events/lock.h
++++ b/include/trace/events/lock.h
+@@ -19,7 +19,7 @@
+ 
+ #ifdef CONFIG_LOCKDEP
+ 
+-#include <linux/lockdep.h>
++#include <linux/lockdep_types.h>
+ 
+ TRACE_EVENT(lock_acquire,
+ 
+diff --git a/include/trace/events/mmc.h b/include/trace/events/mmc.h
+index 7b706ff21335..0bef571ed465 100644
+--- a/include/trace/events/mmc.h
++++ b/include/trace/events/mmc.h
+@@ -5,7 +5,7 @@
+ #if !defined(_TRACE_MMC_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_MMC_H
+ 
+-#include <linux/blkdev.h>
++#include <linux/blk_types.h>
+ #include <linux/mmc/core.h>
+ #include <linux/mmc/host.h>
+ #include <linux/tracepoint.h>
+diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
+index 262d52021c23..39632ee71773 100644
+--- a/include/trace/events/workqueue.h
++++ b/include/trace/events/workqueue.h
+@@ -6,7 +6,7 @@
+ #define _TRACE_WORKQUEUE_H
+ 
+ #include <linux/tracepoint.h>
+-#include <linux/workqueue.h>
++#include <linux/workqueue_types.h>
+ 
+ struct pool_workqueue;
+ 
 -- 
 2.39.2
 
