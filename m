@@ -1,148 +1,241 @@
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF0169965
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186EF605D5
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706692255; cv=none; b=iSZ442yQj9w1epGMOfnbKoamvNZ+elZiKz2ff8uvmnTE3WRUO5UkjZGC3268M3LC3huRAGJQ5i8Tus8URYvb2DmPzXqdTXn0ohBoFxNdvJ505oKqrQsp6U5i3Xlj2ucSjTO4orOo9KaPQB0E8gpQbwBKuo8qYtdjUqvsCkQXRMM=
+	t=1706692270; cv=none; b=l1ktIc3BOZjQWkUCsWA3CBXwAdvVjTmjENGTKaOTkAy3jyFFlrkmGDVX1Vx8hCK23JYn30z5ak02+TC+bmRkd63e3QEFjRmFSwGk96MiBwQQ3kGOQDio3BEdfbOc1e+d3cPy6ZhhSkCa2Ifyb629qT5yMwTrrJZGky5U7L1rcD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706692255; c=relaxed/simple;
-	bh=tZ2Kkk4OTFSJm493uk6H8hT3BpCU0VrAwNM5XClLaCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jhs1pGxIOrf2ESjBeyvFV3Eh+GG9StGPnK6gQe02SJafTcHqnjgM4LLo/5V1hc5Ba+4ymj7DyfgIy/PViMdAdlGWYhQ7PA28mgw5SO9ECnSjNL6VMqnn8C0BtlhywgWUh74mG5jNSW1zZq54K6Nhs/UEXP85wk/gKoAW397J26U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1706691568-086e230f2933e90001-xx1T2L
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id CpJE2AnaHniHCIlk (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 31 Jan 2024 16:59:28 +0800 (CST)
-X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
- 2024 16:59:28 +0800
-Received: from [10.32.57.248] (10.32.57.248) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 31 Jan
- 2024 16:59:25 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Message-ID: <4ef18ceb-68ae-4e09-a04a-b268c7442c52@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.32.57.248
-Date: Wed, 31 Jan 2024 16:59:24 +0800
+	s=arc-20240116; t=1706692270; c=relaxed/simple;
+	bh=NH2etRj/6qjghtCNgvl/AG6envctjUG+1+4PACKTM48=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sT7icDPXnVFCZkAUpaQ9uXz3VFHydEuHPfCAZcFGxIM3jSsrN82kfzMKFKoklCpVv0xKdKF7e61NRWBFjnafHOUZJlcb+a0gz6Qvrf0TRXP+a63dwWQhDeMtgCoADk62huHmMHNizm3hcv8M27x3tLCOpcy77VfOfvNTvv2rl7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=CdTe1YQU; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CdTe1YQU"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a27e7b70152so186560866b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 01:11:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1706692267; x=1707297067; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORBEpQ5F08UVhnCzKa+jzZ+oJJNJsZKWbQ0DCuxPaWc=;
+        b=CdTe1YQUzexoGnXkejwtL73hxANu+i1V3y0cjRlzNu57zGNnwytqoKXFyowqBJs58/
+         jhYSSdcMMpB+cAE227b92rcJGVqqEes7E1xXMswBb8TVQM+ICNgArqdplfDoa2AQLNXg
+         vICo0cfxNGunjuUMuTkBSAmbr3MER2eTZHglM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706692267; x=1707297067;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ORBEpQ5F08UVhnCzKa+jzZ+oJJNJsZKWbQ0DCuxPaWc=;
+        b=M1kkYjWXLlH7Pto44JEavGCoepYv5VbOI/KfoFW7lRzwJxFxHZwNeakzxQPMI6gUV9
+         vCaiFKOj+LIo4YPv8TRvD9wMtfIg5yVliDdW6b44elPB8YawWBITT1P8f885wcDaqq+d
+         bgARmodGEAhORgoYpyqfMi32GCQW5YRAyaG5+8PY1GioHpDCIlZ0TYxsrDcY1RGxYm6Z
+         bDjFefkDnK7IyihI07t8dIiAgXgAq47FwWcj6b1zjb0UchIxlsiT51X0HF1cB1H5TgW4
+         D24LYzGhPdHIhGwu/N4uAMCEuYfDF3wgMn8GmSs+uIon4Hr+mKDdlx9qF6AxM5mFOG+7
+         nckw==
+X-Gm-Message-State: AOJu0Ywkj45sIpbMGxQL3seLK0tz8vgd8XpFlOkr96FtP1kLxrjHgWha
+	oRarNVzassOzgen1z6riKVNvEOlzTQdcOH+n0FgwNGJymFf1kl7MCxUBFRpbTQs=
+X-Google-Smtp-Source: AGHT+IHHkRoncH5TZwJ2KO/1SVucsjdiD6pGPJaM5NKeKM2EzUdubU6eh2uy4dvG7OzWu32QgOh+eg==
+X-Received: by 2002:a17:906:4a52:b0:a35:b6a1:712d with SMTP id a18-20020a1709064a5200b00a35b6a1712dmr697445ejv.2.1706692266392;
+        Wed, 31 Jan 2024 01:11:06 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id j9-20020a170906254900b00a311685890csm5987876ejb.22.2024.01.31.01.11.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 01:11:05 -0800 (PST)
+Date: Wed, 31 Jan 2024 10:11:03 +0100
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Jason-JH Lin =?utf-8?B?KOael+edv+elpSk=?= <Jason-JH.Lin@mediatek.com>
+Cc: "daniel@ffwll.ch" <daniel@ffwll.ch>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
+	"michel@daenzer.net" <michel@daenzer.net>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"mikita.lipski@amd.com" <mikita.lipski@amd.com>,
+	"dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"maxime@cerno.tech" <maxime@cerno.tech>,
+	"daniel.vetter@intel.com" <daniel.vetter@intel.com>,
+	"nicholas.kazlauskas@amd.com" <nicholas.kazlauskas@amd.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"quic_abhinavk@quicinc.com" <quic_abhinavk@quicinc.com>,
+	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	"manasi.d.navare@intel.com" <manasi.d.navare@intel.com>,
+	"lucas.demarchi@intel.com" <lucas.demarchi@intel.com>,
+	"sean@poorly.run" <sean@poorly.run>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
+	"fshao@chromium.org" <fshao@chromium.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"jani.nikula@intel.com" <jani.nikula@intel.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
+	"freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/atomic-helpers: remove legacy_cursor_update hacks
+Message-ID: <ZboOp7JOp5teV1Cs@phenom.ffwll.local>
+Mail-Followup-To: Jason-JH Lin =?utf-8?B?KOael+edv+elpSk=?= <Jason-JH.Lin@mediatek.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"michel@daenzer.net" <michel@daenzer.net>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"mikita.lipski@amd.com" <mikita.lipski@amd.com>,
+	"dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"maxime@cerno.tech" <maxime@cerno.tech>,
+	"daniel.vetter@intel.com" <daniel.vetter@intel.com>,
+	"nicholas.kazlauskas@amd.com" <nicholas.kazlauskas@amd.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"quic_abhinavk@quicinc.com" <quic_abhinavk@quicinc.com>,
+	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	"manasi.d.navare@intel.com" <manasi.d.navare@intel.com>,
+	"lucas.demarchi@intel.com" <lucas.demarchi@intel.com>,
+	"sean@poorly.run" <sean@poorly.run>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
+	"fshao@chromium.org" <fshao@chromium.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"jani.nikula@intel.com" <jani.nikula@intel.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
+	"freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>
+References: <20230216111214.3489223-1-daniel.vetter@ffwll.ch>
+ <20230307145613.xvhru3fpcudlpazt@houat>
+ <aac416742920953999a9ce230ac68139bf5b9790.camel@mediatek.com>
+ <ZbKlsTEvGPiGtzS3@phenom.ffwll.local>
+ <1349365de499bae53a8c868738c7270fc16813d5.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] x86/cpufeatures: Add CPU feature flags for Zhaoxin
- Hash Engine
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH v2 2/3] x86/cpufeatures: Add CPU feature flags for Zhaoxin
- Hash Engine
-To: "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>
-CC: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <seanjc@google.com>, <kim.phillips@amd.com>,
-	<kirill.shutemov@linux.intel.com>, <jmattson@google.com>,
-	<babu.moger@amd.com>, <kai.huang@intel.com>, <acme@redhat.com>,
-	<aik@amd.com>, <namhyung@kernel.org>, <CobeChen@zhaoxin.com>,
-	<TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>, <GeorgeXue@zhaoxin.com>
-References: <20240123022852.2475-1-TonyWWang-oc@zhaoxin.com>
- <20240123022852.2475-3-TonyWWang-oc@zhaoxin.com>
- <20240123094427.GAZa-Ke5d2Kwyk2nSU@fat_crate.local>
- <AADBA4D3-3D36-4AB6-B0D1-510DD5347430@zytor.com>
-From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-In-Reply-To: <AADBA4D3-3D36-4AB6-B0D1-510DD5347430@zytor.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1706691568
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 3419
-X-Barracuda-BRTS-Status: 0
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.120182
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+In-Reply-To: <1349365de499bae53a8c868738c7270fc16813d5.camel@mediatek.com>
+X-Operating-System: Linux phenom 6.6.11-amd64 
 
+On Wed, Jan 31, 2024 at 05:17:08AM +0000, Jason-JH Lin (林睿祥) wrote:
+> On Thu, 2024-01-25 at 19:17 +0100, Daniel Vetter wrote:
+> >  	 
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> >  On Tue, Jan 23, 2024 at 06:09:05AM +0000, Jason-JH Lin (林睿祥) wrote:
+> > > Hi Maxime, Daniel,
+> > > 
+> > > We encountered similar issue with mediatek SoCs.
+> > > 
+> > > We have found that in drm_atomic_helper_commit_rpm(), when
+> > disabling
+> > > the cursor plane, the old_state->legacy_cursor_update in
+> > > drm_atomic_wait_for_vblank() is set to true.
+> > > As the result, we are not actually waiting for a vlbank to wait for
+> > our
+> > > hardware to close the cursor plane. Subsequently, the execution
+> > > proceeds to drm_atomic_helper_cleanup_planes() to  free the cursor
+> > > buffer. This can lead to use-after-free issues with our hardware.
+> > > 
+> > > Could you please apply this patch to fix our problem?
+> > > Or are there any considerations for not applying this patch?
+> > 
+> > Mostly it needs someone to collect a pile of acks/tested-by and then
+> > land
+> > it.
+> > 
+> 
+> Got it. I would add tested-by tag for mediatek SoC.
+> 
+> > I'd be _very_ happy if someone else can take care of that ...
+> > 
+> > There's also the potential issue that it might slow down some of the
+> > legacy X11 use-cases that really needed a non-blocking cursor, but I
+> > think
+> > all the drivers where this matters have switched over to the async
+> > plane
+> > update stuff meanwhile. So hopefully that's good.
+> > 
+> 
+> I think all the drivers should have switched to async plane update.
+> 
+> Can we add the checking condition to see if atomic_async_update/check
+> function are implemented?
 
-On 2024/1/23 23:42, H. Peter Anvin wrote:
->
-> [这封邮件来自外部发件人 谨防风险]
->
-> On January 23, 2024 1:44:27 AM PST, Borislav Petkov <bp@alien8.de> wrote:
->> On Tue, Jan 23, 2024 at 10:28:51AM +0800, Tony W Wang-oc wrote:
->>> Zhaoxin CPUs have implemented the SHA(Secure Hash Algorithm) as its
->>> instrucions.
->>> Add two CPU feature flags indicated by CPUID.(EAX=C0000001,ECX=0):EDX
->>> bit 25/26 which will be used by Zhaoxin SHA driver.
->>>
->>> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
->>> ---
->>>   arch/x86/include/asm/cpufeatures.h       | 4 +++-
->>>   tools/arch/x86/include/asm/cpufeatures.h | 4 +++-
->>>   2 files changed, 6 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
->>> index 29cb275a219d..28b0e62dbdf5 100644
->>> --- a/arch/x86/include/asm/cpufeatures.h
->>> +++ b/arch/x86/include/asm/cpufeatures.h
->>> @@ -145,7 +145,7 @@
->>>   #define X86_FEATURE_RDRAND          ( 4*32+30) /* RDRAND instruction */
->>>   #define X86_FEATURE_HYPERVISOR              ( 4*32+31) /* Running on a hypervisor */
->>>
->>> -/* VIA/Cyrix/Centaur-defined CPU features, CPUID level 0xC0000001, word 5 */
->>> +/* VIA/Cyrix/Centaur/Zhaoxin-defined CPU features, CPUID level 0xC0000001, word 5 */
->> Does that mean that all those companies agree on the contents of this
->> CPUID leaf?
->>
->>>   #define X86_FEATURE_XSTORE          ( 5*32+ 2) /* "rng" RNG present (xstore) */
->>>   #define X86_FEATURE_XSTORE_EN               ( 5*32+ 3) /* "rng_en" RNG enabled */
->>>   #define X86_FEATURE_XCRYPT          ( 5*32+ 6) /* "ace" on-CPU crypto (xcrypt) */
->>> @@ -156,6 +156,8 @@
->>>   #define X86_FEATURE_PHE_EN          ( 5*32+11) /* PHE enabled */
->>>   #define X86_FEATURE_PMM                     ( 5*32+12) /* PadLock Montgomery Multiplier */
->>>   #define X86_FEATURE_PMM_EN          ( 5*32+13) /* PMM enabled */
->>> +#define X86_FEATURE_PHE2            ( 5*32+25) /* "phe2" Zhaoxin Hash Engine */
->>> +#define X86_FEATURE_PHE2_EN         ( 5*32+26) /* "phe2_en" PHE2 enabled */
->>                                                      ^^^^^^^^^
->>
->> From: Documentation/arch/x86/cpuinfo.rst
->>
->> "a: Feature flags can be derived from the contents of CPUID leaves.
->> ------------------------------------------------------------------
->> These feature definitions are organized mirroring the layout of CPUID
->> leaves and grouped in words with offsets as mapped in enum cpuid_leafs
->> in cpufeatures.h (see arch/x86/include/asm/cpufeatures.h for details).
->> If a feature is defined with a X86_FEATURE_<name> definition in
->> cpufeatures.h, and if it is detected at run time, the flags will be
->> displayed accordingly in /proc/cpuinfo. For example, the flag "avx2"
->> comes from X86_FEATURE_AVX2 in cpufeatures.h."
->>
->> Is your grep broken?
->>
-> Well, Centaur bought Cyrix, and then VIA bought Centaur. I think Zhaoxin is a joint venture between VIA and the City of Shanghai, or something like that?
+Pretty sure not all have done that, so really it boils down to whether we
+break a real user's use-case. Which pretty much can only be checked by
+merging the patch (hence the requirement to get as many acks as possible
+from display drivers) and then being willing to handle any fallout that's
+reported as regressions for a specific driver.
 
-Yes, Zhaoxin is a joint venture including VIA and Shanghai Alliance 
-Investment Ltd.
+It's a pile of work, at least when it goes south, that's why I'm looking
+for volunteers.
 
-VIA has not designed new CPU products for a long time, nor maintained 
-the previous products.
+Note that handling the fallout doesn't mean you have to fix that specific
+driver, the only realistic option might be to reinstate the legacy cursor
+behaviour, but as an explicit opt-in that only that specific driver
+enables.
 
-Zhaoxin is currently designing and releasing new CPU products, and VIA 
-understands and agrees that Zhaoxin uses the contents of this CPUID leaf.
+So maybe for next round of that patch it might be good to have a 2nd patch
+which implements this fallback plan in the shared atomic modeset code?
 
-Sorry for late!
+Cheers, Sima
 
+> 
+> Regards,
+> Jason-JH.Lin
+> 
+> > Cheers, Sima
+> > > 
+> > > Regards,
+> > > Jason-JH.Lin
+> > > 
+> > > On Tue, 2023-03-07 at 15:56 +0100, Maxime Ripard wrote:
+> > > > Hi,
+> > > > 
+> > > > On Thu, Feb 16, 2023 at 12:12:13PM +0100, Daniel Vetter wrote:
+> > > > > The stuff never really worked, and leads to lots of fun because
+> > it
+> > > > > out-of-order frees atomic states. Which upsets KASAN, among
+> > other
+> > > > > things.
+> > > > > 
+> > > > > For async updates we now have a more solid solution with the
+> > > > > ->atomic_async_check and ->atomic_async_commit hooks. Support
+> > for
+> > > > > that
+> > > > > for msm and vc4 landed. nouveau and i915 have their own commit
+> > > > > routines, doing something similar.
+> > > > > 
+> > > > > For everyone else it's probably better to remove the use-after-
+> > free
+> > > > > bug, and encourage folks to use the async support instead. The
+> > > > > affected drivers which register a legacy cursor plane and don't
+> > > > > either
+> > > > > use the new async stuff or their own commit routine are:
+> > amdgpu,
+> > > > > atmel, mediatek, qxl, rockchip, sti, sun4i, tegra, virtio, and
+> > > > > vmwgfx.
+> > > > > 
+> > > > > Inspired by an amdgpu bug report.
+> > > > 
+> > > > Thanks for submitting that patch. It's been in the downstream RPi
+> > > > tree
+> > > > for a while, so I'd really like it to be merged eventually :)
+> > > > 
+> > > > Acked-by: Maxime Ripard <maxime@cerno.tech>
+> > > > 
+> > > > Maxime
+> > 
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
