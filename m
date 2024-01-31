@@ -1,99 +1,88 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902DE3FB1B;
-	Wed, 31 Jan 2024 19:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A509F3EA76
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 19:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706730134; cv=none; b=lulEF9wPer63pA3GkKIWklfWP0ZJYRqXJoDXT17TjmNHrhuw0HJnzc7T4izCWv9vWOkD5OeqDD+f+rgIyBA6GhOdQwqu7lEGkb5EamOHm1koKklbu+Q6n7UlB7toGy6vInVTmSc/AVDZ/8+xn0q7OrVbmfGIE2TCvJB+4xCxlgE=
+	t=1706730187; cv=none; b=BOwI9uE5YDSDqelogy6MO2aP5cA1uSRfWq7eLWG9jeaNTHW9WLtzMtYeJI7iKGTGs94B0n/PLu/y8KUbT6j+xa+UvGUaf7TDkoXevJ/RfXxt3havS057Y8d6BGn+eXs4U0g5Qd7TwPOVCxrN8Bk6Ns7KFYtvB9tqH4y7dbYYIEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706730134; c=relaxed/simple;
-	bh=HfEeR4MwJftRCskWBfPPSp7AlKEy7Zjknx2BVaGOJBQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mWYLW2kFWHHDXiMB16TSnRq0FoMoVRPOKfKNMc5vEFXv0YbOyCM5IDIm8CpR+P87GGoxSTXZVEtrEb8REt9SL6K6ktEir6im384QaU0r/BtTCTsKMaM+iW7qbdWjbOywYmfZBclm5MNkQTPbZ4koYSIACHTY5kzX2Piro7yMKWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=vpLA9WZb; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1706730187; c=relaxed/simple;
+	bh=5LurfDzDMlU/+e4WHlA9quWo6BsFXeuGeJjyZPZVAOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RMntKNtyaKPpJLd3aOgcACi9rkp6wt4AEiWb98hL49eCjQQC3euCC4WjafXUp1njbQW7QeVKcC8cPMxNa20hV0dK6RJpQh4HX9ei4UoJbLqGMau5h3CTGMS6M+iafbYixwcuuLqu2O5OwZLeEq9n8pxcTVwa0b2Qx73xyGJlij0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LIcyY7Z4; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="vpLA9WZb"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id A02F422B70;
-	Wed, 31 Jan 2024 20:42:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1706730130;
-	bh=+K3WVKgZ1fWnpN1m6qoOBzVUSoAk5LMmTV/l3Hp8dMU=; h=From:To:Subject;
-	b=vpLA9WZbGyS5yGYnXdvEOeicCcSD8At9fQJ0HSzQVEvS4QTiZsOss7LArzGKItS1Y
-	 rgQLbPcwPMoLFvCXJ6KbDnlh3QzXvlIE36EWtHbTKJv1dhNuJyAfWToxxDmWJ/fNbJ
-	 87NwCIEjzO7iDLhtkYhpLiDvBQCDKxYqC2ldxZlLtZy4jrYbzWALolIHqbtCdqz2Lr
-	 W+HYj6+Zq92UGlubi3VZUJYDyzHw54BPSdbw/a8l3QOVeKSsROKQN3PH7SSRwCu7Qa
-	 CyLpN17qrN/is5nPRH3cAOk7kfEisnNA+6Uw+jVCSK5ShxX2iZdxvfIczDrJL2GDqd
-	 QDXPEjpqdM0qw==
-Date: Wed, 31 Jan 2024 20:42:07 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: carlos.song@nxp.com
-Cc: broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, linux-imx@nxp.com, benjamin@bigler.one,
-	stefanmoring@gmail.com, linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] spi: imx: fix the burst length at DMA mode and CPU
- mode
-Message-ID: <20240131194207.GB12870@francesco-nb>
-References: <20240131101916.437398-1-carlos.song@nxp.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIcyY7Z4"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-60403c28ff6so1629107b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:43:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706730184; x=1707334984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5LurfDzDMlU/+e4WHlA9quWo6BsFXeuGeJjyZPZVAOA=;
+        b=LIcyY7Z4JAonoXYcKTcEcdwcvTlh8lJffcT+NJs9VnuJiK8WaVRkDYji7C1SmHz1Dl
+         SJOgCGV3kZDTBHsCMLYBanv63QrXIK6tNsIy15Dbae8K0baedqcGRI4G8v/NLh7qtWKk
+         pN8vDLsRqC7lMjscShrbTTpUxVrdSpzjj7i0VxXsnIMzJ8vpHZ30J+uFlDv6blmMY70N
+         Dznc8f05/WvYZc7DrBRFCqi5aQzi/JnC4kdd32jWPEW2bj4dTrvVsVP0UiSoy4jI3VUz
+         RIuc88yiiYcT/VNI71y8OnavUl63P1PFPxKHty0wrbQtkyTsGFfUvYvKOgXH2bZ7vfxR
+         RmAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706730184; x=1707334984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5LurfDzDMlU/+e4WHlA9quWo6BsFXeuGeJjyZPZVAOA=;
+        b=J3d6e28K2uBuf5q26VRnnc04BlzhnaVW4Q0C2cEBwy2wYVz5PdYuoe9A1oVscFLl5b
+         mXL4Sh1vInTfpdZzlG7TbNtRnW//KKMe5xBZQiKFpxoD/aLRFxVaIlyazflcQ7dX7r5O
+         u/eleslHQihYCZYumROnxhv4DeKoOWC0nf+BF4vy0cm19l/qSmnuQXStkHpy7WR7FDk1
+         WdbKxqSCs4jU2rBtWJOGVjCaUqOZDI7bNvO1JT7denaMbvu0CQoe9oBBsK96SFiT+jhi
+         xFusCx3UUWnhssOrxs5spKiK0X+P8N3VbUFap78yu4RuRzDQa6M/v9BBH73yRi7QgDMU
+         ZbRg==
+X-Gm-Message-State: AOJu0YzD/1HmwuJICne8KOLP/xCHYrPV63Fou9cUr2VHp+v4+M4LAsGQ
+	oA8UE5X2P3rc01Okm1bTBHbm5F2Lnrs19ZHXkUyKAAQmQy4dKHE2ykqMnRo38lUEb0ORiDiiWSj
+	zFiUV2tAERA2TJuuO5zuCX/WnsYIqQlFBsSgPtg==
+X-Google-Smtp-Source: AGHT+IFNchrTJN/laRoFT/serLUkj7SLPdu4ZsP2h1VQRwyjVfP96PoaTsrUDUW7Vv3PJ2nUnCiNh4c8poZyV3/bdYY=
+X-Received: by 2002:a81:9103:0:b0:5ff:4b02:73b9 with SMTP id
+ i3-20020a819103000000b005ff4b0273b9mr2679922ywg.21.1706730184634; Wed, 31 Jan
+ 2024 11:43:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131101916.437398-1-carlos.song@nxp.com>
+References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-9-brgl@bgdev.pl>
+In-Reply-To: <20240130124828.14678-9-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 31 Jan 2024 20:42:53 +0100
+Message-ID: <CACRpkdah4My-nArTpnhV3sovT9SaUZJjrMaXmm67MFfrhcW6qQ@mail.gmail.com>
+Subject: Re: [PATCH 08/22] gpio: sysfs: use gpio_device_find() to iterate over
+ existing devices
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 06:19:16PM +0800, carlos.song@nxp.com wrote:
-> From: Carlos Song <carlos.song@nxp.com>
-> 
-> For DMA mode, the bus width of the DMA is equal to the size of data
-> word, so burst length should be configured as bits per word.
-> 
-> For CPU mode, because of the spi transfer len is in byte, so burst
-> length should be configured as bits per byte * spi_imx->count.
-> 
-> Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> Reviewed-by: Clark Wang <xiaoning.wang@nxp.com>
-> Fixes: e9b220aeacf1 ("spi: spi-imx: correctly configure burst length when using dma")
-> Fixes: 5f66db08cbd3 ("spi: imx: Take in account bits per word instead of assuming 8-bits")
-> ---
-> Changes for V2:
-> - Removed BITS_PER_BYTE defination
-> ---
->  drivers/spi/spi-imx.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index 546cdce525fc..0436e7a161ef 100644
-> --- a/drivers/spi/spi-imx.c
-> +++ b/drivers/spi/spi-imx.c
-> @@ -660,15 +660,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
->  			<< MX51_ECSPI_CTRL_BL_OFFSET;
->  	else {
->  		if (spi_imx->usedma) {
-> -			ctrl |= (spi_imx->bits_per_word *
-> -				spi_imx_bytes_per_word(spi_imx->bits_per_word) - 1)
-> +			ctrl |= (spi_imx->bits_per_word - 1)
->  				<< MX51_ECSPI_CTRL_BL_OFFSET;
->  		} else {
->  			if (spi_imx->count >= MX51_ECSPI_CTRL_MAX_BURST)
-> -				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST - 1)
-> +				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST * BITS_PER_BYTE - 1)
->  						<< MX51_ECSPI_CTRL_BL_OFFSET;
->  			else
-> -				ctrl |= (spi_imx->count * spi_imx->bits_per_word - 1)
-> +				ctrl |= (spi_imx->count * BITS_PER_BYTE - 1)
->  						<< MX51_ECSPI_CTRL_BL_OFFSET;
->  		}
->  	}
+On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Add #include <linux/bits.h> given you are using BITS_PER_BYTE
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> With the list of GPIO devices now protected with SRCU we can use
+> gpio_device_find() to traverse it from sysfs.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Francesco
+This is beautiful. And you can make the list private too.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
