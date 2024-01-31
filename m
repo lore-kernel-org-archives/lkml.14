@@ -1,29 +1,29 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0641869E0A;
-	Wed, 31 Jan 2024 10:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417F86A353;
+	Wed, 31 Jan 2024 10:55:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706698559; cv=none; b=XBO40BLAE1ELt1nw4EnuIujVfz9/783kqTZe2yzYrN10rqY2KwQqlHQLnhP0kLCDqQ5L5H3rT0uvBdX/B0iD485UNY/At1HCxHGCuHT21/jWOjeADUxp+8DPXeHkqsjrWJ/YokWJjbBPQgX66zIfwf1YBGCRbdsBX6rBHJsuChU=
+	t=1706698559; cv=none; b=bweNXF22iXTxdROeX9blPwcPVgoiA6lc8l8kiBNclhrlYTbQqYYpWaXeF2bavneiLHIaeR8JHxSRKarHABEYBlbpH4J2DpkFqBFxG+Hd0jI9BxsRobrYoVqe2bVoZuVfqVeyc2zbBP9qtORlozNqg2w/OepLN/XuyTTYXMG8vFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706698559; c=relaxed/simple;
-	bh=frqd03oMwryAVYOMjuhoxNgEPtVwWiXGm8JhLGkkWjM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=LE+MInpXic59sAv/CjTFvcwK5c0WcQSVhuUWAIpB5DU9JhbhyUV4S3T/SCm7AzdBqG7MAwjruejZ6Q1eafKBty6Pc75dzXp+IvHSXZDB0TC/C77Cd5OXvtYB39TyGBo7iNrAI+nNXv4Iy2mhMfABjxRWs5pfxPh/+8BurRFYCls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=G8MMrpEU; arc=none smtp.client-ip=13.77.154.182
+	bh=lwkOSAnGEnMRxgE2eYpnXuty91szYnqPYwpQeHF0pik=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=uQJlTUtoLWCf0BKHjR5cdNs7+s64dqAscWIP7paIraP22Fru7WUdWHrO9+yTvNfOfm017LDyiYtIXzX3XvkNgxtRq5KgrClCBgQck7I7j/mYvM/3PGTE0/ZGKkM2njuO1IhX2rPTk6vqB2x6LDcq9z54451lFaTfYxSVcA29Cmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GB+vxnbL; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G8MMrpEU"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GB+vxnbL"
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 90C2C20B2000;
+	by linux.microsoft.com (Postfix) with ESMTPSA id DB96C20B2003;
 	Wed, 31 Jan 2024 02:55:57 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 90C2C20B2000
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DB96C20B2003
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1706698557;
-	bh=KuYMJ+KtPcMpYaHpCQD6at9/ZkKaQhJhxkcrHAaAz5Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=G8MMrpEUYNwKezWt0+XL+V2iOx7qrmPPI1Hzv7f2rknXSRL1q2Bb7iDikR0y+DNGf
-	 LLrPpgEumCEVyEYkdaxeebwtVqix1aNAMI4otjHtVUJtNgF05JCzgo8zGPk7NLyIDi
-	 3Zz996xwwKFNxWHiWf5HgiNONhbBVhpalwpDDTBM=
+	bh=5yXFaEp9vKBshRa+NgGc9Zh0uI+t9u7kQk3cCqXTndQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GB+vxnbLTjT5Cnt7unO+5vs7vkPwsXIQa+KctyE3Mac1SWpuauMpA/7NTrY3DtkI1
+	 sUNbJdGmFonKb7p7PPqw+sfZxDcRQ6RPXJb3hzFqDbDhm8Kutug1KLwv4S48AZS0BU
+	 1rCrPaeAerPUAqgKgZvX1bzGT5bltj7dNZ5gMp04=
 From: Konstantin Taranov <kotaranov@linux.microsoft.com>
 To: kotaranov@microsoft.com,
 	sharmaajay@microsoft.com,
@@ -32,41 +32,107 @@ To: kotaranov@microsoft.com,
 	leon@kernel.org
 Cc: linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next v1 0/5] RDMA/mana_ib: Enable RNIC adapter and populate it with GIDs
-Date: Wed, 31 Jan 2024 02:55:47 -0800
-Message-Id: <1706698552-25383-1-git-send-email-kotaranov@linux.microsoft.com>
+Subject: [PATCH rdma-next v1 3/5] RDMA/mana_ib: Implement port parameters
+Date: Wed, 31 Jan 2024 02:55:50 -0800
+Message-Id: <1706698552-25383-4-git-send-email-kotaranov@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1706698552-25383-1-git-send-email-kotaranov@linux.microsoft.com>
+References: <1706698552-25383-1-git-send-email-kotaranov@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-This patch series creates RNIC adapter in mana_ib.
-To create the adapter, we must create one EQ.
-In the future patches, this EQ will be used for fatal RC QP error events.
-In the future patches, we will also add more EQs for CQs.
+Implement port parameters for RNIC. Only port 1 is RoCEv2 capable.
 
-mana_ib is served by mana ethernet for RAW QPs and by RNIC for RC QPs.
-If RNIC is not available in the HW, we do not fail mana_ib and keep only RAW QP
-support. RNIC is availale only for port 1.
+Signed-off-by: Konstantin Taranov <kotaranov@linux.microsoft.com>
+---
+ drivers/infiniband/hw/mana/device.c  |  2 ++
+ drivers/infiniband/hw/mana/main.c    | 37 +++++++++++++++++++++++++++++++++++-
+ drivers/infiniband/hw/mana/mana_ib.h |  4 ++++
+ 3 files changed, 42 insertions(+), 1 deletion(-)
 
-As a minimal usage, this patch series brings adding and removing RoCEv2 GIDs.
-For this, we set master netdev to the ib device and set required port parameters
-to get GIDs. RNIC of mana supports IPv6 and IPv4 addresses that are stored in the HW.  
-
-Konstantin Taranov (5):
-  RDMA/mana_ib: Add EQ creation for rnic adapter
-  RDMA/mana_ib: Create and destroy rnic adapter
-  RDMA/mana_ib: Implement port parameters
-  RDMA/mana_ib: Enable RoCE on port 1
-  RDMA/mana_ib: Adding and deleting GIDs
-
- drivers/infiniband/hw/mana/device.c  |  27 ++++-
- drivers/infiniband/hw/mana/main.c    | 203 ++++++++++++++++++++++++++++++++++-
- drivers/infiniband/hw/mana/mana_ib.h |  75 +++++++++++++
- 3 files changed, 297 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
+index d8e8b10..11b0410 100644
+--- a/drivers/infiniband/hw/mana/device.c
++++ b/drivers/infiniband/hw/mana/device.c
+@@ -29,12 +29,14 @@
+ 	.destroy_rwq_ind_table = mana_ib_destroy_rwq_ind_table,
+ 	.destroy_wq = mana_ib_destroy_wq,
+ 	.disassociate_ucontext = mana_ib_disassociate_ucontext,
++	.get_link_layer = mana_ib_get_link_layer,
+ 	.get_port_immutable = mana_ib_get_port_immutable,
+ 	.mmap = mana_ib_mmap,
+ 	.modify_qp = mana_ib_modify_qp,
+ 	.modify_wq = mana_ib_modify_wq,
+ 	.query_device = mana_ib_query_device,
+ 	.query_gid = mana_ib_query_gid,
++	.query_pkey = mana_ib_query_pkey,
+ 	.query_port = mana_ib_query_port,
+ 	.reg_user_mr = mana_ib_reg_user_mr,
+ 
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+index 33cd69e..3e05a62 100644
+--- a/drivers/infiniband/hw/mana/main.c
++++ b/drivers/infiniband/hw/mana/main.c
+@@ -492,7 +492,42 @@ int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_attr *props,
+ int mana_ib_query_port(struct ib_device *ibdev, u32 port,
+ 		       struct ib_port_attr *props)
+ {
+-	/* This version doesn't return port properties */
++	struct net_device *ndev = mana_ib_get_netdev(ibdev, port);
++
++	if (!ndev)
++		return -EINVAL;
++
++	memset(props, 0, sizeof(*props));
++	props->max_mtu = IB_MTU_4096;
++	props->active_mtu = ib_mtu_int_to_enum(ndev->mtu);
++
++	if (netif_carrier_ok(ndev) && netif_running(ndev)) {
++		props->state = IB_PORT_ACTIVE;
++		props->phys_state = IB_PORT_PHYS_STATE_LINK_UP;
++	} else {
++		props->state = IB_PORT_DOWN;
++		props->phys_state = IB_PORT_PHYS_STATE_DISABLED;
++	}
++
++	props->active_width = IB_WIDTH_4X;
++	props->active_speed = IB_SPEED_EDR;
++	props->pkey_tbl_len = 1;
++	if (port == 1)
++		props->gid_tbl_len = 16;
++
++	return 0;
++}
++
++enum rdma_link_layer mana_ib_get_link_layer(struct ib_device *device, u32 port_num)
++{
++	return IB_LINK_LAYER_ETHERNET;
++}
++
++int mana_ib_query_pkey(struct ib_device *ibdev, u32 port, u16 index, u16 *pkey)
++{
++	if (index != 0)
++		return -EINVAL;
++	*pkey = IB_DEFAULT_PKEY_FULL;
+ 	return 0;
+ }
+ 
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
+index 96454cf..196f3c8 100644
+--- a/drivers/infiniband/hw/mana/mana_ib.h
++++ b/drivers/infiniband/hw/mana/mana_ib.h
+@@ -262,4 +262,8 @@ int mana_ib_query_gid(struct ib_device *ibdev, u32 port, int index,
+ void mana_ib_gd_create_rnic_adapter(struct mana_ib_dev *mdev);
+ 
+ void mana_ib_gd_destroy_rnic_adapter(struct mana_ib_dev *mdev);
++
++int mana_ib_query_pkey(struct ib_device *ibdev, u32 port, u16 index, u16 *pkey);
++
++enum rdma_link_layer mana_ib_get_link_layer(struct ib_device *device, u32 port_num);
+ #endif
 -- 
 1.8.3.1
 
