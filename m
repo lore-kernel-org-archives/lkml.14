@@ -1,52 +1,68 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2075.outbound.protection.outlook.com [40.107.93.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1E83AC14;
-	Wed, 31 Jan 2024 22:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706741491; cv=none; b=ryCQbNzfQakr5R9cfKKsCsCjyqwcM/sUPJUffjTNEbPTlFWTr/6aBUK6ogWV3u3g9hFN+YYWGdnhzWDoU3E+UENQaLitvptMsKI2RpYNsVEHumQfn2Zp+CzaJngXv8SwCNm/9Lc1ChQ+0RKYxXJOudrNTnmlRCbdtXazo6mpCOA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706741491; c=relaxed/simple;
-	bh=nUkzR12xy1p2FiXOVo6YSxE3TENbyX/bzQKcNKNH2Jw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c5bMEdkPx0AUhNGzLVGp8Hk7sZh3aB7/P7YqPkD3wg5cguTPFAx7kTDBlF6k5sfUfuSYLIUoYPwQPmwxUu1aGhiY8ba4uBc6bBxAm9/khmAlmhygCJFXUHHAScl9mI9IRTTTPF9k9LUVcRAWS6/Nii5bc48h8ixG6gbqe2N0AtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RRFaCJ4U; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE673A29B;
+	Wed, 31 Jan 2024 22:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706741585; cv=fail; b=HXYJycauHF2QegpQcX6ifFKkzKe0fswV/Sa8XCWxPdYUIBsU1oNGU9x122aMYDr8oS/P4+BC1wIH5e71tkUr2nvM/6sAiBdRXSpNx9d6Gl7ak3PSyaXtQj6SWXxKdJCQ1w7eOb3i1jKmAhVRmYeFg6uba5aYAx1MIFnw+7z1NuQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706741585; c=relaxed/simple;
+	bh=u8ftxr/zmcmQ+41E9vLMzmh0IdM3CStGbY0JP47+G98=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rm4Wefba6ihxgf0DmDQw+me+G2QabHGklKrK++3I2VbfznGH6dQpUjvxPxAe915ZlJo0xvkViotiWTrhDuraCyXYx0mSfa8fTtJEIcLNV9p/TmS5vuyd5KBFjjZZq+xHD1XbtsmA3lW0CsoMOxQiA6M6wUZpWBluXij/3MlUx1Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DVrGbXGs; arc=fail smtp.client-ip=40.107.93.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RRFaCJ4U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=VHDS8XfeqrJJCoN72ANJz9/5fJVypoPtMt3FLrR4fJQ=; b=RRFaCJ4USpY0kDnPaF2Gol/eCH
-	uSXwm4FGSYKqQL6L2LaiKlthJCk+UXmcoNd1huvU87/ebEx4N9F6NuJ6Xr6wmSsYva88XNpFNk6Jl
-	8VonDVWqHqa3NtjMQblemeLe2bJBWdLZIn/YwiXRHJ2yXZehrKiXuK6Cl8FowK0RCaEFrzF9medG7
-	8PgaWqykDIabwdxryzoDPb7BtJQOZ2Xwd6zmtJ5tKsvE5DoyhNEu2vzdTaWxcNJlubQV+gJFxTmtz
-	5bW2px9kQeGRUnIKNiFdPrrD3gER30HYudTQofdG5jkhHiqrNHXq3m6LCOzlu+ap8tr+BzqIVixew
-	i3855xlQ==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rVJQW-00000005kZC-3y0I;
-	Wed, 31 Jan 2024 22:51:28 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: willy@infradead.org,
-	akpm@linux-foundation.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	hare@suse.com,
-	p.raghav@samsung.com,
-	da.gomez@samsung.com,
-	djwong@kernel.org,
-	david@fromorbit.com,
-	mcgrof@kernel.org
-Subject: [PATCH v2 1/2] test_xarray: add tests for advanced multi-index use
-Date: Wed, 31 Jan 2024 14:51:24 -0800
-Message-ID: <20240131225125.1370598-2-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240131225125.1370598-1-mcgrof@kernel.org>
-References: <20240131225125.1370598-1-mcgrof@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DVrGbXGs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VgX0lBaPElxJM7kAVWqF3YWInzGOEfYxc+Je9OYYTb7LBP+uZ/m7+OW7bUcMfveUcUGqljkupvDUTMahDPqVGhA8mtcd+bafW4RVZwG8Eps7Y8K19oFAtjtRwPe5qFR4GgumFKd2t3gkKt9c1PD3utaobQh1TBTsfoL6CS3DXifG9MtWNy845SiCona7nkI+SeGbhlc2T/g75ERRybz8NM9HDFi0F2eTWxn7gYMt/ocujKCJmqTsMnqoAxQ+r955k/ocTnr/GVhJ6c4FkqkYsoorDhzhUGEZnEXOsgBu9NWZ41V/cSCG7TRXsxt36qHqBQiv1UIeDx2JTmx0Ws4l7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g2GA1trPozishODq9GcYNZH4hhJM7/o15GxCaIyy8Gw=;
+ b=HTclhD5YhY90MzkLxTXLX7QbjpKSsBlMlXhaN/eH1d4gQF1vOX6uxZc+d4+Rqi9BhV3SP2SGwOMAsjH2iS9rl3i3xCu2xwJCKoyOI4gj+Z5Om4/foGENB2IPmq/j+kzKEjANxsiMIHOwc+IUxHRAkfi8s8oLmj/2BnivUy7HmAmC4bVSbfnj8wbBgKNp8+zzPvGvofVk0deM92J2XfuQI0j957lcQkE/CnkCovNZeqLwmYcBbMrpjza8r8MX91Qy/y2Qvg4kJhAMITmB/CrP8QgI272QaXwNlfshDNHw7Fcvsii+7QsuB3aWCXzhl10hHd8aRfoUJGW/6SAllqzqgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g2GA1trPozishODq9GcYNZH4hhJM7/o15GxCaIyy8Gw=;
+ b=DVrGbXGs5KyxsUcQtmdSUn5CYu3Kz3bCdK6NffjirHabMqCPRyPZ2TyUS8/vHxLSEexxjWlkgkI+Gjv9KO4n2nUTQPcb8w4Qz5z9/PzAZPWzmUhSxGHJpH4eFI+JRYUJDmOfWdV5PfTYq/FHL7mSDilhN4QKZhzL952wjz0yX/8=
+Received: from DM6PR06CA0009.namprd06.prod.outlook.com (2603:10b6:5:120::22)
+ by SA1PR12MB6970.namprd12.prod.outlook.com (2603:10b6:806:24d::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Wed, 31 Jan
+ 2024 22:53:01 +0000
+Received: from DS1PEPF0001708E.namprd03.prod.outlook.com
+ (2603:10b6:5:120:cafe::60) by DM6PR06CA0009.outlook.office365.com
+ (2603:10b6:5:120::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22 via Frontend
+ Transport; Wed, 31 Jan 2024 22:53:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0001708E.mail.protection.outlook.com (10.167.17.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Wed, 31 Jan 2024 22:53:00 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 31 Jan
+ 2024 16:52:59 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: Lars-Peter Clausen <lars@metafoo.de>, "open list:IIO SUBSYSTEM AND
+ DRIVERS" <linux-iio@vger.kernel.org>, open list
+	<linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH] iio: accel: Fix a compilation problem
+Date: Wed, 31 Jan 2024 16:52:46 -0600
+Message-ID: <20240131225246.14169-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,204 +70,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001708E:EE_|SA1PR12MB6970:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0269b82-acbc-4855-b451-08dc22af6029
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+cOGVVnG528b8JlZxScBmvpBxjLXr1sJWdv++yu6PdszAMB2fTH08a/1s67105wuLkERbeH8U9VVMvkv4H3jw6YaifRwYhPBpSBfL9SMYYYDgKMebBo7R8B+GP2jl9G5/OZpvgmUYOvAab6/95ZotRTGAiRYM19LZ/lphvSc+evBHuhdWqMnEUSPLBxrS77A8RWF6hTiq0UfJttvOsv4qnhzAugplxvZ7o8hH/r52wbsvQ9QKSxPf0KyRAY5E2sEzMG8WI3cUEUKSFMWFWJTpedZFmJOw/11kkIgqblSJTfOGuqzwboRtS3mwM+dbex5Bd4LG8v9ilt1WwtRY8Ej1Bd9Ay7ufifoxdcIa5lrcHknyD1Pt4t/bTscL7x7SEW+fcD4jb3qIf6ULiOpgQ1V9q7pyIONcxYCILR5YNMSgTEkIoFSqVSL0m0DiVQvRcIwDW7g/lZKuvS4JmwQFA6XYLEXVNm3ca70uQtfWIvwU4oCkDS6LvextphdrX7g/H5FzC4C8gO+rLofCp1lepKpSAZ11no9KwLwDRTkfUaO00DDAj1VyjRkgjaOFpDvvuCStLx4A/AzitaHdMp5rML37lOIZxpdUtSBNBHZfWWYTBkDzLPRDPFlAfo7CcbNI4YSUAwYFLoYXCCL/I6sjf1cQYGjNRci1oUvyG0wufuNRwzopjiLgBSdhV6MivKE8G3KQpuNGLi2PC9yyPu1ysOvnALNw9dGQVRzcbCq/tLkXYBCM5oJfCmrH9qDZ6u+jXMxRrbhMDNk1xMijVMblb24Bg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(376002)(346002)(230922051799003)(82310400011)(1800799012)(451199024)(64100799003)(186009)(40470700004)(36840700001)(46966006)(4326008)(44832011)(40480700001)(40460700003)(1076003)(82740400003)(4744005)(36860700001)(2906002)(8936002)(8676002)(16526019)(26005)(83380400001)(6666004)(336012)(426003)(5660300002)(356005)(54906003)(81166007)(70206006)(86362001)(478600001)(316002)(6916009)(70586007)(966005)(2616005)(7696005)(47076005)(36756003)(41300700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 22:53:00.6641
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0269b82-acbc-4855-b451-08dc22af6029
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001708E.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6970
 
-The multi index selftests are great but they don't replicate
-how we deal with the page cache exactly, which makes it a bit
-hard to follow as the page cache uses the advanced API.
+The kernel fails when compiling without `CONFIG_REGMAP_I2C` but with
+`CONFIG_BMA400`.
+```
+ld: drivers/iio/accel/bma400_i2c.o: in function `bma400_i2c_probe':
+bma400_i2c.c:(.text+0x23): undefined reference to `__devm_regmap_init_i2c'
+```
 
-Add tests which use the advanced API, mimicking what we do in the
-page cache, while at it, extend the example to do what is needed for
-min order support.
+This was caught with one of the kconfigs used by the LKP robot for a
+separate issue.
 
-Tested-by: Daniel Gomez <da.gomez@samsung.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Link: https://download.01.org/0day-ci/archive/20240131/202401311634.FE5CBVwe-lkp@intel.com/config
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- lib/test_xarray.c | 164 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 164 insertions(+)
+ drivers/iio/accel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index e77d4856442c..8b23481f0e8f 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -674,6 +674,169 @@ static noinline void check_multi_store(struct xarray *xa)
- #endif
- }
+diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+index 91adcac875a4..c9d7afe489e8 100644
+--- a/drivers/iio/accel/Kconfig
++++ b/drivers/iio/accel/Kconfig
+@@ -219,10 +219,12 @@ config BMA400
  
-+#ifdef CONFIG_XARRAY_MULTI
-+/* mimics page cache __filemap_add_folio() */
-+static noinline void check_xa_multi_store_adv_add(struct xarray *xa,
-+						  unsigned long index,
-+						  unsigned int order,
-+						  void *p)
-+{
-+	XA_STATE(xas, xa, index);
-+	unsigned int nrpages = 1UL << order;
-+
-+	/* users are responsible for index alignemnt to the order when adding */
-+	XA_BUG_ON(xa, index & (nrpages - 1));
-+
-+	xas_set_order(&xas, index, order);
-+
-+	do {
-+		xas_lock_irq(&xas);
-+
-+		xas_store(&xas, p);
-+		XA_BUG_ON(xa, xas_error(&xas));
-+		XA_BUG_ON(xa, xa_load(xa, index) != p);
-+
-+		xas_unlock_irq(&xas);
-+	} while (xas_nomem(&xas, GFP_KERNEL));
-+
-+	XA_BUG_ON(xa, xas_error(&xas));
-+}
-+
-+/* mimics page_cache_delete() */
-+static noinline void check_xa_multi_store_adv_del_entry(struct xarray *xa,
-+							unsigned long index,
-+							unsigned int order)
-+{
-+	XA_STATE(xas, xa, index);
-+
-+	xas_set_order(&xas, index, order);
-+	xas_store(&xas, NULL);
-+	xas_init_marks(&xas);
-+}
-+
-+static noinline void check_xa_multi_store_adv_delete(struct xarray *xa,
-+						     unsigned long index,
-+						     unsigned int order)
-+{
-+	xa_lock_irq(xa);
-+	check_xa_multi_store_adv_del_entry(xa, index, order);
-+	xa_unlock_irq(xa);
-+}
-+
-+/* mimics page cache filemap_get_entry() */
-+static noinline void *test_get_entry(struct xarray *xa, unsigned long index)
-+{
-+	XA_STATE(xas, xa, index);
-+	void *p;
-+
-+	rcu_read_lock();
-+repeat:
-+	xas_reset(&xas);
-+	p = xas_load(&xas);
-+	if (xas_retry(&xas, p))
-+		goto repeat;
-+	rcu_read_unlock();
-+
-+	return p;
-+}
-+
-+static unsigned long some_val = 0xdeadbeef;
-+static unsigned long some_val_2 = 0xdeaddead;
-+
-+/* mimics the page cache usage */
-+static noinline void check_xa_multi_store_adv(struct xarray *xa,
-+					      unsigned long pos,
-+					      unsigned int order)
-+{
-+	unsigned int nrpages = 1UL << order;
-+	unsigned long index, base, next_index, next_next_index;
-+	unsigned int i;
-+
-+	index = pos >> PAGE_SHIFT;
-+	base = round_down(index, nrpages);
-+	next_index = round_down(base + nrpages, nrpages);
-+	next_next_index = round_down(next_index + nrpages, nrpages);
-+
-+	check_xa_multi_store_adv_add(xa, base, order, &some_val);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, base + i) != &some_val);
-+
-+	XA_BUG_ON(xa, test_get_entry(xa, next_index) != NULL);
-+
-+	/* Use order 0 for the next item */
-+	check_xa_multi_store_adv_add(xa, next_index, 0, &some_val_2);
-+	XA_BUG_ON(xa, test_get_entry(xa, next_index) != &some_val_2);
-+
-+	/* Remove the next item */
-+	check_xa_multi_store_adv_delete(xa, next_index, 0);
-+
-+	/* Now use order for a new pointer */
-+	check_xa_multi_store_adv_add(xa, next_index, order, &some_val_2);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, next_index + i) != &some_val_2);
-+
-+	check_xa_multi_store_adv_delete(xa, next_index, order);
-+	check_xa_multi_store_adv_delete(xa, base, order);
-+	XA_BUG_ON(xa, !xa_empty(xa));
-+
-+	/* starting fresh again */
-+
-+	/* let's test some holes now */
-+
-+	/* hole at base and next_next */
-+	check_xa_multi_store_adv_add(xa, next_index, order, &some_val_2);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, base + i) != NULL);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, next_index + i) != &some_val_2);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, next_next_index + i) != NULL);
-+
-+	check_xa_multi_store_adv_delete(xa, next_index, order);
-+	XA_BUG_ON(xa, !xa_empty(xa));
-+
-+	/* hole at base and next */
-+
-+	check_xa_multi_store_adv_add(xa, next_next_index, order, &some_val_2);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, base + i) != NULL);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, next_index + i) != NULL);
-+
-+	for (i = 0; i < nrpages; i++)
-+		XA_BUG_ON(xa, test_get_entry(xa, next_next_index + i) != &some_val_2);
-+
-+	check_xa_multi_store_adv_delete(xa, next_next_index, order);
-+	XA_BUG_ON(xa, !xa_empty(xa));
-+}
-+#endif
-+
-+static noinline void check_multi_store_advanced(struct xarray *xa)
-+{
-+#ifdef CONFIG_XARRAY_MULTI
-+	unsigned int max_order = IS_ENABLED(CONFIG_XARRAY_MULTI) ? 20 : 1;
-+	unsigned long end = ULONG_MAX/2;
-+	unsigned long pos, i;
-+
-+	/*
-+	 * About 117 million tests below.
-+	 */
-+	for (pos = 7; pos < end; pos = (pos * pos) + 564) {
-+		for (i = 0; i < max_order; i++) {
-+			check_xa_multi_store_adv(xa, pos, i);
-+			check_xa_multi_store_adv(xa, pos + 157, i);
-+		}
-+	}
-+#endif
-+}
-+
- static noinline void check_xa_alloc_1(struct xarray *xa, unsigned int base)
- {
- 	int i;
-@@ -1804,6 +1967,7 @@ static int xarray_checks(void)
- 	check_reserve(&array);
- 	check_reserve(&xa0);
- 	check_multi_store(&array);
-+	check_multi_store_advanced(&array);
- 	check_get_order(&array);
- 	check_xa_alloc();
- 	check_find(&array);
+ config BMA400_I2C
+ 	tristate
++	select REGMAP_I2C
+ 	depends on BMA400
+ 
+ config BMA400_SPI
+ 	tristate
++	select REGMAP_SPI
+ 	depends on BMA400
+ 
+ config BMC150_ACCEL
 -- 
-2.43.0
+2.34.1
 
