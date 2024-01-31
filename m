@@ -1,212 +1,398 @@
-Received: from mxout012.mail.hostpoint.ch (mxout012.mail.hostpoint.ch [217.26.49.172])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFCE6D1BA;
-	Wed, 31 Jan 2024 11:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.26.49.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD1E76058;
+	Wed, 31 Jan 2024 11:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706699833; cv=none; b=B1MbYpZCHksZU814yeTR3V0aAaP5FB039+GE80efmjMUfqVoRoR589V/feNCWU4/cQJz2AaPkpVebERPgY1pFZiIeBxL7EygqrRj3wXH5Ygt2iEC2rsTmcD70MVnDY/tJVZi7SXryZVNq1FMD3qzvi4jRodEE68qgXqe6qr/8k8=
+	t=1706699832; cv=none; b=tbifSHV0+sT/Z/XEpsD+ACPDZPTELSCBuN2h7W8TmjVccqfsNNL8ZWxxSjjq8qe+33eD+fLLA/1YRcl1nbzjeVO1VQrODG9NjthZMcsvOBmfC/jmIq01k64dajAEABEfotvkaQ8yfDKcVIp663DQIEygFdDDTYeNovZw6b/F7k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706699833; c=relaxed/simple;
-	bh=bi0Uckinvs++A9lPfNrJcVzgqzcSVsKWlDd2cPXeYj8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VlGuxSUirZEdjDM4vvQpfSg70TXgc1TT/a0WanqVromdLYsamfozGP/8VfRQMtsN/kI718gt4iqxgQchbk2spzx3TMH+xRT6oXWaiRZbmqi/0mQX9/V6c19n6r1d8MRS0kIM12SxuSFeDNmwFogr/U/4BhYHmGiSqZ81vAhdGOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stefan-gloor.ch; spf=pass smtp.mailfrom=stefan-gloor.ch; arc=none smtp.client-ip=217.26.49.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stefan-gloor.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stefan-gloor.ch
-Received: from [10.0.2.44] (helo=asmtp014.mail.hostpoint.ch)
-	by mxout012.mail.hostpoint.ch with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.97.1 (FreeBSD))
-	(envelope-from <code@stefan-gloor.ch>)
-	id 1rV8ZB-0000000055k-20LK;
-	Wed, 31 Jan 2024 12:15:41 +0100
-Received: from 157.20.79.83.dynamic.wline.res.cust.swisscom.ch ([83.79.20.157] helo=thinkpad.localdomain)
-	by asmtp014.mail.hostpoint.ch with esmtpa (Exim 4.97.1 (FreeBSD))
-	(envelope-from <code@stefan-gloor.ch>)
-	id 1rV8ZB-000000009un-0gBT;
-	Wed, 31 Jan 2024 12:15:41 +0100
-X-Authenticated-Sender-Id: code@stefan-gloor.ch
-From: Stefan Gloor <code@stefan-gloor.ch>
-To: jdelvare@suse.com,
-	linux@roeck-us.net,
-	corbet@lwn.net,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
+	s=arc-20240116; t=1706699832; c=relaxed/simple;
+	bh=TrsKOF55qp1ILWmy4Bo/xU5i29aKGzHbP46d5jF2Hok=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ke/wKjbIBfbohRkXKfQwqHxHC5cByFZwa8bWHNAVvaG6lvN/ae2okBpHjB2b97TNE9xE4KE1YxAedxx8x8sNLT079jdiP2FCDlUmR4Hhs+aLtdMMfyQ8wOqctGGkQRBoG0EXbMWbtVbTjJ0BVRSdui4Dbe8neI8EEpE07UDHB4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ooMNmd23; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ooMNmd23"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1706699819; x=1707304619; i=w_armin@gmx.de;
+	bh=TrsKOF55qp1ILWmy4Bo/xU5i29aKGzHbP46d5jF2Hok=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=ooMNmd23ht5HJN48DLiXxq5Sq6Rgu3ffwgof68L3zJscpm4O3hmo/NJHmQlVEAXf
+	 zqtM8WKhlhSyFnkvpbC98JI0mKpVeKXfHyA4KDynn32N6NU/EpalOvBWQ1i7l3vmO
+	 mQEuqKgGCzQ3iRCG5UiUrEvo+GeNSSnv2LL3rD4RBVYsakpqtD9seviIHbdYoT6d/
+	 Cr0wGv6Khq5AImR/i8nOeDFM346LhQBLMMnyux5FJ3Rr0QK1s4RepGHvI2ktRoodf
+	 iE2kHKylpNcV/I6Qi3nEXAqLdgTz/Ze39nwnTfIiHk1iY3v6OTK/s8RFNwM7WFINg
+	 rRvPwdPyWWq77oYtZQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-inspiron.fritz.box ([91.137.126.34]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MMGRA-1rnLxd0eNK-00JKnZ; Wed, 31 Jan 2024 12:16:59 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: dennisn@dennisn.mooo.com,
+	lkml@vorpal.se,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: coproscefalo@gmail.com,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Stefan Gloor <code@stefan-gloor.ch>
-Subject: [PATCH v4 1/1] hwmon: (sht3x) read out sensor serial number
-Date: Wed, 31 Jan 2024 12:15:12 +0100
-Message-ID: <20240131111512.25321-2-code@stefan-gloor.ch>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240131111512.25321-1-code@stefan-gloor.ch>
-References: <20240131111512.25321-1-code@stefan-gloor.ch>
+Subject: [PATCH 1/2] platform/x86: Add ACPI quickstart button (PNP0C32) driver
+Date: Wed, 31 Jan 2024 12:16:40 +0100
+Message-Id: <20240131111641.4418-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240131111641.4418-1-W_Armin@gmx.de>
+References: <20240131111641.4418-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Vs-State: 0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AQu5VSnpGmVQT3zPMXhlCFUdcoyBR1IqdAB3qHwBnK3lcHRY3qZ
+ k1/bMkLpHS8uEiFwxUyJEmW1H+6xkGtn5IIR91Vmuxr/bI90gV8d5ZGQf3rN9kF0rzcsXGA
+ CpUTxjQOEhpV9irr/bFV6kfkJ7YTDdur9LOMYONfXzmRenHZBLbzSe1/DRV1bfqKSDtpBOz
+ VykpM5uYku6gwsxa16ywg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qk9fWM+aFiE=;AXc0UpokgFZpe3NnzhbWkLD1php
+ pEhPJrPVg5sDI0cec4MDUVOV2Nk950ZoLGAqJiFvWVxr/J817koKb/sUDxvanU+xjSG39PvBi
+ 8n4h8NyZ6cgUfcfv0BML4SO1Fbz3uYfyE0NTP8eGwzk0CyvtkETXY6YaD7XR+pXw7r71FSgJ7
+ kbHeySZQB8kKUwJ4TjLS38BUsSun/+wWmjZgZX3PBgCENDavk+FxXvhBN+eoNUe762YbU1iNf
+ 2eHQ81QabduIO+u/X679dqo66cUZbJc/jnq7QRGORJXNZaj4K7AH10KDGXkiYBBaiGyGSspIz
+ bGCZojPi6Gn/QButwtlAh5CnXkGAevqj9ACAq9ZgwQlS43LWKqytb2TAk3f97bgrbpVrcL5Sk
+ GL30eFtS9G4bOJNFedvm8MuRybTxtzpDV96aYyA41MtOoOZ6nkWH67PQXYlxDaUhYUgGPIjN5
+ 20T10JxfarfvYdJTr45QFqjj+2jhd/taH9vrdgulmuW6mShjym2D4CtTIqzy8zylg6X/AnU/5
+ GsQ+mE49yNAT7KuCFPZysEMhJzhmCXVL4DmL+WRwUT3eImSorhhB9wB7SceMNDE2RQVb9+9iH
+ bzwmFlrOp/ADKwN44I4TbZ23k0JyES21hk/8cewS63Pi3F2FZdhQdkizK2p3TeALohEn16syp
+ uRCNRSSPCDtPLkDkKwrKucykMrCXXe/yJpSAIXird/eUo390hvxPsBfGDtzKQg/aM4kWjgypX
+ B1+t0PABMnuGoBKb04vvGF86vvuFWEAJvcNanv4ZvAdvfky1Jdf3y9/mN6ezQnTpnqcgguX0z
+ Dhd4SiHScOHhulHhWDtDZXRL9A+fBLnUznTxWO+sYQzB9mn6EbOu8gMTzaMsDiqouMmGBNLdM
+ VMxPTZlbqA3jkvU+b2bHlwLAsDX6w0sxMYk9Qi5IpHQAfEyMoE34ViZ6NqLYtAoJu9MyUHTGM
+ mSU2kcNau6cntTq3mdeSTc2sFT0=
 
-The temperature/humidity sensors of the STS3x/SHT3x family are
-calibrated and factory-programmed with a unique serial number.
-For some sensors, this serial number can be used to obtain a calibration
-certificate via an API provided by the manufacturer (Sensirion).
-Expose the serial number via debugfs.
+This drivers supports the ACPI quickstart button device, which
+is used to send manufacturer-specific events to userspace.
+Since the meaning of those events is not standardized, userspace
+has to use for example hwdb to decode them.
 
-Tested with: 2x STS31, 1x STS32, 1x SHT31
+The driver itself is based on an earlier proposal, but contains
+some improvements and uses the device wakeup API instead of a
+custom sysfs file.
 
-Signed-off-by: Stefan Gloor <code@stefan-gloor.ch>
----
- Documentation/hwmon/sht3x.rst | 11 ++++++
- drivers/hwmon/sht3x.c         | 66 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 76 insertions(+), 1 deletion(-)
+Compile-tested only.
 
-diff --git a/Documentation/hwmon/sht3x.rst b/Documentation/hwmon/sht3x.rst
-index 957c854f5d08..9585fa7c5a5d 100644
---- a/Documentation/hwmon/sht3x.rst
-+++ b/Documentation/hwmon/sht3x.rst
-@@ -65,6 +65,10 @@ When the temperature and humidity readings move back between the hysteresis
- values, the alert bit is set to 0 and the alert pin on the sensor is set to
- low.
- 
-+The serial number exposed to debugfs allows for unique identification of the
-+sensors. For sts32, sts33 and sht33, the manufacturer provides calibration
-+certificates through an API.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ MAINTAINERS                       |   6 +
+ drivers/platform/x86/Kconfig      |  13 ++
+ drivers/platform/x86/Makefile     |   3 +
+ drivers/platform/x86/quickstart.c | 225 ++++++++++++++++++++++++++++++
+ 4 files changed, 247 insertions(+)
+ create mode 100644 drivers/platform/x86/quickstart.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..b71692c55f7b 100644
+=2D-- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -354,6 +354,12 @@ B:	https://bugzilla.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+ F:	drivers/acpi/pmic/
+
++ACPI QUICKSTART DRIVER
++M:	Armin Wolf <W_Armin@gmx.de>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/quickstart.c
 +
- sysfs-Interface
- ---------------
- 
-@@ -99,3 +103,10 @@ repeatability:      write or read repeatability, higher repeatability means
-                         - 1: medium repeatability
-                         - 2: high repeatability
- =================== ============================================================
+ ACPI SERIAL MULTI INSTANTIATE DRIVER
+ M:	Hans de Goede <hdegoede@redhat.com>
+ L:	platform-driver-x86@vger.kernel.org
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 6dbd40e2aeda..9cba9a410e28 100644
+=2D-- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -641,6 +641,19 @@ config THINKPAD_LMI
+
+ source "drivers/platform/x86/intel/Kconfig"
+
++config ACPI_QUICKSTART
++	tristate "ACPI Quickstart button driver"
++	depends on ACPI
++	depends on INPUT
++	select INPUT_SPARSE_KEYMAP
++	help
++	  This driver adds support for ACPI quickstart button (PNP0C32) devices.
++	  The button emits a manufacturer-specific key value when pressed, so
++	  userspace has to map this value to a standard key code.
 +
-+debugfs-Interface
-+-----------------
++	  To compile this driver as a module, choose M here: the module will be
++	  called quickstart.
 +
-+=================== ============================================================
-+serial_number:      unique serial number of the sensor in decimal
-+=================== ============================================================
-diff --git a/drivers/hwmon/sht3x.c b/drivers/hwmon/sht3x.c
-index 79657910b79e..c0d02fbcdb76 100644
---- a/drivers/hwmon/sht3x.c
-+++ b/drivers/hwmon/sht3x.c
-@@ -10,6 +10,7 @@
- 
- #include <asm/page.h>
- #include <linux/crc8.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
-@@ -41,6 +42,9 @@ static const unsigned char sht3x_cmd_heater_off[]              = { 0x30, 0x66 };
- /* other commands */
- static const unsigned char sht3x_cmd_read_status_reg[]         = { 0xf3, 0x2d };
- static const unsigned char sht3x_cmd_clear_status_reg[]        = { 0x30, 0x41 };
-+static const unsigned char sht3x_cmd_read_serial_number[]      = { 0x37, 0x80 };
+ config MSI_EC
+ 	tristate "MSI EC Extras"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1de432e8861e..0801ccc37e9b 100644
+=2D-- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -70,6 +70,9 @@ obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
+ # Intel
+ obj-y				+=3D intel/
+
++# Microsoft
++obj-$(CONFIG_ACPI_QUICKSTART)  +=3D quickstart.o
 +
-+static struct dentry *debugfs;
- 
- /* delays for single-shot mode i2c commands, both in us */
- #define SHT3X_SINGLE_WAIT_TIME_HPM  15000
-@@ -163,12 +167,14 @@ struct sht3x_data {
- 	enum sht3x_chips chip_id;
- 	struct mutex i2c_lock; /* lock for sending i2c commands */
- 	struct mutex data_lock; /* lock for updating driver data */
-+	struct dentry *sensor_dir;
- 
- 	u8 mode;
- 	const unsigned char *command;
- 	u32 wait_time;			/* in us*/
- 	unsigned long last_update;	/* last update in periodic mode*/
- 	enum sht3x_repeatability repeatability;
-+	u32 serial_number;
- 
- 	/*
- 	 * cached values for temperature and humidity and limits
-@@ -831,6 +837,40 @@ static int sht3x_write(struct device *dev, enum hwmon_sensor_types type,
- 	}
- }
- 
-+static void sht3x_debugfs_init(struct sht3x_data *data)
+ # MSI
+ obj-$(CONFIG_MSI_EC)		+=3D msi-ec.o
+ obj-$(CONFIG_MSI_LAPTOP)	+=3D msi-laptop.o
+diff --git a/drivers/platform/x86/quickstart.c b/drivers/platform/x86/quic=
+kstart.c
+new file mode 100644
+index 000000000000..ba3a7a25dda7
+=2D-- /dev/null
++++ b/drivers/platform/x86/quickstart.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * quickstart.c - ACPI Direct App Launch driver
++ *
++ * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
++ * Copyright (C) 2022 Arvid Norlander <lkml@vorapal.se>
++ * Copyright (C) 2007-2010 Angelo Arrifano <miknix@gmail.com>
++ *
++ * Information gathered from disassembled dsdt and from here:
++ * <https://archive.org/details/microsoft-acpi-dirapplaunch>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/acpi.h>
++#include <linux/init.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/sysfs.h>
++#include <linux/types.h>
++
++#include <asm/unaligned.h>
++
++#define DRIVER_NAME	"quickstart"
++
++/*
++ * There will be two events:
++ * 0x02 - Button was pressed while device was off/sleeping.
++ * 0x80 - Button was pressed while device was up.
++ */
++#define QUICKSTART_EVENT_RUNTIME	0x80
++
++struct quickstart_data {
++	struct device *dev;
++	struct input_dev *input_device;
++	char input_name[32];
++	char phys[32];
++	u32 id;
++};
++
++/*
++ * Knowing what these buttons do require system specific knowledge.
++ * This could be done by matching on DMI data in a long quirk table.
++ * However, it is easier to leave it up to user space to figure this out.
++ *
++ * Using for example udev hwdb the scancode 0x1 can be remapped suitably.
++ */
++static const struct key_entry quickstart_keymap[] =3D {
++	{ KE_KEY, 0x1, { KEY_UNKNOWN } },
++	{ KE_END, 0 },
++};
++
++static ssize_t button_id_show(struct device *dev, struct device_attribute=
+ *attr, char *buf)
 +{
-+	char name[32];
++	struct quickstart_data *data =3D dev_get_drvdata(dev);
 +
-+	snprintf(name, sizeof(name), "i2c%u-%02x",
-+		 data->client->adapter->nr, data->client->addr);
-+	data->sensor_dir = debugfs_create_dir(name, debugfs);
-+	debugfs_create_u32("serial_number", 0444,
-+			   data->sensor_dir, &data->serial_number);
++	return sysfs_emit(buf, "%u\n", data->id);
++}
++static DEVICE_ATTR_RO(button_id);
++
++static struct attribute *quickstart_attrs[] =3D {
++	&dev_attr_button_id.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(quickstart);
++
++static void quickstart_notify(acpi_handle handle, u32 event, void *contex=
+t)
++{
++	struct quickstart_data *data =3D context;
++
++	switch (event) {
++	case QUICKSTART_EVENT_RUNTIME:
++		sparse_keymap_report_event(data->input_device, 0x1, 1, true);
++		acpi_bus_generate_netlink_event(DRIVER_NAME, dev_name(data->dev), event=
+, 0);
++		break;
++	default:
++		dev_err(data->dev, FW_INFO "Unexpected ACPI notify event (%u)\n", event=
+);
++		break;
++	}
 +}
 +
-+static void sht3x_debugfs_remove(void *sensor_dir)
++/*
++ * The GHID ACPI method is used to indicate the "role" of the button.
++ * However, all the meanings of these values are vendor defined.
++ *
++ * We do however expose this value to user space.
++ */
++static int quickstart_get_ghid(struct quickstart_data *data)
 +{
-+	debugfs_remove_recursive(sensor_dir);
-+}
++	struct acpi_buffer buffer =3D { ACPI_ALLOCATE_BUFFER, NULL };
++	acpi_handle handle =3D ACPI_HANDLE(data->dev);
++	union acpi_object *obj;
++	acpi_status status;
++	int ret =3D 0;
 +
-+static int sht3x_serial_number_read(struct sht3x_data *data)
-+{
-+	int ret;
-+	char buffer[SHT3X_RESPONSE_LENGTH];
-+	struct i2c_client *client = data->client;
++	/*
++	 * This returns a buffer telling the button usage ID,
++	 * and triggers pending notify events (The ones before booting).
++	 */
++	status =3D acpi_evaluate_object_typed(handle, "GHID", NULL, &buffer, ACP=
+I_TYPE_BUFFER);
++	if (ACPI_FAILURE(status))
++		return -EIO;
 +
-+	ret = sht3x_read_from_command(client, data,
-+				      sht3x_cmd_read_serial_number,
-+				      buffer,
-+				      SHT3X_RESPONSE_LENGTH, 0);
-+	if (ret)
-+		return ret;
++	obj =3D buffer.pointer;
++	if (!obj)
++		return -ENODATA;
 +
-+	data->serial_number = (buffer[0] << 24) | (buffer[1] << 16) |
-+			      (buffer[3] << 8) | buffer[4];
++	/*
++	 * Quoting the specification:
++	 * "The GHID method can return a BYTE, WORD, or DWORD.
++	 *  The value must be encoded in little-endian byte
++	 *  order (least significant byte first)."
++	 */
++	switch (obj->buffer.length) {
++	case 1:
++		data->id =3D obj->buffer.pointer[0];
++		break;
++	case 2:
++		data->id =3D get_unaligned_le16(obj->buffer.pointer);
++		break;
++	case 4:
++		data->id =3D get_unaligned_le32(obj->buffer.pointer);
++		break;
++	default:
++		dev_err(data->dev,
++			FW_BUG "GHID method returned buffer of unexpected length %u\n",
++			obj->buffer.length);
++		ret =3D -EIO;
++		break;
++	}
++
++	kfree(obj);
++
 +	return ret;
 +}
 +
- static const struct hwmon_ops sht3x_ops = {
- 	.is_visible = sht3x_is_visible,
- 	.read = sht3x_read,
-@@ -899,6 +939,18 @@ static int sht3x_probe(struct i2c_client *client)
- 	if (ret)
- 		return ret;
- 
-+	ret = sht3x_serial_number_read(data);
-+	if (ret) {
-+		dev_dbg(dev, "unable to read serial number\n");
-+	} else {
-+		sht3x_debugfs_init(data);
-+		ret = devm_add_action_or_reset(dev,
-+					       sht3x_debugfs_remove,
-+					       data->sensor_dir);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	hwmon_dev = devm_hwmon_device_register_with_info(dev,
- 							 client->name,
- 							 data,
-@@ -917,7 +969,19 @@ static struct i2c_driver sht3x_i2c_driver = {
- 	.id_table    = sht3x_ids,
- };
- 
--module_i2c_driver(sht3x_i2c_driver);
-+static int __init sht3x_init(void)
++static void quickstart_notify_remove(void *context)
 +{
-+	debugfs = debugfs_create_dir("sht3x", NULL);
-+	return i2c_add_driver(&sht3x_i2c_driver);
-+}
-+module_init(sht3x_init);
++	struct quickstart_data *data =3D context;
++	acpi_handle handle;
 +
-+static void __exit sht3x_cleanup(void)
-+{
-+	debugfs_remove_recursive(debugfs);
-+	i2c_del_driver(&sht3x_i2c_driver);
++	handle =3D ACPI_HANDLE(data->dev);
++
++	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, quickstart_notify=
+);
 +}
-+module_exit(sht3x_cleanup);
- 
- MODULE_AUTHOR("David Frey <david.frey@sensirion.com>");
- MODULE_AUTHOR("Pascal Sachs <pascal.sachs@sensirion.com>");
--- 
-2.41.0
++
++static int quickstart_probe(struct platform_device *pdev)
++{
++	struct quickstart_data *data;
++	acpi_handle handle;
++	acpi_status status;
++	int ret;
++
++	handle =3D ACPI_HANDLE(&pdev->dev);
++	if (!handle)
++		return -ENODEV;
++
++	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->dev =3D &pdev->dev;
++	dev_set_drvdata(&pdev->dev, data);
++
++	/* We have to initialize the device wakeup before evaluating GHID becaus=
+e
++	 * doing so will notify the device if the button was used to wake the ma=
+chine
++	 * from S5.
++	 */
++	device_init_wakeup(&pdev->dev, true);
++
++	ret =3D quickstart_get_ghid(data);
++	if (ret < 0)
++		return ret;
++
++	data->input_device =3D devm_input_allocate_device(&pdev->dev);
++	if (!data->input_device)
++		return -ENOMEM;
++
++	ret =3D sparse_keymap_setup(data->input_device, quickstart_keymap, NULL)=
+;
++	if (ret < 0)
++		return ret;
++
++	snprintf(data->input_name, sizeof(data->input_name), "Quickstart Button =
+%u", data->id);
++	snprintf(data->phys, sizeof(data->phys), DRIVER_NAME "/input%u", data->i=
+d);
++
++	data->input_device->name =3D data->input_name;
++	data->input_device->phys =3D data->phys;
++	data->input_device->id.bustype =3D BUS_HOST;
++
++	ret =3D input_register_device(data->input_device);
++	if (ret < 0)
++		return ret;
++
++	status =3D acpi_install_notify_handler(handle, ACPI_DEVICE_NOTIFY, quick=
+start_notify, data);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	return devm_add_action_or_reset(&pdev->dev, quickstart_notify_remove, da=
+ta);
++}
++
++static const struct acpi_device_id quickstart_device_ids[] =3D {
++	{ "PNP0C32", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, quickstart_device_ids);
++
++static struct platform_driver quickstart_platform_driver =3D {
++	.driver	=3D {
++		.name =3D DRIVER_NAME,
++		.dev_groups =3D quickstart_groups,
++		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
++		.acpi_match_table =3D quickstart_device_ids,
++	},
++	.probe =3D quickstart_probe,
++};
++module_platform_driver(quickstart_platform_driver);
++
++MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
++MODULE_AUTHOR("Arvid Norlander <lkml@vorpal.se>");
++MODULE_AUTHOR("Angelo Arrifano");
++MODULE_DESCRIPTION("ACPI Direct App Launch driver");
++MODULE_LICENSE("GPL");
+=2D-
+2.39.2
 
