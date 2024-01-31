@@ -1,158 +1,284 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE50A80C1F
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC437F48F;
+	Wed, 31 Jan 2024 14:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706710329; cv=none; b=Z/5EVs/LfurDdVkY6AWMWuh1wbFwb2fGomuwbloHko9qeVxriPWLf5aqLE2w+x7mMmcb7D52+eivPQZap49vEZ7elkFDTIqIzmlJkxJTc7K0+lEWiJY8rUSID7DdZo/9Gp2jSleVIkAb2RgjGHESqh13dtDmLHenhzFbjbVtGfo=
+	t=1706710329; cv=none; b=b1FVun2Otrrdqcvo9nHWPIHq8BSA3bTcUPsVCWxETwwezOnuyjcTYLaUy/E3lTBGc/etbvi1gM9lInw40vqOTYwZYhIAI4dyRVwSNl5LbJWrnT9YnIGQWRSjSxMlOx4L0lhvK+THPW5Pfz0o2bFc7FMezQmLrg6QAzBu/r9A4Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706710329; c=relaxed/simple;
-	bh=fy67XFG440oNqKNoOyKdiRXwM4wMoj/X9XerGknRkFM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kRXIRXSQr78qin2WXfIYfmfX80UNG5oRlkrwEL73gmDqEym/MeL364/EVi+icMGGrwhH0ZZCVYwCPVm4M95EWkJak8c4dVeTsd5BjSI4LuVViq6drF1RAmgxf7qovoN8SFN6FtjsVLrp+lbNgotYJJmqwQNsd7y+kwrJcNNpvnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MVZOtlij; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	bh=yGS2QDHYP0P0IX5Sj43OrGzM9XRaVZMm32fQBhPrYi8=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=Iu08KdYzvx9vUordlbg2XNrzmwW92oEEmf5DdM5ZFtgRQrQuF/OyDcLFEbIk82wzWdK8NVDLXhlHNZTaLd576JiBY5Y5ax9AqlhZjn7M8DBlS6PRxkmJ9rONbBXaThGMU/XBmk+RYx8C4aTA+HQ863w5UD9hBrJkAcdlzsfgv/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=jqjBT6+u; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=jqjBT6+u; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MVZOtlij"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4bd87fd64c1so1588845e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:12:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706710326; x=1707315126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fy67XFG440oNqKNoOyKdiRXwM4wMoj/X9XerGknRkFM=;
-        b=MVZOtlij2AZ22kc1XCTZWLZ/d/0js7zssLKOlA24s8zen5q3lGG7G5q7IdSPnwtZSB
-         XUZj40mPwU6jNopWsW6w6H49sdsHuUMDhmgR74IkMUgNSv7HYBV9ZVEQ3OF35T9RerlZ
-         CdOy9l5esYmHNqAZWPqoK15kiImPVwzRHteH44iKwyUdF7S2mQkJCxnqEh/OFOBAiu9t
-         yiwqfwhZevpBRKmfbvqa7OX3jVZlBR3DsS18BrHg/xAxVxkHhDskboDF8iOnjECQP/hQ
-         xq/Pfaer6gknZplfImXP1Oxn31CWrSAfEy+iOFa6nQzzkCyqbZC40KN8BqmU7Un3lN9Q
-         uHBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706710326; x=1707315126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fy67XFG440oNqKNoOyKdiRXwM4wMoj/X9XerGknRkFM=;
-        b=CSp/juj0pZW5aoLv/gzOeW/xDRy9UxnqyRMzDh2VuK5zuJ2ImzYWhdifsCQgnIiD7a
-         riIERTHYuOVEOi0EuvKq76H1txSS1a4hAL3TXaBIgpUxuTeyz8/UA9J7MlxzfJhf4NTD
-         mQ0rBWM0XMikzJ4OUA1pARD+jitAcGvmSGPNea9UHvQmmyQ+LvX8LFfQQqGU07sTqOwL
-         O5VeE/VPDIX9psw7+hxLN2EYVlBMxtlVYdk9PyGdKWn32h/sINvoLJYrawBfF5a+HYmt
-         ioP3hC86EqqY57HyAMaL8xe0giEN23jCnNc73no6sJE2xXBrmEXB5Hx4K4cd6zid+Ait
-         CIvA==
-X-Gm-Message-State: AOJu0YzUStJoDCgTQSGYeyD8FvtWKdNHB3RNNMqonxEq2qI9pRCYlLAA
-	TI4mzmj41Drhd2ExWe/zSW1eXMD7Vuz7dA+yCmVmoYzB/XKxsMOF0Vq341jpDuJ6k+lL3XJzeud
-	OEr7dYs+NC1wPhg6MGt/3YwgatH+TvbxzsCPr3w==
-X-Google-Smtp-Source: AGHT+IHw+5LJCo4zP77ngTsk1zmxdOx6fkUQPNqVAurEYXrfnmeT5FR7RaZ6Ra6HK3KzPd2ohkdgXC4v/gfXwwIUBNk=
-X-Received: by 2002:a05:6122:179c:b0:4bd:5328:b20f with SMTP id
- o28-20020a056122179c00b004bd5328b20fmr1596779vkf.14.1706710326488; Wed, 31
- Jan 2024 06:12:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jqjBT6+u";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jqjBT6+u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1706710325;
+	bh=yGS2QDHYP0P0IX5Sj43OrGzM9XRaVZMm32fQBhPrYi8=;
+	h=Message-ID:Subject:From:To:Date:From;
+	b=jqjBT6+u0CSFbNVzN2i5SQLF105KKjwtrCld7rP+PDh6RWJ264TxWmWiZ4DJevYTc
+	 N91EPn6aad5zuXyL+v6Cb9hBc38j3i5HnztUX+hIRY6YACVC/QQrIkqxHydUBU3TSV
+	 JnUzOuLTCnX5EHMvMR79dA35xzgIs795QwbEDaDM=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id DC33C12810AE;
+	Wed, 31 Jan 2024 09:12:05 -0500 (EST)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id qpICi7ymUw4m; Wed, 31 Jan 2024 09:12:05 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1706710325;
+	bh=yGS2QDHYP0P0IX5Sj43OrGzM9XRaVZMm32fQBhPrYi8=;
+	h=Message-ID:Subject:From:To:Date:From;
+	b=jqjBT6+u0CSFbNVzN2i5SQLF105KKjwtrCld7rP+PDh6RWJ264TxWmWiZ4DJevYTc
+	 N91EPn6aad5zuXyL+v6Cb9hBc38j3i5HnztUX+hIRY6YACVC/QQrIkqxHydUBU3TSV
+	 JnUzOuLTCnX5EHMvMR79dA35xzgIs795QwbEDaDM=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::c14])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 22FFF1280474;
+	Wed, 31 Jan 2024 09:12:05 -0500 (EST)
+Message-ID: <c350958c01b9985e1f9bf9c041d1203eb8d82b19.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 6.8-rc2
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds
+	 <torvalds@linux-foundation.org>
+Cc: linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel
+	 <linux-kernel@vger.kernel.org>
+Date: Wed, 31 Jan 2024 09:12:03 -0500
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129115216.96479-1-krzysztof.kozlowski@linaro.org>
- <20240129115216.96479-5-krzysztof.kozlowski@linaro.org> <CACRpkdYf4HUaV-Pjr81WjLbzy9zdAnyFWs9gPayPC6-3OjHQwA@mail.gmail.com>
- <CAMRc=Mc1SGLeUOWmKg=fvCdM+RR6FSu2QkFuR17s7L99eRMGug@mail.gmail.com>
- <CACRpkdbaxqTzwL9L02vCpMMdBYsubNP1VkNuJ8mXB_=4E3Kjaw@mail.gmail.com> <5ef64082-0b44-4bb2-bd4c-654c96f4a9bb@linaro.org>
-In-Reply-To: <5ef64082-0b44-4bb2-bd4c-654c96f4a9bb@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 31 Jan 2024 15:11:55 +0100
-Message-ID: <CAMRc=MfNNdJzbxsihNd94LhqzhZiL2H2-z=grEFoNmOxpua5JA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/6] reset: Instantiate reset GPIO controller for
- shared reset-gpios
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, 
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, 
-	Sean Anderson <sean.anderson@seco.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 31, 2024 at 2:32=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 31/01/2024 14:17, Linus Walleij wrote:
-> > On Wed, Jan 31, 2024 at 10:37=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
-v.pl> wrote:
-> >
-> >> [Me]
-> >>> reset -> virtual "gpio" -> many physical gpios[0..n]
-> >>
-> >> This is a different problem: it supports many users enabling the same
-> >> GPIO (in Krzysztof's patch it's one but could be more if needed) but -
-> >> unlike the broken NONEXCLUSIVE GPIOs in GPIOLIB - it counts the number
-> >> of users and doesn't disable the GPIO for as long as there's at least
-> >> one.
-> >
-> > I don't know if the NONEXCLUSIVE stuff is broken, if you mean reference
-> > counting isn't working on them, then that is by design because they wer=
-e
-> > invented for regulators and such use cases that do their own reference
-> > counting. It's also used for hacks where people need to look up a desc =
-in
-> > a second spot, (perhaps we can fix those better).
-> >
-> > As I say in commit b0ce7b29bfcd090ddba476f45a75ec0a797b048a
-> > "This solution with a special flag is not entirely elegant and should i=
-deally
-> > be replaced by something more careful as this makes it possible for
-> > several consumers to enable/disable the same GPIO line to the left
-> > and right without any consistency."
-> >
-> > I think for regulators (which is the vast majority using it) it isn't b=
-roken
-> > because the regulator reference counting is working.
-> >
-> > So if we solve that problem for reset, we probably should put it in
-> > drivers/gpio/* somewhere so we can reuse the same solution for
-> > regulators and get rid of NONEXCLUSIVE altogether I think?
-> >
-> > The NONEXCLUSIVE stuff was prompted by converting regulators to
-> > gpio descriptors, so it was for the greater good one can say. Or the
-> > lesser evil :( my judgement can be questioned here.
->
-> I discussed the non-exclusive GPIOs with Bartosz quite a lot, who was
-> Cced since beginning of this patchset, because that was my first
-> approach, which was rejected:
->
-> https://lore.kernel.org/all/b7aeda24-d638-45b7-8e30-80d287f498f8@sirena.o=
-rg.uk/
->
-> The non-exclusive GPIO was made explicitly for regulators, so it is
-> working fine there, but it is broken everywhere else, where the drivers
-> do not handle it in sane way as regulator core does.
->
-> To make it working, either GPIO should be enable-count-aware, to which
-> Bartosz was opposing with talks with me, or the subsystem should mimic
+6 small fixes.  5 are obvious and in drivers the fifth is a core fix to
+remove the host lock acquisition and release, caused by a dynamic check
+of host_busy, in the error handling loop which has been reported to
+cause lockups.
 
-For the record: I'm not 100% opposed to the enable-count-awarness of
-GPIOs but don't want it to be the standard. I'm open for introducing a
-wrapper built around the core, low-level GPIO API but I've just
-dropped a big patchset addressing the access control and serialization
-issues for the GPIO consumer API and I would rather work towards
-making it at least more-or-less correct in the first place before we
-start overcomplicating it again.
+The patch is available here:
 
-Bartosz
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-> regulators approach. In some way, my patchset is the second way here -
-> reset framework subsystem being aware of shared GPIO and handles the
-> enable-count, even though it is not using non-exclusive flag.
->
-> Best regards,
-> Krzysztof
->
+The short changelog is:
+
+Colin Ian King (1):
+      scsi: initio: Remove redundant variable 'rb'
+
+Li RongQing (1):
+      scsi: virtio_scsi: Remove duplicate check if queue is broken
+
+Michael Kelley (1):
+      scsi: storvsc: Fix ring buffer size calculation
+
+Ming Lei (1):
+      scsi: core: Move scsi_host_busy() out of host lock for waking up EH handler
+
+Su Hui (1):
+      scsi: isci: Fix an error code problem in isci_io_request_build()
+
+Tyrel Datwyler (1):
+      scsi: MAINTAINERS: Update ibmvscsi_tgt maintainer
+
+And the diffstat:
+
+ MAINTAINERS                 |  2 +-
+ drivers/scsi/initio.c       |  3 +--
+ drivers/scsi/isci/request.c |  2 +-
+ drivers/scsi/scsi_error.c   |  8 ++++----
+ drivers/scsi/scsi_lib.c     |  2 +-
+ drivers/scsi/scsi_priv.h    |  2 +-
+ drivers/scsi/storvsc_drv.c  | 12 +++++++-----
+ drivers/scsi/virtio_scsi.c  |  2 --
+ 8 files changed, 16 insertions(+), 17 deletions(-)
+
+With full diff below
+
+James
+
+---
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..a337cab28160 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10282,7 +10282,7 @@ F:	drivers/scsi/ibmvscsi/ibmvscsi*
+ F:	include/scsi/viosrp.h
+ 
+ IBM Power Virtual SCSI Device Target Driver
+-M:	Michael Cyr <mikecyr@linux.ibm.com>
++M:	Tyrel Datwyler <tyreld@linux.ibm.com>
+ L:	linux-scsi@vger.kernel.org
+ L:	target-devel@vger.kernel.org
+ S:	Supported
+diff --git a/drivers/scsi/initio.c b/drivers/scsi/initio.c
+index 2a50fda3a628..625fd547ee60 100644
+--- a/drivers/scsi/initio.c
++++ b/drivers/scsi/initio.c
+@@ -371,7 +371,6 @@ static u16 initio_se2_rd(unsigned long base, u8 addr)
+  */
+ static void initio_se2_wr(unsigned long base, u8 addr, u16 val)
+ {
+-	u8 rb;
+ 	u8 instr;
+ 	int i;
+ 
+@@ -400,7 +399,7 @@ static void initio_se2_wr(unsigned long base, u8 addr, u16 val)
+ 		udelay(30);
+ 		outb(SE2CS, base + TUL_NVRAM);			/* -CLK */
+ 		udelay(30);
+-		if ((rb = inb(base + TUL_NVRAM)) & SE2DI)
++		if (inb(base + TUL_NVRAM) & SE2DI)
+ 			break;	/* write complete */
+ 	}
+ 	outb(0, base + TUL_NVRAM);				/* -CS */
+diff --git a/drivers/scsi/isci/request.c b/drivers/scsi/isci/request.c
+index 71f711cb0628..355a0bc0828e 100644
+--- a/drivers/scsi/isci/request.c
++++ b/drivers/scsi/isci/request.c
+@@ -3387,7 +3387,7 @@ static enum sci_status isci_io_request_build(struct isci_host *ihost,
+ 		return SCI_FAILURE;
+ 	}
+ 
+-	return SCI_SUCCESS;
++	return status;
+ }
+ 
+ static struct isci_request *isci_request_from_tag(struct isci_host *ihost, u16 tag)
+diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+index 79da4b1c1df0..4f455884fdc4 100644
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -61,11 +61,11 @@ static int scsi_eh_try_stu(struct scsi_cmnd *scmd);
+ static enum scsi_disposition scsi_try_to_abort_cmd(const struct scsi_host_template *,
+ 						   struct scsi_cmnd *);
+ 
+-void scsi_eh_wakeup(struct Scsi_Host *shost)
++void scsi_eh_wakeup(struct Scsi_Host *shost, unsigned int busy)
+ {
+ 	lockdep_assert_held(shost->host_lock);
+ 
+-	if (scsi_host_busy(shost) == shost->host_failed) {
++	if (busy == shost->host_failed) {
+ 		trace_scsi_eh_wakeup(shost);
+ 		wake_up_process(shost->ehandler);
+ 		SCSI_LOG_ERROR_RECOVERY(5, shost_printk(KERN_INFO, shost,
+@@ -88,7 +88,7 @@ void scsi_schedule_eh(struct Scsi_Host *shost)
+ 	if (scsi_host_set_state(shost, SHOST_RECOVERY) == 0 ||
+ 	    scsi_host_set_state(shost, SHOST_CANCEL_RECOVERY) == 0) {
+ 		shost->host_eh_scheduled++;
+-		scsi_eh_wakeup(shost);
++		scsi_eh_wakeup(shost, scsi_host_busy(shost));
+ 	}
+ 
+ 	spin_unlock_irqrestore(shost->host_lock, flags);
+@@ -286,7 +286,7 @@ static void scsi_eh_inc_host_failed(struct rcu_head *head)
+ 
+ 	spin_lock_irqsave(shost->host_lock, flags);
+ 	shost->host_failed++;
+-	scsi_eh_wakeup(shost);
++	scsi_eh_wakeup(shost, scsi_host_busy(shost));
+ 	spin_unlock_irqrestore(shost->host_lock, flags);
+ }
+ 
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index cf3864f72093..1fb80eae9a63 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -280,7 +280,7 @@ static void scsi_dec_host_busy(struct Scsi_Host *shost, struct scsi_cmnd *cmd)
+ 	if (unlikely(scsi_host_in_recovery(shost))) {
+ 		spin_lock_irqsave(shost->host_lock, flags);
+ 		if (shost->host_failed || shost->host_eh_scheduled)
+-			scsi_eh_wakeup(shost);
++			scsi_eh_wakeup(shost, scsi_host_busy(shost));
+ 		spin_unlock_irqrestore(shost->host_lock, flags);
+ 	}
+ 	rcu_read_unlock();
+diff --git a/drivers/scsi/scsi_priv.h b/drivers/scsi/scsi_priv.h
+index 3f0dfb97db6b..1fbfe1b52c9f 100644
+--- a/drivers/scsi/scsi_priv.h
++++ b/drivers/scsi/scsi_priv.h
+@@ -92,7 +92,7 @@ extern void scmd_eh_abort_handler(struct work_struct *work);
+ extern enum blk_eh_timer_return scsi_timeout(struct request *req);
+ extern int scsi_error_handler(void *host);
+ extern enum scsi_disposition scsi_decide_disposition(struct scsi_cmnd *cmd);
+-extern void scsi_eh_wakeup(struct Scsi_Host *shost);
++extern void scsi_eh_wakeup(struct Scsi_Host *shost, unsigned int busy);
+ extern void scsi_eh_scmd_add(struct scsi_cmnd *);
+ void scsi_eh_ready_devs(struct Scsi_Host *shost,
+ 			struct list_head *work_q,
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index a95936b18f69..7ceb982040a5 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -330,6 +330,7 @@ enum storvsc_request_type {
+  */
+ 
+ static int storvsc_ringbuffer_size = (128 * 1024);
++static int aligned_ringbuffer_size;
+ static u32 max_outstanding_req_per_channel;
+ static int storvsc_change_queue_depth(struct scsi_device *sdev, int queue_depth);
+ 
+@@ -687,8 +688,8 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
+ 	new_sc->next_request_id_callback = storvsc_next_request_id;
+ 
+ 	ret = vmbus_open(new_sc,
+-			 storvsc_ringbuffer_size,
+-			 storvsc_ringbuffer_size,
++			 aligned_ringbuffer_size,
++			 aligned_ringbuffer_size,
+ 			 (void *)&props,
+ 			 sizeof(struct vmstorage_channel_properties),
+ 			 storvsc_on_channel_callback, new_sc);
+@@ -1973,7 +1974,7 @@ static int storvsc_probe(struct hv_device *device,
+ 	dma_set_min_align_mask(&device->device, HV_HYP_PAGE_SIZE - 1);
+ 
+ 	stor_device->port_number = host->host_no;
+-	ret = storvsc_connect_to_vsp(device, storvsc_ringbuffer_size, is_fc);
++	ret = storvsc_connect_to_vsp(device, aligned_ringbuffer_size, is_fc);
+ 	if (ret)
+ 		goto err_out1;
+ 
+@@ -2164,7 +2165,7 @@ static int storvsc_resume(struct hv_device *hv_dev)
+ {
+ 	int ret;
+ 
+-	ret = storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
++	ret = storvsc_connect_to_vsp(hv_dev, aligned_ringbuffer_size,
+ 				     hv_dev_is_fc(hv_dev));
+ 	return ret;
+ }
+@@ -2198,8 +2199,9 @@ static int __init storvsc_drv_init(void)
+ 	 * the ring buffer indices) by the max request size (which is
+ 	 * vmbus_channel_packet_multipage_buffer + struct vstor_packet + u64)
+ 	 */
++	aligned_ringbuffer_size = VMBUS_RING_SIZE(storvsc_ringbuffer_size);
+ 	max_outstanding_req_per_channel =
+-		((storvsc_ringbuffer_size - PAGE_SIZE) /
++		((aligned_ringbuffer_size - PAGE_SIZE) /
+ 		ALIGN(MAX_MULTIPAGE_BUFFER_PACKET +
+ 		sizeof(struct vstor_packet) + sizeof(u64),
+ 		sizeof(u64)));
+diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
+index 4cf20be668a6..617eb892f4ad 100644
+--- a/drivers/scsi/virtio_scsi.c
++++ b/drivers/scsi/virtio_scsi.c
+@@ -188,8 +188,6 @@ static void virtscsi_vq_done(struct virtio_scsi *vscsi,
+ 		while ((buf = virtqueue_get_buf(vq, &len)) != NULL)
+ 			fn(vscsi, buf);
+ 
+-		if (unlikely(virtqueue_is_broken(vq)))
+-			break;
+ 	} while (!virtqueue_enable_cb(vq));
+ 	spin_unlock_irqrestore(&virtscsi_vq->vq_lock, flags);
+ }
+
