@@ -1,170 +1,123 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from sender4-of-o50.zoho.com (sender4-of-o50.zoho.com [136.143.188.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27B77EF1B;
-	Wed, 31 Jan 2024 17:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706721294; cv=none; b=OxQW1EKMp5oZqW8Ff2zkjTVWVgW/KES/GusB7qLYggQYnkTY8fWG7iAGBNMgzcsAn/Gia0QE8g5TvJpi7LPjELI5weYFx/bfxsCgkkLVVjbVgCsJXdNbYZ+ikN6F2vL+rM0jJFVEUX0b/Ryc9xv1al/fibOHBguiTarNHrvglnE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706721294; c=relaxed/simple;
-	bh=umMTfbavV5anbbuvqaxrldcGPNeK3mMqhy5S46iPOGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BNtYICpkzP61+mtbbqYs+BJOxusydV5QRdkCbmHoap9x3xAhD3GqEKdIe5Mr4lhZtNEa9iYjIafd+fEQvc7N+en+tGNIdlo0a6W8ZtDjahIcis1qFmLgfnjtw8WwdHJdWDa/dXC+jnbn7eprceULmu3dJOxG9tuGHjIlkydrXXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WgUObyZ/; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD60812C554;
+	Wed, 31 Jan 2024 17:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=136.143.188.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706721435; cv=fail; b=GlPs/VGJfMKaNZK/4sLY+FSVXt0vO2L/fc0U8XgOjLuv67oTouNXiW/HYcaZw4j9rb6sIjVJJKdvkwNNqf4WsrwMww8Y3+b9Z9Tpzz/AA+NJ81sSH7AF2C3SgPa1NhM7HWj0WpIpK0mSxIpRFzsmZHO+J/jRsiSe//hJB915SmM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706721435; c=relaxed/simple;
+	bh=XXcpNZ2rcDI3vVQ8/Eszkap951MkG/aGpB/S+UJ2e7Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CwS4RrcRggTlvrAYPhQHJusnTvR3rYPkdyKEwAss056BmQJed9jPo+evUDhXWDexfYO8zWeNY0nZr+8Y8PxywNejbwB4lmG6YNJwE9iGBeD/n2sNUs+ENPmf2cSX3xJlYY+jnu29dMZtdNWmNk9s2NY/MTUPdNAltIRrhzPIciU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com; spf=pass smtp.mailfrom=apertussolutions.com; dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b=EuBXF3xn; arc=fail smtp.client-ip=136.143.188.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apertussolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WgUObyZ/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 094211C0008;
-	Wed, 31 Jan 2024 17:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706721284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9lTRq8lZT7hitaFYIXz5SPSPzis0fVqQJM+pMRYZ704=;
-	b=WgUObyZ/9pP6ARuPtDDuoCxJPd9co0I0PlUUhWF71vCyZeBfWeR8Ss2Y+MI8LZGFF8xGlz
-	bsssTGy5GTkjZ5ISpRColNqsS+03eXLoQUs2cKzaxdZSzjL79o3Ila6FyUzsMJQ6wu6MP5
-	RDlNIOTa8ikbVSJWA1mfgTkZA6QKQC7D4aUXlkWzuJ+be8Gl/Lre2TS6UFdppqVBOiJQ8m
-	YBpeSA9DHN5llY89e9rWYl/zwHZPdgjFFyb5Bc6BOr7SPHd3A3/K07llty9wC/CG4gD5Wz
-	VCl4pwBraurh0JzRu/edmfyVcNxiePIYSxn50JjqrOkxzthQQSI+vWBYMIfqgA==
-Date: Wed, 31 Jan 2024 18:14:41 +0100
-From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-To: Jeff LaBundy <jeff@labundy.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	catalin.popescu@leica-geosystems.com,
-	mark.satterthwaite@touchnetix.com, bartp@baasheep.co.uk,
-	hannah.rossiter@touchnetix.com,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	bsp-development.geo@leica-geosystems.com
-Subject: Re: [PATCH v5 3/3] Input: Add TouchNetix axiom i2c touchscreen driver
-Message-ID: <20240131171441.GA3005@kb-xps>
-References: <20231211121430.1689139-1-kamel.bouhara@bootlin.com>
- <20231211121430.1689139-4-kamel.bouhara@bootlin.com>
- <ZY5An58Rffrcpfpn@nixie71>
+	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="EuBXF3xn"
+ARC-Seal: i=1; a=rsa-sha256; t=1706721425; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=BrzFsShetAr//Au0/VgUiqgtdGUiEYUh6tSSxK6EQ+wwPblT419KlvABnM+gn9hEC9tAs/r8EZlT0gBujaDU6WtfUcAJRNT+1dbAgdJ8yT5IaGkZZ90lioAeq2dn/A3/lg5Xjl/ERnjNnhleWpMWgolD2l/bZ3flB2QPJCGHwhQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1706721425; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:To:To:Message-Id:Reply-To:Subject; 
+	bh=d8FvsybUVvAeqHKTrmR5FtLlH3g40qorWd0hTMXdq/Y=; 
+	b=SHkfsgAt5iF2lQ8ZBn2r4BOJotInCRCOHndatwQmRUBJpW2HgB2wIRowM90ZSfjJQFN746d6MmSyERboNU+rTN/iyIO416zqF7hyUTlKk0wk/Sz8MM3gqybNE8dtTVcFHZyUXBUFrVRKOhRvVG6jvyqPaKZU3XOLxVFP5rmGg+A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1706721425;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=d8FvsybUVvAeqHKTrmR5FtLlH3g40qorWd0hTMXdq/Y=;
+	b=EuBXF3xnV0wo6LNqC3nSYFgVtFWAnE2iKsAtGyJLC8dHVWO1LFhSSZmQTXECrlj8
+	agm28wXqMmRN3VG4kWX3G4Dm2KLS1iBRUwZYshbtJGdAgs5EeZaQiDVGiLOXTfqmgnJ
+	V33fyPInCWBy9qTHM/0iSuJleBvnKfIiiZxNw82A=
+Received: from sisyou.hme. (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
+	with SMTPS id 1706721424032954.853713826795; Wed, 31 Jan 2024 09:17:04 -0800 (PST)
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+	Ross Philipson <ross.philipson@oracle.com>,
+	Kanth Ghatraju <kanth.ghatraju@oracle.com>,
+	Peter Huewe <peterhuewe@gmx.de>
+Subject: 
+Date: Wed, 31 Jan 2024 12:16:50 -0500
+Message-Id: <20240131171651.15796-1-dpsmith@apertussolutions.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZY5An58Rffrcpfpn@nixie71>
-X-GND-Sasl: kamel.bouhara@bootlin.com
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Thu, Dec 28, 2023 at 09:44:31PM -0600, Jeff LaBundy wrote:
-> Hi Kamel,
->
+Date: Wed, 31 Jan 2024 11:43:16 -0500
+Subject: [PATCH v2 0/3] tpm: make locality handling resilient
 
-Hello Jeff,
+When the kernel is started by a loader that leaves a locality other than
+Locality0 open, for example Intel TXT SINIT ACM leaves Locality2 open, this
+triggers a failure condition in the initialization of the TPM driver. The
+result being that despite calls to request/relinquish locality, the locality
+that was open at startup is never open/closed. The impact for an Intel TXT
+platform is that after SMX mode is exited, access to the Locality2 register
+space is blocked, and the TPM is locked in Locality 2 rendering the TPM
+unusable.
 
-[...]
+The ability to trigger this failure condition was introduced in commit
+933bfc5ad213, which introduced a locality counter to control when locality
+requests were actually sent to the TPM. The commit introduces a series of
+missing or incorrect protections in place for incrementing and decrementing the
+counter. The protection around incrementing the counter was protected with an
+incorrect check. The check was incorrect in two ways, 1.) it assumed that zero
+was the only successful value that would be returned by
+__tpm_tis_request_locality() and 2.) was evaluated outside the if block under
+which __tpm_tis_request_locality() is called. The effect of (1) is that
+__tpm_tis_request_locality() in fact returns the locality number that was
+requested, e.g. 1-4, and therefore the protection check would fail and the
+counter does not get incremented. The effect of (2) is a combination with the
+ret variable being initialized to 0 and the counter not being 0. The result is
+that __tpm_tis_request_locality() does not get called, but the counter is still
+incremented.
 
-> > +
-> > +/*
-> > + * Support function to axiom_process_u41_report.
-> > + * Generates input-subsystem events for every target.
-> > + * After calling this function the caller shall issue
-> > + * a Sync to the input sub-system.
-> > + */
-> > +static bool axiom_process_u41_report_target(struct axiom_data *ts,
-> > +					    struct axiom_target_report *target)
-> > +{
-> > +	struct input_dev *input_dev = ts->input_dev;
-> > +	struct axiom_u41_target *target_prev_state;
-> > +	enum axiom_target_state current_state;
-> > +	bool update = false;
-> > +	int slot;
-> > +
-> > +	/* Verify the target index */
-> > +	if (target->index >= AXIOM_U41_MAX_TARGETS) {
-> > +		dev_dbg(ts->dev, "Invalid target index! %u\n", target->index);
->
-> Should this be dev_err()?
->
-> > +		return false;
-> > +	}
-> > +
-> > +	target_prev_state = &ts->targets[target->index];
-> > +
-> > +	current_state = AXIOM_TARGET_STATE_NOT_PRESENT;
-> > +
-> > +	if (target->present) {
-> > +		if (target->z >= 0)
-> > +			current_state = AXIOM_TARGET_STATE_TOUCHING;
-> > +		else if (target->z > AXIOM_PROX_LEVEL && target->z < 0)
-> > +			current_state = AXIOM_TARGET_STATE_HOVER;
-> > +		else if (target->z == AXIOM_PROX_LEVEL)
-> > +			current_state = AXIOM_TARGET_STATE_PROX;
-> > +	}
-> > +
-> > +	if (target_prev_state->state == current_state &&
-> > +	    target_prev_state->x == target->x &&
-> > +	    target_prev_state->y == target->y &&
-> > +	    target_prev_state->z == target->z) {
-> > +		return false;
-> > +	}
->
-> No need for curly braces here; please refer to the kernel style guidelines.
->
-> > +
-> > +	slot = target->index;
-> > +
-> > +	dev_dbg(ts->dev, "U41 Target T%u, slot:%u present:%u, x:%u, y:%u, z:%d\n",
-> > +		target->index, slot, target->present,
-> > +		target->x, target->y, target->z);
-> > +
-> > +	switch (current_state) {
-> > +	case AXIOM_TARGET_STATE_NOT_PRESENT:
-> > +	case AXIOM_TARGET_STATE_PROX:
-> > +		if (!target_prev_state->insert)
-> > +			break;
-> > +		update = true;
-> > +		target_prev_state->insert = false;
-> > +		input_mt_slot(input_dev, slot);
-> > +
-> > +		if (!slot)
-> > +			input_report_key(input_dev, BTN_TOUCH, 0);
-> > +
-> > +		input_mt_report_slot_inactive(input_dev);
-> > +		/*
-> > +		 * make sure the previous coordinates are
-> > +		 * all off screen when the finger comes back
-> > +		 */
-> > +		target->x = 65535;
-> > +		target->y = 65535;
-> > +		target->z = AXIOM_PROX_LEVEL;
-> > +		break;
-> > +	case AXIOM_TARGET_STATE_HOVER:
-> > +	case AXIOM_TARGET_STATE_TOUCHING:
-> > +		target_prev_state->insert = true;
-> > +		update = true;
-> > +		input_mt_slot(input_dev, slot);
-> > +		input_report_abs(input_dev, ABS_MT_TRACKING_ID, slot);
-> > +		input_report_abs(input_dev, ABS_MT_POSITION_X, target->x);
-> > +		input_report_abs(input_dev, ABS_X, target->x);
->
-> You do not need to explicitly report ABS_X and ABS_Y values, as calling
-> input_mt_sync_frame() effectively takes care of this by way of pointer
-> emulation.
->
+Another effect seen is an indirect result of commit 933bfc5ad213 and is due to
+locality being tracked in two different locations. The first is at the TIS
+layer in struct tpm_tis_data and at the chip layer in struct tpm_chip. The
+failures experienced by commit 933bfc5ad213 causes the locality value in these
+two locations to fall out of sync with the value in tpm_tis_data reflecting
+Locality0 and struct tpm_chip having a value of -1, no locality open.
 
-After double checking/testing this, it doesn't seems to
-report ABS_X/Y values anymore, are you sure about this ? Maybe I missed
-some extra flag in input_mt_init_slots() for that ?
+This series seeks to address these conditions by introducing a protection
+against underflowing the locality counter. The closing of all localities at the
+beginning of initialization to begin with the TPM in the state expected by the
+sequencing codified in the initialization. Lastly to adjust the return error
+codes from __tpm_tis_request_locality() and tpm_tis_request_locality() to
+ensure they are consistent and that the locality counter is only incremented
+for a successful call to __tpm_tis_request_locality().
 
-Regards,
+Changes in v2:
+- split into three patches
+- adjust code comments per review
+- dropped incorrect return value change for tpm_request_locality in tpm-chip.c
+- additional -1 replacement in __tpm_tis_relinquish_locality
+- changed -EIO to -EBUSY, which is more appropriate, in tpm_tis_relinquish_locality
 
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Daniel P. Smith (3):
+  tpm: protect against locality counter underflow
+  tpm: ensure tpm is in known state at startup
+  tpm: make locality request return value consistent
+
+ drivers/char/tpm/tpm_tis_core.c | 25 +++++++++++++++++++------
+ include/linux/tpm.h             |  6 ++++++
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
+-- 
+2.30.2
+
