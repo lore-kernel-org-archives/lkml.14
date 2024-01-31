@@ -1,177 +1,99 @@
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829073A8C5;
-	Wed, 31 Jan 2024 22:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6055C3A8E7;
+	Wed, 31 Jan 2024 22:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706741948; cv=none; b=Euey6KQESTq+Xv8Exrj6pd/Rep90MV61fW9CNTIATxEnJwUYxTUfzMLPf3KUaan8OjinPcH3xrYMduV7n//FpqAXnEZ5J1LjBMM+zIk5wY3waa7DwO2IXxpLsbATh/Ztqug8i8BnVoUeU4dt2sFJEwcRpbYIM6ukdETcTnUVytM=
+	t=1706741996; cv=none; b=DUkir+jH5PhqDtNNwxplJv0EmyE99QXogiALSWbmGvhq+RZpl1B46csZRroM/jm28+xk/WW0Rrcn2U5pO2cdx7Q5ETcXxuY8RRHwK747j4YDhzfk4706RuDzdw7j0X44PYry3/BeMLgcPY2mZL+4nWd/I5vQ8XM7wLrOWc2o4v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706741948; c=relaxed/simple;
-	bh=K7ewgk79QCombkqi3c5WQVJe6Ip0DZ6iX8pogb7qiwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FYbr4+nNR3OSKfXJ8PsVsivjxCc1WjwIOUBmwbGSNhq7MqE8Rf0m/Yqwe2MtPCRNJsQIoJIlSTB/lfeXqIv5e1lEa0idzpo76JB7K7aIKbFqLEp0PQw7xhUYn4dd0YJwjtiuBf20gX4Pejyj3Mz5iQzYxx6cgVykbTVNQS26v5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.17.2/8.17.2) with ESMTPS id 40VMmx1W001349
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 1 Feb 2024 09:19:00 +1030
-Date: Thu, 1 Feb 2024 09:18:59 +1030
-From: Jonathan Woithe <jwoithe@just42.net>
-To: Igor Mammedov <imammedo@redhat.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
-Message-ID: <ZbrOW/eTC0FFPjec@marvin.atrad.com.au>
-References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
- <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com>
- <ZZaiLOR4aO84CG2S@marvin.atrad.com.au>
- <ZZ+gEmxI/TxdbmyQ@marvin.atrad.com.au>
- <ZajJzcquyvRebAFN@marvin.atrad.com.au>
- <Za0T_siv79qz1jkk@smile.fi.intel.com>
- <Za2YtnwLKKeMquv6@marvin.atrad.com.au>
- <62b66d58-7824-3650-6a73-12068a22563e@linux.intel.com>
- <20240122144520.7761c5a6@imammedo.users.ipa.redhat.com>
+	s=arc-20240116; t=1706741996; c=relaxed/simple;
+	bh=zdzGQukzuFM99odXc1XHFwDNHwjEYQ2tT1RmuJLmutg=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=umGzoTOASmkTVaL9hLMtdTINI+Li/AoeOv/ZGcFsCLh/DI+G8cPUzKuxBzhrrH8iX5TXtu2e3107kfmPX6yGRjlLC/JzbtWd28neSCGh7wwWirM5IhC2IrMTh9l9T7Lo3Ah2pZz261NfAurtniEFHhEhRiCKEzv6EPnDZFsJPSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+jPDyWj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+jPDyWj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BF5C433C7;
+	Wed, 31 Jan 2024 22:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706741995;
+	bh=zdzGQukzuFM99odXc1XHFwDNHwjEYQ2tT1RmuJLmutg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=M+jPDyWjW3p2BFL4c7Lq/tJLbKE0eoQKC70P1AS5REFlY4kdxkNB5cTBbAFNDw1hI
+	 2jP/AbKdvUAxefuvOQh22+j7DgdGVzQ3I5QRhy0N9Upe1mX/GsYF0W6i+Dm2K8IfgK
+	 aaCTibLiwPJs/QYgWz4pNrt86vq2TzlHrW3LD7GcPXNqA4xfdMx+OxZJ6gsGzi6zOq
+	 cmGZ0fU6BVOtgwkZbi25gi+5Oow8v+mf8eSt9A4C6pMEL/aZOrLzK4IrofeZrybwYI
+	 wWu727yJvBE5SN5Rr+8ryTsDlTV0UA0rTEGgaRgBFH3pcLi4e0ZYUxqKCbcyxmDqcE
+	 ceTxausFkQgQg==
+Message-ID: <efe6a7886c3491cc9c225a903efa2b1e.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240122144520.7761c5a6@imammedo.users.ipa.redhat.com>
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240131205405.GA2249327-robh@kernel.org>
+References: <20240130004508.1700335-1-sboyd@kernel.org> <20240130004508.1700335-2-sboyd@kernel.org> <20240131205405.GA2249327-robh@kernel.org>
+Subject: Re: [PATCH v2 1/7] arm64: Unconditionally call unflatten_device_tree()
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev, linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org, kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Rob Herring <robh@kernel.org>
+Date: Wed, 31 Jan 2024 14:59:53 -0800
+User-Agent: alot/0.10
 
-On Mon, Jan 22, 2024 at 02:45:20PM +0100, Igor Mammedov wrote:
-> On Mon, 22 Jan 2024 14:37:32 +0200 (EET)
-> Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> 
-> > On Mon, 22 Jan 2024, Jonathan Woithe wrote:
-> > 
-> > > On Sun, Jan 21, 2024 at 02:54:22PM +0200, Andy Shevchenko wrote:  
-> > > > On Thu, Jan 18, 2024 at 05:18:45PM +1030, Jonathan Woithe wrote:  
-> > > > > On Thu, Jan 11, 2024 at 06:30:22PM +1030, Jonathan Woithe wrote:  
-> > > > > > On Thu, Jan 04, 2024 at 10:48:53PM +1030, Jonathan Woithe wrote:  
-> > > > > > > On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:  
-> > > > > > > > On Thu, 28 Dec 2023 18:57:00 +0200
-> > > > > > > > Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > > > > >   
-> > > > > > > > > Hi all,
-> > > > > > > > > 
-> > > > > > > > > Here's a series that contains two fixes to PCI bridge window sizing
-> > > > > > > > > algorithm. Together, they should enable remove & rescan cycle to work
-> > > > > > > > > for a PCI bus that has PCI devices with optional resources and/or
-> > > > > > > > > disparity in BAR sizes.
-> > > > > > > > > 
-> > > > > > > > > For the second fix, I chose to expose find_empty_resource_slot() from
-> > > > > > > > > kernel/resource.c because it should increase accuracy of the cannot-fit
-> > > > > > > > > decision (currently that function is called find_resource()). In order
-> > > > > > > > > to do that sensibly, a few improvements seemed in order to make its
-> > > > > > > > > interface and name of the function sane before exposing it. Thus, the
-> > > > > > > > > few extra patches on resource side.
-> > > > > > > > > 
-> > > > > > > > > Unfortunately I don't have a reason to suspect these would help with
-> > > > > > > > > the issues related to the currently ongoing resource regression
-> > > > > > > > > thread [1].  
-> > > > > > > > 
-> > > > > > > > Jonathan,
-> > > > > > > > can you test this series on affected machine with broken kernel to see if
-> > > > > > > > it's of any help in your case?  
-> > > > > > > 
-> > > > > > > Certainly, but it will have to wait until next Thursday (11 Jan 2024).  I'm
-> > > > > > > still on leave this week, and when at work I only have physical access to
-> > > > > > > the machine concerned on Thursdays at present.
-> > > > > > > 
-> > > > > > > Which kernel would you prefer I apply the series to?  
-> > > > > > 
-> > > > > > I was very short of time today but I did apply the above series to the
-> > > > > > 5.15.y branch (since I had this source available), resulting in version
-> > > > > > 5.15.141+.  Unfortunately, in the rush I forgot to do a clean after the
-> > > > > > bisect reset, so the resulting kernel was not correctly built.  It booted
-> > > > > > but thought it was a different version and therefore none of the modules
-> > > > > > could be found.  As a result, the test is invalid.
-> > > > > > 
-> > > > > > I will try again in a week when I next have physical access to the system. 
-> > > > > > Apologies for the delay.  In the meantime, if there's a specific kernel I
-> > > > > > should apply the patch series against please let me know.  As I understand
-> > > > > > it, you want it applied to one of the kernels which failed, making 5.15.y
-> > > > > > (for y < 145) a reasonable choice.  
-> > > > > 
-> > > > > I did a "make clean" to reset the source tree and recompiled.  However, it
-> > > > > errored out:
-> > > > > 
-> > > > >   drivers/pci/setup-bus.c:988:24: error: ‘RESOURCE_SIZE_MAX’ undeclared
-> > > > >   drivers/pci/setup-bus.c:998:17: error: ‘pci_bus_for_each_resource’ undeclared
-> > > > > 
-> > > > > This was with the patch series applied against 5.15.141.  It seems the patch
-> > > > > targets a kernel that's too far removed from 5.15.x.
-> > > > > 
-> > > > > Which kernel would you like me to apply the patch series to and test?  
-> > > > 
-> > > > The rule of thumb is to test against latest vanilla (as of today v6.7).
-> > > > Also makes sense to test against Linux Next. The v5.15 is way too old for
-> > > > a new code.  
-> > > 
-> > > Thanks, and understood.  In this case the request from Igor was 
-> > > 
-> > >     can you test this series on affected machine with broken kernel to see if
-> > >     it's of any help in your case?
-> > > 
-> > > The latest vanilla kernel (6.7) has (AFAIK) had the offending commit
-> > > reverted, so it's not a "broken" kernel in this respect.  Therefore, if I've
-> > > understood the request correctly, working with that kernel won't produce the
-> > > desired test.  
-> > 
-> > Well, you can revert the revert again to get back to the broken state.
-> 
-> either this or just a hand patching as Ilpo has suggested earlier
-> would do.
+Quoting Rob Herring (2024-01-31 12:54:05)
+> On Mon, Jan 29, 2024 at 04:45:00PM -0800, Stephen Boyd wrote:
+> > Call this function unconditionally so that we can populate an empty DTB
+> > on platforms that don't boot with a firmware provided or builtin DTB.
+> > Override 'initial_boot_params' to NULL when ACPI is in use but the
+> > bootloader has loaded a DTB so that we don't allow both ACPI and DT to
+> > be used during boot. If there isn't a valid initial_boot_params dtb then
+> > unflatten_device_tree() returns early so this is fine.
+> >=20
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: <linux-arm-kernel@lists.infradead.org>
+> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > ---
+> >  arch/arm64/kernel/setup.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> > index 417a8a86b2db..ffb1942724ae 100644
+> > --- a/arch/arm64/kernel/setup.c
+> > +++ b/arch/arm64/kernel/setup.c
+> > @@ -351,8 +351,11 @@ void __init __no_sanitize_address setup_arch(char =
+**cmdline_p)
+> >       /* Parse the ACPI tables for possible boot-time configuration */
+> >       acpi_boot_table_init();
+> > =20
+> > -     if (acpi_disabled)
+> > -             unflatten_device_tree();
+> > +     /* Don't use the FDT from boot if ACPI is in use */
+> > +     if (!acpi_disabled)
+> > +             initial_boot_params =3D NULL;
+>=20
+> I still think this is a problem for kexec. See=20
+> of_kexec_alloc_and_setup_fdt(). You see it uses initial_boot_params. At=20
+> first glance it looks like it would just write out everything we need.=20
+> But for UEFI boot, I think we need all the chosen properties like=20
+> linux,uefi-mmap-start preserved from the current boot for the next=20
+> kernel we kexec.
 
-No problem.  This was the easiest approach for me and I have now done this. 
-Apologies for the delay in getting to this: I ran out of time last Thursday.
+Ok, got it.
 
-> There is non zero chance that this series might fix issues
-> Jonathan is facing. i.e. failed resource reallocation which
-> offending patches trigger.
+>=20
+> I think you'll have to check acpi_disabled in unflatten_device_tree()=20
+> and unflatten the empty tree leaving initial_boot_params alone. That=20
+> means our FDT and unflattened tree will be different DTs, but I think=20
+> that's fine.
 
-I can confirm that as expected, this patch series has had no effect on the
-system which experiences the failed resource reallocation.  From syslog,
-running a 5.15.141+ kernel[1]:
-
-    kernel: radeon 0000:4b:00.0: Fatal error during GPU init
-    kernel: radeon: probe of 0000:4b:00.0 failed with error -12
-
-This is unchanged from what is seen with the unaltered 5.15.141 kernel.
-
-In case it's important, can also confirm that the errors related to the
-thunderbolt device are are also still present in the patched 5.15.141+
-kernel:
-
-    thunderbolt 0000:04:00.0: interrupt for TX ring 0 is already enabled
-    :
-    thunderbolt 0000:04:00.0: interrupt for RX ring 0 is already enabled
-    :
-
-Like the GPU failure, they do not appear in the working kernels on this
-system.
-
-Let me know if you would like to me to run further tests.
-
-Regards
-  jonathan
-
-[1] This is 5.15.141, patched with the series of interest here and the hand
-    patch from Ilpo.
+It's sort of scary given that 'initial_boot_params' is an exported
+global. Maybe that should be hidden away and accessed with a function
+instead so that this mismatch doesn't break something later on?
