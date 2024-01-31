@@ -1,127 +1,283 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586386775E
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E2069D00;
+	Wed, 31 Jan 2024 10:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706696318; cv=none; b=D6M0H5gMN7TkcSbVTbA4d3M7oJA8zaSZHgx70aMoLJLS5M92qIakiwHkzat6xrdWJu92PeZCyhfZY2x/ACDQabVlFg7QXFC0VW8ADrUXb3Es0a6+xDTC3DzKUSGrlaQQZoUeGEjRwbX58mxT9EJFjRT93yGX2g2jbxtcxxQ0yoE=
+	t=1706696389; cv=none; b=JWPruKJ/3DFhsuCnU3K2lALbB3Iu8/8uW4ZBGKL4WgCpb5+uaSvO7DUweBbNS18GwW2ThyDk5ybbEWqWPSpgosLfcEU6zk6hdyyz7ZKy2xkiR2ulCuFmr7OEu4y0PlWOjN1eBuoi2dp/5D5BrVEs2foHMJNh61bLShhsm1HKd4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706696318; c=relaxed/simple;
-	bh=ykZfkKoX7TOjRuI9YLjTyIXMIdhpZDwu6WP2/XZu0fQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YpA290pNwLQQ2FTRIxEd7OZP8FCdTAm4QSp0GEd1SjNYODyzFsX2bqDRgiU9NpcVYn/a0NhD8jLiLhUDTvSMKHSISiwMU+oHkDbYgN3JrCitybbt47YL+xKeUE1tU7HFS3GP1fxEx52baIubo+iYr5jFiWulphHl5bcEo1LnPAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp70t1706696289tk9l24wz
-X-QQ-Originating-IP: Ktt9i8CN95Xfql4e+hRGz/fWFMloBH13l1Px5P2wytg=
-Received: from [127.0.0.1] ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 31 Jan 2024 18:18:07 +0800 (CST)
-X-QQ-SSF: 00400000000000B0B000000A0000000
-X-QQ-FEAT: 90EFqYDyPxCbs1f2TU2Vi8g7zUPEIDXMypu2mV8mS9KG91ynL9zStuL4gly0L
-	7VSBIR7F1GHe5CujByBVBu002e9hsIParfK+kjF+1JB+oXZmy2/9VFXvfZCXuP4cLBfy6tL
-	Lj4T6x9lEwR/mWDzLooumM2fet1y2am75xHY9ia6squ5x6cVvkIDiCU3QkEA74B54A9dxDN
-	YA3fIh5TfShI/U/hbGmJeBtngGKB5eh9h04AUvcoHOzMzjL1h8YKYIKcV3rS2nqx6sO7L1a
-	XGfHd2RvqNrPuUyUAGLAIEDUUXZOwvvlW2v3tUJjKaNei9mUBxJINPAaYX/X9nwnvu+Yji8
-	5JT8lN3rXkJnsUewyPzrjSFROCk3LgGgKdMAlib8Q5+CCQtoKvQNfCz8B8G5AVIkhspiYkO
-	yPcTKCISPEnynTvH4OamBwvdNfYe2TcpIF7cGJkdomA=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 6162895536767829948
-Message-ID: <EC1445AF2C5DB6F4+64772ecd-5e7a-42bb-aaa8-bc2857b2ab8b@shingroup.cn>
-Date: Wed, 31 Jan 2024 18:18:07 +0800
+	s=arc-20240116; t=1706696389; c=relaxed/simple;
+	bh=3oWq+GNr3tgQsR407ZFMHVQBed2EHuNUvnJY/ULjyhs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ksjpzokbowfiX0FhqIpjwMDDlzIGPoedYtaaotndWKqu4DibS7EnlqPNSH72gJlF9ix3l3AXfyHOpzyPx1knF7aHdVrahh6XiD/SIUjtSW1YA6GAnVX38ecIndTOIAC6H96tuPpQbDtruxedLKLfSClrVI8VARE5TcAPw5RwtQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FqozsgSb; arc=none smtp.client-ip=192.55.52.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FqozsgSb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706696387; x=1738232387;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3oWq+GNr3tgQsR407ZFMHVQBed2EHuNUvnJY/ULjyhs=;
+  b=FqozsgSbeknXEXWREdLHU62q7SFih6QKc4fBthSgglAH1u2gOrKvCgDW
+   /cdGtzNqQV0a2qsKhyGdBXdJYCIpoTLskoUdRz7nwKTDGKWS6Iw4tams7
+   JaLPLrr08oK+1qVlhJWCLaX0ukWktJYU33M9zaz2fHFZDjtulgol4UUsc
+   LzUxkXUVUZAdTqjesA7I6A8ryDQHlaEDmepA0HY7l/53YjO1RaGChhKqB
+   8jc8K6fKRTTL8zlaZmsa0Fj3OtGCLfKWBsOJzpaZ9fz/3VPdpu7Jgdgwv
+   IJc4aZHPrnvrTSAag4QNzeSLt6wVu0fE32l05hUoPo6IIiqo7J7YqVECh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403182529"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="403182529"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:19:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822519740"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="822519740"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.35.167])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:19:43 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 31 Jan 2024 12:19:38 +0200 (EET)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+In-Reply-To: <4fab3112d17a4bd2edbee66a8e77695943cbaf5a.1706607635.git.shravankr@nvidia.com>
+Message-ID: <a28597c7-782a-69a3-90c5-13ef46c8ced1@linux.intel.com>
+References: <cover.1706607635.git.shravankr@nvidia.com> <4fab3112d17a4bd2edbee66a8e77695943cbaf5a.1706607635.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bingdings: perf: Support uncore ARM NI-700 PMU
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- will <will@kernel.org>, "mark.rutland" <mark.rutland@arm.com>
-Cc: shenghui.qu@shingroup.cn, =?UTF-8?B?6LW15Y+v?= <ke.zhao@shingroup.cn>,
- zhijie.ren@shingroup.cn, linux-kernel@vger.kernel.org,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20240131065953.9634-1-jialong.yang@shingroup.cn>
- <e7bf16fc-b12d-47eb-9197-0694e6829ac8@linaro.org>
- <02B995F774AB7A9D+adfd0934-00cb-4dc3-8bf8-058b83dc2fbb@shingroup.cn>
- <ebbc9d73-9be2-49ae-98f3-0d71ce624ee4@linaro.org>
- <873A6CC450C1D0E6+75a39d6c-4fbf-4e30-8630-3226bd725901@shingroup.cn>
- <b99efbd4-7c12-485d-8688-a4ec606f0cf5@linaro.org>
-From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
-In-Reply-To: <b99efbd4-7c12-485d-8688-a4ec606f0cf5@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 30 Jan 2024, Shravan Kumar Ramani wrote:
 
-
-在 2024/1/31 18:16, Krzysztof Kozlowski 写道:
-> On 31/01/2024 11:13, Yang Jialong 杨佳龙 wrote:
->>
->>
->> 在 2024/1/31 17:30, Krzysztof Kozlowski 写道:
->>> On 31/01/2024 10:26, Yang Jialong 杨佳龙 wrote:
->>>>
->>>>
->>>> 在 2024/1/31 15:49, Krzysztof Kozlowski 写道:
->>>>> On 31/01/2024 07:59, JiaLong.Yang wrote:
->>>>>> Add file corresponding to hx_arm_ni.c introducing ARM NI-700 PMU driver
->>>>>> for HX.
->>>>>>
->>>>>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
->>>>>> ---
->>>>>> v1 --> v2:
->>>>>> 1. Submit dt-bindings file Seperately.
->>>>>
->>>>> Where is the driver?
->>>>>
->>>>> Please read:
->>>>> https://elixir.bootlin.com/linux/v6.8-rc2/source/Documentation/process/submitting-patches.rst
->>>>> before posting.
->>>>>
->>>
->>> Keep all discussions public.
->>
->> Get.
->>
->>>
->>>
->>>>>> +  pccs-id:
->>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>>> +    description: Used to identify NIs in system which has more than
->>>>>> +      one NI.
->>>>>
->>>>> No, reg does it. Drop the property. Anyway you miss here vendor prefix
->>>>> and proper explanation.
->>>>>
->>>>
->>>> reg will tell phy address. Phy address is too long. I just want a id.
->>>> example: perf stat -a -e ni_pmu_${pccs-id}/cycles/
->>>> I will use it in user space. Not only in driver.
->>>
->>> Custom vendor property is not for that purpose. Use for example IDR, DT
->>> aliases or something else.
->>>
->>>
->>
->> I have considered TD aliases. It's not very easy. Two places...
->> IDR.. I have tested. But it chouldn't correspond to the HWs.
->> I need it to identify NIs.
->> DT aliases is reachable. But no very easy.
+> Add support for programming any counter to monitor the cycle count.
+> Since counting of cycles using 32-bit ocunters would result in frequent
+> wraparounds, add the ability to combine 2 adjacent 32-bit counters to
+> form 1 64-bit counter.
+> Both these features are supported by BlueField-3 PMC hardware, hence
+> the required bit-fields are exposed by the driver via sysfs to allow
+> the user to configure as needed.
 > 
-> Except that "you want" I did not see any rationale, any argument
-> explaining why this is needed and why this has to be present.
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 132 ++++++++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+> 
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index b1995ac268d7..906dfa96f783 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -88,6 +88,8 @@
+>  #define MLXBF_PMC_CRSPACE_PERFMON_CTL(n) (n * MLXBF_PMC_CRSPACE_PERFMON_REG0_SZ)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_EN BIT(30)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_CLR BIT(28)
+> +#define MLXBF_PMC_CRSPACE_PERFMON_UOC GENMASK(15, 0)
+> +#define MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(n) (MLXBF_PMC_CRSPACE_PERFMON_CTL(n) + 0x4)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_VAL0(n) (MLXBF_PMC_CRSPACE_PERFMON_CTL(n) + 0xc)
+>  
+>  /**
+> @@ -114,6 +116,8 @@ struct mlxbf_pmc_attribute {
+>   * @attr_event: Attributes for "event" sysfs files
+>   * @attr_event_list: Attributes for "event_list" sysfs files
+>   * @attr_enable: Attributes for "enable" sysfs files
+> + * @attr_use_odd_counter: Attributes for "use_odd_counter" sysfs files
+> + * @attr_count_clock: Attributes for "count_clock" sysfs files
+>   * @block_attr: All attributes needed for the block
+>   * @block_attr_grp: Attribute group for the block
+>   */
+> @@ -126,6 +130,8 @@ struct mlxbf_pmc_block_info {
+>  	struct mlxbf_pmc_attribute *attr_event;
+>  	struct mlxbf_pmc_attribute attr_event_list;
+>  	struct mlxbf_pmc_attribute attr_enable;
+> +	struct mlxbf_pmc_attribute attr_use_odd_counter;
+> +	struct mlxbf_pmc_attribute attr_count_clock;
+>  	struct attribute *block_attr[MLXBF_PMC_MAX_ATTRS];
+>  	struct attribute_group block_attr_grp;
+>  };
+> @@ -1759,6 +1765,101 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  	return count;
+>  }
+>  
+> +/* Show function for "use_odd_counter" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_use_odd_counter_show(struct device *dev,
+> +					      struct device_attribute *attr, char *buf)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_use_odd_counter = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	int blk_num, value;
+> +	uint32_t reg;
+> +
+> +	blk_num = attr_use_odd_counter->nr;
+> +
+> +	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +			&reg))
+> +		return -EINVAL;
+> +
+> +	value = FIELD_GET(MLXBF_PMC_CRSPACE_PERFMON_UOC, reg);
 
-OK. DT aliases it good.
+Is this a signed field? If not, don't use int for value and change the %d 
+-> %u too.
 
+> +
+> +	return sysfs_emit(buf, "%d\n", value);
+> +}
+> +
+> +/* Store function for "use_odd_counter" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_use_odd_counter_store(struct device *dev,
+> +					       struct device_attribute *attr,
+> +					       const char *buf, size_t count)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_use_odd_counter = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	uint32_t uoc, reg;
+
+uint32_t is not to be used as in-kernel type, use u32 in kernel.
+
+> +	int err, blk_num;
+> +
+> +	blk_num = attr_use_odd_counter->nr;
+> +
+> +	err = kstrtoint(buf, 0, &uoc);
+
+Hmm, uoc is unsigned but you use signed variant, kstrtouint() also 
+available for you so better to use that.
+
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +		&reg);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	reg &= ~MLXBF_PMC_CRSPACE_PERFMON_UOC;
+> +	reg |= FIELD_PREP(MLXBF_PMC_CRSPACE_PERFMON_UOC, uoc);
+> +
+> +	mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +		MLXBF_PMC_WRITE_REG_32, reg);
+> +
+> +	return count;
+> +}
+> +
+> +/* Show function for "count_clock" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_count_clock_show(struct device *dev,
+> +					  struct device_attribute *attr, char *buf)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_count_clock = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	uint32_t reg;
+
+u32
+
+> +	int blk_num;
+> +
+> +	blk_num = attr_count_clock->nr;
+> +
+> +	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +			MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(pmc->block[blk_num].counters),
+> +			&reg))
+> +		return -EINVAL;
+> +
+> +	return sysfs_emit(buf, "%d\n", reg);
+
+Use %u when printing unsigned values.
+
+> +}
+> +
+> +/* Store function for "count_clock" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_count_clock_store(struct device *dev,
+> +					   struct device_attribute *attr,
+> +					   const char *buf, size_t count)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_count_clock = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	int err, blk_num;
+> +	uint32_t reg;
+
+u32
+
+> +
+> +	blk_num = attr_count_clock->nr;
+> +
+> +	err = kstrtoint(buf, 0, &reg);
+
+kstrtouint()
+
+> +	if (err < 0)
+> +		return err;
+> +
+> +	mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(pmc->block[blk_num].counters),
+> +		MLXBF_PMC_WRITE_REG_32, reg);
+> +
+> +	return count;
+> +}
+> +
+>  /* Populate attributes for blocks with counters to monitor performance */
+>  static int mlxbf_pmc_init_perftype_counter(struct device *dev, int blk_num)
+>  {
+> @@ -1792,6 +1893,37 @@ static int mlxbf_pmc_init_perftype_counter(struct device *dev, int blk_num)
+>  		attr = NULL;
+>  	}
+>  
+> +	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+> +		/*
+> +		 * Couple adjacent odd and even 32-bit counters to form 64-bit counters
+> +		 * using "use_odd_counter" sysfs which has one bit per even counter.
+> +		 */
+> +		attr = &pmc->block[blk_num].attr_use_odd_counter;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_use_odd_counter_show;
+> +		attr->dev_attr.store = mlxbf_pmc_use_odd_counter_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "use_odd_counter");
+
+Why you need alloc for a constant string?
+
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +
+> +		/* Program crspace counters to count clock cycles using "count_clock" sysfs */
+> +		attr = &pmc->block[blk_num].attr_count_clock;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_count_clock_show;
+> +		attr->dev_attr.store = mlxbf_pmc_count_clock_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "count_clock");
+
+Why alloc?
+
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +	}
+> +
+>  	pmc->block[blk_num].attr_counter = devm_kcalloc(
+>  		dev, pmc->block[blk_num].counters,
+>  		sizeof(struct mlxbf_pmc_attribute), GFP_KERNEL);
 > 
-> Best regards,
-> Krzysztof
-> 
-> 
+
+-- 
+ i.
 
