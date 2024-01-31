@@ -1,74 +1,78 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2062.outbound.protection.outlook.com [40.107.255.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7821869951;
-	Wed, 31 Jan 2024 08:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706690516; cv=fail; b=F1sMDxkRJhIAjk7ViKcieDVQsJ78VtwIE9S8gLfoUN6EfRw0h1j2ndGusqEhVe3uXkb8LMu6KBqzstaGOplbH1EUItjQlWbHS9nwIRLPElBPmO3Et6oyl94XOI2W5A9jWMHVLICG+JMJLVDv9MIkTN2Zz4/xgIXHkUi+dOOHVnU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706690516; c=relaxed/simple;
-	bh=0uqavz9LrMtQsZ0CHtAlV5c+czx2PwnIw4YXLNZBMzE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B330769978
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706690517; cv=none; b=t+U9wceKatsunF3hdtF8XiHS8WzmraXWo6KlPPSbPdKaVp3OnCh4MeplPsynhHLKQUGLC7Y+jjVJ6SHlxTO19yX7yEFwVeZeKAZFKZGj+zKv/iw8S0HFyStVWUfsymmsQFtDJMrzGI+obJRrpnyf9HwEOP+BH+l26oyfuM/Lses=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706690517; c=relaxed/simple;
+	bh=/PWJylbKKwrgWlPJgrOJpkH0IScCVBZN792i+Gp+2SI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bIQjRe1oU0q++gQAk/+Bw9JzkOkqAOdzD9pKxl1g+CtIT0hOIAD5qe0p90GntVRA8/8BqHZJz7vMt/Xq/yaaGpPvUGXCkwR9DxQmIo5wcx/yloqJvrBr3ifvSEwz7EekRs8PQ7tnFe54qb13Gkaqqz0hQOYi95MRhxTHX8odrn0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=nWdykIzd; arc=fail smtp.client-ip=40.107.255.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	 MIME-Version; b=G56ngFjUxmkVceiKZuccoaxV6S0Rzu+F4mpWiUlsSJpHfWfQy6ddQhpuBnZdSpE9izn10DDqcIYh8Z5ayQcNM7jH9VkYBb3TVa/JYPaDr+C5ySr3ZyaMIm74+ltsigoz/zcrIAOD7+cf4VZ2wo4QjSR8we0nuEiCZ6B6Ik1PPn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=qXe4WuFF; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="nWdykIzd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SpAgdLrGMvCvG9kviUClNyYumzl9DfNjBg+SArXH9K8oygwRsPZU4Kb/ZnqgC312SVrbuv0Tqer+7qp3WqhLJ4aU9R08tQh+Zygww/eyrrdyw+zbVKVvWRvoIGki8BYrlqSrLx5g/iZw2mixw08DqAeM2vAVk/mbTPMhTMvsCPtgNN76zXDvh4viFt/ok0asKEctt7FHjdDQIP1iBybs6P2BEewOleWQLQMAAxrgPN5cFeneBO+fbPj01Ws8afY0PKyaPVBZRMg1TAIUvRNJMswP9dTlb1raUnys+tVzlLbd4YBXMDOWPrvE9BjR5cKF0NYtAKnaT5QMdWyaprVwYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5kCO11WdUiFDfGWanOnHA5fSAvcgtGuDJsJBtZQkii8=;
- b=iYmlN3N6iXjeqB/bxr50RWPgavq4s69OA1Yr0pDl7qzGaRt7qlHl1ZPUkvG2Y9Jqg6hTLRUE9XIXlKxSZjv1OO6+O/Ai5aN4Od4MZY/Ldkt7NZqfhJ0QtKSX8XDjtUffttdGn4O4OS5l1/i9VcFUFKK56agSVugrl2ewpoaXcHEHRJ2dH9KE5cAlw1x5tEz65KyJqkm2zOAFkoT2GPD35kZuyD+qsBFI+cXWHsYIekrVnjKuS5DVerCdtx/t3xyE9TwQOvkz95Mmpj1vHz92Ah3wCdVyIed6ZZjEANrF0v8+Ys7+TsQYPPqPUnYKivQLdeWLBvrMtzhgfoIxVOImOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5kCO11WdUiFDfGWanOnHA5fSAvcgtGuDJsJBtZQkii8=;
- b=nWdykIzdRignff7a08thqIOFGvPb+VWNapP5SVn7SuBIMuinzJMBFyFPEr149S0CZ8KE4P3fQB642LbBDlnExIXFxv88nx2b9dpCeF0kVzIrjyF0LKuMVlvyhGz7hcf7nUBqeXD0ld1b1sm3kIRj3gHxP3MLFrXdZkco8AAt0wefaQTFEbsdJusKQqlz1Kwl/02uTvZyjVSrCXIloobvdhPip8LKlYQWt7osoXZ+tDFEwmMjhYL3/eFmqOIy6bO+p5rSPdMG3h4pNKnzkzb/DlmH/B6ScoDEDOtYT1bVC+SGKW8U8Y/ns2NYPNfccejMzmup3XmLRJdvepMVqIrXpg==
-Received: from SG2P153CA0024.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::11) by
- SEZPR04MB7248.apcprd04.prod.outlook.com (2603:1096:101:17f::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.34; Wed, 31 Jan 2024 08:41:47 +0000
-Received: from HK2PEPF00006FB2.apcprd02.prod.outlook.com
- (2603:1096:4:c7:cafe::47) by SG2P153CA0024.outlook.office365.com
- (2603:1096:4:c7::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.8 via Frontend
- Transport; Wed, 31 Jan 2024 08:41:47 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK2PEPF00006FB2.mail.protection.outlook.com (10.167.8.8) with Microsoft SMTP
- Server id 15.20.7228.16 via Frontend Transport; Wed, 31 Jan 2024 08:41:46
- +0000
-From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 02/21] ARM: dts: aspeed: yosemite4: Enable adc15
-Date: Wed, 31 Jan 2024 16:41:13 +0800
-Message-Id: <20240131084134.328307-3-Delphine_CC_Chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240131084134.328307-1-Delphine_CC_Chiu@wiwynn.com>
-References: <20240131084134.328307-1-Delphine_CC_Chiu@wiwynn.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qXe4WuFF"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55f279dca99so3454918a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:41:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1706690514; x=1707295314; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=itOIGVA3R7eyMhVQYhNOchTm4KKMCVx7yc0jtC14CEA=;
+        b=qXe4WuFF/jIibmNYjRzxdXnwE2P7yHJJUwh0IX/kXluVSkktU4EJ5YB9Yz1se12gyb
+         qqFc3DLkPehoPlU47mcs99zFFlrafTGISMkBIdy5VnM/Yt2Tw7l+e4paoGzNC+1XJqOK
+         Qpxomv8J8fUBNuoyfJkS6ZHYciSWPqrq2768P+qPTsD0gtGk6/NRveNghVVAw4lFL6j0
+         IznFAQTgtaWJI7emXI5XuG3xXTIJUi6LSjglhS3dqCg9XGQNSFmXS4Oa1rfIjw1E4tuQ
+         mpcYWMVzDgMBzb8WnW13EDqVcDRmPxjgo2HOPpxKMZnWU5YQAxqGu0+pd7cT3P5KoHJX
+         AktQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706690514; x=1707295314;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=itOIGVA3R7eyMhVQYhNOchTm4KKMCVx7yc0jtC14CEA=;
+        b=ZDCalJllnGpsAwb7bSDx7qBiYFPOBDreNPMTUwtv+C7+iqABVWQGkDEOdjKG3mxtRX
+         B2R/q14eKxs7m71PqyVXtZvffC0CMgcwa8OfrFzRBQhjB97s7qn5GZIRoN5AgNZy7iNN
+         dVeSa9g344jK8eY/bD2MG/VGSayA4SpfNraz/u5QJuwu9zpvUF8Q646htjO+XfgFWkqI
+         /PdNa5NI2hjZefZzjgKHjlnSEHoMTS7MZxWtmPwZLHVYISN+Y9/c9guuA5SfrvR0EwPS
+         ml9oNxpL7uAuvGH2GXMzaaBmdimZYA2SHgqKpeurBHcQMWE538V15ABXhIRT+F04ZU4Q
+         BWXg==
+X-Gm-Message-State: AOJu0YxhhpG5o1uey7zPoY8KA81WqHfgzADxFkaxjJuwiJGG2y/cFN5Y
+	x+uAF5CaqwGNs6/ikAcbyxaW1P+WPwf4c/00OtdMWx3fENCgPtDBtnH0qEdthXk=
+X-Google-Smtp-Source: AGHT+IG9rGImo292r2RZzxIGuzmZgarHtrrUyPsuHv+Si+ydCummwyBkISc94Tv4f6xKXAs77SJF1Q==
+X-Received: by 2002:aa7:d295:0:b0:55f:80e1:29 with SMTP id w21-20020aa7d295000000b0055f80e10029mr581032edq.1.1706690514031;
+        Wed, 31 Jan 2024 00:41:54 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVOa7jtGLIUOzbqQlRyo7VdLl2vPSo50eXt1GVm+ze22BKVkK2vAwQy30mcxXXWsk49Buip2FgifGbUKUW2PKpUWqAxmUMuJPFTiP/vj858c1fKxX+GaV2MdSPu6afhocNYu6xXgCCFFiw4M1DsMKuRNOddHzMKyC5qi+5CIpPxIOMyp3owAsm1+BPXn9vsRO8g5KgLFhpp24J+2Y2u3sBBrS3KykLjVXlT6eql1dTjJvd94SsjGKMbSWYKQH4srHfakkrivvKiYVNO+P1dz6X1EblE1bzDg6z/0+eepILVQtQXUOrwHhJDQcx2SZHomtAyz6KtrGSXZt1JJA4I4KpO0mCro0agXucYU6V2IwqSddMpQN3Gl6gZU5hRusy7WnqkYW2K7ZecZ3spdSYslbfAjaGIWM3SVu1ccNtTTXlVgqR0U0A=
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.87])
+        by smtp.gmail.com with ESMTPSA id cq16-20020a056402221000b0055f02661ae2sm2863630edb.78.2024.01.31.00.41.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 00:41:53 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: s.shtylyov@omp.ru,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	richardcochran@gmail.com,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH net-next v5 06/15] net: ravb: Assert/de-assert reset on suspend/resume
+Date: Wed, 31 Jan 2024 10:41:24 +0200
+Message-Id: <20240131084133.1671440-7-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240131084133.1671440-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20240131084133.1671440-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,63 +80,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB2:EE_|SEZPR04MB7248:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: a877906d-7b84-4f4d-c25f-08dc223875f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	aS1jebEGCiI0x6LeNWBVLr9a8RDR9ofgv2VWJJtSnwIGi5aNOrXmT9frfWBoRETHZMZseGdQ7TKXGC/5qwY6fPQywm9EayHU/GYNOu/VWJvhRp5R48NIV6cq8c+qteastZWCSpApnTLhEAydcTkmLqr2ituM+FVdYLJMhDNnBQXdjSVfkre0gI94MQ44dIPKMiZb2XOQ3unA3dkdCGu1Re69nJqxlhh994Tc2cfPSzOtRacThu+Wqh7GXSmDkJ/fl5HR0e8TudrtSJC46t6WNwlVakePbIMnsmxvaR+a0sgmBHksytlmdRV2oxsnTSiw0fHAD481LQd5GRM1+jasMHjP4jbTvlLPbwXZRm3qJy/MKM4zkswL0rHShN1SMQyVOADB6TiGTbjMxZ7tT/gZAVq9vhXcqipy6e6Fcjwyc8G0by2kiNjCXCRp/6EvIS4UNtpJRbmEjR71+/lrdgtgFNv5ATELfHuzXvqMuLg2AceGoUVqgNvxMtRY+JGKofS2EkAn/Y2zblfHYX9L0yqs75fdntUlF4UaNIeypCZd69ATUASTbKRcq+5RncVOxCMSC4uv3M9lFDwzKK4+nsmEC+MiCTkfb0QDjGeckT3WXbzfEaRrhzWcwMlmJ1qTr5fDjFUSbHlcaGl5ZxzETq0Z9QGruwfG1HkLFm5YkCDshlOxQcRDg1E9KAU4Bod9+SeFk5Jj+Z1yVZlsNA5hhWcfEA==
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(6069001)(4636009)(346002)(136003)(376002)(39860400002)(396003)(230922051799003)(451199024)(82310400011)(186009)(1800799012)(64100799003)(36840700001)(46966006)(40480700001)(47076005)(81166007)(36860700001)(6506007)(356005)(83380400001)(82740400003)(9316004)(336012)(2616005)(956004)(36736006)(36756003)(6512007)(86362001)(2906002)(5660300002)(316002)(4326008)(8936002)(6666004)(110136005)(8676002)(41300700001)(7416002)(70206006)(70586007)(478600001)(6486002)(26005)(1076003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 08:41:46.1449
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a877906d-7b84-4f4d-c25f-08dc223875f6
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FB2.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR04MB7248
 
-Enable Yosemite 4 adc15 config
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
+RZ/G3S can go to deep sleep states where power to most of the SoC parts is
+off. When resuming from such a state, the Ethernet controller needs to be
+reinitialized. De-asserting the reset signal for it should also be done.
+Thus, add reset assert/de-assert on suspend/resume functions.
+
+On the resume function, the de-assert was not reverted in case of failures
+to give the user a chance to restore the interface (e.g., bringing down/up
+the interface) in case suspend/resume failed.
+
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-index dac58d3ea63c..6846aab893ad 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-@@ -51,7 +51,7 @@ iio-hwmon {
- 		compatible = "iio-hwmon";
- 		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
- 				<&adc0 4>, <&adc0 5>, <&adc0 6>, <&adc0 7>,
--				<&adc1 0>, <&adc1 1>;
-+				<&adc1 0>, <&adc1 1>, <&adc1 7>;
- 	};
- };
+Changes in v5:
+- none
+
+Changes in v4:
+- none
+
+Changes in v3:
+- collected tags
+
+Changes in v2:
+- fixed typos in patch description and subject
+- on ravb_suspend() assert the reset signal in case interface is down;
+  due to this the Sergey's Rb tag was left aside in this version
+
+ drivers/net/ethernet/renesas/ravb_main.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index c05d4a2664eb..c2b65bdad13c 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -2978,7 +2978,7 @@ static int ravb_suspend(struct device *dev)
+ 	int ret;
  
-@@ -920,10 +920,10 @@ &pinctrl_adc4_default &pinctrl_adc5_default
- &adc1 {
- 	ref_voltage = <2500>;
- 	status = "okay";
--	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default>;
-+	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default
-+	    &pinctrl_adc15_default>;
- };
+ 	if (!netif_running(ndev))
+-		return 0;
++		goto reset_assert;
  
--
- &ehci0 {
- 	status = "okay";
- };
+ 	netif_device_detach(ndev);
+ 
+@@ -2990,7 +2990,11 @@ static int ravb_suspend(struct device *dev)
+ 	if (priv->info->ccc_gac)
+ 		ravb_ptp_stop(ndev);
+ 
+-	return ret;
++	if (priv->wol_enabled)
++		return ret;
++
++reset_assert:
++	return reset_control_assert(priv->rstc);
+ }
+ 
+ static int ravb_resume(struct device *dev)
+@@ -2998,7 +3002,11 @@ static int ravb_resume(struct device *dev)
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct ravb_private *priv = netdev_priv(ndev);
+ 	const struct ravb_hw_info *info = priv->info;
+-	int ret = 0;
++	int ret;
++
++	ret = reset_control_deassert(priv->rstc);
++	if (ret)
++		return ret;
+ 
+ 	/* If WoL is enabled set reset mode to rearm the WoL logic */
+ 	if (priv->wol_enabled) {
 -- 
-2.25.1
+2.39.2
 
