@@ -1,108 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3A53D572;
-	Wed, 31 Jan 2024 05:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189513D964
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706679185; cv=none; b=d2p88v9Eo2CHaTxapz6n80ve5IyoBCohYmx9yYCSG+KKMvmWsGaY/dB5f4EIcwHSmRAPn/NdV6pX1VcMaBKMP5lfGibdJ0MSYPIo3q6Zjmh9GGsR/NFDOxW2RoxirNW5A/PW2FV+2+Pp3V7YOJ96mjctOoWr+h7Wfa9GOIXACXM=
+	t=1706679494; cv=none; b=hURfWT/GU8d9tmszqHcCTXFesULAcgaynsSrxm5owB8lvz4j2/PK/ShSEbHqlLGsIdS62kGoQWhipFZAnbstcJR+zieyEMapwnZT4aXuuBqqMOujnBwV6PkjQ8TnFzJJSod8oX5BUjXLwwuE7xh+991xwxNv26RPR5AjjUiU3wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706679185; c=relaxed/simple;
-	bh=9eNMyVRmJlRMLKSTZzoMPiOUu+w8lh4JoPKvelIwgak=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mNGMEGuxKNXP/6S0wwNSsIT4JgNYKWrVU6a3V8ppZRPh6tDqPWgZwFpaWxV+9FT7qmhLrLKLciVhKZeA2EBkM3nv0cPEPk96v6Nmgohnfz0NH2fcLDKEotW+In20Jd4FjTrRmce3SDC/5csLtGZ8Z4/ZA6LOhxm/qBL8IiXqKjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB23BC43390;
-	Wed, 31 Jan 2024 05:33:04 +0000 (UTC)
-Date: Wed, 31 Jan 2024 00:33:17 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
- refcounts
-Message-ID: <20240131003317.7a63e799@gandalf.local.home>
-In-Reply-To: <CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-5-torvalds@linux-foundation.org>
-	<20240131000956.3dbc0fc0@gandalf.local.home>
-	<CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706679494; c=relaxed/simple;
+	bh=22Krx4btf00/8e1ZZBBu8MzhsLLX45dV/yNclvUWUag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPO7kBClBPSga/yw1USJQrMW4bYqTmgrjJg1NbZ4lqLj5K644hwea8XuNlS18qO48UFny230BxuiVbDR7RslhbqRH5wn0Y8ulNutlLVg6nzP5LEF+5iKyNN0lDUutzDhaFaHTRVI6+Yu138+B4JiVtOOPYcC2k2siP4A9no2f3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SprPIEde; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SprPIEde"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB433C43390;
+	Wed, 31 Jan 2024 05:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706679493;
+	bh=22Krx4btf00/8e1ZZBBu8MzhsLLX45dV/yNclvUWUag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SprPIEdeeiOm1uug0/HcOCQDu8xShAIOqfy+Lr8SVYVikVDl3aI9ONVCm1PDroLb1
+	 /BBHiEG3trPAcQac98allr6kqurTPWi3T/1CU/PDwPa5WreOBblJ06FFQG63/iXQK8
+	 c1pDO19/jRPVQ2ZTmkW4gLUv20otv3aiF+NVanjiOKc1j95D4q0k0APJIt0a7JLLw/
+	 VvaqDj03CMt0Z19iCHhUPPiRIZp5JLNPh4DEVmUjvSJtsDDzHIOE/gen0ZBU8Z+FCC
+	 iLPTFwl638xcT/bFSayT0AriKuzt6aMpfFNTa6R6FJXhcleU9ee3OTpMF8Of7QEF19
+	 rsNbZ5uKJN0Zg==
+Date: Wed, 31 Jan 2024 13:25:10 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Matteo Croce <mcroce@microsoft.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 2/3] riscv: optimized memmove
+Message-ID: <ZbnZthTjiUArHIvq@xhacker>
+References: <20240128111013.2450-1-jszhang@kernel.org>
+ <20240128111013.2450-3-jszhang@kernel.org>
+ <fa36b871-43d7-413c-82a2-0ecc0ebce9b4@ics.forth.gr>
+ <Zbj1o6VAsk8Tn2ab@xhacker>
+ <c6066469-7bc9-4232-b600-0b167193f13f@ics.forth.gr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c6066469-7bc9-4232-b600-0b167193f13f@ics.forth.gr>
 
-On Tue, 30 Jan 2024 21:25:30 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, Jan 30, 2024 at 06:52:24PM +0200, Nick Kossifidis wrote:
+> On 1/30/24 15:12, Jisheng Zhang wrote:
+> > On Tue, Jan 30, 2024 at 01:39:10PM +0200, Nick Kossifidis wrote:
+> > > On 1/28/24 13:10, Jisheng Zhang wrote:
+> > > > From: Matteo Croce <mcroce@microsoft.com>
+> > > > 
+> > > > When the destination buffer is before the source one, or when the
+> > > > buffers doesn't overlap, it's safe to use memcpy() instead, which is
+> > > > optimized to use a bigger data size possible.
+> > > > 
+> > > > Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+> > > > Reported-by: kernel test robot <lkp@intel.com>
+> > > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> > > 
+> > > I'd expect to have memmove handle both fw/bw copying and then memcpy being
+> > > an alias to memmove, to also take care when regions overlap and avoid
+> > > undefined behavior.
+> > 
+> > Hi Nick,
+> > 
+> > Here is somthing from man memcpy:
+> > 
+> > "void *memcpy(void dest[restrict .n], const void src[restrict .n],
+> >                      size_t n);
+> > 
+> > The  memcpy()  function copies n bytes from memory area src to memory area dest.
+> > The memory areas must not overlap.  Use memmove(3) if the memory areas do  over‐
+> > lap."
+> > 
+> > IMHO, the "restrict" implies that there's no overlap. If overlap
+> > happens, the manual doesn't say what will happen.
+> > 
+> >  From another side, I have a concern: currently, other arch don't have
+> > this alias behavior, IIUC(at least, per my understanding of arm and arm64
+> > memcpy implementations)they just copy forward. I want to keep similar behavior
+> > for riscv.
+> > 
+> > So I want to hear more before going towards alias-memcpy-to-memmove direction.
+> > 
+> > Thanks
+> 
 
-> > Does this work:
-> >
-> >         d_invalidate(dentry);  
-> 
-> It does, but it's basically irrelevant with the d_revalidate approach.
-> 
-> Basically, once you have d_revalidate(), the unhashing happens there,
-> and it's just extra work and pointless to do it elsewhere.
-> 
-> So if you look at the "clean up dentry ops and add revalidate
-> function" patch, you'll see that it just does
-> 
-> -       simple_recursive_removal(dentry, NULL);
-> 
-> and the thing is just history.
+Hi Nick,
 
-With even the last patch included, without the d_invalidate() I get errors
-with simply doing:
+> If you read Matteo's original post that was also his suggestion, and Linus
 
- # cd /sys/kernel/tracing
- # mkdir instances/foo
- # ls instances/foo/events
- # rmdir instances/foo
+I did read all discussions in Matteo's v1 ~ v5 before this renew. Per my
+understanding, Matteo also concerned no such memcpy-alias-memmove behavior
+in other arch's implementations.
 
-As the rmdir calls tracefs_remove() that calls simple_recursive_removal()
-that then walks into the "events" directory. Without that d_invalidate, it
-walks beyond just the top directory and then splats on the dentries that
-are cached.
+> has also commented on that. In general it's better to handle the case where
 
+Linus commented on https://bugzilla.redhat.com/show_bug.cgi?id=638477#c132
+about glibc alias memcpy to memove rather than the patch series.
 
+> the regions provided to memcpy() overlap than to resort to "undefined
+> behavior", I provided a backwards copy example that you can use so that we
+> can have both fw and bw copying for memmove(), and use memmove() in any
+> case. The [restrict .n] in the prototype is just there to say that the size
+> of src is restricted by n (the next argument). If someone uses memcpy() with
+
+I didn't have c99 spec in hand, but I found gcc explanations about
+restrict keyword from [1]:
+
+"the restrict declaration promises that the code will not access that
+object in any other way--only through p."
+
+So if there's overlap in memcpy, then it contradicts the restrict
+implication.
+
+[1] https://www.gnu.org/software/c-intro-and-ref/manual/html_node/restrict-Pointers.html
+
+And from the manual, if the memcpy users must ensure "The memory areas
+must not overlap." So I think all linux kernel's memcpy implementations(only copy
+fw and don't take overlap into consideration) are right.
+
+I did see the alias-memcpy-as-memmove in some libc implementations, but
+this is not the style in current kernel's implementations.
+
+Given current riscv asm implementation also doesn't do the alias and
+copy-fw only, and this series improves performance and doesn't introduce the
+Is it better to divide this into two steps: Firstly, merge this series
+if there's no obvious bug; secondly, do the alias as you suggested,
+since you have a basic implementation, you could even submit your patch
+;) What do you think about this two steps solution?
+
+Thanks
+> overlapping regions, which is always a possibility, in your case it'll
+> result corrupted data, we won't even get a warning (still counts as
+> undefined behavior) about it.
 > 
-> So really, that final patch is the one that fixes the whole eventfs
-> mess for good (knock wood). But you can't do it first, because it
-> basically depends on all the refcount fixes.
-
-I'm running my full suite with the final patch included, plus some of the
-updates I mentioned in replies to other patches, as well as including this
-"d_invalidate()" as it doesn't pass without it.
-
+> Regards,
+> Nick
 > 
-> It might be possible to re-organize the patches so that the refcount
-> changes go first, then the d_revalidate(), and then the rest. But I
-> suspect they all really end up depending on each other some way,
-> because the basic issue was that the whole "keep unrefcounted dentry
-> pointers around" was just wrong.  So it doesn't end up right until
-> it's _all_ fixed, because every step of the way exposes some problem.
-> 
-> At least that was my experience. Fix one thing, and it exposes the
-> hack that another thing depended on.
-> 
-> This is actually something that Al is a master at. You sometimes see
-> him send one big complicated patch where he talks about all the
-> problems in some area and it's one huge "fix up everything patch" that
-> looks very scary.
-> 
-> And then a week later he sends a series of 19 patches that all make
-> sense and all look "obvious" and all make small progress.
-> 
-> And magically they end up matching that big cleanup patch in the end.
-> And you just *know* that it didn't start out as that beautiful logical
-> series, because you saw the big messy patch first...
-
-I'll take a look at breaking the patches up further, as I now have a much
-better understanding of dentries then I did before this discussion.
-
--- Steve
