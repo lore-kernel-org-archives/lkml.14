@@ -1,242 +1,137 @@
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E68538FB5;
-	Wed, 31 Jan 2024 21:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6633539876;
+	Wed, 31 Jan 2024 21:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706736425; cv=none; b=K8k9Gog3oYhbq5XziZYWSceJoSaIL3s9eGzBoXp2DOOTEogVGCu7crWnapKecmhWDhxqvxu1Ws0A6Y7sMd8QX+mWS+fmzo3xlyftXMeC20w05/a8dP33ToqsvAsJgWh7M0LvA4DuRCy/mOtN4sAcUJuKD9Z98/ux1toxRquuYHU=
+	t=1706736425; cv=none; b=blhWwu1+g3Hs1sx2LbjMvQsNtjJHH9Qyfh5pu7km2ppCSPoC41GL60pqtcjXOQ9CqhsIfNbqEG5kVdmIRkgHc+Z78IxUkhQlu2RryYuRZz7dcUI3lbpAG6wMI2qDQboyvxwQa9YMQp+gtcmuvPeTXYD9edo87YHpYlImxeTsJDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706736425; c=relaxed/simple;
-	bh=uVGvn5v3uULObvAaf3HZa/wtMRXqXaT8sHbkcl4AM74=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tnJiZEbTwwrVZdeKmV04KRRHyE6GGcvPjqcF4FIsw9Aax7kaVFJE17XKwY7bxtkcrtfVoZh2caURHqRa2CcalkRwlIgTCZSilLtz0hDTN45oyRcNLwAdDONcgarTbSc+86lPtR6C9w6/N43+UjzmWJrPLLE21e23DzahZ81R79E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 2BD3E85458;
-	Wed, 31 Jan 2024 22:27:00 +0100 (CET)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Wed, 31 Jan 2024 22:26:03 +0100
-Subject: [PATCH v2 2/2] dt-bindings: mmp-dma: convert to YAML
+	bh=W9PyDFDm6db+wY56jckOPsaPr9KPRsFX9rqfQqV1gzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oHe6rV6xuCIaqfN9mDmXSPa7ojnxTK5heOhm/vVSAMcqu3xZSiG3h2PpkXN6YiaQ4KGCTdsnEQTObqBwx+PidyuTiwvp1v3HdybA1LDYvLTUy5nCa5TZHGjtnEnwBp+WWs/heWB5hkmbU32GDRehpvtJCBir1RaGQvI+++GhxTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lRrQi1l0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lRrQi1l0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5850C433F1;
+	Wed, 31 Jan 2024 21:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706736424;
+	bh=W9PyDFDm6db+wY56jckOPsaPr9KPRsFX9rqfQqV1gzk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lRrQi1l03Zl7CRmx/XVUgrMjdmBqPJR+e39jYW/Yf7erVn3NUY7RkSyctWLWh0rAy
+	 h94FQtxcOv+D30DLHgdSGAu20JrzttlVz5mtVyMs03TglDV9dfqFrwq1zJcGm3hZSk
+	 jbThPTY36ZiyVC0xvQ4yY02id0RO/CIQFtJDz7ko=
+Date: Wed, 31 Jan 2024 13:27:03 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Chris Leech <cleech@redhat.com>
+Cc: Nilesh Javali <njavali@marvell.com>, Christoph Hellwig <hch@lst.de>,
+	John Meneghini <jmeneghi@redhat.com>, Lee Duncan <lduncan@suse.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	Hannes Reinecke <hare@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH 0/2] UIO_MEM_DMA_COHERENT for cnic/bnx2/bnx2x
+Message-ID: <2024013123-subway-shrapnel-98f4@gregkh>
+References: <20240131191732.3247996-1-cleech@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240131-pxa-dma-yaml-v2-2-9611d0af0edc@skole.hr>
-References: <20240131-pxa-dma-yaml-v2-0-9611d0af0edc@skole.hr>
-In-Reply-To: <20240131-pxa-dma-yaml-v2-0-9611d0af0edc@skole.hr>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5281;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=uVGvn5v3uULObvAaf3HZa/wtMRXqXaT8sHbkcl4AM74=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlurr28BlvrjNxs/aFdU/EAgxMD0nSWupIBhMn4
- 0Y8td+J3fKJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZbq69gAKCRCaEZ6wQi2W
- 4Z+FEACklOwkgEUQkLD0n5IeZH3nI12sq64yycJO8TELm84kZdc8b8IBO9M67LOwFQPjHg2CNKX
- nt+QbFSGCoaMQgC8yI6w7+nCUMzKtDL6NVLc2tBMfbZs7l2BfIEiAAL1twS+MAXz7xydwNDx/JD
- +I9OxH4SZCK4UCG0xPr3Tast9Zfzx9sCn9mLXBwN6Q5yqMeiKos3plSc/84HW/RInOvWboxmWYA
- yk4jJQ1GoT2mwKnJXlWKVP3ZZmxYKqmxf8bJkujDklYyIZwOzXO7aai3JKRQnPOmptg6A0K250x
- j+jus28Okw5K3JNFwo06jI1KAxYbP4Dp8YO/5TW5COdXzC49aP3ySK7ybTiPnL1K9x8dC36Zt50
- gyN/MxGWFWvlRJmMRs2rJyEhHwusmMCA3awYdsVLyC9ihVw9Uvxscw+z5m+abZV8CGWtivELH3X
- GxRELzKUE/J0rfRLMqVJp+FHTfd4h6dSq4GntPoeZfHcOItx9um6lgu6ObYwU+aJIfmU/yTTL7U
- pxKLbc3FBUXQAb4WwyUk+zCmlMKqkB8juHRxbwmfGrfoP5oWWgN+fnbTlyuu1r9T6KmBfrjdFPh
- 57XiR/dj8qT9z2Yc5wqMlFssfwOFXBkbYfV980lhXY4DlCS3k+6Gfwca9jxai/VUzPM6QbDB2Ia
- rZTNXBYucQc3jNw==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131191732.3247996-1-cleech@redhat.com>
 
-Convert the Marvell MMP DMA binding to YAML.
+On Wed, Jan 31, 2024 at 11:17:30AM -0800, Chris Leech wrote:
+> During bnx2i iSCSI testing we ran into page refcounting issues in the
+> uio mmaps exported from cnic to the iscsiuio process, and bisected back
+> to the removal of the __GFP_COMP flag from dma_alloc_coherent calls.
+> 
+> The cnic uio interface also has issues running with an iommu enabled,
+> which these changes correct.
+> 
+> In order to fix these drivers to be able to mmap dma coherent memory via
+> a uio device, introduce a new uio mmap type backed by dma_mmap_coherent.
+> 
+> While I understand some complaints about how these drivers have been
+> structured, I also don't like letting support bitrot when there's a
+> reasonable alternative to re-architecting an existing driver. I believe
+> this to be the most sane way to restore these drivers to functioning
+> properly.
+> 
+> There are two other uio drivers which are mmaping dma_alloc_coherent
+> memory as UIO_MEM_PHYS, uio_dmem_genirq and uio_pruss. While a
+> conversion to use dma_mmap_coherent might be more correct for these as
+> well, I have no way of testing them and assume that this just hasn't
+> been an issue for the platforms in question.
+> 
+> v4:
+> - re-introduce the dma_device member to uio_map,
+>   it needs to be passed to dma_mmap_coherent somehow
+> - drop patch 3 to focus only on the uio interface,
+>   explicit page alignment isn't needed
+> - re-add the v1 mail recipients,
+>   this isn't something to be handled through linux-scsi
+> v3 (Nilesh Javali <njavali@marvell.com>):
+> - fix warnings reported by kernel test robot
+>   and added base commit
+> v2 (Nilesh Javali <njavali@marvell.com>):
+> - expose only the dma_addr within uio and cnic.
+> - Cleanup newly added unions comprising virtual_addr
+>   and struct device
+> 
+> previous threads:
+> v1: https://lore.kernel.org/all/20230929170023.1020032-1-cleech@redhat.com/
+> attempt at an alternative change: https://lore.kernel.org/all/20231219055514.12324-1-njavali@marvell.com/
+> v2: https://lore.kernel.org/all/20240103091137.27142-1-njavali@marvell.com/
+> v3: https://lore.kernel.org/all/20240109121458.26475-1-njavali@marvell.com/
+> 
+> Chris Leech (2):
+>   uio: introduce UIO_MEM_DMA_COHERENT type
+>   cnic,bnx2,bnx2x: use UIO_MEM_DMA_COHERENT
+> 
+>  drivers/net/ethernet/broadcom/bnx2.c          |  1 +
+>  .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  2 +
+>  drivers/net/ethernet/broadcom/cnic.c          | 15 +++++--
+>  drivers/net/ethernet/broadcom/cnic.h          |  1 +
+>  drivers/net/ethernet/broadcom/cnic_if.h       |  1 +
+>  drivers/uio/uio.c                             | 40 +++++++++++++++++++
+>  include/linux/uio_driver.h                    |  3 ++
+>  7 files changed, 60 insertions(+), 3 deletions(-)
+> 
+> 
+> base-commit: 861c0981648f5b64c86fd028ee622096eb7af05a
+> -- 
+> 2.43.0
+> 
 
-The TXT binding mentions that the controller may have one IRQ per DMA
-channel. Examples of this were dropped in the YAML binding because of
-dt_binding_check complaints (either too many interrupt cells or
-interrupts) and the fact that this is not used in any of the in-tree
-device trees.
+Hi,
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- .../devicetree/bindings/dma/marvell,mmp-dma.yaml   | 72 +++++++++++++++++++
- Documentation/devicetree/bindings/dma/mmp-dma.txt  | 81 ----------------------
- 2 files changed, 72 insertions(+), 81 deletions(-)
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-diff --git a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-new file mode 100644
-index 000000000000..d447d5207be0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/marvell,mmp-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell MMP DMA controller
-+
-+maintainers:
-+  - Duje Mihanović <duje.mihanovic@skole.hr>
-+
-+description:
-+  Marvell MMP SoCs may have two types of DMA controllers, peripheral and audio.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - marvell,pdma-1.0
-+      - marvell,adma-1.0
-+      - marvell,pxa910-squ
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt lines for the controller, may be shared or one per DMA channel
-+    minItems: 1
-+
-+  asram:
-+    description:
-+      A phandle to the SRAM pool
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  '#dma-channels':
-+    deprecated: true
-+
-+  '#dma-requests':
-+    deprecated: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#dma-cells'
-+
-+allOf:
-+  - $ref: dma-controller.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - marvell,pdma-1.0
-+    then:
-+      properties:
-+        asram: false
-+    else:
-+      required:
-+        - asram
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    dma-controller@d4000000 {
-+        compatible = "marvell,pdma-1.0";
-+        reg = <0xd4000000 0x10000>;
-+        interrupts = <47>;
-+        #dma-cells = <2>;
-+        dma-channels = <16>;
-+    };
-diff --git a/Documentation/devicetree/bindings/dma/mmp-dma.txt b/Documentation/devicetree/bindings/dma/mmp-dma.txt
-deleted file mode 100644
-index ec18bf0a802a..000000000000
---- a/Documentation/devicetree/bindings/dma/mmp-dma.txt
-+++ /dev/null
-@@ -1,81 +0,0 @@
--* MARVELL MMP DMA controller
--
--Marvell Peripheral DMA Controller
--Used platforms: pxa688, pxa910, pxa3xx, etc
--
--Required properties:
--- compatible: Should be "marvell,pdma-1.0"
--- reg: Should contain DMA registers location and length.
--- interrupts: Either contain all of the per-channel DMA interrupts
--		or one irq for pdma device
--
--Optional properties:
--- dma-channels: Number of DMA channels supported by the controller (defaults
--  to 32 when not specified)
--- #dma-channels: deprecated
--- dma-requests: Number of DMA requestor lines supported by the controller
--  (defaults to 32 when not specified)
--- #dma-requests: deprecated
--
--"marvell,pdma-1.0"
--Used platforms: pxa25x, pxa27x, pxa3xx, pxa93x, pxa168, pxa910, pxa688.
--
--Examples:
--
--/*
-- * Each channel has specific irq
-- * ICU parse out irq channel from ICU register,
-- * while DMA controller may not able to distinguish the irq channel
-- * Using this method, interrupt-parent is required as demuxer
-- * For example, pxa688 icu register 0x128, bit 0~15 is PDMA channel irq,
-- * 18~21 is ADMA irq
-- */
--pdma: dma-controller@d4000000 {
--	      compatible = "marvell,pdma-1.0";
--	      reg = <0xd4000000 0x10000>;
--	      interrupts = <0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15>;
--	      interrupt-parent = <&intcmux32>;
--	      dma-channels = <16>;
--      };
--
--/*
-- * One irq for all channels
-- * Dmaengine driver (DMA controller) distinguish irq channel via
-- * parsing internal register
-- */
--pdma: dma-controller@d4000000 {
--	      compatible = "marvell,pdma-1.0";
--	      reg = <0xd4000000 0x10000>;
--	      interrupts = <47>;
--	      dma-channels = <16>;
--      };
--
--
--Marvell Two Channel DMA Controller used specifically for audio
--Used platforms: pxa688, pxa910
--
--Required properties:
--- compatible: Should be "marvell,adma-1.0" or "marvell,pxa910-squ"
--- reg: Should contain DMA registers location and length.
--- interrupts: Either contain all of the per-channel DMA interrupts
--		or one irq for dma device
--
--"marvell,adma-1.0" used on pxa688
--"marvell,pxa910-squ" used on pxa910
--
--Examples:
--
--/* each channel has specific irq */
--adma0: dma-controller@d42a0800 {
--	      compatible = "marvell,adma-1.0";
--	      reg = <0xd42a0800 0x100>;
--	      interrupts = <18 19>;
--	      interrupt-parent = <&intcmux32>;
--      };
--
--/* One irq for all channels */
--squ: dma-controller@d42a0800 {
--	      compatible = "marvell,pxa910-squ";
--	      reg = <0xd42a0800 0x100>;
--	      interrupts = <46>;
--      };
+You are receiving this message because of the following common error(s)
+as indicated below:
 
--- 
-2.43.0
+- This looks like a new version of a previously submitted patch, but the
+  version is not listed in the subject line.  Please read the section
+  entitled "The canonical patch format" in the kernel file,
+  Documentation/process/submitting-patches.rst for what needs to be done
+  here to properly describe this.
 
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
+thanks,
+
+greg k-h's patch email bot
