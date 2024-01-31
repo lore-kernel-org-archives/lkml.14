@@ -1,66 +1,24 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.enpas.org (zhong.enpas.org [46.38.239.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A4CFBF3;
-	Wed, 31 Jan 2024 14:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76F483CDB;
+	Wed, 31 Jan 2024 14:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.239.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706712412; cv=none; b=IXBJ5vD0ChcsRcvgChoss9X7CaWPQd6W0nN3fQdeYcNe7BvdhyA+sVb8iBGyAlOWzVosctqLUQe1CvY60A5OlsDc9PIE1xxpuzXsQaU4qlWy43fF8HMPh9SwvuqUPomeO83bI05fQGsLHMcasC5wG5k2ArDjTGlEHuewVOGQiys=
+	t=1706712532; cv=none; b=q0W9CruCvaDAxKLuP3+CmxZZRo04lVtOLk8NUSjJcjZG3eJtsLwxycMEgzUeYIUOtYKJCKP2PC1SIwJc8rtbALEDjKDWfvBBaMvz7E95bpNs4G407n0uLmw38Ow7e+7m+s4AJlDaOdjGSdPvzzjp0gSFgbhEfVbOXQQhWKBXdaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706712412; c=relaxed/simple;
-	bh=dRezcYdYLhpFsKr2NdLaq3DYfeOJBWWpX2zQQ1DPQKo=;
+	s=arc-20240116; t=1706712532; c=relaxed/simple;
+	bh=hi/CSU2J1Y+QCIkEj/pP9amk+Pq0WBFMSDYIBL9sJyc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C5uNtQCDs8z8DXr3wxfaNeWbVTfAZ0IUZYAdSwYvpJuA/jHwNI4k9ovra0oJKR61TCDDrupAhMRa3X0DDlj17sYrY8gSiSteWhNOYSXGHmNJr8cJKhQjfV/pbRa8m+i5d2VUyocTjBFm4Fi5XFXqZrgZT0SHHdx0jm/MBp6kAOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HDsD/c4E; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HDsD/c4E"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40VDeBQu019348;
-	Wed, 31 Jan 2024 14:46:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=wgccrFtt613FD3f0tbHr8qKSJoWVdVbUoodUYvH1tvw=;
- b=HDsD/c4EnXDTz0lvkSJZmWKwNRaZhHmrDOCW3j8Xm7ZxwtcWcJmfX04VtjrdV6+PM1zS
- +LWk2X5785a9z9vSaMXPrXUAp/qOYssysQHF+OecHwZfRJMlXOJ4O6u7V03X/BWAV20I
- 2fohYXbJVyGpLuPQqUiqct4xqhjFOT/girgL8KDoPk3a197Cwbuxwf1c9K9URuXDeude
- gbNDAOl0viHLCf7G6uL+oWk//dCqDKScTL1cYz1eX3sAJB24e5U1e/KS4bXTBJgPmj8a
- 0bqHfk+3cY9Kc7nPMxKHtBJwep3bNmVxaokOMNSMcjqGq87HdiMY44IfGgCX34aMhnq/ Ug== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vyq9jt2g0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 14:46:32 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40VEU2ZE007411;
-	Wed, 31 Jan 2024 14:46:31 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vyq9jt2fq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 14:46:31 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40VEZ9o0017723;
-	Wed, 31 Jan 2024 14:46:31 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vwchyx5e8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 14:46:31 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40VEkU6M57016680
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 31 Jan 2024 14:46:30 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 86B1458055;
-	Wed, 31 Jan 2024 14:46:30 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4BA215804E;
-	Wed, 31 Jan 2024 14:46:25 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 31 Jan 2024 14:46:25 +0000 (GMT)
-Message-ID: <c4dc6344-445c-44b8-b5ea-2eb8e2d051d1@linux.ibm.com>
-Date: Wed, 31 Jan 2024 09:46:24 -0500
+	 In-Reply-To:Content-Type; b=Bro+qASkfsnULUWDsaa7fvizXmc0vGlqkSxKJtHIR4rbBnOqpWu60abMNqBnlh0Ii8O9mTmc5eRKmBK2UtZKgSO6BX7sK+5cOPr32OAR4FsM95iM+m6iJHWk4wQWyaTss6s3w6boNRx5PTUyrK+cq91bBrYX5YQNzPUuHw4kLSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org; spf=pass smtp.mailfrom=enpas.org; arc=none smtp.client-ip=46.38.239.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enpas.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enpas.org
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mail.enpas.org (Postfix) with ESMTPSA id 36DADFFB3B;
+	Wed, 31 Jan 2024 14:48:38 +0000 (UTC)
+Message-ID: <d5d301c6-172d-4204-88cc-2dc9b351e693@enpas.org>
+Date: Wed, 31 Jan 2024 23:48:35 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,147 +26,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] ima: Reset EVM status upon detecting changes to
- overlay backing file
+Subject: Re: [PATCH v1 7/7] HID: playstation: DS4: Add VID/PID for SZ-MYPOWER
+ controllers
 Content-Language: en-US
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        zohar@linux.ibm.com, roberto.sassu@huawei.com, miklos@szeredi.hu,
-        Christian Brauner <brauner@kernel.org>
-References: <20240130214620.3155380-1-stefanb@linux.ibm.com>
- <20240130214620.3155380-4-stefanb@linux.ibm.com>
- <CAOQ4uxjC=-GOFi3J4ctcNgdMfaerkae30OH9=TkKTWCf=TP95g@mail.gmail.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <CAOQ4uxjC=-GOFi3J4ctcNgdMfaerkae30OH9=TkKTWCf=TP95g@mail.gmail.com>
+To: Roderick Colenbrander <thunderbird2k@gmail.com>
+Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+ Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240115144538.12018-1-max@enpas.org>
+ <20240115144538.12018-8-max@enpas.org>
+ <CAEc3jaBU3M0Zce2pdFvdBSG50a7Ky=GY4gLO3dkYdDrkYtiO0Q@mail.gmail.com>
+ <e107b202-5843-41a7-b61e-68dd92128176@enpas.org>
+ <CAEc3jaCifoWW3ZXHvySSfgwhVm1AffYe=z7HRP9RjmYyu53w7Q@mail.gmail.com>
+From: Max Staudt <max@enpas.org>
+Autocrypt: addr=max@enpas.org; keydata=
+ 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
+ PsRBqTJGs7jw5gOWMMchFaemEnEJtg==
+In-Reply-To: <CAEc3jaCifoWW3ZXHvySSfgwhVm1AffYe=z7HRP9RjmYyu53w7Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NWIO3KIocDpIpKqDbuta9d1ypXNVnaIF
-X-Proofpoint-ORIG-GUID: ixlWU0_8sPCweEQ69zy3CM3YItVpUlUR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_08,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 spamscore=0 malwarescore=0 bulkscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 adultscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=835 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2401310113
+Content-Transfer-Encoding: 7bit
+
+On 1/31/24 06:07, Roderick Colenbrander wrote:
+> Hmpf, euhm euhm I'm not entirely sure what makes sense. From the
+> sounds of it are somewhat broken devices (buggy firmwares on them) or
+> perhaps one of your controllers (the one with not working touch) is
+> perhaps broken.
+> 
+> Some of the patches like handling report id 0x1 (minimal) won't hurt,
+> the LED fixes won't either. It makes it easier to add more devices. I
+> wonder if we have fully have enough data.
+> 
+> Need to think a bit...
+
+Yeah, maybe for now, let's focus on the patches that you don't see much trouble with. Better to enable some devices, than none.
+
+I suggest dropping this here patch (enabling 7545:0104) for now, and if there's ever a change of mind, we can just pick it from the LKML archives :)
+
+
+You can also drop the other patch that you're uneasy about, since I believe these 7545:0104 devices are the only ones I've observed to not implement the what-is-your-MAC-address command.
 
 
 
-On 1/31/24 08:56, Amir Goldstein wrote:
-> On Tue, Jan 30, 2024 at 11:46 PM Stefan Berger <stefanb@linux.ibm.com> wrote:
->>
->> To avoid caching effects to take effect reset the EVM status upon
->> detecting changes to the overlay backing files. This prevents a not-yet-
->> copied-up file on the overlay from executing if for example the
->> security.evm xattr on the file on the 'lower' layer has been removed.
->>
-> 
-> And what is expected to happen when file is executed after copy up?
+Max
 
-The copy-up may be triggered by changing file content or file metadata.
-For EVM file metadata (file attributes and xattrs) are important and if 
-they change EVM would re-evaluate the file, meaning that it would 
-determine the file mode bits, uid, gid and xattrs and calculate a hash 
-over them and compare this hash against the signature in security.evm.
-
-> Doesn't this change also protect the same threat after copy up?
-
- From what I remember from my testing is that file attribute or extended 
-attribute changes on an already copied-up file were already handled 
-correctly, meaning they caused the re-evaluation of the file as 
-described above.
-
-> 
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> ---
->>   include/linux/evm.h               | 8 ++++++++
->>   security/integrity/evm/evm_main.c | 7 +++++++
->>   security/integrity/ima/ima_main.c | 2 ++
->>   3 files changed, 17 insertions(+)
->>
->> diff --git a/include/linux/evm.h b/include/linux/evm.h
->> index d8c0343436b8..e7d6742eee9d 100644
->> --- a/include/linux/evm.h
->> +++ b/include/linux/evm.h
->> @@ -66,6 +66,8 @@ extern int evm_protected_xattr_if_enabled(const char *req_xattr_name);
->>   extern int evm_read_protected_xattrs(struct dentry *dentry, u8 *buffer,
->>                                       int buffer_size, char type,
->>                                       bool canonical_fmt);
->> +extern void evm_reset_cache_status(struct dentry *dentry,
->> +                                  struct integrity_iint_cache *iint);
->>   #ifdef CONFIG_FS_POSIX_ACL
->>   extern int posix_xattr_acl(const char *xattrname);
->>   #else
->> @@ -189,5 +191,11 @@ static inline int evm_read_protected_xattrs(struct dentry *dentry, u8 *buffer,
->>          return -EOPNOTSUPP;
->>   }
->>
->> +static inline void evm_reset_cache_status(struct dentry *dentry,
->> +                                         struct integrity_iint_cache *iint)
->> +{
->> +       return;
->> +}
->> +
->>   #endif /* CONFIG_EVM */
->>   #endif /* LINUX_EVM_H */
->> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
->> index 22a5e26860ea..e96d127b48a2 100644
->> --- a/security/integrity/evm/evm_main.c
->> +++ b/security/integrity/evm/evm_main.c
->> @@ -721,6 +721,13 @@ static void evm_reset_status(struct inode *inode)
->>                  iint->evm_status = INTEGRITY_UNKNOWN;
->>   }
->>
->> +void evm_reset_cache_status(struct dentry *dentry,
->> +                           struct integrity_iint_cache *iint)
->> +{
->> +       if (d_real_inode(dentry) != d_backing_inode(dentry))
->> +               iint->evm_status = INTEGRITY_UNKNOWN;
->> +}
->> +
->>   /**
->>    * evm_revalidate_status - report whether EVM status re-validation is necessary
->>    * @xattr_name: pointer to the affected extended attribute name
->> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
->> index cc1217ac2c6f..84bdc6e58329 100644
->> --- a/security/integrity/ima/ima_main.c
->> +++ b/security/integrity/ima/ima_main.c
->> @@ -26,6 +26,7 @@
->>   #include <linux/ima.h>
->>   #include <linux/fs.h>
->>   #include <linux/iversion.h>
->> +#include <linux/evm.h>
->>
->>   #include "ima.h"
->>
->> @@ -295,6 +296,7 @@ static int process_measurement(struct file *file, const struct cred *cred,
->>                      !inode_eq_iversion(backing_inode, iint->version)) {
->>                          iint->flags &= ~IMA_DONE_MASK;
->>                          iint->measured_pcrs = 0;
->> +                       evm_reset_cache_status(file_dentry(file), iint);
->>                  }
->>          }
-> 
-> Make sense.
-> Unrelated to your change, I now noticed something odd about Mimi's change:
-> 
->          backing_inode = d_real_inode(file_dentry(file));
-> 
-> I find the choice of variable name to be quite confusing, because ima/evm code
-> uses  d_backing_inode() all over the place and d_real_inode() !=
-> d_backing_inode().
-> 
-> First of all, there is never any reason to use d_backing_inode() and its name is
-> quite confusing in the first place, but it will be a big cleanup to
-> remove them all.
-> 
-> Suggest to rename the variable to real_inode, same as in
-> ima_collect_measurement()
-> to be consistent and reduce confusion factor, which is already high enough ;)
-> 
-> Thanks,
-> Amir.
