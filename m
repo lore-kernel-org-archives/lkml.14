@@ -1,108 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F76B8287A;
-	Wed, 31 Jan 2024 14:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F948287A
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706712314; cv=none; b=B/yf/b/eJ0LMwurXAVXE+fsu5ulRSv7SY5QjtSjigtDNklhGdvOLrI8Egswhj9EP12PsqNcNOzf+uVWivQsp/9eTNtjApUlWut4FnC8OwJPyXIfIwNObMSCZFtg0ucWF5v4SU/ySZE0wtAFxu3/PZJKW2WEDRbp7hf/ppvhqDC0=
+	t=1706712396; cv=none; b=b5CoQxwAXgjY5kRz6CKz0yph2rrnXKQg5pgFFt4s6WNPbiINg7cedsiDvf/BmjQZsG4hF53Ax72lBky6X8AP59RqYe9AsgjDq0KxPagu/2PgABCexGNnGYKJSIzoOXrCGMsW66Hf7vRba0JnLlC4EqID6hZOKRazBp15e92BgUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706712314; c=relaxed/simple;
-	bh=kCZwcyMb+5WvH3zc/WuE5q1/NFvJGsx1BENTOF5FEqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IecajaxYBleBageA4CczfYtm5ThH+Z5u0AdEjbV862bZ5SaRT6yVCt+nxbZ4MFwFIyb7ks0T0PA7UjJx8A//9ZkNMMBvO2+oJKTlx8mtFYPbuY6THeGsr2Iq9/aYOV26xd513AWuCDOElJhRoMlFwhcVxWjKkm1n/Ppzn+rcUbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=ggL8SJR/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ggL8SJR/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D56C433C7;
-	Wed, 31 Jan 2024 14:45:12 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ggL8SJR/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1706712309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1fYt8wXatgG3kv/t9njHjlDMwjUnGLZdfGdlIyn9zH8=;
-	b=ggL8SJR/RILxNt5QWNzEkGHkToTXzWqitmbTeVOu0EhBIQQ7kbLc1XgjyvE36XvNvJYm7y
-	H8FC17DEUpipkFq7yh/dsR+Nx8M8ynfLwAL/eMtcDFuybrN9WcXAs5CiCC4VJWPgkFLRa2
-	4K5X0qRKOqiyzyKwNmEmzFlTqd5/7ow=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a7d12a80 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 31 Jan 2024 14:45:09 +0000 (UTC)
-Date: Wed, 31 Jan 2024 15:45:06 +0100
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: "Reshetova, Elena" <elena.reshetova@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
-Message-ID: <Zbpc8tppxuKr-hnN@zx2c4.com>
-References: <20240130083007.1876787-1-kirill.shutemov@linux.intel.com>
- <CAHmME9pOt=uEmuBzBpgUHw9DqAD2FZTZ3v53AOZbQ3Cd2p97xQ@mail.gmail.com>
- <DM8PR11MB5750E38A8B2BCE66AF7F9812E77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9qMO7=RDR60bKJvpDTRokcKed_i0+7BbFD53_7o2OJ6-g@mail.gmail.com>
- <CAHmME9rum4uwSNFd_GkD9p_+vN4DBxA=feZX7k9RvugFZsZNJg@mail.gmail.com>
- <DM8PR11MB5750797D0B9B8EB32740F55DE77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9oC=GE-7QS2m9FA5cs_ss+tQgB9Pj3tKnTtMMFpQmUshg@mail.gmail.com>
- <DM8PR11MB5750B861F7A105886AA5FCE4E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
- <20240131140756.GB2356784@mit.edu>
+	s=arc-20240116; t=1706712396; c=relaxed/simple;
+	bh=xw/JEHipL3IdpaBrUlztJJRa6YI56n1PTV2RANvdiQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=s7JHDi+cMEqJYfPFIHx+vxSz/rwZs/VBThaoF3TcAlVpqGRQn1xK2VmDleD3xRx84L9Ub/y5cy6z43F7uFaFZoLxfBCBuAmRg2w4BQor7vkqtwHEV6FL60GZSdCSAf+tkx1oZf4FVIeXdLhNv+7Ie9wzgtCp9zv980d1yvwmzyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6CEA9E0003;
+	Wed, 31 Jan 2024 14:46:28 +0000 (UTC)
+Message-ID: <25e2faa5-908c-4391-87db-8540d1f0e904@ghiti.fr>
+Date: Wed, 31 Jan 2024 15:46:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240131140756.GB2356784@mit.edu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: add CALLER_ADDRx support
+Content-Language: en-US
+To: Zong Li <zong.li@sifive.com>, palmer@dabbelt.com,
+ Palmer Dabbelt <palmer@rivosinc.com>, paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20231205085959.32177-1-zong.li@sifive.com>
+ <CANXhq0r6A48q+ehayaURLO6snDEjzVJO6Ti+1we-57i0ORT9yg@mail.gmail.com>
+ <CANXhq0qqv3MBEt8zsWBT+gkdyt1PD4ZjDSrznEotdFM7M7K+yQ@mail.gmail.com>
+ <CANXhq0qNA5JO1xZLbuL6ig1Ddws0m2azMwCyqLFgN3B0VZmvEw@mail.gmail.com>
+ <CANXhq0o-MaEQY3m+0CNWK2Jv_pxqsjhhSJWtVR396wgKUzcbQw@mail.gmail.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <CANXhq0o-MaEQY3m+0CNWK2Jv_pxqsjhhSJWtVR396wgKUzcbQw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-On Wed, Jan 31, 2024 at 09:07:56AM -0500, Theodore Ts'o wrote:
-> What about simply treating boot-time initialization of the /dev/random
-> state as special.  That is, on x86, if the hardware promises that
-> RDSEED or RDRAND is available, we use them to initialization our RNG
-> state at boot.  On bare metal, there can't be anyone else trying to
-> exhaust the on-chip RNG's entropy supply, so if RDSEED or RDRAND
-> aren't working available --- panic, since the hardware is clearly
-> busted.
+Hi Zong,
 
-This is the first thing I suggested here: https://lore.kernel.org/all/CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com/
+On 31/01/2024 15:24, Zong Li wrote:
+> On Thu, Jan 18, 2024 at 8:50 AM Zong Li <zong.li@sifive.com> wrote:
+>> On Wed, Jan 10, 2024 at 11:33 AM Zong Li <zong.li@sifive.com> wrote:
+>>> On Fri, Dec 29, 2023 at 2:34 PM Zong Li <zong.li@sifive.com> wrote:
+>>>> On Tue, Dec 5, 2023 at 5:00 PM Zong Li <zong.li@sifive.com> wrote:
+>>>>> CALLER_ADDRx returns caller's address at specified level, they are used
+>>>>> for several tracers. These macros eventually use
+>>>>> __builtin_return_address(n) to get the caller's address if arch doesn't
+>>>>> define their own implementation.
+>>>>>
+>>>>> In RISC-V, __builtin_return_address(n) only works when n == 0, we need
+>>>>> to walk the stack frame to get the caller's address at specified level.
+>>>>>
+>>>>> data.level started from 'level + 3' due to the call flow of getting
+>>>>> caller's address in RISC-V implementation. If we don't have additional
+>>>>> three iteration, the level is corresponding to follows:
+>>>>>
+>>>>> callsite -> return_address -> arch_stack_walk -> walk_stackframe
+>>>>> |           |                 |                  |
+>>>>> level 3     level 2           level 1            level 0
+>>>>>
+>>>>> Signed-off-by: Zong Li <zong.li@sifive.com>
+>>>>> ---
+>>>>>   arch/riscv/include/asm/ftrace.h    |  5 ++++
+>>>>>   arch/riscv/kernel/Makefile         |  2 ++
+>>>>>   arch/riscv/kernel/return_address.c | 48 ++++++++++++++++++++++++++++++
+>>>>>   3 files changed, 55 insertions(+)
+>>>>>   create mode 100644 arch/riscv/kernel/return_address.c
+>>>>>
+>>>>> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+>>>>> index 2b2f5df7ef2c..42777f91a9c5 100644
+>>>>> --- a/arch/riscv/include/asm/ftrace.h
+>>>>> +++ b/arch/riscv/include/asm/ftrace.h
+>>>>> @@ -25,6 +25,11 @@
+>>>>>
+>>>>>   #define ARCH_SUPPORTS_FTRACE_OPS 1
+>>>>>   #ifndef __ASSEMBLY__
+>>>>> +
+>>>>> +extern void *return_address(unsigned int level);
+>>>>> +
+>>>>> +#define ftrace_return_address(n) return_address(n)
+>>>>> +
+>>>>>   void MCOUNT_NAME(void);
+>>>>>   static inline unsigned long ftrace_call_adjust(unsigned long addr)
+>>>>>   {
+>>>>> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+>>>>> index fee22a3d1b53..40d054939ae2 100644
+>>>>> --- a/arch/riscv/kernel/Makefile
+>>>>> +++ b/arch/riscv/kernel/Makefile
+>>>>> @@ -7,6 +7,7 @@ ifdef CONFIG_FTRACE
+>>>>>   CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+>>>>>   CFLAGS_REMOVE_patch.o  = $(CC_FLAGS_FTRACE)
+>>>>>   CFLAGS_REMOVE_sbi.o    = $(CC_FLAGS_FTRACE)
+>>>>> +CFLAGS_REMOVE_return_address.o = $(CC_FLAGS_FTRACE)
+>>>>>   endif
+>>>>>   CFLAGS_syscall_table.o += $(call cc-option,-Wno-override-init,)
+>>>>>   CFLAGS_compat_syscall_table.o += $(call cc-option,-Wno-override-init,)
+>>>>> @@ -46,6 +47,7 @@ obj-y += irq.o
+>>>>>   obj-y  += process.o
+>>>>>   obj-y  += ptrace.o
+>>>>>   obj-y  += reset.o
+>>>>> +obj-y  += return_address.o
+>>>>>   obj-y  += setup.o
+>>>>>   obj-y  += signal.o
+>>>>>   obj-y  += syscall_table.o
+>>>>> diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/return_address.c
+>>>>> new file mode 100644
+>>>>> index 000000000000..c2008d4aa6e5
+>>>>> --- /dev/null
+>>>>> +++ b/arch/riscv/kernel/return_address.c
+>>>>> @@ -0,0 +1,48 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>>> +/*
+>>>>> + * This code come from arch/arm64/kernel/return_address.c
+>>>>> + *
+>>>>> + * Copyright (C) 2023 SiFive.
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/export.h>
+>>>>> +#include <linux/kprobes.h>
+>>>>> +#include <linux/stacktrace.h>
+>>>>> +
+>>>>> +struct return_address_data {
+>>>>> +       unsigned int level;
+>>>>> +       void *addr;
+>>>>> +};
+>>>>> +
+>>>>> +static bool save_return_addr(void *d, unsigned long pc)
+>>>>> +{
+>>>>> +       struct return_address_data *data = d;
+>>>>> +
+>>>>> +       if (!data->level) {
+>>>>> +               data->addr = (void *)pc;
+>>>>> +               return false;
+>>>>> +       }
+>>>>> +
+>>>>> +       --data->level;
+>>>>> +
+>>>>> +       return true;
+>>>>> +}
+>>>>> +NOKPROBE_SYMBOL(save_return_addr);
+>>>>> +
+>>>>> +void *return_address(unsigned int level)
+>>>>> +{
+>>>>> +       struct return_address_data data;
+>>>>> +
+>>>>> +       data.level = level + 3;
+>>>>> +       data.addr = NULL;
+>>>>> +
+>>>>> +       arch_stack_walk(save_return_addr, &data, current, NULL);
+>>>>> +
+>>>>> +       if (!data.level)
+>>>>> +               return data.addr;
+>>>>> +       else
+>>>>> +               return NULL;
+>>>>> +
+>>>>> +}
+>>>>> +EXPORT_SYMBOL_GPL(return_address);
+>>>>> +NOKPROBE_SYMBOL(return_address);
+>>>>> --
+>>>>> 2.17.1
+>>>>>
+>>>> Hi Palmer and all,
+>>>> I was wondering whether this patch is good for everyone? Thanks
+>>> Hi Palmer,
+>>> Is there any chance to include this patch in 6.8-rc1? Thanks
+>> Hi Palmer,
+>> I'm not sure if this patch is a feature or bug fix, would you consider
+>> it for 6.8-rcX? Thanks
+> Hi Palmer,
+> Sorry for pinging you again. I'm not sure if you saw this patch. The
+> irqsoff and wakeup tracer will use CALLER_ADDR1 and CALLER_ADDR2 to
+> obtain the caller's return address, but we are currently encountering
+> an issue in the RISC-V port where the wrong caller is identified. I
+> guess you can easily reproduce the situation using ftrace. Could you
+> share your thoughts on this when you have the time to take a look?
+> Thanks
 
-But Elena found this dissatisfying because we still can't guarantee new
-material later.
 
-> On a guest OS, if confidential compute is enabled, and if RDSEED and
-> RDRAND don't work after N retries, and we know CC is enabled, panic,
-> since the kernel can't provide the promised security gaurantees, and
-> the CC developers and users are cordially invited to sharpen their
-> pitchforks and to send their tender regards to the Intel RNG
-> engineers.
+I'm not Palmer but I'll take a look at your patch today :)
 
-Yea, maybe bubbling the RDRAND DoS up to another DoS in the CoCo case is
-a good tradeoff that will produce the right pitchforkers without
-breaking anything real.
+Thanks,
 
-> For non-confidential compute guests, the question is what is the
-> appropriate reaction if another VM, possibly belonging to a different
-> user/customer, is carrying out a RDRAND DOS attack.  I'd argue that in
-> these cases, if the guest VM is using virtio-random, then the host's
-> /dev/random should be able to cover for cases of Intel RNG exhaustion,
-> and allowing other customer to be able to prevent other user's VM's
-> from being able to boot is the the greater evil, so we shouldn't treat
-> boot-time RDRAND/RDSEED failures as panic-worthy.
+Alex
 
-The non-CoCo case is fine, because guests can trust hosts, so things are
-as they have been forever.
 
-Jason
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
