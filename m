@@ -1,89 +1,134 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130141C32;
-	Wed, 31 Jan 2024 01:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203F54C8E
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 01:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706663577; cv=none; b=aaYxFE8qLxTQe8eO3+DP8tajtoFBDBPKFXBcVLN5xU1LO8LqNxNele9UVLBBSZGKUurh8cVA5K0yw6R77OKzSYYpftST9WwcvEslF1qqiuaOvu5HMrcjwpjQ8GTVuBNErlPcR5fKr/g8ky4WwL54nOoWROW2BpfYNUe6SEHkOEE=
+	t=1706663584; cv=none; b=c0NvG+ZqvCFP0piWYpANH0MaBNOOzmnNd7baWb3PhU29bV+dKXwwXEh2GncR7Enqmtd0sChjwj8L60uqPjhkS1K8U+tT3GbzXFnDf7d+5n7S9CFEGyx3OuXr/tJeJHVr3KB6ZCFQxrjLizHOiTVZjQ3W9ESs0GgFdOhQ/12LHI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706663577; c=relaxed/simple;
-	bh=dEApJi9PEQyHSqV0Yx65sBvpyJJEQjEqNeAGYIZ7Q6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JrnWyfihe7U+XHeQpRn0LdRN5ioKCLEslSEC/dNOiqmXS4y3c3DH5hq2OX7xsfMu5WcHXOsr/QfPrdNGtdo4SvqG16rthtTdr2BfLV/y8vVEvIwpYBFrLE4yffSZwQAESDTq1cNfJHNaTxpvr6k0I/Rm9h0Fc0MjzRORKH07YHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=aw/iDwt0; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1706663584; c=relaxed/simple;
+	bh=WnaiMYjG3HYrBPVosKeochjRi58QHb85b9Uafy87v5A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XwQGKRk8sjpE1P6np5WqkLqmgf5IxU4kIUkQ1m/erTPQrd0/EWB9SPYhH6KYidX2KihHyPlrmK8F8hj+z9mKnZzAsHG94IQtezegteoeDPLArv3weDAUAaUjw9YMEHC1A2Xv4JKlbXStwRHb07UUFvdeKYeBbX1ZIgi5eUslv2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w9IQLSNZ; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="aw/iDwt0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tvJGjlrL3+/iLawTES3nBbeFVhzC+7i7j5qNH73zx0s=; b=aw/iDwt0pwz5EHcNO4TgpkaZ9c
-	F7R6l8sVLdEGizRcGSvZQjR0Pvd8sAdy+Dq4Cin5pM1OmeifJl13SUEnuKNdDaYyvrkHXBDrog6C0
-	6XA+L4ToT93O2QsGDmoTXenhRoG2AUsoI3/rC9wKDg1CLRZaM55LhanG+itGMsxEvkt+jhUjRZGMw
-	EWmSJGACisOgZpAbx+ewz8rLHrg/b6V11dHLYSZk9AXpqs/iAqcbRFtrtfktlz2b+VN3nqkpskzyS
-	8lYKwJq8xE6MaJp6METTL/o7rldwfaoYXId6glvOKxolPldNYwyHc7nr9uFj3YDo/HxzMYPVTLDH9
-	KamD77SA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rUz9i-001ltx-0H;
-	Wed, 31 Jan 2024 01:12:46 +0000
-Date: Wed, 31 Jan 2024 01:12:46 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate
- function
-Message-ID: <20240131011246.GP2087318@ZenIV>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
- <20240130190355.11486-6-torvalds@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w9IQLSNZ"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5cfd6ba1c11so3187836a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 17:13:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706663582; x=1707268382; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/GoosJvXV4tQVgQnoX094ue9LgaeDV/puMZ+zgV5v8A=;
+        b=w9IQLSNZ4uiLohicHi+6G4ZMJRs0oUrtBRqKLSOvirKyQrWa1O/qJwki5kVmpdZUx3
+         IpKJ4/Q6lzxOqvq+nzIOc64XbTDVm5OnVcguzGFi4NlitC2y4KwWXcGKJZHfHjeWTbpc
+         Nqc5QsHw1b4PeF0Jqt2N5f0pgo9UHiHsbXI6wiwqGaevp5KffFT1lNyFTEchXuLFnmwy
+         8aeYQITF4QJdmpaKl8yABpwEesen6QirhP2R5sWTUkaY7VuuYZpwS4VR8k2F/w6BascW
+         TIj9TXanfw+TjmKBdug0CmE/Jm2wfYbveeQ59wYGdBLLdJZWqwhMyrLj+atS2x+AgBwu
+         5s7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706663582; x=1707268382;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/GoosJvXV4tQVgQnoX094ue9LgaeDV/puMZ+zgV5v8A=;
+        b=o/189c0hHz+JvQXufLYm2j4Pn+B6NKLBSj2dbwMfc84c2VW1Iuimnmmo9jSXfLqd8Y
+         yx0MH890DGoMzKiuMujQIrhn+2JYNSUzNgZ0B0HI/IgG6QKAqWYCQGhZ+BwjYYWfvUQJ
+         SK/IY3r8pgy9bzE0EWARP0hE7Igc2DPvljs6ibiM4ZKwnCEimQqzWKTV8z/qEm4c9mvy
+         5bMQ9U3Ix1s0277wy4Lf2RilH7gJWSJM33UlQBFgwJ0zwmv7ULntkuVe85HdKiyEYJHT
+         /4qDE5ghXMBiP/LU8ful8DMpngJPDouJiwRdVcCdQRJBJVzjGAzn9i7m3TwLBzT7jWr8
+         RF1g==
+X-Gm-Message-State: AOJu0YzTnBiQ0R8ZeGjbBOK/c3yyIIddWRf4of+xdsuf8RgQ7+05Oj12
+	/JRwPwgOr6BqvxNbdbtDJ8FyD3NbArUCiJ/df+Y1j6GLWMw6hcRQO21OqrFU4twmsQ2PK1dyKfX
+	6sQ==
+X-Google-Smtp-Source: AGHT+IHXA4t0uhZ7tzthJIqQkUlU7edO5hP5ya6T+NaNmVk8RFxp+26SnKPKNqGEdvTVdg4s3sxwKV4qvvQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:d212:b0:1d9:1e1:76ca with SMTP id
+ t18-20020a170902d21200b001d901e176camr715ply.10.1706663582547; Tue, 30 Jan
+ 2024 17:13:02 -0800 (PST)
+Date: Tue, 30 Jan 2024 17:13:00 -0800
+In-Reply-To: <20231016115028.996656-9-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130190355.11486-6-torvalds@linux-foundation.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+References: <20231016115028.996656-1-michael.roth@amd.com> <20231016115028.996656-9-michael.roth@amd.com>
+Message-ID: <ZbmenP05fo8hZU8N@google.com>
+Subject: Re: [PATCH RFC gmem v1 8/8] KVM: x86: Determine shared/private faults
+ based on vm_type
+From: Sean Christopherson <seanjc@google.com>
+To: Michael Roth <michael.roth@amd.com>
+Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org, 
+	linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, pbonzini@redhat.com, isaku.yamahata@intel.com, 
+	ackerleytng@google.com, vbabka@suse.cz, ashish.kalra@amd.com, 
+	nikunj.dadhania@amd.com, jroedel@suse.de, pankaj.gupta@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Jan 30, 2024 at 11:03:55AM -0800, Linus Torvalds wrote:
+On Mon, Oct 16, 2023, Michael Roth wrote:
+> For KVM_X86_SNP_VM, only the PFERR_GUEST_ENC_MASK flag is needed to
+> determine with an #NPF is due to a private/shared access by the guest.
+> Implement that handling here. Also add handling needed to deal with
+> SNP guests which in some cases will make MMIO accesses with the
+> encryption bit.
 
-> +void eventfs_d_release(struct dentry *dentry)
->  {
-> -	struct eventfs_inode *ei;
-> -
-> -	mutex_lock(&eventfs_mutex);
-> -	ei = dentry->d_fsdata;
-> -	if (ei) {
-> -		dentry->d_fsdata = NULL;
-> -		put_ei(ei);
-> -	}
-> -	mutex_unlock(&eventfs_mutex);
-> +	put_ei(dentry->d_fsdata);
->  }
+...
 
-I'd rather pass ->d_fsdata to that sucker (or exposed put_ei(),
-for that matter).
+> @@ -4356,12 +4357,19 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+>  			return RET_PF_EMULATE;
+>  	}
+>  
+> -	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
+> +	/*
+> +	 * In some cases SNP guests will make MMIO accesses with the encryption
+> +	 * bit set. Handle these via the normal MMIO fault path.
+> +	 */
+> +	if (!slot && private_fault && kvm_is_vm_type(vcpu->kvm, KVM_X86_SNP_VM))
+> +		private_fault = false;
 
-> @@ -857,6 +847,5 @@ void eventfs_remove_events_dir(struct eventfs_inode *ei)
->  	 * sticks around while the other ei->dentry are created
->  	 * and destroyed dynamically.
->  	 */
-> -	simple_recursive_removal(dentry, NULL);
+Why?  This is inarguably a guest bug.
 
-That also needs to move earlier in the series - bisect hazard.
+> +	if (private_fault != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
+>  		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+>  		return -EFAULT;
+>  	}
+>  
+> -	if (fault->is_private)
+> +	if (private_fault)
+>  		return kvm_faultin_pfn_private(vcpu, fault);
+>  
+>  	async = false;
+> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+> index 759c8b718201..e5b973051ad9 100644
+> --- a/arch/x86/kvm/mmu/mmu_internal.h
+> +++ b/arch/x86/kvm/mmu/mmu_internal.h
+> @@ -251,6 +251,24 @@ struct kvm_page_fault {
+>  
+>  int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
+>  
+> +static bool kvm_mmu_fault_is_private(struct kvm *kvm, gpa_t gpa, u64 err)
+> +{
+> +	bool private_fault = false;
+> +
+> +	if (kvm_is_vm_type(kvm, KVM_X86_SNP_VM)) {
+> +		private_fault = !!(err & PFERR_GUEST_ENC_MASK);
+> +	} else if (kvm_is_vm_type(kvm, KVM_X86_SW_PROTECTED_VM)) {
+> +		/*
+> +		 * This handling is for gmem self-tests and guests that treat
+> +		 * userspace as the authority on whether a fault should be
+> +		 * private or not.
+> +		 */
+> +		private_fault = kvm_mem_is_private(kvm, gpa >> PAGE_SHIFT);
+> +	}
 
-> + *
-> + * Note that d_revalidate is called potentially under RCU,
-> + * so it can't take the eventfs mutex etc. It's fine - if
-> + * we open a file just as it's marked dead, things will
-> + * still work just fine, and just see the old stale case.
+This can be more simply:
 
-Looks like use after free, unless freeing ei is RCU-delayed...
+	if (kvm_is_vm_type(kvm, KVM_X86_SNP_VM))
+		return !!(err & PFERR_GUEST_ENC_MASK);
 
-> +	return !(ei && ei->is_freed);
+	if (kvm_is_vm_type(kvm, KVM_X86_SW_PROTECTED_VM))
+		return kvm_mem_is_private(kvm, gpa >> PAGE_SHIFT);
