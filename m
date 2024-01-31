@@ -1,151 +1,191 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B4158135
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 07:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F8A4F1E0;
+	Wed, 31 Jan 2024 07:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706685585; cv=none; b=RhHzkrFaFpvmJxxeL6p6PxjHaggRCBfCF0Ue2bhpG5rfTx9wP5PY+JzEJuCeKlkh8He+wkNXrezzWjYC4I6t66aLzPnBHvpc0GMy2g7GCBII+qXIRV4ABB5PL7BrN/L1loTvNPPZZ9XJdf2dd/FTQbp8fVQy9Te5ZKEiGsb8W/8=
+	t=1706685670; cv=none; b=u+CVdEWsZLptxa8CSZ65hLY+WJ6nXqZTbzV5MCsOLul5v6yD6SDznytrE6lMGRRAEGIv7niiNrAMGuc4ak1cNX2YxKJoClzsgXBtj0Mrg7s1MeRHIG+a54KEQiKeK8TbUtaNebe0pwSu39Mf15G7r4mJAiQk6W/IetybWMA89sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706685585; c=relaxed/simple;
-	bh=eZ+l+wLYJ2MeDMddYNHMwdCwUGTL0/3u/r/f3w7FWCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Py67xyn8ItRSxKSZ2XmuagZikYA0iTFGqYQqC9IFPtOVP7Ae/oAUI5eOw/0R6WETMpa5Lq8Q28c2mKcUT7nD4bC3tg4SWtdvLcfTpeD12fNcxUvWFLhx5l/a+l1Ag9FNvhX81J19YIE33MQIsxgCNsDZa6dYjG02b90PoVcgJ9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pect7BMu; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706685670; c=relaxed/simple;
+	bh=JVBiuCE5M+gXf3Sfnd1UxGuRYdOuZgAOHcK2Z6zJMzg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=nSmLUYKbeGI0iiN3AQnVGzXouuXGHwJtirzzK9xTafo0UCLMpD6DUeTn1ZFsxfdR85/6hv/P2xAEnPmnHy2Nn+TEr7UIa3PEJlejVasm0fDm047Uj+9Y8cbt2D84HtGRn4lsMM9zG98eSUZEi9guJ4C6y8ZzmznF56j9koT8Yic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s1HP0BXS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9A7i+9mH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pect7BMu"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3510d79ae9so545254666b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 23:19:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706685582; x=1707290382; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KUU5ZoGCbRyIKRX82P6J3FpHavAE7JR3VdNwhkZXt4A=;
-        b=pect7BMuIciNjXTb+zfpmkV8GX7b7vsTw3RdCAOHQT+cLeU6hPuzVwyTAqKr5XnoNv
-         fn6LFVf3/rZ3HNcYrsWUVGPc5FO1hdMCZBXDSDgossgdDTP1N2i6cVQpP6wVMjo8C4Iv
-         o+bsNJncb/W1r7gZ71opsbLlaROkvVoxQgNzcedBRPYW9yd3H1hhTJndCMIlY9uOcVkO
-         2to8ZkVoizKMw0h8f2uCOlKOIPgCIUQRi83Ty9B/Ii/JspI86HOVwx3TxUH834UOZRbe
-         waEiXvGwhUZJ066aTOulkRTgQj4q86RpZHerpLRN2c2x+9CRHhN7PNroi2euUiyxMxYn
-         NOlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706685582; x=1707290382;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KUU5ZoGCbRyIKRX82P6J3FpHavAE7JR3VdNwhkZXt4A=;
-        b=oKXvHGDgU+4Rf/x5n6Q35ih4jTftgNqodYFv3BB2sj585uhIU2c7XzsoVJGBNyyMFp
-         wrDLx7Yd4b8W5qxk9RPB8ZNxQyokf6nYRdUTbTMOLLetio7RQ/EuwWK+6pgtyyuQX569
-         z9N4yi3i9XMaG/4SPLuQgKh8gZUtS2q4XItIVJMgI7CDOEsZN7s3CRZEjEKxtrZEl3wy
-         jiZaOLTDXaqNbUoalSkuSgAdAPaF5ir3HLDna0e04K+2i5nAxCSnxGRK9N+HXoQVPrpb
-         RxraHk4Xgtt76XiBl/xt4T1cHF6VQ9RkUPta95b4OE5Ff3+4g91/3borDzmHdLa//xyB
-         mS7w==
-X-Gm-Message-State: AOJu0YxinldWGbmjXPLmGGXMSPAvCuutgjvLw35YC+YpoZ8y+zXVIcx9
-	KwVsHIwBoFOgTH5WtkAKFgVCoowNoOpWp2glX9bCe9K2EWfalU0HMc9gged3rJs=
-X-Google-Smtp-Source: AGHT+IFPqlMSfu3cp6otULlKJfAcpttJPDZ5Z9teZIomxyVXxBpafaf8B7ByOKjyEiTca0+Q8re+tA==
-X-Received: by 2002:a17:906:11d7:b0:a31:805b:4172 with SMTP id o23-20020a17090611d700b00a31805b4172mr464623eja.9.1706685582003;
-        Tue, 30 Jan 2024 23:19:42 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVyIVbRNfdYv2GFprKZHsR4lg4A/z5JIvSC6nU8j9cZwWg5roTHwNsnWdIUpDI1Pp0s4/pNjm3FINYBi0MLFHS6+YOGD07TbSwylGmAotFW91dMrWNPaDwAjMQ+iU0Q31wcdb5xmQ2BTrpitwBVN01VpzAqHVuA4xaeBSlzJmJ7FgWiTEqGAvf/Cxu21YWVGaacoRuZAVmXh0H6sMBmtTha6EHg5wZQPGGNc9oNq00hCpfUJZA42T7pugO7gQKhP1yjKKhVnSrEb/I25INYmmlYm7StCki/tvRjhMK1PrNZhr+Ewrfgwye0O/guJxxGkcbG+S5IIOex0MFUl9Bu2bkU3lxHptrF9DhVmjxeuteFgC3W7PqpLPeLvnBfoQYXL86sjdB6yT4GgOcYY5KnPI2YlVBJbq+KegiVR68=
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id ck15-20020a170906c44f00b00a35ec7eddfesm2316959ejb.50.2024.01.30.23.19.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 23:19:41 -0800 (PST)
-Message-ID: <a04aa883-d9b8-480b-a9df-8c31bef1165c@linaro.org>
-Date: Wed, 31 Jan 2024 08:19:39 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s1HP0BXS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9A7i+9mH"
+Date: Wed, 31 Jan 2024 07:21:05 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706685666;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RlKjq9jrAuFiVS25p9BnOCOg7PFYNPRinO3Roqp3A5g=;
+	b=s1HP0BXSc4fEDfoSqVX93aZX6oFfv37akKAmtgiOknkXRjw+kOY3E7gE3ylJDcpOzmO22D
+	h8EKOWHlRwWFDkmKkN0bk0IHUBBm9y8W9nEbg8Qu9zjbIKih6/PXiL5bVOrkc1jxSC/msq
+	S8no/KYQbuCCPi9cFLf2UYBTppPKNGKDRbj1Jyyfyjy37JFl06c2P/LBIOX9f8L+3Y5v2o
+	JNl3bDyADgR1KEz5G+37dUeGNFpwoAQk4Jy8Tid6kAdZ9oA4DzPE/nYLFxtetN7kB5C4Xg
+	4YMzKpgBRmDjbi/Np3QrBBuwHbSQnRupALivWLYv1UiaGJL6vxT3PYfauNUMIg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706685666;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RlKjq9jrAuFiVS25p9BnOCOg7PFYNPRinO3Roqp3A5g=;
+	b=9A7i+9mH/RDNl0MGGJRvO3Gzy4P4qyLCKsMG2P1vXiAXS3T8pMNDqD7R3nVzyR+cbFXgV+
+	QsTaf7fzq8Kf4bCg==
+From: "tip-bot2 for H. Peter Anvin (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/fred] x86/fred: Invoke FRED initialization code to enable FRED
+Cc: "H. Peter Anvin (Intel)" <hpa@zytor.com>, Xin Li <xin3.li@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Shan Kang <shan.kang@intel.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20231205105030.8698-36-xin3.li@intel.com>
+References: <20231205105030.8698-36-xin3.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] ARM: dts: samsung: exynos5420-galaxy-tab-common: sort
- node properties
-Content-Language: en-US
-To: Henrik Grimler <henrik@grimler.se>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20240130-galaxy-tab-s-cleanup-v1-0-d4e17857241d@grimler.se>
- <20240130-galaxy-tab-s-cleanup-v1-1-d4e17857241d@grimler.se>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240130-galaxy-tab-s-cleanup-v1-1-d4e17857241d@grimler.se>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <170668566571.398.17800534215552184936.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 30/01/2024 21:40, Henrik Grimler wrote:
-> Sort all node properties according to dts coding style guidelines, to
-> make dtsi easier to follow.
-> 
-> Signed-off-by: Henrik Grimler <henrik@grimler.se>
-> ---
->  .../dts/samsung/exynos5420-galaxy-tab-common.dtsi  | 23 +++++++++++-----------
->  1 file changed, 11 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi b/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi
-> index f525b2f5e4e0..0c1aeafc025b 100644
-> --- a/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi
-> +++ b/arch/arm/boot/dts/samsung/exynos5420-galaxy-tab-common.dtsi
-> @@ -103,8 +103,8 @@ &cpu4 {
->  };
->  
->  &gpu {
-> -	status = "okay";
->  	mali-supply = <&buck4_reg>;
-> +	status = "okay";
+The following commit has been merged into the x86/fred branch of tip:
 
-Such changes should come from a tool, but since we do not have them, I
-don't want to bother with properties re-shuffling.
+Commit-ID:     b564b0111a3f03d1a92ba87c4b0f054ad1845963
+Gitweb:        https://git.kernel.org/tip/b564b0111a3f03d1a92ba87c4b0f054ad1845963
+Author:        H. Peter Anvin (Intel) <hpa@zytor.com>
+AuthorDate:    Tue, 05 Dec 2023 02:50:24 -08:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 30 Jan 2024 18:20:36 +01:00
 
-Best regards,
-Krzysztof
+x86/fred: Invoke FRED initialization code to enable FRED
 
+Let cpu_init_exception_handling() call cpu_init_fred_exceptions() to
+initialize FRED. However if FRED is unavailable or disabled, it falls
+back to set up TSS IST and initialize IDT.
+
+Co-developed-by: Xin Li <xin3.li@intel.com>
+Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Signed-off-by: Xin Li <xin3.li@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Shan Kang <shan.kang@intel.com>
+Link: https://lore.kernel.org/r/20231205105030.8698-36-xin3.li@intel.com
+
+---
+ arch/x86/kernel/cpu/common.c | 22 +++++++++++++++++-----
+ arch/x86/kernel/irqinit.c    |  7 ++++++-
+ arch/x86/kernel/traps.c      |  5 ++++-
+ 3 files changed, 27 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 4f5e4aa..cf82e31 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -61,6 +61,7 @@
+ #include <asm/microcode.h>
+ #include <asm/intel-family.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/fred.h>
+ #include <asm/uv/uv.h>
+ #include <asm/ia32.h>
+ #include <asm/set_memory.h>
+@@ -2107,7 +2108,15 @@ void syscall_init(void)
+ 	/* The default user and kernel segments */
+ 	wrmsr(MSR_STAR, 0, (__USER32_CS << 16) | __KERNEL_CS);
+ 
+-	idt_syscall_init();
++	/*
++	 * Except the IA32_STAR MSR, there is NO need to setup SYSCALL and
++	 * SYSENTER MSRs for FRED, because FRED uses the ring 3 FRED
++	 * entrypoint for SYSCALL and SYSENTER, and ERETU is the only legit
++	 * instruction to return to ring 3 (both sysexit and sysret cause
++	 * #UD when FRED is enabled).
++	 */
++	if (!cpu_feature_enabled(X86_FEATURE_FRED))
++		idt_syscall_init();
+ }
+ 
+ #else	/* CONFIG_X86_64 */
+@@ -2213,8 +2222,9 @@ void cpu_init_exception_handling(void)
+ 	/* paranoid_entry() gets the CPU number from the GDT */
+ 	setup_getcpu(cpu);
+ 
+-	/* IST vectors need TSS to be set up. */
+-	tss_setup_ist(tss);
++	/* For IDT mode, IST vectors need to be set in TSS. */
++	if (!cpu_feature_enabled(X86_FEATURE_FRED))
++		tss_setup_ist(tss);
+ 	tss_setup_io_bitmap(tss);
+ 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+ 
+@@ -2223,8 +2233,10 @@ void cpu_init_exception_handling(void)
+ 	/* GHCB needs to be setup to handle #VC. */
+ 	setup_ghcb();
+ 
+-	/* Finally load the IDT */
+-	load_current_idt();
++	if (cpu_feature_enabled(X86_FEATURE_FRED))
++		cpu_init_fred_exceptions();
++	else
++		load_current_idt();
+ }
+ 
+ /*
+diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
+index c683666..f79c5ed 100644
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -28,6 +28,7 @@
+ #include <asm/setup.h>
+ #include <asm/i8259.h>
+ #include <asm/traps.h>
++#include <asm/fred.h>
+ #include <asm/prom.h>
+ 
+ /*
+@@ -96,7 +97,11 @@ void __init native_init_IRQ(void)
+ 	/* Execute any quirks before the call gates are initialised: */
+ 	x86_init.irqs.pre_vector_init();
+ 
+-	idt_setup_apic_and_irq_gates();
++	if (cpu_feature_enabled(X86_FEATURE_FRED))
++		fred_complete_exception_setup();
++	else
++		idt_setup_apic_and_irq_gates();
++
+ 	lapic_assign_system_vectors();
+ 
+ 	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs()) {
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 1b19a17..6cb31df 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1438,7 +1438,10 @@ void __init trap_init(void)
+ 
+ 	/* Initialize TSS before setting up traps so ISTs work */
+ 	cpu_init_exception_handling();
++
+ 	/* Setup traps as cpu_init() might #GP */
+-	idt_setup_traps();
++	if (!cpu_feature_enabled(X86_FEATURE_FRED))
++		idt_setup_traps();
++
+ 	cpu_init();
+ }
