@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD95745E7
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4CA76906
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706700886; cv=none; b=XA8wvdt0QsolKuJ6ldVpD4cf7lbObxnxR/kVaobrBOVCzj9yYY0k8e5F+Ao5ErCSNSz4X1c/STteEk3wtqFgT64zpSkpxHFzRV12E66cZDjnW4eaLO7ZJSDrmOmzhy/jDxZYY872jLrI8PRpUfHDX6nQdTvtgV9bUoEoW/icHLk=
+	t=1706700888; cv=none; b=ijHMLC+fIGZnhgUi4pR3aSLlRcIs20WFlmHtuMmNBVAemGu9cGYPavG8jUgFEzDTo7NGjRVgpAF6eFR5L8FIWor2VlHP9LJc70kFm241SHh8DcphDVapP9OTXLVyxdY+ZpBDZd2a3z73ha8jvth2JD9nuy1UBE/sHInIXbUcA4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706700886; c=relaxed/simple;
-	bh=j/2ny5Y8DyyuhjfBUyl+Wn3ma9b5f2x2Zt+jtkjquuQ=;
+	s=arc-20240116; t=1706700888; c=relaxed/simple;
+	bh=zbzMnTpoZSIYlb8jiO31bv5oIKyPpIebAKdElYE+AVE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hFBjYJeLdZx2d3CPLTZRCVlKieJcda8gRrUXF+hmVL8z47FFOSQTzXoB4dnJRY9zdu5p8Qxn+0bEk8YTNtsbzlpcEcjbVxugBk4/0NaIY46GyPxnyjTMcJv9vEGjXiTqkKxzy1Yue/mx6+7zDLBHJMy5Bh8ZdpB3ZodUL6Ang8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gxsDWFAr; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=OdW2pgDT5sua1NOma1Z+Yf8Mwc5cJbQ9T3BLxeFny3W9Xnwi7/YC2gcA5/QWxMMXiuA5KPAgdYB7HPlRa/hsghgxnMefg7OwKGP+s2F9phgM5YJZUepwBUIe3t2xYaM1ueswVOg9owohJXJDqAchJEtUuIErEZpK45KBih3gG5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=5dr1dfI9; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gxsDWFAr"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5dr1dfI9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706700882;
-	bh=j/2ny5Y8DyyuhjfBUyl+Wn3ma9b5f2x2Zt+jtkjquuQ=;
+	s=mail; t=1706700884;
+	bh=zbzMnTpoZSIYlb8jiO31bv5oIKyPpIebAKdElYE+AVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gxsDWFArIlHi4qwvZ6rZXoBdVYA2HN5umf1ZsoYTcohnu2NWTj+nD/Q2Z+KWy1B3P
-	 wt5N/5Z9tVsIwChL/ESE+yMp+Q3GIU24g0TOHlBaFKSK/uMtrtczbDtwXXCM/Qe5eS
-	 ByM1mXZKyKw+ikwKScQF7/vnGOpIf7KFA1QoqIwH/CFqx/+13jyWBToissFpOuPj2H
-	 mDvwkFB23vL5v1l8mJjyjvtUhNl/eB50kgQooiDEZpi/3ZrTqFxywrBtjbNgRIwDA8
-	 1Wt2E/avFg8F215I1mCKItvbtJtjwmRoaoiOM4OMOlSo+pkOx93wv1yGP4LOXspBkb
-	 m4Ix63AF1wTsQ==
+	b=5dr1dfI92989qfXEE0vyDLv888ezBDSodGehkNXNu0kz/KOLNI2QAPbV94iem1CV7
+	 1vb+GpQyeTrowvnxj+NHPGxupHSIFm9halBaUDvBp+FjeD4AiKxwk1yFbm1dlWIIas
+	 3qUGHF7gp5zBt7P1ubh4rZ4YI5FISupAKiOIYlW4H7KpKp2huSfWFrCsXRHFtTi/WL
+	 oCIopRbWxre6xzV5+CPcruTcOSPt1ezSlcARcAYaUnQL0gAUbfe09BU1mSJ+0ViV1z
+	 bFfUCRJXYpMlcRFQ2MiwVynywKnp8KsUxzo2Zbd6NqXORJOwCij/MZgeoPmGmCpN5n
+	 SVEoPacPM0w9Q==
 Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1008E3782067;
-	Wed, 31 Jan 2024 11:34:42 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 17D033782084;
+	Wed, 31 Jan 2024 11:34:44 +0000 (UTC)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: fshao@chromium.org,
@@ -46,9 +46,9 @@ Cc: fshao@chromium.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	kernel@collabora.com
-Subject: [PATCH v3 2/7] drm/mediatek: dsi: Cleanup functions mtk_dsi_ps_control{_vact}()
-Date: Wed, 31 Jan 2024 12:34:29 +0100
-Message-ID: <20240131113434.241929-3-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v3 4/7] drm/mediatek: dsi: Replace open-coded instance of HZ_PER_MHZ
+Date: Wed, 31 Jan 2024 12:34:31 +0100
+Message-ID: <20240131113434.241929-5-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240131113434.241929-1-angelogioacchino.delregno@collabora.com>
 References: <20240131113434.241929-1-angelogioacchino.delregno@collabora.com>
@@ -60,138 +60,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Function mtk_dsi_ps_control() is a subset of mtk_dsi_ps_control_vact():
-merge the two in one mtk_dsi_ps_control() function by adding one
-function parameter `config_vact` which, when true, writes the VACT
-related registers.
+In mtk_dsi_phy_timconfig(), we're dividing the `data_rate` variable,
+expressed in Hz to retrieve a value in MHz: instead of open-coding,
+use the HZ_PER_MHZ definition, available in linux/units.h.
 
-Reviewed-by: Fei Shao <fshao@chromium.org>
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 76 +++++++++---------------------
- 1 file changed, 23 insertions(+), 53 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 3b7392c03b4d..8414ce73ce9f 100644
+index cba63de5092d..cc625febe6c8 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -351,40 +351,6 @@ static void mtk_dsi_set_vm_cmd(struct mtk_dsi *dsi)
- 	mtk_dsi_mask(dsi, DSI_VM_CMD_CON, TS_VFP_EN, TS_VFP_EN);
- }
+@@ -13,6 +13,7 @@
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
++#include <linux/units.h>
  
--static void mtk_dsi_ps_control_vact(struct mtk_dsi *dsi)
--{
--	struct videomode *vm = &dsi->vm;
--	u32 dsi_buf_bpp, ps_wc;
--	u32 ps_bpp_mode;
--
--	if (dsi->format == MIPI_DSI_FMT_RGB565)
--		dsi_buf_bpp = 2;
--	else
--		dsi_buf_bpp = 3;
--
--	ps_wc = vm->hactive * dsi_buf_bpp;
--	ps_bpp_mode = ps_wc;
--
--	switch (dsi->format) {
--	case MIPI_DSI_FMT_RGB888:
--		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
--		break;
--	case MIPI_DSI_FMT_RGB666:
--		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
--		break;
--	case MIPI_DSI_FMT_RGB666_PACKED:
--		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
--		break;
--	case MIPI_DSI_FMT_RGB565:
--		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
--		break;
--	}
--
--	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
--	writel(ps_bpp_mode, dsi->regs + DSI_PSCTRL);
--	writel(ps_wc, dsi->regs + DSI_HSTX_CKL_WC);
--}
--
- static void mtk_dsi_rxtx_control(struct mtk_dsi *dsi)
+ #include <video/mipi_display.h>
+ #include <video/videomode.h>
+@@ -238,7 +239,7 @@ static void mtk_dsi_mask(struct mtk_dsi *dsi, u32 offset, u32 mask, u32 data)
+ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
  {
- 	u32 tmp_reg;
-@@ -416,36 +382,40 @@ static void mtk_dsi_rxtx_control(struct mtk_dsi *dsi)
- 	writel(tmp_reg, dsi->regs + DSI_TXRX_CTRL);
- }
+ 	u32 timcon0, timcon1, timcon2, timcon3;
+-	u32 data_rate_mhz = DIV_ROUND_UP(dsi->data_rate, 1000000);
++	u32 data_rate_mhz = DIV_ROUND_UP(dsi->data_rate, HZ_PER_MHZ);
+ 	struct mtk_phy_timing *timing = &dsi->phy_timing;
  
--static void mtk_dsi_ps_control(struct mtk_dsi *dsi)
-+static void mtk_dsi_ps_control(struct mtk_dsi *dsi, bool config_vact)
- {
--	u32 dsi_tmp_buf_bpp;
--	u32 tmp_reg;
-+	struct videomode *vm = &dsi->vm;
-+	u32 dsi_buf_bpp, ps_wc;
-+	u32 ps_bpp_mode;
-+
-+	if (dsi->format == MIPI_DSI_FMT_RGB565)
-+		dsi_buf_bpp = 2;
-+	else
-+		dsi_buf_bpp = 3;
-+
-+	ps_wc = vm->hactive * dsi_buf_bpp;
-+	ps_bpp_mode = ps_wc;
- 
- 	switch (dsi->format) {
- 	case MIPI_DSI_FMT_RGB888:
--		tmp_reg = PACKED_PS_24BIT_RGB888;
--		dsi_tmp_buf_bpp = 3;
-+		ps_bpp_mode |= PACKED_PS_24BIT_RGB888;
- 		break;
- 	case MIPI_DSI_FMT_RGB666:
--		tmp_reg = LOOSELY_PS_18BIT_RGB666;
--		dsi_tmp_buf_bpp = 3;
-+		ps_bpp_mode |= PACKED_PS_18BIT_RGB666;
- 		break;
- 	case MIPI_DSI_FMT_RGB666_PACKED:
--		tmp_reg = PACKED_PS_18BIT_RGB666;
--		dsi_tmp_buf_bpp = 3;
-+		ps_bpp_mode |= LOOSELY_PS_18BIT_RGB666;
- 		break;
- 	case MIPI_DSI_FMT_RGB565:
--		tmp_reg = PACKED_PS_16BIT_RGB565;
--		dsi_tmp_buf_bpp = 2;
--		break;
--	default:
--		tmp_reg = PACKED_PS_24BIT_RGB888;
--		dsi_tmp_buf_bpp = 3;
-+		ps_bpp_mode |= PACKED_PS_16BIT_RGB565;
- 		break;
- 	}
- 
--	tmp_reg += dsi->vm.hactive * dsi_tmp_buf_bpp & DSI_PS_WC;
--	writel(tmp_reg, dsi->regs + DSI_PSCTRL);
-+	if (config_vact) {
-+		writel(vm->vactive, dsi->regs + DSI_VACT_NL);
-+		writel(ps_wc, dsi->regs + DSI_HSTX_CKL_WC);
-+	}
-+	writel(ps_bpp_mode, dsi->regs + DSI_PSCTRL);
- }
- 
- static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
-@@ -521,7 +491,7 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
- 	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
- 	writel(horizontal_frontporch_byte, dsi->regs + DSI_HFP_WC);
- 
--	mtk_dsi_ps_control(dsi);
-+	mtk_dsi_ps_control(dsi, false);
- }
- 
- static void mtk_dsi_start(struct mtk_dsi *dsi)
-@@ -666,7 +636,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- 	mtk_dsi_reset_engine(dsi);
- 	mtk_dsi_phy_timconfig(dsi);
- 
--	mtk_dsi_ps_control_vact(dsi);
-+	mtk_dsi_ps_control(dsi, true);
- 	mtk_dsi_set_vm_cmd(dsi);
- 	mtk_dsi_config_vdo_timing(dsi);
- 	mtk_dsi_set_interrupt_enable(dsi);
+ 	timing->lpx = (60 * data_rate_mhz / (8 * 1000)) + 1;
 -- 
 2.43.0
 
