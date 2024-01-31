@@ -1,39 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7991386A8;
-	Wed, 31 Jan 2024 16:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29A013BE80;
+	Wed, 31 Jan 2024 16:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706718448; cv=none; b=mnLVjC19H8qReeFMu1PsusQHK07Xo6M0Cbas7cP8EP8khClpTs/4YQc55KjFXI93RKLCo7ki2EC9rR6LofydEwGWDiL0L+Hm2hysmtogPwfBKbHc6m/3SNvTcQuHgTDq/YF0M7jjgD+My1Y9gXa8ptbVs/h4uVi8mTnB/dGifLg=
+	t=1706718449; cv=none; b=elPAkh0tfj5JgEQ4wVgMLYuD/KwIIjyVmK3Sn20mTrOVx7DxlBva1J8MVCtvZVRl+GQIYQUkis3CBCACfHSx4pppRbIPZVde4x9RctSIYjd9NfwuEWbGBIOCCMtN/pBpP2H15eZlh3REJxUCvu+AEtin0rwuIiwRRfHNzpyKWb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706718448; c=relaxed/simple;
-	bh=oGVuFQH2Vpt7KWBJelUxk+aICBl1NUF8Jkkl7r/J8tA=;
+	s=arc-20240116; t=1706718449; c=relaxed/simple;
+	bh=XnW4AYy3Nc97tfx3b9rBN9XG71YZGgJFnnvWMkeQV3U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rQS3gPT9oH8yXrNzqr/v6YI7v1DGjCvhRGnjEKE0WhfyTSQh11uWBkLUqoTjb4bk4S8RpIJTU4zaiQnRj66pWY+u9858Msmp75osnW3n7cCTL8MqMNkBSFodypW7NwFlAiDu+aGZ+vGZa+foHGpxOHlzmM4yW9E3AVAukfSP7fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Es78e1Ie; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=Brt13EpCq7UrRCf/Sx/As7Wf6gk/p3q8CAokzmBzA5OOdypUWgWW70Sy4uKRM8NW2px7cwYmq7BGu0/5bkXBhf4Q2WElkr0yvI890PzImb/oHlbsNbpxUTNBXlxUKighkcu9mvQ/r1xArYt3lkI78ZoLsbG2zkWAt8hLdS4v0mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F2vykkux; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Es78e1Ie"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C549340006;
-	Wed, 31 Jan 2024 16:27:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F2vykkux"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4DFBF4000C;
+	Wed, 31 Jan 2024 16:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706718443;
+	t=1706718444;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JJeokSopmVKcL3uXVtWha5+P5NH0m5rgY0PH8CJYzgU=;
-	b=Es78e1IesRvttlYt6VTqSYHuXGdy6TdFkNT3WJvGaOrJvm9Q8VM9leRnIXHHRovC1rNo3V
-	0y6Ua0Tbl6gywXHUYmw/jgeY9WqhI0JnKvuYm5ItsMuQgOJBGx2A7uIn7566z4lXiG+PwK
-	JIht0t8kcUOrWWdcTXsXkmnFCwfKa/+KBQ9sxO5S1RM7wAnFCzCYhEBkWbCqOimECKWLlg
-	BivgPg7TbzZVI/XZFFNiSmdKIMKvq5eHTUt4AXe4Y0n38bwMMrcQ0VI8U9gdPzFnyvBhwZ
-	B+phJc1ZiAl/IjXy9dey/O5fUYOLNTY1VKcKgQx+XMWI8j6j9ZsQ8R1x98RPuA==
+	bh=E0E4D1zz8fIXJ+KURAPowU82qI2dGBP74YLhcrLKxeE=;
+	b=F2vykkuxPmOPCEqFpG66Hjw4H+nvbRvwiORFpqCghiwDy6wgvYnqTB7tCu1698xlP+9yi3
+	mK8Fa1OnckzQr5yn5ufgb67Nl48UPBwBL7ChdGEgPFq3Z6lk6PKnCIlblQbQZmXDL1RllZ
+	BYBN3lu8uy7uPLnHkOYsDCD5IlU2H82f4RMMI30fG0OH60gkF8+lJ8YS2EQubUuckh1cYr
+	IMKfY2kyS+lDfN5yiUsN7E8vmah2Y9BZCHbV86go1Y6R2kiwczY+XBOnCs1XU1XL+DBcJ8
+	/sfVlQ9ZNkdbnWV/BfmNnuk+BuiflxfwggsiLuu5JucQDIO7aa/+OSynLpafMA==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 31 Jan 2024 17:26:29 +0100
-Subject: [PATCH v4 16/18] MIPS: mobileye: eyeq5: add reset properties to
- UARTs
+Date: Wed, 31 Jan 2024 17:26:31 +0100
+Subject: [PATCH v4 18/18] MIPS: mobileye: eyeq5: add pinctrl properties to
+ UART nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240131-mbly-clk-v4-16-bcd00510d6a0@bootlin.com>
+Message-Id: <20240131-mbly-clk-v4-18-bcd00510d6a0@bootlin.com>
 References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
 In-Reply-To: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
@@ -63,40 +63,42 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-UART nodes have been added to the devicetree by the initial platform
-support patch series. Add reset properties now that the reset node is
-declared.
+UART nodes are present in the platform devicetree. Add pinctrl to them
+now that the pin controller is supported.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- arch/mips/boot/dts/mobileye/eyeq5.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index 06e941b0ce10..ece71cafb6ee 100644
+index ae13e8299994..643bbc55e2b5 100644
 --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
 +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -78,6 +78,7 @@ uart0: serial@800000 {
- 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+@@ -79,6 +79,8 @@ uart0: serial@800000 {
  			clocks  = <&uart_clk>, <&occ_periph>;
  			clock-names = "uartclk", "apb_pclk";
-+			resets = <&reset 0 10>;
+ 			resets = <&reset 0 10>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins>;
  		};
  
  		uart1: serial@900000 {
-@@ -88,6 +89,7 @@ uart1: serial@900000 {
- 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+@@ -90,6 +92,8 @@ uart1: serial@900000 {
  			clocks  = <&uart_clk>, <&occ_periph>;
  			clock-names = "uartclk", "apb_pclk";
-+			resets = <&reset 0 11>;
+ 			resets = <&reset 0 11>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart1_pins>;
  		};
  
  		uart2: serial@a00000 {
-@@ -98,6 +100,7 @@ uart2: serial@a00000 {
- 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+@@ -101,6 +105,8 @@ uart2: serial@a00000 {
  			clocks  = <&uart_clk>, <&occ_periph>;
  			clock-names = "uartclk", "apb_pclk";
-+			resets = <&reset 0 12>;
+ 			resets = <&reset 0 12>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart2_pins>;
  		};
  
  		olb: system-controller@e00000 {
