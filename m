@@ -1,69 +1,52 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011FB7B3E3;
-	Wed, 31 Jan 2024 13:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963ED7BB03
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706707623; cv=none; b=spu5cRPsVQDhwg820NydzmxSavzHXIxpDjcny1RLSv+IcrnfGLiPWBz4jCn41F+SSvF92IGjnipL7kIpImM5mFLg9FGcZ1oKcmjbd00LTUu2O9uuCglHUd2FZcMQfFwwStfWvdTiIoOwVd9lxVuVk6AZ/SBEKwjmL594TV7AA2k=
+	t=1706707625; cv=none; b=mASPmnW8Iu4rl3DnjhgI7XR/jj29oXL3EP6TgoonuZ80rNAkZeb5N4dhGWw7XMZ4RtofypV8eqjq7YREOPFciOBJoY5rj8g/yBXADGYzdmzLEv/UTBTHWVMthRnTdpj1FhlHUGIyPLzmDk60qX6ZSZkvZ4kN6oscImws3qBS5Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706707623; c=relaxed/simple;
-	bh=omfvpfyhE2JHUeOU5bsJZgaeJu08LQaB+yaoeTyFGEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q3hsCYMIRVl5F7Y+w/ges7n3mPmjLjVl0nAWcfdKGh8XGfzNnot2glCLQ5m/p7mlitBgjsBCNNnOgXhYQYHklno/pdQaj2jM06by4TmfPZwZNftd6aErHl8YrauAZy/W8zU5vnLG1kNoHK7R88ti0HXc5EKUtPuLQB41EOw8pH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZAmqh163; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706707625; c=relaxed/simple;
+	bh=x2alkTFdX9GtAAjAdf9d5pBfRjBGsbqEAc0JOC49oYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=F4HH/clEBRYJrUkOQXPWQytGFPkmXGmK7sG5NsaQ6ccd/1M2wzbyZJRXPk1gd/P5gs4lj6jOOB8COoYb6A1PwkX5rB1SUEiVQg87urcLUNMTZbkiaegS4VPxdk3VoGzhz94TPVAsLMU4PDdTLhtZVAaQbMRRk5vErmrx1oaUqtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QAr2T3qJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAmqh163"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5cf2d73a183so581698a12.1;
-        Wed, 31 Jan 2024 05:27:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706707621; x=1707312421; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J6Mlm1rYpgJEjcWexOZQE2YpTdhmKOn2T1JwDr7J3Rg=;
-        b=ZAmqh163+r62E3KjFC7Ordakqtr0DuCjdpsa3Dq2tslnkpNQ/HVUHJyLoPvSZIzOgd
-         //LFMa4b7V0kgQuEaZ3zFmwNE3OB/wrQcxrRtQA9au8KOnoc5lRuSSpoHwHieiQl22aq
-         JxeC6ProP7IfOvPFIe62jJhiniCjfoM08/yZKYNLMNzG+iAzVmKn/xDgknlicDggoKtq
-         y24/zXLMeQEWyRg68f74kRUeySuLcY4bVnnj8SvJcrU1cHJC/nnT6iFnzZozl9oIaOm3
-         HVVXneyfvJblKCl+zv3ZbFcg+WECCMIVY7oRDTlKbkMTupcJuRlH0dqf95HFoMr5KA7n
-         zxAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706707621; x=1707312421;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J6Mlm1rYpgJEjcWexOZQE2YpTdhmKOn2T1JwDr7J3Rg=;
-        b=qtH5praGKm/l1GVU3FCpda6hMnGLT4s8F4CnKc42wamDDqCV74MoYP36rluUIJOli+
-         rkk6KgXtBYHrZCDAxfA598P0ZG6sz3x57oqr4WjI7S1xG+/jG3ZKiBpVw7UMRKq09oaj
-         /3mQDoKyum8IftsLp1UVEaZl5w1qDuNJ0BCxXXpGz9zanjEJE2cLW0qPg4kJRbJ5gwuM
-         HSkgMh6OJ/TLiFyBoQ1u+hDuKU0dn9IwKP6yqmuOiIvlUTTPKAccYLAm9DDP55hHVlAI
-         trIMhFrt+iaS9hGrkmuk3ofrXfo6fo+dHAI3FhGSci+tgJPmqUnSNPZGoCZ2bRxnYXqX
-         sqog==
-X-Gm-Message-State: AOJu0Yw0omt+hMuKN1DM0q2LEtqA5wmGPHwO4DfXKFiPP4WFowKDecjG
-	CkAli5Ov7uTC0ke+Ae1HwT3mLeVWZvst6HGXj14u5zkIi7Xkm1Pd
-X-Google-Smtp-Source: AGHT+IGSOFvdtutw5d/ymE7z7XB5saYDBdhTbsJU4Ac6nblsOGRd8PpxkWkp53bwuImqaA67HSbyug==
-X-Received: by 2002:a17:90b:1983:b0:295:d09a:107 with SMTP id mv3-20020a17090b198300b00295d09a0107mr2994750pjb.11.1706707621248;
-        Wed, 31 Jan 2024 05:27:01 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y15-20020a170902b48f00b001d8921f2058sm9004443plr.205.2024.01.31.05.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 05:27:00 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 31 Jan 2024 05:26:59 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Charles Hsu <ythsu0511@gmail.com>
-Cc: jdelvare@suse.com, corbet@lwn.net, Delphine_CC_Chiu@wiwynn.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] hwmon: Add driver for MPS MPQ8785 Synchronous
- Step-Down Converter
-Message-ID: <98472af4-fd16-4bae-a7fb-0ce5719500bb@roeck-us.net>
-References: <20240131074822.2962078-1-ythsu0511@gmail.com>
- <20240131074822.2962078-2-ythsu0511@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QAr2T3qJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706707622;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=AEoHzKgqw9sGTXanl1cSpEXOm2keGIi49ypqIIavTQY=;
+	b=QAr2T3qJ4T+rqV6FPAgKZXl+sKCdxgVaDuq730gcnGxwv1rCTuF6gPZTlzrj09wTRIdqmz
+	qsOZwsDLZMfUEDsu1UEO74i8a35a2snAd5S3zDLE8V/DnWTduCXeNsQSrzkRyPjwMrO7C7
+	lcAz21UGL1SSCPfoAm995Hke8j+OpCw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-466-ryf6m05BOHuqu6haSIRe3w-1; Wed, 31 Jan 2024 08:26:58 -0500
+X-MC-Unique: ryf6m05BOHuqu6haSIRe3w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5EFE0101A526;
+	Wed, 31 Jan 2024 13:26:58 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.249])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 0D16140C122E;
+	Wed, 31 Jan 2024 13:26:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 31 Jan 2024 14:25:43 +0100 (CET)
+Date: Wed, 31 Jan 2024 14:25:41 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/1] pidfd: implement PIDFD_THREAD flag for pidfd_open()
+Message-ID: <20240131132541.GA23632@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,15 +55,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240131074822.2962078-2-ythsu0511@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Wed, Jan 31, 2024 at 03:48:22PM +0800, Charles Hsu wrote:
-> Add support for mpq8785 device from Monolithic Power Systems, Inc.
-> (MPS) vendor. This is synchronous step-down controller.
-> 
-> Signed-off-by: Charles Hsu <ythsu0511@gmail.com>
+Please see the interdiff below.
 
-Applied.
+Also, I updated the changelog to document that the behaviour of
+pidfd_poll(PIDFD_THREAD, pid-of-group-leader) is not well defined
+if a sub-thread execs.
 
-Thanks,
-Guenter
+Do you agree with this semantics?
+
+Oleg.
+---
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 73e4045df271..0fd7e668c477 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1143,7 +1143,11 @@ static int de_thread(struct task_struct *tsk)
+ 
+ 		BUG_ON(leader->exit_state != EXIT_ZOMBIE);
+ 		leader->exit_state = EXIT_DEAD;
+-
++		/*
++		 * leader and tsk exhanged their pids, the old pid dies,
++		 * wake up the PIDFD_THREAD waiters.
++		 */
++		do_notify_pidfd(leader);
+ 		/*
+ 		 * We are going to release_task()->ptrace_unlink() silently,
+ 		 * the tracer can sleep in do_wait(). EXIT_DEAD guarantees
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index e6a041cb8bac..8124d57752b9 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -70,10 +70,11 @@ extern const struct file_operations pidfd_fops;
+ 
+ struct file;
+ 
+-extern struct pid *pidfd_pid(const struct file *file);
++struct pid *pidfd_pid(const struct file *file);
+ struct pid *pidfd_get_pid(unsigned int fd, unsigned int *flags);
+ struct task_struct *pidfd_get_task(int pidfd, unsigned int *flags);
+ int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret);
++void do_notify_pidfd(struct task_struct *task);
+ 
+ static inline struct pid *get_pid(struct pid *pid)
+ {
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 5f48d2c4b409..9b40109f0c56 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2019,7 +2019,7 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
+ 	return ret;
+ }
+ 
+-static void do_notify_pidfd(struct task_struct *task)
++void do_notify_pidfd(struct task_struct *task)
+ {
+ 	struct pid *pid;
+ 
+
