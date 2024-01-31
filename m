@@ -1,113 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B25E3770D
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8357D3EE;
+	Wed, 31 Jan 2024 13:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706706561; cv=none; b=uxlWRMh7BJ/m/zZnONnd6eoOIzKqP8WRt/Iy+zPCs5tPMa5+NPhWmRc7ky8W8ssCOFDNaLpUFLDfZHMN4VUxqfqDtoBQjlaFxsXZi3EHEQja/e0ltnwqZeSuQImZfMP4koy3n0jJusQ2cdNUFU72vtgK6ccHfeULMrS4d5wwdxc=
+	t=1706706569; cv=none; b=nwsknHDWBAd32YgIWjJwzO0IbPpszwXsFafeua4t1kTquPryoGMPMdWsu0X1bbpQKcIAzBIabxkSwirKx/Nm7tIgnthMeukpy6FM9lEJb7AFTQdJmK3M6ighmI91npGo3D+0iKVT81WvGwZyR4rsXDKl/SQDc7IUkLwIuQ/lx5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706706561; c=relaxed/simple;
-	bh=hLnu5IAc3QGNlNKTY3jsLCwnTnvQBY8D4pUs+0Lc3hw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uA7UhloHgfUKPzCpNp9wrZOAjfR2eRUuPFTeojL+ghSjaY+kd53UQlw/hCn0XV/cD25NGt7wWYCwKUU6wPPO5xsRFtVJigozgMXM2zqG//sc/AxbrQ/rpCxrF3uZm7JA3FAeqOp+qY5z+2mvveg8k/hhZmiyrA+cytFzADL52WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XZVOxxJk; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706706569; c=relaxed/simple;
+	bh=ProXTEbb42WMrODS82z2i95OCR1gKnbNsh8jOLrnuI4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E6Er3JgJTYSYDbinuMYT7P7YnBHmG15rWg9zubLXf9hmi1d8DxdHOKxSEd1TJwI9JuurP4XW515ZhQ2gx6guucjKvg0cpKQT8SQJ3oZDOLOWR+oo69dVFmkXc/h7uzbDJpuBvMvMBjAWMAJfyPZJwqEfKWuPp+aNIYvQwqnfOhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F4JoE4Mw; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XZVOxxJk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706706560; x=1738242560;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hLnu5IAc3QGNlNKTY3jsLCwnTnvQBY8D4pUs+0Lc3hw=;
-  b=XZVOxxJk0uiZTLE5VCdiXqYEh1MZ19OzcdyAGXzu8GNFzVniwzy3ozRm
-   HyMePKAhkojWU0Mx+1r0wkpwl8s1cB26df8yU+CtKt8x1ZEg89S1kIWuJ
-   1IzBDf6RXJFCMlCEwOKIh6ThgZbNBEO5uigl+EqdNNwSb0DLL6W189bpJ
-   RwxXNBEYCmM37pn99c0zH4/E5xSK2Qz62VOVWqssWhtbRQhOEGkui+V8e
-   rrkCY0beSpMUReGqPPvJZzSQ15NF07H9/6LCSwNKv9i6OrNmsIIfVetkI
-   RF9zM8jSe3QKI+nqu2MADCymZe//xAN1j3diocCOVFA6G+RpA7/6RKM6v
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10347935"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="10347935"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 05:09:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822566327"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="822566327"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.21.82])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 05:09:16 -0800
-From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH] cleanup: Add cond_guard() to conditional guards
-Date: Wed, 31 Jan 2024 14:09:13 +0100
-Message-ID: <13504735.uLZWGnKmhe@fdefranc-mobl3>
-Organization: intel
-In-Reply-To:
- <65b82555aaf86_5902829447@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References:
- <20240129190100.329791-1-fabio.maria.de.francesco@linux.intel.com>
- <65b82555aaf86_5902829447@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F4JoE4Mw"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40VBaYgi008037;
+	Wed, 31 Jan 2024 13:09:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=yjp8mNUxahTgn7kvuM/IVGuQ/zwU7B9XzbCPNzk19Eg=;
+ b=F4JoE4MwRCfUiFU3YlVQ97KGcnfQuzeuXkErfTrzFLHktQhbu7xnQZzC+iLG7xaCmBci
+ 4gZ0aJioZKFbWcJ28UNKCHzKJZFvdGnNt3QG+l6+MgGNlpHQ6uME9s07l/3/o6Q1aK8m
+ tM9EMDkr6lA4P/wa8g1Dyu28ac2ikVqm4LffRpezFnOUiOWwxOOJtjpxYKaLp04JL727
+ WIxg3Q7B+rVv0shQE2nW44Fyexiv7iUQtRcjEUHzUf5uvd3mdpMFiDuz5AF8hSOBb/bU
+ NVRQ5HqGn4ewhqdeJKKLGXQFCljbMRWIwOPuXWkTwjMH0GQ4YhSQoc+Q3oZ1D2Vg2FgO YA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vymu839k0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jan 2024 13:09:09 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40VCU6k0023273;
+	Wed, 31 Jan 2024 13:09:09 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vymu839jh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jan 2024 13:09:08 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40VC5pqg008234;
+	Wed, 31 Jan 2024 13:09:08 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vwdnm5cpd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 Jan 2024 13:09:08 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40VD94An57147712
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 31 Jan 2024 13:09:04 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B51B82004E;
+	Wed, 31 Jan 2024 13:09:04 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E4FE020067;
+	Wed, 31 Jan 2024 13:09:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.59.95])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 31 Jan 2024 13:09:02 +0000 (GMT)
+From: R Nageswara Sastry <rnsastry@linux.ibm.com>
+To: linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        skhan@linuxfoundation.org, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: rnsastry@linux.ibm.com
+Subject: [PATCH] papr_vpd.c: calling devfd before get_system_loc_code
+Date: Wed, 31 Jan 2024 18:38:59 +0530
+Message-Id: <20240131130859.14968-1-rnsastry@linux.ibm.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: of0iIm6w8rYeDF7JcWbHIF16Z7Rixjyh
+X-Proofpoint-ORIG-GUID: O83hNWb-4by3EyM9cdH9oufTUYtX3KgY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-31_06,2024-01-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401310100
 
-On Monday, 29 January 2024 23:23:17 CET Dan Williams wrote:
-> Fabio M. De Francesco wrote: 
-> > 2) By using cond_guard() it is not possible to release the lock before
-> > calling other functions from the current one. The lock is held until the
-> > current function exits. This is not always desirable.
-> 
-> No, that's not correct, the lock is only held until the exit from the
-> current scope, and if you call functions from within that scope the lock
-> remains held. So:
-> 
->     func1()
->     {
->         guard(...)(lock1);
->         if (condition) {
->             guard(...)(lock2);
->             func2();
->         }
->         func3();
->     }
-> 
-> func2() is called with lock1 and lock2 held, func3() is only called with
-> lock1() held.
+Calling get_system_loc_code before checking devfd and errno - fails the test
+when the device is not available, expected a SKIP.
+Change the order of 'SKIP_IF_MSG' correctly SKIP when the /dev/papr-vpd device
+is not available.
 
-Dan,
+with out patch: Test FAILED on line 271
+with patch: [SKIP] Test skipped on line 266: /dev/papr-vpd not present
 
-If I read your example correctly, this is exactly what I wanted to say by 
-"it's not possible to release the lock before calling other functions from the 
-current one". 
+Signed-off-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+---
+ tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-For example, if we use this (not scoped) cond_guard() in cxl_region_probe(), 
-we end up to the switch() and then possibly call devm_cxl_add_pmem_region() 
-with the cxl_region_rwsem semaphore down, whereas the current code calls a 
-up_read() before the switch.
-
-I think that in cxl_region_probe() the only suited conditional guard is 
-scoped_cond_guard().
-
-I know that you don't want an indented success path but in cxl_region_probe 
-but I suspect that scoped_cond_guard() is the only viable solution, otherwise 
-we end up calling the functions that now are called after up_read() with the 
-semaphore still down.
-
-I hope that this time I have been clearer.
-
-Thanks,
-
-Fabio
-
+diff --git a/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c b/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c
+index 98cbb9109ee6..505294da1b9f 100644
+--- a/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c
++++ b/tools/testing/selftests/powerpc/papr_vpd/papr_vpd.c
+@@ -263,10 +263,10 @@ static int papr_vpd_system_loc_code(void)
+ 	off_t size;
+ 	int fd;
+ 
+-	SKIP_IF_MSG(get_system_loc_code(&lc),
+-		    "Cannot determine system location code");
+ 	SKIP_IF_MSG(devfd < 0 && errno == ENOENT,
+ 		    DEVPATH " not present");
++	SKIP_IF_MSG(get_system_loc_code(&lc),
++		    "Cannot determine system location code");
+ 
+ 	FAIL_IF(devfd < 0);
+ 
+-- 
+2.37.1 (Apple Git-137.1)
 
