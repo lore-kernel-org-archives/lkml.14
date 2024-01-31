@@ -1,95 +1,72 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB107319D;
-	Wed, 31 Jan 2024 12:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E798878686
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706703511; cv=none; b=p/bmGFB93dP/KIga110X+pyCUC+TWaPWfhR54RY/UsnvjHzqrdTNXqcB0xqoYabmFGruNJwAmHk+1m0Sp7TYBZx9oRFYTUajs1uxP9QKfPq7OcoAvBX+qSSpBHQO3Xtz9R+o94JOTiRLaBljX2FSCY2MK8NZImrWk+2VvGs90+Y=
+	t=1706703654; cv=none; b=fF0vWsZie/h0hlGPr/UzuW9vehg5sEurhblXcl2n5viV/j/6Px9/G8PiDjYq8OOubd+7/RVbcVTx2YbSWV2n1DrQg1JV/m3fHnbu1/oLgSoiAp2JFO+6fkU7eamak8DQlJti3rO09yg9Ggu1ItK8PLMLws8oWuNmIoNPSpB6uf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706703511; c=relaxed/simple;
-	bh=kY/nfN3StEs524jZ+xz9fo8BvAXypmxWDqDm3ovUVqs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=k6Ap+Ydzpi1edLp9pgX0d/yg3UHjyf3BUrroiLffGo6sliMr5wmeuHr++Q9U27Bn84m8IODdEJslV86BIYr3KU5PHWmXK0zeemCZJLiT5ICX0gEmHP0VwjIgJ0TWWh/lggqx2BrFH8Hn7Giq+HXQFcoaMxfiHIunadlTE0bu6/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aEjEsiyB; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706703654; c=relaxed/simple;
+	bh=0BtYXxoyRbEEo8CC0J9V99c66jdyzmAOjg8hCNOZ7b0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hvERmAltigke3EJx4mIbDysozd5vIexSgvRwlGWtKurAEdQV45Jc7zpzZ1FKizMrJ2bSwJiyYOQ5pjnMosgJvOS0FDqM7cHkKYSJvSVOXWQotB282Sa/fXKZzNsNN4V6C2dI7gOnNtUx5mrJsaFmQoHNlLlGZnYpd1XalM/wpcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JTcupFQR; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aEjEsiyB"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40VCHOVH100330;
-	Wed, 31 Jan 2024 06:17:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706703444;
-	bh=kY/nfN3StEs524jZ+xz9fo8BvAXypmxWDqDm3ovUVqs=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To;
-	b=aEjEsiyBJvl9pQuDYfuzgOGq33WSNU676/e9e3JTOrwbruuuS8EkZFwIsQWFmSSSh
-	 wGbucqPdRgMvon0Xr58LD6lTgYtCaoR2JZk/ZqMoF0raUZFNfyzP6QvxPBtP1oyCgT
-	 OE+5pTwSQlyrUv+FapZeg8KGyzvO/Wf4mkhNGc5Q=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40VCHOoe018987
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 31 Jan 2024 06:17:24 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
- Jan 2024 06:17:23 -0600
-Received: from DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c]) by
- DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c%18]) with mapi id
- 15.01.2507.023; Wed, 31 Jan 2024 06:17:23 -0600
-From: "Ding, Shenghao" <shenghao-ding@ti.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "robh+dt@kernel.org"
-	<robh+dt@kernel.org>,
-        "andriy.shevchenko@linux.intel.com"
-	<andriy.shevchenko@linux.intel.com>,
-        "Lu, Kevin" <kevin-lu@ti.com>, "Xu,
- Baojun" <baojun.xu@ti.com>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "P O, Vijeth" <v-po@ti.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz"
-	<perex@perex.cz>,
-        "pierre-louis.bossart@linux.intel.com"
-	<pierre-louis.bossart@linux.intel.com>,
-        "13916275206@139.com"
-	<13916275206@139.com>,
-        "Chawla, Mohit" <mohit.chawla@ti.com>,
-        "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
-        "soyer@irl.hu"
-	<soyer@irl.hu>, "Huang, Jonathan" <jkhuang3@ti.com>,
-        "tiwai@suse.de"
-	<tiwai@suse.de>, "Djuandi, Peter" <pdjuandi@ti.com>,
-        "McPherson, Jeff"
-	<j-mcpherson@ti.com>,
-        "Navada Kanyana, Mukund" <navada@ti.com>,
-        Mark Brown
-	<broonie@kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH v2 4/4] ASoc: dt-bindings: PCM6240: Add
- initial DT binding
-Thread-Topic: [EXTERNAL] Re: [PATCH v2 4/4] ASoc: dt-bindings: PCM6240: Add
- initial DT binding
-Thread-Index: AQHaUAwUI8E/PZj0r0in3/wm+owNo7DsJ5KAgABZ9gCAA7KFIIACwEkAgADnt+A=
-Date: Wed, 31 Jan 2024 12:17:23 +0000
-Message-ID: <d3655fa4a6854ed5a19c8764885295dd@ti.com>
-References: <20240126035855.1785-1-shenghao-ding@ti.com>
- <20240126035855.1785-4-shenghao-ding@ti.com>
- <f7a2de19-55c5-4aa9-b0a8-632f22b6c147@linaro.org>
- <f5357751-ed4d-49ad-9d65-199c49f4cbdf@sirena.org.uk>
- <015abf2c43a44c478726c270bfa17fc0@ti.com>
- <dc867ca4-e579-47f5-8490-ebefbc3c2875@linaro.org>
-In-Reply-To: <dc867ca4-e579-47f5-8490-ebefbc3c2875@linaro.org>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTcupFQR"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40fafae5532so12144545e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 04:20:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706703651; x=1707308451; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CR4Ho3L6jue69cceJ1b2x5jJZb5ixIFGR4e9QkosqQA=;
+        b=JTcupFQR/G3NtuoyS/vT+jQeQ4XtwtBpU+LV2Da2LRSvVW5DzqePKb2PeEiMSGSrBs
+         i0WaRtclgZLzUPJBKVZ2+2NxVgd6zZ/B5B2G8ZUYdQaNvoMIDIpN1x16yxcRiEMDgxu6
+         Iwdqx74WFE2fOFBTlNYA4hA+Wkwsvz0nGjikfxyjWtKpNdEtgtxU7DQdPFH5lxmpKc7F
+         SchQxoUpINV4CY74zh3NN+pxpEHHq/24Pj3ScIlrJ4ysY4wYKdNVZU3J9rvVYVWPH8lL
+         ZXDWKQ3cudchQmlw0glKEBJGGowzP3Sqmrvx4rYpwmCGnIPv9YrHIRMy/ZVl/zNORRQ3
+         0+3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706703651; x=1707308451;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CR4Ho3L6jue69cceJ1b2x5jJZb5ixIFGR4e9QkosqQA=;
+        b=tWVd19RGVg4FZDnM3HYigLXZhhkXPHVkGSF1OubGCRlGrDNa9H0wbnCVw9l06QunGI
+         ztU60CMzOhHCKoidXh+q2AjkDMX/iTp5ISEh8IchatHF6hhTZSBr6E4qo3DpLI5V6kCo
+         20642Mfccfyjb/mq3hmMSSpjYo0+upg4DnvIjoh0KBhyQoEnrfXchDrs98kMpjIpAcK2
+         /Z4jc4vs6yhpcTPq85vU0n+RvVf+J6NSwgB2dJZh1wMjP8ZimurOpzKYzjUuiGUvV2Xi
+         lnzEmD3j9wsM0ler1eIIqNDOafUo5NiibWwbWE44IBf0dFvBvEfuMAJEISxZxBuX4Yxl
+         p4UA==
+X-Gm-Message-State: AOJu0Yz0PFR3inG2Gnve6ZkmRf9pRYajN6uP5puBuGs7jLbl888QJC/h
+	I8iyQYmLIXXSnOIakOr8tCc5XxWWmnYOzyFQo7hqCAxjapDoG5su
+X-Google-Smtp-Source: AGHT+IHrAFGvgzNAU1x7cZ3VVZ2tm8h0xv0lhf3R+ivG9q/H4NNgiS0W+QqF0r52fYuf/YDbvb9dHQ==
+X-Received: by 2002:a05:600c:19c9:b0:40e:a0a3:f358 with SMTP id u9-20020a05600c19c900b0040ea0a3f358mr1077732wmq.22.1706703650656;
+        Wed, 31 Jan 2024 04:20:50 -0800 (PST)
+Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
+        by smtp.gmail.com with ESMTPSA id z12-20020a7bc7cc000000b0040efb503d58sm1460094wmk.28.2024.01.31.04.20.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 04:20:50 -0800 (PST)
+Message-ID: <dcb1b6dbc2172dd66bfdcc0c8135e0d98f1c22dd.camel@gmail.com>
+Subject: Re: [PATCH RESEND RFC] driver: core: don't queue device links
+ removal for dt overlays
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: nuno.sa@analog.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki"
+	 <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring
+	 <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Saravana Kannan <saravanak@google.com>
+Date: Wed, 31 Jan 2024 13:24:07 +0100
+In-Reply-To: <20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com>
+References: 
+	<20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,56 +74,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
-d3NraSA8a3J6eXN6dG9mLmtvemxvd3NraUBsaW5hcm8ub3JnPg0KPiBTZW50OiBXZWRuZXNkYXks
-IEphbnVhcnkgMzEsIDIwMjQgMTI6MTggQU0NCj4gVG86IERpbmcsIFNoZW5naGFvIDxzaGVuZ2hh
-by1kaW5nQHRpLmNvbT4NCj4gQ2M6IGNvbm9yK2R0QGtlcm5lbC5vcmc7IHJvYmgrZHRAa2VybmVs
-Lm9yZzsNCj4gYW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tOyBMdSwgS2V2aW4gPGtl
-dmluLWx1QHRpLmNvbT47IFh1LCBCYW9qdW4NCj4gPGJhb2p1bi54dUB0aS5jb20+OyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgUCBPLCBWaWpldGggPHYtDQo+IHBvQHRpLmNvbT47IGxnaXJk
-d29vZEBnbWFpbC5jb207IHBlcmV4QHBlcmV4LmN6OyBwaWVycmUtDQo+IGxvdWlzLmJvc3NhcnRA
-bGludXguaW50ZWwuY29tOyAxMzkxNjI3NTIwNkAxMzkuY29tOyBDaGF3bGEsIE1vaGl0DQo+IDxt
-b2hpdC5jaGF3bGFAdGkuY29tPjsgbGludXgtc291bmRAdmdlci5rZXJuZWwub3JnOyBsaW51eC0N
-Cj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGlhbS5yLmdpcmR3b29kQGludGVsLmNvbTsgc295
-ZXJAaXJsLmh1OyBIdWFuZywNCj4gSm9uYXRoYW4gPGpraHVhbmczQHRpLmNvbT47IHRpd2FpQHN1
-c2UuZGU7IERqdWFuZGksIFBldGVyDQo+IDxwZGp1YW5kaUB0aS5jb20+OyBNY1BoZXJzb24sIEpl
-ZmYgPGotbWNwaGVyc29uQHRpLmNvbT47IE5hdmFkYQ0KPiBLYW55YW5hLCBNdWt1bmQgPG5hdmFk
-YUB0aS5jb20+OyBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJl
-OiBbRVhURVJOQUxdIFJlOiBbUEFUQ0ggdjIgNC80XSBBU29jOiBkdC1iaW5kaW5nczogUENNNjI0
-MDoNCj4gQWRkIGluaXRpYWwgRFQgYmluZGluZw0KPiANCj4gT24gMjkvMDEvMjAyNCAwNTrigIo0
-MywgRGluZywgU2hlbmdoYW8gd3JvdGU6ID4+ID4+IE9uIEZyaSwgSmFuIDI2LCAyMDI0IGF0DQo+
-IDA5OuKAijI3OuKAijQ3QU0gKzAxMDAsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6ID4+PiBP
-biAyNi8wMS8yMDI0IDA0OuKAijU4LA0KPiBTaGVuZ2hhbyBEaW5nIHdyb3RlOiA+PiA+Pj4+ICsg
-LSBpZjogPj4+PiArIHByb3BlcnRpZXM6DQo+IFpqUWNtUVJZRnBmcHRCYW5uZXJTdGFydCBUaGlz
-IG1lc3NhZ2Ugd2FzIHNlbnQgZnJvbSBvdXRzaWRlIG9mIFRleGFzDQo+IEluc3RydW1lbnRzLg0K
-PiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IHJlY29n
-bml6ZSB0aGUgc291cmNlIG9mDQo+IHRoaXMgZW1haWwgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMg
-c2FmZS4NCj4gDQo+IFpqUWNtUVJZRnBmcHRCYW5uZXJFbmQNCj4gT24gMjkvMDEvMjAyNCAwNTo0
-MywgRGluZywgU2hlbmdoYW8gd3JvdGU6DQo+ID4+DQo+ID4+IE9uIEZyaSwgSmFuIDI2LCAyMDI0
-IGF0IDA5OjI3OjQ3QU0gKzAxMDAsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+ID4+PiBP
-biAyNi8wMS8yMDI0IDA0OjU4LCBTaGVuZ2hhbyBEaW5nIHdyb3RlOg0KPiA+Pg0KPiA+Pj4+ICsg
-IC0gaWY6DQo+ID4+Pj4gKyAgICAgIHByb3BlcnRpZXM6DQo+ID4+Pj4gKyAgICAgICAgY29tcGF0
-aWJsZToNCj4gPj4+PiArICAgICAgICAgIGNvbnRhaW5zOg0KPiA+Pj4+ICsgICAgICAgICAgICBl
-bnVtOg0KPiA+Pj4+ICsgICAgICAgICAgICAgIC0gdGkscGNtMTY5MA0KPiA+Pj4+ICsgICAgdGhl
-bjoNCj4gPj4+PiArICAgICAgcHJvcGVydGllczoNCj4gPj4+PiArICAgICAgICByZWc6DQo+ID4+
-Pj4gKyAgICAgICAgICBpdGVtczoNCj4gPj4+PiArICAgICAgICAgICAgbWluaW11bTogMHg0Yw0K
-PiA+Pj4+ICsgICAgICAgICAgICBtYXhpbXVtOiAweDRmDQo+ID4+DQo+ID4+PiBOb3RoaW5nIGlt
-cHJvdmVkLg0KPiA+Pg0KPiA+PiBTaGVuZ2hhbyBleHBsYWluZWQgd2hhdCB3aGF0IHRoaXMgaXMg
-ZG9pbmcgLSBJJ20gbm90IHN1cmUgd2hhdCB0aGUNCj4gPj4gYWN0dWFsIHByb2JsZW0gaXMgaGVy
-ZT8gIEl0J3MgYW4gYWN0dWFsIHJlc3RyaWN0aW9uIG9uIHRoZSB2YWx1ZXMgdGhhdCBhcmUNCj4g
-dmFsaWQuDQo+ID4NCj4gPiBIaSwgS3J6eXN6dG9mLiBNYXkgSSBoYXZlIHRoZSBwcml2aWxlZ2Ug
-dG8gcGV0aXRpb24gb24gYmVoYWxmIG9mIG15DQo+ID4gY3VzdG9tZXJzPyBUaGV5IHdhbnQgdG8g
-a2VlcCB0aGVzZSBpZiBicmFuY2hlcyBhbmQgdGhlIGkyYyBhZGRyZXNzIGluDQo+ID4geWFtbCBm
-aWxlLiBBcyB5b3Uga25vdywgbW9zdCBvZiBteSBjdXN0b21lcnMgdXNlZCB0byBtYWtlIG1pc3Rh
-a2VzIGFuZA0KPiA+IGNvbmZ1c2Ugd2l0aCB0aGUgaTJjIGFkZHJlc3MuIExpc3RpbmcgdGhlbSBo
-ZXJlIGNhbiBoZWxwIHRoZW0gdG8gZ2V0IHRoZQ0KPiBpbmZvcm1hdGlvbiBlYXNpbHkuDQo+IA0K
-PiBUbyB3aGljaCBjYXNlcyB0aGlzIGV4Y2VwdGlvbiB3aWxsIGFwcGx5PyBZb3VyIHBhdGNoZXMs
-IGFsbCBUST8NCj4gDQpTb21lIEFJIGN1c3RvbWVycyB1c3VhbGx5IGxpa2UgdG8gdHJ5IHNvbWUg
-aW5ub3ZhdGl2ZSBwcm9qZWN0cywgc3VjaCBhcyB0aGVpciBtdWx0aXBsZS1zbG90IFRETSANCmRl
-dmljZXMgd2l0aCBzZXJ2YWwgZGlmZmVyZW50IEFEQ3Mgb3IgREFDIG9uIGRpZmZlcmVudCBpMmMg
-YnVzZXMuIFRyYWRpdGlvbmFsIGRyaXZlciBjb2RlIHJlYWxseSANCmNhbid0IG1lZXQgdGhlaXIg
-cmVxdWlyZW1lbnRzLg0KPiBCaW5kaW5ncyBhcmUgbm90IHN1cHBvc2VkIHRvIGJlIHNvIGRldGFp
-bGVkIHRvIGNyZWF0ZSBEVFMgb3V0IGlmIGl0LCBiZWNhdXNlIGl0DQo+IG1ha2VzIHRoZW0gbW9y
-ZSBkaWZmaWN1bHQgdG8gbWFpbnRhaW4uIFN1Y2ggYW1vdW50IG9mDQo+IGlmOnRoZW46IG1ha2Vz
-IGl0IHRyaWNraWVyLCBmb3Igbm8gcmVhbCBnYWluLg0KPiANCkFjY2VwdA0KDQogQmVzdCByZWdh
-cmRzLA0KU2hlbmdoYW8gRGluZw0KDQo=
+On Tue, 2024-01-23 at 16:40 +0100, Nuno Sa via B4 Relay wrote:
+> From: Nuno Sa <nuno.sa@analog.com>
+>=20
+> For device links, releasing the supplier/consumer devices references
+> happens asynchronously in device_link_release_fn(). Hence, the possible
+> release of an of_node is also asynchronous. If these nodes were added
+> through overlays we have a problem because this does not respect the
+> devicetree overlays assumptions that when a changeset is
+> being removed in __of_changeset_entry_destroy(), it must hold the last
+> reference to that node. Due to the async nature of device links that
+> cannot be guaranteed.
+>=20
+> Given the above, in case one of the link consumer/supplier is part of
+> an overlay node we call directly device_link_release_fn() instead of
+> queueing it. Yes, it might take some significant time for
+> device_link_release_fn() to complete because of synchronize_srcu() but
+> we would need to, anyways, wait for all OF references to be released if
+> we want to respect overlays assumptions.
+>=20
+> Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+> ---
+> This RFC is a follow up of a previous one that I sent to the devicetree
+> folks [1]. It got rejected because it was not really fixing the root
+> cause of the issue (which I do agree). Please see the link where I
+> fully explain what the issue is.
+>=20
+> I did also some git blaming and did saw that commit
+> 80dd33cf72d1 ("drivers: base: Fix device link removal") introduced
+> queue_work() as we could be releasing the last device reference and hence
+> sleeping which is against SRCU callback requirements. However, that same
+> commit is now making use of synchronize_srcu() which may take
+> significant time (and I think that's the reason for the work item?).
+>=20
+> However, given the dt overlays requirements, I'm not seeing any
+> reason to not be able to run device_link_release_fn() synchronously if we
+> detect an OVERLAY node is being released. I mean, even if we come up
+> (and I did some experiments in this regard) with some async mechanism to
+> release the OF nodes refcounts, we still need a synchronization point
+> somewhere.
+>=20
+> Anyways, I would like to have some feedback on how acceptable would this
+> be or what else could I do so we can have a "clean" dt overlay removal.
+>=20
+> I'm also including dt folks so they can give some comments on the new
+> device_node_overlay_removal() function. My goal is to try to detect when =
+an
+> overlay is being removed (maybe we could even have an explicit flag for
+> it?) and only directly call device_link_release_fn() in that case.
+>=20
+> [1]:
+> https://lore.kernel.org/linux-devicetree/20230511151047.1779841-1-nuno.sa=
+@analog.com/
+> ---
+> =C2=A0drivers/base/core.c | 25 ++++++++++++++++++++++++-
+> =C2=A01 file changed, 24 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 14d46af40f9a..31ea001f6142 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -497,6 +497,18 @@ static struct attribute *devlink_attrs[] =3D {
+> =C2=A0};
+> =C2=A0ATTRIBUTE_GROUPS(devlink);
+> =C2=A0
+> +static bool device_node_overlay_removal(struct device *dev)
+> +{
+> +	if (!dev_of_node(dev))
+> +		return false;
+> +	if (!of_node_check_flag(dev->of_node, OF_DETACHED))
+> +		return false;
+> +	if (!of_node_check_flag(dev->of_node, OF_OVERLAY))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> =C2=A0static void device_link_release_fn(struct work_struct *work)
+> =C2=A0{
+> =C2=A0	struct device_link *link =3D container_of(work, struct device_link=
+,
+> rm_work);
+> @@ -532,8 +544,19 @@ static void devlink_dev_release(struct device *dev)
+> =C2=A0	 * synchronization in device_link_release_fn() and if the consumer=
+ or
+> =C2=A0	 * supplier devices get deleted when it runs, so put it into the
+> "long"
+> =C2=A0	 * workqueue.
+> +	 *
+> +	 * However, if any of the supplier, consumer nodes is being removed
+> +	 * through overlay removal, the expectation in
+> +	 * __of_changeset_entry_destroy() is for the node 'kref' to be 1
+> which
+> +	 * cannot be guaranteed with the async nature of
+> +	 * device_link_release_fn(). Hence, do it synchronously for the
+> overlay
+> +	 * case.
+> =C2=A0	 */
+> -	queue_work(system_long_wq, &link->rm_work);
+> +	if (device_node_overlay_removal(link->consumer) ||
+> +	=C2=A0=C2=A0=C2=A0 device_node_overlay_removal(link->supplier))
+> +		device_link_release_fn(&link->rm_work);
+> +	else
+> +		queue_work(system_long_wq, &link->rm_work);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static struct class devlink_class =3D {
+>=20
+> ---
+> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> change-id: 20240123-fix-device-links-overlays-5422e033a09b
+> --
+>=20
+> Thanks!
+> - Nuno S=C3=A1
+>=20
+
+Hi Rafael,
+
+Would be nice to have your feedback on this one or if this is a complete na=
+ck...
+I think calling device_link_release_fn() synchronously is ok but I might be
+completely wrong.
+
++Cc Saravan as he should also be very familiar with device_links and see if=
+ the
+above fairly simple solution is sane.
+
+I also don't want to be pushy as I know you guys are all very busy but it's=
+ (i
+think) the third time I resend the patch :)
+
+- Nuno S=C3=A1
