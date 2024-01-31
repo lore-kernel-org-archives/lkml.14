@@ -1,169 +1,156 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3180C3E46B;
-	Wed, 31 Jan 2024 06:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981FA3EA83
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706680881; cv=none; b=TQUZbywfKUMGvLDNGf0rG9jhCEYRVHZMK3Uwc2X5yEQiwtmP9d/JgewoqZDMne+G7uyUes0AEnGdCCWj8q4dxiuuD6jDNU1OYWMHsaEUC2vejKd5oqptG1uOMX4dTscSpI0MD4uATY1YBdHet/2JqbMEzM81uYTCvmSbFZ+Gg3Q=
+	t=1706680951; cv=none; b=HBHIOoxBuo9Sdr2+d5qgvEtsKSS/rzfk74FH60uYf3wYl7ykoMp2oiJu0XB0abqmaweF2lPhWuBv9Eyp96Hg5Rdntzb9bET1DaNp065T97aLKm9voxMiYifp7PLsXzv+MrYCEGYl7uHko7aLKXipXd/KpAosf0d0+fwYFNluS3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706680881; c=relaxed/simple;
-	bh=NEnY0eMPOlLKjUxvivCMOJQhrAWo3oDLZhH5bmOUHQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EC0Iksil/he+y3wncGt2qJD595Vhgy3G5Fi8cFZdNGu/6WRE+3FEviVyE6pUYGFCRw3+9BBH+mJq/9Fjs0bqi13eRiidQT8BWrBL6AQ0f27mNFUPYgOAe96SGupzkNI5axPlXPUKOj1Tyj9Z2niqyOWdRYmAeXmEhZlw7bMbYdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ab/IJojY; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706680951; c=relaxed/simple;
+	bh=S6iqY0O7bWkNnxXJ5MbqGTCSCZS6LNZcocjvfJVeznc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WV4+jM6g5c/Hc0ltABJy+/d5WtmImkNKz3NBpKSGCyoxVZC5z41/ZqRioSCmJYmTFeXSKgejvdE0y47U/Ko9+BKPpTFtVb9bOazFB49HXx+H+WEIfDf4TcqqLTXElTHS4o9Ey1cmaH27mo+OUjskp3yq4FC9bfbRhr9AWh5TzhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=yZ1L6ecC; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ab/IJojY"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e1352dd653so1458291a34.2;
-        Tue, 30 Jan 2024 22:01:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="yZ1L6ecC"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6de0ba30994so403178b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 22:02:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706680878; x=1707285678; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=3d59pSZFrotxa5OB09tA6yrFpKxzayWubKgHGCJEqP0=;
-        b=Ab/IJojYXqC8NzrXPOsQctVPYUVhQEWDKdZ9w44HC43qmGKsaYa9dwJ4ikDC4fNHbX
-         v1+qgQ8ek3JBnecP+80Bz3hzSTLeo3xQotchgkewr0GvJTFzpt5RL7nk2zg1yNPoq3Wu
-         Ot5rjVWcIL/LaVRP1YJQ+qhiGYEtLwEGJmHGVzo718U1tElxjFR94QBAZYBblk1fJyVA
-         +iHu7lPLU3WkpelycEVpwRzWHoRNNjqsYpGwAqFcHlXMMb7zw9vUZkljiGOx3xiOO636
-         pV2tbGTfblOrsCZMRT2YABAkZJ8KQcnFqp56itOp9TBNCbzcsIaulQGaArzvxS4bEr6a
-         JNpQ==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706680949; x=1707285749; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7nVt2N2T/88QwCj9vDpwCSukp2aFRSspOwEn5na4qf0=;
+        b=yZ1L6ecCUUONG4bsc6gQvxkyWEIx86v9ub2Z5lEFvMNlYAm/TYsXR+v2xtprwKasht
+         OwMj1laWfYKFRZWotbBiIGM87RAmQN/uoosw7sgX20Jp6aQJh3A0c8sYCtAJ/pV46MyG
+         J9OHxV3o3C4aZurnOXtqPFSkyi73oh9fBkLhJCj0xwMg38KoCEUhkF4Or9cqVmf+OqAq
+         8m09Ziy/kDVJ57O+bL9fyfidqAvrsEllyyqzn4O4P+7AtaeMx7xh+9axRlalBZZQpy8d
+         5ItNfpbocRrHDu39iij8LGt50WSyzCjEtCZd26IHJAtoXk791nSI8c2+PK0GeQJSfiAK
+         KJGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706680878; x=1707285678;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3d59pSZFrotxa5OB09tA6yrFpKxzayWubKgHGCJEqP0=;
-        b=rQoZfFN9uEr7L/oLPkit5aqOvd/ZGG3WK5qubUl+46gxMUsiTGHx21NagUvJGuxysL
-         LP5aWo0JmE55VM/DatfJKA8knT3l4lXKzU31Zx9efb2QeGp7oAgEXas7SJ5vMI+XGLTu
-         HVVLeB8MlK3TkgvOGij9JEJpnY6x1xVKCgTnNX3POo5wJz5EREcuk1SgNzxgrMkDPKeX
-         Y6/B37Q/GwyoYtYstdi6IHMEtGZcR98MtlER17eKP3sKrsNaX0rtHqSfed68EoUYvQVE
-         FOHI/KR9c1wi3rx5nj0tTttGrF7u2c8B1yKmujwBmm7QTtkH9EIPMRRV6Y35W67xIRlj
-         AoEw==
-X-Gm-Message-State: AOJu0Yxx8pqCE9YV5hoSuQ1/OxOcyPkCj7M6VL6vR83HctDC6MsoWt2/
-	5HFWA/VsyFg293osqqYgkPUmuB7JPxLIOyakpbzdzV9ndRfY8tzt
-X-Google-Smtp-Source: AGHT+IFen+FDfjlBIeidg23Urvr88JScP5kLZW1IYd4CA5oBP1lCslXPTD2pKl7tL3WrbAEkIMOXQA==
-X-Received: by 2002:a05:6358:60cc:b0:178:6d3d:4cc1 with SMTP id i12-20020a05635860cc00b001786d3d4cc1mr543296rwi.24.1706680878039;
-        Tue, 30 Jan 2024 22:01:18 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n26-20020aa78a5a000000b006ddc87c1780sm8916401pfa.63.2024.01.30.22.01.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 22:01:17 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <1a996038-bcc7-4c0f-8f27-ca36a2eb9d3d@roeck-us.net>
-Date: Tue, 30 Jan 2024 22:01:15 -0800
+        d=1e100.net; s=20230601; t=1706680949; x=1707285749;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7nVt2N2T/88QwCj9vDpwCSukp2aFRSspOwEn5na4qf0=;
+        b=SVjSfWQuR4EyTbos5EmLRD+7BH4K/X4H/BadnpBJriMFUNzWg8FNCrFD9wGAJtdrrw
+         /CzrmeHVD8aZaWxlYdwYehWaK3JWdTR2RjSteFayoJnQFbcDH+yCiDMfu+crxowbZhjP
+         BRegsyQX6ojy+xES/gpTHUIgiKKWuBWQC+JPVXZG3gKk6i1CnBbz/lgJ3oViLHCJKij7
+         GW7e1yiZwwx99ZHJmbk0kkZ70zum8OoVN+8PrdeALcsbKEYb7DYJHXr9C8cNI+cDGcvG
+         yoIVnMwQiaaOcWWEw4emlGBXnA0CWBsd2HX/THsh4u9LZoooh4RqAeQIYsHDEmoSh/4j
+         S+mw==
+X-Gm-Message-State: AOJu0YwoSTW2siWjEm2TN7nHJM0UlLHOah3yF5F8EeMujrhQXCLyvwTo
+	ZizIzklQhngMnQGJbqkbnOaFh8biJXUm226PypjS1e+Vd8q/DB6nZroYjTxxplQ=
+X-Google-Smtp-Source: AGHT+IF83oLZBbfL/1pDsa5srWK3SXBJBiWlPPeb6q8CD6Rlv6AkRdfMv41fs5CW1HIELf7DGdNSpA==
+X-Received: by 2002:a62:ce86:0:b0:6db:c583:1ac6 with SMTP id y128-20020a62ce86000000b006dbc5831ac6mr709518pfg.9.1706680948838;
+        Tue, 30 Jan 2024 22:02:28 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
+        by smtp.gmail.com with ESMTPSA id e17-20020a656491000000b005d67862799asm4574140pgv.44.2024.01.30.22.02.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 22:02:28 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rV3g1-0002Xn-15;
+	Wed, 31 Jan 2024 17:02:25 +1100
+Date: Wed, 31 Jan 2024 17:02:25 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	syzbot <syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com>,
+	adilger.kernel@dilger.ca, chandan.babu@oracle.com, jack@suse.com,
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: current->journal_info got nested! (was Re: [syzbot] [xfs?]
+ [ext4?] general protection fault in jbd2__journal_start)
+Message-ID: <Zbnicfk+JHIlG2WC@dread.disaster.area>
+References: <000000000000e98460060fd59831@google.com>
+ <000000000000d6e06d06102ae80b@google.com>
+ <ZbmILkfdGks57J4a@dread.disaster.area>
+ <20240131045822.GA2356784@mit.edu>
+ <ZbnYitvLz7sWi727@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: qcom: Start the watchdog in probe
-Content-Language: en-US
-To: Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mukesh Ojha <quic_mojha@quicinc.com>
-References: <20240131-qcom-wdt-start-probe-v1-1-bee0a86e2bba@quicinc.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240131-qcom-wdt-start-probe-v1-1-bee0a86e2bba@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbnYitvLz7sWi727@casper.infradead.org>
 
-On 1/30/24 20:15, Pavankumar Kondeti wrote:
-> When CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is enabled, kernel can pet the
-> watchdog until user space takes over. Make use of this feature and
-> start the watchdog in probe.
+On Wed, Jan 31, 2024 at 05:20:10AM +0000, Matthew Wilcox wrote:
+> On Tue, Jan 30, 2024 at 11:58:22PM -0500, Theodore Ts'o wrote:
+> > Hmm, could XFS pre-fault target memory buffer for the bulkstat output
+> > before starting its transaction?  Alternatively, ext4 could do a save
+> > of current->journal_info before starting to process the page fault,
+> > and restore it when it is done.  Both of these seem a bit hacky, and
+> > the question is indeed, are there other avenues that might cause the
+> > transaction context nesting, such that a more general solution is
+> > called for?
 > 
-> Signed-off-by: Pavankumar Kondeti <quic_pkondeti@quicinc.com>
-> ---
->   drivers/watchdog/qcom-wdt.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> index 9e790f0c2096..4fb5dbf5faee 100644
-> --- a/drivers/watchdog/qcom-wdt.c
-> +++ b/drivers/watchdog/qcom-wdt.c
-> @@ -276,12 +276,16 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->   	watchdog_init_timeout(&wdt->wdd, 0, dev);
->   
->   	/*
-> +	 * Kernel can pet the watchdog until user space takes over.
-> +	 * Start the watchdog here to make use of this feature.
-> +	 
+> I'd suggest that saving off current->journal_info is risky because
+> it might cover a real problem where you've taken a pagefault inside
+> a transaction (eg ext4 faulting while in the middle of a transaction on
+> the same filesystem that contains the faulting file).
 
-No, that is not what CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is about.
-Please see its description.
+Depends. Look at it from the POV of XFS:
 
-NACK.
+1. we can identify current->journal_info as belonging to XFS because
+of the TRAN magic number in the first 32 bits of the structure.
 
-Guenter
+2. the struct xfs_trans has a pointer to the xfs_mount which points
+to the VFS superblock, which means we can identify exactly which
+filesystem instance the transaction belongs to.
 
->   	 * If WDT is already running, call WDT start which
->   	 * will stop the WDT, set timeouts as bootloader
->   	 * might use different ones and set running bit
->   	 * to inform the WDT subsystem to ping the WDT
+3. We can determine if the transaction has a journal reservation
+from the log ticket the transaction holds.
 
->   	 */
-> -	if (qcom_wdt_is_running(&wdt->wdd)) {
-> +	if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED) ||
-> +	    qcom_wdt_is_running(&wdt->wdd)) {
->   		qcom_wdt_start(&wdt->wdd);
->   		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
->   	}
-> 
-> ---
-> base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
-> change-id: 20240131-qcom-wdt-start-probe-b8e0560aef7d
-> 
-> Best regards,
+From these three things, we can identify if we are about to recurse
+into the same filesystem, and if so, determine if it is safe to run
+new transactions from within that context.
 
+> Seems to me that we shouldn't be writing to userspace while in the
+> middle of a transaction.  We could even assert that in copy_to_user()?
+
+On further thinking I don't think the problem is taking page faults
+within a filesystem transaction context is the problem here. We're
+using the transaction context for automated garbage collection so we
+never have to care about leaking object references in the code, not
+because we are running a modification and holding a journal
+reservation. It's the journals reservations that cannot be allowed
+to nest in XFS, not the transactions themselves.
+
+IOWs, the real problem is that multiple filesystems use the same
+task field for their own individual purposes, and that then leads
+these sorts of recursion problems when a task jumps from one
+filesystem context to another and the task field is then
+mis-interpretted.
+
+I've had a look at the XFS usage of current->journal_info, and I
+think we can just remove it.
+
+It's used for warning that we are running a writepages operations
+from within transaction context (which should never happen from XFS
+nor memory reclaim). it's also used in the ->destroy_inode path to
+determine if we are running in a context where we cannot block on
+filesystem locks or transaction reservations. 
+
+The former we can remove with no loss, the latter we can simply
+check PF_MEMALLOC_NOFS as that is set by transaction contexts.
+
+IOWs, I think that, in general, page faults in user buffers are fine
+in empty XFS transaction contexts as long as we aren't using some
+structure that some other filesystem might then to process the
+page fault....
+
+This may not be true for other filesystems, but I don't think we
+can really say "page faults in any filesystem transaction are unsafe
+and should be banned"....
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
