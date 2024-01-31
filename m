@@ -1,144 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36646768FA;
-	Wed, 31 Jan 2024 12:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75D77762C
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706702708; cv=none; b=cbXyy9W8/UJkpUugCDcABSeDA7qIJd9MjO6t3n7qPzmkdq/+F4X2YpU+bZ64qSJK7tYotw0j2bL+plwWmxV2zcf4bCXbyrKGTvXJnxux0Few4B37Lx4Ubh3PEcFTrnpRFPHU+mxZHd75tA8qCdK0w1EXzECjZXPpPPpATBfXcPY=
+	t=1706702838; cv=none; b=QOwCLMVdJ1yAgdMLrPdcXr7PS3jNTG2vZaEMeJgPmjUgWYWp8WhAThisw8sHh3x/jeOPHkQkn2QeXWnOhncdHk78LjMEEwj8FYC6FutJ74+NK0SGkx4Ip9fnr5LaiAXTL4jdS7JGArcyq7hUWWBViwKzL4m+RNAKDvvh9bXt2as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706702708; c=relaxed/simple;
-	bh=C4+J0LK2uGlnop8N8+yJQ1nCoUA+KOAPfCeSlARfKYU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Tq1pWmB0msIhR+Y6Rdz200JY+QeTzabtA/Su5R97imUkNsA6nKepbR7B5M8SE21X97tzjFdhYv8LTB7UG3YWARiahYloOw49KeMJnJEtggBT8QCYBjMcbantp7AgJz4q8aAsfcSJyvVCQYpSFs9GDLxqqv0WHHWh+erOjsFnkrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQeIH0ar; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706702838; c=relaxed/simple;
+	bh=qU4E162loZwfTp3HYkyxdRM3XI8TqDAEicNfRq17EP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OCK/uCKq8vJ8B6R5hwPsNbDrAJ7Rw3j8S31bQpSzMicXYgxLlYtqjJgotigWLM1ogd0HfQkPjkysGAAvWGN5wz24ztp1bDniwJ14il+pDnN5ApGdnERDHygFAnYhoLzZ1UJeLoIbVGi6rvb3WOIa+r6aYoTtSvGUcO5QFhQacSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TeRxvga9; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQeIH0ar"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706702707; x=1738238707;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=C4+J0LK2uGlnop8N8+yJQ1nCoUA+KOAPfCeSlARfKYU=;
-  b=hQeIH0arMlLFVtsHsLx6Ucc9MDMfnXm3etK2rSlN0Afh6si4iyt6zkAa
-   SFDkrvSWoz539x5SSjGv4ciXzCLvJ76kNUPOFZ2U7RsNs1dMYRG9SZ601
-   bKf7K+A+/zAO2PZkb2hiulELLttQKR1BBxk21SaVvQcTuapOJuosxSa2I
-   YUzK6YgWZ+m7kMexxpHmNTSLlCgWXBZtJlo93R3IYozywk2eG20kZQr+u
-   OnIKrPxdppBWAo12Ulov+zUQ4YlOIFrcMzGIF/+DEHMbHiSWQMTcLuKkN
-   LP3XPUA35foO9cva2oW5XDFcziY8Aqdc6t9DDXkZ4O9Hu7vsL6QihYCCB
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10965154"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="10965154"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 04:05:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="738074974"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="738074974"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.35.167])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 04:05:01 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 31 Jan 2024 14:04:57 +0200 (EET)
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-cc: Reinette Chatre <reinette.chatre@intel.com>, fenghua.yu@intel.com, 
-    shuah@kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] selftests/resctrl: Add helpers for the non-contiguous
- test
-In-Reply-To: <tck7kcpjdch3a3qkkwusft5zwptlhtmicx53zjcqk3x42w5p55@pf6vrmnh7deo>
-Message-ID: <6259e494-bab3-0aeb-0bf6-e4e384f8f0b0@linux.intel.com>
-References: <cover.1706180726.git.maciej.wieczor-retman@intel.com> <85b1efc3ddd698b3ac81aa72a6dc987ee17da3e2.1706180726.git.maciej.wieczor-retman@intel.com> <ea9b0e06-c07e-eb4b-9e7d-ed20419b677d@linux.intel.com> <611fd2b6-d9ec-42f0-9711-b1398fc02842@intel.com>
- <tck7kcpjdch3a3qkkwusft5zwptlhtmicx53zjcqk3x42w5p55@pf6vrmnh7deo>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TeRxvga9"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33ae51f8111so2639606f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 04:07:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706702835; x=1707307635; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qU4E162loZwfTp3HYkyxdRM3XI8TqDAEicNfRq17EP8=;
+        b=TeRxvga9JP+VY1AJ3tZ20wr5/MLzTokxLNfMCFU3a4a8XpLrx4tey6NtViNneO/WW4
+         wyg41Q5q/v+DeK3kdl0ZscV48Srrc1kMze/07ruNYKoEHaP7MayxO/gVcl26ISrVUE5g
+         mjesh18yncZSFplSN2ioRJOgoVISZ+cXCpK3kOE0iwRwW6P4FPWqH9pypXlCprSozuQo
+         /JbExTn/k9ZvCExP7mTpUqycgHT4XZfqrVZ9eM8x0hTKFLIJYnAH6hBt+b9WyE8p4fkU
+         7q5YkncZZ6aEvWBA2L6OyhsC9AZzoiA2vO4Ua6aNhNjFiV0ttCYkbrreFc0Ku+kwxQdy
+         trAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706702835; x=1707307635;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qU4E162loZwfTp3HYkyxdRM3XI8TqDAEicNfRq17EP8=;
+        b=GUP+7nYkJQHkOBn0l6XZTh2JvnpWekhkX50zLIk5e2zL3M2TZy1IaGZyhTR3vgkKd6
+         5kAlj9V1a1BLr2T2lHFPAy8JY9PDr2Mpznf1pfxDh7gXAIiPBUadGde/H8BP5eJxVhnX
+         AcrGCuuvF/ffoNnBZs4PQJ/ZL6z7nVARSR7Z67jO4mfLXVg834/5JILjPqF4w/3W3Bg1
+         7MfpYM6/fAJrIkMdm3eKKaWmIvlxtrCgPva1XsIHMI3w41eBda9mJDzLdMD7z4ZEff3j
+         0RYfMuJC5dxNcMqdN4DT0XIivxIJlVqK8F3ZQZxwof4NFO7ko34LdjOTihDh3BadQJPJ
+         uPfw==
+X-Gm-Message-State: AOJu0Yym4/GfR8IJ8qA0pRgjJ5xePoQ99xi8tZLpErYMvPiC0xRCqFBd
+	nKswRG1o9B27aTxPFia/w1cEbok0leli7iEVm1Tuz9fAe2Ab/c8iHSS2F5C1Yc8=
+X-Google-Smtp-Source: AGHT+IHEiOaXbWBjL1ilTiEtD7iPaCuj/GwMk7gd6hWU92Q2b0hXuGgSG3wky1CyZEiG3uPJAJ4kSg==
+X-Received: by 2002:a5d:68ca:0:b0:33b:e1:e2b7 with SMTP id p10-20020a5d68ca000000b0033b00e1e2b7mr857231wrw.67.1706702835109;
+        Wed, 31 Jan 2024 04:07:15 -0800 (PST)
+Received: from [192.168.100.86] ([176.61.106.68])
+        by smtp.gmail.com with ESMTPSA id bv16-20020a0560001f1000b0033b049ba4d4sm1391994wrb.57.2024.01.31.04.07.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 04:07:14 -0800 (PST)
+Message-ID: <d56d11f7-e796-4de5-ad1b-2e7fdef5f085@linaro.org>
+Date: Wed, 31 Jan 2024 12:07:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1725428063-1706702697=:1077"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: ipq6018: add ipq6000 CPU OPP tables
+Content-Language: en-US
+To: Chukun Pan <amadeus@jmu.edu.cn>, Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240131102003.2061203-1-amadeus@jmu.edu.cn>
+ <20240131102003.2061203-2-amadeus@jmu.edu.cn>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240131102003.2061203-2-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 31/01/2024 10:20, Chukun Pan wrote:
+> Some IPQ6000 SoCs don't have pmic chips, and fused 1.2GHz.
 
---8323328-1725428063-1706702697=:1077
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+"ipq60xx SoCs" ? "and are fused"
 
-On Wed, 31 Jan 2024, Maciej Wieczor-Retman wrote:
-> On 2024-01-26 at 10:58:04 -0800, Reinette Chatre wrote:
-> >On 1/25/2024 4:14 AM, Ilpo J=E4rvinen wrote:
-> >> On Thu, 25 Jan 2024, Maciej Wieczor-Retman wrote:
-> >
-> >>> +=09fp =3D fopen(file_path, "r");
-> >>> +=09if (!fp) {
-> >>> +=09=09snprintf(reason, sizeof(reason), "Error in opening %s file\n",=
- filename);
-> >>> +=09=09ksft_perror(reason);
-> >>=20
-> >> Was this the conclusion of the kstf_perror() discussion with Reinette?=
- I=20
-> >> expected a bit different outcome when I stopped following it...
-> >>=20
-> >> In any case, it would be nice though if ksft_perror() (or some kselfte=
-st.h=20
-> >> function yet to be added with a different name) would accept full prin=
-tf=20
-> >> interface and just add the errno string into the end of the string so =
-one=20
-> >> would not need to build constructs like this at all.
-> >>=20
-> >> It will require a bit of macro trickery into kselftest.h. I don't know=
- how=20
-> >> it should handle the case where somebody just passes a char pointer to=
- it,=20
-> >> not a string literal, but I guess it would just throw an error while=
-=20
-> >> compiling if somebody tries to do that as the macro string literal=20
-> >> concatenation could not build useful/compilable token.
-> >>=20
-> >> It would make these prints informative enough to become actually usefu=
-l=20
-> >> without needed to resort to preparing the string in advance which seem=
-s
-> >> to be required almost every single case with the current interface.
-> >
-> >I think this can be accomplished with a new:
-> >=09void  ksft_vprint_msg(const char *msg, va_list args)
-> >
-> >... but ksft_perror() does conform to perror() and I expect that having =
-one
-> >support variable number of arguments while the other does to cause confu=
-sion.
-> >
-> >To support variable number of arguments with errno I'd propose just to u=
-se
-> >ksft_print_msg() with strerror(errno), errno as the arguments (or even %=
-m
-> >that that errno handling within ksft_print_msg() aims to support). This =
-does
-> >indeed seem to be the custom in other tests.
->=20
-> Does something like this look okay?
->=20
-> =09fp =3D fopen(file_path, "r");
-> =09if (!fp) {
-> =09=09ksft_print_msg("Error in opening %s\n: %m\n", file_path);
-> =09=09return -1;
-> =09}
->=20
-> The '%m' seems to work fine but doesn't print errno's number code. Do you=
- want
-> me to add errno after '%m' so it is the same as ksft_perror()? I looked t=
-hrough
-> some other tests where '%m' is used, and only few ones add errno with '%d=
-'.
-
-I think %m is enough.
-
---=20
- i.
-
---8323328-1725428063-1706702697=:1077--
+---
+bod
