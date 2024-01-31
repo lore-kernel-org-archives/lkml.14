@@ -1,97 +1,78 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81278286F;
-	Thu,  1 Feb 2024 05:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20427995B
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 05:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706766816; cv=none; b=GZ/2qUakKwHhiOF+AGe7gWjYDds0UKkp8DFqz8TkCwyK8VDm2tAvpQzxVo0CduE6M/m18DVIwS6ftG/G3U2Pq0myq2iq6BkAegDok9yvzWSAhncrmcSj8tDol68pJqwRhFJF4PLIU9m+oetXCoQpFMC4IUcPyBzAz+z7s2FrdcU=
+	t=1706767110; cv=none; b=StREDa69DicAO4JD25ndXPe6/ctdeta81HIaISA/KeZo4TjJl5rYLwSnkLX3QnptVYAOPF1rZzXLykrYGvPpxMm0MIMjU8TdoZiogyS5222N6II+OqIgfI4GwTWkvcdnOn8TnbAUpq8ybCjrXTlwcO1gY0wSdpojS8AkTgvWx2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706766816; c=relaxed/simple;
-	bh=AMDcIniZzCTTe3m6Kx1T7sK45RG+dKky3PyruYQqQJ0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W/7BYG5jz8da3fHFKzx7BP+zVBDCCWTtMtpW+Mln/Lz72bV28zcWTEBdqiAzvIhJmFrYTW/gY4c3K5xhR1nD20s/NA6bAw9yWrfRA5P+ohasRyXuKjrnPRGHhDZRbpwDiWnUTTgZolir1loHEtEr8iA0QcbmK/5HW+LNX+V0+8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=DM8xbrHo; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1706767110; c=relaxed/simple;
+	bh=MNDj5IWjo3jJNGSHHfjkIbLwbF2Xv1SZe6qfPAyjhiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ToxH117EpVfgcayczbTXvbut6NbeTsmYQKYPXANIuuB+GLpL0Sz7lgXSHMLnL6DGat/hTbhrVTGxJAzl4iEMkeQD4kpJdj7uScpTWavNiaUn3hOIqUG2yxlGzck4FJcT0fQ+kj+ELFzSZKJufWflXkpXCdNXDT3XD8ka3nVfbX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djMG3SjM; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="DM8xbrHo"
-Received: from [192.168.68.112] (ppp14-2-76-194.adl-apt-pir-bras31.tpg.internode.on.net [14.2.76.194])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id B8E6E2017A;
-	Thu,  1 Feb 2024 13:53:31 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1706766812;
-	bh=rI8P+diGy8KEwpMykWyWoBLcsgBDvjFoVkDPmpqeTSo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=DM8xbrHotWktCfZXqrNxsoWb3wCYAx/NrtfEqSeuDwct39ip1/+neHABCwpE1PWY8
-	 6XgRKKHOUT4STg71WQcjkOP46UCu7Ljr2DtDi8TGwNomsg/iF6G2WT8X1cP5bXJRIu
-	 mky4vsFVfHQxIM87mm4Y7FZHXZRn79FOqG08yT9CcaYCpNAhiZgmAX0j4U1hzPxcVO
-	 3HlpUJuGWy/NaQ1KbvCrMa8vlAfhzmYk3x1rXfsm06Gcckf1tRjXmsFE0IFclEHM0Y
-	 K7zkrx64iWCMyJVUfg/V9joGg3hdN13JVQQ5Jaw3VThqnZH8sSibP0wdLmTPYYT9jV
-	 oo1Jdmd+hhDAw==
-Message-ID: <6f39a2cc2a853b45624553d5fdc66c3b65830721.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5 18/21] ARM: dts: aspeed: yosemite4: add mctp config
- for NIC
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>, patrick@stwcx.xyz, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date: Thu, 01 Feb 2024 16:23:31 +1030
-In-Reply-To: <20240131084134.328307-19-Delphine_CC_Chiu@wiwynn.com>
-References: <20240131084134.328307-1-Delphine_CC_Chiu@wiwynn.com>
-	 <20240131084134.328307-19-Delphine_CC_Chiu@wiwynn.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djMG3SjM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706767109; x=1738303109;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MNDj5IWjo3jJNGSHHfjkIbLwbF2Xv1SZe6qfPAyjhiM=;
+  b=djMG3SjMB/ZyN4oxtQrzeXg4GRqvpGUdKG03kyhbSn7uY8aVg/aHrUr3
+   KhVwg4s01GDHQ97Z+PlBaNgMGxi2ax4rTBmCU49fwZn4t2G//ykkNavgi
+   5uXNQ8HZpfbynk+QCZoVr7y/nMng95vCXYy2r9irqMPiFmCkkBqv/5Li7
+   iQ4OIu2FSImFJLFCS29GEbHDJGKZpUo4a9dzDLgFlITNWABZeqfhRNg7q
+   n6CfNgV/GqEe+vDD1cq1g8boWkFv+I3hPEJflwtpIVlDQBBH5Vx8Mi1vM
+   6GZxysUW1Zd+PV6+oTAIIIfHTdQyusn0oxJKEzyOb5fvhX7f9Ld8E9saE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="17350102"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="17350102"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 21:58:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="23014111"
+Received: from tsecasiu-mobl1.amr.corp.intel.com (HELO [10.209.91.60]) ([10.209.91.60])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 21:58:26 -0800
+Message-ID: <e2756783-b279-71c2-f844-4c3a4128bad9@linux.intel.com>
+Date: Wed, 31 Jan 2024 08:12:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH 2/6] soundwire: sysfs: move sdw_slave_dev_attr_group into
+ the existing list of groups
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Sanyog Kale <sanyog.r.kale@intel.com>
+References: <2024013025-spoiling-exact-ad20@gregkh>
+ <2024013029-afternoon-suitably-cb59@gregkh>
+ <65b9d883538fa_5a9dd2946a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <65b9d883538fa_5a9dd2946a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2024-01-31 at 16:41 +0800, Delphine CC Chiu wrote:
-> add mctp config for NIC
 
-How does this integrate into the MCTP network(s)? It would be good to
-have more of a description.
+> Makes sense. I won't say "looks good" as this file has "slave" all over
+> the place, but I checked and it entered the kernel just before the
+> CodingStyle changed.
 
->=20
-> Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-> ---
-> Changelog:
->   - v4
->     - Revise device node name
->   - v2
->     - Add patch for NIC mctp config
-> ---
->  .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b=
-/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-> index 7c7c9e85bb92..b9b6fe729cd6 100644
-> --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-> @@ -1273,40 +1273,64 @@ imux24: i2c@0 {
->  			#address-cells =3D <1>;
->  			#size-cells =3D <0>;
->  			reg =3D <0>;
-> +			mctp-controller;
->  			temperature-sensor@1f {
->  				compatible =3D "ti,tmp421";
->  				reg =3D <0x1f>;
->  			};
-> +
-> +			temperature-sensor@3c {
-> +				compatible =3D "smsc,emc1403";
-> +				reg =3D <0x3c>;
-> +			};
+SoundWire 1.2.1 introduced the terms "Manager" and "Peripheral", I had a 
+patchset to rename everything maybe two years ago already but it's been 
+difficult to add without getting in the way of development and 
+backports. Maybe a gradual replacement makes more sense, not sure how to 
+go about this.
 
-This is unrelated to the MCTP configuration? Same with the other nodes
-in the patch.
-
-Andrew
