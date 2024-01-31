@@ -1,130 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A3D39AE3
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640F239FCF;
+	Wed, 31 Jan 2024 22:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706738674; cv=none; b=kjYhE9C86yDQxFmY6y4t83eGlshKZi2zLW7DuE1/LLAm4HlCjBuXuzFWEzeTwUmUuru/KhDj2o/vD65iM49vK5JlJAppmMi7rCTcoeGGj2sjxJcdzlM89OpqShxpxxTnR9bBFrhhGQSlV9OnG4I8zpjYW7Hal79K0N0tokt0AAU=
+	t=1706738688; cv=none; b=hd3anqNHky3Rx8HLBFNsjRAJMPzIvtO+ht2zxfkB86vGwsLsKfZKkO4PMwRvMby9yYUbRZHl6EB4hkGT9UrQE13VKHyDWlO+X1F5bYUZ/5RxYltcj552uGgHmtJkdEQ/VVV+l7YRxfawVG03D1scbAIIHqKZdz4ArAyBpDnCrzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706738674; c=relaxed/simple;
-	bh=xlAN2QLDnWTPrzGA96Nc3PWumrZqgEr6+/uaJjDOMBE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ufXbTFrQNeM+vBS2lmmP/+rwXElSeQHmrfX9lBBYn4tzceP0/d780M9iuHBI66tFyMEMqcbb8quvlRmuZ4QNhbbJhF4GYbcmRjFve71jyVUzab1AF6k0hNWKWKXKen4GzflKfugDjmUrw9eJBExWnt0Xrlk9E2NR7yNqVT4qb7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aR4LrGii; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706738688; c=relaxed/simple;
+	bh=rL6UwTddxATQMnHl3lvOrzS0ZwUZS/8XdLqdZsz3tYE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hnWYWnX6EsghOORTIziZEjUxDOVOzq04TNpeaI0pf3Vl3TdowdqRes7waNBOAdhLU7IMxDI3/N3recdPNb8iW/F1bO9fpYPk0jG5eENQWihrKZkgSJDm2DW32gCwacIQG6SINqdnSP6Ak/DAWBj/xbI0l+ZeTLXb+jH99exx9h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kxIWU+wB; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aR4LrGii"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706738671;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c2B+y4zcCSl6e8cZoEf8NGUQNYqPAkNPFv+7JRkypuQ=;
-	b=aR4LrGiiVXxAWsaoN52kyaJ3z8sIkEcvhETIv7Jvtv+SKRMoVRYFRrLeXf8ze5nk7VUKF3
-	DyzzpbVbOfPIsDrbgn2qKHTpxiARna900X/BU/0tgiGY+Gagzzc6gVsb972hGZdZFtGuPY
-	pE3h3v04jqv1e/biCOqu4mwTAtYocMk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-241-RVFZnAT3NGWRLmEri1ej-w-1; Wed, 31 Jan 2024 17:04:29 -0500
-X-MC-Unique: RVFZnAT3NGWRLmEri1ej-w-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40fa6610ddfso1809845e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:04:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706738668; x=1707343468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c2B+y4zcCSl6e8cZoEf8NGUQNYqPAkNPFv+7JRkypuQ=;
-        b=rOFqabnDi1MDWEyAwFjTTYIPnhSlrtkeSg7ozzQJxwMyVxPyVjneBYQWF2KyduReCj
-         /qws3cDPYljoG5807BodIAl28ahlcHId/NF1j6TiI2E7lMPQEWDqeiPR+Xz5MuZPF4Fv
-         EHgwpnuPr5fjvvZxLA8NLnYGuyZI484udMiunkbtBuVcYvLdp1RnHvwhA/zIg47hnn7n
-         xqiLdy3AKz4ixEUSs1EPefDNlnS+LZRjL8CPGp6NwZ+kKDTAeoweon8M6MiV5EU+4krG
-         byyc2SyUWaNG5wz6CsFxlNYVqCLZfTuqFQBpS2wWKFEPgEWX22eAA/XriSZ1vsGVk1Vz
-         4Upw==
-X-Gm-Message-State: AOJu0YwtlH7QDIzmurACSA5Wp18lqOhVTEEXIi+Ll1xVxpcy8C/ve+l3
-	jlDO3yGXSSvCOMZ6rJufV5h7orjcQHIA4LTOL+uRmenXnfm12zwxNCcs2FaPvYmFCw5aEQakFMT
-	st0Vwu47NpsR8SWyxO8TdHq7b2cl10q1KqH+AC6j6EwFRM0i4a+YDTNQ0zhWwDy0WUrLUT8eDML
-	Qh8KxrrMCcU0n9POBLTicXAhPMiKHS5Mbp2k6p
-X-Received: by 2002:a5d:4e83:0:b0:33a:e52b:b70a with SMTP id e3-20020a5d4e83000000b0033ae52bb70amr1797952wru.52.1706738668722;
-        Wed, 31 Jan 2024 14:04:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFUSR+gKqKBrSwFxjGQplhODAFtwIlGGnvArNv3hse5pGus1FlrI6TWmmcrVEpdOnaHl9kI7lavlY04wu9cQHU=
-X-Received: by 2002:a5d:4e83:0:b0:33a:e52b:b70a with SMTP id
- e3-20020a5d4e83000000b0033ae52bb70amr1797935wru.52.1706738668099; Wed, 31 Jan
- 2024 14:04:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kxIWU+wB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706738684;
+	bh=rL6UwTddxATQMnHl3lvOrzS0ZwUZS/8XdLqdZsz3tYE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=kxIWU+wBshFK7I+RUIsTcbhEwf/iedWGcTjpZZQ9pBsm/WgVfrDG2ElwGudROcsj6
+	 zQx0qUOFZZCQ9rUDCRLsTJnpb1CGjLghSEXHed0O5Om5Tb1d+Hn+ARLQJGNazir57V
+	 QjxHnsZqu1Dm/MpT0OXW5JpdPiFSX6MHu6IivQKtPIM7a075gO0239WzK4efY9GOL6
+	 c5wWT48FBN0xqvP6Gm7foEV48XWvksY7gTYJJ5YLcXRrozzFi9hp2vg115vqUwED2k
+	 vA1ZbWe9/G//EI2j2qmdavtXvATR540ij+CCG1l5JOJind2BLS85Ek1/Ps910FS4Fg
+	 cZYQ/0q/av7uw==
+Received: from [192.168.1.211] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DEF1F378042B;
+	Wed, 31 Jan 2024 22:04:42 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Subject: [PATCH 0/4] selftests: ktap_helpers: Add some missing helpers
+Date: Wed, 31 Jan 2024 17:02:39 -0500
+Message-Id: <20240131-ktap-sh-helpers-extend-v1-0-98ffb468712c@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <170561158585.591793.15929255265114320850@demetrius> <20240124094843.K-b1_mn7@linutronix.de>
-In-Reply-To: <20240124094843.K-b1_mn7@linutronix.de>
-From: Clark Williams <williams@redhat.com>
-Date: Wed, 31 Jan 2024 22:04:17 +0000
-Message-ID: <CAMLffL8qyNCocBGtxfDO49dORs_QFdv-6ZrvBEbhxjoBBk4rrw@mail.gmail.com>
-Subject: Re: [ANNOUNCE] 6.6.12-rt20
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	linux-rt-users <linux-rt-users@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Carsten Emde <C.Emde@osadl.org>, John Kacur <jkacur@redhat.com>, 
-	Daniel Wagner <daniel.wagner@suse.com>, Tom Zanussi <tom.zanussi@linux.intel.com>, 
-	Pavel Machek <pavel@denx.de>, Joseph Salisbury <joseph.salisbury@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAH/DumUC/x3MQQqDMBBG4avIrB1ItJLSqxQXMf41Q0saMiKCe
+ HeDy2/x3kGKIlB6NQcVbKLyTxW2bShEnxawzNXUme5hbG/5u/rMGjnil1GUsa9IMz/NMDkXvHN
+ 9oBrngo/s9/g9nucFWsbcDWgAAAA=
+To: Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Laura Nao <laura.nao@collabora.com>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.12.4
 
-I'll revert that commit and re-release the 6.6.14 I just pushed
+This series adds a few missing functions to the shell KTAP helpers
+script which are present in the C counterpart, kselftest.h.
 
-On Wed, Jan 24, 2024 at 9:48=E2=80=AFAM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2024-01-18 20:59:45 [-0000], Clark Williams wrote:
-> > Hello RT-list!
-> Hi Clark,
->
-> > I'm pleased to announce the 6.6.12-rt20 stable release.
->
-> I've been looking over it and it looks okay. Then I compared how it
-> would do it vs your outcome and noticed this:
->
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -575,12 +575,6 @@ static int check_unaligned_access(void *param)
->         if (per_cpu(misaligned_access_speed, cpu) !=3D RISCV_HWPROBE_MISA=
-LIGNED_UNKNOWN)
->                 return;
->
-> -       page =3D alloc_pages(GFP_NOWAIT, get_order(MISALIGNED_BUFFER_SIZE=
-));
-> -       if (!page) {
-> -               pr_warn("Can't alloc pages to measure memcpy performance"=
-);
-> -               return;
-> -       }
-> -
->         /* Make an unaligned destination buffer. */
->         dst =3D (void *)((unsigned long)page_address(page) | 0x1);
->         /* Unalign src as well, but differently (off by 1 + 2 =3D 3). */
->
-> You shouldn't allocate that page. Nobody will free it, that page is
-> passed via an argument now. Please drop hunk.
->
-> While at it, do you think you can drop patch
->    preempt-Put-preempt_enable-within-an-instrumentation.patch
->
-> or revert commit
->    c15abad8f7159 ("preempt: Put preempt_enable() within an instrumentatio=
-n*() section.")
->
-> I've been looking over it and it is fixed as of v6.6 so this patch is no
-> longer needed.
->
-> > Enjoy!
-> > Clark
->
-> Sebastian
->
+This series depends on
+"selftests: Move KTAP bash helpers to selftests common folder"
+https://lore.kernel.org/all/20240102141528.169947-1-laura.nao@collabora.com/
+
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+Nícolas F. R. A. Prado (4):
+      selftests: ktap_helpers: Add helper to print diagnostic messages
+      selftests: ktap_helpers: Add helper to pass/fail test based on exit code
+      selftests: ktap_helpers: Add a helper to abort the test
+      selftests: ktap_helpers: Add a helper to finish the test
+
+ tools/testing/selftests/kselftest/ktap_helpers.sh | 39 +++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
+---
+base-commit: f1ca07220ad16a9efae7f68e4bade0db89b63a3c
+change-id: 20240131-ktap-sh-helpers-extend-805b77ca773c
+
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
