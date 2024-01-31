@@ -1,86 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60961128388
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 15:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828431292FA;
+	Wed, 31 Jan 2024 15:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706716004; cv=none; b=MVJJN4Fy9s48xXeBoLfx2wp/MWZZ5Mp4AhunNCQgA4v/5E+JGswn+Ob3J7sLrfriKR+i6r1JGPf9bz89Vv9PaHMz9NgQQ7uXSfo5gL6Psb9SvRVOPkS3OW9mxnPQHLgAsm1c1ib4EJekd9rrrjINFgN7WVUAY7SF6aL8zwh7P8k=
+	t=1706716060; cv=none; b=mBhHP7ZNR5IatxETtGnOD9o7IZWLstIpUp6A9RMzf6o1kRhYg6533YeeJFU79pt92q9PgAiXRZH37Xg+FRbf+pNghFil9GYPYOW2Y4ZI/XGRvWnRyv6bnxkn8MyRDaURyVk+qoGwrSqpfvEFDctItQOz2EpSmBeKDusH8gEZzL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706716004; c=relaxed/simple;
-	bh=TIYEjhEm+Q9THJNQ+RQRVyVZX4DEQNHZSWYzF0LI+Ak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CuwXNRgMW7bf0DtXDPqD18+COXPH+Bu2qiRfmuUCMcZeKUCAHWsD1mJzyLw9OByhuBKVaoBz4wDSDIhhbNIrTN9s+s35FXRNkrsM5pIpbb9sPC7St+0qejCNixQ0QmL7Tcyx7Yx7MTmo7eE0HK7Bn/02eqDgySvW3wreuYRhyWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YxZxh5pV; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706716060; c=relaxed/simple;
+	bh=dPqaiX5PAWnQlOQ8Jiutu8bSeKEr3U2pTg/+HqQA8Ak=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O6iptg37gIBvci8kk5Rq9Bg4tykHSaqQ8DbLGeP9ras1RCQHb0xHwdlRphTv8F1t/KtO5tySYe8VPNPKa/KIDPDI0rmj/KttC8/eXOHtkugPkVemJbhgc6IKWzwkxX/gB/72O0T8JJ7vskJGV4r8Hyk1CGrAm7sz5N+98kv/aIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H9SVQJ3k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uMlUuZq/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YxZxh5pV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706716003; x=1738252003;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TIYEjhEm+Q9THJNQ+RQRVyVZX4DEQNHZSWYzF0LI+Ak=;
-  b=YxZxh5pVPqosFLAAD7MphbDqPojQeWmV3P0TSZGqGs+JLwJ9C0b549mD
-   AJoAnXY2kGm7L+7YptHQSvbF/LB3VNkaNTtlfOrrKnnuaVScJGE4zKiRu
-   70TliT2+w6BpfoUaPGZx+VXZ58G3av602SwdJLmu3hk1r4n+Fs/7RnfFY
-   NgiE6ifIjvvG70exoRxq0eET+Vc037Lkladx6gTHJVKP5ofegXYNzG/6b
-   yoGjYptSRowVK99byy5J575tygDCcAnjmugiWQZsP2Q0qJNeuBFCA3Uxe
-   JoWqAPtq5OhDr3Ci5NcdK/xtkX9zDNkEnmOB19GjqCjRX322uqNhX3Gtj
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="394068820"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="394068820"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 07:46:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822605488"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="822605488"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 31 Jan 2024 07:46:31 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 07C7B772; Wed, 31 Jan 2024 17:36:46 +0200 (EET)
-Date: Wed, 31 Jan 2024 17:36:46 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Kevin Loughlin <kevinloughlin@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Nick Desaulniers <ndesaulniers@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Pankaj Gupta <pankaj.gupta@amd.com>, 
-	Hou Wenlong <houwenlong.hwl@antgroup.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Dionna Glaze <dionnaglaze@google.com>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-coco@lists.linux.dev, Ashish Kalra <ashish.kalra@amd.com>, 
-	Andi Kleen <ak@linux.intel.com>, Adam Dunlap <acdunlap@google.com>, 
-	Peter Gonda <pgonda@google.com>, Jacob Xu <jacobhxu@google.com>, 
-	Sidharth Telang <sidtelang@google.com>
-Subject: Re: [PATCH v3 2/2] x86/head64: Replace pointer fixups with
- RIP_RELATIVE_ADDR()
-Message-ID: <yie3eza6ak7eqlsvb2fjj6t7k43qtupscmv6cvu2eoqv5ikaoz@h5drniall723>
-References: <20240121182040.GBZa1geI5NxWSslvt0@fat_crate.local>
- <20240130220845.1978329-3-kevinloughlin@google.com>
- <733302e0-e8c2-458e-a4b2-dfd10e065036@amd.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H9SVQJ3k";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uMlUuZq/"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706716056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tgMsdbxCaBeot/1FIP0WAPLTrTPmjNYgZHCMmQQu8dA=;
+	b=H9SVQJ3kZBcTos2bLSoPIrvvuZKMApea5Qu9HHZYgNM8BNQfA/OHFJ+WjVXo9vY7aDRTYj
+	ADHdyOKvce0Yx57ElMxY8VKqQeBrB6bnGXVcCpphzLJ/FAxc3tG8ylCm3Mfmi7ES3VJNgc
+	5INdOZHUh6oDVntoImpbiMFZj0rr9FigBfKXo+yy499BbD7YTOHzSGSullWchOTiHzaAaF
+	xqtwBg4aOuV84BADA55KqidMBwO1u0n8G0zIEXQYRWuYIwFbwbUrc8aYvIVAkzifI8qQzg
+	SQE7/RUsoOi63G/shU8/5VmgYyTiG17bDxAPMZoZjyDiiGljPu5dtVIlgnfHxA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706716056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tgMsdbxCaBeot/1FIP0WAPLTrTPmjNYgZHCMmQQu8dA=;
+	b=uMlUuZq/EpH/uEvkdR/5kovyAEmTtSfIOBdtlMc+HOaYYqnXFmQEhRRc2BfnSYhyfHHkXS
+	XtjXjlW9DmUwSGBQ==
+To: Luis Chamberlain <mcgrof@kernel.org>, Yoann Congal
+ <yoann.congal@smile.fr>, Josh Triplett <josh@joshtriplett.org>, Petr
+ Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Willem de
+ Bruijn <willemdebruijn.kernel@gmail.com>, Matthew Wilcox
+ <willy@infradead.org>, Peter Zijlstra <peterz@infradead.org>, Darren Hart
+ <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, =?utf-8?Q?An?=
+ =?utf-8?Q?dr=C3=A9?= Almeida
+ <andrealmeid@igalia.com>, Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v2] printk: Remove redundant CONFIG_BASE_SMALL
+In-Reply-To: <ZbfLl6PR_qxxreeX@bombadil.infradead.org>
+References: <20240127220026.1722399-1-yoann.congal@smile.fr>
+ <ZbfLl6PR_qxxreeX@bombadil.infradead.org>
+Date: Wed, 31 Jan 2024 16:53:32 +0106
+Message-ID: <871q9xzeqz.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <733302e0-e8c2-458e-a4b2-dfd10e065036@amd.com>
+Content-Type: text/plain
 
-On Wed, Jan 31, 2024 at 09:30:10AM -0600, Tom Lendacky wrote:
-> On 1/30/24 16:08, Kevin Loughlin wrote:
-> > Now that we have RIP_RELATIVE_ADDR(), we can replace the "fixup_*()"
-> > family of functions in head64.c with the new macro for cleaner code.
-> 
-> If this series is purely for backporting, this specific patch isn't needed,
-> right? Since this all works today with clang?
+On 2024-01-29, Luis Chamberlain <mcgrof@kernel.org> wrote:
+> You should mention the one case which this patch fixes is:
+>
+>> CONFIG_BASE_SMALL was used that way in init/Kconfig:
+>>   config LOG_CPU_MAX_BUF_SHIFT
+>>   	default 12 if !BASE_SMALL
+>>   	default 0 if BASE_SMALL
+>
+> You should then mention this has been using 12 for a long time now
+> for BASE_SMALL, and so this patch is a functional fix for those
+> who used BASE_SMALL and wanted a smaller printk buffer contribtion per
+> cpu. The contribution was only per CPU, and since BASE_SMALL systems
+> likely don't have many CPUs the impact of this was relatively small,
+> 4 KiB per CPU.  This patch fixes that back down to 0 KiB per CPU.
 
-That's true. However, temporary things often end up becoming permanent :/
+For printk this will mean that BASE_SMALL systems were probably
+previously allocating/using the dynamic ringbuffer and now they will
+just continue to use the static ringbuffer. Which is fine and saves
+memory (as it should).
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
