@@ -1,259 +1,174 @@
-Received: from smtpbg156.qq.com (smtpbg156.qq.com [15.184.82.18])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2040.outbound.protection.outlook.com [40.107.7.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A30169D00
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.82.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706695760; cv=none; b=pYp0H3M7g0IIhQIprbBDGonbXHdMaclBvCb7oJBLI71AbTz2DNmmbTmOOdADl9fuZL4Dqgu8jH5MKnp9p+hBPnNRYzeq1Tb24XVCEVJHIyAMIPA8Of4fa6dA1iQgQUa44uPlQ5Dgy/QTKlnQL8XAADFdgY6ea+MIihd6Yg3QG3Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706695760; c=relaxed/simple;
-	bh=RP/I+8uuK/VRuOMcdIvi50FS3t9KpH1OFAKeipus0Zk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AJtHyc67IqqCXcbqXkuYT6paysjnNlwwgJ8UdqMpcuQRalqJliOb3g6ajCVK96EqwMWxBJ6xT9EocQV5wPKTdCcp1UsX75MncpfMwpcV0bFVmttZ3Iu/NZCpGum/9pSO5/88si5PdybctlkTOWCeEZCAPFqGTrcjW19kEni3D9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.82.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp75t1706695625tivm4zm9
-X-QQ-Originating-IP: nhTylzDyDo0X69SSTDFByXkurmTeC9BIYrrq9o5w/Rc=
-Received: from [127.0.0.1] ( [223.112.234.130])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 31 Jan 2024 18:07:04 +0800 (CST)
-X-QQ-SSF: 00400000000000B0B000000A0000000
-X-QQ-FEAT: FwowAM4HOqA1ZfczPNwk89L/EDYhnrdgPQcm5K2csmbV6IglsxTql112S2ip+
-	o3diWF5wkq++k7OF3ypRhArsEXktzpH6EEfoeVu0rzEc4uMPCe9yOeowypok6Rg8U5086jc
-	xpSGlnh5TI51dMlXbfw1cTlAxvj03VfLJ9Qm0gx+8UXx/FhqWJqO8te94/WdMy8bKTD9HXv
-	71IMoyO6lu6CGUdzaMNg1vLJEh2K4IhyvOQ+G0/4CabIC05UDW7fiKLmmj7gzyyvtYKxScX
-	czfXZs0Kf91pfIaD+KKHiWQclvEo2wzDuW35n3VkZnQ9dUKAZgDXwLeWG3fWUhuY0KQRep6
-	G4rwpI607SxyyKMIsClefN8evPqSIr/1glujPTKSEg+R/4t2ev/ajMtMect7sZiACMJCv35
-	+sfDfFrwFzBsJAdcHQM0jU3dA7kBYDed
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 10940394262338438076
-Message-ID: <0C0EA95E5AC6D147+ff1001b7-d61b-4365-9a22-b3c4dfacbc53@shingroup.cn>
-Date: Wed, 31 Jan 2024 18:07:03 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC266996B;
+	Wed, 31 Jan 2024 10:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706695919; cv=fail; b=o4n0cCLoK/J1pIoXIfuLgB5eBpf0i1ouZwUDmJITrwy9rysa2BUp7nXeAISw0zOMAZddWpfpkhnfOYZtQuTOsEbgkc0MFXeh0kHlPpLyq2bJY/0mH3xjeJrPsuk3V41XwJAmKDcVeJsW8dhrlIvP7csT31+MlaiR0Ad/3Kz0hu0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706695919; c=relaxed/simple;
+	bh=M6W/fVXHHpJU2xT3l1drIM8S6ixt8Q7bmFUVZWytrm0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KfSeOk4IeBbmQuc+T/6KyCPGHBfVd2yXw/82ZP69oESi1qsM5pcYTXy+dhZulLlHaC44gDD+qwS8vZdlfF/WZkjgx5Gps30ZwtVmRVc+W1aZ9UG9V9qplJEAOrmVlF4LFvWarXaeZS7frheQDaf+NLJ+wq0b3aBw02zvSyYvLhM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Ca7aO2mc; arc=fail smtp.client-ip=40.107.7.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ca7aO2mc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FJ2Mf3J1gdq212h4WN2Mz9FO3C6uOItg5ryWzdJ4TmKe7bOWqPOzGJo5lI0zXijqqK2VOHhWcSSs74CKKqegBSVarOgcGiVSIKvqpA8SCx3GLmkY9CmyRMIeQ8hKtPq/lDzN5zu1IJevezGsKvQSNS7WUFquUjUtnk939FZW05ysT2PxGK2+CQo9CCUmUE7+j6U0KAVlNQfSymBmX/q0yjCMQsccjxfSErcsypCHVT5b46eyG1SvvZTzToiEtQNXCba6vQevl+/jf+Xzm7T3Yw8idMLwJPnwBz+hkph1xEEbHHF7nsBWuA1IV77Itmb2utzeDvzdu3XJQi0y3/B0Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M6W/fVXHHpJU2xT3l1drIM8S6ixt8Q7bmFUVZWytrm0=;
+ b=ijT47y3V6CrVUvbozcLWzP1HT8BmD55w7zwsJHNagyaDTheGXFz+vK+ote5dtehAmpdmv9qEFIl2py0e3nyGLt8JjdxQPgLtp4O9j+zgOKHXz9u+VsES+VXf9AzMrKIcDQ4+0Oge/5qJk2V5su3b8m8qEW32hSTh2l642d+JCzW/HYlFTlcQwz2EGzsfEPmfEtBFMSsIle8PKCMdSkt/1cdjuGNq+iBapRCHY5NzhJG11YSY7fIOGFufKZvcSImiEQXv5tTQjzmlcQ5qwgJg4QJ4qVFbUInsBGIg6/1K5nnFJtPcUfZj2CIKKqBXVHovLpyomhTHaxcrMu09dzGQ8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M6W/fVXHHpJU2xT3l1drIM8S6ixt8Q7bmFUVZWytrm0=;
+ b=Ca7aO2mcg7quEC+wGLN3H6IXq6yvOrQRd7Zks0yScMofss1Ebmjhobzu3+OD3vLWA1WZ7A9PzxnJF5mPB0Ccv+5iAXAZgziKvEXf0v61SYWWap02y9vTRYNsB4AMzgvALIPorbZ1rtR8BEsyWqL8M2JJ08QumpEa2DSNh9Tjkp8=
+Received: from DB7PR04MB5003.eurprd04.prod.outlook.com (2603:10a6:10:1a::19)
+ by DB8PR04MB7002.eurprd04.prod.outlook.com (2603:10a6:10:119::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
+ 2024 10:11:51 +0000
+Received: from DB7PR04MB5003.eurprd04.prod.outlook.com
+ ([fe80::6bca:3978:83bb:8a8a]) by DB7PR04MB5003.eurprd04.prod.outlook.com
+ ([fe80::6bca:3978:83bb:8a8a%7]) with mapi id 15.20.7228.026; Wed, 31 Jan 2024
+ 10:11:50 +0000
+From: Carlos Song <carlos.song@nxp.com>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+CC: "broonie@kernel.org" <broonie@kernel.org>, "shawnguo@kernel.org"
+	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx
+	<linux-imx@nxp.com>, "benjamin@bigler.one" <benjamin@bigler.one>,
+	"stefanmoring@gmail.com" <stefanmoring@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-spi@vger.kernel.org"
+	<linux-spi@vger.kernel.org>
+Subject: Re: [PATCH] spi: imx: fix the burst length at DMA mode and CPU mode
+Thread-Topic: [PATCH] spi: imx: fix the burst length at DMA mode and CPU mode
+Thread-Index: AQHaVC3otfDou86mc0KogxOLjuuCkQ==
+Date: Wed, 31 Jan 2024 10:11:50 +0000
+Message-ID:
+ <DB7PR04MB50031F5413B1B67B12B0934AE87C2@DB7PR04MB5003.eurprd04.prod.outlook.com>
+References: <20240131024623.329240-1-carlos.song@nxp.com>
+ <20240131-chant-reoccur-7d63ba3f02cf-mkl@pengutronix.de>
+In-Reply-To: <20240131-chant-reoccur-7d63ba3f02cf-mkl@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB7PR04MB5003:EE_|DB8PR04MB7002:EE_
+x-ms-office365-filtering-correlation-id: 303e636d-2233-4064-9957-08dc22450aaf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ bgf9fPZLo8Wj48yfGrVkX8FUlHcjdLXBfAcvM7Sg6N68xR4n4ciC8ptZb8YOwEn2oEjS2M3fj0nHaJhd5NRJtI7eQr70hBfWp7bDNT6uwtOQKYnSIeWPfEunqs+2NPqZTfYmlL5MeBkICrO/BQrEuAR1trqxK0couAgadpJANTycj8996Ys705vFXylm5poemyt8Ay+Yz6M0/n9Ra6a2RHw4x2z7sQDSYN7t4EaI2btYLJXvB0SNsCUc7Ok34FaxrO7lTTVmn90nfjq6M5H+eiYgWUWgr2rnZjsY2BYmpgSzXeov7wr2S9TIMdkInW7wyycR2PxTFdS50DgiDCixCoaYbOXqRWJENYdqce1qMGeWRDZpUH+q8UBbFLvauB6f13xUMwDkbmiCQrtk1Nh0kzyNT7bY6+fCylUhngUOFee2S/88TVJJ0IbA45/T06CmTM3sfxpRvKjKWQE0IQW1tiR1CnzAUB+CvezVar9rO47FT0PPUnZo1pTpT8J3nxVw9km6OYOzb8pErmIoqPRbYjL1IrWLDPwSEXUVZxtStZM5diF7Tpf+PTO3+sElHSuLTqbCbbAcQOsDXW3+fA+xetO7SWpI5yDUoB0sEpUSFL8=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5003.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(346002)(366004)(396003)(136003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(52536014)(966005)(86362001)(478600001)(122000001)(76116006)(33656002)(26005)(66946007)(316002)(66476007)(66556008)(66446008)(54906003)(6916009)(64756008)(66574015)(83380400001)(7696005)(6506007)(53546011)(71200400001)(38100700002)(41300700001)(9686003)(4326008)(8936002)(8676002)(38070700009)(5660300002)(55016003)(7416002)(2906002)(44832011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?SFdJUitaYzA2YXpqT1ZBaHp2emdXNjN5NHBrajA0NllFWWlPdHRFRXVuNG93?=
+ =?utf-8?B?MldJampvYXlQWEhNc1pIc2U5SDJ6Qnk2Qk55WGJ6RGdLR3B1ZlI5S2IzUXQ1?=
+ =?utf-8?B?WXJmVmxkMytQOEpHajBvR3c5UDhmMzRJNm9hSDVYTW5JSlgvYUhDTTFiWVZX?=
+ =?utf-8?B?RDN2RUgyeEI3WmRVTW1XK1BKeWp5ZVp3Qk81RUI4bnpFNXdLMDYxbmZ2eE9S?=
+ =?utf-8?B?NnVMY3dWalRWNGJOZTBJVkxrYmVGVkZPOFpidmtHN3o3V2xOS1ltMkJjRDJM?=
+ =?utf-8?B?MFYzODJVeWpGM04zeDR5UWR1YlJtZ3Q2RzVIMU0vUUpiMDYyNmRydVZST0VR?=
+ =?utf-8?B?TDMrZU9lSVE0OXZWUlNpMTZoREp5Q0dYSEdIZnFWZ3F6dWRZM2dxc3FXUDZ3?=
+ =?utf-8?B?MzY5dW5ocndDOHBmcEUzVTFRdUZGdGRWMkN0OTdjZkltS3p1VkFVUnNXQnlT?=
+ =?utf-8?B?SmM5T2JmcTFrdlk2YWliSUsraGZxTzBnWEw3MkJjSktpbHFVVVlBS1krSGhV?=
+ =?utf-8?B?ODJ2cmtEUWFrRFVwbWxPWjRKMEU0aUVNK3pyODdZQWZaRXRiY1lXTHRuNFcw?=
+ =?utf-8?B?bk0zYjVsZkJkN21Ccms3MzgrV3M1Q3pMNGRiYzJjdHE0VU45amJvb0ROY3Er?=
+ =?utf-8?B?WlhWK0Y3OERMeXVUbm4xNEZyK2JFMWVEUG5GM292V3BrS1llMnpPc3VWcTht?=
+ =?utf-8?B?ZXdqQ20zTkpiR01GbTVIbCtVSzRzckVVY04wN25pVDVJQ2JmSTE5OVp2QTFH?=
+ =?utf-8?B?ZjJrNjFDc01kaGs3WGNaNUpQNEJ1MlNmWEtLMXVLTmE0c0tPN1FCN1Zabzkr?=
+ =?utf-8?B?eGh0UDJ4TDBpbFJxazB3cmtNYXdsTHpkSGpIOWZCM0haNm1KMCthVStDNHpG?=
+ =?utf-8?B?V2FxSmlxQXhJUERiN0owU2Fuek9oU1RhYnRLNjllUmNaVWhheFpFdmV6QW9p?=
+ =?utf-8?B?dXMxZzluUmR6Wkc3ZE90N2RZazlIVENGS0w4Rm1DcG1NbytwcGJEVWZIbVBJ?=
+ =?utf-8?B?alNhWGhNOEpUeWwxbXhQNlRDRTZCV2lRMEJRMFRqdG5YdzdIem5GN2JJaDJj?=
+ =?utf-8?B?SElTdHZyY1laQkN3UXpCUm5qcTN6N0JVQXBUelkwNEFkSWdrQklTUjhUazYz?=
+ =?utf-8?B?VDB2eUcxSGZWd2NmQkl1RHBySVhHejZSUzRzMkJ4WjFTTndzT1JyS25YRFpx?=
+ =?utf-8?B?akxOVllIaVl6bmZvT2UvS1lGL2VablU4N1k4TDFPblpuNGxYdEMwdWdnRW9X?=
+ =?utf-8?B?Nk9xcE0rOFJIOWtlZG0vOGszVUhMNzlkeFVzcHF6aGxqT3VIUGFDeTFuendK?=
+ =?utf-8?B?ZHJJcll6TGZBK1lPQUNHaGx4OWFmVDZwRlR4Z0xUNWtCemJNVzBHaWFVMC9U?=
+ =?utf-8?B?aWp3S1lLSkJ0dHdBTkU0YU1NZUFqcnhDMHN2d0p5OFl4eUd6WE9xZ216eVJk?=
+ =?utf-8?B?WjZqeWx3ZGhiZEx0b0dLTGtRYm9GNkxFYUw2M0x6NHlTZ3g2SXpJZUdCSW01?=
+ =?utf-8?B?ankvcjNIYkNScTAzcXJzWTM1YlF5bm1mLzhuMHM2UnNvaFNycENHRUtVMWRD?=
+ =?utf-8?B?R3U5UHh0QlloeVVZbitLcVZiVDNaekdqWUhsV2JaaGY0OE1kWWRkQ1Z1bEE4?=
+ =?utf-8?B?RENHaWs3bFZKUmR6Z1NaOWxaVEF1a3NDNHliUjZRM0Z0V3FmazgyeFJZMWhM?=
+ =?utf-8?B?UWxJQk5kZk1HTjV6eHFoY2FzM1ZMUjhzVldGZDZ5S2RIZlQ3T1RLbTFVWXcx?=
+ =?utf-8?B?Ung0K043cVcxaUVBTENrcmc3bUpNSGxlNC9aKzdsYWwzazUvWkl0OXdjNG1m?=
+ =?utf-8?B?NXE2VC92cG91RWg4cUxUQWQxT2lNcUVxRVRvRlpZYmludjB1dnNZcC9rUUts?=
+ =?utf-8?B?REEzOUdIMHhDdVBjVlBpSGkxSFVyMWhNMFQ1MmF6VHVyTTFweDR5c0puWnUv?=
+ =?utf-8?B?Sy8xYWNMeVJaRlAvSU81OXRqQ00xNkM1VlhBMUJBWUx0ajZwcDREUVlsaTBy?=
+ =?utf-8?B?ZGtaaThwZmZZMGRITXdJdTRrN2hFLy9LMkU5ZmpHNitCWFJKVnU0TDN0d1BM?=
+ =?utf-8?B?WmllV0JHY3lqL05xRG1TUFhHa2xGZ0cyelNwMW95RWpJS0phZHI1bFBqMjJq?=
+ =?utf-8?Q?bQhM=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf/hx_arm_ni: Support uncore ARM NI-700 PMU
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: shenghui.qu@shingroup.cn, ke.zhao@shingroup.cn, zhijie.ren@shingroup.cn,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240131070821.11477-1-jialong.yang@shingroup.cn>
- <deb708e5-bbaf-4510-826b-17e14e69b475@kernel.org>
- <6D9001324476F76F+ee5f853d-7c69-4a99-857c-cc2b03e9eea1@shingroup.cn>
- <fef66164-1238-45e4-b70c-c565caa2cf75@kernel.org>
-From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
-In-Reply-To: <fef66164-1238-45e4-b70c-c565caa2cf75@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5003.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 303e636d-2233-4064-9957-08dc22450aaf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 10:11:50.6839
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g6yqBr19CmV3p5SEj6YFy+AJf1mEQOH6q6HzuJAvHlSI0A6NwCOmV7k/dHbV66edU18A8WiBYQ2AtKG/iioyFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7002
 
-
-
-在 2024/1/31 17:38, Krzysztof Kozlowski 写道:
-> On 31/01/2024 10:07, Yang Jialong 杨佳龙 wrote:
->>
->>
->> 在 2024/1/31 15:59, Krzysztof Kozlowski 写道:
->>> On 31/01/2024 08:08, JiaLong.Yang wrote:
->>>> This code is based on uncore PMUs arm_smmuv3_pmu and arm-cmn.
->>>> One ni-700 can have many clock domains. Each of them has only one PMU.
->>>> Here one PMU corresponds to one 'struct ni_pmu' instance.
->>>> PMU name will be ni_pmu_N_M, which N means different NI-700s and M means
->>>> different PMU in one NI-700. If only one NI-700 found in NI-700, name will
->>>> be ni_pmu_N.
->>>> Node interface event name will be xxni_N_eventname, such as
->>>> asni_0_rdreq_any. There are many kinds of type of nodes in one clock
->>>> domain. Also means that there are many kinds of that in one PMU. So we
->>>> distinguish them by xxni string. Besides, maybe there are many nodes
->>>> have same type. So we have number N in event name.
->>>> By ni_pmu_0_0/asni_0_rdreq_any/, we can pinpoint accurate bus traffic.
->>>> Example1: perf stat -a -e ni_pmu_0_0/asni_0_rdreq_any/,ni_pmu_0_0/cycles/
->>>> EXample2: perf stat -a -e ni_pmu_0_0/asni,id=0,event=0x0/
->>>>
->>>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
->>>> ---
->>>> v1 --> v2:
->>>> 1. Submit MAINTANER Documentation/ files seperately.
->>>
->>> SEPARATE PATCHES, not patchsets. You have now checkpatch warnings
->>> because of this...
->>
->> ...OK. But the MAINTANER file changing should be given in which one
->> patches.
->> I will submit patch v3 after talking and your permission.
->>
->>>
->>>> 2. Delete some useless info printing.
->>>> 3. Change print from pr_xxx to dev_xxx.
->>>> 4. Fix more than 75 length log info.
->>>> 5. Fix dts attribute pccs-id.
->>>> 6. Fix generic name according to DT specification.
->>>> 7. Some indentation.
->>>> 8. Del of_match_ptr macro.
->>>>
->>>>    drivers/perf/Kconfig     |   11 +
->>>>    drivers/perf/Makefile    |    1 +
->>>>    drivers/perf/hx_arm_ni.c | 1284 ++++++++++++++++++++++++++++++++++++++
->>>>    3 files changed, 1296 insertions(+)
->>>>    create mode 100644 drivers/perf/hx_arm_ni.c
->>>>
->>>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
->>>> index ec6e0d9194a1..95ef8b13730f 100644
->>>> --- a/drivers/perf/Kconfig
->>>> +++ b/drivers/perf/Kconfig
->>>> @@ -241,4 +241,15 @@ config CXL_PMU
->>>>    
->>>>    	  If unsure say 'm'.
->>>>    
->>>> +config HX_ARM_NI_PMU
->>>> +       tristate "HX ARM NI-700 PMU"
->>>> +       depends on PPC_HX_C2000 && 64BIT
->>>
->>> 1. There is no PPC_HX_C2000.
->>
->> I have been used to using this macro. However this macro is not existed
->> in mainline.
->> I will replace it with ARM64. And del involved C code if OK.
->>
->> 64bit:
->> __ffs(unsigned long) and __fls(unsigned long) will be wrong in 32bit. I
->> pass a u64 argument.
-> 
-> One thing is where the code is supposed to run, second thing is compile
-> testing.
-> 
-
-Now run on my company product, a 64bit PowerPC...
-But I think it's general for 64bit systems.
-
-> Why do you use __ffs, not __ffs64 which takes u64 if you really want
-> only 64bit argument? unsigned long != u64, so your code is not
-> architecture independent. You claim you wrote it on purpose as
-> non-architecture-independent, but then I claim it's a bug. We are
-> supposed to write code which is portable, as much as possible, assuming
-> it does not affect readability.
-> 
-
-I write code in v5.18, there are __ffs64() and fls64(). Asymmetric.
-There are some difference in return val between __ffs() and ffs64().
-__ffs(0) and ffs64(0) will give different value.
-
-And I'm sure code run in 64bit. So I choose to use __ffs and __fls.
-
-Maybe it could be compatbile with 32bit. But I don't have a environment 
-to test this.
-> 
->> struct ni_hw_perf_event will be big than limit.
->> BUILD_BUG_ON(sizeof(struct ni_hw_perf_event) > offsetof(struct
->> hw_perf_event, target));
-> 
-> And why do you need to use any of such code? Please open one of hundreds
-> of other drivers which work correctly on 32 and 64-bit platforms.
-> 
-
-Code for 64bit.
-This code is to avoid struct ni_hw_perf_event is too big than struct 
-hw_perf_event::target.
-I learn it from arm-cmn.c.
-ni_hw_perf_event will replace hw_perf_event.
-I will put some useful information in it with less space and good field 
-names.
-But I can't exceed a limit.
-
->>
->>> 2. Nothing justified dependency on 64bit. Drop or explain. Your previous
->>> message did not provide real rationale.
->>
->> If ARM64, then drop.
-> 
-> ...
-> 
-> ...
-> 
->>>> +	/* Step2: Traverse all clock domains. */
->>>> +	for (cd_idx = 0; cd_idx < ni->cd_num; cd_idx++) {
->>>> +		cd = cd_arrays[cd_idx];
->>>> +
->>>> +		num = ni_child_number(cd);
->>>> +		dev_dbg(dev, "The %dth clock domain has %d child nodes:", cd_idx, num);
->>>> +
->>>> +		/* Omit pmu node */
->>>> +		ni_pmu = devm_kzalloc(dev, struct_size(ni_pmu, ev_src_nodes, num - 1),
->>>> +				      GFP_KERNEL);
->>>> +		ni_pmu->ev_src_num = num - 1;
->>>> +
->>>> +		if (!ni_pmu)
->>>> +			return -ENOMEM;
->>>> +
->>>> +		num_idx = 0;
->>>> +		for (nd_idx = 0; nd_idx < num; nd_idx++) {
->>>> +			nd = ni_child_pointer(pbase, cd, nd_idx);
->>>> +
->>>> +			node.base = nd;
->>>> +			node.node_type = ni_node_node_type(nd);
->>>> +
->>>> +			if (unlikely(ni_node_type(nd) == NI_PMU))
->>>> +				ni_pmu->pmu_node = node;
->>>> +			else
->>>> +				ni_pmu->ev_src_nodes[num_idx++] = node;
->>>> +			dev_dbg(dev, "  name: %s   id: %d", ni_node_name[node.type], node.id);
->>>> +		}
->>>> +
->>>> +		ni_pmu->dev = dev;
->>>> +		ni_pmu->ni = ni;
->>>> +		ni->ni_pmus[cd_idx] = ni_pmu;
->>>> +	}
->>>> +
->>>> +	devm_kfree(dev, cd_arrays);
->>>
->>> Why? If it is not device-lifetime then allocate with usual way.
->>>
->>
->> No device-lifetime.
->> Will allocate in stack.
-> 
-> I was thinking about kzalloc. But if array is small, stack could be as well.
-> 
-
-If I have to return before devm_kfree because of wrong, I will have to use:
-
-goto out;
-
-out:
-kfree();
-
-But if I use devm_kzalloc, I will not be worried about that. Even if no 
-device-lifetime.
-Isn't this a good way?
-
-> ...
-> 
->>>
->>>> +
->>>> +static const struct of_device_id ni_pmu_of_match[] = {
->>>> +	{ .compatible = "hx,c2000-arm-ni" },
->>>
->>> Don't send undocumented compatibles.
->>
->> OK. Means I should send doc and code in one patch thread with more than
->> one patch?
-> 
-> Yes. Please open lore.kernel.org and look at any other submissions
-> involving bindings or other type of ABI documentation (like sysfs).
-
-Get.
-
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJjIEtsZWluZS1CdWRkZSA8
+bWtsQHBlbmd1dHJvbml4LmRlPg0KPiBTZW50OiBXZWRuZXNkYXksIEphbnVhcnkgMzEsIDIwMjQg
+NDowOCBQTQ0KPiBUbzogQ2FybG9zIFNvbmcgPGNhcmxvcy5zb25nQG54cC5jb20+DQo+IENjOiBi
+cm9vbmllQGtlcm5lbC5vcmc7IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9u
+aXguZGU7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZGwtbGludXgtaW14IDxsaW51eC1pbXhA
+bnhwLmNvbT47IGJlbmphbWluQGJpZ2xlci5vbmU7DQo+IHN0ZWZhbm1vcmluZ0BnbWFpbC5jb207
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZzsgbGludXgtc3BpQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBbRVhU
+XSBSZTogW1BBVENIXSBzcGk6IGlteDogZml4IHRoZSBidXJzdCBsZW5ndGggYXQgRE1BIG1vZGUg
+YW5kIENQVQ0KPiBtb2RlDQo+IA0KPiBPbiAzMS4wMS4yMDI0IDEwOjQ2OjIzLCBjYXJsb3Muc29u
+Z0BueHAuY29tIHdyb3RlOg0KPiA+IEZyb206IENhcmxvcyBTb25nIDxjYXJsb3Muc29uZ0BueHAu
+Y29tPg0KPiA+DQo+ID4gRm9yIERNQSBtb2RlLCB0aGUgYnVzIHdpZHRoIG9mIHRoZSBETUEgaXMg
+ZXF1YWwgdG8gdGhlIHNpemUgb2YgZGF0YQ0KPiA+IHdvcmQsIHNvIGJ1cnN0IGxlbmd0aCBzaG91
+bGQgYmUgY29uZmlndXJlZCBhcyBiaXRzIHBlciB3b3JkLg0KPiA+DQo+ID4gRm9yIENQVSBtb2Rl
+LCBiZWNhdXNlIG9mIHRoZSBzcGkgdHJhbnNmZXIgbGVuIGlzIGluIGJ5dGUsIHNvIGJ1cnN0DQo+
+ID4gbGVuZ3RoIHNob3VsZCBiZSBjb25maWd1cmVkIGFzIGJpdHMgcGVyIGJ5dGUgKiBzcGlfaW14
+LT5jb3VudC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENhcmxvcyBTb25nIDxjYXJsb3Muc29u
+Z0BueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBDbGFyayBXYW5nIDx4aWFvbmluZy53YW5nQG54
+cC5jb20+DQo+ID4gRml4ZXM6IGU5YjIyMGFlYWNmMSAoInNwaTogc3BpLWlteDogY29ycmVjdGx5
+IGNvbmZpZ3VyZSBidXJzdCBsZW5ndGgNCj4gPiB3aGVuIHVzaW5nIGRtYSIpDQo+ID4gRml4ZXM6
+IDVmNjZkYjA4Y2JkMyAoInNwaTogaW14OiBUYWtlIGluIGFjY291bnQgYml0cyBwZXIgd29yZCBp
+bnN0ZWFkDQo+ID4gb2YgYXNzdW1pbmcgOC1iaXRzIikNCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9z
+cGkvc3BpLWlteC5jIHwgOSArKysrLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0
+aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Nw
+aS9zcGktaW14LmMgYi9kcml2ZXJzL3NwaS9zcGktaW14LmMgaW5kZXgNCj4gPiA1NDZjZGNlNTI1
+ZmMuLmI0YWRlMmQ1M2ZlZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3NwaS9zcGktaW14LmMN
+Cj4gPiArKysgYi9kcml2ZXJzL3NwaS9zcGktaW14LmMNCj4gPiBAQCAtNTQsNyArNTQsNyBAQCBN
+T0RVTEVfUEFSTV9ERVNDKHBvbGxpbmdfbGltaXRfdXMsDQo+ID4gICNkZWZpbmUgTVg1MV9FQ1NQ
+SV9DVFJMX01BWF9CVVJTVAk1MTINCj4gPiAgLyogVGhlIG1heGltdW0gYnl0ZXMgdGhhdCBJTVg1
+M19FQ1NQSSBjYW4gdHJhbnNmZXIgaW4gdGFyZ2V0IG1vZGUuKi8NCj4gPiAgI2RlZmluZSBNWDUz
+X01BWF9UUkFOU0ZFUl9CWVRFUwkJNTEyDQo+ID4gLQ0KPiA+ICsjZGVmaW5lIEJJVFNfUEVSX0JZ
+VEUJOA0KPiANCg0KSXQgd2lsbCBiZSByZW1vdmVkIGFuZCBJIHdpbGwgc2VuZCBwYXRjaCBWMi4N
+ClRoYW5rIHlvdSENCg0KQlINCkNhcmxvcw0KDQo+IFRoYXQncyBhbHJlYWR5IGRlZmluZWQgaW4g
+bGludXgvYml0cy5oDQo+IA0KPiByZWdhcmRzLA0KPiBNYXJjDQo+IA0KPiAtLQ0KPiBQZW5ndXRy
+b25peCBlLksuICAgICAgICAgICAgICAgICB8IE1hcmMgS2xlaW5lLUJ1ZGRlICAgICAgICAgIHwN
+Cj4gRW1iZWRkZWQgTGludXggICAgICAgICAgICAgICAgICAgfCBodHRwczovL3d3dy5wZW5ndXRy
+b25peC5kZSB8DQo+IFZlcnRyZXR1bmcgTsO8cm5iZXJnICAgICAgICAgICAgICB8IFBob25lOiAr
+NDktNTEyMS0yMDY5MTctMTI5IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYg
+fCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTkgICB8DQo=
