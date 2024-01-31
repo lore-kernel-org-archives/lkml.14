@@ -1,154 +1,167 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BA57BAFD;
-	Wed, 31 Jan 2024 13:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD4B7F490;
+	Wed, 31 Jan 2024 13:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706708709; cv=none; b=HkRchvNYy+9tsWQZEHh2YwKIPdFc3pg1UvGBjhyXRvjYPjX7+PwVpn6mCYE2lax/mBQCF5XU6vc5oBJ2NZT2tJsH9kh9J3CxsI2Rv96sQJK3Novc2Mf5JQZ1sx84vYiSAlJpbGcV72RElOYEyM77Un3sWJBbLLX4vaCTgdZToX4=
+	t=1706708781; cv=none; b=DUW4fC9Fnl2tld31ZyE8TMIY1UAv+LF7ORzpryQVdII1cCPBKVfKDTLBnCf7tKPWHOvNsLlKm46HDKKCLat6zoHeKlHEEkyLUtiFm3zRt9/A7ua5S0yxREJpYCbI4Kfy8dZ5UOaDdO4JCiG+COqf5PWRFdk+iO2nS75hnl2dLfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706708709; c=relaxed/simple;
-	bh=ko9z6/bFheAwnGiWMZ6vEZKMvFzJZVuzUrhnaUT0xNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jPIMNBATFrU4iwCv3RR4ZH/o3qiCVmVrEBVFUiVtVZfCZOA5zonA9RVasA65ZufRh0hcpbqBbaMcE3dDGOdNrJ1h4j+u7BLbsv7n5x5FNHsrD8oEFhRziSb9MUTCiYyT/Zb8M239OXWcqF6bubeTUMfZSCZCFRRxEOgVtf9JfXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ft9+zo/2; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706708781; c=relaxed/simple;
+	bh=ebr3AMTFub7iemMw/BGmsstjBawvqvFelKMLo850JVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q2NainEMdcKkFES+OwElLfkEcHDiCmR2SsBOc6vZOSruWhYiUxwUEmSPWf/JU1WOle3wAggfCZ7fPc5/2fnq1+MHjS5/necjtenZt9pG6NK8XuBCkvewcx97TReKD7Hh4JeiXUorrHq8RXfuDgC+JF2AVfmvt2/UUI9Qqbe9yHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LPuGA7Z6; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ft9+zo/2"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C8FBF40E0177;
-	Wed, 31 Jan 2024 13:44:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5EzhkpaSewFH; Wed, 31 Jan 2024 13:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706708695; bh=vd0S3+VygE3QCe4RuOxmUMpSvRBiS6wvgNYSYf4SLJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ft9+zo/24INLYyRbnV1+Ue6tpOUUMqsqkgxYHXPFgAcsizBpOzGDL6MlN+vNGgwo4
-	 YKDmbbRtah8FtD9nG8Qc29P8Semmu3NeswchNzRufDyeZrllDZ74E8XgnSE1rzFExo
-	 B9WV4/sXDheqcDeQE+UB8zX0zcAhW/Vy9ZIZXgcq5Wlru9yPXw9aHzJG0+n1NJLbdG
-	 UVKxx733vwMu/c6s80iJgnOzOEjIJJXd+D6NfnuyuNoUmeXw6pZ+O+nN3Gfs8L07xT
-	 OEIZuv+wvNAnUYIo6ABZ9GjGDCPszIbp2shs5tj0z7lcs/sjMGiCHPD19JiRWWU0wk
-	 YuNutbMPXcky7bAzTZWTCGxyK+wnAvpKSo7GQKO+b1S/LV9Hae8hWLvPo8JQySY5Vw
-	 +NKGYW6dQ+DT/zw2aeNRDkJ5iOSNKswAuNGqTQUvjJGRYptkbkU3VoF/h9RzZDlUbR
-	 TLq1FeUIk2Rb1B2xlk1b4qPcU9an6V++AH+HBQCGf+W4NxPxnxEHIxWFyex5LFbpRY
-	 84xcA0/TsOBrJYEWV3RLW8FTuxbv2EnldN/cGQUQjYjOXO305LVMILVE+4QmGCg+MN
-	 BfjsWECgJYF1NoBmwJ6A9muNf7ttPBqRPUeZq/+bH1eHNl0kXxKH9jR8vP4bqzdG9i
-	 RIBHJzI1m00ykTVMj5fZFvZk=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6A71440E00B2;
-	Wed, 31 Jan 2024 13:44:37 +0000 (UTC)
-Date: Wed, 31 Jan 2024 14:44:31 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>,
-	linux-arch@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 03/19] x86/startup_64: Drop long return to
- initial_code pointer
-Message-ID: <20240131134431.GJZbpOvz3Ibhg4VhCl@fat_crate.local>
-References: <20240129180502.4069817-21-ardb+git@google.com>
- <20240129180502.4069817-24-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPuGA7Z6"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6933a46efso2680403276.0;
+        Wed, 31 Jan 2024 05:46:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706708779; x=1707313579; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V1nzFqWekvSu6tY6ZSGzcooEF5tznBA46cjxleLmSoI=;
+        b=LPuGA7Z6bQ8fJwlX6UVw1J93XtYL4RG0jdwKxYxRpR74wWEiUk93tOK9ryxb4UQf1i
+         tPnvsJY4D494m4AM2V9jGZWDzmn43YorOOyM0fh3etstcP26xLmKAnMiFOTIg5kxMnxb
+         TYmJx4ssArNglJaO3fiJk+CB3csWnLE+wbASRVA+jCGelxFKWkcCD5y39n1PFXiIROIq
+         W/pxB8DXTXH2KBpzJ1oPdUOiPIBvEQ73qdhKx/WW0TPdYyd9V69tj/fQgG8w0PyHogab
+         tuApeXSSOeMNgyQ3HsYz4RwxESUDp45fPm6kqcJ/fdPT9xLsiF/jADQksQ9q2rMecFlJ
+         wCjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706708779; x=1707313579;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V1nzFqWekvSu6tY6ZSGzcooEF5tznBA46cjxleLmSoI=;
+        b=kRWTur09/8MzbosZ6c5ahMjPW5sM4ep1dOIrBCrrrTtzUjRNYInDkUNeRg7Mmpznga
+         f0hS/B82G9Ah3RL7tZNKrqRFgAw3FlPo6DGV2cyHs639yVyY2DQ0fpLjfmKKRpWYWu9O
+         ZC/LD0EAK653Iuf7rAdhjUnaSXQxwxNlZLC0GpM/cXaEfyRTm7D1fHLDYLLo0jANdoei
+         f8ScKo+xChntZ5/0KB1GKyjhLpyBPAlGVdJkc+8vPjUGZYsidhcJkPMc9LlS7TeLUSA7
+         aYLzX1pPF3i1+hbdShpsfhOIU+5/iof0hrm8TBz3PH4BDdU99fUZTEO6rnSDgxSr3E3p
+         UVqA==
+X-Gm-Message-State: AOJu0YyR8VCNedJvVmcGPDTjOO2iitEDIHxLnsB/PhNvSdRJnCS1FqjC
+	/plz4kvvAGJ4TNjj1cYKouHujMSF5fz6slMNfOvTo6w1qzfHYoeeB5ZsU6b/ojHe1LYIMw+k+Wy
+	rj5ipGkhaG5Ia5gncHijEOCU50RA=
+X-Google-Smtp-Source: AGHT+IEiFoBBXxuV5gR1XwSItKbDrrADzmIWacG63ou2WjTfLO5bCeIPeYOpJr+lhbVeaYbihGwqxx+EMKZNj1aTGQc=
+X-Received: by 2002:a25:e00a:0:b0:dbe:ace1:acf6 with SMTP id
+ x10-20020a25e00a000000b00dbeace1acf6mr1765364ybg.13.1706708778843; Wed, 31
+ Jan 2024 05:46:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240129180502.4069817-24-ardb+git@google.com>
+References: <20240131013705.1002722-1-hayatake396@gmail.com> <0fc3f574-6243-4c85-a6a7-442dc480c9e7@linux.intel.com>
+In-Reply-To: <0fc3f574-6243-4c85-a6a7-442dc480c9e7@linux.intel.com>
+From: takeru hayasaka <hayatake396@gmail.com>
+Date: Wed, 31 Jan 2024 22:46:07 +0900
+Message-ID: <CADFiAc+wymeApwWFAjA_+sYN6_MaMssA3b4bYjeHXxjypjemRg@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH net-next v5] ethtool: ice: Support for
+ RSS settings to GTP from ethtool
+To: Marcin Szycik <marcin.szycik@linux.intel.com>
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	linux-doc@vger.kernel.org, vladimir.oltean@nxp.com, 
+	linux-kernel@vger.kernel.org, laforge@gnumonks.org, 
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+	mailhol.vincent@wanadoo.fr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2024 at 07:05:06PM +0100, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> Since commit 866b556efa12 ("x86/head/64: Install startup GDT"), the
-> primary startup sequence sets the code segment register (CS) to __KERNEL_CS
-> before calling into the startup code shared between primary and
-> secondary boot.
-> 
-> This means a simple indirect call is sufficient here.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/x86/kernel/head_64.S | 35 ++------------------
->  1 file changed, 3 insertions(+), 32 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> index d4918d03efb4..4017a49d7b76 100644
-> --- a/arch/x86/kernel/head_64.S
-> +++ b/arch/x86/kernel/head_64.S
-> @@ -428,39 +428,10 @@ SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
->  	movq	%r15, %rdi
->  
->  .Ljump_to_C_code:
-> -	/*
-> -	 * Jump to run C code and to be on a real kernel address.
-> -	 * Since we are running on identity-mapped space we have to jump
-> -	 * to the full 64bit address, this is only possible as indirect
-> -	 * jump.  In addition we need to ensure %cs is set so we make this
-> -	 * a far return.
-> -	 *
-> -	 * Note: do not change to far jump indirect with 64bit offset.
-> -	 *
-> -	 * AMD does not support far jump indirect with 64bit offset.
-> -	 * AMD64 Architecture Programmer's Manual, Volume 3: states only
-> -	 *	JMP FAR mem16:16 FF /5 Far jump indirect,
-> -	 *		with the target specified by a far pointer in memory.
-> -	 *	JMP FAR mem16:32 FF /5 Far jump indirect,
-> -	 *		with the target specified by a far pointer in memory.
-> -	 *
-> -	 * Intel64 does support 64bit offset.
-> -	 * Software Developer Manual Vol 2: states:
-> -	 *	FF /5 JMP m16:16 Jump far, absolute indirect,
-> -	 *		address given in m16:16
-> -	 *	FF /5 JMP m16:32 Jump far, absolute indirect,
-> -	 *		address given in m16:32.
-> -	 *	REX.W + FF /5 JMP m16:64 Jump far, absolute indirect,
-> -	 *		address given in m16:64.
-> -	 */
-> -	pushq	$.Lafter_lret	# put return address on stack for unwinder
->  	xorl	%ebp, %ebp	# clear frame pointer
-> -	movq	initial_code(%rip), %rax
-> -	pushq	$__KERNEL_CS	# set correct cs
-> -	pushq	%rax		# target address in negative space
-> -	lretq
-> -.Lafter_lret:
-> -	ANNOTATE_NOENDBR
-> +	ANNOTATE_RETPOLINE_SAFE
-> +	callq	*initial_code(%rip)
-> +	int3
->  SYM_CODE_END(secondary_startup_64)
->  
->  #include "verify_cpu.S"
+Hi Marcin-san
 
-objtool doesn't like it yet:
+> LGTM
 
-vmlinux.o: warning: objtool: verify_cpu+0x0: stack state mismatch: cfa1=4+8 cfa2=-1+0
+Thanks for your review!
 
-Once we've solved this, I'll take this one even now - very nice cleanup!
+> Still removing this line :c
 
-Thx.
+Oh! Sorry for the oversight. I will fix it in the next patch.
+Could you please take another look at the patch?
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks
+Takeru
+2024=E5=B9=B41=E6=9C=8831=E6=97=A5(=E6=B0=B4) 20:53 Marcin Szycik <marcin.s=
+zycik@linux.intel.com>:
 
-https://people.kernel.org/tglx/notes-about-netiquette
+>
+>
+>
+> On 31.01.2024 02:37, Takeru Hayasaka wrote:
+> > This is a patch that enables RSS functionality for GTP packets using et=
+htool.
+> >
+> > A user can include TEID and make RSS work for GTP-U over IPv4 by doing =
+the
+> > following:`ethtool -N ens3 rx-flow-hash gtpu4 sde`
+> >
+> > In addition to gtpu(4|6), we now support gtpc(4|6),gtpc(4|6)t,gtpu(4|6)=
+e,
+> > gtpu(4|6)u, and gtpu(4|6)d.
+> >
+> > gtpc(4|6): Used for GTP-C in IPv4 and IPv6, where the GTP header format=
+ does
+> > not include a TEID.
+> > gtpc(4|6)t: Used for GTP-C in IPv4 and IPv6, with a GTP header format t=
+hat
+> > includes a TEID.
+> > gtpu(4|6): Used for GTP-U in both IPv4 and IPv6 scenarios.
+> > gtpu(4|6)e: Used for GTP-U with extended headers in both IPv4 and IPv6.
+> > gtpu(4|6)u: Used when the PSC (PDU session container) in the GTP-U exte=
+nded
+> > header includes Uplink, applicable to both IPv4 and IPv6.
+> > gtpu(4|6)d: Used when the PSC in the GTP-U extended header includes Dow=
+nlink,
+> > for both IPv4 and IPv6.
+> >
+> > GTP generates a flow that includes an ID called TEID to identify the tu=
+nnel.
+> > This tunnel is created for each UE (User Equipment).By performing RSS b=
+ased on
+> > this flow, it is possible to apply RSS for each communication unit from=
+ the UE.
+> > Without this, RSS would only be effective within the range of IP addres=
+ses. For
+> > instance, the PGW can only perform RSS within the IP range of the SGW.
+> > Problematic from a load distribution perspective, especially if there's=
+ a bias
+> > in the terminals connected to a particular base station.This case can b=
+e
+> > solved by using this patch.
+>
+> LGTM
+> Reviewed-by: Marcin Szycik <marcin.szycik@linux.intel.com>
+>
+> > Signed-off-by: Takeru Hayasaka <hayatake396@gmail.com>
+> > ---
+> > v2->v3: Based on Harald-san's review, I added documentation and comment=
+s to
+> > ethtool.h and ice.rst.
+> > v3->v4: Based on Marcin-san's review, I added the missing code for GTPC=
+ and
+> > GTPC_TEID, and revised the documentation and comments.
+> > v4->v5: Based on Marcin-san's review, I fixed rename and wrong code reg=
+arding
+> > GTPC
+>
+> [...]
+>
+> >      f     Hash on bytes 0 and 1 of the Layer 4 header of the Rx packet=
+.
+> >      n     Hash on bytes 2 and 3 of the Layer 4 header of the Rx packet=
+.
+> > -
+>
+> Still removing this line :c
+>
+> > +    e     Hash on GTP Packet on TEID (4bytes) of the Rx packet.
+> >
+> >  Accelerated Receive Flow Steering (aRFS)
+> >  ----------------------------------------
+>
+> ---8<---
