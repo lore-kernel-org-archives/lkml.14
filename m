@@ -1,145 +1,105 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6370F82862;
-	Wed, 31 Jan 2024 14:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF66169DEB
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706710833; cv=none; b=f+jlE5QwzajWS6rYT0p1w4klR5714/Ps+p3HY6XPCH4CgxlKKy5kcP6F+empGPUlcG7dZYIlZPJ6wGOFnhsGl7Vi2W1ZdtnacQiKDyal8VSozqsHLpnUUdjqoX1jwUb0qdccHJX/ZMVqveH3IIAK4joHh5MXInU2pBKaDPTivZo=
+	t=1706710881; cv=none; b=cPDaiBiUfH937kYpqgsxDoJDdvTWMy9Hl+5C7xImwB973RP1oDN4fV+t92BlW2R1uARknFg5/7XpMb4UDYLY9/xOEphYX1EJ2oIyswzqIDbsCfwa2dHoVgG53irxXGo0OdbPgK2QKsa454PZdAB7IvF+qmxObmKE9o7fOZPPn9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706710833; c=relaxed/simple;
-	bh=xris7o8yXlcSUmSEHHExzupHTnepUyEcoByrAEK7LLI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CNVCNtzfD9r2oC3kCWdgTRE6o8gm3Y2/xFjqm2cU1EMCKkXzkxEBUzg2Gx/TADgOMFdJ85Xf1RTPejLii2v3/bpKASSJMjecM/9j9Dpl/D7duLai2Izt+2bZGZM5Q8Sy1H88+hkHT/MJGNHPGHEeqzKgZdx1DdVwGtEUIqhJ7bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-214289d3a8cso179928fac.0;
-        Wed, 31 Jan 2024 06:20:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706710831; x=1707315631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/6eQzKUzkhghuoMWMIet5Cb7oA4QoF5Z4EgT5biPHZk=;
-        b=LEY6AhVTOPcJHlktZlhh0d8mhTDz+5J3AvCAKUIlYCFBjb76UN+o1uTKly2/70fP9d
-         Q6Lz1h4v8QNVljtH3XeRcdl0kvIvoZx8KGXpWEho6JrK8pbql83tKLcri0CVAPd1q5c6
-         u9v5rVYNUS7h8CGPi9PGj9UkSN/0tfJDDHNz1gbTPMjl4roPp4PoM/rQ+ofjK0xXIh/C
-         6JmmCmCYiZnYm2KXSVxAW6ci5EeCjHkWZBFRS04sH71/V1g8L3umt+nhwX1wWF2aSWar
-         ZdWmK3UgzZRNMigrU0bUXnmqz1vCdlQOXpvEmTNJ6sNsBW5G0hNoOluZeMX9dIZcikmV
-         my1w==
-X-Gm-Message-State: AOJu0YzFzhXRBQvHYNmg8xsM+ZeSRJWgyUnlz3NWFS+5WQZMwHkaQ5Ia
-	eVPxS2nuQP0Db5l6nNlfuAn3Q5IXzMXpCe3qtKNtag0LefGt17PeUDtDafOiV0y8J8GPpo/SMpG
-	E4gkBoFO4IPI66S/1iP8exvyR+n0=
-X-Google-Smtp-Source: AGHT+IHuOpuKPfGHvA4B/OmaY0pqcuUtMVo3hwvEVlQveYhC3fMNzFHMcjrp0rNxSaoeOr4uV+EMIUkBdlZRDUf/9E8=
-X-Received: by 2002:a05:6870:92c6:b0:218:566d:d3cb with SMTP id
- g6-20020a05687092c600b00218566dd3cbmr2080559oak.1.1706710831320; Wed, 31 Jan
- 2024 06:20:31 -0800 (PST)
+	s=arc-20240116; t=1706710881; c=relaxed/simple;
+	bh=fSiMmFA1Onj6bA6ApyGPOy0mxZtbDqOV4qzmHd/evew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B4WqDw22XFtUbzYXZU6TF53DMcBOYOTK3o6deXPUv407s9VY1RQlfKne5n6wgMEZnRUYtuqIoge7a4XMzLe4u/s4ELBwItWvRK6NY4y2nRCv3JcxSgiX4xKHM9W5wufkM1o1W4gV1BG4hxwBwX6ZJ+g/OlT3wdgNCGWvU+mI+gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YIvBLXkS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YIvBLXkS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706710878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QmWgIn8/losqPNaZbqt7S0IwT1KTKOd2fh4BG0eCSsU=;
+	b=YIvBLXkSniyNYOrXON6GXrhEe/HNlmad0Py8h/iD6S39JSnNnxRKvKNjrAozzMu40BNM2Z
+	13OfEoWCbcUCwqDo9aBwN9rf0RGYF8RYqkJfBkoZvbrRIrAekqwk44fDPYs2lhQPBCzR9e
+	xzO2CX8S2Vd238+/hCRwT/T4Y+KwbpU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-79-9qT7n0-xMQuk6NJR10R6Iw-1; Wed,
+ 31 Jan 2024 09:21:15 -0500
+X-MC-Unique: 9qT7n0-xMQuk6NJR10R6Iw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9737F2812FE1;
+	Wed, 31 Jan 2024 14:21:14 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.249])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 8F2DF3C2E;
+	Wed, 31 Jan 2024 14:21:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 31 Jan 2024 15:20:00 +0100 (CET)
+Date: Wed, 31 Jan 2024 15:19:58 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] pidfd: implement PIDFD_THREAD flag for
+ pidfd_open()
+Message-ID: <20240131141957.GB2609@redhat.com>
+References: <20240131132541.GA23632@redhat.com>
+ <20240131132602.GA23641@redhat.com>
+ <20240131-raubbau-rentier-7ca9be9bc7c9@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1705927916.git.quic_nprakash@quicinc.com>
-In-Reply-To: <cover.1705927916.git.quic_nprakash@quicinc.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 31 Jan 2024 15:20:20 +0100
-Message-ID: <CAJZ5v0idcSPdwp7=WED0hYJ9s1KY_9w8Rkut8PCVGh56L0F5JA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] PM: hibernate: LZ4 compression support
-To: Nikhil V <quic_nprakash@quicinc.com>
-Cc: Len Brown <len.brown@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
-	Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, 
-	Yan-Jie Wang <yanjiewtw@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	quic_pkondeti@quicinc.com, quic_kprasan@quicinc.com, 
-	quic_mpilaniy@quicinc.com, quic_shrekk@quicinc.com, mpleshivenkov@google.com, 
-	ericyin@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131-raubbau-rentier-7ca9be9bc7c9@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Mon, Jan 22, 2024 at 2:16=E2=80=AFPM Nikhil V <quic_nprakash@quicinc.com=
-> wrote:
+On 01/31, Christian Brauner wrote:
 >
-> This patch series covers the following:
-> 1. Renaming lzo* to generic names, except for lzo_xxx() APIs. This is
-> used in the next patch where we move to crypto based APIs for
-> compression. There are no functional changes introduced by this
-> approach.
+> On Wed, Jan 31, 2024 at 02:26:02PM +0100, Oleg Nesterov wrote:
+> > With this flag:
+> >
+> > 	- pidfd_open() doesn't require that the target task must be
+> > 	  a thread-group leader
+> >
+> > 	- pidfd_poll() succeeds when the task exits and becomes a
+> > 	  zombie (iow, passes exit_notify()), even if it is a leader
+> > 	  and thread-group is not empty.
+> >
+> > 	  This means that the behaviour of pidfd_poll(PIDFD_THREAD,
+> > 	  pid-of-group-leader) is not well defined if it races with
+> > 	  exec() from its sub-thread; pidfd_poll() can succeed or not
+> > 	  depending on whether pidfd_task_exited() is called before
+> > 	  or after exchange_tids().
 >
->
-> 2. Replace LZO library calls with crypto generic APIs
->
-> Currently for hibernation, LZO is the only compression algorithm
-> available and uses the existing LZO library calls. However, there
-> is no flexibility to switch to other algorithms which provides better
-> results. The main idea is that different compression algorithms have
-> different characteristics and hibernation may benefit when it uses
-> alternate algorithms.
->
-> By moving to crypto based APIs, it lays a foundation to use other
-> compression algorithms for hibernation.
->
->
-> 3. LZ4 compression
->
-> Extend the support for LZ4 compression to be used with hibernation.
-> The main idea is that different compression algorithms have different
-> characteristics and hibernation may benefit when it uses any of these
-> algorithms: a default algorithm, having higher compression rate but is
-> slower(compression/decompression) and a secondary algorithm, that is
-> faster(compression/decompression) but has lower compression rate.
->
-> LZ4 algorithm has better decompression speeds over LZO. This reduces
-> the hibernation image restore time.
-> As per test results:
->                                     LZO             LZ4
-> Size before Compression(bytes)   682696704       682393600
-> Size after Compression(bytes)    146502402       155993547
-> Decompression Rate               335.02 MB/s     501.05 MB/s
-> Restore time                       4.4s             3.8s
->
-> LZO is the default compression algorithm used for hibernation. Enable
-> CONFIG_HIBERNATION_DEF_COMP_LZ4 to set the default compressor as LZ4.
->
-> Compression Benchmarks: https://github.com/lz4/lz4
->
->
-> 4. Support to select compression algorithm
->
-> Currently the default compression algorithm is selected based on
-> Kconfig. Introduce a kernel command line parameter "hib_compression" to
-> override this behaviour.
->
-> Users can set "hib_compression" command line parameter to specify
-> the algorithm.
-> Usage:
->     LZO: hib_compression=3Dlzo
->     LZ4: hib_compression=3Dlz4
-> LZO is the default compression algorithm used with hibernation.
->
->
-> Changes in v3:
->  - Rebased to v6.8-rc1 after resolving the minor conflicts.
->  - Link to v2:
->  https://lore.kernel.org/all/cover.1700048610.git.quic_nprakash@quicinc.c=
-om/
+> I think that we can live with that for now. If it doesn't hinder Tycho's
+> use-case it's fine.
 
-I've applied the first 3 patches in the series (as 6.9 material), but
-I'm not particularly happy with the last one.
+OK, good.
 
-First off, I'm not sure if a kernel command line parameter is the most
-convenient way of selecting the compression algorithm.  Since (AFAICS)
-the restore kernel will detect the compression algo in use anyway (or
-at least it can be made do so), a modparam should work for this and it
-would be far more convenient to use.
+> (I often wish that we could report custom data from poll similar to
+> kqueue on bsd then we could attach file specific information to the
+> notification. That would enable userspace to handle this the way they
+> want.)
 
-Second, if I can be convinced that indeed, using a kernel command line
-option for this is the way to go, I don't particularly like the name
-used in that patch.
+Or at least perhaps we can change do_notify_pidfd() to use the keyed
+wakeups... I'll try to take a look later.
 
-Please feel free to send a replacement for patch [4/4] separately.
+> > thread_group_exited() is no longer used, perhaps it can die.
+>
+> Feel free to add a patch for that on top of it.
 
-Thanks!
+Yes, will do.
+
+Oleg.
+
