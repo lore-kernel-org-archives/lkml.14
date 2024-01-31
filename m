@@ -1,123 +1,91 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45159679E7;
-	Wed, 31 Jan 2024 08:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D294D66B5F
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706691247; cv=none; b=uDZoL3dRectHN40GqWu81fK8JO8fSMrHKxfy1c62okmi2gZGxVGU6ULR8V451vgYXmj6yTEf1LzmqH3E5JQW92NvIna8f9PxzfCdQrBMNZsWMAVIFkiyfgSqYGnWSVeyFZ6HxWNswYTOauQUZbSxUOAJ75b/u+kz5yuDj60UCO4=
+	t=1706691324; cv=none; b=bnHemfV2mBv58Wi3yEbY2fRsd6o4eWgSxbkIPNv1oeAPBAYpxbxxOmziZaLoMcbPHu0j0IWFuunrOhQ1Fx2foJqoaz/zCFpfRGr4bYvFpkWXvF3eRzf1UJJ00ilSOujn434K28YnKL5+NTyRjWlD+89hqKgCmJGV5ZRdYlLcIFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706691247; c=relaxed/simple;
-	bh=Yq2n/Sfh/d+tpcr27V4STsJGXvRFCM/Exbdl8+V33jQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sf/mKixq4NC1UjQ382qrPpNateuEhLVabTLJhH6P4vCXePt/yZTWF2KjTU9GBE7PKI9cwx8dJF9LqoDkimScbfEWMPoHPZ4K3WHmIiuZZaS836DLEfhztGTGGQ30sBNFuyEGltL1aZpzugr+FjzLXwLGsvnL228kW924P5euQZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YLJOYTQ3; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706691324; c=relaxed/simple;
+	bh=1zAz2+MFVhaNzjF0CUHFlp2iK4QKE8zWsjZLLf44jk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ddQ0/Gn/Hr/4WrutzFOsXJ5jbnJMlYv1Zw69tQxH0rSmcd4mjxlX//XN9N74zPwNpIMCnXESbpEdYggc7ow3afx3vOkGR6ukHSIIpLg93CHJkovEug+ZjS2BZZkxQZAkiiWp9PgTpNcNxUFiJ8vA77CKAEhKzX01xA2P2OckXP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=Fg9tabzF; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YLJOYTQ3"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40V8ru5d119174;
-	Wed, 31 Jan 2024 02:53:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706691236;
-	bh=P3p6Pw+gRR2W4dVZvVjmTZdIBjEbZqZZnvgFeXT2zks=;
-	h=From:To:CC:Subject:Date;
-	b=YLJOYTQ3fcHfjlGDJEGWyputUKM0rXPVe/EvkocLIp+v68ctJnTU62d2oM8PCI6oI
-	 AoBr8PrmuGwvsJPeD+8Kq8u3BdoZLBWOc7IB2RFr+ln3s8EWNgRWnoaqrWxFpZ5JlH
-	 X9waIjEku/QjvPyBBNNTkylwbXWMTmM3EsxM0Y/s=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40V8ruds116100
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 31 Jan 2024 02:53:56 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
- Jan 2024 02:53:56 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 31 Jan 2024 02:53:55 -0600
-Received: from uda0500640.dal.design.ti.com (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40V8rpYG125241;
-	Wed, 31 Jan 2024 02:53:52 -0600
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>
-CC: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>,
-        <rogerq@kernel.org>, <srk@ti.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] dt-bindings: net: ti: Update maintainers list
-Date: Wed, 31 Jan 2024 14:23:51 +0530
-Message-ID: <20240131085351.25103-1-r-gunasekaran@ti.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="Fg9tabzF"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33ae51f8111so2505249f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706691321; x=1707296121; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1zAz2+MFVhaNzjF0CUHFlp2iK4QKE8zWsjZLLf44jk4=;
+        b=Fg9tabzFtad5EwKggaEcDrs2/ZmYJgVp0eQLjYfftJD/GGN9DqbBjrSzWpf9P0vuel
+         2H2p4iUBl+z7ZcoiyXgY7tKPHl2wEELXSPz9QHhIR1yFzwOJddRcaFbdrH4IaUAA+x3e
+         71xBT/WyuXGZEfWjbJmE9Bb/PyQjzA6cq1Gl9D7u7xn3+g3OkDk21bE7j4UCzXisM7z0
+         1d9Qr5ohvYSOSrALiOIFqu2OzFRpVRkz7mLfMphGo0aZO4bQCgOfazaHSFShW0yx4+Sl
+         9M33WfiHHlZGjo2YfomsK2Tb7PZfGfCmkk7jAM0hhMnao5/V5+4C0vYQGdYf6ursuSWA
+         uNcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706691321; x=1707296121;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1zAz2+MFVhaNzjF0CUHFlp2iK4QKE8zWsjZLLf44jk4=;
+        b=vR7ofJvm3PsSZypaSHwl6xdxI3gVNjFpY9tZp/kPMFn1LXl31EbIDR4sOiYDlh7Yyn
+         OsrDcyyw/FT4Me4y9oiwFZYFz8Q0wAwMwpA/b5AZ9kxGSUQkWKQWGJpaXY66nQ2mxhcE
+         xDNYm+Z/eZjkHqRR8596sfC3S6llUs85XyPmXmsgyboKPa5z8dY9/Q+dL9Upk+Mbz+Qq
+         t2YFLFARME/P+cEhRZn3m+uY6QMFVjji8l3N+yrrnF5pe+xaD7tePcscfzCjgG63PGLB
+         o39kz4IJcQgrqsbUREECyJuIGm0Sybtlhn7PjwG+RkCZ7iYaQmApvYhO+Fu9LOVtOdKQ
+         4kjQ==
+X-Gm-Message-State: AOJu0YyWWbfE02/Iql9l5QULnm9sWkwHJbRoKUuhX28SIIZX+fYNBWz/
+	0cxjC9GO4ijyGfd7YcrzPp7t2rSNm+0O2F7mOqEC3t5FaJW4/ZXUixsodE/2VapP8fo6HmkNAo9
+	lOuAqaQ==
+X-Google-Smtp-Source: AGHT+IEDaB/xrJB9e/nbcOYh/jzhcipifSUQvbsXwmciEyC3bvRWprUeAzSWNd6QobawgPm3fQCCjQ==
+X-Received: by 2002:adf:ffc8:0:b0:33b:290:253 with SMTP id x8-20020adfffc8000000b0033b02900253mr711420wrs.59.1706691321011;
+        Wed, 31 Jan 2024 00:55:21 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVijmjMIBMPrVUDqpjOW8DpKrsuG/p+eiyjvljc+dEmxB6q2VcNXli1GoNTXWTgsQuSMqmzskCR7aGyn4nRAwYXYG/UmYNOWWOF1uwNI61zppf43lGmYYizGcUNUFCZZQNUGCpi7w4ZtgCB0WBCIqRnfLxpSC7406NOM6iHs7q8O8FAcRbp9PGzvBG0YR8wPtWvmVSfJPd2E13lM01BVx/i0geEPVTkXUA85quOLBts/lbIapx0m+Jo+E9NT+8V7zgl1CDqyXsAmJTXcg8qrf6IjK7V6+Bm05MpE4tIP18QxWOvc6hJnHXPaG/FBv9hHppA6A2RVm0KvkfqxOQuL2hN0bjIcYdO2SCRlhD74ep7iaQ/4VlTQOZdnqM7BYSCfXvf0IC11iSL8TmQkogGy7tRWyt308LRGyblF0Yop5iZy4AyE/JLjXz8YbuWg/lkm1NH80kP
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ay12-20020a5d6f0c000000b0033ad47d7b86sm12915043wrb.27.2024.01.31.00.55.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 00:55:20 -0800 (PST)
+Date: Wed, 31 Jan 2024 09:55:17 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: karthiksundaravel <ksundara@redhat.com>
+Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rjarry@redhat.com, aharivel@redhat.com, vchundur@redhat.com,
+	cfontain@redhat.com
+Subject: Re: [PATCH] ice: Add get/set hw address for VF representor ports
+Message-ID: <ZboK9aHNTngj71ue@nanopsycho>
+References: <20240131080847.30614-1-ksundara@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131080847.30614-1-ksundara@redhat.com>
 
-Update the list with the current maintainers of TI's CPSW ethernet
-peripheral.
+Wed, Jan 31, 2024 at 09:08:47AM CET, ksundara@redhat.com wrote:
+>Changing the mac address of the VF representor ports are not
+>available via devlink. Add the function handlers to set and get
+>the HW address for the VF representor ports.
 
-Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
----
- Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml    | 5 +++--
- .../devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml       | 5 +++--
- Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml  | 5 +++--
- 3 files changed, 9 insertions(+), 6 deletions(-)
+Wait a sec. The API is there to change the mac of the actual VF. Not the
+representor. Apparently your patch is not doing that, changing mac of
+the representor.
 
-diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-index f07ae3173b03..d5bd93ee4dbb 100644
---- a/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.yaml
-@@ -7,8 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: TI SoC Ethernet Switch Controller (CPSW)
- 
- maintainers:
--  - Grygorii Strashko <grygorii.strashko@ti.com>
--  - Sekhar Nori <nsekhar@ti.com>
-+  - Siddharth Vadapalli <s-vadapalli@ti.com>
-+  - Ravi Gunasekaran <r-gunasekaran@ti.com>
-+  - Roger Quadros <rogerq@kernel.org>
- 
- description:
-   The 3-port switch gigabit ethernet subsystem provides ethernet packet
-diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-index c9c25132d154..73ed5951d296 100644
---- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-@@ -7,8 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: The TI AM654x/J721E/AM642x SoC Gigabit Ethernet MAC (Media Access Controller)
- 
- maintainers:
--  - Grygorii Strashko <grygorii.strashko@ti.com>
--  - Sekhar Nori <nsekhar@ti.com>
-+  - Siddharth Vadapalli <s-vadapalli@ti.com>
-+  - Ravi Gunasekaran <r-gunasekaran@ti.com>
-+  - Roger Quadros <rogerq@kernel.org>
- 
- description:
-   The TI AM654x/J721E SoC Gigabit Ethernet MAC (CPSW2G NUSS) has two ports
-diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
-index 3e910d3b24a0..b1c875325776 100644
---- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
-@@ -7,8 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: The TI AM654x/J721E Common Platform Time Sync (CPTS) module
- 
- maintainers:
--  - Grygorii Strashko <grygorii.strashko@ti.com>
--  - Sekhar Nori <nsekhar@ti.com>
-+  - Siddharth Vadapalli <s-vadapalli@ti.com>
-+  - Ravi Gunasekaran <r-gunasekaran@ti.com>
-+  - Roger Quadros <rogerq@kernel.org>
- 
- description: |+
-   The TI AM654x/J721E CPTS module is used to facilitate host control of time
--- 
-2.17.1
+NAK.
 
+Fix this to change the VF mac address or drop the patch entirely.
+Thanks!
+
+pw-bot: cr
