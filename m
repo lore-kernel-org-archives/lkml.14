@@ -1,113 +1,96 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD3F3FB39;
-	Wed, 31 Jan 2024 20:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A733FB39;
+	Wed, 31 Jan 2024 20:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706732452; cv=none; b=Vt6B3ueld0QRLyn8pYYehEntTb0bI5MoIxSv7WVrVfcCMeut7NaQls0Fpw5cppr+5EC3O6ZMeNVyz+3z+6A2tzZkYsnUgISGJ8HTyqBmJKATRz6NEFX21hfzqXwAc+lQRyuUCl5Lw+uVujHSGablcsMLgNGmlBUPJJosYzNdYQM=
+	t=1706732562; cv=none; b=WFDnkWc6ttFN3ZH78qQZ2uPdbB0xSCQpA6w6m6NPJc4X7D/43uV84W1T93G1hHBOfO2rnXQJx6lYCZ9zgrAgpn9YDUkGsZLT6OJymdd3qqbCBUwW+lGPU5M3tUHlYsUUqj9RfWrOpiep47uDjhnXengD9pC58C4/z1yYhnZweeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706732452; c=relaxed/simple;
-	bh=jZewVfEeg5K9SkK5UySM3h5rrkjoCak4+ZjrIOKh0cA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KN7VmHDqS7RRXXP06hpsEcJRuqz3ffnxt3Z0Xh/LhIwai37jJkB2GQ4qg9xzx/jpgr1OwilpDu7/7PSH/4Sh8BiZpxv88UA/JI7OOpGjTTzuThN+QK/Blev9ZlZoPxMiX5paLN0v2JVCZ+PeAx1LfGSRDSJIBpSG7FEnKrvnKUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R4hzoWcK; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706732562; c=relaxed/simple;
+	bh=qd/w5Bcuf2svgiEaBng8uEFP+/hQ9TBMaFzh70vee4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bE8yRuXDbY9LH46wHXExqWSItrARwazGCgo8N6UwOemZaFaSzvpGjPI/wSuy3vulUL5IMVHPuoqOPbWzEhNrXb8BcjxZaPGLjMPyNTS+29dopY32Y7S/jKInlMs0MIiReM60N0K1F0zP7hD7oxM05DE2ENXFrFdVP7N5krkDykA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haYT871A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4hzoWcK"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5111e5e4e2bso183676e87.3;
-        Wed, 31 Jan 2024 12:20:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706732448; x=1707337248; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YeIsgl8+EFYn5S6ni1qvspvfCQnicxx3gHZ+U13Srac=;
-        b=R4hzoWcKKoyTVosqeyrKm3ShYUvpt+koT41ICXht4vNEVDg46l3YUjETZsZpOR+BIM
-         fjF3ZC/ceyDAucyBmqRYchkVLN/mgp7EaAEL/dz4S7qI4kAMbcd9VydRid9SGx7/5nis
-         A4AoIUqraeJ4X6AJFOAU0rFnc2Y/Hf/0FY+FTQKmjn0R082NY1M0H+RW3OCldbbWWyjl
-         /ly8DfLUsFrw81nkN3QrV8klBn4VdP//YVp3vA9Proy05Y+OBADBlbka9N8i9qTZ22Jp
-         hGk2iItKNfmZ86z3Zlf+qRHAaznfhz7RkiyI5uwR+87o1vyMbiF6QhHo+cskodpSXoA3
-         Xz7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706732448; x=1707337248;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YeIsgl8+EFYn5S6ni1qvspvfCQnicxx3gHZ+U13Srac=;
-        b=sCuhjgzO8h/Lx2xvdOYqWDk/WlWQB1sGRBiH3om4B3gxVNEo92ZXkJ1Rz96W5fAdTe
-         XvWEH6+CUMtn9WUMC2JD5hGihTt7xLENYZTvgi68IGZcPoM1WkJn2G3EY2t5KZvsUPFT
-         J2KdDzTXRq4MIl3Tm/Kpc/ESBPsNhH+JkSvMiAJ1gm0cH5Vw9j0vmOKZxdv++gSc7Q1E
-         waFfJqpAtTG9YNMKfBEZ2bHyZO/9vcjZHsai7e8/9N5Hgd1A9lMkux7AVNkoDzsQkQJF
-         vgd98ZNmk79AxlLG6zEw5E2/NrQHRPEz0LwM6iqPINsE/zhJA+yVMdsiDlvpqvXaAdyZ
-         Oquw==
-X-Gm-Message-State: AOJu0YyoxhL0dlJRNQPof6BbT0WC9BstUpKYTPENVxvKoKZelAQ6116p
-	fSzron8OTbdhC/txuDN0O+zFUPlcDs31rME0X7iR1bS5jYONSmpmwo7pVMY8BS4Lu3t/YlG+fUo
-	62Ds61MtAbvLllHkimZ8TZ8Gqhyg=
-X-Google-Smtp-Source: AGHT+IFctTMEsBEALITPd9P9JYlZ+E6XiMU7oZunjT4jHOqSTOqn77q3mWKKZy/qhtYsP7ZUL8dO7lVf8n5NdeS5c6w=
-X-Received: by 2002:a05:6512:1394:b0:511:fb6:b1a0 with SMTP id
- fc20-20020a056512139400b005110fb6b1a0mr207585lfb.52.1706732448077; Wed, 31
- Jan 2024 12:20:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haYT871A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FABC433F1;
+	Wed, 31 Jan 2024 20:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706732561;
+	bh=qd/w5Bcuf2svgiEaBng8uEFP+/hQ9TBMaFzh70vee4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=haYT871AjlVRcMjGMJ5jr8i6K3lktJn5RibSXPsjUf+1fm+UTvAmvdLV7GIPk+i7z
+	 p1UXFNdz/xYWIwO5FaL60DFz56gNy0yYD2jHq6aDAiuh1RJPILXSHEwz0AjbpgURxK
+	 nbzeLCsifWDlIJ2UM6G0LSSQvI3wLMU6L3dp69Y0ZyXM9HAXAHWeM2+wJKOUs1fkor
+	 TbN0keNBgCc2jRipyt0wwM+5H4og0RqwNIGz10eH+i55CaWgFv5tO0JH6CW08iBZeA
+	 U74JjuOwK6M3YwdKrOT5hscZuOWwrfKYWPPIDVs0FmMlbcW4KKLXcDyKMd0O+QmnSy
+	 RjtfPZ3G+GfhA==
+Date: Wed, 31 Jan 2024 14:22:39 -0600
+From: Rob Herring <robh@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@somainline.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: HID: i2c-hid: Document reset-related
+ properties
+Message-ID: <20240131202239.GA2222869-robh@kernel.org>
+References: <20240129-x13s-touchscreen-v3-0-c4a933034145@quicinc.com>
+ <20240129-x13s-touchscreen-v3-1-c4a933034145@quicinc.com>
+ <ZbfYzyHaNmjJyNpY@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <571c33b3-8378-49fd-84e1-57f622ef6db5@moroto.mountain>
-In-Reply-To: <571c33b3-8378-49fd-84e1-57f622ef6db5@moroto.mountain>
-From: Steve French <smfrench@gmail.com>
-Date: Wed, 31 Jan 2024 14:20:36 -0600
-Message-ID: <CAH2r5mvFYd0bjajnNVwMzdmKwbMGwgrbxUV9+4-FOBxe5Ejx+A@mail.gmail.com>
-Subject: Re: [PATCH] smb: client: Fix a NULL vs IS_ERR() check in wsl_set_xattrs()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Paulo Alcantara <pc@manguebit.com>, Steve French <sfrench@samba.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbfYzyHaNmjJyNpY@hovoldconsulting.com>
 
-Good catch.  Thx.
+On Mon, Jan 29, 2024 at 05:56:47PM +0100, Johan Hovold wrote:
+> On Mon, Jan 29, 2024 at 08:47:47AM -0800, Bjorn Andersson wrote:
+> > Some I2C HID devices has a reset pin and requires that some specified
+> > time elapses after this reset pin is deasserted, before communication
+> > with the device is attempted.
+> > 
+> > The Linux implementation is looking for these in the "reset-gpios" and
+> > "post-reset-deassert-delay-ms" properties already, so use these property
+> > names.
+> 
+> > +  post-reset-deassert-delay-ms:
+> > +    description: Time required by the device after reset has been deasserted,
+> > +      before it is ready for communication.
+> > +
+> > +  reset-gpios: true
+> 
+> Hmm, for the third time, it seems you ignored my comment that you need
+> to remove the comment about these properties from the driver as part of
+> this series.
+> 
+> 	/*
+> 	 * Note this is a kernel internal device-property set by x86 platform code,
+> 	 * this MUST not be used in devicetree files without first adding it to
+> 	 * the DT bindings.
+> 	 */
+> 	if (!device_property_read_u32(dev, "post-reset-deassert-delay-ms", &val))
+> 		ihid_of->post_reset_delay_ms = val;
 
-Added Paulo's RB and added to cifs-2.6.git for-next
+DT devices should have a specific compatible that gives enough detail to 
+handle this delay or *any* other power sequencing requirement.
 
+OTOH, we've already got one other delay property, what's one more. Sigh.
 
-On Wed, Jan 31, 2024 at 1:17=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> This was intended to be an IS_ERR() check.  The ea_create_context()
-> function doesn't return NULL.
->
-> Fixes: 1eab17fe485c ("smb: client: add support for WSL reparse points")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  fs/smb/client/reparse.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/smb/client/reparse.c b/fs/smb/client/reparse.c
-> index ce69d67feefa..d4d2555ebd38 100644
-> --- a/fs/smb/client/reparse.c
-> +++ b/fs/smb/client/reparse.c
-> @@ -225,7 +225,7 @@ static int wsl_set_xattrs(struct inode *inode, umode_=
-t mode,
->         }
->
->         cc =3D ea_create_context(dlen, &cc_len);
-> -       if (!cc)
-> +       if (IS_ERR(cc))
->                 return PTR_ERR(cc);
->
->         ea =3D &cc->ea;
-> --
-> 2.43.0
->
->
+Acked-by: Rob Herring <robh@kernel.org>
 
-
---=20
-Thanks,
-
-Steve
+Rob
