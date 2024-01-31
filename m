@@ -1,317 +1,259 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtpbg156.qq.com (smtpbg156.qq.com [15.184.82.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167D569D00;
-	Wed, 31 Jan 2024 10:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A30169D00
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.82.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706695739; cv=none; b=B0LSnyEULZNEftQQyLAMS4pFJEjRHJ/v22QSntJ+soEitiU6KbXXlCLtJoOVx0Gien16/WQaroZjQa8gYabyyQ/GHRETGSYEkHuUP0+G/5SY6Ovpx5rrMnTGQn9eN8K6NJO6jktqqzYtvB4ZZI4maD4M5ZToaOYtx1RAX+nHgXI=
+	t=1706695760; cv=none; b=pYp0H3M7g0IIhQIprbBDGonbXHdMaclBvCb7oJBLI71AbTz2DNmmbTmOOdADl9fuZL4Dqgu8jH5MKnp9p+hBPnNRYzeq1Tb24XVCEVJHIyAMIPA8Of4fa6dA1iQgQUa44uPlQ5Dgy/QTKlnQL8XAADFdgY6ea+MIihd6Yg3QG3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706695739; c=relaxed/simple;
-	bh=VGccL/d9Jh3SX3ofkFgHSICtp5humDPOSw2NmoTxOZ0=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=sFMkDKB6WGXwwubq4hgcWxzyHuM2ZWl+4IABTE3H6enH28CU2K3GDzF9kHQrpE7DXh5+UGeZ0hKGjVGaAGyYcjoko0OUHU5Hg7LcPHEKlM0xiDAVci45x0fWr7G51Ww3VOHovG/KHM0xM+/BiDG1TptglZIqCisYP8Ua2YNVuzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=LMwVQErL; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="LMwVQErL"
+	s=arc-20240116; t=1706695760; c=relaxed/simple;
+	bh=RP/I+8uuK/VRuOMcdIvi50FS3t9KpH1OFAKeipus0Zk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AJtHyc67IqqCXcbqXkuYT6paysjnNlwwgJ8UdqMpcuQRalqJliOb3g6ajCVK96EqwMWxBJ6xT9EocQV5wPKTdCcp1UsX75MncpfMwpcV0bFVmttZ3Iu/NZCpGum/9pSO5/88si5PdybctlkTOWCeEZCAPFqGTrcjW19kEni3D9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.82.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp75t1706695625tivm4zm9
+X-QQ-Originating-IP: nhTylzDyDo0X69SSTDFByXkurmTeC9BIYrrq9o5w/Rc=
+Received: from [127.0.0.1] ( [223.112.234.130])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 31 Jan 2024 18:07:04 +0800 (CST)
+X-QQ-SSF: 00400000000000B0B000000A0000000
+X-QQ-FEAT: FwowAM4HOqA1ZfczPNwk89L/EDYhnrdgPQcm5K2csmbV6IglsxTql112S2ip+
+	o3diWF5wkq++k7OF3ypRhArsEXktzpH6EEfoeVu0rzEc4uMPCe9yOeowypok6Rg8U5086jc
+	xpSGlnh5TI51dMlXbfw1cTlAxvj03VfLJ9Qm0gx+8UXx/FhqWJqO8te94/WdMy8bKTD9HXv
+	71IMoyO6lu6CGUdzaMNg1vLJEh2K4IhyvOQ+G0/4CabIC05UDW7fiKLmmj7gzyyvtYKxScX
+	czfXZs0Kf91pfIaD+KKHiWQclvEo2wzDuW35n3VkZnQ9dUKAZgDXwLeWG3fWUhuY0KQRep6
+	G4rwpI607SxyyKMIsClefN8evPqSIr/1glujPTKSEg+R/4t2ev/ajMtMect7sZiACMJCv35
+	+sfDfFrwFzBsJAdcHQM0jU3dA7kBYDed
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 10940394262338438076
+Message-ID: <0C0EA95E5AC6D147+ff1001b7-d61b-4365-9a22-b3c4dfacbc53@shingroup.cn>
+Date: Wed, 31 Jan 2024 18:07:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1706695733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6JCmGi/vABcqFbAYIX4DWFvcJjSKxoxQP5nERWYlDuk=;
-	b=LMwVQErLZnUMAfgvZ7dCsBTivEFe6gy4V+Xi+6cEKyXmHDGO2jBQnR6ud7cQIq4fZEfgfv
-	Q/thtdW5cVTaNfJAPA5/hUUbQMVkzxvRpQeedcHE/Uwe4vJaZUe7AX37JOTRYhdVKSX/eK
-	XfX1N3yWG+XEm7rZW6Jyw2xt/FwG+kWWHlUkD6iRmqlokNQ3xTHyEmdibwawUMhLb75TkP
-	ds3h/Mo16J00q2gmqQwNp7A97Ex78CPS1wNo8rnsIBQy2DocFBsYH7IGE0CeFF1m4Q3aBy
-	wHR+F431p+UBfFxkX44ffCGT1V5KUHhJXNdsHuBehCNNozk9E5GX38d8F1tzWQ==
-Date: Wed, 31 Jan 2024 11:08:53 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: enable built-in thermal
- monitoring on rk3588
-In-Reply-To: <CABjd4Ywx4-3BN7tF=Lv6LNTry_+j=jjM_v7SdzLaWHbuePip3g@mail.gmail.com>
-References: <20240130-rk-dts-additions-v2-0-c6222c4c78df@gmail.com>
- <20240130-rk-dts-additions-v2-1-c6222c4c78df@gmail.com>
- <0702542c8d7dc4139ba5da690fd98e67@manjaro.org>
- <CABjd4Ywx4-3BN7tF=Lv6LNTry_+j=jjM_v7SdzLaWHbuePip3g@mail.gmail.com>
-Message-ID: <00cb830bbf9a03787e53de0b05cb076c@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/hx_arm_ni: Support uncore ARM NI-700 PMU
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: shenghui.qu@shingroup.cn, ke.zhao@shingroup.cn, zhijie.ren@shingroup.cn,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240131070821.11477-1-jialong.yang@shingroup.cn>
+ <deb708e5-bbaf-4510-826b-17e14e69b475@kernel.org>
+ <6D9001324476F76F+ee5f853d-7c69-4a99-857c-cc2b03e9eea1@shingroup.cn>
+ <fef66164-1238-45e4-b70c-c565caa2cf75@kernel.org>
+From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
+In-Reply-To: <fef66164-1238-45e4-b70c-c565caa2cf75@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-On 2024-01-31 10:56, Alexey Charkov wrote:
-> On Wed, Jan 31, 2024 at 9:05 AM Dragan Simic <dsimic@manjaro.org> 
-> wrote:
->> Some small nitpicks below, please have a look.
->> 
->> On 2024-01-30 19:21, Alexey Charkov wrote:
->> > Include thermal zones information in device tree for rk3588 variants
->> 
->> Please use "RK3588" instead of "rk3588", both here and in the
->> patch subject.  Looks much better.
+
+
+在 2024/1/31 17:38, Krzysztof Kozlowski 写道:
+> On 31/01/2024 10:07, Yang Jialong 杨佳龙 wrote:
+>>
+>>
+>> 在 2024/1/31 15:59, Krzysztof Kozlowski 写道:
+>>> On 31/01/2024 08:08, JiaLong.Yang wrote:
+>>>> This code is based on uncore PMUs arm_smmuv3_pmu and arm-cmn.
+>>>> One ni-700 can have many clock domains. Each of them has only one PMU.
+>>>> Here one PMU corresponds to one 'struct ni_pmu' instance.
+>>>> PMU name will be ni_pmu_N_M, which N means different NI-700s and M means
+>>>> different PMU in one NI-700. If only one NI-700 found in NI-700, name will
+>>>> be ni_pmu_N.
+>>>> Node interface event name will be xxni_N_eventname, such as
+>>>> asni_0_rdreq_any. There are many kinds of type of nodes in one clock
+>>>> domain. Also means that there are many kinds of that in one PMU. So we
+>>>> distinguish them by xxni string. Besides, maybe there are many nodes
+>>>> have same type. So we have number N in event name.
+>>>> By ni_pmu_0_0/asni_0_rdreq_any/, we can pinpoint accurate bus traffic.
+>>>> Example1: perf stat -a -e ni_pmu_0_0/asni_0_rdreq_any/,ni_pmu_0_0/cycles/
+>>>> EXample2: perf stat -a -e ni_pmu_0_0/asni,id=0,event=0x0/
+>>>>
+>>>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+>>>> ---
+>>>> v1 --> v2:
+>>>> 1. Submit MAINTANER Documentation/ files seperately.
+>>>
+>>> SEPARATE PATCHES, not patchsets. You have now checkpatch warnings
+>>> because of this...
+>>
+>> ...OK. But the MAINTANER file changing should be given in which one
+>> patches.
+>> I will submit patch v3 after talking and your permission.
+>>
+>>>
+>>>> 2. Delete some useless info printing.
+>>>> 3. Change print from pr_xxx to dev_xxx.
+>>>> 4. Fix more than 75 length log info.
+>>>> 5. Fix dts attribute pccs-id.
+>>>> 6. Fix generic name according to DT specification.
+>>>> 7. Some indentation.
+>>>> 8. Del of_match_ptr macro.
+>>>>
+>>>>    drivers/perf/Kconfig     |   11 +
+>>>>    drivers/perf/Makefile    |    1 +
+>>>>    drivers/perf/hx_arm_ni.c | 1284 ++++++++++++++++++++++++++++++++++++++
+>>>>    3 files changed, 1296 insertions(+)
+>>>>    create mode 100644 drivers/perf/hx_arm_ni.c
+>>>>
+>>>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+>>>> index ec6e0d9194a1..95ef8b13730f 100644
+>>>> --- a/drivers/perf/Kconfig
+>>>> +++ b/drivers/perf/Kconfig
+>>>> @@ -241,4 +241,15 @@ config CXL_PMU
+>>>>    
+>>>>    	  If unsure say 'm'.
+>>>>    
+>>>> +config HX_ARM_NI_PMU
+>>>> +       tristate "HX ARM NI-700 PMU"
+>>>> +       depends on PPC_HX_C2000 && 64BIT
+>>>
+>>> 1. There is no PPC_HX_C2000.
+>>
+>> I have been used to using this macro. However this macro is not existed
+>> in mainline.
+>> I will replace it with ARM64. And del involved C code if OK.
+>>
+>> 64bit:
+>> __ffs(unsigned long) and __fls(unsigned long) will be wrong in 32bit. I
+>> pass a u64 argument.
 > 
-> Noted, thanks!
+> One thing is where the code is supposed to run, second thing is compile
+> testing.
 > 
->> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
->> > ---
->> >  arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 162
->> > ++++++++++++++++++++++++++++++
->> >  1 file changed, 162 insertions(+)
->> >
->> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > index 36b1b7acfe6a..696cb72d75d0 100644
->> > --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > @@ -10,6 +10,7 @@
->> >  #include <dt-bindings/reset/rockchip,rk3588-cru.h>
->> >  #include <dt-bindings/phy/phy.h>
->> >  #include <dt-bindings/ata/ahci.h>
->> > +#include <dt-bindings/thermal/thermal.h>
->> >
->> >  / {
->> >       compatible = "rockchip,rk3588";
->> > @@ -2228,6 +2229,167 @@ tsadc: tsadc@fec00000 {
->> >               status = "disabled";
->> >       };
->> >
->> > +     thermal_zones: thermal-zones {
->> > +             /* sensor near the center of the whole chip */
->> 
->> It would be good to replace "whole chip" with "SoC".  Simpler and
->> IIRC closer to the official description of the sensor.
+
+Now run on my company product, a 64bit PowerPC...
+But I think it's general for 64bit systems.
+
+> Why do you use __ffs, not __ffs64 which takes u64 if you really want
+> only 64bit argument? unsigned long != u64, so your code is not
+> architecture independent. You claim you wrote it on purpose as
+> non-architecture-independent, but then I claim it's a bug. We are
+> supposed to write code which is portable, as much as possible, assuming
+> it does not affect readability.
 > 
-> The TRM only says "near chip center" (sic) :)
 
-In that case, it would be good to just replace "whole" with
-"entire" in the original wording. :)
+I write code in v5.18, there are __ffs64() and fls64(). Asymmetric.
+There are some difference in return val between __ffs() and ffs64().
+__ffs(0) and ffs64(0) will give different value.
 
->> > +             package_thermal: package-thermal {
->> > +                     polling-delay-passive = <0>;
->> > +                     polling-delay = <0>;
->> > +                     thermal-sensors = <&tsadc 0>;
->> > +
->> > +                     trips {
->> > +                             package_crit: package-crit {
->> > +                                     temperature = <115000>;
->> > +                                     hysteresis = <0>;
->> > +                                     type = "critical";
->> > +                             };
->> > +                     };
->> > +             };
->> > +
->> > +             /* sensor between A76 cores 0 and 1 */
->> > +             bigcore0_thermal: bigcore0-thermal {
->> > +                     polling-delay-passive = <100>;
->> > +                     polling-delay = <0>;
->> > +                     thermal-sensors = <&tsadc 1>;
->> > +
->> > +                     trips {
->> 
->> Please add the following comment here, to make it clear what's
->> the purpose of this thermal trip when the IPA thermal governor
->> is used (more similar comments below):
->> 
->>                                  /* IPA threshold */
+And I'm sure code run in 64bit. So I choose to use __ffs and __fls.
+
+Maybe it could be compatbile with 32bit. But I don't have a environment 
+to test this.
 > 
-> Not so sure about this one: shouldn't the device tree be
-> implementation agnostic, and just describe the hardware and its
-> expectations? Sounds like references to a particular thermal governor
-> would be out of scope.
+>> struct ni_hw_perf_event will be big than limit.
+>> BUILD_BUG_ON(sizeof(struct ni_hw_perf_event) > offsetof(struct
+>> hw_perf_event, target));
+> 
+> And why do you need to use any of such code? Please open one of hundreds
+> of other drivers which work correctly on 32 and 64-bit platforms.
+> 
 
-I'd agree on that, but having two passive thermal trips is already
-kinda out of place, because only one is actually needed, so we should
-describe the reason why there are multiples of pairs.
+Code for 64bit.
+This code is to avoid struct ni_hw_perf_event is too big than struct 
+hw_perf_event::target.
+I learn it from arm-cmn.c.
+ni_hw_perf_event will replace hw_perf_event.
+I will put some useful information in it with less space and good field 
+names.
+But I can't exceed a limit.
 
-I have some plans for getting this resolved in a way that's much
-more governor-agnostic, but it will take some time.  In the meantime,
-having the comments can only help anyone reading the dtsi file to
-understand the need for additional thermal trips.
+>>
+>>> 2. Nothing justified dependency on 64bit. Drop or explain. Your previous
+>>> message did not provide real rationale.
+>>
+>> If ARM64, then drop.
+> 
+> ...
+> 
+> ...
+> 
+>>>> +	/* Step2: Traverse all clock domains. */
+>>>> +	for (cd_idx = 0; cd_idx < ni->cd_num; cd_idx++) {
+>>>> +		cd = cd_arrays[cd_idx];
+>>>> +
+>>>> +		num = ni_child_number(cd);
+>>>> +		dev_dbg(dev, "The %dth clock domain has %d child nodes:", cd_idx, num);
+>>>> +
+>>>> +		/* Omit pmu node */
+>>>> +		ni_pmu = devm_kzalloc(dev, struct_size(ni_pmu, ev_src_nodes, num - 1),
+>>>> +				      GFP_KERNEL);
+>>>> +		ni_pmu->ev_src_num = num - 1;
+>>>> +
+>>>> +		if (!ni_pmu)
+>>>> +			return -ENOMEM;
+>>>> +
+>>>> +		num_idx = 0;
+>>>> +		for (nd_idx = 0; nd_idx < num; nd_idx++) {
+>>>> +			nd = ni_child_pointer(pbase, cd, nd_idx);
+>>>> +
+>>>> +			node.base = nd;
+>>>> +			node.node_type = ni_node_node_type(nd);
+>>>> +
+>>>> +			if (unlikely(ni_node_type(nd) == NI_PMU))
+>>>> +				ni_pmu->pmu_node = node;
+>>>> +			else
+>>>> +				ni_pmu->ev_src_nodes[num_idx++] = node;
+>>>> +			dev_dbg(dev, "  name: %s   id: %d", ni_node_name[node.type], node.id);
+>>>> +		}
+>>>> +
+>>>> +		ni_pmu->dev = dev;
+>>>> +		ni_pmu->ni = ni;
+>>>> +		ni->ni_pmus[cd_idx] = ni_pmu;
+>>>> +	}
+>>>> +
+>>>> +	devm_kfree(dev, cd_arrays);
+>>>
+>>> Why? If it is not device-lifetime then allocate with usual way.
+>>>
+>>
+>> No device-lifetime.
+>> Will allocate in stack.
+> 
+> I was thinking about kzalloc. But if array is small, stack could be as well.
+> 
 
-I hope you agree.
+If I have to return before devm_kfree because of wrong, I will have to use:
 
->> > +                             bigcore0_alert0: bigcore0-alert0 {
->> > +                                     temperature = <75000>;
->> > +                                     hysteresis = <2000>;
->> > +                                     type = "passive";
->> > +                             };
->> 
->> Please add the following comment here:
->> 
->>                                  /* IPA target */
->> 
->> > +                             bigcore0_alert1: bigcore0-alert1 {
->> > +                                     temperature = <85000>;
->> > +                                     hysteresis = <2000>;
->> > +                                     type = "passive";
->> > +                             };
->> > +                             bigcore0_crit: bigcore0-crit {
->> > +                                     temperature = <115000>;
->> > +                                     hysteresis = <0>;
->> > +                                     type = "critical";
->> > +                             };
->> > +                     };
->> > +                     cooling-maps {
->> > +                             map0 {
->> > +                                     trip = <&bigcore0_alert1>;
->> > +                                     cooling-device =
->> > +                                             <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> > +                                             <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> > +                             };
->> > +                     };
->> > +             };
->> > +
->> > +             /* sensor between A76 cores 2 and 3 */
->> > +             bigcore2_thermal: bigcore2-thermal {
->> > +                     polling-delay-passive = <100>;
->> > +                     polling-delay = <0>;
->> > +                     thermal-sensors = <&tsadc 2>;
->> > +
->> > +                     trips {
->> 
->> Please add the following comment here:
->> 
->>                                  /* IPA threshold */
->> 
->> > +                             bigcore2_alert0: bigcore2-alert0 {
->> > +                                     temperature = <75000>;
->> > +                                     hysteresis = <2000>;
->> > +                                     type = "passive";
->> > +                             };
->> 
->> Please add the following comment here:
->> 
->>                                  /* IPA target */
->> 
->> > +                             bigcore2_alert1: bigcore2-alert1 {
->> > +                                     temperature = <85000>;
->> > +                                     hysteresis = <2000>;
->> > +                                     type = "passive";
->> > +                             };
->> > +                             bigcore2_crit: bigcore2-crit {
->> > +                                     temperature = <115000>;
->> > +                                     hysteresis = <0>;
->> > +                                     type = "critical";
->> > +                             };
->> > +                     };
->> > +                     cooling-maps {
->> > +                             map0 {
->> > +                                     trip = <&bigcore2_alert1>;
->> > +                                     cooling-device =
->> > +                                             <&cpu_b2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> > +                                             <&cpu_b3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> > +                             };
->> > +                     };
->> > +             };
->> > +
->> > +             /* sensor between the four A55 cores */
->> > +             little_core_thermal: littlecore-thermal {
->> > +                     polling-delay-passive = <100>;
->> > +                     polling-delay = <0>;
->> > +                     thermal-sensors = <&tsadc 3>;
->> > +
->> > +                     trips {
->> 
->> Please add the following comment here:
->> 
->>                                  /* IPA threshold */
->> 
->> > +                             littlecore_alert0: littlecore-alert0 {
->> > +                                     temperature = <75000>;
->> > +                                     hysteresis = <2000>;
->> > +                                     type = "passive";
->> > +                             };
->> 
->> Please add the following comment here:
->> 
->>                                  /* IPA target */
->> 
->> > +                             littlecore_alert1: littlecore-alert1 {
->> > +                                     temperature = <85000>;
->> > +                                     hysteresis = <2000>;
->> > +                                     type = "passive";
->> > +                             };
->> > +                             littlecore_crit: littlecore-crit {
->> > +                                     temperature = <115000>;
->> > +                                     hysteresis = <0>;
->> > +                                     type = "critical";
->> > +                             };
->> > +                     };
->> > +                     cooling-maps {
->> > +                             map0 {
->> > +                                     trip = <&littlecore_alert1>;
->> > +                                     cooling-device =
->> > +                                             <&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> > +                                             <&cpu_l1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> > +                                             <&cpu_l2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> > +                                             <&cpu_l3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> > +                             };
->> > +                     };
->> > +             };
->> > +
->> > +             /* sensor near the PD_CENTER power domain */
->> > +             center_thermal: center-thermal {
->> > +                     polling-delay-passive = <0>;
->> > +                     polling-delay = <0>;
->> > +                     thermal-sensors = <&tsadc 4>;
->> > +
->> > +                     trips {
->> > +                             center_crit: center-crit {
->> > +                                     temperature = <115000>;
->> > +                                     hysteresis = <0>;
->> > +                                     type = "critical";
->> > +                             };
->> > +                     };
->> > +             };
->> > +
->> > +             gpu_thermal: gpu-thermal {
->> > +                     polling-delay-passive = <0>;
->> > +                     polling-delay = <0>;
->> > +                     thermal-sensors = <&tsadc 5>;
->> > +
->> > +                     trips {
->> > +                             gpu_crit: gpu-crit {
->> > +                                     temperature = <115000>;
->> > +                                     hysteresis = <0>;
->> > +                                     type = "critical";
->> > +                             };
->> > +                     };
->> > +             };
->> > +
->> > +             npu_thermal: npu-thermal {
->> > +                     polling-delay-passive = <0>;
->> > +                     polling-delay = <0>;
->> > +                     thermal-sensors = <&tsadc 6>;
->> > +
->> > +                     trips {
->> > +                             npu_crit: npu-crit {
->> > +                                     temperature = <115000>;
->> > +                                     hysteresis = <0>;
->> > +                                     type = "critical";
->> > +                             };
->> > +                     };
->> > +             };
->> > +     };
->> > +
->> >       saradc: adc@fec10000 {
->> >               compatible = "rockchip,rk3588-saradc";
->> >               reg = <0x0 0xfec10000 0x0 0x10000>;
+goto out;
+
+out:
+kfree();
+
+But if I use devm_kzalloc, I will not be worried about that. Even if no 
+device-lifetime.
+Isn't this a good way?
+
+> ...
+> 
+>>>
+>>>> +
+>>>> +static const struct of_device_id ni_pmu_of_match[] = {
+>>>> +	{ .compatible = "hx,c2000-arm-ni" },
+>>>
+>>> Don't send undocumented compatibles.
+>>
+>> OK. Means I should send doc and code in one patch thread with more than
+>> one patch?
+> 
+> Yes. Please open lore.kernel.org and look at any other submissions
+> involving bindings or other type of ABI documentation (like sysfs).
+
+Get.
+
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+
