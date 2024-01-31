@@ -1,165 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797923D964
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706679596; cv=fail; b=svzc37vOgUdeUOOvgxCszzARmJmy2anTM7mQko73o8MC1HifYLcCUiPgo0cqNcpCmrywmTbFse9UIC2E9j9nWZ+3rx49UmpS4lA5dWVT25fjtw5fpl+ZEA2mU/RcQWzvy899+ZgURb0wuBQOMz1d3lXDmgwLgnFKyKdztScI10Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706679596; c=relaxed/simple;
-	bh=tDNvStFRsgGwrhNGTvjftastO3YvrJQIZtpaiPh1HkI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=iJjuf7RV6W+cUUsvcnuka9NpsIePJLHN1Crgmwk8G12M5egvXjF2d/qgG+qHUCCs2Tph3OlgdalppQQcNmyx252MeLa7jEt2ekMS4psju1p1NAe9F9NX4yJe8ej8D5vRLQn1unwWXkNrWVaUYOTT3fUV2c4K9cKRWALnnR5o1UQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EezwnE/F; arc=fail smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8023DB92;
+	Wed, 31 Jan 2024 05:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706679763; cv=none; b=IbdV9dSz9IfseJW4WD7z7cprWm4WcBIlSjAC7a8ma5WJSEmScDfZYyBBvzxSELnjHmxWEvPkxZjw05E5Xj+WOyoaLJLJp55Wy8FvksxRPnlOQJYIz+D+pC1/JCx3WOCG+xuKzFvofZ3qZMlF1rikdYRQ16dHuafdWcUE5w4P0j0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706679763; c=relaxed/simple;
+	bh=2KCNaKjDztHsR7PieMgniR5qU5EYgWjlyweWqhhAVb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N9kZXcV+1ZcOU2Jjs8FSGN9AlQv6Otv1ONlYkNu/dV5aS1FeTR5SThxTRdPQvqT+i+Y+YNN6/uUA97GgPoI7EhITd3gn+afIxdCNxtFujQ88RSgxwBdHzSL2Ptb/tQT9pPJvOTHnTmJOPAjznVn04adE9vyeuVTUcl82fkefTBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h34K48fK; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EezwnE/F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h34K48fK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706679594; x=1738215594;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=tDNvStFRsgGwrhNGTvjftastO3YvrJQIZtpaiPh1HkI=;
-  b=EezwnE/FxhDquKHXcraZ5Mu334V4+8psSfWRNR277PGlpgDKfojdFQFe
-   46hQ6P71vV7Cq4+mMAdmW+EJYnUvE5F1dNPv3vV/SZrHyp0ifF6488UGJ
-   FDeyvSFva48ecii67aIGylA08gkZtk1wy/NBx2+nuZQszSsSs+Q+5FmxC
-   esruD2fx3rAKgakaBa42KKosB49E5u1GZF5p5p79/BhpW19d7a+/OWaVt
-   hbUXJLU/vCNZFiIvHEh8qZ4z/EReSxNqXIy0nRStoxr/fGq4Uc7mybSkc
-   i66ctJyvPEC5rikimpu/2/zNMnsp4jHL+lj7DZfLu6FPDYsZipfO58UDS
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="407214222"
+  t=1706679761; x=1738215761;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2KCNaKjDztHsR7PieMgniR5qU5EYgWjlyweWqhhAVb0=;
+  b=h34K48fKdTl/RiJcSmCmdAQVYdM0nf8ZdMaOxUV2jNv0FjiF9MXKC2Dc
+   +2uHBY77Jb3/1HITG4apxwkqzg+LPPEZioUBFTnEXwwfs2fr07FZlP8Fr
+   tRYs0DFUzRAtecHAYRQalOsqh1AdBg4++iKRrnU1SjNunL06kh+wzaNsX
+   SaaqxBq2AQ00PT+xhdrhn8HnBaL8PovsAT5SeJ+ApAMeQ/iKG3+XEVcEO
+   0i01hh/ys0O9+ZR/jsivcvVxdCWr9Zq84Rj4DJHGL20VJPQdJgbmil42s
+   Y/c3pUfnjG8oG7krk3hn7xOqoNu6JH4ldeWLW8lWid45mWsqPAaIiHo+A
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="24972093"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="407214222"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 21:39:53 -0800
+   d="scan'208";a="24972093"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 21:42:40 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="858700745"
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="911678156"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="858700745"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Jan 2024 21:39:53 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 30 Jan 2024 21:39:52 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 30 Jan 2024 21:39:52 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 30 Jan 2024 21:39:52 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FpAASZeOG9Qn8Olgd2xCU3VXtC9UqU+SnK5QzI06CP6W+MPKOGEWrGKLvEqsNy8Oh/xDyEb0svgwqIgJH5KSomV+EA8TcgpN1tscEqf66PoYW24+7XoLnYOABqNsg66y0Ph7UmE5C7roFGD9FVBPmnd67wAJB3jFOlzC5ywxlw/b1BBOxLzMjx+0dGDSGLy8ePBRexJ+k02rc8hvKA2NynNno3HvmJBbZ8ona/hPp+PftHPqq5JbThpfATeI0p1ODdwOt1QEuGUMsiuzUBcmQaUpIYgikn+qEL+UPD/5pz+1JYCtOJWdAWwOvdEXUKG1sC8eapvpwe5OTbXXnhCyCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MkOXcwpvB60iTIaoBAxQS+Vndv8zjCD3SRRdmKG5Heo=;
- b=UQDYfwZjmwvtjH5x8yrfvbbO3dD1PX8QK0e66f7dycbByswdkcrvRscEQIXPaQQlZNrNCaYxZqC8rS1ZfKW/mT67i2veAknwwMlP+jN2v/XOwt7geHj9IJL/kn2Zq+gTY5zns2mA2bNOuXfL5l1MRaAgM7jz3TGujonvWOoLEOa2IRTeCOAM6BD7bntRcLP6pwtGdyqBFU0Cm96nwcfhSiZBD00mQxob8x1c9Qk1vkt2yYeRyZChUxaYdv6yCMoF+syU6nyaEg1CYc+d0TVGCjAHO2UWUHCz174vJSULMj9TdjbUeqP0aYp4sEdU9Spy5Zux3QDX6Sp5O4CAh45r9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB5358.namprd11.prod.outlook.com (2603:10b6:5:395::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
- 2024 05:39:45 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7228.029; Wed, 31 Jan 2024
- 05:39:45 +0000
-Date: Tue, 30 Jan 2024 21:39:43 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<alsa-devel@alsa-project.org>
-CC: <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Dan Williams <dan.j.williams@intel.com>, "Vinod
- Koul" <vkoul@kernel.org>, Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Sanyog Kale
-	<sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 5/6] soundwire: sysfs: remove sdw_slave_sysfs_init()
-Message-ID: <65b9dd1f64d0d_5a9dd2946e@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <2024013025-spoiling-exact-ad20@gregkh>
- <2024013030-denatured-swaddling-b047@gregkh>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2024013030-denatured-swaddling-b047@gregkh>
-X-ClientProxiedBy: MW4PR03CA0034.namprd03.prod.outlook.com
- (2603:10b6:303:8e::9) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="911678156"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.254.210.203]) ([10.254.210.203])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 21:42:35 -0800
+Message-ID: <f28f9e0c-ea19-456b-9016-9d69fb90048a@linux.intel.com>
+Date: Wed, 31 Jan 2024 13:42:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB5358:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45e489e2-e909-4ac4-8aaf-08dc221f0803
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /haw3s6T//tH5vqA1OozvJx4rLhqZzlj0eockxmPmDsaSHidS6CAU9tf7gTEGkIlxvjY9TZ5aeDqWr0bG6LIldtL6MZtuNzuWxqxqLXzP3HhBcwm2NlLwBANBvwr66EUVXxP2l3PUeC52CklfqxIhtd6+SBtQoNjL/u4AMKq/alSJeQ9Jnt+uUngNqm9fyH2giSRNLosEkVBafxPCQTVxkBseFefRaoIpeyfEODTGawwXCGbKNjNTEwnov2/NNsH3oj9nujBrzuJXZ62u2Ky/wf1Xr5M/KQvsH0hLqdK6g93HkT8nghwU2JA6Wc5XvpzsUTBkz4hlwlvVx/s3gxeUHLC9jCbAHXbBathFdMrn4I7B62ldqwscAkBD73env08m1xy/f4XWWgmPUpnlQEqIc5PfuR6EJ3/Ld82bvUwFB5P4t9YUoLIVsLe8WE+mreD17W3+edvbBz3SexkWescpSmqOymvsU8+lBIiVrTitFhhfpWRq1xN34pc7u3i1bQILs/NUcS/m9ct3Jn1dZByL+OPIMrMZjgZH5ZKP8+4f5qAo5Xwu+JVtaEencz6uRIH
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(376002)(396003)(39860400002)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(41300700001)(6512007)(9686003)(26005)(38100700002)(4326008)(8676002)(8936002)(5660300002)(2906002)(4744005)(478600001)(6486002)(6506007)(54906003)(66476007)(66556008)(66946007)(316002)(86362001)(82960400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?n9rCU3ipdgnoqgOI4CbrSTLAkn0xh9hhFdf0M34SioUzIjt7nDH5l8Se8uYf?=
- =?us-ascii?Q?XyjYt1hqEngSWN4k8YK4QfeqSjAf/IoNtUv4gXzMF6z17cNzXqd4fHcvFC5Y?=
- =?us-ascii?Q?6+YG3YKaD70Lo9tMZ6k0KUYEup0QyaKnIMtSwpn+WUVaXu1+6/r3SPaZn8Zv?=
- =?us-ascii?Q?nEOkyTb2thB12qvkZYrHZCMEYTsE30D/aystDFdhlP6KBTCQFkLWWT6WMUhV?=
- =?us-ascii?Q?dt8XqZ2nPzOHgzEwSA8/TFbS4iKYL8/V3uF/b1RoAN5b8ugAxm1PT1Zav7Ed?=
- =?us-ascii?Q?uLoxZLzfLJL4oKxyIt1OXRzoAX9a7LEFQGo/6VyU1fln+0kaZm9PVlYsjEEa?=
- =?us-ascii?Q?Oc7BJknvxMbaz7U2xLgJ6GfFvdZ3PjtLf4EZ4w6QHgMrgM2BqXgGmGgBSULv?=
- =?us-ascii?Q?IcOk6yNfUkc8dfC4CU1ml6236KcCirt2dgssmn3bkUalfSCxRqsa+bZDl29g?=
- =?us-ascii?Q?NuZhMwTvOzkaPIWrvx6kWAYQInYznF7/vAE8i/da9axPxtxIVdPXR2y5sm99?=
- =?us-ascii?Q?cBjhuP2hMXRI0mQ5Dw0ebiBN0XEqkV0S0aY0alZWp9Z3icQwXuYlRXv1HG4S?=
- =?us-ascii?Q?VMXpbzWX3fWUAcWWYZWc+CpDmqgYAbN5K8/EBex98HfOzGCIE8z6PNp6w/pH?=
- =?us-ascii?Q?QNyUdIVRZ3sEGQwP7Hhsi8v3XgAWedVQz0YspdOdVT/dAf+LLU2hbhtShHTx?=
- =?us-ascii?Q?Y/ZvPy8P+0T8+cFLSDIo0F7qDI3lzLG0towJ0ZFphBfSrVQUNtPTvMeInRla?=
- =?us-ascii?Q?7L2XWnjbk1gBRq1X8Xp/F6TpBcMRyuehFJfEk1/bqzR0dBcxOEd4o2TtnKgW?=
- =?us-ascii?Q?iH85fOYseDp8AaU+WFXbhgjeENSqKwpaJiKvMb/tLRjiLj3qlVTM7jLafS2s?=
- =?us-ascii?Q?5q35YAa4JIggQCEkRFaCQkPj1APRg4JnNNo2tq9rwWHXqlnpEWxHD80zdODP?=
- =?us-ascii?Q?jHpqRJlZSXkQ7aKtEr8ye8ASFJoOU/Dm92fdKl8g5YINYb/HXOX5hjHg3eQI?=
- =?us-ascii?Q?tiztR/DPWSMIjAgRIS+OHr6btnMfV9sjkOS53FmcTcF7CGx4le2qgnrrF5Wf?=
- =?us-ascii?Q?4QT5WvHY3N5lFZYxZib7z+aR+la+HohPtO9aYanmyrWh/iBpTRKzSUVzDMlP?=
- =?us-ascii?Q?HsIFHkPBbAkPSOXolTAfg3u+07bgkVI9Pj1lFhqJgLaiDFtlXyS95rEouPH3?=
- =?us-ascii?Q?zyjJ8zuPZSXXk/XcciCrLXR2OvI22PYfltKnxAGyhi5G31logxuO8jKOSIFb?=
- =?us-ascii?Q?6oIkXK0oLaB3moElaIkWIZ24L0srEHbgS8xpF+L5gdrUf71OLkXKL7CdTkiQ?=
- =?us-ascii?Q?LgYFjJJU6WXQfXEBMI57kRqO/YKEHJCerw5adxiTmeWX89QIkvHUQskFGWQb?=
- =?us-ascii?Q?3Hatkx2O60F1+60gX946K8ft34j0kjazIFhXDWlNmUZ1UkbO5cGA7ysPki6q?=
- =?us-ascii?Q?cD0USP39LWC5z32YImltVPNk6vws/u6PV75XUdFkoRtzvQL3Cnf8W9I+Iiwz?=
- =?us-ascii?Q?HDBmuaIP4kkaBO220GTjwkhlizxBS4N6zqRgO2TKZlfUOOI0A8ld0+Bh0xhb?=
- =?us-ascii?Q?RKWg7Afc3v4JM04BZMYbz3DZrIQPlr5XnMsiIoufQrin0Gu7ufT/CdQKVk7T?=
- =?us-ascii?Q?8w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45e489e2-e909-4ac4-8aaf-08dc221f0803
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 05:39:45.4492
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vnIQuBrgscTUTTg/G//aUruz5dnOcxxtROJd+WqvGasfP9OsdHarzucMUne/ynmc3e8a1uENAYB8mMFWuruFrV+zXVpgr/gIw6nWeoO0fXQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5358
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
+ device isn't present
+To: "Tian, Kevin" <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
+ "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>,
+ "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
+ <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
+ <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
+ <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
+ <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
+ <BN9PR11MB527674172BBA9BDC49A004D08C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <56a9971e-7015-4584-89c7-80056b7ec547@linux.intel.com>
+ <BN9PR11MB5276CDBA6ED200319C8455EE8C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276CDBA6ED200319C8455EE8C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Greg Kroah-Hartman wrote:
-> Now that sdw_slave_sysfs_init() only calls sdw_slave_sysfs_dpn_init(),
-> just do that instead and remove sdw_slave_sysfs_init() to get it out of
-> the way to save a bit of logic and code size.
-> 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Cc: Sanyog Kale <sanyog.r.kale@intel.com>
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On 1/30/2024 5:24 PM, Tian, Kevin wrote:
+>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>> Sent: Tuesday, January 30, 2024 5:13 PM
+>>
+>> On 1/30/2024 4:43 PM, Tian, Kevin wrote:
+>>>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>>>> Sent: Tuesday, January 30, 2024 4:16 PM
+>>>>
+>>>> On 1/30/2024 2:22 PM, Tian, Kevin wrote:
+>>>>> Here we need consider two situations.
+>>>>>
+>>>>> One is that the device is not bound to a driver or bound to a driver
+>>>>> which doesn't do active work to the device when it's removed. In
+>>>>> that case one may observe the timeout situation only in the removal
+>>>>> path as the stack dump in your patch02 shows.
+>>>> When iommu_bus_notifier() got called for hotplug removal cases to
+>>>> flush devTLB (ATS invalidation), driver was already unloaded.
+>>>> whatever safe removal or surprise removal. so in theory no active
+>>>> driver working there.
+>>>>
+>>>> pciehp_ist()
+>>>>     pciehp_disable_slot()
+>>>>      remove_board()
+>>>>       pciehp_unconfigure_device()
+>>>>        pci_stop_and_remove_bus_device()
+>>>>         pci_stop_bus_device()--->here unload driver
+>>>>         pci_remove_bus_device()->here qi_flush_dev_iotlb() got called.
+>>> yes, so patch02 can fix this case.
+>>>
+>>>>> patch02 can fix that case by checking whether the device is present
+>>>>> to skip sending the invalidation requests. So the logic being discussed
+>>>>> here doesn't matter.
+>>>>>
+>>>>> The 2nd situation is more tricky. The device might be bound to
+>>>>> a driver which is doing active work to the device with in-fly
+>>>>> ATS invalidation requests. In this case in-fly requests must be aborted
+>>>>> before the driver can be detached from the removed device.
+>> Conceptually
+>>>>> a device is removed from the bus only after its driver is detached.
+>>>> Some tricky situations:
+>>>>
+>>>> 1. The ATS invalidation request is issued from driver driver, while it is
+>>>> in handling, device is removed. this momment, the device instance still
+>>>> exists in the bus list. yes, if searching it by BDF, could get it.
+>>> it's searchable between the point where the device is removed and the
+>>> point where the driver is unloaded:
+>>>
+>>>           CPU0                                CPU1
+>>>     (Driver is active)                    (pciehp handler)
+>>>     qi_submit_sync()                      pciehp_ist()
+>>>       ...                                   ...
+>>>       loop for completion() {               pciehp_unconfigure_device()
+>>>         ...                                   pci_dev_set_disconnected()
+>>>         if (ITE) {                            ...
+>>>           //find pci_dev from sid             pci_remove_bus_device()
+>>>           if (pci_dev_is_connected())           device_del()
+>>>             break;                                bus_remove_device()
+>>>         }                                           device_remove_driver()
+>> If the device was hot plugin or re-scanned, the device has a PCI_DEV_ADDED
+>> flag,
+> in this case is pci_dev_is_disconnected() true or false?
+>
+> how is this patch supposed to work with it?
 
-Looks correct.
+pci_dev_is_disconnected() is true for safe removal, false for surprise 
+removal, but it not called in this patch, is used in patch[2/5], 
+explained in its commit log. This patch use the pci_device_is_present() 
+to check device present or not. if pci_dev_is_disconnected() returns true, then check its presence by pci vendor
+configuration reading (a specific protocal in PCIe spec).
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>
+>> if so the driver unloading work isn't defered to the tail of device_del(), it
+>> is unloaded before pci_remove_bus_device()->device_del(), in pci_stop_dev
+>>
+>> pci_stop_bus_device()
+>>    pci_stop_dev()
+>>    {
+>>     if (pci_dev_is_added(dev)) {
+>>         device_release_driver(&dev->dev);
+>>    }
+> no matter where driver unload is requested, it needs to wait for aborting
+> in-fly request on CPU0.
+
+yes, the progress of driver unloading has complex sync mechanism in
+  __device_release_driver() to do that.
+
+>
+>> So the interval the device is searchable, only applied to those devices
+>> not hot plugged, or never be scanned.
+>>
+> and in the worst case even if pci_dev is not searchable, isn't it already
+> an indicator that the device is absent then qi_submit_sync() should
+> just exit upon ITE?
+
+Hmmm, pci_dev is not searchable, but that pci_dev instance is just not in
+the bus list or device list, not mean is disconnected or not present that
+moment. :)
+
+
+Thanks,
+Ethan
+
