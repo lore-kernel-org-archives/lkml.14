@@ -1,60 +1,60 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709BC3A8D2
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4863AC34
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706740654; cv=none; b=iFaOjNC359s3WymISqFNVUAY1KR0G7w8mwudC9p+OL+JhucejkUCvilj7D1S0oz/t3eJp3GHec14h0gHYkWisbAgDmPV0BuY9gTaX/hodRw5xN67S0n77DN7fXqKVAnIIddxoXgywM2PcZqz5Z5MdQ0S5s20mt8SH3+YF5NL7H4=
+	t=1706740654; cv=none; b=Mufuy/6p5o3Zv36lquvSWcS0t1/Bv+0e2RXxakCkQvwfpiXC76ffgVc9cQO9N/GwdRYBN2yZoEUIuf2CrRrtZPHcArR8QLlRwVMEEFD2CWUbuPjVCfRM7UhG0vF+vIVPUT7ijivjWKK0W4GTvTJhaxGXg/ZX5ffIPH96LjXQH5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706740654; c=relaxed/simple;
-	bh=qs2IwTXMaVMdAglmU0WRwo3NIfb2WrdCf70I7utlgJg=;
+	bh=5XJc9ghGuRNHdIp0vfzuqM/TEK4kPBeBAS0v6fakgGg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WxrFP0262kdSl3u0oO+Du/gth6/vlUbdlzVmiFMshsXDt13Vi7NPak0KhRRpgELaPcjuMQ4SCTQC9QdcNFjOSaPJobnhKjqew9uER4K244ejufq8anM9xha8qDKV0crgpIKwdeMetMHv3Bc0xLe0aMip1joEehTPXQTOeLbbsv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hE4m2gYb; arc=none smtp.client-ip=209.85.167.45
+	 In-Reply-To:To:Cc; b=f1p0nkcFfci1JVo86rFtFqC0p5NhZDT/GG/pPywr5ncmybHtposh/uAIW7Erw22eb4sUGFL9EXt4DbgWdwo9CYXsbpjV7m1orNenGZfQpXPsuuvCMdePIH3r3VXDDqfDOETAlT1qiBMyx3zaoGkMzYrKIX4jNhjLsX/1Uu3VuQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HDPT9GmH; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hE4m2gYb"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5112cb7ae27so451604e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:37:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HDPT9GmH"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-510221ab3ebso413346e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:37:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706740648; x=1707345448; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706740651; x=1707345451; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/DrXHgtRj4uXVnKQSHYAiPmivQLWMpRFu04w8Lw2Uhw=;
-        b=hE4m2gYbteTmy+sHgBEvYTf/3i94+39FzSnKtC7MC3Edb1qOEms7VKkvlcPFu+aMPZ
-         seJrnYiHtl1qKDHtxzCS5F4zFH6cIMu+UeKZtUX1xpaue9JByhaYkclg5RYuiM5fJKi0
-         8skSsGHf+W34cS4fsXDqF3BHpaKW5M5Lp9XJPhgIAQRd9BEuA9iy9BI5FKM2YQqLcp+W
-         hSD6ogXPVM4tYdwQOLvSa8Ql6jtnZyVEPcY7S662e3uY9681auDMDnfshDVI4bCh4iP3
-         wj0BcacuT0n6OiHw+LEufQYoHJJ9tTYTXvmHL7AGhcoksaH2ONyelbx5uhc2s0UGE63f
-         HrUQ==
+        bh=Syf6YeMPz8gpPA3EVgI80juDku+cwPRF2yHgIUcG34U=;
+        b=HDPT9GmHUOZD/Yxh3GJWuhrCPWKJLyKNbT46T56qYwQ+t5C19KazrGlqwdkAhYpEhN
+         KpkMVoQQlG/7efMR2W00TmnczusNjTZC4pwOEuHwHeK6J3GodI9ohefzpuojTJLiYqiP
+         jK3li270zlCFQLl3aRlWfhn12jP/9ZddXGH8Ar/zGBgviUIc/GMbR5CyFES753ea0jOh
+         fGqqfCK5QVj53AANaws3osrNz5mr78baCIs7QkxwVA2D89IRCtTntKaJ1tz9Du37P/rk
+         NnBQlkQqSTlc2654wYemX6X2VqrqYOsZ9wt0tmZdpVsKclCg+BOyYXm0az4Uxk4cETVm
+         CuOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706740648; x=1707345448;
+        d=1e100.net; s=20230601; t=1706740651; x=1707345451;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/DrXHgtRj4uXVnKQSHYAiPmivQLWMpRFu04w8Lw2Uhw=;
-        b=GXlO7ODVwhDeSJYJK5lT/aasBLN60oj7c6lltzEY3XiqPfMOjRovvnJj/zgRaU/+c1
-         dRCDZk/Uo8kTlNdndGt5V4t2d3FE/E8L0Jq18tq/icC7d04SZXJq5sIlWYfMN/+sj/mt
-         6SibvX3dlUDvV8MCRpw6M39PL8txqhM850qXy5rvK3h2qDhOi623voJ4CTXfIERW/1D0
-         Hpi5kbchBWQzpBdhXw7yzHuTg2CjKKDdKkk3HMKu2TRSvDDqcvqhCxZqEE3m+JActXPU
-         nqiq6n/3cPiImiexkC86A/DxBVa3Iuemn3hUU1RZQJRpPhRxclBQG8NhV8P7mbVzcR0U
-         24SQ==
-X-Gm-Message-State: AOJu0Yyk95ccth34AjEpfMyCxi2+jI+9PmGQbyHI8zU2na/qau4ITOpd
-	PQEP6KKnzbFwMA4EoUs80+civOnFgnCVGjjsDrm+l1pq0m2D6Oh4qESfwaUpRAQ=
-X-Google-Smtp-Source: AGHT+IHi2rdan0vzvY3WJ53/OhmnsWjwEgrGErJ9PujYvsVhU6yQ5terlMO9S1GY55tz3i4rJ67UrA==
-X-Received: by 2002:a05:6512:74f:b0:511:ecf:e5df with SMTP id c15-20020a056512074f00b005110ecfe5dfmr480442lfs.28.1706740648240;
-        Wed, 31 Jan 2024 14:37:28 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXMQDd0jdlmjd8LP1gDqtuZnmdtJ/f8Xv3tT40eOqMozES6c/VXBoJuzMJweWxBCFWWaB01StTnH2fi2WG8laVUthcdxf1Bw8IiozdWj7hZ9jT+2Y+Yws4kQLkSLrjQyGJOEVlQ/t2C6tbfe4OIRPi8YzW80V+bEGdDuggS4QBfDI+Uak8OsVWouEQ5+59ICBDHXabvmZlpO2lV48Tl09GF0zlfJmTcZ5vUE+XM7JZp91jHRUlEMUAZqi6QNbebP2SiV9Ke8mHwCRsNlQS7su/EbFOGr9u3bO81mUHA/de45UDIoqi7D7fby3N87oco9+fBgXfgFeJs4SsIfZcYDox0yGL21Y9bwk7WvksU/g6eak5dcKVA8brkgRS+V5Vsz42wEjnbuNI8s7CgcLMhArrB+nDPh8CfJgB0lmgC1/K3Yen6kW3XIrsNkq1uGWgjPMpdUMnPYhQs3OLSMA==
+        bh=Syf6YeMPz8gpPA3EVgI80juDku+cwPRF2yHgIUcG34U=;
+        b=wKKDaGfr8sz3vKm//IU+lfyUq71eGSDrCnYHNZVdp+4dY8zubVkeIM/DLhXoo8sc+O
+         dd2HbOBSljB2KEZOzv4b5IB1VAqXx154Am74LEHZkDEAVWkEY7umuyOQQOjE2ZmoeG23
+         dmBmV+0in7VFnk9HavXv6XmG4j10kRxrRI1VHee4EQyokWIEuAN21GA0Xv3COTvZJhXH
+         4b8S8H9Gc/dQzsC72WjNURF7O2QsTKNkK9mzrkRuvrGQILLcqDzHawHlDIFkE5ZZYACq
+         BqubqLRVR28jYZSgMVT0pBDUNJVGC7/Va4DCQb9a1WoYHxkP0oTKn8hqHTuhy/yPgTrp
+         MKPg==
+X-Gm-Message-State: AOJu0Yyfa3QbC315KkEQYdL8+P45g83TokV5JyfLu+kWiV1vFdqPdQFa
+	Fx2YWuSsvAsewPzJilyrKtpZxJyxa8KI1O+gqE5Iw729TM3WtLIL3q6DktTMWLM=
+X-Google-Smtp-Source: AGHT+IFabhNFUnvdjOxg++L9fXcb6SseUl3cRggcgn5z5FCEUpUkxPFCH2Fjl+pik3OVtLZSD+aU/g==
+X-Received: by 2002:ac2:4286:0:b0:510:1ac1:652a with SMTP id m6-20020ac24286000000b005101ac1652amr516477lfh.53.1706740650892;
+        Wed, 31 Jan 2024 14:37:30 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVU6Xf2k7fLJCsGaXJ48xSGR/ZEOgNNv73JxVK6al6D6h+kwLhNizQIheA/90lTULztjTEEKfX+3/KgEleOjYGyA0TnU1HRdffRBekVLCBsGPdip21OBVuPWgPhsF5aYeXOK5XSNHVbdJSp021SsqUGhnoqYgSPfrxYeh9/dE+OdLwuYbPH0vFGMaaJ4GsBITxAtMMEGDcYt5rqSUNQGygPLeHXkhyrXLZe2QJGfx6rRlsx4SKAgLQF7Q6cCXBl43Pej4mGMa9UqoTubJnXHDbW+qb7nC/BFcLPnEONINAp4qVE75tgiMAeoYuTeE4DZgWSqXVY3hXvwe6QVpoje2IfttB64b1IyRgD3ZWZI5Isv9lPmMjrpLeAYqmgiDfyUYaBCZGGG+KXLAzinIGiFlbNgE33LfOUA3RHGRYBxgdTIPkgqgEUvbH+JrTO/dnKhFM/Ogfi+IIOrD57Jw==
 Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id v25-20020a05651203b900b0051023149df3sm1976021lfp.248.2024.01.31.14.37.27
+        by smtp.gmail.com with ESMTPSA id v25-20020a05651203b900b0051023149df3sm1976021lfp.248.2024.01.31.14.37.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 14:37:27 -0800 (PST)
+        Wed, 31 Jan 2024 14:37:30 -0800 (PST)
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 23:37:22 +0100
-Subject: [PATCH 3/6] brcm80211: brcmsmac: Drop legacy header
+Date: Wed, 31 Jan 2024 23:37:24 +0100
+Subject: [PATCH 5/6] wifi: plfxlc: Drop unused include
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240131-descriptors-wireless-v1-3-e1c7c5d68746@linaro.org>
+Message-Id: <20240131-descriptors-wireless-v1-5-e1c7c5d68746@linaro.org>
 References: <20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org>
 In-Reply-To: <20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org>
 To: =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>, 
@@ -79,27 +79,26 @@ Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
  Linus Walleij <linus.walleij@linaro.org>
 X-Mailer: b4 0.12.4
 
-The driver is using all the modern abstractions to obtain and use
-GPIOs and the legacy <linux/gpio.h> header is unused, so drop it.
+The driver includes the legacy GPIO header <linux/gpio.h>
+but does not use any symbols from it. Drop the include.
 
-Fixes: a8e59744e16b ("gpiolib: split linux/gpio/driver.h out of linux/gpio.h")
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/led.c | 1 -
+ drivers/net/wireless/purelifi/plfxlc/mac.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/led.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/led.c
-index 89c8829528c2..9540a05247c2 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/led.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/led.c
-@@ -1,7 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <net/mac80211.h>
- #include <linux/bcma/bcma_driver_chipcommon.h>
+diff --git a/drivers/net/wireless/purelifi/plfxlc/mac.c b/drivers/net/wireless/purelifi/plfxlc/mac.c
+index 506d2f31efb5..6f5857d09af0 100644
+--- a/drivers/net/wireless/purelifi/plfxlc/mac.c
++++ b/drivers/net/wireless/purelifi/plfxlc/mac.c
+@@ -7,7 +7,6 @@
+ #include <linux/etherdevice.h>
+ #include <linux/slab.h>
+ #include <linux/usb.h>
 -#include <linux/gpio.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/machine.h>
- #include <linux/gpio/consumer.h>
+ #include <linux/jiffies.h>
+ #include <net/ieee80211_radiotap.h>
+ 
 
 -- 
 2.34.1
