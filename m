@@ -1,64 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4A539AC7;
-	Wed, 31 Jan 2024 21:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5841E39AC9;
+	Wed, 31 Jan 2024 21:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706735683; cv=none; b=oc06lSFpecZac9OffU4rSrrfQVTnIWndA71mUtYaN6nwsS5hZrPTc81uWSEJH/gMi5d1PixxgXZwwRtbEAl4GvEr8blX3yzzdCkos9mf2L6g5pqkeEc17sGGOKwIcrDS4v3aJJ/yKOeK7nzoM3PirLIPgbUUelS6BGNW+FIe0EU=
+	t=1706735685; cv=none; b=jWaGXBIX3UNnc4/I7+8OUUdehCg9rv87Qg0UTVCGfWmOFQ3RSrzsjCfj4QPADCvZK5JT1wqU1/IdIQj/TDVENl18VKDBfN3NC3zv5wYogmkC0ikwdPBYKc9IkFdTz74QNqTb+R2Tbr3dheJWMtTIISyERaj2rf3CNLQ+wgj7sKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706735683; c=relaxed/simple;
-	bh=3O0qDRDhPH9KqD642IEiWJ4kj+fu1gV+eTfhzgS4RJg=;
+	s=arc-20240116; t=1706735685; c=relaxed/simple;
+	bh=2kI0pp2ebvjx3Net6f5BaCa+zCRiOI0i3Dcvsje3BWQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=sXCJd/9oeUvhW7/FFrhDtG5ZoiANuJ3dNmguLlFcI3cpI55Vdw/VyxEBSFAMWkpS/jvtkWiU+yya7TTFKGWFwZXueSP1HEg+ySZmgPCiab5TGDOA0JaLTdkD6Vb6uNCWLQi9hMEeHUqDt+i75mnJqUPgA1/R+SRxXEsX3tzmFcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yKXqYSVM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mpylkgwj; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=gomutT10SUKKXgmXAZzPNpiOCjOnJBL+SYp9IUffO5BMFMvvqNifmBIWRpY8PqRTMgywaZmcUF2CmCZ19cNcMvhyTesYBZVOvl87bKtP/48BLtAQreKDuQ+1+jXA5JU8Pn1UGm/gO1Sp7UdNQIwMIgJXHl5IG3BhxsrgXGQPyho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mg1HOa2S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bs8HIRoi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yKXqYSVM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mpylkgwj"
-Date: Wed, 31 Jan 2024 21:14:38 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mg1HOa2S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bs8HIRoi"
+Date: Wed, 31 Jan 2024 21:14:40 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706735679;
+	s=2020; t=1706735681;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=roTZ7/tHvZOfb2gFOmTpe5nbycM6sv+b7LY7uSI+xwY=;
-	b=yKXqYSVM2rZfjf1O09AF9V9xzB5cH3WTQgmBoOonWyJmtv8tRjJV63pV1qwEEldvK4jXtX
-	us+X11DpQBCKpd3WNMR01+LsFo3dtTqPOSPnJ3t8IcnBfx6PVZ70t8SV6ehhZig2WnRHqQ
-	KDISe6p81Vc+ivCyUigSH9S3dVQK2L368DCZ90aWJFuaEoNfydzPb+L3/2nqhCuaYxBS4R
-	OXVYKBlHJMgXt5I7xUoHKHNKZv8tssjcr6g5crcgNoBKTbLWnEKUZm7i8WX/Q9bg0tdr5z
-	v2NzKdPkXeGP1y5yz8DKn8By/GDs3FUEAqhYxHuE20BuwvZltqcyrT3veLBJ6A==
+	bh=e8KOhM5Qjx/tbTGBUaxGTsl3zbsHtEdTk0xpND8kSrA=;
+	b=mg1HOa2SRNthC+jc56+zq6XTZz6oh66RIhDbNOv7X+f5oPTW5Ec3LL738tWZQU+/TcuBAV
+	UUeEfeDUvI3n0JtgkLYzLtyz9bWExdH9dtlwguzck3GVDEWER+ODHLlpVJK/I346vtIMRT
+	WI+G6oybZB2ZSNjQoSFCMZDeeQIEh2DMjK/MaSfKh3ivk1vIhbycr/7k89HQ7JsK/sQUMW
+	n8n/5D20ywxf9R9uFVQ/UcADMxM2jRaTvDUaJhOJnFrqhO1bpSA8BfiUudofLm9mLE9Bo5
+	DRNvOqLSVmMlg46+c4UzP/dOrFB7rbhHYNcJlNQfZYZdww/ITogUqeYRj+LfHA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706735679;
+	s=2020e; t=1706735681;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=roTZ7/tHvZOfb2gFOmTpe5nbycM6sv+b7LY7uSI+xwY=;
-	b=mpylkgwj0Q3jsCCSESoVfEppE1iNZoF9B2HjF7vZjJCDfVgFljadBGtcb+yOAsVtdB9dzu
-	taDXCBWh//DWyVDg==
-From: "tip-bot2 for H. Peter Anvin (Intel)" <tip-bot2@linutronix.de>
+	bh=e8KOhM5Qjx/tbTGBUaxGTsl3zbsHtEdTk0xpND8kSrA=;
+	b=bs8HIRoiwzPZX0/YF9BG/2ThgIhD6EBia5Yakt1teeAZ4U1gX4VPJCyE2WZL93Y+7kXsM5
+	3hV70CDKrjiYqoBQ==
+From: "tip-bot2 for Xin Li" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: x86/fred] x86/fred: Invoke FRED initialization code to enable FRED
-Cc: "H. Peter Anvin (Intel)" <hpa@zytor.com>, Xin Li <xin3.li@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Shan Kang <shan.kang@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20231205105030.8698-36-xin3.li@intel.com>
-References: <20231205105030.8698-36-xin3.li@intel.com>
+ [tip: x86/fred] KVM: VMX: Call fred_entry_from_kvm() for IRQ/NMI handling
+Cc: Xin Li <xin3.li@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Shan Kang <shan.kang@intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20231205105030.8698-33-xin3.li@intel.com>
+References: <20231205105030.8698-33-xin3.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170673567895.398.11546031751766547696.tip-bot2@tip-bot2>
+Message-ID: <170673568079.398.1185799126657342768.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,124 +69,68 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/fred branch of tip:
 
-Commit-ID:     208d8c79fd0f155bce1b23d8d78926653f7603b7
-Gitweb:        https://git.kernel.org/tip/208d8c79fd0f155bce1b23d8d78926653f7603b7
-Author:        H. Peter Anvin (Intel) <hpa@zytor.com>
-AuthorDate:    Tue, 05 Dec 2023 02:50:24 -08:00
+Commit-ID:     70d0fe5d0923abfb28c26e71171944f4801f9f38
+Gitweb:        https://git.kernel.org/tip/70d0fe5d0923abfb28c26e71171944f4801f9f38
+Author:        Xin Li <xin3.li@intel.com>
+AuthorDate:    Tue, 05 Dec 2023 02:50:21 -08:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 31 Jan 2024 22:03:36 +01:00
+CommitterDate: Wed, 31 Jan 2024 22:03:20 +01:00
 
-x86/fred: Invoke FRED initialization code to enable FRED
+KVM: VMX: Call fred_entry_from_kvm() for IRQ/NMI handling
 
-Let cpu_init_exception_handling() call cpu_init_fred_exceptions() to
-initialize FRED. However if FRED is unavailable or disabled, it falls
-back to set up TSS IST and initialize IDT.
+When FRED is enabled, call fred_entry_from_kvm() to handle IRQ/NMI in
+IRQ/NMI induced VM exits.
 
-Co-developed-by: Xin Li <xin3.li@intel.com>
-Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
 Signed-off-by: Xin Li <xin3.li@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Tested-by: Shan Kang <shan.kang@intel.com>
-Link: https://lore.kernel.org/r/20231205105030.8698-36-xin3.li@intel.com
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lore.kernel.org/r/20231205105030.8698-33-xin3.li@intel.com
 ---
- arch/x86/kernel/cpu/common.c | 22 +++++++++++++++++-----
- arch/x86/kernel/irqinit.c    |  7 ++++++-
- arch/x86/kernel/traps.c      |  5 ++++-
- 3 files changed, 27 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 4f5e4aa..cf82e31 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -61,6 +61,7 @@
- #include <asm/microcode.h>
- #include <asm/intel-family.h>
- #include <asm/cpu_device_id.h>
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index e262bc2..cce92f7 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -38,6 +38,7 @@
+ #include <asm/desc.h>
+ #include <asm/fpu/api.h>
+ #include <asm/fpu/xstate.h>
 +#include <asm/fred.h>
- #include <asm/uv/uv.h>
- #include <asm/ia32.h>
- #include <asm/set_memory.h>
-@@ -2107,7 +2108,15 @@ void syscall_init(void)
- 	/* The default user and kernel segments */
- 	wrmsr(MSR_STAR, 0, (__USER32_CS << 16) | __KERNEL_CS);
+ #include <asm/idtentry.h>
+ #include <asm/io.h>
+ #include <asm/irq_remapping.h>
+@@ -6960,14 +6961,16 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
+ {
+ 	u32 intr_info = vmx_get_intr_info(vcpu);
+ 	unsigned int vector = intr_info & INTR_INFO_VECTOR_MASK;
+-	gate_desc *desc = (gate_desc *)host_idt_base + vector;
  
--	idt_syscall_init();
-+	/*
-+	 * Except the IA32_STAR MSR, there is NO need to setup SYSCALL and
-+	 * SYSENTER MSRs for FRED, because FRED uses the ring 3 FRED
-+	 * entrypoint for SYSCALL and SYSENTER, and ERETU is the only legit
-+	 * instruction to return to ring 3 (both sysexit and sysret cause
-+	 * #UD when FRED is enabled).
-+	 */
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))
-+		idt_syscall_init();
- }
+ 	if (KVM_BUG(!is_external_intr(intr_info), vcpu->kvm,
+ 	    "unexpected VM-Exit interrupt info: 0x%x", intr_info))
+ 		return;
  
- #else	/* CONFIG_X86_64 */
-@@ -2213,8 +2222,9 @@ void cpu_init_exception_handling(void)
- 	/* paranoid_entry() gets the CPU number from the GDT */
- 	setup_getcpu(cpu);
- 
--	/* IST vectors need TSS to be set up. */
--	tss_setup_ist(tss);
-+	/* For IDT mode, IST vectors need to be set in TSS. */
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))
-+		tss_setup_ist(tss);
- 	tss_setup_io_bitmap(tss);
- 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
- 
-@@ -2223,8 +2233,10 @@ void cpu_init_exception_handling(void)
- 	/* GHCB needs to be setup to handle #VC. */
- 	setup_ghcb();
- 
--	/* Finally load the IDT */
--	load_current_idt();
+ 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+-	vmx_do_interrupt_irqoff(gate_offset(desc));
 +	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+		cpu_init_fred_exceptions();
++		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
 +	else
-+		load_current_idt();
- }
++		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
+ 	kvm_after_interrupt(vcpu);
  
- /*
-diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-index c683666..f79c5ed 100644
---- a/arch/x86/kernel/irqinit.c
-+++ b/arch/x86/kernel/irqinit.c
-@@ -28,6 +28,7 @@
- #include <asm/setup.h>
- #include <asm/i8259.h>
- #include <asm/traps.h>
-+#include <asm/fred.h>
- #include <asm/prom.h>
+ 	vcpu->arch.at_instruction_boundary = true;
+@@ -7260,7 +7263,10 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	if ((u16)vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI &&
+ 	    is_nmi(vmx_get_intr_info(vcpu))) {
+ 		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+-		vmx_do_nmi_irqoff();
++		if (cpu_feature_enabled(X86_FEATURE_FRED))
++			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
++		else
++			vmx_do_nmi_irqoff();
+ 		kvm_after_interrupt(vcpu);
+ 	}
  
- /*
-@@ -96,7 +97,11 @@ void __init native_init_IRQ(void)
- 	/* Execute any quirks before the call gates are initialised: */
- 	x86_init.irqs.pre_vector_init();
- 
--	idt_setup_apic_and_irq_gates();
-+	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+		fred_complete_exception_setup();
-+	else
-+		idt_setup_apic_and_irq_gates();
-+
- 	lapic_assign_system_vectors();
- 
- 	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs()) {
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 1b19a17..6cb31df 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -1438,7 +1438,10 @@ void __init trap_init(void)
- 
- 	/* Initialize TSS before setting up traps so ISTs work */
- 	cpu_init_exception_handling();
-+
- 	/* Setup traps as cpu_init() might #GP */
--	idt_setup_traps();
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))
-+		idt_setup_traps();
-+
- 	cpu_init();
- }
