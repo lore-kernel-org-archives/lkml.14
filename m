@@ -1,264 +1,283 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0656369D05
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9146380C0C
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706711242; cv=none; b=qtxsADb+qSES2+qdg4fmoDzCBX2mI0qJPnSZ+JuVFW8gpul6D3MVCB8X6YMnaDs+2Vd6w8SMgA4RBZrhlMySL/bDQo0MQf0Xa2f+sEx+w3IDDdgslutP3IWxRZCD186nAgX1HvPRY9QTuBZ/lnIv7LbKV+Q2GV876xFZ+ZJljWs=
+	t=1706711339; cv=none; b=Zrjrw6umMDZyXD8guHe1uOZtkmQhehBkJYl7aL7En+PEggPEw7o9ssF6nb4tuEg8/dfKr8YAseDpT2/lZIT4v8Rvz6xB4kGoAm9+1ce54kXuM27wnpbg58UPtesvjx2dZzAOrPghYXcsexU922kR1/bjs4lwxKDVRnGfVaeWWdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706711242; c=relaxed/simple;
-	bh=2u0EiAbnI+SxeWJcE3dkliyArAbGqJgGAb/HUoEEFAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBCACJZauaTK4qGMEfwO7CNAEIXEEStZkYTe8ra9pJz/zYCUD3nqdXN65gTYJzELvelyfNGQDMw3mWrsH8OQcO07kJa07Dq8YwlXGv3hRr7X6S7fZqisJmSmbae/hq+DiCIvC+sdG9stqYI/ZFYaU83DpZ3s650eOBUoAA0Cg0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=ilDBt27V; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kvDy04bX; arc=none smtp.client-ip=66.111.4.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="ilDBt27V";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kvDy04bX"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id CDD3A5C010F;
-	Wed, 31 Jan 2024 09:27:18 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 31 Jan 2024 09:27:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1706711238; x=
-	1706797638; bh=O+NOsGtmDMjm+YGmeRLPyQMTyQEv9RjEJlAly7V/omo=; b=i
-	lDBt27VITmov4TnCLNeF+Q+liICFqSOPNH4KByxzBlBzo7WE+7mB5RuiZnrrxYSf
-	XskEPucSm7f2+K1NF2EgIgNvvkaQslwVTIdx/G52ZKUTGg3v4B/oUzl5TO4oVkQE
-	QFj1CngVcqapm2MbImyjQoq2J2Vfc70VloUB8cXHB3yuAqBLaYDHAYhPtiRSak+C
-	sXPNIdljyR+qlM0C/FI+D263g+zzwnNg5VMJVm5GCyff7fDrvuK0Y9XA8tOGHoHE
-	iXVo1vSuFa4o5PKObxbE/dSm/qKRS3rMFOoahbcC5JhJuOS5nXGgQtZQi4KAo+Bv
-	OzlzEVKmWajGl86XXmqRA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706711238; x=1706797638; bh=O+NOsGtmDMjm+YGmeRLPyQMTyQEv
-	9RjEJlAly7V/omo=; b=kvDy04bXRRwVouqHqjt6RjPVo2QR3WDh49y3lKsATCks
-	QMEkWOno7r9m127K97nReiGi1b0HaSDt9b9m5tQysNkrbcI/LBDoxukIGIZy8nEo
-	rcnM6CprbQ9xvFPeKNeURkfZMKytD/CBq5BbphewZawNUgmX3zNfNcnst18/nuhO
-	5sHagj+mdkJXUGLreOpJFQwvf3HbNxcYE0UQZ221P6IxVmsI2TpALA1lFUo7jKB/
-	SuMAVUMf8hfIsSG8sEhGhG/r5r7/EiVFr6wJf7tJmW2n4HFzG06dyDHeZQEXTI7l
-	bdBt2RDvT6siAmvnOb6XRZyL/dlltPcn/ssU3z74cQ==
-X-ME-Sender: <xms:xli6ZfjconLkX5ov8eROM7NSRnzcsk7TVI6P7TSjCcCIe-pJNHTyxg>
-    <xme:xli6ZcABdS4d5SOrSL96Bv0bXX1AgTZrHFgHq1PjUQKzhD_nakVs9bS9eJMG77Y7j
-    CB3BsF74INNazZy_bE>
-X-ME-Received: <xmr:xli6ZfGWxPtQnb1604TcpuKU9FYstxiHaVBMg3MO-2f-KPtzdM2aX3-pO3od0M3LuMgkNlsTX5Rht1AIWOnrUMCRcKN5y7_oGnA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtledgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvfevuffkfhggtggu
-    jgesthdtredttddtvdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceooh
-    dqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhep
-    jefhhfegueethfefuefggeegudfhkeffudfhhfehkefhtdevfefhjeejffdtgfejnecuff
-    homhgrihhnpehsohhurhgtvghfohhrghgvrdhnvghtnecuvehluhhsthgvrhfuihiivgep
-    tdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotg
-    gthhhirdhjph
-X-ME-Proxy: <xmx:xli6ZcQ2YDuymIa3kJIzGIHS_DJ3YFQewm1Xn1VHlcfOMjHnrTuGMA>
-    <xmx:xli6ZcwtH2rfbvYzbhp3amVTiHT-89w4iPo2o2WqH2T_XQN-Px4-JA>
-    <xmx:xli6ZS5kYtPVvXRD1ivPeXPlxVZ5GgAqmzsY3X55pb0QhHD9bTj08w>
-    <xmx:xli6ZZrWFSsmtyP05WF39kDQdNMev5YNTUT284RDZDPzTpli2K7CSA>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 31 Jan 2024 09:27:17 -0500 (EST)
-Date: Wed, 31 Jan 2024 23:27:14 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Adam Goldman <adamg@pobox.com>
-Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firewire: core: send bus reset promptly on gap count
- error
-Message-ID: <20240131142714.GA60028@workstation.local>
-Mail-Followup-To: Adam Goldman <adamg@pobox.com>,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <Za90vAQlDhbLpY67@iguana.24-8.net>
- <20240127083730.GA159729@workstation.local>
- <ZbTlaCCbpxQoqo0i@iguana.24-8.net>
+	s=arc-20240116; t=1706711339; c=relaxed/simple;
+	bh=GIY3puUwmm8gipSYVvNmXkzP4r+lY0H0/6s2wL+i7Qs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kgw2zoeSSTmGwlqbJ4lrMPb0degye5p+XSk1Wx4JGSIhiplMy5Me6Srz3Q94ww+NaMX/g9MC/f+kTtaEVjAdYZl1QRSi0e2v/sV87u6BrQ5+zJWPyfBTSPrdOW13gSJ4uVx5yktIY1aK6RH69s62VcSzgYEo47tBD/2xtTRyIOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-59a134e29d2so593940eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:28:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706711336; x=1707316136;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rbuYbhYTg4M3+vx3CF+IFiq2udSQyY8c3ipCcauV4D4=;
+        b=uxNt2fOH3wsDgbvxwBKicVb0U2TGW51a9hMg2In18F3vuTT0Y73S+XF5dDNlHLQzjU
+         Gyuux0Sdwr3h9It+WelkZpuUJUzTFoPIIaXpzhVT9fOv7k5FPaVaGBMbPgyplrjRTXcY
+         e5bplAdIop+BmOuv+TkyLA2O3WNdRzCdg31DV+DnMailn7/b18WOgemCaWOqpIzsexEs
+         Ule14c5wWcSdB+9sU68mNCjc+XJWP2W2KpzgkPJt5knXp5HoAKyFA9+NY65JmCk3dxK+
+         I53SaQeq8H5Ig14f7K/6oaERs5qxD4P60qGMYPQfdB12bBZfkN7ENgoRovr85T7sJbbM
+         Beaw==
+X-Gm-Message-State: AOJu0Yy3i3XOjyBypW+/5zKN12nLcj0X/UEeXbu62Ftdy6goF1Jl6Nsd
+	KL7xxLrqckLMu/oJPIfVgJkQOcI4hMCJUKeQSl8uzu6Ha8XjkGlI9FNjgpU0eESN0SYUyttCuBU
+	KWgpT3TvWP65i+1tnLUdpnbfH/70=
+X-Google-Smtp-Source: AGHT+IHdFq8z8b2V9wc0FWARlsindN6BD/8xxmNLb0+6cLn0Bo+xpEUoc89OA/yF4rB1ox11kwv7yPzriQug84hwrOQ=
+X-Received: by 2002:a05:6870:55ce:b0:218:d68f:fe29 with SMTP id
+ qk14-20020a05687055ce00b00218d68ffe29mr626994oac.3.1706711336553; Wed, 31 Jan
+ 2024 06:28:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbTlaCCbpxQoqo0i@iguana.24-8.net>
+References: <20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com>
+ <dcb1b6dbc2172dd66bfdcc0c8135e0d98f1c22dd.camel@gmail.com>
+ <CAJZ5v0gAK9CChRPSx7Lu=BrGQo22q4swpvvN3__wFw68NfqKPA@mail.gmail.com> <25d3cfd74b26eb6a4aa07f1da93ccf4815b0b1c6.camel@gmail.com>
+In-Reply-To: <25d3cfd74b26eb6a4aa07f1da93ccf4815b0b1c6.camel@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 31 Jan 2024 15:28:45 +0100
+Message-ID: <CAJZ5v0hX4Yv7UVng=O4tZyb_O7D2EcymdEDdSUrVDPk6h51VjA@mail.gmail.com>
+Subject: Re: [PATCH RESEND RFC] driver: core: don't queue device links removal
+ for dt overlays
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, nuno.sa@analog.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Jan 31, 2024 at 3:18=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
+>
+> On Wed, 2024-01-31 at 14:30 +0100, Rafael J. Wysocki wrote:
+> > On Wed, Jan 31, 2024 at 1:20=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail=
+.com> wrote:
+> > >
+> > > On Tue, 2024-01-23 at 16:40 +0100, Nuno Sa via B4 Relay wrote:
+> > > > From: Nuno Sa <nuno.sa@analog.com>
+> > > >
+> > > > For device links, releasing the supplier/consumer devices reference=
+s
+> > > > happens asynchronously in device_link_release_fn(). Hence, the poss=
+ible
+> > > > release of an of_node is also asynchronous. If these nodes were add=
+ed
+> > > > through overlays we have a problem because this does not respect th=
+e
+> > > > devicetree overlays assumptions that when a changeset is
+> > > > being removed in __of_changeset_entry_destroy(), it must hold the l=
+ast
+> > > > reference to that node. Due to the async nature of device links tha=
+t
+> > > > cannot be guaranteed.
+> > > >
+> > > > Given the above, in case one of the link consumer/supplier is part =
+of
+> > > > an overlay node we call directly device_link_release_fn() instead o=
+f
+> > > > queueing it. Yes, it might take some significant time for
+> > > > device_link_release_fn() to complete because of synchronize_srcu() =
+but
+> > > > we would need to, anyways, wait for all OF references to be release=
+d if
+> > > > we want to respect overlays assumptions.
+> > > >
+> > > > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+> > > > ---
+> > > > This RFC is a follow up of a previous one that I sent to the device=
+tree
+> > > > folks [1]. It got rejected because it was not really fixing the roo=
+t
+> > > > cause of the issue (which I do agree). Please see the link where I
+> > > > fully explain what the issue is.
+> > > >
+> > > > I did also some git blaming and did saw that commit
+> > > > 80dd33cf72d1 ("drivers: base: Fix device link removal") introduced
+> > > > queue_work() as we could be releasing the last device reference and=
+ hence
+> > > > sleeping which is against SRCU callback requirements. However, that=
+ same
+> > > > commit is now making use of synchronize_srcu() which may take
+> > > > significant time (and I think that's the reason for the work item?)=
+.
+> > > >
+> > > > However, given the dt overlays requirements, I'm not seeing any
+> > > > reason to not be able to run device_link_release_fn() synchronously=
+ if we
+> > > > detect an OVERLAY node is being released. I mean, even if we come u=
+p
+> > > > (and I did some experiments in this regard) with some async mechani=
+sm to
+> > > > release the OF nodes refcounts, we still need a synchronization poi=
+nt
+> > > > somewhere.
+> > > >
+> > > > Anyways, I would like to have some feedback on how acceptable would=
+ this
+> > > > be or what else could I do so we can have a "clean" dt overlay remo=
+val.
+> > > >
+> > > > I'm also including dt folks so they can give some comments on the n=
+ew
+> > > > device_node_overlay_removal() function. My goal is to try to detect=
+ when
+> > > > an
+> > > > overlay is being removed (maybe we could even have an explicit flag=
+ for
+> > > > it?) and only directly call device_link_release_fn() in that case.
+> > > >
+> > > > [1]:
+> > > > https://lore.kernel.org/linux-devicetree/20230511151047.1779841-1-n=
+uno.sa@analog.com/
+> > > > ---
+> > > >  drivers/base/core.c | 25 ++++++++++++++++++++++++-
+> > > >  1 file changed, 24 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > > index 14d46af40f9a..31ea001f6142 100644
+> > > > --- a/drivers/base/core.c
+> > > > +++ b/drivers/base/core.c
+> > > > @@ -497,6 +497,18 @@ static struct attribute *devlink_attrs[] =3D {
+> > > >  };
+> > > >  ATTRIBUTE_GROUPS(devlink);
+> > > >
+> > > > +static bool device_node_overlay_removal(struct device *dev)
+> > > > +{
+> > > > +     if (!dev_of_node(dev))
+> > > > +             return false;
+> > > > +     if (!of_node_check_flag(dev->of_node, OF_DETACHED))
+> > > > +             return false;
+> > > > +     if (!of_node_check_flag(dev->of_node, OF_OVERLAY))
+> > > > +             return false;
+> > > > +
+> > > > +     return true;
+> > > > +}
+> > > > +
+> > > >  static void device_link_release_fn(struct work_struct *work)
+> > > >  {
+> > > >       struct device_link *link =3D container_of(work, struct device=
+_link,
+> > > > rm_work);
+> > > > @@ -532,8 +544,19 @@ static void devlink_dev_release(struct device =
+*dev)
+> > > >        * synchronization in device_link_release_fn() and if the con=
+sumer
+> > > > or
+> > > >        * supplier devices get deleted when it runs, so put it into =
+the
+> > > > "long"
+> > > >        * workqueue.
+> > > > +      *
+> > > > +      * However, if any of the supplier, consumer nodes is being r=
+emoved
+> > > > +      * through overlay removal, the expectation in
+> > > > +      * __of_changeset_entry_destroy() is for the node 'kref' to b=
+e 1
+> > > > which
+> > > > +      * cannot be guaranteed with the async nature of
+> > > > +      * device_link_release_fn(). Hence, do it synchronously for t=
+he
+> > > > overlay
+> > > > +      * case.
+> > > >        */
+> > > > -     queue_work(system_long_wq, &link->rm_work);
+> > > > +     if (device_node_overlay_removal(link->consumer) ||
+> > > > +         device_node_overlay_removal(link->supplier))
+> > > > +             device_link_release_fn(&link->rm_work);
+> > > > +     else
+> > > > +             queue_work(system_long_wq, &link->rm_work);
+> > > >  }
+> > > >
+> > > >  static struct class devlink_class =3D {
+> > > >
+> > > > ---
+> > > > base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> > > > change-id: 20240123-fix-device-links-overlays-5422e033a09b
+> > > > --
+> > > >
+> > > > Thanks!
+> > > > - Nuno S=C3=A1
+> > > >
+> > >
+> > > Hi Rafael,
+> > >
+> > > Would be nice to have your feedback on this one or if this is a compl=
+ete
+> > > nack...
+> > > I think calling device_link_release_fn() synchronously is ok but I mi=
+ght be
+> > > completely wrong.
+> >
+> > Well, it sounds like you are expecting me to confirm that what you are
+> > doing makes sense, but I cannot do that, because I am not sufficiently
+> > familiar with DT overlays.
+> >
+>
+> I'm trying to understand if there's no hidden issue by calling it synchro=
+nously.
+> (don't think there is but this is rather core stuff :)).
+>
+> From the DT guys, it would be helpful to get feedback on the new
+> device_node_overlay_removal() helper I'm introducing. The goal is to just=
+ do the
+> sync release in case we detect a node being removed as a result of an ove=
+rlay
+> removal.
+>
+> > You first need to convince yourself that you are not completely wrong.
+>
+> I mean, the problem is definitely real and if you see the link I pasted i=
+n the
+> cover, this will all lead to big splats.
+>
+> >
+> > > +Cc Saravan as he should also be very familiar with device_links and =
+see if
+> > > the
+> > > above fairly simple solution is sane.
+> > >
+> > > I also don't want to be pushy as I know you guys are all very busy bu=
+t it's
+> > > (i
+> > > think) the third time I resend the patch :)
+> >
+> > Sorry about that, I haven't realized that my input is requisite.
+> >
+>
+> Yeah, get_mantainers gives me you and Greg but I think you're the main de=
+v on
+> dev_links right?
+>
+> > So the patch not only calls device_link_release_fn() synchronously,
+> > but it also calls this function directly and I, personally, wouldn't
+> > do at least the latter.
+> >
+>
+> So you mean adding something like adding a new
+>
+> device_link_release(struct device_link *link) helper
+> and either call it synchronously from devlink_dev_release() or asynchrono=
+usly
+> from device_link_release_fn()?
+>
+> I can drop the RFC and send a patch with the above...
 
-I'm sorry to be late for reply.
+No, IMV devlink_dev_release() needs to be called via
+device_link_put_kref(), but it may run device_link_release_fn()
+directly if the link is marked in a special way or something like
+this.
 
-On Sat, Jan 27, 2024 at 03:13:45AM -0800, Adam Goldman wrote:
-> Hi,
-> 
-> On Sat, Jan 27, 2024 at 05:37:30PM +0900, Takashi Sakamoto wrote:
-> > On Tue, Jan 23, 2024 at 12:11:40AM -0800, Adam Goldman wrote:
-> > > If we are bus manager and the bus has inconsistent gap counts, send a 
-> > > bus reset immediately instead of trying to read the root node's config 
-> > > ROM first. Otherwise, we could spend a lot of time trying to read the 
-> > > config ROM but never succeeding.
-> > > 
-> > > This eliminates a 50+ second delay before the FireWire bus is usable 
-> > > after a newly connected device is powered on in certain circumstances.
-> > 
-> > At first, would I request you to explain about the certain
-> > circumstances in the patch comment? It is really helpful to understand
-> > the change itself.
-> 
-> The delay occurs if a gap count inconsistency occurs, we are not the 
-> root node, and we become bus manager. One scenario that causes this is 
-> with a TI XIO2213B OHCI, the first time a Sony DSR-25 is powered on 
-> after being connected to the FireWire cable.
-> 
-> > > Link: https://sourceforge.net/p/linux1394/mailman/message/58727806/
-> 
-> This link has a longer description and kernel logs.
- 
-Of course, I've already read your post in the last week. Yes, you did
-enough investigation. However, in the review process, you need to post
-patches with sufficient description.
- 
-> > > --- linux-source-6.1.orig/drivers/firewire/core-card.c	2023-09-23 02:11:13.000000000 -0700
-> > > +++ linux-source-6.1/drivers/firewire/core-card.c	2024-01-22 04:23:06.000000000 -0800
-> > > @@ -435,6 +435,16 @@
-> > >  		 * config rom.  In either case, pick another root.
-> > >  		 */
-> > >  		new_root_id = local_id;
-> > > +	} else if (card->gap_count == 0) {
-> > > +		/* 
-> > > +		 * If self IDs have inconsistent gap counts, do a
-> > > +		 * bus reset ASAP. The config rom read might never
-> > > +		 * complete, so don't wait for it. However, still
-> > > +		 * send a PHY configuration packet prior to the bus
-> > > +		 * reset, as permitted by IEEE 1394-2008 8.4.5.2.
-> > > +		 */
-> > > +		new_root_id = local_id;
-> > > +		card->bm_retries = 0;
-> > >  	} else if (!root_device_is_running) {
-> > >  		/*
-> > > 		 * If we haven't probed this device yet, bail out now
-> > 
-> > Next, after the condition branches, we can see below lines:
-> > 
-> > ```
-> > 	/*
-> > 	 * Finally, figure out if we should do a reset or not.  If we have
-> > 	 * done less than 5 resets with the same physical topology and we
-> > 	 * have either a new root or a new gap count setting, let's do it.
-> > 	 */
-> > 
-> > 	if (card->bm_retries++ < 5 &&
-> > 	    (card->gap_count != gap_count || new_root_id != root_id))
-> > 		do_reset = true;
-> > ```
-> > 
-> > When the value of "card->gap_count" is zero, it would hit the condition of
-> > "card->gap_count != gap_count". I think the transmission of phy config
-> > packet and scheduling of short bus reset would be done, regardless of the
-> > change. Would I ask the main intention to the additional branch?
-> 
-> Without the additional branch, the !root_device_is_running branch will 
-> be taken (because the root node's config ROM hasn't been read yet), and 
-> bm_work will go to sleep. Eventually we will give up trying to read the 
-> config ROM, the root_device==NULL branch will be taken, and the bus 
-> reset will be done. The additional branch eliminates waiting for the 
-> config ROM read when gap_count is zero.
-> 
-> Here is the full sequence of events:
-> 
-> 1. Bus reset occurs due to newly active device.
-> 
-> 2. Self identification process completes. We are not root node. Gap 
-> counts are inconsistent.
-> 
-> 3. build_tree() notices the gap count error and sets gap_count to 0:
-> 
-> > 		/*
-> > 		 * If PHYs report different gap counts, set an invalid count
-> > 		 * which will force a gap count reconfiguration and a reset.
-> > 		 */
-> > 		if (SELF_ID_GAP_COUNT(q) != gap_count)
-> > 			gap_count = 0;
-> 
-> 4. bm_work() starts and makes us bus manager:
-> 
-> > 		rcode = fw_run_transaction(card, TCODE_LOCK_COMPARE_SWAP,
-> > 				irm_id, generation, SCODE_100,
-> > 				CSR_REGISTER_BASE + CSR_BUS_MANAGER_ID,
-> > 				transaction_data, 8);
-> 
-> 5. read_config_rom() starts reading the root node's config ROM.
-> 
-> 6. bm_work() wants to know if the root node is cycle master capable. If 
-> the root node is cycle master capable, we will leave it as the root 
-> node. Otherwise, we will make ourself the root node. To determine if the 
-> root node is cycle master capable, we must wait until its config ROM has 
-> been read:
-> 
-> > 	} else if (!root_device_is_running) {
-> > 		/*
-> > 		 * If we haven't probed this device yet, bail out now
-> > 		 * and let's try again once that's done.
-> > 		 */
-> > 		spin_unlock_irq(&card->lock);
-> > 		goto out;
-> 
-> 7a. Without the patch: read_config_rom() reads the first few quadlets 
-> from the config ROM. Due to the gap count inconsistency, eventually one 
-> of the reads times out. When read_config_rom() fails, fw_device_init() 
-> calls it again until MAX_RETRIES is reached. This takes 50+ seconds.
-> 
-> 8a. bm_work() sees that we have given up trying to read the config ROM. 
-> It makes us the root node and does a bus reset:
-> 
-> > 	if (root_device == NULL) {
-> > 		/*
-> > 		 * Either link_on is false, or we failed to read the
-> > 		 * config rom.  In either case, pick another root.
-> > 		 */
-> > 		new_root_id = local_id;
-> > ...
-> > 	if (card->bm_retries++ < 5 &&
-> > 	    (card->gap_count != gap_count || new_root_id != root_id))
-> > 		do_reset = true;
-> 
-> 7b. With the patch: Because of the gap count inconsistency, bm_work() 
-> does not wait for the config ROM to be read. It makes us the root node 
-> and does a bus reset immediately:
-> 
-> > 	} else if (card->gap_count == 0) {
-> > 		/*
-> > 		 * If self IDs have inconsistent gap counts, do a
-> > 		 * bus reset ASAP. The config rom read might never
-> > 		 * complete, so don't wait for it. However, still
-> > 		 * send a PHY configuration packet prior to the
-> > 		 * bus reset, as permitted by 1394-2008 8.4.5.2.
-> > 		 */
-> > 		new_root_id = local_id;
-> > 		card->bm_retries = 0;
-> > ...
-> > 	if (card->bm_retries++ < 5 &&
-> > 	    (card->gap_count != gap_count || new_root_id != root_id))
-> > 		do_reset = true;
-
-Thanks for the detail.
-
-The mismatch of gap count can be detected in the firstworkqueue context
-(bus_reset_work()) in 'driver/firewire/ohci.c', so I investigated more
-quick way to reset the bus, however your change looks better than it.
-
-I'd like to apply your patch for v6.9 kernel, while the patch
-description is not suffice, as I address. I'm sorry to ask you more
-work, but would I ask you to repost your patch with any detail
-description? The description should include enough information for
-developers inner/outer this subsystem to understand its background
-and intention.
-
-
-Thanks
-
-Takashi Sakamoto
+AFAICS, this is the only way to do it and be sure that all of the
+references to the link have been dropped when it is freed.
