@@ -1,98 +1,119 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA1B5D739;
-	Wed, 31 Jan 2024 08:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A415810E;
+	Wed, 31 Jan 2024 08:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706689183; cv=none; b=hr6Rx34ZnCLBTNHFAaV4vT5j3mqhaBAHF4JMW+Y0ce9+DRnwaKEL3YMmC+IiFcMdJLQ1LR5eVGhlA+eEHJue46eGM7pJWJC6CiFUCClDJpp1zSxu6ECm1csc0BcXXE1NKvR8SSn0j8sAHRW0+A32M/WVKcTXv1I8l2YVO8NtVtw=
+	t=1706689227; cv=none; b=LsYB01II6iGBpIVx23tRdjcnFWsWtr+Ys4Kb/WJpV3xt9yJ4koDiBwD34VzNzqhIy7U6sAbCbaudC/oPBayrmSJW7cGCuUs0GHoavvl4zdBkj/QBWRGhofmzIzzR0mr64XlfUr3NZXRX2vmoyosK8sqzMztYeXBbWhBhHAFkycg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706689183; c=relaxed/simple;
-	bh=roonl72rZoCY0eRCPNI1fFfaZaXU4SJaWKrmE9lbXwk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pdCCt6DGxK8PHNYfFfz342stInc/AGARE8rgIj9fp33uTDrOruzwdviYEKHIbc0Trtx+vYIU7tyGq071ZdsLLUv1g8ZiNWzN7juXiPYD2qtIx0X+61UEU9TAMWPQGD4MlVx1G1vAiaMOBfQMnCZkk3E53feF48yyu8+N/TjgRxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=cw8YYKqN; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1706689227; c=relaxed/simple;
+	bh=RW9cv7toZnF6LEuYZzxkXycyW8t3NCYo9rT737UUGSk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qeAa1f8X2ENvqnQ2DmC6QKpa17SuZpvojwVH4FT1yyhl2YU/JWDmG9JrUN7WhJoDRxnIZz48L02CU+TTaVymWxbC/RzBb7yhraoDxn4BRD4WaUysZyflQlVveC2oecrJJ/mIjPC8QT3hkzr2SdWJ5I3hVkaUFc+qmaJntQd144M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BF39uFbj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+szjX1SI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="cw8YYKqN"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40V5BJEn005588;
-	Tue, 30 Jan 2024 23:54:47 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	pfpt0220; bh=ddK/t4zmxUxGOtboW7SIg6Tqsmf8tZCG4JAxK5QM2fE=; b=cw8
-	YYKqNyUhXdOYA7Qjp2mPYh5bKzsRJDX4BCq2fyKstYvGE9Kltwas/7EaoEiLwpxL
-	YMYrB+A8Ana9ZGVsqJ/rA6dut1E6vGMOxsYCLqFyTMYujdYPvklzDXgeQsSwiOqk
-	I4/JRIwcDNw+RkeDFGxjajvm6rsCrOooisEylvPXnZPux8db8txvMoNdtlNXgUuy
-	02iWv3iZCaEQAA6feQ65FvQZ6E05WCKtPgnv37QmtPug7/tu7OAUCvHfyjJO6k/6
-	MuzEwFo/bbbiH8BePda+XgBh6jav5oPIzVJUHmT6RaB+g1oMmpEN0ERmwZJt3HGn
-	S8muNXelSqnOondhN+A==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vy64ka98x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jan 2024 23:54:47 -0800 (PST)
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 30 Jan
- 2024 23:54:45 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Tue, 30 Jan 2024 23:54:45 -0800
-Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id 398525B694D;
-	Tue, 30 Jan 2024 23:54:41 -0800 (PST)
-From: Geetha sowjanya <gakula@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
-        <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
-        <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [PATCH v2 0/2] Dynamically allocate BPIDs for LBK
-Date: Wed, 31 Jan 2024 13:24:39 +0530
-Message-ID: <20240131075441.17227-1-gakula@marvell.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BF39uFbj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+szjX1SI"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706689224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w8HpHV0x1fENAzE/fQpwHsbHa7p7cxsO49CTT+C0rLw=;
+	b=BF39uFbjNsmkux2PvO6mYxHtzNyyH1IobjCeqy+pT88EE4kYmF/uj2F6wNtsfNvuDXme94
+	MFOoi2nFs/dZsB0b8H4+arNJ9qWwirkF2xZGxPgkgih5NhkgLQ5BFgzsES4xsVrvXGP7jI
+	zWDM3gu9LaTJbpAR4Y+EA9IEEoPQJa7KPiUP0pRiGdD/+kEGRh4SNjdkt7Vonj58BFxYYH
+	WcVrZbUuBOmtQMb6dDWq1eOd269vzAvxi/VDp2Q0aPwcCZdDhrLyBP6Jyga8H2gRN+5O5x
+	A88RBpmMtRjd3LFB/nnD0NhcPKtnUFKq0k7zOXnuFtvXW50HUCqCUQz/cH+I+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706689224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w8HpHV0x1fENAzE/fQpwHsbHa7p7cxsO49CTT+C0rLw=;
+	b=+szjX1SI5t1MyKsWanFvac6dZS4L+0EVLC1N3HAKrYGepum1PrI36nKXIG5xYU90olsKy3
+	gGtmx59GsHAqH0Ag==
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Guo Ren <guoren@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Nam Cao <namcao@linutronix.de>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] irqchip/sifive-plic: enable interrupt if needed before EOI
+Date: Wed, 31 Jan 2024 09:19:33 +0100
+Message-Id: <20240131081933.144512-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-GUID: -Log7YDWi1FvVNTg10i6h1ki5MJTJ8hp
-X-Proofpoint-ORIG-GUID: -Log7YDWi1FvVNTg10i6h1ki5MJTJ8hp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_03,2024-01-30_01,2023-05-22_02
+Content-Transfer-Encoding: quoted-printable
 
-In current driver 64 BPIDs are reserved for LBK interfaces.
-These bpids are 1-to-1 mapped to LBK interface channel numbers.
-In some usecases one LBK interface required more than one bpids
-and in some case they may not require at all. These usescas
-can't be address with the current implementation as it always
-reserves only one bpid per LBK channel. 
+RISC-V PLIC cannot "end-of-interrupt" (EOI) disabled interrupts, as
+explained in the description of Interrupt Completion in the PLIC spec:
 
-This patch addresses this issue by creating free bpid pool from
-these 64 bpids instead of 1-to-1 mapping to the lbk channel.
-Now based on usecase LBK interface can request a bpid using (bp_enable()).
+"The PLIC signals it has completed executing an interrupt handler by
+writing the interrupt ID it received from the claim to the claim/complete
+register. The PLIC does not check whether the completion ID is the same
+as the last claim ID for that target. If the completion ID does not match
+an interrupt source that *is currently enabled* for the target, the
+completion is silently ignored."
 
+Commit 69ea463021be ("irqchip/sifive-plic: Fixup EOI failed when masked")
+ensured that EOI is successful by enabling interrupt first, before EOI.
 
-v1 -> v2:
-   - Modified commit message.
-   - Dropped patch2, as for now rvu netdev have no usecase. Will
-     be upstream along with the CPT driver.
-   - Addressed review comments by Simon Horman. 
+Commit a1706a1c5062 ("irqchip/sifive-plic: Separate the enable and mask
+operations") removed the interrupt enabling code from the previous
+commit, because it assumes that interrupt should already be enabled at the
+point of EOI. However, this is incorrect: there is a window after a hart
+claiming an interrupt and before irq_desc->lock getting acquired,
+interrupt can be disabled during this window. Thus, EOI can be invoked
+while the interrupt is disabled, effectively nullify this EOI. This
+results in the interrupt never gets asserted again, and the device who
+uses this interrupt appears frozen.
 
-Geetha sowjanya (2):
-  octeontx2-af: Create BPIDs free pool
-  octeontx2-af: Cleanup loopback device checks
+Make sure that interrupt is really enabled before EOI.
 
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |   2 +
- .../net/ethernet/marvell/octeontx2/af/rvu.c   |  14 +-
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |  21 +-
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   | 179 ++++++++++++++----
- .../ethernet/marvell/octeontx2/af/rvu_npc.c   |   8 +-
- .../ethernet/marvell/octeontx2/af/rvu_reg.h   |   3 +
- .../ethernet/marvell/octeontx2/af/rvu_sdp.c   |   6 +-
- 7 files changed, 181 insertions(+), 52 deletions(-)
+Fixes: a1706a1c5062 ("irqchip/sifive-plic: Separate the enable and mask ope=
+rations")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+v2:
+  - add unlikely() for optimization
+  - re-word commit message to make it clearer
 
--- 
-2.25.1
+ drivers/irqchip/irq-sifive-plic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive=
+-plic.c
+index e1484905b7bd..0a233e9d9607 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -148,7 +148,13 @@ static void plic_irq_eoi(struct irq_data *d)
+ {
+ 	struct plic_handler *handler =3D this_cpu_ptr(&plic_handlers);
+=20
+-	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
++	if (unlikely(irqd_irq_disabled(d))) {
++		plic_toggle(handler, d->hwirq, 1);
++		writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
++		plic_toggle(handler, d->hwirq, 0);
++	} else {
++		writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
++	}
+ }
+=20
+ #ifdef CONFIG_SMP
+--=20
+2.39.2
 
