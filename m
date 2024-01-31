@@ -1,91 +1,73 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D294D66B5F
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B636629FE;
+	Wed, 31 Jan 2024 08:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706691324; cv=none; b=bnHemfV2mBv58Wi3yEbY2fRsd6o4eWgSxbkIPNv1oeAPBAYpxbxxOmziZaLoMcbPHu0j0IWFuunrOhQ1Fx2foJqoaz/zCFpfRGr4bYvFpkWXvF3eRzf1UJJ00ilSOujn434K28YnKL5+NTyRjWlD+89hqKgCmJGV5ZRdYlLcIFA=
+	t=1706691419; cv=none; b=mq/3Qe5zarq30jCR8UInVUgwx+ZO+Ss7+Jx2rdzfB+aB8dbZFkWMUhWfgfXzySV9/qBFQqM4q08jb/EyrY5B4sZuOi5Jzp4Bm0KQgve0Ds2uONFCpCl90MCejR6hCu2taK7Jbn47a/EX7w9pNvfHR7ssAUbB6DEfbcqtLVV+wZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706691324; c=relaxed/simple;
-	bh=1zAz2+MFVhaNzjF0CUHFlp2iK4QKE8zWsjZLLf44jk4=;
+	s=arc-20240116; t=1706691419; c=relaxed/simple;
+	bh=5IwHoHhAaOUvqb5LH+q/D/hYRD9jixazumE1nV6Qdl4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ddQ0/Gn/Hr/4WrutzFOsXJ5jbnJMlYv1Zw69tQxH0rSmcd4mjxlX//XN9N74zPwNpIMCnXESbpEdYggc7ow3afx3vOkGR6ukHSIIpLg93CHJkovEug+ZjS2BZZkxQZAkiiWp9PgTpNcNxUFiJ8vA77CKAEhKzX01xA2P2OckXP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=Fg9tabzF; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	 Content-Type:Content-Disposition:In-Reply-To; b=Snd2EHTd4o3G2n89znVZpd5xs8fIS4875jgLbR1MX1K7lj8h7eAFcR/51sRqp8yR/DG47CZbrm72L8o41ns9Crskf+08v8rF6tkJuR6hxDebVWKF/Q56vVFNhb0pCVRrSCXYrtYwr8w+eyaRDHHggdTiKeb8VWRVZLVMkyUo1JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnoU/8AT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="Fg9tabzF"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33ae51f8111so2505249f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:55:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706691321; x=1707296121; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1zAz2+MFVhaNzjF0CUHFlp2iK4QKE8zWsjZLLf44jk4=;
-        b=Fg9tabzFtad5EwKggaEcDrs2/ZmYJgVp0eQLjYfftJD/GGN9DqbBjrSzWpf9P0vuel
-         2H2p4iUBl+z7ZcoiyXgY7tKPHl2wEELXSPz9QHhIR1yFzwOJddRcaFbdrH4IaUAA+x3e
-         71xBT/WyuXGZEfWjbJmE9Bb/PyQjzA6cq1Gl9D7u7xn3+g3OkDk21bE7j4UCzXisM7z0
-         1d9Qr5ohvYSOSrALiOIFqu2OzFRpVRkz7mLfMphGo0aZO4bQCgOfazaHSFShW0yx4+Sl
-         9M33WfiHHlZGjo2YfomsK2Tb7PZfGfCmkk7jAM0hhMnao5/V5+4C0vYQGdYf6ursuSWA
-         uNcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706691321; x=1707296121;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1zAz2+MFVhaNzjF0CUHFlp2iK4QKE8zWsjZLLf44jk4=;
-        b=vR7ofJvm3PsSZypaSHwl6xdxI3gVNjFpY9tZp/kPMFn1LXl31EbIDR4sOiYDlh7Yyn
-         OsrDcyyw/FT4Me4y9oiwFZYFz8Q0wAwMwpA/b5AZ9kxGSUQkWKQWGJpaXY66nQ2mxhcE
-         xDNYm+Z/eZjkHqRR8596sfC3S6llUs85XyPmXmsgyboKPa5z8dY9/Q+dL9Upk+Mbz+Qq
-         t2YFLFARME/P+cEhRZn3m+uY6QMFVjji8l3N+yrrnF5pe+xaD7tePcscfzCjgG63PGLB
-         o39kz4IJcQgrqsbUREECyJuIGm0Sybtlhn7PjwG+RkCZ7iYaQmApvYhO+Fu9LOVtOdKQ
-         4kjQ==
-X-Gm-Message-State: AOJu0YyWWbfE02/Iql9l5QULnm9sWkwHJbRoKUuhX28SIIZX+fYNBWz/
-	0cxjC9GO4ijyGfd7YcrzPp7t2rSNm+0O2F7mOqEC3t5FaJW4/ZXUixsodE/2VapP8fo6HmkNAo9
-	lOuAqaQ==
-X-Google-Smtp-Source: AGHT+IEDaB/xrJB9e/nbcOYh/jzhcipifSUQvbsXwmciEyC3bvRWprUeAzSWNd6QobawgPm3fQCCjQ==
-X-Received: by 2002:adf:ffc8:0:b0:33b:290:253 with SMTP id x8-20020adfffc8000000b0033b02900253mr711420wrs.59.1706691321011;
-        Wed, 31 Jan 2024 00:55:21 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVijmjMIBMPrVUDqpjOW8DpKrsuG/p+eiyjvljc+dEmxB6q2VcNXli1GoNTXWTgsQuSMqmzskCR7aGyn4nRAwYXYG/UmYNOWWOF1uwNI61zppf43lGmYYizGcUNUFCZZQNUGCpi7w4ZtgCB0WBCIqRnfLxpSC7406NOM6iHs7q8O8FAcRbp9PGzvBG0YR8wPtWvmVSfJPd2E13lM01BVx/i0geEPVTkXUA85quOLBts/lbIapx0m+Jo+E9NT+8V7zgl1CDqyXsAmJTXcg8qrf6IjK7V6+Bm05MpE4tIP18QxWOvc6hJnHXPaG/FBv9hHppA6A2RVm0KvkfqxOQuL2hN0bjIcYdO2SCRlhD74ep7iaQ/4VlTQOZdnqM7BYSCfXvf0IC11iSL8TmQkogGy7tRWyt308LRGyblF0Yop5iZy4AyE/JLjXz8YbuWg/lkm1NH80kP
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ay12-20020a5d6f0c000000b0033ad47d7b86sm12915043wrb.27.2024.01.31.00.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 00:55:20 -0800 (PST)
-Date: Wed, 31 Jan 2024 09:55:17 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: karthiksundaravel <ksundara@redhat.com>
-Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rjarry@redhat.com, aharivel@redhat.com, vchundur@redhat.com,
-	cfontain@redhat.com
-Subject: Re: [PATCH] ice: Add get/set hw address for VF representor ports
-Message-ID: <ZboK9aHNTngj71ue@nanopsycho>
-References: <20240131080847.30614-1-ksundara@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnoU/8AT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C20C433F1;
+	Wed, 31 Jan 2024 08:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706691419;
+	bh=5IwHoHhAaOUvqb5LH+q/D/hYRD9jixazumE1nV6Qdl4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OnoU/8AT2AW8gLEZqwyHoDHyyK8SY0hagyrGfyk/M9V1KYXLMwpivFsrh4yeAA3P8
+	 PFMhSIzKgtOkdZ6fEnguzwpt41uDrNJgcBVP0a9GhTu8wY8+OsfcGfF3JtYVfFuiwt
+	 hrd4lc0EKrn28Ju19Hia18Ybzhz83nmhSKxuFdtNKNN8ODvRBAQMC7KC3DiqWD/Jhs
+	 LPLtWxiWVoJbRx99Tj2VBeY/aBbyqMkuh/0P/WbMLHuz7Ef73QwcS+QNmRHPjVXPh5
+	 ZIMFF+JEh2xyHpTTda9RznaDPcyKIUdNbyZS2HuaqsTqcwFuDzP42NN7VHamtaxbC1
+	 emwaIGMGSVIlg==
+Date: Wed, 31 Jan 2024 08:56:54 +0000
+From: Lee Jones <lee@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Anjelique Melendez <quic_amelende@quicinc.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the leds-lj tree
+Message-ID: <20240131085654.GE8551@google.com>
+References: <20240129131054.14bc453e@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240131080847.30614-1-ksundara@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240129131054.14bc453e@canb.auug.org.au>
 
-Wed, Jan 31, 2024 at 09:08:47AM CET, ksundara@redhat.com wrote:
->Changing the mac address of the VF representor ports are not
->available via devlink. Add the function handlers to set and get
->the HW address for the VF representor ports.
+On Mon, 29 Jan 2024, Stephen Rothwell wrote:
 
-Wait a sec. The API is there to change the mac of the actual VF. Not the
-representor. Apparently your patch is not doing that, changing mac of
-the representor.
+> Hi all,
+> 
+> After merging the leds-lj tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/leds/rgb/leds-qcom-lpg.c:17:10: fatal error: linux/soc/qcom/qcom-pbs.h: No such file or directory
+>    17 | #include <linux/soc/qcom/qcom-pbs.h>
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   8148c8234e10 ("leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM")
 
-NAK.
+I'm holding out for a little while:
 
-Fix this to change the VF mac address or drop the patch entirely.
-Thanks!
+  https://lore.kernel.org/r/20240125130432.GG74950@google.com
 
-pw-bot: cr
+> I have used the leds-lj tree from next-20240125 for today.
+
+Thanks.  Please keep doing this for "a little while". :)
+
+-- 
+Lee Jones [李琼斯]
