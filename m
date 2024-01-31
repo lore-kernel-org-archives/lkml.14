@@ -1,135 +1,83 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BF912CDBE
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706721801; cv=none; b=LZaHjMkHcCArsevBBCyLpp0z3d7eC5NYL2ouuEkJO4QknxAfBjp4OBSmi5Y9bFbD0Ug7aSFa1gKt5BNQkdD3woYre8ow0D9fRj5CqdNE02WdTLHUNgOn2c7Xi6zcCcjNhn1IEkBDrfwcHGyObqBwKfZRl/46wBz9ToXkanwivh8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706721801; c=relaxed/simple;
-	bh=jg4i/dyF43h8qgH5FZhzIx6dU5C7yA20jsPgJAwXzcg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dtqrrsuiwArLaeWJXfaZQ619x/YYheFGeIZOe5YYrnX6Lr9UbX/W9Wi0RcGj2mJibAAgJ60WTwaUleY8e6bpqhZ7S4kSGpQk4NunVR1iO0Y6iadC0MhcaegCCxhXElK6grjOhwXNSkUp0a/LHPJuQZ1Y9DNjgFOBfTMSaC0aF8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pXwk3K/7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC80912DD84;
+	Wed, 31 Jan 2024 17:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706721802; cv=pass; b=r2ttYtRCJoMky9DAIlAoXaF0A2ZMUgthSYJ2J/WpyIP4V8uDfvLfEwcayHLFfm5aVA+I5JuYogSJSBk+KID/iI7fBZENnSWMsou7Lc3IDlQ+gtjs/J1mhUyUpZmXyHHnjV1WffIYZOgkwL+d4k7sYKWphy+Pu8Qz5X0bisoO3ok=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706721802; c=relaxed/simple;
+	bh=OkbyR1eOud37M5OLwfX1vWYkrALqqo3FGkCmHla/MMA=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=pB4xvcP5dTCnXtZRWcPk+IEU2twgSD3YLBVV3g7sJTdic7D7nr41jQOkt6bHmmDVuDvCCNwh2vcivR7BcrSstlCQfWsgkxrKt4kMQf9Yh4mUQJkMVhdZoXbzcY8Zf/S5vPeWF9DtQJCq8blyI8ui2EzoYwLXkhv0bM9DsWi+aWY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=T5SxKhAA; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pXwk3K/7"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40VEA2lf021787;
-	Wed, 31 Jan 2024 17:23:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=OAK6AJ+Qp5umUhoDZecQwsbHlqutIZ1GzP5+lXa9h+8=; b=pX
-	wk3K/7qdkxnMF0dgBx3g08nAzWAcBNcLPPckhZPQIxbJfzsN99bSgU0HeD0A4yrA
-	PRpTOtEVORw1YiVy5UzcAcK1Sc5331fGpfeRYFKvgFTIkMJwCRGVITjiUO5L9PjS
-	HBndsFf+wyfKgZlg9hkwpmOBUHnajEOvEVv5OwkHWJk4pGevh5n7cPge4HdzHvsZ
-	csnQisNWF4OcCmhJOhtrcFLs9ifgxbW7iWKD86m7TSkPz0vN7dFDAKSng4b+/+a6
-	n/9mrzGXj7PuA4+N5SM3OmOBT+srCQmI03+IqQLToJn6XMihC3LUJUc9Vlzd1Bz7
-	VuhNenunQT8XyEQCgrZQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vyjas1844-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 17:23:07 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40VHN79f022329
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 17:23:07 GMT
-Received: from [10.216.17.229] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 31 Jan
- 2024 09:23:03 -0800
-Message-ID: <f085796d-df7e-03c9-a2b5-56cd6897a347@quicinc.com>
-Date: Wed, 31 Jan 2024 22:52:59 +0530
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="T5SxKhAA"
+Message-ID: <e0861faa7b564362e384783d4e52e38c@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1706721797;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T7jJIaYqMSfxPjtLTr60DeUKvzsmBPgfKadAEZC9wwo=;
+	b=T5SxKhAAJiH0NWcSdazzl+wRI6/ATIDRkkLlsiQNj6P+XSRcZbj16uQSZC0qMDWHAm/t32
+	y3POA/YOv31Sz7HR3CLt+qJJexg5TUwkuKcp5NJTBbFLZzZnu9zaEDytRQivcziCm+AZWH
+	LMgHe6mCtAMfq17ajMJCzLrvpP5ktkIwK78qGV82ODHXyN8rT0x2zsb3tG5RiAFgCsrTzy
+	NH74VvHMxbJKrFOC0ImAbgSq1Zfq9XhmDUE/MQUqsX4418pw5a2QvC9/S7qhsFiMZ1WXUL
+	mhzMCgYV1wv98suc2P4xMB91L0BXTjcy8EBwMzcdjcoQOHF8uG6EldVD2ldU7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1706721797; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T7jJIaYqMSfxPjtLTr60DeUKvzsmBPgfKadAEZC9wwo=;
+	b=C7S5PNyeFynbMjNaJdSIVnEfbdRFQhB66SkNb1tyfxDZGujMTB0pCmkhAgVK0B/IzSCNn1
+	DAFhaayE8FIoBcoPKWW/aZ+0d9i7F7bfeTiHJ5DggJGzVECZnNjp757YOVxmGKTbFj1oc9
+	7EUdrv8LuXa8AwB/9Sak9f74/9s76JnCe15r3D0Trtna3aMjyINxdnnEbQu95upfGYiDWH
+	MiDCKRwrq3JZfXl2IuDN2jJ53NpTh6XV15v+VU1vfKKZMBuzf9p1Es70dUre7kXa3rO1Ji
+	vVf1fYcK5zOWB4CBmewCsiBV4Hg/MYs4GAkvoyAtLLbwpAZviVA4gi8fLQQGLA==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1706721797; a=rsa-sha256;
+	cv=none;
+	b=o37iH5DlZhudX0g7wrQFXivWYBlZfw6KV7qoPJAOAGnneqnGleIIuyAbIJCgSkfaJercFA
+	C3wJSco9alFsazIkS88c9WTPVBCfqUiTAlYmkz2x/KW8rBkWJ9+ODTPvF3Zr4QMbyrGaAI
+	tQ1FMh0x1QNMcTKe7c9+xnOZnGfrxfdmGBxAngqv5a3U7ww6sF3xf0MW2VYeXOHpeOGHc5
+	tGudQ+zfB1Jrnx5O6JrqvOJDG9iCcS0yk0Oah8eGvnuN7xNPAUiTVqtezehrQKk6AnpWOX
+	BKHyojikbjpT6meialC9E4L4rrFOFFHt60tZVArrThILfV7IQDYxKBswH/fnwA==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Steve French <sfrench@samba.org>, Ronnie Sahlberg
+ <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom
+ Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] smb: client: Fix a NULL vs IS_ERR() check in
+ wsl_set_xattrs()
+In-Reply-To: <571c33b3-8378-49fd-84e1-57f622ef6db5@moroto.mountain>
+References: <571c33b3-8378-49fd-84e1-57f622ef6db5@moroto.mountain>
+Date: Wed, 31 Jan 2024 14:23:13 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 1/2] devcoredump: Remove devcoredump device if failing
- device is gone
-Content-Language: en-US
-To: Johannes Berg <johannes@sipsolutions.net>,
-        Rodrigo Vivi
-	<rodrigo.vivi@intel.com>, <linux-kernel@vger.kernel.org>
-CC: Jose Souza <jose.souza@intel.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-References: <20240126151121.1076079-1-rodrigo.vivi@intel.com>
- <d57dc34fa8b0e25cec014b8001dcd0527d1c1013.camel@sipsolutions.net>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <d57dc34fa8b0e25cec014b8001dcd0527d1c1013.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BjxZvj4JEA9y5WyZm35AnLFiE098fKpy
-X-Proofpoint-ORIG-GUID: BjxZvj4JEA9y5WyZm35AnLFiE098fKpy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 mlxscore=0
- mlxlogscore=464 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
- clxscore=1011 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401310134
+Content-Type: text/plain
 
+Dan Carpenter <dan.carpenter@linaro.org> writes:
 
+> This was intended to be an IS_ERR() check.  The ea_create_context()
+> function doesn't return NULL.
+>
+> Fixes: 1eab17fe485c ("smb: client: add support for WSL reparse points")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  fs/smb/client/reparse.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 1/29/2024 11:18 PM, Johannes Berg wrote:
-> On Fri, 2024-01-26 at 10:11 -0500, Rodrigo Vivi wrote:
->> Make dev_coredumpm a real device managed helper, that not only
->> frees the device after a scheduled delay (DEVCD_TIMEOUT), but
->> also when the failing/crashed device is gone.
->>
->> The module remove for the drivers using devcoredump are currently
->> broken if attempted between the crash and the DEVCD_TIMEOUT, since
->> the symbolic sysfs link won't be deleted.
-> 
-> Hmm, is it a problem to remove a whole dev when it still has some link
-> here? Maybe we could just make the link be managed/auto-removed?
-> 
-> Probably regardless of that you should change the comment in
-> devcd_dev_release() since it's no longer a concern?
-> 
->> On top of that, for PCI devices, the unbind of the device will
->> call the pci .remove void function, that cannot fail. At that
->> time, our device is pretty much gone, but the read and free
->> functions are alive trough the devcoredump device and they
->                        ^ through, I guess
-> 
->> can get some NULL dereferences or use after free.
-> 
-> Not sure I understand this part, how's this related to PCI's .remove?
-> 
->> So, if the failing-device is gone let's also request for the
->> devcoredump-device removal using the same mod_delayed_work
->> as when writing anything through data. The flush cannot be
->> used since it is synchronous and the devcd would be surely
->> gone right before the mutex_unlock on the next line.
-> 
-> Can we just decouple it instead and remove the symlink? Which is kind of
-> what the comment in devcd_dev_release() says but at the time I wasn't
-> aware of all the devm mechanics etc.
-
-Are we going to do this ?
-
--Mukesh
-
-> 
-> I'm thinking this might be annoying in certain recovery cases, e.g.
-> iwlwifi uses this but may sometimes unbind/rebind itself to recover from
-> certain errors, and that'd make the FW dumps disappear.
-> 
-> johannes
-> 
+Reviewed-by: Paulo Alcantara <pc@manguebit.com>
