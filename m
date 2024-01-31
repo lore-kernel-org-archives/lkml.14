@@ -1,177 +1,118 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9705E54BD3
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 07:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4902058108;
+	Wed, 31 Jan 2024 07:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706686915; cv=none; b=C0kCdIcQSdBvPmhY52qI3rgfSvvWjYfHzkKUxoNRcuXa+dF1A9tkJzp8AZljOayIvxxiL3CTdx+lnzWrDlMZauQJJc6FP3Mb7QbLclZ/EmvNROA6/ITMDBhvY54gjzLX97Qj7X+2yqXoAMo/4J2DU3gaXuFCCouLJQfC/SBR/lk=
+	t=1706686963; cv=none; b=ocp3bTR9zdoNo56Mt5lS84+Kp923C7/abx5nOyoA+dNws+nBcPkiBseVZwLWJF+orNQU/g7D0oq0oNrJr+rvtpzfiORIvNdds0ujjTnpjN46+OgaapwvZX0zIaFbFfCiwumoXy6CgQWDZjFTLShfsAmxuwC8SYoI6rb+D08Pq68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706686915; c=relaxed/simple;
-	bh=NOyLoCawcsMObxWNelTokNi7Fz/djxsX8kp4Q9E3sTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzYE26xu+ylvYVnefsQ+8kvNUnoZmo6oWRQnxxbwNbHdNwFcrTWeFTrSAVPZd+WQancqfCaI2mVoRRpMN8Q4JlR1JYsssgmu/2i6kDrMjOvvE5R/mMWH7dPCxYyyT/lMSeCCCU/naf+RGapL721eGyzL/5v7+cfidgt3Po/VFyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HqXq/2uf; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706686963; c=relaxed/simple;
+	bh=Wbcp7koPRxXu2bkDffYsNjnA80y7HrspVM0b9HnQegc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZ+3o1wkqYlHM0/AphFzDdtT57ClzaOLXqkVpEUoMp47kb6Mg2hdsv3o349wHJvG8YAELnCihSwbjpwlP01Bl/xuqExLYsXgnctIx9aXuMCY3ZbZ1lT0/cu/MUFMeTBEiBM/Sd6l7a5674g7Cylvww0QVtO0IQMRLbbyOO7pBVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRfNtHzN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HqXq/2uf"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a357cba4a32so439869966b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 23:41:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706686912; x=1707291712; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0v+Z03GSTlSfxtBgakq1a7TipNM6Rdkt1tyPtHyHcIc=;
-        b=HqXq/2ufByhHNJGfOf5YixgSDyVx7z5LCPcrLvKdABNa65bDurEA3V16t+bzz0gH3A
-         iJquoR5CvlbZtlDrczEd+ucRS16DijxGRi3Ckrkzg7QqUuwM3lm0nDrgVllSkPY64a5V
-         pX0YULbRFj5y+/y4D7l6nKDo1Zsapo+tr/kfg2DEs26cvnCmOrpGExFfJGtaa9t+7qGr
-         xG1Nt4h3Vh8SHwe4u1QoCPTlmvgp6oE9Zp3tYdYO6s87/jDiAUO5c83/43b3OojfC9JB
-         bg+OQVlsU9+k6pAA0TODBMPLuEEHfoHXePU/OJ7KJYQHU95D21Xm0L2Yb2sFa4mQSVB6
-         rpcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706686912; x=1707291712;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0v+Z03GSTlSfxtBgakq1a7TipNM6Rdkt1tyPtHyHcIc=;
-        b=fJwVXyKk2NAPAqoFyIVYglB6gUaahWWrkVESvKDp+5O3K1t/2E0s8WSO9Zmaso3xdd
-         Bmv25h9sLDzVru+tuukphsZ4RMo6mLFDw+B1OR2J6BeFZSfB0xCZMSrkWK0RmPlh943P
-         C6tahKZ6+8gY/4lB3ydWUzk9IG6CINYGcGgJHjx9W/twrCCuYPeQ8VZopj0hhK6LTm1/
-         Du1kGaIwqSPI+iN6usmRHXLkXQbrNqFosjO3pBj047yXbfjvuVydTp1pIfbkK0Qy7fye
-         fp/dIZDN/8BDeuOK4CNJ6pQl4kLQ/Y+pWbSql/8cm8/IsGUELlqzdlH/v9Dyp/FuSvhR
-         elZg==
-X-Gm-Message-State: AOJu0YwAWp+iHPxWOjlSZl1Kq5zZE8dB4e9NmYouuOFWtI7tjRBYZEh2
-	pLZMcl5/yzED9fSDusl9Qf/scJGCglPTvjFyYjGl7xNYLJIwYaw+szU5G+VLv+M=
-X-Google-Smtp-Source: AGHT+IFIZWFwqmWAqZNOO8+QAw/aks4TW/bYHmCQzKX0cwyl8xm9ADUDSqdTBiduVBNG7thUSYhMgw==
-X-Received: by 2002:a17:906:4e8c:b0:a35:a7ba:c642 with SMTP id v12-20020a1709064e8c00b00a35a7bac642mr550927eju.51.1706686911727;
-        Tue, 30 Jan 2024 23:41:51 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV6TZ7PDybr9+ovqIBEwqG7r5yOFwzmNW7bZmO6f0l4055zP4C7ctwj13F9RuO9xsMYUiGscTfa7cKJ2neLyIGk8YH+7Uhdy3jHPlbvJMh4hXUAKHN5fUdCBaBdRpk35J95czAtQi38J3LYcAPfOfPPznTgdweNIEFnE/cLYjXm5kOMGFO5Gq56ZYixSCovrS86XbGYMEdbk368087lff/65+VIgZMd6S1gP1qsiInE172w5VtIQ+ZqV0eKj/9bvJE3MLcbNDREuy/0oF6rzip03xiHJtS1VLMACayNpcaFnOzaQL7673yibaqCFBinmY/OIqNCyFxTvcL9vHKobRENxBQiKYNAIpy3bJuC9S3JEFXHG7cRA5GzZkMlAPjYy5OkwWj1XPlFuqzBb7Udj9CyUtz76PNUCZZL801mIrR+qbfUkZmYAk+TIt7+1af23u2bkj5vVNFdtuHKff4z6Hy8hpk10yZL3U7TqiEP/WXNSTCLQsKsLpeeYm86SGXhYj/DcZBWIyNp7gLh0X61KwWx4AWaZIu91gRMVWSOg8kK3qPKntqVKX+gGFonJeura94U6qKAm6QzglaFO4ZKa5i1AOI+99TfAZXKSvKldHAoxGDcqTOPXcP015GtHmcu65+7t6571rc+D796cy/83iH46JpJ6uIKKx7AZtzkYQEPTEifDvsCunXgSavh7DgOKH4=
-Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id sf5-20020a1709078a8500b00a353bfdd411sm4774695ejc.59.2024.01.30.23.41.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 23:41:51 -0800 (PST)
-Message-ID: <378befa5-d211-42c1-97fc-47c1d8bb0f95@linaro.org>
-Date: Wed, 31 Jan 2024 08:41:49 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRfNtHzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9478DC433C7;
+	Wed, 31 Jan 2024 07:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706686962;
+	bh=Wbcp7koPRxXu2bkDffYsNjnA80y7HrspVM0b9HnQegc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qRfNtHzN3ON+SLCKG/4tTFQFvso/AwPY2mwZcsKaAvDdkPlFoaJl7lE400e2thxov
+	 RmJdjCVPpaanot8lrhVBJ2yj0imiUVaM6/j1qJpFNm8g9Y9mnDmD+lnpHjvJOO4U7O
+	 payx3qb7fX2YyBK1zzCA0U513Ovt25G+kOBp2zbZrj5mFIghQCeTN9lkBeayPMjXIL
+	 0mkrPgg+FlyRu1tX+O037HVU438yPUtRDOzK/71jcxqdyat2PjYzUUZInKoZqB2giI
+	 EEh/wH8vEvA3HxmciwF2cLR+/0qoFkavOxeTkCqt40os6/WnBwgYnZRtrcTKo7JhTw
+	 J8ebG8JxKOnWQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rV5F3-0000000041E-0Ybb;
+	Wed, 31 Jan 2024 08:42:41 +0100
+Date: Wed, 31 Jan 2024 08:42:41 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the pci-current tree
+Message-ID: <Zbn58XcoOXauLUjN@hovoldconsulting.com>
+References: <20240131125843.29e54460@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: Add coresight nodes for sm8450
-Content-Language: en-US
-To: Mao Jinlong <quic_jinlmao@quicinc.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- Leo Yan <leo.yan@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
- Yuanfang Zhang <quic_yuanfang@quicinc.com>,
- Tao Zhang <quic_taozha@quicinc.com>
-References: <20240119092500.7154-1-quic_jinlmao@quicinc.com>
- <20240119092500.7154-3-quic_jinlmao@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240119092500.7154-3-quic_jinlmao@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 19/01/2024 10:24, Mao Jinlong wrote:
-> Add coresight components on Qualcomm SM8450 Soc. The components include
-> TMC ETF/ETR, ETE, STM, TPDM, CTI.
-> 
-> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-> ---
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GjSVFlK1+j0Pd+dz"
+Content-Disposition: inline
+In-Reply-To: <20240131125843.29e54460@canb.auug.org.au>
 
 
-> +		funnel@13810000 {
-> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-> +
-> +			reg = <0x0 0x13810000 0x0 0x1000>;
-> +
-> +			clocks = <&aoss_qmp>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +
-> +				port {
-> +					funnel_apss_in_funnel_ete: endpoint {
-> +						remote-endpoint =
-> +							<&funnel_ete_out_funnel_apss>;
-> +					};
-> +				};
-> +
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					funnel_apss_out_funnel_in1: endpoint {
-> +						remote-endpoint =
-> +							<&funnel_in1_in_funnel_apss>;
-> +					};
-> +				};
-> +
+--GjSVFlK1+j0Pd+dz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You have several redundant lines, everywhere. Clean up to match coding
-style. There is no blank line between trailing }; and another trailing };.
+On Wed, Jan 31, 2024 at 12:58:43PM +1100, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> After merging the pci-current tree, today's linux-next build (htmldocs)
+> produced this warning:
+>=20
+> drivers/pci/bus.c:440: warning: Function parameter or struct member 'top'=
+ not described in 'pci_walk_bus'
+> drivers/pci/bus.c:440: warning: Function parameter or struct member 'cb' =
+not described in 'pci_walk_bus'
+> drivers/pci/bus.c:440: warning: Function parameter or struct member 'user=
+data' not described in 'pci_walk_bus'
+>=20
+> Introduced by commit
+>=20
+>   69fb843fdbd9 ("PCI/ASPM: Fix deadlock when enabling ASPM")
 
-> +			};
-> +		};
+Bah, I added a newline after the opening /** when moving a comment
+without noticing that the kernel doc comment was malformed.
+
+Bjorn, you could either remove that newline or squash the below patch
+address this.
+
+Johan
 
 
-Best regards,
-Krzysztof
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index 116415f91195..826b5016a101 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -425,9 +425,9 @@ static void __pci_walk_bus(struct pci_bus *top, int (*c=
+b)(struct pci_dev *, void
+=20
+ /**
+  *  pci_walk_bus - walk devices on/under bus, calling callback.
+- *  @top      bus whose devices should be walked
+- *  @cb       callback to be called for each device found
+- *  @userdata arbitrary pointer to be passed to callback.
++ *  @top: bus whose devices should be walked
++ *  @cb: callback to be called for each device found
++ *  @userdata: arbitrary pointer to be passed to callback
+  *
+  *  Walk the given bus, including any bridged devices
+  *  on buses under this bus.  Call the provided callback
 
+--GjSVFlK1+j0Pd+dz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQQHbPq+cpGvN/peuzMLxc3C7H1lCAUCZbn57AAKCRALxc3C7H1l
+CPpAAQC4RNRa7mhHKoWOZh7t9zxoRLj/MyUUw9Ekqb21tHB4UwEA1DpbLPPMAXVC
+xiWFBkDiW7pBKBbBrlltq1Ca8/5OwAw=
+=6Txi
+-----END PGP SIGNATURE-----
+
+--GjSVFlK1+j0Pd+dz--
