@@ -1,213 +1,438 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2123.outbound.protection.partner.outlook.cn [139.219.146.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A61E69D0B;
-	Wed, 31 Jan 2024 10:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706697637; cv=fail; b=o0/jZuTcbVsnk87E6sMj1r6LbLOeOIvgvdeSZDXWy/FJgBem44l8Praf6aG9c1ntlqC/DkGau5rueW6ytQzH2mb64lHVf8VskZXUGJtDAXs/I1bMgAKX3DSzFNd+jQE8B9dTj6JOnITzLwTQvGdq+JZehK6Lqh4dikcgYHJS25k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706697637; c=relaxed/simple;
-	bh=WrngU0cqJWE8iYOCGJHyDNFOSufIx64Og0cutRtDVtQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZL7cMMzcUoG7SqcL9QNYYZEef6ryZoVaxx4a1fRM9nZ93xj9El7hsYYRkgL0NRJ0qymt+Lw9Kg7g5u8o6ivjRol/6zIpO3moXCHWWddhiV/nHTzMoiZUeDs+jSLJCMiikIye1p6tr0xG6dAHuYZ6uT6a/Oo9VB4oMpVTL3AT83s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QgrMSJsQyXDmroakVZPCF0/rQRm18XiCmXUyzsGJDCVepksxuOr0OlbLMg/31v9kRRAnJiRNkhe09FSlaWR5V7loSgduEx+MLOxkWNsUrGgBwAlkpyFAZQtKKwv7GXLV8Hwda7DUvOyQw4VkTPJ3cHIhUpvSqfRjIzsQRwxekuAJxR30/w80+/QDoTVKzyOSv2bn9wwobgeW767pTjt4dllOQhg6qIKdnSCQ7K1X3bDnUoyPsjKY1TlxwFliR9/XhlddWJIMrvbKe6Ou8pFORcYS9sOD5berVeZr/X20GAzDgnjaWeMg6MDX2XY1sASfs9xNB0+rbQzhGFH+IjwVWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zhADv0OpMlAftKwUCinfh10J8mx+tVIicHFmgxSwuQ0=;
- b=HtYn1sm/VdNtHAaCnCPnqXhfI4cKbmo5rSYUZ9um/A9tsXRkes5Jd+uWSXUhbETWx7eUV95blhsLFGhV5+SD+oU5BHsB9syoqlwuLq78ysjzRqrTtzv9AyQLgPFqJNQDzf9UX0mUzNsW/MIYlBQ5q2HGOgyb/iLSddIl1UnIqXibgS2ymvOA+YhOoZyfJK6nArOh4Nv4rSsDMlkXqGdhOAgk8DQGhpp5plqivcm6QyHj5nBBjBUd3JPcSxhyj56jwQnr08zDkL1TsElo1TYizyD/Myq1f7RkPx7JD3leWB6vE+m2ouh9zCAvIt6yA/hsadBAGGGLgdCi8CNAERakwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0797.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
- 2024 10:07:09 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::5a5a:fa59:15fd:63dc]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
- with mapi id 15.20.7228.029; Wed, 31 Jan 2024 10:07:08 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Rob Herring <robh@kernel.org>
-CC: Palmer Dabbelt <palmer@dabbelt.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Kevin Xie <kevin.xie@starfivetech.com>, Leyfoon Tan
-	<leyfoon.tan@starfivetech.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Daire McNamara
-	<daire.mcnamara@microchip.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mason Huo
-	<mason.huo@starfivetech.com>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Conor Dooley <conor@kernel.org>, Paul
- Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v14,RESEND 19/22] dt-bindings: PCI: Add StarFive JH7110
- PCIe controller
-Thread-Topic: [PATCH v14,RESEND 19/22] dt-bindings: PCI: Add StarFive JH7110
- PCIe controller
-Thread-Index: AQHaUk7ANof4CuKrsESG58uORquI7LDxXlAAgAEciACAATsJUA==
-Date: Wed, 31 Jan 2024 10:07:08 +0000
-Message-ID:
- <SHXPR01MB0863F3FFB671A0B95324A830E67CA@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
-References: <20240129010142.3732-1-minda.chen@starfivetech.com>
- <20240129010142.3732-4-minda.chen@starfivetech.com>
- <170656679886.3057.12378312489853176077.robh@kernel.org>
- <20240130151934.GA1636501-robh@kernel.org>
-In-Reply-To: <20240130151934.GA1636501-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SHXPR01MB0863:EE_|SHXPR01MB0797:EE_
-x-ms-office365-filtering-correlation-id: e20775ca-71d4-44bf-17d1-08dc224462b5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- +eTndG5e8ZDFNKThe/FTof5rojlAiIQkdBV1uom3wmhYjdEqyDh9q31jfne+V/uYMKKm41d0Zj0FIOZRiZHHKBbGSYA/GgmgWefgs8gQfecs8Btwut6MIpV8X+YSZeGGlabHulHaQukz5WjaVkN0NdRrAxKv1+38ttBSnwEngX5uGgi1jTAJ6ZgnEXXMRwwWoi4gJruxPQ54aZrrMPOAB/Lm4FAx7ifz2Q9iJfKBRy5DGdXx5rBRfykiIWPOdJZ5NM7BzFgNXV1dPAPpm/nqErqm/qUTDda8hRePOMOyn0GByh0jos2Zc/Bg73Za4AX4+Qxsbu+h8hXDD58vKiJNnqKnmH0l+HdYzcw8PQwn71KdHTqYMtmKK15mImWeCeskuSx73Dxrbis9f1DyZuRT/+Bi9sLMZhkMOcHD4v+ef4+dAebQAMB83IY/nwuTu2luO0UJVEMgsWfTZ8VVf+1xYlKgWFZobcqzVWQtI/f3DgDeWlAHmizJAHtGpkDoW1gp04b0Ol4g+XPICObJydUbrTWuilBmq6X3OYEG2/HtBFS6+XDsAVkHqhXYsbsBdcfKOkpvS05zEys8qDmT3w1UOnDppi4W295/fPVY8ykyfHg=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(346002)(366004)(136003)(396003)(230922051799003)(230273577357003)(230173577357003)(64100799003)(1800799012)(451199024)(186009)(38070700009)(7416002)(41320700001)(2906002)(40180700001)(5660300002)(33656002)(41300700001)(86362001)(66446008)(64756008)(76116006)(54906003)(66476007)(83380400001)(66946007)(6916009)(966005)(508600001)(66556008)(71200400001)(7696005)(9686003)(55016003)(8676002)(26005)(44832011)(122000001)(4326008)(8936002)(38100700002)(40160700002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?iZLFVnPiawQsG6dKofl+88tg8LdCLBrx1rwXDDCeO8mWCXcfBEkzVcybFi?=
- =?iso-8859-2?Q?MWcf8s9HRNLv1SVNn/9wHYbP0tEnfDOUk7e+YGR93zy4eUPOG4Z03jl8cd?=
- =?iso-8859-2?Q?TjNBb3J0wuQzS7aYjLJwY+OHMuM9kSjxOgz7NfY0cFziXVOW4ZwU231aUc?=
- =?iso-8859-2?Q?MdLSkBk7WpSc8AtvKIScwZUhdT8qWB9lDk4DvooSZ5lXmvXhsiMIZ9vqIL?=
- =?iso-8859-2?Q?gSCH9k8syA4maG97dil+BrkiNQa3dmL92h1xuwhVDDLdujL1IUypPH5qO9?=
- =?iso-8859-2?Q?AmRDOw4YZMGappm4HW+me8iRVo+z/7wtZUq96NuX1+eRtrzB9g7YQIH7/a?=
- =?iso-8859-2?Q?voxGaV1C6JtnwM+fdqWXuWgRBywXMyv199/QwZvU/opBhvSiMgQSW8Vam7?=
- =?iso-8859-2?Q?9a73/tIXKFWkssbp3g5OmW0xClt2zd4zd0tYSKvzTsgy4oOB254e/m8xEU?=
- =?iso-8859-2?Q?a8Ib4nlc4+vV7BraBLrZ/8N40neoMN2byv+ATciGnWl7lkDrCN3x1cxv72?=
- =?iso-8859-2?Q?MmTmAoJOOfurQU+crBUimYT+yCPkpcaSMfVoG+a8DRwUhOCktazyq69fd5?=
- =?iso-8859-2?Q?wCYRUW1110V6urdGWhhVPqpR3JIXMXiQa2DsbF3jp+cR5adqjdwMURJOqH?=
- =?iso-8859-2?Q?SmGzkmmPawgBg6bLubYvbIFyvPIBgsmizs447D3QlvKcyR6dpTwupqXBl2?=
- =?iso-8859-2?Q?gzqqQNZGJ40gzktT7Y2eGpnWz57eJDS/sPXcsKXyxtbqPiMoTugAnUYJab?=
- =?iso-8859-2?Q?zhEm0ZxkDEjO9vNUDExAiLerwsV0zH8Fu7j3NAzaUh8vvfAi5Q5FLSvjMI?=
- =?iso-8859-2?Q?u5ZyfJZifXDDE7U9JRTNlJD/gIvu5WmkP7frdfwgtBzLmsYW5kvDTk3dLz?=
- =?iso-8859-2?Q?ERpQtvW/ouf0NZZjSu1m78sSkVNSDV/gzcR4IbFtH2HGRLVSrz/k8ALirp?=
- =?iso-8859-2?Q?f+zzwnVFkvW3PgvNz/USn+9M/veu7/FXo9yG07lc9dQFFBq4WEZ7tTfrFw?=
- =?iso-8859-2?Q?TkvyP4DNARuD7jCFjAMoLcTHJBbknpJ4ig9SnbZci4OA6CfiJIzrqc70Cj?=
- =?iso-8859-2?Q?YLb+iyEOBMdSymxm5NF+bPPTLBEcxWr6m8o65aNevEp3nX5JzyZTDUcrMn?=
- =?iso-8859-2?Q?U0SzKViohLup1f2tHPLHCFk8XMIMzOA7nTnHF/kIgL4ys3vocodBnaLFcu?=
- =?iso-8859-2?Q?aMIQLC8OMgk5IAeamc3nZGdEX6MJkI/Besw/+gNQwyEG358mR8HSps+nyw?=
- =?iso-8859-2?Q?x7O+po8KAgHqYWTnu7Y9ysUwf3cx6B0v9vZuc8CwkQEb011T4E5jYzw5bm?=
- =?iso-8859-2?Q?4VJ/lbpLoW8Wtv5sMsILkWfNYPpsVMJtYawDxpq+eu9rzOITalVffICBNq?=
- =?iso-8859-2?Q?a6h9XWFYMzIhUBHm3NO56CWxSs3t8ghztLafHjL/NY4Q59Kc5fS7gQ9ddc?=
- =?iso-8859-2?Q?8aBCD5V/OA/MTxVDmonAtHRfOIhF4smwTak8oJJBi5XXsuy0CfkHKkB9Dv?=
- =?iso-8859-2?Q?yR3OwFCU1vRYMJdcb7HYSh5h/lZ827kFFPySJgknucaFBB9Gz1CbyLsJgN?=
- =?iso-8859-2?Q?PbRKwyHddC0hDa2y9k8RpHFiqchuMZbyMS2qTpLNNVnb1Dwf8QJkx5c+Vv?=
- =?iso-8859-2?Q?cybX83Ul1tHF+GZZVALLnj9YoC2e5+DkNs?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09FD69E08;
+	Wed, 31 Jan 2024 10:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706697650; cv=none; b=EHCy6Odc/9CCLTWsBTXe3C9We5jC2wzGhzn6JgpOjOKapX1iwyT3XH8hCxLE5jD4xmeWBFjCX0xIyhxDB2tn8LeNJH+pPny4K9SmfY/lWGRs84ZS6eUTCBjd+8Xtw03bbWYRRYs/QXuq02meQLqTp6cSFnbBrasnFARRNyUEHIw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706697650; c=relaxed/simple;
+	bh=d/nXT1q2zn2ci4I6hykfWt4RZtJJql4mao3cw3YEgvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IpBDRZJmIo6CdopENkh5KVs2FUrk2Z9Z/B+1bnlXsRjSdMhwNHHwE/3bOmUO2QaUp5hjd3/jS2rMeuJIjgwYJ0LDZghyAnjT4h0YyeehcXS3lfaEvXOUXJeCZHCm4Ze+KK0ElZrqUhCocZw+Z1OKGVAF8cylf7Z7K0+aGU+wMas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZRZTDeEm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=i3NPAvBW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZRZTDeEm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=i3NPAvBW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZRZTDeEm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="i3NPAvBW";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZRZTDeEm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="i3NPAvBW"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B4AF722054;
+	Wed, 31 Jan 2024 10:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706697645; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dPcLX73r3YpQEEGzySZYAJEksezsG5Bmi9BufYjnANg=;
+	b=ZRZTDeEmDc/cnenutt7MpAtBmVvI2fD+FkXDjxvkeDMBhx2VgK7k5wphsnedmOkrspsS/y
+	TxN32QgixN6qtjDZHc6zU8xy7GAJqMmft1b03lcjlR1x/rxzuGj2x/XfgSwuuKruM2Zb8q
+	eiCjApvfP2ErePpeJ306CA9bRSHkUqc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706697645;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dPcLX73r3YpQEEGzySZYAJEksezsG5Bmi9BufYjnANg=;
+	b=i3NPAvBWC6FJoTL70zaa+aePduGYa6q2sAPRijmmitCV7YPgpIzy/06ENFnUqA9EOznEK6
+	FHG3hq5D9SAcAbBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706697645; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dPcLX73r3YpQEEGzySZYAJEksezsG5Bmi9BufYjnANg=;
+	b=ZRZTDeEmDc/cnenutt7MpAtBmVvI2fD+FkXDjxvkeDMBhx2VgK7k5wphsnedmOkrspsS/y
+	TxN32QgixN6qtjDZHc6zU8xy7GAJqMmft1b03lcjlR1x/rxzuGj2x/XfgSwuuKruM2Zb8q
+	eiCjApvfP2ErePpeJ306CA9bRSHkUqc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706697645;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dPcLX73r3YpQEEGzySZYAJEksezsG5Bmi9BufYjnANg=;
+	b=i3NPAvBWC6FJoTL70zaa+aePduGYa6q2sAPRijmmitCV7YPgpIzy/06ENFnUqA9EOznEK6
+	FHG3hq5D9SAcAbBQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A8562132FA;
+	Wed, 31 Jan 2024 10:40:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id c/QTKa0jumWNNwAAn2gu4w
+	(envelope-from <jack@suse.cz>); Wed, 31 Jan 2024 10:40:45 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 488DBA0809; Wed, 31 Jan 2024 11:40:45 +0100 (CET)
+Date: Wed, 31 Jan 2024 11:40:45 +0100
+From: Jan Kara <jack@suse.cz>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Brian Foster <bfoster@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/19] writeback: simplify writeback iteration
+Message-ID: <20240131104045.ojke3u3t6bj4vhr7@quack3>
+References: <20240125085758.2393327-1-hch@lst.de>
+ <20240125085758.2393327-20-hch@lst.de>
+ <20240130104605.2i6mmdncuhwwwfin@quack3>
+ <20240130141601.GA31330@lst.de>
+ <20240130215016.npofgza5nmoxuw6m@quack3>
+ <20240131071437.GA17336@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: e20775ca-71d4-44bf-17d1-08dc224462b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 10:07:08.8646
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2tuRH9VHICaUrxhvK7y47hamdbhcTDak1DGM3lnBPqYKRGia89/pEEKhcnwsZzOUCivEXe26esJ/5ojoivphS1gbSRuSv9lOM9D06QyRQ44=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0797
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131071437.GA17336@lst.de>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
+On Wed 31-01-24 08:14:37, Christoph Hellwig wrote:
+> On Tue, Jan 30, 2024 at 10:50:16PM +0100, Jan Kara wrote:
+> > Well, batch release needs to be only here because if writeback_get_folio()
+> > returns NULL, the batch has been already released by it.
+> 
+> Indeed.
+> 
+> > So what would be
+> > duplicated is only the error assignment. But I'm fine with the version in
+> > the following email and actually somewhat prefer it compared the yet
+> > another variant you've sent.
+> 
+> So how about another variant, this is closer to your original suggestion.
+> But I've switched around the ordered of the folio or not branches
+> from my original patch, and completely reworked and (IMHO) improved the
+> comments.  it replaces patch 19 instead of being incremental to be
+> readable:
 
->=20
-> On Mon, Jan 29, 2024 at 04:21:12PM -0600, Rob Herring wrote:
-> >
-> > On Mon, 29 Jan 2024 09:01:39 +0800, Minda Chen wrote:
-> > > Add StarFive JH7110 SoC PCIe controller dt-bindings. JH7110 using
-> > > PLDA XpressRICH PCIe host controller IP.
-> > >
-> > > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> > > Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
-> > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  .../bindings/pci/starfive,jh7110-pcie.yaml    | 120 ++++++++++++++++=
-++
-> > >  1 file changed, 120 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
-> > >
-> >
-> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m
-> dt_binding_check'
-> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
-> >
-> > yamllint warnings/errors:
-> >
-> > dtschema/dtc warnings/errors:
-> >
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/p=
-ci/s
-> tarfive,jh7110-pcie.yaml:
-> > Error in referenced schema matching $id:
-> > http://devicetree.org/schemas/pci/plda,xpressrich3-axi-common.yaml
-> >
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/p=
-ci/s
-> tarfive,jh7110-pcie.example.dtb: pcie@940000000: False schema does not
-> allow {'compatible': ['starfive,jh7110-pcie'], 'reg': [[9, 1073741824, 0,
-> 268435456], [0, 721420288, 0, 16777216]], 'reg-names': ['cfg', 'apb'],
-> '#address-cells': [[3]], '#size-cells': [[2]], '#interrupt-cells': [[1]],=
- 'device_type':
-> ['pci'], 'ranges': [[2181038080, 0, 805306368, 0, 805306368, 0, 134217728=
-],
-> [3271557120, 9, 0, 9, 0, 0, 1073741824]], 'starfive,stg-syscon': [[429496=
-7295]],
-> 'bus-range': [[0, 255]], 'interrupts': [[56]], 'interrupt-map-mask': [[0,=
- 0, 0, 7]],
-> 'interrupt-map': [[0, 0, 0, 1, 2, 1], [0, 0, 0, 2, 2, 2], [0, 0, 0, 3, 2,=
- 3], [0, 0, 0, 4, 2, 4]],
-> 'msi-controller': True, 'clocks': [[4294967295, 86], [4294967295, 10],
-> [4294967295, 8], [4294967295, 9]], 'clock-names': ['noc', 'tl', 'axi_mst0=
-', 'apb'],
-> 'resets': [[4294967295, 11], [4294967295, 12], [4294967295, 13], [4294967=
-295,
-> 14], [4294967295, 15], [4294967295, 16]], 'perst-gpios': [[4294967295, 26=
-, 1]],
-> 'phys': [[4294967295]], 'interrupt-controller': {'#address-cells': [[0]],
-> '#interrupt-cells': [[1]], 'interrupt-controller': True, 'phandle': [[2]]=
-}, '$nodename':
-> ['pcie@940000000']}
-> > 	from schema $id:
-> > http://devicetree.org/schemas/pci/starfive,jh7110-pcie.yaml#
-> >
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/p=
-ci/s
-> tarfive,jh7110-pcie.example.dtb: pcie@940000000: Unevaluated properties a=
-re
-> not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-ra=
-nge',
-> 'device_type', 'interrupt-controller', 'interrupt-map', 'interrupt-map-ma=
-sk',
-> 'interrupts', 'msi-controller', 'ranges', 'reg', 'reg-names' were unexpec=
-ted)
-> > 	from schema $id:
-> > http://devicetree.org/schemas/pci/starfive,jh7110-pcie.yaml#
->=20
-> These are probably due to only patches 16-22 showing up in lore.
->=20
-> Rob
+Yes, this looks very good to me. Feel free to add:
 
-Yes.
-The plda,xpressrich3-axi-common.yaml file is not added to kernel.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Error in referenced schema matching $id:
-> > http://devicetree.org/schemas/pci/plda,xpressrich3-axi-common.yaml
+								Honza
+
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 58b3661f5eac9e..1593a783176ca2 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -1985,12 +1985,13 @@ iomap_writepages(struct address_space *mapping, struct writeback_control *wbc,
+>  		struct iomap_writepage_ctx *wpc,
+>  		const struct iomap_writeback_ops *ops)
+>  {
+> -	struct folio *folio;
+> -	int ret;
+> +	struct folio *folio = NULL;
+> +	int ret = 0;
+>  
+>  	wpc->ops = ops;
+> -	for_each_writeback_folio(mapping, wbc, folio, ret)
+> +	while ((folio = writeback_iter(mapping, wbc, folio, &ret)))
+>  		ret = iomap_do_writepage(folio, wbc, wpc);
+> +
+>  	if (!wpc->ioend)
+>  		return ret;
+>  	return iomap_submit_ioend(wpc, wpc->ioend, ret);
+> diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+> index 2416da933440e2..fc4605627496fc 100644
+> --- a/include/linux/writeback.h
+> +++ b/include/linux/writeback.h
+> @@ -367,15 +367,8 @@ int balance_dirty_pages_ratelimited_flags(struct address_space *mapping,
+>  
+>  bool wb_over_bg_thresh(struct bdi_writeback *wb);
+>  
+> -struct folio *writeback_iter_init(struct address_space *mapping,
+> -		struct writeback_control *wbc);
+> -struct folio *writeback_iter_next(struct address_space *mapping,
+> -		struct writeback_control *wbc, struct folio *folio, int error);
+> -
+> -#define for_each_writeback_folio(mapping, wbc, folio, error)		\
+> -	for (folio = writeback_iter_init(mapping, wbc);			\
+> -	     folio || ((error = wbc->err), false);			\
+> -	     folio = writeback_iter_next(mapping, wbc, folio, error))
+> +struct folio *writeback_iter(struct address_space *mapping,
+> +		struct writeback_control *wbc, struct folio *folio, int *error);
+>  
+>  typedef int (*writepage_t)(struct folio *folio, struct writeback_control *wbc,
+>  				void *data);
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index 0763c4353a676a..eefcb00cb7b227 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2360,29 +2360,6 @@ void tag_pages_for_writeback(struct address_space *mapping,
+>  }
+>  EXPORT_SYMBOL(tag_pages_for_writeback);
+>  
+> -static void writeback_finish(struct address_space *mapping,
+> -		struct writeback_control *wbc, pgoff_t done_index)
+> -{
+> -	folio_batch_release(&wbc->fbatch);
+> -
+> -	/*
+> -	 * For range cyclic writeback we need to remember where we stopped so
+> -	 * that we can continue there next time we are called.  If  we hit the
+> -	 * last page and there is more work to be done, wrap back to the start
+> -	 * of the file.
+> -	 *
+> -	 * For non-cyclic writeback we always start looking up at the beginning
+> -	 * of the file if we are called again, which can only happen due to
+> -	 * -ENOMEM from the file system.
+> -	 */
+> -	if (wbc->range_cyclic) {
+> -		if (wbc->err || wbc->nr_to_write <= 0)
+> -			mapping->writeback_index = done_index;
+> -		else
+> -			mapping->writeback_index = 0;
+> -	}
+> -}
+> -
+>  static xa_mark_t wbc_to_tag(struct writeback_control *wbc)
+>  {
+>  	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+> @@ -2442,10 +2419,8 @@ static struct folio *writeback_get_folio(struct address_space *mapping,
+>  		filemap_get_folios_tag(mapping, &wbc->index, wbc_end(wbc),
+>  				wbc_to_tag(wbc), &wbc->fbatch);
+>  		folio = folio_batch_next(&wbc->fbatch);
+> -		if (!folio) {
+> -			writeback_finish(mapping, wbc, 0);
+> +		if (!folio)
+>  			return NULL;
+> -		}
+>  	}
+>  
+>  	folio_lock(folio);
+> @@ -2458,60 +2433,107 @@ static struct folio *writeback_get_folio(struct address_space *mapping,
+>  	return folio;
+>  }
+>  
+> -struct folio *writeback_iter_init(struct address_space *mapping,
+> -		struct writeback_control *wbc)
+> +/**
+> + * writepage_iter - iterate folio of a mapping for writeback
+> + * @mapping: address space structure to write
+> + * @wbc: writeback context
+> + * @folio: previously iterated folio (%NULL to start)
+> + * @error: in-out pointer for writeback errors (see below)
+> + *
+> + * This function should be called in a while loop in the ->writepages
+> + * implementation and returns the next folio for the writeback operation
+> + * described by @wbc on @mapping.
+> + *
+> + * To start writeback @folio should be passed as NULL, for every following
+> + * iteration the folio returned by this function previously should be passed.
+> + * @error should contain the error from the previous writeback iteration when
+> + * calling writeback_iter.
+> + *
+> + * Once the writeback described in @wbc has finished, this function will return
+> + * %NULL and if there was an error in any iteration restore it to @error.
+> + *
+> + * Note: callers should not manually break out of the loop using break or goto.
+> + */
+> +struct folio *writeback_iter(struct address_space *mapping,
+> +		struct writeback_control *wbc, struct folio *folio, int *error)
+>  {
+> -	if (wbc->range_cyclic)
+> -		wbc->index = mapping->writeback_index; /* prev offset */
+> -	else
+> -		wbc->index = wbc->range_start >> PAGE_SHIFT;
+> -
+> -	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+> -		tag_pages_for_writeback(mapping, wbc->index, wbc_end(wbc));
+> -
+> -	wbc->err = 0;
+> -	folio_batch_init(&wbc->fbatch);
+> -	return writeback_get_folio(mapping, wbc);
+> -}
+> +	if (!folio) {
+> +		folio_batch_init(&wbc->fbatch);
+> +		wbc->err = 0;
+>  
+> -struct folio *writeback_iter_next(struct address_space *mapping,
+> -		struct writeback_control *wbc, struct folio *folio, int error)
+> -{
+> -	unsigned long nr = folio_nr_pages(folio);
+> +		/*
+> +		 * For range cyclic writeback we remember where we stopped so
+> +		 * that we can continue where we stopped.
+> +		 *
+> +		 * For non-cyclic writeback we always start at the beginning of
+> +		 * the passed in range.
+> +		 */
+> +		if (wbc->range_cyclic)
+> +			wbc->index = mapping->writeback_index;
+> +		else
+> +			wbc->index = wbc->range_start >> PAGE_SHIFT;
+>  
+> -	wbc->nr_to_write -= nr;
+> +		/*
+> +		 * To avoid livelocks when other processes dirty new pages, we
+> +		 * first tag pages which should be written back and only then
+> +		 * start writing them.
+> +		 *
+> +		 * For data-integrity sync we have to be careful so that we do
+> +		 * not miss some pages (e.g., because some other process has
+> +		 * cleared the TOWRITE tag we set).  The rule we follow is that
+> +		 * TOWRITE tag can be cleared only by the process clearing the
+> +		 * DIRTY tag (and submitting the page for I/O).
+> +		 */
+> +		if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+> +			tag_pages_for_writeback(mapping, wbc->index,
+> +					wbc_end(wbc));
+> +	} else {
+> +		wbc->nr_to_write -= folio_nr_pages(folio);
+>  
+> -	/*
+> -	 * Handle the legacy AOP_WRITEPAGE_ACTIVATE magic return value.
+> -	 * Eventually all instances should just unlock the folio themselves and
+> -	 * return 0;
+> -	 */
+> -	if (error == AOP_WRITEPAGE_ACTIVATE) {
+> -		folio_unlock(folio);
+> -		error = 0;
+> +		/*
+> +		 * For integrity writeback  we have to keep going until we have
+> +		 * written all the folios we tagged for writeback prior to
+> +		 * entering the writeback loop, even if we run past
+> +		 * wbc->nr_to_write or encounter errors, and just stash away
+> +		 * the first error we encounter in wbc->err so that it can
+> +		 * be retrieved on return.
+> +		 *
+> +		 * This is because the file system may still have state to clear
+> +		 * for each folio.  We'll eventually return the first error
+> +		 * encountered.
+> +		 */
+> +		if (wbc->sync_mode == WB_SYNC_ALL) {
+> +			if (*error && !wbc->err)
+> +				wbc->err = *error;
+> +		} else {
+> +			if (*error || wbc->nr_to_write <= 0)
+> +				goto done;
+> +		}
+>  	}
+>  
+> -	if (error && !wbc->err)
+> -		wbc->err = error;
+> +	folio = writeback_get_folio(mapping, wbc);
+> +	if (!folio) {
+> +		/*
+> +		 * For range cyclic writeback not finding another folios means
+> +		 * that we are at the end of the file.  In that case go back
+> +		 * to the start of the file for the next call.
+> +		 */
+> +		if (wbc->range_cyclic)
+> +			mapping->writeback_index = 0;
+>  
+> -	/*
+> -	 * For integrity sync  we have to keep going until we have written all
+> -	 * the folios we tagged for writeback prior to entering the writeback
+> -	 * loop, even if we run past wbc->nr_to_write or encounter errors.
+> -	 * This is because the file system may still have state to clear for
+> -	 * each folio.   We'll eventually return the first error encountered.
+> -	 *
+> -	 * For background writeback just push done_index past this folio so that
+> -	 * we can just restart where we left off and media errors won't choke
+> -	 * writeout for the entire file.
+> -	 */
+> -	if (wbc->sync_mode == WB_SYNC_NONE &&
+> -	    (wbc->err || wbc->nr_to_write <= 0)) {
+> -		writeback_finish(mapping, wbc, folio->index + nr);
+> -		return NULL;
+> +		/*
+> +		 * Return the first error we encountered (if there was any) to
+> +		 * the caller now that we are done.
+> +		 */
+> +		*error = wbc->err;
+>  	}
+> +	return folio;
+>  
+> -	return writeback_get_folio(mapping, wbc);
+> +done:
+> +	if (wbc->range_cyclic)
+> +		mapping->writeback_index = folio->index + folio_nr_pages(folio);
+> +	folio_batch_release(&wbc->fbatch);
+> +	return NULL;
+>  }
+>  
+>  /**
+> @@ -2549,13 +2571,18 @@ int write_cache_pages(struct address_space *mapping,
+>  		      struct writeback_control *wbc, writepage_t writepage,
+>  		      void *data)
+>  {
+> -	struct folio *folio;
+> -	int error;
+> +	struct folio *folio = NULL;
+> +	int error = 0;
+>  
+> -	for_each_writeback_folio(mapping, wbc, folio, error)
+> +	while ((folio = writeback_iter(mapping, wbc, folio, &error))) {
+>  		error = writepage(folio, wbc, data);
+> +		if (error == AOP_WRITEPAGE_ACTIVATE) {
+> +			folio_unlock(folio);
+> +			error = 0;
+> +		}
+> +	}
+>  
+> -	return wbc->err;
+> +	return error;
+>  }
+>  EXPORT_SYMBOL(write_cache_pages);
+>  
+> @@ -2563,13 +2590,17 @@ static int writeback_use_writepage(struct address_space *mapping,
+>  		struct writeback_control *wbc)
+>  {
+>  	struct blk_plug plug;
+> -	struct folio *folio;
+> -	int err;
+> +	struct folio *folio = NULL;
+> +	int err = 0;
+>  
+>  	blk_start_plug(&plug);
+> -	for_each_writeback_folio(mapping, wbc, folio, err) {
+> +	while ((folio = writeback_iter(mapping, wbc, folio, &err))) {
+>  		err = mapping->a_ops->writepage(&folio->page, wbc);
+>  		mapping_set_error(mapping, err);
+> +		if (err == AOP_WRITEPAGE_ACTIVATE) {
+> +			folio_unlock(folio);
+> +			err = 0;
+> +		}
+>  	}
+>  	blk_finish_plug(&plug);
+>  
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
