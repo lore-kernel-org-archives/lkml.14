@@ -1,93 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F3512C556;
-	Wed, 31 Jan 2024 16:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9449512AAD1
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706720281; cv=none; b=Q/Pmvac6u+wZ2h6UC6g/764eVjUuIYetnLWImIMTsg2ifS5szAkCPHRzt/9ES/332/Pt1fO/G679Lj4zVTkmteGfXnL4F9Qp+eCGUFwGjOeEoRRntwTXbUdfociinu/6qtS4hqRRiWyc4b51YhlK0a8mx9BxXtv/UwWd/Vfsx/k=
+	t=1706720351; cv=none; b=rLIzunYYnhh/QgvHmSSkK2yC3BR/nlBdhqVgA2OyHDknH0/WAAcy8IsGHOboCML7qD+/JTQE+klEz4V3wyPlZh0RrEv/zUO0MYmLTg4xbzngCXu51wXjattSzxzwqLlCZep2gv3L6YChrz0la/pwA2DjRzK0nDfCkHTkSkTsMCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706720281; c=relaxed/simple;
-	bh=AAYWli0+ekhwWji5QCBI9mHhUVTGhsGXqS6v4AGlvlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GxQf/x/FIqqEO1NSgeRxES2pzOLAWrtM/R8FZlxK32PDEU/INX9v3RvGkMG2JN5ilzUlrPum2UYLRQk69FkMTvmqpNldPR1dbyS/BhJucB/QZ/hJ+NGf11O18PmoEm9a9gKw5FvNyYxLVXckejI+TJaOoI5a5Y5srsBHlWJ4OLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzd32YWS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzd32YWS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32405C43141;
-	Wed, 31 Jan 2024 16:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706720280;
-	bh=AAYWli0+ekhwWji5QCBI9mHhUVTGhsGXqS6v4AGlvlc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bzd32YWSJzGiNrYKNjcbSmNWQC1tX4vuCsbNRyS4hcXoKvaWKLbAXclry+EhmcuJc
-	 E8zUGGnjhHod98dwmRjly8o80Y6dt946OjRBjKYburDoqu7vC0MQbvCJnObOtL5k2l
-	 Yztm2wprEf7HxsFGZkw9yYUSsYEl4hbOPhTGKbG5kr6EC46OpdiFA0JbDtNSutf8G9
-	 GvvTbK8O93UBVZdR/dqomTQeeh8XmSmz0uSFYpsUqa86TtTiYTB2uW1TXIZNA6afko
-	 Opl0Hv0E7H0eQipEEHSoxIsBkh6lmZnn5VAbMxP2GqamcL/vjvfR/qPOPCPFFOYVaq
-	 riRoyy7u1s6gQ==
-Date: Wed, 31 Jan 2024 16:57:53 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: sam@ravnborg.org, bbrezillon@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lee@kernel.org, thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-	hari.prasathge@microchip.com, manikandan.m@microchip.com
-Subject: Re: [linux][PATCH v5 3/3] dt-bindings: mfd: atmel,hlcdc: Convert to
- DT schema format
-Message-ID: <20240131-spray-commodity-673622ffc1b0@spud>
-References: <20240131033523.577450-1-dharma.b@microchip.com>
- <20240131033523.577450-4-dharma.b@microchip.com>
+	s=arc-20240116; t=1706720351; c=relaxed/simple;
+	bh=GjVWMfDZ6tvNQI5J0g8k01qf+gu5mZITKfSXLDmab8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ndr4Mj5DsFaGTLJunxJbNjaCa/dEDehtu4paa64hf+YQyNI10dgkLTiHRF1zdrC30fUBuaXa0ZNfItDzN6wJua5vbh7q//cWkKr7mVZ92JNmjaVrVx5J+E5jFzw21SVQ6OSIY79x4G2HK3gFMiZz/U3JtN9BS0TxIfUC6v8of94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 098CFDA7;
+	Wed, 31 Jan 2024 08:59:52 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 886B13F762;
+	Wed, 31 Jan 2024 08:59:07 -0800 (PST)
+Message-ID: <c68f8b00-c5df-45e1-b75a-f86ce128ddf0@arm.com>
+Date: Wed, 31 Jan 2024 16:59:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Up5J+MjpJWWvw0o9"
-Content-Disposition: inline
-In-Reply-To: <20240131033523.577450-4-dharma.b@microchip.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bingdings: perf: Support uncore ARM NI-700 PMU
+Content-Language: en-GB
+To: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, will
+ <will@kernel.org>, "mark.rutland" <mark.rutland@arm.com>
+Cc: shenghui.qu@shingroup.cn, =?UTF-8?B?6LW15Y+v?= <ke.zhao@shingroup.cn>,
+ zhijie.ren@shingroup.cn, linux-kernel@vger.kernel.org,
+ linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>
+References: <20240131065953.9634-1-jialong.yang@shingroup.cn>
+ <e7bf16fc-b12d-47eb-9197-0694e6829ac8@linaro.org>
+ <02B995F774AB7A9D+adfd0934-00cb-4dc3-8bf8-058b83dc2fbb@shingroup.cn>
+ <ebbc9d73-9be2-49ae-98f3-0d71ce624ee4@linaro.org>
+ <873A6CC450C1D0E6+75a39d6c-4fbf-4e30-8630-3226bd725901@shingroup.cn>
+ <b99efbd4-7c12-485d-8688-a4ec606f0cf5@linaro.org>
+ <EC1445AF2C5DB6F4+64772ecd-5e7a-42bb-aaa8-bc2857b2ab8b@shingroup.cn>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <EC1445AF2C5DB6F4+64772ecd-5e7a-42bb-aaa8-bc2857b2ab8b@shingroup.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 31/01/2024 10:18 am, Yang Jialong 杨佳龙 wrote:
+> 
+> 
+> 在 2024/1/31 18:16, Krzysztof Kozlowski 写道:
+>> On 31/01/2024 11:13, Yang Jialong 杨佳龙 wrote:
+>>>
+>>>
+>>> 在 2024/1/31 17:30, Krzysztof Kozlowski 写道:
+>>>> On 31/01/2024 10:26, Yang Jialong 杨佳龙 wrote:
+>>>>>
+>>>>>
+>>>>> 在 2024/1/31 15:49, Krzysztof Kozlowski 写道:
+>>>>>> On 31/01/2024 07:59, JiaLong.Yang wrote:
+>>>>>>> Add file corresponding to hx_arm_ni.c introducing ARM NI-700 PMU 
+>>>>>>> driver
+>>>>>>> for HX.
+>>>>>>>
+>>>>>>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+>>>>>>> ---
+>>>>>>> v1 --> v2:
+>>>>>>> 1. Submit dt-bindings file Seperately.
+>>>>>>
+>>>>>> Where is the driver?
+>>>>>>
+>>>>>> Please read:
+>>>>>> https://elixir.bootlin.com/linux/v6.8-rc2/source/Documentation/process/submitting-patches.rst
+>>>>>> before posting.
+>>>>>>
+>>>>
+>>>> Keep all discussions public.
+>>>
+>>> Get.
+>>>
+>>>>
+>>>>
+>>>>>>> +  pccs-id:
+>>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>>> +    description: Used to identify NIs in system which has more than
+>>>>>>> +      one NI.
+>>>>>>
+>>>>>> No, reg does it. Drop the property. Anyway you miss here vendor 
+>>>>>> prefix
+>>>>>> and proper explanation.
+>>>>>>
+>>>>>
+>>>>> reg will tell phy address. Phy address is too long. I just want a id.
+>>>>> example: perf stat -a -e ni_pmu_${pccs-id}/cycles/
+>>>>> I will use it in user space. Not only in driver.
+>>>>
+>>>> Custom vendor property is not for that purpose. Use for example IDR, DT
+>>>> aliases or something else.
+>>>>
+>>>>
+>>>
+>>> I have considered TD aliases. It's not very easy. Two places...
+>>> IDR.. I have tested. But it chouldn't correspond to the HWs.
+>>> I need it to identify NIs.
+>>> DT aliases is reachable. But no very easy.
+>>
+>> Except that "you want" I did not see any rationale, any argument
+>> explaining why this is needed and why this has to be present.
+> 
+> OK. DT aliases it good.
 
---Up5J+MjpJWWvw0o9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 31, 2024 at 09:05:23AM +0530, Dharma Balasubiramani wrote:
-> Convert the atmel,hlcdc binding to DT schema format.
->=20
-> Align clocks and clock-names properties to clearly indicate that the LCD
-> controller expects lvds_pll_clk when interfaced with the lvds display. Th=
-is
-> alignment with the specific hardware requirements ensures accurate device=
- tree
-> configuration for systems utilizing the HLCDC IP.
->=20
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+The real way to address that particular issue is to fix perf to properly 
+associate the PMU device with the underlying hardware device. Jonathan 
+had a series doing that[1], but I'm not sure what its status is now.
 
 Thanks,
-Conor.
+Robin.
 
---Up5J+MjpJWWvw0o9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbp8EQAKCRB4tDGHoIJi
-0pFnAQCKH+mkNUeIXKouL9L0h7OnKONe67YgBm0bChu/ir7aEQD+J9bT3DR1BQ5V
-CebLc0QPs+K8WjytedCfx8EaPxvUBwM=
-=OQtS
------END PGP SIGNATURE-----
-
---Up5J+MjpJWWvw0o9--
+[1] 
+https://lore.kernel.org/linux-arm-kernel/20230404134225.13408-1-Jonathan.Cameron@huawei.com/
