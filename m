@@ -1,246 +1,151 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C34F5D91D
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 07:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3090605DC
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 07:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706686970; cv=none; b=embvmB+CZae0nP0nr5nL9BABFMQI9WBur5AKX8pQfSFVdiw9YBDc8Z1JxcRwSVG42XntvaoAOt7lcZBfhO4vSLrnr+1dKeiie96lGHyQW7V84qLuqmyISPpRKYaGO9gArmOfJ71EQJWCuH5BiEA6wFYnBlcbV9ATFfgiUHqguAg=
+	t=1706686980; cv=none; b=HiXGZYp6wZbTyGWOyjEQS0RuwRdeuq7vuhVV5bXh9OZOXsHn4G1mEemJy6Rh8NYbIyltS1FTdMJJP5dytx7vVPi2y8VG2DIhW/bzf4pnwu9z2gNeyfbH/+kw3llOV1moCcf9BSlIgZxQ//IPDlx8mGNpveu6Z9dbajdHgYoAVDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706686970; c=relaxed/simple;
-	bh=4KKkTrbwPu5ft0acqG3EPuy+AZwQW4V5ebRq7oZxEUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UiZoui/2BEk+zbVFRG2ehzWpt4OCourV+qYNYUxMJYrJyUqgNbHjLTLqnlkfYlfeqHPExRLzxeWUAsNy0/m4OkH2wK7HWPmN+ip3Y8+wiWZsds/DyJ0mBYkbITKU1uSKOCrNrafKIf4/f7m6S8Q349NUGHlZ1z67WDzUX65ANZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=d8vqVUys; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=d8vqVUys; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1706686980; c=relaxed/simple;
+	bh=pKugPOpY04/DiyHgIqo5Kmzs80fKoyhDuxl3Cm5ZjaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OppiVp0dKGeaUwxOaJhZAlWK8qCznNhYY1C3KAFr1M0U+OhcfAB6rT59IgFLQ6CTvF7mRnsqWMyDLclvbID/0GOqZA6yyNpuXYb+Ow0vlmH2xstTYFWj7c8IUYz2mITJrbLzwJusqYsZsc6IPes2PCg6ZpHUSsH2z3lM4KgpaCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UKvc3wjV; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="d8vqVUys";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="d8vqVUys"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7956D22101;
-	Wed, 31 Jan 2024 07:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706686966; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zjt9KyKsqTWBc+lH+CWv0C2loE0PPkI+cOIqFoZTqOc=;
-	b=d8vqVUyspqDrkgW6kJPeUhj2eTsAz9mbU7WG38ZXoYVCBWLH60vR+z4Vo7Q03IaQFHCugb
-	N5F1KPqoEJRpNh8dHAq7Wkt2W1XLKXzDa2qpTgCDH5TIluKiAGjU8aiVAn0jHds5a22ErW
-	irFZgJu8hoAfgpaq5GgHg+Q7PU3uH3k=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706686966; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zjt9KyKsqTWBc+lH+CWv0C2loE0PPkI+cOIqFoZTqOc=;
-	b=d8vqVUyspqDrkgW6kJPeUhj2eTsAz9mbU7WG38ZXoYVCBWLH60vR+z4Vo7Q03IaQFHCugb
-	N5F1KPqoEJRpNh8dHAq7Wkt2W1XLKXzDa2qpTgCDH5TIluKiAGjU8aiVAn0jHds5a22ErW
-	irFZgJu8hoAfgpaq5GgHg+Q7PU3uH3k=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C984C1347F;
-	Wed, 31 Jan 2024 07:42:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kjmgKPX5uWWPOgAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 31 Jan 2024 07:42:45 +0000
-Date: Wed, 31 Jan 2024 08:42:34 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Muchun Song <muchun.song@linux.dev>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH] fs,hugetlb: Fix NULL pointer dereference in
- hugetlbs_fill_super
-Message-ID: <Zbn56u1kg4yQAThE@tiehlicka>
-References: <20240130210418.3771-1-osalvador@suse.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UKvc3wjV"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a354fc17f24so443781466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jan 2024 23:42:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706686976; x=1707291776; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3MsvoJLPDJmzJceztupHh5xHVFDdzmY/ZbgHQRKQzrQ=;
+        b=UKvc3wjVod1tLgjHYc2IsqbJEH57XrDxbYasP0h037Ue9SlskYO7GX+MDP65AqEi9B
+         +CUzUcimFmyPR01u5ZZDrgCzn8KuJwH/d6H0TLZkYcjK5Io5Aeukt+dLXS1eT1ll1/cC
+         U+eruIVzAVlD2EYTodhOxaa9C1oG4w7KsFXM2m6JfDg/5VbzlUgZ4Dt7Qf8cvjVqaHzF
+         n5HY7ocW59ZpcWrpv8/x4g2h9Ghq96YIZ69n0W7HcWK4BH1plAq5avQczMKKhciJrYw1
+         ZS1FWKXwwVWhnRMYSX2RP6wu3wIFnTey0ekeOYm2w1824SkV1lkCotuGkfvj7J5b11aF
+         ZTUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706686976; x=1707291776;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3MsvoJLPDJmzJceztupHh5xHVFDdzmY/ZbgHQRKQzrQ=;
+        b=Ge8RA+jg/+8AWsS1FijODAi5jixHcCClbqXpeF1hw3XUpZJW98KtfVlmAkowmXtRZn
+         EIENPZXsF30c6m9R1cYPrcq9lsbvOorYC0m9gqtqPBlEVHA88Pn/VPOfCvEILUfR7o2F
+         DHz6/36pzY6qABwcaq0Xzxzv1aRVdIE78PdvF0MeIZxyUldVcIQpMlE3ieyWkq/pe0gn
+         w+VKiErw5X/Io/rTygh+nmVZ7b73VSmEYyfCUlkEQz6VO0Xrw+24VWuAYd04yBhhB52g
+         YqA0/fsP1NYSRgurTmNDWzwMZdgeFaSSzj5pVQFOm4nBwMgR15d5shCz6keRetpk+E5t
+         RWfA==
+X-Gm-Message-State: AOJu0YzFu09EnQDn8P0Ou24jDgcK3kuhccJ8wtHzkM+rePP+pWv1tiWB
+	JIppsbHXf19yonVqP4DnGL8FnCL6lpmUMnYzjYQxG9ffSzvGR4MqhpG3OtZOBCs=
+X-Google-Smtp-Source: AGHT+IG+PTdvYYjkkfX3QZLzmIWsLbrwU26k1BtEo61WenPzwml+9eF+0GBr0mrNJCQC6C6bivUJuw==
+X-Received: by 2002:a17:906:4c48:b0:a35:d6c0:d2f9 with SMTP id d8-20020a1709064c4800b00a35d6c0d2f9mr518121ejw.14.1706686976278;
+        Tue, 30 Jan 2024 23:42:56 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVjDTGxXnd0wgU3BL1W7lHthECvV7Z/of3IfhI3q8n2r1YoUt82BJKp30aMSSYtFfYY6rqka8orTqY4w3Zoqmqi47cvDW30+s6l9xn+rkdpPpbEm4FwhQN7brN/Y/hAQqgUX6jn83Ieu6zEiafyK5BMW3eHeeiGF8qKIwFTzoZeCjgonp9SstXohf3p4AbVHAWv7DbcPDV0+xHggwNyapeO+65vrB2+GtzCL0oDDgmdhDeAucj3KU0X+bfW+Y0PIdCtQQL9GMcund3pG917uxrnwEgoXMVaXajtgW4lKfN6ZWQgLaAatAnNMe3fATVQKdLjal1mqdIQy9JeuHzsgzzPRM3L/OeVpWUnmbNb3rUyoGsu/Qzmmv+nkZSlV3m9TzoF8yxGtwzugZeUi1bzvxHHLYp+fO8mfWr655Ni/wnjvFxSzQJmVAxxMpLXQDpedQOtW0+KW0n9wpRbw9h2OGfnRwPGuDnQoFg8yRhLn4Shc+kYzivHGWkDXiXbwvbQlPOyxQE/MWrbH7OzuhKNW4rmdPsEVBy3Xs9lVpioE1MC9jduASfrS1Ufy1IUSGPiPGZOcsCakLsn2GGBpL5df/6PEdSG8L770jW4d9oH3XMZnGdDDJCnMY9Pq46CicoN9lBGFalXAe4Lxz27MJ26D0tIhCdbi2mL1mtGxPbIgUfNiFfQ8NpSMqhA7W0v1xshXHApQCqDc5hgikVixuf+eQDt1wMReQlb18u3FpF4jGLJ9rTnS9y9
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id sf5-20020a1709078a8500b00a353bfdd411sm4774695ejc.59.2024.01.30.23.42.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 23:42:55 -0800 (PST)
+Message-ID: <c1e9964b-5edc-46a6-bbd5-fd88aba66605@linaro.org>
+Date: Wed, 31 Jan 2024 08:42:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240130210418.3771-1-osalvador@suse.de>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.60
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/10] dt-bindings: arm: qcom,coresight-tpdm: Add
+ support for CMB element size
+Content-Language: en-US
+To: Tao Zhang <quic_taozha@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Konrad Dybcio <konradybcio@gmail.com>, Mike Leach <mike.leach@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Song Chai <quic_songchai@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, andersson@kernel.org
+References: <1706605366-31705-1-git-send-email-quic_taozha@quicinc.com>
+ <1706605366-31705-4-git-send-email-quic_taozha@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <1706605366-31705-4-git-send-email-quic_taozha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue 30-01-24 22:04:18, Oscar Salvador wrote:
-> When configuring a hugetlb filesystem via the fsconfig() syscall, there i=
-s a
-> possible NULL dereference in hugetlbfs_fill_super() caused by assigning
-> NULL to ctx->hstate in hugetlbfs_parse_param() when the requested pagesize
-> is non valid.
->=20
-> E.g: Taking the following steps:
->=20
->      fd =3D fsopen("hugetlbfs", FSOPEN_CLOEXEC);
->      fsconfig(fd, FSCONFIG_SET_STRING, "pagesize", "1024", 0);
->      fsconfig(fd, FSCONFIG_CMD_CREATE, NULL, NULL, 0);
->=20
-> Given that the requested "pagesize" is invalid, ctxt->hstate will be repl=
-aced
-> with NULL, losing its previous value, and we will print an error:
->=20
->  ...
->  ...
->  case Opt_pagesize:
->  ps =3D memparse(param->string, &rest);
->  ctx->hstate =3D h;
->  if (!ctx->hstate) {
->          pr_err("Unsupported page size %lu MB\n", ps / SZ_1M);
->          return -EINVAL;
->  }
->  return 0;
->  ...
->  ...
->=20
-> This is a problem because later on, we will dereference ctxt->hstate in
-> hugetlbfs_fill_super()
->=20
->  ...
->  ...
->  sb->s_blocksize =3D huge_page_size(ctx->hstate);
->  ...
->  ...
->=20
->  Causing below Oops.
->=20
->  Fix this by replacing cxt->hstate value only when then pagesize is known=
- to be valid.
->=20
->  kernel: hugetlbfs: Unsupported page size 0 MB
->  kernel: BUG: kernel NULL pointer dereference, address: 0000000000000028
->  kernel: #PF: supervisor read access in kernel mode
->  kernel: #PF: error_code(0x0000) - not-present page
->  kernel: PGD 800000010f66c067 P4D 800000010f66c067 PUD 1b22f8067 PMD 0
->  kernel: Oops: 0000 [#1] PREEMPT SMP PTI
->  kernel: CPU: 4 PID: 5659 Comm: syscall Tainted: G            E      6.8.=
-0-rc2-default+ #22 5a47c3fef76212addcc6eb71344aabc35190ae8f
->  kernel: Hardware name: Intel Corp. GROVEPORT/GROVEPORT, BIOS GVPRCRB1.86=
-B.0016.D04.1705030402 05/03/2017
->  kernel: RIP: 0010:hugetlbfs_fill_super+0xb4/0x1a0
->  kernel: Code: 48 8b 3b e8 3e c6 ed ff 48 85 c0 48 89 45 20 0f 84 d6 00 0=
-0 00 48 b8 ff ff ff ff ff ff ff 7f 4c 89 e7 49 89 44 24 20 48 8b 03 <8b> 48=
- 28 b8 00 10 00 00 48 d3 e0 49 89 44 24 18 48 8b 03 8b 40 28
->  kernel: RSP: 0018:ffffbe9960fcbd48 EFLAGS: 00010246
->  kernel: RAX: 0000000000000000 RBX: ffff9af5272ae780 RCX: 0000000000372004
->  kernel: RDX: ffffffffffffffff RSI: ffffffffffffffff RDI: ffff9af555e9b000
->  kernel: RBP: ffff9af52ee66b00 R08: 0000000000000040 R09: 0000000000370004
->  kernel: R10: ffffbe9960fcbd48 R11: 0000000000000040 R12: ffff9af555e9b000
->  kernel: R13: ffffffffa66b86c0 R14: ffff9af507d2f400 R15: ffff9af507d2f400
->  kernel: FS:  00007ffbc0ba4740(0000) GS:ffff9b0bd7000000(0000) knlGS:0000=
-000000000000
->  kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  kernel: CR2: 0000000000000028 CR3: 00000001b1ee0000 CR4: 00000000001506f0
->  kernel: Call Trace:
->  kernel:  <TASK>
->  kernel:  ? __die_body+0x1a/0x60
->  kernel:  ? page_fault_oops+0x16f/0x4a0
->  kernel:  ? search_bpf_extables+0x65/0x70
->  kernel:  ? fixup_exception+0x22/0x310
->  kernel:  ? exc_page_fault+0x69/0x150
->  kernel:  ? asm_exc_page_fault+0x22/0x30
->  kernel:  ? __pfx_hugetlbfs_fill_super+0x10/0x10
->  kernel:  ? hugetlbfs_fill_super+0xb4/0x1a0
->  kernel:  ? hugetlbfs_fill_super+0x28/0x1a0
->  kernel:  ? __pfx_hugetlbfs_fill_super+0x10/0x10
->  kernel:  vfs_get_super+0x40/0xa0
->  kernel:  ? __pfx_bpf_lsm_capable+0x10/0x10
->  kernel:  vfs_get_tree+0x25/0xd0
->  kernel:  vfs_cmd_create+0x64/0xe0
->  kernel:  __x64_sys_fsconfig+0x395/0x410
->  kernel:  do_syscall_64+0x80/0x160
->  kernel:  ? syscall_exit_to_user_mode+0x82/0x240
->  kernel:  ? do_syscall_64+0x8d/0x160
->  kernel:  ? syscall_exit_to_user_mode+0x82/0x240
->  kernel:  ? do_syscall_64+0x8d/0x160
->  kernel:  ? exc_page_fault+0x69/0x150
->  kernel:  entry_SYSCALL_64_after_hwframe+0x6e/0x76
->  kernel: RIP: 0033:0x7ffbc0cb87c9
->  kernel: Code: 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 90 48 89 f=
-8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d=
- 01 f0 ff ff 73 01 c3 48 8b 0d 97 96 0d 00 f7 d8 64 89 01 48
->  kernel: RSP: 002b:00007ffc29d2f388 EFLAGS: 00000206 ORIG_RAX: 0000000000=
-0001af
->  kernel: RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ffbc0cb87c9
->  kernel: RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000003
->  kernel: RBP: 00007ffc29d2f3b0 R08: 0000000000000000 R09: 0000000000000000
->  kernel: R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
->  kernel: R13: 00007ffc29d2f4c0 R14: 0000000000000000 R15: 0000000000000000
->  kernel:  </TASK>
->  kernel: Modules linked in: rpcsec_gss_krb5(E) auth_rpcgss(E) nfsv4(E) dn=
-s_resolver(E) nfs(E) lockd(E) grace(E) sunrpc(E) netfs(E) af_packet(E) brid=
-ge(E) stp(E) llc(E) iscsi_ibft(E) iscsi_boot_sysfs(E) intel_rapl_msr(E) int=
-el_rapl_common(E) iTCO_wdt(E) intel_pmc_bxt(E) sb_edac(E) iTCO_vendor_suppo=
-rt(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) coretemp(E) kvm_intel(E) =
-rfkill(E) ipmi_ssif(E) kvm(E) acpi_ipmi(E) irqbypass(E) pcspkr(E) igb(E) ip=
-mi_si(E) mei_me(E) i2c_i801(E) joydev(E) intel_pch_thermal(E) i2c_smbus(E) =
-dca(E) lpc_ich(E) mei(E) ipmi_devintf(E) ipmi_msghandler(E) acpi_pad(E) tin=
-y_power_button(E) button(E) fuse(E) efi_pstore(E) configfs(E) ip_tables(E) =
-x_tables(E) ext4(E) mbcache(E) jbd2(E) hid_generic(E) usbhid(E) sd_mod(E) t=
-10_pi(E) crct10dif_pclmul(E) crc32_pclmul(E) crc32c_intel(E) polyval_clmuln=
-i(E) ahci(E) xhci_pci(E) polyval_generic(E) gf128mul(E) ghash_clmulni_intel=
-(E) sha512_ssse3(E) sha256_ssse3(E) xhci_pci_renesas(E) libahci(E) ehci_pci=
-(E) sha1_ssse3(E) xhci_hcd(E) ehci_hcd(E) libata(E)
->  kernel:  mgag200(E) i2c_algo_bit(E) usbcore(E) wmi(E) sg(E) dm_multipath=
-(E) dm_mod(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) scsi_mod(E) sc=
-si_common(E) aesni_intel(E) crypto_simd(E) cryptd(E)
->  kernel: Unloaded tainted modules: acpi_cpufreq(E):1 fjes(E):1
->  kernel: CR2: 0000000000000028
->  kernel: ---[ end trace 0000000000000000 ]---
->  kernel: RIP: 0010:hugetlbfs_fill_super+0xb4/0x1a0
->  kernel: Code: 48 8b 3b e8 3e c6 ed ff 48 85 c0 48 89 45 20 0f 84 d6 00 0=
-0 00 48 b8 ff ff ff ff ff ff ff 7f 4c 89 e7 49 89 44 24 20 48 8b 03 <8b> 48=
- 28 b8 00 10 00 00 48 d3 e0 49 89 44 24 18 48 8b 03 8b 40 28
->  kernel: RSP: 0018:ffffbe9960fcbd48 EFLAGS: 00010246
->  kernel: RAX: 0000000000000000 RBX: ffff9af5272ae780 RCX: 0000000000372004
->  kernel: RDX: ffffffffffffffff RSI: ffffffffffffffff RDI: ffff9af555e9b000
->  kernel: RBP: ffff9af52ee66b00 R08: 0000000000000040 R09: 0000000000370004
->  kernel: R10: ffffbe9960fcbd48 R11: 0000000000000040 R12: ffff9af555e9b000
->  kernel: R13: ffffffffa66b86c0 R14: ffff9af507d2f400 R15: ffff9af507d2f400
->  kernel: FS:  00007ffbc0ba4740(0000) GS:ffff9b0bd7000000(0000) knlGS:0000=
-000000000000
->  kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  kernel: CR2: 0000000000000028 CR3: 00000001b1ee0000 CR4: 00000000001506f0
->=20
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+On 30/01/2024 10:02, Tao Zhang wrote:
+> Add property "qcom,cmb-elem-bits" to support CMB(Continuous
+> Multi-Bit) element for TPDM. The associated aggregator will read
+> this size before it is enabled. CMB element size currently only
+> supports 8-bit, 32-bit and 64-bit. Because the existing example
+> tpdm "tpdm@684c000" which only supports dsb sub-unit, I introduce
+> a new example "tpdm@6c29000" to describe the usage of this new
+> property.
+> 
+> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
+>  .../bindings/arm/qcom,coresight-tpdm.yaml     | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 
-Fixes: 32021982a324 ("hugetlbfs: Convert to fs_context")
-AFAICS
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks!
+Best regards,
+Krzysztof
 
---=20
-Michal Hocko
-SUSE Labs
