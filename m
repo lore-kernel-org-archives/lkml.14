@@ -1,233 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A8A7FBBC
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AB97BB03;
+	Wed, 31 Jan 2024 13:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706708296; cv=none; b=KyQ+hVtszDdawFhCHMD61NoVoVpQMEAETQr7vTx59eDLvCSxaz/vrAAW67G9tY7RCPSZocaGqs0URP6Jt7G12xe7kY94WBXO+FzHAulkQjM6uWdLwirgBjAjGORxF/EU4237ajzzaWEFPf5Swc5Boa1sKJH5Tpn4USMw/jA5Mo4=
+	t=1706708333; cv=none; b=EDrqPhYEbI8vl+3VMhBTI5DazOW8LLBBkW5hBZZ6pCVxNsVbOtneNofC0vno5hVd87wnFYnlfycBk9HAWwp043K47FOq3ULLhuGlvt+9RvidHwDWP5DaJ4YpvhRAhdJvJuJsxcQ4AJJonVjRvm64upTbk+s5iOfKFRDgiAvzaP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706708296; c=relaxed/simple;
-	bh=EP/VOkvRrFbuplhNL+kIPj0fhAj0V0gvW1a0Gsl/Y28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pnc2TvvnIKTfRm1npCiG0fsM+sziHfLj0mwwi9qxz1wlAIlgtByMY+bGjmRWJC3gUTgjV4xNvJEWOjN+os4Goxb5Qckb/cFulpc/r7dWK5xgHVgf+ZL0Izosa5bBmft74MHFMXMo1KcDjwNHKLG/EgB2g2hkt3nTW3xkjPa4Yk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JXs8VltE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706708333; c=relaxed/simple;
+	bh=CPLp+9AYzGX3pEeWi3wlU4ZtwP5lMB44GA9+1lDqg0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NmUHIj3fRm2144wh5f1U8pQaNh7M4/c1nXhWbshMV8hygCTN7htY55JajIRjATpH2ynh8hdnYJe4GYZcLmLTweQi+5rvq1gl0zs37Jx5JH1w1Ll3Wjek/DI+VlLjOcYyUEkR+/Ve33KAd0k1TVfviyLPky38rVjfyMscAaGwM1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7wOeWfN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JXs8VltE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706708293;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vNnp/Z0S7DqUPASGq4M26R4kayT9Cyd518Jol1/4wN4=;
-	b=JXs8VltEDDI38sWcW2ltl865d9+Jd80OQC1ZXQvy8COslFEkJsgp0wtzQWYgDVcelPXK9Q
-	O+/DnxUbiRD4x6z1hLvnc/9O/FIulnjUeYFIwuFOHWYhNo58qtSg/stBje48/87FOQ5LOh
-	mBjZiypSLtq7yX6nlZWEazCnrBecHVo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-512-OPhQpnqqN3yRmhK5GPpB6Q-1; Wed, 31 Jan 2024 08:38:12 -0500
-X-MC-Unique: OPhQpnqqN3yRmhK5GPpB6Q-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40fb64f802dso1590475e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:38:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706708291; x=1707313091;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vNnp/Z0S7DqUPASGq4M26R4kayT9Cyd518Jol1/4wN4=;
-        b=Q7s64H0FN+WzO20OfD33qjxgHC5fENjuy6Z3DGlVE+Sa52S7CuTs2GcJxdZnqE4lE7
-         BedxNKmN0QTiIV6PThTg03/sIXe4o6qqftu8F38HBFgnYAEB5qF670x5yIDL8E9bDbcV
-         uZY31YHWdsWAjH7uh0sKc5KKyWBjwdHglehvqXduXPqfwN7sRA5phOqvJWD1bKDlPSC3
-         hFKyJCuENErkY1p5wlCW8V3u7nQzTBrJboNeS3KrzcyANPL31DARCONvIVcow6vByFkj
-         U4eGXQSVO0OaE/mWiaOoN+OajeEoNRYVCYlkDGEAcYPAO4YJtEF7pjUuHoUD8fvHYCau
-         YAmw==
-X-Gm-Message-State: AOJu0YxvDtzpxFmV/oZRUAiggCapcoySaYI3Nm0LhmR/4UqppjtDCkt7
-	J0xAw9zGcW21gLSVRI80SOgKK/eLKBl6ZrCBz/SCb+UQ0c8vvySCBIahz56zg3VOtWLdOYw8y0Y
-	6RSLLeZf5CMdd7IFlNxRPMkxJ7sdnAZ4iueXZc1jfoZNdvseJjat4KcgfzOJ7qg==
-X-Received: by 2002:a05:600c:6551:b0:40e:b93e:4a0f with SMTP id dn17-20020a05600c655100b0040eb93e4a0fmr1406584wmb.19.1706708291169;
-        Wed, 31 Jan 2024 05:38:11 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEoAHxE3D/zHX4Njds0uFxoI5Tm9039gsOQ1jUjIaqjF15lPY9fb5u6xV8tefJ0lfUgXMicvQ==
-X-Received: by 2002:a05:600c:6551:b0:40e:b93e:4a0f with SMTP id dn17-20020a05600c655100b0040eb93e4a0fmr1406543wmb.19.1706708290739;
-        Wed, 31 Jan 2024 05:38:10 -0800 (PST)
-Received: from [10.32.64.237] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id h9-20020a05600016c900b0033aedb71269sm8183465wrf.88.2024.01.31.05.38.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jan 2024 05:38:10 -0800 (PST)
-Message-ID: <c63870b0-690a-4051-b4f5-296cf3b73be2@redhat.com>
-Date: Wed, 31 Jan 2024 14:38:09 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7wOeWfN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94E8DC43390;
+	Wed, 31 Jan 2024 13:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706708332;
+	bh=CPLp+9AYzGX3pEeWi3wlU4ZtwP5lMB44GA9+1lDqg0Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N7wOeWfNFJ1SeWiKk+cAW/43kh5X4RTcseKgUBBaK7HVu8FeyNgcglzNeEXM2iNbt
+	 /ER/FBSdTbD8zxzkp1m6hGF1ZbEtJSt7LAvN2RjY2ZHhsrsNdnZHICJU+dntMNj7Kt
+	 +bLM6GbahqHupXQ7NAX9OsINU4u47fu2bsiiphcj6GOc8UdGxxor1JYAuTz7gx6rcs
+	 FhgUs3L3O5eFGUyU/cWIHpOxgcVw+mLwH1L/2Aek4/sHOodoDgoCWjByU2tar/oc/z
+	 aRKNv5zBHnxLe7jwzcZLyvci/++PNsc4zB8TtQyQPxkFeSjQZOUqTewp7WxDy9MBBR
+	 MeDQYGadFcmHg==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Emil Renner Berthing <kernel@esmil.dk>
+Cc: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] riscv: dts: starfive: add Milkv Mars board device tree
+Date: Wed, 31 Jan 2024 21:25:54 +0800
+Message-ID: <20240131132600.4067-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/15] mm/memory: optimize fork() with PTE-mapped THP
-Content-Language: en-US
-To: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dinh Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
-References: <20240129124649.189745-1-david@redhat.com>
- <a335a9d2-9b8f-4eb8-ba22-23a223b59b06@arm.com>
- <a1a0e9b3-dae2-418f-bd63-50e65f471728@redhat.com>
- <57eb82c7-4816-42a2-b5ab-cc221e289b21@arm.com>
- <e6eaba5b-f290-4d1f-990b-a47d89f56ee4@redhat.com>
- <714d0930-2202-48b6-9728-d248f820325e@arm.com>
- <dcaa20c4-bd1f-4f15-bb0a-3a790808937d@arm.com>
- <30718fc8-15cf-41e4-922c-5cdbf00a0840@redhat.com>
- <de975655-8f8f-40dc-b281-75c40dd1e2c1@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <de975655-8f8f-40dc-b281-75c40dd1e2c1@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
->>> Nope: looks the same. I've taken my test harness out of the picture and done
->>> everything manually from the ground up, with the old tests and the new. Headline
->>> is that I see similar numbers from both.
->>
->> I took me a while to get really reproducible numbers on Intel. Most importantly:
->> * Set a fixed CPU frequency, disabling any boost and avoiding any
->>    thermal throttling.
->> * Pin the test to CPUs and set a nice level.
-> 
-> I'm already pinning the test to cpu 0. But for M2, at least, I'm running in a VM
-> on top of macos, and I don't have a mechanism to pin the QEMU threads to the
-> physical CPUs. Anyway, I don't think these are problems because for a given
-> kernel build I can accurately repro numbers.
+The Milkv Mars is a development board based on the Starfive JH7110 SoC.
+The board features:
 
-Oh, you do have a layer of virtualization in there. I *suspect* that 
-might amplify some odd things regarding code layout, caching effects, etc.
+- JH7110 SoC
+- 1/2/4/8 GiB LPDDR4 DRAM
+- AXP15060 PMIC
+- 40 pin GPIO header
+- 3x USB 3.0 host port
+- 1x USB 2.0 host port
+- 1x M.2 E-Key
+- 1x eMMC slot
+- 1x MicroSD slot
+- 1x QSPI Flash
+- 1x 1Gbps Ethernet port
+- 1x HDMI port
+- 1x 2-lane DSI and 1x 4-lane DSI
+- 1x 2-lane CSI
 
-I guess especially the fork() benchmark is too sensible (fast) for 
-things like that, so I would just focus on bare metal results where you 
-can control the environment completely.
+patch1 adds 'cpus' label
+patch2 adds "milkv,mars" board dt-binding
+patch3 ~ patch4 adopt Krzysztof's suggestions to DT node names
+patch5 introduces a board common dtsi for visionfive2 and mars
+patch3 adds the mars board dts file describing the currently supported
+features:
+Namely PMIC, UART, I2C, GPIO, SD card, QSPI Flash, eMMC and Ethernet.
 
-Note that regarding NUMA effects, I mean when some memory access within 
-the same socket is faster/slower even with only a single node. On AMD 
-EPYC that's possible, depending on which core you are running and on 
-which memory controller the memory you want to access is located. If 
-both are in different quadrants IIUC, the access latency will be different.
+Since v2:
+ - add a common board file which can be used by vf2 and mars
 
->> But yes: I was observing something similar on AMD EPYC, where you get
->> consecutive pages from the buddy, but once you allocate from the PCP it might no
->> longer be consecutive.
->>
->>>    - test is 5-10% slower when output is printed to terminal vs when redirected to
->>>      file. I've always effectively been redirecting. Not sure if this overhead
->>>      could start to dominate the regression and that's why you don't see it?
->>
->> That's weird, because we don't print while measuring? Anyhow, 5/10% variance on
->> some system is not the end of the world.
-> 
-> I imagine its cache effects? More work to do to print the output could be
-> evicting some code that's in the benchmark path?
+Since v1:
+ - add two new patches which add "cpus" label and board dt-binding
+ - adopt Krzysztof's suggestions, thanks
 
-Maybe. Do you also see these oddities on the bare metal system?
+Jisheng Zhang (6):
+  riscv: dts: starfive: add 'cpus' label to jh7110 and jh7100 soc dtsi
+  dt-bindings: riscv: starfive: add Milkv Mars board
+  riscv: dts: starfive: visionfive 2: update sound and codec dt node
+    name
+  riscv: dts: starfive: visionfive 2: use cpus label for timebase freq
+  riscv: dts: starfive: introduce a common board dtsi for jh7110 based
+    boards
+  riscv: dts: starfive: add Milkv Mars board device tree
 
-> 
->>
->>>
->>> I'm inclined to run this test for the last N kernel releases and if the number
->>> moves around significantly, conclude that these tests don't really matter.
->>> Otherwise its an exercise in randomly refactoring code until it works well, but
->>> that's just overfitting to the compiler and hw. What do you think?
->>
->> Personally, I wouldn't lose sleep if you see weird, unexplainable behavior on
->> some system (not even architecture!). Trying to optimize for that would indeed
->> be random refactorings.
->>
->> But I would not be so fast to say that "these tests don't really matter" and
->> then go wild and degrade them as much as you want. There are use cases that care
->> about fork performance especially with order-0 pages -- such as Redis.
-> 
-> Indeed. But also remember that my fork baseline time is ~2.5ms, and I think you
-> said yours was 14ms :)
-
-Yes, no idea why M2 is that fast (BTW, which page size? 4k or 16k? ) :)
-
-> 
-> I'll continue to mess around with it until the end of the day. But I'm not
-> making any headway, then I'll change tack; I'll just measure the performance of
-> my contpte changes using your fork/zap stuff as the baseline and post based on that.
-
-You should likely not focus on M2 results. Just pick a representative 
-bare metal machine where you get consistent, explainable results.
-
-Nothing in the code is fine-tuned for a particular architecture so far, 
-only order-0 handling is kept separate.
-
-BTW: I see the exact same speedups for dontneed that I see for munmap. 
-For example, for order-9, it goes from 0.023412s -> 0.009785, so -58%. 
-So I'm curious why you see a speedup for munmap but not for dontneed.
+ .../devicetree/bindings/riscv/starfive.yaml   |   1 +
+ arch/riscv/boot/dts/starfive/Makefile         |   1 +
+ arch/riscv/boot/dts/starfive/jh7100.dtsi      |   2 +-
+ .../boot/dts/starfive/jh7110-milkv-mars.dts   |  35 +
+ .../jh7110-starfive-visionfive-2.dtsi         | 600 +----------------
+ .../jh7110-visionfive2-mars-common.dtsi       | 617 ++++++++++++++++++
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      |   2 +-
+ 7 files changed, 657 insertions(+), 601 deletions(-)
+ create mode 100644 arch/riscv/boot/dts/starfive/jh7110-milkv-mars.dts
+ create mode 100644 arch/riscv/boot/dts/starfive/jh7110-visionfive2-mars-common.dtsi
 
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
