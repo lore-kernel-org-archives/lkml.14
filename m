@@ -1,105 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D836027F;
-	Wed, 31 Jan 2024 09:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E672B9AC;
+	Wed, 31 Jan 2024 09:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706692136; cv=none; b=hOrIp/H/q506mmfiQSM7eXBkTSG6U7s8OhfbmX2HRkr8ZUDY9SGJksjR4V/oB45cQPlmAPefunybst3/xhoVINiiJX5WMPhtqmYBKpR037RhBBz7UwJ9Gjp94ELuxbKSEXiULn1VjE7xFW+sTNC5GnsfcR597dMDELlgz7BosuQ=
+	t=1706692143; cv=none; b=dOqlH3Vc4GnQXnxwFQd7cFERbfOJr5Cc9Uu4Edth3ysuEIbWIeL3aKN/pxVMttrGUCOCO5zt/pCSy6dHdBmGUWbbKoen4mbGdf0+DIhoJ0i/IEUSEsFrEAtUXC/FwfaUwgW3IO23PLeFaVxwNZO+JlBM8xoHKGplu80uKZOn1Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706692136; c=relaxed/simple;
-	bh=hxzRTdZxJSt3TvyZe6HqJcBulFzOOA/CYDt4I8ip2l4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ARCZzxtjh+d6DApGWw/i2EYl8aCiZSw++c2iGcdONKkW6ezMVQNV3CfuurlcvKuC3TUkJeHQqeXlukLePH4oOPGB22OJZ1SOqaY3/F66/cd/B9uS1TqjZkwFODcMtXPn1RJT1oIkkP1jcdnNsT+aAYuGoF9eUHYPiUk5FO2TSGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h7/3s84I; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h7/3s84I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706692133; x=1738228133;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hxzRTdZxJSt3TvyZe6HqJcBulFzOOA/CYDt4I8ip2l4=;
-  b=h7/3s84IVSjc+w194EUXLr+YHeSzxAiiAHK3kCg7koKWHy0r4qI/07Vo
-   v6PrCPbVM4BwAXKmNm3tyE6ziJWidZWqbMaRTV0i5SF6y7lX6qufGUW88
-   kksp8ERcwA4Q7nn4ttc+G1ELFXCBpoczJSgcOqSKdG6GM3I/fMP+t8ovT
-   3S5ldHEATqN9TidCzxR3U17CTSOY0mn/tSYRnTgSL/rjOUqeqWS2kPCye
-   vQzokjEjka2cx+7b9Nqk9NN0M3tYB03M/b0yaFK6OzhahXb2SyF0oVdxB
-   1uFK99Xegf7vwGONvLA0Y5SVDbJyArMxOp+P0Tg1EKQ/oBHD6T7FbnM4R
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10207460"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="10207460"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 01:08:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="931776091"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="931776091"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 31 Jan 2024 01:08:49 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 7A2316E4; Wed, 31 Jan 2024 10:39:14 +0200 (EET)
-Date: Wed, 31 Jan 2024 10:39:14 +0200
-From: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Zixi Chen <zixchen@redhat.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Kai Huang <kai.huang@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH] x86/cpu/intel: Detect TME keyid bits before setting MTRR
- mask registers
-Message-ID: <bf3ptwhblztmal3c5b7jhjpohizw7q64th76pzit6rpgnewmo5@atq3oy6sp5vn>
-References: <20240130180400.1698136-1-pbonzini@redhat.com>
+	s=arc-20240116; t=1706692143; c=relaxed/simple;
+	bh=ujwMiO00xHpCheR9JNmSZrbICGjRt5Prk8QBLRfTBqs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=udlnHOAuPcl4cJrX3sozYu85f+sRHq0bxT+d5M/dkD4QOVsm4DRMHiTBGqUiFgq1qoIruWB1dolA7KTITrP7DPJVeMePQkNzyM6jgRD4Ya9IiI+te+BEyr2uX0+twyOF7FZ7l6bgHk2XDwp8RtRplK1Ztlz128Oqh9fHiJlo8rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 2af88985a625436e8365e53352332a4e-20240131
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:599b2e0d-088f-4f13-b4ac-3fb1808a31a8,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.35,REQID:599b2e0d-088f-4f13-b4ac-3fb1808a31a8,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:5d391d7,CLOUDID:963df57f-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:240131170855MHIAF13P,BulkQuantity:0,Recheck:0,SF:24|17|19|44|66|38|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 2af88985a625436e8365e53352332a4e-20240131
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 326931249; Wed, 31 Jan 2024 17:08:55 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 79BFDE000EB9;
+	Wed, 31 Jan 2024 17:08:53 +0800 (CST)
+X-ns-mid: postfix-65BA0E25-202812822
+Received: from kernel.. (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id A2CBEE000EB9;
+	Wed, 31 Jan 2024 17:08:52 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: dccp@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH net-next] net: dccp: Simplify the allocation of slab caches in dccp_ackvec_init
+Date: Wed, 31 Jan 2024 17:08:51 +0800
+Message-Id: <20240131090851.144229-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130180400.1698136-1-pbonzini@redhat.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 30, 2024 at 07:04:00PM +0100, Paolo Bonzini wrote:
-> MKTME repurposes the high bit of physical address to key id for encryption
-> key and, even though MAXPHYADDR in CPUID[0x80000008] remains the same,
-> the valid bits in the MTRR mask register are based on the reduced number
-> of physical address bits.
-> 
-> detect_tme() in arch/x86/kernel/cpu/intel.c detects TME and subtracts
-> it from the total usable physical bits, but it is called too late.
-> Move the call to early_init_intel() so that it is called in setup_arch(),
-> before MTRRs are setup.
-> 
-> This fixes boot on some TDX-enabled systems which until now only worked
-> with "disable_mtrr_cleanup".  Without the patch, the values written to
-> the MTRRs mask registers were 52-bit wide (e.g. 0x000fffff_80000800)
-> and the writes failed; with the patch, the values are 46-bit wide,
-> which matches the reduced MAXPHYADDR that is shown in /proc/cpuinfo.
-> 
-> Fixes: cb06d8e3d020 ("x86/tme: Detect if TME and MKTME is activated by BIOS", 2018-03-12)
-> Reported-by: Zixi Chen <zixchen@redhat.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: Kai Huang <kai.huang@linux.intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: x86@kernel.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+to simplify the creation of SLAB caches.
 
-I've seen the patch before, although by different author and with
-different commit message, not sure what is going on.
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ net/dccp/ackvec.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-I had concern about that patch and I don't think it was addressed.
-See the thread:
+diff --git a/net/dccp/ackvec.c b/net/dccp/ackvec.c
+index c4bbac99740d..1cba001bb4c8 100644
+--- a/net/dccp/ackvec.c
++++ b/net/dccp/ackvec.c
+@@ -376,15 +376,11 @@ EXPORT_SYMBOL_GPL(dccp_ackvec_parsed_cleanup);
+=20
+ int __init dccp_ackvec_init(void)
+ {
+-	dccp_ackvec_slab =3D kmem_cache_create("dccp_ackvec",
+-					     sizeof(struct dccp_ackvec), 0,
+-					     SLAB_HWCACHE_ALIGN, NULL);
++	dccp_ackvec_slab =3D KMEM_CACHE(dccp_ackvec, SLAB_HWCACHE_ALIGN);
+ 	if (dccp_ackvec_slab =3D=3D NULL)
+ 		goto out_err;
+=20
+-	dccp_ackvec_record_slab =3D kmem_cache_create("dccp_ackvec_record",
+-					     sizeof(struct dccp_ackvec_record),
+-					     0, SLAB_HWCACHE_ALIGN, NULL);
++	dccp_ackvec_record_slab =3D KMEM_CACHE(dccp_ackvec_record, SLAB_HWCACHE=
+_ALIGN);
+ 	if (dccp_ackvec_record_slab =3D=3D NULL)
+ 		goto out_destroy_slab;
+=20
+--=20
+2.39.2
 
-https://lore.kernel.org/all/20231002224752.33qa2lq7q2w4nqws@box
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
