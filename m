@@ -1,76 +1,105 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F5960DCC;
-	Wed, 31 Jan 2024 09:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2896D60DCC;
+	Wed, 31 Jan 2024 09:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706692459; cv=none; b=sVaid/6xudwgZVTmzPC/IDKih3RC95zVpLHBkITxREfIn3VhiHL8Y+hIomkFsuSDiAqkPizUWr7zE2IW+E/aLXrRrz53zQilEj5KElUTkYj/dmNSnh1e+25MDPNh7au2KDkw5fJK+8txWf6obrBwO3L6JwccKMBM8yfM4V4Y3+0=
+	t=1706692500; cv=none; b=g2W0PuvHFL5XXxU9z/zguXwgbYdHzmitJNklyj/eRCSKvU5nwFFWVdZy789we434m+gEEKPLC4g3G823kMFJfu7Z7HXTxUqzao4K0Lg8mHX4sjPEqesSAseqBn+Q2uHgjMX33Hqyk/vDYVnQ7WFOGKU2uosNArUODzUEpUZdI40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706692459; c=relaxed/simple;
-	bh=2PwMDPC8NQUUg2/errtkejxFs7bUsyCxqaGHwtreq5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H0T942FZQqxVnLBfTh8JLuorPQ1F0wxL7Rkygm7mHtT+b78dm5eFq8BFYOdzHv8ZMW9PNMGHTvdD/gEgAob2MMk7pOH0M0niOF3HwqicdybVv/6/+6y8zIuMLVJMwOm0+b7kTkFOlDwDDwrhdqeIFLmgDPaUxT/bF/H5BkWZykI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=5BOpaePE; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5BOpaePE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706692455;
-	bh=2PwMDPC8NQUUg2/errtkejxFs7bUsyCxqaGHwtreq5U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=5BOpaePEXnLgEs0w1foP+e3f5pZOcnJ/DghUTUze1p1o71HWeTKA5x7Knkrkzhpl9
-	 MTDjRqvSW7UD4oGEHttevqzOPREsJ6FTScbMIimoU3wBnG1UNuPG4Xix//3H+JQhpn
-	 UcLadPJrzrpSzOpdEUNp68OdCwc5nyul6ZfVu3jdXPrmo4BHrDwgobfxXiFe7ojp3N
-	 M1J+onqRju+S5rjQ/5qSHs+Eu/p9MLOwgPpFwzKPFqfWnZQkfmJWubwuoGiTW+7gVn
-	 ua/aOanAG2AV5hBE4LE/mUxYg5sBrqVIGMeQFmrS9pK+uxqjJzcQwJuJ81hg6UvN+v
-	 6b0e0QyDlh5xw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3942D37803EE;
-	Wed, 31 Jan 2024 09:14:15 +0000 (UTC)
-Message-ID: <6f2e1340-4fd8-48ce-91a1-f94486732abb@collabora.com>
-Date: Wed, 31 Jan 2024 10:14:14 +0100
+	s=arc-20240116; t=1706692500; c=relaxed/simple;
+	bh=76RXlR/msdWs4e9OX1WpKtSooLAmtPygvVwdSqDyayY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PAS1sesCzLQJWaXEoUnKchM2O0U+EZn8n/2ida0ToeX4/BujfexaQI3jP1Wky/xYWBgG7AW70/XhHA8XATyA0z8bLpmX5WAYI3DIFmqXjO3f5reONYudm3rzZ6tZ8bLCeExwkkWSZVkFfSQ7EMG1rIfYBjp2lIbW+DaStVBP1v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TPxDL2B49z1xmtd;
+	Wed, 31 Jan 2024 17:13:54 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id 347B71404D8;
+	Wed, 31 Jan 2024 17:14:54 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 31 Jan
+ 2024 17:14:53 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <netfs@lists.linux.dev>
+CC: <dhowells@redhat.com>, <jlayton@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <libaokun1@huawei.com>,
+	<stable@vger.kernel.org>
+Subject: [PATCH] cachefiles: fix memory leak in cachefiles_add_cache()
+Date: Wed, 31 Jan 2024 17:17:17 +0800
+Message-ID: <20240131091717.1277013-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mediatek: mt8183-pico6: Fix wake-on-X event
- node names
-Content-Language: en-US
-To: Chen-Yu Tsai <wenst@chromium.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-References: <20240131084043.3970576-1-wenst@chromium.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240131084043.3970576-1-wenst@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-Il 31/01/24 09:40, Chen-Yu Tsai ha scritto:
-> The wake-on-bt and wake-on-wlan nodes don't have a button- or event-
-> prefix that the gpio-keys binding requires.
-> 
-> Fix up the node names to satisfy the binding. While at it, also fix up
-> the GPIO overriding structure for the wake-on-wlan node. Instead of
-> referencing the gpio-keys node and then open coding the node, add a
-> label for the event node, and use that to reference and override the
-> GPIO settings.
-> 
-> Fixes: 055ef10ccdd4 ("arm64: dts: mt8183: Add jacuzzi pico/pico6 board")
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+The following memory leak was reported after unbinding /dev/cachefiles:
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+==================================================================
+unreferenced object 0xffff9b674176e3c0 (size 192):
+  comm "cachefilesd2", pid 680, jiffies 4294881224
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace (crc ea38a44b):
+    [<ffffffff8eb8a1a5>] kmem_cache_alloc+0x2d5/0x370
+    [<ffffffff8e917f86>] prepare_creds+0x26/0x2e0
+    [<ffffffffc002eeef>] cachefiles_determine_cache_security+0x1f/0x120
+    [<ffffffffc00243ec>] cachefiles_add_cache+0x13c/0x3a0
+    [<ffffffffc0025216>] cachefiles_daemon_write+0x146/0x1c0
+    [<ffffffff8ebc4a3b>] vfs_write+0xcb/0x520
+    [<ffffffff8ebc5069>] ksys_write+0x69/0xf0
+    [<ffffffff8f6d4662>] do_syscall_64+0x72/0x140
+    [<ffffffff8f8000aa>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
+==================================================================
 
+Put the reference count of cache_cred in cachefiles_daemon_unbind() to
+fix the problem. And also put cache_cred in cachefiles_add_cache() error
+branch to avoid memory leaks.
+
+Fixes: 9ae326a69004 ("CacheFiles: A cache that backs onto a mounted filesystem")
+CC: stable@vger.kernel.org
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+ fs/cachefiles/cache.c  | 2 ++
+ fs/cachefiles/daemon.c | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/fs/cachefiles/cache.c b/fs/cachefiles/cache.c
+index 7077f72e6f47..f449f7340aad 100644
+--- a/fs/cachefiles/cache.c
++++ b/fs/cachefiles/cache.c
+@@ -168,6 +168,8 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
+ 	dput(root);
+ error_open_root:
+ 	cachefiles_end_secure(cache, saved_cred);
++	put_cred(cache->cache_cred);
++	cache->cache_cred = NULL;
+ error_getsec:
+ 	fscache_relinquish_cache(cache_cookie);
+ 	cache->cache = NULL;
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 3f24905f4066..6465e2574230 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -816,6 +816,7 @@ static void cachefiles_daemon_unbind(struct cachefiles_cache *cache)
+ 	cachefiles_put_directory(cache->graveyard);
+ 	cachefiles_put_directory(cache->store);
+ 	mntput(cache->mnt);
++	put_cred(cache->cache_cred);
+ 
+ 	kfree(cache->rootdirname);
+ 	kfree(cache->secctx);
+-- 
+2.31.1
 
