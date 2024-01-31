@@ -1,78 +1,70 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C50B21E522;
-	Wed, 31 Jan 2024 11:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584F176906
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706700543; cv=none; b=KqTMeXJKRrWeXZ7ED4vZA61Dz6KKKqKRAhvkzGzBwCKUeKHgs7jQT8nEVL4r2N3NcQLx8q23R9tcOA3Vc88B6QF8tyvu0sOJim2oFyuCpKqWAqFJtx09enpFRGVnXlKkgpX8+T7cmonbaTj/3NOYbngBIJCC+tzkmfYS43LfCjQ=
+	t=1706700547; cv=none; b=aavAIpOWpHy/IYAvDDxg6woiV2+4Pa1ZA3AorhHcOJ0JvTnXmYoiV03NAp0unmurxdsnroS6xsaG67fsjNRUeoJw/Lon00R3nIqVsmk6O8wkP3m5FaaA+BXdoD1BTCkq6SylgUS8YjBVmn20PIoQNkkSLQ7eI6YGktOhZsKgRRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706700543; c=relaxed/simple;
-	bh=QKraxa4UloPYnJDUngqsppTilrRHPIZbphWIi9YMt/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RF7r2o7hPuld8mDnVyrEvfJnu/2JMCZ3NaydrMTPnHe5bXy5/Ih13+RqaRZ5tIxUFpWn/1DIdn8LxRrE3GmDvWnz+NYHW4mrSH2itN4dA0h6MIG3U9+7hkJXL+HmacZ9AX/60rpl651o2CUXKno2PsplADSp0wWDCm6oVrfeOz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABF94DA7;
-	Wed, 31 Jan 2024 03:29:43 -0800 (PST)
-Received: from bogus (unknown [10.57.78.35])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FF973F762;
-	Wed, 31 Jan 2024 03:28:57 -0800 (PST)
-Date: Wed, 31 Jan 2024 11:28:54 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Sibi Sankar <quic_sibis@quicinc.com>, rafael@kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>, viresh.kumar@linaro.org,
-	morten.rasmussen@arm.com, dietmar.eggemann@arm.com,
-	lukasz.luba@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_mdtipton@quicinc.com, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V2 1/4] firmware: arm_scmi: Add perf_notify_support
- interface
-Message-ID: <20240131112854.24euh6c6xgljsj6c@bogus>
-References: <20240117104116.2055349-1-quic_sibis@quicinc.com>
- <20240117104116.2055349-2-quic_sibis@quicinc.com>
- <ZbfJN1c9viiLhO1L@pluto>
- <ZbfhdqBBpjyf3IRI@pluto>
+	s=arc-20240116; t=1706700547; c=relaxed/simple;
+	bh=VvhBjcDQyhRQey66mVjt2h3hioRHmNNCtKdYCiX4HUQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=eA4Vyg88t2fM3BqwjSot95wgHh/7YDkZkUGyHQiJ2Ti8Rhi7qf7Mor8mswgtDzYnnNxcjsI7Al+cNNbvizAJj8YTjbuY3aAdU2CsFIPdKzzXst4rGyDYv95Gfz3kjFmXr6s+RR2KMv8JvWHV7WLxOM1KIwMQPzlVho2afMIRk90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3637e2a2e5fso4223985ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 03:29:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706700545; x=1707305345;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CqJ1VFyXzv77xQ1wVPZaGWa05ieFny/6Ks8ZB2AjPvA=;
+        b=rAWTb7ppxWK5PhrUaJYFzA4S15sQBt/jVtycbCEslqSj5m2QvQIQ0oxxTkdlSAliUJ
+         +7E0Rhn4x3pv/uII4DlWUx54XOXwN4rFk3yPlBgmWmNYoNMIa75IKCwOV/yYv/MQ5XFy
+         I5epIJ+bBDEfjClmGRapd5a30p2D3acDWOtN6y3T56m94bj7CUtLSwPoFs+Jg6dgbvOq
+         pwo7eeTPCtshzuXR8sQaTT61axxGdHCDXoJT2isN5L0zjedASxg9d7mb0Q+gZjMAIkxC
+         T+4Z4Z8pkXSABvSZyuQ/zPoYh6hG5NBC8ZnjlkiLYyQaPigWsVfqjMy96yLpnVMhyB8z
+         X7HA==
+X-Gm-Message-State: AOJu0YwF8uPdVfv/TOnHUuhx6wPFQW2naYPu7pZHiNSrmCW/m1tbRemk
+	31i9QX8m2VzXHAVTYu88pqR8O7bQldranxZ/yVFMHIxuUGNtM3Xyh8VNh69qhniixSV7EHFg/Go
+	v3oxzLiYnfsmPE7arltVhhicSFcpYLd78DYWCYotRFNvkUZ4C5mdjwzE=
+X-Google-Smtp-Source: AGHT+IFeKkJaobJHPLZkKWEyEX2ZFgisgbMXudwPhKUO8dGfX0qFXlrGqBrfI3CZi3++TC2CZp33TAjV+VmpSWNywF6WekjPLEo7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbfhdqBBpjyf3IRI@pluto>
+X-Received: by 2002:a05:6e02:1aac:b0:363:75a8:56e1 with SMTP id
+ l12-20020a056e021aac00b0036375a856e1mr100345ilv.3.1706700545472; Wed, 31 Jan
+ 2024 03:29:05 -0800 (PST)
+Date: Wed, 31 Jan 2024 03:29:05 -0800
+In-Reply-To: <20240131102731.1550-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c041c206103c2f22@google.com>
+Subject: Re: [syzbot] [bluetooth?] INFO: task hung in hci_conn_failed
+From: syzbot <syzbot+a984066a63e9c1e62662@syzkaller.appspotmail.com>
+To: boqun.feng@gmail.com, eadavis@qq.com, hdanton@sina.com, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 29, 2024 at 05:33:42PM +0000, Cristian Marussi wrote:
-> On Mon, Jan 29, 2024 at 03:50:20PM +0000, Cristian Marussi wrote:
-> > On Wed, Jan 17, 2024 at 04:11:13PM +0530, Sibi Sankar wrote:
-> > > Add a new perf_notify_support interface to the existing perf_ops to export
-> > > info regarding limit/level change notification support.
-> > > 
-> > 
-> > Hi Sibi,
-> > 
-> > as I mentioned previously, in order not to add a needless stream of SCMI
-> > Perf accessors I posted this:
-> > 
-> > https://lore.kernel.org/linux-arm-kernel/20240129151002.1215333-1-cristian.marussi@arm.com/T/#u
-> > 
-> > to expose all the Perf domains infos via the usual info_get(), similarly
-> > to how other SCMI protocols do already.
-> > 
-> > I think that reworking this series on that, you can certainly drop this patch and just
-> > check the _notify booleans on the retrieved domain info.
-> 
-> Sorry, but hold on with this change, I will probably post an updated version
-> my patch above.
-> 
+Hello,
 
-As discussed in private, I would prefer to avoid exposing all the internals
-to the users of SCMI perf. At the same time may we can do better if we can
-check the availability of notification as part of notification enablement
-from the SCMI driver, I need to think the details yet.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
--- 
-Regards,
-Sudeep
+Reported-and-tested-by: syzbot+a984066a63e9c1e62662@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         dd85149d rcu/exp: Remove rcu_par_gp_wq
+git tree:       https://github.com/fbq/linux.git rcu-exp.2024.01.29b
+console output: https://syzkaller.appspot.com/x/log.txt?x=1132b337e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f9804db253bdfc61
+dashboard link: https://syzkaller.appspot.com/bug?extid=a984066a63e9c1e62662
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
