@@ -1,89 +1,124 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DD9768FA
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F179768FA
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706702405; cv=none; b=KPFeWnoeuPc/AiiWWIyIZs0ylKRhXKQIG5vuvGkwqxP9vfNp1WY3KmSI07iYQEkp4LFye7ShGHUqPYlnUkzOLiuSxyNZkbZFPBsU9TRlZpHH7zc2PvVUskIE50fmuknDLOe89gMLqLYSwLWHdcKVap0xsaZYLp2d6ffxzQrEMT0=
+	t=1706702412; cv=none; b=B/9hh37J8MxmP+UuqZcCRHFLVSW/6g/XwJqBJeb7p7cjqqNfS9VrhwzrbaCQa9Qb7fqz8qB9VsURYJgKq+Sg0P215zcxj8E71kPrdO1+mlgpFNDd1rW6hXmv1dbegBi1HFEekVfU4F2x0RNhfd6CZVgX+aX03cn8pqlq1yiTUOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706702405; c=relaxed/simple;
-	bh=oWQhQKQpPRCG6szRCfg++x9P88w7qfedeAfc8hA27VI=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=UiQ7KtI6o5J8a0uqFF/un8+95L1gDLBnAiaLipkBpJXM89Bu1vostFzeOunxGxBK/vpNqj0NMpRVGNSsmuP658Gjto7+5vNIuGc8VHH3sK/z2D1FTWFnGGQqnkFdLSXPFGIHH416apkm8YQh0Um0/XjGAlHpdQDW3VlOWEYbx7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=rT1Gz1UC; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1706702412; c=relaxed/simple;
+	bh=mbaGmg6mYMDAv6U0bRENMo1BCyzpuN1OGZkDhvhXR0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CeNBgmvKSfAr4rzRoXbQYPiUxW8AjJhZsqYRMBsifsHiPvD0TrVmi80Lny+wo13fL2vxNwL9J61Nb8F982h1Q1VTs4qK8MGgkHa3uc75NRQy4UY9K5aJB13V/dz2qQgJITKxmQCwK4GjiqXuF9kv0NNw1KQYMgKwBg7Mdcl37Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=uPz8u/DH; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="rT1Gz1UC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1706702398; bh=yazyxRJIRqs2Z51K4OSBPM0fWNpJUGwfkDY5jgcCGBE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=rT1Gz1UCTHuNTA3hmxwLJJ13G5uAzCXJJeNTa1TmppO3xRLXY+CB3H45K2tYL2uq9
-	 ONdZlVODAC0C0ENrWjxnPSl8HRvvacyk61MQ9PfiRUE01edd815ZsTXYGREvirRkGN
-	 5kbpG5yfEEhfbhtFbT/48klGWEzthqXduRDTa1Ks=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id D739EE77; Wed, 31 Jan 2024 19:53:51 +0800
-X-QQ-mid: xmsmtpt1706702031t9qu06wl3
-Message-ID: <tencent_9DB87AFA6C9C2D756D849410E9FEEC26CF0A@qq.com>
-X-QQ-XMAILINFO: NvH2zBBgt3uT6SfvEicVD2LwKEFyAx6vot/s2ulIM1f/xr2IAkRRop5rDeX4EX
-	 axaa6hnr6R/IAhWup+SQNYqu/69NvauL95KbxbNOiiw9p74zmnRx1kCnEW+wlN+ZHDK2X0QfLCEt
-	 HhBYrsR/IIaW+8+1sfsNq8ATe85C5MDlZSNcBDqo2y4YG+AjVq5PnCujrqxKIqMOPAE+bFFW6PwW
-	 jwlf1kb47GZfZk95lafHY1CtLsYbuCaj2FBGCxvkiRoL6cd0b79z96Q6JLVj6PfFwFL4lJ0TnK9R
-	 ASmpQlLr2SJa85TrQqql2R9mUnUYdTNV/1ob047RoKv95/bpm5PMSstKf5Jy+0L27VDtq6rR8XhT
-	 Z8slGIqttDMBhutDtWNequVZMiNERkW+Nx7ImtUxSCt8cH9V8vr+7LIv6+BBJjBnHaZvSTB7kq1N
-	 GKCernGwy+IaIEz2dZuDRO/8V6te2OkC31YbiaGKuVVlWXTmrNG9FGAGMTN0pLWpuQqhUG+/V1cH
-	 yRaoA9wqxhLKSyNMMcuzpD4JXUIlQoXdeOyxtotxWiQzjOSGfAHJcCy2yLwTRbVspfN/H/p/HONE
-	 hwtso2SLHtl2yV6evHm4EqBNvdufTtITu+BvytP6fql7u/oLC4Nh0NzMh+LAtoGA9rAU+QNfLA85
-	 cfWBEEygvdQ3Za7goFVGtdpcgYGJdkhnljzjyMrCYctU1IlWCAFHPXB3RB2fdNdkDOfEkyT4lqrG
-	 q4B1+mWGfG7SyVq8M4R9LhA0b629IcSc4nQAsbH76DUemY2BmUyjf59lUcQCPg9y/qvB/b1GjkER
-	 28qq2l8dtxXOBlsF/Er305Hd3tnCYdlaA7Yt9ljxIKWUKnw66vWjLvsDUneLMb7tCkRxCG4WaZGy
-	 Ev5uwglWmgggavKJOWjeLfl0dnWd8DtRYEGatabwDbfoO7JqUUKe4lBtmJ79fYlsXitOD9K2kk7V
-	 egC6IO/L7ykQnRQLGQrfUV7iqusp64
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
-Date: Wed, 31 Jan 2024 19:53:52 +0800
-X-OQ-MSGID: <20240131115351.1261875-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000002b1fc7060fca3adf@google.com>
-References: <0000000000002b1fc7060fca3adf@google.com>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="uPz8u/DH"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33ae3be1c37so494003f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 04:00:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706702408; x=1707307208; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRIlhUmLDjTPjpQJWhot1CNU7PKVSI6pop1UZB6zBPk=;
+        b=uPz8u/DHZEW7QjqmfmPZUKoTFrDZJRlQYAfRuxN4zsvBBZc5t3d+y8z9mYhMNE+TCA
+         28tP7hYJ4hBpANJsjAhVjSfC0ghdnC33MduTWnylpBJ0wgRA8lTFIttN8ABd+hUf+Eul
+         o1XUXwa9xxdJEsKfSwyoF1ICmPjw9Mf29y335BT3HlMp9K2KVnXRkgFThV0Q79Jeh73I
+         +N0WCzmGjgPWmbMQIqAsIwZtRUAXUUfSckx8wtyTmS7Ia2n5mKJSj72M9thSdEWdwBQ5
+         sUS4qsWraTr7Ep4ZwKg8q5fVFi1ztPG8iKtmlxFVIUxJMdt0vHkt4YTAciD9i5nbyRor
+         I2fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706702408; x=1707307208;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HRIlhUmLDjTPjpQJWhot1CNU7PKVSI6pop1UZB6zBPk=;
+        b=tHYmZRFW811hY+j3T/wr+0dNJmURTaG+l7JUHXDOz44+V/J8b2r9BMfWinIxlepINv
+         MVujkidgik/vmzZKf4MnGdBaR0NuWHhfrn7XIYvdw0XEPhwGzdL5lBvQk+78VVw4Sz7L
+         4k+h6Y6hhOEfNnvkEZmMzzrwGzhlu8q5m1bEMme4Qd+vpwHkKKCjYS6+vJ/1vRkOqwUM
+         GRKkswtnXQ68yVDVRHq65cS3jjtuJDIhs19J6S9zWMmCkoo84GcCcuxPk27XQM+YtFux
+         M8gBFqG+TXpRRdvqAY6cr6kIyjei22AJy9YkMV1+VDlYrzuWwag0encZIzwcIZplhf9c
+         Zeog==
+X-Gm-Message-State: AOJu0Yxicz1qGgbUfWDKUmPWfDq/l0yaL1XAputyWF/qP5sxFGiQVh/c
+	PrksGgmvzgJJlm6FGRf6BwkQh/vNoF2merb9NCOclDThCnUR8B2TbubragZhyDs=
+X-Google-Smtp-Source: AGHT+IE/gZETgx51O7pzrCc3cEr494HTU9XfJV8azb9nJPzczdS5zJhegdsdVTGJc1Cb3wC4htdFyQ==
+X-Received: by 2002:adf:dd8b:0:b0:33a:ded0:c309 with SMTP id x11-20020adfdd8b000000b0033aded0c309mr1288727wrl.13.1706702408470;
+        Wed, 31 Jan 2024 04:00:08 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCU/uzCB3VwH+x4UZ0/JI+iYwp4TEf7h9P3oHFQu4kmLs2PpqfRUeMAuxSO2exbX8NFFnywp9GbXo9B0FY00u6gCHLamjEQFCckgF5FkQjjJtzeQxXC2AJxKfNm78BC6gqliQ9xHevRjGoOQ33Z5xahTB0cofWFeJ42FqQQFHCd2w8Kl2roAuskO5t/99Y49u1DiRdjrujfdB61Wo1J+QrPFK6s/SbDz86ixx+uyLMrCWo6z195T4OBXWsW5q2RYnQI5OODIvHQIn7Leh3JBndKSfm9r1xSISWUbihBsp3Pno0GQuIAxX8+9z1ip5PFJvmp9gGjnE0RUCIWuxPyCL9/CLzVg1Zqgjx92LA5FCZgDZFh2y1LYIV8ZVQStOu4/oEqFX8+K7Nrg9+fFdNiX7xmDig3ttLbaGZbIw74ofQJNPxU27aQhNdKNNY4N0QienQ9zXSHD6h3qhbZEY9IDheZpmCOjymOsAUtknS/q8nbmWA==
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ch19-20020a5d5d13000000b00337b47ae539sm13337744wrb.42.2024.01.31.04.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 04:00:07 -0800 (PST)
+Date: Wed, 31 Jan 2024 13:00:04 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Cc: karthiksundaravel <ksundara@redhat.com>, jesse.brandeburg@intel.com,
+	anthony.l.nguyen@intel.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rjarry@redhat.com,
+	aharivel@redhat.com, vchundur@redhat.com, cfontain@redhat.com
+Subject: Re: [PATCH] ice: Add get/set hw address for VF representor ports
+Message-ID: <Zbo2RJErBsD0Sc_z@nanopsycho>
+References: <20240131080847.30614-1-ksundara@redhat.com>
+ <ZbokUx7myZ1bVWLL@mev-dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbokUx7myZ1bVWLL@mev-dev>
 
-please test task hung in blk_trace_remove
+Wed, Jan 31, 2024 at 11:43:44AM CET, michal.swiatkowski@linux.intel.com wrote:
+>On Wed, Jan 31, 2024 at 01:38:47PM +0530, karthiksundaravel wrote:
+>> Changing the mac address of the VF representor ports are not
+>> available via devlink. Add the function handlers to set and get
+>> the HW address for the VF representor ports.
+>> 
+>> Signed-off-by: karthiksundaravel <ksundara@redhat.com>
+>> ---
+>>  drivers/net/ethernet/intel/ice/ice_devlink.c | 134 ++++++++++++++++++-
+>>  1 file changed, 132 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/net/ethernet/intel/ice/ice_devlink.c b/drivers/net/ethernet/intel/ice/ice_devlink.c
+>> index 80dc5445b50d..56d81836c469 100644
+>> --- a/drivers/net/ethernet/intel/ice/ice_devlink.c
+>> +++ b/drivers/net/ethernet/intel/ice/ice_devlink.c
+>> @@ -9,6 +9,8 @@
+>
+>As Jiri already wrote, you are not changing MAC of VF in your code. Try
+>to look at ice_set_vf_mac in ice_sriov.c. In current implementation you
+>nedd to set new MAC value for VF and reset it. You shouldn't use PF VSI.
+>
+>Pointer to VF you can get from representor struct (through parent VSI).
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+What if it is in a different host? Would you still be able to change the
+mac?
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d5d94510afd3..4543be718362 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -313,6 +313,7 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
- 
- static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
- {
-+	mutex_unlock(&q->debugfs_mutex);
- 	relay_close(bt->rchan);
- 
- 	/*
-@@ -325,6 +326,7 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
- 	} else {
- 		debugfs_remove(bt->dir);
- 	}
-+	mutex_lock(&q->debugfs_mutex);
- 	free_percpu(bt->sequence);
- 	free_percpu(bt->msg_data);
- 	kfree(bt);
--- 
-2.43.0
 
+>
+>You shouldn't manage the rules during MAC changing, as in switchdev
+>slow-path there shouldn't be VF MAC rules. It can be problematic as user
+>already can have MAC + sth rule (which also needs to be change). I will
+>leave it to user (most probably the MAC change happens before adding any
+>rules).
+
+Rules are on the representor, not the VF, correct? Seems unrelated to
+me.
+
+
+>
+>In few days we will send patchset for subfunction support where the
+>subfunction MAC chaning is implementing from devlink API. I will add you
+>to the CC.
+>
+>Thanks for working on it, it is a gap in our solution.
+>
+>Thanks,
+>Michal
+>
