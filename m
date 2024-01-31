@@ -1,286 +1,145 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2AF12C553
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5145A1EF12;
+	Wed, 31 Jan 2024 17:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706721479; cv=none; b=mCbKWDzeGhVsS9THsK9bnftiZw0G1EzdkAhFVZ17xkWLBUHcDwvdySSRfvcyDvmz+au4n/Fl8mcJIt1ODT9t91Ok9j5CloG5OaL/UXDnoPI1sntBSphYJYMpAR+zmENcSN6FDALQu6RTbjDvVxZjwYgtmdwNcAHkipR7WwlGfps=
+	t=1706721530; cv=none; b=K0NawIozxj4/Eh/Q2mso2pbo0lndjtavKUP/e34Q4ZoUirQxWUUM6oTXu2PrbPMNgE0xKnx0sNQ7TyK0PnYGFd6skxn5Jr4FRXgnIygz1aai2jTtQOGOT/jqqlGyo0cdN1p5OYwQa28ILNd+aK8kxk9cCKdoYUGVwO6xnZd1xhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706721479; c=relaxed/simple;
-	bh=9nkrtbjByfNv1T6sAC22Fmx80l4zZlQsOYlq646IIRE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e4Oo31D7/uP8QE9W8mL/9ZLNAr/VDeXqQcQ1eR8GSigOFjKEsOoDsflrgoyiz5rXZyVUetFubU0vdmA42GS2D2gdlVHM4T0/I2a974CKHchNIJLjGUnyWhZ77ke8OFvT0vqM1gHVzop92URto0AiQoAjpSdc2bDk2zN93p2WTyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LcmtWHym; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1706721530; c=relaxed/simple;
+	bh=IIUrR5YxqrFodLFFKzfNxQbgIV0lT446TBY2XEfvZHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cCUb1V1r6Tfqu0/iW2IjEympeelhZxytQZ3EUr1AAklhakBiM/hq1bzmyZk1LFCdn6RhX7lpsHLdFMUTP8FmJoc4ygUeom/5dF4b5WRFXtdq+tL1DGY/WkJn4CGLvVBCYpsKyi4wUFUGexHediXywbD/fovkt6FXEkv/HMnLM90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=T6eti3Jo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tbHH6htc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=T6eti3Jo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tbHH6htc; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LcmtWHym"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1706721468; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=4dRcMznKsMkWtxs3KkZc5kx2bNGWIJtSaincuWHLRCY=;
-	b=LcmtWHymEvwR6EUSIQ7KJqCtOlMgefesEkqHeRKeZQacTzUwgwelZ4TdD+1j0VTT41V4e9fE1oM2wRoKwIW1dO/ssWWXZQXgC5O2xjfrbbG4GdICY9QB+95I3qQIjhVFTir8HsImxfCqQXoRHXY2TXTHp1oCXkgwycO0UT1ufSk=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W.kJfVI_1706721466;
-Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W.kJfVI_1706721466)
-          by smtp.aliyun-inc.com;
-          Thu, 01 Feb 2024 01:17:48 +0800
-From: Bitao Hu <yaoma@linux.alibaba.com>
-To: dianders@chromium.org,
-	akpm@linux-foundation.org,
-	pmladek@suse.com,
-	kernelfans@gmail.com,
-	liusong@linux.alibaba.com
-Cc: linux-kernel@vger.kernel.org,
-	yaoma@linux.alibaba.com
-Subject: [PATCHv3 2/2] watchdog/softlockup: report the most frequent interrupts
-Date: Thu,  1 Feb 2024 01:17:38 +0800
-Message-Id: <20240131171738.35496-3-yaoma@linux.alibaba.com>
-X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
-In-Reply-To: <20240131171738.35496-1-yaoma@linux.alibaba.com>
-References: <20240131171738.35496-1-yaoma@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="T6eti3Jo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tbHH6htc";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="T6eti3Jo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tbHH6htc"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6B2BE22004;
+	Wed, 31 Jan 2024 17:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706721525; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pX2DnOrLwWKLYumNK3TzC8Reh/LhxYlUXHdH/lnaQVY=;
+	b=T6eti3JomHWyQK2w1ouQcH9N4rpG3PELNj74ZN4VaqatpzG0OGvDMrbfaCGpulVE9HVvK5
+	6V/stfT1hSlW3BChIjK1gikbVn5HYP9MKe2/UutxHWafVFnPZflIK4VqdaGX8SGo19ABer
+	d9IsW/MUWk3AJRNXq/DGzvGtKYGIKPI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706721525;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pX2DnOrLwWKLYumNK3TzC8Reh/LhxYlUXHdH/lnaQVY=;
+	b=tbHH6htc44POBCV+ShlckMgx2UO6ThqfIflJtvq/Rt1bmAUh4Z30usoPGlC0MGwUa088KV
+	OQBUbijpEzcaSgDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706721525; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pX2DnOrLwWKLYumNK3TzC8Reh/LhxYlUXHdH/lnaQVY=;
+	b=T6eti3JomHWyQK2w1ouQcH9N4rpG3PELNj74ZN4VaqatpzG0OGvDMrbfaCGpulVE9HVvK5
+	6V/stfT1hSlW3BChIjK1gikbVn5HYP9MKe2/UutxHWafVFnPZflIK4VqdaGX8SGo19ABer
+	d9IsW/MUWk3AJRNXq/DGzvGtKYGIKPI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706721525;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pX2DnOrLwWKLYumNK3TzC8Reh/LhxYlUXHdH/lnaQVY=;
+	b=tbHH6htc44POBCV+ShlckMgx2UO6ThqfIflJtvq/Rt1bmAUh4Z30usoPGlC0MGwUa088KV
+	OQBUbijpEzcaSgDw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 604E3132FA;
+	Wed, 31 Jan 2024 17:18:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id pDt2F/WAumXQFwAAn2gu4w
+	(envelope-from <jack@suse.cz>); Wed, 31 Jan 2024 17:18:45 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 0ED1DA0809; Wed, 31 Jan 2024 18:18:45 +0100 (CET)
+Date: Wed, 31 Jan 2024 18:18:45 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+4654552e088ed458b10d@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [reiserfs?] BUG: unable to handle kernel NULL pointer
+ dereference in reiserfs_find_entry
+Message-ID: <20240131171845.okzidcm6gylcy4gw@quack3>
+References: <00000000000073b6d905eb48de3f@google.com>
+ <000000000000e3d3f9061040b2ff@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000e3d3f9061040b2ff@google.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-0.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=162cf2103e4a7453];
+	 TAGGED_RCPT(0.00)[4654552e088ed458b10d];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,syzkaller.appspot.com:url,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -0.10
 
-When the watchdog determines that the current soft lockup is due
-to an interrupt storm based on CPU utilization, reporting the
-most frequent interrupts could be good enough for further
-troubleshooting.
+On Wed 31-01-24 08:52:05, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
+> 
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
+> 
+>     fs: Block writes to mounted block devices
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e6fb5be80000
+> start commit:   51f269a6ecc7 Merge tag 'probes-fixes-6.4-rc4' of git://git..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=162cf2103e4a7453
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4654552e088ed458b10d
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1177c895280000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f4b2a5280000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
 
-Below is an example of interrupt storm. The call tree does not
-provide useful information, but we can analyze which interrupt
-caused the soft lockup by comparing the counts of interrupts.
+Makes sense:
+ 
+#syz fix: fs: Block writes to mounted block devices
 
-[ 2987.488075] watchdog: BUG: soft lockup - CPU#9 stuck for 23s! [kworker/9:1:214]
-[ 2987.488607] CPU#9 Utilization every 4s during lockup:
-[ 2987.488941]  #1:   0% system,          0% softirq,   100% hardirq,     0% idle
-[ 2987.489357]  #2:   0% system,          0% softirq,   100% hardirq,     0% idle
-[ 2987.489771]  #3:   0% system,          0% softirq,   100% hardirq,     0% idle
-[ 2987.490186]  #4:   0% system,          0% softirq,   100% hardirq,     0% idle
-[ 2987.490601]  #5:   0% system,          0% softirq,   100% hardirq,     0% idle
-[ 2987.491034] CPU#9 Detect HardIRQ Time exceeds 50%. Most frequent HardIRQs:
-[ 2987.491493]  #1: 330985      irq#7(IPI)
-[ 2987.491743]  #2: 5000        irq#10(arch_timer)
-[ 2987.492039]  #3: 9           irq#91(nvme0q2)
-[ 2987.492318]  #4: 3           irq#118(virtio1-output.12)
-...
-[ 2987.492728] Call trace:
-[ 2987.492729]  __do_softirq+0xa8/0x364
-
-Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
----
- kernel/watchdog.c | 156 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 156 insertions(+)
-
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 046507be4eb5..c4c25f25eae7 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -25,6 +25,9 @@
- #include <linux/stop_machine.h>
- #include <linux/kernel_stat.h>
- #include <linux/math64.h>
-+#include <linux/irq.h>
-+#include <linux/bitops.h>
-+#include <linux/irqdesc.h>
- 
- #include <asm/irq_regs.h>
- #include <linux/kvm_para.h>
-@@ -431,11 +434,15 @@ void touch_softlockup_watchdog_sync(void)
- 	__this_cpu_write(watchdog_report_ts, SOFTLOCKUP_DELAY_REPORT);
- }
- 
-+static void set_potential_softlockup(unsigned long now, unsigned long touch_ts);
-+
- static int is_softlockup(unsigned long touch_ts,
- 			 unsigned long period_ts,
- 			 unsigned long now)
- {
- 	if ((watchdog_enabled & WATCHDOG_SOFTOCKUP_ENABLED) && watchdog_thresh) {
-+		/* Softlockup may occur in the current period */
-+		set_potential_softlockup(now, period_ts);
- 		/* Warn about unreasonable delays. */
- 		if (time_after(now, period_ts + get_softlockup_thresh()))
- 			return now - touch_ts;
-@@ -462,6 +469,8 @@ static DEFINE_PER_CPU(u16, cpustat_old[NUM_STATS_PER_GROUP]);
- static DEFINE_PER_CPU(u8, cpustat_utilization[NUM_STATS_GROUPS][NUM_STATS_PER_GROUP]);
- static DEFINE_PER_CPU(u8, cpustat_tail);
- 
-+static void print_hardirq_counts(void);
-+
- /*
-  * We don't need nanosecond resolution. A granularity of 16ms is
-  * sufficient for our precision, allowing us to use u16 to store
-@@ -516,10 +525,156 @@ static void print_cpustat(void)
- 			__this_cpu_read(cpustat_utilization[i][STATS_HARDIRQ]),
- 			__this_cpu_read(cpustat_utilization[i][STATS_IDLE]));
- 	}
-+	print_hardirq_counts();
-+}
-+
-+#define HARDIRQ_PERCENT_THRESH		50
-+#define NUM_HARDIRQ_REPORT		5
-+static DECLARE_BITMAP(softlockup_hardirq_cpus, CONFIG_NR_CPUS);
-+static DEFINE_PER_CPU(u32 *, hardirq_counts);
-+
-+struct irq_counts {
-+	int irq;
-+	u32 counts;
-+};
-+
-+static void find_counts_top(struct irq_counts *irq_counts, int irq, u32 counts, int range)
-+{
-+	unsigned int i, j;
-+
-+	for (i = 0; i < range; i++) {
-+		if (counts > irq_counts[i].counts) {
-+			for (j = range - 1; j > i; j--) {
-+				irq_counts[j].counts = irq_counts[j - 1].counts;
-+				irq_counts[j].irq = irq_counts[j - 1].irq;
-+			}
-+			irq_counts[j].counts = counts;
-+			irq_counts[j].irq = irq;
-+			break;
-+		}
-+	}
-+}
-+
-+/*
-+ * If the proportion of time spent handling irq exceeds HARDIRQ_PERCENT_THRESH%
-+ * during sample_period, then it is necessary to record the counts of each irq.
-+ */
-+static inline bool need_record_irq_counts(int type)
-+{
-+	int tail = __this_cpu_read(cpustat_tail);
-+	u8 utilization;
-+
-+	if (--tail == -1)
-+		tail = 4;
-+	utilization = __this_cpu_read(cpustat_utilization[tail][type]);
-+	return utilization > HARDIRQ_PERCENT_THRESH;
-+}
-+
-+/*
-+ * Mark softlockup as potentially caused by hardirq
-+ */
-+static void set_potential_softlockup_hardirq(void)
-+{
-+	u32 i;
-+	u32 *counts = __this_cpu_read(hardirq_counts);
-+	int cpu = smp_processor_id();
-+	struct irq_desc *desc;
-+
-+	if (!need_record_irq_counts(STATS_HARDIRQ))
-+		return;
-+
-+	if (!test_bit(cpu, softlockup_hardirq_cpus)) {
-+		counts = kmalloc_array(nr_irqs, sizeof(u32), GFP_ATOMIC);
-+		if (!counts)
-+			return;
-+		for_each_irq_desc(i, desc) {
-+			if (!desc)
-+				continue;
-+			counts[i] = desc->kstat_irqs ?
-+				*this_cpu_ptr(desc->kstat_irqs) : 0;
-+		}
-+		__this_cpu_write(hardirq_counts, counts);
-+		set_bit(cpu, softlockup_hardirq_cpus);
-+	}
-+}
-+
-+static void clear_potential_softlockup_hardirq(void)
-+{
-+	u32 *counts = __this_cpu_read(hardirq_counts);
-+	int cpu = smp_processor_id();
-+
-+	if (test_bit(cpu, softlockup_hardirq_cpus)) {
-+		kfree(counts);
-+		counts = NULL;
-+		__this_cpu_write(hardirq_counts, counts);
-+		clear_bit(cpu, softlockup_hardirq_cpus);
-+	}
- }
-+
-+/*
-+ * Mark that softlockup may occur
-+ */
-+static void set_potential_softlockup(unsigned long now, unsigned long period_ts)
-+{
-+	if (time_after_eq(now, period_ts + get_softlockup_thresh() / 5))
-+		set_potential_softlockup_hardirq();
-+}
-+
-+static void clear_potential_softlockup(void)
-+{
-+	clear_potential_softlockup_hardirq();
-+}
-+
-+static void print_hardirq_counts(void)
-+{
-+	u32 i;
-+	struct irq_desc *desc;
-+	u32 counts_diff;
-+	u32 *counts = __this_cpu_read(hardirq_counts);
-+	int cpu = smp_processor_id();
-+	struct irq_counts hardirq_counts_top[NUM_HARDIRQ_REPORT] = {
-+		{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0},
-+	};
-+
-+	if (test_bit(cpu, softlockup_hardirq_cpus)) {
-+		/* Find the top NUM_HARDIRQ_REPORT most frequent interrupts */
-+		for_each_irq_desc(i, desc) {
-+			if (!desc)
-+				continue;
-+			counts_diff = desc->kstat_irqs ?
-+				*this_cpu_ptr(desc->kstat_irqs) - counts[i] : 0;
-+			find_counts_top(hardirq_counts_top, i, counts_diff,
-+					NUM_HARDIRQ_REPORT);
-+		}
-+		/*
-+		 * We do not want the "watchdog: " prefix on every line,
-+		 * hence we use "printk" instead of "pr_crit".
-+		 */
-+		printk(KERN_CRIT "CPU#%d Detect HardIRQ Time exceeds %d%%. Most frequent HardIRQs:\n",
-+			smp_processor_id(), HARDIRQ_PERCENT_THRESH);
-+		for (i = 0; i < NUM_HARDIRQ_REPORT; i++) {
-+			if (hardirq_counts_top[i].irq == -1)
-+				break;
-+			desc = irq_to_desc(hardirq_counts_top[i].irq);
-+			if (desc && desc->action)
-+				printk(KERN_CRIT "\t#%u: %-10u\tirq#%d(%s)\n",
-+					i+1, hardirq_counts_top[i].counts,
-+					hardirq_counts_top[i].irq, desc->action->name);
-+			else
-+				printk(KERN_CRIT "\t#%u: %-10u\tirq#%d\n",
-+					i+1, hardirq_counts_top[i].counts,
-+					hardirq_counts_top[i].irq);
-+		}
-+		if (!need_record_irq_counts(STATS_HARDIRQ))
-+			clear_potential_softlockup_hardirq();
-+	}
-+}
-+
- #else
- static inline void update_cpustat(void) { }
- static inline void print_cpustat(void) { }
-+static inline void set_potential_softlockup(unsigned long now, unsigned long period_ts) { }
-+static inline void clear_potential_softlockup(void) { }
- #endif
- 
- /* watchdog detector functions */
-@@ -537,6 +692,7 @@ static DEFINE_PER_CPU(struct cpu_stop_work, softlockup_stop_work);
- static int softlockup_fn(void *data)
- {
- 	update_touch_ts();
-+	clear_potential_softlockup();
- 	complete(this_cpu_ptr(&softlockup_completion));
- 
- 	return 0;
+									Honza
 -- 
-2.37.1 (Apple Git-137.1)
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
