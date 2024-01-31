@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125DB3A1C8;
-	Wed, 31 Jan 2024 18:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E12E3EA96;
+	Wed, 31 Jan 2024 18:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706727298; cv=none; b=Yn8JZn0Iwabe8Ua9fcT4G+5b163vjldSYfz9J6h7+6l+S97SoTRco+xh0hLR4jmiO7+4SUu9ZvZI/FF+0DBx0eypI/waU6z2l1BApJzCJcAlUSu8jelHj2GJTvOIVdb+SuIl21sdEuxR9TwTncE90ehDUCro8FYMn28hunHd8B8=
+	t=1706727298; cv=none; b=YagUh+JHNe8k94F7NDoPk36aEj43tchKDVYICh4CtOpAeb0d88VQQwuyRAjPQOX0/lJjc2it1EmDJZXRnPpJUP5NsaY4bF4SSpR8oKMPizUKvdMexsGM1gGX5Z9h4EQ9QynK/t7ZEKlXJ0CcTsljZJuoKoKYILLt63MQ3RLHBEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706727298; c=relaxed/simple;
-	bh=GDc+aLW5Fd1txUftp1mWm1xo+fkkQ873V74up1OwR9E=;
+	bh=q343WLfpufl7W/ZraSQs5ordYtlVQ0quLjuxzkJRZAM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=TqUKGMLpJifjlVUUvG6T6Ycl2hxA5mCAb8CTKYgTEKluOaEPpwp8likqt3fCbPQ/ilqjl3FljVBDk5SkOn1+F4QqdefV1n/DlZ9DlxAmRYxdpOtJday0gWbKD6z28xAEmZ7Po3JDkvExewGyMeAiXht3B2YWfJ4hwOqcwoIBTnM=
+	 Content-Type; b=OMBb+6BOD7b0uHZahDt8hAJeFiXa1gLsj15ae3fo8QL/2iuPf/RMHfHAw12pFekQ+Effpf3RdYrFeFGz7uz1c5/LjweF/44wLoVs1s7PRF1AUid//N2BBWnLMrwrBwxYUk6B0e/gFKYBQfOakQRK+jj2LrfNxVA+9ecwkQq+6uw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC093C433B2;
-	Wed, 31 Jan 2024 18:54:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34D08C41606;
+	Wed, 31 Jan 2024 18:54:58 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rVFjs-000000055Qq-3Goq;
-	Wed, 31 Jan 2024 13:55:12 -0500
-Message-ID: <20240131185512.638645365@goodmis.org>
+	id 1rVFjt-000000055SJ-15QJ;
+	Wed, 31 Jan 2024 13:55:13 -0500
+Message-ID: <20240131185513.124644253@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 31 Jan 2024 13:49:21 -0500
+Date: Wed, 31 Jan 2024 13:49:24 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -34,7 +34,7 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Ajay Kaher <ajay.kaher@broadcom.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  stable@vger.kernel.org
-Subject: [PATCH v2 3/7] tracefs: Avoid using the ei->dentry pointer unnecessarily
+Subject: [PATCH v2 6/7] eventfs: Clean up dentry ops and add revalidate function
 References: <20240131184918.945345370@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,25 +46,26 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-The eventfs_find_events() code tries to walk up the tree to find the
-event directory that a dentry belongs to, in order to then find the
-eventfs inode that is associated with that event directory.
+In order for the dentries to stay up-to-date with the eventfs changes,
+just add a 'd_revalidate' function that checks the 'is_freed' bit.
 
-However, it uses an odd combination of walking the dentry parent,
-looking up the eventfs inode associated with that, and then looking up
-the dentry from there.  Repeat.
+Also, clean up the dentry release to actually use d_release() rather
+than the slightly odd d_iput() function.  We don't care about the inode,
+all we want to do is to get rid of the refcount to the eventfs data
+added by dentry->d_fsdata.
 
-But the code shouldn't have back-pointers to dentries in the first
-place, and it should just walk the dentry parenthood chain directly.
+It would probably be cleaner to make eventfs its own filesystem, or at
+least set its own dentry ops when looking up eventfs files.  But as it
+is, only eventfs dentries use d_fsdata, so we don't really need to split
+these things up by use.
 
-Similarly, 'set_top_events_ownership()' looks up the dentry from the
-eventfs inode, but the only reason it wants a dentry is to look up the
-superblock in order to look up the root dentry.
+Another thing that might be worth doing is to make all eventfs lookups
+mark their dentries as not worth caching.  We could do that with
+d_delete(), but the DCACHE_DONTCACHE flag would likely be even better.
 
-But it already has the real filesystem inode, which has that same
-superblock pointer.  So just pass in the superblock pointer using the
-information that's already there, instead of looking up extraneous data
-that is irrelevant.
+As it is, the dentries are all freeable, but they only tend to get freed
+at memory pressure rather than more proactively.  But that's a separate
+issue.
 
 Link: https://lore.kernel.org/linux-trace-kernel/202401291043.e62e89dc-oliver.sang@intel.com/
 
@@ -73,83 +74,90 @@ Fixes: c1504e510238 ("eventfs: Implement eventfs dir creation functions")
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Original patch: https://lore.kernel.org/linux-trace-kernel/20240130190355.11486-1-torvalds@linux-foundation.org
+Original-patch: https://lore.kernel.org/linux-trace-kernel/20240130190355.11486-6-torvalds@linux-foundation.org
 
- fs/tracefs/event_inode.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ fs/tracefs/event_inode.c |  5 ++---
+ fs/tracefs/inode.c       | 27 ++++++++++++++++++---------
+ fs/tracefs/internal.h    |  3 ++-
+ 3 files changed, 22 insertions(+), 13 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 824b1811e342..e9819d719d2a 100644
+index 0289ec787367..0213a3375d53 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -156,33 +156,30 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	return ret;
+@@ -378,13 +378,12 @@ static void free_ei(struct eventfs_inode *ei)
  }
  
--static void update_top_events_attr(struct eventfs_inode *ei, struct dentry *dentry)
-+static void update_top_events_attr(struct eventfs_inode *ei, struct super_block *sb)
+ /**
+- * eventfs_set_ei_status_free - remove the dentry reference from an eventfs_inode
+- * @ti: the tracefs_inode of the dentry
++ * eventfs_d_release - dentry is going away
+  * @dentry: dentry which has the reference to remove.
+  *
+  * Remove the association between a dentry from an eventfs_inode.
+  */
+-void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
++void eventfs_d_release(struct dentry *dentry)
  {
--	struct inode *inode;
-+	struct inode *root;
+ 	struct eventfs_inode *ei;
+ 	int i;
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 5c84460feeeb..d65ffad4c327 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -377,21 +377,30 @@ static const struct super_operations tracefs_super_operations = {
+ 	.show_options	= tracefs_show_options,
+ };
  
- 	/* Only update if the "events" was on the top level */
- 	if (!ei || !(ei->attr.mode & EVENTFS_TOPLEVEL))
- 		return;
- 
- 	/* Get the tracefs root inode. */
--	inode = d_inode(dentry->d_sb->s_root);
--	ei->attr.uid = inode->i_uid;
--	ei->attr.gid = inode->i_gid;
-+	root = d_inode(sb->s_root);
-+	ei->attr.uid = root->i_uid;
-+	ei->attr.gid = root->i_gid;
- }
- 
- static void set_top_events_ownership(struct inode *inode)
+-static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
++/*
++ * It would be cleaner if eventfs had its own dentry ops.
++ *
++ * Note that d_revalidate is called potentially under RCU,
++ * so it can't take the eventfs mutex etc. It's fine - if
++ * we open a file just as it's marked dead, things will
++ * still work just fine, and just see the old stale case.
++ */
++static void tracefs_d_release(struct dentry *dentry)
  {
- 	struct tracefs_inode *ti = get_tracefs(inode);
- 	struct eventfs_inode *ei = ti->private;
--	struct dentry *dentry;
+-	struct tracefs_inode *ti;
++	if (dentry->d_fsdata)
++		eventfs_d_release(dentry);
++}
  
- 	/* The top events directory doesn't get automatically updated */
- 	if (!ei || !ei->is_events || !(ei->attr.mode & EVENTFS_TOPLEVEL))
- 		return;
+-	if (!dentry || !inode)
+-		return;
++static int tracefs_d_revalidate(struct dentry *dentry, unsigned int flags)
++{
++	struct eventfs_inode *ei = dentry->d_fsdata;
  
--	dentry = ei->dentry;
--
--	update_top_events_attr(ei, dentry);
-+	update_top_events_attr(ei, inode->i_sb);
- 
- 	if (!(ei->attr.mode & EVENTFS_SAVE_UID))
- 		inode->i_uid = ei->attr.uid;
-@@ -235,8 +232,10 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- 
- 	mutex_lock(&eventfs_mutex);
- 	do {
--		/* The parent always has an ei, except for events itself */
--		ei = dentry->d_parent->d_fsdata;
-+		// The parent is stable because we do not do renames
-+		dentry = dentry->d_parent;
-+		// ... and directories always have d_fsdata
-+		ei = dentry->d_fsdata;
- 
- 		/*
- 		 * If the ei is being freed, the ownership of the children
-@@ -246,12 +245,11 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- 			ei = NULL;
- 			break;
- 		}
--
--		dentry = ei->dentry;
-+		// Walk upwards until you find the events inode
- 	} while (!ei->is_events);
- 	mutex_unlock(&eventfs_mutex);
- 
--	update_top_events_attr(ei, dentry);
-+	update_top_events_attr(ei, dentry->d_sb);
- 
- 	return ei;
+-	ti = get_tracefs(inode);
+-	if (ti && ti->flags & TRACEFS_EVENT_INODE)
+-		eventfs_set_ei_status_free(ti, dentry);
+-	iput(inode);
++	return !(ei && ei->is_freed);
  }
+ 
+ static const struct dentry_operations tracefs_dentry_operations = {
+-	.d_iput = tracefs_dentry_iput,
++	.d_revalidate = tracefs_d_revalidate,
++	.d_release = tracefs_d_release,
+ };
+ 
+ static int trace_fill_super(struct super_block *sb, void *data, int silent)
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 932733a2696a..4b50a0668055 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -78,6 +78,7 @@ struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
+ struct dentry *tracefs_end_creating(struct dentry *dentry);
+ struct dentry *tracefs_failed_creating(struct dentry *dentry);
+ struct inode *tracefs_get_inode(struct super_block *sb);
+-void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry);
++
++void eventfs_d_release(struct dentry *dentry);
+ 
+ #endif /* _TRACEFS_INTERNAL_H */
 -- 
 2.43.0
 
