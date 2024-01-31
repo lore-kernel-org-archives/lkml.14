@@ -1,206 +1,75 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0E8CA7F;
-	Wed, 31 Jan 2024 19:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE3838DD1;
+	Wed, 31 Jan 2024 19:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706727718; cv=none; b=ONwJy5kYQaxYVEhedgglOoC62pgv/UFFsTkjB+uNRvuhqGsOzgSNxT5729rmPE+Zp6HPy5Cx3Bp41tyf6YOqh4hZSttpYmPhV/PquQUvD9ahsPFl7kXC19vlAyDoSB7e+6B3vUHKmiX0gPjHNR1nCLx6+uXxflInaWLveKU41fY=
+	t=1706727794; cv=none; b=cXTGD8bwQarfpJ48J6Am0VBWKn5rXp3aWzPJhFMhQfwdXzLP15WWIBulRAeFtbKfZNoEg13Su2U+Z9DivL8m38MrtOzTdMcb34GkAP6fQCb0s8mlYhHD3yI0Jotz6Pjzn0jQHy0+YgX0NimMQewY/yDLW4boSPfMUn5peQyl6HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706727718; c=relaxed/simple;
-	bh=eQZHF14Plim2/h/HfVCGI8KyzULHq0F0ksaKAy59jYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AiSJskCz5pE050rv4/+fLA+7ZwJ4g0s1NS0EKv4t+Qih1qKBmNMjWDz64lZMKdZm3q6cDGJbWxUYrgzcZvDAE+QCt/wxBletD9nseQdnFeIp3le5swoC7j4CfLzH8AQM+jDyCCHiQbJF6tLC8mdf1mwXI0A9GBOukj5fO76l5bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id b6d18a2c6112265a; Wed, 31 Jan 2024 20:01:53 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 59EC066982B;
-	Wed, 31 Jan 2024 20:01:53 +0100 (CET)
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Lukasz Luba <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Manaf Meethalavalappu Pallikunhi <quic_manafm@quicinc.com>
-Subject:
- Re: [PATCH v1] thermal: sysfs: Make trip hysteresis writable along with trip
- temperature
-Date: Wed, 31 Jan 2024 20:01:53 +0100
-Message-ID: <12386481.O9o76ZdvQC@kreacher>
-In-Reply-To:
- <CAJZ5v0iZ0hyPYB3i6YdbiKueHGWoM3i6mPBnzGL9bB8wFxVSPw@mail.gmail.com>
-References:
- <4565526.LvFx2qVVIh@kreacher>
- <7caf2f4d-d0d5-4622-b290-bb0396547f3c@linaro.org>
- <CAJZ5v0iZ0hyPYB3i6YdbiKueHGWoM3i6mPBnzGL9bB8wFxVSPw@mail.gmail.com>
+	s=arc-20240116; t=1706727794; c=relaxed/simple;
+	bh=WKMU0Z5OzqnsIcqS/IBWHJPpY6kqQUrZAznF1ycmrqk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2GuzWx6RAeGXFqs13duMkiDAEhziwuBPUxBkjXgzTPVI16cWgDMT8Rot80cUCRTPtN8n6PzhML9SaXzXpoDLCfIOkns94KYbT3QkVbVA5r76uRQmq+X+969WEigH9kv3pXIzWjFwddTDO9Y6TahXJYKPpEqQ0orG0Bm+SL5hsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wg35BRhC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wg35BRhC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AECCC433F1;
+	Wed, 31 Jan 2024 19:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706727793;
+	bh=WKMU0Z5OzqnsIcqS/IBWHJPpY6kqQUrZAznF1ycmrqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wg35BRhCQKJAef7IJr58v5VouJ5fEQSpFeg4mDoveVwkeWvNalXAMTQiK+2cSv6IO
+	 Qz3OuwZp/aqjiNlk+b4ALWGUbqHmCo5Ui9k2k0vmF1iWwg54UFpjH6a1HZfBMaFxMb
+	 Tu/1VGO4laZZQlC/FyWPg/P+DMUbxNsT2hy5AZk5YNXW7Zipi9RedPaFaM8DigJtm/
+	 PxWDS+ogkmuodtD/AuaSXRvC3fOr5rmhgmtMa5suI/rG/4ZKYNJtSyMcQAYw4eyhNQ
+	 WtcDYHVD5Wdgj1bRHXeOPzTc8GEDnBtj80oLCt+d1+vsr6HM5qb4eF2OlyG34OatLl
+	 ohBcSWM1EMDjw==
+Date: Wed, 31 Jan 2024 13:03:11 -0600
+From: Rob Herring <robh@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Andy Gross <andy.gross@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bart Van Assche <bvanassche@acm.org>,
+	Avri Altman <avri.altman@wdc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-scsi@vger.kernel.org, Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: ufs: qcom: Make reset properties as
+ required
+Message-ID: <170672779030.2119109.999859641415132765.robh@kernel.org>
+References: <20240129-ufs-core-reset-fix-v1-0-7ac628aa735f@linaro.org>
+ <20240129-ufs-core-reset-fix-v1-1-7ac628aa735f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtledguddujecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthhqredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeekieelheffleefgffgtdejvdektedtjeefveeugeefvdfhgfduueetiefgieelteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepkedprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtoheprhhuihdriihhrghnghesihhnthgvlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
-
-On Wednesday, January 31, 2024 7:41:52 PM CET Rafael J. Wysocki wrote:
-> On Wed, Jan 31, 2024 at 7:18=E2=80=AFPM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
-> >
-> > On 29/01/2024 21:40, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Trip point temperature can be modified via sysfs if
-> > > CONFIG_THERMAL_WRITABLE_TRIPS is enabled and the thermal
-> > > zone creator requested that the given trip be writable
-> > > in the writable trips mask passed to the registration
-> > > function.
-> > >
-> > > However, trip point hysteresis is treated differently - it is only
-> > > writable if the thermal zone has a .set_trip_hyst() operation defined
-> > > and neither CONFIG_THERMAL_WRITABLE_TRIPS, nor the writable trips mask
-> > > supplied by the zone creator has any bearing on this.  That is
-> > > inconsistent and confusing, and it generally does not meet user
-> > > expectations.
-> > >
-> > > For this reason, modify create_trip_attrs() to handle trip point
-> > > hysteresis in the same way as trip point temperature, so they both
-> > > are writable at the same time regardless of what trip point operations
-> > > are defined for the thermal zone.
-> > >
-> > > Link: https://lore.kernel.org/linux-pm/20240106191502.29126-1-quic_ma=
-nafm@quicinc.com
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >
-> > > Notes:
-> > >
-> > >   * I don't think that CONFIG_THERMAL_WRITABLE_TRIPS is very useful.
-> > >     The only thing controlled by it is whether or not the writable tr=
-ip
-> > >     mask used during registration will have any effect and this is qu=
-ite
-> > >     confusing.  Some drivers select it for this reason which seems a =
-bit
-> > >     odd to me.
-> > >
-> > >     Maybe it can be dropped after the patch below?
-> >
-> > Actually it is used from an userspace daemon to get threshold crossing
-> > temperature which is then changed on the fly.
->=20
-> I mean to drop CONFIG_THERMAL_WRITABLE_TRIPS and make the writable
-> trip masks used during zone registration always work.  Sorry for the
-> confusion.
-
-So for the record, this (and note that the symbol is clearly not used as
-intended, because drivers select it and one platform sets it in defconfig):
-
-=2D--
- arch/arm/configs/imx_v6_v7_defconfig |    1 -
- drivers/thermal/Kconfig              |   11 -----------
- drivers/thermal/intel/Kconfig        |    2 --
- drivers/thermal/thermal_sysfs.c      |    8 +++-----
- 4 files changed, 3 insertions(+), 19 deletions(-)
-
-Index: linux-pm/drivers/thermal/Kconfig
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/Kconfig
-+++ linux-pm/drivers/thermal/Kconfig
-@@ -83,17 +83,6 @@ config THERMAL_OF
- 	  Say 'Y' here if you need to build thermal infrastructure
- 	  based on device tree.
-=20
-=2Dconfig THERMAL_WRITABLE_TRIPS
-=2D	bool "Enable writable trip points"
-=2D	help
-=2D	  This option allows the system integrator to choose whether
-=2D	  trip temperatures can be changed from userspace. The
-=2D	  writable trips need to be specified when setting up the
-=2D	  thermal zone but the choice here takes precedence.
-=2D
-=2D	  Say 'Y' here if you would like to allow userspace tools to
-=2D	  change trip temperatures.
-=2D
- choice
- 	prompt "Default Thermal governor"
- 	default THERMAL_DEFAULT_GOV_STEP_WISE
-Index: linux-pm/drivers/thermal/thermal_sysfs.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_sysfs.c
-+++ linux-pm/drivers/thermal/thermal_sysfs.c
-@@ -458,8 +458,7 @@ static int create_trip_attrs(struct ther
- 						tz->trip_temp_attrs[indx].name;
- 		tz->trip_temp_attrs[indx].attr.attr.mode =3D S_IRUGO;
- 		tz->trip_temp_attrs[indx].attr.show =3D trip_point_temp_show;
-=2D		if (IS_ENABLED(CONFIG_THERMAL_WRITABLE_TRIPS) &&
-=2D		    mask & (1 << indx)) {
-+		if (mask & (1 << indx)) {
- 			tz->trip_temp_attrs[indx].attr.attr.mode |=3D S_IWUSR;
- 			tz->trip_temp_attrs[indx].attr.store =3D
- 							trip_point_temp_store;
-@@ -474,8 +473,7 @@ static int create_trip_attrs(struct ther
- 					tz->trip_hyst_attrs[indx].name;
- 		tz->trip_hyst_attrs[indx].attr.attr.mode =3D S_IRUGO;
- 		tz->trip_hyst_attrs[indx].attr.show =3D trip_point_hyst_show;
-=2D		if (IS_ENABLED(CONFIG_THERMAL_WRITABLE_TRIPS) &&
-=2D		    mask & (1 << indx)) {
-+		if (mask & (1 << indx)) {
- 			tz->trip_hyst_attrs[indx].attr.attr.mode |=3D S_IWUSR;
- 			tz->trip_hyst_attrs[indx].attr.store =3D
- 					trip_point_hyst_store;
-Index: linux-pm/drivers/thermal/intel/Kconfig
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/intel/Kconfig
-+++ linux-pm/drivers/thermal/intel/Kconfig
-@@ -23,7 +23,6 @@ config X86_PKG_TEMP_THERMAL
- 	tristate "X86 package temperature thermal driver"
- 	depends on X86_THERMAL_VECTOR
- 	select THERMAL_GOV_USER_SPACE
-=2D	select THERMAL_WRITABLE_TRIPS
- 	select INTEL_TCC
- 	default m
- 	help
-@@ -47,7 +46,6 @@ config INTEL_SOC_DTS_THERMAL
- 	tristate "Intel SoCs DTS thermal driver"
- 	depends on X86 && PCI && ACPI
- 	select INTEL_SOC_DTS_IOSF_CORE
-=2D	select THERMAL_WRITABLE_TRIPS
- 	help
- 	  Enable this to register Intel SoCs (e.g. Bay Trail) platform digital
- 	  temperature sensor (DTS). These SoCs have two additional DTSs in
-Index: linux-pm/arch/arm/configs/imx_v6_v7_defconfig
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/arch/arm/configs/imx_v6_v7_defconfig
-+++ linux-pm/arch/arm/configs/imx_v6_v7_defconfig
-@@ -228,7 +228,6 @@ CONFIG_SENSORS_IIO_HWMON=3Dy
- CONFIG_SENSORS_PWM_FAN=3Dy
- CONFIG_SENSORS_SY7636A=3Dy
- CONFIG_THERMAL_STATISTICS=3Dy
-=2DCONFIG_THERMAL_WRITABLE_TRIPS=3Dy
- CONFIG_CPU_THERMAL=3Dy
- CONFIG_IMX_THERMAL=3Dy
- CONFIG_WATCHDOG=3Dy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129-ufs-core-reset-fix-v1-1-7ac628aa735f@linaro.org>
 
 
+On Mon, 29 Jan 2024 13:22:04 +0530, Manivannan Sadhasivam wrote:
+> Apart from the legacy UFS controllers that were not supported in upstream,
+> rest of the controllers do require reset property to reset the UFS host
+> controller. So mark them as required.
+> 
+> Even though this is an ABI break, the bindings should reflect the
+> capabilities of the hardware.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+
+Acked-by: Rob Herring <robh@kernel.org>
 
