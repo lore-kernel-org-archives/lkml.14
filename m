@@ -1,622 +1,284 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2097.outbound.protection.outlook.com [40.107.244.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F184782868
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706720434; cv=none; b=TTOkU0thtBnA64rG2EaY/3nwTzbxotblpSIf+GxUKHcr7J9xIgDMfCzAfrT0lg7JWjsT9yn+8fS21CiE0rRMO58KnzSoFMAHnC8wl+kPE6+qxFsBSo6LA+1p84m6Sq49vRV8Di+f2aCzhN6d7OvmVI7IuumCNxBXbU08tGObseg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706720434; c=relaxed/simple;
-	bh=7ZI5OiUN/ZoXvxWDcRvjx22ns4EuR9iHRYQgmrHB4IM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hzV3MmhkgN7J+cMNM+NuVHaBlf3lw1+/XoC2L+6REo/KgVDONEQIrUidNgvxxAtvLXXeyY6UTMRiL2lXsUFoXp8ZziHK96rqvR1Jkkk3DdHum8kjl4suqnfF1eCx1i6pTdrTr8FlyimXzgF0aya9V+Q0MkN8BnbFO0ju5qJ2pSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=h0RjWr9d; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7938812BF0E;
+	Wed, 31 Jan 2024 17:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706720525; cv=fail; b=MUJGVWiN+VvyFx5/puCTPXHk6fq1BK+KcyVQ+f1j5QQYuANvGCodWibUrFE3SIwHcJ6fzmggWIWPv/Newtb4RxtXkTXp2Y3h1qsKL2nZZ27llQ9R+83z1rLUr+0z8K6nE6M72xWI3UQu3RqD8JtA6cFJwxvHcHN5rvOWPl8M6Zs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706720525; c=relaxed/simple;
+	bh=mak9oODDoJTe+F5M/XBZGhoxjdhHlFWTaK8SK3b0pN0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HbPgb72Km1CSqQ/86G5Hx3xtwp2UOKFIGt7frEyup/jUmfUh70OQ1P/WdVRJ9jPYLQeHOLBZ6uTo568Pex4axH1ZRMPl156bI6NuGTni0jxTg7DD5Ncn/ZYn+nunyuL+e/G4PmS5Xs5qWWKSeUy7FDkZyBYMxw2FJts4UJ4TkPo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cornelisnetworks.com; spf=pass smtp.mailfrom=cornelisnetworks.com; dkim=pass (2048-bit key) header.d=cornelisnetworks.com header.i=@cornelisnetworks.com header.b=T/jnam4E; arc=fail smtp.client-ip=40.107.244.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cornelisnetworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cornelisnetworks.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="h0RjWr9d"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d8bc1caf00so3361a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 09:00:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1706720431; x=1707325231; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=orIE+m+kaBV/H9IsTBMWBHTEFbu8zhGx2d0kSUXoqu8=;
-        b=h0RjWr9dfjhZuFdKDJNz25gdTlzgCt80nTM+Bi9j3G07C8e6I9j6IeyhXjvohESYq8
-         YB6WND2FcdpvPzrKDZsGHjk69VHDJlqT6Dnkp8uSfIUZYw4accilgQOpGr/Ub7Wdq7vy
-         MUD5G7FRrjx8VQYdTsSA7vffqBR03gyNZQ5xOzcXqMnGxAr8x6FOBVpBDE4wPqsA+OuJ
-         9bSMuh1QZS/km463mMLsjs/j/VB3mdfIfwRhD3BpDvKlDqiTs/77xjQ1ScYVwAWfcK5O
-         EbCrKc4blaEEb3/bnJ8RgWAOL8ITcWih0AiqJmW77CY7S7tn97bYTrohEKCzodOqDKcY
-         470g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706720431; x=1707325231;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=orIE+m+kaBV/H9IsTBMWBHTEFbu8zhGx2d0kSUXoqu8=;
-        b=OHvjhYKPWoC/eEFB65053BN1aSaZNsEe9ZK/K7k4aMJiHB/HD2MdbmDWoVHfk1yZxF
-         jHbJGkOE7+VBja305quwrgktXyo0pKbQtR7ZpXehvst0C4jcLrsl+Vas/7sWcxUSWB99
-         3KfUyLqIQAA4mluOMnVNOK9IRatgPiEGxsLozXVSUftwlYiUn0su6nMTME4sPkCsIHl3
-         MM3FnSoGedB1FGqX5yNum20zzjD8fpAvw/wP3ixbReng8SoJwCgRqj+aXMf8HraXix6K
-         Zqr650XaAseq1Os04p3QUWd1ZEjNzYBSTnG9QKOHwGK2yyNtpJDQ7UaaDPrXHTMx/6QP
-         VMLg==
-X-Gm-Message-State: AOJu0Ywqy6KDfFZjX34vSmkIuSt40lZ04V++5k0EbOjKvszwcT9LtcPu
-	jdp+aI2Q5FEiUjbVEoDRPOGgAAZUhMpqzockwuW9Xsqn2lwBV5pwmKkobnTQdPg=
-X-Google-Smtp-Source: AGHT+IGzlghiahCuiO2Gb18iwEaxiSN5NOIaXDisOmM+Oy6bEyyY3V6lzdiLI2cVqp77/xikhcgvjA==
-X-Received: by 2002:a05:6a20:d90d:b0:19c:a0f0:b0ea with SMTP id jd13-20020a056a20d90d00b0019ca0f0b0eamr2345044pzb.19.1706720431221;
-        Wed, 31 Jan 2024 09:00:31 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV3WHrZvGNEERtCOZWRcc7t5hlO9itp98eVqBq0GHz4idVx198YdS//u3gZ0RNU7cTnI3yGXSAWwmf1i0Fge1eB+VS2PMyQthjS8pk2a+F/y2DYfjiarZL8nmVxdV1hKMaYGtW7cat7c3ROMR/Z2o9zQ410XMUBgqFV9Uj6Ab22RLklLHO/BtC80o7l6mIYhQz3GXM8b4GFWfK8cA/Z8oWzKynInT5DlrkkoW16L0z778Na9RSlDZDfZMOQybORv8eIdKSzhftclPG+Abelc7mRDbZ+IB/93W+UFaM27jA9I8G73MEEJcb4HAzrdwPutVRuRs6p/g6hrsxPBLfzEQ38FRXWaOHOcIE6PY8yra3XvpdpWXq80E0Q3jBsw61mGr0zj43qvPNuyblIPibLP4OGr3bc2J1v4sIu8JC1ot6Of4Jhc7tYgMNoSJC5y/msPy9xBOHexYy+rYv7mXsZCoCxiuGfEyZTiLxpQDNJPngGJpkErwas1ro0TRzxl6sPa6xHz4Wp4kRgmKtPj8t6b/ho72R7MboJNl1ZdmanDnWVTQeEwq9ua2Wn554Jcw347YslvJMpL/DzBKpFpCOnUt2xDnn94EG9W3MdZXAg5JyUQgTaaE+az+WV051AYA==
-Received: from hermes.local (204-195-123-141.wavecable.com. [204.195.123.141])
-        by smtp.gmail.com with ESMTPSA id gu2-20020a056a004e4200b006dde1781800sm10447537pfb.94.2024.01.31.09.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 09:00:30 -0800 (PST)
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: netdev@vger.kernel.org
-Cc: Stephen Hemminger <stephen@networkplumber.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	bpf@vger.kernel.org (open list:BPF [NETWORKING] (tcx & tc BPF, sock_addr)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] net/sched: report errors with extack
-Date: Wed, 31 Jan 2024 08:58:06 -0800
-Message-ID: <20240131170019.106122-1-stephen@networkplumber.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=cornelisnetworks.com header.i=@cornelisnetworks.com header.b="T/jnam4E"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MrL/EEiPAOnWIZTBalv8dn+DaEqF0nLgDnkydR1pdbYxuyM4bLC6zCPINgEgUsj9zxhj1cBqgOENfE8Q+wRkv5wqj0V3H5gauobI72rcBkgQ/jePjy5O3Z1dqW2cF+ekr5Ka0GakV36Tpli2e8xkRiIhArLL7DvJrgCxggDt5JGd+l4viNKnvxLYRg6Y5hzpdP7b7+ocIAEkbeHVs9lE3qtuKBFWCbsbW75pC9HLol4g0hVI6hrG7qQ6Olvenerv3g1XYLth7C71dnq4fU9MGfRVEGdkvhqTfmon11O2gD6cEoI7qj9EeR1Oe9rHv2/2lXiFDsj7c3E7percgHcqdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FyRRgiTUNhoLdPIKIuSiOUTq5hR4NBqbFnW6LBy0jGk=;
+ b=DGqldHFaC70+CuDV8ptv1oZCT3iXnLvLP6xUeh7lzlKAbeSBE3T1w9AJPXsTuUxaCa5CUui0c+ScnN7Wp8rxoeQSm4FCXPIudm2XXMtsGpS16esLtVzsXGPx5PVnaiNj0iprolU5CQzHf9kno3X7JRzU7//UZnedmwPI0mrLWHDUQyGvVSAlnqVFJvtOeeuNaWK5bBKOjKt16vUNYtRsGpOWM8p0Mx/fEEvJhUa/EPmt/6t4NQR8+FBF1ArHS2E5Sr32IQeUUdGv1Cv1sEGTqAJiOmbzmDv5/VUDjM4U2qYKlrkF3fsDpyRei0fFCKsxyhT8GhEjTJu4LkRQJSEqmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cornelisnetworks.com; dmarc=pass action=none
+ header.from=cornelisnetworks.com; dkim=pass header.d=cornelisnetworks.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cornelisnetworks.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FyRRgiTUNhoLdPIKIuSiOUTq5hR4NBqbFnW6LBy0jGk=;
+ b=T/jnam4Edy16m+FPYTPOjIkOgIkfD4RVCBoX6P+MMk2OfVAvHA8lp9V0irnR8uWKxZ6kKWh74CUJUDQaJzer5lGX0hUJVy1f3T8JCX46JoXzqU4RXuYCuu2EJTL1B8l+84KmtezRIs2wx3J3IF4nIWSpX+d0s/WyV4r1H2kOHEcAnyQWhhf2mCPtOnn2/7aCaWAQ6frlSikQ8KlurW727/6Kjpj9NE1NaWPdT5jIP1j9eeiwQxZpXCfNNn6bKRe4ESpp5bdMH/huRdnzrKA6acwxw0Mcff+R85/3SGaeLlc+qS9XeoXq/ftgax3DpmVW6Auzzc+IHprlXRfqGLtdEw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cornelisnetworks.com;
+Received: from BL0PR01MB4099.prod.exchangelabs.com (2603:10b6:208:42::12) by
+ SA0PR01MB6394.prod.exchangelabs.com (2603:10b6:806:e0::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7249.24; Wed, 31 Jan 2024 17:01:59 +0000
+Received: from BL0PR01MB4099.prod.exchangelabs.com
+ ([fe80::b624:a23a:44ff:a1e9]) by BL0PR01MB4099.prod.exchangelabs.com
+ ([fe80::b624:a23a:44ff:a1e9%6]) with mapi id 15.20.7249.024; Wed, 31 Jan 2024
+ 17:01:59 +0000
+Message-ID: <e89dc56f-556e-4743-8bd0-4050e5829de1@cornelisnetworks.com>
+Date: Wed, 31 Jan 2024 12:01:54 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] IB/hfi1: Fix sdma.h tx->num_descs off-by-one error (take
+ two)
+Content-Language: en-US
+To: Leon Romanovsky <leon@kernel.org>, Daniel Vacek <neelx@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>,
+ Brendan Cunningham <bcunningham@cornelisnetworks.com>,
+ Patrick Kelsey <pat.kelsey@cornelisnetworks.com>, stable@vger.kernel.org,
+ Mats Kronberg <kronberg@nsc.liu.se>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240126152125.869509-1-neelx@redhat.com>
+ <20240131125037.GF71813@unreal>
+From: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
+In-Reply-To: <20240131125037.GF71813@unreal>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0339.namprd13.prod.outlook.com
+ (2603:10b6:208:2c6::14) To BL0PR01MB4099.prod.exchangelabs.com
+ (2603:10b6:208:42::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR01MB4099:EE_|SA0PR01MB6394:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72858ef7-7852-46f9-0533-08dc227e564f
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	S7noM9kCPnWA89xB2pRmBwLPtHgjBO1HGj2qnt4Mwq83D7vIDfgrWa/r+gaAYOGVgYWlAUTeU0MfGfOvpkzZk09z4jAkeco/CQJplKrTH1KqY5qy3dJ1Z+adxR5ZJvcdlBh0SsVwglYz2kfYesixSDRLhxcGPvQCNCn5P6Bd7qqkgM99Da8g5weJO7SgjOmqlEMcWpX6lnjDRS41lMp+EbWPQbiv8HwZ14Awu9sPLTUBWDbkCvbamL1RE3VKeghISXY5+qL2OGVWo/m2lrYkwOYkVYSiMcU2P+8OdsBOK4Muj8Va8unOkAflnbqaOu3o38VcOfOsLxFWfG6umf/+wsoeHYQpRdKimGwwODwjOz2GIJLvBl7GFV2WstiZDbK6c+k+qWITMYerFLzYtKkebPFpQAp8r6Jl4UXl/nz2JsPqPNnVNnsObMgWbVCeZQBqHALqYFm79PG5rHcikXxdXVcZ8mBtYN7uS/sW0JkXF1XQXyfJgqBiu6eBjY/ofGbkWI2ANty4qa4UxiyuhA9yEymyhDahf2S9IioE84KrhbB31tM6joHYH8XrFZBtqU97zD96IyCRlrjJJKo2/ANXlWfT6oI4LcM8mUQTugTZ/vVkQjCnm+9XAybgz9GEY3Njaxdevfv075zGOpAUj5bq6Q==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR01MB4099.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(376002)(39840400004)(396003)(186009)(451199024)(64100799003)(1800799012)(41300700001)(66946007)(8936002)(44832011)(4326008)(86362001)(2906002)(5660300002)(31696002)(8676002)(110136005)(54906003)(66476007)(316002)(38350700005)(36756003)(66556008)(38100700002)(6506007)(6512007)(52116002)(478600001)(83380400001)(6666004)(53546011)(6486002)(2616005)(26005)(31686004)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?anozK0ZWekNlVzBXZ0tVZFJiSktBWmpiQWwrNENEN3RWckJhNWxQM3kwWG5M?=
+ =?utf-8?B?MTQ2Y3hXNE9ZcHZKU3Jab2Uwd3diMlM4RUE1NS9qbisvYUJ4Wm5oKzVCUGho?=
+ =?utf-8?B?TmFpU0FNSGcyaFltMlIrUXY2MlFvS0d6SWc3WWN0NGlGdUxKb2xRNGVpZ3dW?=
+ =?utf-8?B?eFRUbkgraUVGOUhBMFJVWS8yVDA0RERXWEE3bjhpa09KVm84YnpTd3NNeTJZ?=
+ =?utf-8?B?SFV1c045Y0JxRlREUUgzTHhLb2JIdVJqQU43MEI2YzV2ZmRJcUNjTW9yYU5P?=
+ =?utf-8?B?U1VEUUdYVFNwSmNDbDBML3FDenZjZldTaFR6dFp6RXF5aTRoc0RneVJ4aFQ3?=
+ =?utf-8?B?b1c4V1ZaTktJOEJ6b0lzT1Z1SHlpT2pucGl1djhycnhac0xYdmpLbHNwbGxz?=
+ =?utf-8?B?cXg0a3VVMW1aTXY1eGNVQ1JibVRjbVhoaEp2RDNqejl1U0ZaZnFKL243bmhy?=
+ =?utf-8?B?aGxNNC9GMTVycWFwUUlYc2pib1E2NTRJbFFlYk9ObnpzelhEZWpCYkJWZSs2?=
+ =?utf-8?B?WjhvZVc0QURZcC9XRi9Ya3hITTlNNWhuK1g5ajhWMG00Z1JzZmhodHZOTWxk?=
+ =?utf-8?B?eUo3aEFDa05CL3EyLzFYSnpsRUJTWm40SUZjMmZkeGVoOUtZSTNNWjlWa3R5?=
+ =?utf-8?B?TE5aSzY4UFlTTWs5R3N5YnZybWxTQk1IWm8zeFVzc1lDWWtvVlZ5SUdvSFlp?=
+ =?utf-8?B?cnEyMzllbnRUMTFOZ3BUaFZWRTV5a2J4eTNJZ09IdW82S1VNc2lkVUlXanVq?=
+ =?utf-8?B?MVN4MHR0NE5uMnVESjJCQzNGRDA4WGR2ejVDNWhreGJvMGRjRXhyWitIcFow?=
+ =?utf-8?B?VXpnZlZaUnNxMU1EOFdNMkhvNW5XOEt0UzJScjQzVG9HbEVaRWY1WUpBU2NJ?=
+ =?utf-8?B?Sm8rU2pTTmVYNlNZalhScURHOGFTOTFUN0o2RlpyWkpCWWJwejZTN1lWenk5?=
+ =?utf-8?B?SXY1NEdub0xiTGkvTE5LL0NoUWg0RlZLMGYxYTc5dTJpTlhlakxIN3RMTUtI?=
+ =?utf-8?B?NUc5cmtiQWxBZmFlekV2WkhXWTdITEcyUUI1U1dJRDNvdXBRa3lpZDNYU1hL?=
+ =?utf-8?B?VWpwT09udWNPVldiYmVhRVNzRTNXVW8rdzVsZnVsbEZvSFdsdFVUMXgyVlhp?=
+ =?utf-8?B?K1BKZmRYMXhiS3l5WXltbklid05zLzI0NEFHbStEbGdZcVI2ZGk3Y0srMmhM?=
+ =?utf-8?B?aGE0R2RWZTNJZ3lrbnlKTEhjU0VtdzZQelFYajMyZENvajI2MkQ1Y2Fhc3Yy?=
+ =?utf-8?B?citoTFR6Rlc2a0l5RWh0WXFaSVVXajBxcjBsb3kvRHJNWGJuYTlKb0Z2VGR1?=
+ =?utf-8?B?Y0lBWUtzWUhmckw5QThEZWZKdUpoWFprRzFERUtVVW1JakNPTU03dWhoSkFi?=
+ =?utf-8?B?QmswVDVBSkdKL0RpZ1BsS2lBRnU1Rm4wUk9SVTZJcVZrekRoekxWTVcvWDdw?=
+ =?utf-8?B?ZE5jSGdmYWJneTZIOUV3eG5BRC9KS1kzMWZOM3pFSDd6MDJTK0M0eTN2dXZP?=
+ =?utf-8?B?UDhncEtUMkdsNyszSWZ5bEVqVkEzQ3lGa0hNb3lkdWoyditVTzdQOXR3Zktu?=
+ =?utf-8?B?MnJ5ckpuSTJxczZkUnYrcDJCeFBQUXptYlAyMFRXVnFuQjcvNmdnYTdWQ0hJ?=
+ =?utf-8?B?SW1Jd0lucFlHOFhzVlQ2Zm1aMGdKNWwvMjBlRFByWk1hMnkvWDJDQWFJZVBp?=
+ =?utf-8?B?cjY4UlNpM0RCc3B0ZW5wWUJiN3NmbTJjc2pBSEZZYlRDM1ZsK3RGdHNRUzhp?=
+ =?utf-8?B?TGswNjhMZXlIekFoYjNHUlBLS1Zpai9UeFRBcGdhOEdEUU9qdFNKejY3UVRF?=
+ =?utf-8?B?SXZMcDRaTnN3NDE2dTVzcjJJZjJWMHpvZ1c5dE1WSjdXV3pWQTd4NUxRRDll?=
+ =?utf-8?B?SHZmc2pyaEdmR1o0c1VMQnoxNDl2N21wN1NSSUFpOVpJcmRoTXFRVENnRmQ1?=
+ =?utf-8?B?MThXZFFlSlp2VUdUS0RJL0QwVDh2MHZXL0lQSTE2aGtLcUQyNFdrRGd4bGZo?=
+ =?utf-8?B?ZktxZGFLMlJURzlkUjB1c0JvTlAycStldExLOGNsQ2QrbGZmNG5zMlF3T25N?=
+ =?utf-8?B?cUs1N2RTcXV6ZnRwT0pqQXRrcmw1SVBMMllTczI2a3AvYVZSTWpXNDFYVWR2?=
+ =?utf-8?B?b2VjeVkzN3RabEJhSG8weTluc2dJalFQWWk0bTFRdEVPdmZmb08vKzAyMlQ2?=
+ =?utf-8?Q?6VgfTMKAxOoHyu3pNDJEzSI=3D?=
+X-OriginatorOrg: cornelisnetworks.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72858ef7-7852-46f9-0533-08dc227e564f
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR01MB4099.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 17:01:59.0136
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4dbdb7da-74ee-4b45-8747-ef5ce5ebe68a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a4pFXapGDFusocdnuf3dLxX/ceuiwjZTSl9T5SLwtLVJp4zfxkTM7XGKPmNj5ZUF9yKAK9JCh+xemVgvc7+Eo9MFA5Qe96gJP0zoDWDlpli4uH5mAGiXBqWU7vx4aVAf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR01MB6394
 
-While working a BPF action, found that the error handling was
-limited. The support of external ack was only added to some
-but not all actions. 
+On 1/31/24 7:50 AM, Leon Romanovsky wrote:
+> On Fri, Jan 26, 2024 at 04:21:23PM +0100, Daniel Vacek wrote:
+>> Unfortunately the commit `fd8958efe877` introduced another error
+>> causing the `descs` array to overflow. This reults in further crashes
+>> easily reproducible by `sendmsg` system call.
+>>
+>> [ 1080.836473] general protection fault, probably for non-canonical address 0x400300015528b00a: 0000 [#1] PREEMPT SMP PTI
+>> [ 1080.869326] RIP: 0010:hfi1_ipoib_build_ib_tx_headers.constprop.0+0xe1/0x2b0 [hfi1]
+>> --
+>> [ 1080.974535] Call Trace:
+>> [ 1080.976990]  <TASK>
+>> [ 1081.021929]  hfi1_ipoib_send_dma_common+0x7a/0x2e0 [hfi1]
+>> [ 1081.027364]  hfi1_ipoib_send_dma_list+0x62/0x270 [hfi1]
+>> [ 1081.032633]  hfi1_ipoib_send+0x112/0x300 [hfi1]
+>> [ 1081.042001]  ipoib_start_xmit+0x2a9/0x2d0 [ib_ipoib]
+>> [ 1081.046978]  dev_hard_start_xmit+0xc4/0x210
+>> --
+>> [ 1081.148347]  __sys_sendmsg+0x59/0xa0
+>>
+>> crash> ipoib_txreq 0xffff9cfeba229f00
+>> struct ipoib_txreq {
+>>   txreq = {
+>>     list = {
+>>       next = 0xffff9cfeba229f00,
+>>       prev = 0xffff9cfeba229f00
+>>     },
+>>     descp = 0xffff9cfeba229f40,
+>>     coalesce_buf = 0x0,
+>>     wait = 0xffff9cfea4e69a48,
+>>     complete = 0xffffffffc0fe0760 <hfi1_ipoib_sdma_complete>,
+>>     packet_len = 0x46d,
+>>     tlen = 0x0,
+>>     num_desc = 0x0,
+>>     desc_limit = 0x6,
+>>     next_descq_idx = 0x45c,
+>>     coalesce_idx = 0x0,
+>>     flags = 0x0,
+>>     descs = {{
+>>         qw = {0x8024000120dffb00, 0x4}  # SDMA_DESC0_FIRST_DESC_FLAG (bit 63)
+>>       }, {
+>>         qw = {  0x3800014231b108, 0x4}
+>>       }, {
+>>         qw = { 0x310000e4ee0fcf0, 0x8}
+>>       }, {
+>>         qw = {  0x3000012e9f8000, 0x8}
+>>       }, {
+>>         qw = {  0x59000dfb9d0000, 0x8}
+>>       }, {
+>>         qw = {  0x78000e02e40000, 0x8}
+>>       }}
+>>   },
+>>   sdma_hdr =  0x400300015528b000,  <<< invalid pointer in the tx request structure
+>>   sdma_status = 0x0,                   SDMA_DESC0_LAST_DESC_FLAG (bit 62)
+>>   complete = 0x0,
+>>   priv = 0x0,
+>>   txq = 0xffff9cfea4e69880,
+>>   skb = 0xffff9d099809f400
+>> }
+>>
+>> With this patch the crashes are no longer reproducible and the machine is stable.
+>>
+>> Note, the header file changes are just an unrelated clean-up while I was looking
+>> around trying to find the bug.
+>>
+>> Fixes: fd8958efe877 ("IB/hfi1: Fix sdma.h tx->num_descs off-by-one errors")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Mats Kronberg <kronberg@nsc.liu.se>
+>> Tested-by: Mats Kronberg <kronberg@nsc.liu.se>
+>> Signed-off-by: Daniel Vacek <neelx@redhat.com>
+>> ---
+>>  drivers/infiniband/hw/hfi1/sdma.c |  2 +-
+>>  drivers/infiniband/hw/hfi1/sdma.h | 17 +++++++----------
+>>  2 files changed, 8 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
+>> index 6e5ac2023328a..b67d23b1f2862 100644
+>> --- a/drivers/infiniband/hw/hfi1/sdma.c
+>> +++ b/drivers/infiniband/hw/hfi1/sdma.c
+>> @@ -3158,7 +3158,7 @@ int _pad_sdma_tx_descs(struct hfi1_devdata *dd, struct sdma_txreq *tx)
+>>  {
+>>  	int rval = 0;
+>>  
+>> -	if ((unlikely(tx->num_desc + 1 == tx->desc_limit))) {
+>> +	if ((unlikely(tx->num_desc == tx->desc_limit))) {
+> 
+> Maybe, Dennis?
 
-When an action detects invalid parameters, it should
-be adding an external ack to netlink so that the user is
-able to diagnose the issue.
+I actually have a patch that does exactly this one line change queued up to send
+out.
 
-Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
----
- net/sched/act_bpf.c      | 31 ++++++++++++++++++++++---------
- net/sched/act_connmark.c |  8 ++++++--
- net/sched/act_csum.c     |  8 ++++++--
- net/sched/act_gact.c     | 14 +++++++++++---
- net/sched/act_gate.c     | 15 +++++++++++----
- net/sched/act_ife.c      |  8 ++++++--
- net/sched/act_nat.c      |  9 +++++++--
- net/sched/act_police.c   | 13 ++++++++++---
- net/sched/act_sample.c   |  8 ++++++--
- net/sched/act_simple.c   |  9 +++++++--
- net/sched/act_skbedit.c  | 13 ++++++++++---
- net/sched/act_skbmod.c   |  9 +++++++--
- net/sched/act_vlan.c     |  8 ++++++--
- 13 files changed, 115 insertions(+), 38 deletions(-)
+The commit message for our fix is:
+    If an SDMA send consists of exactly 6 descriptors and requires dword
+    padding (in the 7th descriptor), the sdma_txreq descriptor array
+    is not properly expanded and the packet will overflow into the
+    container structure. This results in a panic when the send completion
+    runs. The exact panic varies depending on what elements of the
+    container structure get corrupted. The fix is to use the correct
+    expression in _pad_sdma_tx_descs() to test the need to expand the
+    descriptor array.
 
-diff --git a/net/sched/act_bpf.c b/net/sched/act_bpf.c
-index 6cfee6658103..f8a03d3bbf20 100644
---- a/net/sched/act_bpf.c
-+++ b/net/sched/act_bpf.c
-@@ -184,7 +184,8 @@ static const struct nla_policy act_bpf_policy[TCA_ACT_BPF_MAX + 1] = {
- 				    .len = sizeof(struct sock_filter) * BPF_MAXINSNS },
- };
- 
--static int tcf_bpf_init_from_ops(struct nlattr **tb, struct tcf_bpf_cfg *cfg)
-+static int tcf_bpf_init_from_ops(struct nlattr **tb, struct tcf_bpf_cfg *cfg,
-+				 struct netlink_ext_ack *extack)
- {
- 	struct sock_filter *bpf_ops;
- 	struct sock_fprog_kern fprog_tmp;
-@@ -193,12 +194,16 @@ static int tcf_bpf_init_from_ops(struct nlattr **tb, struct tcf_bpf_cfg *cfg)
- 	int ret;
- 
- 	bpf_num_ops = nla_get_u16(tb[TCA_ACT_BPF_OPS_LEN]);
--	if (bpf_num_ops	> BPF_MAXINSNS || bpf_num_ops == 0)
-+	if (bpf_num_ops	> BPF_MAXINSNS || bpf_num_ops == 0) {
-+		NL_SET_ERR_MSG_MOD(extack, "Invalid number of BPF instructions");
- 		return -EINVAL;
-+	}
- 
- 	bpf_size = bpf_num_ops * sizeof(*bpf_ops);
--	if (bpf_size != nla_len(tb[TCA_ACT_BPF_OPS]))
-+	if (bpf_size != nla_len(tb[TCA_ACT_BPF_OPS])) {
-+		NL_SET_ERR_MSG_MOD(extack, "BPF instruction size");
- 		return -EINVAL;
-+	}
- 
- 	bpf_ops = kmemdup(nla_data(tb[TCA_ACT_BPF_OPS]), bpf_size, GFP_KERNEL);
- 	if (bpf_ops == NULL)
-@@ -221,7 +226,8 @@ static int tcf_bpf_init_from_ops(struct nlattr **tb, struct tcf_bpf_cfg *cfg)
- 	return 0;
- }
- 
--static int tcf_bpf_init_from_efd(struct nlattr **tb, struct tcf_bpf_cfg *cfg)
-+static int tcf_bpf_init_from_efd(struct nlattr **tb, struct tcf_bpf_cfg *cfg,
-+				 struct netlink_ext_ack *extack)
- {
- 	struct bpf_prog *fp;
- 	char *name = NULL;
-@@ -230,8 +236,10 @@ static int tcf_bpf_init_from_efd(struct nlattr **tb, struct tcf_bpf_cfg *cfg)
- 	bpf_fd = nla_get_u32(tb[TCA_ACT_BPF_FD]);
- 
- 	fp = bpf_prog_get_type(bpf_fd, BPF_PROG_TYPE_SCHED_ACT);
--	if (IS_ERR(fp))
-+	if (IS_ERR(fp)) {
-+		NL_SET_ERR_MSG_MOD(extack, "BPF program type mismatch");
- 		return PTR_ERR(fp);
-+	}
- 
- 	if (tb[TCA_ACT_BPF_NAME]) {
- 		name = nla_memdup(tb[TCA_ACT_BPF_NAME], GFP_KERNEL);
-@@ -292,16 +300,20 @@ static int tcf_bpf_init(struct net *net, struct nlattr *nla,
- 	int ret, res = 0;
- 	u32 index;
- 
--	if (!nla)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Bpf requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	ret = nla_parse_nested_deprecated(tb, TCA_ACT_BPF_MAX, nla,
- 					  act_bpf_policy, NULL);
- 	if (ret < 0)
- 		return ret;
- 
--	if (!tb[TCA_ACT_BPF_PARMS])
-+	if (!tb[TCA_ACT_BPF_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required bpf parameters");
- 		return -EINVAL;
-+	}
- 
- 	parm = nla_data(tb[TCA_ACT_BPF_PARMS]);
- 	index = parm->index;
-@@ -336,14 +348,15 @@ static int tcf_bpf_init(struct net *net, struct nlattr *nla,
- 	is_ebpf = tb[TCA_ACT_BPF_FD];
- 
- 	if (is_bpf == is_ebpf) {
-+		NL_SET_ERR_MSG_MOD(extack, "Can not specify both BPF fd and ops");
- 		ret = -EINVAL;
- 		goto put_chain;
- 	}
- 
- 	memset(&cfg, 0, sizeof(cfg));
- 
--	ret = is_bpf ? tcf_bpf_init_from_ops(tb, &cfg) :
--		       tcf_bpf_init_from_efd(tb, &cfg);
-+	ret = is_bpf ? tcf_bpf_init_from_ops(tb, &cfg, extack) :
-+		       tcf_bpf_init_from_efd(tb, &cfg, extack);
- 	if (ret < 0)
- 		goto put_chain;
- 
-diff --git a/net/sched/act_connmark.c b/net/sched/act_connmark.c
-index f8762756657d..0964d10dfc04 100644
---- a/net/sched/act_connmark.c
-+++ b/net/sched/act_connmark.c
-@@ -110,16 +110,20 @@ static int tcf_connmark_init(struct net *net, struct nlattr *nla,
- 	int ret = 0, err;
- 	u32 index;
- 
--	if (!nla)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Connmark requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	ret = nla_parse_nested_deprecated(tb, TCA_CONNMARK_MAX, nla,
- 					  connmark_policy, NULL);
- 	if (ret < 0)
- 		return ret;
- 
--	if (!tb[TCA_CONNMARK_PARMS])
-+	if (!tb[TCA_CONNMARK_PARMS]) {
-+		NL_SET_ERR_MSG(extack, "Missing required connmark parameters");
- 		return -EINVAL;
-+	}
- 
- 	nparms = kzalloc(sizeof(*nparms), GFP_KERNEL);
- 	if (!nparms)
-diff --git a/net/sched/act_csum.c b/net/sched/act_csum.c
-index 7f8b1f2f2ed9..7c7f74e37528 100644
---- a/net/sched/act_csum.c
-+++ b/net/sched/act_csum.c
-@@ -55,16 +55,20 @@ static int tcf_csum_init(struct net *net, struct nlattr *nla,
- 	int ret = 0, err;
- 	u32 index;
- 
--	if (nla == NULL)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Checksum requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_CSUM_MAX, nla, csum_policy,
- 					  NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (tb[TCA_CSUM_PARMS] == NULL)
-+	if (!tb[TCA_CSUM_PARMS]) {
-+		NL_SET_ERR_MSG(extack, "Missing required checksum parameters");
- 		return -EINVAL;
-+	}
- 	parm = nla_data(tb[TCA_CSUM_PARMS]);
- 	index = parm->index;
- 	err = tcf_idr_check_alloc(tn, &index, a, bind);
-diff --git a/net/sched/act_gact.c b/net/sched/act_gact.c
-index 4af3b7ec249f..5d04bcd5115e 100644
---- a/net/sched/act_gact.c
-+++ b/net/sched/act_gact.c
-@@ -68,16 +68,21 @@ static int tcf_gact_init(struct net *net, struct nlattr *nla,
- 	struct tc_gact_p *p_parm = NULL;
- #endif
- 
--	if (nla == NULL)
-+	if (!nla) {
-+		NL_SET_ERR_MSG(extack, "Gact requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_GACT_MAX, nla, gact_policy,
- 					  NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (tb[TCA_GACT_PARMS] == NULL)
-+	if (!tb[TCA_GACT_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required gact parameters");
- 		return -EINVAL;
-+	}
-+
- 	parm = nla_data(tb[TCA_GACT_PARMS]);
- 	index = parm->index;
- 
-@@ -87,8 +92,11 @@ static int tcf_gact_init(struct net *net, struct nlattr *nla,
- #else
- 	if (tb[TCA_GACT_PROB]) {
- 		p_parm = nla_data(tb[TCA_GACT_PROB]);
--		if (p_parm->ptype >= MAX_RAND)
-+		if (p_parm->ptype >= MAX_RAND) {
-+			NL_SET_ERR_MSG(extack, "Invalid ptype in gact prob");
- 			return -EINVAL;
-+		}
-+
- 		if (TC_ACT_EXT_CMP(p_parm->paction, TC_ACT_GOTO_CHAIN)) {
- 			NL_SET_ERR_MSG(extack,
- 				       "goto chain not allowed on fallback");
-diff --git a/net/sched/act_gate.c b/net/sched/act_gate.c
-index c681cd011afd..c9e32822938c 100644
---- a/net/sched/act_gate.c
-+++ b/net/sched/act_gate.c
-@@ -239,8 +239,10 @@ static int parse_gate_list(struct nlattr *list_attr,
- 	int err, rem;
- 	int i = 0;
- 
--	if (!list_attr)
-+	if (!list_attr) {
-+		NL_SET_ERR_MSG(extack, "Gate missing attributes");
- 		return -EINVAL;
-+	}
- 
- 	nla_for_each_nested(n, list_attr, rem) {
- 		if (nla_type(n) != TCA_GATE_ONE_ENTRY) {
-@@ -317,15 +319,19 @@ static int tcf_gate_init(struct net *net, struct nlattr *nla,
- 	ktime_t start;
- 	u32 index;
- 
--	if (!nla)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Gate requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested(tb, TCA_GATE_MAX, nla, gate_policy, extack);
- 	if (err < 0)
- 		return err;
- 
--	if (!tb[TCA_GATE_PARMS])
-+	if (!tb[TCA_GATE_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required gate parameters");
- 		return -EINVAL;
-+	}
- 
- 	if (tb[TCA_GATE_CLOCKID]) {
- 		clockid = nla_get_s32(tb[TCA_GATE_CLOCKID]);
-@@ -343,7 +349,7 @@ static int tcf_gate_init(struct net *net, struct nlattr *nla,
- 			tk_offset = TK_OFFS_TAI;
- 			break;
- 		default:
--			NL_SET_ERR_MSG(extack, "Invalid 'clockid'");
-+			NL_SET_ERR_MSG_MOD(extack, "Invalid 'clockid'");
- 			return -EINVAL;
- 		}
- 	}
-@@ -409,6 +415,7 @@ static int tcf_gate_init(struct net *net, struct nlattr *nla,
- 			cycle = ktime_add_ns(cycle, entry->interval);
- 		cycletime = cycle;
- 		if (!cycletime) {
-+			NL_SET_ERR_MSG_MOD(extack, "cycle time is zero");
- 			err = -EINVAL;
- 			goto chain_put;
- 		}
-diff --git a/net/sched/act_ife.c b/net/sched/act_ife.c
-index 0e867d13beb5..85a58cfb23f3 100644
---- a/net/sched/act_ife.c
-+++ b/net/sched/act_ife.c
-@@ -508,8 +508,10 @@ static int tcf_ife_init(struct net *net, struct nlattr *nla,
- 	if (err < 0)
- 		return err;
- 
--	if (!tb[TCA_IFE_PARMS])
-+	if (!tb[TCA_IFE_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required ife parameters");
- 		return -EINVAL;
-+	}
- 
- 	parm = nla_data(tb[TCA_IFE_PARMS]);
- 
-@@ -517,8 +519,10 @@ static int tcf_ife_init(struct net *net, struct nlattr *nla,
- 	 * they cannot run as the same time. Check on all other values which
- 	 * are not supported right now.
- 	 */
--	if (parm->flags & ~IFE_ENCODE)
-+	if (parm->flags & ~IFE_ENCODE) {
-+		NL_SET_ERR_MSG_MOD(extack, "Invalid ife flag parameter");
- 		return -EINVAL;
-+	}
- 
- 	p = kzalloc(sizeof(*p), GFP_KERNEL);
- 	if (!p)
-diff --git a/net/sched/act_nat.c b/net/sched/act_nat.c
-index a180e724634e..a990d0c626cd 100644
---- a/net/sched/act_nat.c
-+++ b/net/sched/act_nat.c
-@@ -46,16 +46,21 @@ static int tcf_nat_init(struct net *net, struct nlattr *nla, struct nlattr *est,
- 	struct tcf_nat *p;
- 	u32 index;
- 
--	if (nla == NULL)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Nat action requires attributes");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_NAT_MAX, nla, nat_policy,
- 					  NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (tb[TCA_NAT_PARMS] == NULL)
-+	if (!tb[TCA_NAT_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Nat action parameters missing");
- 		return -EINVAL;
-+	}
-+
- 	parm = nla_data(tb[TCA_NAT_PARMS]);
- 	index = parm->index;
- 	err = tcf_idr_check_alloc(tn, &index, a, bind);
-diff --git a/net/sched/act_police.c b/net/sched/act_police.c
-index e119b4a3db9f..3eb41233257b 100644
---- a/net/sched/act_police.c
-+++ b/net/sched/act_police.c
-@@ -56,19 +56,26 @@ static int tcf_police_init(struct net *net, struct nlattr *nla,
- 	u64 rate64, prate64;
- 	u64 pps, ppsburst;
- 
--	if (nla == NULL)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Police requires attributes");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_POLICE_MAX, nla,
- 					  police_policy, NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (tb[TCA_POLICE_TBF] == NULL)
-+	if (!tb[TCA_POLICE_TBF]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required police action parameters");
- 		return -EINVAL;
-+	}
-+
- 	size = nla_len(tb[TCA_POLICE_TBF]);
--	if (size != sizeof(*parm) && size != sizeof(struct tc_police_compat))
-+	if (size != sizeof(*parm) && size != sizeof(struct tc_police_compat)) {
-+		NL_SET_ERR_MSG_MOD(extack, "Invalid size for police action parameters");
- 		return -EINVAL;
-+	}
- 
- 	parm = nla_data(tb[TCA_POLICE_TBF]);
- 	index = parm->index;
-diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
-index c5c61efe6db4..2442e001d92e 100644
---- a/net/sched/act_sample.c
-+++ b/net/sched/act_sample.c
-@@ -49,15 +49,19 @@ static int tcf_sample_init(struct net *net, struct nlattr *nla,
- 	bool exists = false;
- 	int ret, err;
- 
--	if (!nla)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Sample requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 	ret = nla_parse_nested_deprecated(tb, TCA_SAMPLE_MAX, nla,
- 					  sample_policy, NULL);
- 	if (ret < 0)
- 		return ret;
- 
--	if (!tb[TCA_SAMPLE_PARMS])
-+	if (!tb[TCA_SAMPLE_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required sample action parameters");
- 		return -EINVAL;
-+	}
- 
- 	parm = nla_data(tb[TCA_SAMPLE_PARMS]);
- 	index = parm->index;
-diff --git a/net/sched/act_simple.c b/net/sched/act_simple.c
-index 0a3e92888295..02b8e42c1bdd 100644
---- a/net/sched/act_simple.c
-+++ b/net/sched/act_simple.c
-@@ -100,16 +100,20 @@ static int tcf_simp_init(struct net *net, struct nlattr *nla,
- 	int ret = 0, err;
- 	u32 index;
- 
--	if (nla == NULL)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Sample requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_DEF_MAX, nla, simple_policy,
- 					  NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (tb[TCA_DEF_PARMS] == NULL)
-+	if (!tb[TCA_DEF_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required sample action parameters");
- 		return -EINVAL;
-+	}
- 
- 	parm = nla_data(tb[TCA_DEF_PARMS]);
- 	index = parm->index;
-@@ -121,6 +125,7 @@ static int tcf_simp_init(struct net *net, struct nlattr *nla,
- 		return ACT_P_BOUND;
- 
- 	if (tb[TCA_DEF_DATA] == NULL) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing simple action default data");
- 		if (exists)
- 			tcf_idr_release(*a, bind);
- 		else
-diff --git a/net/sched/act_skbedit.c b/net/sched/act_skbedit.c
-index 754f78b35bb8..671ca64a2c33 100644
---- a/net/sched/act_skbedit.c
-+++ b/net/sched/act_skbedit.c
-@@ -133,16 +133,20 @@ static int tcf_skbedit_init(struct net *net, struct nlattr *nla,
- 	int ret = 0, err;
- 	u32 index;
- 
--	if (nla == NULL)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Skbedit requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_SKBEDIT_MAX, nla,
- 					  skbedit_policy, NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (tb[TCA_SKBEDIT_PARMS] == NULL)
-+	if (!tb[TCA_SKBEDIT_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required skbedit parameters");
- 		return -EINVAL;
-+	}
- 
- 	if (tb[TCA_SKBEDIT_PRIORITY] != NULL) {
- 		flags |= SKBEDIT_F_PRIORITY;
-@@ -161,8 +165,10 @@ static int tcf_skbedit_init(struct net *net, struct nlattr *nla,
- 
- 	if (tb[TCA_SKBEDIT_PTYPE] != NULL) {
- 		ptype = nla_data(tb[TCA_SKBEDIT_PTYPE]);
--		if (!skb_pkt_type_ok(*ptype))
-+		if (!skb_pkt_type_ok(*ptype)) {
-+			NL_SET_ERR_MSG_MOD(extack, "ptype is not a valid");
- 			return -EINVAL;
-+		}
- 		flags |= SKBEDIT_F_PTYPE;
- 	}
- 
-@@ -212,6 +218,7 @@ static int tcf_skbedit_init(struct net *net, struct nlattr *nla,
- 		return ACT_P_BOUND;
- 
- 	if (!flags) {
-+		NL_SET_ERR_MSG_MOD(extack, "No skbedit action flag");
- 		if (exists)
- 			tcf_idr_release(*a, bind);
- 		else
-diff --git a/net/sched/act_skbmod.c b/net/sched/act_skbmod.c
-index bcb673ab0008..c80828cdeb69 100644
---- a/net/sched/act_skbmod.c
-+++ b/net/sched/act_skbmod.c
-@@ -119,16 +119,20 @@ static int tcf_skbmod_init(struct net *net, struct nlattr *nla,
- 	u16 eth_type = 0;
- 	int ret = 0, err;
- 
--	if (!nla)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Skbmod requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_SKBMOD_MAX, nla,
- 					  skbmod_policy, NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (!tb[TCA_SKBMOD_PARMS])
-+	if (!tb[TCA_SKBMOD_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required skbmod parameters");
- 		return -EINVAL;
-+	}
- 
- 	if (tb[TCA_SKBMOD_DMAC]) {
- 		daddr = nla_data(tb[TCA_SKBMOD_DMAC]);
-@@ -160,6 +164,7 @@ static int tcf_skbmod_init(struct net *net, struct nlattr *nla,
- 		return ACT_P_BOUND;
- 
- 	if (!lflags) {
-+		NL_SET_ERR_MSG_MOD(extack, "No skbmod action flag");
- 		if (exists)
- 			tcf_idr_release(*a, bind);
- 		else
-diff --git a/net/sched/act_vlan.c b/net/sched/act_vlan.c
-index 836183011a7c..b468a4c8a904 100644
---- a/net/sched/act_vlan.c
-+++ b/net/sched/act_vlan.c
-@@ -134,16 +134,20 @@ static int tcf_vlan_init(struct net *net, struct nlattr *nla,
- 	int ret = 0, err;
- 	u32 index;
- 
--	if (!nla)
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "Vlan requires attributes to be passed");
- 		return -EINVAL;
-+	}
- 
- 	err = nla_parse_nested_deprecated(tb, TCA_VLAN_MAX, nla, vlan_policy,
- 					  NULL);
- 	if (err < 0)
- 		return err;
- 
--	if (!tb[TCA_VLAN_PARMS])
-+	if (!tb[TCA_VLAN_PARMS]) {
-+		NL_SET_ERR_MSG_MOD(extack, "Missing required vlan action parameters");
- 		return -EINVAL;
-+	}
- 	parm = nla_data(tb[TCA_VLAN_PARMS]);
- 	index = parm->index;
- 	err = tcf_idr_check_alloc(tn, &index, a, bind);
--- 
-2.43.0
 
+
+>>  		rval = _extend_sdma_tx_descs(dd, tx);
+>>  		if (rval) {
+>>  			__sdma_txclean(dd, tx);
+>> diff --git a/drivers/infiniband/hw/hfi1/sdma.h b/drivers/infiniband/hw/hfi1/sdma.h
+>> index d77246b48434f..362815a8da267 100644
+>> --- a/drivers/infiniband/hw/hfi1/sdma.h
+>> +++ b/drivers/infiniband/hw/hfi1/sdma.h
+>> @@ -639,13 +639,13 @@ static inline void sdma_txclean(struct hfi1_devdata *dd, struct sdma_txreq *tx)
+>>  static inline void _sdma_close_tx(struct hfi1_devdata *dd,
+>>  				  struct sdma_txreq *tx)
+>>  {
+>> -	u16 last_desc = tx->num_desc - 1;
+>> +	struct sdma_desc *desc = &tx->descp[tx->num_desc - 1];
+>>  
+>> -	tx->descp[last_desc].qw[0] |= SDMA_DESC0_LAST_DESC_FLAG;
+>> -	tx->descp[last_desc].qw[1] |= dd->default_desc1;
+>> +	desc->qw[0] |= SDMA_DESC0_LAST_DESC_FLAG;
+>> +	desc->qw[1] |= dd->default_desc1;
+>>  	if (tx->flags & SDMA_TXREQ_F_URGENT)
+>> -		tx->descp[last_desc].qw[1] |= (SDMA_DESC1_HEAD_TO_HOST_FLAG |
+>> -					       SDMA_DESC1_INT_REQ_FLAG);
+>> +		desc->qw[1] |= (SDMA_DESC1_HEAD_TO_HOST_FLAG |
+>> +				SDMA_DESC1_INT_REQ_FLAG);
+> 
+> Unrelated change which doesn't change anything.
+
+Please drop.
+
+> 
+>>  }
+>>  
+>>  static inline int _sdma_txadd_daddr(
+>> @@ -670,13 +670,10 @@ static inline int _sdma_txadd_daddr(
+>>  	tx->tlen -= len;
+>>  	/* special cases for last */
+>>  	if (!tx->tlen) {
+>> -		if (tx->packet_len & (sizeof(u32) - 1)) {
+>> +		if (tx->packet_len & (sizeof(u32) - 1))
+>>  			rval = _pad_sdma_tx_descs(dd, tx);
+>> -			if (rval)
+>> -				return rval;
+>> -		} else {
+>> +		else
+>>  			_sdma_close_tx(dd, tx);
+>> -		}
+> 
+> Same as before, unrelated change.
+
+Agree. Please drop.
