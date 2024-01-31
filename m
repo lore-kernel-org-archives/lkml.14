@@ -1,92 +1,87 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32845810C;
-	Wed, 31 Jan 2024 07:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBA255C04
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 07:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706687497; cv=none; b=D/hF1NpXLo7iM94YwYygPMB7v2uqhAHuvTby88AuLqrN98Pz5dQI0TKC1rH56/D+TgGcJs0R5coi09eEiwsbgcHvTZwqcQoK9grJw8+MiAmexYlC5UN6JewOxMZmbfnuKtA//sUHK/nIwrLv2H4uOIidhh2F3MQUa82l0A1Tmv8=
+	t=1706687632; cv=none; b=MV/GuocdRH1A44Ayj1sZSJf7SUZKfPp3z5FV53ctS8CoHXer80SM8YG1HmDMGFcrQZf8iazgpL5tNlGlnJuUvi8bzKGjrzKNNOluLQpzPDCWyVgZR5kPjZG7y8/bWPF49MNBE54owLWgceqWJVjxIUUlT8zFfdQvU1I24K4jwK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706687497; c=relaxed/simple;
-	bh=RCpx2LOg9/ZmAaeB9rFYkX9ZLKhwvnqQppjV3dOKF78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=peTHoKYwLHSQr6IKSoLpQ5WJzDg/XCBbuzKjPtjtQYN5rbiMONWmWOCBTmcgo6DIG7QlJKng/UAqCKKTXs7wl3xc1oPYJehO33N19bJ5T/JhEXE9dH6yRb/ZDKetrLa79ab23QOSmzg+ybei5vyvaKE3OlNThAhZjykijptNP/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YrCcDfV/; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1706687632; c=relaxed/simple;
+	bh=W9r78muWkI7nDBVfVwQKxgwZF+QemuVc+xUj/UPzmy8=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=qws4TusrXpXcq8BHrkUoUOVYBQbWD5qX9I6VKp2sB/rbQkBZ8zBIgw/4pv3Xh1g5vsy1wkGPsR6oZCJYQ/yPKhl0PPksQHuZMmVHH+5tEXzM+BgGIejE77ZrgvURJ5KIUKpKSF/jdpD/8L/LHY2zw3wQgGAdse6jCBcKvfLv2Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HrEr1tyw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YrCcDfV/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1706687464; x=1707292264; i=markus.elfring@web.de;
-	bh=RCpx2LOg9/ZmAaeB9rFYkX9ZLKhwvnqQppjV3dOKF78=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=YrCcDfV/YvrBQAMq1T8G78gtbH3KS2AwJOZJYkHFFOnIVVTLrDczUsxGgDZgAKqv
-	 STfA2c4sAXxrLmmUaMYeg6imxW7oY+gd7rfYOvqPOpp4vETYlK0OpIcPVw7PBYtVi
-	 0kmGPHapdqh13Prk6rNx/oA5jcO65k+/B8my+PyxbJI96RjDhWvCoIKIwSSEnpf66
-	 JIvxnwFBZYKbl/iqFZwLA/cyAQ1rusJXn6d1wc7Q/l1UzfiR8Da6WcTEEKdhCBFgb
-	 HuOsB+h88m5oz85ozx9EyuMvFoJj4AInNIQC1guYL1SQ5y045tEmuhQ1vXeOE0CIQ
-	 AlUHyr7XeQTvs7y9rA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MPaII-1rikLS1lly-00Munv; Wed, 31
- Jan 2024 08:51:04 +0100
-Message-ID: <35f48b58-8687-4620-a859-e16a0ef142e5@web.de>
-Date: Wed, 31 Jan 2024 08:51:02 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HrEr1tyw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706687629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NoCqocFaREeAQQuKlxOEQkO+oRFd1J81Erw4wSxms6o=;
+	b=HrEr1tyw2CSblJi+Rf3T78uByCZezJENRAQcezycd/nXtxRWsbZtIbHwQT8A05iqUiDqDd
+	qoKwLF0xrCWg47XueCDriCL/6Rd2AWPOFYDEbY1CLUGnF+Blmtzn1YMJXywoqz4Iifj61f
+	0jO1fblfYK5VV0/tGxsvUGQY+n5AyqM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-336-KHEcACATNOCZmihN0j5VXg-1; Wed, 31 Jan 2024 02:53:45 -0500
+X-MC-Unique: KHEcACATNOCZmihN0j5VXg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2346A86E91F;
+	Wed, 31 Jan 2024 07:53:45 +0000 (UTC)
+Received: from oldenburg.str.redhat.com (unknown [10.39.192.109])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A15D2166B31;
+	Wed, 31 Jan 2024 07:53:41 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Yang Shi <shy828301@gmail.com>
+Cc: oliver.sang@intel.com,  riel@surriel.com,  fengwei.yin@intel.com,
+  willy@infradead.org,  cl@linux.com,  ying.huang@intel.com,
+  akpm@linux-foundation.org,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE
+References: <20231221065943.2803551-1-shy828301@gmail.com>
+	<20231221065943.2803551-2-shy828301@gmail.com>
+Date: Wed, 31 Jan 2024 08:53:40 +0100
+In-Reply-To: <20231221065943.2803551-2-shy828301@gmail.com> (Yang Shi's
+	message of "Wed, 20 Dec 2023 22:59:43 -0800")
+Message-ID: <878r46ym4b.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.3 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: fpga: dfl: fme: Return directly after a failed devm_kasprintf()
- call in fme_perf_pmu_register()
-Content-Language: en-GB
-To: Dan Carpenter <dan.carpenter@linaro.org>, linux-fpga@vger.kernel.org,
- kernel-janitors@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
- Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <chentao@kylinos.cn>
-References: <d94376b6-12e8-45bb-a9be-4887bb316d35@web.de>
- <b7e2e9d1-5e3e-44b2-a4b7-327d334b776d@moroto.mountain>
- <e760bd1b-30bf-489f-b745-128d05397feb@web.de>
- <5a3a1c80-47ae-45c7-86ca-8aa40566551b@moroto.mountain>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <5a3a1c80-47ae-45c7-86ca-8aa40566551b@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ezTFH0oi9O4DbezQPSoY98o1En7nW7T6V/09QuY+3PKrMaNo/CX
- f/ojdEBeK4DGkzVDOmK1Bl/r5M+rJFw2fjirevGhIvvjweZKnO6eEJgMyxDIfCcjBK0/2En
- vJ19HiQtGQfu7C+GTOBjyyTCmtptPPFoZ737xD6zUza44cA1Lkje+cX4hvOBUp0PvVthVzK
- OQi3+J7oM1Q/lFwBy2u+w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vPoORXPt/OI=;jr5MxVXfcURfY/GOeGuCh6k6qZW
- 7gaJYMLUtiOWDy0jdnkrTyPREOPJ0lazjBV/hWpObpx7D+YLylL5FHuMzRwdaBp6zqbcpWi4p
- S3LBzbRIGwSro+waOYYyCUe3AnjR/NMRFAW/yOU7iBVT3IDKpeOYwavnrlYzKSkNlBc+yxPbL
- k/d63Uzth8qHRpTnu7thtGhNyEgEsmldl8C+TipxEqG3CgKqQCNvnLkEZ9o6ANIXFnBBPsU/I
- PzhvTxldQAIKYvEKSK9pxhbVwaYxzWPAMJMKZmZqi2Mxvo6e4GzyzFbpRHWCPDn4KR+Pe3RZe
- lQNxJQITSPCQvzmKjHceHmW56NApZbIRUYVntDwoUD25/AHg5QKpnXCG50i0Hi+a0eOjtyFYM
- OcCHPOEsPngcW9Bv7wx+YQHsvWScL3yI5R38zdv/K3C4MHdMIZsTlkcPgDM8pXey9U5t3uwTp
- oVj6MAgbcPfWeIsjdu7OzBkyp9tUizWMHLlXd+nXYoJwFTMzDIci1JaQNKaSK88oYgIJWkeSv
- EbAA0cbx8M/kPzNJ3UYuky3xlFFlIvAZXnJp+9UNSgwOOVfkeM/BbGZpGynyQLw1NEyh2eGmd
- 8nEI0uY9reHFaPsAOExbW0BDT2vcJceT+LtI3vg0HfkrWnsS9yPfgPS/vcO4EGA9QJaYO90Nr
- p/K8d0IxvIn7usOdGAHTyWNBZe+JEs2CcP1r2w9/k0JGbl+i1laOqIP2tk4D/f1sNYIlg13sA
- qg07Cu/4XVarbG/R0yYnfY+B9DKFsD0uWMIiD32IXBd/z9GONfacApCeHS5iFI2KF8g290h6B
- PTJNOae7LEOrdqdw9a0bMNPAIf8dHkc3vHqfL+IdC5P/Ei4GCmLMi9Ya+spZAnYoMyKwumg5v
- PU1rgnbk3RRt5c46ucQw2pSNKmWysO6PtN8nOYKN2CitslON/79aY3mxYKZVdFTwmODrmgFdF
- XO76BA==
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-> The check is right before that on line 11527.
+* Yang Shi:
+
+> From: Yang Shi <yang@os.amperecomputing.com>
 >
-> https://elixir.bootlin.com/linux/v6.8-rc2/source/kernel/events/core.c#L1=
-1527
+> The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
+> boundaries") incured regression for stress-ng pthread benchmark [1].
+> It is because THP get allocated to pthread's stack area much more possible
+> than before.  Pthread's stack area is allocated by mmap without VM_GROWSDOWN
+> or VM_GROWSUP flag, so kernel can't tell whether it is a stack area or not.
+>
+> The MAP_STACK flag is used to mark the stack area, but it is a no-op on
+> Linux.  Mapping MAP_STACK to VM_NOHUGEPAGE to prevent from allocating
+> THP for such stack area.
 
-Do you find a warning message like =E2=80=9CCan not register anonymous pmu=
-.=E2=80=9D acceptable
-in addition to eventual other indications for memory allocation failures s=
-o far?
+Doesn't this introduce a regression in the other direction, where
+workloads expect to use a hugepage TLB entry for the stack?
 
-Regards,
-Markus
+It's seems an odd approach to fixing the stress-ng regression.  Isn't it
+very much coding to the benchmark?
+
+Thanks,
+Florian
+
