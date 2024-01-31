@@ -1,91 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DD512DDAB
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 18:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286E312DDB6
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 18:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706724190; cv=none; b=FYfHweucS5pb6Ah/C+GWL2RU513tYqnIUnHuJkbjHeUtc4DHRPAETJVIEshKTn2UYBB1I2VhQg3+wXyOwV51my9CWw8DMau1jiZB5tWrs6c5ytD5eVIfZgUrmX+3niav7UdWd7eOfsIjkCwHr70RKMHLTHJSgpklA93/iYQzzVA=
+	t=1706724516; cv=none; b=WVG/yodWFaF3JXCJZcCBZ77uGTvyVhtn1xItlw645uoNAjQKUyWPppg5NeiFsEQyYXlYb7cZOJb6bQg7vCZ3FU2TjD0DLqbsMu5cPr5C8wYEJSEscc/hzrDEzpOecAWQBCIfLx3xYIce/UE+Num5DGaGbw7DNj07jfTxl7Cyzlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706724190; c=relaxed/simple;
-	bh=fC3hvECKtCFypEuerDMNoG/UZBOT7Ld0GR4SGXo8Mr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2zoB2oM6pGZj4ildfw/EWrdXwuVnI6HnqoXewFao118z+vME1qDl1R33BB7U/DCSqlvRv5JgQEJlgJwphS4KtyxXHzH43yXdASjVrtfDCsnwtKZczPm9W/4th1onob3CwjJ6J/fXULqE1yHvIXSdSYgOCHOumkERP7+m9PW0lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PNHC8j7g; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706724516; c=relaxed/simple;
+	bh=/TqVe9oPbkha3IG0Da9VATsWwyM9nTOpqGNcQqestL0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sgMFfL1LYy7G9TVmA6mJDMbcRkoGBr8GBmmfzBVkDxFR0e9KQfbA0h5AtuunQn7ZjYEoSiB2KTQ+BNKmLcnCIObnW1RmDzBul/4dBoJ/1cch8+udKIK+LAu7fI1kUxayfe/CNReGGS2Oip7Hcd1JWC6GoQoIaoOp/XgprAzOJ0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nBHmYp1U; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNHC8j7g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706724187;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8OjWSdnzVIc5DKpSGecXOiiUOX1tI2G9mHRb0zHs00A=;
-	b=PNHC8j7gmGxJnrh92/DyaAo8CmowjIGHcwDwaisHe3Qq5CTEuE5PNhWTmnrz5cUAEH/YhQ
-	7rsM62MXJiFEI/u2WLmfYXXHUAwIZg/UET2ZOyowW2+OEFHW9OlACoUkcXN4Xbp/Ohux/w
-	KgXz3gJ57cp9s07pkkVYXipCFgEpdX0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-538-jvh8vazaP-i5_VuRTPYOrg-1; Wed,
- 31 Jan 2024 13:03:04 -0500
-X-MC-Unique: jvh8vazaP-i5_VuRTPYOrg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D98C63806291;
-	Wed, 31 Jan 2024 18:03:03 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.249])
-	by smtp.corp.redhat.com (Postfix) with SMTP id BD4BB48C;
-	Wed, 31 Jan 2024 18:03:02 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 31 Jan 2024 19:01:49 +0100 (CET)
-Date: Wed, 31 Jan 2024 19:01:47 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] pidfd: implement PIDFD_THREAD flag for
- pidfd_open()
-Message-ID: <20240131180146.GD2609@redhat.com>
-References: <20240131132541.GA23632@redhat.com>
- <20240131132602.GA23641@redhat.com>
- <ZbqCKgTuP/IaEbMM@tycho.pizza>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nBHmYp1U"
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-7d5c2502ea2so42623241.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706724514; x=1707329314; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/TqVe9oPbkha3IG0Da9VATsWwyM9nTOpqGNcQqestL0=;
+        b=nBHmYp1Uuxr1sHICTyKntcPSlpXo1fWE5HjCLJIic/Hixx4NPPhedNhisc13iwB17Y
+         ycVd8mfBia/+ttcqR3ou6ZHOiK2UUwB9SaDzPm42W8sXxyxgSKRVVTZ/PJ9H5hnlpxTS
+         AFi4t6moy4MAbB8OPH1RcinD/YV2byiba89GQf/v9XLnejCPwas19onM6hBpqdzUQn8X
+         LKZLOgvYGIqtDTnjR3RMA/i+JH7edHR0LHYUzaPFABx6zgsnkODIqVqXO/OwY5QY/9xM
+         bLQhVROPRMeSE3dv2bXK+TaD5a+4bu9tpUO3O9PPysFHmWfsoZH6jzl5PbI5p3KlIbnD
+         F/jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706724514; x=1707329314;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/TqVe9oPbkha3IG0Da9VATsWwyM9nTOpqGNcQqestL0=;
+        b=rIPh/UresRRC+WhxWDsc8eCLZLtl0KCOeD2GY2Gxf7nFs3bCqokCKkxeBn/YL44aW1
+         ubtWJiqvUYEIJ5IYbEoLkywzMuxfwjRv3YAsfXqqf9fzWlEtRcvOHCl2eAILmzm3P2EC
+         scrOXYIZev9jR6CMgRuovl46i/xalYOwc9mi8p+N176d8oZ3nIJPDHIzpi5wr1+yzddv
+         HM1Jgr02HKcUUXxud2MXC81l9XcPABpZjWKku2EwBWqpQpQohudjdFGJsihkDQAnHdnE
+         XrCsg5LLmUwMCkHuw4U+iomq0UbsJMhjYm1W/Cpv7//avkXk67pCHufuinrpJ/qjGdFU
+         CLNg==
+X-Gm-Message-State: AOJu0YzFW2vByn5sAklFmm+8PTqWd499iGI5Mvg9YKg+80vmT1m4j74s
+	XzgYwX65ajifxRXCpkpwt/6FYzKcE/6/xhBNpvUBiMucAVIwxGHGuuw6D5w8nf/XWMT2LCJxJ+r
+	qvoN7aJHZgPPlaCtfERCXnbEd0ZQfIwWRjZHN9w==
+X-Google-Smtp-Source: AGHT+IHSR1zkm9u0xTdCg4AnwUx5UxJxm92+kZ7qjzL2ndLDeyODEpEu4Tn2VdVNfFi3Lzs7lb3SIDs3OHvqs+2kpEE=
+X-Received: by 2002:a05:6122:a20:b0:4bd:4356:40bc with SMTP id
+ 32-20020a0561220a2000b004bd435640bcmr2650075vkn.5.1706724513929; Wed, 31 Jan
+ 2024 10:08:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbqCKgTuP/IaEbMM@tycho.pizza>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-4-brgl@bgdev.pl>
+ <CACRpkdY_9=2Uqo9=ZEDrn+RFGdPkq73ZRYLVCbh6BLMzU9LZ_A@mail.gmail.com>
+In-Reply-To: <CACRpkdY_9=2Uqo9=ZEDrn+RFGdPkq73ZRYLVCbh6BLMzU9LZ_A@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 31 Jan 2024 19:08:22 +0100
+Message-ID: <CAMRc=Mdh5f_hrAh8BO4P9s0o_t9cT8FdfiY24-PQnPVz7QRZFA@mail.gmail.com>
+Subject: Re: [PATCH 03/22] gpio: remove unused logging helpers
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/31, Tycho Andersen wrote:
+On Wed, Jan 31, 2024 at 6:39=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
 >
-> >  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
-> >  {
-> > -	if (!pid || !pid_has_task(pid, PIDTYPE_TGID))
-> > +	bool thread = flags & PIDFD_THREAD;
-> > +
-> > +	if (!pid || !pid_has_task(pid, thread ? PIDTYPE_PID : PIDTYPE_TGID));
+> On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
 >
-> Small typo here, trailing ;. When I fix that, tests pass for me.
-
-OOPS.
-
-Christian, should I spam lkml with v4, or will you add this fix yourself?
-
-> Assuming that's fixed up:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > The general rule of the kernel is to not provide symbols that have no
+> > users upstream. Let's remove logging helpers that are not used anywhere=
+.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Reviewed-by: Tycho Andersen <tandersen@netflix.com>
-> Tested-by: Tycho Andersen <tandersen@netflix.com>
+> Seems unrelated to the rest of the patches but OK.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Yours,
+> Linus Walleij
 
-Thanks Tycho!!!
+It's kind of related because I'm later modifying the logging helpers
+so I'm saving myself some work.
 
-Oleg.
-
+Bart
