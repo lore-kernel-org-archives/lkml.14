@@ -1,104 +1,96 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762C63FB17
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 19:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9313B189;
+	Wed, 31 Jan 2024 19:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706730107; cv=none; b=ZYic2XY25klDrN19UrBxkO3FdpStzIq7txY9j1lYipqhhnJW5VczenizCwJXNxMKnrrGKVhyjpADBry0QLBuDX6kC5Sh1QhrEXTxWizR8u2pMgfssCWNfoCNgX/At2F43KC9r8zcMBI9RNOVDaIwngLc/g/fx22cGyHHalSfFq4=
+	t=1706730124; cv=none; b=CKDNEWCPbTlXDsTJ4OtvtXoLCc5cbe5Y6nL5fb9NEAzrH9iuqnlFLlu/L+WduBsOLzpFvL6cFY1O5zSB+UlRS6szcs9zaNKNi/vpP+iLsuzgJ3PhmGjNp5mW/RDv+JUkmudYwbJm7SkcPf3L97/Vam5jZE5ZMgMq9R2uyTu5W+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706730107; c=relaxed/simple;
-	bh=OkhClyqGGM5gqjlWyitEvXIZetTvRXEOIznDvqpU1TI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CoIKPDC8NduQ0wV9se18wwsBp9cY9dkHCWlECZr+AmJkyMDSaWZ2DSs/qDPPEWqjIC4UWCsZFCT3Y26P/a0CRbmKPK4I+CyPm3IJv4cyYLoYhR5tE0J2i0VfIgKSzp/QU2YnRyiVmMmYVXnIn45HVSLJvCtTrmbD59OKQTHND5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YMdiFHmX; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YMdiFHmX"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-602c714bdbeso803577b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:41:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706730104; x=1707334904; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OnoQHvAbASaPoVdTyGlmKQC9N2Jh1gEDxnnkfJ0ZHb4=;
-        b=YMdiFHmXZ4YNZ83hJFGTVaJFVgCJN1eKBI0DLd8/m6U73fU/N4RryPGL56IaTHmRss
-         EG5f10CeHJa9CzpxPHTG2q6DQe7hvF2kgOYkTYa0PSy2o2rrKfiAcjU2bFIGQq71QqZh
-         2eDYl4jKfEN5FLu2TMjfaNFUvzeQzVfzDVB6rnFGOheXFWy4m1DIty9vCoFTOzqRVkge
-         vyIhIN1WsYtDCxqoRM7hkxUS9bJtpDBx0/SHxlD5JH5UknYQ5YHbIkACoKN01PSEF+ZN
-         ZVtT9/emgPH6b4Iyc4fHEnX5tGUZAUu0cnGSt1o3l4XgMFcgAN/IyMPKROkcRsIlVomW
-         XXfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706730104; x=1707334904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OnoQHvAbASaPoVdTyGlmKQC9N2Jh1gEDxnnkfJ0ZHb4=;
-        b=Q6UXnec5k2IIEEi0249wFzvSaA5CQRLnygx3fDqNSySpG1Xi+8yc8xtoGgPBNgLbMJ
-         Ju6UbuoxOIMk2bwOMYKHTyLnKMbTjH+uaqhdgA2Tk8ayKz74tJsW8Q2r9xbZkHq+WArO
-         j55BKsPrWgjDCM+p6UOallAREdncR9f6CC6QPPwPL0szGmv2dNcFWhQMFl2F36mhY6Cu
-         o39I5no7Zg+F7ip+PiTBd6G+LeELuZJ6AlmmwsOTNCvn9uVZqP/bANfFAz7rllbAUaGC
-         kJ8QP5+CuxfPRqod2MXSM2FunTVVwoaxi36qeJKxxe5oKgInlqEGBaO3GCfrgw43mLKG
-         w1lA==
-X-Gm-Message-State: AOJu0Yzf4RtywMpIRbULyZvZTt2hobDKEgjLTr4/QQoeVo3YlYtodqO2
-	XvFGoiO3daIuXbR54HAFz451lUdV1oco+C2Jo0/VOWIqjegyA/Mf1p/NKLhAtaqOXiLgAyD9xPz
-	Eb4/vVC15zYf2HVcskzQ8L9F9TQoAnJzpFxth5g==
-X-Google-Smtp-Source: AGHT+IHIkxz5wbRgafyXx9pFQL6X7VgtqIYZUzIvbjFzPcOeVDH+7LFp9Qk/vLeKYy4h/WD0yWj0sJaf3erb0b5746Y=
-X-Received: by 2002:a81:83cc:0:b0:604:1277:d759 with SMTP id
- t195-20020a8183cc000000b006041277d759mr1317173ywf.20.1706730104368; Wed, 31
- Jan 2024 11:41:44 -0800 (PST)
+	s=arc-20240116; t=1706730124; c=relaxed/simple;
+	bh=m8vwoaQsBcdyqdU5wzhrn7icali5QipJmCUL6e3LtlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AgSmmo1X0nnuqNFSqPAi3M/hKaJKl7IXUIznifhU/4sIf7UCf2RTlLxAoH7FaxYO8VjtX+RXqbs7NMsTZ5wrM8OD3OXBOdyubnd9LKepAXAFHWybatEXZbIqjPLEKbRcE+rF7wFNZmxkhh8ln1DMoy/REPoVcAia/L6QjuxnQBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C73CC433C7;
+	Wed, 31 Jan 2024 19:42:02 +0000 (UTC)
+Date: Wed, 31 Jan 2024 14:42:16 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
+ <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [linus:master] [eventfs] 852e46e239:
+ BUG:unable_to_handle_page_fault_for_address
+Message-ID: <20240131144217.0130b517@gandalf.local.home>
+In-Reply-To: <CAHk-=wgh0otaSyV0MNrQpwFDTjT3=TWV94Wit2eUuPdh2KdyVg@mail.gmail.com>
+References: <202401291043.e62e89dc-oliver.sang@intel.com>
+	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
+	<20240129172200.1725f01b@gandalf.local.home>
+	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
+	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+	<20240129174950.5a17a86c@gandalf.local.home>
+	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
+	<20240129193549.265f32c8@gandalf.local.home>
+	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
+	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+	<20240130132319.022817e8@gandalf.local.home>
+	<CAHk-=wiGb2aDbtq2+mYv6C=pYRKmo_iOu9feL9o52iRT8cuh6Q@mail.gmail.com>
+	<20240130143734.31b9b3f1@gandalf.local.home>
+	<CAHk-=whMJgqu2v1_Uopg5NBschGFa_BK1Ct=s7ehwnzPpPi6nQ@mail.gmail.com>
+	<20240131105847.3e9afcb8@gandalf.local.home>
+	<CAHk-=wgh0otaSyV0MNrQpwFDTjT3=TWV94Wit2eUuPdh2KdyVg@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-8-brgl@bgdev.pl>
-In-Reply-To: <20240130124828.14678-8-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 20:41:33 +0100
-Message-ID: <CACRpkdaqrZ5cgpnocBv4NbLfZGuW+M0uQzfCpA_A4+5wTe1J2w@mail.gmail.com>
-Subject: Re: [PATCH 07/22] gpio: protect the descriptor label with SRCU
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Wed, 31 Jan 2024 11:35:18 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> In order to ensure that the label is not freed while it's being
-> accessed, let's protect it with SRCU and synchronize it everytime it's
-> changed.
->
-> Let's modify desc_set_label() to manage the memory used for the label as
-> it can only be freed once synchronize_srcu() returns.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> On Wed, 31 Jan 2024 at 07:58, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > BTW, I ran my full test suite on your patches with the below updates and it
+> > all passed.  
+> 
+> Those patch updates all look sane to me.
+> 
+> > I can break up and clean up the patches so that they are bisectable, and if
+> > that passes the bisectable portion of my tests, I can still send them to
+> > you for 6.8.  
+> 
+> Ack. That series you posted looks fine. I didn't do any actual testing
+> or applying the patches, just looking at them.
+> 
+> The one thing I noticed is that the 'llist' removal still needs to be
+> done. The logical point is that "[PATCH v2 7/7]" where the
+> eventfs_workfn stuff is ripped out.
+> 
+> And the 'rcu' head should now be a union with something that is no
+> longer used after the last kref. The only thing that *is* used after
+> the last kref is the "is_freed" bit, so there's lots of choice. Using
+> the 'struct list_head listl' that is used for the child list would
+> seem to be the obvious choice, but it could be anything (including all
+> of the beginning of that eventfs_inode, but then you would need to
+> group that as another nested unnamed struct, so picking a "big enough"
+> entry like 'list' makes it syntactically simpler.
 
-And this conclude the previous patches by protecting the inevitable
-label with SRCU, very clever. (I wouldn't have been able to come up
-with it...)
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Yeah, that was what I was talking about in my cover letter with:
 
-> -#define gpiod_err(desc, fmt, ...)                                       =
-      \
-> -       pr_err("gpio-%d (%s): " fmt, desc_to_gpio(desc), desc->label ? : =
-"?",  \
-> -                ##__VA_ARGS__)
-(...)
+  Note, there's more clean ups that can happen. One being cleaning up the
+  eventfs_inode structure. But that's not critical now and can be added
+  later.
 
-Now it is clear why you were minimizing these helpers.
-(Maybe add to the commit message of that patch? "We do this
-because all functions need to be changed later".)
+I just want to get the majority of the broken parts done. The clean up of
+the eventfs_inode is something that I'd add a separate patch. Not sure that
+falls in your "fixes" category for 6.8.
 
-Yours,
-Linus Walleij
+-- Steve
