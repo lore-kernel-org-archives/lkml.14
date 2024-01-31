@@ -1,63 +1,63 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96B312BF01
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0434C84A40
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706712632; cv=none; b=HIAqDCaw+cCa0TEMJDlRpsjY07tn7pUe9XbLui25rcEmCmeryWVDTc8pACOJ4kJl1j4/r5oVH3XphGkcn/+60guenI0cYyHagTZg+iHJRoaIlU6CyU8rKQIN9stDqLwjxyWGClzr86yS2CoCJfq13W1VUcKsIys9yIe+jlywe9U=
+	t=1706712636; cv=none; b=gEkAWHa2DETMxtgwxOeQBIuZ06YY7uVGIrzrTCEcd8b7AUCCFQErgMiQG5Haav5gA18Rspcsib4RFeGarA/PLGmZxqBdcQCykMoGXkWG5VD6VUXPVfDNoiDmYMSbomY/mwfJFMUO9QAlStNSEeT34KcPlR7KKchEZdKI++6MJ4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706712632; c=relaxed/simple;
-	bh=iPCyZ2KUwOFgyUzIGaDQfCAYR/4Sl5SIrrt7kLBaXS8=;
+	s=arc-20240116; t=1706712636; c=relaxed/simple;
+	bh=nKk/y25uTEBLSW/GB/hBFVugbtV2eXB0vBG1lhYY0WE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OFM6Iea4K54126IR5wg7xdVYO+AO06Nm7VvGTS7ls9nsKrU27OA2jOw3TKH5exyU0UUvqF2ZYzv9b+mbfyVJBEG+vDJ525jjQ5HeY1QAK2kO4Hg0eZZYTdTBzgR42ryQ92P6Cs9jzwFkxpD/TW7lrU1/Z9Ugrn6cMtjUaaGxKTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=aYlr81CM; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=luY83VnJeCaLQjrUV6SSpWVEvCxu2QL8oFx4PcAytiHioi0XtYP6p5FDbP45WDwJ+LCTfBT9l2nOID61MlzoGSK5dsr+ZFB0Or+7RiMfvNb3OAaUuLvum4egfpRY5P2aZkUzhRDKihzFuKRfJRRBUWOyksvnJpujql/nRKITw4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QoR8q9om; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="aYlr81CM"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33afcfc40e2so1175432f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:50:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QoR8q9om"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40ef75adf44so28231165e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:50:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1706712627; x=1707317427; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1706712630; x=1707317430; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h59UYzvy6kpxTaWQxJXzjWALnlqX8AK9QZK5PYncxLY=;
-        b=aYlr81CMiILyg8NoAsMCOW1KwmEEmDymlJrG6LDifVTlgBjzyh1pgPsE0o+ecYUQ8v
-         YwhZ2JBzgw4MOD2Bwxhr8k60aKisW0lFyYHG/8iEd15+EQciEwRHR64ZIz8QaTy02lyZ
-         8EJq12xR33BGUn+l/XSM8Cn2wdm+UKFkaqDM7jqYapu2ltHB4Gx6oJlOM/8PAQn/ZvCh
-         a+uZBmMiFW95woTdA1Sq3+7hwQCpB2Ly9KFN3SWThBTTvGU43J3mhxfoduO3IEJIx3MF
-         IO1ORtgEyOknCUmwop9rEZYgp8MRdpfzS8yjzkDA58QVt4T9FZW9972xtA/WvEfw1/YY
-         SZUg==
+        bh=0mbaZiKy2gj/Ag7nIoIhu2w4coHbnrCERj0vQ/xP9W4=;
+        b=QoR8q9omoVLlekYAK4rm3BefQv3Fl7OjepnlUYl+MDdlZnDcyOo7LDz0MAkztBCqXc
+         eSeX2DKP3BVKprp9pKLMTAg3oV5tjp2Y4axVy+zFhTuy3vCeZg4srQ4ekC5DFTtFUTjj
+         HJswlgsTCTmNAcDp+crufZsVI4UiJx2teijR5e0L7P6ISlR9IoXkNf0rUNH11TOMXh71
+         TWUUhZ3fnwKlS1gblI5eEpnK/0mM23APzj3dkTl3MkaCXWbuHP7X0v4dZgXfihTxO784
+         1FIRlvWmgrIoxfeGVl0DJEPN/ADJSZi0xTvhEIJ05LLWQTx6slLq8kAMkQR1Zud6ZlQU
+         63Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706712627; x=1707317427;
+        d=1e100.net; s=20230601; t=1706712630; x=1707317430;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h59UYzvy6kpxTaWQxJXzjWALnlqX8AK9QZK5PYncxLY=;
-        b=hfrLXFXaDTUMqgJFTq8sqQcK3fhM6GeJdILwjpGkXfOleYTFwK8P7Gu/DrAOWif/tW
-         ZNXZD0SKZVUusoKtoOWH9me8VrTbDY/owSDyO/KDfaHI/rGp9b4EAY1ndeRyW9Iw8wSj
-         kTrf1jietUG3uN8a1UsNrXTY9d1M/L9spC+0ZzQlBR/QKXYf0uEiUDgELPzu6NdLJt1i
-         ZO8iWtJ8Zl2VX4xrj0dTfJQuVNca5/2Z8SoZtwi2XM65VeG4iiN4VsIHS9nLDpY6XaKL
-         KHzAV8PVt10Z4/6MSbyWrAR4ZjxMgnn649raHYVC69Q44WLCGIdw4Omiz7HRFsounzSJ
-         cbFQ==
-X-Gm-Message-State: AOJu0YzaDmhMmpFj4ohEXg/tC+IX28LMbcBK9FfmWTsvML8jxDAo3grd
-	AyZaSktKTgZYyCruejFFDWyDuF6e0rh53h5h77bdHpxm8J8QIAmxihwdn9ZH0N2iRev+wVwJv0J
-	g
-X-Google-Smtp-Source: AGHT+IHI9p0VfhVaqY22cCJ+RemCFoocEANz2qRpKlf4L7xeGm4BCb3HPCxKEIM+RorSwFq+jwIbFQ==
-X-Received: by 2002:a5d:42c3:0:b0:33a:fc59:91c1 with SMTP id t3-20020a5d42c3000000b0033afc5991c1mr1272273wrr.18.1706712626654;
-        Wed, 31 Jan 2024 06:50:26 -0800 (PST)
+        bh=0mbaZiKy2gj/Ag7nIoIhu2w4coHbnrCERj0vQ/xP9W4=;
+        b=qtL5mOJwrGmMI3V0Cm5husQduBddqWZseVlkPwk4lJ2xQiJ4l81IXUE3It2BlM7zlx
+         SpTlBbyw8E20B4KLTJ6k2jdSXW4Z1ZkWLt891d1Pl9y2cp8RIxqsybVXE6GQUCfbeELf
+         +RrrFj+ydMZ9siL0Sfvk7tcSUcYtWWaFjVtGdLqLpDz+hlLxHLn/VNa1Rf5wFgr0e0vd
+         SZmvvm3vlyER5BXbfNvUNVAkFPhOrVH90Dr2UbJqhZAFwAssSbTiHJLKXGfiiBJvL5D7
+         BobOerDyPjo79XEM9HZv2W/OTf+h9zZhQnu3UfauwpSkN4e7hpvADufZhHGi6XPNfWAx
+         uY7A==
+X-Gm-Message-State: AOJu0YyEVMAc18NQPC81cgwpJYitFwy3AGEOnVRme1K6Ci3I1YVAkXEj
+	eCaRn+vVrza7PI5b3yY2ukb6ShB+w4p7kU47xsHlRxs01utaX8wYXqNmQbEw1MVx+q9OGwN30l3
+	o
+X-Google-Smtp-Source: AGHT+IFWiH+fokSiZefCR4ZUlTwt8+JB5rKd1sDBfj5iFxCcjqPprY3c1PtHJyYLXCSLedQxdx8i3A==
+X-Received: by 2002:a05:600c:1c9c:b0:40e:88be:ec58 with SMTP id k28-20020a05600c1c9c00b0040e88beec58mr1376079wms.31.1706712630796;
+        Wed, 31 Jan 2024 06:50:30 -0800 (PST)
 Received: from raven.blarg.de (p200300dc6f2f5c00023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f2f:5c00:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id ch15-20020a5d5d0f000000b0033905a60689sm13850173wrb.45.2024.01.31.06.50.26
+        by smtp.gmail.com with ESMTPSA id ch15-20020a5d5d0f000000b0033905a60689sm13850173wrb.45.2024.01.31.06.50.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 06:50:26 -0800 (PST)
+        Wed, 31 Jan 2024 06:50:30 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH 13/28] wait.h: move declarations to wait_types.h
-Date: Wed, 31 Jan 2024 15:49:53 +0100
-Message-Id: <20240131145008.1345531-14-max.kellermann@ionos.com>
+Subject: [PATCH 18/28] blkdev.h: move blk_op_is_passthrough() to blk_types.h
+Date: Wed, 31 Jan 2024 15:49:58 +0100
+Message-Id: <20240131145008.1345531-19-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240131145008.1345531-1-max.kellermann@ionos.com>
 References: <20240131145008.1345531-1-max.kellermann@ionos.com>
@@ -69,617 +69,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-By providing declarations in a lean header, we can reduce header
-dependencies.
+This is a very low-level function without any additional dependencies,
+and moving it will allow certain sources to omit the "blkdev.h"
+dependency.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h |  2 +-
- include/drm/gpu_scheduler.h            |  2 +-
- include/linux/backing-dev-defs.h       |  2 +-
- include/linux/blkdev.h                 |  2 +-
- include/linux/buffer_head.h            |  2 +-
- include/linux/ceph/libceph.h           |  2 +-
- include/linux/cgroup-defs.h            |  2 +-
- include/linux/console_struct.h         |  2 +-
- include/linux/counter.h                |  2 +-
- include/linux/dcache.h                 |  2 +-
- include/linux/dma-buf.h                |  2 +-
- include/linux/eventfd.h                |  2 +-
- include/linux/gnss.h                   |  2 +-
- include/linux/libps2.h                 |  2 +-
- include/linux/lp.h                     |  2 +-
- include/linux/mempool.h                |  2 +-
- include/linux/mhi.h                    |  2 +-
- include/linux/mmzone.h                 |  2 +-
- include/linux/net.h                    |  2 +-
- include/linux/nfs_fs_sb.h              |  2 +-
- include/linux/parport.h                |  2 +-
- include/linux/pid.h                    |  2 +-
- include/linux/pm.h                     |  2 +-
- include/linux/poll.h                   |  2 +-
- include/linux/psi_types.h              |  2 +-
- include/linux/relay.h                  |  2 +-
- include/linux/rtnetlink.h              |  2 +-
- include/linux/sbitmap.h                |  2 +-
- include/linux/sunrpc/rpc_pipe_fs.h     |  2 +-
- include/linux/syslog.h                 |  2 +-
- include/linux/wait.h                   | 23 +------------------
- include/linux/wait_bit.h               |  2 +-
- include/linux/wait_types.h             | 31 ++++++++++++++++++++++++++
- include/media/dvb_ringbuffer.h         |  2 +-
- include/net/smc.h                      |  2 +-
- include/net/sock.h                     |  2 +-
- include/scsi/libiscsi.h                |  2 +-
- include/sound/control.h                |  2 +-
- include/sound/rawmidi.h                |  2 +-
- 39 files changed, 69 insertions(+), 59 deletions(-)
- create mode 100644 include/linux/wait_types.h
+ include/linux/blk_types.h | 6 ++++++
+ include/linux/blkdev.h    | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-index 59a5bc9b1120..6e01527b2be5 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.h
-@@ -25,7 +25,7 @@
- #define __AMDGPU_IH_H__
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 96a37f399928..ad48c3f5ddd6 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -434,6 +434,12 @@ static inline enum req_op bio_op(const struct bio *bio)
+ 	return bio->bi_opf & REQ_OP_MASK;
+ }
  
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- /* Maximum number of IVs processed at once */
- #define AMDGPU_IH_MAX_NUM_IVS	32
-diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-index 4edd7ac64b62..05591cc987c2 100644
---- a/include/drm/gpu_scheduler.h
-+++ b/include/drm/gpu_scheduler.h
-@@ -28,7 +28,7 @@
- #include <linux/dma-fence.h>
- #include <linux/completion.h>
- #include <linux/xarray.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/workqueue_types.h>
- 
- #define MAX_WAIT_SCHED_ENTITY_Q_EMPTY msecs_to_jiffies(1000)
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 720a88bb3513..ffdd82f2f3e6 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -10,7 +10,7 @@
- #include <linux/percpu-refcount.h>
- #include <linux/flex_proportions.h>
- #include <linux/timer_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/workqueue_types.h>
- #include <linux/kref_types.h>
- 
++static inline bool blk_op_is_passthrough(blk_opf_t op)
++{
++	op &= REQ_OP_MASK;
++	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
++}
++
+ static inline bool op_is_write(blk_opf_t op)
+ {
+ 	return !!(op & (__force blk_opf_t)1);
 diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index ec4940fcc489..3a14de75286a 100644
+index d2c0934a7224..a5e41a54de18 100644
 --- a/include/linux/blkdev.h
 +++ b/include/linux/blkdev.h
-@@ -13,7 +13,7 @@
- #include <linux/minmax.h>
- #include <linux/timer_types.h>
- #include <linux/workqueue_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/bio.h>
- #include <linux/gfp_types.h>
- #include <linux/kdev_t.h>
-diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
-index d78454a4dd1f..15dffb5374fb 100644
---- a/include/linux/buffer_head.h
-+++ b/include/linux/buffer_head.h
-@@ -13,7 +13,7 @@
- #include <linux/fs.h>
- #include <linux/linkage.h>
- #include <linux/pagemap.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/atomic.h>
+@@ -259,12 +259,6 @@ static inline int blk_validate_block_size(unsigned long bsize)
+ 	return 0;
+ }
  
- enum bh_state_bits {
-diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
-index d01be9103e56..12eb9c9f6620 100644
---- a/include/linux/ceph/libceph.h
-+++ b/include/linux/ceph/libceph.h
-@@ -11,7 +11,7 @@
- #include <linux/fs.h>
- #include <linux/mempool.h>
- #include <linux/pagemap.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/writeback.h>
- #include <linux/slab.h>
- #include <linux/refcount_types.h>
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 380a59b31624..99e24f3034df 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -11,7 +11,7 @@
- #include <linux/limits.h>
- #include <linux/list.h>
- #include <linux/idr.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/mutex_types.h>
- #include <linux/rcupdate.h>
- #include <linux/refcount_types.h>
-diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
-index a0142b93eaf9..8babdd50a4ca 100644
---- a/include/linux/console_struct.h
-+++ b/include/linux/console_struct.h
-@@ -13,7 +13,7 @@
- #ifndef _LINUX_CONSOLE_STRUCT_H
- #define _LINUX_CONSOLE_STRUCT_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/vt.h>
- #include <linux/workqueue_types.h>
- 
-diff --git a/include/linux/counter.h b/include/linux/counter.h
-index 846b94517c5b..638ebb5b4d27 100644
---- a/include/linux/counter.h
-+++ b/include/linux/counter.h
-@@ -13,7 +13,7 @@
- #include <linux/mutex_types.h>
- #include <linux/spinlock_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <uapi/linux/counter.h>
- 
- struct counter_device;
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index a2d39fef6a4a..cbfc0f6c468d 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -13,7 +13,7 @@
- #include <linux/rcupdate.h>
- #include <linux/lockref.h>
- #include <linux/stringhash.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct path;
- struct file;
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index 8ff4add71f88..ab67e5a4b0ec 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -21,7 +21,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/fs.h>
- #include <linux/dma-fence.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct device;
- struct dma_buf;
-diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
-index e32bee4345fb..e021a18f53b5 100644
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -9,7 +9,7 @@
- #ifndef _LINUX_EVENTFD_H
- #define _LINUX_EVENTFD_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/err.h>
- #include <linux/percpu-defs.h>
- #include <linux/percpu.h>
-diff --git a/include/linux/gnss.h b/include/linux/gnss.h
-index 9f38ff948d78..3c24e934b732 100644
---- a/include/linux/gnss.h
-+++ b/include/linux/gnss.h
-@@ -14,7 +14,7 @@
- #include <linux/mutex_types.h>
- #include <linux/rwsem_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct gnss_device;
- 
-diff --git a/include/linux/libps2.h b/include/linux/libps2.h
-index 006c38667e75..c2f438730ae1 100644
---- a/include/linux/libps2.h
-+++ b/include/linux/libps2.h
-@@ -11,7 +11,7 @@
- #include <linux/interrupt.h>
- #include <linux/mutex_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct ps2dev;
- 
-diff --git a/include/linux/lp.h b/include/linux/lp.h
-index 337573412852..d700bf3255b1 100644
---- a/include/linux/lp.h
-+++ b/include/linux/lp.h
-@@ -9,7 +9,7 @@
- #define _LINUX_LP_H
- 
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/mutex_types.h>
- #include <uapi/linux/lp.h>
- 
-diff --git a/include/linux/mempool.h b/include/linux/mempool.h
-index 7be1e32e6d42..ea9cfabd9897 100644
---- a/include/linux/mempool.h
-+++ b/include/linux/mempool.h
-@@ -5,7 +5,7 @@
- #ifndef _LINUX_MEMPOOL_H
- #define _LINUX_MEMPOOL_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/compiler.h>
- 
- struct kmem_cache;
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index bd99f47726dc..243bfae1a94c 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -12,7 +12,7 @@
- #include <linux/skbuff.h>
- #include <linux/slab.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/workqueue_types.h>
- 
- #define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index ce11c2dab2bc..fa41c34f16da 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -8,7 +8,7 @@
- #include <linux/spinlock_types.h>
- #include <linux/list.h>
- #include <linux/list_nulls.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/bitops.h>
- #include <linux/cache.h>
- #include <linux/threads.h>
-diff --git a/include/linux/net.h b/include/linux/net.h
-index c9b4a63791a4..139a936fb772 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -16,7 +16,7 @@
- 
- #include <linux/stringify.h>
- #include <linux/random.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/fcntl.h>	/* For O_CLOEXEC and O_NONBLOCK */
- #include <linux/rcupdate.h>
- #include <linux/once.h>
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 08860ceda787..1c9a1e28b13e 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -5,7 +5,7 @@
- #include <linux/list.h>
- #include <linux/backing-dev.h>
- #include <linux/idr.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/nfs_xdr.h>
- #include <linux/sunrpc/xprt.h>
- 
-diff --git a/include/linux/parport.h b/include/linux/parport.h
-index c8e3b71a3b49..783835d05d9b 100644
---- a/include/linux/parport.h
-+++ b/include/linux/parport.h
-@@ -10,7 +10,7 @@
- #include <linux/jiffies.h>
- #include <linux/proc_fs.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/irqreturn.h>
- #include <linux/semaphore.h>
- #include <linux/device.h>
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index e6a041cb8bac..585886644e3d 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -7,7 +7,7 @@
- #include <linux/rcupdate.h>
- #include <linux/refcount.h>
- #include <linux/sched.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
+-static inline bool blk_op_is_passthrough(blk_opf_t op)
+-{
+-	op &= REQ_OP_MASK;
+-	return op == REQ_OP_DRV_IN || op == REQ_OP_DRV_OUT;
+-}
+-
  /*
-  * What is struct pid?
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index f94a78728f1e..14f95d7e67ab 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -12,7 +12,7 @@
- #include <linux/list.h>
- #include <linux/workqueue_types.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/hrtimer_types.h>
- #include <linux/completion.h>
- 
-diff --git a/include/linux/poll.h b/include/linux/poll.h
-index a9e0e1c2d1f2..043aa684b09c 100644
---- a/include/linux/poll.h
-+++ b/include/linux/poll.h
-@@ -5,7 +5,7 @@
- 
- #include <linux/compiler.h>
- #include <linux/ktime.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/string.h>
- #include <linux/fs.h>
- #include <linux/uaccess.h>
-diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
-index 8af6452b36e2..de72dcc6e0bf 100644
---- a/include/linux/psi_types.h
-+++ b/include/linux/psi_types.h
-@@ -5,7 +5,7 @@
- #include <linux/kthread.h>
- #include <linux/seqlock_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- #ifdef CONFIG_PSI
- 
-diff --git a/include/linux/relay.h b/include/linux/relay.h
-index d33735edc3cb..79ecc446ed48 100644
---- a/include/linux/relay.h
-+++ b/include/linux/relay.h
-@@ -13,7 +13,7 @@
- 
- #include <linux/types.h>
- #include <linux/sched.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/list.h>
- #include <linux/irq_work.h>
- #include <linux/bug.h>
-diff --git a/include/linux/rtnetlink.h b/include/linux/rtnetlink.h
-index 904cf20a7ae6..0cce3f1a73d6 100644
---- a/include/linux/rtnetlink.h
-+++ b/include/linux/rtnetlink.h
-@@ -3,7 +3,7 @@
- #define __LINUX_RTNETLINK_H
- 
- #include <linux/netdevice.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/refcount.h>
- #include <uapi/linux/rtnetlink.h>
- 
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index d7d3fba174f8..f7279f7632fe 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -18,7 +18,7 @@
- #include <linux/percpu.h>
- #include <linux/slab.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct seq_file;
- 
-diff --git a/include/linux/sunrpc/rpc_pipe_fs.h b/include/linux/sunrpc/rpc_pipe_fs.h
-index c26733d8fde7..3f4d6fc0a8a3 100644
---- a/include/linux/sunrpc/rpc_pipe_fs.h
-+++ b/include/linux/sunrpc/rpc_pipe_fs.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/list.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct rpc_pipe_dir_head {
- 	struct list_head pdh_entries;
-diff --git a/include/linux/syslog.h b/include/linux/syslog.h
-index 955f80e34d4f..2a4c9199d718 100644
---- a/include/linux/syslog.h
-+++ b/include/linux/syslog.h
-@@ -8,7 +8,7 @@
- #ifndef _LINUX_SYSLOG_H
- #define _LINUX_SYSLOG_H
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- /* Close the log.  Currently a NOP. */
- #define SYSLOG_ACTION_CLOSE          0
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index 8aa3372f21a0..b36000bb012c 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -4,17 +4,12 @@
- /*
-  * Linux wait queue related types and methods
-  */
--#include <linux/list.h>
-+#include <linux/wait_types.h>
- #include <linux/stddef.h>
- #include <linux/spinlock.h>
- 
- #include <asm/current.h>
- 
--typedef struct wait_queue_entry wait_queue_entry_t;
--
--typedef int (*wait_queue_func_t)(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
--int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
--
- /* wait_queue_entry::flags */
- #define WQ_FLAG_EXCLUSIVE	0x01
- #define WQ_FLAG_WOKEN		0x02
-@@ -22,22 +17,6 @@ int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int
- #define WQ_FLAG_DONE		0x08
- #define WQ_FLAG_PRIORITY	0x10
- 
--/*
-- * A single wait-queue entry structure:
-- */
--struct wait_queue_entry {
--	unsigned int		flags;
--	void			*private;
--	wait_queue_func_t	func;
--	struct list_head	entry;
--};
--
--struct wait_queue_head {
--	spinlock_t		lock;
--	struct list_head	head;
--};
--typedef struct wait_queue_head wait_queue_head_t;
--
- struct task_struct;
- 
- /*
-diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
-index 96c90fbcf652..514f68eff79d 100644
---- a/include/linux/wait_bit.h
-+++ b/include/linux/wait_bit.h
-@@ -8,7 +8,7 @@
- #include <linux/bitops.h>
- #include <linux/init.h> // for __init
- #include <linux/kernel.h> // for might_sleep()
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- struct wait_bit_key {
- 	void			*flags;
-diff --git a/include/linux/wait_types.h b/include/linux/wait_types.h
-new file mode 100644
-index 000000000000..4b43e7bc6dac
---- /dev/null
-+++ b/include/linux/wait_types.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_WAIT_TYPES_H
-+#define _LINUX_WAIT_TYPES_H
-+/*
-+ * Linux wait queue related types and methods
-+ */
-+#include <linux/list.h>
-+#include <linux/spinlock_types.h>
-+
-+typedef struct wait_queue_entry wait_queue_entry_t;
-+
-+typedef int (*wait_queue_func_t)(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
-+int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
-+
-+/*
-+ * A single wait-queue entry structure:
-+ */
-+struct wait_queue_entry {
-+	unsigned int		flags;
-+	void			*private;
-+	wait_queue_func_t	func;
-+	struct list_head	entry;
-+};
-+
-+struct wait_queue_head {
-+	spinlock_t		lock;
-+	struct list_head	head;
-+};
-+typedef struct wait_queue_head wait_queue_head_t;
-+
-+#endif /* _LINUX_WAIT_TYPES_H */
-diff --git a/include/media/dvb_ringbuffer.h b/include/media/dvb_ringbuffer.h
-index 131997d1f131..22da81bff624 100644
---- a/include/media/dvb_ringbuffer.h
-+++ b/include/media/dvb_ringbuffer.h
-@@ -24,7 +24,7 @@
- #define _DVB_RINGBUFFER_H_
- 
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- 
- /**
-  * struct dvb_ringbuffer - Describes a ring buffer used at DVB framework
-diff --git a/include/net/smc.h b/include/net/smc.h
-index 44a01bd3da10..92611a9cf0e9 100644
---- a/include/net/smc.h
-+++ b/include/net/smc.h
-@@ -13,7 +13,7 @@
- 
- #include <linux/spinlock_types.h>
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include "linux/ism.h"
- 
- struct device;
-diff --git a/include/net/sock.h b/include/net/sock.h
-index bebdc45cf622..008a6c5a3bfc 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -53,7 +53,7 @@
- #include <linux/memcontrol.h>
- #include <linux/static_key.h>
- #include <linux/sched.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/cgroup-defs.h>
- #include <linux/rbtree_types.h>
- #include <linux/rculist_nulls.h>
-diff --git a/include/scsi/libiscsi.h b/include/scsi/libiscsi.h
-index 01f13729ad24..d30e65c5f137 100644
---- a/include/scsi/libiscsi.h
-+++ b/include/scsi/libiscsi.h
-@@ -11,7 +11,7 @@
- #define LIBISCSI_H
- 
- #include <linux/types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/mutex_types.h>
- #include <linux/timer_types.h>
- #include <linux/workqueue_types.h>
-diff --git a/include/sound/control.h b/include/sound/control.h
-index 9a4f4f7138da..b921cdb94082 100644
---- a/include/sound/control.h
-+++ b/include/sound/control.h
-@@ -7,7 +7,7 @@
-  *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
-  */
- 
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/nospec.h>
- #include <sound/asound.h>
- 
-diff --git a/include/sound/rawmidi.h b/include/sound/rawmidi.h
-index 46678a38dbb9..6c380196bff4 100644
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -10,7 +10,7 @@
- #include <sound/asound.h>
- #include <linux/interrupt.h>
- #include <linux/spinlock_types.h>
--#include <linux/wait.h>
-+#include <linux/wait_types.h>
- #include <linux/mutex_types.h>
- #include <linux/workqueue_types.h>
- #include <linux/device.h>
+  * BLK_BOUNCE_NONE:	never bounce (default)
+  * BLK_BOUNCE_HIGH:	bounce all highmem pages
 -- 
 2.39.2
 
