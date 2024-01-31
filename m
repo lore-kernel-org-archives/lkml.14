@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBC15813B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55E258137;
 	Wed, 31 Jan 2024 09:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706691887; cv=none; b=Ik/InyM8UxePWzF75XNsTX5YLH34asrF2zNLWxf+SqZBwHyyEknhsm4E8VCBcfs/kCA6nRR1CFy8tHx8u0ME8r2dmLDyM8nhhpu1JnHXrKoKmi8t4D4/e/FR53Dnd7mG6Q30ji5lWn/ZHQRmDiovfOlceBwhxZB1g1fzMDD7clQ=
+	t=1706691887; cv=none; b=F/a14nbL6umkRNCAUGSKnsBJ1fryPTziSXOWHjgpfBNZblYdKTWRKFLSyp6IvZZ+mMG3aPcaeJCKK/oQCM2xVNiH6DpL8bPfYStDLVAyhzqE1NkO5HrBPHxVMpk7elG3CYmAvVUMFhTGjDnaPrk9j9YmUTpkgVQ6VnBumcd6IMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706691887; c=relaxed/simple;
-	bh=QlP98aSQSqBpclGKVx9/GrrG73fSHvaxlFUeCcBcyCM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kfFFrrvofbHKgTiHcwHMEi93YEPYX9jwL4A2g6238/RFWOr22K5eaYD5WTVyy4NW4rS9/VNWvQ/3Z5CPwpLuS6QDOuvf9IF/XA1fLLabw1gyd+AYC9m/XVGb9gAdzOU2p5jBjM+RQGHAKuU+u78k4qxXo+Nk1PnonneX9nZvetI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8W6VO2D; arc=none smtp.client-ip=10.30.226.201
+	bh=EuQVvrTQv0qFbBXUXHtzFTv+0FNlC9+gEW6Jz+tkv8Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SyrmTgLPK1YKwCxvBjKLqwEqh0wkgcryBvomO/It/nVa+wftfMPjafZkP8WLmGsV5XdpiI5ZjlCaGL+6n/1cYV5TMmwiSdP93FXyx8ry3AM03ior/XLGfF1WWVq9dfr5muz3bqrkTearBr/iL/wo8wdrU15OFOMQgFenlQosT+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pW6Lub9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8W6VO2D"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 36C93C43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pW6Lub9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1D04BC433C7;
 	Wed, 31 Jan 2024 09:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706691887;
-	bh=QlP98aSQSqBpclGKVx9/GrrG73fSHvaxlFUeCcBcyCM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=O8W6VO2DtjQRTH84AM5vGi+Rkudj9MGURJ6TmVkEF+a175CpOq1jPESfQfOYZVbXK
-	 mZirgbsyqAvFtg56GSwrzJWChf4joEPSmT0VquvC7LbEIRBBSiPqmNadjQI3Rs8El3
-	 OqSid/oyMr3pnNC0jCKu68RHWDLv/XKt72/3FhPtv6OvaQ+qi1SxldMGlAsTpSzoOt
-	 kzEvfZLBSrAVZ3R1Sz3gEVSPi2N/SPaH9cnc6AaPOfiw/e4jtXdQD8T64dU5PQbmXb
-	 mqSM2W8U3NgD2tslfdELDA54CliEyLf00TF7E6hVTS6LpTClbKzTP6RPvI8j1XTIOI
-	 qnhFu+9sWCOYQ==
+	bh=EuQVvrTQv0qFbBXUXHtzFTv+0FNlC9+gEW6Jz+tkv8Q=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=pW6Lub9UtEOT+tMcYS1eAEAEqY9VpHJT3uEPJHHpDbUEhsWvncn4MOvxP5pIRM2zr
+	 8niSV2VquDECu+HeBtFQti5tI6kRzkMbfz5qu2so3zTYflITumLHz+/ZQi5XxNQDaV
+	 x73OuHf7cwrbRaOo2cBzyJmGqxWjGznQW9GJc1ND6VyyBefXrzs1heQ97HZWRfLj3b
+	 6brKJDczAG25XTLqz7DnhBgU6khiy+FbQC1VKQjh8sezCIbWoUJKEj60+lHROCAzO+
+	 17v0nTMzYCO6YUf6qOaE+XxAREo5rfUFtnj5EvAWGC09pxXbd0Ioz+YShyLO7Zy/GH
+	 JVhazoZswDcuA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B96C48285;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B771C47258;
 	Wed, 31 Jan 2024 09:04:47 +0000 (UTC)
 From: Rudraksha Gupta via B4 Relay <devnull+guptarud.gmail.com@kernel.org>
-Date: Wed, 31 Jan 2024 01:04:47 -0800
-Subject: [PATCH v2 2/2] ARM: dts: qcom: msm8960: expressatt: Add mXT224S
- touchscreen
+Subject: [PATCH v2 0/2] Add the mXT224S touchscreen to expressatt
+Date: Wed, 31 Jan 2024 01:04:45 -0800
+Message-Id:
+ <20240131-expressatt_mxt224s_touchscreen-v2-0-4463ae0414b5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,12 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id:
- <20240131-expressatt_mxt224s_touchscreen-v2-2-4463ae0414b5@gmail.com>
-References:
- <20240131-expressatt_mxt224s_touchscreen-v2-0-4463ae0414b5@gmail.com>
-In-Reply-To:
- <20240131-expressatt_mxt224s_touchscreen-v2-0-4463ae0414b5@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAC4NumUC/42NQQ6CMBBFr0K6tqYdAZWV9zCE4DCFSYSaTiUYw
+ t2tnMDl+/l5b1VCgUlUla0q0MzCfkoAh0zh0E49ae4SKzCQGwtXTcsrkEgbYzMuESCXJvo3DoK
+ BaNLOurxDY8vyjCpJ0tnxsgfudeKBJfrw2Xuz/a1/q2erjXaPS1EAWTwB3vqx5ecR/ajqbdu+B
+ 06AiswAAAA=
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -54,11 +52,11 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Rudraksha Gupta <guptarud@gmail.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706691886; l=1620;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706691886; l=1095;
  i=guptarud@gmail.com; s=20240120; h=from:subject:message-id;
- bh=4Gi3ILnitkF34hh7B1r4k2VP7IMCG7Hjj/6AwpaU750=;
- b=aToJeq7bdKkloeO+pbha6Cimk77XwMqWEyri7P45ecOMZaHTkdN4Cy1Gcpli+x+loyRp/LVf6
- SNTmxUSdiqZDmTcl8lGZNOvhSgthxCwy1F5lkuFNrb/xQprQc/fsi0B
+ bh=EuQVvrTQv0qFbBXUXHtzFTv+0FNlC9+gEW6Jz+tkv8Q=;
+ b=XygDxen7AysewD20GDUn9VxaNk5xD1C2SZ+syYyG8tAYDOBYWYcoDln5hhs6++SEfVktT2C7/
+ 7ECqQAgWDTfChKKaIk00iNaex1fbLKy/ENlSLHtbE9umBvqmkiIgWP8
 X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
  pk=RGmug3GRHS4XYTXDcT2VrlTGXlEF2gY4L9/swGIU1ko=
 X-Endpoint-Received:
@@ -66,72 +64,34 @@ X-Endpoint-Received:
 X-Original-From: Rudraksha Gupta <guptarud@gmail.com>
 Reply-To: <guptarud@gmail.com>
 
-From: Rudraksha Gupta <guptarud@gmail.com>
+Adds support for the Atmel touchscreen to the Samsung Galaxy Express 
+SGH-I437. Copies the gsbi3 node from apq8064, which is a similar SoC,
+and sets appropriate properties.
 
-Add mXT224S touchscreen
+Applies successfully on top of my previous patch:
+https://lkml.org/lkml/2024/1/20/56
 
 Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
 ---
+Changes in v2:
+- Fix formatting for gsbi3
+
+- Link to v1: https://lore.kernel.org/r/20240129-expressatt_mxt224s_touchscreen-v1-0-fb8552e1c32c@gmail.com
+
+---
+Rudraksha Gupta (2):
+      ARM: dts: qcom: msm8960: Add gsbi3 node
+      ARM: dts: qcom: msm8960: expressatt: Add mXT224S touchscreen
+
+ arch/arm/boot/dts/qcom/qcom-msm8960-pins.dtsi      | 21 +++++++++++++++
  .../dts/qcom/qcom-msm8960-samsung-expressatt.dts   | 31 +++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/qcom/qcom-msm8960.dtsi           | 28 +++++++++++++++++++
+ 3 files changed, 79 insertions(+), 1 deletion(-)
+---
+base-commit: df2fa93a6956fcd03da4c251150aa9cc3c88c74d
+change-id: 20240129-expressatt_mxt224s_touchscreen-f1f4dc01667c
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts b/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
-index 47e0e26ad9f0..af6cc6393d74 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
-@@ -85,6 +85,27 @@ &gsbi1_spi {
- 	status = "okay";
- };
- 
-+&gsbi3 {
-+	qcom,mode = <GSBI_PROT_I2C>;
-+	status = "okay";
-+};
-+
-+&gsbi3_i2c {
-+	status = "okay";
-+
-+	// Atmel mXT224S touchscreen
-+	touchscreen@4a {
-+		compatible = "atmel,maxtouch";
-+		reg = <0x4a>;
-+		interrupt-parent = <&msmgpio>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+		vdda-supply = <&pm8921_lvs6>;
-+		vdd-supply = <&pm8921_l17>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touchscreen>;
-+	};
-+};
-+
- &msmgpio {
- 	spi1_default: spi1-default-state {
- 		mosi-pins {
-@@ -123,6 +144,14 @@ gpio_keys_pin_a: gpio-keys-active-state {
- 		drive-strength = <8>;
- 		bias-disable;
- 	};
-+
-+	touchscreen: touchscreen-int-state {
-+		pins = "gpio11";
-+		function = "gpio";
-+		output-enable;
-+		bias-disable;
-+		drive-strength = <2>;
-+	};
- };
- 
- &pm8921 {
-@@ -285,7 +314,7 @@ pm8921_l16: l16 {
- 		};
- 
- 		pm8921_l17: l17 {
--			regulator-min-microvolt = <1800000>;
-+			regulator-min-microvolt = <3300000>;
- 			regulator-max-microvolt = <3300000>;
- 			bias-pull-down;
- 		};
-
+Best regards,
 -- 
-2.43.0
+Rudraksha Gupta <guptarud@gmail.com>
 
