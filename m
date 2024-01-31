@@ -1,168 +1,183 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2069B76919;
-	Wed, 31 Jan 2024 10:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1526775E
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706696126; cv=none; b=eitUx+Q3k4eVtbrX1ku0EqsQ9fhKP4q4/8+Yb9dbCVv6wkPa6K9BdfT07BicBpz3SO4VYofO9pHlL/7gK0CCn3EBRSlkBunQzgf/HhWJn8nqtECHcQkPK+KL2STTPEbWwG9cfkz1PjxSA8gZqwaiW6Y0IsV/ZqlrsXp8xww7tP8=
+	t=1706696169; cv=none; b=D2vMOv19N2VwSh+Cf/9q/UzTFDZlTwRw/9DuhWJN7t0RBykG9kHjzKpsJjhIA86TXL4XlqSvLsJll3e2YBEvWkD+BJBwqOGbUzWiAoYx/3VhDrRCkhAfLUuCPE/amnvVnG3zBH9+HVPChKv5pITt5Ps9mXBU5ta3OH6PxYsVKEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706696126; c=relaxed/simple;
-	bh=DH5NiegzsYQpiijOn8/YrWg0zYL9KB6NJv4gbpeVvEQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y5FB6bycUiDS8rBQydXrh5XXRyGYGCFaCdyKA5FlgDT1/i2oH68KLYzsDPxhbqfOsXXjvT7ZVtvXFODKCbpWjwnjDMS0AgtVxyhVy0V4Zc7YdpNMLCjHtDx5ZIeYCG5yzdUl0lMGtYVWgWiy3NH4eCnscukBF/WhMEqSEPEs+KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hfKmreoZ; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706696169; c=relaxed/simple;
+	bh=k5yjOXfE45Fq1dYHfeKw7CS8ob/2spnqmq/42WE3TFs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RoUn4X3bZjUNjHFaaL9Ty+UZhKyej/UJe7F32o6hph4DcuwQ+fZrlFXjU7gmTEEYzHmG6iS+sEYVgWlxU/557Lsp5GSkGg5E6eqCuyvw0GveUG8Ylc/l6Ck9kBFWulAzaLKNnyX4jFw0NSgrNyy7KD60PGHNAyG4R/lBzRfH6jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YBAhDdj4; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hfKmreoZ"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40VAEpUo065453;
-	Wed, 31 Jan 2024 04:14:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706696091;
-	bh=oqemPubLVRrgYvvfimFAejLxoKvjxzL1JVzVCjpzc9Q=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=hfKmreoZO1hN0nuNHxYFKZbiuQiKZILt9BIdoCUyzB8I9Zjyz4lETxXdka9BjkwYH
-	 dAXm89GQGCy0JoI24yf/CjEXoeF+99RfKRZwvSgVMBptuzJj/8e9D0NN1Fb1XGx/AW
-	 ykIJh4Xf4l1eiDkbsF8DGQOm2WBOu1qcXUyMlyE0=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40VAEoXH006848
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 31 Jan 2024 04:14:50 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
- Jan 2024 04:14:50 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 31 Jan 2024 04:14:50 -0600
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40VAEnaV110279;
-	Wed, 31 Jan 2024 04:14:50 -0600
-From: Chintan Vankar <c-vankar@ti.com>
-To: Andrew Davis <afd@ti.com>, Peter Rosin <peda@axentia.se>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Tero
- Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
- Menon <nm@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>,
-        Jayesh Choudhary
-	<j-choudhary@ti.com>,
-        Chintan Vankar <c-vankar@ti.com>
-Subject: [PATCH v4 4/6] arm64: dts: ti: k3-j784s4: Add Main CPSW2G node
-Date: Wed, 31 Jan 2024 15:44:39 +0530
-Message-ID: <20240131101441.1362409-5-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240131101441.1362409-1-c-vankar@ti.com>
-References: <20240131101441.1362409-1-c-vankar@ti.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YBAhDdj4"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55ef0465507so4255618a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 02:16:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706696166; x=1707300966; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A0S/vewGpjwHH5F87kZM31jgzYWI7BwBNBZ7vu7tKQM=;
+        b=YBAhDdj4vW6amzYKezwyhMqSZSWoBzQCeM+D7uavNyYNUYTE5TMZEw925qHoedPHAX
+         IBNCdeFacnCetQObcbHbsDWwi4vkA25OvPpSxRAS7i6djPDi4la+3RaF3NTfgbn4OykQ
+         y0WXIv9MqPVwek/2YQKxUEXJ4Q9bc+q6Om/ddpMDSOGE7e1sTbd7UhMk+jCdIxbvkvNe
+         RkA9UWIK6NNjvFsIXY4o9nwsOQhyF1I+FCuFlY208OCvGO6xFyl7rFfXpXVCFM3xQzvZ
+         WHj7+cdMFAnSNEPq80YMqw1E3EzhTxV8PbN5qOqueL6vJMSPfbgYgs4Tz6TLk95MBGge
+         GCwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706696166; x=1707300966;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A0S/vewGpjwHH5F87kZM31jgzYWI7BwBNBZ7vu7tKQM=;
+        b=kkYFwfGH7O/Mi4gadHLk298r3GsRzgjoFs1Geu7DwXfTSS5FICPsqgV589aPAPd5h1
+         rHnvjfWL58vKVTV+goqzvW0wAsAlWBwPqUXBLzZmo6VahoM2DMYfQLUZmVv59ybFHDi/
+         6Bs/iBstDDfDBWuUlUJXOeXhQW0Yu5HHBiQGjJ1RstoPD1O8LVo8xYDuQQf2TKXwTMcc
+         yy6zJ2MCryjuab0QqEpGIA74QVSf6hM+LHtYU0LSpeYpUASXjLDN5PXsvL3Zo0dqQdvA
+         XPW5+ZYWl2dCI9tQ7VjJOvGTQhql94zwRD54H4Mtle0ZcFw1Oke2hTKif0Ukjw/AdXGG
+         ULFw==
+X-Gm-Message-State: AOJu0YyDNRHCcAqdLmnY+V/Gp3mYW85oRWN1Rx4X2nW8MAQ9qdhjZnSU
+	i0Y0zRpaf/jsJ1zbrBJgcs7gdZNxnm386dTKRddIpmvAqdYSVOF8ViLciYZNfVQ=
+X-Google-Smtp-Source: AGHT+IFf+dsKbgDvXKZGpdiPaPGzkvTx0wWWOhyaNQkX9/WGaK0wTpqUxq+6fQE4y02wS2ma7DUVsw==
+X-Received: by 2002:a05:6402:3d1:b0:55f:8021:3570 with SMTP id t17-20020a05640203d100b0055f80213570mr697319edw.33.1706696165792;
+        Wed, 31 Jan 2024 02:16:05 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCU2ZUSqngD7xTZu588qskRd6Vv38U1PfT9beW2sdy638tGqcZmoJSrMXOMD8kMwc7Ji7EvgQR4wrhQp8RWEmv44chPCrFgzR7LIifOYP/vk7Di3tPN78SdGw6SDvV2dqYBkgVweXuSiBLM/2VIKtBFBHUF9puGNgInFJskPYIlJE2YQhKfdIqfZxDhmzBHVr51tERFF6JSwzJk5KuLFUd8Vj3rGprkommEazM5h2KrBBpRd1Lrxr2WFGzkLpgdU9csp744w2LO6OQ==
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id n3-20020a5099c3000000b0055971af7a23sm5916192edb.95.2024.01.31.02.16.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 02:16:04 -0800 (PST)
+Message-ID: <b99efbd4-7c12-485d-8688-a4ec606f0cf5@linaro.org>
+Date: Wed, 31 Jan 2024 11:16:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bingdings: perf: Support uncore ARM NI-700 PMU
+Content-Language: en-US
+To: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>,
+ will <will@kernel.org>, "mark.rutland" <mark.rutland@arm.com>
+Cc: shenghui.qu@shingroup.cn, =?UTF-8?B?6LW15Y+v?= <ke.zhao@shingroup.cn>,
+ zhijie.ren@shingroup.cn, linux-kernel@vger.kernel.org,
+ linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20240131065953.9634-1-jialong.yang@shingroup.cn>
+ <e7bf16fc-b12d-47eb-9197-0694e6829ac8@linaro.org>
+ <02B995F774AB7A9D+adfd0934-00cb-4dc3-8bf8-058b83dc2fbb@shingroup.cn>
+ <ebbc9d73-9be2-49ae-98f3-0d71ce624ee4@linaro.org>
+ <873A6CC450C1D0E6+75a39d6c-4fbf-4e30-8630-3226bd725901@shingroup.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <873A6CC450C1D0E6+75a39d6c-4fbf-4e30-8630-3226bd725901@shingroup.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
+On 31/01/2024 11:13, Yang Jialong 杨佳龙 wrote:
+> 
+> 
+> 在 2024/1/31 17:30, Krzysztof Kozlowski 写道:
+>> On 31/01/2024 10:26, Yang Jialong 杨佳龙 wrote:
+>>>
+>>>
+>>> 在 2024/1/31 15:49, Krzysztof Kozlowski 写道:
+>>>> On 31/01/2024 07:59, JiaLong.Yang wrote:
+>>>>> Add file corresponding to hx_arm_ni.c introducing ARM NI-700 PMU driver
+>>>>> for HX.
+>>>>>
+>>>>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+>>>>> ---
+>>>>> v1 --> v2:
+>>>>> 1. Submit dt-bindings file Seperately.
+>>>>
+>>>> Where is the driver?
+>>>>
+>>>> Please read:
+>>>> https://elixir.bootlin.com/linux/v6.8-rc2/source/Documentation/process/submitting-patches.rst
+>>>> before posting.
+>>>>
+>>
+>> Keep all discussions public.
+> 
+> Get.
+> 
+>>
+>>
+>>>>> +  pccs-id:
+>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>> +    description: Used to identify NIs in system which has more than
+>>>>> +      one NI.
+>>>>
+>>>> No, reg does it. Drop the property. Anyway you miss here vendor prefix
+>>>> and proper explanation.
+>>>>
+>>>
+>>> reg will tell phy address. Phy address is too long. I just want a id.
+>>> example: perf stat -a -e ni_pmu_${pccs-id}/cycles/
+>>> I will use it in user space. Not only in driver.
+>>
+>> Custom vendor property is not for that purpose. Use for example IDR, DT
+>> aliases or something else.
+>>
+>>
+> 
+> I have considered TD aliases. It's not very easy. Two places...
+> IDR.. I have tested. But it chouldn't correspond to the HWs.
+> I need it to identify NIs.
+> DT aliases is reachable. But no very easy.
 
-Add the device-tree nodes for the Main CPSW2G instance and enable it.
+Except that "you want" I did not see any rationale, any argument
+explaining why this is needed and why this has to be present.
 
-Add alias for the Main CPSW2G port to enable Linux to fetch MAC Address
-for the port directly from U-Boot.
-
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 49 ++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-index b74f7d3025de..be028c246c67 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-@@ -28,6 +28,7 @@ aliases {
- 		i2c0 = &wkup_i2c0;
- 		i2c3 = &main_i2c0;
- 		ethernet0 = &mcu_cpsw_port1;
-+		ethernet1 = &main_cpsw1_port1;
- 	};
- 
- 	memory@80000000 {
-@@ -280,6 +281,30 @@ &wkup_gpio0 {
- 
- &main_pmx0 {
- 	bootph-all;
-+	main_cpsw2g_default_pins: main-cpsw2g-default-pins {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x0b8, PIN_INPUT, 6) /* (AC34) MCASP1_ACLKX.RGMII1_RD0 */
-+			J784S4_IOPAD(0x0a0, PIN_INPUT, 6) /* (AD34) MCASP0_AXR12.RGMII1_RD1 */
-+			J784S4_IOPAD(0x0a4, PIN_INPUT, 6) /* (AJ36) MCASP0_AXR13.RGMII1_RD2 */
-+			J784S4_IOPAD(0x0a8, PIN_INPUT, 6) /* (AF34) MCASP0_AXR14.RGMII1_RD3 */
-+			J784S4_IOPAD(0x0b0, PIN_INPUT, 6) /* (AL33) MCASP1_AXR3.RGMII1_RXC */
-+			J784S4_IOPAD(0x0ac, PIN_INPUT, 6) /* (AE34) MCASP0_AXR15.RGMII1_RX_CTL */
-+			J784S4_IOPAD(0x08c, PIN_INPUT, 6) /* (AE35) MCASP0_AXR7.RGMII1_TD0 */
-+			J784S4_IOPAD(0x090, PIN_INPUT, 6) /* (AC35) MCASP0_AXR8.RGMII1_TD1 */
-+			J784S4_IOPAD(0x094, PIN_INPUT, 6) /* (AG35) MCASP0_AXR9.RGMII1_TD2 */
-+			J784S4_IOPAD(0x098, PIN_INPUT, 6) /* (AH36) MCASP0_AXR10.RGMII1_TD3 */
-+			J784S4_IOPAD(0x0b4, PIN_INPUT, 6) /* (AL34) MCASP1_AXR4.RGMII1_TXC */
-+			J784S4_IOPAD(0x09c, PIN_INPUT, 6) /* (AF35) MCASP0_AXR11.RGMII1_TX_CTL */
-+		>;
-+	};
-+
-+	main_cpsw2g_mdio_default_pins: main-cpsw2g-mdio-default-pins {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x0c0, PIN_INPUT, 6) /* (AD38) MCASP1_AXR0.MDIO0_MDC */
-+			J784S4_IOPAD(0x0bc, PIN_INPUT, 6) /* (AD33) MCASP1_AFSX.MDIO0_MDIO */
-+		>;
-+	};
-+	
- 	main_uart8_pins_default: main-uart8-default-pins {
- 		bootph-all;
- 		pinctrl-single,pins = <
-@@ -809,6 +834,30 @@ &mcu_cpsw_port1 {
- 	phy-handle = <&mcu_phy0>;
- };
- 
-+&main_cpsw1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_cpsw2g_default_pins>;
-+};
-+
-+&main_cpsw1_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_cpsw2g_mdio_default_pins>;
-+
-+	main_cpsw1_phy0: ethernet-phy@0 {
-+		reg = <0>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		ti,min-output-impedance;
-+	};
-+};
-+
-+&main_cpsw1_port1 {
-+	status = "okay";
-+	phy-mode = "rgmii-rxid";
-+	phy-handle = <&main_cpsw1_phy0>;
-+};
-+
- &mailbox0_cluster0 {
- 	status = "okay";
- 	interrupts = <436>;
--- 
-2.34.1
+Best regards,
+Krzysztof
 
