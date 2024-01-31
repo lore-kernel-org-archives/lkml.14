@@ -1,82 +1,102 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C5B82897;
-	Wed, 31 Jan 2024 14:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEF982886;
+	Wed, 31 Jan 2024 14:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706711127; cv=none; b=nYagDrdFN+gpIfRCg9HfX6mMbPuCSFtN66zkEjxKKtNMkq3rFe3ENLDIMGiaBawqEbsTZogbUSoRewEmKcUnKCM2Oz2MgoJHnStfQqGMd6f84E2emYXmM8Vj72MJCup5B2yK1sqhgvdUU4eKlTcfLWY+p/sQKjNpehdiwAxrwnU=
+	t=1706711139; cv=none; b=KraX4U3/haNpNgG61BG6rnzkUQLYWbOzFbf5v9/XMLZPDC4zbIjYxuVUYqOzPjalQO1b+U6jY/Pizu5LvxSCmYsV/VQzKBy1QY5xNR8VaUd/qJ9LA1zGzj3EDCeuABiPCQjQsuK0f0OHXFziYbx7AMEM+lVjgnge5OrwkdCA1dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706711127; c=relaxed/simple;
-	bh=jSLcBRT/JBS3CuOSt5RIMTpse8yunC2EQvSqCC8NviE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Qk5Y/PC5V9Zo9YMNIicZFr74FZt4oTWfkM1wlXLzKFt8I+4VO5cBen0LD6X7/Wvb+JGVXPqHwmtRy5WMIbeVwU2BOCWU+mvMvqKlG19HkSSXfPTY8J+bqCERSUFJ2y4i5ANKyRXEuFdWXBUDlPDhozCVPO/3h8Hyhelw5EMICP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=AWs9MlCU; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1706711139; c=relaxed/simple;
+	bh=OYIebYlAw7S0p992aaP/mpC7lN+bDzKspkekfONLIXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JJDlINdUaQF++GRHJb3C2gdrUBQ77UnFj4vwlH/2BYLnchYe0z3C6c9Wrz2o7Xm0nxG1crsWmMlMIc09ZXYJhaoYqb8rg4gvY2AbNmB7EBcN5+XZlFhZwD8GJ6thHP0st3uywLPCKMKRB8jakVgLjuMxSC/3HIEP4Rp166p/thw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbOKxxCe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="AWs9MlCU"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3BBFC47AA8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1706711119; bh=FEM/DbaFWYJWTHsxmCC7qANz8rbrQnNBM98qBCXz9Ck=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AWs9MlCUOEfbI/IsoUFloM0XlMFsobTu6eOTm66RoXzm3C3Dq7GCqgRfgYOpBTcSm
-	 jbmUTm16iEVfbgnO9Vu3Ud3aApvrrwDI/Frunb/CYzD0wd8oQJM/v4kMvjI7fWwyoE
-	 33hb3z10vR2T80Wrf6zuzNzdy/greRRxycDwBZVzHqYsenQDQREzugY1VVXIoYIam4
-	 EQNmmDFLbqB4OzW0Mzgcz3PCa6LkkngncGSdv9dtTBQobjruRWo4BFOP8Xu3YerE/Z
-	 Oakyd24otlM021WOYocT9BTreYu2f9/r4oYojBk3cLfaQkQD88lQ+3C1F1h+zfFn7B
-	 H9GOeLQytsE3w==
-Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 3BBFC47AA8;
-	Wed, 31 Jan 2024 14:25:19 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Bartosz Golaszewski
- <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson
- <warthog618@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the gpio-brgl tree with the jc_docs
- tree
-In-Reply-To: <20240131115838.4af8131c@canb.auug.org.au>
-References: <20240131115838.4af8131c@canb.auug.org.au>
-Date: Wed, 31 Jan 2024 07:25:18 -0700
-Message-ID: <87r0hx7f75.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbOKxxCe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA53C43390;
+	Wed, 31 Jan 2024 14:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706711138;
+	bh=OYIebYlAw7S0p992aaP/mpC7lN+bDzKspkekfONLIXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VbOKxxCe7LLdszUKJ6gqFU85V1F9KsTEni4EqaiaJyNN4AQq7ZbbJ1XJS5iNbHaCn
+	 Uunk1FrgPVF5cZmHwshfWunPMjARZREk+GXLho7Wb2bNkC/6W/lskYsng6MKTHncnC
+	 GTHLENhg/Z31cBppgwtpqoMt68XRXcr+sWD8jiPHnLVTtwxtYoxwnz2c+Aeln9zIbN
+	 IHVTPkuqeHrhJh52yEl8bm3JjEQUp09J9G8WeH226HtBaLYvF6YCywPXc3BbIs6lMN
+	 ZK2uGRcXY4GAc0l87b9m4EWvZXwJvyS/m02MftyvRXXMBpAb9CYZJfXjQwxdWNM/Ag
+	 zutQk5P9aNfnA==
+Date: Wed, 31 Jan 2024 15:25:32 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Stefan Berger <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
+	roberto.sassu@huawei.com, miklos@szeredi.hu
+Subject: Re: [PATCH 1/5] security: allow finer granularity in permitting
+ copy-up of security xattrs
+Message-ID: <20240131-lacht-elend-536d94682370@brauner>
+References: <20240130214620.3155380-1-stefanb@linux.ibm.com>
+ <20240130214620.3155380-2-stefanb@linux.ibm.com>
+ <CAOQ4uxjgdvGU0WE+92ByQE26Jp0j16AgfyCjNyEp7=86akOSsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxjgdvGU0WE+92ByQE26Jp0j16AgfyCjNyEp7=86akOSsA@mail.gmail.com>
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+On Wed, Jan 31, 2024 at 03:25:29PM +0200, Amir Goldstein wrote:
+> On Tue, Jan 30, 2024 at 11:46 PM Stefan Berger <stefanb@linux.ibm.com> wrote:
+> >
+> > Copying up xattrs is solely based on the security xattr name. For finer
+> > granularity add a dentry parameter to the security_inode_copy_up_xattr
+> > hook definition, allowing decisions to be based on the xattr content as
+> > well.
+> >
+> > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > ---
+> >  fs/overlayfs/copy_up.c            | 2 +-
+> >  include/linux/evm.h               | 2 +-
+> >  include/linux/lsm_hook_defs.h     | 3 ++-
+> >  include/linux/security.h          | 4 ++--
+> >  security/integrity/evm/evm_main.c | 2 +-
+> >  security/security.c               | 7 ++++---
+> >  security/selinux/hooks.c          | 2 +-
+> >  security/smack/smack_lsm.c        | 2 +-
+> >  8 files changed, 13 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+> > index b8e25ca51016..bd9ddcefb7a7 100644
+> > --- a/fs/overlayfs/copy_up.c
+> > +++ b/fs/overlayfs/copy_up.c
+> > @@ -114,7 +114,7 @@ int ovl_copy_xattr(struct super_block *sb, const struct path *oldpath, struct de
+> >                 if (ovl_is_private_xattr(sb, name))
+> >                         continue;
+> >
+> > -               error = security_inode_copy_up_xattr(name);
+> > +               error = security_inode_copy_up_xattr(old, name);
+> 
+> What do you think about:
+> 
+>                      error = security_inode_copy_up_xattr(name, NULL, 0);
+> 
+> and then later...
+> 
+>                      error = security_inode_copy_up_xattr(name, value, size);
+> 
+> I am asking because overlayfs uses mnt_idmap(path->mnt) and you
+> have used nop_mnt_idmap inside evm hook.
+> this does not look right to me?
 
-> Hi all,
->
-> Today's linux-next merge of the gpio-brgl tree got a conflict in:
->
->   Documentation/userspace-api/index.rst
->
-> between commit:
->
->   8722435d325b ("docs: rework the userspace-api top page")
->
-> from the jc_docs tree and commit:
->
->   32a0a0da530e ("Documentation: gpio: add chardev userspace API documentation")
->
-> from the gpio-brgl tree.
->
-> I fixed it up (see below) and can carry the fix as necessary.
+So it's relevant if they interact with xattrs that care about the
+idmapping and that's POSIX ACLs and fscaps. And only if they perform
+permission checks such as posix_acl_update_mode() or something. IOW, it
+depends on what exactly EVM is doing.
 
-That seems like a fine fix.  Part of the purpose of the userspace-api
-reorg was to, hopefully, reduce the frequency of these conflicts going
-forward...
-
-Thanks,
-
-jon
+IIRC, I already added custom security_*() hooks specifically for POSIX
+ACLs as they can't be retrieved through vfs_xattr*() helpers anymore.
