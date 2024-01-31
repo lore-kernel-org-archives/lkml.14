@@ -1,118 +1,123 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBA18F78
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B28878681
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706704536; cv=none; b=Vyfx85Kg+k50xI8eApyo96VR/vEiaQBW/MLHADztfxDDoXNzH3HLjmS0RqhlZXkOn5s/b1tqnmVOayk5+Hsn8Oc6Gy84kleJfBpL4Jgf9IP9sO5JEZ3S/YST9HuI8tc1qbEEAaM0OTGsJoLEJJAvi4/lq1rGkE95qqmI/1k/eWA=
+	t=1706704639; cv=none; b=VGRP9DeXr6QbirQJ4awu+5L5x8tim6G7AhEDFO9TUhQZu2oslGQa96t/+/ZKjXflfXMw2FS+EeJgLDzd08bjy8N87OpF0/vuQ7TDOr6DaKU8cIRXacfkD7WCI8ioddaLJ6k94CLBj/uZe7l+Kf4U4oHcM0aBodE2SDTOmKcC4Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706704536; c=relaxed/simple;
-	bh=w2bmAJ0nzsqoalBpGmsMLOmE/qsljTRmZBe5Nbchf/4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XlO9dpk+TTXN1h9cPI0lIF0/O2mSd5hYA4yMvfuPeVXEnULBc+2AG7aalTOvDIW9ss92sPvT35ZUjwmZos3L8HeUeqUS0nQekOqUn3AgcU5WFEEOj/HzjRGujNnhY7842r7Ulu7hnSqyGat3jgKcpydTWoV/32Njn2NChKJvc18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cMNuiwJa; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706704639; c=relaxed/simple;
+	bh=Ve4gakTdVS97IwqTqcMnjzvWFWX6F6kTDN1mDs18iWk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gBqwjgXexSnn8JKxRqKDnNCREpUl5nlrtWQslGYYrnYUbP4kTZnFj74ebEH2rElIwIX2C7ET2jLUHtyWBINnECbgfYTGRYMI3Yg/85m2Jpij51RgfV2e59kjLpiyfQkP6kDDBsuOpA1FlUxuO7MW2Ez4/2587ZnJgTPxL98yuMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=41d6lcDs; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cMNuiwJa"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55f15762840so3228984a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 04:35:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706704532; x=1707309332; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RzoNtv4zjMbI5M4GmQ/IM20349q4pSFjUG8rhyBeLJU=;
-        b=cMNuiwJa3oYCABD1+fZI1W3K4hL2smvBDf4tWyE766Jq3LO3cgp9C62VbosZ5UeVqX
-         Cxe7pqEiyNOj8bcaP+Av2l7TrJNdfSm1paCADOlw6O0rqwD0defVWYtwPfxF4R7EyoUK
-         +Wn7mTub5cMeEQUMtElgWX+Hd94+beryEFOa2MiuOOtk9rwEUCCW0XmGzv0HAwChxKRv
-         BmrsORyKX7uQlfZnb2CP8Hm9Dmt0SJEJFA0qswMDebHzoGHlJH1h3RcAgJfjdp9XxgGa
-         9IRdk1t+bwav/tsAtUV5srXvFxUg0CZOhvWn69uSKZY/cP2Tt3mvskt0ygfrqh8FWtZA
-         t4vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706704532; x=1707309332;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RzoNtv4zjMbI5M4GmQ/IM20349q4pSFjUG8rhyBeLJU=;
-        b=AAx3QmyiNi9F45DxUJx8XW1bbVvX7WxcwyUuL7UPoH17Kq2SGYCtfzsobAQ6nvsZjn
-         K5jj/6FeWVGEeVoT988bka0Fx5jvZ6sckbPlFpv0stt9X4K8kNCTsGi1qggbIw3wapGZ
-         3ggXtcvfvtEpMzzXU1WryoSLA3Z1chS/kve0g6ZnZlGp5f3PGDWtX4dhyj2K/zU3THnF
-         FLmnz9pHj4Z58coJsA4OzrxIo6/aenWLorNxWGmYAmR7z/5kGtZUlXYdmOtL/35iBXeW
-         l8qKFHz/12Egf5bvib4y/wfaFS5w6oRU2yNkgAHP3UxNRGQIxRZtdUusYAhcUZFRy2tK
-         NvWg==
-X-Gm-Message-State: AOJu0Yz6FcRvIB47oSsLGE9Tn2WcnQz7N4iG8OK9d9xfHXLUZ71f1mEH
-	zoaAv9By2wIy7F/VWKMspd45piJmNEFrk9C+K/1/TD9DIRGniQlIEkCHEanUsnU=
-X-Google-Smtp-Source: AGHT+IGtZS9N7CtUcW94pZVB02sVlRqtHadz6/z4++B0mGuFkpEeSYmXbulfAuMGIbzsIH+m53utjQ==
-X-Received: by 2002:a05:6402:1803:b0:55f:7b91:cbcf with SMTP id g3-20020a056402180300b0055f7b91cbcfmr1086694edy.6.1706704531735;
-        Wed, 31 Jan 2024 04:35:31 -0800 (PST)
-Received: from [127.0.1.1] ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id k4-20020a50cb84000000b0055c97f940fcsm5797004edi.81.2024.01.31.04.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 04:35:31 -0800 (PST)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Wed, 31 Jan 2024 14:35:16 +0200
-Subject: [PATCH] iommu/arm-smmu-qcom: Add X1E80100 MDSS compatible
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="41d6lcDs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706704635;
+	bh=Ve4gakTdVS97IwqTqcMnjzvWFWX6F6kTDN1mDs18iWk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=41d6lcDsQ90ipamoTz3UtZcsw2iXlPy7t1JTzpmTLR9qEbkF37yICg6gufCEmP0xi
+	 WikrqZ5S9PupmXPsKWNrWuwr2aMpfDF4Y5cy5uQhRf0fBEAaBbetM4/ChJaJNQ4T+c
+	 5LnyycU1ikRrIP4h9TjQXLse8mkj35nDJorXGj47AR//KMgBFNOVWJgkBqcG033AnQ
+	 26XmZh/XWEklOHVyRvibqt4MB36P9DxGhsgfcdpXqn1x3UqKWKXDaWUuy/Oljwtcmi
+	 LvTmnmT2eqU2su1/k/KGbdmAaHNxHCsjOhhX5fh7AFIJUShIbrSH3R/UBn7xFO0oef
+	 l5gafT5LSpoxw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 65D1D378203B;
+	Wed, 31 Jan 2024 12:37:14 +0000 (UTC)
+Message-ID: <6020133f-53ee-4bbe-856f-7b7b0957081f@collabora.com>
+Date: Wed, 31 Jan 2024 13:37:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240131-x1e80100-iommu-arm-smmu-qcom-v1-1-c1240419c718@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAIM+umUC/x2NQQrCMBBFr1Jm7cBMgli8irhI48QONIlmqBRK7
- 250999fvLeDSVMxuA47NPmoaS0d+DRAnEN5CuqjMzhynh0xbiwjMRFqzXnF0DLab7xjzZiIz+P
- FJfbOQ1dMwQSnFkqcu6Ssy9LPV5Ok2795ux/HF1hs+byDAAAA
-To: Rob Clark <robdclark@gmail.com>, Will Deacon <will@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=945; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=w2bmAJ0nzsqoalBpGmsMLOmE/qsljTRmZBe5Nbchf/4=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBluj6IwzyXy3eNlLeiHej5D5hRWuRN8IiqUkwP3
- WIeTnQmr+OJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbo+iAAKCRAbX0TJAJUV
- VqxVD/43QDc1w17onfyvHi3K12ydFg+Of5vdAS2Ya4Y7er6pJenrPlY1FKUEQtHQAqc7hfjEbXh
- QmUyjzcsAJn+Bfb6GfuPVfwrb+uCi3WUcKrMfNeTf/4ON6QHRN067/RAdpKjEov9ppo8fXUuv0b
- z8IaHDM4Ze8Yd20A3sA1Oy9oH6wW9AYplCvSxLkhjKe2c0Qs8w04rRM+nY9vM9j4i3KWHQZqfeF
- 9fdza0YW+FycnQYs6A3SRFLA1xz5Fc3puYx2gULfk8quYGa5lyxm/11bE7QlPsQRXhD6g3U9LCq
- hIlR4ftRLl/TXndWjl/UZKrI6Klz2aviVIcHdRWS5hpRFavbFJxZzcHYllxNE9XIgqn0ZG10WbU
- XHXxnEHNQx0RgF69vaWWIK2oS9E0604Kd9l7RKBUB8F3W05Up55lytuVwJ+R4YhGieMFeWc2TmL
- nlMhaub1zn934mvz44Lc9FjSNdBJmk3BDheJ9GKJ+wG+2NvUrw2cqxVGx1kMMDqKOljdrw6WDxB
- K1r0fbei8nT5L9B3v0lLDLymD9Lrh8z/9tjXpdekmgWUGEvtwyQzlOY9t828MRxn6hUEOID+IOT
- k7oBVrfqnBS/pIVVyo6AwdimgPNW1RF0UJUBma3JtXFQYw1R74MsZV88W/wV4+13tYuFh5k0PjD
- uv3PKP8qumiiTfw==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3 2/3] ASoC: mediatek: mt8186: correct the HDMI widgets
+Content-Language: en-US
+To: =?UTF-8?B?SmlheGluIFl1ICjkv57lrrbpkasp?= <Jiaxin.Yu@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "wenst@chromium.org" <wenst@chromium.org>,
+ "ajye_huang@compal.corp-partner.google.com"
+ <ajye_huang@compal.corp-partner.google.com>,
+ =?UTF-8?B?Q2h1bnh1IExpICjmnY7mmKXml60p?= <Chunxu.Li@mediatek.com>,
+ =?UTF-8?B?QWxsZW4tS0ggQ2hlbmcgKOeoi+WGoOWLsik=?=
+ <Allen-KH.Cheng@mediatek.com>, "broonie@kernel.org" <broonie@kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
+ "andrzej.hajda@intel.com" <andrzej.hajda@intel.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+ "robert.foss@linaro.org" <robert.foss@linaro.org>,
+ "Laurent.pinchart@ideasonboard.com" <Laurent.pinchart@ideasonboard.com>,
+ "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+ "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+ "nfraprado@collabora.com" <nfraprado@collabora.com>
+References: <20230730180803.22570-1-jiaxin.yu@mediatek.com>
+ <20230730180803.22570-3-jiaxin.yu@mediatek.com>
+ <25e6ab45-ecad-4bc3-bf4d-983243c939ad@sirena.org.uk>
+ <c6ae8630d06138b6d0156c19323afebf0718f522.camel@mediatek.com>
+ <089fe457-1c61-4b7b-ad37-a67e7f46cb56@sirena.org.uk>
+ <6aa6947865795fc534b61f5b8a80b3c42fd5a0cd.camel@mediatek.com>
+ <9c90185c-9cd4-4a08-9925-be5d460af54d@sirena.org.uk>
+ <11f4cfd2-f6a2-45cb-923a-95760a1b9883@collabora.com>
+ <aeef45d131e3e0131b57958253c85cd50a378f63.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <aeef45d131e3e0131b57958253c85cd50a378f63.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Add the X1E80100 MDSS compatible to clients compatible list, as it also
-needs the workarounds.
+Il 31/01/24 13:25, Jiaxin Yu (俞家鑫) ha scritto:
+> On Wed, 2024-01-31 at 12:42 +0100, AngeloGioacchino Del Regno wrote:
+>> Il 03/08/23 21:33, Mark Brown ha scritto:
+>>> On Thu, Aug 03, 2023 at 07:20:15AM +0000, Jiaxin Yu (俞家鑫) wrote:
+>>>
+>>>> I agree with you, in fact the speaker is indeed doing this way.
+>>>> But
+>>>> about the hdmi that on the board, I did not find a defination
+>>>> link
+>>>> snd_soc_dapm_hdmi, so I use snd_soc_dapm_line to replace. The
+>>>> purpose
+>>>> is to control it link speaker. Or what do you suggest I should
+>>>> do?
+>>>
+>>> I think the sensible thing here is to define a DIGITAL_OUTPUT()
+>>> which
+>>> can be used for HDMI, S/PDIF and anything else that comes up and
+>>> isn't
+>>> clearly wrong like reusing one of the analog descriptions is.
+>>
+>> Hello Jiaxin,
+>>
+>> the MT8186 Corsola Chromebooks are broken upstream without this
+>> series.
+>>
+>> Are you still interested in upstreaming this one?
+>>
+>> Thanks,
+>> Angelo
+> 
+> Hello Angelo,
+> 
+> No, I'm still interesting in upstream this series. It's just that I
+> have less time recently. I'm considering revisiting this issue next
+> mouth. Do you have any suggestions for this?
+> 
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 1 +
- 1 file changed, 1 insertion(+)
+Nothing on top of Mark's suggestions.
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 8b04ece00420..5c7cfc51b57c 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -260,6 +260,7 @@ static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
- 	{ .compatible = "qcom,sm6375-mdss" },
- 	{ .compatible = "qcom,sm8150-mdss" },
- 	{ .compatible = "qcom,sm8250-mdss" },
-+	{ .compatible = "qcom,x1e80100-mdss" },
- 	{ }
- };
- 
+Angelo
 
----
-base-commit: 596764183be8ebb13352b281a442a1f1151c9b06
-change-id: 20231201-x1e80100-iommu-arm-smmu-qcom-f015872f1323
-
-Best regards,
--- 
-Abel Vesa <abel.vesa@linaro.org>
 
