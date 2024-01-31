@@ -1,121 +1,217 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819527BAE5;
-	Wed, 31 Jan 2024 13:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2444C7AE65
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706707728; cv=none; b=OkQE91SKXwfsRjys6nqcm3ac3bf/nFa+gD2G9dXipvQAhDJBfMFxKHO/gpdZ15LBb/nG/do64oQl/+t99FqI7hdgYiEZXi72unRT0LZWnGOANVKOlb9UjlqspLUqbRBLJd3VYiirAJ8PEQGyAWCn7qF0ZeuKJW9IkbDkViMz+jo=
+	t=1706707834; cv=none; b=aQ9ZnVJDeMo4HfrwxaVjZbW0iafJtUQ0G4iDk7xnZYBMEYaDfIVr5POKsfO2oujvqJs6SSwXRR5j6CslD5kGOgxBZvtjBPER4eUzEqNYbM4k04qbolY0Rhv70aq0e0pRa2a19iBx/PpyB8GUlxzqbCM5Oro9pNaB4+3pqz0rUnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706707728; c=relaxed/simple;
-	bh=lIBxN2xK0RgqTSCJuiuPNWVTJjAnTDXK2hhfs4E2yZs=;
+	s=arc-20240116; t=1706707834; c=relaxed/simple;
+	bh=9MHyl2YuajP1t5RTzvhWTy6pVSz8JSWVNyEoJ3+fI4c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rflESknE1uzXpEtMAr1/q/OF6OEDBoPp3MEai9EA6B+PUdwBL3AGjq1MKKUignHXpRk+VkJv431ZfUXlWetOF/lDbkviq8P+5OixbI6hlWA9xsZT9SbjiBQv/Z8y355K64q6VY+iDj5Y74apm+IhIdv0C6v4ZFTb14Vqojy6cfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFxo4WeY; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=I2nlUWZOsWimD3zhP6vAr6QdQ30cy4DIh+enaXTgmJQVh3iSRx6DKAaD2j0bF+wL83+1L0n7REA6Tfn2ZPbD3Pe7HolIX4i8t8o5nMfO7U8p7eg5HnBbR+aYtsyg+D1UJSUEOs1CnEfSIy4X1q0mg1ryJlJ9JGt8V2Gf9hWX8ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFxo4WeY"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso5662021276.0;
-        Wed, 31 Jan 2024 05:28:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706707725; x=1707312525; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CInWjVijKdpWX/OivLCS5uDZMBdRZrMOuy0NJJ7JN4A=;
-        b=KFxo4WeYaGCLdceXsC8bKj6kQa2k5fNOZDX8MN11i6OAEOlnAG1EHMlFysz1cnFGB8
-         E1CPVDd9u7yYtp52LFujb3+owCEY2n67dswnHtxFmSG7iM0Lb9w6h+X4QvYDQUqPpCRq
-         qlFc1aACoYiP6qdUet0XdeCVZIqfOg7/fzNmKAnFe2GHqxMQXAi1HvJ1mlZqUGp5ZWWF
-         vmQDrgxUfMkTUCcLf8nUuKk8h+Qq1vHLx2IWQvad4gklH0Ldx3OcPrqT9/LZrIvG8o5z
-         2i4gV+YuRH+V1SANIMPMCCro+oUqWMqMKbejy8iFsmj2mXfpSqg10w10gdBUySaFlqQD
-         NSGg==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-59a47232667so291784eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:30:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706707725; x=1707312525;
+        d=1e100.net; s=20230601; t=1706707832; x=1707312632;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CInWjVijKdpWX/OivLCS5uDZMBdRZrMOuy0NJJ7JN4A=;
-        b=N7Our5MU74tOZ3C46A5hCW2MLJYmT4cP+tBrJPnMkkMOCnyOGnFmSwt34gshD8Z2/Z
-         ZEj8OWoNURnsK1SSdU/cVlKAqBghr3X9A6VYChfyb7a8BKf1XS6DGZH7Zhz5Vjovc93A
-         lU8LbmiJl6yJXElk+g3II42WBJB+Be1KBcQx9oYkNO0xmbsw//EenZIfZU/p6jaLZAgu
-         quQmH+xvPOMtGk5i+rm5lfmpFzN6ArulM4NiOVPvtv0cXygDSY4mXtxsaVb0sBpwnEK7
-         h394qXtVTgnDWPhl4QY0E+o8TeuYM2PXnb4Fa3jT4rS2z1PbHrOV1Tmt4cIHKqZsoWna
-         feQA==
-X-Gm-Message-State: AOJu0YyUPtA7v30P+FRBEGYE5korAZ7szcXHwgHftI/dX0BDVezirwRf
-	wyheHZqjxaWOBitJ7QxZeT5QOH5+p05ZGZC5WVfGCC7yNLLVzhNxz2sAXOQKrmllnk99iSxsZe4
-	WXnQf+vVBHN8F/CiZb3900E0rP9g=
-X-Google-Smtp-Source: AGHT+IHQ5iuyQY5XSK3G4YxpBh6+91uMY5iuz65wfOW2zqJxshNOPHiQuRLcLSvsDOY1vRbVwWod7Zc2dI96wgK4kwQ=
-X-Received: by 2002:a25:dccc:0:b0:dc6:b7c4:3bb0 with SMTP id
- y195-20020a25dccc000000b00dc6b7c43bb0mr1352249ybe.27.1706707725398; Wed, 31
- Jan 2024 05:28:45 -0800 (PST)
+        bh=n/rYmxaRyYcbls7DLNAJGNk9JtvKcHEco425CoFE7h8=;
+        b=plFz7tEtLt7ImRPvbIu0f4K9z8zBJhGZSeYzxX5f/aCdYh5BnY0oKSoF+CpUs7wHN8
+         SQLgYB7e/KdE/+osUnxpjBk5oaFkaSN4eunYXIv9iCM4ltL0z6Cvb7q8JILRrIBUGRrl
+         wQ3uAbJPBVEreOJC/FaCRWJq7gAnYPVi8MtpgfjRVjQBv6wf+/l2ZfPCpwVu01VppLes
+         ySU05LBtk/mXqBYajzJnveuNlUaDAfRQi3rtpPq5NSDuglQVscCwOOHsw4tyEBCkMgqd
+         4t+JSsfIwmwOJGGoHCXwVm7m+36A3KoRlIgOoeH/WhLxvB43TxWwyVK5+5DCeXy1Sy7N
+         gzXA==
+X-Forwarded-Encrypted: i=0; AJvYcCWfZJxCzvG+JgTBIV/fjSoJBI7Vis6+yu2xGDfplxUkkhxWuf9U8Nqw5jRIeXj4NgVcM+vkSYDiyWtVDRONPRwRjk01BwD7u1ZL9hxy
+X-Gm-Message-State: AOJu0YyBHG1ts0+ruT54iOxY2EqKE2Wm9qXBKtZmp8UxQmIRQi6YiTHG
+	imQquilKHtEepRbRQSe6aGTlEo5RJmwHUDVg4Nb13pH1gYK7Z7lJe20tqzuyYW7gZ8LbmGLDvYS
+	eI3EB8kTqRULA6a5zeO+aHaIzTUk=
+X-Google-Smtp-Source: AGHT+IHpOBMRVTnwpVok/4beLIL/TkCN5tTRjeqI9mD9VY7x96Ig05JoGQDYJFpjPA7LLZIuU8QiCdP37ZGvmMGr05Q=
+X-Received: by 2002:a05:6820:139:b0:599:9e03:68da with SMTP id
+ i25-20020a056820013900b005999e0368damr1536206ood.0.1706707832016; Wed, 31 Jan
+ 2024 05:30:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130214620.3155380-1-stefanb@linux.ibm.com> <20240130214620.3155380-3-stefanb@linux.ibm.com>
-In-Reply-To: <20240130214620.3155380-3-stefanb@linux.ibm.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 31 Jan 2024 15:28:34 +0200
-Message-ID: <CAOQ4uxhVmdWf+jwKg0bPcFf0VRRqpYg9m7yDavCk4cJ4fDg2zA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] evm: Implement per signature type decision in security_inode_copy_up_xattr
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
-	roberto.sassu@huawei.com, miklos@szeredi.hu, 
-	Christian Brauner <brauner@kernel.org>
+References: <20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com> <dcb1b6dbc2172dd66bfdcc0c8135e0d98f1c22dd.camel@gmail.com>
+In-Reply-To: <dcb1b6dbc2172dd66bfdcc0c8135e0d98f1c22dd.camel@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 31 Jan 2024 14:30:20 +0100
+Message-ID: <CAJZ5v0gAK9CChRPSx7Lu=BrGQo22q4swpvvN3__wFw68NfqKPA@mail.gmail.com>
+Subject: Re: [PATCH RESEND RFC] driver: core: don't queue device links removal
+ for dt overlays
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: nuno.sa@analog.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	Saravana Kannan <saravanak@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 30, 2024 at 11:46=E2=80=AFPM Stefan Berger <stefanb@linux.ibm.c=
-om> wrote:
+On Wed, Jan 31, 2024 at 1:20=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
 >
-> To support portable and immutable signatures on otherwise unsupported
-> filesystems, determine the EVM signature type by the content of a file's
-> xattr. If the file has the appropriate signature then allow it to be
-> copied up. All other signature types are discarded as before.
+> On Tue, 2024-01-23 at 16:40 +0100, Nuno Sa via B4 Relay wrote:
+> > From: Nuno Sa <nuno.sa@analog.com>
+> >
+> > For device links, releasing the supplier/consumer devices references
+> > happens asynchronously in device_link_release_fn(). Hence, the possible
+> > release of an of_node is also asynchronous. If these nodes were added
+> > through overlays we have a problem because this does not respect the
+> > devicetree overlays assumptions that when a changeset is
+> > being removed in __of_changeset_entry_destroy(), it must hold the last
+> > reference to that node. Due to the async nature of device links that
+> > cannot be guaranteed.
+> >
+> > Given the above, in case one of the link consumer/supplier is part of
+> > an overlay node we call directly device_link_release_fn() instead of
+> > queueing it. Yes, it might take some significant time for
+> > device_link_release_fn() to complete because of synchronize_srcu() but
+> > we would need to, anyways, wait for all OF references to be released if
+> > we want to respect overlays assumptions.
+> >
+> > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+> > ---
+> > This RFC is a follow up of a previous one that I sent to the devicetree
+> > folks [1]. It got rejected because it was not really fixing the root
+> > cause of the issue (which I do agree). Please see the link where I
+> > fully explain what the issue is.
+> >
+> > I did also some git blaming and did saw that commit
+> > 80dd33cf72d1 ("drivers: base: Fix device link removal") introduced
+> > queue_work() as we could be releasing the last device reference and hen=
+ce
+> > sleeping which is against SRCU callback requirements. However, that sam=
+e
+> > commit is now making use of synchronize_srcu() which may take
+> > significant time (and I think that's the reason for the work item?).
+> >
+> > However, given the dt overlays requirements, I'm not seeing any
+> > reason to not be able to run device_link_release_fn() synchronously if =
+we
+> > detect an OVERLAY node is being released. I mean, even if we come up
+> > (and I did some experiments in this regard) with some async mechanism t=
+o
+> > release the OF nodes refcounts, we still need a synchronization point
+> > somewhere.
+> >
+> > Anyways, I would like to have some feedback on how acceptable would thi=
+s
+> > be or what else could I do so we can have a "clean" dt overlay removal.
+> >
+> > I'm also including dt folks so they can give some comments on the new
+> > device_node_overlay_removal() function. My goal is to try to detect whe=
+n an
+> > overlay is being removed (maybe we could even have an explicit flag for
+> > it?) and only directly call device_link_release_fn() in that case.
+> >
+> > [1]:
+> > https://lore.kernel.org/linux-devicetree/20230511151047.1779841-1-nuno.=
+sa@analog.com/
+> > ---
+> >  drivers/base/core.c | 25 ++++++++++++++++++++++++-
+> >  1 file changed, 24 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 14d46af40f9a..31ea001f6142 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -497,6 +497,18 @@ static struct attribute *devlink_attrs[] =3D {
+> >  };
+> >  ATTRIBUTE_GROUPS(devlink);
+> >
+> > +static bool device_node_overlay_removal(struct device *dev)
+> > +{
+> > +     if (!dev_of_node(dev))
+> > +             return false;
+> > +     if (!of_node_check_flag(dev->of_node, OF_DETACHED))
+> > +             return false;
+> > +     if (!of_node_check_flag(dev->of_node, OF_OVERLAY))
+> > +             return false;
+> > +
+> > +     return true;
+> > +}
+> > +
+> >  static void device_link_release_fn(struct work_struct *work)
+> >  {
+> >       struct device_link *link =3D container_of(work, struct device_lin=
+k,
+> > rm_work);
+> > @@ -532,8 +544,19 @@ static void devlink_dev_release(struct device *dev=
+)
+> >        * synchronization in device_link_release_fn() and if the consume=
+r or
+> >        * supplier devices get deleted when it runs, so put it into the
+> > "long"
+> >        * workqueue.
+> > +      *
+> > +      * However, if any of the supplier, consumer nodes is being remov=
+ed
+> > +      * through overlay removal, the expectation in
+> > +      * __of_changeset_entry_destroy() is for the node 'kref' to be 1
+> > which
+> > +      * cannot be guaranteed with the async nature of
+> > +      * device_link_release_fn(). Hence, do it synchronously for the
+> > overlay
+> > +      * case.
+> >        */
+> > -     queue_work(system_long_wq, &link->rm_work);
+> > +     if (device_node_overlay_removal(link->consumer) ||
+> > +         device_node_overlay_removal(link->supplier))
+> > +             device_link_release_fn(&link->rm_work);
+> > +     else
+> > +             queue_work(system_long_wq, &link->rm_work);
+> >  }
+> >
+> >  static struct class devlink_class =3D {
+> >
+> > ---
+> > base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> > change-id: 20240123-fix-device-links-overlays-5422e033a09b
+> > --
+> >
+> > Thanks!
+> > - Nuno S=C3=A1
+> >
 >
-> Portable and immutable EVM signatures can be copied up by stacked file-
-> system since the metadata their signature covers does not include file-
-> system-specific data such as a file's inode number, generation, and UUID.
+> Hi Rafael,
 >
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> ---
->  security/integrity/evm/evm_main.c | 27 ++++++++++++++++++++++++---
->  1 file changed, 24 insertions(+), 3 deletions(-)
->
-> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/e=
-vm_main.c
-> index 2555aa4501ae..22a5e26860ea 100644
-> --- a/security/integrity/evm/evm_main.c
-> +++ b/security/integrity/evm/evm_main.c
-> @@ -898,9 +898,30 @@ void evm_inode_post_setattr(struct dentry *dentry, i=
-nt ia_valid)
->
->  int evm_inode_copy_up_xattr(struct dentry *src, const char *name)
->  {
-> -       if (strcmp(name, XATTR_NAME_EVM) =3D=3D 0)
-> -               return 1; /* Discard */
-> -       return -EOPNOTSUPP;
-> +       struct evm_ima_xattr_data *xattr_data =3D NULL;
-> +       int rc;
-> +
-> +       if (strcmp(name, XATTR_NAME_EVM) !=3D 0)
-> +               return -EOPNOTSUPP;
-> +
-> +       /* first need to know the sig type */
-> +       rc =3D vfs_getxattr_alloc(&nop_mnt_idmap, src, XATTR_NAME_EVM,
-> +                               (char **)&xattr_data, 0, GFP_NOFS);
+> Would be nice to have your feedback on this one or if this is a complete =
+nack...
+> I think calling device_link_release_fn() synchronously is ok but I might =
+be
+> completely wrong.
 
+Well, it sounds like you are expecting me to confirm that what you are
+doing makes sense, but I cannot do that, because I am not sufficiently
+familiar with DT overlays.
 
-See my suggestion for post-getxattr hook:
-security_inode_copy_up_xattr(name, value, size)
-to avoid using nop_mnt_idmap here.
+You first need to convince yourself that you are not completely wrong.
 
-Unless it is fine to use nop_mnt_idmap in this context? not sure.
+> +Cc Saravan as he should also be very familiar with device_links and see =
+if the
+> above fairly simple solution is sane.
+>
+> I also don't want to be pushy as I know you guys are all very busy but it=
+'s (i
+> think) the third time I resend the patch :)
 
-Thanks,
-Amir.
+Sorry about that, I haven't realized that my input is requisite.
+
+So the patch not only calls device_link_release_fn() synchronously,
+but it also calls this function directly and I, personally, wouldn't
+do at least the latter.
+
+It should be fine to run it synchronously from within
+devlink_dev_release(), it will just take time for the SRCU
+synchronization, but AFAICS it is not generally safe to run it without
+dropping the last reference to the device link.
