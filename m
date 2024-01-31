@@ -1,71 +1,74 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2045.outbound.protection.outlook.com [40.107.255.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417145A0E4;
-	Wed, 31 Jan 2024 08:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706690505; cv=fail; b=VUfERreqLNFeC1RQitYzMuj/xJXICtbLkhuAfqrVBAGJmIeJzxcfZy/eTpm7I55uDDlngiV+o0MCE4mX7igykqOUSK7R0mphMRP0NzUcdUZM+mDQdk0bhCXZd294+zQo4oSsnSK3UZuPMdHPb7lM6OsTDJVYxPOp90GbQLRnv7E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706690505; c=relaxed/simple;
-	bh=ZB0uuKhuGlwhDRABa0fnEYzauI2z6mkdht1GyBc8b/0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=I5pHmBqxlC9Qn5i2mXyfAjfT8/4pvZZId4b+J4rRzP0o6VKoC+uamE22NBVomL59SIz0vR9KD9j/0Gis8wnJo/xpAc434T5Q6lsSLlHP7rY1UIry5CwoXpKuRvaNafrN4aUupsLTST3lkfRH6touwAqch2V2gfieCzgCZ0mN3gE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=mXqtTjjF; arc=fail smtp.client-ip=40.107.255.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163D5605DC
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706690510; cv=none; b=t9jnL2XKcKycrWvLbc+DwcnS5LWT5Yuxh01XR51FUJCySrlYC4QVYd8SRm+wIwhsE6f6cYLdLXc3AypV2kgyBBauy/z3IvuUsKP4pA+Bk0T2xqnFlI6xNhU635jvH+o96Fm8mHGBUwwi1cv2fhZTRes+BWhpfSSOkVeJyVumjXk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706690510; c=relaxed/simple;
+	bh=iKRXLwTfrqU+PVgGgOqGO2T4SSk0VbOyJ7O4Lzl4WVE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T7wuu3CT50uUF1gnkLA8Vbs3ARf5k54/2DY/SAKWGO59hzXiZIJtWZzvoRBexby8ubwvqb8Zkl8C6HsTAQ9iBAdMR8QJ4imiXKKsmive5P6+8tAogy/Gktd6bcLN9tX7OE3pB1QdmGqokNlXqaVEXEjcYR3MHNHiUXbirk8CzvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=rdTH2LtM; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="mXqtTjjF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZD/mJqXdnlPvY31raih7TWrPZxFXQAnnyRRcrxn86ShSaisu7JqD+L65jt4JsmtOJSYb5wbRWVg/QpDw421WCmNx2WPdUqFFPOkDp6UWnN8BqjlxCNfhqSuzS/0/wI+1dDOK3oiOpiq5z2ING8inDKC5vipBTmMjH4jSn8kxP0jdGQgeUUA147B9GTovB26QlKyHtV4kxGF63G8WDCkJ0K4/dCWyzzWy73JwUxJyCiMV1hRwuUIwwHyPOPRW7Yp4CBzlAQLmuyAvHgzjX0Fze++9XUxk18CbDsKriRUFW1j9/86DiGJ1EECafJP5p0EYlEF1kT/m1xGTjOxtg20xpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S4g56/60hyAX5ggdjqNQXbU+iIP856fiKJRFbrdd3P4=;
- b=GVkyezF0LF/3Ej5vLv598qAOPYYhvTN8k6+aLYKHYuMgAPhQS5ERelf7w6seLatomYa0mYnRJofHsWE6ElKppGr6BBIc+l8+Pdwhjt/mDtjytPjQ3iOM3YX+AhCuAwtutZkF3D+YqwevpCwD+jOg0RJdBprbt3rtYwozhI2kA8Q9DISr9lVLW/5R/iJF/wzImF6mc7WtGXfFMqlBKjtc723z1W2oG7AZ2+7AjTdS3UB1+oDPeRnB+8KJFmGrZVpXzyGEhuACJ0SEvNHgd95vY03wjxSdLX/rV0bGzipchbei9dwujgG4LvYmGrtnGhtKoz05rmW6Q+2oSxA37LyaHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S4g56/60hyAX5ggdjqNQXbU+iIP856fiKJRFbrdd3P4=;
- b=mXqtTjjFlBpqx+94sqqssx4pgYRQPe1AeceFxR4fODAHVqw5ArMyoj/Ar9y8YOScy2BgBvr0ecqyEKOskcE2cpIM3uDIxt+C4aNIg4mgW6iJUS704onkRBs0frnpDAPXyr9y+WJGp46q5yWKdCfh7Xa59BtkySOibnqsZnpvziMZc9z3DRcUBuSWsOGSQV3M6Pvvi3AvkOpMeacSC+kSGKBZdmvfaTAvTZniRziAj9G/kceoeToWkTQxK3uw96I94+5de1cAXDRFYboGfSARdP9KsOxNlgJOLGhwqs5PIPusdN2YTE2BtGMZHcZh5cQbNl38/B2naViCVQ8uXjtvtA==
-Received: from SG2P153CA0032.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::19) by
- TYZPR04MB7783.apcprd04.prod.outlook.com (2603:1096:405:76::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.34; Wed, 31 Jan 2024 08:41:39 +0000
-Received: from HK2PEPF00006FB2.apcprd02.prod.outlook.com
- (2603:1096:4:c7:cafe::39) by SG2P153CA0032.outlook.office365.com
- (2603:1096:4:c7::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.6 via Frontend
- Transport; Wed, 31 Jan 2024 08:41:39 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK2PEPF00006FB2.mail.protection.outlook.com (10.167.8.8) with Microsoft SMTP
- Server id 15.20.7228.16 via Frontend Transport; Wed, 31 Jan 2024 08:41:37
- +0000
-From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-To: patrick@stwcx.xyz
-Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 00/21] Add i2c-mux and eeprom devices for Meta Yosemite 4
-Date: Wed, 31 Jan 2024 16:41:11 +0800
-Message-Id: <20240131084134.328307-1-Delphine_CC_Chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="rdTH2LtM"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55783b7b47aso5950230a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:41:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1706690506; x=1707295306; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1524TzWJOECLHteJDyR9DLp3V3fisC4TKq1DpxaWyKw=;
+        b=rdTH2LtMovlTU2OPE+C9AK1NLSirmXe40R34WpQX+Q5KfhqNXzjpuzq8OzNVPvoFuw
+         dPvevXOxNav9DuSBdc5SufA/gx3FZEtnZRiJIXBoB49T6xCY1YsuMMo1S/zG4YKRqvcS
+         u1vi71Rj9Rb0faAIze08l0RTZqYpJ0zVSWNH7CiGtl80WREwcfcmOZx81sbIC/6Vw+Vg
+         rnqR6X0sC++FHrbokyOOO/Ot7n9hYjCdARj5FJoTW5tBO7iHQ0UVqiUivOcImphzInjN
+         F04ieIOxs8ksl/Oap3+CeecvSA1NHCJKSbDrGBGnrflUShyTghiClMt7XSmno4/wBJ49
+         O40A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706690506; x=1707295306;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1524TzWJOECLHteJDyR9DLp3V3fisC4TKq1DpxaWyKw=;
+        b=maZtAYIZq1xeOwpQkobDkJDPclmyMAHOdrCb3Z/JK315aoMcKOf/mWzlSzqj3KzGE7
+         zvgKvddK/YDKXqlEfiZ5UUA4bxQl9WeyREAklpEFB9VkmoEbgvmxUH+7NRnW59JvcZs7
+         sfaiXbY5jB+WkWoXlYlwSCj4x3qsIGnElpzEpHCAgubTpCZN7sxOWVnaNUxhqIo0Uez7
+         jfoa0/67/1lVcnL4mp4+jb4LbHOPYbsV6clOPN5MMAmFGSza05npg+lMfWwPLwzq3/GO
+         w3WYfWTQbzi/71oqXpx+f5YFaEnlRAC8FCyRW9GGUpXYFZjM9eHIxJl8rTyn4B1y8gnH
+         G3WA==
+X-Gm-Message-State: AOJu0YzU+YM7zlu54dYgDMRo8cwBNNqSFM5biLrfAXGSr1t73gSdKc4i
+	VaaePpmvNiR68MAlOxHyTeYt+8LzfWzhpqp39Exd3Qo7ssywVY5gKC+2rYASlRY=
+X-Google-Smtp-Source: AGHT+IEGqc5y9PC/J6J9ErYD3JK8SaZx7UhdE7wuVBjIuEL5mo3X27baMFsbr922gsCpNlpqEnJZow==
+X-Received: by 2002:a05:6402:1c04:b0:55f:86a0:99ba with SMTP id ck4-20020a0564021c0400b0055f86a099bamr626662edb.28.1706690505971;
+        Wed, 31 Jan 2024 00:41:45 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVl5Q/Ei2bvcvv8xNVcQim5Dj02Pl4QjnlUYe+y66df6tf56svSKkWCWd1P/sjdv0gI4LyPVsSopEmlbd13tygZ/mvkuo68KQPQ+8j8kBSDCMF5cUiKMTvYirtlGF0m64iw6+0IGSVGX69xRzlxVO0Be7DrcFDUza9Re4l0fPxIVNgaklWDkagRF+QHIITCEMnuG1eAIhz1ujTNKIrl4ELdFNlN9rTl9asvyXFRxdb/42bD+SjhDyyM7AqP0PVcYaoiQ0c8oTG2o33pVGjiei3JOswrMw8fm8V7pLLefyw63AG29R2I8JAFBfwCcSzzS8OswTrq3h5Hol+JfTB0AeKftpAipGef9/JBUsmSmwPb3YusdXJvaQ7GD8qpgf2l5kAhQnkR51D4g6TA/m6RvAT6y3ZRIk3yzvzhTnqJJkFdBLejai8=
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.87])
+        by smtp.gmail.com with ESMTPSA id cq16-20020a056402221000b0055f02661ae2sm2863630edb.78.2024.01.31.00.41.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 00:41:45 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: s.shtylyov@omp.ru,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	richardcochran@gmail.com,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH net-next v5 00/15] net: ravb: Prepare for suspend to RAM and runtime PM support (part 1)
+Date: Wed, 31 Jan 2024 10:41:18 +0200
+Message-Id: <20240131084133.1671440-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,97 +76,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB2:EE_|TYZPR04MB7783:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: dc1575c9-f2c4-4f7f-e5b4-08dc223870ec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+TlP5J3HL+I/NsOp+TwfSMGiM2t9qcBpxMVxGq0+ImNaSKd9NBOS8JIrB2QvQz2DzaasUQ6oUj0R7pZAp+sGlyNOjCWqNebF8YTRSlW5bra7/7y/4UIfwk6GhOHpme6XS0ypBQMKWnk+j4P2yKeNENAELL4+JwYZj4FVWuTZYbGgp8RgmfGcTD1X66AHKQJjgXfF1R72yEbG5cA49XOV2DgmCGM4ZSMRxSTiz1RAsL4Eu2B5YbReX9v1wA+loIspa8a4VyXQw7tGteHjR2mgPmQWX1+IiALx5SvzLTDkbEKXXiXzrJdejvQUzvLAUKJSb4EXQfShKJnysQRZl4B4YqqLX6oMXDFO3ZGCkvR5BgEhjHGjASowAMxrbEIwlbMiYixlo3NDfGrj5JL4hWI3dpKXfsQyMf51cwINPEoY2f9W3ZS6FtqBf6mUvxf0Ts92bGIHgnsC8AqJon1y3ZvFxswXA6otZz6/baDfW2BFKg/Nr1MBMvAeBjRxJHNQuHbJyytC+qcTZoSfgpiGSi3udaCztbq/eltnB947t1oS4rrTFubFsnFvqAg3+LW0dP8paXpegXSixUZshoXKGMy4b9aw0FIejs+aQpMf9Yg3Njp+v6x3JW8otl9alWpdqSrdKMzmI5sMZZeqTCavh766Yrs8MesVTp9aCrPrvNaIsqGK4/Z8Sb2ytPaSGXRBwKWaJSa+Rkw4y6t9Jrla+UJahg==
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(6069001)(4636009)(136003)(376002)(396003)(346002)(39850400004)(230922051799003)(451199024)(186009)(64100799003)(82310400011)(1800799012)(46966006)(36840700001)(1076003)(9316004)(70586007)(8936002)(8676002)(4326008)(7416002)(5660300002)(2906002)(86362001)(36736006)(54906003)(6506007)(6916009)(36860700001)(6512007)(47076005)(82740400003)(70206006)(81166007)(36756003)(478600001)(6666004)(316002)(356005)(6486002)(83380400001)(336012)(2616005)(956004)(26005)(41300700001)(40480700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 08:41:37.6760
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc1575c9-f2c4-4f7f-e5b4-08dc223870ec
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FB2.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR04MB7783
 
-Changelog:
-  - v5
-    - Support medusa board adc sensors
-    - support NIC eeprom
-  - v4
-    - Re-format gpio linename
-    - Revise i2c device node names
-    - Split patches by logic changes
-  - v3
-    - Correct patch for revising gpio name
-  - v2
-    - Revise mx31790 fan tach config
-    - Add mctp config for NIC
-    - Support mux to cpld
-    - Revise gpio name
-  - v1
-    - Add gpio and eeprom behind i2c-mux
-    - Remove redundant idle-state setting for i2c-mux
-    - Enable adc 15, wdt2,spi gpio for yosemite4 use
-    - Revise quad mode to dual mode to avoid WP pin influnece the SPI
-    - Revise power sensor adm1281 for yosemite4 schematic change
-    - Add gpio pca9506 I/O expander for yosemite4 use
-    - remove space for adm1272 compatible
-    - enable interrupt setting for pca9555
-    - add eeprom for yosemite4 medusa board/BSM use
-    - remove temperature sensor for yosemite4 schematic change
-    - add power sensor for power module reading
-    - Revise adc128d818 adc mode for yosemite4 schematic change
-    - Revise ina233 for yosemite4 schematic change
-    - Remove idle state setting for yosemite4 NIC connection
-    - Initialize bmc gpio state
-    - Revise mx31790 fan tach config
-    - Add mctp config for NIC
-    - Support mux to cpld
-    - Revise gpio name
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Delphine CC Chiu (21):
-  ARM: dts: aspeed: yosemite4: Revise i2c-mux devices
-  ARM: dts: aspeed: yosemite4: Enable adc15
-  ARM: dts: aspeed: yosemite4: Enable spi-gpio setting
-  ARM: dts: aspeed: yosemite4: Enable watchdog2
-  ARM: dts: aspeed: yosemite4: Revise quad mode to dual mode
-  ARM: dts: aspeed: yosemite4: Revise power sensor adm1281 for schematic
-    change
-  ARM: dts: aspeed: yosemite4: Add gpio pca9506
-  ARM: dts: aspeed: yosemite4: Remove space for adm1272 compatible
-  ARM: dts: aspeed: yosemite4: Enable interrupt setting for pca9555
-  ARM: dts: aspeed: yosemite4: Add power sensor for power module reading
-  ARM: dts: aspeed: yosemite4: Add eeprom for yosemite4 use
-  ARM: dts: aspeed: yosemite4: Remove temperature sensor for yosemite4
-    schematic change
-  ARM: dts: aspeed: yosemite4: Revise adc128d818 adc mode for yosemite4
-    schematic change
-  ARM: dts: aspeed: yosemite4: Revise ina233 config for yosemite4
-    schematic change
-  ARM: dts: aspeed: yosemite4: Remove idle state setting for yosemite4
-    NIC connection
-  ARM: dts: aspeed: yosemite4: Initialize bmc gpio state
-  ARM: dts: aspeed: yosemite4: Revise mx31790 fan tach config
-  ARM: dts: aspeed: yosemite4: add mctp config for NIC
-  ARM: dts: aspeed: yosemite4: support mux to cpld
-  ARM: dts: aspeed: yosemite4: support medusa board adc sensors
-  ARM: dts: aspeed: yosemite4: support NIC eeprom
+Hi,
 
- .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 1221 +++++++++++++++--
- 1 file changed, 1110 insertions(+), 111 deletions(-)
+This series prepares ravb driver for runtime PM support and adjust the
+already existing suspend to RAM code to work for RZ/G3S (R9A08G045) SoC.
+
+As there are IP versions that switch to module standby when disabling
+the clocks, and because of module standby IP switches to reset and
+the register content is lost, to be able to have runtime PM supported
+for all IP variants, the configuration operations were moved all to
+ravb_open()/ravb_close() letting the ravb_probe() and ravb_remove()
+to deal with resource parsing and allocation/free.
+
+The ethtool and IOCTL APIs that could have been run asyncronously
+were adapted to return if the interface is down. As explained in
+each individual commits description, this should be harmless.
+
+Along with it, the series contains preparatory cleanups.
+
+The series has been tested on the boards with the following device trees:
+- r8a7742-iwg21d-q7.dts
+- r8a774a1-hihope-rzg2m-ex.dts 
+- r9a07g043u11-smarc-rzg2ul.dts
+- r9a07g054l2-smarc-rzv2l.dts
+- r9a07g044l2-smarc-rzg2l.dts
+
+Thank you,
+Claudiu Beznea
+
+Changes in v5:
+- collected tags
+- fixed typos in patches description
+- improved description for patch 07/15
+- collected tags
+
+Changes in v4:
+- changed cover letter title and keep on 15 patches in series to cope
+  with requirement at [1]
+- add dependency on RESET_CONTROLLER in patch "net: ravb: Make reset
+  controller support mandatory"
+- use pm_runtime_active() in patch "net: ravb: Move the IRQs get and
+  request in the probe function"
+- set config more before reading the mac address in patch "net: ravb: Set
+  config mode in ndo_open and reset mode in ndo_close"
+- collected tags
+  
+[1] https://www.kernel.org/doc/html/v6.6/process/maintainer-netdev.html#tl-dr
+
+Changes in v3:
+- collected tags
+- addressed review comments
+- squashed patch 17/21 ("net: ravb: Keep clock request operations grouped
+  together") from v2 in patch 07/19 ("net: ravb: Move reference clock
+  enable/disable on runtime PM APIs") from v3
+- check for ndev->flags & IFF_UP in patch 17/19 and 18/19 instead of
+  checking netif_running()
+- dropped patch 19/21 ("net: ravb: Do not set promiscuous mode if the
+  interface is down") as the changes there are not necessary as
+  ndev->flags & IFF_UP is already checked at the beginning of
+  __dev_set_rx_mode()
+- remove code from ravb_open() introduced by patch 20/21
+  ("net: ravb: Do not apply RX CSUM settings to hardware if the interface
+  is down") from v2 as this is not necessary; driver already takes
+  care of this in ravb_emac_init_rcar()
+
+Changes in v2:
+- rework the driver (mainly, ravb_open() contains now only resource
+  allocation and parsing leaving the settings to ravb_open(); ravb_remove()
+  has been adapted accordingly) to be able to use runtime PM for all
+  IP variants; due to this number of patches increased
+- adjust previous series to review comments
+- collected tags
+- populated driver's own runtime PM ops with enable/disable of reference
+  clock
+
+Claudiu Beznea (15):
+  net: ravb: Let IP-specific receive function to interrogate descriptors
+  net: ravb: Rely on PM domain to enable gptp_clk
+  net: ravb: Make reset controller support mandatory
+  net: ravb: Switch to SYSTEM_SLEEP_PM_OPS()/RUNTIME_PM_OPS() and
+    pm_ptr()
+  net: ravb: Use tabs instead of spaces
+  net: ravb: Assert/de-assert reset on suspend/resume
+  net: ravb: Move reference clock enable/disable on runtime PM APIs
+  net: ravb: Move the IRQs getting/requesting in the probe() method
+  net: ravb: Split GTI computation and set operations
+  net: ravb: Move delay mode set in the driver's ndo_open API
+  net: ravb: Move DBAT configuration to the driver's ndo_open API
+  net: ravb: Move PTP initialization in the driver's ndo_open API for
+    ccc_gac platorms
+  net: ravb: Set config mode in ndo_open and reset mode in ndo_close
+  net: ravb: Simplify ravb_suspend()
+  net: ravb: Simplify ravb_resume()
+
+ drivers/net/ethernet/renesas/Kconfig     |   1 +
+ drivers/net/ethernet/renesas/ravb.h      |   6 +-
+ drivers/net/ethernet/renesas/ravb_main.c | 738 +++++++++++------------
+ 3 files changed, 352 insertions(+), 393 deletions(-)
 
 -- 
-2.25.1
+2.39.2
 
