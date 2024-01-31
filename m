@@ -1,119 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543C812BE8F;
-	Wed, 31 Jan 2024 16:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7448212AAC0
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706717442; cv=none; b=Hx2I3tgEJRMufa6njlUZcbS9QIrRfMRyXkcA0+WDualUiU3jlR3Rw5r5jWpxiWz2RZvmILt0wYkW48AyMIjhF1mYh7Ncf02Ezt8VTw7TMFBFUzyRNUaYbmNmRLTnsYUtQxq9cl/Gl046VeljTEog+asqXEV67iCaKVD8h8/KRIU=
+	t=1706717519; cv=none; b=Q32jXt0wRWn7yhD3Hb0RVDAv/CGCtiD7nOgXKpAyFNQzL+iwBgoFN3v5/zqCBEHMEp6H1vYM2kIi8ZRVI01N8U8LgjirX2vrtg7vQ0jmvQdfm5CPi7ZwXKOTLbPkok4lzqlqb2EBMibqKmqZd1pqd+02p8CJk9Mwu4lC/zFI8gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706717442; c=relaxed/simple;
-	bh=hwmB+C/u/by+wrZ26oOJ2Ax1b/vEvnFtb7tDhr+WVQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bGpZPFcyYf1IqjAMHJeJ4Vq5V/okYLYciRe8uc7ejIxtjQ9CONlPq5b3RrGM4aUf2mksNZ6R9wGBK4g5Hwxvnr08FaSeHkyFnpdYURqR45j/PgHkIN56TXNGBW89KMT2LeTUSpi9kBbuhRstADX2rAwtK5YA7I5NDZD/NGYVP8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxkfYglX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxkfYglX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56196C43399;
-	Wed, 31 Jan 2024 16:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706717441;
-	bh=hwmB+C/u/by+wrZ26oOJ2Ax1b/vEvnFtb7tDhr+WVQs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NxkfYglXwQLizeqK+ZLtRxhktWMZu9Hg2cZMRNwxV4MIBcpQr69apiNbJmt1qBkv3
-	 iuxbzov2L0+anI1U4WGNp1XChsDh6KVt8Yc/VnQXUduuIagmwuaLjyvJeWf/lV6vNC
-	 xlk/v3hyJ9D8/0TzAQLPSbCm8FW+B1ZygM1gtidZxYtRONu/cKgX0ikE0RCZo8Q9xj
-	 bL93Oo1JYqUwNGUTwy1aoBONgyVuivcRNDoddOYCWICSB57x1pZ5/V6+i8SRbQ4QD4
-	 jucz5CfjY3QUwLGtNA293v150PPQ/JT/bRy7Y/BggqHLnOV+rRpUi9beHxJB+WuMoT
-	 4E7seT4G8sngQ==
-Date: Wed, 31 Jan 2024 16:10:37 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Svyatoslav <clamor95@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
+	s=arc-20240116; t=1706717519; c=relaxed/simple;
+	bh=etiQOCiZU9tDAlchggQr10q8COercMMXKaVDFoX+q74=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mKVTzUozpRh/ioDVcRhWRMjQxS41kDZp/WHmGUAJBoGJNDPcsskvY8paQLl28l/W+d08P6qz/2zTonsapUsCWjnqLXYQgMeTLrw+ICufRpTEBFcFJlp1O88/Pke+PW+iX0H5d7Jga9q/b25TZPRyB7FkfnikrSW57Q9luFcXVVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:88f0:c83b:bafa:cdc3])
+	by andre.telenet-ops.be with bizsmtp
+	id hUBq2B00N4efzLr01UBqR2; Wed, 31 Jan 2024 17:11:55 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rVDAw-00GrV5-9U;
+	Wed, 31 Jan 2024 17:11:50 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rVDBm-008lXe-Ht;
+	Wed, 31 Jan 2024 17:11:50 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kees Cook <keescook@chromium.org>,
-	Maxim Schwalm <maxim.schwalm@gmail.com>, devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] dt-bindings: vendor-prefixes: add LG Electronics,
- Inc. prefix
-Message-ID: <20240131-undercoat-rewash-1770ce13b556@spud>
-References: <20240131105153.8070-1-clamor95@gmail.com>
- <20240131105153.8070-2-clamor95@gmail.com>
- <20240131-elderly-passover-341b89f65189@spud>
- <656FDD69-D7B1-4910-B848-108CB985AAAC@gmail.com>
- <20240131-tractor-roundish-f6f90b5bd640@spud>
- <BCBF1994-C5AE-4D2B-B645-C3C67BE19000@gmail.com>
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] dt-bindings: timer: renesas,tmu: Document input capture interrupt
+Date: Wed, 31 Jan 2024 17:11:45 +0100
+Message-Id: <8cb38b5236213a467c6c0073f97ccc4bfd5a39ff.1706717378.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="G4dIpqmRG0duvBE0"
-Content-Disposition: inline
-In-Reply-To: <BCBF1994-C5AE-4D2B-B645-C3C67BE19000@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+Some Timer Unit (TMU) instances with 3 channels support a fourth
+interrupt: an input capture interrupt for the third channel.
 
---G4dIpqmRG0duvBE0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+While at it, document the meaning of the four interrupts, and add
+"interrupt-names" for clarity.
 
-On Wed, Jan 31, 2024 at 06:06:58PM +0200, Svyatoslav wrote:
->=20
->=20
-> 31 =D1=81=D1=96=D1=87=D0=BD=D1=8F 2024=E2=80=AF=D1=80. 18:02:31 GMT+02:00=
-, Conor Dooley <conor@kernel.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=
-=B2(-=D0=BB=D0=B0):
-> >On Wed, Jan 31, 2024 at 05:30:58PM +0200, Svyatoslav wrote:
-> >>=20
-> >>=20
-> >> 31 =D1=81=D1=96=D1=87=D0=BD=D1=8F 2024=E2=80=AF=D1=80. 17:28:49 GMT+02=
-:00, Conor Dooley <conor@kernel.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=
-=D0=B2(-=D0=BB=D0=B0):
-> >> >On Wed, Jan 31, 2024 at 12:51:50PM +0200, Svyatoslav Ryhel wrote:
-> >> >> Add missing LG Electronics, Inc. prefix used by some older devices.
-> >> >
-> >> >Is it? You're only adding these devices now as far as I can see.
-> >> >
-> >>=20
-> >> Hammerhead (LG Nexus 5)
-> >
-> >I have absolutely no idea what this means. Please link me the in-tree
-> >devicetree of the user (or the patchset adding it).
-> >
-> >Thanks,
-> >Conor
-> >
->=20
-> Sure, here you go
-> <https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/ar=
-ch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts?h=3Dlinux-6.4.y#n11>
->=20
-> So devices I have sent are not the first.
+Update the example to match reality.
 
-Thanks.
+Inspired by a patch by Yoshinori Sato for SH.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Reword interrupt descriptions.
 
-Cheers,
-Conor.
+The corresponding DTS updates can be found in series "[PATCH 0/2]
+ARM/arm64: dts: renesas: Improve TMU interrupt descriptions".
+https://lore.kernel.org/r/cover.1705325654.git.geert+renesas@glider.be
+Once the DTS updates are upstream, "interrupt-names" can be made
+required.
+---
+ .../devicetree/bindings/timer/renesas,tmu.yaml | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+index a67e427a9e7e22aa..84bbe15028a1de94 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
++++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+@@ -46,7 +46,19 @@ properties:
+ 
+   interrupts:
+     minItems: 2
+-    maxItems: 3
++    items:
++      - description: Underflow interrupt, channel 0
++      - description: Underflow interrupt, channel 1
++      - description: Underflow interrupt, channel 2
++      - description: Input capture interrupt, channel 2
++
++  interrupt-names:
++    minItems: 2
++    items:
++      - const: tuni0
++      - const: tuni1
++      - const: tuni2
++      - const: ticpi2
+ 
+   clocks:
+     maxItems: 1
+@@ -100,7 +112,9 @@ examples:
+             reg = <0xffd80000 0x30>;
+             interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
+                          <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+-                         <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++                         <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "tuni0", "tuni1", "tuni2", "ticpi2";
+             clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
+             clock-names = "fck";
+             power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
+-- 
+2.34.1
 
---G4dIpqmRG0duvBE0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbpw/AAKCRB4tDGHoIJi
-0kuxAP9L5NyTrY0gnYlNY5TKeYQVjvpJcrsKdkdNiyFCpnjlgQD/cIOPTZUVf3Ns
-BJYUPoowiN6VqIj9snqVCmoG8Ph2nQE=
-=SEyq
------END PGP SIGNATURE-----
-
---G4dIpqmRG0duvBE0--
