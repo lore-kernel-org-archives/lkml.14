@@ -1,145 +1,262 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10C93EA76
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 19:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8903EA7B;
+	Wed, 31 Jan 2024 19:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706730688; cv=none; b=FT5saKFaRwXjxQoSfTaThBhrARp4xE5GGyjlVL/87qOC0NeZR6viG6qQ3/f4ZNZZZ07rUM56NDpsfJrMcJSJ/P1XC0bi79qSgBjtflQpJEuWeVJ164qIspNZOAjToVSs/EFpar4Az9vZ5SxyNTibQcTmpjFBjoeVkqB2oE5HiZw=
+	t=1706730704; cv=none; b=dYJ1fJDWwy33sAb/PB8YWZHYm+X7tBpZ+GCSyybHObh6/URdyzIp3+z1E0qkTZuuiHxBqDcZrrxf1eQW7MeJO8y6mxdFxaL9exQXYl8pktZsjmrjCMuKC+UU13lYuchM7jObZ66qWUQLzuCQWOjUieZPM41tne71JXDV1s0+KJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706730688; c=relaxed/simple;
-	bh=8ZnEORlLbsizKlPFacpTEd7KUr01nxGRz1weMm3NKU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D8I9F7keTSFL25oSCN6tBqr//1KI2bYrEpbcgtxvXs6GFdRXCdGjjg9nReGFJ/q9Pg+kYiVVPr3lOc8p3jyMIZ2eCSGhCevknsed/vb8KFEJDvmSsWqlsbPPgBXE+CymWnUIfWzMjW4Rh5PAaVQ/UpHyZ4Zj/hcjV8tdW5dVCp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T/dFGNq0; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T/dFGNq0"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6040e7ebf33so1086017b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 11:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706730686; x=1707335486; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OZWFUz0qVhfYcOd6k65WaS5iTo9NPz5WXjPmrZMzV94=;
-        b=T/dFGNq0WcdpJ8au0TejcD/HB7cCpK/wY7Hh9ihq3CYW/CeF/VEzqE0hnh82x/775/
-         ve/FgS+ZFl5lqOSDbsJ9xHiAy8SjOF08IbmH4kML/Fi/9b972bjVhj3Ir9P78jlRlqwB
-         LqFXt8gBcH24MLVofYOhHWQuM9GnkYJCXkiPEvlm7dfTz5PEunlEZxR+e9MKczcIgvzI
-         pigD8UXOES3mkzgR69IuikmtiL14yAkMa814mPQgJX2PqP4mIRu3C8POd1oVBLTtA40M
-         nDQSPMHczkEF/ZYP2X5dJBmHxLpyOZ1DmbutK5EImqdEPOXGH8lETAwqLeVQgqH05Ixm
-         rR3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706730686; x=1707335486;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OZWFUz0qVhfYcOd6k65WaS5iTo9NPz5WXjPmrZMzV94=;
-        b=b5fu/PJt+/X3/zhnj+wlOlGy21XQ0whyH3KcQHlUHRxK5j8POGNuFtuZUq11TllIbi
-         EwiTKxEepPsw4xuQatAv0tsYn5h6ZCNR/eNnHgF8+V4YxcK7NpHr4QSdUwFz8sJhHGc/
-         4jVa8JfiPhOfpfmUZmyQQ/+IQKyx8ypOmYD+ZFi82YhQuZH9ixmdJfHVInC5GToaAcCr
-         eVcZ7+kgApGVYgUXlDAovVf4aU57lPpPE+qaDElGMliHE8o/UAivQC1RjrLUqPZT1kF7
-         pkLnTBB/FKv1PIpuQOEiDOZYTs1BForGkXQd8gXthU7rcCoP64Q4zncSD/VFA85RM+cI
-         07ng==
-X-Gm-Message-State: AOJu0YyZKDWycedC4OMJEJSS9aqtr09bFO5O5VhC1hKXZbZumJzvHVFY
-	9XBv1VRtmODO60CGU1RmhFdlSqoxwyNFDBoBi5Xe7gC13vW/ayZJ1HrmTgRO/i6h02JLTfdlWF+
-	Q9+FsAtEEwKnjgtx4QqECMdU1/9i4IUkZ372erg==
-X-Google-Smtp-Source: AGHT+IGs/NmCuCnWWnRTFZmUjiYjl0D9360SAO7l1FGiKCPViEqEv3tl91ectKTgOG2KW8co04hic15sCAz9DuoRn/A=
-X-Received: by 2002:a81:a0c3:0:b0:604:fd3:e656 with SMTP id
- x186-20020a81a0c3000000b006040fd3e656mr1407309ywg.19.1706730685631; Wed, 31
- Jan 2024 11:51:25 -0800 (PST)
+	s=arc-20240116; t=1706730704; c=relaxed/simple;
+	bh=M6wSqmB0Z4qDqXRKTry7u9uVyCw99+NA5tEi+4ltQBU=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QRGU4hM5vn2UuOf06Q0xpWAf7BLZsGuMy7KObnWcY15bueDiz7IExhFcFKNDUOHOWGlcU1EM+BZwhTklm9RT+a4C6Cj8iMU+abOqNJa+z/fs5uvm/YaX9KeY1Wj6nsf1mFTfNkIOAoRfxvtvS3CQLGyX48FudRFt1ZP/ekOSZoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (31.173.81.146) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 31 Jan
+ 2024 22:51:29 +0300
+Subject: Re: [PATCH net-next v5 08/15] net: ravb: Move the IRQs
+ getting/requesting in the probe() method
+To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<richardcochran@gmail.com>, <p.zabel@pengutronix.de>,
+	<geert+renesas@glider.be>
+CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>
+References: <20240131084133.1671440-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240131084133.1671440-9-claudiu.beznea.uj@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <5536e607-e03b-f38e-2909-a6f6a126ff0d@omp.ru>
+Date: Wed, 31 Jan 2024 22:51:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-10-brgl@bgdev.pl>
-In-Reply-To: <20240130124828.14678-10-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 20:51:14 +0100
-Message-ID: <CACRpkdY8v2x6VzRnEV6baa4_XLGLm0BOe6Nj6wzjujHxqEDHVA@mail.gmail.com>
-Subject: Re: [PATCH 09/22] gpio: remove gpio_lock
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240131084133.1671440-9-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/31/2024 19:37:01
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 183090 [Jan 31 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.81.146 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.81.146
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 01/31/2024 19:42:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 1/31/2024 10:54:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+   I said the subject needs to be changed to "net: ravb: Move getting/requesting IRQs in
+the probe() method", not "net: ravb: Move IRQs getting/requesting in the probe() method".
+That's not very proper English, AFAIK! =)
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> The "multi-function" gpio_lock is pretty much useless with how it's used
-> in GPIOLIB currently. Because many GPIO API calls can be called from all
-> contexts but may also call into sleeping driver callbacks, there are
-> many places with utterly broken workarounds like yielding the lock to
-> call a possibly sleeping function and then re-acquiring it again without
-> taking into account that the protected state may have changed.
->
-> It was also used to protect several unrelated things: like individual
-> descriptors AND the GPIO device list. We now serialize access to these
-> two with SRCU and so can finally remove the spinlock.
->
-> There is of course the question of consistency of lockless access to
-> GPIO descriptors. Because we only support exclusive access to GPIOs
-> (officially anyway, I'm looking at you broken
-> GPIOD_FLAGS_BIT_NONEXCLUSIVE bit...) and the API contract with providers
-> does not guarantee serialization, it's enough to ensure we cannot
-> accidentally dereference an invalid pointer and that the state we present
-> to both users and providers remains consistent. To achieve that: read the
-> flags field atomically except for a few special cases. Read their current
-> value before executing callback code and use this value for any subsequen=
-t
-> logic. Modifying the flags depends on the particular use-case and can
-> differ. For instance: when requesting a GPIO, we need to set the
-> REQUESTED bit immediately so that the next user trying to request the
-> same line sees -EBUSY.
->
-> While at it: the allocations that used GFP_ATOMIC until this point can
-> now switch to GFP_KERNEL.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 1/31/24 11:41 AM, Claudiu wrote:
 
-Neat!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> The runtime PM implementation will disable clocks at the end of
+> ravb_probe(). As some IP variants switch to reset mode as a result of
+> setting module standby through clock disable APIs, to implement runtime PM
+> the resource parsing and requesting are moved in the probe function and IP
+> settings are moved in the open function. This is done because at the end of
+> the probe some IP variants will switch anyway to reset mode and the
+> registers content is lost. Also keeping only register settings operations
+> in the ravb_open()/ravb_close() functions will make them faster.
+> 
+> Commit moves IRQ requests to ravb_probe() to have all the IRQs ready when
+> the interface is open. As now IRQs getting/requesting are in a single place
 
-(I'm sorry about NONEXCLUSIVE, let's see what we can do about it...)
+   Again, "getting/requesting IRQs is done"...
 
-> @@ -578,6 +577,9 @@ int gpiod_export(struct gpio_desc *desc, bool directi=
-on_may_change)
->                 return -EINVAL;
->         }
->
-> +       if (!test_and_set_bit(FLAG_EXPORT, &desc->flags))
-> +               return -EPERM;
+> there is no need to keep intermediary data (like ravb_rx_irqs[] and
+> ravb_tx_irqs[] arrays or IRQs in struct ravb_private).
+> 
+> In order to avoid accessing the IP registers while the IP is runtime
+> suspended (e.g. in the timeframe b/w the probe requests shared IRQs and
+> IP clocks are enabled) in the interrupt handlers were introduced
 
-This exit early split off from the big if() below (which is good) is
-a new thing right? Maybe mention this in the commit message?
+   But can't we just request our IRQs after we call pm_runtime_resume_and_get()?
+We proaobly can... but then again, we call pm_runtime_put_sync() in the remove()
+method before the IRQs are freed...  So, it still seems OK that we're adding
+pm_runtime_active() calls to the IRQ handlers in this very patch, not when we'll
+start calling the RPM APIs in the ndo_{open|close}() methods, correct? :-)
 
-> -/* gpio_lock prevents conflicts during gpio_desc[] table updates.
-> - * While any GPIO is requested, its gpio_chip is not removable;
-> - * each GPIO's "requested" flag serves as a lock and refcount.
-> - */
-> -DEFINE_SPINLOCK(gpio_lock);
+> pm_runtime_active() checks. The device runtime PM usage counter has been
+> incremented to avoid disabling the device's clocks while the check is in
+> progress (if any).
+> 
+> This is a preparatory change to add runtime PM support for all IP variants.
+> 
+> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+[...]
 
-GOOD RIDDANCE.
+> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+> index e70c930840ce..f9297224e527 100644
+> --- a/drivers/net/ethernet/renesas/ravb_main.c
+> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+[...]
+> @@ -1092,11 +1082,23 @@ static irqreturn_t ravb_emac_interrupt(int irq, void *dev_id)
+>  {
+>  	struct net_device *ndev = dev_id;
+>  	struct ravb_private *priv = netdev_priv(ndev);
+> +	struct device *dev = &priv->pdev->dev;
+> +	irqreturn_t result = IRQ_HANDLED;
+> +
+> +	pm_runtime_get_noresume(dev);
+> +
 
-> -               /* FIXME: make this GFP_KERNEL once the spinlock is out. =
-*/
-> -               new =3D kstrdup_const(label, GFP_ATOMIC);
-> +               new =3D kstrdup_const(label, GFP_KERNEL);
+   Not sure we need en empty line here...
 
-And all of this is neat as well.
+> +	if (unlikely(!pm_runtime_active(dev))) {
+> +		result = IRQ_NONE;
+> +		goto out_rpm_put;
+> +	}
+>  
+>  	spin_lock(&priv->lock);
+>  	ravb_emac_interrupt_unlocked(ndev);
+>  	spin_unlock(&priv->lock);
+> -	return IRQ_HANDLED;
+> +
+> +out_rpm_put:
+> +	pm_runtime_put_noidle(dev);
+> +	return result;
+>  }
+>  
+>  /* Error interrupt handler */
+> @@ -1176,9 +1178,15 @@ static irqreturn_t ravb_interrupt(int irq, void *dev_id)
+>  	struct net_device *ndev = dev_id;
+>  	struct ravb_private *priv = netdev_priv(ndev);
+>  	const struct ravb_hw_info *info = priv->info;
+> +	struct device *dev = &priv->pdev->dev;
+>  	irqreturn_t result = IRQ_NONE;
+>  	u32 iss;
+>  
+> +	pm_runtime_get_noresume(dev);
+> +
 
-Someone might complain about splitting that in a separate patch,
-but not me because I don't care so much about such processy
-things. (The patchset is already split enough as it is.)
+   And here...
 
-Yours,
-Linus Walleij
+> +	if (unlikely(!pm_runtime_active(dev)))
+> +		goto out_rpm_put;
+> +
+>  	spin_lock(&priv->lock);
+>  	/* Get interrupt status */
+>  	iss = ravb_read(ndev, ISS);
+[...]
+> @@ -1230,9 +1241,15 @@ static irqreturn_t ravb_multi_interrupt(int irq, void *dev_id)
+>  {
+>  	struct net_device *ndev = dev_id;
+>  	struct ravb_private *priv = netdev_priv(ndev);
+> +	struct device *dev = &priv->pdev->dev;
+>  	irqreturn_t result = IRQ_NONE;
+>  	u32 iss;
+>  
+> +	pm_runtime_get_noresume(dev);
+> +
+
+   Here too...
+
+> +	if (unlikely(!pm_runtime_active(dev)))
+> +		goto out_rpm_put;
+> +
+>  	spin_lock(&priv->lock);
+>  	/* Get interrupt status */
+>  	iss = ravb_read(ndev, ISS);
+[...]
+> @@ -1261,8 +1281,14 @@ static irqreturn_t ravb_dma_interrupt(int irq, void *dev_id, int q)
+>  {
+>  	struct net_device *ndev = dev_id;
+>  	struct ravb_private *priv = netdev_priv(ndev);
+> +	struct device *dev = &priv->pdev->dev;
+>  	irqreturn_t result = IRQ_NONE;
+>  
+> +	pm_runtime_get_noresume(dev);
+> +
+
+   Here as well...
+
+> +	if (unlikely(!pm_runtime_active(dev)))
+> +		goto out_rpm_put;
+> +
+>  	spin_lock(&priv->lock);
+>  
+>  	/* Network control/Best effort queue RX/TX */
+[...]
+> @@ -2616,6 +2548,90 @@ static void ravb_parse_delay_mode(struct device_node *np, struct net_device *nde
+>  	}
+>  }
+>  
+> +static int ravb_setup_irq(struct ravb_private *priv, const char *irq_name,
+> +			  const char *ch, int *irq, irq_handler_t handler)
+> +{
+> +	struct platform_device *pdev = priv->pdev;
+> +	struct net_device *ndev = priv->ndev;
+> +	struct device *dev = &pdev->dev;
+> +	const char *dev_name;
+> +	unsigned long flags;
+> +	int error;
+> +
+> +	if (irq_name) {
+> +		dev_name = devm_kasprintf(dev, GFP_KERNEL, "%s:%s", ndev->name, ch);
+> +		if (!dev_name)
+> +			return -ENOMEM;
+> +
+> +		*irq = platform_get_irq_byname(pdev, irq_name);
+> +		flags = 0;
+> +	} else {
+> +		dev_name = ndev->name;
+> +		*irq = platform_get_irq(pdev, 0);
+> +		flags = IRQF_SHARED;
+
+   Perhaps it's worth passing flags as a parameter here instead?
+
+> +	}
+> +	if (*irq < 0)
+> +		return *irq;
+> +
+> +	error = devm_request_irq(dev, *irq, handler, flags, dev_name, ndev);
+> +	if (error)
+> +		netdev_err(ndev, "cannot request IRQ %s\n", dev_name);
+> +
+> +	return error;
+> +}
+[...]
+
+MBR, Sergey
