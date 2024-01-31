@@ -1,104 +1,82 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDE63613E;
-	Wed, 31 Jan 2024 19:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38D92110B;
+	Wed, 31 Jan 2024 19:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706727827; cv=none; b=H6GJISbsnI/QybB0R8jze0QrlEqJXyum78dVPgEFHZGOVORuqNPjVive3PEYCt8j8jfC6PA6TRZiIVuBUAj5zryipReLDjXnTxjoymfFffjkGVtpLhFTKUKbbLJmoO1rov46nfDaFjvSPuzUqpQkUqzaZNELX0yS8JYfU+98vqg=
+	t=1706727865; cv=none; b=llXk0FzHKu09Q+My1EQ26kMo2c7vwZrai1RT7YWl7le2jM50WSTn+Rv0WKae2QY6Zx0l+lXFs7k7fQOaTeVDdmIgrQMIU5F2Ny0ePovuMhCEpiYdGJvh45M/csoWm0D75QAjmFh8oIUQabPuaogemIz+4WmE911tPtmLzR7cKRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706727827; c=relaxed/simple;
-	bh=UXmrc4wHW1CYloxZDq3S33BFNdKy0XymGy38w6L2Lpk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gDVqclDyVtaowCWBEUewQz+cw0z1PaKgE3SR+lmME9etpG/TtaBZS4uCI6jk97J+Ua2IasxD9F0Hc44jvTqfyl5ftEcuATit3LqXIJAgSlE2MkE3RT07Wq48sPDPt51icccu6lqqEDJ1XrHVlY8rk/u3OWJGKQv6KNP3Jg7vl2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YaB8JCQk; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706727865; c=relaxed/simple;
+	bh=ZFaDRFvyJi8lc9H2xeHHqn2J0lyfMDKKkZt/RaDQJyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NjR05bm/OkPsGhT1Zlrs2zZWUnAfRDNMYKOYWElmz/SqpqM3qIPReQk2dp4IAddmrSufCdinU4DRSxnY4KlfMGelKBxOYOXqwanI+CK09v8LAAkKKjCB1mJr3UImaXTZ61f3IljOE/5bvI7witoOQthiPQ6vIO5MTIe8XPfDGxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPQZLRAN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaB8JCQk"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d057b6df2aso2321061fa.3;
-        Wed, 31 Jan 2024 11:03:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706727824; x=1707332624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCHcg1JGhJ1uDn0/KCMDkISefHyEiFXm2OiWCo3MPgk=;
-        b=YaB8JCQkbrytj6fAYLEnEcgzz7LT/WlZF5qrgL288Ef3iRNlh1F44h1x1WGQdGZBuc
-         sCQ4fCjlN1KCaYZppcYIQ2LD6YrC60OYAcUC2/rn9oJTAVJAxbOys/ab9/mAYSPE0phl
-         Ew3+IpP/YTfhyuIfFjJLcRcxeLpkCKMXiH/F8rae2VtdrJ45HKlpIhbDIohxoVfGibNr
-         S4kcyLzulFYZlxMiiStMq6m/z5TQHar4xH+WNOu3nGJmnH1kTt0Z0S7qi0SlBi/uQeiw
-         nPiU6ok9Ks1sxXShH/S9XKWhZ05ncGWkAtPNnMCfVaLbl/qUsPZHBWQCVb7EM9s9ziaK
-         FOxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706727824; x=1707332624;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uCHcg1JGhJ1uDn0/KCMDkISefHyEiFXm2OiWCo3MPgk=;
-        b=nGO7RAmw6/WVgZGd3+YgweBMFCdPhEOMtymcx6VGsnhL8BqWtiFarcBozl168QSt2i
-         iJcEC1sBfZNgsOjYw67Tf2u5fIOZWV0eC5QjYXkFYmHfKDYXyXrOwJD6XfDHxlq5mLZV
-         HwN/YP83CKWcDx6zh4B05bODQux4EFyPnH61UO1HeygYWf9zDuGUrSaEIKtZ2wyfUt7r
-         oVwiM+dvOAlVM2Pv1XfVfXeW/WSNbgIhfkL9YmfwMvQvlcxDD1lBKbKF9Cqxtj9VgBNA
-         YOTUKnaH4RLSK1DkNisFT7EnVrwSBOJZYMNCGRb5oQ4lncoVlkvL66OqyFhGvCvL7/bv
-         rAlg==
-X-Gm-Message-State: AOJu0YwxwnEckRe9Xuuz1nEBKcINveMMrlg5gzO5sGvVffRqEvnnj2ap
-	8cjSbfMolKIVGN6Np17UgW+5dHOSN8PK7XezXYa84CNoB18O8yde
-X-Google-Smtp-Source: AGHT+IFxO0UJx1CWcR7R0seQ2GoGKXK2HU6HjdCH7+nqBD0RdIAd7Gm8gdPifuWXAJwepiEiI/HaSA==
-X-Received: by 2002:a2e:6817:0:b0:2cf:159e:d401 with SMTP id c23-20020a2e6817000000b002cf159ed401mr1766472lja.36.1706727823354;
-        Wed, 31 Jan 2024 11:03:43 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWkQyUqdEVyHuJ139U8yx76A/GLneo5P9W85xtd5CCIfd3DqSQ4Ikxmunm44Hp49LxHm3OsbPTFNoJgxVNoDByQyAyVDphTVCfjV49UQSAwks61TGDzBZDE4pTcFZScDLFoZas2EMzzx0D3b2NLVJpd8XZW4DvQaGHXL74N1TvBFqKV18ef
-Received: from localhost.localdomain ([77.222.24.25])
-        by smtp.gmail.com with ESMTPSA id n2-20020a2e86c2000000b002d06a953a37sm323870ljj.138.2024.01.31.11.03.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 11:03:42 -0800 (PST)
-From: Andrew Kanner <andrew.kanner@gmail.com>
-To: mcgrof@kernel.org
-Cc: linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hch@lst.de,
-	mchehab@kernel.org,
-	Andrew Kanner <andrew.kanner@gmail.com>
-Subject: [PATCH v1] module.h: define __symbol_get_gpl() as a regular __symbol_get()
-Date: Wed, 31 Jan 2024 22:02:52 +0300
-Message-Id: <20240131190251.4668-1-andrew.kanner@gmail.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPQZLRAN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4739CC433C7;
+	Wed, 31 Jan 2024 19:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706727863;
+	bh=ZFaDRFvyJi8lc9H2xeHHqn2J0lyfMDKKkZt/RaDQJyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oPQZLRANymnanJEmVrcU1z5hwoMHQ0uiQ2OuD0i/eugGPZiRSQKYKEElVSkQjwfOm
+	 AhyvdcTA/3byabyI6bqeTnoCEow1gajhWprTieKkGfmDN4xPtujfzzK5RDHXYViMK6
+	 8XYYZvWVJp9jXvAeqnp++2o060/zCZyzHU5nXvzkNeg+NBAAWGfBQs44WlljopfwzJ
+	 SYaUNOonI+e0L070SLPY9sVzL3lbT9tE8iHo/b1Tw0CvwdpbPcdiGo9I4ob4c1TQcQ
+	 UfzSFeOUwFK7PHNzyZFsMrDISII7Xf0HyPYVqBK8J3GwNBkyAjg+U4YF4EHYNNkiW1
+	 wpa3Xx+dtRPNA==
+Date: Wed, 31 Jan 2024 13:04:21 -0600
+From: Rob Herring <robh@kernel.org>
+To: Charles Hsu <ythsu0511@gmail.com>
+Cc: krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	jdelvare@suse.com, linux@roeck-us.net, corbet@lwn.net,
+	Delphine_CC_Chiu@wiwynn.com, naresh.solanki@9elements.com,
+	peteryin.openbmc@gmail.com, patrick.rudolph@9elements.com,
+	alexander.stein@ew.tq-group.com, lakshmiy@us.ibm.com,
+	bhelgaas@google.com, michal.simek@amd.com, lukas@wunner.de,
+	festevam@denx.de, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	ytshu0511@gmail.com
+Subject: Re: [PATCH v2] hwmon: Add driver for MPS MPQ8785 Synchronous
+ Step-Down Converter
+Message-ID: <20240131190421.GA2119523-robh@kernel.org>
+References: <20240129083115.2107466-1-ythsu0511@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129083115.2107466-1-ythsu0511@gmail.com>
 
-Prototype for __symbol_get_gpl() was introduced in the initial git
-commit 1da177e4c3f4 ("Linux-2.6.12-rc2"), but was not used after that.
+On Mon, Jan 29, 2024 at 04:31:15PM +0800, Charles Hsu wrote:
+> Add support for mpq8785 device from Monolithic Power Systems, Inc.
+> (MPS) vendor. This is synchronous step-down controller.
+> 
+> Signed-off-by: Charles Hsu <ythsu0511@gmail.com>
+> 
+> ---
+> Change in v1:
+>     Initial patchset.
+> Change in v2:
+>     1.Add pmbus support status registers.
+>     2.Add mpq8785 in trivial-devices.yaml.
+>     3.Remove format[PSC_VOLTAGE_OUT]
+>     4.Fix MODULE_DESCRIPTION
+> ---
+>  .../devicetree/bindings/trivial-devices.yaml  |  2 +
 
-In commit 9011e49d54dc ("modules: only allow symbol_get of
-EXPORT_SYMBOL_GPL modules") Christoph Hellwig switched __symbol_get()
-to process GPL symbols only, most likely this is what
-__symbol_get_gpl() was designed to do.
+Bindings are a separate patch. checkpatch.pl will tell you this.
 
-We might either define __symbol_get_gpl() as __symbol_get() or remove
-it completely as suggested by Mauro Carvalho Chehab.
-
-Link: https://lore.kernel.org/lkml/5f001015990a76c0da35a4c3cf08e457ec353ab2.1652113087.git.mchehab@kernel.org/
-Signed-off-by: Andrew Kanner <andrew.kanner@gmail.com>
----
- include/linux/module.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 96bc462872c0..8a660c81ac3d 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -299,7 +299,7 @@ struct notifier_block;
- extern int modules_disabled; /* for sysctl */
- /* Get/put a kernel symbol (calls must be symmetric) */
- void *__symbol_get(const char *symbol);
--void *__symbol_get_gpl(const char *symbol);
-+#define __symbol_get_gpl(x) (__symbol_get(x))
- #define symbol_get(x) ((typeof(&x))(__symbol_get(__stringify(x))))
- 
- /* modules using other modules: kdb wants to see this. */
--- 
-2.39.3
-
+>  Documentation/hwmon/index.rst                 |  1 +
+>  Documentation/hwmon/mpq8785.rst               | 94 +++++++++++++++++++
+>  drivers/hwmon/pmbus/Kconfig                   |  9 ++
+>  drivers/hwmon/pmbus/Makefile                  |  1 +
+>  drivers/hwmon/pmbus/mpq8785.c                 | 62 ++++++++++++
+>  6 files changed, 169 insertions(+)
+>  create mode 100644 Documentation/hwmon/mpq8785.rst
+>  create mode 100644 drivers/hwmon/pmbus/mpq8785.c
