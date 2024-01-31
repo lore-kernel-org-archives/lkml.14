@@ -1,137 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000A260885;
-	Wed, 31 Jan 2024 09:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508BC60B92;
+	Wed, 31 Jan 2024 09:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706692928; cv=none; b=J8UJQ5KBv7R7jCcenqwVp4qz+5O1XFaVcfJap4fz6IhcQI5zaQNECnfagKWT/O+8HJYjskkyJLiWA8+zMc8M0nVveTzJmz7tdBhVqaDR+3v0+IcTj5MrZANH7JGMK3cY3246j4ZZyjJZGRPDhdfFRbCgEVBZqEBPC9cfy+snBYE=
+	t=1706692948; cv=none; b=uLiH5vydtaUCxjcUjHm5nY7XOwutTl3vx5+aGL/2cyvm2YelJredUn9/RNnmFPD3avPvf2sDPpA/nOr25I22lTtRK4hrl8MxxQxEPWucBtf0rAyqOZp5uzO5kTqz2hwg3adsxE0f0qDNVR3zgbBXhOXSXIq2q4IZhKjTQY1pXzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706692928; c=relaxed/simple;
-	bh=CIUpGUXPv7s5EVwneVuhL8R9G3KLULjDTGG/TKf9KI0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C9bZLv4lchSpi5+CYuxQyK7QyqMP3rgimvDaz+cNzAdEM2NpuhRPiqzax3/H24hfWVwEs2/y5j+qzHpgBTcpHXdtn97038XWgNAQco8R5rCiDLD8fH1W3ZQEfKcEXK+sH5v9n4GLyiJQy/sCv2xZl3bEKXdzswxBKa3at8uTfUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wohi/Frx; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706692948; c=relaxed/simple;
+	bh=7uCNS8ZF/Auzjom6uu9TsSxTk/2Jclq1JY93w1lCN+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TUvvVTcjwfZYVhR+pOhmP9yciaJLLqRUFZRhd1Bw/vOInSkiWd9UMB5S8cyD96FI/4JzRgUVCoh4Uy+njJWp5x64JYvFKJziV0+HwZB/vjsRPRkLSZHtcuvZOlvn4FKCNRWgfRCc/nokybmUGozl7eDFNDzsgGAG25Vr+B7Pcq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODfvF77J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wohi/Frx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706692927; x=1738228927;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=CIUpGUXPv7s5EVwneVuhL8R9G3KLULjDTGG/TKf9KI0=;
-  b=Wohi/FrxDs8Yw8IVCJP877C7l70mB6IXxfzpTxQsRRncNWkrsxzmckIO
-   7hucbdRJQ72RB5VUtwJpNV+LbLL5jG9qZHTR0QfUi+sG0prPe5HPLCqlS
-   cgCSa998yKOmK9ofOdrrMSCj1x9NmrtdhXYGAtK0DXiGXwzE3o7ZR/cNm
-   UqkZlfWrzaUdno3VdwOejzNtCjUYWH2yLs4OBgPqatu09Y7CVBKiPpHVF
-   Hp0GRlGh49HrNQDxwMtmcrjQJ/rxuSka88NLXrgwub1bnEpEs6dXzvOpl
-   6Lx5tiBAbMiS/JGprmhHDUHa++nfXxdIVo3zypXJ1iKUPO9MRo8TeQmqc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="2480966"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="2480966"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 01:21:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="738034755"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="738034755"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 01:21:47 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-doc@vger.kernel.org>,
-  <linux-fsdevel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
-  <corbet@lwn.net>,  <akpm@linux-foundation.org>,  <honggyu.kim@sk.com>,
-  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <mhocko@kernel.org>,
-  <vtavarespetr@micron.com>,  <jgroves@micron.com>,
-  <ravis.opensrc@micron.com>,  <sthanneeru@micron.com>,
-  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
-  <seungjun.ha@samsung.com>,  <hannes@cmpxchg.org>,
-  <dan.j.williams@intel.com>,  Srinivasulu Thanneeru
- <sthanneeru.opensrc@micron.com>
-Subject: Re: [PATCH v4 3/3] mm/mempolicy: introduce MPOL_WEIGHTED_INTERLEAVE
- for weighted interleaving
-In-Reply-To: <Zbn6FG3346jhrQga@memverge.com> (Gregory Price's message of "Wed,
-	31 Jan 2024 02:43:16 -0500")
-References: <20240130182046.74278-1-gregory.price@memverge.com>
-	<20240130182046.74278-4-gregory.price@memverge.com>
-	<877cjqgfzz.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<Zbn6FG3346jhrQga@memverge.com>
-Date: Wed, 31 Jan 2024 17:19:51 +0800
-Message-ID: <87y1c5g8qw.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODfvF77J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8658C433F1;
+	Wed, 31 Jan 2024 09:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706692947;
+	bh=7uCNS8ZF/Auzjom6uu9TsSxTk/2Jclq1JY93w1lCN+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ODfvF77JGkLF6m2DYd8w4dtVVoq8y4oQ3c0J7SinxA3QB2AomQRAFOb9+UqdhPq2n
+	 +NCC8ZUPMnmhKSERKIuJPR7ImNcxNWZOmMREkoW0DjYB7JVj8XQ53C8KlWKC5vMWjY
+	 scy7aeDWZfp0xqIDYC5Vr4flWWf9YMnrNkvHCzusXPZTmAtDQP0+mwY7SK+X5NN25X
+	 +ReBfjRTJJkKlVsJh1phTx7fFkL/4toVdT81qjNRdF4Cx/zuek4vxvz8db/OASwgrB
+	 8NsI0Ndq6T0y26CshkpiNMVxXX7EQkg8l/K5CxaqDEJK/cAsJx/KcIh1TtQylIIQ98
+	 mL3o2/wkNC+PQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rV6na-000000005OG-07PB;
+	Wed, 31 Jan 2024 10:22:26 +0100
+Date: Wed, 31 Jan 2024 10:22:26 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Puliang Lu <puliang.lu@fibocom.com>
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: add Fibocom FM101-GL variant
+Message-ID: <ZboRUjTnovX871ht@hovoldconsulting.com>
+References: <20240131091224.30064-1-puliang.lu@fibocom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131091224.30064-1-puliang.lu@fibocom.com>
 
-Gregory Price <gregory.price@memverge.com> writes:
+On Wed, Jan 31, 2024 at 05:12:24PM +0800, Puliang Lu wrote:
+> Update the USB serial option driver support for the Fibocom
+> FM101-GL
+> LTE modules as there are actually several different variants.
+> - VID:PID 2cb7:01a3, FM101-GL are laptop M.2 cards (with
+> MBIM interfaces for /Linux/Chrome OS)
 
-> On Wed, Jan 31, 2024 at 02:43:12PM +0800, Huang, Ying wrote:
->> Gregory Price <gourry.memverge@gmail.com> writes:
->> >  
->> > +static unsigned int weighted_interleave_nodes(struct mempolicy *policy)
->> > +{
->> > +	unsigned int node = current->il_prev;
->> > +
->> > +	if (!current->il_weight || !node_isset(node, policy->nodes)) {
->> > +		node = next_node_in(node, policy->nodes);
->> > +		/* can only happen if nodemask is being rebound */
->> > +		if (node == MAX_NUMNODES)
->> > +			return node;
->> 
->> I feel a little unsafe to read policy->nodes at same time of writing in
->> rebound.  Is it better to use a seqlock to guarantee its consistency?
->> It's unnecessary to be a part of this series though.
->> 
->
-> I think this is handled already? It is definitely an explicit race
-> condition that is documented elsewhere:
->
-> /*
->  * mpol_rebind_policy - Migrate a policy to a different set of nodes
->  *
->  * Per-vma policies are protected by mmap_lock. Allocations using per-task
->  * policies are protected by task->mems_allowed_seq to prevent a premature
->  * OOM/allocation failure due to parallel nodemask modification.
->  */
+Applied, thanks.
 
-Thanks for pointing this out!
-
-If we use task->mems_allowed_seq reader side in
-weighted_interleave_nodes() we can guarantee the consistency of
-policy->nodes.  That may be not deserved, because it's not a big deal to
-allocate 1 page in a wrong node.
-
-It makes more sense to do that in
-alloc_pages_bulk_array_weighted_interleave(), because a lot of pages may
-be allocated there.
-
-> example from slub:
->
-> do {
-> 	cpuset_mems_cookie = read_mems_allowed_begin();
-> 	zonelist = node_zonelist(mempolicy_slab_node(), pc->flags);
-> 	...
-> } while (read_mems_allowed_retry(cpuset_mems_cookie));
->
-> quick perusal through other allocators, show similar checks.
->
-> page_alloc.c  -  check_retry_cpusetset()
-> filemap.c     -  filemap_alloc_folio()
->
-> If we ever want mempolicy to be swappable from outside the current task
-> context, this will have to change most likely - but that's another
-> feature for another day.
->
-
---
-Best Regards,
-Huang, Ying
+Johan
