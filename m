@@ -1,99 +1,300 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8891479938;
-	Wed, 31 Jan 2024 12:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703757690E
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 12:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706703956; cv=none; b=phvaHaEcwLKqBV2fiNoGuOD/ucxEQvoY0bd+Xy23s5ZZ64kfb2y2C/ODJBwmEDlyjAw59+ezHOsO1YuwIa2ocu2mVgmeSqAwBsuecNLLAeWLmV+AfPCbjnHGW5hUWIeOnqZakIQNyARAGkx8R9qcC60VaD/4DTOVOOh+AAAwAXE=
+	t=1706703969; cv=none; b=fjQnVPqik79ABCp+7ZGqx8Bd9o0fEnOyJkc/PzpZSlLxNjoEA9rXiP5faI9ZOrDGPB/CoXr3LxOgXpJf31Yfn+AGtBEM/FbA7MvSZLB1pi7DmYnCWUxECW6/F8aeh1FuVI3GvN0TyD/GTcBK4Do3fn6ur1dFdA7uQjg3HRwb1i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706703956; c=relaxed/simple;
-	bh=97FSX4oU5s9ZlUZoIaV1rFcSltgv+fl+Z/Ia3ZsihrQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jdgpoiukA4FV2jxJ4idtvsyjbiE5U9LLtO5VxEEPlNbG0ecZljKTvoEjT51/r27YjA8Q4j7oOxXVSqzJC1soqCnrnaOPm1d6VWkfWY4+Ha035OXis+IdrEVNepm27wmE/c3RWPEX/a/Lb8mSGoElS4W7AR+6ty9yNtKWv8LYFTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PS8Lt+3J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706703969; c=relaxed/simple;
+	bh=P2snzUQaV78T2UXte2q2QP64eJ4+iF8/LbiWUxjGA0I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OeDWOAqWcBJWnoUN+80ay3M81sgZIrz4v3ip/4hWQGXTkz2zrVHIZppszAnRAII3k4AL3u4KNwsaXABg5COUbZ7s/iWKTiOHQK9YUhwY9QLSL404ZR9wh10ARoPQtwVUfGTE2QAfEq1W9mogTQdg2PqfdsrXiEWNYdToMTDPCVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hok1Zh06; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PS8Lt+3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAD9C43390;
-	Wed, 31 Jan 2024 12:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706703956;
-	bh=97FSX4oU5s9ZlUZoIaV1rFcSltgv+fl+Z/Ia3ZsihrQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PS8Lt+3J3Xs0kHh+rJD0hfTP0DSeJUPH7CN4ilOfxfaxEBTtABTQKFhU1Vt6Fpl2h
-	 SXSdHDwsTGoxoDqLkFJctSVVpGe6bcg8D+ruZJSMQ9FtOZvbd2j6ArIUmJTydEP6Vq
-	 EtyOYy0RIbZaKV+hZb32fZ/s5BBWwSM3KYRey7qNdeHvVKj0KOC2C77zkelgMAGfM6
-	 f1BcJFsEuDj8878ZiNGUZ8oz51mPpdupW5+NYpRewfsMIkoqZRWfkwondppd3ymkBO
-	 vNd4nflHvdfxun1SphQ32VxWLLgyY6a49tQ2rU989y6BJ5OHpugMz8mm/PWTuiVa8W
-	 nJvTjeNIafLhA==
-From: Will Deacon <will@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	iommu@lists.linux.dev,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v2 3/3] swiotlb: Honour dma_alloc_coherent() alignment in swiotlb_alloc()
-Date: Wed, 31 Jan 2024 12:25:43 +0000
-Message-Id: <20240131122543.14791-4-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240131122543.14791-1-will@kernel.org>
-References: <20240131122543.14791-1-will@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hok1Zh06"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-603fdc46852so12295487b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 04:26:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706703965; x=1707308765; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lNAQWe7GlakSWDmg7q0hi9akDhI0G3cV17++87SbIMA=;
+        b=hok1Zh06MVNrr/F8umCt9mbhhYjWBKqF/Du6MdF2MPvXUJgBxHE26wuKOacUhMn7xb
+         tQUu6Gpi/N8X7GJQO2hUat3Ee2WutJA2SvJM6hGY7uf8ungzYvibwJmyC0kFgINbRdDv
+         EKmjAyDqrjYTNFEkQZsltOaOC+x/8x3kZeqK9sO33eTZu533ncETYlkU1ntO/p6hzOHT
+         Mj2NkGovtmeb5ekdrZrWwSq0dfMX22DevAXTbI0cNYRyKinnAIWrf+Rqtnx/8b05mz5M
+         WvM1XZrCyhq3/QSNNpsJQbZgh0XW8CYINAWjZdjoG41NaI6LQUolkZfMblQlczt1O0vr
+         vPgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706703965; x=1707308765;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lNAQWe7GlakSWDmg7q0hi9akDhI0G3cV17++87SbIMA=;
+        b=LfqjoU8MFMvo1EqctSGJU06EL8jyQg+FBxEnrsjSP3FAELzwhTWMRx/cUFlzL8MOEV
+         AI2AQumjt6wC/1R7Wj2fL4/SDSEV7SQ7XQmSPhTK5m5U3x+F5a8pOhwe6pc6VeY3BfCe
+         7NeHfZYihYsXCDQ+WWw0sQhrve1yAX60qGjmuxHqj8pPfx9Bkp0R4KZOWUANQ0CpXn52
+         a+4bQT0iMG38bpPip/pQbiJU8oOSpjkAPqt5x602Lgn9qhamCTLPbjGsY0MwX1uTNSIg
+         jiuSjqMvfk1p4DsEXekaG2mnyrJHISdM14/H4F5kPaGrTGKFebe6QtRu5tCtpmJ2IBZC
+         9tnw==
+X-Gm-Message-State: AOJu0YzPEd1XRfySY1xLtorgGtAQL8+iZUupBoqRKuWa9Gx99Xxtpeg/
+	+U/Ki/lbm64rNBzkg4Czv+MkA9Z8mjm8pmpu3PaDStlrFHQ6PqKOkDJprhiEGIBlBn9nh/TFGp9
+	QYnp4iczDGNyxjfLT20Mh9D5cQlwkI9LERD3GUw==
+X-Google-Smtp-Source: AGHT+IE4QdPfvM4LOGGKevW8OxSEANsb2HyagWTnfsuRpwSCL1XKO8bnNBygoLJTlT2T1b89u8q7/jm6oUOkngcwVcY=
+X-Received: by 2002:a81:b608:0:b0:5ff:b07b:fb0b with SMTP id
+ u8-20020a81b608000000b005ffb07bfb0bmr1223691ywh.49.1706703965301; Wed, 31 Jan
+ 2024 04:26:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240131102003.2061203-1-amadeus@jmu.edu.cn>
+In-Reply-To: <20240131102003.2061203-1-amadeus@jmu.edu.cn>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 31 Jan 2024 14:25:54 +0200
+Message-ID: <CAA8EJppDQAdnceYhL_=Di0n5j3W0F2+7ntpNMxpXBXgnYoh_uQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: ipq6018: separate CPU OPP tables
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-core-api/dma-api-howto.rst states the following properties of
-dma_alloc_coherent():
+On Wed, 31 Jan 2024 at 12:22, Chukun Pan <amadeus@jmu.edu.cn> wrote:
+>
+> Some IPQ6000 SoCs do not come with PMIC (MP5496) chip,
+> which causes cpufreq to be unavailable due to lack of
+> cpu-supply. Separate CPU OPP tables from soc.dtsi to
+> support versions with and without PMIC chip.
 
-  | The CPU virtual address and the DMA address are both guaranteed to
-  | be aligned to the smallest PAGE_SIZE order which is greater than or
-  | equal to the requested size.
+I went on and checked ipq6018.dtsi. It will need to be reworked before
+we can continue with PMIC-less devices.
 
-However, swiotlb_alloc() passes zero for the 'alloc_align_mask'
-parameter of swiotlb_find_slots() and so this property is not upheld.
-Instead, allocations larger than a page are aligned to PAGE_SIZE,
+Obviously, the PMIC is not a part of the SoC. So please move the
+"qcom,rpm-mp5496-regulators" node to the board files together with the
+cpu-supply properties that reference that regulator.
 
-Calculate the mask corresponding to the page order suitable for holding
-the allocation and pass that to swiotlb_find_slots().
+The SoC itself supports all listed frequencies, so it is incorrect to
+split the opp tables from the ipq6018.dtsi. Instead please patch the
+PMIC-less boards in the following way:
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Cc: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- kernel/dma/swiotlb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+#include "ipq6018.dtsi"
+&cpu_opp_table {
+  /* the board doesn't have a PMIC, disable CPU frequencies which
+require higher voltages */
+  /delete-node/ opp-1320000000;
+  /delete-node/ opp-1440000000;
+};
 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 4485f216e620..8ec37006ac70 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -1632,12 +1632,14 @@ struct page *swiotlb_alloc(struct device *dev, size_t size)
- 	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
- 	struct io_tlb_pool *pool;
- 	phys_addr_t tlb_addr;
-+	unsigned int align;
- 	int index;
- 
- 	if (!mem)
- 		return NULL;
- 
--	index = swiotlb_find_slots(dev, 0, size, 0, &pool);
-+	align = (1 << (get_order(size) + PAGE_SHIFT)) - 1;
-+	index = swiotlb_find_slots(dev, 0, size, align, &pool);
- 	if (index == -1)
- 		return NULL;
- 
+>
+> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  1 +
+>  arch/arm64/boot/dts/qcom/ipq6018-opp.dtsi    | 74 ++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 56 ---------------
+>  3 files changed, 75 insertions(+), 56 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-opp.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> index f5f4827c0e17..06dfc2cb6b7f 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+> @@ -8,6 +8,7 @@
+>  /dts-v1/;
+>
+>  #include "ipq6018.dtsi"
+> +#include "ipq6018-opp.dtsi"
+>
+>  / {
+>         model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-opp.dtsi b/arch/arm64/boot/dts/qcom/ipq6018-opp.dtsi
+> new file mode 100644
+> index 000000000000..9c0bed2d8bf5
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018-opp.dtsi
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * IPQ60xx with PMIC (MP5496) CPU OPP tables
+> + */
+> +
+> +/ {
+> +       cpu_opp_table: opp-table-cpu {
+> +               compatible = "operating-points-v2-kryo-cpu";
+> +               nvmem-cells = <&cpu_speed_bin>;
+> +               opp-shared;
+> +
+> +               opp-864000000 {
+> +                       opp-hz = /bits/ 64 <864000000>;
+> +                       opp-microvolt = <725000>;
+> +                       opp-supported-hw = <0xf>;
+> +                       clock-latency-ns = <200000>;
+> +               };
+> +
+> +               opp-1056000000 {
+> +                       opp-hz = /bits/ 64 <1056000000>;
+> +                       opp-microvolt = <787500>;
+> +                       opp-supported-hw = <0xf>;
+> +                       clock-latency-ns = <200000>;
+> +               };
+> +
+> +               opp-1320000000 {
+> +                       opp-hz = /bits/ 64 <1320000000>;
+> +                       opp-microvolt = <862500>;
+> +                       opp-supported-hw = <0x3>;
+> +                       clock-latency-ns = <200000>;
+> +               };
+> +
+> +               opp-1440000000 {
+> +                       opp-hz = /bits/ 64 <1440000000>;
+> +                       opp-microvolt = <925000>;
+> +                       opp-supported-hw = <0x3>;
+> +                       clock-latency-ns = <200000>;
+> +               };
+> +
+> +               opp-1608000000 {
+> +                       opp-hz = /bits/ 64 <1608000000>;
+> +                       opp-microvolt = <987500>;
+> +                       opp-supported-hw = <0x1>;
+> +                       clock-latency-ns = <200000>;
+> +               };
+> +
+> +               opp-1800000000 {
+> +                       opp-hz = /bits/ 64 <1800000000>;
+> +                       opp-microvolt = <1062500>;
+> +                       opp-supported-hw = <0x1>;
+> +                       clock-latency-ns = <200000>;
+> +               };
+> +       };
+> +};
+> +
+> +&CPU0 {
+> +       operating-points-v2 = <&cpu_opp_table>;
+> +       cpu-supply = <&ipq6018_s2>;
+> +};
+> +
+> +&CPU1 {
+> +       operating-points-v2 = <&cpu_opp_table>;
+> +       cpu-supply = <&ipq6018_s2>;
+> +};
+> +
+> +&CPU2 {
+> +       operating-points-v2 = <&cpu_opp_table>;
+> +       cpu-supply = <&ipq6018_s2>;
+> +};
+> +
+> +&CPU3 {
+> +       operating-points-v2 = <&cpu_opp_table>;
+> +       cpu-supply = <&ipq6018_s2>;
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> index 5e1277fea725..ea72fd5739ac 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> @@ -41,8 +41,6 @@ CPU0: cpu@0 {
+>                         next-level-cache = <&L2_0>;
+>                         clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
+>                         clock-names = "cpu";
+> -                       operating-points-v2 = <&cpu_opp_table>;
+> -                       cpu-supply = <&ipq6018_s2>;
+>                 };
+>
+>                 CPU1: cpu@1 {
+> @@ -53,8 +51,6 @@ CPU1: cpu@1 {
+>                         next-level-cache = <&L2_0>;
+>                         clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
+>                         clock-names = "cpu";
+> -                       operating-points-v2 = <&cpu_opp_table>;
+> -                       cpu-supply = <&ipq6018_s2>;
+>                 };
+>
+>                 CPU2: cpu@2 {
+> @@ -65,8 +61,6 @@ CPU2: cpu@2 {
+>                         next-level-cache = <&L2_0>;
+>                         clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
+>                         clock-names = "cpu";
+> -                       operating-points-v2 = <&cpu_opp_table>;
+> -                       cpu-supply = <&ipq6018_s2>;
+>                 };
+>
+>                 CPU3: cpu@3 {
+> @@ -77,8 +71,6 @@ CPU3: cpu@3 {
+>                         next-level-cache = <&L2_0>;
+>                         clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
+>                         clock-names = "cpu";
+> -                       operating-points-v2 = <&cpu_opp_table>;
+> -                       cpu-supply = <&ipq6018_s2>;
+>                 };
+>
+>                 L2_0: l2-cache {
+> @@ -95,54 +87,6 @@ scm {
+>                 };
+>         };
+>
+> -       cpu_opp_table: opp-table-cpu {
+> -               compatible = "operating-points-v2-kryo-cpu";
+> -               nvmem-cells = <&cpu_speed_bin>;
+> -               opp-shared;
+> -
+> -               opp-864000000 {
+> -                       opp-hz = /bits/ 64 <864000000>;
+> -                       opp-microvolt = <725000>;
+> -                       opp-supported-hw = <0xf>;
+> -                       clock-latency-ns = <200000>;
+> -               };
+> -
+> -               opp-1056000000 {
+> -                       opp-hz = /bits/ 64 <1056000000>;
+> -                       opp-microvolt = <787500>;
+> -                       opp-supported-hw = <0xf>;
+> -                       clock-latency-ns = <200000>;
+> -               };
+> -
+> -               opp-1320000000 {
+> -                       opp-hz = /bits/ 64 <1320000000>;
+> -                       opp-microvolt = <862500>;
+> -                       opp-supported-hw = <0x3>;
+> -                       clock-latency-ns = <200000>;
+> -               };
+> -
+> -               opp-1440000000 {
+> -                       opp-hz = /bits/ 64 <1440000000>;
+> -                       opp-microvolt = <925000>;
+> -                       opp-supported-hw = <0x3>;
+> -                       clock-latency-ns = <200000>;
+> -               };
+> -
+> -               opp-1608000000 {
+> -                       opp-hz = /bits/ 64 <1608000000>;
+> -                       opp-microvolt = <987500>;
+> -                       opp-supported-hw = <0x1>;
+> -                       clock-latency-ns = <200000>;
+> -               };
+> -
+> -               opp-1800000000 {
+> -                       opp-hz = /bits/ 64 <1800000000>;
+> -                       opp-microvolt = <1062500>;
+> -                       opp-supported-hw = <0x1>;
+> -                       clock-latency-ns = <200000>;
+> -               };
+> -       };
+> -
+>         pmuv8: pmu {
+>                 compatible = "arm,cortex-a53-pmu";
+>                 interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> --
+> 2.25.1
+>
+>
+
+
 -- 
-2.43.0.429.g432eaa2c6b-goog
-
+With best wishes
+Dmitry
