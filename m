@@ -1,105 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A45D6995D;
-	Wed, 31 Jan 2024 09:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B68169DF7;
+	Wed, 31 Jan 2024 09:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706692505; cv=none; b=m9hjv7luIs9DvtwtqS0zFcdhICuCEjoSBkNhaGGLmmV7FY1zMRq1ZMwjbDWm1Pbo1NZvitKxl7pdFI2vsnBQLc/WNsdxvUrQvkdksJj9FxF9GmJjaxNmPGFDigrewd8MqCuwnax0Av7uFpTjzoaE0zUIpppxXdjTqLrAdlq9brY=
+	t=1706692510; cv=none; b=e7Mi38USAgdyHCX/iQ+isiOINoFtdEXxsMgh2TDhRaTxc4IIxZ2LfUj7smhqog8j9ZWiESQQfcahP1qMnsZ6yf0b1gnxVpmoFMl2jo6F6JF3gp2xHJDxHRY5cCPhUC70FMKG7nBkNofP0CUb4qkpIiGalKX96aN/Nxmg+gjCt5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706692505; c=relaxed/simple;
-	bh=hxzRTdZxJSt3TvyZe6HqJcBulFzOOA/CYDt4I8ip2l4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s4xT3ak4Rb9vo6k4gFrJv4OCJzmrRxX3b9eKoYTN63FWxpQSL5tpUg4ES+Kkf23bPPbTgE4g1zFCCi3Cozp69ZIY5+k173m/c4tVR+YOWiyaHuDC/yhFedMPzZnOtwfcA6ViNVjvMaYAffnLdofm7Ht0I9kVGOIRlMviQ735mMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N2x9tabN; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706692510; c=relaxed/simple;
+	bh=vw0BizcmVJNTech9k7+lv72FT42A03VfqewLKVt57OA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nE43dBSZHxRhA9CDUfLosPJInW0C4nHTHKQZf5RbnW7fELcYVloZCc7yXjH6PEyAg+MelWaV3HbBbB/54fU+R7uGSZVDvejuJ6dkyTw64Pub7Nb86kfRpPKo7ff7PqfdMKqDGtM5lf6U/DIDkdQrVuriLoL6L2/Jo8hn95B/sYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Dzzx9yYQ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N2x9tabN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706692503; x=1738228503;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hxzRTdZxJSt3TvyZe6HqJcBulFzOOA/CYDt4I8ip2l4=;
-  b=N2x9tabN59nYSvbMWNiY8YH1HANWKKOdTmPn1hRlwAoo/m5Dp4jHaCKi
-   ii6X5oAZUBGLLpVvw2i+wV6QeKvEVqybN1BtwkE685HUAlfL32wmaEeK0
-   +Zn1w1arBlUb7jcDcJl1VKPSr/VmufnMGbHbCmgx4gqgTyqhjFJkAStgI
-   Bhq92RFmUFJRISWpNaVYJ59WCApQZ4q4B5FsebzbZgteGSn9ZrYL4I6HX
-   HcFQVIc7QiwDMQcsRGhzAZKDfNzD4udT3+y4AhSopA7CM0cA2E8bPVXiB
-   vSWZEAZwrjz+fqNeaDoHFwYACaMU9d3hs6PlltQQO5IiXiea/RPblzEqQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="2479071"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="2479071"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 01:15:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="961555289"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="961555289"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 31 Jan 2024 01:14:59 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id E88812D5; Wed, 31 Jan 2024 11:12:41 +0200 (EET)
-Date: Wed, 31 Jan 2024 11:12:41 +0200
-From: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Zixi Chen <zixchen@redhat.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Kai Huang <kai.huang@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH] x86/cpu/intel: Detect TME keyid bits before setting MTRR
- mask registers
-Message-ID: <ek5fc344zqxfzto2ntg3j62oqjdkcw4bcezgh5jdrx6bekte5s@urzw7ta2nm5n>
-References: <20240130180400.1698136-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Dzzx9yYQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706692507;
+	bh=vw0BizcmVJNTech9k7+lv72FT42A03VfqewLKVt57OA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Dzzx9yYQ4NlDZtjv4Hu8j/wZzNHep086PNouK99Ho4cO1aS+eamCDsPhOocwVyKTe
+	 1GIYcHymsvTIWw5VESooTY3CxJedPoIctFhMtFfStgJWx/25rQwUm1r1q+No1KdY18
+	 qd6piQZKdOTjtyxb+ZlM0/U+NS1MSYY2Zr+DHpjE/zLUyW686CZ2XEbBc05qYyuEO+
+	 MoBiF29I8GO54NHyyLrBBiKp/zQWxpnSJ3Df6qaMS4HcOVqgdLsmqlVZrp3jkRocWm
+	 +sgQ4YkvDs6Cl6nirmdpPnpQUuNG+WRfOQUSFFajHyD2vKm1JELKt9UWW1AiKXX8pH
+	 dDX5vJCKIKKwA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BFF2E37803EE;
+	Wed, 31 Jan 2024 09:15:06 +0000 (UTC)
+Message-ID: <1a94706f-b814-4993-b495-40d3fc019abb@collabora.com>
+Date: Wed, 31 Jan 2024 10:15:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130180400.1698136-1-pbonzini@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mediatek: mt8183-kukui-jacuzzi: Add ports
+ node for anx7625
+Content-Language: en-US
+To: Chen-Yu Tsai <wenst@chromium.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+References: <20240131083931.3970388-1-wenst@chromium.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240131083931.3970388-1-wenst@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 07:04:00PM +0100, Paolo Bonzini wrote:
-> MKTME repurposes the high bit of physical address to key id for encryption
-> key and, even though MAXPHYADDR in CPUID[0x80000008] remains the same,
-> the valid bits in the MTRR mask register are based on the reduced number
-> of physical address bits.
+Il 31/01/24 09:39, Chen-Yu Tsai ha scritto:
+> The anx7625 binding requires a "ports" node as a container for the
+> "port" nodes. The jacuzzi dtsi file is missing it.
 > 
-> detect_tme() in arch/x86/kernel/cpu/intel.c detects TME and subtracts
-> it from the total usable physical bits, but it is called too late.
-> Move the call to early_init_intel() so that it is called in setup_arch(),
-> before MTRRs are setup.
+> Add a "ports" node under the anx7625 node, and move the port related
+> nodes and properties under it.
 > 
-> This fixes boot on some TDX-enabled systems which until now only worked
-> with "disable_mtrr_cleanup".  Without the patch, the values written to
-> the MTRRs mask registers were 52-bit wide (e.g. 0x000fffff_80000800)
-> and the writes failed; with the patch, the values are 46-bit wide,
-> which matches the reduced MAXPHYADDR that is shown in /proc/cpuinfo.
-> 
-> Fixes: cb06d8e3d020 ("x86/tme: Detect if TME and MKTME is activated by BIOS", 2018-03-12)
-> Reported-by: Zixi Chen <zixchen@redhat.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: Kai Huang <kai.huang@linux.intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: x86@kernel.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Fixes: cabc71b08eb5 ("arm64: dts: mt8183: Add kukui-jacuzzi-damu board")
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 
-I've seen the patch before, although by different author and with
-different commit message, not sure what is going on.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-I had concern about that patch and I don't think it was addressed.
-See the thread:
 
-https://lore.kernel.org/all/20231002224752.33qa2lq7q2w4nqws@box
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
