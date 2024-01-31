@@ -1,92 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6923540BE9;
-	Wed, 31 Jan 2024 06:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96553EA68
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706682438; cv=none; b=WHYLtg/4tiVvR7s712AeapNosYIA7iK4OzsqiyT1oXw0h9z544OdlqxhygrM2zBE/ySr2THLnwbekR8yexx8ElVIj2Sj+Gc+1LC003igBgxsiH6eG6e9BlvI3vw1jiO50+MFWQhb6MGXUiB71AjjQ99CkQb8twFo5h9y8Kj+Q1k=
+	t=1706682466; cv=none; b=DXBNGZoeQPNU1D0EHrwlrg1Ur3IKoeiPQvLnDI81suMvIqxGtrWQrshfNkwvUNeuvVQfBfvFs6IaFFdBskdg039KV2QWaA1sQo60p3BDO+Ko30t8N3S80v2CRifhLcpnTs9+Wq8zYd++MO0Fy8UUkBFlQHCME4zkMBqedRWVfJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706682438; c=relaxed/simple;
-	bh=Xo8Jvj5oQfz6M2xvN89WBs3fC3gskTN27sgAVfq3fjI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=is4erkwnkhjsVO68fYZo6ZZwZ9leBSlpOiH1fnSLU1Wzz4PsZDMwk8k0TTAbKtXcAklr4nq9Dhue/fxkp6cbFNynIH6zNkrF4IBYmw7xe7Byh34EnFvkbxCyj63xD9LbyWcno2glpocTYxTE98WJRTm4bZpgnJ9gbh0Q0boetCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z2czEHs1; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z2czEHs1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706682437; x=1738218437;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=Xo8Jvj5oQfz6M2xvN89WBs3fC3gskTN27sgAVfq3fjI=;
-  b=Z2czEHs12ncbG+D4JgStwFJcGuQylSGpN2rThGtbYZFR6rOSlV8aKJsA
-   FNzbYAHaor7nIY8LvTktsB8a8PPjEPJTLfVMv/vgXDBYDLt4VfLTS1g9E
-   B4HC0tGZNIQ/xB6MzyzApi+GDdpEVKLkGgKoJ5iRtRlz7M4GTf8i7Hoir
-   FVSOB4J4cWivCDLtT2tS3hxE8NjGIrmFR8oMtjdB/mk0Osi3+j4CjACz6
-   3zHCXCjKfTM33LqbT3gv8HhZUJdeWrtRNOreDKpw0I1j+UfeuwKVksnwa
-   FxrGNDH438lknycSPiO6jBnZxG+sYDyjUXGfQ5qDgdKL4VHY1qYxYqLZj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10144950"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="10144950"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:27:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="931737324"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="931737324"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:27:10 -0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: arnd@arndb.de,
-	linus.walleij@linaro.org,
-	guoren@kernel.org,
-	bcain@quicinc.com,
-	jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi,
-	shorne@gmail.com
-Cc: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 1/4] asm-generic/page.h: apply page shift to PFN instead of VA in pfn_to_virt
-Date: Wed, 31 Jan 2024 13:57:40 +0800
-Message-Id: <20240131055740.2579-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240131055159.2506-1-yan.y.zhao@intel.com>
-References: <20240131055159.2506-1-yan.y.zhao@intel.com>
+	s=arc-20240116; t=1706682466; c=relaxed/simple;
+	bh=5a6kabL1Imum/t71C6ufR+TowFQ0vw8KXkpbEbavqO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GltBeKLctJUxko8d303ig4bbo9P4ysDvm0OelyQjIk3vg/pMLpvxqWcQMgm4iEGUyDF2Kh8O9AQJoan/S/iT/8Af3dVsZeHF/RaX30CaAzgS5W0QMmoJ320LWsWz2l2y8d4pSuwJ+7ujHlh1LYX446QcuUkmju0j2hMotYgge2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id CEFDA68B05; Wed, 31 Jan 2024 07:27:41 +0100 (CET)
+Date: Wed, 31 Jan 2024 07:27:41 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Daniel Wagner <dwagner@suse.de>
+Cc: James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/12] nvmet-fc: hold reference on hostport match
+Message-ID: <20240131062741.GE16225@lst.de>
+References: <20240130094938.1575-1-dwagner@suse.de> <20240130094938.1575-7-dwagner@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130094938.1575-7-dwagner@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Apply the page shift to PFN to get physical address for final VA.
-The macro __va should take physical address instead of PFN as input.
+On Tue, Jan 30, 2024 at 10:49:32AM +0100, Daniel Wagner wrote:
+> The hostport data structure is shared between the association, this why
+> we keep track of the users via a refcount. So we should not decrement
+> the refcount on a match and free the hostport several times.
+> 
+> Reported by KASAN.
+> 
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
 
-Fixes: 2d78057f0dd4 ("asm-generic/page.h: Make pfn accessors static inlines")
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- include/asm-generic/page.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks good:
 
-diff --git a/include/asm-generic/page.h b/include/asm-generic/page.h
-index 9773582fd96e..4f1265207b9a 100644
---- a/include/asm-generic/page.h
-+++ b/include/asm-generic/page.h
-@@ -81,7 +81,7 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
- #define virt_to_pfn virt_to_pfn
- static inline void *pfn_to_virt(unsigned long pfn)
- {
--	return __va(pfn) << PAGE_SHIFT;
-+	return __va(pfn << PAGE_SHIFT);
- }
- #define pfn_to_virt pfn_to_virt
- 
--- 
-2.17.1
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
