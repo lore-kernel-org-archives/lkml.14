@@ -1,106 +1,98 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB3B3FE24
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 20:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B41405FF;
+	Wed, 31 Jan 2024 20:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706732642; cv=none; b=Xzu3x/RWvbW3+MKM/GRJAt+2reatvbav7UQvRdCJeGyu3c6EctNZCqHoxarlE0XnhMm3qWrMiKlhmkYol6Dcy89r8CwTvqBx9LcxC0Sc7l3uSyvyvUASX2Yqp8a3C2EXNtznXhYJo7JCVcKLhK/0aBWJZlTMBeHACdSksqzL5fc=
+	t=1706732649; cv=none; b=lluPtye6TZARLTqrrDmbqOiLX/v6e1Kvzxij24/pZxGI7FJKWKT8ROdZUc2QRu7Pxo4vmHlsh1fedA5Own4t0sybH4KziPk2DXCmV62kTuj6kN2c/yfZW5brPnx/tiVKsApYKoJkRcu3DVIt7XqLC5mxhdrYlDQT8EaVUrhH0xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706732642; c=relaxed/simple;
-	bh=c8BgyeaOxRJoVpmpdlvaVs8pxX9gKWMdLr4cmkJxJVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ENd2jk3iiwnyjSGiv6t7PZUEjVRPbEs+l+5LPuyzVsKaVtVTvT29dY6d2YMVayJo6rzbph2UlIEB9KgLsn3DltOVR3no5bxhN5UMaU4LhfDjkOc8P3rMb/mEKVMBBSoDO+L4D99nHl0kuC6zRl1PC+4WM1/2ch3sve1uFCl3JMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bC7gUmsB; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706732649; c=relaxed/simple;
+	bh=wGJkNZWM5trjq8rhQ/Cfkn8OWEaE+kuNu9wG/5opVek=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=L8h6rf0WyNVXO+Dc3PQstNAOAzxFQdfeHrQ0+hkzsOiUlwC2HfzTqsU3b0LSa07kfP4ra6i4/69OtZl9juei725Mo433T9dHi86Ol5uWRAr3Iv11cj4+I+KR8GO0C03T7Qd/Ae1ybl3AbkBHqvWgRdSn/GC0zQvo0df0VvOhD54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNprb6YD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bC7gUmsB"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0354A40E00C5;
-	Wed, 31 Jan 2024 20:23:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id OjcC5NNgSzNe; Wed, 31 Jan 2024 20:23:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706732634; bh=7fi3dyXMMd6/0aeF3EFLTQzMzTDCXg1mf7AUEGHYLUE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bC7gUmsBOplYUTS3insO6U3/vcK1ccGuZATodDgxyMyA6ZU4zmV4UqmrDyuRTUm7k
-	 kWhG/F7i+f54+y8ZHQhqwEGK7SG6oxftSS9UYztvq8bpOQ4xH1NlCdPDTzojzSIJ7M
-	 jyfbHf8Xza0UfKqwfj2ptoNy/ooIrlvrnl+EgvQvCyozspj1IqvB1DnaX2T+H7KhAe
-	 2464GX5F8g9nyEOnPqKAMqAwNNQIhKjQdAPc8N9NaY++vE8reJlZutAuQHINimzgBv
-	 fLChyZE4giHr8szkhwTpY+PbrDUaEioL++DDgZPFXX4OL/vbvAkVBSM5ARUZ8aV+MS
-	 fJ61a45RitAtYWzi8rePeam7QuO/qjB4R73VLrEmEbL1b528uWdO06WsG8r5NWSsHi
-	 cLBwlC1RrtICYwrwSsHaXtPPqDrcajE1IStK/bzL7amXUAzNgOlCHJFb2sw4eGOA6k
-	 x1Vebmlb3V0FyXtu/yWxQEizB5yxO5BwKhjte8xgk+tELgFntkuPwn6fwy489Rmpgy
-	 B6/n3iHfa7pSq7AYfaZQaZlB0xNmf5tGR+om1kFVfcPGXD+2Yd4/RzmRsPkWl9NXBO
-	 YAWidFn+youjqKmhuUm1YZQ2YdbuxOtplpmEhnn+b6dT/9czpt/F3OQo/cbw0M+6K4
-	 0l8hQRsaQZPls2EtUkQNkQ1c=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CF3EC40E01A2;
-	Wed, 31 Jan 2024 20:23:45 +0000 (UTC)
-Date: Wed, 31 Jan 2024 21:23:40 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Isaku Yamahata <isaku.yamahata@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH, RESEND] x86/pat: Simplifying the PAT programming protocol
-Message-ID: <20240131202340.GLZbqsTJkeFQycXT0B@fat_crate.local>
-References: <20240124130650.496056-1-kirill.shutemov@linux.intel.com>
- <20240131175738.GIZbqKEhlDKhaKfh_w@fat_crate.local>
- <67hqgqargmt6nln5mds672g263lka7glyzbvcdgt4owdg7xc2e@v6wvuizw5ond>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNprb6YD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D6E63C43390;
+	Wed, 31 Jan 2024 20:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706732648;
+	bh=wGJkNZWM5trjq8rhQ/Cfkn8OWEaE+kuNu9wG/5opVek=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=PNprb6YDsVQC9K+TZzrTZxVZajBZtbt0v8EZOLlsgo9ic6ZIKGgwYkpOu18ml/JPB
+	 28BjIcm5oWk4O6LQLH+iiXEXcEXVa6seXpRmH6OrgZ2v/xJ93r3nXlP+LVdK8O27yU
+	 ibHmdCD0pFYnH0g1f1h3OrWJ4aBvRlp0M/IdmuhNXp7zjBVYBgAYtHzTz5xTs/KSBN
+	 2KwOIuwx6xk6ziB6tee+6QrWwTQjkb7u5glUx6cA+3bAOZM5Wg29M4+irOTXT5crHh
+	 DYxVPQBdVQoh8fx4X4mnK8BX4gaXRgsseQ1PL7kRO21Bx0oNpq+7jwsMQZuh/a1vp2
+	 Tmjs5CmJiEDNw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C38C4828E;
+	Wed, 31 Jan 2024 20:24:08 +0000 (UTC)
+From: Valentin Obst via B4 Relay <devnull+kernel.valentinobst.de@kernel.org>
+Date: Wed, 31 Jan 2024 21:23:25 +0100
+Subject: [PATCH v3 03/12] rust: ioctl: end top-level module docs with full
+ stop
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <67hqgqargmt6nln5mds672g263lka7glyzbvcdgt4owdg7xc2e@v6wvuizw5ond>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240131-doc-fixes-v3-v3-3-0c8af94ed7de@valentinobst.de>
+References: <20240131-doc-fixes-v3-v3-0-0c8af94ed7de@valentinobst.de>
+In-Reply-To: <20240131-doc-fixes-v3-v3-0-0c8af94ed7de@valentinobst.de>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Wedson Almeida Filho <wedsonaf@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@samsung.com>, 
+ Alice Ryhl <aliceryhl@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Valentin Obst <kernel@valentinobst.de>, Trevor Gross <tmgross@umich.edu>, 
+ Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706732646; l=787;
+ i=kernel@valentinobst.de; s=20240131; h=from:subject:message-id;
+ bh=RnmjgqCkBgtaoPxCHzDBkuKFgg4rjvv/297TJiMhnEQ=;
+ b=DFYaExxkBLacWrAXEjYrfqcfudJkoubWg1dEDgUS4NWXXUrugAr3GKNQOtG7EKqVDRcOEdWOY
+ oGHG7IZ5INYD7JdP0I4w3Hacu97rtIsCPjclv3/mroltWwWdXZWc1sN
+X-Developer-Key: i=kernel@valentinobst.de; a=ed25519;
+ pk=3s7U8y0mqkaiurgHSQQTYWOo2tw5HgzCg5vnJVfw37Y=
+X-Endpoint-Received:
+ by B4 Relay for kernel@valentinobst.de/20240131 with auth_id=124
+X-Original-From: Valentin Obst <kernel@valentinobst.de>
+Reply-To: <kernel@valentinobst.de>
 
-On Wed, Jan 31, 2024 at 08:52:46PM +0200, Kirill A. Shutemov wrote:
-> The second step is relevant for set_memory code that already does the
-> flushing on changing memory type.
+From: Valentin Obst <kernel@valentinobst.de>
 
-So the "relaxation" is the removal of that CR0.CD requirement?
+Every other module ends its first line of documentation with a full
+stop. Adapt the only outlier.
 
-> Our HW folks confirmed that the new optimized sequence works on all past
-> processors that support PAT.
+Signed-off-by: Valentin Obst <kernel@valentinobst.de>
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
+Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/kernel/ioctl.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Your folks confirmed that for all released hw and for x86 hardware from
-other vendors?
-
-> Testing wouldn't hurt, but it cannot possibly prove that the new flow is
-> safe by testing.
-
-This basically says that I should not take this patch at all as there's
-no way of even testing it?!
-
-I hope I'm misunderstanding you.
-
-> PAT MST was always virtualized, but we was not able to program it as we
-> followed MTRR protocol that sets CR0.CD. And I covered it in the commit
-> message:
-> 
->     Specifically, a TDX guest is not allowed to set CR0.CD. It triggers
->     a #VE exception.
-
-Ok, I'll extend that part once the rest has been sorted out.
-
-Thx.
+diff --git a/rust/kernel/ioctl.rs b/rust/kernel/ioctl.rs
+index 59050e5f5a5a..5987ad6d38a7 100644
+--- a/rust/kernel/ioctl.rs
++++ b/rust/kernel/ioctl.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-//! ioctl() number definitions
++//! ioctl() number definitions.
+ //!
+ //! C header: [`include/asm-generic/ioctl.h`](srctree/include/asm-generic/ioctl.h)
+ 
 
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
