@@ -1,124 +1,143 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B183B18C;
-	Wed, 31 Jan 2024 23:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2943A278
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 23:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706744601; cv=none; b=P21PpbdQ0ECSj9Jsmmw12e3UcAaXcv7n83kQVV+OHdBTEotI+OymQK+AnXKauWx5BmOewj6pqjXMrUqwHwVzBzkbYvlaQH5mAF1FME6mjwdxOs5+r00EUqPQQFR8ppjAp2bwfsRhPD4dx7DQQqCex7LfIkcB7TqbMhTHBvnX4XA=
+	t=1706744731; cv=none; b=pKqAPksbrQAd7v2Ti0yTwoYpnb3f3PmYOddoXTX42ugcauiQAP46Epwhcpgrw6rJMVYKiXYioqqp1bw3tLbivCvfDCu21Kv8fsuSkAGrebu56ajcopVjxCor/Pe37rPW24VekVNdrY/RlNzoz+jqMTwigmtPfoDhRVfwBKX5fIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706744601; c=relaxed/simple;
-	bh=SewAFr4bPu+Lhyx/z6EWMEwTisOjNDlCx4omV1kFgNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWLKcJdU6n2Q7iOBynHmUmFEwlJTNPEsj4+/JVMA1T6Ijkf0j5EIrUySFaAtgK/PEmRIe0GWc6zrxysMeTIGQ3wFVIPCDhw05TlIcdHfBV18bHpVjweEYPyPYj53qfMcBWASlMtr3bF5W8JFs/u6+hlyr2eJweTSu3ChwgSY09k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLWnSFN4; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706744731; c=relaxed/simple;
+	bh=rgrCgSpALvr1CWsUIFrHZh9N3HtW5tFrYXTts++yW4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NZtiXgBWoaeiaU+yiQEXy/AMAG37jNuKqJ4NFfCvE7iC1zYRjKjHdjA0W1CyzCMVy4y9dk5NnG5N1cVVZ3d0jOBXGmhwWBKlTSnB1txIydfFO6RP8cBOkTu2GPuMvsngPAU3uouLq9ZFcFDjou5hPSvg8pQtK6lz3RyH4dCNDjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSG2dZct; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLWnSFN4"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ddb1115e82so191462b3a.0;
-        Wed, 31 Jan 2024 15:43:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706744599; x=1707349399; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xxn4ihDOE6z0ST3ffWk22KtYMRkFrMur7Pj62WhcijA=;
-        b=iLWnSFN4KxenjwC9txMAyy73R2ING+hRmCwygabu2dDXWy/kwKvVPOIjzpUK7aLw+9
-         RBg+EllxKrqHOAuMbZdb8yftJ5wb1B+TdrQiH6rCdOOhOnk1NQHDh/jDAb8JcBJYINb+
-         rsGMj6tBssOFRJLFLNTNolkoakqqavoWxfD0GnHYIbwd65jV1dnX7IraaFuaL96CQ1yB
-         XHt+lMdp5HEsfCmUrA5FzN3L5eRtdQRFX1PFDmsqieMBzh/b01tU+4P/O/mq/i3PuOFG
-         aEQkTPlyfh2cAFxHzFXuLmh6Pc66xUfwgvq/Pu9T0eze00ExxnkoWAybmLWSB0gpD++d
-         NJDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706744599; x=1707349399;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xxn4ihDOE6z0ST3ffWk22KtYMRkFrMur7Pj62WhcijA=;
-        b=Yxz6a0SM2KzzDcdLKsXKB+DiWHvoEaUmJDjrii7DLnySm0RIMAqk18+IVo2hfNNqJT
-         eB0UnvjrJ0z04PDw59yR1vCS95vve15IJfD7NFyvhhQ93/Dz3NLqEVq6wiGUiYWTsHwu
-         r7K9CYlbyq5yC+37he8VxVYHfcfxu1MdILB4/RRRrmRk8bBqLzNuC+alH1qpwH7jOo5w
-         mCJhVFkefQHa5ocggTTs2XoYAx/zs6pImFJ/4eoQURO8OwRTrKUnejDfLtFlhrBMgqoS
-         LRBEiozKGIc0Mf4+DUK0rRE9OCok8Taoh6Qkp29w8mGEcIcb6nY6dl9/Yyh+d3QNXOeX
-         7jhQ==
-X-Gm-Message-State: AOJu0Ywoe75fRrQEU9jsmg6RfRD2hnsmqIEmFLDjRUGHcVxAN6TspxeC
-	BesLgRMEi8duD2NC+BaJnMQfHEKkva4pn+2/RzHgbSTaeRoociwt
-X-Google-Smtp-Source: AGHT+IG12ShFssnmDhowtvlRu/PeZj1bzh7IuwUwMPYLopCQUYz8u/YflVcMMRTR7jZ8L6FXUj7EUw==
-X-Received: by 2002:a05:6a20:d48a:b0:19c:80af:2fa8 with SMTP id im10-20020a056a20d48a00b0019c80af2fa8mr3517618pzb.48.1706744599240;
-        Wed, 31 Jan 2024 15:43:19 -0800 (PST)
-Received: from dragon (173.242.119.193.16clouds.com. [173.242.119.193])
-        by smtp.gmail.com with ESMTPSA id v19-20020a056a00149300b006ddb0b0ff0dsm5775406pfu.34.2024.01.31.15.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 15:43:18 -0800 (PST)
-Date: Thu, 1 Feb 2024 15:42:10 +0800
-From: Shawn Guo <shawn.gsc@gmail.com>
-To: Frieder Schrempf <frieder@fris.de>
-Cc: Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v4 00/12] arm64: dts: imx8mm-kontron: DT updates
-Message-ID: <20240201073833.GB463595@dragon>
-References: <20240108084945.75356-1-frieder@fris.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSG2dZct"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02252C43609
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 23:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706744730;
+	bh=rgrCgSpALvr1CWsUIFrHZh9N3HtW5tFrYXTts++yW4Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VSG2dZctjU1VVVJzpFnw0HUzkXVWotnl9yhtM+MfzL2JzdbcQ4R8wBs+mj8dL+PqI
+	 gBfwF1oeHX4rY1b7LbDFv2ZP8bI5sglrAJCHhyKrw7jQdEnsxwhAsxV9Yhw8eMKjfo
+	 KqRNujtxhjW+OaU8xvR7mRjsFXES3dW7rYwSXQZ02m8SuBb6m/9epwiStAlVRad30K
+	 1fbsQFaPRn5158VWH8EnXCbMvI5OuPIUowehO77vbIvKtIIuDR++UfkNiapO4w/pVB
+	 dsB+Crlr+bxRjrU3wfXIvUgwgzSkTBMm2rXVw4wbz2R1nXQmyfHjiIe81ABg/J+Pn9
+	 0eiTy4GZ4lDQg==
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3639b16c17bso1599435ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 15:45:29 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx7lPHTGJggCCKrAFfXSw/eqMA2jL0TnYF9bHJPjdsvBZOU+bpb
+	iBcqWZ5njJRJTz0FAJ8xxRm8Xus+wpCjpUH6Rn48AmqiUXZCMv+FWrf0FFOpcq25YdkNlXFfx+x
+	WxUuu7axBJkdgil4QjnAVuEbr01HMkrZrsC72
+X-Google-Smtp-Source: AGHT+IHxIcPjPLgCEuO2FNMNke9aAioh5w/QeEIyl/LRy/szpWrbpAnYRI7c1RlsYBxcbDyJqlEj/OCh5XxkmjljosY=
+X-Received: by 2002:a92:cf47:0:b0:363:7dc6:a156 with SMTP id
+ c7-20020a92cf47000000b003637dc6a156mr3162291ilr.5.1706744729276; Wed, 31 Jan
+ 2024 15:45:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240108084945.75356-1-frieder@fris.de>
+References: <20240129175423.1987-1-ryncsn@gmail.com> <20240129175423.1987-7-ryncsn@gmail.com>
+ <87bk92gqpx.fsf_-_@yhuang6-desk2.ccr.corp.intel.com> <CAMgjq7DhjeeCehzj5hiO=v+X0Jg5mEpKim3k8abJA20TN63SHA@mail.gmail.com>
+In-Reply-To: <CAMgjq7DhjeeCehzj5hiO=v+X0Jg5mEpKim3k8abJA20TN63SHA@mail.gmail.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Wed, 31 Jan 2024 15:45:18 -0800
+X-Gmail-Original-Message-ID: <CAF8kJuN6G578RWQ5R6eW=FQWg3mphywgnusQYCRMJA4TzhR4jg@mail.gmail.com>
+Message-ID: <CAF8kJuN6G578RWQ5R6eW=FQWg3mphywgnusQYCRMJA4TzhR4jg@mail.gmail.com>
+Subject: Re: Whether is the race for SWP_SYNCHRONOUS_IO possible? (was Re:
+ [PATCH v3 6/7] mm/swap, shmem: use unified swapin helper for shmem)
+To: Kairui Song <ryncsn@gmail.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, 
+	Yu Zhao <yuzhao@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 08, 2024 at 09:48:57AM +0100, Frieder Schrempf wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> This patchset contains several improvements and updates for the devicetrees
-> for the i.MX8MM modules and boards by Kontron Electronics GmbH.
-> 
-> * Misc cleanups and small fixes
-> * OSM-S i.MX8MM module refactoring and update to latest HW revision
-> 
-> Changes in v4:
-> * Rebase to Shawn's imx/dt64 branch
-> * Drop patches 1 and 2 (display support) as there are unresolved DTC warnings
->   and I am not sure how to resolve them at the moment.
-> 
-> Changes in v3:
-> * Address Shawn's review comments for patch 1, 2 and 14 (thanks!)
-> 
-> Changes in v2:
-> * Rework DSI mux GPIO logic to be compatible with overlay
-> * Switch from 4 to 2 DSI lanes for LVDS bridge to fix non-working display
-> 
-> Frieder Schrempf (12):
->   arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on OSM-S
->     i.MX8MM
->   arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on SL/BL
->     i.MX8MM
->   arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals
->     on BL OSM-S board
->   arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals
->     on BL board
->   arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals
->     on BL OSM-S board
->   arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals
->     on BL board
->   arm64: dts: imx8mm-kontron: Fix interrupt for RTC on OSM-S i.MX8MM
->     module
->   arm64: dts: imx8mm-kontron: Fix OSM-S devicetrees to match latest
->     hardware
->   arm64: dts: imx8mm-kontron: Disable uneffective PUE bit in SDIO IOMUX
->   arm64: dts: imx8mm-kontron: Remove useless trickle-diode-disable from
->     RTC node
->   arm64: dts: imx8mm-kontron: Add I2C EEPROM on OSM-S Kontron i.MX8MM
->   arm64: dts: imx8mm-kontron: Refactor devicetree for OSM-S module and
->     board
+On Tue, Jan 30, 2024 at 7:58=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> Hi Ying,
+>
+> On Wed, Jan 31, 2024 at 10:53=E2=80=AFAM Huang, Ying <ying.huang@intel.co=
+m> wrote:
+> >
+> > Hi, Minchan,
+> >
+> > When I review the patchset from Kairui, I checked the code to skip swap
+> > cache in do_swap_page() for swap device with SWP_SYNCHRONOUS_IO.  Is th=
+e
+> > following race possible?  Where a page is swapped out to a swap device
+> > with SWP_SYNCHRONOUS_IO and the swap count is 1.  Then 2 threads of the
+> > process runs on CPU0 and CPU1 as below.  CPU0 is running do_swap_page()=
+.
+>
+> Chris raised a similar issue about the shmem path, and I was worrying
+> about the same issue in previous discussions about do_swap_page:
+> https://lore.kernel.org/linux-mm/CAMgjq7AwFiDb7cAMkWMWb3vkccie1-tocmZfT7m=
+4WRb_UKPghg@mail.gmail.com/
 
-Applied all, thanks!
+Ha thanks for remembering that.
+
+>
+> """
+> In do_swap_page path, multiple process could swapin the page at the
+> same time (a mapped once page can still be shared by sub threads),
+> they could get different folios. The later pte lock and pte_same check
+> is not enough, because while one process is not holding the pte lock,
+> another process could read-in, swap_free the entry, then swap-out the
+> page again, using same entry, an ABA problem. The race is not likely
+> to happen in reality but in theory possible.
+> """
+>
+> >
+> > CPU0                            CPU1
+> > ----                            ----
+> > swap_cache_get_folio()
+> > check sync io and swap count
+> > alloc folio
+> > swap_readpage()
+> > folio_lock_or_retry()
+> >                                 swap in the swap entry
+> >                                 write page
+> >                                 swap out to same swap entry
+> > pte_offset_map_lock()
+> > check pte_same()
+> > swap_free()   <-- new content lost!
+> > set_pte_at()  <-- stale page!
+> > folio_unlock()
+> > pte_unmap_unlock()
+>
+> Thank you very much for highlighting this!
+>
+> My concern previously is the same as yours (swapping out using the
+> same entry is like an ABA issue, where pte_same failed to detect the
+> page table change), later when working on V3, I mistakenly thought
+> that's impossible as entry should be pinned until swap_free on CPU0,
+> and I'm wrong. CPU1 can also just call swap_free, then swap count is
+> dropped to 0 and it can just swap out using the same entry. Now I
+> think my patch 6/7 is also affected by this potential race. Seems
+> nothing can stop it from doing this.
+>
+> Actually I was trying to make a reproducer locally, due to swap slot
+> cache, swap allocation algorithm, and the short race window, this is
+> very unlikely to happen though.
+
+You can put some sleep in some of the CPU0 where expect the other race
+to happen to manual help triggering it. Yes, it sounds hard to trigger
+in real life due to reclaim swap out.
+
+>
+> How about we just increase the swap count temporarily in the direct
+> swap in path (after alloc folio), then drop the count after pte_same
+> (or shmem_add_to_page_cache in shmem path)? That seems enough to
+> prevent the entry reuse issue.
+
+Sounds like a good solution.
+
+Chris
