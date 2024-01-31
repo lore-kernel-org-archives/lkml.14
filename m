@@ -1,379 +1,173 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC06F80C0F
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E557A80C0C
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706710759; cv=none; b=Oo4C5fQqMI+tdGLkWS6+k9UwYIPpBUIa39QKMWpzIAitMIrknGMCzEew6vui9HmVucu45rBKd6x0765Pch9rKufD5KHzf8paJwpaGS/WjNmItdDJl53pkkiDdGsIEntONYYpZswtzgdRmYyAk8D1l0ZGP/cqfBBj1NPI+jiGeBU=
+	t=1706710811; cv=none; b=W3IaHxXxN++8JCnpn44IsAHEdxDzJLa1sEZIjuY9TT/dimXTj+CA2/Zh3HUxApeMIPGgaxarV93dVRyZqqUmubm96efen0ZOxgS1A85tEywXkRPQvpH6c7i/wH1rlEwIg/JzfFfTrZVCbOMx2EdSMC5czAM8szKhbyMLRPMSFkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706710759; c=relaxed/simple;
-	bh=YvsXE9OR+IUltygOycGvea6KYYgI+LiZAiXelBwbSdw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AhT5xLsrEw+yQce4MfmTPmK2mmFAosCnplBd+4A51wdBfzjJsm3xI7LtKq6fZYO4MQ9DB2BKYg2LjvQ5OSMS18d6zv4CHYBsE50guq+NSKo2dKrX58iZFuKeAIGX1fY+3iCWaG9gFnVNOJi0UQsHyzHUbRbwN2lDKK2Ri4JsMGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a5mJQCFU; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1706710811; c=relaxed/simple;
+	bh=IL1GPoNzL7QSd5vUAqTFQj0vKy+cgDd6bxQdbYB88ZY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SD52Iarq7Jb3kN7JJ9qsVdorQjyVSUrun3bZBmAY7QR1SpKM+xdZGJjoKRlHbvwxmSX2Ydepyj7vcUBh0CUJ7gEG1wom4d6c6YZubmrga50vvN0ipKoQRQjZg8qAAdC6WyhB/5tuaFCY0ZujassVaRZmTRhmu8lJL/NbSNdWiqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fz57jE3J; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a5mJQCFU"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-55f12bced3bso1818681a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:19:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706710754; x=1707315554; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IaMeGJ0rWB78uo9A8Je3r+q2sT9bnmMm16vK1tzleA8=;
-        b=a5mJQCFUZ+lU3jx08r2hDwm5++dAbuUrLC2LtD1xYZJXj3lrT1/L+L27zWBxdw2RCX
-         Bwtr95WvVu0zIeK5K4iABYM2SxXmmGx9y6LYZOKKTBu5bIsmkp/J+j7o9FRM3dc8tpir
-         MKd2t1OuABcbcxFrXbk0YCdNcXqaly0Zsa9cc075rL9sFn2AMvU5qAewT+d4+sKKpy6Y
-         F2RO9dK2Ctp0VOpEhksqHSUE14AF6Y+snbrdNRsJN47l8Cqs4rOF9reQ8a3LD6pW2RT8
-         6RysvzfjIoT3+82XV3yQgamNqak1DdDdswuR8f58/2EomOp96uB1V4Rywq3J7v5m8sI6
-         SmmA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fz57jE3J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706710808;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EJ5IuSkHp6LD0vYjmHgDCJ3/HytjuH6PXzpbQ2D4dxA=;
+	b=fz57jE3Jo4IFzin0ySu/BfUbN61C4B6fD6MYx6rOqLtfZQQ+eH0/sySCfBTka/VTmSalqG
+	er8D7AsbyZiU2PmZFo5Id4YImUBHRhWkwAsF6+9g4Smvg7CKawNqU5mJPSJx4oCP88edMC
+	Zh0DXE0wRUoaMKZl6On8/PLotb4FtyQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-297-GB1f6sSiMoqKdMZEQRWnLw-1; Wed, 31 Jan 2024 09:20:07 -0500
+X-MC-Unique: GB1f6sSiMoqKdMZEQRWnLw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40d62d3ae0cso37038855e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:20:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706710754; x=1707315554;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1706710806; x=1707315606;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IaMeGJ0rWB78uo9A8Je3r+q2sT9bnmMm16vK1tzleA8=;
-        b=dG1EG8loctVAExD/fXC5EYnE8rsqmqm4JSxayJ/D3rgZJMwiMnmkLFfTATT8ERnPs5
-         MbF9CoW6Gd0IWlPqVjIaLnSS81Wa/wWuBW7SA23uIyKnjnKXd7wA3Ib7QDmg7yqDbWOn
-         /0J37u9PFSQ44hjBoh4MLOBUt5pI46K2hZcKzop/WwyGzYcZkeZDQrLeJa22qzpNYIdC
-         PbrK/B1ZIAZKWWKhPprDrv2YDve8cho35RBdM/r2kEfBt8mljnExwBpU1D4xbFxyutWN
-         el2v0f9IBWYyIpuURRORdoNP0TbH5pI+FF68TOetUfHo1m68PkwFeMPC6YEA0yyAkwrO
-         I3Eg==
-X-Gm-Message-State: AOJu0YznjGVOS7YMjLnH/GmW00+vuUuAufXy5+Pf3ZJ8yuVZddIcNiEf
-	XH+aMgTgLDcOCzJ93G5/2B+Er0ryhggOJXddE8s4SQDAfBafynSl68ErhSGZsfni2ZuBTe3loQ=
-	=
-X-Google-Smtp-Source: AGHT+IH1fksSvzeQMmagfUyODYTJ4E+QON8T+tLm4xKVfBz5TBUVM3L+OZBAqEMtOoqN7+rXMWq6gbQOIA==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:5727:e5f5:9cb8:3c6e])
- (user=elver job=sendgmr) by 2002:a05:6402:b87:b0:55e:f9f8:9025 with SMTP id
- cf7-20020a0564020b8700b0055ef9f89025mr3587edb.3.1706710753556; Wed, 31 Jan
- 2024 06:19:13 -0800 (PST)
-Date: Wed, 31 Jan 2024 15:18:44 +0100
+        bh=EJ5IuSkHp6LD0vYjmHgDCJ3/HytjuH6PXzpbQ2D4dxA=;
+        b=fGeqG5vYd0iFx+7Al6HvTzUUQ2fuWa1lvP1oO0QMJ4gZmgYHcXsxWYgOi6s5uhrAIC
+         RfdOaG9zlyvPHtHAyVvy510WLwlRM8ytR6qSqAPEDj7oGjNQB3lTgOeBN6rd1FNvAPqD
+         RihcHwZgzg4B9iSYV50DIH8cS0OI5RPzu3pyq+eM0wba+FcjMRcALV0oSOdFfIypxiuT
+         Y5MNqrG1afPWGaE2UD6DlMA688b99Nbce1ZhDfUefRt9MAMd3qwZdNRxW1pQRtTW4iQc
+         npgkXuOoA7fAFsrk4RjFDanoPHSWwjTpHdva9DWOAdUZXb628PrdhQAagv9q+TEK6Zw4
+         4C8w==
+X-Gm-Message-State: AOJu0YyD+VSi8WOUYprZUE3XH6ICl4wP+gsExVpcPfSp+rGkvlE0biIx
+	TGWA+3+Nfss4M0Z7co5HIHt66qtkk+2CCLmxzg7GbG+502nR4AE9Y7ThnbMalnEhxY91CuEB+70
+	Nahh+8RntO7pLcqb+PW4TnuZMbRe+NFNnDfEMlfpirxQ9qtVANEAvvZSecKynEQ==
+X-Received: by 2002:a05:600c:1e16:b0:40e:f972:9918 with SMTP id ay22-20020a05600c1e1600b0040ef9729918mr1606331wmb.29.1706710805912;
+        Wed, 31 Jan 2024 06:20:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEVS0DLc03z9UjF+ShKdgT2iE+aZAHubGYficvaqYAxhORIFpUTuMxb55nVEcr4Ub+xdd+4nQ==
+X-Received: by 2002:a05:600c:1e16:b0:40e:f972:9918 with SMTP id ay22-20020a05600c1e1600b0040ef9729918mr1606301wmb.29.1706710805551;
+        Wed, 31 Jan 2024 06:20:05 -0800 (PST)
+Received: from [10.32.64.237] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id n36-20020a05600c3ba400b0040ed1d6ce7csm1745809wms.46.2024.01.31.06.20.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 06:20:05 -0800 (PST)
+Message-ID: <e55a111d-0f09-4981-94e1-f547bdfad059@redhat.com>
+Date: Wed, 31 Jan 2024 15:20:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240131141858.1149719-1-elver@google.com>
-Subject: [PATCH] bpf: Separate bpf_local_storage_lookup() fast and slow paths
-From: Marco Elver <elver@google.com>
-To: elver@google.com
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/9] mm/memory: optimize unmap/zap with PTE-mapped THP
+Content-Language: en-US
+To: Michal Hocko <mhocko@suse.com>, Ryan Roberts <ryan.roberts@arm.com>
+Cc: Yin Fengwei <fengwei.yin@intel.com>, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+ linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>
+References: <20240129143221.263763-1-david@redhat.com>
+ <4ef64fd1-f605-4ddf-82e6-74b5e2c43892@intel.com>
+ <ee94b8ca-9723-44c0-aa17-75c9678015c6@redhat.com>
+ <1fd26a83-8e6f-4b96-9d27-dd46de9488cc@arm.com> <ZbpUVXa-Aujp6gWO@tiehlicka>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZbpUVXa-Aujp6gWO@tiehlicka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-To allow the compiler to inline the bpf_local_storage_lookup() fast-
-path, factor it out by making bpf_local_storage_lookup() a static inline
-function and move the slow-path to bpf_local_storage_lookup_slowpath().
+On 31.01.24 15:08, Michal Hocko wrote:
+> On Wed 31-01-24 10:26:13, Ryan Roberts wrote:
+>> IIRC there is an option to zero memory when it is freed back to the buddy? So
+>> that could be a place where time is proportional to size rather than
+>> proportional to folio count? But I think that option is intended for debug only?
+>> So perhaps not a problem in practice?
+> 
+> init_on_free is considered a security/hardening feature more than a
+> debugging one. It will surely add an overhead and I guess this is
+> something people who use it know about. The batch size limit is a latency
+> reduction feature for !PREEMPT kernels but by no means it should be
+> considered low latency guarantee feature. A lot of has changed since
+> the limit was introduced and the current latency numbers will surely be
+> different than back then. As long as soft lockups do not trigger again
+> this should be acceptable IMHO.
 
-Base on results from './benchs/run_bench_local_storage.sh' this produces
-improvements in throughput and latency in the majority of cases:
+It could now be zeroing out ~512 MiB. That shouldn't take double-digit 
+seconds unless we are running in a very problematic environment 
+(over-committed VM). But then, we might have different problems already.
 
-| Hashmap Control
-| =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| num keys: 10
-|  hashmap (control) sequential get:
-|                              <before>                | <after>
-|   hits throughput:           13.895 =C2=B1 0.024 M ops/s  | 14.022 =C2=B1=
- 0.095 M ops/s	(+0.9%)
-|   hits latency:              71.968 ns/op            | 71.318 ns/op		(-0.=
-9%)
-|   important_hits throughput: 13.895 =C2=B1 0.024 M ops/s  | 14.022 =C2=B1=
- 0.095 M ops/s	(+0.9%)
-|
-| num keys: 1000
-|  hashmap (control) sequential get:
-|                              <before>                | <after>
-|   hits throughput:           11.793 =C2=B1 0.018 M ops/s  | 11.645 =C2=B1=
- 0.370 M ops/s	(-1.3%)
-|   hits latency:              84.794 ns/op            | 85.874 ns/op		(+1.=
-3%)
-|   important_hits throughput: 11.793 =C2=B1 0.018 M ops/s  | 11.645 =C2=B1=
- 0.370 M ops/s	(-1.3%)
-|
-| num keys: 10000
-|  hashmap (control) sequential get:
-|                              <before>                | <after>
-|   hits throughput:           7.113 =C2=B1 0.012 M ops/s   | 7.037 =C2=B1 =
-0.051 M ops/s	(-1.1%)
-|   hits latency:              140.581 ns/op           | 142.113 ns/op		(+1=
-.1%)
-|   important_hits throughput: 7.113 =C2=B1 0.012 M ops/s   | 7.037 =C2=B1 =
-0.051 M ops/s	(-1.1%)
-|
-| num keys: 100000
-|  hashmap (control) sequential get:
-|                              <before>                | <after>
-|   hits throughput:           4.793 =C2=B1 0.034 M ops/s   | 4.990 =C2=B1 =
-0.025 M ops/s	(+4.1%)
-|   hits latency:              208.623 ns/op           | 200.401 ns/op		(-3=
-.9%)
-|   important_hits throughput: 4.793 =C2=B1 0.034 M ops/s   | 4.990 =C2=B1 =
-0.025 M ops/s	(+4.1%)
-|
-| num keys: 4194304
-|  hashmap (control) sequential get:
-|                              <before>                | <after>
-|   hits throughput:           2.088 =C2=B1 0.008 M ops/s   | 2.962 =C2=B1 =
-0.004 M ops/s	(+41.9%)
-|   hits latency:              478.851 ns/op           | 337.648 ns/op		(-2=
-9.5%)
-|   important_hits throughput: 2.088 =C2=B1 0.008 M ops/s   | 2.962 =C2=B1 =
-0.004 M ops/s	(+41.9%)
-|
-| Local Storage
-| =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| num_maps: 1
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           32.598 =C2=B1 0.008 M ops/s  | 38.480 =C2=B1=
- 0.054 M ops/s	(+18.0%)
-|   hits latency:              30.676 ns/op            | 25.988 ns/op		(-15=
-.3%)
-|   important_hits throughput: 32.598 =C2=B1 0.008 M ops/s  | 38.480 =C2=B1=
- 0.054 M ops/s	(+18.0%)
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           36.963 =C2=B1 0.045 M ops/s  | 43.847 =C2=B1=
- 0.037 M ops/s	(+18.6%)
-|   hits latency:              27.054 ns/op            | 22.807 ns/op		(-15=
-.7%)
-|   important_hits throughput: 36.963 =C2=B1 0.045 M ops/s  | 43.847 =C2=B1=
- 0.037 M ops/s	(+18.6%)
-|
-| num_maps: 10
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           32.078 =C2=B1 0.004 M ops/s  | 37.813 =C2=B1=
- 0.020 M ops/s	(+17.9%)
-|   hits latency:              31.174 ns/op            | 26.446 ns/op		(-15=
-.2%)
-|   important_hits throughput: 3.208 =C2=B1 0.000 M ops/s   | 3.781 =C2=B1 =
-0.002 M ops/s	(+17.9%)
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           34.564 =C2=B1 0.011 M ops/s  | 40.082 =C2=B1=
- 0.037 M ops/s	(+16.0%)
-|   hits latency:              28.932 ns/op            | 24.949 ns/op		(-13=
-.8%)
-|   important_hits throughput: 12.344 =C2=B1 0.004 M ops/s  | 14.315 =C2=B1=
- 0.013 M ops/s	(+16.0%)
-|
-| num_maps: 16
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           32.493 =C2=B1 0.023 M ops/s  | 38.147 =C2=B1=
- 0.029 M ops/s	(+17.4%)
-|   hits latency:              30.776 ns/op            | 26.215 ns/op		(-14=
-.8%)
-|   important_hits throughput: 2.031 =C2=B1 0.001 M ops/s   | 2.384 =C2=B1 =
-0.002 M ops/s	(+17.4%)
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           34.380 =C2=B1 0.521 M ops/s  | 41.605 =C2=B1=
- 0.095 M ops/s	(+21.0%)
-|   hits latency:              29.087 ns/op            | 24.035 ns/op		(-17=
-.4%)
-|   important_hits throughput: 10.939 =C2=B1 0.166 M ops/s  | 13.238 =C2=B1=
- 0.030 M ops/s	(+21.0%)
-|
-| num_maps: 17
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           28.748 =C2=B1 0.028 M ops/s  | 32.248 =C2=B1=
- 0.080 M ops/s	(+12.2%)
-|   hits latency:              34.785 ns/op            | 31.009 ns/op		(-10=
-.9%)
-|   important_hits throughput: 1.693 =C2=B1 0.002 M ops/s   | 1.899 =C2=B1 =
-0.005 M ops/s	(+12.2%)
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           31.313 =C2=B1 0.030 M ops/s  | 35.911 =C2=B1=
- 0.020 M ops/s	(+14.7%)
-|   hits latency:              31.936 ns/op            | 27.847 ns/op		(-12=
-.8%)
-|   important_hits throughput: 9.533 =C2=B1 0.009 M ops/s   | 10.933 =C2=B1=
- 0.006 M ops/s	(+14.7%)
-|
-| num_maps: 24
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           18.475 =C2=B1 0.027 M ops/s  | 19.000 =C2=B1=
- 0.006 M ops/s	(+2.8%)
-|   hits latency:              54.127 ns/op            | 52.632 ns/op		(-2.=
-8%)
-|   important_hits throughput: 0.770 =C2=B1 0.001 M ops/s   | 0.792 =C2=B1 =
-0.000 M ops/s	(+2.9%)
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           21.361 =C2=B1 0.028 M ops/s  | 22.388 =C2=B1=
- 0.099 M ops/s	(+4.8%)
-|   hits latency:              46.814 ns/op            | 44.667 ns/op		(-4.=
-6%)
-|   important_hits throughput: 6.009 =C2=B1 0.008 M ops/s   | 6.298 =C2=B1 =
-0.028 M ops/s	(+4.8%)
-|
-| num_maps: 32
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           14.220 =C2=B1 0.006 M ops/s  | 14.168 =C2=B1=
- 0.020 M ops/s	(-0.4%)
-|   hits latency:              70.323 ns/op            | 70.580 ns/op		(+0.=
-4%)
-|   important_hits throughput: 0.445 =C2=B1 0.000 M ops/s   | 0.443 =C2=B1 =
-0.001 M ops/s	(-0.4%)
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           17.250 =C2=B1 0.011 M ops/s  | 16.650 =C2=B1=
- 0.021 M ops/s	(-3.5%)
-|   hits latency:              57.971 ns/op            | 60.061 ns/op		(+3.=
-6%)
-|   important_hits throughput: 4.815 =C2=B1 0.003 M ops/s   | 4.647 =C2=B1 =
-0.006 M ops/s	(-3.5%)
-|
-| num_maps: 100
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           5.212 =C2=B1 0.012 M ops/s   | 5.878 =C2=B1 =
-0.004 M ops/s	(+12.8%)
-|   hits latency:              191.877 ns/op           | 170.116 ns/op		(-1=
-1.3%)
-|   important_hits throughput: 0.052 =C2=B1 0.000 M ops/s   | 0.059 =C2=B1 =
-0.000 M ops/s	(+13.5%)
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           6.521 =C2=B1 0.053 M ops/s   | 7.086 =C2=B1 =
-0.010 M ops/s	(+8.7%)
-|   hits latency:              153.343 ns/op           | 141.116 ns/op		(-8=
-.0%)
-|   important_hits throughput: 1.703 =C2=B1 0.014 M ops/s   | 1.851 =C2=B1 =
-0.003 M ops/s	(+8.7%)
-|
-| num_maps: 1000
-|  local_storage cache sequential  get:
-|                              <before>                | <after>
-|   hits throughput:           0.357 =C2=B1 0.005 M ops/s   | 0.325 =C2=B1 =
-0.005 M ops/s	(-9.0%)
-|   hits latency:              2803.738 ns/op          | 3076.923 ns/op		(+=
-9.7%)
-|   important_hits throughput: 0.000 =C2=B1 0.000 M ops/s   | 0.000 =C2=B1 =
-0.000 M ops/s
-|  local_storage cache interleaved get:
-|                              <before>                | <after>
-|   hits throughput:           0.434 =C2=B1 0.007 M ops/s   | 0.447 =C2=B1 =
-0.007 M ops/s	(+3.0%)
-|   hits latency:              2306.539 ns/op          | 2237.687 ns/op		(-=
-3.0%)
-|   important_hits throughput: 0.109 =C2=B1 0.002 M ops/s   | 0.112 =C2=B1 =
-0.002 M ops/s	(+2.8%)
+I'll do some sanity checks with an extremely large processes (as much as 
+I can fit on my machines), with a !CONFIG_PREEMPT kernel and 
+init_on_free, to see if anything pops up.
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- include/linux/bpf_local_storage.h               | 17 ++++++++++++++++-
- kernel/bpf/bpf_local_storage.c                  | 14 ++++----------
- .../selftests/bpf/progs/cgrp_ls_recursion.c     |  2 +-
- .../selftests/bpf/progs/task_ls_recursion.c     |  2 +-
- 4 files changed, 22 insertions(+), 13 deletions(-)
+Thanks Michal!
 
-diff --git a/include/linux/bpf_local_storage.h b/include/linux/bpf_local_st=
-orage.h
-index 173ec7f43ed1..c8cecf7fff87 100644
---- a/include/linux/bpf_local_storage.h
-+++ b/include/linux/bpf_local_storage.h
-@@ -130,9 +130,24 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
- 			    bool bpf_ma);
-=20
- struct bpf_local_storage_data *
-+bpf_local_storage_lookup_slowpath(struct bpf_local_storage *local_storage,
-+				  struct bpf_local_storage_map *smap,
-+				  bool cacheit_lockit);
-+static inline struct bpf_local_storage_data *
- bpf_local_storage_lookup(struct bpf_local_storage *local_storage,
- 			 struct bpf_local_storage_map *smap,
--			 bool cacheit_lockit);
-+			 bool cacheit_lockit)
-+{
-+	struct bpf_local_storage_data *sdata;
-+
-+	/* Fast path (cache hit) */
-+	sdata =3D rcu_dereference_check(local_storage->cache[smap->cache_idx],
-+				      bpf_rcu_lock_held());
-+	if (likely(sdata && rcu_access_pointer(sdata->smap) =3D=3D smap))
-+		return sdata;
-+
-+	return bpf_local_storage_lookup_slowpath(local_storage, smap, cacheit_loc=
-kit);
-+}
-=20
- void bpf_local_storage_destroy(struct bpf_local_storage *local_storage);
-=20
-diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.=
-c
-index 146824cc9689..2ef782a1bd6f 100644
---- a/kernel/bpf/bpf_local_storage.c
-+++ b/kernel/bpf/bpf_local_storage.c
-@@ -415,20 +415,14 @@ void bpf_selem_unlink(struct bpf_local_storage_elem *=
-selem, bool reuse_now)
- }
-=20
- /* If cacheit_lockit is false, this lookup function is lockless */
--struct bpf_local_storage_data *
--bpf_local_storage_lookup(struct bpf_local_storage *local_storage,
--			 struct bpf_local_storage_map *smap,
--			 bool cacheit_lockit)
-+noinline struct bpf_local_storage_data *
-+bpf_local_storage_lookup_slowpath(struct bpf_local_storage *local_storage,
-+				  struct bpf_local_storage_map *smap,
-+				  bool cacheit_lockit)
- {
- 	struct bpf_local_storage_data *sdata;
- 	struct bpf_local_storage_elem *selem;
-=20
--	/* Fast path (cache hit) */
--	sdata =3D rcu_dereference_check(local_storage->cache[smap->cache_idx],
--				      bpf_rcu_lock_held());
--	if (sdata && rcu_access_pointer(sdata->smap) =3D=3D smap)
--		return sdata;
--
- 	/* Slow path (cache miss) */
- 	hlist_for_each_entry_rcu(selem, &local_storage->list, snode,
- 				  rcu_read_lock_trace_held())
-diff --git a/tools/testing/selftests/bpf/progs/cgrp_ls_recursion.c b/tools/=
-testing/selftests/bpf/progs/cgrp_ls_recursion.c
-index a043d8fefdac..9895087a9235 100644
---- a/tools/testing/selftests/bpf/progs/cgrp_ls_recursion.c
-+++ b/tools/testing/selftests/bpf/progs/cgrp_ls_recursion.c
-@@ -21,7 +21,7 @@ struct {
- 	__type(value, long);
- } map_b SEC(".maps");
-=20
--SEC("fentry/bpf_local_storage_lookup")
-+SEC("fentry/bpf_local_storage_lookup_slowpath")
- int BPF_PROG(on_lookup)
- {
- 	struct task_struct *task =3D bpf_get_current_task_btf();
-diff --git a/tools/testing/selftests/bpf/progs/task_ls_recursion.c b/tools/=
-testing/selftests/bpf/progs/task_ls_recursion.c
-index 4542dc683b44..d73b33a4c153 100644
---- a/tools/testing/selftests/bpf/progs/task_ls_recursion.c
-+++ b/tools/testing/selftests/bpf/progs/task_ls_recursion.c
-@@ -27,7 +27,7 @@ struct {
- 	__type(value, long);
- } map_b SEC(".maps");
-=20
--SEC("fentry/bpf_local_storage_lookup")
-+SEC("fentry/bpf_local_storage_lookup_slowpath")
- int BPF_PROG(on_lookup)
- {
- 	struct task_struct *task =3D bpf_get_current_task_btf();
---=20
-2.43.0.429.g432eaa2c6b-goog
+-- 
+Cheers,
+
+David / dhildenb
 
