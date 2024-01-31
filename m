@@ -1,56 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D40A7D3E3
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D467BB19;
+	Wed, 31 Jan 2024 13:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706707465; cv=none; b=rtjnmxrNaqOFNF/ltm+fGCNKdMxDJrROuBE/bcHf/Vf7+SDurNU9rHd2NCsHUja5zKUbKE1GpZNFOBJ8Vszz4P3+nLyCTdWgA70261M0NKSK5OLLpa1wS0aHFh4HO5iiT84kmsWh6AEXZ5goTHDo6bkm35Aj4YJ5PFBlrnn6tjo=
+	t=1706707473; cv=none; b=kD7IgaEtdQReVsSIx4Lw93DzLlSTY5ToJ0wVklrT7ZKFNoOZx4kTeV5udYa1Zf+gcqH2QTnKdJh81DaK9xKE1FP/eg/z4Kqns69C2jgs6B80nBRQMdzR3XYYxeUdSXVQWEAU+nTxlNgOiSHsvofEilwNKTMEW2lX3Cm6LH7bhHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706707465; c=relaxed/simple;
-	bh=Qqf/UeSmjtXbkfGb1ggwNrtJYnwihR+82214TBpnMiU=;
+	s=arc-20240116; t=1706707473; c=relaxed/simple;
+	bh=FmKNXLkA/kr+CM40gASiK/j9SM+MckCirdBHbOT2wJE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j6HbBE7TQ0QPjbg9rWMkSWLaxKjpeuOuPK0I10Z0x9RWHLt+p2KhHUbL+xItyLwJCG+DzNOFx3aWDQtgzzTYf23hR5rjbvhsgkxf7lEJmhqyH8XpdkXp7/1ltgj0POtWvjtmf+EVQz3TuQZFdHsiu3rWHoPocnh1eLBEjHztYCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHddOYP+; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eKaQzRgPcsFr+kdaWX1p71hbNzD7gB/oI8G7uUQw/tWNa1TcpdJ1hQIQigIGYtWpz7T8YI830lvKquhaUYKqiAKkG4xtfHfQvxCPz+0QTY7JUonWQCKaOnTBTOASojsMjSgu/QHeRweHisKJwdkjBq4YWlY6DPYFT4NSmeQviug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HMXTCep+; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHddOYP+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706707463; x=1738243463;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Qqf/UeSmjtXbkfGb1ggwNrtJYnwihR+82214TBpnMiU=;
-  b=HHddOYP+CSg7mNMCIvr5UcJaoKvoEvTmDURiOW4lb28iPt8ryGaqQL+t
-   AS5/u03lofozbL9kFJIQBR+ElRqtR3pERcPUhbo5CAoZ6XZ60FvvfysjH
-   ecL9zkxoyDgZMINQpFIs9AQUGa60qTZX3YnXB0VYBum7XgH/fz3VFkHi6
-   1FKhQXMGogScAZbjHIGvAgvN5U9kTmIr/ULGeAHrsCQpg2gTh382VpLdx
-   cYWM7rtFoEA5XzmrCqlYG9Rr+yQND8dmKpW+Q7CD9yEslP5jeeq6rLHvc
-   hR2PjdHQnvgInYYGoahUoOYZsaiTbIKl0XWhkaXI2vJmknvjkHDN0K6e2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="25074820"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="25074820"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 05:24:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788575863"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="788575863"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 31 Jan 2024 05:24:19 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id B45731CB; Wed, 31 Jan 2024 14:58:57 +0200 (EET)
-Date: Wed, 31 Jan 2024 14:58:57 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH, RESEND] x86/pat: Simplifying the PAT programming protocol
-Message-ID: <uvm2vudogp3mkkhpx723l6nmmy3dzivneoyaacx6cfbbrlvjqc@wc5q7m27mmzr>
-References: <20240124130650.496056-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMXTCep+"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6dfc321c677so593848b3a.3;
+        Wed, 31 Jan 2024 05:24:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706707471; x=1707312271; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mIdR54PoTx04BsX44lZ3Vej1iDtysZ6kTYG9UVMC/bo=;
+        b=HMXTCep+I5/MyReAopcRT003eQ940PO71GL7qpnfqeUQ1nBKjIyUOga7z0Fwg+7Ilq
+         Po99nNEGhAP7DNyjUYHz8TM2AO/9Mcm+FA7iofPyOOHFoY2vYmMySgAwci1eZ7FeGSc0
+         nezxG+0IXF2Hs/pvMzy+0beUjfxVGheSSCR5Q2CHkqIHIXFSijOpvs6idFj+Jcn/f1yy
+         Vu/1EoHcI0C62UD44heADIl8bNEG1ZQWw38hBtG7XmcEtjqV0PkmK1Oh/tUXU261wn6j
+         TDqZsLMhlNoBpAVquniHYsU45lOMGuKL9+2f/bsixaSQnds+gtZrrMxjVg8waYhdvysn
+         ++1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706707471; x=1707312271;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mIdR54PoTx04BsX44lZ3Vej1iDtysZ6kTYG9UVMC/bo=;
+        b=GK4UW7OKpGCO4WUyBMUdPlJr++vksefc5jEs1W5E73w9PEZScxNsuqINhNPElhhrEX
+         Ewama48jurBFUNjud5Qzid2PJGNrPqHiKonTMYe00eQGXkgriJx3OaPrf5hhTf7vk8Cr
+         Wal9jU4WTYEycQIw1i/nDcX/N8rhocAvMavePnDxsqKnZ5QRScbm9HkLwEqNgSipjey/
+         VsFgU1GFdRIpnRInS5oRwSp1bIuSCZlkCGlY1He9boWvng96jry+Hdm9hggEe46Ccumg
+         Ygpj3dxjDfiMHgwoFBtJPj+KS+cJ1TNszN18rdRBhEQ1KYcgnmHI5F0YJyHIH+x2A7KZ
+         bs6w==
+X-Gm-Message-State: AOJu0YyeoDnGdvN5ipMdsdWhbhtwgjUSmdCV0NZryxrpmsVbaMEOd5+l
+	RE3N9fPrtWPuhmOj8f5giyWtvo5aW/Wzteboowry1NG2YGpuInU/
+X-Google-Smtp-Source: AGHT+IEORJNOP8Y2doGdBQmQSDg8neCI7FRvJuiw+TokpKCUC1ZXUM0pJlOg1K4ZcPAxCx1Yh4TKXg==
+X-Received: by 2002:a05:6a00:2e8d:b0:6dd:e398:2a84 with SMTP id fd13-20020a056a002e8d00b006dde3982a84mr2216183pfb.7.1706707471354;
+        Wed, 31 Jan 2024 05:24:31 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y11-20020a056a00190b00b006dde0969ce3sm9717371pfi.66.2024.01.31.05.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 05:24:30 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 31 Jan 2024 05:24:30 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Ivor Wanders <ivor@iwanders.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] platform/surface: aggregator_registry: add entry
+ for fan speed
+Message-ID: <7e392c1e-2cb2-43e4-804e-227551ed2dd7@roeck-us.net>
+References: <20240131005856.10180-1-ivor@iwanders.net>
+ <20240131005856.10180-3-ivor@iwanders.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,33 +74,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240124130650.496056-1-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240131005856.10180-3-ivor@iwanders.net>
 
-On Wed, Jan 24, 2024 at 03:06:50PM +0200, Kirill A. Shutemov wrote:
-> The programming protocol for the PAT MSR follows the MTRR programming
-> protocol. However, this protocol is cumbersome and requires disabling
-> caching (CR0.CD=1), which is not possible on some platforms.
+On Tue, Jan 30, 2024 at 07:58:56PM -0500, Ivor Wanders wrote:
+> Add an entry for the fan speed function.
+> Add this new entry to the Surface Pro 9 group.
 > 
-> Specifically, a TDX guest is not allowed to set CR0.CD. It triggers
-> a #VE exception.
-> 
-> Turned out the requirement to follow the MTRR programming protocol for
-> PAT programming is unnecessarily strict. The new Intel Software
-> Developer Manual[1] (December 2023) relaxes this requirement. Please
-> refer to the section titled "Programming the PAT" for more information.
-> 
-> The AMD documentation does not link PAT programming to MTRR.
-> 
-> The kernel only needs to flush the TLB after updating the PAT MSR. The
-> set_memory code already takes care of flushing the TLB and cache when
-> changing the memory type of a page.
-> 
-> [1] http://www.intel.com/sdm
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Juergen Gross <jgross@suse.com>
+> Signed-off-by: Ivor Wanders <ivor@iwanders.net>
+> Link: https://github.com/linux-surface/kernel/pull/144
+> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-Any feedback?
+I wasn't sure if the Reviewed-by: tag means that I should apply the patch
+through the hwmon subsystem. If so, please let me know. For now I'll
+assume that it will be applied through a platform tree.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Thanks,
+Guenter
