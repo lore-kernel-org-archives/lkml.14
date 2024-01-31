@@ -1,33 +1,42 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7243F7A716;
-	Wed, 31 Jan 2024 13:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F9A79DD0
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 13:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706706103; cv=none; b=YZfXwGHDsrE4tJ54pXP7ExG01MsbGijNPp6b1iIYmMUnXiZyhLt+jz3qpOakjvjA6uNKUi2j/A/pHpCJS2fe/1iYgFOKkWbgahAaH9kfvJuNBS8fHseJad36PRLVH8IY9huGb/4a0XxjxbTWXHf1V7le5VJ7Ep55XepsbzzT3lI=
+	t=1706706260; cv=none; b=pPN1oPDf+yMET5DtsmUwuSFNWunItLTS8dEIZl5LZ0eWrUY0Qj97k2eytgbeV8gaS5u0CIiLN7SG3jbVNZKUlZ/yhSlMpgCzboA8L5l+E+nnKBRDNj3MwzXFpGDrJGOnnpgMdnmGgTfnWQBm+7u9S/CQ0q+yV2w3tAq3Y7RJO2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706706103; c=relaxed/simple;
-	bh=A2HkjWs/uqyXRaWNFEgz3xTTLEQ3Q1Ks7F/RFXEiUUc=;
+	s=arc-20240116; t=1706706260; c=relaxed/simple;
+	bh=Bhwmz/F21q1kBgFydqSZjzH43cF3Nb4bvQpSB4Ggiro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RFU+SNOdM2bb0tbVTZmRKuJSA/oDF1HF1C8DvouYYPFBi6/P7SjHehnLbraN59OIez8Q6PhPNhWS8L4S1yxsRu9qOvNPePZSCbbzMRqyWCNKLRbZrIHIVUYXraShw5epX6KowaMa4UtuJuQgZCZr7STdzLrX5T+hAcFauqjXyz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id AEAFC68BEB; Wed, 31 Jan 2024 14:01:33 +0100 (CET)
-Date: Wed, 31 Jan 2024 14:01:33 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Brian Foster <bfoster@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-	linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/19] writeback: simplify writeback iteration
-Message-ID: <20240131130133.GA25391@lst.de>
-References: <20240125085758.2393327-1-hch@lst.de> <20240125085758.2393327-20-hch@lst.de> <20240130104605.2i6mmdncuhwwwfin@quack3> <20240130141601.GA31330@lst.de> <20240130215016.npofgza5nmoxuw6m@quack3> <20240131071437.GA17336@lst.de> <ZbpCEagJOh61eH6M@bfoster>
+	 Content-Type:Content-Disposition:In-Reply-To; b=he+T4pNwJT2tcueh1Udf4yS5vNGUU5NxEuQXaSCqABUARjTTY7nb2sd+j8ZgV3JvvCLXWh7KIvmVix9KXCIhsdfOFmqsJl3Ue+/V6el9m68HuWGEROuaK6UaV5+FCqBPQPlc8MOCF8k4FaXxvPOiStq/tBFXmG6SbLYrg2Qzixc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STuuWiXg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STuuWiXg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D858AC433C7;
+	Wed, 31 Jan 2024 13:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706706260;
+	bh=Bhwmz/F21q1kBgFydqSZjzH43cF3Nb4bvQpSB4Ggiro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=STuuWiXgFm0uKtFdbRCBs+QU3MEpoDCLVg2onooJaU5lUhwSQybtFHgqe0UZL3/Ru
+	 qJ5lvtKnK84snuTKY+NqdwmJVQahSkVjeqnKeuNudX0Y5RfPbuZg1AhAMddXEUSi+J
+	 khxQlZmkDEQQIULsANidjoL9MBOK0+rDXqdW2+zqh7vwib4NVWmjKEZUjDPLAS+U9e
+	 +H6oZb5omK9mRe+gp/llSquQ3+h90Z1N7p+CA2hDmE5qJbb7N69S+zZDwQo/bLbwAx
+	 8x5xaRC1b9l71P8ohg4jP3V78uOVtzAvQHxED5/0fRVu2QZVbQgVIt4bvJRiYQk/KZ
+	 KX2XBZ+3fcU3Q==
+Date: Wed, 31 Jan 2024 18:34:15 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 0/7] Soundwire: clean up sysfs group creation
+Message-ID: <ZbpFTyW9UCZdCs_v@matsya>
+References: <2024013025-spoiling-exact-ad20@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,19 +45,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZbpCEagJOh61eH6M@bfoster>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <2024013025-spoiling-exact-ad20@gregkh>
 
-On Wed, Jan 31, 2024 at 07:50:25AM -0500, Brian Foster wrote:
-> The implied field initialization via !folio feels a little wonky to me
-> just because it's not clear from the client code that both fields must
-> be initialized. Even though the interface is simpler, I wonder if it's
-> still worth having a dumb/macro type init function that at least does
-> the batch and error field initialization.
+On 30-01-24, 10:46, Greg Kroah-Hartman wrote:
+> Note, this is a redone version of a very old series I wrote back in
+> 2022:
+> 	https://lore.kernel.org/r/20220824135951.3604059-1-gregkh@linuxfoundation.org
+> but everyone has forgotten about it now, and I've reworked it, so I'm
+> considering it a "new" version, and not v2.
 > 
-> Or on second thought maybe having writeback_iter() reset *error as well
-> on folio == NULL might be a little cleaner without changing the
-> interface....
+> Here's a series that adds the functionality to the driver core to hide
+> entire attribute groups, in a much saner way than we have attempted in
+> the past (i.e. dynamically figuring it out.)  Many thanks to Dan for
+> this patch.  I'll also be taking this into my driver-core branch and
+> creating a stable tag for anyone else to pull from to get it into their
+> trees, as I think it will want to be in many for this development cycle.
+> 
+> After the driver core change, there's cleanups to the soundwire core for
+> how the attribute groups are created, to remove the "manual" creation of
+> them, and allow the driver core to create them correctly, as needed,
+> when needed, which makes things much smaller for the soundwire code to
+> manage.
 
-I like that second idea.  An initialization helper I could live with,
-but if only folio needs a defined state, that seems superflous.
+The series lgtm, having the core handle these would be good. I will wait
+couple of days for people to test this and give a t-b and apply.
+I hope it is okay if patch1 goes thru sdw tree?
+
+BR
+-- 
+~Vinod
