@@ -1,37 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3FD7F48F;
-	Wed, 31 Jan 2024 14:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EEB82869;
+	Wed, 31 Jan 2024 14:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706709923; cv=none; b=AgbG7nQ91giiyj7zVRkf6FTD7FfKdk5qgKB7+cf+jX8IeU0sg+df2/lXe0eT5LjFJ4tO8K0W37VFi5MseAsDBLD+qH2YZatBqyfx0/walNBU2RqZiZ1keoscvoe3wEkkpJX2Uiwf3UA9ByNUQvMj5rtoc49vmwaqXXXJoP1yKWg=
+	t=1706709926; cv=none; b=Dw/uLHoqpsqvaY5SBG7G8h2BdKUohXP5Q6AfspuOl6jLX2omiUSLKnpytXVwJU3pkfT5w2/N45kQSEu0squDISi242QGD4SjQk0rjRNA7cHOpiEcrNsy/eGMvHX9T71jFIS1mJxGIT9/THxv0w33RamSj+IzATQde+Zv/k9CaDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706709923; c=relaxed/simple;
-	bh=C1jyyNN3WoASzPdbjbyMPpmrKLB566vijGdtqZFTW+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dalnMkLyLLqbYw7lMfobP1sswPtPsXeYy6hEup2fo4LI+0rcyWK5TrcVxz1epI7ICpbgRgph0LMOQUc1oRr8m6KwT/p84ZXqwZK32PMPSi6+XedQb0M2dbrsAeSKhKki4ovSpo9DWR6sXqeYfWNETBx4PbQcl8IgiAKz4G7datw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hVRTdRod; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1706709926; c=relaxed/simple;
+	bh=AYYPiG5/eQFpT9F2zXPDgcKcsgIGjoY5wyEFVeBzakA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e3mYtxtEW4AiB3S7tJjrH4r8dGGuXmlSCUK4nB5gtsA1n4VI3fcIL319vMtD7mmXbl6TQKYiD+O5PtqHoRyZEuDJD6TeuK8MyluJP2HlNBkrr6MC6iMedsaXcDry64ZYdkmUpUF5CqE7L0b6fAymacsrQwuN9kheOk1RGrZzjFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MACRpNQR; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hVRTdRod"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MACRpNQR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706709916;
-	bh=C1jyyNN3WoASzPdbjbyMPpmrKLB566vijGdtqZFTW+0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hVRTdRodufiiXRyUTw9piPgw/oM92aLsJkDJGNDDTsunq7gJopZrnj+e3uqM09Ifw
-	 k0w0zc9ThSlxrYjasOBccPbbcGyeFCFKGuOcVC5KieK9Sp4aGF33D6MfyXTLlTrZyb
-	 dhTHrGWeb4FM7XQNVxruHPijt+Fkg/nEm98o5ebb8XFF8Qt/cXkO4XSlC3ndGxv0S2
-	 oqaGai6ttvc6I60U/yqwE/TZ0j0LPMR46ap6XGlfAdWeChx84aXANCMFs6mYsw70DT
-	 FjeAPcOuZmZ8KNZfI5GISi+BwMX4fEXehcftq/U7JIgfeAVesXIjXx8CTEtZ+dnC9a
-	 BsGRGSxhSpIMg==
+	s=mail; t=1706709923;
+	bh=AYYPiG5/eQFpT9F2zXPDgcKcsgIGjoY5wyEFVeBzakA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MACRpNQRni2hxNtFtl0XFeCH9MObYnCAvaART/lNidK151skysiHjPaR4MZboLENO
+	 kSiZzJkI2kq3aACjopN5pOvZ07EYablIQQ8ZbPv1J5rVeVKClSoDDoqqabEv8hKQNe
+	 tJwrEM+7F7Aow/nmgzl5c2D3G5Vk03PKnxPylQsEqm2R0DUzvZfxEfpuTFzzHWJ9iX
+	 4p3Zl8ns1zYYh5d93xBE6QgQRca+dM+UixWexBKSRzQp+LckUG8PPvV0d7o3hSwCWe
+	 GZ9zqxWUgp9pbf8g46q3WGpnY/14HJYTjCZUvXRjDDlQ8fyb8uf6B4d9/ixrxI9tXo
+	 JHuSSK3zpAelQ==
 Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8243E3781FCF;
-	Wed, 31 Jan 2024 14:05:14 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9F8E23782084;
+	Wed, 31 Jan 2024 14:05:21 +0000 (UTC)
 From: Muhammad Usama Anjum <usama.anjum@collabora.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Shuah Khan <shuah@kernel.org>
@@ -40,10 +41,12 @@ Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/12] selftests/mm: map_fixed_noreplace: conform test to TAP format output
-Date: Wed, 31 Jan 2024 19:05:11 +0500
-Message-ID: <20240131140528.320252-1-usama.anjum@collabora.com>
+Subject: [PATCH 04/12] selftests/mm: mlock-random-test: conform test to TAP format output
+Date: Wed, 31 Jan 2024 19:05:14 +0500
+Message-ID: <20240131140528.320252-4-usama.anjum@collabora.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240131140528.320252-1-usama.anjum@collabora.com>
+References: <20240131140528.320252-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,238 +57,271 @@ Content-Transfer-Encoding: 8bit
 
 Conform the layout, informational and status messages to TAP. No
 functional change is intended other than the layout of output messages.
-While at it, convert commenting style from // to /**/.
 
 Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- .../selftests/mm/map_fixed_noreplace.c        | 96 ++++++-------------
- 1 file changed, 31 insertions(+), 65 deletions(-)
+ .../testing/selftests/mm/mlock-random-test.c  | 136 +++++++-----------
+ 1 file changed, 54 insertions(+), 82 deletions(-)
 
-diff --git a/tools/testing/selftests/mm/map_fixed_noreplace.c b/tools/testing/selftests/mm/map_fixed_noreplace.c
-index 598159f3df1f2..b74813fdc9514 100644
---- a/tools/testing/selftests/mm/map_fixed_noreplace.c
-+++ b/tools/testing/selftests/mm/map_fixed_noreplace.c
-@@ -12,6 +12,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <unistd.h>
+diff --git a/tools/testing/selftests/mm/mlock-random-test.c b/tools/testing/selftests/mm/mlock-random-test.c
+index 1fba77df7f628..1cd80b0f76c33 100644
+--- a/tools/testing/selftests/mm/mlock-random-test.c
++++ b/tools/testing/selftests/mm/mlock-random-test.c
+@@ -13,6 +13,7 @@
+ #include <sys/ipc.h>
+ #include <sys/shm.h>
+ #include <time.h>
 +#include "../kselftest.h"
+ #include "mlock2.h"
  
- static void dump_maps(void)
- {
-@@ -28,15 +29,12 @@ static unsigned long find_base_addr(unsigned long size)
+ #define CHUNK_UNIT (128 * 1024)
+@@ -31,14 +32,14 @@ int set_cap_limits(rlim_t max)
+ 	new.rlim_cur = max;
+ 	new.rlim_max = max;
+ 	if (setrlimit(RLIMIT_MEMLOCK, &new)) {
+-		perror("setrlimit() returns error\n");
++		ksft_perror("setrlimit() returns error\n");
+ 		return -1;
+ 	}
  
- 	flags = MAP_PRIVATE | MAP_ANONYMOUS;
- 	addr = mmap(NULL, size, PROT_NONE, flags, -1, 0);
--	if (addr == MAP_FAILED) {
--		printf("Error: couldn't map the space we need for the test\n");
--		return 0;
+ 	/* drop capabilities including CAP_IPC_LOCK */
+ 	if (cap_set_proc(cap)) {
+-		perror("cap_set_proc() returns error\n");
+-		return -2;
++		ksft_perror("cap_set_proc() returns error\n");
++		return -1;
+ 	}
+ 
+ 	return 0;
+@@ -52,27 +53,24 @@ int get_proc_locked_vm_size(void)
+ 	unsigned long lock_size = 0;
+ 
+ 	f = fopen("/proc/self/status", "r");
+-	if (!f) {
+-		perror("fopen");
+-		return -1;
 -	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("Error: couldn't map the space we need for the test\n");
-+
-+	if (munmap(addr, size) != 0)
-+		ksft_exit_fail_msg("Error: munmap failed\n");
++	if (!f)
++		ksft_exit_fail_msg("fopen: %s\n", strerror(errno));
  
--	if (munmap(addr, size) != 0) {
--		printf("Error: couldn't map the space we need for the test\n");
--		return 0;
--	}
- 	return (unsigned long)addr;
+ 	while (fgets(line, 1024, f)) {
+ 		if (strstr(line, "VmLck")) {
+ 			ret = sscanf(line, "VmLck:\t%8lu kB", &lock_size);
+ 			if (ret <= 0) {
+-				printf("sscanf() on VmLck error: %s: %d\n",
+-						line, ret);
+ 				fclose(f);
+-				return -1;
++				ksft_exit_fail_msg("sscanf() on VmLck error: %s: %d\n",
++						   line, ret);
+ 			}
+ 			fclose(f);
+ 			return (int)(lock_size << 10);
+ 		}
+ 	}
+ 
+-	perror("cannot parse VmLck in /proc/self/status\n");
+ 	fclose(f);
++	ksft_exit_fail_msg("cannot parse VmLck in /proc/self/status: %s\n", strerror(errno));
+ 	return -1;
  }
  
-@@ -46,51 +44,39 @@ int main(void)
- 	unsigned long flags, addr, size, page_size;
- 	char *p;
+@@ -91,10 +89,8 @@ int get_proc_page_size(unsigned long addr)
+ 	size_t size;
  
-+	ksft_print_header();
-+	ksft_set_plan(9);
-+
- 	page_size = sysconf(_SC_PAGE_SIZE);
+ 	smaps = seek_to_smaps_entry(addr);
+-	if (!smaps) {
+-		printf("Unable to parse /proc/self/smaps\n");
+-		return 0;
+-	}
++	if (!smaps)
++		ksft_exit_fail_msg("Unable to parse /proc/self/smaps\n");
  
--	//let's find a base addr that is free before we start the tests
-+	/* let's find a base addr that is free before we start the tests */
- 	size = 5 * page_size;
- 	base_addr = find_base_addr(size);
--	if (!base_addr) {
--		printf("Error: couldn't map the space we need for the test\n");
--		return 1;
+ 	while (getline(&line, &size, smaps) > 0) {
+ 		if (!strstr(line, "MMUPageSize")) {
+@@ -105,12 +101,9 @@ int get_proc_page_size(unsigned long addr)
+ 		}
+ 
+ 		/* found the MMUPageSize of this section */
+-		if (sscanf(line, "MMUPageSize:    %8lu kB",
+-					&mmupage_size) < 1) {
+-			printf("Unable to parse smaps entry for Size:%s\n",
+-					line);
+-			break;
+-		}
++		if (sscanf(line, "MMUPageSize:    %8lu kB", &mmupage_size) < 1)
++			ksft_exit_fail_msg("Unable to parse smaps entry for Size:%s\n",
++					   line);
+ 
+ 	}
+ 	free(line);
+@@ -136,7 +129,7 @@ int get_proc_page_size(unsigned long addr)
+  *    return value: 0 - success
+  *    else: failure
+  */
+-int test_mlock_within_limit(char *p, int alloc_size)
++static void test_mlock_within_limit(char *p, int alloc_size)
+ {
+ 	int i;
+ 	int ret = 0;
+@@ -145,11 +138,9 @@ int test_mlock_within_limit(char *p, int alloc_size)
+ 	int page_size = 0;
+ 
+ 	getrlimit(RLIMIT_MEMLOCK, &cur);
+-	if (cur.rlim_cur < alloc_size) {
+-		printf("alloc_size[%d] < %u rlimit,lead to mlock failure\n",
+-				alloc_size, (unsigned int)cur.rlim_cur);
+-		return -1;
+-	}
++	if (cur.rlim_cur < alloc_size)
++		ksft_exit_fail_msg("alloc_size[%d] < %u rlimit,lead to mlock failure\n",
++				   alloc_size, (unsigned int)cur.rlim_cur);
+ 
+ 	srand(time(NULL));
+ 	for (i = 0; i < TEST_LOOP; i++) {
+@@ -169,13 +160,11 @@ int test_mlock_within_limit(char *p, int alloc_size)
+ 			ret = mlock2_(p + start_offset, lock_size,
+ 				       MLOCK_ONFAULT);
+ 
+-		if (ret) {
+-			printf("%s() failure at |%p(%d)| mlock:|%p(%d)|\n",
+-					is_mlock ? "mlock" : "mlock2",
+-					p, alloc_size,
+-					p + start_offset, lock_size);
+-			return ret;
+-		}
++		if (ret)
++			ksft_exit_fail_msg("%s() failure at |%p(%d)| mlock:|%p(%d)|\n",
++					   is_mlock ? "mlock" : "mlock2",
++					   p, alloc_size,
++					   p + start_offset, lock_size);
+ 	}
+ 
+ 	/*
+@@ -183,18 +172,12 @@ int test_mlock_within_limit(char *p, int alloc_size)
+ 	 */
+ 	locked_vm_size = get_proc_locked_vm_size();
+ 	page_size = get_proc_page_size((unsigned long)p);
+-	if (page_size == 0) {
+-		printf("cannot get proc MMUPageSize\n");
+-		return -1;
 -	}
  
- 	flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE;
+-	if (locked_vm_size > PAGE_ALIGN(alloc_size, page_size) + page_size) {
+-		printf("test_mlock_within_limit() left VmLck:%d on %d chunk\n",
+-				locked_vm_size, alloc_size);
+-		return -1;
+-	}
++	if (locked_vm_size > PAGE_ALIGN(alloc_size, page_size) + page_size)
++		ksft_exit_fail_msg("%s left VmLck:%d on %d chunk\n",
++				   __func__, locked_vm_size, alloc_size);
  
--	// Check we can map all the areas we need below
--	errno = 0;
-+	/* Check we can map all the areas we need below */
- 	addr = base_addr;
- 	size = 5 * page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
--
- 	if (p == MAP_FAILED) {
- 		dump_maps();
--		printf("Error: couldn't map the space we need for the test\n");
--		return 1;
-+		ksft_exit_fail_msg("Error: couldn't map the space we need for the test\n");
- 	}
--
--	errno = 0;
- 	if (munmap((void *)addr, 5 * page_size) != 0) {
- 		dump_maps();
--		printf("Error: munmap failed!?\n");
--		return 1;
-+		ksft_exit_fail_msg("Error: munmap failed!?\n");
- 	}
--	printf("unmap() successful\n");
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
+-	return 0;
++	ksft_test_result_pass("%s\n", __func__);
+ }
  
--	errno = 0;
- 	addr = base_addr + page_size;
- 	size = 3 * page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
+ 
+@@ -213,7 +196,7 @@ int test_mlock_within_limit(char *p, int alloc_size)
+  *    return value: 0 - success
+  *    else: failure
+  */
+-int test_mlock_outof_limit(char *p, int alloc_size)
++static void test_mlock_outof_limit(char *p, int alloc_size)
+ {
+ 	int i;
+ 	int ret = 0;
+@@ -221,11 +204,9 @@ int test_mlock_outof_limit(char *p, int alloc_size)
+ 	struct rlimit cur;
+ 
+ 	getrlimit(RLIMIT_MEMLOCK, &cur);
+-	if (cur.rlim_cur >= alloc_size) {
+-		printf("alloc_size[%d] >%u rlimit, violates test condition\n",
+-				alloc_size, (unsigned int)cur.rlim_cur);
+-		return -1;
+-	}
++	if (cur.rlim_cur >= alloc_size)
++		ksft_exit_fail_msg("alloc_size[%d] >%u rlimit, violates test condition\n",
++				   alloc_size, (unsigned int)cur.rlim_cur);
+ 
+ 	old_locked_vm_size = get_proc_locked_vm_size();
+ 	srand(time(NULL));
+@@ -240,56 +221,47 @@ int test_mlock_outof_limit(char *p, int alloc_size)
+ 		else
+ 			ret = mlock2_(p + start_offset, lock_size,
+ 					MLOCK_ONFAULT);
+-		if (ret == 0) {
+-			printf("%s() succeeds? on %p(%d) mlock%p(%d)\n",
+-					is_mlock ? "mlock" : "mlock2",
+-					p, alloc_size,
+-					p + start_offset, lock_size);
+-			return -1;
+-		}
++		if (ret == 0)
++			ksft_exit_fail_msg("%s() succeeds? on %p(%d) mlock%p(%d)\n",
++					   is_mlock ? "mlock" : "mlock2",
++					   p, alloc_size, p + start_offset, lock_size);
+ 	}
+ 
+ 	locked_vm_size = get_proc_locked_vm_size();
+-	if (locked_vm_size != old_locked_vm_size) {
+-		printf("tests leads to new mlocked page: old[%d], new[%d]\n",
+-				old_locked_vm_size,
+-				locked_vm_size);
+-		return -1;
+-	}
++	if (locked_vm_size != old_locked_vm_size)
++		ksft_exit_fail_msg("tests leads to new mlocked page: old[%d], new[%d]\n",
++				   old_locked_vm_size,
++				   locked_vm_size);
+ 
+-	return 0;
++	ksft_test_result_pass("%s\n", __func__);
+ }
+ 
+ int main(int argc, char **argv)
+ {
+ 	char *p = NULL;
+-	int ret = 0;
++
++	ksft_print_header();
+ 
+ 	if (set_cap_limits(MLOCK_RLIMIT_SIZE))
+-		return -1;
++		ksft_finished();
++
++	ksft_set_plan(2);
+ 
+ 	p = malloc(MLOCK_WITHIN_LIMIT_SIZE);
+-	if (p == NULL) {
+-		perror("malloc() failure\n");
+-		return -1;
+-	}
+-	ret = test_mlock_within_limit(p, MLOCK_WITHIN_LIMIT_SIZE);
+-	if (ret)
+-		return ret;
++	if (p == NULL)
++		ksft_exit_fail_msg("malloc() failure: %s\n", strerror(errno));
++
++	test_mlock_within_limit(p, MLOCK_WITHIN_LIMIT_SIZE);
+ 	munlock(p, MLOCK_WITHIN_LIMIT_SIZE);
+ 	free(p);
+ 
 -
- 	if (p == MAP_FAILED) {
- 		dump_maps();
--		printf("Error: first mmap() failed unexpectedly\n");
--		return 1;
-+		ksft_exit_fail_msg("Error: first mmap() failed unexpectedly\n");
- 	}
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
+ 	p = malloc(MLOCK_OUTOF_LIMIT_SIZE);
+-	if (p == NULL) {
+-		perror("malloc() failure\n");
+-		return -1;
+-	}
+-	ret = test_mlock_outof_limit(p, MLOCK_OUTOF_LIMIT_SIZE);
+-	if (ret)
+-		return ret;
++	if (p == NULL)
++		ksft_exit_fail_msg("malloc() failure: %s\n", strerror(errno));
++
++	test_mlock_outof_limit(p, MLOCK_OUTOF_LIMIT_SIZE);
+ 	munlock(p, MLOCK_OUTOF_LIMIT_SIZE);
+ 	free(p);
  
- 	/*
- 	 * Exact same mapping again:
-@@ -100,17 +86,14 @@ int main(void)
- 	 *     +3 | mapped | new
- 	 *     +4 |  free  | new
- 	 */
--	errno = 0;
- 	addr = base_addr;
- 	size = 5 * page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
--
- 	if (p != MAP_FAILED) {
- 		dump_maps();
--		printf("Error:1: mmap() succeeded when it shouldn't have\n");
--		return 1;
-+		ksft_exit_fail_msg("Error:1: mmap() succeeded when it shouldn't have\n");
- 	}
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
- 
- 	/*
- 	 * Second mapping contained within first:
-@@ -121,17 +104,14 @@ int main(void)
- 	 *     +3 | mapped |
- 	 *     +4 |  free  |
- 	 */
--	errno = 0;
- 	addr = base_addr + (2 * page_size);
- 	size = page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
--
- 	if (p != MAP_FAILED) {
- 		dump_maps();
--		printf("Error:2: mmap() succeeded when it shouldn't have\n");
--		return 1;
-+		ksft_exit_fail_msg("Error:2: mmap() succeeded when it shouldn't have\n");
- 	}
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
- 
- 	/*
- 	 * Overlap end of existing mapping:
-@@ -141,17 +121,14 @@ int main(void)
- 	 *     +3 | mapped | new
- 	 *     +4 |  free  | new
- 	 */
--	errno = 0;
- 	addr = base_addr + (3 * page_size);
- 	size = 2 * page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
--
- 	if (p != MAP_FAILED) {
- 		dump_maps();
--		printf("Error:3: mmap() succeeded when it shouldn't have\n");
--		return 1;
-+		ksft_exit_fail_msg("Error:3: mmap() succeeded when it shouldn't have\n");
- 	}
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
- 
- 	/*
- 	 * Overlap start of existing mapping:
-@@ -161,17 +138,14 @@ int main(void)
- 	 *     +3 | mapped |
- 	 *     +4 |  free  |
- 	 */
--	errno = 0;
- 	addr = base_addr;
- 	size = 2 * page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
--
- 	if (p != MAP_FAILED) {
- 		dump_maps();
--		printf("Error:4: mmap() succeeded when it shouldn't have\n");
--		return 1;
-+		ksft_exit_fail_msg("Error:4: mmap() succeeded when it shouldn't have\n");
- 	}
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
- 
- 	/*
- 	 * Adjacent to start of existing mapping:
-@@ -181,17 +155,14 @@ int main(void)
- 	 *     +3 | mapped |
- 	 *     +4 |  free  |
- 	 */
--	errno = 0;
- 	addr = base_addr;
- 	size = page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
--
- 	if (p == MAP_FAILED) {
- 		dump_maps();
--		printf("Error:5: mmap() failed when it shouldn't have\n");
--		return 1;
-+		ksft_exit_fail_msg("Error:5: mmap() failed when it shouldn't have\n");
- 	}
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
- 
- 	/*
- 	 * Adjacent to end of existing mapping:
-@@ -201,27 +172,22 @@ int main(void)
- 	 *     +3 | mapped |
- 	 *     +4 |  free  |  new
- 	 */
--	errno = 0;
- 	addr = base_addr + (4 * page_size);
- 	size = page_size;
- 	p = mmap((void *)addr, size, PROT_NONE, flags, -1, 0);
--	printf("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
--
- 	if (p == MAP_FAILED) {
- 		dump_maps();
--		printf("Error:6: mmap() failed when it shouldn't have\n");
--		return 1;
-+		ksft_exit_fail_msg("Error:6: mmap() failed when it shouldn't have\n");
- 	}
-+	ksft_test_result_pass("mmap() @ 0x%lx-0x%lx p=%p result=%m\n", addr, addr + size, p);
- 
- 	addr = base_addr;
- 	size = 5 * page_size;
- 	if (munmap((void *)addr, size) != 0) {
- 		dump_maps();
--		printf("Error: munmap failed!?\n");
--		return 1;
-+		ksft_exit_fail_msg("Error: munmap failed!?\n");
- 	}
--	printf("unmap() successful\n");
-+	ksft_test_result_pass("Base Address unmap() successful\n");
- 
--	printf("OK\n");
 -	return 0;
 +	ksft_finished();
  }
