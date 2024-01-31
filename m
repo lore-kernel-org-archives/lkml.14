@@ -1,331 +1,160 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2067.outbound.protection.partner.outlook.cn [139.219.17.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEF369946;
-	Wed, 31 Jan 2024 09:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706694978; cv=none; b=U7vduSRucWHhCZ7KF5HpGsZjUnXB1TGLjl0traz45PJbtGJ/IS1OiUl95hVkirRcFoTHB94XnOCa4n0eusyaP7B38SUxPVBtgS+7YZN142OLdo6gWbXhS2HVev5A84n3PKUtdh4wa/l84Pb2TRuSZ1GJiQT/RbrRLAw/r9Glj4A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706694978; c=relaxed/simple;
-	bh=fK6iq4rUq+DD9xk9G5tnkNwycPJfH/ldT14R1RzQc3Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oD8+kHt0w7OIZL3xgS8o7bVRqFYkJw89hZgb54SrqmoBs436Gn4wZL/0FS5rJmWYhj/VkxI4yPaqhibS+bj86LxYF/Tg9Z2X5cYbKEumCxbnUBEjAWu0WAZME5Ln+nwepb1Yc5BJqNhLI2fXhynHpDT495tKk2RILeGBk7pacbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JOtesOJ8; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOtesOJ8"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so620610766b.2;
-        Wed, 31 Jan 2024 01:56:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706694974; x=1707299774; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zEadS9UxY93S+yF9FZGOCXcaSPkNTNxK4D1IAVD6N6k=;
-        b=JOtesOJ808gX9YpB+S6L5ViAI0DAEv+MzY6TWNIYQQdHQkEyEsRbK7Krjrb3zNgpYr
-         Rf+GbvfDFrsalkKXlSFJ0gYHmqwkperxY8yPLjRS+q8FKfIS0GKnZBVfpeiT8ffIwP/V
-         NjloSfUku6SsMhojeccvXbvLaEW7J7NRWcKCRf9naArxulyOB4xWqaL/gFCWdSEvx7rX
-         YwzbFeO9tVkjgVd1jRvsG+PO4FqScJJmTIJngLkyMtwlzSFlCgFwUzpVBbHbTHJp543m
-         6YYhs6MdakgIg23cR07CHXSbQT5g2b62BbSxCThTR3yOGiFJhuPWSJxruc6StknH7eHo
-         s3hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706694974; x=1707299774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zEadS9UxY93S+yF9FZGOCXcaSPkNTNxK4D1IAVD6N6k=;
-        b=Ml8D8ZceT8knm93OJH8h7W1wx/3G1oT6OuyiVB1J0r7fcGZoH7PB90tCe1oE+8NXbm
-         47RpULzAAtzcF09np4HskhVpPPl2isJvV7nOFyzIPVKsVzBTriMcOBEQ8fA6KWtyj+1U
-         bLPwQb7Ci6SIf7GeWx8ZiPEOj49s5qZWBK/NnJPbbRHjpN/Dl+m7gAWCStXy4JkouAyl
-         SMt/NhvOqBNvjWQN7hpjCdHzszEW5wosXFRsi4HXGBCM74olfGXjOwFfgiaat6wUFBI0
-         HgjxIcBuW91lcwYYVXE5W6pC1qFjv6wTSv91Q2bkc7nmJMiAO8de6sUtpi1QNxQ+kwc0
-         d6gw==
-X-Gm-Message-State: AOJu0YwMyNZRku1BtGqMRzXUepeUsWgE0OPhVReQ2lvtC8n5SrnzwxdQ
-	LhqyvuneU5RDSXsdCWBVUHFNEHNRg+gx9qDEvT/iv8cH1HG0ywcfJKmVg5YcozdJ8/7CFOgDau1
-	Zad3MIb9DecQNK6vldF9fpFwq1Ao=
-X-Google-Smtp-Source: AGHT+IH4DyH0g1ej/nBlEHJ+mPR+KHehaqfvp4PLg2KVCzp3KPZ9erh9Kgz4XrTxHRarieng8jtQWjzFh74lTtCusQM=
-X-Received: by 2002:a17:906:fc26:b0:a35:3152:c46b with SMTP id
- ov38-20020a170906fc2600b00a353152c46bmr708719ejb.60.1706694974324; Wed, 31
- Jan 2024 01:56:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42C969958;
+	Wed, 31 Jan 2024 09:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706695041; cv=fail; b=honNmz2pgaHxE3VEb9e1398Gt5vp78RUhMOTasCkRW83RNEdQBeSc9fTVzWPtH5kR1HdoCiJGCxtxCNQQyluBxHmS7sWrSPWuadZsVY+rVL0qe8bKsodroIAbhmBos4j4AA4KwXmSLGxnIDzimFpQGOJiVqn9tFwaHwaQDHOx+s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706695041; c=relaxed/simple;
+	bh=ytVULuwkFklVC91b/qokiLoeTsfLvoZO1FXXpUJ0MM8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=oOiUlnNghTZ5r7PUAbQy/b9sDENybUhiYqaZeEWnuyPhAVhJXnaMNMaak3d23tx7PIhidGbAlI63JmCwCSUkoHhSgTLTDVZxLxLAh8vkvOJmZGy8NcQkQlagYeFU30uGyiMtF+if8tDKOOj+kRhEQE0pBTvro8xqtNaYqiOS9dc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OG4wJD8kUQ0XAKc66dwH0oCP6HR4x1XgK9xsrtL2+eRJziXIgu2MZD55wesEM5ees7FZoL/RXXzjnog8qDXzaJPnEkJgMNBD5eN/J7WfJT8AXav1t2dd+11c9tYYQFiJwIC4JzGUeZexHl/kgCc3YqLLCWYaq7A48CuluHtN6ehbqhyVLsmfZH3973QKYcsykwcFW6YUVFWg6NPlAJOrj94CZriSMv1Bh6WWWjHHEGnLDG9Q+PrqRlw0ltf4UYWaYY2+fVfntctmpFKr918XLHsD+IEfStxie4Czo5LI3mn5X/PhBZvlCYhV1ZXsAduiWXfgSydteSKisYS+ZXgJCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Aw3CWTlCesETFFXC33GBRJUHEd72O25xH+lGBm4JbLc=;
+ b=FSQw7XxYz9kE9RWrnJk8AA3bpQIL79dF5NlFce1234v/WVvDStUe7L4FNJf9yc2Ybvq5MOFd6cmcISI/NN/8qSB676GW4ehS2r8xm+LNKvcvnazrWm3HC+fVohQukDSw9q9oyV30KAbaF4ev7m4wjoMfValhKoQIF//853u+yaD8J8fI5hsPep0gm84KCm7P9BIGHpU0x0KwcSoSHgM4GRmcuNEccEfM/qUCNW4ZTMOe5tRNHhoX3zHrApqR1u41k4dCT1i3km8uqFuIfIpXKMH9540fz+cr0M2AGkeOUa8GL9ISgeVFqCVRsOvFHSy+AX2gjh+JEDQTzDV93UDepQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) by SHXPR01MB0591.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1e::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
+ 2024 09:24:39 +0000
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::148c:e1dd:302a:196b]) by
+ SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::148c:e1dd:302a:196b%6])
+ with mapi id 15.20.7228.022; Wed, 31 Jan 2024 09:24:39 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Jack Zhu <jack.zhu@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: [v1] staging: media: starfive: Set 16 bpp for capture_raw device
+Date: Wed, 31 Jan 2024 01:24:32 -0800
+Message-Id: <20240131092432.232540-1-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHXPR01CA0014.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1b::23) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130-rk-dts-additions-v2-0-c6222c4c78df@gmail.com>
- <20240130-rk-dts-additions-v2-1-c6222c4c78df@gmail.com> <0702542c8d7dc4139ba5da690fd98e67@manjaro.org>
-In-Reply-To: <0702542c8d7dc4139ba5da690fd98e67@manjaro.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 31 Jan 2024 13:56:02 +0400
-Message-ID: <CABjd4Ywx4-3BN7tF=Lv6LNTry_+j=jjM_v7SdzLaWHbuePip3g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: enable built-in thermal
- monitoring on rk3588
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0591:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0343a24e-5696-4255-3968-08dc223e72c4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	HavGtDbH37WLnxAiAPBynLD526uCOO499MjsX2ODQzsYYT4mi9sFkdHu9QIKf3LrSFFwvKWe+YKamlJp6btVQqKWqIhR6GOKFx9lGOOrFqA6CQXXyf39HFaZkEujgbZDP9EGLYWuJ2Il/QGgncIx/OmDNyZx2D3vKbvGWAp4CvTuLiX4SVgGFn4T1vH7mF1UAHb90NMXkVpRWUbBmCcKwMHrz+Eke0oj9yzLgZIfoX7GEtogl/KCA1+SPxsupFjcKXZVl+uKVsmCWBFVBCQdUYxd0jFzwd7QaJjeB0/ReP+hYcZXThV5y+6rasI1SQT834Z+rIMu+OsZWIcfhbNFgDtVyCmCIR9Dtp+pchw4QKEiVbPP1oqlvKJ2FtqJm5DG/EtXckbpasKavNvrP0GCiiCR4XMZNLdFcdWcLUqj0n6oKW/8ebS5BJ9AeNW13nHU20JThbAix5caQCbEY0uiKYL2TyOEtCp57QSR5c7S7bLOCrdUDkU8XF9A/bijUGRIaFbyqcp3ViN6xZm/88dgLWsWIiBr7eGxW5mU07WHqlJksS7nyQmaKN11mjnqoWui
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(39830400003)(346002)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(38350700005)(41300700001)(1076003)(40160700002)(41320700001)(2616005)(26005)(36756003)(52116002)(6666004)(83380400001)(508600001)(54906003)(40180700001)(38100700002)(2906002)(110136005)(86362001)(66556008)(66476007)(8936002)(44832011)(4326008)(66946007)(8676002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?19DMFhwyfykPhGuennW2ken26WpTWNq805TDQzdpWIVkOaiur9KleDeW0Nsi?=
+ =?us-ascii?Q?Df2DYIlyChO34Szta+XaCYNZ2fl3TBnFF5e4XhQtfxPbXQXTa8w3IWExywuW?=
+ =?us-ascii?Q?IBNJ97Q0NkbJAAaV9m/UFKKcyB7Q1LNq8hmU3YlMomxymoNGT2KPNUaMjRP0?=
+ =?us-ascii?Q?FEhXuuUZhnyBPh745uuMM3CEpZGcoiwwU0qXipJBfVX80BwfIn7KwLF3MrLP?=
+ =?us-ascii?Q?qzQ5e98FiEiKtguNBEWKwS4xxMJs6YihTChItEPyyl/Q8rCv5qI3osU6eK5F?=
+ =?us-ascii?Q?zR7isp+OU21L7bhIijN1XuNP77q5CF2g6tDCq4zWy38biftlGLF3CggdR5hp?=
+ =?us-ascii?Q?j/iDit7PsgsFG1cM/LcRX5jpRSVtaPXSR31ec9a2q6iCwQJXGQvh3ff604l9?=
+ =?us-ascii?Q?FONEGjVWM/V8922b2rM0tO4qm0orDmk20bBhK3yZRAPOt5KltGCC2DrTSqLU?=
+ =?us-ascii?Q?+BiIL58A8Zb/9sMinHAaUWrXTj6nJaZdVaDCYZTioLp5Iuj6Q+vHq0zKPGy2?=
+ =?us-ascii?Q?kp/Bbzorjw7mbBoI1M6i6ce3VfrRskBui+QeZ1fW8j7VcLLsN6RddEmlVIln?=
+ =?us-ascii?Q?DxkWCNyQxLoCcGFcUVEjgcelxh1UVDdJzicchSYMMmh/9nv5eoEmnOPRUE/w?=
+ =?us-ascii?Q?sO7EepMsCEZq7tRq8yCjHuwZawr/J0VrpyfnRkGaziTqU4KVHEAMTrXc9IGD?=
+ =?us-ascii?Q?SNdiYKxwuhGy80Rg0sRQ9EtppXgopAy8+h+GRoFbZzuT9CrNElK62kpGZRou?=
+ =?us-ascii?Q?SgPb/33UrCd4MflQs6ENF2JderkGGqxiNFzFcGpVyADb6RCtvSFunmC6CXl4?=
+ =?us-ascii?Q?KuAkxHf8FX4dh/bDrlUqYjK3+YFC3KewtjnMnxa1JJnCuwVzZ9Kq16x8kc2S?=
+ =?us-ascii?Q?uT32xZWmAf0PXFVUe2sgsXHjopN5ftENrnuzI38tyEDRMQoTLLXvtIS4vLVI?=
+ =?us-ascii?Q?qnTVWiwHfPzkZV+8qL685TsK3yBxbMutdpmTMcN8uZrbLRntaGm3kfrSW0mC?=
+ =?us-ascii?Q?RkRyYK/5GhL4cCliRU1Mj9c78ii1EsZpaJ8MRHr8jPADF4xnSqeApeV7uA9F?=
+ =?us-ascii?Q?VaRI9SYTlk2GHv/hCB2weA8CPo1kYoHjRvDEzqyLxUbRdfPjYdtJGjZIzF6W?=
+ =?us-ascii?Q?0JtZSvyIanyclcoJwQSm5D44kV4AuxaHheQ1GIC77xNIpz9G7+TqIM4Q5ni8?=
+ =?us-ascii?Q?tqpayl6BXmK6uJQ6Eb21Hbq4Od6J//XrxlkZjjXenl8OgpXZglhB2GQyQrul?=
+ =?us-ascii?Q?vAUhCqdMsE+BKfr1JKp+N9McsIar7n1d8d3Rh0g+PJniz7/ngqvxMPQ4n+sn?=
+ =?us-ascii?Q?3h3BzqpQ6s742pNAceExR6X+ajAEe0kmT0o77Rjsk0h/fl3BG5ZWESo3uzNP?=
+ =?us-ascii?Q?N+Kv8L1oTqqd608joNHqJIrwbZ+pPkog0uMdNJBOES2JtE5VWuVjDI4gB7nR?=
+ =?us-ascii?Q?ISCIXIyiRsF8jaN2wT+CRsWPKrupyWXIiwo44v2+LE8TNrQ+E+c5JzbzAcms?=
+ =?us-ascii?Q?zrGvRpGedYgrrdziCC/RfVRiOv/Dgc3aVM4nDQ6BjUTNy4ofO7W7LU5G4EbS?=
+ =?us-ascii?Q?VB27JbJnYqtIv8tQVhNUH2zWq2zAuTLujBNjuhLVqgZe17sWZ46pVGtQxoPz?=
+ =?us-ascii?Q?lCmsY0IpRQmDxgrgwaRYXIw=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0343a24e-5696-4255-3968-08dc223e72c4
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 09:24:38.9669
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vw2j/fIKHpbskVQkmbLa2t2H9K9ktEXYTJOXdLRAbMwH4GGLS0iGvPPx0GFeGEmFpUILkUaHdblUFGCjH/sBFbYkHsPTsF32CAuO2z1SoTPXuJK8Cps1gh4i2M+5wa+r
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0591
 
-On Wed, Jan 31, 2024 at 9:05=E2=80=AFAM Dragan Simic <dsimic@manjaro.org> w=
-rote:
->
-> Hello Alexey,
->
-> Some small nitpicks below, please have a look.
->
-> On 2024-01-30 19:21, Alexey Charkov wrote:
-> > Include thermal zones information in device tree for rk3588 variants
->
-> Please use "RK3588" instead of "rk3588", both here and in the
-> patch subject.  Looks much better.
+For StarFive JH7110 Camera Subsystem, capture_raw video device output
+raw10 pixelformat requires 16bit of alignment.
 
-Noted, thanks!
+Fixes: e080f339c80a ("media: staging: media: starfive: camss: Add capture driver")
+Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+---
+ drivers/staging/media/starfive/camss/stf-capture.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 162
-> > ++++++++++++++++++++++++++++++
-> >  1 file changed, 162 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> > b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> > index 36b1b7acfe6a..696cb72d75d0 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> > @@ -10,6 +10,7 @@
-> >  #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-> >  #include <dt-bindings/phy/phy.h>
-> >  #include <dt-bindings/ata/ahci.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >       compatible =3D "rockchip,rk3588";
-> > @@ -2228,6 +2229,167 @@ tsadc: tsadc@fec00000 {
-> >               status =3D "disabled";
-> >       };
-> >
-> > +     thermal_zones: thermal-zones {
-> > +             /* sensor near the center of the whole chip */
->
-> It would be good to replace "whole chip" with "SoC".  Simpler and
-> IIRC closer to the official description of the sensor.
+diff --git a/drivers/staging/media/starfive/camss/stf-capture.c b/drivers/staging/media/starfive/camss/stf-capture.c
+index 70c24b050a1b..ec5169e7b391 100644
+--- a/drivers/staging/media/starfive/camss/stf-capture.c
++++ b/drivers/staging/media/starfive/camss/stf-capture.c
+@@ -20,28 +20,28 @@ static const struct stfcamss_format_info stf_wr_fmts[] = {
+ 		.pixelformat = V4L2_PIX_FMT_SRGGB10,
+ 		.planes = 1,
+ 		.vsub = { 1 },
+-		.bpp = 10,
++		.bpp = 16,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
+ 		.pixelformat = V4L2_PIX_FMT_SGRBG10,
+ 		.planes = 1,
+ 		.vsub = { 1 },
+-		.bpp = 10,
++		.bpp = 16,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
+ 		.pixelformat = V4L2_PIX_FMT_SGBRG10,
+ 		.planes = 1,
+ 		.vsub = { 1 },
+-		.bpp = 10,
++		.bpp = 16,
+ 	},
+ 	{
+ 		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
+ 		.pixelformat = V4L2_PIX_FMT_SBGGR10,
+ 		.planes = 1,
+ 		.vsub = { 1 },
+-		.bpp = 10,
++		.bpp = 16,
+ 	},
+ };
+ 
+-- 
+2.25.1
 
-The TRM only says "near chip center" (sic) :)
-
-> > +             package_thermal: package-thermal {
-> > +                     polling-delay-passive =3D <0>;
-> > +                     polling-delay =3D <0>;
-> > +                     thermal-sensors =3D <&tsadc 0>;
-> > +
-> > +                     trips {
-> > +                             package_crit: package-crit {
-> > +                                     temperature =3D <115000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             /* sensor between A76 cores 0 and 1 */
-> > +             bigcore0_thermal: bigcore0-thermal {
-> > +                     polling-delay-passive =3D <100>;
-> > +                     polling-delay =3D <0>;
-> > +                     thermal-sensors =3D <&tsadc 1>;
-> > +
-> > +                     trips {
->
-> Please add the following comment here, to make it clear what's
-> the purpose of this thermal trip when the IPA thermal governor
-> is used (more similar comments below):
->
->                                  /* IPA threshold */
-
-Not so sure about this one: shouldn't the device tree be
-implementation agnostic, and just describe the hardware and its
-expectations? Sounds like references to a particular thermal governor
-would be out of scope.
-
-Best regards,
-Alexey
-
-> > +                             bigcore0_alert0: bigcore0-alert0 {
-> > +                                     temperature =3D <75000>;
-> > +                                     hysteresis =3D <2000>;
-> > +                                     type =3D "passive";
-> > +                             };
->
-> Please add the following comment here:
->
->                                  /* IPA target */
->
-> > +                             bigcore0_alert1: bigcore0-alert1 {
-> > +                                     temperature =3D <85000>;
-> > +                                     hysteresis =3D <2000>;
-> > +                                     type =3D "passive";
-> > +                             };
-> > +                             bigcore0_crit: bigcore0-crit {
-> > +                                     temperature =3D <115000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip =3D <&bigcore0_alert1>;
-> > +                                     cooling-device =3D
-> > +                                             <&cpu_b0 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> > +                                             <&cpu_b1 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             /* sensor between A76 cores 2 and 3 */
-> > +             bigcore2_thermal: bigcore2-thermal {
-> > +                     polling-delay-passive =3D <100>;
-> > +                     polling-delay =3D <0>;
-> > +                     thermal-sensors =3D <&tsadc 2>;
-> > +
-> > +                     trips {
->
-> Please add the following comment here:
->
->                                  /* IPA threshold */
->
-> > +                             bigcore2_alert0: bigcore2-alert0 {
-> > +                                     temperature =3D <75000>;
-> > +                                     hysteresis =3D <2000>;
-> > +                                     type =3D "passive";
-> > +                             };
->
-> Please add the following comment here:
->
->                                  /* IPA target */
->
-> > +                             bigcore2_alert1: bigcore2-alert1 {
-> > +                                     temperature =3D <85000>;
-> > +                                     hysteresis =3D <2000>;
-> > +                                     type =3D "passive";
-> > +                             };
-> > +                             bigcore2_crit: bigcore2-crit {
-> > +                                     temperature =3D <115000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip =3D <&bigcore2_alert1>;
-> > +                                     cooling-device =3D
-> > +                                             <&cpu_b2 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> > +                                             <&cpu_b3 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             /* sensor between the four A55 cores */
-> > +             little_core_thermal: littlecore-thermal {
-> > +                     polling-delay-passive =3D <100>;
-> > +                     polling-delay =3D <0>;
-> > +                     thermal-sensors =3D <&tsadc 3>;
-> > +
-> > +                     trips {
->
-> Please add the following comment here:
->
->                                  /* IPA threshold */
->
-> > +                             littlecore_alert0: littlecore-alert0 {
-> > +                                     temperature =3D <75000>;
-> > +                                     hysteresis =3D <2000>;
-> > +                                     type =3D "passive";
-> > +                             };
->
-> Please add the following comment here:
->
->                                  /* IPA target */
->
-> > +                             littlecore_alert1: littlecore-alert1 {
-> > +                                     temperature =3D <85000>;
-> > +                                     hysteresis =3D <2000>;
-> > +                                     type =3D "passive";
-> > +                             };
-> > +                             littlecore_crit: littlecore-crit {
-> > +                                     temperature =3D <115000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip =3D <&littlecore_alert1>;
-> > +                                     cooling-device =3D
-> > +                                             <&cpu_l0 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> > +                                             <&cpu_l1 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> > +                                             <&cpu_l2 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>,
-> > +                                             <&cpu_l3 THERMAL_NO_LIMIT=
- THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             /* sensor near the PD_CENTER power domain */
-> > +             center_thermal: center-thermal {
-> > +                     polling-delay-passive =3D <0>;
-> > +                     polling-delay =3D <0>;
-> > +                     thermal-sensors =3D <&tsadc 4>;
-> > +
-> > +                     trips {
-> > +                             center_crit: center-crit {
-> > +                                     temperature =3D <115000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             gpu_thermal: gpu-thermal {
-> > +                     polling-delay-passive =3D <0>;
-> > +                     polling-delay =3D <0>;
-> > +                     thermal-sensors =3D <&tsadc 5>;
-> > +
-> > +                     trips {
-> > +                             gpu_crit: gpu-crit {
-> > +                                     temperature =3D <115000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +
-> > +             npu_thermal: npu-thermal {
-> > +                     polling-delay-passive =3D <0>;
-> > +                     polling-delay =3D <0>;
-> > +                     thermal-sensors =3D <&tsadc 6>;
-> > +
-> > +                     trips {
-> > +                             npu_crit: npu-crit {
-> > +                                     temperature =3D <115000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> >       saradc: adc@fec10000 {
-> >               compatible =3D "rockchip,rk3588-saradc";
-> >               reg =3D <0x0 0xfec10000 0x0 0x10000>;
