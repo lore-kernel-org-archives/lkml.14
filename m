@@ -1,96 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5513B12CDAD;
-	Wed, 31 Jan 2024 17:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B4E12C539
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706720970; cv=none; b=ks0SGBN6N5fm9ybeX8a2bK0VeWHbGaFCQpMXw7TW5L1xIaeUMZIXrXRjohKATwkDKiabwQbfvWi86kURguIF3QOpRHMG3v/a1L+VCRuafTxCh0SIJ33wYLt8BX7VGLeumQ3tJNUcsVKo9EB/AhroQ9R3970C4qImbA4hbQnx4hw=
+	t=1706721057; cv=none; b=sDgv7QxklcuvXXEnQ/yVkCx1d3tGtv9aRjWw2IoVwQ+gNHVLk10HSbX3RC9W3Tt8yJ6SL917CcpsQy7lx568ruhNO1AchEZS0LcZtwuCCNHPx/hXn+6HYosXwowJtupa6OwDc4fZ1CRtU2fUOZxZ82zJJLC9AYciXIbawXPiEXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706720970; c=relaxed/simple;
-	bh=dVvlpOFPokj2vNw6vrhxASEx0Sn+K4PJzSQgQWHwgBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=molVg8JFcwlbny7r1c9+KfNU+cua2gFXyURVbqyIrEMeh3zYbW8rcEYc3o7mqMb8FjnCZwuMq3qhFoEQGNDZSEwlcFBIjX69yGbMCnqhgizyl14UPtsoSzXcgCRzeq7U5M+E+9iWxXDPB42GM+pzLPZYFbTqfQO6fMrfsQqy0Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kcl8GR9Z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcl8GR9Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD5D7C433C7;
-	Wed, 31 Jan 2024 17:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706720969;
-	bh=dVvlpOFPokj2vNw6vrhxASEx0Sn+K4PJzSQgQWHwgBk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kcl8GR9ZaWoc7zLRPbldy0pSjmZ9EnduzFdn9dLAtG2imtPNJwDJYp3c2HTe6z2fX
-	 iZe8pSm20ECL8q0hLq4qOUp4QLeI0Q0t8ittmTizk7QZpjTnC0nnhU96Ese3uWt1uz
-	 jN4RgblEZePFCUIp7ImZMqlUt63qwpLDM48neQKXK/57NTgTIM9plC6g4v1c9TT9an
-	 OwPDXXZLMc5wK2QY7z5Tyq+3l5Q+TWzVVnPJLfqIQhQocQ42vR3r9tfF30G5fKTg9t
-	 bThiX20tNj0oAoU84ZqhuKH4UQKdkIM/6pOzQ/7R9qaUOofI8N2VqCQUggCltKSoeO
-	 Y/IlEgELsQ1og==
-Date: Wed, 31 Jan 2024 17:09:22 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: sam@ravnborg.org, bbrezillon@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lee@kernel.org, thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-	hari.prasathge@microchip.com, manikandan.m@microchip.com,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [linux][PATCH v5 2/3] dt-bindings: atmel,hlcdc: convert pwm
- bindings to json-schema
-Message-ID: <20240131-ravioli-unseeing-401d093f3d7b@spud>
-References: <20240131033523.577450-1-dharma.b@microchip.com>
- <20240131033523.577450-3-dharma.b@microchip.com>
+	s=arc-20240116; t=1706721057; c=relaxed/simple;
+	bh=vyqxsmT1sYLs8Lhco7xrp08oqpIsWPXEzBlZX7H94oY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=F0+wLLi3FwyFoHzxCQ+aAuqkMW2zjDIyf6Fk8xEcdK3sOYLVNIaBrUFeVQximX7/3Xtvc1rla0VVL8+4qj9hdp0OlbNp2nyp140fN9gnxY9VNv7nmGPihTEpDSwybIFIGqC2NeDOqfBKCqjnFn6C6BMAT0hC/n/x8ng8SUsnW3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 739B2240006;
+	Wed, 31 Jan 2024 17:10:48 +0000 (UTC)
+Message-ID: <139cdbd6-73d9-4452-94ce-825689b7c0c8@ghiti.fr>
+Date: Wed, 31 Jan 2024 18:10:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aXzkUnbG7Mn0Gz+m"
-Content-Disposition: inline
-In-Reply-To: <20240131033523.577450-3-dharma.b@microchip.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: add CALLER_ADDRx support
+Content-Language: en-US
+To: Zong Li <zong.li@sifive.com>, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20231205085959.32177-1-zong.li@sifive.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20231205085959.32177-1-zong.li@sifive.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
+
+On 05/12/2023 09:59, Zong Li wrote:
+> CALLER_ADDRx returns caller's address at specified level, they are used
+> for several tracers. These macros eventually use
+> __builtin_return_address(n) to get the caller's address if arch doesn't
+> define their own implementation.
+>
+> In RISC-V, __builtin_return_address(n) only works when n == 0, we need
+> to walk the stack frame to get the caller's address at specified level.
 
 
---aXzkUnbG7Mn0Gz+m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 31, 2024 at 09:05:22AM +0530, Dharma Balasubiramani wrote:
-> Convert device tree bindings for Atmel's HLCDC PWM controller to YAML
-> format.
->=20
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Same comment about the examples here FWIW.
-
-> +examples:
-> +  - |
-> +    pwm {
-> +      compatible =3D "atmel,hlcdc-pwm";
-> +      pinctrl-names =3D "default";
-> +      pinctrl-0 =3D <&pinctrl_lcd_pwm>;
-> +      #pwm-cells =3D <3>;
-> +    };
+Is that a bug in gcc or something expected for riscv in general?
 
 
---aXzkUnbG7Mn0Gz+m
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> data.level started from 'level + 3' due to the call flow of getting
+> caller's address in RISC-V implementation. If we don't have additional
+> three iteration, the level is corresponding to follows:
+>
+> callsite -> return_address -> arch_stack_walk -> walk_stackframe
+> |           |                 |                  |
+> level 3     level 2           level 1            level 0
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>   arch/riscv/include/asm/ftrace.h    |  5 ++++
+>   arch/riscv/kernel/Makefile         |  2 ++
+>   arch/riscv/kernel/return_address.c | 48 ++++++++++++++++++++++++++++++
+>   3 files changed, 55 insertions(+)
+>   create mode 100644 arch/riscv/kernel/return_address.c
+>
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> index 2b2f5df7ef2c..42777f91a9c5 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -25,6 +25,11 @@
+>   
+>   #define ARCH_SUPPORTS_FTRACE_OPS 1
+>   #ifndef __ASSEMBLY__
+> +
+> +extern void *return_address(unsigned int level);
+> +
+> +#define ftrace_return_address(n) return_address(n)
+> +
+>   void MCOUNT_NAME(void);
+>   static inline unsigned long ftrace_call_adjust(unsigned long addr)
+>   {
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index fee22a3d1b53..40d054939ae2 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -7,6 +7,7 @@ ifdef CONFIG_FTRACE
+>   CFLAGS_REMOVE_ftrace.o	= $(CC_FLAGS_FTRACE)
+>   CFLAGS_REMOVE_patch.o	= $(CC_FLAGS_FTRACE)
+>   CFLAGS_REMOVE_sbi.o	= $(CC_FLAGS_FTRACE)
+> +CFLAGS_REMOVE_return_address.o	= $(CC_FLAGS_FTRACE)
+>   endif
+>   CFLAGS_syscall_table.o	+= $(call cc-option,-Wno-override-init,)
+>   CFLAGS_compat_syscall_table.o += $(call cc-option,-Wno-override-init,)
+> @@ -46,6 +47,7 @@ obj-y	+= irq.o
+>   obj-y	+= process.o
+>   obj-y	+= ptrace.o
+>   obj-y	+= reset.o
+> +obj-y	+= return_address.o
+>   obj-y	+= setup.o
+>   obj-y	+= signal.o
+>   obj-y	+= syscall_table.o
+> diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/return_address.c
+> new file mode 100644
+> index 000000000000..c2008d4aa6e5
+> --- /dev/null
+> +++ b/arch/riscv/kernel/return_address.c
+> @@ -0,0 +1,48 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * This code come from arch/arm64/kernel/return_address.c
+> + *
+> + * Copyright (C) 2023 SiFive.
+> + */
+> +
+> +#include <linux/export.h>
+> +#include <linux/kprobes.h>
+> +#include <linux/stacktrace.h>
+> +
+> +struct return_address_data {
+> +	unsigned int level;
+> +	void *addr;
+> +};
+> +
+> +static bool save_return_addr(void *d, unsigned long pc)
+> +{
+> +	struct return_address_data *data = d;
+> +
+> +	if (!data->level) {
+> +		data->addr = (void *)pc;
+> +		return false;
+> +	}
+> +
+> +	--data->level;
+> +
+> +	return true;
+> +}
+> +NOKPROBE_SYMBOL(save_return_addr);
+> +
+> +void *return_address(unsigned int level)
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbp+wgAKCRB4tDGHoIJi
-0uHdAQDRIWCACxF57XH7d6WwYm9HlJkxtUJkLkZJC1tH6V9gxgD/QeCytDHnwOcI
-MHTiSXTTdJqrntCh1r9H2nbFvbD2ngg=
-=Eynb
------END PGP SIGNATURE-----
+Maybe return_address() should be noinline to make sure it's not inlined 
+as it would break the "+ 3"? Not sure it's necessary though.
 
---aXzkUnbG7Mn0Gz+m--
+
+> +{
+> +	struct return_address_data data;
+> +
+> +	data.level = level + 3;
+> +	data.addr = NULL;
+> +
+> +	arch_stack_walk(save_return_addr, &data, current, NULL);
+> +
+> +	if (!data.level)
+> +		return data.addr;
+> +	else
+> +		return NULL;
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(return_address);
+> +NOKPROBE_SYMBOL(return_address);
+
+
+And I see that with this patch, ftrace_return_address() is now defined 
+whether CONFIG_FRAME_POINTER is set or not, is that correct?
+
+This looks like a fix to me so that should go into -fixes with a Fixes 
+tag (but we'll have to make sure that the "+ 3" is correct on all 
+backports...):
+
+Fixes: 10626c32e382 ("riscv/ftrace: Add basic support")
+
+And you can finally add for your v2 (or not if you don't respin):
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks and sorry for the delay!
+
+Alex
+
