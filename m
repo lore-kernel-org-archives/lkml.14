@@ -1,105 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D563B3BB29
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1725539FEB
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706739613; cv=none; b=VtXjLZ3cW2apY+aWLWIES7Xu+p22s4M7T7IlbcdP6eLyfSjH/t/JY838NXQuhZetO9ViTo9yUe/YqoBzM3qxFChWu+57xojCwKFhOTASU+2BGA4YcuUWhJZW10+GwKIzQvxy2L0PAIOByjF0hfxwOAotWBEU7+Jpl9u1SQBDHhg=
+	t=1706739727; cv=none; b=YQ9PQLSQxLDii3QDqrRWckK/4nQTU0mjgUbbkbxVTZlL77aWNqTcUZ0j5wxWA4buw9BK4Av0z15yml6/6phMA3Zxc0ch19+lpaptZriEjRitY3pW1N0B21IFlMIkAu7QvgHj98D1KMOUQJ0PDNzeZMWVNAS4JeIfBGWeIfhUkcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706739613; c=relaxed/simple;
-	bh=Znshv+RH0oLXtMaY0APjfhexQmz7CI7Km/3plXspJn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZKHqOO8wdtOl7+Sg955JMt0tqmfYt9+pgzr9Df0faK++sIZEFnuOsNakJOX6s93hRVJuVXDzadhFf3+V135i6d0zerU/eby83Ae08IFj2u/si8659qZNwpRkbabO82F0tSaVx7IeM/0iAEEitqu6qRdDhPtnMtDwQYXe/1SWEZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QVvgUAvK; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706739727; c=relaxed/simple;
+	bh=vcScM3cpdf7Pja37NGeK6Yly0/J61B5EtMzfdpq0CFg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=P7EtdQ27KDFgo1uuCLaaPcfhMTA6p0hPOFiiyzbUSxen9emb47uero/hymFuV9n55CjsOmiythWvlqDbnKRuMaVPml8j1D0s5fEP9sL7Gq7bPMmJSfOjhE1FPcJMIkXTaRhw4llICiAGMentAmlycpo+iLsvWT7Dj6+dQPzx8Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=a0IxyXcY; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QVvgUAvK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706739611; x=1738275611;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Znshv+RH0oLXtMaY0APjfhexQmz7CI7Km/3plXspJn8=;
-  b=QVvgUAvKmIfwdFYX3AmeRR1bURlwpQDJtAo1abnkDjukMrSDR594lQUv
-   kRxZll+Nf53g9p2utkoXFTu0+R+ei94cd99c45iY1YO7is02KBHieHem8
-   jXLNSmUR7oUcuhs1X24U7G6n1AZlQM8tQG030IrS9dBcu2WfpUQ5QgwLb
-   vsbwnIi6UNpsQxmVVrqTfbTQ9u4/OSGdpsGRyJfEx6/HlbGxeAelvr22/
-   M9qXSZyanALZaNOvi5HMCEooUQgL/Gr+VGuqXNQzd8ZlOCqLX9e1Tz7lP
-   X3SALlnrn7wIU4pkdQbfgTL9fNWyYWejulCUfPzd00bHrKGanQ1XRJ0PW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="434910651"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="434910651"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 14:20:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788739786"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="788739786"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 31 Jan 2024 14:20:07 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 3331639B; Thu,  1 Feb 2024 00:17:32 +0200 (EET)
-Date: Thu, 1 Feb 2024 00:17:32 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH, RESEND] x86/pat: Simplifying the PAT programming protocol
-Message-ID: <fvzki5mtpbsoyljy354qnva5rllgukba7iuxufxjttceio5osd@tdvgddwttfqo>
-References: <20240124130650.496056-1-kirill.shutemov@linux.intel.com>
- <20240131175738.GIZbqKEhlDKhaKfh_w@fat_crate.local>
- <67hqgqargmt6nln5mds672g263lka7glyzbvcdgt4owdg7xc2e@v6wvuizw5ond>
- <20240131202340.GLZbqsTJkeFQycXT0B@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="a0IxyXcY"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42a4516ec46so2270461cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:22:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iwanders.net; s=google; t=1706739725; x=1707344525; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vcScM3cpdf7Pja37NGeK6Yly0/J61B5EtMzfdpq0CFg=;
+        b=a0IxyXcYWUS0UrNbcJkKcy0kjVdzpNm2qnbggSJj3XN8vuN3WRoVmVp6dWoim0I08b
+         i54pYRG/sKToEfVwg2LTGWrMU8lt/YKiNTpyxZQ/dS6cw5TqmvXFVDHS6OJQL0TPJA1l
+         18nT4JpW5Hf+cNO5LPKtLHg1GVPdabkI542vY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706739725; x=1707344525;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vcScM3cpdf7Pja37NGeK6Yly0/J61B5EtMzfdpq0CFg=;
+        b=Qvo8+9Kp13hDCGi3/koqLbf6g71sk2gEa4roo1SGIuVft79Xg/hsIwl79s/WAvxIwN
+         fZDTcSW1QJ87P6sd+MSCftiKTHS4xI6Sw+BuZYyWeKo9vNVF1Dec8QljPC6RJnSHrtiL
+         7leJg4SZif2+2yGeYCqbd3eqEwLxt0gxBUxzOJ78s0TJDIdXrehiQaCLFVKoCIYT0ntW
+         yckUMv2ij+1yhQ738OPj9SEdeEJwHyA0/6al1Z2+fVCOBmQUW98rgNCE5Aj0X4Aw9Wig
+         MDfkAc5EreYLIP0Uitu6kLpVoW5F2LG50hRL0F1Td2eDjOMdxTCTQ98WrkvsSD5N0YBT
+         vXOw==
+X-Gm-Message-State: AOJu0YyM6OVOZUdA4/3mWNw6c0MlrYQOaGSauqMo+lkRcZ1bPibt46Js
+	X6OnMfjCgBNuLjD44KoJf4O8Z2d0C4+RA9cfQCaSd5NTgXolo+bMLZYmFeJdls0=
+X-Google-Smtp-Source: AGHT+IHT6U2Z6r+BnwKmbGRGJKdtoLhCF94IFwTmfyoXINLyl1O7n6F0NJF3d2P84mNPLywdHvL9eg==
+X-Received: by 2002:ac8:5a04:0:b0:42a:9d70:7f58 with SMTP id n4-20020ac85a04000000b0042a9d707f58mr6949131qta.49.1706739724907;
+        Wed, 31 Jan 2024 14:22:04 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVNPF3itdhRp04csr0g5GO3JreHvCYGEIEA/une96Tw0FryJ0AUsks6nkPc9NxQycBHkdbMDKYBVjTcz2IjRJuyJkHgxNyySC5weAtSxjO5EEaYMVghfNH7nKD4OL1lxjiGUjUEI7dg4/tfEA2tPW06FBT06l8h5qTN/ZKeRaBEiSsjKlk/w8lTGiQA7XkPmaR6priWatn7TyQuVpp3HuVi7JRILUR0tzT73HALyiZHrMrUYSL6iJ59uXeozc9BZprHUPJ3nr0SnhhiPljScq+3grTguB6aez9TEeN+149b7uSCpWNPtbIx8KEoBFtMBaboVIJrCAZbJ/hfkzNfAWBjTQ+9QfVsmuYbogN8Hz0VnU9yp7Y5/WBWK5TAX/hi841Njiv6orz8GwTLsOAH
+Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
+        by smtp.gmail.com with ESMTPSA id ci13-20020a05622a260d00b0042a729d17dcsm1896082qtb.86.2024.01.31.14.22.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 14:22:04 -0800 (PST)
+From: Ivor Wanders <ivor@iwanders.net>
+To: luzmaximilian@gmail.com
+Cc: corbet@lwn.net,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	ivor@iwanders.net,
+	jdelvare@suse.com,
+	linux-doc@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	markgross@kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] platform/surface: aggregator_registry: add entry for fan speed
+Date: Wed, 31 Jan 2024 17:21:45 -0500
+Message-Id: <20240131222145.3320-1-ivor@iwanders.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <8552a795-9ce4-417a-bc71-593571a6b363@gmail.com>
+References: <8552a795-9ce4-417a-bc71-593571a6b363@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131202340.GLZbqsTJkeFQycXT0B@fat_crate.local>
 
-On Wed, Jan 31, 2024 at 09:23:40PM +0100, Borislav Petkov wrote:
-> On Wed, Jan 31, 2024 at 08:52:46PM +0200, Kirill A. Shutemov wrote:
-> > The second step is relevant for set_memory code that already does the
-> > flushing on changing memory type.
-> 
-> So the "relaxation" is the removal of that CR0.CD requirement?
+> I assume because of an older MAINTAINERS list. Ivor, please add him for
+> any next submissions to platform/surface.
 
-And double WBINVD if the machine has no X86_FEATURE_SELFSNOOP (before and
-after TLB flush).
+Yes, mea culpa. Guenter also ran into trouble applying the v4 version of
+the patch yesterday. I'm sorry I didn't base this off the correct branch
+everyone, will be sure to do so in the future!
 
-> > Our HW folks confirmed that the new optimized sequence works on all past
-> > processors that support PAT.
-> 
-> Your folks confirmed that for all released hw and for x86 hardware from
-> other vendors?
-
-No. They can only talk for Intel CPUs. But AMD docs don't require MTTR
-flow to begin with.
-
-It is better to double-check on AMD side.
-
-> > Testing wouldn't hurt, but it cannot possibly prove that the new flow is
-> > safe by testing.
-> 
-> This basically says that I should not take this patch at all as there's
-> no way of even testing it?!
-> 
-> I hope I'm misunderstanding you.
-
-Testing can prove that the proposed patch is broken if a problem show ups.
-But if you found no issue during testing you cannot say that the patch is
-safe. You could just get lucky and don't hit pathological scenario with
-broken cache/TLB aliases or something.
-
-It is better to get confirmation from HW folks.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+~Ivor
