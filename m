@@ -1,134 +1,177 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2075.outbound.protection.outlook.com [40.107.93.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE673A29B;
-	Wed, 31 Jan 2024 22:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706741585; cv=fail; b=HXYJycauHF2QegpQcX6ifFKkzKe0fswV/Sa8XCWxPdYUIBsU1oNGU9x122aMYDr8oS/P4+BC1wIH5e71tkUr2nvM/6sAiBdRXSpNx9d6Gl7ak3PSyaXtQj6SWXxKdJCQ1w7eOb3i1jKmAhVRmYeFg6uba5aYAx1MIFnw+7z1NuQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706741585; c=relaxed/simple;
-	bh=u8ftxr/zmcmQ+41E9vLMzmh0IdM3CStGbY0JP47+G98=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rm4Wefba6ihxgf0DmDQw+me+G2QabHGklKrK++3I2VbfznGH6dQpUjvxPxAe915ZlJo0xvkViotiWTrhDuraCyXYx0mSfa8fTtJEIcLNV9p/TmS5vuyd5KBFjjZZq+xHD1XbtsmA3lW0CsoMOxQiA6M6wUZpWBluXij/3MlUx1Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DVrGbXGs; arc=fail smtp.client-ip=40.107.93.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DVrGbXGs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VgX0lBaPElxJM7kAVWqF3YWInzGOEfYxc+Je9OYYTb7LBP+uZ/m7+OW7bUcMfveUcUGqljkupvDUTMahDPqVGhA8mtcd+bafW4RVZwG8Eps7Y8K19oFAtjtRwPe5qFR4GgumFKd2t3gkKt9c1PD3utaobQh1TBTsfoL6CS3DXifG9MtWNy845SiCona7nkI+SeGbhlc2T/g75ERRybz8NM9HDFi0F2eTWxn7gYMt/ocujKCJmqTsMnqoAxQ+r955k/ocTnr/GVhJ6c4FkqkYsoorDhzhUGEZnEXOsgBu9NWZ41V/cSCG7TRXsxt36qHqBQiv1UIeDx2JTmx0Ws4l7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g2GA1trPozishODq9GcYNZH4hhJM7/o15GxCaIyy8Gw=;
- b=HTclhD5YhY90MzkLxTXLX7QbjpKSsBlMlXhaN/eH1d4gQF1vOX6uxZc+d4+Rqi9BhV3SP2SGwOMAsjH2iS9rl3i3xCu2xwJCKoyOI4gj+Z5Om4/foGENB2IPmq/j+kzKEjANxsiMIHOwc+IUxHRAkfi8s8oLmj/2BnivUy7HmAmC4bVSbfnj8wbBgKNp8+zzPvGvofVk0deM92J2XfuQI0j957lcQkE/CnkCovNZeqLwmYcBbMrpjza8r8MX91Qy/y2Qvg4kJhAMITmB/CrP8QgI272QaXwNlfshDNHw7Fcvsii+7QsuB3aWCXzhl10hHd8aRfoUJGW/6SAllqzqgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g2GA1trPozishODq9GcYNZH4hhJM7/o15GxCaIyy8Gw=;
- b=DVrGbXGs5KyxsUcQtmdSUn5CYu3Kz3bCdK6NffjirHabMqCPRyPZ2TyUS8/vHxLSEexxjWlkgkI+Gjv9KO4n2nUTQPcb8w4Qz5z9/PzAZPWzmUhSxGHJpH4eFI+JRYUJDmOfWdV5PfTYq/FHL7mSDilhN4QKZhzL952wjz0yX/8=
-Received: from DM6PR06CA0009.namprd06.prod.outlook.com (2603:10b6:5:120::22)
- by SA1PR12MB6970.namprd12.prod.outlook.com (2603:10b6:806:24d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Wed, 31 Jan
- 2024 22:53:01 +0000
-Received: from DS1PEPF0001708E.namprd03.prod.outlook.com
- (2603:10b6:5:120:cafe::60) by DM6PR06CA0009.outlook.office365.com
- (2603:10b6:5:120::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22 via Frontend
- Transport; Wed, 31 Jan 2024 22:53:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0001708E.mail.protection.outlook.com (10.167.17.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Wed, 31 Jan 2024 22:53:00 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 31 Jan
- 2024 16:52:59 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: Lars-Peter Clausen <lars@metafoo.de>, "open list:IIO SUBSYSTEM AND
- DRIVERS" <linux-iio@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH] iio: accel: Fix a compilation problem
-Date: Wed, 31 Jan 2024 16:52:46 -0600
-Message-ID: <20240131225246.14169-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829073A8C5;
+	Wed, 31 Jan 2024 22:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706741948; cv=none; b=Euey6KQESTq+Xv8Exrj6pd/Rep90MV61fW9CNTIATxEnJwUYxTUfzMLPf3KUaan8OjinPcH3xrYMduV7n//FpqAXnEZ5J1LjBMM+zIk5wY3waa7DwO2IXxpLsbATh/Ztqug8i8BnVoUeU4dt2sFJEwcRpbYIM6ukdETcTnUVytM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706741948; c=relaxed/simple;
+	bh=K7ewgk79QCombkqi3c5WQVJe6Ip0DZ6iX8pogb7qiwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FYbr4+nNR3OSKfXJ8PsVsivjxCc1WjwIOUBmwbGSNhq7MqE8Rf0m/Yqwe2MtPCRNJsQIoJIlSTB/lfeXqIv5e1lEa0idzpo76JB7K7aIKbFqLEp0PQw7xhUYn4dd0YJwjtiuBf20gX4Pejyj3Mz5iQzYxx6cgVykbTVNQS26v5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.17.2/8.17.2) with ESMTPS id 40VMmx1W001349
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Thu, 1 Feb 2024 09:19:00 +1030
+Date: Thu, 1 Feb 2024 09:18:59 +1030
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+Message-ID: <ZbrOW/eTC0FFPjec@marvin.atrad.com.au>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+ <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com>
+ <ZZaiLOR4aO84CG2S@marvin.atrad.com.au>
+ <ZZ+gEmxI/TxdbmyQ@marvin.atrad.com.au>
+ <ZajJzcquyvRebAFN@marvin.atrad.com.au>
+ <Za0T_siv79qz1jkk@smile.fi.intel.com>
+ <Za2YtnwLKKeMquv6@marvin.atrad.com.au>
+ <62b66d58-7824-3650-6a73-12068a22563e@linux.intel.com>
+ <20240122144520.7761c5a6@imammedo.users.ipa.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001708E:EE_|SA1PR12MB6970:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0269b82-acbc-4855-b451-08dc22af6029
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+cOGVVnG528b8JlZxScBmvpBxjLXr1sJWdv++yu6PdszAMB2fTH08a/1s67105wuLkERbeH8U9VVMvkv4H3jw6YaifRwYhPBpSBfL9SMYYYDgKMebBo7R8B+GP2jl9G5/OZpvgmUYOvAab6/95ZotRTGAiRYM19LZ/lphvSc+evBHuhdWqMnEUSPLBxrS77A8RWF6hTiq0UfJttvOsv4qnhzAugplxvZ7o8hH/r52wbsvQ9QKSxPf0KyRAY5E2sEzMG8WI3cUEUKSFMWFWJTpedZFmJOw/11kkIgqblSJTfOGuqzwboRtS3mwM+dbex5Bd4LG8v9ilt1WwtRY8Ej1Bd9Ay7ufifoxdcIa5lrcHknyD1Pt4t/bTscL7x7SEW+fcD4jb3qIf6ULiOpgQ1V9q7pyIONcxYCILR5YNMSgTEkIoFSqVSL0m0DiVQvRcIwDW7g/lZKuvS4JmwQFA6XYLEXVNm3ca70uQtfWIvwU4oCkDS6LvextphdrX7g/H5FzC4C8gO+rLofCp1lepKpSAZ11no9KwLwDRTkfUaO00DDAj1VyjRkgjaOFpDvvuCStLx4A/AzitaHdMp5rML37lOIZxpdUtSBNBHZfWWYTBkDzLPRDPFlAfo7CcbNI4YSUAwYFLoYXCCL/I6sjf1cQYGjNRci1oUvyG0wufuNRwzopjiLgBSdhV6MivKE8G3KQpuNGLi2PC9yyPu1ysOvnALNw9dGQVRzcbCq/tLkXYBCM5oJfCmrH9qDZ6u+jXMxRrbhMDNk1xMijVMblb24Bg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(376002)(346002)(230922051799003)(82310400011)(1800799012)(451199024)(64100799003)(186009)(40470700004)(36840700001)(46966006)(4326008)(44832011)(40480700001)(40460700003)(1076003)(82740400003)(4744005)(36860700001)(2906002)(8936002)(8676002)(16526019)(26005)(83380400001)(6666004)(336012)(426003)(5660300002)(356005)(54906003)(81166007)(70206006)(86362001)(478600001)(316002)(6916009)(70586007)(966005)(2616005)(7696005)(47076005)(36756003)(41300700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 22:53:00.6641
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0269b82-acbc-4855-b451-08dc22af6029
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001708E.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6970
+In-Reply-To: <20240122144520.7761c5a6@imammedo.users.ipa.redhat.com>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-The kernel fails when compiling without `CONFIG_REGMAP_I2C` but with
-`CONFIG_BMA400`.
-```
-ld: drivers/iio/accel/bma400_i2c.o: in function `bma400_i2c_probe':
-bma400_i2c.c:(.text+0x23): undefined reference to `__devm_regmap_init_i2c'
-```
+On Mon, Jan 22, 2024 at 02:45:20PM +0100, Igor Mammedov wrote:
+> On Mon, 22 Jan 2024 14:37:32 +0200 (EET)
+> Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> 
+> > On Mon, 22 Jan 2024, Jonathan Woithe wrote:
+> > 
+> > > On Sun, Jan 21, 2024 at 02:54:22PM +0200, Andy Shevchenko wrote:  
+> > > > On Thu, Jan 18, 2024 at 05:18:45PM +1030, Jonathan Woithe wrote:  
+> > > > > On Thu, Jan 11, 2024 at 06:30:22PM +1030, Jonathan Woithe wrote:  
+> > > > > > On Thu, Jan 04, 2024 at 10:48:53PM +1030, Jonathan Woithe wrote:  
+> > > > > > > On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:  
+> > > > > > > > On Thu, 28 Dec 2023 18:57:00 +0200
+> > > > > > > > Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> > > > > > > >   
+> > > > > > > > > Hi all,
+> > > > > > > > > 
+> > > > > > > > > Here's a series that contains two fixes to PCI bridge window sizing
+> > > > > > > > > algorithm. Together, they should enable remove & rescan cycle to work
+> > > > > > > > > for a PCI bus that has PCI devices with optional resources and/or
+> > > > > > > > > disparity in BAR sizes.
+> > > > > > > > > 
+> > > > > > > > > For the second fix, I chose to expose find_empty_resource_slot() from
+> > > > > > > > > kernel/resource.c because it should increase accuracy of the cannot-fit
+> > > > > > > > > decision (currently that function is called find_resource()). In order
+> > > > > > > > > to do that sensibly, a few improvements seemed in order to make its
+> > > > > > > > > interface and name of the function sane before exposing it. Thus, the
+> > > > > > > > > few extra patches on resource side.
+> > > > > > > > > 
+> > > > > > > > > Unfortunately I don't have a reason to suspect these would help with
+> > > > > > > > > the issues related to the currently ongoing resource regression
+> > > > > > > > > thread [1].  
+> > > > > > > > 
+> > > > > > > > Jonathan,
+> > > > > > > > can you test this series on affected machine with broken kernel to see if
+> > > > > > > > it's of any help in your case?  
+> > > > > > > 
+> > > > > > > Certainly, but it will have to wait until next Thursday (11 Jan 2024).  I'm
+> > > > > > > still on leave this week, and when at work I only have physical access to
+> > > > > > > the machine concerned on Thursdays at present.
+> > > > > > > 
+> > > > > > > Which kernel would you prefer I apply the series to?  
+> > > > > > 
+> > > > > > I was very short of time today but I did apply the above series to the
+> > > > > > 5.15.y branch (since I had this source available), resulting in version
+> > > > > > 5.15.141+.  Unfortunately, in the rush I forgot to do a clean after the
+> > > > > > bisect reset, so the resulting kernel was not correctly built.  It booted
+> > > > > > but thought it was a different version and therefore none of the modules
+> > > > > > could be found.  As a result, the test is invalid.
+> > > > > > 
+> > > > > > I will try again in a week when I next have physical access to the system. 
+> > > > > > Apologies for the delay.  In the meantime, if there's a specific kernel I
+> > > > > > should apply the patch series against please let me know.  As I understand
+> > > > > > it, you want it applied to one of the kernels which failed, making 5.15.y
+> > > > > > (for y < 145) a reasonable choice.  
+> > > > > 
+> > > > > I did a "make clean" to reset the source tree and recompiled.  However, it
+> > > > > errored out:
+> > > > > 
+> > > > >   drivers/pci/setup-bus.c:988:24: error: ‘RESOURCE_SIZE_MAX’ undeclared
+> > > > >   drivers/pci/setup-bus.c:998:17: error: ‘pci_bus_for_each_resource’ undeclared
+> > > > > 
+> > > > > This was with the patch series applied against 5.15.141.  It seems the patch
+> > > > > targets a kernel that's too far removed from 5.15.x.
+> > > > > 
+> > > > > Which kernel would you like me to apply the patch series to and test?  
+> > > > 
+> > > > The rule of thumb is to test against latest vanilla (as of today v6.7).
+> > > > Also makes sense to test against Linux Next. The v5.15 is way too old for
+> > > > a new code.  
+> > > 
+> > > Thanks, and understood.  In this case the request from Igor was 
+> > > 
+> > >     can you test this series on affected machine with broken kernel to see if
+> > >     it's of any help in your case?
+> > > 
+> > > The latest vanilla kernel (6.7) has (AFAIK) had the offending commit
+> > > reverted, so it's not a "broken" kernel in this respect.  Therefore, if I've
+> > > understood the request correctly, working with that kernel won't produce the
+> > > desired test.  
+> > 
+> > Well, you can revert the revert again to get back to the broken state.
+> 
+> either this or just a hand patching as Ilpo has suggested earlier
+> would do.
 
-This was caught with one of the kconfigs used by the LKP robot for a
-separate issue.
+No problem.  This was the easiest approach for me and I have now done this. 
+Apologies for the delay in getting to this: I ran out of time last Thursday.
 
-Link: https://download.01.org/0day-ci/archive/20240131/202401311634.FE5CBVwe-lkp@intel.com/config
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/iio/accel/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> There is non zero chance that this series might fix issues
+> Jonathan is facing. i.e. failed resource reallocation which
+> offending patches trigger.
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 91adcac875a4..c9d7afe489e8 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -219,10 +219,12 @@ config BMA400
- 
- config BMA400_I2C
- 	tristate
-+	select REGMAP_I2C
- 	depends on BMA400
- 
- config BMA400_SPI
- 	tristate
-+	select REGMAP_SPI
- 	depends on BMA400
- 
- config BMC150_ACCEL
--- 
-2.34.1
+I can confirm that as expected, this patch series has had no effect on the
+system which experiences the failed resource reallocation.  From syslog,
+running a 5.15.141+ kernel[1]:
 
+    kernel: radeon 0000:4b:00.0: Fatal error during GPU init
+    kernel: radeon: probe of 0000:4b:00.0 failed with error -12
+
+This is unchanged from what is seen with the unaltered 5.15.141 kernel.
+
+In case it's important, can also confirm that the errors related to the
+thunderbolt device are are also still present in the patched 5.15.141+
+kernel:
+
+    thunderbolt 0000:04:00.0: interrupt for TX ring 0 is already enabled
+    :
+    thunderbolt 0000:04:00.0: interrupt for RX ring 0 is already enabled
+    :
+
+Like the GPU failure, they do not appear in the working kernels on this
+system.
+
+Let me know if you would like to me to run further tests.
+
+Regards
+  jonathan
+
+[1] This is 5.15.141, patched with the series of interest here and the hand
+    patch from Ilpo.
