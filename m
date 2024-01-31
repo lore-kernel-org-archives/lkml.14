@@ -1,191 +1,322 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BEC12837F
-	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D4D12A15C
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706717021; cv=none; b=HD6VmarQJ3kMIDerFvGpZACUqiET0vd0yoFYZcot7/ADTBvyxhdyi58skSjGbmq6DZt1m0xVmS4ghNeXTh2N5OI9/hD1+wQ0fh5/rL+n/kaVnLO7AFbZopbJbGegZbq7C8zJxPbM6Q3bTvUHPTyDTtgpnW/71S0l42qBikq736M=
+	t=1706717115; cv=none; b=b6ZspaU1NFbAmyLVCbBgr+XODtyc6fmpVu7EEN/YGiXPibczWWpkd3rfg85MNSZPUv89r3eIT8ytEhOHHfWmJb1x/Jt2qWQbOa8RK03tTQpDQ/4fuQsAZd9hhIFH9jfXxqPxk82RF612ETBVMBFQoRvLrIryNmZKcZEgafCkk0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706717021; c=relaxed/simple;
-	bh=2mXgFzRq0Ox+M+gSvM+xy16HnlbLzrNafWWDZOAbpLI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aEu+y2d10wF/O/eCSqBUHKTF3RzG/qnpd++05fCo6HMwS3h/LVuzXL8GnZAdGszC5WKvd/KhTTX8NRDM3zsHm20ge12OiyWV/IK2Wzg7p4jHXrrO+afpSb98WpVmaYfeTquKxWVCjrZ812L7NOUrETgFLnh50mvgrzVT4CrO5J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=eIGL1Lud; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="eIGL1Lud"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33ae6dfa923so2567613f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:03:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706717018; x=1707321818; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2G7N9HKTptzFvdsSy7a/wMEV20988NdsE2TTuou7VW4=;
-        b=eIGL1LudcuGFTrr5RG4FeVDTObnA0dOg7m/GNoTlUuCkYiHRu7v8zhC6/5eJ6QsqPo
-         1yPpTNvOxhkbPJXiAf6CEPLOMPFJGSHCrRhML+7YOp6b0bB6s4LJ7l4e39giqjqckSQk
-         YxZ8qzqFvIZS3nLvXSjk4wYNp1LRRLkW/UHlWbO3yOnPvJ9sl1bprx+oJG0c6+SdoQg7
-         ipqVD078sl9wEH8hVE+anbSSc01j8iHXJln7HkWZXMCpAwizTAAJibKBosQ7GY1fn8eU
-         TLhqrNN1AfyLHwYlehLbdv6xo0gAg8UiiqGum70keeNP7B56mEfyUBc4EbIrfY9n5EBi
-         D9sg==
+	s=arc-20240116; t=1706717115; c=relaxed/simple;
+	bh=7mKW+OHj3yGbTswJBa10dhFZoNBsPYh0fy7RTmxx1eE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jxaK+CkxMYR87UVA9qFEpZ+kH974Jcu3y0j0DTd9W37cOzubHKP53rL21kghFk2wHIb0zJdiP2a1rfLp37uYD/hFaMY9K+ftz5rLXTCYjilPkVLzt1bYNoEHIzc5MlZG433qcN4/SE3Kj/ynULBxWWtGRConRK2Jm90zkkYfASA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-59a24bf7cadso1087311eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:05:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706717018; x=1707321818;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1706717113; x=1707321913;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2G7N9HKTptzFvdsSy7a/wMEV20988NdsE2TTuou7VW4=;
-        b=jL+/pezcE2wy4UOAc5ynCHMw15qYJ1ddMxs46qcWLOcxXNApoVHF+Vrc78Pu3uH4YS
-         OiydEywWwMaRvh4r8KjPd8bumQXQm0yt9UvFA+C0spjcn4zdd8HTFtnuUlGK60WTm/Kv
-         9py4zHa6yyKgtegwTayFPpBGga0qY9Gw8rzlyukBfGMHljkCINseFRyM224OSWCDHxJM
-         OaQK674akrPAgtPdOs34gQYi1YXR6PXKIYVaR3H1t5FwIhPXsMSLf0iALoQIJ6dH3SNr
-         ofdfKUBVQ6ncRuwJZlPJG+pOaNXwhBYrr8uKiAt4cqsQCYNSqURAqoaCDHo6aMtn7quk
-         K3wg==
-X-Gm-Message-State: AOJu0Yz/IM2iPlQEG3h34FtsbKC9OpYLZDwN8juAzjYiUCdYZbZX3AXP
-	WkIIUzdJrTdVBxd4GRlzS07pH4yhRi70ABcD84Mi+FhBZBxqHcqThML/MAC9NE0=
-X-Google-Smtp-Source: AGHT+IFv4RsKrg6kAntnJ/YCtPGAW1U1YNeeMXiuO/lnsK9Rn1OpwCBxYmcNw94F8PYwyQot8cihag==
-X-Received: by 2002:a5d:4448:0:b0:33a:e6cf:f564 with SMTP id x8-20020a5d4448000000b0033ae6cff564mr1365333wrr.28.1706717018193;
-        Wed, 31 Jan 2024 08:03:38 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVg1J2yUOavmT1BH4y5nxg3fStQ3N4AW690uC+KVjknvwF1ll2sBXJWTCViTvOYReZkrcvAcX1OMeyRFhnXqudjaBZl/gg5Slh2qMDSCgRbs+MYgkxfwyGouM0xHRs0tgxJCpxbNgoQm1h/C/3NBDpOmt8gVIsv7E96n1TY5vhD8PUSLr9R0dCCkfWeCCPx063FNEcg1j2K+XyPJxLVqJsMLPBwMAa2yiLVZ3yCyGFm+j7Fzm78VPLhSet9sBLkuF7EhUO0JSNmhAm08ItvQD/eyizM4UaWgLJ5IfIEvoIxGnSv1g+/L7u5k1OSXo4eUZCK3WtIs5nc2sntY+iTJ0XM7Sw1HGmFv+717YWEYjUgFkTaZDBVXQ8szzSSQSMga7N2cvCO6sZEEmIdJ3WrbxjU7MsY+3d8+XL7ukOMZvPAA8ULHgKtMBLME0qs6pvJjiy+Ahi0q6IN7XN+z8czcuyGvvHVD505pmNGMbMOVBEgXzcDvj6KG+dXMI7+j2KsumizhlmmeCeIGlGoXRxI8cSqcGpx+z3xdHoptsF2bc/C5MXJ+q72d+EHk9Pq97YjxLi0+gDc1EX/D+NmdurxTc5o3aAmGs8bweDvIDgr9lY+Cqq7S0y8tugvFuJReOmvvT386mI9I7qqIrf8NA==
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id bu16-20020a056000079000b0033b0797cc14sm1358024wrb.51.2024.01.31.08.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 08:03:37 -0800 (PST)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ved Shanbhogue <ved@rivosinc.com>,
-	Matt Evans <mev@rivosinc.com>,
-	Dylan Jhong <dylan@andestech.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH RFC/RFT v2 4/4] riscv: Stop emitting preventive sfence.vma for new userspace mappings with Svvptc
-Date: Wed, 31 Jan 2024 16:59:29 +0100
-Message-Id: <20240131155929.169961-5-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240131155929.169961-1-alexghiti@rivosinc.com>
-References: <20240131155929.169961-1-alexghiti@rivosinc.com>
+        bh=g7OaZiinwbzng/0HgaGMCW4qacoR+2u1bX4wvl4xbCg=;
+        b=c5mceaPespC/ex59vMBoXPCyaaPEPwgRcMJYagldjI0ACrEpUXx9sv3MdwEKjZ24Ve
+         ZLds1WoyjB9+/Ro0sgO9z8DNyoMnd3yFR4rbMfg3n7jbznd4Gy9/xLRpg/l809pm8FQ8
+         n3lbFu36rEmyy0hAvDf6RjtiYdE0pfe9R/4nQjlQq078ESBBzX34ESkiG0eYlZfOS4br
+         kk6H7x14J3pO1FkiFnzXQTrj/m+8tNL6qdBXANZwBvJwM4N3BHdW1mHPDmx4YGIpP0ZV
+         t0veeUL5pSbyilI1TmrEvQyjRx9KwRufAZUsN+Pwo6GJSGoRccOUf1l+2gKcOFeDatqI
+         /Svg==
+X-Forwarded-Encrypted: i=0; AJvYcCUZJwOcO0m8epfebZCwKe/6v2del94SkQMJ8KHQkNKenqXxHiAcCqUYrTBdfdhw8SM29l1aqfIW3m8N6fXAEFBs4BNu3rUcO0EfaD48
+X-Gm-Message-State: AOJu0Yx8XWmmBdB7skHWuq2yycr1uGdznSgx02C11Qa/iD5ueUGoA2N9
+	zcI7plBUcn6FeX0rGBov1tcJ5q+gT2SUaOtiuVHNvNv1WR8v9MCKH6HVY5F2Jq6Mv0MJM9gS5jj
+	8Bix6BEd29bKmyFK1u7HaBDx5ft0=
+X-Google-Smtp-Source: AGHT+IErDYoefTwYsWl+oj3VgNhS6W7vgBMPp2AVhj8HRfc7hSQ3tU4b0G/pFN4T2E3Muyl+8CItGNPZg1LtdmK/YTc=
+X-Received: by 2002:a05:6820:1c96:b0:59a:bf5:a0da with SMTP id
+ ct22-20020a0568201c9600b0059a0bf5a0damr51991oob.0.1706717112759; Wed, 31 Jan
+ 2024 08:05:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com>
+ <dcb1b6dbc2172dd66bfdcc0c8135e0d98f1c22dd.camel@gmail.com>
+ <CAJZ5v0gAK9CChRPSx7Lu=BrGQo22q4swpvvN3__wFw68NfqKPA@mail.gmail.com>
+ <25d3cfd74b26eb6a4aa07f1da93ccf4815b0b1c6.camel@gmail.com>
+ <CAJZ5v0hX4Yv7UVng=O4tZyb_O7D2EcymdEDdSUrVDPk6h51VjA@mail.gmail.com>
+ <8682d7f7ee1a60902b1f3e5529a4adbaf4846aa0.camel@gmail.com>
+ <CAJZ5v0hW60++hhKG=yBE7+rB9qt2m+tO_WAf=YFhNU2-y3VHFw@mail.gmail.com> <9a4b4dd60c35dd4e00b97e19fced0e79a86f6eef.camel@gmail.com>
+In-Reply-To: <9a4b4dd60c35dd4e00b97e19fced0e79a86f6eef.camel@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 31 Jan 2024 17:05:01 +0100
+Message-ID: <CAJZ5v0hbGF6u5D8iyiziWMceph124wnC6KOH+V9Y2xqQgkZu5g@mail.gmail.com>
+Subject: Re: [PATCH RESEND RFC] driver: core: don't queue device links removal
+ for dt overlays
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, nuno.sa@analog.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The preventive sfence.vma were emitted because new mappings must be made
-visible to the page table walker but Svvptc guarantees that xRET act as
-a fence, so no need to sfence.vma for the uarchs that implement this
-extension.
+On Wed, Jan 31, 2024 at 4:46=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
+>
+> On Wed, 2024-01-31 at 16:10 +0100, Rafael J. Wysocki wrote:
+> > On Wed, Jan 31, 2024 at 3:52=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail=
+.com> wrote:
+> > >
+> > > On Wed, 2024-01-31 at 15:28 +0100, Rafael J. Wysocki wrote:
+> > > > On Wed, Jan 31, 2024 at 3:18=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@g=
+mail.com> wrote:
+> > > > >
+> > > > > On Wed, 2024-01-31 at 14:30 +0100, Rafael J. Wysocki wrote:
+> > > > > > On Wed, Jan 31, 2024 at 1:20=E2=80=AFPM Nuno S=C3=A1 <noname.nu=
+no@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Tue, 2024-01-23 at 16:40 +0100, Nuno Sa via B4 Relay wrote=
+:
+> > > > > > > > From: Nuno Sa <nuno.sa@analog.com>
+> > > > > > > >
+> > > > > > > > For device links, releasing the supplier/consumer devices
+> > > > > > > > references
+> > > > > > > > happens asynchronously in device_link_release_fn(). Hence, =
+the
+> > > > > > > > possible
+> > > > > > > > release of an of_node is also asynchronous. If these nodes =
+were
+> > > > > > > > added
+> > > > > > > > through overlays we have a problem because this does not re=
+spect
+> > > > > > > > the
+> > > > > > > > devicetree overlays assumptions that when a changeset is
+> > > > > > > > being removed in __of_changeset_entry_destroy(), it must ho=
+ld the
+> > > > > > > > last
+> > > > > > > > reference to that node. Due to the async nature of device l=
+inks
+> > > > > > > > that
+> > > > > > > > cannot be guaranteed.
+> > > > > > > >
+> > > > > > > > Given the above, in case one of the link consumer/supplier =
+is part
+> > > > > > > > of
+> > > > > > > > an overlay node we call directly device_link_release_fn() i=
+nstead
+> > > > > > > > of
+> > > > > > > > queueing it. Yes, it might take some significant time for
+> > > > > > > > device_link_release_fn() to complete because of synchronize=
+_srcu()
+> > > > > > > > but
+> > > > > > > > we would need to, anyways, wait for all OF references to be
+> > > > > > > > released
+> > > > > > > > if
+> > > > > > > > we want to respect overlays assumptions.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+> > > > > > > > ---
+> > > > > > > > This RFC is a follow up of a previous one that I sent to th=
+e
+> > > > > > > > devicetree
+> > > > > > > > folks [1]. It got rejected because it was not really fixing=
+ the
+> > > > > > > > root
+> > > > > > > > cause of the issue (which I do agree). Please see the link =
+where I
+> > > > > > > > fully explain what the issue is.
+> > > > > > > >
+> > > > > > > > I did also some git blaming and did saw that commit
+> > > > > > > > 80dd33cf72d1 ("drivers: base: Fix device link removal") int=
+roduced
+> > > > > > > > queue_work() as we could be releasing the last device refer=
+ence
+> > > > > > > > and
+> > > > > > > > hence
+> > > > > > > > sleeping which is against SRCU callback requirements. Howev=
+er,
+> > > > > > > > that
+> > > > > > > > same
+> > > > > > > > commit is now making use of synchronize_srcu() which may ta=
+ke
+> > > > > > > > significant time (and I think that's the reason for the wor=
+k
+> > > > > > > > item?).
+> > > > > > > >
+> > > > > > > > However, given the dt overlays requirements, I'm not seeing=
+ any
+> > > > > > > > reason to not be able to run device_link_release_fn()
+> > > > > > > > synchronously if
+> > > > > > > > we
+> > > > > > > > detect an OVERLAY node is being released. I mean, even if w=
+e come
+> > > > > > > > up
+> > > > > > > > (and I did some experiments in this regard) with some async
+> > > > > > > > mechanism
+> > > > > > > > to
+> > > > > > > > release the OF nodes refcounts, we still need a synchroniza=
+tion
+> > > > > > > > point
+> > > > > > > > somewhere.
+> > > > > > > >
+> > > > > > > > Anyways, I would like to have some feedback on how acceptab=
+le
+> > > > > > > > would
+> > > > > > > > this
+> > > > > > > > be or what else could I do so we can have a "clean" dt over=
+lay
+> > > > > > > > removal.
+> > > > > > > >
+> > > > > > > > I'm also including dt folks so they can give some comments =
+on the
+> > > > > > > > new
+> > > > > > > > device_node_overlay_removal() function. My goal is to try t=
+o
+> > > > > > > > detect
+> > > > > > > > when
+> > > > > > > > an
+> > > > > > > > overlay is being removed (maybe we could even have an expli=
+cit
+> > > > > > > > flag
+> > > > > > > > for
+> > > > > > > > it?) and only directly call device_link_release_fn() in tha=
+t case.
+> > > > > > > >
+> > > > > > > > [1]:
+> > > > > > > > https://lore.kernel.org/linux-devicetree/20230511151047.177=
+9841-1-nuno.sa@analog.com/
+> > > > > > > > ---
+> > > > > > > >  drivers/base/core.c | 25 ++++++++++++++++++++++++-
+> > > > > > > >  1 file changed, 24 insertions(+), 1 deletion(-)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > > > > > > index 14d46af40f9a..31ea001f6142 100644
+> > > > > > > > --- a/drivers/base/core.c
+> > > > > > > > +++ b/drivers/base/core.c
+> > > > > > > > @@ -497,6 +497,18 @@ static struct attribute *devlink_attrs=
+[] =3D {
+> > > > > > > >  };
+> > > > > > > >  ATTRIBUTE_GROUPS(devlink);
+> > > > > > > >
+> > > > > > > > +static bool device_node_overlay_removal(struct device *dev=
+)
+> > > > > > > > +{
+> > > > > > > > +     if (!dev_of_node(dev))
+> > > > > > > > +             return false;
+> > > > > > > > +     if (!of_node_check_flag(dev->of_node, OF_DETACHED))
+> > > > > > > > +             return false;
+> > > > > > > > +     if (!of_node_check_flag(dev->of_node, OF_OVERLAY))
+> > > > > > > > +             return false;
+> > > > > > > > +
+> > > > > > > > +     return true;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > >  static void device_link_release_fn(struct work_struct *wor=
+k)
+> > > > > > > >  {
+> > > > > > > >       struct device_link *link =3D container_of(work, struc=
+t
+> > > > > > > > device_link,
+> > > > > > > > rm_work);
+> > > > > > > > @@ -532,8 +544,19 @@ static void devlink_dev_release(struct=
+ device
+> > > > > > > > *dev)
+> > > > > > > >        * synchronization in device_link_release_fn() and if=
+ the
+> > > > > > > > consumer
+> > > > > > > > or
+> > > > > > > >        * supplier devices get deleted when it runs, so put =
+it into
+> > > > > > > > the
+> > > > > > > > "long"
+> > > > > > > >        * workqueue.
+> > > > > > > > +      *
+> > > > > > > > +      * However, if any of the supplier, consumer nodes is=
+ being
+> > > > > > > > removed
+> > > > > > > > +      * through overlay removal, the expectation in
+> > > > > > > > +      * __of_changeset_entry_destroy() is for the node 'kr=
+ef' to
+> > > > > > > > be 1
+> > > > > > > > which
+> > > > > > > > +      * cannot be guaranteed with the async nature of
+> > > > > > > > +      * device_link_release_fn(). Hence, do it synchronous=
+ly for
+> > > > > > > > the
+> > > > > > > > overlay
+> > > > > > > > +      * case.
+> > > > > > > >        */
+> > > > > > > > -     queue_work(system_long_wq, &link->rm_work);
+> > > > > > > > +     if (device_node_overlay_removal(link->consumer) ||
+> > > > > > > > +         device_node_overlay_removal(link->supplier))
+> > > > > > > > +             device_link_release_fn(&link->rm_work);
+> > > > > > > > +     else
+> > > > > > > > +             queue_work(system_long_wq, &link->rm_work);
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > >  static struct class devlink_class =3D {
+> > > > > > > >
+> > > > > > > > ---
+> >
+> > [cut]
+> >
+> > > > No, IMV devlink_dev_release() needs to be called via
+> > > > device_link_put_kref(), but it may run device_link_release_fn()
+> > > > directly if the link is marked in a special way or something like
+> > > > this.
+> > >
+> > > Sorry, I'm not totally getting this. I'm directly calling
+> > > device_link_release_fn() from  devlink_dev_release(). We should only =
+get
+> > > into
+> > > devlink_dev_release() after all the references are dropped right (bei=
+ng it
+> > > the
+> > > release callback for the link class)?
+> >
+> > OK, I got confused somehow, sorry.
+> >
+> > It should work.
+> >
+> > I kind of don't like adding OF-specific code to the driver core, but
+> > if this is fine with Greg, it can be done.  It should depend on
+>
+> Not perfect but I'm not seeing any other way. We need to somehow see if t=
+he node
+> is part of an OVERLAY and AFAIK, the only way is looking at the node flag=
+s. I'll
+> wait on Greg's feedback.
+>
+> > CONFIG_OF_OVERLAY, though.
+>
+> I guess that should be already indirectly implied. I mean if CONFIG_OF_OV=
+ERLAY
+> is not set, I guess there's not way for
+> of_node_check_flag(dev->of_node, OF_OVERLAY)) return true. But yeah, I ca=
+n bail
+> out right away if IS_ENABLED(CONFIG_OF_OVERLAY) is not set.
+>
+> > I would like a comment to be added to device_link_release_fn() to
+> > explain why the overlay case needs synchronous execution in there.
+>
+> I do have the following comment before checking device_node_overlay_remov=
+al():
+>
+>
+> "* However, if any of the supplier, consumer nodes is being removed
+>  * through overlay removal, the expectation in
+>  * __of_changeset_entry_destroy() is for the node 'kref' to be 1 which
+>  * cannot be guaranteed with the async nature of
+>  * device_link_release_fn(). Hence, do it synchronously for the overlay
+>  * case."
+>
+> I can elaborate more if you prefer...
 
-This allows to drastically reduce the number of sfence.vma emitted:
+No, that should suffice IMV, thanks.
 
-* Ubuntu boot to login:
-Before: ~630k sfence.vma
-After:  ~200k sfence.vma
-
-* ltp - mmapstress01
-Before: ~45k
-After:  ~6.3k
-
-* lmbench - lat_pagefault
-Before: ~665k
-After:   832 (!)
-
-* lmbench - lat_mmap
-Before: ~546k
-After:   718 (!)
-
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/pgtable.h | 16 +++++++++++++++-
- arch/riscv/mm/pgtable.c          | 13 +++++++++++++
- 2 files changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 0c94260b5d0c..50986e4c4601 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -473,6 +473,9 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
- 		struct vm_area_struct *vma, unsigned long address,
- 		pte_t *ptep, unsigned int nr)
- {
-+	asm_volatile_goto(ALTERNATIVE("nop", "j %l[svvptc]", 0, RISCV_ISA_EXT_SVVPTC, 1)
-+			  : : : : svvptc);
-+
- 	/*
- 	 * The kernel assumes that TLBs don't cache invalid entries, but
- 	 * in RISC-V, SFENCE.VMA specifies an ordering constraint, not a
-@@ -482,12 +485,23 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
- 	 */
- 	while (nr--)
- 		local_flush_tlb_page(address + nr * PAGE_SIZE);
-+
-+svvptc:
-+	/*
-+	 * Svvptc guarantees that xRET act as a fence, so when the uarch does
-+	 * not cache invalid entries, we don't have to do anything.
-+	 */
-+	;
- }
- #define update_mmu_cache(vma, addr, ptep) \
- 	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
- 
- #define __HAVE_ARCH_UPDATE_MMU_TLB
--#define update_mmu_tlb update_mmu_cache
-+static inline void update_mmu_tlb(struct vm_area_struct *vma,
-+				  unsigned long address, pte_t *ptep)
-+{
-+	flush_tlb_range(vma, address, address + PAGE_SIZE);
-+}
- 
- static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 		unsigned long address, pmd_t *pmdp)
-diff --git a/arch/riscv/mm/pgtable.c b/arch/riscv/mm/pgtable.c
-index ef887efcb679..99ed389e4c8a 100644
---- a/arch/riscv/mm/pgtable.c
-+++ b/arch/riscv/mm/pgtable.c
-@@ -9,6 +9,9 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
- 			  unsigned long address, pte_t *ptep,
- 			  pte_t entry, int dirty)
- {
-+	asm_volatile_goto(ALTERNATIVE("nop", "j %l[svvptc]", 0, RISCV_ISA_EXT_SVVPTC, 1)
-+			  : : : : svvptc);
-+
- 	if (!pte_same(ptep_get(ptep), entry))
- 		__set_pte_at(ptep, entry);
- 	/*
-@@ -16,6 +19,16 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
- 	 * the case that the PTE changed and the spurious fault case.
- 	 */
- 	return true;
-+
-+svvptc:
-+	if (!pte_same(ptep_get(ptep), entry)) {
-+		__set_pte_at(ptep, entry);
-+		/* Here only not svadu is impacted */
-+		flush_tlb_page(vma, address);
-+		return true;
-+	}
-+
-+	return false;
- }
- 
- int ptep_test_and_clear_young(struct vm_area_struct *vma,
--- 
-2.39.2
-
+Now that I think of it there is one more possibility: A dedicated
+workqueue can be used for running device_link_release_fn() and the DT
+overlay code can flush it after the device link deletion.
