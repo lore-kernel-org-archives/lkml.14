@@ -1,135 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6C612CD9D;
-	Wed, 31 Jan 2024 16:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4116012C522;
+	Wed, 31 Jan 2024 16:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706720087; cv=none; b=Im5l9SacKKjqrz7cNi7Sv51Tghh2b0AYX5fpo0UMwwV70ZijzAD+yfc50aBgLFzUpxaAQqUXLnyjVloKQrAn5pcXQx/xudY8l5mLfVqpmcOOnlSJmM9fO+8YAfOAEyQBMbdb/S4U3fk+tH23IBTC89NBuyebxuYZuiUjtSbu4m4=
+	t=1706720177; cv=none; b=cr4OwY9TWqOSoXFMFQrxpiT5QMeCfYkFkg39OoSXxqydHrsqBPj1y9ouRfqX1yHldnx+1nTGvbiumhLPPRhT1aWm11Csn3wLwdYv4o8DV9yIL5NopPaHsisqu0IqySRy1tiTTlg44TbsEkQcdHFZA+lsYMmJGP1BTB6Wz1ctDwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706720087; c=relaxed/simple;
-	bh=e7PkgB7K0gx8CAPjTVUKMOvEqHbyafX+oBkcjQV6dys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ARHe509KVM9JXw8scBfFUs/AI/wcwU+/kjlT9nIhhdKa8j7DqfhTFFX2sJ5Mygd6oA6UsWcfRG5z8RWKbL+CAr/wXlMnOlHySY5Oev3jeQyGO0gKcf/WPIaITrZT+wePsfU4Wsbw6S0E8VUFXzGAwDwr97Iyq2PCtR77mV6wnLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nmve9pUU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706720177; c=relaxed/simple;
+	bh=wqEyR5IykLjkRZWjBqfISdN6LAuQbshQspGGNzb4xB4=;
+	h=In-Reply-To:References:From:To:Cc:Subject:MIME-Version:
+	 Content-Disposition:Content-Type:Message-Id:Date; b=GnU3I8unCQwvB1RqUaDyD/mypXv+VfI4boj/l4H1TVjWMskOn42+zZQjjVePvWl1iuUCrGQ5GhesSDRYmfZb/9MO6c9Z9PKtqC4PK+f5wlrRogH7a3sjyCYJjXuCSbATPFzGuTVlnK/K+bywg/dc9FNiT49sauSxBtDki34D83Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=rZ+y9KQN; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nmve9pUU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A395C433F1;
-	Wed, 31 Jan 2024 16:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706720087;
-	bh=e7PkgB7K0gx8CAPjTVUKMOvEqHbyafX+oBkcjQV6dys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Nmve9pUUOt196CcaU4YrJBEqco8cFcMpDhATzxHHFGUBeb+NRVrbaatX8PRY9P2Ri
-	 a72GGOr8swMe3/9YGP2C7ynYNXM3YtjprV7fg2zcqLiv8ZbI7AS/Gat+qn0VTM84lX
-	 sW0uTAp3pKw6YA91cokoNKsX+bspGqRgmZMH+viCzzb6VewaxLvhClbU/iKqbWGFEG
-	 5veXuTSAZi0pjjMSsQBMIYiIKQP817JFKr5UCxMGb1ZwHGDBioeocFw5MlzcAHUsA+
-	 EPOkzz4hr0nHkcNzhgd05rVWD/+s6VrsblUWPVhpu2xicRpeqKYQgpr1CcDdIHYSLo
-	 f4B4pQU5jYfsw==
-Date: Wed, 31 Jan 2024 16:54:42 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, mazziesaccount@gmail.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: iio: afe: voltage-divider: Add
- io-channel-cells
-Message-ID: <20240131-stylized-defile-d8fe346ab197@spud>
-References: <20240130115651.457800-1-naresh.solanki@9elements.com>
- <1c855a34-8a0d-491e-bfd2-24635b41c86f@linaro.org>
- <20240131163516.000043df@Huawei.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rZ+y9KQN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
+	In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=f5npkqxZTlvintQfJQR7JFbNovddfzG1yIBSkxo5huM=; b=rZ+y9KQNys/vt6EBJk4R2yPaCi
+	4OKNmwHWIF+OvTh5I/L9c8gwiS0OLuRncsIm3vvJTYzYGyPl24yFVpR090gnimcgSNH4/GiyFcrOL
+	lo7MDovAf/jMcoyctkWeHbWsOhFg1IxstP5eHZd5CdG23fpLnqXRtDHdHfWjdJ3oosl9pHh3hxHZg
+	r2+PFBLmUHdJ4D/F3kO4APh+Oc6e2sTVlnuToDH0/pAkBPVdmJqL+SJY0KZArZMEf0BAplgmV1BIc
+	QZwZ7uqRz3oAg8aTWw8NVtu2aty6N2PFsYTvEqAMD1hsLAhC9AMdtmWwhXCCxy7U0WDeoMRR67yJb
+	aL9h6OEQ==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:33590 helo=rmk-PC.armlinux.org.uk)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <rmk@armlinux.org.uk>)
+	id 1rVDnT-0003WQ-1m;
+	Wed, 31 Jan 2024 16:50:47 +0000
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <rmk@rmk-PC.armlinux.org.uk>)
+	id 1rVDnP-0027ZZ-BN; Wed, 31 Jan 2024 16:50:43 +0000
+In-Reply-To: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
+References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
+From: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+To: linux-pm@vger.kernel.org,
+	 loongarch@lists.linux.dev,
+	 linux-acpi@vger.kernel.org,
+	 linux-arch@vger.kernel.org,
+	 linux-kernel@vger.kernel.org,
+	 linux-arm-kernel@lists.infradead.org,
+	 linux-riscv@lists.infradead.org,
+	 kvmarm@lists.linux.dev,
+	 x86@kernel.org,
+	 acpica-devel@lists.linuxfoundation.org,
+	 linux-csky@vger.kernel.org,
+	 linux-doc@vger.kernel.org,
+	 linux-ia64@vger.kernel.org,
+	 linux-parisc@vger.kernel.org
+Cc: Salil Mehta <salil.mehta@huawei.com>,
+	 Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	 jianyong.wu@arm.com,
+	 justin.he@arm.com,
+	 James Morse <james.morse@arm.com>,
+	 Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	 "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH RFC v4 13/15] ACPI: add support to (un)register CPUs based on
+ the _STA enabled bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h8APYS+PcgeCvIXI"
 Content-Disposition: inline
-In-Reply-To: <20240131163516.000043df@Huawei.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1rVDnP-0027ZZ-BN@rmk-PC.armlinux.org.uk>
+Sender: Russell King <rmk@armlinux.org.uk>
+Date: Wed, 31 Jan 2024 16:50:43 +0000
 
+From: James Morse <james.morse@arm.com>
 
---h8APYS+PcgeCvIXI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+acpi_processor_get_info() registers all present CPUs. Registering a
+CPU is what creates the sysfs entries and triggers the udev
+notifications.
 
-On Wed, Jan 31, 2024 at 04:35:16PM +0000, Jonathan Cameron wrote:
-> On Wed, 31 Jan 2024 09:29:59 +0100
-> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
->=20
-> > On 30/01/2024 12:56, Naresh Solanki wrote:
-> > > voltage-divider is always an iio consumer at the same time it is
-> > > optionally an iio provider.
-> > > Hence add #io-channel-cells
-> > > Also update example.
-> > >  =20
-> >=20
-> > Fix
-> > wrapping
-> > and
-> > proper
-> > sentences. Each sentence finishes with full stop.
-> >=20
-> > ...
-> > >    output-ohms:
-> > >      description:
-> > >        Resistance Rout over which the output voltage is measured. See=
- full-ohms.
-> > > @@ -75,12 +82,17 @@ examples:
-> > >              spi-max-frequency =3D <1000000>;
-> > >          };
-> > >      };
-> > > -    sysv {
-> > > +    p12v_vd: sysv { =20
-> >=20
-> > No, drop label.
-> >=20
-> > >          compatible =3D "voltage-divider";
-> > >          io-channels =3D <&maxadc 1>;
-> > > +        #io-channel-cells =3D <1>;
-> > > =20
-> > >          /* Scale the system voltage by 22/222 to fit the ADC range. =
-*/
-> > >          output-ohms =3D <22>;
-> > >          full-ohms =3D <222>; /* 200 + 22 */
-> > >      };
-> > > +    iio-hwmon {
-> > > +        compatible =3D "iio-hwmon";
-> > > +        io-channels =3D <&p12v_vd 0>; =20
-> >=20
-> > The same question as for v2. Drop unrelated example.
->=20
-> Conor requested an example of the device acting as a consumer and a provi=
-der.
-> Might have meant in the patch description?
->=20
-> Conor?
+arm64 virtual machines that support 'virtual cpu hotplug' use the
+enabled bit to indicate whether the CPU can be brought online, as
+the existing ACPI tables require all hardware to be described and
+present.
 
-I wanted it in the property description to help with understanding when
-to use it. I don't think the extra example nodes actually help you
-understand what it is doing, only how to write one yourself once you
-know you need it.
+If firmware describes a CPU as present, but disabled, skip the
+registration. Such CPUs are present, but can't be brought online for
+whatever reason. (e.g. firmware/hypervisor policy).
 
-Thanks,
-Conor.
+Once firmware sets the enabled bit, the CPU can be registered and
+brought online by user-space. Online CPUs, or CPUs that are missing
+an _STA method must always be registered.
 
---h8APYS+PcgeCvIXI
-Content-Type: application/pgp-signature; name="signature.asc"
+When firmware clears the enabled bit, we need to unregister the CPU
+for symetry. As this is dependent on hotplug CPU being support, and
+arch_unregister_cpu() only exists when hotplug CPU is supported,
+we need to add a check for that configuration symbol.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+---
+Changes since RFC v3 (smaller series):
+ * Squash "ACPI: processor: Only call arch_unregister_cpu() if
+   HOTPLUG_CPU is selected" into this patch.
+---
+ drivers/acpi/acpi_processor.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbp7UQAKCRB4tDGHoIJi
-0qUKAP0Ww48y8Vpl0AK0ojq0GTFz+pnr+vWFetK6V8fbSyQ0YwEAg+sb0e5EXttx
-Yc5wqU6OG+ali+z2CNC/Op4kdAyPMAE=
-=i3bX
------END PGP SIGNATURE-----
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index d1d33e74216c..5e641180c45a 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -228,6 +228,32 @@ static int acpi_processor_make_present(struct acpi_processor *pr)
+ 	return ret;
+ }
+ 
++static int acpi_processor_make_enabled(struct acpi_processor *pr)
++{
++	unsigned long long sta;
++	acpi_status status;
++	bool present, enabled;
++
++	if (!acpi_has_method(pr->handle, "_STA"))
++		return arch_register_cpu(pr->id);
++
++	status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
++	present = sta & ACPI_STA_DEVICE_PRESENT;
++	enabled = sta & ACPI_STA_DEVICE_ENABLED;
++
++	if (cpu_online(pr->id) && (!present || !enabled)) {
++		pr_err_once(FW_BUG "CPU %u is online, but described as not present or disabled!\n", pr->id);
++		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
++	} else if (!present || !enabled) {
++		return -ENODEV;
++	}
++
++	return arch_register_cpu(pr->id);
++}
++
+ static int acpi_processor_get_info(struct acpi_device *device)
+ {
+ 	union acpi_object object = { 0 };
+@@ -318,7 +344,7 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 	 */
+ 	if (!invalid_logical_cpuid(pr->id) && cpu_present(pr->id) &&
+ 	    !get_cpu_device(pr->id)) {
+-		int ret = arch_register_cpu(pr->id);
++		int ret = acpi_processor_make_enabled(pr);
+ 
+ 		if (ret)
+ 			return ret;
+@@ -511,7 +537,7 @@ static void acpi_processor_post_eject(struct acpi_device *device)
+ 	unsigned long long sta;
+ 	acpi_status status;
+ 
+-	if (!device)
++	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU) || !device)
+ 		return;
+ 
+ 	pr = acpi_driver_data(device);
+@@ -526,6 +552,9 @@ static void acpi_processor_post_eject(struct acpi_device *device)
+ 		acpi_processor_make_not_present(device);
+ 		return;
+ 	}
++
++	if (cpu_present(pr->id) && !(sta & ACPI_STA_DEVICE_ENABLED))
++		arch_unregister_cpu(pr->id);
+ }
+ 
+ #ifdef CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC
+-- 
+2.30.2
 
---h8APYS+PcgeCvIXI--
