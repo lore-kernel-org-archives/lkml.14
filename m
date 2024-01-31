@@ -1,132 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29293E481;
-	Wed, 31 Jan 2024 06:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFC53E485
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706682088; cv=none; b=BGpJvapJOsmOSiMIDgaRi9iWliyO7ds8RNFmTLPScnnX7mAOgpMT7JBHOGuB8iih+RHtl1hAHvRdGBGaQ4IS8xGyYwbmq5OTwNsNZXYPngWMeNiJ2XxgMTV0OLOt+5PFwLJUrUp6Ku5qtH2q4jVTtvpw6f/s3E4GU6JX/72DaOM=
+	t=1706682126; cv=none; b=B6pUDjQbbFloLOdhfdhpmIF5B40D/1+av/SU/LugrfOtaeB12i4U3MgNXpDNKfHBXmaL+7FmbStgdzQi8T6F0u4SdJsZHOiWDW+9w1O0TGeGING2BItckkmCQPkQRmM/lDeVh3HJGent2INrHI6yUPdW0VSnncONmMFusxXVFpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706682088; c=relaxed/simple;
-	bh=BFal/c7OdPWIXpcKKVgoT+h8Uly3mTIFcWBHU8qcqPc=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SUSH3/W80CbpfPLwgPPUfGbTLiVjYifl2RwT4B2dAoJ0H6mClaWxz02FVfllVCVzWuHj3ChIIQRH3iivM3VTIInwDSRMw9nOoBQafv7X9EGT3tfw2ElisPWRLQ+WwqjQHZHQYK8JHYPFKxRY4xZzMqiygKlAtPMbPFbMa/OfZNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KaWI4yUS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706682126; c=relaxed/simple;
+	bh=u1F+OL/6PYNx+FVYO52mlMno0kijyr/ditkmdFoW+R8=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=I9MPjx699PKLf0ztIWnVJyVMa08Yb48fNURuITSSJoNC7R2zzV2qbvjtJpTMSIHsZOZC84TCxEvNgvGtdBb32i89kO7lWGkc/SHiGN9W2dgKOv4jih+K/arHOA0wHoYO1BTyMO6nlo4NPSeeaVQjJ79k/V2nPCVs7E7t/CEbJQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=g92sfM9Y; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KaWI4yUS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706682087; x=1738218087;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BFal/c7OdPWIXpcKKVgoT+h8Uly3mTIFcWBHU8qcqPc=;
-  b=KaWI4yUS7aDiFgNzqm2DN3a0d+v0lNWDZSsQ3+qrRR09/EArXmZMCuyL
-   O+NSpok14vmV5hFNaijh8A4+ITzVbKrdeF8pS7YTi5WP+3QRo6XPxpTwv
-   lZSiyUCNH3w1zXVunAfmKPWyI5RuFw1k+MkNlzxr/spUoGD/uSdTApX50
-   C3C65IXDjj5ezhMKxXfN8UwBb3AxgPUlDnxD45b76jBTJTN+knH0zGNjc
-   XXfH4Do49iBrLOqsfbQViK6mkrprCa0ysWqdyACpWPKV/O22y6RYaNQ1Q
-   IXtYo2wIriXzZCUQq55yOO79fo8AM0WMwSZDwphgWEEXdb/rbDVV/BUvH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3347747"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="3347747"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:21:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="36759621"
-Received: from wwang17-mobl.ccr.corp.intel.com (HELO [10.249.175.9]) ([10.249.175.9])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:21:22 -0800
-Message-ID: <6a48f023-2701-4f2f-8077-14fe348794dd@linux.intel.com>
-Date: Wed, 31 Jan 2024 14:21:20 +0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g92sfM9Y"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240131062200epoutp03f0225699b618b39089ba7ac577745ed1~vWliv-tfM3121631216epoutp03j
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:22:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240131062200epoutp03f0225699b618b39089ba7ac577745ed1~vWliv-tfM3121631216epoutp03j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1706682120;
+	bh=+RKD13BNunG5kxjS9Yb51An1Mqb6woru+4hsuyBagDA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=g92sfM9Y4BFhqEB91wjc31IRBk/IVXavqVHQIADAikdkGeqkrHnIC8gCR87U3GUv2
+	 ATx66QvnfMiGt3yHU3lPVHAWZJ+8ZFiBEt/Mm55Awcud0O5r128BYyvN82iO6l+Htu
+	 zyWYpl52T5c4yTp+N2O9K6oORrIP7VNyEv3eL0pk=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240131062200epcas5p1020bf98ae6b4c882a21c60e7a2db5469~vWliFVMmv2137221372epcas5p1b;
+	Wed, 31 Jan 2024 06:22:00 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4TPsPy2tZfz4x9QB; Wed, 31 Jan
+	2024 06:21:58 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	80.A3.10009.607E9B56; Wed, 31 Jan 2024 15:21:58 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240131060648epcas5p40670be153beb80e60b0676c6f75911c5~vWYRINvp70740307403epcas5p4f;
+	Wed, 31 Jan 2024 06:06:48 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240131060648epsmtrp2b438ade56609b635b694d126b3a08ac4~vWYRCe-dH0826108261epsmtrp2r;
+	Wed, 31 Jan 2024 06:06:48 +0000 (GMT)
+X-AuditID: b6c32a4a-ff1ff70000002719-7c-65b9e706c9a0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	51.51.08755.873E9B56; Wed, 31 Jan 2024 15:06:48 +0900 (KST)
+Received: from FDSFTE308 (unknown [107.122.81.79]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240131060645epsmtip1d176db43cfcfb3e746c05b8cffbedff1~vWYOsY8D11677016770epsmtip1b;
+	Wed, 31 Jan 2024 06:06:45 +0000 (GMT)
+From: "Aakarsh Jain" <aakarsh.jain@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Cc: <m.szyprowski@samsung.com>, <andrzej.hajda@intel.com>,
+	<mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+	<krzysztof.kozlowski+dt@linaro.org>, <robh+dt@kernel.org>,
+	<conor+dt@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+	<andi@etezian.org>, <gost.dev@samsung.com>, <alim.akhtar@samsung.com>,
+	<pankaj.dubey@samsung.com>
+In-Reply-To: <bb6e3546-a596-4748-92d9-7cfc1f5e2db1@linaro.org>
+Subject: RE: [PATCH] dt-bindings: media: s5p-mfc: Remove s5p-mfc.txt binding
+Date: Wed, 31 Jan 2024 11:36:44 +0530
+Message-ID: <010301da540b$accfe490$066fadb0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
- "Liu, Yi L" <yi.l.liu@intel.com>, "bhelgaas@google.com"
- <bhelgaas@google.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "dwmw2@infradead.org" <dwmw2@infradead.org>,
- "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
- device isn't present
-To: Jason Gunthorpe <jgg@ziepe.ca>, Ethan Zhao <haifeng.zhao@linux.intel.com>
-References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
- <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
- <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
- <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
- <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
- <20240130162958.GF50608@ziepe.ca>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240130162958.GF50608@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-in
+Thread-Index: AQI/PvU03lDO5YGArwDNxcQQAt8ooQHpnmsRAg4hmkMB/4tQ4q/53L+w
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDJsWRmVeSWpSXmKPExsWy7bCmli7b852pBi0/hSwezNvGZrH4x3Mm
+	i/uLP7NYrNl7jsli/pFzrBY3D+xksrg48y6LRd+Lh8wWe19vZbfY9Pgaq8XlXXPYLHo2bGW1
+	mHF+H5PF2iN32S2WbfrDZLFo6xd2i9a9R9gdBD2uL/nE7LF4z0smj02rOtk87lzbw+axeUm9
+	R9+WVYwenzfJeZz6+pk9gCMq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEv
+	MTfVVsnFJ0DXLTMH6A0lhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJgV5xYm5x
+	aV66Xl5qiZWhgYGRKVBhQnbGhC0z2Ata+SrOHbrH0sB4i7uLkZNDQsBEYvf6d6xdjFwcQgK7
+	GSXeTl/MDuF8YpT42tkF5XxjlPi+5wILTMuW9idMEIm9jBLTeh9BVT1nlDi5H6KKTUBf4v6p
+	HrDBIgJHGSUebHnIDOIwC5xnkrj1bwNQhoODU8BOovdQFogpLOAj8eJSNEgvi4CqxKJbn1lB
+	bF4BS4npMx6zQdiCEidnPgGbzywgL7H97RxmiIsUJH4+XcYKEReXOPqzBywuIuAmMefHTjaQ
+	tRICPzgkjl5azgrR4CLxdN03qGZhiVfHt7BD2FISn9/tZYOwkyUeL3oJVZMjsX7PFKj37SUO
+	XJnDAnIzs4CmxPpd+hBhWYmpp9YxQdzAJ9H7+wkTRJxXYsc8GFtNYs6dH1AnyEgcXr2UcQKj
+	0iwkr81C8tosJO/MQti2gJFlFaNkakFxbnpqsWmBUV5qOTzGk/NzNzGCk7mW1w7Ghw8+6B1i
+	ZOJgPMQowcGsJMK7Um5nqhBvSmJlVWpRfnxRaU5q8SFGU2B4T2SWEk3OB+aTvJJ4QxNLAxMz
+	MzMTS2MzQyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUamOIXTq4/w1krtFYyjfnGxs/T3izN
+	rZ9dF+ZZHP3vxVO75b/vVnP+mSSeefmEwrfKU6Vrku8u2Hn406rn/zRPakec2cC2yfPC7bW/
+	Jrkr97jKrlnQX3xE74ipiEmy9lw+ngk+d9+KiBWtf30nJ+d/dPfF9og1T7bvlblx4oiSxK4L
+	lQInsrOXF5c+CvGVX9b5rE+468HFoyr5rh0Sy6tzkl+9Yw7fs3sdi/wy/znnb9rfl0lZyLar
+	x0e8+6CHZpzAtSA1k3jl2FWJwfJSZe9O7XXXrVol/rfm2sGl34UluS8vU4pyqS/X1Y97mhlv
+	qr97VcWpCRseuZy/IvtWfV/6wpsL/V6/mrLfy2S+9q3FnwKUWIozEg21mIuKEwETm53gbwQA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCSnG7F452pBp+2CVg8mLeNzWLxj+dM
+	FvcXf2axWLP3HJPF/CPnWC1uHtjJZHFx5l0Wi74XD5kt9r7eym6x6fE1VovLu+awWfRs2Mpq
+	MeP8PiaLtUfuslss2/SHyWLR1i/sFq17j7A7CHpcX/KJ2WPxnpdMHptWdbJ53Lm2h81j85J6
+	j74tqxg9Pm+S8zj19TN7AEcUl01Kak5mWWqRvl0CV8aELTPYC1r5Ks4dusfSwHiLu4uRk0NC
+	wERiS/sTpi5GLg4hgd2MEi++3GKHSMhI/G87BmULS6z895wdougpo8TWN8vZQBJsAvoS90/1
+	sIIkRAROMkr0n2kBc5gFbjNJLJ23hRWi5TOjxJxdbxi7GDk4OAXsJHoPZYGYwgI+Ei8uRYMM
+	YhFQlVh06zMriM0rYCkxfcZjNghbUOLkzCcsIDazgLZE78NWRghbXmL72znMENcpSPx8uowV
+	Ii4ucfRnD1hcRMBNYs6PnWwTGIVnIRk1C8moWUhGzULSvoCRZRWjZGpBcW56brFhgWFearle
+	cWJucWleul5yfu4mRnBEa2nuYNy+6oPeIUYmDsZDjBIczEoivCvldqYK8aYkVlalFuXHF5Xm
+	pBYfYpTmYFES5xV/0ZsiJJCeWJKanZpakFoEk2Xi4JRqYFo6P+2mVdEsaZurOWFXavvF+yQv
+	vFBffCb8f8ifI7u/2cTs5loeaKUda80RHBq7WsdFefM6T36noCshMl18xhlT3ibEiO5d0Cyv
+	es4qo/sok0Xc/GM1C1T/Vu4LZ3RttvBZ/CZChImloamqtvsCX+RU5q+Fctsiph63jMj5fCUv
+	+I5ERuuGwMY9N/86XvsXPp29Wub+BZW54pcnnLxjbPXFRiDb94QTt2Hnu4C28P8uydFzyj/9
+	vfjD5on0p2uvuH50yrxe0FS/r3+u8aP734vKekvZ9y35d6Su7OWeIrPHvkdiL57xTT/2X/z8
+	x/MFfeF8PVPvv/8z4eoK5zezeP/fEj60rGOOtczEKqZ2ISWW4oxEQy3mouJEAACbbRpXAwAA
+X-CMS-MailID: 20240131060648epcas5p40670be153beb80e60b0676c6f75911c5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240130125754epcas5p2edd5cc52dc58add09299d3aa5985a9fd
+References: <CGME20240130125754epcas5p2edd5cc52dc58add09299d3aa5985a9fd@epcas5p2.samsung.com>
+	<20240130125748.54194-1-aakarsh.jain@samsung.com>
+	<9a8cb901-8021-42a3-a13b-bae10a645011@linaro.org>
+	<bb6e3546-a596-4748-92d9-7cfc1f5e2db1@linaro.org>
 
-On 2024/1/31 0:29, Jason Gunthorpe wrote:
-> On Tue, Jan 30, 2024 at 04:15:33PM +0800, Ethan Zhao wrote:
->> Some tricky situations:
->>
->> 1. The ATS invalidation request is issued from driver driver, while it is
->> in handling, device is removed. this momment, the device instance still
->> exists in the bus list. yes, if searching it by BDF, could get it.
->>
->> 2. The ATS invalidation request is issued from iommu_bus_notifier()
->> for surprise removal reason, as shown in above calltrace, device was
->> already removed from bus list. if searching it by BDF, return NULL.
->>
->> 3. The ATS invlidation request is issued from iommu_bus_notifier()
->> for safe removal, when is in handling, device is removed or link
->> is down. also as #2, device was already removed from bus list.
->> if searching it by BDF. got NULL.
->> ...
->>
->> so, searching device by BDF, only works for the ATS invalidation
->> request is from device driver.
-> In the good path, where the hot removal is expected and this is about
-> coordinating, the IOMMU driver should do an orderly shutdown of the
-> ATS mechanism:
-> 
->   1 Write to PCI config space to disable the ATS
->   2 Make the IOMMU respond to ATS requests with UR and set it to BLOCKED
->   3 Issue a flush of the ATC
->   4 Wait for all outstanding ATC flushes to complete
-> 
-> If it is a bad/surprise path where the device is already gone then:
-> 
->   1 should automatically not do anything, possibly timing out
->   2 must succeed
->   3 should time out
->   4 should "complete" in that the ATC flushes are all timed out
-> 
-> IMHO all you need to do is not crash/lockup while processing the ATC
-> timeouts. If this is a surprise path then the ATC timeout might
-> already happened before the iommu driver remove notifier event happens.
-> 
-> If the driver needs to translate from the IOMMU device table index
-> into a struct device it is probably best to do that inside the driver.
-> 
-> eg ARM maintains a rbtree in the iommu dev data. (see
-> arm_smmu_insert_master)
 
-An rbtree for IOMMU device data for the VT-d driver would be beneficial.
-It also benefits other paths of fault handling, such as the I/O page
-fault handling path, where it currently still relies on the PCI
-subsystem to convert a RID value into a pci_device structure.
 
-Given that such an rbtree would be helpful for multiple individual
-drivers that handle PCI devices, it seems valuable to implement it in
-the core?
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Sent: 30 January 2024 19:57
+> To: Aakarsh Jain <aakarsh.jain@samsung.com>; linux-arm-
+> kernel@lists.infradead.org; linux-media@vger.kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Cc: m.szyprowski@samsung.com; andrzej.hajda@intel.com;
+> mchehab@kernel.org; hverkuil-cisco@xs4all.nl;
+> krzysztof.kozlowski+dt@linaro.org; robh+dt@kernel.org;
+> conor+dt@kernel.org; linux-samsung-soc@vger.kernel.org;
+> andi@etezian.org; gost.dev@samsung.com; alim.akhtar@samsung.com;
+> pankaj.dubey@samsung.com
+> Subject: Re: [PATCH] dt-bindings: media: s5p-mfc: Remove s5p-mfc.txt
+> binding
+> 
+> On 30/01/2024 15:25, Krzysztof Kozlowski wrote:
+> > On 30/01/2024 13:57, Aakarsh Jain wrote:
+> >> Commit "538af6e5856b" which convert s5p-mfc bindings to
+> >
+> > Please run scripts/checkpatch.pl and fix reported warnings. Some
+> > warnings can be ignored, but the code here looks like it needs a fix.
+> > Feel free to get in touch if the warning is not clear.
+> >
+I am getting below warning while running scripts/checkpatch.pl on this patch
+WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+#18:
+deleted file mode 100644
 
-Best regards,
-baolu
+total: 0 errors, 1 warnings, 0 lines checked
+
+I think this can be ignored.
+> >> json-schema is already merged. Remove "s5p-mfc.txt" file.
+> >>
+> >> Signed-off-by: Aakarsh Jain <aakarsh.jain@samsung.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/media/s5p-mfc.txt | 0
+> >
+> > Why you did not remove it in the first place? Your diff from
+> > 538af6e5856b is so confusing.
+> 
+I missed it before. Will add Fixes tag.
+
+> Also, add fixes tag.
+> 
+Sure.
+
+Thanks for review!
+> Best regards,
+> Krzysztof
+
+
