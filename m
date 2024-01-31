@@ -1,48 +1,59 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF4E56763;
-	Wed, 31 Jan 2024 08:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC2E58135
+	for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 08:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706689301; cv=none; b=rRPY3vBPewNsoOz5jvDxem63uuzCql12X8P9n289DYtY1oxdf6BS/EnrLslH9Z2Onr29JJYiWzT9JcNHQ/yk1ne66GoCm40HSs9GDDKi4UQ+KE9OSJqRLjuomo74qhi8z4SsfApWghDznyO+6YLj7YgD7KeCmVmYgXUzfk49msQ=
+	t=1706689404; cv=none; b=jjxo1Fu7I9lFlgnzDXk//1WpbSpeWxPlMSEmcGNN+XRNP+RnwYvDjcNtObWZA0cmzMNY4XV4RXEgVTPGTi5gNI4sD7amskrXC8o541Uzq6/olzaINQbRJGsD3F19bBsIBcGZhfCT/T9r73Uiop7hfBvl4or39sTjOt6J6eHUtQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706689301; c=relaxed/simple;
-	bh=jnAscI+rbO+rCf//5jY0bWtSH4AFcNwB1T8g144wfes=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Rc2J0bHsAVa4cVKxo69NF17xXjq8tGqvTCoE3g7nzsRSqH/sGpzNhsWc/IH0Dssc9GZtJUe92Qk/f2x8HN+eXrZBirTOmejJtaIZmLI8qcjr35o6v/tZ7Qb0CT/Qi4+woswDwHL15zSJYWM43acn0jkG0rt03vh60u7Pt6ZrcQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=udAck43A; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706689404; c=relaxed/simple;
+	bh=QgpDZve7ss1zcRxUslxn5XlDMDLXMO00RYq1sF7s++o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bi+/+s1wn+5KiNKfyT+ZTe9nulM2P82DJCZzJCGujVAo5Msmde15fb+FOODSONov8ID95xdmFlQRaZNWOnZMKmV3EGgBKn1PhDuUOfGYi4ABn/4aRoC6X2SO9VUHqUsiiSZq/cQAk+Pg6eBXzikSnPdsAzLmeMPAnEbx7PI6eTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XE/sxfpW; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="udAck43A"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40V8LTPT023251;
-	Wed, 31 Jan 2024 02:21:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706689289;
-	bh=tOU3qILgkt/xTeSyBnZY6LOVJN6KI4+/QJBiXdIF5J8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=udAck43APlChEoXKBhs/fucrbQfyb+chpMVIcrARxMcgX05otLG46A0mGmCEApi9M
-	 SJyFV4+u8atMxtCU7YsUTdsr7Y+PsRLyrQ0jzQ8EzX9TVz2ma1UyGjAF1seWjxLi4+
-	 NMZZx3QDa4VyOxHD2QHIHelBd/A1VABzsii9b3Jg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40V8LTUd015562
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 31 Jan 2024 02:21:29 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 31
- Jan 2024 02:21:28 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 31 Jan 2024 02:21:28 -0600
-Received: from [172.24.26.29] (lt5cg0025dg6.dhcp.ti.com [172.24.26.29])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40V8LOlu124092;
-	Wed, 31 Jan 2024 02:21:25 -0600
-Message-ID: <f7995fae-e0ac-4232-9178-814f1638a46c@ti.com>
-Date: Wed, 31 Jan 2024 13:51:24 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XE/sxfpW"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-55eed368b0bso1283059a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 00:23:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706689400; x=1707294200; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6oWkXNQFc42njWrBrqxTcJGmHbVFrq7Z5uukN1LsJvo=;
+        b=XE/sxfpWsQ12AT0mH8w2C2XdswqbmzJjdfIMsPqStUoTnFkcBsYqFuKJM729AY8KdI
+         6REnoEqJha8LockcC0VQ9hIVL/Rz990rue1BrSGdnQM647txQxtbl+VSERoSZHQGRxyY
+         DNSOS9Bm9Q48lkYcLBu6YSINF9D06D7hfEfN8IylFUeVJeq3yLaZ26NlQzGrcNMWjaUd
+         RMXl8JCjqA5agFFtro1BMXTvtB0Aq743P2y5XWbkenpKRsZqzU+Z0VYeDlOmsREQGiGG
+         06QqT8BZveUih3BDhCLdS+L8REz4wbXLu2qsg90xkxOeD5UcXlZ6JjLdpTtPcSIjGAEL
+         2RcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706689400; x=1707294200;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6oWkXNQFc42njWrBrqxTcJGmHbVFrq7Z5uukN1LsJvo=;
+        b=f8qYgzRm2uI7eYQw8LQ6NF5WucmPz+BbJvXqhgYm8kWmrNh4sRBK0B5Nf6y5szmYqD
+         02XCN/LTbIp1xyFxvOmpJGCTDeUPq0/NKsabZQ1iw7nKQcR0UF2cOtziVSb1Hvt9YVtZ
+         3G8c+l9psFY8vAVswAnHp50T1m+FPSbjT3WSSpTioil8MEQEDktldsr2U2LxzXLO4oAV
+         +b592v5WG3UPngMG1llWo44dFbDp8XRfAsSo9bHNnECar4BiluHobfTOjonrDwcOe8L0
+         Ezwd9pL0t+peqKI4EEj/+WcvuRm+2/PK8GA2666BvJJFlYQKuoG5HIOlGl1wKN35KOUu
+         7g0A==
+X-Gm-Message-State: AOJu0Yw3IGUOmtkVSEwho/CyyqeANkyIXgbDEAPgTk9wQzxhNQkYgprW
+	JDXHygjWIvLgea5oyj8XRNb5CAbDe7jJ4OxVwDMCH1qPO1C175ZncpwPZFiXlpo=
+X-Google-Smtp-Source: AGHT+IFxEn8Dm6TyE4moFxcJmW05ztFJmbBnpV/niDQ4vi/BEjobr+abb1wIm8azHmC0V+A9QHVTpA==
+X-Received: by 2002:a05:6402:28a7:b0:55f:16d2:46a8 with SMTP id eg39-20020a05640228a700b0055f16d246a8mr908029edb.3.1706689400632;
+        Wed, 31 Jan 2024 00:23:20 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVu2nf+laZjhpaHa+O8ru184W3wpyDEnU4Va2z/o1HE1L/WXlRM0zYUtFl7SyaRpyWcZNo4tT4Jf0gHtol4LBWQYND23+fD02nVFk+PV3rgCl7B8uupIOfwWIpn2cyOYSANaqBjWenBTY5yLAoWEf72TGunJx4klneb5BioPDl4OoD9Ox9i6MeH6/vOquQ/wvSbIUkb3GWJs56Y8k20S0A3asM1PNUdGmd9vLo6aII+SoXQEKvLOG28R3olr6ujST3ttXwTjAc4quOfrWwJ0D/in42SzdwpvvyOFICfZnLC2diQIw==
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id en26-20020a056402529a00b0055823c2ae17sm5530662edb.64.2024.01.31.00.23.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 00:23:20 -0800 (PST)
+Message-ID: <faba2666-88f3-491c-8edb-c844fcec1f48@linaro.org>
+Date: Wed, 31 Jan 2024 09:23:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,244 +61,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] thermal: k3_j72xx_bandgap: implement suspend/resume
- support
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: syscon: Add ti,am654-serdes-ctrl
+ compatible
 Content-Language: en-US
-To: Thomas Richard <thomas.richard@bootlin.com>, <rafael@kernel.org>,
-        <daniel.lezcano@linaro.org>
-CC: <rui.zhang@intel.com>, <lukasz.luba@arm.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>,
-        <gregory.clement@bootlin.com>, <theo.lebrun@bootlin.com>,
-        <u-kumar1@ti.com>
-References: <20231130164953.2043305-1-thomas.richard@bootlin.com>
- <41a5c85b-073d-4083-be9e-830452f88438@bootlin.com>
-From: "J, KEERTHY" <j-keerthy@ti.com>
-In-Reply-To: <41a5c85b-073d-4083-be9e-830452f88438@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240130195128.58748-1-afd@ti.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240130195128.58748-1-afd@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 1/24/2024 2:26 PM, Thomas Richard wrote:
-> Added Keerthy
+On 30/01/2024 20:51, Andrew Davis wrote:
+> Add TI SERDES control registers compatible. This is a region found in the
+> TI AM65 CTRL_MMR0 register space[0]. Each instance is used to control a
+> SERDES clock and lane select mux.
 > 
-> On 11/30/23 17:49, Thomas Richard wrote:
->> From: Théo Lebrun <theo.lebrun@bootlin.com>
->>
->> This add suspend-to-ram support.
->>
->> The derived_table is kept-as is, so the resume is only about
->> pm_runtime_* calls and restoring the same registers as the probe.
->>
->> Extract the hardware initialization procedure to a function called at
->> both probe-time & resume-time.
->>
->> The probe-time loop is split in two to ensure doing the hardware
->> initialization before registering thermal zones. That ensures our
->> callbacks cannot be called while in bad state.
-Thomas,
+> [0] https://www.ti.com/lit/pdf/spruid7
+> 
+> Signed-off-by: Andrew Davis <afd@ti.com>
 
-Thanks for adding suspend/resume support.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-FWIW
+Best regards,
+Krzysztof
 
-Acked-by: Keerthy <j-keerthy@ti.com>
-
-- Keerthy
->>
->> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
->> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->> ---
->>
->> v2:
->> - Fix warnings/errors reported by kernel test robot
->>
->>   drivers/thermal/k3_j72xx_bandgap.c | 112 ++++++++++++++++++++---------
->>   1 file changed, 79 insertions(+), 33 deletions(-)
->>
->> diff --git a/drivers/thermal/k3_j72xx_bandgap.c b/drivers/thermal/k3_j72xx_bandgap.c
->> index c74094a86982..4ad23c8bf73b 100644
->> --- a/drivers/thermal/k3_j72xx_bandgap.c
->> +++ b/drivers/thermal/k3_j72xx_bandgap.c
->> @@ -178,6 +178,7 @@ struct k3_j72xx_bandgap {
->>   	void __iomem *base;
->>   	void __iomem *cfg2_base;
->>   	struct k3_thermal_data *ts_data[K3_VTM_MAX_NUM_TS];
->> +	int cnt;
->>   };
->>   
->>   /* common data structures */
->> @@ -338,24 +339,53 @@ static void print_look_up_table(struct device *dev, int *ref_table)
->>   		dev_dbg(dev, "%d       %d %d\n", i, derived_table[i], ref_table[i]);
->>   }
->>   
->> +static void k3_j72xx_bandgap_init_hw(struct k3_j72xx_bandgap *bgp)
->> +{
->> +	struct k3_thermal_data *data;
->> +	int id, high_max, low_temp;
->> +	u32 val;
->> +
->> +	for (id = 0; id < bgp->cnt; id++) {
->> +		data = bgp->ts_data[id];
->> +		val = readl(bgp->cfg2_base + data->ctrl_offset);
->> +		val |= (K3_VTM_TMPSENS_CTRL_MAXT_OUTRG_EN |
->> +			K3_VTM_TMPSENS_CTRL_SOC |
->> +			K3_VTM_TMPSENS_CTRL_CLRZ | BIT(4));
->> +		writel(val, bgp->cfg2_base + data->ctrl_offset);
->> +	}
->> +
->> +	/*
->> +	 * Program TSHUT thresholds
->> +	 * Step 1: set the thresholds to ~123C and 105C WKUP_VTM_MISC_CTRL2
->> +	 * Step 2: WKUP_VTM_TMPSENS_CTRL_j set the MAXT_OUTRG_EN  bit
->> +	 *         This is already taken care as per of init
->> +	 * Step 3: WKUP_VTM_MISC_CTRL set the ANYMAXT_OUTRG_ALERT_EN  bit
->> +	 */
->> +	high_max = k3_j72xx_bandgap_temp_to_adc_code(MAX_TEMP);
->> +	low_temp = k3_j72xx_bandgap_temp_to_adc_code(COOL_DOWN_TEMP);
->> +
->> +	writel((low_temp << 16) | high_max, bgp->cfg2_base + K3_VTM_MISC_CTRL2_OFFSET);
->> +	mdelay(100);
->> +	writel(K3_VTM_ANYMAXT_OUTRG_ALERT_EN, bgp->cfg2_base + K3_VTM_MISC_CTRL_OFFSET);
->> +}
->> +
->>   struct k3_j72xx_bandgap_data {
->>   	const bool has_errata_i2128;
->>   };
->>   
->>   static int k3_j72xx_bandgap_probe(struct platform_device *pdev)
->>   {
->> -	int ret = 0, cnt, val, id;
->> -	int high_max, low_temp;
->> -	struct resource *res;
->> +	const struct k3_j72xx_bandgap_data *driver_data;
->> +	struct thermal_zone_device *ti_thermal;
->>   	struct device *dev = &pdev->dev;
->> +	bool workaround_needed = false;
->>   	struct k3_j72xx_bandgap *bgp;
->>   	struct k3_thermal_data *data;
->> -	bool workaround_needed = false;
->> -	const struct k3_j72xx_bandgap_data *driver_data;
->> -	struct thermal_zone_device *ti_thermal;
->> -	int *ref_table;
->>   	struct err_values err_vals;
->>   	void __iomem *fuse_base;
->> +	int ret = 0, val, id;
->> +	struct resource *res;
->> +	int *ref_table;
->>   
->>   	const s64 golden_factors[] = {
->>   		-490019999999999936,
->> @@ -422,10 +452,10 @@ static int k3_j72xx_bandgap_probe(struct platform_device *pdev)
->>   
->>   	/* Get the sensor count in the VTM */
->>   	val = readl(bgp->base + K3_VTM_DEVINFO_PWR0_OFFSET);
->> -	cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
->> -	cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
->> +	bgp->cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
->> +	bgp->cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
->>   
->> -	data = devm_kcalloc(bgp->dev, cnt, sizeof(*data), GFP_KERNEL);
->> +	data = devm_kcalloc(bgp->dev, bgp->cnt, sizeof(*data), GFP_KERNEL);
->>   	if (!data) {
->>   		ret = -ENOMEM;
->>   		goto err_alloc;
->> @@ -449,8 +479,8 @@ static int k3_j72xx_bandgap_probe(struct platform_device *pdev)
->>   	else
->>   		init_table(3, ref_table, pvt_wa_factors);
->>   
->> -	/* Register the thermal sensors */
->> -	for (id = 0; id < cnt; id++) {
->> +	/* Precompute the derived table & fill each thermal sensor struct */
->> +	for (id = 0; id < bgp->cnt; id++) {
->>   		data[id].bgp = bgp;
->>   		data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET + id * 0x20;
->>   		data[id].stat_offset = data[id].ctrl_offset +
->> @@ -470,13 +500,13 @@ static int k3_j72xx_bandgap_probe(struct platform_device *pdev)
->>   		else if (id == 0 && !workaround_needed)
->>   			memcpy(derived_table, ref_table, TABLE_SIZE * 4);
->>   
->> -		val = readl(data[id].bgp->cfg2_base + data[id].ctrl_offset);
->> -		val |= (K3_VTM_TMPSENS_CTRL_MAXT_OUTRG_EN |
->> -			K3_VTM_TMPSENS_CTRL_SOC |
->> -			K3_VTM_TMPSENS_CTRL_CLRZ | BIT(4));
->> -		writel(val, data[id].bgp->cfg2_base + data[id].ctrl_offset);
->> -
->>   		bgp->ts_data[id] = &data[id];
->> +	}
->> +
->> +	k3_j72xx_bandgap_init_hw(bgp);
->> +
->> +	/* Register the thermal sensors */
->> +	for (id = 0; id < bgp->cnt; id++) {
->>   		ti_thermal = devm_thermal_of_zone_register(bgp->dev, id, &data[id],
->>   							   &k3_of_thermal_ops);
->>   		if (IS_ERR(ti_thermal)) {
->> @@ -486,21 +516,7 @@ static int k3_j72xx_bandgap_probe(struct platform_device *pdev)
->>   		}
->>   	}
->>   
->> -	/*
->> -	 * Program TSHUT thresholds
->> -	 * Step 1: set the thresholds to ~123C and 105C WKUP_VTM_MISC_CTRL2
->> -	 * Step 2: WKUP_VTM_TMPSENS_CTRL_j set the MAXT_OUTRG_EN  bit
->> -	 *         This is already taken care as per of init
->> -	 * Step 3: WKUP_VTM_MISC_CTRL set the ANYMAXT_OUTRG_ALERT_EN  bit
->> -	 */
->> -	high_max = k3_j72xx_bandgap_temp_to_adc_code(MAX_TEMP);
->> -	low_temp = k3_j72xx_bandgap_temp_to_adc_code(COOL_DOWN_TEMP);
->> -
->> -	writel((low_temp << 16) | high_max, data[0].bgp->cfg2_base +
->> -	       K3_VTM_MISC_CTRL2_OFFSET);
->> -	mdelay(100);
->> -	writel(K3_VTM_ANYMAXT_OUTRG_ALERT_EN, data[0].bgp->cfg2_base +
->> -	       K3_VTM_MISC_CTRL_OFFSET);
->> +	platform_set_drvdata(pdev, bgp);
->>   
->>   	print_look_up_table(dev, ref_table);
->>   	/*
->> @@ -527,6 +543,35 @@ static void k3_j72xx_bandgap_remove(struct platform_device *pdev)
->>   	pm_runtime_disable(&pdev->dev);
->>   }
->>   
->> +static int __maybe_unused k3_j72xx_bandgap_suspend(struct device *dev)
->> +{
->> +	pm_runtime_put_sync(dev);
->> +	pm_runtime_disable(dev);
->> +	return 0;
->> +}
->> +
->> +static int __maybe_unused k3_j72xx_bandgap_resume(struct device *dev)
->> +{
->> +	struct k3_j72xx_bandgap *bgp = dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	pm_runtime_enable(dev);
->> +	ret = pm_runtime_get_sync(dev);
->> +	if (ret < 0) {
->> +		pm_runtime_put_noidle(dev);
->> +		pm_runtime_disable(dev);
->> +		return ret;
->> +	}
->> +
->> +	k3_j72xx_bandgap_init_hw(bgp);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct dev_pm_ops k3_j72xx_bandgap_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(k3_j72xx_bandgap_suspend, k3_j72xx_bandgap_resume)
->> +};
->> +
->>   static const struct k3_j72xx_bandgap_data k3_j72xx_bandgap_j721e_data = {
->>   	.has_errata_i2128 = true,
->>   };
->> @@ -554,6 +599,7 @@ static struct platform_driver k3_j72xx_bandgap_sensor_driver = {
->>   	.driver = {
->>   		.name = "k3-j72xx-soc-thermal",
->>   		.of_match_table	= of_k3_j72xx_bandgap_match,
->> +		.pm = &k3_j72xx_bandgap_pm_ops,
->>   	},
->>   };
->>   
