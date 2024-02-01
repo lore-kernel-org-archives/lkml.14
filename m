@@ -1,46 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4B71EF15;
-	Thu,  1 Feb 2024 01:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC341A27C;
+	Thu,  1 Feb 2024 01:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706749675; cv=none; b=YiX9QLUrMOHKI0F65qVTEl+5n4iovawM92tD1ioKQdnZOa+TFhSJX1Il8/rXZ1dQHeZ0cpGkRIsW4nPZ8CwOHp6XCrTUlo1cO2Y770W4t1uhPUVOn6RyF3BS1mqVmpBRR9j6s/kmtV9D336h55MxvKW1+Yca4H25Od6V0yKNLX4=
+	t=1706749674; cv=none; b=Cpi2uoHiHI62yLGAqLIwuUnaoy40fl26DbGzsvCbAPtDSgEgLQSTJ5qIjlwspMLz6kau1v5J8hG2zBwE1AoXvtZ3qN+zlZAfM8d2hpm2K734YMScw8DnXkiLg6gePKb2SE6WhtoudXQ0hIPkPMLjA8FD5ogyajr9hB+JNFST8WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706749675; c=relaxed/simple;
-	bh=yHNdMgW9yFyo2zPLd2fT4A8rb7bD8WunIVFdY+rWAMY=;
+	s=arc-20240116; t=1706749674; c=relaxed/simple;
+	bh=4WsWv00onasp48d72sbpBjqQmJ37YOowYHi4hbk2FQg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WrnF1VULZGV3UwDkvTH7iL9ZbLW2Ymcpsh8MUDGKqPSPFdB+WW1c3DKxIb60lQ8RN/LXE7h3Yj7kYEejvcTpCcUb1go+rUAJfL763ydT2T1yTwgDTArYfPlHA1dwfGogu7HMRf0lNevCrv4SCJ7K/TKpesp0/wa8fGWu2wkRMMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPYbQd+J; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=lw2/+/imtUYNYsK40hv8IZUsm/ruRAKxDyY+gKE+o45ZROcCiCrxtSlEhVCaEpyUBiGjRlwSTh8aLgbjze0AsDiyzeHpKSDhooalLUNecLBJ3tf5gq2k7xdgcrngl1P1oRoawqs6EFiJLpmtlEIaPsp36lNyCzL2gNwWP/YMc3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LTnaoViN; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPYbQd+J"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LTnaoViN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706749674; x=1738285674;
+  t=1706749673; x=1738285673;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yHNdMgW9yFyo2zPLd2fT4A8rb7bD8WunIVFdY+rWAMY=;
-  b=KPYbQd+J66Hu5+wQD/qzz0Nyhe69dwqqfdbKoroU4j746tDo8p5F2Tv7
-   Qf817LcZugU7Il9c/tCDKN4PBaaCUxrzADNLY5VXwyaGvhk62B79/DQ1L
-   LbRjEc/OGdsWFAKreT6xfdA20u7ulsJBMyEbDXYvl2jBizvBcU2CNfZOw
-   57KGnbFdE4amIJKFw5MaO5bivABe+9pHv+C48RJtWWs6Gvj8hIMw4LgDR
-   ek1ytvRxd1SEO1SW2/9uENHB0ivq0KB1FnY+LkyT7/NKT8stRefgixCMg
-   nNjH0o59rI309r7HHfNePtwMq5u1NCPuzvIUwmopQvh/dNMnc6Dj7PXPi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11145823"
+  bh=4WsWv00onasp48d72sbpBjqQmJ37YOowYHi4hbk2FQg=;
+  b=LTnaoViNbPtUE6o6pHTOyj5Oe3N52/I/rvVudQkO0hkyJB1Pe6L+2VUd
+   ktExJfxO9kxxAOoEMn2lrDAQP6OJPXIp14ZSkMlu8zWlfqNJmFZXlvdH6
+   Iain2QAJqJkzd74TeaSBdNZfBND5yjNTVHhJhtje/3ITDfTVKpPkWWxwc
+   ByfKa7TTCAYhXq1tqgdOV109cX/tPQEKNKbYcSAz2XuKqNveuZOauioNk
+   OHYvcmCMyHRi99eiV9dszi12lr/ugxZFTKMH8Qu9Jw2iVxlMHYvjmZgYE
+   Xh6KJtHHeTn/Hrd2JLN7CRS0Po+W9sp6wlqdqhAlGrBmXHDJnhvzkP+32
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10533017"
 X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="11145823"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:07:50 -0800
+   d="scan'208";a="10533017"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:07:50 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="37057415"
+   d="scan'208";a="4265165"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:07:49 -0800
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:07:50 -0800
 Received: from debox1-desk4.lan (unknown [10.212.205.115])
-	by linux.intel.com (Postfix) with ESMTP id 26C98580DF0;
+	by linux.intel.com (Postfix) with ESMTP id B3099580201;
 	Wed, 31 Jan 2024 17:07:49 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: netdev@vger.kernel.org,
@@ -49,9 +49,9 @@ To: netdev@vger.kernel.org,
 	sathyanarayanan.kuppuswamy@linux.intel.com
 Cc: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 5/8] platform/x86/intel/sdsi: Add in-band BIOS lock support
-Date: Wed, 31 Jan 2024 17:07:44 -0800
-Message-Id: <20240201010747.471141-6-david.e.box@linux.intel.com>
+Subject: [PATCH 8/8] tools: intel_sdsi: Add current meter support
+Date: Wed, 31 Jan 2024 17:07:47 -0800
+Message-Id: <20240201010747.471141-9-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240201010747.471141-1-david.e.box@linux.intel.com>
 References: <20240201010747.471141-1-david.e.box@linux.intel.com>
@@ -63,54 +63,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Add support to read the 'meter_current' file. The display is the same as
+the 'meter_certificate', but will show the current snapshot of the
+counters.
 
-As per SDSi in-band interface specification, sec titled "BIOS lock for
-in-band provisioning", when IB_LOCK bit is set in control qword, the
-SDSI agent is only allowed to perform the read flow, but not allowed to
-provision license blob or license key. So add check for it in
-sdsi_provision().
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/sdsi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/arch/x86/intel_sdsi/intel_sdsi.c | 48 +++++++++++++++++---------
+ 1 file changed, 31 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-index 14821fee249c..287780fe65bb 100644
---- a/drivers/platform/x86/intel/sdsi.c
-+++ b/drivers/platform/x86/intel/sdsi.c
-@@ -61,6 +61,7 @@
- #define CTRL_OWNER			GENMASK(5, 4)
- #define CTRL_COMPLETE			BIT(6)
- #define CTRL_READY			BIT(7)
-+#define CTRL_INBAND_LOCK		BIT(32)
- #define CTRL_STATUS			GENMASK(15, 8)
- #define CTRL_PACKET_SIZE		GENMASK(31, 16)
- #define CTRL_MSG_SIZE			GENMASK(63, 48)
-@@ -331,12 +332,21 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, s
- 	return sdsi_mbox_cmd_read(priv, info, data_size);
+diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+index a8fb6d17405f..c9b3e457885d 100644
+--- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
++++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+@@ -182,6 +182,7 @@ struct sdsi_dev {
+ enum command {
+ 	CMD_SOCKET_INFO,
+ 	CMD_METER_CERT,
++	CMD_METER_CURRENT_CERT,
+ 	CMD_STATE_CERT,
+ 	CMD_PROV_AKC,
+ 	CMD_PROV_CAP,
+@@ -329,7 +330,7 @@ static void get_feature(uint32_t encoding, char *feature)
+ 	feature[0] = name[3];
  }
  
-+static bool sdsi_ib_locked(struct sdsi_priv *priv)
-+{
-+	return !!FIELD_GET(CTRL_INBAND_LOCK, readq(priv->control_addr));
-+}
-+
- static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
- 			      enum sdsi_command command)
+-static int sdsi_meter_cert_show(struct sdsi_dev *s)
++static int sdsi_meter_cert_show(struct sdsi_dev *s, bool show_current)
  {
- 	struct sdsi_mbox_info info = {};
- 	int ret;
+ 	char buf[METER_CERT_MAX_SIZE] = {0};
+ 	struct bundle_encoding_counter *bec;
+@@ -360,7 +361,11 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
+ 		return ret;
+ 	}
  
-+	/* Make sure In-band lock is not set */
-+	if (sdsi_ib_locked(priv))
-+		return -EPERM;
+-	cert_ptr = fopen("meter_certificate", "r");
++	if (!show_current)
++		cert_ptr = fopen("meter_certificate", "r");
++	else
++		cert_ptr = fopen("meter_current", "r");
 +
- 	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
- 		return -EOVERFLOW;
+ 	if (!cert_ptr) {
+ 		perror("Could not open 'meter_certificate' file");
+ 		return -1;
+@@ -368,7 +373,8 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
  
+ 	size = fread(buf, 1, sizeof(buf), cert_ptr);
+ 	if (!size) {
+-		fprintf(stderr, "Could not read 'meter_certificate' file\n");
++		fprintf(stderr, "Could not read '%s' file\n",
++			show_current ? "meter_current" : "meter_certificate");
+ 		fclose(cert_ptr);
+ 		return -1;
+ 	}
+@@ -734,7 +740,7 @@ static void sdsi_free_dev(struct sdsi_dev *s)
+ 
+ static void usage(char *prog)
+ {
+-	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-m] [-a FILE] [-c FILE]]\n", prog);
++	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-m | -C] [-a FILE] [-c FILE]\n", prog);
+ }
+ 
+ static void show_help(void)
+@@ -743,8 +749,9 @@ static void show_help(void)
+ 	printf("  %-18s\t%s\n", "-l, --list",           "list available On Demand devices");
+ 	printf("  %-18s\t%s\n", "-d, --devno DEVNO",    "On Demand device number");
+ 	printf("  %-18s\t%s\n", "-i, --info",           "show socket information");
+-	printf("  %-18s\t%s\n", "-s, --state",          "show state certificate");
+-	printf("  %-18s\t%s\n", "-m, --meter",          "show meter certificate");
++	printf("  %-18s\t%s\n", "-s, --state",          "show state certificate data");
++	printf("  %-18s\t%s\n", "-m, --meter",          "show meter certificate data");
++	printf("  %-18s\t%s\n", "-C, --meter_current",  "show live unattested meter data");
+ 	printf("  %-18s\t%s\n", "-a, --akc FILE",       "provision socket with AKC FILE");
+ 	printf("  %-18s\t%s\n", "-c, --cap FILE>",      "provision socket with CAP FILE");
+ }
+@@ -760,21 +767,22 @@ int main(int argc, char *argv[])
+ 	int option_index = 0;
+ 
+ 	static struct option long_options[] = {
+-		{"akc",		required_argument,	0, 'a'},
+-		{"cap",		required_argument,	0, 'c'},
+-		{"devno",	required_argument,	0, 'd'},
+-		{"help",	no_argument,		0, 'h'},
+-		{"info",	no_argument,		0, 'i'},
+-		{"list",	no_argument,		0, 'l'},
+-		{"meter",	no_argument,		0, 'm'},
+-		{"state",	no_argument,		0, 's'},
+-		{0,		0,			0, 0 }
++		{"akc",			required_argument,	0, 'a'},
++		{"cap",			required_argument,	0, 'c'},
++		{"devno",		required_argument,	0, 'd'},
++		{"help",		no_argument,		0, 'h'},
++		{"info",		no_argument,		0, 'i'},
++		{"list",		no_argument,		0, 'l'},
++		{"meter",		no_argument,		0, 'm'},
++		{"meter_current",	no_argument,		0, 'C'},
++		{"state",		no_argument,		0, 's'},
++		{0,			0,			0, 0 }
+ 	};
+ 
+ 
+ 	progname = argv[0];
+ 
+-	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hilms", long_options,
++	while ((opt = getopt_long_only(argc, argv, "+a:c:d:hilmCs", long_options,
+ 			&option_index)) != -1) {
+ 		switch (opt) {
+ 		case 'd':
+@@ -790,6 +798,9 @@ int main(int argc, char *argv[])
+ 		case 'm':
+ 			command = CMD_METER_CERT;
+ 			break;
++		case 'C':
++			command = CMD_METER_CURRENT_CERT;
++			break;
+ 		case 's':
+ 			command = CMD_STATE_CERT;
+ 			break;
+@@ -828,7 +839,10 @@ int main(int argc, char *argv[])
+ 			ret = sdsi_read_reg(s);
+ 			break;
+ 		case CMD_METER_CERT:
+-			ret = sdsi_meter_cert_show(s);
++			ret = sdsi_meter_cert_show(s, false);
++			break;
++		case CMD_METER_CURRENT_CERT:
++			ret = sdsi_meter_cert_show(s, true);
+ 			break;
+ 		case CMD_STATE_CERT:
+ 			ret = sdsi_state_cert_show(s);
 -- 
 2.34.1
 
