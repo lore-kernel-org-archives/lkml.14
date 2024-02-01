@@ -1,72 +1,45 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352DB626B0
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A766626A3;
+	Thu,  1 Feb 2024 15:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706801678; cv=none; b=o+a5zv7WZbIVPrSTas99b08ShojMBEY2BuxIzsDeHA5/7o4UCt1zjQUCNkwt1nDLSR/hdHr2Hq5w6SejmJiVkMjC+DQ/hD5eIpY1/crl/Q7U/87B/P72QuUrtUh15eAMRBdVYa2dmIlzSQTa7JZC9ggX0MoRaulkXnSkM/JclTA=
+	t=1706801699; cv=none; b=FjuxEsUtuseWh9M7uuw0jlLPH+MKFUIva1N2ufoUvSv3DzsWvhIEl3Lo672P8IyGlJWxZMa3KNIR4VMicE0wFNZORiKyd5OK6qJi6fTRucpXRK6KF1PdC2HtCAN+FwTdio/j5Vgy3zinQz9dMAWzKI8EJ/Nlj4GAHyN4Efay4j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706801678; c=relaxed/simple;
-	bh=13PcTdhaGFdTv+3l6uEyVq/w0uQbXHOvcDFwClNLKZg=;
+	s=arc-20240116; t=1706801699; c=relaxed/simple;
+	bh=92wOjai83MNYikSNgzyhgo4pXtuXVYoQBQ0iJgRYYeQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GfLreZuFaze8GIu8gU/ODgAf0zwgf3ZjK5x1ql5ZWg8yWdmRAS30G1TYKXXr4a55fyPtvrmKeZkghoBGMG2XC/PuOa5JiTsPmhwjK67KV3kUr/fuTJIOkYf/mBwLCTJhmqwlRCV0ENF7LyC04cHLsyLB3VS8MbXoxN6cuWk0NDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=lDXRXzRD; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=h/8YGZnCrfDN3DW3IyMuHPPAhpT907FAcRGiflyOJngF80O70AObuQBcCdEy+M5kq+kGJMir3WFuoWEM9feiKd/cTyXUrSjvgKgXxfZLDdHStsQbXhOTe+/rSeN0SQ8OBhWI5o9IhsBRvWVOtBoD5cp5myVXjpAhGDAZf5T7C60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=t9WXw0PC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="lDXRXzRD"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-783d4b3a00bso73967985a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:34:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1706801675; x=1707406475; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zPvZs4K/sfx3gwEPHE0K6OK7OOwWGbcE7kwIuj736Gk=;
-        b=lDXRXzRDu4Hdu7j+0XXXm/fY+D/Q9NDZOGdiUVNlhMTZDii16yItoEX7zpLas6unVT
-         QQFU6zy8RDuqiiF/xpO72sqIgyA0abeaIW9Ysx/f8DXpuX8jcVFv7JpVk6AucMzeNYjh
-         Km2jpznZC+SGUA+NJexeHi1hq4p7RTJlLmQ2ZFxIUAItnI7SXtiZ5xwDflsPfW+RHnb7
-         IoNw0yhMaiCMF44q0TZGYe1kFi8hYY8V5AdCITOCGDJGLEALb3PXU7miyoPf+zF7ZriM
-         E8NC+yx42Ru6alCZC6fpZZGOElwyRucX0ovliA4nmaU6iM6gfKniz9CwJwu+T5zx7o5R
-         DHFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706801675; x=1707406475;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zPvZs4K/sfx3gwEPHE0K6OK7OOwWGbcE7kwIuj736Gk=;
-        b=bMKxU6Q4ftll9z/lAMW7+dC/26RM+PH14HOT+ulgRpmB118ULNkDMqnJR8crZmNlep
-         BS9epvO1rH0kbjpGc9sCQXWiPqOCayfRP2xKEL+xAr3UERON52BBqoUAOYZ1NjhJWcp8
-         PGysrSicIjUp+qo6P8gfRFn6H57e7+S/VwtlCsuKJms9Z5ONlwD+9iLeB2AWZsgU9AxV
-         Nx2M47ahz2WPm5m1zMBPPmxxJncLKqgM5HK4hJT+BZQnq3tOXjyzWWO1HYliucoiYvOB
-         Wbl5fQIf/6lJ2FTsxZ0j9gjH0PnM82ZpdBk4Nn6ZkzVQHagpvL/0lkx16v9eqyY/7s4U
-         fD4A==
-X-Gm-Message-State: AOJu0Yybyn8xe+H0bkpXhEZzl791Ik1+UEgxJCxWffDC+cgHHg5UDKHk
-	DbJgGkcXhTJIY5jwKTvsXd380kEZO+iOdS1CU0TC+9sf57JaykGvo/oEHa32x1w=
-X-Google-Smtp-Source: AGHT+IGi/XmGKqr5Cs1gVK8YipQ2XHKTRdRpKkoeUGmO9YOgPFP2kvzWajFfZcZoTktkg1gfV2ePmA==
-X-Received: by 2002:a05:620a:26a2:b0:783:5b21:5746 with SMTP id c34-20020a05620a26a200b007835b215746mr3935847qkp.43.1706801674936;
-        Thu, 01 Feb 2024 07:34:34 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWJY1BAiTTEZMvicUpiSL9Kon6fKRwF3bWl6PwAZJC7iyhfRfrydfsJ5C+fXJA32s9ApqaBsBBEUHSHo+Kkzhp5r3fZeOOpdfU4yoeNqMjLSkqBvLpTGA+NCh7wpjyeS0dIhEriuuIqIg0XlRtefRk/FxGDcMT+LJ3nk9UrZ8+YDxTCeYS4HCV65LhB3VeDXyQLjxCuN43UvgZ4s3C07VVvH27WkDy02wbD4TIB90t8t01GhyO8NFCmWhrz8g1bfvvRi2zXbx0l7ONCw4n9pMZkgp2Su7ETPyA8mZxI6hVrywGoAd7GwZD5BdclWZjquE3kE1d8XMDVDzKuORnJ7nLiTwE3KbgWgr0+5ojToooEIB5Xb08GaDDWTwmCQqXczCpIp3eKjOUeaIOtORQcfOu8Fg==
-Received: from localhost (2603-7000-0c01-2716-97cf-7b55-44af-acd6.res6.spectrum.com. [2603:7000:c01:2716:97cf:7b55:44af:acd6])
-        by smtp.gmail.com with ESMTPSA id vy15-20020a05620a490f00b00784048d795asm2918077qkn.108.2024.02.01.07.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 07:34:34 -0800 (PST)
-Date: Thu, 1 Feb 2024 10:34:28 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: "T.J. Mercier" <tjmercier@google.com>, Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeelb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Efly Young <yangyifei03@kuaishou.com>, android-mm@google.com,
-	yuzhao@google.com, cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: memcg: Use larger chunks for proactive reclaim
-Message-ID: <20240201153428.GA307226@cmpxchg.org>
-References: <20240131162442.3487473-1-tjmercier@google.com>
- <q3m42iuxahsjrskuio3ajz2edrisiw56cwy2etx2jyht5l7jzq@ttbsrvgu4mvl>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="t9WXw0PC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6F8C433F1;
+	Thu,  1 Feb 2024 15:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706801699;
+	bh=92wOjai83MNYikSNgzyhgo4pXtuXVYoQBQ0iJgRYYeQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t9WXw0PCnRPV/1t0PVCSpps11fq4ZDWzZ4l5o4Q8/KnhKtXC2Ja77YAMZ2lO22RIP
+	 Nzf5ltRtt48pUS/WPpxwzWwvC6uji24oLfku+QlNtKuEU4UUsEsBvwOa/+oVIwKmbF
+	 zPtEtZgjOl+LnETbfl/J4k9ZxmE+R/yuq4Jd04h0=
+Date: Thu, 1 Feb 2024 07:34:58 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Hegde, Suma" <Suma.Hegde@amd.com>, naveenkrishna.chatradhi@amd.com,
+	LKML <linux-kernel@vger.kernel.org>,
+	Carlos Bilbao <carlos.bilbao@amd.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/amd/hsmp: switch to use device_add_groups()
+Message-ID: <2024020122-undertone-hammock-b08d@gregkh>
+References: <2024012822-exalted-fidgeting-f180@gregkh>
+ <0d110d2a-da0c-017a-0e5a-fc6bef7b066a@linux.intel.com>
+ <e73426f6-6d50-4ed7-8613-1ec42fa3f991@amd.com>
+ <2024020144-duplicity-nuptials-1cd7@gregkh>
+ <f48ebcb1-8f87-efee-08ed-844775c995aa@linux.intel.com>
+ <2024020135-sly-theft-0594@gregkh>
+ <fb66b037-eeba-45d6-be41-215478cf3ba9@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,53 +49,85 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <q3m42iuxahsjrskuio3ajz2edrisiw56cwy2etx2jyht5l7jzq@ttbsrvgu4mvl>
+In-Reply-To: <fb66b037-eeba-45d6-be41-215478cf3ba9@redhat.com>
 
-On Thu, Feb 01, 2024 at 02:57:22PM +0100, Michal Koutný wrote:
-> Hello.
+On Thu, Feb 01, 2024 at 03:50:08PM +0100, Hans de Goede wrote:
+> Hi Greg,
 > 
-> On Wed, Jan 31, 2024 at 04:24:41PM +0000, "T.J. Mercier" <tjmercier@google.com> wrote:
-> >  		reclaimed = try_to_free_mem_cgroup_pages(memcg,
-> > -					min(nr_to_reclaim - nr_reclaimed, SWAP_CLUSTER_MAX),
-> > +					max((nr_to_reclaim - nr_reclaimed) / 4,
-> > +					    (nr_to_reclaim - nr_reclaimed) % 4),
+> On 2/1/24 15:47, Greg Kroah-Hartman wrote:
+> > On Thu, Feb 01, 2024 at 04:34:30PM +0200, Ilpo Järvinen wrote:
+> >> On Thu, 1 Feb 2024, Greg Kroah-Hartman wrote:
+> >>
+> >>> On Thu, Feb 01, 2024 at 06:50:33PM +0530, Hegde, Suma wrote:
+> >>>> On 1/29/2024 6:16 PM, Ilpo Järvinen wrote:
+> >>>>> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> >>>>>
+> >>>>>
+> >>>>> + Cc Suma Hegde.
+> >>>>>
+> >>>>> On Sun, 28 Jan 2024, Greg Kroah-Hartman wrote:
+> >>>>>
+> >>>>>> The use of devm_*() functions works properly for when the device
+> >>>>>> structure itself is dynamic, but the hsmp driver is attempting to have a
+> >>>>>> local, static, struct device and then calls devm_() functions attaching
+> >>>>>> memory to the device that will never be freed.
+> >>>>>>
+> >>>>>> The logic of having a static struct device is almost never a wise
+> >>>>>> choice, but for now, just remove the use of devm_device_add_groups() in
+> >>>>>> this driver as it obviously is not needed.
+> >>>>
+> >>>> Hi Greg,
+> >>>>
+> >>>> Could you please hold on merging this patch for a week? I will push a patch
+> >>>> for converting platform specific structure's memory allocation from static
+> >>>> to a dynamic
+> >>>>
+> >>>> allocation.
+> >>>
+> >>> Push it where?  Ususally we do "first patch wins" type stuff, why not
+> >>> just do your work on top of mine?
+> >>>
+> >>> Also, when you do make the needed changes, please remove the explicit
+> >>> call to create sysfs groups and use the default groups pointer instead,
+> >>> that will make things much simpler and avoid races in the code.
+> >>
+> >> Hi Greg,
+> >>
+> >> Well, if you really want to "win" :-), please provide an updated version 
+> >> which considers the changes already made in the for-next branch (the 
+> >> current one won't apply).
+> > 
+> > Fair enough, I don't want to "win", I just want to squash any "hold off
+> > and don't make any changes to this file because I was going to plan on
+> > doing something else here in the future" type of stuff, as that is what
+> > has been documented to take down many projects in the past.
+> > 
+> > That's why we almost always take patches that people have submitted
+> > today, instead of ignoring them for potential future changes, unless of
+> > course, they are not acceptable.
+> > 
+> > I'll rebase on linux-next, rejecting it for that reason is totally valid :)
 > 
-> The 1/4 factor looks like magic.
+> I checked the code in linux-next and the dev passed to devm_device_add_groups()
+> now is &amd_hsmp_platdev->dev and amd_hsmp_platdev gets properly removed
+> from hsmp_plt_exit(), so I believe that keeping the devm_... call is
+> the right thing to do.
 
-It's just cutting the work into quarters to balance throughput with
-goal accuracy. It's no more or less magic than DEF_PRIORITY being 12,
-or SWAP_CLUSTER_MAX being 32.
+I'm trying to delete the devm_device_add_groups() function entirely from
+the kernel, so I might disagree with you there :)
 
-> Commit 0388536ac291 says:
-> | In theory, the amount of reclaimed would be in [request, 2 * request).
+> With that said this driver really could use some modernization
+> (even though it is not a very old driver):
+> 
+> 1. The sysfs attribute registration should really switch to using
+> amd_hsmp_driver.driver.dev_groups rather then manually
+> calling devm_device_add_groups().
 
-Looking at the code, I'm not quite sure if this can be read this
-literally. Efly might be able to elaborate, but we do a full loop of
-all nodes and cgroups in the tree before checking nr_to_reclaimed, and
-rely on priority level for granularity. So request size and complexity
-of the cgroup tree play a role. I don't know where the exact factor
-two would come from.
+Yes, I'm all for that, I'll look at that this afternoon.  That's my main
+goal here, to get rid of ALL manual group additions in the tree if at
+all possible.  And for those rare cases that it isn't, because they are
+dynamically created, work on a solution for those.
 
-IMO it's more accurate to phrase it like this:
+thanks,
 
-Reclaim tries to balance nr_to_reclaim fidelity with fairness across
-nodes and cgroups over which the pages are spread. As such, the bigger
-the request, the bigger the absolute overreclaim error. Historic
-in-kernel users of reclaim have used fixed, small request batches to
-approach an appropriate reclaim rate over time. When we reclaim a user
-request of arbitrary size, use decaying batches to manage error while
-maintaining reasonable throughput.
-
-> Doesn't this suggest 1/2 as a better option? (I didn't pursue the
-> theory.)
-
-That was TJ's first suggestion as well, but as per above I suggested
-quartering as a safer option.
-
-> Also IMO importantly, when nr_to_reclaim - nr_reclaimed is less than 8,
-> the formula gives arbitrary (unrelated to delta's magnitude) values.
-
-try_to_free_mem_cgroup_pages() rounds up to SWAP_CLUSTER_MAX. So the
-error margin is much higher at the smaller end of requests anyway.
-But practically speaking, users care much less if you reclaim 32 pages
-when 16 were requested than if you reclaim 2G when 1G was requested.
+greg k-h
