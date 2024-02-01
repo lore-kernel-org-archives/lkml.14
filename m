@@ -1,89 +1,131 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067FF5337E;
-	Thu,  1 Feb 2024 14:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37EC5D491;
+	Thu,  1 Feb 2024 14:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706796973; cv=none; b=DEd1A6ydtAdFtqbrZKvzCA0/Rq439+2PXBIYVhNsjHqyUihrYulyg6R+q+f5x6KVxVAvs9g72QhkXIE49vvmBihbUbzY9c96H0B6dFN2waDEPCd8Ty/I0WahNGN4fcm/PprIirbfESpOJVsBlZrleuutMrCMjTeH4d/05Z8YmXY=
+	t=1706796991; cv=none; b=oixYbdVrE3zSxPcZCI5kScR92/FmS9pyogkI/cMkjjBV30nVMiL5EGwOvyq5VFNscoVDqgExLFrT8Y9yDbeGUUcqDGaibwcZ68K65alYIPRh16WXAZBy8zkBkuX81sLOAT0FY3/qnYY1O3pev7WAKga9DmqYS43MGm9ZknVOiAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706796973; c=relaxed/simple;
-	bh=COW4TixgCHmoWbYb6ZMc3lV+lQapifvdBll4Z4yxb8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGzdHlvQnbY9IR5L4bstkiKoaRkOY7noepzFx9HfQxBl7FFd6yIEMtYgVdeCnlJ5T9LHI14cYs2a+aw3A59t9GziSYyEOPWC0TpX1hh5LeMvgDdfXOjLdE7+5C1LGHJpNhWF/4uSU9Hrkz/TQERna+X6dmUA9uiovGHQG6NFcb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=a55N6gHX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="a55N6gHX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A5AFB40E01B0;
-	Thu,  1 Feb 2024 14:16:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 0TrGAcQI3Xuq; Thu,  1 Feb 2024 14:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706796963; bh=SPv10L/MGaHhB1H9sFZLgmVexA6qV9vljgR/Vr3xiDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a55N6gHXjamiqkNWVLUYdCEVvi7klLEctKuGIMd260pApO3EYbRb2hFX2d1k/dGzK
-	 gtYQaz6hfBmEhVBoUfpV+xNBWZKnl9WnyB4vNS22AOQwf9CeG8cxRGUHVcMN2nZ+7P
-	 +fVcQc1qRf65v4XQpyJhTN9Rasu/Zw6ZLqAxj2cf6ytiFxRTpPnnAwF4pP+uyzLadX
-	 mlwwct7pG4FBsuiChZ23s1F3dmLhXrNFCynvJJ7tgF7p1UK5KzSzI4YnFpOGZ0r4K7
-	 M+Qew+vWDChw8c9zZei4Y6tpUe5iyhhXrU3sj2mQUSKmEuG0bweGMJFx4tfuqNzlIg
-	 +vKQaaZqQmvSNhFONaBU7RTQA3tkf8CjX/D12D7LLygzLWKYQNPoNhWUrVZnBvXhOQ
-	 N05poUHjGyn6aylpBBadfIbY52kavj47luqp6xT7zhUw3rExr+6aXc9iLpBIdKKQ4V
-	 eUWcA3sxBUg4C+kfB6A3IdVNdviKeHh64Cys7etuiMhIPhphLBSoc3R7pE+0sHnFye
-	 memaYqyViB6GdAzMReFPDd9ufZEx23ig69wHfxOP/bewJzZiVccKv4aAnQEFABuc3A
-	 fMdoYtEFMiXtN6b181m9atN8mJeHHHTjhOF1H8y1gLXdMZ57uXn93Mdb5dOFJpSpSb
-	 9agUjQe8TNzywkM6WMcy/xic=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E19DF40E01A2;
-	Thu,  1 Feb 2024 14:15:53 +0000 (UTC)
-Date: Thu, 1 Feb 2024 15:15:52 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Xin Li <xin@zytor.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the tip tree
-Message-ID: <20240201141552.GEZbunmFCS_MwZ6sTT@fat_crate.local>
-References: <20240201111453.0ee3beff@canb.auug.org.au>
- <402d250c-e9b2-4c19-befd-d12b2e2582cd@zytor.com>
+	s=arc-20240116; t=1706796991; c=relaxed/simple;
+	bh=7RgMnk9HW84EbxS2xyK1O0Sz4jbb2wR+0AQQeJkbATI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ebhtO2pLf57EvzmE2P/3huEcbUyXpnNhHVToLApfLcWntUUc3pQ4FE1XrPsrMyWgNZaCr6u4853SVdLVd9rDKw0gGhbIr1knBNtCUMwlP8aNrDIb0eDfU7qBWwpyt7ZmjDBBDkeeHHzccWRWzgq2e0m1+D0b7yC+14Z6fyFnHUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TQgrm679Rz29ktV;
+	Thu,  1 Feb 2024 22:14:32 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id 518421400D4;
+	Thu,  1 Feb 2024 22:16:24 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 1 Feb
+ 2024 22:16:23 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <linux-ext4@vger.kernel.org>
+CC: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <jack@suse.cz>,
+	<ritesh.list@gmail.com>, <ojaswin@linux.ibm.com>,
+	<linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <chengzhihao1@huawei.com>, <yukuai3@huawei.com>,
+	<libaokun1@huawei.com>, <stable@kernel.org>
+Subject: [PATCH v2] ext4: correct best extent lstart adjustment logic
+Date: Thu, 1 Feb 2024 22:18:45 +0800
+Message-ID: <20240201141845.1879253-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <402d250c-e9b2-4c19-befd-d12b2e2582cd@zytor.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-On Thu, Feb 01, 2024 at 12:59:54AM -0800, Xin Li wrote:
-> The following patch gets rid of the warning.
->
-> Boris, should I send a format patch?
+When yangerkun review commit 93cdf49f6eca ("ext4: Fix best extent lstart
+adjustment logic in ext4_mb_new_inode_pa()"), it was found that the best
+extent did not completely cover the original request after adjusting the
+best extent lstart in ext4_mb_new_inode_pa() as follows:
 
-This is how kernel development is usually done. People send formal
-patches and maintainers apply them.
+  original request: 2/10(8)
+  normalized request: 0/64(64)
+  best extent: 0/9(9)
 
-:-)
+When we check if best ex can be kept at start of goal, ac_o_ex.fe_logical
+is 2 less than the adjusted best extent logical end 9, so we think the
+adjustment is done. But obviously 0/9(9) doesn't cover 2/10(8), so we
+should determine here if the original request logical end is less than or
+equal to the adjusted best extent logical end.
 
-Make sure you explain why you're fixing it.
+In addition, add a comment stating when adjusted best_ex will not cover
+the original request, and remove the duplicate assertion because adjusting
+lstart makes no change to b_ex.fe_len.
 
-Thx.
+Link: https://lore.kernel.org/r/3630fa7f-b432-7afd-5f79-781bc3b2c5ea@huawei.com
+Fixes: 93cdf49f6eca ("ext4: Fix best extent lstart adjustment logic in ext4_mb_new_inode_pa()")
+Cc: stable@kernel.org
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+V1->V2:
+	Remove the problematic BUG_ON and add some comments.
 
+ fs/ext4/mballoc.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 1ea6491b6b00..20cad0676aab 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -5148,10 +5148,16 @@ ext4_mb_new_inode_pa(struct ext4_allocation_context *ac)
+ 			.fe_len = ac->ac_orig_goal_len,
+ 		};
+ 		loff_t orig_goal_end = extent_logical_end(sbi, &ex);
++		loff_t o_ex_end = extent_logical_end(sbi, &ac->ac_o_ex);
+ 
+-		/* we can't allocate as much as normalizer wants.
+-		 * so, found space must get proper lstart
+-		 * to cover original request */
++		/*
++		 * We can't allocate as much as normalizer wants, so we try
++		 * to get proper lstart to cover the original request, except
++		 * when the goal doesn't cover the original request as below:
++		 *
++		 * orig_ex:2045/2055(10), isize:8417280 -> normalized:0/2048
++		 * best_ex:0/200(200) -> adjusted: 1848/2048(200)
++		 */
+ 		BUG_ON(ac->ac_g_ex.fe_logical > ac->ac_o_ex.fe_logical);
+ 		BUG_ON(ac->ac_g_ex.fe_len < ac->ac_o_ex.fe_len);
+ 
+@@ -5163,7 +5169,7 @@ ext4_mb_new_inode_pa(struct ext4_allocation_context *ac)
+ 		 * 1. Check if best ex can be kept at end of goal (before
+ 		 *    cr_best_avail trimmed it) and still cover original start
+ 		 * 2. Else, check if best ex can be kept at start of goal and
+-		 *    still cover original start
++		 *    still cover original end
+ 		 * 3. Else, keep the best ex at start of original request.
+ 		 */
+ 		ex.fe_len = ac->ac_b_ex.fe_len;
+@@ -5173,7 +5179,7 @@ ext4_mb_new_inode_pa(struct ext4_allocation_context *ac)
+ 			goto adjust_bex;
+ 
+ 		ex.fe_logical = ac->ac_g_ex.fe_logical;
+-		if (ac->ac_o_ex.fe_logical < extent_logical_end(sbi, &ex))
++		if (o_ex_end <= extent_logical_end(sbi, &ex))
+ 			goto adjust_bex;
+ 
+ 		ex.fe_logical = ac->ac_o_ex.fe_logical;
+@@ -5181,7 +5187,6 @@ ext4_mb_new_inode_pa(struct ext4_allocation_context *ac)
+ 		ac->ac_b_ex.fe_logical = ex.fe_logical;
+ 
+ 		BUG_ON(ac->ac_o_ex.fe_logical < ac->ac_b_ex.fe_logical);
+-		BUG_ON(ac->ac_o_ex.fe_len > ac->ac_b_ex.fe_len);
+ 		BUG_ON(extent_logical_end(sbi, &ex) > orig_goal_end);
+ 	}
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.31.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
