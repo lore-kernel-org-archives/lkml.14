@@ -1,439 +1,312 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293FA4D9F1;
-	Thu,  1 Feb 2024 14:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C3B5F479
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 14:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706797501; cv=none; b=QUra7+vURTG2P9Ut4avjUnDakYGQkF9aPa4VAfemkNKuVcvc+1iLs7wx/I47kWxJmM9pa0PIpLHqPe0b6u5Ku6JtfWLVSNFu0L9C22Hk7++yWgki3RhLg921o4dxZ9baBS4r3EnTl4H97oj1tdVVIURJ7jSoEqDRM5rUoDNZfx8=
+	t=1706797505; cv=none; b=oDsFQvdpThorUV9W1uABZdZToacv+sHWMYriCE89lsyXGY1SjENRon7ZyzoaADKRVBAmiD/JLhS77d/LXZXnFLPXWCNybYLNUqneQJd3dK7327rhhdC2Bl/1Krh7+AmzYpeas41A4cB2dcNpFIZ97xk9cWFjR/riABmi2TbHGUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706797501; c=relaxed/simple;
-	bh=+bLoTTaHsl+A5R6HiKzYAF0KFmmHE8t2clEhFgCuM7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=h6rJ84kLxX238PZhRVsEtzJxSM8+ta2dWc0c9T7ezGLCqwHKxk7zGSUEAL2fUraph5kbuYg4iZf86ELkMsj485d+guD1Z41+NCOF19QgfAs5vQz4T46wYl5AOao7S0e17/kASNimxIvpqQzE9eMkZBE3VRkNUrYVHB0YjQUP9Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TmRAhsEC; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706797505; c=relaxed/simple;
+	bh=urTC8c/x4GjOmh3DyV8iK3vfUq7I4Kdkr8Ip1YAlpbU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kpbUHgXAqb/spuck1yA15L/lzVsZceUMKqpBJRwFQhF//jl3hOuO5TGj3jO3Cr/GosHQ7N8iAGlMrADWCoK9vSQbtRS/XduiIRoUAJkRUkjc4JsSIaMGvcuJdRtRFlizIl8rH/OynYymlhLPghIHB3nq2HK50IlGCNYeReEocLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vIA7Zmft; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TmRAhsEC"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411EOns2124597;
-	Thu, 1 Feb 2024 08:24:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706797489;
-	bh=7k2bmk4T4kc2umY6OQPSEDZqMD1FAYPjS55Drp2nL8M=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=TmRAhsECrpOTDU7t7im4AOvbTG2kFJFtDaivTT5fZkQGPlCfaf/H9fIKxCVIFoNc6
-	 ba/7b1BIX8ooj9eDaE14Hmt+J8Q2WZys6hHCeIfAYypRl8yRMIyjKcIeZxFchYVopx
-	 CJeBpJXh5O0cUiW5LJzL7Y/J8tPAAeKpNee+VtdQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411EOnij025159
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 1 Feb 2024 08:24:49 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
- Feb 2024 08:24:49 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 1 Feb 2024 08:24:49 -0600
-Received: from [10.249.129.226] ([10.249.129.226])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411EOSXJ067328;
-	Thu, 1 Feb 2024 08:24:29 -0600
-Message-ID: <32f49a1d-7974-4dc6-be20-f21f5aabc264@ti.com>
-Date: Thu, 1 Feb 2024 19:54:24 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vIA7Zmft"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d5ce88b51cso202495ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 06:25:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706797503; x=1707402303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3oik3gsH7UCRMxBdMG02de4OGV898umiHRSHwrLUdZI=;
+        b=vIA7ZmftqW1QTWmyWPq9JEbOmBVd8wve5m8oPT7SROsE3310AomOg28ZHVHk/uYyOO
+         R5uzmYW5fsNgdv9qw7AlmlBltH76NW+N6kjoamqTj2lcS25gOPFZ5pICobcfAsGeauMF
+         mqkQ9V9kJ8MxLkYEbKieEz8GJD+AVFt6A3J+tpmMnj+KOQ7ID9aCY6SYImXgAQz40psM
+         gDELNuES+y1I1SZda7P+mJmH8Co7iQrHKsH6PTP2ZADsiRFWFewKIuS1Yh15sMw3858m
+         ova2xsQDxokCUNlX5eOYK0ZDaAyOt4vEcxMKEx1yQtq2FS2v9ru2WkBxQu+xMX+HPsCh
+         HTsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706797503; x=1707402303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3oik3gsH7UCRMxBdMG02de4OGV898umiHRSHwrLUdZI=;
+        b=xMoOcaMVoTZQAK3GmteQ1hlFcmrPEFB+/V9Y6Dc4SgfS76NGVk0zj5QjcU+98VegEr
+         WqquF2+/YPzXw9Cndk/Uco1BlVStv1Q+IZZirbLGEz3Cl+E8Amnoog+8JxADjbR9opyZ
+         0GqV90hw8eKtc5lDP8zW1sUZXmymYVCz1whZyScMV8nLwU3Wc5qoBAP07gAGeBaCMhYg
+         +Apd/WS/aFZJSwAXKnipgIYOvBBgNp7JoBOM7e2b/tX4rCi1zxswe7Mlut351Z/UTIth
+         o5m6A4ikSJgh6qToDx+EzEHW3QsTEJlB7PI59tTTR28iGz2u5ClEfMQA03YL9qoN+V30
+         orWw==
+X-Gm-Message-State: AOJu0YxfGWKMYwIs04aVc/ZgXLl69MPcooM9WSwpleMqNqgQobWqTV/4
+	d3KLV+Hit/CkRY78TD0sfps4bCKDuE7SozCIqrTZEPSa1mtY+zWULU02tEF4axR1q0ZyZ5ee5iu
+	s2xBvxoDYUtFYOjw3j48bfS9O6bZbvGSnCci2
+X-Google-Smtp-Source: AGHT+IHI1zkSF24WGgfobv3gzLaErXwwm+tRmNbiHxBAsTDDC816FuOmnpUy05KzuzVXoUjvif2HUxanJbXCQ6xr+OI=
+X-Received: by 2002:a17:903:41cb:b0:1d8:fc6f:e1da with SMTP id
+ u11-20020a17090341cb00b001d8fc6fe1damr245879ple.2.1706797502666; Thu, 01 Feb
+ 2024 06:25:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next 2/2] net: ethernet: ti: inter-core-virt-eth:
- Register as network device
-Content-Language: en-US
-To: Simon Horman <horms@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <andrew@lunn.ch>, <rogerq@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <s-vadapalli@ti.com>, <srk@ti.com>
-References: <20240130110944.26771-1-r-gunasekaran@ti.com>
- <20240130110944.26771-3-r-gunasekaran@ti.com>
- <20240201131912.GB530335@kernel.org>
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <20240201131912.GB530335@kernel.org>
+References: <20240201042236.1538928-1-irogers@google.com> <20240201042236.1538928-4-irogers@google.com>
+ <9d177173-c66f-a0d3-ba4d-2261f8663fce@arm.com>
+In-Reply-To: <9d177173-c66f-a0d3-ba4d-2261f8663fce@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 1 Feb 2024 06:24:51 -0800
+Message-ID: <CAP-5=fVDjOfM8rZStYJCFPcTD3uhJDNSf_=JrkwYjFrnoOLC=w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] perf arm-spe/cs-etm: Directly iterate CPU maps
+To: James Clark <james.clark@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
+	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 1, 2024 at 3:25=E2=80=AFAM James Clark <james.clark@arm.com> wr=
+ote:
+>
+>
+>
+> On 01/02/2024 04:22, Ian Rogers wrote:
+> > Rather than iterate all CPUs and see if they are in CPU maps, directly
+> > iterate the CPU map. Similarly make use of the intersect
+> > function. Switch perf_cpu_map__has_any_cpu_or_is_empty to more
+> > appropriate alternatives.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/arch/arm/util/cs-etm.c    | 77 ++++++++++++----------------
+> >  tools/perf/arch/arm64/util/arm-spe.c |  4 +-
+> >  2 files changed, 34 insertions(+), 47 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/ut=
+il/cs-etm.c
+> > index 77e6663c1703..f4378ba0b8d6 100644
+> > --- a/tools/perf/arch/arm/util/cs-etm.c
+> > +++ b/tools/perf/arch/arm/util/cs-etm.c
+> > @@ -197,38 +197,32 @@ static int cs_etm_validate_timestamp(struct auxtr=
+ace_record *itr,
+> >  static int cs_etm_validate_config(struct auxtrace_record *itr,
+> >                                 struct evsel *evsel)
+> >  {
+> > -     int i, err =3D -EINVAL;
+> > +     int idx, err =3D -EINVAL;
+> >       struct perf_cpu_map *event_cpus =3D evsel->evlist->core.user_requ=
+ested_cpus;
+> >       struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
+s();
+> > +     struct perf_cpu_map *intersect_cpus =3D perf_cpu_map__intersect(e=
+vent_cpus, online_cpus);
+>
+> Hi Ian,
+>
+> This has the same issue as V1. 'any' intersect 'online' =3D=3D empty. Now=
+ no
+> validation happens anymore. For this to be the same as it used to be,
+> validation has to happen on _all_ cores when event_cpus =3D=3D -1. So it
+> needs to be 'any' intersect 'online' =3D=3D 'online'.
+>
+> Same issue below with cs_etm_info_priv_size()
 
+Thanks James, sorry for the churn. I'll work on that for v3.
 
-On 2/1/2024 6:49 PM, Simon Horman wrote:
-> On Tue, Jan 30, 2024 at 04:39:44PM +0530, Ravi Gunasekaran wrote:
->> Register the RPMsg driver as network device and add support for
->> basic ethernet functionality by using the shared memory for data
->> plane.
->>
->> The shared memory layout is as below, with the region between
->> PKT_1_LEN to PKT_N modelled as circular buffer.
->>
->> -------------------------
->> |          HEAD         |
->> -------------------------
->> |          TAIL         |
->> -------------------------
->> |       PKT_1_LEN       |
->> |         PKT_1         |
->> -------------------------
->> |       PKT_2_LEN       |
->> |         PKT_2         |
->> -------------------------
->> |           .           |
->> |           .           |
->> -------------------------
->> |       PKT_N_LEN       |
->> |         PKT_N         |
->> -------------------------
->>
->> The offset between the HEAD and TAIL is polled to process the Rx packets.
->>
->> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
-> Hi Ravi,
->
-> some feedback, mainly regarding issues flagged by linters and static analysis.
->
->> ---
->>  drivers/net/ethernet/ti/inter-core-virt-eth.c | 316 ++++++++++++++++++
->>  drivers/net/ethernet/ti/inter-core-virt-eth.h |  16 +
->>  2 files changed, 332 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/ti/inter-core-virt-eth.c b/drivers/net/ethernet/ti/inter-core-virt-eth.c
->> index d3b689eab1c0..735482001f4d 100644
->> --- a/drivers/net/ethernet/ti/inter-core-virt-eth.c
->> +++ b/drivers/net/ethernet/ti/inter-core-virt-eth.c
->> @@ -6,6 +6,50 @@
->>  
->>  #include "inter-core-virt-eth.h"
->>  
->> +#define ICVE_MIN_PACKET_SIZE	ETH_ZLEN
->> +#define ICVE_MAX_PACKET_SIZE	(ETH_FRAME_LEN + ETH_FCS_LEN)
->> +#define ICVE_MAX_TX_QUEUES	1
->> +#define ICVE_MAX_RX_QUEUES	1
->> +
->> +#define TEST_DEBUG		1
-> Please remove TEST_DEBUG and associated code.
-> This does not seem appropriate for upstream.
+Ian
 
-Sure,  I will do so.
-
+> Thanks
+> James
 >
->> +
->> +#ifdef TEST_DEBUG
->> +#define ICVE_MAX_BUFFERS	100 //TODO : Set to power of 2 to leverage shift operations
->> +#endif
->> +
->> +#define PKT_LEN_SIZE_TYPE	sizeof(u32)
->> +
->> +/* 4 bytes to hold packet length and ICVE_MAX_PACKET_SIZE to hold packet */
->> +#define ICVE_BUFFER_SIZE	(ICVE_MAX_PACKET_SIZE + PKT_LEN_SIZE_TYPE)
->> +
->> +#define RX_POLL_TIMEOUT		250
->> +
->> +#define icve_ndev_to_priv(ndev) \
->> +	((struct icve_ndev_priv *)netdev_priv(ndev))
->> +#define icve_ndev_to_port(ndev) (icve_ndev_to_priv(ndev)->port)
->> +#define icve_ndev_to_common(ndev) (icve_ndev_to_port(ndev)->common)
->> +
->> +static void icve_rx_timer(struct timer_list *timer)
->> +{
->> +	struct icve_port *port = from_timer(port, timer, rx_timer);
->> +	struct napi_struct *napi;
->> +	int num_pkts = 0;
->> +	u32 head, tail;
->> +
->> +	head = port->rx_buffer->head;
->> +	tail = port->rx_buffer->tail;
->> +
->> +	num_pkts = tail - head;
->> +	num_pkts = num_pkts >= 0 ? num_pkts : (num_pkts + port->icve_max_buffers);
-> Networking (still) prefers code to be < 80 columns wide.
-> In this case I'd probably go for (completely untested!):
-
-I will take care of this from now on.
-
-> 	num_pkts = tail - head;
-> 	if (num_pkts <= 0)
-> 		num_pkts = num_pkts + port->icve_max_buffers;
->
-> Please consider running checkpatch as it is run by the CI.
->
-> [1] https://github.com/linux-netdev/nipa/blob/main/tests/patch/checkpatch/checkpatch.sh`
->
->> +
->> +	napi = &port->rx_napi;
->> +	if (num_pkts && likely(napi_schedule_prep(napi))) {
->> +		__napi_schedule(napi);
->> +	} else {
->> +		mod_timer(&port->rx_timer, RX_POLL_TIMEOUT);
-> Smatch warns that mod_timer takes an absolute time rather than an offset.
-> So, perhaps (completely untested!):
->
-> 		mod_timer(&port->rx_timer, jiffies + RX_POLL_TIMEOUT);
->
->> +	}
-> If any arm of an if statement has {} then all should,
-> but {} is not needed unless there is more than one statement
-> convered by conditions.
->
-> So (completely untested!):
->
-> 	if (num_pkts && likely(napi_schedule_prep(napi)))
-> 		__napi_schedule(napi);
-> 	else
-> 		mod_timer(&port->rx_timer, jiffies + RX_POLL_TIMEOUT);
->
-> ...
-
-Noted. I had added debug prints between the {}, forgot take care the single
-statement rule
-while cleaning up. Not an excuse though.
-
->> @@ -85,11 +145,262 @@ static int create_request(struct icve_common *common, enum icve_rpmsg_type rpmsg
->>  	return ret;
->>  }
->>  
->> +static int icve_rx_packets(struct napi_struct *napi, int budget)
->> +{
->> +	struct icve_port *port = container_of(napi, struct icve_port, rx_napi);
->> +	u32 count, process_pkts;
->> +	struct sk_buff *skb;
->> +	u32 head, tail;
->> +	u32 pkt_len;
->> +	int num_pkts;
-> nit: Please use reverse xmas tree - longest line to shortest - for local
->      variables in Networking code.
->
-> This tool can help achieve that.
-> * https://github.com/ecree-solarflare/xmastree
-
-Thanks for sharing the link. I will use it from now on.
-
->> +
->> +	head = port->rx_buffer->head;
->> +	tail = port->rx_buffer->tail;
->> +
->> +	num_pkts = tail - head;
->> +	num_pkts = num_pkts >= 0 ? num_pkts : (num_pkts + port->icve_max_buffers);
->> +	process_pkts = min(num_pkts, budget);
->> +	count = 0;
->> +	while (count < process_pkts) {
->> +		memcpy((void *)&pkt_len,
->> +		       (void *)port->rx_buffer->base_addr + ((head + count) * ICVE_BUFFER_SIZE),
->> +		       PKT_LEN_SIZE_TYPE);
-> I don't think there is any need to cast to (void *) like this.
->
-> ...
-
-Ok.
-
->
->> +static netdev_tx_t icve_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->> +{
->> +	struct icve_port *port = icve_ndev_to_port(ndev);
->> +	struct ethhdr *ether;
->> +	u32 head, tail;
->> +	u32 num_pkts;
->> +	u32 len;
->> +
->> +	ether = eth_hdr(skb);
-> ether is assigned but otherwise unused in this function.
->
-> Flaged by W=1 builds using both gcc-13 and clang-17.
->
->> +	len = skb_headlen(skb);
->> +
->> +	head = port->tx_buffer->head;
->> +	tail = port->tx_buffer->tail;
->> +
->> +	/* If the buffer queue is full, then drop packet */
->> +	num_pkts = tail - head;
->> +	num_pkts = num_pkts >= 0 ? num_pkts : (num_pkts + port->icve_max_buffers);
-> num_pkts is unsigned, so the condition above is always true.
->
-> Flagged by Coccinelle and Smatch.
->
->> +	if ((num_pkts + 1) == port->icve_max_buffers) {
->> +		netdev_warn(ndev, "Tx buffer full\n");
->> +		goto ring_full;
->> +	}
->> +
->> +	/* Copy length */
->> +	memcpy((void *)port->tx_buffer->base_addr + (port->tx_buffer->tail * ICVE_BUFFER_SIZE),
->> +	       (void *)&len, PKT_LEN_SIZE_TYPE);
->> +
->> +	/* Copy data to shared mem */
->> +	memcpy((void *)(port->tx_buffer->base_addr + PKT_LEN_SIZE_TYPE) +
->> +	       (port->tx_buffer->tail * ICVE_BUFFER_SIZE),
->> +	       (void *)skb->data, len);
->> +
->> +#ifdef TEST_DEBUG
->> +	/* For quick Rx path testing, inject Tx pkt back into network */
->> +	test_tx_rx_path(skb, ndev);
->> +#endif
->> +	port->tx_buffer->tail = (port->tx_buffer->tail + 1) % port->icve_max_buffers;
->> +
->> +	dev_consume_skb_any(skb);
->> +
->> +	return NETDEV_TX_OK;
->> +
->> +ring_full:
->> +	return NETDEV_TX_BUSY;
->> +}
->> +
->> +static int icve_set_mac_address(struct net_device *ndev, void *addr)
->> +{
->> +	eth_mac_addr(ndev, addr);
->> +
->> +	/* TODO : Inform remote core about MAC address change */
->> +	return 0;
->> +}
->> +
->> +static const struct net_device_ops icve_netdev_ops = {
->> +	.ndo_open		= icve_ndo_open,
->> +	.ndo_stop		= icve_ndo_stop,
->> +	.ndo_start_xmit		= icve_start_xmit,
->> +	.ndo_set_mac_address	= icve_set_mac_address,
->> +};
->> +
->> +static int icve_init_ndev(struct icve_common *common)
->> +{
->> +	struct device *dev = &common->rpdev->dev;
->> +	struct icve_ndev_priv *ndev_priv;
->> +	struct icve_port *port;
->> +	static u32 port_id;
->> +	int err;
->> +
->> +	port = common->port;
->> +	port->common = common;
->> +	port->port_id = port_id++;
->> +
->> +	port->ndev = devm_alloc_etherdev_mqs(common->dev, sizeof(*ndev_priv),
->> +					     ICVE_MAX_TX_QUEUES,
->> +					     ICVE_MAX_RX_QUEUES);
->> +
->> +	if (!port->ndev) {
->> +		dev_err(dev, "error allocating net_device\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	ndev_priv = netdev_priv(port->ndev);
->> +	ndev_priv->port = port;
->> +	SET_NETDEV_DEV(port->ndev, dev);
->> +
->> +	port->ndev->min_mtu = ICVE_MIN_PACKET_SIZE;
->> +	port->ndev->max_mtu = ICVE_MAX_PACKET_SIZE;
->> +	port->ndev->netdev_ops = &icve_netdev_ops;
->> +
->> +#ifdef TEST_DEBUG
->> +	/* Allocate memory to test without actual RPMsg handshaking */
->> +	port->tx_buffer = devm_kzalloc(dev, sizeof(port->tx_buffer),
->> +				       GFP_KERNEL);
-> (I think this code should be removed, but in any case I'll flag
->  the problems that I am aware of.)
->
-> This allocates the size of the port->tx_buffer pointer, rather than the
-> size of port->tx_buffer itself (4 or 8 bytes instead of 12 or 16 bytes).
-> So perhaps it should be (completely untested!):
->
-> 	port->tx_buffer = devm_kzalloc(dev, sizeof(*port->tx_buffer),
-> 				       GFP_KERNEL);
->
-> Flagged by Sparse.
-
-My bad, a mistake on my part.
-
->
->> +	if (!port->tx_buffer) {
->> +		dev_err(dev, "Memory not available\n");
-> Out of memory messages will be logged by the code.
-> So there is no need for the dev_err() call above.
->
->> +		return -ENOMEM;
->> +	}
->> +
->> +	port->tx_buffer->base_addr = devm_kzalloc(dev, ICVE_BUFFER_SIZE * ICVE_MAX_BUFFERS,
->> +						  GFP_KERNEL);
->> +	if (!port->tx_buffer->base_addr) {
->> +		dev_err(dev, "Memory not available\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	port->rx_buffer = devm_kzalloc(dev, sizeof(port->rx_buffer),
->> +				       GFP_KERNEL);
->> +	if (!port->rx_buffer) {
->> +		dev_err(dev, "Memory not available\n");
->> +		return -ENOMEM;
->> +	};
->> +
->> +	port->rx_buffer->base_addr = devm_kzalloc(dev, ICVE_BUFFER_SIZE * ICVE_MAX_BUFFERS,
->> +						  GFP_KERNEL);
->> +	if (!port->rx_buffer->base_addr) {
->> +		dev_err(dev, "Memory not available\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	port->icve_max_buffers = ICVE_MAX_BUFFERS;
->> +#else
->> +	/* Shared memory details will be sent by the remote core.
->> +	 * So turn off the carrier, until both the virtual port and
->> +	 * remote core is ready
->> +	 */
->> +	netif_carrier_off(port->ndev);
->> +
->> +#endif
->> +	err = register_netdev(port->ndev);
->> +
->> +	if (err)
->> +		dev_err(dev, "error registering icve net device %d\n", err);
->> +
->> +	return 0;
->> +}
->> +
-> ...
->
->> diff --git a/drivers/net/ethernet/ti/inter-core-virt-eth.h b/drivers/net/ethernet/ti/inter-core-virt-eth.h
-> ...
->
->> @@ -70,7 +78,11 @@ struct shared_mem {
->>  struct icve_port {
->>  	struct shared_mem *tx_buffer; /* Write buffer for data to be consumed remote side */
->>  	struct shared_mem *rx_buffer; /* Read buffer for data to be consumed by this driver */
->> +	struct timer_list rx_timer;
->>  	struct icve_common *common;
->> +	struct napi_struct rx_napi;
->> +	u8 local_mac_addr[ETH_ALEN];
-> local_mac_addr does not appear to be used in this patch.
-> If so, please drop it and add it when it is needed.
-
-Noted.
-
->
->> +	struct net_device *ndev;
->>  	u32 icve_max_buffers;
->>  	u32 port_id; /* Unique ID for the port : TODO: Define range for use by Linux and non linux */
->>  
-> ...
-Thanks for taking time to review the patches.
-
-The primary intention of this series was to know if the RPMsg based approach
-would be upstream friendly or not. But I would not like to use that as an excuse
-for not fixing checks/warnings/errors reported by checkpatch completely.
-Even though if its RFC, I will treat it as an actual upstream patch  and address the
-checkpatch/smatch/sparse findings or atleast mention in the cover letter that the
-findings have not been fully addressed.
-
-I apologize for the inconvenience caused and be careful in future. 
-
-
+> > +     struct perf_cpu cpu;
+> >
+> > -     /* Set option of each CPU we have */
+> > -     for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
+> > -             struct perf_cpu cpu =3D { .cpu =3D i, };
+> > -
+> > -             /*
+> > -              * In per-cpu case, do the validation for CPUs to work wi=
+th.
+> > -              * In per-thread case, the CPU map is empty.  Since the t=
+raced
+> > -              * program can run on any CPUs in this case, thus don't s=
+kip
+> > -              * validation.
+> > -              */
+> > -             if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus) &&
+> > -                 !perf_cpu_map__has(event_cpus, cpu))
+> > -                     continue;
+> > -
+> > -             if (!perf_cpu_map__has(online_cpus, cpu))
+> > -                     continue;
+> > +     perf_cpu_map__put(online_cpus);
+> >
+> > -             err =3D cs_etm_validate_context_id(itr, evsel, i);
+> > +     /*
+> > +      * Set option of each CPU we have. In per-cpu case, do the valida=
+tion
+> > +      * for CPUs to work with.  In per-thread case, the CPU map is emp=
+ty.
+> > +      * Since the traced program can run on any CPUs in this case, thu=
+s don't
+> > +      * skip validation.
+> > +      */
+> > +     perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
+> > +             err =3D cs_etm_validate_context_id(itr, evsel, cpu.cpu);
+> >               if (err)
+> >                       goto out;
+> > -             err =3D cs_etm_validate_timestamp(itr, evsel, i);
+> > +             err =3D cs_etm_validate_timestamp(itr, evsel, cpu.cpu);
+> >               if (err)
+> >                       goto out;
+> >       }
+> >
+> >       err =3D 0;
+> >  out:
+> > -     perf_cpu_map__put(online_cpus);
+> > +     perf_cpu_map__put(intersect_cpus);
+> >       return err;
+> >  }
+> >
+> > @@ -435,7 +429,7 @@ static int cs_etm_recording_options(struct auxtrace=
+_record *itr,
+> >        * Also the case of per-cpu mmaps, need the contextID in order to=
+ be notified
+> >        * when a context switch happened.
+> >        */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+> >               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+> >                                          "timestamp", 1);
+> >               evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+> > @@ -461,7 +455,7 @@ static int cs_etm_recording_options(struct auxtrace=
+_record *itr,
+> >       evsel->core.attr.sample_period =3D 1;
+> >
+> >       /* In per-cpu case, always need the time of mmap events etc */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
+> >               evsel__set_sample_bit(evsel, TIME);
+> >
+> >       err =3D cs_etm_validate_config(itr, cs_etm_evsel);
+> > @@ -533,38 +527,32 @@ static size_t
+> >  cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+> >                     struct evlist *evlist __maybe_unused)
+> >  {
+> > -     int i;
+> > +     int idx;
+> >       int etmv3 =3D 0, etmv4 =3D 0, ete =3D 0;
+> >       struct perf_cpu_map *event_cpus =3D evlist->core.user_requested_c=
+pus;
+> >       struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
+s();
+> > +     struct perf_cpu cpu;
+> >
+> >       /* cpu map is not empty, we have specific CPUs to work with */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+> > -             for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
+> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
+> > -
+> > -                     if (!perf_cpu_map__has(event_cpus, cpu) ||
+> > -                         !perf_cpu_map__has(online_cpus, cpu))
+> > -                             continue;
+> > +     if (!perf_cpu_map__is_empty(event_cpus)) {
+> > +             struct perf_cpu_map *intersect_cpus =3D
+> > +                     perf_cpu_map__intersect(event_cpus, online_cpus);
+> >
+> > -                     if (cs_etm_is_ete(itr, i))
+> > +             perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_c=
+pus) {
+> > +                     if (cs_etm_is_ete(itr, cpu.cpu))
+> >                               ete++;
+> > -                     else if (cs_etm_is_etmv4(itr, i))
+> > +                     else if (cs_etm_is_etmv4(itr, cpu.cpu))
+> >                               etmv4++;
+> >                       else
+> >                               etmv3++;
+> >               }
+> > +             perf_cpu_map__put(intersect_cpus);
+> >       } else {
+> >               /* get configuration for all CPUs in the system */
+> > -             for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
+> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
+> > -
+> > -                     if (!perf_cpu_map__has(online_cpus, cpu))
+> > -                             continue;
+> > -
+> > -                     if (cs_etm_is_ete(itr, i))
+> > +             perf_cpu_map__for_each_cpu(cpu, idx, online_cpus) {
+> > +                     if (cs_etm_is_ete(itr, cpu.cpu))
+> >                               ete++;
+> > -                     else if (cs_etm_is_etmv4(itr, i))
+> > +                     else if (cs_etm_is_etmv4(itr, cpu.cpu))
+> >                               etmv4++;
+> >                       else
+> >                               etmv3++;
+> > @@ -814,15 +802,14 @@ static int cs_etm_info_fill(struct auxtrace_recor=
+d *itr,
+> >               return -EINVAL;
+> >
+> >       /* If the cpu_map is empty all online CPUs are involved */
+> > -     if (perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
+> > +     if (perf_cpu_map__is_empty(event_cpus)) {
+> >               cpu_map =3D online_cpus;
+> >       } else {
+> >               /* Make sure all specified CPUs are online */
+> > -             for (i =3D 0; i < perf_cpu_map__nr(event_cpus); i++) {
+> > -                     struct perf_cpu cpu =3D { .cpu =3D i, };
+> > +             struct perf_cpu cpu;
+> >
+> > -                     if (perf_cpu_map__has(event_cpus, cpu) &&
+> > -                         !perf_cpu_map__has(online_cpus, cpu))
+> > +             perf_cpu_map__for_each_cpu(cpu, i, event_cpus) {
+> > +                     if (!perf_cpu_map__has(online_cpus, cpu))
+> >                               return -EINVAL;
+> >               }
+> >
+> > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm=
+64/util/arm-spe.c
+> > index 51ccbfd3d246..0b52e67edb3b 100644
+> > --- a/tools/perf/arch/arm64/util/arm-spe.c
+> > +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> > @@ -232,7 +232,7 @@ static int arm_spe_recording_options(struct auxtrac=
+e_record *itr,
+> >        * In the case of per-cpu mmaps, sample CPU for AUX event;
+> >        * also enable the timestamp tracing for samples correlation.
+> >        */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+> >               evsel__set_sample_bit(arm_spe_evsel, CPU);
+> >               evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
+> >                                          "ts_enable", 1);
+> > @@ -265,7 +265,7 @@ static int arm_spe_recording_options(struct auxtrac=
+e_record *itr,
+> >       tracking_evsel->core.attr.sample_period =3D 1;
+> >
+> >       /* In per-cpu case, always need the time of mmap events etc */
+> > -     if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
+> > +     if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
+> >               evsel__set_sample_bit(tracking_evsel, TIME);
+> >               evsel__set_sample_bit(tracking_evsel, CPU);
+> >
