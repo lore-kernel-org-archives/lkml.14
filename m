@@ -1,224 +1,100 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A972B9B7;
-	Thu,  1 Feb 2024 22:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B983FE27;
+	Thu,  1 Feb 2024 22:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706825779; cv=none; b=aK4I2sZbD0ZvuBtKvxQ/4EJKYPomZ+ItwF/dg3cCJipQZ2nqW0aHuHiDRgJ5DRWnIWjdm4UOrPxjL6Z9kfru1peCTM24cMq+JEz54rqP6G3oySjntEsOaMjUQ2QYCV3tvLU+Ask7btJQ1dBeBbbhEYvKSRJHwibPBKCk3anzayA=
+	t=1706825817; cv=none; b=q4OS3Gp3AfWBtExEPTQ44sobCLX4w/cTT+Rfu/o2hZp+g3+p6miUM55R8Og7yKIxVa5c4Upg7/3+SKf6RbXW9SmQEKemGKIuG2+A3RzCvaoVsk3/4G/BQRpD5wVRxP1qzLARtvJxcGfeSbqscI6xQOvvplUbFHjvYjIPK8cEs1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706825779; c=relaxed/simple;
-	bh=hqgtxNp7Iuz1bqpAIGNwcpiwbcRfEKvN3xrRY0SIspc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lbjQtppnolDvr/RL0kB7LkPZj0/usMiu7mW+cIerSG3BCWvPZf1H4jnMXFZuEZFP4VIBUR/fjvaEC/hJsIJfpV6xxjv+THvStTEh5qD1Oe0Mt/OnZmUIRR7MmedC4UwarFqlAMcb99hHVv+ScCUbP0V7yWcql5dLBXJIMeIWrC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qVSpZPBa; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1706825817; c=relaxed/simple;
+	bh=cuWu+ZnwEeDB3jYUYTTRe0UH9c6SmZiHQzhLc1hdnYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xkf+h+klXWk0a9dr0SR6e0iKdrvq4193agVKeVgwE/8wEC27FlkVCI1qkX5ZXUUyUys06aGjnbGUeKJZ6cRC/LbVNnAIacYqVYJNIWwJHWC7EJj5twndC8KmXQy12Ql6YqmsBMaNpwjzNJDgH1iQq544z9DPPqjqDQ0145HAR1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJwm95ir; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qVSpZPBa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1706825774;
-	bh=awOmy8WaFgd4i6TyX/ak6oz6bJVoINEscXRUP4mgr+o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qVSpZPBatu96synLRDz35S2iFHqkqMUoJrQmnf/ahvNShdm1MlFpC5SRzoQwWnpAy
-	 9OzRPWed08gi1M3jXRdkCHNrF7Tflt9LYshY5og4mSdoB3oiLLzoaKTHyyQHAz1iNE
-	 9ym0GZXmBvzY5Xywbm5FTbWVE4tCDziiXBto7d+SJTc0L67povszqHRM5YrLTAFNN2
-	 rN9TfVKHMB0Ex0Ln8dDT+GAwvJUFcjQJ12EU3Kd/VEUMrlXKbtS7et/ZIhJtB+NpnA
-	 H2r8EVIUGfPNC74QuAJOX9mLk/ll3F96ocJq+TA5p/aOUNs6ouX1sy5j0JUGLDw4HO
-	 U0D/QlTPC7wBQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TQtXY3rQ0z4wcP;
-	Fri,  2 Feb 2024 09:16:13 +1100 (AEDT)
-Date: Fri, 2 Feb 2024 09:16:12 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: syzbot <syzbot+0e9c9f96dbdc31a8431b@syzkaller.appspotmail.com>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
- daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com,
- john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org,
- linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
- martin.lau@linux.dev, sdf@google.com, sfr@canb.auug.org.au,
- song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Subject: Re: [syzbot] [bpf?] linux-next boot error: WARNING in
- register_btf_kfunc_id_set
-Message-ID: <20240202091612.11b6ebd8@canb.auug.org.au>
-In-Reply-To: <000000000000e447290610580f33@google.com>
-References: <000000000000e447290610580f33@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJwm95ir"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACE52C433C7;
+	Thu,  1 Feb 2024 22:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706825816;
+	bh=cuWu+ZnwEeDB3jYUYTTRe0UH9c6SmZiHQzhLc1hdnYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iJwm95iredNZf01FKKqw1K8Cve6weFz5cAOoDZKVoWe3PpexUzoGPjJafD2pGbkGw
+	 eSEIrmo/GHdvyOSQ8oqaYHJagePer7h4jeWCFcLzrdSiR+NZQtF7X69fr3fBc2bo9d
+	 kulDLY8Kb43B7O9lIfuaOA8dxbgBM141x3/9YfJtOJ2uDaMN1G13Dk//xj7FQkbrEQ
+	 PXKTFsXVU0Tcv4J3fY2V5w4Lglh/CMUI8bgD307AaufIO7S6Stan4GILuEx+9xRapX
+	 742IhYAMMkBEGPl9+wv/uNc3ltlBirIMVY5YaxuoWdmIcNDXOjJeSG1SzUHPwX0Smm
+	 BVgzx6ULRUBhQ==
+Date: Thu, 1 Feb 2024 15:16:54 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Mike Isely <isely@pobox.com>,
+	Tiffany Lin <tiffany.lin@mediatek.com>,
+	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 3/3] media: mediatek: vcodedc: Fix
+ Wcast-function-type-strict warnings
+Message-ID: <20240201221654.GC2240065@dev-arch.thelio-3990X>
+References: <20240128-fix-clang-warnings-v1-0-1d946013a421@chromium.org>
+ <20240128-fix-clang-warnings-v1-3-1d946013a421@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/F4_GNSjmOCbv4/U/1D_f50v";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240128-fix-clang-warnings-v1-3-1d946013a421@chromium.org>
 
---Sig_/F4_GNSjmOCbv4/U/1D_f50v
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jan 28, 2024 at 02:12:22AM +0000, Ricardo Ribalda wrote:
+> Building with LLVM=1 throws the following warning:
+> drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c:38:32: warning: cast from 'mtk_vcodec_ipi_handler' (aka 'void (*)(void *, unsigned int, void *)') to 'ipi_handler_t' (aka 'void (*)(const void *, unsigned int, void *)') converts to incompatible function type [-Wcast-function-type-strict]
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Hi syzbot,
+I am not positive because I don't have any hardware to test this driver
+but I suspect this patch is just hiding the warning without actually
+addressing the issue that it is pointing out. If handler is called
+through vpu_ipi_register() indirectly (which it obviously is if it is
+being passed down), there will be a CFI failure because the type of
+mtk_vcodec_ipi_handler is not the same as ipi_handler_t, as the comment
+mentions.
 
-On Thu, 01 Feb 2024 12:44:30 -0800 syzbot <syzbot+0e9c9f96dbdc31a8431b@syzk=
-aller.appspotmail.com> wrote:
->
-> Hello,
->=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    51b70ff55ed8 Add linux-next specific files for 20240201
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D17b05288180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D88d85200b6a62=
-126
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D0e9c9f96dbdc31a=
-8431b
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
->=20
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/f2d3a98d07e5/dis=
-k-51b70ff5.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/d525430ddf13/vmlinu=
-x-51b70ff5.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/6d1ec0b50066/b=
-zImage-51b70ff5.xz
->=20
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+0e9c9f96dbdc31a8431b@syzkaller.appspotmail.com
->=20
-> greybus: registered new driver hid
-> greybus: registered new driver gbphy
-> gb_gbphy: registered new driver usb
-> asus_wmi: ASUS WMI generic driver loaded
-> usbcore: registered new interface driver snd-usb-audio
-> usbcore: registered new interface driver snd-ua101
-> usbcore: registered new interface driver snd-usb-usx2y
-> usbcore: registered new interface driver snd-usb-us122l
-> usbcore: registered new interface driver snd-usb-caiaq
-> usbcore: registered new interface driver snd-usb-6fire
-> usbcore: registered new interface driver snd-usb-hiface
-> usbcore: registered new interface driver snd-bcd2000
-> usbcore: registered new interface driver snd_usb_pod
-> usbcore: registered new interface driver snd_usb_podhd
-> usbcore: registered new interface driver snd_usb_toneport
-> usbcore: registered new interface driver snd_usb_variax
-> drop_monitor: Initializing network drop monitor service
-> NET: Registered PF_LLC protocol family
-> GACT probability on
-> Mirror/redirect action on
-> Simple TC action Loaded
-> netem: version 1.3
-> u32 classifier
->     Performance counters on
->     input device check on
->     Actions configured
-> nf_conntrack_irc: failed to register helpers
-> nf_conntrack_sane: failed to register helpers
-> nf_conntrack_sip: failed to register helpers
-> xt_time: kernel timezone is -0000
-> IPVS: Registered protocols (TCP, UDP, SCTP, AH, ESP)
-> IPVS: Connection hash table configured (size=3D4096, memory=3D32Kbytes)
-> IPVS: ipvs loaded.
-> IPVS: [rr] scheduler registered.
-> IPVS: [wrr] scheduler registered.
-> IPVS: [lc] scheduler registered.
-> IPVS: [wlc] scheduler registered.
-> IPVS: [fo] scheduler registered.
-> IPVS: [ovf] scheduler registered.
-> IPVS: [lblc] scheduler registered.
-> IPVS: [lblcr] scheduler registered.
-> IPVS: [dh] scheduler registered.
-> IPVS: [sh] scheduler registered.
-> IPVS: [mh] scheduler registered.
-> IPVS: [sed] scheduler registered.
-> IPVS: [nq] scheduler registered.
-> IPVS: [twos] scheduler registered.
-> IPVS: [sip] pe registered.
-> ipip: IPv4 and MPLS over IPv4 tunneling driver
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 1 at kernel/bpf/btf.c:8131 register_btf_kfunc_id_set=
-+0x261/0x290 kernel/bpf/btf.c:8131
-> Modules linked in:
-> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc2-next-20240201-syzkall=
-er #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 01/25/2024
-> RIP: 0010:register_btf_kfunc_id_set+0x261/0x290 kernel/bpf/btf.c:8131
-> Code: 16 e8 b3 fb db ff bd 0b 00 00 00 eb 0a e8 a7 fb db ff bd 0d 00 00 0=
-0 89 ef 4c 89 f6 5b 41 5e 41 5f 5d eb 45 e8 90 fb db ff 90 <0f> 0b 90 e9 22=
- fe ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c da fd
-> RSP: 0000:ffffc90000067940 EFLAGS: 00010293
-> RAX: ffffffff81b7d510 RBX: 0000000000000000 RCX: ffff888016a98000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000003 R08: ffffffff81b7d311 R09: 1ffffffff1f0b5bd
-> R10: dffffc0000000000 R11: fffffbfff1f0b5be R12: 1ffffffff21e0e1d
-> R13: dffffc0000000000 R14: ffffffff8caa77c0 R15: dffffc0000000000
-> FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000000df32000 CR4: 00000000003506f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  fou_init+0x50/0x110 net/ipv4/fou_core.c:1239
->  do_one_initcall+0x238/0x830 init/main.c:1233
->  do_initcall_level+0x157/0x210 init/main.c:1295
->  do_initcalls+0x3f/0x80 init/main.c:1311
->  kernel_init_freeable+0x430/0x5d0 init/main.c:1549
->  kernel_init+0x1d/0x2b0 init/main.c:1439
->  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:242
->  </TASK>
->=20
->=20
+Has this seen testing on real hardware with kCFI?
+
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->=20
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->=20
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->=20
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->=20
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->=20
-> If you want to undo deduplication, reply with:
-> #syz undup
-
-#syz fix: bpf: btf: Add BTF_KFUNCS_START/END macro pair
-
-This is a new version of a commit in linux-next yesterday.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/F4_GNSjmOCbv4/U/1D_f50v
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmW8GCwACgkQAVBC80lX
-0Gw2XAf6A9pUD0ZTB1Hrnq2WXrpV5IziHYiG71nmLztJ+Amm9ZuRQzLdL/puJBjy
-Xw+y+SllbinN7WCc+qjH7kRYrJ1FY7/q2jsoUo7xlL5WlRVdMIqJ5ikTXPDU5eI5
-bDOV00g5maC5f3bHVTl+oc+eoB/kqDz/dmRv3NyEIO9q1c8ffNiF+d0O6XMXuWUh
-6uv3yp0KkJLAx1dr2cvye0vMoJwmmAVpcBZxnr3anzVs9Gt27o4mimOh4OCFZqFh
-nIaHJVQ0nYSTsRCquoQawkGK7RuJ7/jrSoee4p/zzVIxDAdLQtpI/Xe8ZC3bS7Qo
-xGtDNOkOuvhunFLhplj5oDZPeydaTQ==
-=W/Uh
------END PGP SIGNATURE-----
-
---Sig_/F4_GNSjmOCbv4/U/1D_f50v--
+>  drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+> index 9f6e4b59455d..781a0359afdc 100644
+> --- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+> +++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+> @@ -33,9 +33,11 @@ static int mtk_vcodec_vpu_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
+>  	 * The handler we receive takes a void * as its first argument. We
+>  	 * cannot change this because it needs to be passed down to the rproc
+>  	 * subsystem when SCP is used. VPU takes a const argument, which is
+> -	 * more constrained, so the conversion below is safe.
+> +	 * more constrained, so the conversion below is safe. We use the void
+> +	 * casting, to convince clang with -Wcast-function-type-sctrict that
+> +	 * this is safe.
+>  	 */
+> -	ipi_handler_t handler_const = (ipi_handler_t)handler;
+> +	ipi_handler_t handler_const = (ipi_handler_t)((void *)handler);
+>  
+>  	return vpu_ipi_register(fw->pdev, id, handler_const, name, priv);
+>  }
+> 
+> -- 
+> 2.43.0.429.g432eaa2c6b-goog
+> 
