@@ -1,159 +1,159 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646991649AD;
-	Thu,  1 Feb 2024 09:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1C04D9F4;
+	Thu,  1 Feb 2024 09:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706779843; cv=none; b=cS+r96GcXzHOFxwYtdZ9Q3udmSso4vJfLoDCt55Dlsfn71D3aU5tsRQhwydacCK4GW5YxzJidbF0AJJ5H4UQh0E6cTD83UPYZiA2Gd3ZLS6BG6brFQZUI6oEyqFYKXxiqAuppKEDYFT3Gctr7+yaiTh46iDa2s87xqnEsNHKxkc=
+	t=1706779886; cv=none; b=joXsrvqQf+bPzp/AL/bHIhSBVE/FoU794xZuCNC4Q62HcONvt0BfT03dHO5jqObUCFeogKxvK6kshYbHmS9aWqbVAbl/DjYOqVaV0/M4LACXvaoE6XwsUj7mmhBtVFpUCONJFci3FbwYeBfRpfaWh9UpD3xudjr8qH0dJm/8h2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706779843; c=relaxed/simple;
-	bh=Pw8nxEepj3SW3fuzUXlVu8OndBo1SbgV3fSER76rjfk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ivz8vl+5acLGcqxweoSlnOR39eiPstaE/3RqCXdu0G6/fcY7Ty67Npx/jJFQI/7TwUyYzZkaW0r0S2ppdLG0LD+0gfQ7XBXQiZsIfluxfGbJj6m6LLJfT2eXrNg46/blzg6v7K5AuO0aM1XqRBonuD8vuBKrNK8dqGUjjAaMXS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TQYY42zs3z4f3l7p;
-	Thu,  1 Feb 2024 17:30:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 9DD691A0390;
-	Thu,  1 Feb 2024 17:30:36 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBGtZLtl8V6KCg--.33515S18;
-	Thu, 01 Feb 2024 17:30:36 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: mpatocka@redhat.com,
-	heinzm@redhat.com,
-	xni@redhat.com,
-	blazej.kucman@linux.intel.com,
-	agk@redhat.com,
-	snitzer@kernel.org,
-	dm-devel@lists.linux.dev,
-	song@kernel.org,
-	yukuai3@huawei.com,
-	jbrassow@f14.redhat.com,
-	neilb@suse.de,
-	shli@fb.com,
-	akpm@osdl.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v5 14/14] dm-raid: remove mddev_suspend/resume()
-Date: Thu,  1 Feb 2024 17:25:59 +0800
-Message-Id: <20240201092559.910982-15-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240201092559.910982-1-yukuai1@huaweicloud.com>
-References: <20240201092559.910982-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1706779886; c=relaxed/simple;
+	bh=NCINvj4Y1T2SJFg7Qok5Q80wpETFi8oJObXS6KhNNjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AV3IyNqI1xN1OFq95l8ngZRg4vRvAIqfDHqlBwaPQGaHmR64SFhg4bIf5DCar/TLJwdqPYPT2Cafd0KZASaibpyCBU3ZGEFxlYEpAo8boEqGDCE6tPMe0vykMOXcf1xc2unYq3tfjegR0SLBWuL20jVbbRepygHKTQWhRVVFJWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4OMQogt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4OMQogt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B9DDC433F1;
+	Thu,  1 Feb 2024 09:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706779885;
+	bh=NCINvj4Y1T2SJFg7Qok5Q80wpETFi8oJObXS6KhNNjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P4OMQogtkyu0vL8S5TV2Q593vFtymlGsJaf1sxbSKdsN17VUmTdK/ga9qYaQrV9Wb
+	 928Hwt1LqE9cnMePmG6qZlixdgRKiEpiWv32XqzsbZs9YplBy5QNMcqzNkS2c/+xKV
+	 9ozWzTpqV85BAqIShl3kQd7lQCiBYyXZGDAXNKZ+rD9qaHKDHDWz2wkpdpZVK1mp3g
+	 b+/+AQ3XNf0psoILlvoCH6iMSmm93D+mnfa82U3la5hCa0kNweSGGQChH114mx8OuE
+	 Ge5hfnXCRxm2Eai7n53R/ndt956xR2sqwLra3OWTg1hz7iaXEdbM2PAtFhVdsw2a1j
+	 WYscoU2nXOTVw==
+Date: Thu, 1 Feb 2024 10:31:19 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ratheesh Kannoth <rkannoth@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	sgoutham@marvell.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, bcreeley@amd.com,
+	sbhatta@marvell.com, gakula@marvell.com, hkelam@marvell.com,
+	sumang@marvell.com
+Subject: Re: [PATCH net v3] octeontx2-af: Initialize maps.
+Message-ID: <20240201093119.GB514352@kernel.org>
+References: <20240131024118.254758-1-rkannoth@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBGtZLtl8V6KCg--.33515S18
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF4UXw48Cw4kXrW8Cw4DJwb_yoW5GrWDpw
-	4IqFWayw4UtFZrXwsrA3WvgFy5twn5KrWjkrZxW34fWa43Gr13Wr18Gay5XFWDKFWfJF1D
-	Aa1Utw48uryIgrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUP214x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6r
-	xdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
-	WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbmZ
-	X7UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131024118.254758-1-rkannoth@marvell.com>
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Wed, Jan 31, 2024 at 08:11:18AM +0530, Ratheesh Kannoth wrote:
+> kmalloc_array() without __GFP_ZERO flag does not initialize
+> memory to zero. This causes issues. Use __GFP_ZERO flag for maps and
+> bitmap_zalloc() for bimaps.
+> 
+> Fixes: dd7842878633 ("octeontx2-af: Add new devlink param to configure maximum usable NIX block LFs")
+> Signed-off-by: Ratheesh Kannoth <rkannoth@marvell.com>
+> ---
+> 
+> ChangeLogs:
+> v2 -> v3: Used GFP_ZERO for normal map arrays
+> v1 -> v2: Used bitmap_zalloc() API.
+> v0 -> v1: Removed devm_kcalloc()._
+> ---
+>  .../ethernet/marvell/octeontx2/af/rvu_npc.c   | 26 ++++++++++---------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+> index 167145bdcb75..6a8f0efd96a5 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+> @@ -1850,8 +1850,8 @@ void npc_mcam_rsrcs_deinit(struct rvu *rvu)
+>  {
+>  	struct npc_mcam *mcam = &rvu->hw->mcam;
+> 
+> -	kfree(mcam->bmap);
+> -	kfree(mcam->bmap_reverse);
+> +	bitmap_free(mcam->bmap);
+> +	bitmap_free(mcam->bmap_reverse);
+>  	kfree(mcam->entry2pfvf_map);
+>  	kfree(mcam->cntr2pfvf_map);
+>  	kfree(mcam->entry2cntr_map);
+> @@ -1904,13 +1904,11 @@ int npc_mcam_rsrcs_init(struct rvu *rvu, int blkaddr)
+>  	mcam->pf_offset = mcam->nixlf_offset + nixlf_count;
+> 
+>  	/* Allocate bitmaps for managing MCAM entries */
+> -	mcam->bmap = kmalloc_array(BITS_TO_LONGS(mcam->bmap_entries),
+> -				   sizeof(long), GFP_KERNEL);
+> +	mcam->bmap = bitmap_zalloc(mcam->bmap_entries, GFP_KERNEL);
+>  	if (!mcam->bmap)
+>  		return -ENOMEM;
+> 
+> -	mcam->bmap_reverse = kmalloc_array(BITS_TO_LONGS(mcam->bmap_entries),
+> -					   sizeof(long), GFP_KERNEL);
+> +	mcam->bmap_reverse = bitmap_zalloc(mcam->bmap_entries, GFP_KERNEL);
+>  	if (!mcam->bmap_reverse)
+>  		goto free_bmap;
+> 
+> @@ -1918,7 +1916,8 @@ int npc_mcam_rsrcs_init(struct rvu *rvu, int blkaddr)
+> 
+>  	/* Alloc memory for saving entry to RVU PFFUNC allocation mapping */
+>  	mcam->entry2pfvf_map = kmalloc_array(mcam->bmap_entries,
+> -					     sizeof(u16), GFP_KERNEL);
+> +					     sizeof(u16),
+> +					     GFP_KERNEL | __GFP_ZERO);
 
-dm layer will make sure that no new IO can be issued and will wait for
-all dispatched IO to be done during suspend or before removing the
-device. Hence there is no need to call mddev_suspend/resume() again.
+Hi Ratheesh,
 
-BTW, mddev_suspend/resume() can't gurantee that there are no sync IO,
-and previous patch make sure that presuspend will stop sync thread.
+The use of bitmap_zalloc()/bitmap_free() looks good to me.
+But for the kmalloc_array(..., GFP_KERNEL | __GFP_ZERO) cases
+I think kcalloc() is the way to go.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/dm-raid.c |  8 +++-----
- drivers/md/md.c      | 11 +++++++++++
- 2 files changed, 14 insertions(+), 5 deletions(-)
+>  	if (!mcam->entry2pfvf_map)
+>  		goto free_bmap_reverse;
+> 
+> @@ -1942,7 +1941,8 @@ int npc_mcam_rsrcs_init(struct rvu *rvu, int blkaddr)
+>  		goto free_entry_map;
+> 
+>  	mcam->cntr2pfvf_map = kmalloc_array(mcam->counters.max,
+> -					    sizeof(u16), GFP_KERNEL);
+> +					    sizeof(u16),
+> +					    GFP_KERNEL | __GFP_ZERO);
+>  	if (!mcam->cntr2pfvf_map)
+>  		goto free_cntr_bmap;
+> 
+> @@ -1950,12 +1950,14 @@ int npc_mcam_rsrcs_init(struct rvu *rvu, int blkaddr)
+>  	 * counter's reference count.
+>  	 */
+>  	mcam->entry2cntr_map = kmalloc_array(mcam->bmap_entries,
+> -					     sizeof(u16), GFP_KERNEL);
+> +					     sizeof(u16),
+> +					     GFP_KERNEL | __GFP_ZERO);
+>  	if (!mcam->entry2cntr_map)
+>  		goto free_cntr_map;
+> 
+>  	mcam->cntr_refcnt = kmalloc_array(mcam->counters.max,
+> -					  sizeof(u16), GFP_KERNEL);
+> +					  sizeof(u16),
+> +					  GFP_KERNEL | __GFP_ZERO);
+>  	if (!mcam->cntr_refcnt)
+>  		goto free_entry_cntr_map;
+> 
+> @@ -1988,9 +1990,9 @@ int npc_mcam_rsrcs_init(struct rvu *rvu, int blkaddr)
+>  free_entry_map:
+>  	kfree(mcam->entry2pfvf_map);
+>  free_bmap_reverse:
+> -	kfree(mcam->bmap_reverse);
+> +	bitmap_free(mcam->bmap_reverse);
+>  free_bmap:
+> -	kfree(mcam->bmap);
+> +	bitmap_free(mcam->bmap);
+> 
+>  	return -ENOMEM;
+>  }
+> --
+> 2.25.1
+> 
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index 5f78cc19d6f3..ed8c28952b14 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3241,7 +3241,7 @@ static int raid_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	rs->md.in_sync = 1;
- 
- 	/* Has to be held on running the array */
--	mddev_suspend_and_lock_nointr(&rs->md);
-+	mddev_lock_nointr(&rs->md);
- 
- 	/* Keep array frozen until resume. */
- 	md_frozen_sync_thread(&rs->md);
-@@ -3829,11 +3829,9 @@ static void raid_postsuspend(struct dm_target *ti)
- {
- 	struct raid_set *rs = ti->private;
- 
--	if (!test_and_set_bit(RT_FLAG_RS_SUSPENDED, &rs->runtime_flags)) {
-+	if (!test_and_set_bit(RT_FLAG_RS_SUSPENDED, &rs->runtime_flags))
- 		/* Writes have to be stopped before suspending to avoid deadlocks. */
- 		md_stop_writes(&rs->md);
--		mddev_suspend(&rs->md, false);
--	}
- }
- 
- static void attempt_restore_of_faulty_devices(struct raid_set *rs)
-@@ -4091,7 +4089,7 @@ static void raid_resume(struct dm_target *ti)
- 		mddev->ro = 0;
- 		mddev->in_sync = 0;
- 		md_unfrozen_sync_thread(mddev);
--		mddev_unlock_and_resume(mddev);
-+		mddev_unlock(mddev);
- 	}
- }
- 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 2c245341148a..a8db84c200fe 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -437,6 +437,10 @@ int mddev_suspend(struct mddev *mddev, bool interruptible)
- {
- 	int err = 0;
- 
-+	/* Array is supended from dm_suspend() for dm-raid. */
-+	if (!mddev->gendisk)
-+		return 0;
-+
- 	/*
- 	 * hold reconfig_mutex to wait for normal io will deadlock, because
- 	 * other context can't update super_block, and normal io can rely on
-@@ -488,6 +492,13 @@ EXPORT_SYMBOL_GPL(mddev_suspend);
- 
- static void __mddev_resume(struct mddev *mddev, bool recovery_needed)
- {
-+	/*
-+	 * Array is supended from dm_suspend() and resumed from dm_resume() for
-+	 * dm-raid.
-+	 */
-+	if (!mddev->gendisk)
-+		return;
-+
- 	lockdep_assert_not_held(&mddev->reconfig_mutex);
- 
- 	mutex_lock(&mddev->suspend_mutex);
 -- 
-2.39.2
-
+pw-bot: changes-requested
