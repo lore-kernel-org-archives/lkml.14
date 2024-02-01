@@ -1,443 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A63415B983
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12AD15D5C2
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706780005; cv=none; b=PtSvBVz5KoMgOYiaNl33nBZJSwfJXhkVaFY16d5ixa7QXIKmXHUiqSCeNT9VhPeu52YchmZjO+9GmFYrjeLKulnm1WZNf4e2Oso1XNqWFBaFEnN/JbwFgJ+VFSpRjv9lEDoRZwCFPMYhNt62Bc7v6fHgNuzueuPaS+cq1VPe47Q=
+	t=1706780011; cv=none; b=MYsPmVLZ/1cm2DqN4scIzqJkG/Mt6xlXNPUJievAo+/wG+tPHPnJfszd2iIPEDNV33bKS/lvt/85UgGlbwmWMEaN51n4Bs3MfyB4QKdx04cm3IdWwME5vcCwfcg8DoUsNdhwpSTaxZP/N+OJxry12APIGF6nCJ/NUxthFa5+3FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706780005; c=relaxed/simple;
-	bh=O5mPy11j1ho/Gik2SO3unm82tQu4oMlxIWapItCDpew=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EgcWZ9cqka/mGqYFraaLuKopg0UsHn/TLWnlHhFruabCeO2ewoxH798qGxLW1+h8DnQ+2JR6StzKUaQOpW/Jeeoy9s0kf/3bhLisU1lgR2jlt4SVa1bYBEew3Cz2L3HLM8sE0sBD4eyecVkQxP8snsCRNABgTB/jYBTRXUlwJLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iyrYuYHb; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706780011; c=relaxed/simple;
+	bh=YLiuwzxJK7z4LnYgttvR2Sapn5bCDOX4mzVFpvVjXmk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nvGOySnk7M/yAnLdk7D9I0XnAe7Ri4UJetB4LyzVrVjyRAheDNVcaR2jKl31m9EQ8riH263n11KkziULVmA3HFVpo4R36wt6cXOYzav71b3+LZr1AUMemmyIHFuWMZei6xwC0UA6zXiUk+SGrXCd7rGuTcfMcv2t7F7TY2BfBe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rqmvH/WL; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iyrYuYHb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706780003; x=1738316003;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=O5mPy11j1ho/Gik2SO3unm82tQu4oMlxIWapItCDpew=;
-  b=iyrYuYHbWAlRrCMcx/9e6PVY/t7je773ONb7/9bErxc4SrHiDT/Wv4Ds
-   PSNGUCapNg2SmDVnIrD6HR1Dml+hj+IW14zAnfvAzaHwcYmH6Uj47PpLw
-   lWbl63kuzm1nflUYD1IfhV5KxiayPacCeHyCh2T95YAWCS8wOFlr3NHno
-   4KsX65kTIkS/tIALijq2mcL7Ek8uphlQ5RROXCIVdA2W7BsnBuzhkuKf0
-   T72rLjVTCSNrfG+xzjIvLNHEnGhWe1pqwi4Cq++UclWogcE8i3bbDmAKJ
-   1hDxRXud+6eOdEVyfvO4On9GMYc2RXcq62s+6ogNX64WMbeYnxXAa2Lke
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="2789234"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="2789234"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 01:33:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788895868"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="788895868"
-Received: from unknown (HELO localhost.localdomain) ([10.226.216.117])
-  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2024 01:33:19 -0800
-From: kah.jing.lee@intel.com
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Kah Jing Lee <kah.jing.lee@intel.com>
-Subject: [PATCH] drivers: firmware: stratix10-rsu: Query device info
-Date: Thu,  1 Feb 2024 17:32:22 +0800
-Message-Id: <20240201093221.3709583-1-kah.jing.lee@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rqmvH/WL"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7d6275d7d4dso161331241.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706780008; x=1707384808; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ql4C5VbwVafB+HuiCeKv/ZB0OwAPB3Y+qFC6HwShTwY=;
+        b=rqmvH/WLCsQIhWZhL/bRkkndq4aN4muZngCEt8ASRkRVJ/IgSRN6KNjdmsZAa6Fm0N
+         GzRCeUdezedOe7FnIXf+SBPEusRia+9WPNdKbR4jRYreif+1C45VtjwFvpm53uWsDhet
+         LQ4DSGd/bDR0CkoaSZ6lfsxTVGvgnHEOxCnTZpIx17969cKp4+ozHyF/Q25hoWeEgRR0
+         L0WjDYRP3ttIKvgaHkws6BTB5wNt9mrX3VwuTgLP2fMdJNOgk8t2a60vAKGpHtzfa6xF
+         tlvD0Mw6S/b9op1CMvBDxfyRPfU/CHblmTnTuuPvd+9z6L/tDCRNVfaAlptLGG0EtuYQ
+         FJzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706780008; x=1707384808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ql4C5VbwVafB+HuiCeKv/ZB0OwAPB3Y+qFC6HwShTwY=;
+        b=G7B3NGcEPN7z5lf4jUGAwA9kN2x6J9OW6JZ/1o1jia/Vk+yr4nTetj34tIj5JIUKp9
+         YmvzOf0ZFD3uMjWftR+tjuLZiXsFtPMJFC+n4+odeM785boTmluvFP71yRanTWyeRKLq
+         ELmqsbRf8j7oI5XMMTDaYL/sDU2TSkMxMnEE/d/J5B/PvlkPhfSRb+t83QyiRhpRI5yI
+         JKyqKiu1KWx+GPEtY9L8pw4vF8myEjpmWJtZzGFBlE9GiO8zLzrpmPqK0rkUKoSCJ2fn
+         1K3fdgu/WjHxoKqSbDwmdhxeS12NOmCPwukxHvZNMDcsdEZYwUmHQ9hKVInfk7vymKEL
+         L3KQ==
+X-Gm-Message-State: AOJu0YwAwAjWofcdbgwhUqia8qjw8Qd0txjEGoja9zgmJFutM88AC36y
+	cN+GAbVpWxbr65FZCAWbkCZcsk+xYPyWBROntGggf4r1vqoDEZ3HuhFv9XsvWpvb7w85+wTkR6s
+	sV3S2dYsAfX2q1hxqsZ8WYoVfu07i35bIkqE7
+X-Google-Smtp-Source: AGHT+IHj7VQQODUtt8W233cgecG5pRHU950m/YrPbX/8p8zsdkQm+M41oUqBJNRvDqpTEesJYRB6/NjUo6U3PL68imc=
+X-Received: by 2002:a05:6122:368e:b0:4b7:8d7c:346f with SMTP id
+ ec14-20020a056122368e00b004b78d7c346fmr3589907vkb.9.1706780008274; Thu, 01
+ Feb 2024 01:33:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240118-alice-file-v3-0-9694b6f9580c@google.com>
+ <20240118-alice-file-v3-1-9694b6f9580c@google.com> <5dbbaba2-fd7f-4734-9f44-15d2a09b4216@proton.me>
+ <CAH5fLghgc_z23dOR2L5vnPhVmhiKqZxR6jin9KCA5e_ii4BL3w@mail.gmail.com> <84850d04-c1cb-460d-bc4e-d5032489da0d@proton.me>
+In-Reply-To: <84850d04-c1cb-460d-bc4e-d5032489da0d@proton.me>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 1 Feb 2024 10:33:17 +0100
+Message-ID: <CAH5fLgioyr7NsX+-VSwbpQZtm2u9gFmSF8URHGzdSWEruRRrSQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] rust: file: add Rust abstraction for `struct file`
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kah Jing Lee <kah.jing.lee@intel.com>
+On Thu, Feb 1, 2024 at 10:31=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On 29.01.24 17:34, Alice Ryhl wrote:
+> > On Fri, Jan 26, 2024 at 4:04=E2=80=AFPM Benno Lossin <benno.lossin@prot=
+on.me> wrote:
+> >>> +///   closed.
+> >>> +/// * A light refcount must be dropped before returning to userspace=
+.
+> >>> +#[repr(transparent)]
+> >>> +pub struct File(Opaque<bindings::file>);
+> >>> +
+> >>> +// SAFETY: By design, the only way to access a `File` is via an immu=
+table reference or an `ARef`.
+> >>> +// This means that the only situation in which a `File` can be acces=
+sed mutably is when the
+> >>> +// refcount drops to zero and the destructor runs. It is safe for th=
+at to happen on any thread, so
+> >>> +// it is ok for this type to be `Send`.
+> >>
+> >> Technically, `drop` is never called for `File`, since it is only used
+> >> via `ARef<File>` which calls `dec_ref` instead. Also since it only con=
+tains
+> >> an `Opaque`, dropping it is a noop.
+> >> But what does `Send` mean for this type? Since it is used together wit=
+h
+> >> `ARef`, being `Send` means that `File::dec_ref` can be called from any
+> >> thread. I think we are missing this as a safety requirement on
+> >> `AlwaysRefCounted`, do you agree?
+> >> I think the safety justification here could be (with the requirement a=
+dded
+> >> to `AlwaysRefCounted`):
+> >>
+> >>       SAFETY:
+> >>       - `File::drop` can be called from any thread.
+> >>       - `File::dec_ref` can be called from any thread.
+> >
+> > This wording was taken from rust/kernel/task.rs. I think it's out of
+> > scope to reword it.
+>
+> Rewording the safety docs on `AlwaysRefCounted`, yes that is out of scope=
+,
+> I was just checking if you agree that the current wording is incomplete.
 
-Extend Intel Remote System Update (RSU) driver to get device info table
-using SMC call. Device info table contains size and erasesize for multiple
-flashes. Empty flash will return 0 for size and erasesize.
+That's not what I meant. The wording of this safety comment is
+identical to the wording in other existing safety comments in the
+kernel, such as e.g. the one for `impl Send for Task`.
 
-Signed-off-by: Kah Jing Lee <kah.jing.lee@intel.com>
----
- drivers/firmware/stratix10-rsu.c              | 204 ++++++++++++++++++
- drivers/firmware/stratix10-svc.c              |  11 +
- include/linux/firmware/intel/stratix10-smc.h  |  23 ++
- .../firmware/intel/stratix10-svc-client.h     |   4 +
- 4 files changed, 242 insertions(+)
-
-diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
-index e20cee9c2d32..614121b24842 100644
---- a/drivers/firmware/stratix10-rsu.c
-+++ b/drivers/firmware/stratix10-rsu.c
-@@ -19,6 +19,7 @@
- #define RSU_VERSION_MASK		GENMASK_ULL(63, 32)
- #define RSU_ERROR_LOCATION_MASK		GENMASK_ULL(31, 0)
- #define RSU_ERROR_DETAIL_MASK		GENMASK_ULL(63, 32)
-+#define RSU_ERASE_SIZE_MASK		GENMASK_ULL(63, 32)
- #define RSU_DCMF0_MASK			GENMASK_ULL(31, 0)
- #define RSU_DCMF1_MASK			GENMASK_ULL(63, 32)
- #define RSU_DCMF2_MASK			GENMASK_ULL(31, 0)
-@@ -34,10 +35,17 @@
- #define INVALID_DCMF_VERSION		0xFF
- #define INVALID_DCMF_STATUS		0xFFFFFFFF
- #define INVALID_SPT_ADDRESS		0x0
-+#define INVALID_DEVICE_INFO		0x0
- 
- #define RSU_GET_SPT_CMD			0x5A
-+#define RSU_GET_DEVICE_INFO_CMD		0x74
- #define RSU_GET_SPT_RESP_LEN		(4 * sizeof(unsigned int))
- 
-+struct flash_device_info {
-+	unsigned int size;
-+	unsigned int erase_size;
-+};
-+
- typedef void (*rsu_callback)(struct stratix10_svc_client *client,
- 			     struct stratix10_svc_cb_data *data);
- /**
-@@ -60,6 +68,8 @@ typedef void (*rsu_callback)(struct stratix10_svc_client *client,
-  * @dcmf_status.dcmf1: dcmf1 status
-  * @dcmf_status.dcmf2: dcmf2 status
-  * @dcmf_status.dcmf3: dcmf3 status
-+ * @device_info.size: flash size
-+ * @device_info.erase_size: flash erase size
-  * @retry_counter: the current image's retry counter
-  * @max_retry: the preset max retry value
-  * @spt0_address: address of spt0
-@@ -94,6 +104,8 @@ struct stratix10_rsu_priv {
- 		unsigned int dcmf3;
- 	} dcmf_status;
- 
-+	struct flash_device_info device_info[4];
-+
- 	unsigned int retry_counter;
- 	unsigned int max_retry;
- 
-@@ -270,6 +282,50 @@ static void rsu_dcmf_status_callback(struct stratix10_svc_client *client,
- 	complete(&priv->completion);
- }
- 
-+/**
-+ * rsu_get_device_info_callback() - Callback from Intel service layer for getting
-+ * the QSPI device info
-+ * @client: pointer to client
-+ * @data: pointer to callback data structure
-+ *
-+ * Callback from Intel service layer for QSPI device info
-+ */
-+static void rsu_get_device_info_callback(struct stratix10_svc_client *client,
-+					 struct stratix10_svc_cb_data *data)
-+{
-+	struct stratix10_rsu_priv *priv = client->priv;
-+	struct arm_smccc_1_2_regs *res = (struct arm_smccc_1_2_regs *)data->kaddr1;
-+
-+	if (data->status == BIT(SVC_STATUS_OK)) {
-+		priv->device_info[0].size = res->a1;
-+		priv->device_info[0].erase_size =
-+			FIELD_GET(RSU_ERASE_SIZE_MASK, res->a1);
-+		priv->device_info[1].size = res->a2;
-+		priv->device_info[1].erase_size =
-+			FIELD_GET(RSU_ERASE_SIZE_MASK, res->a2);
-+		priv->device_info[2].size = res->a3;
-+		priv->device_info[2].erase_size =
-+			FIELD_GET(RSU_ERASE_SIZE_MASK, res->a3);
-+		priv->device_info[3].size = res->a4;
-+		priv->device_info[3].erase_size =
-+			FIELD_GET(RSU_ERASE_SIZE_MASK, res->a4);
-+
-+	} else {
-+		dev_err(client->dev, "COMMAND_RSU_GET_DEVICE_INFO returned 0x%lX\n",
-+			res->a0);
-+		priv->device_info[0].size = INVALID_DEVICE_INFO;
-+		priv->device_info[1].size = INVALID_DEVICE_INFO;
-+		priv->device_info[2].size = INVALID_DEVICE_INFO;
-+		priv->device_info[3].size = INVALID_DEVICE_INFO;
-+		priv->device_info[0].erase_size = INVALID_DEVICE_INFO;
-+		priv->device_info[1].erase_size = INVALID_DEVICE_INFO;
-+		priv->device_info[2].erase_size = INVALID_DEVICE_INFO;
-+		priv->device_info[3].erase_size = INVALID_DEVICE_INFO;
-+	}
-+
-+	complete(&priv->completion);
-+}
-+
- static void rsu_get_spt_callback(struct stratix10_svc_client *client,
- 				 struct stratix10_svc_cb_data *data)
- {
-@@ -621,6 +677,122 @@ static ssize_t notify_store(struct device *dev,
- 	return count;
- }
- 
-+static ssize_t size0_show(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[0].size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", priv->device_info[0].size);
-+}
-+
-+static ssize_t size1_show(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[1].size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", priv->device_info[1].size);
-+}
-+
-+static ssize_t size2_show(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[2].size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", priv->device_info[2].size);
-+}
-+
-+static ssize_t size3_show(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[3].size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", priv->device_info[3].size);
-+}
-+
-+static ssize_t erase_size0_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[0].erase_size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
-+					 priv->device_info[0].erase_size);
-+}
-+
-+static ssize_t erase_size1_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[1].erase_size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
-+					 priv->device_info[1].erase_size);
-+}
-+
-+static ssize_t erase_size2_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[2].erase_size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
-+					 priv->device_info[2].erase_size);
-+}
-+
-+static ssize_t erase_size3_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct stratix10_rsu_priv *priv = dev_get_drvdata(dev);
-+
-+	if (!priv)
-+		return -ENODEV;
-+
-+	if (priv->device_info[3].erase_size == INVALID_DEVICE_INFO)
-+		return -EIO;
-+
-+	return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
-+					 priv->device_info[3].erase_size);
-+}
-+
- static ssize_t spt0_address_show(struct device *dev,
- 				 struct device_attribute *attr, char *buf)
- {
-@@ -665,6 +837,14 @@ static DEVICE_ATTR_RO(dcmf0_status);
- static DEVICE_ATTR_RO(dcmf1_status);
- static DEVICE_ATTR_RO(dcmf2_status);
- static DEVICE_ATTR_RO(dcmf3_status);
-+static DEVICE_ATTR_RO(size0);
-+static DEVICE_ATTR_RO(size1);
-+static DEVICE_ATTR_RO(size2);
-+static DEVICE_ATTR_RO(size3);
-+static DEVICE_ATTR_RO(erase_size0);
-+static DEVICE_ATTR_RO(erase_size1);
-+static DEVICE_ATTR_RO(erase_size2);
-+static DEVICE_ATTR_RO(erase_size3);
- static DEVICE_ATTR_WO(reboot_image);
- static DEVICE_ATTR_WO(notify);
- static DEVICE_ATTR_RO(spt0_address);
-@@ -687,6 +867,14 @@ static struct attribute *rsu_attrs[] = {
- 	&dev_attr_dcmf1_status.attr,
- 	&dev_attr_dcmf2_status.attr,
- 	&dev_attr_dcmf3_status.attr,
-+	&dev_attr_size0.attr,
-+	&dev_attr_size1.attr,
-+	&dev_attr_size2.attr,
-+	&dev_attr_size3.attr,
-+	&dev_attr_erase_size0.attr,
-+	&dev_attr_erase_size1.attr,
-+	&dev_attr_erase_size2.attr,
-+	&dev_attr_erase_size3.attr,
- 	&dev_attr_reboot_image.attr,
- 	&dev_attr_notify.attr,
- 	&dev_attr_spt0_address.attr,
-@@ -727,6 +915,14 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 	priv->max_retry = INVALID_RETRY_COUNTER;
- 	priv->spt0_address = INVALID_SPT_ADDRESS;
- 	priv->spt1_address = INVALID_SPT_ADDRESS;
-+	priv->device_info[0].size = INVALID_DEVICE_INFO;
-+	priv->device_info[1].size = INVALID_DEVICE_INFO;
-+	priv->device_info[2].size = INVALID_DEVICE_INFO;
-+	priv->device_info[3].size = INVALID_DEVICE_INFO;
-+	priv->device_info[0].erase_size = INVALID_DEVICE_INFO;
-+	priv->device_info[1].erase_size = INVALID_DEVICE_INFO;
-+	priv->device_info[2].erase_size = INVALID_DEVICE_INFO;
-+	priv->device_info[3].erase_size = INVALID_DEVICE_INFO;
- 
- 	mutex_init(&priv->lock);
- 	priv->chan = stratix10_svc_request_channel_byname(&priv->client,
-@@ -776,6 +972,14 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 		stratix10_svc_free_channel(priv->chan);
- 	}
- 
-+	/* get QSPI device info from firmware */
-+	ret = rsu_send_msg(priv, COMMAND_RSU_GET_DEVICE_INFO,
-+			   0, rsu_get_device_info_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, getting QSPI Device Info %i\n", ret);
-+		stratix10_svc_free_channel(priv->chan);
-+	}
-+
- 	priv->get_spt_response_buf =
- 		stratix10_svc_allocate_memory(priv->chan, RSU_GET_SPT_RESP_LEN);
- 
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index 528f37417aea..218b9e31198b 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -369,6 +369,12 @@ static void svc_thread_recv_status_ok(struct stratix10_svc_data *p_data,
- 		res.a2 = res.a2 * BYTE_TO_WORD_SIZE;
- 		cb_data->kaddr2 = &res.a2;
- 		break;
-+	case COMMAND_RSU_GET_DEVICE_INFO:
-+		cb_data->status = BIT(SVC_STATUS_OK);
-+		cb_data->kaddr1 = &res;
-+		cb_data->kaddr2 = NULL;
-+		cb_data->kaddr3 = NULL;
-+		break;
- 	default:
- 		pr_warn("it shouldn't happen\n");
- 		break;
-@@ -487,6 +493,11 @@ static int svc_normal_to_secure_thread(void *data)
- 			a1 = 0;
- 			a2 = 0;
- 			break;
-+		case COMMAND_RSU_GET_DEVICE_INFO:
-+			a0 = INTEL_SIP_SMC_RSU_GET_DEVICE_INFO;
-+			a1 = 0;
-+			a2 = 0;
-+			break;
- 
- 		/* for FCS */
- 		case COMMAND_FCS_DATA_ENCRYPTION:
-diff --git a/include/linux/firmware/intel/stratix10-smc.h b/include/linux/firmware/intel/stratix10-smc.h
-index ee80ca4bb0d0..7d9dce61da55 100644
---- a/include/linux/firmware/intel/stratix10-smc.h
-+++ b/include/linux/firmware/intel/stratix10-smc.h
-@@ -424,6 +424,29 @@ INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_FPGA_CONFIG_COMPLETED_WRITE)
- #define INTEL_SIP_SMC_RSU_DCMF_STATUS \
- 	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_RSU_DCMF_STATUS)
- 
-+/**
-+ * Request INTEL_SIP_SMC_RSU_GET_DEVICE_INFO
-+ *
-+ * Sync call used by service driver at EL1 to query QSPI device info from FW
-+ *
-+ * Call register usage:
-+ * a0 INTEL_SIP_SMC_RSU_GET_DEVICE_INFO
-+ * a1-7 not used
-+ *
-+ * Return status
-+ * a0 INTEL_SIP_SMC_STATUS_OK
-+ * a1 erasesize0 | size0
-+ * a2 erasesize1 | size1
-+ * a3 erasesize2 | size2
-+ * a4 erasesize3 | size3
-+ * Or
-+ *
-+ * a0 INTEL_SIP_SMC_RSU_ERROR
-+ */
-+#define INTEL_SIP_SMC_FUNCID_RSU_GET_DEVICE_INFO 22
-+#define INTEL_SIP_SMC_RSU_GET_DEVICE_INFO \
-+	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_RSU_GET_DEVICE_INFO)
-+
- /**
-  * Request INTEL_SIP_SMC_SERVICE_COMPLETED
-  * Sync call to check if the secure world have completed service request
-diff --git a/include/linux/firmware/intel/stratix10-svc-client.h b/include/linux/firmware/intel/stratix10-svc-client.h
-index 60ed82112680..2a141c7ba2a1 100644
---- a/include/linux/firmware/intel/stratix10-svc-client.h
-+++ b/include/linux/firmware/intel/stratix10-svc-client.h
-@@ -124,6 +124,9 @@ struct stratix10_svc_chan;
-  * @COMMAND_RSU_DCMF_STATUS: query firmware for the DCMF status
-  * return status is SVC_STATUS_OK or SVC_STATUS_ERROR
-  *
-+ * @COMMAND_RSU_GET_DEVICE_INFO: query firmware for QSPI device info
-+ * return status is SVC_STATUS_OK or SVC_STATUS_ERROR
-+ *
-  * @COMMAND_FCS_REQUEST_SERVICE: request validation of image from firmware,
-  * return status is SVC_STATUS_OK, SVC_STATUS_INVALID_PARAM
-  *
-@@ -158,6 +161,7 @@ enum stratix10_svc_command_code {
- 	COMMAND_RSU_DCMF_VERSION,
- 	COMMAND_RSU_DCMF_STATUS,
- 	COMMAND_FIRMWARE_VERSION,
-+	COMMAND_RSU_GET_DEVICE_INFO,
- 	/* for FCS */
- 	COMMAND_FCS_REQUEST_SERVICE = 20,
- 	COMMAND_FCS_SEND_CERTIFICATE,
-
-base-commit: 1bbb19b6eb1b8685ab1c268a401ea64380b8bbcb
--- 
-2.25.1
-
+> > Besides, it says "destructor runs", not "drop runs". The destructor
+> > can be interpreted to mean the right thing for ARef.
+>
+> To me "destructor runs" and "drop runs" are synonyms.
+>
+> > The right safety comment would probably be that dec_ref can be called
+> > from any thread.
+>
+> Yes and no, I would prefer if you could remove the "By design, ..."
+> part and only focus on `dec_ref` being callable from any thread and
+> it being ok to send a `File` to a different thread.
