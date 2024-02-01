@@ -1,95 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D86F1649A7;
-	Thu,  1 Feb 2024 17:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F92C5B046
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 17:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706808028; cv=none; b=si2INydRqWg4fW1NXetxKo/fVBIxxYmgfxj7C5zanuCM+X/m70p3QVM5wUzVO8rZcirSIfipcbzL0inBdStOAAWL02tDtQ0cvZOyPM+zY9EWV5RzovdNNqHeL5p6URR6hf+APFNqkt+3RS7MmYX/je4KLpMFtMfTCbn4W7PBLIg=
+	t=1706808146; cv=none; b=jz7OJwtNHALFVBzG/QHHz9LPXocKL/RAs4Z6OgTJCQtkL2/72vKCX1D6/eybZ47TRn67pBXtQ3oVgUU9ia1ZCoFtZpbCbpV8eMD9bb9JPzCew4PjrT10f1YnJmh9QtZVDnw7Mf5EyX/Ah3Eawygwhym2iGy3FrWSA1J43HluZ+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706808028; c=relaxed/simple;
-	bh=pxNxp2jInNaPMPU2mt5mwA5Yn1hERV9B5vHmU6y78cw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=GNrzR+wjU+cBdIHJY2Tw1g1J/bNx8YRy7myeyWP1+tjs7gQRFQQJixA7OF7vaCRonI4/LuXkC4kgFpEPggCkK1sg3JFwDsWfi6H012Y2uSsJuXOsO4IbbOwpogxVAxxHb/kb6AaOJca+uF9xm7HFlXv8Axve+v7+mn0KH6CMBRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Txv4arnq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Txv4arnq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 01FE3C43394;
-	Thu,  1 Feb 2024 17:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706808028;
-	bh=pxNxp2jInNaPMPU2mt5mwA5Yn1hERV9B5vHmU6y78cw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Txv4arnq5wa9wJ+pWoG2Dr0OS7TPVffhW1PLyUO0eNDFSgmDM14vZCJ2554f1g2lO
-	 iF+o53AhSB3TAkhVeNfffg7T4nRAKxnW8MhjFhs3NqHta2guik0wPr9hCsAJz7uKH2
-	 0VyBOx56/LRJSzNGUMOjw3+Erjx6dVMx4UGpl/hZ1DFjVvf6C0btl1etZUx+DBnSWi
-	 J5ejAcwWADKgVR8kyZ2u8nFuo9A4FkfpPW2D2NG3xRojuET0rAlTfGRnRKaxM7lvpH
-	 jQqPLW7YGWs8lnjyWqV3kqLxJ8chB0RO1nnflm0zZKnDEGJbKVEGelopWBQ75gRBjD
-	 iUDI963VPRrGw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DDEF8D8C978;
-	Thu,  1 Feb 2024 17:20:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1706808146; c=relaxed/simple;
+	bh=rHZbjNL8tRxKipsBLSqjYxs8COfcgDSsNiRrJZJBiFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Icnpjmw+GaY1fVnD7D9tW8iS1H6foC/HatnSNgsfDpedl2EM2teYRHs0s4jSX8lmTuYQFFNgjJBpHM3LOeiceDHWrSHHHdKIYuWiTuUGW35f1y67A2N/I5ICv4bpj6QUgNXw9NQZOVtgyWV1/2TX5eA5uQMZCJsKn5fFeUphZKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso1017715a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 09:22:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706808143; x=1707412943;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aZtAaumIvU3IAWyjvvbYXJr6tn3IceIszOO9KSScbmk=;
+        b=AEvRRM+xTYySNG1QROtEZTpu57tZcZ7NapUXrRBrEjrUBVhtOCasWL2m5n0Ife4M1z
+         oAyWf7cPvPs2eBsqmUxP1UqYqRbXkvPqiyiM3zkBpUjji4dpTJnGv9JHj6xNM1H1QKun
+         LVfMr3tuVNLgni83NUuJ9CI6ZeGPJ3dvZcY22tQSl13KagVuCaxM90JUsqAF5prnwEJZ
+         HQyBUHbdd65oaw9JcvAlIAGxVXBllt2DqzUcKiUV0wUHUqkmf1VRvvwWBI3DgLBArHuk
+         sJ1JGea3sjCMrbU5wQZDFdmVDrNK94Drq9IAUX6v0ZO/eckKM6/7AmHD/jfM83PRwqdC
+         +Tnw==
+X-Gm-Message-State: AOJu0YxfJswUSmLl0lYmkM1iFLMHtMr/S4nfzHcD/b8R8avvI7822Q5l
+	LCBL6A3LBlCj9GVVmnT9Ywy6Pfb+CG+tDqcIfBMYaECdmBFQike2Ohl0y0Xu
+X-Google-Smtp-Source: AGHT+IGxifk4iveoBRmwTjYQ06upWNmNzxZw/szV4Bov7vw6rxSIlqMjtU+h01kkSVVWtsgm4hROEg==
+X-Received: by 2002:a05:6a20:b3a9:b0:19c:a7e2:c1d6 with SMTP id eg41-20020a056a20b3a900b0019ca7e2c1d6mr4971130pzb.25.1706808143369;
+        Thu, 01 Feb 2024 09:22:23 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVFQrXyxOIpQOPuCQCiME6pADWOWifdCiqBlBAdNJ+VYjaEnr2CaZ5MnUI6rKgYI54KL0kQMGXubBd5+o9y7H+bDbGsPHisFtM/sYfNi5nSgsTzC96ckjVREz/cDWd8fj7g55H5twtVAkOuRVThcXJCc+O8TVFAfy3pbUc4imCfRMcTikQ76pMi3SL6NklLUINxoZG1BSGTOIBCe8tUbVPKaa36mjTy4H1mo99vGVGRw2yaBSqYwT+VbCvnnTpVPZP0bnQLxrki0HhwwNix69Pj41fdKA43hXZzbPJJiGk3ACp3LMNJtoH5
+Received: from ?IPV6:2620:0:1000:8411:170e:a1a5:1887:adb2? ([2620:0:1000:8411:170e:a1a5:1887:adb2])
+        by smtp.gmail.com with ESMTPSA id n13-20020a056a000d4d00b006dddd5cc47csm12098253pfv.157.2024.02.01.09.22.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 09:22:22 -0800 (PST)
+Message-ID: <2d1f4f16-6d66-4449-a7b7-5e2b2a4eaeb3@acm.org>
+Date: Thu, 1 Feb 2024 09:22:20 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/9] mptcp: fixes for recent issues reported by CI's
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170680802790.24895.13487831241333435786.git-patchwork-notify@kernel.org>
-Date: Thu, 01 Feb 2024 17:20:27 +0000
-References: <20240131-upstream-net-20240131-mptcp-ci-issues-v1-0-4c1c11e571ff@kernel.org>
-In-Reply-To: <20240131-upstream-net-20240131-mptcp-ci-issues-v1-0-4c1c11e571ff@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang.tang@linux.dev,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org, geliang@kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] lockdep: fix deadlock issue between lockdep and rcu
+Content-Language: en-US
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>, peterz@infradead.org,
+ mingo@redhat.com, will@kernel.org, longman@redhat.com, boqun.feng@gmail.com
+Cc: linux-kernel@vger.kernel.org, niuzhiguo84@gmail.com, ke.wang@unisoc.com,
+ xuewen.yan@unisoc.com, Carlos Llamas <cmllamas@google.com>
+References: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On 1/16/24 23:48, Zhiguo Niu wrote:
+> There is a deadlock scenario between lockdep and rcu when
+> rcu nocb feature is enabled, just as following call stack:
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Is it necessary to support lockdep for this kernel configuration or should we
+rather forbid this combination by changing lib/Kconfig.debug?
 
-On Wed, 31 Jan 2024 22:49:45 +0100 you wrote:
-> This series of 9 patches fixes issues mostly identified by CI's not
-> managed by the MPTCP maintainers. Thank you Linero (LKFT) and Netdev
-> maintainers (NIPA) for running our kunit and selftests tests!
-> 
-> For the first patch, it took a bit of time to identify the root cause.
-> Some MPTCP Join selftest subtests have been "flaky", mostly in slow
-> environments. It appears to be due to the use of a TCP-specific helper
-> on an MPTCP socket. A fix for kernels >= v5.15.
-> 
-> [...]
+>   /*
+> - * Schedule an RCU callback if no RCU callback is pending. Must be called with
+> - * the graph lock held.
+> - */
+> -static void call_rcu_zapped(struct pending_free *pf)
+> +* See if we need to queue an RCU callback, must called with
+> +* the lockdep lock held, returns false if either we don't have
+> +* any pending free or the callback is already scheduled.
+> +* Otherwise, a call_rcu() must follow this function call.
+> +*/
 
-Here is the summary with links:
-  - [net,1/9] mptcp: fix data re-injection from stale subflow
-    https://git.kernel.org/netdev/net/c/b6c620dc43cc
-  - [net,2/9] selftests: mptcp: add missing kconfig for NF Filter
-    https://git.kernel.org/netdev/net/c/3645c844902b
-  - [net,3/9] selftests: mptcp: add missing kconfig for NF Filter in v6
-    https://git.kernel.org/netdev/net/c/8c86fad2cecd
-  - [net,4/9] selftests: mptcp: add missing kconfig for NF Mangle
-    https://git.kernel.org/netdev/net/c/2d41f10fa497
-  - [net,5/9] selftests: mptcp: increase timeout to 30 min
-    https://git.kernel.org/netdev/net/c/4d4dfb2019d7
-  - [net,6/9] selftests: mptcp: decrease BW in simult flows
-    https://git.kernel.org/netdev/net/c/5e2f3c65af47
-  - [net,7/9] selftests: mptcp: allow changing subtests prefix
-    https://git.kernel.org/netdev/net/c/de46d138e773
-  - [net,8/9] selftests: mptcp: join: stop transfer when check is done (part 1)
-    https://git.kernel.org/netdev/net/c/31ee4ad86afd
-  - [net,9/9] selftests: mptcp: join: stop transfer when check is done (part 2)
-    https://git.kernel.org/netdev/net/c/04b57c9e096a
+Why has the name been changed from "graph lock" into "lockdep lock"? I think
+elsewhere in this source file it is called the "graph lock".
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+>   	/*
+> -	 * If there's anything on the open list, close and start a new callback.
+> -	 */
+> -	call_rcu_zapped(delayed_free.pf + delayed_free.index);
+> +	* If there's anything on the open list, close and start a new callback.
+> +	*/
+> +	if (need_callback)
+> +		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
 
+The comment above the if-statement refers to the call_rcu_zapped() function
+while call_rcu_zapped() has been changed into call_rcu(). So the comment is
+now incorrect.
 
+Additionally, what guarantees that the above code won't be triggered
+concurrently from two different threads? As you may know calling call_rcu()
+twice before the callback has been started is not allowed. I think that can
+happen with the above code.
+
+Bart.
