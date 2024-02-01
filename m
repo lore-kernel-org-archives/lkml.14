@@ -1,109 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09338163AAB;
-	Thu,  1 Feb 2024 12:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9790F15D5DB;
+	Thu,  1 Feb 2024 12:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706789040; cv=none; b=GtsGIh/sVtNYU/FdPjGsHXqPayHw2tpzEf+dXJR6tsmk43LxnpWq8lfYkZHsMT8GwU/wd5S+ue2WhJymuOUFx6HkUjFF2AEGcDAo9okHntGyJy5PCDZPiwFAD93LIzAvmFux9/tOdK8q3SrTS0TPFMUsnBscdHRPbTL8u0CknBU=
+	t=1706789069; cv=none; b=hwK51EDv1p/LElblwUKA2Hi6vo9TsNLMWSjEYR8U81rkLM9zSDC1WPlKgOE9rrqEmKLIPLTotWKTZGLVQiH6C1dck3xLF30YRQImsWB+uvr9unxaGLq9ga8FEYNul4bwmboJXHelOsRDXpVXOGogpTd/ABGqwYm/vj0wMfPBLNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706789040; c=relaxed/simple;
-	bh=cMkEfo42ar08rIRgf549MDh3sGVcDxZ39tgkRF74Xzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e659jcu5GSIrKX4gEL47FsxdqBRj3L1/2jRbZNpL2hPkaySjFX03Z8Eg/w0y/v3QbMyNwoC6TcwgNNOK2wVGFMc8rgr5K8HUMcHkRQ6iPRH5TC3ezKhSXdUahCiC8x8kMWMIPqTxNz+0Zfwr9qT8MEX1dK1CIiTl0k4BE2yc8hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdEl2bus; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdEl2bus"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706789039; x=1738325039;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cMkEfo42ar08rIRgf549MDh3sGVcDxZ39tgkRF74Xzc=;
-  b=TdEl2busVR6dyxzEFg2Ew15YKLvh9RpaHVuQ+p/jZA1Snk34EEsP7Lc6
-   ma0ibEpZFbjfXLPLazD363DJJZOl8cyBAu/svHO0w5BERLA7m/JcMtbwi
-   fWQcz2SiaWnl/juzYzfD38E247mn++tp8/s1ZUw/3rT9Uoqyb6jhgA8k7
-   EH/4IeUsocZIBXzAyTn2vYD8yH7yDG9odByk4+6nzp4PreYrvoNhSwFC4
-   fdNhYak4aOMbrwR+bkeU/kwMz34/iYuHTrNnCdNcvu5J8LP4tito2npgy
-   ry75sP4K84jfY/6+FXVrDRrPrHmmXb2GNmqkKBDZKwNyEfS+j7KVUqTui
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11255990"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="11255990"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822905406"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="822905406"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rVVB1-00000000oik-1Ux1;
-	Thu, 01 Feb 2024 13:24:15 +0200
-Date: Thu, 1 Feb 2024 13:24:15 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] pwm: dwc: simplify error handling
-Message-ID: <Zbt_XxqYc3qKA6tr@smile.fi.intel.com>
-References: <20240122030238.29437-1-raag.jadav@intel.com>
- <20240122030238.29437-3-raag.jadav@intel.com>
- <ZbZpMO9b7L-DNIcb@smile.fi.intel.com>
- <ZbizxhQ5cxcDk2eK@black.fi.intel.com>
+	s=arc-20240116; t=1706789069; c=relaxed/simple;
+	bh=qo7pwrQdY7fIkZ8m5MR220PWKc/kV4xPGU2nyh1wI3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j7cgFyVPJ+R344NPiqgBQEDIrkatbbL1sTTj87+oZV8AXNgTSEtj0I5zAn2lmpdYHZDwWaAyUH5H/qoxRFqLDhkwJoi3OobAMjqWpVsv9ydKaD85cqO4Kx+PRqDdEIz+Y9+En0NeCEjII+oZd4XbtBozwNSt2nqliEhndr3ocqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFBC6DA7;
+	Thu,  1 Feb 2024 04:05:08 -0800 (PST)
+Received: from [10.57.79.60] (unknown [10.57.79.60])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE8DB3F762;
+	Thu,  1 Feb 2024 04:04:24 -0800 (PST)
+Message-ID: <f833c7f9-f59a-49d5-9fce-dc531c11509e@arm.com>
+Date: Thu, 1 Feb 2024 12:04:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbizxhQ5cxcDk2eK@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] selftests/mm: run_vmtests: remove sudo and conform
+ to tap
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240125154608.720072-1-usama.anjum@collabora.com>
+ <20240125154608.720072-3-usama.anjum@collabora.com>
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240125154608.720072-3-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 10:31:02AM +0200, Raag Jadav wrote:
-> On Sun, Jan 28, 2024 at 04:48:16PM +0200, Andy Shevchenko wrote:
-> > On Mon, Jan 22, 2024 at 08:32:37AM +0530, Raag Jadav wrote:
-> > > Simplify error handling in ->probe() function using dev_err_probe() helper.
-
-...
-
-> > >  	ret = pcim_iomap_regions(pci, BIT(0), pci_name(pci));
-> > > -	if (ret) {
-> > > -		dev_err(dev, "Failed to iomap PCI BAR (%pe)\n", ERR_PTR(ret));
-> > > -		return ret;
-> > > -	}
-> > > +	if (ret)
-> > > +		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR (%pe)\n", ERR_PTR(ret));
-> > >  
-> > >  	base = pcim_iomap_table(pci)[0];
-> > 
-> > > -	if (!base) {
-> > > -		dev_err(dev, "Base address missing\n");
-> > > -		return -ENOMEM;
-> > > -	}
-> > > +	if (!base)
-> > > +		return dev_err_probe(dev, -ENOMEM, "Base address missing\n");
-> > 
-> > This check is bogus. Just remove it completely.
-> > 
-> > The pcim_iomap_table() fails IFF pcim_iomap_regions() fails.
-> > You have checked the latter already.
+On 25/01/2024 15:46, Muhammad Usama Anjum wrote:
+> Remove sudo as some test running environments may not have sudo
+> available. Instead skip the test if root privileges aren't available in
+> the test.
 > 
-> I'm no expert on devres but I found a few NULL returns in alloc_dr()
-> call path. In the interest of learning more about iomap, wouldn't we
-> need to handle them (just in some odd case)?
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+> Changes since v1:
+> - Added this patch in v2
+> 
+> We are allocating 2*RLIMIT_MEMLOCK.rlim_max memory and mmap() isn't
+> failing. This seems like true bug in the kernel. Even the root user
+> shouldn't be able to allocate more memory than allowed MEMLOCKed memory.
+> Any ideas?
+> ---
+>  tools/testing/selftests/mm/on-fault-limit.c | 36 ++++++++++-----------
+>  tools/testing/selftests/mm/run_vmtests.sh   |  2 +-
+>  2 files changed, 18 insertions(+), 20 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mm/on-fault-limit.c b/tools/testing/selftests/mm/on-fault-limit.c
+> index b5888d613f34e..0ea98ffab3589 100644
+> --- a/tools/testing/selftests/mm/on-fault-limit.c
+> +++ b/tools/testing/selftests/mm/on-fault-limit.c
+> @@ -5,40 +5,38 @@
+>  #include <string.h>
+>  #include <sys/time.h>
+>  #include <sys/resource.h>
+> +#include "../kselftest.h"
+>  
+> -static int test_limit(void)
+> +static void test_limit(void)
+>  {
+> -	int ret = 1;
+>  	struct rlimit lims;
+>  	void *map;
+>  
+> -	if (getrlimit(RLIMIT_MEMLOCK, &lims)) {
+> -		perror("getrlimit");
+> -		return ret;
+> -	}
+> +	if (getrlimit(RLIMIT_MEMLOCK, &lims))
+> +		ksft_exit_fail_msg("getrlimit: %s\n", strerror(errno));
+>  
+> -	if (mlockall(MCL_ONFAULT | MCL_FUTURE)) {
+> -		perror("mlockall");
+> -		return ret;
+> -	}
+> +	if (mlockall(MCL_ONFAULT | MCL_FUTURE))
+> +		ksft_exit_fail_msg("mlockall: %s\n", strerror(errno));
+>  
+>  	map = mmap(NULL, 2 * lims.rlim_max, PROT_READ | PROT_WRITE,
+>  		   MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE, -1, 0);
+> +
+> +	ksft_test_result(map == MAP_FAILED, "Failed mmap\n");
+> +
+>  	if (map != MAP_FAILED)
+> -		printf("mmap should have failed, but didn't\n");
+> -	else {
+> -		ret = 0;
+>  		munmap(map, 2 * lims.rlim_max);
+> -	}
+> -
+>  	munlockall();
+> -	return ret;
+>  }
+>  
+>  int main(int argc, char **argv)
+>  {
+> -	int ret = 0;
+> +	ksft_print_header();
+> +	ksft_set_plan(1);
+> +
+> +	if (getuid())
+> +		ksft_test_result_skip("Require root privileges to run\n");
+> +	else
+> +		test_limit();
+>  
+> -	ret += test_limit();
+> -	return ret;
+> +	ksft_finished();
+>  }
+> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+> index 246d53a5d7f28..e373d592dbf5c 100755
+> --- a/tools/testing/selftests/mm/run_vmtests.sh
+> +++ b/tools/testing/selftests/mm/run_vmtests.sh
+> @@ -291,7 +291,7 @@ echo "$nr_hugepgs" > /proc/sys/vm/nr_hugepages
+>  
+>  CATEGORY="compaction" run_test ./compaction_test
+>  
+> -CATEGORY="mlock" run_test sudo -u nobody ./on-fault-limit
+> +CATEGORY="mlock" run_test ./on-fault-limit
 
-It has nothing to do with devres. The logic is implemented in PCI core.
+I think changing this is going to give unintended results. run_vmtests.sh must
+already be running as root. "sudo -u nobody" is deprivieging the test to run as
+nobody. The rlimit is not enforced for root so this test must run unprivileged
+to work. See man page for getrlimit():
 
--- 
-With Best Regards,
-Andy Shevchenko
+  Since Linux 2.6.9, no limits are placed on the amount of memory that a
+  privileged process may lock, and this limit instead governs the amount of
+  memory that an unprivileged process may lock
 
+So I think the correct fix is actually to install sudo on your CI.
+
+>  
+>  CATEGORY="mmap" run_test ./map_populate
+>  
 
