@@ -1,105 +1,100 @@
-Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E891653363;
-	Thu,  1 Feb 2024 12:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.101.248.176
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD3B86634;
+	Thu,  1 Feb 2024 12:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791667; cv=none; b=gNfdw6XBTUXSui+tZs4vzNCUcXeXp17bQ5uIcsg8bNYkWCIbFPUMh+NT5ITBtYIiCZOBqDuWE2YMPDddZuelxq/OaoorxSJf+HQGKk0V5pQYL9ZqmP8R64aKOJzEr7P2loCz7y6vDzXhIDuCcxoi7BRG61jEgCqOEEhK2kov8yk=
+	t=1706791702; cv=none; b=S4HAkvReEZ9UmD+H3SWAj22wWbUkHcRk7FjDVOHEUcv39Ohbbf9WhU+0ATYFzR2vSFKQ/YXGkT9IqY5PwAE8GH8KMDr9UxAd6tc7wqyroBm3mt6NV4u/cH7gKfz4KqbsPqwtUAGBxJlAQ++dN5H3MZeJJ+QgeLiFUgfDMnT6WOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706791667; c=relaxed/simple;
-	bh=WK8ow8z0KhSe3WrYq5ZZUDwAfiid7skMNsxiDeRPrsw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y70l80SzWVeGLI+60EeMej89VudRdyfKXq11d01yX4Oz/762K0BLjPMha/QsTud77fxxeVW/UGtzsk/Ge9dpxQdAprVyhjhlTMykNj5oaN8GcEa7xUMR9uGioJp11StVOc/oQncm32NctJCwq5H+YWfRYbjcIk8tpU4+oY5yvVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=46.101.248.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [183.128.135.43])
-	by mail-app2 (Coremail) with SMTP id by_KCgDHCanWkrtl4sUxAQ--.60206S2;
-	Thu, 01 Feb 2024 20:47:19 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Sunil Goutham <sgoutham@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	hariprasad <hkelam@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] octeontx2-pf: Fix a memleak otx2_sq_init
-Date: Thu,  1 Feb 2024 20:47:13 +0800
-Message-Id: <20240201124714.3053525-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706791702; c=relaxed/simple;
+	bh=YnRtTpNpTQxt2XnhcsroxzL3b51GCvpDICjR9ygSGDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7XR2kdwnwmUbiEvZ1/MagJjfHTgaMua+LCTVAxBiAYRjv2UIzBN8zxiCO0RQY7S2gwN91O0eAy8c++o7zSLQ9gM/4bd4AR0wK3dvOiOwQbFCIY+hT1DSRIGAWztXKwc/jFVEqtIlradjkBc6uOb0WDdqvItCTkhq29J9xGnRmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XuiDy2ze; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XuiDy2ze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44DDEC433C7;
+	Thu,  1 Feb 2024 12:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706791701;
+	bh=YnRtTpNpTQxt2XnhcsroxzL3b51GCvpDICjR9ygSGDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XuiDy2zeBXNfjRlxYry3vuawC6QPm/Q4DOnhZlxds7dCy6sdBMmAXpUCjozdP0saL
+	 8799dhAH34b0sm+UZa6o0MkyDfzvcdrHeMzt8b8KPsIkaaLf43RLIYuxIklQO2rAAs
+	 m4TGC6TZDULElSexskS7+8OacGitdvteEn7OGnf0tQn1vZ9tHfvB8P97m0NXjOipAy
+	 qKlWEblPDCJTEXo9QSKI7ZhfdicfFCmgQ4gkbWZYgt0FdTrS8nx53pFqcm4LAiL0Dw
+	 2QD0Od3ytN8iNcY9Qllh/jVUQIsnzJ3WKUNj6vrjzsZI4C/sR6VJOFVKchGQ3I/zUX
+	 dTMLBOvinM90g==
+Date: Thu, 1 Feb 2024 12:48:16 +0000
+From: Will Deacon <will@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
+	iommu@lists.linux.dev, Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+	Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH v2 2/3] swiotlb: Enforce page alignment in swiotlb_alloc()
+Message-ID: <20240201124816.GB15707@willie-the-truck>
+References: <20240131122543.14791-1-will@kernel.org>
+ <20240131122543.14791-3-will@kernel.org>
+ <b4045104-7ea4-47b2-ad74-a44bab76c796@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgDHCanWkrtl4sUxAQ--.60206S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr13Kw17KF1rJF45Gr18Grg_yoW8Gr4fpa
-	1FkryxJF90yr13XwnrXF1rZwn8Kan7ta4xKFy7CwnagwnYvwn5A3sYyFWSgr1fGrZ7uas0
-	yFWqyFWrCFn5Xw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbbo7tUUUUU==
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4045104-7ea4-47b2-ad74-a44bab76c796@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-When qmem_alloc and pfvf->hw_ops->sq_aq_init fails, sq->sg should be
-freed to prevent memleak.
+On Wed, Jan 31, 2024 at 03:14:18PM +0000, Robin Murphy wrote:
+> On 31/01/2024 12:25 pm, Will Deacon wrote:
+> > When allocating pages from a restricted DMA pool in swiotlb_alloc(),
+> > the buffer address is blindly converted to a 'struct page *' that is
+> > returned to the caller. In the unlikely event of an allocation bug,
+> > page-unaligned addresses are not detected and slots can silently be
+> > double-allocated.
+> > 
+> > Add a simple check of the buffer alignment in swiotlb_alloc() to make
+> > debugging a little easier if something has gone wonky.
+> > 
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Cc: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+> > Cc: Dexuan Cui <decui@microsoft.com>
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> >   kernel/dma/swiotlb.c | 6 ++++++
+> >   1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> > index 56cc08b1fbd6..4485f216e620 100644
+> > --- a/kernel/dma/swiotlb.c
+> > +++ b/kernel/dma/swiotlb.c
+> > @@ -1642,6 +1642,12 @@ struct page *swiotlb_alloc(struct device *dev, size_t size)
+> >   		return NULL;
+> >   	tlb_addr = slot_addr(pool->start, index);
+> > +	if (unlikely(!PAGE_ALIGNED(tlb_addr))) {
+> > +		dev_WARN_ONCE(dev, 1, "Cannot allocate pages from non page-aligned swiotlb addr 0x%pa.\n",
+> > +			      &tlb_addr);
+> 
+> Nit: if there's cause for another respin, I'd be inclined to use a
+> straightforward "if (WARN_ON(...))" here - this condition should represent
+> SWIOTLB itself going badly wrong, which isn't really attributable to
+> whatever device happened to be involved in the call.
 
-Fixes: c9c12d339d93 ("octeontx2-pf: Add support for PTP clock")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- .../ethernet/marvell/octeontx2/nic/otx2_common.c   | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Well, there'll definitely be a v3 thanks to my idiotic dropping of the
+'continue' statement when I reworked the searching loop for v2.
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-index 7ca6941ea0b9..02d0b707aea5 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-@@ -951,8 +951,11 @@ int otx2_sq_init(struct otx2_nic *pfvf, u16 qidx, u16 sqb_aura)
- 	if (pfvf->ptp && qidx < pfvf->hw.tx_queues) {
- 		err = qmem_alloc(pfvf->dev, &sq->timestamps, qset->sqe_cnt,
- 				 sizeof(*sq->timestamps));
--		if (err)
-+		if (err) {
-+			kfree(sq->sg);
-+			sq->sg = NULL;
- 			return err;
-+		}
- 	}
- 
- 	sq->head = 0;
-@@ -968,7 +971,14 @@ int otx2_sq_init(struct otx2_nic *pfvf, u16 qidx, u16 sqb_aura)
- 	sq->stats.bytes = 0;
- 	sq->stats.pkts = 0;
- 
--	return pfvf->hw_ops->sq_aq_init(pfvf, qidx, sqb_aura);
-+	err = pfvf->hw_ops->sq_aq_init(pfvf, qidx, sqb_aura);
-+	if (err) {
-+		kfree(sq->sg);
-+		sq->sg = NULL;
-+		return err;
-+	}
-+
-+	return 0;
- 
- }
- 
--- 
-2.34.1
+However, given that we're returning NULL, I think printing the device is
+helpful as we're likely to cause some horrible error (e.g. probe failure)
+in the caller and then it will be obvious why that happened from looking
+at the logs. So I'd prefer to keep it unless you insist.
 
+Cheers,
+
+Will
