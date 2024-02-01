@@ -1,116 +1,140 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF41B15A498
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B0A4D9F4
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706781552; cv=none; b=dl6azFOFVIGFBg85aYo2Ye6msMJH1tQ97xCeqTuqBr6dBPco3a7+uk5lsnRxI5hVzjRXZFM7KIuaR81yJOYP9A4Z7tCfRgLLTKQkv3WFMF1YZXik7AtUBhnBhbDgrUZBmSu7at8ytPZLA+R+UX+JCjmfie6ru6GLupn4jmV5DOc=
+	t=1706781592; cv=none; b=Ij0e9+GwW95NMK8jL7DDuky0GWHSEClUuAayOFAMslZQNSDXIyKT9aV5mYEPm+Y/Z6rKI2ZNJVpIKNUQ+4uvJZ5HZqFsr43oMKEXi/ZuKeblvY/HSInSt8TCQGWqfzO7qKYcMDeWqNkJ+gIWiPMb/xzC2o2WAKs/myvdZDPG0jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706781552; c=relaxed/simple;
-	bh=0Py4q+pTOmqEv1tbTXSx6iTRN0wAURlDATZNMO9qr/Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LUTtHTDsb+sroNKz6PCoQwXpVLWxFeUSFgAgLddpsOSRutNk2rKnvKfyg8S7F4bYiE9C6UoxkgwouE8LnzlR5nuN0o9OoAqhThzOcKn7Rfpdl5GxiFBWWZwYyZO8dWPeZ50uryWpMrFzAKHpRqnE+Cghpn+6yTRn19JIk2CCUPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=YCiSTW1Y; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YCiSTW1Y"
-X-UUID: 853e8c8ec0e811ee9e680517dc993faa-20240201
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=IV7dhqul9WvXyKJ2ZoYl348suTPEjJTKUrzYhGujRks=;
-	b=YCiSTW1YR5WgUfsccaksI0OH8Bg4smHLY1RBb3EkzQVTX+CrdDB7eyIUsXUCfXwibT2/YyXM/zMMUL5UdsCvOT6xcaN5PpYdNHS/vWGv4jEAWIvy+64lWrBJfUZFRyy9h5+cvo/FBi5V0Y8Wz9KIG11casO10Qwvf1ONKgAgpu4=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.36,REQID:a80a9e6f-1e5a-4ff2-8fec-d4d2eef05944,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6e16cf4,CLOUDID:f192e88e-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 853e8c8ec0e811ee9e680517dc993faa-20240201
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-	(envelope-from <flash.liu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 763909255; Thu, 01 Feb 2024 17:58:59 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 1 Feb 2024 17:58:57 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 1 Feb 2024 17:58:57 +0800
-From: Pin-Chuan Liu <flash.liu@mediatek.com>
-To: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
-	<cristian.marussi@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: <wsd_upstream@mediatek.com>, <cylen.yao@mediatek.com>, Pin-Chuan Liu
-	<flash.liu@mediatek.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2] firmware: arm_scmi: Avoid to call mbox_client_txdone on txdone_irq mode
-Date: Thu, 1 Feb 2024 17:57:52 +0800
-Message-ID: <20240201095754.25374-1-flash.liu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	s=arc-20240116; t=1706781592; c=relaxed/simple;
+	bh=HpRKshTR53h1WMYXI/4/LpBIWmTwxTMmuHtPn3QrAg4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XHLaQAAdHH7eoWeySvTCc0zCVUUm2QHo/tDFY6CWfr5N1Kl6rzSiF0d7Gxc4p2ACsx+iKFFXq2r8tgAJddaYQxzPCn7+nkkISAeSTENfx9oQAe9Ki68mxlVrePALTy4SlOu2VqjIFgSXxIG/vPa9jx5g5ujGpq6NsWktWwFjDms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 4119sqmr017945;
+	Thu, 1 Feb 2024 03:54:52 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 4119sp8g017944;
+	Thu, 1 Feb 2024 03:54:51 -0600
+Date: Thu, 1 Feb 2024 03:54:51 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "Daniel P. Berrang??" <berrange@redhat.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Nakajima, Jun" <jun.nakajima@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
+Message-ID: <20240201095451.GA17612@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20240130083007.1876787-2-kirill.shutemov@linux.intel.com> <CAHmME9qsfOdOEHHw_MOBmt6YAtncbbqP9LPK2dRjuOp1CrHzRA@mail.gmail.com> <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com> <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com> <Zbk6h0ogqeInLa_1@redhat.com> <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com> <CAHmME9ps6W5snQrYeNVMFgfhMKFKciky=-UxxGFbAx_RrxSHoA@mail.gmail.com> <20240131203531.GA12035@wind.enjellic.com> <20240201044735.GC2356784@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--2.422700-8.000000
-X-TMASE-MatchedRID: wpfAD6xEq/V3VjVXh/TSj0+4wmL9kCTxsEf8CpnIYtnz+Z+5iD+iRb87
-	jWxVKGOh6lVWmieuZwnS1Xndr/786uHxFb2pjr4bsyNb+yeIRApCX8V1FiRRkt9RlPzeVuQQost
-	SmZzTxtqmuE8sHNH+0VdTP5dw4GERGN63p9ap1YqTEgTE0DYkgNJ178I1tpklvQmfz7H+YLGjxY
-	yRBa/qJcFwgTvxipFa9xS3mVzWUuCMx6OO8+QGvvp6VplSc3s0tpvpvul44/cJ0fmqU3YzVcLTD
-	yr2YnVuSsYg+5kG385nseWfOBeyocaMMthp5d9Dfe0egsLORU77IUwzFKThe3mVKZusLp922v9O
-	jYWA2uMMswg45VMfPadst5iAforfVlxr1FJij9s=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--2.422700-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: 35B1F35528FCD59015ED3E5BC9AED8B5A4809366F666BAE20EA5A4EB88B2D1CE2000:8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201044735.GC2356784@mit.edu>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 01 Feb 2024 03:54:53 -0600 (CST)
 
-On txdone_irq mode, tx_tick is done from mbox_chan_txdone.
-Calling to mbox_client_txdone could get error message
-and return directly, add a check to avoid this.
+On Wed, Jan 31, 2024 at 11:47:35PM -0500, Theodore Ts'o wrote:
+> On Wed, Jan 31, 2024 at 02:35:32PM -0600, Dr. Greg wrote:
+> > I think it would demonstrate a lack of appropriate engineering
+> > diligence on the part of our community to declare RDRAND 'busted' at
+> > this point.
+> > 
+> > While it appeares to be trivially easy to force RDSEED into depletion,
+> > there does not seem to be a suggestion, at least in the open
+> > literature, that this directly or easily translates into stalling
+> > output from RDRAND in any type of relevant adversarial fashion.
+> > 
+> > If this were the case, given what CVE's seem to be worth on a resume,
+> > someone would have rented a cloud machine and come up with a POC
+> > against RDRAND in a multi-tenant environment and then promptly put up
+> > a web-site called 'Random Starve' or something equally ominous.
 
-Signed-off-by: Pin-Chuan Liu <flash.liu@mediatek.com>
----
-V1 -> V2:
- - Remove Change-Id
- - Use single line comment
- 
- drivers/firmware/arm_scmi/mailbox.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> I suspect the reason why DOS attacks aren't happening in practice, is
+> because of concerns over the ability to trust the RDRAND (how do you
+> prove that the NSA didn't put a backdoor into the hardware with
+> Intel's acquisence --- after all, the NSA absolutely positively didn't
+> encourage the kneecaping of WEP and absolutely didn't put a trapdoor
+> into DUAL_EC_DRBG...)  since it can not externally audited and verfied
+> by a third party, in contrast to the source code for the /dev/random
+> driver or the RNG used in OpenSSL.
+> 
+> As a result, most random number generators use RDRAND in combination
+> with other techniques.  If RDRAND is absolutely trustworthy, the extra
+> sources won't hurt --- and if it isn't trustworthy mixing in other
+> sources will likely make things harder for Fort Meade.  And even if
+> these other sources might be observable for someone who can listen in
+> on the inter-packet arrival times on the LAN (for example), it might
+> not be so easy for an analyst sitting at their desk in Fort Meade.
+> 
+> And once you do _that_, you don't need to necessarily loop on RDRAND,
+> because it's one of multiple sources of entropies that are getting
+> mixed togethwer.  Hence, even if someone drives RDRAND into depletion,
+> if they are using getrandom(2), it's not a big deal.
 
-diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
-index b8d470417e8f..d391463e3208 100644
---- a/drivers/firmware/arm_scmi/mailbox.c
-+++ b/drivers/firmware/arm_scmi/mailbox.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/err.h>
- #include <linux/device.h>
-+#include <linux/mailbox_controller.h>
- #include <linux/mailbox_client.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -275,7 +276,10 @@ static void mailbox_mark_txdone(struct scmi_chan_info *cinfo, int ret,
- 	 * Unfortunately, we have to kick the mailbox framework after we have
- 	 * received our message.
- 	 */
--	mbox_client_txdone(smbox->chan, ret);
-+
-+	/* With txdone_irq mode, kick can be done by mbox_chan_txdone */
-+	if (!(smbox->chan->mbox->txdone_irq))
-+		mbox_client_txdone(smbox->chan, ret);
- }
- 
- static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
--- 
-2.18.0
+All well taken points, the Linux RNG and associated community has
+benefited from your and Jason's concerns and work on all of this.
 
+However, whether or not DOS attacks based on RNG depletion are
+happening in the wild, and the reasons they are not, are orthogonal to
+whether or not they can be proven to exist, which was the point I was
+trying to make.
+
+Demonstrating a vulnerability in something as critical as Intel's RNG
+implementation would be a big motivation for some research group.  The
+fact that hasn't occurred would seem to suggest that the RDRAND
+resource depletion we are concerned with is not adversarially
+exploitable.
+
+I suspect that the achievable socket core count cannot effectively
+overwhelm the 1022x amplification factor inherent in the design of the
+RDSEED based seeding of RDRAND.
+
+We will see if Elena can come up with what Intel engineering's
+definition of 'astronomical' is.. :-)
+
+> There's a special case with Confidential Compute VM's, since the
+> assumption is that you want to protect against even a malicious
+> hypervisor who could theoretically control all other sources of
+> timing uncertainty.  And so, yes, in that case, the only thing we
+> can do is Panic if RDRAND fails.
+
+Indeed.
+
+The bigger question, which I will respond to Elena with, is how much
+this issue calls the entire question of confidential computing into
+question.
+
+>    	    	  		     	 - Ted
+
+Have a good day, it has been a long time since you and I were standing
+around with Phil Hughes in the Galleria in Atlanta argueing about
+whether or not Active Directory was going to dominate enterprise
+computing.
+
+It does seem to have gained some significant amount of traction... :-)
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
