@@ -1,106 +1,209 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C71415D5B2
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC73915D5B1
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706780330; cv=none; b=WtbzO0cYTeKYeZAxYV25BWVuEiX2Q5yt6wYT7JrLq/L36cyxGolusSYwPEd+IQ/i9hb50Excxr0Twhv/Gs0scoOZNJqzzbSxS0aN0s9PIALdkh1CVaehhZlA9bXIoYVhV7XqbPqSxtM/o3v7wEPDTqCehLlLGKsqISvFUOecu6o=
+	t=1706780329; cv=none; b=dcQwGFDKaRN8/WgwFY2TSUjQvsggER0Xgl1jTTp92UCFVnySB618Cpz0GYxvjxC+No7RBBchn+Mx4mdEGCUjiQ3RrBqNBCyP41/cZIzz41VjoWWxhIZ2sOWecLk7eScNk/xXw/14WDk0S47ShJtkT4FwTngSpEWoCLRW4rSaGWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706780330; c=relaxed/simple;
-	bh=9l/wcXT+bs/WGiyv1cRps49ciJ9TEQfO/iHpcmKSk20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rDyK8tQ4z988PcwAjhNodRG6KmLhSt8vXxu/ay8zyzA0KQwolVE9iJrJjhkFrM9BkwnEj/W9UmNGcuGQroROfUtWkqeOAQSEC346tka3hE7jEoRfoNymBwJvaxFkMDgtLNQLowopF/KOH/6zGRF4qUzJZRMMfjBmADWCBwouiH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UTydyzgl; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1706780329; c=relaxed/simple;
+	bh=a/aTDNN6EMDkD+niHUP8ICMvAXcz4gxgK/NiZj68fgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ifWmaj3GVkSeEX1ThGbTkXySQQ1CPAQWem51NPBwZIchgl+YxT0LBGY4B3vXKl/T8KDn/2j6orQd/9kdJ+zF6mwqdGllr8wPY7ShYr2BoXxBx+/bKLlSOi9DxBxOKBpfFD5Diny0blsnBFXuqj6H0T45M8TaX0P7pXYfWiVgyuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CQt3V5mK; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UTydyzgl"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55a5e7fa471so840035a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:38:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CQt3V5mK"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4bffff28c08so141583e0c.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:38:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1706780326; x=1707385126; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ETrdbaHyveHNyICbP2DXqhvu68zNHBWwdNewWmRtz18=;
-        b=UTydyzglxjJxAhMsW1gDk+FG3EiXNSuEQaqXcodPIqr46Yz1vJJXJLQU2GM42pqPsR
-         wk1BgVO/DybEnV3/8yAnFETHBe08ZIeArnkutsuDV5EJAOCzx/2cY8w2y+9nXgHGNyx+
-         d7RuejNI0kS5RY/rWXRODyBxSMFck58x7EbeMV5bQJk7oAhgimxaM0gi9xOCuAZqw47v
-         mBbq5E7l1zLXldKNUA7QXqZ6qWdVG0NrUZ7xhiiwQnx8Puo2G/tJhJN0lODHXIHRzAGd
-         rH2I/XCCosdiJptYNwUI8EOITzDNVpETOE3FrgoG70DOon0/g7YmVDpMtC3flSNhuNNp
-         U4dQ==
+        d=google.com; s=20230601; t=1706780326; x=1707385126; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XD0yQ/tI+tg2dm8uEuvvq9XaoXhsRoncokKKzr2jeMM=;
+        b=CQt3V5mKUZJtQ1Uc8NnqYw51bPgPqJyKqw3J+2N7R+9c9SBZzi+UxRbOQLbmei3KH3
+         QlTbiuP1hflU64f8mbOo5j7TgWUqH/O48q7wAvBHhUZ/sW1C4LE6Ucs5sDW62sqgCI8l
+         d2SpKqkLGIgQZZ4v0ZwX/J7CBCrNI7TGleUuBAECg7x7Ty3/f4CKvRyQVM+Cekv1VnMp
+         4z6Bsm0sWyJZIwmbivPzWVUHChqNMzbGekWOzjqCy3OYHB+xfSixyIbwZkx1iiJeGQnO
+         YwdH6C9S3GXG0TTzkeyINNgFk1ojCVBeNhvfxf4s+Eq5RcU+jAR1PCOXU2vthM9xAAUK
+         d6ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1706780326; x=1707385126;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ETrdbaHyveHNyICbP2DXqhvu68zNHBWwdNewWmRtz18=;
-        b=YXZOaTisdn1fKPwcmxKxR0zIoiDtDLZ80P0HNcg6/z92NoSQxbSblHxS7gyjeQGSAZ
-         sh2DI3FY8qBTVB/jGzkD2UO/TiFey55e0FrcsbivtHRH/1goV2PxNBCqylNCjrGGVZgO
-         6q7hSiuTHRmLn7VCDocXD+uy52GhtcIlg71XJODQ//ObNAg7jJioigb2FyNfWO8WXqie
-         oU/MTHZGwowRZvvNpzEzWr3cizp8B9DJLIQpGEAYN6LJ0+4shig/cQCqRjpaCAftW/Wl
-         Sfy8DA+i8CMH9y6QyHOMArTWT3rq1N4N7N6xnb0YvNT4VF2V3M9idiGoQh7lwaNZfKMs
-         8aBg==
-X-Gm-Message-State: AOJu0Yx7mniLVffJp3CO1jb1fqRkzptKmEeSBA6x1lc+0DDRc7O4AfF6
-	8accOh8TiV6KgZYCc55ji8Moe8aVgND1eIVqY/Ph87C2PH3EazLoAQZvfa19tQk=
-X-Google-Smtp-Source: AGHT+IHxmn0xHdwcOe8J8slylRP8BO1emqCK/Lm1LnQPUY17Fiyt3TUyFc0RlSUnQc7x52p7IIlldg==
-X-Received: by 2002:a17:906:5fca:b0:a35:fe4c:e76b with SMTP id k10-20020a1709065fca00b00a35fe4ce76bmr3021090ejv.66.1706780326536;
-        Thu, 01 Feb 2024 01:38:46 -0800 (PST)
-Received: from ?IPV6:2001:a61:1366:6801:7ce4:a9a1:7f22:a638? ([2001:a61:1366:6801:7ce4:a9a1:7f22:a638])
-        by smtp.gmail.com with ESMTPSA id rs6-20020a170907890600b00a26d20a48dasm7002102ejc.125.2024.02.01.01.38.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 01:38:46 -0800 (PST)
-Message-ID: <09fce208-72b1-49e8-988e-ea149fbaf0b5@suse.com>
-Date: Thu, 1 Feb 2024 10:38:44 +0100
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XD0yQ/tI+tg2dm8uEuvvq9XaoXhsRoncokKKzr2jeMM=;
+        b=RhNcgab1i25lgDWjveFu89XRti3BMLbcAxUy+o2cODDxcvx6lBgBT8cjZzcnF69t3c
+         hJIvv5fbM5ybNKpDzDKwA6wMFGIc8qOwkLZuYbVZdq67ygLJwIp1St/4Whs4zcX0mfYN
+         xOLEcDakCqsFnhY1x9JDKYRbzEoN129WWDCa5sMH0Wm/MN5Mj9ClD+vJB4I5wRsjhnc/
+         +g/IIPSv5JcnBRL+6R+P5+65x4L1Ok3R8fOb3lxdgK/VG6RgifbXYm0/DYrqgJ42LSBz
+         60ezfnMvQ7JKwjk1rGHN42N3EFnWHFkbKaNttGvXWRCsLPgVFUKDcO1UZoYQX3zZyf0I
+         0hLQ==
+X-Gm-Message-State: AOJu0YzvgZedIlke79lV7jdML7GZaK6yKBnlwr2D578IvtXsjA62M7T5
+	znnu7B7MLzGtGJVyA8sHySonDYaBDCGaq5XaK/N+Kz5wwZd7rqOp1QQJ/Q6s9f+5Q9+fw9bBEW6
+	f0JxCFCok8oZmmBGPqlqXGcCTskdAFUaNqDVw
+X-Google-Smtp-Source: AGHT+IH+sgJyGjTNJ8nrAZACpyhjF1aGCbvp4J/0sKBmH4acCQHArxhx13e7Uh8RuNCOYXyQzWjA12EqMJKHy6Nh8Ic=
+X-Received: by 2002:a05:6122:1d87:b0:4bd:7da1:a2ea with SMTP id
+ gg7-20020a0561221d8700b004bd7da1a2eamr1519212vkb.14.1706780326396; Thu, 01
+ Feb 2024 01:38:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [RFC] usb: host: Allow userspace to control usb suspend
- flows
-To: Guan-Yu Lin <guanyulin@google.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: gregkh@linuxfoundation.org, mathias.nyman@intel.com, royluo@google.com,
- hadess@hadess.net, benjamin.tissoires@redhat.com,
- heikki.krogerus@linux.intel.com, oneukum@suse.com, grundler@chromium.org,
- yajun.deng@linux.dev, dianders@chromium.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, badhri@google.com, albertccwang@google.com,
- pumahsu@google.com
-References: <20240130064819.1362642-1-guanyulin@google.com>
- <0e4221b5-bafe-4bea-b533-0ed8add81ef1@rowland.harvard.edu>
- <CAOuDEK2VSBcQdLKt27VrLUxH2S22275ffbe5mdVM=vBZDhceQA@mail.gmail.com>
-Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <CAOuDEK2VSBcQdLKt27VrLUxH2S22275ffbe5mdVM=vBZDhceQA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240131210041.686657-1-paul.heidekrueger@tum.de>
+In-Reply-To: <20240131210041.686657-1-paul.heidekrueger@tum.de>
+From: Marco Elver <elver@google.com>
+Date: Thu, 1 Feb 2024 10:38:07 +0100
+Message-ID: <CANpmjNPvQ16mrQOTzecN6ZpYe+N8dBw8V+Mci53CBgC2sx84Ew@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] kasan: add atomic tests
+To: =?UTF-8?Q?Paul_Heidekr=C3=BCger?= <paul.heidekrueger@tum.de>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	kasan-dev@googlegroups.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, 31 Jan 2024 at 22:01, Paul Heidekr=C3=BCger <paul.heidekrueger@tum.=
+de> wrote:
+>
+> Hi!
+>
+> This RFC patch adds tests that detect whether KASan is able to catch
+> unsafe atomic accesses.
+>
+> Since v1, which can be found on Bugzilla (see "Closes:" tag), I've made
+> the following suggested changes:
+>
+> * Adjust size of allocations to make kasan_atomics() work with all KASan =
+modes
+> * Remove comments and move tests closer to the bitops tests
+> * For functions taking two addresses as an input, test each address in a =
+separate function call.
+> * Rename variables for clarity
+> * Add tests for READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and smp_sto=
+re_release()
+>
+> I'm still uncelar on which kinds of atomic accesses we should be testing
+> though. The patch below only covers a subset, and I don't know if it
+> would be feasible to just manually add all atomics of interest. Which
+> ones would those be exactly?
 
+The atomics wrappers are generated by a script. An exhaustive test
+case would, if generated by hand, be difficult to keep in sync if some
+variants are removed or renamed (although that's probably a relatively
+rare occurrence).
 
-On 01.02.24 10:02, Guan-Yu Lin wrote:
-> On Wed, Jan 31, 2024 at 1:12 AM Alan Stern <stern@rowland.harvard.edu> wrote:
->>
->> On Tue, Jan 30, 2024 at 06:47:13AM +0000, Guan-Yu Lin wrote:
+I would probably just cover some of the most common ones that all
+architectures (that support KASAN) provide. I think you are already
+covering some of the most important ones, and I'd just say it's good
+enough for the test.
 
->> Why does this affect only the USB subsystem?  Can't the co-processor
->> use other, non-USB, devices on the system?
->>
-> In our use case, the co-processor only supports USB subsystem. There might be
-> other co-processors support more subsystems, but we're not sure about how they
-> will interact with the system.
+> As Andrey pointed out on Bugzilla, if we
+> were to include all of the atomic64_* ones, that would make a lot of
+> function calls.
 
-Hi,
+Just include a few atomic64_ cases, similar to the ones you already
+include for atomic_. Although beware that the atomic64_t helpers are
+likely not available on 32-bit architectures, so you need an #ifdef
+CONFIG_64BIT.
 
-it would be very good if you decided this now, before we add attributes.
+Alternatively, there is also atomic_long_t, which (on 64-bit
+architectures) just wraps atomic64_t helpers, and on 32-bit the
+atomic_t ones. I'd probably opt for the atomic_long_t variants, just
+to keep it simpler and get some additional coverage on 32-bit
+architectures.
 
-The reason is that if this feature is needed for multiple subsystems,
-the attribute should be added to the generic device structure, so that
-the naming and semantics are consistent.
-You really don't want to repeat this discussion for every subsystem.
+> Also, the availability of atomics varies between architectures; I did my
+> testing on arm64. Is something like gen-atomic-instrumented.sh required?
 
-	Regards
-		Oliver
+I would not touch gen-atomic-instrumented.sh for the test.
 
+> Many thanks,
+> Paul
+>
+> CC: Marco Elver <elver@google.com>
+> CC: Andrey Konovalov <andreyknvl@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D214055
+> Signed-off-by: Paul Heidekr=C3=BCger <paul.heidekrueger@tum.de>
+> ---
+>  mm/kasan/kasan_test.c | 50 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>
+> diff --git a/mm/kasan/kasan_test.c b/mm/kasan/kasan_test.c
+> index 8281eb42464b..1ab4444fe4a0 100644
+> --- a/mm/kasan/kasan_test.c
+> +++ b/mm/kasan/kasan_test.c
+> @@ -1150,6 +1150,55 @@ static void kasan_bitops_tags(struct kunit *test)
+>         kfree(bits);
+>  }
+>
+> +static void kasan_atomics_helper(struct kunit *test, void *unsafe, void =
+*safe)
+> +{
+> +       int *i_safe =3D (int *)safe;
+> +       int *i_unsafe =3D (int *)unsafe;
+> +
+> +       KUNIT_EXPECT_KASAN_FAIL(test, READ_ONCE(*i_unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, WRITE_ONCE(*i_unsafe, 42));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, smp_load_acquire(i_unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, smp_store_release(i_unsafe, 42));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_read(unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_set(unsafe, 42));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_add(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_sub(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc(unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec(unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_and(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_andnot(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_or(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_xor(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_xchg(unsafe, 42));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_cmpxchg(unsafe, 21, 42));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_try_cmpxchg(unsafe, safe, 42=
+));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_try_cmpxchg(safe, unsafe, 42=
+));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_sub_and_test(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec_and_test(unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc_and_test(unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_add_negative(42, unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_add_unless(unsafe, 21, 42));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc_not_zero(unsafe));
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc_unless_negative(unsafe))=
+;
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec_unless_positive(unsafe))=
+;
+> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec_if_positive(unsafe));
+> +}
+> +
+> +static void kasan_atomics(struct kunit *test)
+> +{
+> +       int *a1, *a2;
+
+If you're casting it to void* below and never using as an int* in this
+function, just make these void* (the sizeof can just be sizeof(int)).
+
+> +       a1 =3D kzalloc(48, GFP_KERNEL);
+> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, a1);
+> +       a2 =3D kzalloc(sizeof(*a1), GFP_KERNEL);
+> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, a1);
+> +
+> +       kasan_atomics_helper(test, (void *)a1 + 48, (void *)a2);
+
+We try to ensure (where possible) that the KASAN tests are not
+destructive to the rest of the kernel. I think the size of "48" was
+chosen to fall into the 64-byte size class, similar to the bitops. I
+would just copy that comment, so nobody attempts to change it in
+future. :-)
+
+> +       kfree(a1);
+> +       kfree(a2);
+
+Thanks,
+-- Marco
