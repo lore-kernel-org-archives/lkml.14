@@ -1,236 +1,266 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2821263C85
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 17:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2B963C90;
+	Thu,  1 Feb 2024 17:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706808586; cv=none; b=rGCvdu5lCEufLtTtKOn8pPYMPsGBcGSxZtQXp00R8cwzxhVo3u1SEcLl+OXV1PEy5ClvXu5H+wwUzoCzw165OpzM5nWRRcU655mhQTDKycfG8ArqVVTMPretUqdJSOw53Q/VP31lfF5+HLTkaWRc0Y45obqcb3NigmDFDEg9iO4=
+	t=1706808695; cv=none; b=p6UB9XsJrRnbbI5QKtu1wBWV0EaNJj5tS5DerFKpt+PYoyqUdO2cykHFkTqrZRq9qHIuGLjOEkXbU+YtImDPPdtCnFYkTyrtUIwMZRRApGpS6L8rTBDhJ1NasOiR6MKYvDFlsJc1Mim7s0rPnbCUTs/99qRQeZSkAEuHv5OJjT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706808586; c=relaxed/simple;
-	bh=jiqimdF8tfIp0DYa4JWLmSbNouWv248ghCExbt4VYTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AkS/Khzd7bcJmbgHw8XEPPaMQgVwdIaBMLEsCK6Ue/ar1hadz8I1zBhTiiVLtMjNV17rBXCTrN+lscH4GM8vDGsiIu8ogscyeYDfI2CHLB8HcWNbWNeBuxPXCSc+5NQmvX4Hz869Pk4bEVoDo8jUjesWdl6KsNPVC350chzgcsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EEF9DA7;
-	Thu,  1 Feb 2024 09:30:25 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.58])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59CB73F738;
-	Thu,  1 Feb 2024 09:29:41 -0800 (PST)
-Date: Thu, 1 Feb 2024 17:29:38 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Fangrui Song <maskray@google.com>, Peter Smith <peter.smith@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	Jisheng Zhang <jszhang@kernel.org>, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: jump_label: use constraint "S" instead of "i"
-Message-ID: <ZbvVApJ2/+yca0u6@e133380.arm.com>
-References: <20240131065322.1126831-1-maskray@google.com>
- <CAMj1kXGzADFWa7RmXyjWpCnQ=9hhz6i-XkN4PS1CboZ-kFL8dQ@mail.gmail.com>
- <ZbpEnDK3U/O24ng0@e133380.arm.com>
- <20240201045551.ajg4iqcajyowl2rh@google.com>
- <CAMj1kXEBjumu3VUySg1cQ+SYm4MugJ5f6pd1f7C0XrLyOWAoOw@mail.gmail.com>
- <20240201091120.pbgr7ng6t2c36fut@google.com>
- <ZbuFWSRBntgm2ukJ@e133380.arm.com>
- <CAMj1kXGu76WHY8=Y-KhCxBq3xeHeCYQ9syqViSr9VRkjgWQ3BQ@mail.gmail.com>
+	s=arc-20240116; t=1706808695; c=relaxed/simple;
+	bh=heWzdfpbzi3J60PDEobakECsbGBJAkX3ElnHxfAmHKg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H1iRiXe3dMz5njTyc5GVlqskZDq5hm5qSL5dIs2RPUq7ghoDKGd5BR3Zn0sfMCMfhnXDYAT5gdV9wQar+mzqOlMLRQ1igIC/k4Jt5kuZwH3sTL4JwUaGYsZVYNMemKKf297vqb295YYlc86lt7Uq5dCPCFqwCIEkK5eWqoBvEzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DjJxIHWQ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DjJxIHWQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706808693; x=1738344693;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=heWzdfpbzi3J60PDEobakECsbGBJAkX3ElnHxfAmHKg=;
+  b=DjJxIHWQbufi2CFLyzKRK/arkUmiJz2A/0uh2R1EjPaWsuI7IjhBG8n/
+   27a8bmvWc+RYz56hPCTlhbMpDEIoASvAtObKipQrb7++nf803MU+frcc2
+   y2915zASIkXDhJaVyvBZv5fbCVCYZbxxnWEmtlccSpwGK9/cW4ANNkgFS
+   NzC7qBa8Ah4DocR4zr8mLz35QcgqOSEhnRLttuV96d0CKCLcAjXvF07mU
+   915RTHH0pS+zxny9aTCDL7aiR2VBd6Hv/atWSp6TRhjNwb7B7jpB68s2d
+   +vfwtSow2iMfy6k1sC/0DRjslobm9whIYMkyRqUAbVeTHoLRXmkRXn5Ej
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11054732"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="11054732"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 09:31:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="37359"
+Received: from cacasing-mobl1.amr.corp.intel.com (HELO [10.209.102.228]) ([10.209.102.228])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 09:31:31 -0800
+Message-ID: <6ee06c50-3782-4d50-9a01-f332d181d3fc@linux.intel.com>
+Date: Thu, 1 Feb 2024 09:31:30 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGu76WHY8=Y-KhCxBq3xeHeCYQ9syqViSr9VRkjgWQ3BQ@mail.gmail.com>
-
-On Thu, Feb 01, 2024 at 05:07:59PM +0100, Ard Biesheuvel wrote:
-> On Thu, 1 Feb 2024 at 12:50, Dave Martin <Dave.Martin@arm.com> wrote:
-> >
-> > On Thu, Feb 01, 2024 at 01:11:20AM -0800, Fangrui Song wrote:
-> ...
-> > >
-> > > Hmm. Clang's constraint "S" implementation doesn't support a constant
-> > > offset, so
-> > > `static_key_false(&nf_hooks_needed[pf][hook])` in include/linux/netfilter.h:nf_hook
-> > > would not compile with Clang <= 18.
-> > >
-> > > I have a patch https://github.com/llvm/llvm-project/pull/80255 , but
-> > > even if it is accepted and cherry-picked into the 18.x release branch,
-> > > if we still support older Clang, we cannot use "S" unconditionally.
-> > >
-> > >
-> > > So we probably need the following to prepare for -fPIE support in the
-> > > future:
-> > >
-> > > diff --git a/arch/arm64/include/asm/jump_label.h b/arch/arm64/include/asm/jump_label.h
-> > > index 48ddc0f45d22..b8af2f8b0c99 100644
-> > > --- a/arch/arm64/include/asm/jump_label.h
-> > > +++ b/arch/arm64/include/asm/jump_label.h
-> > > @@ -15,6 +15,16 @@
-> > >  #define JUMP_LABEL_NOP_SIZE          AARCH64_INSN_SIZE
-> > > +/*
-> > > + * Prefer "S" to support PIC. However, use "i" for Clang 18 and earlier as "S"
-> > > + * on a symbol with a constant offset is not supported.
-> > > + */
-> > > +#if defined(CONFIG_CC_IS_CLANG) && __clang_major__ <= 18
-> >
-> > Is a GCC version check needed?  Or is the minimum GCC version specified
-> > for building the kernel new enough?
-> >
-> > > +#define JUMP_LABEL_STATIC_KEY_CONSTRAINT "i"
-> > > +#else
-> > > +#define JUMP_LABEL_STATIC_KEY_CONSTRAINT "S"
-> > > +#endif
-> > > +
-> 
-> Can we use "Si" instead?
-
-I thought the point was to avoid "S" on compilers that would choke on
-it?  If so, those compilers would surely choke on "Si" too, no?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/8] platform/x86/intel/sdsi: Combine read and write
+ mailbox flows
+Content-Language: en-US
+To: "David E. Box" <david.e.box@linux.intel.com>, netdev@vger.kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20240201010747.471141-1-david.e.box@linux.intel.com>
+ <20240201010747.471141-3-david.e.box@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240201010747.471141-3-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> > >  static __always_inline bool arch_static_branch(struct static_key * const key,
-> > >                                              const bool branch)
-> > >  {
-> > > @@ -23,9 +33,9 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
-> > >                "      .pushsection    __jump_table, \"aw\"    \n\t"
-> > >                "      .align          3                       \n\t"
-> > >                "      .long           1b - ., %l[l_yes] - .   \n\t"
-> > > -              "      .quad           %c0 - .                 \n\t"
-> > > +              "      .quad           %0 + %1 - .             \n\t"
-> > >                "      .popsection                             \n\t"
-> > > -              :  :  "i"(&((char *)key)[branch]) :  : l_yes);
-> > > +              :  :  JUMP_LABEL_STATIC_KEY_CONSTRAINT(key), "i"(branch) :  : l_yes);
-> >
-> > While this looks reasonable, I'm still not clear now why the asm must do
-> > the addition.
-> >
-> > Can we roll the branch argument into the macro?
-> >
-> > "S"(symbol + constant) seems to do the right thing for AArch64, at least
-> > in GCC.
-> >
-> 
-> 'symbol' is a struct static_key pointer, so adding '1' to it will not
-> produce the needed result.
+On 1/31/24 5:07 PM, David E. Box wrote:
+> The current mailbox commands are either read-only or write-only and the
+> flow is different for each. New commands will need to send and receive
+> data. In preparation for these commands, create a common polling function
+> to handle sending data and receiving in the same transaction.
+>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/sdsi.c | 79 +++++++++++++++++--------------
+>  1 file changed, 44 insertions(+), 35 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index a70c071de6e2..05a35f2f85b6 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/overflow.h>
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <linux/sysfs.h>
+> @@ -156,8 +157,8 @@ static int sdsi_status_to_errno(u32 status)
+>  	}
+>  }
+>  
+> -static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
+> -			      size_t *data_size)
+> +static int sdsi_mbox_poll(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
+> +			  size_t *data_size)
+>  {
+>  	struct device *dev = priv->dev;
+>  	u32 total, loop, eom, status, message_size;
+> @@ -166,18 +167,10 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  
+>  	lockdep_assert_held(&priv->mb_lock);
+>  
+> -	/* Format and send the read command */
+> -	control = FIELD_PREP(CTRL_EOM, 1) |
+> -		  FIELD_PREP(CTRL_SOM, 1) |
+> -		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
+> -		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
+> -	writeq(control, priv->control_addr);
+> -
+>  	/* For reads, data sizes that are larger than the mailbox size are read in packets. */
+>  	total = 0;
+>  	loop = 0;
+>  	do {
+> -		void *buf = info->buffer + (SDSI_SIZE_MAILBOX * loop);
+>  		u32 packet_size;
+>  
+>  		/* Poll on ready bit */
+> @@ -195,6 +188,11 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  		if (ret)
+>  			break;
+>  
+> +		if (!packet_size) {
+> +			sdsi_complete_transaction(priv);
+> +			break;
+> +		}
+> +
 
-I mean loosely things that resolve to something of the form
-"symbol + constant" in the compiler output.
+It seems to be a generic check. Is this related to converting to a read/write function or
+a common fix you added together in this patch.
 
-"S"(&((char *)key)[branch]) does indeed seem to do the right thing,
-at least with GCC.
+>  		/* Only the last packet can be less than the mailbox size. */
+>  		if (!eom && packet_size != SDSI_SIZE_MAILBOX) {
+>  			dev_err(dev, "Invalid packet size\n");
+> @@ -208,9 +206,13 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  			break;
+>  		}
+>  
+> -		sdsi_memcpy64_fromio(buf, priv->mbox_addr, round_up(packet_size, SDSI_SIZE_CMD));
+> +		if (packet_size && info->buffer) {
+> +			void *buf = info->buffer + array_size(SDSI_SIZE_MAILBOX, loop);
+>  
+> -		total += packet_size;
+> +			sdsi_memcpy64_fromio(buf, priv->mbox_addr,
+> +					     round_up(packet_size, SDSI_SIZE_CMD));
+> +			total += packet_size;
+> +		}
+>  
+>  		sdsi_complete_transaction(priv);
+>  	} while (!eom && ++loop < MBOX_MAX_PACKETS);
+> @@ -230,16 +232,33 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  		dev_warn(dev, "Read count %u differs from expected count %u\n",
+>  			 total, message_size);
+>  
+> -	*data_size = total;
+> +	if (data_size)
+> +		*data_size = total;
+>  
+>  	return 0;
+>  }
+>  
+> -static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
+> +static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
+> +			      size_t *data_size)
+> +{
+> +	u64 control;
+> +
+> +	lockdep_assert_held(&priv->mb_lock);
+> +
+> +	/* Format and send the read command */
+> +	control = FIELD_PREP(CTRL_EOM, 1) |
+> +		  FIELD_PREP(CTRL_SOM, 1) |
+> +		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
+> +		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
+> +	writeq(control, priv->control_addr);
+> +
+> +	return sdsi_mbox_poll(priv, info, data_size);
+> +}
+> +
+> +static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
+> +			       size_t *data_size)
+>  {
+>  	u64 control;
+> -	u32 status;
+> -	int ret;
+>  
+>  	lockdep_assert_held(&priv->mb_lock);
+>  
+> @@ -256,20 +275,7 @@ static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *in
+>  		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
+>  	writeq(control, priv->control_addr);
+>  
+> -	/* Poll on ready bit */
+> -	ret = readq_poll_timeout(priv->control_addr, control, control & CTRL_READY,
+> -				 MBOX_POLLING_PERIOD_US, MBOX_TIMEOUT_US);
+> -
+> -	if (ret)
+> -		goto release_mbox;
+> -
+> -	status = FIELD_GET(CTRL_STATUS, control);
+> -	ret = sdsi_status_to_errno(status);
+> -
+> -release_mbox:
+> -	sdsi_complete_transaction(priv);
+> -
+> -	return ret;
+> +	return sdsi_mbox_poll(priv, info, data_size);
+>  }
+>  
+>  static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
+> @@ -313,7 +319,8 @@ static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info
+>  	return ret;
+>  }
+>  
+> -static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
+> +static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
+> +			   size_t *data_size)
+>  {
+>  	int ret;
+>  
+> @@ -323,7 +330,7 @@ static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
+>  	if (ret)
+>  		return ret;
+>  
+> -	return sdsi_mbox_cmd_write(priv, info);
+> +	return sdsi_mbox_cmd_write(priv, info, data_size);
+>  }
+>  
+>  static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, size_t *data_size)
+> @@ -342,7 +349,7 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, s
+>  static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
+>  			      enum sdsi_command command)
+>  {
+> -	struct sdsi_mbox_info info;
+> +	struct sdsi_mbox_info info = {};
 
-I probably didn't help by bikeshedding the way that expression was
-written, apologies for that.  It's orthogonal to what this patch is
-doing.
+This change also looks like an independent fix. Is this related to common function usage
+you mentioned in the commit log.
 
-> 
-> ...
-> > > > > >If there's another reason why "S" is advantageous though, I'm happy to
-> > > > > >be corrected.
-> > > > >
-> > > > > I remember that Ard has an RFC
-> > > > > https://lore.kernel.org/linux-arm-kernel/20220427171241.2426592-1-ardb@kernel.org/
-> > > > > "[RFC PATCH 0/2] arm64: use PIE code generation for KASLR kernel"
-> > > > > and see some recent PIE codegen patches.
-> > > > >
-> > > > > > Building the KASLR kernel without -fpie but linking it with -pie works
-> > > > > > in practice, but it is not something that is explicitly supported by the
-> > > > > > toolchains - it happens to work because the default 'small' code model
-> > > > > > used by both GCC and Clang relies mostly on ADRP+ADD/LDR to generate
-> > > > > > symbol references.
-> >
-> > Does this mean that doing boot-time relocation on a fully statically
-> > linked kernel doesn't bring much benefit?
-> 
-> Not sure I follow you here. The boot-time relocation is necessary in
-> any case, to fix up statically initialized pointer variables all over
-> the kernel.
-> 
-> > It would tend to be more
-> > painful to do the relocation work, and mean that the kernel text has to
-> > be temporarily writeable, but static linking should have the best
-> > runtime performance.
-> >
-> 
-> Not sure what you mean by 'static linking' here.
-> 
-> The only thing PIE linking does in the case of the kernel is
-> a) complain if static relocations are used that cannot be fixed up at
-> runtime (e.g., movk/movz sequences)
-> b) emit dynamic relocations that the early startup code can use to fix
-> up all statically initialized pointers
-> 
-> From a codegen point-of-view, there is no difference because we don't
-> use -fpic code. The problem with -fpic codegen is that it makes some
-> assumptions that only hold for shared ELF objects, e.g., avoiding
-> dynamic relocations in .text, using GOT entries even for variables
-> defined in the same compilation so that they can be preempted, keeping
-> all runtime relocatable quantities together so the CoW footprint of
-> the shared library is minimized.
-> 
-> None of this matters for the kernel, and as it turns out, the non-PIC
-> small C model produces code that the PIE linker is happy with.
-> 
-> TL;DR our code (including inline and out-of-line asm) is already PIC,
-> and this property is relied upon by KASLR.
-> 
-> > Maybe it doesn't make as much difference as I thought (certainly ADRP
-> > based addressing should make a fair amount of the PIC/PIE overhead go
-> > away).
-> >
-> 
-> The PIC/PIE overhead is in the indirections via the GOT. However,
-> recent linkers will actually perform some relaxations too: if a symbol
-> is defined in the same executable and is not preemptible, a GOT load
-> 
-> ADRP
-> LDR
-> 
-> can be transparently converted to
-> 
-> ADRP
-> ADD
-> 
-> referring to the symbol directly. This is also where hidden.h comes
-> in: making all symbol declarations and definitions 'hidden' will allow
-> the compiler to assume that a GOT entry is never needed.
+>  	int ret;
+>  
+>  	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
+> @@ -364,7 +371,9 @@ static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
+>  	ret = mutex_lock_interruptible(&priv->mb_lock);
+>  	if (ret)
+>  		goto free_payload;
+> -	ret = sdsi_mbox_write(priv, &info);
+> +
+> +	ret = sdsi_mbox_write(priv, &info, NULL);
+> +
+>  	mutex_unlock(&priv->mb_lock);
+>  
+>  free_payload:
+> @@ -408,7 +417,7 @@ static ssize_t
+>  certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
+>  		 size_t count)
+>  {
+> -	struct sdsi_mbox_info info;
+> +	struct sdsi_mbox_info info = {};
+>  	size_t size;
+>  	int ret;
+>  
 
-Is there a reason why we don't just build the whole kernel with
--fvisibility=hidden today?
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-> So building with -fPIC is currently not need in practice, and creates
-> some complications, which is why we have been avoiding it. But PIE
-> linking non-PIC objects is not guaranteed to remain supported going
-> forward, so it would be better to have a plan B, i.e., being able to
-> turn on -fpic without massive regressions due to GOT overhead, or
-> codegen problems with our asm hacks.
-
-Summarising all of this is it right that:
-
-1) ld -pie is how we get the reloc info into the kernel for KASLR
-today.
-
-2) We use gcc -fno-pic today, but this might break with ld -pie in the
-future, although it works for now.
-
-3) gcc -fno-pic and gcc -fPIC (or -fPIE) generate almost the same code,
-assuming we tweak symbol visibility and use a memory model that
-ADR+ADD/LDR can span.  So, moving to -fPIE is likely to be do-able.
-
-
-My point is that an alternative option would be to move to ld -no-pie.
-We would need another way to get relocs into the kernel, such as an
-intermediate step with ld --emit-relocs.  I have definitely seen this
-done before somewhere, but it would be extra work and not necessarily
-worth it, based on what you say about code gen.
-
-This may all have been discussed to death already -- I didn't mean to
-hijack this patch, so I'll stop digging here, but if I've misunderstood,
-please shout!
-
-Cheers
----Dave
