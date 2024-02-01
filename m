@@ -1,115 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEDA15CD52;
-	Thu,  1 Feb 2024 11:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25C64DA0C;
+	Thu,  1 Feb 2024 11:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706786657; cv=none; b=jzltFvIyEjrfPg7wZ1UvX/060Rrfox0IuC/ntZ07/Af1nuis4lYRKzzY77dZ82Yb/wwVDMxqshk8bHML1iA3LDErVwL7skpTumgmNwMRsUpHn54Ddrdyzxv3hsIh56CofX7EFwDD+okx0MDwXxsLmosWmThJHYpsS9Qb7ty643s=
+	t=1706786737; cv=none; b=FOqUBTssYlh3fJlh6TX3Gn65rBqyWm9vhAtJEDB5eU+ta2Aj/VaHHNnNkBTf48dbTytqiOU/uEy4yHrdVDdHawUdJxGo1SwUXZlLD9mBzN6/nck0B/piremyPQqD9hLKrCuVEBqCS0mOAVkkf9pgfYA4ilIvg8AL6OdG+q0VQ4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706786657; c=relaxed/simple;
-	bh=uZUoJTXUOtGTmSyrM1RM4G9rWHINL+HQGMIgwpk5Gdk=;
+	s=arc-20240116; t=1706786737; c=relaxed/simple;
+	bh=8FsMzGJfsM0aOcmxMpvBjhVsj+8VYxKWtsJcxs8GM5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+CwVJY5XUuG/bHGjcvtw7LceCq7zqI6dgi30ALwO8xt43Xjm+ed68fmHGjuNHe/V1LyZUtJYnnAypK7FVI1cyYywUYKJPxobMG9ZMLNjeQINGooqb15RIX4h/TvgZIQHt0XVzsDLDiU3wUUb1h2bX2Uag1XLETY3RRJmyT2nUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9273FDA7;
-	Thu,  1 Feb 2024 03:24:56 -0800 (PST)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0C5F3F762;
-	Thu,  1 Feb 2024 03:19:41 -0800 (PST)
-Date: Thu, 1 Feb 2024 11:19:30 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	"souvik.chakravarty@arm.com" <Souvik.Chakravarty@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <Zbt-QkWhz5d9P-v6@pluto>
-References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com>
- <f88d07ef-83b2-4d14-976a-6dbbd71e036f@oss.nxp.com>
- <CACRpkdYV=qYQ9qDUWYTLDAV1niay30gYH5S=zjfi31GpeY5o-A@mail.gmail.com>
- <DU0PR04MB9417A9074C5DC49AE689E65288432@DU0PR04MB9417.eurprd04.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fkbLdDHco06nXWVHQdkn1wyoqUQcz1Y4slm4xo1ber1ckGSwxpnB7VAFHCQmbVLTNyIC0Qn5uLb44wfC1SPABvqJPC0/cBEQCIVrJUPj0iRHR4titi3swu2VeTxQqrED34LQ6Kguz1b6z9B+r8sUKUz1Pk1FLW5aV46SmJ6MWvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZz4QSq+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZz4QSq+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EC9C433F1;
+	Thu,  1 Feb 2024 11:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706786737;
+	bh=8FsMzGJfsM0aOcmxMpvBjhVsj+8VYxKWtsJcxs8GM5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OZz4QSq+RagaDlfjVVz5KtwyqN+z6+sFOtdgVwirtr8OUVEyjsqZmctO07hi8NI32
+	 7CXregjsqNFCRgNzAQC6LkIWzv5+FlZ5wptO3v4wdXf9QnO1eGpacIgLM+ofZOdYxj
+	 hAVJ2KjiNLCky+UQLUuEHvtkt1AjCPRNtR+Gf4R7opVdUrpjheRe1N1Z6Ile36juWk
+	 LyEHXJ1jGYRdeA/3Qd/ypbl0w5N5Zld3EkS/FrAXVZWt29xWDcW/7+Tb1+hdFwMFor
+	 epg+86jqzzvkzy+KV9xJKQ8Wb03jVceOWng1nGR8KT30YOw61WiY7hww8gsNtTPFGI
+	 B1ljn8Z04DlNA==
+Date: Thu, 1 Feb 2024 11:25:27 +0000
+From: Mark Brown <broonie@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: perex@perex.cz, tiwai@suse.com, matthias.bgg@gmail.com,
+	ribalda@chromium.org, nicolas.ferre@microchip.com,
+	u.kleine-koenig@pengutronix.de, kuninori.morimoto.gx@renesas.com,
+	nfraprado@collabora.com, alsa-devel@alsa-project.org,
+	trevor.wu@mediatek.com, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, lgirdwood@gmail.com
+Subject: Re: [PATCH 0/7] ASoC: mediatek: AFE drivers cleanups
+Message-ID: <6f7a34b6-6f65-42c3-a92d-6b064bf9dee1@sirena.org.uk>
+References: <20240111105247.117766-1-angelogioacchino.delregno@collabora.com>
+ <cace3472-7ee3-459b-ab2c-51764db99bd7@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PVPGHszu86wFrqHg"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DU0PR04MB9417A9074C5DC49AE689E65288432@DU0PR04MB9417.eurprd04.prod.outlook.com>
+In-Reply-To: <cace3472-7ee3-459b-ab2c-51764db99bd7@collabora.com>
+X-Cookie: You can't cheat the phone company.
 
-On Thu, Feb 01, 2024 at 07:14:17AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> > protocol basic support
-> > 
 
-Hi Peng,
+--PVPGHszu86wFrqHg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > On Mon, Jan 29, 2024 at 1:37 PM Peng Fan <peng.fan@oss.nxp.com> wrote:
-> > 
-> > > And for i.MX95 OEM extenstion, do you have any suggestions?
-> > > I have two points:
-> > > 1. use vendor compatible. This would also benefit when supporting
-> > > vendor protocol.
-> > > 2. Introduce a property saying supporting-generic-pinconf
-> > >
-> > > How do you think?
-> > 
-> > While I don't know how OEM extensions to SCMI were designed, the pin
-> > control subsystem has the philosophy that extensions are for minor fringe
-> > stuff, such as a pin config option that no other silicon is using and thus have
-> > no use for anyone else. Well that is actually all the custom extensions we
-> > have.
-> > (This notion is even carried over to SCMI pinctrl.)
-> > 
-> > The i.MX95 OEM extension is really odd to me, it looks like a
-> > reimplementation of the core aspects of SCMI pin control, and looks much
-> > more like the old i.MX drivers than like the SCMI driver.
-> 
-> i.MX SCMI pin protocol conf settings follows non-SCMI pin conf settings.
-> 
+On Thu, Feb 01, 2024 at 11:08:41AM +0100, AngeloGioacchino Del Regno wrote:
+> Il 11/01/24 11:52, AngeloGioacchino Del Regno ha scritto:
+> > This series converts MediaTek AFE drivers' probe functions to use
+> > dev_err_probe() and devm functions where possible and, in some
+> > cases, dropping the .remove_new() callback, reducing the size.
 
-It is not just a matter of using custom SCMI OEM types, it is the whole
-layout/definitions of the i.MX pin/groups/funcs DT bindings that deviates from
-the generic DT bindings layout as handled and expected by the Linux Pinctrl
-subsystem (AFAIU), while the SCMI Pinctrl driver as it stands in this series,
-was conceived, designed and implemented originally by Oleksii to just use the
-generic existing Pinctrl DT bindings; as a consequence, in your i.MX extensions,
-you had to add a dedicated i.MX DT parser to interpret the protocol@19 DT snippet
-in a completely different way, to try to stick your custom solution on top of
-the generic one.
+> Gentle ping for this series, afraid that went out of the radar :-)
 
-Thanks,
-Cristian
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-> > 
-> > But I sure cannot speak of what is allowed in SCMI OEM extensions or not.
-> 
-> + SPEC owner, Souvik. Any comments?
-> 
-> Thanks,
-> Peng.
-> 
-> > 
-> > Yours,
-> > Linus Walleij
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
+
+--PVPGHszu86wFrqHg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmW7f6cACgkQJNaLcl1U
+h9CaHgf8CtVCkC6J116wxuSCyfeBTiCzoyj46PgrA3xwNRTTduzax3JoO/1grpq3
+5NlOg1xyh3YtqEDvxa2wBDCc6fM3zw9mAQPKiXCqHHI2A8WH8xMPSJzvlhfrC14S
+SDY7qm/mG8CiXyEI84YBRHdgoxBnBqECwRehV975FL3ZvrDYSQTFO4EbYI0I1oNI
+arokA5pQoEzgBMazkodUtmgDueOoBVtbT7HQMsMTjtn+iQ7dMAhf2wGc8uhMC3K1
+8jB9piZTC2sZHVRli3Rbzrs4TMYz8Ji5ey/zUMcsfKBO1/awWWGrYqm8eEZJiME4
+TtANCMujJdC2XSTWBBod6hXZGV07oQ==
+=z6oI
+-----END PGP SIGNATURE-----
+
+--PVPGHszu86wFrqHg--
