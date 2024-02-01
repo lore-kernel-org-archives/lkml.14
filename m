@@ -1,141 +1,444 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2040.outbound.protection.outlook.com [40.107.237.40])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766CF3B7AA;
-	Thu,  1 Feb 2024 06:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706767424; cv=fail; b=UFN+1MQ/E0K3D/2Lt8lypjgraYXF/dD1RBmq9thWMerN4iu4b/RqTQD+mVFL7cb1txL+ppXtAP+FibHzhlcvrrbR98YUGkofyN2v8UusDiQ/YbUoZaPDn4q/mkz/WtU5ow4G6jejfPQuc3/TcucAcJtWEHMqAsnymPPu6ID0AeM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706767424; c=relaxed/simple;
-	bh=nmkbU6j9etEgM8KswWjXV+8AQ1NOcFNCMpXHt/4+5Hc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hpuWTobI6ONbXQ1So4cLcx5F0EufPdPNaKkkK+8PrgZ8XYBb4OCpN9IcOLa+S99zjn12gLKRoAqG9w1eVSsZC0PrYgV3PeSaGbTM20iRIdGChmvVlfRaWR1VGX4/wJz4A8oUOP0yQ5n26zbmyEdSzOePaNpD/QE5KkxPSDyJ9lY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XzTimBLe; arc=fail smtp.client-ip=40.107.237.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19D28005B;
+	Thu,  1 Feb 2024 06:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706767481; cv=none; b=Rp1aV9XwY2ezel6VRTQdz+eZQ4S9fHkw9VUTQeDw/QTgmc6Na00XCCXMYIaaPDOFrmQc2xbvOhwaV2yyiIvRQHmypRXmIQYN9mBFAmtX0nRfplibluS54K1QXaBPF8x7V7n+uvG3eDCw78tgEmgFqksvBhxsMgDvvAKRfubfeIg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706767481; c=relaxed/simple;
+	bh=B/yad2lA/J92uE3dv3uCDmqxZyOCBHtRlqZrKmlCv3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kVYDc2AVjRCEHbZ6hoK4U9mb7y8/ewH5hCD4s4cmsoVJokUZP5X/MWqFk+CRvh/klHa4gSWy2kjQ1XTIntG7W9i2ngNS2EVl+5bP2tkYoe/0xKWf704V2KIJmnI3lkfCBv49eboQm3H9I3znnswzJlj4pMaQyRclVy4cMON/oWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eWsKVNFg; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XzTimBLe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LVDw6ZQ1md93byl/IxUgcH3ny8Fm2E8pJ+zMiflhMTfaMI/Gz9l1XZZ1RKOqf1lzj/EjRsw535xMzTD5T7qTCkTEmdQSLH+5T3KxXBUP/nIvakIQ7N/hUyRzHFFVvI8NCM17mA5M03O45cH5+G0aXHNIxQbtEi92od/R5L+tNfNM7BRBbdhks00z0UzGrD3pDSJjKf+96pJKo1rBaMMsrMEeh+htJX+g8tPKa8mu36iFxOa+GUGKYL5fmVd6lCWdR3y9d1iHM12u8h7WdKUfnq2qY1570FwmzVKjXuqp+M5a1MngXTRAMqdEyXmx66Mp9iI/H/3aJJCYSM4wxKhtUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bxTTmHAn3n4M08VnrVUM59cmjxQi+aeaUOc6rJRVuEc=;
- b=b9VfwonbEAztd9gpO8pE2j+gnMOAxOLGwRT+TF82RXfqkty9SK8q4tPMFnGCxwa29YI1nBc4Li/a118gU82PCMwPqlnl9KlomF0ZLqkVQBPG2sa53g9N0Ns9I8QrouJQytLEhVHfxZAJN3t+Ltav+6HuwJ/hqDUSMSG+dNf7X9dHsYrASS2DZNmugD4y8lS7x01Y8y+zAgTCMxhRVKDruItMj1yMskPoouyE+wDjHZwgWPRf8GWTrIZ/SCwII6NRUSBLlny2zLARGm1bfOREYGg9nlkoUV6WHAASteGZxW5mNJDDQVK/yNDQgApzmYW4AGeXBP5uLPE5Y7cECdo46Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bxTTmHAn3n4M08VnrVUM59cmjxQi+aeaUOc6rJRVuEc=;
- b=XzTimBLeT2ccd3uj8CG4iLLi5Wn6MeZw1so7pohyOBXS+QioePIR0zHH3lhhhCbTRO7q9lE4tS951DHfqHNMTBj6MV1QJ7reGItsBaiLXi9nRMu3wrpQvT4jjIbtO/Md0o29SCKWlZUk4EeBXPZ3B7pqWoqoUJgecTEoecbm6WQ=
-Received: from DS7PR03CA0234.namprd03.prod.outlook.com (2603:10b6:5:3ba::29)
- by MW6PR12MB8705.namprd12.prod.outlook.com (2603:10b6:303:24c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Thu, 1 Feb
- 2024 06:03:38 +0000
-Received: from CY4PEPF0000EE3D.namprd03.prod.outlook.com
- (2603:10b6:5:3ba:cafe::9e) by DS7PR03CA0234.outlook.office365.com
- (2603:10b6:5:3ba::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22 via Frontend
- Transport; Thu, 1 Feb 2024 06:03:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE3D.mail.protection.outlook.com (10.167.242.17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.13 via Frontend Transport; Thu, 1 Feb 2024 06:03:37 +0000
-Received: from aiemdee.2.ozlabs.ru (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 1 Feb
- 2024 00:03:03 -0600
-From: Alexey Kardashevskiy <aik@amd.com>
-To: <linux-pci@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Lukas Wunner
-	<lukas@wunner.de>, Alexey Kardashevskiy <aik@amd.com>
-Subject: [PATCH kernel 1/4] pci/doe: Define protocol types and make those public
-Date: Thu, 1 Feb 2024 17:02:25 +1100
-Message-ID: <20240201060228.3070928-2-aik@amd.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240201060228.3070928-1-aik@amd.com>
-References: <20240201060228.3070928-1-aik@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eWsKVNFg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=cuubT9ORMRxlSpS/OPGYBxMqwCoFHo6Ow8mUI5UMK3A=; b=eWsKVNFg8RWjqgU1q5XyCTH3Dy
+	BpkYH5gu/+oomneoc66Yde7qqT3VmH7+xYmBPyEuTdSNE7VxiqoahuX0gI0kblskwEQ3RaoNtkPW2
+	5om4P0IIZL3FEjKT79gDIyq2HF7E3z7d4Q8gwOoV8XGep1IZMBIahiy+9mtIZeIMyRGO6s+DfcXdO
+	ej9RYfYhW3bBpQUHmLv+fwsM273a0Ezd/iwCxKVB0eDaC3nD+wKpT4Scb1eZVOosrui1VK7YKLd8g
+	aomyLxwkdhpWcdzo13rDJ7VBR1EBxlJTe+JkssHlevvocf9pMavCS+4vfvB0Lin5S4vztkxTMmjWs
+	IInsG45w==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rVQBj-00000006i4n-144t;
+	Thu, 01 Feb 2024 06:04:39 +0000
+Message-ID: <09e318f9-ccb6-4c0c-b06d-d433d44d6e25@infradead.org>
+Date: Wed, 31 Jan 2024 22:04:38 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] rpmb: add Replay Protected Memory Block (RPMB)
+ subsystem
+Content-Language: en-US
+To: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, op-tee@lists.trustedfirmware.org
+Cc: Shyam Saini <shyamsaini@linux.microsoft.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Jerome Forissier <jerome.forissier@linaro.org>,
+ Sumit Garg <sumit.garg@linaro.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Bart Van Assche <bvanassche@acm.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Tomas Winkler <tomas.winkler@intel.com>, =?UTF-8?Q?Alex_Benn=C3=A9e?=
+ <alex.bennee@linaro.org>
+References: <20240131174347.510961-1-jens.wiklander@linaro.org>
+ <20240131174347.510961-2-jens.wiklander@linaro.org>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240131174347.510961-2-jens.wiklander@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3D:EE_|MW6PR12MB8705:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3837c16e-da6f-423a-db98-08dc22eb884c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	irh/Q4Dl7t4mH4r8bea0NKqyssJGwwB41vPg149N7rZXPH5nwnJhdqW8BnwclwM8IUgwefRRhmqbg7ei7ijOY27oK1GIbIVxvA+HZnXWbFXAv5wOz37UWakYP/WPEQAeJQBKmYM9tAeXVgYlFt6/neXMNAES3/ZhfPWaIeqy2Ro0IS+QfoX1rQgQxeTZqhzqdTrr7jsAFCsDKgwlAXmSVMcM33Zb4wF4aRlzKSAjvqj/R3N5MjcyCAMDx3j/6jXLeFDXHHg8fAhKT0mLzTu1bAqIKDnrttWfaDpE2ae35OZR9ZJkGIl4Cm8EnnOxHGl2Qq8BPv5p9WmbpGrP9rp01sxYsZr2pVG2deINH+ZmW60O7hy1gvnWsbz1Bk8JF7K1/2HVCs7KWU375UG2O5yMvftYS18AQxu2uInkGKmritxtf+ljpKIF9+IgYMkSLpI2kh7qFs406hLUKsQxhSLCn3t3FUP5mVi801jCCmYqOqBR8gXy/1bMeFFtS/25TUjsiW/ZhDRipTkm7NsWTivqAAsuFy+Yd58Oo6DyaKH8tH1Plc+nvSxJUa3SJKH9Pgbq/NVUv/Uwwn3Thoor4tXj5MGui1YPlLvQeM5NfuCNVsmZ/q6fiR9zAhhB0LXEGDwHZH8YTqymbDSlf9i1VCa2FtE1mDYilwywlRAcv5qiW83P8d3K67DDM32e1SSeXPbJQ8hl4jMkzQstLqGjk8unnGQYe0bX0Fo0TQoIUg0pR5vVlBL6dDzipLHOyY0yl3YZLRT3duPIGdy4l3oEugnojQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(376002)(39860400002)(136003)(346002)(230922051799003)(82310400011)(64100799003)(1800799012)(186009)(451199024)(46966006)(40470700004)(36840700001)(40480700001)(40460700003)(70586007)(2906002)(5660300002)(316002)(47076005)(8936002)(54906003)(70206006)(4326008)(6916009)(8676002)(356005)(81166007)(478600001)(26005)(36756003)(426003)(82740400003)(36860700001)(336012)(16526019)(6666004)(1076003)(2616005)(41300700001)(83380400001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 06:03:37.8071
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3837c16e-da6f-423a-db98-08dc22eb884c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE3D.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8705
 
-Already public pci_doe() takes a protocol type argument.
-PCIe 6.0 defines three, define them in a header for use with pci_doe().
+Hi,
 
-Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
----
- include/linux/pci-doe.h | 4 ++++
- drivers/pci/doe.c       | 2 --
- 2 files changed, 4 insertions(+), 2 deletions(-)
+On 1/31/24 09:43, Jens Wiklander wrote:
+> A number of storage technologies support a specialised hardware
+> partition designed to be resistant to replay attacks. The underlying
+> HW protocols differ but the operations are common. The RPMB partition
+> cannot be accessed via standard block layer, but by a set of specific
+> RPMB commands: WRITE, READ, GET_WRITE_COUNTER, and PROGRAM_KEY. Such a
+> partition provides authenticated and replay protected access, hence
+> suitable as a secure storage.
+> 
+> The initial aim of this patch is to provide a simple RPMB Driver which
+> can be accessed by the optee driver to facilitate early RPMB access to
+> OP-TEE OS (secure OS) during the boot time.
+> 
+> A TEE device driver can claim the RPMB interface, for example, via
+> class_interface_register() or rpmb_dev_find_device(). The RPMB driver
+> provides a callback to route RPMB frames to the RPMB device accessible
+> via rpmb_route_frames().
+> 
+> The detailed operation of implementing the access is left to the TEE
+> device driver itself.
+> 
+> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
+> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  MAINTAINERS              |   7 ++
+>  drivers/misc/Kconfig     |   9 ++
+>  drivers/misc/Makefile    |   1 +
+>  drivers/misc/rpmb-core.c | 247 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/rpmb.h     | 184 +++++++++++++++++++++++++++++
+>  5 files changed, 448 insertions(+)
+>  create mode 100644 drivers/misc/rpmb-core.c
+>  create mode 100644 include/linux/rpmb.h
+> 
 
-diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-index 1f14aed4354b..5c33f7dc978b 100644
---- a/include/linux/pci-doe.h
-+++ b/include/linux/pci-doe.h
-@@ -13,6 +13,10 @@
- #ifndef LINUX_PCI_DOE_H
- #define LINUX_PCI_DOE_H
- 
-+#define PCI_DOE_PROTOCOL_DISCOVERY		0
-+#define PCI_DOE_PROTOCOL_CMA_SPDM		1
-+#define PCI_DOE_PROTOCOL_SECURED_CMA_SPDM	2
-+
- struct pci_doe_mb;
- 
- struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index e3aab5edaf70..61f0531d2b1d 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -22,8 +22,6 @@
- 
- #include "pci.h"
- 
--#define PCI_DOE_PROTOCOL_DISCOVERY 0
--
- /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
- #define PCI_DOE_TIMEOUT HZ
- #define PCI_DOE_POLL_INTERVAL	(PCI_DOE_TIMEOUT / 128)
+
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 4fb291f0bf7c..891aa5763666 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -104,6 +104,15 @@ config PHANTOM
+>  	  If you choose to build module, its name will be phantom. If unsure,
+>  	  say N here.
+>  
+> +config RPMB
+> +	tristate "RPMB partition interface"
+> +	help
+> +	  Unified RPMB unit interface for RPMB capable devices such as eMMC and
+> +	  UFS. Provides interface for in kernel security controllers to access
+
+	                              in-kernel
+
+> +	  RPMB unit.
+> +
+> +	  If unsure, select N.
+> +
+>  config TIFM_CORE
+>  	tristate "TI Flash Media interface support"
+>  	depends on PCI
+
+
+> diff --git a/drivers/misc/rpmb-core.c b/drivers/misc/rpmb-core.c
+> new file mode 100644
+> index 000000000000..a3c289051687
+> --- /dev/null
+> +++ b/drivers/misc/rpmb-core.c
+> @@ -0,0 +1,247 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright(c) 2015 - 2019 Intel Corporation. All rights reserved.
+> + * Copyright(c) 2021 - 2024 Linaro Ltd.
+> + */
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/rpmb.h>
+> +#include <linux/slab.h>
+
+> +
+> +/**
+> + * rpmb_route_frames() - route rpmb frames to rpmb device
+> + * @rdev:	rpmb device
+> + * @req:	rpmb request frames
+> + * @req_len:	length of rpmb request frames in bytes
+> + * @rsp:	rpmb response frames
+> + * @rsp_len:	length of rpmb response frames in bytes
+> + *
+> + * @return < 0 on failure
+
+Above needs a colon ':' after @return, although using
+ * Return:
+is preferable IMO.
+
+> + */
+> +int rpmb_route_frames(struct rpmb_dev *rdev, u8 *req,
+> +		      unsigned int req_len, u8 *rsp, unsigned int rsp_len)
+> +{
+
+
+> +/**
+> + * rpmb_dev_find_device() - return first matching rpmb device
+> + * @data: data for the match function
+> + * @match: the matching function
+> + *
+> + * @returns a matching rpmb device or NULL on failure
+
+    * @returns:
+or
+    * Returns:
+
+> + */
+> +struct rpmb_dev *rpmb_dev_find_device(const void *data,
+> +				      const struct rpmb_dev *start,
+> +				      int (*match)(struct device *dev,
+> +						   const void *data))
+> +{
+> +	struct device *dev;
+> +	const struct device *start_dev = NULL;
+> +
+> +	if (start)
+> +		start_dev = &start->dev;
+> +	dev = class_find_device(&rpmb_class, start_dev, data, match);
+> +
+> +	return dev ? to_rpmb_dev(dev) : NULL;
+> +}
+> +
+> +/**
+> + * rpmb_dev_unregister() - unregister RPMB partition from the RPMB subsystem
+> + * @rdev: the rpmb device to unregister
+> + *
+> + * @returns < 0 on failure
+
+Ditto.
+
+> + */
+> +int rpmb_dev_unregister(struct rpmb_dev *rdev)
+> +{
+> +	if (!rdev)
+> +		return -EINVAL;
+> +
+> +	device_del(&rdev->dev);
+> +
+> +	rpmb_dev_put(rdev);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rpmb_dev_unregister);
+> +
+> +/**
+> + * rpmb_dev_register - register RPMB partition with the RPMB subsystem
+> + * @dev: storage device of the rpmb device
+> + * @target: RPMB target/region within the physical device
+
+There is no @target function parameter.
+
+> + * @ops: device specific operations
+> + *
+> + * While registering the RPMB partition get references to needed resources
+> + * with the @ops->get_resources() callback and extracts needed devices
+> + * information while needed resources are available.
+> + *
+> + * @returns a pointer to a 'struct rpmb_dev' or an ERR_PTR on failure
+
+Ditto for Return syntax.
+
+> + */
+> +struct rpmb_dev *rpmb_dev_register(struct device *dev,
+> +				   const struct rpmb_ops *ops)
+> +{
+> +	struct rpmb_dev *rdev;
+> +	int id;
+> +	int ret;
+> +
+> +	if (!dev || !ops || !ops->get_resources ||
+> +	    !ops->put_resources || !ops->route_frames ||
+> +	    !ops->set_dev_info)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
+> +	if (!rdev)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mutex_lock(&rpmb_mutex);
+> +	id = ida_simple_get(&rpmb_ida, 0, 0, GFP_KERNEL);
+> +	mutex_unlock(&rpmb_mutex);
+> +	if (id < 0) {
+> +		ret = id;
+> +		goto exit;
+> +	}
+> +
+> +	rdev->ops = ops;
+> +	rdev->id = id;
+> +
+> +	dev_set_name(&rdev->dev, "rpmb%d", id);
+> +	rdev->dev.class = &rpmb_class;
+> +	rdev->dev.parent = dev;
+> +
+> +	ret = ops->set_dev_info(dev, rdev);
+> +	if (ret)
+> +		goto exit;
+> +
+> +	ret = device_register(&rdev->dev);
+> +	if (ret)
+> +		goto exit;
+> +
+> +	ops->get_resources(rdev->dev.parent);
+> +
+> +	dev_dbg(&rdev->dev, "registered device\n");
+> +
+> +	return rdev;
+> +
+> +exit:
+> +	if (id >= 0) {
+> +		mutex_lock(&rpmb_mutex);
+> +		ida_simple_remove(&rpmb_ida, id);
+> +		mutex_unlock(&rpmb_mutex);
+> +	}
+> +	kfree(rdev);
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(rpmb_dev_register);
+
+
+> diff --git a/include/linux/rpmb.h b/include/linux/rpmb.h
+> new file mode 100644
+> index 000000000000..45073513264a
+> --- /dev/null
+> +++ b/include/linux/rpmb.h
+> @@ -0,0 +1,184 @@
+> +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 */
+> +/*
+> + * Copyright (C) 2015-2019 Intel Corp. All rights reserved
+> + * Copyright (C) 2021-2022 Linaro Ltd
+> + */
+> +#ifndef __RPMB_H__
+> +#define __RPMB_H__
+> +
+> +#include <linux/types.h>
+> +#include <linux/device.h>
+> +
+> +/**
+> + * struct rpmb_frame - rpmb frame as defined by specs
+> + *
+> + * @stuff        : stuff bytes
+> + * @key_mac      : The authentication key or the message authentication
+> + *                 code (MAC) depending on the request/response type.
+> + *                 The MAC will be delivered in the last (or the only)
+> + *                 block of data.
+> + * @data         : Data to be written or read by signed access.
+> + * @nonce        : Random number generated by the host for the requests
+> + *                 and copied to the response by the RPMB engine.
+> + * @write_counter: Counter value for the total amount of the successful
+> + *                 authenticated data write requests made by the host.
+> + * @addr         : Address of the data to be programmed to or read
+> + *                 from the RPMB. Address is the serial number of
+> + *                 the accessed block (half sector 256B).
+> + * @block_count  : Number of blocks (half sectors, 256B) requested to be
+> + *                 read/programmed.
+> + * @result       : Includes information about the status of the write counter
+> + *                 (valid, expired) and result of the access made to the RPMB.
+> + * @req_resp     : Defines the type of request and response to/from the memory.
+> + */
+> +struct rpmb_frame {
+> +	u8     stuff[196];
+> +	u8     key_mac[32];
+> +	u8     data[256];
+> +	u8     nonce[16];
+> +	__be32 write_counter;
+> +	__be16 addr;
+> +	__be16 block_count;
+> +	__be16 result;
+> +	__be16 req_resp;
+> +} __packed;
+> +
+> +#define RPMB_PROGRAM_KEY       0x1    /* Program RPMB Authentication Key */
+> +#define RPMB_GET_WRITE_COUNTER 0x2    /* Read RPMB write counter */
+> +#define RPMB_WRITE_DATA        0x3    /* Write data to RPMB partition */
+> +#define RPMB_READ_DATA         0x4    /* Read data from RPMB partition */
+> +#define RPMB_RESULT_READ       0x5    /* Read result request  (Internal) */
+> +
+> +#define RPMB_REQ2RESP(_OP) ((_OP) << 8)
+> +#define RPMB_RESP2REQ(_OP) ((_OP) >> 8)
+> +
+> +/**
+> + * enum rpmb_op_result - rpmb operation results
+> + *
+> + * @RPMB_ERR_OK      : operation successful
+> + * @RPMB_ERR_GENERAL : general failure
+> + * @RPMB_ERR_AUTH    : mac doesn't match or ac calculation failure
+> + * @RPMB_ERR_COUNTER : counter doesn't match or counter increment failure
+> + * @RPMB_ERR_ADDRESS : address out of range or wrong address alignment
+> + * @RPMB_ERR_WRITE   : data, counter, or result write failure
+> + * @RPMB_ERR_READ    : data, counter, or result read failure
+> + * @RPMB_ERR_NO_KEY  : authentication key not yet programmed
+> + *
+> + * @RPMB_ERR_COUNTER_EXPIRED:  counter expired
+> + */
+> +enum rpmb_op_result {
+> +	RPMB_ERR_OK      = 0x0000,
+> +	RPMB_ERR_GENERAL = 0x0001,
+> +	RPMB_ERR_AUTH    = 0x0002,
+> +	RPMB_ERR_COUNTER = 0x0003,
+> +	RPMB_ERR_ADDRESS = 0x0004,
+> +	RPMB_ERR_WRITE   = 0x0005,
+> +	RPMB_ERR_READ    = 0x0006,
+> +	RPMB_ERR_NO_KEY  = 0x0007,
+> +
+> +	RPMB_ERR_COUNTER_EXPIRED = 0x0080
+> +};
+> +
+> +/**
+> + * enum rpmb_type - type of underlaying storage technology
+
+                               underlying
+
+> + *
+> + * @RPMB_TYPE_EMMC  : emmc (JESD84-B50.1)
+> + * @RPMB_TYPE_UFS   : UFS (JESD220)
+> + * @RPMB_TYPE_NVME  : NVM Express
+> + */
+> +enum rpmb_type {
+> +	RPMB_TYPE_EMMC,
+> +	RPMB_TYPE_UFS,
+> +	RPMB_TYPE_NVME,
+> +};
+> +
+> +/**
+> + * struct rpmb_dev - device which can support RPMB partition
+> + *
+> + * @dev              : device
+> + * @id               : device id;
+> + * @ops              : operation exported by rpmb
+> + * @dev_id           : unique device identifier read from the hardware
+> + * @dev_id_len       : length of unique device identifier
+> + * @reliable_wr_count: number of sectors that can be written in one access
+> + * @capacity         : capacity of the device in units of 128K
+> + */
+> +struct rpmb_dev {
+> +	struct device dev;
+> +	int id;
+> +	const struct rpmb_ops *ops;
+> +	u8 *dev_id;
+> +	size_t dev_id_len;
+> +	u16 reliable_wr_count;
+> +	u16 capacity;
+> +};
+> +
+> +#define to_rpmb_dev(x) container_of((x), struct rpmb_dev, dev)
+> +
+> +/**
+> + * struct rpmb_ops - RPMB ops to be implemented by underlying block device
+> + *
+> + * @type          : block device type
+> + * @get_resources : gets references to needed resources in rpmb_dev_register()
+> + * @put_resources : puts references from resources in rpmb_dev_release()
+> + * @route_frames  : routes frames to and from the RPMB device
+> + * @get_dev_info  : extracts device info from the RPMB device
+
+       set_dev_info ???
+
+> + */
+> +struct rpmb_ops {
+> +	enum rpmb_type type;
+> +	void (*get_resources)(struct device *dev);
+> +	void (*put_resources)(struct device *dev);
+> +	int (*set_dev_info)(struct device *dev, struct rpmb_dev *rdev);
+> +	int (*route_frames)(struct device *dev, bool write,
+> +			    u8 *req, unsigned int req_len,
+> +			    u8 *resp, unsigned int resp_len);
+> +};
+> +
+
+thanks.
 -- 
-2.41.0
-
+#Randy
