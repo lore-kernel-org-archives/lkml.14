@@ -1,68 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5203A8CA;
-	Wed, 31 Jan 2024 23:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B183B18C;
+	Wed, 31 Jan 2024 23:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706744514; cv=none; b=X25GZeF3EqT3AXn3sudSk9jBiT3cxZArntT3Val7skwAJ5YJEaWDhHfrcuI3ORhD1J0laurKhTVORTSeRJ1LPaIoO03KYY/DTAtFkc6jBTNu1LeDLKOFVQdpJUjuBXC514jYN6JoajD8T14zuxJM8FXQN+I9pv5Lgv+Jsn9wo5c=
+	t=1706744601; cv=none; b=P21PpbdQ0ECSj9Jsmmw12e3UcAaXcv7n83kQVV+OHdBTEotI+OymQK+AnXKauWx5BmOewj6pqjXMrUqwHwVzBzkbYvlaQH5mAF1FME6mjwdxOs5+r00EUqPQQFR8ppjAp2bwfsRhPD4dx7DQQqCex7LfIkcB7TqbMhTHBvnX4XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706744514; c=relaxed/simple;
-	bh=Cxry7gNqW2doRhJEQkZIqtEdzMs9aiFd0Dqs4XIolps=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GNo9pNiHNV6cFc1RyB5KjQVs/KL7xQB1PGse6Abk/rJ7D66C0s2Q9vZuVTSRW02xwsQsP8orKIe/jP03uNVxop692Bdhip0z+KRlP2jJPFGXeBL7jBTUPNBoqjAk6fnm9UEA+OAN6o8XZXja1fOkfn8v70zWVOmGln6gUSD++i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9c1ot3i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706744601; c=relaxed/simple;
+	bh=SewAFr4bPu+Lhyx/z6EWMEwTisOjNDlCx4omV1kFgNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWLKcJdU6n2Q7iOBynHmUmFEwlJTNPEsj4+/JVMA1T6Ijkf0j5EIrUySFaAtgK/PEmRIe0GWc6zrxysMeTIGQ3wFVIPCDhw05TlIcdHfBV18bHpVjweEYPyPYj53qfMcBWASlMtr3bF5W8JFs/u6+hlyr2eJweTSu3ChwgSY09k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLWnSFN4; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9c1ot3i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97879C433C7;
-	Wed, 31 Jan 2024 23:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706744514;
-	bh=Cxry7gNqW2doRhJEQkZIqtEdzMs9aiFd0Dqs4XIolps=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=k9c1ot3iIXBALfeUAu3wqIIJ7Ti8ktIInBfVbWNZhd1coiGlvHEg/G7EFO4mB2vR3
-	 tCnJ5dWRDePTI5zb3mVZzlXawgGgnmwTJuV2A04LjKjcictcYm5SXybHee+VtGT/lg
-	 dUax5FimBswXB5IlU2zZlSGiaznW3aCVYxH2mvEqd1CwTHIcVniV/3Cw0xGkP/3ZIH
-	 SgUm/bpRtF6R0dgePswepsAgLm9BLA+S5pu/r82Zqdbms5RmuJXRRMJ61TfPmXqxLW
-	 HgFNjRnXlbkc189WnNNSXT9HavAuiCpcrVvTMjBwdDyCqWDmQl7Qol3VyBhsBxcNyM
-	 7DWjvyFUBV+YA==
-Date: Wed, 31 Jan 2024 15:41:48 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Andrew Halaney <ahalaney@redhat.com>
-Cc: Vinod Koul <vkoul@kernel.org>, bhupesh.linux@gmail.com, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] MAINTAINERS: Drop unreachable reviewer for Qualcomm
- ETHQOS ethernet driver
-Message-ID: <20240131154148.00d9d318@kernel.org>
-In-Reply-To: <ual3c4fuuz5trgn2ekklsfeslwvswfjg5nij5epbnuf5mihfay@pp32fs6btwxk>
-References: <20240129-remove-dwmac-qcom-ethqos-reviewer-v1-1-2645eab61451@redhat.com>
-	<ZbkWwn-oN5wqoPfJ@matsya>
-	<ual3c4fuuz5trgn2ekklsfeslwvswfjg5nij5epbnuf5mihfay@pp32fs6btwxk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLWnSFN4"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ddb1115e82so191462b3a.0;
+        Wed, 31 Jan 2024 15:43:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706744599; x=1707349399; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xxn4ihDOE6z0ST3ffWk22KtYMRkFrMur7Pj62WhcijA=;
+        b=iLWnSFN4KxenjwC9txMAyy73R2ING+hRmCwygabu2dDXWy/kwKvVPOIjzpUK7aLw+9
+         RBg+EllxKrqHOAuMbZdb8yftJ5wb1B+TdrQiH6rCdOOhOnk1NQHDh/jDAb8JcBJYINb+
+         rsGMj6tBssOFRJLFLNTNolkoakqqavoWxfD0GnHYIbwd65jV1dnX7IraaFuaL96CQ1yB
+         XHt+lMdp5HEsfCmUrA5FzN3L5eRtdQRFX1PFDmsqieMBzh/b01tU+4P/O/mq/i3PuOFG
+         aEQkTPlyfh2cAFxHzFXuLmh6Pc66xUfwgvq/Pu9T0eze00ExxnkoWAybmLWSB0gpD++d
+         NJDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706744599; x=1707349399;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xxn4ihDOE6z0ST3ffWk22KtYMRkFrMur7Pj62WhcijA=;
+        b=Yxz6a0SM2KzzDcdLKsXKB+DiWHvoEaUmJDjrii7DLnySm0RIMAqk18+IVo2hfNNqJT
+         eB0UnvjrJ0z04PDw59yR1vCS95vve15IJfD7NFyvhhQ93/Dz3NLqEVq6wiGUiYWTsHwu
+         r7K9CYlbyq5yC+37he8VxVYHfcfxu1MdILB4/RRRrmRk8bBqLzNuC+alH1qpwH7jOo5w
+         mCJhVFkefQHa5ocggTTs2XoYAx/zs6pImFJ/4eoQURO8OwRTrKUnejDfLtFlhrBMgqoS
+         LRBEiozKGIc0Mf4+DUK0rRE9OCok8Taoh6Qkp29w8mGEcIcb6nY6dl9/Yyh+d3QNXOeX
+         7jhQ==
+X-Gm-Message-State: AOJu0Ywoe75fRrQEU9jsmg6RfRD2hnsmqIEmFLDjRUGHcVxAN6TspxeC
+	BesLgRMEi8duD2NC+BaJnMQfHEKkva4pn+2/RzHgbSTaeRoociwt
+X-Google-Smtp-Source: AGHT+IG12ShFssnmDhowtvlRu/PeZj1bzh7IuwUwMPYLopCQUYz8u/YflVcMMRTR7jZ8L6FXUj7EUw==
+X-Received: by 2002:a05:6a20:d48a:b0:19c:80af:2fa8 with SMTP id im10-20020a056a20d48a00b0019c80af2fa8mr3517618pzb.48.1706744599240;
+        Wed, 31 Jan 2024 15:43:19 -0800 (PST)
+Received: from dragon (173.242.119.193.16clouds.com. [173.242.119.193])
+        by smtp.gmail.com with ESMTPSA id v19-20020a056a00149300b006ddb0b0ff0dsm5775406pfu.34.2024.01.31.15.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 15:43:18 -0800 (PST)
+Date: Thu, 1 Feb 2024 15:42:10 +0800
+From: Shawn Guo <shawn.gsc@gmail.com>
+To: Frieder Schrempf <frieder@fris.de>
+Cc: Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v4 00/12] arm64: dts: imx8mm-kontron: DT updates
+Message-ID: <20240201073833.GB463595@dragon>
+References: <20240108084945.75356-1-frieder@fris.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240108084945.75356-1-frieder@fris.de>
 
-On Tue, 30 Jan 2024 09:53:22 -0600 Andrew Halaney wrote:
-> > Looks like Bhupesh sent the patch changing but never followed up with a
-> > v2 for this:
-> > lore.kernel.org/r/20230915191600.3410862-1-bhupesh.linux@gmail.com
-> > 
-> > Would prefer if this is changed to his email (copied him as well)
-> >   
+On Mon, Jan 08, 2024 at 09:48:57AM +0100, Frieder Schrempf wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
 > 
-> Thanks for finding that! Bhupesh, do you plan on spinning a v2 soon? If
-> so I will not send a v2, otherwise I can respin this with your email and
-> no .mailmap change.
+> This patchset contains several improvements and updates for the devicetrees
+> for the i.MX8MM modules and boards by Kontron Electronics GmbH.
+> 
+> * Misc cleanups and small fixes
+> * OSM-S i.MX8MM module refactoring and update to latest HW revision
+> 
+> Changes in v4:
+> * Rebase to Shawn's imx/dt64 branch
+> * Drop patches 1 and 2 (display support) as there are unresolved DTC warnings
+>   and I am not sure how to resolve them at the moment.
+> 
+> Changes in v3:
+> * Address Shawn's review comments for patch 1, 2 and 14 (thanks!)
+> 
+> Changes in v2:
+> * Rework DSI mux GPIO logic to be compatible with overlay
+> * Switch from 4 to 2 DSI lanes for LVDS bridge to fix non-working display
+> 
+> Frieder Schrempf (12):
+>   arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on OSM-S
+>     i.MX8MM
+>   arm64: dts: imx8mm-kontron: Disable pullups for I2C signals on SL/BL
+>     i.MX8MM
+>   arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals
+>     on BL OSM-S board
+>   arm64: dts: imx8mm-kontron: Disable pullups for onboard UART signals
+>     on BL board
+>   arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals
+>     on BL OSM-S board
+>   arm64: dts: imx8mm-kontron: Disable pull resistors for SD card signals
+>     on BL board
+>   arm64: dts: imx8mm-kontron: Fix interrupt for RTC on OSM-S i.MX8MM
+>     module
+>   arm64: dts: imx8mm-kontron: Fix OSM-S devicetrees to match latest
+>     hardware
+>   arm64: dts: imx8mm-kontron: Disable uneffective PUE bit in SDIO IOMUX
+>   arm64: dts: imx8mm-kontron: Remove useless trickle-diode-disable from
+>     RTC node
+>   arm64: dts: imx8mm-kontron: Add I2C EEPROM on OSM-S Kontron i.MX8MM
+>   arm64: dts: imx8mm-kontron: Refactor devicetree for OSM-S module and
+>     board
 
-The lack of response is not inspiring confidence. We can add Bhupesh
-back if he wants to be active again..
+Applied all, thanks!
