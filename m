@@ -1,123 +1,158 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3013886632
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801DD53362
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791152; cv=none; b=JW1sbQuONZtYd9nBzQBBLeLlcnRuYCJhRSr+S0xxY9dzT0NEYV5ysACGp0TfTVfltvYMv1Szyp2vKlOSoSrcmHP9+A+m0Efg3BUZF3ndvqNbb3pwHaZptcX6I7m3fEYh3CtSY8d9Aw3OCyJgQTD1gbUnj+qBver15qD9dXqU9wM=
+	t=1706791304; cv=none; b=ZpzVjSL5eZBUNUHPhaaQF1qttVzjDzM1WjwzhbXi6CFi4P6EMAqNo6ybhZR6PaPma7JnjOblaLJPO+4UMvh1FEGNPkwUVxI5x1Q71qcKpdrJ/plQG6EpUgda4VqgnZZfEEcyCuME3Lq7ssOYcieBGCfu5wCtjd7iK2ja/WZFf7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706791152; c=relaxed/simple;
-	bh=vcSXNWqKLKnr/XxvBuwOVYodoel7yAEy8t0XbIE1FLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F19J8tdQUZceeAH/mTBwfvKfW21fa30jkG9/XKjpTJ0fZDWTLiF9uCXMEZ1iCmJAzYqMjvqMUBx62qggrgC8EZXiuG0zXkw2ITDITmJGv8nmy1EqDfm/U7vjl+Y7nbkubZbp5zmioChzv2LIHR6MMQcAHFMaFnSoSkEWmCfhrOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=I8GeZnd3; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1706791304; c=relaxed/simple;
+	bh=vzOwURaJGFGngjzlTNi14jTCw9s2QcCg9bsA4XtIG2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OL/x1a/MCOYOohlVUJwoPN9M4IRNs7EBUmJIhULtAr/B3ErBgbYi4poQvw7E2Gbtyccz2y2gqgm/KItcxTXbjNb57GsPbVgiNql/er7zFGRguMqkuo7HapzMwE7C3WlQAicpKTQYlOJ9fHSOEv3pT5dcJWEfYL04Jnbb9RQlA3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TBsQMI8V; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SCM3kbqr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Oj6fHY44; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Kt+M9LIW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="I8GeZnd3"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40ef75adf44so7871755e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 04:39:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706791147; x=1707395947; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+R0ydXD/di7fbrB8jfxyy8IuF2nnjQdgLn7lXVeRMY=;
-        b=I8GeZnd3FjUF0hKA8uLNdRU2aXQWfOiHaed5YoFnxP8BcQyj0f5rD/apEI7eY1Qlmv
-         oXz+s+GQcLUPesU6qaQhxVmTOWvF+n5dHTXFo/axdRCPhkcXQKwrNQF63jgCiwIGfy5S
-         qgUOrMts2nz0zJL9FY5rKO0XZiXQ9n7aoYcM22osu5ivQ/nOZNJyUD6ozsYVcQppBOd6
-         oL77WkmFRzj9xFnl7T7Y2TszJmfv3PENd8ylEsc4LF60LCRuAI5vnFhLwehedpaD68YT
-         LmTx0yzps/XAD+H5szhQE27q/RRtBveBgQ0Cr8/3UegSBgorksBQ3WfF1ng+6UPL1ZQh
-         9h1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706791147; x=1707395947;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G+R0ydXD/di7fbrB8jfxyy8IuF2nnjQdgLn7lXVeRMY=;
-        b=OKfh61w5J3qqlRFKxN3lHTjCTDbSIRrsA6NGNpHVBvH6hZoMBoGpeJZrPbb/Qhaqj2
-         BmLuzoMM+KSl7AS7NoynihFt+ha/i/6iLM7mux7aK+NGvOnwn6IHssWQiH0gzerbq0K0
-         wP/LfgcxvWvAiQrFwCMcSfPMgHYA7wf89PVduuT7gu70X+Blp09+CCQftUWNRWxw0ygQ
-         JLpvterIZhtQiMH/t6fKBabZjZCaocHzjsFk/bMzbbqq6nOIY0vWnpe3CTKjm4w0wz64
-         rHJLDxU7pI1Ek1I2ej6WQqf+VxQZQZI+cbSwHx35iiVuNlYriTyKQUl4CpU5ajqJ7EHb
-         dDPA==
-X-Gm-Message-State: AOJu0Yzbble/NIRZPXUaxqqH5b8rTJC0ZSmVp/rZjrnXHyuVfA0Syt9w
-	oIfZtOy+OC/zXu9R17bmY7r09vS8S0zquYOvYm25Ah+buR/90yRu97q2OVdTB6A=
-X-Google-Smtp-Source: AGHT+IEu0L318kNsyVOJlQFrGCea8JQ3yLCrd9+VDQ6+MeMgB75U7I6tgx2Oef+Ldiu1FpmF1HB+HA==
-X-Received: by 2002:a05:600c:1705:b0:40e:4f81:3f68 with SMTP id c5-20020a05600c170500b0040e4f813f68mr4280509wmn.16.1706791146931;
-        Thu, 01 Feb 2024 04:39:06 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV1oNiYoCy1UgJxP9Ql5prbzFAsWudfeZsVk2LzshOEsDr8SMvy53OEcb+atyC7KHyYzHIGu88E2LDymf/j6i843WMGxBgn65w3khjqo79UvJk1T7xTg4l6YjzMFF2iL18IW6JXRceG/UQPsK3eW2Pc3ITiXy+aghMOW3n+G21OYK6X3BWO5Xi+g292zTJ+fgyRT5aLAfwo6FBMDKRx6lHOHYgmevL9cvNC7PrfgviypD/uBvs8pWJWN/9BXN8zEAP+zMwNnIQCjpe0uYo5sx/o7E1lWWEgHwhclEsj7fOkuFNEFy+qCwKXyHhXuyig178PyOLeoDhUY6g/GOXxjwly8wbaE5NTe0OrBqvKbabAplT9I7OeP7D8BQN5+2HvEDqISfhbqKk2k1pp667cxaF6Iw==
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id p14-20020a05600c468e00b0040fbad272f6sm1785216wmo.46.2024.02.01.04.39.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 04:39:06 -0800 (PST)
-Date: Thu, 1 Feb 2024 13:39:03 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Egor Pomozov <epomozov@marvell.com>,
-	Igor Russkikh <irusskikh@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Dmitry Bezrukov <dmitry.bezrukov@aquantia.com>,
-	Sergey Samoilenko <sergey.samoilenko@aquantia.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net] net: atlantic: Fix DMA mapping for PTP hwts ring
-Message-ID: <ZbuQ58l4DoWU70Bp@nanopsycho>
-References: <20240201094752.883026-1-ivecera@redhat.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TBsQMI8V";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SCM3kbqr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Oj6fHY44";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Kt+M9LIW"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9E4582213F;
+	Thu,  1 Feb 2024 12:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706791300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mZAhmoimqX/LFqyFMVuwwM2dsHNWcXM1TVKD5f+E3iQ=;
+	b=TBsQMI8V4yJ3FugvLlIWA4PWW77HxgUrYNypS1PgR+7ESl2drUJHP/vZlgopDhVdIEkXBb
+	CkXHZZFbwTEMOB6cZfQpkDSMuHaq6H9NukwC6+x9BiL+Y6kNhBkbYjsHB1Jqgk07NLTSu8
+	h+PMo7XQZ4FYNhZ4w2mcpwvn99BHI6E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706791300;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mZAhmoimqX/LFqyFMVuwwM2dsHNWcXM1TVKD5f+E3iQ=;
+	b=SCM3kbqr+J/ToX9ZTq6Hz/1GABTHlV3HR+EGhCvbq/EddrRYpPEZrqWIyAbJo6XD6izwOS
+	ACrlnIj0zrml2EDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706791299; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mZAhmoimqX/LFqyFMVuwwM2dsHNWcXM1TVKD5f+E3iQ=;
+	b=Oj6fHY44xm8f+RcRl402bUNPfwSKVGPi0J9AvH+6ey7OMm9eSgnpdyrerV4v2GYdgtHHZg
+	2quewS7HBGMq4vXtzGOws/UMBkREf+pdHNLDiZN+lStJZpJfPI+EEi2Shm6FPqYp45nafW
+	GEHPeGGONUPLV7t5MdLLChuAHjqI9+I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706791299;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mZAhmoimqX/LFqyFMVuwwM2dsHNWcXM1TVKD5f+E3iQ=;
+	b=Kt+M9LIW0v54SADgTAPOmLy0uhSjVCTxGaCWPNZAW8lGzdlY8/+sPAjF3L5VVGRJABPhuh
+	ByKsBt6UBs5MRGAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E94B5139B1;
+	Thu,  1 Feb 2024 12:41:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lqUqLIGRu2XNOAAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 01 Feb 2024 12:41:37 +0000
+Message-ID: <3da93cc3-80a9-4dbf-b6af-aa5fc6b35b33@suse.de>
+Date: Thu, 1 Feb 2024 13:41:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201094752.883026-1-ivecera@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/12] nvme-fc: do not wait in vain when unloading
+ module
+Content-Language: en-US
+To: Daniel Wagner <dwagner@suse.de>, James Smart <james.smart@broadcom.com>
+Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240131085112.21668-1-dwagner@suse.de>
+ <20240131085112.21668-2-dwagner@suse.de>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240131085112.21668-2-dwagner@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -4.29
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Flag: NO
 
-Thu, Feb 01, 2024 at 10:47:51AM CET, ivecera@redhat.com wrote:
->Function aq_ring_hwts_rx_alloc() maps extra AQ_CFG_RXDS_DEF bytes
->for PTP HWTS ring but then generic aq_ring_free() does not take this
->into account.
->Create and use a specific function to free HWTS ring to fix this
->issue.
->
->Trace:
->[  215.351607] ------------[ cut here ]------------
->[  215.351612] DMA-API: atlantic 0000:4b:00.0: device driver frees DMA memory with different size [device address=0x00000000fbdd0000] [map size=34816 bytes] [unmap size=32768 bytes]
->[  215.351635] WARNING: CPU: 33 PID: 10759 at kernel/dma/debug.c:988 check_unmap+0xa6f/0x2360
->...
->[  215.581176] Call Trace:
->[  215.583632]  <TASK>
->[  215.585745]  ? show_trace_log_lvl+0x1c4/0x2df
->[  215.590114]  ? show_trace_log_lvl+0x1c4/0x2df
->[  215.594497]  ? debug_dma_free_coherent+0x196/0x210
->[  215.599305]  ? check_unmap+0xa6f/0x2360
->[  215.603147]  ? __warn+0xca/0x1d0
->[  215.606391]  ? check_unmap+0xa6f/0x2360
->[  215.610237]  ? report_bug+0x1ef/0x370
->[  215.613921]  ? handle_bug+0x3c/0x70
->[  215.617423]  ? exc_invalid_op+0x14/0x50
->[  215.621269]  ? asm_exc_invalid_op+0x16/0x20
->[  215.625480]  ? check_unmap+0xa6f/0x2360
->[  215.629331]  ? mark_lock.part.0+0xca/0xa40
->[  215.633445]  debug_dma_free_coherent+0x196/0x210
->[  215.638079]  ? __pfx_debug_dma_free_coherent+0x10/0x10
->[  215.643242]  ? slab_free_freelist_hook+0x11d/0x1d0
->[  215.648060]  dma_free_attrs+0x6d/0x130
->[  215.651834]  aq_ring_free+0x193/0x290 [atlantic]
->[  215.656487]  aq_ptp_ring_free+0x67/0x110 [atlantic]
->...
->[  216.127540] ---[ end trace 6467e5964dd2640b ]---
->[  216.132160] DMA-API: Mapped at:
->[  216.132162]  debug_dma_alloc_coherent+0x66/0x2f0
->[  216.132165]  dma_alloc_attrs+0xf5/0x1b0
->[  216.132168]  aq_ring_hwts_rx_alloc+0x150/0x1f0 [atlantic]
->[  216.132193]  aq_ptp_ring_alloc+0x1bb/0x540 [atlantic]
->[  216.132213]  aq_nic_init+0x4a1/0x760 [atlantic]
->
->Fixes: 94ad94558b0f ("net: aquantia: add PTP rings infrastructure")
->Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+On 1/31/24 09:51, Daniel Wagner wrote:
+> The module exit path has race between deleting all controllers and
+> freeing 'left over IDs'. To prevent double free a synchronization
+> between nvme_delete_ctrl and ida_destroy has been added by the initial
+> commit.
+> 
+> There is some logic around trying to prevent from hanging forever in
+> wait_for_completion, though it does not handling all cases. E.g.
+> blktests is able to reproduce the situation where the module unload
+> hangs forever.
+> 
+> If we completely rely on the cleanup code executed from the
+> nvme_delete_ctrl path, all IDs will be freed eventually. This makes
+> calling ida_destroy unnecessary. We only have to ensure that all
+> nvme_delete_ctrl code has been executed before we leave
+> nvme_fc_exit_module. This is done by flushing the nvme_delete_wq
+> workqueue.
+> 
+> While at it, remove the unused nvme_fc_wq workqueue too.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>   drivers/nvme/host/fc.c | 47 ++++++------------------------------------
+>   1 file changed, 6 insertions(+), 41 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Ivo Totev, Andrew McDonald,
+Werner Knoblich
+
