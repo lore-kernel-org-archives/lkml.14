@@ -1,86 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DFC8663B
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A3B2134F;
+	Thu,  1 Feb 2024 12:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706792095; cv=none; b=bB19CxLvuZMgEwPi2pkCkrSKu5oh4C5US3mP/7N3LtWcdnmrur/b5tw+ng+qlZQoGcvuejhCK+bkwX3aNwOf7NxnzrUtzVlUe9kEULRfp3USzcD81roVSJQp+wzdwfQO8sb/XUG8IdpGSZ+RB3sRm5kiw8Nn5fzziAVtaBluMLw=
+	t=1706792110; cv=none; b=ifIwZ2XjvufA++c+Dj01eaofYZiw0xjxRbbnB+785yjJcGJNDc+f6bF4fJSFzEnpGapDvync7bR9DXFDSfk+2EKWEMQ7aOtJQBdFpghw9qwhyEi2AthHuzqccOaMq0syCDQqrEOFOMxko7M6/QoIp58m+feYZBrnc0emZsox0sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706792095; c=relaxed/simple;
-	bh=2y7CbDzTpQzkOvThYnBnSLOklaoR5dazKT+V9eJXstI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MK8yQvwiS4rqDA8sQ1QdzlQETSBGn9tbcG0mFTJnqRai73yVyyIYYDO9w7xsa0NunX6OolmZArKnNInW7WM8HyQjYx/d9scR3Qh/ng3eDx6uyuGrLxjf37ffmwt27fFKnuEp2Cu0YAUz4g7HbP6t/SOw9HeLnIKraNCMjTBdrx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPxFXXmz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706792110; c=relaxed/simple;
+	bh=F0QG+HX+GA+HXJhX/KToYgeGTqJkykSyyE7Up16UTBc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CsHHZ1CzS3vK+KUvcgsPXJ1hspPX+U5ERzNcOkngIy2dAtVL0b0rzph708IvxNtknVzhMyaeITxDd44J9qyowx9s0m75JN5qVKLCWViMIYbvWQm5TcSIEVdVtRcVbBxf522CoPxmH3irrlvIGm7srCobnGJJK0b/+geZq0kSGco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yQoBzW5g; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPxFXXmz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F56C43394
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706792095;
-	bh=2y7CbDzTpQzkOvThYnBnSLOklaoR5dazKT+V9eJXstI=;
-	h=From:Date:Subject:To:Cc:From;
-	b=dPxFXXmzy+ZcUSonO3yZjyJN8VOYRZrUJehJYteuSmYd9+caFaIBQwETQPyyNDYHE
-	 f2LMtHWlmybPS6JMG/H7qxJlGn61XEKipQM3siPDub4pqRChlxk32/gf1Z0FRUtpeg
-	 EqyjfLuHgEqbel9CB83OnWJJIf6QK/RFJdwRf6M0vu0VN6tQF0UdORBDDAIR6kYhEn
-	 pHR4TWithhd7WC1gY8bbpeVr9o0PbGe6d6scUVrlhVXZLwJJz7SfeRQAIkLdJbP+I6
-	 SNJQoYrQAoY+Euu+IGhrfpofhQ1ELuTM7wBu8YNMk9t+6zifwWL64PIEPLGF6CAU4m
-	 DdmB9InrPjTvw==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-59a58ef4a04so467008eaf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 04:54:55 -0800 (PST)
-X-Gm-Message-State: AOJu0YxjaX2lPepqHkfmhTV52epH5kq8FB1jRmKnkth8cMgecDUEpts8
-	cceA+uKqEMxWFeUS6rzCPIxxjYLH1wKoH7CZu9pwtjWgi2nxW5bIC5FyoXOKh4wmja7TrE01uK1
-	CjASEPhfkD8Uxc6r4bWQyNAvMTro=
-X-Google-Smtp-Source: AGHT+IHEyZK/0RIwuQsHuVg6wPxM6JOtZCd2kUv+r8s9iICHikTtDEyDB6fqUV/pvH4aG53A3RtdkuRGvOyHehbQRF0=
-X-Received: by 2002:a4a:e2c3:0:b0:599:c1cf:ea6d with SMTP id
- l3-20020a4ae2c3000000b00599c1cfea6dmr5015375oot.1.1706792094465; Thu, 01 Feb
- 2024 04:54:54 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yQoBzW5g"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411CsrMl101296;
+	Thu, 1 Feb 2024 06:54:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706792093;
+	bh=sodrgaqu1kxUDJNx4GE0NQQ5b5C3Xq+q3hat/bV8by8=;
+	h=From:To:CC:Subject:Date;
+	b=yQoBzW5gm4HGB4YqteYQr9dpeEEUykk7XX+6i0sgW9M3RXJmAv/A6jtKuNyJrd3cC
+	 hcirLCV2iO46QKYZbbF+KFlTn0NmaVX55XJ2lPpQ75UEIvmRMKJVC9hiS2L9kkBjhE
+	 EtgPCNxBs2xHJUylSKrBiba3vnN+5orRD4TtBbSI=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411Csr56055079
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 1 Feb 2024 06:54:53 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
+ Feb 2024 06:54:53 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 1 Feb 2024 06:54:53 -0600
+Received: from localhost (uda0496377.dhcp.ti.com [10.24.69.150])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411CsqQj064868;
+	Thu, 1 Feb 2024 06:54:52 -0600
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Linux ARM Kernel List
+	<linux-arm-kernel@lists.infradead.org>,
+        Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>,
+        Devarsh Thakkar <devarsht@ti.com>, Jai
+ Luthra <j-luthra@ti.com>,
+        Aradhya Bhatia <a-bhatia1@ti.com>
+Subject: [PATCH 0/3] arm64: ti: k3-am62a: Add display support
+Date: Thu, 1 Feb 2024 18:24:49 +0530
+Message-ID: <20240201125452.1920623-1-a-bhatia1@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Received: by 2002:ac9:6692:0:b0:514:c0b3:431 with HTTP; Thu, 1 Feb 2024
- 04:54:53 -0800 (PST)
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Thu, 1 Feb 2024 21:54:53 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd8hypJfgauRpzQ3-oHr9CybwWe406sxjKp8U=icU7=sJw@mail.gmail.com>
-Message-ID: <CAKYAXd8hypJfgauRpzQ3-oHr9CybwWe406sxjKp8U=icU7=sJw@mail.gmail.com>
-Subject: [GIT PULL] exfat fixes for 6.8-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
-	"Yuezhang.Mo" <Yuezhang.Mo@sony.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Linus,
+Hi,
 
-This is exfat fixes pull request for v6.8-rc3. I add description of
-this pull request on below. Please pull exfat with following fixes.
+This patch series adds DT nodes for Display SubSystem (DSS) and other
+peripherals required to enable the HDMI audio and video on the
+AM62A7-SK EVM. An HDMI monitor can be connected to the platform for the
+audio-video outputs.
 
-Thanks!
+Regards
+Aradhya
 
-The following changes since commit 296455ade1fdcf5f8f8c033201633b60946c589a:
+Aradhya Bhatia (3):
+  arm64: dts: ti: k3-am62a-main: Add node for Display SubSystem (DSS)
+  arm64: dts: ti: k3-am62a7-sk: Add HDMI support
+  arm64: dts: ti: Makefile: Add HDMI audio for AM62A7-SK
 
-  Merge tag 'char-misc-6.8-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-(2024-01-17 16:47:17 -0800)
+ arch/arm64/boot/dts/ti/Makefile           |  2 +
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 25 ++++++
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts   | 92 +++++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git
-tags/exfat-for-6.8-rc3
+base-commit: 51b70ff55ed88edd19b080a524063446bcc34b62
+-- 
+2.34.1
 
-for you to fetch changes up to 0991abeddefa118479b0af32c28bcd662dec1561:
-
-  exfat: fix zero the unwritten part for dio read (2024-01-18 23:01:51 +0900)
-
-----------------------------------------------------------------
-Description for this pull request:
-  - Fix BUG in iov_iter_revert reported from syzbot.
-
-----------------------------------------------------------------
-Yuezhang Mo (1):
-      exfat: fix zero the unwritten part for dio read
-
- fs/exfat/inode.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
