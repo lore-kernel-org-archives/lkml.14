@@ -1,90 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4071433CD2;
-	Thu,  1 Feb 2024 21:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B80F3BB43;
+	Thu,  1 Feb 2024 21:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706822801; cv=none; b=NDQqjifASyKHq1OJnAU2YWJaCBN8hYJQlWHaY84IbDF8NyrxNuGB5PjANk55zsCcyd702yRfOvaLexRgneQAa293J2dv7FQRxfxkT9FE8oPdOWObFhxXHkI+tH6A6bQThfNUdfqpNOwx79hsHdxNwHR4PPGIWtPdxT76HdJnibw=
+	t=1706822810; cv=none; b=n0DI+Pf/jSStpnSfTkvfO7GWfpkPcHIDG4FiGhYOG4omujkQUffx1A2P4gkifmrYP2BqHOCVBlk77AV21hBS5mqLGEBVLLN0tbi1D0klvKiyYhtnQl18ealixMq3Wgb/KJadWeUZTZ27vQh4brLN1LcEhPQZTLDY1np78d/6NUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706822801; c=relaxed/simple;
-	bh=uHXO8vBspe4hFpG6HIUx8f6zPOoaQs4CBNh78fDVPR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oV4aYwmLZC6oX0HHxxKoVK+SIYdCj3nxRW9Oti3Po1c5f7z4qbmm6GG5Qtnie9FV6tQCUmF6CHESl0CF3eXJ07usfvMC4wBmEdAYLMt3jqdgQAs/8j/rikoS+T22LcEXrVv5fYOiqcjL40VtyDK/TizucMAqwpvjD+z6MmHYykg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=au47RHpe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706822810; c=relaxed/simple;
+	bh=VR/a8iPw20/aKaajgHIqiK8JjLNzC/p31Ouefl5Ivf4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eL8Dpk7rGjIxKespS9z4zZ3wU8dY/oDOLdnCr4dHu7YYqWSLH4kaH5iiICqL1eaR679vmntbS5ld8i0n/Hey1QeyQwikvObMLQ1gVHNR63MEnkFLXw+PAmtQkWHUA/MqRMUcHL/twJ5/f4+jFr7D1i5HkxeKeZ3OqG97kEy8i+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtS0Ov1+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="au47RHpe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 748AFC433C7;
-	Thu,  1 Feb 2024 21:26:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtS0Ov1+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A1F73C433C7;
+	Thu,  1 Feb 2024 21:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706822800;
-	bh=uHXO8vBspe4hFpG6HIUx8f6zPOoaQs4CBNh78fDVPR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=au47RHpeuUZIx6x/nrtitp67X0IVcQg2CWujI0/JaCCZgoM80ZGI8XE27+Wv5aYZ0
-	 wJF+4gMF8l2kX7fzmDOiGAVfZaXmMb1IPdwDBBp65rovINxHmjFmbI5lZSn/lYPFEd
-	 IUMmoxs1Zl2gTGKW+RzmP/w8wpdrPNncku0PCQBVLIAbH07BSqWFTBDK3gvj6g89hT
-	 VsCNDrBa+H6Q0BQrkxry5c4OpPv3cqird0Y9+wsrerl5JLHl1r/1RxasNnxvRDdLFD
-	 hUXCLalkiGjAlI8AhZfCeHqePwXkumDUbnzdf66ispj/cWnu5N77HUWtSEpn6O5AP/
-	 i0HcjvzsLu9Aw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-	id EED7840441; Thu,  1 Feb 2024 18:26:37 -0300 (-03)
-Date: Thu, 1 Feb 2024 18:26:37 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, James Clark <james.clark@arm.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf tools fixes for v6.8
-Message-ID: <ZbwMjWO-AD1eB1a_@kernel.org>
-References: <20240201202254.15588-1-acme@kernel.org>
- <CAHk-=wgkTKyon279Rfd_20ot9sfHmCh=t=v8GD8yHCM3Bna_hw@mail.gmail.com>
- <ZbwJrkkQbUxw-hyb@kernel.org>
- <CAHk-=wgVxsBrf9hme-VQ+h+h6j3V9n_ph0ALT1EANDiEKy3uHg@mail.gmail.com>
+	s=k20201202; t=1706822809;
+	bh=VR/a8iPw20/aKaajgHIqiK8JjLNzC/p31Ouefl5Ivf4=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=BtS0Ov1+1n+xvhX3KKNy3PGrDN4AN36h2uDo8s7rAav3imdzYMX6hRv/7sPDNtHhm
+	 JLS/ALKNre5XLmxInWzUbB0pqABgk9ILP0pvP9F6qhhqoNlsKyodtdgi6n1SZxF28J
+	 iDzaww089UYYy70BCDRV/eWO7QVBMv5katAFqSxATPCXdrmkCTsrBcREjOoJELKYwk
+	 DlkTldw8n8u0icffmLBqwMtcUx+s02YyknNSicAIiJPflOYZJxk9NaUZtf7eXHLhAj
+	 XndIkJITGuw1s3Vl4cuIgM++o737FRBuG3CS3/djQZH4O1xs4PiWrzVs4uwR7fQ5mG
+	 Am8JXDXY31YAw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AEDC4828D;
+	Thu,  1 Feb 2024 21:26:49 +0000 (UTC)
+From:
+ Bjorn Andersson via B4 Relay <devnull+quic_bjorande.quicinc.com@kernel.org>
+Date: Thu, 01 Feb 2024 13:31:19 -0800
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm interconnect providers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgVxsBrf9hme-VQ+h+h6j3V9n_ph0ALT1EANDiEKy3uHg@mail.gmail.com>
-X-Url: http://acmel.wordpress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240201-enable-icc-8250-2290-v1-1-8ded02750521@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAKYNvGUC/x2MSQqAMAwAvyI5G4ih4vIV8dAlakCqtCCC+HeLx
+ xmYeSBLUskwVg8kuTTrEQs0dQV+s3EV1FAYmNgQU4MSrduL9R57bgmZB0JnFtsF37khCJT0TLL
+ o/W+n+X0/dim61WYAAAA=
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1606;
+ i=quic_bjorande@quicinc.com; h=from:subject:message-id;
+ bh=PrRvWI3v6LUZy5gGPJMmYHZxgRkosEui53nfZHHVYmI=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBlvA2xeaQWX56SHdES03wVrRhZc5n1qzqikkpUs
+ 3iffg/eBJaJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZbwNsRUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcXURBAAp2ZEzZ5VHTUvPh2jGmshtNoJ3rw3667luu9Wa7O
+ +zTrJzuPVMYydm7VBER85Vvz2NSgXfE4M3syN8q4856+zE81uXPERay+k9J/7NTCyZpWLdvWYT+
+ y9O0EpDD3hRPYagegaM0kj3saPdlPwIP/pMiwkG0gwcwWceSdxbLu0aSIumtNSwLkeJfWm9iFbN
+ mvBvbtnNg50DmZ1IH0LFv0uNJ5h3Btb9gWD+ceuvD0BpQ8ivkggeXN74faBQteo4/VGrYqKFVKU
+ BQNu7dQKtsKGAKw8VAriuqbRds/2fQTJbofvuMYoZA4eOeObgVKytdazSZmWfMrHIaQ58ei2WqJ
+ I/JBxirh5Xf5daHQHseUSdljmdjF38naBdAgBtTG2/jA5T3eJjsDXkL5tiru9j/K+RHm1p00L29
+ weMqHbyBtPrngyzUCu2jAZOhM8aJ4ByZu1LVyWYykMy+PUC31N0jq/kHLMXFIRGA50W47zMaI2N
+ Zx3WH8eL9pxWag2AmJy3exSm0Jcbs3EYlz7TZDoVI3A36KSmAkBVSnhe1nd9llOocQ8hTdp3igs
+ HgqkaqO9uXaKi2Uze3EgOB4evzb6FUXiVBZ8BB32sGmuwhsnO49WM4IP8gdTDntR1YDJalAGmRU
+ F7UTvz0iCJqNPSCKaKu4QmwlBL2xQ71ia7Af6tfUV0RA=
+X-Developer-Key: i=quic_bjorande@quicinc.com; a=openpgp;
+ fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
+X-Endpoint-Received:
+ by B4 Relay for quic_bjorande@quicinc.com/default with auth_id=118
+X-Original-From: Bjorn Andersson <quic_bjorande@quicinc.com>
+Reply-To: <quic_bjorande@quicinc.com>
 
-Em Thu, Feb 01, 2024 at 01:21:16PM -0800, Linus Torvalds escreveu:
-> On Thu, 1 Feb 2024 at 13:14, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > I should've known better and not send the noisy JSON changes at this
-> > point in time.
-> 
-> Arnaldo, it's not the JSON changes in the history.
-> 
-> It's the absolute garbage in the *tag* itself. It's crazy. Do this"
-> 
->    git fetch   git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git
-> perf-tools-fixes-for-v6.8-1-2024-02-01
-> 
->    git cat-file tag FETCH_HEAD
-> 
-> and see complete and utter garbage in the tag contents.
-> 
-> Note: that is not a change *made* by the tag. It's literally just
-> garbage content in the tag *message* itself.
-> 
-> You have something *seriously* wrong with your scripting or tag
-> creation workflow.
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-Ok, I'll check, as I said I switched machines, I must've screwed up
-something.
+With interconnect providers built as modules Qualcomm SM8250 and QCM2290
+platforms launches init without /dev/console being backed by the debug
+UART.
 
-- Arnaldo
+Build there drivers into the kernel, to make sure the dependencies for
+the UART driver are available and thereby give userspace access to the
+UART without having to re-open the console, once the deferred UART
+driver has probed.
+
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+---
+ arch/arm64/configs/defconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e6cf3e5d63c3..0463db563215 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1550,7 +1550,7 @@ CONFIG_INTERCONNECT_QCOM=y
+ CONFIG_INTERCONNECT_QCOM_MSM8916=m
+ CONFIG_INTERCONNECT_QCOM_MSM8996=m
+ CONFIG_INTERCONNECT_QCOM_OSM_L3=m
+-CONFIG_INTERCONNECT_QCOM_QCM2290=m
++CONFIG_INTERCONNECT_QCOM_QCM2290=y
+ CONFIG_INTERCONNECT_QCOM_QCS404=m
+ CONFIG_INTERCONNECT_QCOM_SA8775P=y
+ CONFIG_INTERCONNECT_QCOM_SC7180=y
+@@ -1560,7 +1560,7 @@ CONFIG_INTERCONNECT_QCOM_SC8280XP=y
+ CONFIG_INTERCONNECT_QCOM_SDM845=y
+ CONFIG_INTERCONNECT_QCOM_SDX75=y
+ CONFIG_INTERCONNECT_QCOM_SM8150=m
+-CONFIG_INTERCONNECT_QCOM_SM8250=m
++CONFIG_INTERCONNECT_QCOM_SM8250=y
+ CONFIG_INTERCONNECT_QCOM_SM8350=m
+ CONFIG_INTERCONNECT_QCOM_SM8450=y
+ CONFIG_INTERCONNECT_QCOM_SM8550=y
+
+---
+base-commit: 06f658aadff0e483ee4f807b0b46c9e5cba62bfa
+change-id: 20240201-enable-icc-8250-2290-b4fa7dc7b9de
+
+Best regards,
+-- 
+Bjorn Andersson <quic_bjorande@quicinc.com>
+
