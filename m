@@ -1,82 +1,305 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E839BFC14;
-	Thu,  1 Feb 2024 02:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD1B171D0;
+	Thu,  1 Feb 2024 02:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706753159; cv=none; b=g+6W/Hm5Y/dp4ogQOTPdO2zui37EaHy1e369WJgn3TplcnPax4DMbmCftA9nRdKi0hz/Bn8pZNqbtuKmpzT7f2yVk9cEXY0TOLa3G5H9RyFn8cTNUHP6Pr3W0+Zxw2Uqg3l/cT13WGnC4CRLy7m1yYalRDOgpfJIkMLuBU/kXvM=
+	t=1706753341; cv=none; b=GAcOv+cWFtAe9dFAVOvq6vRX+JYjzKLNbnDRL2S18bXEE6I6x/x2H2+8i/yzeOVlaSYkWMgq3hMdDY5HmVR9uHQtgLl0myCsnwB6dAqf7HCKSHy+QzAkPHbZgzKtW+GnYTFLY5eqlHnWKwGbMNXJacUrQ2dWAmqGZDd9O6TYqkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706753159; c=relaxed/simple;
-	bh=WZKyyU3njHxkaPfTiuVOaKohUtAcLb9qZANIc0cHy6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kaUGgsYQj3IERjm8Qfn+nyLQAGEuq4CPhXFaqloJffXKcE3KwtgpTEVb/08j6onD9yksDjqzKHBiXwPrVzFYFg7NkRUoixLp4ADe6YKuPb/C0K6UAqeu36RXr2fdN7OlKOhylROEDlVU702VITVuQotvvRr+3dJfh2nCcNbmo7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EML5+2Kh; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706753341; c=relaxed/simple;
+	bh=qpgaAko8Zmepj+CsJYgEeQt49UM0kbaD3f1MmT1j9Y0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hij+/PMEkTQTX6y+shAS1rmLNP1BnGnAPUDo8Jm79RhDPhHjmTFlYaI2ZwFvBpKRus0g8SX90yiV+NmZ1lodfYZW8c/bpgfVCBUwCtTHPE892Ihz4OyvAfyGBZFbJsrKL+1msVN8KI6oGfPYPU2FEw1G0TwDXpR+BpcYAdhs92Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZTad7qP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EML5+2Kh"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so388918a12.1;
-        Wed, 31 Jan 2024 18:05:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706753157; x=1707357957; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CabtX6HVlcsvD8Lc4Od57wI4l06g03/hrDUv1/sVAuA=;
-        b=EML5+2Kh5g9Z1EK26kI3zprTTMkJP+Yjw4WiZAvPJvyhHHYgc1k+NE58c7KzJcFYIY
-         aY+vYE+ubdI4/CtGoyd3heFPTAskiLzxKuAm1UN0+X+EDmR5B3Av6a80wxUXhoTlcrs5
-         Dm76jRdWaoOH8BgFwG3z8JDvHOt4fbq6GP9fptwVNtPkj1SzGNzXjUaSeLENSBM2AhIf
-         FvW52bAgiHu8+00iO6jjFtAj7QoAxky5kxd0pCuYoOhuSLx07mbOZqKpFQ2btAKZ2SSe
-         zJJN1rTqPZKlIe/ALwlSxJHPHyO7FddgmxcAel6hkzgDbNK19dhoOVMWoBWvmR67wW78
-         01nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706753157; x=1707357957;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CabtX6HVlcsvD8Lc4Od57wI4l06g03/hrDUv1/sVAuA=;
-        b=Yp1d+erA5pu5ah/ZK/cx4hEzQ/PcaB5xaVj0omnzZmOfQeY1J9tz8sxgM7/rFp/cEa
-         /OMQVZnXbTJQR/spQtFj3Y6Ky6tXpETNGWkGE82yrsJ8a0Z4Becl056f/JQmmrXSWE32
-         +h+T7i0sssGRWPizkY6LorDm6dwL5c8Bg3nE6ecuEiL2DvfJku5GdgYKvrbMv9I6xaW0
-         cbJJRMATouYmy9FTaD0GQHuaZG9XcSK7KQjXA8GeiILLsI+Jg7p8PHcm82YtrAj7XPDl
-         zGd5X2nTRhwVhw94kcernyScBdH8LHgR+sCn2uqvl2rz0KdjSpmjrlu0CqiArEwXjKVB
-         5Jpg==
-X-Gm-Message-State: AOJu0YxDkMBSB8LtUkZEvz2zyOhnNl4wCdXjhYi4P4uPiO/kELp+ZcFT
-	LD5gG5w1tAz0hGn+CA36qBPDI6a/C3qLhbOE1qME6dFj39AeaQ9oa0YNwOngpECN6w==
-X-Google-Smtp-Source: AGHT+IEAZdmadmtlqNJT0DdlQkBf4IfmFoc/IRSry9cgLFX6xq5IoETw0+TLgbp6VWQDYULteetUxQ==
-X-Received: by 2002:a05:6a21:9214:b0:199:d9c9:2b65 with SMTP id tl20-20020a056a21921400b00199d9c92b65mr3518060pzb.55.1706753157208;
-        Wed, 31 Jan 2024 18:05:57 -0800 (PST)
-Received: from dragon (173.242.119.193.16clouds.com. [173.242.119.193])
-        by smtp.gmail.com with ESMTPSA id h3-20020aa786c3000000b006ddc30172c7sm10512734pfo.30.2024.01.31.18.05.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 18:05:56 -0800 (PST)
-Date: Thu, 1 Feb 2024 18:04:47 +0800
-From: Shawn Guo <shawn.gsc@gmail.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: shawnguo@kernel.org, xiaolei.wang@windriver.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, festevam@gmail.com, imx@lists.linux.dev,
-	kernel@pengutronix.de, krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org, marcel.ziswiler@toradex.com,
-	qiangqing.zhang@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de
-Subject: Re: [PATCH 1/2] arm64: dts: imx8qm: Align edma3 power-domains
- resources indentation
-Message-ID: <20240201100447.GE463595@dragon>
-References: <20231214194655.608902-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZTad7qP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CBD2C433A6;
+	Thu,  1 Feb 2024 02:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706753340;
+	bh=qpgaAko8Zmepj+CsJYgEeQt49UM0kbaD3f1MmT1j9Y0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=JZTad7qPMEODueqFLCJmkELXm9HqTKqqlK6oRGm1CWsxL5D8nj56bwWj4KHDjoGAT
+	 QFSmCQT+VmLNXD+YWswWbYQE+RgWqX9LeAum2/AnCvO+ta9I+CHn50rG4i6XXPokd8
+	 U91f0X5GdhMvb5nfvW2v79oE1kHcUNscpAFW+QK7Ai/LtGVpt0yGNS+0lYKmyWPSmr
+	 AHcXS6CJVm3qzRq7Z92J/0nfnmbt1MneKUR8vVc9VPcKkURXwokU2LUCQ21wdsOBZ4
+	 Dwa7JdsfOwSE6D4WvoP+ZjeyfdoauCZXdMi5OaSZBDyP83OphTzJriJorHSyZI3mhQ
+	 73WVBu8JzlQWA==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d05d774518so3162391fa.1;
+        Wed, 31 Jan 2024 18:09:00 -0800 (PST)
+X-Gm-Message-State: AOJu0YxLpS4DL1wbt+pYzC0DV31xoCTFHPLl9fEpKp9eYZUgIEC/zzsn
+	bJp73su3l+3w3hVr42EWteCbk6VI5uOaKokJiOzvveCKctrNBlqEeQSXhl5S8rLh2s3LWNKLLr0
+	+E4te4n5ZPud5KhD+Ljwhb9CnpN0=
+X-Google-Smtp-Source: AGHT+IEZWLOW5AyfTxq3DsArqXYZjZVQKlZdAkdNup913YWdU7itR3gfTo5qLKzEsXv/ztER6wEmyRn8aAlIHDNUV8Y=
+X-Received: by 2002:a2e:a414:0:b0:2cc:78b7:1ef0 with SMTP id
+ p20-20020a2ea414000000b002cc78b71ef0mr1136378ljn.4.1706753338768; Wed, 31 Jan
+ 2024 18:08:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214194655.608902-1-Frank.Li@nxp.com>
+References: <20231202035511.487946-1-sjg@chromium.org> <20231202035511.487946-3-sjg@chromium.org>
+ <20231213121353.GA31326@willie-the-truck> <CAFLszTjfmSx1YMqzb2TsQf7sP4KrcQB=X7DY_HxRQp0J5HAppQ@mail.gmail.com>
+ <CAK7LNAQRCDC03e=TVO=k4FuD2a2RdTy7yLr3UptQjVCX7pM1CA@mail.gmail.com>
+ <20240109143349.GR1610741@bill-the-cat> <CAFLszTjwhy24UiT6kUJABMC1Xn0h9Q1q9fYpZZJg9DX8Vss9cA@mail.gmail.com>
+ <CAFLszTjPAHd6RdO1mvatXC=yRS+h=sgJ_pMdyEnkROTx7yRpog@mail.gmail.com>
+ <CAK7LNARsY6-rrx=sNFq6oFqpqf0s5S_=3DrUsCOS7zF0BXcoTg@mail.gmail.com> <CAL_JsqLYB0D5wAfedsb6tQp4EmD1AROgxiCncwO7gvA2p1C6Lg@mail.gmail.com>
+In-Reply-To: <CAL_JsqLYB0D5wAfedsb6tQp4EmD1AROgxiCncwO7gvA2p1C6Lg@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 1 Feb 2024 11:08:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR-3rL6=YdhRRXB9dz+94y2yHTA=9mF4p7OPj7KExd7rg@mail.gmail.com>
+Message-ID: <CAK7LNAR-3rL6=YdhRRXB9dz+94y2yHTA=9mF4p7OPj7KExd7rg@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] arm64: boot: Support Flat Image Tree
+To: Rob Herring <robh@kernel.org>
+Cc: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>, Will Deacon <will@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+	U-Boot Mailing List <u-boot@lists.denx.de>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Terrell <terrelln@fb.com>, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	workflows@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 14, 2023 at 02:46:54PM -0500, Frank Li wrote:
-> <&pd IMX_SC_R_DMA_1_CH*> is now properly aligned with the previous line
-> for improved code readability.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Thu, Feb 1, 2024 at 7:03=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Jan 30, 2024 at 3:16=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
+.org> wrote:
+> >
+> > On Fri, Jan 26, 2024 at 1:04=E2=80=AFAM Simon Glass <sjg@chromium.org> =
+wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Wed, 17 Jan 2024 at 06:14, Simon Glass <sjg@chromium.org> wrote:
+> > > >
+> > > > Hi Masahiro, Tom,
+> > > >
+> > > > On Tue, 9 Jan 2024 at 07:33, Tom Rini <trini@konsulko.com> wrote:
+> > > > >
+> > > > > On Tue, Jan 09, 2024 at 11:01:42PM +0900, Masahiro Yamada wrote:
+> > > > > > Hi Simon,
+> > > > > >
+> > > > > >
+> > > > > > On Wed, Jan 3, 2024 at 8:47=E2=80=AFAM Simon Glass <sjg@chromiu=
+m.org> wrote:
+> > > > > > >
+> > > > > > > Hi Masahiro,
+> > > > > > >
+> > > > > > > On Wed, Dec 13, 2023 at 5:14=E2=80=AFAM Will Deacon <will@ker=
+nel.org> wrote:
+> > > > > > > >
+> > > > > > > > On Fri, Dec 01, 2023 at 08:54:42PM -0700, Simon Glass wrote=
+:
+> > > > > > > > > Add a script which produces a Flat Image Tree (FIT), a si=
+ngle file
+> > > > > > > > > containing the built kernel and associated devicetree fil=
+es.
+> > > > > > > > > Compression defaults to gzip which gives a good balance o=
+f size and
+> > > > > > > > > performance.
+> > > > > > > > >
+> > > > > > > > > The files compress from about 86MB to 24MB using this app=
+roach.
+> > > > > > > > >
+> > > > > > > > > The FIT can be used by bootloaders which support it, such=
+ as U-Boot
+> > > > > > > > > and Linuxboot. It permits automatic selection of the corr=
+ect
+> > > > > > > > > devicetree, matching the compatible string of the running=
+ board with
+> > > > > > > > > the closest compatible string in the FIT. There is no nee=
+d for
+> > > > > > > > > filenames or other workarounds.
+> > > > > > > > >
+> > > > > > > > > Add a 'make image.fit' build target for arm64, as well. U=
+se
+> > > > > > > > > FIT_COMPRESSION to select a different algorithm.
+> > > > > > > > >
+> > > > > > > > > The FIT can be examined using 'dumpimage -l'.
+> > > > > > > > >
+> > > > > > > > > This features requires pylibfdt (use 'pip install libfdt'=
+). It also
+> > > > > > > > > requires compression utilities for the algorithm being us=
+ed. Supported
+> > > > > > > > > compression options are the same as the Image.xxx files. =
+For now there
+> > > > > > > > > is no way to change the compression other than by editing=
+ the rule for
+> > > > > > > > > $(obj)/image.fit
+> > > > > > > > >
+> > > > > > > > > While FIT supports a ramdisk / initrd, no attempt is made=
+ to support
+> > > > > > > > > this here, since it must be built separately from the Lin=
+ux build.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Simon Glass <sjg@chromium.org>
+> > > > > > > > > ---
+> > > > > > > > >
+> > > > > > > > > Changes in v9:
+> > > > > > > > > - Move the compression control into Makefile.lib
+> > > > > > > > >
+> > > > > > > > > Changes in v8:
+> > > > > > > > > - Drop compatible string in FDT node
+> > > > > > > > > - Correct sorting of MAINTAINERS to before ARM64 PORT
+> > > > > > > > > - Turn compress part of the make_fit.py comment in to a s=
+entence
+> > > > > > > > > - Add two blank lines before parse_args() and setup_fit()
+> > > > > > > > > - Use 'image.fit: dtbs' instead of BUILD_DTBS var
+> > > > > > > > > - Use '$(<D)/dts' instead of '$(dir $<)dts'
+> > > > > > > > > - Add 'mkimage' details Documentation/process/changes.rst
+> > > > > > > > > - Allow changing the compression used
+> > > > > > > > > - Tweak cover letter since there is only one clean-up pat=
+ch
+> > > > > > > > >
+> > > > > > > > > Changes in v7:
+> > > > > > > > > - Add Image as a dependency of image.fit
+> > > > > > > > > - Drop kbuild tag
+> > > > > > > > > - Add dependency on dtbs
+> > > > > > > > > - Drop unnecessary path separator for dtbs
+> > > > > > > > > - Rebase to -next
+> > > > > > > > >
+> > > > > > > > > Changes in v5:
+> > > > > > > > > - Drop patch previously applied
+> > > > > > > > > - Correct compression rule which was broken in v4
+> > > > > > > > >
+> > > > > > > > > Changes in v4:
+> > > > > > > > > - Use single quotes for UIMAGE_NAME
+> > > > > > > > >
+> > > > > > > > > Changes in v3:
+> > > > > > > > > - Drop temporary file image.itk
+> > > > > > > > > - Drop patch 'Use double quotes for image name'
+> > > > > > > > > - Drop double quotes in use of UIMAGE_NAME
+> > > > > > > > > - Drop unnecessary CONFIG_EFI_ZBOOT condition for help
+> > > > > > > > > - Avoid hard-coding "arm64" for the DT architecture
+> > > > > > > > >
+> > > > > > > > > Changes in v2:
+> > > > > > > > > - Drop patch previously applied
+> > > > > > > > > - Add .gitignore file
+> > > > > > > > > - Move fit rule to Makefile.lib using an intermediate fil=
+e
+> > > > > > > > > - Drop dependency on CONFIG_EFI_ZBOOT
+> > > > > > > > > - Pick up .dtb files separately from the kernel
+> > > > > > > > > - Correct pylint too-many-args warning for write_kernel()
+> > > > > > > > > - Include the kernel image in the file count
+> > > > > > > > > - Add a pointer to the FIT spec and mention of its wide i=
+ndustry usage
+> > > > > > > > > - Mention the kernel version in the FIT description
+> > > > > > > > >
+> > > > > > > > >  Documentation/process/changes.rst |   9 +
+> > > > > > > > >  MAINTAINERS                       |   7 +
+> > > > > > > > >  arch/arm64/Makefile               |   7 +-
+> > > > > > > > >  arch/arm64/boot/.gitignore        |   1 +
+> > > > > > > > >  arch/arm64/boot/Makefile          |   6 +-
+> > > > > > > > >  scripts/Makefile.lib              |  16 ++
+> > > > > > > > >  scripts/make_fit.py               | 291 ++++++++++++++++=
+++++++++++++++
+> > > > > > > > >  7 files changed, 334 insertions(+), 3 deletions(-)
+> > > > > > > > >  create mode 100755 scripts/make_fit.py
+> > > > > > > >
+> > > > > > > > I'll need Masahiro's Ack on the scripts/ changes before I c=
+an take this
+> > > > > > > > one.
+> > > > > > >
+> > > > > > > Any thoughts on this request, please?
+> > > > > > >
+> > > > > > > Regards,
+> > > > > > > Simon
+> > > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > > As I mentioned before, I am concerned with having
+> > > > > > the same "compatible" entries, with different contents,
+> > > > > > as you use the "compatible" string as an ID to selecting
+> > > > > > the target config node, right?
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > > $ fdtdump  arch/arm64/boot/image.fit
+> > > > > >
+> > > > > >         ...
+> > > > > >
+> > > > > >         conf-10 {
+> > > > > >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> > > > > > "tq,am642-tqma6442l", "ti,am642";
+> > > > > >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4x=
+xL carrier board";
+> > > > > >             fdt =3D "fdt-10";
+> > > > > >             kernel =3D "kernel";
+> > > > > >         };
+> > > > > >
+> > > > > >         ...
+> > > > > >
+> > > > > >         conf-25 {
+> > > > > >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> > > > > > "tq,am642-tqma6442l", "ti,am642";
+> > > > > >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4x=
+xL carrier board";
+> > > > > >             fdt =3D "fdt-25";
+> > > > > >             kernel =3D "kernel";
+> > > > > >         };
+> > > > >
+> > > > > I had asked Rob a while ago about if having the same compatible f=
+or two
+> > > > > functionally different machines is a feature, or a bug, and I don=
+'t
+> > > > > think either of us fully agreed either way. I'd be leaning toward=
+s
+> > > > > saying the above example is a bug in the dts files, it's just not=
+ been a
+> > > > > bug people have worried about before due to (sadly) how little th=
+e
+> > > > > top-level compatible has been used.
+>
+> I much prefer being able to use compatibles over filenames.
+>
+> > > >
+> > > > Yes I believe this is a bug in the files.
+> > > >
+> > > > What should the script do in this case? Print a warning, perhaps?
+> > >
+> > > Is there anything I should do here? Would a warning be helpful, or
+> > > just confusing?
+> >
+> >
+> >
+> > I do not think it is useful.
+> > You would almost always get a warning, and there is no way to fix it.
+>
+> The above case is due to overlays. Why would you have a FIT image with
+> both a base tree and applied overlays?
 
-Applied both, thanks!
+
+
+Because they are different hardware.
+
+If FIT includes only base DTBs, how to use a base with extensions?
+
+
+
+
+>
+> In any case, maybe we need to record in dtb overlays that have been
+> applied (which you asked about recently on dtc list). Not sure what
+> that looks like though. Overlays have a 'top-level' compatible that we
+> add in either separately or merged with the base's top-level
+> compatible?
+
+
+If there is a way to make "compatible" unique, that will be good.
+
+But, in my understanding, we can replace a property value,
+but not modify it.
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
