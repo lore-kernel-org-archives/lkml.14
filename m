@@ -1,307 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF82F12FB0E;
-	Thu,  1 Feb 2024 18:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED3A7E112;
+	Thu,  1 Feb 2024 18:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706812334; cv=none; b=ufiqQjOqCoFpw+tyousiv6HvWQSNnmoq57oQcW8vMEbQ92Cb/akqpjiDsWOJE6Khgt/ZdmtsjorfYDUl6lFCdEzeS6OfDHqZXZzkTO5hYRyJmqjou2cO7BJTecSRS8cIIEQUfFuVZfeNOMjtVPngooj57hz0Vjt++akbyphL9Os=
+	t=1706812339; cv=none; b=EkIA8IukoW/k9xKTkgRyZYFwtKoh3I1zLT/qIrvFS3JDxZ5kNxYUbmrkMUo7NPST8itQR0P8nP7nlCgS0pCoupLogSIMhgNxfeYMPhDrGICzIgcsRlUQzajxICYxIdix7Q5EA7wrsfGUXa768Q0b0aBm9WGqpeHC3ECVZcLlsTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706812334; c=relaxed/simple;
-	bh=HBONCdrxzDqsxndhvVUnYO6LFvC8ZcUi1vLplgj5IO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K/yidI5sloCES8F70OtTEGsNmk++zngN/VDceUvMs2ljX8dzLmJVOJI9ZrHwS0e29g2uPGeUYD9DmhvqQeYpucPfqWkjvRmpmvUU1LQkt5oV+1BXR6woEjx5K/cxdBqKVw5Y7bVGteg54PmoEhUrV6322bh+BIC2wNP8ltwnwtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSsdxOkd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706812339; c=relaxed/simple;
+	bh=KCztPjFje46tTvFIspE4Yw+0iPrI8st5t4y4xeZHOTM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MpmAklX62L2wf3LdBMAfVfX5MKnFyJ44lKkWkx5rK8Y9TmPghveMBs04LxEOnwmHxzmrfT7csz4UaYvW4KwH4ToPIQX+MXFWgGs22sfI5u+ovnKHhAOzJyO4hMT5rk9qK7IfFqcbvW9mDlqcOfUwrzl58ZNZ70bQEHe7gDLlj90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=tt1qRTli; arc=none smtp.client-ip=134.0.28.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSsdxOkd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF8DC433C7;
-	Thu,  1 Feb 2024 18:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706812334;
-	bh=HBONCdrxzDqsxndhvVUnYO6LFvC8ZcUi1vLplgj5IO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gSsdxOkdBhbQAtPx9jBFEUfHGCwzCZ6edeHKJcNVeywrqCdY9zdUgOVZgDCnj+Z8+
-	 7GkqdwI0CTph2ii7IV8ROrZkSAVVIOYonb7Ij+kvVfiMENKSQYlakprWWFCB+t63pZ
-	 j1ZtdSPIid5DyqCluM5OBkoY1MFI6ik6QNKyT2ZaqdVa8aX1Nx92NpsIHhhQLXlXTT
-	 an00Jwx5gLXg781IrDQtS907l1GxqExYTbW5hEhdUl28Rzqojgqj/W9+u3bONiW0Oj
-	 3thn3wbo+tD9lAEZFbD/CFgCBBUi1Bqnu8+GNFKnK8TGM6atGxhKuV1rM8oIFok4eK
-	 1U7gsZzUm0BFg==
-Date: Thu, 1 Feb 2024 18:32:09 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="tt1qRTli"
+Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
+	by mxout2.routing.net (Postfix) with ESMTP id 15933615E9;
+	Thu,  1 Feb 2024 18:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1706811856;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FM4cDbc05aFm+s5YmM2e5LZAZcaagXIlqsb3avH/P4U=;
+	b=tt1qRTliyFFSUHcMcviRe+VcJNZonpH26E8dcYVWElrfwmBvJGErlNZWu9vcwvtc29m+ld
+	fR5Hj/0LQVl3HMVwY/cVXoz7qP3B5GC5yngrA0SoYtLeEawZL16MajOChDPaxfV48q8kDC
+	8n6YvCFuSVht9AX1E3/QJ/H+Ao8fK7M=
+Received: from frank-G5.. (fttx-pool-217.61.148.248.bambit.de [217.61.148.248])
+	by mxbox1.masterlogin.de (Postfix) with ESMTPSA id F247440533;
+	Thu,  1 Feb 2024 18:24:14 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Charles Hsu <ythsu0511@gmail.com>,
-	linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: trivial-devices: sort entries
- alphanumerically
-Message-ID: <20240201-silliness-unfair-265a0d896377@spud>
-References: <20240201075805.7492-1-krzysztof.kozlowski@linaro.org>
- <5461a237-1df4-4077-86ef-e9ff6ff17e27@roeck-us.net>
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Sam Shih <sam.shih@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v4 0/2] Add reset controller to mt7988 infracfg
+Date: Thu,  1 Feb 2024 19:24:07 +0100
+Message-Id: <20240201182409.39878-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="N+zoBAHBXolU7sZ9"
-Content-Disposition: inline
-In-Reply-To: <5461a237-1df4-4077-86ef-e9ff6ff17e27@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+X-Mail-ID: c0fd09d3-398d-40e5-b864-847111d8224c
+
+From: Frank Wunderlich <frank-w@public-files.de>
+
+Infracfg on mt7988 supports reset controller function which is
+needed to get lvts thermal working.
+
+changes:
+ v4:
+   - changed commit message of dt-bindings patch to include information
+     about starting from 0 again suggested by Conor Dooley.
+ v3:
+   - start resets on RST0 offset (LVTS is RST1)
+   - rename offset constants with MT7988 prefix (else collision with reset.h)
+ v2:
+   - change value of constant to 0 from 9
+   - add missing SoB and commit-message for binding-patch
 
 
---N+zoBAHBXolU7sZ9
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Frank Wunderlich (2):
+  dt-bindings: reset: mediatek: add MT7988 infracfg reset IDs
+  clk: mediatek: add infracfg reset controller for mt7988
 
-On Thu, Feb 01, 2024 at 05:25:13AM -0800, Guenter Roeck wrote:
-> On 1/31/24 23:58, Krzysztof Kozlowski wrote:
-> > Sort entries alphanumerically.  This was a semi manual job with help of:
-> >=20
-> >    cat Documentation/devicetree/bindings/trivial-devices.yaml | grep ' =
-   - ' > old
-> >    cat old | sort -n > new
-> >    diff -ubB old new
-> >=20
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >=20
->=20
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
+ drivers/clk/mediatek/clk-mt7988-infracfg.c    | 23 +++++++++++++++++++
+ .../reset/mediatek,mt7988-resets.h            |  6 +++++
+ 2 files changed, 29 insertions(+)
 
-z sorts before a, please fix in the whole file.
+-- 
+2.34.1
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
->=20
-> > ---
-> >=20
-> > Cc: Charles Hsu <ythsu0511@gmail.com>
-> > Cc: linux-hwmon@vger.kernel.org
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > ---
-> >   .../devicetree/bindings/trivial-devices.yaml  | 73 ++++++++++---------
-> >   1 file changed, 37 insertions(+), 36 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/D=
-ocumentation/devicetree/bindings/trivial-devices.yaml
-> > index 5b52950e6bfc..41982a41398a 100644
-> > --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> > +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> > @@ -28,6 +28,7 @@ properties:
-> >     compatible:
-> >       items:
-> > +      # Entries are sorted alphanumerically by the compatible
-> >         - enum:
-> >               # Acbel fsg032 power supply
-> >             - acbel,fsg032
-> > @@ -49,12 +50,12 @@ properties:
-> >             - ams,iaq-core
-> >               # i2c serial eeprom (24cxx)
-> >             - at,24c08
-> > +            # i2c h/w elliptic curve crypto module
-> > +          - atmel,atecc508a
-> >               # ATSHA204 - i2c h/w symmetric crypto module
-> >             - atmel,atsha204
-> >               # ATSHA204A - i2c h/w symmetric crypto module
-> >             - atmel,atsha204a
-> > -            # i2c h/w elliptic curve crypto module
-> > -          - atmel,atecc508a
-> >               # BPA-RS600: Power Supply
-> >             - blutek,bpa-rs600
-> >               # Bosch Sensortec pressure, temperature, humididty and VO=
-C sensor
-> > @@ -115,20 +116,6 @@ properties:
-> >             - fsl,mpl3115
-> >               # MPR121: Proximity Capacitive Touch Sensor Controller
-> >             - fsl,mpr121
-> > -            # Monolithic Power Systems Inc. multi-phase controller mp2=
-856
-> > -          - mps,mp2856
-> > -            # Monolithic Power Systems Inc. multi-phase controller mp2=
-857
-> > -          - mps,mp2857
-> > -            # Monolithic Power Systems Inc. multi-phase controller mp2=
-888
-> > -          - mps,mp2888
-> > -            # Monolithic Power Systems Inc. multi-phase controller mp2=
-971
-> > -          - mps,mp2971
-> > -            # Monolithic Power Systems Inc. multi-phase controller mp2=
-973
-> > -          - mps,mp2973
-> > -            # Monolithic Power Systems Inc. multi-phase controller mp2=
-975
-> > -          - mps,mp2975
-> > -            # Monolithic Power Systems Inc. multi-phase hot-swap contr=
-oller mp5990
-> > -          - mps,mp5990
-> >               # Honeywell Humidicon HIH-6130 humidity/temperature sensor
-> >             - honeywell,hi6130
-> >               # IBM Common Form Factor Power Supply Versions (all versi=
-ons)
-> > @@ -197,6 +184,8 @@ properties:
-> >             - maxim,max1237
-> >               # Temperature Sensor, I2C interface
-> >             - maxim,max1619
-> > +            # 3-Channel Remote Temperature Sensor
-> > +          - maxim,max31730
-> >               # 10-bit 10 kOhm linear programmable voltage divider
-> >             - maxim,max5481
-> >               # 10-bit 50 kOhm linear programmable voltage divider
-> > @@ -209,8 +198,6 @@ properties:
-> >             - maxim,max6621
-> >               # 9-Bit/12-Bit Temperature Sensors with I=B2C-Compatible =
-Serial Interface
-> >             - maxim,max6625
-> > -            # 3-Channel Remote Temperature Sensor
-> > -          - maxim,max31730
-> >               # mCube 3-axis 8-bit digital accelerometer
-> >             - mcube,mc3230
-> >               # Measurement Specialities I2C temperature and humidity s=
-ensor
-> > @@ -241,8 +228,6 @@ properties:
-> >             - memsic,mxc6655
-> >               # Menlo on-board CPLD trivial SPI device
-> >             - menlo,m53cpld
-> > -            # Micron SPI NOR Authenta
-> > -          - micron,spi-authenta
-> >               # Microchip differential I2C ADC, 1 Channel, 18 bit
-> >             - microchip,mcp3421
-> >               # Microchip differential I2C ADC, 2 Channel, 18 bit
-> > @@ -259,40 +244,56 @@ properties:
-> >             - microchip,mcp3427
-> >               # Microchip differential I2C ADC, 4 Channel, 16 bit
-> >             - microchip,mcp3428
-> > -            # Microchip 7-bit Single I2C Digital POT (5k)
-> > -          - microchip,mcp4017-502
-> >               # Microchip 7-bit Single I2C Digital POT (10k)
-> >             - microchip,mcp4017-103
-> > -            # Microchip 7-bit Single I2C Digital POT (50k)
-> > -          - microchip,mcp4017-503
-> >               # Microchip 7-bit Single I2C Digital POT (100k)
-> >             - microchip,mcp4017-104
-> >               # Microchip 7-bit Single I2C Digital POT (5k)
-> > -          - microchip,mcp4018-502
-> > +          - microchip,mcp4017-502
-> > +            # Microchip 7-bit Single I2C Digital POT (50k)
-> > +          - microchip,mcp4017-503
-> >               # Microchip 7-bit Single I2C Digital POT (10k)
-> >             - microchip,mcp4018-103
-> > -            # Microchip 7-bit Single I2C Digital POT (50k)
-> > -          - microchip,mcp4018-503
-> >               # Microchip 7-bit Single I2C Digital POT (100k)
-> >             - microchip,mcp4018-104
-> >               # Microchip 7-bit Single I2C Digital POT (5k)
-> > -          - microchip,mcp4019-502
-> > +          - microchip,mcp4018-502
-> > +            # Microchip 7-bit Single I2C Digital POT (50k)
-> > +          - microchip,mcp4018-503
-> >               # Microchip 7-bit Single I2C Digital POT (10k)
-> >             - microchip,mcp4019-103
-> > -            # Microchip 7-bit Single I2C Digital POT (50k)
-> > -          - microchip,mcp4019-503
-> >               # Microchip 7-bit Single I2C Digital POT (100k)
-> >             - microchip,mcp4019-104
-> > +            # Microchip 7-bit Single I2C Digital POT (5k)
-> > +          - microchip,mcp4019-502
-> > +            # Microchip 7-bit Single I2C Digital POT (50k)
-> > +          - microchip,mcp4019-503
-> >               # PWM Fan Speed Controller With Fan Fault Detection
-> >             - microchip,tc654
-> >               # PWM Fan Speed Controller With Fan Fault Detection
-> >             - microchip,tc655
-> > +            # Micron SPI NOR Authenta
-> > +          - micron,spi-authenta
-> >               # MiraMEMS DA226 2-axis 14-bit digital accelerometer
-> >             - miramems,da226
-> >               # MiraMEMS DA280 3-axis 14-bit digital accelerometer
-> >             - miramems,da280
-> >               # MiraMEMS DA311 3-axis 12-bit digital accelerometer
-> >             - miramems,da311
-> > +            # Monolithic Power Systems Inc. multi-phase controller mp2=
-856
-> > +          - mps,mp2856
-> > +            # Monolithic Power Systems Inc. multi-phase controller mp2=
-857
-> > +          - mps,mp2857
-> > +            # Monolithic Power Systems Inc. multi-phase controller mp2=
-888
-> > +          - mps,mp2888
-> > +            # Monolithic Power Systems Inc. multi-phase controller mp2=
-971
-> > +          - mps,mp2971
-> > +            # Monolithic Power Systems Inc. multi-phase controller mp2=
-973
-> > +          - mps,mp2973
-> > +            # Monolithic Power Systems Inc. multi-phase controller mp2=
-975
-> > +          - mps,mp2975
-> > +            # Monolithic Power Systems Inc. multi-phase hot-swap contr=
-oller mp5990
-> > +          - mps,mp5990
-> >               # Temperature sensor with integrated fan control
-> >             - national,lm63
-> >               # Serial Interface ACPI-Compatible Microprocessor System =
-Hardware Monitor
-> > @@ -323,12 +324,12 @@ properties:
-> >             - samsung,exynos-sataphy-i2c
-> >               # Semtech sx1301 baseband processor
-> >             - semtech,sx1301
-> > -            # Sensirion low power multi-pixel gas sensor with I2C inte=
-rface
-> > -          - sensirion,sgpc3
-> >               # Sensirion multi-pixel gas sensor with I2C interface
-> >             - sensirion,sgp30
-> >               # Sensirion gas sensor with I2C interface
-> >             - sensirion,sgp40
-> > +            # Sensirion low power multi-pixel gas sensor with I2C inte=
-rface
-> > +          - sensirion,sgpc3
-> >               # Sensirion temperature & humidity sensor with I2C interf=
-ace
-> >             - sensirion,sht4x
-> >               # Sensortek 3 axis accelerometer
-> > @@ -374,8 +375,6 @@ properties:
-> >             - ti,lm74
-> >               # Temperature sensor with integrated fan control
-> >             - ti,lm96000
-> > -            # I2C Touch-Screen Controller
-> > -          - ti,tsc2003
-> >               # Low Power Digital Temperature Sensor with SMBUS/Two Wir=
-e Serial Interface
-> >             - ti,tmp103
-> >               # Thermometer with SPI interface
-> > @@ -397,10 +396,12 @@ properties:
-> >             - ti,tps544b25
-> >             - ti,tps544c20
-> >             - ti,tps544c25
-> > -            # Winbond/Nuvoton H/W Monitor
-> > -          - winbond,w83793
-> > +            # I2C Touch-Screen Controller
-> > +          - ti,tsc2003
-> >               # Vicor Corporation Digital Supervisor
-> >             - vicor,pli1209bc
-> > +            # Winbond/Nuvoton H/W Monitor
-> > +          - winbond,w83793
-> >   required:
-> >     - compatible
->=20
-
---N+zoBAHBXolU7sZ9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbvjqQAKCRB4tDGHoIJi
-0pUkAQC7COG0wQHXHHVbr9oUN80S3HyMBEKEt1fd8f2t04rMUgEAxFHMu3kpe2Oi
-8v4ZZvn3JWpDH2UeG3AlDkN1ByEr0gE=
-=hyjd
------END PGP SIGNATURE-----
-
---N+zoBAHBXolU7sZ9--
