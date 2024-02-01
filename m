@@ -1,58 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DC72B9D1;
-	Thu,  1 Feb 2024 06:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2D414C58D;
+	Thu,  1 Feb 2024 06:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706770536; cv=none; b=diDomLMEuM8w12Xh5WGaQmW41Pz0uZbWu5ABzdS4YgvpFUn3ZR/KNte8nnHvqe9K7pOirxeYp4ADf0614NWDhJ/cWGtqYgF17Y9ojLPkRNHgmR6N0/p0ZcrkFTPg5K/G7MwVT40//66KEKRMRoyujXNxtkI4hAYhVWSBSlk402o=
+	t=1706770599; cv=none; b=U5sh6Sru9WEiTkzwZ3tRm7AwobddrlueON7F3MYO+COc/5wRAf8xmJ2A6zF5RbioGmcidrsuLI+RPGg18MUMvdNqCg9r9eMkqWb30avp1kky9YCg7alWCRYw23WWOdlaq7scczESrbWMjvfKLgWUyn2E8iY5ogyfxOIm2LjdzNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706770536; c=relaxed/simple;
-	bh=k85R9HmB4RP7ktbABdRSoIpDMqKQO80Ei14Lpu87/+Q=;
+	s=arc-20240116; t=1706770599; c=relaxed/simple;
+	bh=0hGp61YtpizS4C5ByCdu2R4tN2l76xoOODrZGSJ7FHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ja1FNDzJ+2IaPEIoosedmgG93pMaBJWzFDJUm9Lm7cmspRUX8/Sbudx11ldw/ki6WjBOHtnGx5rYfm6wnRoQ0AixEXaUfk2XVUpJ1pEe1GvlQ69JWzNEuvRTz+6+XMA5gdRqUOGxHB81qG+NdwVFGBg78PPuP8N4NKikgnnUjiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VpXfMLag; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VpXfMLag"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706770535; x=1738306535;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=k85R9HmB4RP7ktbABdRSoIpDMqKQO80Ei14Lpu87/+Q=;
-  b=VpXfMLagTGnxQ8Dx0UuejXIrHIeA8JnXy4XaOXD9a59uWSSwiHaP5z7C
-   XXMf3lOUVU/93mNt2UUoyQ32jrc9r1DcTA5Mo6ZRQtIZCL+kVerLgUJNm
-   9BkWfEXZQYt0Mtr7ohp03PAKw8z/o+77gNXbQRt9PjlUlE9YSmBDc8Jte
-   C1WX5sbGhk10rrDe84hb498gK/3Zl/FdCC/KFNd0r/Uw4ImtvPbeqZkIL
-   B32M1TED4evIxHfurmt1k9wYFjOaX8e1ZZRYP2jG8ZXaxDhRX3pfIgsGJ
-   S8+YV9rxYAZxyarS+pKzRqnu1UXjjbB4oIVxrNzVh2vQH3eXfuUFe7PVd
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10928131"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="10928131"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 22:55:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="4330273"
-Received: from unknown (HELO mev-dev) ([10.237.112.144])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 22:55:29 -0800
-Date: Thu, 1 Feb 2024 07:55:26 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: karthiksundaravel <ksundara@redhat.com>, jesse.brandeburg@intel.com,
-	anthony.l.nguyen@intel.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rjarry@redhat.com,
-	aharivel@redhat.com, vchundur@redhat.com, cfontain@redhat.com
-Subject: Re: [PATCH] ice: Add get/set hw address for VF representor ports
-Message-ID: <ZbtAXuLtrhrbYjEw@mev-dev>
-References: <20240131080847.30614-1-ksundara@redhat.com>
- <ZbokUx7myZ1bVWLL@mev-dev>
- <Zbo2RJErBsD0Sc_z@nanopsycho>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yyc3Up3+nuNX453q//vNmM0OcAYoB4JQJVt50qc0uPrGl1K3tIlZ/k4QAbaMzpzji+dDkVt76Ml4rHmX4Q+zyjcZ8MrwYzuyy6gx2BrCLiIpxXvOWvtPq9r8LZPXfammghVhmLpm9nTzQAdrlNFScqLFFlXHSM2bHnPcH+O1eJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id CF282100DA1A1;
+	Thu,  1 Feb 2024 07:50:40 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 9ED9A1E367; Thu,  1 Feb 2024 07:50:40 +0100 (CET)
+Date: Thu, 1 Feb 2024 07:50:40 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH kernel 1/4] pci/doe: Define protocol types and make those
+ public
+Message-ID: <20240201065040.GA31925@wunner.de>
+References: <20240201060228.3070928-1-aik@amd.com>
+ <20240201060228.3070928-2-aik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,65 +42,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zbo2RJErBsD0Sc_z@nanopsycho>
+In-Reply-To: <20240201060228.3070928-2-aik@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, Jan 31, 2024 at 01:00:04PM +0100, Jiri Pirko wrote:
-> Wed, Jan 31, 2024 at 11:43:44AM CET, michal.swiatkowski@linux.intel.com wrote:
-> >On Wed, Jan 31, 2024 at 01:38:47PM +0530, karthiksundaravel wrote:
-> >> Changing the mac address of the VF representor ports are not
-> >> available via devlink. Add the function handlers to set and get
-> >> the HW address for the VF representor ports.
-> >> 
-> >> Signed-off-by: karthiksundaravel <ksundara@redhat.com>
-> >> ---
-> >>  drivers/net/ethernet/intel/ice/ice_devlink.c | 134 ++++++++++++++++++-
-> >>  1 file changed, 132 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/drivers/net/ethernet/intel/ice/ice_devlink.c b/drivers/net/ethernet/intel/ice/ice_devlink.c
-> >> index 80dc5445b50d..56d81836c469 100644
-> >> --- a/drivers/net/ethernet/intel/ice/ice_devlink.c
-> >> +++ b/drivers/net/ethernet/intel/ice/ice_devlink.c
-> >> @@ -9,6 +9,8 @@
-> >
-> >As Jiri already wrote, you are not changing MAC of VF in your code. Try
-> >to look at ice_set_vf_mac in ice_sriov.c. In current implementation you
-> >nedd to set new MAC value for VF and reset it. You shouldn't use PF VSI.
-> >
-> >Pointer to VF you can get from representor struct (through parent VSI).
-> 
-> What if it is in a different host? Would you still be able to change the
-> mac?
-> 
+On Thu, Feb 01, 2024 at 05:02:25PM +1100, Alexey Kardashevskiy wrote:
+> Already public pci_doe() takes a protocol type argument.
+> PCIe 6.0 defines three, define them in a header for use with pci_doe().
+[...]
+> --- a/include/linux/pci-doe.h
+> +++ b/include/linux/pci-doe.h
+> @@ -13,6 +13,10 @@
+>  #ifndef LINUX_PCI_DOE_H
+>  #define LINUX_PCI_DOE_H
+>  
+> +#define PCI_DOE_PROTOCOL_DISCOVERY		0
+> +#define PCI_DOE_PROTOCOL_CMA_SPDM		1
+> +#define PCI_DOE_PROTOCOL_SECURED_CMA_SPDM	2
 
-In current VF MAC changing implementation yes, because it is done by
-resetting the VF. After the reset new MAC will be sent via virtchnl.
-But I think resetting VF may be incorrect here, as it leads to reset
-also port representor.
+These are deliberately defined in the .c files which actually need them,
+i.e. DISCOVERY is defined in drivers/pci/doe.c and CMA_SPDM is defined in
+drivers/pci/cma.c:
 
-> 
-> >
-> >You shouldn't manage the rules during MAC changing, as in switchdev
-> >slow-path there shouldn't be VF MAC rules. It can be problematic as user
-> >already can have MAC + sth rule (which also needs to be change). I will
-> >leave it to user (most probably the MAC change happens before adding any
-> >rules).
-> 
-> Rules are on the representor, not the VF, correct? Seems unrelated to
-> me.
-> 
+https://lore.kernel.org/all/7721bfa3b4f8a99a111f7808ad8890c3c13df56d.1695921657.git.lukas@wunner.de/
 
-I pointed it out because it was in the code. Rules added on representor
-points to corresponding VF. My point was that there shouldn't be any
-changes to rules after changing MAC.
+I don't see why they would have to be public if they're each only needed
+in a single .c file.
 
-> 
-> >
-> >In few days we will send patchset for subfunction support where the
-> >subfunction MAC chaning is implementing from devlink API. I will add you
-> >to the CC.
-> >
-> >Thanks for working on it, it is a gap in our solution.
-> >
-> >Thanks,
-> >Michal
-> >
+Thanks,
+
+Lukas
