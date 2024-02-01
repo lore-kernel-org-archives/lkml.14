@@ -1,66 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA1715AABB
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161C415AAB9
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706777848; cv=none; b=sxqL/WCG0pjWcbMIad+wZkoqd4hL20HpO3YYQ6i16kh80wgEIg3IRCaFS7krZL5Ac+xjLGukDCmQzjUiTY9v2n+EVFYqI3KGtrPYA1XhNZMhNG5CRjkQc9i11/Z2M2pRRnSkm7TVAfiYQ/weZe5YvJI6cQ03ZKQ/C36E+go2BI4=
+	t=1706777934; cv=none; b=FICMnpt+nN4fM+dT/Ce44TpY+wIAVKDiIgxVl2o/AL2RBv1VNy8zlVEvxNOwaPQrKowVCxf6//URphhMMISZaEcxRFHJfeb4hZ5kr60rjObd++AHwrJ8r1DX/pRT3EnhHVIxQ7TU8ZWNk9Ip3uhy9cccy8n3YrvPHSeB4GNUsyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706777848; c=relaxed/simple;
-	bh=j3Zd4mKrm216Zi80MFkLzEXQBZt3skOFnFm6RoTNJkY=;
+	s=arc-20240116; t=1706777934; c=relaxed/simple;
+	bh=lXquSksINnAQgs9rhIZIDnVL2EKjkAWgHOMS4W4xcWs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qx+OrEZHmS8oQuIUO9iUnPOFPeA/dV4i0igk8UqW38Kf2h8Dw2kOx9vANFloNCBjXqHkJxjv1N+EnXo5QuLDbQqbO4ZqTR4Kt0ZWZ/AbHdxmQZbrpjdraaV/uYgvC+CszzPlc6SHzcxMnfi8lc/C9iX0pg73Y7KOJCZIljOr3nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iEuFoIiG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=bprd/FLf6IF0vutV3CQ3ZBbPqzuVdhRP5/noyVfY9glvNnxTeHU9BYAPy58gVJhcQJShBQlCk+m5zJ42cEm7TgTccjy5vZEOzUVtOodPsvCaEjgYS8dNv7JqLIJ1RktrH7vtKs2JrOhWSN0QWjNYgYjp9WtqJmkqUgZZXQrxk+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wz+W1+aD; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEuFoIiG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706777845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WmH3EWgqG+olCCSdo93j0hjDoEO8xtf6eODTmOyVxmc=;
-	b=iEuFoIiG1Bkc0wtbUnhL4mcAg7dcmNMf1qxgf5yhPonQ9KY1FIxYE7onGVpq2f40uFnOIw
-	38iygeSMlofcNVyOu5zsb3gmy1v/L0Fwb17JWKudQ1DY0iSDvR/KBwyciG6jcNetk3Mxce
-	FShCQi522dchHj1fz06OnpjRxKLGK/4=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-gYvzS65iPzqTT7Dkt885WQ-1; Thu, 01 Feb 2024 03:57:24 -0500
-X-MC-Unique: gYvzS65iPzqTT7Dkt885WQ-1
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6da4d130a82so202917b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:57:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wz+W1+aD"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a354fc17f24so79763366b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:58:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706777930; x=1707382730; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vnahjsb4pOQLDby7/J+uHzKaCcjEiFwB97sDznnRHfU=;
+        b=Wz+W1+aDDkEOG1XY42i0NtuFb819FgkqZRJtIOe9MPv3OlhzyrMGGJh8mg/lWcQCA8
+         C/B2Sa1F13O/p+yHamaiA/wIaouuj3cdwQ3GDav9iQEI/EoPzbftaVe7uZnt/sz+viN8
+         1miEJfgIvQf7NGkSs9wIPHbNpM9Txun1ZjqvucquWPTjYDj0XRbQWMkoikWo7OJY4pz+
+         OZYnWDM8S9A1RTUh6GSmtZX2mT2d0OLP5Q05GPdks//VHltnlYGizaoLcbPV9bUSv++k
+         B5hbj769uHq8PDpdGRBK8jeKdMRclsiy3wirzURKvd09FE7SQEaLt580PPocxu3WKD/q
+         Jx1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706777843; x=1707382643;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1706777930; x=1707382730;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WmH3EWgqG+olCCSdo93j0hjDoEO8xtf6eODTmOyVxmc=;
-        b=jCVL9kBEvcvlRSeVuNFKUh2Ty9ei8mQXnDvK7wdGENohM3zm6K5MVQsq3k5iV0Qpbi
-         VZbUhalJcfOrCBvwjiGjM2tzVzFxhsbnPkbVT465MgSe9Ul3xgRJNkSHykjpvVwiRHEo
-         T5AkOaLhZZRD7Q9Zhqup9sOpTUeose5E3oFz0cl03Dy6BxpTAG84dd74THVClSPRgtEx
-         5zjkOYoRssT6akfO00P6111sUd8sEEnhduaPCnIc0z2jnRwPDlH+vV/RqUuWFK/mJlcP
-         bgZeF8jk6IjXPgmXDlrWRPDn+nzVM0JWocWdhX2feOj+E9SK/Cd17Hp7+FNt8hzir+HK
-         D8Qg==
-X-Forwarded-Encrypted: i=0; AJvYcCX776vqVyGmc28Fby+gEPBCjUfqTTjktsR6qT81WPpAVCYvxtzLCRFglio2sD2P1kE7Nxb3H8ZwHf/sAIEJ9ASAaFQk2pS7+gtEaoNm
-X-Gm-Message-State: AOJu0Yy1rbz8dJd+PLYmsof0Gx9wV5zq4Ffmh2o5aA62g6C23GpQT1Z7
-	jsBR7on2Fub5ZaETYlltvA6L3fSTcT8lK23NWrH5DlDrAFpD5OWTDDKRL53+oGBMskXlnYFxYhX
-	Et9lK+h+NU1IyRkob6m58CEu2rZiqc9RyqBsJzTFh36Pr1fH0VdPUJh6A3bp/cw==
-X-Received: by 2002:a05:6a20:160f:b0:19c:a8bf:cd8a with SMTP id l15-20020a056a20160f00b0019ca8bfcd8amr4380743pzj.6.1706777842867;
-        Thu, 01 Feb 2024 00:57:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGTFKwk/btSV/URCvdNmfvTLLCCyn2J86wXYURGOxFkP60VZpTwKUeSS6vccvZLBAnMS5i/pQ==
-X-Received: by 2002:a05:6a20:160f:b0:19c:a8bf:cd8a with SMTP id l15-20020a056a20160f00b0019ca8bfcd8amr4380731pzj.6.1706777842524;
-        Thu, 01 Feb 2024 00:57:22 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUP/ZIaNn49n5TVAR93hXxAwxjFEqEJt4iHPuOJgKwEjVloTkbnBVGpepDMZwP7FegNvKVoxj9riCBjxnnhojfbyPR9TGdcIyKENxVf03w30ZLoGFsf1nuH7zly7RWLiI0V8KZVmkbfH07smSntsCCYZYP+DDWQU1+Hmat3VqEYJbXLWzIrYOSbQhQ2erhMv+ccDRg4W26EmkMN555UWF4MegUUDvhBFe09n/brWh+bZXflVeTWO+ydsBnoAFTECQ==
-Received: from [10.66.61.39] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id jh21-20020a170903329500b001d951b9ce37sm765467plb.273.2024.02.01.00.57.20
+        bh=vnahjsb4pOQLDby7/J+uHzKaCcjEiFwB97sDznnRHfU=;
+        b=S3NTa1cGa64ZfjUFkF7UBw48/w//t8VO2PVlT8kjweR+QXFsK3aj7XrbMn0Cim48/j
+         FD3wELDGTkld2XhPAKi3ZzIsM5c3NSpSzXkgYt7FQsm5bBedqx81CqSdJkg5zkrqyboM
+         zSQLxpG9tplg6ZVf1SyiyAiCWPIXnd4ujrXkKFqbCWM1JTWgAq64oCrhSiSjgjJbujZR
+         z3yCNlng+fFEFY1lHjI7J1ctFLvWd/s41mHwOEXPzKkz94TC1broDmCZ7rdknclSMKZj
+         3dEFCI3tT+W4y3OpTAXDGL2/XybZajP938JulLTKKyNU0+eD+Rw9AXUl+YxtD69sBG+I
+         a0lA==
+X-Gm-Message-State: AOJu0YwbO4hR/IwNzNJCy/ceytmXj99uSiEQs9efa8bUoetU8AvCu6TP
+	IqjmqQkIjdvjUkYrRNc8qe7BmBpeFgEzFbQoXU179PZb/dIcft0bpQNCJBs2C60=
+X-Google-Smtp-Source: AGHT+IGCVX0wVZBLFNP3H7tBIEao7tri0750Mpd+CzIpeEhrsJKa5eVo0JUl7i0WvplLkHdqwVS0cw==
+X-Received: by 2002:a17:906:22d6:b0:a36:c845:86c2 with SMTP id q22-20020a17090622d600b00a36c84586c2mr539710eja.51.1706777930228;
+        Thu, 01 Feb 2024 00:58:50 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVVAzN0iPoBBCQ0p+uFB1UzQGKLIa1StwdomT7NOn/+KGFkt9UQV88DuvaRv4O4G/0A38BiZaUuxd1lzz1dJPdFNy6PsDRmdMaVV2LSTFxegohgGFDO3Gv0I1gNF8QDaFBmGgS/8PvBN7yv9brAZ+mDkX6fw02jhcYScfaaVX0mBQyQnSz13qGcbTIcK6J0Dt4yBubrQbE/ca+YXhbifnS7DkaowpALoEyFur3jdWqb2alesiaAXX7EFDghY40dvvvDHwfcxVV+UWxOhv8uew/9ZeR51SsTXlOekyGdqsh1ja3xBIlWIMgEZwyXp6O5Fh/7kPVp5Gp4Ds/5IgkWzZ7T8xqsxHMpADL39g/WVfeJFxo4uS0iCKL4whE66s2tPFYkwRvbrmzwYmKMFnTyEcvgzolsWYyTGLTWxetLr5CTDx3rm0rN6MHqFvSlxdlNdCzdvVHyrLu4CuMK3sUGotG6EU+M6AXQToQ8PRxANYFpyQd0mq+4J6arjdwFhjbAGUJdqMVgDhJwWYNmRIuPUvgHUsa/R946C8sv+8V8zRDc98p9ubCV5RuBZ63Qml6qIHbXpF1Yy9agI0wtntmn8Xq8HLP39DLfAon1RKBtSyPg+8WSimZzxzNN7Pldj/qPJkMiW/yBH+WCGA==
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id ll9-20020a170907190900b00a36c3e2e52dsm285476ejc.61.2024.02.01.00.58.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 00:57:22 -0800 (PST)
-Message-ID: <510f3534-b076-4d23-b4b8-361c1f872d57@redhat.com>
-Date: Thu, 1 Feb 2024 16:57:19 +0800
+        Thu, 01 Feb 2024 00:58:49 -0800 (PST)
+Message-ID: <f6e5b748-17c4-4de1-be42-f79155be21cb@linaro.org>
+Date: Thu, 1 Feb 2024 09:58:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,156 +61,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] KVM: selftests: Fix the dirty_log_test semaphore
- imbalance
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Xu <peterx@redhat.com>
-References: <20231117052210.26396-1-shahuang@redhat.com>
- <ZbQVRX3V1P-ZE2Wf@google.com>
+Subject: Re: [PATCH v4 04/18] dt-bindings: clock: mobileye,eyeq5-clk: add
+ bindings
 Content-Language: en-US
-From: Shaoqin Huang <shahuang@redhat.com>
-In-Reply-To: <ZbQVRX3V1P-ZE2Wf@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+ <20240131-mbly-clk-v4-4-bcd00510d6a0@bootlin.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240131-mbly-clk-v4-4-bcd00510d6a0@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Sean,
-
-Thanks for your reviewing.
-
-On 1/27/24 04:25, Sean Christopherson wrote:
-> +Peter
+On 31/01/2024 17:26, Théo Lebrun wrote:
+> Add DT schema bindings for the EyeQ5 clock controller driver.
 > 
-> On Fri, Nov 17, 2023, Shaoqin Huang wrote:
->> When execute the dirty_log_test on some aarch64 machine, it sometimes
->> trigger the ASSERT:
->>
->> ==== Test Assertion Failure ====
->>    dirty_log_test.c:384: dirty_ring_vcpu_ring_full
->>    pid=14854 tid=14854 errno=22 - Invalid argument
->>       1  0x00000000004033eb: dirty_ring_collect_dirty_pages at dirty_log_test.c:384
->>       2  0x0000000000402d27: log_mode_collect_dirty_pages at dirty_log_test.c:505
->>       3   (inlined by) run_test at dirty_log_test.c:802
->>       4  0x0000000000403dc7: for_each_guest_mode at guest_modes.c:100
->>       5  0x0000000000401dff: main at dirty_log_test.c:941 (discriminator 3)
->>       6  0x0000ffff9be173c7: ?? ??:0
->>       7  0x0000ffff9be1749f: ?? ??:0
->>       8  0x000000000040206f: _start at ??:?
->>    Didn't continue vcpu even without ring full
->>
->> The dirty_log_test fails when execute the dirty-ring test, this is
->> because the sem_vcpu_cont and the sem_vcpu_stop is non-zero value when
->> execute the dirty_ring_collect_dirty_pages() function. When those two
->> sem_t variables are non-zero, the dirty_ring_wait_vcpu() at the
->> beginning of the dirty_ring_collect_dirty_pages() will not wait for the
->> vcpu to stop, but continue to execute the following code. In this case,
->> before vcpu stop, if the dirty_ring_vcpu_ring_full is true, and the
->> dirty_ring_collect_dirty_pages() has passed the check for the
->> dirty_ring_vcpu_ring_full but hasn't execute the check for the
->> continued_vcpu, the vcpu stop, and set the dirty_ring_vcpu_ring_full to
->> false. Then dirty_ring_collect_dirty_pages() will trigger the ASSERT.
->>
->> Why sem_vcpu_cont and sem_vcpu_stop can be non-zero value? It's because
->> the dirty_ring_before_vcpu_join() execute the sem_post(&sem_vcpu_cont)
->> at the end of each dirty-ring test. It can cause two cases:
->>
->> 1. sem_vcpu_cont be non-zero. When we set the host_quit to be true,
->>     the vcpu_worker directly see the host_quit to be true, it quit. So
->>     the log_mode_before_vcpu_join() function will set the sem_vcpu_cont
->>     to 1, since the vcpu_worker has quit, it won't consume it.
->> 2. sem_vcpu_stop be non-zero. When we set the host_quit to be true,
->>     the vcpu_worker has entered the guest state, the next time it exit
->>     from guest state, it will set the sem_vcpu_stop to 1, and then see
->>     the host_quit, no one will consume the sem_vcpu_stop.
->>
->> When execute more and more dirty-ring tests, the sem_vcpu_cont and
->> sem_vcpu_stop can be larger and larger, which makes many code paths
->> don't wait for the sem_t. Thus finally cause the problem.
->>
->> To fix this problem, we can wait a while before set the host_quit to
->> true, which gives the vcpu time to enter the guest state, so it will
->> exit again. Then we can wait the vcpu to exit, and let it continue
->> again, then the vcpu will see the host_quit. Thus the sem_vcpu_cont and
->> sem_vcpu_stop will be both zero when test finished.
->>
->> Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
->> ---
->> v1->v2:
->>    - Fix the real logic bug, not just fresh the context.
->>
->> v1: https://lore.kernel.org/all/20231116093536.22256-1-shahuang@redhat.com/
->> ---
->>   tools/testing/selftests/kvm/dirty_log_test.c | 16 +++++++++++++++-
->>   1 file changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
->> index 936f3a8d1b83..a6e0ff46a07c 100644
->> --- a/tools/testing/selftests/kvm/dirty_log_test.c
->> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
->> @@ -417,7 +417,8 @@ static void dirty_ring_after_vcpu_run(struct kvm_vcpu *vcpu, int ret, int err)
->>   
->>   static void dirty_ring_before_vcpu_join(void)
->>   {
->> -	/* Kick another round of vcpu just to make sure it will quit */
->> +	/* Wait vcpu exit, and let it continue to see the host_quit. */
->> +	dirty_ring_wait_vcpu();
->>   	sem_post(&sem_vcpu_cont);
->>   }
->>   
->> @@ -719,6 +720,7 @@ static void run_test(enum vm_guest_mode mode, void *arg)
->>   	struct kvm_vm *vm;
->>   	unsigned long *bmap;
->>   	uint32_t ring_buf_idx = 0;
->> +	int sem_val;
->>   
->>   	if (!log_mode_supported()) {
->>   		print_skip("Log mode '%s' not supported",
->> @@ -726,6 +728,11 @@ static void run_test(enum vm_guest_mode mode, void *arg)
->>   		return;
->>   	}
->>   
->> +	sem_getvalue(&sem_vcpu_stop, &sem_val);
->> +	assert(sem_val == 0);
->> +	sem_getvalue(&sem_vcpu_cont, &sem_val);
->> +	assert(sem_val == 0);
-> 
-> Never use bare assert() in selftests, they'll either get compiled out or IIRC,
-> will cause the test to silently exit if they fail.  Either do nothing, or use
-> TEST_ASSERT().
-> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
 
-Sure. I will replace them with TEST_ASSERT().
+No changelog, tags ignored, I scrolled through first two pages of cover
+letter and also no changelog.
 
->> +
->>   	/*
->>   	 * We reserve page table for 2 times of extra dirty mem which
->>   	 * will definitely cover the original (1G+) test range.  Here
->> @@ -825,6 +832,13 @@ static void run_test(enum vm_guest_mode mode, void *arg)
->>   		sync_global_to_guest(vm, iteration);
->>   	}
->>   
->> +	/*
->> +	 *
->> +	 * Before we set the host_quit, let the vcpu has time to run, to make
->> +	 * sure we consume the sem_vcpu_stop and the vcpu consume the
->> +	 * sem_vcpu_cont, to keep the semaphore balance.
->> +	 */
->> +	usleep(p->interval * 1000);
-> 
-> Please no.  "Wait for a while" is never a complete solution for fixing races.
-> In rare cases, adding a delay might be the only sane workaround, but I doubt that's
-> the case here.
+This is a friendly reminder during the review process.
 
-If that's the case. I guess I should keep the current solution. Except 
-you have any better solution, please let me know.
+It looks like you received a tag and forgot to add it.
 
-Thanks,
-Shaoqin
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, under or above your Signed-off-by tag. Tag is "received", when
+provided in a message replied to you on the mailing list. Tools like b4
+can help here. However, there's no need to repost patches *only* to add
+the tags. The upstream maintainer will do that for tags received on the
+version they apply.
 
-> 
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
 
--- 
-Shaoqin
+If a tag was not added on purpose, please state why and what changed.
+
+Best regards,
+Krzysztof
 
