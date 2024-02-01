@@ -1,142 +1,89 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A835D47F;
-	Thu,  1 Feb 2024 14:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067FF5337E;
+	Thu,  1 Feb 2024 14:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706796959; cv=none; b=uxopQT7dE7KHITw8TwkHpUHeUNVrZaMmkb23G1rxFhac3nKKQe3dQsM37gzZndZGZDTGNR8v0aaYJ49IGpmiQ26qJicXly1edoxNofJRtVgX1ImhfZoFSMaZ1avOHRF2awWjYlt2eHsojwLUVkTwaFWULBDs9NoP8Ij2Ad2szU8=
+	t=1706796973; cv=none; b=DEd1A6ydtAdFtqbrZKvzCA0/Rq439+2PXBIYVhNsjHqyUihrYulyg6R+q+f5x6KVxVAvs9g72QhkXIE49vvmBihbUbzY9c96H0B6dFN2waDEPCd8Ty/I0WahNGN4fcm/PprIirbfESpOJVsBlZrleuutMrCMjTeH4d/05Z8YmXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706796959; c=relaxed/simple;
-	bh=IBgH0tB27y4jumRoQMdXPm5HdwQXC8IYWeN1SNZ9N8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RWhoxQG3Zkb21K4XSWlK3m+01+w64zQy8aHalLlhp6f0M35Y37Yi44eNMJEUzHe+NoD8LDlMgvjYUXksOMUBjg72VTs+ltY8rkT9Vi8p5Ih+1AcBuwibuxIdgCSqtDDLaOdN7KFD/7/OLDiI00BjqtQX8ZctR3Yf2aTD8n7dd58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oaocL2L0; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706796973; c=relaxed/simple;
+	bh=COW4TixgCHmoWbYb6ZMc3lV+lQapifvdBll4Z4yxb8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OGzdHlvQnbY9IR5L4bstkiKoaRkOY7noepzFx9HfQxBl7FFd6yIEMtYgVdeCnlJ5T9LHI14cYs2a+aw3A59t9GziSYyEOPWC0TpX1hh5LeMvgDdfXOjLdE7+5C1LGHJpNhWF/4uSU9Hrkz/TQERna+X6dmUA9uiovGHQG6NFcb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=a55N6gHX; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oaocL2L0"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411EFfZa122499;
-	Thu, 1 Feb 2024 08:15:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706796941;
-	bh=J6flvXpOkXawJWzN/G+NmhHzqrhF472sihVACRH/ksM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=oaocL2L0YFB2E/M/Mx3/J+AVekeYV3/SxFQxmP03dI+IyFr1AHCTLo7qmpgXN4a4i
-	 en3Xrd/L0oem5F1g3NVcsfl/EmRXe/XQdl4DPO/Y5bMeJPle4Qyp8VYbMLoe9S1WR2
-	 QS0OFNUhIcWkKPkw4B5vnKx04f/8Uk/UcwAT24Fw=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411EFfv3014842
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 1 Feb 2024 08:15:41 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
- Feb 2024 08:15:41 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 1 Feb 2024 08:15:41 -0600
-Received: from [10.249.129.226] ([10.249.129.226])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411EFAoe050156;
-	Thu, 1 Feb 2024 08:15:18 -0600
-Message-ID: <0ff9f349-25f1-408c-b7f8-ffad035f427e@ti.com>
-Date: Thu, 1 Feb 2024 19:45:05 +0530
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="a55N6gHX"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A5AFB40E01B0;
+	Thu,  1 Feb 2024 14:16:08 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0TrGAcQI3Xuq; Thu,  1 Feb 2024 14:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706796963; bh=SPv10L/MGaHhB1H9sFZLgmVexA6qV9vljgR/Vr3xiDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a55N6gHXjamiqkNWVLUYdCEVvi7klLEctKuGIMd260pApO3EYbRb2hFX2d1k/dGzK
+	 gtYQaz6hfBmEhVBoUfpV+xNBWZKnl9WnyB4vNS22AOQwf9CeG8cxRGUHVcMN2nZ+7P
+	 +fVcQc1qRf65v4XQpyJhTN9Rasu/Zw6ZLqAxj2cf6ytiFxRTpPnnAwF4pP+uyzLadX
+	 mlwwct7pG4FBsuiChZ23s1F3dmLhXrNFCynvJJ7tgF7p1UK5KzSzI4YnFpOGZ0r4K7
+	 M+Qew+vWDChw8c9zZei4Y6tpUe5iyhhXrU3sj2mQUSKmEuG0bweGMJFx4tfuqNzlIg
+	 +vKQaaZqQmvSNhFONaBU7RTQA3tkf8CjX/D12D7LLygzLWKYQNPoNhWUrVZnBvXhOQ
+	 N05poUHjGyn6aylpBBadfIbY52kavj47luqp6xT7zhUw3rExr+6aXc9iLpBIdKKQ4V
+	 eUWcA3sxBUg4C+kfB6A3IdVNdviKeHh64Cys7etuiMhIPhphLBSoc3R7pE+0sHnFye
+	 memaYqyViB6GdAzMReFPDd9ufZEx23ig69wHfxOP/bewJzZiVccKv4aAnQEFABuc3A
+	 fMdoYtEFMiXtN6b181m9atN8mJeHHHTjhOF1H8y1gLXdMZ57uXn93Mdb5dOFJpSpSb
+	 9agUjQe8TNzywkM6WMcy/xic=
+Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E19DF40E01A2;
+	Thu,  1 Feb 2024 14:15:53 +0000 (UTC)
+Date: Thu, 1 Feb 2024 15:15:52 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Xin Li <xin@zytor.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>, Xin Li <xin3.li@intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the tip tree
+Message-ID: <20240201141552.GEZbunmFCS_MwZ6sTT@fat_crate.local>
+References: <20240201111453.0ee3beff@canb.auug.org.au>
+ <402d250c-e9b2-4c19-befd-d12b2e2582cd@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next 1/2] net: ethernet: ti: Introduce
- inter-core-virt-eth as RPMsg driver
-To: Simon Horman <horms@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <andrew@lunn.ch>, <rogerq@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <s-vadapalli@ti.com>, <srk@ti.com>,
-        Ravi Gunasekaran <r-gunasekaran@ti.com>
-References: <20240130110944.26771-1-r-gunasekaran@ti.com>
- <20240130110944.26771-2-r-gunasekaran@ti.com>
- <20240201133001.GC530335@kernel.org>
-Content-Language: en-US
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <20240201133001.GC530335@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <402d250c-e9b2-4c19-befd-d12b2e2582cd@zytor.com>
 
-Simon,
-
-On 2/1/2024 7:00 PM, Simon Horman wrote:
-> On Tue, Jan 30, 2024 at 04:39:43PM +0530, Ravi Gunasekaran wrote:
->> TI's K3 SoCs comprises heterogeneous processors (Cortex A, Cortex R).
->> When the ethernet controller is completely managed by a core (Cortex R)
->> running a flavor of RTOS, in a non virtualized environment, network traffic
->> tunnelling between heterogeneous processors can be realized by means of
->> RPMsg based shared memory ethernet driver. With the shared memory used
->> for the data plane and the RPMsg end point channel used for control plane.
->>
->> inter-core-virt-eth driver is modelled as a RPMsg based shared
->> memory ethernet driver for such an use case.
->>
->> As a first step, register the inter-core-virt-eth as a RPMsg driver.
->> And introduce basic control messages for querying and responding.
->>
->> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
->> ---
->>  drivers/net/ethernet/ti/inter-core-virt-eth.c | 139 ++++++++++++++++++
->>  drivers/net/ethernet/ti/inter-core-virt-eth.h |  89 +++++++++++
->>  2 files changed, 228 insertions(+)
->>  create mode 100644 drivers/net/ethernet/ti/inter-core-virt-eth.c
->>  create mode 100644 drivers/net/ethernet/ti/inter-core-virt-eth.h
->>
->> diff --git a/drivers/net/ethernet/ti/inter-core-virt-eth.c b/drivers/net/ethernet/ti/inter-core-virt-eth.c
->> new file mode 100644
->> index 000000000000..d3b689eab1c0
->> --- /dev/null
->> +++ b/drivers/net/ethernet/ti/inter-core-virt-eth.c
->> @@ -0,0 +1,139 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
-> Hi Ravi and Siddharth,
+On Thu, Feb 01, 2024 at 12:59:54AM -0800, Xin Li wrote:
+> The following patch gets rid of the warning.
 >
-> The correct style for SPDX headers in .c files is a '//' comment:
->
-> // SPDX-License-Identifier: GPL-2.0
+> Boris, should I send a format patch?
 
-I will fix this.
+This is how kernel development is usually done. People send formal
+patches and maintainers apply them.
 
->> +/* Texas Instruments K3 Inter Core Virtual Ethernet Driver
->> + *
->> + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
->> + */
-> ...
->
->> diff --git a/drivers/net/ethernet/ti/inter-core-virt-eth.h b/drivers/net/ethernet/ti/inter-core-virt-eth.h
-> ...
->
->> +struct icve_common {
->> +	struct rpmsg_device *rpdev;
->> +	spinlock_t send_msg_lock;
->> +	spinlock_t recv_msg_lock;
-> Spinlocks ought to come with an comment regarding what they lock.
+:-)
 
-I will add the comments as reported by checkpatch.
+Make sure you explain why you're fixing it.
 
->
->> +	struct message send_msg;
->> +	struct message recv_msg;
->> +	struct icve_port *port;
->> +	struct device *dev;
->> +} __packed;
->> +
->> +#endif /* __INTER_CORE_VIRT_ETH_H__ */
->> -- 
->> 2.17.1
->>
->>
+Thx.
 
-Ravi
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
