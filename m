@@ -1,130 +1,183 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB6F5D46C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 14:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD63A5F462;
+	Thu,  1 Feb 2024 14:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706797339; cv=none; b=Npr833HHaQQ180FcExJfi44uWT0V2gAkJ43pWZRi6iNLHDVlA/XeWu9VNjdLvPMDdUV54y5o5i659zijaegl1ojzFAaM+SdW1rIENQzWGGAW9j/XDuckhmcz1GTA+OztjYdXrEZbHverH2VQWTXsStVkssCvh+9ecysiQMeUtKQ=
+	t=1706797349; cv=none; b=oookAMu/1XtQvTw2yWOj6hAhVH8w8P1ixsUGPsx+KZXaLH1eNXfw1w+GV8dt+51x5iOeXYjvnvyCt+cO6JYc2pFMHTcj2FWofCcuUhMnBgUeerSY4/hdUMLcKrY2PxB8HSd9sDEwtFO15rggS9WLkWyQj3BRWGE6tH3mLUoLyO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706797339; c=relaxed/simple;
-	bh=1O1AOTNGsQX+i0nDTY1kz81nsRaOmNyTqRoqQQPcBeo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LqtEqjz9gXEKjpozRpYZ2HRBE20nIRLITAmbWb9mHOj3legsLG8l5okfiPr+yecU6eoOxZqLEQI4LWE3KVVZlx+Qtl0Z9eIabhONvUd+Lf9ByKt7+TPmDw4OUlnIfMh2R+egAk18Qw2PHsPNbnNwtlyq87Lhg9fGHShsQZgFyHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o1L1I5hC; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706797349; c=relaxed/simple;
+	bh=vZ0f9QgMh/MLNXr5IM6uI3bSgBD+ttKqdlYxHv7Mncg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q1SQ/yCqTKTh2Bc9WVndRFU2M1zgZddNbR+wvWjM7DlwWdKWJFQV+my5uezHdgr0BbJboFzrura9k/VItnIpSbYs4LbNM5yqD07swpez74p6161JsoIzUof+lLuZ+ErinVKX+MEL+GGkRY2ZTNcJQXeK7Mq6WraoJhZAQcZeTwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eh0Iz/LY; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o1L1I5hC"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d8bc1caf00so863249a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 06:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706797335; x=1707402135; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R6RqxSYIRPivOTJEnlw3gOkIIa+Ul1PRzCUBYhNeDdQ=;
-        b=o1L1I5hChL71yecrcBoh/i5TxnGFN48SlTa6ffMxWpNnn/Vts3idVS64/7dP191Dea
-         DiYTTjTBCDA76pnMxDDZ0DcmGrBC73q3aL8yIEgYqgooHk5jXEGB6cCxLVFPWtObxgaP
-         v8UnQmGJQoH5A6CKa6dQ6Mhzyg4wYoghW3FRXDic/G56aAdwh5N0ErQ9mDSI45B7jy0P
-         9po+smAMAzRODYtTQgAUK7mFb0TBaS8clJdiFmeMqkggELfeEeO+b5NeB7+Jv6z0w+QX
-         DwFtB4b0WCl9/5GdJ/IcIP11HYHNVshU7DSU43QBVjQ0BK9Dru1nyux75FjOqsizqZ+c
-         Ko3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706797335; x=1707402135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R6RqxSYIRPivOTJEnlw3gOkIIa+Ul1PRzCUBYhNeDdQ=;
-        b=tO/epxZ+viMqn8Kk45Ce82QTTQRSiIMQpPo7C/O11L77/j3C05+h5U6pfARGDNSWep
-         kdG7DRTzrSpkNuKxR1hA5oRLAFA9iEGlvVCsMOY/PK+BV5p1Hd6G4qd3jeiQaV4qttCn
-         q+1YHFsEHoHEP0pQV6IU/oiYn5R2qPCan1dwRpKlCvoOchuNza4HI5OEMHYYlUUCutja
-         BsMc2BmRJ3dhy/ogF/e03bzKvbQ6X1HRpI29cbVf5D7DrvfHzOtQPQ7t/An70uzoMo73
-         WshoJmdqYuYqKJKGZq4ZV19EIuw82v32AgsWKtcZBs4rxbTlbDLko8SrwbDP4tSh8Bz7
-         6oMg==
-X-Gm-Message-State: AOJu0YyHatK9zX5g3ZXMeu+KMAyY2ycMpZmZlgplBKWX9FirJun5g6Z6
-	NLjC8E9jVlVfjZ9LHtM/v+fsFkddMrXLoPQGnkDxKpHUKtPgrrbn0iKxgC9FdEsu/cWoOaL8ilH
-	fv/tGAZhL41oL1QDSJ3Gw/ViH98S7d9QlTpJusQ==
-X-Google-Smtp-Source: AGHT+IErbFgMVG98pJg/oaehaHSpsB61MD2tROFlx7fdPd5hSbz2EsbFIOcbXTPEqNs8GfN7zqAzP9yPfu+IfMDWtSA=
-X-Received: by 2002:a05:6a20:c526:b0:19c:74d1:b314 with SMTP id
- gm38-20020a056a20c52600b0019c74d1b314mr1891047pzb.17.1706797335445; Thu, 01
- Feb 2024 06:22:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eh0Iz/LY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706797347; x=1738333347;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vZ0f9QgMh/MLNXr5IM6uI3bSgBD+ttKqdlYxHv7Mncg=;
+  b=eh0Iz/LYSRxrIMy5ktuHOewhdE9InVgas6hdfpruATWNEdw8/VWAmVtk
+   lru3y9hCt8Tr8VnlQWJOEMfP4mjZLXLLRuMKWorauxY0/g6l2bz2X+D1+
+   P6wXGjvWs9uYctyUmYN+PusFgfXQegIchvcRzvqkZiGVmuidxKbWOve+q
+   qndrMW9MJr6wTQOPTnotT/rZ1oMF7WJGBB3HQelgkwlRf9Ad1AvwwLjPg
+   0P6noVVgmge495lanEGB6AIEMQib8vDeVkx+Q2XvQCVanvdmKMG+KMaFr
+   c9z56J4u+00P9ccOikYeKbyMvRRIMJZFu03IiQcGFkZr3X+I8ZG2ZWxrZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="401034126"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="401034126"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 06:22:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119948354"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="1119948354"
+Received: from mszycik-mobl1.ger.corp.intel.com (HELO [10.246.35.198]) ([10.246.35.198])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 06:22:23 -0800
+Message-ID: <043361a1-bb11-4d0c-bbc2-d31b38deb4dc@linux.intel.com>
+Date: Thu, 1 Feb 2024 15:22:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125013858.3986-1-semen.protsenko@linaro.org>
- <20240125013858.3986-4-semen.protsenko@linaro.org> <cd9ca36f-84f6-4cc7-bc1e-a4c5781d2bf2@linaro.org>
-In-Reply-To: <cd9ca36f-84f6-4cc7-bc1e-a4c5781d2bf2@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Thu, 1 Feb 2024 08:22:04 -0600
-Message-ID: <CAPLW+4ke9AJ_7FkmqTsT7kQv3TWYW0_G2rc=RsSGVFuvX2qi-w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Add SPI nodes for Exynos850
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
-	Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH net-next v7 1/2] ethtool: Add GTP RSS
+ hash options to ethtool.h
+Content-Language: en-US
+To: Takeru Hayasaka <hayatake396@gmail.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, vladimir.oltean@nxp.com,
+ linux-kernel@vger.kernel.org, laforge@gnumonks.org,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ mailhol.vincent@wanadoo.fr
+References: <20240201033310.1028154-1-hayatake396@gmail.com>
+From: Marcin Szycik <marcin.szycik@linux.intel.com>
+In-Reply-To: <20240201033310.1028154-1-hayatake396@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 1, 2024 at 4:31=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 25/01/2024 02:38, Sam Protsenko wrote:
-> > Some USI blocks can be configured as SPI controllers. Add corresponding
-> > SPI nodes to Exynos850 SoC device tree.
-> >
-> > Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-> > ---
-> > Changes in v2:
-> >   - Sorted pinctrl properties properly
-> >
-> >  arch/arm64/boot/dts/exynos/exynos850.dtsi | 54 +++++++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/exynos/exynos850.dtsi b/arch/arm64/boo=
-t/dts/exynos/exynos850.dtsi
-> > index 618bc674896e..ca257da74b50 100644
-> > --- a/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> > +++ b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> > @@ -738,6 +738,24 @@ usi_spi_0: usi@139400c0 {
-> >                                <&cmu_peri CLK_GOUT_SPI0_IPCLK>;
-> >                       clock-names =3D "pclk", "ipclk";
-> >                       status =3D "disabled";
-> > +
-> > +                     spi_0: spi@13940000 {
-> > +                             compatible =3D "samsung,exynos850-spi";
-> > +                             reg =3D <0x13940000 0x30>;
-> > +                             interrupts =3D <GIC_SPI 221 IRQ_TYPE_LEVE=
-L_HIGH>;
-> > +                             pinctrl-0 =3D <&spi0_pins>;
-> > +                             pinctrl-names =3D "default";
-> > +                             clocks =3D <&cmu_peri CLK_GOUT_SPI0_IPCLK=
->,
-> > +                                      <&cmu_peri CLK_GOUT_SPI0_PCLK>;
-> > +                             clock-names =3D "spi_busclk0", "spi";
-> > +                             samsung,spi-src-clk =3D <0>;
-> > +                             dmas =3D <&pdma0 5>, <&pdma0 4>;
-> > +                             dma-names =3D "tx", "rx";
-> > +                             num-cs =3D <1>;
->
-> For the future: please keep properties sorted by name, so clocks+name,
-> dmas+name, interrupts, pinctrl+name, more-or-less matching DTS coding
-> style. address/size cells can go to the end.
->
 
-Noted, thanks! So IIUC, basically follow the order of properties
-described at [1], but keep the standard/common properties block
-sorted, and then keep vendor properties sorted, right?
 
-[1] Documentation/devicetree/bindings/dts-coding-style.rst
+On 01.02.2024 04:33, Takeru Hayasaka wrote:
+> This is a patch that enables RSS functionality for GTP packets using ethtool.
+> 
+> A user can include TEID and make RSS work for GTP-U over IPv4 by doing the
+> following:`ethtool -N ens3 rx-flow-hash gtpu4 sde`
+> 
+> In addition to gtpu(4|6), we now support gtpc(4|6),gtpc(4|6)t,gtpu(4|6)e,
+> gtpu(4|6)u, and gtpu(4|6)d.
+> 
+> gtpc(4|6): Used for GTP-C in IPv4 and IPv6, where the GTP header format does
+> not include a TEID.
+> gtpc(4|6)t: Used for GTP-C in IPv4 and IPv6, with a GTP header format that
+> includes a TEID.
+> gtpu(4|6): Used for GTP-U in both IPv4 and IPv6 scenarios.
+> gtpu(4|6)e: Used for GTP-U with extended headers in both IPv4 and IPv6.
+> gtpu(4|6)u: Used when the PSC (PDU session container) in the GTP-U extended
+> header includes Uplink, applicable to both IPv4 and IPv6.
+> gtpu(4|6)d: Used when the PSC in the GTP-U extended header includes Downlink,
+> for both IPv4 and IPv6.
+> 
+> GTP generates a flow that includes an ID called TEID to identify the tunnel.
+> This tunnel is created for each UE (User Equipment).By performing RSS based on
+> this flow, it is possible to apply RSS for each communication unit from the UE.
+> Without this, RSS would only be effective within the range of IP addresses. For
+> instance, the PGW can only perform RSS within the IP range of the SGW.
+> Problematic from a load distribution perspective, especially if there's a bias
+> in the terminals connected to a particular base station.This case can be
+> solved by using this patch.
 
-> Best regards,
-> Krzysztof
->
+Reviewed-by: Marcin Szycik <marcin.szycik@linux.intel.com>
+
+> Signed-off-by: Takeru Hayasaka <hayatake396@gmail.com>
+> ---
+> v2->v3: Based on Harald-san's review, I added documentation and comments to
+> ethtool.h and ice.rst.
+> v3->v4: Based on Marcin-san's review, I added the missing code for GTPC and
+> GTPC_TEID, and revised the documentation and comments.
+> v4->v5: Based on Marcin-san's review, I fixed rename and wrong code regarding
+> GTPC
+> v5->v6: Based on Marcin-san's review, Undoing the addition of unnecessary
+> blank lines.Minor fixes.
+> v6->v7 Based on Jakub-san's review, Split the patch.
+>  include/uapi/linux/ethtool.h | 48 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> index 06ef6b78b7de..11fc18988bc2 100644
+> --- a/include/uapi/linux/ethtool.h
+> +++ b/include/uapi/linux/ethtool.h
+> @@ -2023,6 +2023,53 @@ static inline int ethtool_validate_duplex(__u8 duplex)
+>  #define	IPV4_FLOW	0x10	/* hash only */
+>  #define	IPV6_FLOW	0x11	/* hash only */
+>  #define	ETHER_FLOW	0x12	/* spec only (ether_spec) */
+> +
+> +/* Used for GTP-U IPv4 and IPv6.
+> + * The format of GTP packets only includes
+> + * elements such as TEID and GTP version.
+> + * It is primarily intended for data communication of the UE.
+> + */
+> +#define GTPU_V4_FLOW 0x13	/* hash only */
+> +#define GTPU_V6_FLOW 0x14	/* hash only */
+> +
+> +/* Use for GTP-C IPv4 and v6.
+> + * The format of these GTP packets does not include TEID.
+> + * Primarily expected to be used for communication
+> + * to create sessions for UE data communication,
+> + * commonly referred to as CSR (Create Session Request).
+> + */
+> +#define GTPC_V4_FLOW 0x15	/* hash only */
+> +#define GTPC_V6_FLOW 0x16	/* hash only */
+> +
+> +/* Use for GTP-C IPv4 and v6.
+> + * Unlike GTPC_V4_FLOW, the format of these GTP packets includes TEID.
+> + * After session creation, it becomes this packet.
+> + * This is mainly used for requests to realize UE handover.
+> + */
+> +#define GTPC_TEID_V4_FLOW 0x17	/* hash only */
+> +#define GTPC_TEID_V6_FLOW 0x18	/* hash only */
+> +
+> +/* Use for GTP-U and extended headers for the PSC (PDU Session Container).
+> + * The format of these GTP packets includes TEID and QFI.
+> + * In 5G communication using UPF (User Plane Function),
+> + * data communication with this extended header is performed.
+> + */
+> +#define GTPU_EH_V4_FLOW 0x19	/* hash only */
+> +#define GTPU_EH_V6_FLOW 0x1a	/* hash only */
+> +
+> +/* Use for GTP-U IPv4 and v6 PSC (PDU Session Container) extended headers.
+> + * This differs from GTPU_EH_V(4|6)_FLOW in that it is distinguished by
+> + * UL/DL included in the PSC.
+> + * There are differences in the data included based on Downlink/Uplink,
+> + * and can be used to distinguish packets.
+> + * The functions described so far are useful when you want to
+> + * handle communication from the mobile network in UPF, PGW, etc.
+> + */
+> +#define GTPU_UL_V4_FLOW 0x1b	/* hash only */
+> +#define GTPU_UL_V6_FLOW 0x1c	/* hash only */
+> +#define GTPU_DL_V4_FLOW 0x1d	/* hash only */
+> +#define GTPU_DL_V6_FLOW 0x1e	/* hash only */
+> +
+>  /* Flag to enable additional fields in struct ethtool_rx_flow_spec */
+>  #define	FLOW_EXT	0x80000000
+>  #define	FLOW_MAC_EXT	0x40000000
+> @@ -2037,6 +2084,7 @@ static inline int ethtool_validate_duplex(__u8 duplex)
+>  #define	RXH_IP_DST	(1 << 5)
+>  #define	RXH_L4_B_0_1	(1 << 6) /* src port in case of TCP/UDP/SCTP */
+>  #define	RXH_L4_B_2_3	(1 << 7) /* dst port in case of TCP/UDP/SCTP */
+> +#define	RXH_GTP_TEID	(1 << 8) /* teid in case of GTP */
+>  #define	RXH_DISCARD	(1 << 31)
+>  
+>  #define	RX_CLS_FLOW_DISC	0xffffffffffffffffULL
