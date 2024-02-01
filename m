@@ -1,196 +1,136 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2101.outbound.protection.outlook.com [40.107.22.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92084D9E9;
-	Thu,  1 Feb 2024 13:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706793510; cv=none; b=kwn28bZFxsUwXdKGTWtJMok95FUcO8K3PMZnSfn9/3Mdm7r//1LqYQwCVkqltr7cnqjE5r6Tb5vVMaCDo+OnI/m6djXM1Xzoxt2x1xMHTQyXPez4j9N+BtOBi2ErqqtOt+3ZUOJhwIvyhepN2IOB6u844wZrsV6dR2IUM2jF2QQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706793510; c=relaxed/simple;
-	bh=Wm7puvNOUdtZukl0ZC90LuZ809sXvQ+YUf3Z8otjBIE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OWSWvARLSqrM9Pk3COrkGM3nbNKqUhDWejGI9Qp9lIPL3hqGC8aZWkFi0V0KDBQLA9+KlCugy1m2kijjnudulms1L147YWlvBNpuqFgAQd8Cz4WFnY/dF3qsoFoMIB0O/6yvRNwXUuFmAGNUqcOsiSlDq6Zt93pfsd0RvErMfXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bi4vh7aI; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016105B68F
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 13:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.101
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706793526; cv=fail; b=sIaCZ4Ygsgzl3AcCBVJjZ6A6zr60IXJR0W7hg0FxdGPgh56MAvRlLeWNmuKP7lyD/HyaSj/FbARjzvD29BpFFhoaARmzEty70SzciNvxvQhgbDbL9WnjyQ/WPyDRrBSyXELvmoblCDE0ZW6az/gWAy/OoFUDS2j5gpxW3Cpn2YQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706793526; c=relaxed/simple;
+	bh=B7RcvbnNf5GZ+FZLekSTBvetz0v/1b6qxp4sDie0PL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TrXOt+4S7hHH/61C8hUWoTXAcjhT9fyr9kvC8qn7D7f1sqJqfLbL7V6rSb0Dz6UQDWe03cIGzChJaFQjnNiSUGVRkV90QqC0xglzeOtm6MYJHKlJLgxoXQi11rNyrrmpxVQq9TUdUQtrxCb6HW7HD7GIb+lc1fNgsnYpRizlHR4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=asem.it; dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b=UXFXBfWv; arc=fail smtp.client-ip=40.107.22.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asem.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bi4vh7aI"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6de287449f1so598668b3a.2;
-        Thu, 01 Feb 2024 05:18:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706793506; x=1707398306; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+qbAAqTLIMzAo4medIpeojk88gvHdZvjy5YQAUei/s=;
-        b=Bi4vh7aIeTreaebi0E7HXYPNXZllcauYOXAxNpUcpz/GEpUP7/a/YbgGlc1ImKZXuL
-         d522dk1dtYbHM94Pa5RQmYAQJdJ44xqgDf4qpRIyGNa7pSfxR85mj87Ugxl4wYOeoQTS
-         1PVe0Ws2AYBvbMK8kMt1vVtMxEpXJkf5cUzmQJonejL5iXHdSQefzt/WGwc1H6lfnTVE
-         I9emMOeVVLTBiK1/LzLLks+PWXon2w28YUgUvb/69E0ljVhkfvL71VhzD13Bea1OsjVx
-         M4pkPGIniLCr5qTwIQSB2TEs1gUmCdS++DbNgoKGpKZKblPfpDFFyjSdL8mYwqFcw/+P
-         8hrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706793506; x=1707398306;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z+qbAAqTLIMzAo4medIpeojk88gvHdZvjy5YQAUei/s=;
-        b=DtuFVR0nIrPkS47oGbnFxqfo1/RGwi3nFdjomhsrOiVfHPBwf12nneI+xAKe5z5EV8
-         44/tiH3rY7O//cheyT+rY39WQYkmvjFmq3X5lE3sINlNa+/kfpchv5FDGJQSpFnsG+5Q
-         erJWaleYEvgftAFlESIy1lQhgDKPeInpGdrRjwK8vnCGcTvFNVy+oXvOyRXwjuzjOzuz
-         aR74vrQnoJTBHWu4/WahmYMPbz8BOnkyBC1KPz5hIIhruNfDfsLbTDgF+AARdyDZPXPK
-         f+OHElgcWSBvBncMsranFGOt0tWScvCV4OCDlROEzNJDtJEEh/pqP88Pv7xCcO6gCf5/
-         XyIg==
-X-Gm-Message-State: AOJu0Ywhb3rHthwR6EosXbg0X87vbx+lTdO6fciR58tZ1gEMM8I/uCU3
-	bvIIb05Ydqf/43OI7V3a1FED44Z8qeb9hKG02Zu34mJzXEZXLbGS
-X-Google-Smtp-Source: AGHT+IHfay/vXtv4N3R3RiSIuEgbVLNuNAb5ILB+QCyVzUMSlQAD81xkspKh4LaUuYKU3w//nbiFRA==
-X-Received: by 2002:aa7:8c48:0:b0:6d9:b9b4:8ca with SMTP id e8-20020aa78c48000000b006d9b9b408camr4755803pfd.28.1706793506089;
-        Thu, 01 Feb 2024 05:18:26 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWL4ceCPiFaZMjXdAcS1JkokfmAxkjNVSD2ep+viYzOaj8Z4YH/IyA8+PkgOmRxOKLcrxU3EeBIwmTAUg8ojZhW7yfJ5QTlBprN3oMJbx0fQmZyHLJymS+6vkc8rseK8beSh+JiygnhTjKkxZhX3c9xxd6ea5f+Zd6/flH05aHx/tV+V3ZTvfWkf240NtEqeWuXp9TfWzsSGL+HS4EeJtZj30lhwHXZDMgySD5a0JP7OGCM2/7saYw2zs0U/Vq4W+Uv6s9RSgjmE/Y0RDd5KiRhab9mf6KQgkmk0Ye5gO2e4d/f5HxZZ8i/X9iJpubx2dQE2fGITt2jSTL2ZsPXEPfcdj0ddhwiu034xFUOzvpbLiMspe411WHPNjuRTtOHy/GhFg==
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q6-20020aa79826000000b006d9c0dd1b26sm12163984pfl.15.2024.02.01.05.18.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 05:18:25 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <88a60be9-083b-4618-845c-6983bcad3540@roeck-us.net>
-Date: Thu, 1 Feb 2024 05:18:23 -0800
+	dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b="UXFXBfWv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DVbf9z/5D/ZkOM78k6oh2GJEA357A+WqI5anEUJgqgo8iIslhOo5xdKbzWunjlp7J62RtsHQii4kT9bjhuY88EpUL2fs7W8wa8x537jdxLxHynduh7/5Yk1gd44ZZCHdzW6Kx2voWrFx/rSPJ8bzk6jzsmTmZpXh/zOwHXp/2MOLim+hgyff33EbaQ/YsTozM1bAXrV7eEe9cOpelNArp2EHO/hEiAZ5DSEGWIyoPIcI/bC52D71isUe/x+VJwoQ+Z2UKBdcjxixgGQafLijex6BgARXtO1yQvm0UUdRawjvommnn5Wj5n0yySgEdsuUCjqK46u9Hr7Q2qtg+udZWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gbk6GEaZFm2CqJE8OhLPw9fpnMMZjNb43lrAdGQwPeQ=;
+ b=Up1IyOHvsmAfLXSlINW9biAcfVhVWQo0WC28psgH7lz7n+aUKJ7aUz8jBl6viqzzgq6n3Eu381hhaiFor/r2G9DJEr6tgRKt0XftpMI2Fx/GV5PjzKtmPajL727ehaXqB+GebXu73kemvjc6BQjNWpWPgS1FUc7B0ZXGcc/3VGwLPUpXbJFMZyxusLBsVEu/0E5WD15ssyszs8/Ul3PuF7TXxC2Z5MSfWzh4sYp3uMw26RbgpGI+yowmUxnE15yD0vf8iG5buvwJxrv5U6MLDyRNTuPmRxBqoZPlfHCKvfUkHKfQsLbaWMXcmIIJcNQiX16kbZswmQKD4ShKiowoJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 151.1.184.193) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=asem.it;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=asem.it;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gbk6GEaZFm2CqJE8OhLPw9fpnMMZjNb43lrAdGQwPeQ=;
+ b=UXFXBfWvUiAsJF6UNe3vTh4anvmav6O1VKdJu6KZ+dgYNdUczVTBaZoRAGUVo9Fi2jdaNyBWs2tj5IxdyKYpChtVRbiM3p3YTXJ1jOjwWcNjlAYBlIPqzulLTTobfkVg6N2osaz6RXIsaZwvbyAHHyUiMnlACOClQ8TutrE2XN0=
+Received: from DUZPR01CA0243.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b5::11) by AM8PR01MB7881.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:3d8::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Thu, 1 Feb
+ 2024 13:18:40 +0000
+Received: from DB5PEPF00014B9E.eurprd02.prod.outlook.com
+ (2603:10a6:10:4b5:cafe::bc) by DUZPR01CA0243.outlook.office365.com
+ (2603:10a6:10:4b5::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.26 via Frontend
+ Transport; Thu, 1 Feb 2024 13:18:40 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 151.1.184.193) smtp.mailfrom=asem.it; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=asem.it;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ asem.it discourages use of 151.1.184.193 as permitted sender)
+Received: from asas054.asem.intra (151.1.184.193) by
+ DB5PEPF00014B9E.mail.protection.outlook.com (10.167.8.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7249.19 via Frontend Transport; Thu, 1 Feb 2024 13:18:40 +0000
+Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with Microsoft SMTPSVC(10.0.14393.4169);
+	 Thu, 1 Feb 2024 14:18:38 +0100
+From: Flavio Suligoi <f.suligoi@asem.it>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] mtd: spi-nor: everspin: add em004lxb entry
+Date: Thu,  1 Feb 2024 14:17:10 +0100
+Message-Id: <20240201131710.797505-2-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240201131710.797505-1-f.suligoi@asem.it>
+References: <20240201131710.797505-1-f.suligoi@asem.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 net-next 08/13] net: phy: marvell-88q2xxx: add support
- for temperature sensor
-Content-Language: en-US
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jean Delvare <jdelvare@suse.com>, Stefan Eichenberger <eichest@gmail.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <20240122212848.3645785-1-dima.fedrau@gmail.com>
- <20240122212848.3645785-9-dima.fedrau@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240122212848.3645785-9-dima.fedrau@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 01 Feb 2024 13:18:38.0651 (UTC) FILETIME=[2B15E0B0:01DA5511]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9E:EE_|AM8PR01MB7881:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: a70de548-1ebb-4002-ffc2-08dc23284e95
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	TJA/5jsn6LNlsArDxahb7MmQFfOCksqm9t5VUfya1XiJxGX6SiSAs/QhikbUDPOizBKVU+TlUc5pd5ksGsupC30oRo+Ni8M6V2CncKYGvaZ7JTRajBBbJ115omP0rbJWlRyi2bEVDsWUY2vsS6Lc9emArNX5iuVFopcHj8R7xP+Fc418A1Cf3IJQM5xbY+tRlBznCKhFJP1jcLVwDVrD91qZ/kkimxZTwNA4/RGC2IXRfFs9uZYmUSOKn88EXCYlHz87F9blyAv7heAYf2ZB9P5kGB555Mwkyr2s/wWdAV6E/e27Mqb1dk9a0o4e6SH5AsJCjhh1TQ7q00qz5CgE365Bn+lE/ILfKV/2QYugLRG7e90uhFGcWyM/Ak2SSVN+G1jyEn+hzhFgc6sW521gLh/b0+JVBnH/CWn81l2W8vodfzxphBKjt0ijAab0SINIho3hxv5GST3uxCvk/HtMiyE5ovafj9OG6E3WCyyWZBEhDigL9WQDtDrYm7PslxZ8NfZPZmg2i5A6hUjlh9lt3GRcdbPYpDMeKTQEYg8v7Zg7JxmD/mTb9WKc/OsiM7XJJH836V5xG6SFOH6aa5R5Lsq0kmB0MOGjQP14Qwno9SpMcHKWoW8eeuwLd0vByY8kD5ma/Bju+xYc5z6xcsCnj5nVdSyOOQDRKdtCfPjfPzaaYnvejcVwkQL3+2CZRxSIkqkVjmrhzU7cjvbLA9FSikuenEJ5/NdfJkVaAryGrek=
+X-Forefront-Antispam-Report:
+	CIP:151.1.184.193;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:asas054.asem.intra;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(39850400004)(136003)(346002)(376002)(396003)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(82310400011)(36840700001)(46966006)(36756003)(4744005)(2906002)(41300700001)(86362001)(316002)(70586007)(110136005)(70206006)(47076005)(336012)(6666004)(1076003)(107886003)(2616005)(26005)(478600001)(83380400001)(966005)(40480700001)(82740400003)(5660300002)(356005)(36860700001)(4326008)(81166007)(8936002)(8676002)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: asem.it
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 13:18:40.2635
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a70de548-1ebb-4002-ffc2-08dc23284e95
+X-MS-Exchange-CrossTenant-Id: d0a766c6-7992-4344-a4a2-a467a7bb1ed2
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d0a766c6-7992-4344-a4a2-a467a7bb1ed2;Ip=[151.1.184.193];Helo=[asas054.asem.intra]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B9E.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR01MB7881
 
-On 1/22/24 13:28, Dimitri Fedrau wrote:
-> Marvell 88q2xxx devices have an inbuilt temperature sensor. Add hwmon
-> support for this sensor.
-> 
-> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> ---
->   drivers/net/phy/marvell-88q2xxx.c | 152 ++++++++++++++++++++++++++++++
->   1 file changed, 152 insertions(+)
-> 
-> diff --git a/drivers/net/phy/marvell-88q2xxx.c b/drivers/net/phy/marvell-88q2xxx.c
-> index 4cb8fe524795..6900bad275d0 100644
-> --- a/drivers/net/phy/marvell-88q2xxx.c
-> +++ b/drivers/net/phy/marvell-88q2xxx.c
-> @@ -5,6 +5,7 @@
->   #include <linux/ethtool_netlink.h>
->   #include <linux/marvell_phy.h>
->   #include <linux/phy.h>
-> +#include <linux/hwmon.h>
->   
->   #define PHY_ID_88Q2220_REVB0	(MARVELL_PHY_ID_88Q2220 | 0x1)
->   
-> @@ -33,6 +34,19 @@
->   #define MDIO_MMD_PCS_MV_GPIO_INT_CTRL			32787
->   #define MDIO_MMD_PCS_MV_GPIO_INT_CTRL_TRI_DIS		0x0800
->   
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR1			32833
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR1_RAW_INT		0x0001
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR1_INT		0x0040
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR1_INT_EN		0x0080
-> +
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR2			32834
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR2_DIS_MASK		0xc000
-> +
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR3			32835
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR3_INT_THRESH_MASK	0xff00
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR3_INT_THRESH_SHIFT	8
-> +#define MDIO_MMD_PCS_MV_TEMP_SENSOR3_MASK		0x00ff
-> +
->   #define MDIO_MMD_PCS_MV_100BT1_STAT1			33032
->   #define MDIO_MMD_PCS_MV_100BT1_STAT1_IDLE_ERROR		0x00ff
->   #define MDIO_MMD_PCS_MV_100BT1_STAT1_JABBER		0x0100
-> @@ -488,6 +502,143 @@ static int mv88q2xxx_resume(struct phy_device *phydev)
->   	return phy_clear_bits_mmd(phydev, MDIO_MMD_PMAPMD, MDIO_CTRL1,
->   				  MDIO_CTRL1_LPOWER);
->   }
-> +#ifdef CONFIG_HWMON
+Add the Everspin EM0004LXB 4Mb (512KB) Industrial STT-MRAM Persistent
+Memory.
+This device is JEDEC compatible (JESD251 and JESD251-1), but it is not
+able to provide SFDP information.
 
-HWMON is tristate, so this may be problematic if the driver is built
-into the kernel and hwmon is built as module.
+Link: https://www.everspin.com/file/158244/download
 
-[ ... ]
-> +
-> +static int mv88q2xxx_hwmon_write(struct device *dev,
-> +				 enum hwmon_sensor_types type, u32 attr,
-> +				 int channel, long val)
-> +{
-> +	struct phy_device *phydev = dev_get_drvdata(dev);
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_max:
-> +		if (val < -75000 || val > 180000)
-> +			return -EINVAL;
-> +
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ drivers/mtd/spi-nor/everspin.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Not that it matters much, but we typically use clamp_val() to limit
-the range of temperature limits because the valid range differs for
-each chip and is otherwise difficult to determine for the user.
-
-Guenter
+diff --git a/drivers/mtd/spi-nor/everspin.c b/drivers/mtd/spi-nor/everspin.c
+index 5f321e24ae7d..4741930ce9a8 100644
+--- a/drivers/mtd/spi-nor/everspin.c
++++ b/drivers/mtd/spi-nor/everspin.c
+@@ -31,6 +31,14 @@ static const struct flash_info everspin_nor_parts[] = {
+ 		.size = SZ_512K,
+ 		.sector_size = SZ_512K,
+ 		.flags = SPI_NOR_NO_ERASE | SPI_NOR_NO_FR,
++	}, {
++		.id = SNOR_ID(0x6b, 0xbb, 0x13),
++		.name = "em004lxb",
++		.size = SZ_512K,
++		.sector_size = SZ_512K,
++		.flags = SPI_NOR_NO_ERASE | SPI_NOR_NO_FR | SPI_NOR_HAS_LOCK |
++			 SPI_NOR_HAS_TB | SPI_NOR_4BIT_BP | SPI_NOR_BP3_SR_BIT6,
++		.no_sfdp_flags = SPI_NOR_SKIP_SFDP,
+ 	}
+ };
+ 
+-- 
+2.34.1
 
