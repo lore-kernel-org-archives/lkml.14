@@ -1,40 +1,48 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DAA15B102;
-	Thu,  1 Feb 2024 10:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3D115B102;
+	Thu,  1 Feb 2024 10:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706782611; cv=none; b=pnZ4HaPhB5hmyy6cunhOnGSojbyZ4CFFTEYiENVreuHrp5JHglnoKE44gtGl9+WDfv02osXx9nq5Hm6ES2gSBTTXbHULJLpzqCuDNe2+tUImhne+lhMqFbVjJ2IPWjVJA56E63QDXkKn3AlqjQr2/9yTJieYxlZsY/AcyDCPgJw=
+	t=1706782662; cv=none; b=nBKjxzEekcVcb1jRnRKNTlLVV65ieVv0LEQ+wY/ncXuwWW/JKoe7m6uFypTQzRm//Gu9eE3oePaVLOJ2ThxInBSzjAb9PqwdvpS2PYdEgyIMf3QKeJikaZFWSWI1hC6T2HFub4q1jhYxTX99Ih23EwBBhPWvXvugUAa9gVb3mDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706782611; c=relaxed/simple;
-	bh=o1wVIMmJ520BEQsqM1zAURXL/Zn0xmObwP0BDMXU0tE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=txU0Y3Z7N6BGe6ZcgI8vOtFtzZ/ozxPQtb31W5M86EiDlMChg+mGsFl1rspcMBLgeAgAJfzKf0O83ytSgZCftQfWUBI+i7Q+h7kcbzFNxP4b1eNuAGoGUnO/tHZYTkrym2GMFBT4xi8U6NHyhcGWeDHNEmGb4Go7maHKrSYsQbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OyN24PAm; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706782662; c=relaxed/simple;
+	bh=e90Rv4w1hU2IykaN/Qvvk//SylNjfXirH78B0STgVfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HGzbbvtl2WXzntERs4sf2oj4q0QyRVHsl7r7x9aCuULgZcDvludcjg42jnm6anZpYnqqIiJWk4eNbi8XhcoTJlhWrqLG+lAaNEKgvkcgK7yRcz5H4k8DPtIobWwZzBUKW1LMjFMByC8g1yn7wetnuzVJq8XylAaXZotQrHfgd/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oy5MO2uP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OyN24PAm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706782607;
-	bh=o1wVIMmJ520BEQsqM1zAURXL/Zn0xmObwP0BDMXU0tE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OyN24PAmgPssyDz6LNpoS4vKe68IhaXzpboE/QWs9lBIfLX3OKEG0tWptllPgBmXe
-	 5wbN1U84A9sgPBUaw7OG1MKf3+2nED7MU9/1HmNvwZziLcV+umKeH3o1GyXpS+dcIJ
-	 kZfE069dG1fXd3nautF8hE8Fz6WmkMob3LfE1PBks0EYWXhQ/R3h4bCl+OxphF/jXU
-	 FM68yojo/8cYHUrfFi8eJHbz3uqQqkHBCi9JqCCjTAEbxgpvm1+fcmr7cFIU0aptss
-	 uadO8A5LRV7aLlTCn4TDCyl3CQxdN0ZWDtWFI3E+tR7lTNv1bpB0PRrbeVOecoJUVc
-	 vzIPOyvY3HKBg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BC29E3782081;
-	Thu,  1 Feb 2024 10:16:46 +0000 (UTC)
-Message-ID: <488c6f38-02c6-4e62-b90b-d2ac112541ae@collabora.com>
-Date: Thu, 1 Feb 2024 11:16:46 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oy5MO2uP"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 411A6ABJ023316;
+	Thu, 1 Feb 2024 10:17:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=AfWuN6LbuvcvxBSPjYrEHyzxmGBZs4Ru/UowddQIa/I=; b=oy
+	5MO2uPH1iOGDMn1K3AYBte2R2rk5ue8ufwysMeg8lbtByd+K7bgYIaVC3vOPaFVq
+	SVWB1vh+tTL5P0aZdipalfO93ohBmZ9YE1MOPjscyV6WgwFBnLGIbI2sOmNYOl7i
+	RopZKjmOIxUxFn92IvNrQUW4Mirrdy0CqUX0YgPHao1ru063WRAKg17jaaPLS26N
+	Lc2BslgE/4J9l4WhFLhmKF1omw373row0Bihot+NL+BXHKjPHRVywKG4xaAYQPDX
+	oofcs+LJtbVqUmc1rqdjXGO6HRRifRmlQ5MvJht3Rg8nn+bw+uEkntLDABzIzOi/
+	m/RLlSSHyLa/yU/mMYWw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w098c00ud-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Feb 2024 10:17:36 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 411AHaxr022716
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 1 Feb 2024 10:17:36 GMT
+Received: from [10.218.25.146] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 1 Feb
+ 2024 02:17:32 -0800
+Message-ID: <3a3a5ef2-c5c5-4c19-8760-6805d571658e@quicinc.com>
+Date: Thu, 1 Feb 2024 15:47:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,100 +50,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/17] Support IGT in display driver
+Subject: Re: [V2] i2c: i2c-qcom-geni: Correct I2C TRE sequence
 Content-Language: en-US
-To: Hsiao Chien Sung <shawn.sung@mediatek.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Chen-Yu Tsai
- <wenst@chromium.org>, Sean Paul <sean@poorly.run>,
- Fei Shao <fshao@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20231212121957.19231-1-shawn.sung@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20231212121957.19231-1-shawn.sung@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Andi Shyti <andi.shyti@kernel.org>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
+        <quic_bjorande@quicinc.com>, <manivannan.sadhasivam@linaro.org>,
+        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>
+References: <20240129061003.4085-1-quic_vdadhani@quicinc.com>
+ <lib6m2bty4uilvvu544sjlezeux7ne4cx5i25j6yndicx7miaw@tvxpuekiczwh>
+From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+In-Reply-To: <lib6m2bty4uilvvu544sjlezeux7ne4cx5i25j6yndicx7miaw@tvxpuekiczwh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-
-Il 12/12/23 13:19, Hsiao Chien Sung ha scritto:
-> This series is based on mediatek-drm-next.
-> 
-> This series adds support for running IGT (Intel GPU Tool) tests
-> with MediaTek display driver. The following changes will be
-> applied:
-> 
-> 1. Add a new API for creating GCE thread loop to retrieve CRCs
->     from the hardware component
-> 2. Support hardware CRC calculation in both VDOSYS0 and VDOSYS1
-> 3. Support alpha blending in both VDOSYS0 and VDOSYS1
-> 
-
-Hello,
-is there still interest in upstreaming this?
-
-We're interested in enabling more comprehensive IGT tests on MediaTek SoCs
-and this series is definitely useful.
-
-Regards,
-Angelo
-
-> Changes in v4:
-> - Seperate the patch into smaller ones
-> - Change the title of some patches
-> - Revert the changes that are not related to the series
-> 
-> Changes in v3:
-> - Modify the dt-binding document of Mediatek OVL
-> - Set DRM mode configs accroding to the hardware capabilities
-> - Replace cmdq_pkt_jump_absolute() with cmdq_pkt_jump()
-> 
-> Changes in v2:
-> - Simplify CMDQ by adding commands that are currently used only
-> - Integrate CRC related codes into new APIs for Mixer and OVL to reuse
-> - Add CPU version CRC retrieval when CMDQ is disabled
-> 
-> Hsiao Chien Sung (17):
->    soc: mediatek: Add register definitions for GCE
->    soc: mediatek: Disable 9-bit alpha in ETHDR
->    dt-bindings: display: mediatek: ovl: Modify rules for MT8195/MT8188
->    drm/mediatek: Add OVL compatible name for MT8195
->    drm/mediatek: Set DRM mode configs accordingly
->    drm/mediatek: Support alpha blending in OVL
->    drm/mediatek: Support alpha blending in Mixer
->    drm/mediatek: Support alpha blending in display driver
->    drm/mediatek: Support CSC in OVL
->    drm/mediatek: Support more color formats in OVL
->    drm/mediatek: Turn off the layers with zero width or height
->    drm/mediatek: Support CRC in display driver
->    drm/mediatek: Support CRC in OVL
->    drm/mediatek: Support CRC in OVL adaptor
->    drm/mediatek: Add missing plane settings when async update
->    drm/mediatek: Fix errors when reporting rotation capability
->    drm/mediatek: Add comments for the structures
-> 
->   .../display/mediatek/mediatek,ovl.yaml        |  12 +-
->   drivers/gpu/drm/mediatek/mtk_disp_drv.h       |   7 +
->   drivers/gpu/drm/mediatek/mtk_disp_ovl.c       | 326 +++++++++++++++---
->   .../gpu/drm/mediatek/mtk_disp_ovl_adaptor.c   |  32 +-
->   drivers/gpu/drm/mediatek/mtk_drm_crtc.c       | 261 +++++++++++++-
->   drivers/gpu/drm/mediatek/mtk_drm_crtc.h       |  39 +++
->   drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c   |   7 +
->   drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  35 ++
->   drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  30 +-
->   drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  16 +
->   drivers/gpu/drm/mediatek/mtk_drm_plane.c      |  15 +-
->   drivers/gpu/drm/mediatek/mtk_ethdr.c          | 106 +++++-
->   drivers/gpu/drm/mediatek/mtk_ethdr.h          |   5 +
->   drivers/soc/mediatek/mtk-mmsys.c              |   1 +
->   include/linux/soc/mediatek/mtk-cmdq.h         |  10 +
->   15 files changed, 834 insertions(+), 68 deletions(-)
-> 
-> --
-> 2.18.0
-> 
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: GC_OZ6MCaLT0ZsA1jftpdRcrMfW03cg8
+X-Proofpoint-GUID: GC_OZ6MCaLT0ZsA1jftpdRcrMfW03cg8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-31_10,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ phishscore=0 clxscore=1015 suspectscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2402010081
 
 
+
+On 1/30/2024 4:54 AM, Andi Shyti wrote:
+> Hi Viken,
+> 
+> as Bryan has done some comments in version 1, please, Cc him to
+> this patch.
+> 
+> On Mon, Jan 29, 2024 at 11:40:03AM +0530, Viken Dadhaniya wrote:
+>> For i2c read operation, we are getting gsi mode timeout due
+>> to malformed TRE(Transfer Ring Element). Currently we are
+>> configuring incorrect TRE sequence in gpi driver
+>> (drivers/dma/qcom/gpi.c) as below
+>>
+>> - Sets up CONFIG
+>> - Sets up DMA tre
+>> - Sets up GO tre
+>>
+>> As per HPG(Hardware programming guide), We should configure TREs in below
+>> sequence for any i2c transfer
+>>
+>> - Sets up CONFIG tre
+>> - Sets up GO tre
+>> - Sets up DMA tre
+>>
+>> For only write operation or write followed by read operation,
+>> existing software sequence is correct.
+>>
+>> for only read operation, TRE sequence need to be corrected.
+>> Hence, we have changed the sequence to submit GO tre before DMA tre.
+>>
+>> Tested covering i2c read/write transfer on QCM6490 RB3 board.
+>>
+>> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+>> Fixes: commit d8703554f4de ("i2c: qcom-geni: Add support for GPI DMA")
+> 
+> The format is:
+> 
+> Fixes: d8703554f4de ("i2c: qcom-geni: Add support for GPI DMA")
+> 
+> and goes above the SoB.
+> 
+
+Submitted V3 with correct fix tag.
+
+>> ---
+>> v1 -> v2:
+>> - Remove redundant check.
+>> - update commit log.
+>> - add fix tag.
+>> ---
+>> ---
+>>   drivers/i2c/busses/i2c-qcom-geni.c | 14 +++++++-------
+>>   1 file changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+>> index 0d2e7171e3a6..da94df466e83 100644
+>> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+>> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+>> @@ -613,20 +613,20 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
+>>   
+>>   		peripheral.addr = msgs[i].addr;
+>>   
+>> +		ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
+>> +				    &tx_addr, &tx_buf, I2C_WRITE, gi2c->tx_c);
+>> +		if (ret)
+>> +			goto err;
+>> +
+>>   		if (msgs[i].flags & I2C_M_RD) {
+>>   			ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
+>>   					    &rx_addr, &rx_buf, I2C_READ, gi2c->rx_c);
+>>   			if (ret)
+>>   				goto err;
+>> -		}
+>> -
+>> -		ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
+>> -				    &tx_addr, &tx_buf, I2C_WRITE, gi2c->tx_c);
+>> -		if (ret)
+>> -			goto err;
+>>   
+>> -		if (msgs[i].flags & I2C_M_RD)
+>>   			dma_async_issue_pending(gi2c->rx_c);
+>> +		}
+>> +
+> 
+> Bryan, could you please check here?
+> 
+> Thanks for your review!
+> 
+> Andi
