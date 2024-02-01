@@ -1,204 +1,126 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F59F15A4B1;
-	Thu,  1 Feb 2024 08:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8444D2E842
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706776481; cv=none; b=phwnTu+R7ityfV1Wc0srNtV5wlXj+IYKvKwzpNHVEZZ3bsppMPOQIs8WkYSCavYrHaNFFSiueh4lgG/cLJFGVFKTzOXVkLYkc9cpCNApg/TpZTGhRVBiRAwQedBi7H2kxWzN4loRPllYeArToIuTOPpC83OkCbnw0k1saLdydW8=
+	t=1706776523; cv=none; b=pVSLoRUj1fq7pDbmNqZ3LFP7OGuzLhRCzkCh+dNZHV0aghlePX2zbtPD/iMZ53Ig01J1yWJawc9TB8bfoXzwgIhpn/nJDXsUgjC/uNZVXWHOPVV7UJCyCcZ4vc93xU1O7FaxU0BttYmACSzESN79e7xCZOuEKIqUGaa+/OILzqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706776481; c=relaxed/simple;
-	bh=sDRZVbaV2bc5xAXJPaIp6yTdUcALc0sGqcGUq+EIioI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fgSypmhkIShjBqh8Tap+a40SqwyDTXysPOudCIAESFwxUTrXoPwgz/9sbJhvcEy67uiq5KG2p1vpin6EzPUjAKCOwFyG5TNwnB546QR2YxEwMO9uHvpd1eMMrziGxpzOBAOjEFEMDWiu+pnPjdNU7471BTsaoTWYcQ1d8OYbLzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-604059403e9so6634737b3.3;
-        Thu, 01 Feb 2024 00:34:39 -0800 (PST)
+	s=arc-20240116; t=1706776523; c=relaxed/simple;
+	bh=iHyEQ2KXdIyR0Q46AEjColJDwQljhOsmrS2qirjC+9Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=DxNRpwSg3krKzetXwnhLnm313v+alu8OMJKINMCmiwwkxzdLFnM8slL2rqpRjhUuud66avBVyf1bzNj9vzx6HOtlkfvBvLnnJIm7vO4CijqZG1wodv1SLqD5WvvHH7O89EPoK+0sfa5Uph4tJAIqXjd4Etzp6EJRq4U2UIJbYPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bEBBu6Qo; arc=none smtp.client-ip=209.85.208.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bEBBu6Qo"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-55f20f0013eso342763a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:35:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706776519; x=1707381319; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yDijPStjyNK8y9wipx4jasC/bHAVPAFiOvOL8ps5ECY=;
+        b=bEBBu6QoutCoqsLWpsngjv+oo1yNFPTXbsHeqVzC7HM3RN4rH1SnXEq29VItKpzdjO
+         K7TnMqpRcwhLXX1L2Fvip1yZ8I9sLg4NExhCzEzXynF6Axsde5Frve/XzJiyozAhcPvv
+         +dV+vjalQNWfniGr9du8JuDMtF/qEEXVOan5eynlIhxLjaMEpLWYv9OtYicw8LaCdjuP
+         g12Mafv3mW5x6ymVg+bYFPLTbFqIyfStQJ/jJtLSq0PsQUrj2Qv/PKl8k2lxTDw/FQ7R
+         ttc2KqWYhigd9wb8ai8bA9Js1BZnCFIvROvd1IHW7PopvfDrx2z0HrC6bAndYgsj/4K9
+         NmeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706776477; x=1707381277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2HK1C91x+7wARyC9FcS8BRNfiXMoVY/LaEt3n42/zAE=;
-        b=lSkI3ezM/rlL7xMqWJLmzViFtiW2ZbpcW/O05DD5lUJ9sZh4HY57rR9MsSphZB3PEE
-         nGynipms3SIgsWsWkegH1igejgX96CRhZpU2NsgQBpB1qugpfPcNgyhwngYJkenc/vAu
-         XhMG3KmvqOe5a88NQSDtCb4JCNBITCeA2HKlFFVMvW+xaGLol46kkG254E9E5tryOHt9
-         Cl0VBLCikjm2kHyRNcRbl/etm97RT6GeSRdgAJHzcp5UULV5KGYcejXaAx6FLE8kS6w3
-         BPI+83sHQ9capwfY6EcTqzgvOhqC2XkAxuB/VsufC0aecqjDt4CpTfq53JPGKXOPTS46
-         g6og==
-X-Gm-Message-State: AOJu0YxNVOtko++fOMcJNZ1FKNHtDMdzMB5irsMWz5+ZOIyVLeqEE2Bc
-	v6eZC0kMdhZG22afqa6ywf2P8SdeFlO87l56uAUvHiuDDmVYHh/VCSGHxCn8X5Y=
-X-Google-Smtp-Source: AGHT+IFjwVn4UY2Kxo/XufzLNB2vGbsLImFRXcrEXkKYpRr064g+bPgK+2JO0wCQnTYdEYiRtfS2SQ==
-X-Received: by 2002:a81:4813:0:b0:602:b697:d9ff with SMTP id v19-20020a814813000000b00602b697d9ffmr1701529ywa.22.1706776476936;
-        Thu, 01 Feb 2024 00:34:36 -0800 (PST)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id ez10-20020a05690c308a00b005ff9154001fsm3637062ywb.140.2024.02.01.00.34.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 00:34:35 -0800 (PST)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc236729a2bso617516276.0;
-        Thu, 01 Feb 2024 00:34:34 -0800 (PST)
-X-Received: by 2002:a25:824a:0:b0:dc6:ad43:8cf4 with SMTP id
- d10-20020a25824a000000b00dc6ad438cf4mr1840360ybn.20.1706776474698; Thu, 01
- Feb 2024 00:34:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706776519; x=1707381319;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yDijPStjyNK8y9wipx4jasC/bHAVPAFiOvOL8ps5ECY=;
+        b=EyN/63UoocmDtTBI/htpswll2fXMeHpMstqO6LOjJxp3DeeC10nLD6N2tsAmboL2gl
+         FbEy7oqByLKktuvfYJYgCv3I3/D6p3xUBexPi/R40LJguSgpAN4G0IzAGLH/0p0u1g/1
+         YEvH8IFsmoCkXiu6hgoPlmmq6kNvug+1bp/ZiZ9K+H0NLd5NB1240VQV02fOCQrEy50f
+         3Gv4rV0GidwyESYHTonsaiHAnuSBsQlRpKRru8R+97MzXARaagYii2Jw2hxkMtYnOf0I
+         q+g+u5MKcFyWgH1UiOeJ1PaatrA4QtoY48M8Nj9rSqeB95+yE4CePPjq3k1f1C/1fRab
+         9DxA==
+X-Gm-Message-State: AOJu0YygyCx6zRsN9GW8wsOn1/JDj/1OJcYh5tkEOO3HbSBeblf7IqBl
+	MIP4rMO+NeYsMahwLng51llE6TzaEAPcxcpJEO7LxkutvUJ23iSLgV75vU7vGlTMi1NYjw8G1g=
+	=
+X-Google-Smtp-Source: AGHT+IGpYlrXxQ4pf2SgD9UFPN6gxoK9EQuNzVYVVNI/PX8RZh44GlCTq+L5CxRmI95uHiD5ihNh0Vw0Wg==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:c945:1806:ff53:36fa])
+ (user=elver job=sendgmr) by 2002:a05:6402:44:b0:55f:2bd3:a896 with SMTP id
+ f4-20020a056402004400b0055f2bd3a896mr10422edu.3.1706776519344; Thu, 01 Feb
+ 2024 00:35:19 -0800 (PST)
+Date: Thu,  1 Feb 2024 09:31:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240129151618.90922-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240129151618.90922-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV7Q4kMv1pFVNBf5oYF=_W_snp=5GKLpr9+OxeqxywhBw@mail.gmail.com> <CA+V-a8spFYvOo2=9CwM-1EyMA3Xrc_rggUgxDZwZan2ou4SG1A@mail.gmail.com>
-In-Reply-To: <CA+V-a8spFYvOo2=9CwM-1EyMA3Xrc_rggUgxDZwZan2ou4SG1A@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 1 Feb 2024 09:34:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUFZ6pRtZv4QLGhTz_gG575-8-LvaFprNuP2-1HGS8r+A@mail.gmail.com>
-Message-ID: <CAMuHMdUFZ6pRtZv4QLGhTz_gG575-8-LvaFprNuP2-1HGS8r+A@mail.gmail.com>
-Subject: Re: [PATCH 2/5] irqchip/renesas-rzg2l: Add support for RZ/Five SoC
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Message-ID: <20240201083259.1734865-1-elver@google.com>
+Subject: [PATCH -mm] stackdepot: do not use flex_array_size() in memcpy()
+From: Marco Elver <elver@google.com>
+To: elver@google.com, Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kasan-dev@googlegroups.com, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
+	Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+Since 113a61863ecb ("Makefile: Enable -Wstringop-overflow globally")
+string overflow checking is enabled by default. Unfortunately the
+compiler still isn't smart enough to always see that the size will never
+overflow.
 
-On Wed, Jan 31, 2024 at 7:36=E2=80=AFPM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Tue, Jan 30, 2024 at 11:38=E2=80=AFAM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Mon, Jan 29, 2024 at 4:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gma=
-il.com> wrote:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > The IX45 block has additional mask registers (NMSK/IMSK/TMSK) as comp=
-ared
-> > > to the RZ/G2L (family) SoC.
-> > >
-> > > Introduce masking/unmasking support for IRQ and TINT interrupts in IR=
-QC
-> > > controller driver. Two new registers, IMSK and TMSK, are defined to
-> > > handle masking on RZ/Five SoC. The implementation utilizes a new data
-> > > structure, `struct rzg2l_irqc_data`, to determine mask support for a
-> > > specific controller instance.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
->
-> >
-> > > --- a/drivers/irqchip/irq-renesas-rzg2l.c
-> > > +++ b/drivers/irqchip/irq-renesas-rzg2l.c
-> > > @@ -66,15 +68,25 @@ struct rzg2l_irqc_reg_cache {
-> > >         u32     titsr[2];
-> > >  };
-> > >
-> > > +/**
-> > > + * struct rzg2l_irqc_data - OF data structure
-> > > + * @mask_supported: Indicates if mask registers are available
-> > > + */
-> > > +struct rzg2l_irqc_data {
-> >
-> > This structure has the same name as the single static struct
-> > rzg2l_irqc_priv instance, which is confusing.
-> >
-> Agreed, I will rename it to rzg2l_irqc_of_data
->
-> > > +       bool    mask_supported;
-> > > +};
-> > > +
-> > >  /**
-> > >   * struct rzg2l_irqc_priv - IRQ controller private data structure
-> > >   * @base:      Controller's base address
-> > > + * @data:      OF data pointer
-> > >   * @fwspec:    IRQ firmware specific data
-> > >   * @lock:      Lock to serialize access to hardware registers
-> > >   * @cache:     Registers cache for suspend/resume
-> > >   */
-> > >  static struct rzg2l_irqc_priv {
-> > >         void __iomem                    *base;
-> > > +       const struct rzg2l_irqc_data    *data;
-> >
-> > Replacing this by a bool would avoid a pointer dereference in each user=
-,
-> > and allows you to make rzg2l_irqc_data etc. __initconst.
-> >
-> Do you mean just add "bool mask_supported" here and get rid of struct
-> rzg2l_irqc_data ? Can you please elaborate here..
+Specifically, in stackdepot, we have this before memcpy()'ing a
+stacktrace:
 
-Either add "bool mask_supported" here, or add a copy of the full
-struct rzg2l_irqc_data (see below).
+  if (nr_entries > CONFIG_STACKDEPOT_MAX_FRAMES)
+  	nr_entries = CONFIG_STACKDEPOT_MAX_FRAMES;
+  ...
+  memcpy(stack->entries, entries, flex_array_size(stack, entries, nr_entries));
 
->
-> > >         struct irq_fwspec               fwspec[IRQC_NUM_IRQ];
-> > >         raw_spinlock_t                  lock;
-> > >         struct rzg2l_irqc_reg_cache     cache;
-> >
-> > > @@ -371,9 +475,23 @@ static int rzg2l_irqc_parse_interrupts(struct rz=
-g2l_irqc_priv *priv,
-> > >         return 0;
-> > >  }
-> > >
-> > > +static const struct rzg2l_irqc_data rzfive_irqc_data =3D {
-> > > +       .mask_supported =3D true,
-> > > +};
-> > > +
-> > > +static const struct rzg2l_irqc_data rzg2l_irqc_default_data =3D {
-> > > +       .mask_supported =3D false,
-> > > +};
-> > > +
-> > > +static const struct of_device_id rzg2l_irqc_matches[] =3D {
-> > > +       { .compatible =3D "renesas,r9a07g043f-irqc", .data =3D &rzfiv=
-e_irqc_data },
-> > > +       { }
-> > > +};
-> > > +
-> > >  static int rzg2l_irqc_init(struct device_node *node, struct device_n=
-ode *parent)
-> > >  {
-> > >         struct irq_domain *irq_domain, *parent_domain;
-> > > +       const struct of_device_id *match;
-> > >         struct platform_device *pdev;
-> > >         struct reset_control *resetn;
-> > >         int ret;
-> > > @@ -392,6 +510,12 @@ static int rzg2l_irqc_init(struct device_node *n=
-ode, struct device_node *parent)
-> > >         if (!rzg2l_irqc_data)
-> > >                 return -ENOMEM;
-> > >
-> > > +       match =3D of_match_node(rzg2l_irqc_matches, node);
-> > > +       if (match)
-> > > +               rzg2l_irqc_data->data =3D match->data;
-> > > +       else
-> > > +               rzg2l_irqc_data->data =3D &rzg2l_irqc_default_data;
-> >
-> > Instead of matching a second time, I'd rather add a second
-> > IRQCHIP_MATCH() entry with a different init function, passing the
-> > actual rzg2l_irqc_data pointer.
-> >
-> OK, or rather just pass true/false instead of rzg2l_irqc_of_data pointer.=
-?
+Where 'entries' is an array of unsigned long, and STACKDEPOT_MAX_FRAMES
+is 64 by default (configurable up to 256), thus the maximum size in
+bytes (on 32-bit) would be 1024. For some reason the compiler (GCC
+13.2.0) assumes that an overflow may be possible and flex_array_size()
+can return SIZE_MAX (4294967295 on 32-bit), resulting in this warning:
 
-Yes, that would be fine for me, too.
-It all depends on whether you plan to add, or see a need for adding,
-more flags or other fields in the future (and even for flags, you could
-combine them in an unsigned long).
+ In function 'depot_alloc_stack',
+     inlined from 'stack_depot_save_flags' at lib/stackdepot.c:688:4:
+ arch/x86/include/asm/string_32.h:150:25: error: '__builtin_memcpy' specified bound 4294967295 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]
+   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+ lib/stackdepot.c:459:9: note: in expansion of macro 'memcpy'
+   459 |         memcpy(stack->entries, entries, flex_array_size(stack, entries, nr_entries));
+       |         ^~~~~~
+ cc1: all warnings being treated as errors
 
-Gr{oetje,eeting}s,
+Silence the false positive warning by inlining the multiplication
+ourselves.
 
-                        Geert
+Link: https://lore.kernel.org/all/20240201135747.18eca98e@canb.auug.org.au/
+Fixes: d869d3fb362c ("stackdepot: use variable size records for non-evictable entries")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Marco Elver <elver@google.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+---
+ lib/stackdepot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+index 8f3b2c84ec2d..e6047f58ad62 100644
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -456,7 +456,7 @@ depot_alloc_stack(unsigned long *entries, int nr_entries, u32 hash, depot_flags_
+ 	stack->hash = hash;
+ 	stack->size = nr_entries;
+ 	/* stack->handle is already filled in by depot_pop_free_pool(). */
+-	memcpy(stack->entries, entries, flex_array_size(stack, entries, nr_entries));
++	memcpy(stack->entries, entries, nr_entries * sizeof(entries[0]));
+ 
+ 	if (flags & STACK_DEPOT_FLAG_GET) {
+ 		refcount_set(&stack->count, 1);
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
