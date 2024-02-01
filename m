@@ -1,132 +1,107 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9625338E;
-	Thu,  1 Feb 2024 14:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336C35D47F;
+	Thu,  1 Feb 2024 14:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706796199; cv=none; b=BTbyd6zMFvYVIADLQjLKuSM6XA49oHbk20schr19IvwFQU5FGLEo1G5qX4cQISwxhZLdzUljkJu+0lYppEze5fftpyFiFA+7zF7MgKUM/fOryvLcinXUEMquhuniywxGNxUBURErkKZ3R6nj6ELGpynKywxHHPYLc6q2WPcoLh4=
+	t=1706796228; cv=none; b=bn5gOoAB7tYsiYnilJqezBqYnoDdn+KNiquJ86ydAe1g1J34Fuk99tEzDr61De7cnvYmd8FeDrQrgpOwXK67ztw4ETfvO82fVTRhcfMHHLc3tJh88LJYF6A54g7uoISWv22b5Z+tZqI8fxTJjNjTEq2H6oVilf7uZSImaCRxBts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706796199; c=relaxed/simple;
-	bh=ca8fj2gTG3iRmOfEmYapKTreDfkQJ3NcDZ7iQMWLM0k=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=VGTizVjS8xtbv58wuSsbXRm+SKuIi21CW1KjzAKgC1PiDkphxrmQcR0uBzFamEr5fsMzYTqvshulVtwdn9ML3GPnX3zNIQU7h/U9XIyzTtPHeZDsbxFZHLGAPJ8gavZx//6Ks+QEh128IFtzRgLQPX94yrN6NEw4tLBBg3Z53Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=V6uoivNv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EtUyAS1n; arc=none smtp.client-ip=66.111.4.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1706796228; c=relaxed/simple;
+	bh=jo0lrXCr+ByQjN7lNIgf3/5HMNYXX9RLoXwcL4UFG68=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bsZS98wTZJrF5M3Ylsx+mtz12Zmrxczdqv5cGWjMmQFZxNfKKx7/wX+91JHbwimsUkTjwCTMgigNB8r8wGYCFaqygVeQYZOIHGHK2+SOK3FwyNlwSOfk4qYYFz4M09xgDQWqSZ3s4F3PvGPDND1aWz9Ow0ofbgBFCqtV9xxc928=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOu2A/5Z; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="V6uoivNv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EtUyAS1n"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id DA5765C015A;
-	Thu,  1 Feb 2024 09:03:11 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 01 Feb 2024 09:03:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1706796191;
-	 x=1706882591; bh=SrMsYSSdXBYrmJby1JuNx2foZxC1DPyP8T36AKwqkBI=; b=
-	V6uoivNvjOsWV8cVN414irLYJXlAxzYQLgIylQ4tIF25byDBNWNzWAFRdI2GHwXG
-	MqrpO04Rai1GLgT488yZbPpEnexlkT78FRbLnCRXSaWv2p3LNcpZ4KTQj6PDU8/q
-	P6/4YK57n8AJ+xvxcKFoSC6LRAiV2duWOBxPr0Ritc2iBXQrQcEgJSax/ELkNevM
-	omXro5wjkLCT/+BKTEDszb5lU6H1AUTKueRvQTV6brqfIO2Y0wc3RKBF4B/FODLZ
-	4aQe53Rg812/uIB13jRoudEycB0R4CeE+UWFQLBv5xdj1cR/SWQ31ELe4mPQ1LqG
-	XjZupRbQN8z0d9JXMsNNpw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706796191; x=
-	1706882591; bh=SrMsYSSdXBYrmJby1JuNx2foZxC1DPyP8T36AKwqkBI=; b=E
-	tUyAS1nQPJjZFmzE8hd+Xi0j0IDvz3Hj5hZHLkcVSkEToZ0xLDtzH9zrFdQhPVcK
-	4ORifOcYB+qP1esUYHQdMeUjevk2wtAGWtA5UVQDmm4sGazF/Amv2cM9/CwjrYeh
-	cqXkC/mZeon+LU7GBTrjTrrs6bbSouPNyaRdnPvvcqNH3aSDpkzx5WwNltvOzj52
-	bCL7x7DU7gVGQk5urJJm/SOrdhx0sgIs5PgHAQl+Xq0zJhmcgVyX20aZjUQfJfS0
-	8cBWyDtfuOdcvqDZH0NEneABQY8yGy9zLW6Rl5VSXFOPPa7M9P9aeID1iBIZDvez
-	RrfCGP2rJwYWO17+hRQSg==
-X-ME-Sender: <xms:nqS7ZeZL0sSN5_odCeX5vdkvsOCiCpCr0DlG98SBeLHiqMPBiChcYg>
-    <xme:nqS7ZRYRuXF7tf-BBEqzi-kMH3lfeKk4hWLR5Z4K4g5I-RCib-Acttig8AG15z0xM
-    LYwh5UddWERCG88iPg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeduuddgheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:nqS7ZY9iznyhiGKP7YnBR_mUnhKxBooFkyaLliDR2nfmBTEMcgsymw>
-    <xmx:nqS7ZQrdI7OIfLpGnDRXupFZQTd2lvuYxCIkWQq0YwhHJk_-Xfnypw>
-    <xmx:nqS7ZZrdVyx3b5AJi1L8hmKTwflW3Tx7m_LLx88vZYDxN2HSclYC-Q>
-    <xmx:n6S7ZQ5EuvV7yz_oWjsSWX4fKvwtp0TLNHOe6ZoA5H8SyRV2YAKZbw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 9F57BB6008D; Thu,  1 Feb 2024 09:03:10 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOu2A/5Z"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6dddee3ba13so645251b3a.1;
+        Thu, 01 Feb 2024 06:03:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706796225; x=1707401025; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RiE5Onayz6cyE5+MyLfFrdqfq7HqpeSLCHp3c1TdnJ4=;
+        b=LOu2A/5ZTD7qUurQ9Frp3pfBg9rTB2WpbaVf9Bf4OY5qTe7Lb+6hxLn1CebWPFuk8z
+         +DNsjANNNLb0NaG6Adgf3/Z6H1ugS7y6ilxLVcAhhXB6sfPHa1WI3zUOZBe4t4JVtFfq
+         JQ6fjz2uYdWLq1DWBgFsqwiEfKWKvbS2Aez1d+YE5vtx9rzYewWZj3NBBaWASBWw7srL
+         Okq1uqA5z20uk4WeuuywO89Al85fsL5J7bvzHINVwx8bv57ghgh58ZIV9YOuBKDXyfvl
+         Ja/x4CJS1xWKPBRjd5NKkLzp9MRnUoWqb5jMkjwI7lA8HkTpyDDfMt/AKabt4+SYLaxT
+         LWqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706796225; x=1707401025;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RiE5Onayz6cyE5+MyLfFrdqfq7HqpeSLCHp3c1TdnJ4=;
+        b=Cyt7eoxkc+FFzLyaBa5V4Cgdpws7HrBna269doqj2MPFrEE1o9XkPn8U52F6kk6F/L
+         5P2KcGpEJB3mY1NEUjDn6LZf12r0ncYR2zorhSX98C4IGRJ3B0OInUFatBHnyad2qM9i
+         xk7W2KhD2vt7IG8ZkBHXU8niYKzY+3mfjqgi6UIZloOrUBzh+qJXtAiyWZ2Rj8BkinbS
+         YJabDml2iM4iC6ZDkofmc5dpooVh/lbpLcRGFB9l6qfWm1uF/6H5HMRh/Dwsr7kVtn+b
+         2nxUlxqJsvaD5QFoGkokMYZvrc6rkPvqkXdIkM7RKZ+A7ArTQWdhRj9yt2mNedhgUBze
+         8MRQ==
+X-Gm-Message-State: AOJu0Yz3oWbrPcRoUcs656VaQr2lmHVG5ICqcRxM2zRCUXmkKf0gkniS
+	jYsMKxbyeeB9r/KvQaMsvMpBdM6HGywP9F9JJbOB87GppwiAECUoGV2vqrlUAOQ=
+X-Google-Smtp-Source: AGHT+IEXOMtth7Vcaoi9vKZ25QuQJIIReWzUToo5//Tpyww2+VbtLIAH6lnQ8JReO/6qUxJ+gEgkDg==
+X-Received: by 2002:a05:6a00:1ca1:b0:6dd:da40:948d with SMTP id y33-20020a056a001ca100b006ddda40948dmr5448587pfw.25.1706796225384;
+        Thu, 01 Feb 2024 06:03:45 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWYdMpnY2InEs7uHYKz+la0wznH/ZEKH9EFQHr5pJyjvybbtBC/TjiPBcLBatTAjHeq0TKWpMXUCC4k7QU2hYUzsJf6+PX0qechE0OozEIoM05UpaMuRxTCrX0Zde7U59YIjF8V42Cf6Z38xASMnJdbRh3e3OAVyhZKDqo5iy1ofmbLXESjpdeXbRbEMCTauxnwOklavH2b1/jm+A/nVsfs62jBOX0MWZqPibm3EHVwqPLPrzPx6J8FSEi7+9sToFn/cPcTM9nSK3LLD42KjI9+FQ==
+Received: from penguin.lxd (133-32-135-143.east.xps.vectant.ne.jp. [133.32.135.143])
+        by smtp.gmail.com with ESMTPSA id l23-20020a62be17000000b006dfebfd0481sm1169171pff.7.2024.02.01.06.03.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 06:03:44 -0800 (PST)
+From: Tomasz Figa <tomasz.figa@gmail.com>
+To: linux-samsung-soc@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers),
+	linux-kernel@vger.kernel.org (open list),
+	Tomasz Figa <tomasz.figa@gmail.com>
+Subject: [PATCH] MAINTAINERS: Remove Tomasz from Samsung clock and pinctrl entries
+Date: Thu,  1 Feb 2024 23:01:34 +0900
+Message-Id: <20240201140134.4345-1-tomasz.figa@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <b4309c85-026c-4fc9-8c26-61689ac38fa1@app.fastmail.com>
-In-Reply-To: 
- <CAG_fn=Wb81V+axD2eLLiE9SfdbJ8yncrkhuyw8b+6OBJJ_M9Sw@mail.gmail.com>
-References: <20240201122216.2634007-1-aleksander.lobakin@intel.com>
- <20240201122216.2634007-2-aleksander.lobakin@intel.com>
- <3f6df876-4b25-4dc8-bbac-ce678c428d86@app.fastmail.com>
- <CAG_fn=Wb81V+axD2eLLiE9SfdbJ8yncrkhuyw8b+6OBJJ_M9Sw@mail.gmail.com>
-Date: Thu, 01 Feb 2024 15:02:50 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Alexander Potapenko" <glider@google.com>
-Cc: "Alexander Lobakin" <aleksander.lobakin@intel.com>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>,
- "Michal Swiatkowski" <michal.swiatkowski@linux.intel.com>,
- "Marcin Szycik" <marcin.szycik@linux.intel.com>,
- "Wojciech Drewek" <wojciech.drewek@intel.com>,
- "Yury Norov" <yury.norov@gmail.com>, "Andy Shevchenko" <andy@kernel.org>,
- "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
- "Jiri Pirko" <jiri@resnulli.us>, "Ido Schimmel" <idosch@nvidia.com>,
- "Przemek Kitszel" <przemyslaw.kitszel@intel.com>,
- "Simon Horman" <horms@kernel.org>, linux-btrfs@vger.kernel.org,
- dm-devel@redhat.com, ntfs3@lists.linux.dev, linux-s390@vger.kernel.org,
- "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
- Netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
- "Syed Nayyar Waris" <syednwaris@gmail.com>,
- "William Breathitt Gray" <william.gray@linaro.org>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH net-next v5 01/21] lib/bitmap: add bitmap_{read,write}()
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 1, 2024, at 14:45, Alexander Potapenko wrote:
-> On Thu, Feb 1, 2024 at 2:23=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
-rote:
->> On Thu, Feb 1, 2024, at 13:21, Alexander Lobakin wrote:
->>
->> As far as I can tell, the header ends up being included
->> indirectly almost everywhere, so just parsing these functions
->> likey adds not just dependencies but also compile time.
->>
->
-> Removing particular functions from a header to reduce compilation time
-> does not really scale.
-> Do we know this case has a noticeable impact on the compilation time?
-> If yes, maybe we need to tackle this problem in a different way (e.g.
-> reduce the number of dependencies on it)?
+I have been no longer at Samsung for a long time, the platforms
+that I am knowledgable about (S3C24xx, S3C64xx, Exynos 4) are no longer
+relevant and we have people with better capabilities as maintainers
+already, so let me remove myself. Thanks for the nice collaboration
+everyone!
 
-Cleaning up the header dependencies is definitely possible in
-theory, and there are other places we could start this, but
-it's also a multi-year effort that several people have tried
-without much success.
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+---
+ MAINTAINERS | 2 --
+ 1 file changed, 2 deletions(-)
 
-All I'm asking here is to not make it worse by adding this
-one without need. If the function is not normally inlined
-anyway, there is no benefit to having it in the header.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 61117c3afa80..7f550edab68e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17343,7 +17343,6 @@ F:	Documentation/devicetree/bindings/pinctrl/renesas,*
+ F:	drivers/pinctrl/renesas/
+ 
+ PIN CONTROLLER - SAMSUNG
+-M:	Tomasz Figa <tomasz.figa@gmail.com>
+ M:	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ M:	Sylwester Nawrocki <s.nawrocki@samsung.com>
+ R:	Alim Akhtar <alim.akhtar@samsung.com>
+@@ -19392,7 +19391,6 @@ F:	drivers/media/platform/samsung/exynos4-is/
+ SAMSUNG SOC CLOCK DRIVERS
+ M:	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ M:	Sylwester Nawrocki <s.nawrocki@samsung.com>
+-M:	Tomasz Figa <tomasz.figa@gmail.com>
+ M:	Chanwoo Choi <cw00.choi@samsung.com>
+ R:	Alim Akhtar <alim.akhtar@samsung.com>
+ L:	linux-samsung-soc@vger.kernel.org
+-- 
+2.39.2
 
-      Arnd
