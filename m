@@ -1,146 +1,140 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B3F4C7B;
-	Thu,  1 Feb 2024 01:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D793A1A2
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 01:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706751743; cv=none; b=NVJGuMpcfFDwA6F7NnNYay3crQGsqyTHpDXLi3JkZW/EBFYrT7eO1aHCi5jULXv9zaDEZq5Pr80qeOJMmQfA9I92BGGHQxIvePfVjpX59vcyIYu5Jxm2QhPxHK8iKPDH+PkYu37BciMNYD47EfrMTOdWPjnbElKrJLgk+WOylRk=
+	t=1706751756; cv=none; b=b4ESgn0rMr7p+ypYNu4BoSyTKPZZKjEqdZw/3qxAAoQthLSaI/fKXjhJYVCvv5Jk76qDLDNYej8wZGwq3X8nHYPHKBQghzexuTv/qYATnbEvUThOe7rvE5uukbj9VWfU4BUJg78ZLD+O1hW402MPh95SpdxAS/ZYNxxVPLOcKlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706751743; c=relaxed/simple;
-	bh=6oMVGx/JwGgsizKVfPO1lHIPkL1xgjV9NuMQhjvciWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tudURNa+bwSd/RYoc8m1Aer1fBOD6WtfD9FARAGJ32yVWeR2HYTbEG/RTACr+yteeqP7ZpC8ZgXD860HTyn5mpQaOf43jifIw0o3utbzPpKMQUb3Lnzf+wi6Ve2LGrcndr9tFPi9tRBvFrpVgZlmXuZtsD7mr+3jnKrBV0vqff8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZuLWh71B; arc=none smtp.client-ip=209.85.222.171
+	s=arc-20240116; t=1706751756; c=relaxed/simple;
+	bh=hHS7K9jd1Ar2zK8gbkXO7ymeRa0EUnCLE3JMNQcT+lA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fu6iIthf16inCaolia9hH0cDEEMj9EG0Ppo9N0mfQCzB4yJBIJuOHR9d9Htv0pLJPUOtJHL2LWZRhFSW3xZi9bV4J2zlHrdoaek8GkTU3fcCRbvXiKeU6LLKOPi1joQk8LnpfyjPDqdgGVvaN3IObKc30decfx6if3Hz5NGt5YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cOhSsOqo; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZuLWh71B"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-783ced12f9bso19792585a.3;
-        Wed, 31 Jan 2024 17:42:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOhSsOqo"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2906773c7e9so263652a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 17:42:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706751740; x=1707356540; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4WRKA+8oB7qFwtR1n75bKmIl1ybu1sGsFv65Z7DNMuk=;
-        b=ZuLWh71BL1EJNOFSk/gid87c2vx7R3bxoiGdyL8PffH0ma/Utl7wwCbs0PoXeed9X5
-         +wE0iMkAyMv2A7yysekrh88dGErbyN7rlV9/UZc868cRe74aYPxKswDl+LsvMU4FY62+
-         MzcIlBLHbwuK0KcWOpWqbGle/qniXSoNZfQNX+8Rxw8yRADYaLNxbSWjN9yi38euSb0E
-         MTgqxvu5Y9GTu3y31KssoK3YBqQLnSLVZtKTdC2jH2ORUl7Bs0wfAD6IjACaOUh8G7bo
-         TsoUZjC50SHX66/JE82hoZZA4UKSiWJCOOKwt29gqdECLI0KQDh/7sWNEaEXkR7RlTHT
-         R34A==
+        d=gmail.com; s=20230601; t=1706751754; x=1707356554; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IxrvsxjGLflaggur+73WfV09BCRMmIX9yGv56ImWnQI=;
+        b=cOhSsOqottHTIyiV5kUHobzJRqAjhVRZCmLaXmlXdzYvpMebGI183JBDg7uZZWP2of
+         QY8FPZMgJhy2VqW3aRaHeVFEuVgWN1M3Nx/Agwwk2vc65FiTzcP0+jniMG9UknaW35vK
+         7oM1hRPQ7xUw3Sy6ptmt/ELyEuNWXID7WcMVoAbFgb3usEopbOHKuqg9KrkOE3lqozOZ
+         dGYrQgOsr+HdggxA2w/GHMpFG5GmV0GoK7SDk6l4/PqctPguYhc5AfRj+lxN+uBGImgt
+         gknHMWEnuSBJjUwS/nYkWtBKI5SNAaOZ+K2tsGVfgdLeMnmAIJ7PH6afsE0HJYgz7LGx
+         1fCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706751740; x=1707356540;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4WRKA+8oB7qFwtR1n75bKmIl1ybu1sGsFv65Z7DNMuk=;
-        b=U8fb9UNf1hCOxXDd5X2KDpAoZJT2WaRcY8QJYIKyhaUQLJshAzgSraDz+86URiMvF4
-         ffZRCsA+thjJUr+n0si6AIOsy0pbk5haI6x/2koXaYSdB8f8z8Pgh70K14YRGXb6LBtl
-         6JWiiMlHakn03rV9CHbnJY8bgqTndXeApNmF6A9o1zUrYkqw3GdRdV0To4Pm/dZEEZgy
-         gRh6FykbyNvPzJhwcntBl/fXrI3Tn8rMFEzG9c+jdm2DWGScd0U19eCf3l56tYMs7JEF
-         kvBZJJL7BJYIgh4M91U0WUgVhUM8z/3tMKTC9oB6OX0+ddriUEC+O/xpanaqhLHP4vVj
-         9HXg==
-X-Gm-Message-State: AOJu0Yzltku3mK5WOrUL2olSJmBK50Ed1ah8qEFzxEKbdAnccuVF4NQM
-	HxLp2p9cRRrYGMCVtsdgmPEq2TrizdsoAGrSYcegbYfCBOr2JVPuy2qOXRpn
-X-Google-Smtp-Source: AGHT+IH7gXEnhRV6dQ/hlBl1ymm90ftsMLEZXl2lXUDTf5mMK0KACFhC6A6WDgvulzQq3n9XQg8mjw==
-X-Received: by 2002:a05:620a:124c:b0:783:4a89:f1d9 with SMTP id a12-20020a05620a124c00b007834a89f1d9mr1233836qkl.59.1706751740697;
-        Wed, 31 Jan 2024 17:42:20 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWHG9KQtwYecuVAw3zxj3CBVPr63QVPiot25Ti3U39+yLxoXmX2tiyTEzAMYm2wos+U1uG/a36SWyhSXx0T+NMz0XuoixOz4zXYn5QMYtMo8DQ4xhy1OYv1U2EyWVgWItmvawjkFZMDd822hmOW/ZBcZ/Jho9XnKLij7ig8pGhCnA0BVGlqKr9bF/LAEq7cffAh1q4siV6BVIttYaBaO3yGpyLnd92oFQ1z3rwwN5OXA5erZ8afTzxG+DS9KoWAplGRveeVz2MY4/p1XQ7w6RHbfPMZKlkRwpS1ktIiWZeMThX0t10Mp4k3K8fC/AMFVHncaHXI6k+ApnZkS7nXhRyYiccemfoIxRslq0PxKIwc5kJvDFNf8L4q
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id qp15-20020a05620a388f00b007840843f3b2sm2079154qkn.18.2024.01.31.17.42.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 17:42:20 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailauth.nyi.internal (Postfix) with ESMTP id E1BC627C005B;
-	Wed, 31 Jan 2024 20:42:19 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Wed, 31 Jan 2024 20:42:19 -0500
-X-ME-Sender: <xms:-_a6ZTyunmMp5e08Hf8LadfDVCQLdRrvUlxBOxCRTbySy_DXySaVmA>
-    <xme:-_a6ZbQzYOqNvPN7I1Vqu1EIwvJUWIsfDkS8FJtgRG68aJ86f8V9Sv4KvpMaFMBK7
-    rzRhICL_aPr_9rp-g>
-X-ME-Received: <xmr:-_a6ZdUTuvKRA0CNcsZPiRr1qJ31YqWSfQIEt1tJCvd8tVz9-6PlBEbcgtgVkA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedutddgfeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeegleejiedthedvheeggfejveefjeejkefgveffieeujefhueeigfegueeh
-    geeggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:-_a6Zdg7S8pGxEosGJb_EvN7056T2qoi79vujCfAV1Bx4Pl3mN1l5A>
-    <xmx:-_a6ZVBPMHHLG0AMgakkTFCJ40FO56HrFq7DLoP4OwveBDcDYPpcCg>
-    <xmx:-_a6ZWJBepdoeyf33FADW32vZFjKIWnvHvZvbiY-lqpq1hJAgAxk3g>
-    <xmx:-_a6ZaJwiwlPuyGFbBDN4Qnq3jWhBhXBta6xgytUXv6H4j-wIPTTUQ>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 31 Jan 2024 20:42:19 -0500 (EST)
-From: Boqun Feng <boqun.feng@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	rcu@vger.kernel.org
-Cc: Zqiang <qiang.zhang1211@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH 6/6] rcu/nocb: Check rdp_gp->nocb_timer in __call_rcu_nocb_wake()
-Date: Wed, 31 Jan 2024 17:40:58 -0800
-Message-ID: <20240201014100.3204532-7-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240201014100.3204532-1-boqun.feng@gmail.com>
-References: <20240201014100.3204532-1-boqun.feng@gmail.com>
+        d=1e100.net; s=20230601; t=1706751754; x=1707356554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IxrvsxjGLflaggur+73WfV09BCRMmIX9yGv56ImWnQI=;
+        b=k2+UGnIr/z1/PsRL24nlm6Xreeq6nMASxkYTMiMwNzHc0ozVWNMVpMRKIWP4HH1KVY
+         TdU1H9WZENwPUlgv631diNxs43gCW2qjWglaFtq3FqD6Zi+vM5ayfMVep7IxuzVbCIZV
+         Ozm6OJRgGYdNhc1uXZDXgO9EQWfarZO0sCHUthdYW96a1QKfMaDg/c3/WzU7cHcOLBNb
+         luyNjxGxqXkUeJUMwHHYfeJpTGjbshP3rgUEDb1fqPLmiVEDcC6byu4s8cRFiqoWswdC
+         ExCibhXTAn9o7EAGLpqzZCmIOJ1ZfwiNX5ASk1L3zAJckWoBxwRlX/ae+JCAJmFl9nm0
+         dcag==
+X-Gm-Message-State: AOJu0Yyl+wyzGXIxCJfUvvLArJOjfhWgiJ7sdzuYOY8bcNdInVSbRyJg
+	eyYzhrqY6n+ByM/r7R/7Xbp+fkpd01edepHINVjHQ26rx4B2yQwrVgFWqiwxAPqrJY1gAcLum1c
+	+JS7n1uJLlqtIWS5i8rbyqzMseOBN78w=
+X-Google-Smtp-Source: AGHT+IHhUF5Fa//zSjPaaE1z39Uh3wUONBpiYn84dsQLYLcy4oPpShw8iUXeaNfHURGQwZUVKQL9DI2syvlSjuP8eiQ=
+X-Received: by 2002:a17:90a:9206:b0:294:bb78:3972 with SMTP id
+ m6-20020a17090a920600b00294bb783972mr3225091pjo.14.1706751754258; Wed, 31 Jan
+ 2024 17:42:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CALGdzupf2Eh-_E-0ZyHa23sHKqo7-e==A9DR9FDsiMNPjtpbEg@mail.gmail.com>
+In-Reply-To: <CALGdzupf2Eh-_E-0ZyHa23sHKqo7-e==A9DR9FDsiMNPjtpbEg@mail.gmail.com>
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+Date: Wed, 31 Jan 2024 19:42:23 -0600
+Message-ID: <CALGdzuptUXhRxft9oz9RX-FBP0iwRTWFxsb4KtQjX79_ASSRow@mail.gmail.com>
+Subject: Re: [Linux Kernel Bug] memory leak in posix_clock_open
+To: davem@davemloft.net, reibax@gmail.com, linux-kernel@vger.kernel.org
+Cc: syzkaller@googlegroups.com, Zijie Zhao <zzjas98@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Zqiang <qiang.zhang1211@gmail.com>
+Dear Linux Developers,
 
-Currently, only rdp_gp->nocb_timer is used, for nocb_timer of
-no-rdp_gp structure, the timer_pending() is always return false,
-this commit therefore need to check rdp_gp->nocb_timer in
-__call_rcu_nocb_wake().
+I am reaching out to kindly inquire whether there have been any recent
+updates or progress regarding the memory leak issue.
+If you have any questions about the reproducer or config, please let me kno=
+w.
 
-Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- kernel/rcu/tree_nocb.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Best,
+Chenyuan
 
-diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-index ffa69a5e18f4..f124d4d45ce6 100644
---- a/kernel/rcu/tree_nocb.h
-+++ b/kernel/rcu/tree_nocb.h
-@@ -564,6 +564,7 @@ static void __call_rcu_nocb_wake(struct rcu_data *rdp, bool was_alldone,
- 	long lazy_len;
- 	long len;
- 	struct task_struct *t;
-+	struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
- 
- 	// If we are being polled or there is no kthread, just leave.
- 	t = READ_ONCE(rdp->nocb_gp_kthread);
-@@ -608,7 +609,7 @@ static void __call_rcu_nocb_wake(struct rcu_data *rdp, bool was_alldone,
- 		smp_mb(); /* Enqueue before timer_pending(). */
- 		if ((rdp->nocb_cb_sleep ||
- 		     !rcu_segcblist_ready_cbs(&rdp->cblist)) &&
--		    !timer_pending(&rdp->nocb_timer)) {
-+		    !timer_pending(&rdp_gp->nocb_timer)) {
- 			rcu_nocb_unlock(rdp);
- 			wake_nocb_gp_defer(rdp, RCU_NOCB_WAKE_FORCE,
- 					   TPS("WakeOvfIsDeferred"));
--- 
-2.43.0
 
+On Wed, Jan 24, 2024 at 10:22=E2=80=AFAM Chenyuan Yang <chenyuan0y@gmail.co=
+m> wrote:
+>
+> Dear Linux Developers for Posix Timer,
+>
+> We encountered "memory leak in posix_clock_open" when testing the
+> posix timer with
+> Syzkaller and our generated specifications.
+>
+> ```
+> BUG: memory leak
+> unreferenced object 0xffff888000f66fa0 (size 16):
+>   comm "syz-executor.0", pid 21073, jiffies 4295079945 (age 8.800s)
+>   hex dump (first 16 bytes):
+>     00 b8 d6 0d 80 88 ff ff 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<ffffffff8162788a>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:42 [inline]
+>     [<ffffffff8162788a>] slab_post_alloc_hook mm/slab.h:766 [inline]
+>     [<ffffffff8162788a>] slab_alloc_node mm/slub.c:3478 [inline]
+>     [<ffffffff8162788a>] __kmem_cache_alloc_node+0x2fa/0x3e0 mm/slub.c:35=
+17
+>     [<ffffffff81572354>] kmalloc_trace+0x24/0x90 mm/slab_common.c:1098
+>     [<ffffffff81388b0e>] kmalloc include/linux/slab.h:600 [inline]
+>     [<ffffffff81388b0e>] kzalloc include/linux/slab.h:721 [inline]
+>     [<ffffffff81388b0e>] posix_clock_open+0x5e/0xe0
+> kernel/time/posix-clock.c:126
+>     [<ffffffff81692d69>] chrdev_open+0x119/0x340 fs/char_dev.c:414
+>     [<ffffffff81680706>] do_dentry_open+0x336/0x9e0 fs/open.c:948
+>     [<ffffffff816a9659>] do_open fs/namei.c:3622 [inline]
+>     [<ffffffff816a9659>] path_openat+0x1799/0x1b00 fs/namei.c:3779
+>     [<ffffffff816aa5ce>] do_filp_open+0xce/0x1b0 fs/namei.c:3809
+>     [<ffffffff816843ed>] do_sys_openat2+0xdd/0x130 fs/open.c:1440
+>     [<ffffffff81684d53>] do_sys_open fs/open.c:1455 [inline]
+>     [<ffffffff81684d53>] __do_sys_openat fs/open.c:1471 [inline]
+>     [<ffffffff81684d53>] __se_sys_openat fs/open.c:1466 [inline]
+>     [<ffffffff81684d53>] __x64_sys_openat+0x83/0xe0 fs/open.c:1466
+>     [<ffffffff84ae676f>] do_syscall_x64 arch/x86/entry/common.c:51 [inlin=
+e]
+>     [<ffffffff84ae676f>] do_syscall_64+0x3f/0x110 arch/x86/entry/common.c=
+:82
+>     [<ffffffff84c0008b>] entry_SYSCALL_64_after_hwframe+0x63/0x6b
+>
+> BUG: leak checking failed
+> ```
+> I have attached the reproducible C program and its configuration for
+> this crash. Please note that the C program has not been minimized
+> because there were issues with syz-repro.
+>
+> For this memory leak, it seems that the `pccontext` allocated by
+> kzalloc (https://elixir.bootlin.com/linux/v6.7/source/kernel/time/posix-c=
+lock.c#L126)
+> is not released correctly.
+>
+> If you have any questions or require more information, please feel
+> free to contact us.
+>
+> Reported-by: Chenyuan Yang <chenyuan0y@gmail.com>
+>
+> Best,
+> Chenyuan
