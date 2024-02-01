@@ -1,106 +1,156 @@
-Received: from mail1.hosting.lp.pl (mail1.hosting.lp.pl [194.1.144.125])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF050374
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 00:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.1.144.125
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CB2652
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 00:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706746989; cv=none; b=U63oflzy3JiNORdvLL9NTTGjywmh5/96tTqFN6cOH8JOnHGao6+uQzSFaPlOeHYhcvlMBDWE5coKWRJbOFfsS+n/jVG6GGJAM0PvX7uSeYg8c+z8Wnq5VAjfFOoZpriSeJjbKvg9xIGqHLtCn41GtayqigXaXJKEg9I6D8OEK0g=
+	t=1706747071; cv=none; b=NDdG3lhaeE9kNnJKXlvWr1zA6j1QdgFWnEdKMek1tyvsg4mgnt1JC0LyS1vHrjxqEmsZKYGw58Fy9w11d/o279GdXmbqehiKYg2Wfth/I6QjJBDFpDd0E00/IBZjC2yI/CriGwwtSF1qHT5LminNiNal8oGgdvBTBz5Xh3UvVto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706746989; c=relaxed/simple;
-	bh=8EQCJ0zRWIJAH4B7S7rBKKBSElX4FaQmCDWO7VGXYbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z6CoCDYqIe+bIgTG0atz6L746wXSzT6JR2bkQeC2/Cv1p6iI2ojEKcAcDF8t6B4NW5DpqrxKw2zQC251rz4swuFtEIWPI4+fMPeq6DJBkQocRj9yFKF2Q4D3s4KCBEgauGu6u0tXg0F1tWINqq/gANyVMnJ6b9w5qGyWoU8DHVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zgredder.pl; spf=pass smtp.mailfrom=zgredder.pl; dkim=pass (2048-bit key) header.d=zgredder.pl header.i=@zgredder.pl header.b=mlUTHJCp; arc=none smtp.client-ip=194.1.144.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zgredder.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zgredder.pl
+	s=arc-20240116; t=1706747071; c=relaxed/simple;
+	bh=Ew6h++/+DdbPoHox2grFx/ClbVltBqDrTN113GMVi4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H9r8ZDOlIgDczmJDagb5aZc4av75vNCum9updCEQ/7Hh3OsRCmV73/XInkKKwB9y9srzRO13/GQN0Yggbdh/gnw5R+hFosxHI38TSavHeBFCOjSwsl9iCAbjfV3sO/fudYp9ngbzrvCtSNCeLpOkOVlA+9ACmbxPvtPCy03zD9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3h52+5J; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zgredder.pl header.i=@zgredder.pl header.b="mlUTHJCp"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail1.hosting.lp.pl (Postfix) with ESMTP id EA55C88B69;
-	Thu,  1 Feb 2024 01:15:12 +0100 (CET)
-Authentication-Results: mail1.hosting.lp.pl (amavisd-new);
-	dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-	header.d=zgredder.pl
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=zgredder.pl; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:from:from; s=default; t=1706746511; x=
-	1708560912; bh=8EQCJ0zRWIJAH4B7S7rBKKBSElX4FaQmCDWO7VGXYbY=; b=m
-	lUTHJCpwmkpihcMCOMRM5IQmeGl0jDsHesvRAiesKDRIC9pH4HTv5mgDS2e/fYnj
-	pM2tVoCHwtCZtzR84W47Qi4I4+rCNMJKUgp+IKaefSWi0upzZSilmUCYwlmyLjKI
-	5jtA7eDZHY4KFgPxay+twisDkOwOfvq2LN7UG08ckGjzn/WFljNLT8wKFibfOhQA
-	LercHP6fDtfP3+qHaEB7D/4GQe+F71sbXZHj9iCXm2bU2jxu8z4sclbvC+aOXEKe
-	t2Xq2FZaT6HD7IG5rU6R7UBQ4vgEk1DKZ50kP6Y4PRQKIEMk9ulDfj+e14ps4Ibn
-	c8RdGfMSXGsseyTq3FCaQ==
-X-Virus-Scanned: Debian amavisd-new at mail1.hosting.lp.pl
-Received: from mail1.hosting.lp.pl ([127.0.0.1])
-	by localhost (mail1.hosting.lp.pl [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FBzgoY_-3Q_q; Thu,  1 Feb 2024 01:15:11 +0100 (CET)
-Received: from localhost.localdomain (31-178-92-228.dynamic.chello.pl [31.178.92.228])
-	(Authenticated sender: zgredder@zgredder.pl)
-	by smtp.lmail.pl (Postfix) with ESMTPSA id B693788A5C;
-	Thu,  1 Feb 2024 01:15:11 +0100 (CET)
-From: Bartosz Szreder <zgredder@zgredder.pl>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	colin.i.king@gmail.com,
-	linux-kernel@vger.kernel.org
-Cc: Bartosz Szreder <zgredder@zgredder.pl>
-Subject: [PATCH] x86/lib: Avoid undefined behavior on sign flip
-Date: Thu,  1 Feb 2024 01:10:33 +0100
-Message-ID: <20240201001033.9483-1-zgredder@zgredder.pl>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3h52+5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706747070; x=1738283070;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ew6h++/+DdbPoHox2grFx/ClbVltBqDrTN113GMVi4E=;
+  b=I3h52+5Jt2RvvhcjsksgPJ3pPwcPBI6add6Og5I9DATEK1cgop4DuXlr
+   ZHwJNa7wEJ5swAwlZSuSxLly/27kyr8iUhrgx/QOVBeXpYK3iUI5RZmws
+   q/MOyKUS0AKAZdpc5vlU5EtQbmcm95m7BDUbtnEfG6e/eHN/pddTHbGEU
+   o8o21I31ZweSNh52IBrybo5GpwGJ0DckkTOf+pxILE67HKqde028QTHIj
+   6PIMv+Qv4oMNbbaBdXFtSfQxU36OGqdLCRvrhMq1LIIsB/vwljKcqmHKi
+   r17MP7UqfA7E4pBaUoEOffDUt59uiFQunFzLsqdbotcqdTDkJkeKfHyEb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10867219"
+X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
+   d="scan'208";a="10867219"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 16:24:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="878954466"
+X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
+   d="scan'208";a="878954466"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 16:24:27 -0800
+Date: Wed, 31 Jan 2024 16:25:49 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: alexs@kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, sshegde@linux.ibm.com
+Subject: Re: [PATCH v2 4/6] sched/fair: packing func
+ sched_use_asym_prio/sched_asym_prefer
+Message-ID: <20240201002549.GB18560@ranerica-svr.sc.intel.com>
+References: <20240130131708.429425-1-alexs@kernel.org>
+ <20240130131708.429425-4-alexs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130131708.429425-4-alexs@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-If argument to function num_digits() is equal to INT_MIN, the sign change
-operation results in undefined behavior due to signed integer overflow.
+On Tue, Jan 30, 2024 at 09:17:06PM +0800, alexs@kernel.org wrote:
+> From: Alex Shi <alexs@kernel.org>
+> 
+> Packing the func sched_use_asym_prio/sched_asym_prefer into one, Using
+> new func to simply code. No function change.
 
-Avoid that issue by converting to unsigned type.
+You should use imperative mood when writing changelogs. Also, you should
+avoid abbreviations. When referring to functions,
+please use (). In this specific instance, you could probably say:
 
-Signed-off-by: Bartosz Szreder <zgredder@zgredder.pl>
----
- arch/x86/lib/misc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+     "Consolidate the functions sched_use_asym_prio() and 
+      sched_asym_prefer() into one. This makes the code easier to
+      read. No functional changes."
+> 
+> Thanks Ricardo Neri for func rename and comments suggestion!
 
-diff --git a/arch/x86/lib/misc.c b/arch/x86/lib/misc.c
-index 40b81c338ae5..778ab6d27372 100644
---- a/arch/x86/lib/misc.c
-+++ b/arch/x86/lib/misc.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <asm/misc.h>
-+#include <linux/limits.h>
-=20
- /*
-  * Count the digits of @val including a possible sign.
-@@ -9,14 +10,17 @@
- int num_digits(int val)
- {
- 	long long m =3D 10;
-+	unsigned int tmp =3D val;
- 	int d =3D 1;
-=20
- 	if (val < 0) {
- 		d++;
--		val =3D -val;
-+
-+		if (val !=3D INT_MIN)
-+			tmp =3D -val;
- 	}
-=20
--	while (val >=3D m) {
-+	while (tmp >=3D m) {
- 		m *=3D 10;
- 		d++;
- 	}
---=20
-2.43.0
+Thanks for the mention! But no need. :)
 
+Perhaps you could explain the reasons for renaming the functions as you
+did. Explaining why you make changes is an essential part of the
+changelog.
+
+> 
+> Signed-off-by: Alex Shi <alexs@kernel.org>
+> To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> To: Valentin Schneider <vschneid@redhat.com>
+> To: Vincent Guittot <vincent.guittot@linaro.org>
+> To: Peter Zijlstra <peterz@infradead.org>
+> To: Ingo Molnar <mingo@redhat.com>
+> ---
+>  kernel/sched/fair.c | 34 ++++++++++++++++------------------
+>  1 file changed, 16 insertions(+), 18 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index ebd659af2d78..835dbe77b260 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9745,8 +9745,15 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
+>  		(sd->flags & SD_SHARE_CPUCAPACITY) || is_core_idle(cpu);
+>  }
+>  
+> +static inline bool sched_asym(struct sched_domain *sd, int dst_cpu, int src_cpu)
+> +{
+> +	/* Check if asym balance applicable, then check priorities.*/
+> +	return sched_use_asym_prio(sd, dst_cpu) &&
+> +		sched_asym_prefer(dst_cpu, src_cpu);
+> +}
+> +
+>  /**
+> - * sched_asym - Check if the destination CPU can do asym_packing load balance
+> + * sched_group_asym - Check if the destination CPU can do asym_packing balance
+>   * @env:	The load balancing environment
+>   * @sgs:	Load-balancing statistics of the candidate busiest group
+>   * @group:	The candidate busiest group
+> @@ -9766,22 +9773,15 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
+>   * otherwise.
+>   */
+>  static inline bool
+> -sched_asym(struct lb_env *env, struct sg_lb_stats *sgs, struct sched_group *group)
+> +sched_group_asym(struct lb_env *env, struct sg_lb_stats *sgs, struct sched_group *group)
+>  {
+> -	/* Ensure that the whole local core is idle, if applicable. */
+> -	if (!sched_use_asym_prio(env->sd, env->dst_cpu))
+> -		return false;
+> -
+>  	/*
+> -	 * CPU priorities does not make sense for SMT cores with more than one
+> +	 * CPU priorities do not make sense for SMT cores with more than one
+>  	 * busy sibling.
+>  	 */
+> -	if (group->flags & SD_SHARE_CPUCAPACITY) {
+> -		if (sgs->group_weight - sgs->idle_cpus != 1)
+> -			return false;
+> -	}
+> -
+> -	return sched_asym_prefer(env->dst_cpu, group->asym_prefer_cpu);
+> +	return !(group->flags & SD_SHARE_CPUCAPACITY &&
+> +			sgs->group_weight - sgs->idle_cpus != 1) &&
+> +		sched_asym(env->sd, env->dst_cpu, group->asym_prefer_cpu);
+
+
+I am having second thoughts about compressing these conditions into a
+single line. For instance, the comment above only applies to the first
+condition and it is clear how the condition is met.
+
+Checking the conditions separately makes the funcion easier to read, IMO.
