@@ -1,213 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FD38664B
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF8186645;
+	Thu,  1 Feb 2024 12:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791797; cv=none; b=CoZhkCzj278rvoBDxbh0IzFC5gdlxjADV6R/yW28dlHf7RB73Bj03GFoX7dqP7ACVEhT5ETjzt5Q3SlwbYw1Kq/HpH8guUhGrZdKFX3rY6ujClLva+W8F63nD7xDq6bb0L0QhETho0f7pJsDBsriTLG+wgKHcMLgH02jD2HLcvY=
+	t=1706791879; cv=none; b=NEbKthR7KDB36Dsm1MXCL1aH/OW0nYpJCXhE6EOvMxQI6oBgaoePOfB9F+cl215C/5kEtv7Jh9Vv+wmClKATK6a4iepx42+Ii/dIa9b/UfTIQT44lmqS6AXIo8uJR9iYSYkz4szi/eeDxJVLE2+kSzw8NYVbSfXXoGJazFB0atU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706791797; c=relaxed/simple;
-	bh=HxF5orB0Gg4E2W+2GUmdOwNq0HSHX+F8qh3CVJCvNPE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=NLZ1dN8gMw9hLO7wPIAZqzS8iq+YGWmWKMc9FfAtt89ADUcd4PnxraY0Rqs4VwwOsxEIgLf8sDjnfZqw+vdkLnDGifIKUFMuQdaCbG9Sj75XlMFmsjKu5wYzLdDdmmDsg1r2uMshtWy5GnI4SqvBkdRnunBcJjuDaE5RX+fzBxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aRzQ6mi9; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706791879; c=relaxed/simple;
+	bh=iO+Eo8pPglcxEzFGDR/NbmaGU1weyDXreVR1dhmvHfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BU6Uilh/3Bu4lu1s94Sps9ggfaww2gGJeozR5fFbi8InMUe8JdAHqPzpb3kFhlwRpXGBP7OA98xrjtTBmJFhbyHdA1DeEMRF7QjskXqEg31nZc7d2CD9aWzPhA2nHiMWYDLLeqh6WxlU4/MGmvonuIgoLzfcEHWo1ssRjas4qys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VG2TeXqv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aRzQ6mi9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706791794; x=1738327794;
-  h=date:from:to:cc:subject:message-id;
-  bh=HxF5orB0Gg4E2W+2GUmdOwNq0HSHX+F8qh3CVJCvNPE=;
-  b=aRzQ6mi9VPGaInzHraTCUr0GtqGDk7rhpm50vSJHcGLyTGoVqs0oVMHZ
-   Pei+YeMyQoqxEy3wwcQz4TB1EG3INRC/BUzv2YCWJGXWyESsHa6L3YFIt
-   U36590an+kssMrYgk5czZMzAGa/QvPCIl/0LfSBCfZQieqohSRiMIMvco
-   RbsFQmp8MsURbAO8Rpy3Jd5fgtfWFzU7f7PWcxwLrlfIxgtkArEvIB4Qh
-   b0s4unwAvJJK09yjXxBLgZSO3BglFWsVidu6FlXPlJysQXP3dipdPjJlb
-   ukBDE7wMwVnG95WE81Vy8kK5t0g9X2vZUhrX7umgdmIfuobqwBEa+0ASW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403496524"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="403496524"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:49:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822911451"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="822911451"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 01 Feb 2024 04:49:52 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rVWVq-0002mg-1B;
-	Thu, 01 Feb 2024 12:49:50 +0000
-Date: Thu, 01 Feb 2024 20:49:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/fred] BUILD SUCCESS
- 208d8c79fd0f155bce1b23d8d78926653f7603b7
-Message-ID: <202402012030.egB70YNQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VG2TeXqv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C37FC433C7;
+	Thu,  1 Feb 2024 12:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706791878;
+	bh=iO+Eo8pPglcxEzFGDR/NbmaGU1weyDXreVR1dhmvHfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VG2TeXqvjxGcRv1tIL7nOyafkaL7z3CCvzIcS+2JApyFPDRQM0dhUM3PKC9rui9W7
+	 opOWXzX3wf+INRuwos5WuH4cf3M6JbqJJyg+LLI0aU/Mjafxp/zI/6LLOjymUIwDoC
+	 VDSk9ZulqP9mhOGNO91YqNdrN/xj0ITM+fgsH8po+qhjWD78Oni1Q/PDRrpA8716mK
+	 q7pVitaQP60mvxztWefD4GBlghOrGBUOghPd2F99j+OOahvR6F8gTncbv1qJZI/FBz
+	 m1WAK/Vazl7vTC3aR4c4aWHK20XFT2GuwJVRCjUR6Z4saoYMDPtpDx3hv0SXZYc5LH
+	 BbV/B+1mMlIrg==
+Date: Thu, 1 Feb 2024 13:51:15 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Emma Anholt <emma@anholt.net>, Jonathan Corbet <corbet@lwn.net>, 
+	Sandy Huang <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>, 
+	linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: Re: [PATCH v5 15/44] drm/connector: hdmi: Compute bpc and format
+ automatically
+Message-ID: <jlkoofv7nszj2uqmo2672yo4wjd3yjqarge2l2hxofixcchu6a@j72pa4iybitd>
+References: <20231207-kms-hdmi-connector-state-v5-0-6538e19d634d@kernel.org>
+ <20231207-kms-hdmi-connector-state-v5-15-6538e19d634d@kernel.org>
+ <CAPY8ntBQ+qY9441-rMzq_JAoYAaY_r+E-ADv7Wry0tJNTzKpwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vqybhtpmawkwvb6z"
+Content-Disposition: inline
+In-Reply-To: <CAPY8ntBQ+qY9441-rMzq_JAoYAaY_r+E-ADv7Wry0tJNTzKpwg@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/fred
-branch HEAD: 208d8c79fd0f155bce1b23d8d78926653f7603b7  x86/fred: Invoke FRED initialization code to enable FRED
 
-elapsed time: 918m
+--vqybhtpmawkwvb6z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 126
-configs skipped: 3
+On Thu, Dec 14, 2023 at 03:10:43PM +0000, Dave Stevenson wrote:
+> > +static bool
+> > +sink_supports_format_bpc(const struct drm_connector *connector,
+> > +                        const struct drm_display_info *info,
+> > +                        const struct drm_display_mode *mode,
+> > +                        unsigned int format, unsigned int bpc)
+> > +{
+> > +       struct drm_device *dev =3D connector->dev;
+> > +       u8 vic =3D drm_match_cea_mode(mode);
+> > +
+> > +       if (vic =3D=3D 1 && bpc !=3D 8) {
+> > +               drm_dbg(dev, "VIC1 requires a bpc of 8, got %u\n", bpc);
+> > +               return false;
+> > +       }
+> > +
+> > +       if (!info->is_hdmi &&
+> > +           (format !=3D HDMI_COLORSPACE_RGB || bpc !=3D 8)) {
+> > +               drm_dbg(dev, "DVI Monitors require an RGB output at 8 b=
+pc\n");
+> > +               return false;
+> > +       }
+> > +
+> > +       if (!(connector->hdmi.supported_formats & BIT(format))) {
+> > +               drm_dbg(dev, "%s format unsupported by the connector.\n=
+",
+> > +                       drm_hdmi_connector_get_output_format_name(forma=
+t));
+> > +               return false;
+> > +       }
+> > +
+> > +       switch (format) {
+> > +       case HDMI_COLORSPACE_RGB:
+> > +               drm_dbg(dev, "RGB Format, checking the constraints.\n");
+> > +
+> > +               if (!(info->color_formats & DRM_COLOR_FORMAT_RGB444))
+> > +                       return false;
+>=20
+> We've dropped this check from vc4 in our downstream kernel as it stops
+> you using the prebaked EDIDs (eg drm.edid_firmware=3Dedid/1024x768.bin),
+> or any other EDID that is defined as an analog monitor.
+> The EDID parsing bombs out at [1], so info->color_formats gets left at 0.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Right, but it only does so if the display isn't defined as a digital displa=
+y...
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                            hsdk_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   clang
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   clang
-i386                             allyesconfig   gcc  
-i386                                defconfig   clang
-i386                  randconfig-011-20240201   clang
-i386                  randconfig-012-20240201   clang
-i386                  randconfig-013-20240201   clang
-i386                  randconfig-014-20240201   clang
-i386                  randconfig-015-20240201   clang
-i386                  randconfig-016-20240201   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-nios2                         10m50_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      arches_defconfig   gcc  
-powerpc                   currituck_defconfig   gcc  
-powerpc                    ge_imp3a_defconfig   gcc  
-powerpc                     ksi8560_defconfig   gcc  
-powerpc                      ppc40x_defconfig   gcc  
-powerpc                  storcenter_defconfig   gcc  
-powerpc                        warp_defconfig   gcc  
-riscv                            allmodconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-s390                             allmodconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          polaris_defconfig   gcc  
-sh                          r7785rp_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                                allnoconfig   gcc  
-um                               allyesconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   clang
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240201   gcc  
-x86_64       buildonly-randconfig-002-20240201   gcc  
-x86_64       buildonly-randconfig-003-20240201   gcc  
-x86_64       buildonly-randconfig-004-20240201   gcc  
-x86_64       buildonly-randconfig-005-20240201   gcc  
-x86_64       buildonly-randconfig-006-20240201   gcc  
-x86_64                              defconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   clang
-x86_64                                  kexec   gcc  
-x86_64                randconfig-011-20240201   gcc  
-x86_64                randconfig-012-20240201   gcc  
-x86_64                randconfig-013-20240201   gcc  
-x86_64                randconfig-014-20240201   gcc  
-x86_64                randconfig-015-20240201   gcc  
-x86_64                randconfig-016-20240201   gcc  
-x86_64                randconfig-071-20240201   gcc  
-x86_64                randconfig-072-20240201   gcc  
-x86_64                randconfig-073-20240201   gcc  
-x86_64                randconfig-074-20240201   gcc  
-x86_64                randconfig-075-20240201   gcc  
-x86_64                randconfig-076-20240201   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
+> RGB is mandatory for both DVI and HDMI, so rejecting it seems overly fuss=
+y.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+=2E.. which is required for both DVI and HDMI.
+
+And sure enough, if we decode that EDID:
+
+edid-decode (hex):
+
+00 ff ff ff ff ff ff 00 31 d8 00 00 00 00 00 00
+05 16 01 03 6d 23 1a 78 ea 5e c0 a4 59 4a 98 25
+20 50 54 00 08 00 61 40 01 01 01 01 01 01 01 01
+01 01 01 01 01 01 64 19 00 40 41 00 26 30 08 90
+36 00 63 0a 11 00 00 18 00 00 00 ff 00 4c 69 6e
+75 78 20 23 30 0a 20 20 20 20 00 00 00 fd 00 3b
+3d 2f 31 07 00 0a 20 20 20 20 20 20 00 00 00 fc
+00 4c 69 6e 75 78 20 58 47 41 0a 20 20 20 00 55
+
+----------------
+
+Block 0, Base EDID:
+  EDID Structure Version & Revision: 1.3
+  Vendor & Product Identification:
+    Manufacturer: LNX
+    Model: 0
+    Made in: week 5 of 2012
+  Basic Display Parameters & Features:
+    Analog display
+    Signal Level Standard: 0.700 : 0.000 : 0.700 V p-p
+    Blank level equals black level
+    Sync: Separate Composite Serration
+    Maximum image size: 35 cm x 26 cm
+    Gamma: 2.20
+    DPMS levels: Standby Suspend Off
+    RGB color display
+    First detailed timing is the preferred timing
+  Color Characteristics:
+    Red  : 0.6416, 0.3486
+    Green: 0.2919, 0.5957
+    Blue : 0.1474, 0.1250
+    White: 0.3125, 0.3281
+  Established Timings I & II:
+    DMT 0x10:  1024x768    60.003840 Hz   4:3     48.363 kHz     65.000000 =
+MHz
+  Standard Timings:
+    DMT 0x10:  1024x768    60.003840 Hz   4:3     48.363 kHz     65.000000 =
+MHz
+  Detailed Timing Descriptors:
+    DTD 1:  1024x768    60.003840 Hz   4:3     48.363 kHz     65.000000 MHz=
+ (355 mm x 266 mm)
+                 Hfront    8 Hsync 144 Hback  168 Hpol N
+                 Vfront    3 Vsync   6 Vback   29 Vpol N
+    Display Product Serial Number: 'Linux #0'
+    Display Range Limits:
+      Monitor ranges (GTF): 59-61 Hz V, 47-49 kHz H, max dotclock 70 MHz
+    Display Product Name: 'Linux XGA'
+Checksum: 0x55
+
+----------------
+
+Warnings:
+
+Block 0, Base EDID:
+  Detailed Timing Descriptor #1: DTD is similar but not identical to DMT 0x=
+10.
+
+EDID conformity: PASS
+
+So, if anything, it's the EDID that needs to be updated, not the code there.
+Maxime
+
+--vqybhtpmawkwvb6z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZbuTwwAKCRDj7w1vZxhR
+xStzAQDYM7L7UXag4iNuhrqdZjT3FFQPKQRkvAlVCUNanR6aCQEAkg4xQyzE9/jz
+b81DQAxlvCB4Ne7NX/cfiEPrXcR93Q0=
+=Fb2U
+-----END PGP SIGNATURE-----
+
+--vqybhtpmawkwvb6z--
