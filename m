@@ -1,156 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2221E5B675;
-	Thu,  1 Feb 2024 12:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBFE2135B;
+	Thu,  1 Feb 2024 12:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706790611; cv=none; b=cOi3fDsdaBmAjuigsLYWGyAJ+s4yyQRLPce8UKRI2IGLytK+6XQ78BJ+ipYVidoW6Fpiruhq3y81ZZXmvRqTgd4P527GZwuElJpsfmRRWmvn2k2wBwQvzfT9jrNXPNVZSFqletExVX5ysed3fZuOvfdqvFIrhj8Ds/ssC3gRKwE=
+	t=1706790674; cv=none; b=ohOLkJSSvvzHwAbqp8OOYwRlHdUQtkpdDZ3qOBoFeG49MyZ5AH+IbjlfrjsHjNrQGv2OC4SPHMnqWl8uiNfDGBONC/QGLAsU1VsnROZ2/vWkwcawkXxO2q5CKQwYqIRpRFxdkGNqCR+mnHD0L66m02yPp+gRau5d5W7bebIwDOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706790611; c=relaxed/simple;
-	bh=rmELVqCs4ikLv5jAKdVyJAPps8W0PUgMVeUUwWBQpRA=;
+	s=arc-20240116; t=1706790674; c=relaxed/simple;
+	bh=E4A5iVgzE715w//0CLgtkuodzITNIqD3Gz7PVnBh6zw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XTo2jrgKkR3zlIehD5+3YsldHDEb59+BrOsk6UHYz9JrWa7IQhzvpOAMbx2Rd1oU2wAj5tzWJ3mF2GDjfGAVgoa0DncypUbTRuOf4V3W5qb5ASIhoUWRwPl7NJPUk+kMxu1npay6iAgQzrV6EchfCbWCZcMADdfVSBWoDJqV0Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSbyEQTE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CRREpvPs8mLKWR7GyZSRFyDhzVhPOHod20FhD687A3+bGRfrE+89xVY/430x7SEqG07snSO/EnuLv8yQnqs6HF83wyuotM1tq6okXBobgE9P0PEJi0D+U4vgqhFR3bpliyyQS491WQIdQEx4dYA06clBwuItyZnxe+TsU/B/Ijo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KU06cK6/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSbyEQTE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 307BFC43390;
-	Thu,  1 Feb 2024 12:30:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KU06cK6/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78931C433F1;
+	Thu,  1 Feb 2024 12:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706790610;
-	bh=rmELVqCs4ikLv5jAKdVyJAPps8W0PUgMVeUUwWBQpRA=;
+	s=k20201202; t=1706790674;
+	bh=E4A5iVgzE715w//0CLgtkuodzITNIqD3Gz7PVnBh6zw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lSbyEQTE218AJfS4lkow46hitJEmhR5LoGoOpATK3DKPCzy5hzHLI+gdkNeZbs+Rs
-	 CCFzznShBjxWnlYLytIa3ixKjNyGnjrtytdXMJT83kc7YjVo8fRVu0Mf/s5cOpNdp8
-	 wnxVcMYCn6jz5T6Dc+q0j9c0EP6nkQujGTgf7zVRUTlfNWQ48DjIKa0XHkEQ4Yooe6
-	 l1F1sjaWr5p4MHoWlSAN+ES1/NMIQudiol59cskF0zdDdr6ZPHhACbNUK929adYcv6
-	 oZKZz+OazSSUeU0jNaxQddyOnPe0INtR9310oL8WCZVQdhxsYXxlzgRtvYKNwOHSvV
-	 ov8+bMzc5WNmQ==
-Date: Thu, 1 Feb 2024 12:30:04 +0000
-From: Lee Jones <lee@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
-	Juergen Quade <quade@hsnr.de>,
-	David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v3 1/1] lib/vsprintf: Implement spprintf() to catch
- truncated strings
-Message-ID: <20240201123004.GA938078@google.com>
-References: <20240130160953.766676-1-lee@kernel.org>
- <ZbuFSIIGbfhXeP92@smile.fi.intel.com>
+	b=KU06cK6/KJppk6C5DXCgRbg1tp1NHfzoP7v8JNCDbSrsBCiCe4mQIY68WxUzAfgQD
+	 3ek8+x4ofpQiuNkFaRqCHIvI8WfbENNBUbp2KRqgSL2JUfNmUvRMD1KoyeLhRI8O8c
+	 5Ywg58ONGGezToU/D1im0u4OiT6MkodmcyP9QdW2Usb8/+0tVWd9pX0PLiuDgEzp3V
+	 AFGRz6nSkzQTW7ROALNurhfindo+YAQmOMPuFL7s32w0LI8wWVvIUteYSoTiJZ/8RY
+	 phkN9ziIj1ROCTTj/7OBVU21SkfOQEV+1LqE2LPLgxqdHHJvghEcf46Blg1H0ueDXw
+	 PGc1RT3Hvh8iw==
+Date: Thu, 1 Feb 2024 12:31:09 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
+Cc: srinivas.kandagatla@linaro.org, bgoswami@quicinc.com, tiwai@suse.com,
+	Fullway Wang <fullwaywang@outlook.com>, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, fullwaywang@tencent.com
+Subject: Re: [PATCH] sound: soc: wcd934x: fix an incorrect use of kstrndup()
+Message-ID: <bf3ffc3e-c786-4d52-9204-ad57e1dfccbe@sirena.org.uk>
+References: <PH7PR20MB59255EF9DFFB022CB1BBB574BF712@PH7PR20MB5925.namprd20.prod.outlook.com>
+ <170662942110.37296.1277489815994094565.b4-ty@kernel.org>
+ <dde96dd7-eb33-41ca-9b08-3a2788164d02@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="QR8WRBmfgmn/QwRS"
+Content-Disposition: inline
+In-Reply-To: <dde96dd7-eb33-41ca-9b08-3a2788164d02@linux.intel.com>
+X-Cookie: You can't cheat the phone company.
+
+
+--QR8WRBmfgmn/QwRS
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZbuFSIIGbfhXeP92@smile.fi.intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 01 Feb 2024, Andy Shevchenko wrote:
+On Thu, Feb 01, 2024 at 10:04:23AM +0100, Amadeusz S=C5=82awi=C5=84ski wrot=
+e:
 
-> On Tue, Jan 30, 2024 at 04:09:53PM +0000, Lee Jones wrote:
-> > There is an ongoing effort to replace the use of {v}snprintf() variants
-> > with safer alternatives - for a more in depth view, see Jon's write-up
-> > on LWN [0] and/or Alex's on the Kernel Self Protection Project [1].
-> > 
-> > Whist executing the task, it quickly became apparent that the initial
-> > thought of simply s/snprintf/scnprintf/ wasn't going to be adequate for
-> > a number of cases.  Specifically ones where the caller needs to know
-> > whether the given string ends up being truncated.  This is where
-> > spprintf() comes in, since it takes the best parts of both of the
-> > aforementioned variants.  It has the testability of truncation of
-> > snprintf() and returns the number of Bytes *actually* written, similar
-> > to scnprintf(), making it a very programmer friendly alternative.
-> > 
-> > Here's some examples to show the differences:
-> > 
-> >   Success: No truncation - all 9 Bytes successfully written to the buffer
-> > 
-> >     ret = snprintf (buf, 10, "%s", "123456789");  // ret = 9
-> >     ret = scnprintf(buf, 10, "%s", "123456789");  // ret = 9
-> >     ret = spprintf (buf, 10, "%s", "123456789");  // ret = 9
-> > 
-> >   Failure: Truncation - only 9 of 10 Bytes written; '-' is truncated
-> > 
-> >     ret = snprintf (buf, 10, "%s", "123456789---"); // ret = 12
-> > 
-> >       Reports: "12 Bytes would have been written if buf was large enough"
-> >       Issue: Too easy for programmers to assume ret is Bytes written
-> > 
-> >     ret = scnprintf(buf, 10, "%s", "123456789---"); // ret = 9
-> > 
-> >       Reports: "9 Bytes actually written"
-> >       Issue: Not testable - returns 9 on success AND failure (see above)
-> > 
-> >     ret = spprintf (buf, 10, "%s", "123456789---"); // ret = 10
-> > 
-> >       Reports: "Data provided is too large to fit in the buffer"
-> >       Issue: No tangible impact: No way to tell how much data was lost
-> > 
-> > Since spprintf() only reports the total size of the buffer, it's easy to
-> > test if they buffer overflowed since if we include the compulsory '\0',
-> > only 9 Bytes additional Bytes can fit, so the return of 10 informs the
-> > caller of an overflow.  Also, if the return data is plugged straight
-> > into an additional call to spprintf() after the occurrence of an
-> > overflow, no out-of-bounds will occur:
-> > 
-> >     int size = 10;
-> >     char buf[size];
-> >     char *b = buf;
-> > 
-> >     ret = spprintf(b, size, "1234");
-> >     size -= ret;
-> >     b += ret;
-> >     // ret = 4  size = 6  buf = "1234\0"
-> > 
-> >     ret = spprintf(b, size, "5678");
-> >     size -= ret;
-> >     b += ret;
-> >     // ret = 4  size = 2  buf = "12345678\0"
-> > 
-> >     ret = spprintf(b, size, "9***");
-> >     size -= ret;
-> >     b += ret;
-> >     // ret = 2  size = 0  buf = "123456789\0"
-> > 
-> > Since size is now 0, further calls result in no changes of state.
-> > 
-> >     ret = spprintf(b, size, "----");
-> >     size -= ret;
-> >     b += ret;
-> >     // ret = 0  size = 0  buf = "123456789\0"
-> 
-> > [0] https://lwn.net/Articles/69419/
-> > [1] https://github.com/KSPP/linux/issues/105
-> 
-> Link: ... [0]
-> Link: ... [1]
+> Mark, my other comment was meant to stop this patch from being applied ;),
+> perhaps I could have been more clear? kmemdup_nul() in this case will copy
 
-OOI, what does that do?
+Your comment appeared to be a complaint about the existing code being
+bad which sure but not a blocker to a minor fix.
 
-Does tooling pick-up on them?
+--QR8WRBmfgmn/QwRS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-These links are for humans.
+-----BEGIN PGP SIGNATURE-----
 
-Is there documentation I can go look at?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmW7jwwACgkQJNaLcl1U
+h9DlAAf/Zkwb92UAMo+KF0xiS0ypCUfcY7H54ga9UK2UMV6RT3C/R/Kt+2N1bC/j
+rq43Inynq2gpcVx+iL77Rjpfx7jKMjeMruG8nXQ5vwn44X8hGqT3Xes4IMpNrG/K
+PNjKmgjAyM1cQ/y0NxXpA7CoQuSMnMZ6VDupwkMp6RNs5h9Kngf40spTLc9n15Yf
+Z0eKgvR/cTfGlhtLgtj9C06LmmFV7mvk9px1ffUg0SLMaLBIJmTYyO0mFoy1TPtw
+SsmdiyTJ4VzchWwOgBBBQiHsOGHC1ePRaGqj2F1g3gu4OeHSzncWr4YhTyXeHiS3
+jRQGOxrEIe6bh0DTo9bgRDqEhRGRjA==
+=HfjQ
+-----END PGP SIGNATURE-----
 
-> > Signed-off-by: Lee Jones <lee@kernel.org>
-> 
-> ...
-> 
-> I'm a bit late in this discussion, but the commit message doesn't spit a single
-> word on why seq_buf() approach can't be used in those cases?
-
-When I can carve out a little more free time, investigating seq_buf() is
-the next step.
-
--- 
-Lee Jones [李琼斯]
+--QR8WRBmfgmn/QwRS--
