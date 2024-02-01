@@ -1,38 +1,41 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9B515A4B1;
-	Thu,  1 Feb 2024 09:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A3D15AAB5;
+	Thu,  1 Feb 2024 09:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706778794; cv=none; b=oG1S4DnbpHp0tVuxnkzlZ4WpqgPkoa2d7TRU/ayTHUv+ovXVqi4S+w7X4xy74Z9FBtjpo27N+CkDa4aZiFZjfusD2o3w8CqNB8UYZ9fNGlH2ciHGLZvTMIFIsp27h8XzLtbuYgME8ws6xWUkSjHOxlLl+sP7HPtWwFdQAZlf/k0=
+	t=1706778796; cv=none; b=pANsTM9T2bBKOJ0/pA71OUx/M9QqmVlIQfhTqmlp1N0Jo8uc62pdJ5kU7K4RMJ1RL3qsXI2DPE/lHwIljbjqldPWlwX5EwBMuvR6gGW4fVaMhkCZDWj5BUAZzSLzNUQBI0URYUyjN8VvrVhRnSTKaWjyHl/rLRIqEEz4+YZTqOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706778794; c=relaxed/simple;
-	bh=vdcjgpSSe3vHkaNcPGjjlLa0vhqVfEdHpZMs8SYg4f0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AvGA8mjN8vkMyuEcNAqD4aAt5YmZi+UFKAyb1ihKkgCPIdqTDb95WgwyvbRKjF9pXbxnqb9wLpIBqGR0FeX+n6CS8t+PtmKSZ/voAmYHQwjisWlcqUNic1bXnqGKVzigaXnW8fGONF8m9KHxSD744QnRv8/D/gsy46Jxw/VPprc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+	s=arc-20240116; t=1706778796; c=relaxed/simple;
+	bh=7sqqG92PUIOpPJ0+E1C7xrOjm82lqqJbU4jpppRz7LA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QRJQd9abjYzJmqLs2PTVHkhyL/VAbFiuo9zb8ZESGXqdkWP4BfIx0aAKH0ZlJR3Qs+m7DAIxgU6MOr6d50fyJaaS0/aUx9tKcRAPdAbCIkg2o2Dc0QEbMbTKMPaB0Rd9LSNvddZtLLSAl5BxHReAlr38zhkW1W7qaB8zvSRzpSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TQY6s3h8Bz1Q8Ks;
-	Thu,  1 Feb 2024 17:11:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TQY7c6YpPzsWkK;
+	Thu,  1 Feb 2024 17:11:56 +0800 (CST)
 Received: from dggpemd200004.china.huawei.com (unknown [7.185.36.141])
-	by mail.maildlp.com (Postfix) with ESMTPS id 205971400D4;
-	Thu,  1 Feb 2024 17:13:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2C21818005E;
+	Thu,  1 Feb 2024 17:13:10 +0800 (CST)
 Received: from huawei.com (10.175.113.32) by dggpemd200004.china.huawei.com
  (7.185.36.141) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Thu, 1 Feb
- 2024 17:13:08 +0800
+ 2024 17:13:09 +0800
 From: Liu Shixin <liushixin2@huawei.com>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
 	<brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox
 	<willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
 CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-mm@kvack.org>, Liu Shixin <liushixin2@huawei.com>
-Subject: [PATCH 0/2] Fix I/O high when memory almost met memcg limit
-Date: Thu, 1 Feb 2024 18:08:33 +0800
-Message-ID: <20240201100835.1626685-1-liushixin2@huawei.com>
+Subject: [PATCH 2/2] mm/readahead: limit sync readahead while too many active refault
+Date: Thu, 1 Feb 2024 18:08:35 +0800
+Message-ID: <20240201100835.1626685-3-liushixin2@huawei.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240201100835.1626685-1-liushixin2@huawei.com>
+References: <20240201100835.1626685-1-liushixin2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,45 +47,113 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggpemd200004.china.huawei.com (7.185.36.141)
 
-Recently, when install package in a docker environment where the memory
-almost reached the memcg limit, the program have no respond severely for
-more than 15 minutes. During this period, the I/O is high(~1G/s) which
-cause other programs failed to work properly.
+When the pagefault is not for write and the refault distance is close,
+the page will be activated directly. If there are too many such pages in
+a file, that means the pages may be reclaimed immediately.
+In such situation, there is no positive effect to read-ahead since it will
+only waste IO. So collect the number of such pages and when the number is
+too large, stop bothering with read-ahead for a while until it decreased
+automatically.
 
-The problem can be constructed in the following way:
+Define 'too large' as 10000 experientially, which can solves the problem
+and does not affect by the occasional active refault.
 
- 1. Download the image:
-	docker pull centos:7
- 2. Create a docker with 4G memory limit and 6G memsw limit(cgroupv1):
-	docker create --name dockerhub_centos7 --cpu-period=100000
-	--cpu-quota=400000 --memory 4G --memory-swap 6G --cap-add=SYS_PTRACE
-	--cap-add=SYS_ADMIN --cap-add=NET_ADMIN --cap-add=NET_RAW
-	--pids-limit=20000 --ulimit nofile=1048576:1048576
-	--ulimit memlock=-1:-1 dockerhub_centos7:latest /usr/sbin/init
- 3. Start the docker:
-	docker start dockerhub_centos7
- 4. Allocate 6094MB memory in docker.
- 5. run 'yum install expect'.
-
-We found that this problem is caused by a lot ot meaningless readahead.
-Since memory is almost met memcg limit, the readahead page will be
-reclaimed immediately and will readahead and reclaim again and again.
-
-These two patch will stop readahead early when memcg charge failed and
-will skip readahead when there are too many active refault.
-
-[1] https://lore.kernel.org/linux-mm/c2f4a2fa-3bde-72ce-66f5-db81a373fdbc@huawei.com/T/
-
-Liu Shixin (2):
-  mm/readahead: stop readahead loop if memcg charge fails
-  mm/readahead: limit sync readahead while too many active refault
-
+Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+---
  include/linux/fs.h      |  2 ++
  include/linux/pagemap.h |  1 +
  mm/filemap.c            | 16 ++++++++++++++++
- mm/readahead.c          | 12 ++++++++++--
- 4 files changed, 29 insertions(+), 2 deletions(-)
+ mm/readahead.c          |  4 ++++
+ 4 files changed, 23 insertions(+)
 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index ed5966a704951..f2a1825442f5a 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -960,6 +960,7 @@ struct fown_struct {
+  *      the first of these pages is accessed.
+  * @ra_pages: Maximum size of a readahead request, copied from the bdi.
+  * @mmap_miss: How many mmap accesses missed in the page cache.
++ * @active_refault: Number of active page refault.
+  * @prev_pos: The last byte in the most recent read request.
+  *
+  * When this structure is passed to ->readahead(), the "most recent"
+@@ -971,6 +972,7 @@ struct file_ra_state {
+ 	unsigned int async_size;
+ 	unsigned int ra_pages;
+ 	unsigned int mmap_miss;
++	unsigned int active_refault;
+ 	loff_t prev_pos;
+ };
+ 
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 2df35e65557d2..da9eaf985dec4 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -1256,6 +1256,7 @@ struct readahead_control {
+ 	pgoff_t _index;
+ 	unsigned int _nr_pages;
+ 	unsigned int _batch_count;
++	unsigned int _active_refault;
+ 	bool _workingset;
+ 	unsigned long _pflags;
+ };
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 750e779c23db7..4de80592ab270 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -3037,6 +3037,7 @@ loff_t mapping_seek_hole_data(struct address_space *mapping, loff_t start,
+ 
+ #ifdef CONFIG_MMU
+ #define MMAP_LOTSAMISS  (100)
++#define ACTIVE_REFAULT_LIMIT	(10000)
+ /*
+  * lock_folio_maybe_drop_mmap - lock the page, possibly dropping the mmap_lock
+  * @vmf - the vm_fault for this fault.
+@@ -3142,6 +3143,18 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	if (mmap_miss > MMAP_LOTSAMISS)
+ 		return fpin;
+ 
++	ractl._active_refault = READ_ONCE(ra->active_refault);
++	if (ractl._active_refault)
++		WRITE_ONCE(ra->active_refault, --ractl._active_refault);
++
++	/*
++	 * If there are a lot of refault of active pages in this file,
++	 * that means the memory reclaim is ongoing. Stop bothering with
++	 * read-ahead since it will only waste IO.
++	 */
++	if (ractl._active_refault >= ACTIVE_REFAULT_LIMIT)
++		return fpin;
++
+ 	/*
+ 	 * mmap read-around
+ 	 */
+@@ -3151,6 +3164,9 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	ra->async_size = ra->ra_pages / 4;
+ 	ractl._index = ra->start;
+ 	page_cache_ra_order(&ractl, ra, 0);
++
++	WRITE_ONCE(ra->active_refault, ractl._active_refault);
++
+ 	return fpin;
+ }
+ 
+diff --git a/mm/readahead.c b/mm/readahead.c
+index cc4abb67eb223..d79bb70a232c4 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -263,6 +263,10 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+ 			folio_set_readahead(folio);
+ 		ractl->_workingset |= folio_test_workingset(folio);
+ 		ractl->_nr_pages++;
++		if (unlikely(folio_test_workingset(folio)))
++			ractl->_active_refault++;
++		else if (unlikely(ractl->_active_refault))
++			ractl->_active_refault--;
+ 	}
+ 
+ 	/*
 -- 
 2.25.1
 
