@@ -1,117 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CE815B970;
-	Thu,  1 Feb 2024 11:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEDA15CD52;
+	Thu,  1 Feb 2024 11:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706786601; cv=none; b=tCHMHEFsojt0LUcgpj1kCFZCDp54z0yFIfUI0yuge+l/fgU9oYuNRB0tJqh1+s/2QDB0rtwylAzWZRVUwADabKBSZnCDrxrgAkIIyb8pDPIXnTUNvFtOcfpKn8T7hXXKNyWFEvpWmwYq0g1k3h4M5Q9aBaqOVqIIwL6AiTuhZ/g=
+	t=1706786657; cv=none; b=jzltFvIyEjrfPg7wZ1UvX/060Rrfox0IuC/ntZ07/Af1nuis4lYRKzzY77dZ82Yb/wwVDMxqshk8bHML1iA3LDErVwL7skpTumgmNwMRsUpHn54Ddrdyzxv3hsIh56CofX7EFwDD+okx0MDwXxsLmosWmThJHYpsS9Qb7ty643s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706786601; c=relaxed/simple;
-	bh=lix+9YkAqqOOpOyydIQmC81jZuQWHhwyMTu4skQlNZA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P04tWhVladxosxb/G9Dg1j7bxwwBm2jnceX1zOllEsGolBnT5U510l6DcSgkMrDUei6mE4R2NHNklOPnlcp/R1/xFiGuF1NcYSmgWx8xwFGCeVYF4I105JEnXU2Vz6Pi17ybVK/dGEH2xSFqVnaZe7mUfpUNZAs4kBIcmvF86tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TQbzW5Mgrz6K807;
-	Thu,  1 Feb 2024 19:20:07 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id B27951409EA;
-	Thu,  1 Feb 2024 19:23:15 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 1 Feb
- 2024 11:23:15 +0000
-Date: Thu, 1 Feb 2024 11:23:14 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-efi@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/2] cxl/trace: Remove unnecessary memcpy's
-Message-ID: <20240201112314.00005dbc@Huawei.com>
-In-Reply-To: <ZbrxQ+FehE6nq9w5@aschofie-mobl2>
-References: <20240131-cxl-cper-fixups-v1-0-335c85b1d77b@intel.com>
-	<20240131-cxl-cper-fixups-v1-2-335c85b1d77b@intel.com>
-	<ZbrxQ+FehE6nq9w5@aschofie-mobl2>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1706786657; c=relaxed/simple;
+	bh=uZUoJTXUOtGTmSyrM1RM4G9rWHINL+HQGMIgwpk5Gdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B+CwVJY5XUuG/bHGjcvtw7LceCq7zqI6dgi30ALwO8xt43Xjm+ed68fmHGjuNHe/V1LyZUtJYnnAypK7FVI1cyYywUYKJPxobMG9ZMLNjeQINGooqb15RIX4h/TvgZIQHt0XVzsDLDiU3wUUb1h2bX2Uag1XLETY3RRJmyT2nUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9273FDA7;
+	Thu,  1 Feb 2024 03:24:56 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0C5F3F762;
+	Thu,  1 Feb 2024 03:19:41 -0800 (PST)
+Date: Thu, 1 Feb 2024 11:19:30 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"souvik.chakravarty@arm.com" <Souvik.Chakravarty@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	dl-linux-imx <linux-imx@nxp.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <Zbt-QkWhz5d9P-v6@pluto>
+References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com>
+ <f88d07ef-83b2-4d14-976a-6dbbd71e036f@oss.nxp.com>
+ <CACRpkdYV=qYQ9qDUWYTLDAV1niay30gYH5S=zjfi31GpeY5o-A@mail.gmail.com>
+ <DU0PR04MB9417A9074C5DC49AE689E65288432@DU0PR04MB9417.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DU0PR04MB9417A9074C5DC49AE689E65288432@DU0PR04MB9417.eurprd04.prod.outlook.com>
 
-On Wed, 31 Jan 2024 17:17:55 -0800
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Thu, Feb 01, 2024 at 07:14:17AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+> > protocol basic support
+> > 
 
-> On Wed, Jan 31, 2024 at 03:55:39PM -0800, Ira Weiny wrote:
-> > CPER events don't have UUIDs.  Therefore UUIDs were removed from the
-> > records passed to trace events and replaced with hard coded values.
+Hi Peng,
+
+> > On Mon, Jan 29, 2024 at 1:37 PM Peng Fan <peng.fan@oss.nxp.com> wrote:
 > > 
-> > As pointed out by Jonathan, the new defines for the UUIDs present a more
-> > efficient way to assign UUID in trace records.[1]
+> > > And for i.MX95 OEM extenstion, do you have any suggestions?
+> > > I have two points:
+> > > 1. use vendor compatible. This would also benefit when supporting
+> > > vendor protocol.
+> > > 2. Introduce a property saying supporting-generic-pinconf
+> > >
+> > > How do you think?
 > > 
-> > Replace memcpy's with the use of static data.  
+> > While I don't know how OEM extensions to SCMI were designed, the pin
+> > control subsystem has the philosophy that extensions are for minor fringe
+> > stuff, such as a pin config option that no other silicon is using and thus have
+> > no use for anyone else. Well that is actually all the custom extensions we
+> > have.
+> > (This notion is even carried over to SCMI pinctrl.)
+> > 
+> > The i.MX95 OEM extension is really odd to me, it looks like a
+> > reimplementation of the core aspects of SCMI pin control, and looks much
+> > more like the old i.MX drivers than like the SCMI driver.
 > 
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> 
-> 
-> > 
-> > [1] https://lore.kernel.org/all/20240108132325.00000e9c@Huawei.com/
-> > 
-> > Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  drivers/cxl/core/trace.h | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> > index 89445435303a..bdf117a33744 100644
-> > --- a/drivers/cxl/core/trace.h
-> > +++ b/drivers/cxl/core/trace.h
-> > @@ -338,7 +338,7 @@ TRACE_EVENT(cxl_general_media,
-> >  
-> >  	TP_fast_assign(
-> >  		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> > -		memcpy(&__entry->hdr_uuid, &CXL_EVENT_GEN_MEDIA_UUID, sizeof(uuid_t));
-> > +		__entry->hdr_uuid = CXL_EVENT_GEN_MEDIA_UUID;
-> >  
-> >  		/* General Media */
-> >  		__entry->dpa = le64_to_cpu(rec->phys_addr);
-> > @@ -425,7 +425,7 @@ TRACE_EVENT(cxl_dram,
-> >  
-> >  	TP_fast_assign(
-> >  		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> > -		memcpy(&__entry->hdr_uuid, &CXL_EVENT_DRAM_UUID, sizeof(uuid_t));
-> > +		__entry->hdr_uuid = CXL_EVENT_DRAM_UUID;
-> >  
-> >  		/* DRAM */
-> >  		__entry->dpa = le64_to_cpu(rec->phys_addr);
-> > @@ -573,7 +573,7 @@ TRACE_EVENT(cxl_memory_module,
-> >  
-> >  	TP_fast_assign(
-> >  		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> > -		memcpy(&__entry->hdr_uuid, &CXL_EVENT_MEM_MODULE_UUID, sizeof(uuid_t));
-> > +		__entry->hdr_uuid = CXL_EVENT_MEM_MODULE_UUID;
-> >  
-> >  		/* Memory Module Event */
-> >  		__entry->event_type = rec->event_type;
-> > 
-> > -- 
-> > 2.43.0
-> >   
+> i.MX SCMI pin protocol conf settings follows non-SCMI pin conf settings.
 > 
 
+It is not just a matter of using custom SCMI OEM types, it is the whole
+layout/definitions of the i.MX pin/groups/funcs DT bindings that deviates from
+the generic DT bindings layout as handled and expected by the Linux Pinctrl
+subsystem (AFAIU), while the SCMI Pinctrl driver as it stands in this series,
+was conceived, designed and implemented originally by Oleksii to just use the
+generic existing Pinctrl DT bindings; as a consequence, in your i.MX extensions,
+you had to add a dedicated i.MX DT parser to interpret the protocol@19 DT snippet
+in a completely different way, to try to stick your custom solution on top of
+the generic one.
+
+Thanks,
+Cristian
+
+> > 
+> > But I sure cannot speak of what is allowed in SCMI OEM extensions or not.
+> 
+> + SPEC owner, Souvik. Any comments?
+> 
+> Thanks,
+> Peng.
+> 
+> > 
+> > Yours,
+> > Linus Walleij
