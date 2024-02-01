@@ -1,211 +1,106 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.hosting.lp.pl (mail1.hosting.lp.pl [194.1.144.125])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FB57F4
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 00:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF050374
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 00:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.1.144.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706746857; cv=none; b=mhAVM7nN/Wudd0rjXILYuT/k7t2NtFA7svAbSVa2w16ErrInqAq9zmU/chJJdPNyn9lrWAhamVhxEyblvovtnTtuEgtiFVSTw7PSzVxskLShzXwh+h9hPxAW+WJKOHkncu7pSHbc021d4aX7PaQ0QfoAqzmWsXrFWps6RcNVRi8=
+	t=1706746989; cv=none; b=U63oflzy3JiNORdvLL9NTTGjywmh5/96tTqFN6cOH8JOnHGao6+uQzSFaPlOeHYhcvlMBDWE5coKWRJbOFfsS+n/jVG6GGJAM0PvX7uSeYg8c+z8Wnq5VAjfFOoZpriSeJjbKvg9xIGqHLtCn41GtayqigXaXJKEg9I6D8OEK0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706746857; c=relaxed/simple;
-	bh=vPtpnLaleP3MgQmoDyqqaoE5DCMRkDO/XbE6A+o6ZGs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iTKtNq5W3hzTcoKca6lVSbJKCKT1/tMvc1DnUpgDBKDLeoRv9rW0q1HkPvj4UBzBmrjqCihZs46EkYHJDizKINh72dNhBcJgqEQUrNy476k88MeforTqMel2Uz+ev8dMMX+DDYcyjqTD/lfd/hhICedQhwOKcWTTRcrzHbopKjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AFeTbHsO; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1706746989; c=relaxed/simple;
+	bh=8EQCJ0zRWIJAH4B7S7rBKKBSElX4FaQmCDWO7VGXYbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z6CoCDYqIe+bIgTG0atz6L746wXSzT6JR2bkQeC2/Cv1p6iI2ojEKcAcDF8t6B4NW5DpqrxKw2zQC251rz4swuFtEIWPI4+fMPeq6DJBkQocRj9yFKF2Q4D3s4KCBEgauGu6u0tXg0F1tWINqq/gANyVMnJ6b9w5qGyWoU8DHVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zgredder.pl; spf=pass smtp.mailfrom=zgredder.pl; dkim=pass (2048-bit key) header.d=zgredder.pl header.i=@zgredder.pl header.b=mlUTHJCp; arc=none smtp.client-ip=194.1.144.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zgredder.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zgredder.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AFeTbHsO"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60404484c23so7381607b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:20:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706746854; x=1707351654; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g1PMHYRH7qb67G88ys4k0o39fe/edxcv9FM2T4EKaqk=;
-        b=AFeTbHsOsKi0IdFmI4ZHqHMqsZQrVeacIQd1k/xRKGIHIzMtd0fGZV0dv6RVKFWPzp
-         NfIdcY1+/yq9AB4JCtHAOXqOYfJAaUJhQh17mNlm+GBau9Nw5FuY9+Crtdpv1OGhgpBP
-         k+BZqbQWQNyD3KVftXmFrnVXGnLT0Cj4H/5emXpjY8cPtNjsovulp9yHl1OYFhkeejBn
-         BbguLsmNpBvN1fPIPaCakGvjv2KBMzTN3vWR37OpWUu70Y4rokHViV3Q98fA/oMd4091
-         5LqxDxF5jTSU9lj4QvFxrOBaasgXia7QUfavSW+h58reOnEjQa2HKuIPFA9h+ovDgXAa
-         9F3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706746854; x=1707351654;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g1PMHYRH7qb67G88ys4k0o39fe/edxcv9FM2T4EKaqk=;
-        b=lYaVpWQg63wVXgKD3LWLdNvEYMacQxYZjurs4U8HyHnbrT4Q/oh+bG5bMqAlTn0+9f
-         3pEJ9eY0U5UQcNgMA3K9YdnwbYpT/MzaL/002IlMee1Lt4NXXw65dgtUMpBMciQpuyJF
-         +jGR+4rWvtR17n8B/vSqIyMpw140NsgYGZAQ/eqPu8JjWxGsx5Y2Er5QBh3PZNBvaAiU
-         VjqdnaIWrp+ToJvMNMxG1VZwUJIGfQIMkDtSrurHyoRFjXjEIYVf/Ew1HDUUwe2shw9q
-         lmoenIVkv12hnZUU+q7jFGWUjVJUy1vNM7uG8bgIk3LjbDRoq2YX2Vlaq7Ik69ynztJ2
-         oa3A==
-X-Gm-Message-State: AOJu0Yw+dJzGfaC3sjnc65WRjRQZAu5saHMLT03wcZCYsu7GuZNu9Mg4
-	mPp3gyWTKDWa5FkWnOYYr264NBa8Vp0kk5rsqPXjr8zcT05oJ6IdsUR+1wE/VLGsqBXz0l7nvLg
-	Wvg==
-X-Google-Smtp-Source: AGHT+IH80WQPe2gC0t41s8elGGKjfDMTRtXWW//0TOVmoyUvyUr43Ya/wSrUFZF+r6Z3Ca0w0TJIfiQeiMA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:f85:b0:5ff:9315:7579 with SMTP id
- df5-20020a05690c0f8500b005ff93157579mr690348ywb.6.1706746854726; Wed, 31 Jan
- 2024 16:20:54 -0800 (PST)
-Date: Wed, 31 Jan 2024 16:20:53 -0800
-In-Reply-To: <97bb1f2996d8a7b828cd9e3309380d1a86ca681b.1705965635.git.isaku.yamahata@intel.com>
+	dkim=pass (2048-bit key) header.d=zgredder.pl header.i=@zgredder.pl header.b="mlUTHJCp"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail1.hosting.lp.pl (Postfix) with ESMTP id EA55C88B69;
+	Thu,  1 Feb 2024 01:15:12 +0100 (CET)
+Authentication-Results: mail1.hosting.lp.pl (amavisd-new);
+	dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+	header.d=zgredder.pl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=zgredder.pl; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:from:from; s=default; t=1706746511; x=
+	1708560912; bh=8EQCJ0zRWIJAH4B7S7rBKKBSElX4FaQmCDWO7VGXYbY=; b=m
+	lUTHJCpwmkpihcMCOMRM5IQmeGl0jDsHesvRAiesKDRIC9pH4HTv5mgDS2e/fYnj
+	pM2tVoCHwtCZtzR84W47Qi4I4+rCNMJKUgp+IKaefSWi0upzZSilmUCYwlmyLjKI
+	5jtA7eDZHY4KFgPxay+twisDkOwOfvq2LN7UG08ckGjzn/WFljNLT8wKFibfOhQA
+	LercHP6fDtfP3+qHaEB7D/4GQe+F71sbXZHj9iCXm2bU2jxu8z4sclbvC+aOXEKe
+	t2Xq2FZaT6HD7IG5rU6R7UBQ4vgEk1DKZ50kP6Y4PRQKIEMk9ulDfj+e14ps4Ibn
+	c8RdGfMSXGsseyTq3FCaQ==
+X-Virus-Scanned: Debian amavisd-new at mail1.hosting.lp.pl
+Received: from mail1.hosting.lp.pl ([127.0.0.1])
+	by localhost (mail1.hosting.lp.pl [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id FBzgoY_-3Q_q; Thu,  1 Feb 2024 01:15:11 +0100 (CET)
+Received: from localhost.localdomain (31-178-92-228.dynamic.chello.pl [31.178.92.228])
+	(Authenticated sender: zgredder@zgredder.pl)
+	by smtp.lmail.pl (Postfix) with ESMTPSA id B693788A5C;
+	Thu,  1 Feb 2024 01:15:11 +0100 (CET)
+From: Bartosz Szreder <zgredder@zgredder.pl>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	colin.i.king@gmail.com,
+	linux-kernel@vger.kernel.org
+Cc: Bartosz Szreder <zgredder@zgredder.pl>
+Subject: [PATCH] x86/lib: Avoid undefined behavior on sign flip
+Date: Thu,  1 Feb 2024 01:10:33 +0100
+Message-ID: <20240201001033.9483-1-zgredder@zgredder.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1705965634.git.isaku.yamahata@intel.com> <97bb1f2996d8a7b828cd9e3309380d1a86ca681b.1705965635.git.isaku.yamahata@intel.com>
-Message-ID: <Zbrj5WKVgMsUFDtb@google.com>
-Subject: Re: [PATCH v18 064/121] KVM: TDX: Create initial guest memory
-From: Sean Christopherson <seanjc@google.com>
-To: isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com, 
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, 
-	hang.yuan@intel.com, tina.zhang@intel.com, gkirkpatrick@google.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024, isaku.yamahata@intel.com wrote:
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 4cbcedff4f16..1a5a91b99de9 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -591,6 +591,69 @@ static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
->  	return 0;
->  }
->  
-> +static int tdx_mem_page_add(struct kvm *kvm, gfn_t gfn,
-> +			    enum pg_level level, kvm_pfn_t pfn)
-> +{
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	hpa_t hpa = pfn_to_hpa(pfn);
-> +	gpa_t gpa = gfn_to_gpa(gfn);
-> +	struct tdx_module_args out;
-> +	hpa_t source_pa;
-> +	bool measure;
-> +	u64 err;
-> +	int i;
-> +
-> +	/*
-> +	 * KVM_INIT_MEM_REGION, tdx_init_mem_region(), supports only 4K page
-> +	 * because tdh_mem_page_add() supports only 4K page.
-> +	 */
-> +	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * In case of TDP MMU, fault handler can run concurrently.  Note
-> +	 * 'source_pa' is a TD scope variable, meaning if there are multiple
-> +	 * threads reaching here with all needing to access 'source_pa', it
-> +	 * will break.  However fortunately this won't happen, because below
-> +	 * TDH_MEM_PAGE_ADD code path is only used when VM is being created
-> +	 * before it is running, using KVM_TDX_INIT_MEM_REGION ioctl (which
-> +	 * always uses vcpu 0's page table and protected by vcpu->mutex).
-> +	 */
+If argument to function num_digits() is equal to INT_MIN, the sign change
+operation results in undefined behavior due to signed integer overflow.
 
-Most of the above is superflous.  tdx_mem_page_add() is called if and only if
-the TD is finalized, and the TDX module disallow running vCPUs before the TD is
-finalized.  That's it.  And maybe throw in a lockdep to assert that kvm->lock is
-held.
+Avoid that issue by converting to unsigned type.
 
-> +	if (KVM_BUG_ON(kvm_tdx->source_pa == INVALID_PAGE, kvm)) {
-> +		tdx_unpin(kvm, pfn);
-> +		return -EINVAL;
-> +	}
-> +
-> +	source_pa = kvm_tdx->source_pa & ~KVM_TDX_MEASURE_MEMORY_REGION;
-> +	measure = kvm_tdx->source_pa & KVM_TDX_MEASURE_MEMORY_REGION;
-> +	kvm_tdx->source_pa = INVALID_PAGE;
-> +
-> +	do {
-> +		err = tdh_mem_page_add(kvm_tdx->tdr_pa, gpa, hpa, source_pa,
-> +				       &out);
-> +		/*
-> +		 * This path is executed during populating initial guest memory
-> +		 * image. i.e. before running any vcpu.  Race is rare.
+Signed-off-by: Bartosz Szreder <zgredder@zgredder.pl>
+---
+ arch/x86/lib/misc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-How are races possible at all?
+diff --git a/arch/x86/lib/misc.c b/arch/x86/lib/misc.c
+index 40b81c338ae5..778ab6d27372 100644
+--- a/arch/x86/lib/misc.c
++++ b/arch/x86/lib/misc.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <asm/misc.h>
++#include <linux/limits.h>
+=20
+ /*
+  * Count the digits of @val including a possible sign.
+@@ -9,14 +10,17 @@
+ int num_digits(int val)
+ {
+ 	long long m =3D 10;
++	unsigned int tmp =3D val;
+ 	int d =3D 1;
+=20
+ 	if (val < 0) {
+ 		d++;
+-		val =3D -val;
++
++		if (val !=3D INT_MIN)
++			tmp =3D -val;
+ 	}
+=20
+-	while (val >=3D m) {
++	while (tmp >=3D m) {
+ 		m *=3D 10;
+ 		d++;
+ 	}
+--=20
+2.43.0
 
-> +		 */
-> +	} while (unlikely(err == TDX_ERROR_SEPT_BUSY));
-> +	if (KVM_BUG_ON(err, kvm)) {
-> +		pr_tdx_error(TDH_MEM_PAGE_ADD, err, &out);
-> +		tdx_unpin(kvm, pfn);
-> +		return -EIO;
-> +	} else if (measure) {
-> +		for (i = 0; i < PAGE_SIZE; i += TDX_EXTENDMR_CHUNKSIZE) {
-> +			err = tdh_mr_extend(kvm_tdx->tdr_pa, gpa + i, &out);
-> +			if (KVM_BUG_ON(err, &kvm_tdx->kvm)) {
-> +				pr_tdx_error(TDH_MR_EXTEND, err, &out);
-> +				break;
-> +			}
-> +		}
-
-Why is measurement done deep within the MMU?  At a glance, I don't see why this
-can't be done up in the ioctl, outside of a spinlock.
-
-And IIRC, the order affects the measurement but doesn't truly matter, e.g. KVM
-could choose to completely separate tdh_mr_extend() from tdh_mem_page_add(), no?
-
-> +static int tdx_init_mem_region(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
-> +{
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	struct kvm_tdx_init_mem_region region;
-> +	struct kvm_vcpu *vcpu;
-> +	struct page *page;
-> +	int idx, ret = 0;
-> +	bool added = false;
-> +
-> +	/* Once TD is finalized, the initial guest memory is fixed. */
-> +	if (is_td_finalized(kvm_tdx))
-> +		return -EINVAL;
-> +
-> +	/* The BSP vCPU must be created before initializing memory regions. */
-> +	if (!atomic_read(&kvm->online_vcpus))
-> +		return -EINVAL;
-> +
-> +	if (cmd->flags & ~KVM_TDX_MEASURE_MEMORY_REGION)
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(&region, (void __user *)cmd->data, sizeof(region)))
-> +		return -EFAULT;
-> +
-> +	/* Sanity check */
-> +	if (!IS_ALIGNED(region.source_addr, PAGE_SIZE) ||
-> +	    !IS_ALIGNED(region.gpa, PAGE_SIZE) ||
-> +	    !region.nr_pages ||
-> +	    region.nr_pages & GENMASK_ULL(63, 63 - PAGE_SHIFT) ||
-> +	    region.gpa + (region.nr_pages << PAGE_SHIFT) <= region.gpa ||
-> +	    !kvm_is_private_gpa(kvm, region.gpa) ||
-> +	    !kvm_is_private_gpa(kvm, region.gpa + (region.nr_pages << PAGE_SHIFT)))
-> +		return -EINVAL;
-> +
-> +	vcpu = kvm_get_vcpu(kvm, 0);
-> +	if (mutex_lock_killable(&vcpu->mutex))
-> +		return -EINTR;
-
-The real reason for this drive-by pseudo-review is that I am hoping/wishing we
-can turn this into a generic KVM ioctl() to allow userspace to pre-map guest
-memory[*].
-
-If we're going to carry non-trivial code, we might as well squeeze as much use
-out of it as we can.
-
-Beyond wanting to shove this into KVM_MEMORY_ENCRYPT_OP, is there any reason why
-this is a VM ioctl() and not a vCPU ioctl()?  Very roughly, couldn't we use a
-struct like this as input to a vCPU ioctl() that maps memory, and optionally
-initializes memory from @source?
-
-	struct kvm_memory_mapping {
-		__u64 base_gfn;
-		__u64 nr_pages;
-		__u64 flags;
-		__u64 source;
-	}
-
-TDX would need to do special things for copying the source, but beyond that most
-of the code in this function is generic.
-
-[*] https://lore.kernel.org/all/65262e67-7885-971a-896d-ad9c0a760907@polito.it
