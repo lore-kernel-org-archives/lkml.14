@@ -1,199 +1,403 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DB03CF74
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 20:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318243A1BA;
+	Thu,  1 Feb 2024 20:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706820355; cv=none; b=MKK1b+EC9AOnsfyorDG4gOHeG4j/FCe7L6z1UKPAHvK6SispzNs6kK2yCPoaj5xvVNtgc4nP/Ft7QQLRimGvJlklbsKBRj0cjWGCBJJRtQnD6IYfjQy8AeE+sBSRIVg8krQSFARpJ3K3AtdzGu9x2aIZ/+Qvw1v1jAtdf6G41y8=
+	t=1706820384; cv=none; b=gXmiFP6O13kR+b4k3Ou9+OklbcB2n9nW2cGi7QDoDlHf+atgghcMdoRofLnHsYrPBOloTN5YXUewreu05nJ+w16mpXtXGK+VUi9CbpElj8kDWwrpsFJ2IckCSHB6we8+pAMAD4bHtCieYaJlkXEB0quiFcxD6FE+iteT2iPBXKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706820355; c=relaxed/simple;
-	bh=Dgw6KwuT5iOSIOfdXghS0A8NOeSxhwpnWQcPHTaILOw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=owCopdqCZsps5qEbo8yGCELjvsJXFQ3zGpJsAXfqLrqXiEJXsmBUQaR7O9LCfsZi2SEXRNH/YYzq/SwjY5MViGfpUSjVJWvfDUDs+gx/kxPJY0pfNhSBYbqkDgHaN9ueVbkJkSylVVTJAr7MWOSb0VRD7/xVZM/h8oy2VKN+2ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rj5oBC8C; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706820384; c=relaxed/simple;
+	bh=t09CtJbWPWWsJyZ10cfRu8KBrOeZpB9O9/16992I+P4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UvoPnYkA+XilBZafV9e4UsSHLUAyChBX7h0nGIrAV9wTajXhTvD4ehYCdYjgKrCU0QmeHVtOJftyQZ9uogS76b0xwEtyjObNplRMvf00hDGPb1AT5HkZlTLPJR94YZgRX10sftkeBMrKQZwUzWg/KSmI1PfUWTwLwmdzWDhH3+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RtpMI/Ly; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rj5oBC8C"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a36597a3104so194758866b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 12:45:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706820351; x=1707425151; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2nVZO6y8TcIQYcaKwHAm6Bz36UagPk36lmeIjL1j0eQ=;
-        b=rj5oBC8C7/ctfHD7gaN0OpOE9NLag6pQNHUV4LFFXvTm3rWKSe++BmiruwSOkFHXYI
-         CGX2AcnkSeszcUx4PO3yPMoqdMfaTSC8IbjKoK4yqlm0iZ3gEYi2SXMuR6xxAfktXrSz
-         SFTBPqk4iSe8LNyCHSRxNwGxHKtq/aMoVOsL0tyHPpWanclL3JTxAj6xbFBc3sIuo2+V
-         T9PtmGkZGsJajodx2sE4E3gGyEx1Xa4MSZSkAJZuLjJue9c97xyHpu1ItlwImJ/6MSFG
-         OSs8b+LGR+A2CoUnB0we0Tz3gh8TMdt/cfXNh2490NiChuYgdQkJceqB3l0jCyRc6blw
-         lvMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706820351; x=1707425151;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2nVZO6y8TcIQYcaKwHAm6Bz36UagPk36lmeIjL1j0eQ=;
-        b=WfZz/XmtLgsgJPh2WFtcoBHsTXKlPbfk6aayHvI/jaiGj04pQXB5ABiVjHOs8XxGTa
-         rH290EBtzDNWhK5yqKG0iK7pCQa3HciG0UGzDU7mmKjHmgCz+VWKVJaSzXFM7oO5hT87
-         ZOl69qq/iprbzkuTfHawByiNFg43TsFMjAPfqcZcvF8rXULGQkMRwH1tO3tuWUFZlsl9
-         KxKUIz/DnH+YwkEf43cnMefksvFL7BtrSyWctcG17/tnIHyOV3pnWKFYbKL73HzFf/3k
-         BbBVmWtvtyorjH7GyoDWpZKS9rciTvu0sVX74ZeK5BePpLc0//VWrfXPX0Hxl2P29m5N
-         z5pw==
-X-Gm-Message-State: AOJu0YwDOBfk0TCMFsrDYGnJh+kJAxf8x3bufGfY/Gsco6EDCoiYV1GX
-	W4ZQfWM3e68owxM7yGCC9ajnMXcnuNz73tEGxKfpzvBo6O8k3V/PCA5WKicRUptZ+fDcB1lP34f
-	VB9x5ofkc07X63kVtUtw11nezOi06etfCCrGGos3lSXsF0EPR0myZ
-X-Google-Smtp-Source: AGHT+IG/DL6INtFHc9j0F77V2IEAikGcResQBCFRtVCsiZS9TEJ+CqZIrzxtUr08GJ7e33dJapOrJizJUMeB5E/tYFo=
-X-Received: by 2002:a17:907:c82:b0:a36:c353:952e with SMTP id
- gi2-20020a1709070c8200b00a36c353952emr143080ejc.41.1706820351053; Thu, 01 Feb
- 2024 12:45:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RtpMI/Ly"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 411JkGtW018554;
+	Thu, 1 Feb 2024 20:46:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=graNKSh9djGaHBgZ18hC3bWHCAiqvlQdmmsaj93OQBQ=; b=Rt
+	pMI/LyvjOFLc6VNzBorEYuSMysXp9j8vFHsxqDftAX+7rruZLxrmdBqojL+jNGy9
+	swjLBOZXMVHJd3FlW7qrl+0EV9uScXXc9WO/OSoHgfr3/4ayWaHlXoWySKh3q6Vr
+	jHb5b7xjgpUujpuSMozvDR/ajiLod04VscR/hEFd33GkPxEL9T5dVYYqIbh5ZTV3
+	WFJgoubYXeoXHPtmvl8OwHnGRGvxbH0JAPUpR+GJnec4mqZ9wodg/n9ecFfRYw5G
+	RBn6Zxut3eqy2mrLx6RnKBReb9oq4FmtcJYD+fm/OF44zKi+aqo8g5XfW3kzAeYD
+	nuqpOxq7VOVoO7WhZ7YA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vyvb5kc70-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Feb 2024 20:46:17 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 411KkGxx000995
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 1 Feb 2024 20:46:16 GMT
+Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 1 Feb 2024 12:46:15 -0800
+From: Anjelique Melendez <quic_amelende@quicinc.com>
+To: <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <agross@kernel.org>, <andersson@kernel.org>
+CC: <konrad.dybcio@linaro.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        "Anjelique
+ Melendez" <quic_amelende@quicinc.com>
+Subject: [PATCH 2/2] soc: qcom: add QCOM PBS driver
+Date: Thu, 1 Feb 2024 12:44:24 -0800
+Message-ID: <20240201204421.16992-6-quic_amelende@quicinc.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20240201204421.16992-2-quic_amelende@quicinc.com>
+References: <20240201204421.16992-2-quic_amelende@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123221749.793069-1-almasrymina@google.com>
- <20240123221749.793069-3-almasrymina@google.com> <cff078e234e94593fb3fcfce9732d7988ead42d3.camel@redhat.com>
-In-Reply-To: <cff078e234e94593fb3fcfce9732d7988ead42d3.camel@redhat.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 1 Feb 2024 12:45:37 -0800
-Message-ID: <CAHS8izMHciG28ZdiRmvxpoKcffS7uXEHNTC+EfDgtd96btx7tw@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 2/2] net: add netmem to skb_frag_t
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Shakeel Butt <shakeelb@google.com>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: NaQeHL_RmJARlk5bI-wdo3oLKB3ZIApl
+X-Proofpoint-ORIG-GUID: NaQeHL_RmJARlk5bI-wdo3oLKB3ZIApl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-01_06,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ spamscore=0 clxscore=1015 impostorscore=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2402010160
 
-On Tue, Jan 30, 2024 at 1:34=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
-te:
->
-> Hi,
->
-> I'm sorry for the late feedback.
->
+Add the Qualcomm PBS (Programmable Boot Sequencer) driver. The QCOM PBS
+driver supports configuring software PBS trigger events through PBS RAM
+on Qualcomm Technologies, Inc (QTI) PMICs.
 
-Thanks for looking.
+Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+---
+ drivers/soc/qcom/Kconfig          |   9 ++
+ drivers/soc/qcom/Makefile         |   1 +
+ drivers/soc/qcom/qcom-pbs.c       | 236 ++++++++++++++++++++++++++++++
+ include/linux/soc/qcom/qcom-pbs.h |  30 ++++
+ 4 files changed, 276 insertions(+)
+ create mode 100644 drivers/soc/qcom/qcom-pbs.c
+ create mode 100644 include/linux/soc/qcom/qcom-pbs.h
 
-> On Tue, 2024-01-23 at 14:17 -0800, Mina Almasry wrote:
-> > @@ -845,16 +863,24 @@ struct sk_buff *__napi_alloc_skb(struct napi_stru=
-ct *napi, unsigned int len,
-> >  }
-> >  EXPORT_SYMBOL(__napi_alloc_skb);
-> >
-> > -void skb_add_rx_frag(struct sk_buff *skb, int i, struct page *page, in=
-t off,
-> > -                  int size, unsigned int truesize)
-> > +void skb_add_rx_frag_netmem(struct sk_buff *skb, int i, netmem_ref net=
-mem,
-> > +                         int off, int size, unsigned int truesize)
-> >  {
-> >       DEBUG_NET_WARN_ON_ONCE(size > truesize);
-> >
-> > -     skb_fill_page_desc(skb, i, page, off, size);
-> > +     skb_fill_netmem_desc(skb, i, netmem, off, size);
-> >       skb->len +=3D size;
-> >       skb->data_len +=3D size;
-> >       skb->truesize +=3D truesize;
-> >  }
-> > +EXPORT_SYMBOL(skb_add_rx_frag_netmem);
-> > +
-> > +void skb_add_rx_frag(struct sk_buff *skb, int i, struct page *page, in=
-t off,
-> > +                  int size, unsigned int truesize)
-> > +{
-> > +     skb_add_rx_frag_netmem(skb, i, page_to_netmem(page), off, size,
-> > +                            truesize);
-> > +}
-> >  EXPORT_SYMBOL(skb_add_rx_frag);
->
-> Out of sheer ignorance, I'm unsure if the compiler will always inline
-> the above skb_add_rx_frag_netmem() call. What about moving this helper
-> to the header file?
->
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index b3634e10f6f5..52aa58b02e72 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -254,4 +254,13 @@ config QCOM_INLINE_CRYPTO_ENGINE
+ 	tristate
+ 	select QCOM_SCM
+ 
++config QCOM_PBS
++	tristate "PBS trigger support for Qualcomm Technologies, Inc. PMICS"
++	depends on SPMI
++	help
++	  This driver supports configuring software programmable boot sequencer (PBS)
++	  trigger event through PBS RAM on Qualcomm Technologies, Inc. PMICs.
++	  This module provides the APIs to the client drivers that wants to send the
++	  PBS trigger event to the PBS RAM.
++
+ endmenu
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index bbca2e1e55bb..49bb86b0fe33 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -32,3 +32,4 @@ obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
+ obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
+ qcom_ice-objs			+= ice.o
+ obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
++obj-$(CONFIG_QCOM_PBS) +=	qcom-pbs.o
+diff --git a/drivers/soc/qcom/qcom-pbs.c b/drivers/soc/qcom/qcom-pbs.c
+new file mode 100644
+index 000000000000..f17805489552
+--- /dev/null
++++ b/drivers/soc/qcom/qcom-pbs.c
+@@ -0,0 +1,236 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++#include <linux/spmi.h>
++#include <linux/soc/qcom/qcom-pbs.h>
++
++#define PBS_CLIENT_TRIG_CTL		0x42
++#define PBS_CLIENT_SW_TRIG_BIT		BIT(7)
++#define PBS_CLIENT_SCRATCH1		0x50
++#define PBS_CLIENT_SCRATCH2		0x51
++#define PBS_CLIENT_SCRATCH2_ERROR	0xFF
++
++#define RETRIES				2000
++#define DELAY				1100
++
++struct pbs_dev {
++	struct device		*dev;
++	struct regmap		*regmap;
++	struct mutex		lock;
++	struct device_link	*link;
++
++	u32			base;
++};
++
++static int qcom_pbs_wait_for_ack(struct pbs_dev *pbs, u8 bit_pos)
++{
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read_poll_timeout(pbs->regmap,  pbs->base + PBS_CLIENT_SCRATCH2,
++					val, val & BIT(bit_pos), DELAY, DELAY * RETRIES);
++
++	if (ret < 0) {
++		dev_err(pbs->dev, "Timeout for PBS ACK/NACK for bit %u\n", bit_pos);
++		return -ETIMEDOUT;
++	}
++
++	if (val == PBS_CLIENT_SCRATCH2_ERROR) {
++		ret = regmap_write(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, 0);
++		dev_err(pbs->dev, "NACK from PBS for bit %u\n", bit_pos);
++		return -EINVAL;
++	}
++
++	dev_dbg(pbs->dev, "PBS sequence for bit %u executed!\n", bit_pos);
++	return 0;
++}
++
++/**
++ * qcom_pbs_trigger_event() - Trigger the PBS RAM sequence
++ * @pbs: Pointer to PBS device
++ * @bitmap: bitmap
++ *
++ * This function is used to trigger the PBS RAM sequence to be
++ * executed by the client driver.
++ *
++ * The PBS trigger sequence involves
++ * 1. setting the PBS sequence bit in PBS_CLIENT_SCRATCH1
++ * 2. Initiating the SW PBS trigger
++ * 3. Checking the equivalent bit in PBS_CLIENT_SCRATCH2 for the
++ *    completion of the sequence.
++ * 4. If PBS_CLIENT_SCRATCH2 == 0xFF, the PBS sequence failed to execute
++ *
++ * Return: 0 on success, < 0 on failure
++ */
++int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap)
++{
++	unsigned int val;
++	u16 bit_pos;
++	int ret;
++
++	if (WARN_ON(!bitmap))
++		return -EINVAL;
++
++	if (IS_ERR_OR_NULL(pbs))
++		return -EINVAL;
++
++	mutex_lock(&pbs->lock);
++	ret = regmap_read(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, &val);
++	if (ret < 0)
++		goto out;
++
++	if (val == PBS_CLIENT_SCRATCH2_ERROR) {
++		/* PBS error - clear SCRATCH2 register */
++		ret = regmap_write(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, 0);
++		if (ret < 0)
++			goto out;
++	}
++
++	for (bit_pos = 0; bit_pos < 8; bit_pos++) {
++		if (!(bitmap & BIT(bit_pos)))
++			continue;
++
++		/* Clear the PBS sequence bit position */
++		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2,
++					BIT(bit_pos), 0);
++		if (ret < 0)
++			goto out_clear_scratch1;
++
++		/* Set the PBS sequence bit position */
++		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1,
++					BIT(bit_pos), BIT(bit_pos));
++		if (ret < 0)
++			goto out_clear_scratch1;
++
++		/* Initiate the SW trigger */
++		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_TRIG_CTL,
++					PBS_CLIENT_SW_TRIG_BIT, PBS_CLIENT_SW_TRIG_BIT);
++		if (ret < 0)
++			goto out_clear_scratch1;
++
++		ret = qcom_pbs_wait_for_ack(pbs, bit_pos);
++		if (ret < 0)
++			goto out_clear_scratch1;
++
++		/* Clear the PBS sequence bit position */
++		regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1, BIT(bit_pos), 0);
++		regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, BIT(bit_pos), 0);
++	}
++
++out_clear_scratch1:
++	/* Clear all the requested bitmap */
++	ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1, bitmap, 0);
++
++out:
++	mutex_unlock(&pbs->lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(qcom_pbs_trigger_event);
++
++/**
++ * get_pbs_client_device() - Get the PBS device used by client
++ * @dev: Client device
++ *
++ * This function is used to get the PBS device that is being
++ * used by the client.
++ *
++ * Return: pbs_dev on success, ERR_PTR on failure
++ */
++struct pbs_dev *get_pbs_client_device(struct device *dev)
++{
++	struct device_node *pbs_dev_node;
++	struct platform_device *pdev;
++	struct pbs_dev *pbs;
++
++	pbs_dev_node = of_parse_phandle(dev->of_node, "qcom,pbs", 0);
++	if (!pbs_dev_node) {
++		dev_err(dev, "Missing qcom,pbs property\n");
++		return ERR_PTR(-ENODEV);
++	}
++
++	pdev = of_find_device_by_node(pbs_dev_node);
++	if (!pdev) {
++		dev_err(dev, "Unable to find PBS dev_node\n");
++		pbs = ERR_PTR(-EPROBE_DEFER);
++		goto out;
++	}
++
++	pbs = platform_get_drvdata(pdev);
++	if (!pbs) {
++		dev_err(dev, "Cannot get pbs instance from %s\n", dev_name(&pdev->dev));
++		platform_device_put(pdev);
++		pbs = ERR_PTR(-EPROBE_DEFER);
++		goto out;
++	}
++
++	pbs->link = device_link_add(dev, &pdev->dev, DL_FLAG_AUTOREMOVE_SUPPLIER);
++	if (!pbs->link) {
++		dev_err(&pdev->dev, "Failed to create device link to consumer %s\n", dev_name(dev));
++		platform_device_put(pdev);
++		pbs = ERR_PTR(-EINVAL);
++		goto out;
++	}
++
++out:
++	of_node_put(pbs_dev_node);
++	return pbs;
++}
++EXPORT_SYMBOL_GPL(get_pbs_client_device);
++
++static int qcom_pbs_probe(struct platform_device *pdev)
++{
++	struct pbs_dev *pbs;
++	u32 val;
++	int ret;
++
++	pbs = devm_kzalloc(&pdev->dev, sizeof(*pbs), GFP_KERNEL);
++	if (!pbs)
++		return -ENOMEM;
++
++	pbs->dev = &pdev->dev;
++	pbs->regmap = dev_get_regmap(pbs->dev->parent, NULL);
++	if (!pbs->regmap) {
++		dev_err(pbs->dev, "Couldn't get parent's regmap\n");
++		return -EINVAL;
++	}
++
++	ret = device_property_read_u32(pbs->dev, "reg", &val);
++	if (ret < 0) {
++		dev_err(pbs->dev, "Couldn't find reg, ret = %d\n", ret);
++		return ret;
++	}
++	pbs->base = val;
++	mutex_init(&pbs->lock);
++
++	platform_set_drvdata(pdev, pbs);
++
++	return 0;
++}
++
++static const struct of_device_id qcom_pbs_match_table[] = {
++	{ .compatible = "qcom,pbs" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, qcom_pbs_match_table);
++
++static struct platform_driver qcom_pbs_driver = {
++	.driver = {
++		.name		= "qcom-pbs",
++		.of_match_table	= qcom_pbs_match_table,
++	},
++	.probe = qcom_pbs_probe,
++};
++module_platform_driver(qcom_pbs_driver)
++
++MODULE_DESCRIPTION("QCOM PBS DRIVER");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/soc/qcom/qcom-pbs.h b/include/linux/soc/qcom/qcom-pbs.h
+new file mode 100644
+index 000000000000..8a46209ccf13
+--- /dev/null
++++ b/include/linux/soc/qcom/qcom-pbs.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#ifndef _QCOM_PBS_H
++#define _QCOM_PBS_H
++
++#include <linux/errno.h>
++#include <linux/types.h>
++
++struct device_node;
++struct pbs_dev;
++
++#if IS_ENABLED(CONFIG_QCOM_PBS)
++int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap);
++struct pbs_dev *get_pbs_client_device(struct device *client_dev);
++#else
++static inline int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap)
++{
++	return -ENODEV;
++}
++
++static inline struct pbs_dev *get_pbs_client_device(struct device *client_dev)
++{
++	return ERR_PTR(-ENODEV);
++}
++#endif
++
++#endif
+-- 
+2.41.0
 
-Will do.
-
-> > diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
-> > index 1184d40167b8..145ef22b2b35 100644
-> > --- a/net/kcm/kcmsock.c
-> > +++ b/net/kcm/kcmsock.c
-> > @@ -636,9 +636,14 @@ static int kcm_write_msgs(struct kcm_sock *kcm)
-> >               for (i =3D 0; i < skb_shinfo(skb)->nr_frags; i++)
-> >                       msize +=3D skb_frag_size(&skb_shinfo(skb)->frags[=
-i]);
-> >
-> > +             if (WARN_ON_ONCE(!skb_frag_page(&skb_shinfo(skb)->frags[0=
-]))) {
-> > +                     ret =3D -EINVAL;
-> > +                     goto out;
-> > +             }
->
-> I feel like the following has been already discussed, but I could not
-> find the relevant reference... Are all frags constrained to carry the
-> same memref type? If not it would be better to move this check inside
-> the previous loop, it's already traversing all the skb frags, it should
-> not add measurable overhead.
->
-
-Yes, this was discussed before. I believe the agreement is that, yes,
-all the frags in a single skb will be constrained to a single type. It
-was discussed on one of the many RFCs I believe.
-
-Supporting skbs with mixed netmem types is certainly possible, but
-requires per-frag checking and per-frag handling. Constraining all
-skbs to the same netmem type just simplifies things greatly because
-frag0 can be checked to determine the type of all the frags in the
-skb, and all the frags in the skb can be processed the same as they're
-the same type. There are no interesting use cases I can think of right
-now that require mixed types, and the code can always be extended to
-that if someone has a use case in the future.
-
-I plan to add a WARN_ON_ONCE or DEBUG_NET_WARN_ON_ONCE in
-skb_add_frag_rx_netmem that detects if the driver is trying to mix
-types in the devmem series which adds non-page netmem.
-
-If OK with you, I'll keep the check for only frag 0, but combine it
-with the nr_frags check above like this:
-
-diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
-index 145ef22b2b35..73c200c5c8e4 100644
---- a/net/kcm/kcmsock.c
-+++ b/net/kcm/kcmsock.c
-@@ -627,7 +627,8 @@ static int kcm_write_msgs(struct kcm_sock *kcm)
-                        skb =3D txm->frag_skb;
-                }
-
--               if (WARN_ON(!skb_shinfo(skb)->nr_frags)) {
-+               if (WARN_ON(!skb_shinfo(skb)->nr_frags) ||
-+                   WARN_ON_ONCE(!skb_frag_page(&skb_shinfo(skb)->frags[0])=
-)) {
-                        ret =3D -EINVAL;
-                        goto out;
-                }
-@@ -636,11 +637,6 @@ static int kcm_write_msgs(struct kcm_sock *kcm)
-                for (i =3D 0; i < skb_shinfo(skb)->nr_frags; i++)
-                        msize +=3D skb_frag_size(&skb_shinfo(skb)->frags[i]=
-);
-
--               if (WARN_ON_ONCE(!skb_frag_page(&skb_shinfo(skb)->frags[0])=
-)) {
--                       ret =3D -EINVAL;
--                       goto out;
--               }
--
-
-But I'm happy implementing the check exactly as you described if you
-strongly prefer that instead, I don't think it's a big deal from my
-end either way. Thanks!
-
---=20
-Thanks,
-Mina
