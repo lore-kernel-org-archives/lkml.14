@@ -1,157 +1,119 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6F985270;
-	Thu,  1 Feb 2024 19:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374E385631;
+	Thu,  1 Feb 2024 19:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706815253; cv=none; b=OxgyNZVOXITddVZMy3AGInQrBj3lW0Hg9oljqLXNWtB7kiDRBX/NXMKVWvAxQjfypsN20XuDeULKWq4+4ofHHnLJiqXc3Snk7166qXKv4N6UYUuT55eQAXD4yc29+rLVgpmlmULV+bI4FWK8SBov04WLdyfSRXlpxd6L7Y5zMpY=
+	t=1706815255; cv=none; b=l0cR3j85vHqnmwSsZObmIBR5ThTNiuDmA3de38nvhXX25mu+BcowdtvsrXncy667izPxQlC/e3zD+z/TLahEH3nptOHeTdohlfgpaad5ZXgeTlFbm1f0cxkHuiZ2gIqR8jW074A2oAyeDZqN0Mq76WdurAoCH94oCeHt3rj0fN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706815253; c=relaxed/simple;
-	bh=0zW/ynUDROed77RIRLq/hCLZRf5+NOXfoIJZKFpkiB8=;
+	s=arc-20240116; t=1706815255; c=relaxed/simple;
+	bh=8ByGpw4Ub5BR+JBxRpGU9i868XZCdYzjzStzYSpZcaQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FJZTIU/MF2VFAGJ8bRQbaOGUN6jrdJ2eu5ySlrEt+ckHre2U8QxPDvyXc1pL59ViF/nZNrPB87WMtop3Vj2yZAaSlpiQOG9/7Uaok7LG9ODi5iF+vHx3FBgjlXcV3L3PG+fFo1odbxAH4TZTjYnjhEi4VXK5nA/NNtLQDOHfgx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ED4tcWCM; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bsUPpHUtbFsu/Ed5QV2N2czMWI5dFaJNmKrdSztkUNWjPmrxC9sl9F7OTL3YxUSSUDdHaPXEKFwZKFH9f/RZjSvdGxwFc8GAOfP0z+CAvQ3ZreSeoy1disB4PPPTo1f4n/EKPE5VKPC8p/RF3Aui95zMH7NIgGVwgrU8Q/1Oiqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzOTlHxm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ED4tcWCM"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-785388b3281so78563185a.2;
-        Thu, 01 Feb 2024 11:20:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706815251; x=1707420051; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hyJu/UUVOGO6WHBbFcUHcwW7sN0BImG4+VVTXTyQNHI=;
-        b=ED4tcWCMJtFxIYQSAhvFY3oNdiZ5MU0AtYmENLWiERlc9Yf0pcCqlitgcmP+F6pddM
-         CHy9oLiRLYboo52teQI+EESdHj2UGjFJ3MH29JPpeQsEiUB/IsNbAjRM+mM9c6s8cKMq
-         PbK6OP/HVXRJ394GSFRtv2Byr2a8FdqaIQqxTXoMcafFFM75zGdYwMmpWbfDeHpPcfg/
-         cCb1VjFcexJRmZ3XdGaVwKXcU8sWsEBveoIlsRZ6LNgVHqejAsGEPkxvosSKYQDe11OV
-         PMiUU4CDmY9J6Pg0OjQ1jjO7Vr2LcMbiVf3JBDB/Iht0QsmVmAnKrcMtATXuxhBSc+hH
-         +cDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706815251; x=1707420051;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hyJu/UUVOGO6WHBbFcUHcwW7sN0BImG4+VVTXTyQNHI=;
-        b=dQG3Rrx/2BAkBlXsf+k6dE4DMtmVnjU3PbQx6YbwbuMRcw9W+6Fbo2vrIjB4obhL8Z
-         iQ7MDpDBj1b1dKRG+8HAsL/ZJGtejkRSp2qDs1l+GOfXUz2f6OpZtOz45cVI20aMuQPX
-         g4paHv8/7uCgK+FiHqEvCgQMgLI2+O5hDVNUakcWiBBYkcMLpQkUu7a0eQHx3oQIzh6J
-         WLK3OmQHXyhfwsNbljxXw7Vs44esvs8WOhtqYqxPWOVOD2z26aIm0f7ShKDlVfoCJq1f
-         Q7jnxaD5K8VUBsr7M24VwSxFVCyK5m5czUkg+77HepCFWTWgYaOSDmIq1mDOfa9DuAc1
-         Qq3g==
-X-Gm-Message-State: AOJu0YxqAohSb9kROILjNwsNjqCjg9gGghzPK71tzipFV+R2Rb0ayHIY
-	sxqvkXfCak/hjj5yKw+k5akEtSEXD6NLA5ZZLAD+pwPCZEBGKjB9
-X-Google-Smtp-Source: AGHT+IHnQnFWMrsG0p/IkJPB2EmpB/t51E19lnSbEfZRbcAwarAS3iVVDOSaUG4TdNHgWFimkAh1uw==
-X-Received: by 2002:a05:620a:24c6:b0:785:45a7:d484 with SMTP id m6-20020a05620a24c600b0078545a7d484mr111677qkn.27.1706815251035;
-        Thu, 01 Feb 2024 11:20:51 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUpa0p8plrVAVnDE6wbLgKOmCGS+l0GnY0I7Y64VOiY/HhEEF6VbxwS1/0Uab9n1Gh69uonUthtavq2+BXoHqADXMsXcFNxSecwMmCcN0hUGj/j2p7RAg8+O3VlWq2/3po1DjdpGPpj7IMAdS2ti8/st/HV8RG8ePGCUcAw6ALCpwAH8tqSnOpcXeGiJ8UQMSWRRSdoZMH/aGLWTEOSrFDNcwOh58e82LdutVsvh5L7xSry39s4Q9m0I18dsq+VE8J5cp/jgs593VyvDkRXB/rzyVieB1JYZqxZIPgrFlHJBIRSXrbudw4nJvyeAtPdCXtqP/Tf95tOITyqsYAwrPZAv2SgCtqDUsbLE2cZQbetehOpQk5RYPR8NR8s36tSt8/Pg9nTdR4n+VwyDFV0tK4XUJe5jA==
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id ay14-20020a05620a178e00b00783df78821dsm73336qkb.25.2024.02.01.11.20.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 11:20:50 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailauth.nyi.internal (Postfix) with ESMTP id F20F827C0060;
-	Thu,  1 Feb 2024 14:20:49 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 01 Feb 2024 14:20:49 -0500
-X-ME-Sender: <xms:Ee-7ZTpq-MtTlEEg1tu3PfgwDtuYmsg-8xxKEL_67Tr3Y3N1wbx0Gg>
-    <xme:Ee-7Zdpyo4lyA05jrylauQEIXseeBZ74fnTn40-0IOFBKkIRN7R-trbIdUE4JkR5R
-    OutRAvYyXLsTAwk7w>
-X-ME-Received: <xmr:Ee-7ZQMbIFhk9MnVYDWHLDQMIXcMZL4cegMQXuU2xfZL1PidUzj1SoCHOlU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeduuddguddvtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhephfetvdfgtdeukedvkeeiteeiteejieehvdetheduudejvdektdekfeeg
-    vddvhedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquh
-    hnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:Ee-7ZW6elyNywtxUiA9ed2p7uXdE2Gqtzlnl7WGkKLRMwS0dX4QgRQ>
-    <xmx:Ee-7ZS4NkQ28r_Uj-ASs4IgX3dNnGKE4u6OW4L7GSKN8tzdw-bDsAg>
-    <xmx:Ee-7ZeiM6KMqLYlkaQreBxyyXe93U5ZOCfwAvy51QTsYcPGV6sRnDw>
-    <xmx:Ee-7ZSywnsXRT0jOvJFduO_IkIqMvqRcCV-IRvKcTLIdSjj1Y24V4w>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 1 Feb 2024 14:20:49 -0500 (EST)
-Date: Thu, 1 Feb 2024 11:19:43 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH] workqueue: rust: sync with `WORK_CPU_UNBOUND` change
-Message-ID: <Zbvuz5iym2MhNzPQ@boqun-archlinux>
-References: <20240201190620.18064-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzOTlHxm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633ADC43390;
+	Thu,  1 Feb 2024 19:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706815254;
+	bh=8ByGpw4Ub5BR+JBxRpGU9i868XZCdYzjzStzYSpZcaQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gzOTlHxm42AJzkNvcYod5FnctsxVUpkGYpyxL9dB/i5vickaagyGDQy88hFm6bvWd
+	 ym2Or4Z3hANT+/xKff/LMtVY7gByIg1NEQV6iwKx+p2if0vrq3QYo3cTcDTFFcShEv
+	 lP6eBu7rbxfcWW9OhOo8goiC+3ojDDate/8Xs8mv0JROO0tSumWzZzVpnPcn8q14sl
+	 xr3llIpr0hWmFH+2nI/I+gGbBFaNpYeXgJNSNBmWJcqo+bgBOATo01kTtH5naD1sXr
+	 KjLYcXCO7Di2+O/qd0iSDZRNo2khimWLVX7voXP+nM9u48FJ+BwemSnndvvUUa5lTd
+	 T92SMb2YjNJzQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 14D5C40441; Thu,  1 Feb 2024 16:20:52 -0300 (-03)
+Date: Thu, 1 Feb 2024 16:20:52 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Anders Roxell <anders.roxell@linaro.org>
+Cc: linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	james.clark@arm.com, Arnd Bergmann <arnd@arndb.de>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: Perf not able to cross compile
+Message-ID: <ZbvvFLN32si2fhGD@kernel.org>
+References: <CADYN=9+DUzu6xEThaWQKp0udCsPs7h3XijyE5zmn-UYG8oM+AA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240201190620.18064-1-ojeda@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADYN=9+DUzu6xEThaWQKp0udCsPs7h3XijyE5zmn-UYG8oM+AA@mail.gmail.com>
+X-Url: http://acmel.wordpress.com
 
-On Thu, Feb 01, 2024 at 08:06:20PM +0100, Miguel Ojeda wrote:
-> Commit e563d0a7cdc1 ("workqueue: Break up enum definitions and give
-> names to the types") gives a name to the `enum` where `WORK_CPU_UNBOUND`
-> was defined, so `bindgen` changes its output from e.g.:
+Em Thu, Feb 01, 2024 at 12:32:09PM +0100, Anders Roxell escreveu:
+> Hey,
 > 
->     pub type _bindgen_ty_10 = core::ffi::c_uint;
->     pub const WORK_CPU_UNBOUND: _bindgen_ty_10 = 64;
+> I'm trying to cross compile perf ARCH=arm64 on my x86_64 host from
+> linus tree [1], branch master.
 > 
-> to e.g.:
 > 
->     pub type wq_misc_consts = core::ffi::c_uint;
->     pub const wq_misc_consts_WORK_CPU_UNBOUND: wq_misc_consts = 64;
+> This is the failue I see, full log [2]:
 > 
-> Thus update Rust's side to match the change (which requires a slight
-> reformat of the code), fixing the build error.
-> 
-> Closes: https://lore.kernel.org/rust-for-linux/CANiq72=9PZ89bCAVX0ZV4cqrYSLoZWyn-d_K4KpBMHjwUMdC3A@mail.gmail.com/
-> Fixes: e563d0a7cdc1 ("workqueue: Break up enum definitions and give names to the types")
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> ...
+>   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/elf.o
+>   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/features.o
+> cc1: error: ‘-fcf-protection=full’ is not supported for this target
+> error: command '/usr/local/bin/sccache' failed with exit code 1
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+We have some checks to deal with unknown options that came from python,
+perl config, but it seems in your case there is something that is not
+being covered, worth of further investigation.
 
-Regards,
-Boqun
+Can you simply first try disabling python support? Look at
+tools/perf/Makefile.perf, first trying with NO_LIBPYTHON=1 to your
+make command line?
 
-> ---
-> Tejun: here is the formal patch as you requested. Please feel free to
-> either take it or to rebase to fix the old commit. Thanks!
+- Arnaldo
+
+> cp: cannot stat
+> '/home/tuxbuild/.cache/tuxmake/builds/1/build/python_ext_build/lib/perf*.so':
+> No such file or directory
+> make[2]: *** [Makefile.perf:678:
+> /home/tuxbuild/.cache/tuxmake/builds/1/build/python/perf.cpython-311-x86_64-linux-gnu.so]
+> Error 1
+> make[2]: *** Waiting for unfinished jobs....
+>   LD      /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/staticobjs/libbpf-in.o
+>   LINK    /home/tuxbuild/.cache/tuxmake/builds/1/build/libbpf/libbpf.a
+> make[1]: *** [Makefile.perf:261: sub-make] Error 2
+> make: *** [Makefile:70: all] Error 2
 > 
->  rust/kernel/workqueue.rs | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> Running 'x86_64-linux-gnu-python3-config --cflags' I see
+> '-fcf-protection' in the output and this happens when I'm building
+> cross compile arm64 on my x86_64 host machine. Building on an arm64
+> host works. cross compile x86_64 on my x86_64 host works too.
 > 
-> diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-> index 498397877376..d00231e18007 100644
-> --- a/rust/kernel/workqueue.rs
-> +++ b/rust/kernel/workqueue.rs
-> @@ -199,7 +199,11 @@ pub fn enqueue<W, const ID: u64>(&self, w: W) -> W::EnqueueOutput
->          // stay valid until we call the function pointer in the `work_struct`, so the access is ok.
->          unsafe {
->              w.__enqueue(move |work_ptr| {
-> -                bindings::queue_work_on(bindings::WORK_CPU_UNBOUND as _, queue_ptr, work_ptr)
-> +                bindings::queue_work_on(
-> +                    bindings::wq_misc_consts_WORK_CPU_UNBOUND as _,
-> +                    queue_ptr,
-> +                    work_ptr,
-> +                )
->              })
->          }
->      }
+> I have 'aarch64-linux-gnu-python3-config' installed but that isn't used.
 > 
-> base-commit: 15930da42f8981dc42c19038042947b475b19f47
-> --
-> 2.43.0
+> $ x86_64-linux-gnu-python3-config --cflags
+> -I/usr/include/python3.11 -I/usr/include/python3.11  -Wsign-compare -g
+>   -fstack-protector-strong -fstack-clash-protection -Wformat
+> -Werror=format-security -fcf-protection  -DNDEBUG -g -fwrapv -O2 -Wall
+> $ aarch64-linux-gnu-python3-config --cflags
+> -I/usr/include/python3.11 -I/usr/include/python3.11  -Wsign-compare -g
+>   -fstack-protector-strong -fstack-clash-protection -Wformat
+> -Werror=format-security -mbranch-protection=standard  -DNDEBUG -g
+> -fwrapv -O2 -Wall
 > 
+> I tried to set PYTHON and PYTHON_CONFIG too, but didn't work.
+> 
+> It doesn't try to use $(CROSS_COMPILE)python3-config, any idea how to
+> use the correct config?
+> 
+> Cheers,
+> Anders
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> [2]  https://storage.tuxsuite.com/public/linaro/lkft/builds/2bc6x6cISHzG9Jgo0oAVv2OgLOG/build.log
+
+-- 
+
+- Arnaldo
