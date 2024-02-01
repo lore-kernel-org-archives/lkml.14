@@ -1,159 +1,139 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB247C6C9;
-	Thu,  1 Feb 2024 18:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4478E84FA4;
+	Thu,  1 Feb 2024 18:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706813571; cv=none; b=Z9tKGkpNoYwO6j2PnNzqVBf+eg8FCgcdfzRzV/TRKhWfTqfmRZ9DyvfBNe9/QEzCyQg9l1D6VbIGoRha76N4drTwITQSGqQebgHWWBkHTCA0pnfiVa4SO0x3cth+NDIKqwKjgXoxF2FVg7DuwzNA/dtGDperVFwIR2kaSLoYMzU=
+	t=1706813587; cv=none; b=G87U21DihpBrqhzL3IWYIrDkFGbij2SHT7s3oDhJg/HbHocbj03c4Bi7S4dZ+ZtmLXVuv5jJO8fENt5SbStBxoLUHoT7E8CVA8sTLB+FEErDC3WHizRQMN6apJ7Kw3YKWls6RDZ42BDHqP64+DM34RjHAsnWL17O2H2YLthMGL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706813571; c=relaxed/simple;
-	bh=R5SmCeK0evbt6CgDNri/AvrJT0Z6FxRIC4DoIPbyKrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cxIv55zOFUuo3YpLafRhfYth1tipS9KipCCbCxYdppbTMg7qr4oTuhcKnXLlksiatP7lmz/ClX184sUYgyn357u6lHfonekwAH9P2LpLfou2l/jy2UQKJ2+k14gL/+xCyoZYue0Dtxxv1jRthOIcCQPsWLY0rvQbGfBoosGq07k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JkrLJTrI; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706813587; c=relaxed/simple;
+	bh=hn6KWUJsg7QMVb1YKITYVJPIHabhwsJrPCRKqDD8JsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QfIlniwIsZLvd0s455iU/uF6MXbtT4tlnMn1TsBwZ3CrcakfKSnLtwVH5KqWnuuBIaGGBn911xhWJB2xvkOXK91hfEPRgsHz1qCpfjoLCml4P4O8OFVqHQ5EUrR+uJnhQI4UzVLDf0oK8YmUm9jkwkT25amrPrMSZb2I512nMbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcYN3Bx+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JkrLJTrI"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411IqinY071422;
-	Thu, 1 Feb 2024 12:52:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706813564;
-	bh=RDeqVbvlaRb9r9JoZeLA/s6aNs4VyHfgLVh0geU0jXY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=JkrLJTrIDtrP7JE6+6oRn6UJWjtns3Bpy4NLGXywDFK7/GvnIG0BcGnRFiq4wmJp/
-	 Q56+U8lADZpDWyJCm6ZEEOdTauiL1b2+XsVYUxKdQm1eDBVBwo+2dFfICZo9F00IGn
-	 LIwtlxycn9IGXzfyixVyMcGYvqVIUNuwZhed3GLI=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411IqiAW002093
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 1 Feb 2024 12:52:44 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
- Feb 2024 12:52:44 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 1 Feb 2024 12:52:44 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411IqiPC121096;
-	Thu, 1 Feb 2024 12:52:44 -0600
-Message-ID: <f35a729b-ff00-474f-903b-ada2704b0382@ti.com>
-Date: Thu, 1 Feb 2024 12:52:44 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcYN3Bx+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A53CC433F1;
+	Thu,  1 Feb 2024 18:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706813587;
+	bh=hn6KWUJsg7QMVb1YKITYVJPIHabhwsJrPCRKqDD8JsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mcYN3Bx+py4jPwGusxAPSr91dfhPbsysnAALcnrUdj/imtlQVXvZd6kBzCYS8KbJr
+	 +rEACQruYT6OcH+CJOxRsBZV0Kn+8yuQ8fA/tHD6YwJTzjYkPgXTneBmgTdwCnGmv/
+	 OhAhrvkbbK4GoLGg5y5PXQAdRZ/S5ytQ3ro/5r5mAe8bfKx3x4xfFHF/9Q40OpLbdr
+	 l8rrY3yV9LK1deRzEmsNYIkIXNbIoFMfaeUIF2GmVsMV2W6xyujgptOhYfhb6bqbsi
+	 xczhGyV3JSS7Lmfyr+4BxtfXJTCWGtnxbp/UJXCAnMoMPInIfZgNKSCmxeMOaIYaN4
+	 AQt4ZAg3zpisA==
+Date: Thu, 1 Feb 2024 18:53:02 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Andrew Davis <afd@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 01/12] dt-bindings: power: reset: Document ti,sci-reboot
+ compatible
+Message-ID: <20240201-ambiguous-swan-a927ae8f126f@spud>
+References: <20240131221957.213717-1-afd@ti.com>
+ <20240131221957.213717-2-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] usb: dwc3-am62: add workaround for Errata i2409
-Content-Language: en-US
-To: Roger Quadros <rogerq@kernel.org>, <Thinh.Nguyen@synopsys.com>
-CC: <gregkh@linuxfoundation.org>, <r-gunasekaran@ti.com>, <b-liu@ti.com>,
-        <srk@ti.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240201121220.5523-1-rogerq@kernel.org>
- <20240201121220.5523-5-rogerq@kernel.org>
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240201121220.5523-5-rogerq@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qZaAzCjNUu3le7WH"
+Content-Disposition: inline
+In-Reply-To: <20240131221957.213717-2-afd@ti.com>
 
-On 2/1/24 6:12 AM, Roger Quadros wrote:
-> All AM62 devices have Errata i2409 [1] due to which
-> USB2 PHY may lock up due to short suspend.
-> 
-> Workaround involves setting bit 5 and 4 PLL_REG12
-> in PHY2 register space after USB controller is brought
-> out of LPSC reset but before controller initialization.
-> 
-> Handle this workaround.
-> 
-> [1] - https://www.ti.com/lit/er/sprz487d/sprz487d.pdf
-> 
-> Signed-off-by: Roger Quadros <rogerq@kernel.org>
+
+--qZaAzCjNUu3le7WH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 31, 2024 at 04:19:46PM -0600, Andrew Davis wrote:
+> This calls into the system firmware using TI-SCI to reboot the system.
+> Used as a fallback when PSCI is unable or not available to reboot
+> the system.
+>=20
+> Signed-off-by: Andrew Davis <afd@ti.com>
 > ---
->   drivers/usb/dwc3/dwc3-am62.c | 29 +++++++++++++++++++++++++++++
->   1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-am62.c b/drivers/usb/dwc3/dwc3-am62.c
-> index af1ce934e7fb..35d7a2fb128e 100644
-> --- a/drivers/usb/dwc3/dwc3-am62.c
-> +++ b/drivers/usb/dwc3/dwc3-am62.c
-> @@ -101,11 +101,17 @@
->   #define PHY_CORE_VOLTAGE_MASK	BIT(31)
->   #define PHY_PLL_REFCLK_MASK	GENMASK(3, 0)
->   
-> +/* USB PHY2 register offsets */
-> +#define	USB_PHY_PLL_REG12		0x130
-> +#define	USB_PHY_PLL_LDO_REF_EN		BIT(5)
-> +#define	USB_PHY_PLL_LDO_REF_EN_EN	BIT(4)
+>  .../bindings/power/reset/ti,sci-reboot.yaml   | 33 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/ti,sci-=
+reboot.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/reset/ti,sci-reboot.=
+yaml b/Documentation/devicetree/bindings/power/reset/ti,sci-reboot.yaml
+> new file mode 100644
+> index 0000000000000..aa628be33d122
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/ti,sci-reboot.yaml
+> @@ -0,0 +1,33 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/reset/ti,sci-reboot.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->   #define DWC3_AM62_AUTOSUSPEND_DELAY	100
->   
->   struct dwc3_am62 {
->   	struct device *dev;
->   	void __iomem *usbss;
-> +	void __iomem *phy;
-
-Why do you need this in the driver data? You only use it in probe(),
-just have it be a local variable.
-
->   	struct clk *usb2_refclk;
->   	int rate_code;
->   	struct regmap *syscon;
-> @@ -140,6 +146,16 @@ static inline void dwc3_ti_writel(struct dwc3_am62 *am62, u32 offset, u32 value)
->   	writel(value, (am62->usbss) + offset);
->   }
->   
-> +static inline u32 dwc3_ti_phy_readl(struct dwc3_am62 *am62, u32 offset)
-> +{
-
-Do you really need these one line functions? They add more code than
-they save and just hide a single deference? Just do that directly.
-
-Andrew
-
-> +	return readl((am62->phy) + offset);
-> +}
+> +title: TI-SCI reboot controller
 > +
-> +static inline void dwc3_ti_phy_writel(struct dwc3_am62 *am62, u32 offset, u32 value)
-> +{
-> +	writel(value, (am62->phy) + offset);
-> +}
+> +maintainers:
+> +  - Andrew Davis <afd@ti.com>
 > +
->   static int phy_syscon_pll_refclk(struct dwc3_am62 *am62)
->   {
->   	struct device *dev = am62->dev;
-> @@ -201,6 +217,12 @@ static int dwc3_ti_probe(struct platform_device *pdev)
->   		return PTR_ERR(am62->usbss);
->   	}
->   
-> +	am62->phy = devm_platform_ioremap_resource(pdev, 1);
-> +	if (IS_ERR(am62->phy)) {
-> +		dev_err(dev, "can't map PHY IOMEM resource. Won't apply i2409 fix.\n");
-> +		am62->phy = NULL;
-> +	}
+> +description: |
+> +  Some TI SoCs contain a system controller (like the Power Management Mi=
+cro
+> +  Controller (PMMC) on Keystone 66AK2G SoC) that are responsible for con=
+trolling
+> +  the state of the various hardware modules present on the SoC. Communic=
+ation
+> +  between the host processor running an OS and the system controller hap=
+pens
+> +  through a protocol called TI System Control Interface (TI-SCI protocol=
+).
 > +
->   	am62->usb2_refclk = devm_clk_get(dev, "ref");
->   	if (IS_ERR(am62->usb2_refclk)) {
->   		dev_err(dev, "can't get usb2_refclk\n");
-> @@ -227,6 +249,13 @@ static int dwc3_ti_probe(struct platform_device *pdev)
->   	if (ret)
->   		return ret;
->   
-> +	/* Workaround Errata i2409 */
-> +	if (am62->phy) {
-> +		reg = dwc3_ti_phy_readl(am62, USB_PHY_PLL_REG12);
-> +		reg |= USB_PHY_PLL_LDO_REF_EN | USB_PHY_PLL_LDO_REF_EN_EN;
-> +		dwc3_ti_phy_writel(am62, USB_PHY_PLL_REG12, reg);
-> +	}
+> +  This reboot controller node uses the TI SCI protocol to perform a devi=
+ce reboot.
 > +
->   	/* VBUS divider select */
->   	am62->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
->   	reg = dwc3_ti_readl(am62, USBSS_PHY_CONFIG);
+> +  Must be a child node of the associated TI-SCI system controller node.
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,sci-reboot
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    k3_reboot: reboot-controller {
+> +        compatible =3D "ti,sci-reboot";
+> +    };
+
+I'd drop the example since this has no use standalone and just rely on
+the one in the parent. Otherwise I think this is fine.
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--qZaAzCjNUu3le7WH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbvojgAKCRB4tDGHoIJi
+0lQjAQD9jRgISimwK5XXqRkIOSmfbFMop/J2bMV+Hq0W/jsK4wD/V+Mx0ZYHEweK
+6yVr+pLxeofwsOmv/jSXGp+DcgHJiAo=
+=8HJw
+-----END PGP SIGNATURE-----
+
+--qZaAzCjNUu3le7WH--
