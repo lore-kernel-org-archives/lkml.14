@@ -1,105 +1,118 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AFA12FB08;
-	Thu,  1 Feb 2024 18:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E317E113;
+	Thu,  1 Feb 2024 18:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706812972; cv=none; b=IvoB8RP3R5yyKXp3sN7hixpqh+LBZ0vKOVq2LXnQKPwoUWxUCCRx3pNB6D+zEkBdDTohRPxAIG7CcOMPFG2soyqCLOt+I2kcaVKgmKGYCPKmkiZqkwaNPqabXzPQWK2nwKv37eUKwL2rz+VWl4y9uN1GnVz8pELg6ukprBObyvY=
+	t=1706812985; cv=none; b=r5Uh4xEu3ZYWTRszDUqKrFCo5KEaU6wgap0F8TqAXyu6lpboj8P9A8ALoCuuKx4f01DVnnaoUhpkorgHUAmqeIQ3QB6MTxoUHurbzAAo/ddz2izzVIzV5fHoETux4Mj5C21zcr+JpeBzkjvMd8wXvG0u1ou7pxJa9tHdjp+gNzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706812972; c=relaxed/simple;
-	bh=VIvy4lTH+SG5Ye0Xk/ugj+PgutpBZ54WPeCaP7NfPJ8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q0FIgEMx7hoSXYOYMd9RdQ2JEEoRuUywdnL1b+NR6zdKNh6LRrf1HG9rlsRVzPHxCsiwz8LCKOB58C/KDTuYLGEqMKNEDs0FrmGggncFz+YODFqe9j413xtrD9LRL+wZVqWKF03vAV9Ff7fA1qBRsgVc8T0efZUIAfK8ljJSq0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sTWw38OL; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706812985; c=relaxed/simple;
+	bh=08WTJYiiiVSXfDqZA54KHPdrHQAZkWse/35hApk4m4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oTE9MnHfEhtJ1n3Q0xTxqHqLeZNPxncOjvqQtHwsyj4hfZtq8TA5HSN6Bwdfa5eLMqjG08qvYOcDyfqzpPQML/YbrDr5kdTr3MjLEPvT1nSOlhVucF+bnZSm/W914wS2q4ppwuI2GfM1UfnOOBmhMnsHsmOMOS0wHckhiyO2keI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eY+ElGIm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sTWw38OL"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411IgfX5006990;
-	Thu, 1 Feb 2024 12:42:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706812961;
-	bh=Ew1MvrMW2/yaRtaTroFMXsF9Ix1hzxk1BU3jjawkr2k=;
-	h=From:To:CC:Subject:Date;
-	b=sTWw38OL1IluL6GvAACoKlFW9X7dmgmrVfjQ6iXvAx7qAmOkhgfJpJgRhc2sLmVx7
-	 usO1ypP0yaNcBblMI6fb4F+3IO9Sbj7AXTz5toapXM4Ob9lqAv0m5DsDLTOjWJob6t
-	 oEEMP9hisLqEBssr/O1GcH7ZwzYH/5yQ6fyElgog=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411Igf1r023903
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 1 Feb 2024 12:42:41 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
- Feb 2024 12:42:40 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 1 Feb 2024 12:42:40 -0600
-Received: from udba0500997.dhcp.ti.com (udba0500997.dhcp.ti.com [128.247.81.249])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411IgeuD042789;
-	Thu, 1 Feb 2024 12:42:40 -0600
-From: Brandon Brnich <b-brnich@ti.com>
-To: Nas Chung <nas.chung@chipsnmedia.com>,
-        Jackson Lee
-	<jackson.lee@chipsnmedia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>, Vignesh
- Raghavendra <vigneshr@ti.com>
-CC: Darren Etheridge <detheridge@ti.com>, Brandon Brnich <b-brnich@ti.com>
-Subject: [PATCH v2] dt-bindings: media: Add sram-size Property for Wave5
-Date: Thu, 1 Feb 2024 12:42:38 -0600
-Message-ID: <20240201184238.2542695-1-b-brnich@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eY+ElGIm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B8AC433F1;
+	Thu,  1 Feb 2024 18:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706812984;
+	bh=08WTJYiiiVSXfDqZA54KHPdrHQAZkWse/35hApk4m4E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eY+ElGImWlNLu57i4LaQK0R+OxW4C/stUbAV9y9nwzPjQYbVIcDqFKs92YNXyF+qD
+	 g+4r2+gyDSgxqJy0rwBLKA7GbIn34H0SExYaOKv2unXJIXQGIOhswlZp+tkE5QcWV/
+	 XKrN3PilkyDzGoi5JPc1Gaw53RPhFq2MIAgwD1owOTnR21pyltGjoZcyHqqxXljVne
+	 CkYBnGHtWNkF6PfTVegva3fxkqlXfKvjg8MXdGA7jf9M1widO+1SE7M+FiY/uV3kV/
+	 2uo/W9+mTgxkRUjqtX8bVl7k6rPHE6otrnC3zJSDAu6QM6KbF4DFlY0MXW8KdgV3Kq
+	 hs9fHDDswpw9g==
+Date: Thu, 1 Feb 2024 18:42:59 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Andrew Davis <afd@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 02/12] dt-bindings: arm: keystone: ti-sci: Add
+ reboot-controller child node
+Message-ID: <20240201-jester-gleeful-3ac8f035e0a4@spud>
+References: <20240131221957.213717-1-afd@ti.com>
+ <20240131221957.213717-3-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wEmJWZe8MbdHoMiC"
+Content-Disposition: inline
+In-Reply-To: <20240131221957.213717-3-afd@ti.com>
 
-Wave521c has capability to use SRAM carveout to store reference data with
-purpose of reducing memory bandwidth. To properly use this pool, the driver
-expects to have an sram and sram-size node. Without sram-size node, driver
-will default value to zero, making sram node irrelevant.
 
-Signed-off-by: Brandon Brnich <b-brnich@ti.com>
----
- Documentation/devicetree/bindings/media/cnm,wave521c.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+--wEmJWZe8MbdHoMiC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/media/cnm,wave521c.yaml b/Documentation/devicetree/bindings/media/cnm,wave521c.yaml
-index 6a11c1d11fb5..ea5469eb38f9 100644
---- a/Documentation/devicetree/bindings/media/cnm,wave521c.yaml
-+++ b/Documentation/devicetree/bindings/media/cnm,wave521c.yaml
-@@ -43,6 +43,12 @@ properties:
-       storing it on DMA memory. It is mainly used for the purpose of reducing
-       bandwidth.
- 
-+  sram-size:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      SRAM size reserved for VPU operations. If not specified, size will default
-+      to zero.
-+
- required:
-   - compatible
-   - reg
-@@ -58,4 +64,5 @@ examples:
-         clocks = <&clks 42>;
-         interrupts = <42>;
-         sram = <&sram>;
-+        sram-size = <0x1234>;
-     };
--- 
-2.34.1
+On Wed, Jan 31, 2024 at 04:19:47PM -0600, Andrew Davis wrote:
+> The TI-SCI firmware supports rebooting the system in addition to the
+> functions already listed here, document child node for the same.
+>=20
+> Signed-off-by: Andrew Davis <afd@ti.com>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+> ---
+>  .../devicetree/bindings/arm/keystone/ti,sci.yaml          | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml b=
+/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml
+> index c24ad0968f3ef..e392175b33c74 100644
+> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml
+> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml
+> @@ -83,6 +83,10 @@ properties:
+>      type: object
+>      $ref: /schemas/reset/ti,sci-reset.yaml#
+> =20
+> +  reboot-controller:
+> +    type: object
+> +    $ref: /schemas/power/reset/ti,sci-reboot.yaml#
+> +
+>  required:
+>    - compatible
+>    - mbox-names
+> @@ -126,4 +130,8 @@ examples:
+>          compatible =3D "ti,sci-reset";
+>          #reset-cells =3D <2>;
+>        };
+> +
+> +      k3_reboot: reboot-controller {
+> +        compatible =3D "ti,sci-reboot";
+> +      };
+>      };
+> --=20
+> 2.39.2
+>=20
+
+--wEmJWZe8MbdHoMiC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbvmMwAKCRB4tDGHoIJi
+0s2aAP9oJwCoaFBP/LiIOI1L9NQnqVEqe8nwLeFFqoCC5wnytQEA0xHtdx7CCHLx
+xpLtzML7N+aekuG2qmu4q1raHVY7UgU=
+=+A1E
+-----END PGP SIGNATURE-----
+
+--wEmJWZe8MbdHoMiC--
