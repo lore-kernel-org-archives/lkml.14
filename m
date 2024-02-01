@@ -1,98 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91A52E3FE;
-	Thu,  1 Feb 2024 08:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5288A2E3FE
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706776905; cv=none; b=Fm2XbmSKBP5CQU0RdizUe4rRpLfO1PdlwvYUbBBN2zJpbIOn1n+CH9dXZCXNB+DmjIsPF+kc1RG7zD1Cjp+M3O18d1O/zV4OQr4q2j7eOBTEF/9lqRVzjOjz3Iop4UWVVpinip7DQEqhENXFR5uk6avS76e9rV0CdKu+6TOQHR4=
+	t=1706776913; cv=none; b=Fs0LHZ706OSzPIOq7M611/kJOJ0GwiBv5WSxoQXaT2WHzmQmaqOkjlHdnuh1z+3eqwIhA/8MxQJjOSjgLyCjYBNIr6FRW0YZiR54hGa/mHy98se8kx6qaZB183UiyhQ76MJPqWKM7lCgyztCexnqpUi3Y9A01RjgJhkUcaFlM+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706776905; c=relaxed/simple;
-	bh=VTaH4OKD+0kQFzbSZV77olKsxgKVO4SzwSYHx1uKUlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HRyQ/OMsjdLduDZcvH8KNSuCEGjIX7QHJPAj1QoWCh/SesPwbzascxbAnXqXd1o5+s9hkHGxeJkoA3f4HjA06nTwTF8xhmsjAaKs+50SS1fVFteOSKzXqagrUmgVoPbGmY9AWBQjkCfqR/RMu4K1ZC9AOnLy1nKa7TZSNwSPTpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jgnklMa2; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706776913; c=relaxed/simple;
+	bh=Vzju7W+IjNdwglfc44+Hjdx7ZHSiHR/m/5nHV/EkTVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ONMM4P+wkO/8Oj1DlCJTQ8PrzJ3y/qBcOwfROWstCfsyBlbrT6pns7Udwj9FHWb4MeNzQyqUH5ZC9sbVLi5zAfrZl5HCecJ8ZwrxlZTdlfvp1dcs2GtnpXFRG9+MQMzjGI+RohHVfMtJYH0tl4C2qWEwhV0fH4Jijw7m4X9c46g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XYgnyk0W; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jgnklMa2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706776903; x=1738312903;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VTaH4OKD+0kQFzbSZV77olKsxgKVO4SzwSYHx1uKUlQ=;
-  b=jgnklMa2AYkv0SLg+wedUt9MYG5O3nME/8tdi3C9USx9F/UCSnULR7aR
-   X2s+Xv+zaPAm8n7+l7I5jGhdhDBxR2fTZqaqABipejFNnpiLsbNmbCGfX
-   G8PgIKWST+dYyzDYuYRfTRU3qkzlTObj2fruzNi4JHHijMP+VCEr5ZZIr
-   gAtOAnjUAeWGKrbY/womhz8T77f22A/45zdikZ03CI8fewwUL2NK7iygp
-   AWC8h6P6mIg2laD9DjX1Ei4FXBlPlL8W6jw0zR34g/zZJ8xed30PCWVkY
-   2SOuqvB9JTrPJzJKsTo4k9yvLTOTIHcw0dLFqr1rjyYxY6Eq97/nVS8Ku
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403457233"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="403457233"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 00:41:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="879052024"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="879052024"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 01 Feb 2024 00:41:40 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 49F0E789; Thu,  1 Feb 2024 10:33:55 +0200 (EET)
-Date: Thu, 1 Feb 2024 10:33:55 +0200
-From: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Zixi Chen <zixchen@redhat.com>, Adam Dunlap <acdunlap@google.com>, 
-	Xiaoyao Li <xiaoyao.li@intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] x86/cpu: allow reducing x86_phys_bits during
- early_identify_cpu()
-Message-ID: <hhzgb6ymqhba3snzk5zjorxr57h6jykaedqftgm2veapsazfnd@ldwehefzpkfx>
-References: <20240131230902.1867092-1-pbonzini@redhat.com>
- <20240131230902.1867092-2-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYgnyk0W"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3be3753e002so349026b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706776911; x=1707381711; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KrlsSLxbWQrmBnhYxqoorX1XNnQRO/DomwYkHslWCyQ=;
+        b=XYgnyk0WkNcoaI7BdottU84A1uKfn/CIypO0gbokagfb07WUuG3Yi3sdahcjaboV3Y
+         7+FT3HFPCc9SOZv+xEnHAG5xMNWRegaT8lzoHz3d4Gcx3iXF724PbqRg8QXHhEGffiaW
+         I5hjGGMRtm+RIogWCPzdhWzbykHDWm47T3CWOKAReuCcEhcEzwTmKKW6JpA2AVzptu9D
+         cEGgdOGaiRBXGUke9/ke9UdjLc9KtA4ovvMLSF/kcl6uVbHFvCrKtvjaUkJApoIXBejD
+         PljLxz2aHOSJBkh/7ldRGKkQ1cEk1zB9nMr91im0k4JRk9qsN0yx9AAD7RCaSlqnNyHa
+         BtZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706776911; x=1707381711;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KrlsSLxbWQrmBnhYxqoorX1XNnQRO/DomwYkHslWCyQ=;
+        b=Pzl9fWgRFHBHj7Wngm5plUYm/+5aCoQb6UKOqTNVE8mWrvhLQqpPUBuV+r7pIAHh4C
+         /ejTFlT1PPDaFzO8v+SNT6sRV/0Ha+dhpehJ0NVHr2m9wprEpJobQBeeSmuRdfwskTv8
+         ndmpNzKslRXdKAT7ByTUESIwLEqWnwoUKUouPys4CNiREAZ8Y2qNIXqS52JNKXJmFgLX
+         xLxmOtthSw9gxtEP+muSUd6DPQYbZetqlWFQw+OgAQP65X+6dUhRaR+dww22uAUqRF3/
+         sYmtMSduvi/O8N4bcnMA71Ct/I5wkCKNf25fa5hv6wuuAtXDcaf/sGyOGsaGD5FltDmo
+         2nEg==
+X-Gm-Message-State: AOJu0YwJ+Q9TENIQauLJ9zjgXe3YF9vorDPIxliRR9yISwAso7wKTmtO
+	CGvIW2khwpzdFkN6BCenvay/zed8FPlowFqmTcU/hfFS4NsNoUnn
+X-Google-Smtp-Source: AGHT+IHmFoocETjIyIfZd9UDIAb0iJgXkp7OFWDtYhUA+dPhQ5QsaT7UM4HX8crBls7v9p3xUB9U2w==
+X-Received: by 2002:aca:1c14:0:b0:3bd:2fbd:23d5 with SMTP id c20-20020aca1c14000000b003bd2fbd23d5mr4046103oic.49.1706776911219;
+        Thu, 01 Feb 2024 00:41:51 -0800 (PST)
+Received: from [192.168.255.10] ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id fn17-20020a056a002fd100b006dd84763ce3sm11254801pfb.169.2024.02.01.00.41.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 00:41:50 -0800 (PST)
+Message-ID: <76e24d20-b966-4efb-a83c-583618a7d3c7@gmail.com>
+Date: Thu, 1 Feb 2024 16:41:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131230902.1867092-2-pbonzini@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/6] sched/fair: cleanup sched_use_asym_prio
+Content-Language: en-US
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, alexs@kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+ sshegde@linux.ibm.com
+References: <20240130131708.429425-1-alexs@kernel.org>
+ <20240130131708.429425-3-alexs@kernel.org>
+ <20240201011346.GE18560@ranerica-svr.sc.intel.com>
+From: kuiliang Shi <seakeel@gmail.com>
+In-Reply-To: <20240201011346.GE18560@ranerica-svr.sc.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 01, 2024 at 12:09:01AM +0100, Paolo Bonzini wrote:
-> In commit fbf6449f84bf ("x86/sev-es: Set x86_virt_bits to the correct
-> value straight away, instead of a two-phase approach"), the initialization
-> of c->x86_phys_bits was moved after this_cpu->c_early_init(c).  This is
-> incorrect because early_init_amd() expected to be able to reduce the
-> value according to the contents of CPUID leaf 0x8000001f.
-> 
-> Fortunately, the bug was negated by init_amd()'s call to early_init_amd(),
-> which does reduce x86_phys_bits in the end.  However, this is very
-> late in the boot process and, most notably, the wrong value is used for
-> x86_phys_bits when setting up MTRRs.
-> 
-> To fix this, call get_cpu_address_sizes() as soon as X86_FEATURE_CPUID is
-> set/cleared, and c->extended_cpuid_level is retrieved.
-> 
-> Fixes: fbf6449f84bf ("x86/sev-es: Set x86_virt_bits to the correct value straight away, instead of a two-phase approach")
-> Cc: Adam Dunlap <acdunlap@google.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: Kai Huang <kai.huang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: x86@kernel.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+On 2/1/24 9:13 AM, Ricardo Neri wrote:
+> On Tue, Jan 30, 2024 at 09:17:05PM +0800, alexs@kernel.org wrote:
+>> From: Alex Shi <alexs@kernel.org>
+>>
+>> And simplify the one line code. No function change.
+>>
+>> Signed-off-by: Alex Shi <alexs@kernel.org>
+>> To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+>> To: Valentin Schneider <vschneid@redhat.com>
+>> To: Vincent Guittot <vincent.guittot@linaro.org>
+>> To: Peter Zijlstra <peterz@infradead.org>
+>> To: Ingo Molnar <mingo@redhat.com>
+>> ---
+>>  kernel/sched/fair.c | 6 ++----
+>>  1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 8d70417f5125..ebd659af2d78 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -9741,10 +9741,8 @@ group_type group_classify(unsigned int imbalance_pct,
+>>   */
+>>  static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
+>>  {
+>> -	if (!sched_smt_active())
+>> -		return true;
+>> -
+>> -	return sd->flags & SD_SHARE_CPUCAPACITY || is_core_idle(cpu);
+>> +	return (!sched_smt_active()) ||
+>> +		(sd->flags & SD_SHARE_CPUCAPACITY) || is_core_idle(cpu);
+> 
+> I think that compressing the two conditions into one hurts readability.
+
+Sure, will remove this change.
+
+Thanks
+Alex
+
+> As implemented, it is clear that no further checks are required if there
+> is no SMT.
+> 
+> Also, please see my comment in patch 6/6.
+>  
