@@ -1,126 +1,101 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1141F3CF6C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 04:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6B538DE1;
+	Thu,  1 Feb 2024 04:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706762811; cv=none; b=ilgRxnoyisxr/sMhgbWf7ElB3jSqytCpTsGaQSTnaueWHActVhGjKpPVsrgdEFaNETb/6gLzRkoKKAXGefhM41ZUV3msSPA9vOQMeKziuOUaNIU80kcaTOuNwp8sad5BcRDRlGPbEZYt2VD20NnBsaPOXQLE+Y9BJX7aG7jn6BY=
+	t=1706762856; cv=none; b=tPZDP9A1aUTYyhahdZnGqAlGJwfOVtsX0Zz9oaHyAxPENEd9QlqBF5R2nUlzRnq9vAns9sP/hx/CjnTt30V0bg2xoRzqdW0LqmLA+XaPV38H44X3J+DX7ZqngSE/gg1xKoH/y+wWI68lR654kS0VDD6AfdJi0YID3g0wNwvWNAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706762811; c=relaxed/simple;
-	bh=Twt8VpGAnLnDknK+2mkdxRc9XEHSq6p2WMav1kEzpAw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=tkQbSBPv4JgLO/NnhIWq5bwR0Uau3IZb9l5QGQuy+qZkbeOHYyZ8UZMCr4wh1WHJ1u+Sx7fq10iAZSTL792Fo7DEH6XGz5N3zXR87I6T4Lr33MEa44/xdRNFz261l//MEqM8yVeQJEigGzEX/c64AUqwPHT3Axtr0+33TadcwW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aahila.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N8kvZ/ir; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aahila.bounces.google.com
+	s=arc-20240116; t=1706762856; c=relaxed/simple;
+	bh=TO5EoA5D34t9gL56uly/Y17i1sqa2TP9ujAaDNI3dUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u/Izw51tTuCCyix6d/aJVAJaNIrVv8K6KX5PLO0nBMIdQlQFDR7rHPnMDzs7v1dTJsHNOnlH3j/+uuWACTfN3+Y20WNFq7MYcAGLwlg1UbjoeebFLysyozyTi9Vpk7exMugbeBxvkvCmrB8gdy04pW0DuRlYxdnk0dR8ozUjhzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PJ00XLhD; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N8kvZ/ir"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-604127be0a0so10952937b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 20:46:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706762809; x=1707367609; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8c691bs4raW5tl1fD8/M9N6DqO7UPyEHeitm4Vwh450=;
-        b=N8kvZ/irzYvcuRYBw0Ut78xk7XwlNAtgF9N5BGOaTXIjxMZre/TZb/nyjnvb504t0P
-         aeBELdHdqmSd10ai3mPQ2E/YoACMofobbkxoQQCHFUuV15LHlzqHhjh/ihB0HQwCS/fG
-         D5aMjpE8EA7c5zpsepMW/nT+KS54+YoaVRXDNHNYi2FWBHCFyf0Swu01tYZmXdZBp87y
-         D09pf+yqRVhcyO2jX6YvRC+nPLaV2mCBxvt00qs+n1DhwI2uW+HqSksFHL8dDEHHo3tD
-         iiO/nRI4VkplJJ69tUGaeoC/Y9aXf9+ksQR4DakdR0IF7sYxE4Pg8/76SrMedq1zROyJ
-         zdSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706762809; x=1707367609;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8c691bs4raW5tl1fD8/M9N6DqO7UPyEHeitm4Vwh450=;
-        b=CcV+DSkTvvfvRVeDac/fI4TB8pTbFIRKdY4QMt02MGg0UPI2JHVQfQLKJBtuDrEvc0
-         2FJdqHPbC40uS4uHl5R64I0NBXu+RmYKfnpAe9cQoplkIcNPCLqhqG75pUUJ9vV7OX6P
-         DVvcJpC2h7YWAQ8gTSiRLoY+QOcEgQJJ1ireKL6D9mhNrRbwrdvi37wElOUFeYM0sX3s
-         tNxTihlWQRqQqf+XSG3JrtAvCg0Bn4eseaWPTb0b4wJvrNVpQJe9hHwzk4zU2EHThfp2
-         o/0f5OTHtFYdP9L/DPutKkonXYotlv84WnPDplAPnjD8V91ufr9fJaR2b1HeqVAU1Fmi
-         pvrA==
-X-Gm-Message-State: AOJu0Yz8r13Gu2LKs9fR0jtm6d73pOdFQFFxfFkdGJklPhCLIuVA7gPb
-	wcBYxhWoRHrPq8O7FO8plewf+kOFndU1zkzz2qegKlLeD8dWM7zpiDaykkhZ9/IgZjWksH3JkSJ
-	rlg==
-X-Google-Smtp-Source: AGHT+IGCqkf4S6bQM1K/unGBkakUD903fQKJFzDx/PsI7m/ghEanV+fd8QwhKiXNvUcW/cWgJucE/HbyIpE=
-X-Received: from aahila.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:2f3])
- (user=aahila job=sendgmr) by 2002:a05:690c:f85:b0:5ff:9eb1:29a6 with SMTP id
- df5-20020a05690c0f8500b005ff9eb129a6mr796091ywb.2.1706762809133; Wed, 31 Jan
- 2024 20:46:49 -0800 (PST)
-Date: Thu,  1 Feb 2024 04:46:23 +0000
-In-Reply-To: <20240201044623.374389-1-aahila@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PJ00XLhD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1706762849;
+	bh=TO5EoA5D34t9gL56uly/Y17i1sqa2TP9ujAaDNI3dUM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PJ00XLhDIgZPSO3B5zSUPYBpGdHLpkqei/mzpkLVeW5gCLR9YM/rSJNzIlOE8SULe
+	 MryzVypOej3qNiBMgMOC5uqvXWUsu6oQd0ucItu6s9mrIgPFHmU88oY1PgcIe1vwlT
+	 zDM8BUjU3uzlUEo+LvaLndpWjK/QqhO/eXyUPrbJpR2pUdqMcyP5H1flZAqBqr02hf
+	 H8Y1ZSfwtMfBc4N5bi7AVLoMr8S60M2WAh5b2yTXEUnXsL0iV70xNJ6wZ1dTH1PvEG
+	 ydIk6ztKhSYQTWY7zgunBQpwq0UZsBLymMTEDWR1GbMoqVudTBeIv32ftG9oVnVcDP
+	 xsAg/zfCo0m4w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TQRGT4LwDz4x5K;
+	Thu,  1 Feb 2024 15:47:29 +1100 (AEDT)
+Date: Thu, 1 Feb 2024 15:47:27 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Daniel Xu <dxu@dxuuu.xyz>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: runtime warnings after merge of the bpf-next tree
+Message-ID: <20240201154727.6dff97a1@canb.auug.org.au>
+In-Reply-To: <CAADnVQLGZFf64X+HinDzCkVxzhB0ja62aMSeMG7Lm0=KLd977g@mail.gmail.com>
+References: <20240201142348.38ac52d5@canb.auug.org.au>
+	<CAADnVQLGZFf64X+HinDzCkVxzhB0ja62aMSeMG7Lm0=KLd977g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240201044623.374389-1-aahila@google.com>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240201044623.374389-2-aahila@google.com>
-Subject: [PATCH 2/2] i2c: designware: allow fine tuning tuning waveform from
- device tree
-From: Aahil Awatramani <aahila@google.com>
-To: Aahil Awatramani <aahila@google.com>, David Dillow <dillow@google.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/q69lYkRZLZHjA3cPQ7CUxDU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The Synopsys i2c driver allows a user to override the parameters
-controlling the waveform using ACPI; this is useful for fine tuning when
-needed to make spec compliance. Extend this support to the device tree to
-allow non-ACPI platforms the same capabilities.
+--Sig_/q69lYkRZLZHjA3cPQ7CUxDU
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Aahil Awatramani <aahila@google.com>
----
- drivers/i2c/busses/i2c-designware-platdrv.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Hi Alexei,
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 855b698e99c0..09c464874fdb 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -132,6 +132,17 @@ static int mscc_twi_set_sda_hold_time(struct dw_i2c_dev *dev)
- 	return 0;
- }
- 
-+static void i2c_parse_cnt(struct device *dev, char *prop_name, u16 *cnt)
-+{
-+	u32 tmp_cnt;
-+	int ret;
-+
-+	ret = device_property_read_u32(dev, prop_name, &tmp_cnt);
-+	if (ret)
-+		return;
-+	*cnt = tmp_cnt;
-+}
-+
- static int dw_i2c_of_configure(struct platform_device *pdev)
- {
- 	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
-@@ -146,6 +157,15 @@ static int dw_i2c_of_configure(struct platform_device *pdev)
- 		break;
- 	}
- 
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-ss-hcnt", &dev->ss_hcnt);
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-ss-lcnt", &dev->ss_lcnt);
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-fs-hcnt", &dev->fs_hcnt);
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-fs-lcnt", &dev->fs_lcnt);
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-fp-hcnt", &dev->fp_hcnt);
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-fp-lcnt", &dev->fp_lcnt);
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-hs-hcnt", &dev->hs_hcnt);
-+	i2c_parse_cnt(&pdev->dev, "i2c-scl-hs-lcnt", &dev->hs_lcnt);
-+
- 	return 0;
- }
- 
--- 
-2.43.0.429.g432eaa2c6b-goog
+On Wed, 31 Jan 2024 19:55:01 -0800 Alexei Starovoitov <alexei.starovoitov@g=
+mail.com> wrote:
+>
+> On Wed, Jan 31, 2024 at 7:23=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.o=
+rg.au> wrote:
+> >
+> > After merging the bpf-next tree, today's linux-next build (powerpc
+> > pseries_le_defconfig) produced these runtime warnings in my qemu boot
+> > tests: =20
+>=20
+> le - little endian?
 
+Yes.
+
+> Do you see this on other architectures or powerpr_le only?
+
+I only do qemu boot tests on powerpc le, sorry.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/q69lYkRZLZHjA3cPQ7CUxDU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmW7Il8ACgkQAVBC80lX
+0GySmgf/es4uAQiBgmiHmyiELu8GssMwzoSJ/D3tvPYhcNymcUWsbHAtGlUL7t/M
+lWibW4wmfmT7MK16C+J9Okr524vqGYoQkTIgdYdFYDXIDifADd4uNvGCjpwtwd8A
+kL+OFWZIFqnAa7BZaGBCPRt6CTta/DHOCeam0qfJkOyoK9RsC84k6PoZhTkH8tvQ
+HA0NbLBuWp+0I1fEPFhEqK+9Jlv+mKoOGeMvPEMDLbKetC3XM8EAliNuZRJMOvPn
+tnwW7snK8bzlbXJCEmE+bzISCjIJid9sg6CfP7qdk3ubwc8iGgytcJ2YTH/vAc30
+HXGaq8K59I5lECw8F729H9ac0gX//Q==
+=ixwz
+-----END PGP SIGNATURE-----
+
+--Sig_/q69lYkRZLZHjA3cPQ7CUxDU--
