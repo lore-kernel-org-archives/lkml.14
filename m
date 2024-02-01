@@ -1,117 +1,102 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2134.outbound.protection.outlook.com [40.107.7.134])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C945B686
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 13:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706793527; cv=fail; b=oNMcL4kbpmRl8Y0vKdDDKNCC14ld6Yi8JH7Pzvg5Ta7I50Ti4byRNsM82iIV1izTQeE/Z67DIex35SJCL3t7RAnEIW321kkqV1ebcahPkO7nOxjbsE6mewk4/cdd+D3+37eZ/W53VGSp98egY69gBEk/iEKz9TbPe30MUiKX4vU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706793527; c=relaxed/simple;
-	bh=S/aNv2lF06ooFUIcmaegi/4jt++yjayJ5fVpl/t9Ymc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=qAdAIEJY4ngrOX0aghIDpnsACqwDHaZh4df6I50ufnd0cdwNsrDV8AFV0aPnpgDzwLW/g6A4CxNB3s/fl/QuPF2RxuCAVvqjdjrjc4Rl90/fSfinnS2fJJ2jzwkoRkHLPDZ7ouCNvcbgoWw5wG2DITNXpdgKgtLmL0+swZaCMco=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=asem.it; dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b=DNA0fAmc; arc=fail smtp.client-ip=40.107.7.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asem.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D25253366
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 13:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706793548; cv=none; b=ELvFnQgGdKv9u1yXUDmum1lv6IfNDgl2d7LYBU9DydspAX1AkAr7I18mX0iHRMyAUp+McHNlA7fmx4P1HmnkfO5mGEEFWD6FxnMsqW3Xv6N7jMKpivlPxKIsp62NXw5c+djq6usYYdo8ovWwaf2fMVs+HBCCqCbjQqnavauo7m4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706793548; c=relaxed/simple;
+	bh=Jn+xPN0GPUw3/463SkJJ8PbiXcmQAnj17oz7Lj+qSyk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lrmSnQrlfvUSBou9H8u8K1NEZHIg+e07lX8Txy6TcWifAWgoWAYw7l7yNtb+y7UM5uOefbxhwWaDEKO2csM9iZHSszLHV286cxmRVehWEbfaKneJo38iz7QC/jOMgk+XD14YVYeKcbMuaPqwwVV1YBuAIloQt0p0DHjohC/iLaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=UX5pg4vN; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b="DNA0fAmc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WeEt4NPg/T+bC4QONW2AQi/06eWlns+537JushcNi+OikOoIYjq/frtt/EeHEAC05N6LaKOI2hBL+dewPYUT03FAo3uOZ+Ec3Jc/ovu+6qXkcyGDq5xePn1p7z+AebUMaykPLK3zZW4lx4KiuBEvLAVEMojhYA9C1/lsgP73Wy8MjoTq+bDMEShBykybhZl+2aVogSkCLkMhQJmq5eNrLTliya3GlUm36jSGWr+kAJsgr4dpmX2cKppMnAb+aLykvaVxZlAJ6vIU1X6iheKtUOQ1Jpr86lI6PxIfInwYKhQX0ajFVv9hWaTy8UMrDyyxMEk5EiELZExsNM38senA4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BEE1Q44IuerTAix98C68lkBVz054z7wXlAMnf+3bW8g=;
- b=NjRHgde4xLT8hmAy4f/wm47CBLvXhFPiaaJu7iQPEQyGZc5FRcDrp2ZUheg5hJ6Ue48qCEeF1gjQnl9IdAfhiid7aw0IxcCSvW2vuGBVtrWxOQT4X7RV/ciGYF49xt67uOtCm6e12UBReKvKOEIFfXE5eJi6sgXRulDnCT18QbLk8pZHJr6q1I4kORoWS7q6Nxnp2DtaJetC4ELfFgXOa4BdSTkM44bqO5qMnGN8HHzNDAH5mRq7508pyuJ4aeL3K9EjWS0VW9r1zV0McBkHTDfiat+vDS6Qt2USGorV6GfV40PDMqEnXVNi3LbLLcAXK5MmTV9F3U28pBQcQagKeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 151.1.184.193) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=asem.it;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=asem.it;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BEE1Q44IuerTAix98C68lkBVz054z7wXlAMnf+3bW8g=;
- b=DNA0fAmcNdlw2UUDbrA2qcNAPFSyk1I4Ke2+HIYoQvpttR6voOveA5xRL6fRhewC9Z43Z/sm5AH23rdzFhFaAB6ybQPmWJ0cMAYlrJfZ7EsZHp/iSP63JX1gOJoxshSH9RXtRO0ZXJGRDlvXeVSShEHe2mS11r74TJkvnxPuJ7s=
-Received: from DUZPR01CA0241.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b5::24) by PA4PR01MB7248.eurprd01.prod.exchangelabs.com
- (2603:10a6:102:d5::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Thu, 1 Feb
- 2024 13:18:39 +0000
-Received: from DB5PEPF00014B9E.eurprd02.prod.outlook.com
- (2603:10a6:10:4b5:cafe::c0) by DUZPR01CA0241.outlook.office365.com
- (2603:10a6:10:4b5::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.26 via Frontend
- Transport; Thu, 1 Feb 2024 13:18:39 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 151.1.184.193) smtp.mailfrom=asem.it; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=asem.it;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- asem.it discourages use of 151.1.184.193 as permitted sender)
-Received: from asas054.asem.intra (151.1.184.193) by
- DB5PEPF00014B9E.mail.protection.outlook.com (10.167.8.171) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.19 via Frontend Transport; Thu, 1 Feb 2024 13:18:39 +0000
-Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with Microsoft SMTPSVC(10.0.14393.4169);
-	 Thu, 1 Feb 2024 14:18:38 +0100
-From: Flavio Suligoi <f.suligoi@asem.it>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 0/1] mtd: spi-nor: everspin: add em004lxb entry
-Date: Thu,  1 Feb 2024 14:17:09 +0100
-Message-Id: <20240201131710.797505-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="UX5pg4vN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706793546; x=1738329546;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jn+xPN0GPUw3/463SkJJ8PbiXcmQAnj17oz7Lj+qSyk=;
+  b=UX5pg4vNgydFoahyN4mJ3b/HYelbz211ggrbBsA/TvmVahgNsKB5lhG7
+   dVDaUzpQRDTXUJ7yL/IJzWdZq5QFwP1leCPyWN0biJfjoc393cA6LeVJI
+   u3YTjnn+ezWO95mauVrqanGXPQs5LLjoFGJy5Oljyoqy5b7gcMVKtrgY2
+   zmoHREVfeA7jbOqBHMt61HHZGik2u+vnLCK/Rm8qMn+dIn9iuis3OwOki
+   rdu81cGD03B2BPsDzsid9DyzHVZM5sPDqljdSCPHu3aANkPK+i+oREqbl
+   5w3QHLObDtmHghzmcye4s0nVA3rt3FNjvMZzYmIbh4wbQlLH8nUz+jywF
+   w==;
+X-CSE-ConnectionGUID: uEqx+vOgQfai2o2FgVbElQ==
+X-CSE-MsgGUID: IPF+MlIWSpqLnzUSxccXDg==
+X-IronPort-AV: E=Sophos;i="6.05,234,1701154800"; 
+   d="asc'?scan'208";a="16123786"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Feb 2024 06:19:04 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 1 Feb 2024 06:18:34 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 1 Feb 2024 06:18:33 -0700
+Date: Thu, 1 Feb 2024 13:17:54 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+CC: Zong Li <zong.li@sifive.com>, <palmer@dabbelt.com>,
+	<paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] riscv: add CALLER_ADDRx support
+Message-ID: <20240201-glacier-sheep-049045564f7d@wendy>
+References: <20231205085959.32177-1-zong.li@sifive.com>
+ <139cdbd6-73d9-4452-94ce-825689b7c0c8@ghiti.fr>
+ <CANXhq0oA7LsKev+5gZCtNzCJ64RVOyimM1yQnY0kqs22VE6S4A@mail.gmail.com>
+ <4bf64df4-43a4-4207-b7d5-ff07adb98193@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 01 Feb 2024 13:18:38.0573 (UTC) FILETIME=[2B09F9D0:01DA5511]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9E:EE_|PA4PR01MB7248:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 599c823b-f943-4ac5-b793-08dc23284e0b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	vIoYl3V1upuwX5lB7+o+KpNQUqQzezhyiV9YFmIaXF+x3Qf3nDCT2CqlXopr2U4bPLy2Ib2PO6hz/yu1pllaA/KniRoTRkLJ7yPwo5/mOQP4ORJD6QLi7g76MSLXWk1amvik1NZVul4j4FKjEDDwgRMKBkJ9/CsWho1Ts8eFA39QNUupou284mfmSAb/hzFAkwUZe9bQV69LJ1pBUkVkMci3kosMJI+nudoE/n/3g81MM3Jy/HCI3uGsAhkCvr2JMgiFRQFNE+lDRLesq1ZZG1xd3Prh60SkecRvV8cQuIu2++kraV5oT4DmEhUKBZymSOJwPp7wrfZtfPXEhZwv5M5ANR9VNEPZCnoOToW8DjVTl7JxVapq0t78TleSYy6Stx+TvHSh86pZENC/FO7MH7MEgxn4s7HPq8L6HzoQpHr9pzSSig0lDIWdJqfDC2/T66jZb37iEzNWQwcHJ27q1aiHvVW5zliG947AL3n2w4jnnt1q/6FBrRsdBAmFDBbMC5t1FxQdp8qvfEpfbVXkWMzoHgsCtu6Q4XkG5tkNWIntijTPbLV40Bv9Zdhmz0ot06mfCC+ENranZkuhcrAumBmGYRPmU03mVvcdtsgI1CiubLrzrWWxmyX4abe8U5LHntRaTFK/sK6l+1TayC6N1kj92zBOeNRlNRKE/qfVNG9gRX+YfSBl/0DwjM1S6tO+gKh4Jp4r2lbGvYnum2lc7s30yc02fHhXfJ/x53cTCME=
-X-Forefront-Antispam-Report:
-	CIP:151.1.184.193;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:asas054.asem.intra;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(39850400004)(376002)(396003)(136003)(346002)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(82310400011)(36840700001)(46966006)(47076005)(83380400001)(1076003)(107886003)(26005)(82740400003)(336012)(36860700001)(356005)(2616005)(81166007)(316002)(8676002)(8936002)(2906002)(4744005)(5660300002)(478600001)(6666004)(4326008)(966005)(70586007)(70206006)(110136005)(86362001)(36756003)(41300700001)(40480700001)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: asem.it
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 13:18:39.2478
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 599c823b-f943-4ac5-b793-08dc23284e0b
-X-MS-Exchange-CrossTenant-Id: d0a766c6-7992-4344-a4a2-a467a7bb1ed2
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d0a766c6-7992-4344-a4a2-a467a7bb1ed2;Ip=[151.1.184.193];Helo=[asas054.asem.intra]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B9E.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR01MB7248
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HYeRZY6h66DPo2M8"
+Content-Disposition: inline
+In-Reply-To: <4bf64df4-43a4-4207-b7d5-ff07adb98193@ghiti.fr>
 
-Add the Everspin EM0004LXB 4Mb (512KB) Industrial STT-MRAM Persistent
-Memory.
-This device is JEDEC compatible (JESD251 and JESD251-1), but it is not able
-to provide SFDP information.
+--HYeRZY6h66DPo2M8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Link: https://www.everspin.com/file/158244/download
+On Thu, Feb 01, 2024 at 11:07:48AM +0100, Alexandre Ghiti wrote:
 
-I currently use this MRAM on one of our i.MX8MP boards.
+> 5cb0080f1bfd was introduced in v5.11, so that will make the backport poss=
+ible up to 5.15, I guess that's ok, nobody will ever use a riscv kernel tha=
+t old (?).
+>=20
+> So I'd add the Fixes tag I proposed above, and let the backport fail for =
+< 5.15. @Conor any opinion?
 
-Flavio Suligoi (1):
-  mtd: spi-nor: everspin: add em004lxb entry
+The stable kernels are 5.10 and 5.15, so there's no kernels that matter
+which have the bad commit and are < 5.15.
 
- drivers/mtd/spi-nor/everspin.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
--- 
-2.34.1
 
+
+--HYeRZY6h66DPo2M8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbuaAgAKCRB4tDGHoIJi
+0qfLAP4koWDuVPDcVXYFtHVrzdhF1eAsAsPdz/1TZGZe7aSkrAD9EOXqNsc82ZRJ
+95s2w9tShScq7Dv46eJxemyXBKHqywE=
+=BEJH
+-----END PGP SIGNATURE-----
+
+--HYeRZY6h66DPo2M8--
