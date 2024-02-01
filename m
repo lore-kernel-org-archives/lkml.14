@@ -1,63 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5018C15F330;
-	Thu,  1 Feb 2024 12:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9778915D5AF
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706789163; cv=none; b=nHGndeufk42uaG5YvwU2KUA0segmoEUeYtjT8gMbM7dK7dyuVb5MMPwNuFoG73nX75pfCddjbaKvbyEsGTCRogPtVlXF8wn9jAZ5TuZ5wQB1YuZAwYR+WbgK5GTT04ZTrj0oYDDDNrymE4KbWFddP/J9GYD47QVZxNCQdQmGdXg=
+	t=1706789272; cv=none; b=Sg4K04amruNTLyuW/ZsPK66oVZFotcT+969MRRn8Wr6vu3EfFox2hi1f59yVs8SheOH/e61hAOsJ4RWkUESNpb8Is7tbbmIOl0hHXkJE0z1KAjDW9piAgzZFhWx34ytQdzeT5IgF5WckxVE/76JQfhc+lXjqW785a0yAFv2dygQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706789163; c=relaxed/simple;
-	bh=wtovyXGq+lANxIqxjzQGfZMIslZlpYTFhgC/2Kdi7hw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Jp9HWGKU4l1myWgkWD4es3TtdcXhPwi4JFJ1fLK9QI9tHiEKT+C8jy/MyjOFI7AMSPJMASnZO+JOuSniAf78ImdCJpGowNSftL5S0eMZREVRUBmdvJsnjP3oXHBb9xGiB/5/o0VDYAEF0NSmOYHDe7Vtv6jh51wbuu+y6KERnzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVV8y9Yt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVV8y9Yt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C29FCC433C7;
-	Thu,  1 Feb 2024 12:06:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706789163;
-	bh=wtovyXGq+lANxIqxjzQGfZMIslZlpYTFhgC/2Kdi7hw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IVV8y9YtftBdMkEZ6HKC6yBseYCxKozy7o5YI+1XjDws0wRvljdw5Ipvo9Aep5L27
-	 vVVitKfbPRiHk27JlTfwj/PMe7svilEd6Z/4/UY1SWPu8AtUB6HWi6gSC9vxvLfLaV
-	 Qe53YlR9O7V1hu+wyGSMWh/DlpwyvPB6a7RboIHpmb0XKsp+f6A7qGv2B7y43uVX03
-	 gbOA0NiMOyC/WiuCdBmofcBX+Oif2LR13Yb3sXyA4rOOc3zwTzac5Izc+r/Cm8qY5e
-	 YEJwbA7NuA6kcAcY7dy8zn7QimBZwbCKd8DPiOniFfwyZ5X/ODxAZ5RGXzpS5YSesf
-	 r/pG87CKW6Rbw==
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.8-rc2
-Date: Thu, 01 Feb 2024 12:05:52 +0000
-Message-Id: <20240201120602.C29FCC433C7@smtp.kernel.org>
+	s=arc-20240116; t=1706789272; c=relaxed/simple;
+	bh=Xb32RFnnxd0YWCMLvOL0X89QJ5gFB+ifVMyQBccQwes=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sv+hC9ZL4ZmRf8I+eCRWZLr7NcfH75B6W5eM7JFXbKXaMQjtiUsbaEV8vlgYwVHkT1N8BzxYbwsj/YCfDGloUT7S6SZ7dn9wg+IX+XJFZb2GMEouZ1xrLPH8XjVaDereBrl9kDoJjEi1V0G+fFNk2oCLHXvErLjEvWzbmpwRW0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from [192.168.50.99] (unknown [62.217.188.159])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4TQcvq4z5pzsRjW;
+	Thu,  1 Feb 2024 15:01:59 +0300 (MSK)
+Message-ID: <b4d8649c-5cda-42da-8b6c-058bd42b3484@astralinux.ru>
+Date: Thu, 1 Feb 2024 15:01:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: RuPost Desktop
+Subject: Re: [PATCH] qnx4: add upcasting to avoid overflow
+Content-Language: ru
+To: Anders Larsen <al@alarsen.net>
+Cc: linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+References: <20231123100627.20739-1-abelova@astralinux.ru>
+From: =?UTF-8?B?0JDQvdCw0YHRgtCw0YHQuNGPINCb0Y7QsdC40LzQvtCy0LA=?=
+ <abelova@astralinux.ru>
+In-Reply-To: <20231123100627.20739-1-abelova@astralinux.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-DrWeb-SpamScore: -100
+X-DrWeb-SpamState: legit
+X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttderjeenucfhrhhomheptehhrggtthgrtgippicupiipieipmhhouegruceorggsvghlohhvrgesrghsthhrrghlihhnuhigrdhruheqnecuggftrfgrthhtvghrnhepueegueduvddtffetieekgfeggfeitddvjeduieevfefhkeeggfdvvdeluedtveeinecuffhomhgrihhnpehlihhnuhigthgvshhtihhnghdrohhrghenucfkphepiedvrddvudejrddukeekrdduheelnecurfgrrhgrmhephhgvlhhopegludelvddrudeikedrhedtrdellegnpdhinhgvthepiedvrddvudejrddukeekrdduheelmeehkedvuddpmhgrihhlfhhrohhmpegrsggvlhhovhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeefpdhrtghpthhtoheprghlsegrlhgrrhhsvghnrdhnvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhvtgdqphhrohhjvggttheslhhinhhugihtvghsthhinhhgrdhorhhg
+X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
+X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.61.08090, Virus records: 12290912, Updated: 2024-Feb-01 10:21:37 UTC]
 
-The following changes since commit 8c2ae772fe08e33f3d7a83849e85539320701abd:
+Just a friendly reminder.
 
-  spi: fix finalize message on error return (2024-01-25 21:55:48 +0000)
+23/11/23 13:06, Anastasia Belova пишет:
+> To avoid possible integer overflow in qnx4_statfs
+> cast literal to unsigned long. Otherwise multiplication
+> of two u32 may give a value that is outside of the range.
+>
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
+> ---
+>   fs/qnx4/inode.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/qnx4/inode.c b/fs/qnx4/inode.c
+> index 6eb9bb369b57..4be8dba60567 100644
+> --- a/fs/qnx4/inode.c
+> +++ b/fs/qnx4/inode.c
+> @@ -133,7 +133,7 @@ static int qnx4_statfs(struct dentry *dentry, struct kstatfs *buf)
+>   
+>   	buf->f_type    = sb->s_magic;
+>   	buf->f_bsize   = sb->s_blocksize;
+> -	buf->f_blocks  = le32_to_cpu(qnx4_sb(sb)->BitMap->di_size) * 8;
+> +	buf->f_blocks  = le32_to_cpu(qnx4_sb(sb)->BitMap->di_size) * 8ul;
+>   	buf->f_bfree   = qnx4_count_free_blocks(sb);
+>   	buf->f_bavail  = buf->f_bfree;
+>   	buf->f_namelen = QNX4_NAME_MAX;
 
-are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.8-rc2
-
-for you to fetch changes up to 6500ad28fd5d67d5ca0fee9da73c463090842440:
-
-  spi: sh-msiof: avoid integer overflow in constants (2024-01-30 15:27:21 +0000)
-
-----------------------------------------------------------------
-spi: Fix for v6.8
-
-One simple fix for a minor but valid issue with constants overflowing
-identified via cppcheck.
-
-----------------------------------------------------------------
-Wolfram Sang (1):
-      spi: sh-msiof: avoid integer overflow in constants
-
- drivers/spi/spi-sh-msiof.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
