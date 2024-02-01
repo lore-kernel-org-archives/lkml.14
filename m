@@ -1,123 +1,257 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA11779E0;
-	Thu,  1 Feb 2024 15:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332D562142
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706800033; cv=none; b=ldynbnV3G3wbmiSYsfAe8IK26pFOiMTDxNl7S6rysZ7QkI8DWZBXYHPQ53nc7Zmjz2W06yeimqkH3481vejTE1QbCpRfl9VrgMyASehRXuri+HOIScQk1pM8YTwH1DzWhmPqvjer0i9yK59sNSWQa6f0TPn06IihgCnlLUwidx8=
+	t=1706800059; cv=none; b=MbnXgZM/9tUFZjnfad2cFS/GLiEdQGLtu4bSYkGPbSqZAoHMPIARIS0fvgwF68irumkolr5c20NaejG0mTUOg+osVFv7fwiEjKVlrio5GcBz78z42I1LY5dN/mYyL+XRLLnZWUwPmk3QOUdP+0tbfeK+EPIXaZRB+wF97fQM2Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706800033; c=relaxed/simple;
-	bh=h3pF1J2Y7kD2DXqK7FYxLp/Ne6w/RwV/LgnGUdj/cGQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=k0RHOhUw0d7KG7YkW4RikzNdRk/038WiAu7I8oP/Rtxa6jQri1IgqkS8d9qyvfSLOYxx84Rq/+v+fz9CUloykpfOS8sD8J5SgtGyJ3bz9h9ZtA/izwDIadTyIDEQ7Dgyi5Gzz2tz/yEjDvznnrXj5RY12y/YyTQsuoyTTfeNPeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TYF+RqoW; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706800059; c=relaxed/simple;
+	bh=HT94Gy/s8mApeD+I37YiRcB6z1V+JAmEA/Xb2VOOoJA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IvEqObyhAouBu9tKdCt5E+mEbkjcfXy5ySam+hEu6olUtEMta7HZPRUH4aJOYTQfuvPCdfU/8I9TIy0dltoRiZL3l3khQq5m8ZLPAbMh0rvmx4sAtexko0AZECp0HCfD9PogHNtKfKdBk0SYjqdQwVY41BI9jSVd79+JKQCuCQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=DrjrgQus; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYF+RqoW"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55790581457so1457656a12.3;
-        Thu, 01 Feb 2024 07:07:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="DrjrgQus"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cf4fafa386so14528511fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:07:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706800029; x=1707404829; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1706800055; x=1707404855; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c6kNM7+P4ZoD4vrIwh2/Maqu21Cod8+oG65RL/+v3EI=;
-        b=TYF+RqoWfP7RuD1udpB1vLIWDgEA4c5QVL6inBdvGXaV8GpmxetwYxelbNnhZx3CoJ
-         7qpp5OpZhXEHvDrzhiACXM62fsulEgUbC0Ly4RiLprjDMaV4WHn6ptatexa/SNOuGS8S
-         QagZ+yLX3XPOqrBiWxwDPTkDu8PZlv4scr85PRFHAzQXOQDAxSxH8cgaPNWr5yRW9Kl7
-         sRMImerRrxIC3+ENGcmoIFn/6Ffq8cKMlGxlXe1sbSsr+uu+3jC6pPnul28L7q4pm7C1
-         DltLkjhyKXklWPnTKjr1ykL5tYttANfWTMpmIp2gKSgKR1RbiRP6SDq2ZPJZF6J/ohYL
-         QAPQ==
+        bh=RLy6aeMXF8RQMmhWAlLcYtBSh4Y9QyUdmEdSbRti4xA=;
+        b=DrjrgQusPv0iOoDPNULRivKkMdIUQA2WVG34IKKngrOK6VzmdptDsMwEhZ5xwXbsnK
+         MUDn5PAi/Bi0cgZJXnSG+/i2LR4n3X7eKdTi3r3xgQUK3OV8A0qiq/IUAhzfdTCMKmCO
+         DuQrTfuFDYjYKQrA2bS+zaSfrzR7XynT9ritpJ1mcK1d58FSohs5gYVMeJJOihW3rruw
+         NkXfGS3wBgo6VtSdB1mmpwHlfJUTAfmiJQsy/9XbNbvALnYjQ7exUCv9SgoKK/3cvI4P
+         YyrsfiXNRb3oKpUNL6BTNKj3xqu7dUklT/ZpS8XkhVmcOoRXSUrnMenvpWUwtNh0jd+K
+         GQ9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706800029; x=1707404829;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=c6kNM7+P4ZoD4vrIwh2/Maqu21Cod8+oG65RL/+v3EI=;
-        b=DEzCoD2ARG1NIMMMBBAjcDHkH3jDVZEgGLiSWAPz1qvajDCa36m1rsLDBe8XsoBnpD
-         UWrHYm10Fi1Il/L+Zu5SACz8ekpIcj7nfxtemprgGmW+XVtF69fShHva1/ako0V2g0M2
-         5undDsWL3jhV+51YUfmNNSN7AE91jvbVZYNYVwwNnajXz27+fKga+DpFiMqYi6zes3GG
-         R3Jo37INo3yzDP00gaxKr8cdZorY3PaF1dIz6cSNFBCxYTyCPkuwV6/avqM+BR5wzWYw
-         jqBRGbLbbE7IHE2ckUKf8HiMmmztmcxbAW9Y0ERf+mjbxe2Vhtk1r0gu2q+XsejRG+WK
-         SrnA==
-X-Gm-Message-State: AOJu0YyLmbsRFdZ+rCm6UMZcUuOUb8fEZsUXMqoefTXuxfngrpF/RjBg
-	T6MDp/wAtEN6LOVw3p+8LPceahnjraYvRSHt/jRy7XMZWyrlXuou0ZtwUIRA
-X-Google-Smtp-Source: AGHT+IEI6GYkYAaN2UQKxbqF0jFNrD3InRZixcUzz3s7038/VKRQQv7EOijspj3ZPOcnbX5jFyRbng==
-X-Received: by 2002:a17:906:806:b0:a36:459:51fd with SMTP id e6-20020a170906080600b00a36045951fdmr3768397ejd.69.1706800029163;
-        Thu, 01 Feb 2024 07:07:09 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXXxpiQCZJqEx19t4J+GfFAE2DbpEq/i69JR4Er4q/chEhvQHsLUDkBsKj51c+JLihAYJLmgBJD2mhWExfdhRDwrGMLfbQL7YLTit/iaGvwuJT2QqNLzdmpyqUpuyuWqaC8pXo/ddj8k2+ehlLkALMvr/OjAfNiB58MNSSgNSfO3ThmS7v4lwNwgG/N/BAqnCtJ8kjkr+Wts1LCfWNQ1fb+gjz5mlzQXxKCUaAlo1mTl3OF3+ZXlEVe5uosT3ZB9843784RZi5ZsmhG1Oxnkg49eAw=
-Received: from localhost (p200300e41f147f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f14:7f00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id lz13-20020a170906fb0d00b00a317ca8b422sm6006663ejb.92.2024.02.01.07.07.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 07:07:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706800055; x=1707404855;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RLy6aeMXF8RQMmhWAlLcYtBSh4Y9QyUdmEdSbRti4xA=;
+        b=WSP+Rabo0QWufzbEwGkeKb7ULv4UDGPg93CUS7LAUJtD9O++ZVErVtq5Vm4gL5bwM4
+         RPuv6maGbD+PyW6rgUMf60b5U7ABLtuK/Bo6W4WV6yh7zL+ndBcwVziwkijE1wA36B/u
+         bshY9a4D8E8OfGQFYsy+JvN+ZxUwYToLI4sPGI29XYGRd10xIYBf567bPuPUnk3m30an
+         Liw2l8Q65vDQiMM1R6K1Vv7JyqCYbcffyKVIR0z6x3PKIbNuyrh2nJtIXIq6R2LhJfQP
+         XMbXQix2Hwg50GCKd2fdJAiPdoeoW6TGW7bggQzOlWLicD7Lnr/kxXcK6O7KDGd+ov/X
+         S3Lg==
+X-Gm-Message-State: AOJu0Yyt9eoGga8jOltNX2QKmpb+SFiQ3n5xkfw9eq1KynBivLP5CJVG
+	mJ3IqDMIcwCEXeB8qpXYhuHDJtkqvIXTnvGpwmoUxtWA/d8L1/mPJjeKB/NxKSBWCvuNEuVc74z
+	Iuvxjbk6StDdzzYZ4MXC52xc4nHu2V9FrMRgkvQ==
+X-Google-Smtp-Source: AGHT+IHbJBJ7YxaQlxRHLubYk5mC6hSutRyT7koHpdOpAI01kSdP/Fen2aCh7OgP+TYgCNNz73qnZVSrl+LwoncuI9I=
+X-Received: by 2002:a2e:9dc8:0:b0:2cf:495a:1396 with SMTP id
+ x8-20020a2e9dc8000000b002cf495a1396mr3525139ljj.17.1706800055030; Thu, 01 Feb
+ 2024 07:07:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240127161753.114685-1-apatel@ventanamicro.com>
+ <87r0hzuw87.fsf@all.your.base.are.belong.to.us> <87le87uulb.fsf@all.your.base.are.belong.to.us>
+ <CAK9=C2UYCKUBKggtM606orH2mBu_AbTdB5-R5AP1M0t-LsEbEQ@mail.gmail.com>
+ <87cytjvybb.fsf@all.your.base.are.belong.to.us> <87ttmuq3m7.fsf@all.your.base.are.belong.to.us>
+ <CAK9=C2UEpbd+pHAMg-AuP-fTPZVho16u69oSjOHhsR11HTwiew@mail.gmail.com> <87fryeognc.fsf@all.your.base.are.belong.to.us>
+In-Reply-To: <87fryeognc.fsf@all.your.base.are.belong.to.us>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Thu, 1 Feb 2024 20:37:22 +0530
+Message-ID: <CAK9=C2UX0sRb5UbLdm8xwe1dP=x+enJRYzAuCPf6MdHTLTC_Cw@mail.gmail.com>
+Subject: Re: [PATCH v12 00/25] Linux RISC-V AIA Support
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	Saravana Kannan <saravanak@google.com>, Marc Zyngier <maz@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>, 
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	Andrew Jones <ajones@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 01 Feb 2024 16:07:08 +0100
-Message-Id: <CYTU44ED147E.2V11E1VTOPYSE@gmail.com>
-Cc: "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "Thierry
- Reding" <treding@nvidia.com>
-Subject: Re: linux-next: Tree for Jan 29 (soc/tegra/fuse/fuse-tegra30.c)
-From: "Thierry Reding" <thierry.reding@gmail.com>
-To: "Arnd Bergmann" <arnd@arndb.de>, "Jon Hunter" <jonathanh@nvidia.com>,
- "Randy Dunlap" <rdunlap@infradead.org>, "Stephen Rothwell"
- <sfr@canb.auug.org.au>, "linux-next" <linux-next@vger.kernel.org>, "Kartik"
- <kkartik@nvidia.com>
-X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
-References: <20240129143030.16647483@canb.auug.org.au>
- <d0e1a7c1-06a2-4fa4-b4f8-df149af8eccb@infradead.org>
- <61e8b6ae-fd30-4443-8473-6429f6de8768@nvidia.com>
- <dafa2fb5-276d-4c87-b003-4b7f30d44f0a@app.fastmail.com>
-In-Reply-To: <dafa2fb5-276d-4c87-b003-4b7f30d44f0a@app.fastmail.com>
 
-On Tue Jan 30, 2024 at 11:59 AM CET, Arnd Bergmann wrote:
-> On Tue, Jan 30, 2024, at 11:46, Jon Hunter wrote:
-> > On 30/01/2024 04:06, Randy Dunlap wrote:
+On Tue, Jan 30, 2024 at 11:19=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kerne=
+l.org> wrote:
 >
-> > Looks like we are missing the following ...
-> >
-> > diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c=20
-> > b/drivers/soc/tegra/fuse/fuse-tegra30.c
-> > index 2070d36c510d..eb14e5ff5a0a 100644
-> > --- a/drivers/soc/tegra/fuse/fuse-tegra30.c
-> > +++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
-> > @@ -38,7 +38,8 @@
-> >       defined(CONFIG_ARCH_TEGRA_210_SOC) || \
-> >       defined(CONFIG_ARCH_TEGRA_186_SOC) || \
-> >       defined(CONFIG_ARCH_TEGRA_194_SOC) || \
-> > -    defined(CONFIG_ARCH_TEGRA_234_SOC)
-> > +    defined(CONFIG_ARCH_TEGRA_234_SOC) || \
-> > +    defined(CONFIG_ARCH_TEGRA_241_SOC)
-> >   static u32 tegra30_fuse_read_early(struct tegra_fuse *fuse, unsigned=
-=20
-> > int offset)
-> >
-> >
-> > Kartik, can you send a fix for this?
+> Anup Patel <apatel@ventanamicro.com> writes:
 >
-> If I get an Ack for my original patch, I can pick that
-> up into the soc tree directly:
+> > On Tue, Jan 30, 2024 at 8:18=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@ke=
+rnel.org> wrote:
+> >>
+> >> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+> >>
+> >> > Anup Patel <apatel@ventanamicro.com> writes:
+> >> >
+> >> >> On Tue, Jan 30, 2024 at 1:22=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjor=
+n@kernel.org> wrote:
+> >> >>>
+> >> >>> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+> >> >>>
+> >> >>> > Anup Patel <apatel@ventanamicro.com> writes:
+> >> >>> >
+> >> >>> >> The RISC-V AIA specification is ratified as-per the RISC-V inte=
+rnational
+> >> >>> >> process. The latest ratified AIA specifcation can be found at:
+> >> >>> >> https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-=
+interrupts-1.0.pdf
+> >> >>> >>
+> >> >>> >> At a high-level, the AIA specification adds three things:
+> >> >>> >> 1) AIA CSRs
+> >> >>> >>    - Improved local interrupt support
+> >> >>> >> 2) Incoming Message Signaled Interrupt Controller (IMSIC)
+> >> >>> >>    - Per-HART MSI controller
+> >> >>> >>    - Support MSI virtualization
+> >> >>> >>    - Support IPI along with virtualization
+> >> >>> >> 3) Advanced Platform-Level Interrupt Controller (APLIC)
+> >> >>> >>    - Wired interrupt controller
+> >> >>> >>    - In MSI-mode, converts wired interrupt into MSIs (i.e. MSI =
+generator)
+> >> >>> >>    - In Direct-mode, injects external interrupts directly into =
+HARTs
+> >> >>> >>
+> >> >>> >> For an overview of the AIA specification, refer the AIA virtual=
+ization
+> >> >>> >> talk at KVM Forum 2022:
+> >> >>> >> https://static.sched.com/hosted_files/kvmforum2022/a1/AIA_Virtu=
+alization_in_KVM_RISCV_final.pdf
+> >> >>> >> https://www.youtube.com/watch?v=3Dr071dL8Z0yo
+> >> >>> >>
+> >> >>> >> To test this series, use QEMU v7.2 (or higher) and OpenSBI v1.2=
+ (or higher).
+> >> >>> >>
+> >> >>> >> These patches can also be found in the riscv_aia_v12 branch at:
+> >> >>> >> https://github.com/avpatel/linux.git
+> >> >>> >>
+> >> >>> >> Changes since v11:
+> >> >>> >>  - Rebased on Linux-6.8-rc1
+> >> >>> >>  - Included kernel/irq related patches from "genirq, irqchip: C=
+onvert ARM
+> >> >>> >>    MSI handling to per device MSI domains" series by Thomas.
+> >> >>> >>    (PATCH7, PATCH8, PATCH9, PATCH14, PATCH16, PATCH17, PATCH18,=
+ PATCH19,
+> >> >>> >>     PATCH20, PATCH21, PATCH22, PATCH23, and PATCH32 of
+> >> >>> >>     https://lore.kernel.org/linux-arm-kernel/20221121135653.208=
+611233@linutronix.de/)
+> >> >>> >>  - Updated APLIC MSI-mode driver to use the new WIRED_TO_MSI me=
+chanism.
+> >> >>> >>  - Updated IMSIC driver to support per-device MSI domains for P=
+CI and
+> >> >>> >>    platform devices.
+> >> >>> >
+> >> >>> > Thanks for working on this, Anup! I'm still reviewing the patche=
+s.
+> >> >>> >
+> >> >>> > I'm hitting a boot hang in text patching, with this series appli=
+ed on
+> >> >>> > 6.8-rc2. IPI issues?
+> >> >>>
+> >> >>> Not text patching! One cpu spinning in smp_call_function_many_cond=
+() and
+> >> >>> the others are in cpu_relax(). Smells like IPI...
+> >> >>
+> >> >> I tried bootefi from U-Boot multiple times but can't reproduce the
+> >> >> issue you are seeing.
+> >> >
+> >> > Thanks! I can reproduce without EFI, and simpler command-line:
+> >> >
+> >> > qemu-system-riscv64 \
+> >> >   -bios /path/to/fw_dynamic.bin \
+> >> >   -kernel /path/to/Image \
+> >> >   -append 'earlycon console=3Dtty0 console=3DttyS0' \
+> >> >   -machine virt,aia=3Daplic-imsic \
+> >> >   -no-reboot -nodefaults -nographic \
+> >> >   -smp 4 \
+> >> >   -object rng-random,filename=3D/dev/urandom,id=3Drng0 \
+> >> >   -device virtio-rng-device,rng=3Drng0 \
+> >> >   -m 4G -chardev stdio,id=3Dchar0 -serial chardev:char0
+> >> >
+> >> > I can reproduce with your upstream riscv_aia_v12 plus the config in =
+the
+> >> > gist [1], and all latest QEMU/OpenSBI:
+> >> >
+> >> > QEMU: 11be70677c70 ("Merge tag 'pull-vfio-20240129' of https://githu=
+b.com/legoater/qemu into staging")
+> >> > OpenSBI: bb90a9ebf6d9 ("lib: sbi: Print number of debug triggers fou=
+nd")
+> >> > Linux: d9b9d6eb987f ("MAINTAINERS: Add entry for RISC-V AIA drivers"=
+)
+> >> >
+> >> > Removing ",aia=3Daplic-imsic" from the CLI above completes the boot =
+(i.e.
+> >> > panicking about missing root mount ;-))
+> >>
+> >> More context; The hang is during a late initcall, where an ftrace dire=
+ct
+> >> (register_ftrace_direct()) modification is done.
+> >>
+> >> Stop machine is used to call into __ftrace_modify_call(). Then into th=
+e
+> >> arch specific patch_text_nosync(), where flush_icache_range() hangs in
+> >> flush_icache_all(). From "on_each_cpu(ipi_remote_fence_i, NULL, 1);" t=
+o
+> >> on_each_cpu_cond_mask() "smp_call_function_many_cond(mask, func, info,
+> >> scf_flags, cond_func);" which never returns from "csd_lock_wait(csd)"
+> >> right before the end of the function.
+> >>
+> >> Any ideas? Disabling CONFIG_HID_BPF, that does the early ftrace code
+> >> patching fixes the boot hang, but it does seem related to IPI...
+> >>
+> > Looks like flush_icache_all() does not use the IPIs (on_each_cpu()
+> > and friends) correctly.
+> >
+> > On other hand, the flush_icache_mm() does the right thing by
+> > doing local flush on the current CPU and IPI based flush on other
+> > CPUs.
+> >
+> > Can you try the following patch ?
+> >
+> > diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+> > index 55a34f2020a8..a3dfbe4de832 100644
+> > --- a/arch/riscv/mm/cacheflush.c
+> > +++ b/arch/riscv/mm/cacheflush.c
+> > @@ -19,12 +19,18 @@ static void ipi_remote_fence_i(void *info)
+> >
+> >  void flush_icache_all(void)
+> >  {
+> > +    cpumask_t others;
+> > +
+> >      local_flush_icache_all();
+> >
+> > +    cpumask_andnot(&others, cpu_online_mask, cpumask_of(smp_processor_=
+id()));
+> > +    if (cpumask_empty(&others))
+> > +        return;
+> > +
+> >      if (IS_ENABLED(CONFIG_RISCV_SBI) && !riscv_use_ipi_for_rfence())
+> > -        sbi_remote_fence_i(NULL);
+> > +        sbi_remote_fence_i(&others);
+> >      else
+> > -        on_each_cpu(ipi_remote_fence_i, NULL, 1);
+> > +        on_each_cpu_mask(&others, ipi_remote_fence_i, NULL, 1);
+> >  }
+> >  EXPORT_SYMBOL(flush_icache_all);
 >
-> https://lore.kernel.org/all/20240103102654.3779458-1-arnd@kernel.org/
+> Unfortunately, I see the same hang. LMK if you'd like me to try anything
+> else.
 
-Sorry for the delay on this. I guess you can't really apply that to ARM
-SoC directly because the patch that introduces Tegra241 support is only
-in the Tegra tree.
+I was able to reproduce this at my end but I had to use your config.
 
-In any case, I've applied your patch now, so the fixed version should
-show up in tomorrow's linux-next.
+Digging further, it seems the issue is observed only when we use
+in-kernel IPIs for cache flushing (instead of SBI calls) along with
+some of the tracers (or debugging features) enabled. With the tracers
+(or debug features) disabled we don't see any issue. In fact, the
+upstream defconfig works perfectly fine with AIA drivers and
+in-kernel IPIs.
 
-I'm considering squashing it into the original since that'd preserve
-bisectability, though that'd probably be of limited usefulness because
-most people doing regression builds involving this will likely have one
-of the other bits enabled.
+It seems AIA based in-kernel IPIs are exposing some other issue
+with RISC-V kernel. I will debug more to find the root cause.
 
-Thierry
+Regards,
+Anup
