@@ -1,92 +1,86 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC5E74281
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852DB63064;
+	Thu,  1 Feb 2024 18:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706810571; cv=none; b=a5KjEH2/snJgy9IdehMN2Z8JnFWtG8VLEhFqFGI2bi5rhuseEYcwvvey9cE+0Fbt19PVm2o08AyRcsqnTGwzzFs+4aNU6YFn7anJC9vKCTdisBJfItKvGjGb4knuVE1uyWsYf5aHoZOL9x+gJw70Ijx4ivqfFAhr5YCT9jt1PL0=
+	t=1706810631; cv=none; b=OPgKzjMEACtJ8Ao8+DYXZrZGr2M2JQrYvg1WDvnPAPQ+LgCDi2R9X9Ii9jzuMiY1wFhwIfh2Ts51fJXWKbpGAEomDk0SHBdy5gDFcsLB/o2KPCWbnnRCOsspLWUfe3YrrPtRP4CtqrWd9+5ULLm5lH4mni5HWmEBCuAKesvV03Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706810571; c=relaxed/simple;
-	bh=ColfYwGzOWxKPXerfApdGAeGET6bCQa3gNPmYycvkQM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Urt229891h4krMDSNhiH+5THN/NRg/m6B6KHSCbilsZAdv138IfwBbJ+e85k369lkfn1VZDfqObltgekQBTI1d5J6p2JrESICd5MyLgzj6TUM0umMjSu204fdRr8qQ4zgqgUsoZWByNIDWkbN5tz7fp1cGMBOKoNwNdJ7v7Y14s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iBeRCQHw; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1706810631; c=relaxed/simple;
+	bh=cimPZd7g/IjUV38GuJgS7vN9RrjhC7JdmJnDdWIPGdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HryBn3AdJd1YptBz+r0KTktZDsBgKM+F/fZ2llkZ51wTSGzL0eMEGIx9ddW33bQmyFonqLv83lAz9O7gP3Unm5RRqBRHhXsUk3Na2le9ItFnip7cSYqoaSN3lelsLdSZZ8+yFoiXOmPhg1X4VJkUgWvE3YXGJEfV6yyMx2F3f2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gsOVeeci; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iBeRCQHw"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6c2643a07so2048114276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 10:02:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706810569; x=1707415369; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vt7MU0bmv3DhhiQJ3wtJw9K+Dqd9x1ouKjCbyi3XDIo=;
-        b=iBeRCQHwnhng3F7xF2wvH9rngX7LXNNuPb4fIrcvbWP0PKEchzldpXqbtvENO0q2af
-         8ufDzTTB14ip4V47s2EbwMRCybDCocdBE8iYQwwmKv4HwL5EcHUqc89OZCg/CvwfD8eh
-         kdV+WzDrl41kQ++QUXTNQoGBaouklYy83LvdvLajTYBun6f5/VUhO0yF8VpX4BfyiZv/
-         gQ9Ueb8gYuFztOFz+6nmkX0sZfej2ov2Eb1vnoNKys5esCjsXIhUNR/fQAc8KxPlsnSs
-         aAbM2TNGdJ0OC8Oxjit+M7Yk0zABfE0dW5AoFvWQ+NH1td3UVxOA/kmUS7Mw529NX7tN
-         B08Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706810569; x=1707415369;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vt7MU0bmv3DhhiQJ3wtJw9K+Dqd9x1ouKjCbyi3XDIo=;
-        b=VQlnSYv5YguY33/LyRi6pOcaMh7jAlb+UyoKcr2EsAYF4BupnR0tY6A0XX2oU2ke4N
-         dWSUJMwtNSab568Li8FLQ4jRSqP7iNX6TeIsxNBLF2lVD/iQZzp/oh+Fb7Idh3k8ukMj
-         Phi0l2xa7yjjF89zB4jPZQlC8ivsteCgjYgFctTdJumKFDmJD5Rz8LA2riQTkD/ms2PJ
-         djM9AodsIBGacXseBLcHx2FxCqk0WCexRHvBtW0oL44Mx9At7I9SbyYu6lpcWu/vMiGQ
-         rQxQKFT0iIHr+TA+cW9G/KLgVFe5cjcq6q4zvit8DSRrugTMSxlABx07tCj3uQo0o6ak
-         jGTA==
-X-Gm-Message-State: AOJu0YwdrFUIWpXX3WDMzDoxZiV76mjVIHopxciluIhrG1o91Gsa3cGy
-	gBI6ghzc/X21eSSsX4uvLHrpUuA2by0JwBXzbSSr3udULIvqysBLaPtnZ/5FF+OfGG1ErE9hXyR
-	zog==
-X-Google-Smtp-Source: AGHT+IGoUgKcoa4GAi8Lw+GdpN5bAXMcZfSWEQrKdT61wiJMGMnkzYXnrDgYCKzRULVUjofcJPOdgJcRbDc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:13ce:b0:dc2:1bde:b7ed with SMTP id
- y14-20020a05690213ce00b00dc21bdeb7edmr1349889ybu.8.1706810569436; Thu, 01 Feb
- 2024 10:02:49 -0800 (PST)
-Date: Thu, 1 Feb 2024 10:02:47 -0800
-In-Reply-To: <20240201061505.2027804-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gsOVeeci"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA8A9C43399;
+	Thu,  1 Feb 2024 18:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706810631;
+	bh=cimPZd7g/IjUV38GuJgS7vN9RrjhC7JdmJnDdWIPGdE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=gsOVeeci6sC1lNCliVkreUO4TPedFwk18sO7t/T30vKvNS0Zg7rD2DbeTjIwtEVPt
+	 ikUVM3JJbX4F17FNnTGYPUB3ViQdC9YApUsK5+e+lKUP2RdM38uSTgrSp9rs3VvAzU
+	 +KNQZNlRIuMFGBv8rBmnif01Y+5ngR9l8kAkGSnujr8CginKDJIJC7OWqbCXsMfAu7
+	 b/oheiZR8unpNmR9Xxb14fDSDG2P02CaLT1y0LLv9I2wUkUguVLmZu3AJfgyb8YDMm
+	 S1p4BxjssXNhxUBFXg2ZgZEnV6Mgxn7xu7Jacxl55DECjrDlubhQ+Bjo0XxJ/LHH4r
+	 qZt8sHTzxm2xA==
+Date: Thu, 1 Feb 2024 12:03:49 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] PCI: dwc: Add common send PME_Turn_Off message
+ method
+Message-ID: <20240201180349.GA640827@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240201061505.2027804-1-dapeng1.mi@linux.intel.com>
-Message-ID: <Zbvcx0A-Ln2sP6XA@google.com>
-Subject: Re: [PATCH] KVM: selftests: Test top-down slots event
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Jinrong Liang <cloudliang@tencent.com>, Aaron Lewis <aaronlewis@google.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201-pme_msg-v2-6-6767052fe6a4@nxp.com>
 
-On Thu, Feb 01, 2024, Dapeng Mi wrote:
-> Although the fixed counter 3 and the exclusive pseudo slots events is
-> not supported by KVM yet, the architectural slots event is supported by
-> KVM and can be programed on any GP counter. Thus add validation for this
-> architectural slots event.
+On Thu, Feb 01, 2024 at 11:13:30AM -0500, Frank Li wrote:
+> Set outbound ATU map memory write to send PCI message. So one MMIO write
+> can trigger a PCI message, such as PME_Turn_Off.
 > 
-> Top-down slots event "counts the total number of available slots for an
-> unhalted logical processor, and increments by machine-width of the
-> narrowest pipeline as employed by the Top-down Microarchitecture
-> Analysis method." So suppose the measured count of slots event would be
-> always larger than 0.
+> Add common dw_pcie_send_pme_turn_off_by_atu() function.
+> ...
 
-Please translate that into something non-perf folks can understand.  I know what
-a pipeline slot is, and I know a dictionary's definition of "available" is, but I
-still have no idea what this event actually counts.  In other words, I want a
-precise definition of exactly what constitutes an "available slot", in verbiage
-that anyone with basic understanding of x86 architectures can follow after reading
-the whitepaper[*], which is helpful for understanding the concepts, but doesn't
-crisply explain what this event counts.
+> -	if (!pci->pp.ops->pme_turn_off)
+> -		return 0;
+> +	if (pci->pp.ops->pme_turn_off)
+> +		pci->pp.ops->pme_turn_off(&pci->pp);
+> +	else
+> +		ret = dw_pcie_send_pme_turn_off_by_atu(pci);
 
-Examples of when a slot is available vs. unavailable would be extremely helpful.
+I think it's nice if function names match the function pointer names.
 
-[*] https://www.intel.com/content/www/us/en/docs/vtune-profiler/cookbook/2023-0/top-down-microarchitecture-analysis-method.html
+E.g., we currently already have:
+
+  .pme_turn_off = ls_pcie_send_turnoff_msg,
+  .pme_turn_off = ls1021a_pcie_send_turnoff_msg,
+  .pme_turn_off = ls1043a_pcie_send_turnoff_msg,
+
+which is slightly annoying because it's always useful to compare
+implementations, but "git grep pme_turn_off" doesn't find the actual
+functions, so I wish these were named "ls_pcie_pme_turn_off()", etc.
+
+You don't have to fix those existing layerscape ones now, but I think
+the same applies to dw_pcie_send_pme_turn_off_by_atu(): it would be
+nice if it were named something like "dw_pcie_pme_turn_off()" so
+grep/cscope would find it easily.
+
+Bjorn
