@@ -1,114 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471994D9F4;
-	Thu,  1 Feb 2024 10:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B30315AAB9;
+	Thu,  1 Feb 2024 10:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706781946; cv=none; b=HnMksamZ1CRCqDpDzDQXBgNxu8yGj9fWM9zwvbP8Eo1aJeVp5SYIIuRQb5wgLPYU8vYdHOQrvMdn+GmDl9jm81Llo5gdZtesNAIi6QI17CLE9wHGbTn5b9+ZXMEU6l4qaFaJGWhHI903zO77tYotfvtfAPZjJa3lH70Vq/CSFIE=
+	t=1706781972; cv=none; b=eW7+BfKWWJ3ImHlAPk1T/fpl9/wcQ1H39mQcDAvNu9t5rTCKdMcjBXSn9ZLqHR+AqKQYNPEv7q+v7V7h/Ih9YzpuO56owXo5HOrVSZbsFdat2GLCI6r4Ss0ZET1bQ0e6RhRPl3FknDydrlVamvXaQw1zFvf/C+Bf42zylyVsyFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706781946; c=relaxed/simple;
-	bh=OCNyn/+xthVB/CqbVTIbZppBhTX2tBQqtngKgAF+EVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AOf1hpwJ053AzfOCEPH9HpI4l4JXGqec/QttNkcmDt1p2/N+/As/EpOHE5cfDxcQ+co63NjrR/MUzuZNErEp1IM/3vNzciUi7K9erqfUNLGXzgGuHD7RawJEwv5maFOTVkCXUIDQhZFbFxpwlRM3E5GgHTuh7wXl8svggf/KM8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHRqrwND; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706781972; c=relaxed/simple;
+	bh=X+CKtvTbbLk6luseks2U7/JYjJq9xPQPysG0gwURc4c=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=dxop9vIzDuz1MBvhwsAls09J0F0oLhQLiphO8yM/Xa1CJmzjinJeTMTi1EHqTuFwUUcjFeEF/UAC4Fqw1N2WMg/IDar7wTv7Us4tXXIhrNg1LVZFAXcbxOFio19SlorT4ohewR13+tL4jV18UP8a7rM0VA945PrsztmqWelOO+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6WLngXY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHRqrwND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF129C43390;
-	Thu,  1 Feb 2024 10:05:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6WLngXY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE54C433C7;
+	Thu,  1 Feb 2024 10:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706781945;
-	bh=OCNyn/+xthVB/CqbVTIbZppBhTX2tBQqtngKgAF+EVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bHRqrwNDCBUSpevdR2oKRzmtqXY9LZ2Vt8YhL/C46k/Aittq0sbfuP7a4DJPlD9ib
-	 Sw+UYpgXUOwQty/m4/V8pLakfQPwCdTiOUEBtqLeVVITg4p0dkgz+fyRCRoJWg8ekE
-	 cT7PjUWI/BAmuP+1LMcYY3l5oWeNOdWyDYQVW5lFSuBHcsRdWSyzM2tUo/VQn2pn+/
-	 VpVGqyAsDRDm+t2d18ZXTCFyg9oQGxHLxOhJoOtiPAmNj9ZW9OxJbEGW15j+EN6ap0
-	 uBIgtieGe6HDPKDDHHeyGsTUnyIgSIPnoDOTncfC2EO7YhnfGQ9YRA6PINUg8zoomP
-	 J9wgwubT3oFOg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rVTx5-000000006DY-09wo;
-	Thu, 01 Feb 2024 11:05:47 +0100
-Date: Thu, 1 Feb 2024 11:05:47 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@somainline.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: HID: i2c-hid: Document reset-related
- properties
-Message-ID: <Zbts-9tRDPcXbhYi@hovoldconsulting.com>
-References: <20240131-x13s-touchscreen-v4-0-39c0f9925d3c@quicinc.com>
- <20240131-x13s-touchscreen-v4-1-39c0f9925d3c@quicinc.com>
+	s=k20201202; t=1706781971;
+	bh=X+CKtvTbbLk6luseks2U7/JYjJq9xPQPysG0gwURc4c=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=X6WLngXYb4n/kV4qVbVCcA6FeuVrTBpzTcnTx2mKCHO+oaZZoog2YuDiXFFAl/Gwq
+	 ewrKlMAdfEeXxoSLtt5bhLKd/6mR9qDru6zQ2rFUnsYXRbfU/N0xok9oi+OQh6P3QH
+	 AXwCDCAWOlMkmDLDY/wQepLVyMxjJEOIjMiF/793t/1ZXT1X4mMrkTJlUESrrCzu06
+	 iGlcA28jER7eU7Xxp1+cqquzfGuvWUaIFlfzIQ7gRMi1PUG9TSdd0THR+94BLtb6YG
+	 Vh4toLaOW9eCxfgSgZiF2mZjjXI8dLBaBpO2YnW2Yq7ZiuxEfEkr3c/LJBpX87eH+u
+	 G4RCVr6EvCdZQ==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131-x13s-touchscreen-v4-1-39c0f9925d3c@quicinc.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wifi: wilc1000: remove setting msg.spi
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240123212135.2607178-1-dlechner@baylibre.com>
+References: <20240123212135.2607178-1-dlechner@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: David Lechner <dlechner@baylibre.com>,
+ Ajay Singh <ajay.kathat@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170678196828.2736043.11019687394930194957.kvalo@kernel.org>
+Date: Thu,  1 Feb 2024 10:06:10 +0000 (UTC)
 
-On Wed, Jan 31, 2024 at 07:07:26PM -0800, Bjorn Andersson wrote:
-> Some I2C HID devices has a reset pin and requires that some specified
-> time elapses after this reset pin is deasserted, before communication
-> with the device is attempted.
+David Lechner <dlechner@baylibre.com> wrote:
+
+> (spi_message_add_tail() does not access this field.)
 > 
-> The Linux implementation is looking for these in the "reset-gpios" and
-> "post-reset-deassert-delay-ms" properties already, so use these property
-> names.
-> 
-> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/input/hid-over-i2c.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.yaml b/Documentation/devicetree/bindings/input/hid-over-i2c.yaml
-> index 138caad96a29..f07ff4cb3d26 100644
-> --- a/Documentation/devicetree/bindings/input/hid-over-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.yaml
-> @@ -50,6 +50,12 @@ properties:
->      description: Time required by the device after enabling its regulators
->        or powering it on, before it is ready for communication.
->  
-> +  post-reset-deassert-delay-ms:
-> +    description: Time required by the device after reset has been deasserted,
-> +      before it is ready for communication.
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-I know that Rob reluctantly acked this, but re-reading the commit
-message for the commit that added support for the reset gpio to the
-driver, and added a comment about this not having been added to the
-devicetree binding, it becomes obvious that the latter was done on
-purpose and that we probably should not be adding the
-'post-reset-deassert-delay-ms' property after all:
+Yes, please send with the correct commit message.
 
-	For now the new "post-reset-deassert-delay-ms" property is only
-	used on x86/ACPI (non devicetree) devs. IOW it is not used in
-	actual devicetree files and the same goes for the reset GPIO.
-	The devicetree-bindings maintainers have requested properties
-	like these to not be added to the devicetree-bindings, so the
-	new property + GPIO are deliberately not added to the existing
-	devicetree-bindings.
+Patch set to Changes Requested.
 
-	2be404486c05 ("HID: i2c-hid-of: Add reset GPIO support to i2c-hid-of")
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240123212135.2607178-1-dlechner@baylibre.com/
 
-So perhaps we should just do this properly and add a new compatible
-property for X13s touchscreen which can be used to determine these
-delays (e.g. for cases where some default values are insufficient).
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-Johan
