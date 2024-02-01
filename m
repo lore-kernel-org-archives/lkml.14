@@ -1,83 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0CF77A06;
-	Thu,  1 Feb 2024 15:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B7A15DBBD
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706800912; cv=none; b=JhageEzXODrB9uHYCO/W5TmmjOCA/rB/2NS/BVaGBIaeZEGIggoIo5h/8Zu4/2zNu+WHMUFRjw5S+iWyv8VQJ6b0DFMTJXuYlxWxSZ3YWthSwvK4zK3a5L/ofkONftMMCqFvZj7+reGSuKTT5F2vYgkllBeP5kSV2r6jf9mMQww=
+	t=1706800941; cv=none; b=CH3eekubq2LABqlAyUcP9KREMwrvLR774y1csgNu0hzghGgwYnA6NbGW+F/Ulm660clDcq1PXdcX+oZAUBkkChK0zrQ4+WzdzotcpJNxPtXPBxJVeQ6fv4Xa+D35gnhR9Bu8jL4NYPMQyp8GD9kUoyBsk4YK5X0G7gg7Nj3B4zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706800912; c=relaxed/simple;
-	bh=wIQGdFqlY0xAMd+07bg96OAGO6sKPhtrx96e+mX0ZBE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ODmT/RUuqRowJ3tWVM8LzO+14JMf2QBpZ8fEfdSf1QOI0iVEvnD7KRE68yogJPgjtDdiHqaIK2th592+KSQx+bLReHwP0xivI2zXJOB1zrGX0I4LvkzUWPZa8OiC1mTOVHkLGCLN1bRyoCnQ0Q9c63PS/+2FFXb6l1RAtIffVvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F9C6h7Bo; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F9C6h7Bo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706800910; x=1738336910;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wIQGdFqlY0xAMd+07bg96OAGO6sKPhtrx96e+mX0ZBE=;
-  b=F9C6h7Bo9cJLXeaTQzGJ60VBTRbHYEC4iBNhAZ3Vs/fSxCdMgEcoIJPr
-   T+Sw4RhAcxyGvNdbp/sxhogOZMtHjbFafAnkHkmJjJ88kkIO+ILFOvyNk
-   Hg4rWdXdTQ2evhdAMWkDv6s3pgb3lRY3CIW05PCDzowVlKBWSBKdnrj11
-   4e7zTdH/IozfWza4uXSfgCfx/fzkylKvUdOyc27FIX2IBrbYD/BlzWYrL
-   Y8xmwaq4nt4n4+wu+L2XEyVGcNyU730dWnnQabALNyEGSyzv3BQy33WCO
-   IRzxfuPIQw8Al+B/E/hNn2+HPO81LFex3ZnQCp0DgSzvcks9gyF5vjASa
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="402762457"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="402762457"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 07:21:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788953699"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="788953699"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2024 07:21:41 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id B8E0CBA3; Thu,  1 Feb 2024 17:15:42 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Flavio Suligoi <f.suligoi@asem.it>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>
-Subject: [PATCH v2 0/3] backlight: mp3309c: Allow to use on non-OF platforms
-Date: Thu,  1 Feb 2024 17:14:12 +0200
-Message-ID: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	s=arc-20240116; t=1706800941; c=relaxed/simple;
+	bh=/fNW+EnrstF3l6Tjhf3Juk+33vhljOeeF3e/iB7fpLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K6sauhZCMESpUnWxNWrBQycdjLhpRh1tJ9pgWeeqMa/UCAkTKUkWOp5iPAg7YJoggNbk27I5gzdGYLxax3rXWiWWBiEcXEOO8n/GZvybsdtPmi81cqZHFBYdwVOh3/Hely30l7ix9FHIPKrwb5FOX4ajbkfp65RwkRGA2JebFXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 0410E41ED5;
+	Thu,  1 Feb 2024 16:22:13 +0100 (CET)
+Message-ID: <34292692-67e9-4132-be1c-eba79dd3a84f@proxmox.com>
+Date: Thu, 1 Feb 2024 16:22:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/core: Drop spinlocks on contention iff kernel is
+ preemptible
+To: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+ Valentin Schneider <valentin.schneider@arm.com>,
+ Marco Elver <elver@google.com>, Frederic Weisbecker <frederic@kernel.org>,
+ David Matlack <dmatlack@google.com>
+References: <20240110214723.695930-1-seanjc@google.com>
+Content-Language: en-US
+From: Friedrich Weber <f.weber@proxmox.com>
+In-Reply-To: <20240110214723.695930-1-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Allow to use driver on non-OF platforms and other cleanups.
+On 10/01/2024 22:47, Sean Christopherson wrote:
+> Use preempt_model_preemptible() to detect a preemptible kernel when
+> deciding whether or not to reschedule in order to drop a contended
+> spinlock or rwlock.  Because PREEMPT_DYNAMIC selects PREEMPTION, kernels
+> built with PREEMPT_DYNAMIC=y will yield contended locks even if the live
+> preemption model is "none" or "voluntary".  In short, make kernels with
+> dynamically selected models behave the same as kernels with statically
+> selected models.
+> 
+> Somewhat counter-intuitively, NOT yielding a lock can provide better
+> latency for the relevant tasks/processes.  E.g. KVM x86's mmu_lock, a
+> rwlock, is often contended between an invalidation event (takes mmu_lock
+> for write) and a vCPU servicing a guest page fault (takes mmu_lock for
+> read).  For _some_ setups, letting the invalidation task complete even
+> if there is mmu_lock contention provides lower latency for *all* tasks,
+> i.e. the invalidation completes sooner *and* the vCPU services the guest
+> page fault sooner.
 
-Changelog v2:
-- rename pm3309c_parse_dt_node() --> mp3309c_parse_fwnode() (Daniel)
-- add tags (Daniel, Flavio)
-- new patch 2
+I've been testing this patch for some time now:
 
-Andy Shevchenko (3):
-  backlight: mp3309c: Make use of device properties
-  backlight: mp3309c: use dev_err_probe() instead of dev_err()
-  backlight: mp3309c: Utilise temporary variable for struct device
+Applied on top of Linux 6.7 (0dd3ee31) on a PREEMPT_DYNAMIC kernel with
+preempt=voluntary, it fixes an issue for me where KVM guests would
+temporarily freeze if NUMA balancing and KSM are active on a NUMA host.
+See [1] for more details.
 
- drivers/video/backlight/mp3309c.c | 88 ++++++++++++-------------------
- 1 file changed, 35 insertions(+), 53 deletions(-)
+In addition, I've been running with this patch on my (non-NUMA)
+workstation with (admittedly fairly light) VM workloads for two weeks
+now and so far didn't notice any negative effects (this is on top of a
+modified 6.5.11 kernel though).
 
--- 
-2.43.0.rc1.1.gbec44491f096
+Side note: I noticed the patch doesn't apply anymore on 6.8-rc2, seems
+like sched.h was refactored in the meantime.
+
+[1]
+https://lore.kernel.org/kvm/ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@proxmox.com/
 
