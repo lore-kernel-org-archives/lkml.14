@@ -1,384 +1,174 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1D3158D7C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04607157056;
+	Thu,  1 Feb 2024 08:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706775884; cv=none; b=fdlqW3Hf+AhrR8mu/6Og8fym0hPuzffOd/wgKX0ZVx1NWcCc7sxTKX7L5lyVyQog5zbMlQKZPKde17AwRCWSyvFuDCsrrnPIbnZK5TAfcHiVNFRnyqBxoiYmfcglcQ0z17OADlD4h4z+B6bx0YRupsj39+5KkPF8zk97O5ZxmBM=
+	t=1706775972; cv=none; b=fHuGTBJCeCBXU0WWzwICmfrdAX8gPFw4sNYOtHzQacw3HLHJ/+t+RVru8UUOjR+p2t0aR1opY2utZrIiRQTMclAxDYBKsb0OcMPqzKi5uc7Hi4h22H6zjJwM/tpHbu1aU/PrTP4J0rmNID1uOxmM6juNPM8ROzHy9e1M/0dAruk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706775884; c=relaxed/simple;
-	bh=nHXt1Dp2jSr4fCGQT8FH/tmmfiC/MkvLT78PNHEXGzE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=am4BY+7Yg5j/OXfs1IpF7m6OyPJ3MVHSuM/oUXPibuhg+10W+yaEYUF78M5dPTbsNd5wq+7lcoXSHsoUGa5/WhLXNfmNwHptAzuqtAK1Na0KXFReeYAFyG5LeHYMMngEfvRA3tOjIlTadv4vPn9shmJ483bTexh6ZOBQV9sYWMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XaBzDN3f; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706775972; c=relaxed/simple;
+	bh=FMcpzuqbziwjbDKPU3ZKMutj2d/R80lDM22a6yVTZJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k41CjO+PPX5bmQvjSxx9n0PlIQG78DZP/0dHtDhFhVd/BgwDn9hnqERJic40gsnorYkLMbCzX3NBLpHyKPwvUVqwGndjGfpJJM4FrRkST+8Xc9AVfhWlAHiJcsC/Ruj0WIoWG7xoITZXKVlfRK7lxXtca+3GLjoCgZMiWtruiZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KsjPgccL; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XaBzDN3f"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55fc9a581f8so90591a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:24:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706775880; x=1707380680; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nHXt1Dp2jSr4fCGQT8FH/tmmfiC/MkvLT78PNHEXGzE=;
-        b=XaBzDN3fzIFeF+9BMENb4suJJytwiDeZ9VvPqRwx/E8owDBCGx/xyXJ4WPGoqVT2PP
-         a40SRuypG22UvKX6Xakg4qVasD+9BdvnrTrXp1ojrBEFA5Q6IAfM4ELSR8k+EWMv8GfV
-         AYGBFT+tAJk0JggtXnbzMLeIXMzeeXrQp0/jVVXCJ7JUGhnYCvOiRaI2ryyDZtBZyDHL
-         aRm2gtqWU50sjq6KZTFuWpBQ6919dsky7EUEPfoWb6ceWuGdrPOuoZCM6mI4vS8hAr3U
-         App5Ng2qfZSsI9Hbt5ffa1rhrYKv1ABbBpJi6VA785fQfUTMHz6PuzL42Oop099avsEc
-         wGwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706775880; x=1707380680;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nHXt1Dp2jSr4fCGQT8FH/tmmfiC/MkvLT78PNHEXGzE=;
-        b=ZjKK6miT2ifW7ebG5/ThG04NMhA2LEp+gNt3w7kMX310i2HbTGz3sBZeNzATaNr+Ot
-         NhXZtjNfXjrcgEoZ6HTigrt5QlmpJcTh0QDE3hM5auBxEUbtlTQC0IGaDik2feQ7L7g6
-         23kxzsHxtko9GgnWjtPG+rIjdO9PYAzzLi8oR/6TewKTnSosNjuEPvrJd+gSlDSS6Ecw
-         ShElS1aShEpAow2DvBflg64LUeMQdafUayWcVpvs+C7kC9QrIk+gppdDnIn22nnUWwH3
-         mrwFayECBBszac3wg83R0R3jINh5DR//xC+34CYXjOUSpnTPSSDIPZN1+y70pwrSFtqh
-         803g==
-X-Gm-Message-State: AOJu0Yy627AKUiOHANBvd6IzoKWjVoXPJryGra3BVu+Kn5FK4GMQD/Y9
-	GR1QXHecz1rS+YNvs+5MnLeZOQEhVl3qxkZh+pNCXFkn08g07VKU+kO4K+VJSUTkWAvZ
-X-Google-Smtp-Source: AGHT+IH49fgByfl1LfnGqpFGC2kywuRdEvMHqY76KOAa845Az0ac6RQmyzwmj6MpAUL3/nMW59HHAw==
-X-Received: by 2002:aa7:c988:0:b0:55f:3d22:b307 with SMTP id c8-20020aa7c988000000b0055f3d22b307mr2343351edt.41.1706775879947;
-        Thu, 01 Feb 2024 00:24:39 -0800 (PST)
-Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
-        by smtp.gmail.com with ESMTPSA id k11-20020a056402340b00b0055f11bd3564sm3399222edc.8.2024.02.01.00.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 00:24:39 -0800 (PST)
-Message-ID: <670808962822c7f3be7072f5bcd8cec6536e98bc.camel@gmail.com>
-Subject: Re: [PATCH RESEND RFC] driver: core: don't queue device links
- removal for dt overlays
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: nuno.sa@analog.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- linux-kernel@vger.kernel.org,  Saravana Kannan <saravanak@google.com>
-Date: Thu, 01 Feb 2024 09:24:39 +0100
-In-Reply-To: <CAJZ5v0hbGF6u5D8iyiziWMceph124wnC6KOH+V9Y2xqQgkZu5g@mail.gmail.com>
-References: 
-	<20240123-fix-device-links-overlays-v1-1-9e4f6acaab6c@analog.com>
-	 <dcb1b6dbc2172dd66bfdcc0c8135e0d98f1c22dd.camel@gmail.com>
-	 <CAJZ5v0gAK9CChRPSx7Lu=BrGQo22q4swpvvN3__wFw68NfqKPA@mail.gmail.com>
-	 <25d3cfd74b26eb6a4aa07f1da93ccf4815b0b1c6.camel@gmail.com>
-	 <CAJZ5v0hX4Yv7UVng=O4tZyb_O7D2EcymdEDdSUrVDPk6h51VjA@mail.gmail.com>
-	 <8682d7f7ee1a60902b1f3e5529a4adbaf4846aa0.camel@gmail.com>
-	 <CAJZ5v0hW60++hhKG=yBE7+rB9qt2m+tO_WAf=YFhNU2-y3VHFw@mail.gmail.com>
-	 <9a4b4dd60c35dd4e00b97e19fced0e79a86f6eef.camel@gmail.com>
-	 <CAJZ5v0hbGF6u5D8iyiziWMceph124wnC6KOH+V9Y2xqQgkZu5g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KsjPgccL"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F1E3D60003;
+	Thu,  1 Feb 2024 08:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706775961;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EYkQXqzcGz3hrfklpGf6cCnC1Loec/vHktXK38RmtMw=;
+	b=KsjPgccLmKV1+LN1lgOi+u4HVkmk+JOojxWki84Yx7/kX3tpLAEHnbw0M5SOBRdylO+9su
+	pj6qWeV3v+U2fJRx9FQH6DcrHPZMlMm41naFkDbo5k3a8t3Bagu4pyhoQGOSDkEA221+Mh
+	VywBw67GHyz7WPF4/0A1LZ9y/oxvQC1FJPbEAhsRV9BRtE7PizquX+rWgGakSdWQ7qAZN2
+	lR3EDPnv24fE0E1RZx2dYRR8c9hrWMw8BHwkB8IHVQCPj2NHudCoa4/rBxdRkmm5qeu8pZ
+	kLkXNy2Yc1tgFCT9U6aog4tgUXUV+kIKpI2YoXd44VfoKMCc9h5sd5VMrKdTXQ==
+Date: Thu, 1 Feb 2024 09:25:58 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: William Zhang <william.zhang@broadcom.com>
+Cc: David Regan <dregan@broadcom.com>, dregan@mail.com, Richard Weinberger
+ <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ computersforpeace@gmail.com, kdasu.kdev@gmail.com,
+ linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Joel Peshkin
+ <joel.peshkin@broadcom.com>, Tomer Yacoby <tomer.yacoby@broadcom.com>, Dan
+ Beygelman <dan.beygelman@broadcom.com>, Anand Gore
+ <anand.gore@broadcom.com>, Kursad Oney <kursad.oney@broadcom.com>, Florian
+ Fainelli <florian.fainelli@broadcom.com>, rafal@milecki.pl,
+ bcm-kernel-feedback-list@broadcom.com, andre.przywara@arm.com,
+ baruch@tkos.co.il, linux-arm-kernel@lists.infradead.org, Dan Carpenter
+ <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v3 10/10] mtd: rawnand: brcmnand: allow for on-die ecc
+Message-ID: <20240201092558.5499ee6a@xps-13>
+In-Reply-To: <bcd9f8a5-7dab-42e6-b860-8a56ebb51cb6@broadcom.com>
+References: <20240124030458.98408-1-dregan@broadcom.com>
+	<20240124030458.98408-11-dregan@broadcom.com>
+	<20240124184027.712b1e47@xps-13>
+	<CAA_RMS42FaiN+Za1iY12o0YUANH9rJarBTBa=9jNn8x6_g-Fng@mail.gmail.com>
+	<20240126071913.699c3795@xps-13>
+	<CAA_RMS5gX88v_Qt1csgSL_ffMNsqo2G8B164EB_Hg=hXd620eg@mail.gmail.com>
+	<20240129115228.06dc2292@xps-13>
+	<2a3edcf5-7afc-410c-a402-3d8cd3feb1da@broadcom.com>
+	<20240130120155.3cb6feed@xps-13>
+	<CAA_RMS577vw=QWN9_NHfmWqt+_cDG22tA01aU019CPNjAgHqJQ@mail.gmail.com>
+	<20240130195504.506fb446@xps-13>
+	<bcd9f8a5-7dab-42e6-b860-8a56ebb51cb6@broadcom.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, 2024-01-31 at 17:05 +0100, Rafael J. Wysocki wrote:
-> On Wed, Jan 31, 2024 at 4:46=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.c=
-om> wrote:
+Hi William,
+
+> >>>>>>>> This is a double check to turn on/off our hardware ECC. =20
+> >>>>>>>
+> >>>>>>> I expect the engine to be always disabled. Enable it only when you
+> >>>>>>> need (may require an additional patch before this one). =20
+> >>>>>>
+> >>>>>> We are already turning on the ECC enable at this point,
+> >>>>>> this is just adding the option to turn it off if the NAND chip
+> >>>>>> itself will be doing the ECC instead of our controller. =20
+> >>>>>
+> >>>>> Sorry if I have not been clear.
+> >>>>>
+> >>>>> This sequence:
+> >>>>> - init
+> >>>>> - enable hw ECC engine
+> >>>>> Is broken. =20
+> >>>>>   >>>> ECC engine is not enabled for all the cases. Here we only in=
+tended to enable it for the nand chip that is set to use NAND_ECC_ENGINE_TY=
+PE_ON_HOST. The logic here should better change to: =20
+> >>>> if (chip->ecc.engine_type =3D=3D NAND_ECC_ENGINE_TYPE_ON_HOST)
+> >>>>       brcmnand_set_ecc_enabled(host, 1);
+> >>>> else
+> >>>>       brcmnand_set_ecc_enabled(host, 0); =20
+> >>>>   >>>>> It *cannot* work as any operation going through exec_op now =
+may =20
+> >>>>> perform page reads which should be unmodified by the ECC engine. Yo=
+u > driver *must* follow the following sequence:
+> >>>>> - init and disable (or keep disabled) the hw ECC engine
+> >>>>> - when you perform a page operation with correction you need to
+> >>>>>      - enable the engine
+> >>>>>      - perform the operation
+> >>>>>      - disable the engine
+> >>>>> Maybe I am missing something here but are you saying the exec_op ca=
+n have different ecc type for page read/write at run time on the same nand =
+chip? I don't see the op instr structure has the ecc type field and thought=
+ it is only bind to the nand chip and won't change at run time. So looks to=
+ me the init time setting to the engine based on ecc.engine_type should be =
+sufficient. =20
+> >>>>
+> >>>> What you described here can work for the hw.ecc read path (ecc.read_=
+page =3D brcmnand_read_page) which always assumes ecc is enabled. Although =
+it is probably not too bad with these two extra operation, it would be bett=
+er if we don't have to add anything as our current code does. For the brcmn=
+and_read_page_raw,  we currently disable the engine and then re-enable it(b=
+ut we need to fix it to only enable it with hw ecc engine type).  So it is =
+just opposite of you logic but works the same with no impact on the most pe=
+rformance critical path. =20
+> >>>
+> >>> This is not "my" logic, this is the "core's" logic. I am saying: your
+> >>> approach is broken because that is not how the API is supposed to wor=
+k,
+> >>> but it mostly works in the standard case. =20
+> >>
+> >> In the interest of minimizing register writes, would it be acceptable =
+to
+> >> enable/disable ECC at the beginning of a standard
+> >> path transfer but not, after the transfer, turn off the ECC? This shou=
+ld not
+> >> affect other standard path operations nor affect the exec_op path as t=
+hose
+> >> are low level transfers which our ECC engine would not touch and the N=
+AND
+> >> device driver should be responsible for turning on/off its own ECC. =20
 > >=20
-> > On Wed, 2024-01-31 at 16:10 +0100, Rafael J. Wysocki wrote:
-> > > On Wed, Jan 31, 2024 at 3:52=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gma=
-il.com> wrote:
-> > > >=20
-> > > > On Wed, 2024-01-31 at 15:28 +0100, Rafael J. Wysocki wrote:
-> > > > > On Wed, Jan 31, 2024 at 3:18=E2=80=AFPM Nuno S=C3=A1 <noname.nuno=
-@gmail.com> wrote:
-> > > > > >=20
-> > > > > > On Wed, 2024-01-31 at 14:30 +0100, Rafael J. Wysocki wrote:
-> > > > > > > On Wed, Jan 31, 2024 at 1:20=E2=80=AFPM Nuno S=C3=A1 <noname.=
-nuno@gmail.com> wrote:
-> > > > > > > >=20
-> > > > > > > > On Tue, 2024-01-23 at 16:40 +0100, Nuno Sa via B4 Relay wro=
-te:
-> > > > > > > > > From: Nuno Sa <nuno.sa@analog.com>
-> > > > > > > > >=20
-> > > > > > > > > For device links, releasing the supplier/consumer devices
-> > > > > > > > > references
-> > > > > > > > > happens asynchronously in device_link_release_fn(). Hence=
-, the
-> > > > > > > > > possible
-> > > > > > > > > release of an of_node is also asynchronous. If these node=
-s were
-> > > > > > > > > added
-> > > > > > > > > through overlays we have a problem because this does not =
-respect
-> > > > > > > > > the
-> > > > > > > > > devicetree overlays assumptions that when a changeset is
-> > > > > > > > > being removed in __of_changeset_entry_destroy(), it must =
-hold the
-> > > > > > > > > last
-> > > > > > > > > reference to that node. Due to the async nature of device=
- links
-> > > > > > > > > that
-> > > > > > > > > cannot be guaranteed.
-> > > > > > > > >=20
-> > > > > > > > > Given the above, in case one of the link consumer/supplie=
-r is part
-> > > > > > > > > of
-> > > > > > > > > an overlay node we call directly device_link_release_fn()=
- instead
-> > > > > > > > > of
-> > > > > > > > > queueing it. Yes, it might take some significant time for
-> > > > > > > > > device_link_release_fn() to complete because of synchroni=
-ze_srcu()
-> > > > > > > > > but
-> > > > > > > > > we would need to, anyways, wait for all OF references to =
-be
-> > > > > > > > > released
-> > > > > > > > > if
-> > > > > > > > > we want to respect overlays assumptions.
-> > > > > > > > >=20
-> > > > > > > > > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-> > > > > > > > > ---
-> > > > > > > > > This RFC is a follow up of a previous one that I sent to =
-the
-> > > > > > > > > devicetree
-> > > > > > > > > folks [1]. It got rejected because it was not really fixi=
-ng the
-> > > > > > > > > root
-> > > > > > > > > cause of the issue (which I do agree). Please see the lin=
-k where I
-> > > > > > > > > fully explain what the issue is.
-> > > > > > > > >=20
-> > > > > > > > > I did also some git blaming and did saw that commit
-> > > > > > > > > 80dd33cf72d1 ("drivers: base: Fix device link removal") i=
-ntroduced
-> > > > > > > > > queue_work() as we could be releasing the last device ref=
-erence
-> > > > > > > > > and
-> > > > > > > > > hence
-> > > > > > > > > sleeping which is against SRCU callback requirements. How=
-ever,
-> > > > > > > > > that
-> > > > > > > > > same
-> > > > > > > > > commit is now making use of synchronize_srcu() which may =
-take
-> > > > > > > > > significant time (and I think that's the reason for the w=
-ork
-> > > > > > > > > item?).
-> > > > > > > > >=20
-> > > > > > > > > However, given the dt overlays requirements, I'm not seei=
-ng any
-> > > > > > > > > reason to not be able to run device_link_release_fn()
-> > > > > > > > > synchronously if
-> > > > > > > > > we
-> > > > > > > > > detect an OVERLAY node is being released. I mean, even if=
- we come
-> > > > > > > > > up
-> > > > > > > > > (and I did some experiments in this regard) with some asy=
-nc
-> > > > > > > > > mechanism
-> > > > > > > > > to
-> > > > > > > > > release the OF nodes refcounts, we still need a synchroni=
-zation
-> > > > > > > > > point
-> > > > > > > > > somewhere.
-> > > > > > > > >=20
-> > > > > > > > > Anyways, I would like to have some feedback on how accept=
-able
-> > > > > > > > > would
-> > > > > > > > > this
-> > > > > > > > > be or what else could I do so we can have a "clean" dt ov=
-erlay
-> > > > > > > > > removal.
-> > > > > > > > >=20
-> > > > > > > > > I'm also including dt folks so they can give some comment=
-s on the
-> > > > > > > > > new
-> > > > > > > > > device_node_overlay_removal() function. My goal is to try=
- to
-> > > > > > > > > detect
-> > > > > > > > > when
-> > > > > > > > > an
-> > > > > > > > > overlay is being removed (maybe we could even have an exp=
-licit
-> > > > > > > > > flag
-> > > > > > > > > for
-> > > > > > > > > it?) and only directly call device_link_release_fn() in t=
-hat case.
-> > > > > > > > >=20
-> > > > > > > > > [1]:
-> > > > > > > > > https://lore.kernel.org/linux-devicetree/20230511151047.1=
-779841-1-nuno.sa@analog.com/
-> > > > > > > > > ---
-> > > > > > > > > =C2=A0drivers/base/core.c | 25 ++++++++++++++++++++++++-
-> > > > > > > > > =C2=A01 file changed, 24 insertions(+), 1 deletion(-)
-> > > > > > > > >=20
-> > > > > > > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > > > > > > index 14d46af40f9a..31ea001f6142 100644
-> > > > > > > > > --- a/drivers/base/core.c
-> > > > > > > > > +++ b/drivers/base/core.c
-> > > > > > > > > @@ -497,6 +497,18 @@ static struct attribute *devlink_att=
-rs[] =3D {
-> > > > > > > > > =C2=A0};
-> > > > > > > > > =C2=A0ATTRIBUTE_GROUPS(devlink);
-> > > > > > > > >=20
-> > > > > > > > > +static bool device_node_overlay_removal(struct device *d=
-ev)
-> > > > > > > > > +{
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (!dev_of_node(dev))
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return false;
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (!of_node_check_flag(dev->of=
-_node, OF_DETACHED))
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return false;
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (!of_node_check_flag(dev->of=
-_node, OF_OVERLAY))
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return false;
-> > > > > > > > > +
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 return true;
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > > =C2=A0static void device_link_release_fn(struct work_stru=
-ct *work)
-> > > > > > > > > =C2=A0{
-> > > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device_link *link =
-=3D container_of(work, struct
-> > > > > > > > > device_link,
-> > > > > > > > > rm_work);
-> > > > > > > > > @@ -532,8 +544,19 @@ static void devlink_dev_release(stru=
-ct device
-> > > > > > > > > *dev)
-> > > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * synchronization in=
- device_link_release_fn() and if the
-> > > > > > > > > consumer
-> > > > > > > > > or
-> > > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * supplier devices g=
-et deleted when it runs, so put it into
-> > > > > > > > > the
-> > > > > > > > > "long"
-> > > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * workqueue.
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * However, if any of the =
-supplier, consumer nodes is being
-> > > > > > > > > removed
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * through overlay removal=
-, the expectation in
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * __of_changeset_entry_de=
-stroy() is for the node 'kref' to
-> > > > > > > > > be 1
-> > > > > > > > > which
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * cannot be guaranteed wi=
-th the async nature of
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * device_link_release_fn(=
-). Hence, do it synchronously for
-> > > > > > > > > the
-> > > > > > > > > overlay
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * case.
-> > > > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > > > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0 queue_work(system_long_wq, &lin=
-k->rm_work);
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 if (device_node_overlay_removal=
-(link->consumer) ||
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_=
-node_overlay_removal(link->supplier))
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 device_link_release_fn(&link->rm_work);
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0 else
-> > > > > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 queue_work(system_long_wq, &link->rm_work);
-> > > > > > > > > =C2=A0}
-> > > > > > > > >=20
-> > > > > > > > > =C2=A0static struct class devlink_class =3D {
-> > > > > > > > >=20
-> > > > > > > > > ---
-> > >=20
-> > > [cut]
-> > >=20
-> > > > > No, IMV devlink_dev_release() needs to be called via
-> > > > > device_link_put_kref(), but it may run device_link_release_fn()
-> > > > > directly if the link is marked in a special way or something like
-> > > > > this.
-> > > >=20
-> > > > Sorry, I'm not totally getting this. I'm directly calling
-> > > > device_link_release_fn() from=C2=A0 devlink_dev_release(). We shoul=
-d only get
-> > > > into
-> > > > devlink_dev_release() after all the references are dropped right (b=
-eing it
-> > > > the
-> > > > release callback for the link class)?
-> > >=20
-> > > OK, I got confused somehow, sorry.
-> > >=20
-> > > It should work.
-> > >=20
-> > > I kind of don't like adding OF-specific code to the driver core, but
-> > > if this is fine with Greg, it can be done.=C2=A0 It should depend on
-> >=20
-> > Not perfect but I'm not seeing any other way. We need to somehow see if=
- the node
-> > is part of an OVERLAY and AFAIK, the only way is looking at the node fl=
-ags. I'll
-> > wait on Greg's feedback.
-> >=20
-> > > CONFIG_OF_OVERLAY, though.
-> >=20
-> > I guess that should be already indirectly implied. I mean if CONFIG_OF_=
-OVERLAY
-> > is not set, I guess there's not way for
-> > of_node_check_flag(dev->of_node, OF_OVERLAY)) return true. But yeah, I =
-can bail
-> > out right away if IS_ENABLED(CONFIG_OF_OVERLAY) is not set.
-> >=20
-> > > I would like a comment to be added to device_link_release_fn() to
-> > > explain why the overlay case needs synchronous execution in there.
-> >=20
-> > I do have the following comment before checking device_node_overlay_rem=
-oval():
-> >=20
-> >=20
-> > "* However, if any of the supplier, consumer nodes is being removed
-> > =C2=A0* through overlay removal, the expectation in
-> > =C2=A0* __of_changeset_entry_destroy() is for the node 'kref' to be 1 w=
-hich
-> > =C2=A0* cannot be guaranteed with the async nature of
-> > =C2=A0* device_link_release_fn(). Hence, do it synchronously for the ov=
-erlay
-> > =C2=A0* case."
-> >=20
-> > I can elaborate more if you prefer...
+> > Do you have legitimate concerns about this register write taking way
+> > more time than I could expect? Because compared to the transfer of a
+> > NAND page + tR/tPROG it should not be noticeable. I don't see how you
+> > could even measure such impact actually, unless the register write does
+> > way more than usual. I'm fine with the above idea if you show me it has
+> > an interest.
+> >  =20
+> Dave did the mtd_speed test and we can see we get consistently ~35KB/s sl=
+ower with the extra enable and disable ecc engine calls in ecc read page pa=
+th.
 >=20
-> No, that should suffice IMV, thanks.
->=20
-> Now that I think of it there is one more possibility: A dedicated
-> workqueue can be used for running device_link_release_fn() and the DT
-> overlay code can flush it after the device link deletion.
+> With the change:
+> [   28.148355] mtd_speedtest:   page read speed is 9857 KiB/s
+> [   31.754258] mtd_speedtest: 2 page read speed is 9865 KiB/s
+> Without the change
+> [   56.444735] mtd_speedtest:   page read speed is 9892 KiB/s
+> [   60.042262] mtd_speedtest: 2 page read speed is 9897 KiB/s
 
-Hmm, I did some experiments with that but having a work item per kobject (b=
-eing that
-the common thing between of_node and device) but that (even though it worke=
-d) ended
-up being overly complicated.
+I believe if you repeat this 10 times you'll get totally different
+results. I don't think this test on a non RT machine is precise enough
+so that a unique 35kiB difference can be interpreted as being
+significant.
 
-I think I went with the above because, in theory, you can have DT waiting f=
-or
-unrelated releases but that should really be a corner a case. So, if you pr=
-efer a
-dedicated queue I can give that a try to see how it looks like. Thinking in
-allocating a queue (maybe with the same flags as system_long_wq) in:
+> Although it is only less than 1% drop, it is still something. I understan=
+d the procedure you laid out above is the preferred way but with our driver=
+ fully control the chip ecc read/write page, ecc read_raw/write_raw page fu=
+nction and exec_op path, I don't see where it may not work.
 
-devlink_class_init()
+I just told you, the exec_op path runs with ECC enabled. I don't know
+how this controller works. Now if you don't care and are 100% sure this
+is working and future proof, just keep it like this.
 
-Then we can have a new fwnode_link_flush_queue() helper to call from DT. Na=
-ming it
-like this as DT guys might also not like much of having device specific cal=
-ls in
-there (and fwnode_link) actually fits IMO).
-
-Is it something like this that you have in mind?
-
-
-Thanks for helping!
-- Nuno S=C3=A1
+Cheers,
+Miqu=C3=A8l
