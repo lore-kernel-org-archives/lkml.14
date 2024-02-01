@@ -1,184 +1,165 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BCE163A8A;
-	Thu,  1 Feb 2024 12:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA541649C5;
+	Thu,  1 Feb 2024 12:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706790239; cv=none; b=A7VW8lfXFGccdFvwJAtpZFM3lgRZeAaoTOPCpT0vFs8YZ2ndX0QlCvHIcZn7O+l82OtoQz+TV/zRhhAe7Z8uG0BlMn4erswNhHATsQ1w12oU13gyjWP0Sn59kL067MNPvJ0tmS+lhQYAsNYrxxSpnZYfdyq57EG709BdSQN06BU=
+	t=1706790244; cv=none; b=jxUoYcLAmpIlkwTdCo1hPmDtGYPRIb4ZtSYOvU2UVDKRWnS3REJRBEdZwsIzVpPWO5pATamnnwwq6kw4xroQymq8zrrX6drv1o+0it6MEKzACl8k08Y3YuFlZ87UKUh7aelPrwziFQacbq3UAKCl2G2xmmAIYJDqbspi9JgUhYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706790239; c=relaxed/simple;
-	bh=j8QKIz2LyfqG7kXLMqtzk7hMvrhGXzbOQETFhOd/EaI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SmIbnBRD8ONNMAyM+UAW+iFlDPpHFZoP9lPSJT4pitfAvwTuegkuJATw5PgLXv3weDPjLNW/V3DBAT93Ez2z3HibvHRzCQPUWx/+AGBa4XbrM94BUuUNqbaJzgbUzCAiczdZi2PCqr3VicRD8+lZBNCO9Bk9cjuueNNFCKscR4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=R/kJqq2e; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706790244; c=relaxed/simple;
+	bh=SoA/u9+ab8IWfX0PrdnuNf/ZyTjLUt7GJssFy85j9T4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nM4UwVeJQyYgWC3GiJ23M6kpLobhfE4RvTCz+aJcBIAR4k9xztXTDrATOpW47D1wu5ecSqU1by+pJnATqQSwnW5H3rjqkZYm5rs/aPd54tQXMmS9VGNxKE3p52VqJHujOFKLu0W6LFxC7GrE3gWZvByH0vSsAi1dGGgr1etWBsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B/QtCQ6+; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="R/kJqq2e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706790236;
-	bh=j8QKIz2LyfqG7kXLMqtzk7hMvrhGXzbOQETFhOd/EaI=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=R/kJqq2eBKZjoZTcmiUwCtX+KsvoexBVNOsYpPxG/pVOWmPoFjYSMFTbSMsA1VRkM
-	 NcMWRdJkLZ12znvltyCDAc31jvuLlhmsQdJqCf1dpnWuEb2zUwL6/2JBsnB3mDu2V/
-	 bl1h9D+qNgcsdCQw4VGuUBZrwRhrKLPMhEVaJPXrubmM4XLbb6EQ8MhDiFQj69xeYZ
-	 WgYmEFXizgICcDWZ6a52qZ+MIkfBwy1mPOxaeUSZpgP9bWQFKEwhf8+iG4zR9kc06r
-	 +yRktM00Jeb2vplDjr1uJOAHPZu9HnQlhBGiJfRU6PAzTddQrhk5/ZNJ0NUDPZbiYI
-	 cJX7qaiINLpLA==
-Received: from [100.66.47.90] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BF129378047F;
-	Thu,  1 Feb 2024 12:23:53 +0000 (UTC)
-Message-ID: <8a340f1a-20b5-4792-9bca-b9ed2d95d384@collabora.com>
-Date: Thu, 1 Feb 2024 17:24:09 +0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/QtCQ6+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706790244; x=1738326244;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SoA/u9+ab8IWfX0PrdnuNf/ZyTjLUt7GJssFy85j9T4=;
+  b=B/QtCQ6+6zS9xgkahcW9mD8LE3nFzTjX4bUDg8aTqSaO7RPli38u3AdO
+   sWJFAMZjNNNb+3okTBfYzmb4+zVA9y/SSNl1ZOnMWXRLSFdgTodKn0OBY
+   jOw3q0myLh5lQz6bQE2bVq1qkD0MAGXrrZ55isHgON1+NqY6mSbZ8FnMh
+   Ez7pdIDv4aJZudsC+apq7ZU2Uujs1nHX3iL/wEU3d16EKxoEPWqIpwsWE
+   K+3u1RK9hScoitgIseXKAWNkSnIIuNWwrzovQjEw3Fa8sfOvuBdi0JjCE
+   8RerQVbHl8zgTRW3Khri9loLuWkDFjnlcvspG/JXrOlBv0q1UxW8QlLiz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3746983"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="3746983"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:24:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="4499104"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by orviesa004.jf.intel.com with ESMTP; 01 Feb 2024 04:23:57 -0800
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Marcin Szycik <marcin.szycik@linux.intel.com>,
+	Wojciech Drewek <wojciech.drewek@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Alexander Potapenko <glider@google.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	linux-btrfs@vger.kernel.org,
+	dm-devel@redhat.com,
+	ntfs3@lists.linux.dev,
+	linux-s390@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH net-next v5 06/21] bitops: let the compiler optimize {__,}assign_bit()
+Date: Thu,  1 Feb 2024 13:22:01 +0100
+Message-ID: <20240201122216.2634007-7-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240201122216.2634007-1-aleksander.lobakin@intel.com>
+References: <20240201122216.2634007-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] selftests/mm: run_vmtests: remove sudo and conform
- to tap
-Content-Language: en-US
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-References: <20240125154608.720072-1-usama.anjum@collabora.com>
- <20240125154608.720072-3-usama.anjum@collabora.com>
- <f833c7f9-f59a-49d5-9fce-dc531c11509e@arm.com>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <f833c7f9-f59a-49d5-9fce-dc531c11509e@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/1/24 5:04 PM, Ryan Roberts wrote:
-> On 25/01/2024 15:46, Muhammad Usama Anjum wrote:
->> Remove sudo as some test running environments may not have sudo
->> available. Instead skip the test if root privileges aren't available in
->> the test.
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->> Changes since v1:
->> - Added this patch in v2
->>
->> We are allocating 2*RLIMIT_MEMLOCK.rlim_max memory and mmap() isn't
->> failing. This seems like true bug in the kernel. Even the root user
->> shouldn't be able to allocate more memory than allowed MEMLOCKed memory.
->> Any ideas?
->> ---
->>  tools/testing/selftests/mm/on-fault-limit.c | 36 ++++++++++-----------
->>  tools/testing/selftests/mm/run_vmtests.sh   |  2 +-
->>  2 files changed, 18 insertions(+), 20 deletions(-)
->>
->> diff --git a/tools/testing/selftests/mm/on-fault-limit.c b/tools/testing/selftests/mm/on-fault-limit.c
->> index b5888d613f34e..0ea98ffab3589 100644
->> --- a/tools/testing/selftests/mm/on-fault-limit.c
->> +++ b/tools/testing/selftests/mm/on-fault-limit.c
->> @@ -5,40 +5,38 @@
->>  #include <string.h>
->>  #include <sys/time.h>
->>  #include <sys/resource.h>
->> +#include "../kselftest.h"
->>  
->> -static int test_limit(void)
->> +static void test_limit(void)
->>  {
->> -	int ret = 1;
->>  	struct rlimit lims;
->>  	void *map;
->>  
->> -	if (getrlimit(RLIMIT_MEMLOCK, &lims)) {
->> -		perror("getrlimit");
->> -		return ret;
->> -	}
->> +	if (getrlimit(RLIMIT_MEMLOCK, &lims))
->> +		ksft_exit_fail_msg("getrlimit: %s\n", strerror(errno));
->>  
->> -	if (mlockall(MCL_ONFAULT | MCL_FUTURE)) {
->> -		perror("mlockall");
->> -		return ret;
->> -	}
->> +	if (mlockall(MCL_ONFAULT | MCL_FUTURE))
->> +		ksft_exit_fail_msg("mlockall: %s\n", strerror(errno));
->>  
->>  	map = mmap(NULL, 2 * lims.rlim_max, PROT_READ | PROT_WRITE,
->>  		   MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE, -1, 0);
->> +
->> +	ksft_test_result(map == MAP_FAILED, "Failed mmap\n");
->> +
->>  	if (map != MAP_FAILED)
->> -		printf("mmap should have failed, but didn't\n");
->> -	else {
->> -		ret = 0;
->>  		munmap(map, 2 * lims.rlim_max);
->> -	}
->> -
->>  	munlockall();
->> -	return ret;
->>  }
->>  
->>  int main(int argc, char **argv)
->>  {
->> -	int ret = 0;
->> +	ksft_print_header();
->> +	ksft_set_plan(1);
->> +
->> +	if (getuid())
->> +		ksft_test_result_skip("Require root privileges to run\n");
-I'd sent a patch to fix this behavior today. This test should run without
-root privileges.
-https://lore.kernel.org/all/20240201071307.592317-1-usama.anjum@collabora.com
+Since commit b03fc1173c0c ("bitops: let optimize out non-atomic bitops
+on compile-time constants"), the compilers are able to expand inline
+bitmap operations to compile-time initializers when possible.
+However, during the round of replacement if-__set-else-__clear with
+__assign_bit() as per Andy's advice, bloat-o-meter showed +1024 bytes
+difference in object code size for one module (even one function),
+where the pattern:
 
->> +	else
->> +		test_limit();
->>  
->> -	ret += test_limit();
->> -	return ret;
->> +	ksft_finished();
->>  }
->> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
->> index 246d53a5d7f28..e373d592dbf5c 100755
->> --- a/tools/testing/selftests/mm/run_vmtests.sh
->> +++ b/tools/testing/selftests/mm/run_vmtests.sh
->> @@ -291,7 +291,7 @@ echo "$nr_hugepgs" > /proc/sys/vm/nr_hugepages
->>  
->>  CATEGORY="compaction" run_test ./compaction_test
->>  
->> -CATEGORY="mlock" run_test sudo -u nobody ./on-fault-limit
->> +CATEGORY="mlock" run_test ./on-fault-limit
-> 
-> I think changing this is going to give unintended results. run_vmtests.sh must
-> already be running as root. "sudo -u nobody" is deprivieging the test to run as
-> nobody. The rlimit is not enforced for root so this test must run unprivileged
-> to work. See man page for getrlimit():
-> 
->   Since Linux 2.6.9, no limits are placed on the amount of memory that a
->   privileged process may lock, and this limit instead governs the amount of
->   memory that an unprivileged process may lock
-> 
-> So I think the correct fix is actually to install sudo on your CI.
-run_vmtests.sh is invoked without sudo with following:
-make -C tools/testing/selftests/mm run_tests
+	DECLARE_BITMAP(foo) = { }; // on the stack, zeroed
 
-Installing sudo in rootfs wouldn't be trivial enough on the CI side.
-Alternatively, we can check if sudo is present before executing this test
-to avoid error that sudo isn't found.
+	if (a)
+		__set_bit(const_bit_num, foo);
+	if (b)
+		__set_bit(another_const_bit_num, foo);
+	...
 
-> 
->>  
->>  CATEGORY="mmap" run_test ./map_populate
->>  
-> 
-> 
+is heavily used, although there should be no difference: the bitmap is
+zeroed, so the second half of __assign_bit() should be compiled-out as
+a no-op.
+I either missed the fact that __assign_bit() has bitmap pointer marked
+as `volatile` (as we usually do for bitops) or was hoping that the
+compilers would at least try to look past the `volatile` for
+__always_inline functions. Anyhow, due to that attribute, the compilers
+were always compiling the whole expression and no mentioned compile-time
+optimizations were working.
 
+Convert __assign_bit() to a macro since it's a very simple if-else and
+all of the checks are performed inside __set_bit() and __clear_bit(),
+thus that wrapper has to be as transparent as possible. After that
+change, despite it showing only -20 bytes change for vmlinux (due to
+that it's still relatively unpopular), no drastic code size changes
+happen when replacing if-set-else-clear for onstack bitmaps with
+__assign_bit(), meaning the compiler now expands them to the actual
+operations will all the expected optimizations.
+
+Atomic assign_bit() is less affected due to its nature, but let's
+convert it to a macro as well to keep the code consistent and not
+leave a place for possible suboptimal codegen. Moreover, with certain
+kernel configuration it actually gives some saves (x86):
+
+do_ip_setsockopt    4154    4099     -55
+
+Suggested-by: Yury Norov <yury.norov@gmail.com> # assign_bit(), too
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ include/linux/bitops.h | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
+
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index e0cd09eb91cd..b25dc8742124 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -275,23 +275,11 @@ static inline unsigned long fns(unsigned long word, unsigned int n)
+  * @addr: the address to start counting from
+  * @value: the value to assign
+  */
+-static __always_inline void assign_bit(long nr, volatile unsigned long *addr,
+-				       bool value)
+-{
+-	if (value)
+-		set_bit(nr, addr);
+-	else
+-		clear_bit(nr, addr);
+-}
++#define assign_bit(nr, addr, value)					\
++	((value) ? set_bit((nr), (addr)) : clear_bit((nr), (addr)))
+ 
+-static __always_inline void __assign_bit(long nr, volatile unsigned long *addr,
+-					 bool value)
+-{
+-	if (value)
+-		__set_bit(nr, addr);
+-	else
+-		__clear_bit(nr, addr);
+-}
++#define __assign_bit(nr, addr, value)					\
++	((value) ? __set_bit((nr), (addr)) : __clear_bit((nr), (addr)))
+ 
+ /**
+  * __ptr_set_bit - Set bit in a pointer's value
 -- 
-BR,
-Muhammad Usama Anjum
+2.43.0
+
