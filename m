@@ -1,360 +1,120 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2086.outbound.protection.outlook.com [40.107.93.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE90169964
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 06:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706767364; cv=none; b=knhXGAmu5fxUFebFEtv8wtZpu0CUeDSq7+yxRyHkoj1Lq6vRsWiC674YwYcvXNSAiMUgTBni13GIoX0kh2QAEBiF2NhRdwLQtyBI+fbjPM/CBZq7Yu9VxQYAO/HYayaEqy6tpoCi+LDysbRnKhesApiXtyJpMcwR2uFvpIhYMV8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706767364; c=relaxed/simple;
-	bh=BWXjvn1WrcWmIAKsvVlO551dw6bRFuLHM55n2sO9UXE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uCA5zF6xE5khDUQMd0ST/GzHJ7q2PCzN2elwsNBiJB66lKXPv1jor9j3brkUe9mB/S2QrxL2qxcZTA2PZ6+MEi0QrkchyOnWOmVQiqtkn6bkJ9vq9SzwFbRPDDd/62B/2fnyOnylSpL/TpwG5F7gaonh3wamZawRKy+vRKp6bxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=rWzdjeqd; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50E28288D;
+	Thu,  1 Feb 2024 06:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706767375; cv=fail; b=uh9+DhlUP5CTdgvhTg/uTujSWizMDG4D54wC7OGl6yG1qWX3NLAQLfYll7wrxtcTzv0oRYqaxqnYmXiUtbKdmwnlqgbev9sDNuS1Vi2RleB8StxP1qAemwEeJNZ5iI0mvpfrmz895ftIwTqgjSaoSj238ORWw7iwc6WzufwDRyM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706767375; c=relaxed/simple;
+	bh=T5ucevCSj4v4d8IsBMBYDZsBpr94lZ6aHONVPAA1Buk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P0xDVrPkiyPN0/OUxDp/RQgQMU6c2y8UOE/5L41Lusqf3UzcbWLs0xmIzrN5WojxzA93zP7pr+fbgerjd3K7i3UGSLrZYAUSCj4BoJsdO2AXQNRZjRCqu/uuqwrYUFJ0OZzOpDzjh0NsWlQV82EjMPnC0ST9Np+rqKdgClkiVfk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fgWFEyWf; arc=fail smtp.client-ip=40.107.93.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="rWzdjeqd"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc6db13f1abso172949276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:02:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1706767361; x=1707372161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Mwgn/QSK2JvsemXWguzhCOtQHmbYu/lyiMFsqWuyyE=;
-        b=rWzdjeqdNcm/UP48WfnWFIKOIVt6xSpLef/z7CE77DV7kfaVk2P1k9ESjKGsFKsaLv
-         Vk35z69E1F6+ce4u/3jxwq9t7ifGPiIGmH5uUD3inlYwjHZ3f/CA0VaP8oEHJLpUxR3i
-         fDE1F/0Wx9isqrZWqI1NQf3mLy+E4rHiF/o5f2xpkwrvuuwaMyQq8DYqp2CzBtP9Ijbi
-         yrwJXnddRlAesWrd/a5hXoIU5NoKoQwtPFjZu9jJKwIURO64s8s3Y45Vqvub49XFyayO
-         NEoG11qQSl1JASoQDKsRn964NcxzzDLGeKT2xoXtAgA/SXix9ZLU1CK3qsNPWg113kAY
-         S/VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706767361; x=1707372161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Mwgn/QSK2JvsemXWguzhCOtQHmbYu/lyiMFsqWuyyE=;
-        b=ZgzemzQB1S0R2pOxg1vSivp9shuMNIxDWD9EC1WZaCd9BTBS0XbFb92Vke+5zTUdVY
-         ZabJw8LPOjYGQ3dZ8mAFZHs6DsPlRosAwQsYphwW7okOPe9ssY8keYSZDYPa9q7OBihN
-         rlkCmLa7sTsiijEp0dpsXIaL1hl+P8OlF//MN/9Yz5u/MdObaxpGKqfOB/M6WB3u9egw
-         jnM9wXeVnrwCr0QQ/lwCgIiZHjoh4TGGYDVLFN827jhVr6dlLB3Vcqj5D0OhazoehoKj
-         rQTf1z0J8A9C23KOu62MSqteQyr3jL4Q2t96BSuJuN2ewwsOPghcgQMSjiZtaP4t6EMh
-         NS/Q==
-X-Gm-Message-State: AOJu0YwXVHD7Q4FGcndrl2RdH1TkzzC2RRoj2hQDngDbPwtnkCEeTm5X
-	6A6L67nXoaUP/uxLWksuo1GIaBk4Q2mpyPS91pKoxwZzuT1tWE7Kv4E88RNSXJGoBPu2vQO+LR7
-	QqyFAmEr7mIeAQlkXeX47XpGxnRddrNa2h/E/Iw==
-X-Google-Smtp-Source: AGHT+IFJu59Zj/bIfKeYdW/9VSltP5uh59sSolnrsNHFKdNwn6YS3IjqdK+InnXn5JB16Q0dFVT2MGTes1Ri5ynzxv8=
-X-Received: by 2002:a25:fc13:0:b0:db5:37c7:a0cb with SMTP id
- v19-20020a25fc13000000b00db537c7a0cbmr3744674ybd.11.1706767360702; Wed, 31
- Jan 2024 22:02:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fgWFEyWf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LRbNGUG4PZ23lRmEWxCMuHw8rFM+8CdrAXeIW0eRiWodnpjoiHSAauIM5WRhg/Ib3qoXMZI6MuhIuwk/oAa7jHFhWGkWRVOYeC7k7xsJ2CWXiX6J1FiKL9oXYcB7C1GCcvJyEL/Fajm2ky4SaneWOxbwwi9kwIOIHdLoWfA3pa/AKhlnaQuLckBKSrJLtDk2uzdeK0Zm9GhHOPBEkbh8F9DIEd2jzVNGyoPZZxUP1muGVqy38n1CcsxMHMSGaNLJb02QWFSbsovLUp9VhHR8XV9ah8cleoTOTNU0oqprBdmVTjZ517KQPbT/TklmfFuE4MWMwMNY+XIHkuaxDUZPTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=I12sMEcBoUeAmv0mGLCQRDfx0D2f4a+gqFgqFcyBof8=;
+ b=a2al6qg70PyKP8FpHgrk9ZnUoddss+h6L8lCfPxaFYyUsAbtp7AeZPq99u6zPbUEaJ9izFct2wYvMdE/CdZNTQVczM6WbNR4+h8JfPGA6qjQ9kLpvYGG/2bV+QmL0bc1YqKEYkb2Ab1cJoCTpZOxg0OoFkr2GI3/deCNPJkSK2V8J5qgVxVNjzoUIuUi/jn0sBeFEDgZYiplUAVzS53lvtT+pHCdQoBmxNuVYAVRex8pMaFsCcAsw7NgB8HkVzZDIAz9xDbavybFXbmjMK0Az9qCcFFRsTLI+9vZnY2QkVbyOXKBJDMTKfeLvrSKhRy4Kr51nwMq/w0rW9v4rb+p1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I12sMEcBoUeAmv0mGLCQRDfx0D2f4a+gqFgqFcyBof8=;
+ b=fgWFEyWfzGzkd3nwU5sDeXp7FkRbUvstEECA4CJTRH557mVLidUtln8eBjL09fT9yHmv7Sl6mfh5UsdJPvqcAQ4p25hIpzr4QmpMLdMIdJycEewZgLeBxWBBGP19mX/LruaVq569I6cetYDmVgxXiSH1qeiwtJdyjKpwQ1ILQcM=
+Received: from DM6PR07CA0116.namprd07.prod.outlook.com (2603:10b6:5:330::13)
+ by IA1PR12MB7711.namprd12.prod.outlook.com (2603:10b6:208:421::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Thu, 1 Feb
+ 2024 06:02:49 +0000
+Received: from CY4PEPF0000EE3C.namprd03.prod.outlook.com
+ (2603:10b6:5:330:cafe::19) by DM6PR07CA0116.outlook.office365.com
+ (2603:10b6:5:330::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24 via Frontend
+ Transport; Thu, 1 Feb 2024 06:02:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE3C.mail.protection.outlook.com (10.167.242.16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.14 via Frontend Transport; Thu, 1 Feb 2024 06:02:49 +0000
+Received: from aiemdee.2.ozlabs.ru (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 1 Feb
+ 2024 00:02:45 -0600
+From: Alexey Kardashevskiy <aik@amd.com>
+To: <linux-pci@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Lukas Wunner
+	<lukas@wunner.de>, Alexey Kardashevskiy <aik@amd.com>
+Subject: [PATCH kernel 0/4] pci/doe/ide: Capabilities, protocols
+Date: Thu, 1 Feb 2024 17:02:24 +1100
+Message-ID: <20240201060228.3070928-1-aik@amd.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com> <20240124-alice-mm-v1-3-d1abcec83c44@google.com>
-In-Reply-To: <20240124-alice-mm-v1-3-d1abcec83c44@google.com>
-From: Trevor Gross <tmgross@umich.edu>
-Date: Thu, 1 Feb 2024 01:02:29 -0500
-Message-ID: <CALNs47uPgvYXxEDmwb6GKa+cw597_rDD1zaSPDa9k9D-6_qZxQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] rust: add abstraction for `struct page`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Kees Cook <keescook@chromium.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3C:EE_|IA1PR12MB7711:EE_
+X-MS-Office365-Filtering-Correlation-Id: fdbec881-edae-47c7-ec2b-08dc22eb6b3d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	OmtBHwIcY+E6YqODZFBLpJiY5QI9DqbKLD8+o1X2Yk9iCdcv+7YCUP/Gq6ps/h9+Cx0l8NUlgdGedcLO8ALuqskVqZQ0LaqwLDt/Ss2einNBnOiN0OA3c+EH+kI32jUvYCRAn3En7klt2z7vKE+j5dxuShq0KhjqtM3W48EikYngUAgGFaXEtba97tlSBTbKbI8v3lENzOYRU7cDqPVeCVWfwqaJmOpRVUpERvC6MGTZSfWCkjU3zLin3hTQyf6MnDijJt2/CbEYY7JnA3EpbNMjbKehkjBbqAdWBgubX3KEj4LXKp/k6jBNa3plQJVQHN+NxvQnyGIFqBIVh6RfIuz7oiqoOH3AkNQ2PVpxG4QBOVdyGAWaJqPX+9b7gyNAwX+110etvn9tRCwF5oaEaQSNSrYfWqDsA8Xi7O9O2UNDS4FHrgm8AGqZay/1FnFq7YBbuAcVlqgd3Oqfb4lAY9igy5vQSjwrGfKpAOerlbsU69+n93FZUtSJnyT4GIGKm/h+GBG4OqJew1cIrdfP/X3xxNCjbUvYG5aLaYNW1MMcRAFXQ33oYkeYTPBdHN1LYhaBqwnFXkS7RfLMk59HY+I49QIdz88mH4TkGYvdfmW/s7znUVNfyme7THavUHIf3qVnATu2ZFq6KFMfDIsBvfOXrguWwk1IVgXmdCngIX2Nz1T2dwd6a6iMxDqdGPwARQ2+0Y0n2afElrdby1FyAcHf+sNKcmTD865zRqi3sqtRPklQg+xgl3VUmVd5mdecIIMtPnWH7SAZlGDArJYrQA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(136003)(396003)(346002)(230922051799003)(451199024)(82310400011)(186009)(64100799003)(1800799012)(40470700004)(36840700001)(46966006)(4744005)(426003)(2906002)(2616005)(1076003)(26005)(36860700001)(16526019)(82740400003)(336012)(5660300002)(47076005)(54906003)(70206006)(70586007)(8936002)(6666004)(4326008)(8676002)(316002)(478600001)(6916009)(83380400001)(81166007)(40480700001)(356005)(40460700003)(41300700001)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 06:02:49.0709
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdbec881-edae-47c7-ec2b-08dc22eb6b3d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE3C.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7711
 
-On Wed, Jan 24, 2024 at 6:22=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Kernel page allocation and management.
-> +
-> +use crate::{bindings, error::code::*, error::Result, user_ptr::UserSlice=
-PtrReader};
-> +use core::{
-> +    alloc::AllocError,
-> +    ffi::c_void,
-> +    ptr::{self, NonNull},
-> +};
-> +
-> +/// A bitwise shift for the page size.
-> +pub const PAGE_SHIFT: usize =3D bindings::PAGE_SHIFT as usize;
-> +/// The number of bytes in a page.
-> +pub const PAGE_SIZE: usize =3D 1 << PAGE_SHIFT;
-> +/// A bitwise mask for the page size.
-> +pub const PAGE_MASK: usize =3D PAGE_SIZE - 1;
-> +
-> +/// A pointer to a page that owns the page allocation.
-> +///
-> +/// # Invariants
-> +///
-> +/// The pointer points at a page, and has ownership over the page.
-> +pub struct Page {
-> +    page: NonNull<bindings::page>,
-> +}
+Here are 4 small independent patches defining new PCIe caps and bits and
+protocols, I am using them with my test device so they are real :)
 
-Shouldn't this be UnsafeCell / Opaque? Since `struct page` contains locks.
 
-> +// SAFETY: It is safe to transfer page allocations between threads.
-> +unsafe impl Send for Page {}
-> +
-> +// SAFETY: Calling `&self` methods on this type in parallel is safe. It =
-might
-> +// allow you to perform a data race on bytes stored in the page, but we =
-treat
-> +// this like data races on user pointers.
-> +unsafe impl Sync for Page {}
+Please comment. Thanks.
 
-These races should probably be in the Page docs, rather than pointing
-to user pointers.
 
-> +impl Page {
-> +    /// Allocates a new set of contiguous pages.
 
-"set of contiguous page" -> "page"?
+Alexey Kardashevskiy (4):
+  pci/doe: Define protocol types and make those public
+  pci/doe: Support discovery version
+  pci: Define TEE-IO bit in PCIe device capabilities
+  pci: Define Integrity and Data Encryption (IDE) extended capability
 
-> +    pub fn new() -> Result<Self, AllocError> {
-> +        // SAFETY: These are the correct arguments to allocate a single =
-page.
-> +        let page =3D unsafe {
-> +            bindings::alloc_pages(
-> +                bindings::GFP_KERNEL | bindings::__GFP_ZERO | bindings::=
-__GFP_HIGHMEM,
-> +                0,
-> +            )
-> +        };
-> +
-> +        match NonNull::new(page) {
-> +            // INVARIANT: We checked that the allocation above succeeded=
-.
-> +            Some(page) =3D> Ok(Self { page }),
-> +            None =3D> Err(AllocError),
-> +        }
+ include/linux/pci-doe.h       |  4 ++++
+ include/uapi/linux/pci_regs.h |  5 ++++-
+ drivers/pci/doe.c             | 13 ++++++++-----
+ 3 files changed, 16 insertions(+), 6 deletions(-)
 
-Optionally:
+-- 
+2.41.0
 
-    let page =3D NonNull::new(page).ok_or(AllocError)?;
-    Ok(Self { page })
-
-> +    }
-> +
-> +    /// Returns a raw pointer to the page.
-
-Maybe add ", valid for PAGE_SIZE" or similar to make this obvious.
-
-> +    pub fn as_ptr(&self) -> *mut bindings::page {
-> +        self.page.as_ptr()
-> +    }
-> +
-> +    /// Runs a piece of code with this page mapped to an address.
-
-Maybe ", then immediately unmaps the page" to make the entire operation cle=
-ar.
-
-> +    /// It is up to the caller to use the provided raw pointer correctly=
-.
-> +    pub fn with_page_mapped<T>(&self, f: impl FnOnce(*mut c_void) -> T) =
--> T {
-
-If there is exclusive access into the page, this signature could be:
-
-    FnOnce(&mut [u8; PAGE_SIZE]) -> T
-
-Otherwise possibly
-
-    FnOnce(*mut [u8; PAGE_SIZE]) -> T
-
-But based on the thread with Boqun it seems there is no synchronized
-access here. In this case, "use the provided raw pointer correctly" or
-the type level docs should clarify what you can and can't rely on with
-pointers into a page.
-
-E.g. if I'm understanding correctly, you can never construct a &T or
-&mut T anywhere in this page unless T is Sync.
-
-> +        // SAFETY: `page` is valid due to the type invariants on `Page`.
-> +        let mapped_addr =3D unsafe { bindings::kmap_local_page(self.as_p=
-tr()) };
-> +
-> +        let res =3D f(mapped_addr);
-> +
-> +        // SAFETY: This unmaps the page mapped above.
-> +        //
-> +        // Since this API takes the user code as a closure, it can only =
-be used
-> +        // in a manner where the pages are unmapped in reverse order. Th=
-is is as
-> +        // required by `kunmap_local`.
-> +        //
-> +        // In other words, if this call to `kunmap_local` happens when a
-> +        // different page should be unmapped first, then there must nece=
-ssarily
-> +        // be a call to `kmap_local_page` other than the call just above=
- in
-> +        // `with_page_mapped` that made that possible. In this case, it =
-is the
-> +        // unsafe block that wraps that other call that is incorrect.
-> +        unsafe { bindings::kunmap_local(mapped_addr) };
-> +
-> +        res
-> +    }
-> +
-> +    /// Runs a piece of code with a raw pointer to a slice of this page,=
- with
-> +    /// bounds checking.
-> +    ///
-> +    /// If `f` is called, then it will be called with a pointer that poi=
-nts at
-> +    /// `off` bytes into the page, and the pointer will be valid for at =
-least
-> +    /// `len` bytes. The pointer is only valid on this task, as this met=
-hod uses
-> +    /// a local mapping./
-> +    ///
-> +    /// If `off` and `len` refers to a region outside of this page, then=
- this
-> +    /// method returns `EINVAL` and does not call `f`.
-> +    pub fn with_pointer_into_page<T>(
-> +        &self,
-> +        off: usize,
-> +        len: usize,
-> +        f: impl FnOnce(*mut u8) -> Result<T>,
-> +    ) -> Result<T> {
-
-Same question about exclusive access
-
-    impl FnOnce(&mut [u8]) -> Result<T>
-
-> +        let bounds_ok =3D off <=3D PAGE_SIZE && len <=3D PAGE_SIZE && (o=
-ff + len) <=3D PAGE_SIZE;
-> +
-> +        if bounds_ok {
-> +            self.with_page_mapped(move |page_addr| {
-> +                // SAFETY: The `off` integer is at most `PAGE_SIZE`, so =
-this pointer offset will
-> +                // result in a pointer that is in bounds or one off the =
-end of the page.
-> +                f(unsafe { page_addr.cast::<u8>().add(off) })
-> +            })
-> +        } else {
-> +            Err(EINVAL)
-> +        }
-> +    }
-> +
-> +    /// Maps the page and reads from it into the given buffer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that `dest` is valid for writing `len` bytes=
-.
-> +    pub unsafe fn read(&self, dest: *mut u8, offset: usize, len: usize) =
--> Result {
-
-Is there a reason not to use a slice just for a destination to read into?
-
-> +        self.with_pointer_into_page(offset, len, move |from_ptr| {
-
-Nit: do the names from_ptr/to_ptr come from existing binder? src/dst
-seems more common (also dst vs. dest).
-
-> +            // SAFETY: If `with_pointer_into_page` calls into this closu=
-re, then
-> +            // it has performed a bounds check and guarantees that `from=
-_ptr` is
-> +            // valid for `len` bytes.
-> +            unsafe { ptr::copy(from_ptr, dest, len) };
-> +            Ok(())
-> +        })
-> +    }
-> +
-> +    /// Maps the page and writes into it from the given buffer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that `src` is valid for reading `len` bytes.
-> +    pub unsafe fn write(&self, src: *const u8, offset: usize, len: usize=
-) -> Result {
-
-Same slice question
-
-> +        self.with_pointer_into_page(offset, len, move |to_ptr| {
-> +            // SAFETY: If `with_pointer_into_page` calls into this closu=
-re, then
-> +            // it has performed a bounds check and guarantees that `to_p=
-tr` is
-> +            // valid for `len` bytes.
-> +            unsafe { ptr::copy(src, to_ptr, len) };
-> +            Ok(())
-> +        })
-> +    }
-> +
-> +    /// Maps the page and zeroes the given slice.
-
-Mention that this will error with the same conditions as with_pointer_into_=
-page.
-
-> +    pub fn fill_zero(&self, offset: usize, len: usize) -> Result {
-> +        self.with_pointer_into_page(offset, len, move |to_ptr| {
-> +            // SAFETY: If `with_pointer_into_page` calls into this closu=
-re, then
-> +            // it has performed a bounds check and guarantees that `to_p=
-tr` is
-> +            // valid for `len` bytes.
-> +            unsafe { ptr::write_bytes(to_ptr, 0u8, len) };
-> +            Ok(())
-> +        })
-> +    }
-> +
-> +    /// Copies data from userspace into this page.
-> +    pub fn copy_into_page(
-> +        &self,
-> +        reader: &mut UserSlicePtrReader,
-> +        offset: usize,
-> +        len: usize,
-> +    ) -> Result {
-
-Maybe copy_from_user_slice or something that includes "user", since
-as-is it sounds like copying a page into another page.
-
-Also, docs should point out the error condition.
-
-> +        self.with_pointer_into_page(offset, len, move |to_ptr| {
-> +            // SAFETY: If `with_pointer_into_page` calls into this closu=
-re, then
-> +            // it has performed a bounds check and guarantees that `to_p=
-tr` is
-> +            // valid for `len` bytes.
-> +            unsafe { reader.read_raw(to_ptr, len) }
-> +        })
-> +    }
-> +}
-> +
-> +impl Drop for Page {
-> +    fn drop(&mut self) {
-> +        // SAFETY: By the type invariants, we have ownership of the page=
- and can
-> +        // free it.
-> +        unsafe { bindings::__free_pages(self.page.as_ptr(), 0) };
-> +    }
-> +}
->
-> --
-> 2.43.0.429.g432eaa2c6b-goog
->
->
-
-- Trevor
