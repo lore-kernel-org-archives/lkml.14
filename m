@@ -1,173 +1,116 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2053.outbound.protection.outlook.com [40.107.20.53])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165074DA1D;
-	Thu,  1 Feb 2024 09:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706781543; cv=fail; b=EpEqRM5cPAYLS0mR9zj7laKAq7Mon1pvVIu2By1dUxBGBq6Ck9JPNjzKWAlmpKKcEBLFf0OLasI3FqbWm/lohejcwAkDqDuajToLie7Mo3mEmdS0F3ls0hX9ZfwgKzPryfkJvaZxW7eqGrIJiyx0oy7MNJcZTxWJrkR6rF2z3DY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706781543; c=relaxed/simple;
-	bh=wrZ7M7oH+CP2btmXx6OY4MU2eDkZxP9GSDXaMnT2MH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=C/mzH6OAV487//vAyfZErde2+fjTF8iYN8fxR/q9XRo7JuJX+XxbrAd55Sl1XVdHxDzuV39ZRWrhvGU3UfVDQ4EPjhK9DxvWDylh7qNoeWcOKThPt1r2zWIpMbzy7WzEF7EZaXFOyCQ9E6ZXhN5I7nPpEYPzfeFHb0BsqkPBD9o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=nC1GRuY5; arc=fail smtp.client-ip=40.107.20.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF41B15A498
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706781552; cv=none; b=dl6azFOFVIGFBg85aYo2Ye6msMJH1tQ97xCeqTuqBr6dBPco3a7+uk5lsnRxI5hVzjRXZFM7KIuaR81yJOYP9A4Z7tCfRgLLTKQkv3WFMF1YZXik7AtUBhnBhbDgrUZBmSu7at8ytPZLA+R+UX+JCjmfie6ru6GLupn4jmV5DOc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706781552; c=relaxed/simple;
+	bh=0Py4q+pTOmqEv1tbTXSx6iTRN0wAURlDATZNMO9qr/Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LUTtHTDsb+sroNKz6PCoQwXpVLWxFeUSFgAgLddpsOSRutNk2rKnvKfyg8S7F4bYiE9C6UoxkgwouE8LnzlR5nuN0o9OoAqhThzOcKn7Rfpdl5GxiFBWWZwYyZO8dWPeZ50uryWpMrFzAKHpRqnE+Cghpn+6yTRn19JIk2CCUPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=YCiSTW1Y; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nC1GRuY5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YQ5PrEw+IyS/Q5lzNyPEHED/xIxq89JvqkBFSNtHGLMS7+R8+/fwEb2gpoY1nIVE1f8MMPrGuaH8ri4kGXoHJf3cG40OAeyCPnK6OUqSDLguTlQiWIigA1art7upTv/J4NZI2NaQnAxsyskKEMkXbcJitdZ9+kYUELU3aAzAxW78raIuV4/f73W+gwEhSO1kIloqX2jeYTJokgSIOgyrJ9Ti4m/Jst7gBce43QGxLH8uksmWKVOc0CnvV52wY1UZMhA0D6C9NxxxlC0ZfP/QWgOKoaFnWH1zLbnikdWqIx5pMnBSK0nrzFbPPXX4sOPAseXq8LK8Pl3fZImtdcXG4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sPAuamCtRGYmEZ2/ApaqNW3BZNP83NLc1CjOwQbcFhA=;
- b=mvVNLdL5j3tf3GOdkDQ99A4nH6bKhQmeSlmCCfTAU1F59NB2qSNbK6likQNLBu+DEYrF7SdSGm8bSm7KqUZudIOpOSPW35cyg7PPaDaDecB1sgqfqDETclp5PqpgSO3HJnbph3VzcEE4wCi+eutz4y/GVjjsnhuCrk7P1zUTdMyaPG206OzvodThwGIZZWESo88uVNzJpe6TB8c5Yq3ozqz4/f/PNCu0+rgA8nVtbyIbU7D4IN5gijgHOl6MuSVdyU1sImFHYatx2CfWcMqULQd+lh5LN/tPUpT0RuO2Y07v0y79fmchG+QQBRbbjJcesEdsIR0M2X5tlSXUZXH0PA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sPAuamCtRGYmEZ2/ApaqNW3BZNP83NLc1CjOwQbcFhA=;
- b=nC1GRuY51qtZTTDKFGK7FyLdZdF9BrnPdHdCknsKaZiLHWef5SWjGdowKQmA7P1hP3W9YQ7M6bokftUxskWJ8/zcbtmAhXNwRJIcV5IcD8u1HkmxEnvjmn6QzvB13v6Un41WWqydFfyZa+IiX0b93mDiYD5yvmzzyX4qE0GG4nI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30)
- by AM9PR04MB8178.eurprd04.prod.outlook.com (2603:10a6:20b:3e3::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Thu, 1 Feb
- 2024 09:58:59 +0000
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::f363:2b4f:4f8b:8af5]) by VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::f363:2b4f:4f8b:8af5%6]) with mapi id 15.20.7249.024; Thu, 1 Feb 2024
- 09:58:59 +0000
-From: carlos.song@nxp.com
-To: broonie@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	linux-imx@nxp.com,
-	benjamin@bigler.one,
-	stefanmoring@gmail.com
-Cc: linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] spi: imx: fix the burst length at DMA mode and CPU mode
-Date: Thu,  1 Feb 2024 18:01:15 +0800
-Message-Id: <20240201100115.503296-1-carlos.song@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AS4P250CA0015.EURP250.PROD.OUTLOOK.COM
- (2603:10a6:20b:5df::14) To VI1PR04MB5005.eurprd04.prod.outlook.com
- (2603:10a6:803:57::30)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YCiSTW1Y"
+X-UUID: 853e8c8ec0e811ee9e680517dc993faa-20240201
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=IV7dhqul9WvXyKJ2ZoYl348suTPEjJTKUrzYhGujRks=;
+	b=YCiSTW1YR5WgUfsccaksI0OH8Bg4smHLY1RBb3EkzQVTX+CrdDB7eyIUsXUCfXwibT2/YyXM/zMMUL5UdsCvOT6xcaN5PpYdNHS/vWGv4jEAWIvy+64lWrBJfUZFRyy9h5+cvo/FBi5V0Y8Wz9KIG11casO10Qwvf1ONKgAgpu4=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.36,REQID:a80a9e6f-1e5a-4ff2-8fec-d4d2eef05944,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6e16cf4,CLOUDID:f192e88e-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 853e8c8ec0e811ee9e680517dc993faa-20240201
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <flash.liu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 763909255; Thu, 01 Feb 2024 17:58:59 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 1 Feb 2024 17:58:57 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 1 Feb 2024 17:58:57 +0800
+From: Pin-Chuan Liu <flash.liu@mediatek.com>
+To: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
+	<cristian.marussi@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+CC: <wsd_upstream@mediatek.com>, <cylen.yao@mediatek.com>, Pin-Chuan Liu
+	<flash.liu@mediatek.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v2] firmware: arm_scmi: Avoid to call mbox_client_txdone on txdone_irq mode
+Date: Thu, 1 Feb 2024 17:57:52 +0800
+Message-ID: <20240201095754.25374-1-flash.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5005:EE_|AM9PR04MB8178:EE_
-X-MS-Office365-Filtering-Correlation-Id: c71026de-7e0d-4fa2-6f1a-08dc230c68fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	BpfpLvedg827/FHjQUl+hZKbvxSdMpXHimGF5yeRQJ//M/KPzKDyjQnUazCuRtKs/cI50ggo7Dhz3bcdyNb/L7YK9+wbVEDzwNMCk140h1awDl8SGVFTyHVQksYBi9bhQ+ytxKCoR4J/EueuBfjoDiCABVOUU9hycgNRGnivG+YjhTzHTP0y/cuzSYW5LT5AQnSuSl6wfGx7a7oy6mKnNKz9TKWK3FXktmxNCmQzWyegDJKzg8u660wCxZyF4o2tdL6JDVtprczdiSn3nVdi4QP86vp1/RLvN0DlGqtjUGbClfdqQqjh6t01vXLEU5S7D19fv0RLKmzKC6sffpbCef5o0h/a8yCrhI8slnp10K/FpcPK0/WxcXiNsX9VOrIBaGdwtHGNye4Fp2xDzEnuFdMjnScurHRGw0Y90CdLbROMWCMYU2JdYcU/7ckR+vUPC605qGBffgAThXqUhFEIKAsQgoBrEukoe4s0ZpgiAiYm4xdtpHRVkFdYNd5dEgY24vp+cxncuymmFl5GjsaaE8N0YLLvvtdckMe0u5bVvH2V6B8HACrWLHYaSNBIP6LydHDo4vy7jocnoaLwycoP6sBlfPvSK/wve91vOVHELH753dNw8hX1ap+jLTQiGS8p
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5005.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(136003)(366004)(39860400002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(41300700001)(83380400001)(1076003)(26005)(9686003)(38100700002)(2616005)(6512007)(8676002)(8936002)(4326008)(478600001)(5660300002)(66556008)(6506007)(6486002)(66946007)(2906002)(6666004)(66476007)(316002)(52116002)(38350700005)(86362001)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Qg+Da+ny1DHpN2STDpLFq4Sh/GvOqobMuMZOC14TMPH8ffnv5j9VfCD8n6D4?=
- =?us-ascii?Q?M3NCD4kRe2kx4KPNx+w0UZGR0Gl2c4BPCFREVl7sRwjZ/NqkkrUIKDpDL92E?=
- =?us-ascii?Q?muB08AJjCwft4el2i7xwoeBIkgj5OQls/4w1azmlEoMIMLl61Xfenlv0KBQm?=
- =?us-ascii?Q?HpIXASg0melcaB1CYW9w9j8Gacm+Sw85FVaqcJ/Oc+vkgJLTjyi2HgBDZASt?=
- =?us-ascii?Q?4CN69LU7QkGdkULjaSVGLWKW4wpp0VqePfWlWc3IqiXkzNOo/H6fe8/pNRiB?=
- =?us-ascii?Q?vEVu5QhHIVR3w8eJT3MYidu7Zb2YUCPq4WRktZi9K2EZq5yAV8ZU8u4yXfho?=
- =?us-ascii?Q?HvHl+304cZ0Vzl7d9ZTAmbz0I+9nti1iUY/DWV4cUX5BIvpj5Y7e90bzyN32?=
- =?us-ascii?Q?JkK80uEVW6hcuWJcpMHRxI+mfAfVDrRfPFpq0xukAnVO9Zf14AQVlCv9yRoP?=
- =?us-ascii?Q?uvgzWudjBnxf1uunYXl6m8dSyp4gnBs0Wyeem6Y6+U1LF6o0bRLJlrtfuZnG?=
- =?us-ascii?Q?HH8uu5kpTSvgUt1dm0gqRWAEzVgO0E4rhAeW+VQ1NAQ8gKHfiBUpSslHl3LM?=
- =?us-ascii?Q?lhaMOnz2M0qcM4/kcUyZ1BKHlEplheAydmL6ZOk7RJx204S0HaSlntaRZ8If?=
- =?us-ascii?Q?L92/zcCVNuHHfGfcCyuxsvyVe60Y35so7zZiFLYRd4VC+E+ckjV29VBkvLNG?=
- =?us-ascii?Q?FvG8qU02hR49on2iqQAihV6jowOymPAhCVb0WUagpmWrR0YfMgsz39Kx2Fz7?=
- =?us-ascii?Q?WA3IDLGyH9zeOjOSpnAh0pltn1CX95gSBplUzpmxePwvhFbyhMJU1tjSSrhT?=
- =?us-ascii?Q?IJHQBWR6cDorUxo/Rzil+PvoIAi7OdmiUyq6PyfY8vZ2gq4nBY/13vfel4Nt?=
- =?us-ascii?Q?j2DgniplOztReLPLWDgHo336rwYbGed/HlvjgEYN3Bn/mbkT+boD4FtWt4vS?=
- =?us-ascii?Q?1n0Gsp0/Ryp1W4e36aYNW+PsriGscBU+y0uLo5mB6gL+pSbX73ovoEvsb9zf?=
- =?us-ascii?Q?orppZYXqFPAgZvrJmWyJ0GvSJHr/tj8DWB7h21KLyJ76aNV06lbuHzGYaNXE?=
- =?us-ascii?Q?vbKxgAwRQrxqEwFGRICnlr9kTx3VklUFJ8a3BIiGNtFHk5OPdEwOkIsAa8D4?=
- =?us-ascii?Q?lBHjukkMB+3uo1FxZ6GVh4MaQpR6G4bp5FPcuShYfXbUd8kltW359XNF8/Oc?=
- =?us-ascii?Q?4AJCvKiSYGION3hcLOEQzVVpqFgSKixG1oSnKgvL7oDI9rFg/uZXZJ5i2WGZ?=
- =?us-ascii?Q?/zLZZ0iyCu1Z0HWXaFhN8mgve4uapO6hlyQjNxFguQa35SBLmpoA1OtK2Lsc?=
- =?us-ascii?Q?sjmuvKABZ8y/feE2R3yfNjKKswovr0LrgOhcr9QX77B19GCvrYJuNVChS+cm?=
- =?us-ascii?Q?696fdHApuT3bLelG05zMpeTK+mBUBAb33PzmbhnDDCe2af98VMJtoozPYsqp?=
- =?us-ascii?Q?LnfGhGV/Q1S29uIrlGmKG19BkvBAc5svtaiDihaOpQS2SesT9o151PtR6DGY?=
- =?us-ascii?Q?1lHhfS2a96de/wc3851D+r9c9h82aMT6dMrBvrHYieH+Cf43xIZLdJYhnSLQ?=
- =?us-ascii?Q?3mD6BUwm3TFkVrECmyQoAbBIXaHz3ZgbgWep4S/1?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c71026de-7e0d-4fa2-6f1a-08dc230c68fe
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5005.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 09:58:59.2469
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bhfWWLIRJf8FLIbfESiv7TT/6ICO+aLhXKCiuaZmc6KY8mveGa8kORdbpmEAFgxUzD4U+sIa8+DXRkvKaMG+Tg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8178
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--2.422700-8.000000
+X-TMASE-MatchedRID: wpfAD6xEq/V3VjVXh/TSj0+4wmL9kCTxsEf8CpnIYtnz+Z+5iD+iRb87
+	jWxVKGOh6lVWmieuZwnS1Xndr/786uHxFb2pjr4bsyNb+yeIRApCX8V1FiRRkt9RlPzeVuQQost
+	SmZzTxtqmuE8sHNH+0VdTP5dw4GERGN63p9ap1YqTEgTE0DYkgNJ178I1tpklvQmfz7H+YLGjxY
+	yRBa/qJcFwgTvxipFa9xS3mVzWUuCMx6OO8+QGvvp6VplSc3s0tpvpvul44/cJ0fmqU3YzVcLTD
+	yr2YnVuSsYg+5kG385nseWfOBeyocaMMthp5d9Dfe0egsLORU77IUwzFKThe3mVKZusLp922v9O
+	jYWA2uMMswg45VMfPadst5iAforfVlxr1FJij9s=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--2.422700-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: 35B1F35528FCD59015ED3E5BC9AED8B5A4809366F666BAE20EA5A4EB88B2D1CE2000:8
 
-From: Carlos Song <carlos.song@nxp.com>
+On txdone_irq mode, tx_tick is done from mbox_chan_txdone.
+Calling to mbox_client_txdone could get error message
+and return directly, add a check to avoid this.
 
-For DMA mode, the bus width of the DMA is equal to the size of data
-word, so burst length should be configured as bits per word.
-
-For CPU mode, because of the spi transfer len is in byte, so burst
-length should be configured as bits per byte * spi_imx->count.
-
-Signed-off-by: Carlos Song <carlos.song@nxp.com>
-Reviewed-by: Clark Wang <xiaoning.wang@nxp.com>
-Fixes: e9b220aeacf1 ("spi: spi-imx: correctly configure burst length when using dma")
-Fixes: 5f66db08cbd3 ("spi: imx: Take in account bits per word instead of assuming 8-bits")
+Signed-off-by: Pin-Chuan Liu <flash.liu@mediatek.com>
 ---
-Changes for V3:
-- include <linux/bits.h> 
----
- drivers/spi/spi-imx.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 546cdce525fc..2a1ae7b00760 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -21,7 +21,7 @@
- #include <linux/types.h>
- #include <linux/of.h>
- #include <linux/property.h>
--
-+#include <linux/bits.h>
- #include <linux/dma/imx-dma.h>
+V1 -> V2:
+ - Remove Change-Id
+ - Use single line comment
  
- #define DRIVER_NAME "spi_imx"
-@@ -660,15 +660,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
- 			<< MX51_ECSPI_CTRL_BL_OFFSET;
- 	else {
- 		if (spi_imx->usedma) {
--			ctrl |= (spi_imx->bits_per_word *
--				spi_imx_bytes_per_word(spi_imx->bits_per_word) - 1)
-+			ctrl |= (spi_imx->bits_per_word - 1)
- 				<< MX51_ECSPI_CTRL_BL_OFFSET;
- 		} else {
- 			if (spi_imx->count >= MX51_ECSPI_CTRL_MAX_BURST)
--				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST - 1)
-+				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST * BITS_PER_BYTE - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 			else
--				ctrl |= (spi_imx->count * spi_imx->bits_per_word - 1)
-+				ctrl |= (spi_imx->count * BITS_PER_BYTE - 1)
- 						<< MX51_ECSPI_CTRL_BL_OFFSET;
- 		}
- 	}
+ drivers/firmware/arm_scmi/mailbox.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
+index b8d470417e8f..d391463e3208 100644
+--- a/drivers/firmware/arm_scmi/mailbox.c
++++ b/drivers/firmware/arm_scmi/mailbox.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/err.h>
+ #include <linux/device.h>
++#include <linux/mailbox_controller.h>
+ #include <linux/mailbox_client.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -275,7 +276,10 @@ static void mailbox_mark_txdone(struct scmi_chan_info *cinfo, int ret,
+ 	 * Unfortunately, we have to kick the mailbox framework after we have
+ 	 * received our message.
+ 	 */
+-	mbox_client_txdone(smbox->chan, ret);
++
++	/* With txdone_irq mode, kick can be done by mbox_chan_txdone */
++	if (!(smbox->chan->mbox->txdone_irq))
++		mbox_client_txdone(smbox->chan, ret);
+ }
+ 
+ static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
 -- 
-2.34.1
+2.18.0
 
