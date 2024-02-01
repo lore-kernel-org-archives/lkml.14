@@ -1,131 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EC762153;
-	Thu,  1 Feb 2024 15:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8654862141
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706800433; cv=none; b=TLZaEMdIjjwmN4s02Mb0m1AmssE5eYGRlQBuCdFhgBs4IQrtrMib1wbMDWRl61Uq4Q3FFb6NeL1+8MZGOwcfhn5iAumrnRMZH2a2fVAMIn5Zec1pn/su25mbJl2ghSvCf69ApUbhVuJyoGlAd072kFQeLb2At40jvwUq5b6fuqk=
+	t=1706800565; cv=none; b=JCGudWh90hkikaPlS/RQadDu4D+3Yjc6IiAoxUEAJ/uGcrWhwkvn3TNNYShgxaJf5ILWXyTtdQT2mUZaZOHQJY8i9sj0UVH4B8yEhYvPFEXy3KfBeDaegSGlDByCH2gkMMduJy+PhnHRIT42nqVrETlql5b/B+ASrWCRtH9hwao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706800433; c=relaxed/simple;
-	bh=9ckWzzJ12lEtMOBToFzrFe0Ik5jELpvVYP3r7aY/Vnw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dy/JumWZRVPTf2v503JELYCjFTcMLFD+JXPdxaHAuIpiCym3JgbE/83wbwQqRkUw326Ai6i2i/UKjKypkLFUZRI/9GqNVjaua6H6/MnLUHWTb1EOwtTERDFLkJFm2KGJmFKVp602TCcFgwn5K/9YT/Ve8+9Lz1mKa2okyBbCb2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f3PMYYq4; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706800565; c=relaxed/simple;
+	bh=2c2O8Cc9VKYP/y1ar4r+bdMh2y3qB+F8BIbxfjXxo4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lXJaoq7ud4pTkUfFx52gaFMbmDXvIYrg6/oWmV1is0NEhNhLDaKNZlk9KG6iOinuVh2PgXUGJdlEKH07bKySIURmhpUL4lqTtULiGNf6yuWgIfzHAlL4+nmv6fo/dS45Y7AxSgp8Ubs8WG/4wKsTQq9lKzpqkoLtGR/AWWGO5Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ThgMJo1o; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f3PMYYq4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706800433; x=1738336433;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9ckWzzJ12lEtMOBToFzrFe0Ik5jELpvVYP3r7aY/Vnw=;
-  b=f3PMYYq479/q1w2cUU+pmhp+llbeg8eXfbkegZgK902t/D+td5rNpR63
-   aqn5nzpVUNXaOYrW+9KZUwB/olfEn0rDUP9+J6UI5XuwP70ACYaz7wa19
-   hOxaYLBG47edpRr3aUHIEjaI4m+TuNmdfPGrNFY/bU5jK16d9IMLr8qOU
-   8vKBZTQlXxnBoyjl4/1nMbFhJVDpvBML3ZaH4w80U1lQ3UF6izh4itxkP
-   sKaiZ5QynZVmEhZ8y+Yro7sdY76UIik3XR+fvk1iOiqdUW7JVhe/6yEkR
-   K+9r8+HaSU++gIjoXxvLDafLJUJ1tL1+x00CUhLUandIm2b08z+rIkBYP
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="22413765"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="22413765"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 07:13:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="4430453"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.213.2.91])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 07:13:37 -0800
-From: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, dan.j.williams@intel.com,
- linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
- linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH v3] cleanup: Add cond_guard() to conditional guards
-Date: Thu, 01 Feb 2024 16:13:34 +0100
-Message-ID: <2172852.irdbgypaU6@fdefranc-mobl3>
-Organization: intel
-In-Reply-To: <20240201113612.00001d90@Huawei.com>
-References:
- <20240131134108.423258-1-fabio.maria.de.francesco@linux.intel.com>
- <1785013.VLH7GnMWUR@fdefranc-mobl3> <20240201113612.00001d90@Huawei.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ThgMJo1o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706800561;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H+qWz/DQvoXRtLaiUs+ygF3UhqzsPEEWrkmZUq5EmAU=;
+	b=ThgMJo1owUli8s60jdOhEcifYMwG2/BuBx40H7oCtXukQ6/Kfd4YpBL2+ON79Ae/Aa1Rbt
+	CPDW06P/wjxw1IhlluAQe5Kes3dWUMfEfpAvraGO6vRjVRW0cAo5sXYnQLxzJvXTyH0U35
+	imiKvSFs59oVjm0HtId0tboeMjgNJU0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-515-SHjAwtzkO56Kf-9vhZXCOQ-1; Thu, 01 Feb 2024 10:14:22 -0500
+X-MC-Unique: SHjAwtzkO56Kf-9vhZXCOQ-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33aebf85ce9so414019f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:14:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706800458; x=1707405258;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H+qWz/DQvoXRtLaiUs+ygF3UhqzsPEEWrkmZUq5EmAU=;
+        b=V8xRwbPVkJMoTbQVrZUmQDUnam0K/2AAdYuObEzotov3NWirPaXSmCt92K+JWY1b/r
+         Qzl8mqiI/Vf+bGet97FpmDhPG4WeJWu71PwmjO/CkBBbEGH+Hylyx18sMNXNt1LSuMcr
+         EVmfxFt6cUXXBassaC4k1guiY/vPm7uoi4V8IJ2liU5O24fX2VsBNt048adVf+63EmrL
+         3/L0UShEX7QEavc9Iid7TBnJC02N7mhFWRnDnOXpSLsJHqgNCRq1hKx8ba+G2Rbt8JBz
+         7QaRHpWaWNEG0Nakrt0Nb7Y8LYtIeWc27b9g3W+DqvFJAS90Hd3BG71bBLpnxOigcdLs
+         d4OA==
+X-Gm-Message-State: AOJu0Yy90nodXdn22TgsKbt85VEFiOQLTUMdBPvKMx1DfIJNwlZewhnt
+	cHZ/0RNs7upTuxLPxTSl11ODIAmaYNPZ3JDN5Hh7SrRbnmoFYe+f2RZ/pIbfUMsT9IihkiNhWO1
+	zUbr1WRhCbfRj8kB7zi3lOWKR9yIx1UYEvNz4eP6uCoORU5LFYdptZefBz8D4
+X-Received: by 2002:adf:fec3:0:b0:33b:1ae4:10be with SMTP id q3-20020adffec3000000b0033b1ae410bemr656919wrs.46.1706800457805;
+        Thu, 01 Feb 2024 07:14:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEQ1LSSiNVgFItzWKTj0LfVmS5upYQ2eKQBxvYDmMDMD7a3/zefheP6gAwFbMonNNjA8rzILA==
+X-Received: by 2002:adf:fec3:0:b0:33b:1ae4:10be with SMTP id q3-20020adffec3000000b0033b1ae410bemr656907wrs.46.1706800457493;
+        Thu, 01 Feb 2024 07:14:17 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXaEwqOkI/VK9eNkoA4uPPbdatQOwtq1EPu0xJA7z2SWYUIWqy+ov7zZDoNulKSTiXoUR02WK++vXcyW3dU0M6SaRBhGyrdona8fTbFXXg6h/5CDcoicVaNzGGOT3Dq+E7irt+xb03koPH/lr13Dv/mESKncyMmLbTR7lbsWUeailm79/RQZ1JJhhfsEzgbmw2fW6uaGkrMX5wjRHu5T9Q=
+Received: from [192.168.9.34] (net-2-34-24-75.cust.vodafonedsl.it. [2.34.24.75])
+        by smtp.gmail.com with ESMTPSA id t8-20020adfe108000000b0033921c383b2sm16400154wrz.67.2024.02.01.07.14.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 07:14:17 -0800 (PST)
+Message-ID: <985729eb-08c5-4c0d-9172-1642a45caffd@redhat.com>
+Date: Thu, 1 Feb 2024 16:14:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fpga: remove redundant checks for bridge ops
+Content-Language: en-US
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+ Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+ linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240124152408.88068-1-marpagan@redhat.com>
+ <Zbi+yJC7KNvl9med@yilunxu-OptiPlex-7050>
+From: Marco Pagani <marpagan@redhat.com>
+In-Reply-To: <Zbi+yJC7KNvl9med@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thursday, 1 February 2024 12:36:12 CET Jonathan Cameron wrote:
-> On Thu, 01 Feb 2024 09:16:59 +0100
+
+
+On 2024-01-30 10:18, Xu Yilun wrote:
+> On Wed, Jan 24, 2024 at 04:24:07PM +0100, Marco Pagani wrote:
+>> Commit 0d70af3c2530 ("fpga: bridge: Use standard dev_release for class
+>> driver") introduced a check in fpga_bridge_register() that prevents
+>> registering a bridge without ops, making checking on every call
+>> redundant.
+>>
+>> Signed-off-by: Marco Pagani <marpagan@redhat.com>
+>> ---
+>>  drivers/fpga/fpga-bridge.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/fpga/fpga-bridge.c b/drivers/fpga/fpga-bridge.c
+>> index a024be2b84e2..e0a5ef318f5e 100644
+>> --- a/drivers/fpga/fpga-bridge.c
+>> +++ b/drivers/fpga/fpga-bridge.c
+>> @@ -30,7 +30,7 @@ int fpga_bridge_enable(struct fpga_bridge *bridge)
+>>  {
+>>  	dev_dbg(&bridge->dev, "enable\n");
+>>  
+>> -	if (bridge->br_ops && bridge->br_ops->enable_set)
+>> +	if (bridge->br_ops->enable_set)
+>>  		return bridge->br_ops->enable_set(bridge, 1);
+>>  
+>>  	return 0;
+>> @@ -48,7 +48,7 @@ int fpga_bridge_disable(struct fpga_bridge *bridge)
+>>  {
+>>  	dev_dbg(&bridge->dev, "disable\n");
+>>  
+>> -	if (bridge->br_ops && bridge->br_ops->enable_set)
+>> +	if (bridge->br_ops->enable_set)
+>>  		return bridge->br_ops->enable_set(bridge, 0);
+>>  
+>>  	return 0;
+>> @@ -401,7 +401,7 @@ void fpga_bridge_unregister(struct fpga_bridge *bridge)
+>>  	 * If the low level driver provides a method for putting bridge into
+>>  	 * a desired state upon unregister, do it.
+>>  	 */
+>> -	if (bridge->br_ops && bridge->br_ops->fpga_bridge_remove)
+>> +	if (bridge->br_ops->fpga_bridge_remove)
+>>  		bridge->br_ops->fpga_bridge_remove(bridge);
 > 
-> "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
-> >
-> > [snip]
-> > 
-> > Actually, I'm doing this:
-> > 	cond_guard(..., rc, 0, -EINTR, ...);
-> 
-> Can we not works some magic to do.
-> 	cond_guard(..., return -EINTR, ...)
-> 
-> and not have an rc at all if we don't want to.
-> 
-> Something like
-> 
-> #define cond_guard(_name, _fail, args...) \
-> 	CLASS(_name, scope)(args); \
-> 	if (!__guard_ptr(_name)(&scope)) _fail
-> 
-> Completely untested so I'm probably missing some subtleties.
-> 
-> Jonathan
-> 
-Jonathan,
+> Also for state_show()?
 
-Can you please comment on the v5 of this RFC?
-It is at https://lore.kernel.org/all/20240201131033.9850-1-fabio.maria.de.francesco@linux.intel.com/
+Right, I missed that one. I'll remove it in v2
 
-The macro introduced in v5 has the following, more general, use case:
+Thanks,
+Marco
 
-* * 	int ret;
-+ * 	// down_read_trylock() returns 1 on success, 0 on contention
-+ * 	cond_guard(rwsem_read_try, ret, 1, 0, &sem);
-+ * 	if (!ret) {
-+ * 		dev_dbg("down_read_trylock() failed to down 'sem')\n");
-+ * 		return ret;
-+ * 	}
-
-The text above has been copy-pasted from the RFC Patch v5.
-
-Please notice that we need to provide both the success and the failure code to 
-make it work also with the _trylock() variants (more details in the patch).
-
-If we simply do something like:
-	
-	cond_guard(..., ret = 0, ...)
-
-to be able store in 'ret' the code of the contended case, that is 0.
-
-Since down_read_trylock() returns 1 on down semaphore, when we later check 
-'ret' with "if (!ret) <failure path>;" we always enter in that failure path 
-even if the semaphore is down because we didn't store the success code in ret 
-(and ret is still probably 0).
-
-This is why, I think, we need a five arguments cond_guard(). This can manage 
-also the _interruptible() and _killable() cases as:
-
-	cond_guard(..., ret, 0, -EINTR, ...) 
-
-In this case we don't need 5 arguments, but we have a general use case, one 
-only macro, that can work with all the three variants of locks.
-
-Fabio 
-
-
+ 
 
