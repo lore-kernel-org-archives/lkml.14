@@ -1,60 +1,71 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19365336C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC91B5336A
 	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791998; cv=none; b=sMW3pjhsUPVIe7pRHB8RTdBJXk+i6l3Pk6E/sFQbUxDVSOSZ2VximRGKuq/iETkTTft86hnVxXi2c/E6tzN+Pvzd2Ptmdj0aEL3StHIkvzeRXdCwWLWeOx+AruSNh8Z4SgAOHL69DzqTNyXsfOZUAzaQwgxqJl1JTlCMJTKiepI=
+	t=1706791998; cv=none; b=a6T4exDnm7HwbocBUE/UKsaSfWABVobZQI52/ipzsVrFIEmJV+vOIBuUpRH2J/jikvojCH96thJ2lEoOjDYifJjbFbQFjyi+ZyrGZMjIymGsRrcD/wIcX9sin5Sknu6v0cA1AyxJAb+s5+epKZGde+BAFUTNc+MBx+ggAIHgM1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706791998; c=relaxed/simple;
-	bh=soGWShtp1fE1scZOoOivLMJWWmkLBlGxzNtJ8q6CdrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jd7XVypZC7ZXH4aKRfKeV6Yo4GXVDQxTSD2iOLtByfoS5yPLj7bXkgxczPg8cNxZIPcvwzzh5XZhX0yb9arKbb9Je9TNWZ1Cbd7buVeRayymS0dmgcwH71jIIKpHpR2gsPG6WIBTs0dxbGW4hUx01yIMsnv0u1XwxMd2Ev4/7zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FLckKJ25; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=7PXAUnHUmoEF3UTxLOPfT0TJCC9/HwX2n79M8mfQ9Hc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RAhfwFdS1cSOsSWBWOHa9hH9MvfGeEI9wQBjWh9s7pQDscq5rDS4t1sg+WuEYN8ux+8pSg1gPgF1eOjphJZj4BvZYLw7pzY8bBIzcyKfX6/4G4XMU7FXivMsoHkqx38PlqEn32YPBfZSFOAH5jgKDiItlapKWcwwsTOfhR0Z9GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgsernW5; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FLckKJ25"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706791995;
-	bh=soGWShtp1fE1scZOoOivLMJWWmkLBlGxzNtJ8q6CdrU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FLckKJ25YStrCwmV5MWq9MkI58ksS265iNzGTCslvCL7vXFE/iaCWN+y/AbxvW/wr
-	 /AWfHHLIw1Jj2gPYOyGWpMiGHNebUb0hqknVb2A1EdrIxi8+WK3OJqA6/zKuxHL81d
-	 gBAd7nCFnQW+KPC1BxbLJ9Z5V7iTkAQQps5Cw5C0xzhoLNRoDZm4carNn7fF8VgKlG
-	 5wUx/DJ5Fq0/S/0KDldTsfIM1TwkXWPu7v773LjRdSBRa+dWmc3JFjJDVoQLsRSt3T
-	 yFaaSqo0D5sMcwUCiB1xdYr6IDbSOlEzhLyvriE6h2i58sn/hmlm9TCZngXmW3bbIw
-	 NWp6Wy4es1BkQ==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 48339378208F;
-	Thu,  1 Feb 2024 12:53:14 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	ck.hu@mediatek.com,
-	nancy.lin@mediatek.com,
-	nathan.lu@mediatek.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgsernW5"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-363844ae819so3334235ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 04:53:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706791996; x=1707396796; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+dIpEuHcsVA+p6HpZJFPK5u2p7oWDuiKjAseXCAiZTo=;
+        b=SgsernW59t1ppqSoFFq1hQRjxtFsBWBplyJ0cd/gcqiqpn4VDYAV/iEAoZxJsldLuX
+         YQGkYCFDU6FNnTM6jsSaKxTpjyAcF4J5z7opw/Sk+reTQy982TalAe7c2NCJc7LeFoz1
+         skdZoAxT6xcxaRkFEAYbGmJh85JQ2O14kWXkcjRToGKuaaFavuJe3ZdYQlUYPs9bhV/T
+         AWrvzApU5dKHK1bnPV8lNWpDpdS3Pdjeie4MHG2De7r6+bdB+A5MAsSowEkQM+opSUOD
+         qWaMHA+P4cU3tY1SEpT89GsMQmp3gycQF487BvkOEZXpW79VQ4Tv3yG3hMMKV9GT+hZF
+         Juug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706791996; x=1707396796;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+dIpEuHcsVA+p6HpZJFPK5u2p7oWDuiKjAseXCAiZTo=;
+        b=QEHgQGZx1vYFFNsiv1bjN07lPsp0fx/sErNdtSilJrSdL+WyrnueTq1zXFTPHf3xDy
+         9AZMUSALaAYFLSUJcotgmPSKssIkT49/zngbPMeMcsCP+n/DbZuXiA6kUOffFQZCLko7
+         bt/e9Y9cRBOi6gwYtZWMP7bWBBJgooM5R610czp0z0ASJWvKy9iiIlB98kLeRslJn1Gh
+         O2BMT2M1miMUqJjZYphyQ/oWqhYWEZJiCc/HN1Nk8FPQYSg2N0fj4SidGqYItjmhKe8i
+         Z9cfeb5k4TnxdGZ8+qEQ8SPmmzgZhjGJlVVU2QErqnTGlu3FWRxtf2QDKAMJSBP+VyZf
+         e3ow==
+X-Gm-Message-State: AOJu0YystGCgjw3gVh51TroqlvU5c09O/LzwS4qQZsavnVL+tPih8z4z
+	6U8aO4cQJrnlG6KqWg0zZmPmGA80fJ5ydMByzcXLxxsJPf2LJiq/
+X-Google-Smtp-Source: AGHT+IG9rtFkIqzbFdbCc8UCLsLfITRXKzQzKEPG60fxsRW3huj2RDpqksiISbxY3tV787PqINAdnA==
+X-Received: by 2002:a92:d44c:0:b0:363:7a04:548e with SMTP id r12-20020a92d44c000000b003637a04548emr4612091ilm.9.1706791995971;
+        Thu, 01 Feb 2024 04:53:15 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUQmbzvwjjuar5/jjMYvrUfyQqXab4b3OcMUL5T6Ss1INNhxyM/EtSEtESt8NBceTbbqBw+exoQkoGSxIXlWYk9A6fm4vSBbVM4TGBGBYv1jEUsE2LIYM4raJEJQbIg91R+vXrspkuys7H+WdjiG5pCXXdycCqMtjyUGqg9OBJoQ2ZLPTAaXVlkVf60qmWPCqeN/0Z47xRoIJyNXO7MdPN5l35ojzS3wrt339yLwDcWBflMmKnZ5bWc/Y+lOPfbZs7chGjFduDN6/XTx01BxIg6o+bpGfBlXkYU9gNxb+k3a649thcqK5Vmvdw+BNkFqm8n
+Received: from LancedeMBP.lan ([112.10.240.49])
+        by smtp.gmail.com with ESMTPSA id k30-20020a63ba1e000000b005c661a432d7sm10863637pgf.75.2024.02.01.04.53.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 04:53:15 -0800 (PST)
+From: Lance Yang <ioworker0@gmail.com>
+To: akpm@linux-foundation.org
+Cc: mhocko@suse.com,
+	zokeefe@google.com,
+	david@redhat.com,
+	songmuchun@bytedance.com,
+	shy828301@gmail.com,
+	peterx@redhat.com,
+	minchan@kernel.org,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com,
-	wenst@chromium.org
-Subject: [PATCH 3/3] drm/mediatek: drm_ddp_comp: Add mtk_ddp_is_simple_comp() internal helper
-Date: Thu,  1 Feb 2024 13:53:04 +0100
-Message-ID: <20240201125304.218467-4-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240201125304.218467-1-angelogioacchino.delregno@collabora.com>
-References: <20240201125304.218467-1-angelogioacchino.delregno@collabora.com>
+	Lance Yang <ioworker0@gmail.com>
+Subject: [PATCH 1/1] mm/khugepaged: skip copying lazyfree pages on collapse
+Date: Thu,  1 Feb 2024 20:52:26 +0800
+Message-Id: <20240201125226.28372-1-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.33.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,96 +74,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the simple component check to a new mtk_ddp_is_simple_comp()
-internal helper to reduce code duplication.
+The collapsing behavior of khugepaged with pages
+marked using MADV_FREE might cause confusion
+among users.
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+For instance, allocate a 2MB chunk using mmap and
+later release it by MADV_FREE. Khugepaged will not
+collapse this chunk. From the user's perspective,
+it treats lazyfree pages as pte_none. However,
+for some pages marked as lazyfree with MADV_FREE,
+khugepaged might collapse this chunk and copy
+these pages to a new huge page. This inconsistency
+in behavior could be confusing for users.
+
+After a successful MADV_FREE operation, if there is
+no subsequent write, the kernel can free the pages
+at any time. Therefore, in my opinion, counting
+lazyfree pages in max_pte_none seems reasonable.
+
+Perhaps treating MADV_FREE like MADV_DONTNEED, not
+copying lazyfree pages when khugepaged collapses
+huge pages in the background better aligns with
+user expectations.
+
+Signed-off-by: Lance Yang <ioworker0@gmail.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 57 +++++++++++----------
- 1 file changed, 31 insertions(+), 26 deletions(-)
+ mm/khugepaged.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 539b526a6b0a..4ca2a02ada3c 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -575,6 +575,29 @@ unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
- 	return ret;
- }
- 
-+static bool mtk_ddp_is_simple_comp(enum mtk_ddp_comp_type type)
-+{
-+	switch (type) {
-+	case MTK_DISP_AAL:
-+	case MTK_DISP_BLS:
-+	case MTK_DISP_CCORR:
-+	case MTK_DISP_COLOR:
-+	case MTK_DISP_GAMMA:
-+	case MTK_DISP_MERGE:
-+	case MTK_DISP_OVL:
-+	case MTK_DISP_OVL_2L:
-+	case MTK_DISP_OVL_ADAPTOR:
-+	case MTK_DISP_PWM:
-+	case MTK_DISP_RDMA:
-+	case MTK_DP_INTF:
-+	case MTK_DPI:
-+	case MTK_DSI:
-+		return false;
-+	default:
-+		return true;
-+	}
-+}
-+
- int mtk_ddp_comp_init(struct device_node *node, struct mtk_ddp_comp *comp,
- 		      unsigned int comp_id)
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 2b219acb528e..6cbf46d42c6a 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -777,6 +777,7 @@ static int __collapse_huge_page_copy(pte_t *pte,
+ 				     pmd_t orig_pmd,
+ 				     struct vm_area_struct *vma,
+ 				     unsigned long address,
++				     struct collapse_control *cc,
+ 				     spinlock_t *ptl,
+ 				     struct list_head *compound_pagelist)
  {
-@@ -605,19 +628,13 @@ int mtk_ddp_comp_init(struct device_node *node, struct mtk_ddp_comp *comp,
- 	}
- 	comp->dev = &comp_pdev->dev;
+@@ -797,6 +798,13 @@ static int __collapse_huge_page_copy(pte_t *pte,
+ 			continue;
+ 		}
+ 		src_page = pte_page(pteval);
++
++		if (cc->is_khugepaged
++				&& !folio_test_swapbacked(page_folio(src_page))) {
++			clear_user_highpage(page, _address);
++			continue;
++		}
++
+ 		if (copy_mc_user_highpage(page, src_page, _address, vma) > 0) {
+ 			result = SCAN_COPY_MC;
+ 			break;
+@@ -1205,7 +1213,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+ 	anon_vma_unlock_write(vma->anon_vma);
  
--	if (type == MTK_DISP_AAL ||
--	    type == MTK_DISP_BLS ||
--	    type == MTK_DISP_CCORR ||
--	    type == MTK_DISP_COLOR ||
--	    type == MTK_DISP_GAMMA ||
--	    type == MTK_DISP_MERGE ||
--	    type == MTK_DISP_OVL ||
--	    type == MTK_DISP_OVL_2L ||
--	    type == MTK_DISP_PWM ||
--	    type == MTK_DISP_RDMA ||
--	    type == MTK_DPI ||
--	    type == MTK_DP_INTF ||
--	    type == MTK_DSI)
-+	/*
-+	 * Resources for simple components are retrieved here as those are
-+	 * managed in here without the need of more complex drivers; for
-+	 * the latter, their respective probe function will do the job, so
-+	 * we must avoid getting their resources here.
-+	 */
-+	if (!mtk_ddp_is_simple_comp(type))
- 		return 0;
- 
- 	priv = devm_kzalloc(comp->dev, sizeof(*priv), GFP_KERNEL);
-@@ -651,19 +668,7 @@ void mtk_ddp_comp_destroy(struct mtk_ddp_comp *comp)
- 		return;
- 
- 	/* Complex components are destroyed with their own remove callback */
--	if (type == MTK_DISP_AAL ||
--	    type == MTK_DISP_BLS ||
--	    type == MTK_DISP_CCORR ||
--	    type == MTK_DISP_COLOR ||
--	    type == MTK_DISP_GAMMA ||
--	    type == MTK_DISP_MERGE ||
--	    type == MTK_DISP_OVL ||
--	    type == MTK_DISP_OVL_2L ||
--	    type == MTK_DISP_PWM ||
--	    type == MTK_DISP_RDMA ||
--	    type == MTK_DPI ||
--	    type == MTK_DP_INTF ||
--	    type == MTK_DSI)
-+	if (!mtk_ddp_is_simple_comp(mtk_ddp_matches[comp->id].type))
- 		return;
- 
- 	priv = dev_get_drvdata(comp->dev);
+ 	result = __collapse_huge_page_copy(pte, hpage, pmd, _pmd,
+-					   vma, address, pte_ptl,
++					   vma, address, cc, pte_ptl,
+ 					   &compound_pagelist);
+ 	pte_unmap(pte);
+ 	if (unlikely(result != SCAN_SUCCEED))
 -- 
-2.43.0
+2.33.1
 
