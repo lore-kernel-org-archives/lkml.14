@@ -1,78 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D2E163A9E
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31232626AC;
+	Thu,  1 Feb 2024 15:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706800718; cv=none; b=bBldxnWUxHU3KstdXoyn7Q9XQ4sJbcvQM4+0B3ysSTN41n2xszdIvhAEmhDritB4q0noJWd/ULDTTfveB3bqbcej1nlMSK1wanMGTk9zJBqKltsH/QEz+eoNu+ZM+MrM/4Qo6RtRCl6hL+z2dcvQ1b0t/lNWSAIIyBwPGVGWirA=
+	t=1706800740; cv=none; b=dPCJvJPoVPZcsPrrsgZWgbV3oTOD7Isets57/eJfzwjs0XszRiWIyHuRDKhgMjP5mRgRaVHcBXFtEwgpDSL/5G4APsYB+rXDj9Vd8rKe8gyo9MidNG1RPFOa5DnzP1uJeyUOSth0vk1oMMWOSCrWnbdTQ+jPMXBOAZixWikbj98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706800718; c=relaxed/simple;
-	bh=7Y044RfAyAnYPPxwov64yn9PAAetech3yST1uGWNe68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0RwX5prLkH05tm8sxTv7gFgOAWQv1FhJ5zwUudL3DsX4wLPJjmcZQm598PIDTGcAUfpGMTX6z+51Vu1ROqZ1HROx1b/psqBEnLFR0IGwvFBPKm15MovtXPsIOHioWUdgvu7bCa6dQk5aijSjKV+HISHc/MQmhq36IK2cdaOqeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K59Cf+Z2; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706800740; c=relaxed/simple;
+	bh=x2Jr4nV3kJTIg0KYAbhrFtYkqlzK2SYGmGQTdfLTNJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TdLodpJ4cvVr+JlvPIuHQ2Ntn5wM5rwELVksCOgM64glUvL5tyZoewYFL225vR7ZdhvzYhKKpMjb9y7g/ycHiO5/VH4ZooMBnn7WF3ajTN/QaO9Y2xUhBb2IO9pt/wP6KplqJJzaWv0vYzS0nyJ6z8iWZSi3JQzPhACI7DuqkS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XswRnU+9; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K59Cf+Z2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706800717; x=1738336717;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7Y044RfAyAnYPPxwov64yn9PAAetech3yST1uGWNe68=;
-  b=K59Cf+Z2fruHKw9XRvziR4RF0biLp0u05UBEJX/z1NC1NHabCBL5sod+
-   MPojxtJT1vBRQNdgIGiexVsnpD3l4qEHZ5gQg5UozCCgZvU0clvf91G7v
-   8v9nhe20gLdWLnAsn3DoeKe7yNw3FR0MRidcpl8SyC1MU4JD9TXaVZeoS
-   Du1nm1lhQpfAtGGpXlsLXjKtvSWXwRURXHpjuYDB4REeekeKhuvxTOBLS
-   xcb5mIwivMOVS58QbK2scUgF/fIQk8TZtv7vBXJIFXJspno9fLhcYNCEM
-   a75QJDMV+MjPjkeuGuMFJuRZ35GAUUBp8YgMXZAssi0pRearGjtg3VYya
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="394367707"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="394367707"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 07:18:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822940925"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="822940925"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 07:18:35 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rVYoR-00000000rso-2mm6;
-	Thu, 01 Feb 2024 17:17:11 +0200
-Date: Thu, 1 Feb 2024 17:17:11 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH v1 1/1] pcmcia: Convert to use less arguments in
- pci_bus_for_each_resource()
-Message-ID: <Zbu19xfahgI_dKLt@smile.fi.intel.com>
-References: <20231030115053.2752588-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XswRnU+9"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a35e65df2d8so134440366b.0;
+        Thu, 01 Feb 2024 07:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706800737; x=1707405537; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+7rgZm3r6uF9XcdUSoMmbnnPMtYOwIoB+ZObdBMW3Go=;
+        b=XswRnU+9+81y4RVbDOQ+Z6xhSbkmvb1flTsKEzxLH1n3q2u+Uhk32/PC5LDrRr+SMY
+         mWcLCGL2tNMRh0ptBuSQyYGNJi/yAhAbPWM9FjvY2LSdSgNdoQe88KFofQE/6JD+Yli/
+         8kWUZUxkVArqFTVVB5vUMNypLciHJ9cS7u9cutk/Y+sGB8uZkXVniFJLwHF/Lj2lBMwz
+         Xz8wOyOM+6nrsVj5IGubOMAAMNtJOM/YqL8Enh18x+3GGukBG1ERP5DDaWJCI31dq+qb
+         nbwY+Uqh+o6x1pP/E7eorL+cvolvXzobPrs9JbCZSMmVvK2bYPp7EkKtMa+xxySa0Xqg
+         8MOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706800737; x=1707405537;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+7rgZm3r6uF9XcdUSoMmbnnPMtYOwIoB+ZObdBMW3Go=;
+        b=gqLJFqQ3fzqYoWFaUpICXyNGOhC21HMJQ9eDoiBEU16SHvWCIFUZhBuCBgf5F/HY9T
+         B7TP2ivxpVAb3kBOKajMmhQyEQ5MQmFE/IFk3crDbooIC/WNaDaIEyVhfadaHlnHiiSF
+         zj9o03GyIOMnfKgdy7c5/m1uyKrCX0WFo4iasoI+4DYP7beYkUt7t13qiB0uAz1rM9j6
+         B8t87SRkcYpHQbC0SlAGnSyIpw0MC6+C041jt1a7cDGCy/bJH4tVWs1cwEaLMHjkBy5+
+         mK7sYisKPWojL0HqMquJVDUh4MX3dJr1A3dOZqrxbuExmYDba8QFlFM8Mk76sUbkXbcN
+         FVMw==
+X-Gm-Message-State: AOJu0YyjYYkCIgfnYyCGNMM6R0f80T5iSOM/EzQJKhVICUQRPjlUQhNK
+	5Y4T6Gk/4Y3/KkRnYywYWGkkQf3nbLURBubNIDLtjtNbyGrAbabu
+X-Google-Smtp-Source: AGHT+IFem4E/8W0pKsC0gsMVprFszUbs9kqx0etdldtQi5ehHLevvPYNncZyZj2CcLr/6ZPY9LeBkw==
+X-Received: by 2002:a17:906:e98:b0:a36:95cd:5e64 with SMTP id p24-20020a1709060e9800b00a3695cd5e64mr2741748ejf.62.1706800737106;
+        Thu, 01 Feb 2024 07:18:57 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUfarDKUPfvZbgtKsZHsl7RZR9QwXyYK39JaqO6UCGhp/rzYkh5eKF2lYdLrI0tdO1g98WDuZmYg2RA9/fM8aNC8WCNtRfA1AgRusxt46UD2pmkOsTgFnrwndssg4gNkPeRcjbgksHMfFiqcrUnJMHtUvLdlh7gP0JKZA==
+Received: from localhost.localdomain (101-82.fiber.cz. [217.28.82.101])
+        by smtp.gmail.com with ESMTPSA id og16-20020a1709071dd000b00a28aba1f56fsm7244984ejc.210.2024.02.01.07.18.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 07:18:56 -0800 (PST)
+From: Nikita Mikhailevich <ermyril@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ermyril@gmail.com
+Subject: [PATCH] iio: accel: mxc4005: new ACPI ID for the MXC6655 accelerometer
+Date: Thu,  1 Feb 2024 16:18:48 +0100
+Message-ID: <20240201151848.1666245-1-ermyril@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231030115053.2752588-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 30, 2023 at 01:50:53PM +0200, Andy Shevchenko wrote:
-> The pci_bus_for_each_resource() can hide the iterator loop since
-> it may be not used otherwise. With this, we may drop that iterator
-> variable definition.
+New ID was introduced by Chuwi on Minibook X 2023.
 
-Can it be now applied?
+Signed-off-by: Nikita Mikhailevich <ermyril@gmail.com>
+---
+ drivers/iio/accel/mxc4005.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/drivers/iio/accel/mxc4005.c b/drivers/iio/accel/mxc4005.c
+index 82e8d0b39..09764ef8b 100644
+--- a/drivers/iio/accel/mxc4005.c
++++ b/drivers/iio/accel/mxc4005.c
+@@ -472,6 +472,7 @@ static int mxc4005_probe(struct i2c_client *client)
+ static const struct acpi_device_id mxc4005_acpi_match[] = {
+ 	{"MXC4005",	0},
+ 	{"MXC6655",	0},
++	{"MDA6655",	0},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(acpi, mxc4005_acpi_match);
+--
+2.43.0
 
