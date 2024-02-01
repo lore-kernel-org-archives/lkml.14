@@ -1,90 +1,142 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9BBA8663F;
-	Thu,  1 Feb 2024 12:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE178664A;
+	Thu,  1 Feb 2024 12:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791766; cv=none; b=OiU7qJF8akDwINMo/YHNUOr65PQYi/OJwNyJ12GV1b5Z0Bs5B++vCFxxuwxIGPpjr9VfwOQIzcXSFmv++zAl/bLpN27WBuCkagrzfCmXUcKqsD/hcudeeDNU/jMhHGXJ+9zaY10eNiHmQ37g8ejM+bE+oQ/DtI8BIJo72xJUai8=
+	t=1706791780; cv=none; b=BZpSwqOElPqqfJl9LA1PRWBMJZ5dthaosWZXzaihZKEN+HUqy6la1f8dnQvJFMV3Z4BRWoUHyZCGd1qPuO/gQTmAr/oTA4azBoEj1l8KOgKyKX3vEw4F6PsfmPq4bBq3ckS5LL7XpTTInUL5qCoyBO6/f6r+pEmid5m96+OM/cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706791766; c=relaxed/simple;
-	bh=Yi8Yp0mra6HVN4MohQAem1CrTDUOAi3hKvHb8V/rYVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AIgTFWQAyAeJkT2ttOW6+6ARxwVQzlQHwGQTAmdKVWi1120AozIO59XrCoDIC7RwHdO/9/RjV7QBo9OyE91L+qa7EbcOOyck82pRidF2DkSyWRrSyc/hS4NuHEyqDGnJ9GY4B1v/gYGj4z95mWhhJJBgDEp1GatUh/dxqbtDJWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [183.128.135.43])
-	by mail-app2 (Coremail) with SMTP id by_KCgDXGqpDk7tl6tQxAQ--.4622S2;
-	Thu, 01 Feb 2024 20:49:07 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: v4l2-mem2mem: fix a memleak in v4l2_m2m_register_entity
-Date: Thu,  1 Feb 2024 20:48:44 +0800
-Message-Id: <20240201124846.3054579-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706791780; c=relaxed/simple;
+	bh=73yNjbX3V5CwANTEQjLTld89ILQCh/j/Q6b2MYKvOug=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jr9bWKz0dCeNmXvng7GQHVjoGmQgCi4YFf6OvoA6EwqoioxnObDg28p611qKIfAxKtLW69d9OW4qt9MVIk36VuF80tMP2ekk9urw379XZ8sXRxdzXk0M8GVYl2PMo3kDfHkysK6xdRf7eogSfLBVVgbjbaSpEGXlCUs4Yca52XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sVkuvq9M; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=U3iAOdW4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=igZEU4SK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5n7VExPE; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sVkuvq9M";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="U3iAOdW4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="igZEU4SK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5n7VExPE"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E79B61FB83;
+	Thu,  1 Feb 2024 12:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706791775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0OPATdqXvb+caoegnnSuXx1SUc1odadlEih9NfSLUgs=;
+	b=sVkuvq9My99tel6yzls+aOPbmI5KRf2qL6l4MgCTWKRZLCxJrpAGURLWLPE3tKKo5vRt16
+	5YLG9O9ZasCyiEf1H0Yeigsr/Zyo7c6+WRqB2NcAJfV/tVb2ShJeICKfmNIMBeLGGG6Zgk
+	WTbazjGlEuEmFzsKlh4e2i9QCpjiBDA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706791775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0OPATdqXvb+caoegnnSuXx1SUc1odadlEih9NfSLUgs=;
+	b=U3iAOdW4Mhkj2iThF5ZtIKItLDpdXCEseESa7zVN4wxEPqCxcY400oVuPch5xsKMCZ+7bY
+	Hvb5oKkNtw5kWWAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706791774; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0OPATdqXvb+caoegnnSuXx1SUc1odadlEih9NfSLUgs=;
+	b=igZEU4SKS2Hu9A5IDMqwX9MDFkJ9hQUfhB6qKDGEceK6QjdnB4EXiZoOA+AL/JidoftTsI
+	QjRe0szEKCJPz8SI0Z00GWAphEb+nLV8ls+z4szoF18sSEk3XMB6UDAy3P2DI3Mdye6upy
+	JL5QAjIxg4G6M93N8Qi5NRTsx1r2I58=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706791774;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0OPATdqXvb+caoegnnSuXx1SUc1odadlEih9NfSLUgs=;
+	b=5n7VExPEYQcJR3mjewXySgWcwTfX1DyLpogo/QHlF6xs4za9C6VuNJRkIR4ONS2A/YBQ/a
+	HVBWwDHJX29KvgBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AD037139B1;
+	Thu,  1 Feb 2024 12:49:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WJwOKV6Tu2XkOgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 01 Feb 2024 12:49:34 +0000
+Date: Thu, 01 Feb 2024 13:49:34 +0100
+Message-ID: <87msskz6w1.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com
+Subject: Re: [PATCH 00/18] ALSA: Various fixes for Cirrus Logic CS35L56 support
+In-Reply-To: <1cc8d9c7-2af5-43f1-a022-75624deae51f@sirena.org.uk>
+References: <20240129162737.497-1-rf@opensource.cirrus.com>
+	<1cc8d9c7-2af5-43f1-a022-75624deae51f@sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgDXGqpDk7tl6tQxAQ--.4622S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw4rWryrJFy3AF45KF48JFb_yoWkAFg_uF
-	s7uFnxWF1UKw43G3WUK395Z340ga9Fqrn3Ga13tF43tFy5JasxtFWDZrn8X397WF17A3sx
-	Crn8WrWfCF1jkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_Xr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfU0FApUUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=igZEU4SK;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5n7VExPE
+X-Spamd-Result: default: False [-0.39 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.08)[87.99%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -0.39
+X-Rspamd-Queue-Id: E79B61FB83
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Bar: /
 
-The entity->name (i.e. name) is allocated in v4l2_m2m_register_entity
-but isn't freed in its following error-handling paths. This patch
-adds such deallocation to prevent memleak of entity->name.
+On Thu, 01 Feb 2024 13:47:38 +0100,
+Mark Brown wrote:
+> 
+> On Mon, Jan 29, 2024 at 04:27:19PM +0000, Richard Fitzgerald wrote:
+> > This chain of patches fixes various things that were undocumented, unknown
+> > or uncertain when the original driver code was written. And also a few
+> > things that were just bugs.
+> > 
+> > The HDA patches have dependencies on the ASoC patches, except for the final
+> > patch that removes a bogus test stub function.
+> 
+> Takashi, should I apply the ALSA bits of this via ASoC?
 
-Fixes: be2fff656322 ("media: add helpers for memory-to-memory media controller")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- drivers/media/v4l2-core/v4l2-mem2mem.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Judging from the amount, better to go through your tree.
+Please go ahead.
 
-diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-index 0cc30397fbad..8db9ac9c1433 100644
---- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-+++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -1084,11 +1084,17 @@ static int v4l2_m2m_register_entity(struct media_device *mdev,
- 	entity->function = function;
- 
- 	ret = media_entity_pads_init(entity, num_pads, pads);
--	if (ret)
-+	if (ret) {
-+		kfree(entity->name);
-+		entity->name = NULL;
- 		return ret;
-+	}
- 	ret = media_device_register_entity(mdev, entity);
--	if (ret)
-+	if (ret) {
-+		kfree(entity->name);
-+		entity->name = NULL;
- 		return ret;
-+	}
- 
- 	return 0;
- }
--- 
-2.34.1
 
+thanks,
+
+Takashi
