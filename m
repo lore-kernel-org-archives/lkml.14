@@ -1,60 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from repost01.tmes.trendmicro.eu (repost01.tmes.trendmicro.eu [18.185.115.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E52EACC;
-	Thu,  1 Feb 2024 01:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706749674; cv=none; b=KIsMdZyBAVe8utwY6MEV0NBkbZf4zrxB9HLsT52KKUPlCvza4Qm7d1roljGtdTZQgSGT3utay54myiw8s5E9jYO6MYMSTUep8XI65XpUrTrUViEgYWULF/nSMX0tM35nBy4cLuSlXiqrjXe7zN+hO4VRDn6f5sOsJsTc8OgccwY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706749674; c=relaxed/simple;
-	bh=biQMLZUnkVyV4tyTKSCox8eL77UiNWCAiGVihWRmr6Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nRjn7kUl+8fVkeYOsGCUMXPq9uYgAejK7RibL7MFOBVQEza/jx3ZGkgxUCVWuZVyAavCcssb9ni4PJ+Kf02Ml5e96BbNhhmFerUsJYqYCE++2vsr539SrR8eZfACz3VN7EvqCRQXN7VxQ457LK+02yiPVfhej0/Vm1K+NWRuK5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DVvtUTcJ; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C75D3C2C
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 01:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=18.185.115.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706749718; cv=fail; b=PmRAeZ7vNY9CdZ6lb8/WcC+9JMZRclYxIfW2xFDck5qnu4Q6F+LIM8DFNbFGcTzriclhl7vcXaZYjhTHSb/iFL4hndAiD8kFuANI1CYDxZElECAsori8KFPYpbEeEZzceC00LfVLsmx4ACPg2GQXQcLGHk9OZt6aWL3VMXirhAM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706749718; c=relaxed/simple;
+	bh=oohEjQrzvapv0uR3lS9rKQZ5S5PGY1gElpFaIbQC5+w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=M7MK29tuzH1TcRvCFzI1Mjr9BulkBI24D5XBaNElVN4rtqdmAsTWBe7NYHhKEH6/FPNEIxqpghVCNygHpTCPh8DRHjLJdZYtH5wuMSC2WOsk+fttFr6AgUImgDInR1wZwMlq8rD9t+oQ+U1BDdOhYxQip/OAwvdohiJlLZjnA8E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com; spf=pass smtp.mailfrom=opensynergy.com; dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b=vY+1udhH; arc=fail smtp.client-ip=18.185.115.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensynergy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DVvtUTcJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706749672; x=1738285672;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=biQMLZUnkVyV4tyTKSCox8eL77UiNWCAiGVihWRmr6Y=;
-  b=DVvtUTcJZl48MJjJ1hnTLIuX3kZVZMgBCAxzneE1zuMX3r23OYDA9ocM
-   i/HJ+9sLVhzvV0r6RIydMaoHpF7jko1x7Jsv3mfFihkYQQcxDZNfex5x4
-   9NhUnV2eEHGmKdomJ9/ne2Dy69Ch/QXkVst2hv9gNevu+Kn5Y5+J3ehue
-   pfaR9GEPGuH/W/NYEm+uydsISHxY17OrvvEHQMbsLIyfbHV7MAIkiKH37
-   vibfLHLlwye+koWoXO5J67A6N/cjnlP6CEBOZrqTId6UCdz+EyjZgz783
-   Cywm6Kf5eJxnNwl+Vw5ap9uhM23LJrwx0YDuzUR/bK4RPg2YfHvapOUam
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11145822"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="11145822"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:07:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="37057413"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:07:49 -0800
-Received: from debox1-desk4.lan (unknown [10.212.205.115])
-	by linux.intel.com (Postfix) with ESMTP id E7401580E05;
-	Wed, 31 Jan 2024 17:07:48 -0800 (PST)
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: netdev@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	david.e.box@linux.intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 4/8] platform/x86/intel/sdsi: Add netlink SPDM transport
-Date: Wed, 31 Jan 2024 17:07:43 -0800
-Message-Id: <20240201010747.471141-5-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240201010747.471141-1-david.e.box@linux.intel.com>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b="vY+1udhH"
+Received: from 104.47.7.169_.trendmicro.com (unknown [172.21.176.220])
+	by repost01.tmes.trendmicro.eu (Postfix) with SMTP id 0ED311000007B;
+	Thu,  1 Feb 2024 01:08:34 +0000 (UTC)
+X-TM-MAIL-RECEIVED-TIME: 1706749545.465000
+X-TM-MAIL-UUID: 91f114d5-cdae-4860-91b8-7a6b17dffd8c
+Received: from DEU01-BE0-obe.outbound.protection.outlook.com (unknown [104.47.7.169])
+	by repre01.tmes.trendmicro.eu (Trend Micro Email Security) with ESMTPS id 71D17100003AD;
+	Thu,  1 Feb 2024 01:05:45 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BQg0F0onfrHuJeQMIS3f5yRTmE+7A57wFB3jEQFZNBe+ygqB7bCsDhcPXkJZfPhZ3wT2TRoyaFgGptf2qQT1d3DHQFCHiUpER/9zj9LMxNCJxwwaBhL/yw72/3nEAVDRIUap7qzbPmEV7L0CsMufHrWtYNa62ce7GrrJSIBL6puVc64Bmpp94I303bhj1wM0uSlV/oL2ihFpzRcQ+9fPC9QrlS3quFTzIsjdwsbi0RSM0YWi9eu/Xm7pEiojjBh4IHmjeEK2QDrgIX3YztDh7sipZt9shBPAkVY93E4A23KLxNz0HKZ82Oz2xrmP1j0zYC8ylgVmNZYNq4LKwYyXRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JpqQiNj/kxIgYjjUNSOJjdxt9i7tE6QKYLiavqxbOJU=;
+ b=ohBfA7DzslpQoVW9xqriHTgooZEzhOAd3L2uPQAcjA/EZe9KlgTHzt3JBWw1l6NXzWwik8TvFDRwuXkIgoQOM+D1zNogULzFPkjv4gpWfW1A9yDC8hGBGACuMrTzkgJNmPivtroeV5cQhfOyJTs3UlDbE4CyBaJXZ3hcJjE76b86gwbA54ipufyqWHkP190yHczOhe59i/CGAACiivClEXh8B4xodZZkMmZwNkHAUegxNACbVgN8ZRZmYDS+whCLhiYG6QqQHFk6Yy2vHXtaN1Rf38rh+57zMSE5hsih4/WDubiktAFf2ERM0WDnCKgVWGKklG2xyP61zCBYmf54Zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 217.66.60.4) smtp.rcpttodomain=alien8.de smtp.mailfrom=opensynergy.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=opensynergy.com; dkim=none (message not signed); arc=none (0)
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 217.66.60.4)
+ smtp.mailfrom=opensynergy.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=opensynergy.com;
+Received-SPF: Pass (protection.outlook.com: domain of opensynergy.com
+ designates 217.66.60.4 as permitted sender) receiver=protection.outlook.com;
+ client-ip=217.66.60.4; helo=SR-MAIL-03.open-synergy.com; pr=C
+From: Peter Hilber <peter.hilber@opensynergy.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Hilber <peter.hilber@opensynergy.com>,
+	"D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	jstultz@google.com,
+	giometti@enneenne.com,
+	corbet@lwn.net,
+	"Dong, Eddie" <eddie.dong@intel.com>,
+	"Hall, Christopher S" <christopher.s.hall@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	kvm@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v3 0/8] treewide: Use clocksource ID for get_device_system_crosststamp()
+Date: Thu,  1 Feb 2024 02:04:45 +0100
+Message-Id: <20240201010453.2212371-1-peter.hilber@opensynergy.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,727 +80,209 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB8EUR05FT034:EE_|BEZP281MB3106:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: aa9a9031-901c-43ea-7678-08dc22c1e9ea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4SwkuaKy26n9g6JnGJkPstpqo116JdztJTGa3iJVyqtG8bFNaUETeF4oR/bCjzXb7Gj3CMMHXivol48RA7V4eFL6/ax8vPACNt7XqGCGePpLHq8SzjAIdRM2d6BiAmDevW52IT45Yie03lx1qQOwWkLUvakgCCOcBCOt9EzAM9mJLYOnoPPEQT1Hr5X/mVtp2tOivFlDpCffebRXKOcIQls+vPZz36hGtJ36If3QVf9qRcAclWIA1cPghgVLug3gvl70aWr+GRyjLS1Fu01SyaVrHifyF9/Qdc/8L5+hmB91teAoxtvdITrKSgxaJXYP6x2Cmbb33XFSnBytlo8IieVdP4DAVQQjoXBeua7rOp+HsQY/VOXxf52Raavn0j0WuZLS9j73W7vE6Pelx9jGDa5xfVEh6yAB2qiNEr7pV06cXLEzNoAMAFdilNGpX1dybpRTwZKlY0RS/84eWm5n98ECntkI9q5mqXveLiU9CEG1xqC38ZXo9NC/eszawUVxMymiap3sFXZxKF7r/7uG6mFDaJajrz/w6Ns9KAS7rknH+GbAQbMHHUviupLA+OaCmNVvSGujammcujvGQO/hvfrHQ2mQgqC7DgRXuaRG1dKtdYhlgUyhWXcn6AK4eFxJj+VpEzEMSkDLLooB4fwRO3aKij4cfQ/+2Q6wmtkkC696HcIdXgpt3eBnRyO0nT7MBktoA+i40ORWpQ3DovWuM0NuVQ0TZYbguzp48ms3cMxejIchzl9Pw/K5gLH/7i4bMoZBrh61ImLqlUATsoZU77xgCP0ThVsQfFb/nGG1bLewHcJqIcQpksyKoY4DKwiV
+X-Forefront-Antispam-Report:
+	CIP:217.66.60.4;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SR-MAIL-03.open-synergy.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(136003)(346002)(39840400004)(396003)(376002)(230922051799003)(230273577357003)(230173577357003)(186009)(82310400011)(451199024)(64100799003)(1800799012)(36840700001)(46966006)(41300700001)(5660300002)(70586007)(4326008)(8676002)(8936002)(2906002)(7416002)(86362001)(44832011)(70206006)(54906003)(42186006)(6916009)(316002)(36756003)(36860700001)(47076005)(81166007)(478600001)(966005)(83380400001)(1076003)(26005)(2616005)(336012)(40480700001)(36900700001);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensynergy.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 01:05:42.7163
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa9a9031-901c-43ea-7678-08dc22c1e9ea
+X-MS-Exchange-CrossTenant-Id: 800fae25-9b1b-4edc-993d-c939c4e84a64
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=800fae25-9b1b-4edc-993d-c939c4e84a64;Ip=[217.66.60.4];Helo=[SR-MAIL-03.open-synergy.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB8EUR05FT034.eop-eur05.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BEZP281MB3106
+X-TM-AS-ERS: 104.47.7.169-0.0.0.0
+X-TMASE-Version: StarCloud-1.3-9.1.1015-28152.007
+X-TMASE-Result: 10--9.655700-4.000000
+X-TMASE-MatchedRID: kU+oJxJqVp+UP+0hdpOx0lmcWIT2GKzJi9V1e7G8XUijN1SoAtAGxtsH
+	8mvO8CBHCRqqhJm8rIn5mjPOVI6+s/oKZK4fc4pdc6MQph12+/qgn19QHAlOzICpIfHsTRJvaQX
+	O0KwCdXrdTrmsiWLAxD3Dhol2PU5Lmbpduk4zUf/BcAkkfZSxiKJDaGSlxWd0nFPS5wCjpHZ01t
+	kgbj61ndpXJMrozGW3YpESvCL4it1Y7t9efcoDgI/LriVzPuf5wgrtnQK+MOoY5qQDqF7ovmDbt
+	ijTkWnp3MnltAZSB6WDdsVaS6GBxzFZ+rmPiUkrsZIjJc0QK/bVLrJfyVWkTeEZbxf3Zciyh21E
+	BzIb6ox/PBbU24mRsJqKJrV3x9ZQXV7SCcp2kYuSHQtEOSQwHEXzYX/dCbSfMHiMmW0ZUNss3nA
+	Y9fdM9dh5c4TN8zbZ7PVkFWMnCn8N5Rk4kJccyAwdv/u39cUHoli4ZoiOHT9+ICquNi0WJL0Rdj
+	vdXSTSc1mnLhfpPYG9EGEki1p2D9gS00QqA5oUftwZ3X11IV0=
+X-TMASE-XGENCLOUD: 46464346-aa41-412c-9459-3adbed66af2e-0-0-200-0
+X-TM-Deliver-Signature: E53744A90FEB612068C1A10663A0D405
+X-TM-Addin-Auth: Hn48YxJdqloKVmrtONTaujT6J+gMYyewEsscs5FseHrjAJvx7khCR8Wm7KA
+	QNofComxEaSLqfZNWdFZJliRP+mjmcNc5kQnc+Km0tYSXLzok3OoglhTQH/1D0V1T7udt/gWBaq
+	AHiYwLLbR+HnPN8YXGRsXhXgPDO50H5IDvTrKmqYtGlldTcOFI500JFgFVNsBqET0nsHlhuRKsw
+	516DlGeblvX7JS1Oz3s8mHDTQ5FUSYAUZt6KUMa0yKhHVtqkmw8jm8y0km88gRj7wtjg+qxP/ef
+	5e92o+LihlmRTVJTBAOyDrq1jZbFFrqL2Ek1.bBD+JSCJ8cycENkHPM45HyFYal1+LCHEFbTwRh
+	qFtutrcdZJQf8vvJOYtIZbT57MYOE7nKsOKvJrnB0zcRBLhMRa0ZzRyKHIvQlViXhOFZfR1m7ZB
+	FGn/kYNORK1a3JI0xYJ2h/A6PaBJ2//EBvSyEZJ2ojua7JT7rw7c9FR4aAsBiVO9BN8PSuEw0UK
+	w5EgfcvyhvmaB9D6BLnJPtmZUKPnkJMH9dryP4WftTqTkuJsO6VI3sdF924CgF8uDaB46nSZHpp
+	gFYgzi6alLz6yqK/RFgzA06EPpjIcFlXZ24pFUIRJ0ff2aRCdkTDQ++gs/mtM1hhWwZZqyAzz+c
+	i+JQ==
+X-TM-Addin-ProductCode: EMS
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=opensynergy.com;
+	s=TM-DKIM-20210503141657; t=1706749713;
+	bh=oohEjQrzvapv0uR3lS9rKQZ5S5PGY1gElpFaIbQC5+w=; l=5321;
+	h=From:To:Date;
+	b=vY+1udhHfDmjfepIYBPpZVPzmT5c82H6cOcSB+pTNjU7Zu63qtFX2KDbl3bGlIM34
+	 a3HOtEwNIlTgFgRekkKZwXheDhTdXayNXtS/zTvyWB2zZGHEO9sMbkmVBY43CQdxYg
+	 jldYuu1054YMVY9KBgSbEBEV8g4eJnPnDk18mFubq83YFqvArNsN8HBYTAaOoK9jiK
+	 Jse7qJQZ0zyoWGLJypYVCY576b0KidBzzY+y6kqFsznfLNPukg/I28l47yXlpRQv9u
+	 362BsgrkJyIkVr0WQS+7tAZ3GMsMH1gqiMPsMxQaMYRUDI78+DJhZS7ietRI/Vy4kV
+	 MekQ/7SgvBT5g==
 
-Intel On Demand adds attestation and firmware measurement retrieval
-services through use of the protocols defined the Security Protocols and
-Data Measurement (SPDM) specification. SPDM messages exchanges are used to
-authenticate On Demand hardware and to retrieve signed measurements of the
-NVRAM state used to track feature provisioning and the NVRAM state used for
-metering services. These allow software to verify the authenticity of the
-On Demand hardware as well as the integrity of the reported silicon
-configuration.
+Overview
+--------
 
-Add a netlink SPDM transport for sending SPDM messages through the On
-Demand mailbox. Provides commands to get a list of SPDM enabled devices,
-get the message size limits for SPDM Requesters and Responders, and perform
-an SPDM message exchange.
+This patch series changes struct system_counterval_t to identify the
+clocksource through enum clocksource_ids, rather than through struct
+clocksource *. The net effect of the patch series is that
+get_device_system_crosststamp() callers can supply clocksource ids instead
+of clocksource pointers. The pointers can be problematic to get hold of.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Tested-by: Wendy Wang <wendy.wang@intel.com>
-Link: https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf [1]
----
- Documentation/netlink/specs/intel_sdsi.yaml |  97 ++++++++
- MAINTAINERS                                 |   2 +
- drivers/platform/x86/intel/Makefile         |   2 +-
- drivers/platform/x86/intel/sdsi.c           | 164 ++++++++++++-
- drivers/platform/x86/intel/sdsi.h           |  14 ++
- drivers/platform/x86/intel/sdsi_genl.c      | 249 ++++++++++++++++++++
- include/uapi/linux/intel-sdsi.h             |  40 ++++
- 7 files changed, 565 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/netlink/specs/intel_sdsi.yaml
- create mode 100644 drivers/platform/x86/intel/sdsi_genl.c
- create mode 100644 include/uapi/linux/intel-sdsi.h
+The series is also available at
 
-diff --git a/Documentation/netlink/specs/intel_sdsi.yaml b/Documentation/netlink/specs/intel_sdsi.yaml
-new file mode 100644
-index 000000000000..eeeaaffe3e81
---- /dev/null
-+++ b/Documentation/netlink/specs/intel_sdsi.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
-+
-+name: intel-sdsi
-+
-+protocol: genetlink
-+
-+doc:
-+  Intel On Demand generic netlink ABI for Attestation servives.
-+
-+attribute-sets:
-+  -
-+    name: sdsi
-+    name-prefix: sdsi-genl-attr-
-+    attributes:
-+      -
-+        name: unspec
-+        type: unused
-+        value: 0
-+      -
-+        name: devs
-+        doc: List of On Demand entries
-+        type: nest
-+        multi-attr: true
-+        nested-attributes: dev-info
-+      -
-+        name: dev-id
-+        type: u32
-+      -
-+        name: dev-name
-+        type: string
-+      -
-+        name: spdm-req
-+        type: binary
-+      -
-+        name: spdm-rsp
-+        type: binary
-+      -
-+        name: spdm-rsp-size
-+        type: u32
-+      -
-+        name: spdm-req-size
-+        type: u32
-+  -
-+    name: dev-info
-+    subset-of: sdsi
-+    attributes:
-+      -
-+        name: dev-id
-+        type: u32
-+      -
-+        name: dev-name
-+        type: string
-+
-+operations:
-+  name-prefix: sdsi-genl-cmd-
-+  list:
-+    -
-+      name: unspec
-+      doc: unused
-+      value: 0
-+    -
-+      name: get-devs
-+      doc: Returns a list of available On Demand entries
-+      attribute-set: sdsi
-+      do: &get-devs-op
-+        request:
-+          attributes:
-+            - dev-id
-+        reply:
-+          attributes:
-+            - devs
-+      dump: *get-devs-op
-+    -
-+      name: get-info
-+      doc: Returns information about On Demand devices
-+      attribute-set: sdsi
-+      do:
-+        request:
-+          attributes:
-+            - dev-id
-+        reply:
-+          attributes:
-+            - spdm-req-size
-+            - spdm-rsp-size
-+    -
-+      name: get-spdm
-+      doc: Send and receive SPDM messages
-+      attribute-set: sdsi
-+      do:
-+        request:
-+          attributes:
-+            - dev-id
-+            - spdm-req
-+        reply:
-+          attributes:
-+            - dev-id
-+            - spdm-rsp
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09ef8497e48a..523943140bf5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11041,8 +11041,10 @@ F:	drivers/platform/x86/intel_scu_*
- INTEL SDSI DRIVER
- M:	David E. Box <david.e.box@linux.intel.com>
- S:	Supported
-+F:	drivers/platform/x86/intel/sdsi_genl.c
- F:	drivers/platform/x86/intel/sdsi.c
- F:	drivers/platform/x86/intel/sdsi.h
-+F:	include/uapi/linux/sdsi_nl.h
- F:	tools/arch/x86/intel_sdsi/
- F:	tools/testing/selftests/drivers/sdsi/
- 
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index c1d5fe05e3f3..e1408d60d6ea 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -28,7 +28,7 @@ intel_int0002_vgpio-y			:= int0002_vgpio.o
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
- intel_oaktrail-y			:= oaktrail.o
- obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
--intel_sdsi-y				:= sdsi.o
-+intel_sdsi-y				:= sdsi.o sdsi_genl.o
- obj-$(CONFIG_INTEL_SDSI)		+= intel_sdsi.o
- intel_vsec-y				:= vsec.o
- obj-$(CONFIG_INTEL_VSEC)		+= intel_vsec.o
-diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-index d48bb648f0b2..14821fee249c 100644
---- a/drivers/platform/x86/intel/sdsi.c
-+++ b/drivers/platform/x86/intel/sdsi.c
-@@ -11,6 +11,7 @@
- #include <linux/auxiliary_bus.h>
- #include <linux/bits.h>
- #include <linux/bitfield.h>
-+#include <linux/cleanup.h>
- #include <linux/device.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
-@@ -34,6 +35,7 @@
- 
- #define SDSI_ENABLED_FEATURES_OFFSET	16
- #define SDSI_FEATURE_SDSI		BIT(3)
-+#define SDSI_FEATURE_ATTESTATION	BIT(12)
- #define SDSI_FEATURE_METERING		BIT(26)
- 
- #define SDSI_SOCKET_ID_OFFSET		64
-@@ -76,11 +78,15 @@
- #define GUID_V2_CNTRL_SIZE		16
- #define GUID_V2_REGS_SIZE		80
- 
-+LIST_HEAD(sdsi_list);
-+DEFINE_MUTEX(sdsi_list_lock);
-+
- enum sdsi_command {
- 	SDSI_CMD_PROVISION_AKC		= 0x0004,
- 	SDSI_CMD_PROVISION_CAP		= 0x0008,
- 	SDSI_CMD_READ_STATE		= 0x0010,
- 	SDSI_CMD_READ_METER		= 0x0014,
-+	SDSI_CMD_ATTESTATION		= 0x1012,
- };
- 
- struct sdsi_mbox_info {
-@@ -533,6 +539,99 @@ static const struct attribute_group sdsi_group = {
- };
- __ATTRIBUTE_GROUPS(sdsi);
- 
-+bool sdsi_supports_attestation(struct sdsi_priv *priv)
-+{
-+	return priv->features & SDSI_FEATURE_ATTESTATION;
-+}
-+
-+/* SPDM transport  */
-+int sdsi_spdm_exchange(void *private, const void *request, size_t request_sz,
-+		       void *response, size_t response_sz)
-+{
-+	struct sdsi_priv *priv = private;
-+	struct sdsi_mbox_info info = {};
-+	size_t spdm_msg_size, size;
-+	int ret;
-+	u64 *payload __free(kfree) = NULL;
-+
-+	/*
-+	 * For the attestation command, the mailbox write size is the sum of:
-+	 *     Size of the SPDM request payload, padded for qword alignment
-+	 *     8 bytes for the mailbox command
-+	 *     8 bytes for the actual (non-padded) size of the SPDM request
-+	 */
-+	if (request_sz > (SDSI_SIZE_WRITE_MSG - (2 * sizeof(u64))))
-+		return -EOVERFLOW;
-+
-+	info.size = round_up(request_sz, sizeof(u64)) + 2 * sizeof(u64);
-+
-+	payload = kzalloc(info.size, GFP_KERNEL);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	memcpy(payload, request, request_sz);
-+
-+	/* The non-padded SPDM payload size is the 2nd-to-last qword */
-+	payload[(info.size / sizeof(u64)) - 2] = request_sz;
-+
-+	/* Attestation mailbox command is the last qword of payload buffer */
-+	payload[(info.size / sizeof(u64)) - 1] = SDSI_CMD_ATTESTATION;
-+
-+	info.payload = payload;
-+	info.buffer = response;
-+
-+	ret = mutex_lock_interruptible(&priv->mb_lock);
-+	if (ret)
-+		return ret;
-+	ret = sdsi_mbox_write(priv, &info, &size);
-+	mutex_unlock(&priv->mb_lock);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * The read size is the sum of:
-+	 *     Size of the SPDM response payload, padded for qword alignment
-+	 *     8 bytes for the actual (non-padded) size of the SPDM payload
-+	 */
-+
-+	if (size < sizeof(u64)) {
-+		dev_err(priv->dev,
-+			"Attestation error: Mailbox reply size, %ld, too small\n",
-+			size);
-+		return -EPROTO;
-+	}
-+
-+	if (!IS_ALIGNED(size, sizeof(u64))) {
-+		dev_err(priv->dev,
-+			"Attestation error: Mailbox reply size, %ld, is not aligned\n",
-+			size);
-+		return -EPROTO;
-+	}
-+
-+	/*
-+	 * Get the SPDM response size from the last QWORD and check it fits
-+	 * with no more than 7 bytes of padding
-+	 */
-+	spdm_msg_size = ((u64 *)info.buffer)[(size - sizeof(u64)) / sizeof(u64)];
-+	if (!in_range(size - spdm_msg_size - sizeof(u64), 0, 8)) {
-+		dev_err(priv->dev,
-+			"Attestation error: Invalid SPDM response size, %ld\n",
-+			spdm_msg_size);
-+		return -EPROTO;
-+	}
-+
-+	if (spdm_msg_size > response_sz) {
-+		dev_err(priv->dev, "Attestation error: Expected response size %ld, got %ld\n",
-+			 response_sz, spdm_msg_size);
-+		return -EOVERFLOW;
-+	}
-+
-+	memcpy(response, info.buffer, spdm_msg_size);
-+
-+	return spdm_msg_size;
-+}
-+
- static int sdsi_get_layout(struct sdsi_priv *priv, struct disc_table *table)
- {
- 	switch (table->guid) {
-@@ -614,6 +713,7 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
- 		return -ENOMEM;
- 
- 	priv->dev = &auxdev->dev;
-+	priv->id = auxdev->id;
- 	mutex_init(&priv->mb_lock);
- 	auxiliary_set_drvdata(auxdev, priv);
- 
-@@ -637,9 +737,36 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
- 	if (ret)
- 		return ret;
- 
-+	mutex_lock(&sdsi_list_lock);
-+	list_add(&priv->node, &sdsi_list);
-+	mutex_unlock(&sdsi_list_lock);
-+
- 	return 0;
- }
- 
-+static void sdsi_remove(struct auxiliary_device *auxdev)
-+{
-+	struct sdsi_priv *priv = auxiliary_get_drvdata(auxdev);
-+
-+	list_del(&priv->node);
-+}
-+
-+struct sdsi_priv *sdsi_dev_get_by_id(int id)
-+{
-+	struct sdsi_priv *priv, *match = NULL;
-+
-+	mutex_lock(&sdsi_list_lock);
-+	list_for_each_entry(priv, &sdsi_list, node) {
-+		if (priv->id == id) {
-+			match = priv;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&sdsi_list_lock);
-+
-+	return match;
-+}
-+
- static const struct auxiliary_device_id sdsi_aux_id_table[] = {
- 	{ .name = "intel_vsec.sdsi" },
- 	{}
-@@ -652,9 +779,42 @@ static struct auxiliary_driver sdsi_aux_driver = {
- 	},
- 	.id_table	= sdsi_aux_id_table,
- 	.probe		= sdsi_probe,
--	/* No remove. All resources are handled under devm */
-+	.remove		= sdsi_remove,
- };
--module_auxiliary_driver(sdsi_aux_driver);
-+
-+static bool netlink_initialized;
-+
-+static int __init sdsi_init(void)
-+{
-+	int ret;
-+
-+	ret = auxiliary_driver_register(&sdsi_aux_driver);
-+	if (ret)
-+		goto error;
-+
-+	if (sdsi_netlink_init())
-+		pr_warn("Intel SDSi failed to init netlink\n");
-+	else
-+		netlink_initialized = true;
-+
-+	return 0;
-+
-+error:
-+	mutex_destroy(&sdsi_list_lock);
-+	return ret;
-+}
-+module_init(sdsi_init);
-+
-+static void __exit sdsi_exit(void)
-+{
-+	if (netlink_initialized)
-+		sdsi_netlink_exit();
-+
-+	auxiliary_driver_unregister(&sdsi_aux_driver);
-+
-+	mutex_destroy(&sdsi_list_lock);
-+}
-+module_exit(sdsi_exit);
- 
- MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
- MODULE_DESCRIPTION("Intel On Demand (SDSi) driver");
-diff --git a/drivers/platform/x86/intel/sdsi.h b/drivers/platform/x86/intel/sdsi.h
-index d0d7450c7b2b..256618eb3136 100644
---- a/drivers/platform/x86/intel/sdsi.h
-+++ b/drivers/platform/x86/intel/sdsi.h
-@@ -19,13 +19,27 @@ struct device;
- struct sdsi_priv {
- 	struct mutex			mb_lock;	/* Mailbox access lock */
- 	struct device			*dev;
-+	struct intel_vsec_device	*ivdev;
-+	struct list_head		node;
- 	void __iomem			*control_addr;
- 	void __iomem			*mbox_addr;
- 	void __iomem			*regs_addr;
- 	int				control_size;
- 	int				maibox_size;
- 	int				registers_size;
-+	int				id;
- 	u32				guid;
- 	u32				features;
- };
-+
-+extern struct list_head sdsi_list;
-+extern struct mutex sdsi_list_lock;
-+
-+extern bool sdsi_supports_attestation(struct sdsi_priv *priv);
-+extern int
-+sdsi_spdm_exchange(void *private, const void *request, size_t request_sz,
-+		   void *response, size_t response_sz);
-+extern struct sdsi_priv *sdsi_dev_get_by_id(int id);
-+extern int sdsi_netlink_init(void);
-+extern int sdsi_netlink_exit(void);
- #endif
-diff --git a/drivers/platform/x86/intel/sdsi_genl.c b/drivers/platform/x86/intel/sdsi_genl.c
-new file mode 100644
-index 000000000000..bca1671eba0d
---- /dev/null
-+++ b/drivers/platform/x86/intel/sdsi_genl.c
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023, Intel Corporation.
-+ * All Rights Reserved.
-+ *
-+ * Author: David E. Box <david.e.box@linux.intel.com>
-+ *
-+ * Netlink ABI for Intel On Demand SPDM transport
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/intel-sdsi.h>
-+#include <net/genetlink.h>
-+
-+#include "sdsi.h"
-+
-+static struct genl_family sdsi_nl_family;
-+
-+static const struct nla_policy sdsi_genl_policy[SDSI_GENL_ATTR_MAX + 1] = {
-+	[SDSI_GENL_ATTR_DEVS]			= { .type = NLA_NESTED },
-+	[SDSI_GENL_ATTR_DEV_ID]			= { .type = NLA_U32 },
-+	[SDSI_GENL_ATTR_DEV_NAME]		= { .type = NLA_STRING },
-+	[SDSI_GENL_ATTR_SPDM_REQ]		= { .type = NLA_BINARY },
-+	[SDSI_GENL_ATTR_SPDM_RSP]		= { .type = NLA_BINARY },
-+	[SDSI_GENL_ATTR_SPDM_REQ_SIZE]		= { .type = NLA_U32 },
-+	[SDSI_GENL_ATTR_SPDM_RSP_SIZE]		= { .type = NLA_U32 },
-+};
-+
-+struct param {
-+	struct nlattr **attrs;
-+	struct sk_buff *msg;
-+	struct sdsi_priv *priv;
-+};
-+
-+typedef int (*sdsi_genl_cb_t)(struct param *);
-+
-+static int sdsi_genl_cmd_spdm(struct param *p)
-+{
-+	struct sk_buff *msg = p->msg;
-+	struct sdsi_priv *priv = p->priv;
-+	void *response __free(kfree) = NULL;
-+	void *request;
-+	int rsp_size, req_size;
-+	int ret;
-+
-+	if (!sdsi_supports_attestation(priv))
-+		return -EOPNOTSUPP;
-+
-+	if (!p->attrs[SDSI_GENL_ATTR_SPDM_REQ])
-+		return -EINVAL;
-+
-+	request = nla_data(p->attrs[SDSI_GENL_ATTR_SPDM_REQ]);
-+	req_size = nla_len(p->attrs[SDSI_GENL_ATTR_SPDM_REQ]);
-+
-+	response = kmalloc(SDSI_SIZE_READ_MSG, GFP_KERNEL);
-+	if (!response)
-+		return -ENOMEM;
-+
-+	rsp_size = sdsi_spdm_exchange(priv, request, req_size, response,
-+				      SDSI_SIZE_READ_MSG);
-+	if (rsp_size < 0)
-+		return rsp_size;
-+
-+	ret = nla_put_u32(msg, SDSI_GENL_ATTR_DEV_ID, priv->id);
-+	if (ret)
-+		return ret;
-+
-+	return nla_put(msg, SDSI_GENL_ATTR_SPDM_RSP, rsp_size,
-+		       response);
-+}
-+
-+static int sdsi_genl_cmd_get_devs(struct param *p)
-+{
-+	struct sk_buff *msg = p->msg;
-+	struct nlattr *nest_start;
-+	struct sdsi_priv *priv = p->priv;
-+
-+	nest_start = nla_nest_start(msg, SDSI_GENL_ATTR_DEVS);
-+	if (!nest_start)
-+		return -EMSGSIZE;
-+
-+	if (nla_put_u32(msg, SDSI_GENL_ATTR_DEV_ID, priv->id) ||
-+	    nla_put_string(msg, SDSI_GENL_ATTR_DEV_NAME, dev_name(priv->dev)))
-+		goto out_cancel_nest;
-+
-+	nla_nest_end(msg, nest_start);
-+
-+	return 0;
-+
-+out_cancel_nest:
-+	nla_nest_cancel(msg, nest_start);
-+
-+	return -EMSGSIZE;
-+}
-+
-+static int sdsi_genl_cmd_get_info(struct param *p)
-+{
-+	struct sk_buff *msg = p->msg;
-+	int ret;
-+
-+	ret = nla_put_u32(msg, SDSI_GENL_ATTR_SPDM_REQ_SIZE,
-+			  SDSI_SIZE_WRITE_MSG - (2 * sizeof(u64)));
-+	if (ret)
-+		return ret;
-+
-+	return nla_put_u32(msg, SDSI_GENL_ATTR_SPDM_RSP_SIZE,
-+			   SDSI_SIZE_READ_MSG - (sizeof(u64)));
-+}
-+
-+static sdsi_genl_cb_t sdsi_genl_cmd_cb[] = {
-+	[SDSI_GENL_CMD_GET_DEVS]		= sdsi_genl_cmd_get_devs,
-+	[SDSI_GENL_CMD_GET_INFO]		= sdsi_genl_cmd_get_info,
-+	[SDSI_GENL_CMD_GET_SPDM]		= sdsi_genl_cmd_spdm,
-+};
-+
-+static int sdsi_genl_cmd_dumpit(struct sk_buff *skb,
-+				struct netlink_callback *cb)
-+{
-+	struct param p = { .msg = skb };
-+	struct sdsi_priv *entry;
-+	const struct genl_dumpit_info *info = genl_dumpit_info(cb);
-+	int cmd = info->op.cmd;
-+	int ret = 0, idx = 0;
-+	void *hdr;
-+
-+	hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
-+			  &sdsi_nl_family, NLM_F_MULTI, cmd);
-+	if (!hdr)
-+		return -EMSGSIZE;
-+
-+	mutex_lock(&sdsi_list_lock);
-+	list_for_each_entry(entry, &sdsi_list, node) {
-+		p.priv = entry;
-+		ret = sdsi_genl_cmd_cb[cmd](&p);
-+		if (ret)
-+			break;
-+		idx++;
-+	}
-+	mutex_unlock(&sdsi_list_lock);
-+
-+	if (ret)
-+		goto out_cancel_msg;
-+
-+	genlmsg_end(skb, hdr);
-+
-+	return 0;
-+
-+out_cancel_msg:
-+	genlmsg_cancel(skb, hdr);
-+	return ret;
-+}
-+
-+static int sdsi_genl_cmd_doit(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct param p = { .attrs = info->attrs };
-+	struct sdsi_priv *priv, *entry;
-+	struct sk_buff *msg;
-+	void *hdr;
-+	int cmd = info->genlhdr->cmd;
-+	int ret = 0;
-+	int id;
-+
-+	if (!p.attrs[SDSI_GENL_ATTR_DEV_ID])
-+		return -EINVAL;
-+
-+	id = nla_get_u32(p.attrs[SDSI_GENL_ATTR_DEV_ID]);
-+
-+	priv = sdsi_dev_get_by_id(id);
-+	if (!priv)
-+		return -ENODEV;
-+
-+	msg = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	p.msg = msg;
-+	p.priv = priv;
-+
-+	hdr = genlmsg_put_reply(msg, info, &sdsi_nl_family, 0, cmd);
-+	if (!hdr)
-+		goto out_free_msg;
-+
-+	mutex_lock(&sdsi_list_lock);
-+	list_for_each_entry(entry, &sdsi_list, node) {
-+		if (entry == priv) {
-+			ret = sdsi_genl_cmd_cb[cmd](&p);
-+			if (ret)
-+				break;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&sdsi_list_lock);
-+
-+	if (ret)
-+		goto out_cancel_msg;
-+
-+	genlmsg_end(msg, hdr);
-+
-+	return genlmsg_reply(msg, info);
-+
-+out_cancel_msg:
-+	genlmsg_cancel(msg, hdr);
-+out_free_msg:
-+	nlmsg_free(msg);
-+
-+	return ret;
-+}
-+
-+static const struct genl_ops sdsi_genl_ops[] = {
-+	{
-+		.cmd = SDSI_GENL_CMD_GET_DEVS,
-+		.doit = sdsi_genl_cmd_doit,
-+		.dumpit = sdsi_genl_cmd_dumpit,
-+	},
-+	{
-+		.cmd = SDSI_GENL_CMD_GET_INFO,
-+		.doit = sdsi_genl_cmd_doit,
-+		.flags = GENL_ADMIN_PERM,
-+	},
-+	{
-+		.cmd = SDSI_GENL_CMD_GET_SPDM,
-+		.doit = sdsi_genl_cmd_doit,
-+		.flags = GENL_ADMIN_PERM,
-+	},
-+};
-+
-+static struct genl_family sdsi_nl_family __ro_after_init = {
-+	.hdrsize	= 0,
-+	.name		= SDSI_FAMILY_NAME,
-+	.version	= SDSI_FAMILY_VERSION,
-+	.maxattr	= SDSI_GENL_ATTR_MAX,
-+	.policy		= sdsi_genl_policy,
-+	.ops		= sdsi_genl_ops,
-+	.resv_start_op	= SDSI_GENL_CMD_MAX + 1,
-+	.n_ops		= ARRAY_SIZE(sdsi_genl_ops),
-+};
-+
-+int __init sdsi_netlink_init(void)
-+{
-+	return genl_register_family(&sdsi_nl_family);
-+}
-+
-+int sdsi_netlink_exit(void)
-+{
-+	return genl_unregister_family(&sdsi_nl_family);
-+}
-diff --git a/include/uapi/linux/intel-sdsi.h b/include/uapi/linux/intel-sdsi.h
-new file mode 100644
-index 000000000000..db7c49a66fdd
---- /dev/null
-+++ b/include/uapi/linux/intel-sdsi.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Intel On Demand SPDM Interface
-+ * Copyright (c) 2023, Intel Corporation.
-+ * All rights reserved.
-+ *
-+ * Author: David E. Box <david.e.box@linux.intel.com>
-+ */
-+
-+#ifndef __SDSI_NL_H
-+#define __SDSI_NL_H
-+
-+#define SDSI_FAMILY_NAME	"intel_sdsi"
-+#define SDSI_FAMILY_VERSION	1
-+
-+enum {
-+	SDSI_GENL_ATTR_UNSPEC,
-+	SDSI_GENL_ATTR_DEVS,		/* nested */
-+	SDSI_GENL_ATTR_DEV_ID,		/* u32, device id */
-+	SDSI_GENL_ATTR_DEV_NAME,	/* string, device name */
-+	SDSI_GENL_ATTR_SPDM_REQ,	/* binary, SDPM request message */
-+	SDSI_GENL_ATTR_SPDM_RSP,	/* binary, SDPM response message */
-+	SDSI_GENL_ATTR_SPDM_REQ_SIZE,	/* u32, max SDPM request size */
-+	SDSI_GENL_ATTR_SPDM_RSP_SIZE,	/* u32, max SPDM response size */
-+
-+	__SDSI_GENL_ATTR_MAX,
-+	SDSI_GENL_ATTR_MAX = (__SDSI_GENL_ATTR_MAX - 1)
-+};
-+
-+enum {
-+	SDSI_GENL_CMD_UNSPEC,
-+	SDSI_GENL_CMD_GET_DEVS,		/* Get On Demand device list */
-+	SDSI_GENL_CMD_GET_INFO,		/* Get On Demand device info */
-+	SDSI_GENL_CMD_GET_SPDM,		/* Get SPDM response to SPDM request */
-+
-+	__SDSI_GENL_CMD_MAX,
-+	SDSI_GENL_CMD_MAX = (__SDSI_GENL_CMD_MAX - 1)
-+};
-+
-+#endif /* __SDSI_NL_H */
+        https://github.com/OpenSynergy/linux clocksource-id-for-xtstamp-v3
+
+Motivation
+----------
+
+The immediate motivation for this patch series is to enable the virtio_rtc
+RFC driver (v3 cf. [1]) to refer to the Arm Generic Timer clocksource
+without requiring new helper functions in the arm_arch_timer driver. Other
+future get_device_system_crosststamp() users may profit from this change as
+well.
+
+Clocksource structs are normally private to clocksource drivers. Therefore,
+get_device_system_crosststamp() callers require that clocksource drivers
+expose the clocksource of interest in some way.
+
+Drivers such as virtio_rtc could obtain all information for calling
+get_device_system_crosststamp() from their bound device, except for
+clocksource identification. Often, such drivers' only direct relation with
+the clocksource driver is clocksource identification. So using the
+clocksource enum, rather than obtaining pointers in a clocksource driver
+specific way, would reduce the coupling between the
+get_device_system_crosststamp() callers and clocksource drivers.
+
+Affected Code
+-------------
+
+This series modifies code which is relevant to
+get_device_system_crosststamp(), in timekeeping, ptp/kvm, x86/kvm, and
+x86/tsc.
+
+There are two sorts of get_device_system_crosststamp() callers in the
+current kernel:
+
+1) On Intel platforms, some PTP hardware clocks, and the HDA controller,
+obtain the clocksource pointer for get_device_system_crosststamp() using
+convert_art_to_tsc() or convert_art_ns_to_tsc() from arch/x86.
+
+2) The ptp_kvm driver uses kvm_arch_ptp_get_crosststamp(), which is
+implemented for platforms with kvm_clock (x86) or arm_arch_timer.
+Amongst other things, kvm_arch_ptp_get_crosststamp() returns a clocksource
+pointer. The Arm implementation is in the arm_arch_timer driver.
+
+Changes
+-------
+
+The series does the following:
+
+- add clocksource ID to the get_device_system_crosststamp() param type
+
+- add required clocksource ids and set them in
+  get_device_system_crosststamp() users
+
+- evaluate clocksource ID in get_device_system_crosststamp(), rather than
+  clocksource pointer
+
+- remove now obsolete clocksource pointer field and related code
+
+This series should not alter any behavior. This series is a prerequisite
+for the virtio_rtc driver [1].
+
+Verification
+------------
+
+Out of the existing get_device_system_crosststamp() users, only ptp_kvm has
+been tested (on x86-64 and arm64).
+
+For each patch, with next-20240131 and mainline 1bbb19b6eb1b, on x86-64 and
+arm64:
+
+- built allmodconfig, allyesconfig, tinyconfig with GCC and LLVM (with a
+  few unrelated features turned off)
+
+- runtime-tested ptp_kvm, checking ioctl PTP_SYS_OFFSET_PRECISE return
+  codes and clock synchronization success (reverted unrelated 
+  "tty: serial: amba-pl011: Remove QDF2xxx workarounds" from linux-next
+  on arm64, to get QEMU with console working)
+
+Changelog
+---------
+
+v3:
+
+- Drop RFC.
+
+- Omit redundant clocksource_ids.h includes (Andy Shevchenko).
+
+- Fix tsc.c kernel-doc warnings, omitting some redundant documentation
+  (Simon Horman).
+
+- Document relevant verification.
+
+- Improve commit message wording.
+
+v2:
+
+- Align existing changes with sketch [2] by Thomas Gleixner (omitting
+  additional clocksource base changes from [2]).
+
+- Add follow-up improvements in ptp_kvm and kvmclock.
+
+- Split patches differently (Thomas Gleixner).
+
+- Refer to clocksource IDs as such in comments (Thomas Gleixner).
+
+- Update comments which were still referring to clocksource pointers.
+
+[1] https://lore.kernel.org/lkml/20231218073849.35294-1-peter.hilber@opensynergy.com/
+[2] https://lore.kernel.org/lkml/87lec15i4b.ffs@tglx/
+
+
+Peter Hilber (8):
+  x86/tsc: Fix major kernel-doc warnings for tsc.c
+  timekeeping: Add clocksource ID to struct system_counterval_t
+  x86/tsc: Add clocksource ID, set system_counterval_t.cs_id
+  x86/kvm, ptp/kvm: Add clocksource ID, set system_counterval_t.cs_id
+  ptp/kvm, arm_arch_timer: Set system_counterval_t.cs_id to constant
+  timekeeping: Evaluate system_counterval_t.cs_id instead of .cs
+  treewide: Remove system_counterval_t.cs, which is never read
+  kvmclock: Unexport kvmclock clocksource
+
+ arch/x86/include/asm/kvmclock.h      |  2 --
+ arch/x86/kernel/kvmclock.c           |  4 ++--
+ arch/x86/kernel/tsc.c                | 28 +++++++++++++++-------------
+ drivers/clocksource/arm_arch_timer.c |  6 +++---
+ drivers/ptp/ptp_kvm_common.c         | 10 +++++-----
+ drivers/ptp/ptp_kvm_x86.c            |  4 ++--
+ include/linux/clocksource_ids.h      |  3 +++
+ include/linux/ptp_kvm.h              |  4 ++--
+ include/linux/timekeeping.h          | 10 ++++++----
+ kernel/time/timekeeping.c            |  9 +++++----
+ 10 files changed, 43 insertions(+), 37 deletions(-)
+
+
+base-commit: 06f658aadff0e483ee4f807b0b46c9e5cba62bfa
 -- 
-2.34.1
+2.40.1
 
