@@ -1,160 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746C01FC8
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 00:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A6D20E4
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 00:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706748888; cv=none; b=tW2hrX2bOuYTxCuOa17J2gX46fKim/n80HQ2jnJh+2Nl9M1kZCXKQnkcXo7fQlhoMiEc6Y0N6MnswFGmMkBE5HvKYs4E0XV9pmpUayZfrGrPo6MeSEoPtUsyqiO1znqD4Wm25ptluX/Kmwa0fJQB7Y2JcrfQ8bezwJ/rPHkksTI=
+	t=1706749077; cv=none; b=H19TSl9fm2SKPpKgHZXwGrid0zr0XmgmclLpnRzSlhuFcGhydDajM6aAF/sz+oEwLoZHkvGP/9wt5ADyzc7BQAcISc58CKNXqLbsFIC+So2gB33Rj95N9jRKqq1Mkymz+1KhIcbRJtTVFJiIYOoNoqP9wBj4kt5It59ZGC5/abA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706748888; c=relaxed/simple;
-	bh=qujnpASse8+r8ZzJznge6AEXFi6ewoeRbuwBmjdvRgs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tBRm9sCNgNNLlI8x5h0bOhQfV5/ZFshSJTAntQiGuvhsP9YaNNl/EvqcCY6lDVehaonIik6cqnsXk5bt7GqaYKZvD4+OuzaQBch3B295dBzjw+t2bBDRUWH8J5sDFi/B6vOeHF5jdEXGZerKbDcWpP5HR0Y/0nuVOgFpQOH02do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i963c31J; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706749077; c=relaxed/simple;
+	bh=8k0ghcR4VPDFES5qhdUN/8xWWs6EqfQ8PKPk1D1kB24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YLhoC5uocgPHjPkiWcsOjVmTFQh/jWZRogtJd+lrRKzKG/8gav/EH7icqA8aszwN70G4J6A6eNs9lWGj4DP/9yAZN7QKSSZLWuelpL6MJT2SIjTcW5pGeo1xd+jKHIVKQSXZhFn+EsK1xxOb1eok28IWBN0GmRzNIdybVWk7dKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQ7+woMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i963c31J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706748887; x=1738284887;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=qujnpASse8+r8ZzJznge6AEXFi6ewoeRbuwBmjdvRgs=;
-  b=i963c31JKDOsy8Jyo/yBYjeyygNMupxtpRmVONsNUDzUo4vL5M63mYq2
-   xogcgTSJbXTjRUsP4I4mk3hBfyeqPaKttF4w5UJKQ/BfDFypLl6EMHQqH
-   KMdTpPD9AuSuHbaAqOuP/IWHyEtpHSYbddnuUyniQjlKXG9liRjOTDvKE
-   LmVifYDfaHiqGmgQeC7qWA3pqnA8A+ryIl8KfSrhye8qJgkWOOgaWxvjN
-   DzJQT6mpXkcyYLbWTS5f2RGgPMf97Wm7BBpG0gcVl9yobcDgrb1h3IJYT
-   vdHjS68bteSC5ONt+9mX91/83qNNM2b8KS2Fgea6S5vt+Z2ZdwbcunUVq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="17157873"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="17157873"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 16:54:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="932031458"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="932031458"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 16:54:42 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Chris Li <chrisl@kernel.org>
-Cc: Kairui Song <ryncsn@gmail.com>,  Minchan Kim <minchan@kernel.org>,
-  linux-mm@kvack.org,  Andrew Morton <akpm@linux-foundation.org>,  Hugh
- Dickins <hughd@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,
-  Matthew Wilcox <willy@infradead.org>,  Michal Hocko <mhocko@suse.com>,
-  Yosry Ahmed <yosryahmed@google.com>,  David Hildenbrand
- <david@redhat.com>,  linux-kernel@vger.kernel.org,  Yu Zhao
- <yuzhao@google.com>
-Subject: Re: Whether is the race for SWP_SYNCHRONOUS_IO possible? (was Re:
- [PATCH v3 6/7] mm/swap, shmem: use unified swapin helper for shmem)
-In-Reply-To: <CAF8kJuN6G578RWQ5R6eW=FQWg3mphywgnusQYCRMJA4TzhR4jg@mail.gmail.com>
-	(Chris Li's message of "Wed, 31 Jan 2024 15:45:18 -0800")
-References: <20240129175423.1987-1-ryncsn@gmail.com>
-	<20240129175423.1987-7-ryncsn@gmail.com>
-	<87bk92gqpx.fsf_-_@yhuang6-desk2.ccr.corp.intel.com>
-	<CAMgjq7DhjeeCehzj5hiO=v+X0Jg5mEpKim3k8abJA20TN63SHA@mail.gmail.com>
-	<CAF8kJuN6G578RWQ5R6eW=FQWg3mphywgnusQYCRMJA4TzhR4jg@mail.gmail.com>
-Date: Thu, 01 Feb 2024 08:52:46 +0800
-Message-ID: <87plxhf1k1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQ7+woMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C7F2C4166C
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 00:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706749076;
+	bh=8k0ghcR4VPDFES5qhdUN/8xWWs6EqfQ8PKPk1D1kB24=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RQ7+woMJyhZ5xwaXun7RkiXhY8yZcJcOm5385luZ5v8tXK1kYYWb2RqGkXjaomjiu
+	 PaF7q7MjCmt8ICQ/fDoIURd93DpmZD452SGPP4/N+sJ/1MZSikMvRjs5kMrPYfHWQ1
+	 Whxu+QKOkL0InXzf6oLYcRkoHgLfM/oNanA+iCnx3m4oxf5jiq66cO1gMeUHOrLkAd
+	 6L20H2pM+L5SlOVZCRtRdCYwAXVr3OZtYDNwvzBGbCwXwO0OoZBJdCl73Kulu6Wu7B
+	 gDc0fKB8THCXtC5b9OS0y6vhylMgXseWdKirjMWcDX0K1NE6ClbM54C9zPV4YmeN+x
+	 JFbjYXPG3uXjQ==
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-36380147a69so1640075ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 16:57:56 -0800 (PST)
+X-Gm-Message-State: AOJu0YyIMWjRs/2lvPqF/mTclMLXNa+P3bkwRvHtnbVZH7hYphbH6/ze
+	zM79xeKzIGxQBpdagobIQ08vqKq+ICnXlkA/FGSk3dIPiC8lfXYQdCuIISL3lkfXuEB2EzUTjdA
+	chp0VKT68bRf2jxvl+M+X+p3qei1CwocjINhD
+X-Google-Smtp-Source: AGHT+IGKUurwsJMSUXptg8WBQRlcd/mcUrOb09X7kqm5toaDCgm+DHc+joHcrdNygWdls/NNK4npl5EZGAuMVdJaRUc=
+X-Received: by 2002:a05:6e02:1c87:b0:363:8c6c:4c8e with SMTP id
+ w7-20020a056e021c8700b003638c6c4c8emr1046887ill.31.1706749075395; Wed, 31 Jan
+ 2024 16:57:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20231221-async-free-v1-1-94b277992cb0@kernel.org> <CAJD7tkY6XF_rhnAzqhZ-mo8yw-W4hOjxFsbvH04oqVr0u8mOzQ@mail.gmail.com>
+In-Reply-To: <CAJD7tkY6XF_rhnAzqhZ-mo8yw-W4hOjxFsbvH04oqVr0u8mOzQ@mail.gmail.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Wed, 31 Jan 2024 16:57:44 -0800
+X-Gmail-Original-Message-ID: <CAF8kJuOZO5C6J44U0CkU-Y9nGYnYiX4EQddjJGo+fQxh3BDVQg@mail.gmail.com>
+Message-ID: <CAF8kJuOZO5C6J44U0CkU-Y9nGYnYiX4EQddjJGo+fQxh3BDVQg@mail.gmail.com>
+Subject: Re: [PATCH] mm: swap: async free swap slot cache entries
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, =?UTF-8?B?V2VpIFh177+8?= <weixugc@google.com>, 
+	=?UTF-8?B?WXUgWmhhb++/vA==?= <yuzhao@google.com>, 
+	Greg Thelen <gthelen@google.com>, Chun-Tse Shao <ctshao@google.com>, 
+	=?UTF-8?Q?Suren_Baghdasaryan=EF=BF=BC?= <surenb@google.com>, 
+	Brain Geffon <bgeffon@google.com>, Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Mel Gorman <mgorman@techsingularity.net>, Huang Ying <ying.huang@intel.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Kairui Song <kasong@tencent.com>, 
+	Zhongkun He <hezhongkun.hzk@bytedance.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Barry Song <v-songbaohua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Chris Li <chrisl@kernel.org> writes:
+Hi Yosry,
 
-> On Tue, Jan 30, 2024 at 7:58=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wr=
-ote:
->>
->> Hi Ying,
->>
->> On Wed, Jan 31, 2024 at 10:53=E2=80=AFAM Huang, Ying <ying.huang@intel.c=
-om> wrote:
->> >
->> > Hi, Minchan,
->> >
->> > When I review the patchset from Kairui, I checked the code to skip swap
->> > cache in do_swap_page() for swap device with SWP_SYNCHRONOUS_IO.  Is t=
-he
->> > following race possible?  Where a page is swapped out to a swap device
->> > with SWP_SYNCHRONOUS_IO and the swap count is 1.  Then 2 threads of the
->> > process runs on CPU0 and CPU1 as below.  CPU0 is running do_swap_page(=
-).
->>
->> Chris raised a similar issue about the shmem path, and I was worrying
->> about the same issue in previous discussions about do_swap_page:
->> https://lore.kernel.org/linux-mm/CAMgjq7AwFiDb7cAMkWMWb3vkccie1-tocmZfT7=
-m4WRb_UKPghg@mail.gmail.com/
+On Thu, Dec 28, 2023 at 7:34=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
+ wrote:
 >
-> Ha thanks for remembering that.
+> On Thu, Dec 21, 2023 at 10:25=E2=80=AFPM Chris Li <chrisl@kernel.org> wro=
+te:
+> >
+> > We discovered that 1% swap page fault is 100us+ while 50% of
+> > the swap fault is under 20us.
+> >
+> > Further investigation show that a large portion of the time
+> > spent in the free_swap_slots() function for the long tail case.
+> >
+> > The percpu cache of swap slots is freed in a batch of 64 entries
+> > inside free_swap_slots(). These cache entries are accumulated
+> > from previous page faults, which may not be related to the current
+> > process.
+> >
+> > Doing the batch free in the page fault handler causes longer
+> > tail latencies and penalizes the current process.
+> >
+> > Move free_swap_slots() outside of the swapin page fault handler into an
+> > async work queue to avoid such long tail latencies.
+> >
+> > Testing:
+> >
+> > Chun-Tse did some benchmark in chromebook, showing that
+> > zram_wait_metrics improve about 15% with 80% and 95% confidence.
+> >
+> > I recently ran some experiments on about 1000 Google production
+> > machines. It shows swapin latency drops in the long tail
+> > 100us - 500us bucket dramatically.
+> >
+> > platform        (100-500us)             (0-100us)
+> > A               1.12% -> 0.36%          98.47% -> 99.22%
+> > B               0.65% -> 0.15%          98.96% -> 99.46%
+> > C               0.61% -> 0.23%          98.96% -> 99.38%
 >
->>
->> """
->> In do_swap_page path, multiple process could swapin the page at the
->> same time (a mapped once page can still be shared by sub threads),
->> they could get different folios. The later pte lock and pte_same check
->> is not enough, because while one process is not holding the pte lock,
->> another process could read-in, swap_free the entry, then swap-out the
->> page again, using same entry, an ABA problem. The race is not likely
->> to happen in reality but in theory possible.
->> """
->>
->> >
->> > CPU0                            CPU1
->> > ----                            ----
->> > swap_cache_get_folio()
->> > check sync io and swap count
->> > alloc folio
->> > swap_readpage()
->> > folio_lock_or_retry()
->> >                                 swap in the swap entry
->> >                                 write page
->> >                                 swap out to same swap entry
->> > pte_offset_map_lock()
->> > check pte_same()
->> > swap_free()   <-- new content lost!
->> > set_pte_at()  <-- stale page!
->> > folio_unlock()
->> > pte_unmap_unlock()
->>
->> Thank you very much for highlighting this!
->>
->> My concern previously is the same as yours (swapping out using the
->> same entry is like an ABA issue, where pte_same failed to detect the
->> page table change), later when working on V3, I mistakenly thought
->> that's impossible as entry should be pinned until swap_free on CPU0,
->> and I'm wrong. CPU1 can also just call swap_free, then swap count is
->> dropped to 0 and it can just swap out using the same entry. Now I
->> think my patch 6/7 is also affected by this potential race. Seems
->> nothing can stop it from doing this.
->>
->> Actually I was trying to make a reproducer locally, due to swap slot
->> cache, swap allocation algorithm, and the short race window, this is
->> very unlikely to happen though.
+> I recall you mentioning that mem_cgroup_uncharge_swap() is the most
+> expensive part of the batched freeing. If that's the case, I am
+> curious what happens if we move that call outside of the batching
+> (i.e. once the swap entry is no longer used and will be returned to
+> the cache). This should amortize the cost of memcg uncharging and
+> reduce the tail fault latency without extra work. Arguably, it could
+> increase the average fault latency, but not necessarily in a
+> significant way.
 >
-> You can put some sleep in some of the CPU0 where expect the other race
-> to happen to manual help triggering it. Yes, it sounds hard to trigger
-> in real life due to reclaim swap out.
->
->>
->> How about we just increase the swap count temporarily in the direct
->> swap in path (after alloc folio), then drop the count after pte_same
->> (or shmem_add_to_page_cache in shmem path)? That seems enough to
->> prevent the entry reuse issue.
->
-> Sounds like a good solution.
+> Ying pointed out something similar if I understand correctly (and
+> other operations that can be moved).
 
-Yes.  It seems that this can solve the race.
+If the goal is to let the swap fault return as soon as possible. Then
+the current approach is better.
+mem_cgroup_uncarge_swap() is only part of it. Not close to all of it.
 
---
-Best Regards,
-Huang, Ying
+>
+> Also, if we choose to follow this route, I think there we should flush
+> the async worker in drain_slots_cache_cpu(), right?
+Not sure I understand this part. The drain_slots_cache_cpu(), will
+free the entries already. The current lock around cache->free_lock
+should protect async workers accessing the entries. What do you mean
+by flushing?
+
+Chris
