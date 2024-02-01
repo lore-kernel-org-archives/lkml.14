@@ -1,129 +1,153 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006C615AABD;
-	Thu,  1 Feb 2024 09:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F95114010
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706778058; cv=none; b=uc+xlAeorDiYy9HizCN2A1YEBoje5unQ93zetsxhKCCmIsj5bXMFPlCMa5WvvISU9uof9XUK9XFd/1zXyGOymhw5XllxlDl88sP/o9Jtu54lmAhdbTsgbLi60ido3uBdZHvCJYO1D6KwhZPpY8PErQfaP3HOaqcPR2gvlsjzGSU=
+	t=1706778127; cv=none; b=RpjM1jAWJWIkfJXLrdZwlRk+QRAJbfXkvSEVHzkk3EqbcohshQMgiAAAQRzsIe60fRTOoDZw6a6YMAw7S6bPgY1wg06d5k3jRE74tKia1zfWjiFr50ZddGYo9nl9AV2cRmolZNEmPGFh2cRb+uM5iYZrIN7hrjUHay+iJRmEzXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706778058; c=relaxed/simple;
-	bh=fxSyWTEXII9FYSRHA5AllCgfRShTZzISEB1qdO01mVI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f9d0urdlRPFWVc4t+XZjUYiG2t2lbgLoGJxq784Cuez4MSZxUXSbyrUnPIepOTfOBDrlC+fpQRL7mp/TjU/Pc4k3o/yErDEgEJAllP504j/ZcAhl2wSZ94OzWRoIEtchmyHTWZYkU078QlAOWeR9L+UqowHRtjBlXpNSmILk3AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=mOsLsqPN; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1706778127; c=relaxed/simple;
+	bh=LsreWoRfx0pNIFiAcMF+cfb38qMMG2mxUe6kV9wDkMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k4t+8t2hBU+I6q1pqThaZP+E4BQcwYEKSqYgkO0oYRTZ3BuNqJgvxUSeyvZR/ZYvZrJKEiQgvJ+P1WaEz4+5YfU9iLcMhY+hV09cgUgaMrDxnBhx0fG0Id5a+DOVKGnD0+43u7QRPLgbafnCbo78MMSxm0+MWWwVu7YG1NzGk94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aq9nQ/0P; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mOsLsqPN"
-Received: from [192.168.7.187] ([73.202.249.128])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4118xupP3896486
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 1 Feb 2024 00:59:57 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4118xupP3896486
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024011201; t=1706777997;
-	bh=2OdhOw0PyYye8iy3BvAlrNaxdI5nz4rcJWl5AjniITU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mOsLsqPNqBCvVElm9FO1/DCh5rF4TBhAJcFtvg702QrJo8oZHJfpxIXHnrg/oDCHT
-	 HXanXvq2H1YYiSQDToOIqc0irVzJPN5WnFcUV7SItZrrl1RqAONO502qx52BK4cCpr
-	 aq2x9I141DbBfHW2reiAlwWDvlX/UMx1yvRJHhhxZYs8G484T1Ob3envYe7tXmq3z8
-	 76PhmvBSd0iIV7vJ35v1MKO9WUvVjWHGDHzqwVf2CTigPsQkpG1n56QU0Kv2XfnEK6
-	 P+RzTuH3cAgKWm4FmbxpI9F75hdK1WuXuJ8FxaPXsI7Qe4ciWRywU2Nr6+1IPywSer
-	 OYcbGxIyd3Efw==
-Message-ID: <402d250c-e9b2-4c19-befd-d12b2e2582cd@zytor.com>
-Date: Thu, 1 Feb 2024 00:59:54 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aq9nQ/0P"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55818b7053eso12787a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:02:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706778124; x=1707382924; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BI44NP3dAK0mdmDzCdTw2B5OH4IMuQfBMUx2warDaO8=;
+        b=aq9nQ/0PjJk9Mxjodi3m0Y0kjfix456yaMM+XQ2GVTXh7ks+Wecofb33pFkWoUHDU1
+         F1+PxHKFKffuiI0rZuunstKPXuCW47CyROI0aqBaT3dsBJz5eOdj9xISPmSEeubjs4pZ
+         1I7mSuh3+/b2+B/zquMEEmZ41hxM0wOwkPwYgdjcaI2XtxgrYqR7Xr5IOwI/3jkjeyaO
+         YHNvXuKhxZlb04wA4qRNtIPfjdWmZMMBboHw2+wesbQCA+dOy5Nj2xgq+cTtYxWiV2as
+         yTApApGgy2wgREsgMRxtFPv80mRKfdOCm+gqaxIGG5OVDVd2fudl57vvLWk8K2CurUah
+         zcyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706778124; x=1707382924;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BI44NP3dAK0mdmDzCdTw2B5OH4IMuQfBMUx2warDaO8=;
+        b=JAwJeg5waJ8XgUjXN7yHazo+Mf6NkSHAnoPFmvEmyExKYNjv3JPaQvPrw1SK/WmukI
+         m1FGm7dB5Fk/CEvPei0SrIhtlrftkmJuNO1rVk283OJl7lQJ3uWbYv0mOJWERmgdKJ6A
+         rK+uY+3z+8xV+NheVHgbnoLhio3rcZ9zKk5fc3D42EP814gXWDuBbke5VB7PcxzOmFfe
+         Qa3oVsm/Cvu0zqp4qwVzYhkpPCYcTPW8JTi2wxDTwpV3UfXC+fkLsaTDujhplu/Vqq2v
+         jxO6FV1qjFsDWUeAFNHUR3fGm8Mx33yj6FTB7cGu/i8XeKOcjNNxuTOuH65q+qLT+wcZ
+         2Jxw==
+X-Gm-Message-State: AOJu0YyNAJ23VS9gOT3jUdWu8lLODlC5w1icEayymbWQ+wwe36NDCWOl
+	21TX2QuqG2KGHHwd9jMRAkbIFQYFiAX6MBLrmOprG3oz20DyHK4fKQr5aHI+RDDcwLwegI4aRrJ
+	LinyXrl2yJiE9WpsasrmdHM4yADAdCk+u6Fsi
+X-Google-Smtp-Source: AGHT+IEV+PFmvWb0HhY9R2VJ/3+i829zTcpeThpuxAGk8FzbJyV2L6AzWe5SCksdJRpPQudCgJcihZ8Y7vNI9ZKsj1Y=
+X-Received: by 2002:a50:8e51:0:b0:55f:a1af:badc with SMTP id
+ 17-20020a508e51000000b0055fa1afbadcmr165293edx.6.1706778123426; Thu, 01 Feb
+ 2024 01:02:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build warning after merge of the tip tree
-Content-Language: en-US
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Xin Li <xin3.li@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-References: <20240201111453.0ee3beff@canb.auug.org.au>
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240201111453.0ee3beff@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240130064819.1362642-1-guanyulin@google.com> <0e4221b5-bafe-4bea-b533-0ed8add81ef1@rowland.harvard.edu>
+In-Reply-To: <0e4221b5-bafe-4bea-b533-0ed8add81ef1@rowland.harvard.edu>
+From: Guan-Yu Lin <guanyulin@google.com>
+Date: Thu, 1 Feb 2024 17:02:00 +0800
+Message-ID: <CAOuDEK2VSBcQdLKt27VrLUxH2S22275ffbe5mdVM=vBZDhceQA@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] usb: host: Allow userspace to control usb suspend flows
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: gregkh@linuxfoundation.org, mathias.nyman@intel.com, royluo@google.com, 
+	hadess@hadess.net, benjamin.tissoires@redhat.com, 
+	heikki.krogerus@linux.intel.com, oneukum@suse.com, grundler@chromium.org, 
+	yajun.deng@linux.dev, dianders@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, badhri@google.com, albertccwang@google.com, 
+	pumahsu@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/31/2024 4:14 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-> produced this warning:
-> 
-> vmlinux.o: warning: objtool: fred_extint+0x1c: call to array_index_mask_nospec.constprop.0() leaves .noinstr.text section
-> 
-> Probably introduced by commit
-> 
->    6786137bf8fd ("x86/fred: FRED entry/exit and dispatch code")
-> 
-
-The following patch gets rid of the warning.
-
-Boris, should I send a format patch?
-
-Thanks!
-     Xin
-
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 0216f63a366b..fe1e7e3cc844 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -33,7 +33,7 @@
-   * Returns:
-   *     0 - (index < size)
-   */
--static inline unsigned long array_index_mask_nospec(unsigned long index,
-+static __always_inline unsigned long array_index_mask_nospec(unsigned 
-long index,
-  		unsigned long size)
-  {
-  	unsigned long mask;
-
-
+On Wed, Jan 31, 2024 at 1:12=E2=80=AFAM Alan Stern <stern@rowland.harvard.e=
+du> wrote:
+>
+> On Tue, Jan 30, 2024 at 06:47:13AM +0000, Guan-Yu Lin wrote:
+> > In a system with sub-system engaged, the controllers are controlled by
+>
+> What is a sub-system and how does it become engaged?
+>
+The subsystem, run by the co-processor, provides basic functionality even w=
+hen
+the main system is suspended or otherwise occupied. In our design, the
+subsystem becomes engaged when the main system is powered on. The userspace
+will interact with and control both main system (main processor) and the su=
+b
+system (co-processor). That way, the controllers will not be occupied by bo=
+th
+processors simultaneously.
+>
+> > both the main processor and the co-processor. Chances are when the main
+> > processor decides to suspend the USB device, the USB device might still
+> > be used by the co-processor. In this scenario, we need a way to let
+> > system know whether it can suspend the USB device or not. We introduce =
+a
+> > new sysfs entry "deprecate_device_pm" to allow userspace to control the
+> > device power management functionality on demand. As the userspace shoul=
+d
+> > possess the information of both the main processor and the co-processor=
+,
+> > it should be able to address the conflict mentioned above.
+>
+> This description and the comments and documentation in the patch all
+> talk about "device power management".  But in fact the patch only
+> affects system power management; it does not affect runtime power
+> management.
+>
+This description does introduce ambiguity, In addition, the implementation =
+does
+affect more functionality than I expected. I'll re-design the feature to le=
+t it
+only affect `suspend to RAM`. The related comments/commit message will also=
+ be
+updated in the next version.
+>
+> Also, "deprecate_device_pm" does not seem like a very good name.
+> You're not deprecating power management; you're just disabling it
+> temporarily.  You should find a better name.
+>
+Thanks for pointing that out. I'll use `disable_suspend2ram` in the next
+version to better reflect what this feature does. I'll also update other
+wordings accordingly.
+>
+> Do you really want your new flag to affect device suspend during
+> hibernation?  Does the co-processor remain powered when the system is
+> powered off and unplugged?
+>
+The implementation will be modified in the next version. This feature will
+only focus on `suspend to RAM`.
+The co-processor will not be powered when the system is powered off.
+>
+> Do you really want the new sysfs flag to be present even on systems
+> that don't have a co-processor?
+>
+We've identified a use case where this feature would be essential, which is=
+ a
+system with both the main processor and the co-processor. However, other us=
+e
+cases may also benefit from this feature. So, I think we could create a bui=
+ld
+flag for related data structures and codes.
+>
+> Why does this affect only the USB subsystem?  Can't the co-processor
+> use other, non-USB, devices on the system?
+>
+In our use case, the co-processor only supports USB subsystem. There might =
+be
+other co-processors support more subsystems, but we're not sure about how t=
+hey
+will interact with the system.
+>
+> Alan Stern
