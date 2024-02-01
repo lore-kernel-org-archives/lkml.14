@@ -1,86 +1,147 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A0D553363;
-	Thu,  1 Feb 2024 12:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6168662D
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791307; cv=none; b=OimGppKyitb+8jREfuab8FoUg05km8xOYiqb74oj3D+vU5SABfWFuKSK53dqEkv+EjQIQJqrmWPXFc900JbHnSck7iBUGBcGtDbL7KPr3Juuf5AUm++vtuRtfhvksdZ/jRIjMcyVKCgewn3VTxVZtvRkr0KWyPV8Xoh/PsA8qGg=
+	t=1706791336; cv=none; b=d53B650SUswEb4lyreV+4TJIM/s/KAoF8iZbBgJZbqwxBUtwSi29vf6M5vaNAxvHyXo8jn7BuSJdhQ6f6QLWArpKWpPexwDCekCe8YMXSJ5wl8NPtHosnYbIZsyZn13SliEPHhdOJIaIfCUZC44qXOVnCgtzwBFNUhnlNuT6plM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706791307; c=relaxed/simple;
-	bh=mTEwM8qtZQmg8mw1XWHtWN1F324EEuX/vctn70rwP6M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pLG6g+3sLp7GHt3WaQTbyOVtY2ZUl/BEi3boLlFgYedB+xhoy3xcbjlz8ChyfG6j9U49TOIN4vJ9YyHj0BoNywh4vu+uy59SmH5ttmwX24XRwdKCi1URHSiSDVQk8ApJxOg+T8/2ye1+YKiv4kI2ESiy/M9lpKq3A0RE8ARQ3Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [220.184.253.207])
-	by mail-app3 (Coremail) with SMTP id cC_KCgAnDDZxkbtl8ZnjAA--.10172S2;
-	Thu, 01 Feb 2024 20:41:21 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Chas Williams <3chas3@gmail.com>,
-	linux-atm-general@lists.sourceforge.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] atm: idt77252: fix a memleak in open_card_ubr0
-Date: Thu,  1 Feb 2024 20:41:05 +0800
-Message-Id: <20240201124108.3052635-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706791336; c=relaxed/simple;
+	bh=V5F1/67R8Xve6cxS+r+J6PhWJS4TbDHxtjr1nFLKqMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TLWU1Zv4MQSOl0tiVn9uNvMnisPSR36dXaBKR0X5CELGGJD+k7FMFVIwsGStxFCW4uD00eeVThPw5oPVwY99H+47OtaaWeCw5JC9T+sYee4l+gmqYoLlwVldjmrrXHcr10mkXYoY5D2OCrT9V7ByDh673CuS8woPLSyaO0qszqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nUlZng0j; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=USQoimqp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nUlZng0j; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=USQoimqp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nUlZng0j";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="USQoimqp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nUlZng0j";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="USQoimqp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3BE181F385;
+	Thu,  1 Feb 2024 12:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706791333; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pNulsnfLW8vN7uY9MUHrP0RR2dzcocOH9POfk8gEbtA=;
+	b=nUlZng0jXMmIHXrcx4p7ty+mDhAdLSSbOSeURx3mAQy4qWNNPhEIhpZlbY5JXDkuKJDAYG
+	fu8arzbKUc37d1zq1tj7m99n+IFEzh4fwj4P5BBzkoSx2rmtH6OrbZKrDG6AP0LdUQcWJY
+	jZy0ZpGVC6fYSien9mpDBTr+kFFY9As=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706791333;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pNulsnfLW8vN7uY9MUHrP0RR2dzcocOH9POfk8gEbtA=;
+	b=USQoimqpN5kQ9u8B+gkm8NzQZvFeNY6QPWhrIULGaMAhKcijINPHBHme9EXY8Aifl/NbK6
+	ov06BMMIt7P3UJAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706791333; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pNulsnfLW8vN7uY9MUHrP0RR2dzcocOH9POfk8gEbtA=;
+	b=nUlZng0jXMmIHXrcx4p7ty+mDhAdLSSbOSeURx3mAQy4qWNNPhEIhpZlbY5JXDkuKJDAYG
+	fu8arzbKUc37d1zq1tj7m99n+IFEzh4fwj4P5BBzkoSx2rmtH6OrbZKrDG6AP0LdUQcWJY
+	jZy0ZpGVC6fYSien9mpDBTr+kFFY9As=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706791333;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pNulsnfLW8vN7uY9MUHrP0RR2dzcocOH9POfk8gEbtA=;
+	b=USQoimqpN5kQ9u8B+gkm8NzQZvFeNY6QPWhrIULGaMAhKcijINPHBHme9EXY8Aifl/NbK6
+	ov06BMMIt7P3UJAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 89E7B139B1;
+	Thu,  1 Feb 2024 12:42:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YP5zD6ORu2XNOAAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 01 Feb 2024 12:42:11 +0000
+Message-ID: <6950991f-0c1b-40e0-a11d-258276ac56ad@suse.de>
+Date: Thu, 1 Feb 2024 13:42:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 02/12] nvmet-fcloop: swap the list_add_tail arguments
+Content-Language: en-US
+To: Daniel Wagner <dwagner@suse.de>, James Smart <james.smart@broadcom.com>
+Cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240131085112.21668-1-dwagner@suse.de>
+ <20240131085112.21668-3-dwagner@suse.de>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240131085112.21668-3-dwagner@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cC_KCgAnDDZxkbtl8ZnjAA--.10172S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GrykKr4rAw4xJr17GrW7Arb_yoWfXFXE9a
-	4Fqw12q3yYqwn2ya15GFyfuayj9a10yw1ku342qanxGrZFkFW3XrWkW3WaqF13WayxZFZ8
-	Kryjg34DZr18GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbsxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_Xr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JUc189UUUUU=
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nUlZng0j;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=USQoimqp
+X-Spamd-Result: default: False [-3.26 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-2.96)[99.82%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 3BE181F385
+X-Spam-Level: 
+X-Spam-Score: -3.26
+X-Spam-Flag: NO
 
-When alloc_scq fails, card->vcs[0] (i.e. vc) should be freed. Otherwise,
-in the following call chain:
+On 1/31/24 09:51, Daniel Wagner wrote:
+> The first argument of list_add_tail function is the new element which
+> should be added to the list which is the second argument. Swap the
+> arguments to allow processing more than one element at a time.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>   drivers/nvme/target/fcloop.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-idt77252_init_one
-  |-> idt77252_dev_open
-        |-> open_card_ubr0
-              |-> alloc_scq [failed]
-  |-> deinit_card
-        |-> vfree(card->vcs);
+Cheers,
 
-card->vcs is freed and card->vcs[0] is leaked.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- drivers/atm/idt77252.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
-index e327a0229dc1..e7f713cd70d3 100644
---- a/drivers/atm/idt77252.c
-+++ b/drivers/atm/idt77252.c
-@@ -2930,6 +2930,8 @@ open_card_ubr0(struct idt77252_dev *card)
- 	vc->scq = alloc_scq(card, vc->class);
- 	if (!vc->scq) {
- 		printk("%s: can't get SCQ.\n", card->name);
-+		kfree(card->vcs[0]);
-+		card->vcs[0] = NULL;
- 		return -ENOMEM;
- 	}
- 
+Hannes
 -- 
-2.34.1
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Ivo Totev, Andrew McDonald,
+Werner Knoblich
 
