@@ -1,50 +1,50 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3624286621
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 13:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8AC5336E;
+	Thu,  1 Feb 2024 13:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706793954; cv=none; b=VBdro13rvNvPwJbAvKUXtPVehaK8OtuGxZqa7XCH9RDWmNn8Ga0JhpL1x/q9iFmYAvtb3GJeGyyp+GtazLkFgTCgqFA0WafMSFNdwuVzmL/J/a6llQsPru69zOL0AWd63//qLj/Ffy6UY6Nym+a1ja8r4eeuMypXJuGzWaob7bU=
+	t=1706794064; cv=none; b=sWdvML+B6GoGEMBCd8Yv7xLoKeGptzvy9RRPmCJbcUQgSv/Cxv29CMjYW0Y/ZTlFzgXR+ne/GoMNaCFO+Tg8633WKMhFigmcnHTPJxV/gvzxMPbzHB2fPttLtzOs9DIEJLQzdWb0vHL3BMPfNP6Z0jDGzFBxPB8LigxhPYY00rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706793954; c=relaxed/simple;
-	bh=oQjRzK2plHqhTt+Chgslw8wHs1sZ8/+vslBzoxSXcw4=;
+	s=arc-20240116; t=1706794064; c=relaxed/simple;
+	bh=Eg9W3NSA9s6osL6RP2fEHXmCU98GnHHKlYaGBUQfKk4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=utBXUtWaZmicBOIaPvel3aJgaSl6Y37pRT9G+RGVV9TCzcrKXt/l9aQ7IOMxssb/FoPIrJ/TuKZUe90iJx7+tl0IIM0jQ3L6xR+nhVsTkXo00FvHdlsBL6EXwPBC0vnPV7hpTqZZn3H9dQWerS/Szs/pGlaujM8il03qROlqCtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=yf5YCI+q; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=DzMxLtY4XEITosXCcDNHiyndsVfd2v6JAlGHgzHHHG7D1bdsJvpa4aEIFq0IlV+FljzXqLIYPEiav16BZrsIEV6MuKPWmyJxZxyJmf5mDHarecE1SAVKMF1x9r0RCXwY79EL/8n2dXX+XhzxitEdsNUDXp6NNdCnMl7rn++H8SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GOBvCrf6; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yf5YCI+q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2gMbDmm684tBY5OyDAXTn0bRzW55WFT0smq6dzUb1vg=; b=yf5YCI+q0lUEQdT/EOZhEqJ9ZI
-	xIwEEbJ3Rhj8ayiB9mjOyplXozQOSmm92hNNQOrBt+krAD/Ubly1Fo049WSTnSe/gZQQjo3BCiwaM
-	afoIrAnCRgtDYuCCNxeEOT1EC0XKZlSqtbEXaDuPPXnUBeVK0l83BR+CKm3StOE2ygxgW0Gd7OP1Y
-	24C57Suv09U/QP+AmO54+mXusCzJLhkKlcZlWdw5SvnyVyyskLhN7aNU3y7uKuOg918nVgCmB3BaW
-	1VvLImejcbolEsgo1/1/hrT8/TMOvQ7OWhBkSCkWhgcX8mE/DzdlTXXZnNLgyGuyaWF9fYNJUptLw
-	nwamv4gw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41894)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rVWvJ-0004ax-11;
-	Thu, 01 Feb 2024 13:16:09 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rVWvH-0007PU-0R; Thu, 01 Feb 2024 13:16:07 +0000
-Date: Thu, 1 Feb 2024 13:16:06 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Stefan Wiehler <stefan.wiehler@nokia.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] arm: topology: Fix missing clock-frequency
- property warning
-Message-ID: <ZbuZlok+8ZkxGBq7@shell.armlinux.org.uk>
-References: <20240201123605.3037829-2-stefan.wiehler@nokia.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GOBvCrf6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=zjpeycqnVI85EQN7sDqSOxS/I+t8ZWH69ZG5XBfe+hM=; b=GOBvCrf6MlGPgkU0qKHXY8Xic1
+	UtjA5kdkn775QjBvCaGI5WkgYsh2FLU7yS5RyllVeSR/rTXtNFx/9pbtg+hFEWsfWhlWI/7l0zOOb
+	5L3LLrlXxK3+yuoysWEaRayqd+OxlQ65p3Sdtleq4W0Xpw7/2bOM/DSQKhXeUvnfiRW0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rVX6G-006g11-27; Thu, 01 Feb 2024 14:27:28 +0100
+Date: Thu, 1 Feb 2024 14:27:28 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 08/13] net: phy: marvell-88q2xxx: add support
+ for temperature sensor
+Message-ID: <c9866a56-d82e-4a3d-b335-db22c0413416@lunn.ch>
+References: <20240122212848.3645785-1-dima.fedrau@gmail.com>
+ <20240122212848.3645785-9-dima.fedrau@gmail.com>
+ <88a60be9-083b-4618-845c-6983bcad3540@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,27 +53,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240201123605.3037829-2-stefan.wiehler@nokia.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <88a60be9-083b-4618-845c-6983bcad3540@roeck-us.net>
 
-Sorry, I was going to reply to this, but having composed the reply,
-and attempting to add the DT maintainers, mutt decided to completely
-obliterate the To: line.
+> > +#ifdef CONFIG_HWMON
+> 
+> HWMON is tristate, so this may be problematic if the driver is built
+> into the kernel and hwmon is built as module.
 
-Please check with the DT maintainers what the expected behaviour is
-supposed to be.
+There should be Kconfig in addition to this, e.g.
 
-On Thu, Feb 01, 2024 at 01:36:06PM +0100, Stefan Wiehler wrote:
-> The devicetree specification in section 3.8 however specifies that
-> "properties that have identical values across cpu nodes may be placed in
-> the /cpus node instead.
+config MAXLINEAR_GPHY
+        tristate "Maxlinear Ethernet PHYs"
+        select POLYNOMIAL if HWMON
+        depends on HWMON || HWMON=n
+        help
+          Support for the Maxlinear GPY115, GPY211, GPY212, GPY215,
+          GPY241, GPY245 PHYs.
 
-Does this mean the /cpus property is like a default for when a CPU node
-doesn't specify the clock frequency, or does it mean that the /cpus
-property should only exist when all the values for each CPU are
-identical and thus the individual CPU node clock frequency should
-not be specified.
+So its forced to being built in, or not built at all.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+	Andrew
