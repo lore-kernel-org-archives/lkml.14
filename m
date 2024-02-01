@@ -1,113 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85F13FFE;
-	Thu,  1 Feb 2024 16:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C004C67
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 16:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706805757; cv=none; b=agQRx+aIJdg+uxHIF/WW/ePtdE4JvZdAm5L2z2nQzy5Lm5JE1OkLiKZYWceW/Qtj/Tn1JcNQuP53vl0NR/c/owXqLMCukKHYRIAYOESIR3VV6UdUSdOkqf1AOBVmq/1jvfywBR41Lakxhn2CYYGAdd+/1BgnT8V6XYbFNr/DM7A=
+	t=1706806050; cv=none; b=UPHvutCYVJgWur4n/025eC3ob/ifzMbWFPL9nD9A+R1adcAeSii06+AgppZXhjo3o/toudn52Vv1Gil+dmfRoaRF/7WoswMvj37BjO2uPFJvPLDrVxBfb7ZWsS69aA8l0jBGz1vJR77wxw12vKCEipRJJ9b1+cWkziw1mAkKrGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706805757; c=relaxed/simple;
-	bh=Crd3dJgXe4fYUS6yZk7Jg/OJoQ9gKfrffjshj7lAM8A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NMHyyZkZO7CDB6dFLXEC7mqlExncos/maMKcQMu9X4D+6UWML7uB1cTRNcs/0V4/6I/PveIctTO8cIQQYyhsuYoNdVdV1HhaK9bEADbS3kGRUXlT6TL+ln54l2LwTFeKIyqDM0aMwjRmQa+lHSjKhRMF5wtho2jaT0Ww2Sgkv5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZVIcQ1j4; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706806050; c=relaxed/simple;
+	bh=zAH2uQqL5Ghvi4qHjuvcOGK8ukNTqNE0n+POJg40rI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hu41CWXGM/h3Yl6yLn2T0mmrJyF7GPplo5z1iz/tcWl3v4yMsn4NsRmJ5B56nRTdj+2YdKejcHZb+4+VltuhjFGT63rxGwtmu8e3v7DN9qJ+KHN1hzb/h+T9uabdjuJHsDfjRUOyBOx8oM4UMl6+MFAQv3kKvfk1sDcCX3YfmVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+1RKOYH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZVIcQ1j4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706805756; x=1738341756;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Crd3dJgXe4fYUS6yZk7Jg/OJoQ9gKfrffjshj7lAM8A=;
-  b=ZVIcQ1j4wLvA1kpqAyDL2PaYQFti0RlU5QiS7hxb7wmv1ProZb/MKQ/e
-   8WcfUPGX2U2na3Bq5l0+8n1Be8IGVfqKZmB87MnVNG1bgp1ePZzxW+dHL
-   a0C9SIliP/ZFEK3zUIPHNV3fPxjJsbYAfyHs3XnzFx4Of1eNE3IL6AUKN
-   pcMPcvQ6xiQwE2f9BdzzspVtPbpcEnm19Je9Men60pK/quY6/4ggIgHFv
-   IXV8NbdmlHs6DOpjKOmwYi4dnJo2jsSqEEXFRA3nc0HCGey2kXrk1qX/5
-   maDE1rTQQatYSS1QCSuONyYRd3i4+GkiKQENQg7d/QKY2kyItQyqFvhNY
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10688931"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="10688931"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 08:42:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="4437860"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 08:42:34 -0800
-Received: from ssigler-mobl.amr.corp.intel.com (unknown [10.209.41.165])
-	by linux.intel.com (Postfix) with ESMTP id 16F6F580D28;
-	Thu,  1 Feb 2024 08:42:34 -0800 (PST)
-Message-ID: <94a61858ac82ceaac1ef8ae41067ae7356512d7d.camel@linux.intel.com>
-Subject: Re: [PATCH 4/8] platform/x86/intel/sdsi: Add netlink SPDM transport
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: netdev@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Date: Thu, 01 Feb 2024 08:42:33 -0800
-In-Reply-To: <ZbtjyOBHzVKXu_4H@nanopsycho>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com>
-	 <20240201010747.471141-5-david.e.box@linux.intel.com>
-	 <ZbtjyOBHzVKXu_4H@nanopsycho>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+1RKOYH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64058C433C7;
+	Thu,  1 Feb 2024 16:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706806049;
+	bh=zAH2uQqL5Ghvi4qHjuvcOGK8ukNTqNE0n+POJg40rI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V+1RKOYH2OinbbPvsqgtrjbqENkTGpctjpJWlbLkP/L+k+rXffMuHkrK1dGXfSFmf
+	 xG0nOq8qfbK9Q3Z/5Ikk0pF0hTF6aPfh35ugHSG/1sV2qYRCyclpNuhqQX30FrLR+U
+	 VBOAhqQnqJmXdRNS0RoZasUxd3j9Qcvd3jA2gMGK37G1Ox1i1ApwLsyAQygL4Lkzze
+	 J5vTs8+KWyQSGJli5C11lJt0jYDshY1w2yanFwsfaURaKeQcxJnVD5MIL4ITL/vylz
+	 qqa6/CHAzYEXq0Zc8WJcq1bl9T/xSfy5eUXYPtvv5cDTBAZue3Ctt5C+JtFnYOQVyx
+	 I+ymF5YcjY1OA==
+Date: Thu, 1 Feb 2024 17:47:26 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Eric Dumazet <edumazet@google.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Arjan van de Ven <arjan@infradead.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sebastian Siewior <bigeasy@linutronix.de>,
+	Giovanni Gherdovich <ggherdovich@suse.cz>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v10 19/20] timer_migration: Add tracepoints
+Message-ID: <ZbvLHnigSf1NOZ5M@localhost.localdomain>
+References: <20240115143743.27827-1-anna-maria@linutronix.de>
+ <20240115143743.27827-20-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240115143743.27827-20-anna-maria@linutronix.de>
 
-Hi Jiro,
+Le Mon, Jan 15, 2024 at 03:37:42PM +0100, Anna-Maria Behnsen a écrit :
+> +TRACE_EVENT(tmigr_connect_child_parent,
+> +
+> +	TP_PROTO(struct tmigr_group *child),
+> +
+> +	TP_ARGS(child),
+> +
+> +	TP_STRUCT__entry(
+> +		__field( void *,	child		)
+> +		__field( void *,	parent		)
+> +		__field( unsigned int,	lvl		)
+> +		__field( unsigned int,	numa_node	)
+> +		__field( unsigned int,	num_children	)
+> +		__field( u32,		childmask	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->child		= child;
+> +		__entry->parent		= child->parent;
+> +		__entry->lvl		= child->parent->level;
+> +		__entry->numa_node	= child->parent->numa_node;
+> +		__entry->numa_node	= child->parent->num_children;
 
-Thanks for your comments.
+__entry->num_children ?
 
-On Thu, 2024-02-01 at 10:26 +0100, Jiri Pirko wrote:
-> Thu, Feb 01, 2024 at 02:07:43AM CET, david.e.box@linux.intel.com=C2=A0wro=
-te:
->=20
-> [...]
->=20
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 name: spdm-req
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type: binary
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 name: spdm-rsp
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type: binary
->=20
-> I don't understand the need to use netlink for this. Basically what you
-> do is you just use it to pass binary blobs to and from FW.
-> Advantages, like well-defined attributes, notifications etc, for which
-> it makes sense to use Netlink are not utilized at all.
+> +		__entry->childmask	= child->childmask;
+> +	),
+> +
+> +	TP_printk("group=%p childmask=%0x parent=%p lvl=%d numa=%d num_children=%d",
+> +		  __entry->child,  __entry->childmask, __entry->parent,
+> +		  __entry->lvl, __entry->numa_node, __entry->num_children)
+> +);
+> +
+> +TRACE_EVENT(tmigr_connect_cpu_parent,
+> +
+> +	TP_PROTO(struct tmigr_cpu *tmc),
+> +
+> +	TP_ARGS(tmc),
+> +
+> +	TP_STRUCT__entry(
+> +		__field( void *,	parent		)
+> +		__field( unsigned int,	cpu		)
+> +		__field( unsigned int,	lvl		)
+> +		__field( unsigned int,	numa_node	)
+> +		__field( unsigned int,	num_children	)
+> +		__field( u32,		childmask	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->parent		= tmc->tmgroup;
+> +		__entry->cpu		= tmc->cpuevt.cpu;
+> +		__entry->lvl		= tmc->tmgroup->level;
+> +		__entry->numa_node	= tmc->tmgroup->numa_node;
+> +		__entry->numa_node	= tmc->tmgroup->num_children;
 
-SPDM supports the setup of a secure channel between the responder and reque=
-stor
-using TLS based encryption algorthms. While this is just a transport for th=
-ose
-blobs, netlink seemed an appropriate interface for this type of communicati=
-on.
-The binary blobs can instead be broken out into the SPDM protocol messages,
-right out of the spec. But for our needs this would still just define the
-protocol. The algorithms themselves are not handled by the driver.
+Ditto.
 
-> Also, I don't thing it is good idea to have hw-driver-specific genl
-> family. I'm not aware of anything like that so far. Leave netlink
-> for use of generic and abstracted APIs.
-
-Sounds like an implied rule. If so should it be documented somewhere?
-
->=20
-> Can't you just have a simple misc device for this?
-
-It wouldn't be too much work to convert it.
-
-David
+Thanks.
