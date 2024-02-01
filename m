@@ -1,334 +1,154 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2110.outbound.protection.partner.outlook.cn [139.219.17.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A92EEBC
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 02:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706753580; cv=none; b=ThplL0FJCm0Lt2c8SbEXCnEkxll2WhThmXanSl7hzm8rw3s7g8sOpkWYVolQdzBBy94XwMrlSg9pEhriBO5FU3BRQ1Hs3qlHnXk0J52olGv6kqhWEKj05Qprh4BwwLCetHsPbfPvqu0ItiPEF8njQwrtG+fgI3oUxXq6rxVwEUE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706753580; c=relaxed/simple;
-	bh=zNQDt/Rn1q3aEGgA9q976rgWmhppDKSFZOPDcvkyYnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ry7fF6r2YUHbfNy+8DGTy3lXPtsBmw5Mm87DanvVW+5MwL646UGL6U0A82nLX5jKB0Gn5JsJYBpWan2TKV72ziNzbfIfyUCzUcTdErmSUpnqXXFjQokXtcDSM37tCyO1vWRgvSd+JDJ/hZwHsJ6Xy/yEnXwofTHYEA1XNdI8sW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LKK0PuSs; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LKK0PuSs"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3638bd37107so50415ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 18:12:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706753577; x=1707358377; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6QwOM3Udzc7VB8Osj9qIeTGsk0UZWwK2mnv/fJx+RfI=;
-        b=LKK0PuSsQqqeKPelDD0vC6z7MVAeMaJBU10g3DDWEIj0rlFL1Vwl4M2AjYtdQ+l3u5
-         QbWSC1+8/cWWGCHqXxPE960WCPj6C6xun3rMeG9M38XNUOJ4n3G0INn4Q5hpwGtUtvFW
-         OeXdanxZmPwe2f579BgLw2/6RHyMIoZGZW5A9yk06o9jdrpGQML3h37+XcIfs1NeYmRm
-         /5PyvPXUDnpRoHvDzEnGtXWfUU4hv92BkPuzmr5XiZuRbuffE4N+LfQHcUJOwmsV1Vu0
-         UKomfdasB4Xx/8d2mGpe1a4FHPe+NHuJzhHqxIgwGXlXrgjaG6rUiqer0zicXrQN15Uz
-         uhDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706753577; x=1707358377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6QwOM3Udzc7VB8Osj9qIeTGsk0UZWwK2mnv/fJx+RfI=;
-        b=T124kIn+WOpx+C3oKBH1SbgHTnyDTtuwKZX7363BLB6yFNwSyYpbzazIQ3YOLPvesH
-         HH9TOf0b5EAeewMgQp51v38tGc3gWhXHu6nIaDKdECox26K2osPF1SbKNY7fbT/UG8uH
-         JCOlK+0hM7z51raJUsFOPOXayx0ReECIOVXt8NIVoPM6QILpqiHXP6la03oRdJJHFxl2
-         J8ZGJRImJJoKfJQNyc45F8cSpQWCiaNcmJss71IztyrwDww1mUS3aGtCH+GWuDtb2XcA
-         qXTfPLdksTdUeebMHAblmqrzW0wXGxe/w6+k7t6YkZ6Zb8OYTvjD4dYVKvP1c2JCKPOm
-         Q7tg==
-X-Gm-Message-State: AOJu0Ywj2BcVsN6yHMphUWISH2530tiSytaHQ9mcLp3zDb3LgcQjaw0k
-	yTl1u4Li/7YKdxaaXwrjMil0aQgIwD8yU2ffSasN4k3ijYSDpY7nifzGPqA+jjmsXpvuhUyWi1/
-	vC0je8B7m6u61xJ3oNrwZw1a4cuE3oS3ecCEf
-X-Google-Smtp-Source: AGHT+IEwMO8xEvKHqWiIDPSHUAtoieh+TkSU2KTMVNKN9SPavhQEA6Oi29+++xaQjG8V01fnbiIrGdiVCPiy7OvEumk=
-X-Received: by 2002:a05:6e02:339b:b0:363:8007:d7dd with SMTP id
- bn27-20020a056e02339b00b003638007d7ddmr94374ilb.3.1706753576934; Wed, 31 Jan
- 2024 18:12:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1851079B;
+	Thu,  1 Feb 2024 02:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.110
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706753743; cv=fail; b=nW7eQDyoY1mOA54esJ4t72AGQMY9EFSyqUbVvtmryuazbVH5O4LKLrH902iw55cCshzYudz111aXU6fFwNRmr4+qu6SnIYns3RT/pQts2Fja8xKZqDTzY129woHbyznhf3jOjSyRwy//C4s2x+0FlyKsp4vhrwJQpAeE5523OTc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706753743; c=relaxed/simple;
+	bh=zjJXMUpZGVhjiYlhAc9XLjPlTdVKSNpEgKtsR2ocXOk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=W5u6n5SkmVaBYCmEOQaR84r1r1zeCyFfyj8MN6/mD/AjzHCnDo9oln1UwhnFm3VaEbgbmci7iiWDOk3i95Uq7IJ56ivZ/4qRP67lPfqEB/f76xBSET7qQiNqqU0hvZqksqigdFkjrVn6Pgwmrnvx0kAhucOZOTjIhBKfI6/1IIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QMCh51rwP1Zn6Gf+xLIRy5QLTkOMkUlAnwqPPDGR410FH4yoIimHA7BirFIEZi7VliERwYyulo03R4c9emotzQ8JLB2xWgj2jDw1m2RpEN7OW/SFQzSjjRZqCLIhEHz4ABuxOevqe9j5/GerS5mi/8LnfMsknuCBX0BDJff9BOz50XZhea9+0vPKPPn/hYudpBxI2vjdhabuz4R1K5Nc4i5LW5WvjOmA6FxzOVkwh27LCRVY5Lp/3Wo7DtL0MXF+AAMIjVLRk07iog20C8FUlgV1wo9HNOX8IFEfY+ThlMQM3n7x9y2rMcxJgG7y0tBXiAP4D+QhB58fZnEhahuUVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zjJXMUpZGVhjiYlhAc9XLjPlTdVKSNpEgKtsR2ocXOk=;
+ b=CNvoIXNFctbPpOrB+D5Gg4TZ0UUeo1VDnLQxvFY9G3RH3rlMSl4KpP43Bx3fS4pJHuCRHB+3UQyh6Ejc809hffFNh7HL94LcCPeNh7m2AWDMO8LQR0VQzKK88JkRtuolv8co6TB5i7OdbqqxSYDH29ynlUYQjOh2vtWc4cHzUEF6RUEj9BJmspd23wRPPusrhnK84aZMBh/QkIsFXlTkbbEIZnOPxwcwkTRKhtpWrRaeAe1M5oXPq5W+qkfA/yNQjyfs7BpVXOkYqpKTEHOlrjRyuCVNOZv5QFAaESMlWAm6zwNAyoyh41ktFOLYsr4sfOJ4gMrN4cjpzqIe89jFNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:20::21) by SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:20::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.31; Thu, 1 Feb
+ 2024 01:42:14 +0000
+Received: from SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
+ ([fe80::a812:2d74:cde5:d094]) by
+ SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn ([fe80::a812:2d74:cde5:d094%6])
+ with mapi id 15.20.7228.029; Thu, 1 Feb 2024 01:42:13 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Emil
+ Renner Berthing <kernel@esmil.dk>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jack
+ Zhu <jack.zhu@starfivetech.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>
+Subject:
+ =?gb2312?B?u9i4tDogW3YyXSByaXNjdjogZHRzOiBzdGFyZml2ZTogamg3MTEwOiBBZGQg?=
+ =?gb2312?Q?camera_subsystem_nodes?=
+Thread-Topic: [v2] riscv: dts: starfive: jh7110: Add camera subsystem nodes
+Thread-Index: AQHaU1XbC4h2Cxa8Q0qBcekBfbY08LDz/xMAgAC4KBA=
+Date: Thu, 1 Feb 2024 01:42:13 +0000
+Message-ID:
+ <SH0PR01MB06675EF7ACD1452C4DEBE45FF243A@SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn>
+References: <20240130082509.217683-1-changhuang.liang@starfivetech.com>
+ <20240131-recycling-entering-b742e0e835eb@spud>
+In-Reply-To: <20240131-recycling-entering-b742e0e835eb@spud>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SH0PR01MB0667:EE_
+x-ms-office365-filtering-correlation-id: b781fb56-fd2b-4495-1499-08dc22c703b2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ k8+fKsN/huevOrOJtopgnHF8pQwOkPHJZcSgun1SH0SogiYfsDJYWB/A8Ha8fW368Li1bI81Vv0ywq2xchjhKgKRWubpQWoQdWNkKgm3/mJfIQdu4lDZngfZ8Lq5ZOQvZk6PYvylIspqlpawCG5iixMMP+2EvFtC0q7xjrln73eWoAERiR11C5UvhWOFPey4ruTEoqfU2c1bqsvH0sIGosqPbLgIOPv6XQNZfJHq7G8S44+1p3BrdlM1IlNZAffVucvGatdfDROmCx1GaJQMbfwcO9ds2mDCNHJsOdQ9RdVS+OfxBpvtTXuTPla4Vqql7ad2YghMpBCo1qURkuE1qRkXymAGPw9zbk7FkUIhVNm4FaHUcGCvncDghDf/Q2vUl9TrGd2qwrreBxKvK485IjeRk3iX+A+93IyDldNdEBiiS7HUMYbwy+5TLJBDrTQtiS0kPcucuTYGj3vF42sYWg7XFH4NzGTkD0gS0hcsFC+MpBK7wd6j2t08lXpWv7S+b+9G6f2oBKSYr4hj/p3N5xaeKsD5+IgUk/VR4xDFJ0kuenmeag/oOQqJcNTu6bj7
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(136003)(396003)(366004)(346002)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(38070700009)(41300700001)(40180700001)(33656002)(2906002)(5660300002)(41320700001)(7416002)(26005)(7696005)(83380400001)(66556008)(66946007)(66476007)(66446008)(6916009)(64756008)(86362001)(54906003)(76116006)(508600001)(71200400001)(55016003)(9686003)(4326008)(122000001)(224303003)(44832011)(38100700002)(40160700002)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?ZjlXYlZCZlMvUVorS2lPZms5VzNKVldBYlFRaml4UlVhc3orTXZWM3J6WTQ3?=
+ =?gb2312?B?SmZGcERlVWI0cjkzYW1tbnE5ZGpCRWh2UTArYmcwOURiYWFxWE96YVlFdjVq?=
+ =?gb2312?B?Y3FQVmhMSzF5YitlNUhCTlh5N0tmQ3RhNlJmSHdQYU5aSFdTVnllcC8xTDVs?=
+ =?gb2312?B?RDdsNG51WVpFU3NwQ21xek5EY0p4dUhTTVppN1Zib3YweU9naWRCOFo1K3ZT?=
+ =?gb2312?B?SFk0MzZCS2lIck53d3Ivc1QxbVJyVzVESmJkNU5rUXMyTm9rbjM4dThST3lD?=
+ =?gb2312?B?WXhLMmlJakRyY01wUkN5bXhsdTR3TEVuSWEyMXFqVCtrY2t3ckRsVEl5eEkv?=
+ =?gb2312?B?U1V5WjJrME9SanpobDFlTG5tWDRyUmJyeGJwcnhZeUYwYW5QY3llUCtnQWRB?=
+ =?gb2312?B?SytwU0hkeHA0cDIrYjVlcHdjRTdzTGxRbkI3VlpwNVpyUU8yUUpmNStkSzBY?=
+ =?gb2312?B?NSs0S1N1Mk01Y2ZFYzFGRURkVXB6TDdkWEMrWnJxa2RodmhGbTR1Wks5Y0Ew?=
+ =?gb2312?B?OVZsSzc0dkhmMVREVXZ4cVlWdFJWUGN5NVhadDdrazFYNUVpSnU1cFR3V0Ji?=
+ =?gb2312?B?QmRiM2dEdnVZRi9zWkNDRjR6ajhBWStDcnlxckh0ZHdTWDJ0akQ4OVFKbmhr?=
+ =?gb2312?B?dG90R2EwSmkyR1dOckR5VFlUbC8vREh0RFdmbjRHZ3lyRVlwUFpuQ2phcUF0?=
+ =?gb2312?B?QUdGbThDY3BuSVl6a1dFOFd1bDRGUWRjRGd5RkpXWDRILzJDSWh5blFDTmFi?=
+ =?gb2312?B?QmRvdW81R1o0bTlrSGRmM2d5RDh6VGpWbjZnN0ZSdW9OeDgxNkVYTmtJZDkz?=
+ =?gb2312?B?b0hIak4wbytqYVRaMGRrNldHb0t4MFMzcEx5d3VSakJldFBqSEY5aUJhTGN0?=
+ =?gb2312?B?ajBhaXBKYy9YMXdjdm9CR3dNTWt2SnpSek40d0x4TENIQnp5ZUx3S3ExZEM0?=
+ =?gb2312?B?MThKNG5vMXk5RWhyN1dRaWhzeFdBVTlwbkxyNEJRMU1ubG00UFdzZjd2RlNN?=
+ =?gb2312?B?c1NRT3JQU1pnYi84d2huNWEvNzVtQ0R4d0xDenpsRWxRZkZxczNScEYrRGR6?=
+ =?gb2312?B?V3NUTW93VXhhajdvd1V1OXUyUWtUcnI3YUtRVWQ5dmdPa2g5dHZPcDdUclVp?=
+ =?gb2312?B?RlpWaFJYVCs1UXBsc3RMQ3BhMVZRa3pIVU5TSjFGMEtlbHR6SjF5ZkNvY2cz?=
+ =?gb2312?B?V01uVE9MTXdsSDlwNDNOVDd3SnFpVk83TnpYQkhNZ3QyY3ZrQ0hvMDVIclA0?=
+ =?gb2312?B?Tm1jTXZ4dWU3Slk0d1AvSjlwLzRSRXhzR2JBQ2FxdjNZRks0SFZEZ3g1ZndS?=
+ =?gb2312?B?cmRZVzF5Z09oQTRKTitySFFIY1Q1VHNhdGZBSkxZUmZVdXpRMTNFclAyWEow?=
+ =?gb2312?B?QitackdKNGhHa3NDeHVtdHZDTTVydXdHdTcrSWV6NWNyVlk2bjlyWGpqOTZD?=
+ =?gb2312?B?Um9xeHptT0NwczRwSGt3VHordUJra0Exb3lvV095b3d6Qmlqdkp5RitGandF?=
+ =?gb2312?B?WXZpMStuMGtTZlZYcDhtUGpNS0tqcVVDZGRXbzBCMEloM09kZmljTkErbmww?=
+ =?gb2312?B?Zys5YU1tQXN0SWZrMkVhNysvLyt3ZXNqSERyUnVPWlZWRHlocHo1VzZ4MmJU?=
+ =?gb2312?B?bHRUcTJOKzY0ZGVYQmU4SjNBNWNTWjdyOFl1SzJXRXRrNmxoZzVqY0UrQUd0?=
+ =?gb2312?B?MkthSnhlL3NSL2s4ZWNUcUYvMzVBOTBnY3p1bkJuY0NpaFRMWkhwbFNlU0k0?=
+ =?gb2312?B?OFBQVjRWbjNnNzRvOUZndnNSU25sSWtvS3Vvb01PRFZaNXBEd2lrblRCMVlY?=
+ =?gb2312?B?SWFuWk8xTVNad2FqYjJmK0pEcFU4YTFuTVN6ZUZJQmV5T1EvYmNMdFBnK1Rh?=
+ =?gb2312?B?VmQwSHNtQU8yQmt0aCtBdzZxYldsWEc3b3dEOTJuNnh5MG1DQnF1SWVKcGZu?=
+ =?gb2312?B?aUFQR0RMTUpRdXdKcVU0YU04eit2MDJONVh5ZGwvN0orMEQxNlhiVjBGSjZT?=
+ =?gb2312?B?N1JUWU5tdkVSZjFab1cwUmJjd0hjdVBUaDBXV1pUZFQ2emlpUGVWYyt4WUZs?=
+ =?gb2312?B?L2p3Ri93bmlqRk5GTUdraDRJZ0F2SGJFcWJMREc0d1BjcmdDTEF0UFpOZTZn?=
+ =?gb2312?B?SFcydHdTQ2ZXZStZZmNnMklpdFY5ZGVMVkM4RWErOW1UMnIxVHF0ZzNzSXFo?=
+ =?gb2312?B?a1E9PQ==?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231129060211.1890454-1-irogers@google.com> <20231129060211.1890454-8-irogers@google.com>
- <e3a01313-ed03-bc54-0260-5445fb2c15ee@arm.com> <2adf8e9c-e08d-a772-bfe2-378d6759721f@arm.com>
-In-Reply-To: <2adf8e9c-e08d-a772-bfe2-378d6759721f@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 31 Jan 2024 18:12:45 -0800
-Message-ID: <CAP-5=fVkwz4fb4hn=cg_RaEW-s_N-4t2nm4mX_oWOduP+0QdOA@mail.gmail.com>
-Subject: Re: [PATCH v1 07/14] perf arm-spe/cs-etm: Directly iterate CPU maps
-To: James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	Changbin Du <changbin.du@huawei.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Paran Lee <p4ranlee@gmail.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
-	Leo Yan <leo.yan@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SH0PR01MB0667.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: b781fb56-fd2b-4495-1499-08dc22c703b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2024 01:42:13.5524
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hDi7fcF0XfAwjLCrD5SexH0kihNM2509AGShcEQOiQ9GWUt/yLGW/otjW77BClmSab15Ai1tzJ5kAdMtzdygCGnDhYX6ybTy4a+l4LHVZfHbAcztJsmtl7EGD8gsZA9s
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SH0PR01MB0667
 
-On Tue, Dec 12, 2023 at 6:36=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
->
->
-> On 12/12/2023 14:17, James Clark wrote:
-> >
-> >
-> > On 29/11/2023 06:02, Ian Rogers wrote:
-> >> Rather than iterate all CPUs and see if they are in CPU maps, directly
-> >> iterate the CPU map. Similarly make use of the intersect
-> >> function. Switch perf_cpu_map__has_any_cpu_or_is_empty to more
-> >> appropriate alternatives.
-> >>
-> >> Signed-off-by: Ian Rogers <irogers@google.com>
-> >> ---
-> >>  tools/perf/arch/arm/util/cs-etm.c    | 77 ++++++++++++---------------=
--
-> >>  tools/perf/arch/arm64/util/arm-spe.c |  4 +-
-> >>  2 files changed, 34 insertions(+), 47 deletions(-)
-> >>
-> >> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/u=
-til/cs-etm.c
-> >> index 77e6663c1703..a68a72f2f668 100644
-> >> --- a/tools/perf/arch/arm/util/cs-etm.c
-> >> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> >> @@ -197,38 +197,32 @@ static int cs_etm_validate_timestamp(struct auxt=
-race_record *itr,
-> >>  static int cs_etm_validate_config(struct auxtrace_record *itr,
-> >>                                struct evsel *evsel)
-> >>  {
-> >> -    int i, err =3D -EINVAL;
-> >> +    int idx, err =3D -EINVAL;
-> >>      struct perf_cpu_map *event_cpus =3D evsel->evlist->core.user_requ=
-ested_cpus;
-> >>      struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
-s();
-> >> +    struct perf_cpu_map *intersect_cpus =3D perf_cpu_map__intersect(e=
-vent_cpus, online_cpus);
-> >> +    struct perf_cpu cpu;
-> >>
-> >> -    /* Set option of each CPU we have */
-> >> -    for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
-> >> -            struct perf_cpu cpu =3D { .cpu =3D i, };
-> >> -
-> >> -            /*
-> >> -             * In per-cpu case, do the validation for CPUs to work wi=
-th.
-> >> -             * In per-thread case, the CPU map is empty.  Since the t=
-raced
-> >> -             * program can run on any CPUs in this case, thus don't s=
-kip
-> >> -             * validation.
-> >> -             */
-> >> -            if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus) &&
-> >> -                !perf_cpu_map__has(event_cpus, cpu))
-> >> -                    continue;
-> >
-> > This has broken validation for per-thread sessions.
-> > perf_cpu_map__intersect() doesn't seem to be able to handle the case
-> > where an 'any' map intersected with an online map should return the
-> > online map. Or at least it should for this to work, and it seems to mak=
-e
-> > sense for it to work that way.
-> >
-> > At least that was my initial impression, but I only debugged it and saw
-> > that the loop is now skipped entirely.
-> >
-> >> -
-> >> -            if (!perf_cpu_map__has(online_cpus, cpu))
-> >> -                    continue;
-> >> +    perf_cpu_map__put(online_cpus);
-> >>
-> >> -            err =3D cs_etm_validate_context_id(itr, evsel, i);
-> >> +    /*
-> >> +     * Set option of each CPU we have. In per-cpu case, do the valida=
-tion
-> >> +     * for CPUs to work with.  In per-thread case, the CPU map is emp=
-ty.
-> >> +     * Since the traced program can run on any CPUs in this case, thu=
-s don't
-> >> +     * skip validation.
-> >> +     */
-> >> +    perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_cpus) {
-> >> +            err =3D cs_etm_validate_context_id(itr, evsel, cpu.cpu);
-> >>              if (err)
-> >>                      goto out;
-> >> -            err =3D cs_etm_validate_timestamp(itr, evsel, i);
-> >> +            err =3D cs_etm_validate_timestamp(itr, evsel, idx);
-
-I think this is an error, idx shouldn't be used here, cpu.cpu should.
-
-> >>              if (err)
-> >>                      goto out;
-> >>      }
-> >>
-> >>      err =3D 0;
-> >>  out:
-> >> -    perf_cpu_map__put(online_cpus);
-> >> +    perf_cpu_map__put(intersect_cpus);
-> >>      return err;
-> >>  }
-> >>
-> >> @@ -435,7 +429,7 @@ static int cs_etm_recording_options(struct auxtrac=
-e_record *itr,
-> >>       * Also the case of per-cpu mmaps, need the contextID in order to=
- be notified
-> >>       * when a context switch happened.
-> >>       */
-> >> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-> >> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> >>              evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> >>                                         "timestamp", 1);
-> >>              evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
-> >> @@ -461,7 +455,7 @@ static int cs_etm_recording_options(struct auxtrac=
-e_record *itr,
-> >>      evsel->core.attr.sample_period =3D 1;
-> >>
-> >>      /* In per-cpu case, always need the time of mmap events etc */
-> >> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus))
-> >> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus))
-> >>              evsel__set_sample_bit(evsel, TIME);
-> >>
-> >>      err =3D cs_etm_validate_config(itr, cs_etm_evsel);
-> >> @@ -533,38 +527,32 @@ static size_t
-> >>  cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
-> >>                    struct evlist *evlist __maybe_unused)
-> >>  {
-> >> -    int i;
-> >> +    int idx;
-> >>      int etmv3 =3D 0, etmv4 =3D 0, ete =3D 0;
-> >>      struct perf_cpu_map *event_cpus =3D evlist->core.user_requested_c=
-pus;
-> >>      struct perf_cpu_map *online_cpus =3D perf_cpu_map__new_online_cpu=
-s();
-> >> +    struct perf_cpu cpu;
-> >>
-> >>      /* cpu map is not empty, we have specific CPUs to work with */
-> >> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
-> >> -            for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
-> >> -                    struct perf_cpu cpu =3D { .cpu =3D i, };
-> >> -
-> >> -                    if (!perf_cpu_map__has(event_cpus, cpu) ||
-> >> -                        !perf_cpu_map__has(online_cpus, cpu))
-> >> -                            continue;
-> >> +    if (!perf_cpu_map__is_empty(event_cpus)) {
-> >> +            struct perf_cpu_map *intersect_cpus =3D
-> >> +                    perf_cpu_map__intersect(event_cpus, online_cpus);
-> >>
-> >> -                    if (cs_etm_is_ete(itr, i))
-> >> +            perf_cpu_map__for_each_cpu_skip_any(cpu, idx, intersect_c=
-pus) {
-> >> +                    if (cs_etm_is_ete(itr, cpu.cpu))
->
-> Similar problem here. For a per-thread session, the CPU map is not empty
-> (it's an 'any' map, presumably length 1), so it comes into this first
-> if, rather than the else below which is for the 'any' scenario.
->
-> Then the intersect with online CPUs results in an empty map, so no CPU
-> metadata is recorded, then the session fails.
->
-> If you made the intersect work in the way I mentioned above we could
-> also delete the else below, because that's just another way to convert
-> from 'any' to 'all online'.
-
-I don't think intersect of "all online" with an "any CPU" should
-return "all online" as these would be quite different options to
-perf_event_open. Let's see if the issue above fixes this change
-otherwise I can revert it to a more mechanical translation of the
-existing code into the new APIs.
-
-Thanks,
-Ian
-
-> >>                              ete++;
-> >> -                    else if (cs_etm_is_etmv4(itr, i))
-> >> +                    else if (cs_etm_is_etmv4(itr, cpu.cpu))
-> >>                              etmv4++;
-> >>                      else
-> >>                              etmv3++;
-> >>              }
-> >> +            perf_cpu_map__put(intersect_cpus);
-> >>      } else {
-> >>              /* get configuration for all CPUs in the system */
-> >> -            for (i =3D 0; i < cpu__max_cpu().cpu; i++) {
-> >> -                    struct perf_cpu cpu =3D { .cpu =3D i, };
-> >> -
-> >> -                    if (!perf_cpu_map__has(online_cpus, cpu))
-> >> -                            continue;
-> >> -
-> >> -                    if (cs_etm_is_ete(itr, i))
-> >> +            perf_cpu_map__for_each_cpu(cpu, idx, online_cpus) {
-> >> +                    if (cs_etm_is_ete(itr, cpu.cpu))
-> >>                              ete++;
-> >> -                    else if (cs_etm_is_etmv4(itr, i))
-> >> +                    else if (cs_etm_is_etmv4(itr, cpu.cpu))
-> >>                              etmv4++;
-> >>                      else
-> >>                              etmv3++;
-> >> @@ -814,15 +802,14 @@ static int cs_etm_info_fill(struct auxtrace_reco=
-rd *itr,
-> >>              return -EINVAL;
-> >>
-> >>      /* If the cpu_map is empty all online CPUs are involved */
-> >> -    if (perf_cpu_map__has_any_cpu_or_is_empty(event_cpus)) {
-> >> +    if (perf_cpu_map__is_empty(event_cpus)) {
-> >>              cpu_map =3D online_cpus;
-> >>      } else {
-> >>              /* Make sure all specified CPUs are online */
-> >> -            for (i =3D 0; i < perf_cpu_map__nr(event_cpus); i++) {
-> >> -                    struct perf_cpu cpu =3D { .cpu =3D i, };
-> >> +            struct perf_cpu cpu;
-> >>
-> >> -                    if (perf_cpu_map__has(event_cpus, cpu) &&
-> >> -                        !perf_cpu_map__has(online_cpus, cpu))
-> >> +            perf_cpu_map__for_each_cpu(cpu, i, event_cpus) {
-> >> +                    if (!perf_cpu_map__has(online_cpus, cpu))
-> >>                              return -EINVAL;
-> >>              }
-> >>
-> >> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/ar=
-m64/util/arm-spe.c
-> >> index 51ccbfd3d246..0b52e67edb3b 100644
-> >> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> >> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> >> @@ -232,7 +232,7 @@ static int arm_spe_recording_options(struct auxtra=
-ce_record *itr,
-> >>       * In the case of per-cpu mmaps, sample CPU for AUX event;
-> >>       * also enable the timestamp tracing for samples correlation.
-> >>       */
-> >> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-> >> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> >>              evsel__set_sample_bit(arm_spe_evsel, CPU);
-> >>              evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
-> >>                                         "ts_enable", 1);
-> >> @@ -265,7 +265,7 @@ static int arm_spe_recording_options(struct auxtra=
-ce_record *itr,
-> >>      tracking_evsel->core.attr.sample_period =3D 1;
-> >>
-> >>      /* In per-cpu case, always need the time of mmap events etc */
-> >> -    if (!perf_cpu_map__has_any_cpu_or_is_empty(cpus)) {
-> >> +    if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-> >>              evsel__set_sample_bit(tracking_evsel, TIME);
-> >>              evsel__set_sample_bit(tracking_evsel, CPU);
-> >>
+SGksIENvbm9yDQoNCj4gT24gVHVlLCBKYW4gMzAsIDIwMjQgYXQgMTI6MjU6MDlBTSAtMDgwMCwg
+Q2hhbmdodWFuZyBMaWFuZyB3cm90ZToNCj4gPiBBZGQgY2FtZXJhIHN1YnN5c3RlbSBub2RlcyBm
+b3IgdGhlIFN0YXJGaXZlIEpINzExMCBTb0MuIFRoZXkgY29udGFpbg0KPiA+IHRoZSBpbXgyMTks
+IGRwaHktcngsIGNzaTJyeCwgY2Ftc3Mgbm9kZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBD
+aGFuZ2h1YW5nIExpYW5nIDxjaGFuZ2h1YW5nLmxpYW5nQHN0YXJmaXZldGVjaC5jb20+DQo+ID4g
+LS0tDQo+ID4gIC4uLi9qaDcxMTAtc3RhcmZpdmUtdmlzaW9uZml2ZS0yLmR0c2kgICAgICAgICB8
+IDEwMw0KPiArKysrKysrKysrKysrKysrKysNCj4gPiAgYXJjaC9yaXNjdi9ib290L2R0cy9zdGFy
+Zml2ZS9qaDcxMTAuZHRzaSAgICAgIHwgIDY3ICsrKysrKysrKysrKw0KPiA+ICAyIGZpbGVzIGNo
+YW5nZWQsIDE3MCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9hcmNo
+L3Jpc2N2L2Jvb3QvZHRzL3N0YXJmaXZlL2poNzExMC1zdGFyZml2ZS12aXNpb25maXZlLTIuZHRz
+aQ0KPiA+IGIvYXJjaC9yaXNjdi9ib290L2R0cy9zdGFyZml2ZS9qaDcxMTAtc3RhcmZpdmUtdmlz
+aW9uZml2ZS0yLmR0c2kNCj4gPiBpbmRleCBiODllOTc5MWVmYTcuLmUwMDI3YmIzNzllZiAxMDA2
+NDQNCj4gPiAtLS0gYS9hcmNoL3Jpc2N2L2Jvb3QvZHRzL3N0YXJmaXZlL2poNzExMC1zdGFyZml2
+ZS12aXNpb25maXZlLTIuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcmlzY3YvYm9vdC9kdHMvc3RhcmZp
+dmUvamg3MTEwLXN0YXJmaXZlLXZpc2lvbmZpdmUtMi5kdHNpDQo+ID4gQEAgLTMwLDYgKzMwLDM3
+IEBAIGNwdXMgew0KPiA+ICAJCXRpbWViYXNlLWZyZXF1ZW5jeSA9IDw0MDAwMDAwPjsNCj4gPiAg
+CX07DQo+ID4NCj4gPiArCWlteDIxOV9jbGs6IGlteDIxOS1jbG9jayB7DQo+ID4gKwkJY29tcGF0
+aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gImlteDIx
+OV9jbGsiOw0KPiA+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDwyNDAwMDAwMD47DQo+ID4gKwkJI2Ns
+b2NrLWNlbGxzID0gPDA+Ow0KPiA+ICsJfTsNCj4gDQo+IFdoeSBkbyB5b3UgbmVlZCBhbiBvdXRw
+dXQgbmFtZSBoZXJlPw0KDQpUaGUgb3V0cHV0IG5hbWUgY2FuIGJlIHVubmVjZXNzYXJ5LiANCg0K
+PiBBbHNvLCB3aGVyZSBkb2VzIHRoaXMgY2xvY2sgY29tZSBmcm9tPyBJcyBpdCBhbiBvc2NpbGxh
+dG9yIG9uIHRoZSBib2FyZD8NCj4gDQoNClRoaXMgY2xvY2sgY29tZSBmcm9tIGlteDIxOSwgbm90
+IHRoZSBWaXNpb25GaXZlIDIgYm9hcmQuDQoNCnJlZ2FyZHMNCkNoYW5naHVhbmcNCg0K
