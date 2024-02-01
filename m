@@ -1,73 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A2D3A8D2;
-	Thu,  1 Feb 2024 12:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DFC8663B
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706792003; cv=none; b=ZTAOjsNGs5bhoLWplAS78msKqgq2i8WZIVFoBz6WvozEGTA3DwyuJtQ7ada6czTuJpWxeyW9r/K+/+Z/pyauqnjkVGiZhZRN6tOTrNxc/guSw0S38QM6WgTfICLdHxb/hxEHkAoy2aQ788/bcdbuS+M7i7izrbgqEwNb+ntc7EY=
+	t=1706792095; cv=none; b=bB19CxLvuZMgEwPi2pkCkrSKu5oh4C5US3mP/7N3LtWcdnmrur/b5tw+ng+qlZQoGcvuejhCK+bkwX3aNwOf7NxnzrUtzVlUe9kEULRfp3USzcD81roVSJQp+wzdwfQO8sb/XUG8IdpGSZ+RB3sRm5kiw8Nn5fzziAVtaBluMLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706792003; c=relaxed/simple;
-	bh=m24lBTyUtO514F3RlBvmhK0NobQndwRBoeE3EG8UpAI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=Evo8K/uvs2HUuzFpPQs9lAqHUiuSgf4wa7jWU4J57nRBhpfOb0dl+1Isacgtex35WwRqsunbw4BNPfrkQ5MbxHlhcj5GPBGPWUl2trmpvu91biLqOLMTXLaO5DmQEpN66bo3YTelBdxxOxUXi+dlX/ccPBC7dKGQMxA6i9oqDjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXcpROzp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706792095; c=relaxed/simple;
+	bh=2y7CbDzTpQzkOvThYnBnSLOklaoR5dazKT+V9eJXstI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MK8yQvwiS4rqDA8sQ1QdzlQETSBGn9tbcG0mFTJnqRai73yVyyIYYDO9w7xsa0NunX6OolmZArKnNInW7WM8HyQjYx/d9scR3Qh/ng3eDx6uyuGrLxjf37ffmwt27fFKnuEp2Cu0YAUz4g7HbP6t/SOw9HeLnIKraNCMjTBdrx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPxFXXmz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXcpROzp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01802C43394;
-	Thu,  1 Feb 2024 12:53:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPxFXXmz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F56C43394
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706792002;
-	bh=m24lBTyUtO514F3RlBvmhK0NobQndwRBoeE3EG8UpAI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=oXcpROzpeZwNLawLFjNcX4K1LX3lPVn2h9Bmf5PEjkMkD22FPlvIjzw/4wE1eiav1
-	 ZmVXv3Ke/tOPplUo2O45LVx3DkU2t+UO+gHm4RDFweFA85wAXFN188vMD0f3dLi5VP
-	 gcFMPdq6ox7zG+jJRdOT3ewMDMDXARVaNSMb/vchaQX29FohZfxodALjj7FSPQhKrK
-	 tRKyTvpISHebqRPxBSq1sKYSpas1oEf1UilaUj0/EO8biGNJoH9SIsUCx68fFFhp97
-	 qU1Nhx3wyq/lqUfh7YbNIhGFV+njscM4wHssk0mrQfvhrltcTAAQvFy9CSYzfMPuR1
-	 3M0Ht50nCP5gA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,  Toke =?utf-8?Q?H=C3=B8iland?=
- =?utf-8?Q?-J=C3=B8rgensen?=
- <toke@toke.dk>,  Arend van Spriel <aspriel@gmail.com>,  Franky Lin
- <franky.lin@broadcom.com>,  Hante Meuleman <hante.meuleman@broadcom.com>,
-  Arnd Bergmann <arnd@arndb.de>,  Lee Jones <lee@kernel.org>,  Brian Norris
- <briannorris@chromium.org>,  Srinivasan Raju <srini.raju@purelifi.com>,
-  linux-wireless@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  brcm80211-dev-list.pdl@broadcom.com
-Subject: Re: [PATCH 0/6] Convert some wireless drivers to use GPIO descriptors
-References: <20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org>
-	<ZbuDqwDUaSIaOI2w@smile.fi.intel.com>
-Date: Thu, 01 Feb 2024 14:53:18 +0200
-In-Reply-To: <ZbuDqwDUaSIaOI2w@smile.fi.intel.com> (Andy Shevchenko's message
-	of "Thu, 1 Feb 2024 13:42:35 +0200")
-Message-ID: <874jesuz0h.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1706792095;
+	bh=2y7CbDzTpQzkOvThYnBnSLOklaoR5dazKT+V9eJXstI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=dPxFXXmzy+ZcUSonO3yZjyJN8VOYRZrUJehJYteuSmYd9+caFaIBQwETQPyyNDYHE
+	 f2LMtHWlmybPS6JMG/H7qxJlGn61XEKipQM3siPDub4pqRChlxk32/gf1Z0FRUtpeg
+	 EqyjfLuHgEqbel9CB83OnWJJIf6QK/RFJdwRf6M0vu0VN6tQF0UdORBDDAIR6kYhEn
+	 pHR4TWithhd7WC1gY8bbpeVr9o0PbGe6d6scUVrlhVXZLwJJz7SfeRQAIkLdJbP+I6
+	 SNJQoYrQAoY+Euu+IGhrfpofhQ1ELuTM7wBu8YNMk9t+6zifwWL64PIEPLGF6CAU4m
+	 DdmB9InrPjTvw==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-59a58ef4a04so467008eaf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 04:54:55 -0800 (PST)
+X-Gm-Message-State: AOJu0YxjaX2lPepqHkfmhTV52epH5kq8FB1jRmKnkth8cMgecDUEpts8
+	cceA+uKqEMxWFeUS6rzCPIxxjYLH1wKoH7CZu9pwtjWgi2nxW5bIC5FyoXOKh4wmja7TrE01uK1
+	CjASEPhfkD8Uxc6r4bWQyNAvMTro=
+X-Google-Smtp-Source: AGHT+IHEyZK/0RIwuQsHuVg6wPxM6JOtZCd2kUv+r8s9iICHikTtDEyDB6fqUV/pvH4aG53A3RtdkuRGvOyHehbQRF0=
+X-Received: by 2002:a4a:e2c3:0:b0:599:c1cf:ea6d with SMTP id
+ l3-20020a4ae2c3000000b00599c1cfea6dmr5015375oot.1.1706792094465; Thu, 01 Feb
+ 2024 04:54:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Received: by 2002:ac9:6692:0:b0:514:c0b3:431 with HTTP; Thu, 1 Feb 2024
+ 04:54:53 -0800 (PST)
+From: Namjae Jeon <linkinjeon@kernel.org>
+Date: Thu, 1 Feb 2024 21:54:53 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd8hypJfgauRpzQ3-oHr9CybwWe406sxjKp8U=icU7=sJw@mail.gmail.com>
+Message-ID: <CAKYAXd8hypJfgauRpzQ3-oHr9CybwWe406sxjKp8U=icU7=sJw@mail.gmail.com>
+Subject: [GIT PULL] exfat fixes for 6.8-rc3
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
+	"Yuezhang.Mo" <Yuezhang.Mo@sony.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+Hi Linus,
 
-> On Wed, Jan 31, 2024 at 11:37:19PM +0100, Linus Walleij wrote:
->> This converts some Wireless network drivers to use GPIO descriptors,
->> and some just have unused header inclusions.
->> 
->> The Intersil PL54 driver is intentionally untouched because Arnd
->> is cleaning it up fully.
->
-> Thanks for doing this! We pretty much want to get rid of gpio.h along with
-> of_gpio.h ASAP, that's why I expect this series to be applied in a fastest
-> possible manner.
+This is exfat fixes pull request for v6.8-rc3. I add description of
+this pull request on below. Please pull exfat with following fixes.
 
-This is for -next, right?
+Thanks!
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+The following changes since commit 296455ade1fdcf5f8f8c033201633b60946c589a:
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+  Merge tag 'char-misc-6.8-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+(2024-01-17 16:47:17 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git
+tags/exfat-for-6.8-rc3
+
+for you to fetch changes up to 0991abeddefa118479b0af32c28bcd662dec1561:
+
+  exfat: fix zero the unwritten part for dio read (2024-01-18 23:01:51 +0900)
+
+----------------------------------------------------------------
+Description for this pull request:
+  - Fix BUG in iov_iter_revert reported from syzbot.
+
+----------------------------------------------------------------
+Yuezhang Mo (1):
+      exfat: fix zero the unwritten part for dio read
+
+ fs/exfat/inode.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
