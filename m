@@ -1,120 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B80F3BB43;
-	Thu,  1 Feb 2024 21:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB77F20DF1;
+	Thu,  1 Feb 2024 21:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706822810; cv=none; b=n0DI+Pf/jSStpnSfTkvfO7GWfpkPcHIDG4FiGhYOG4omujkQUffx1A2P4gkifmrYP2BqHOCVBlk77AV21hBS5mqLGEBVLLN0tbi1D0klvKiyYhtnQl18ealixMq3Wgb/KJadWeUZTZ27vQh4brLN1LcEhPQZTLDY1np78d/6NUQ=
+	t=1706823018; cv=none; b=nhPZQP/hEtTz632fQV/n8GhR3YeBllGjfNmbIMCBZ7FhFm5yVI+a90GuBXXCQlBE6ZrqBGO8GxaJ5xtNBuFuhOIs0Cw12bvj7rFhb6H92PklvPh6WabSq3/eWcBVd7CebA1YGqROnH0GPS+23dh9YLdCt/r4jpLzcbWKmfg8CLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706822810; c=relaxed/simple;
-	bh=VR/a8iPw20/aKaajgHIqiK8JjLNzC/p31Ouefl5Ivf4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eL8Dpk7rGjIxKespS9z4zZ3wU8dY/oDOLdnCr4dHu7YYqWSLH4kaH5iiICqL1eaR679vmntbS5ld8i0n/Hey1QeyQwikvObMLQ1gVHNR63MEnkFLXw+PAmtQkWHUA/MqRMUcHL/twJ5/f4+jFr7D1i5HkxeKeZ3OqG97kEy8i+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtS0Ov1+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706823018; c=relaxed/simple;
+	bh=WO1pSGffK2BlsotNwVmh8l81KNixmgAA6UL4gmhM/sc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iPQ8SqA9F4w3oHXx2JOrbUL8RkB5ElXJ1CwCvFgFrX1ErxX9LOibdsuKrqUFloL+j03RR/jVvCSVXUXcYGbxH3mWLg21qoUh3aJUFhTxE7gFTfgtlhGqeN6NS8Fp63P0+lF3va+iw5KyWmlQqDrs0KLutxqqTvKDgIY537Jt++Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zxmqXiyX; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtS0Ov1+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A1F73C433C7;
-	Thu,  1 Feb 2024 21:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706822809;
-	bh=VR/a8iPw20/aKaajgHIqiK8JjLNzC/p31Ouefl5Ivf4=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=BtS0Ov1+1n+xvhX3KKNy3PGrDN4AN36h2uDo8s7rAav3imdzYMX6hRv/7sPDNtHhm
-	 JLS/ALKNre5XLmxInWzUbB0pqABgk9ILP0pvP9F6qhhqoNlsKyodtdgi6n1SZxF28J
-	 iDzaww089UYYy70BCDRV/eWO7QVBMv5katAFqSxATPCXdrmkCTsrBcREjOoJELKYwk
-	 DlkTldw8n8u0icffmLBqwMtcUx+s02YyknNSicAIiJPflOYZJxk9NaUZtf7eXHLhAj
-	 XndIkJITGuw1s3Vl4cuIgM++o737FRBuG3CS3/djQZH4O1xs4PiWrzVs4uwR7fQ5mG
-	 Am8JXDXY31YAw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AEDC4828D;
-	Thu,  1 Feb 2024 21:26:49 +0000 (UTC)
-From:
- Bjorn Andersson via B4 Relay <devnull+quic_bjorande.quicinc.com@kernel.org>
-Date: Thu, 01 Feb 2024 13:31:19 -0800
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm interconnect providers
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zxmqXiyX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=n9vCqnQ6kLBE0f/I+0hHoajVVyErt59ig2/HWfGH0AA=; b=zxmqXiyXFy7SLUTKfKDL3w89pd
+	oZb7jeslnq2ro4bmDEpZb9hGEa2BgVxzuEcILzPX7uMaWphgfNsfqBja0UV+QqPgO0z0esv1Zcg8A
+	ovckSI8Sp6N5+RWLIx52C5a28/YKrK5qgGV0N3S8MTLrih4qMkWmWvpGcPy/jWy3US9w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rVecz-006ixF-4T; Thu, 01 Feb 2024 22:29:45 +0100
+Date: Thu, 1 Feb 2024 22:29:45 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Christina Quast <contact@christina-quast.de>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Heiko Stuebner <heiko@sntech.de>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] net: phy: add Rust Rockchip PHY driver
+Message-ID: <6725eeac-45ee-4f3f-a612-0ef5725b9fd9@lunn.ch>
+References: <20240201-rockchip-rust-phy_depend-v2-0-c5fa4faab924@christina-quast.de>
+ <20240201-rockchip-rust-phy_depend-v2-3-c5fa4faab924@christina-quast.de>
+ <2024020105-bankroll-opium-a6e5@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240201-enable-icc-8250-2290-v1-1-8ded02750521@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAKYNvGUC/x2MSQqAMAwAvyI5G4ih4vIV8dAlakCqtCCC+HeLx
- xmYeSBLUskwVg8kuTTrEQs0dQV+s3EV1FAYmNgQU4MSrduL9R57bgmZB0JnFtsF37khCJT0TLL
- o/W+n+X0/dim61WYAAAA=
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1606;
- i=quic_bjorande@quicinc.com; h=from:subject:message-id;
- bh=PrRvWI3v6LUZy5gGPJMmYHZxgRkosEui53nfZHHVYmI=;
- b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBlvA2xeaQWX56SHdES03wVrRhZc5n1qzqikkpUs
- 3iffg/eBJaJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZbwNsRUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcXURBAAp2ZEzZ5VHTUvPh2jGmshtNoJ3rw3667luu9Wa7O
- +zTrJzuPVMYydm7VBER85Vvz2NSgXfE4M3syN8q4856+zE81uXPERay+k9J/7NTCyZpWLdvWYT+
- y9O0EpDD3hRPYagegaM0kj3saPdlPwIP/pMiwkG0gwcwWceSdxbLu0aSIumtNSwLkeJfWm9iFbN
- mvBvbtnNg50DmZ1IH0LFv0uNJ5h3Btb9gWD+ceuvD0BpQ8ivkggeXN74faBQteo4/VGrYqKFVKU
- BQNu7dQKtsKGAKw8VAriuqbRds/2fQTJbofvuMYoZA4eOeObgVKytdazSZmWfMrHIaQ58ei2WqJ
- I/JBxirh5Xf5daHQHseUSdljmdjF38naBdAgBtTG2/jA5T3eJjsDXkL5tiru9j/K+RHm1p00L29
- weMqHbyBtPrngyzUCu2jAZOhM8aJ4ByZu1LVyWYykMy+PUC31N0jq/kHLMXFIRGA50W47zMaI2N
- Zx3WH8eL9pxWag2AmJy3exSm0Jcbs3EYlz7TZDoVI3A36KSmAkBVSnhe1nd9llOocQ8hTdp3igs
- HgqkaqO9uXaKi2Uze3EgOB4evzb6FUXiVBZ8BB32sGmuwhsnO49WM4IP8gdTDntR1YDJalAGmRU
- F7UTvz0iCJqNPSCKaKu4QmwlBL2xQ71ia7Af6tfUV0RA=
-X-Developer-Key: i=quic_bjorande@quicinc.com; a=openpgp;
- fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
-X-Endpoint-Received:
- by B4 Relay for quic_bjorande@quicinc.com/default with auth_id=118
-X-Original-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-Reply-To: <quic_bjorande@quicinc.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024020105-bankroll-opium-a6e5@gregkh>
 
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
+On Thu, Feb 01, 2024 at 10:23:03AM -0800, Greg KH wrote:
+> On Thu, Feb 01, 2024 at 07:07:00PM +0100, Christina Quast wrote:
+> > This is the Rust implementation of drivers/net/phy/rockchip.c. The
+> > features are equivalent. You can choose C or Rust version kernel
+> > configuration.
+> > 
+> > Signed-off-by: Christina Quast <contact@christina-quast.de>
+> Cool, but why?  Is this going to happen for all phy drivers going
+> forward?  What's the end-game here, dropping all .c phy drivers that are
+> in rust?  Or having duplicates for all of them?
 
-With interconnect providers built as modules Qualcomm SM8250 and QCM2290
-platforms launches init without /dev/console being backed by the debug
-UART.
+As one of the PHY Maintainers, i would say no.
 
-Build there drivers into the kernel, to make sure the dependencies for
-the UART driver are available and thereby give userspace access to the
-UART without having to re-open the console, once the deferred UART
-driver has probed.
+Now we have an example, i think we should be a lot more strict about
+what we actually merge. It should be a driver for hardware which does
+not have a C driver.
 
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
----
- arch/arm64/configs/defconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+We cannot drop C drivers since Rust at the moment does not support all
+architectures GCC/Clang does. PHY drivers are architecture
+independent, and in real life used on multiple architectures. When
+Rust eventually catches up, we could consider dropping C drivers when
+there is an equivalent Rust driver, but from what i hear, that is a
+few years away. I don't want to be supporting a C and Rust driver for
+the same hardware.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e6cf3e5d63c3..0463db563215 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1550,7 +1550,7 @@ CONFIG_INTERCONNECT_QCOM=y
- CONFIG_INTERCONNECT_QCOM_MSM8916=m
- CONFIG_INTERCONNECT_QCOM_MSM8996=m
- CONFIG_INTERCONNECT_QCOM_OSM_L3=m
--CONFIG_INTERCONNECT_QCOM_QCM2290=m
-+CONFIG_INTERCONNECT_QCOM_QCM2290=y
- CONFIG_INTERCONNECT_QCOM_QCS404=m
- CONFIG_INTERCONNECT_QCOM_SA8775P=y
- CONFIG_INTERCONNECT_QCOM_SC7180=y
-@@ -1560,7 +1560,7 @@ CONFIG_INTERCONNECT_QCOM_SC8280XP=y
- CONFIG_INTERCONNECT_QCOM_SDM845=y
- CONFIG_INTERCONNECT_QCOM_SDX75=y
- CONFIG_INTERCONNECT_QCOM_SM8150=m
--CONFIG_INTERCONNECT_QCOM_SM8250=m
-+CONFIG_INTERCONNECT_QCOM_SM8250=y
- CONFIG_INTERCONNECT_QCOM_SM8350=m
- CONFIG_INTERCONNECT_QCOM_SM8450=y
- CONFIG_INTERCONNECT_QCOM_SM8550=y
-
----
-base-commit: 06f658aadff0e483ee4f807b0b46c9e5cba62bfa
-change-id: 20240201-enable-icc-8250-2290-b4fa7dc7b9de
-
-Best regards,
--- 
-Bjorn Andersson <quic_bjorande@quicinc.com>
-
+     Andrew
