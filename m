@@ -1,23 +1,40 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAE34D9E7
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 10:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9944DA05;
+	Thu,  1 Feb 2024 10:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706782076; cv=none; b=drYipehoR2LkHeWp43cDrgNV7xEoJlILOj+b33SiHuIPiaWfoZQ67VxdtFi6gXtGcmGat6y1QbGJEqgQGTbfJ8caQ1CkI+3NB6xSUVtZ8Df7EJZtiM0FaZwzWPgrLXAlBj+1k5uo1pNjljfpSc1KdstKyfTXbvmBovL91jIUX90=
+	t=1706782126; cv=none; b=HDToFPwC6BIKASiMdCDBcdzwAT0xEn1eU8QMTMopzZy5/aNSBTt/eVwoZbrlBrW2t+1qteSjRcjZIA40rNrS0XJiWvlAjdKuI2tDonFK7unSBrZUM0kvQMrdxIhajsss9f9Jz6VMqMG51Q1/ks/hZI+zWoPOL5gIczNEdBnRo48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706782076; c=relaxed/simple;
-	bh=H3NlgKMwCfq774/B0cUI4gDakYJQeaoj9l7F/QS62HE=;
+	s=arc-20240116; t=1706782126; c=relaxed/simple;
+	bh=Zbw1duyIkUff9kk8iVE8KbWbqATyvr/EHkllKd6B7Ow=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SFqUJ1sgqV1kGuYSKoQc6CDOUsGHrMEz0Lmjt/cAhEl0jPYnpnkIxVsIcNsFZKI4zvjAxRxhkVzd4460ev26L37h75x3UJrdBdGVGOdJpchw72cHIhsgjFkFKarhBg1VWRVTdd8V7eBMxnp6k1Q1W5DCdw7GuSRtv2m1lrWOt+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5B34E24000C;
-	Thu,  1 Feb 2024 10:07:49 +0000 (UTC)
-Message-ID: <4bf64df4-43a4-4207-b7d5-ff07adb98193@ghiti.fr>
-Date: Thu, 1 Feb 2024 11:07:48 +0100
+	 In-Reply-To:Content-Type; b=haX6GbYJtVWDhFLtT2bmZqeV5njgJDONmM+bBIj1Wg5CjCDaqUGkc0McshjMHtUZqEmYKoC1ukmN/yblawy/Al7mmjmF5wCnjW0qZBy6iynnLcdANvlcWeHsI4Gf25nrjCNcV1Ce7ao4xdkcO3Wn5xQFpcenbQcXn85n19Z5+dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Z86UnYCO; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Z86UnYCO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706782122;
+	bh=Zbw1duyIkUff9kk8iVE8KbWbqATyvr/EHkllKd6B7Ow=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Z86UnYCO3n19Iz57kNWMmT0uZdLi3ScTKbcJBmq+uANG3S3GFbOPzIJkYnPiv7imu
+	 lUc7yeFkPdCt1D4SWAlRkJ8B/BsZD6IYrfSd+xZBOlFrLQ816gy5lOIt941oiRm0Ir
+	 ZfDcRnAIDX5dU+tz1hR7gRSy2AOHRMOM63MJ5/Z4ih8wod/lPXx0uf9/3kfepJA2gJ
+	 Z5qbo6PXrGxXuqUMFy63bWX4u+24WaAd50oE9I+koZVzdR+b9VjNd6jR7nx4l9dMTI
+	 ad35+HPNKXoUiFt6v0zKjmmEKsRK/ewKAWOoey7c5HZApJ8cwmxuVO+bhpWWyUsytp
+	 8eGV6rRexID+g==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A3A5B3782081;
+	Thu,  1 Feb 2024 10:08:41 +0000 (UTC)
+Message-ID: <cace3472-7ee3-459b-ab2c-51764db99bd7@collabora.com>
+Date: Thu, 1 Feb 2024 11:08:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,191 +42,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: add CALLER_ADDRx support
+Subject: Re: [PATCH 0/7] ASoC: mediatek: AFE drivers cleanups
 Content-Language: en-US
-To: Zong Li <zong.li@sifive.com>, Conor Dooley <conor.dooley@microchip.com>
-Cc: palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20231205085959.32177-1-zong.li@sifive.com>
- <139cdbd6-73d9-4452-94ce-825689b7c0c8@ghiti.fr>
- <CANXhq0oA7LsKev+5gZCtNzCJ64RVOyimM1yQnY0kqs22VE6S4A@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CANXhq0oA7LsKev+5gZCtNzCJ64RVOyimM1yQnY0kqs22VE6S4A@mail.gmail.com>
+To: broonie@kernel.org
+Cc: perex@perex.cz, tiwai@suse.com, matthias.bgg@gmail.com,
+ ribalda@chromium.org, nicolas.ferre@microchip.com,
+ u.kleine-koenig@pengutronix.de, kuninori.morimoto.gx@renesas.com,
+ nfraprado@collabora.com, alsa-devel@alsa-project.org,
+ trevor.wu@mediatek.com, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, lgirdwood@gmail.com
+References: <20240111105247.117766-1-angelogioacchino.delregno@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240111105247.117766-1-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 7bit
 
-On 01/02/2024 09:43, Zong Li wrote:
-> On Thu, Feb 1, 2024 at 1:10 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
->> On 05/12/2023 09:59, Zong Li wrote:
->>> CALLER_ADDRx returns caller's address at specified level, they are used
->>> for several tracers. These macros eventually use
->>> __builtin_return_address(n) to get the caller's address if arch doesn't
->>> define their own implementation.
->>>
->>> In RISC-V, __builtin_return_address(n) only works when n == 0, we need
->>> to walk the stack frame to get the caller's address at specified level.
->>
->> Is that a bug in gcc or something expected for riscv in general?
->>
-> I think it isn't supported for riscv in general.
->
->>> data.level started from 'level + 3' due to the call flow of getting
->>> caller's address in RISC-V implementation. If we don't have additional
->>> three iteration, the level is corresponding to follows:
->>>
->>> callsite -> return_address -> arch_stack_walk -> walk_stackframe
->>> |           |                 |                  |
->>> level 3     level 2           level 1            level 0
->>>
->>> Signed-off-by: Zong Li <zong.li@sifive.com>
->>> ---
->>>    arch/riscv/include/asm/ftrace.h    |  5 ++++
->>>    arch/riscv/kernel/Makefile         |  2 ++
->>>    arch/riscv/kernel/return_address.c | 48 ++++++++++++++++++++++++++++++
->>>    3 files changed, 55 insertions(+)
->>>    create mode 100644 arch/riscv/kernel/return_address.c
->>>
->>> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
->>> index 2b2f5df7ef2c..42777f91a9c5 100644
->>> --- a/arch/riscv/include/asm/ftrace.h
->>> +++ b/arch/riscv/include/asm/ftrace.h
->>> @@ -25,6 +25,11 @@
->>>
->>>    #define ARCH_SUPPORTS_FTRACE_OPS 1
->>>    #ifndef __ASSEMBLY__
->>> +
->>> +extern void *return_address(unsigned int level);
->>> +
->>> +#define ftrace_return_address(n) return_address(n)
->>> +
->>>    void MCOUNT_NAME(void);
->>>    static inline unsigned long ftrace_call_adjust(unsigned long addr)
->>>    {
->>> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
->>> index fee22a3d1b53..40d054939ae2 100644
->>> --- a/arch/riscv/kernel/Makefile
->>> +++ b/arch/riscv/kernel/Makefile
->>> @@ -7,6 +7,7 @@ ifdef CONFIG_FTRACE
->>>    CFLAGS_REMOVE_ftrace.o      = $(CC_FLAGS_FTRACE)
->>>    CFLAGS_REMOVE_patch.o       = $(CC_FLAGS_FTRACE)
->>>    CFLAGS_REMOVE_sbi.o = $(CC_FLAGS_FTRACE)
->>> +CFLAGS_REMOVE_return_address.o       = $(CC_FLAGS_FTRACE)
->>>    endif
->>>    CFLAGS_syscall_table.o      += $(call cc-option,-Wno-override-init,)
->>>    CFLAGS_compat_syscall_table.o += $(call cc-option,-Wno-override-init,)
->>> @@ -46,6 +47,7 @@ obj-y       += irq.o
->>>    obj-y       += process.o
->>>    obj-y       += ptrace.o
->>>    obj-y       += reset.o
->>> +obj-y        += return_address.o
->>>    obj-y       += setup.o
->>>    obj-y       += signal.o
->>>    obj-y       += syscall_table.o
->>> diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/return_address.c
->>> new file mode 100644
->>> index 000000000000..c2008d4aa6e5
->>> --- /dev/null
->>> +++ b/arch/riscv/kernel/return_address.c
->>> @@ -0,0 +1,48 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +/*
->>> + * This code come from arch/arm64/kernel/return_address.c
->>> + *
->>> + * Copyright (C) 2023 SiFive.
->>> + */
->>> +
->>> +#include <linux/export.h>
->>> +#include <linux/kprobes.h>
->>> +#include <linux/stacktrace.h>
->>> +
->>> +struct return_address_data {
->>> +     unsigned int level;
->>> +     void *addr;
->>> +};
->>> +
->>> +static bool save_return_addr(void *d, unsigned long pc)
->>> +{
->>> +     struct return_address_data *data = d;
->>> +
->>> +     if (!data->level) {
->>> +             data->addr = (void *)pc;
->>> +             return false;
->>> +     }
->>> +
->>> +     --data->level;
->>> +
->>> +     return true;
->>> +}
->>> +NOKPROBE_SYMBOL(save_return_addr);
->>> +
->>> +void *return_address(unsigned int level)
->>
->> Maybe return_address() should be noinline to make sure it's not inlined
->> as it would break the "+ 3"? Not sure it's necessary though.
-> Yes, thanks for pointing it out. We should ensure it's not inlined in
-> any case. I will send the next version.
->
->>
->>> +{
->>> +     struct return_address_data data;
->>> +
->>> +     data.level = level + 3;
->>> +     data.addr = NULL;
->>> +
->>> +     arch_stack_walk(save_return_addr, &data, current, NULL);
->>> +
->>> +     if (!data.level)
->>> +             return data.addr;
->>> +     else
->>> +             return NULL;
->>> +
->>> +}
->>> +EXPORT_SYMBOL_GPL(return_address);
->>> +NOKPROBE_SYMBOL(return_address);
->>
->> And I see that with this patch, ftrace_return_address() is now defined
->> whether CONFIG_FRAME_POINTER is set or not, is that correct?
-> Yes, that is what I understand. In this patch, the
-> ftrace_return_address() is still defined to return_address() when
-> CONFIG_FRAME_POINTER isn't enabled, and return_address still works
-> because riscv port can walk stackframe without fp.
->
->> This looks like a fix to me so that should go into -fixes with a Fixes
->> tag (but we'll have to make sure that the "+ 3" is correct on all
->> backports...):
->>
->> Fixes: 10626c32e382 ("riscv/ftrace: Add basic support")
-> The return_address() invokes arch_stack_walk(), which enabled by the
-> '5cb0080f1bfd ("riscv: Enable ARCH_STACKWALK")'
->
-> I guess that we are not able to apply it on all backports. Is this
-> right? "+3" is correct after enabling ARCH_STACKWALK.
+Il 11/01/24 11:52, AngeloGioacchino Del Regno ha scritto:
+> This series converts MediaTek AFE drivers' probe functions to use
+> dev_err_probe() and devm functions where possible and, in some
+> cases, dropping the .remove_new() callback, reducing the size.
+> 
+> Cheers!
 
+Gentle ping for this series, afraid that went out of the radar :-)
 
-5cb0080f1bfd was introduced in v5.11, so that will make the backport possible up to 5.15, I guess that's ok, nobody will ever use a riscv kernel that old (?).
+Cheers,
+Angelo
 
-So I'd add the Fixes tag I proposed above, and let the backport fail for < 5.15. @Conor any opinion?
+> 
+> AngeloGioacchino Del Regno (7):
+>    ASoC: mediatek: mt8173-afe-pcm: Convert to devm_pm_runtime_enable()
+>    ASoC: mediatek: mt8173-afe-pcm: Use devm_snd_soc_register_component()
+>    ASoC: mediatek: mt8183-afe-pcm: Convert to devm_pm_runtime_enable()
+>    ASoC: mediatek: mt8183-afe-pcm: Simplify with dev_err_probe()
+>    ASoC: mediatek: mt8192-afe-pcm: Convert to devm_pm_runtime_enable()
+>    ASoC: mediatek: mt8192-afe-pcm: Simplify with dev_err_probe()
+>    ASoC: mediatek: mt8195-afe-pcm: Drop .remove_new() callback
+> 
+>   sound/soc/mediatek/mt8173/mt8173-afe-pcm.c |  78 +++------------
+>   sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 108 +++++++--------------
+>   sound/soc/mediatek/mt8192/mt8192-afe-pcm.c |  95 ++++++------------
+>   sound/soc/mediatek/mt8195/mt8195-afe-pcm.c |  12 +--
+>   4 files changed, 81 insertions(+), 212 deletions(-)
+> 
 
-
->
->> And you can finally add for your v2 (or not if you don't respin):
->>
->> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Thanks for the review, Alexandre. I will add it in v2:)
-
-
-Thanks,
-
-Alex
-
-
->
->> Thanks and sorry for the delay!
->>
->> Alex
->>
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
