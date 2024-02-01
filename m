@@ -1,234 +1,186 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349174D9E4
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AC715AAC6
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706780125; cv=none; b=VwR/6kVW4FCljBG8KNeBfwp1/bkXhKysMN/n/bskLvJamVUVCrV1wg42LL2FC7I7R/5/eAJjcufaAau8iSw/7sBsH+illBtAv9WHfh2mGfYonkWZCnORgDk+zfiD3Hux37H7xfT1iz9v80+IRgqsH1N65vUbxxrJEElPnlGLWEw=
+	t=1706780138; cv=none; b=cyq2jME2Pk+vgOE5dElyKOiyEiRHF3f2XiC7xpre87Nf2jvKCeiKBP4qCWHZxyy8ADZON/662LAS7w6yT5NlDlz9we2plKVhw/YA6XyhHQYBsmk9hzrbMQVYrXnWHQL3qbaS3Lua4rK2a+K3HS+g5C+feNWKYhJEgIzyHQQ3UzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706780125; c=relaxed/simple;
-	bh=Jxy0XWbWb/nIGgYtjM7GzjVLRuuPBPaYqN1Klw6CfqM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uKG4b12WltpaxdkbDU/g2iSV2nZHdN4MOib6aKiEwKhJAeCbmie0zIJmJhSGdVBMJEAO1QC7QwQwwWP3H5R/j9zUxf2odLjizyIEl39xGBn5ALKxfeGkXB4Fs+BgThTQ5B5ApeLo8Dk43hfnbeQDMEp2RX4e+9XlSWH6fyj/U5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--howardyen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zAOErTCa; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--howardyen.bounces.google.com
+	s=arc-20240116; t=1706780138; c=relaxed/simple;
+	bh=ZDllaHl05SCr+3uHdTXuT0oEzPdQZpv371GP17gaYA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dVLAjeUoRqQLaIW5WP0E3ihV9NyN8bILVD4E6hANWETBTNqP8wAIJ437B00E3M4x+beBQU8xWT+BKDtzpSJ8OcS4WEC8LuMx2oOn3AZMBeD5bSBDOQPobTiVFfoI3NvzwEht2LWN9vSgdFxjlpfZ/OmcAVQ38SSpgnsYKtpIB6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fKR08lYb; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zAOErTCa"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26eed12so1084193276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:35:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fKR08lYb"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3651c87ebbso88650966b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:35:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706780123; x=1707384923; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JVCHyyuWn0Tx2DLVfJKCMBpt+teKIiAvPgxfHY9hPE0=;
-        b=zAOErTCaK4UA1WjvWW3iCydhF8RX5iX4fFoh6Ad7ih+bTghTT2U3plBCcJpvc1ApcP
-         vkR1KFgeabXkhPp6dnZGJhrL5ic3Q5u6ylXmW7yAh7vF7mzu2Z1AXUqG0wRSK+9wTWWH
-         PGOa5iUcE5nqnq5LwuUfQo951jNIx0lVxjK1mB7BJXD0eH5kIvfBqtY5g4VVjQA5+7xu
-         hftbe0Eds9y05kGudLdFrbj/kIPdtvCXmdWLCQkhjQRWEidJQlplB5Bslzlpzi1dC6bE
-         P9znuJbxk4PD2JWpi6H2G9NcOXi9xckncwfumPAKGC2L6KN7uVeeeM8gGdjNukjA3Vjg
-         v1hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706780123; x=1707384923;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=linaro.org; s=google; t=1706780135; x=1707384935; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JVCHyyuWn0Tx2DLVfJKCMBpt+teKIiAvPgxfHY9hPE0=;
-        b=Py97AH3/KsLJkcDKIRSkJkckWIkoLP0RBBi5CxBsO0boWtXhg+oAscKhaMSY8AprXU
-         gxV4wEmWc/tQsblSc7OOtDelB6zHiPVQrGSrXmD4Rtm9lYMliX422MzpGqg51tAhcSuL
-         mrWddJvAXaUvjmBIBUQpdChi+Ip+LpftUPE644IGe9+Lj3pswjyuy5nw0ZbctRn4APWd
-         wW+BRy1IuiT8V285zKRAOMzKgaHhpC22TO4obsOZW5PWwbWR7O84noSzbbdz3wN9WmWt
-         dHbdBp0HLRmIHkc9MRRm2v+sCTFdkd5oaBYvyZIeQpADLLbecQHCxLMyd1gTrNPaLLxa
-         ulhw==
-X-Gm-Message-State: AOJu0Yw3H4LmxXudpRoDzasM5v5bl2Ci0d2qh46dF3li4pVwrpDeX0v8
-	RPI8vHd/Kxq1M4cFwBw62uSTL+7l6EENnNItX7n7hklIirbt5qGA2JrEW7mO2hjNRUFayK8e0si
-	1i6PIF2yKKz9USQ==
-X-Google-Smtp-Source: AGHT+IGBIccH2+bx2/z4pW2hln1Ej5XqEjzys8cPg/yPdxOeiTjk6VBw47Rbp/BUJpIbfmDrx/U0eGdPHPBWCyQ=
-X-Received: from howardyen2.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:16f7])
- (user=howardyen job=sendgmr) by 2002:a05:6902:920:b0:dc2:26f6:fbc8 with SMTP
- id bu32-20020a056902092000b00dc226f6fbc8mr140303ybb.7.1706780123180; Thu, 01
- Feb 2024 01:35:23 -0800 (PST)
-Date: Thu,  1 Feb 2024 09:35:15 +0000
+        bh=HyqXM2RqPns7OmdRV2J0tJ30SgtDybOdsbla0qjmeAA=;
+        b=fKR08lYbkrM4J9QQBbXECd/bj+lZ7HskbgR+e56PT32P6ImB1dmRWBzf+tnhCvFGL/
+         4UdTWMAX1Gv28HIZhhRdIMXTYjAFvy+Q0WOSWOF0onbmanHjitJbsbTHRiMOfWP9Re2w
+         Nu03byPtsTflU0tNlNN7l5exUazhMeD81uI/Hg70x0PhLOVlOzxXa2J2PJYTHcEWeQkT
+         X0jfGJTRJqYBoHpJxbYTRXKv9u1NrO1LSRo/+OnJkKj4CFx3/roxTqwGKBjWpPR6Bw7E
+         TcBqaBa0Ztb2KWifxWwgarcVdjGzrhRhQLQlh1llXhrnptTErb832ZUhRm6zSJR+ggZB
+         RVDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706780135; x=1707384935;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HyqXM2RqPns7OmdRV2J0tJ30SgtDybOdsbla0qjmeAA=;
+        b=oJDB9fdiXipAXhCoK2YeMjTHNfU4R5kicxSn81X5waG/yBwCUYIA/SXGZ0mxQGZW8w
+         a0KGTqNqnb41dfP1xmzZ/zhSOz5TOktAGklfSm2ToEQMWuR/bwrRL4kAhPy1gEZ8kxU7
+         cLDlfaz6AOwxxwqJfG0Hwy3F8jDG0nyJdtRg1Pnt4oxWfIlEvoNvKjRSdE9nySrkI+QE
+         835OkcN4LAv7DXE1nRnVbMFdAw/txp1Xv1GS/lxt27bwV1MFS9CgXKwlQQsDhtcrfoRJ
+         97bspdH/Yp48VNpGXZwKbixaYKbGJ1aa63EWC3M6IZ/or6JyfqROKVZwOdp5b0wgf8X6
+         odYA==
+X-Gm-Message-State: AOJu0Yx1gVU9HWAEyKi9Ercuo4xmMcmXlkjcwmNR1vsWZ8/aXxjZ7VmE
+	ADu3xFDjWvpdoJycvbgDEOHAMsiWeMEY7lzqO6GZw/zd6fDGB9czVPKpCRpESlc=
+X-Google-Smtp-Source: AGHT+IFC7C6ZTgZVnlcChUgICQ7l00lXxa3JRgiSmvfPutlq8w7VkeX2Me0z0MaoewEduVjVtCvkrA==
+X-Received: by 2002:a17:906:f34f:b0:a35:c518:8808 with SMTP id hg15-20020a170906f34f00b00a35c5188808mr1263470ejb.30.1706780134959;
+        Thu, 01 Feb 2024 01:35:34 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXi789qMnuijxBvOmllY3dSeOAsDCkm5lAvjqnc1Swbfmd67t8t/hJp8UXoHUHbkJhXZc3h2M/aed75XjZCbac1cyRQqZCDJJgAUBL44kYI8fYLTFhSnhfWS+c8DlkiGIDL0Gix+rHpsRyQcRhC0hqMKsyD5i6uzRV7gIQAmQghwW+aOkGxvoAqvlCy5BM4BJX5pE1vx9dqiXPEUK6JbCRp/I6QIunSYQ6Vw+gUACWB7MgtG7vxcPtaZw3Ot3ZJqNXzWS1MO/ZKA0hWdpHKjAPo4jAp2V61kKhtibAdSH75WgryFmfJdo83YWBHSvmPufppszpOL+C6fFTTbbK6oqD+n7jq4ryEztLXi4HIlDbVRoRWkMJdf5U+ZJjZRuxkGoLljj6NFadk0HHzQzk=
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id ty8-20020a170907c70800b00a353d1a19a9sm5929063ejc.191.2024.02.01.01.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 01:35:34 -0800 (PST)
+Message-ID: <94075be0-b91c-4147-86b1-582b124e71a0@linaro.org>
+Date: Thu, 1 Feb 2024 10:35:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240201093515.849873-1-howardyen@google.com>
-Subject: [PATCH] dma-coherent: add support for multi coherent rmems per dev
-From: Howard Yen <howardyen@google.com>
-To: hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com, 
-	gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com, 
-	petr.tesarik.ext@huawei.com, rafael@kernel.org, broonie@kernel.org, 
-	james@equiv.tech, james.clark@arm.com, masahiroy@kernel.org
-Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	Howard Yen <howardyen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/3] w1: add UART w1 bus driver
+Content-Language: en-US
+To: Christoph Winklhofer <cj.winklhofer@gmail.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20240126-w1-uart-v5-0-1d82bfdc2ae9@gmail.com>
+ <20240126-w1-uart-v5-3-1d82bfdc2ae9@gmail.com>
+ <092a9986-5ebb-483d-9911-37a93d7cb2dd@kernel.org>
+ <ZbtIPo--1hfzNmho@cjw-notebook>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ZbtIPo--1hfzNmho@cjw-notebook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add support for multiple coherent rmems per device. This patch addes
-dma_mem_list to device structure to store multiple rmems.
+On 01/02/2024 08:29, Christoph Winklhofer wrote:
+>>> +
+>>> +static void w1_uart_remove(struct serdev_device *serdev)
+>>> +{
+>>> +	struct w1_uart_device *w1dev = serdev_device_get_drvdata(serdev);
+>>> +
+>>> +	mutex_lock(&w1dev->mutex);
+>>> +
+>>> +	w1_remove_master_device(&w1dev->bus);
+>>> +
+>>> +	mutex_unlock(&w1dev->mutex);
+>>
+>> This is still suspicious. You do not have serdev_device_close and you
+>> want to protect from concurrent access but it looks insufficient.
+>>
+>> This code assumes that:
+>>
+>> w1_uart_remove()
+>>   <-- here concurrent read/write might start
+>>   mutex_lock()
+>>   w1_remove_master_device()
+>>   mutex_unlock()
+>>   <-- now w1_uart_serdev_tx_rx() or w1_uart_serdev_receive_buf() can be
+>> executed, but device is removed. So what's the point of the mutex here?
+>>
+>> What exactly is protected by the mutex? So far it looks like only some
+>> contents of w1dev, but it does not matter, because it that memory is
+>> still valid at this point.
+>>
+>> After describing what is protected we can think whether it is really
+>> protected...
+>>
+>>
+>>>
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> Yes, it is still suspicious, sorry..
+> 
+> After w1_uart_remove, serdev is closed and w1dev is released. Therefore
+> the w1-callback (w1_uart_serdev_tx_rx) must be finished before returning
 
-These multiple rmems can be assigned to the device one by one by
-of_reserved_mem_device_init_by_idx() with the memory-region
-declaration in device tree as below and store the rmem to the dma_mem_list.
+I did not even go to end of w1_uart_remove(). In my code above, that
+thread is still in w1_uart_remove(), just after unlocking mutex.
 
-	device1@0 {
-		...
-		memory-region = <&reserved_mem0>, <&reserved_mem1>;
-		...
-	};
+> from w1_uart_remove. That was the intention with the lock and trylock.
 
-When driver tries to allocate memory from the rmems, looks for the first
-available rmem and allocates the memory from this rmem.
+Then it does not look really protected. To be honest, w1-gpio and other
+drivers also might have a race here. You can test it by adding long
+sleeps in read/write paths and then trying to unbind device. Maybe this
+should be fixed everywhere, but this mutex here brings more questions.
 
-Then if driver removed, of_reserved_mem_device_release() needs to be
-invoked to release all the rmems assigned to the device.
 
-Signed-off-by: Howard Yen <howardyen@google.com>
----
- include/linux/device.h |  1 +
- kernel/dma/coherent.c  | 66 +++++++++++++++++++++++++++++++++++-------
- 2 files changed, 56 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 97c4b046c09d..c8682ee507cf 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -751,6 +751,7 @@ struct device {
- #ifdef CONFIG_DMA_DECLARE_COHERENT
- 	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
- 					     override */
-+	struct list_head	dma_mem_list;
- #endif
- #ifdef CONFIG_DMA_CMA
- 	struct cma *cma_area;		/* contiguous memory area for dma
-diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-index ff5683a57f77..f31befd2e6f8 100644
---- a/kernel/dma/coherent.c
-+++ b/kernel/dma/coherent.c
-@@ -18,6 +18,7 @@ struct dma_coherent_mem {
- 	unsigned long	*bitmap;
- 	spinlock_t	spinlock;
- 	bool		use_dev_dma_pfn_offset;
-+	struct list_head	node;
- };
- 
- static inline struct dma_coherent_mem *dev_get_coherent_memory(struct device *dev)
-@@ -61,6 +62,7 @@ static struct dma_coherent_mem *dma_init_coherent_memory(phys_addr_t phys_addr,
- 	dma_mem->pfn_base = PFN_DOWN(phys_addr);
- 	dma_mem->size = pages;
- 	dma_mem->use_dev_dma_pfn_offset = use_dma_pfn_offset;
-+	INIT_LIST_HEAD(&dma_mem->node);
- 	spin_lock_init(&dma_mem->spinlock);
- 
- 	return dma_mem;
-@@ -90,10 +92,13 @@ static int dma_assign_coherent_memory(struct device *dev,
- 	if (!dev)
- 		return -ENODEV;
- 
--	if (dev->dma_mem)
--		return -EBUSY;
-+	if (!dev->dma_mem) {
-+		dev->dma_mem = mem;
-+		INIT_LIST_HEAD(&dev->dma_mem_list);
-+	}
-+
-+	list_add_tail(&mem->node, &dev->dma_mem_list);
- 
--	dev->dma_mem = mem;
- 	return 0;
- }
- 
-@@ -187,12 +192,17 @@ static void *__dma_alloc_from_coherent(struct device *dev,
- int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
- 		dma_addr_t *dma_handle, void **ret)
- {
--	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
-+	struct dma_coherent_mem *mem_tmp, *mem = dev_get_coherent_memory(dev);
- 
- 	if (!mem)
- 		return 0;
- 
--	*ret = __dma_alloc_from_coherent(dev, mem, size, dma_handle);
-+	list_for_each_entry(mem_tmp, &dev->dma_mem_list, node) {
-+		*ret = __dma_alloc_from_coherent(dev, mem_tmp, size, dma_handle);
-+		if (*ret)
-+			break;
-+	}
-+
- 	return 1;
- }
- 
-@@ -226,9 +236,19 @@ static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
-  */
- int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr)
- {
--	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
-+	struct dma_coherent_mem *mem_tmp, *mem = dev_get_coherent_memory(dev);
-+	int ret = 0;
- 
--	return __dma_release_from_coherent(mem, order, vaddr);
-+	if (!mem)
-+		return ret;
-+
-+	list_for_each_entry(mem_tmp, &dev->dma_mem_list, node) {
-+		ret = __dma_release_from_coherent(mem_tmp, order, vaddr);
-+		if (ret == 1)
-+			break;
-+	}
-+
-+	return ret;
- }
- 
- static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
-@@ -271,9 +291,19 @@ static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
- int dma_mmap_from_dev_coherent(struct device *dev, struct vm_area_struct *vma,
- 			   void *vaddr, size_t size, int *ret)
- {
--	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
-+	struct dma_coherent_mem *mem_tmp, *mem = dev_get_coherent_memory(dev);
-+	int retval = 0;
- 
--	return __dma_mmap_from_coherent(mem, vma, vaddr, size, ret);
-+	if (!mem)
-+		return retval;
-+
-+	list_for_each_entry(mem_tmp, &dev->dma_mem_list, node) {
-+		retval = __dma_mmap_from_coherent(mem_tmp, vma, vaddr, size, ret);
-+		if (retval == 1)
-+			break;
-+	}
-+
-+	return retval;
- }
- 
- #ifdef CONFIG_DMA_GLOBAL_POOL
-@@ -351,8 +381,22 @@ static int rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
- static void rmem_dma_device_release(struct reserved_mem *rmem,
- 				    struct device *dev)
- {
--	if (dev)
--		dev->dma_mem = NULL;
-+	struct dma_coherent_mem *mem, *mem_tmp, *q;
-+
-+	if (dev) {
-+		mem = dev_get_coherent_memory(dev);
-+		if (rmem->priv != mem) {
-+			list_for_each_entry_safe(mem_tmp, q, &dev->dma_mem_list, node) {
-+				if (mem_tmp == rmem->priv) {
-+					list_del_init(&mem_tmp->node);
-+					break;
-+				}
-+			}
-+		} else {
-+			list_del_init(&mem->node);
-+			dev->dma_mem = NULL;
-+		}
-+	}
- }
- 
- static const struct reserved_mem_ops rmem_dma_ops = {
--- 
-2.43.0.429.g432eaa2c6b-goog
+Best regards,
+Krzysztof
 
