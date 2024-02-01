@@ -1,165 +1,126 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785B185639;
-	Thu,  1 Feb 2024 19:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE14285286
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 19:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706817259; cv=none; b=kdfOPrxivdJoLlF5wStSFJ/eGLHSPIRTogynUCwmveLP9IFa+bEZc/ZcEUsS8/3DXIfdd04Q0+4PY2zhy+oGG3XzWTqRp0kL0zZnfe2rSw4CHeahcbWvrVHBb7n0BoMq9rVOqE174K7Ab4kqZHOt805HFT09ZHg/EL8seSVZQeg=
+	t=1706817377; cv=none; b=W2YRzMs9m251kVrdWuu/qHgW1pV2ABYwbD/DzeqZzbEsaBwJqx66kSee9zwt1scBNwdb4li/sWujcpLpLDb+vyGDn+6dUh+g/Zr3ebVavPalxYcgkr1w4BbVZ9zS45Y2RX1hh2JANlzW0fOjIB479D/eEsvlxlGS5V6JQSfWA98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706817259; c=relaxed/simple;
-	bh=igWepZJuJ7/NxlfTBcvat+93tyRHyJ7CtS8SToYFt88=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SuT0G204YM4NdlbyLqHY5FpSibrhaPskX0/wW3nih7h60+Qp8ca1iCQH80cEHHz+ACLn47RvbYf/MULKhnNTbRXOgsPZGsub5k7OsJSSLMWSBNee9L5EXZNJT3t86fC0S3gbGYkf+07qEwoZxtKHkLI68tjhrrvxwnsuEtpMHyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TdS04626; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706817377; c=relaxed/simple;
+	bh=TyvARfG5cdiLS3Lx957Ua1EFLe1TpBHS0WmMWNXQHGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=InTWaVbt+IAU+dWdH8qX+H8Ug1nMQx1oK8UBjp31EyFXsnkZmATUuNAwC0ooC/V4fRHlFbBIWxWrU0jjmrF5x2eI3aD4pYWDAa5fHPmDaKmjo2MpvP7MHkM/TOQcdpVd/2HNG7Q8hCRaRgZWGtYsbILtcKmLvnD1OT0traoCVSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTRQ4Hna; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TdS04626"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40fb3b5893eso11361575e9.0;
-        Thu, 01 Feb 2024 11:54:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706817255; x=1707422055; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fw0ii54g50YM0TTuIh98HIpGP8lHOO7kLQ/jqdmdMzg=;
-        b=TdS04626BAnPz7e+SzFyfM0zwf4n+7EOtW9jQoMtN+hXw+GMYH6yEVmVq1s3zJmFni
-         +PdA1Is6XgSL2FW8hvvMmcETWF+q70OmCmSjaxvwWKLmNkpx0g3keFh+64BFQAaIW+Qv
-         Q1nY7L+bIxZyVXcTCOvYsiUfC90I4lwDn+w/d8QmSBJpalBGOXtlD3WuNplg/+I5mVcB
-         gWT6VINX/TW+YAXauYjMg/vMtNF7jZ22UdzKNeBi8wh0x1RQxS2rgcc7levF24Zlt//X
-         s65l82XLTmkE9bZgzFXHHdI+jcXv/SWJFwPNACi0dD+NYPFCJmeBK3rNFMutIKclqSfd
-         a6iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706817255; x=1707422055;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fw0ii54g50YM0TTuIh98HIpGP8lHOO7kLQ/jqdmdMzg=;
-        b=shfY+4VOnuCZJGkcAegkLC6CtYeO/cGGd5MWA58tFKu8KxBbNJYbftcGOypeBWtq29
-         +quTcQy1Z1bstManfu/5FBaiB1lfxYpj0XeH8OyIAyhji9j0yfkG4jA/78zqB8KQeG7z
-         VFPfK4Nh5/39Cpvjergw6sCEwdIBFO2TPz9SZCCG7WZ+bp1fGlonwdMJy2nN5a/dMzFT
-         uSlX8dmKy+yAKg0XLtDjnYhR5U/08QDfbQn62NCO3vrMomB0oB4W6lkTlAmMcYisCRSX
-         h6sa5WN+UvL1Qu1hBgfxioOTXzqgP+JQAIM2Pp+48mV03Wqlf6yb/ySRMpPT3OLW5mUa
-         YJJw==
-X-Gm-Message-State: AOJu0Yxbc1bI041AhZP0oDt1b31dsWtvpEaofVSFeKEvI4lb5KsgHrlm
-	h7c4NFj6b7rluX39gU+GE4PhzW651n5pj23NWvlb+yivjffPj5kC
-X-Google-Smtp-Source: AGHT+IEnh5hwCXXTj+jcR1g0I5bM3FN4GQ3RUZkTBdSNXXRnJnKzpnLqx2ztJH2PVqejHm+eHD5rlg==
-X-Received: by 2002:adf:f64d:0:b0:33a:ed59:c13f with SMTP id x13-20020adff64d000000b0033aed59c13fmr2215794wrp.53.1706817254477;
-        Thu, 01 Feb 2024 11:54:14 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUkIqDqfPVesemdoaqG1j9jyMLDsyXZci7qdN4rwuZyTnBZy4P9GdwzPQDb4Y97RzDb7Nt0/KTkiYHc51OSLbBILSGHypTjb1PDb72ZoN4kaiS2TT38IIny9hPv2qk7pbyB11bBj5eswJ+oqt6ESrIo8PmhujbvmHrZ92DidVXSYCIjxN1acjdlenKmkXnSfu++c+dj/Av8asn0HmbyqnJOHJwIvOONyMQz7F09oEWk0jsg4Qs3a3TqQFxA5SUAaxlPo2IJXN4OUMn6+DxZIgdQzBM6KWGu35l4Soq52r7+Zd0QERbzokhqf2Tb42N3SFmMLFs+a7yMc+7eTw7Al8QKIOgIa0u0jl1oDEI1AB6rPSle+MxY1/QtbLL8
-Received: from jernej-laptop.localnet (82-149-13-182.dynamic.telemach.net. [82.149.13.182])
-        by smtp.gmail.com with ESMTPSA id v12-20020a5d4b0c000000b0033afce63fd0sm211781wrq.53.2024.02.01.11.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 11:54:14 -0800 (PST)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Aren <aren@peacevolution.org>
-Cc: linux-kernel@vger.kernel.org, Miles Alan <m@milesalan.com>,
- Ondrej Jirman <megi@xff.cz>, Chen-Yu Tsai <wens@csie.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, Samuel Holland <samuel@sholland.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-Subject:
- Re: [PATCH 2/4] arm64: dts: sun50i-a64-pinephone: Retain leds state in
- suspend
-Date: Thu, 01 Feb 2024 20:54:12 +0100
-Message-ID: <10409647.nUPlyArG6x@jernej-laptop>
-In-Reply-To: <sbcg74hktwv5x7hookeb4su27xut7swarl3d5mbs3i5cqxtq4g@4evugu43ctiv>
-References:
- <20240128204740.2355092-1-aren@peacevolution.org>
- <4892315.31r3eYUQgx@jernej-laptop>
- <sbcg74hktwv5x7hookeb4su27xut7swarl3d5mbs3i5cqxtq4g@4evugu43ctiv>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTRQ4Hna"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706817374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iN9wTYAiEZqmVZSRGp3IE12Ur++dFYxvXqv8nbWcyFg=;
+	b=DTRQ4Hnaubahspwx54qtR7ubNcdJwXU4sKmDD/SKuTVJ92bACyRN2QF/mLHMqCxK+X8sFm
+	+5hoDjhjXOUgzDAirYLhJoUp9DydRg7ncYio7FxVq8nrBmZJen7XkEh21adiZ6WKM+k+t6
+	elDp2D1qSB9OdS3AJgQCoDQauTbkWiw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-518-2hoVCHGRMSqXp1LTv0T2SA-1; Thu, 01 Feb 2024 14:56:11 -0500
+X-MC-Unique: 2hoVCHGRMSqXp1LTv0T2SA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E92FF8489F7;
+	Thu,  1 Feb 2024 19:56:10 +0000 (UTC)
+Received: from tpad.localdomain (unknown [10.96.133.5])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B007A2026D66;
+	Thu,  1 Feb 2024 19:56:10 +0000 (UTC)
+Received: by tpad.localdomain (Postfix, from userid 1000)
+	id CA31C402492AA; Thu,  1 Feb 2024 15:45:01 -0300 (-03)
+Date: Thu, 1 Feb 2024 15:45:01 -0300
+From: Marcelo Tosatti <mtosatti@redhat.com>
+To: Parshuram Sangle <parshuram.sangle@intel.com>
+Cc: rafael@kernel.org, daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jaishankar.rajendran@intel.com
+Subject: Re: [PATCH] cpuidle: do not shrink guest poll_limit_ns below
+ grow_start
+Message-ID: <ZbvmrdBkeOK71KGg@tpad>
+References: <20240111135950.17016-1-parshuram.sangle@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111135950.17016-1-parshuram.sangle@intel.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Dne =C4=8Detrtek, 01. februar 2024 ob 02:36:46 CET je Aren napisal(a):
-> On Tue, Jan 30, 2024 at 08:06:24PM +0100, Jernej =C5=A0krabec wrote:
-> > Dne nedelja, 28. januar 2024 ob 21:45:08 CET je Aren Moynihan napisal(a=
-):
-> > > From: Miles Alan <m@milesalan.com>
-> > >=20
-> > > Allows user to set a led before entering suspend to know that
-> > > the phone is still on (or could be used for notifications etc.)
-> > >=20
-> > > Signed-off-by: Miles Alan <m@milesalan.com>
-> > > Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> > > Signed-off-by: Aren Moynihan <aren@peacevolution.org>
-> >=20
-> > Where is patch 1 and possibly cover letter? Please resend with all patc=
-hes.
->=20
-> Oops, sorry about that, I'm still getting used to get_maintainer.pl.
-> I'll resend this properly when I have time this weekend, until then the
-> patch you missed is available at
-> https://lore.kernel.org/lkml/20240128204740.2355092-1-aren@peacevolution.=
-org/
+On Thu, Jan 11, 2024 at 07:29:50PM +0530, Parshuram Sangle wrote:
+> While adjusting guest halt poll limit, grow block starts at
+> guest_halt_poll_grow_start without taking intermediate values.
+> Similar behavior is expected while shrinking the value. This
+> avoids short interval values which are really not required.
+> 
+> VCPU1 trace (guest_halt_poll_shrink equals 2):
+> 
+> VCPU1 grow 10000
+> VCPU1 shrink 5000
+> VCPU1 shrink 2500
+> VCPU1 shrink 1250
+> VCPU1 shrink 625
+> VCPU1 shrink 312
+> VCPU1 shrink 156
+> VCPU1 shrink 78
+> VCPU1 shrink 39
+> VCPU1 shrink 19
+> VCPU1 shrink 9
+> VCPU1 shrink 4
+> 
+> Similar change is done in KVM halt poll flow with below patch:
+> Link: https://lore.kernel.org/kvm/20211006133021.271905-3-sashal@kernel.org/
+> 
+> Co-developed-by: Rajendran Jaishankar <jaishankar.rajendran@intel.com>
+> Signed-off-by: Rajendran Jaishankar <jaishankar.rajendran@intel.com>
+> Signed-off-by: Parshuram Sangle <parshuram.sangle@intel.com>
+> ---
+>  drivers/cpuidle/governors/haltpoll.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
+> index 1dff3a52917d..663b7f164d20 100644
+> --- a/drivers/cpuidle/governors/haltpoll.c
+> +++ b/drivers/cpuidle/governors/haltpoll.c
+> @@ -98,10 +98,15 @@ static void adjust_poll_limit(struct cpuidle_device *dev, u64 block_ns)
+>  		unsigned int shrink = guest_halt_poll_shrink;
+>  
+>  		val = dev->poll_limit_ns;
+> -		if (shrink == 0)
+> +		if (shrink == 0) {
+>  			val = 0;
+> -		else
+> +		} else {
+>  			val /= shrink;
+> +			/* Reset value to 0 if shrunk below grow_start */
+> +			if (val < guest_halt_poll_grow_start)
+> +				val = 0;
+> +		}
+> +
+>  		trace_guest_halt_poll_ns_shrink(val, dev->poll_limit_ns);
+>  		dev->poll_limit_ns = val;
+>  	}
+> -- 
+> 2.17.1
+> 
+> 
+> 
 
-When sending patch series it's customary to send all patches to all
-maintainers and mailing lists (to have a context). In case of large patch
-series, you can send only selected patches to each maintainer and mailing
-lists, but then send cover letter to all involved and explain general idea
-behind the series.
+Looks good.
 
-Best regards,
-Jernej
-
->=20
-> > However, this particular patch is:
-> > Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
->=20
-> Thanks
->  - Aren
->=20
-> > Best regards,
-> > Jernej
-> >=20
-> > > ---
-> > >=20
-> > >  arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >=20
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi =
-b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > > index 87847116ab6d..ad2476ee01e4 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > > @@ -43,18 +43,21 @@ led-0 {
-> > >  			function =3D LED_FUNCTION_INDICATOR;
-> > >  			color =3D <LED_COLOR_ID_BLUE>;
-> > >  			gpios =3D <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 */
-> > > +			retain-state-suspended;
-> > >  		};
-> > > =20
-> > >  		led-1 {
-> > >  			function =3D LED_FUNCTION_INDICATOR;
-> > >  			color =3D <LED_COLOR_ID_GREEN>;
-> > >  			gpios =3D <&pio 3 18 GPIO_ACTIVE_HIGH>; /* PD18 */
-> > > +			retain-state-suspended;
-> > >  		};
-> > > =20
-> > >  		led-2 {
-> > >  			function =3D LED_FUNCTION_INDICATOR;
-> > >  			color =3D <LED_COLOR_ID_RED>;
-> > >  			gpios =3D <&pio 3 19 GPIO_ACTIVE_HIGH>; /* PD19 */
-> > > +			retain-state-suspended;
-> > >  		};
-> > >  	};
-> > > =20
-> > >=20
-> >=20
-> >=20
-> >=20
-> >=20
->=20
-
-
-
+Reviewed-by: Marcelo Tosatti <mtosatti@redhat.com>
 
