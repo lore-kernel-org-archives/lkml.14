@@ -1,39 +1,64 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2D414C58D;
-	Thu,  1 Feb 2024 06:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC33157E89;
+	Thu,  1 Feb 2024 07:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706770599; cv=none; b=U5sh6Sru9WEiTkzwZ3tRm7AwobddrlueON7F3MYO+COc/5wRAf8xmJ2A6zF5RbioGmcidrsuLI+RPGg18MUMvdNqCg9r9eMkqWb30avp1kky9YCg7alWCRYw23WWOdlaq7scczESrbWMjvfKLgWUyn2E8iY5ogyfxOIm2LjdzNk=
+	t=1706770919; cv=none; b=S9HlbtkbWX+VPHy7jFqeJjcwutS7hT8xxiJAs2n+qpCrU7KHJmHm+tX2a/lYj0zCdgV/edlG9uz94J/nCR62Us0IWCSDfKPrqHye4Yf1VDPwsm6NSK8Icmf2/8fALsBvH++MKdoSXTyI7YkE+nVFpdj6TD/XB8iKG+RvEmDiiGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706770599; c=relaxed/simple;
-	bh=0hGp61YtpizS4C5ByCdu2R4tN2l76xoOODrZGSJ7FHc=;
+	s=arc-20240116; t=1706770919; c=relaxed/simple;
+	bh=Z0os6sV4H7BI+19bTCyZJGJy6DbnbMpARctTbP6TdfA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yyc3Up3+nuNX453q//vNmM0OcAYoB4JQJVt50qc0uPrGl1K3tIlZ/k4QAbaMzpzji+dDkVt76Ml4rHmX4Q+zyjcZ8MrwYzuyy6gx2BrCLiIpxXvOWvtPq9r8LZPXfammghVhmLpm9nTzQAdrlNFScqLFFlXHSM2bHnPcH+O1eJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id CF282100DA1A1;
-	Thu,  1 Feb 2024 07:50:40 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9ED9A1E367; Thu,  1 Feb 2024 07:50:40 +0100 (CET)
-Date: Thu, 1 Feb 2024 07:50:40 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH kernel 1/4] pci/doe: Define protocol types and make those
- public
-Message-ID: <20240201065040.GA31925@wunner.de>
-References: <20240201060228.3070928-1-aik@amd.com>
- <20240201060228.3070928-2-aik@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qnVTOwvkGLrXUCLfYwB/Yu0BEjzJArxBFzquRqTRuoU7oaWPNopRCOTAMBsPzIqoLvGvkat2Ml8OroA/PsSMlPuctCxSVu/DTFPR64QASPJN6sKmLwj6fT6WYNKIxQWffSC7yAnXFzlRJJsabkkq7J7f0mXn+5ujyHOIylPvdKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S6Dw5KnM; arc=none smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S6Dw5KnM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706770918; x=1738306918;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Z0os6sV4H7BI+19bTCyZJGJy6DbnbMpARctTbP6TdfA=;
+  b=S6Dw5KnMXRyeguOR32qcptgCzbNJ7qOF7aCTr5mBHDAohc+VpTUI4vau
+   r7morwH7iQiFFnSrRrMRAhmDACf3J663SWuGstcbQpduznDcSjg+OiiUc
+   Kw1zISPTJaxJ8soQGzt6w0cG+g9BQbT5dkFepLa9VlLSEIyqEMhBwzHUY
+   Y+GEY11kDUVYpsIBUSqI7eiBMb+wTrZpESkBpnSwySsaCwUA2mddUgAOQ
+   eCR7ErcbAU1om+d0AF2xv2CApHVgtL3xSd9aIJ0sl6K6YxicyGiFfdvDU
+   mDPyamA1N1PDD/DacrEXDSxChB4VBhAQSebCuDKxwnxBxtOho6tH+Pt25
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="407542951"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="407542951"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 23:01:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788861726"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="788861726"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 31 Jan 2024 23:01:53 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rVR52-0002UO-2K;
+	Thu, 01 Feb 2024 07:01:49 +0000
+Date: Thu, 1 Feb 2024 15:01:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Brauner <brauner@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Matthew Wilcox <willy@infradead.org>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH DRAFT 1/4] : tracefs: port to kernfs
+Message-ID: <202402011431.c6K3rKZS-lkp@intel.com>
+References: <20240131-tracefs-kernfs-v1-1-f20e2e9a8d61@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,32 +67,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240201060228.3070928-2-aik@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240131-tracefs-kernfs-v1-1-f20e2e9a8d61@kernel.org>
 
-On Thu, Feb 01, 2024 at 05:02:25PM +1100, Alexey Kardashevskiy wrote:
-> Already public pci_doe() takes a protocol type argument.
-> PCIe 6.0 defines three, define them in a header for use with pci_doe().
-[...]
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -13,6 +13,10 @@
->  #ifndef LINUX_PCI_DOE_H
->  #define LINUX_PCI_DOE_H
->  
-> +#define PCI_DOE_PROTOCOL_DISCOVERY		0
-> +#define PCI_DOE_PROTOCOL_CMA_SPDM		1
-> +#define PCI_DOE_PROTOCOL_SECURED_CMA_SPDM	2
+Hi Christian,
 
-These are deliberately defined in the .c files which actually need them,
-i.e. DISCOVERY is defined in drivers/pci/doe.c and CMA_SPDM is defined in
-drivers/pci/cma.c:
+kernel test robot noticed the following build warnings:
 
-https://lore.kernel.org/all/7721bfa3b4f8a99a111f7808ad8890c3c13df56d.1695921657.git.lukas@wunner.de/
+[auto build test WARNING on 41bccc98fb7931d63d03f326a746ac4d429c1dd3]
 
-I don't see why they would have to be public if they're each only needed
-in a single .c file.
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Brauner/tracefs-port-to-kernfs/20240131-214120
+base:   41bccc98fb7931d63d03f326a746ac4d429c1dd3
+patch link:    https://lore.kernel.org/r/20240131-tracefs-kernfs-v1-1-f20e2e9a8d61%40kernel.org
+patch subject: [PATCH DRAFT 1/4] : tracefs: port to kernfs
+config: i386-randconfig-061-20240201 (https://download.01.org/0day-ci/archive/20240201/202402011431.c6K3rKZS-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240201/202402011431.c6K3rKZS-lkp@intel.com/reproduce)
 
-Thanks,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402011431.c6K3rKZS-lkp@intel.com/
 
-Lukas
+sparse warnings: (new ones prefixed by >>)
+>> fs/tracefs/inode.c:88:27: sparse: sparse: symbol 'global_opts' was not declared. Should it be static?
+
+vim +/global_opts +88 fs/tracefs/inode.c
+
+    87	
+  > 88	struct tracefs_mount_opts global_opts = {
+    89		.mode	= TRACEFS_DEFAULT_MODE,
+    90		.uid	= GLOBAL_ROOT_UID,
+    91		.gid	= GLOBAL_ROOT_GID,
+    92		.opts	= 0,
+    93	};
+    94	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
