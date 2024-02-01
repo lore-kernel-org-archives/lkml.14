@@ -1,116 +1,84 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BA915B964;
-	Thu,  1 Feb 2024 11:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D2015D5A7;
+	Thu,  1 Feb 2024 11:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706787379; cv=none; b=a4cNCdwq6m2/IRN7X0nCuY2pNAsdTfVTa1CmJLrK2XbNIZuxo6O6EtVwgTPaYXJ+juuyPxk+Otn5LGR2Oq035W/DyXS+svBi70TLwjYdpKEU7amkV0nY4ZNXBmIt0bbR9KZBT3Ka7IrI6F9uBP+QHU3CdOmE5yR5c9RobWP+Tyo=
+	t=1706787451; cv=none; b=qRKrzDXDQpTqqfcv8hs5eOVSiUy8fFBo9Hju4i3b6MMRpaoErAyqMwc09Ix8vXVM1etS7YR+FriOQneCSdg1alwfQ9uS014mNzSOPg1uyRApCJUTc9uD4nM7M4N9NBDU+ufqlIj6l9wzBMrSwadXBaeYEEuUKBPlzXUbHqsCTn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706787379; c=relaxed/simple;
-	bh=jGa42X+BFB0gekur+doHwNmJpCnbHR5W4fMjgpjmq+0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fHBcW74SdqqR4u21vaHCHolgfoLGxVOsx/o1sjlZ6eRPsRIWVooOFnHQUijVSUmrUoh2uxf3DYEuYWmMSatC0G4V1hnJpPiro32kfGSzI12lMY02VhtzlwsmQtPGEf7Qghe32iRmyHqWDLTVvuc/M3QPpd5VasN9wejCKA0uxtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+	s=arc-20240116; t=1706787451; c=relaxed/simple;
+	bh=WK2M+igzvkFNxwmmkFufPf/3i1QW4p0L5XQuTx6V0R0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ub7Yi5HHY9MAEGth9jiL9c+t1Kt3ULEgPNf2sqcihpeaU8EuEupbJtB650KR3/KgMCSj5XJ0xNyJyAZbYsU715qej+c7qkdhLm0o114GbY4GQ94AbZecGsOIunKAb2FrVEuVTNXt1F2c3zVN08hT8kLrgEWEAX9NNn4lfJT4ufY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TQcGD01SGz6JBVN;
-	Thu,  1 Feb 2024 19:32:52 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6BD2C1400D1;
-	Thu,  1 Feb 2024 19:36:14 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 1 Feb
- 2024 11:36:13 +0000
-Date: Thu, 1 Feb 2024 11:36:12 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-CC: Peter Zijlstra <peterz@infradead.org>, <dan.j.williams@intel.com>,
-	<linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	<linux-cxl@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [RFC PATCH v3] cleanup: Add cond_guard() to conditional guards
-Message-ID: <20240201113612.00001d90@Huawei.com>
-In-Reply-To: <1785013.VLH7GnMWUR@fdefranc-mobl3>
-References: <20240131134108.423258-1-fabio.maria.de.francesco@linux.intel.com>
-	<6168759.DvuYhMxLoT@fdefranc-mobl3>
-	<65baefec49c1a_4e7f52946b@dwillia2-xfh.jf.intel.com.notmuch>
-	<1785013.VLH7GnMWUR@fdefranc-mobl3>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TQcKM5THLz29kYk;
+	Thu,  1 Feb 2024 19:35:35 +0800 (CST)
+Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1E78A14040D;
+	Thu,  1 Feb 2024 19:37:27 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 1 Feb 2024 19:37:25 +0800
+Message-ID: <3009aadd-69d6-c797-20b4-95cf926b6dd9@huawei.com>
+Date: Thu, 1 Feb 2024 19:37:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-
-On Thu, 01 Feb 2024 09:16:59 +0100
-"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
-
-> On Thursday, 1 February 2024 02:12:12 CET Dan Williams wrote:
-> > Fabio M. De Francesco wrote:  
-> > > I just noticed that this is not the final version. It misses a semicolon.
-> > > Please discard this v3. I'm sending v4.  
-> > 
-> > Ok, but do please copy the aspect of scoped_conf_guard() to take a
-> > "_fail" statement argument. Passing a return code collector variable by
-> > reference just feels a bit too magical. I like the explicitness of
-> > passing the statement directly.  
-> 
-> I had introduced a bug in my tests that made me see failures when there were 
-> not. Now I fixed it and tests don't fail.
-> 
-> I'm sending a new version that passes the return variable directly, not as a 
-> reference, similar but not equal to:
-> 
-> 	cond_guard(..., rc, -EINTR, ...);
-> 
-> Actually, I'm doing this:
-> 
-> 	cond_guard(..., rc, 0, -EINTR, ...);
-
-Can we not works some magic to do.
-	cond_guard(..., return -EINTR, ...)
-
-and not have an rc at all if we don't want to.
-
-Something like
-
-#define cond_guard(_name, _fail, args...) \
-	CLASS(_name, scope)(args); \
-	if (!__guard_ptr(_name)(&scope)) _fail
-
-Completely untested so I'm probably missing some subtleties.
-
-Jonathan
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH -next v4 2/3] x86/mce: rename MCE_IN_KERNEL_COPYIN to
+ MCE_IN_KERNEL_COPY_MC
+To: Borislav Petkov <bp@alien8.de>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	<wangkefeng.wang@huawei.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Tony Luck
+	<tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Naoya
+ Horiguchi <naoya.horiguchi@nec.com>, <linux-kernel@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <linux-mm@kvack.org>, Guohanjun
+	<guohanjun@huawei.com>
+References: <20240111135548.3207437-1-tongtiangen@huawei.com>
+ <20240111135548.3207437-3-tongtiangen@huawei.com>
+ <20240131070258.GGZbnwov0g918F-FGz@fat_crate.local>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <20240131070258.GGZbnwov0g918F-FGz@fat_crate.local>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600017.china.huawei.com (7.193.23.234)
 
 
-> 
-> I'm not passing 'rc = -EINTR' because I want to take into account the 
-> possibility that rc contains values different than 0 from previous assignments. 
-> I'm passing rc, so that the macro can assign either a success code or a 
-> failure error to this variable. Any value from previous assignments must be 
-> always overwritten: 
-> 
-> 	#define cond_guard(_name, _ret, _scs, _err, args...) \
->         	CLASS(_name, scope)(args); \
->         	if (!__guard_ptr(_name)(&scope)) _ret = _err; \
->         	else _ret = _scs;
-> 
-> I should have seen long ago that my tests were failing because of a missing 
-> 'else' when passing a statement in 'cond_guard(..., rc = -EINTR, ...);'. It 
-> had nothing to do with how to pass 'rc'. Sorry for that confusion.
-> 
-> Fabio
-> 
-> Fabio 
-> 
-> 
-> 
 
+在 2024/1/31 15:02, Borislav Petkov 写道:
+> On Thu, Jan 11, 2024 at 09:55:47PM +0800, Tong Tiangen wrote:
+>> Currently, there are some kernel memory copy scenarios is also mc safe
+>> which use copy_mc_to_kernel() or copy_mc_user_highpage().
+> 
+> Both of those end up in copy_mc_enhanced_fast_string() which does
+> EX_TYPE_DEFAULT_MCE_SAFE.
+
+OK, how about this commit msg change? :)
+
+Currently, there are some kernel memory copy scenarios is also mc safe
+which use copy_mc_to_kernel() or copy_mc_user_highpage(), **both of 
+those end up in copy_mc_enhanced_fast_string() or copy_mc_fragile() 
+which does EX_TYPE_DEFAULT_MCE_SAFE.**
+
+In these scenarios, posion pages need to be isolated too. Therefore, a
+macro similar to MCE_IN_KERNEL_COPYIN is required. For this reason, we
+can rename MCE_IN_KERNEL_COPYIN to MCE_IN_KERNEL_COPY_MC, the new macro
+can be applied to both user-to-kernel mc safe copy and kernel-to-kernel
+mc safe copy.
+
+Thanks.
+Tong.
+
+> 
