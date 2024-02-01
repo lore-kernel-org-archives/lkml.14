@@ -1,222 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA164161B5A;
-	Thu,  1 Feb 2024 16:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47A715D5BA;
+	Thu,  1 Feb 2024 16:16:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706804160; cv=none; b=VB8ysJzuZqpiRNu5wDwSEVM69UmeC57KQZuwsfTvqcGO8jeNiaCdVzUXPwsP4RC8Ruy2c5HMC/jRCxQiX2Ty6EtKR21qjyAY5yYfGkYa4ZL4zoGL9/eXtw6wlPy1nN7hj4BPzorSr4g4qOEAF8Mwbf7ulnf4ykNWpwFB2iyLn2c=
+	t=1706804164; cv=none; b=UknDnTv2Ue+LpTVoj3sh/XWtbSrrg/Z66oEFXjlW7JIeuvaE/SFYpATQ4SVe8VOwcXEv8fpd/EhBm6BPP2QnEVorGrAfnLn9YGYPGHw8ucRabvK9gKwleE0lFUBtDpgOlLJIwHINkROBLmXWfcoJ5R6mfTV7vXbAGaCtSgYd+C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706804160; c=relaxed/simple;
-	bh=TwXMBgsYj3cjkDRxSyydgTaD5Knftq7Y2tB5Ttzmt/o=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=aMcvm0WCz0C/QiDVpqjkRugXULfZ6vYDjO8AM+gB36+R+xEOlOeCxMCCMdgaHER5K5Q/gDcoY+/r7cngwLRZHzB1OQ0TBw5oYAqDWpg1wMg4UflApcPXxjDWyYUiT3E6KOB3RwevXJDiVZt4EhYFg/rT/43KHN4vbEIBcXs2+gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DDFC4166C;
-	Thu,  1 Feb 2024 16:16:00 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rVZjd-00000005TlA-3MFD;
-	Thu, 01 Feb 2024 11:16:17 -0500
-Message-ID: <20240201161617.658992558@goodmis.org>
-User-Agent: quilt/0.67
-Date: Thu, 01 Feb 2024 10:34:52 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Christian Brauner <brauner@kernel.org>,
- Al Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>
-Subject: [PATCH 6/6] eventfs: Create eventfs_root_inode to store dentry
-References: <20240201153446.138990674@goodmis.org>
+	s=arc-20240116; t=1706804164; c=relaxed/simple;
+	bh=KIv/fPGPmFB9fnYjlnfz0tTFBP50SqUKsGSXl+uC83I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EvHs4niaR6YFevlJp2JOD7jfdMe27ojWhiXyFn7euPItd+75WLg1Em0cRDdFAi72JA7eAXHm/BeYqYDmTVSFEwwpOp2oW8TgiAPQDsTuz+AK2LVEHtd5pL+bYY9Vc4poKUE+FVx+GRdvAFNN2GBqSQSLVKhilIQFbX0sTm12SSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWcvEHCk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWcvEHCk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA5AC433A6;
+	Thu,  1 Feb 2024 16:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706804164;
+	bh=KIv/fPGPmFB9fnYjlnfz0tTFBP50SqUKsGSXl+uC83I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jWcvEHCk6NPvkAwDiApDyJCJ3CmqrBtyA67xJeSSTahG+ig0UMgVlwx4ipHbTjRwL
+	 ly1hjVcT/dRWjq9SUx9m4DiDvftphyqDOjJjsSqDLFfukL2e6rCFI7i47L10TgWGgd
+	 gfj0RMa+9S+J4LSimyGzUitIGJ6EgvIG+OiwU074mwA4c8n17n4P/EeH0iIvRWMTQK
+	 m7WSNgRrR3U71ffPondudt0Xd+zGc12JRaGaL1/SFWxCM+73xMhA4817td3oACzFOF
+	 FM5QYv4V8PiX/0qiWAvbM/gYMN7ITcAUlb6FmZ3gtTQhCBt9hNqBuXmZkBuy+FDAMc
+	 kKCEiCZIfDcGA==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2cf33b909e8so21765801fa.0;
+        Thu, 01 Feb 2024 08:16:04 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx63SmZkkedS/Onut7NzSjoxTLY3p3Q7yl53DBcTS3D/Kj02D1b
+	tCQQdej2RA3BAv0kB2/FgNWLa5XWYp0E/3bUPgHXe1zRfAQTM+R/yb0y1v0RALcSWUYsEAoehMK
+	F6HE5JYCdhVBbtQ/og8sY4vxOU+o=
+X-Google-Smtp-Source: AGHT+IGCz2AvcYNo8VPFy1Gw6nGWuB+5qmsVqWWYqW5UFbannAB2SzVvLb5a0QRqGMvdcoV5bRlxSDtXGv23RdSYYfE=
+X-Received: by 2002:a2e:b546:0:b0:2cd:9e2f:c631 with SMTP id
+ a6-20020a2eb546000000b002cd9e2fc631mr1571302ljn.10.1706804162761; Thu, 01 Feb
+ 2024 08:16:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240129180502.4069817-21-ardb+git@google.com>
+ <20240129180502.4069817-23-ardb+git@google.com> <20240131083511.GIZboGP8jPIrUZA8DF@fat_crate.local>
+ <CAMj1kXG9W0XeEVR4tXDDg0Ai9XPsZGrTJaSRYUqgTV-xtFxjdQ@mail.gmail.com>
+ <20240131092952.GCZboTECip8DbWtYtz@fat_crate.local> <8b38ef82-ec2b-4845-9732-15713a0e2a85@amd.com>
+In-Reply-To: <8b38ef82-ec2b-4845-9732-15713a0e2a85@amd.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 1 Feb 2024 17:15:51 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXH4U7X3_xgwhYUgbWqVfnzL5Dx0QaUhb_5TpZGQEh=_8g@mail.gmail.com>
+Message-ID: <CAMj1kXH4U7X3_xgwhYUgbWqVfnzL5Dx0QaUhb_5TpZGQEh=_8g@mail.gmail.com>
+Subject: Re: [PATCH v3 02/19] x86/boot: Move mem_encrypt= parsing to the decompressor
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	Kevin Loughlin <kevinloughlin@google.com>, Dionna Glaze <dionnaglaze@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>, linux-arch@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, 1 Feb 2024 at 15:17, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>
+> On 1/31/24 03:29, Borislav Petkov wrote:
+> > On Wed, Jan 31, 2024 at 10:12:13AM +0100, Ard Biesheuvel wrote:
+> >> The reason we need two flags is because there is no default value to
+> >> use when the command line param is absent.
+> >
+> > I think absent means memory encryption disabled like with every other
+> > option which is not present...
+> >
+> >> There is CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT but that one is AMD
+> >
+> > ... yes, and I'm thinking that it is time we kill this. I don't think
+> > anything uses it. It was meant well at the time.
+> >
+> > Let's wait for Tom to wake up first, though, as he might have some
+> > objections...
+>
+> I don't know if anyone is using the AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
+> config option, but I don't have an issue removing it.
+>
 
-Only the root "events" directory stores a dentry. There's no reason to
-hold a dentry pointer for every eventfs_inode as it is never set except
-for the root "events" eventfs_inode.
-
-Create a eventfs_root_inode structure that holds the events_dir dentry.
-The "events" eventfs_inode *is* special, let it have its own descriptor.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 65 +++++++++++++++++++++++++++++++++-------
- fs/tracefs/internal.h    |  2 --
- 2 files changed, 55 insertions(+), 12 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 1a831ba1042b..c50d089c9a7f 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -35,6 +35,17 @@ static DEFINE_MUTEX(eventfs_mutex);
- /* Choose something "unique" ;-) */
- #define EVENTFS_FILE_INODE_INO		0x12c4e37
- 
-+struct eventfs_root_inode {
-+	struct eventfs_inode		ei;
-+	struct dentry			*events_dir;
-+};
-+
-+static struct eventfs_root_inode *get_root_inode(struct eventfs_inode *ei)
-+{
-+	WARN_ON_ONCE(!ei->is_events);
-+	return container_of(ei, struct eventfs_root_inode, ei);
-+}
-+
- /* Just try to make something consistent and unique */
- static int eventfs_dir_ino(struct eventfs_inode *ei)
- {
-@@ -73,12 +84,18 @@ enum {
- static void release_ei(struct kref *ref)
- {
- 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
-+	struct eventfs_root_inode *rei;
- 
- 	WARN_ON_ONCE(!ei->is_freed);
- 
- 	kfree(ei->entry_attrs);
- 	kfree_const(ei->name);
--	kfree_rcu(ei, rcu);
-+	if (ei->is_events) {
-+		rei = get_root_inode(ei);
-+		kfree_rcu(rei, ei.rcu);
-+	} else {
-+		kfree_rcu(ei, rcu);
-+	}
- }
- 
- static inline void put_ei(struct eventfs_inode *ei)
-@@ -408,19 +425,43 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
- 	return NULL;
- }
- 
-+static inline struct eventfs_inode *init_ei(struct eventfs_inode *ei, const char *name)
-+{
-+	ei->name = kstrdup_const(name, GFP_KERNEL);
-+	if (!ei->name)
-+		return NULL;
-+	kref_init(&ei->kref);
-+	return ei;
-+}
-+
- static inline struct eventfs_inode *alloc_ei(const char *name)
- {
- 	struct eventfs_inode *ei = kzalloc(sizeof(*ei), GFP_KERNEL);
-+	struct eventfs_inode *result;
- 
- 	if (!ei)
- 		return NULL;
- 
--	ei->name = kstrdup_const(name, GFP_KERNEL);
--	if (!ei->name) {
-+	result = init_ei(ei, name);
-+	if (!result)
- 		kfree(ei);
-+
-+	return result;
-+}
-+
-+static inline struct eventfs_inode *alloc_root_ei(const char *name)
-+{
-+	struct eventfs_root_inode *rei = kzalloc(sizeof(*rei), GFP_KERNEL);
-+	struct eventfs_inode *ei;
-+
-+	if (!rei)
- 		return NULL;
--	}
--	kref_init(&ei->kref);
-+
-+	rei->ei.is_events = 1;
-+	ei = init_ei(&rei->ei, name);
-+	if (!ei)
-+		kfree(rei);
-+
- 	return ei;
- }
- 
-@@ -710,6 +751,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 						int size, void *data)
- {
- 	struct dentry *dentry = tracefs_start_creating(name, parent);
-+	struct eventfs_root_inode *rei;
- 	struct eventfs_inode *ei;
- 	struct tracefs_inode *ti;
- 	struct inode *inode;
-@@ -722,7 +764,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 	if (IS_ERR(dentry))
- 		return ERR_CAST(dentry);
- 
--	ei = alloc_ei(name);
-+	ei = alloc_root_ei(name);
- 	if (!ei)
- 		goto fail;
- 
-@@ -731,10 +773,11 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 		goto fail;
- 
- 	// Note: we have a ref to the dentry from tracefs_start_creating()
--	ei->events_dir = dentry;
-+	rei = get_root_inode(ei);
-+	rei->events_dir = dentry;
-+
- 	ei->entries = entries;
- 	ei->nr_entries = size;
--	ei->is_events = 1;
- 	ei->data = data;
- 
- 	/* Save the ownership of this directory */
-@@ -845,13 +888,15 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
-  */
- void eventfs_remove_events_dir(struct eventfs_inode *ei)
- {
-+	struct eventfs_root_inode *rei;
- 	struct dentry *dentry;
- 
--	dentry = ei->events_dir;
-+	rei = get_root_inode(ei);
-+	dentry = rei->events_dir;
- 	if (!dentry)
- 		return;
- 
--	ei->events_dir = NULL;
-+	rei->events_dir = NULL;
- 	eventfs_remove_dir(ei);
- 
- 	/*
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index beb3dcd0e434..15c26f9aaad4 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -36,7 +36,6 @@ struct eventfs_attr {
-  * @children:	link list into the child eventfs_inode
-  * @entries:	the array of entries representing the files in the directory
-  * @name:	the name of the directory to create
-- * @events_dir: the dentry of the events directory
-  * @entry_attrs: Saved mode and ownership of the @d_children
-  * @data:	The private data to pass to the callbacks
-  * @attr:	Saved mode and ownership of eventfs_inode itself
-@@ -54,7 +53,6 @@ struct eventfs_inode {
- 	struct list_head		children;
- 	const struct eventfs_entry	*entries;
- 	const char			*name;
--	struct dentry			*events_dir;
- 	struct eventfs_attr		*entry_attrs;
- 	void				*data;
- 	struct eventfs_attr		attr;
--- 
-2.43.0
-
-
+OK, I'll remove it in the next rev.
