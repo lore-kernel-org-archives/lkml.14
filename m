@@ -1,77 +1,119 @@
-Received: from outbound-smtp13.blacknight.com (outbound-smtp13.blacknight.com [46.22.139.230])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEEB440E
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 10:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.22.139.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4152E2747F;
+	Thu,  1 Feb 2024 10:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706783875; cv=none; b=fYIx3BI50x65OiRKW4yzb1EoB8nZVTYeaEPbMvZu5TC6PsUh2hhp3OP4hkoGtnEJ0Zs1jmzuDoy4bOasg0YbsLKaXee4rxK2nvU0eBj1QvZ6WUry96MVjlRuvY7OkhqeKJI9Htaa4RrPLtIks22uMPiXpusqlZWc1S/BqeoExds=
+	t=1706783923; cv=none; b=bV51MDD1AC720ru+U+jw3w4EZh9KIox0NQdLl9UHCVwdvigFAs6Z22Y9sIcSdWj4xiOX6dEU48uzdlbsosgifMOC4zBtv+RQMCna5aNGBUXyymUtJnVKFowRYOCX4tnNq0tvbopEQbRlCdYyUrkGTpEfwIbOlyAsJntoZo+q+Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706783875; c=relaxed/simple;
-	bh=Exr2BwZvsh3y5wM6YrZoLn/QOAjN5a+Z82NaFBeOZs0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nzDgDeerQuAERfwJrPYMcTVUMWQT2wZ5G84rh3LgdR+9tZWrBc9+p9/GinX2RrrHWW0BC2LPwQ4eUJclsl35mpYC/4+F+yEZgv4+kVOv770NpPWmVsph75hSsap4E5urxySxT/WQDG0Rxiq0JlgbiMb/RbMV9a9j3MJgbGfInm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net; spf=pass smtp.mailfrom=techsingularity.net; arc=none smtp.client-ip=46.22.139.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=techsingularity.net
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-	by outbound-smtp13.blacknight.com (Postfix) with ESMTPS id B107F1C3DE2
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 10:30:11 +0000 (GMT)
-Received: (qmail 1080 invoked from network); 1 Feb 2024 10:30:11 -0000
-Received: from unknown (HELO mail.blacknight.com) (mgorman@techsingularity.net@[81.17.254.19])
-  by 81.17.254.26 with ESMTPA; 1 Feb 2024 10:30:11 -0000
-Date: Thu, 1 Feb 2024 10:30:09 +0000
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, vbabka@suse.cz, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm: compaction: update the cc->nr_migratepages when
- allocating or freeing the freepages
-Message-ID: <20240201103009.jycolrj7t3axtlgd@techsingularity.net>
-References: <afcd9377351c259df7a25a388a4a0d5862b986f4.1705928395.git.baolin.wang@linux.alibaba.com>
- <0773058df022fa701b78f9a6dfe3c501a1a77351.1705928395.git.baolin.wang@linux.alibaba.com>
+	s=arc-20240116; t=1706783923; c=relaxed/simple;
+	bh=9dO6Oej2KgYjkvAzqv58BDV8rSpNHuXwrckSqS3XlMc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=TYR9tHMyTS++wyIP2GWT1g8Yex0fw3QRXHknu2DoiZbk5KOa8V8S7os7ddyLw92QYugkb/GjSHv6utRboCCA218nZg+5B+NBVw5amo/k3CmBSCp4vlqg+00xloAnU3KD0tLZl/ROUINGlEObm8MlC4FRutGip+lwxvDBUl6a0jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L1M7ktTa; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L1M7ktTa"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E07EFF812;
+	Thu,  1 Feb 2024 10:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706783912;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZCjekKQATy7QigT3ZYZ4Fxvzy/254wA5JrrgSgewDR0=;
+	b=L1M7ktTaycn0uGbfShyQ/9qgi0r7KX5YamwJgP1jwQjtBt1hlJq06OX61GV98LbMO7C3tw
+	B9SFMGFDBTwdVP/6jpcSHdTGQhLK+gupoPbFX3i04QWTY/+N8Er1dxb0vnwzU9fGGLtltx
+	ST5sH8vHqUZY53ntk8FKCnTeASX1qL9UilrNS9u5Oxk0WpP7aE4OKd/QRBEANeoPR+1RWM
+	qkqcb0PhBhSbCC1+hac4xIlIGxFqf4T2BrmYOAZbD/Y4qlypBlyLkfGfr1OJiEgbBF56aX
+	Aoh2JaqHuyviMFWthg4sH2cbNCGHiYFzAn3Eu+6bBwx42UDeoHaGTuot9H2h/w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <0773058df022fa701b78f9a6dfe3c501a1a77351.1705928395.git.baolin.wang@linux.alibaba.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 01 Feb 2024 11:38:31 +0100
+Message-Id: <CYTOEGEI34JQ.36CF09LNJFQHS@bootlin.com>
+Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Gregory
+ CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
+ <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v4 04/18] dt-bindings: clock: mobileye,eyeq5-clk: add
+ bindings
+X-Mailer: aerc 0.15.2
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+ <20240131-mbly-clk-v4-4-bcd00510d6a0@bootlin.com>
+ <f6e5b748-17c4-4de1-be42-f79155be21cb@linaro.org>
+In-Reply-To: <f6e5b748-17c4-4de1-be42-f79155be21cb@linaro.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Mon, Jan 22, 2024 at 09:01:54PM +0800, Baolin Wang wrote:
-> Currently we will use 'cc->nr_freepages >= cc->nr_migratepages' comparison
-> to ensure that enough freepages are isolated in isolate_freepages(), however
-> it just decreases the cc->nr_freepages without updating cc->nr_migratepages
-> in compaction_alloc(), which will waste more CPU cycles and cause too many
-> freepages to be isolated.
-> 
-> So we should also update the cc->nr_migratepages when allocating or freeing
-> the freepages to avoid isolating excess freepages. And I can see fewer free
-> pages are scanned and isolated when running thpcompact on my Arm64 server:
->                                        k6.7         k6.7_patched
-> Ops Compaction pages isolated      120692036.00   118160797.00
-> Ops Compaction migrate scanned     131210329.00   154093268.00
-> Ops Compaction free scanned       1090587971.00  1080632536.00
-> Ops Compact scan efficiency               12.03          14.26
-> 
-> Moreover, I did not see an obvious latency improvements, this is likely because
-> isolating freepages is not the bottleneck in the thpcompact test case.
->                               k6.7                  k6.7_patched
-> Amean     fault-both-1      1089.76 (   0.00%)     1080.16 *   0.88%*
-> Amean     fault-both-3      1616.48 (   0.00%)     1636.65 *  -1.25%*
-> Amean     fault-both-5      2266.66 (   0.00%)     2219.20 *   2.09%*
-> Amean     fault-both-7      2909.84 (   0.00%)     2801.90 *   3.71%*
-> Amean     fault-both-12     4861.26 (   0.00%)     4733.25 *   2.63%*
-> Amean     fault-both-18     7351.11 (   0.00%)     6950.51 *   5.45%*
-> Amean     fault-both-24     9059.30 (   0.00%)     9159.99 *  -1.11%*
-> Amean     fault-both-30    10685.68 (   0.00%)    11399.02 *  -6.68%*
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Hello,
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+On Thu Feb 1, 2024 at 9:58 AM CET, Krzysztof Kozlowski wrote:
+> On 31/01/2024 17:26, Th=C3=A9o Lebrun wrote:
+> > Add DT schema bindings for the EyeQ5 clock controller driver.
+> >=20
+> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> > ---
+>
+> No changelog, tags ignored, I scrolled through first two pages of cover
+> letter and also no changelog.
 
--- 
-Mel Gorman
-SUSE Labs
+In this case we fit into the "If a tag was not added on purpose". Sorry
+the changelog was not explicit enough. In my mind it fits into the
+first bullet point of the cover letter changelog:
+
+> - Have the three drivers access MMIO directly rather than through the
+>   syscon & regmap.
+
+That change means important changes to the dt-bindings to adapt to this
+new behavior. In particular we now have reg and reg-names properties
+that got added and made required.
+
+I wanted to have your review on that and did not want to tag the patch
+as already reviewed.
+
+>
+> This is a friendly reminder during the review process.
+>
+> It looks like you received a tag and forgot to add it.
+>
+> If you do not know the process, here is a short explanation:
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+> versions, under or above your Signed-off-by tag. Tag is "received", when
+> provided in a message replied to you on the mailing list. Tools like b4
+> can help here. However, there's no need to repost patches *only* to add
+> the tags. The upstream maintainer will do that for tags received on the
+> version they apply.
+>
+> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/su=
+bmitting-patches.rst#L577
+>
+> If a tag was not added on purpose, please state why and what changed.
+
+As an aside, what's your preference on location for this information?
+Cover letter changelog? Following '---' in the specific commit message?
+Somewhere else?
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
