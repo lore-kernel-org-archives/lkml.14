@@ -1,68 +1,132 @@
-Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21463CF65
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 21:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A38F3F8C8
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 21:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706824543; cv=none; b=G1AORHwgLx5nuo9kobJ1TTosiDCkEhXEZgwS8M0iZMiJiCRSgJydK7lkAdGcVQUUFDJPMIdebNBuyeolyKMruBSnhU/v7CtRNoRA2yxr2wJQpVFoFPUeqVFKO2Ma8z2fmeS+MCeiqyx+6aeq5AbBIDlbyB6D6yDgRNg0albSKcs=
+	t=1706824602; cv=none; b=Q7CIQl/dGZexGiLvuSyx8DrnAC2jrUgI2Ez2f4X7aJBTnkxFmEJNXrCkJ6Q4S7EFziif8fNAHOxMxMrXVOd10QkKflozRl5btGGGYuZpTcjz6FxCug4BLdyiJcdsUE1hpplBu3L6wU18Nf7QK6xN6rJ4yq7h7veAhQIlDhaVD6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706824543; c=relaxed/simple;
-	bh=MlRyLyzqikcwM+AiNbxjM/6ncFTI2d+6hAaeIv97k8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ORYkrpI6rMpzqzvWMt41KIN8OR+KOVGIdsy7fSR0ZMpbPkTy0OTmFRLiILYuZC0YWA7qgvnKGgWED4kAzvsV8omfFRdDDVzqxJldHEAy5qOa77ko5DqyDDjoLJffvbksaaSYHlt5J/n+YoWRhqbMKAt7GrBG7m7az99CWrd5Dgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Ka36WAfz; arc=none smtp.client-ip=192.19.166.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1706824602; c=relaxed/simple;
+	bh=U3HRZu0hfYdAw3piq+fNS3Ph9tLvjEaJxmQ8IFz7O2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W3I5mx5JJMjw4NBoYmewCk9D55yfXod6RgVuDFIOnKu7GmXwMDKuI8poKDsF/i9a/0zrIXizVV2upt7o9ZZxZutSV3XOGFQwcndNm1q7QZioUgS3cuOUsD8YFxqsN5uWnojppvlh8qghUBZy8RWMyqY5CQXhQ2HkZWpaccYNWIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jLdji2zT; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ka36WAfz"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 241C6C003408;
-	Thu,  1 Feb 2024 13:50:11 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 241C6C003408
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1706824211;
-	bh=MlRyLyzqikcwM+AiNbxjM/6ncFTI2d+6hAaeIv97k8I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ka36WAfzllRbex4soE/D4Zt+yfU1aHBqnZqEadBCBJPY48cHX08dPpUOeImArHgDO
-	 6oZ23dtValzcOVi6u/sGE3Vnks2RFNwtE+ZMSHpqtyDafVHRDHSHUVkv+9w6gm/D7x
-	 axFSDeCuHytZX8OQlCMvlUxD30LJpK90AkuZR6RM=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 8103218041CAC4;
-	Thu,  1 Feb 2024 13:50:09 -0800 (PST)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: bcm-kernel-feedback-list@broadcom.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: brcmstb: Add debug UART entry for 74165
-Date: Thu,  1 Feb 2024 13:50:10 -0800
-Message-Id: <20240201215010.2633163-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129184651.2405485-1-florian.fainelli@broadcom.com>
-References: <20240129184651.2405485-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLdji2zT"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e14b858785so840453a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 13:56:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706824600; x=1707429400; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9fIppjMUeVlwOxKTD0ceP+Py3vPz42BK+5Be9y2b8mE=;
+        b=jLdji2zTHqJHg71HEQ5SQyb1RxOu62tGG7l64FUP+xrSJf/wJK8qxSomz7JNaAGbuC
+         UxUyPmMWU8brn80/QU5IRxfK/VHkeMwTTJJold5svN3/ai4egZJC7w69KPfrIuyATD6K
+         1r4yyAZ1FXqnsqarp5/9XOWmETI8Axpx3XcVHqZKA0NxiX3xD+vHthYfqff8iCwymkRB
+         Ty+WZHbAvr6AmuR0XL4Eb9g8cc3KeGiyFfUZmcxn0QEIrApARlvKCoirzBds+x8BAvUu
+         Go1iIZ7sARTjkv0nfC+Zfu2GJmVGyCtrqMjKANKz8yGK6I27U+3A2IWGd7Ec3xgw55hY
+         qTBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706824600; x=1707429400;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9fIppjMUeVlwOxKTD0ceP+Py3vPz42BK+5Be9y2b8mE=;
+        b=fLrGKVyOXeEJeTuAEyxo7twgBwdz1CPz0vD18QNYXt4lcHVvhl5SXXOUIiSGF56z5z
+         IxkG6FGndLRKamSKqmrSn/MazG0P+4K5v7SMC4/e2F9iqX7b/1twV/dmHkPwTSES4cjt
+         T9qR9ru437Jea5rBVYqV7H06ciJWhWNa31FNFH+hNNydP3g7aYt2Zf7f/sUeQa4s45Iw
+         P10dQ9tYY2ls1KqAwWzmIptvhbfSvSxpIfUeHkBVVbyxsgBXUonVgpFJ7pFvgRzIaNTC
+         ePP3tlbTP7Jb5SoMpwIjG5+5ElFitq+SEI4J/N8MhuY8mgrng6MRsVjXJ5mCq6uqMUV1
+         wGEg==
+X-Gm-Message-State: AOJu0YzGOZ4Jw35laRoEv+ORgUnAJT1JLYVMrT83vWmOep3hclMxZyZj
+	lWHQcTEO3r3yO1aRJLP23SwSR+UJ6vUi1XspU2jzoVnww4rk5NWi
+X-Google-Smtp-Source: AGHT+IH4ptqPl7FCLvPrQmIRXDF0ZoNIuZI2sd+z8xjzpcTkOaGTgGzTUZSxJdUlMoD/ijAN1jupFA==
+X-Received: by 2002:a05:6830:1453:b0:6dd:e95f:c6f5 with SMTP id w19-20020a056830145300b006dde95fc6f5mr3720566otp.37.1706824600095;
+        Thu, 01 Feb 2024 13:56:40 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVCtEt9h2O7d5c5NRKEguG6Y/bs6FpadrtgFWyzB6IgUj96+35b6MksaxXYCzBY4OpilROw5pVEjE/MeMGmnbSiLyMdYU2zytI8c8w+fqqqJMPL+DGBgg+Tqz5CIHdR5PlfRVaQuhYWzE9Apb5LOFgx16vdjRGNAMluy216WflaCbYRi5wRbJAGXFY3aFh6w5ouZ4Nag7KhRag3SUNN0ET/nfQtNo5X08qq5csgCY+EytD3RLczYMJ9bc2COHdBwo/PItGZlDzJ7xk/gqvHReHklI8LJn3TTb6TL/X0XJzCPA1BltQ56M2NeulHT6cTgxsfwSZWgLBLz20c+UcvAweCEG0lXRBt3OBWsUUQYSSg+430eQa/+qQ8cmS8wcZC
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id o24-20020ac841d8000000b0042a40e3ca9fsm171859qtm.85.2024.02.01.13.56.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 13:56:39 -0800 (PST)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailauth.nyi.internal (Postfix) with ESMTP id 5A64C27C005B;
+	Thu,  1 Feb 2024 16:56:39 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Thu, 01 Feb 2024 16:56:39 -0500
+X-ME-Sender: <xms:lxO8ZbyaKJv7gvc0hliwcH-83bWYdizYUbvncv4R-_ChwmgJxXEOnw>
+    <xme:lxO8ZTTmlIA49MIq7CWABxWF82hf3WS8Q-mzFSciV9DGpmXpRqia-AawFwBvOiqu7
+    _Fzex-HMP9bQEnALg>
+X-ME-Received: <xmr:lxO8ZVUUic2LXoqY0gXIE4l076RB0msI4ALEKOHmg821qnLT_1bjLfBBFSIzAQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeduuddgudehtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
+    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:lxO8ZVhy4WSJawKDGFnv-tfvCKvSDl809FFgwqniwJPybpCpVe292g>
+    <xmx:lxO8ZdCDHHa68wecNBn7PaJTCe8yQlD5gAYnPgwPUKYPL8KVqG-YMA>
+    <xmx:lxO8ZeKbN03xRktCxDaM2Xu5Dk-Eud6sv8lp4u932wJbrBV-pndGCA>
+    <xmx:lxO8ZR6tVPMRZvlDDqWMc8hnzloYu05shy-8O0FEgnbG-Zp8PhTIWA>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 Feb 2024 16:56:38 -0500 (EST)
+Date: Thu, 1 Feb 2024 13:55:32 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, peterz@infradead.org,
+	mingo@redhat.com, will@kernel.org, longman@redhat.com,
+	linux-kernel@vger.kernel.org, niuzhiguo84@gmail.com,
+	ke.wang@unisoc.com, xuewen.yan@unisoc.com,
+	Carlos Llamas <cmllamas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V2] lockdep: fix deadlock issue between lockdep and rcu
+Message-ID: <ZbwTVPj7WU_Vu6D_@boqun-archlinux>
+References: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
+ <cc828212-9a90-430e-8719-e6b19bdab600@acm.org>
+ <CAL0jBu-2jrhBzTo+ZneFMpsTsqUMLVQCYCAQKqd6BHjv3-kxhQ@mail.gmail.com>
+ <1f1691cd-fcc8-4a0b-9d63-bff15c5a52ad@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f1691cd-fcc8-4a0b-9d63-bff15c5a52ad@acm.org>
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-
-On Mon, 29 Jan 2024 10:46:51 -0800, Florian Fainelli <florian.fainelli@broadcom.com> wrote:
-> BCM74165 uses the same address map as the 7278 family (v7 memory map)
-> therefore re-use that constant and shit down the other labels to keep
-> numerical ordering.
+On Thu, Feb 01, 2024 at 01:24:48PM -0800, Bart Van Assche wrote:
+> On 2/1/24 11:48, Boqun Feng wrote:
+> > raw_spin_lock_irqsave():
+> >    lock_acquire():
+> >      __lock_acquire():
+> >        validate_chain():
+> >          lookup_chain_cache_add():
+> >            graph_lock();
+> > 
+> > Basically, every lock acquisition may lock the lockdep graph because
+> > of dependency checking.
 > 
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> ---
+> Wouldn't it be simpler to make __lock_acquire() return early if
+> this_cpu_read(lockdep_recursion) indicates that the graph lock is held?
+> 
 
-Applied to https://github.com/Broadcom/stblinux/commits/soc/next, thanks!
---
-Florian
+Note that lockdep_recursion doesn't indicate graph lock is held, it
+indicates we enter lockdep internal, which means if there was any lock
+acquisition, __lock_acquire() would skip the check, so we don't go into
+lockdep internal again, therefore avoid infinite recursion.
+
+Regards,
+Boqun
+
+> Thanks,
+> 
+> Bart.
