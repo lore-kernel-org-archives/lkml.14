@@ -1,57 +1,57 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D399A779F9
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4916F779FC
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706802949; cv=none; b=Bh9l8OYS1d1ROlEzMe0brTnDPFFZVFyiZnVkC7g1LKE30mJt1/dLwKzTEuE3jDFklGXoBUO7gyXUQ5C0n1diQtriE/T9pagNARkntLJtQw+JaGfToCnddJkU8qUcve6pB4jChNHEXboju+PQqqRIX9lDOVqB+zlBv9b438x2iqo=
+	t=1706802952; cv=none; b=le796GIR1Vylo7jXhgqf+UbbNbSLo4F2XA3/eZXk3XDho7I1rkeIwhUlOpreXshmBTr6lcpcbNgJwyB8bCdi2VQL/XxevsK53Ty1pb9KSYXgttQLJr8PvKrYHR4AYJwLxlUaRLJykitHjFmX8DSspUu3GgT021DXHA6F+gsEE24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706802949; c=relaxed/simple;
-	bh=l970XQK253auBEaf1sxyowqJp9xH8paHYFxN6sDXauI=;
+	s=arc-20240116; t=1706802952; c=relaxed/simple;
+	bh=N8nSlGpY+h0yDVzKyyy2ahDrdLPIziiOuPJg6GZ4M/s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cxmMi8AkgnQXeHWkX9Fx+5J8J4F1lsQuyj+j4gZ15BNJiy4ErPjb+C4/kAJmQikMChnBd8jMFztx7b3dd4HlsYeE7QQrgGLBIHpVnPgbkMN2y68Zi+w+MOQjs8DaLOYgBVdMEv4mMHfYWEbFsMxxyL0yNsQxI5r/mtZLpeNupzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=G9RWTJ74; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version; b=WUKyxYcw3KSDWJlRqUTrFuta48DKQsNia3gpwhlUf1sKsy+30TfGjBFPk8+E3No93PofZTpYrn+WdsJfjNhVlgFKP8CMnyR4hqHtZ5BbORx5/PeV+J1eSH1Cw3zJc0W1EmqWKgU9P6O7KYY2kSlzFG11j1UWL3UdpnUs0+lOB5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=p58qGk7G; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="G9RWTJ74"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33b1b95df3bso156590f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:55:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="p58qGk7G"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso9823835e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:55:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706802945; x=1707407745; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706802948; x=1707407748; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LiBDDlOs/2wfibbPM7pcc8BqiHTc+Y7z4AiaXyajHnk=;
-        b=G9RWTJ746Il9xgpvbYa/5DB88zEYC1FN5DandYEhLoXxVacjQi7qCbIkPI6Bb3M006
-         0dXeq/a9lnijUHPM+hdoe6bLrU1hViCqmHH06/Xa5H7uIkx6tKm6W3HA4lfg0GOiYGql
-         TSZ/SGs57KheHbcwBhqbczLf4fnOay0iCAbRRXeAeIxQxKmU5rKg2CZel26xO27xxvqn
-         q7nqcp7qF/nscWvxjoOLVhvmOJjllTufMWFssUmFKUuM2jaE6vU8NBikMYjbhXPkNOZb
-         HAVBxhM49Qs36Q/vtNq/BlKmej1xiEhq+Nsu86s5h1l9/+U5rzdbtbLXanfXEw3Szbvu
-         u38g==
+        bh=ko9AldsNAGIySQ6r8IsXSCtLQ9r/1ys0AWCrWCqKA/w=;
+        b=p58qGk7GpsIaI00rBDL8NubrJoBHh4q8c7qGLMluqvCYFLcjbigkypbrWHzULlja9z
+         kwbwlskssLJ0pxEzD92PbPeBpWX2xlKkJCFHZXePvLRSp9oCScYir71yr3eaMXEz6NBO
+         dO6slGOQiOaEnXA17hNJ1PBWA2uW7MmqmaEREz6zI9UIToX8xpseTzi2Rn6PiQ/Ar9Es
+         Sc0UiN3W90Qlcf4zBj14r+CUFGud4W4rWj7YBrs/SRSRGD7dWijABCNaRAIYHKMs+qW2
+         EYHiNJG3Lo8RCrpQsoVJGgR+aN0QB9yL91r82P21xoZn9+rpH/Gq70q7G1Dolj+KSGLx
+         0grg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706802945; x=1707407745;
+        d=1e100.net; s=20230601; t=1706802948; x=1707407748;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LiBDDlOs/2wfibbPM7pcc8BqiHTc+Y7z4AiaXyajHnk=;
-        b=fvjWWP4Iv4DYphJZXIZt5SPji87TPaEn/RATfuVAO4dVO43TCPobLiQAzn7T/eCT4v
-         vQ/ipx0MmCK05d9EnYp3IkyGYaPwLfVrBODrYezpGL5bXvGVz06b1deUagCV55cv7QvV
-         eCBWRt320fReNoMCXsghda9YlpQ5lPitbn2Zn3Iu5Nl2LJualbFbgqI2oc/0+FttdnIG
-         8imuYHoGjRihm/SDPTAJZDFL4Ffo5rFsbX9CDGUR1Hz7AJLe9vfK1DiJW6KsJC2S88PD
-         DIjOdGD6xEmknvHe+p+FMaUTKZ65DFIErp+a9Qm2ZITF7qXN/w5iMAr5dJUGZWAPKiPz
-         0D/w==
-X-Gm-Message-State: AOJu0YwrVMqTdiaUmS+4bpjgy+M0r3o3XVO4kPVyIYs0aKMKm0cvCswO
-	/gDpc+l+JafN2qf6Sa63X8JszZmwEET+W6xtX4VSphPbu4vCZNorfxPvYGQN7RA=
-X-Google-Smtp-Source: AGHT+IHxONjLYq+jzZhOLqBDb8Gde9vLS8rl0OD8rTABSRercwHSWNE8jCpnLlSK2NSuoUdjMDgg3A==
-X-Received: by 2002:a05:6000:192:b0:33a:eeec:88a0 with SMTP id p18-20020a056000019200b0033aeeec88a0mr3985658wrx.37.1706802945207;
-        Thu, 01 Feb 2024 07:55:45 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUaySnrCpckAG9NxaYAlvPP8d7ea+hPHInzet8cV6mP05yLPA3X3eVUPeRSd5tyEQTjEK2RfI6Z000TtduQHxFZjajbUTJgSZP0SnKkTxq0Sp36jZ6hvtpOv5UFAmBcVZEMi+S7ALmOf8UOhS5EWeh8pCP6sFcTY+DvNDzyOmEJbZXFECyWPvvKZ7G3Vk6kiQ3Un4lnyIRxrAajgBOo+IuFMXFOxpNkVavcaixTnLVHxjyxAK/A/rG9mSHEaT1ENyNcloNiC9jFsxAjnyQNJ03sgIa3/CX2+vaMHcGK78oAFSItGyZszpE0Eq+uTd1Xv5QRoeDnaEXmXt3hh+dabnLxLO05r55BaLKduYH8q09ulAd7Qr7kBJi4cSNZ7Dwk/T5kWj1Z/rGFY5ZhDmJ0JA/eYJ6LP9wakINW7EAanza0r40cKFRl9vFzSJ66dXuJbbb9YiOvRpT/jsTi1U48tzrjkAvvs22Bg0Dzx31P7R8Hhk+Q6qnILQ58sm/j9q0suSh+jc+mj7qjX1UQmS441o/wiuSBTETLvJkiXp998mBM5mG8rAMudS8YmVv/tvnQxbnsXgiFrzXlr8MFE5oC8NS1FFrvBw4W/bB/0ASIK3YqBaWV+BNvrqjq2jznDQ5nwYRaHGQz9jP6yjMFni0M6qBiC9xTNhjN60oN4xdJUTAN3/m+4eM7g9qjy1MfZWktNv9KxVt44o+R
+        bh=ko9AldsNAGIySQ6r8IsXSCtLQ9r/1ys0AWCrWCqKA/w=;
+        b=dfYw0+qr/CWtQsgI/PsDq4KEJdxH9igKqB+7I7aVhGJNYZzNoT+RzhgVRjr8c5Xuvf
+         UZKk28FBuSAInAM6vZF7rdIEwWnI1zSxy+5QqGYSQSl2PySQ/FwNLmjkXfVboAZG92LB
+         axvZPqsliVtx137Qdv0BbK1k1yJTSCgWdloCtAi5emsgBJTkUt22sPEyq2Fq6cMp9urd
+         wZhNtGo3IAfuI1qqCSPdFkB5/xszslfP9K0kolLzpE6WiWl935f1FztppiD3tjIxGzZN
+         qDG2fzBSm1JXcnP3Z8wk3z2ZFLlxOKPYTRbqfs25SvxqRHtS7/JqtxvD+Y0dM5VhTxPE
+         2CGg==
+X-Gm-Message-State: AOJu0YzW6R19HVZeth4/9GF/UBUqCUhEeFhRpAQ+lxBM1qltSuEenfCY
+	0xNmETrxHSdZSXkhdHTEXSa9ib2+bLqsE3RMcIydnHcL249xN95nUFrOfFKP3wg=
+X-Google-Smtp-Source: AGHT+IECy3sWdJFy3OZpf+H1uoDhxOmtRildWIioaz3T+kxQVPSM7srz5odlLPfDowURVFQ+IX4DuQ==
+X-Received: by 2002:adf:fa0b:0:b0:33b:1823:284a with SMTP id m11-20020adffa0b000000b0033b1823284amr1007860wrr.14.1706802948596;
+        Thu, 01 Feb 2024 07:55:48 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXlYTWL8hpL9LxHRL3AaXBmnDvFdHk7gghjqrm9VPT2vAMqnxwu1brL92C/rrGLj6Q+nQGdtnoBGYncZ7MS5HnZEyzekn8X6U80Jw+acvE05tAxDZSUY3SUBqV9QAKNQizaPN7c7coYJPP6dj1lMEXKA+w28eUp5CEECfKrN0Yc6AU/XstQxBOTcMkkgHpr8dx1Y+kyQLYyFwArboJaHOIoM3phfdOT6iDvzN66m7gfGvRcLRoFErs40y26IVK2NJ7VZLxBoTmzu++rdtyFOMh7eGER9tIaarMrcqY7MOg/hwULS4CR0hV46ErZ+LiLDUvx4NGruAPBCXSJDnENrxceqfnJffheG+7EO9KtKDceCAXIf7cfZlcloSiVrGJWE/jgOM39K1I+t8dbGWs8qiRFUagUPU03jBFoM4y729ewrbOTy87QZGaG3a4Ikf1QNkR9x6B0Mj0+q+x+3cFuiqip2oSZCpuG4Zw6/aatb9pJ8aIFQqLNPFGpjD40s443zJjKz2j6Dp5VXeNyhFjGbTz6vZzEqLfoG6J7ky2gG2lNgjcmA4l3jnTTjLFx1EykZNUufaXC7WVeWFFAxzoYB51bhN965SYXiYPcGfryZWkquTFQlBVOr0Ju0Zg1z6LBDLz3oyrFCHOWYbnXYpY6RFnctHSYPI+3LZuvQYvqdRtfo3V/kKp8/ULsphAb8+SPmcWilJrJa5ql
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:dd01:5dec:43e3:b607])
-        by smtp.gmail.com with ESMTPSA id ce2-20020a5d5e02000000b0033af4848124sm9650318wrb.109.2024.02.01.07.55.44
+        by smtp.gmail.com with ESMTPSA id ce2-20020a5d5e02000000b0033af4848124sm9650318wrb.109.2024.02.01.07.55.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 07:55:44 -0800 (PST)
+        Thu, 01 Feb 2024 07:55:48 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -75,9 +75,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	linux-bluetooth@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RFC 4/9] power: pwrseq: add a driver for the QCA6390 PMU module
-Date: Thu,  1 Feb 2024 16:55:27 +0100
-Message-Id: <20240201155532.49707-5-brgl@bgdev.pl>
+Subject: [RFC 7/9] PCI: hold the rescan mutex when scanning for the first time
+Date: Thu,  1 Feb 2024 16:55:30 +0100
+Message-Id: <20240201155532.49707-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240201155532.49707-1-brgl@bgdev.pl>
 References: <20240201155532.49707-1-brgl@bgdev.pl>
@@ -91,290 +91,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This adds the power sequencing driver for the QCA6390's PMU module. It
-uses the pwrseq subsystem and knows how to match the sequencer to the
-consumer device by verifying the relevant properties and DT layout.
+With the introduction of the power sequencing drivers that will be able
+to trigger the port rescan, we need to hold the rescan mutex during the
+initial pci_host_probe() too or the two could get in each other's way.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/power/sequencing/Kconfig          |  16 ++
- drivers/power/sequencing/Makefile         |   2 +
- drivers/power/sequencing/pwrseq-qca6390.c | 232 ++++++++++++++++++++++
- 3 files changed, 250 insertions(+)
- create mode 100644 drivers/power/sequencing/pwrseq-qca6390.c
+ drivers/pci/probe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
-index ba5732b1dbf8..84ddf3b4ae56 100644
---- a/drivers/power/sequencing/Kconfig
-+++ b/drivers/power/sequencing/Kconfig
-@@ -10,3 +10,19 @@ menuconfig POWER_SEQUENCING
- 	  during power-up.
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b7335be56008..957f7afee7ba 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -3122,7 +3122,9 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+ 	struct pci_bus *bus, *child;
+ 	int ret;
  
- 	  If unsure, say no.
-+
-+if POWER_SEQUENCING
-+
-+config POWER_SEQUENCING_QCA6390
-+	tristate "QCA6390 PMU driver"
-+	default m if ARCH_QCOM
-+	help
-+	  Say U here to enable the power sequencing driver for Qualcomm
-+	  QCA6390.
-+
-+	  The QCA6390 package contains the BT and WLAN modules whose power
-+	  is controlled by the PMU module. As the former two share the power-up
-+	  sequence which is executed by the PMU, this driver is needed for
-+	  correct power control.
-+
-+endif
-diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing/Makefile
-index dcdf8c0c159e..628345c4e7ae 100644
---- a/drivers/power/sequencing/Makefile
-+++ b/drivers/power/sequencing/Makefile
-@@ -2,3 +2,5 @@
- 
- obj-$(CONFIG_POWER_SEQUENCING)		+= pwrseq-core.o
- pwrseq-core-y				:= core.o
-+
-+obj-$(CONFIG_POWER_SEQUENCING_QCA6390)	+= pwrseq-qca6390.o
-diff --git a/drivers/power/sequencing/pwrseq-qca6390.c b/drivers/power/sequencing/pwrseq-qca6390.c
-new file mode 100644
-index 000000000000..6c930e3e88ec
---- /dev/null
-+++ b/drivers/power/sequencing/pwrseq-qca6390.c
-@@ -0,0 +1,232 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2024 Linaro Ltd.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/pwrseq/provider.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+struct pwrseq_qca6390_vreg {
-+	const char *name;
-+	unsigned int load_uA;
-+};
-+
-+struct pwrseq_qca6390_pdata {
-+	const struct pwrseq_qca6390_vreg *vregs;
-+	size_t num_vregs;
-+	unsigned int pwup_delay_msec;
-+};
-+
-+struct pwrseq_qca6390_ctx {
-+	struct pwrseq_device *pwrseq;
-+	struct device_node *of_node;
-+	const struct pwrseq_qca6390_pdata *pdata;
-+	struct regulator_bulk_data *regs;
-+	struct gpio_desc *bt_gpio;
-+	struct gpio_desc *wlan_gpio;
-+};
-+
-+static const struct pwrseq_qca6390_vreg pwrseq_qca6390_vregs[] = {
-+	{
-+		.name = "vddio",
-+		.load_uA = 20000,
-+	},
-+	{
-+		.name = "vddaon",
-+		.load_uA = 100000,
-+	},
-+	{
-+		.name = "vddpmu",
-+		.load_uA = 1250000,
-+	},
-+	{
-+		.name = "vddpcie1",
-+		.load_uA = 35000,
-+	},
-+	{
-+		.name = "vddpcie2",
-+		.load_uA = 15000,
-+	},
-+	{
-+		.name = "vddrfa1",
-+		.load_uA = 200000,
-+	},
-+	{
-+		.name = "vddrfa2",
-+		.load_uA = 400000,
-+	},
-+	{
-+		.name = "vddrfa3",
-+		.load_uA = 400000,
-+	},
-+};
-+
-+static const struct pwrseq_qca6390_pdata pwrseq_qca6390_of_data = {
-+	.vregs = pwrseq_qca6390_vregs,
-+	.num_vregs = ARRAY_SIZE(pwrseq_qca6390_vregs),
-+	.pwup_delay_msec = 16,
-+};
-+
-+static int pwrseq_qca6390_power_on(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_data(pwrseq);
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ctx->pdata->num_vregs, ctx->regs);
-+	if (ret)
-+		return ret;
-+
-+	gpiod_set_value_cansleep(ctx->bt_gpio, 1);
-+	gpiod_set_value_cansleep(ctx->wlan_gpio, 1);
-+
-+	if (ctx->pdata->pwup_delay_msec)
-+		msleep(ctx->pdata->pwup_delay_msec);
-+
-+	return 0;
-+}
-+
-+static int pwrseq_qca6390_power_off(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_data(pwrseq);
-+
-+	gpiod_set_value_cansleep(ctx->bt_gpio, 0);
-+	gpiod_set_value_cansleep(ctx->wlan_gpio, 0);
-+
-+	return regulator_bulk_disable(ctx->pdata->num_vregs, ctx->regs);
-+}
-+
-+static int pwrseq_qca6390_match(struct pwrseq_device *pwrseq,
-+				struct device *dev)
-+{
-+	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_data(pwrseq);
-+	struct device_node *dev_node = dev->of_node;
-+
-+	/*
-+	 * The PMU supplies power to the Bluetooth and WLAN modules. both
-+	 * consume the PMU AON output so check the presence of the
-+	 * 'vddaon-supply' property and whether it leads us to the right
-+	 * device.
-+	 */
-+	if (!of_property_present(dev_node, "vddaon-supply"))
-+		return 0;
-+
-+	struct device_node *reg_node __free(of_node) =
-+			of_parse_phandle(dev_node, "vddaon-supply", 0);
-+	if (!reg_node)
-+		return 0;
-+
-+	/*
-+	 * `reg_node` is the PMU AON regulator, its parent is the `regulators`
-+	 * node and finally its grandparent is the PMU device node that we're
-+	 * looking for.
-+	 */
-+	if (!reg_node->parent || !reg_node->parent->parent ||
-+	    reg_node->parent->parent != ctx->of_node)
-+		return 0;
-+
-+	return 1;
-+}
-+
-+static int pwrseq_qca6390_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwrseq_qca6390_ctx *ctx;
-+	struct pwrseq_config config;
-+	int ret, i;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->of_node = dev->of_node;
-+
-+	ctx->pdata = of_device_get_match_data(dev);
-+	if (!ctx->pdata)
-+		return dev_err_probe(dev, -ENODEV,
-+				     "Failed to obtain platform data\n");
-+
-+	if (ctx->pdata->vregs) {
-+		ctx->regs = devm_kcalloc(dev, ctx->pdata->num_vregs,
-+					 sizeof(*ctx->regs), GFP_KERNEL);
-+		if (!ctx->regs)
-+			return -ENOMEM;
-+
-+		for (i = 0; i < ctx->pdata->num_vregs; i++)
-+			ctx->regs[i].supply = ctx->pdata->vregs[i].name;
-+
-+		ret = devm_regulator_bulk_get(dev, ctx->pdata->num_vregs,
-+					      ctx->regs);
-+		if (ret < 0)
-+			return dev_err_probe(dev, ret,
-+					     "Failed to get all regulators\n");
-+
-+		for (i = 0; i < ctx->pdata->num_vregs; i++) {
-+			if (!ctx->pdata->vregs[1].load_uA)
-+				continue;
-+
-+			ret = regulator_set_load(ctx->regs[i].consumer,
-+						 ctx->pdata->vregs[i].load_uA);
-+			if (ret)
-+				return dev_err_probe(dev, ret,
-+						     "Failed to set vreg load\n");
-+		}
-+	}
-+
-+	ctx->bt_gpio = devm_gpiod_get_optional(dev, "bt-enable", GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->bt_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
-+				     "Failed to get the Bluetooth enable GPIO\n");
-+
-+	ctx->wlan_gpio = devm_gpiod_get_optional(dev, "wlan-enable",
-+						 GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->wlan_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->wlan_gpio),
-+				     "Failed to get the WLAN enable GPIO\n");
-+
-+	memset(&config, 0, sizeof(config));
-+
-+	config.parent = dev;
-+	config.owner = THIS_MODULE;
-+	config.drvdata = ctx;
-+	config.match = pwrseq_qca6390_match;
-+	config.power_on = pwrseq_qca6390_power_on;
-+	config.power_off = pwrseq_qca6390_power_off;
-+
-+	ctx->pwrseq = devm_pwrseq_device_register(dev, &config);
-+	if (IS_ERR(ctx->pwrseq))
-+		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
-+				     "Failed to register the power sequencer\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id pwrseq_qca6390_of_match[] = {
-+	{
-+		.compatible = "qcom,qca6390-pmu",
-+		.data = &pwrseq_qca6390_of_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pwrseq_qca6390_of_match);
-+
-+static struct platform_driver pwrseq_qca6390_driver = {
-+	.driver = {
-+		.name = "pwrseq-qca6390",
-+		.of_match_table = pwrseq_qca6390_of_match,
-+	},
-+	.probe = pwrseq_qca6390_probe,
-+};
-+module_platform_driver(pwrseq_qca6390_driver);
-+
-+MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-+MODULE_DESCRIPTION("QCA6390 PMU power sequencing driver");
-+MODULE_LICENSE("GPL");
++	pci_lock_rescan_remove();
+ 	ret = pci_scan_root_bus_bridge(bridge);
++	pci_unlock_rescan_remove();
+ 	if (ret < 0) {
+ 		dev_err(bridge->dev.parent, "Scanning root bridge failed");
+ 		return ret;
 -- 
 2.40.1
 
