@@ -1,201 +1,125 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF4C15F30C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA031626AC
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706802644; cv=none; b=A3XssTVtrnUOtaCq8VZDNnq0UtTe6Y2xFftR6AL893JIAGNPLXhcSX6XSQeRhXCoL4I84hLOv7UlHnb6AVFPA4YStv9lYS8xJFKYfIrBMZU7cFBkSdVgfBen2govlBk/2VDXifNe5r2TBVCRjfDd6qEvuki12+f8cWrQsthppVE=
+	t=1706802946; cv=none; b=GDCzm5pyi2V6DJ/+52Wp1WZDt6UuALII1mW745f1++qB4ZhUZT2Y7Zg9LYjKUTgzOnEHPpFAgnSqpK82XRV5fHL4IDJKXawIfwIJluK7LInk2NI185Otn00wkW1d3dXCbx2+gdZOJXrXaDTI/Cxp42YxJ1iGyrJeieGp+TLMtgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706802644; c=relaxed/simple;
-	bh=zBvxp3bCJ9K1CLS/F5jZOmWaBn4ykFxftOcDi63IcHE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t7a02oeAIDasIIQ4b7OsaYUnXQgWhciPTqs8rflsFjDPDfnz4tM33s4/TrwjR0pE9Hz/RU/qTujbnapQAfRo8RY9NZYiv3sqr/XeR1KapTFEegF2MeP0ti7KfTh2uWLUQcXGylO5wVFHFDasHH93OAPYFoYwycmjJzc6TRjXkSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <zhouchengming@bytedance.com>
-Date: Thu, 01 Feb 2024 15:49:06 +0000
-Subject: [PATCH 6/6] mm/zswap: zswap entry doesn't need refcount anymore
+	s=arc-20240116; t=1706802946; c=relaxed/simple;
+	bh=Ne8FaYyFdYXd0+/nwcZOOibQRd96MjLCW87e/NW56iw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=n0oIlqNME9AQkrYTFVamjDHiNbNHldszPI+SgOQymCaxBo9fPVrz9DFKdo2iBUNeqobKj8Nd9Dsi9DVg+Yjs4pYoXRIMiSfHP+OY1iZ4C0qqQlHLz5Hi/8LO3N8xitw1oTBEYm4qk5bL7X9cyS4lPM5TDtIIdt+o8Zxkl2gyWeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=F5YiyoUQ; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="F5YiyoUQ"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50eac018059so1351636e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:55:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706802942; x=1707407742; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VCf5neYMqxadjaO4J9s6ucwyXDUQTnbQajZUESpjeQY=;
+        b=F5YiyoUQ4LpEOSuwn6LB/HtF/4p39epgnm8sKeleBEhmcdjFQORpdhD5Mm1b2p/qOL
+         lNkog+mNetWQUBsRUq2lL+Wq4AAIRDD9D1XV9SvC6V3mSXmcetOXnWu6uGu13UHdjMxD
+         gZhHnmyX1wNTlfdGUL7gnEQIjavJdFh8q16PGwfpTtzGIQ0zH/vTF+BWYo+ix+PXiOiA
+         ZEwZoz88OmHe/tG1121+EBTQzhKcqXUNIVnE90Kmj21Hf0xnU1eJeCQoeji0VG0SOAQ2
+         Epf7azEh/Rh/Cqtht76lxDviRzZhRsLahahoOwE4XGEa91FpHv6Tb5irklpfn/RUWtZY
+         DMgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706802942; x=1707407742;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VCf5neYMqxadjaO4J9s6ucwyXDUQTnbQajZUESpjeQY=;
+        b=XuDOBEHTOiNoE9WxkXSE67suIVHXHEeRPOyIaZtfltxkdI+peqZu63Ti8pkEVQNCLr
+         0HeIj17gziEevRapK74rPYK5ZiKZcOdZ0nJfBLAWZrSTQUH5EvMXhtY2TMg68ocMWRFv
+         JeXPhilDJVeZbfsFUmnPFmW2++DeVf8q1/4Ie1+2nMBkDd38jw7PBxnwvxcBl2pvMBeI
+         QK/Ad+LYYYhPRNEnWAKIa/WvahlKnPvH2qP9J9US/Y2AfrZ97NjW7gpt74dAd+188+sX
+         bKYnn+spgHX0p5UPq2aq6U1xnO/aaKxeRZ0ejZMPHzAV0nse06epYUukK5QYw8/LvKtV
+         7O+Q==
+X-Gm-Message-State: AOJu0YztNOFZHm/YSG3tshNerBmxrY3Mt4jHFMy4gT5Np57IM8qUSo5b
+	TA3xGKhVg3MJdGTqoUzVgeH04K5Fx7EMcKSPvJxt8fTMoUmP6/I03ANZwN61lKI=
+X-Google-Smtp-Source: AGHT+IHkrn+Zj3y1432zmCh6KEhYhszwNLXkoBCTb2I+poJA3NCw+EWCILXaf1b/15MhTWnBC6A3Ag==
+X-Received: by 2002:ac2:4d10:0:b0:511:1dff:f605 with SMTP id r16-20020ac24d10000000b005111dfff605mr1981785lfi.46.1706802941684;
+        Thu, 01 Feb 2024 07:55:41 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVF+2wdShjm6OQ5Wtjr1zIFeaiuVtcAzxXa+wf/JoOMr1kUfk2Tzmj9xzmNSLmnZ5tTi3zErj9tT6F/4UHmgYHK4NDC4c6mCjI0MkhI+HTmlEcNuCV3LVgfo+05AtZMS0sCTIQ5Cs+h9f4+aqt2E1E33ErUq7puh3AW4Ezyoh1gecPEJvl6ONF6zsa7XXcopCHcdI4tCGfWNXv//bihN4LQA189xCmb9aZZTVOPVh8Z2ra+AR9GZIz9SDf96WxpEaz3W0ylZET2Eux5p/O7PgK6UJK4zP+CovmN8UuLL9oUinr4vlj+V5ABtH4iLiJtBDzQnRqwLB6hTt7fXuNt7DjHBefIu2uzrGGP8SzhunR+s7F+pLsepU8uFSil0bcTXXaesrIuTNFrOaeHPq5BDuquDTLUl21KithIGmHmhJYd5KUC5Rfj4YqWqDmIefsc5mEcIsH3uqxt3cMnw4RdaWIrbuuI9xHIZVofhD5KFasGiVclTbyFNDBNmLRX7lkPd8DUwQVrNgbcrJE0sQ/ZYX0wUi9uB5KSM58LnnwFThhoq/aq9JXPDTNSQBBiWfVNn1QutlP3JNqunH+T40nqNurCIqCvWePIjTD9OY1dNlUeoAjvli7wGIwoTpWf+EsvK6aXHGfIvAsuTnEG0R/HQgQTHKptTe67rV92Vof4Xm0dxjJyxPfFQyO8hy5uX/14Ib02fUI/PKeC
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:dd01:5dec:43e3:b607])
+        by smtp.gmail.com with ESMTPSA id ce2-20020a5d5e02000000b0033af4848124sm9650318wrb.109.2024.02.01.07.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 07:55:41 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [RFC 1/9] of: provide a cleanup helper for OF nodes
+Date: Thu,  1 Feb 2024 16:55:24 +0100
+Message-Id: <20240201155532.49707-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240201155532.49707-1-brgl@bgdev.pl>
+References: <20240201155532.49707-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240201-b4-zswap-invalidate-entry-v1-6-56ed496b6e55@bytedance.com>
-References: <20240201-b4-zswap-invalidate-entry-v1-0-56ed496b6e55@bytedance.com>
-In-Reply-To: <20240201-b4-zswap-invalidate-entry-v1-0-56ed496b6e55@bytedance.com>
-To: Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>,
- Yosry Ahmed <yosryahmed@google.com>
-Cc: linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>, Chengming Zhou <zhouchengming@bytedance.com>,
- Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org
-X-Migadu-Flow: FLOW_OUT
 
-Since we don't need to leave zswap entry on the zswap tree anymore,
-we should remove it from tree once we find it from the tree.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Then after using it, we can directly free it, no concurrent path
-can find it from tree. Only the shrinker can see it from lru list,
-which will also double check under tree lock, so no race problem.
+Allow to use __free() to automatically put references to OF nodes.
 
-So we don't need refcount in zswap entry anymore and don't need to
-take the spinlock for the second time to invalidate it.
-
-The side effect is that zswap_entry_free() maybe not happen in tree
-spinlock, but it's ok since nothing need to be protected by the lock.
-
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- mm/zswap.c | 63 +++++++++++---------------------------------------------------
- 1 file changed, 11 insertions(+), 52 deletions(-)
+ include/linux/of.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index cbf379abb6c7..cd67f7f6b302 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -193,12 +193,6 @@ struct zswap_pool {
-  *
-  * rbnode - links the entry into red-black tree for the appropriate swap type
-  * swpentry - associated swap entry, the offset indexes into the red-black tree
-- * refcount - the number of outstanding reference to the entry. This is needed
-- *            to protect against premature freeing of the entry by code
-- *            concurrent calls to load, invalidate, and writeback.  The lock
-- *            for the zswap_tree structure that contains the entry must
-- *            be held while changing the refcount.  Since the lock must
-- *            be held, there is no reason to also make refcount atomic.
-  * length - the length in bytes of the compressed page data.  Needed during
-  *          decompression. For a same value filled page length is 0, and both
-  *          pool and lru are invalid and must be ignored.
-@@ -211,7 +205,6 @@ struct zswap_pool {
- struct zswap_entry {
- 	struct rb_node rbnode;
- 	swp_entry_t swpentry;
--	int refcount;
- 	unsigned int length;
- 	struct zswap_pool *pool;
- 	union {
-@@ -222,11 +215,6 @@ struct zswap_entry {
- 	struct list_head lru;
- };
- 
--/*
-- * The tree lock in the zswap_tree struct protects a few things:
-- * - the rbtree
-- * - the refcount field of each entry in the tree
-- */
- struct zswap_tree {
- 	struct rb_root rbroot;
- 	spinlock_t lock;
-@@ -890,14 +878,10 @@ static int zswap_rb_insert(struct rb_root *root, struct zswap_entry *entry,
- 	return 0;
- }
- 
--static bool zswap_rb_erase(struct rb_root *root, struct zswap_entry *entry)
-+static void zswap_rb_erase(struct rb_root *root, struct zswap_entry *entry)
- {
--	if (!RB_EMPTY_NODE(&entry->rbnode)) {
--		rb_erase(&entry->rbnode, root);
--		RB_CLEAR_NODE(&entry->rbnode);
--		return true;
--	}
--	return false;
-+	rb_erase(&entry->rbnode, root);
-+	RB_CLEAR_NODE(&entry->rbnode);
- }
- 
- /*********************************
-@@ -911,7 +895,6 @@ static struct zswap_entry *zswap_entry_cache_alloc(gfp_t gfp, int nid)
- 	entry = kmem_cache_alloc_node(zswap_entry_cache, gfp, nid);
- 	if (!entry)
- 		return NULL;
--	entry->refcount = 1;
- 	RB_CLEAR_NODE(&entry->rbnode);
- 	return entry;
- }
-@@ -954,33 +937,15 @@ static void zswap_entry_free(struct zswap_entry *entry)
- 	zswap_update_total_size();
- }
- 
--/* caller must hold the tree lock */
--static void zswap_entry_get(struct zswap_entry *entry)
--{
--	WARN_ON_ONCE(!entry->refcount);
--	entry->refcount++;
--}
--
--/* caller must hold the tree lock */
--static void zswap_entry_put(struct zswap_entry *entry)
--{
--	WARN_ON_ONCE(!entry->refcount);
--	if (--entry->refcount == 0) {
--		WARN_ON_ONCE(!RB_EMPTY_NODE(&entry->rbnode));
--		zswap_entry_free(entry);
--	}
--}
--
- /*
-- * If the entry is still valid in the tree, drop the initial ref and remove it
-- * from the tree. This function must be called with an additional ref held,
-- * otherwise it may race with another invalidation freeing the entry.
-+ * The caller hold the tree lock and search the entry from the tree,
-+ * so it must be on the tree, remove it from the tree and free it.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 331e05918f11..5462ed47f25b 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -11,6 +11,8 @@
+  * Updates for SPARC64 by David S. Miller
+  * Derived from PowerPC and Sparc prom.h files by Stephen Rothwell, IBM Corp.
   */
- static void zswap_invalidate_entry(struct zswap_tree *tree,
- 				   struct zswap_entry *entry)
- {
--	if (zswap_rb_erase(&tree->rbroot, entry))
--		zswap_entry_put(entry);
-+	zswap_rb_erase(&tree->rbroot, entry);
-+	zswap_entry_free(entry);
- }
++
++#include <linux/cleanup.h>
+ #include <linux/types.h>
+ #include <linux/bitops.h>
+ #include <linux/errno.h>
+@@ -887,6 +889,8 @@ static inline const void *of_device_get_match_data(const struct device *dev)
+ #define of_match_node(_matches, _node)	NULL
+ #endif /* CONFIG_OF */
  
- /*********************************
-@@ -1219,7 +1184,7 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
- 	}
- 
- 	/* Safe to deref entry after the entry is verified above. */
--	zswap_entry_get(entry);
-+	zswap_rb_erase(&tree->rbroot, entry);
- 	spin_unlock(&tree->lock);
- 
- 	zswap_decompress(entry, &folio->page);
-@@ -1228,10 +1193,7 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
- 	if (entry->objcg)
- 		count_objcg_event(entry->objcg, ZSWPWB);
- 
--	spin_lock(&tree->lock);
--	zswap_invalidate_entry(tree, entry);
--	zswap_entry_put(entry);
--	spin_unlock(&tree->lock);
-+	zswap_entry_free(entry);
- 
- 	/* folio is up to date */
- 	folio_mark_uptodate(folio);
-@@ -1702,7 +1664,7 @@ bool zswap_load(struct folio *folio)
- 		spin_unlock(&tree->lock);
- 		return false;
- 	}
--	zswap_entry_get(entry);
-+	zswap_rb_erase(&tree->rbroot, entry);
- 	spin_unlock(&tree->lock);
- 
- 	if (entry->length)
-@@ -1717,10 +1679,7 @@ bool zswap_load(struct folio *folio)
- 	if (entry->objcg)
- 		count_objcg_event(entry->objcg, ZSWPIN);
- 
--	spin_lock(&tree->lock);
--	zswap_invalidate_entry(tree, entry);
--	zswap_entry_put(entry);
--	spin_unlock(&tree->lock);
-+	zswap_entry_free(entry);
- 
- 	folio_mark_dirty(folio);
- 
-
++DEFINE_FREE(of_node, struct device_node *, if (_T) of_node_put(_T))
++
+ /* Default string compare functions, Allow arch asm/prom.h to override */
+ #if !defined(of_compat_cmp)
+ #define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
 -- 
-b4 0.10.1
+2.40.1
+
