@@ -1,110 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE68C8665C;
-	Thu,  1 Feb 2024 13:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C525336E
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 13:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706794386; cv=none; b=caSQWpYw0RXgP1BNC7xVBE0L2/rRoPV+mFM041EbNolmF2mzfqLG1Zz2tZrfODDKLiFKqU9d79aBMwESe90eL7xyJcXYE/dKl+gvqTf3AD26dRnARko90KZ/mITg80axKkb4wa1xDi1NDddub6+tlY94vu7dWs4I6+XVtwWsDWQ=
+	t=1706794448; cv=none; b=PP8cruultdv6V2SxWB1tAUUHHMs7gO0htXamWJETBFlQ/aAN4z5l1QASpsBN5oUh73roNBKvrW+mGHu6gYxMR8+J1YWnbn3ll62hEFc/sz8/GGFs6E0T2UUi92n2azS5TK+Rl5cY6xbuP59XYLc7z4DVEfjIOMdrTwiWn1t8CoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706794386; c=relaxed/simple;
-	bh=d4nO28AX07KPa1Zt4ur/QYk2sW8LPfo64qW4Aj9sTFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oLY8ZrY5+ld603iK45+WNJpPpmBdC/IK0ucjiOF0PjB9CLaqFBHUrOLBuNQeCJvwV4x/bdwV0QSWDmjd2Wu02k1jcwC4YbGxi5Kt9ZWFBo/ni0lywSqu8eMnP2TJjQC/fiWyruSJg8q4Wdi9/SQVy82ATDR2cXIiLMDZJYPcoy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZlCLq80j; arc=none smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZlCLq80j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706794384; x=1738330384;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=d4nO28AX07KPa1Zt4ur/QYk2sW8LPfo64qW4Aj9sTFA=;
-  b=ZlCLq80jy9b5FBu5a0l1Vu0PYd62XH4CGEV198CviGhqB47cfcfOqs3H
-   XKcmf9HW3lqCv1heTX2WvR3NwIGwZNlx6TWftt6yYdjHszmLZACl1geno
-   LuMvBmF/pGKqKpE+wr45lwNRcY8PHhzdF1E8G9yIqwXuM5uMbCduuUzPJ
-   a304QzeXUj73826XBSkbCVnMt7TVj0ixhFolSTNavzREhmriIbvQvM3eQ
-   NEze46T1rX8lSdY0eaoLUOZsrqfQb8u/TJbvZMvA6xRxqyz/GNrtZhZCi
-   bRjCshHIWhiqtySdHVB58BTWRz3uvuRAoI7w7fOx0pgjbaboiJlp6Kb3L
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="468127722"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="468127722"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 05:33:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="932178346"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="932178346"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 05:33:00 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rVX4Z-00000000qTX-09SH;
-	Thu, 01 Feb 2024 15:25:43 +0200
-Date: Thu, 1 Feb 2024 15:25:42 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
-	Juergen Quade <quade@hsnr.de>,
-	David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v3 1/1] lib/vsprintf: Implement spprintf() to catch
- truncated strings
-Message-ID: <Zbub1upDDLN9JWne@smile.fi.intel.com>
-References: <20240130160953.766676-1-lee@kernel.org>
- <ZbuFSIIGbfhXeP92@smile.fi.intel.com>
- <20240201123004.GA938078@google.com>
+	s=arc-20240116; t=1706794448; c=relaxed/simple;
+	bh=rd6W1x/KuaIZFGaRElImh44uQYLR6BIEILWB8MhkURo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=AEGxhldHZRWL6Msd+fnZoBeSWay74jKI0re7kwmbYHhZ4/A42IFvfB1OsvlazZuieIIoyYLGNURmpbGn/IebFWXPFOCt04h/Uob69dFQSBweAX0s495Ekfl0kAU6FqYDYfj8omYYsEbwuecp5BH7s6tKYQk9yQXH5/bxf+w3mbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3637b396e6eso7193805ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 05:34:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706794446; x=1707399246;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o6a91I90sAKh4gLsTKdd7mCIRQtdpvv+u7oJYdEoCJI=;
+        b=Rr21JsGC3NDXtoNBsTjB5GBohMFJSbTfMpaZT1JnVY1kCTz3oS9n+QB0/W0G98pgCf
+         c4SNNgE4rPTPBEsMi0vVORyqpqDAd67yArgcPxupkUQklAtt6+DqEvOx1aAJ+lyPTsv8
+         EKgIPQm729c3sMyP8O+1/srIcAUULzV+9UDTtbT1kd5/aYfgZbrLJitXfFOoqeVmzxm2
+         ZH7n2MRpiOPXJdPW4vP4RGplzl4bXQYtcXbNYJL2vmAKhGqQUoGYi8HdW1EH8pM8QJXR
+         J7X9rpTrRom4MviPEUNWfWBcYmb6F7iKgC5/CqeKsSJKbAJf2U/qHBQnrtaAHpKP3sLW
+         x6oA==
+X-Gm-Message-State: AOJu0YyZLpxqkuC1JV46eForNVejheJVO8N9bf3VY1jC+ObmFx2l8l1x
+	PQO+6QCjyhczHYDIMMNDIxUzDD1Tr3A6F+Aj9vIPAPC3sFto5CdLRzmIMx1VR8ocjl4c4JD5AlP
+	cEXiNNkFczCFE7NSBG//87byp4l7nLOnQl/+UnnPnxkQKgkRB/oNB+LY=
+X-Google-Smtp-Source: AGHT+IFSjLjJ4TUMmWaP57HZl7Y/QxcdqFht1QpORuYbRkbyZKrLixc0lHp3XFigeN8LlHmhtlAT9dIvZQsTORMYhKkq0kPo6ZjP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201123004.GA938078@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Received: by 2002:a92:cd81:0:b0:363:83ec:3663 with SMTP id
+ r1-20020a92cd81000000b0036383ec3663mr394893ilb.2.1706794446188; Thu, 01 Feb
+ 2024 05:34:06 -0800 (PST)
+Date: Thu, 01 Feb 2024 05:34:06 -0800
+In-Reply-To: <tencent_2E074FCB8D8325A10DE7927D5D905DAF9907@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ab7bf00610520cc5@google.com>
+Subject: Re: [syzbot] [erofs?] KMSAN: uninit-value in z_erofs_lz4_decompress (3)
+From: syzbot <syzbot+88ad8b0517a9d3bb9dc8@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 01, 2024 at 12:30:04PM +0000, Lee Jones wrote:
-> On Thu, 01 Feb 2024, Andy Shevchenko wrote:
-> > On Tue, Jan 30, 2024 at 04:09:53PM +0000, Lee Jones wrote:
+Hello,
 
-...
+syzbot tried to test the proposed patch but the build/boot failed:
 
-> > > [0] https://lwn.net/Articles/69419/
-> > > [1] https://github.com/KSPP/linux/issues/105
-> > 
-> > Link: ... [0]
-> > Link: ... [1]
-> 
-> OOI, what does that do?
-> 
-> Does tooling pick-up on them?
+failed to apply patch:
+checking file fs/erofs/decompressor.c
+Hunk #1 FAILED at 250.
+1 out of 1 hunk FAILED
 
-Yes, b4 shows them when you do `b4 am` and then you can click from the
-terminal.
 
-> These links are for humans.
 
-No objections on this.
+Tested on:
 
-> Is there documentation I can go look at?
-
-https://docs.kernel.org/process/submitting-patches.html
-
-"If related discussions or any other background information behind the change
-can be found on the web, add 'Link:' tags pointing to it."
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+commit:         6764c317 Merge tag 'scsi-fixes' of git://git.kernel.or..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+kernel config:  https://syzkaller.appspot.com/x/.config?x=656820e61b758b15
+dashboard link: https://syzkaller.appspot.com/bug?extid=88ad8b0517a9d3bb9dc8
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12541988180000
 
