@@ -1,149 +1,98 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5678182D73
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 06:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC2784A2B;
+	Thu,  1 Feb 2024 06:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706767583; cv=none; b=KyysFRAgN99IwKAaOIodlByAAtTlmklL/I3Y/gTSnRvbG9IYQKRd90uTcnncnPoZ7gn2rMUb9iZl/X5O6IUyKIeGQ11mS3sX0PDD8GFrNGi/30KL/Hg0gj/MYVrWX7JNifpYOokXK6GMNpxCcgrZw/8ilQ/J7hMB3Igl2fTnTnA=
+	t=1706767664; cv=none; b=M75LZ2BGxFxOgy22iVCXPA/OdG6WxQ28iWyNEVdPmR/skhd2HuzKNXptTYWPrVB5tb7lC+19ZAwXouvlOhl+pQRZwV3jOIHQ64n8FNplJbJL9zS6L/nuWrf0nWle7vEgRgRk07lKK1u3blopbQMKscZ8813l/M2l03I08fdQ53M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706767583; c=relaxed/simple;
-	bh=0LRxdChxLmKEhnOYVLzmM5OXlQ0XC+cmLb43Z7+cynM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dcmSxHO/ffpVcYx2w0P6Q9MsyWQv1zqc98CGQXwYreR+N3+YKMUZIAiUyyCumU35WnyZfQytSeoWYIZ5gfUXzXL0XVwB/rD24kGTJzTNGXmmFuy9SgtUwBkwFhvw8uv6FGgd4DpGorzIZtoLbXtyzbJRgknCcUCIHC2ZeOQJ28Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0LY85O9h; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+	s=arc-20240116; t=1706767664; c=relaxed/simple;
+	bh=2Mh1AT0f2dbPt4JXsiALccjzvLIfnSSqSxigb7iI0+0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PabyGuUW3ASnOuRM+OWCLfZGNEPxA2z+mWt2qc6mZFFhbloRKzvrKaiTHbR0JJLK5HWtckhePWrP9W604kUmMXgS+Bj4ZOqQxdRkwIu6mVdkgdTW8rh1J58k6S86n27YxSxK36F6uaSK9Mkkcu8CdRnoniDw6c9smVblGq3u1yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzqp2sYE; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0LY85O9h"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6cd10fd4aso899352276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:06:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706767581; x=1707372381; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+R+QwEvKVG52HCupcuvyMyVixKSfMEwsPllchfsZTgU=;
-        b=0LY85O9h72c4jUBvNZCjsSNl9tDmeiIwvLt7tNGNn6Z8suRSBZ01xM2oLDvhQrOIxO
-         e8/rexbGGV6qLd3Vk+tFrDNDsI4CWhUh5VLUhearaVAHK08bcNrNoyCbt3Ed9T4sNe6/
-         fIbaThBUjiCGgL3fAOYQmKe2qJhORoWCKH9Th6ZoYpeHi5BMydYfVwTlFICLeqgRKq11
-         bn83jNXwX4FOHfEhRIWKG3IsRIbKDL76AvohXQWVErVhphEYmrKp5yx7K4Gtxf5uYMrS
-         CX2GkKCQ6eEKHAYDIH5CTJxblIKi3S7qvFpAIPjTA3552Lhe9aYClLIfISAWQz/0Hu91
-         3dXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706767581; x=1707372381;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+R+QwEvKVG52HCupcuvyMyVixKSfMEwsPllchfsZTgU=;
-        b=Z78uYBCJ/L/jMOqBSMu8D1kfwYcpJrlDCks9YTGFz8I5/IiLfLvfq6cErgOyLFVLBN
-         EL9EZ1MN9t8/ZU8FXDo8BtFKxzd5lwxrNXyekrtWPT8VIb257rlWbuCsHDV2AQIp0iB6
-         t6k4WnNi5qbrhwVu0eag4yrU1uOM2sQ9kw7OcgEBQja40HdoDF1us0D+gn3P1Pc/a61C
-         Y9dqsOtLF90UKupuLYryyIhigqxjEk+8VDH+jVCNjnLYCtUD5fa3ukDEqUT/TSV1oE9H
-         cII8TIpzD3Y8PKkktUGt8p4TIrm84kphPu/wdKGnYtA8Taltd0Rhh5IPm+6vFJtv+uSW
-         JxLA==
-X-Gm-Message-State: AOJu0Yx4Ni4Okkw4hLdlTtlsptaJg1FfAyoPavpSoYsX+gKYKHyTMVFv
-	xSEZcyIdld22lk04R4K+QqMb/iWi+m1taTW5eppjGAOf4X4c0MG4gS3L1HUIfuFJrdkzdFrZ67k
-	t6X+B77mM+A==
-X-Google-Smtp-Source: AGHT+IH9ZcrmRVPK1BcEkoPLLW9uzYcuLK5XpwTitIVSUboPpipeCUTTfA1c8/oZ1Sjbi+UPYG3ZprHTGqrSQA==
-X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a05:6902:1584:b0:dbe:387d:a8ef with SMTP
- id k4-20020a056902158400b00dbe387da8efmr41769ybu.1.1706767581338; Wed, 31 Jan
- 2024 22:06:21 -0800 (PST)
-Date: Thu,  1 Feb 2024 14:04:36 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzqp2sYE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706767663; x=1738303663;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2Mh1AT0f2dbPt4JXsiALccjzvLIfnSSqSxigb7iI0+0=;
+  b=nzqp2sYEPWOnwkw6Fu6zI8vhn0lElEF4LmYPGHoXnJxAiWrTREJFVOkJ
+   84ie2zE9xxZZzSXlIMQk5oNtXBobFUkpFhMhWRtIOsvZ7Mg7JQG+MzEhD
+   glpBB9WpUY2O/Iu0p30nLGleOMXPyt8tlHE01R2CNdO/0pg3PAnGsSx6m
+   dmt9aTjg4vZ8x/6VC2Swg49KVmPD+ZsfWJIO7sr3V1HKI/SFF/M9VExZe
+   XhEyVCm/tsEvxStk2yr6PYDsakvx53fZx+JCyyFWItTK3pGQMXNViFp2r
+   nSEtn4rhI2EL9rV/TMlnax0SQh/1ZegP4OdlCG3qQK6K35BSc1H2For+G
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10574908"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="10574908"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 22:07:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="30776298"
+Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
+  by fmviesa001.fm.intel.com with ESMTP; 31 Jan 2024 22:07:39 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Jim Mattson <jmattson@google.com>,
+	Jinrong Liang <cloudliang@tencent.com>,
+	Aaron Lewis <aaronlewis@google.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH] KVM: selftests: Test top-down slots event
+Date: Thu,  1 Feb 2024 14:15:05 +0800
+Message-Id: <20240201061505.2027804-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240201060437.861155-2-davidgow@google.com>
-Subject: [PATCH] kunit: device: Unregister the kunit_bus on shutdown
-From: David Gow <davidgow@google.com>
-To: Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: David Gow <davidgow@google.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Maxime Ripard <mripard@kernel.org>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, Borah@google.com, 
-	Chaitanya Kumar <chaitanya.kumar.borah@intel.com>, Saarinen@google.com, 
-	Jani <jani.saarinen@intel.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
-	intel-gfx@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-If KUnit is built as a module, and it's unloaded, the kunit_bus is not
-unregistered. This causes an error if it's then re-loaded later, as we
-try to re-register the bus.
+Although the fixed counter 3 and the exclusive pseudo slots events is
+not supported by KVM yet, the architectural slots event is supported by
+KVM and can be programed on any GP counter. Thus add validation for this
+architectural slots event.
 
-Unregister the bus and root_device on shutdown, if it looks valid.
+Top-down slots event "counts the total number of available slots for an
+unhalted logical processor, and increments by machine-width of the
+narrowest pipeline as employed by the Top-down Microarchitecture
+Analysis method." So suppose the measured count of slots event would be
+always larger than 0.
 
-In addition, be more specific about the value of kunit_bus_device. It
-is:
-- a valid struct device* if the kunit_bus initialised correctly.
-- an ERR_PTR if it failed to initialise.
-- NULL before initialisation and after shutdown.
+pmu_counters_test passed with this patch on Intel Sapphire Rapids.
 
-Fixes: d03c720e03bd ("kunit: Add APIs for managing devices")
-Signed-off-by: David Gow <davidgow@google.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
+ tools/testing/selftests/kvm/x86_64/pmu_counters_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-This will hopefully resolve some of the issues linked to from:
-https://lore.kernel.org/intel-gfx/DM4PR11MB614179CB9C387842D8E8BB40B97C2@DM4PR11MB6141.namprd11.prod.outlook.com/
+diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+index ae5f6042f1e8..99bcb619b861 100644
+--- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
++++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+@@ -117,6 +117,7 @@ static void guest_assert_event_count(uint8_t idx,
+ 		fallthrough;
+ 	case INTEL_ARCH_CPU_CYCLES_INDEX:
+ 	case INTEL_ARCH_REFERENCE_CYCLES_INDEX:
++	case INTEL_ARCH_TOPDOWN_SLOTS_INDEX:
+ 		GUEST_ASSERT_NE(count, 0);
+ 		break;
+ 	default:
 
----
- lib/kunit/device-impl.h |  2 ++
- lib/kunit/device.c      | 14 ++++++++++++++
- lib/kunit/test.c        |  3 +++
- 3 files changed, 19 insertions(+)
-
-diff --git a/lib/kunit/device-impl.h b/lib/kunit/device-impl.h
-index 54bd55836405..5fcd48ff0f36 100644
---- a/lib/kunit/device-impl.h
-+++ b/lib/kunit/device-impl.h
-@@ -13,5 +13,7 @@
- 
- // For internal use only -- registers the kunit_bus.
- int kunit_bus_init(void);
-+// For internal use only -- unregisters the kunit_bus.
-+void kunit_bus_shutdown(void);
- 
- #endif //_KUNIT_DEVICE_IMPL_H
-diff --git a/lib/kunit/device.c b/lib/kunit/device.c
-index 074c6dd2e36a..644a38a1f5b1 100644
---- a/lib/kunit/device.c
-+++ b/lib/kunit/device.c
-@@ -54,6 +54,20 @@ int kunit_bus_init(void)
- 	return error;
- }
- 
-+/* Unregister the 'kunit_bus' in case the KUnit module is unloaded. */
-+void kunit_bus_shutdown(void)
-+{
-+	/* Make sure the bus exists before we unregister it. */
-+	if (IS_ERR_OR_NULL(kunit_bus_device))
-+		return;
-+
-+	bus_unregister(&kunit_bus_type);
-+
-+	root_device_unregister(kunit_bus_device);
-+
-+	kunit_bus_device = NULL;
-+}
-+
- /* Release a 'fake' KUnit device. */
- static void kunit_device_release(struct device *d)
- {
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 31a5a992e646..1d1475578515 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -928,6 +928,9 @@ static void __exit kunit_exit(void)
- #ifdef CONFIG_MODULES
- 	unregister_module_notifier(&kunit_mod_nb);
- #endif
-+
-+	kunit_bus_shutdown();
-+
- 	kunit_debugfs_cleanup();
- }
- module_exit(kunit_exit);
+base-commit: f0f3b810edda57f317d79f452056786257089667
 -- 
-2.43.0.429.g432eaa2c6b-goog
+2.40.1
 
