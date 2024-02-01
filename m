@@ -1,101 +1,110 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620465336C;
-	Thu,  1 Feb 2024 13:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE68C8665C;
+	Thu,  1 Feb 2024 13:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706794365; cv=none; b=AAqDFENJNRwgRP7ZZCtf8sd9lZbTEUZzHwRFluhGrI49wgw16vUnCC13lq6gM7P+mCrGbBoOPyg+TB4D7u5vVKg9bSpz4vE3JZ+xkr0NwAqMMH2uhQUNOSSSTB0L8s+jT02iS1hknQPjB1juLEVplK5ORhpkjF2L2r02nzgI6G8=
+	t=1706794386; cv=none; b=caSQWpYw0RXgP1BNC7xVBE0L2/rRoPV+mFM041EbNolmF2mzfqLG1Zz2tZrfODDKLiFKqU9d79aBMwESe90eL7xyJcXYE/dKl+gvqTf3AD26dRnARko90KZ/mITg80axKkb4wa1xDi1NDddub6+tlY94vu7dWs4I6+XVtwWsDWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706794365; c=relaxed/simple;
-	bh=L9ncuNlPiuhV+Tgp8aiHz1A9CHSswt3CwCdzJSUYnwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fauhy/asduVuvb58vmRBLff1vlW9Y3ymPmqCVh65HzTgKAgKFSssHxC32vJ5wUnCAsLHJ8+cg2pSKBJ9X7DAxmLeqMzbIOR9xLqbbNw4o5KN6iiuJ6kkCRe3KupCvGdhpvDD1+rDoS8dtKsXiF9cwP7PcGu9LJIBD1NSSj3MWZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a26fa294e56so127092466b.0;
-        Thu, 01 Feb 2024 05:32:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706794361; x=1707399161;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DPawFIAhtjEptx34yN1DVcCgpO4g27vMV7ZWuCSE18o=;
-        b=UsA98u0BkPo6EiFB1Scle1NOjTIXCjWvMoe+9lN8Q9C6WdHGrfciKI+tWOLWg9zMtO
-         EmKmZ+/l9Xu06JE7fjuMawVK8gzLQ+N10zZ67OQVrE9xTjzD+xCFYM4BBUL0SjF+pEsd
-         bNAOgzpl9UB60FME4XSI3AHBRuYsyaln7IoocOT3qy5IB6NIJzPpOp1E47jruMw+1Sb6
-         p7QH8DIYT3kHm6xrbCAXX7njUbNmztXQxf0s169jF/OzO0T3nciSYsFKo50AbtSBlqHO
-         Ik0S9osIpXK8ck9xec3kMlVz5zdqvOsnNyl13g3xZtMaV4k+Ga9K1sLXjX1+yGVPZUaH
-         Pa0A==
-X-Gm-Message-State: AOJu0YxPCXiE9ADlN4e7I6a7qHO4q5EyQ4nkUFwFEhg1WqFQTEiSrXiB
-	xwz2Zcu2NUS99tUEw/80GNNJ2zhqWXsS2KvnbMlX7aQB9Uh+JUBy
-X-Google-Smtp-Source: AGHT+IE2dqeAMP8WIUzJIlbbIjKkCCC+rcdNuODnsW0z5TlRFolwBryDbWLYHthiNGKd+lFKmkWA8Q==
-X-Received: by 2002:a17:906:5053:b0:a35:32ae:e0c0 with SMTP id e19-20020a170906505300b00a3532aee0c0mr3578892ejk.3.1706794361382;
-        Thu, 01 Feb 2024 05:32:41 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVVG+qynyiJ0xto/6fL4lOt2J9jSM0ooLDXIVE1W5u7WlW6jISxS3h/er5GCZ4hVxQh2lgMpZv+7KFUy6/DnIMFRSS+qg/Tw8Pw5gojN/cI9zssWtqsnkFS8xxRinjAsk4zcVpDdzAq3Q6FO6meBdMaV/jVLgrHcpWit4+yeGSTK4Y2hqj9TCVaaqo8Z0WBmSsFQ4aZ+/O5dLR8Qg833nBbX6WOi2vzSqH2/1kyXrlLdNDA3bMAAQFSgMswy27dH4k6etXdWRcTBnRQn0xaPzWiqFN25BP5mOyjZ3uoxrml704sPBlIQzDe5iJFmumFXak0iuPIpH3BgsWyeFISbW4=
-Received: from localhost (fwdproxy-lla-004.fbsv.net. [2a03:2880:30ff:4::face:b00c])
-        by smtp.gmail.com with ESMTPSA id f14-20020a170906494e00b00a3681468567sm1474795ejt.81.2024.02.01.05.32.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 05:32:41 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-To: kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
+	s=arc-20240116; t=1706794386; c=relaxed/simple;
+	bh=d4nO28AX07KPa1Zt4ur/QYk2sW8LPfo64qW4Aj9sTFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oLY8ZrY5+ld603iK45+WNJpPpmBdC/IK0ucjiOF0PjB9CLaqFBHUrOLBuNQeCJvwV4x/bdwV0QSWDmjd2Wu02k1jcwC4YbGxi5Kt9ZWFBo/ni0lywSqu8eMnP2TJjQC/fiWyruSJg8q4Wdi9/SQVy82ATDR2cXIiLMDZJYPcoy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZlCLq80j; arc=none smtp.client-ip=134.134.136.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZlCLq80j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706794384; x=1738330384;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=d4nO28AX07KPa1Zt4ur/QYk2sW8LPfo64qW4Aj9sTFA=;
+  b=ZlCLq80jy9b5FBu5a0l1Vu0PYd62XH4CGEV198CviGhqB47cfcfOqs3H
+   XKcmf9HW3lqCv1heTX2WvR3NwIGwZNlx6TWftt6yYdjHszmLZACl1geno
+   LuMvBmF/pGKqKpE+wr45lwNRcY8PHhzdF1E8G9yIqwXuM5uMbCduuUzPJ
+   a304QzeXUj73826XBSkbCVnMt7TVj0ixhFolSTNavzREhmriIbvQvM3eQ
+   NEze46T1rX8lSdY0eaoLUOZsrqfQb8u/TJbvZMvA6xRxqyz/GNrtZhZCi
+   bRjCshHIWhiqtySdHVB58BTWRz3uvuRAoI7w7fOx0pgjbaboiJlp6Kb3L
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="468127722"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="468127722"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 05:33:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="932178346"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="932178346"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 05:33:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rVX4Z-00000000qTX-09SH;
+	Thu, 01 Feb 2024 15:25:43 +0200
+Date: Thu, 1 Feb 2024 15:25:42 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Mahesh Bandewar <maheshb@google.com>
-Cc: weiwan@google.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	horms@kernel.org,
-	andrew@lunn.ch,
-	leit@fb.com
-Subject: [PATCH] blackhole_dev: Fix buil warning
-Date: Thu,  1 Feb 2024 05:32:37 -0800
-Message-Id: <20240201133238.3089363-1-leitao@debian.org>
-X-Mailer: git-send-email 2.39.3
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
+	Juergen Quade <quade@hsnr.de>,
+	David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v3 1/1] lib/vsprintf: Implement spprintf() to catch
+ truncated strings
+Message-ID: <Zbub1upDDLN9JWne@smile.fi.intel.com>
+References: <20240130160953.766676-1-lee@kernel.org>
+ <ZbuFSIIGbfhXeP92@smile.fi.intel.com>
+ <20240201123004.GA938078@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201123004.GA938078@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-lib/test_blackhole_dev.c sets a variable that is never read, causing
-this following building warning:
+On Thu, Feb 01, 2024 at 12:30:04PM +0000, Lee Jones wrote:
+> On Thu, 01 Feb 2024, Andy Shevchenko wrote:
+> > On Tue, Jan 30, 2024 at 04:09:53PM +0000, Lee Jones wrote:
 
-	lib/test_blackhole_dev.c:32:17: warning: variable 'ethh' set but not used [-Wunused-but-set-variable]
+...
 
-Remove the variable struct ethhdr *ethh, which is unused.
+> > > [0] https://lwn.net/Articles/69419/
+> > > [1] https://github.com/KSPP/linux/issues/105
+> > 
+> > Link: ... [0]
+> > Link: ... [1]
+> 
+> OOI, what does that do?
+> 
+> Does tooling pick-up on them?
 
-Fixes: 509e56b37cc3 ("blackhole_dev: add a selftest")
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- lib/test_blackhole_dev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Yes, b4 shows them when you do `b4 am` and then you can click from the
+terminal.
 
-diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
-index 4c40580a99a3..f247089d63c0 100644
---- a/lib/test_blackhole_dev.c
-+++ b/lib/test_blackhole_dev.c
-@@ -29,7 +29,6 @@ static int __init test_blackholedev_init(void)
- {
- 	struct ipv6hdr *ip6h;
- 	struct sk_buff *skb;
--	struct ethhdr *ethh;
- 	struct udphdr *uh;
- 	int data_len;
- 	int ret;
-@@ -61,7 +60,7 @@ static int __init test_blackholedev_init(void)
- 	ip6h->saddr = in6addr_loopback;
- 	ip6h->daddr = in6addr_loopback;
- 	/* Ether */
--	ethh = (struct ethhdr *)skb_push(skb, sizeof(struct ethhdr));
-+	skb_push(skb, sizeof(struct ethhdr));
- 	skb_set_mac_header(skb, 0);
- 
- 	skb->protocol = htons(ETH_P_IPV6);
+> These links are for humans.
+
+No objections on this.
+
+> Is there documentation I can go look at?
+
+https://docs.kernel.org/process/submitting-patches.html
+
+"If related discussions or any other background information behind the change
+can be found on the web, add 'Link:' tags pointing to it."
+
 -- 
-2.39.3
+With Best Regards,
+Andy Shevchenko
+
 
