@@ -1,45 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB3286625;
-	Thu,  1 Feb 2024 12:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2791DFF3
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791600; cv=none; b=pGAIdHjw7bGxMMqm0+iipA1fIIWcFboHoL1wn8u2560aM3SqauGUOFRUv8TjhTCxxZ2JRL0gFKqLcurrh3YTsyIhV9GxJwlYHQIFs8/uBaZfkk8oNdElXwUFOmD3qz87cABIg2R2tj7p31VHzBbVYDx67Hhmb5i6T1uGeH9NaDM=
+	t=1706791654; cv=none; b=TnGqbyHItI+ugMdlmaduTMjkgWd3VyBmwPtoqnX/Cs+HNZsEm1mSJG9qiY1qKkwXZQMyaOlNQqjlFc1Zz6OC+C6hpXOi96ZmiGm76B6SWoto8w4NSOwMDnAkhCW/f929qS194tbyY6Qa+Bb6DZSrm4jlhT+Gk6zi3dX1kOeM8M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706791600; c=relaxed/simple;
-	bh=Ozs8J41000u00dB2ZIw83RqiiLRy3YYbyXOG40NYRg4=;
+	s=arc-20240116; t=1706791654; c=relaxed/simple;
+	bh=SrCCSDqnT83NBejFDqLvZhNBdZEM7c/GDlvAag2DkXA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPrt9CRVsahKGthiPmGpULgSi5YiN1SgyCInAizN4d3tQvX53FztfVH8WqmjRmz9k22ZHMX8smjG2hnPnApLOItxR490aXpzXMUsaAfhcWRDKUaoF07FAaUV6s2HXASmtlWQxqH2OX6aq4NG8zRYjByrWD9fjQN7VoQ66myqWKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gV3GV92r; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDJTA++zf6OvWa+I3plPcCxXRpnhva95BFMz9AwDVPaVeIluDWIr6k7wUnsjv/+PcfcbwAenu/qMhy/9cKUEBiR1ZiL5D4JGBMZb8OlZq9N//j72dDaSepgS0crSSMxGeAa1xpMCbQpBcP4hn3NxnaNNVwg2A27FC7SKuwdMkkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=aI1/fiHr; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gV3GV92r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D524C433C7;
-	Thu,  1 Feb 2024 12:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706791600;
-	bh=Ozs8J41000u00dB2ZIw83RqiiLRy3YYbyXOG40NYRg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gV3GV92rSzety+2LaA+j5pbLeIEYqtkmO44ZOu0MTkg0cPMuXy3hjhnzAzwjvq29p
-	 4X0bOmPvXzEmQE1svyww0as4u0/Laz6fcso/6LKZP+Y5geI9NnWrw1NTuI8fkY/Smc
-	 XFsocQFRcqGXoKTP2kK6pVSnS9ANsA4wmbm0n+m1xBF41xMj6c0VZBp7YTuRLNmM3C
-	 oMQqtUNq+6PXFVTjAhrP+EPKD1Jw4V3FS4lWWbpgfZD25hwFYPGUMsSmp+id9FgMjL
-	 m51uTRmObMJGlBaC2ZfDd43Os6eBTMGnEliRPo+FFvJFqNxQgapyGPHC+QbdcffhVW
-	 J7JTpEWbx4mRg==
-Date: Thu, 1 Feb 2024 12:46:34 +0000
-From: Will Deacon <will@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
-	iommu@lists.linux.dev, Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v2 1/3] swiotlb: Fix allocation alignment requirement
- when searching slots
-Message-ID: <20240201124634.GA15707@willie-the-truck>
-References: <20240131122543.14791-1-will@kernel.org>
- <20240131122543.14791-2-will@kernel.org>
- <4c9f50d2-05f9-4a37-ac50-dcd98e40e87f@arm.com>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="aI1/fiHr"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33aef64f702so507199f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 04:47:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706791650; x=1707396450; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SrCCSDqnT83NBejFDqLvZhNBdZEM7c/GDlvAag2DkXA=;
+        b=aI1/fiHr6NErtr0KIAfc5sKxYgbxdGCNb05/KAC6/UbWsuUxsWYLM0XNT90TQLTm54
+         CEkw32xscbGCB2SaZfxUr5AoGLoETQL/VDk9FyzDYszmn3UN0FWOW32yEMsZJzE7intX
+         e28UwOGOi/aVK9gL6i+0hkBHokLASqE8fzpCA8r7vrg7iyG9906kdnYLymmQJu7KptJQ
+         0m85+kIfrDt1ZGbMcfs0zB8/2yXWv++Prz1Y1dti5xanRSQxPmjcpUE5bqckoj8kOUT2
+         OOvakqwgHqLG4e+zZXNX4WvHv8JtAaouY52gpSODD1FvUIKuLGb30ltSzQ7Q0sGEuElD
+         ctrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706791650; x=1707396450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SrCCSDqnT83NBejFDqLvZhNBdZEM7c/GDlvAag2DkXA=;
+        b=qiuA3OtbNJLJo64xqcnGciCwyD0fOX8fiSOGFAvNzg1O2uF0ZeujMr/FnArtd290Sk
+         WD6b6blEQyAFSy78OUhSoqZOauMOZLPvf5+bjMDVpitXZL+uLFBgl7gD3C9an8HUaw/i
+         2Siusy0EkZn6cbCx6W8kpyHTDy6xSS61A2SgdohcESHORfrXA6CAgq6yfX0cHrKY272X
+         N9bY6mZ1Xmy1MAOMQSftKCn7Qm8IAair2C4wrRLq13QDAgn1PHJIBi6Dn2ZfSKzD4gKY
+         4bTqbP246ZD0Ck252mYp7JLKJgyYuCJiEUgtfEu1VKLRZzXXU5orlV/yQAFUR1D9iKne
+         c28Q==
+X-Gm-Message-State: AOJu0YzjMGCMToCKuKmr+ikRdSY/JjuMWbbc/gsOhjb/X8Zx5xKF3tcM
+	esbiW5oMS9N7GDVnH+V0tKB4Z5H2kYkdFC0Y1qx3agRjgZZUZAN0kabjI59BKFQ=
+X-Google-Smtp-Source: AGHT+IFBQDMjB9QaO2zF8XjHM829y8wQFGbOhiy7LTTNAI0oH7do/LOdRbfw60OBh09NOApacPt4Xw==
+X-Received: by 2002:adf:ea8f:0:b0:337:c73f:db0f with SMTP id s15-20020adfea8f000000b00337c73fdb0fmr2765113wrm.41.1706791650430;
+        Thu, 01 Feb 2024 04:47:30 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUgoQNbt3yJXfH7E2BOIhJs+AzgLHGcMAQhcPyICRIlMkpiRP+/hBdsENkApsvxCAuI0g5AIskYnAXSr1M3h6H6fYbiWiRNBlZbRHylTt9VQNK2tpJJHRnCrXl6tBMvajWkywnTWDaLOv5ZVbW5CBODV4KYYQbc6m/kUGz6gOGuwkfOY9KyISmHgR7JDeP717oUvPtbwGA+QFhnWQ4XrKEdEMsHeMYtfC4274B92qU33D9O7GF0muyY5+6gGjZD1fk6DHmEGszC0NGSxVi922d6Z0czanKQA4XTc2jexMJOmlkoKjwpTZR5rYWhpKbuIIy5h38SKqC6VkjQyxmk
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id cw7-20020a056000090700b0033afcb5b5d2sm6653298wrb.80.2024.02.01.04.47.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 04:47:29 -0800 (PST)
+Date: Thu, 1 Feb 2024 13:47:26 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Kunwu Chan <chentao@kylinos.cn>
+Cc: dhowells@redhat.com, marc.dionne@auristor.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] rxrpc: Simplify the allocation of slab caches
+Message-ID: <ZbuS3n8DM4QqoUGg@nanopsycho>
+References: <20240201100924.210298-1-chentao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,56 +69,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c9f50d2-05f9-4a37-ac50-dcd98e40e87f@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240201100924.210298-1-chentao@kylinos.cn>
 
-Hey Robin,
+Thu, Feb 01, 2024 at 11:09:24AM CET, chentao@kylinos.cn wrote:
+>Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+>to simplify the creation of SLAB caches.
+>
+>Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
 
-Cheers for having a look.
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
 
-On Wed, Jan 31, 2024 at 03:54:03PM +0000, Robin Murphy wrote:
-> On 31/01/2024 12:25 pm, Will Deacon wrote:
-> > Commit bbb73a103fbb ("swiotlb: fix a braino in the alignment check fix"),
-> > which was a fix for commit 0eee5ae10256 ("swiotlb: fix slot alignment
-> > checks"), causes a functional regression with vsock in a virtual machine
-> > using bouncing via a restricted DMA SWIOTLB pool.
-> > 
-> > When virtio allocates the virtqueues for the vsock device using
-> > dma_alloc_coherent(), the SWIOTLB search fails to take into account the
-> > 8KiB buffer size and returns page-unaligned allocations if 'area->index'
-> > was left unaligned by a previous allocation from the buffer:
-> 
-> Hmm, but isn't this fundamentally swiotlb_alloc()'s fault for assuming it's
-> going to get a page-aligned address back despite asking for 0 alignment in
-> the first place? I'm not sure SWIOTLB has ever promised implicit
-> size-alignment, so it feels somewhat misplaced to be messing with the
-> algorithm before fixing the obvious issue in the caller :/
-
-It's hard to tell which guarantees are intentional here given that this
-interface is all internal to swiotlb.c, but the 'alloc_align_mask'
-parameter didn't even exist prior to e81e99bacc9f ("swiotlb: Support
-aligned swiotlb buffers") and practically the implementation has ensured
-page-aligned allocations for buffers >= PAGE_SIZE prior to 0eee5ae10256
-("swiotlb: fix slot alignment checks") by virtue of aligning the search
-index to the stride.
-
-In any case, this patch is required because the current state of
-swiotlb_search_pool_area() conflates the DMA alignment mask, the
-allocation alignment mask and the stride so that even if a non-zero
-'alloc_align_mask' is passed in, it won't necessarily be honoured.
-
-For example, I just gave it a spin with only patch #3 and then this log:
-
-> >   # Final address in brackets is the SWIOTLB address returned to the caller
-> >   | virtio-pci 0000:00:07.0: orig_addr 0x0 alloc_size 0x2000, iotlb_align_mask 0x800 stride 0x2: got slot 1645-1649/7168 (0x98326800)
-
-Becomes:
-
-  | virtio-pci 0000:00:07.0: alloc_size 0x2000, iotlb_align_mask 0x1800 stride 0x4: got slot 1645-1649/7168 (0x98326800)
-
-So even though the stride is correct, we still end up with a 2KiB aligned
-allocation.
-
-Cheers,
-
-Will
+btw, why don't you bulk these changes into patchsets of 15 patches? Or,
+given the low complexicity of the patch, just merge multiple patches
+that are changing similar locations togeter.
