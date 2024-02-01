@@ -1,149 +1,497 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2114.outbound.protection.outlook.com [40.107.247.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9583D15CD6C;
-	Thu,  1 Feb 2024 11:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706787457; cv=fail; b=sOkV9iK3KJRLtfd7Lc3WpCumS31yCx87wPo7l0uVPgKB4JfEQ9yxQvqyKW2V3Md/bacVo2J1mVsYzdSL810MJlIOcFvmFGOlf3qIfm77DCPjC4L3mtya+HTQUtYfoZ0zTuoJTK8GmLbcrSwe5b1D72Un6HJbbuoTz0GixycAGaU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706787457; c=relaxed/simple;
-	bh=4TLzuUG+cD1ah0+jc3t9NcCQawuhHMyWz8z+IOJLiJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=tJP8UNsRG5m/VmG5pctzud9HjbYpA74WwunErLRbVYX7ys6vNiGmxl8EAolZ1GDGAi3mfci+75gQAz4aIzi/NGDOxJZzsBaKGABFMuCbUMirpFs7mu/uiSrV1N4Km67kNM025SuChEb6SCxgBUq48eiWBiIOwtEo1Wwg2n2FBl8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kunbus.com; spf=pass smtp.mailfrom=kunbus.com; dkim=pass (1024-bit key) header.d=kunbus.com header.i=@kunbus.com header.b=LHkFL9FB; arc=fail smtp.client-ip=40.107.247.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kunbus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kunbus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C1315B970
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 11:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706787572; cv=none; b=l6e1Y4ucuIOjxB5Hkbz1RU4uui/Nll3JNyW8t+mQ7LUS6WF8iuKbNGhaNWnez9O2J9AXI+svcQtIauccmElLQu5N+LC/wwcClbl6vEIfc6vr2VDwM2S1/M5vcYnvIDP+FNDQdVkit24M5GDrWsDD4+3th8vBeim9M/mnfF1tm6A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706787572; c=relaxed/simple;
+	bh=xcL6s1Bq2w54lbP4i4OtFL1LPYy3fOZH0SfAWhqCcqE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CIokU2RovNQUqaAIuUpKY1pl15oAdehNfVcRcVL6VnSKoLNle0qwM5iZw2VMpuNhfWtH49YLCc6b5i/qm9sso493f79Pa6lGCftRVl6Buvzgl6vqC4PuTEDQPMbWyfGa50gawkyliR1QCa7bYdggOt1Ztf2B0uM1eeb6UJ9DqKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UuUBqucW; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kunbus.com header.i=@kunbus.com header.b="LHkFL9FB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oV9xOpqPGyRtcZZvJdeJ6tMTTvWpjt4Y+8xJeLjFmhf80q9y5zHi9p/uCif6y1OXyNLNlLXLmwPqNi3775UrvU8VQWzELHEtATzRuT7iVo6bhsUL03MXMvtIDHxfvdFjtLfY0nE8+fWg2IX1HQHWBTNNS8yv17W3dc83fYEOlzY6XDJIVkY5r3ffr9N5hPM9bB+eF3dQw8rANVS7U6gOJeiA1fVcPbWHXa2D8B8Sp3R98wYfsO1+rgPpkFXeE749odqrmetFOZkLdgXfsyWVAVHJQ8DJM3FbK5hU6TYnHA9RkWdEiHLGkyN8bLhaH9sT/rNh4VR/jWl9gMYYfOtSaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4TLzuUG+cD1ah0+jc3t9NcCQawuhHMyWz8z+IOJLiJo=;
- b=TvLMCJ9b8EUHl2e+7ZwhRMGLnYA+NoJ9jo1TXe8jR6ygF5avijaDb09UYkoa1lEvC73ARw3bePv7+fZyKTO1y1+ihqsUtDEpKTqYf4sl9kTbe1qBAfHE1IX2Wa92lVX3H2Iw0neOKQsayCTXscCvBRkkaXbCC9g6uykWzB+6qK2ggnSbz8OZaUcyQJzSsbQX+ewI3QdakZq4S3CHRx8XJnksBcEkc1qVciD+Hv1qv0ulJVeSc0OSsZL3Nm+o9wVlf/l4leuKmk+iMhI+qxzu/H2MTOonEzQA2Kt9bBieEBi2vyLlqMYoK/M991RoqcMvUK/4JgzCEnYkSNIn0iulQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kunbus.com; dmarc=pass action=none header.from=kunbus.com;
- dkim=pass header.d=kunbus.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kunbus.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4TLzuUG+cD1ah0+jc3t9NcCQawuhHMyWz8z+IOJLiJo=;
- b=LHkFL9FB0fIrpBc1wp0fQlm/9qxMEzijiEvfViV7f3CCdvT5e2814WpYJYZDG3nS/XC3AG22nJ4hY05MOyCR/8KmPvy/vP3S3YovEDLTRSaRHbuV4AXxRGiU48LuKoVrPz+vubDXiw/dejQh15eIdDdwir9ovb+nxqWAP4iKO7M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kunbus.com;
-Received: from VI1P193MB0413.EURP193.PROD.OUTLOOK.COM (2603:10a6:803:4e::14)
- by AM8P193MB0804.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:1e2::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.26; Thu, 1 Feb
- 2024 11:37:28 +0000
-Received: from VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
- ([fe80::67b0:68bf:2582:19cb]) by VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
- ([fe80::67b0:68bf:2582:19cb%7]) with mapi id 15.20.7228.029; Thu, 1 Feb 2024
- 11:37:28 +0000
-From: Lino Sanfilippo <l.sanfilippo@kunbus.com>
-To: jarkko@kernel.org,
-	peterhuewe@gmx.de
-Cc: LinoSanfilippo@gmx.de,
-	p.rosenberger@kunbus.com,
-	lukas@wunner.de,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] tpm,tpm_tis: Avoid warning splat at shutdown
-Date: Thu,  1 Feb 2024 12:36:45 +0100
-Message-ID: <20240201113646.31734-1-l.sanfilippo@kunbus.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: base64
-Content-Type: text/plain
-X-ClientProxiedBy: FR5P281CA0011.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f2::19) To VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:803:4e::14)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UuUBqucW"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-59a8ecbadf7so367460eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 03:39:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706787569; x=1707392369; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vDYGx+taIjkEtLDF3e8GG+vO4dY+SCmgebrDZRPNBdg=;
+        b=UuUBqucWJZtZnVpjfEj5Y9aA9vHrznckc+fYWanxQINbgjowHahAomRM4uzTNiou5V
+         u+bI/s/6tcrXEfn+2q5zHTpHJlLf83m2d2ZV4r5In27yn0FDqljysKFCKC7SeZQ+SidO
+         n05+lN2A1DGFhQtbPJV6D6QNC8xc2ndeu74I0oj06ZsbvdcfjevZkjcNtGNNUipSeVbs
+         7/cycjvrI6ca2rW53v9Psk6JdQA7Ni+UKnAOIr8JzBT7jEfyjukgKEHayA5DKMWwLKx9
+         kJmKQz376/L3l9Bwy0GFW6pEEwCa3xjR8R1fO7QH9h87d7yaXKby2SiwUI5ByCHP8qMA
+         GTiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706787569; x=1707392369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vDYGx+taIjkEtLDF3e8GG+vO4dY+SCmgebrDZRPNBdg=;
+        b=oFFbAB0W+zgEfkWhs8hTqfjnyeiaPjVXXEWJpzKeB0rrnZxssEGFvjBrEzJfFuCYkW
+         o9CLVcFPfrWCmDUJp+TyiPa6PWZMfZZ2XhIqG1apOzEx4BmiSB4Xr3P1zW0ZSQowV3N2
+         Time/TkNDQ68cRSMyY3r5TRq+3uk8SVMTWNmzIhH8gkkuuR+jAd21Aa0O8H9Sh0jIS1K
+         Hapn8wwDrwxtrpZRYktiZQiEMxKoLkBcFHBYkK9gf5BYxrf8crRfMeKJiedoRhc96sUE
+         /yBVBFZJXQqymaz5AdLoj9uhET0z2bOGFcPX1y9l328CiBg+lvzZhIb4oeKmypn3XjL4
+         CZyg==
+X-Gm-Message-State: AOJu0YxqUtfzYdWM9XbFawkf4WXs6RBrv3cm2dFQ4+YvegSHGhj4e5xI
+	20kKK7Zsh1+WChMdYEzmH10JejLcSCGBgb9FGupN3NX5SIBfWWkaTLZbtNIGQ1dLvgLClakmz/1
+	h/vcpAfkZULBeW7FauXjIeXmAbfU1wQDhvkrXFA==
+X-Google-Smtp-Source: AGHT+IFA+dn/9ZhRl6yhyA1YfPf8MiEw+0CW5/qz1iT6gz9YEhCL0Dkc7NHJH8pn4HQKdRJ9B9feEpDdYQnoW19OJ/Y=
+X-Received: by 2002:a4a:d847:0:b0:59a:3ad:4ff1 with SMTP id
+ g7-20020a4ad847000000b0059a03ad4ff1mr1685877oov.3.1706787569156; Thu, 01 Feb
+ 2024 03:39:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1P193MB0413:EE_|AM8P193MB0804:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c7c2774-3134-4e84-a274-08dc231a2add
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	0L2CdmkwvP3HSxC50oqgcme1DvJMXWfLdQNue7WGJ2T86oNC5s2Q5H3krHChgdEeYG/NlGbdZgp5BvvLaqTblFWDFGl4ai4mvKnxBoCnz249bnlzuyL3EoeFRdQv3dtrZNnRl4xVnDu8lGXAuOksFULezZFPcxUGoa7wdKkkMdgaViGkoyvJ8rzM5pI8iahjWoDVMCeH9x50tysygEVmBhLacVwCcsDMDEyThaWjNP/Z66Z29aXNwSnzJgvDZN8zmUOHJRwNZQrUKuOjPZ6i62XEiUPdDd6QgNRge8EN7Z7PndmzFUVNvtfkbRP7JZPzLO6Mq9XvEfLt2j0YrwqbrE2S9L5i6DzM3LokX6oWOyoKzA/YS7MhlzsCcsBR1kCakp6NkKP12pZZWudcXCIOo7biMNu2zxSetrET08SIoRuzjnFmL7tsp+oNILRqie5re/wn6q+BMNZQFpIK2xTHrrfXKiOZrbSKo8acdFuMUhmi0DEde6tY5nfmufEvWS9PRraVCqAMxQAZhlH75qaO4Wug/bkipJl/Hlw1blJfbt2TjeVyHoexyQvk0UipPJKETQVyN5u9Bcoq2UECk99b2afI9GKNtIT4PcoqhNRfE6hOk44bxhuWrdeIvlZx7Lf2
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P193MB0413.EURP193.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(366004)(39840400004)(376002)(346002)(230273577357003)(230922051799003)(230173577357003)(451199024)(64100799003)(186009)(1800799012)(478600001)(1076003)(6486002)(966005)(41300700001)(86362001)(52116002)(6666004)(6512007)(6506007)(38100700002)(2616005)(316002)(66946007)(66476007)(66556008)(8676002)(8936002)(4326008)(2906002)(36756003)(83380400001)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?P3mMcsUJl8Z/r1fWnB3iv7riq/rYiCW/ob8aQQWYzL8mV+QpMuJ2Uvuye4VN?=
- =?us-ascii?Q?GXkMtS01etlicLr9wUFfge0irzr7CBzcRkozfBp9f7QJSfp6dld88poTNvmm?=
- =?us-ascii?Q?bFLLOeBvfwwfXo4RQEt4D1wnPkgtndnLwM126pPdFm5It8euKVh8mwr6BL9h?=
- =?us-ascii?Q?FBpbTg3rrCpz/KYLWfhBwLGxHNhvwZ7N7/EdPOuBchClZV4ZjNthqcYXufZx?=
- =?us-ascii?Q?r9fD/3fzAhz64sEk/HCynZ7MNRyf7A9GdVjSE7s8Tu50CX7zXzSMLKnVLHzE?=
- =?us-ascii?Q?h2xybVDl1NlQnYmbHD4HaC5DazsRWdKMoCIalVJJ3JX3WL0bidHibcYnTymZ?=
- =?us-ascii?Q?rwuHNhER4EdwmJVc2gFHRu1R5Htn19h5l30FRpU+pXM4ggYEqu5e/WVp5Cyy?=
- =?us-ascii?Q?xLZzyRNmv/BoUoglQu6Z/RW9c40kjhAFcpV0mkxEM0bEgJfcxl5BiGW/MbEG?=
- =?us-ascii?Q?ZN1HRalHdaaZUXe3O13k537IbV1Ni2bp7S/qJ8Xf9T4j0pf1x+4fvH4QxELI?=
- =?us-ascii?Q?h5sJNd82lseGegpe0FtqO8w57Npf2QwHtSlPX1a9M/5RV2HnNdzwg98x2UkW?=
- =?us-ascii?Q?fI+eubBA3wecpLt5YXetx6ZxrGQ/6jC5KY+/n26UsntwusTghWB/IIQ4l/ZG?=
- =?us-ascii?Q?W9I8kuRJkyo/AsvTCbe0dZSojU8WU02J9iWDH7yO5IIQbJc3K/RPF7WLFgTg?=
- =?us-ascii?Q?Fmu1dCoA3cwtDilVWph57teCOUmhVD6/JFrH8skHHPFtUjaBIHZqyulGguhn?=
- =?us-ascii?Q?pkuADYmO/P79QNSDOMOx0mFszp7HgtdNlGr3fmTsFmCyDwCqPtcfhtlHE7AX?=
- =?us-ascii?Q?XuSx5DwVro+vFyJ7UWsP7T/Urw6vGzvdgDr7Rh2w1DIbW8xnvjLzbT3LOpzE?=
- =?us-ascii?Q?a+rhTZk9+6jqYPIOiY+tss/UgomoBI4dojVhPAvJIUedGEAzbzEwigt7Jmsp?=
- =?us-ascii?Q?PEaIm8AmJcA2S71aJ0W+PMgEyAhwqejRG4MUO2SIHfzuZRpf4Cu3EScZMIeM?=
- =?us-ascii?Q?vPltVO43e88P4qlgi1B1iaxCLKs2Y7xySiIp+NT1bSTc8IcnPkh/q8lwIPcd?=
- =?us-ascii?Q?+qHorTYhmGsVuAFEe/Z/cPgdRFvNYYfbnbvnKJv05jd63pgkSqzF9QYquvSU?=
- =?us-ascii?Q?3lK+VtG6m7qixfzr+SZOQJ9TmoA+vRnH5QVxOwpgpiMJ6VwfV9U296fnDWhm?=
- =?us-ascii?Q?fTZtlUOTHDygLaTI0JXs0gMHJ2dIWKvAP3FDH4x4ADQlWezHFTQ11K7WAXaS?=
- =?us-ascii?Q?TTzR08KpyAzOm/gPEVO8Z9Cvb4NSkTJNm5imo4scNI5VE+8eiU9VPioVFRqe?=
- =?us-ascii?Q?rJNWGi5ledV1BXn8c0fj7CuAU7w8bHfX1I2OrJPoiZ9703Ocxovifk/hUhdA?=
- =?us-ascii?Q?9eVwARXklDC2JE1FaQVxqHzDxNWaoAoUmkcEkV9Hiacx9OB2bNvE26i0+yCl?=
- =?us-ascii?Q?xOq4TWMyHNDXOmD7SwpJf/LBihqPRflVlzzjNDRjr7C5AR4cAFCBGqGHrw+X?=
- =?us-ascii?Q?DF//uLLjw5XeczHW0N4/fAOSlY7OePaa8TABnTNIAGaUNt9AULWbchor+olM?=
- =?us-ascii?Q?aZNKzf3LqNHc6T6QIeN4Moy5amezLQiWdSueOqmWcT6In6JlnqN1yN1F+Zcu?=
- =?us-ascii?Q?a+g/YqPIbTVzyWFmq4744+/iLqkzp6jIHI5UOpKz7l9oBh0oucgA0w/Lkx+1?=
- =?us-ascii?Q?P5CNOQ=3D=3D?=
-X-OriginatorOrg: kunbus.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c7c2774-3134-4e84-a274-08dc231a2add
-X-MS-Exchange-CrossTenant-AuthSource: VI1P193MB0413.EURP193.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 11:37:27.7172
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: aaa4d814-e659-4b0a-9698-1c671f11520b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hSvuP6o7mbP9rDAZjVqn24aPHLTavy2UitQUuTi6AWKlvmPE/L22T+h6AwEkEarcfqmxoEG8FCiBgG0fYD5PRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8P193MB0804
+References: <20240131174347.510961-1-jens.wiklander@linaro.org>
+ <20240131174347.510961-2-jens.wiklander@linaro.org> <09e318f9-ccb6-4c0c-b06d-d433d44d6e25@infradead.org>
+In-Reply-To: <09e318f9-ccb6-4c0c-b06d-d433d44d6e25@infradead.org>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Thu, 1 Feb 2024 12:39:17 +0100
+Message-ID: <CAHUa44EmZVBVfQPexthZXDyCo_VKwZBuKH1Lz1pL4FSeJubVRg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] rpmb: add Replay Protected Memory Block (RPMB) subsystem
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	op-tee@lists.trustedfirmware.org, 
+	Shyam Saini <shyamsaini@linux.microsoft.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Jerome Forissier <jerome.forissier@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Bart Van Assche <bvanassche@acm.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomas Winkler <tomas.winkler@intel.com>, 
+	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SWYgaW50ZXJydXB0cyBhcmUgbm90IGFjdGl2YXRlZCB0aGUgd29yayBzdHJ1Y3QgJ2ZyZWVfaXJx
-X3dvcmsnIGlzIG5vdAppbml0aWFsaXplZC4gVGhpcyByZXN1bHRzIGluIGEgd2FybmluZyBzcGxh
-dCBhdCBtb2R1bGUgc2h1dGRvd24uCgpGaXggdGhpcyBieSBhbHdheXMgaW5pdGlhbGl6aW5nIHRo
-ZSB3b3JrIHJlZ2FyZGxlc3Mgb2Ygd2hldGhlciBpbnRlcnJ1cHRzCmFyZSBhY3RpdmF0ZWQgb3Ig
-bm90LgoKY2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcKRml4ZXM6IDQ4MWMyZDE0NjI3ZCAoInRw
-bSx0cG1fdGlzOiBEaXNhYmxlIGludGVycnVwdHMgYWZ0ZXIgMTAwMCB1bmhhbmRsZWQgSVJRcyIp
-ClJlcG9ydGVkLWJ5OiBKYXJra28gU2Fra2luZW4gPGphcmtrb0BrZXJuZWwub3JnPgpDbG9zZXM6
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC9DWDMyUkZPTUpVUTAuM1I0WUNMOU1EQ0I5NkBr
-ZXJuZWwub3JnLwpTaWduZWQtb2ZmLWJ5OiBMaW5vIFNhbmZpbGlwcG8gPGwuc2FuZmlsaXBwb0Br
-dW5idXMuY29tPgotLS0KIGRyaXZlcnMvY2hhci90cG0vdHBtX3Rpc19jb3JlLmMgfCAzICstLQog
-MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvY2hhci90cG0vdHBtX3Rpc19jb3JlLmMgYi9kcml2ZXJzL2NoYXIvdHBtL3Rw
-bV90aXNfY29yZS5jCmluZGV4IDFiMzUwNDEyZDhhNi4uNjRjODc1NjU3Njg3IDEwMDY0NAotLS0g
-YS9kcml2ZXJzL2NoYXIvdHBtL3RwbV90aXNfY29yZS5jCisrKyBiL2RyaXZlcnMvY2hhci90cG0v
-dHBtX3Rpc19jb3JlLmMKQEAgLTkxOSw4ICs5MTksNiBAQCBzdGF0aWMgaW50IHRwbV90aXNfcHJv
-YmVfaXJxX3NpbmdsZShzdHJ1Y3QgdHBtX2NoaXAgKmNoaXAsIHUzMiBpbnRtYXNrLAogCWludCBy
-YzsKIAl1MzIgaW50X3N0YXR1czsKIAotCUlOSVRfV09SSygmcHJpdi0+ZnJlZV9pcnFfd29yaywg
-dHBtX3Rpc19mcmVlX2lycV9mdW5jKTsKLQogCXJjID0gZGV2bV9yZXF1ZXN0X3RocmVhZGVkX2ly
-cShjaGlwLT5kZXYucGFyZW50LCBpcnEsIE5VTEwsCiAJCQkJICAgICAgIHRpc19pbnRfaGFuZGxl
-ciwgSVJRRl9PTkVTSE9UIHwgZmxhZ3MsCiAJCQkJICAgICAgIGRldl9uYW1lKCZjaGlwLT5kZXYp
-LCBjaGlwKTsKQEAgLTExMzIsNiArMTEzMCw3IEBAIGludCB0cG1fdGlzX2NvcmVfaW5pdChzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCB0cG1fdGlzX2RhdGEgKnByaXYsIGludCBpcnEsCiAJcHJp
-di0+cGh5X29wcyA9IHBoeV9vcHM7CiAJcHJpdi0+bG9jYWxpdHlfY291bnQgPSAwOwogCW11dGV4
-X2luaXQoJnByaXYtPmxvY2FsaXR5X2NvdW50X211dGV4KTsKKwlJTklUX1dPUksoJnByaXYtPmZy
-ZWVfaXJxX3dvcmssIHRwbV90aXNfZnJlZV9pcnFfZnVuYyk7CiAKIAlkZXZfc2V0X2RydmRhdGEo
-JmNoaXAtPmRldiwgcHJpdik7CiAKCmJhc2UtY29tbWl0OiA0MWJjY2M5OGZiNzkzMWQ2M2QwM2Yz
-MjZhNzQ2YWM0ZDQyOWMxZGQzCi0tIAoyLjQzLjAKCg==
+On Thu, Feb 1, 2024 at 7:04=E2=80=AFAM Randy Dunlap <rdunlap@infradead.org>=
+ wrote:
+>
+> Hi,
+>
+> On 1/31/24 09:43, Jens Wiklander wrote:
+> > A number of storage technologies support a specialised hardware
+> > partition designed to be resistant to replay attacks. The underlying
+> > HW protocols differ but the operations are common. The RPMB partition
+> > cannot be accessed via standard block layer, but by a set of specific
+> > RPMB commands: WRITE, READ, GET_WRITE_COUNTER, and PROGRAM_KEY. Such a
+> > partition provides authenticated and replay protected access, hence
+> > suitable as a secure storage.
+> >
+> > The initial aim of this patch is to provide a simple RPMB Driver which
+> > can be accessed by the optee driver to facilitate early RPMB access to
+> > OP-TEE OS (secure OS) during the boot time.
+> >
+> > A TEE device driver can claim the RPMB interface, for example, via
+> > class_interface_register() or rpmb_dev_find_device(). The RPMB driver
+> > provides a callback to route RPMB frames to the RPMB device accessible
+> > via rpmb_route_frames().
+> >
+> > The detailed operation of implementing the access is left to the TEE
+> > device driver itself.
+> >
+> > Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> > Signed-off-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+> > Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > ---
+> >  MAINTAINERS              |   7 ++
+> >  drivers/misc/Kconfig     |   9 ++
+> >  drivers/misc/Makefile    |   1 +
+> >  drivers/misc/rpmb-core.c | 247 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/rpmb.h     | 184 +++++++++++++++++++++++++++++
+> >  5 files changed, 448 insertions(+)
+> >  create mode 100644 drivers/misc/rpmb-core.c
+> >  create mode 100644 include/linux/rpmb.h
+> >
+>
+>
+> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> > index 4fb291f0bf7c..891aa5763666 100644
+> > --- a/drivers/misc/Kconfig
+> > +++ b/drivers/misc/Kconfig
+> > @@ -104,6 +104,15 @@ config PHANTOM
+> >         If you choose to build module, its name will be phantom. If uns=
+ure,
+> >         say N here.
+> >
+> > +config RPMB
+> > +     tristate "RPMB partition interface"
+> > +     help
+> > +       Unified RPMB unit interface for RPMB capable devices such as eM=
+MC and
+> > +       UFS. Provides interface for in kernel security controllers to a=
+ccess
+>
+>                                       in-kernel
+>
+> > +       RPMB unit.
+> > +
+> > +       If unsure, select N.
+> > +
+> >  config TIFM_CORE
+> >       tristate "TI Flash Media interface support"
+> >       depends on PCI
+>
+>
+> > diff --git a/drivers/misc/rpmb-core.c b/drivers/misc/rpmb-core.c
+> > new file mode 100644
+> > index 000000000000..a3c289051687
+> > --- /dev/null
+> > +++ b/drivers/misc/rpmb-core.c
+> > @@ -0,0 +1,247 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright(c) 2015 - 2019 Intel Corporation. All rights reserved.
+> > + * Copyright(c) 2021 - 2024 Linaro Ltd.
+> > + */
+> > +#include <linux/device.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/list.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/rpmb.h>
+> > +#include <linux/slab.h>
+>
+> > +
+> > +/**
+> > + * rpmb_route_frames() - route rpmb frames to rpmb device
+> > + * @rdev:    rpmb device
+> > + * @req:     rpmb request frames
+> > + * @req_len: length of rpmb request frames in bytes
+> > + * @rsp:     rpmb response frames
+> > + * @rsp_len: length of rpmb response frames in bytes
+> > + *
+> > + * @return < 0 on failure
+>
+> Above needs a colon ':' after @return, although using
+>  * Return:
+> is preferable IMO.
+
+Thanks, I'll change to "* Return:" instead, everywhere in this patch.
+
+>
+> > + */
+> > +int rpmb_route_frames(struct rpmb_dev *rdev, u8 *req,
+> > +                   unsigned int req_len, u8 *rsp, unsigned int rsp_len=
+)
+> > +{
+>
+>
+> > +/**
+> > + * rpmb_dev_find_device() - return first matching rpmb device
+> > + * @data: data for the match function
+> > + * @match: the matching function
+> > + *
+> > + * @returns a matching rpmb device or NULL on failure
+>
+>     * @returns:
+> or
+>     * Returns:
+>
+> > + */
+> > +struct rpmb_dev *rpmb_dev_find_device(const void *data,
+> > +                                   const struct rpmb_dev *start,
+> > +                                   int (*match)(struct device *dev,
+> > +                                                const void *data))
+> > +{
+> > +     struct device *dev;
+> > +     const struct device *start_dev =3D NULL;
+> > +
+> > +     if (start)
+> > +             start_dev =3D &start->dev;
+> > +     dev =3D class_find_device(&rpmb_class, start_dev, data, match);
+> > +
+> > +     return dev ? to_rpmb_dev(dev) : NULL;
+> > +}
+> > +
+> > +/**
+> > + * rpmb_dev_unregister() - unregister RPMB partition from the RPMB sub=
+system
+> > + * @rdev: the rpmb device to unregister
+> > + *
+> > + * @returns < 0 on failure
+>
+> Ditto.
+>
+> > + */
+> > +int rpmb_dev_unregister(struct rpmb_dev *rdev)
+> > +{
+> > +     if (!rdev)
+> > +             return -EINVAL;
+> > +
+> > +     device_del(&rdev->dev);
+> > +
+> > +     rpmb_dev_put(rdev);
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(rpmb_dev_unregister);
+> > +
+> > +/**
+> > + * rpmb_dev_register - register RPMB partition with the RPMB subsystem
+> > + * @dev: storage device of the rpmb device
+> > + * @target: RPMB target/region within the physical device
+>
+> There is no @target function parameter.
+
+You're right, I'll remove it.
+
+>
+> > + * @ops: device specific operations
+> > + *
+> > + * While registering the RPMB partition get references to needed resou=
+rces
+> > + * with the @ops->get_resources() callback and extracts needed devices
+> > + * information while needed resources are available.
+> > + *
+> > + * @returns a pointer to a 'struct rpmb_dev' or an ERR_PTR on failure
+>
+> Ditto for Return syntax.
+>
+> > + */
+> > +struct rpmb_dev *rpmb_dev_register(struct device *dev,
+> > +                                const struct rpmb_ops *ops)
+> > +{
+> > +     struct rpmb_dev *rdev;
+> > +     int id;
+> > +     int ret;
+> > +
+> > +     if (!dev || !ops || !ops->get_resources ||
+> > +         !ops->put_resources || !ops->route_frames ||
+> > +         !ops->set_dev_info)
+> > +             return ERR_PTR(-EINVAL);
+> > +
+> > +     rdev =3D kzalloc(sizeof(*rdev), GFP_KERNEL);
+> > +     if (!rdev)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     mutex_lock(&rpmb_mutex);
+> > +     id =3D ida_simple_get(&rpmb_ida, 0, 0, GFP_KERNEL);
+> > +     mutex_unlock(&rpmb_mutex);
+> > +     if (id < 0) {
+> > +             ret =3D id;
+> > +             goto exit;
+> > +     }
+> > +
+> > +     rdev->ops =3D ops;
+> > +     rdev->id =3D id;
+> > +
+> > +     dev_set_name(&rdev->dev, "rpmb%d", id);
+> > +     rdev->dev.class =3D &rpmb_class;
+> > +     rdev->dev.parent =3D dev;
+> > +
+> > +     ret =3D ops->set_dev_info(dev, rdev);
+> > +     if (ret)
+> > +             goto exit;
+> > +
+> > +     ret =3D device_register(&rdev->dev);
+> > +     if (ret)
+> > +             goto exit;
+> > +
+> > +     ops->get_resources(rdev->dev.parent);
+> > +
+> > +     dev_dbg(&rdev->dev, "registered device\n");
+> > +
+> > +     return rdev;
+> > +
+> > +exit:
+> > +     if (id >=3D 0) {
+> > +             mutex_lock(&rpmb_mutex);
+> > +             ida_simple_remove(&rpmb_ida, id);
+> > +             mutex_unlock(&rpmb_mutex);
+> > +     }
+> > +     kfree(rdev);
+> > +     return ERR_PTR(ret);
+> > +}
+> > +EXPORT_SYMBOL_GPL(rpmb_dev_register);
+>
+>
+> > diff --git a/include/linux/rpmb.h b/include/linux/rpmb.h
+> > new file mode 100644
+> > index 000000000000..45073513264a
+> > --- /dev/null
+> > +++ b/include/linux/rpmb.h
+> > @@ -0,0 +1,184 @@
+> > +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2015-2019 Intel Corp. All rights reserved
+> > + * Copyright (C) 2021-2022 Linaro Ltd
+> > + */
+> > +#ifndef __RPMB_H__
+> > +#define __RPMB_H__
+> > +
+> > +#include <linux/types.h>
+> > +#include <linux/device.h>
+> > +
+> > +/**
+> > + * struct rpmb_frame - rpmb frame as defined by specs
+> > + *
+> > + * @stuff        : stuff bytes
+> > + * @key_mac      : The authentication key or the message authenticatio=
+n
+> > + *                 code (MAC) depending on the request/response type.
+> > + *                 The MAC will be delivered in the last (or the only)
+> > + *                 block of data.
+> > + * @data         : Data to be written or read by signed access.
+> > + * @nonce        : Random number generated by the host for the request=
+s
+> > + *                 and copied to the response by the RPMB engine.
+> > + * @write_counter: Counter value for the total amount of the successfu=
+l
+> > + *                 authenticated data write requests made by the host.
+> > + * @addr         : Address of the data to be programmed to or read
+> > + *                 from the RPMB. Address is the serial number of
+> > + *                 the accessed block (half sector 256B).
+> > + * @block_count  : Number of blocks (half sectors, 256B) requested to =
+be
+> > + *                 read/programmed.
+> > + * @result       : Includes information about the status of the write =
+counter
+> > + *                 (valid, expired) and result of the access made to t=
+he RPMB.
+> > + * @req_resp     : Defines the type of request and response to/from th=
+e memory.
+> > + */
+> > +struct rpmb_frame {
+> > +     u8     stuff[196];
+> > +     u8     key_mac[32];
+> > +     u8     data[256];
+> > +     u8     nonce[16];
+> > +     __be32 write_counter;
+> > +     __be16 addr;
+> > +     __be16 block_count;
+> > +     __be16 result;
+> > +     __be16 req_resp;
+> > +} __packed;
+> > +
+> > +#define RPMB_PROGRAM_KEY       0x1    /* Program RPMB Authentication K=
+ey */
+> > +#define RPMB_GET_WRITE_COUNTER 0x2    /* Read RPMB write counter */
+> > +#define RPMB_WRITE_DATA        0x3    /* Write data to RPMB partition =
+*/
+> > +#define RPMB_READ_DATA         0x4    /* Read data from RPMB partition=
+ */
+> > +#define RPMB_RESULT_READ       0x5    /* Read result request  (Interna=
+l) */
+> > +
+> > +#define RPMB_REQ2RESP(_OP) ((_OP) << 8)
+> > +#define RPMB_RESP2REQ(_OP) ((_OP) >> 8)
+> > +
+> > +/**
+> > + * enum rpmb_op_result - rpmb operation results
+> > + *
+> > + * @RPMB_ERR_OK      : operation successful
+> > + * @RPMB_ERR_GENERAL : general failure
+> > + * @RPMB_ERR_AUTH    : mac doesn't match or ac calculation failure
+> > + * @RPMB_ERR_COUNTER : counter doesn't match or counter increment fail=
+ure
+> > + * @RPMB_ERR_ADDRESS : address out of range or wrong address alignment
+> > + * @RPMB_ERR_WRITE   : data, counter, or result write failure
+> > + * @RPMB_ERR_READ    : data, counter, or result read failure
+> > + * @RPMB_ERR_NO_KEY  : authentication key not yet programmed
+> > + *
+> > + * @RPMB_ERR_COUNTER_EXPIRED:  counter expired
+> > + */
+> > +enum rpmb_op_result {
+> > +     RPMB_ERR_OK      =3D 0x0000,
+> > +     RPMB_ERR_GENERAL =3D 0x0001,
+> > +     RPMB_ERR_AUTH    =3D 0x0002,
+> > +     RPMB_ERR_COUNTER =3D 0x0003,
+> > +     RPMB_ERR_ADDRESS =3D 0x0004,
+> > +     RPMB_ERR_WRITE   =3D 0x0005,
+> > +     RPMB_ERR_READ    =3D 0x0006,
+> > +     RPMB_ERR_NO_KEY  =3D 0x0007,
+> > +
+> > +     RPMB_ERR_COUNTER_EXPIRED =3D 0x0080
+> > +};
+> > +
+> > +/**
+> > + * enum rpmb_type - type of underlaying storage technology
+>
+>                                underlying
+
+Thanks
+
+>
+> > + *
+> > + * @RPMB_TYPE_EMMC  : emmc (JESD84-B50.1)
+> > + * @RPMB_TYPE_UFS   : UFS (JESD220)
+> > + * @RPMB_TYPE_NVME  : NVM Express
+> > + */
+> > +enum rpmb_type {
+> > +     RPMB_TYPE_EMMC,
+> > +     RPMB_TYPE_UFS,
+> > +     RPMB_TYPE_NVME,
+> > +};
+> > +
+> > +/**
+> > + * struct rpmb_dev - device which can support RPMB partition
+> > + *
+> > + * @dev              : device
+> > + * @id               : device id;
+> > + * @ops              : operation exported by rpmb
+> > + * @dev_id           : unique device identifier read from the hardware
+> > + * @dev_id_len       : length of unique device identifier
+> > + * @reliable_wr_count: number of sectors that can be written in one ac=
+cess
+> > + * @capacity         : capacity of the device in units of 128K
+> > + */
+> > +struct rpmb_dev {
+> > +     struct device dev;
+> > +     int id;
+> > +     const struct rpmb_ops *ops;
+> > +     u8 *dev_id;
+> > +     size_t dev_id_len;
+> > +     u16 reliable_wr_count;
+> > +     u16 capacity;
+> > +};
+> > +
+> > +#define to_rpmb_dev(x) container_of((x), struct rpmb_dev, dev)
+> > +
+> > +/**
+> > + * struct rpmb_ops - RPMB ops to be implemented by underlying block de=
+vice
+> > + *
+> > + * @type          : block device type
+> > + * @get_resources : gets references to needed resources in rpmb_dev_re=
+gister()
+> > + * @put_resources : puts references from resources in rpmb_dev_release=
+()
+> > + * @route_frames  : routes frames to and from the RPMB device
+> > + * @get_dev_info  : extracts device info from the RPMB device
+>
+>        set_dev_info ???
+
+Yes.
+
+Thanks,
+Jens
+
+>
+> > + */
+> > +struct rpmb_ops {
+> > +     enum rpmb_type type;
+> > +     void (*get_resources)(struct device *dev);
+> > +     void (*put_resources)(struct device *dev);
+> > +     int (*set_dev_info)(struct device *dev, struct rpmb_dev *rdev);
+> > +     int (*route_frames)(struct device *dev, bool write,
+> > +                         u8 *req, unsigned int req_len,
+> > +                         u8 *resp, unsigned int resp_len);
+> > +};
+> > +
+>
+> thanks.
+> --
+> #Randy
