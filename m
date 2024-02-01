@@ -1,142 +1,73 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC91B5336A
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A2D3A8D2;
+	Thu,  1 Feb 2024 12:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706791998; cv=none; b=a6T4exDnm7HwbocBUE/UKsaSfWABVobZQI52/ipzsVrFIEmJV+vOIBuUpRH2J/jikvojCH96thJ2lEoOjDYifJjbFbQFjyi+ZyrGZMjIymGsRrcD/wIcX9sin5Sknu6v0cA1AyxJAb+s5+epKZGde+BAFUTNc+MBx+ggAIHgM1c=
+	t=1706792003; cv=none; b=ZTAOjsNGs5bhoLWplAS78msKqgq2i8WZIVFoBz6WvozEGTA3DwyuJtQ7ada6czTuJpWxeyW9r/K+/+Z/pyauqnjkVGiZhZRN6tOTrNxc/guSw0S38QM6WgTfICLdHxb/hxEHkAoy2aQ788/bcdbuS+M7i7izrbgqEwNb+ntc7EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706791998; c=relaxed/simple;
-	bh=7PXAUnHUmoEF3UTxLOPfT0TJCC9/HwX2n79M8mfQ9Hc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RAhfwFdS1cSOsSWBWOHa9hH9MvfGeEI9wQBjWh9s7pQDscq5rDS4t1sg+WuEYN8ux+8pSg1gPgF1eOjphJZj4BvZYLw7pzY8bBIzcyKfX6/4G4XMU7FXivMsoHkqx38PlqEn32YPBfZSFOAH5jgKDiItlapKWcwwsTOfhR0Z9GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgsernW5; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706792003; c=relaxed/simple;
+	bh=m24lBTyUtO514F3RlBvmhK0NobQndwRBoeE3EG8UpAI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=Evo8K/uvs2HUuzFpPQs9lAqHUiuSgf4wa7jWU4J57nRBhpfOb0dl+1Isacgtex35WwRqsunbw4BNPfrkQ5MbxHlhcj5GPBGPWUl2trmpvu91biLqOLMTXLaO5DmQEpN66bo3YTelBdxxOxUXi+dlX/ccPBC7dKGQMxA6i9oqDjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXcpROzp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgsernW5"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-363844ae819so3334235ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 04:53:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706791996; x=1707396796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+dIpEuHcsVA+p6HpZJFPK5u2p7oWDuiKjAseXCAiZTo=;
-        b=SgsernW59t1ppqSoFFq1hQRjxtFsBWBplyJ0cd/gcqiqpn4VDYAV/iEAoZxJsldLuX
-         YQGkYCFDU6FNnTM6jsSaKxTpjyAcF4J5z7opw/Sk+reTQy982TalAe7c2NCJc7LeFoz1
-         skdZoAxT6xcxaRkFEAYbGmJh85JQ2O14kWXkcjRToGKuaaFavuJe3ZdYQlUYPs9bhV/T
-         AWrvzApU5dKHK1bnPV8lNWpDpdS3Pdjeie4MHG2De7r6+bdB+A5MAsSowEkQM+opSUOD
-         qWaMHA+P4cU3tY1SEpT89GsMQmp3gycQF487BvkOEZXpW79VQ4Tv3yG3hMMKV9GT+hZF
-         Juug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706791996; x=1707396796;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+dIpEuHcsVA+p6HpZJFPK5u2p7oWDuiKjAseXCAiZTo=;
-        b=QEHgQGZx1vYFFNsiv1bjN07lPsp0fx/sErNdtSilJrSdL+WyrnueTq1zXFTPHf3xDy
-         9AZMUSALaAYFLSUJcotgmPSKssIkT49/zngbPMeMcsCP+n/DbZuXiA6kUOffFQZCLko7
-         bt/e9Y9cRBOi6gwYtZWMP7bWBBJgooM5R610czp0z0ASJWvKy9iiIlB98kLeRslJn1Gh
-         O2BMT2M1miMUqJjZYphyQ/oWqhYWEZJiCc/HN1Nk8FPQYSg2N0fj4SidGqYItjmhKe8i
-         Z9cfeb5k4TnxdGZ8+qEQ8SPmmzgZhjGJlVVU2QErqnTGlu3FWRxtf2QDKAMJSBP+VyZf
-         e3ow==
-X-Gm-Message-State: AOJu0YystGCgjw3gVh51TroqlvU5c09O/LzwS4qQZsavnVL+tPih8z4z
-	6U8aO4cQJrnlG6KqWg0zZmPmGA80fJ5ydMByzcXLxxsJPf2LJiq/
-X-Google-Smtp-Source: AGHT+IG9rtFkIqzbFdbCc8UCLsLfITRXKzQzKEPG60fxsRW3huj2RDpqksiISbxY3tV787PqINAdnA==
-X-Received: by 2002:a92:d44c:0:b0:363:7a04:548e with SMTP id r12-20020a92d44c000000b003637a04548emr4612091ilm.9.1706791995971;
-        Thu, 01 Feb 2024 04:53:15 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUQmbzvwjjuar5/jjMYvrUfyQqXab4b3OcMUL5T6Ss1INNhxyM/EtSEtESt8NBceTbbqBw+exoQkoGSxIXlWYk9A6fm4vSBbVM4TGBGBYv1jEUsE2LIYM4raJEJQbIg91R+vXrspkuys7H+WdjiG5pCXXdycCqMtjyUGqg9OBJoQ2ZLPTAaXVlkVf60qmWPCqeN/0Z47xRoIJyNXO7MdPN5l35ojzS3wrt339yLwDcWBflMmKnZ5bWc/Y+lOPfbZs7chGjFduDN6/XTx01BxIg6o+bpGfBlXkYU9gNxb+k3a649thcqK5Vmvdw+BNkFqm8n
-Received: from LancedeMBP.lan ([112.10.240.49])
-        by smtp.gmail.com with ESMTPSA id k30-20020a63ba1e000000b005c661a432d7sm10863637pgf.75.2024.02.01.04.53.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 04:53:15 -0800 (PST)
-From: Lance Yang <ioworker0@gmail.com>
-To: akpm@linux-foundation.org
-Cc: mhocko@suse.com,
-	zokeefe@google.com,
-	david@redhat.com,
-	songmuchun@bytedance.com,
-	shy828301@gmail.com,
-	peterx@redhat.com,
-	minchan@kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Lance Yang <ioworker0@gmail.com>
-Subject: [PATCH 1/1] mm/khugepaged: skip copying lazyfree pages on collapse
-Date: Thu,  1 Feb 2024 20:52:26 +0800
-Message-Id: <20240201125226.28372-1-ioworker0@gmail.com>
-X-Mailer: git-send-email 2.33.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXcpROzp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01802C43394;
+	Thu,  1 Feb 2024 12:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706792002;
+	bh=m24lBTyUtO514F3RlBvmhK0NobQndwRBoeE3EG8UpAI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=oXcpROzpeZwNLawLFjNcX4K1LX3lPVn2h9Bmf5PEjkMkD22FPlvIjzw/4wE1eiav1
+	 ZmVXv3Ke/tOPplUo2O45LVx3DkU2t+UO+gHm4RDFweFA85wAXFN188vMD0f3dLi5VP
+	 gcFMPdq6ox7zG+jJRdOT3ewMDMDXARVaNSMb/vchaQX29FohZfxodALjj7FSPQhKrK
+	 tRKyTvpISHebqRPxBSq1sKYSpas1oEf1UilaUj0/EO8biGNJoH9SIsUCx68fFFhp97
+	 qU1Nhx3wyq/lqUfh7YbNIhGFV+njscM4wHssk0mrQfvhrltcTAAQvFy9CSYzfMPuR1
+	 3M0Ht50nCP5gA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,  Toke =?utf-8?Q?H=C3=B8iland?=
+ =?utf-8?Q?-J=C3=B8rgensen?=
+ <toke@toke.dk>,  Arend van Spriel <aspriel@gmail.com>,  Franky Lin
+ <franky.lin@broadcom.com>,  Hante Meuleman <hante.meuleman@broadcom.com>,
+  Arnd Bergmann <arnd@arndb.de>,  Lee Jones <lee@kernel.org>,  Brian Norris
+ <briannorris@chromium.org>,  Srinivasan Raju <srini.raju@purelifi.com>,
+  linux-wireless@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  brcm80211-dev-list.pdl@broadcom.com
+Subject: Re: [PATCH 0/6] Convert some wireless drivers to use GPIO descriptors
+References: <20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org>
+	<ZbuDqwDUaSIaOI2w@smile.fi.intel.com>
+Date: Thu, 01 Feb 2024 14:53:18 +0200
+In-Reply-To: <ZbuDqwDUaSIaOI2w@smile.fi.intel.com> (Andy Shevchenko's message
+	of "Thu, 1 Feb 2024 13:42:35 +0200")
+Message-ID: <874jesuz0h.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The collapsing behavior of khugepaged with pages
-marked using MADV_FREE might cause confusion
-among users.
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-For instance, allocate a 2MB chunk using mmap and
-later release it by MADV_FREE. Khugepaged will not
-collapse this chunk. From the user's perspective,
-it treats lazyfree pages as pte_none. However,
-for some pages marked as lazyfree with MADV_FREE,
-khugepaged might collapse this chunk and copy
-these pages to a new huge page. This inconsistency
-in behavior could be confusing for users.
+> On Wed, Jan 31, 2024 at 11:37:19PM +0100, Linus Walleij wrote:
+>> This converts some Wireless network drivers to use GPIO descriptors,
+>> and some just have unused header inclusions.
+>> 
+>> The Intersil PL54 driver is intentionally untouched because Arnd
+>> is cleaning it up fully.
+>
+> Thanks for doing this! We pretty much want to get rid of gpio.h along with
+> of_gpio.h ASAP, that's why I expect this series to be applied in a fastest
+> possible manner.
 
-After a successful MADV_FREE operation, if there is
-no subsequent write, the kernel can free the pages
-at any time. Therefore, in my opinion, counting
-lazyfree pages in max_pte_none seems reasonable.
+This is for -next, right?
 
-Perhaps treating MADV_FREE like MADV_DONTNEED, not
-copying lazyfree pages when khugepaged collapses
-huge pages in the background better aligns with
-user expectations.
-
-Signed-off-by: Lance Yang <ioworker0@gmail.com>
----
- mm/khugepaged.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 2b219acb528e..6cbf46d42c6a 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -777,6 +777,7 @@ static int __collapse_huge_page_copy(pte_t *pte,
- 				     pmd_t orig_pmd,
- 				     struct vm_area_struct *vma,
- 				     unsigned long address,
-+				     struct collapse_control *cc,
- 				     spinlock_t *ptl,
- 				     struct list_head *compound_pagelist)
- {
-@@ -797,6 +798,13 @@ static int __collapse_huge_page_copy(pte_t *pte,
- 			continue;
- 		}
- 		src_page = pte_page(pteval);
-+
-+		if (cc->is_khugepaged
-+				&& !folio_test_swapbacked(page_folio(src_page))) {
-+			clear_user_highpage(page, _address);
-+			continue;
-+		}
-+
- 		if (copy_mc_user_highpage(page, src_page, _address, vma) > 0) {
- 			result = SCAN_COPY_MC;
- 			break;
-@@ -1205,7 +1213,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	anon_vma_unlock_write(vma->anon_vma);
- 
- 	result = __collapse_huge_page_copy(pte, hpage, pmd, _pmd,
--					   vma, address, pte_ptl,
-+					   vma, address, cc, pte_ptl,
- 					   &compound_pagelist);
- 	pte_unmap(pte);
- 	if (unlikely(result != SCAN_SUCCEED))
 -- 
-2.33.1
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
