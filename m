@@ -1,76 +1,104 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9261E405F7
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 22:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446253CF4F
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 22:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706826607; cv=none; b=tFAxmvP8xFCaLqvGutV9KEBD5IGwH2+K4269A8dBpPfjBzH4OlBWA/tU53H0HbVKu6GknXOwFKKCHp2nGjNqZTdfT/54TrHq3TvvKD2/NprnjzCoCeAE9BS1CTOq586XVaFTyuLudMZOwUgr76xQQulllXOYUhU56vCMrfw2Efk=
+	t=1706826694; cv=none; b=K1fUboAhbbm0cMksyOW9QCte0H1NNgqU5mMJIcafxPA4rlKPm/4JK8wtpIHSvgHQs6qB247GdqQA44e8nAO+s7Yd4014xrKJfTlsycz1kb46tyEG8PgCEoyGU0EziJCMBayfzDLfWBFnVkp+ZJxhz7UPkURGOnOAw5vxc6e+sEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706826607; c=relaxed/simple;
-	bh=+FEiqruD2PhiHiOREenoir18YObY1XMyZp7vO4EV3A4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=DQ/f5SF3cojBYHczX8sNDbffS3at6IYkNC/08bezSiG+eyMuOQePEdDJHhBPZfluZVTry4ZvZ0KYyVlnDbrgNTuydEOwiK14lMnbAcdqPKovtfqpy8+5LpvxxpehETeHAPNwZ5DXAhTO8gBkxd4lKCmdDaEzhHWFVZ0ILo1j+Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-92-6SPxv_cpN_qKS1Gtzru5yA-1; Thu, 01 Feb 2024 22:29:54 +0000
-X-MC-Unique: 6SPxv_cpN_qKS1Gtzru5yA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 1 Feb
- 2024 22:29:37 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 1 Feb 2024 22:29:37 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Kees Cook' <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-CC: "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC] string: Allow 2-argument strscpy()
-Thread-Topic: [RFC] string: Allow 2-argument strscpy()
-Thread-Index: AQHaUvHLFgl6ZJLHe0apLw7TCgOYwbD2FRpA
-Date: Thu, 1 Feb 2024 22:29:37 +0000
-Message-ID: <9dae4c62fc164abeaa7915f9e53fdb28@AcuMS.aculab.com>
-References: <20240129202901.work.282-kees@kernel.org>
-In-Reply-To: <20240129202901.work.282-kees@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1706826694; c=relaxed/simple;
+	bh=P85U7qVEtiwib4InPfeSXcENaMJdinVkRUgfk7DtKHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kM19Yf7VlZNPtndy3KKMfEPLYEkiuccCihreerFLqHu9gLHwlvFrvkQQmZlnFscLlOgjySe62rhh8QAEVBloSPGjqMQbsOzvPKvkPxWtZREYm0KndXCyPzc9lWx6yySX5Id8a7D4mhtarzcDYIgJsdHqN2lWhkU/h+B0NmM2jec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=nBOFyOVr; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="nBOFyOVr"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40e80046264so12716425e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 14:31:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1706826691; x=1707431491; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bSwwFBcdZU7AoQFv7c4YL4HHZxb8TbX42mV1GK+DKhc=;
+        b=nBOFyOVrwYU8v5+SrJXKESazdNxqy/IU3SDuOuKMOVsmM4B1zSSU8AcNwkWeybxKdf
+         40YyKujzupfDMJDZBnimxy2PUnTvsqnm4iFRQEWY6pdgLSDo3wV79Qi57Jf+H4HaWRiV
+         OsBmIdSuVpZlKQHTaU11u32DC0W3CnZ3L0IV84QRl6doenpay5Eot6WEbRrnnbxG3MEo
+         6epRoReXuik2ZU00IbC/dwBdUZCqNjDwBp+x5Rzi3EslF3vEVdsgPNlhBNu7ICtjwmkU
+         zYzOTDgSOL9TYXJXXnFtjHUXyzxMEbad/ITx1V1vrcIsD4dIEuNv5vStYzc+36M/DKNh
+         ztxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706826691; x=1707431491;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bSwwFBcdZU7AoQFv7c4YL4HHZxb8TbX42mV1GK+DKhc=;
+        b=E87zXfvOdH808HLRmm/V5UfFHdwHnXyYl92GjiFA8PWtEyY2RvdbyX+ZyJh8hDo4uY
+         G4xv+gNtKyVPfPZdaQwbfCyiUhIpWxHUuqdq2NXSy+VBFCu+em07dCzGAkyuJXeOzACD
+         43uFLvLmyVWKb0tP1vhd6j2LnuM2FzXD1Pe1v+diPXKqBg770iCStz4Pb9RZ7quG9QZ5
+         Mrkry4m6pMuYuv/y/NH07y2AvoEp4atYy+CgZYOGxs6all7vtVt4trrpSfw8Ae5fD6Sr
+         EwcXy5t74RTO6GfKEj3kbWxafaYYXYj7jGc9nEH7vZxwwn0pIKGA9DFVBukTXdSN5hSr
+         xe0w==
+X-Gm-Message-State: AOJu0YxnT5PNHrByql4f5VL9TPRJYhUAZrUp0VKdc6Z6r+NSN9sW4NQi
+	UfAwRmTpXOXGY3EEY1UJXYlrrG0tHj3S7rm5LB5sXt8/WSWm/uWJDxRADZSRB7M=
+X-Google-Smtp-Source: AGHT+IF8QApT7bATZDY+w5kW8aQ4j60TNo6unSXL6IYGopuNDYPYb+8DLkY4V4sQt1uNgqgtE55e1A==
+X-Received: by 2002:a05:600c:519a:b0:40f:aff2:7e47 with SMTP id fa26-20020a05600c519a00b0040faff27e47mr262722wmb.9.1706826691295;
+        Thu, 01 Feb 2024 14:31:31 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWIf31ZoqlyXSpCq4fHgoJGp+ghpYzElUZnT2g5S0rmRR1kZ+Og+7ds3qYKF8aMdhUtXUM+IqpHmefJnjkGigCIrWgSBWBMvfIAmO6ZVGy8U5y3LdxVBf07WfuaBDHgw4AH/jNzmn5JlHnVcCjdgl77BGgXa+comDcI3VdAVgCTpIIPxb0dCBd+OkQ8cmv37RxG5CHG26KWa46M1Y7bA1ciiVL0GuuL3PlJQ6L8QObXE2koc3cFz5J5TLw/Ke60x/f8saMdns0vTnKG78ufhdW20+jIuyQIt8J++Kf5wUg289QgyxqdrsMnWUvapDqy0B4HNmm/eD88dCQGVUJMNJG1P5uXG/dpk3HsQHKtJ4w=
+Received: from airbuntu ([213.122.231.14])
+        by smtp.gmail.com with ESMTPSA id o7-20020a05600c4fc700b0040fb44a9288sm5680446wmq.48.2024.02.01.14.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 14:31:30 -0800 (PST)
+Date: Thu, 1 Feb 2024 22:31:29 +0000
+From: Qais Yousef <qyousef@layalina.io>
+To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	Lukasz Luba <lukasz.luba@arm.com>, Wei Wang <wvw@google.com>,
+	Rick Yiu <rickyiu@google.com>, Chung-Kai Mei <chungkai@google.com>
+Subject: Re: [PATCH v2 7/8] sched/schedutil: Add a new tunable to dictate
+ response time
+Message-ID: <20240201223129.2dgeko4aikkpisqf@airbuntu>
+References: <20231208002342.367117-1-qyousef@layalina.io>
+ <20231208002342.367117-8-qyousef@layalina.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231208002342.367117-8-qyousef@layalina.io>
 
-From: Kees Cook
-> Sent: 29 January 2024 20:29
->=20
-> Using sizeof(dst) is the overwhelmingly common case for strscpy().
-> Instead of requiring this everywhere, allow a 2-argument version to be
-> used that will use the sizeof() internally.
+On 12/08/23 00:23, Qais Yousef wrote:
 
-You may want to (try to) add a check that the first argument is
-actually an array rather than just a pointer.
+> +static inline u64 sugov_calc_freq_response_ms(struct sugov_policy *sg_policy)
+> +{
+> +	int cpu = cpumask_first(sg_policy->policy->cpus);
+> +	unsigned long cap = arch_scale_cpu_capacity(cpu);
+> +	unsigned int max_freq, sec_max_freq;
+> +
+> +	max_freq = sg_policy->policy->cpuinfo.max_freq;
+> +	sec_max_freq = __resolve_freq(sg_policy->policy,
+> +				      max_freq - 1,
+> +				      CPUFREQ_RELATION_H);
+> +
+> +	/*
+> +	 * We will request max_freq as soon as util crosses the capacity at
+> +	 * second highest frequency. So effectively our response time is the
+> +	 * util at which we cross the cap@2nd_highest_freq.
+> +	 */
+> +	cap = sec_max_freq * cap / max_freq;
+> +
+> +	return approximate_runtime(cap + 1);
 
-But the cpp output bloat can get silly and slow the build down.
-I guess no one would do:
-=09x =3D min(strscpy(a, b), strscpy(c, d));
-but you can never tell :-)
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+After Linus problem (and more testing) I realize this is not correct. This
+value is correct for the biggest core only, for smaller cores I must stretch
+time with capacity. I have similar invariance issues that I need to address in
+this series and uclamp max aggregation series.
