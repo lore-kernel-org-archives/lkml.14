@@ -1,85 +1,113 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6734A15CD5C;
-	Thu,  1 Feb 2024 09:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C93915CD59;
+	Thu,  1 Feb 2024 09:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706779323; cv=none; b=JY5SeGuu/iIU+yKwmqFgV7n4YLR93L4kuuZQ9Uy4CKsriIf1cAosA3Oc+A92JzA1BTtoU1bb5OIQIHm/i3/lGclB61Tipdn/+3kQQ8zcv7kW32uyUlvmwaEF4ITUCnJmZjrECQOJotqiQyoukCakMFwSvoDcal4qzy5Y1KefPb0=
+	t=1706779335; cv=none; b=Bvq6Hd5w18fi1pnwUOekrmdlrm2J5WyAP53o5FG9g3caJ8mpiIKyO6XCVz6XqMqsVgYYlswBsqDvxXy9hO1xb/WsNjBeMn+UeXQMgkV4uRUJClcQLSCchMHA6QpFIDNvm+XeFqVcR+fUG6xM1NPAsGiNYfsNUOwdY/9nEteYmJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706779323; c=relaxed/simple;
-	bh=c/OtwZ1IVY3svpSGJcfnXW8p+CkDVu3pn+h8kJ4hxi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RzSGIJbHQV7zuVbLrgG1YHbtZ7bPyQdL8ATwnqVoKNNcMd5m35oFDfUOqNHh83iWxeQEFWWvOFyWdF9tqCUJEo0HN44i/V5YNciJ7r3LqLal65fRi+epaOC/XA/87zrAQgu2h8paQsCsqaiPJRJEqHzNYGXRmHHA74N6N7Vx0Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NawEF8H0; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NawEF8H0"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0E87740E01A9;
-	Thu,  1 Feb 2024 09:21:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id HbuLDg8jRx1L; Thu,  1 Feb 2024 09:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706779315; bh=0Q3UUFk6+/2SkhRCa05XVslnKNWRkpVQdLj6IkRIvOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NawEF8H0wvIx6pk2E2d2j8+Vq/ffdEIwfZGyFaT1EIKzr2JzAJcLgmaOCQGde6ZZS
-	 qvq9VOkHmB5jctS5kfZJQAxQNhBY/e1MBPSqAlB4enAq7ndTJ+gstuziUX/yeYkIxE
-	 O4Mjolx6PYROYXJeOuDGED/pbNYgpTZV5189th8bbhOwSI8beEY/FG/q5iNqIQB8sB
-	 N2T6t7xWLPx3iTJykSJ0Ycn4rHUv697P8N55TCLdesJKjIGEEx12/DzoJgHEWdVb1I
-	 pcBt/pcy+nzFwcxgBwM3A8x8ZeOAxIVHmHzyFEHJWDf54Js+qbeE9nXtzEWo7ma7VG
-	 2hVz2iykKxEWN7ktkg+Nz4D1MDCTBzsQmAoOVJmv71LAaL9d9LJjY4CDHZd4iwpR2h
-	 nNqYE1NbikhpNRi3jMTml5fRxe1hRFcnMpwM9Smv8nDbbDz8En2laWZ/662psgeJcc
-	 qVTOXeXLlnSEtGmD3voHMzVCUJFRrsk3pkGAqYNwe+u3AV4LY5QU+v24Qp+bsoi4uz
-	 b5zo0jEYLamJydzC8gATMlsquCP2kon6O/Mgk015d+GllRyVdCe7nwXMH/PEhr50jl
-	 czo28vbdx0xnmO3Ksh2JkjEWOTFN+WNftppHa3r6kJe8oCa7il/EThzuYT1Dse+6JR
-	 oZdYUe5hc/62Azy7+Ff/FpHI=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C12AC40E00C5;
-	Thu,  1 Feb 2024 09:21:48 +0000 (UTC)
-Date: Thu, 1 Feb 2024 10:21:48 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, muralidhara.mk@amd.com
-Subject: Re: [PATCH] RAS/AMD/ATL: Add MI300 DRAM to Normalized address
- translation support
-Message-ID: <20240201092148.GBZbtirOfNAR3SYmht@fat_crate.local>
-References: <20240131165732.88297-1-yazen.ghannam@amd.com>
+	s=arc-20240116; t=1706779335; c=relaxed/simple;
+	bh=al1OXT3b4ZNm+oAqseaUr5rbOswfuhlYywbfkVT/QTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SkcUVLRffCgagG15QZ1UNUU6dC4pxYpqJJz67F6h/w31xHBjCWgK3wbbxwJ3nc75Ohe02SqY/lrxc9ckj0ez42gt2maEGdgFX+TF8CuQELh9zYeRjxmQsyglJUBxlRvRWc7Mf9Fcou02siICH08UfF6kxYV34KoQ52etvz6NH8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5ffdf06e009so6959237b3.3;
+        Thu, 01 Feb 2024 01:22:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706779331; x=1707384131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IeOVkvGjHG8vKffIVzdxVjnEBY9Jb+dC/AhaTOMUW0U=;
+        b=YIA5GFYJ9Bp5Lo54rMijHTM4cGQWRni4UTCAeRnz17rF7DMBQy0jxbbQ08UZxa2g5C
+         fcSUbgeFYtUtfVigbS9Ye4pNyyGTv4t1cJKrlo4wuf5YHEAPvPMw3U0qHAwcgFSJjpUV
+         /3q+ML0JV7NwoBUrq77HHuzyJYQ6zzRzQ7tJ14M6vumHx7g4LslGg3gZ8TOYSfySowA+
+         k0mAqJ38057GEcXLlcLgzm1r9u/FbFUH6X8vD10LDzi7vOfo1hYj8vYVvEJXWksSdUnd
+         /qsEUIG1XFUE4nOmlepacqjRYaystdnBWlnjWGJdQXP8zbG98kJeJR1oHpIGHYMd7rHi
+         d4yQ==
+X-Gm-Message-State: AOJu0Yzd3yXS7BAbl2gGl91KexcHZyzzcMEgKTgGCQr1d/x5wdnUVtm4
+	H3ztp3vPelVggH7J68LRqtDHjXgNLRaFiFgnc6xTwgntMqjd/BalmtHVuoLAIYw=
+X-Google-Smtp-Source: AGHT+IHA+fzM83bO8SBIWNrSWhdUuIe7MjEEIAB4WiKM5Tdbu3sMZ6IvCy/XiYWKSg4EYvjf/oud6g==
+X-Received: by 2002:a0d:e2d7:0:b0:5ff:fdd5:d368 with SMTP id l206-20020a0de2d7000000b005fffdd5d368mr1923515ywe.44.1706779331611;
+        Thu, 01 Feb 2024 01:22:11 -0800 (PST)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id gt16-20020a05690c451000b005ff8bcbe01dsm4248271ywb.16.2024.02.01.01.22.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 01:22:11 -0800 (PST)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6041c6333cdso4651007b3.2;
+        Thu, 01 Feb 2024 01:22:11 -0800 (PST)
+X-Received: by 2002:a81:b65b:0:b0:5ee:65b3:f289 with SMTP id
+ h27-20020a81b65b000000b005ee65b3f289mr1815979ywk.3.1706779330966; Thu, 01 Feb
+ 2024 01:22:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240131165732.88297-1-yazen.ghannam@amd.com>
+References: <20240130095222.11177-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240130095222.11177-1-wsa+renesas@sang-engineering.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 1 Feb 2024 10:21:58 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUB_9TNzo+GFbDZO-gjBUGfk7O7aEyJYG5pCw-Z1nK-pw@mail.gmail.com>
+Message-ID: <CAMuHMdUB_9TNzo+GFbDZO-gjBUGfk7O7aEyJYG5pCw-Z1nK-pw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: ulcb-kf: document a problemw with
+ old firmware
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 10:57:32AM -0600, Yazen Ghannam wrote:
-> diff --git a/drivers/ras/amd/atl/umc.c b/drivers/ras/amd/atl/umc.c
-> index 7bfa21a582f0..816c2c5c683f 100644
-> --- a/drivers/ras/amd/atl/umc.c
-> +++ b/drivers/ras/amd/atl/umc.c
-> @@ -49,6 +49,203 @@ static u8 get_coh_st_inst_id_mi300(struct atl_err *err)
->  	return i;
->  }
->  
-> +static u16 internal_bitwise_xor(u16 val)
+Hi Wolfram,
 
-Why are we calling it "internal"?
+On Tue, Jan 30, 2024 at 10:52=E2=80=AFAM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Old firmware set the GPIO to output, so no interrupts could be read.
+> Newer firmware does this correctly. The exact version could not be
+> determined, sadly.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks for your patch!
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> @@ -324,6 +324,7 @@ gpio_exp_77: gpio@77 {
+>                 reg =3D <0x77>;
+>                 gpio-controller;
+>                 #gpio-cells =3D <2>;
+> +               /* If these interrupts don't work, please update your fir=
+mware */
+>                 interrupt-controller;
+>                 interrupt-parent =3D <&gpio5>;
+>                 interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>;
+
+I'd rather not add such comments (especially +6y after the fact), as
+this is the standard operating procedure in case something doesn't work.
+
+Do you think we should sprinkle the following, too??
+
+/* If secondary CPUs don't work, please update your firmware */
+/* If cpuidle crashes, please update your firmware */
+/* If watchdog restart doesn't work, please update your firmware */
+/* If PSCI reboot doesn't work, please update your firmware */
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
