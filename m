@@ -1,112 +1,67 @@
-Received: from gepdcl09.sg.gdce.sony.com.sg (unknown [121.100.38.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603AD4DA1D;
-	Thu,  1 Feb 2024 10:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.100.38.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2419A4DA06;
+	Thu,  1 Feb 2024 10:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706782841; cv=none; b=uQPep8RJlPq0VKjUXYK1GvPZjT657cXvv7mkQ+GHY2KhABgfRvO31Dw3crvWXuHEQ0dLjpKx1lyFRgml6lKjdkMwnaNaSUY+dXDCdoFwdPMSmbp/brbiAUsGFG4FxIP6xzpyFzzVMczGLgf7Mnz4QQP8uDXjA/17ua9Ra+sp2lg=
+	t=1706782876; cv=none; b=MNQ79MMmxh8WyHRpnBYRPdDIUPN2mQ03gGreHCl3a9tO7D45H/N4l3EcWs3B2CMMNSfCFrfRRWa46/VB8sV1KfNECQ7jawnfPluUtt9n8rCUaaTuNB4Fz6d+803HuRXOCARJA9wfCQzOMGdV8XHMBRztc1CLcWxbRCYbMP7MCbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706782841; c=relaxed/simple;
-	bh=pYr5nSckZllMvDyVy8SYcl+YX0JIp0Bb40dbMDbdlLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AkBE7XAYpA8ZCR1LvD133gR4+sd/BFBWpBNyB4lvJoZIv7hPWICt7pMY806zXKfVVaHAeQsCN3xWYUIxz0xt/6/NH413YM3zIzUAF8MEzqTnmUocY7e+gpzAI19+xqRvUjhrycfzVbM4Cac5yQcqaJ3sSoU0qZ5b1nNPuv5isTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; arc=none smtp.client-ip=121.100.38.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
-Received: from gepdcl04.s.gdce.sony.com.sg (SGGDCSE1NS08.sony.com.sg [146.215.123.198])
-	by gepdcl09.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 411AJ2we009066;
-	Thu, 1 Feb 2024 18:20:07 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl04.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 411AIUEB008473;
-	Thu, 1 Feb 2024 18:18:30 +0800
-Received: by mail.sony.com (Postfix, from userid 1000)
-	id 9BD1820C1C49; Thu,  1 Feb 2024 15:46:57 +0530 (IST)
-Date: Thu, 1 Feb 2024 15:46:57 +0530
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, pmladek@suse.com
-Cc: rdunlap@infradead.org, rostedt@goodmis.org, senozhatsky@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, taichi.shimoyashiki@sony.com,
-        daniel.palmer@sony.com, anandakumar.balasubramaniam@sony.com,
-        sreenath.vijayan@sony.com
-Subject: [PATCH v4 0/2] Add support to dump printk buffer to console via sysrq
-Message-ID: <cover.1706772349.git.sreenath.vijayan@sony.com>
+	s=arc-20240116; t=1706782876; c=relaxed/simple;
+	bh=p7kLDUFLd7rjovPMsYMtGm/nnUJKbjK4ZofGZ628x0I=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=MQbJNXTJtzCSPJ0ICGT6PfBzZV8sCf/FX4ydWvZ7C0zt3ZZ5QW6hnt1Q4UJ+SwU0UbEg2N5p97q7QyN+nWgnItV3+BwmdObrr3J+ExuNJYyMsyBmNP+b9iEhGcc4oZbeNHvqvIJxn6g6NN0o4okqK3dQB0m06Yuc+BjUq7uabW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lwq0jZUI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lwq0jZUI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706CAC433F1;
+	Thu,  1 Feb 2024 10:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706782876;
+	bh=p7kLDUFLd7rjovPMsYMtGm/nnUJKbjK4ZofGZ628x0I=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=Lwq0jZUI+6qSM0K9t6B8VaFbzBEYKAf0CywnG68NDwn/9EZFB+Xa3pCdh54PhW3dd
+	 rofkx03iV1nGm++sTu6iazQGTtQ7npoh15RYzhkEzEnx63FSA7pp0XoROeAef74ggx
+	 nxRatuZgZWcy76gncBOF56OxJKTNd57vqiN6fsE7Bdb6dC67UX+hgMUNpOLZAs9K2i
+	 0D/c0U2gszkQ4U3nYAl/+kJjPVA1XisknsRx7AdtVrk/PEKoZjQfb9bdLnyw6T8WfQ
+	 fXxFrjEb68ZosiRNILjvnjKvN37oR6qz3LRdW1zE7zMmTFDY/PwHKOxE+4WDE67+XI
+	 bf2EX0rXdtjQg==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wifi: rtl8xxxu: fix error messages
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <7b144531-a8da-4725-8911-9b614a525a35@moroto.mountain>
+References: <7b144531-a8da-4725-8911-9b614a525a35@moroto.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Martin Kaistra <martin.kaistra@linutronix.de>,
+ Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170678287278.2736043.14378506532887522258.kvalo@kernel.org>
+Date: Thu,  1 Feb 2024 10:21:14 +0000 (UTC)
 
-Hi,
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-This patch series enables one to dump the messages in printk ring
-buffer unless all CPUs are locked up. This is useful to view the
-kernel messages when terminal is unresponsive to enter commands
-like dmesg and syslog services are also disabled, especially on
-embedded targets. Although debug features like kdb/kgdb already
-allow this, these debug configs should be enabled which is often
-not the case.
+> The first parameter of WARN_ONCE() is a condition so this code will end
+> up printing the function name instead of the proper message.
+> 
+> Fixes: 3ff7a05996f9 ("wifi: rtl8xxxu: support setting bssid register for multiple interfaces")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Reviewed-by: Ping-Ke Shih <pkshih@realtek.com>
 
-Till the last version, kmsg_dump* interface was being used to
-retrieve the messages in printk buffer before dumping them to
-consoles. However, John Ogness pointed out the issue with
-kmsg_dump* interface that it doesn't work well with extended
-consoles. He suggested a new method to reuse the code in
-console_flush_on_panic() but without disabling scheduling.
+Patch applied to wireless-next.git, thanks.
 
-In the first commit, code under CONSOLE_REPLAY_ALL mode in
-console_flush_on_panic() is taken out to a helper function
-console_rewind_all() to set the console sequence numbder to
-oldest record in the printk buffer. And the new function to
-dump the buffer called dump_printk_buffer() calls this function
-after taking the console lock and then releases the lock which
-flushes out the contents of printk buffer to console.
-
-In the second commit, code is added to call dump_printk_buffer()
-function when sysrq+D is pressed. As the function may sleep,
-it cannot be called from interrupt context. A work is queued
-in the system unbound workqueue to call the function when
-the key is pressed.
-
-Links to previous discussion:
-- https://lore.kernel.org/all/cover.1705331453.git.sreenath.vijayan@sony.com/T/#t
-- https://lore.kernel.org/linux-serial/20231221133953.1507021-1-sreenath.vijayan@sony.com/
-
-Changelog:
-V3 -> V4:
-- refactored code in console_flush_on_panic() under CONSOLE_REPLAY_ALL mode
-- added helper function console_rewind_all()
-- used console_rewind_all() instead of ksmg_dump*() in dump_printk_buffer()
-
-V2 -> V3:
-- split the implementation into two commits
-- added function in printk.c to dump printk buffer to consoles
-- added Suggested-by tag
-- removed code to dump printk buffer from sysrq.c and called
-new function
-
-V1 -> V2:
-- modified kernel ring buffer to printk ring buffer
-- allocated buf dynamically to prevent stack frame size warnings
-- used buf of size 2048 to match PRINTK_MESSAGE_MAX and added comment
-
--- Sreenath
-
-Sreenath Vijayan (2):
-  printk: Add function to dump printk buffer directly to consoles
-  tty/sysrq: Dump printk ring buffer messages via sysrq
-
- Documentation/admin-guide/sysrq.rst |  2 +
- drivers/tty/sysrq.c                 | 20 +++++++++-
- include/linux/printk.h              |  4 ++
- kernel/printk/printk.c              | 61 +++++++++++++++++------------
- 4 files changed, 62 insertions(+), 25 deletions(-)
+17903a283593 wifi: rtl8xxxu: fix error messages
 
 -- 
-2.43.0
+https://patchwork.kernel.org/project/linux-wireless/patch/7b144531-a8da-4725-8911-9b614a525a35@moroto.mountain/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
