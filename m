@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D331A12FB38
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E955C84FB5;
+	Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706811792; cv=none; b=IO9A5cTMu7EjBqnRstxzsxFgBnAH2R70qeQS4CU9s/cEaK8L0lweS3Kp66MCH8LVpJhETqm2B9lEaqEHKCWZCf2BZnSkqer/P5iD5nQC+30svA2WuvYGouQ8b4EybyhY9mtAFGcuAhzjmQgfg+P6zFgR53KPNcDr8sCWlq3qkuA=
+	t=1706811793; cv=none; b=pl9L1/QZzkgefi0jRVVFudta4hoHIaLmsA0L+/+ZPyGQ7LMOsXwg/IMY/nJRoEQxIZxhJ6Kpt5uF2sAvRtgSSv+iGpQpQpnSTHpWYDQIOYMc42U4qPgro16KSBVG6b6oR2PTHLeCFbqluUmb8GJxTcLRptwlBH9qcZGOrW9UPYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706811792; c=relaxed/simple;
-	bh=Rfq/1EbOlZ+uf0g++56AeiUKr/p3cQK/1XhmbONGGPc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fFqubQMp3MRz3PWA6OBL6vGBCdWBS2qx5HqUee2Wgppksm0fK96c8w4gYme8tloxoiz5Sqc0QpOtbWZ6ZHqUrVN0tb8tcWY5joW8sceI2i6fy+PEWqRvON4mDJG/PLCAnPohXttsZbsdVRVWDpftmSodphJuW1pAnwKYGgTfDdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ma6CkSE7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706811793; c=relaxed/simple;
+	bh=dYHEZyzFDMNRESViUxpIGg7O+oIhEHIcwsdoOOOFcoI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NpVBwjZHNztooyXU/stxTrQZo8kQ78Hs5wGXF+tLR5K2gysPAT+zPYRZoXJDv9Mi7WlKY+QoeTMP649pl0RqMZRp6Za2uYkyXWEITMIyV9UimaaB5Ncmv5xLwmZL6Rle7XLuYQEUavxVjEbaM+wtXzT3cEWUpIi3AGvKH4D+pH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClUmgX40; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ma6CkSE7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A9D2FC433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClUmgX40"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5E361C433F1;
 	Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706811792;
-	bh=Rfq/1EbOlZ+uf0g++56AeiUKr/p3cQK/1XhmbONGGPc=;
+	bh=dYHEZyzFDMNRESViUxpIGg7O+oIhEHIcwsdoOOOFcoI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Ma6CkSE7BKVBMoMLMkhmCz9NKmWS7uzpJZ0KjCPxdRvk+9ainRHSl5jGZoEnsB5MD
-	 fymy4dNoK+GggX/KVZBOWnAEWpkNDusApzOMZCELExRxDTOh25B/VGaFbE6sMP4NrR
-	 LppXzLpLwKKM25/APNL3RvOw7DBFS12/qur7ah4xjzvFeWboLna/pnjLkCAn+fzdkM
-	 5h13opXe8DXaRzJ+9NZJp/LseR3ALTIhePiWIymhXTxgHJU0RatQ9NXD2gHdha8BOk
-	 0frYW9xOkARkHRc5ETRsEPfBVSasiygvHdZ5DlXUIKx5+Nm7y6S+htDDLrlBg9U7iz
-	 wOfucuL2KFXGw==
+	b=ClUmgX40sOnwH546IDth9FI6HXCn6fZF2JcqoO+t7DKgA92glbpTTzmWnGp9b96vU
+	 Rp9zoaLVB0NH7Hhxrxj8XRC9csDDL8f1yVuZZz0RLPuj7zCg0ltroriHRXVdXJLqOV
+	 G8iKpsclbugKwVGexddOInqJ8GygYKM/+W7hk2FNLhu2e1gAdyrfc/exuf51b+xl8e
+	 UjrrP7yE3kK9pNRCCt0BlSsa0kUMiWO2FbmrGBr9aC0Q+lywVBZ7l6p9tFg1p8yKdO
+	 1koPg10RBXvZYyCUo0sB2niyDdNsxrcPzQqKd9ZM8bFQmaVNVOIFM/TFbOX9R/gddr
+	 12ZuRNh1l7UJA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 97010C0C40E;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 48A0EE3237E;
 	Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
-Subject: Re: [GIT PULL] firewire fixes for v6.8-rc3
+Subject: Re: [GIT PULL] lsm/lsm-pr-20240131
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240201121926.GA87292@workstation.local>
-References: <20240201121926.GA87292@workstation.local>
+In-Reply-To: <8b9583bc21af9323bf40a53b7f62c5c9@paul-moore.com>
+References: <8b9583bc21af9323bf40a53b7f62c5c9@paul-moore.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240201121926.GA87292@workstation.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.8-rc3
-X-PR-Tracked-Commit-Id: 47dc55181dcbee69fc84c902e7fb060213b9b8a5
+X-PR-Tracked-Message-Id: <8b9583bc21af9323bf40a53b7f62c5c9@paul-moore.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git tags/lsm-pr-20240131
+X-PR-Tracked-Commit-Id: 5a287d3d2b9de2b3e747132c615599907ba5c3c1
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f6cdd897cc7030a573f56ab1e9ebaece26c7c10c
-Message-Id: <170681179261.954.17356427499585105372.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 6d805afaf02e64e83a687182dd1214a703d4cf0f
+Message-Id: <170681179228.954.17098697822150756350.pr-tracker-bot@kernel.org>
 Date: Thu, 01 Feb 2024 18:23:12 +0000
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+To: Paul Moore <paul@paul-moore.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 1 Feb 2024 21:19:26 +0900:
+The pull request you sent on Wed, 31 Jan 2024 18:46:15 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.8-rc3
+> https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git tags/lsm-pr-20240131
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f6cdd897cc7030a573f56ab1e9ebaece26c7c10c
+https://git.kernel.org/torvalds/c/6d805afaf02e64e83a687182dd1214a703d4cf0f
 
 Thank you!
 
