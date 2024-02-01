@@ -1,172 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184364C6C;
-	Thu,  1 Feb 2024 16:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56DF7E0EA
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 16:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706805235; cv=none; b=lbnAhJSXsSq9PwPEH1xdi5cMoRq7olYqYW/V9VrFyzcLJvfPDfOvzx2O1YIZ7evEheE/rAMuxx9G8vq31KDb16m5srrKWY21tRp5BDNQMvMiTmiasFdAavbjoWMlkOgB+M9tg9itv8TAeoz6eN0An6kK8lwS1Y9Ww7RwmceuN6M=
+	t=1706805324; cv=none; b=jh/FnTfI2FLa0cZu+Gsk3ZDcx/TDDGRG9gJ4waKoXI8kUpdxl+Ydvw07mp4AgxghNGrcsPkBCcjwOmQxslvuquSsIXz/BPFoFRT09KRGIg59GJVuN6CeKXJukUHHBr0Q56CgEObcD4wNwlXN/932uBdqm8t+OWyVxDaS/5rQs48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706805235; c=relaxed/simple;
-	bh=Y4tGleDCKLWtxFwW/vft+m/ukBpChbYl89eQXzMV72U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FnjqWufN4tUas0/aivIHPHuR+uy5acHsIxeWJimZk+Fx2XAKrVyAJihKd7c2l97pMTyK4sHm/x7daJodbYmjtzNzSJhXOpsGBv5CoXLKbNnmgHKbMGmZe7aqZcsP14+j/cb4iYNravYS63l7iKHA5ypDUah4BX8Wrg/AEpdtynI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6zOFB0Y; arc=none smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706805324; c=relaxed/simple;
+	bh=xNU2G1wWCYAXemLHQIapTJ+woUfaGlzNvEQHLSN2LlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YG9sJuzDC676CV9WGPt8EgEOTwjt/z4ocedkFYS0CEIz2aJOOMLPej9Xvs8OHArxLr/lUS3EV/kDQbRPWQHJOE1zY9IsoWLek4FQZ88nxcMvXafaIULHo7KGUFb85Li0QlbZ0qBzqoFapk2qYw1JlXdYZXrNI+ajcNEu0jxCJBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CXUxypiu; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6zOFB0Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706805233; x=1738341233;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Y4tGleDCKLWtxFwW/vft+m/ukBpChbYl89eQXzMV72U=;
-  b=a6zOFB0YS7Xb50kcscGV0/RRu/D6+hjzoZtuEsRPxizC0n/QrHTbHNsv
-   HBFGnwnbHN3p2p8yuTH0t3hMoygjN92CPqu8KXqXxcETdVGo/Io+BkFph
-   wqPzLfjV6NANyF7qhgPEhAk+yZWpPycHSX230pMZApcvliWe/5j0NPO3D
-   3+r8zWksdCiNaLVbAPHmmnMnxAgGtN7QFCFBIG4KKawyJLCHAq1n4QT1z
-   nQIpMknsG/FEbOSEcGokczCpcafs0+sQbxNLJBLnIIcUKkU/zHh0Jb4Rg
-   Op+3/pJKqH+vi2zFMu0kMoiSaLYZOMQ43uw6Pp9q9EbK6u3cHG6BKluT9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="468167634"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="468167634"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 08:31:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="908292478"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="908292478"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Feb 2024 08:31:41 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id DEA06C41; Thu,  1 Feb 2024 17:15:42 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Flavio Suligoi <f.suligoi@asem.it>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>
-Subject: [PATCH v2 3/3] backlight: mp3309c: Utilise temporary variable for struct device
-Date: Thu,  1 Feb 2024 17:14:15 +0200
-Message-ID: <20240201151537.367218-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
-References: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CXUxypiu"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29080973530so849128a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 08:35:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706805322; x=1707410122; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JEnWz5ZST/dH/UlGa6pT/UbRvB/1V8kTgwNMqCtd58o=;
+        b=CXUxypiuVGjC9/CYeZ/vWVC3OO8m8ap5epfdMpBtpsQPeBlhaQJJrxahb51dD5ipUI
+         49pfIoBhz0cWMkvfmESsD00VHAu7xvi5rFyZlRJ7r8xoIlbbcOnhkfbx9Xbkgsuj/Ai+
+         R4NJKIRta6o/7FMZ3zzHDxmoO1i8cJzsJtbq17lo3albDWkfXlqHFia3eexATkuFWxEP
+         fOB6EA7ZVOtrFNS66CXmQoNtfSa8oSmZ7kF+jiknvidXktTIK+daUcbfr8fGW2e7Vacd
+         MGsf/KRhK+39ZfvtLWj9bkrUjnVm198IRbmQTuZPN4pCHvo1f7EcDkUhVFvTzaTm/ZyB
+         siSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706805322; x=1707410122;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JEnWz5ZST/dH/UlGa6pT/UbRvB/1V8kTgwNMqCtd58o=;
+        b=WAM6jKSWoMII1qm/Uwbd5perHH4T9J5gEp77ddzu+7nJnWjvYsfL7ZNbKdUQingkll
+         mZfQ7xiuqfBmg64t+wzqJWIfrKCZSLb00LM77eArYm7T0q6XazR364WJ3LRvrjCTSsfW
+         SXs3sZvVAqVhgIVu1UHNodfUXIdNuhNRDLA71neoZh9BnY80dln314ipnnx6AQ/Zuv0L
+         5QKmEb14A49kkT36fRr01vuqyZHvZUdhM3B2Zfo5i7hKrPoBx2n6qt1zkc+HpFnxv00E
+         q2LLu6Fy2MbDhT0D7LAeZUUC9XPC9Hkzhjvstpj4HpEcdQdtRgw0pxv5jajz7PdmaCa1
+         5ECw==
+X-Gm-Message-State: AOJu0YyXdcE2/Syjd+HJDtKz58U8IzOUe7b5z6QhXd4u7eBQaCkzmVrM
+	RxhT/FmhhSYiTZr9CLykFCPLrYLx93tYxEHn/xd62flFDe9bOKdcovrr5vRCjQ==
+X-Google-Smtp-Source: AGHT+IFuEuJM0fB+6LKcH/h6Kz9oMWgeazwllVl+2+39fGDBVo4YBYxQBVl080VfgQPHjK/lXRUsGQ==
+X-Received: by 2002:a17:90a:d78f:b0:296:1d9f:93d5 with SMTP id z15-20020a17090ad78f00b002961d9f93d5mr1574261pju.18.1706805321860;
+        Thu, 01 Feb 2024 08:35:21 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXHs+lSFlCnoIia2qkGpKQwtoJDxQdOarxtWJPx423pvrYhY0lfFSMH2RETUWglEI1BA/xHOwFm1FNehrXvkWVpd4KsDkSmWiKXz+0vDkfFq84MWO8t22pNcbjtg52+eF+ypbh2flU+5RM/Jd9M4PljlhBBK6c3lAY0mp9nsNp2Q0gjBhvNLBxCDf1wArLW8tlAhWy9RyJT2Ye3b6KPgotrtYmswItdZh/oDaQCbc6JSTT34fp5zQRjRY/eHPidhN/YMwZHn8lnBWuCfgyuQj99Z6iefMT1vWwQ+fTpD9XBX8h1F6mk0mwkIkURn0RIOQ==
+Received: from google.com (152.33.83.34.bc.googleusercontent.com. [34.83.33.152])
+        by smtp.gmail.com with ESMTPSA id sg15-20020a17090b520f00b00293851b198csm12770pjb.56.2024.02.01.08.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 08:35:21 -0800 (PST)
+Date: Thu, 1 Feb 2024 16:35:17 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	longman@redhat.com, boqun.feng@gmail.com,
+	linux-kernel@vger.kernel.org, niuzhiguo84@gmail.com,
+	ke.wang@unisoc.com, xuewen.yan@unisoc.com,
+	Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH V2] lockdep: fix deadlock issue between lockdep and rcu
+Message-ID: <ZbvIRZLyx7C8EzvW@google.com>
+References: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1705477714-10467-1-git-send-email-zhiguo.niu@unisoc.com>
 
-We have a temporary variable to keep pointer to struct device.
-Utilise it where it makes sense.
+On Wed, Jan 17, 2024 at 03:48:34PM +0800, Zhiguo Niu wrote:
+> There is a deadlock scenario between lockdep and rcu when
+> rcu nocb feature is enabled, just as following call stack:
+> 
+>      rcuop/x
+> -000|queued_spin_lock_slowpath(lock = 0xFFFFFF817F2A8A80, val = ?)
+> -001|queued_spin_lock(inline) // try to hold nocb_gp_lock
+> -001|do_raw_spin_lock(lock = 0xFFFFFF817F2A8A80)
+> -002|__raw_spin_lock_irqsave(inline)
+> -002|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F2A8A80)
+> -003|wake_nocb_gp_defer(inline)
+> -003|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F30B680)
+> -004|__call_rcu_common(inline)
+> -004|call_rcu(head = 0xFFFFFFC082EECC28, func = ?)
+> -005|call_rcu_zapped(inline)
+> -005|free_zapped_rcu(ch = ?)// hold graph lock
+> -006|rcu_do_batch(rdp = 0xFFFFFF817F245680)
+> -007|nocb_cb_wait(inline)
+> -007|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F245680)
+> -008|kthread(_create = 0xFFFFFF80803122C0)
+> -009|ret_from_fork(asm)
+> 
+>      rcuop/y
+> -000|queued_spin_lock_slowpath(lock = 0xFFFFFFC08291BBC8, val = 0)
+> -001|queued_spin_lock()
+> -001|lockdep_lock()
+> -001|graph_lock() // try to hold graph lock
+> -002|lookup_chain_cache_add()
+> -002|validate_chain()
+> -003|lock_acquire
+> -004|_raw_spin_lock_irqsave(lock = 0xFFFFFF817F211D80)
+> -005|lock_timer_base(inline)
+> -006|mod_timer(inline)
+> -006|wake_nocb_gp_defer(inline)// hold nocb_gp_lock
+> -006|__call_rcu_nocb_wake(rdp = 0xFFFFFF817F2A8680)
+> -007|__call_rcu_common(inline)
+> -007|call_rcu(head = 0xFFFFFFC0822E0B58, func = ?)
+> -008|call_rcu_hurry(inline)
+> -008|rcu_sync_call(inline)
+> -008|rcu_sync_func(rhp = 0xFFFFFFC0822E0B58)
+> -009|rcu_do_batch(rdp = 0xFFFFFF817F266680)
+> -010|nocb_cb_wait(inline)
+> -010|rcu_nocb_cb_kthread(arg = 0xFFFFFF817F266680)
+> -011|kthread(_create = 0xFFFFFF8080363740)
+> -012|ret_from_fork(asm)
+> 
+> rcuop/x and rcuop/y are rcu nocb threads with the same nocb gp thread.
+> This patch release the graph lock before lockdep call_rcu.
+> 
+> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use")
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Tested-by: Flavio Suligoi <f.suligoi@asem.it>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/video/backlight/mp3309c.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+This has a "Fixes" tag but I don't see Cc: stable. Does this need to be
+picked for stable branches? Or does tip branch does something special?
 
-diff --git a/drivers/video/backlight/mp3309c.c b/drivers/video/backlight/mp3309c.c
-index 2d6bd1a180b3..e7abefd175a4 100644
---- a/drivers/video/backlight/mp3309c.c
-+++ b/drivers/video/backlight/mp3309c.c
-@@ -222,10 +222,9 @@ static int mp3309c_parse_fwnode(struct mp3309c_chip *chip,
- 	 */
- 	pdata->dimming_mode = DIMMING_ANALOG_I2C;
- 	if (device_property_present(dev, "pwms")) {
--		chip->pwmd = devm_pwm_get(chip->dev, NULL);
-+		chip->pwmd = devm_pwm_get(dev, NULL);
- 		if (IS_ERR(chip->pwmd))
--			return dev_err_probe(chip->dev, PTR_ERR(chip->pwmd),
--					     "error getting pwm data\n");
-+			return dev_err_probe(dev, PTR_ERR(chip->pwmd), "error getting pwm data\n");
- 		pdata->dimming_mode = DIMMING_PWM;
- 		pwm_apply_args(chip->pwmd);
- 	}
-@@ -243,11 +242,9 @@ static int mp3309c_parse_fwnode(struct mp3309c_chip *chip,
- 		num_levels = ANALOG_I2C_NUM_LEVELS;
- 
- 		/* Enable GPIO used in I2C dimming mode only */
--		chip->enable_gpio = devm_gpiod_get(chip->dev, "enable",
--						   GPIOD_OUT_HIGH);
-+		chip->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_HIGH);
- 		if (IS_ERR(chip->enable_gpio))
--			return dev_err_probe(chip->dev,
--					     PTR_ERR(chip->enable_gpio),
-+			return dev_err_probe(dev, PTR_ERR(chip->enable_gpio),
- 					     "error getting enable gpio\n");
- 	} else {
- 		/*
-@@ -265,8 +262,7 @@ static int mp3309c_parse_fwnode(struct mp3309c_chip *chip,
- 	}
- 
- 	/* Fill brightness levels array */
--	pdata->levels = devm_kcalloc(chip->dev, num_levels,
--				     sizeof(*pdata->levels), GFP_KERNEL);
-+	pdata->levels = devm_kcalloc(dev, num_levels, sizeof(*pdata->levels), GFP_KERNEL);
- 	if (!pdata->levels)
- 		return -ENOMEM;
- 	if (device_property_present(dev, "brightness-levels")) {
-@@ -336,21 +332,21 @@ static int mp3309c_probe(struct i2c_client *client)
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
- 		return dev_err_probe(dev, -EOPNOTSUPP, "failed to check i2c functionality\n");
- 
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
- 
--	chip->dev = &client->dev;
-+	chip->dev = dev;
- 
- 	chip->regmap = devm_regmap_init_i2c(client, &mp3309c_regmap);
- 	if (IS_ERR(chip->regmap))
--		return dev_err_probe(&client->dev, PTR_ERR(chip->regmap),
-+		return dev_err_probe(dev, PTR_ERR(chip->regmap),
- 				     "failed to allocate register map\n");
- 
- 	i2c_set_clientdata(client, chip);
- 
- 	if (!pdata) {
--		pdata = devm_kzalloc(chip->dev, sizeof(*pdata), GFP_KERNEL);
-+		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
- 		if (!pdata)
- 			return -ENOMEM;
- 
-@@ -367,11 +363,10 @@ static int mp3309c_probe(struct i2c_client *client)
- 	props.type = BACKLIGHT_RAW;
- 	props.power = FB_BLANK_UNBLANK;
- 	props.fb_blank = FB_BLANK_UNBLANK;
--	chip->bl = devm_backlight_device_register(chip->dev, "mp3309c",
--						  chip->dev, chip,
-+	chip->bl = devm_backlight_device_register(dev, "mp3309c", dev, chip,
- 						  &mp3309c_bl_ops, &props);
- 	if (IS_ERR(chip->bl))
--		return dev_err_probe(chip->dev, PTR_ERR(chip->bl),
-+		return dev_err_probe(dev, PTR_ERR(chip->bl),
- 				     "error registering backlight device\n");
- 
- 	/* In PWM dimming mode, enable pwm device */
-@@ -383,8 +378,7 @@ static int mp3309c_probe(struct i2c_client *client)
- 		pwmstate.enabled = true;
- 		ret = pwm_apply_state(chip->pwmd, &pwmstate);
- 		if (ret)
--			return dev_err_probe(chip->dev, ret,
--					     "error setting pwm device\n");
-+			return dev_err_probe(dev, ret, "error setting pwm device\n");
- 	}
- 
- 	chip->pdata->status = FIRST_POWER_ON;
--- 
-2.43.0.rc1.1.gbec44491f096
+Also, Cc: Bart Van Assche <bvanassche@acm.org> (blamed_fixes) just FYI.
 
+--
+Carlos Llamas
