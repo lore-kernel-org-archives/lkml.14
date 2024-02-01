@@ -1,215 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 525FB1552F9
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 10:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0955415B970;
+	Thu,  1 Feb 2024 10:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706784353; cv=none; b=eb32I7i6rM8+5Vv9mpJ8jt+3FhNjjAmSNLVUGbBCLcuzQvyJXa+llHfCz46rWS3WqIpvSUNzxZ5sYFGXNFobLuCwUpgrOFwNrU8yHJpOye+o9it+pkLZDOSK5QAfSrMIeAtFORDhqwAI7LiYBiKXEEYTkylA8u4kAYMCYM2m8nI=
+	t=1706784417; cv=none; b=fKzD+8W4/nEdnL7JborArpWv7zmTZvF/z7OTG0KWodysF2c3RplW1Hpx2ZrrAVHu6+Y0WsNduvNrS1B/sFtVEsCauRSAcP2ujShTf5FAFpHr9di5BqtYVujlUIP2yxyzGISoGlgvKIO/3pCQ3IMqmzjyZ3jZ7CPTq2HtNSqCGlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706784353; c=relaxed/simple;
-	bh=HBm42zRx/RDMK6dmj0sv5Tu8TXRYdczQqGZHuJFKTlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lHl5HSJsI5JabF+nKZXETPlyrpRLVl+gvHN/tU63/uNsGRk9gba6CzhL2YC4r29vSPjgkLi2rOncLe8S8hQ7FBlwE2/qiegK3VXDUar4huK7rqAR4bqCvdLDu2+9onkWpZbILPR1wjjDZzwXfjjivKKzt/8GwU45OfVAEIytU5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 891DD175D;
-	Thu,  1 Feb 2024 02:46:32 -0800 (PST)
-Received: from [10.57.46.192] (unknown [10.57.46.192])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DABCC3F738;
-	Thu,  1 Feb 2024 02:45:47 -0800 (PST)
-Message-ID: <f5b626ae-bda1-479f-bc14-b1fd7ba043cf@arm.com>
-Date: Thu, 1 Feb 2024 10:45:30 +0000
+	s=arc-20240116; t=1706784417; c=relaxed/simple;
+	bh=V/x1b1ldsDYK3JfVzlP9ZZq7WJ2uPOBTgaU55XZNPrU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uae74+ml/x9I8YHsawncyZ/bLn9nMjJgD/nQyKq5iSu/6u9CGaLlOl4FAWn20jMx8XtzDq72Nt/QgJpyEDlVaY2gwESdAWOoltPW1GSoQzMXhse1vCGvQf2FaRI/juEPR33rjgcZN5MBwWsl/hXl3wBpqoPsVKa4KsxVa/mEVCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-46b2aaa36d5so314226137.1;
+        Thu, 01 Feb 2024 02:46:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706784413; x=1707389213;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HFZPcFLhDs+gYYjGu7bIEoeJY8eTRZGl5q1i/K40hjQ=;
+        b=AfuD/sPbMby0fAp02Uipxv1N1hhgGlyfRNBoHYWA5TxYrbndJ7584pgDZFssUVyyoA
+         tzmh5/mHUh4uEaJ46pxMfVIm0hLkefgukuPlTc58ElBFdIgx5RZfUCvMEG000CyEdLyc
+         DtNeweYULzfHKJ4LkEHR5UtyOedmc49kgWt76NFIHbH1v9ub3XmRG978ecgBpFDTnurJ
+         EGiK22H9CN2TGQ7NLD5RobNSa7JvwKGruu5JU4LESwPB4C2DT2QELOKnsKkcVUmZEKNT
+         nzUAjU58clAK3Pnsf3d/fRxQrQr1kjUVqCcNn2z7qQHppQDZwF1NKQeCi/U8ld5jnpQD
+         ioOw==
+X-Gm-Message-State: AOJu0YxHEe8ubUmZcjL/kT9sbQO9p7wDesxu328zED16Ocw4fB72g0b9
+	tS6enfEBNVHHzDd0qSPIZEA5HbPhFneU/f+Zav/ZHOEtM/QTTKfSBjsIo97eirQ=
+X-Google-Smtp-Source: AGHT+IGAax/Sb4kznliaD3ZikyM2fMNpStWpgDSjdppPgPo6zArlRUDDpv43TD1zZV1AYQmu+PZg0A==
+X-Received: by 2002:a05:6102:529:b0:46c:ad31:a013 with SMTP id m9-20020a056102052900b0046cad31a013mr1938286vsa.32.1706784413193;
+        Thu, 01 Feb 2024 02:46:53 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUCcA6+DcW2Zid2/1Bir3jdUBSreyAhSoWuY/+WAnYhGDWSwKlYqOphWSKItWfgw1kvyyOrhc8AQanKU1MTMniidZzz8SYazmZoA8HCkuZGCq9DgERUd5F32ESn8X1KKaVTwp0MF+rxTU+DbSzAOIqG0l/v4EOswjtN+PXeDCLKqE8CJS9bE8mBeRewetkh+hWKiUJHL1JW4iDFrBgIqZXouAS4nU2xmoWXz6wja0SotnznG9cDzGnaan4xHDAqL5ME8uQ=
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id ly9-20020a0562145c0900b0068509353fb6sm5840691qvb.133.2024.02.01.02.46.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 02:46:52 -0800 (PST)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78406c22dc7so58782585a.0;
+        Thu, 01 Feb 2024 02:46:52 -0800 (PST)
+X-Received: by 2002:a0d:ea85:0:b0:5ff:7cdc:404b with SMTP id
+ t127-20020a0dea85000000b005ff7cdc404bmr1645047ywe.52.1706784391742; Thu, 01
+ Feb 2024 02:46:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma-coherent: add support for multi coherent rmems per
- dev
-Content-Language: en-GB
-To: Howard Yen <howardyen@google.com>, hch@lst.de, m.szyprowski@samsung.com,
- gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
- petr.tesarik.ext@huawei.com, rafael@kernel.org, broonie@kernel.org,
- james@equiv.tech, james.clark@arm.com, masahiroy@kernel.org
-Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-References: <20240201093515.849873-1-howardyen@google.com>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20240201093515.849873-1-howardyen@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240131055159.2506-1-yan.y.zhao@intel.com> <5e55b5c0-6c8d-45b4-ac04-cf694bcb08d3@app.fastmail.com>
+ <ZbrfcTaiuu2gaa2A@yzhao56-desk.sh.intel.com> <9f27c23b-ea8b-443c-b09c-03ecaa210cd5@app.fastmail.com>
+In-Reply-To: <9f27c23b-ea8b-443c-b09c-03ecaa210cd5@app.fastmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 1 Feb 2024 11:46:19 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWPToeXdcBWv2LJuu2Z6td-JYz3GGf5fD1+ScqVD+Wurg@mail.gmail.com>
+Message-ID: <CAMuHMdWPToeXdcBWv2LJuu2Z6td-JYz3GGf5fD1+ScqVD+Wurg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] apply page shift to PFN instead of VA in pfn_to_virt
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Yan Zhao <yan.y.zhao@intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	guoren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org, 
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-hexagon@vger.kernel.org, 
+	"linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-02-01 9:35 am, Howard Yen wrote:
-> Add support for multiple coherent rmems per device. This patch addes
-> dma_mem_list to device structure to store multiple rmems.
-> 
-> These multiple rmems can be assigned to the device one by one by
-> of_reserved_mem_device_init_by_idx() with the memory-region
-> declaration in device tree as below and store the rmem to the dma_mem_list.
-> 
-> 	device1@0 {
-> 		...
-> 		memory-region = <&reserved_mem0>, <&reserved_mem1>;
-> 		...
-> 	};
-> 
-> When driver tries to allocate memory from the rmems, looks for the first
-> available rmem and allocates the memory from this rmem.
-> 
-> Then if driver removed, of_reserved_mem_device_release() needs to be
-> invoked to release all the rmems assigned to the device.
-> 
-> Signed-off-by: Howard Yen <howardyen@google.com>
-> ---
->   include/linux/device.h |  1 +
->   kernel/dma/coherent.c  | 66 +++++++++++++++++++++++++++++++++++-------
->   2 files changed, 56 insertions(+), 11 deletions(-)
-> 
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 97c4b046c09d..c8682ee507cf 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -751,6 +751,7 @@ struct device {
->   #ifdef CONFIG_DMA_DECLARE_COHERENT
->   	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
->   					     override */
-> +	struct list_head	dma_mem_list;
+Hi Arnd,
 
-I'm not necessarily against the idea, but only if it's implemented 
-sensibly. If we're going to have a list of these it should *replace* the 
-existing pointer, not do this weird thing with both.
+On Thu, Feb 1, 2024 at 11:11=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+> I think it's fair to assume we won't need asm-generic/page.h any
+> more, as we likely won't be adding new NOMMU architectures.
 
-Thanks,
-Robin.
+So you think riscv-nommu (k210) was the last one we will ever see?
 
->   #endif
->   #ifdef CONFIG_DMA_CMA
->   	struct cma *cma_area;		/* contiguous memory area for dma
-> diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-> index ff5683a57f77..f31befd2e6f8 100644
-> --- a/kernel/dma/coherent.c
-> +++ b/kernel/dma/coherent.c
-> @@ -18,6 +18,7 @@ struct dma_coherent_mem {
->   	unsigned long	*bitmap;
->   	spinlock_t	spinlock;
->   	bool		use_dev_dma_pfn_offset;
-> +	struct list_head	node;
->   };
->   
->   static inline struct dma_coherent_mem *dev_get_coherent_memory(struct device *dev)
-> @@ -61,6 +62,7 @@ static struct dma_coherent_mem *dma_init_coherent_memory(phys_addr_t phys_addr,
->   	dma_mem->pfn_base = PFN_DOWN(phys_addr);
->   	dma_mem->size = pages;
->   	dma_mem->use_dev_dma_pfn_offset = use_dma_pfn_offset;
-> +	INIT_LIST_HEAD(&dma_mem->node);
->   	spin_lock_init(&dma_mem->spinlock);
->   
->   	return dma_mem;
-> @@ -90,10 +92,13 @@ static int dma_assign_coherent_memory(struct device *dev,
->   	if (!dev)
->   		return -ENODEV;
->   
-> -	if (dev->dma_mem)
-> -		return -EBUSY;
-> +	if (!dev->dma_mem) {
-> +		dev->dma_mem = mem;
-> +		INIT_LIST_HEAD(&dev->dma_mem_list);
-> +	}
-> +
-> +	list_add_tail(&mem->node, &dev->dma_mem_list);
->   
-> -	dev->dma_mem = mem;
->   	return 0;
->   }
->   
-> @@ -187,12 +192,17 @@ static void *__dma_alloc_from_coherent(struct device *dev,
->   int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
->   		dma_addr_t *dma_handle, void **ret)
->   {
-> -	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
-> +	struct dma_coherent_mem *mem_tmp, *mem = dev_get_coherent_memory(dev);
->   
->   	if (!mem)
->   		return 0;
->   
-> -	*ret = __dma_alloc_from_coherent(dev, mem, size, dma_handle);
-> +	list_for_each_entry(mem_tmp, &dev->dma_mem_list, node) {
-> +		*ret = __dma_alloc_from_coherent(dev, mem_tmp, size, dma_handle);
-> +		if (*ret)
-> +			break;
-> +	}
-> +
->   	return 1;
->   }
->   
-> @@ -226,9 +236,19 @@ static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
->    */
->   int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr)
->   {
-> -	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
-> +	struct dma_coherent_mem *mem_tmp, *mem = dev_get_coherent_memory(dev);
-> +	int ret = 0;
->   
-> -	return __dma_release_from_coherent(mem, order, vaddr);
-> +	if (!mem)
-> +		return ret;
-> +
-> +	list_for_each_entry(mem_tmp, &dev->dma_mem_list, node) {
-> +		ret = __dma_release_from_coherent(mem_tmp, order, vaddr);
-> +		if (ret == 1)
-> +			break;
-> +	}
-> +
-> +	return ret;
->   }
->   
->   static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
-> @@ -271,9 +291,19 @@ static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
->   int dma_mmap_from_dev_coherent(struct device *dev, struct vm_area_struct *vma,
->   			   void *vaddr, size_t size, int *ret)
->   {
-> -	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
-> +	struct dma_coherent_mem *mem_tmp, *mem = dev_get_coherent_memory(dev);
-> +	int retval = 0;
->   
-> -	return __dma_mmap_from_coherent(mem, vma, vaddr, size, ret);
-> +	if (!mem)
-> +		return retval;
-> +
-> +	list_for_each_entry(mem_tmp, &dev->dma_mem_list, node) {
-> +		retval = __dma_mmap_from_coherent(mem_tmp, vma, vaddr, size, ret);
-> +		if (retval == 1)
-> +			break;
-> +	}
-> +
-> +	return retval;
->   }
->   
->   #ifdef CONFIG_DMA_GLOBAL_POOL
-> @@ -351,8 +381,22 @@ static int rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
->   static void rmem_dma_device_release(struct reserved_mem *rmem,
->   				    struct device *dev)
->   {
-> -	if (dev)
-> -		dev->dma_mem = NULL;
-> +	struct dma_coherent_mem *mem, *mem_tmp, *q;
-> +
-> +	if (dev) {
-> +		mem = dev_get_coherent_memory(dev);
-> +		if (rmem->priv != mem) {
-> +			list_for_each_entry_safe(mem_tmp, q, &dev->dma_mem_list, node) {
-> +				if (mem_tmp == rmem->priv) {
-> +					list_del_init(&mem_tmp->node);
-> +					break;
-> +				}
-> +			}
-> +		} else {
-> +			list_del_init(&mem->node);
-> +			dev->dma_mem = NULL;
-> +		}
-> +	}
->   }
->   
->   static const struct reserved_mem_ops rmem_dma_ops = {
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
