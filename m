@@ -1,223 +1,132 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E13A15CD72;
-	Thu,  1 Feb 2024 12:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4694C15DBC9;
+	Thu,  1 Feb 2024 12:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706789473; cv=none; b=arld/fkXYjiOXN76/nAarJuTYJEeeUj7ZI/vaxYOBiwow8jlzw+AIvPA8cvxp9eKJ11cI7J4pv4t2ipi3+ioDa0NeFbONytF6Jdgov50Tco/3li7y+8ka3dykNJeWV/mWJZu5Kynp+vEnBaVoM52k905CQAYLc5muEwcDE5IrJk=
+	t=1706789502; cv=none; b=hM6ULOAx8BSnNIAj0g4gZ2js6xa8GCEzXxrmPAdSxrXOvvmGcHhvE1pK26qcLIriK5l30kNSRREWdK66ZTrSU+5GHuNq6pmdUeeL1b2zgSV0tXLRN3obZ7DQmn9s4I9mH6HiMvqbma6x/yDqRVzgbBkupkvvLSfNoks3j2pZ1Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706789473; c=relaxed/simple;
-	bh=BKkgs5o3flr8DLm3fRhM8fmYE/Cis38Wwzz6W7RuFKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kQc1Cl8peuMxRtkKyFUhdH1v0izQUoFTvvb22onni9iF+X3We1+srX33Ibb8pxoA5cYbYbWtOTV4uZde84E04jR9b+CEU8JBTJ7dzMfzZZL0op1oz6r/Dtszt4JD9sMK1hzG4CoeSj+uVHCqqsXzt9PYUkXf9Dc8DsXwGXq1sU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFXudBYv; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFXudBYv"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-783def87c8cso55057885a.0;
-        Thu, 01 Feb 2024 04:11:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706789470; x=1707394270; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ot6Gz4jMBpIlofVX53+ZXvqyeKrVY8kBh2nwQY9He9E=;
-        b=eFXudBYvX2tcpFNSUP2cazwHp3jOYG+ZdrYS4wh6m4wsR9ORg/zK6R8NgJZgfvZi1T
-         nyfqbPCzN9fkLyU8bMzkVy31OkediJZszk7kXAuT406rhbbh1zpGPe98+5ae5ahD8vVL
-         qfGMWolbvoe3gjpGTwVbuX3ZcizxmHruR0WfML2yQmdYjB+LMYraAFHkSfBHEjbwLnPV
-         7Wg86Bgd96eMPozWFgCm/ZIRHptY52G5akn/QfxXQjI7++M7MsK6eyXZaDsM+SgXEfhS
-         5m8CmMc7i08QrSftbwfz0rnJmZzODWPrw/S9AiAQL3hQoBXmjGAKs168Du0mudibfb/Z
-         rjBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706789470; x=1707394270;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ot6Gz4jMBpIlofVX53+ZXvqyeKrVY8kBh2nwQY9He9E=;
-        b=sdGWcerYoFYS8Cqm3NwrAYdEL1C0O96QDLUFKVuuCONIQtNcYcABvs79vZkyG/fjgw
-         7/RNiGpPPCMsTbod8KZXB64lghwg4q2nqv1upZqJdtgBbzyu5wLJ1rzSC4EhXVDks2BF
-         5Td8hqKnhIb0WOUcLzVRewVu7DIvqe6+ckQLPn9h6AkOvCrEtb5OlFL3NFAeCnsEkqgw
-         Jq0BbtszAcqcq1Cnd9tlQmrKBzoXJj3bDVSr4Wlxfi/QVxBD5eVjXjqdcjx9L7nDhxIG
-         4XwXjsLcImtWB8doG501l9ehlBEgFxVbRiW4qFg+gZRNKryBiHqFdCnQvgpT5Ols5jmq
-         ZdhQ==
-X-Gm-Message-State: AOJu0YzReK1Okx2/fFKR/eysnm32REusatw7doCDXJrEEh4S8Ws13aOs
-	UPOoSvUKpXiac8giCMMmn+h8RTeRVQ+5+srroe4QdB4eQ35WsELrZiZ3nIj76eJvUjYa0AhcA+p
-	0D5hn1NtFGdoAIrSs0XVQ567nOq0=
-X-Google-Smtp-Source: AGHT+IHz6LtCx2w85BoWFdo+DeI9pIZ3+8vPu7taC1c5PJhh8sKbBeBLxRBVp/IF+mUCKoIMsRCelHFrrApZQHhaDAc=
-X-Received: by 2002:a05:6214:d6a:b0:686:abad:6f13 with SMTP id
- 10-20020a0562140d6a00b00686abad6f13mr4705853qvs.7.1706789470211; Thu, 01 Feb
- 2024 04:11:10 -0800 (PST)
+	s=arc-20240116; t=1706789502; c=relaxed/simple;
+	bh=mZSf9y0CQF9TxVXy4FE06iWwVm1ShXHTG/eLd5Jidf8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lfuvOZfIuQ2V3fMLoW028+WasibBsFvbzcMHyaXP0UxSH8m2d6x2O9KYC5v09nMxz9ZoxDlIj3T73jxLYEF41Eg0LG7GGd7ZqVthbq8fCq7oslCyBSo70iMqiuy8wjLcM7lpn0ypL6K3qoxcpLbUq7pkkhkbeL8TaIZ9zkpbBAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26519DA7;
+	Thu,  1 Feb 2024 04:12:17 -0800 (PST)
+Received: from [10.57.79.60] (unknown [10.57.79.60])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681EB3F762;
+	Thu,  1 Feb 2024 04:11:33 -0800 (PST)
+Message-ID: <ab7523db-f032-4f99-8090-785f126a3ae2@arm.com>
+Date: Thu, 1 Feb 2024 12:11:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130214620.3155380-1-stefanb@linux.ibm.com>
- <20240130214620.3155380-5-stefanb@linux.ibm.com> <38230b4c-54ae-45ed-a6fb-34e63501e5b1@linux.ibm.com>
- <CAOQ4uxiYARZBSgzb4_W-RKvB1XLSF3GUBqeLw2kH+eVeZ_8ARQ@mail.gmail.com>
- <c018b014-9ba8-4395-86dc-b61346ab20a8@linux.ibm.com> <CAOQ4uxi6Te8izWpXROthknRaXrVA9jho5nbc+mkuQDrcTLY44Q@mail.gmail.com>
- <CAOQ4uxigdNeE+2nfr4VxS9piQf5hez=ryT0a-jzW+tW0BT-zuw@mail.gmail.com> <492ea12a-d79d-47da-9bbe-a7f33051bd3f@linux.ibm.com>
-In-Reply-To: <492ea12a-d79d-47da-9bbe-a7f33051bd3f@linux.ibm.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 1 Feb 2024 14:10:58 +0200
-Message-ID: <CAOQ4uxgiO1RbsmqOu4F4Foy-MBPecnEXO7BvgDGz-Lzb1Eysog@mail.gmail.com>
-Subject: Re: [PATCH 4/5] evm: Use the real inode's metadata to calculate
- metadata hash
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
-	roberto.sassu@huawei.com, miklos@szeredi.hu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/5] selftests/mm: run_vmtests.sh: add missing tests
+Content-Language: en-GB
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240125154608.720072-1-usama.anjum@collabora.com>
+ <20240125154608.720072-6-usama.anjum@collabora.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240125154608.720072-6-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 31, 2024 at 7:46=E2=80=AFPM Stefan Berger <stefanb@linux.ibm.co=
-m> wrote:
->
->
->
-> On 1/31/24 12:23, Amir Goldstein wrote:
-> > On Wed, Jan 31, 2024 at 5:54=E2=80=AFPM Amir Goldstein <amir73il@gmail.=
-com> wrote:
-> >>
-> >> On Wed, Jan 31, 2024 at 4:40=E2=80=AFPM Stefan Berger <stefanb@linux.i=
-bm.com> wrote:
-> >>>
-> >>>
-> >>>
-> >>> On 1/31/24 08:16, Amir Goldstein wrote:
-> >>>> On Wed, Jan 31, 2024 at 4:11=E2=80=AFAM Stefan Berger <stefanb@linux=
-.ibm.com> wrote:
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>> On 1/30/24 16:46, Stefan Berger wrote:
-> >>>>>> Changes to the file attribute (mode bits, uid, gid) on the lower l=
-ayer
-> >>>>>> are not take into account when d_backing_inode() is used when a fi=
-le is
-> >>>>>> accessed on the overlay layer and this file has not yet been copie=
-d up.
-> >>>>>> This is because d_backing_inode() does not return the real inode o=
-f the
-> >>>>>> lower layer but instead returns the backing inode which holds old =
-file
-> >>>>>> attributes. When the old file attributes are used for calculating =
-the
-> >>>>>> metadata hash then the expected hash is calculated and the file th=
-en
-> >>>>>> mistakenly passes signature verification. Therefore, use d_real_in=
-ode()
-> >>>>>> which returns the inode of the lower layer for as long as the file=
- has
-> >>>>>> not been copied up and returns the upper layer's inode otherwise.
-> >>>>>>
-> >>>>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> >>>>>> ---
-> >>>>>>     security/integrity/evm/evm_crypto.c | 2 +-
-> >>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>>
-> >>>>>> diff --git a/security/integrity/evm/evm_crypto.c b/security/integr=
-ity/evm/evm_crypto.c
-> >>>>>> index b1ffd4cc0b44..2e48fe54e899 100644
-> >>>>>> --- a/security/integrity/evm/evm_crypto.c
-> >>>>>> +++ b/security/integrity/evm/evm_crypto.c
-> >>>>>> @@ -223,7 +223,7 @@ static int evm_calc_hmac_or_hash(struct dentry=
- *dentry,
-> >>>>>>                                  size_t req_xattr_value_len,
-> >>>>>>                                  uint8_t type, struct evm_digest *=
-data)
-> >>>>>>     {
-> >>>>>> -     struct inode *inode =3D d_backing_inode(dentry);
-> >>>>>> +     struct inode *inode =3D d_real_inode(dentry);
-> >>>>>>         struct xattr_list *xattr;
-> >>>>>>         struct shash_desc *desc;
-> >>>>>>         size_t xattr_size =3D 0;
-> >>>>>
-> >>>>> We need this patch when NOT activating CONFIG_OVERLAY_FS_METACOPY b=
-ut
-> >>>>> when setting CONFIG_OVERLAY_FS_METACOPY=3Dy it has to be reverted..=
-.  I am
-> >>>>> not sure what the solution is.
-> >>>>
-> >>>> I think d_real_inode() does not work correctly for all its current u=
-sers for
-> >>>> a metacopy file.
-> >>>>
-> >>>> I think the solution is to change d_real_inode() to return the data =
-inode
-> >>>> and add another helper to get the metadata inode if needed.
-> >>>> I will post some patches for it.
-> >>>
-> >>> I thought that we may have to go through vfs_getattr() but even bette=
-r
-> >>> if we don't because we don't have the file *file anywhere 'near'.
-> >>>
-> >>>>
-> >>>> However, I must say that I do not know if evm_calc_hmac_or_hash()
-> >>>> needs the lower data inode, the upper metadata inode or both.
-> >>>
-> >>> What it needs are data structures with mode bits, uid, and gid that s=
-tat
-> >>> in userspace would show.
-> >>>
-> >>>
-> >>
-> >> With or without metacopy enabled, an overlay inode st_uid st_gid st_mo=
-de
-> >> are always taken from the upper most inode which is what d_real_inode(=
-)
-> >> currently returns, so I do not understand what the problem is.
-> >>
-> >
-> > No, I was wrong. It is the other way around.
-> > d_real_inode() always returns the real data inode and you need the
-> > upper most real inode.
-> >
-> > You can try this:
-> >
-> >   -     struct inode *inode =3D d_backing_inode(dentry);
-> > +     struct inode *inode =3D d_inode(d_real(dentry, false));
-> >
-> > With the changes in:
-> >
-> > https://github.com/amir73il/linux/commits/overlayfs-devel/
-> >
-> > Not thoroughly tested...
->
-> The change + 3 topmost patches cherry-picked is unfortunately are
-> crashing for me.
->
+On 25/01/2024 15:46, Muhammad Usama Anjum wrote:
+> Add missing tests to run_vmtests.sh. The mm kselftests are run through
+> run_vmtests.sh. If a test isn't present in this script, it'll not run
+> with run_tests or `make -C tools/testing/selftests/mm run_tests`.
+> 
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+> Changes since v1:
+> - Copy the original scripts and their dependence script to install directory as well
+> 
+> Changes since v2:
+> - Add a comment
+> - Move tests down in the file
+> - Add "-d" option which poisons the pages and aren't being useable after
+>   the test
+> ---
+>  tools/testing/selftests/mm/Makefile       | 5 +++++
+>  tools/testing/selftests/mm/run_vmtests.sh | 8 ++++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+> index 2453add65d12f..f3aec7be80730 100644
+> --- a/tools/testing/selftests/mm/Makefile
+> +++ b/tools/testing/selftests/mm/Makefile
+> @@ -114,6 +114,11 @@ TEST_PROGS := run_vmtests.sh
+>  TEST_FILES := test_vmalloc.sh
+>  TEST_FILES += test_hmm.sh
+>  TEST_FILES += va_high_addr_switch.sh
+> +TEST_FILES += charge_reserved_hugetlb.sh
+> +TEST_FILES += hugetlb_reparenting_test.sh
+> +
+> +# required by charge_reserved_hugetlb.sh
+> +TEST_FILES += write_hugetlb_memory.sh
+>  
+>  include ../lib.mk
+>  
+> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+> index e373d592dbf5c..a0f37e4438937 100755
+> --- a/tools/testing/selftests/mm/run_vmtests.sh
+> +++ b/tools/testing/selftests/mm/run_vmtests.sh
+> @@ -19,6 +19,7 @@ usage: ${BASH_SOURCE[0]:-$0} [ options ]
+>    -t: specify specific categories to tests to run
+>    -h: display this message
+>    -n: disable TAP output
+> +  -d: run destructive tests
 
-I will look into it.
-But anyway, the patch I suggested above is not enough exactly because
-of the reason I told you earlier.
+You probably want to clarify the behaviour for -a (all). I guess providing -a
+should NOT run destructive tests unless -d is also explicitly provided.
 
-Mimi's fix ("ima: detect changes to the backing overlay file") detects
-a change in d_real_inode(file_dentry(file)) in order to invalidate the
-IMA cache.
+>  
+>  The default behavior is to run required tests only.  If -a is specified,
+>  will run all tests.
+> @@ -79,6 +80,7 @@ EOF
+>  }
+>  
+>  RUN_ALL=false
+> +RUN_DESTRUCTIVE_TEST=false
 
-Your change also invalidates EVM cache on a change in
-d_real_inode(file_dentry(file)) and that makes sense.
+Either call this RUN_DESTRUCTIVE (my preference) or at least make it plural
+(RUN_DESTRUCTIVE_TESTS).
 
-But on "meta copy up" for example on chmod(), an upper inode with no data
-is created (a metacopy) and all the attributes and xattr are copied
-from lower inode.
-The data remains in the lower inode.
+>  TAP_PREFIX="# "
+>  
+>  while getopts "aht:n" OPT; do
+> @@ -87,6 +89,7 @@ while getopts "aht:n" OPT; do
+>  		"h") usage ;;
+>  		"t") VM_SELFTEST_ITEMS=${OPTARG} ;;
+>  		"n") TAP_PREFIX= ;;
+> +		"a") RUN_DESTRUCTIVE_TEST=true ;;
 
-At this point , the IMA cache and the EVM cache refer to two different inod=
-es
-so you cannot share the same logic with IMA cache invalidation.
+The help you added says the option is -d, but this is looking for -a, and
+conflicting with the existing -a=all option.
 
-My patches are meant to provide you with a helper e.g. d_real_meta_inode()
-that you could use to get the upper inode in the case of a metacopy, but
-IMA would still need to use the d_real_data_inode().
+>  	esac
+>  done
+>  shift $((OPTIND -1))
+> @@ -304,6 +307,11 @@ CATEGORY="process_mrelease" run_test ./mrelease_test
+>  CATEGORY="mremap" run_test ./mremap_test
+>  
+>  CATEGORY="hugetlb" run_test ./thuge-gen
+> +CATEGORY="hugetlb" run_test ./charge_reserved_hugetlb.sh -cgroup-v2
+> +CATEGORY="hugetlb" run_test ./hugetlb_reparenting_test.sh -cgroup-v2
+> +if $RUN_DESTRUCTIVE_TEST; then
+> +CATEGORY="hugetlb" run_test ./hugetlb-read-hwpoison
+> +fi
+>  
+>  if [ $VADDR64 -ne 0 ]; then
+>  
 
-Is that explanation clear? Is it clear why I said that the problem is more
-complicated?
-
-Thanks,
-Amir.
