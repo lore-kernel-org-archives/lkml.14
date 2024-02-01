@@ -1,91 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F3F524B;
-	Thu,  1 Feb 2024 01:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F31442D;
+	Thu,  1 Feb 2024 01:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706751672; cv=none; b=WcK30kzqZt5cdQn7ag4QffJYpEy/vNOvNELxV5rABZ5PtsbiGq66PQmRkp1pgek9k3pbL0oV6yshAYhMmeJ2hLCPjN+MnxSQBcoEBKgGYFZe4MoKH0RUj73XniQBEYT3mQP2o3hAJQlUvBalebuUwnQV4wLPbWSuYZmMSCESV30=
+	t=1706751732; cv=none; b=cvyaZj8/7PoOFTwfkcSU+rBY6Eqsu19Gv7PuMkvAtMKklHYSXlBNVR/zuRVmWTS07mLTaxjofx5+J4G+ljUgnXtawognt0vrl4C1e/8dFmQUQAsX8hfEwXCpAJHZWBqGVZTSOLB44mIG2/9s5fpYXOCt1U5sA5Otljo1+0ahaAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706751672; c=relaxed/simple;
-	bh=wjNPj8TpVPxMj33O6Zocl9vYBSzey858v7bzOGiD7a0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BhGPOpDsxZCZNwrKXHF8ZIdgG/KhaMlaRs4At+E5p/m6StpwA2LyWBQONkLKprBbjtkPORCajKz6+pPQ57ND16ew7BLEL73xI36Wk6rDk3nGzU2znDi0a4caZbVAeZYh89akj6YgrlXkMQRuZFCEGHE3LYYg956RCjuQoj4NuGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AQmIM7Nr; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706751732; c=relaxed/simple;
+	bh=efwyMItElJetn/Fmbvc9IiQmkNvaw/WmkGfc/vk+kLg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=roq4JQ3uQDxDYwikAP+AfLsU15riq+qgDujaGU2OpnBB8+fJL2GXd36pBZuvbPgw6AAlxLwY49h3ciOMyyEJc9UGm2fkGbWFHqWRuCX0DgEpEAmpuRG3fr5n09JxHVbYnzXQaGZvGD1hTVF2joSeN9IGTNeVD2uv9MHdO/Oyoyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBtqqqWR; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AQmIM7Nr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706751670; x=1738287670;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wjNPj8TpVPxMj33O6Zocl9vYBSzey858v7bzOGiD7a0=;
-  b=AQmIM7NrzxkUtGiADWRSWNNQU2K+7z+ssFO94rEaAb8x1Bb5hfDGoyz1
-   kjr4ViWLvGP2TIpBkdbGFC7Lrq4z1a3FaWw0/5lgsUEfrem+KtFaonb9r
-   DNSH/r/kCCMEl/qHzt+vTewgrF/3UJ5RDkoTDngejKJ2/gOOZPiCwpV7G
-   xjUZEAU4eynG9Tj6g+oxK/WzbtFRMByE247WrElyDgy9RmZeqZ8NziYF3
-   js756piO67MpiW4lE7sFs8JIWJFnlfTpYQSQ61F7Rrmna08fzhnQGItU+
-   RvtBkMmehbq1Y5qR7/kN2dL1Pjj0Ffy5HoEujRg/ODze4ZVl4nM1SjtbB
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="17164929"
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="17164929"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:41:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
-   d="scan'208";a="4272686"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.93.33.17]) ([10.93.33.17])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:41:05 -0800
-Message-ID: <9b1ca7cc-1a16-4bab-8398-f9bdc4bc23cb@intel.com>
-Date: Thu, 1 Feb 2024 09:41:01 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBtqqqWR"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42aabb1cdaaso3294121cf.2;
+        Wed, 31 Jan 2024 17:42:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706751730; x=1707356530; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vh6Ffd8hFONsbNouZh9tTHMRXHfYbfdTSU7EN4Ui6ec=;
+        b=OBtqqqWR/UmbZ3lqFEdmm8G+h6w/1vBDVlnIVJapR3akdzdbBVyUl5cD1B1WqInsXZ
+         7TZ1aGJhdZxrGXRgm5iWPhEXgScrlj5kwjDJ9Kdq7/zCAv8PeuICKtP3fG3Sp2IoePef
+         PzeJvj8+FCX1Mp9sTxEFztK9f00ObPjupV1fwnqvhLaPNayl2zmAHtsSlz7kZrAxjtmH
+         45UwsgblED79Bay9SuXcM4Ql7Yuh4f+4mGMZvrIddb32Gar+cArb97cSKYqd/VzslQ64
+         X15FHKyJtoHnJN6qecnwNahpnORkj87UL1RXHsqAk0hNtWeAu9GSpvmPuHjydVdKDm+t
+         48Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706751730; x=1707356530;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vh6Ffd8hFONsbNouZh9tTHMRXHfYbfdTSU7EN4Ui6ec=;
+        b=UiJl8Weu2a2Zpu6TZds5Mv1NzDBD2NscS7DWY5ufVymhAeE1neiqYyKUbw3GUQCL2w
+         tIsxKxTJQT6TFkv5h+cGhSnfPFJ7hQKd7/C2fcA50nP0LS2pxw3qNs9yzd1BntU8SYJ+
+         DEsSqtcEjXdkP67VSn6CHfc1mBMRLRkdkwt+3ssJxUdpY1NwH+kcLX80gb2jYKwz9cId
+         SdYq02xXORtg8dU4u9V4t0TiifgWN2U/8tFWj+rFlfagK8IYQHlD1HaWwJYPl9o1WO5d
+         l0YS+CLkbQaZCKVRrpK6dB7+F3SnjCqrls0xwDCzNBl0yZ/ZCV8xahaeE6zGBiRqq+Vg
+         CVtA==
+X-Gm-Message-State: AOJu0YxSbhSTcv7yaVromojTXLVQJeeKXyCSVHE+eIeTf5uF+6+JsZ01
+	MYwdgRpczmJAKWOhExX2E3VS/8bKAh1XADZf3uJ+okwcrLWxA9NB3RCBJns1
+X-Google-Smtp-Source: AGHT+IFOWnXn2P2Y2VCCYfIza1FFKtc/gekxJvIwwFYETDHWeAKoegJoj7OBVetlAfDRMf8lVLaiCA==
+X-Received: by 2002:ac8:5794:0:b0:42b:e44f:2032 with SMTP id v20-20020ac85794000000b0042be44f2032mr845731qta.3.1706751730113;
+        Wed, 31 Jan 2024 17:42:10 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCURKo0WkmLsMqJJbqX55qBbyBL51ZzDiNz38r0vcdDE27eu7GPcfiDy/Ix89AeCotULtyrdd3B3TLAnrPowZPkMisj+
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id bz23-20020a05622a1e9700b0042994b3c20dsm131165qtb.29.2024.01.31.17.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 17:42:09 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailauth.nyi.internal (Postfix) with ESMTP id EDEF927C005B;
+	Wed, 31 Jan 2024 20:42:08 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 31 Jan 2024 20:42:08 -0500
+X-ME-Sender: <xms:8Pa6ZV5i9idX7CaPdCcIDAUgwoqwAlixE8Fm1f8_UahkiFdWHCQhHQ>
+    <xme:8Pa6ZS5y5toUsEhDaIYN2_W4Y-WXSfelmZh4nkg7mNOJYiB9iEzg-e-DIDalJ2O5A
+    cAn7EGv5rQAz_6nig>
+X-ME-Received: <xmr:8Pa6ZcdJfFzPVQVEqeKb46Pw3ipreNbOCfrBkoqCvBVDIoG5n8M6IYEtOFR3Dw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedutddgfeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhm
+    rghilhdrtghomheqnecuggftrfgrthhtvghrnheptdfftddtkeelvdefleeghfelleevge
+    ffteehheeljeejudehueejhefggeevfeetnecuffhomhgrihhnpehgihhthhhusgdrtgho
+    mhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvg
+X-ME-Proxy: <xmx:8Pa6ZeKfi-UiSEMvCm-xgpKdH8h2OH2lQQzUV8sgjoPXYSNA2J1oWw>
+    <xmx:8Pa6ZZLjs8qcaWu1WwDaAJWKPx4Fqcg4VzSoEFZuZ1joUFvPI2p8XA>
+    <xmx:8Pa6ZXyti9RMZPLL5fB1NDmwZnBGTW-F5QG2OsLFevkvHhDxOPmEfg>
+    <xmx:8Pa6ZQURbSpDp-8uY9sO9dv65UFpRnJzun8hOCXxkMLdJPfPoeIrSQ>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 31 Jan 2024 20:42:08 -0500 (EST)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH 0/6] RCU nocb updates for v6.9
+Date: Wed, 31 Jan 2024 17:40:52 -0800
+Message-ID: <20240201014100.3204532-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 006/121] KVM: x86/vmx: Refactor KVM VMX module
- init/exit functions
-Content-Language: en-US
-To: isaku.yamahata@intel.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <f6c59ec1b4822263fc946b7d53a83f3b5ba59261.1705965634.git.isaku.yamahata@intel.com>
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <f6c59ec1b4822263fc946b7d53a83f3b5ba59261.1705965634.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/23/2024 7:52 AM, isaku.yamahata@intel.com wrote:
+Hi,
 
-...
+This series contains the updates and fixes of RCU nocb for v6.9.
+You can also find the series at:
 
-> diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-> index b6836bedc4d3..b936388853ab 100644
-> --- a/arch/x86/kvm/vmx/x86_ops.h
-> +++ b/arch/x86/kvm/vmx/x86_ops.h
-> @@ -6,11 +6,24 @@
->   
->   #include "x86.h"
->   
-> -__init int vmx_hardware_setup(void);
+	https://github.com/fbq/linux.git rcu-nocb.2024.01.29a
 
-...
+The detailed list of the changes:
 
->   
-> +__init int vmx_hardware_setup(void);
+Frederic Weisbecker (4):
+  rcu/nocb: Remove needless LOAD-ACQUIRE
+  rcu/nocb: Remove needless full barrier after callback advancing
+  rcu/nocb: Make IRQs disablement symmetric
+  rcu/nocb: Re-arrange call_rcu() NOCB specific code
 
-this change belongs to Patch 4
+Zqiang (2):
+  rcu/nocb: Fix WARN_ON_ONCE() in the rcu_nocb_bypass_lock()
+  rcu/nocb: Check rdp_gp->nocb_timer in __call_rcu_nocb_wake()
 
->   void vmx_hardware_unsetup(void);
->   int vmx_check_processor_compat(void);
->   int vmx_hardware_enable(void);
+ kernel/rcu/tree.c      | 53 +++++++++++++++++++++++-------------------
+ kernel/rcu/tree.h      |  9 ++++---
+ kernel/rcu/tree_nocb.h | 47 ++++++++++++++++++++++---------------
+ 3 files changed, 61 insertions(+), 48 deletions(-)
+
+-- 
+2.43.0
 
