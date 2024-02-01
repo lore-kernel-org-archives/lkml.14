@@ -1,126 +1,99 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8444D2E842
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA8042067
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706776523; cv=none; b=pVSLoRUj1fq7pDbmNqZ3LFP7OGuzLhRCzkCh+dNZHV0aghlePX2zbtPD/iMZ53Ig01J1yWJawc9TB8bfoXzwgIhpn/nJDXsUgjC/uNZVXWHOPVV7UJCyCcZ4vc93xU1O7FaxU0BttYmACSzESN79e7xCZOuEKIqUGaa+/OILzqg=
+	t=1706776581; cv=none; b=eKLoBfK0W7xefgCbWBTBgKt5L5ggvbcpHE8yfr34Iyj1dMKILWc86Pi9d9mzOdkCs6d3WvT+KBp7OFWJF4Dxpkl33o/+VZ9oC6UkhMHP6RqWeQbSEuen1mm6XqaJkJtRdRCUYvWBByNc3ouFp/iKJwSRiYJU7+EVcElos1Y9MCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706776523; c=relaxed/simple;
-	bh=iHyEQ2KXdIyR0Q46AEjColJDwQljhOsmrS2qirjC+9Y=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=DxNRpwSg3krKzetXwnhLnm313v+alu8OMJKINMCmiwwkxzdLFnM8slL2rqpRjhUuud66avBVyf1bzNj9vzx6HOtlkfvBvLnnJIm7vO4CijqZG1wodv1SLqD5WvvHH7O89EPoK+0sfa5Uph4tJAIqXjd4Etzp6EJRq4U2UIJbYPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bEBBu6Qo; arc=none smtp.client-ip=209.85.208.73
+	s=arc-20240116; t=1706776581; c=relaxed/simple;
+	bh=URAbcGOJJOVtRbliw1Z2VqfxkQeuzBfO9ciuWBnjr64=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j6PDmqtSWcv+AtLa0dqWvzCkyYeRsLJj8Yjj1cXS3NXci/PCmZ9xkzIqzWdzAniGy7jtL0TG66KF54KJeuRl4oR6bWdKwXohx44FdxBjcQ9sKaFNz4rRAt2v2PMvcLzscA2BwWEJeNkpZDEU6WlWmTOJ3Mntw9t/3ocV9lPRgt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tyiMk19w; arc=none smtp.client-ip=209.85.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bEBBu6Qo"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-55f20f0013eso342763a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:35:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tyiMk19w"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4bdd39b62cdso244958e0c.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:36:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706776519; x=1707381319; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yDijPStjyNK8y9wipx4jasC/bHAVPAFiOvOL8ps5ECY=;
-        b=bEBBu6QoutCoqsLWpsngjv+oo1yNFPTXbsHeqVzC7HM3RN4rH1SnXEq29VItKpzdjO
-         K7TnMqpRcwhLXX1L2Fvip1yZ8I9sLg4NExhCzEzXynF6Axsde5Frve/XzJiyozAhcPvv
-         +dV+vjalQNWfniGr9du8JuDMtF/qEEXVOan5eynlIhxLjaMEpLWYv9OtYicw8LaCdjuP
-         g12Mafv3mW5x6ymVg+bYFPLTbFqIyfStQJ/jJtLSq0PsQUrj2Qv/PKl8k2lxTDw/FQ7R
-         ttc2KqWYhigd9wb8ai8bA9Js1BZnCFIvROvd1IHW7PopvfDrx2z0HrC6bAndYgsj/4K9
-         NmeQ==
+        d=google.com; s=20230601; t=1706776578; x=1707381378; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=aNWGy3aMj6Es13FsqznlTHFzLMxc1/DDzgiYp75ZJxU=;
+        b=tyiMk19w2VrXLIy+JtsvpyNhdAWkuf70KO6Bq2erDXOOuJtWyVoqcu3U92KZ5JXfKW
+         fW4LjfGZmNnbs9rLOy15j0sA5FG7+31SebFwufeBt+UYn+nLiEt97B3c7CjmcaXOdYhI
+         tu8eSiwgiazFshbnGmsDYpBMuJPhYFIqcRSGDXHpJEUevJxatFzYm72dx1hvlHfM71Lz
+         yJfFDBJAanP2KJyeGda5cewqg/6ckpE2n7pIMJs/nKzqNIITfliap9K5G6Q2GhVeb7Bv
+         LOKILTXKRyOeFjP/w3dkT0wnf90aUfja6a7JidEfyLffGVxtBzV6g2boGO0Xz5v18v2Z
+         THrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706776519; x=1707381319;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yDijPStjyNK8y9wipx4jasC/bHAVPAFiOvOL8ps5ECY=;
-        b=EyN/63UoocmDtTBI/htpswll2fXMeHpMstqO6LOjJxp3DeeC10nLD6N2tsAmboL2gl
-         FbEy7oqByLKktuvfYJYgCv3I3/D6p3xUBexPi/R40LJguSgpAN4G0IzAGLH/0p0u1g/1
-         YEvH8IFsmoCkXiu6hgoPlmmq6kNvug+1bp/ZiZ9K+H0NLd5NB1240VQV02fOCQrEy50f
-         3Gv4rV0GidwyESYHTonsaiHAnuSBsQlRpKRru8R+97MzXARaagYii2Jw2hxkMtYnOf0I
-         q+g+u5MKcFyWgH1UiOeJ1PaatrA4QtoY48M8Nj9rSqeB95+yE4CePPjq3k1f1C/1fRab
-         9DxA==
-X-Gm-Message-State: AOJu0YygyCx6zRsN9GW8wsOn1/JDj/1OJcYh5tkEOO3HbSBeblf7IqBl
-	MIP4rMO+NeYsMahwLng51llE6TzaEAPcxcpJEO7LxkutvUJ23iSLgV75vU7vGlTMi1NYjw8G1g=
-	=
-X-Google-Smtp-Source: AGHT+IGpYlrXxQ4pf2SgD9UFPN6gxoK9EQuNzVYVVNI/PX8RZh44GlCTq+L5CxRmI95uHiD5ihNh0Vw0Wg==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:c945:1806:ff53:36fa])
- (user=elver job=sendgmr) by 2002:a05:6402:44:b0:55f:2bd3:a896 with SMTP id
- f4-20020a056402004400b0055f2bd3a896mr10422edu.3.1706776519344; Thu, 01 Feb
- 2024 00:35:19 -0800 (PST)
-Date: Thu,  1 Feb 2024 09:31:35 +0100
+        d=1e100.net; s=20230601; t=1706776578; x=1707381378;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aNWGy3aMj6Es13FsqznlTHFzLMxc1/DDzgiYp75ZJxU=;
+        b=ZLNeReIPOF5v9e0IaDxa1jN1Jei7192vbmjetXedpCAjkcNWLE8w16XLS/nKFzke5e
+         MCe8FC5kwRYF5UucCWIV1bEHF+90oXzJ9DlyO24/jfYlrC7jyqY0bG9nCOl/u+ObAkfj
+         3BzsnG5RC6Fhf+Dld3rRoMHysN8pRR5PVOmpol1T8u6ALxrat7UmTHNWenTPSNd5KpU4
+         r42WPeRKLGEHws3xG15vGbQhG4ip8/+nzOOqBl0eaWxQa4/Cj5lSPqIk9ZIwnqVU3a7p
+         RhqrU0auko9l8C/69W+EXgOPAAFyF+HnICfRS5KjzD4iS3lBZgo7uQxINmCSXOYCFTPd
+         pnYg==
+X-Gm-Message-State: AOJu0YydrIqWu1PREaqrierSoBoE/VTQ0LzsH2sXnbBk5ifMfgeaZIGP
+	Z/Ml51DamriE2UYJxgRDzWacn/R85WajjHxW+6pVE3mqGq72y2ZIb0kjNTHg0fY3+NFZhC+IQPV
+	JGzjxSzjXEPrsXyyyTIoc8py1MeHRyKjXPplM
+X-Google-Smtp-Source: AGHT+IFxmaX/PS5XiugiUred/geHgTCYyWuBNSHvpCYMHl7WfgQ9z92CT9vUATBC8i4qxWz02ONq7uV4Qfi0FAqwBHk=
+X-Received: by 2002:a05:6122:178d:b0:4bd:4736:5226 with SMTP id
+ o13-20020a056122178d00b004bd47365226mr3262306vkf.11.1706776578390; Thu, 01
+ Feb 2024 00:36:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240201083259.1734865-1-elver@google.com>
-Subject: [PATCH -mm] stackdepot: do not use flex_array_size() in memcpy()
+MIME-Version: 1.0
+References: <20240201135747.18eca98e@canb.auug.org.au>
+In-Reply-To: <20240201135747.18eca98e@canb.auug.org.au>
 From: Marco Elver <elver@google.com>
-To: elver@google.com, Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kasan-dev@googlegroups.com, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	Kees Cook <keescook@chromium.org>
+Date: Thu, 1 Feb 2024 09:35:40 +0100
+Message-ID: <CANpmjNPG01_70DMC4mdswN0a7sHCRoUZvsALD9=z_N80oTL3sQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the mm tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Since 113a61863ecb ("Makefile: Enable -Wstringop-overflow globally")
-string overflow checking is enabled by default. Unfortunately the
-compiler still isn't smart enough to always see that the size will never
-overflow.
+On Thu, 1 Feb 2024 at 03:57, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the mm tree, today's linux-next build (i386 defconfig)
+> failed like this:
+>
+> In file included from arch/x86/include/asm/string.h:3,
+>                  from include/linux/string.h:61,
+>                  from arch/x86/include/asm/page_32.h:18,
+>                  from arch/x86/include/asm/page.h:14,
+>                  from arch/x86/include/asm/thread_info.h:12,
+>                  from include/linux/thread_info.h:60,
+>                  from include/linux/spinlock.h:60,
+>                  from include/linux/wait.h:9,
+>                  from include/linux/wait_bit.h:8,
+>                  from include/linux/fs.h:6,
+>                  from include/linux/debugfs.h:15,
+>                  from lib/stackdepot.c:17:
+> In function 'depot_alloc_stack',
+>     inlined from 'stack_depot_save_flags' at lib/stackdepot.c:688:4:
+> arch/x86/include/asm/string_32.h:150:25: error: '__builtin_memcpy' specified bound 4294967295 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]
+>   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+> lib/stackdepot.c:459:9: note: in expansion of macro 'memcpy'
+>   459 |         memcpy(stack->entries, entries, flex_array_size(stack, entries, nr_entries));
+>       |         ^~~~~~
+> cc1: all warnings being treated as errors
 
-Specifically, in stackdepot, we have this before memcpy()'ing a
-stacktrace:
-
-  if (nr_entries > CONFIG_STACKDEPOT_MAX_FRAMES)
-  	nr_entries = CONFIG_STACKDEPOT_MAX_FRAMES;
-  ...
-  memcpy(stack->entries, entries, flex_array_size(stack, entries, nr_entries));
-
-Where 'entries' is an array of unsigned long, and STACKDEPOT_MAX_FRAMES
-is 64 by default (configurable up to 256), thus the maximum size in
-bytes (on 32-bit) would be 1024. For some reason the compiler (GCC
-13.2.0) assumes that an overflow may be possible and flex_array_size()
-can return SIZE_MAX (4294967295 on 32-bit), resulting in this warning:
-
- In function 'depot_alloc_stack',
-     inlined from 'stack_depot_save_flags' at lib/stackdepot.c:688:4:
- arch/x86/include/asm/string_32.h:150:25: error: '__builtin_memcpy' specified bound 4294967295 exceeds maximum object size 2147483647 [-Werror=stringop-overflow=]
-   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
-       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
- lib/stackdepot.c:459:9: note: in expansion of macro 'memcpy'
-   459 |         memcpy(stack->entries, entries, flex_array_size(stack, entries, nr_entries));
-       |         ^~~~~~
- cc1: all warnings being treated as errors
-
-Silence the false positive warning by inlining the multiplication
-ourselves.
-
-Link: https://lore.kernel.org/all/20240201135747.18eca98e@canb.auug.org.au/
-Fixes: d869d3fb362c ("stackdepot: use variable size records for non-evictable entries")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Marco Elver <elver@google.com>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
----
- lib/stackdepot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index 8f3b2c84ec2d..e6047f58ad62 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -456,7 +456,7 @@ depot_alloc_stack(unsigned long *entries, int nr_entries, u32 hash, depot_flags_
- 	stack->hash = hash;
- 	stack->size = nr_entries;
- 	/* stack->handle is already filled in by depot_pop_free_pool(). */
--	memcpy(stack->entries, entries, flex_array_size(stack, entries, nr_entries));
-+	memcpy(stack->entries, entries, nr_entries * sizeof(entries[0]));
- 
- 	if (flags & STACK_DEPOT_FLAG_GET) {
- 		refcount_set(&stack->count, 1);
--- 
-2.43.0.429.g432eaa2c6b-goog
-
+This is a false positives due to -next enabling some new warnings by
+default: https://lore.kernel.org/all/20240201083259.1734865-1-elver@google.com/T/#u
