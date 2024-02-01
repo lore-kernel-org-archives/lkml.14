@@ -1,286 +1,329 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2139.outbound.protection.partner.outlook.cn [139.219.17.139])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.77.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C7B273FE;
-	Thu,  1 Feb 2024 06:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706769394; cv=fail; b=H9+ImRWrJ1AqZ++FJ/BpEYQ4fPK+rnnkWsLLu7kHvNwN0zSposOjlAWVn3eU1A2HF79I0HGS+xegJJSFGVjQXAZ85yfZQ0OkSgtBPJBj7i4R8MEpIkoeRlonXGUs7dh05Zwv71PH1+nTocMdRIZV6ppL9d4j72qCNJNDQ2vGUMA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706769394; c=relaxed/simple;
-	bh=mgqucM4IFSLnmpRzbuQGbsDmsBOrHAf0bv8evjvKvNI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=q7XrFl9NGzN9YIYACag9nKnLwJI02dv0XbOpSyh2qsz7UOoVKNjF/k3kuf0xwREwPkfD4YH5YIbYiLjt/1YvIQtGwN14glloyRWXGt5Q0CqYijiVA5dzC0yyvcmVdEC+6RwRMbkJwyV8WpY2YyWjpSFvqxkDxt3fun8CN8TBkEc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OYfldbH0w2MRUgSOysyj4MhwFEFKYlD41q7b/rV/qhZhj8NF6mcQXmsaWvWaJU9LIs/ZIoOdu5fIwY6jsYYqQ8EgQIXjCR5RlJu0m5iuCEDhx4PdbUO5T+AdBT+9WiXLbebqU9T3Z951kLXfMadzaUmk8E24n9tT2/d+STex0uH18UwUoyfCXT+0Cr/vvP/PUNhbpiLr7DVhKM9mdrwn/BygEjkI/tnNx4mtuufItjG61vFvielPOYgM08nxyHs9WSyEpf/U9HnuaA9eu2jKqq59VTK3Nqx5PnPUtI72YeB6jd3nDMZ3g1Bt6q7LGTl9PXsFH7yjXqr1ebjBKTHGMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ccv51G/g3IFSwWo6jUoOz/xSKSc2p04peMx77j+Tc6s=;
- b=nOUN/CNZaBoTKZ3UbuuHCnbVXWX3WWnG7rVOIj5eUNsQvy7GL8SLT+KtzGrZ1/F9lzWY62dIzfVUdemDZK96UwtmXWHi27cFvUAdy47zsM1M303uAPpe2TqJja5ns6GC21Q2o0O25RzVH6DxcEIovGGvdb7HepQ+RhEZbdec4QcIChJOaYJ8EX5twA0XkvDeTtfpF+PcBZj6Gt6JXKNZFEkoxOVby5rVW/B82tu4W/GlESdauNVizfIP2Y5o6PpQ7j34jlyvbITeIJH0/YQDBfrr0K5i2/OYFHfBZ4V5V3p70K8uK0z9o5pTBF9TyillB1mMkIDmS0AYx5alTEsXfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from BJSPR01MB0659.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:1c::14) by BJSPR01MB0786.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:1f::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.35; Thu, 1 Feb
- 2024 03:02:00 +0000
-Received: from BJSPR01MB0659.CHNPR01.prod.partner.outlook.cn
- ([fe80::19a4:3d94:f6a9:97e1]) by
- BJSPR01MB0659.CHNPR01.prod.partner.outlook.cn ([fe80::19a4:3d94:f6a9:97e1%5])
- with mapi id 15.20.7228.029; Thu, 1 Feb 2024 03:01:59 +0000
-From: JiaJie Ho <jiajie.ho@starfivetech.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-CC: "David S . Miller" <davem@davemloft.net>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 4/5] crypto: starfive: Add sm3 support for JH8100
-Thread-Topic: [PATCH v2 4/5] crypto: starfive: Add sm3 support for JH8100
-Thread-Index: AQHaSFqmtg6Zzl/qkUuu0ddSCEXpi7Drn0sAgAgJJNA=
-Date: Thu, 1 Feb 2024 03:01:59 +0000
-Message-ID:
- <BJSPR01MB0659C3FE1262DF8CC7F7DA468A43A@BJSPR01MB0659.CHNPR01.prod.partner.outlook.cn>
-References: <20240116090135.75737-1-jiajie.ho@starfivetech.com>
- <20240116090135.75737-5-jiajie.ho@starfivetech.com>
- <ZbNCKrTLXmPcsrSH@gondor.apana.org.au>
-In-Reply-To: <ZbNCKrTLXmPcsrSH@gondor.apana.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BJSPR01MB0659:EE_|BJSPR01MB0786:EE_
-x-ms-office365-filtering-correlation-id: b835bf45-142c-4720-3f12-08dc22d2288e
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 0x2zXVRtxdxeTtJGNH+CQFh0FOheHlyAWX44VXoMuqgTObvRWw/o1wJFL+sQwPXnqIy1CUYGQyNUhUwlsNOjznT60kCrqsGzeViediDZx+aLB+shDUiL32qd0RYu10p67bInCrLnIIoaKNGS1inhA+wO5lHafd0ez6QsE6cOxlB0AFlPjm9AxknZO3//Omux/hsOiSaXFvf3u0EqsqPCs3RoRBBAEtiRefW6G3ThLq0gIQyMV2MMQgmKCspXg8A5RVP/bfgnv3qQ3Ied95IisgvliRavKnwt6Q0YCwfXfv/QDonA4RLLa8X8L1J95nNTEC97bC7/ZzSBvOxNJdQj7JeaADvv4moh9pSn37AYZa+pxn3W7eOW226CKWC9jFDkjBUG3wGv3olskqIISbQINNYCh8iRE3+zQCvpD2HNHBBNiXjyttK367QyYraMjaILqVSwv9kuaB12E0Ncgh+UWW+HGDAIw/zmq0EdrRZb6smJYZku8jUN0qcU536mvmH6PtX6ud/pGCz7JRVdwHMcdtIqAOYvwjmYvB93c/mkYUDvrIy7yCgEu3rFM7oHVS85
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0659.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(39830400003)(366004)(136003)(346002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(55016003)(83380400001)(41320700001)(38070700009)(40160700002)(40180700001)(33656002)(86362001)(41300700001)(8936002)(38100700002)(26005)(9686003)(5660300002)(71200400001)(66446008)(7696005)(122000001)(6916009)(54906003)(4326008)(64756008)(76116006)(66946007)(66556008)(2906002)(8676002)(66476007)(508600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?IFZnV6saD2SwxTxrhk6g6+fO3GrQlNURycjFgn9y2XVO5nHJGoTxMKwnaYBr?=
- =?us-ascii?Q?5XFJaoFdRk3bFBD9iVFiPiFXbiF6wwIvDtfysYVQjmo5ygMpP1sqdaJ+JY9d?=
- =?us-ascii?Q?rQQQT28MFvSzweC6DoNNsQu2AbA6AmkxLBv41wnHtDGndfl7ltlyu0/MOdP+?=
- =?us-ascii?Q?M8+t2m6rz5eymOQWd2idu9VRKSo9Y3SjKIryQmjksl9oK3820NhzChOsaKjN?=
- =?us-ascii?Q?lEVJ4lPnflENGszDFaCz/ELivLtUIvpx4aEnA/Gb+IgjTNgS16IByVoXm3Sm?=
- =?us-ascii?Q?93bQfL7NQTeQInm9pfb2i0Veykbbinb+HF4eEBr8tACLyn0QfOoCEYuvNTwo?=
- =?us-ascii?Q?8Wo6eJlLZuGHj8qXuPAbmmHZDDKnzb/+M6qKfqmLwvMMjdUsdT5HZLdWXz40?=
- =?us-ascii?Q?G7dStdlSAp6OpVFyDkpVrgL2gt4WV20Pwg5Rg984Sa9JgbTvQvprhKhwxEAq?=
- =?us-ascii?Q?XTSDIIaI2o5xUcL16DaaRd4owPt6BB7xpMeP1GIBAwLof04OgL/R4v/O2JWr?=
- =?us-ascii?Q?vYbyR2k0IoglefeLOTJbOxnlVMIeTg9P926em8OKFPussowuquf+krK/W77s?=
- =?us-ascii?Q?oBrdqK7+vtp0NpMr9wv+2AbNh1k6V1HlMP86HQg/mjx6Ldx2hdWpn1m6ks1u?=
- =?us-ascii?Q?i5Zgf1M9VLfkMH2C70NR2MhEzFJvt6aQhJ9JJkJK1hiq+eMu6a8XAxBNg7Kj?=
- =?us-ascii?Q?ggF+2qvcr+JmCMfnitLYC58UU9sSPCeznPcsr6rnLhw2d2yPd20TnjKgcLTM?=
- =?us-ascii?Q?+NTLH9WNuJ98GSybYin7ygrwLpNjH0MisBDKJbcVd7faMpKvBZuXVz2aGxSb?=
- =?us-ascii?Q?vuzSgg77f7HpNT4+cbPEaHTeGhMc4VSshfSVjF7eNnNzgK6RfDkKPyn2IeOK?=
- =?us-ascii?Q?TuZKpC2Bwk6Yaantk6DROHxVFAIxjomfRITKs30DFTVewaFyKBckyWMXhPb8?=
- =?us-ascii?Q?Ft+FOeasjBSB0dSLWhpG4nFbQuETDaII6kbXxE6sdkQNE+9a6Uiny5rLr0Hb?=
- =?us-ascii?Q?W03wlYIgdPUAgBZlo+3wC3mw+Ve6gEprnqCJ6U7CQf1YZrbOus2e4cMdTY4L?=
- =?us-ascii?Q?GBAr62MG/LyMxTe8F0i5FTfdieK6yLeDmzDyRJCt6Vvoj5tHOWuE/WUE3Um6?=
- =?us-ascii?Q?/7LmEtL8t0FypPQHauI8GBFT/hod+odvymG594c9yVEZUd2LSVNIXrI9WtGr?=
- =?us-ascii?Q?nuoX/KJXY50RVtsoMReietQJVetyQL6WYuD3If0dbN7GguQ7SaXF2+sdrErD?=
- =?us-ascii?Q?2IL3YTrq7lFZm2qzBnB1xH8nxzhEClO79P4whgnnHlRHNFOsFZnhMGvLaSyC?=
- =?us-ascii?Q?iXFyh1Z18pddPFa8pWQfzYmzz9jd888DsTMP988zj5LpxdJhtek2qBZrvl69?=
- =?us-ascii?Q?mOdit9hLcpg7s6SR+17JlUHoaDwmBE5uqW26MusHtBKaUlk6eUyTcXUitksB?=
- =?us-ascii?Q?Pz+BCIFcZmh2l1Pvf7Gttz6U4mOq7httSO//Md3jU5ElxB7Y1TSHOdS0jMhO?=
- =?us-ascii?Q?b+qYlNAc4GSiX4XNrdGp0G1MLQnKG4VkkdALkR462YalWzxIyjGizq1pkPet?=
- =?us-ascii?Q?mH3N7gXiOqAIWgVQsSFtiiZnQJLQ8w1BTkbc+BgAZTRdMflf/mn3vDz0s9wz?=
- =?us-ascii?Q?EA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF208141998
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 06:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.77.159
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706769404; cv=none; b=ZfrDvI1BMp3mBJWEOt4i1+MhGJ+xRID1ImVoV/Qr9zF/KaXLBz3Cnh/kytgZ1Weqf//MhH+xQ33qPv8/c/1u9I562PoDXjO2DZFU7dHHDEgyfXHzfSQ+nIFIh4mgPlV6GPtClW8tllWNJiu1mTE4MaE820qQEQjuZyd5ajmqr5w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706769404; c=relaxed/simple;
+	bh=i5MSXSaMLBae+fF8XqEzWeeV65s59098xCl+b3aOpF8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sYWu5n83DFD1VaL1S2cuOKcAFt4RHHRyrCSLgoF2XbwCCMMP3xt/uGu8Qw4jPrwquV573yPAv0ZZbpX4mQ3GwwAXyxkX7EVQGKWmuXeNAMeInnXe/H+7IGi9Ykr/OcmJ+HqorlLaGwuFVdSt0QU/sZZX4uuwc7X/OYT1cDUNPhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.77.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp67t1706769344tulmhuuk
+X-QQ-Originating-IP: KjVD9+aX2aZYMjcATJfslkoCIdDVohZOIl74GAItYuU=
+Received: from [127.0.0.1] ( [223.112.234.130])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 01 Feb 2024 14:35:42 +0800 (CST)
+X-QQ-SSF: 00400000000000B0B000000A0000000
+X-QQ-FEAT: CQfe3icsPEi/sJ/cqrnfoco1YIfqgVP1kmCAjw6Sx6FzmEKq6FBYfgPS504h3
+	Kv5cVDHuspbbC8dDaMbq5jK8kcq82KW5TJpthlNo+GRe/asZiG8c3lohdf3BSpEAOoAjNX0
+	I0auOD9luogHkD3uEHX8nA2VJy9WAHSx0tsDPBabTKail/bqvdvvl4xzrFYwZ/h9V00upDE
+	MfFSDA03IkoPveMFaN8odJRL1IoqNYzOvEDqgMoGRmIbZVDASDdPYzqFFW/N5z2ExxFdFxF
+	hACBNNlPo1sSxXRavU9b5VNcUuYD1NC1wgFCPb/3G5Cqiu2un/PyfSU/tcb0PdYCJpd3Lzo
+	xNtmJtbLVAwE8ywYHxwNYnfeqYPvvrHeTV9ji6OQhqhoVTKSiToMJvjQW6Y5b30oaH6K/Tg
+	Ar5ZWQDq+jgdnUbB0PlvhrqQs34YxFNt
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 3035629333089044456
+Message-ID: <910819427166ACC0+fac3c73b-ed5b-4e53-b4b2-d636f5bdcca4@shingroup.cn>
+Date: Thu, 1 Feb 2024 14:35:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0659.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: b835bf45-142c-4720-3f12-08dc22d2288e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2024 03:01:59.8617
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6blqKGDP8VJDoQMEIjOA0SrE3nQjB70wu33yZi8Vf29ts4CP41Fod+9M365L1OyhOCRUYQ+rfzFI7HZq64Xt/z0chi+tQ3gmHvoaU1W89d8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0786
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/hx_arm_ni: Support uncore ARM NI-700 PMU
+Content-Language: en-US
+From: =?UTF-8?B?WWFuZyBKaWFsb25nIOadqOS9s+m+mQ==?= <jialong.yang@shingroup.cn>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: shenghui.qu@shingroup.cn, ke.zhao@shingroup.cn, zhijie.ren@shingroup.cn,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240131070821.11477-1-jialong.yang@shingroup.cn>
+ <deb708e5-bbaf-4510-826b-17e14e69b475@kernel.org>
+ <6D9001324476F76F+ee5f853d-7c69-4a99-857c-cc2b03e9eea1@shingroup.cn>
+ <fef66164-1238-45e4-b70c-c565caa2cf75@kernel.org>
+ <0C0EA95E5AC6D147+ff1001b7-d61b-4365-9a22-b3c4dfacbc53@shingroup.cn>
+ <a399c8a5-5972-4e21-b3c0-9201f0f6b146@kernel.org>
+ <cefbbefe-9b10-4ae4-9bb8-af6eb6916f6a@shingroup.cn>
+In-Reply-To: <cefbbefe-9b10-4ae4-9bb8-af6eb6916f6a@shingroup.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-> On Tue, Jan 16, 2024 at 05:01:34PM +0800, Jia Jie Ho wrote:
-> > Add driver support for SM3 hash/HMAC for JH8100 SoC. JH8100 contains a
-> > separate SM algo engine and new dedicated dma that supports 64-bit
-> > address access.
-> >
-> > Signed-off-by: Jia Jie Ho <jiajie.ho@starfivetech.com>
-> > ---
-> >  drivers/crypto/starfive/Kconfig       |  25 +-
-> >  drivers/crypto/starfive/Makefile      |   3 +
-> >  drivers/crypto/starfive/jh7110-cryp.c |  48 ++-
-> > drivers/crypto/starfive/jh7110-cryp.h |  59 +++
-> > drivers/crypto/starfive/jh7110-hash.c |  20 +-
-> > drivers/crypto/starfive/jh8100-sm3.c  | 532
-> ++++++++++++++++++++++++++
-> >  6 files changed, 677 insertions(+), 10 deletions(-)  create mode
-> > 100644 drivers/crypto/starfive/jh8100-sm3.c
-> >
-> > diff --git a/drivers/crypto/starfive/Kconfig
-> > b/drivers/crypto/starfive/Kconfig index 0fe389e9f932..e6bf02d0ed1f
-> > 100644
-> > --- a/drivers/crypto/starfive/Kconfig
-> > +++ b/drivers/crypto/starfive/Kconfig
-> > @@ -5,7 +5,7 @@
-> >  config CRYPTO_DEV_JH7110
-> >  	tristate "StarFive JH7110 cryptographic engine driver"
-> >  	depends on (SOC_STARFIVE && AMBA_PL08X) || COMPILE_TEST
-> > -	depends on HAS_DMA
-> > +	depends on HAS_DMA && !CRYPTO_DEV_JH8100
-> >  	select CRYPTO_ENGINE
-> >  	select CRYPTO_HMAC
-> >  	select CRYPTO_SHA256
-> > @@ -24,3 +24,26 @@ config CRYPTO_DEV_JH7110
-> >  	  skciphers, AEAD and hash functions.
-> >
-> >  	  If you choose 'M' here, this module will be called jh7110-crypto.
-> > +
-> > +config CRYPTO_DEV_JH8100
-> > +	tristate "StarFive JH8100 cryptographic engine drivers"
-> > +	depends on (SOC_STARFIVE && DW_AXI_DMAC) || COMPILE_TEST
-> > +	depends on HAS_DMA
-> > +	select CRYPTO_ENGINE
-> > +	select CRYPTO_HMAC
-> > +	select CRYPTO_SHA256
-> > +	select CRYPTO_SHA512
-> > +	select CRYPTO_SM3_GENERIC
-> > +	select CRYPTO_RSA
-> > +	select CRYPTO_AES
-> > +	select CRYPTO_CCM
-> > +	select CRYPTO_GCM
-> > +	select CRYPTO_CBC
-> > +	select CRYPTO_ECB
-> > +	select CRYPTO_CTR
-> > +	help
-> > +	  Support for StarFive JH8100 crypto hardware acceleration engine.
-> > +	  This module provides additional support for SM2 signature
-> verification,
-> > +	  SM3 hash/hmac functions and SM4 skcipher.
-> > +
-> > +	  If you choose 'M' here, this module will be called jh8100-crypto.
-> > diff --git a/drivers/crypto/starfive/Makefile
-> > b/drivers/crypto/starfive/Makefile
-> > index 8c137afe58ad..67717fca3f5d 100644
-> > --- a/drivers/crypto/starfive/Makefile
-> > +++ b/drivers/crypto/starfive/Makefile
-> > @@ -2,3 +2,6 @@
-> >
-> >  obj-$(CONFIG_CRYPTO_DEV_JH7110) +=3D jh7110-crypto.o
-> > jh7110-crypto-objs :=3D jh7110-cryp.o jh7110-hash.o jh7110-rsa.o
-> > jh7110-aes.o
-> > +
-> > +obj-$(CONFIG_CRYPTO_DEV_JH8100) +=3D jh8100-crypto.o jh8100-crypto-
-> objs
-> > +:=3D jh7110-cryp.o jh7110-hash.o jh7110-rsa.o jh7110-aes.o jh8100-sm3.=
-o
-> > diff --git a/drivers/crypto/starfive/jh7110-cryp.c
-> > b/drivers/crypto/starfive/jh7110-cryp.c
-> > index fe33e87f25ab..fb7c19705fbf 100644
-> > --- a/drivers/crypto/starfive/jh7110-cryp.c
-> > +++ b/drivers/crypto/starfive/jh7110-cryp.c
-> > @@ -106,6 +106,26 @@ static irqreturn_t starfive_cryp_irq(int irq, void
-> *priv)
-> >  	return IRQ_HANDLED;
-> >  }
-> >
-> > +#ifdef CONFIG_CRYPTO_DEV_JH8100
-> > +static irqreturn_t starfive_cryp_irq1(int irq, void *priv) {
-> > +	u32 status;
-> > +	u32 mask;
-> > +	struct starfive_cryp_dev *cryp =3D (struct starfive_cryp_dev *)priv;
-> > +
-> > +	mask =3D readl(cryp->base + STARFIVE_SM_IE_MASK_OFFSET);
-> > +	status =3D readl(cryp->base + STARFIVE_SM_IE_FLAG_OFFSET);
-> > +
-> > +	if (status & STARFIVE_SM_IE_FLAG_SM3_DONE) {
-> > +		mask |=3D STARFIVE_SM_IE_MASK_SM3_DONE;
-> > +		writel(mask, cryp->base + STARFIVE_SM_IE_MASK_OFFSET);
-> > +		tasklet_schedule(&cryp->sm3_done);
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +#endif
-> > +
-> >  static int starfive_cryp_probe(struct platform_device *pdev)  {
-> >  	struct starfive_cryp_dev *cryp;
-> > @@ -156,6 +176,16 @@ static int starfive_cryp_probe(struct
-> platform_device *pdev)
-> >  		return dev_err_probe(&pdev->dev, ret,
-> >  				     "Failed to register interrupt handler\n");
-> >
-> > +#ifdef CONFIG_CRYPTO_DEV_JH8100
-> > +	tasklet_init(&cryp->sm3_done, starfive_sm3_done_task, (unsigned
-> > +long)cryp);
-> > +
-> > +	irq =3D platform_get_irq(pdev, 1);
-> > +	if (irq < 0)
-> > +		return irq;
-> > +
-> > +	ret =3D devm_request_irq(&pdev->dev, irq, starfive_cryp_irq1, 0,
-> > +			       pdev->name, (void *)cryp);
-> > +#endif
-> >  	clk_prepare_enable(cryp->hclk);
-> >  	clk_prepare_enable(cryp->ahb);
-> >  	reset_control_deassert(cryp->rst);
-> > @@ -191,8 +221,17 @@ static int starfive_cryp_probe(struct
-> platform_device *pdev)
-> >  	if (ret)
-> >  		goto err_algs_rsa;
-> >
-> > +#ifdef CONFIG_CRYPTO_DEV_JH8100
-> > +	ret =3D starfive_sm3_register_algs();
-> > +	if (ret)
-> > +		goto err_algs_sm3;
-> > +#endif
-> >  	return 0;
-> >
-> > +#ifdef CONFIG_CRYPTO_DEV_JH8100
-> > +err_algs_sm3:
-> > +	starfive_rsa_unregister_algs();
-> > +#endif
-> >  err_algs_rsa:
-> >  	starfive_hash_unregister_algs();
-> >  err_algs_hash:
-> > @@ -213,7 +252,9 @@ static int starfive_cryp_probe(struct
-> platform_device *pdev)
-> >  	reset_control_assert(cryp->rst);
-> >
-> >  	tasklet_kill(&cryp->hash_done);
-> > -
-> > +#ifdef CONFIG_CRYPTO_DEV_JH8100
-> > +	tasklet_kill(&cryp->sm3_done);
-> > +#endif
->=20
-> Please use if instead if ifdef where possible:
->=20
-> 	if (IS_ENABLED(CONFIG_CRYPTO_DEV_JH8100))
-> 		tasklet_kill(&cryp->sm3_done);
->=20
 
-Hi Herbert,
-I am using ifdef so unused codes wouldn't be compiled into the driver for u=
-nsupported variant.
-Is the compiled driver size a concern for such cases?=20
 
-Thanks for review this.=20
+在 2024/2/1 11:00, Yang Jialong 杨佳龙 写道:
+> 
+> 
+> 在 2024/1/31 18:36, Krzysztof Kozlowski 写道:
+>> On 31/01/2024 11:07, Yang Jialong 杨佳龙 wrote:
+>>>
+>>>
+>>> 在 2024/1/31 17:38, Krzysztof Kozlowski 写道:
+>>>> On 31/01/2024 10:07, Yang Jialong 杨佳龙 wrote:
+>>>>>
+>>>>>
+>>>>> 在 2024/1/31 15:59, Krzysztof Kozlowski 写道:
+>>>>>> On 31/01/2024 08:08, JiaLong.Yang wrote:
+>>>>>>> This code is based on uncore PMUs arm_smmuv3_pmu and arm-cmn.
+>>>>>>> One ni-700 can have many clock domains. Each of them has only one 
+>>>>>>> PMU.
+>>>>>>> Here one PMU corresponds to one 'struct ni_pmu' instance.
+>>>>>>> PMU name will be ni_pmu_N_M, which N means different NI-700s and 
+>>>>>>> M means
+>>>>>>> different PMU in one NI-700. If only one NI-700 found in NI-700, 
+>>>>>>> name will
+>>>>>>> be ni_pmu_N.
+>>>>>>> Node interface event name will be xxni_N_eventname, such as
+>>>>>>> asni_0_rdreq_any. There are many kinds of type of nodes in one clock
+>>>>>>> domain. Also means that there are many kinds of that in one PMU. 
+>>>>>>> So we
+>>>>>>> distinguish them by xxni string. Besides, maybe there are many nodes
+>>>>>>> have same type. So we have number N in event name.
+>>>>>>> By ni_pmu_0_0/asni_0_rdreq_any/, we can pinpoint accurate bus 
+>>>>>>> traffic.
+>>>>>>> Example1: perf stat -a -e 
+>>>>>>> ni_pmu_0_0/asni_0_rdreq_any/,ni_pmu_0_0/cycles/
+>>>>>>> EXample2: perf stat -a -e ni_pmu_0_0/asni,id=0,event=0x0/
+>>>>>>>
+>>>>>>> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
+>>>>>>> ---
+>>>>>>> v1 --> v2:
+>>>>>>> 1. Submit MAINTANER Documentation/ files seperately.
+>>>>>>
+>>>>>> SEPARATE PATCHES, not patchsets. You have now checkpatch warnings
+>>>>>> because of this...
+>>>>>
+>>>>> ...OK. But the MAINTANER file changing should be given in which one
+>>>>> patches.
+>>>>> I will submit patch v3 after talking and your permission.
+>>>>>
+>>>>>>
+>>>>>>> 2. Delete some useless info printing.
+>>>>>>> 3. Change print from pr_xxx to dev_xxx.
+>>>>>>> 4. Fix more than 75 length log info.
+>>>>>>> 5. Fix dts attribute pccs-id.
+>>>>>>> 6. Fix generic name according to DT specification.
+>>>>>>> 7. Some indentation.
+>>>>>>> 8. Del of_match_ptr macro.
+>>>>>>>
+>>>>>>>     drivers/perf/Kconfig     |   11 +
+>>>>>>>     drivers/perf/Makefile    |    1 +
+>>>>>>>     drivers/perf/hx_arm_ni.c | 1284 
+>>>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>>>     3 files changed, 1296 insertions(+)
+>>>>>>>     create mode 100644 drivers/perf/hx_arm_ni.c
+>>>>>>>
+>>>>>>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+>>>>>>> index ec6e0d9194a1..95ef8b13730f 100644
+>>>>>>> --- a/drivers/perf/Kconfig
+>>>>>>> +++ b/drivers/perf/Kconfig
+>>>>>>> @@ -241,4 +241,15 @@ config CXL_PMU
+>>>>>>>           If unsure say 'm'.
+>>>>>>> +config HX_ARM_NI_PMU
+>>>>>>> +       tristate "HX ARM NI-700 PMU"
+>>>>>>> +       depends on PPC_HX_C2000 && 64BIT
+>>>>>>
+>>>>>> 1. There is no PPC_HX_C2000.
+>>>>>
+>>>>> I have been used to using this macro. However this macro is not 
+>>>>> existed
+>>>>> in mainline.
+>>>>> I will replace it with ARM64. And del involved C code if OK.
+>>>>>
+>>>>> 64bit:
+>>>>> __ffs(unsigned long) and __fls(unsigned long) will be wrong in 
+>>>>> 32bit. I
+>>>>> pass a u64 argument.
+>>>>
+>>>> One thing is where the code is supposed to run, second thing is compile
+>>>> testing.
+>>>>
+>>>
+>>> Now run on my company product, a 64bit PowerPC...
+>>> But I think it's general for 64bit systems.
+>>>
+>>>> Why do you use __ffs, not __ffs64 which takes u64 if you really want
+>>>> only 64bit argument? unsigned long != u64, so your code is not
+>>>> architecture independent. You claim you wrote it on purpose as
+>>>> non-architecture-independent, but then I claim it's a bug. We are
+>>>> supposed to write code which is portable, as much as possible, assuming
+>>>> it does not affect readability.
+>>>>
+>>>
+>>> I write code in v5.18, there are __ffs64() and fls64(). Asymmetric.
+>>
+>> Sorry, that's a no go.
+>>
+>> That's some very, very old kernel. Do not develop on old kernels, but on
+>> mainline. I also suspect that by basing your work on old kernel, you
+>> duplicate a lot of issues already fixed.
+>>
+>>> There are some difference in return val between __ffs() and ffs64().
+>>> __ffs(0) and ffs64(0) will give different value.
+>>
+>> __ffs64 calls __ffs, so why would results be different?
+>>
+>> Anyway, that's not really excuse.
+>>
+> 
+> OK. Follow mainline.
+> 
+>>
+>>>
+>>> And I'm sure code run in 64bit. So I choose to use __ffs and __fls.
+>>>
+>>> Maybe it could be compatbile with 32bit. But I don't have a environment
+>>> to test this.
+>>>>
+>>>>> struct ni_hw_perf_event will be big than limit.
+>>>>> BUILD_BUG_ON(sizeof(struct ni_hw_perf_event) > offsetof(struct
+>>>>> hw_perf_event, target));
+>>>>
+>>>> And why do you need to use any of such code? Please open one of 
+>>>> hundreds
+>>>> of other drivers which work correctly on 32 and 64-bit platforms.
+>>>>
+>>>
+>>> Code for 64bit.
+>>> This code is to avoid struct ni_hw_perf_event is too big than struct
+>>> hw_perf_event::target.
+>>
+>> 1. Why would that matter? target is task_struct. It's size does not
+>> matter. Maybe its offset matters, but not size.
+>>
+> 
+> Offset.
+> 
+>> 2. So you claim that on 32-bit system the structure will be bigger than
+>> on 64-bit system?
+> 
+> The structure will exceed the offset in 32bit. Maybe because the latter 
+> changed more.
+> OK. Dont care please.
+> 
+>>
+>>> I learn it from arm-cmn.c.
+>>
+>> Are you copying patterns because they are good patterns or just because
+>> you decided to copy?
+> 
+> Maybe this way is not very good for event framework.
+> OK. Not an official way.
+> 
 
-Regards,
-Jia Jie
+First, the struct hw_perf_event is originally used to record some 
+general information about its event. Example, struct 
+hw_perf_event::state is used to record status by driver developer.
+
+Second, But there are some field I don't need to use. And instread I 
+want to use another name, just like en_bit_mask or is_cc, depending on hw.
+
+Finally, considering the lifetime keeping of struct ni_hw_perf_event, 
+this way is very well. I don't need to keep an eye on it. And I just 
+need to promise the size. So I choose BUILD_BUG_ON();
+
+What do you think?
+
+Dont care about 32, 64 or offset.
+
+>>
+>>> ni_hw_perf_event will replace hw_perf_event.
+>>> I will put some useful information in it with less space and good field
+>>> names.
+>>> But I can't exceed a limit.
+>>>
+>>>>>
+>>>>>> 2. Nothing justified dependency on 64bit. Drop or explain. Your 
+>>>>>> previous
+>>>>>> message did not provide real rationale.
+>>>>>
+>>>>> If ARM64, then drop.
+>>>>
+>>>> ...
+>>>>
+>>>> ...
+>>>>
+>>>>>>> +    /* Step2: Traverse all clock domains. */
+>>>>>>> +    for (cd_idx = 0; cd_idx < ni->cd_num; cd_idx++) {
+>>>>>>> +        cd = cd_arrays[cd_idx];
+>>>>>>> +
+>>>>>>> +        num = ni_child_number(cd);
+>>>>>>> +        dev_dbg(dev, "The %dth clock domain has %d child 
+>>>>>>> nodes:", cd_idx, num);
+>>>>>>> +
+>>>>>>> +        /* Omit pmu node */
+>>>>>>> +        ni_pmu = devm_kzalloc(dev, struct_size(ni_pmu, 
+>>>>>>> ev_src_nodes, num - 1),
+>>>>>>> +                      GFP_KERNEL);
+>>>>>>> +        ni_pmu->ev_src_num = num - 1;
+>>>>>>> +
+>>>>>>> +        if (!ni_pmu)
+>>>>>>> +            return -ENOMEM;
+>>>>>>> +
+>>>>>>> +        num_idx = 0;
+>>>>>>> +        for (nd_idx = 0; nd_idx < num; nd_idx++) {
+>>>>>>> +            nd = ni_child_pointer(pbase, cd, nd_idx);
+>>>>>>> +
+>>>>>>> +            node.base = nd;
+>>>>>>> +            node.node_type = ni_node_node_type(nd);
+>>>>>>> +
+>>>>>>> +            if (unlikely(ni_node_type(nd) == NI_PMU))
+>>>>>>> +                ni_pmu->pmu_node = node;
+>>>>>>> +            else
+>>>>>>> +                ni_pmu->ev_src_nodes[num_idx++] = node;
+>>>>>>> +            dev_dbg(dev, "  name: %s   id: %d", 
+>>>>>>> ni_node_name[node.type], node.id);
+>>>>>>> +        }
+>>>>>>> +
+>>>>>>> +        ni_pmu->dev = dev;
+>>>>>>> +        ni_pmu->ni = ni;
+>>>>>>> +        ni->ni_pmus[cd_idx] = ni_pmu;
+>>>>>>> +    }
+>>>>>>> +
+>>>>>>> +    devm_kfree(dev, cd_arrays);
+>>>>>>
+>>>>>> Why? If it is not device-lifetime then allocate with usual way.
+>>>>>>
+>>>>>
+>>>>> No device-lifetime.
+>>>>> Will allocate in stack.
+>>>>
+>>>> I was thinking about kzalloc. But if array is small, stack could be 
+>>>> as well.
+>>>>
+>>>
+>>> If I have to return before devm_kfree because of wrong, I will have 
+>>> to use:
+>>>
+>>> goto out;
+>>>
+>>> out:
+>>> kfree();
+>>>
+>>> But if I use devm_kzalloc, I will not be worried about that. Even if no
+>>
+>> devm* is not for that purpose. devm is for device-managed allocations.
+>> Device does not manage your allocation.
+>>
+>>> device-lifetime.
+>>> Isn't this a good way?
+>>
+>> Then you want cleanup.h and use proper __free().
+> 
+> Good NEW API. It does what I want.
+> Learned more. Thanks.
+> 
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
