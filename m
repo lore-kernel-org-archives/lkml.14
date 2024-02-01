@@ -1,103 +1,110 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34184DA12;
-	Thu,  1 Feb 2024 09:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92494D9F6
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706779886; cv=none; b=oTXhHriP9+1OtEjc0XOzJ9phkrKfI93nAyJ3CM/kLUR3gPi7tSiV4UXTsxxvhDSmFwo3JhAnLkhzlyMM55HuBFy2W6lHfiLpDhLQz7mNFriE4yiXLf8O7Ia5hfxIfFx+zuRbXUNJ+Meu7SerVQstuE9Oii1r7B24ytgb1228Rbo=
+	t=1706779950; cv=none; b=RI7UTQ8CPfq+uqQFSHXVPEnNm/hSex2ZcZkBoI++Xaess0mJGQMsE2YyOTV24Sv93Uj9nqLAEvwKiVhjWftc+LcBeEgj798RB2RCeViu3zqebYcKVLkB3DGxDM4s6MHtgNKIlws8Jls4m1QBqL17KWfzqT1F1bjBYDwDbWXjRpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706779886; c=relaxed/simple;
-	bh=Pxf0gkPUSV6ML8ezzNHzC2q4EU2zzV+BO6VfllDl0nE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iKa3jFJVdYw/7kQSB8w26CwBjXYXjJlQnl7BlyvJB6c4V2OU0lCuUXm2T8R3m3Hiwf7GDcV3c27YtUzda+zxyAvcl4MzWaXmnhqQvaVjiu53bO4YBknxdGuO/uue6QOBFnD5iDnkMVgFY3cFMRBTScbljZ50Nh3FbCekQKWVHXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=L1SpQ0ZK; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1706779950; c=relaxed/simple;
+	bh=mGbEKbRg3HRX1JJEx5Fmweb6LPOvKH+q8e4+jYDWBnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SLOUNScjs20xeSUBwfhKa86ZEMpHjgoR/Yl1vzYYWT6rTpbkmWwegfg+Cs9eQ4oNaeBCTJa6dhlUW9NRVCMJgzD6pegXXFkdjQwQnLIDenD2Jap0nJMnpRqgCcCybNOyQicE/y8yg63QWmibI9KSVAfbKgXn/MfH0oSQP/L9JqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hRRznMot; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="L1SpQ0ZK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1706779872; x=1707039072;
-	bh=/TpO0duNnWXfuRmnGBDmPg/iJAgdmf8+TRYZheB4zzo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=L1SpQ0ZKZj0vEZbuhSTKvRRrWW6xgW5wTGeQWEXnf0CAAopQ1uUuErf6ZJShY6zcS
-	 DRaGadbR1O069/g9s9vLme57qnXWHn72kNrcA+mO+vh8yOp9yqaFlXTb1PwRQgWd0+
-	 yMzbr7gTl8PCjvZnGQ92+rl6Ksv1VhFApC3vcrsIywUVB1RvQEjz2VuC/YV+PGkPj4
-	 k/p04fwZ8Qntri1r7/csU62ytmv2qaweNFBv58TA9fTur7Ledik1jgashxmaq1QdE+
-	 5FH7Pz+Zg34ZVOj9+l+Ra6iTKzPI46/NOfWQGZzlceuUHTmcnI2CvCI6wjt6ZDY/L/
-	 WUXng+BOezWig==
-Date: Thu, 01 Feb 2024 09:30:46 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/9] rust: file: add Rust abstraction for `struct file`
-Message-ID: <84850d04-c1cb-460d-bc4e-d5032489da0d@proton.me>
-In-Reply-To: <CAH5fLghgc_z23dOR2L5vnPhVmhiKqZxR6jin9KCA5e_ii4BL3w@mail.gmail.com>
-References: <20240118-alice-file-v3-0-9694b6f9580c@google.com> <20240118-alice-file-v3-1-9694b6f9580c@google.com> <5dbbaba2-fd7f-4734-9f44-15d2a09b4216@proton.me> <CAH5fLghgc_z23dOR2L5vnPhVmhiKqZxR6jin9KCA5e_ii4BL3w@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hRRznMot"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Cb3/
+	O3cYgfvjgEQfrw9YH6eePZxbN6AMDZbUnR3SgPM=; b=hRRznMotmrGIfiAq9V2b
+	rhASVA4bmrXckRh4j5NJDBNMAxkYTV+fx4gcKRBO1O5RbUnqU9z29MXuUzmyH5jH
+	HTx3P+3ES0eET4cQErzYSysju8djxaFSMZ2k+VN0KEXdnZF0zMy4kiu01cLIuQai
+	SAa/TR2bTyzG6LwrcPzb56faGl2cmRnq2TctvhfT/Gu59f5IXTvQZLGVFMY84HW3
+	PHkhP5DAAIrNewtdRlwWr93hNGmjHAEa1YFGxWl5O/AVQZ0XXYvl3qVCZJlIgLVb
+	MqhJA+5/zSB7ZkbRWAPxdVwcoDmBy06FcmXqnVaHu+9ST4Zv7FW/Jw3+IxpKYrAe
+	kw==
+Received: (qmail 3478403 invoked from network); 1 Feb 2024 10:32:24 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 Feb 2024 10:32:24 +0100
+X-UD-Smtp-Session: l3s3148p1@+plErE4QJtVehhtJ
+Date: Thu, 1 Feb 2024 10:32:23 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: renesas: ulcb-kf: document a problemw with
+ old firmware
+Message-ID: <ZbtlJ-7UCPxgUXeS@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-renesas-soc@vger.kernel.org,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20240130095222.11177-1-wsa+renesas@sang-engineering.com>
+ <CAMuHMdUB_9TNzo+GFbDZO-gjBUGfk7O7aEyJYG5pCw-Z1nK-pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 29.01.24 17:34, Alice Ryhl wrote:
-> On Fri, Jan 26, 2024 at 4:04=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
->>> +///   closed.
->>> +/// * A light refcount must be dropped before returning to userspace.
->>> +#[repr(transparent)]
->>> +pub struct File(Opaque<bindings::file>);
->>> +
->>> +// SAFETY: By design, the only way to access a `File` is via an immuta=
-ble reference or an `ARef`.
->>> +// This means that the only situation in which a `File` can be accesse=
-d mutably is when the
->>> +// refcount drops to zero and the destructor runs. It is safe for that=
- to happen on any thread, so
->>> +// it is ok for this type to be `Send`.
->>
->> Technically, `drop` is never called for `File`, since it is only used
->> via `ARef<File>` which calls `dec_ref` instead. Also since it only conta=
-ins
->> an `Opaque`, dropping it is a noop.
->> But what does `Send` mean for this type? Since it is used together with
->> `ARef`, being `Send` means that `File::dec_ref` can be called from any
->> thread. I think we are missing this as a safety requirement on
->> `AlwaysRefCounted`, do you agree?
->> I think the safety justification here could be (with the requirement add=
-ed
->> to `AlwaysRefCounted`):
->>
->>       SAFETY:
->>       - `File::drop` can be called from any thread.
->>       - `File::dec_ref` can be called from any thread.
->=20
-> This wording was taken from rust/kernel/task.rs. I think it's out of
-> scope to reword it.
-
-Rewording the safety docs on `AlwaysRefCounted`, yes that is out of scope,
-I was just checking if you agree that the current wording is incomplete.
-
-> Besides, it says "destructor runs", not "drop runs". The destructor
-> can be interpreted to mean the right thing for ARef.
-
-To me "destructor runs" and "drop runs" are synonyms.
-
-> The right safety comment would probably be that dec_ref can be called
-> from any thread.
-
-Yes and no, I would prefer if you could remove the "By design, ..."
-part and only focus on `dec_ref` being callable from any thread and
-it being ok to send a `File` to a different thread.
-
---=20
-Cheers,
-Benno
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m5ayo9h/R03Rj0Ow"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUB_9TNzo+GFbDZO-gjBUGfk7O7aEyJYG5pCw-Z1nK-pw@mail.gmail.com>
 
 
+--m5ayo9h/R03Rj0Ow
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Geert,
+
+> I'd rather not add such comments (especially +6y after the fact), as
+> this is the standard operating procedure in case something doesn't work.
+
+Okay, can be argued.
+
+> /* If secondary CPUs don't work, please update your firmware */
+> /* If cpuidle crashes, please update your firmware */
+> /* If watchdog restart doesn't work, please update your firmware */
+> /* If PSCI reboot doesn't work, please update your firmware */
+
+Actually, I wouldn't mind. It documents that we *know* updating firmware
+helps in this particular case. But as said, I can see your point as
+well. Let's drop this patch.
+
+Happy hacking,
+
+   Wolfram
+
+
+--m5ayo9h/R03Rj0Ow
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmW7ZSQACgkQFA3kzBSg
+KbawvxAAkU+UH6er8246WWvbhlx5F2otGXdN41eOjvKL8rr7GCEZE5zaIubaW8gK
+QRweI+MMksGvVeI0dHmo/wx8g6nRrMLGn9qY8aUSLspD++3nZqUwn5Y3tx930/uW
+XsmJrn1qO02Jda9mCIyZudeabQlOlt+qyVdjKAdVEIEbBdgkIcVg0hOGvVMesYrH
+qRi/3ZWnm7ywc3J1E03a0kgylnYMmm3WpljPKGKnRNHHlkxKUBY8G21gCkvy4VnZ
+aXAfyZrLCj9YVtODgjx6JWZz34pbut+p0LclgjTy6hj9tC+xdooKzpeTEhKwUFtQ
+//fLFan8w4uz/LM70VElp5k62nYYbXHV0w3jfCivPAYucrTk16c+vzcW/hW9DGKV
+9yXGZN8yWKqV3PwymFpm1iE9SrQJQZQe7joAgnsZ63tSo0eUTdxGgmx/BdbLI41y
+UwnXIi7tDlk1YAjsYF1wU644tWdlaxQENLTPh++twauNM7SjuaB+dRySa5et8C2i
+1ifogpTEpyCnmP5azFXUdpxEhPtTgDiEAFNn04gOZ9uB/ANQNamX41mdzywj5J6c
+kg5tPiP+nx4lAZMgz1QxlLHM/ZCmJ49Zcd/9v4Oc7omec+GGVzEsHc8Ympdh8j5J
+3U+WdlatFEfCyG8WasVizOYFC49ZczjEMtlX+0a7gym8ruBKbxA=
+=Ccfm
+-----END PGP SIGNATURE-----
+
+--m5ayo9h/R03Rj0Ow--
