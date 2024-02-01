@@ -1,69 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14B512FB2A;
-	Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D331A12FB38
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706811792; cv=none; b=dvtAipUrPtw5UyRNek7rl1005DTcX6ltJH5RCLBKjt6SKTubPiX7ciKx+UBJ1SRHfjGnczhP0lAK10PzfyXrD1KXF60QvP7pEMo6d5Op9bQM9dflyKQ6ruyzGrxb9Ybn8krJN0Am8DgwRfhoKTvqdKpE0R/s7q0AyHWrjMreuag=
+	t=1706811792; cv=none; b=IO9A5cTMu7EjBqnRstxzsxFgBnAH2R70qeQS4CU9s/cEaK8L0lweS3Kp66MCH8LVpJhETqm2B9lEaqEHKCWZCf2BZnSkqer/P5iD5nQC+30svA2WuvYGouQ8b4EybyhY9mtAFGcuAhzjmQgfg+P6zFgR53KPNcDr8sCWlq3qkuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706811792; c=relaxed/simple;
-	bh=yq+Z4M7zlzPMJLWLN9zuh/eHfYQwP+DCdiLxy1yA5MI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qSwqESwLSzMmnvT9FgYg1fbHevRoXqN7ZZDUh/9w/NiH6+dNgDZVA+RidGLozq0GeYHCrmkLEVNBIBjIvgsjrl+rOmKFHdowV7uYF/VIG+hG0kggYf3RBQgnuLE56mav5Z3CETXnQpmPKboRI4m4Fov5O6iTMA/4o4O/4HroUo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVVBQb7a; arc=none smtp.client-ip=10.30.226.201
+	bh=Rfq/1EbOlZ+uf0g++56AeiUKr/p3cQK/1XhmbONGGPc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fFqubQMp3MRz3PWA6OBL6vGBCdWBS2qx5HqUee2Wgppksm0fK96c8w4gYme8tloxoiz5Sqc0QpOtbWZ6ZHqUrVN0tb8tcWY5joW8sceI2i6fy+PEWqRvON4mDJG/PLCAnPohXttsZbsdVRVWDpftmSodphJuW1pAnwKYGgTfDdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ma6CkSE7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVVBQb7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7668EC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ma6CkSE7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A9D2FC433A6;
 	Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706811792;
-	bh=yq+Z4M7zlzPMJLWLN9zuh/eHfYQwP+DCdiLxy1yA5MI=;
+	bh=Rfq/1EbOlZ+uf0g++56AeiUKr/p3cQK/1XhmbONGGPc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=CVVBQb7alxOrVgqjNfPoyvE2ZNeGf8Ozr4y7QfHOkFdcX40XfE589hxrKZKOHBIGV
-	 renqucEft1x+uVVuAIlHE50gFbXZyskzejLiZykSwBXEAKPfnY1KjMdH0aK9+NflJ8
-	 yiaeOr+9YsD5P73QM7AwMH283e5k3de+SJH6bNNqTNiPmTJpySEgZrYUAEyZKueP42
-	 uWrhtzSwjNDZvaa6IheZHTLzL1tALOarJ199dnpoqRb9ag+tltC37qlSBZCAGMRNfg
-	 FTQkqy501KWaGuXl1ZDCjdHuTgPJrYas1bvVEHSNPHDkg4L6CqiVOfUUvoi15eYKWh
-	 fgfNKP2mPshgA==
+	b=Ma6CkSE7BKVBMoMLMkhmCz9NKmWS7uzpJZ0KjCPxdRvk+9ainRHSl5jGZoEnsB5MD
+	 fymy4dNoK+GggX/KVZBOWnAEWpkNDusApzOMZCELExRxDTOh25B/VGaFbE6sMP4NrR
+	 LppXzLpLwKKM25/APNL3RvOw7DBFS12/qur7ah4xjzvFeWboLna/pnjLkCAn+fzdkM
+	 5h13opXe8DXaRzJ+9NZJp/LseR3ALTIhePiWIymhXTxgHJU0RatQ9NXD2gHdha8BOk
+	 0frYW9xOkARkHRc5ETRsEPfBVSasiygvHdZ5DlXUIKx5+Nm7y6S+htDDLrlBg9U7iz
+	 wOfucuL2KFXGw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 60AD0C0C40E;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 97010C0C40E;
 	Thu,  1 Feb 2024 18:23:12 +0000 (UTC)
-Subject: Re: [GIT PULL] Crypto Fixes for 6.8
+Subject: Re: [GIT PULL] firewire fixes for v6.8-rc3
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZbstBewmaIfrFocE@gondor.apana.org.au>
-References: <YpC1/rWeVgMoA5X1@gondor.apana.org.au>
- <Yui+kNeY+Qg4fKVl@gondor.apana.org.au>
- <Yzv0wXi4Uu2WND37@gondor.apana.org.au>
- <Y5mGGrBJaDL6mnQJ@gondor.apana.org.au>
- <Y/MDmL02XYfSz8XX@gondor.apana.org.au>
- <ZEYLC6QsKnqlEQzW@gondor.apana.org.au>
- <ZJ0RSuWLwzikFr9r@gondor.apana.org.au>
- <ZOxnTFhchkTvKpZV@gondor.apana.org.au>
- <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
- <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au> <ZbstBewmaIfrFocE@gondor.apana.org.au>
+In-Reply-To: <20240201121926.GA87292@workstation.local>
+References: <20240201121926.GA87292@workstation.local>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZbstBewmaIfrFocE@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git v6.8-p2
-X-PR-Tracked-Commit-Id: c5a2f74db71a849f3a60bc153d684d6d28a0c665
+X-PR-Tracked-Message-Id: <20240201121926.GA87292@workstation.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.8-rc3
+X-PR-Tracked-Commit-Id: 47dc55181dcbee69fc84c902e7fb060213b9b8a5
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8a2514c0c61f7d4587071b96b4be7481350b5bc9
-Message-Id: <170681179239.954.11799166338832524461.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: f6cdd897cc7030a573f56ab1e9ebaece26c7c10c
+Message-Id: <170681179261.954.17356427499585105372.pr-tracker-bot@kernel.org>
 Date: Thu, 01 Feb 2024 18:23:12 +0000
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 1 Feb 2024 13:32:53 +0800:
+The pull request you sent on Thu, 1 Feb 2024 21:19:26 +0900:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git v6.8-p2
+> git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.8-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8a2514c0c61f7d4587071b96b4be7481350b5bc9
+https://git.kernel.org/torvalds/c/f6cdd897cc7030a573f56ab1e9ebaece26c7c10c
 
 Thank you!
 
