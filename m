@@ -1,86 +1,128 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FF062164;
-	Thu,  1 Feb 2024 15:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B174A62160;
+	Thu,  1 Feb 2024 15:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706800909; cv=none; b=Fo8XC0VzK1+gmyHKGvzVALMBqE9/aYCCssqsQMWwKBsE8xYIKRom696388fEe0vq2mNdIcHJBip6BK7WH15m3fjF/NzSN0D+Z4rW8Fa/WCcTgyWZVxV9uFFymd+aMjQviUZXa2h1btW1hDhnWuklZK0fVD22x34h7Qzq9ZG529U=
+	t=1706800911; cv=none; b=RlZEckPWSxwVfxpyE6fcj5LKYZ4DPjwZetbAmoyffp6oCJXuH18hG/JUzV+iO2ZGjbh4n2S6TBE50CObxhYvS7YwUWjustKB8XT5f6fzvsBDwjboQUS7LjYx7N2B/OhyKx+yYcns8U7ow0chH8MUl7tyG8KgFGfZ1SihBSUvbjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706800909; c=relaxed/simple;
-	bh=J2Fi4XHVN1Jz6WkErdbO9Tc/fjc+p7m1fDIZnr5SYJA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cHoMYfDRfnMhUa2E0C96kaFOSIn2DSF3skPM5e/kKNcd8kEa9yMsrHQnwHSKSYIpFt/Q8oiX++XUmgfZ/RUFxfKtQubDx4g9syMzG0DlapJN9jUxauReZkdW6HUnJdSJNvP/f0C844cHyjuV1N3hmi7CAP0AploTdm7loKPLEIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TQjGh5Yt0z6K8wZ;
-	Thu,  1 Feb 2024 23:18:36 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 689371400DB;
-	Thu,  1 Feb 2024 23:21:45 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 1 Feb
- 2024 15:21:44 +0000
-Date: Thu, 1 Feb 2024 15:21:44 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: Jonathan Cameron <jic23@kernel.org>, <linux-iio@vger.kernel.org>, "Rob
- Herring" <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-	<linux-kernel@vger.kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	"Nicolas Palix" <nicolas.palix@imag.fr>, Sumera Priyadarsini
-	<sylphrenadin@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, "Len
- Brown" <lenb@kernel.org>, <linux-acpi@vger.kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Subject: Re: [RFC PATCH 0/5] of: automate of_node_put() - new approach to
- loops.
-Message-ID: <20240201152144.000078d6@Huawei.com>
-In-Reply-To: <Zbt-fw8eUrQzBjX9@smile.fi.intel.com>
-References: <20240128160542.178315-1-jic23@kernel.org>
-	<Zbt-fw8eUrQzBjX9@smile.fi.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1706800911; c=relaxed/simple;
+	bh=WQWD/KmFc0zx5MOPqiRy9ksCicyxu+6xfyIr/wR/bkY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KSI00uikfDdZI8FFIzw/5mlCz9o5SJcIUlkafSocmpkq9utaBAqwopsW32C3Ookf3rLDcs2SpslcopcQ1X3fXaLDtDtBN/Mojxho2nGeN146TGUT8lFwtXW9Xnjm/FjQkB08dDApdstUkIVFxfUgak9PY+33K7yS0NV472rW6GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nvwjmWx9; arc=none smtp.client-ip=192.55.52.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nvwjmWx9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706800909; x=1738336909;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WQWD/KmFc0zx5MOPqiRy9ksCicyxu+6xfyIr/wR/bkY=;
+  b=nvwjmWx9PGRKI1zvShK8l1eXlj5P0OPZmO4PZWQRcR2iGOK9yX2W6m8d
+   w0ReZGcaulfKfcDKLcusKfhZ9I1bvme3TZRsYYZJXziOABb/xh0lUC3e+
+   hR/2rX5GQfoFwn5PxmS019XtEjRe/s+zBNGN2UEbuKYNwtBwDzS5IR807
+   yrJffSEn36JaI8YiWy4kfZcPvKDNIjBlbPfh4I6Zx4sm54fq8Nm+9gJR8
+   8A9VhLsd4HqTq07kB63JJj039aAvz9/S1KlRaKuJWXxbdfTlZogr+X96O
+   KRHUgtgG3+0q0MBK+qektJl/3ErF6ZiZDFyJdj0SJtyriez2iH93NG9J8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="402762439"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="402762439"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 07:21:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788953700"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="788953700"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2024 07:21:41 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D646EC07; Thu,  1 Feb 2024 17:15:42 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Flavio Suligoi <f.suligoi@asem.it>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>
+Subject: [PATCH v2 2/3] backlight: mp3309c: use dev_err_probe() instead of dev_err()
+Date: Thu,  1 Feb 2024 17:14:14 +0200
+Message-ID: <20240201151537.367218-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
+References: <20240201151537.367218-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-> > 3) Introduced the pointer to auto put device_node only within the
-> >    for loop scope.
-> > 
-> > +#define for_each_child_of_node_scoped(parent, child) \
-> > +	for (struct device_node *child __free(device_node) =		\
-> > +	     of_get_next_child(parent, NULL);				\
-> > +	     child != NULL;						\  
-> 
-> Just
-> 
-> 	     child;
+Replace dev_err() with dev_err_probe().
 
-Agreed that's the same, but was thinking to follow local style.
-I don't feel strongly though so fine with dropping the != NULL
+This helps in simplifing code and standardizing the error output.
 
-> 
-> > +	     child = of_get_next_available_child(parent, child))
-> > +
-> > 
-> > This series is presenting option 3.  I only implemented this loop out of
-> > all the similar ones and it is only compile tested.
-> > 
-> > Disadvantage Rob raised is that it isn't obvious this macro will instantiate
-> > a struct device_node *child.  I can't see a way around that other than option 2
-> > above, but all suggestions welcome.  Note that if a conversion leaves an
-> > 'external' struct device_node *child variable, in many cases the compiler
-> > will catch that as an unused variable. We don't currently run shaddow
-> > variable detection in normal kernel builds, but that could also be used
-> > to catch such bugs.  
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/video/backlight/mp3309c.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/video/backlight/mp3309c.c b/drivers/video/backlight/mp3309c.c
+index 762bd738c903..2d6bd1a180b3 100644
+--- a/drivers/video/backlight/mp3309c.c
++++ b/drivers/video/backlight/mp3309c.c
+@@ -208,10 +208,8 @@ static int mp3309c_parse_fwnode(struct mp3309c_chip *chip,
+ 	unsigned int num_levels, tmp_value;
+ 	struct device *dev = chip->dev;
+ 
+-	if (!dev_fwnode(dev)) {
+-		dev_err(dev, "failed to get firmware node\n");
+-		return -ENODEV;
+-	}
++	if (!dev_fwnode(dev))
++		return dev_err_probe(dev, -ENODEV, "failed to get firmware node\n");
+ 
+ 	/*
+ 	 * Dimming mode: the MP3309C provides two dimming control mode:
+@@ -287,8 +285,7 @@ static int mp3309c_parse_fwnode(struct mp3309c_chip *chip,
+ 	if (ret)
+ 		pdata->default_brightness = pdata->max_brightness;
+ 	if (pdata->default_brightness > pdata->max_brightness) {
+-		dev_err(chip->dev,
+-			"default brightness exceeds max brightness\n");
++		dev_err_probe(dev, -ERANGE, "default brightness exceeds max brightness\n");
+ 		pdata->default_brightness = pdata->max_brightness;
+ 	}
+ 
+@@ -329,16 +326,15 @@ static int mp3309c_parse_fwnode(struct mp3309c_chip *chip,
+ 
+ static int mp3309c_probe(struct i2c_client *client)
+ {
+-	struct mp3309c_platform_data *pdata = dev_get_platdata(&client->dev);
++	struct device *dev = &client->dev;
++	struct mp3309c_platform_data *pdata = dev_get_platdata(dev);
+ 	struct mp3309c_chip *chip;
+ 	struct backlight_properties props;
+ 	struct pwm_state pwmstate;
+ 	int ret;
+ 
+-	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+-		dev_err(&client->dev, "failed to check i2c functionality\n");
+-		return -EOPNOTSUPP;
+-	}
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
++		return dev_err_probe(dev, -EOPNOTSUPP, "failed to check i2c functionality\n");
+ 
+ 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+-- 
+2.43.0.rc1.1.gbec44491f096
 
