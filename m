@@ -1,172 +1,110 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1B615B961
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 11:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B7A15D5B4;
+	Thu,  1 Feb 2024 11:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706788752; cv=none; b=pUpR2Mgzq4iOl1VCa5K9YoAJXMY3uaqdsZ7FwJ+AR1znPk9QKn7U0DQN+5wMVeWu473w1/pLAEBtS8gJpd2m3bsPzx7B7F0ozvNsl8E2oEj/3QLiyGln0rCQdX3BP8VlpaNWeOAiI/NdzrIrZu8mhG2uQ1HGwpw2EL4r3XDXkv0=
+	t=1706788778; cv=none; b=p05150c0HQNbd1d0OlSCF19UPmky9T/6QjpdvcohIPKMmGwthJa6qDzzj+Na+TwgUzq481gzZMcuWpF2HvCOTDPOqrG0FhBE7avwIBvCCdRmqqyIhTunzUgJK0Fj1ZoV9lNv8tXIUjjJmiquPG0YD/xZGjPMcPRe6b9I60baftU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706788752; c=relaxed/simple;
-	bh=OZsGrszBeKUHNZmz0F4X8KtWFi79ZQpewOFt5i7n+i0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=slygWc7Sn3R+kEK340bVojPz+MDsrWY+AKHQ7DoiEfTdGmiqUTFBVDseqg55zPSL6EO/98DtdAwGSRSSfndU8xqSOzcNtpH/laHz+iCOil66BjIs+XXYYy/VpyG5zSz3X8hf0m1a9ihjDDee26BSGfprbVVeMA752RQu5FNCSRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P+uMA5M4; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706788778; c=relaxed/simple;
+	bh=TVUCRYYR7L1IT+ME8oTcX1x2Rr9n3YCLMjyOODsG+BU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eT9daKrl2NiiqPGm1z8mQYHOi+LBfsU0b57lg2qN5Y6Val3R25Uv07KngdfZM0p4VgsxNnRuYRQA+I24QKGSBxyBX3R1c5wsaKGNXHV7yUsfkbXemSf2zumGYr8xkPsZrooyPg0+i9Fne/rfa/wLWrk56HK0h3ilQSf6up9Q6pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RiBNNyMw; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P+uMA5M4"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-60412866c36so8580367b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 03:59:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706788749; x=1707393549; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uKEpVLIoUGjy+WrPCxIEJ9ucHcFp2SdWWm/C9ZhEGXw=;
-        b=P+uMA5M4o3L2jNoiqwhsOFlWKv3GoAstWZOqlqCaQU9iheeRNY98iEF3Fg6IQfRnmb
-         QFJgbRqLj8JKpIPUzmk3xEbJYAe9m9/38tX8ekNqtmP+j1/EdfkgckwCLhsAk7Bpwmn/
-         HpFOaTMSFprI3OdmbQHyiCTkGFvPi201Amhwbxa7ihMSTBLAq1toOofAm8jTuoM7Xjtf
-         tWnrF8/S/wP8xrV/rNswadlcr39A01Z+P2pOXXf4LyeExix0FNfLLVhcRKhh2B5Acows
-         645pL29Cjib3AQsGEoh6eD99G2GyjgmBcDnXQsOpsVz6hkjcmQMZBThDm2K1xeQqxxbV
-         5HJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706788749; x=1707393549;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uKEpVLIoUGjy+WrPCxIEJ9ucHcFp2SdWWm/C9ZhEGXw=;
-        b=DYqkynFWCw2r5atu+d8zsbt+waHUbfniT0PSOeaNQbLT40MaLDykvRrUuerfW4yHaQ
-         W8L6w8+mlbS+VM+isu+0/Qc00v0FVqcqJOjIVsixFKyMkktsBxWz/0RStOyhll950k0P
-         tZE9yY4o1+iel2cQVDgxVikWYqfhjNSnR4BbqGHL6tU335TNYq2MYMOQPqLEwaS98qWj
-         MNA+nxcUjOFDfshca/IDK7uhSx12Ato3wXx3M/fzui0bxPVjjobWZEpGx109FRewnDYk
-         GBy6GTZj39RQOl0VoVGeEIURJqChWJQ6/KYrL96YwWlXrSkJ7moVMU+TdKki8tCmpGP0
-         Qdxw==
-X-Gm-Message-State: AOJu0Yw8pqvRnZf/lerM8nWX+4E+0s3FHykZfXFPo/tvDih5RTu/dcsI
-	s2UDIrTCo0SQRpyvPkyhi2DWB/Nxv0uXsAjmeRDWpBcuQncEPzf3KNQOSuT1YpA81YMMcqEdhUA
-	7Pz728gDq8hwLfTqbzkZCkggzC1/5epCPL8t2Ng==
-X-Google-Smtp-Source: AGHT+IG3BqsBlMIK+5jbWKOuxuJsDpvCPL0V2HadliqqQz05cdkoXtQw9qjR7RA5e7+YCNT2G6NA6p9yeYIqtzHeO/8=
-X-Received: by 2002:a0d:db8a:0:b0:602:ab27:3752 with SMTP id
- d132-20020a0ddb8a000000b00602ab273752mr4465559ywe.33.1706788748906; Thu, 01
- Feb 2024 03:59:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RiBNNyMw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706788777; x=1738324777;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=TVUCRYYR7L1IT+ME8oTcX1x2Rr9n3YCLMjyOODsG+BU=;
+  b=RiBNNyMwVlE5SKeiqTu0Hv5jJNLUxwVcITT+TBBZGTfI/EagY5DlslQI
+   5zW5AS8IPCbirZvKJZP64WisKH6cbt1AaIbQ0N6zds/rVVgM7ldCuQahW
+   sN68e6RE/Xx6h7FtNKRf/pD+2qTNUFZX7ErmnlfyxxENoqWr/eUiQf+Q/
+   SXe7l0smXxUAygc6B7K4pWa4s6fKkpORtOmxr0QzlQTFSaks9LUm5g1xX
+   KKybGVJZZ3pjl5WvchjhPuvCPcXl4zVloBsJ1xSQn7d87XOMd96Xz+4hl
+   SIe4VjT8qU7gcJ92LpU7638a2YaAjBc0ndtfZB1LXLzYvDAGsTQLR30iI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10531082"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="10531082"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 03:59:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="738409877"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="738409877"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 03:59:32 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rVVbz-00000000p6M-3icn;
+	Thu, 01 Feb 2024 13:52:07 +0200
+Date: Thu, 1 Feb 2024 13:52:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Rengarajan.S@microchip.com
+Cc: Kumaravel.Thiagarajan@microchip.com, jiaqing.zhao@linux.intel.com,
+	gregkh@linuxfoundation.org, ilpo.jarvinen@linux.intel.com,
+	john.ogness@linutronix.de, tony@atomide.com,
+	linux-kernel@vger.kernel.org, Tharunkumar.Pasumarthi@microchip.com,
+	jirislaby@kernel.org, f.fainelli@gmail.com, tglx@linutronix.de,
+	UNGLinuxDriver@microchip.com, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v1 tty] 8250: microchip: Add 4 Mbps support in PCI1XXXX
+ UART
+Message-ID: <ZbuF53TlbnD09rZA@smile.fi.intel.com>
+References: <20240125100619.154873-1-rengarajan.s@microchip.com>
+ <ZbZyW_g4OOkCqIxf@smile.fi.intel.com>
+ <8406d8866968950b9bb2f2c01aaa92e3107a7a00.camel@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-6-77bbf7d0cc37@quicinc.com> <CAA8EJpqwOfeS-QpLVvYGf0jmTVxiT02POwK+9tkN03Cr4DgL+g@mail.gmail.com>
- <da1945ce-7e34-6ad5-7b9b-478fcbd4a2c6@quicinc.com> <CAA8EJpoZakDcBXYE57bRPMFvGEXh1o82r7Znv8mwCK6mRf5xog@mail.gmail.com>
- <20240201115415.GA2934@thinkpad>
-In-Reply-To: <20240201115415.GA2934@thinkpad>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 1 Feb 2024 13:58:58 +0200
-Message-ID: <CAA8EJppAL44ZLL5SnmX7SSwzvRUm2PffFUL6=gQRjq4neaLtRA@mail.gmail.com>
-Subject: Re: [PATCH v6 6/6] PCI: qcom: Add OPP support to scale performance
- state of power domain
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, Brian Masney <bmasney@redhat.com>, 
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org, vireshk@kernel.org, 
-	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com, 
-	quic_nitegupt@quicinc.com, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8406d8866968950b9bb2f2c01aaa92e3107a7a00.camel@microchip.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 1 Feb 2024 at 13:54, Manivannan Sadhasivam <mani@kernel.org> wrote:
->
-> On Tue, Jan 16, 2024 at 11:55:17AM +0200, Dmitry Baryshkov wrote:
-> > On Tue, 16 Jan 2024 at 07:17, Krishna Chaitanya Chundru
-> > <quic_krichai@quicinc.com> wrote:
-> > >
-> > >
-> > >
-> > > On 1/12/2024 9:03 PM, Dmitry Baryshkov wrote:
-> > > > On Fri, 12 Jan 2024 at 16:25, Krishna chaitanya chundru
-> > > > <quic_krichai@quicinc.com> wrote:
-> > > >>
-> > > >> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> > > >> maintains hardware state of a regulator by performing max aggregation of
-> > > >> the requests made by all of the processors.
-> > > >>
-> > > >> PCIe controller can operate on different RPMh performance state of power
-> > > >> domain based up on the speed of the link. And this performance state varies
-> > > >> from target to target.
-> > > >>
-> > > >> It is manadate to scale the performance state based up on the PCIe speed
-> > > >> link operates so that SoC can run under optimum power conditions.
-> > > >>
-> > > >> Add Operating Performance Points(OPP) support to vote for RPMh state based
-> > > >> upon GEN speed link is operating.
-> > > >>
-> > > >> OPP can handle ICC bw voting also, so move icc bw voting through opp
-> > > >> framework if opp entries are present.
-> > > >>
-> > > >> In PCIe certain gen speeds like GEN1x2 & GEN2X1 or GEN3x2 & GEN4x1 use
-> > > >> same icc bw and has frequency, so use frequency based search to reduce
-> > > >> number of entries in the opp table.
-> > > >>
-> > > >> Don't initialize icc if opp is supported.
-> > > >>
-> > > >> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > >> ---
-> > > >>   drivers/pci/controller/dwc/pcie-qcom.c | 83 ++++++++++++++++++++++++++++------
-> > > >>   1 file changed, 70 insertions(+), 13 deletions(-)
-> > > >>
-> > > >> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > >> index 035953f0b6d8..31512dc9d6ff 100644
-> > > >> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > >> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->
-> [...]
->
-> > > >>   static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
-> > > >> @@ -1471,8 +1502,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
-> > > >>   static int qcom_pcie_probe(struct platform_device *pdev)
-> > > >>   {
-> > > >>          const struct qcom_pcie_cfg *pcie_cfg;
-> > > >> +       unsigned long max_freq = INT_MAX;
-> > > >>          struct device *dev = &pdev->dev;
-> > > >>          struct qcom_pcie *pcie;
-> > > >> +       struct dev_pm_opp *opp;
-> > > >>          struct dw_pcie_rp *pp;
-> > > >>          struct resource *res;
-> > > >>          struct dw_pcie *pci;
-> > > >> @@ -1539,9 +1572,33 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> > > >>                  goto err_pm_runtime_put;
-> > > >>          }
-> > > >>
-> > > >> -       ret = qcom_pcie_icc_init(pcie);
-> > > >> -       if (ret)
-> > > >> +        /* OPP table is optional */
-> > > >> +       ret = devm_pm_opp_of_add_table(dev);
-> > > >> +       if (ret && ret != -ENODEV) {
-> > > >> +               dev_err_probe(dev, ret, "Failed to add OPP table\n");
-> > > >>                  goto err_pm_runtime_put;
-> > > >> +       }
-> > > >
-> > > > Can we initialise the table from the driver if it is not found? This
-> > > > will help us by having the common code later on.
-> > > >
-> > > we already icc voting if there is no opp table present in the dts.
-> >
-> > Yes. So later we have two different code paths: one for the OPP table
-> > being present and another one for the absent OPP table. My suggestion
-> > is to initialise minimal OPP table by hand and then have a common code
-> > path in qcom_pcie_icc_update().
-> >
->
-> Are you suggesting to duplicate DT in the driver?
+On Tue, Jan 30, 2024 at 10:52:41AM +0000, Rengarajan.S@microchip.com wrote:
+> On Sun, 2024-01-28 at 17:27 +0200, Andy Shevchenko wrote:
+> > On Thu, Jan 25, 2024 at 03:36:19PM +0530, Rengarajan S wrote:
 
-As a fallback for the cases when there is no OPP table in the driver
-it might make sense. See
-Otherwise the DT is still somewhat duplicated in the form of calling
-icc functions directly.
+...
+
+> > > +     /*
+> > > +      * Microchip PCI1XXXX UART supports maximum baud rate up to 4
+> > > Mbps
+> > > +      */
+> > > +     if (up->port.type == PORT_MCHP16550A)
+> > > +             max = 4000000;
+> > 
+> > No. Please refactor the way the 8250_port won't be modified.
+> > 
+> > Also you have a define for this constant, use it.
+> 
+> The current UART clk in MCHP Ports in pci1xxxx.c is set to 62.5 MHz in
+> order to support fractional baud rates which enables generation of
+> acceptable baud rate and lower error percentage from any available
+> frequency. With 62.5 MHz the maximum supported baud rate supported as
+> per serial_8250_get_baud_rate is 3.9 Mbps. In order to extend the
+> support to 4 Mbps we had hardcoded the max value to 4 Mbps. Since, baud
+> rate is calculated here we needed to make these changes in 8250_port
+> and could not find a way to handle as part 8250_pci1xxxx. Can you let
+> us know any alternatives to address this upper(max) limit? 
+
+Update port->uartclk accordingly in your driver, see how other 8250_* drivers
+do that (e.g., 8250_mid).
+
+So, it will no go with hack in the 8250_port.
 
 -- 
-With best wishes
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
