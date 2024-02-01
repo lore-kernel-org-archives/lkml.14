@@ -1,184 +1,262 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061F4158D8E
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21E2159571
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706778379; cv=none; b=AJdcyYjIpS3evUUaEj/jqiE0Aua/a4e2v/vuyyWqlMLqdkzDTM3Pnk04DQdXYOedfWW1GCg1ZLxlACNEWEiR65zuRuhKjRTzI/8CHMu8L0+kzBIuiVNL4Zc8LLtUXRxW3YaeRi7SGzSP05YFpqRGvOgfhSeT8xTqtfxgQIAP+FE=
+	t=1706778519; cv=none; b=rrZ9uKxLBtP0LHrMV0YJmZcoGq4bosc1F6/lejfkAN+qWDSpVn6SZ1LFJOIj0GUwZfF+PN+H6xgCNLFQj0+TNkrx1TBpEcqbdJmyIkjWDJl7mJfTO8Cvd7plnI6b6asEr5bNf/QqgTlU5wKpiJwH92iWnjBs/7y8PjIiLJjIQjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706778379; c=relaxed/simple;
-	bh=BRIzbWWN4qRwdJsCPOqQTbDAV3TiwA8Kww9EHf4ujwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bhrk7Hr+uybBV+z41SEar+edwTC5lZm23VZcsIyNSkxBxQR1w5e++/YxpPw+9ftiNLLx7eOOg4uFyLOYIRo+vp+6EP/cWxZ1yRGJN9sEtr/E7q4uEZ/2u1bJwfc9SMf2K+shyB1rlBWFiCvw4yG4w/RV3K1jwg/Pd8pjNcMPKr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YaYeCcPA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1706778519; c=relaxed/simple;
+	bh=ruPq2pvkVk8s24AfuKHQzLcgDuuIniLumwcZJ8iyy3A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=n3nHtErEaEByfLQuaHI0pqsqXqtTaZTDxOVNx27fouwYxZi1HceQ3zls2FRmbJcY4j19YqhREJrpuIE641kstsFWRQwduPFyaFaqAkXRcqPTzjBOpT2ftLEFMTmW0pmNot0xZxguvQ4Dpxbik6CUYlD04yVF4X2jQxlWO7gaOJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yi0HgEBy; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YaYeCcPA"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4118ORJd008043;
-	Thu, 1 Feb 2024 09:05:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=pp1;
- bh=rdrKscTz6Z7e6eqDuxnq4hhn6ZBfuuxOKbspA/oNIqo=;
- b=YaYeCcPAYyxLPnEaCFuwv8M+gQHjU1cgOPDdUZ2D78sDYCod73xLzLkOX+ugCYgL8bri
- Wd1El3GNYB3lUEoOUC4A6lndB2DLGU+yS4pj9dbAfmyD1+elFGfQfbZyEfi5R093yTMd
- my34RK9sBqMW/C1QMD5Ukc8TPs+S0XXdwO9AXZAXBsxe/ccTCSDyZjIMJIDitGIJTeYR
- PI2xlCGmnuJYwZF6xLQE7ZN4eN9KSo16nOMnk2+EE24rQcVzSrQclSc7JEx643Nwgunv
- nvE5Hemg+e1d/FLJqRZkmoP8L/T+HxWeaCakvbhsKxxPa073Bj9Tpyjvz9EQ7ZYHpdti fA== 
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w05pdcae2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Feb 2024 09:05:48 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41163ZKb017772;
-	Thu, 1 Feb 2024 09:00:47 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vwcj038kv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Feb 2024 09:00:46 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41190ivJ23790306
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 1 Feb 2024 09:00:44 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA50920040;
-	Thu,  1 Feb 2024 09:00:44 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 660BC20043;
-	Thu,  1 Feb 2024 09:00:43 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.171.28.236])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  1 Feb 2024 09:00:43 +0000 (GMT)
-Date: Thu, 1 Feb 2024 11:00:41 +0200
-From: Mike Rapoport <rppt@linux.ibm.com>
-To: Yongqiang Liu <liuyongqiang13@huawei.com>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, yanaijie@huawei.com,
-        zhangxiaoxu5@huawei.com, wangkefeng.wang@huawei.com,
-        sunnanyong@huawei.com, linux-kernel@vger.kernel.org,
-        keescook@chromium.org, arnd@arndb.de, m.szyprowski@samsung.com,
-        willy@infradead.org
-Subject: Re: [PATCH] arm: flush: don't abuse pfn_valid() to check if pfn is
- in RAM
-Message-ID: <Zbtdue57RO0QScJM@linux.ibm.com>
-References: <20240131125907.1006760-1-liuyongqiang13@huawei.com>
- <0da50102-3e87-49f7-b8f7-45cfcb4232d6@arm.com>
- <ZbqY12U/CXwAAu7A@shell.armlinux.org.uk>
- <edc4e8fa-af0a-46c2-bf07-20a0c4e20af5@arm.com>
- <8b50ca93-c164-ddfc-cd79-8f8525198a96@huawei.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yi0HgEBy"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ffa2bb4810so8649897b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:08:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706778516; x=1707383316; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PyPRSJB8R7sstDIzxYvvLOQP9nz0Xs4tmV9kMbdp44Y=;
+        b=Yi0HgEBypSrfhcSIHIr19OeVet4Sd/Q20A6xGxzPj6qgBCLXCGe0iisIBZh0Gg/Z/V
+         BqDBQ3VAxjO+9DGqoUmldOXdzfpYy2HR6lA/LHTqRAyIxcF1oiPnLXt2yesTEbWjgZYK
+         nx+ORVSL+JJcbcwl216iT6AtKzulXobY85PHVHyNXuLS9uEQkeuCNYDjvP2Q1DP3cUlU
+         jWQplqsag0enGZ0S9Nsu+YdymLDR5DwZl66/hCUScKYd2gQ2JatZB8xPcAfAifpw6nVk
+         4MLqagyaLQEGzTeCFOLcnU2SfH8GOtnHZvCFOIrQzK3+ZcqnaK0n3xT/eGPQTkB7t9uR
+         BfsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706778516; x=1707383316;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PyPRSJB8R7sstDIzxYvvLOQP9nz0Xs4tmV9kMbdp44Y=;
+        b=vPC6lu1t1H21ykMujSQpqRolx42vv+/x4zAmva34QlSm8/vDr8lOnIOrqctRaGdLuY
+         JZIOxfO9ulRuSwyWm+frr3zXZd5ILA9PKhHGzSetWs2g/AUCqs99mTLa1iFe82aXecX5
+         muH97iR8DDtcV1A2V99FcByczs/Qk0xs9Nx0HXIWuD2GnKHGZknpEHpYdaT2iVLTeRXh
+         psbbhJDNTJ3gtfem6i51Mg9IMgUqD6e0YKjI4AGD/kUTSCIppc1YuxvRW3qzdkkWU7wB
+         DIOyV2tR4KklWiIpvlp6BdFBWwY+zD0bmxdfGZalRjUqXpepXmr9jLY6jvwVI6sxKf+/
+         PxDA==
+X-Gm-Message-State: AOJu0Ywnaq9jt6ShHavXDc49gvka2M3oCRGk2CjO4T6lAWXTovDL5AY/
+	mA1QS0NSj6QpHnyOImDeT8kjnQlj/9NEahRqNYlzKBf+gbat1HtMdt0tKouIFfC/fFe0ofQFrts
+	CEF8JS8tG2sq1LluoaA==
+X-Google-Smtp-Source: AGHT+IEal3S+0/LT8L/+ihFESpfF3v8jase7MpGggk1/LchQ6suhlyF5F50sZ3ZPPJU5OFZDNh2MSLQST8IUcSCG
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a05:690c:ec5:b0:5ee:2b5:7d75 with SMTP
+ id cs5-20020a05690c0ec500b005ee02b57d75mr276209ywb.8.1706778516753; Thu, 01
+ Feb 2024 01:08:36 -0800 (PST)
+Date: Thu, 1 Feb 2024 09:08:34 +0000
+In-Reply-To: <20240201032718.1968208-4-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b50ca93-c164-ddfc-cd79-8f8525198a96@huawei.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: S47JddwGa1Kge7YCgDxFNbzSsG5FhyUD
-X-Proofpoint-GUID: S47JddwGa1Kge7YCgDxFNbzSsG5FhyUD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 clxscore=1011 adultscore=0
- mlxlogscore=999 malwarescore=0 suspectscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402010073
+Mime-Version: 1.0
+References: <20240201032718.1968208-1-nphamcs@gmail.com> <20240201032718.1968208-4-nphamcs@gmail.com>
+Message-ID: <Zbtfku0wVGXBHDTD@google.com>
+Subject: Re: [PATCH v2 3/3] selftests: add zswapin and no zswap tests
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: akpm@linux-foundation.org, riel@surriel.com, shuah@kernel.org, 
+	hannes@cmpxchg.org, tj@kernel.org, lizefan.x@bytedance.com, 
+	roman.gushchin@linux.dev, linux-mm@kvack.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
+Hey Nhat,
 
-Please don't top-post to Linux mailing lists.
+I have a few more comments, sorry for not catching everything the first
+time around.
 
-On Thu, Feb 01, 2024 at 04:00:04PM +0800, Yongqiang Liu wrote:
-> Very appreciate it for extra explanation. Notice that commit 024591f9a6e0
-> 
-> ("arm: ioremap: don't abuse pfn_valid() to check if pfn is in RAM") use
-> 
-> memblock_is_map_memory() instead of pfn_valid() to check if a PFN is in
-> 
-> RAM or not, so I wrote the patch to solve this case.  Otherwise, when we
-> 
-> use pageblock align(4M) address of memory or uio, like :
-> 
->      node   0: [mem 0x00000000c0c00000-0x00000000cc8fffff]
->      node   0: [mem 0x00000000d0000000-0x00000000da1fffff]
-> 
-> or uio address set like:
-> 
->    0xc0400000, 0x100000
-> 
-> the pfn_valid will return false as memblock_is_map_memory.
+Adding Roman to CC.
 
-pfn_valid() should return false if and only if there is no struct page for
-that pfn.
+On Wed, Jan 31, 2024 at 07:27:18PM -0800, Nhat Pham wrote:
+> Add a selftest to cover the zswapin code path, allocating more memory
+> than the cgroup limit to trigger swapout/zswapout, then reading the
+> pages back in memory several times. This is inspired by a recently
+> encountered kernel crash on the zswapin path in our internal kernel,
+> which went undetected because of a lack of test coverage for this path.
+> 
+> Add a selftest to verify that when memory.zswap.max = 0, no pages can go
+> to the zswap pool for the cgroup.
+> 
+> Suggested-by: Rik van Riel <riel@surriel.com>
+> Suggested-by: Yosry Ahmed <yosryahmed@google.com>
+> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
+> ---
+>  tools/testing/selftests/cgroup/test_zswap.c | 97 +++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/cgroup/test_zswap.c b/tools/testing/selftests/cgroup/test_zswap.c
+> index 32ce975b21d1..14d1f18f1098 100644
+> --- a/tools/testing/selftests/cgroup/test_zswap.c
+> +++ b/tools/testing/selftests/cgroup/test_zswap.c
+> @@ -60,6 +60,27 @@ static long get_zswpout(const char *cgroup)
+>  	return cg_read_key_long(cgroup, "memory.stat", "zswpout ");
+>  }
+>  
+> +static int allocate_bytes_and_read(const char *cgroup, void *arg)
 
-My understanding is that struct pages exist for the range of UIO addresses,
-and hopefully they have PG_reserved bit set, so a better fix IMO would be
-to check if the folio is !reserved.
- 
-> 在 2024/2/1 5:20, Robin Murphy 写道:
-> > On 2024-01-31 7:00 pm, Russell King (Oracle) wrote:
-> > > On Wed, Jan 31, 2024 at 06:39:31PM +0000, Robin Murphy wrote:
-> > > > On 31/01/2024 12:59 pm, Yongqiang Liu wrote:
-> > > > > @@ -292,7 +293,7 @@ void __sync_icache_dcache(pte_t pteval)
-> > > > >            /* only flush non-aliasing VIPT caches for exec mappings */
-> > > > >            return;
-> > > > >        pfn = pte_pfn(pteval);
-> > > > > -    if (!pfn_valid(pfn))
-> > > > > +    if (!memblock_is_map_memory(PFN_PHYS(pfn)))
-> > > > >            return;
-> > > > >        folio = page_folio(pfn_to_page(pfn));
-> > > > 
-> > > > Hmm, it's a bit odd in context, since pfn_valid() obviously
-> > > > pairs with this
-> > > > pfn_to_page(), whereas it's not necessarily clear that
-> > > > memblock_is_map_memory() implies pfn_valid().
-> > > > 
-> > > > However, in this case we're starting from a PTE - rather than
-> > > > going off to
-> > > > do a slow scan of memblock to determine whether a round-trip through
-> > > > page_address() is going to give back a mapped VA, can we not trivially
-> > > > identify that from whether the PTE itself is valid?
-> > > 
-> > > Depends what you mean by "valid". If you're referring to pte_valid()
-> > > and L_PTE_VALID then no.
-> > > 
-> > > On 32-bit non-LPAE, the valid bit is the same as the present bit, and
-> > > needs to be set for the PTE to not fault. Any PTE that is mapping
-> > > something will be "valid" whether it is memory or not, whether it is
-> > > backed by a page or not.
-> > > 
-> > > pfn_valid() should be telling us whether the PFN is suitable to be
-> > > passed to pfn_to_page(), and if we have a situation where pfn_valid()
-> > > returns true, but pfn_to_page() returns an invalid page, then that in
-> > > itself is a bug that needs to be fixed and probably has far reaching
-> > > implications for the stability of the kernel.
-> > 
-> > Right, the problem here seems to be the opposite one, wherein we *do*
-> > often have a valid struct page for an address which is reserved and thus
-> > not mapped by the kernel, but seemingly we then take it down a path
-> > which assumes anything !PageHighmem() is lowmem and dereferences
-> > page_address() without looking.
-> > 
-> > However I realise I should have looked closer at the caller, and my idea
-> > is futile since the PTE here is for a userspace mapping, not a kernel
-> > VA, and is already pte_valid_user() && !pte_special(). Plus the fact
-> > that the stack trace indicates an mmap() path suggests it most likely is
-> > a legitimate mapping of some no-map carveout or MMIO region. Oh well. My
-> > first point still stands, though - I think at least a comment to clarify
-> > that assumption would be warranted.
-> > 
-> > Thanks,
-> > Robin.
-> > .
+I think allocate_and_read_bytes() is easier to read, but I don't feel
+strongly about it.
 
--- 
-Sincerely yours,
-Mike.
+> +{
+> +	size_t size = (size_t)arg;
+> +	char *mem = (char *)malloc(size);
+> +	int ret = 0;
+> +
+> +	if (!mem)
+> +		return -1;
+> +	for (int i = 0; i < size; i += 4095)
+> +		mem[i] = 'a';
+
+cgroup_util.h defines PAGE_SIZE, see alloc_anon() for example.
+
+On that note, alloc_anon() is awfully close to allocate_bytes() below,
+perhaps we should consolidate them. The only difference I see is that
+alloc_anon() does not check for the allocation failure, but a lot of
+functions in cgroup_helpers.c don't, so it seems intentional for
+simplification.
+
+> +
+> +	/* go through the allocated memory to (z)swap in and out pages */
+> +	for (int i = 0; i < size; i += 4095) {
+> +		if (mem[i] != 'a')
+> +			ret = -1;
+> +	}
+> +
+> +	free(mem);
+> +	return ret;
+> +}
+> +
+>  static int allocate_bytes(const char *cgroup, void *arg)
+>  {
+>  	size_t size = (size_t)arg;
+> @@ -133,6 +154,80 @@ static int test_zswap_usage(const char *root)
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Check that when memory.zswap.max = 0, no pages can go to the zswap pool for
+> + * the cgroup.
+> + */
+> +static int test_swapin_nozswap(const char *root)
+> +{
+> +	int ret = KSFT_FAIL;
+> +	char *test_group;
+> +	long zswpout;
+> +
+> +	/* Set up */
+
+I think this comment is unnecessary.
+
+> +	test_group = cg_name(root, "no_zswap_test");
+> +
+> +	if (!test_group)
+> +		goto out;
+> +	if (cg_create(test_group))
+> +		goto out;
+> +	if (cg_write(test_group, "memory.max", "8M"))
+> +		goto out;
+> +	/* Disable zswap */
+
+I think this comment is unnecessary.
+
+> +	if (cg_write(test_group, "memory.zswap.max", "0"))
+> +		goto out;
+> +
+> +	/* Allocate and read more than memory.max to trigger swapin */
+> +	if (cg_run(test_group, allocate_bytes_and_read, (void *)MB(32)))
+> +		goto out;
+> +
+> +	/* Verify that no zswap happened */
+
+If we want to be really meticulous, we can verify that we did swap out,
+but not to zswap. IOW, we can check memory.swap.current or something.
+
+> +	zswpout = get_zswpout(test_group);
+> +	if (zswpout < 0) {
+> +		ksft_print_msg("Failed to get zswpout\n");
+> +		goto out;
+> +	} else if (zswpout > 0) {
+
+nit: This can be a separate if condition, I think it would be more
+inline with the style of separate consecutive if blocks we are
+following.
+
+> +		ksft_print_msg(
+> +			"Pages should not go to zswap when memory.zswap.max = 0\n");
+
+We can probably avoid the line break with something more concise, for
+example:
+"zswapout > 0 when zswap is disabled"
+or "zswapout > 0 when memory.zswap.max = 0"
+
+> +		goto out;
+> +	}
+> +	ret = KSFT_PASS;
+> +
+> +out:
+> +	cg_destroy(test_group);
+> +	free(test_group);
+> +	return ret;
+> +}
+> +
+> +/* Simple test to verify the (z)swapin code paths */
+> +static int test_zswapin_no_limit(const char *root)
+
+I think test_zswapin() is enough to be distinct from
+test_swapin_nozswap(). The limit is not a factor here AFAICT.
+
+> +{
+> +	int ret = KSFT_FAIL;
+> +	char *test_group;
+> +
+> +	/* Set up */
+
+I think this comment is unnecessary.
+
+> +	test_group = cg_name(root, "zswapin_test");
+> +	if (!test_group)
+> +		goto out;
+> +	if (cg_create(test_group))
+> +		goto out;
+> +	if (cg_write(test_group, "memory.max", "8M"))
+> +		goto out;
+> +	if (cg_write(test_group, "memory.zswap.max", "max"))
+> +		goto out;
+> +
+> +	/* Allocate and read more than memory.max to trigger (z)swap in */
+> +	if (cg_run(test_group, allocate_bytes_and_read, (void *)MB(32)))
+> +		goto out;
+
+We should probably check for a positive zswapin here, no?
+
+> +
+> +	ret = KSFT_PASS;
+> +
+> +out:
+> +	cg_destroy(test_group);
+> +	free(test_group);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * When trying to store a memcg page in zswap, if the memcg hits its memory
+>   * limit in zswap, writeback should affect only the zswapped pages of that
+> @@ -309,6 +404,8 @@ struct zswap_test {
+>  	const char *name;
+>  } tests[] = {
+>  	T(test_zswap_usage),
+> +	T(test_swapin_nozswap),
+> +	T(test_zswapin_no_limit),
+>  	T(test_no_kmem_bypass),
+>  	T(test_no_invasive_cgroup_shrink),
+>  };
+> -- 
+> 2.39.3
