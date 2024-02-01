@@ -1,98 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC2784A2B;
-	Thu,  1 Feb 2024 06:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBD584A20;
+	Thu,  1 Feb 2024 06:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706767664; cv=none; b=M75LZ2BGxFxOgy22iVCXPA/OdG6WxQ28iWyNEVdPmR/skhd2HuzKNXptTYWPrVB5tb7lC+19ZAwXouvlOhl+pQRZwV3jOIHQ64n8FNplJbJL9zS6L/nuWrf0nWle7vEgRgRk07lKK1u3blopbQMKscZ8813l/M2l03I08fdQ53M=
+	t=1706767819; cv=none; b=J8EZijAD9lnO6Zob6c8LgPXaWHNLMto6YBXy+tWhGY/T6qV5R3htQ/H85XNsONQ5ywwYJ0TztfdFQFk9a1dh9R2ZmqDsPgdxyAlG6M8bydV2UPeFKhk8ES4pxSng3Ozbs3VcyegrBHub1HyMa0Tpv6Is9eQ2eQRzt7jcb+5GSh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706767664; c=relaxed/simple;
-	bh=2Mh1AT0f2dbPt4JXsiALccjzvLIfnSSqSxigb7iI0+0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PabyGuUW3ASnOuRM+OWCLfZGNEPxA2z+mWt2qc6mZFFhbloRKzvrKaiTHbR0JJLK5HWtckhePWrP9W604kUmMXgS+Bj4ZOqQxdRkwIu6mVdkgdTW8rh1J58k6S86n27YxSxK36F6uaSK9Mkkcu8CdRnoniDw6c9smVblGq3u1yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzqp2sYE; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzqp2sYE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706767663; x=1738303663;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2Mh1AT0f2dbPt4JXsiALccjzvLIfnSSqSxigb7iI0+0=;
-  b=nzqp2sYEPWOnwkw6Fu6zI8vhn0lElEF4LmYPGHoXnJxAiWrTREJFVOkJ
-   84ie2zE9xxZZzSXlIMQk5oNtXBobFUkpFhMhWRtIOsvZ7Mg7JQG+MzEhD
-   glpBB9WpUY2O/Iu0p30nLGleOMXPyt8tlHE01R2CNdO/0pg3PAnGsSx6m
-   dmt9aTjg4vZ8x/6VC2Swg49KVmPD+ZsfWJIO7sr3V1HKI/SFF/M9VExZe
-   XhEyVCm/tsEvxStk2yr6PYDsakvx53fZx+JCyyFWItTK3pGQMXNViFp2r
-   nSEtn4rhI2EL9rV/TMlnax0SQh/1ZegP4OdlCG3qQK6K35BSc1H2For+G
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10574908"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="10574908"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 22:07:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="30776298"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmviesa001.fm.intel.com with ESMTP; 31 Jan 2024 22:07:39 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Jim Mattson <jmattson@google.com>,
-	Jinrong Liang <cloudliang@tencent.com>,
-	Aaron Lewis <aaronlewis@google.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH] KVM: selftests: Test top-down slots event
-Date: Thu,  1 Feb 2024 14:15:05 +0800
-Message-Id: <20240201061505.2027804-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706767819; c=relaxed/simple;
+	bh=JCwgUM7Lkx9hM5PB0H/+JSoypP5rQNgl3EZ1IP1uZdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FGA638wDyU1SkZTJ8fYxFnli9U6Bowq79ORbitkZFsJHgCyceBLSsq2FptHUcrA15yCxAvhV/CjwHoZLFQZLsgQ+Cp46Yb9QADDK9VneXU+G68qNQ8vhraOrQgViqrtdpN2+ABXBbRrva5YBYxVak15pKOzz8V1lFElKy7WT9lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rVQGw-008Uwg-Os; Thu, 01 Feb 2024 14:10:03 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 01 Feb 2024 14:10:15 +0800
+Date: Thu, 1 Feb 2024 14:10:15 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: JiaJie Ho <jiajie.ho@starfivetech.com>
+Cc: "'David S . Miller'" <davem@davemloft.net>,
+	'Rob Herring' <robh+dt@kernel.org>,
+	'Krzysztof Kozlowski' <krzysztof.kozlowski+dt@linaro.org>,
+	'Conor Dooley' <conor+dt@kernel.org>,
+	"'linux-crypto@vger.kernel.org'" <linux-crypto@vger.kernel.org>,
+	"'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>,
+	"'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/5] crypto: starfive: Add sm3 support for JH8100
+Message-ID: <Zbs1xy4DesZDkFC4@gondor.apana.org.au>
+References: <20240116090135.75737-1-jiajie.ho@starfivetech.com>
+ <20240116090135.75737-5-jiajie.ho@starfivetech.com>
+ <ZbNCKrTLXmPcsrSH@gondor.apana.org.au>
+ <BJSPR01MB0659C3FE1262DF8CC7F7DA468A43A@BJSPR01MB0659.CHNPR01.prod.partner.outlook.cn>
+ <Zbsu39gZn2cGrnew@gondor.apana.org.au>
+ <SHXPR01MB0670720DD9EAB09EE8A1B13E8A43A@SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SHXPR01MB0670720DD9EAB09EE8A1B13E8A43A@SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn>
 
-Although the fixed counter 3 and the exclusive pseudo slots events is
-not supported by KVM yet, the architectural slots event is supported by
-KVM and can be programed on any GP counter. Thus add validation for this
-architectural slots event.
+On Thu, Feb 01, 2024 at 05:59:01AM +0000, JiaJie Ho wrote:
+.
+> Currently, the object files defining new algo register/unregister functions weren't included in Makefile for unsupported device.
+> Compiler will still check for these definitions if IS_ENABLED is used instead of ifdef causing build errors.
 
-Top-down slots event "counts the total number of available slots for an
-unhalted logical processor, and increments by machine-width of the
-narrowest pipeline as employed by the Top-down Microarchitecture
-Analysis method." So suppose the measured count of slots event would be
-always larger than 0.
+Please point me to specific examples of something that's included
+in the output and shouldn't be.
 
-pmu_counters_test passed with this patch on Intel Sapphire Rapids.
-
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/testing/selftests/kvm/x86_64/pmu_counters_test.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-index ae5f6042f1e8..99bcb619b861 100644
---- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
-@@ -117,6 +117,7 @@ static void guest_assert_event_count(uint8_t idx,
- 		fallthrough;
- 	case INTEL_ARCH_CPU_CYCLES_INDEX:
- 	case INTEL_ARCH_REFERENCE_CYCLES_INDEX:
-+	case INTEL_ARCH_TOPDOWN_SLOTS_INDEX:
- 		GUEST_ASSERT_NE(count, 0);
- 		break;
- 	default:
-
-base-commit: f0f3b810edda57f317d79f452056786257089667
+Thanks,
 -- 
-2.40.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
