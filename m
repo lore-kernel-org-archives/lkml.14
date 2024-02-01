@@ -1,207 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013DC15CD46;
-	Thu,  1 Feb 2024 09:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F54A4DA04;
+	Thu,  1 Feb 2024 09:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706780380; cv=none; b=CWIX+mbkHVaOH1/Na6WJsWOyXGApa80Cxv0CqE8PaNa+1kBGDEdfVfxUS+H5MbYMP2NlDVZ3vfyB5kwFJbXsLxVTA2A3m9w1B8XnpkDYVETZNPhlkC2By0HuiCZf+wulT/fqkaDXyZcA+IPDKTzPvsTWG0fBtcoPAA4u1J5TR4g=
+	t=1706780415; cv=none; b=linFo12jbl8LBejog3jMbxl/r9HzsmUXcdBWQGqyY3d8Ul7vb9Qbx2yzM8K8iy6r6NOda7Jn48GC/eLUzU8UeqHZDvzWMu+3ZsosXcuzaPTR9SJ9TlWHa/XHNmKuGqlbuFmQ43KWzVNAc8gi6nXd7yJIAzTfbhiQWi3oCEv6Z+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706780380; c=relaxed/simple;
-	bh=SxZGJXR/5Za9XHdSodFNXRgmS/8/RLHnfvyBWtyAkKg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZbrhgiN8PxSlyDKtymVVks0X2kzNWT/53V95Q3qZEsWpWT3Kzk/9PkRhl5et2eXnkEeOtjdQAFjuvHqs1Tk95a4iTpYSG99PlGfFgvbIJyuPjORO4i9Z4hZW5gm0nFdB1ve72yGVE4j9Kias4wSZhHGsEJsGVUZz7Kw+rf9ZjzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FPKKqRfT; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FPKKqRfT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706780379; x=1738316379;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SxZGJXR/5Za9XHdSodFNXRgmS/8/RLHnfvyBWtyAkKg=;
-  b=FPKKqRfTsl+hfVXUQS+r9B1ghyNZubioGZfKFhuQMMdHmLfF3on2ymTw
-   yUihFmviaUfH04TERCbuZA5EdPujxuEtn6EYMRV7wEOC+bbiHBUlSJrN7
-   lcCBjWLrLPtTzjvW3ofXbbu2R7biLleOKxOPUhru7okKXaMZVK8qpsoNs
-   qAK7hfRH0MpVT1OVubhW1ZNEAKEhUF+kHNUm1bnEDCLFlVXicdGVaBXwr
-   HDkWGD+Z5I1k3uQSzJRCujRhXeUjZPllb4Nxt9nW3X/NnMYHxn86pAXAf
-   hlMY+C47W9+vBpEH1zJuOhnZBfpka9z51UcdKJQi2BDsHIxdldX6iibHj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="402700434"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="402700434"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 01:39:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788896822"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="788896822"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.93.33.17]) ([10.93.33.17])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 01:39:34 -0800
-Message-ID: <750b9252-fc0a-490e-96e5-d90525053c4f@intel.com>
-Date: Thu, 1 Feb 2024 17:39:30 +0800
+	s=arc-20240116; t=1706780415; c=relaxed/simple;
+	bh=vc+Am/eF9iicnxtvW7Z4hjqUV+fLMgxqF8JECJDqaRE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lOYM6MiOwdPoqpQmqT9TkW9rqM4YQm9lcYycwdYXaEVGFAu1I87hwmYwlPm/P99gRnR8zDZ3Gl2e3esXbxTvLocxhXpWvd21UbnRugdaK9npLidHG/rMYrkyOJB+JhDIk3jzn3Uvz17mjXjoCgriopNp4AvKMgWrHuSDKZe+lhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 070b2b4eba1f41a0bacbf62848b6ff79-20240201
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:2a9da3b9-c96f-457e-92b5-eba60a138977,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.35,REQID:2a9da3b9-c96f-457e-92b5-eba60a138977,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:5d391d7,CLOUDID:38720180-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:2402011734352Y3RVKA1,BulkQuantity:0,Recheck:0,SF:24|17|19|44|66|38|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 070b2b4eba1f41a0bacbf62848b6ff79-20240201
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1510496774; Thu, 01 Feb 2024 17:34:31 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id A9E87E000EB9;
+	Thu,  1 Feb 2024 17:34:31 +0800 (CST)
+X-ns-mid: postfix-65BB65A7-4971281242
+Received: from kernel.. (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id C7D7DE000EB9;
+	Thu,  1 Feb 2024 17:34:28 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] mbcache: Simplify the allocation of slab caches
+Date: Thu,  1 Feb 2024 17:34:26 +0800
+Message-Id: <20240201093426.207932-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 009/121] KVM: TDX: Add placeholders for TDX VM/vcpu
- structure
-Content-Language: en-US
-To: isaku.yamahata@intel.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <bb29cde17a53fc1afdabdf24cb88ad1d35d6b4a2.1705965634.git.isaku.yamahata@intel.com>
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <bb29cde17a53fc1afdabdf24cb88ad1d35d6b4a2.1705965634.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 1/23/2024 7:52 AM, isaku.yamahata@intel.com wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
-> 
-> Add placeholders TDX VM/vcpu structure that overlays with VMX VM/vcpu
-> structures.  Initialize VM structure size and vcpu size/align so that x86
-> KVM common code knows those size irrespective of VMX or TDX.  Those
-> structures will be populated as guest creation logic develops.
-> 
-> Add helper functions to check if the VM is guest TD and add conversion
-> functions between KVM VM/VCPU and TDX VM/VCPU.
-> 
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> 
-> ---
-> v14 -> v15:
-> - use KVM_X86_TDX_VM
-> ---
->   arch/x86/kvm/vmx/main.c | 18 +++++++++++++--
->   arch/x86/kvm/vmx/tdx.c  |  1 +
->   arch/x86/kvm/vmx/tdx.h  | 50 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 67 insertions(+), 2 deletions(-)
->   create mode 100644 arch/x86/kvm/vmx/tdx.h
-> 
-> diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-> index 1e1feaacac59..f6b66f18c070 100644
-> --- a/arch/x86/kvm/vmx/main.c
-> +++ b/arch/x86/kvm/vmx/main.c
-> @@ -5,6 +5,7 @@
->   #include "vmx.h"
->   #include "nested.h"
->   #include "pmu.h"
-> +#include "tdx.h"
->   
->   static bool enable_tdx __ro_after_init;
->   module_param_named(tdx, enable_tdx, bool, 0444);
-> @@ -216,6 +217,21 @@ static int __init vt_init(void)
->   	 */
->   	hv_init_evmcs();
->   
-> +	/*
-> +	 * kvm_x86_ops is updated with vt_x86_ops.  vt_x86_ops.vm_size must
-> +	 * be set before kvm_x86_vendor_init().
-> +	 */
-> +	vcpu_size = sizeof(struct vcpu_vmx);
-> +	vcpu_align = __alignof__(struct vcpu_vmx);
-> +	if (enable_tdx) {
+Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
+to simplify the creation of SLAB caches.
 
-until now, 'enable_tdx' is totally decided by module_param, which might 
-change from Y to N if tdx fails enabling. In this case, the below should 
-not be updated.
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ fs/mbcache.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> +		vt_x86_ops.vm_size = max_t(unsigned int, vt_x86_ops.vm_size,
-> +					   sizeof(struct kvm_tdx));
-> +		vcpu_size = max_t(unsigned int, vcpu_size,
-> +				  sizeof(struct vcpu_tdx));
-> +		vcpu_align = max_t(unsigned int, vcpu_align,
-> +				   __alignof__(struct vcpu_tdx));
-> +	}
-> +
->   	r = vmx_init();
->   	if (r)
->   		goto err_vmx_init;
-> @@ -228,8 +244,6 @@ static int __init vt_init(void)
->   	 * Common KVM initialization _must_ come last, after this, /dev/kvm is
->   	 * exposed to userspace!
->   	 */
-> -	vcpu_size = sizeof(struct vcpu_vmx);
-> -	vcpu_align = __alignof__(struct vcpu_vmx);
->   	r = kvm_init(vcpu_size, vcpu_align, THIS_MODULE);
->   	if (r)
->   		goto err_kvm_init;
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 8a378fb6f1d4..1c9884164566 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -6,6 +6,7 @@
->   #include "capabilities.h"
->   #include "x86_ops.h"
->   #include "x86.h"
-> +#include "tdx.h"
->   
->   #undef pr_fmt
->   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-> new file mode 100644
-> index 000000000000..473013265bd8
-> --- /dev/null
-> +++ b/arch/x86/kvm/vmx/tdx.h
-> @@ -0,0 +1,50 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __KVM_X86_TDX_H
-> +#define __KVM_X86_TDX_H
-> +
-> +#ifdef CONFIG_INTEL_TDX_HOST
-> +struct kvm_tdx {
-> +	struct kvm kvm;
-> +	/* TDX specific members follow. */
-> +};
-> +
-> +struct vcpu_tdx {
-> +	struct kvm_vcpu	vcpu;
-> +	/* TDX specific members follow. */
-> +};
-> +
-> +static inline bool is_td(struct kvm *kvm)
-> +{
-> +	return kvm->arch.vm_type == KVM_X86_TDX_VM;
-> +}
-> +
-> +static inline bool is_td_vcpu(struct kvm_vcpu *vcpu)
-> +{
-> +	return is_td(vcpu->kvm);
-> +}
-> +
-> +static inline struct kvm_tdx *to_kvm_tdx(struct kvm *kvm)
-> +{
-> +	return container_of(kvm, struct kvm_tdx, kvm);
-> +}
-> +
-> +static inline struct vcpu_tdx *to_tdx(struct kvm_vcpu *vcpu)
-> +{
-> +	return container_of(vcpu, struct vcpu_tdx, vcpu);
-> +}
-> +#else
-> +struct kvm_tdx {
-> +	struct kvm kvm;
-> +};
-> +
-> +struct vcpu_tdx {
-> +	struct kvm_vcpu	vcpu;
-> +};
-> +
-> +static inline bool is_td(struct kvm *kvm) { return false; }
-> +static inline bool is_td_vcpu(struct kvm_vcpu *vcpu) { return false; }
-> +static inline struct kvm_tdx *to_kvm_tdx(struct kvm *kvm) { return NULL; }
-> +static inline struct vcpu_tdx *to_tdx(struct kvm_vcpu *vcpu) { return NULL; }
-> +#endif /* CONFIG_INTEL_TDX_HOST */
-> +
-> +#endif /* __KVM_X86_TDX_H */
+diff --git a/fs/mbcache.c b/fs/mbcache.c
+index 82aa7a35db26..fe2624e17253 100644
+--- a/fs/mbcache.c
++++ b/fs/mbcache.c
+@@ -426,9 +426,8 @@ EXPORT_SYMBOL(mb_cache_destroy);
+=20
+ static int __init mbcache_init(void)
+ {
+-	mb_entry_cache =3D kmem_cache_create("mbcache",
+-				sizeof(struct mb_cache_entry), 0,
+-				SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD, NULL);
++	mb_entry_cache =3D KMEM_CACHE(mb_cache_entry,
++					 SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD);
+ 	if (!mb_entry_cache)
+ 		return -ENOMEM;
+ 	return 0;
+--=20
+2.39.2
 
