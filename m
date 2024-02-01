@@ -1,89 +1,95 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC195F489;
-	Thu,  1 Feb 2024 15:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05614D9E8;
+	Thu,  1 Feb 2024 15:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706802008; cv=none; b=QX855JXK5TxnX9JuRB55coZlPY6qFIvzBEi3GN7/4e9yo+zespzuByYOlsaGegiOzYbi0mR6aN4cSjiXfDjsn8cN3rrMtboKTYpPnLNxJa9RvxbVKI85/c5zuvUrE4mhbBsdSSoem1umJp365rsrue8gmgrL/6J7V30aHGksQNM=
+	t=1706802092; cv=none; b=KIotKduXjAhpTTXkOID7X5+QorV7DDLxz1CpjGWzhRux6hGmqeJ7jrRUFGj7eYNzjFR0wOUenF9S0MyNzoqh+AtJjyXnifaSYml8qU23lB1QcGnAfUWIwtbkMB6cicXKm9+M8BOHYbQ9JRJm//ZoBYk4Q7llkr3XelF123AVd/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706802008; c=relaxed/simple;
-	bh=2qcjkYA/09qzTjU0YMvalmbOHyCge4tVY/zh9Oyji4s=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=bperc9YpdpYkay2mvcFCLIzkUBQzJ0161S070DPLZdFlFCJV3Hel/+NyhUJTNjQzacT/ukDQ5G/mEu/ZIVoJmbMknwSVovTBgAUw6EiNkipthZlX1Zch+aPsF0dEgzokpaAKoiVrHZE9u/Rs2HfPkwA3betM/bHCsODWFZq9htg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FeAHbqf3; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1706802092; c=relaxed/simple;
+	bh=uOhLn9KGWSsPb/i3wVsc6qllskkS7kDtVG0rkTIgNCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KhDFlPY3YSGhDeQWqCltiqacaIHzjE7Amn0k48/ULmonpOWtn6Ks2cpY4/+LiYzA1hQXoBDR/ZtJCRoJ7MvsmBJHTkBZ8nyzjbfSrMsv9EdCCu37Yml5jvAZiuf2ONydvIQWUEiFtYPhKWN4nwA/ZEVZY5MGLqtmjPCjZ2tFJWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Jgce6kue; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FeAHbqf3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1706801929; x=1707406729; i=markus.elfring@web.de;
-	bh=2qcjkYA/09qzTjU0YMvalmbOHyCge4tVY/zh9Oyji4s=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=FeAHbqf3ogXWj44u0MXNmHNOOmA3iAt4a5Qh0dmKmISUfboxx++coKrQuTkg962S
-	 PKhyKmQeQb8RBGHwXH8c08RImpHz47ZXUyZYn60xkKIt48ShQ4Nu6oJykjCSiekpp
-	 N3mc483lRibHiEvwHsPcetqNTiyxrEiFIQtu6S9vyZN/KelFwCthgRSbNm7LrkF9F
-	 lAbGZNzx7AjT1Q6R7iEZDqtaaBYQJzPxZ8ctH4fYoPBfgJ3EyImdDSwumpFcDCaEk
-	 DASud8pm3Tph05qfmlmAkutav9Y3iBK5OHensfHpI99Ne2j+UaBThDjmWa8dVmJdd
-	 lofuQo5llUOHXVHZLQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mo6Jz-1qfwax3asl-00pZSG; Thu, 01
- Feb 2024 16:38:48 +0100
-Message-ID: <078e0e4b-688e-4f98-aab1-ddd387f7db0a@web.de>
-Date: Thu, 1 Feb 2024 16:38:44 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Jgce6kue"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18876C433F1;
+	Thu,  1 Feb 2024 15:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706802092;
+	bh=uOhLn9KGWSsPb/i3wVsc6qllskkS7kDtVG0rkTIgNCY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jgce6kueTjW7XRyvtrePo8xS39zvtMxeRTwK65el9+Gf7MQpEnLDdMRu33TKtnK56
+	 /RT+fTtHgBQTEWOZNf65lIb4CdqlsWYP5pGhcXNlhm2FZ6AFPUbv9MW26eGi8qFFEi
+	 6Gg2gedX2zr19gPZk9R2twYUJXLjb1aK67wKUPDY=
+Date: Thu, 1 Feb 2024 07:41:31 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Howard Yen <howardyen@google.com>, hch@lst.de, m.szyprowski@samsung.com,
+	andriy.shevchenko@linux.intel.com, petr.tesarik.ext@huawei.com,
+	rafael@kernel.org, broonie@kernel.org, james@equiv.tech,
+	james.clark@arm.com, masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [PATCH] dma-coherent: add support for multi coherent rmems per
+ dev
+Message-ID: <2024020156-reshuffle-salvaging-8161@gregkh>
+References: <20240201093515.849873-1-howardyen@google.com>
+ <f5b626ae-bda1-479f-bc14-b1fd7ba043cf@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Kunwu Chan <chentao@kylinos.cn>, linux-afs@lists.infradead.org,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Marc Dionne <marc.dionne@auristor.com>,
- Paolo Abeni <pabeni@redhat.com>
-References: <20240201100924.210298-1-chentao@kylinos.cn>
-Subject: Re: [net-next] rxrpc: Simplify the allocation of slab caches
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240201100924.210298-1-chentao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VCDUuQeQNKj5tUf0gdRVcgdhX57d47HiTV7SNmo7l5VI23hoGOS
- XiwQQFS70ixo2jFLBXrcv2xt9Jf6Ywjs4Dy8jHU8YOC1DWsjxd8YPR23Dv8Fk4EoEsVDGnt
- WIEEu9ZhtGn+yle4rWPNC1td6Sx887gYj58uGLJx+IFaXRmvQJef7lSBxAJ72GrQLdI2bY+
- mIEB7F561+4ryJaEgdNFA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:R7D/xcBganQ=;+WUL+cplBtvdlYhCP8x/4mZxQ+G
- YtR5DFgB3+/lGSU0SvO6hbdDSeUSGEtfixllX5Wy6YtJlY0Z2FQaQVj4xHcdf4JvphoFaQ5+y
- 3xo33OjUBKdzSLYGGa3KrBCBrWII15NsjC+AtjS5/8xf1DFOdUOxLHZGhuIxdId2opmVKe0tr
- 3gVyLF23IZ+WDWJ2pEGpw7RhM4pArWW5KeROC5ZBougDA5x6Nqtj6r4UdDXRQUH1kuRn9fIXW
- G27w96XF202T4cwn0o6ZRsHm4BOHxeotoFFhOVp0g2JmY5TyWQx56XZyyoeNrmMstdda2pwdk
- aACIW+B1oIJ39plELSCM7f5nGY5gUqiQgDQi3gZ27FhFYZUnrDIA7S464IzTgAqC+riOAczTo
- tpqWVjNihG6ssR0nEZZpf2nhOToB3dChRfkcCg6amZFxv9LE2NKgS7FtNXBLMpBPh7S1RfDYN
- JWr8DXAhpOwO0tOn2G7blfUcVuiN8Vvp+zX1sZNh19CSo0PLMf19d88Bpp8D4ZEEr6FG5XLxm
- Vwrkde1lpWSFVrOb3wFxvBUiE99gy8WtYpD0FXmL6gNWDhMK464D4j6gvHWQATYRKnrqhddXe
- I0FZePNAcaJtehknDB2Od5EYhMx3+YfPaCxIsgCSo9BsdGO/x0TCiwQeCM+vDEpXtkycr+lV9
- N6b0T7SWWs2y7yOb9ln/PrDrUEsfoujpJD1WiY++XBHku89/46d4tC3BOOUE2eHANaXNuusJt
- EwK/Qmce+vzsoDDoU0bWKUEIZqzSOSh30wUQpadKlVOeDvVvu0aFdoE/fbBBmNu1EAHTg8ocr
- 2wAFt6/nvbQASoLh22uBbFuP/3yfJWbtgJYyOizL7cd1s=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5b626ae-bda1-479f-bc14-b1fd7ba043cf@arm.com>
 
-> Use the new KMEM_CACHE() macro instead of direct kmem_cache_create
-> to simplify the creation of SLAB caches.
+On Thu, Feb 01, 2024 at 10:45:30AM +0000, Robin Murphy wrote:
+> On 2024-02-01 9:35 am, Howard Yen wrote:
+> > Add support for multiple coherent rmems per device. This patch addes
+> > dma_mem_list to device structure to store multiple rmems.
+> > 
+> > These multiple rmems can be assigned to the device one by one by
+> > of_reserved_mem_device_init_by_idx() with the memory-region
+> > declaration in device tree as below and store the rmem to the dma_mem_list.
+> > 
+> > 	device1@0 {
+> > 		...
+> > 		memory-region = <&reserved_mem0>, <&reserved_mem1>;
+> > 		...
+> > 	};
+> > 
+> > When driver tries to allocate memory from the rmems, looks for the first
+> > available rmem and allocates the memory from this rmem.
+> > 
+> > Then if driver removed, of_reserved_mem_device_release() needs to be
+> > invoked to release all the rmems assigned to the device.
+> > 
+> > Signed-off-by: Howard Yen <howardyen@google.com>
+> > ---
+> >   include/linux/device.h |  1 +
+> >   kernel/dma/coherent.c  | 66 +++++++++++++++++++++++++++++++++++-------
+> >   2 files changed, 56 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/include/linux/device.h b/include/linux/device.h
+> > index 97c4b046c09d..c8682ee507cf 100644
+> > --- a/include/linux/device.h
+> > +++ b/include/linux/device.h
+> > @@ -751,6 +751,7 @@ struct device {
+> >   #ifdef CONFIG_DMA_DECLARE_COHERENT
+> >   	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
+> >   					     override */
+> > +	struct list_head	dma_mem_list;
+> 
+> I'm not necessarily against the idea, but only if it's implemented sensibly.
+> If we're going to have a list of these it should *replace* the existing
+> pointer, not do this weird thing with both.
 
-* Please replace the word =E2=80=9Cnew=E2=80=9D by a reference to the comm=
-it 0a31bd5f2bbb6473ef9d24f0063ca91cfa678b64
-  ("KMEM_CACHE(): simplify slab cache creation").
+Agreed, it should be one pointer max for this structure for this type of
+thing.  Why not move it into the dma_coherent_mem structure?
 
-  See also related background information from 2007-05-06.
+thanks,
 
-* Would you like to take another look at possibilities to group
-  similar source code transformations into patch series?
-
-
-Regards,
-Markus
+greg k-h
