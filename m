@@ -1,59 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405FA15DBDB;
-	Thu,  1 Feb 2024 12:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71BC15F31D;
+	Thu,  1 Feb 2024 12:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706789012; cv=none; b=M9uLDjHtrk1viMbmhn8v2hJ98gPpfSSa3ViLhuPPrGi3U2zg3BjvzzAI8Egl8ZPwvVJSTTWEmojKZ5sTkrYnYmdBwGBu3NoG8YWAw725E2r9OV5MnZzD2zpa/G/Ws7oXzT6vYMRvEeQuQDIi1gBLn4/Q+HqS4M3Ur+A1ip7JFm8=
+	t=1706789016; cv=none; b=Agd9lBaeysgLkZY8mHr8Ar9EDZR7rc/3wjVTElHL149g4EEXFx+8fZEHJpfuEoe1BYYz8qKAHIYQP9mlTNzpUrw/mFVwIiTjd1hl2uytSvRpBiRXU8090/EBvwaIWTelgghRkrCy+V5jSBVjN3kyHdDJqAMj4pYS6qBKWFsqy7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706789012; c=relaxed/simple;
-	bh=2SUmf9R/YYigzJmyWuD8soVbsph5ihQXY0L6ZAEW93E=;
+	s=arc-20240116; t=1706789016; c=relaxed/simple;
+	bh=xVSfc7rtZNEubzwrbp9DZR56mDddDOEvo4VK0ZpA1cA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jghUdXMq5apFU1KJdjOSXrIvvLRSOVBoDBEC3lk79g/2DpdQ1lAq8tV5aErm8Bfo/c4AmzZnIIPhFyf0zSLPRpPEnfN3eFvIWptHU7R4sKpCPN8wNi0E9kFRJwBcQ+f3J3UFq/2W5QYRDIm5ag+ntIMCXf2k1uLVDA8+CwsNSyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJkbIrqw; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xi1tHu3CTA5cCIswF0ncMzybGhcaN5GdXLOhJAJD9FxKRKT9xyEZOL9yJvpJDx8ChBTs/G5Ki2H1/gyruLsQBmLuqG+D2/O6doQk2C44Lok3FGXVWiC5As8AvdY1rhK53AE27UjqLpA8u9HIXlB3UyRTVDwiFPCRijxqe1m/UGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JwlJyvOW; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJkbIrqw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JwlJyvOW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706789010; x=1738325010;
+  t=1706789015; x=1738325015;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=2SUmf9R/YYigzJmyWuD8soVbsph5ihQXY0L6ZAEW93E=;
-  b=aJkbIrqwVXj/FiKd2A1sE6hQ73o2PHm33kmqbC8gZ9xvZTzSmISXnJql
-   dAKFnJoqVHfb0vD+Pn4CXeKWt3Tv6Rlv9PPJ6Kl9WzaGS7dXiR1QAxwxx
-   JaCS4Hqe98aY1HxqVhdnkNhaggyrnclJJer9RuM1MVa7NHSeW+QOdCTUw
-   iN57H9zyAtNkrRJ5l0cocTNyAcxl/CGa2t6DQxoLNxHIksgpvT8Gxlax3
-   TlkymFZ5IlDRMCOWZzFtNb6jIBhHCJU/+HUYATty/+O6/kprKYl/el6Hj
-   la8/xhSebEY93Ru3WCgFQvhWN1gtPK+uMxob799hA6UC7358oF4B0lDe4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10630044"
+  bh=xVSfc7rtZNEubzwrbp9DZR56mDddDOEvo4VK0ZpA1cA=;
+  b=JwlJyvOWzLsKGuHKNVDTu+NTukGLSFUF6lVYivHnp9L87EIHRGoG9gt9
+   7Gf6QHjbtXZOHYZlv+4yvE2EYUC7EQgeb3EvznwTLYtXkNXvRAJTde3ak
+   AX9XpXVHGqx2BfEe3F8j0dkMUI0YCXTw6KoPi1/75wQ9pnK/tVd5ykAjJ
+   44pCaezCCu5PXK7rD4gJrUWj2c2LehV3fgt1VeuDfAJXjRyFearbSX6co
+   OwcVc0GF2s6XqXPyA34XMVoml1miOFqFsZhMkgn6X4LSQAGwDryGtO3TR
+   Mfymmizc8fVipIr8zwYv22K6PfZmWLj+HoUMJfXyEsEv05Jpiy8dDqWIL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10531590"
 X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="10630044"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:29 -0800
+   d="scan'208";a="10531590"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:34 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="912106710"
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="738410714"
 X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="912106710"
+   d="scan'208";a="738410714"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:27 -0800
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:31 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rVVMt-00000000os0-1uN7;
-	Thu, 01 Feb 2024 13:36:31 +0200
-Date: Thu, 1 Feb 2024 13:36:31 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-Cc: linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
-	radim.pavlik@tbs-biometrics.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: mcp23s08: Check only GPIOs which have
- interrupts enabled
-Message-ID: <ZbuCP4rN_DEsH-Un@smile.fi.intel.com>
-References: <20240130073710.10110-1-arturas.moskvinas@gmail.com>
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rVVDa-00000000ok5-0Gob;
+	Thu, 01 Feb 2024 13:26:54 +0200
+Date: Thu, 1 Feb 2024 13:26:53 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] pwm: dwc: Add 16 channel support for Intel
+ Elkhart Lake
+Message-ID: <Zbt__WmU74vmLpPR@smile.fi.intel.com>
+References: <20240122030238.29437-1-raag.jadav@intel.com>
+ <20240122030238.29437-2-raag.jadav@intel.com>
+ <ZbZqZDvdw-_D3hyb@smile.fi.intel.com>
+ <ZbjPv_-S-6CQsaja@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,49 +65,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130073710.10110-1-arturas.moskvinas@gmail.com>
+In-Reply-To: <ZbjPv_-S-6CQsaja@black.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Jan 30, 2024 at 09:37:10AM +0200, Arturas Moskvinas wrote:
-> GPINTEN register contains information about GPIOs with enabled
-> interrupts no need to check other GPIOs for changes.
+On Tue, Jan 30, 2024 at 12:30:23PM +0200, Raag Jadav wrote:
+> On Sun, Jan 28, 2024 at 04:53:24PM +0200, Andy Shevchenko wrote:
+> > On Mon, Jan 22, 2024 at 08:32:36AM +0530, Raag Jadav wrote:
+> > > Intel Elkhart Lake PSE includes two instances of PWM as a single PCI
+> > > function with 8 channels each. Add support for the remaining channels.
 
 ...
 
-> +	if (mcp_read(mcp, MCP_GPINTEN, &gpinten))
-> +		goto unlock;
+> > First option: Always provide driver data (info is never NULL).
+> 
+> Allowing empty driver_data would save us from adding dummy info
+> for single instance devices in the future.
 
-> +	enabled_interrupts = gpinten;
+Which may be too premature "optimisation". Why? Because if we ever have
+something like pci_dev_get_match_data(), the empty will mean NULL, and
+we may not get difference between empty and missing one.
 
-Move this line to be...
+> > Second option, have the body of the for-loop be factored to a helper
+> > dwc_pwm_init_one() and here
+> > 
+> > 	if (!info)
+> > 		return dwc_pwm_init_one(..., 1, 0);
+> > 
+> > 	for (i = 0; i < info->nr; i++) {
+> > 		ret = dwc_pwm_init_one(...);
+> > 		if (ret)
+> > 			return ret;
+> > 	}
+> 
+> Considering above, we're looking at something like this.
 
-...
+As one option, yes.
 
-> -	for (i = 0; i < mcp->chip.ngpio; i++) {
-> -		/* We must check all of the inputs on the chip,
-> -		 * otherwise we may not notice a change on >=2 pins.
-
-...just here (w/o any blank line in between).
-
-> +	for_each_set_bit(i, &enabled_interrupts, mcp->chip.ngpio) {
-
-...
-
-> +		/* We must check all of the inputs with enabled interrupts
-> +		 * on the chip, otherwise we may not notice a change
-> +		 * on >=2 pins.
-
-Missing space after =. But better to spell in proper English, i.e.
-"...great than or equal to 2 pins."
-
->  		 *
->  		 * On at least the mcp23s17, INTCAP is only updated
-
-/*
- * Use proper multi-line
- * comment style as depicted
- * in this example.
- */
+> static int dwc_pwm_init_one(struct device *dev, void __iomem *base, unsigned int size)
+> {
+>         struct dwc_pwm *dwc;
+> 
+>         dwc = dwc_pwm_alloc(dev);
+>         if (!dwc)
+>                 return -ENOMEM;
+> 
+>         dwc->base = base + size;
+> 
+>         return devm_pwmchip_add(dev, &dwc->chip);
+> }
 
 -- 
 With Best Regards,
