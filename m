@@ -1,91 +1,119 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06A2D281;
-	Thu,  1 Feb 2024 16:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C50D468C
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 16:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706806063; cv=none; b=rueT7QtDwOgs6QIHbTMj1W1XaEDc6jHAzNxjw1CD0cloUfbWB+GRArIsni3OY25kT1RSLFvdiFtcM0ZQy0cVRqtrLk6stjYU2OFWS/qE8WfrGWauxVzmbOG7nzHWdwcn96q3wZ4iRwjqPA4h1BkrkIix7sn2H0R7dpJdyWqU8qQ=
+	t=1706806086; cv=none; b=a2soLFBit/ZbKgo2c8Q5WbvdKKFK+b3AV4Hs+n2yBlAp+Aja5iA57B5pESEkHLfAlEiNbLYK/kGaCCYnLrQWgawZbv7Ql/dEnLJtvhyHYJENfqzIIkn8wNUxKwsb+03C2RxdtK6+Ujq1HQbeNe7Wbm//SSaSoM4Zs7tvHpBtLaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706806063; c=relaxed/simple;
-	bh=+K0T97CVgMNpfRwZlO4eKu8a/DzZVeS+5rFivyPss+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W+kq0HwV8lWIJKmjErXyL2mnFFlIsbhPkf/MsdobuFzdP510Q3JGaQ1MLn+JnZt/er7Szm5DG2aFcYkqHtvX75N0FBzY1Qg7UajfpQYWe5q2qpu2CmuMIAmEd+LjBsXwr+7zkgo0WonrVyuZYIjuJoAn1nZ7VC/oHCd6E3kkJW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XfPMOc1V; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1706806086; c=relaxed/simple;
+	bh=SEGEdx+dqT+/Ew8JKhflR6LHqrtX2JQ7vsb63ovQuTk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bT5VqoeZWFZNyunCXjJ3gLkgtL2PF9MqReHeC159iR9kXD208GVYOO3CBHjRJ+St/RxKHSjDIdf+SGxJcrsia9ab7DHqvb/UfiQsMi63v1ASyBFy+6H7ZujEzEEKCwG92djQnS6olJ286l95yzEb4bhjWkEvEJJW47XeT3gRZ+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OPcGNwzL; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XfPMOc1V"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=bUN7yMh6xy2hWhvAEG7t+zJP6Ap6R4V2I56VA8W+GD8=; b=XfPMOc1Vq3U3HOb18Bz8QczK3k
-	g+LxL9dyOB95t/oGQzYWYyETjRxfv+GLcPmPfUfCFqCmGzlIEgl5v8EMON+nLJH+kRh9CMc2LknpE
-	M4fDU8lpc+Chg/33DQ935/cp4zaBrwvfIfoFPOsEDSTPmULjLXy99RDT4X2KWxL7ASpY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rVaDh-006hIq-0x; Thu, 01 Feb 2024 17:47:21 +0100
-Date: Thu, 1 Feb 2024 17:47:21 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v5 net-next 08/13] net: phy: marvell-88q2xxx: add support
- for temperature sensor
-Message-ID: <b4fc0bc4-1585-4ae0-a980-10814e6d9ff6@lunn.ch>
-References: <20240122212848.3645785-1-dima.fedrau@gmail.com>
- <20240122212848.3645785-9-dima.fedrau@gmail.com>
- <88a60be9-083b-4618-845c-6983bcad3540@roeck-us.net>
- <c9866a56-d82e-4a3d-b335-db22c0413416@lunn.ch>
- <a02c7451-8515-45d4-ae7b-9e64b03b5b38@roeck-us.net>
- <20240201162349.GC48964@debian>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OPcGNwzL"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6040a879e1eso12609567b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 08:48:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706806083; x=1707410883; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A7fik1J0VW0e/Mqa8n8TwB+QOmKZHZ7Id4mjBLFxQY8=;
+        b=OPcGNwzL11qz+3B2RvanL72RqurfjxcvWMZ9yTzfvrJsX8KqbpXXeA+iYXRc3VebLY
+         nn+Ap/IQC7xbXHi0rrvrQXyrP0H4ciLnjd/lgRuhhpc+dY0WVQZqrQx4xHeS329/qISh
+         28K6M5A8APN4g3/xB+M//HDyIk6jySW/aUZ6/X2RNhhaPyPhvF4KZvttxtkv2WTc9mgU
+         UP9Aky3gqI6kPPkOL2xdor2QaXqhOcpRwe4b8ABerLs1TrAQvLlhHYbpdAJa0bGVCzNu
+         U+bBXu4/bB95KIkwtfC+zVUy9NKK2V//pHqJSNJK7h0GI//rCuDEZxdGfMTW5Rv9WBcb
+         6NUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706806083; x=1707410883;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A7fik1J0VW0e/Mqa8n8TwB+QOmKZHZ7Id4mjBLFxQY8=;
+        b=m86RLJC+YRalKHP0Z84rq9RUkcslL2hFQoYR6ecxvRQ9tbtdzWkWvKEvoTHMw9tnjn
+         S4XV1sR+6H2bbs65UAfiUpxXc6pT7x3jr3wB9pwtaNQs+LzdMbanNBVwXRouuQISBifb
+         k8FPGGOIc5VsF100oQzYVo9qcGoeKhlum2tNQ1sC2Ap/ai9410bwodcoP3UTDz2mpM95
+         /PuXO/DfiEZFVl8+XfBdNm4s93HKr0HhnC9ugf+0DkCdJ0iAue1M8dhWRHjpdBIfwRYJ
+         2wFnlLxQ8jDS3kr8/aHYyOCCaK9TpgpWYBYWPn6yOHMGDdVYxPIkQ2HJ7uIocIEjfSPM
+         G/8w==
+X-Gm-Message-State: AOJu0YweYfq6MayHRYLMN7K/eKovNjL10Osh0CxST0oaBYSqB+4Kt6eM
+	N3/d1dUJ0NEvbH7J6g1kAWyE7KZj7G7RNdLqMeSKvkC92C2cE2yIarJEoKF6wZrOi2CsCWdPLAA
+	er8UBLnc7gdF3cqJDn1+mVP3iWsU36dEq+GKYPA==
+X-Google-Smtp-Source: AGHT+IG+SmfjRaQH7El4HH0vjqrdEODfpaYOF7D3+sS8NkQHEjWCndUfnYiQf8SoO624jsugJerkjDJUp44CWBy3d2Y=
+X-Received: by 2002:a81:c545:0:b0:5ff:a52b:55ac with SMTP id
+ o5-20020a81c545000000b005ffa52b55acmr4910993ywj.34.1706806083247; Thu, 01 Feb
+ 2024 08:48:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201162349.GC48964@debian>
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+ <20240131-mbly-clk-v4-10-bcd00510d6a0@bootlin.com> <CACRpkdZvj2E1zfSU1RGY2+_6sCCYxu=pbQ0yv+-bmTLGzEyFwg@mail.gmail.com>
+ <CYTO3C0G7083.1TVFK6PN35G1B@bootlin.com>
+In-Reply-To: <CYTO3C0G7083.1TVFK6PN35G1B@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 1 Feb 2024 17:47:52 +0100
+Message-ID: <CACRpkdYaVPWKATRec4Ta9mQatsjtt5Fexb-enXFEjGSxAt12tg@mail.gmail.com>
+Subject: Re: [PATCH v4 10/18] pinctrl: eyeq5: add platform driver
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 01, 2024 at 05:23:49PM +0100, Dimitri Fedrau wrote:
-> Am Thu, Feb 01, 2024 at 05:39:25AM -0800 schrieb Guenter Roeck:
-> > On 2/1/24 05:27, Andrew Lunn wrote:
-> > > > > +#ifdef CONFIG_HWMON
-> > > > 
-> > > > HWMON is tristate, so this may be problematic if the driver is built
-> > > > into the kernel and hwmon is built as module.
-> > > 
-> > > There should be Kconfig in addition to this, e.g.
-> > > 
-> > > config MAXLINEAR_GPHY
-> > >          tristate "Maxlinear Ethernet PHYs"
-> > >          select POLYNOMIAL if HWMON
-> > >          depends on HWMON || HWMON=n
-> > >          help
-> > >            Support for the Maxlinear GPY115, GPY211, GPY212, GPY215,
-> > >            GPY241, GPY245 PHYs.
-> > > 
-> > > So its forced to being built in, or not built at all.
-> > > 
-> > 
-> > Even then it should be "#if IS_ENABLED(HWMON)" in the code.
-> > 
+On Thu, Feb 1, 2024 at 11:24=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
+
+> > Can't you just use regmap MMIO to access the banks then...?
 > >
-> If using "#if IS_ENABLED(HWMON)" do I have to add the dependency in
-> the KConfig file ? When looking at other PHY drivers, they do.
+> > Maybe it doesn't add much here. I'm not sure.
+>
+> Indeed, I went the minimalist route. You tell me if you'd prefer an MMIO
+> regmap.
 
-Please follow what other drivers do. Its easy to break the build,
-resulting is undefined symbols. What we have now works.
+I'm not sure, because it might be that it adds more overhead than
+it saves and then it is pointless.
 
-	Andrew	  
+> I've not seen any helper to get a regmap based on a resource, targeting
+> by name. Is the expected procedure to acquire the resource then create
+> a regmap config then call devm_regmap_init_mmio()?
+
+No... haven't seen such a thing.
+
+> > > +                          enum eq5p_bank bank, enum eq5p_regs reg, i=
+nt bit)
+> > > +{
+> > > +       u32 val =3D readl(pctrl->base + eq5p_regs[bank][reg]);
+> > > +
+> > > +       return (val & BIT(bit)) !=3D 0;
+> > > +}
+> >
+> > Maybe add a check for bit > 31?
+>
+> Will do. I like that sort of defensive programming. What behavior would
+> you expect?
+>  - WARN_ON(bit > 31) and return false?
+>  - Just return false?
+>  - Something else?
+
+Your pick is as good as mine :D
+I let the author choose what to do there.
+
+Yours,
+Linus Walleij
