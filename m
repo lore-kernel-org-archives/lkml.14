@@ -1,157 +1,91 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9C48665E;
-	Thu,  1 Feb 2024 14:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2635D465;
+	Thu,  1 Feb 2024 14:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706797126; cv=none; b=cOoHRex2gb6CNY3aMxYtwwpMdI6fCtMHyLLzWUE+ob565AYy0GuItwVfFhjBWIR7tKnuQqBO5rDO8N+NR9nH1Gn/Us74oJQWDOsxdwFqHKgqqpKcJ464+lC24bSlVq9Kh+Vr5k1UzikGEM/NjMFfmkoWmglofyvdGi4UUn1IDeI=
+	t=1706797149; cv=none; b=LoYIdC1Vw+3KZCf0T8CNWI8Sst2gnjNV4kTmSs+O7HWHf1J8sGYErIZajBeuSTP23srtWeIYjd2AhUE7qUItUZqechtSOOZsYokhC1anUmP0Nsw5XSmBEp6R2C+/5ia3eHUOJOF7I0Oyw/qrrBymtxJX89SWwiFRzdUz8k819i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706797126; c=relaxed/simple;
-	bh=CwySW7XET/AnUFJ154ZcOrACzdF3MwDFaGctz7AiiVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E2RC4X92AsE0Bi8awdIOjEzfpqP3yQVff9gA6wZKmbZxzxcHQ5XmDjezGSiHHDFdha41KSBZmYHGm+eQomFRoXafqLSpm/ue32HZOVuSMhGYa5aaZwGfb+niacdPzP1rxgqaKmdoKUgKy6d5o8C60Zo/nF6ZQ8ATFjyJ/Lqt1WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IcznWrr/; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706797149; c=relaxed/simple;
+	bh=vHCcKVvZrQL2QrV1hmgo04yutSPw1rOQhlupRpU5Ios=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Z3/QtFMLQsAkvXgaFcVZdc/GtjhHDA30qEjOjkcDYOJl6yqPGgktbMNvtmryxb+1VswF+IaQzdvquKYsY+pgqX84DCVegLWSNhO/4YZBnwFGfg+XqA9ykVys/I+RCkWyGFe1GaTYMlDJkwj+e9aTVR7NN6o/tCmIsnLtmhmyluc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=neRWrpBm; arc=none smtp.client-ip=45.145.95.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcznWrr/"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42aa241b91aso8017641cf.1;
-        Thu, 01 Feb 2024 06:18:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706797124; x=1707401924; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CibH9NsUUmfyfumQzMWLxe29z8lLHioKeun4/4R69c0=;
-        b=IcznWrr/jqED9cECjc8UqLY4pcuq9wZVV1zyPy46R6gwjcUn1dCKVwTwNO9X6eyW4Z
-         8m5LSaykeWbXBSkAhw/6GdO4MBXWdAbubAXIA5W+PG03sxfadtYL5skH+avKs2oQCRhP
-         p+fyhxDAbeRVKuX6rcPYBUUTGpM8FYEW9bskF0iVvm3FVbXO88z5aspXLzZzc1z8oLfl
-         pNyDmmpLzFq4s3IolEQxMPoXh+BNn+TaOr3MXYBpr4pHW3F938e9zlTIv1+iSPq0y0Xw
-         h4ie4AyRj4U1iOs0m+t7t/I/jl4pRl1XmcG5QT1h7yWBlBuUCxKHwY8cASwK13Ktz61f
-         B+YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706797124; x=1707401924;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CibH9NsUUmfyfumQzMWLxe29z8lLHioKeun4/4R69c0=;
-        b=Yx+Y+hte9Yy9UTqaHBKGPkzA+4b4lc+UIMKfksnYD+gwUPZsZIGOM6MVPAx3GFG0qs
-         NzevwrJ7pBBoHL3wrMUnkisJOuWjPIQs6gU2LuVBqdD//yz4WSdortS8wYtX8c405ehI
-         JBnsJ9nyzSFF+wu29UBWsV4H5d1AcqWtz+VPMvWbxJ9Wqao3dZFQ+B8uwQRC8w8gieFi
-         ypO6Ryn97uSQfgvAlIcQC0ky1h4LS9tFCz/E8d9bQcnCpWwzsaUgxPIjtePoTkDPR5Wy
-         0QBVvaFOQtnii8V3OfyWkofc7CcNfU5rvZrtMoGS0l9lC8qwz1hiPYgXb3e1Ye1mncS9
-         Yggg==
-X-Gm-Message-State: AOJu0Yx14kWbeX8zGApfkUyKD9Z9vRuaxwBM6uCPABXMkIXBA0cvHM4y
-	2Lz8zEvDY3pVmppJqQc7RuEWw54cCqHNDPZR8d1gMahpgUD3+MVDdKaR9HW0Tyj3wavjreX2h3P
-	mo0QNLeceYI0QI3sP9u/Dus93PS4=
-X-Google-Smtp-Source: AGHT+IEuKIKRoRWAtz1Fzrb8vDg5FaE8tl591BEPTDBu2YRq/PE8z6sCg6mm7AmQH+8fXhFqgJeBXzyt/jepix/20h0=
-X-Received: by 2002:a05:6214:f63:b0:68c:7f6f:2d9 with SMTP id
- iy3-20020a0562140f6300b0068c7f6f02d9mr1738565qvb.6.1706797123897; Thu, 01 Feb
- 2024 06:18:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="neRWrpBm"
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+	t=1706797139; bh=vHCcKVvZrQL2QrV1hmgo04yutSPw1rOQhlupRpU5Ios=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=neRWrpBmRqFUTHfKG9UtbcYAVngvJzpvVbfWu/Nx/5P2Q1rz7q/N9c1LogDsgIwed
+	 NQanMQVAff9Put9IfFPMfz16iwaupS2CpKnXp6Oz2cnOEHSCdsYBakbxmn8JRy2dHe
+	 EtSbNzZFnBj5xBviUzhq+GdJV0lcriqmEIVHFzDlQ7HpBhSklb8UfBe75U2hTOQLG+
+	 Y37634Dmm/jEt4ysDBEwen0ucetQnBj5f3lZI6ObHLdgt/AVOD66qNQukPCc1o+VcB
+	 qYGjntB+C2r2r2K3R36mK2cqxz5NTkC250pspFJBnMpKGumydx7T6YnYWnAQAXpf3b
+	 pxMlvCb7jChqw==
+To: Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kalle Valo <kvalo@kernel.org>,
+ Arend van Spriel <aspriel@gmail.com>, Franky Lin
+ <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>,
+ Lee Jones <lee@kernel.org>, Brian Norris <briannorris@chromium.org>,
+ Srinivasan Raju <srini.raju@purelifi.com>, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com
+Subject: Re: [PATCH 1/6] wifi: ath9k: Obtain system GPIOS from descriptors
+In-Reply-To: <789b7ca0-80c5-449a-99eb-8c05b5380245@app.fastmail.com>
+References: <20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org>
+ <20240131-descriptors-wireless-v1-1-e1c7c5d68746@linaro.org>
+ <613ae419-9a2c-477e-8b19-8a29d42a3164@app.fastmail.com>
+ <ZbuZ_55a-qqDqkeN@smile.fi.intel.com>
+ <789b7ca0-80c5-449a-99eb-8c05b5380245@app.fastmail.com>
+Date: Thu, 01 Feb 2024 15:18:59 +0100
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <871q9wz2r0.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130214620.3155380-1-stefanb@linux.ibm.com>
- <20240130214620.3155380-2-stefanb@linux.ibm.com> <CAOQ4uxjgdvGU0WE+92ByQE26Jp0j16AgfyCjNyEp7=86akOSsA@mail.gmail.com>
- <20240131-lacht-elend-536d94682370@brauner> <05fe58a1-9b2c-4c1f-80a6-4cb5094a2126@linux.ibm.com>
- <20240201-zierpflanzen-allgegenwart-5eb1fa243a61@brauner>
-In-Reply-To: <20240201-zierpflanzen-allgegenwart-5eb1fa243a61@brauner>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 1 Feb 2024 16:18:32 +0200
-Message-ID: <CAOQ4uxgfkdX+3VR9sA7SeB7f3BW89iAwF2-JRCcJNsurtune_g@mail.gmail.com>
-Subject: Re: [PATCH 1/5] security: allow finer granularity in permitting
- copy-up of security xattrs
-To: Christian Brauner <brauner@kernel.org>
-Cc: Stefan Berger <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, paul@paul-moore.com, jmorris@namei.org, 
-	serge@hallyn.com, zohar@linux.ibm.com, roberto.sassu@huawei.com, 
-	miklos@szeredi.hu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Feb 1, 2024 at 3:35=E2=80=AFPM Christian Brauner <brauner@kernel.or=
-g> wrote:
+"Arnd Bergmann" <arnd@arndb.de> writes:
+
+> On Thu, Feb 1, 2024, at 14:17, Andy Shevchenko wrote:
+>> On Thu, Feb 01, 2024 at 01:20:16PM +0100, Arnd Bergmann wrote:
+>>> On Wed, Jan 31, 2024, at 23:37, Linus Walleij wrote:
+>>
+>>> +	} else if (ah->led_pin < 0) {
+>>
+>> ...
+>>
+>>> +	if (sc->sc_ah->led_gpio)
+>>
+>> Dup check
 >
-> On Wed, Jan 31, 2024 at 09:56:25AM -0500, Stefan Berger wrote:
-> >
-> >
-> > On 1/31/24 09:25, Christian Brauner wrote:
-> > > On Wed, Jan 31, 2024 at 03:25:29PM +0200, Amir Goldstein wrote:
-> > > > On Tue, Jan 30, 2024 at 11:46=E2=80=AFPM Stefan Berger <stefanb@lin=
-ux.ibm.com> wrote:
-> > > > >
-> > > > > Copying up xattrs is solely based on the security xattr name. For=
- finer
-> > > > > granularity add a dentry parameter to the security_inode_copy_up_=
-xattr
-> > > > > hook definition, allowing decisions to be based on the xattr cont=
-ent as
-> > > > > well.
-> > > > >
-> > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > ---
-> > > > >   fs/overlayfs/copy_up.c            | 2 +-
-> > > > >   include/linux/evm.h               | 2 +-
-> > > > >   include/linux/lsm_hook_defs.h     | 3 ++-
-> > > > >   include/linux/security.h          | 4 ++--
-> > > > >   security/integrity/evm/evm_main.c | 2 +-
-> > > > >   security/security.c               | 7 ++++---
-> > > > >   security/selinux/hooks.c          | 2 +-
-> > > > >   security/smack/smack_lsm.c        | 2 +-
-> > > > >   8 files changed, 13 insertions(+), 11 deletions(-)
-> > > > >
-> > > > > diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-> > > > > index b8e25ca51016..bd9ddcefb7a7 100644
-> > > > > --- a/fs/overlayfs/copy_up.c
-> > > > > +++ b/fs/overlayfs/copy_up.c
-> > > > > @@ -114,7 +114,7 @@ int ovl_copy_xattr(struct super_block *sb, co=
-nst struct path *oldpath, struct de
-> > > > >                  if (ovl_is_private_xattr(sb, name))
-> > > > >                          continue;
-> > > > >
-> > > > > -               error =3D security_inode_copy_up_xattr(name);
-> > > > > +               error =3D security_inode_copy_up_xattr(old, name)=
-;
-> > > >
-> > > > What do you think about:
-> > > >
-> > > >                       error =3D security_inode_copy_up_xattr(name, =
-NULL, 0);
-> > > >
-> > > > and then later...
-> > > >
-> > > >                       error =3D security_inode_copy_up_xattr(name, =
-value, size);
-> > > >
-> > > > I am asking because overlayfs uses mnt_idmap(path->mnt) and you
-> > > > have used nop_mnt_idmap inside evm hook.
-> > > > this does not look right to me?
-> > >
-> > > So it's relevant if they interact with xattrs that care about the
-> > > idmapping and that's POSIX ACLs and fscaps. And only if they perform
-> > > permission checks such as posix_acl_update_mode() or something. IOW, =
-it
-> > > depends on what exactly EVM is doing.
-> >
-> > In 2/5 we are reading the value of security.evm to look at its contents=
-.
+> I don't know what you mean here. To explain what I'm
+> trying to do: The idea is that the LED is always backed
+> by either gpiolib or the internal gpio controller on
+> the PCI device. This means every access to an LED must
+> be guarded with 
 >
-> I'm not sure what this is supposed to be telling me in relation to the
-> original question though. :) security.evm doesn't store any {g,u}id
-> information afaict. IOW, it shouldn't matter?
+>    if (gpiodesc)
+>          gpio_*(gpiodesc);
+>    else
+>          internal(ah);
+>
+> We could probably go a little further in the cleanup and
+> throw out the gpiolib path entirely, instead relying
+> on the existing leds-gpio driver. Since there are currently
+> no upstream users of the gpiolib path, that would likely
+> lead to cleaner code but require more changes to any
+> out-of-tree users that rely on the platform_data to
+> pass the GPIOs today.
 
-But it does. in evm_calc_hmac_or_hash() =3D> hmac_add_misc():
+There being exactly one such out of tree user (per your up-thread
+email) in OpenWrt? Or are you aware of others?
 
-        hmac_misc.uid =3D from_kuid(&init_user_ns, inode->i_uid);
-        hmac_misc.gid =3D from_kgid(&init_user_ns, inode->i_gid);
-
-I guess as far as EVM is concerned, it should always be interested in the
-absolute uig/gid values of the inode.
-
-Thanks,
-Amir.
+-Toke
