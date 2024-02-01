@@ -1,174 +1,136 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2068.outbound.protection.outlook.com [40.107.223.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2846B3A1BB;
-	Thu,  1 Feb 2024 10:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706783596; cv=fail; b=d3OvepfqCwEi4cQsLXBG9z1ACY+9hawZrW9kZegIr5vqfMaojeiIYf2JLyuWcNOWbgR9+gweF2CsOcSCGBeoIP4fkVS5FqJBrqGATOSwhQsrfk2poVememcK3ani6kiaf8OIeofG/6/axNX1p+QrXwNderlwn/ETN7oxqqYjLhc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706783596; c=relaxed/simple;
-	bh=G7cRbRPxs8CUJ1VViTGx72ig0XolbIz4vieMwZ6ZtUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQZJHWb0lpLDaw8u+7S4yuk3f73FKEpolvG70/R9TnxV8735aR2ZxXTGSuk+kvNLvT+jLZRqIgn84z2eYbygyTnm0BeNLpSJSUmU3ynOvdwsXf5u2EAPna0nKtroQr20YPnJz/lITv725pg080YdtGeswCzcb1na6PNFLoh5lXg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b=FVoRHlHb; arc=fail smtp.client-ip=40.107.223.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1DD15B975
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 10:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706783606; cv=none; b=nigBgrtYIRW1EVlK3qkhZ6qIqzNO8fzRS7yQMFcXXI87MR5AgjG+IZw2s8cVewtK/Kw+YYrydyRoS/A4ctuNRvY7akH4Lk8F5X39TEMea5YRQURBHuRq3Dc+HyRa7/YjsWNLSW/xz2Pz0MZQhEIESplL4gavnPheHoZJa2KLi7Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706783606; c=relaxed/simple;
+	bh=GlBPwm7a5otw9EILXtijeRE84vG/ltLhBHcp1CoLON8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nHS/f8VjrqgpLupJvD23toWGqMLOj30jSFo611BMRI4Qc82EEpVBd8jDCwlIOqc9Kfgt1gQURgUfr8bHsIElWlp8htsFfoOmYgjbB7pmRzdS6ArSzRXAfb3ffsx3pKVK5TmL4HNqkCZC7PA5vCBm2G3hmxJIwJ3ZJGiFN9en5mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x9lhmmHA; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="FVoRHlHb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F/mdVVJu2qP5yNPefKI0U+ZCBdC/urlu7vNMnylv4JXDD9EbkTVfH/C584qymmzw1xwFeMglpx2Fioqy010oYOKYYPyK0bQ0H8Y4fNsXMXYSypBsQKDw0RMPBimm2tnxKOAMcndRmSCPWqD+14i7QPqmWG+xOceX0J62eni8pBLZ72awOA6rtkJszhB+sQuakh5UiFHRU2lNQvEy+2TKYwAaDYYv5lgUK4K7oMbHhkm5JebcTCRbT8khB9q+TwL1Uo5TIUnRxcrLT1BeAZN1ZX9K2Slh2zqQxWqa4FvrhuTHrUBp7V21AWGRv+WVPD3AYnBq+7HAzv6IiPtghTFtoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yLs2P3s49bjsbevW4T9Hhuh5aR5rSGmElejR7NCZc/g=;
- b=RGO9ahAv+oQwhbA5i71wNTyWEdYW9LpRPTs7b68lTbRjqevknhnVS+M+mK/fdQHHIOPHeh2ThgZnvu+murkDGXF3kk18kb+8RhOTRm1r8NFCq/8n2+KmBB+noIySzZCcpMHPkMYqOlZ0PbcEHcqy0Pk6v0rPtyGT02eg085432hSlaCQMgEebox6UDg6ljTN2GQ3NeHTlxMEPZ59dYt7SDnywSiROk/6VzhUIkfVA/uXav8L2WwsLj2aoilQSY8Q/awiYn7drW8su6YkE/+lCxQHHaZxnNpK7Bx6J2kpyfOExM8335P/OevmZKEm5H13JsXFPiBtB0HZ02tZkITtgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 121.100.38.196) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sony.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=sony.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yLs2P3s49bjsbevW4T9Hhuh5aR5rSGmElejR7NCZc/g=;
- b=FVoRHlHbTDGN/IVgACwfgNTvddVkZshiaU/hWpY1FB30ZskaSyEZRkWVPy/WXbaEmFAO8PmPeBj1iS5OrOQTONfSRnVmfZ7319LqCV6LghNkI+LJ6i/sQ/91n0JejXC2r8wVDQ55k7qJMHPI3rNJ4yVrFneq/l0AnJSVwTrAOWE=
-Received: from CH0PR03CA0243.namprd03.prod.outlook.com (2603:10b6:610:e5::8)
- by SJ0PR13MB5983.namprd13.prod.outlook.com (2603:10b6:a03:43f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Thu, 1 Feb
- 2024 10:33:12 +0000
-Received: from DS2PEPF00003443.namprd04.prod.outlook.com
- (2603:10b6:610:e5:cafe::56) by CH0PR03CA0243.outlook.office365.com
- (2603:10b6:610:e5::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24 via Frontend
- Transport; Thu, 1 Feb 2024 10:33:12 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 121.100.38.196)
- smtp.mailfrom=sony.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=sony.com;
-Received-SPF: Fail (protection.outlook.com: domain of sony.com does not
- designate 121.100.38.196 as permitted sender)
- receiver=protection.outlook.com; client-ip=121.100.38.196;
- helo=gepdcl07.sg.gdce.sony.com.sg;
-Received: from gepdcl07.sg.gdce.sony.com.sg (121.100.38.196) by
- DS2PEPF00003443.mail.protection.outlook.com (10.167.17.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.19 via Frontend Transport; Thu, 1 Feb 2024 10:33:11 +0000
-Received: from gepdcl04.s.gdce.sony.com.sg (SGGDCSE1NS08.sony.com.sg [146.215.123.198])
-	by gepdcl07.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 411AVlS0022120
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 1 Feb 2024 18:32:52 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl04.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 411AVFXd012375;
-	Thu, 1 Feb 2024 18:31:15 +0800
-Received: by mail.sony.com (Postfix, from userid 1000)
-	id 70FBB20C1C4D; Thu,  1 Feb 2024 15:59:42 +0530 (IST)
-Date: Thu, 1 Feb 2024 15:59:42 +0530
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, pmladek@suse.com
-Cc: rdunlap@infradead.org, rostedt@goodmis.org, senozhatsky@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, taichi.shimoyashiki@sony.com,
-        daniel.palmer@sony.com, anandakumar.balasubramaniam@sony.com,
-        sreenath.vijayan@sony.com
-Subject: [PATCH v4 2/2] tty/sysrq: Dump printk ring buffer messages via sysrq
-Message-ID: <ca8dd18e434f309612c907d90e9f77c09e045b37.1706772349.git.sreenath.vijayan@sony.com>
-References: <cover.1706772349.git.sreenath.vijayan@sony.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9lhmmHA"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55fbbfbc0f5so633762a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 02:33:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706783603; x=1707388403; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ECjESsw4J2tVE//l68f5LRtJ/ylD5ePg6AyS02rGK+I=;
+        b=x9lhmmHAVq7WsZvMoA8dYJZhAgcCPzTpaomn2iqpbZOr/3RUqv36EDNGmdoHL1tgaT
+         dpVdNyVCF435QugKGC2DlPCxUiEfzH999eNBf6BTksUlz65CFu7HOxn7TjHBfz+fvEK7
+         6nK5U56BJ00B26iWptzU9lXGWfNfd9c2Gypc/kuINB1GPLvp8CLhxKqtA4J9iVCDBO/i
+         44YrHzKV97U5LNWSeAVsSNZuUwBz+eCJY1QMpO1HGIYKUmmCqCJuUK8QdZoZJRgBeFsG
+         e08eQt5Gtv9m0W+udH+o5cRxAf9VBQQUaWwjZONZMemz6uQiUbejmFLE3tqoMGkTO+Y5
+         JRAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706783603; x=1707388403;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ECjESsw4J2tVE//l68f5LRtJ/ylD5ePg6AyS02rGK+I=;
+        b=rbI4dxJGT5BVgg/a2gCuaQeb1RC8UFMPfSWLpWI1wdnXgkHCCUBe/NiWd+q/pa+ppk
+         ADoxeESymSJ1OEiIyX0LAn+TNup7jO346R19QRqV7JzjsbOHChKivWrLs74T+Rjd6qhg
+         Guxx1NmycRVO8lS7UaEdaOg4LH2PnJ96hFJXJg/dGPN813p9dvqTZog4BXXfohqrhwmQ
+         o84C9PYAm8PZc5Lt38lj2cd0yrrj2jWXu2txz44YR4zcakbigZgWkahkfVgQxlUPWUaj
+         xKak2umnS++8dtj6LoDrR5uPE6F1OYt0jeA5i/Hr8xvdp7ylcSq0vIcq7nUiWWWwbnHr
+         BPXA==
+X-Gm-Message-State: AOJu0Ywryri6iuPs12V8IOkWs3vdoxQlJmhj4te8u9Kr9pUwD9nVsqzj
+	jUTIauBO9wmJl2scTNCWgLhcFSQkTvGbAVNHNy5f+Ev15eBaavJagw1p3a+2Mi4=
+X-Google-Smtp-Source: AGHT+IFnq9gdrGw1N+h4fc5CMzAFuTkrsk1hTTJUDQ0wAy7ue+Ozc+QBh5QWfDyNdBUw8ExW+tZtwA==
+X-Received: by 2002:a17:906:4e88:b0:a35:fb27:2e38 with SMTP id v8-20020a1709064e8800b00a35fb272e38mr3893798eju.34.1706783602193;
+        Thu, 01 Feb 2024 02:33:22 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXYO2Dxpk1fDxl7YfeJPV5r02NbvAmQkySo9eau6yDxSoKDerlRY3HIC3HFjCuMTj+fVbtP+v4AmMGOSEIfaUnkgtc2UTo9Uf/XQwJzJa8tnCyYmBNGPu+TmBqL+mK4V83epY+kRAEZ/VdXl9KX5Yg5V+BjVsMwL5QVRW0xBWPshwVDszzgkMW2iztYSgTobXR9wcxZVuyo8T/07R2CewJ9Z9M0Bi5Dwwlpcbqi6LdGh8+EfFosr8ZXXA+rKX7wTxCMLrSAJRZXivrBglNYmIVL4QEPf3fYtNQTNz8QF9+htXqGgV+zZxFuISRQa+TEoedeuYao19xWfKnHz1B7bvLi106bzm2bDNlhUXxvb75+oLhjuhVufwknotVCiJwLtjuZDOby+8GyvFR+ER/XJ+rkKpfilThIQpyv7P6AO5RPT5W0XdY2ZsLvTLdCTbp+NCuIdjeoWgJUEv+sL1jMH8CSOfuMufgxzuUu+d3VhLphU/r/DIKtWBnlaPQ/qZgzNXExLAOB0Nv+ReP7JoBNmGV/KRyrcY/1u0H3lzY47obSRl22PY2dBkySz3K1R5c7pHYhq/g=
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id d11-20020a170907272b00b00a360fe9a7b0sm2888875ejl.23.2024.02.01.02.33.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 02:33:21 -0800 (PST)
+Message-ID: <85856b38-e42e-412b-b201-ee2798722f67@linaro.org>
+Date: Thu, 1 Feb 2024 11:33:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1706772349.git.sreenath.vijayan@sony.com>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003443:EE_|SJ0PR13MB5983:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2a94104c-5cf2-4bcd-ecba-08dc231130c4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	uACyjzY3GNax10HkdmQRnYfTQMiu+BiSfHteks0zFgU0pDWjcT/zLTJrRvk+MmlvetHYZVnoq9A0lTTFtqefXVvw8CtyC7OX4xevd9dWeGwFbCDkQpIsWqQE7PgctELvgpD4YA4wuB8io6kSdz84tNNIHO8wpyfwXBG6CjTbl5hGBbIKT8at/LKx/e9rPMF55NzywEvKwIWd51sjkjU+roph11lPIGq9SHYMLF9k/CdeE3EyhnEfvNVIf3OFP+fGoeq6TM8naH6+um66Ox6coNfzfeOwv3cL/Hp4/+MjIvowL/kIeUQKImMKgHIM6ngRFCWukXfhrXB7ilu8tR8y2MeYSeKa0FeLjeorUhrK8TmhDN54t9dUakt4HdMEmug2BsGkp6vEv0kH3Tmjwe4BeZ7+hGb1epSKE54xw7zv9X2k3Sz9OQRW63ZR6lc4GV022xLbBHRgJfHM7P01JqYemE+d+MwIDLZgWVoKEEtcEATF1qtoxUMnnsyTDLxuc75xFj/UGKdfz+7LaaMVxuMjTUUz7jxhXikStljpuUawN5cbSUUy82uKRkDRmyoIlRTtRd7p1VBrz5bFVBAKzyFrdBOz901baLdWdwUp0WLGotoeEo44U5OGW5s5nOL8tnYWSE4jMycP0Snj0++2Oi9LJQ4hWl2eX9h7pZB/6e5anf2+wneBj77S1J1o9Xfn6u3Sn8DT9y0XSu9ntJ3hTf3oOXWnK3Z5VnFWWBqiYW8ssUp3e/aP/SZoIILIGQIqvaD8TgY3wQppOf8zPEoyUcx0zg==
-X-Forefront-Antispam-Report:
-	CIP:121.100.38.196;CTRY:SG;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:gepdcl07.sg.gdce.sony.com.sg;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(396003)(39860400002)(136003)(230922051799003)(451199024)(1800799012)(64100799003)(82310400011)(186009)(40470700004)(36840700001)(46966006)(41300700001)(47076005)(83380400001)(107886003)(6266002)(426003)(336012)(26005)(8676002)(356005)(36860700001)(4326008)(44832011)(450100002)(15650500001)(5660300002)(82740400003)(8936002)(2906002)(478600001)(81166007)(42186006)(316002)(2616005)(70206006)(36756003)(82960400001)(86362001)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 10:33:11.2208
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a94104c-5cf2-4bcd-ecba-08dc231130c4
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[121.100.38.196];Helo=[gepdcl07.sg.gdce.sony.com.sg]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-DS2PEPF00003443.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR13MB5983
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] ARM: dts: samsung: specify the SPI fifosize
+Content-Language: en-US
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ krzysztof.kozlowski+dt@linaro.org, broonie@kernel.org
+Cc: robh+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org, andre.draszik@linaro.org,
+ peter.griffin@linaro.org, semen.protsenko@linaro.org,
+ kernel-team@android.com, willmcvicker@google.com
+References: <20240125151630.753318-1-tudor.ambarus@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240125151630.753318-1-tudor.ambarus@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When terminal is unresponsive, one cannot use dmesg to view printk
-ring buffer messages. Also, syslog services may be disabled,
-to check the messages after a reboot, especially on embedded systems.
-In this scenario, dump the printk ring buffer messages via sysrq
-by pressing sysrq+D.
+On 25/01/2024 16:16, Tudor Ambarus wrote:
+> Hi,
+> 
+> The "samsung,spi-fifosize" was introduced in the following patch set:
+> https://lore.kernel.org/linux-arm-kernel/20240125145007.748295-1-tudor.ambarus@linaro.org/T/#t
+> 
 
-Signed-off-by: Sreenath Vijayan <sreenath.vijayan@sony.com>
-Signed-off-by: Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
----
- Documentation/admin-guide/sysrq.rst |  2 ++
- drivers/tty/sysrq.c                 | 20 +++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+Judging by Rob's statement the bindings were not accepted, so I drop
+this series for now.
 
-diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
-index 2f2e5bd440f9..c634e8b4cea2 100644
---- a/Documentation/admin-guide/sysrq.rst
-+++ b/Documentation/admin-guide/sysrq.rst
-@@ -161,6 +161,8 @@ Command	    Function
-             will be printed to your console. (``0``, for example would make
-             it so that only emergency messages like PANICs or OOPSes would
-             make it to your console.)
-+
-+``D``	    Dump the printk ring buffer
- =========== ===================================================================
- 
- Okay, so what can I use them for?
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 02217e3c916b..365f7fa145f0 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -450,6 +450,24 @@ static const struct sysrq_key_op sysrq_unrt_op = {
- 	.enable_mask	= SYSRQ_ENABLE_RTNICE,
- };
- 
-+static void dmesg_dump_callback(struct work_struct *work)
-+{
-+	dump_printk_buffer();
-+}
-+
-+static DECLARE_WORK(sysrq_dmesg_work, dmesg_dump_callback);
-+
-+static void sysrq_handle_dmesg_dump(u8 key)
-+{
-+	queue_work(system_unbound_wq, &sysrq_dmesg_work);
-+}
-+static struct sysrq_key_op sysrq_dmesg_dump_op = {
-+	.handler        = sysrq_handle_dmesg_dump,
-+	.help_msg       = "dump-dmesg(D)",
-+	.action_msg     = "Dump dmesg",
-+	.enable_mask    = SYSRQ_ENABLE_DUMP,
-+};
-+
- /* Key Operations table and lock */
- static DEFINE_SPINLOCK(sysrq_key_table_lock);
- 
-@@ -505,7 +523,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
- 	NULL,				/* A */
- 	NULL,				/* B */
- 	NULL,				/* C */
--	NULL,				/* D */
-+	&sysrq_dmesg_dump_op,		/* D */
- 	NULL,				/* E */
- 	NULL,				/* F */
- 	NULL,				/* G */
--- 
-2.43.0
+Best regards,
+Krzysztof
 
