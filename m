@@ -1,97 +1,115 @@
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A652177A1A
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9225D46E
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 16:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706803130; cv=none; b=SPhbGkIOKo2taFVxlwz2BiRanlYRz+eBAHJTJxXkqf+9eStMZROQlIhc/gIo0CQPT9Rjd6AJC3KtdGyFNkkAgtX2etNQYrWzGkYMM6mbXndIeLMypfRNOhzkn/AMe09FqGhI0T6Afbh8v9m40ms79n2s5KtdZVQYkHaS7upYnqY=
+	t=1706803249; cv=none; b=T8zyOH6ee1cyXzDN+FAVpAu7kpO3/MMGCyyrZEsDUWnwbrc7tYhHKq72kNe4/SQUCuj9PwsjfYmiHJHtZlGyS8TA4xwFKxAI16xdZAt1NqWotoDyURz8653oIMpZCOmNAp9Ms8LMAzH1UvdlO9aUWSP4tv/oRaHQ8+IBqClFQqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706803130; c=relaxed/simple;
-	bh=psIvWV3hDRalSJpwlz2aPwOIlCQIQPngKO3nwLwfQhY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sbkXgcuxrM+kF5HaSxWNJsaPe3JRjTdB837E8weaeH4TX+/Tv9TuLKNz9AmHnH3lh0omLchpqKjWzzWKcgnt9JkGrVfhAjcx5po/UMRGXIpAJvbHKagYH2iwiezEBOmWygEX7iCHtDprlY86d162GMqXyshgpXREv/K2qv1StFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:4392:e888:3d14:1bdc])
-	by xavier.telenet-ops.be with bizsmtp
-	id hryk2B0042BHJxj01ryk6F; Thu, 01 Feb 2024 16:58:45 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rVZRn-00GvjW-2p;
-	Thu, 01 Feb 2024 16:58:44 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rVZSe-00Abua-2h;
-	Thu, 01 Feb 2024 16:58:44 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] regulator: dt-bindings: gpio-regulator: Fix {gpios-,}states limits
-Date: Thu,  1 Feb 2024 16:58:41 +0100
-Message-Id: <b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706802756.git.geert+renesas@glider.be>
-References: <cover.1706802756.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1706803249; c=relaxed/simple;
+	bh=LfH8VcU2Lhb55/DWAFRHRgTWaYRH6XpZml+946QsT8g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KjaM3qB+06s7MTyd2G0BSW4vpXzeIwPo+mE5NXtc9IjjAZABBo7AAR3bj6PlqAb7/tDmY/CZFW9ODljsJWXjnHfaAWt9vrNOrBRprf+EJx7G5BcKTVjAEJt6p9m4awp56XWqBOSo5TB9DbvMqG0bOeI3XrXP79V3x6kSSkGwabU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d7TOtrL7; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d7TOtrL7"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55f63fd3dd8so14286a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 08:00:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706803245; x=1707408045; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b1DMfysap4JrKaVpmot/Ile+whuj0cOJvZWdDpBWCyU=;
+        b=d7TOtrL78rNkvnkc7FWdKyZ+Hc5xhLoH5jtiU9FFaTygKqsoHor/4LSsVk99fxKkmr
+         tmBEWwIc4sRBiPlVfvUPK5dsPE2Mpl16mYc97RGRqEM0W8PMJ7Iw8kGmG3TVVMbQeZCs
+         Bh5UqbeNy98rYGiy8nlyLUVHri3LOVljCRD2w4H1R+cxHL2Kr01/R3oNiuFRQ5lQVHzE
+         J6Wa43X4M5XhveYIOG2AptagT/9k9mpeBRZQmHvsDV2Q7QDqb3peil0ho79SiSERuDD3
+         e5cKqSr6Qr0ySCvfcdd/yncEkFJUIL6uWgAeEETM4KSGJOh9TtKHwNiLIsv30f5oejLE
+         TzzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706803245; x=1707408045;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b1DMfysap4JrKaVpmot/Ile+whuj0cOJvZWdDpBWCyU=;
+        b=N0hbGFMvW5bKcxv0Gq2+QYMAjHLvPb3swmhgPwS0lFjlGccln2wARY2k0eRDDMLwY0
+         W/iilq4iHmbnO4HUwZZvpyc4GvlX/NQc8EWaM4/IWeCL4f/07AIQJz6AQK+iBvwgCNtS
+         vUWrOIdrFDKfPuEoCZ0oyUjPCXD7l5El1NNKTDbFB9btMDT1jqbxgun1Kuaj/zQO9lS3
+         Oo9vkziqfBLIrSHBzf2mAr+w7k6zl40XRvRsRpC5LezWj9Cjl0NwTa5XB6+6xYPCp/7/
+         /QmFbp1TvHIkucAaynRQbMuU4F7UJ0c5YpKTevLEloN/3qsOR6GONkt8yfO/D3i/jUkv
+         O5hA==
+X-Gm-Message-State: AOJu0YwnTFTgcNt/BsdXMq+kfoiXvqCF9zgVK+uixGgceNDZCKWETmuC
+	IfEMmXpehm4OCRxxcbnHMFDOA0h3tYnT8fWk3TEuFtPM9rI9ahAlidqk9D9lXU1EN6qQab4hejj
+	jdiAFEZJykzrHFlCOYPnD22h5jOhWeP0LuONq
+X-Google-Smtp-Source: AGHT+IGPA4t3VShyiapoEsQ+eMSFj6xYW1M1WSp7kdkTKJlhK10lCpopzwUNGlhUan+VUHAy+5jp5I/OpgBbqT5Yoas=
+X-Received: by 2002:a50:9fcb:0:b0:55f:98d7:877c with SMTP id
+ c69-20020a509fcb000000b0055f98d7877cmr192536edf.5.1706803245323; Thu, 01 Feb
+ 2024 08:00:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240130064819.1362642-1-guanyulin@google.com>
+ <0e4221b5-bafe-4bea-b533-0ed8add81ef1@rowland.harvard.edu>
+ <CAOuDEK2VSBcQdLKt27VrLUxH2S22275ffbe5mdVM=vBZDhceQA@mail.gmail.com> <09fce208-72b1-49e8-988e-ea149fbaf0b5@suse.com>
+In-Reply-To: <09fce208-72b1-49e8-988e-ea149fbaf0b5@suse.com>
+From: Guan-Yu Lin <guanyulin@google.com>
+Date: Fri, 2 Feb 2024 00:00:00 +0800
+Message-ID: <CAOuDEK3YcHxm4H2+n1r5KZoFK9PG9+XeJD49FCKaeX+KFhkrzQ@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] usb: host: Allow userspace to control usb suspend flows
+To: Oliver Neukum <oneukum@suse.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, gregkh@linuxfoundation.org, 
+	mathias.nyman@intel.com, royluo@google.com, hadess@hadess.net, 
+	benjamin.tissoires@redhat.com, heikki.krogerus@linux.intel.com, 
+	grundler@chromium.org, yajun.deng@linux.dev, dianders@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, badhri@google.com, 
+	albertccwang@google.com, pumahsu@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-make dtbs_check:
+On Thu, Feb 1, 2024 at 5:38=E2=80=AFPM Oliver Neukum <oneukum@suse.com> wro=
+te:
+>
+>
+>
+> On 01.02.24 10:02, Guan-Yu Lin wrote:
+> > On Wed, Jan 31, 2024 at 1:12=E2=80=AFAM Alan Stern <stern@rowland.harva=
+rd.edu> wrote:
+> >>
+> >> On Tue, Jan 30, 2024 at 06:47:13AM +0000, Guan-Yu Lin wrote:
+>
+> >> Why does this affect only the USB subsystem?  Can't the co-processor
+> >> use other, non-USB, devices on the system?
+> >>
+> > In our use case, the co-processor only supports USB subsystem. There mi=
+ght be
+> > other co-processors support more subsystems, but we're not sure about h=
+ow they
+> > will interact with the system.
+>
+> Hi,
+>
+> it would be very good if you decided this now, before we add attributes.
+>
+> The reason is that if this feature is needed for multiple subsystems,
+> the attribute should be added to the generic device structure, so that
+> the naming and semantics are consistent.
+> You really don't want to repeat this discussion for every subsystem.
+>
+>         Regards
+>                 Oliver
+>
 
-    arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb: regulator-vccq-sdhi0: Unevaluated properties are not allowed ('gpios-states', 'states' were unexpected)
-	    from schema $id: http://devicetree.org/schemas/regulator/gpio-regulator.yaml#
+Hi,
 
-The number of items in "gpios-states" must match the number of items in
-"gpios", so their limits should be identical.
-
-The number of items in "states" must lie within the range from zero up
-to 2^{number of gpios}.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-The second issue did not cause any dtbs_check errors?
----
- .../devicetree/bindings/regulator/gpio-regulator.yaml         | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml b/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
-index f4c1f36e52e9c3d8..1cecf8faee5dc374 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
-@@ -47,6 +47,7 @@ properties:
-         1: HIGH
-       Default is LOW if nothing else is specified.
-     $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 1
-     maxItems: 8
-     items:
-       enum: [0, 1]
-@@ -57,7 +58,8 @@ properties:
-       regulator and matching GPIO configurations to achieve them. If there are
-       no states in the "states" array, use a fixed regulator instead.
-     $ref: /schemas/types.yaml#/definitions/uint32-matrix
--    maxItems: 8
-+    minItems: 0
-+    maxItems: 256
-     items:
-       items:
-         - description: Voltage in microvolts
--- 
-2.34.1
-
+Given that in our use case the co-processor only supports USB subsystem, I'=
+d
+like to proceed with adding the attribute exclusively within the USB subsys=
+tem.
+Please let me know if there is any further consideration, thanks.
