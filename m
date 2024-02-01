@@ -1,119 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2076.outbound.protection.outlook.com [40.107.212.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCEC4500F;
-	Thu,  1 Feb 2024 14:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706798081; cv=none; b=RJ++bqnSox4/yQhY68kS0fJ/mf71Kox6iZyc9OUC+4KdrXn95jRoeIaedql88cqEKo8zkQxNoIok6xTzrJVRPI6v2JlbhyHFlhW0YrQhoOBWsnE5mP0EkZYMhu0R/riKtq0CDV3rfZilsfE84Xy4lHuabucZF2fXmGOby9UAVcY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706798081; c=relaxed/simple;
-	bh=MwpDtmXN1dHVZjKlwVZnjRa8BnrGUX+o12/7/pZ4rzE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=juGlE91V6T0PcS7FUzKcEZLYtkvm8aZ4qWTmjKjwZ55zMx6iil7nU0/UB1EbkbD9vRX+O4Yr783NCgiWnpqOsC5AmLiJmswh/H7MiyS7HfXlZ/dSzgEz808uNMR4fGg+h+xU+HIbgbTgwVarKb8TIcWzO84gvuGuFjRpU0Xw5fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PQV67DeE; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C4553392;
+	Thu,  1 Feb 2024 14:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706798120; cv=fail; b=HqkS/E78ziUDULNIiSNlFUkI99gpNCq9WfLWn8iHbNlvnnr8mLF84duqJp6V1xlGlBcaRmFq6IULeL6vZ5Rgjq4cmMSUARhBvBqiFQ61fBdJImBz9oqAq3Bt1fk7L85XdL6yQYLYU9gPaaG/Xycl22ChU8wj5GLiStiCJU/4Nqs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706798120; c=relaxed/simple;
+	bh=EMgPe8c9XgwP/KE1F0xc76ATd1J0Smxrxgt9kQe7EAA=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GMwF75uzfTY3UXJh6gouzgT6OcGlAeoCzjlmz4DadstEKJeHMJDrP7kGBM6iRDhehohPtF0BtEqTmImQgYcPfqRCrePS9F4/122TEb3tt3K+awk36LxzHz8nH8s3E15EjiPKqaNaLVHXGBnXNNe5ofgiyXvxPPbwaNvx4EZAxZ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YjCYAojm; arc=fail smtp.client-ip=40.107.212.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PQV67DeE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706798080; x=1738334080;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=MwpDtmXN1dHVZjKlwVZnjRa8BnrGUX+o12/7/pZ4rzE=;
-  b=PQV67DeE/3UPzdnxCmfjMEaxv3KOh7aYGDGBbiOz7FWHKupLJoX+C06U
-   riZ/dg0dvK5+fZrihDKJTyoOODNyWIMsPtExcYwBCmXLNgHiG+bTu//xT
-   19U/BqESiwA4AB9iOFYi40j63O2CwnKGcbJrsvxGGhWqZukPxWs3RVc25
-   MUXe75m6jfQCcK5943GHAIrPIXWwEFtnx+7PLPMRS0uK+sZCqlgbFDMyu
-   UxwubZ5sMmad4TU37rOYv8VKFrbcrOXYZAdmmbaJ+KK/G/Y2DpY1h767T
-   AioVnSdHRkwlXb0hHN5aJw+3Sr7W0DMbe89VJeJLYQje55whn7Vixg1Uz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403517806"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="403517806"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 06:34:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="859163966"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="859163966"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.1])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 06:34:34 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 1 Feb 2024 16:34:30 +0200 (EET)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: "Hegde, Suma" <Suma.Hegde@amd.com>, naveenkrishna.chatradhi@amd.com, 
-    LKML <linux-kernel@vger.kernel.org>, Carlos Bilbao <carlos.bilbao@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd/hsmp: switch to use
- device_add_groups()
-In-Reply-To: <2024020144-duplicity-nuptials-1cd7@gregkh>
-Message-ID: <f48ebcb1-8f87-efee-08ed-844775c995aa@linux.intel.com>
-References: <2024012822-exalted-fidgeting-f180@gregkh> <0d110d2a-da0c-017a-0e5a-fc6bef7b066a@linux.intel.com> <e73426f6-6d50-4ed7-8613-1ec42fa3f991@amd.com> <2024020144-duplicity-nuptials-1cd7@gregkh>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YjCYAojm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D98IvCaKmgv4fd7j0i/BuaKZU4Siy3oCRSVF6HnQD0D+cPEFvHIiS1F9cnTbCwTPXD/RAl9A5AV/GkXKf5SddeyC0zjijK1HczwYegG3na6/3RrRtU4a0weznsLeSxubcH+YWcY5QjyWpdpPFPgN4GY+beG7tXzufkDr1egzY6hq+ws885mkZNg3rWJ+p/YfSt+Vbfmw5b8/OKI3e2QWNtVYU5GHyrWlXl5zzdh47xiOknIz7C8sdqRs8pqufdgfGDyKhyBSStf2Boj460sdTeLSTtJ0tTQTIABHeadkEO/73MZ07Q8tQxsCkic7MSBBW89bny8YTLVgnQkeRg54Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iqyRk8Gaqv4gSozfVJxawvBOnCALgwWn9cyW0sVnl/c=;
+ b=nuu+6pnkDr7IzpUfAeOmZLtg2+/hpGY7xUOme7c8Qos0yyS23lez0g3sCivFn/LhoGUSLhonr0NPpTXQE4EsIIoP6SnBnXPs24DzhnP24uRopjT2BQx6VxXz0Atg5/hTcgjL4s1/1NdUMODyh95RXeaH0CtY9Fd8LPqc6vyil+0pTJYjmp2lOAvHFR8Pbgq6CZTJyTI1eed458A4XoEHmn0vE9HYgow9Vvponb/kLpa4GYMQr+tVVoS+5la0r4zjOmVHjQVaenZQrn4qDDrPJG6Gto2WsQk0GLEIjtNlGvMMyAR7qOiolGWF6WU1jWDLSVrXeSuzYWZb5USh/W8zNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iqyRk8Gaqv4gSozfVJxawvBOnCALgwWn9cyW0sVnl/c=;
+ b=YjCYAojmsYx4Dcbb/Xy945BHLiMPYUC5AqxOC9zSIHGSNFCA0vPY3H37qHmHxtBqpUWHohBYY5M9CbzZlR11PWDBYwC53T+4Wqju4X3MRIQDnooqscyjNMzRtffbjXpeUu0qJ552G4IffUQYJv7SKKObUDcsDXINzN5J2Uu0gsk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
+ by SA1PR12MB5672.namprd12.prod.outlook.com (2603:10b6:806:23c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.11; Thu, 1 Feb
+ 2024 14:35:15 +0000
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::3a46:cf50:1239:510c]) by BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::3a46:cf50:1239:510c%7]) with mapi id 15.20.7228.029; Thu, 1 Feb 2024
+ 14:35:15 +0000
+Message-ID: <132e22b9-2e42-4d8d-a2ea-14023bd5dae1@amd.com>
+Date: Thu, 1 Feb 2024 09:35:13 -0500
+User-Agent: Mozilla Thunderbird
+Cc: yazen.ghannam@amd.com, tony.luck@intel.com, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, avadhut.naik@amd.com, john.allen@amd.com,
+ muralidhara.mk@amd.com
+Subject: Re: [PATCH] RAS/AMD/ATL: Add MI300 DRAM to Normalized address
+ translation support
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+References: <20240131165732.88297-1-yazen.ghannam@amd.com>
+ <20240201092148.GBZbtirOfNAR3SYmht@fat_crate.local>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+In-Reply-To: <20240201092148.GBZbtirOfNAR3SYmht@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN9PR03CA0306.namprd03.prod.outlook.com
+ (2603:10b6:408:112::11) To BN8PR12MB3108.namprd12.prod.outlook.com
+ (2603:10b6:408:40::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-462016549-1706798070=:1028"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3108:EE_|SA1PR12MB5672:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b932c36-f903-482a-c281-08dc23330164
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	G550ot8uBDXtA3qQ4ymKCvTjQytnGxJrck52r+BXq3n3if4zpQOxjM0zrgRjDZ1fdyTmNolz84d5xA/jZC8C4CAoUTH4atvFCMS8NVityk8FZ/+RGriSGZjTAefnvjSY5MHPFK/CWGfQPUDGlZmkD+/vTpgOzkbo6zuuEvENj7plKClq9gZ7G62Sjut5c73Dxjd9Or104y6CpZiOxeU+JK0LqwKGEcY3BgTfyBQaJItKxAag2RH7NRRqXeRt5AaGcKHDVXJuzcd0W2y0Z8c9A1NXx6ZcHe1PMVnaLksMBJtF6mhJE2nt2YYfWS0XHVK6GbEk5prW0Jt373Kh+Lpd4X4tbLySXFZ26FEZz1oZOn2bgQpcWrCiPlOHZ15zkv1e0pUs90QUjZHE0cfb7Fsl+3vJuvLXdSqj1gT2HUZR11MCpsbU5scqaJbxOrqLffT9FqJe5y24Aa+nzKVssGJF+IzpxXSKpxNSnApt5nzShlJHtP0LJHFwlhdysyGpttO+yhnjHV+axlOlJfbfXsi8iqjD2Ob+TaTl/R16Lvwxmgay9hc+iH8oawIY4wmShWoGysArX6xyZH0agIpZIts+bcBm9/Zabuu4LTu16818XAZFhDigHgUYLPqI3BdnFZOSJR/JZOoBvntD8pQbgjuRZA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(376002)(396003)(366004)(136003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(31686004)(41300700001)(31696002)(86362001)(36756003)(38100700002)(26005)(6512007)(2616005)(6506007)(53546011)(2906002)(4744005)(478600001)(6486002)(66946007)(316002)(6916009)(66556008)(66476007)(8936002)(5660300002)(4326008)(8676002)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YytqUndwZ3N6ejlYcUNKaHg5aWwxajZzTm0wL04wWmJOTFd4Vkl3YzAyYmpL?=
+ =?utf-8?B?aUp2aUsrMGpnMU9WcjlZSTJITnZYd01JcTBzcy9idmN1T2lMbHVxcm5CTFVv?=
+ =?utf-8?B?NjJ6TEdhMFUrdkFZaGc1UnBpOVFSWlhJUnFRMml6ZDZ0REJ6aXNOTXZFdkZa?=
+ =?utf-8?B?akxYUzE3ZU9SRTAyZ3gwN0c5VG9jbmRtZXJTK0JjcEF1TU5uczZyMXBmWmdU?=
+ =?utf-8?B?M1k4cTR5VWg1SGtmQWtGNERYaUVhQ21yazh6YTNvRC9VYzBNVE9qZ3pNcWla?=
+ =?utf-8?B?Y1RvR2s0UUJDVHMrYjczdnhjTU0zSVpTSDlkVklGK21qTjBtSUFXcEVZYnZ3?=
+ =?utf-8?B?eko4NTJuWk5kNzF3TUhkSkpxUnZtOE0yaFJOTmoxSkt4ZUZSMFdwZFYrOFNW?=
+ =?utf-8?B?ZXI0MTJyek41ek1XQXZTSlBPblpuN3Fzb2szakkyOGV4VnBhU05JWnpZVXZO?=
+ =?utf-8?B?bEtCMG5vNjRNSUtleHA3eUd1SWNSd1ZLWlBVclB2cUVxRVJ5YXNXL1BmRERV?=
+ =?utf-8?B?T1Q3WVhTMHozQUxUSVk0SnZtYlB3QVk5emlRd2JBSW9YNjdmcmZpOWgwNmow?=
+ =?utf-8?B?Z1g0MW1sMDlVUEJidmtJbm4wYkJvb3Z4VGdkM0NUVGg5Q2hPekl4MmpnRWMx?=
+ =?utf-8?B?VFZ3SVlaMEYwSFJBSTM3QWdtOHBid3J3NC9weVdEbHZsMFd5Yy94WGswS0d3?=
+ =?utf-8?B?cVI5Tkw0dC9Mdmk2ODZHMkJYNEs3clVCejVVNC9USmxmWkJtcFpPY0xISjJk?=
+ =?utf-8?B?ZDg0RlJJaTV6TE9yQ3IvMXc4VmFHUGI2VmlPbWZHcENKZGhsWUJEcGRZWW1F?=
+ =?utf-8?B?L3FUcWYxalhLdDFkMzQ5dGRMV1RuUUtlcmhIZ05CcjdBU3laYTI0VjhzY01v?=
+ =?utf-8?B?SmNlNlc0SGJBcXBvenhERWY1cGtqVlBxRy95R0pWbEllNkErQTg1V0R2dzlj?=
+ =?utf-8?B?OTlMRzdyem1LaHllZ3ZhSlFzK0QwWE1aYWZvdHd0eFFScHVKZ0d3eFZVS0R1?=
+ =?utf-8?B?OHo0QUtxLzA3amlVMkNDU2l2d2RPTENRZWdITzduWkhHaUFDMDE4T09peVBK?=
+ =?utf-8?B?bXg3VHY1S29MM3d4V0NjTEg2THJsZngvcm9WcEFybEt5MEpoR2tETW1EN1hz?=
+ =?utf-8?B?UGppWGxwNEVzT2tWbGxYbEdLSjcwSnhJSU5HMGw1dEdmRWxUUU45c3Bqb0V2?=
+ =?utf-8?B?YWdaRldmejQydUZnZFRMc0VxMEtoV2JjcU85Sjc5WjU0cWFtRGhrQ2Z3QTQw?=
+ =?utf-8?B?TXZxV2NZRlJJNHBYa01NVnVjTXlEdlZXQTlibUJrUUtwK05acFErZjkvMTVv?=
+ =?utf-8?B?OHZMWkRJaXVicTR1ckJ4alNJbnFyTytFdThkZlhiRG9WZzJvOC8xOXlFdDFs?=
+ =?utf-8?B?T3lNcHp1QXNMN1FFYkdMMlBEZEFHbDhBU2p3c3hqaiszYnFNSzgrZ2UxTWkv?=
+ =?utf-8?B?YjZnaDhGWldHRWttaE1RaWhwUk5KbFV1ZWp5d3FldlcwSnBGNGttWjh6c2tz?=
+ =?utf-8?B?aytvMlFWM3V6ZTRVVjlHU1JqY0IxL2NKQzh6RzdPbTVVMi83VlNOUUFFVXhB?=
+ =?utf-8?B?a1ZNNFdhK3dvTTNZQWE0dFZUU0p6WWNSVWhxSDR4d1dFRVI5b2ZTK3ZRU0Fs?=
+ =?utf-8?B?YmxoZ0kxZ1dabXFtbk1KcWJueG5YeVRFN2RHcTFDVE5vdFlpUWhXak5KRWUx?=
+ =?utf-8?B?K05GcTlxVTZNbStyVzZSWGJsTWxNaG12dVV2Rk5WakNRL2tJN3l1T0pIbHU4?=
+ =?utf-8?B?NXFTSkEwaUhhU0JseFpISkFOMDE1Rml2aERTVExOTkdoODZTWWlVR1hEclpn?=
+ =?utf-8?B?UzNFcVlSRTE5cWZHbjJLVW12ZnVPdHdid0NmUzdSbGg0TmExUGs4TUVtQUl1?=
+ =?utf-8?B?SzVmOW5zZnNGK2piYkwyK3Z6Qzg1alNwS1Ixek03SGFpdStDN1JkMjU1SWVV?=
+ =?utf-8?B?Rk5PYzBGRUlpUmhjVk5BTHcyaEtWYWxQTjZBaWNCTFFIdWlXS082a24yaWJT?=
+ =?utf-8?B?VXppZ1hkWER4T09ORWZ6bXhaaDlqVmxuQmdYV1V3encvRWYxdDMzZHZja29J?=
+ =?utf-8?B?NzhwSGR4Snh0a0htd2tFNWFteCs0dGs0UHpJQkZUSWpXQVBiaU1OZ2pOYmRN?=
+ =?utf-8?Q?EmL/HlPM7uxFDaWu65RVx1r0h?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b932c36-f903-482a-c281-08dc23330164
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 14:35:15.5156
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ANw6DRZ+p1qEI8MVOBRKSicFLKriIxwmYQoP2rBqMOYJAFsA2drR6bhNxCI15T2CHgvGy+VtQdg+6XwXnBNKoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5672
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 2/1/2024 4:21 AM, Borislav Petkov wrote:
+> On Wed, Jan 31, 2024 at 10:57:32AM -0600, Yazen Ghannam wrote:
+>> diff --git a/drivers/ras/amd/atl/umc.c b/drivers/ras/amd/atl/umc.c
+>> index 7bfa21a582f0..816c2c5c683f 100644
+>> --- a/drivers/ras/amd/atl/umc.c
+>> +++ b/drivers/ras/amd/atl/umc.c
+>> @@ -49,6 +49,203 @@ static u8 get_coh_st_inst_id_mi300(struct atl_err *err)
+>>   	return i;
+>>   }
+>>   
+>> +static u16 internal_bitwise_xor(u16 val)
+> 
+> Why are we calling it "internal"?
+> 
 
---8323328-462016549-1706798070=:1028
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Thu, 1 Feb 2024, Greg Kroah-Hartman wrote:
+It's an operation on the bits within a value rather than between two values.
 
-> On Thu, Feb 01, 2024 at 06:50:33PM +0530, Hegde, Suma wrote:
-> > On 1/29/2024 6:16 PM, Ilpo J=E4rvinen wrote:
-> > > Caution: This message originated from an External Source. Use proper =
-caution when opening attachments, clicking links, or responding.
-> > >=20
-> > >=20
-> > > + Cc Suma Hegde.
-> > >=20
-> > > On Sun, 28 Jan 2024, Greg Kroah-Hartman wrote:
-> > >=20
-> > > > The use of devm_*() functions works properly for when the device
-> > > > structure itself is dynamic, but the hsmp driver is attempting to h=
-ave a
-> > > > local, static, struct device and then calls devm_() functions attac=
-hing
-> > > > memory to the device that will never be freed.
-> > > >=20
-> > > > The logic of having a static struct device is almost never a wise
-> > > > choice, but for now, just remove the use of devm_device_add_groups(=
-) in
-> > > > this driver as it obviously is not needed.
-> >=20
-> > Hi Greg,
-> >=20
-> > Could you please hold on merging this patch for a week? I will push a p=
-atch
-> > for converting platform specific structure's memory allocation from sta=
-tic
-> > to a dynamic
-> >=20
-> > allocation.
->=20
-> Push it where?  Ususally we do "first patch wins" type stuff, why not
-> just do your work on top of mine?
->=20
-> Also, when you do make the needed changes, please remove the explicit
-> call to create sysfs groups and use the default groups pointer instead,
-> that will make things much simpler and avoid races in the code.
+BTW, I looked up "internal" in a thesaurus, and nothing seemed much better to me.
 
-Hi Greg,
+Maybe something like "xor_bits_in_value()"? This has the verb-first style too.
 
-Well, if you really want to "win" :-), please provide an updated version=20
-which considers the changes already made in the for-next branch (the=20
-current one won't apply).
-
---=20
- i.
-
---8323328-462016549-1706798070=:1028--
+Thanks,
+Yazen
