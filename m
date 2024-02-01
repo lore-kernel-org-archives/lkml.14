@@ -1,82 +1,60 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26ED929403;
-	Thu,  1 Feb 2024 05:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1465F851;
+	Thu,  1 Feb 2024 05:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706765581; cv=none; b=C8bKCZtOumXWQZy7HwNykHCUhpwwJO1Y5sO+nY9ttq2xQyn5BhBGV37KOPjBeWEHui5GyGusopSPOa9xP2YjmwPK4JOg7EWX3rOMVxGjhJWcb88/n0tAwRwMhLkRsFzXzGK7jHjorGYdvDsRXcKYl5aHBa/OBNVerNu1gSwFu8E=
+	t=1706765677; cv=none; b=T/Yv0doOCtP+oVuU0/NAw547z5qB+YpTxP85wMedczda1c5kpVOmBl7IFefKOqZhMkD150gaKiDDBWGz7LkfHS/LbdZNibBufo+TfF8cdQKR8pvf8MW5wrgoqQSAg1q5fYeKeNGSIHeeXyLP+bibNTYumu5yS/wygKaB5VDZ1a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706765581; c=relaxed/simple;
-	bh=NWi1hpkvHCFH0KErOmhqssdjDvssGBxw/+ZCVEXNFdM=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YfBPYhr2T5MXuVNpfYPm5H0kCdfmwJUV4/avhOJSZG1FNgXMuUrXIUDBrpaIuCNxRHCHr+PDXhxZycJsEjQ9M6szAe74Cx/Pk2L7Eu9JZdxUmeKoSKkzcAPuFMO2DlUIcHzHHVj7aIu90rQ+TfA8RGhUfZ7TZ65qXGL3IXZuEBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rVPgm-008UIj-9O; Thu, 01 Feb 2024 13:32:41 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 01 Feb 2024 13:32:53 +0800
-Date: Thu, 1 Feb 2024 13:32:53 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 6.8
-Message-ID: <ZbstBewmaIfrFocE@gondor.apana.org.au>
-References: <YpC1/rWeVgMoA5X1@gondor.apana.org.au>
- <Yui+kNeY+Qg4fKVl@gondor.apana.org.au>
- <Yzv0wXi4Uu2WND37@gondor.apana.org.au>
- <Y5mGGrBJaDL6mnQJ@gondor.apana.org.au>
- <Y/MDmL02XYfSz8XX@gondor.apana.org.au>
- <ZEYLC6QsKnqlEQzW@gondor.apana.org.au>
- <ZJ0RSuWLwzikFr9r@gondor.apana.org.au>
- <ZOxnTFhchkTvKpZV@gondor.apana.org.au>
- <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
- <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
+	s=arc-20240116; t=1706765677; c=relaxed/simple;
+	bh=ocGDRaiFfAcxWe/yg/LxwtwAGEIOkFi3bEQi3m4ok1M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KxAi8NO4fKGcSbqRYmOI1KiEGW/MQBSsAhYiOfr36XL/MShH359YHUh4NULFMqrKC/7qPaVGofXW3vegBAm+OcE+6Ao0F8TsGoHanAh7X+aobSrQICKBXIXSNYkQs09lrq4h5N+ltXQrYa2eS9G6wo22wwGqI947hYAdAF1wZmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=ccD/OFyn; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="ccD/OFyn"
+Received: from [192.168.68.112] (ppp14-2-76-194.adl-apt-pir-bras31.tpg.internode.on.net [14.2.76.194])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id D92B22017A;
+	Thu,  1 Feb 2024 13:34:30 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1706765673;
+	bh=ocGDRaiFfAcxWe/yg/LxwtwAGEIOkFi3bEQi3m4ok1M=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=ccD/OFyniLLOYzZT/FmroG2zvSOPbXFZXOEl84HF8/2s/P8PFZ4fSVsE3QufR7eFn
+	 Oj2fPg68qp0s27uOXKXEbZ/c+LEOlWs3l+SyyN14jRL/3XLQz+h3mkx9oY445YqvGT
+	 maaLAinFoxY6sWaFk7qtEoiKO4rIL45gHuGC95DU/FrgKWgBgVA3ZwNgejikutI6E2
+	 KSvOuoAN9WTHnZwirsKaoYLEiDXq0IfIeuo8iShM9LpNpkBpNKcXeM2XfchhecKiG3
+	 iqK3nDAJt1b9TTRajLv7AZoYbtYoEVIaHo/cKZp/w0LoBG9hKBp9kfjUawCPm43CGh
+	 Hv8cKvsSFHkCg==
+Message-ID: <e089430c47df55b57e65e5952fdfde8ab80891b3.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v5 04/21] ARM: dts: aspeed: yosemite4: Enable watchdog2
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>, patrick@stwcx.xyz, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Joel Stanley <joel@jms.id.au>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date: Thu, 01 Feb 2024 16:04:30 +1030
+In-Reply-To: <20240131084134.328307-5-Delphine_CC_Chiu@wiwynn.com>
+References: <20240131084134.328307-1-Delphine_CC_Chiu@wiwynn.com>
+	 <20240131084134.328307-5-Delphine_CC_Chiu@wiwynn.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
 
-Hi Linus:
+On Wed, 2024-01-31 at 16:41 +0800, Delphine CC Chiu wrote:
+> enable watchdog2 setting
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+Maybe "Enable watchdog2 for SoC reboot" at least?
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git v6.8-p2 
-
-for you to fetch changes up to c5a2f74db71a849f3a60bc153d684d6d28a0c665:
-
-  crypto: caam - fix asynchronous hash (2024-01-26 16:35:55 +0800)
-
-----------------------------------------------------------------
-This push fixes regressions in caam and qat.
-----------------------------------------------------------------
-
-Damian Muszynski (1):
-      crypto: qat - fix arbiter mapping generation algorithm for QAT 402xx
-
-Gaurav Jain (1):
-      crypto: caam - fix asynchronous hash
-
- drivers/crypto/caam/caamalg_qi2.c                    | 7 +++++--
- drivers/crypto/caam/caamhash.c                       | 7 +++++--
- drivers/crypto/intel/qat/qat_4xxx/adf_4xxx_hw_data.c | 1 +
- 3 files changed, 11 insertions(+), 4 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Andrew
