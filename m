@@ -1,60 +1,61 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2E812FB26;
-	Thu,  1 Feb 2024 18:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8416184FB3;
+	Thu,  1 Feb 2024 18:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706813357; cv=none; b=nZM8pMq1Q9FpAgadKezXZKuGP7RvxlePK8ANBe9UOARPbxn6AVn6eFSzeFN3OoQgfMGVhtCo/wQ6C89iUDip8G/cnY3pxi/zVb0qovWbKoYde7KodkUn6pDGLNiiutpzW4fKemqNkoeFDd3heC2+GuvFItLmsYIxOqpjMr7gznk=
+	t=1706813361; cv=none; b=MvLf2xJZ6C821iJY0qBKLcnGpVuwhGeafK/6DCD3phT5Dh7J11QVKqeefclRLcjmSXiCC90218vUE8ARGA4S4W/UnnDXffeUhy6V/+N2DlCeRi1ZdoyajW+v75E0OGsgmK9uCRhcmhJzFOekLh2NFaoUnDeyPEW3STeY8/2QMUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706813357; c=relaxed/simple;
-	bh=oSTzOFlxbkYeKTE1fBaJJNw0JiRbh4c461BYCNvcpLk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Vi+76ipBCgclYYtnlYVTfQx5jSARnHWHpKRnZ6BCDCO8ZiJM/KHZRwwJseIaHWXi/f1vJwYFi26yX77XTllnRe9jcAuzvPxdt3RwzwAlpiCxu8ub/uLMZOS36LzbL2ejeE2iOvEq+1+2uHiJgZ0UNXC3d7zryJD7XvMEhe2H9mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FlW1DUX5; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1706813361; c=relaxed/simple;
+	bh=7uE02QbwL+Ni59X0VwC1dSBZ70+psSkm+H47CAxGbCc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZrcVDbusAqeOKAEVV0O9AwODMBzF12oPJWyxTaoEyNem4RkPCsMCQFKurSXL9m2O89ZXmNyGNbAn8YnGYfNbvnxGXgFIHpujuja8VY7/1bvXjbX3XbikdZlVPOmuWKu/vABOucnI3Q3Kdn7L3KEGuzVCZe9iGLTzoW5p7uEwSzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RRcFQwa2; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FlW1DUX5"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a271a28aeb4so194010966b.2;
-        Thu, 01 Feb 2024 10:49:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRcFQwa2"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a26fa294e56so182121466b.0;
+        Thu, 01 Feb 2024 10:49:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706813354; x=1707418154; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UZ2BNxl4CuX+CwL0Q0MM0vOQQgkTfsFjivCQCX+8Vok=;
-        b=FlW1DUX5xEv7nV7Hv+8rVwSQXam7xHC/374gwnY2vk7zTnIGV5lSobcEL/oc4S+72J
-         QYisv8FAREqYRjUr7KwY/OBw2yZxUfdgA0dAERGdAl4qV8iEF0gl6McBTOySWsjC3IOx
-         xtL3rPj+Ibz9o/jd827xk1Gioru3lZ+DX/t78ZPkn05BuIMM4gmznkNb7Ms+ybbOMj3Q
-         +XOrwnuxNEBswc8Tv4BcOLaoo0RipBD0dbOe/uGUm6ZEVB+oeBTkgWjmufHVejI3WbAX
-         DTclcc53LQRYiO5Ft6oc+pVbWpNo8OWOXNOgm11R5J0CruzgOYmP90VepZfq+L56cUOU
-         DQuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706813354; x=1707418154;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1706813357; x=1707418157; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UZ2BNxl4CuX+CwL0Q0MM0vOQQgkTfsFjivCQCX+8Vok=;
-        b=if94eD9euof9ByoJaOHvrD2Gdumt0nUMeDsfnk2L8rekKKfe1UhRPwN635xCWGKQ+f
-         Jm8jN0d/0s9hudo/7lenAQRVxye8wQp6PdsG5Trlt4wi4vA6O1R2wZl4kOcGSranV+9+
-         DHGzHa7JYKVt7HadyYm5Jy/zSRxv7gnf2hdoOfs9TY8UrpjvwDaY+v149Sai8/l9qceO
-         e6k3Lu2cGQOiYu0o2i4zOcJeGMCaYDmtcnFmK78nZErcSrBJ1dqqP0IwQgBYLOZQQlnX
-         d/7E6uZRewpp+rMJr2tKUGOhsu/ds/T1goEIzrRBcL1+Bb3Vlmg2+FudeklFmlbQIpj4
-         ISxA==
-X-Gm-Message-State: AOJu0YyoIoT7T2WPCQJZBcljn4mKRYfqHCXftmqVu+4waufxAf03Pupk
-	wchPQsr6m734MukdGanP/N2Re8BVywpI/1Eykf+E/TE5xIpmt0oCAiUcroid
-X-Google-Smtp-Source: AGHT+IGGA5qp6wn5ZIQiyD78CL7wjsdqPIfXb8OZBkRJqlut4YHxc8hMsIAnp6J7GpIY62bc0rilfQ==
-X-Received: by 2002:a17:907:762d:b0:a36:c478:32c9 with SMTP id jy13-20020a170907762d00b00a36c47832c9mr7913ejc.1.1706813354086;
-        Thu, 01 Feb 2024 10:49:14 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVU8v/SCLnQ7LZSb0w8mkEB9nouppO33QaZIRTkg63zkKfHvnUwR8byyA/ehU4WvIaOSLEfS1AnQtY6pDN12rc/YClKddtWhr0a2epLmZakvpUTr8th0VXyE8tQPJhTSLJwwHPcq9GfP6AvjsMFvrjtHSn6jHT3eL+Au5mtYYypiUEDHzsdwqNJG1hIkKcmDEZivoxQ9O9F3ghxR7jpcMFuXy2IW/+54zZJE3UcVwgFqqVbdYBg0hKZQL/CnheCZZ8ODDbsFBdPcJIJkC1+hjTDNsYFt/wtwblJYfHQXXm8O8K81vy2QX6TLgMcmEVmuKKIqlDDcGDqBn8LF9P8jRq8dCTvtfbY6EB5iX83RMThRTig2I94hY18VgJiepPAjsJCu+XCnHWDwOmxMEb9H9p3Ug==
+        bh=AqDWY8wmk/fnuJTUL0gf+MfJA0JNC72CzhLE0DV6ueU=;
+        b=RRcFQwa2bpJ4fXIcTXYGl57yedAbEWiD1JH1u3jlQtv/Rb9tbsfShaQY24EKQqbptL
+         iECcZRDp5IsIlYaJ2GR5giVcKyRTtMDI7U6blnBNdzJ97wNLAxUC8pIlUVM1kP+qKmRp
+         XR7hkRVQ/Su4NT6U0aT7sK7YVheK6marfq3+55HUmOuxoqeOgr/TOAGmuwFjC43d1gCG
+         YO5+7fwin0+04k00Q7m61s+nIDJ7hcH0phxk2Ik2Y6w5quiFF9kcsH3nZVzHaNHVBMAk
+         pXLI6u9MWJ4Yd8g58cXbOyyNfJD5MLf+MwMr56BjpLLY2ysAeMJV1a53pwfuwyZIvm7m
+         6d3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706813357; x=1707418157;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AqDWY8wmk/fnuJTUL0gf+MfJA0JNC72CzhLE0DV6ueU=;
+        b=pm8VRbbZ4a5G9ghfp9SHsoW6BHAnDm1bXDg1KARiyQ6fXgSvzsjGCP/CwbJk9Q2xqb
+         NLqwmYS8YZshMBx7DmcquxhCgs+iRjUx00PMn1daZIIq7WJFX1JQrbnj172iCBuzFNeO
+         +grkYNgmdOTuTipngwiDx0NNxLMtT2Yrv94nkzVoBt3SdZenp3o5gtXX83fzR059/Uig
+         XxM8In4WLEUUzgqxlUrtvSgGk00WeMByA1vpV6anYR/2ZEPeQjcZq4t2b2y7l+uGPuZF
+         kPNHmMMYLDV8+q1JBlxqiyKHOmm/qc7eUC3MGoK0QUnx9THr9f7dXF5Y701IPUPH+fkQ
+         fNnQ==
+X-Gm-Message-State: AOJu0YwRqxud3WhK+44Lhk2nqBnBZwcCOAtdQsMm5BfswS++gef4jdN1
+	ydkI3F52mbs+bJNfRxxQmTTjIjLpHHxJLCJ0CZRWWyVLVPBi/taC
+X-Google-Smtp-Source: AGHT+IGlCSjy95AXH4mYJjWbk+DnMRTrJeOc6/n32vxw6jslXvR6wtcmhksIMqv5Ku85ONcTVpRJIA==
+X-Received: by 2002:a17:906:4f0a:b0:a35:43d8:a297 with SMTP id t10-20020a1709064f0a00b00a3543d8a297mr4200860eju.0.1706813357648;
+        Thu, 01 Feb 2024 10:49:17 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXg0D4fOjs5HYilBzZpjxO0yJ3sjv2MuAzioOusiL3HyFcWt+sLiMfzeT8BjpFfqnacv7Yby1XXcVHHzOR/xpT+QEskLx0mC9QT+ACNiFR8yS9HHWB6kjXFIf1xkgamzvKGPTfpUs0nFT/kIie32a/YjaeOKyyLcF//DAoNDQ0g1dQBVsH9hcu+yJzPruQUZxhC7Xav6Ephswrty10jq6fjYgREh11U2HnZfz8BZnXDBs9DMt1ZR8BYLGXRKH3kgoM4waLf50/Xdb+S1apLl5R86GarCVapWXen6MCZAmT+n2cB1wva3iCIJnoIa8mFWBLUl+i6mD6AT355vz+L2dGnOZ3hbScsotx818w9xNBhAjfoI7M7GfmX0a9Zb4GxyM9etfoacWRMkVLXALUZMLlDWg==
 Received: from localhost (p200300e41f147f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f14:7f00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id cx3-20020a170907168300b00a2cd74b743csm66021ejd.3.2024.02.01.10.49.13
+        by smtp.gmail.com with ESMTPSA id va11-20020a17090711cb00b00a36894739bbsm64066ejb.88.2024.02.01.10.49.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 10:49:13 -0800 (PST)
+        Thu, 01 Feb 2024 10:49:16 -0800 (PST)
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH net-next 0/3] net: stmmac: Allow driver-specific AXI
- configuration
-Date: Thu, 01 Feb 2024 19:49:04 +0100
-Message-Id: <20240201-stmmac-axi-config-v1-0-822e97b2d26e@nvidia.com>
+Date: Thu, 01 Feb 2024 19:49:06 +0100
+Subject: [PATCH net-next 2/3] net: stmmac: Allow drivers to provide a
+ default AXI configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,9 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKDnu2UC/x3MQQqDMBBG4avIrB2IoSLtVcTFEP/oLBxLEiQg3
- r2hy2/x3k0ZSZHp092UcGnW0xqGvqOwi21gXZvJO/9y3g2cy3FIYKnK4bSoG08TxI2QN2Kk1n0
- Totb/cyZDYUMttDzPD6w5IFptAAAA
+Message-Id: <20240201-stmmac-axi-config-v1-2-822e97b2d26e@nvidia.com>
+References: <20240201-stmmac-axi-config-v1-0-822e97b2d26e@nvidia.com>
+In-Reply-To: <20240201-stmmac-axi-config-v1-0-822e97b2d26e@nvidia.com>
 To: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
  Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
@@ -74,66 +75,120 @@ Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  linux-tegra@vger.kernel.org, Thierry Reding <treding@nvidia.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2274; i=treding@nvidia.com;
- h=from:subject:message-id; bh=oSTzOFlxbkYeKTE1fBaJJNw0JiRbh4c461BYCNvcpLk=;
- b=owEBbQKS/ZANAwAIAd0jrNd/PrOhAcsmYgBlu+eouMKBqCqjqHbOEFVUq9JEBc1aaNZ6eBX7v
- soopTeA7ouJAjMEAAEIAB0WIQSI6sMIAUnM98CNyJ/dI6zXfz6zoQUCZbvnqAAKCRDdI6zXfz6z
- oSBMEACd6S+LvgVemvFHdK75JLJpTPtGcLDSQ/7Sk7hUBygC0TW7403tq5t6684qywgS1lXxtrW
- 09j9R37CCZMvHlpp1RFdsRRu76P3Wu6B1EQPjupoitMRebpFjpD20jaAkCExwgzLyWEvwutf7y5
- pn6TvLXwgXUk5bhkgh7C7p0OaXdDMp9HMf/N8/2dKkbzZZ6T+5NMt3GE3fcduTnMgM6xDxnhXGS
- 8bXvnYLCeeIvGeKcduRK7rcWxZrfqgymErDIM93ILeo2F+md46+NTjFFixPMABrrN/Z49GzvjCd
- 3Vieksc4XFJDeXbkP6v39Cd4UHGGxiXXjYJsJ1rcjJIbnW0hp5A9BXp9vrQ3b/EhUcVLR+i9H//
- bXpj5hyCNGJHvMPVaqfo2Aiij8cw3t3AeEr+HTcmpy43I6FG9ROI+WGB6uSW2Rp/CFmveRHoYg6
- cffusiQC8Hft6ykZO6/s+4bJ8OHIiQ7kXXlUWGjFqLKQ1mRZdY++Xr7LTbioY2Itgljf8GOgdfj
- MzKTeKR5JKpxg8wQkdhNdn80oL97L/bfRzXP3Ta63b3Gl4VP/c3VUXK1p2KVIvudI1b3t2Ybend
- 2jrqodVYP/HxW3DMfPb4/jNEOifckKicPANmsn6EsCXNHpTgAEm4XBCUJ9HY6OWTbCRJCW5rJK3
- Dj/WUeGdQSOFhCA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3475; i=treding@nvidia.com;
+ h=from:subject:message-id; bh=w0xggOKS1PGq0kFbzfjy2DAd3e5snbUxtXdb8/CdR8M=;
+ b=owEBbQKS/ZANAwAIAd0jrNd/PrOhAcsmYgBlu+eo4do/ibRD22vEaMX4s5Ja/xO0RyvXT1Cnc
+ RiSCmMpHyKJAjMEAAEIAB0WIQSI6sMIAUnM98CNyJ/dI6zXfz6zoQUCZbvnqAAKCRDdI6zXfz6z
+ ocs5EACceS9fQZ3tL3oUiof4CHxmR+8LkFehtBa+PFf8289m6QSjXlUa+U6BmQYDYO82XRAQSWp
+ sWLqVLFl+P06C9lS55li+177xc31OTwMkmTFPz6Flz/JkLkTx1IbZ7ECWXI3JObwAzAW7KAcDK2
+ FFEdopjouSg8ZFMuREYFowuyHiQq8clPeHRitwdByxW7rmtfb6Y7nJ5PZ+T6+0fI40v9GV6GA+M
+ Ru97tkDMOVKGYkBf1PP1NR8YhZGv0x/rusw8SxU0uTzEvIbLsBahNtM0MrJtHIJ/NM0oC3e4/se
+ Z+WWE7wBuxGoMSx/rhvwS/XtHmpneR8RxdZQEZZuqTXsb2jN/wLcW1XYwCdsALuMMqnrRf7l/yj
+ GVS/0N2rbCt9oQqoXxWcCnbSS5qnBuo3cc0cQKBnQRe8hsfX2YATDtGCnY753qymvwtM3XqKndx
+ 4Q9j5Q2ZgAeIc75t1Mozsaj5oFbjXLnNOZZKkiIjnwbnwgb215Gi7Y0bqKCoSH51v7H5LaX2Z+2
+ fFdp5oBoKyfxJmy3ue0dkohWH3alIPb0JzF7/iawpgLCeQcv4r6HycHubcU3QPR5HedcNDoP5rv
+ 7FTWnqy4tAoriipDpD3G9VfWF747TP5EvjvkZkCeU9qmNDwMKWEeNvKZVdegLqn+BKPL5gMsKu8
+ j5QK3IU/pg3yO1g==
 X-Developer-Key: i=treding@nvidia.com; a=openpgp;
  fpr=88EAC3080149CCF7C08DC89FDD23ACD77F3EB3A1
 
-AXI bus configuration can, in most cases, be derived from the compatible
-string, so instead of relying exclusively on device tree for the AXI bus
-configuration, create a method for device drivers to pass along a known-
-good configuration.
+From: Thierry Reding <treding@nvidia.com>
+
+In many cases the AXI configuration can be derived from the compatible
+string, so there's no need to add the configuration to DT. Allow drivers
+to pass in the default AXI configuration so they can be properly set up
+without extra data in DT.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
-Thierry Reding (3):
-      net: stmmac: Pass resources to DT parsing code
-      net: stmmac: Allow drivers to provide a default AXI configuration
-      net: stmmac: Configure AXI on Tegra234 MGBE
-
- .../net/ethernet/stmicro/stmmac/dwmac-anarion.c    |  2 +-
- .../ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c    |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-generic.c    |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c    |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-ingenic.c    |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-intel-plat.c |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-ipq806x.c    |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-loongson1.c  |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-lpc18xx.c    |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c  |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-meson8b.c    |  2 +-
- .../ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c    |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-starfive.c   |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c    |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c  |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-tegra.c  | 11 +++-
- .../net/ethernet/stmicro/stmmac/dwmac-visconti.c   |  2 +-
  drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  2 +
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 66 ++++++++++++++--------
- .../net/ethernet/stmicro/stmmac/stmmac_platform.h  |  3 +-
- 25 files changed, 77 insertions(+), 47 deletions(-)
----
-base-commit: 51b70ff55ed88edd19b080a524063446bcc34b62
-change-id: 20240201-stmmac-axi-config-77ea05ea9eff
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 47 ++++++++++++++--------
+ 2 files changed, 33 insertions(+), 16 deletions(-)
 
-Best regards,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index f155e4841c62..07706e7b3cfc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -35,6 +35,8 @@ struct stmmac_resources {
+ 	int sfty_ue_irq;
+ 	int rx_irq[MTL_MAX_RX_QUEUES];
+ 	int tx_irq[MTL_MAX_TX_QUEUES];
++
++	const struct stmmac_axi *axi;
+ };
+ 
+ enum stmmac_txbuf_type {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 8ec2ac28a775..0d5f2cebd6fc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -91,34 +91,49 @@ static int dwmac1000_validate_ucast_entries(struct device *dev,
+  * if required, from device-tree the AXI internal register can be tuned
+  * by using platform parameters.
+  */
+-static struct stmmac_axi *stmmac_axi_setup(struct platform_device *pdev)
++static struct stmmac_axi *stmmac_axi_setup(struct platform_device *pdev,
++					   struct stmmac_resources *res)
+ {
+ 	struct device_node *np;
+ 	struct stmmac_axi *axi;
+ 
+ 	np = of_parse_phandle(pdev->dev.of_node, "snps,axi-config", 0);
+-	if (!np)
++	if (!np && !res->axi)
+ 		return NULL;
+ 
+ 	axi = devm_kzalloc(&pdev->dev, sizeof(*axi), GFP_KERNEL);
+ 	if (!axi) {
+-		of_node_put(np);
++		if (np)
++			of_node_put(np);
++
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+-	axi->axi_lpi_en = of_property_read_bool(np, "snps,lpi_en");
+-	axi->axi_xit_frm = of_property_read_bool(np, "snps,xit_frm");
+-	axi->axi_kbbe = of_property_read_bool(np, "snps,kbbe");
+-	axi->axi_fb = of_property_read_bool(np, "snps,fb");
+-	axi->axi_mb = of_property_read_bool(np, "snps,mb");
+-	axi->axi_rb =  of_property_read_bool(np, "snps,rb");
+-
+-	if (of_property_read_u32(np, "snps,wr_osr_lmt", &axi->axi_wr_osr_lmt))
+-		axi->axi_wr_osr_lmt = 1;
+-	if (of_property_read_u32(np, "snps,rd_osr_lmt", &axi->axi_rd_osr_lmt))
+-		axi->axi_rd_osr_lmt = 1;
+-	of_property_read_u32_array(np, "snps,blen", axi->axi_blen, AXI_BLEN);
+-	of_node_put(np);
++	if (res->axi)
++		*axi = *res->axi;
++
++	if (np) {
++		axi->axi_lpi_en = of_property_read_bool(np, "snps,lpi_en");
++		axi->axi_xit_frm = of_property_read_bool(np, "snps,xit_frm");
++		axi->axi_kbbe = of_property_read_bool(np, "snps,kbbe");
++		axi->axi_fb = of_property_read_bool(np, "snps,fb");
++		axi->axi_mb = of_property_read_bool(np, "snps,mb");
++		axi->axi_rb =  of_property_read_bool(np, "snps,rb");
++
++		if (of_property_read_u32(np, "snps,wr_osr_lmt", &axi->axi_wr_osr_lmt)) {
++			if (!res->axi)
++				axi->axi_wr_osr_lmt = 1;
++		}
++
++		if (of_property_read_u32(np, "snps,rd_osr_lmt", &axi->axi_rd_osr_lmt)) {
++			if (!res->axi)
++				axi->axi_rd_osr_lmt = 1;
++		}
++
++		of_property_read_u32_array(np, "snps,blen", axi->axi_blen, AXI_BLEN);
++
++		of_node_put(np);
++	}
+ 
+ 	return axi;
+ }
+
 -- 
-Thierry Reding <treding@nvidia.com>
+2.43.0
 
