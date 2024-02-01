@@ -1,180 +1,436 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F50315F313;
-	Thu,  1 Feb 2024 17:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.143.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706807633; cv=fail; b=QbWzkrF7TIhvhHiFv/E5OWbZ5Z7PyIk0qmaADqIQcdvavk0+UTsQGGuxhMKrhH3dPjYFfUP9BLdkbiXnYmLWq1ZvwqrFHY/DKh5s6TY+TFuBmbw5l2dTUea2kiNcw50z7XmGcdqq32+g7dStMrL+PtWe0gdXNSwWOnwp6wr1cPo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706807633; c=relaxed/simple;
-	bh=//l7fwohXb8phLtyIDhLgZum/TIE/lRWRi2p3nnCJ0o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J4afCnV22njNqk2/KaxZLreumb3q2RCsA0DsbYPQxkbrdxX0Yow7cWMwHv0YQgVmTv6AXeDqZ4CmDu1PVtqIAruAY91CCwAHBfzugzOMN0D+8BKFm4fsM6PMDz6Yst9zJhF7Ne2VE9QhQIHfAY+H4Dq5iKbPCJj2fzi3jxy/UhE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=IW/5DRWW; arc=fail smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE67C15F313;
+	Thu,  1 Feb 2024 17:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.25
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706807640; cv=none; b=SRMZlFGg3nMbI9HEZy2aMDa/a/TRr6mR7E7YPHqt/kSPSCyXKRMEXacIkwymMPxwWBFGbdPcCDsUy0g+NJ3V8LYH+24P/Fgjs/hmFVBrul/qdQ9VGq4v0Ik3lVi3PIH7PmeeQeA9FJClQb8Mecztl3CNB9VJOuvLyvMiNkayX6M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706807640; c=relaxed/simple;
+	bh=FNJMXoesCASx0C5mvXo8pCpfD0E1Xdpp6ulUZEz0tK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DUd4yA56sjpmuCLjb8gAccX9CQdKtxWq2I7DbGnccto6zYI+9rL8L04j1hJFXW6pqSrC7XmbmfQkbmftb+z0/wia2P+iIWM0zntlmgO6VQOB8lFOJn/luGkebforkxLeDpkOHwUjt26axYdMSDy5KwIi6dZ9L6PhQkd7a6S0xSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=xopk6q0Z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PA0m+sYx; arc=none smtp.client-ip=66.111.4.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="IW/5DRWW"
-Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 411FIVhl028687;
-	Thu, 1 Feb 2024 16:41:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pps0720;
- bh=//l7fwohXb8phLtyIDhLgZum/TIE/lRWRi2p3nnCJ0o=;
- b=IW/5DRWWdX+pr7bOQdjOB3XEe4FY7Mo5KvY0yL0ZtJqq48MZcOqVITxZckZ5Ko2VnrYK
- ZzXbTo7CcC0gZwyWiAhlU4Sr65qFFzK5jwQ5CCVak4n6mXsFv7EWEkLqVDQrgx8MCGcz
- zE238G/H2euJX8KRBh8kJoXF8aY5U6nOjReS9RyHy0vqALk1ii3L6TkYPkke1839UUsb
- zFFrCvSEZYQP2j/e6rGXDxZ9kT+YW5pJTDu9vOYAxNKcIsNTYcA7VXRDqXV9UdS537x4
- lyNilcbE/NcFr9roWsMirOEsG1krbnl3FI3lndAjQ+70n9p1YXP4wi31kHqS8ATJ7W1R 3g== 
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3w0du0gs4w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Feb 2024 16:41:32 +0000
-Received: from p1wg14926.americas.hpqcorp.net (unknown [10.119.18.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 832F28005C8;
-	Thu,  1 Feb 2024 16:40:57 +0000 (UTC)
-Received: from p1wg14923.americas.hpqcorp.net (10.119.18.111) by
- p1wg14926.americas.hpqcorp.net (10.119.18.115) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Thu, 1 Feb 2024 04:40:37 -1200
-Received: from P1WG14918.americas.hpqcorp.net (16.230.19.121) by
- p1wg14923.americas.hpqcorp.net (10.119.18.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42
- via Frontend Transport; Thu, 1 Feb 2024 04:40:37 -1200
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (192.58.206.35)
- by edge.it.hpe.com (16.230.19.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Thu, 1 Feb 2024 16:40:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W1v+eK1c5FFUKGVDp7KIAhnuGtRtqYnOosNyJZaO2Wl2/7amJ2EgGDfYjcMXSEFhBdz0Q/mUUEq7njJtTwGP08vfoJ35VRVeB0TkKcxcFuIFUKvy9onsPrcIso57XkokN800g+ToqTSRrATNoj1scn0HWGkwTqssxyAdif3fSlTlMy/rmdPxYATU62TSICjF8EJDV0GG+TXpzaBEA+pV5+xErWdiP/XqKT4LJLKDV7Fzah0ydM+3qEzIphFumzQEueQxBdW+0dkORak/iYiL/DgZ18EqvQRbQRIeg0Dz7JjkUS4j883B2Goa1tzld8iN+TQG3HMLEA2rtLl4dsXLeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=//l7fwohXb8phLtyIDhLgZum/TIE/lRWRi2p3nnCJ0o=;
- b=PygoSEx4JTuPg6u7lb4gdf2veGEKR+JNpRxdWVOFu4wLuvOsdFHMPrVhuUEM7I9GZs2ytzMM/Cv4Meh3gtBqZp+22Nf8JHbAiBsY5yIVa3ZkLJ1u/KWISzCByxmhZ8eng6IZbFNQlZGKU2dJLn0DNBKVoki60oN6q5CPqk7YNadtMUztmi79PMCKTSWNXc6sTZZ5z/ncHHMInhnou9rlr7BBI556CzaVDt09b4E5PQQMxPtGj61KEERRnL8Lm+6WQCUvWOfkgR55VYDiBPKSAOhNaiM54ugGV6dSf5XihwFEyjijDh8GFIsUpM63WTcZdMRHe1SQlfx5+ffZ8R8YZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
- header.d=hpe.com; arc=none
-Received: from MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:303:1c4::18)
- by MW4PR84MB1539.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:303:1a6::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.26; Thu, 1 Feb
- 2024 16:40:35 +0000
-Received: from MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::f9c4:2ca:bc63:f0d6]) by MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::f9c4:2ca:bc63:f0d6%7]) with mapi id 15.20.7249.027; Thu, 1 Feb 2024
- 16:40:35 +0000
-From: "Elliott, Robert (Servers)" <elliott@hpe.com>
-To: Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-        "jarkko@kernel.org"
-	<jarkko@kernel.org>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>
-CC: "LinoSanfilippo@gmx.de" <LinoSanfilippo@gmx.de>,
-        "p.rosenberger@kunbus.com" <p.rosenberger@kunbus.com>,
-        "lukas@wunner.de"
-	<lukas@wunner.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] tpm,tpm_tis: Avoid warning splat at shutdown
-Thread-Topic: [PATCH] tpm,tpm_tis: Avoid warning splat at shutdown
-Thread-Index: AQHaVQMsqdJbvpVSekKSGk2C/t7RT7D1rPbA
-Date: Thu, 1 Feb 2024 16:40:35 +0000
-Message-ID: <MW5PR84MB184274E28D83DC337B486CEFAB432@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
-References: <20240201113646.31734-1-l.sanfilippo@kunbus.com>
-In-Reply-To: <20240201113646.31734-1-l.sanfilippo@kunbus.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW5PR84MB1842:EE_|MW4PR84MB1539:EE_
-x-ms-office365-filtering-correlation-id: 20382ace-56eb-492c-c685-08dc234483e2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1EBXo8zG6YKA+RqY6pbvMYA4LDW3hZPdFLamF/lWZkNmphQbDZ/wOt0aKgjVO0uHbzVPALa4QxYYxC+xdSZqI8BzZRhUht2HCQIUWGCKUSVBZrVKrVwflLIlmbgJXLWgunj1d/9/KZ+VUoBdnMyviVONmeCp6zULehQ4dVzD/mqWAvy00ugr1AXiAReyaC1g10HLTAqSsoywprRAspsQIFJuWt3iUzfO4/QM0UcY4vreoTGzZFaoQPeFAiv1sBixr7ajM8zwgwwQDXhwCmRM6TGWeXlipmpGjzXWM1cu+k9pECrQe4r6+dn/02GH5T1BuVXgwwUCaVp2GhLJd79EbEY0rJ6RTN9oC1HJuAnP+WS0r8M/XSNpRIxyTKMSlbcqMxPtqPqqdlU/+5U5SnjxAZnTNE6RTV3AXQf6A6jCIE72+3/2gd0OJ4gc19J1J3OkVH04AYd4QeIuLu7d1PnYsFHUnsHLBVhLUDgKZmB8yvswVDVbatHErs5I/o6rfqS0+h0y7DE2dv7p8604zUUJPL5i88QBLQE9K5/edZfMEbzqR28Bgf7+eXUVSIWEm8jMY5At2mp40sQkEo9MpPhsGn8jONfSNYcfj1atuKvZqUK8tnLA0wNdO97/0UTHcRR/aqKb8+OoQnPQFbqLCkaOIGFRePKdkRK7UXq54Hn/NgE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(396003)(39860400002)(346002)(376002)(230173577357003)(230273577357003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(55016003)(83380400001)(66476007)(33656002)(86362001)(41300700001)(82960400001)(38070700009)(122000001)(9686003)(26005)(38100700002)(110136005)(7696005)(6506007)(2906002)(478600001)(66556008)(66946007)(76116006)(316002)(66446008)(54906003)(53546011)(5660300002)(52536014)(64756008)(7416002)(71200400001)(4326008)(8936002)(8676002)(4744005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?GVlvPMn8Tz+2aCGRQEoiVwzbg7eELcLGeGnTuS6WDy7/whFKuU5DjjayDbBW?=
- =?us-ascii?Q?UZc+qmYHdOK0nddArF8x/Xlt8jPqRewmkvUI7s8mIl+jGSY+8mUpeIXYodpp?=
- =?us-ascii?Q?8kMVxRA47d4Y6LIoaSuakaiZa22KqyYd5TYXOuTEQEUYt3nIBaApPm58l/70?=
- =?us-ascii?Q?UEd6Lzce5paeX31/PsUmHPNphrt+pdjEDKzAROUzZmJYFIJQYVzu2lKfBIdR?=
- =?us-ascii?Q?FQpmrI8jMkrmtnThjxsXZY7l5UKCn6o6mjY3SRA7s4a4ve8aNU3ShgQpLgbi?=
- =?us-ascii?Q?pXTdbMCN/OGU5TpRV3/SfiSf3dk3GKsCIaXzZ0U5h3/OLhTbS4HcK41oCw8u?=
- =?us-ascii?Q?uE1o7VFlHauV6QQflOodULwR0TKlJFdRaVNKEfA0O/CEqWZmGyRGvFzPkxKM?=
- =?us-ascii?Q?VMr720FoI+YBKJO35E3rPTv46KMKlOWUa4QpPoE4VDLn3aLvsqZj9HthhDVc?=
- =?us-ascii?Q?cMaJpMdyZBYFxKTJzwt1F46rw2d4zA5udmbGvyYnEdeimPB/iacyjMKS80WT?=
- =?us-ascii?Q?cIlBKwpPtCiace6mdbsMhhcH1sj7gI8X0UOpOnxaJm8eMgfWM3S5o2weRanY?=
- =?us-ascii?Q?q0dtvqCDOr/5ZGcAqumtqANJv8iaJl4611eJnpzNF6uX0mkDhU0xZvrWT/OB?=
- =?us-ascii?Q?hcKC0iVK3Sbr2zpH41lsEdI1afmeEXHJAfm4VAzRFXQQszg7yOeCh3A0fW4x?=
- =?us-ascii?Q?BBpPaNV3kVjpMzrjjfv97RaVyMJTycYcHPt6jbzdCrHytcaYLuPOnYXBlbl1?=
- =?us-ascii?Q?z/HiZqHX+LJKuqAQXA6G8OLZQbS0ShW7uCF8Zvyp+rG0ZhhB1R5iPbd7WCQ/?=
- =?us-ascii?Q?uA4j0Fu0Qn4fKy4G3zTZYo+RHDFFfi0zKcJXDbNiy/p03Z08eIgLx+7SKO1c?=
- =?us-ascii?Q?pqJcDc+VcGbHv8ehbbV4sbZC7cqBESb6Hg391rD9WbZ8NQiV+IDtNkIyxEN1?=
- =?us-ascii?Q?wuIsIQr+QyQhCTdaIfeLQjMEOQrV/8BeGsaDOaPHE1rYxR+46OzfM9FyEkb3?=
- =?us-ascii?Q?PHyL/TDzmLRqye3r61AxtaguqTQprtK6J+3/8GyhZMy80aEb5LUv79MR+SOz?=
- =?us-ascii?Q?urP/BA2NgmZOB8ZA58bAc/k7ziieRXZ7+CXIPi1TjuxbMTcPGDdcP16NVxk6?=
- =?us-ascii?Q?kKHckiF9OCSG2i8iF47HisZAkQSlJWeE0Tonzuhb8noJqu5mdHvs7P87s7uC?=
- =?us-ascii?Q?LiUephVzKl6gFtSJfCpStCFuRWJSRbBknNQoPk7d8JkbMJgUBmuqq+Aq4QS4?=
- =?us-ascii?Q?OR7xwf/Nvb6BycgiGylyFNEgLoNL3jPVL0goSlOO0hp1J6xBi7utavOFnEBH?=
- =?us-ascii?Q?50xsenA1tLJtE+V3QNQJxqWU8sPdOJip1qPf9unRcrlY/SEEWFpHPP3Oavn3?=
- =?us-ascii?Q?FqAN04J2zSOFvWfX2kADUd4vSZZhM2mSEmgl8rDn8opxXIKTmhVFSiEAk9Hc?=
- =?us-ascii?Q?Qgjbi4BxfrbSGdwaMmmSL8QA8fyil2smYZOaq8WUWfdk0dARB1PAA/+6UTd1?=
- =?us-ascii?Q?sbHcpy7u4LVYlgQF6P9gOaLHq90pSBniDV1u4vZYmKwDqAlvfB6khgqJJzJc?=
- =?us-ascii?Q?XzhxStLrOiWM8bIlrdg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="xopk6q0Z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PA0m+sYx"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id A4EE35C00FB;
+	Thu,  1 Feb 2024 12:13:57 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 01 Feb 2024 12:13:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1706807637;
+	 x=1706894037; bh=lMjjV1buWDHIcimo2xOiRU3Rzznhm3EuA6XfF7iUovY=; b=
+	xopk6q0Zn0HPx7bkzr4eFb11QFjmerO6GVID/tlAK+PXLXuMelBjuoSt368KmGaz
+	FYgfoJOYucAKaNkavygZy1EhcNAlIGfDoFpqDzXdoAiypIDtLgcYKPFyB+2XNuzK
+	u2vL+NrX4TwJ7KxJlbBs5ld9NT04u41yl7ZzKaicYc11F5m6RcuE0TnYO2U/NOIO
+	eSeYwhFGGn3+wTAE8Ksrppiyy8bIEUdZ+O10tV23dw6R63LFgtb5xxsGzWL3VSdM
+	REAQNxjRqteVLqXFELMlmJHAMQF/rSK1ZbbSkbazUVdYrT7fXaGah73xF+hRtcqr
+	gi49nBiIoAl//ArC1D5rTg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706807637; x=
+	1706894037; bh=lMjjV1buWDHIcimo2xOiRU3Rzznhm3EuA6XfF7iUovY=; b=P
+	A0m+sYxnohpGaGUB2DeVYRmpBlUvl3Brng3TgvMqoOucCrLKBd1xdawC/dL7CDpl
+	/lC5Xyj4KAMRXFdAVGnch40AeZMIISRSSMwrrfru0lKkxn+zwyZdcbnCwARLGX4W
+	/BGIqgSM7UIiZLK0AbP7TUhpE2ncyWhwp9IXyxVhF+gHkqeveiWf43h1Ff3snm/S
+	JeHqvJSHyHbp9yMqu91ZFZQzkHwUQPv3LjqEoIGUvUyu5wm2vv8QAMNHmob/qHAJ
+	v0uFik47BQrVM2eSakqC9pkeWtCL+80MXpmjkFrSYvUaNRTmszN/TDdREPqXH5Bf
+	QCgtrxtidPcv+ZmQ6phjA==
+X-ME-Sender: <xms:VdG7ZbsWEXNHR4ZEPE9H_opSzKAFcSGwhkuJgO_5yXYH_ijOJmHynQ>
+    <xme:VdG7ZcfLDL_wANMraaEAPGqphSuvwjd-jl66k82j2yZSAivNLwoitQkkBtCMgQScp
+    sqmr2HSun0xa1yqfTs>
+X-ME-Received: <xmr:VdG7ZezlWzwc7xSRVa9BRI1RoTpypgJQw9b6URgVMiOq2pq_ffim8ABGs6bXoH51joKrCfSKJuvVttyaSi9bmxbWIWtcM0QNlEoTJ0o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeduuddgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeflihgr
+    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
+    cuggftrfgrthhtvghrnhepudehjefgtedvkeevvdevieekleekhfevkeevleehieekfedu
+    teeuffduhfehtdehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhg
+    sehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:VdG7ZaNZJiYGLcztyAA4g-zvcbDYMAfYjY9IqOMLoBO5L3aBo_-jrQ>
+    <xmx:VdG7Zb9gZOv24Ff4dh9xV6d9AFQOpEzsR6L_86uX2giC3eOaMGHR_Q>
+    <xmx:VdG7ZaVno7t3Q8pJjNKSmKogizZ1Tl00jp2JC6-D-58Fj39DUWInOg>
+    <xmx:VdG7ZcPVbITOXa59vrr1t0UeZfPBYWdaoaW0y8YxgfjAda2dq88CBA>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 Feb 2024 12:13:55 -0500 (EST)
+Message-ID: <61debd68-4262-431e-a017-163eb820f739@flygoat.com>
+Date: Thu, 1 Feb 2024 17:13:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20382ace-56eb-492c-c685-08dc234483e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2024 16:40:35.6649
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LJ0so137Tes4nu7Lsw7Y4gW64SfGdK/c2w//F2/SBhLdiJThx5hEqaGsrTxkAyCw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR84MB1539
-X-OriginatorOrg: hpe.com
-X-Proofpoint-ORIG-GUID: yzAebmcD9Ic7U5XXcU74tzFLQ25s1OVu
-X-Proofpoint-GUID: yzAebmcD9Ic7U5XXcU74tzFLQ25s1OVu
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-01_04,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- spamscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=670 malwarescore=0
- impostorscore=0 clxscore=1011 phishscore=0 bulkscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402010131
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] ptrace: Introduce exception_ip arch hook
+To: Xi Ruoyao <xry111@xry111.site>, Oleg Nesterov <oleg@redhat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Ben Hutchings <ben@decadent.org.uk>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org
+References: <20240201-exception_ip-v1-0-aa26ab3ee0b5@flygoat.com>
+ <20240201-exception_ip-v1-1-aa26ab3ee0b5@flygoat.com>
+ <9d1d51e69c3f96bf5992e9a988969515ba97f883.camel@xry111.site>
+Content-Language: en-US
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Autocrypt: addr=jiaxun.yang@flygoat.com;
+ keydata= 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
+ HVO98ZmbMeg=
+In-Reply-To: <9d1d51e69c3f96bf5992e9a988969515ba97f883.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> From: Lino Sanfilippo <l.sanfilippo@kunbus.com>
-> Sent: Thursday, February 1, 2024 5:37 AM
-> Subject: [PATCH] tpm,tpm_tis: Avoid warning splat at shutdown
->=20
-> If interrupts are not activated the work struct 'free_irq_work' is not
-> initialized. This results in a warning splat at module shutdown.
->=20
-> Fix this by always initializing the work regardless of whether interrupts
-> are activated or not.
 
-That's using flush_work(), which just waits for one to complete. Is there
-any case where multiple work entries could be queued, and cancel_work_sync(=
-)=20
-would be necessary?
 
-tpm_tis_probe_irq() has a loop calling tpm_tis_probe_irq_single()
-for 3 to 15. Could each of those could trigger an interrupt storm and
-call tpm_tis_revert_interrupts(), which calls schedule_work()?
+在 2024/2/1 16:35, Xi Ruoyao 写道:
+> On Thu, 2024-02-01 at 15:46 +0000, Jiaxun Yang wrote:
+>> On architectures with delay slot, architecture level instruction
+>> pointer (or program counter) in pt_regs may differ from where
+>> exception was triggered.
+>>
+>> Introduce exception_ip hook to invoke architecture code and determine
+>> actual instruction pointer to the exception.
+>>
+>> Link:
+>> https://lore.kernel.org/lkml/00d1b813-c55f-4365-8d81-d70258e10b16@app.fastmail.com/
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> How about adding something like
+>
+> #ifndef arch_exception_ip
+> #define exception_ip(regs) instruction_pointer(regs)
+> #else
+> #define exception_ip(regs) arch_exception_ip(regs)
+> #endif
+>
+> into a generic header, instead of having to add exception_ip definition
+> everywhere?
 
+Actually I tried but failed, cuz there is no asm-generic version of 
+ptrace.h, besides
+exception_ip shall be used at many scenarios so extable.h is also a no go.
+
+Thanks
+- Jiaxun
+
+>
+>> ---
+>>   arch/alpha/include/asm/ptrace.h        | 1 +
+>>   arch/arc/include/asm/ptrace.h          | 1 +
+>>   arch/arm/include/asm/ptrace.h          | 1 +
+>>   arch/csky/include/asm/ptrace.h         | 1 +
+>>   arch/hexagon/include/uapi/asm/ptrace.h | 1 +
+>>   arch/loongarch/include/asm/ptrace.h    | 1 +
+>>   arch/m68k/include/asm/ptrace.h         | 1 +
+>>   arch/microblaze/include/asm/ptrace.h   | 3 ++-
+>>   arch/mips/include/asm/ptrace.h         | 1 +
+>>   arch/mips/kernel/ptrace.c              | 7 +++++++
+>>   arch/nios2/include/asm/ptrace.h        | 3 ++-
+>>   arch/openrisc/include/asm/ptrace.h     | 1 +
+>>   arch/parisc/include/asm/ptrace.h       | 1 +
+>>   arch/s390/include/asm/ptrace.h         | 1 +
+>>   arch/sparc/include/asm/ptrace.h        | 2 ++
+>>   arch/um/include/asm/ptrace-generic.h   | 1 +
+>>   16 files changed, 25 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/alpha/include/asm/ptrace.h
+>> b/arch/alpha/include/asm/ptrace.h
+>> index 3557ce64ed21..1ded3f2d09e9 100644
+>> --- a/arch/alpha/include/asm/ptrace.h
+>> +++ b/arch/alpha/include/asm/ptrace.h
+>> @@ -8,6 +8,7 @@
+>>   #define arch_has_single_step()		(1)
+>>   #define user_mode(regs) (((regs)->ps & 8) != 0)
+>>   #define instruction_pointer(regs) ((regs)->pc)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define profile_pc(regs) instruction_pointer(regs)
+>>   #define current_user_stack_pointer() rdusp()
+>>   
+>> diff --git a/arch/arc/include/asm/ptrace.h
+>> b/arch/arc/include/asm/ptrace.h
+>> index 00b9318e551e..94084f1048df 100644
+>> --- a/arch/arc/include/asm/ptrace.h
+>> +++ b/arch/arc/include/asm/ptrace.h
+>> @@ -105,6 +105,7 @@ struct callee_regs {
+>>   #endif
+>>   
+>>   #define instruction_pointer(regs)	((regs)->ret)
+>> +#define exception_ip(regs)		instruction_pointer(regs)
+>>   #define profile_pc(regs)		instruction_pointer(regs)
+>>   
+>>   /* return 1 if user mode or 0 if kernel mode */
+>> diff --git a/arch/arm/include/asm/ptrace.h
+>> b/arch/arm/include/asm/ptrace.h
+>> index 7f44e88d1f25..fb4dc23eba78 100644
+>> --- a/arch/arm/include/asm/ptrace.h
+>> +++ b/arch/arm/include/asm/ptrace.h
+>> @@ -89,6 +89,7 @@ static inline long regs_return_value(struct pt_regs
+>> *regs)
+>>   }
+>>   
+>>   #define instruction_pointer(regs)	(regs)->ARM_pc
+>> +#define
+>> exception_ip(regs)			instruction_pointer(regs)
+>>   
+>>   #ifdef CONFIG_THUMB2_KERNEL
+>>   #define frame_pointer(regs) (regs)->ARM_r7
+>> diff --git a/arch/csky/include/asm/ptrace.h
+>> b/arch/csky/include/asm/ptrace.h
+>> index 0634b7895d81..a738630e64b0 100644
+>> --- a/arch/csky/include/asm/ptrace.h
+>> +++ b/arch/csky/include/asm/ptrace.h
+>> @@ -22,6 +22,7 @@
+>>   
+>>   #define user_mode(regs) (!((regs)->sr & PS_S))
+>>   #define instruction_pointer(regs) ((regs)->pc)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define profile_pc(regs) instruction_pointer(regs)
+>>   #define trap_no(regs) ((regs->sr >> 16) & 0xff)
+>>   
+>> diff --git a/arch/hexagon/include/uapi/asm/ptrace.h
+>> b/arch/hexagon/include/uapi/asm/ptrace.h
+>> index 2a3ea14ad9b9..846471936237 100644
+>> --- a/arch/hexagon/include/uapi/asm/ptrace.h
+>> +++ b/arch/hexagon/include/uapi/asm/ptrace.h
+>> @@ -25,6 +25,7 @@
+>>   #include <asm/registers.h>
+>>   
+>>   #define instruction_pointer(regs) pt_elr(regs)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define user_stack_pointer(regs) ((regs)->r29)
+>>   
+>>   #define profile_pc(regs) instruction_pointer(regs)
+>> diff --git a/arch/loongarch/include/asm/ptrace.h
+>> b/arch/loongarch/include/asm/ptrace.h
+>> index f3ddaed9ef7f..a34327f0e69d 100644
+>> --- a/arch/loongarch/include/asm/ptrace.h
+>> +++ b/arch/loongarch/include/asm/ptrace.h
+>> @@ -160,6 +160,7 @@ static inline void regs_set_return_value(struct
+>> pt_regs *regs, unsigned long val
+>>   }
+>>   
+>>   #define instruction_pointer(regs) ((regs)->csr_era)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define profile_pc(regs) instruction_pointer(regs)
+>>   
+>>   extern void die(const char *str, struct pt_regs *regs);
+>> diff --git a/arch/m68k/include/asm/ptrace.h
+>> b/arch/m68k/include/asm/ptrace.h
+>> index ea5a80ca1ab3..cb553e2ec73a 100644
+>> --- a/arch/m68k/include/asm/ptrace.h
+>> +++ b/arch/m68k/include/asm/ptrace.h
+>> @@ -13,6 +13,7 @@
+>>   
+>>   #define user_mode(regs) (!((regs)->sr & PS_S))
+>>   #define instruction_pointer(regs) ((regs)->pc)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define profile_pc(regs) instruction_pointer(regs)
+>>   #define current_pt_regs() \
+>>   	(struct pt_regs *)((char *)current_thread_info() +
+>> THREAD_SIZE) - 1
+>> diff --git a/arch/microblaze/include/asm/ptrace.h
+>> b/arch/microblaze/include/asm/ptrace.h
+>> index bfcb89df5e26..974c00fa7212 100644
+>> --- a/arch/microblaze/include/asm/ptrace.h
+>> +++ b/arch/microblaze/include/asm/ptrace.h
+>> @@ -12,7 +12,8 @@
+>>   #define user_mode(regs)			(!kernel_mode(regs))
+>>   
+>>   #define instruction_pointer(regs)	((regs)->pc)
+>> -#define profile_pc(regs)		instruction_pointer(regs)
+>> +#define
+>> exception_ip(regs)			instruction_pointer(regs)
+>> +#define
+>> profile_pc(regs)			instruction_pointer(regs)
+>>   #define user_stack_pointer(regs)	((regs)->r1)
+>>   
+>>   static inline long regs_return_value(struct pt_regs *regs)
+>> diff --git a/arch/mips/include/asm/ptrace.h
+>> b/arch/mips/include/asm/ptrace.h
+>> index daf3cf244ea9..97589731fd40 100644
+>> --- a/arch/mips/include/asm/ptrace.h
+>> +++ b/arch/mips/include/asm/ptrace.h
+>> @@ -154,6 +154,7 @@ static inline long regs_return_value(struct
+>> pt_regs *regs)
+>>   }
+>>   
+>>   #define instruction_pointer(regs) ((regs)->cp0_epc)
+>> +extern unsigned long exception_ip(struct pt_regs *regs);
+>>   #define profile_pc(regs) instruction_pointer(regs)
+>>   
+>>   extern asmlinkage long syscall_trace_enter(struct pt_regs *regs, long
+>> syscall);
+>> diff --git a/arch/mips/kernel/ptrace.c b/arch/mips/kernel/ptrace.c
+>> index d9df543f7e2c..59288c13b581 100644
+>> --- a/arch/mips/kernel/ptrace.c
+>> +++ b/arch/mips/kernel/ptrace.c
+>> @@ -31,6 +31,7 @@
+>>   #include <linux/seccomp.h>
+>>   #include <linux/ftrace.h>
+>>   
+>> +#include <asm/branch.h>
+>>   #include <asm/byteorder.h>
+>>   #include <asm/cpu.h>
+>>   #include <asm/cpu-info.h>
+>> @@ -48,6 +49,12 @@
+>>   #define CREATE_TRACE_POINTS
+>>   #include <trace/events/syscalls.h>
+>>   
+>> +unsigned long exception_ip(struct pt_regs *regs)
+>> +{
+>> +	return exception_epc(regs);
+>> +}
+>> +EXPORT_SYMBOL(exception_ip);
+>> +
+>>   /*
+>>    * Called by kernel/ptrace.c when detaching..
+>>    *
+>> diff --git a/arch/nios2/include/asm/ptrace.h
+>> b/arch/nios2/include/asm/ptrace.h
+>> index 9da34c3022a2..136f5679ae79 100644
+>> --- a/arch/nios2/include/asm/ptrace.h
+>> +++ b/arch/nios2/include/asm/ptrace.h
+>> @@ -66,7 +66,8 @@ struct switch_stack {
+>>   #define user_mode(regs)	(((regs)->estatus & ESTATUS_EU))
+>>   
+>>   #define instruction_pointer(regs)	((regs)->ra)
+>> -#define profile_pc(regs)		instruction_pointer(regs)
+>> +#define
+>> exception_ip(regs)			instruction_pointer(regs)
+>> +#define
+>> profile_pc(regs)			instruction_pointer(regs)
+>>   #define user_stack_pointer(regs)	((regs)->sp)
+>>   extern void show_regs(struct pt_regs *);
+>>   
+>> diff --git a/arch/openrisc/include/asm/ptrace.h
+>> b/arch/openrisc/include/asm/ptrace.h
+>> index 375147ff71fc..67c28484d17e 100644
+>> --- a/arch/openrisc/include/asm/ptrace.h
+>> +++ b/arch/openrisc/include/asm/ptrace.h
+>> @@ -67,6 +67,7 @@ struct pt_regs {
+>>   #define STACK_FRAME_OVERHEAD  128  /* size of minimum stack frame */
+>>   
+>>   #define instruction_pointer(regs)	((regs)->pc)
+>> +#define
+>> exception_ip(regs)			instruction_pointer(regs)
+>>   #define user_mode(regs)			(((regs)->sr &
+>> SPR_SR_SM) == 0)
+>>   #define user_stack_pointer(regs)	((unsigned long)(regs)->sp)
+>>   #define profile_pc(regs)		instruction_pointer(regs)
+>> diff --git a/arch/parisc/include/asm/ptrace.h
+>> b/arch/parisc/include/asm/ptrace.h
+>> index eea3f3df0823..d7e8dcf26582 100644
+>> --- a/arch/parisc/include/asm/ptrace.h
+>> +++ b/arch/parisc/include/asm/ptrace.h
+>> @@ -17,6 +17,7 @@
+>>   #define user_mode(regs)			(((regs)->iaoq[0] &
+>> 3) != PRIV_KERNEL)
+>>   #define user_space(regs)		((regs)->iasq[1] !=
+>> PRIV_KERNEL)
+>>   #define instruction_pointer(regs)	((regs)->iaoq[0] & ~3)
+>> +#define
+>> exception_ip(regs)			instruction_pointer(regs)
+>>   #define user_stack_pointer(regs)	((regs)->gr[30])
+>>   unsigned long profile_pc(struct pt_regs *);
+>>   
+>> diff --git a/arch/s390/include/asm/ptrace.h
+>> b/arch/s390/include/asm/ptrace.h
+>> index d28bf8fb2799..a5255b2337af 100644
+>> --- a/arch/s390/include/asm/ptrace.h
+>> +++ b/arch/s390/include/asm/ptrace.h
+>> @@ -211,6 +211,7 @@ static inline int
+>> test_and_clear_pt_regs_flag(struct pt_regs *regs, int flag)
+>>   
+>>   #define user_mode(regs) (((regs)->psw.mask & PSW_MASK_PSTATE) != 0)
+>>   #define instruction_pointer(regs) ((regs)->psw.addr)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define user_stack_pointer(regs)((regs)->gprs[15])
+>>   #define profile_pc(regs) instruction_pointer(regs)
+>>   
+>> diff --git a/arch/sparc/include/asm/ptrace.h
+>> b/arch/sparc/include/asm/ptrace.h
+>> index d1419e669027..41ae186f2245 100644
+>> --- a/arch/sparc/include/asm/ptrace.h
+>> +++ b/arch/sparc/include/asm/ptrace.h
+>> @@ -63,6 +63,7 @@ extern union global_cpu_snapshot
+>> global_cpu_snapshot[NR_CPUS];
+>>   #define force_successful_syscall_return() set_thread_noerror(1)
+>>   #define user_mode(regs) (!((regs)->tstate & TSTATE_PRIV))
+>>   #define instruction_pointer(regs) ((regs)->tpc)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define instruction_pointer_set(regs, val) do { \
+>>   		(regs)->tpc = (val); \
+>>   		(regs)->tnpc = (val)+4; \
+>> @@ -142,6 +143,7 @@ static inline bool pt_regs_clear_syscall(struct
+>> pt_regs *regs)
+>>   
+>>   #define user_mode(regs) (!((regs)->psr & PSR_PS))
+>>   #define instruction_pointer(regs) ((regs)->pc)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   #define user_stack_pointer(regs) ((regs)->u_regs[UREG_FP])
+>>   unsigned long profile_pc(struct pt_regs *);
+>>   #else /* (!__ASSEMBLY__) */
+>> diff --git a/arch/um/include/asm/ptrace-generic.h
+>> b/arch/um/include/asm/ptrace-generic.h
+>> index adf91ef553ae..f9ada287ca12 100644
+>> --- a/arch/um/include/asm/ptrace-generic.h
+>> +++ b/arch/um/include/asm/ptrace-generic.h
+>> @@ -26,6 +26,7 @@ struct pt_regs {
+>>   #define PT_REGS_SYSCALL_NR(r) UPT_SYSCALL_NR(&(r)->regs)
+>>   
+>>   #define instruction_pointer(regs) PT_REGS_IP(regs)
+>> +#define exception_ip(regs) instruction_pointer(regs)
+>>   
+>>   #define PTRACE_OLDSETOPTIONS 21
+>>   
+>>
+
+-- 
+---
+Jiaxun Yang
 
