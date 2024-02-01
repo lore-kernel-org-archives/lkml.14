@@ -1,101 +1,88 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3645CDF8;
-	Thu,  1 Feb 2024 15:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A43E5F49E;
+	Thu,  1 Feb 2024 15:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706800351; cv=none; b=aTEMM4Ah75bZr91Lz/jWKyYnGaI1PWWZUqZ+r47KAaW9Wyg38nchsHoCJfODNswkUBPhcrCNzjIKjFJ1biMA57NnqeyfFvHeJ9AQKXyDZp6BtF7I6WgB+0pXgnirheTYovEtP9PLw7gJnQ8cSc/69OTP+BgYsuNoO0WRDLupJmU=
+	t=1706800430; cv=none; b=fFWik2sO5Ogu1H7jwMJKSNdUQu9p3/NFL68P0WfyREhIk1+tkmQV5G1y0tJwL16+N9z/HOUB8Ci7Ht/YuGTig/bHyqbhZGSWpX86Op0QdkAutWB6sshOkrBNwWCk5c5bIfiygQbXBSMRLVHQk9tot67msBDH+3bdfxKg2P514l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706800351; c=relaxed/simple;
-	bh=dVLCEsQG0nuHk5qp8res52bJhdD76J5X2UP72bjL4CU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pnX2axurLHLy4TYfJSKmGYN/5pLaJEKygoJbGvglUzSEzQde/9Mt7NopR6/bBkRMYzSk4BpXRSkN9wDYSguVE2vcDCPjBN5Ppo858R1+l0oU180bWAdE6Yzo3H53FpwSFXbN8E3kv21nmSbWrtl2CsISpENlRstXmI6OW5bZRqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Y+aCDQuG; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706800430; c=relaxed/simple;
+	bh=J25LSF02c3Gihi6ywJToP8/0dpuIX20uFfdRTlYxyRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Giya0wkA4NM5SBmK7pVoD+r/vzGsxxAsMEqCA0OV+241RwzkKQdtEsgwoLPYw9IK5kTdaugCAdatSqjr4odZWRMma9ajh4/t9q+5xHHoKAyM9mrtaHVDTer7UykelmbE2iHNTXPmlYgIe0We8F4nyxaP4Tq5COt1w21bW3yZUfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WwRdsEgn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y+aCDQuG"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411FCKjr010658;
-	Thu, 1 Feb 2024 09:12:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706800340;
-	bh=jG4VIb5fRUuPA2q/P2YInb9jGmcE2K2nGcJbz90n3cA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Y+aCDQuGR3NGvjxhcSLrOPnQOrhI4GJWfuSJi+MinHGKR7UrNzqe0kWSMScPsh9Nm
-	 T43uo9x96Sf5+6c0BWvrPAQOHYIFg2KfgpHDk5W35JfxLPuNffy94lZPSRlcbwcUp0
-	 tNGEH1kjM90oSPacmwZcpVtGkdK8+PRUxOvvuu5I=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411FCKbi076600
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 1 Feb 2024 09:12:20 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
- Feb 2024 09:12:19 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 1 Feb 2024 09:12:19 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411FCJvE009640;
-	Thu, 1 Feb 2024 09:12:19 -0600
-Message-ID: <82349e32-ed8e-4952-bf80-3f5319f32a45@ti.com>
-Date: Thu, 1 Feb 2024 09:12:19 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WwRdsEgn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F423DC433F1;
+	Thu,  1 Feb 2024 15:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706800429;
+	bh=J25LSF02c3Gihi6ywJToP8/0dpuIX20uFfdRTlYxyRg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WwRdsEgnfVREwIGEX7L2Y0qvFc4a+QOfttbXdf6t8ZoZNJqEAF6ntKisAF9lamz/c
+	 CKCOXaJCB1NwUOAuFSWq5OWNXl4pXVdZJnYhNcZuW8JGTQ8u0Z4Sosso2c5GgnCgPB
+	 7dR5pfRAW6HrAqvmWuJCBnh6Y5X0kIVJ/KhHUPFuPT9K03GqVRjJtfGP6m6hNgbZP2
+	 X3Sn7bLvYa98cxeGVu0bS+gecxyjnBFLZlorUBZQDP2GS/v+EMk8hjl0Evn3X1dB5N
+	 EIKY1bGR+sRwskTDZMEvuuAvwRImAxta9NDT3WI6wbIW8tPUXCNpYlze1Q51t/tRyl
+	 8tmRRAUrucKXg==
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] tracing/timerlat: Move hrtimer_init to timerlat_fd open()
+Date: Thu,  1 Feb 2024 16:13:39 +0100
+Message-ID: <7324dd3fc0035658c99b825204a66049389c56e3.1706798888.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] arm64: dts: ti: k3-j784s4: Fix power domain for
- VTM node
-To: Manorit Chawdhry <m-chawdhry@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Bryan Brattlof <bb@ti.com>,
-        Keerthy <j-keerthy@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Udit Kumar <u-kumar1@ti.com>
-References: <20240201-b4-upstream-j721s2-fix-vtm-devid-v2-0-85fd568b77e3@ti.com>
- <20240201-b4-upstream-j721s2-fix-vtm-devid-v2-2-85fd568b77e3@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240201-b4-upstream-j721s2-fix-vtm-devid-v2-2-85fd568b77e3@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-On 2/1/24 2:07 AM, Manorit Chawdhry wrote:
-> Fix the power domain device ID for wkup_vtm0 node.
-> 
-> Link: https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j784s4/devices.html
-> Fixes: 64821fbf6738 ("arm64: dts: ti: j784s4: Add VTM node")
-> Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
-> ---
+Currently, the timerlat's hrtimer is initialized at the first read of
+timerlat_fd, and destroyed at close(). It works, but it causes an error
+if the user program open() and close() the file without reading.
 
-Reviewed-by: Andrew Davis <afd@ti.com>
+Move hrtimer_init to timerlat_fd open() to avoid this problem.
 
->   arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
-> index 3902a921d7e5..337122c3f402 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
-> @@ -628,7 +628,7 @@ wkup_vtm0: temperature-sensor@42040000 {
->   		compatible = "ti,j7200-vtm";
->   		reg = <0x00 0x42040000 0x00 0x350>,
->   		      <0x00 0x42050000 0x00 0x350>;
-> -		power-domains = <&k3_pds 154 TI_SCI_PD_SHARED>;
-> +		power-domains = <&k3_pds 243 TI_SCI_PD_SHARED>;
->   		#thermal-sensor-cells = <1>;
->   	};
->   
-> 
+No functional changes.
+
+Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
+Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+---
+ kernel/trace/trace_osnoise.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index bd0d01d00fb9..a8e28f9b9271 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2444,6 +2444,9 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
+ 	tlat = this_cpu_tmr_var();
+ 	tlat->count = 0;
+ 
++	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
++	tlat->timer.function = timerlat_irq;
++
+ 	migrate_enable();
+ 	return 0;
+ };
+@@ -2526,9 +2529,6 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
+ 		tlat->tracing_thread = false;
+ 		tlat->kthread = current;
+ 
+-		hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+-		tlat->timer.function = timerlat_irq;
+-
+ 		/* Annotate now to drift new period */
+ 		tlat->abs_period = hrtimer_cb_get_time(&tlat->timer);
+ 
+-- 
+2.43.0
+
