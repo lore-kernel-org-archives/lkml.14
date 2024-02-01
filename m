@@ -1,403 +1,169 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318243A1BA;
-	Thu,  1 Feb 2024 20:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706820384; cv=none; b=gXmiFP6O13kR+b4k3Ou9+OklbcB2n9nW2cGi7QDoDlHf+atgghcMdoRofLnHsYrPBOloTN5YXUewreu05nJ+w16mpXtXGK+VUi9CbpElj8kDWwrpsFJ2IckCSHB6we8+pAMAD4bHtCieYaJlkXEB0quiFcxD6FE+iteT2iPBXKI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706820384; c=relaxed/simple;
-	bh=t09CtJbWPWWsJyZ10cfRu8KBrOeZpB9O9/16992I+P4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UvoPnYkA+XilBZafV9e4UsSHLUAyChBX7h0nGIrAV9wTajXhTvD4ehYCdYjgKrCU0QmeHVtOJftyQZ9uogS76b0xwEtyjObNplRMvf00hDGPb1AT5HkZlTLPJR94YZgRX10sftkeBMrKQZwUzWg/KSmI1PfUWTwLwmdzWDhH3+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RtpMI/Ly; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C2C3CF40;
+	Thu,  1 Feb 2024 20:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.55.52.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706820429; cv=fail; b=nRnGOQd1cHEmR9kvSCutaivfZJyw/TMCYUibaeMTHOTq0CJe9tNympHxl13rgJZDp+SfxCL0db/X020tUkCNq8W7YHro6MaQGCNvaKh/Bc1y0UUUHc6XnKt9CkeQMdlS+EUumtkIG2N6FdgF9U8LizxnI9iO49T8lo0U7WxQmfw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706820429; c=relaxed/simple;
+	bh=wT3xf3UrUlUUfc0Ty6ggosFPVbzK2GV7tXxCxW2yHgs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=J9MmFy26gP+oRHsVZOOR7HFPylRDOl/PlyNSQ80KAGX5150XFM7BPw5y5Ih9Pg96jkwtpH/KuOY32E7P8ce8tS2gB11/GFMF3HYTh5WTJ8cspMjDEDQND90dhHIY4h6s6bEfOcETs/yJnWlvD/UBO69EMXJCqcogrO84rglmBTU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UwVpOCKH; arc=fail smtp.client-ip=192.55.52.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RtpMI/Ly"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 411JkGtW018554;
-	Thu, 1 Feb 2024 20:46:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=graNKSh9djGaHBgZ18hC3bWHCAiqvlQdmmsaj93OQBQ=; b=Rt
-	pMI/LyvjOFLc6VNzBorEYuSMysXp9j8vFHsxqDftAX+7rruZLxrmdBqojL+jNGy9
-	swjLBOZXMVHJd3FlW7qrl+0EV9uScXXc9WO/OSoHgfr3/4ayWaHlXoWySKh3q6Vr
-	jHb5b7xjgpUujpuSMozvDR/ajiLod04VscR/hEFd33GkPxEL9T5dVYYqIbh5ZTV3
-	WFJgoubYXeoXHPtmvl8OwHnGRGvxbH0JAPUpR+GJnec4mqZ9wodg/n9ecFfRYw5G
-	RBn6Zxut3eqy2mrLx6RnKBReb9oq4FmtcJYD+fm/OF44zKi+aqo8g5XfW3kzAeYD
-	nuqpOxq7VOVoO7WhZ7YA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vyvb5kc70-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Feb 2024 20:46:17 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 411KkGxx000995
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 Feb 2024 20:46:16 GMT
-Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UwVpOCKH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706820427; x=1738356427;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wT3xf3UrUlUUfc0Ty6ggosFPVbzK2GV7tXxCxW2yHgs=;
+  b=UwVpOCKHjX22rc1QWCK1Bd9bzNmFwFU7qZ7A00c2HXbOFZYBeWB0uGqj
+   VaVMOcFa/w+8jlB87x/Kn2xyJQOEBZSvGO7q0j70Shl3sRKCK2PhlxRdz
+   PaEU+CGiGqzA7oYdP869E97KPzuRlW4EKX2QJFKK4GK+DLYossedUgAeo
+   Ntm+2ExTUy7X7DX1dRDQltLExLcepnm/K0sa9Wwsw2CnhLUegOAxAjb9a
+   52RZyv4LfE7gjSsh59q4U7QwVooLITEuTspErVMppNDSmvNjH2o2O7h8j
+   JCpcUawKA8LGGLb4sGMvGPDMBuQ6t44l8eBgsiMXWCyIcqIQIY7ux1YZg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="402844189"
+X-IronPort-AV: E=Sophos;i="6.05,236,1701158400"; 
+   d="scan'208";a="402844189"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 12:47:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="908367314"
+X-IronPort-AV: E=Sophos;i="6.05,236,1701158400"; 
+   d="scan'208";a="908367314"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Feb 2024 12:47:05 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 1 Feb 2024 12:47:04 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 1 Feb 2024 12:47:04 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 1 Feb 2024 12:46:15 -0800
-From: Anjelique Melendez <quic_amelende@quicinc.com>
-To: <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>
-CC: <konrad.dybcio@linaro.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        "Anjelique
- Melendez" <quic_amelende@quicinc.com>
-Subject: [PATCH 2/2] soc: qcom: add QCOM PBS driver
-Date: Thu, 1 Feb 2024 12:44:24 -0800
-Message-ID: <20240201204421.16992-6-quic_amelende@quicinc.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240201204421.16992-2-quic_amelende@quicinc.com>
-References: <20240201204421.16992-2-quic_amelende@quicinc.com>
+ 15.1.2507.35; Thu, 1 Feb 2024 12:47:04 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cv1XTt/lIrl2fKrN1da3e33U72q+rGH4/zP1K2ijAWrgwDZG8EhCtIdX5HCpJ0s3ZGC4P1ng7d9h2/mwolqOSo1cdcO8s1Iry8d8CdZvOzJutauvj+BdvdKPgESAjnCb2BPV0xomjO1lKTjl5nPC5ezOnjBZjfOUrCpSlb3UQ7Xt0mokJ84yzQVjZoPuORYxxVzlV5CPYavwtfZBwifU7duU1+5dXCwhrhXAhhkj0138xFQix3QoM2y3NzotOXqIwumskHpjYHw16xga4Cph0rPNZh6uVDnVGrqRG1Y4MkSVpbZ5low6ehTAdtxV4rzh7TfBPfhUv1GzU9w8YBjrOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B3Cv+JjVvYaJc0G+Pv1rdEkr67p9d41tPR3aSNHSbhE=;
+ b=fXIC6kvdRT+LzQVVJpUHAHSuUEmgWD52PO467v+1kUKZyDV6i9HN/q3t6qgbwM4EMZt5ZOT6iT41gf8DzXRbESJG0MSDHas/0wE1+8nRQ9vvoeyudfUP//83VtDYWD6CqONuHd6HBC42y0Dbuam2J9phiCIVyrMbwEB21vgbGJsQyultuG4rqQfVM5ch2oNtUNRGKlRWHJnEcZQx8dX8aPgaT05UYyEyDBWLqzThIjwKZrBncD4fTI6H+xFlDdL5Wz6BM02WHSt6HcNmidZit9A3vJzNbMFiJXwrXTPwkyPrk4Vy1+98iGp5u/QsZiqWgZm+V4Le95e5G6q0EnFVZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by CH3PR11MB8384.namprd11.prod.outlook.com (2603:10b6:610:176::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Thu, 1 Feb
+ 2024 20:47:03 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::7103:9cf7:fcc0:e802]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::7103:9cf7:fcc0:e802%3]) with mapi id 15.20.7228.037; Thu, 1 Feb 2024
+ 20:47:03 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+CC: Borislav Petkov <bp@alien8.de>, Aristeu Rozanski <aris@redhat.com>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Li, Lili" <lili.li@intel.com>,
+	"ricardo.neri-calderon@linux.intel.com"
+	<ricardo.neri-calderon@linux.intel.com>
+Subject: RE: [PATCH 0/2] EDAC/{igen6,i10nm}: Add EDAC support for two Intel
+ CPUs
+Thread-Topic: [PATCH 0/2] EDAC/{igen6,i10nm}: Add EDAC support for two Intel
+ CPUs
+Thread-Index: AQHaUntqeLPIHg/x00SS/sl6ntrMbrD1+jZg
+Date: Thu, 1 Feb 2024 20:47:02 +0000
+Message-ID: <SJ1PR11MB6083A37E3A43C7055B5B4203FC432@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20240129062040.60809-1-qiuxu.zhuo@intel.com>
+In-Reply-To: <20240129062040.60809-1-qiuxu.zhuo@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|CH3PR11MB8384:EE_
+x-ms-office365-filtering-correlation-id: e4690d72-84d1-466d-831f-08dc2366f1c8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MpWA1CxpRVjl0wcpsscHHTeu6JHuv/GBaN/b+ybtkWpKZ8cjytgvWaysABu+zM4K3qBw7+vL1k2ryOT4fU22B6JHQHy8N/0e2xwzuIvdcE8uQw8+INAjOQucBTgP3zysrbO8Ipq9jrOFMfyQ0lq20fCIWVpu7SwNC+KZ5fkYpAXB4oe+wcPKm50NN1sE+hshrDTRWjogU4zRT27HV8/COV2Li3Y4DxQzCuuGNuAcVafuJmzU/nNQ+Gc0H298qudOBEWO97TfURqvZ6PHmRwxCXDFxPTunwxb/7fajWeIONoSdxK+pFevv7yv40hiZKlR2w5dC4LNr6+P5ggsqPlmSumQjxloCkBqyixA5mtlJg5cPkUSizrseMx0Lh1e0WD3gZ7Kxdygx5gaZuRK0BFfzu8U3oFSsfrjvEjvKR8rSPJL51xcqiYEdxJ44cNvq+4JaWKvb8SsgiZXXlDdA6Vsjp7F8A/3WF7x4VYzysWxPFORYAq47eknK2xXFIc7yaaTreQGSmNTnkA/eSirb6Ke07//W5q6skzgMIfInuL6tuk9kNZrmt/pT7IJBSRBCwwU0HIYIDnZHAoAYcp0rRL+j6bslLGeMIzUHbJ3SGxw+7tcxpLBfrafWBm/e4UtFLLS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(136003)(39860400002)(346002)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(71200400001)(55016003)(86362001)(316002)(64756008)(66946007)(54906003)(66556008)(76116006)(6636002)(66446008)(66476007)(38100700002)(122000001)(52536014)(4326008)(82960400001)(6862004)(8676002)(33656002)(8936002)(478600001)(9686003)(6506007)(26005)(5660300002)(7696005)(4744005)(2906002)(38070700009)(41300700001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ijVOrzbR6tUgeFF5aDbMPvJe2LIKMaanhkSw5ORan+P/tp610emgJLbxyItc?=
+ =?us-ascii?Q?Go7T0UTU6jlzSqq6gWt8Epz9SDk4wdxAocKX1gzNzQW8pdlQTg+Km4coGAdw?=
+ =?us-ascii?Q?fq6Gwl4eW+j5jQVtY4y2842FSsY0+T0uOSWE5/k09f/+EiqrTuE3bC4VeSZs?=
+ =?us-ascii?Q?Wc3Xfshhl3pHA2p5mEr09I0I68H91o2VQaqO4V0n+zHkXrtDaow8+eq6YTCW?=
+ =?us-ascii?Q?jddMjcAntyamuTh4oBS6Z08y4Cl2cIAIqnZPCTnFhWizZtWA/DYQl3PxxK3b?=
+ =?us-ascii?Q?689UYQt0j8KfxTryHclYvoyOVasjvx1PIjaE8fl0VSGN1wCCn0L1sXAhZ7Lc?=
+ =?us-ascii?Q?GvfTFjIubdobp0mek4ZkTuzEutTxnW/QSfp6TFa70b52unAnH3/JvO9iKUw8?=
+ =?us-ascii?Q?q6S1ukS8xuglqzlRJcso40M05D3pSpzXm9Mc/e7cyI5+xuKDwah+K1oIscW/?=
+ =?us-ascii?Q?6T66/32UAAsLvT5TPYhbdYG1ky5RrDLMk8RS8fpv5/nwB7Gj4rFQAHOhEf9d?=
+ =?us-ascii?Q?jxmYsM6XRqG3b7yguU5oJ2gii01/6FyHZ5PnDLYXqtEMlQv9Dq/IRoFPdYaJ?=
+ =?us-ascii?Q?7ib7w4puCB9GORv998TNL8cWWctF1dZnsXNqBRRIltLufSvck9vARuDYM+su?=
+ =?us-ascii?Q?h1maGfGFe28atzK6Qn0hRd59nJyR5hlPxKZYEttYDltJnlH+WHMrvL0bjD9u?=
+ =?us-ascii?Q?GLzw2MIuTdkn/y735wb7PJ4UZTdVqSQLFav3HJiCJENMvPEPIOyikv68Ldl1?=
+ =?us-ascii?Q?jjsnPIe/cwPvoAWWzkUSqM8DPBYLKUeY/LDjWvksAe8qkU2IToemYYOKu2ZD?=
+ =?us-ascii?Q?qCJzONLaNFTMBm3dCFUG2/a9885XopuTPxfh0nxpcnRRkjO/QKTHqyeVa19C?=
+ =?us-ascii?Q?9u+T2lNgclSCW8uSEKtOYX6JqMMtCINztwmaWlKSbVwAL6sD7c1+CT5jajSS?=
+ =?us-ascii?Q?H3zBdvRikndgp1xFksrQyi13hL1AkmuN4y0P4tSXWn1/zIwiw80EEdMwx16A?=
+ =?us-ascii?Q?joDdnDilE9qVd4/qEh77gouMp6s4COW+RGjz4/jYhgsZOpv0/IbddNnb+ehO?=
+ =?us-ascii?Q?c7KAR4OkrIx/F65d1UN8NfJoH0NHF7nw78go/jqU92A2SajHUZX24Zbd5vn8?=
+ =?us-ascii?Q?xuDsgeyhUYmsCLffDHAPoIA1klKCp0KJeGTo5OFr4mPfCjmyUjHlF7EJK1Px?=
+ =?us-ascii?Q?ObrWB8BVc9cUavkvMw42Co4XFwscdoN+G9SU7SWlTOjt6MUXIIDOF6L8iZLg?=
+ =?us-ascii?Q?ev8Re25pQagEBQGny5VfGVxeFIxr4xigoZef/Oks+rBlleiLChD7JYl5KdSL?=
+ =?us-ascii?Q?3A2K7bl41oHE48gab0gvL7LtukVF38XTPgESd4fTzLRxfcsTdkPkzOoJGohg?=
+ =?us-ascii?Q?tmDOuWBo1WC5VSKtb7DdQg+Qns02ThKWyDsDjd4Ro1G/fjvZsFVavFRE8Iqi?=
+ =?us-ascii?Q?w4chmKuwTYDfyMt5dch5VBgJ7H+o0CupBjA9QgDm0xqQnAsUr3DiVV+Loo9+?=
+ =?us-ascii?Q?cUGLJz0L+65jCImfniJdA5Lhh8Hgi4cMnDaXqaaq7PJdoe5YSt9U8OmWG6SL?=
+ =?us-ascii?Q?odzUwiD5GQn0BNxpsU6xtEfZJwIhmOIEq+fpbE2N?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: NaQeHL_RmJARlk5bI-wdo3oLKB3ZIApl
-X-Proofpoint-ORIG-GUID: NaQeHL_RmJARlk5bI-wdo3oLKB3ZIApl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-01_06,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- spamscore=0 clxscore=1015 impostorscore=0 malwarescore=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2402010160
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4690d72-84d1-466d-831f-08dc2366f1c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2024 20:47:02.9771
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cQWHxckEJVJNnx9CBBfTgbgjqL+JUIl2c+gT5rpTqVo9NTVkpErAglhq0P5Hn5cOsv9N5WQ+4tLjYFx6qI3K8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8384
+X-OriginatorOrg: intel.com
 
-Add the Qualcomm PBS (Programmable Boot Sequencer) driver. The QCOM PBS
-driver supports configuring software PBS trigger events through PBS RAM
-on Qualcomm Technologies, Inc (QTI) PMICs.
+> Both patches solely add CPU IDs for EDAC support.
+>
+> - Part1: Add a new Alder Lake-N SoC compute die ID for EDAC support.
+> - Part2: Add the Grand Ridge (micro-server) CPU model ID for EDAC support=
+.
+>
+> Lili Li (1):
+>   EDAC/igen6: Add one more Intel Alder Lake-N SoC support
+>
+> Qiuxu Zhuo (1):
+>   EDAC/i10nm: Add Intel Grand Ridge micro-server support
 
-Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
----
- drivers/soc/qcom/Kconfig          |   9 ++
- drivers/soc/qcom/Makefile         |   1 +
- drivers/soc/qcom/qcom-pbs.c       | 236 ++++++++++++++++++++++++++++++
- include/linux/soc/qcom/qcom-pbs.h |  30 ++++
- 4 files changed, 276 insertions(+)
- create mode 100644 drivers/soc/qcom/qcom-pbs.c
- create mode 100644 include/linux/soc/qcom/qcom-pbs.h
+Applied both patches.
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index b3634e10f6f5..52aa58b02e72 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -254,4 +254,13 @@ config QCOM_INLINE_CRYPTO_ENGINE
- 	tristate
- 	select QCOM_SCM
- 
-+config QCOM_PBS
-+	tristate "PBS trigger support for Qualcomm Technologies, Inc. PMICS"
-+	depends on SPMI
-+	help
-+	  This driver supports configuring software programmable boot sequencer (PBS)
-+	  trigger event through PBS RAM on Qualcomm Technologies, Inc. PMICs.
-+	  This module provides the APIs to the client drivers that wants to send the
-+	  PBS trigger event to the PBS RAM.
-+
- endmenu
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index bbca2e1e55bb..49bb86b0fe33 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -32,3 +32,4 @@ obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
- obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
- qcom_ice-objs			+= ice.o
- obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
-+obj-$(CONFIG_QCOM_PBS) +=	qcom-pbs.o
-diff --git a/drivers/soc/qcom/qcom-pbs.c b/drivers/soc/qcom/qcom-pbs.c
-new file mode 100644
-index 000000000000..f17805489552
---- /dev/null
-+++ b/drivers/soc/qcom/qcom-pbs.c
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+#include <linux/spmi.h>
-+#include <linux/soc/qcom/qcom-pbs.h>
-+
-+#define PBS_CLIENT_TRIG_CTL		0x42
-+#define PBS_CLIENT_SW_TRIG_BIT		BIT(7)
-+#define PBS_CLIENT_SCRATCH1		0x50
-+#define PBS_CLIENT_SCRATCH2		0x51
-+#define PBS_CLIENT_SCRATCH2_ERROR	0xFF
-+
-+#define RETRIES				2000
-+#define DELAY				1100
-+
-+struct pbs_dev {
-+	struct device		*dev;
-+	struct regmap		*regmap;
-+	struct mutex		lock;
-+	struct device_link	*link;
-+
-+	u32			base;
-+};
-+
-+static int qcom_pbs_wait_for_ack(struct pbs_dev *pbs, u8 bit_pos)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read_poll_timeout(pbs->regmap,  pbs->base + PBS_CLIENT_SCRATCH2,
-+					val, val & BIT(bit_pos), DELAY, DELAY * RETRIES);
-+
-+	if (ret < 0) {
-+		dev_err(pbs->dev, "Timeout for PBS ACK/NACK for bit %u\n", bit_pos);
-+		return -ETIMEDOUT;
-+	}
-+
-+	if (val == PBS_CLIENT_SCRATCH2_ERROR) {
-+		ret = regmap_write(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, 0);
-+		dev_err(pbs->dev, "NACK from PBS for bit %u\n", bit_pos);
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(pbs->dev, "PBS sequence for bit %u executed!\n", bit_pos);
-+	return 0;
-+}
-+
-+/**
-+ * qcom_pbs_trigger_event() - Trigger the PBS RAM sequence
-+ * @pbs: Pointer to PBS device
-+ * @bitmap: bitmap
-+ *
-+ * This function is used to trigger the PBS RAM sequence to be
-+ * executed by the client driver.
-+ *
-+ * The PBS trigger sequence involves
-+ * 1. setting the PBS sequence bit in PBS_CLIENT_SCRATCH1
-+ * 2. Initiating the SW PBS trigger
-+ * 3. Checking the equivalent bit in PBS_CLIENT_SCRATCH2 for the
-+ *    completion of the sequence.
-+ * 4. If PBS_CLIENT_SCRATCH2 == 0xFF, the PBS sequence failed to execute
-+ *
-+ * Return: 0 on success, < 0 on failure
-+ */
-+int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap)
-+{
-+	unsigned int val;
-+	u16 bit_pos;
-+	int ret;
-+
-+	if (WARN_ON(!bitmap))
-+		return -EINVAL;
-+
-+	if (IS_ERR_OR_NULL(pbs))
-+		return -EINVAL;
-+
-+	mutex_lock(&pbs->lock);
-+	ret = regmap_read(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, &val);
-+	if (ret < 0)
-+		goto out;
-+
-+	if (val == PBS_CLIENT_SCRATCH2_ERROR) {
-+		/* PBS error - clear SCRATCH2 register */
-+		ret = regmap_write(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, 0);
-+		if (ret < 0)
-+			goto out;
-+	}
-+
-+	for (bit_pos = 0; bit_pos < 8; bit_pos++) {
-+		if (!(bitmap & BIT(bit_pos)))
-+			continue;
-+
-+		/* Clear the PBS sequence bit position */
-+		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2,
-+					BIT(bit_pos), 0);
-+		if (ret < 0)
-+			goto out_clear_scratch1;
-+
-+		/* Set the PBS sequence bit position */
-+		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1,
-+					BIT(bit_pos), BIT(bit_pos));
-+		if (ret < 0)
-+			goto out_clear_scratch1;
-+
-+		/* Initiate the SW trigger */
-+		ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_TRIG_CTL,
-+					PBS_CLIENT_SW_TRIG_BIT, PBS_CLIENT_SW_TRIG_BIT);
-+		if (ret < 0)
-+			goto out_clear_scratch1;
-+
-+		ret = qcom_pbs_wait_for_ack(pbs, bit_pos);
-+		if (ret < 0)
-+			goto out_clear_scratch1;
-+
-+		/* Clear the PBS sequence bit position */
-+		regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1, BIT(bit_pos), 0);
-+		regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH2, BIT(bit_pos), 0);
-+	}
-+
-+out_clear_scratch1:
-+	/* Clear all the requested bitmap */
-+	ret = regmap_update_bits(pbs->regmap, pbs->base + PBS_CLIENT_SCRATCH1, bitmap, 0);
-+
-+out:
-+	mutex_unlock(&pbs->lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(qcom_pbs_trigger_event);
-+
-+/**
-+ * get_pbs_client_device() - Get the PBS device used by client
-+ * @dev: Client device
-+ *
-+ * This function is used to get the PBS device that is being
-+ * used by the client.
-+ *
-+ * Return: pbs_dev on success, ERR_PTR on failure
-+ */
-+struct pbs_dev *get_pbs_client_device(struct device *dev)
-+{
-+	struct device_node *pbs_dev_node;
-+	struct platform_device *pdev;
-+	struct pbs_dev *pbs;
-+
-+	pbs_dev_node = of_parse_phandle(dev->of_node, "qcom,pbs", 0);
-+	if (!pbs_dev_node) {
-+		dev_err(dev, "Missing qcom,pbs property\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	pdev = of_find_device_by_node(pbs_dev_node);
-+	if (!pdev) {
-+		dev_err(dev, "Unable to find PBS dev_node\n");
-+		pbs = ERR_PTR(-EPROBE_DEFER);
-+		goto out;
-+	}
-+
-+	pbs = platform_get_drvdata(pdev);
-+	if (!pbs) {
-+		dev_err(dev, "Cannot get pbs instance from %s\n", dev_name(&pdev->dev));
-+		platform_device_put(pdev);
-+		pbs = ERR_PTR(-EPROBE_DEFER);
-+		goto out;
-+	}
-+
-+	pbs->link = device_link_add(dev, &pdev->dev, DL_FLAG_AUTOREMOVE_SUPPLIER);
-+	if (!pbs->link) {
-+		dev_err(&pdev->dev, "Failed to create device link to consumer %s\n", dev_name(dev));
-+		platform_device_put(pdev);
-+		pbs = ERR_PTR(-EINVAL);
-+		goto out;
-+	}
-+
-+out:
-+	of_node_put(pbs_dev_node);
-+	return pbs;
-+}
-+EXPORT_SYMBOL_GPL(get_pbs_client_device);
-+
-+static int qcom_pbs_probe(struct platform_device *pdev)
-+{
-+	struct pbs_dev *pbs;
-+	u32 val;
-+	int ret;
-+
-+	pbs = devm_kzalloc(&pdev->dev, sizeof(*pbs), GFP_KERNEL);
-+	if (!pbs)
-+		return -ENOMEM;
-+
-+	pbs->dev = &pdev->dev;
-+	pbs->regmap = dev_get_regmap(pbs->dev->parent, NULL);
-+	if (!pbs->regmap) {
-+		dev_err(pbs->dev, "Couldn't get parent's regmap\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = device_property_read_u32(pbs->dev, "reg", &val);
-+	if (ret < 0) {
-+		dev_err(pbs->dev, "Couldn't find reg, ret = %d\n", ret);
-+		return ret;
-+	}
-+	pbs->base = val;
-+	mutex_init(&pbs->lock);
-+
-+	platform_set_drvdata(pdev, pbs);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id qcom_pbs_match_table[] = {
-+	{ .compatible = "qcom,pbs" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, qcom_pbs_match_table);
-+
-+static struct platform_driver qcom_pbs_driver = {
-+	.driver = {
-+		.name		= "qcom-pbs",
-+		.of_match_table	= qcom_pbs_match_table,
-+	},
-+	.probe = qcom_pbs_probe,
-+};
-+module_platform_driver(qcom_pbs_driver)
-+
-+MODULE_DESCRIPTION("QCOM PBS DRIVER");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/soc/qcom/qcom-pbs.h b/include/linux/soc/qcom/qcom-pbs.h
-new file mode 100644
-index 000000000000..8a46209ccf13
---- /dev/null
-+++ b/include/linux/soc/qcom/qcom-pbs.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _QCOM_PBS_H
-+#define _QCOM_PBS_H
-+
-+#include <linux/errno.h>
-+#include <linux/types.h>
-+
-+struct device_node;
-+struct pbs_dev;
-+
-+#if IS_ENABLED(CONFIG_QCOM_PBS)
-+int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap);
-+struct pbs_dev *get_pbs_client_device(struct device *client_dev);
-+#else
-+static inline int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline struct pbs_dev *get_pbs_client_device(struct device *client_dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+#endif
-+
-+#endif
--- 
-2.41.0
+Thanks
 
+-Tony
