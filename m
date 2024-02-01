@@ -1,90 +1,83 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680DD12FB04
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A88412FB0F
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706811065; cv=none; b=ayPdlT0+FpiOkAphM8yi2Gs6fFayYrv4WOt7g6nmjD9HqyPXVLACynW5FG63dxCt1rt+DZqLUAZXag0txxN0smg4ZlbHLM5Rn12sGGwZANOIltHkaFmOpMhsQqGYmAKe3fULrZ0IJEkGp0ogmQgaYU4tA6Ez39qi47ivm0giFr8=
+	t=1706811092; cv=none; b=px3TetNRrLiwFUDR/BsmYE0neGme3ZApQx2S+0aAuTohgCxFfWzenAsqKzXj5fMvrEUBOsgR2zCOoqeLxXHapNacnx7pB4Mzve69OM2PmbRvYuDSLmV71fPi6/kVidxyEq9c2aQPNrEzLKDLENX+H1Wl1KfFLMFhjLKH1YYGVMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706811065; c=relaxed/simple;
-	bh=r200j0k5z6M8FPk7ea3dtycPDKu5zgqHntQsz9dmHCM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u8comshStCuM+Ur92uRvW5XvZ5Gauc72SiAlMNeExB5PFhzuczXg1mryeB98tD8Ibd2tsyDqeyWrJoD3cpsGfpCZjv7GwxrIgY9EmtBMu7j/iuYd0g9Du5pFzPlasjhH1wer5+qIi7fiKrpvqvXzwap/yS+k0QQzOAn4wId4TCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WdRRDQiY; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706811092; c=relaxed/simple;
+	bh=zmHNqS7S/GuQeB3Mbfvj7+e3lNP8Cq+acww9J2gr/8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kizop4cmDMljDqm6DvlfYJcw2F1ELrc3vTe+uvA7T0YA3uk9Y+acbh6SpIxYKWNM2j2suS4zq62PJkKxNvgZH1nfxwe8DATIB9zNDT1S0SFcjajgCqPegZfGo+yyr9St2sipRAYWBuwgWaTkdujCPKhZdqFazI3pSsx5FRSBoFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LR3YlcXz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WdRRDQiY"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2906855ac5fso964813a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 10:11:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706811064; x=1707415864; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GToPV7msCPjuhO1dWFLWs/ihnArgx8snuOE7VU2ptxg=;
-        b=WdRRDQiY1y1r8t39ffQ14BjgrJexJXOgBqWyYctncm2e9e1LPwDTBUgI+e4T9tZtkF
-         4fGUNfMdPZjnTJDAYZY0HtUQk2C4ZENP8sYc83w/Y37Kx8H6FuFpfSl0esJBf5W8whdq
-         M+ZtIw+CYYUUkIiGxXeuUkQ7GJjsFXk/4lLm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706811064; x=1707415864;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GToPV7msCPjuhO1dWFLWs/ihnArgx8snuOE7VU2ptxg=;
-        b=BrQ1TPVgM9iFVAw8m20gLuQlk5A2KGgtCYFsA+/ysSYuKcb2lfGH/Pg4O+/s6K3kx6
-         9OkRNAER2EqnQj3ak2kQHn+7fe2JQ/2mxBNn7NR/AdmGhPx6HlXStjY/D+MU3VZMEzx/
-         H5GsVP1cnvbLlFYxfboos4Z2BxZqVVfqYZV49gxEvsyFqf6TzmHwiIaG8vr9QUpbRYkS
-         4Y26YwnN2Pz8b0sX0wK2ibcfToFkF6IGfbXy8hS2I3ypx7yMTWv6V9shlfJtv4Gvoj0+
-         +ssE6jjFubBxfcYckFH1Sfn+BqUKca7Zpr1uWBYrLsKnLscFyMs3HVLCgouYK05yhni6
-         s6lg==
-X-Gm-Message-State: AOJu0YxmEvlSQtTnCtiWWg4Ui5hiwsBMt/yUXXZ8McPWRh4YhINE4Hwz
-	PjXxbIbC03yz994JQ9bObil6E9AQdghvFv5Rfyp4nTogHE1sUPTwsQPl5xhpqA==
-X-Google-Smtp-Source: AGHT+IGodb1PW97G5oqNVegqQeih+mtW7nbxs8urpujVz6AoXW3kMeSj7E3l5CmXi+tWihRK8nSLLg==
-X-Received: by 2002:a17:90a:bb93:b0:296:2057:28c with SMTP id v19-20020a17090abb9300b002962057028cmr1860044pjr.31.1706811063830;
-        Thu, 01 Feb 2024 10:11:03 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCW2krWTMKExdhHWt6TyQjL1Rm7yRFYGUHQLWTf7/hqr1tPiDR9vLa5HYLg2BT6axZpvzUHe1a4RkKIU2cVjAPjFY7+u9f8gUSExtTZUFYdXRlLVh/dASAxqvvGt+AEOCDtKyRGq3ZT7wMKv3FDiXcAH23xD2EnLrrRCRHcyHJ2+OMIZfloJn1XE7zlo3TwFcMS5LrGZmeY=
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id su14-20020a17090b534e00b00290a6b587fbsm112120pjb.48.2024.02.01.10.11.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 10:11:03 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	Kunwu Chan <chentao@kylinos.cn>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pstore/zone: Add a null pointer check to the psz_kmsg_read
-Date: Thu,  1 Feb 2024 10:10:59 -0800
-Message-Id: <170681105755.3764329.93715039657741016.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240118100206.213928-1-chentao@kylinos.cn>
-References: <20240118100206.213928-1-chentao@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LR3YlcXz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706811089;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zmHNqS7S/GuQeB3Mbfvj7+e3lNP8Cq+acww9J2gr/8A=;
+	b=LR3YlcXzmWxAo9VRC60NXWlFDz1PuTR/z8StdkyUs1E2NJHft3ZFl+0gCPOFlVzam+7S9N
+	FGSuhSD0qdCyc7GKjfgsN1lItR94gexvCZM1dGiGhs2vvDDJ9kt3WbmTPHhW/w5yQz5hot
+	vIQAIhJiaCtf9jx+TLSIw2rqr351e3A=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-PIa3wvWaOmKyz-OWa5qEGA-1; Thu,
+ 01 Feb 2024 13:11:27 -0500
+X-MC-Unique: PIa3wvWaOmKyz-OWa5qEGA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 82D493C0F189;
+	Thu,  1 Feb 2024 18:11:27 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.96])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 48FAE1C060AF;
+	Thu,  1 Feb 2024 18:11:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  1 Feb 2024 19:10:13 +0100 (CET)
+Date: Thu, 1 Feb 2024 19:10:07 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] pidfd: implement PIDFD_THREAD flag for
+ pidfd_open()
+Message-ID: <20240201181006.GA31459@redhat.com>
+References: <20240131132541.GA23632@redhat.com>
+ <20240131132602.GA23641@redhat.com>
+ <20240201-dokumentieren-holen-bc44288345b5@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201-dokumentieren-holen-bc44288345b5@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On Thu, 18 Jan 2024 18:02:06 +0800, Kunwu Chan wrote:
-> kasprintf() returns a pointer to dynamically allocated memory
-> which can be NULL upon failure. Ensure the allocation was successful
-> by checking the pointer validity.
-> 
-> 
+On 02/01, Christian Brauner wrote:
+>
+> One more thing that came to my mind. We also support waitid(P_PIDFD,
+> pidfd). And I just looked through the code and I think it does the right
+> thing when we pass it a PIDFD_THREAD pidfd
 
-Applied to for-next/pstore, thanks!
+Yes, I too looked into kernel_waitid_prepare(P_PIDFD) and didn't notice
+anything wrong,
 
-[1/1] pstore/zone: Add a null pointer check to the psz_kmsg_read
-      https://git.kernel.org/kees/c/69f381e67d6f
+> because wait_consider_task()
 
-Take care,
+Even simpler, I think. waitid(P_PIDFD, pidfd_with_PIDFD_THREAD) doesn't
+really differ from waitid(P_PID, pidfd_pid(pidfd_with_PIDFD_THREAD)), so
+it should work "as expected".
 
--- 
-Kees Cook
+Oleg.
 
