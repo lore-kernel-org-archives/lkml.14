@@ -1,163 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402FA39AE1;
-	Thu,  1 Feb 2024 21:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3C6E41212
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 21:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706821768; cv=none; b=jZrUo7iK7J1S5zVtwisM7gBag0d4s4s6Cn87i/UkoQAB2r4WG7RDhfcFuISJYe9j2JA2fTbVdbK6A1v9JsS0/aBpjRRPNLH9ApgOboSy76oxSdMkc81UqsvPsO+IphPrgZC+swhuGD9w2IbWtBjXD9223xVD0uGck280H+De0Gw=
+	t=1706821777; cv=none; b=JGpDM960pqbNfCjDHdq73mYjyL1ANGOcFu2QD8xiDw5iSwHTkp+a6j8WCn6Y0G479U1L80AdlMvh9shGX0mdYdccpkSG6IFckt3cJp/HVFkWCvF+Z2chKuOOpwNi/BNi4yA0PX9Avj238BQfzlS63Nvujxwk39A+6owL2UZcCS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706821768; c=relaxed/simple;
-	bh=6v01RU+zLBfMH3ycqivUxPJyd9tsVfriHpIcjMGbkes=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QG24YDyc7uIWDgX65NpZH0OkRpOJUMFnylAL7YLr0XyFri1rbr0zE1aW8GCDdWTcXIYW3K5iRnArX7xdBsWB6CU8CTbNFUzhHGWoEMb93w2XMsXuz+6fjFE4sIApFILohe8rqIIiEj50nAx5McyRUECtE2AXe4hPRSwln8XHugM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bn0Kx9Wy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bn0Kx9Wy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3994C43390;
-	Thu,  1 Feb 2024 21:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706821767;
-	bh=6v01RU+zLBfMH3ycqivUxPJyd9tsVfriHpIcjMGbkes=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Bn0Kx9WybaQsW2pRh0Btwv1/jeZ9YrtkMLOy6D5HjMROH6mqJVGRuzWEkekfQt79H
-	 szsqxSalbLFCLrIMbRzgdWINX8HtTO6iySGW5iDstwAMfsP8x5RQJkFtaWt48nIZpR
-	 cp5sVZbAt0/wmSmAL4AjES7fV5+LhBCp2E3SqxF0g9aSTKtzNAmbPCHv0FPFcjvlHd
-	 kdre5oOfR9jsPfz9SmN/9TNbIsEqEcee2U78ZOLJOIAdYG+IfmG30H2Q16gmYRmgQV
-	 CZUjS9z8GsDB70D548p52Q3fGmsOw1uZ1MOl/aXm6gwzGBTBGA5aKXYW7DXuXUlcsi
-	 RTXv55zbNJCYw==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-510322d5363so2184835e87.1;
-        Thu, 01 Feb 2024 13:09:27 -0800 (PST)
-X-Gm-Message-State: AOJu0Yw+oIAqPPuCZopbuQyYPyTHkoRlakKS+43mqLiRwfqnSkwtRthL
-	qzwP39waWHmT/ttGBPsK4bVs0tYUdD+QLJHApsJXzzuIowVr1JjeUMU0gaO2CjD084WilVc5MdN
-	EnEAmu0JUE8lNHNpr4RVqgIelOQ==
-X-Google-Smtp-Source: AGHT+IESdk8xIEMiHdjhEcwakMNvof5/KilzUrpxx4OTDQHF0zbvvJoEq0dv0O8IGj/3mjZHLvI28EeOsT5B/gQ7v60=
-X-Received: by 2002:a05:6512:3b0:b0:511:21e4:5a69 with SMTP id
- v16-20020a05651203b000b0051121e45a69mr2724946lfp.40.1706821765984; Thu, 01
- Feb 2024 13:09:25 -0800 (PST)
+	s=arc-20240116; t=1706821777; c=relaxed/simple;
+	bh=TBOTB9Czzf4Q8dqszUSC2KR1hcttocjMtosMwe5WxeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2nCqiK0rKJJWbYC6LQJLLJM7UgMrKaWC1wA2Humlt/uUME/Krj1265V2/+UtwDXQqWXK2JSjzohYJgk+SHqJ2EFAXuUmjNfb8+DP8GHAma5EDGQCiTb+Nf5j4lij33QCe+KVgrZz+IZqUQ8tHA7LGywjEPERCRD/5KiMSB7kCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 411L4BB7024212;
+	Thu, 1 Feb 2024 15:04:11 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 411L4A9c024211;
+	Thu, 1 Feb 2024 15:04:10 -0600
+Date: Thu, 1 Feb 2024 15:04:10 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: "Daniel P. Berrang??" <berrange@redhat.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Nakajima, Jun" <jun.nakajima@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish" <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] x86/random: Issue a warning if RDRAND or RDSEED fails
+Message-ID: <20240201210410.GA24013@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <DM8PR11MB57507611D651E6D7CBC2A2F3E77D2@DM8PR11MB5750.namprd11.prod.outlook.com> <88a72370-e300-4bbc-8077-acd1cc831fe7@intel.com> <CAHmME9oSQbd3V8+qR0e9oPb7ppO=E7GrCW-a2RN8QNdY_ARbSQ@mail.gmail.com> <Zbk6h0ogqeInLa_1@redhat.com> <DM8PR11MB575052B985CA97B29A443F9AE77C2@DM8PR11MB5750.namprd11.prod.outlook.com> <CAHmME9ps6W5snQrYeNVMFgfhMKFKciky=-UxxGFbAx_RrxSHoA@mail.gmail.com> <20240131203531.GA12035@wind.enjellic.com> <20240201044735.GC2356784@mit.edu> <20240201095451.GA17612@wind.enjellic.com> <Zbt7mXg9p6IOdcqp@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240130105236.3097126-1-dawei.li@shingroup.cn>
- <20240130105236.3097126-2-dawei.li@shingroup.cn> <20240131212938.GB2303754-robh@kernel.org>
- <F096F87333105368+Zbtr1h1ryCvzA3fB@centos8>
-In-Reply-To: <F096F87333105368+Zbtr1h1ryCvzA3fB@centos8>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 1 Feb 2024 15:09:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLC0_mLmgtATkh48963n-GrkHE-MryD_=MN5sNWBeq_RA@mail.gmail.com>
-Message-ID: <CAL_JsqLC0_mLmgtATkh48963n-GrkHE-MryD_=MN5sNWBeq_RA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] of: Introduce __of_phandle_update_cache
-To: Dawei Li <dawei.li@shingroup.cn>
-Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, set_pte_at@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zbt7mXg9p6IOdcqp@redhat.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 01 Feb 2024 15:04:12 -0600 (CST)
 
-On Thu, Feb 1, 2024 at 4:01=E2=80=AFAM Dawei Li <dawei.li@shingroup.cn> wro=
-te:
->
-> Hi Rob,
->
-> Thanks for reviewing,
->
-> On Wed, Jan 31, 2024 at 03:29:38PM -0600, Rob Herring wrote:
-> > On Tue, Jan 30, 2024 at 06:52:35PM +0800, Dawei Li wrote:
-> > > For system with CONFIG_OF_DYNAMIC=3Dy, device nodes can be inserted/r=
-emoved
-> > > dynamically from device tree. Meanwhile phandle_cache is created for =
-fast
-> > > lookup from phandle to device node.
-> >
-> > Why do we need it to be fast? What's the usecase (upstream dynamic DT
-> > usecases are limited) and what's the performance difference? We'll
-> > already cache the new phandle on the first lookup. Plus with only 128
-> > entries you are likely evicting an entry.
->
-> I read the history changelog and get that a _lot_ of lookup has been
-> taken before of_core_init(), so the update of cache in lookup operation
-> mean a lot to performance improvement.
+On Thu, Feb 01, 2024 at 11:08:09AM +0000, Daniel P. Berrang?? wrote:
 
-Yes, and there was compelling data on the performance difference to
-justify the added complexity.
+Hi Dan, thanks for the thoughts.
 
-> > > For node detach, phandle cache of removed node is invalidated to main=
-tain
-> > > the mapping up to date, but the counterpart operation on node attach =
-is
-> > > not implemented yet.
-> > >
-> > > Thus, implement the cache updating operation on node attach.
-> >
-> > Except this patch does not do that. The next patch does.
->
-> Agreed.
->
-> >
-> > >
-> > > Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> > > ---
-> > >  drivers/of/base.c       | 16 ++++++++++++++++
-> > >  drivers/of/of_private.h |  1 +
-> > >  2 files changed, 17 insertions(+)
-> > >
-> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > > index b0ad8fc06e80..8b7da27835eb 100644
-> > > --- a/drivers/of/base.c
-> > > +++ b/drivers/of/base.c
-> > > @@ -163,6 +163,22 @@ void __of_phandle_cache_inv_entry(phandle handle=
-)
-> > >             phandle_cache[handle_hash] =3D NULL;
-> > >  }
-> > >
-> > > +void __of_phandle_update_cache(struct device_node *np, bool lock)
-> > > +{
-> > > +   u32 hash;
-> > > +
-> > > +   if (lock)
-> > > +           lockdep_assert_held(&devtree_lock);
-> >
-> > I don't think this is a good use of a function parameter.
->
-> Yep, assertion under condition is odd.
->
-> >
-> > > +
-> > > +   if (unlikely(!np || !np->phandle))
-> > > +           return;
-> > > +
-> > > +   hash =3D of_phandle_cache_hash(np->phandle);
-> > > +
-> > > +   if (!phandle_cache[hash])
-> > > +           phandle_cache[hash] =3D np;
-> >
-> > Okay, so you don't evict existing entries. I'm not sure what makes more
->
-> Yes, the updating policy of dynamic nodes is exactly same with static nod=
-es
-> (the ones in of_core_init()), no eviction/invalidation on _existing_ cach=
-e
-> involved.
->
-> > sense. I would imagine old entries are less likely to be accessed than
->
-> Well, I don't think we are gonna implement a full-fledged cache replacing
-> algorithm such as LRU.
->
-> > new phandles for just added nodes given DT is kind of parse it all once
-> > (e.g. at boot time). Again, need to understand your usecase and
-> > performance differences.
->
-> It's kinda awkward that no such usecases/stats are available for now.
->
-> My motivation is simple as that:
-> As long as detached nodes are supposed to be removed from cache entries,
-> the newly inserted nodes should be added to cache entries, it is more
-> balanced and symmetric.
+> On Thu, Feb 01, 2024 at 03:54:51AM -0600, Dr. Greg wrote:
+> > I suspect that the achievable socket core count cannot effectively
+> > overwhelm the 1022x amplification factor inherent in the design of the
+> > RDSEED based seeding of RDRAND.
 
-The difference is that no entry for attach works fine while accessing
-a detached node that may have been freed would be a problem.
+> In testing I could get RDSEED down to < 3% success rate when
+> running on 20 cores in parallel on a laptop class i7. If that
+> failure rate can be improved by a little more than one order
+> of magnitude to 0.1% we're starting to get to the point where
+> it might be enough to make RDRAND re-seed fail.
+> 
+> Intel's Sierra Forest CPUs are said to have a variant with 288
+> cores per socket, which is an order of magnitude larger. It is
+> conceivable this might be large enough to demonstrate RDRAND
+> failure in extreme load. Then again who knows what else has
+> changed that might alter the equation, maybe the DRBG is also
+> better / faster. Only real world testing can say for sure.
+> One thing is certain though, core counts per socket keep going
+> up, so the potential worst case load on RDSEED will increase...
 
-Rob
+Indeed, that would seem to be the important and operative question
+that Intel could answer, maybe Dave and Elena will be able to provide
+some guidance.
+
+Until someone can actually demonstrate a sustained RDRAND depletion
+attack we don't have an issue, only a lot of wringing of hands and
+other handwaving on what we should do.
+
+The thing that intrigues me is that we have two AMD engineers
+following this, do you guys have any comments, reflections?  Unless I
+misunderstand, SEV-SNP has the same challenges and issues.
+
+As of late you guys have been delivering higher core counts that would
+make your platform more susceptible.  Does your hardware design not
+have a socket common RNG architecture that makes RDSEED vulnerable to
+socket adversarial depletion?  Is this a complete non-issue in
+practice?
+
+Big opportunity here to proclaim: "Just buy AMD"... :-)
+
+> > We will see if Elena can come up with what Intel engineering's
+> > definition of 'astronomical' is.. :-)
+> > 
+> > > There's a special case with Confidential Compute VM's, since the
+> > > assumption is that you want to protect against even a malicious
+> > > hypervisor who could theoretically control all other sources of
+> > > timing uncertainty.  And so, yes, in that case, the only thing we
+> > > can do is Panic if RDRAND fails.
+> > 
+> > Indeed.
+> > 
+> > The bigger question, which I will respond to Elena with, is how much
+> > this issue calls the entire question of confidential computing into
+> > question.
+
+> A denial of service (from a panic on RDRAND fail) doesn't undermine
+> confidental computing. Guest data confidentiality is maintained by
+> panicing on RDRAND failure and DoS protection isn't a threat that CC
+> claims to be able to mitigate in general.
+
+Yes, if there is a problem with RDRAND we have a CoCo solution, full
+stop.
+
+The issue that I was raising with Elena is more generic, to wit:
+
+Her expressed concern is that a code construct looking something like this,
+rdrand() returning 0 on success:
+
+for (i= 0; i < 9; ++i)
+	if (!rdrand(&seed))
+		break;
+	sleep(some time);
+}
+if (i == 9)
+	BUG("No entropy");
+
+do_something_with(seed);
+
+Could be sufficiently manipulated by a malicious hypervisor in a TDX
+environment so as to compromise its functionality.
+
+If this level of control is indeed possible, given the long history of
+timing and side-channel attacks against cryptography, this would seem
+to pose significant questions as to whether or not CoCo can deliver on
+its stated goals.
+
+> With regards,
+> Daniel
+
+Have a good evening.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
