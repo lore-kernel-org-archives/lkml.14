@@ -1,26 +1,74 @@
-Received: from mail.someserver.de (mail.someserver.de [116.202.193.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BD912D162;
-	Thu,  1 Feb 2024 18:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.193.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E651612D168
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706810840; cv=none; b=pkILYfYFNi0HBtzkjay0rnbJ49sWc9EiexE1DD7dIAD1mP6LVy2qKllt2t8B6LPWYikpQuwaBc85tJhBlokfX7Qy6cBwjVWFNzU4jhf9x/3WEOhZovTcs3va2vn91zNqiaH+8Z+6YzTtT05+qR19H6ANVQ9rOlHcprWgbWbGAmM=
+	t=1706810840; cv=none; b=AHg5+OhDtmIi1PX6axbeNYFHb5AlTSqn2hcG0tYV1fsTiAsNX7HdUhumcP26kt7NAQ3rYtcDlKGRhprv1GWv6Z8xCP8rOegaaMGICik/OUQHKgvXnV84SR6dTyYs/vXYhntr+P/WBFt/mZqZodgoOcXtkoSmwPDYPUXs6QWMcwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706810840; c=relaxed/simple;
-	bh=lj9jzLLyVHFhew0Zi2auFkzyMGCjvKyZGt3bltSvs9k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k4VGjZ2pnk5iCCMCGeMU/0p8uDuMlUNDG+fSbj1/PQD184tSW0/7JrDGfNpzKZ5e6So9D27to0iNNLujv5e8d4y/29D/G7ZW3YPjsOJ6qLgouAXGOQh+Yqpz6hMXcA02pCG4k7IwLSi+e7Bm/y0QZ3M6EUsPGDPraGB1X2T1pJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=christina-quast.de; spf=pass smtp.mailfrom=christina-quast.de; arc=none smtp.client-ip=116.202.193.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=christina-quast.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=christina-quast.de
-Received: from localhost (unknown [195.162.191.218])
-	by mail.someserver.de (Postfix) with ESMTPSA id 8B6DAA2250;
-	Thu,  1 Feb 2024 19:07:15 +0100 (CET)
-From: Christina Quast <contact@christina-quast.de>
-Date: Thu, 01 Feb 2024 19:06:59 +0100
-Subject: [PATCH v2 2/3] rust: phy: add some phy_driver and genphy_
- functions
+	bh=T86R8HpV7zXDhFND8oowyz9LtpNq2PuQYU95ptdb7h4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O82TbouFsLCEDJsN3rNbYWPVPpq078TgrXhQGJ//mwdKy88epAiZikrUwDH4jzsXZxVHskOLXS5Y2fXX6nS17GIaYK+zMg4q8RMffclJOOFDa6WZEEI20kPzf+qCR0adwkXuaJ1A7SyeQ3paOAIkH3RjI0zVajeaAsZFCZjY4OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dhrGiisU; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dhrGiisU"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5ce942efda5so1062426a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 10:07:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706810837; x=1707415637; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0M7HdB/Ln7k5cmlXcTGUtiNuQylG7V6KZfKoZDxv6bw=;
+        b=dhrGiisUhwadhWWe/IhUv+PQnT3WwpPe5xs2bK/x89Omzjn422liXPn41lYGp73EhX
+         qSYfNEUcNBNYaeCXMFdwQ1ymt5pvhWAe4KJ5gDK/Jy7azgbxIj095YKUGn5EKyAvANmO
+         Qw/UyjuK/OEjVyG/Mth5L0ECmDUbgto4MZqQY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706810837; x=1707415637;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0M7HdB/Ln7k5cmlXcTGUtiNuQylG7V6KZfKoZDxv6bw=;
+        b=w53xhW+TEqjcPZpDDaWsTQQZYkJvn4Ei6nC6r2kFl3FeABoircqPjXcqGhlfZu3YcS
+         PpuPCYz9weulpQVauo1OdAKLhRua7w/jpUQNnQPYh1yIYJUNlmFlj4ciK7KLA/vJXEnw
+         ku7JBdzg69AOKD8vhyw/4WfYrVaxa3uUdQinldYc23Uu1lyCnr6jII46uOWwTJxkjsw9
+         jiuyAMfNf0PlVRJv1y7JE4YuQgMCs594/Py3+kxxSYAOz3NV8Q0CtcOnHhPaYIeXwXza
+         an9424mXIsXtg2W0hdADv1EXuLr6xA/+OIGKezADlnZHRGw8hwkcbo9jiEdPTqWeL1vk
+         aelg==
+X-Gm-Message-State: AOJu0Yz63F2PS/YNHhx2WNJkV007Qto9Qd3vC+QBDjQDcrGuTnuQZopV
+	RjmaqU4Uig7g5wS+2V/7wn76gUMc1AgD1drFPAA1d8mpwufnVdGi2xejUAsuog==
+X-Google-Smtp-Source: AGHT+IGZ50YBlnxuzelc5pTz/pz1j+uj9w9e5PyOrID+cIqF/msxn7RtpGU9s8Ie47wWQ+JqRWi2qw==
+X-Received: by 2002:a05:6a20:2a0f:b0:19e:30b0:6ad4 with SMTP id e15-20020a056a202a0f00b0019e30b06ad4mr2993716pzh.55.1706810837327;
+        Thu, 01 Feb 2024 10:07:17 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVJbAZjXQp86ijsd6GO7kukUS8GlA8+ilpBR2ZFQjKnYO3qfd2ORGJpiLlI8DkOGs/iziWlI+OtxFUCZlrTelSfulEVpQKRDvnjBwu+cF/gsrZ7/xb6/oMzs5Ei9sjltpWK5JrmhSUQ0E0uiDJBNdjJOl7XDYxRriY0u8IhE7lcH/YqgMtJN03est7wBrz8WozfgujI00xFJTdYE+ADgdnL5dRk2V3dyapAO4iJEhbc8d4JUJl4sUThfD6fua+p0pi0pIA89QEjah1n1fX2dMm1jGzkmYWIE8CyY4E/pMoV1xGUagwITwL3Jyj24wnMSUg4OytQXgtd2wAoIg7S3Bu5toJ81NcgHY1czpWerYDbrsossXSKtSQFdTxkk1YBiLOJ0mwJEmcNz+ezCpGlUH5FBuTVfQ==
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d11-20020a63d64b000000b005c661a432d7sm94693pgj.75.2024.02.01.10.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 10:07:16 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: linux-hardening@vger.kernel.org,
+	error27@gmail.com,
+	gustavoars@kernel.org,
+	Bryan Tan <bryantan@vmware.com>,
+	Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	vegard.nossum@oracle.com,
+	darren.kenny@oracle.com
+Subject: Re: [PATCH v2 1/2] VMCI: Use struct_size() in kmalloc()
+Date: Thu,  1 Feb 2024 10:06:58 -0800
+Message-Id: <170681081625.3764000.6431595387488802492.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,107 +76,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240201-rockchip-rust-phy_depend-v2-2-c5fa4faab924@christina-quast.de>
-References: <20240201-rockchip-rust-phy_depend-v2-0-c5fa4faab924@christina-quast.de>
-In-Reply-To: <20240201-rockchip-rust-phy_depend-v2-0-c5fa4faab924@christina-quast.de>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Wedson Almeida Filho <wedsonaf@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@samsung.com>, 
- Alice Ryhl <aliceryhl@google.com>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- Trevor Gross <tmgross@umich.edu>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Heiko Stuebner <heiko@sntech.de>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, 
- Christina Quast <contact@christina-quast.de>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706810819; l=2422;
- i=contact@christina-quast.de; s=20240130; h=from:subject:message-id;
- bh=lj9jzLLyVHFhew0Zi2auFkzyMGCjvKyZGt3bltSvs9k=;
- b=aBY8aB9sq9C6dAXsUFZ7GKm0DaKOL3Rg4HPRhXog0o3VGGiSAUmMpGA4nPU0r6SNJlN/kCQ8Q
- 6lt+pqrQgCmB3oQRdIWJxLCdbPCslYHVrYtUjsrYQoPoH+xjpDn+Imd
-X-Developer-Key: i=contact@christina-quast.de; a=ed25519;
- pk=aoQfinjbnr265vCkIZdYteLDcmIqLBhY1m74WfFUU9E=
+Content-Transfer-Encoding: 8bit
 
-Those functions are need for the rockchip_rust.rs implementation.
+On Fri, 05 Jan 2024 08:39:59 -0800, Harshit Mogalapalli wrote:
+> Use struct_size() instead of open coding.
+> 
+> 
 
-Added functions:
-genphy_config_aneg
-config_init
+Applied to for-next/hardening, thanks!
 
-Getter functions for mdix and speed.
+[1/2] VMCI: Use struct_size() in kmalloc()
+      https://git.kernel.org/kees/c/e03d4910e6e4
+[2/2] VMCI: Fix memcpy() run-time warning in dg_dispatch_as_host()
+      https://git.kernel.org/kees/c/19b070fefd0d
 
-Signed-off-by: Christina Quast <contact@christina-quast.de>
----
- rust/kernel/net/phy.rs | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index e457b3c7cb2f..373a4d358e9f 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -95,6 +95,22 @@ pub fn phy_id(&self) -> u32 {
-         unsafe { (*phydev).phy_id }
-     }
- 
-+    /// Gets the current crossover of the PHY.
-+    pub fn mdix(&self) -> u8 {
-+        let phydev = self.0.get();
-+        // SAFETY: The struct invariant ensures that we may access
-+        // this field without additional synchronization.
-+        unsafe { (*phydev).mdix }
-+    }
-+
-+    /// Gets the speed of the PHY.
-+    pub fn speed(&mut self) -> u32 {
-+        let phydev = self.0.get();
-+        // SAFETY: The struct invariant ensures that we may access
-+        // this field without additional synchronization.
-+        unsafe { (*phydev).speed as u32 }
-+    }
-+
-     /// Gets the state of PHY state machine states.
-     pub fn state(&self) -> DeviceState {
-         let phydev = self.0.get();
-@@ -300,6 +316,15 @@ pub fn genphy_read_abilities(&mut self) -> Result {
-         // So it's just an FFI call.
-         to_result(unsafe { bindings::genphy_read_abilities(phydev) })
-     }
-+
-+    /// Writes BMCR
-+    pub fn genphy_config_aneg(&mut self) -> Result {
-+        let phydev = self.0.get();
-+        // SAFETY: `phydev` is pointing to a valid object by the type invariant of `Self`.
-+        // So it's just an FFI call.
-+        // second param = false => autoneg not requested
-+        to_result(unsafe { bindings::__genphy_config_aneg(phydev, false) })
-+    }
- }
- 
- /// Defines certain other features this PHY supports (like interrupts).
-@@ -583,6 +608,12 @@ fn soft_reset(_dev: &mut Device) -> Result {
-         Err(code::ENOTSUPP)
-     }
- 
-+    /// Called to initialize the PHY,
-+    /// including after a reset
-+    fn config_init(_dev: &mut Device) -> Result {
-+        Err(code::ENOTSUPP)
-+    }
-+
-     /// Probes the hardware to determine what abilities it has.
-     fn get_features(_dev: &mut Device) -> Result {
-         Err(code::ENOTSUPP)
+Take care,
 
 -- 
-2.43.0
+Kees Cook
 
