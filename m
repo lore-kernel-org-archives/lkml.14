@@ -1,306 +1,587 @@
-Received: from refb01.tmes.trendmicro.eu (refb01.tmes.trendmicro.eu [18.185.115.53])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92A682C88
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=18.185.115.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706813880; cv=fail; b=imcS6+H36cmUf3f2O8dOiGxgg0SqrUPr09Ju8nNeMMKNT0XmHk0b2jsVrG1qWQX94pmBi+TPxUzlaR3/evVoUX4NBtZmvdxn2qH6+w8/l0hD02U0E0He79DHv3D58mURQbzSTT3XhJophiYPD5Ddgz0kyWxM5jSGQmvXcrffa0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706813880; c=relaxed/simple;
-	bh=NvZCVdlBjooETymEjP5dwWcbxl1lFmbHfAodrQ+uXtM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mo4iKNNg49xYzd9ONvndxGqZmMIYU/VttfFKbr5/xk5oJy/fP1ZLp9dT2YLq5m5ntX7895UmjHzU6k5k1ElkBrVxO/iB+V3idjxbS6rVuKsGf5Oyox62RPCCT1LCX/xBpSb00c0iGehEEK/Iem4asRCkgk3wGPP9YGuIYOTX0+E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com; spf=pass smtp.mailfrom=opensynergy.com; dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b=FpTt98YJ; arc=fail smtp.client-ip=18.185.115.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensynergy.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E07084FC0;
+	Thu,  1 Feb 2024 18:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706813970; cv=none; b=hBOuIJl+lOLr9Ew6ceojNmq4IR3bsg+fg7jyIet8SFJ8Y0OTZ8Oo/i6m0zvnvOQLt3sQ9/vWqY5VJnC3ZDHOY+nbcrW3693a086pyZJMP//OLsQeFGh1WsA7dBJ7+vGrWHYjIeZkaK3xfZiG7Nir0Spv+rfkP7uvk0FEN2O53G8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706813970; c=relaxed/simple;
+	bh=AOqkuc3mA1ZmdTqkaTNKPOdUeF+sPETOFfQiypVXHO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VB+T4aqRjFg5IvSsHxTCKQ+uHWtTGtnZ4ZUGvrOxQhSIEtUZtf+fEnMx2tLpiEroyLkPdv19kgbhsEXYGmsK3ji86AOuT2Q548RqkMmTCUDeufvpONDbfGHMqJSxySz3+UaBKwhFLd8s42uH1n6yTG3xaV7yVF5xc7U8bMgjcsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Mjhp/YgE; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b="FpTt98YJ"
-Received: from 104.47.7.169_.trendmicro.com (unknown [172.21.19.160])
-	by refb01.tmes.trendmicro.eu (Postfix) with ESMTPS id 7E74A10D147BF;
-	Thu,  1 Feb 2024 18:57:56 +0000 (UTC)
-Received: from 104.47.7.169_.trendmicro.com (unknown [172.21.193.99])
-	by repost01.tmes.trendmicro.eu (Postfix) with SMTP id 047EC10000D1A;
-	Thu,  1 Feb 2024 18:57:49 +0000 (UTC)
-X-TM-MAIL-RECEIVED-TIME: 1706813868.322000
-X-TM-MAIL-UUID: 421b226b-1217-4c65-b062-cf62a88bdf10
-Received: from DEU01-BE0-obe.outbound.protection.outlook.com (unknown [104.47.7.169])
-	by repre01.tmes.trendmicro.eu (Trend Micro Email Security) with ESMTPS id 4EBB110000318;
-	Thu,  1 Feb 2024 18:57:48 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FPp/OBSKVSYk5q7rDw89D0HPW88NTGzqJqSoDBpYa8B/HGdIPiAoODz/NT8ki/NgA2hCkLDN2Sn6PJuI9cB3BDq2nTDhAGgFe+vF8jehtwrPO1klFShDKh8GXCIucNm7fvp2OxsoWk3PXTMsaOOGiGUWJywBjdz6as5KV6LmGjt4L4SFeCK7Zk/VQ61WfiL/+/OIs/f6A8oUAz2J/7FedwTSPlNq4mLRo1kSv6tgfW0CddxX5WMjMJsLTtUst1m1jrb6daojjUirfhpViwMtfUPCPTbr3hHnYGhX1K5s3gJWxhV4s0WIViVOiX6l1CtgtTYyF3YEcy9n6czTowMXeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TreiSjs2OMzERptZ9oCUgtUY8csOB85O62YcB/aYjVI=;
- b=iWxH52mTrU/hQeWmvUVKeE1jGPIFmf2QGhGKHDo4KLNP2dCZavSR1ZEtplBQYj6J+1Wk41J9uU9fbv5/aqftO9FAGnY3PJFPyAbXPNqcTW43dSkkn9TZGkfsxED/E8VSbdoZJw3eX/7aJAs5Cg69IlWepDB0StlCb73apRQxyiF9x0wKDc68vnuVRVL5REdDaHkIRk91zrEUPXXVpawf8LY7bWu75TFfhWrC2WNTixPcIvybbjvXb6mZbLGheU96oUidYn9i4IkfMsjqYfIdH9eqoH67rHWVUq6NY204Dcwxku0xYzL1C/wcQnrmjIZpnI+yCcIZwhCsGyDDRUcSxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=opensynergy.com; dmarc=pass action=none
- header.from=opensynergy.com; dkim=pass header.d=opensynergy.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=opensynergy.com;
-Message-ID: <0878aedf-35c2-4901-8662-2688574dd06f@opensynergy.com>
-Date: Thu, 1 Feb 2024 19:57:45 +0100
-Subject: Re: [PATCH v5] can: virtio: Initial virtio CAN driver.
-Content-Language: en-US
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Mikhail Golubev-Ciuchea <Mikhail.Golubev-Ciuchea@opensynergy.com>,
- Wolfgang Grandegger <wg@grandegger.com>,
- Marc Kleine-Budde <mkl@pengutronix.de>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: Damir Shaikhutdinov <Damir.Shaikhutdinov@opensynergy.com>,
- linux-kernel@vger.kernel.org, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, virtualization@lists.linux.dev
-References: <20240108131039.2234044-1-Mikhail.Golubev-Ciuchea@opensynergy.com>
- <a366f529-c901-4cd1-a1a6-c3958562cace@wanadoo.fr>
-From: Harald Mommer <harald.mommer@opensynergy.com>
-In-Reply-To: <a366f529-c901-4cd1-a1a6-c3958562cace@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0061.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ce::7) To BEZP281MB2279.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:56::10)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Mjhp/YgE"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 411CS7sK012505;
+	Thu, 1 Feb 2024 19:33:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=gzJ24ZXAV5ws0PQ9Gy6w1fWQIRpK+wHRqE6kVfCt1BI=; b=Mj
+	hp/YgEEe3T/JJxUrdCB5EfLXyWzRH5pVlkUZ8sS8wd9AtvTMWepWYG8E3xYFWBrZ
+	ZDnqsa+5Ihw5KgAfB4+U8fMy1CMmEgyZdtM5/N9CA30/WtNrfOLEBuuAcPwAuz8F
+	GEbQoXa5svCNkLOQoq37BpqPrApuZbNy9CUS7GpKNcYB2tXKsX9fY+K3voOo40vC
+	zf4SMTaTuWHQrF2xMkKSsbeFDfJQIIb86ihtzKmzbtRXTOXktP4beD0+232ezJYe
+	OLp4YOO2ucUAtr8e7+MEZ1fUD0eurF4iEX9qpjH/8CpGVZ2c3o5jdAQPC/xaLZQ5
+	Ut7W+c50XZOX8I20L+cw==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3vwdnp3u6p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Feb 2024 19:33:48 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ADD29100053;
+	Thu,  1 Feb 2024 19:33:37 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8E28B2C38BF;
+	Thu,  1 Feb 2024 19:33:37 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 1 Feb
+ 2024 19:33:37 +0100
+Received: from [10.201.20.75] (10.201.20.75) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 1 Feb
+ 2024 19:33:36 +0100
+Message-ID: <a52e00c5-fb60-4a9e-85ff-0f9649850f48@foss.st.com>
+Date: Thu, 1 Feb 2024 19:33:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BEZP281MB2279:EE_|BEZP281MB2343:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4896b714-0591-443f-9137-08dc2357ae0e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	mxw5tNZakE0cWvyRt5aspxzHg7gWlvjtiizuzqzTzZE3NzMe5A3wDihFrnOJGjfsnlkQU3a674y1RXCYJSk8ox0vGC/oHQ4AU11FYMC5ONqcoWQppZxCiFsii+FZQx9J1a/5TcONO6IOdT64x4cXFJbrhnMYqiwe3EcvGrGhK2ymSXbEU4Fcv2BFCw2wWWv8kFWvHThl+aBVscdb06+tWj+ej4lkGqyqPxxsV7Gd3BCcWQHmuglyDKDZjbSqOnLFMlmKeqQskdosUevT3BhARJlNN0IJwnUHdh3ZZqwXuxW9hKntk75ghZDy8wHfSlhlBLxPp5dbNo8QPKnrN6v28BtmDikYfdpCpskiFdA5qczsBBA+r52tVFt/6bqvATF7BSGv2ZoxMBSfi22Gma+1h5xD8YMxLYUhtiDU8nD3jg9IVtoMnjiGDre7V2tmwOain0IsiZ2dkQnC/Dz6OXMyr+tcoEX8rBh3vX7quXdp5VmYVkVXXmGyhBp031Q3PLDrIeJmdU8fYeKvptE4OsEB9De8e1xkwouyKfzKRz+7jEbon8V/jxqfy8oPuVvlKOAz62bvFDSfh7iTrDFWfTyrIq59Qvq0HZsmb27JXYXUGW8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BEZP281MB2279.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(39850400004)(396003)(376002)(136003)(366004)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(2906002)(36756003)(41300700001)(921011)(66946007)(38100700002)(42186006)(86362001)(66556008)(66476007)(316002)(110136005)(31696002)(2616005)(26005)(53546011)(478600001)(83380400001)(5660300002)(44832011)(8676002)(31686004)(7416002)(4326008)(8936002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bFVRRExZcWVBUDZMT3VjTDBRSFE4WklNak1pQU41YzA1NnJ4QStFVStKZzVG?=
- =?utf-8?B?bjBMZGNaZExvQkZUTE5hOEJyNWlReWtkSHNqdUt4RC9UTmJ5UjB0cS9WWTgz?=
- =?utf-8?B?WGx1MWVqOUhOS1dmNFBYYWo5dGY5dlFSUWZLckdKN2svMXowYTNZeGViN1hN?=
- =?utf-8?B?bFJMYTRYYkFlcnp6MWVWRStQK0ptTGVPZ2RteWtWZHVCSkRJT3pGN1hRYThZ?=
- =?utf-8?B?L0grNm0vNHVBL2lOQmp1WFVYQThKVmtiT2U3MkNHMGVtVTRodGtlRHRxa3Jr?=
- =?utf-8?B?T1Y5ZDRKTUFhUWlSSmlmWkxnSUZobzU4SG0xY25pc09MYlNXbGkyOTFQZzl5?=
- =?utf-8?B?cTY1VXU3NDVqUitqTjdNL0R4eU5RSkZ3Tld0a1EwbmJwZURwZHVzcXpDcE9O?=
- =?utf-8?B?QThDNWxmNlZtTzR4Mlk3QnRydDFWWGdzUHhzMnVneXBrVXlWUFl2UEhuTXVR?=
- =?utf-8?B?NHVTbG8vRU4vN1ZzNmU1NFhSNjNXWFcrcExScGZLR0JIVHhWS1JkWDlOM3lC?=
- =?utf-8?B?TmgzRlR0cmJ3NGFHM0hKeFVITVVvbW12ZnUzMkZCYkYxcHl2YS92bDVoNFBR?=
- =?utf-8?B?dlZNYnhBb3ZNQ3VYMVZ6SWRDS1VGTlRDUUczYVpXN1ZoVW44SnZOSzR3M1RM?=
- =?utf-8?B?TTZjeVFjM1ZkTEJ6amY5aDNPdERESWJEWXhUOHZQNG04TU53bHJrNHlja3lE?=
- =?utf-8?B?YzA1UGhxU2xWWTF6cTJBUlR0YkF1WGYvdjlhd2pURFh4V3pXeUNXbUdPM1Z3?=
- =?utf-8?B?SC81dkY3TnlMK1Yxb3BNWUMzNnlyWk9ZSmVacms0ZWxMRTlSU0M5MzFqbzZT?=
- =?utf-8?B?Sis0anBCSm1pR2U2VlpZWFllZlBMbEF2THc1aTRKNUdydUwwZGRIMmhkaGZm?=
- =?utf-8?B?RjRGRUtpb3FVVHpKQ0xMUDdvN2VOeXRvNDVSOVJHV2l4STZLdmRWTjgyNlpG?=
- =?utf-8?B?cUVtUlZNWWk2bDZtWGxQN2o1OVNNN1V3TVdhL2xCalM1U1FibmlseDNYRzhK?=
- =?utf-8?B?RFptUG5XQlFzdTcrY09BOCtuaTRZN3NKQ05mVWNKR3c0TytEQmw3SmtiK1R3?=
- =?utf-8?B?Q0llZzNNalZTQjdpRFF0V05LeGtKZHFSSVZUeXhETHBGM1A5STZYV0FQdC82?=
- =?utf-8?B?cENhMW1GaWM1M0J2a2FhcFBmRE14YlJYZ2JkRWFDNDZrMDRSWG9nVUZjRi9y?=
- =?utf-8?B?cVRGWGc1N1FhSU1yaFVxNHBUL3RXU0pTOVRMUmVVMjBRMTFPZEY0MDM2ajU5?=
- =?utf-8?B?aTFzZ0FHUEpDMTM2WmVYRkNNTVJ2dUE0Mzd0RENpWFlsZ0hOVkFFc3lwUmlS?=
- =?utf-8?B?Q1lhR3h2VlFyZVVxZU1SSEpYWDBGWDVBaDF6THlSdUs0UXV0UE9LdFE5WFJZ?=
- =?utf-8?B?SzZuMnRGSXJqREY1Lzc4bDdQM3B1YWdBZFp6UWZCaE5zVXpyZ2ZiVWFmS0da?=
- =?utf-8?B?K2paSXd3NDY4OEkwTzJPUVpKZmxxMG5GQ05hQis2R3RJUFRXM0pmSnhpTmgv?=
- =?utf-8?B?YW5kMnMxQjdvMTRIdWZlRlVoRDRSS04wK2FQc2VUc3U2MGFUSDF2M1RrMVU5?=
- =?utf-8?B?TVdtNG9ySjRkRVkzTDV5UGlvYmZ6eWJOQWlkVHBKSzVWc29hanl1RUcxNTdL?=
- =?utf-8?B?ckk5RlBOQi9PUGhHbjhqWWhFVnVxR3BrMkJ1RjRxY21hcWhUSTFrYzhVbDU0?=
- =?utf-8?B?VlNKTTY4dlp4dGhtQm4wd0w2cXdtbEN5WXJrZVUwbGV0ODVGL3FZQU5xUVlK?=
- =?utf-8?B?b0g3OTJGNkhIbHNwSUNzOUJRU25IYlJ5WEtpTG5RUnppczhGUm1xUHh4dGhE?=
- =?utf-8?B?STRpV05jN2VOZkFYVVF4YXZzRWdnd2s1LzVxcXRlVndybWdzTTBPNzJvVjBO?=
- =?utf-8?B?bWNKSlZBbFR0djFYOVFnamZ2cnd1OUdmSi9zMWUxbm81RzZEMjlwa240SGl3?=
- =?utf-8?B?Z1hLUHBiWDlnT3YrcnVXRW5BRHFtdlVqZGpTckFYbG9yem9oU0tVWDZvQnRm?=
- =?utf-8?B?OHYrc0I1TWp1UHhUbnErLzA5UFZaOHhITmhzalRCOXQ1cnJvcWRpZ2IzM3Z2?=
- =?utf-8?B?MWh5NmZxbmtsSjVaaExKWnhGQXFPUGgxdkp2Zm1CM2FpcmJ3c1htVGRDVUVT?=
- =?utf-8?Q?ihFXTX7gWGp2hPbbteawBCfDI?=
-X-OriginatorOrg: opensynergy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4896b714-0591-443f-9137-08dc2357ae0e
-X-MS-Exchange-CrossTenant-AuthSource: BEZP281MB2279.DEUP281.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 18:57:47.0024
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 800fae25-9b1b-4edc-993d-c939c4e84a64
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2p1N4jtRwYjRZKdoihYc83eyXqeQJn91xZMF5Vz/1IfthCwaFUqdU+pSoNehWj3fRF2BrXzqnZ3cUImHVM7Vpw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BEZP281MB2343
-X-TM-AS-ERS: 104.47.7.169-0.0.0.0
-X-TMASE-Version: StarCloud-1.3-9.1.1015-28158.001
-X-TMASE-Result: 10--20.387600-4.000000
-X-TMASE-MatchedRID: UuaOI1zLN1j7aDO4CTTXAUu+LBodhvWx3B1hSgpgA3NLbD6MAjV/HXkS
-	2NLbu9vrHe/Upp/4ecR55GhBiSRnqdLnVLHHb0BJJ96EZQbLI1wnfL6KqKSjb7AFnlFVORaFHzZ
-	m1Hzj3+G2Jx4NJM8XQj0PPrfB1Bh4PNrwgyWv0FiFhGp9GNPDremlj3mhNSlqjuOgrRhTc4Aovn
-	Wk0W+Kc5wF9/WUecaz/goanha5wsKVUfMM1YjB30kXVQaP16N5AJ4bT6ig74ci1tnHAtK8I+TWQ
-	MB+YaBlLqQeOQ4Yktfi8HzKNwucr8imVA71DJInuva7QpapAo3j08NQZZ6WgbDKT8rFLjFMW/1Y
-	AH/fjRTfXDU2ciEUMsKjGRQnQ81hjWDfMO3Wy/k0UkwbRDtAu1xQCEUiIhCicYO7LzLWqS4D/dH
-	yT/Xh7Q==
-X-TMASE-XGENCLOUD: 6a90687c-9de7-4693-b320-4061278f29e6-0-0-200-0
-X-TM-Deliver-Signature: EB7D5A088DDC6AE0F39EE35575067D4B
-X-TM-Addin-Auth: PhzsgAzHGC0aLkhDNMKp7S9baJwBQqI2AXgWIqhHN5vMhjIJ89CJSi7axkl
-	hMfZkidWRo+Kch2P/UjXzC7CARNhRqZbKVz64DPCNUPqASvL63Hj5D5IJmTo39GwiHVHS/maEL9
-	RZNJ26NKFIGGrGrNg0ANrq9T8p3lFJMhDhwvMVdC2zwfx8DyP6sKyJZkK5+3wqeWCLI2ks5hlh8
-	Ww9a+3kw41muMUMpL3diRF7MBKmqIUzv0MSSZgj4hEUyycdxZ93lXkdCYZMWnmMioL280w0dTkQ
-	IzvhKOwEk9Fqrk0=.Roo4zbJplWNWZ09rQRHFs0UmDpwD4iIqY+1C+ZXrw2ozIT2XcpkTM8rDu9
-	DFDMmc6BX6kWfnz7i6mlpZCzKCwXBJyqFRLWGsW703NxzC6IU20iy3TNAuFejoXiI0UXu/+ctyV
-	9650UdwfahYsP0gPmGjy/YuEIGbqdKhEdF1OXqNf2+kYtdifHK3Y6f8HSoGGWvImJKNpZYGeEj6
-	k7WVHmtSllxefODMbLeY3JqnfpJR/MkbTqJB6/u7aSK7r6DFGP+4LFhDUKBENmX3bVmdLWQjsh3
-	AQPMJS5SpiEhMs3aF50TVE+d3r4RguvZ/vptTDzTgCZcB82EhuUhpe29VVQ==
-X-TM-Addin-ProductCode: EMS
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=opensynergy.com;
-	s=TM-DKIM-20210503141657; t=1706813868;
-	bh=NvZCVdlBjooETymEjP5dwWcbxl1lFmbHfAodrQ+uXtM=; l=3745;
-	h=Date:To:From;
-	b=FpTt98YJa9vWjxpqzvqfILqW4TwH958qOn+/1hkusgvua7U8mFuAt4FsWZ6zL3tQ/
-	 9LyLvlFT4pt80c+dk6UJJ0sk8hkMLT8XLyXQWSHhO60+noS4oBVjUYx/lOnz7Opr3C
-	 boX1fyYC7EhYFXdH2FFsN1sPA3KMiyDQEYSQx7OF7LC02yRgo98F6FdmQUuEeMa/gV
-	 zl8/Xy4DuqimHns41tbNm/K5KBhb9RDRJ77X11X8fHuA6tdlGDeoPxa6bqRPvmf3dQ
-	 RTm3yoUHB7xIRzaEUL3d4jyYeM5RLDYYPctJUyPVM7boxke/Ya+pXHcX6zHbs6dpeF
-	 B7BmKmQkH4Qjw==
-
-Hello,
-
-I thought there would be some more comments coming and I could address 
-everything in one chunk. Not the case, besides your comments silence.
-
-On 08.01.24 20:34, Christophe JAILLET wrote:
->
-> Hi,
-> a few nits below, should there be a v6.
->
-
-I'm sure there will be but not so soon. Probably after acceptance of the 
-virtio CAN specification or after change requests to the specification 
-are received and the driver has to be adapted to an updated draft.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] remoteproc: stm32: Add support of an OP-TEE TA to
+ load the firmware
+Content-Language: en-US
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Jens Wiklander
+	<jens.wiklander@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>
+References: <20240118100433.3984196-1-arnaud.pouliquen@foss.st.com>
+ <20240118100433.3984196-5-arnaud.pouliquen@foss.st.com>
+ <ZbPnsJm67G10+HQ3@p14s> <7ec6c9e8-9267-4e7c-81a4-abcdb2ab4239@foss.st.com>
+ <ZbqW5YfDmEWG4G1X@p14s> <8ede77bb-0fbc-4de2-b51b-67674744b551@foss.st.com>
+ <ZbvAmxHscnbUQGOD@p14s>
+From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Organization: STMicroelectronics
+In-Reply-To: <ZbvAmxHscnbUQGOD@p14s>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-01_05,2024-01-31_01,2023-05-22_02
 
 
->
->> +static int virtio_can_alloc_tx_idx(struct virtio_can_priv *priv)
->> +{
->> +    int tx_idx;
+
+On 2/1/24 17:02, Mathieu Poirier wrote:
+> On Thu, Feb 01, 2024 at 04:06:37PM +0100, Arnaud POULIQUEN wrote:
+>> hello Mathieu,
+>>
+>> On 1/31/24 19:52, Mathieu Poirier wrote:
+>>> On Tue, Jan 30, 2024 at 10:13:48AM +0100, Arnaud POULIQUEN wrote:
+>>>>
+>>>>
+>>>> On 1/26/24 18:11, Mathieu Poirier wrote:
+>>>>> On Thu, Jan 18, 2024 at 11:04:33AM +0100, Arnaud Pouliquen wrote:
+>>>>>> The new TEE remoteproc device is used to manage remote firmware in a
+>>>>>> secure, trusted context. The 'st,stm32mp1-m4-tee' compatibility is
+>>>>>> introduced to delegate the loading of the firmware to the trusted
+>>>>>> execution context. In such cases, the firmware should be signed and
+>>>>>> adhere to the image format defined by the TEE.
+>>>>>>
+>>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+>>>>>> ---
+>>>>>> V1 to V2 update:
+>>>>>> - remove the select "TEE_REMOTEPROC" in STM32_RPROC config as detected by
+>>>>>>   the kernel test robot:
+>>>>>>      WARNING: unmet direct dependencies detected for TEE_REMOTEPROC
+>>>>>>      Depends on [n]: REMOTEPROC [=y] && OPTEE [=n]
+>>>>>>      Selected by [y]:
+>>>>>>      - STM32_RPROC [=y] && (ARCH_STM32 || COMPILE_TEST [=y]) && REMOTEPROC [=y]
+>>>>>> - Fix initialized trproc variable in  stm32_rproc_probe
+>>>>>> ---
+>>>>>>  drivers/remoteproc/stm32_rproc.c | 149 +++++++++++++++++++++++++++++--
+>>>>>>  1 file changed, 144 insertions(+), 5 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+>>>>>> index fcc0001e2657..cf6a21bac945 100644
+>>>>>> --- a/drivers/remoteproc/stm32_rproc.c
+>>>>>> +++ b/drivers/remoteproc/stm32_rproc.c
+>>>>>> @@ -20,6 +20,7 @@
+>>>>>>  #include <linux/remoteproc.h>
+>>>>>>  #include <linux/reset.h>
+>>>>>>  #include <linux/slab.h>
+>>>>>> +#include <linux/tee_remoteproc.h>
+>>>>>>  #include <linux/workqueue.h>
+>>>>>>  
+>>>>>>  #include "remoteproc_internal.h"
+>>>>>> @@ -49,6 +50,9 @@
+>>>>>>  #define M4_STATE_STANDBY	4
+>>>>>>  #define M4_STATE_CRASH		5
+>>>>>>  
+>>>>>> +/* Remote processor unique identifier aligned with the Trusted Execution Environment definitions */
+>>>>>> +#define STM32_MP1_M4_PROC_ID    0
+>>>>>> +
+>>>>>>  struct stm32_syscon {
+>>>>>>  	struct regmap *map;
+>>>>>>  	u32 reg;
+>>>>>> @@ -90,6 +94,8 @@ struct stm32_rproc {
+>>>>>>  	struct stm32_mbox mb[MBOX_NB_MBX];
+>>>>>>  	struct workqueue_struct *workqueue;
+>>>>>>  	bool hold_boot_smc;
+>>>>>> +	bool fw_loaded;
+>>>>>> +	struct tee_rproc *trproc;
+>>>>>>  	void __iomem *rsc_va;
+>>>>>>  };
+>>>>>>  
+>>>>>> @@ -257,6 +263,91 @@ static int stm32_rproc_release(struct rproc *rproc)
+>>>>>>  	return err;
+>>>>>>  }
+>>>>>>  
+>>>>>> +static int stm32_rproc_tee_elf_sanity_check(struct rproc *rproc,
+>>>>>> +					    const struct firmware *fw)
+>>>>>> +{
+>>>>>> +	struct stm32_rproc *ddata = rproc->priv;
+>>>>>> +	unsigned int ret = 0;
+>>>>>> +
+>>>>>> +	if (rproc->state == RPROC_DETACHED)
+>>>>>> +		return 0;
+>>>>>> +
+>>>>>> +	ret = tee_rproc_load_fw(ddata->trproc, fw);
+>>>>>> +	if (!ret)
+>>>>>> +		ddata->fw_loaded = true;
+>>>>>> +
+>>>>>> +	return ret;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int stm32_rproc_tee_elf_load(struct rproc *rproc,
+>>>>>> +				    const struct firmware *fw)
+>>>>>> +{
+>>>>>> +	struct stm32_rproc *ddata = rproc->priv;
+>>>>>> +	unsigned int ret;
+>>>>>> +
+>>>>>> +	/*
+>>>>>> +	 * This function can be called by remote proc for recovery
+>>>>>> +	 * without the sanity check. In this case we need to load the firmware
+>>>>>> +	 * else nothing done here as the firmware has been preloaded for the
+>>>>>> +	 * sanity check to be able to parse it for the resource table.
+>>>>>> +	 */
+>>>>>
+>>>>> This comment is very confusing - please consider refactoring.  
+>>>>>
+>>>>>> +	if (ddata->fw_loaded)
+>>>>>> +		return 0;
+>>>>>> +
+>>>>>
+>>>>> I'm not sure about keeping a flag to indicate the status of the loaded firmware.
+>>>>> It is not done for the non-secure method, I don't see why it would be needed for
+>>>>> the secure one.
+>>>>>
+>>>>
+>>>> The difference is on the sanity check.
+>>>> - in rproc_elf_sanity_check we  parse the elf file to verify that it is
+>>>> valid.
+>>>> - in stm32_rproc_tee_elf_sanity_check we have to do the same, that means to
+>>>> authenticate it. the authentication is done during the load.
+>>>>
+>>>> So this flag is used to avoid to reload it twice time.
+>>>> refactoring the comment should help to understand this flag
+>>>>
+>>>>
+>>>> An alternative would be to bypass the sanity check. But this lead to same
+>>>> limitation.
+>>>> Before loading the firmware in remoteproc_core, we call rproc_parse_fw() that is
+>>>> used to get the resource table address. To get it from tee we need to
+>>>> authenticate the firmware so load it...
+>>>>
+>>>
+>>> I spent a long time thinking about this patchset.  Looking at the code as it
+>>> is now, request_firmware() in rproc_boot() is called even when the TEE is
+>>> responsible for loading the firmware.  There should be some conditional code
+>>> that calls either request_firmware() or tee_rproc_load_fw().  The latter should
+>>> also be renamed to tee_rproc_request_firmware() to avoid confusion.
+>>
+>>
+>> The request_firmware() call is needed in both cases to get the image from the
+>> filesystem. The tee_rproc_load_fw() gets, as input, the struct firmware provided
+>> by request_firmware().
+> 
+> The cover letter clearly state the secure side is responsible for loading the
+> firmware image but here you're telling me it has to be loaded twice.  This is
+> very confusing.
+
+Concerning the call of request_firmware()
+
+By "both cases" I would say that the call of request_firmware() is needed in
+both modes:
+- the ELF firmware is parsed and loaded by linux (legacy)
+- the binary firmware is parsed and loaded by OP-TEE.
+
+The Op-TEE is not able to get the firmware image from the file system.
+
+
+Concerning the call of tee_rproc_load_fw twice time
+
+There are 2 use cases:
+
+- First boot of the remote processor:
+
+  1) The Linux rproc gets the binary firmware image from the file system by
+     calling  request_firmware(). A copy is stored in memory.
+  2) the linux performs a sanity check on the firmware calling
+     rproc_fw_sanity_check()
+	=> from OP-TEE point of view this means to autenticate the firmware
+	=> let consider in this exemple that we bypass this step
+           (ops->sanity_check = NULL)
+		
+  3) the linux rproc call rproc_parse_fw() to get the resource table
+	=> From OP-TEE point of view the resource table is available only when
+           the firmware is loaded
+	=> We need to call tee_rproc_load_fw() to be able then to get the
+           address of the resource table.
+  4) The Linux rproc calls rproc_handle_resources() to parse the resource table.
+  5) The linux rproc calls rproc_start()
+	- load the firrmware calling rproc_load_segments()
+		=> we don't want to call tee_rproc_load_fw() it a second time
+	- start the firmware calling ops->start()
+
+- Reboot on crash recovery using rproc_boot_recovery()
+
+  1)  The Linux rproc gets the binary firmware image from the file system by
+     calling request_firmware(). A copy is stored in memory.
+  5) The linux rproc calls rproc_start()
+	- load the firrmware calling rproc_load_segments()
+		=> we have to call tee_rproc_load_fw() to reload the firmware
+	- start the firmware calling ops->start()
+
+In first use case we have to load the firmware on rproc_parse_fw(), in second
+usecase on rproc_load_segments().
+
+This is the point I have tried to solve with the ddata->fw_loaded variable.
+
+> 
+> I'm also confused as to why stm32_rproc_tee_elf_sanity_check() is calling
+> tee_rproc_load_fw().  There should be one call to load the firmware and another
+> to perform a sanity check on it.  If the sanity check is done at load time by
+> the secure world then ops::sanity_check() is NULL.
+
+Sure, make sense to remove the sanity_check ops
+
+Thanks,
+Arnaud
+
+> 
+> Most of what this patchset does makes sense, but some of it needs to be moved
+> around.  
+> 
+> Thanks,
+> Mathieu
+> 
+>>
+>> If we want to integrate in remoteproc_core the solution could probably have to
+>> create the equivalent of the rproc_fw_boot() to load the firmware with an
+>> external method. Here is an example based on a new rproc_ops ( not tested)
+>>
+>> + static int rproc_fw_ext_boot(struct rproc *rproc, const struct firmware *fw)
+>> + {
+>> + 	struct device *dev = &rproc->dev;
+>> + 	const char *name = rproc->firmware;
+>> + 	int ret;
 >> +
->> +    tx_idx = ida_alloc_range(&priv->tx_putidx_ida, 0,
->> +                 priv->can.echo_skb_max - 1, GFP_KERNEL);
->> +    if (tx_idx >= 0)
->> +        atomic_add(1, &priv->tx_inflight);
->
-> atomic_inc() ?
-
-
-Yes, will be done, already in my local code base.
-
-
->
 >> +
->> +    return tx_idx;
->> +}
+>> + 	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>> + 	
+>> + 	/* ops to load and start the remoteprocessor */
+>> + 	ret = rproc->ops->boot(rproc, fw);
+>> + 	if (ret)
+>> + 		return ret;
 >> +
->> +static void virtio_can_free_tx_idx(struct virtio_can_priv *priv,
->> +                   unsigned int idx)
->> +{
->> +    ida_free(&priv->tx_putidx_ida, idx);
->> +    atomic_sub(1, &priv->tx_inflight);
->
-> atomic_dec() ?
-
-
-See above.
-
-
->
->> +}
->
-> ...
->
->> +static int virtio_can_probe(struct virtio_device *vdev)
->> +{
->> +    struct virtio_can_priv *priv;
->> +    struct net_device *dev;
->> +    int err;
+>> + 	/*
+>> + 	 * if enabling an IOMMU isn't relevant for this rproc, this is
+>> + 	 * just a nop
+>> + 	 */
+>> + 	ret = rproc_enable_iommu(rproc);
+>> + 	if (ret) {
+>> + 		dev_err(dev, "can't enable iommu: %d\n", ret);
+>> + 		return ret;
+>> + 	}
 >> +
->> +    dev = alloc_candev(sizeof(struct virtio_can_priv),
->> +               VIRTIO_CAN_ECHO_SKB_MAX);
->> +    if (!dev)
->> +        return -ENOMEM;
+>> + 	/* Prepare rproc for firmware loading if needed */
+>> + 	ret = rproc_prepare_device(rproc);
+>> + 	if (ret) {
+>> + 		dev_err(dev, "can't prepare rproc %s: %d\n", rproc->name, ret);
+>> + 		goto disable_iommu;
+>> + 	}
 >> +
->> +    priv = netdev_priv(dev);
+>> + 	ret = rproc_set_rsc_table(rproc);
+>> + 	if (ret) {
+>> + 		dev_err(dev, "can't load resource table: %d\n", ret);
+>> + 		goto unprepare_device;
+>> + 	}
 >> +
->> +    ida_init(&priv->tx_putidx_ida);
 >> +
->> +    netif_napi_add(dev, &priv->napi, virtio_can_rx_poll);
->> +    netif_napi_add(dev, &priv->napi_tx, virtio_can_tx_poll);
+>> + 	/* reset max_notifyid */
+>> + 	rproc->max_notifyid = -1;
 >> +
->> +    SET_NETDEV_DEV(dev, &vdev->dev);
+>> + 	/* reset handled vdev */
+>> + 	rproc->nb_vdev = 0;
 >> +
->> +    priv->dev = dev;
->> +    priv->vdev = vdev;
->> +    vdev->priv = priv;
+>> + 	/* handle fw resources which are required to boot rproc */
+>> + 	ret = rproc_handle_resources(rproc, rproc_loading_handlers);
+>> + 	if (ret) {
+>> + 		dev_err(dev, "Failed to process resources: %d\n", ret);
+>> + 		goto clean_up_resources;
+>> + 	}
 >> +
->> +    priv->can.do_set_mode = virtio_can_set_mode;
->> +    /* Set Virtio CAN supported operations */
->> +    priv->can.ctrlmode_supported = CAN_CTRLMODE_BERR_REPORTING;
->> +    if (virtio_has_feature(vdev, VIRTIO_CAN_F_CAN_FD)) {
->> +        err = can_set_static_ctrlmode(dev, CAN_CTRLMODE_FD);
->> +        if (err != 0)
->> +            goto on_failure;
->> +    }
+>> + 	/* Allocate carveout resources associated to rproc */
+>> + 	ret = rproc_alloc_registered_carveouts(rproc);
+>> + 	if (ret) {
+>> + 		dev_err(dev, "Failed to allocate associated carveouts: %d\n",
+>> + 			ret);
+>> + 		goto clean_up_resources;
+>> + 	}
 >> +
->> +    /* Initialize virtqueues */
->> +    err = virtio_can_find_vqs(priv);
->> +    if (err != 0)
->> +        goto on_failure;
+>> + 	return 0;
 >> +
->> +    INIT_LIST_HEAD(&priv->tx_list);
->> +
->> +    spin_lock_init(&priv->tx_lock);
->> +    mutex_init(&priv->ctrl_lock);
->> +
->> +    init_completion(&priv->ctrl_done);
->> +
->> +    virtio_can_populate_vqs(vdev);
->> +
->> +    register_virtio_can_dev(dev);
->
-> Check for error?
-
-
-     err = register_virtio_can_dev(dev);
-     if (err) {
-         virtio_can_del_vq(vdev);
-         dev_err(&vdev->dev, "Couldn't register candev (err=%d)\n", err);
-         goto on_failure;
-     }
-
-
->
-> CJ
->
->> +
->> +    napi_enable(&priv->napi);
->> +    napi_enable(&priv->napi_tx);
->> +
->> +    /* Request device going live */
->> +    virtio_device_ready(vdev); /* Optionally done by 
->> virtio_dev_probe() */
-
-
-The virtio_device_ready() will also be removed. The caller will make the 
-device live anyway after return. There are no operations between the 
-virtio_device_ready() and the return 0 which make it necessary to have 
-the device live early before the return.
-
-
->> +
->> +    return 0;
->> +
->> +on_failure:
->> +    virtio_can_free_candev(dev);
->> +    return err;
->> +}
->
-> ...
->
-
+>> + clean_up_resources:
+>> + 	rproc_resource_cleanup(rproc);
+>> + unprepare_rproc:
+>> + 	/* release HW resources if needed */
+>> + 	rproc_unprepare_device(rproc);
+>> + disable_iommu:
+>> + 	rproc_disable_iommu(rproc);
+>> + 	return ret;
+>> + }
+>>
+>>
+>> int rproc_boot(struct rproc *rproc)
+>> {
+>> [...]
+>>
+>> - 		ret = rproc_fw_boot(rproc, firmware_p);
+>> + 		if(rproc->ops->boot)
+>> + 			ret = rproc_fw_ext_boot(rproc, firmware_p);
+>> + 		else
+>> + 			ret = rproc_fw_boot(rproc, firmware_p);
+>>
+>> Another advantage of this solution is that it opens the framework to other
+>> formats. For instance it could be a way to support dtb format requested in [RFC]
+>> Passing device-tree to remoteproc [1].
+>>
+>> [1]
+>> https://lore.kernel.org/linux-remoteproc/f67cd822-4e29-71f2-7c42-e11dbaa6cd8c@kalrayinc.com/T/#t
+>>
+>> Thanks,
+>> Arnaud
+>>
+>>
+>>
+>>>
+>>> I touched on that before but please rename rproc_tee_get_rsc_table() to
+>>> rproc_tee_elf_load_rsc_table().  I also suggest to introduce a new function,
+>>> rproc_tee_get_loaded_rsc_table() that would be called from
+>>> rproc_tee_elf_load_rsc_table().  That way we don't need trproc->rsc_va.  
+>>>
+>>> I also think tee_rproc should be renamed to "rproc_tee_interface" and folded
+>>> under struct rproc.  
+>>>
+>>> With the above most of the problems with the current implementation should
+>>> naturally go away.
+>>>
+>>> Thanks,
+>>> Mathieu
+>>>
+>>>>
+>>>>>> +	ret = tee_rproc_load_fw(ddata->trproc, fw);
+>>>>>> +	if (ret)
+>>>>>> +		return ret;
+>>>>>> +	ddata->fw_loaded = true;
+>>>>>> +
+>>>>>> +	/* Update the resource table parameters. */
+>>>>>> +	if (rproc_tee_get_rsc_table(ddata->trproc)) {
+>>>>>> +		/* No resource table: reset the related fields. */
+>>>>>> +		rproc->cached_table = NULL;
+>>>>>> +		rproc->table_ptr = NULL;
+>>>>>> +		rproc->table_sz = 0;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static struct resource_table *
+>>>>>> +stm32_rproc_tee_elf_find_loaded_rsc_table(struct rproc *rproc,
+>>>>>> +					  const struct firmware *fw)
+>>>>>> +{
+>>>>>> +	struct stm32_rproc *ddata = rproc->priv;
+>>>>>> +
+>>>>>> +	return tee_rproc_get_loaded_rsc_table(ddata->trproc);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int stm32_rproc_tee_start(struct rproc *rproc)
+>>>>>> +{
+>>>>>> +	struct stm32_rproc *ddata = rproc->priv;
+>>>>>> +
+>>>>>> +	return tee_rproc_start(ddata->trproc);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int stm32_rproc_tee_attach(struct rproc *rproc)
+>>>>>> +{
+>>>>>> +	/* Nothing to do, remote proc already started by the secured context. */
+>>>>>> +	return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int stm32_rproc_tee_stop(struct rproc *rproc)
+>>>>>> +{
+>>>>>> +	struct stm32_rproc *ddata = rproc->priv;
+>>>>>> +	int err;
+>>>>>> +
+>>>>>> +	stm32_rproc_request_shutdown(rproc);
+>>>>>> +
+>>>>>> +	err = tee_rproc_stop(ddata->trproc);
+>>>>>> +	if (err)
+>>>>>> +		return err;
+>>>>>> +
+>>>>>> +	ddata->fw_loaded = false;
+>>>>>> +
+>>>>>> +	return stm32_rproc_release(rproc);
+>>>>>> +}
+>>>>>> +
+>>>>>>  static int stm32_rproc_prepare(struct rproc *rproc)
+>>>>>>  {
+>>>>>>  	struct device *dev = rproc->dev.parent;
+>>>>>> @@ -319,7 +410,14 @@ static int stm32_rproc_prepare(struct rproc *rproc)
+>>>>>>  
+>>>>>>  static int stm32_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+>>>>>>  {
+>>>>>> -	if (rproc_elf_load_rsc_table(rproc, fw))
+>>>>>> +	struct stm32_rproc *ddata = rproc->priv;
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	if (ddata->trproc)
+>>>>>> +		ret = rproc_tee_get_rsc_table(ddata->trproc);
+>>>>>> +	else
+>>>>>> +		ret = rproc_elf_load_rsc_table(rproc, fw);
+>>>>>> +	if (ret)
+>>>>>>  		dev_warn(&rproc->dev, "no resource table found for this firmware\n");
+>>>>>>  
+>>>>>>  	return 0;
+>>>>>> @@ -693,8 +791,22 @@ static const struct rproc_ops st_rproc_ops = {
+>>>>>>  	.get_boot_addr	= rproc_elf_get_boot_addr,
+>>>>>>  };
+>>>>>>  
+>>>>>> +static const struct rproc_ops st_rproc_tee_ops = {
+>>>>>> +	.prepare	= stm32_rproc_prepare,
+>>>>>> +	.start		= stm32_rproc_tee_start,
+>>>>>> +	.stop		= stm32_rproc_tee_stop,
+>>>>>> +	.attach		= stm32_rproc_tee_attach,
+>>>>>> +	.kick		= stm32_rproc_kick,
+>>>>>> +	.parse_fw	= stm32_rproc_parse_fw,
+>>>>>> +	.find_loaded_rsc_table = stm32_rproc_tee_elf_find_loaded_rsc_table,
+>>>>>> +	.get_loaded_rsc_table = stm32_rproc_get_loaded_rsc_table,
+>>>>>> +	.sanity_check	= stm32_rproc_tee_elf_sanity_check,
+>>>>>> +	.load		= stm32_rproc_tee_elf_load,
+>>>>>> +};
+>>>>>> +
+>>>>>>  static const struct of_device_id stm32_rproc_match[] = {
+>>>>>> -	{ .compatible = "st,stm32mp1-m4" },
+>>>>>> +	{.compatible = "st,stm32mp1-m4",},
+>>>>>> +	{.compatible = "st,stm32mp1-m4-tee",},
+>>>>>>  	{},
+>>>>>>  };
+>>>>>>  MODULE_DEVICE_TABLE(of, stm32_rproc_match);
+>>>>>> @@ -853,6 +965,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>>>>>>  	struct device *dev = &pdev->dev;
+>>>>>>  	struct stm32_rproc *ddata;
+>>>>>>  	struct device_node *np = dev->of_node;
+>>>>>> +	struct tee_rproc *trproc = NULL;
+>>>>>>  	struct rproc *rproc;
+>>>>>>  	unsigned int state;
+>>>>>>  	int ret;
+>>>>>> @@ -861,11 +974,31 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>>>>>>  	if (ret)
+>>>>>>  		return ret;
+>>>>>>  
+>>>>>> -	rproc = rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
+>>>>>> -	if (!rproc)
+>>>>>> -		return -ENOMEM;
+>>>>>> +	if (of_device_is_compatible(np, "st,stm32mp1-m4-tee")) {
+>>>>>> +		trproc = tee_rproc_register(dev, STM32_MP1_M4_PROC_ID);
+>>>>>> +		if (IS_ERR(trproc)) {
+>>>>>> +			dev_err_probe(dev, PTR_ERR(trproc),
+>>>>>> +				      "signed firmware not supported by TEE\n");
+>>>>>> +			return PTR_ERR(trproc);
+>>>>>> +		}
+>>>>>> +		/*
+>>>>>> +		 * Delegate the firmware management to the secure context.
+>>>>>> +		 * The firmware loaded has to be signed.
+>>>>>> +		 */
+>>>>>> +		dev_info(dev, "Support of signed firmware only\n");
+>>>>>
+>>>>> Not sure what this adds.  Please remove.
+>>>>
+>>>> This is used to inform the user that only a signed firmware can be loaded, not
+>>>> an ELF file.
+>>>> I have a patch in my pipe to provide the supported format in the debugfs. In a
+>>>> first step, I can suppress this message and we can revisit the issue when I push
+>>>> the debugfs proposal.
+>>>>
+>>>> Thanks,
+>>>> Arnaud
+>>>>
+>>>>>
+>>>>>> +	}
+>>>>>> +	rproc = rproc_alloc(dev, np->name,
+>>>>>> +			    trproc ? &st_rproc_tee_ops : &st_rproc_ops,
+>>>>>> +			    NULL, sizeof(*ddata));
+>>>>>> +	if (!rproc) {
+>>>>>> +		ret = -ENOMEM;
+>>>>>> +		goto free_tee;
+>>>>>> +	}
+>>>>>>  
+>>>>>>  	ddata = rproc->priv;
+>>>>>> +	ddata->trproc = trproc;
+>>>>>> +	if (trproc)
+>>>>>> +		trproc->rproc = rproc;
+>>>>>>  
+>>>>>>  	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_NONE);
+>>>>>>  
+>>>>>> @@ -916,6 +1049,10 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>>>>>>  		device_init_wakeup(dev, false);
+>>>>>>  	}
+>>>>>>  	rproc_free(rproc);
+>>>>>> +free_tee:
+>>>>>> +	if (trproc)
+>>>>>> +		tee_rproc_unregister(trproc);
+>>>>>> +
+>>>>>>  	return ret;
+>>>>>>  }
+>>>>>>  
+>>>>>> @@ -937,6 +1074,8 @@ static void stm32_rproc_remove(struct platform_device *pdev)
+>>>>>>  		device_init_wakeup(dev, false);
+>>>>>>  	}
+>>>>>>  	rproc_free(rproc);
+>>>>>> +	if (ddata->trproc)
+>>>>>> +		tee_rproc_unregister(ddata->trproc);
+>>>>>>  }
+>>>>>>  
+>>>>>>  static int stm32_rproc_suspend(struct device *dev)
+>>>>>> -- 
+>>>>>> 2.25.1
+>>>>>>
