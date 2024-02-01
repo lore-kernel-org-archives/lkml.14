@@ -1,209 +1,109 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC73915D5B1
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894EF157E8C
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 09:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706780329; cv=none; b=dcQwGFDKaRN8/WgwFY2TSUjQvsggER0Xgl1jTTp92UCFVnySB618Cpz0GYxvjxC+No7RBBchn+Mx4mdEGCUjiQ3RrBqNBCyP41/cZIzz41VjoWWxhIZ2sOWecLk7eScNk/xXw/14WDk0S47ShJtkT4FwTngSpEWoCLRW4rSaGWA=
+	t=1706780365; cv=none; b=r1t8a0dfHuQsUwKtBMS5sYluBUP/5JY6jHs2pgMuanmc1Bo2JOfaKKurMQcDSWWdZ3oL+c/oa9ZFGzT78tfzSHxi2TSsWB1yqLMg36xyYwMoeb4FNwlmzu2d5/oDeZYPd9xpRkBCk16LPwhsBfN90xbNDKE7hAzefZqVJEU5B+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706780329; c=relaxed/simple;
-	bh=a/aTDNN6EMDkD+niHUP8ICMvAXcz4gxgK/NiZj68fgA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ifWmaj3GVkSeEX1ThGbTkXySQQ1CPAQWem51NPBwZIchgl+YxT0LBGY4B3vXKl/T8KDn/2j6orQd/9kdJ+zF6mwqdGllr8wPY7ShYr2BoXxBx+/bKLlSOi9DxBxOKBpfFD5Diny0blsnBFXuqj6H0T45M8TaX0P7pXYfWiVgyuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CQt3V5mK; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706780365; c=relaxed/simple;
+	bh=iVB9Pw91ZQiqJxhflZjdTstz9BhoeMHXkV4VjV5TLUw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bHgTfW7e9B7Bp23TFoJGes7eQocgTxt/IFAW0Jf9iVs5gBZz1N77EIaC4mV6FxId4sKbquFtnWHZsnNanFNy4b7SZDDlUah2AhrWqE4lkq1ti4GKqwv2DvWnhu6ab0FQHm+B+YO4fqP7QkAbi9gSUisomuQwNfzplO5hwo0+6lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AIHzLhlh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CQt3V5mK"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4bffff28c08so141583e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:38:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706780326; x=1707385126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XD0yQ/tI+tg2dm8uEuvvq9XaoXhsRoncokKKzr2jeMM=;
-        b=CQt3V5mKUZJtQ1Uc8NnqYw51bPgPqJyKqw3J+2N7R+9c9SBZzi+UxRbOQLbmei3KH3
-         QlTbiuP1hflU64f8mbOo5j7TgWUqH/O48q7wAvBHhUZ/sW1C4LE6Ucs5sDW62sqgCI8l
-         d2SpKqkLGIgQZZ4v0ZwX/J7CBCrNI7TGleUuBAECg7x7Ty3/f4CKvRyQVM+Cekv1VnMp
-         4z6Bsm0sWyJZIwmbivPzWVUHChqNMzbGekWOzjqCy3OYHB+xfSixyIbwZkx1iiJeGQnO
-         YwdH6C9S3GXG0TTzkeyINNgFk1ojCVBeNhvfxf4s+Eq5RcU+jAR1PCOXU2vthM9xAAUK
-         d6ZA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AIHzLhlh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706780362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=iVB9Pw91ZQiqJxhflZjdTstz9BhoeMHXkV4VjV5TLUw=;
+	b=AIHzLhlh7UG8HebA78iMRP+ZhlCL2if0M47NJVbN3K+mQn7L1JfnomisKXytturixZUnZU
+	0OOLZJDYtS+9tMnXkc86FM8kgvSKiy4jS1zLyjNuDOeYOCV/HlgrGUnvCPT/noZsBWbZ7T
+	G0Y25TzDhFEV1LIhIbMKTYspzcsihOg=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-450-R2ftXRjkNK-ZfcZ817HNpA-1; Thu, 01 Feb 2024 04:39:20 -0500
+X-MC-Unique: R2ftXRjkNK-ZfcZ817HNpA-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-51025633d3cso112797e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 01:39:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706780326; x=1707385126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XD0yQ/tI+tg2dm8uEuvvq9XaoXhsRoncokKKzr2jeMM=;
-        b=RhNcgab1i25lgDWjveFu89XRti3BMLbcAxUy+o2cODDxcvx6lBgBT8cjZzcnF69t3c
-         hJIvv5fbM5ybNKpDzDKwA6wMFGIc8qOwkLZuYbVZdq67ygLJwIp1St/4Whs4zcX0mfYN
-         xOLEcDakCqsFnhY1x9JDKYRbzEoN129WWDCa5sMH0Wm/MN5Mj9ClD+vJB4I5wRsjhnc/
-         +g/IIPSv5JcnBRL+6R+P5+65x4L1Ok3R8fOb3lxdgK/VG6RgifbXYm0/DYrqgJ42LSBz
-         60ezfnMvQ7JKwjk1rGHN42N3EFnWHFkbKaNttGvXWRCsLPgVFUKDcO1UZoYQX3zZyf0I
-         0hLQ==
-X-Gm-Message-State: AOJu0YzvgZedIlke79lV7jdML7GZaK6yKBnlwr2D578IvtXsjA62M7T5
-	znnu7B7MLzGtGJVyA8sHySonDYaBDCGaq5XaK/N+Kz5wwZd7rqOp1QQJ/Q6s9f+5Q9+fw9bBEW6
-	f0JxCFCok8oZmmBGPqlqXGcCTskdAFUaNqDVw
-X-Google-Smtp-Source: AGHT+IH+sgJyGjTNJ8nrAZACpyhjF1aGCbvp4J/0sKBmH4acCQHArxhx13e7Uh8RuNCOYXyQzWjA12EqMJKHy6Nh8Ic=
-X-Received: by 2002:a05:6122:1d87:b0:4bd:7da1:a2ea with SMTP id
- gg7-20020a0561221d8700b004bd7da1a2eamr1519212vkb.14.1706780326396; Thu, 01
- Feb 2024 01:38:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706780358; x=1707385158;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iVB9Pw91ZQiqJxhflZjdTstz9BhoeMHXkV4VjV5TLUw=;
+        b=v35TW0AUUVVfPUMVCgmsgeg0Hs5EPr/HaS/Bi60q9osNlTrkvcM0eVzM05DWZlQLMG
+         uasRorYH7SR3bWnNrIQey/vcFe0oemxf5J88hKQfIAezStEwBlU2i2SqEiQQjyB4xOuk
+         MHnyQMAx5dJQt2hhi37zUR5oPgHE1XfHWMZ2vLKcHvlDm4X/y1y+T3jBdeJ36qfFwj6y
+         CyRFg7wt6JBurDTZ/Yv6wU1sw3RYdXK8Sq9pm58goxnwvuiNwMfePRp+GbRZP0Z6mudT
+         YRhXyIIN+20lu2KGkAdivQoo/r/nILM78BywlOO9h7LFZXWfj6HLEEVR6Y87mkCIpPIY
+         Kx8g==
+X-Forwarded-Encrypted: i=0; AJvYcCWGEVRYw2I0hAKPv7XyOfagwWNs+4lUQJDtgw+AqiJVazpfenmVC6ZKR1WFfh69P+rX+hzlVIa8J+FaxgUErkbCTk9VjFqYccvWptQR
+X-Gm-Message-State: AOJu0YyvOHL2Mz4O687NnMs8nkj6/P1ypXO2bmtwWfYsnEfHauESn2u9
+	l+2PDBVXBbo1KCSuWB1KbDY/1xMdVtSD5oQyb/mD4Pc5m4PKcZYk6+q39Ai6meGwWn69FbMv2cv
+	sqVQQbSMZ/kev6ijtNqLMeVU7eTWhAatvZFrK3zLbWquz6xNLlweL9NeWHjpXUg==
+X-Received: by 2002:a19:2d11:0:b0:510:1410:5a72 with SMTP id k17-20020a192d11000000b0051014105a72mr2416288lfj.2.1706780358536;
+        Thu, 01 Feb 2024 01:39:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGPFvjM/R79ElxB+pS6LxWp1kK0YWlG+lxmIeW/pjgJw8faukKSgsRksDo0xlrbAnl/r2evfQ==
+X-Received: by 2002:a19:2d11:0:b0:510:1410:5a72 with SMTP id k17-20020a192d11000000b0051014105a72mr2416266lfj.2.1706780358163;
+        Thu, 01 Feb 2024 01:39:18 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-238-90.dyn.eolo.it. [146.241.238.90])
+        by smtp.gmail.com with ESMTPSA id h12-20020a05600c260c00b0040d87100733sm3800016wma.39.2024.02.01.01.39.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 01:39:17 -0800 (PST)
+Message-ID: <9cb2ec106f3f7864d0128102f9f49f3dbe0e58f7.camel@redhat.com>
+Subject: Re: [PATCH 1/4 V3 net-next] cpumask: add cpumask_weight_andnot()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, 
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com,  davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, longli@microsoft.com,  yury.norov@gmail.com,
+ leon@kernel.org, cai.huoqing@linux.dev,  ssengar@linux.microsoft.com,
+ vkuznets@redhat.com, tglx@linutronix.de,  linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org
+Cc: schakrabarti@microsoft.com, paulros@microsoft.com
+Date: Thu, 01 Feb 2024 10:39:16 +0100
+In-Reply-To: <1706509267-17754-2-git-send-email-schakrabarti@linux.microsoft.com>
+References: 
+	<1706509267-17754-1-git-send-email-schakrabarti@linux.microsoft.com>
+	 <1706509267-17754-2-git-send-email-schakrabarti@linux.microsoft.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131210041.686657-1-paul.heidekrueger@tum.de>
-In-Reply-To: <20240131210041.686657-1-paul.heidekrueger@tum.de>
-From: Marco Elver <elver@google.com>
-Date: Thu, 1 Feb 2024 10:38:07 +0100
-Message-ID: <CANpmjNPvQ16mrQOTzecN6ZpYe+N8dBw8V+Mci53CBgC2sx84Ew@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] kasan: add atomic tests
-To: =?UTF-8?Q?Paul_Heidekr=C3=BCger?= <paul.heidekrueger@tum.de>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	kasan-dev@googlegroups.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, 31 Jan 2024 at 22:01, Paul Heidekr=C3=BCger <paul.heidekrueger@tum.=
-de> wrote:
->
-> Hi!
->
-> This RFC patch adds tests that detect whether KASan is able to catch
-> unsafe atomic accesses.
->
-> Since v1, which can be found on Bugzilla (see "Closes:" tag), I've made
-> the following suggested changes:
->
-> * Adjust size of allocations to make kasan_atomics() work with all KASan =
-modes
-> * Remove comments and move tests closer to the bitops tests
-> * For functions taking two addresses as an input, test each address in a =
-separate function call.
-> * Rename variables for clarity
-> * Add tests for READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and smp_sto=
-re_release()
->
-> I'm still uncelar on which kinds of atomic accesses we should be testing
-> though. The patch below only covers a subset, and I don't know if it
-> would be feasible to just manually add all atomics of interest. Which
-> ones would those be exactly?
+On Sun, 2024-01-28 at 22:21 -0800, Souradeep Chakrabarti wrote:
+> From: Yury Norov <yury.norov@gmail.com>
+>=20
+> Similarly to cpumask_weight_and(), cpumask_weight_andnot() is a handy
+> helper that may help to avoid creating an intermediate mask just to
+> calculate number of bits that set in a 1st given mask, and clear in 2nd
+> one.
+>=20
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 
-The atomics wrappers are generated by a script. An exhaustive test
-case would, if generated by hand, be difficult to keep in sync if some
-variants are removed or renamed (although that's probably a relatively
-rare occurrence).
+@Yury, I guess you are fine with this patch (and the next one) going
+through the net-next tree, but could you confirm that?=20
 
-I would probably just cover some of the most common ones that all
-architectures (that support KASAN) provide. I think you are already
-covering some of the most important ones, and I'd just say it's good
-enough for the test.
+Thanks!
 
-> As Andrey pointed out on Bugzilla, if we
-> were to include all of the atomic64_* ones, that would make a lot of
-> function calls.
+Paolo
 
-Just include a few atomic64_ cases, similar to the ones you already
-include for atomic_. Although beware that the atomic64_t helpers are
-likely not available on 32-bit architectures, so you need an #ifdef
-CONFIG_64BIT.
-
-Alternatively, there is also atomic_long_t, which (on 64-bit
-architectures) just wraps atomic64_t helpers, and on 32-bit the
-atomic_t ones. I'd probably opt for the atomic_long_t variants, just
-to keep it simpler and get some additional coverage on 32-bit
-architectures.
-
-> Also, the availability of atomics varies between architectures; I did my
-> testing on arm64. Is something like gen-atomic-instrumented.sh required?
-
-I would not touch gen-atomic-instrumented.sh for the test.
-
-> Many thanks,
-> Paul
->
-> CC: Marco Elver <elver@google.com>
-> CC: Andrey Konovalov <andreyknvl@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D214055
-> Signed-off-by: Paul Heidekr=C3=BCger <paul.heidekrueger@tum.de>
-> ---
->  mm/kasan/kasan_test.c | 50 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->
-> diff --git a/mm/kasan/kasan_test.c b/mm/kasan/kasan_test.c
-> index 8281eb42464b..1ab4444fe4a0 100644
-> --- a/mm/kasan/kasan_test.c
-> +++ b/mm/kasan/kasan_test.c
-> @@ -1150,6 +1150,55 @@ static void kasan_bitops_tags(struct kunit *test)
->         kfree(bits);
->  }
->
-> +static void kasan_atomics_helper(struct kunit *test, void *unsafe, void =
-*safe)
-> +{
-> +       int *i_safe =3D (int *)safe;
-> +       int *i_unsafe =3D (int *)unsafe;
-> +
-> +       KUNIT_EXPECT_KASAN_FAIL(test, READ_ONCE(*i_unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, WRITE_ONCE(*i_unsafe, 42));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, smp_load_acquire(i_unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, smp_store_release(i_unsafe, 42));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_read(unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_set(unsafe, 42));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_add(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_sub(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc(unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec(unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_and(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_andnot(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_or(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_xor(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_xchg(unsafe, 42));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_cmpxchg(unsafe, 21, 42));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_try_cmpxchg(unsafe, safe, 42=
-));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_try_cmpxchg(safe, unsafe, 42=
-));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_sub_and_test(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec_and_test(unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc_and_test(unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_add_negative(42, unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_add_unless(unsafe, 21, 42));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc_not_zero(unsafe));
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_inc_unless_negative(unsafe))=
-;
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec_unless_positive(unsafe))=
-;
-> +       KUNIT_EXPECT_KASAN_FAIL(test, atomic_dec_if_positive(unsafe));
-> +}
-> +
-> +static void kasan_atomics(struct kunit *test)
-> +{
-> +       int *a1, *a2;
-
-If you're casting it to void* below and never using as an int* in this
-function, just make these void* (the sizeof can just be sizeof(int)).
-
-> +       a1 =3D kzalloc(48, GFP_KERNEL);
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, a1);
-> +       a2 =3D kzalloc(sizeof(*a1), GFP_KERNEL);
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, a1);
-> +
-> +       kasan_atomics_helper(test, (void *)a1 + 48, (void *)a2);
-
-We try to ensure (where possible) that the KASAN tests are not
-destructive to the rest of the kernel. I think the size of "48" was
-chosen to fall into the 64-byte size class, similar to the bitops. I
-would just copy that comment, so nobody attempts to change it in
-future. :-)
-
-> +       kfree(a1);
-> +       kfree(a2);
-
-Thanks,
--- Marco
