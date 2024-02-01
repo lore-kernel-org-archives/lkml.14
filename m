@@ -1,168 +1,149 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABD97429E;
-	Thu,  1 Feb 2024 18:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBB84176B;
+	Thu,  1 Feb 2024 18:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706812521; cv=none; b=KYlvudIptDNPcUspQ/aXUesJe71LIpIt4aM5c5GD0DnPWhfF3vgkwtpQ+rqVZkb6M4jklH302n8f71sb3o9AmN6dLG29h0RxwXAGs97lbk/1177A5Znv2WepTfPDplPS02J9QQARAohXo5zeNcR+/krUMmo/7KQsF8P/rvHa9jA=
+	t=1706812533; cv=none; b=uxR9t/rJJpjUALZ2POzQQoIlBLsyI+hkMSqebAkKI0MEbLWs2pt5qhVwTBobxYAkCDAScdNqlojs4qPjTUe4bXovk9f4wUvFzOHWjxiClDHMwOTWUe4s+XldZd+9O2EkbeMlU8Kv9tMWiPd5MyLvUO6LISgorq0afDJiflr5T8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706812521; c=relaxed/simple;
-	bh=RIkbALjZPSreUFXEN2IqnBWkCSRe05VWOl3KjcYVaaU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a78z5VhazPooAQ/7UtHH67llcRnftqV6vtlsg157WHQyEOMgLXxVafPvtgzBnFG4u9rjHNsKOf3cjKNrPtoiDFeo9uyhS1gO44PZYBuX/ZacnAaM9J6a8GH91xybSjy0mlbkPsCmdORqjg03sRCyEM9nRU3c5e4TPwqcZNw6Iqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PMAzKlAa; arc=none smtp.client-ip=198.47.23.249
+	s=arc-20240116; t=1706812533; c=relaxed/simple;
+	bh=TVZH7oFOhgDsgkjujmCgChVYjn0cg4/4Fn9o5Rulks0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHwd7JbwxtJTn0zGezKdIuH0lzh1k8twPj1B9HWDmBrsmn1N/lCto0z6yj7PelOJ76v+RNnll+BPcdnZyf+OrPhAk4v+lg+gcBHAmB+d67UmV+YnkynBNtoF5JRjY3y3+++RI/HXuVyQExXlDUgg0Bh6B1dBqbxnTUUDIjeNmIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YPTD4j/+; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PMAzKlAa"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411IYvKu004605;
-	Thu, 1 Feb 2024 12:34:57 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YPTD4j/+"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 411IZMsW079208;
+	Thu, 1 Feb 2024 12:35:22 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706812497;
-	bh=M8yVYusQsDMX27rn12ZXPGp6iti7X27Z6TtYkXc9Hlw=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=PMAzKlAavbNenLCMhUVCT04qGfGfCtUtkaJAbz3CnzyJTK5M6DaGeRi/HxRTYO/Du
-	 sZqkKHhAEazjsVBR+BUYw/PMmoTvA82U0N10Dz+kPZG29IqBrURfWHUfFfm5W41YPf
-	 cS7AIbVT3dbqx7HNOjjW76mZy4/IP7xRcL9p/SVM=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411IYvRk070402
+	s=ti-com-17Q1; t=1706812522;
+	bh=rGyK0t8FjhIkG4Ozo6jyOaqYGyp+BnLZYVxHBLTGdgg=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=YPTD4j/+4U6wC022MX60ny9ih+0NKv5dh99zxCWvAZCg3fcf3ywlhzGIWAwOk0cDF
+	 3iv9e3A7OHdH5NvYNuWdPTwB6BnKBt9+acBKXa0aZo+KsARyD52l8K4g2rZd+E0F3s
+	 xDZzH713gOB3jG4X5O3CbGEMlnQFMgGeHt5ml8gY=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 411IZMQ4089686
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 1 Feb 2024 12:34:57 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 1 Feb 2024 12:35:22 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
- Feb 2024 12:34:57 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2024 12:35:22 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 1 Feb 2024 12:34:56 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411IYuU5031306;
-	Thu, 1 Feb 2024 12:34:56 -0600
-Message-ID: <a5f0059d-b80f-44e6-8c1e-793054586e0a@ti.com>
-Date: Thu, 1 Feb 2024 12:34:56 -0600
+ Frontend Transport; Thu, 1 Feb 2024 12:35:22 -0600
+Received: from localhost ([10.249.33.168])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 411IZM7Z032688;
+	Thu, 1 Feb 2024 12:35:22 -0600
+Date: Thu, 1 Feb 2024 12:35:22 -0600
+From: Bin Liu <b-liu@ti.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Roger Quadros <rogerq@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>,
+        <afd@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <srk@ti.com>, <r-gunasekaran@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/5] dt-bindings: usb/ti,am62-usb.yaml: Add PHY2
+ register space
+Message-ID: <20240201183522.ssj553rwefr2wuqi@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>, Conor Dooley <conor@kernel.org>,
+	Roger Quadros <rogerq@kernel.org>, nm@ti.com, vigneshr@ti.com,
+	afd@ti.com, kristo@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, srk@ti.com,
+	r-gunasekaran@ti.com, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240201120332.4811-1-rogerq@kernel.org>
+ <20240201120332.4811-5-rogerq@kernel.org>
+ <20240201-viewpoint-upload-fb714f650ff5@spud>
+ <20240201-violet-chalice-51a73f113e7b@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] arm64: dts: ti: k3-j784s4: Add Wave5 Video
- Encoder/Decoder Node
-Content-Language: en-US
-To: Brandon Brnich <b-brnich@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Geert Uytterhoeven
-	<geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Darren Etheridge <detheridge@ti.com>
-References: <20240131212625.1862775-1-b-brnich@ti.com>
- <20240131212625.1862775-2-b-brnich@ti.com>
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240131212625.1862775-2-b-brnich@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240201-violet-chalice-51a73f113e7b@spud>
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 1/31/24 3:26 PM, Brandon Brnich wrote:
-> This patch adds support for the Wave521cl on the J784S4-evm.
+On Thu, Feb 01, 2024 at 06:18:05PM +0000, Conor Dooley wrote:
+> On Thu, Feb 01, 2024 at 06:15:20PM +0000, Conor Dooley wrote:
+> > On Thu, Feb 01, 2024 at 02:03:31PM +0200, Roger Quadros wrote:
+> > > So far this was not required but due to the newly identified
+> > > Errata i2409 [1] we need to poke this register space.
+> > > 
+> > > [1] https://www.ti.com/lit/er/sprz487d/sprz487d.pdf
+> > > 
+> > > Signed-off-by: Roger Quadros <rogerq@kernel.org>
+> > 
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
 > 
-> Signed-off-by: Brandon Brnich <b-brnich@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-j784s4-evm.dts   |  8 ++++++++
->   arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 20 ++++++++++++++++++++
->   arch/arm64/boot/dts/ti/k3-j784s4.dtsi      |  2 ++
->   3 files changed, 30 insertions(+)
+> Actually, where is the user for this that actually pokes the register
+> space?
+> You're adding another register region, so I went to check how you were
+> handling that in drivers, but there's no driver patch.
+
+See Roger's another patch set 'Add workaround for Errata i2409' posted
+on 16th.
+
+-Bin.
+
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> index f34b92acc56d..7d37c11b4df4 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-> @@ -784,6 +784,14 @@ &main_gpio0 {
->   	status = "okay";
->   };
->   
-> +&vpu0 {
-> +	status = "okay";
-> +};
-> +
-> +&vpu1 {
-> +	status = "okay";
-> +};
-> +
->   &mcu_cpsw {
->   	status = "okay";
->   	pinctrl-names = "default";
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> index f2b720ed1e4f..8b2623ac8160 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> @@ -662,6 +662,26 @@ main_i2c6: i2c@2060000 {
->   		status = "disabled";
->   	};
->   
-> +	vpu0: video-codec@4210000 {
-> +		compatible = "ti,j721s2-wave521c", "cnm,wave521c";
-> +		reg = <0x00 0x4210000 0x00 0x10000>;
-> +		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&k3_clks 241 2>;
-> +		clock-names = "vcodec";
-> +		power-domains = <&k3_pds 241 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
+> 
+> > 
+> > > ---
+> > > 
+> > > Notes:
+> > >     Changelog:
+> > >     
+> > >     v3 - new patch
+> > > 
+> > >  Documentation/devicetree/bindings/usb/ti,am62-usb.yaml | 7 +++++--
+> > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/usb/ti,am62-usb.yaml b/Documentation/devicetree/bindings/usb/ti,am62-usb.yaml
+> > > index fec5651f5602..c02d9d467d9c 100644
+> > > --- a/Documentation/devicetree/bindings/usb/ti,am62-usb.yaml
+> > > +++ b/Documentation/devicetree/bindings/usb/ti,am62-usb.yaml
+> > > @@ -14,7 +14,9 @@ properties:
+> > >      const: ti,am62-usb
+> > >  
+> > >    reg:
+> > > -    maxItems: 1
+> > > +    items:
+> > > +      - description: USB CFG register space
+> > > +      - description: USB PHY2 register space
+> > >  
+> > >    ranges: true
+> > >  
+> > > @@ -82,7 +84,8 @@ examples:
+> > >  
+> > >        usbss1: usb@f910000 {
+> > >          compatible = "ti,am62-usb";
+> > > -        reg = <0x00 0x0f910000 0x00 0x800>;
+> > > +        reg = <0x00 0x0f910000 0x00 0x800>,
+> > > +              <0x00 0x0f918000 0x00 0x400>;
+> > 
+> > Why the double zeros btw?
+> > 
+> > Cheers,
+> > Conor.
+> > 
+> > >          clocks = <&k3_clks 162 3>;
+> > >          clock-names = "ref";
+> > >          ti,syscon-phy-pll-refclk = <&wkup_conf 0x4018>;
+> > > -- 
+> > > 2.34.1
+> > > 
+> 
+> 
 
-Why are these default disabled? I don't see anything missing that
-would need to be added at the board level. You disable them
-just to re-enable them in the next patch. Leave these default
-enabled.
 
-> +	};
-> +
-> +	vpu1: video-codec@4220000 {
-> +		compatible = "ti,j721s2-wave521c", "cnm,wave521c";
-> +		reg = <0x00 0x4220000 0x00 0x10000>;
-> +		interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&k3_clks 242 2>;
-> +		clock-names = "vcodec";
-> +		power-domains = <&k3_pds 242 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +	};
-> +
->   	main_sdhci0: mmc@4f80000 {
->   		compatible = "ti,j721e-sdhci-8bit";
->   		reg = <0x00 0x04f80000 0x00 0x1000>,
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4.dtsi
-> index 4398c3a463e1..93bb0cba1b48 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4.dtsi
-> @@ -247,6 +247,8 @@ cbass_main: bus@100000 {
->   			 <0x00 0x30000000 0x00 0x30000000 0x00 0x0c400000>, /* MAIN NAVSS */
->   			 <0x41 0x00000000 0x41 0x00000000 0x01 0x00000000>, /* PCIe1 DAT1 */
->   			 <0x4e 0x20000000 0x4e 0x20000000 0x00 0x00080000>, /* GPU */
-> +			 <0x00 0x04210000 0x00 0x04210000 0x00 0x00010000>, /* VPU0 */
-> +			 <0x00 0x04220000 0x00 0x04220000 0x00 0x00010000>, /* VPU1 */
-
-Add these in sorted by memory address order.
-
-Andrew
-
->   
->   			 /* MCUSS_WKUP Range */
->   			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
