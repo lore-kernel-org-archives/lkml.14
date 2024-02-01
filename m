@@ -1,57 +1,57 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E325D47E
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D06215F32B
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 15:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706802948; cv=none; b=rIEeyI7/MQm+IOt/x8gpc0m0PjCuBtz+rOQx/e1YhNZ5ausa6DcG9XqoyeNbZwSNFjG2lR921qV3yWz+SG+sN74+K5j7pXRe/1Trw7JMa0AVMSYKsmJOxnuUF+1pw4MCLOLNpjiaRIPel3mAvkDqUjq1F3icjUGvxgiGbag1ay0=
+	t=1706802953; cv=none; b=MTaGhF9GwtbpSdxlAtM0IgAqKAvV4yX3I5cJxYpTKET1RghEvokw8cWXp78vL6b+Xf1RMVFvn49IEwEt64mz112cwKz1H/5OUwRVTNgdnqMiUjiPSawe+U7+LhzAoO+euaW48yM6eB/8Tlrvr76/fSsKYcc2QsaAMdKI13uCFLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706802948; c=relaxed/simple;
-	bh=HGSCSkG775OjrB68wNnu+LDZG1e/YBxKF9hpfLPUJtQ=;
+	s=arc-20240116; t=1706802953; c=relaxed/simple;
+	bh=SRaAiGQwt/dfTnu/kFN7Gord4bVSFSW1hMzlLnCuYxY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fb9gSnkkCUBct3Vt9QgqK9331CU4jHsfRf2xbHF8Xh8kwLDYOtcM2+SSOS6OTC0dAg3gjLgAnSsb1E8tkdgMmAlVml7bUOIkmAI8lq2ShZLeGQCwnKxBpGl9QCw/OnweFmej9wTzVhVmzfPIwCqoLypzRroPT30eISIJjW0Ofbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wGwm7gwu; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=NA30ox0Q8NPR8mhWUH83DYldovXLuxb6uF/7NCgZP7M13FArI/745f4h4GjFhzocsefYj+quCW1T1x+M7AErg87qq2oO29n4aMvm+2WsgsXIsIS03J8FKjdew7tkXdAhf/TlDkx5aFdoHWLyT2rrqCbmaBkCTPFCWtZd0RsJ11A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uk0552m0; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wGwm7gwu"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40fb3b5893eso9546005e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:55:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uk0552m0"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33b029a1c8aso1197346f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 07:55:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706802944; x=1707407744; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706802949; x=1707407749; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Yw1J65h6p5XOSdrT7WKHycBFrHw6YoqtyWZ1wq8uXPg=;
-        b=wGwm7gwuXsuNTHF4Uw75nakTJ3TGucIblPfPVDM4yDsHJw/OvEXNjWNZSvduoK6+r6
-         1EVJ2czxIt9n9coWHoCdHRb5HD85L6A512ULzjNYa7espaI4K4cXMQPILidg9g+9FX34
-         EaBW2U3KoKIk5EkfO0/LNxOOwc9hu+i1gmhZ/IJ8L7pg3h/FsVvTeIZNJtulWoz2S1kW
-         y4jI+/qUnl5oA2zTVreswg5ur17ZbqV9P1vlu0n/9GuOR4jbr4biS5v7VnTGummFVjW1
-         93q414IbYq70ncxt4I6APHewQMboxpl/UAu2nwgWIo/ZmgYlMJOLCBHktgkMVmMpBDms
-         vKWg==
+        bh=6CZ4CYGhd/azweShj7DUYvXo7iLunSpVFtNI+LPmojk=;
+        b=uk0552m0tqeCrs3CXRNJxPY/KmEifTlxZfT3uPjxFBYoVoxeglrgxiEGEkvjSaI2uF
+         ZTKdNlISZId8XGRvIqADL+LWnS71QD2ZhLwkGIpPS9y94QghZk70Nu8yifdqs0/mx42U
+         6SsSfchagUJ8ZBPUSJ2+zeb6claI7FJJZVttX1448Gst+1u3mPq+iPqEQt8sLoDHOpYK
+         QCHvFLa7VMHfQcC9EzjDQYVFnPZka6gza+w/IX1Ko7A2TOyJX4OMSsnvmkAUvHblRWGu
+         pFtqGxvTKIQ5jphebYuE+5QeYFQUrH+bPfnX+2XF5g/6aY5jGyo8Oknla3qRQFqLvSsn
+         G/Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706802944; x=1707407744;
+        d=1e100.net; s=20230601; t=1706802949; x=1707407749;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Yw1J65h6p5XOSdrT7WKHycBFrHw6YoqtyWZ1wq8uXPg=;
-        b=DC3389S09q0zhbCNkpRatCE9RZzGm0Z+4UeeNknRGFcxTa9VnTKKkmgokMO/aNN6g8
-         9Pcwd/lIIBcRc6Xv/N4reddaqLC3t/l72k+2CKs0vcX+Mc2T1BV5T4EU5Li3Zug7jAx/
-         f3z9y/hrIeXF1kelqG6VZT1BGRSuF4EEb9GDbQ50f8aMNOBgJ4JpPu93wQwGm/t6SKhm
-         BT2o5KQ/eHkFSTFqZ6F0VJwJ7URwVq27ThNtsRghicZmP9G2/l7YyCvjwrwXVte7bGEY
-         mLxiD67iJbD/GprGWizz80IqZuNUUOSdl4NOpw6ZO8en/Av5yneBam4C2XuFfd056RTB
-         imuw==
-X-Gm-Message-State: AOJu0YzPMV5C4ptb59+bnaSiCrCvxVVzJFox6H6QM4ytdzjJd7yT78k9
-	A8nHScAwmpIzHj4uM8w0k/FwYbwTkqHiaRYN9mk1LPriSx0mCQHhO9wwTAktsvM=
-X-Google-Smtp-Source: AGHT+IHj4RxNr7NccfGnqcw2wKxJYo0zaJefMkRu7PNahtJvI1eki2FCCTXjUL4PvFiL8KAw1klipg==
-X-Received: by 2002:adf:a45d:0:b0:33a:e6f0:ee05 with SMTP id e29-20020adfa45d000000b0033ae6f0ee05mr1595431wra.45.1706802944103;
-        Thu, 01 Feb 2024 07:55:44 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWmHt2LuAPIpBst6IhLMW/XF6HczuhRzUvWcG6qVxTX574E5XrzgKhsNDFD2MXzJ8MYAaWybaZigmml9/1SP7uFPiS65ma68AE0KEPIt2FZsInN2UndzFsAvkvUcSoxFC1uqsxiiDXmjB2gIEzUKiqcCaF8qheJyaiCg4WfE7wySi2PswMSnGrTXWV4sB7o29EEliTcrV1grLtQ9OPSVeil1n6wuFCAgxkXpu/mvNdA0JBqUrEu9Ji4RLRzqxrpwaY41LkpuwOGooCObkriXJg7caGDh5VWqdNdPIeq42EFsuLGqw8q+yVlv9SI2VzPla3ZrygHW9q+IBx6z+M8W+viPDB6zKRqhGwYQQleddJbvpPdcxU4uZBfGvBNtjN5ReIbjnXViGNhjVIKJAPE6ukY2ZEaaCq04Cl3/GRZi23QfHYqWHD7ecaQ4AvyiAZMSYuM0F0oWelcdaHoWjvUzdaTtR+QNQ+73ZIKyJQt3fcaOtR5dfjyQOVouIK8jP+HY01XJyyrpxJcd3F72buliOVKTJCZE0rNuBuR9o190qkHgR6NYLaG3VQ/zK4nfhXzhGL4RIjBoRvg8jApS4V2I0VJpLciS8bYeLG82Ei57bSU8OYGuRShhbS8MEl4LfM+XcXDdLTZN9MZe7Ix/VhXeb4DPzN7eK38+eYRiZBZZMJ2PLZtZxD9rHCX2o0l6P2LzrqqHWGG0yLq
+        bh=6CZ4CYGhd/azweShj7DUYvXo7iLunSpVFtNI+LPmojk=;
+        b=hAim2k4Es5VXeEF44xvpI6clZnOxi21iNYHVZn3lhc1Xl5IWcWaFZNwzkjrxKambKe
+         B7QM8rGmxhVvD4oq1ShAcLbvP6Z9pDd575tVh/KAhwz9e5zjWbqXxdHbNZqth6qQ6ZQ1
+         tE7JVzV0OzYo1e2/fP7k9RyH1BySbMWtMnBAg8K5D/DJfBbDepdsmRA77xI8jTdFPVxN
+         8dXUGelWSwELB4Wj0tSuzvkmqIostK/myJvcVFAQof5Q/rp/XS5vt2XVaFHw1L+HItMv
+         g2AiMpdTDiqLrPefJ435+P+UhLY7aE14PcStXWRS/yKQRXiVVZW/08X2i/wHLNwK1/gf
+         QhmQ==
+X-Gm-Message-State: AOJu0Ywa1QqcwaE0DEkw/7+QBpMR3PgvcyEpCSeqnW0/LuWrMjVk9lnT
+	EtGc/+ZIRncUCbLHddEoRFsHol2dfQ/kqPiLgy9oBkr+i7i6dAoxqflm6fsWA3U=
+X-Google-Smtp-Source: AGHT+IF0oL0ltCF+I+m2lXndBn2DewW2NEZjIjC7hgrBmZs4spfU1MvvKwjPTHeskQYocgpg9bPSsQ==
+X-Received: by 2002:a5d:64c3:0:b0:33b:1b5f:6215 with SMTP id f3-20020a5d64c3000000b0033b1b5f6215mr740087wri.25.1706802949710;
+        Thu, 01 Feb 2024 07:55:49 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXBkZM/mc6f5LQe4VTAy8QR5OXfk6rlEhlstGhgoOxdbhQaD9R0QxXw/uRpRBH4a6b7tDR4CmD9cOg9TtH6NPIS1CsFZ3wkgka0VTSd+qQT2/oEl7oyIBtL0QHkz4LSS2/MLVCwO2aJ4pNk79/A6IdNapdw0/azS2i6IdVscooMHQ/t+Iy9xCdweJkxnkgl4ZsfNSzxPqsEQlHy22XBBWS17PK2whyQ3PAjUfdezuWSvsXo8qRwXo7dIxrB/6X48/TEDHXdh24EH0jundGMtCQz06Hob58ag1nCe6YN5rGWaqifFzXxqmwcc7P2UL8gOTC3N4a9hVkwYw9pngFNF9ux9R63liMXmTIo4OZYKsTMKmiFEiyP/ka86FxfXVwqVPUf1MR2lmZXVczbxDErG2eaNJJ5q7n2PzFq5IkoJdqga9GM2vkeYx4fC24V63+mnToUuT1oT/fG4gQnrXwSCLtZRFehYyot6V2ejANl+fflUOtgOLHMS6QoR/NrP5dw0nAlJ+HuKZhKLVkfVehzATEEkiXnkQGik54U40/qQkakRxwRvwsESMJFRPWmLUOmBihVK1Zp0sq3lmTtxNhlx+0e5+E2SDAkMQkhvoN9bte4FmPvpM9CSTaW45EP/PYK5Rxm1PeHX4lT8+nXDKUscrkt6Z8aIUD4Mz1CxerlPKe1DC4EfgYkk383n8UZRZIndfizbz4MN20r
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:dd01:5dec:43e3:b607])
-        by smtp.gmail.com with ESMTPSA id ce2-20020a5d5e02000000b0033af4848124sm9650318wrb.109.2024.02.01.07.55.43
+        by smtp.gmail.com with ESMTPSA id ce2-20020a5d5e02000000b0033af4848124sm9650318wrb.109.2024.02.01.07.55.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 07:55:43 -0800 (PST)
+        Thu, 01 Feb 2024 07:55:49 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -75,9 +75,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	linux-bluetooth@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RFC 3/9] power: sequencing: new subsystem
-Date: Thu,  1 Feb 2024 16:55:26 +0100
-Message-Id: <20240201155532.49707-4-brgl@bgdev.pl>
+Subject: [RFC 8/9] PCI/pwrctl: add PCI power control core code
+Date: Thu,  1 Feb 2024 16:55:31 +0100
+Message-Id: <20240201155532.49707-9-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240201155532.49707-1-brgl@bgdev.pl>
 References: <20240201155532.49707-1-brgl@bgdev.pl>
@@ -91,667 +91,198 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Implement the power sequencing subsystem allowing devices to share
-complex powering-up and down procedures. It's split into the consumer
-and provider parts but does not implement any new DT bindings so that
-the actual power sequencing is never revealed in the DT representation.
+Some PCI devices must be powered-on before they can be detected on the
+bus. Introduce a simple framework reusing the existing PCI OF
+infrastructure.
+
+The way this works is: a DT node representing a PCI device connected to
+the port can be matched against its power control platform driver. If
+the match succeeds, the driver is responsible for powering-up the device
+and calling pcie_pwrctl_device_enable() which will trigger a PCI bus
+rescan as well as subscribe to PCI bus notifications.
+
+When the device is detected and created, we'll make it consume the same
+DT node that the platform device did. When the device is bound, we'll
+create a device link between it and the parent power control device.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/power/Kconfig             |   1 +
- drivers/power/Makefile            |   1 +
- drivers/power/sequencing/Kconfig  |  12 +
- drivers/power/sequencing/Makefile |   4 +
- drivers/power/sequencing/core.c   | 482 ++++++++++++++++++++++++++++++
- include/linux/pwrseq/consumer.h   |  53 ++++
- include/linux/pwrseq/provider.h   |  41 +++
- 7 files changed, 594 insertions(+)
- create mode 100644 drivers/power/sequencing/Kconfig
- create mode 100644 drivers/power/sequencing/Makefile
- create mode 100644 drivers/power/sequencing/core.c
- create mode 100644 include/linux/pwrseq/consumer.h
- create mode 100644 include/linux/pwrseq/provider.h
+ drivers/pci/Kconfig         |  1 +
+ drivers/pci/Makefile        |  1 +
+ drivers/pci/pwrctl/Kconfig  |  8 ++++
+ drivers/pci/pwrctl/Makefile |  3 ++
+ drivers/pci/pwrctl/core.c   | 82 +++++++++++++++++++++++++++++++++++++
+ include/linux/pci-pwrctl.h  | 24 +++++++++++
+ 6 files changed, 119 insertions(+)
+ create mode 100644 drivers/pci/pwrctl/Kconfig
+ create mode 100644 drivers/pci/pwrctl/Makefile
+ create mode 100644 drivers/pci/pwrctl/core.c
+ create mode 100644 include/linux/pci-pwrctl.h
 
-diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-index 696bf77a7042..9a8e44ca9ae4 100644
---- a/drivers/power/Kconfig
-+++ b/drivers/power/Kconfig
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- source "drivers/power/reset/Kconfig"
-+source "drivers/power/sequencing/Kconfig"
- source "drivers/power/supply/Kconfig"
-diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-index effbf0377f32..962a2cd30a51 100644
---- a/drivers/power/Makefile
-+++ b/drivers/power/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_POWER_RESET)	+= reset/
-+obj-$(CONFIG_POWER_SEQUENCING)	+= sequencing/
- obj-$(CONFIG_POWER_SUPPLY)	+= supply/
-diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 74147262625b..5b9b84f8774f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -291,5 +291,6 @@ source "drivers/pci/hotplug/Kconfig"
+ source "drivers/pci/controller/Kconfig"
+ source "drivers/pci/endpoint/Kconfig"
+ source "drivers/pci/switch/Kconfig"
++source "drivers/pci/pwrctl/Kconfig"
+ 
+ endif
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index cc8b4e01e29d..6ae202d950f8 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
+ 
+ obj-$(CONFIG_PCI)		+= msi/
+ obj-$(CONFIG_PCI)		+= pcie/
++obj-$(CONFIG_PCI)		+= pwrctl/
+ 
+ ifdef CONFIG_PCI
+ obj-$(CONFIG_PROC_FS)		+= proc.o
+diff --git a/drivers/pci/pwrctl/Kconfig b/drivers/pci/pwrctl/Kconfig
 new file mode 100644
-index 000000000000..ba5732b1dbf8
+index 000000000000..e2dc5e5d2af1
 --- /dev/null
-+++ b/drivers/power/sequencing/Kconfig
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+menuconfig POWER_SEQUENCING
-+	tristate "Power Sequencing support"
-+	help
-+	  Say Y here to enable the Power Sequencing subsystem.
-+
-+	  This subsystem is designed to control power to devices that share
-+	  complex resources and/or require specific power sequences to be run
-+	  during power-up.
-+
-+	  If unsure, say no.
-diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing/Makefile
-new file mode 100644
-index 000000000000..dcdf8c0c159e
---- /dev/null
-+++ b/drivers/power/sequencing/Makefile
-@@ -0,0 +1,4 @@
++++ b/drivers/pci/pwrctl/Kconfig
+@@ -0,0 +1,8 @@
 +# SPDX-License-Identifier: GPL-2.0
 +
-+obj-$(CONFIG_POWER_SEQUENCING)		+= pwrseq-core.o
-+pwrseq-core-y				:= core.o
-diff --git a/drivers/power/sequencing/core.c b/drivers/power/sequencing/core.c
++menu "PCI Power control drivers"
++
++config PCI_PWRCTL
++	bool
++
++endmenu
+diff --git a/drivers/pci/pwrctl/Makefile b/drivers/pci/pwrctl/Makefile
 new file mode 100644
-index 000000000000..f035caed0e4e
+index 000000000000..4381cfbf3f21
 --- /dev/null
-+++ b/drivers/power/sequencing/core.c
-@@ -0,0 +1,482 @@
++++ b/drivers/pci/pwrctl/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_PCI_PWRCTL)		+= core.o
+diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
+new file mode 100644
+index 000000000000..312e6fe95c31
+--- /dev/null
++++ b/drivers/pci/pwrctl/core.c
+@@ -0,0 +1,82 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
 + * Copyright (C) 2024 Linaro Ltd.
 + */
 +
-+#include <linux/bug.h>
-+#include <linux/cleanup.h>
 +#include <linux/device.h>
-+#include <linux/err.h>
 +#include <linux/export.h>
-+#include <linux/idr.h>
 +#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
++#include <linux/pci.h>
++#include <linux/pci-pwrctl.h>
 +#include <linux/property.h>
-+#include <linux/pwrseq/consumer.h>
-+#include <linux/pwrseq/provider.h>
-+#include <linux/rwsem.h>
++#include <linux/slab.h>
 +
-+static DEFINE_IDA(pwrseq_ida);
-+/*
-+ * Protects the device list on the bus from concurrent modifications but allows
-+ * simultaneous read-only access.
-+ */
-+static DECLARE_RWSEM(pwrseq_sem);
-+
-+/**
-+ * struct pwrseq_device - Private power sequencing data.
-+ * @dev: Device struct associated with this sequencer.
-+ * @id: Device ID.
-+ * @owner: Prevents removal of active power sequencing providers.
-+ * @pwrup_count: Keeps track of power state change requests.
-+ * @sem: Protects the device against being unregistered while in use.
-+ * @drvdata: Provider driver private data.
-+ * @match: Power sequencer matching callback.
-+ * @power_on: Power-on callback.
-+ * @power_off: Power-off callback.
-+ */
-+struct pwrseq_device {
-+	struct device dev;
-+	int id;
-+	struct module *owner;
-+	unsigned int pwrup_count;
-+	struct rw_semaphore dev_sem;
-+	struct mutex state_lock;
-+	void *drvdata;
-+	pwrseq_match_func match;
-+	pwrseq_power_state_func power_on;
-+	pwrseq_power_state_func power_off;
-+};
-+
-+/**
-+ * struct pwrseq_desc - Wraps access to the pwrseq_device and ensures that one
-+ *                      user cannot break the reference counting for others.
-+ * @pwrseq: Reference to the power sequencing device.
-+ * @powered_up: Power state set by the holder of the descriptor (not necessarily
-+ * corresponding to the actual power state of the device).
-+ */
-+struct pwrseq_desc {
-+	struct pwrseq_device *pwrseq;
-+	bool powered_up;
-+};
-+
-+static struct pwrseq_device *to_pwrseq_device(struct device *dev)
++static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
++			     void *data)
 +{
-+	return container_of(dev, struct pwrseq_device, dev);
-+}
++	struct pci_pwrctl *pwrctl = container_of(nb, struct pci_pwrctl, nb);
++	struct device *dev = data;
 +
-+static struct pwrseq_device *pwrseq_device_get(struct pwrseq_device *pwrseq)
-+{
-+	get_device(&pwrseq->dev);
++	if (dev_fwnode(dev) != dev_fwnode(pwrctl->dev))
++		return NOTIFY_DONE;
 +
-+	return pwrseq;
-+}
-+
-+static void pwrseq_device_put(struct pwrseq_device *pwrseq)
-+{
-+	put_device(&pwrseq->dev);
-+}
-+
-+static struct bus_type pwrseq_bus = {
-+	.name = "pwrseq",
-+};
-+
-+static void pwrseq_release(struct device *dev)
-+{
-+	struct pwrseq_device *pwrseq = to_pwrseq_device(dev);
-+
-+	mutex_destroy(&pwrseq->state_lock);
-+	ida_free(&pwrseq_ida, pwrseq->id);
-+	kfree(pwrseq);
-+}
-+
-+static const struct device_type pwrseq_device_type = {
-+	.name = "power_sequencer",
-+	.release = pwrseq_release,
-+};
-+
-+/**
-+ * pwrseq_device_register() - Register a new power sequencer.
-+ * @config: Configuration of the new power sequencing device.
-+ *
-+ * The config structure is only used during the call and can be freed after
-+ * the function returns. The config structure *must* have the parent device
-+ * as well as the match(), power_on() and power_off() callbacks registered.
-+ *
-+ * Returns:
-+ * Returns the address of the new pwrseq device or ERR_PTR() on failure.
-+ */
-+struct pwrseq_device *pwrseq_device_register(struct pwrseq_config *config)
-+{
-+	struct pwrseq_device *pwrseq;
-+	int ret;
-+
-+	/*
-+	 * Power sequencer must have a parent device and at least the power-on,
-+	 * power-off and match callbacks.
-+	 */
-+	if (!config->parent || !config->match || !config->power_on ||
-+	    !config->power_off)
-+		return ERR_PTR(-EINVAL);
-+
-+	pwrseq = kzalloc(sizeof(*pwrseq), GFP_KERNEL);
-+	if (!pwrseq)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pwrseq->dev.type = &pwrseq_device_type;
-+	pwrseq->dev.bus = &pwrseq_bus;
-+	pwrseq->dev.parent = config->parent;
-+	device_set_node(&pwrseq->dev, dev_fwnode(config->parent));
-+
-+	pwrseq->id = ida_alloc(&pwrseq_ida, GFP_KERNEL);
-+	if (pwrseq->id < 0) {
-+		kfree(pwrseq);
-+		return ERR_PTR(pwrseq->id);
++	switch (action) {
++	case BUS_NOTIFY_ADD_DEVICE:
++		device_set_of_node_from_dev(dev, pwrctl->dev);
++		break;
++	case BUS_NOTIFY_BOUND_DRIVER:
++		pwrctl->link = device_link_add(dev, pwrctl->dev,
++					       DL_FLAG_AUTOREMOVE_CONSUMER);
++		if (!pwrctl->link)
++			dev_err(pwrctl->dev, "Failed to add device link\n");
++		break;
++	case BUS_NOTIFY_UNBOUND_DRIVER:
++		device_link_del(pwrctl->link);
++		break;
 +	}
 +
-+	/*
-+	 * From this point onwards the device's release() callback is
-+	 * responsible for freeing resources.
-+	 */
-+	device_initialize(&pwrseq->dev);
-+
-+	ret = dev_set_name(&pwrseq->dev, "pwrseq.%d", pwrseq->id);
-+	if (ret)
-+		goto err_put_pwrseq;
-+
-+	pwrseq->owner = config->owner ?: THIS_MODULE;
-+	pwrseq->drvdata = config->drvdata;
-+	pwrseq->match = config->match;
-+	pwrseq->power_on = config->power_on;
-+	pwrseq->power_off = config->power_off;
-+
-+	init_rwsem(&pwrseq->dev_sem);
-+	mutex_init(&pwrseq->state_lock);
-+
-+	scoped_guard(rwsem_write, &pwrseq_sem) {
-+		ret = device_add(&pwrseq->dev);
-+		if (ret)
-+			goto err_put_pwrseq;
-+	}
-+
-+	return pwrseq;
-+
-+err_put_pwrseq:
-+	pwrseq_device_put(pwrseq);
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_device_register);
-+
-+/**
-+ * pwrseq_device_unregister() - Unregister the power sequencer.
-+ * @pwrseq: Power sequencer to unregister.
-+ */
-+void pwrseq_device_unregister(struct pwrseq_device *pwrseq)
-+{
-+	struct device *dev = &pwrseq->dev;
-+
-+	scoped_guard(mutex, &pwrseq->state_lock) {
-+		WARN_ONCE(pwrseq->pwrup_count > 0,
-+			  "%s: UNREGISTERING POWER SEQUENCER WITH ACTIVE USERS\n",
-+			  dev_name(&pwrseq->dev));
-+
-+		scoped_guard(rwsem_write, &pwrseq_sem) {
-+			scoped_guard(rwsem_write, &pwrseq->dev_sem)
-+				device_del(dev);
-+		}
-+	}
-+
-+	pwrseq_device_put(pwrseq);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_device_unregister);
-+
-+static void devm_pwrseq_device_unregister(void *data)
-+{
-+	struct pwrseq_device *pwrseq = data;
-+
-+	pwrseq_device_unregister(pwrseq);
++	return NOTIFY_DONE;
 +}
 +
-+/**
-+ * devm_pwrseq_device_register() - Managed variant of pwrseq_device_register().
-+ * @dev: Managing device.
-+ * @config: Configuration of the new power sequencing device.
-+ *
-+ * Returns:
-+ * Returns the address of the new pwrseq device or ERR_PTR() on failure.
-+ */
-+struct pwrseq_device *
-+devm_pwrseq_device_register(struct device *dev, struct pwrseq_config *config)
++int pci_pwrctl_device_enable(struct pci_pwrctl *pwrctl)
 +{
-+	struct pwrseq_device *pwrseq;
-+	int ret;
-+
-+	pwrseq = pwrseq_device_register(config);
-+	if (IS_ERR(pwrseq))
-+		return pwrseq;
-+
-+	ret = devm_add_action_or_reset(dev, devm_pwrseq_device_unregister,
-+				       pwrseq);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return pwrseq;
-+}
-+EXPORT_SYMBOL_GPL(devm_pwrseq_device_register);
-+
-+/**
-+ * pwrseq_device_get_data() - Get the driver private data associated with this
-+ *                            sequencer.
-+ * @pwrseq: Power sequencer object.
-+ *
-+ * Returns:
-+ * Address of the private driver data.
-+ */
-+void *pwrseq_device_get_data(struct pwrseq_device *pwrseq)
-+{
-+	return pwrseq->drvdata;
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_device_get_data);
-+
-+struct pwrseq_match_data {
-+	struct pwrseq_device *matched;
-+	struct device *dev;
-+};
-+
-+static int pwrseq_match_device(struct device *pwrseq_dev, void *data)
-+{
-+	struct pwrseq_device *pwrseq = to_pwrseq_device(pwrseq_dev);
-+	struct pwrseq_match_data *match_data = data;
-+	int ret;
-+
-+	guard(rwsem_read)(&pwrseq->dev_sem);
-+	if (!device_is_registered(&pwrseq->dev))
-+		return 0;
-+
-+	ret = pwrseq->match(pwrseq, match_data->dev);
-+	if (ret <= 0)
-+		return ret;
-+
-+	match_data->matched = pwrseq;
-+
-+	return 1;
-+}
-+
-+/**
-+ * pwrseq_get() - Get the power sequencer associated with this device.
-+ * @dev: Device for which to get the sequencer.
-+ *
-+ * Returns:
-+ * New power sequencer descriptor for use by the consumer driver or ERR_PTR()
-+ * on failure.
-+ */
-+struct pwrseq_desc *pwrseq_get(struct device *dev)
-+{
-+	struct pwrseq_match_data match_data;
-+	struct pwrseq_device *pwrseq;
-+	int ret;
-+
-+	struct pwrseq_desc *desc __free(kfree) = kzalloc(sizeof(*desc),
-+							 GFP_KERNEL);
-+	if (!desc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	match_data.matched = NULL;
-+	match_data.dev = dev;
-+
-+	guard(rwsem_read)(&pwrseq_sem);
-+
-+	ret = bus_for_each_dev(&pwrseq_bus, NULL, &match_data,
-+			       pwrseq_match_device);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+	if (ret == 0)
-+		/* No device matched. */
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	pwrseq = match_data.matched;
-+
-+	if (!try_module_get(pwrseq->owner))
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	desc->pwrseq = pwrseq_device_get(pwrseq);
-+
-+	return no_free_ptr(desc);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_get);
-+
-+/**
-+ * pwrseq_put() - Release the power sequencer descriptor.
-+ * @desc: Descriptor to release.
-+ */
-+void pwrseq_put(struct pwrseq_desc *desc)
-+{
-+	struct pwrseq_device *pwrseq;
-+
-+	if (!desc)
-+		return;
-+
-+	pwrseq = desc->pwrseq;
-+
-+	if (desc->powered_up)
-+		pwrseq_power_off(desc);
-+
-+	kfree(desc);
-+	module_put(pwrseq->owner);
-+	pwrseq_device_put(pwrseq);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_put);
-+
-+static void devm_pwrseq_put(void *data)
-+{
-+	struct pwrseq_desc *desc = data;
-+
-+	pwrseq_put(desc);
-+}
-+
-+/**
-+ * devm_pwrseq_get() - Managed variant of pwrseq_get().
-+ * @dev: Device for which to get the sequencer and which also manages its
-+ *       lifetime.
-+ *
-+ * Returns:
-+ * New power sequencer descriptor for use by the consumer driver or ERR_PTR()
-+ * on failure.
-+ */
-+struct pwrseq_desc *devm_pwrseq_get(struct device *dev)
-+{
-+	struct pwrseq_desc *desc;
-+	int ret;
-+
-+	desc = pwrseq_get(dev);
-+	if (IS_ERR(desc))
-+		return desc;
-+
-+	ret = devm_add_action_or_reset(dev, devm_pwrseq_put, desc);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return desc;
-+}
-+EXPORT_SYMBOL_GPL(devm_pwrseq_get);
-+
-+/**
-+ * pwrseq_power_on() - Issue a power-on request on behalf of the consumer
-+ *                     device.
-+ * @desc: Descriptor referencing the power sequencer.
-+ *
-+ * This function tells the power sequencer that the consumer wants to be
-+ * powered-up. The sequencer may already have powered-up the device in which
-+ * case the function returns 0. If the power-up sequence is already in
-+ * progress, the function will block until it's done and return 0. If this is
-+ * the first request, the device will be powered up.
-+ *
-+ * Returns:
-+ * 0 on success, negative error number on failure.
-+ */
-+int pwrseq_power_on(struct pwrseq_desc *desc)
-+{
-+	struct pwrseq_device *pwrseq;
-+	int ret;
-+
-+	might_sleep();
-+
-+	if (!desc || desc->powered_up)
-+		return 0;
-+
-+	pwrseq = desc->pwrseq;
-+
-+	guard(rwsem_read)(&pwrseq->dev_sem);
-+	if (!device_is_registered(&pwrseq->dev))
++	if (!pwrctl->dev)
 +		return -ENODEV;
 +
-+	guard(mutex)(&pwrseq->state_lock);
++	pwrctl->nb.notifier_call = pci_pwrctl_notify;
++	bus_register_notifier(&pci_bus_type, &pwrctl->nb);
 +
-+	pwrseq->pwrup_count++;
-+	if (pwrseq->pwrup_count != 1) {
-+		desc->powered_up = true;
-+		return 0;
-+	}
-+
-+	ret = pwrseq->power_on(pwrseq);
-+	if (!ret)
-+		desc->powered_up = true;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_power_on);
-+
-+/**
-+ * pwrseq_power_off() - Issue a power-off request on behalf of the consumer
-+ *                      device.
-+ * @desc: Descriptor referencing the power sequencer.
-+ *
-+ * This undoes the effects of pwrseq_power_on(). It issues a power-off request
-+ * on behalf of the consumer and when the last remaining user does so, the
-+ * power-down sequence will be started. If one is in progress, the function
-+ * will block until it's complete and then return.
-+ *
-+ * Returns:
-+ * 0 on success, negative error number on failure.
-+ */
-+int pwrseq_power_off(struct pwrseq_desc *desc)
-+{
-+	struct pwrseq_device *pwrseq;
-+	int ret;
-+
-+	might_sleep();
-+
-+	if (!desc || !desc->powered_up)
-+		return 0;
-+
-+	pwrseq = desc->pwrseq;
-+
-+	guard(rwsem_read)(&pwrseq->dev_sem);
-+	if (!device_is_registered(&pwrseq->dev))
-+		return -ENODEV;
-+
-+	guard(mutex)(&pwrseq->state_lock);
-+
-+	if (pwrseq->pwrup_count == 0) {
-+		WARN_ONCE(1, "Unmatched power-off\n");
-+		return -EBUSY;
-+	}
-+
-+	pwrseq->pwrup_count--;
-+	if (pwrseq->pwrup_count != 0) {
-+		desc->powered_up = false;
-+		return 0;
-+	}
-+
-+	ret = pwrseq->power_off(pwrseq);
-+	if (!ret)
-+		desc->powered_up = false;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_power_off);
-+
-+static int __init pwrseq_init(void)
-+{
-+	int ret;
-+
-+	ret = bus_register(&pwrseq_bus);
-+	if (ret) {
-+		pr_err("Failed to register the power sequencer bus\n");
-+		return ret;
-+	}
++	pci_lock_rescan_remove();
++	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
++	pci_unlock_rescan_remove();
 +
 +	return 0;
 +}
-+subsys_initcall(pwrseq_init);
++EXPORT_SYMBOL_GPL(pci_pwrctl_device_enable);
 +
-+static void __exit pwrseq_exit(void)
++void pci_pwrctl_device_disable(struct pci_pwrctl *pwrctl)
 +{
-+	bus_unregister(&pwrseq_bus);
++	bus_unregister_notifier(&pci_bus_type, &pwrctl->nb);
 +}
-+module_exit(pwrseq_exit);
++EXPORT_SYMBOL_GPL(pci_pwrctl_device_disable);
 +
-+MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-+MODULE_DESCRIPTION("Power Sequencing subsystem core");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/pwrseq/consumer.h b/include/linux/pwrseq/consumer.h
++static void devm_pci_pwrctl_device_disable(void *data)
++{
++	struct pci_pwrctl *pwrctl = data;
++
++	pci_pwrctl_device_disable(pwrctl);
++}
++
++int devm_pci_pwrctl_device_enable(struct device *dev,
++				  struct pci_pwrctl *pwrctl)
++{
++	int ret;
++
++	ret = pci_pwrctl_device_enable(pwrctl);
++	if (ret)
++		return ret;
++
++	return devm_add_action_or_reset(dev, devm_pci_pwrctl_device_disable,
++					pwrctl);
++}
++EXPORT_SYMBOL_GPL(devm_pci_pwrctl_device_enable);
+diff --git a/include/linux/pci-pwrctl.h b/include/linux/pci-pwrctl.h
 new file mode 100644
-index 000000000000..f207b8b2864d
+index 000000000000..8d16d27cbfeb
 --- /dev/null
-+++ b/include/linux/pwrseq/consumer.h
-@@ -0,0 +1,53 @@
++++ b/include/linux/pci-pwrctl.h
+@@ -0,0 +1,24 @@
 +/* SPDX-License-Identifier: GPL-2.0-or-later */
 +/*
 + * Copyright (C) 2024 Linaro Ltd.
 + */
 +
-+#ifndef __POWER_SEQUENCING_CONSUMER_H__
-+#define __POWER_SEQUENCING_CONSUMER_H__
++#ifndef __PCI_PWRCTL_H__
++#define __PCI_PWRCTL_H__
 +
-+#include <linux/err.h>
-+
-+struct device;
-+struct pwrseq_desc;
-+
-+#if IS_ENABLED(CONFIG_POWER_SEQUENCING)
-+
-+struct pwrseq_desc * __must_check pwrseq_get(struct device *dev);
-+void pwrseq_put(struct pwrseq_desc *desc);
-+
-+struct pwrseq_desc * __must_check devm_pwrseq_get(struct device *dev);
-+
-+int pwrseq_power_on(struct pwrseq_desc *desc);
-+int pwrseq_power_off(struct pwrseq_desc *desc);
-+
-+#else /* CONFIG_POWER_SEQUENCING */
-+
-+static inline struct pwrseq_desc * __must_check pwrseq_get(struct device *dev)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
-+static inline void pwrseq_put(struct pwrseq_desc *desc)
-+{
-+}
-+
-+static inline struct pwrseq_desc * __must_check
-+devm_pwrseq_get(struct device *dev)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
-+static inline int pwrseq_power_on(struct pwrseq_desc *desc)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int pwrseq_power_off(struct pwrseq_desc *desc)
-+{
-+	return -ENOSYS;
-+}
-+
-+#endif /* CONFIG_POWER_SEQUENCING */
-+
-+#endif /* __POWER_SEQUENCING_CONSUMER_H__ */
-diff --git a/include/linux/pwrseq/provider.h b/include/linux/pwrseq/provider.h
-new file mode 100644
-index 000000000000..8696a89afa43
---- /dev/null
-+++ b/include/linux/pwrseq/provider.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2024 Linaro Ltd.
-+ */
-+
-+#ifndef __POWER_SEQUENCING_PROVIDER_H__
-+#define __POWER_SEQUENCING_PROVIDER_H__
++#include <linux/notifier.h>
 +
 +struct device;
-+struct module;
-+struct pwrseq_device;
 +
-+typedef int (*pwrseq_power_state_func)(struct pwrseq_device *);
-+typedef int (*pwrseq_match_func)(struct pwrseq_device *, struct device *);
-+
-+/**
-+ * struct pwrseq_config - Configuration used for registering a new provider.
-+ * @parent: Parent device for the sequencer.
-+ * @owner: Module providing this device.
-+ * @drvdata: Private driver data.
-+ * @match: Provider callback used to match the consumer device to the sequencer.
-+ * @power_on: Callback running the power-on sequence.
-+ * @power_off: Callback running the power-off sequence.
-+ */
-+struct pwrseq_config {
-+	struct device *parent;
-+	struct module *owner;
-+	void *drvdata;
-+	pwrseq_match_func match;
-+	pwrseq_power_state_func power_on;
-+	pwrseq_power_state_func power_off;
++struct pci_pwrctl {
++	struct notifier_block nb;
++	struct device *dev;
++	struct device_link *link;
 +};
 +
-+struct pwrseq_device *pwrseq_device_register(struct pwrseq_config *config);
-+void pwrseq_device_unregister(struct pwrseq_device *pwrseq);
-+struct pwrseq_device *
-+devm_pwrseq_device_register(struct device *dev, struct pwrseq_config *config);
++int pci_pwrctl_device_enable(struct pci_pwrctl *pwrctl);
++void pci_pwrctl_device_disable(struct pci_pwrctl *pwrctl);
++int devm_pci_pwrctl_device_enable(struct device *dev,
++				  struct pci_pwrctl *pwrctl);
 +
-+void *pwrseq_device_get_data(struct pwrseq_device *pwrseq);
-+
-+#endif /* __POWER_SEQUENCING_PROVIDER_H__ */
++#endif /* __PCI_PWRCTL_H__ */
 -- 
 2.40.1
 
