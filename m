@@ -1,131 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8758046439;
-	Thu,  1 Feb 2024 22:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F0C3FB37
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 22:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706826809; cv=none; b=pb/WV8Ae5K5v5VrJztAtCWD1FVpiJFqm2y2NjoDIX6bU84uLxFViXlsywYPmw/xnb/vmmZBpC98lC1NDRcjePbHyLpMpEK0Elac0S1BjlBBlz69LjkARQbLiiKlzkpQV4bQcMFHu6EK1/syOSAddzku2kUsPJg0Lr1Q1ici8bIs=
+	t=1706826829; cv=none; b=UeFcxyCKlmyyR8BTLSFayMx5ydppuWS8rDRXemXny6Cs64afExhUQKa03fm64qYjnZKgHiC5Gy6zE9+0JmT7FirtLEiJJcV6pRWG6DKfl8l1mSxeof+vnvW9kMpOhrY7/2Dj1yvdi3q7nuLZtamSaiEIRIFoLObfN2YJSioU7mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706826809; c=relaxed/simple;
-	bh=dbpaJ6xp7dnMzLTQgOGkgQ/59dglQ1pro5UKwxRA1ZI=;
-	h=Mime-Version:Content-Type:Date:Subject:From:To:Cc:Message-Id:
-	 References:In-Reply-To; b=jhF1Sn0PtpM5IBipeZevE+V9trzkXP5Hl2xZWGY+gncX4QDEaITlPdlzYGr/IkxzLewFFnE414ToSVloYViHybdtUEctyQPrNHaJ3roMoy3lQEEH4Beht+jrPv33rUnT9Ng6eyTcY+wtK6wYOd4nfaNyz4dmB5s9fOiPcplxcxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1XfYw9e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706826829; c=relaxed/simple;
+	bh=KPsuTJp7C2O14rQ/OpkjWMA8klxdzcOuKfmwo10erDg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FYSOoXrpUSaTqCpJaJPrtdQCM2Y3FAlQQRd2coBU2sTUe4Bnhb/ggZwIx+uA7789jdTu+uxzjLVUmdaHfMeGEDA54ucE5Gil9OPnGXEvF2D0r7FgEFMYqjvb7jDtKJ1sJHjYGiiXXa5Png5JOC7LiFBYHCYGa/UIpxOe1GNdJEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kUCJFliT; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1XfYw9e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5769C433C7;
-	Thu,  1 Feb 2024 22:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706826809;
-	bh=dbpaJ6xp7dnMzLTQgOGkgQ/59dglQ1pro5UKwxRA1ZI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Q1XfYw9eheza+NUrhrdtku/nykjTnSunIqOZjdzuF5y6IfPJpn8ETdm6pxs6XsyS1
-	 9pA8xZNw3L833Awrw4mQQH8n7gluq1R1T5GvA1yn+mbqf2/KSK7JGmPx/DL5NZPlK/
-	 kXHL/ewGeFBlFiuzqcpE6u62g6+Cltdv08gtwDDEtUF6LoZQnyugUO6xCgXHtVG4LL
-	 O5DUH5iLNKfsC3kGjAvIy1R3R4cId3L0SsWYtDOL+E7vwhBm1iqmD/FbUv24yv2fhK
-	 b23FDmjFIATI2K/oEaa0BvAUl/OtW1Vuy21WnPbFgwRE11w6GoL0HTxpoQu9cu2gty
-	 /w2VtnOLimZdg==
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kUCJFliT"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6041779e75eso15952027b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 14:33:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706826825; x=1707431625; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dIIwz+3axs9ofDIOeEvHfTKblaO7IqF1Ngm8UvpUX1Q=;
+        b=kUCJFliTr8A6aqTvxw2EKSSABBqpD6stsBEFeqB6syyt1ZGB0ZwNFRMnt3kUP4a6nV
+         NYVTE6DdXwPRdKqHC3RsBUETqP+rzPIQISYS9fCtKv3X3wOLAHXb3dqL1Gsqm0KZocQ8
+         FXoHf4x6l21jwKfeaftujwUAUYTLfNtdtuBztMrIEEePI0XsGtQiFUtq1tNfJHR/+kz2
+         x5tmURGLp2HOcR/3K9Uo75zFjrM5fFY8TLOAKjG44l/gZSPPvgRukPH2HTz/SLmxbjPj
+         8vPa9Z6eku2U83Y+Fu4OCzNAZ5X/q5FqyEcUnMoBpX14xsVPVwx/8H086kWLxg2VzYtK
+         p4Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706826825; x=1707431625;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dIIwz+3axs9ofDIOeEvHfTKblaO7IqF1Ngm8UvpUX1Q=;
+        b=IlBEd1U1bIK8hpY8OLaGaKt6W8q6i/LQ3XEcTpVSqI167G3nXPwu7Z/KL7EmAINt8q
+         EMOCXvphJozUI/QwD9pTt/guOoLnKldDFB91WU7RESpIc3zehxPMHfY1NsccfDrHLvyV
+         8/PLaxoe367/7tXBHmUKu0N5zstjfx6IVUKE7qo2Zm8MsnBIq2Swl2OLPvC/X+16kLqg
+         drAHW9Qe2Z0ETKuX4gwzkS5T1m5T2+uCJoAe6zEbbNbIQKM2mX3ZUjb9reBH+2jZ0Lsd
+         qwU/pOT4Sydld4/NBnjeAO9bANIN0a4ElsGoSHuh8geAvb1WbR4CrUOoJGRrEIgXOKEE
+         a2wA==
+X-Gm-Message-State: AOJu0Yzd9mFbLuSybS+oZhXkyIIrDu6qTr7DkRfbIed0Z7qDnO8NNWSW
+	kwHTCA8gA4PEjqjB69HGLagBKW2AD9jvMdbEY6qR47zcXJW/4yKM/vRcL0ZfJ1g81ukxY5oNamU
+	mRHtIBh7WidOuigR9EKvq81tr5RB/YHNFrDQnqQ==
+X-Google-Smtp-Source: AGHT+IF7BDmJIAD3GWfaR3LtCEEoe0JI/tVQDjPpj6nt/WoSO5SWJoDA8NTnrqWTr5/sudeieo2dIjRJcvM54TnT/YE=
+X-Received: by 2002:a81:488d:0:b0:5ff:b104:cc74 with SMTP id
+ v135-20020a81488d000000b005ffb104cc74mr640319ywa.2.1706826825581; Thu, 01 Feb
+ 2024 14:33:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 Feb 2024 00:33:25 +0200
-Subject: Re: [PATCH 2/3] tpm: ensure tpm is in known state at startup
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>, "Jason Gunthorpe"
- <jgg@ziepe.ca>, <linux-integrity@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Cc: "Ross Philipson" <ross.philipson@oracle.com>, "Peter Huewe"
- <peterhuewe@gmx.de>
-Message-Id: <CYU3H17QGBR0.37HWK14BDMGCD@suppilovahvero>
-X-Mailer: aerc 0.15.2
-References: <20240131170824.6183-1-dpsmith@apertussolutions.com>
- <20240131170824.6183-3-dpsmith@apertussolutions.com>
-In-Reply-To: <20240131170824.6183-3-dpsmith@apertussolutions.com>
+MIME-Version: 1.0
+References: <20240106223951.387067-1-aford173@gmail.com> <20240106223951.387067-2-aford173@gmail.com>
+In-Reply-To: <20240106223951.387067-2-aford173@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 1 Feb 2024 23:33:09 +0100
+Message-ID: <CAPDyKFpx_Xo6Y5yGfuMiV8w3kR2hL6f8t31pKC=91-wEperqjA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pmdomain: imx8mp-blk-ctrl: imx8mp_blk: Add fdcc clock
+ to hdmimix domain
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-pm@vger.kernel.org, Sandor Yu <Sandor.yu@nxp.com>, 
+	Jacky Bai <ping.bai@nxp.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed Jan 31, 2024 at 7:08 PM EET, Daniel P. Smith wrote:
-> When tis core initializes, it assumes all localities are closed. There
-       ~~~~~~~~
-       tpm_tis_core
-
-> are cases when this may not be the case. This commit addresses this by
-> ensuring all localities are closed before initializing begins.
-
-Remove the last sentence and replace with this paragraph:
-
-"Address this by ensuring all the localities are closed in the beginning
-of tpm_tis_core_init(). There are environments, like Intel TXT, which
-may leave a locality open. Close all localities to start from a known
-state."
-
-BTW, why we should motivated to take this patch anyway?
-
-Since the patch is not marked as a bug fix the commit message must pitch
-why it is important to care.
-
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> ---
->  drivers/char/tpm/tpm_tis_core.c | 11 ++++++++++-
->  include/linux/tpm.h             |  6 ++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
+On Sat, 6 Jan 2024 at 23:40, Adam Ford <aford173@gmail.com> wrote:
 >
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_c=
-ore.c
-> index 4176d3bd1f04..5709f87991d9 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -1109,7 +1109,7 @@ int tpm_tis_core_init(struct device *dev, struct tp=
-m_tis_data *priv, int irq,
->  	u32 intmask;
->  	u32 clkrun_val;
->  	u8 rid;
-> -	int rc, probe;
-> +	int rc, probe, i;
->  	struct tpm_chip *chip;
-> =20
->  	chip =3D tpmm_chip_alloc(dev, &tpm_tis);
-> @@ -1170,6 +1170,15 @@ int tpm_tis_core_init(struct device *dev, struct t=
-pm_tis_data *priv, int irq,
->  		goto out_err;
->  	}
-> =20
-> +	/*
-> +	 * There are environments, like Intel TXT, that may leave a TPM
-> +	 * locality open. Close all localities to start from a known state.
-> +	 */
-> +	for (i =3D 0; i <=3D TPM_MAX_LOCALITY; i++) {
-> +		if (check_locality(chip, i))
-> +			tpm_tis_relinquish_locality(chip, i);
-> +	}
-> +
->  	/* Take control of the TPM's interrupt hardware and shut it off */
->  	rc =3D tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
->  	if (rc < 0)
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 4ee9d13749ad..abe0d44d00ee 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -116,6 +116,12 @@ struct tpm_chip_seqops {
->  	const struct seq_operations *seqops;
+> According to i.MX8MP RM and HDMI ADD, the fdcc clock is part of
+> hdmi rx verification IP that should not enable for HDMI TX.
+> But actually if the clock is disabled before HDMI/LCDIF probe,
+> LCDIF will not get pixel clock from HDMI PHY and print the error
+> logs:
+>
+> [CRTC:39:crtc-2] vblank wait timed out
+> WARNING: CPU: 2 PID: 9 at drivers/gpu/drm/drm_atomic_helper.c:1634 drm_atomic_helper_wait_for_vblanks.part.0+0x23c/0x260
+>
+> Add fdcc clock to LCDIF and HDMI TX power domains to fix the issue.
+>
+> Signed-off-by: Sandor Yu <Sandor.yu@nxp.com>
+> Reviewed-by: Jacky Bai <ping.bai@nxp.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+
+Just to let you know, this looks good to me and it seems like the NXP
+people like this too. What I am waiting for is an ack on the DT patch,
+then I am ready to queue this up.
+
+Kind regards
+Uffe
+
+> ---
+> The original work was from Sandor on the NXP Down-stream kernel
+>
+> diff --git a/drivers/pmdomain/imx/imx8mp-blk-ctrl.c b/drivers/pmdomain/imx/imx8mp-blk-ctrl.c
+> index e3203eb6a022..a56f7f92d091 100644
+> --- a/drivers/pmdomain/imx/imx8mp-blk-ctrl.c
+> +++ b/drivers/pmdomain/imx/imx8mp-blk-ctrl.c
+> @@ -55,7 +55,7 @@ struct imx8mp_blk_ctrl_domain_data {
+>         const char *gpc_name;
 >  };
-> =20
-> +/*
-> + * The maximum locality (0 - 4) for a TPM, as defined in section 3.2 of =
-the
-> + * Client Platform Profile Specification.
-> + */
-> +#define TPM_MAX_LOCALITY		4
-> +
->  struct tpm_chip {
->  	struct device dev;
->  	struct device devs;
-
-Is there a dependency to 1/3?
-
-BR, Jarkko
+>
+> -#define DOMAIN_MAX_CLKS 2
+> +#define DOMAIN_MAX_CLKS 3
+>  #define DOMAIN_MAX_PATHS 3
+>
+>  struct imx8mp_blk_ctrl_domain {
+> @@ -457,8 +457,8 @@ static const struct imx8mp_blk_ctrl_domain_data imx8mp_hdmi_domain_data[] = {
+>         },
+>         [IMX8MP_HDMIBLK_PD_LCDIF] = {
+>                 .name = "hdmiblk-lcdif",
+> -               .clk_names = (const char *[]){ "axi", "apb" },
+> -               .num_clks = 2,
+> +               .clk_names = (const char *[]){ "axi", "apb", "fdcc" },
+> +               .num_clks = 3,
+>                 .gpc_name = "lcdif",
+>                 .path_names = (const char *[]){"lcdif-hdmi"},
+>                 .num_paths = 1,
+> @@ -483,8 +483,8 @@ static const struct imx8mp_blk_ctrl_domain_data imx8mp_hdmi_domain_data[] = {
+>         },
+>         [IMX8MP_HDMIBLK_PD_HDMI_TX] = {
+>                 .name = "hdmiblk-hdmi-tx",
+> -               .clk_names = (const char *[]){ "apb", "ref_266m" },
+> -               .num_clks = 2,
+> +               .clk_names = (const char *[]){ "apb", "ref_266m", "fdcc" },
+> +               .num_clks = 3,
+>                 .gpc_name = "hdmi-tx",
+>         },
+>         [IMX8MP_HDMIBLK_PD_HDMI_TX_PHY] = {
+> --
+> 2.43.0
+>
