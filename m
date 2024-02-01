@@ -1,100 +1,143 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF4B515CD54
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA7715B984;
+	Thu,  1 Feb 2024 12:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706788967; cv=none; b=OucXdQRig5OdO4r47IHC5IddWwxxwtY0QbujzSOs1N/qeNfqTYhqPKXA7KWAE66Au/nZPKlFVcXfQyVXieP+0Fiwr/aEIartx4a3P0V7BUKPMaWoQ4zdcxnzMUmeizwhCce7KdrxbkZrJdG9ot0zoCdAwK1BUi19uLcgyeeDvcw=
+	t=1706788987; cv=none; b=GdhUk8m+cyqyYmk5EUcaRcWwwKc3OCpqJYPsBUTou3dzY2SZINsP6mr1F7dGsI/iJdenlmf6pXxX2nscup2QctILg/a3DaEiMOPW7GytmFuSTinsXU0OiF8PrxAkM9IIP05/X59b8IaIZbmIMmiwAyhYPqVCYpW4SHSP4jC+KRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706788967; c=relaxed/simple;
-	bh=U1QgTx/gonDu/uoDj6Yhkj7Mk5lTXdQzwCSaXC26Vq0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SYYA/lb7cSMDkp2BPGCqQDV2evigCigkKhY6JBKoi1FBYbPbMp2mrYM+1FC6VQsl/f77NED3X30D8y/vaJENWi2tI+WuknCNon5/OpSxMHgsy6DQAQUVaqD6IYmwB6XrgrkheY4n5CRFU3S+SrsZ+0DgY2vjlkMkXpvXT47c6aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WRELC0PS; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1706788987; c=relaxed/simple;
+	bh=pJuSO9d6uzAqQ3VtPCr5pnKI1a/DU5bzRyIqtixtObA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6Pd8+DKPLhE532e9iHEvB2YCEXH5I+5cbQcwissGkDsNGTq9EThZ+pdAyXV6aT5K/tGdflMsOLNP3/7EZ9M9IjuHWFWDbiheLVnfxVqBUD9TLR8kC4r71sv5yYgg+w36V7tflZV1ebAAzDXXUwffmXjQGd/SGZLyKFR6R3lJ8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PnSlo+3r; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WRELC0PS"
-Received: from [192.168.1.212] (181-28-144-85.ftth.glasoperator.nl [85.144.28.181])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6F789206FCD0;
-	Thu,  1 Feb 2024 04:02:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6F789206FCD0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706788965;
-	bh=qjw0e01e5zFmjwwo4oUZmNAjRO4lcWWRzjpiHATsHPU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WRELC0PSaLUMEtlRV/S8ryd5KvNa58lt15AZNRro2BSnLpzOJFyou7LW6Nv9NfFoY
-	 GfOyTslatpxy2VeYebidLaHHNzfydmCyJHoEFt05OPTOV7uPHkCYu3eKXWmFLFCLPf
-	 B3mXpPQSaXrvqobr5rXV0qztr8Dn4f4Mc1IWSzhk=
-Message-ID: <1d9d3372-825a-417a-8811-ffa501c83936@linux.microsoft.com>
-Date: Thu, 1 Feb 2024 13:02:38 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PnSlo+3r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706788986; x=1738324986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pJuSO9d6uzAqQ3VtPCr5pnKI1a/DU5bzRyIqtixtObA=;
+  b=PnSlo+3redwfuu//uLdEuT0r9vJ7dVxtOcOkcz6TzSjtqYR7+A542oEh
+   xD5WbMPS2GWrAkLcMkr5O+l2a1K7F+tFpNHb8BnqjADDaF9MBWbKBiCsr
+   KLvUki1YwdDufleyKhvIKQLBXHHQdPfbyTcYPkjLPlRVqRfTOR7M0Aby7
+   EDGBQTQWIAi1szp7KJKFxh+FwN2EABNw1nRIiTZSKDuEMESgfNBOZ6xG0
+   yV2pru2bXR1mtOAM34QDET8nh/oAYhBseMFBW9f2b3jAAOYQcpbGFAa3K
+   14xJvwJ8GmWpaAUZqG2KMCTYou6FtwqMy8DsVoiyq0PNc7BxPd/j41val
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="17409704"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="17409704"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="961902005"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="961902005"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:01 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rVV7Q-00000000ofZ-1VUT;
+	Thu, 01 Feb 2024 13:20:32 +0200
+Date: Thu, 1 Feb 2024 13:20:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Sumera Priyadarsini <sylphrenadin@gmail.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [RFC PATCH 0/5] of: automate of_node_put() - new approach to
+ loops.
+Message-ID: <Zbt-fw8eUrQzBjX9@smile.fi.intel.com>
+References: <20240128160542.178315-1-jic23@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC V1 5/5] x86: CVMs: Ensure that memory conversions happen at
- 2M alignment
-To: Vishal Annapurve <vannapurve@google.com>,
- Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com,
- rientjes@google.com, seanjc@google.com, erdemaktas@google.com,
- ackerleytng@google.com, jxgao@google.com, sagis@google.com,
- oupton@google.com, peterx@redhat.com, vkuznets@redhat.com,
- dmatlack@google.com, pgonda@google.com, michael.roth@amd.com,
- kirill@shutemov.name, thomas.lendacky@amd.com, dave.hansen@linux.intel.com,
- linux-coco@lists.linux.dev, chao.p.peng@linux.intel.com,
- isaku.yamahata@gmail.com, andrew.jones@linux.dev, corbet@lwn.net,
- hch@lst.de, m.szyprowski@samsung.com, rostedt@goodmis.org,
- iommu@lists.linux.dev
-References: <20240112055251.36101-1-vannapurve@google.com>
- <20240112055251.36101-6-vannapurve@google.com>
- <6709a57c-48a0-4ddd-b64e-a1e34ae2b763@intel.com>
- <CAGtprH_ANUVU+Dh1KOq0vpT7BGbCEvD2ab9B=sxjzHYsKxFGeA@mail.gmail.com>
-Content-Language: en-US
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-In-Reply-To: <CAGtprH_ANUVU+Dh1KOq0vpT7BGbCEvD2ab9B=sxjzHYsKxFGeA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240128160542.178315-1-jic23@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 01/02/2024 04:46, Vishal Annapurve wrote:
-> On Wed, Jan 31, 2024 at 10:03 PM Dave Hansen <dave.hansen@intel.com> wrote:
->>
->> On 1/11/24 21:52, Vishal Annapurve wrote:
->>> @@ -2133,8 +2133,10 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
->>>       int ret;
->>>
->>>       /* Should not be working on unaligned addresses */
->>> -     if (WARN_ONCE(addr & ~PAGE_MASK, "misaligned address: %#lx\n", addr))
->>> -             addr &= PAGE_MASK;
->>> +     if (WARN_ONCE(addr & ~HPAGE_MASK, "misaligned address: %#lx\n", addr)
->>> +             || WARN_ONCE((numpages << PAGE_SHIFT) & ~HPAGE_MASK,
->>> +                     "misaligned numpages: %#lx\n", numpages))
->>> +             return -EINVAL;
->>
->> This series is talking about swiotlb and DMA, then this applies a
->> restriction to what I *thought* was a much more generic function:
->> __set_memory_enc_pgtable().  What prevents this function from getting
->> used on 4k mappings?
->>
->>
+On Sun, Jan 28, 2024 at 04:05:37PM +0000, Jonathan Cameron wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> The end goal here is to limit the conversion granularity to hugepage
-> sizes. SWIOTLB allocations are the major source of unaligned
-> allocations(and so the conversions) that need to be fixed before
-> achieving this goal.
+> +CC includes peopleinterested in property.h equivalents to minimize
+> duplication of discussion.  Outcome of this discussion will affect:
+> https://lore.kernel.org/all/20240114172009.179893-1-jic23@kernel.org/
+> [PATCH 00/13] device property / IIO: Use cleanup.h magic for fwnode_handle_put() handling.
 > 
-> This change will ensure that conversion fails for unaligned ranges, as
-> I don't foresee the need for 4K aligned conversions apart from DMA
-> allocations.
+> In discussion of previous approach with Rob Herring we talked about various
+> ways to avoid a disconnect between the declaration of the __free(device_node)
+> and the first non NULL assignment. Making this connection clear is useful for 2
+> reasons:
+> 1) Avoids out of order cleanup with respect to other cleanup.h usage.
+> 2) Avoids disconnect between how cleanup is to be done and how the reference
+>    was acquired in the first place.
+> 
+> https://lore.kernel.org/all/20240117194743.GA2888190-robh@kernel.org/
+> 
+> The options we discussed are:
+> 
+> 1) Ignore this issue and merge original set.
+> 
+> 2) Always put the declaration just before the for loop and don't set it NULL.
+> 
+> {
+> 	int ret;
+> 
+> 	ret = ... and other fun code.
+> 
+> 	struct device_node *child __free(device_node);
+> 	for_each_child_of_node(np, child) {
+> 	}
+> }
+> 
+> This works but careful review is needed to ensure that this unusual pattern is
+> followed.  We don't set it to NULL as the loop will do that anyway if there are
+> no child nodes, or the loop finishes without an early break or return.
+> 
+> 3) Introduced the pointer to auto put device_node only within the
+>    for loop scope.
+> 
+> +#define for_each_child_of_node_scoped(parent, child) \
+> +	for (struct device_node *child __free(device_node) =		\
+> +	     of_get_next_child(parent, NULL);				\
+> +	     child != NULL;						\
 
-Hi Vishal,
+Just
 
-This assumption is wrong. set_memory_decrypted is called from various
-parts of the kernel: kexec, sev-guest, kvmclock, hyperv code. These conversions
-are for non-DMA allocations that need to be done at 4KB granularity
-because the data structures in question are page sized.
+	     child;							\
 
-Thanks,
-Jeremi
+> +	     child = of_get_next_available_child(parent, child))
+> +
+> 
+> This series is presenting option 3.  I only implemented this loop out of
+> all the similar ones and it is only compile tested.
+> 
+> Disadvantage Rob raised is that it isn't obvious this macro will instantiate
+> a struct device_node *child.  I can't see a way around that other than option 2
+> above, but all suggestions welcome.  Note that if a conversion leaves an
+> 'external' struct device_node *child variable, in many cases the compiler
+> will catch that as an unused variable. We don't currently run shaddow
+> variable detection in normal kernel builds, but that could also be used
+> to catch such bugs.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
