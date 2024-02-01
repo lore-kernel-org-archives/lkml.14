@@ -1,78 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846152C1AE;
-	Thu,  1 Feb 2024 16:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77BC3FFE
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 16:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706805026; cv=none; b=reaaTn/n+QgvLMTlFXpgYZrxHoa7QPmn8uRBhittvaBTl5lAOeWWL8winrh8VQhYIUO0WqMyGu4sRaEiwuBY93oLfu6VcTSXqq3ficmAppy0dB0AypAg6ZPV9PxF9XEBtEpWW7wxzC7pdiwo6ikANaUBf4ndjT7PST423dZTfYs=
+	t=1706805132; cv=none; b=Ne06ZbVXAiRfPyz+WBp2z8fz2K0yIvyJrp3rbKDgXYzxc5cVkwwjN3hwsFTWK6brrj3tX7tiYWP6S/UVseizUkR+mRTv7bXXbMssZWWngZ9+vSnPNtsfKqXjxW07kXdaOaVJAAJssJhTxj/Q/wAl3bSbBlN9aK0AL3w/bwasZHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706805026; c=relaxed/simple;
-	bh=eceafvfYynU1zzp2FnC/0uoltxuM0zweeBVsbz35eJk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=IvCHOVLWVN8NAPOzAU3oDsrNd0PV+SujSbrnsSLz0Z9FC04o7L6c64Yr2lk4qrZykwrpYVjwTQQQjY1P823zLpwH6GuI2gaxJCHsXQN4ZYFiccuFhdRlDQ50tHaAkIvSkmqeGO3RX1MYpCuxNSTdgrwS1NyWUJlovRezIPVHLAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rEr6YX78; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706805132; c=relaxed/simple;
+	bh=/dEbfKdsCxc6i2ZleAJoeyfJW9N+L7lE8dX/mKZ0Tvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hGUxj3uCu1Wfp/5vB9sOhDBwQtrN8ximGK8fMa7GBS7NfIodm4kBWSgAoFtOJaP+lctY6GvTn29Osqvuw3LjDNil286Hjvb2HoGQtcKjr6bxJENtiZ/iLIVT7cIBI4HTA85vI7IQNyJIrSYHWbyddZSIua3jirHIfV2C/8JxbgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1qQqYnv; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rEr6YX78"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 106FDC433F1;
-	Thu,  1 Feb 2024 16:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706805026;
-	bh=eceafvfYynU1zzp2FnC/0uoltxuM0zweeBVsbz35eJk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rEr6YX78cKcC0rx1Lt9P3TOfYOeTLUMAaW0HzDoc5jtyUI+ggFWQbfjcLJSOp6I69
-	 iwAE13xxUf7ePDPFuqnx5sTav3VsSJFMO1PX8f0g6MDxPnqQVk635TVceRzgnZQ/GX
-	 zRJrknBAQt4DK9lcE+QAd5JWayiQbULu7H8KU/qUu7Pa/6jSMerwUjPu9oVKG78a3C
-	 Yz2vKZE6L1zywB+3sg0xcFlLs41fqK4sdD4GIB2nKKRlPrZ910YOt5etjJFPH/LmOv
-	 yAjUFydbQAFvjqfcR7i4MTJAL5d6GY/yTQXbbGKzy2B0NXJMj+vPt6jzuLKLCWJJKL
-	 IsrbHWzyesi0Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ECB13E3237E;
-	Thu,  1 Feb 2024 16:30:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1qQqYnv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706805131; x=1738341131;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/dEbfKdsCxc6i2ZleAJoeyfJW9N+L7lE8dX/mKZ0Tvs=;
+  b=j1qQqYnvSNst6l8GdXQQiAjXJwDo2KeAugXMTeNkavLnnZaU41lwKS3L
+   TQiQkjZX5Ln7dgp5gqFTDsaBeR1gJPepdHLMb+55w/16sowwpxtm4yCe3
+   aDhSNH33tUtkgHsZHNDEgXv0SuPuIyChB7NMfp7/kWPEXDYq5mKOpZ1Zs
+   UgQJpHBhHK6zqmzirZshLRTGBjg+MSVyar4iq45UjjT2UpmnvXMwvPfs4
+   s7kD3uvY9gmCo4XkeBSjok4k/t00hFfn7O7Rh4OsYvZqK/W8+EbX14A4m
+   3JDrYfKqDYJSyYVZ4Ka5y/yNdjDDTkvP1rewqmdIEpDN6WIOd+h14Ynf2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11307691"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="11307691"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 08:32:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="109475"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 08:32:09 -0800
+Date: Thu, 1 Feb 2024 08:33:30 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: kuiliang Shi <seakeel@gmail.com>, alexs@kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6 RFT] sched/fair: change sched asym checking
+ condition
+Message-ID: <20240201163330.GB20261@ranerica-svr.sc.intel.com>
+References: <20240130131708.429425-1-alexs@kernel.org>
+ <20240130131708.429425-6-alexs@kernel.org>
+ <20240201011038.GD18560@ranerica-svr.sc.intel.com>
+ <4a6d2404-46ab-41ca-856e-e4cbfebba185@gmail.com>
+ <0c9e077c-c59a-40c7-878f-7f429e12ba24@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2 0/2] net: dqs: NIC stall detector
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170680502596.24534.11598533255978552834.git-patchwork-notify@kernel.org>
-Date: Thu, 01 Feb 2024 16:30:25 +0000
-References: <20240131102150.728960-1-leitao@debian.org>
-In-Reply-To: <20240131102150.728960-1-leitao@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c9e077c-c59a-40c7-878f-7f429e12ba24@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Hello:
-
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 31 Jan 2024 02:21:48 -0800 you wrote:
-> This is a patch that was sent by Jakub Kicinski six month ago, and I
-> am reviving it.
+On Thu, Feb 01, 2024 at 08:49:05PM +0530, Shrikanth Hegde wrote:
 > 
-> This is still mostly Jakub's code, with some small improvements,
-> described in the changelog.
 > 
-> Changelog:
+> On 2/1/24 5:10 PM, kuiliang Shi wrote:
+> > 
+> > 
+> > On 2/1/24 9:10 AM, Ricardo Neri wrote:
+> >> On Tue, Jan 30, 2024 at 09:17:08PM +0800, alexs@kernel.org wrote:
+> >>> From: Alex Shi <alexs@kernel.org>
+> >>>
+> >>> Asym only used on SMT sd, or core sd with ITMT and core idled.
+> >>> !sched_smt_active isn't necessary.
+> >>
+> >> sched_smt_active() is implemented as a static key. Thus, if SMT is not
+> >> enabled, we can quickly return without having to check the rest of the
+> >> conditions, as we should.
+> > 
+> > Hi Ricardo,
+> > 
+> > Thanks a lot for comments! I will drop this patch in this series.
+> > 
+> > But forgive my stupidity, asym feature is possible when SMT enabled instead of SMT disable. Why no SMT is a condition for asm feature? For this asym feature, I only see the SMT and MC domain use this, correct me if I'm wrong. 
+> > 
 > 
-> [...]
+> on power7 ASYM_PACKING is used to pack at SMT level. 
 
-Here is the summary with links:
-  - [net,v2,1/2] net: sysfs: Fix /sys/class/net/<iface> path
-    https://git.kernel.org/netdev/net/c/ae3f4b44641d
-  - [net,v2,2/2] net: dqs: add NIC stall detector based on BQL
-    (no matching commit)
+Indeed, this is why the function returns true if it the sched domain has
+the SD_SHARE_CPUCAPACITY flag.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+When SMT is disabled there is no point in doing any check because we will
+always want to use asym_packing.
 
+> 
+> On x86, ITMT topology uses ASYM_PACKING to do load balancing instead of using different cpu capacities.
 
+You can look at x86_cluster_flags() and x86_die_flags().
+
+> 
+> Its possible to have it in PKG(earlier referred as DIE) as well. 
+> In powerpc recently we did that for shared processor LPAR's. So asym feature is in PKG as well. 
+> 
+> >>
+> >>>
