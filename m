@@ -1,79 +1,42 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64335D473;
-	Thu,  1 Feb 2024 15:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB8B62151;
+	Thu,  1 Feb 2024 15:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706799837; cv=none; b=M4zLIerm33WmRFI//hciseXcAml+Z2dqInGQVdciEBMr8gmg+6KHcvcSBN+lST3aUDtza7zk6Oj7OQ01qLePB7uy0rBQHABVR793MvnbgXytF1XYGk0FnB5QhgSSYbxYH2H9x5lxna9Ad5vl8GfsMDWbIvH8u+TRUoBcoYgtW1I=
+	t=1706799839; cv=none; b=mpVbnLrL+U1CgK+Udbxsn/DqgAhPoSv3dl9CbEWNeKyUYWJa25ohhgTrwyxofPJGwpAwiONp0MPgMrYNzeoqkyNieM/0ZNSbqxhO2doaFlOeCFCYW7TMtMPO7BHNNBK5q7qUGvsRx8OxurrYXxE6Ai8l/qtz3XEZG7Vk2pDTEuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706799837; c=relaxed/simple;
-	bh=V/ONzrff4iKHb3CCc2p1U9n5EASoNMBZGX8D6oRCtP4=;
+	s=arc-20240116; t=1706799839; c=relaxed/simple;
+	bh=U09eNR21Lbmrd2l9PZFgQtRK0fx92Ls+0PVGzJDFuko=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tWXOIfbxCIPks1PcdJoYHWJNE85jDggg6xy5a/bU0sLWRsxx6atjrfnS3mnMWbPmZa+AsjO4N3alkt0e8BEuwK0EvVWJlcbWW4t3SG4aFYXQao1lj2QyS9yLnZ2U15wJ0OG6hpcYz6zBqkvVkhAe+/jJCdOv3VSbO8V/E5MIxz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RkWqBAYE; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q03mstUH/4jMs0JFa0pEaHIEz/47wgx6HASGlPFsuGCE0UklzIyHKULnv8+zkN1jTLijgZ42FB7djWa04KXT96fFj+4YRS3cre85f1nLfVVAmU4skG587SyvjCb+oV7T33v+DUVGWPzuGUbHLxHc+1vcyrdW7oArAoq2yL5ljf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YhYk+fye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkWqBAYE"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e80046264so9256535e9.0;
-        Thu, 01 Feb 2024 07:03:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706799834; x=1707404634; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TQI82xkebwfzT3j+NbzdVCePUJoKXQTTgiIMRHd9tA0=;
-        b=RkWqBAYEYynbQiNMX7OXhIfiRCcceHKoO+Dma1ggp+vvBEw3TrAGgKCLxzeA3O9A5y
-         7E9Idun/cSuEVALjvV3qOYZIPOUnnbV3GPxDhFeN/Hj20adGAPpxPM+WCnhG+qtab/HZ
-         pY3aksbXYi7R6Wxm0czV4kTRVbD2+Y6fe5r5jgBlmM1ocXbn0i1jpFUAfRpBmCNvxrBE
-         iJzttPtRYRaNMR2igX0hs6y+SGhT61p9mhS4HbHvY1tvQzntqkNTO65d7k98X+gFqV6K
-         gsck/jWZoRJL4Kc1LjwIdTtzYtNROGenRoW2ED/bjcVbth47YgRsSgN/DE1W7z3mttfZ
-         6HFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706799834; x=1707404634;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TQI82xkebwfzT3j+NbzdVCePUJoKXQTTgiIMRHd9tA0=;
-        b=PojqinmA7IqGGp+Ff7aQkIBN+BR3aEBkt1fGxJe1NMkfq6V9x66SwKDOX387dHIno7
-         mCDnge4XQtYTLBGyoK7wQh3Fv0MJ1nzWSceJNBUzCSe9rsgBJsqxYwgfDhdb/QAroi4Z
-         UayalZdZS5AZNit3KGwa0j1ea4B4t/4UqM76rERHrwkt1ziHC/tXP8TUtTRb4vq1nslB
-         ThZO/aQg/y2RvXhU/SzV7Sl+NWkdnykp4REqejn8PwC7sZ0SrJEPIq6s86lpf7VchJFY
-         xAdcdM2JUp2J/ohaDxSHNBB23UUZMtVc+CL/u6T7PeVNuZZSYnXWySlk4GfAtepcIENN
-         XjHg==
-X-Gm-Message-State: AOJu0YzxvTRxkexdtU497WZEtxF71ZJR3TFr9af/fES4Qy9IK0Ejo0J6
-	5OMe3edGTfMj8r1h5ict94jJT4JerRv968W3MGM+N0bOdUuAWIhO
-X-Google-Smtp-Source: AGHT+IHgq8VDz2gMVFec1rt9xa8alnLqg6m1IYYBrYWka6TlPpdIpPCK3IdQ6EOAmX4jWd4gg88q+A==
-X-Received: by 2002:a05:600c:1c9b:b0:40e:f702:a304 with SMTP id k27-20020a05600c1c9b00b0040ef702a304mr3558063wms.32.1706799833416;
-        Thu, 01 Feb 2024 07:03:53 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUDpgq0/uHUFP6DOMM/DOOgv6iaPTfvvlORJEtejjXG7NB3wNC7NPVgdP/a80SSBXcJjbaEEIyh+mqStaWE9ShiuHnhGiu0Ude3P4CSFQ3d+CGq9+DAjgcm1aQxefjN0mJjaRHu+d+pEnI81EDPulpbkTCKWAzVI1NQ2CjyFnruwvjT3XSCNT2xi8Rz/Pm9l+yrTYDvmZzT8WwkDZ4TJRCZL7qKJ7JE0w208ZTXS3EdwtHkyMVxRJFjaC6vmbIEV3KJHxW+9E8y6RugEGGGc+RAgrRS2/mcChzL72DvHvv09MdkNJ3SyGTtS/aWraB/umbXkoKBO3eu0iaPDyYl45cI7AIDf4cvnmpMVE36WXwBNDuS5C+dFi6826+JbRT5aVrMB/812NuBe36eW2blfMeKt3OBcyvpvyCF+9r1L742OlcdPyGlBCXjfCg1ZVYrnPqeTySi49U/aQRdxiXSjmMzo/VA+l2tLlv2iNnZdz/5YM0P8SL4ZrgKVPAT0fLShXJOKH7m6PpeKfu+0fpLDF8QTj1FESwPMhuWww/x2V1Ed9CIW4dUvtVF5d9pzMZaqIdpMFOCe6tTae1G15CtxUebt68+gSBiml4shJT3SMHsg1px/hmq3Vr8DBHs63fugiLnN0pAWPPBo3jKqA==
-Received: from andrea ([31.189.34.185])
-        by smtp.gmail.com with ESMTPSA id bk7-20020a0560001d8700b0033addbf2d2csm16043387wrb.9.2024.02.01.07.03.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 07:03:52 -0800 (PST)
-Date: Thu, 1 Feb 2024 16:03:48 +0100
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ved Shanbhogue <ved@rivosinc.com>, Matt Evans <mev@rivosinc.com>,
-	Dylan Jhong <dylan@andestech.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH RFC/RFT v2 4/4] riscv: Stop emitting preventive
- sfence.vma for new userspace mappings with Svvptc
-Message-ID: <Zbuy1E7mz9Oui1Dl@andrea>
-References: <20240131155929.169961-1-alexghiti@rivosinc.com>
- <20240131155929.169961-5-alexghiti@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YhYk+fye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AFCC43390;
+	Thu,  1 Feb 2024 15:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706799839;
+	bh=U09eNR21Lbmrd2l9PZFgQtRK0fx92Ls+0PVGzJDFuko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YhYk+fye2duZoKq7wrP/wZM3zLUsVgooOMGedUBMv9sY58Fkhw1LQoOv10cUkea5d
+	 XQmlhMIApgGld71PJf4ibrlNyNGdZvNr9qUrHG4/+C3CtP5B0Vc6cpYHLKOg8mOz+M
+	 gAaH3/y/b900seFnbfsnWCIoEhJlBzf4hikXk2Ao=
+Date: Thu, 1 Feb 2024 07:03:58 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Chris Leech <cleech@redhat.com>, Nilesh Javali <njavali@marvell.com>,
+	John Meneghini <jmeneghi@redhat.com>, Lee Duncan <lduncan@suse.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	Hannes Reinecke <hare@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH 1/2] uio: introduce UIO_MEM_DMA_COHERENT type
+Message-ID: <2024020125-bunt-nearest-242b@gregkh>
+References: <20240131191732.3247996-1-cleech@redhat.com>
+ <20240131191732.3247996-2-cleech@redhat.com>
+ <20240201044637.GC14176@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,37 +45,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240131155929.169961-5-alexghiti@rivosinc.com>
+In-Reply-To: <20240201044637.GC14176@lst.de>
 
-On Wed, Jan 31, 2024 at 04:59:29PM +0100, Alexandre Ghiti wrote:
-> The preventive sfence.vma were emitted because new mappings must be made
-> visible to the page table walker but Svvptc guarantees that xRET act as
-> a fence, so no need to sfence.vma for the uarchs that implement this
-> extension.
-
-AFAIU, your first submission shows that you don't need that xRET property.
-Similarly for other archs.  What was rationale behind this Svvptc change?
-
-
-> This allows to drastically reduce the number of sfence.vma emitted:
+On Thu, Feb 01, 2024 at 05:46:37AM +0100, Christoph Hellwig wrote:
+> As the least horrible way out this looks ok:
 > 
-> * Ubuntu boot to login:
-> Before: ~630k sfence.vma
-> After:  ~200k sfence.vma
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > 
-> * ltp - mmapstress01
-> Before: ~45k
-> After:  ~6.3k
+> Bt maybe you can add some commentary why this mem mode exists and
+> why no one should be using it in new code?
 > 
-> * lmbench - lat_pagefault
-> Before: ~665k
-> After:   832 (!)
-> 
-> * lmbench - lat_mmap
-> Before: ~546k
-> After:   718 (!)
 
-This Svvptc seems to move/add the "burden" of the synchronization to xRET:
-Perhaps integrate the above counts w/ the perf gains in the cover letter?
+Good idea, and perhaps a kernel log warning when this is used as well
+just to prevent anyone new from ever considering it.
 
-  Andrea
+thanks,
+
+greg k-h
