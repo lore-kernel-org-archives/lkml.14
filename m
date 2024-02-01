@@ -1,129 +1,203 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56183FB01
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 21:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889183D0A4;
+	Thu,  1 Feb 2024 21:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706823027; cv=none; b=gDWs4LlrRg3S4LY96Rs9v1G26mGB0eODvXKlfk7UoO2nKAA8lHTWdTWT208RuACaP4oBbsWyY74ykHzWnbig60c6JoKPPVX/ZjhxWZS8FAxagunHn+/Jy2cFOEZDZ8Clk8cmLcwmVG57Sxf9k88oOYxTOMzcj8bH/Ewbl+g4ubk=
+	t=1706823091; cv=none; b=HWiaz4EOh/e8QHyGNR8apVPWOB0XCNeXFgq6XDeEhkTUjalIt4btc9i9cVUN8mb5e+8wKec4iKvz83lk6boda9pDHhFn8QX1okjzzQt3x+1hh5YdOYe/+DV6MkGLhefi5TvaQ3M4424+70kYgQcSYTr9A1ftTOAqm/CqX87CSas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706823027; c=relaxed/simple;
-	bh=PbdIUqPhYiA6AB3X+rs8Be25vy0jyf89naAwB2nQj1Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VgToYyEgipJ5siWB21jmaRzkZ2wId1OGftOYpDCl+f8g8P3jVJGa/jeUbBisepk1xsHMRr0keYmX9+wod/pluvMnPPhRcxIQF+ECUH0qB7KDu0uo/lva7RvrdIi+B20n4/k4ckTJU/h1ronXOybNdlOkJFMod4guqbCQa0gbCRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DPZORThD; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706823091; c=relaxed/simple;
+	bh=RKRuJZDcHzJVM6OssyI2c9q6nynqY2AMDTYesXnZMbk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UN1wUkugUuAp7EzZMQxtduzr2klH0gQFF5STWICE8FIr+5uHQyp21JOAeTpCjT0L0H7odryF2v3UQ3RJEOS52keLE7VK56Vg0SCeTZknhLuCNfVDTLCmOFU2UOJU+Tt2fWOpBcKT6RBOVRLC9Dwp7AxJ/X60g2ALUEW3ebvOwpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/TxOPyS; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DPZORThD"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a358ec50b7cso30026366b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 13:30:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/TxOPyS"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d07b400bb8so11758851fa.2;
+        Thu, 01 Feb 2024 13:31:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706823023; x=1707427823; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6/QeHBpQyFPB5QhxpYTGrBvtFQrY95kd1lO0Bi8UaxU=;
-        b=DPZORThDPoXzLgCzVtxaLPNByk9k6XXDS0lMiSItp5Rtsn4eQYBzk8HhQ4wES9XD3E
-         hARqmxOHvcX8oOtZiOI1zd8BbHJu9fmWcObInQIZ5NCJP12K9s3NF58EmIa/sZhZOSsE
-         Ga0rYpWo9GEzfwFkMRzozNBZ4cK8zt42RyK+1eYcOfUQUxFzn6kzBUnEw8A6WDsfLPoI
-         sGBELbxzblryR8AsZh6XRZRzF1fy2oNbVi+0zv4tGi5IdWiU2NGJO3Miym2DAYROkv0K
-         hnVTI5pp94Ckeugm4NAEPZcWpahkhx6rHKmovt9ja5GuLdfHOGmKEvat8ODqY97l74Iy
-         W+SQ==
+        d=gmail.com; s=20230601; t=1706823087; x=1707427887; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6n8vJLvrRSpKLu7nGCkmJY4eBysRiYCB7GixziU7X0g=;
+        b=E/TxOPySE2pqLynu8KFzs0ssVLGqYDnXnU1ZKf47UswAcFZzApzty7vC0jlqqLJFnz
+         a+IJ1wTXg5d6aabuPE3Rz5TyL87BlH2T1owLZrDCXQ9DllWWSX6bmZ3uIHtXV9aCyCwy
+         GAjnPLGQ/XYxLpGFk6byFgKSdaOIud4ZdfE1gjBlTWg5MYyOmI3gWeEsneroVrVyiLZV
+         Z0Q5F9kRPk2rlv85k5ErxiXTGk8iitJFW6yV4GIQkgt7/xZpp8/TvUWcEa9+tmrzAdtB
+         1nw6v8KkW3W0hDMLm4Tlguk0qkhy5wETpao77X+vFcgM7F7ll04O5kk6vmsqB+SiNLD0
+         /xAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706823023; x=1707427823;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6/QeHBpQyFPB5QhxpYTGrBvtFQrY95kd1lO0Bi8UaxU=;
-        b=YTXBLr99FmhNX4E+dTQjwYm7GjAPwdsMyhZQY1upb6MihfLpnmNMWa4Ij5BW2vf/2e
-         NyKkr4kUO1/Lg2k4GCvSwsg1jPJIP7Nx1J8PVJCnw2ecjlYeClGfVBeE2UCObwFRspqc
-         rg/XQiUsKRG2TZ193+FOxqQGXdbH1bDR2eo6gGEsvCyj9k3qtu1c71FGyLig0IkPHr1z
-         3TM0CCYE2/jFg1I8xBMY4N17JRLefzOZJdGfwLG3IfjCk27d6Y5sU7S0cUqz+k+A2rRl
-         BVVa/AkUOEXcCi3D/fG+Qf1H8PKk2Cv7QQSghNpsniteZPFcpaW/iYC/DJIexJvgjiK2
-         My7A==
-X-Gm-Message-State: AOJu0YwG5acZfrHuaVz0EoYCzfQIKYGOOVB+7hUlwnXsE7XikZ9EApZE
-	0vHEKY9jKfj24ZN3RIybD6DIttaM6OSOS43RO51Xo6S8MW5/wYbIIYLUqFHxspbtIWi+oA8KgmX
-	x
-X-Google-Smtp-Source: AGHT+IHtJvQqsTQUguHfqfY/hfR6i77WkkUasxCHl7HQl8VYXpNsvAtsieZkmkFJ+Vqc4qtxS7NwgQ==
-X-Received: by 2002:a17:907:7782:b0:a35:3c1f:b29f with SMTP id ky2-20020a170907778200b00a353c1fb29fmr169075ejc.5.1706823022667;
-        Thu, 01 Feb 2024 13:30:22 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVMRc3D9T5IxagDk3x3d6wMkDlSrnKJgtV+EG1BYuZtNjs6K1RNC0CXhuhRxcI8pGVl59dyItFYSZaZZkyQ2CLlXSDzUJsyKHKE52kCsNmfFBFmBbU9Om/FRsTmm+pTvhaM5CLPQbAvl9OX0JTIVOOptsz6gLrbJRKh2PmbKTjL/o3Yp87T/nYvgXgs3/Pqjsf2/VCzGw==
-Received: from [192.168.159.104] (178235179129.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.129])
-        by smtp.gmail.com with ESMTPSA id hd34-20020a17090796a200b00a36f314daa6sm182740ejc.46.2024.02.01.13.30.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 13:30:22 -0800 (PST)
-Message-ID: <67c87d4e-bfab-4248-8f4c-60a80ca3969f@linaro.org>
-Date: Thu, 1 Feb 2024 22:30:20 +0100
+        d=1e100.net; s=20230601; t=1706823087; x=1707427887;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6n8vJLvrRSpKLu7nGCkmJY4eBysRiYCB7GixziU7X0g=;
+        b=KXoQDWmAPiv7T1Z0Soh+1445rnw+AS8ZCKwt9ka2cOPRobgiZULutBozg+WMf6oQbI
+         o7U7a4TeiOESZaXehiFbepJT4RQUMM8K1FK8yWHHx60Trd41XRB4TXdiT8QUWMIjkbiQ
+         qNGzDN3/aQ5by98jBQnlcPlxIwaGPLJeZL1OjChhOZ7m50kycGckaf+7AxdRXc4eAivz
+         IvUlB+oDj7aZA6R61JFcsBp6njt5uD1nqVmxgIt/tILZydOdzGbWZ7GTY7j5Z4qhML1M
+         PbIC3lvUnS605Qe0NGlCSoW85Y+Ymyf3xogYQ+3mJkxRAFwwioCDy5FNq+b2iGHNWerE
+         /3Yg==
+X-Gm-Message-State: AOJu0Yyw+76TwpmcHl3SjU/87lF7Rzq9cnMas7blpSpLNFLnRVEk4Vd2
+	Zntuz8Hq47h6AewoozNcjEHveFfgolHIYTGgygsV86ke2i8y2Xz6
+X-Google-Smtp-Source: AGHT+IFZpTq6sX/Q2weicpKcCIUYb85KsqHg6gZUYWvLCcabBWw6E9n/nVeUeRXTFtD/6IEDYXFU/Q==
+X-Received: by 2002:a2e:9cce:0:b0:2cc:f02c:c972 with SMTP id g14-20020a2e9cce000000b002ccf02cc972mr2044536ljj.14.1706823087011;
+        Thu, 01 Feb 2024 13:31:27 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVzzRqCvJmDAI2yE2jluj5IE8d5RIOgvJEF2HyxvE8agxW5qGdW3kkSUwN3uLk7Xo+UbPs4ZPje5SRcbc3L3gyieNGoQE5/+9tHlLEgxAGy/KTbnjWBOKbHSaoOketgMWqnQE+361MERJoRuL4BdtDLBUOzqiOAvWoQyg6Qj5SWda/jKL04vSnDi+AMlC8oj5enjJYDBVl995/pZ7RvypjUWotuf51mrptvwQC7++46NctRrSV/LYSOFEOIfhyw/s27SG2g40Cud3dRIIHty81nblFKTMSc4gfv6e4G1IXhuJbBXu6fld5Q6VZYAZB2W37faY7S2WWqeNQYHYo10dUfxLW2G8Z+C4e5CQYIYk3LAXP/7xyoV+vW1s92yYumZBj6DyijbbMPwkpNzNxupxXq3gI/XF3AI62ZY0CUFjy/ruAcnrdfyOVrzPuPrV/s2RFmCQPVdY1VRq6f+zz5oS1590qBKZyxF97COq019bkLLTwhBvSBq9pU1nb8D8Af
+Received: from krava ([83.240.62.96])
+        by smtp.gmail.com with ESMTPSA id n7-20020a50cc47000000b0055c63205052sm196016edi.37.2024.02.01.13.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 13:31:26 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 1 Feb 2024 22:31:24 +0100
+To: syzbot <syzbot+0e9c9f96dbdc31a8431b@syzkaller.appspotmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com,
+	john.fastabend@gmail.com, kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	martin.lau@linux.dev, sdf@google.com, sfr@canb.auug.org.au,
+	song@kernel.org, syzkaller-bugs@googlegroups.com,
+	yonghong.song@linux.dev
+Subject: Re: [syzbot] [bpf?] linux-next boot error: WARNING in
+ register_btf_kfunc_id_set
+Message-ID: <ZbwNrPmewQXuMDwU@krava>
+References: <000000000000e447290610580f33@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm interconnect providers
-Content-Language: en-US
-To: quic_bjorande@quicinc.com, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-References: <20240201-enable-icc-8250-2290-v1-1-8ded02750521@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240201-enable-icc-8250-2290-v1-1-8ded02750521@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000e447290610580f33@google.com>
 
-On 1.02.2024 22:31, Bjorn Andersson via B4 Relay wrote:
-> From: Bjorn Andersson <quic_bjorande@quicinc.com>
+On Thu, Feb 01, 2024 at 12:44:30PM -0800, syzbot wrote:
+> Hello,
 > 
-> With interconnect providers built as modules Qualcomm SM8250 and QCM2290
-> platforms launches init without /dev/console being backed by the debug
-> UART.
+> syzbot found the following issue on:
 > 
-> Build there drivers into the kernel, to make sure the dependencies for
-> the UART driver are available and thereby give userspace access to the
-> UART without having to re-open the console, once the deferred UART
-> driver has probed.
+> HEAD commit:    51b70ff55ed8 Add linux-next specific files for 20240201
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17b05288180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=88d85200b6a62126
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0e9c9f96dbdc31a8431b
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 > 
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/f2d3a98d07e5/disk-51b70ff5.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/d525430ddf13/vmlinux-51b70ff5.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/6d1ec0b50066/bzImage-51b70ff5.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+0e9c9f96dbdc31a8431b@syzkaller.appspotmail.com
+> 
+> greybus: registered new driver hid
+> greybus: registered new driver gbphy
+> gb_gbphy: registered new driver usb
+> asus_wmi: ASUS WMI generic driver loaded
+> usbcore: registered new interface driver snd-usb-audio
+> usbcore: registered new interface driver snd-ua101
+> usbcore: registered new interface driver snd-usb-usx2y
+> usbcore: registered new interface driver snd-usb-us122l
+> usbcore: registered new interface driver snd-usb-caiaq
+> usbcore: registered new interface driver snd-usb-6fire
+> usbcore: registered new interface driver snd-usb-hiface
+> usbcore: registered new interface driver snd-bcd2000
+> usbcore: registered new interface driver snd_usb_pod
+> usbcore: registered new interface driver snd_usb_podhd
+> usbcore: registered new interface driver snd_usb_toneport
+> usbcore: registered new interface driver snd_usb_variax
+> drop_monitor: Initializing network drop monitor service
+> NET: Registered PF_LLC protocol family
+> GACT probability on
+> Mirror/redirect action on
+> Simple TC action Loaded
+> netem: version 1.3
+> u32 classifier
+>     Performance counters on
+>     input device check on
+>     Actions configured
+> nf_conntrack_irc: failed to register helpers
+> nf_conntrack_sane: failed to register helpers
+> nf_conntrack_sip: failed to register helpers
+> xt_time: kernel timezone is -0000
+> IPVS: Registered protocols (TCP, UDP, SCTP, AH, ESP)
+> IPVS: Connection hash table configured (size=4096, memory=32Kbytes)
+> IPVS: ipvs loaded.
+> IPVS: [rr] scheduler registered.
+> IPVS: [wrr] scheduler registered.
+> IPVS: [lc] scheduler registered.
+> IPVS: [wlc] scheduler registered.
+> IPVS: [fo] scheduler registered.
+> IPVS: [ovf] scheduler registered.
+> IPVS: [lblc] scheduler registered.
+> IPVS: [lblcr] scheduler registered.
+> IPVS: [dh] scheduler registered.
+> IPVS: [sh] scheduler registered.
+> IPVS: [mh] scheduler registered.
+> IPVS: [sed] scheduler registered.
+> IPVS: [nq] scheduler registered.
+> IPVS: [twos] scheduler registered.
+> IPVS: [sip] pe registered.
+> ipip: IPv4 and MPLS over IPv4 tunneling driver
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 1 at kernel/bpf/btf.c:8131 register_btf_kfunc_id_set+0x261/0x290 kernel/bpf/btf.c:8131
+> Modules linked in:
+> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc2-next-20240201-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+> RIP: 0010:register_btf_kfunc_id_set+0x261/0x290 kernel/bpf/btf.c:8131
+> Code: 16 e8 b3 fb db ff bd 0b 00 00 00 eb 0a e8 a7 fb db ff bd 0d 00 00 00 89 ef 4c 89 f6 5b 41 5e 41 5f 5d eb 45 e8 90 fb db ff 90 <0f> 0b 90 e9 22 fe ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c da fd
+> RSP: 0000:ffffc90000067940 EFLAGS: 00010293
+> RAX: ffffffff81b7d510 RBX: 0000000000000000 RCX: ffff888016a98000
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 0000000000000003 R08: ffffffff81b7d311 R09: 1ffffffff1f0b5bd
+> R10: dffffc0000000000 R11: fffffbfff1f0b5be R12: 1ffffffff21e0e1d
+> R13: dffffc0000000000 R14: ffffffff8caa77c0 R15: dffffc0000000000
+> FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000000 CR3: 000000000df32000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  fou_init+0x50/0x110 net/ipv4/fou_core.c:1239
+>  do_one_initcall+0x238/0x830 init/main.c:1233
+>  do_initcall_level+0x157/0x210 init/main.c:1295
+>  do_initcalls+0x3f/0x80 init/main.c:1311
+>  kernel_init_freeable+0x430/0x5d0 init/main.c:1549
+>  kernel_init+0x1d/0x2b0 init/main.c:1439
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:242
+>  </TASK>
+
+should be fixed by https://lore.kernel.org/bpf/CAADnVQJT8nOiiX90g3Pm7Ud0hzBBjBOQmPtPV1iwUYKMcuBFig@mail.gmail.com/
+
+jirka
+
+> 
+> 
 > ---
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
