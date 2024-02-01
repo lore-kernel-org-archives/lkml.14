@@ -1,126 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFBB779E7;
-	Thu,  1 Feb 2024 15:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2F962166;
+	Thu,  1 Feb 2024 15:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706801207; cv=none; b=R/eCpKOU75h7cOOU1l1Ll9TJLh6/2dx2VLiDdj9a9wdkUzSm4IoaL28QCxKU5njXu5J4wivwuvb4UOAOla4fj/96puz721DC4gBHlzbJmRAmNUTD1eFuQVEBQE+/7anjiMjmSFFIxgih57k/PddCClaRIV2drKadIF/g817Tz40=
+	t=1706801246; cv=none; b=IPxDOGoztjPqLAgrkcblUUOMnE0MSTkn5J6+ddIRdCDnWSZb6qbzdtqLU46Tbdz2jq79SPwaINXoZbAgK3Qcfruhdgb8L2He0o1fukPmfeXNL2FfvI6hEBGQGWmblo5agHUDl911ab40r/GQNXTu2hlZJypnsJttO/61ynj9u6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706801207; c=relaxed/simple;
-	bh=Crj2Xd5+sjM/WF1/AU2C24hHxy1FDdrAbIh7Rfeop1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pH1rQ+HSHNfaxl3Dd6xLv/YBR8ggJ3sTzf3Zis3p+UE3AynCl0Bs1mzq9XJHsrRrIdHNu1seu6igmzt8bQJNOeIOl+19A8fO51Xe9JiQHn09K8AhckMjeZQ/Lp/VMCkGLpk2FJcWCL64mRHm4cJBy9/vyHpLTqvqW/tNoRT7gLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BqKQSyWa; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706801246; c=relaxed/simple;
+	bh=J4oACJ7K02dl5yARmR3wThXfdDqsUmklZwHWhRZPSAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=to88ZmmDc6xUPHZuKpKaEYx7IknfqCwKpa8nENhESH4PVhg63EEFpx6ZPmouECITU2pNg5vemj6JY5MnBX1uMOKBAqHd5jk7FAEcumxsiimxgekosyGhHTu+XiXprWWHHWlkJAP0sTvTIx7n96Mbjo+oEh5bcEUFMz0+N3XsEEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UysrzrXq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BqKQSyWa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706801206; x=1738337206;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Crj2Xd5+sjM/WF1/AU2C24hHxy1FDdrAbIh7Rfeop1M=;
-  b=BqKQSyWamktiLj9I8CL2YP6m5jb7RZdMsINHVYxz5k0x0JM+IwFkCrX9
-   rIYqZMvL9IsoY5R3HIw8QRQpl22P0XIbVJIrrcUzpXYN4F3wdTERD66Rd
-   2zJVk8Ef44rBZhCr7/LrptbF7uM4UmIaXjJy4e/Nwrh1BBPpqqVo+NFCW
-   /kKKAIhAW9oVPEg0ubgAIC7F1U6kmiY4fgLCfxfyUbszaXrMAZbnVGj2V
-   loMwC5LDt/4OOrBTJC/3TJ4CSSWaJU7ClXdWaL/f2SjZjuzOcN9XjRZgH
-   A6YM/PWBBWREytR9a9VorZDtvVTDieUYh+8VqYRGqKXS5dzwAcYN1WHSG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="140716"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="140716"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 07:26:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="908275361"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="908275361"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Feb 2024 07:26:41 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id F2F7CA8A; Thu,  1 Feb 2024 16:49:52 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>,
-	Javier Martinez Canillas <javierm@redhat.com>
-Subject: [PATCH v2 2/4] backlight: hx8357: Move OF table closer to its consumer
-Date: Thu,  1 Feb 2024 16:47:43 +0200
-Message-ID: <20240201144951.294215-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240201144951.294215-1-andriy.shevchenko@linux.intel.com>
-References: <20240201144951.294215-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UysrzrXq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFDE5C433C7;
+	Thu,  1 Feb 2024 15:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706801246;
+	bh=J4oACJ7K02dl5yARmR3wThXfdDqsUmklZwHWhRZPSAQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UysrzrXqbkN/eYckVeuBK8QLFf3oKCyaE5jk5aKqffI5wKVIHHGZYq7HdvPfkt9HP
+	 TrHxL8Q7SmNs8sVFV8HmLJVGfHgE0G4E1mpRc6GWGveRktupuD4fUAl0jo+VrH36Wn
+	 uD6vNQ/BzHFBwz31OKvv7SbNgL+j8DKLYAfOahQ4FsZh6TmWa9xixHW1lEaQdlmmuL
+	 yvRqCWTymTvXjQB6Q42UCQ1Y4MKMscptPFzyDiNM7htsgKKimeG1u5IaeQ9Sa2ZKrB
+	 kzcUKuqq4a3Y1r0Nr/rx3fSPtIL4WH30ScoiXxxXfLaubFQht9JU/4RI5S6w+uS6HH
+	 Q8ulzLDRWjDSQ==
+Message-ID: <88ffd0ec-ef43-4b26-9314-207606291af3@kernel.org>
+Date: Thu, 1 Feb 2024 16:27:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing/timerlat: Move hrtimer_init to timerlat_fd open()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <7324dd3fc0035658c99b825204a66049389c56e3.1706798888.git.bristot@kernel.org>
+ <20240201102526.755de868@gandalf.local.home>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20240201102526.755de868@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Move OF table near to the user.
+On 2/1/24 16:25, Steven Rostedt wrote:
+> On Thu,  1 Feb 2024 16:13:39 +0100
+> Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
+> 
+>> Currently, the timerlat's hrtimer is initialized at the first read of
+>> timerlat_fd, and destroyed at close(). It works, but it causes an error
+>> if the user program open() and close() the file without reading.
+>>
+>> Move hrtimer_init to timerlat_fd open() to avoid this problem.
+>>
+>> No functional changes.
+> 
+> It can't be fixing something and not have any functional changes.
+> 
+> No functional changes means the code is restructured but the resulting
+> assembly would be the same.
+> 
+> Like moving functions around in a file so that you don't need extra
+> prototype declarations.
+> 
+> Please only add "No functional changes" if the function's assembly would be
+> the same.
 
-While at it, drop comma at terminator entry.
+ok
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/video/backlight/hx8357.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+>>
+>> Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
+> 
+> With a fixes tag, I'm assuming his should go into v6.8 with a Cc stable?
 
-diff --git a/drivers/video/backlight/hx8357.c b/drivers/video/backlight/hx8357.c
-index ac65609e5d84..81d0984e9d8b 100644
---- a/drivers/video/backlight/hx8357.c
-+++ b/drivers/video/backlight/hx8357.c
-@@ -566,19 +566,6 @@ static struct lcd_ops hx8357_ops = {
- 
- typedef int (*hx8357_init_fn)(struct lcd_device *);
- 
--static const struct of_device_id hx8357_dt_ids[] = {
--	{
--		.compatible = "himax,hx8357",
--		.data = hx8357_lcd_init,
--	},
--	{
--		.compatible = "himax,hx8369",
--		.data = hx8369_lcd_init,
--	},
--	{},
--};
--MODULE_DEVICE_TABLE(of, hx8357_dt_ids);
--
- static int hx8357_probe(struct spi_device *spi)
- {
- 	struct device *dev = &spi->dev;
-@@ -640,6 +627,19 @@ static int hx8357_probe(struct spi_device *spi)
- 	return 0;
- }
- 
-+static const struct of_device_id hx8357_dt_ids[] = {
-+	{
-+		.compatible = "himax,hx8357",
-+		.data = hx8357_lcd_init,
-+	},
-+	{
-+		.compatible = "himax,hx8369",
-+		.data = hx8369_lcd_init,
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, hx8357_dt_ids);
-+
- static struct spi_driver hx8357_driver = {
- 	.probe  = hx8357_probe,
- 	.driver = {
--- 
-2.43.0.rc1.1.gbec44491f096
+right, I added it on Cc, but did not include the Cc:.. tag. It seems that I should have.
+
+-- Daniel
+
+> -- Steve
+> 
+> 
+>> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+>> ---
+>>  kernel/trace/trace_osnoise.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+>> index bd0d01d00fb9..a8e28f9b9271 100644
+>> --- a/kernel/trace/trace_osnoise.c
+>> +++ b/kernel/trace/trace_osnoise.c
+>> @@ -2444,6 +2444,9 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
+>>  	tlat = this_cpu_tmr_var();
+>>  	tlat->count = 0;
+>>  
+>> +	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+>> +	tlat->timer.function = timerlat_irq;
+>> +
+>>  	migrate_enable();
+>>  	return 0;
+>>  };
+>> @@ -2526,9 +2529,6 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
+>>  		tlat->tracing_thread = false;
+>>  		tlat->kthread = current;
+>>  
+>> -		hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+>> -		tlat->timer.function = timerlat_irq;
+>> -
+>>  		/* Annotate now to drift new period */
+>>  		tlat->abs_period = hrtimer_cb_get_time(&tlat->timer);
+>>  
+> 
 
