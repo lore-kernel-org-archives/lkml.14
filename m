@@ -1,259 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF2D161B4F;
-	Thu,  1 Feb 2024 12:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E92161B6B;
+	Thu,  1 Feb 2024 12:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706789031; cv=none; b=fZtQ4qel4OGflG/dOvkxlQpYumyYKrx+c70KRnti5azSfXuwguPiK5dgVXLJgzxHVK8HqYhvLNZ01MBQxouhXSZNh/4z14DfdD3zSBGOzyaY9w6RKOL1imWJAPl9im6s0AC4PLsZp66YENQpwr9qPpgykq6vQmbtfFRYQXIrWMw=
+	t=1706789035; cv=none; b=Pqd+GQ7Y3YgyW+4b5q4uTwzuuFm1lOmfw6R2yzvTNdsdHz77KLalObCdiKSlN2Gfd+8FFL2AS0zNrBcR6M6xSByHHNsZOIfj2cnH7RCGTzlCWytRIydAcDr6N4A5SCCDUXd8tCp0ZF6bpJX9Q2hBezGmxLDJXEOn3EIBLdFSioY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706789031; c=relaxed/simple;
-	bh=I4vLqsDfXG9pW/rrRlc221L7/vFRIUuAf5F/pe2wE+w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j8Kl/gbMNVsIKvHr+DxpfVv0QgiSAFnCdla7o4J8TFY+8ePkmmzpDLeNQ2qGhymzmee155T37B9+ljDjaEfusWssUunBusKHmbPpK8PwMkL5FvGoij0G1+I9WOD6d/mZm0Wt/QjzDqapQP3xWDLTimAadXKhxTbEi2vROz8YcSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5oszq/V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706789035; c=relaxed/simple;
+	bh=HmMQXeLGQdDe0lD1nXkW7jz/UDWrlhubI0Aip/rEHN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YSOrHI2vToI9NK7wqfX+qo2N8tuCyn95NFRnjXe4wGkY2tfre4mJogucqDmIksUdMxoLYq3x1iUmzCeCJBKbPozFURqbc72u0M6tcjxxbbrP2d0kAAt2Z7gECAg9jcys+1tpHLj2A3iRAcoWB5ByTPOixjhdImai0BtqZGlAj90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XuQfNKpL; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5oszq/V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC48C4167E;
-	Thu,  1 Feb 2024 12:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706789031;
-	bh=I4vLqsDfXG9pW/rrRlc221L7/vFRIUuAf5F/pe2wE+w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k5oszq/Vj1/v/angyQVmOvmusYIudzTsp0qI3wbSoQLTQh5XbQQdnA+5RT/H/9pom
-	 h4lQ4ayG30ZK42F5olRUZAdzFPc9ClMMrm9x0IGLNoKKTGeoxHkENeHDVS8WnMNN2s
-	 iK3ZBJmk/EK4pgza6UC8hi6hWag9FCz1utgfpBwPedHuU6H0pFallH+vblxkzvL9YM
-	 d2oCx9XP7dPdiY48DLdrWW+CJeidtGa9rz7j90SGA3Wm/+TqaJlSlBFpkuXp8rQaBx
-	 VF5e9AjY3QTSJI+dGIpApOjvMfA7mlMC8ukU2pG3i/KAu1S4u4xr049Hcs2N9qbCsO
-	 sNpnsbxGpMEJg==
-From: Roger Quadros <rogerq@kernel.org>
-To: nm@ti.com,
-	vigneshr@ti.com
-Cc: afd@ti.com,
-	kristo@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	srk@ti.com,
-	r-gunasekaran@ti.com,
-	b-liu@ti.com,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Roger Quadros <rogerq@kernel.org>
-Subject: [PATCH v3 3/5] arm64: dts: ti: k3-am62p: add the USB sub-system
-Date: Thu,  1 Feb 2024 14:03:30 +0200
-Message-Id: <20240201120332.4811-4-rogerq@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240201120332.4811-1-rogerq@kernel.org>
-References: <20240201120332.4811-1-rogerq@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XuQfNKpL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706789034; x=1738325034;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HmMQXeLGQdDe0lD1nXkW7jz/UDWrlhubI0Aip/rEHN4=;
+  b=XuQfNKpLwOujWx1ziuTuzPg+zkyL5dKICwu8or0Flqg3do3m5andIX8M
+   4BuGZiYLp9Omi6ZQPNgWl2tP7yLb5g7Dn4o0FxhPGXIwpFK+5l7FGQ+IS
+   rXmey8H3st6o44jgnZfYaL8MiRVGfEmq6bfRD7OZ/utyOAY/c0VfMuuJH
+   Qd8qYbkfWav+99YLj9nqtIWFTGWln2hGXWbaYCe7B94HfI2pwoSBTyCjz
+   L6zatSTPGJj1wLMbyX6yeE89dvEKhSFFwk7siR8wzd9m00KrYLiY7hrg/
+   gtU9XRwQIa4XXAOJaz5+4nrDIlNbQgk+qEIA9ibujqX8vHZcoXFVEZqL8
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="60251"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="60251"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788919040"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="788919040"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:47 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rVVIh-00000000onx-0xJW;
+	Thu, 01 Feb 2024 13:32:11 +0200
+Date: Thu, 1 Feb 2024 13:32:10 +0200
+From: "'andriy.shevchenko@linux.intel.com'" <andriy.shevchenko@linux.intel.com>
+To: "Corona, Ernesto" <ernesto.corona@intel.com>
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"Castro, Omar Eduardo" <omar.eduardo.castro@intel.com>,
+	"'omar.eduardo.castro@linux.intel.com'" <omar.eduardo.castro@linux.intel.com>,
+	"'arnd@arndb.de'" <arnd@arndb.de>,
+	"'jiri@nvidia.com'" <jiri@nvidia.com>,
+	"'vadimp@mellanox.com'" <vadimp@mellanox.com>,
+	"'mchehab+samsung@kernel.org'" <mchehab+samsung@kernel.org>,
+	"'gregkh@linuxfoundation.org'" <gregkh@linuxfoundation.org>,
+	"'davem@davemloft.net'" <davem@davemloft.net>,
+	"'nicolas.ferre@microchip.com'" <nicolas.ferre@microchip.com>,
+	"'robh@kernel.org'" <robh@kernel.org>,
+	"'lukas.bulwahn@gmail.com'" <lukas.bulwahn@gmail.com>,
+	"Filary, Steven A" <steven.a.filary@intel.com>,
+	"'amithash@fb.com'" <amithash@fb.com>,
+	"'patrickw3@fb.com'" <patrickw3@fb.com>,
+	"Chen, Luke" <luke_chen@aspeedtech.com>,
+	Billy Tsai <billy_tsai@aspeedtech.com>
+Subject: Re: [PATCH 30 7/7] Add AST2500 and AST2600 JTAG device in DTS
+Message-ID: <ZbuBOmtyYdlmnCBa@smile.fi.intel.com>
+References: <LV8PR11MB8463F88C2364A08DEF3ABAC28B7D2@LV8PR11MB8463.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <LV8PR11MB8463F88C2364A08DEF3ABAC28B7D2@LV8PR11MB8463.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-There are two USB instances available on the am62p5 starter kit. Include
-and enable them for use on the board.
+On Tue, Jan 30, 2024 at 11:32:48PM +0000, Corona, Ernesto wrote:
+> Adding aspeed jtag device to device tree
+> 
+> Signed-off-by: Ernesto Corona <ernesto.corona@intel.com>
+> Signed-off-by: Omar Castro <omar.eduardo.castro@linux.intel.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
----
+First of all, please use --thread to git-format-patch when preparing the
+series.
 
-Notes:
-    Changelog:
-    
-    v3 - no change
-    
-    v2:
-    - added USB PHY CTRL node changes here
-    - changed USB wrapper node names to usb@
-    - changed Type-C chip node name to usb-power-control@
+> Cc: Jiri Pirko <jiri@nvidia.com>
+> Cc: Vadim Pasternak <vadimp@mellanox.com>
+> Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Cc: Steven Filary <steven.a.filary@intel.com>
+> Cc: Amithash Prasad <amithash@fb.com>
+> Cc: Patrick Williams <patrickw3@fb.com>
+> Cc: Luke Chen <luke_chen@aspeedtech.com>
+> Cc: Billy Tsai <billy_tsai@aspeedtech.com>
 
- arch/arm64/boot/dts/ti/k3-am62p-main.dtsi   | 46 ++++++++++++++
- arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi | 10 +++
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts     | 67 +++++++++++++++++++++
- 3 files changed, 123 insertions(+)
+Second, please avoid flooding commit message with unneeded details, i.e. move
+these Cc:s to...
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-index 4c51bae06b57..17d28390d587 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-@@ -560,6 +560,52 @@ sdhci2: mmc@fa20000 {
- 		status = "disabled";
- 	};
- 
-+	usbss0: usb@f900000 {
-+		compatible = "ti,am62-usb";
-+		reg = <0x00 0x0f900000 0x00 0x800>;
-+		clocks = <&k3_clks 161 3>;
-+		clock-names = "ref";
-+		ti,syscon-phy-pll-refclk = <&usb0_phy_ctrl 0x0>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		power-domains = <&k3_pds 178 TI_SCI_PD_EXCLUSIVE>;
-+		ranges;
-+		status = "disabled";
-+
-+		usb0: usb@31000000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x00 0x31000000 0x00 0x50000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-+			<GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-+			interrupt-names = "host", "peripheral";
-+			maximum-speed = "high-speed";
-+			dr_mode = "otg";
-+		};
-+	};
-+
-+	usbss1: usb@f910000 {
-+		compatible = "ti,am62-usb";
-+		reg = <0x00 0x0f910000 0x00 0x800>;
-+		clocks = <&k3_clks 162 3>;
-+		clock-names = "ref";
-+		ti,syscon-phy-pll-refclk = <&usb1_phy_ctrl 0x0>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
-+		ranges;
-+		status = "disabled";
-+
-+		usb1: usb@31100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x00 0x31100000 0x00 0x50000>;
-+			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-+			<GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-+			interrupt-names = "host", "peripheral";
-+			maximum-speed = "high-speed";
-+			dr_mode = "otg";
-+		};
-+	};
-+
- 	fss: bus@fc00000 {
- 		compatible = "simple-bus";
- 		reg = <0x00 0x0fc00000 0x00 0x70000>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-index 19f42b39394e..00dd38b02a52 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-@@ -18,6 +18,16 @@ chipid: chipid@14 {
- 			reg = <0x14 0x4>;
- 			bootph-all;
- 		};
-+
-+		usb0_phy_ctrl: syscon@4008 {
-+			compatible = "ti,am62-usb-phy-ctrl", "syscon";
-+			reg = <0x4008 0x4>;
-+		};
-+
-+		usb1_phy_ctrl: syscon@4018 {
-+			compatible = "ti,am62-usb-phy-ctrl", "syscon";
-+			reg = <0x4018 0x4>;
-+		};
- 	};
- 
- 	wkup_uart0: serial@2b300000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index 1773c05f752c..80be56c0a4e0 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -27,6 +27,8 @@ aliases {
- 		spi0 = &ospi0;
- 		ethernet0 = &cpsw_port1;
- 		ethernet1 = &cpsw_port2;
-+		usb0 = &usb0;
-+		usb1 = &usb1;
- 	};
- 
- 	chosen {
-@@ -297,6 +299,12 @@ AM62PX_IOPAD(0x01b0, PIN_OUTPUT, 2) /* (G20) MCASP0_ACLKR.UART1_TXD */
- 		bootph-all;
- 	};
- 
-+	main_usb1_pins_default: main-usb1-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_IOPAD(0x0258, PIN_INPUT, 0) /* (G21) USB1_DRVVBUS */
-+		>;
-+	};
-+
- 	main_wlirq_pins_default: main-wlirq-default-pins {
- 		pinctrl-single,pins = <
- 			AM62PX_IOPAD(0x0128, PIN_INPUT, 7) /* (K25) MMC2_SDWP.GPIO0_72 */
-@@ -340,6 +348,36 @@ AM62PX_IOPAD(0x0124, PIN_INPUT, 7) /* (J25) MMC2_SDCD.GPIO0_71 */
- 	};
- };
- 
-+&main_i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_i2c0_pins_default>;
-+	clock-frequency = <400000>;
-+
-+	typec_pd0: usb-power-controller@3f {
-+		compatible = "ti,tps6598x";
-+		reg = <0x3f>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			self-powered;
-+			data-role = "dual";
-+			power-role = "sink";
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				port@0 {
-+					reg = <0>;
-+					usb_con_hs: endpoint {
-+						remote-endpoint = <&usb0_hs_ep>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &main_i2c1 {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -460,6 +498,35 @@ cpsw3g_phy1: ethernet-phy@1 {
- 	};
- };
- 
-+&usbss0 {
-+	status = "okay";
-+	ti,vbus-divider;
-+};
-+
-+&usbss1 {
-+	status = "okay";
-+	ti,vbus-divider;
-+};
-+
-+&usb0 {
-+	usb-role-switch;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@0 {
-+		reg = <0>;
-+		usb0_hs_ep: endpoint {
-+			remote-endpoint = <&usb_con_hs>;
-+		};
-+	};
-+};
-+
-+&usb1 {
-+	dr_mode = "host";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_usb1_pins_default>;
-+};
-+
- &mcasp1 {
- 	status = "okay";
- 	#sound-dai-cells = <0>;
+> ---
+...the after this cutter line.
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
