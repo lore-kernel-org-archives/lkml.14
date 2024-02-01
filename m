@@ -1,149 +1,153 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3F71586E6
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 10:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6224DA06
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 10:20:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706782699; cv=none; b=s3z6dV9sJF3+h1nhQBXqhGr5GeTzYVG5KRwX+SSezATgoddBjrvDZtd5c2jsTOHCRF49cktt5+rCbQnpE54ref09nE6HUF50uVVS2DOVCG2BQ6tmeg6GzZ1rs5DgpKfTksD/0SxbOrNG8oKH3l9nMo1dzo/KCDwYnn+WCA61F20=
+	t=1706782805; cv=none; b=rPzUrdxvDl5OH8DUPnh1hq9IFb7tysblqSmPIbkuyvhLGun4zpweKP+BnVtlXmBW5zyhj9G0WuqjE923j3Co0Zaj/+Gb0jDebepux3XSqsj0YeKRWQMEWGb8aOOxBfVb8gY64nj4wtRXNDCHwyWGm1/RdyQDP8BTe41/Pbuhb8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706782699; c=relaxed/simple;
-	bh=1HfJGHNVvdEAyf53JhA/TQKpIP4/ve8BmZVTF6bOHEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jlt9EY1mHHH/mI+yp4OVExe3zJ9OJxWwrhP9maA1ZISX7KbPthh9arcmNAhQ3J5AAYg61VEEfZ4tY7QI1d+AE/57R3FV0oTkQgp+7gL5E0YAVo5DGnolOGEtna+wc/hQViH2mA8uEP6UKWlK9eLQxothrx7i82KQ6Kp+DzUlWHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Htb66U/C; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1706782805; c=relaxed/simple;
+	bh=fOv7oevZuvvZsJf1C1St13HEDSFkJW2lWu0qBEAsTwc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fVZWuvcLjQrBIDIxo3z58/8Zx9/Sd1Rk7qK5T1ytyy9JGzpjHm9Hex06LHwUtaOF88lDTdyibbc/21BXkvprG4Npc9mN50jZopE1PX10xc4VGbj6S5hL4solkVXOBm9JKUuhM8sn8bpk/Qh59C3CFIysc8uiQ9apJDkuFJKc/Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QFzJNb/y; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Htb66U/C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QFzJNb/y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706782696;
+	s=mimecast20190719; t=1706782802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jDy8qMMA55AKgVosxl6RqKwoMWR5lT1S9B1uXJ8N2Ak=;
-	b=Htb66U/CNi/9t/cOwl7H0LEtE7BznmBzT6PNWZMqvWI02k7vQYOVAy24rW0DeyzYbpijyN
-	0qidgSuipXcQXGrlr39x4xdAJysenvM26cz/bAST1fE8jFm/o6/F/fEkuNk+5ckScWnldQ
-	byxBtI46+lLeHXpsudmnlNP1wPtQI88=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=v/4dNiv7Gixt65uHC5aCs29qHOR+DNKVZDoHEZy6bqM=;
+	b=QFzJNb/yFHqj0lECgOOaCuSB9d4LWnsxzi/suNWvkH7K1qbS31mriop01P0U4guOvtokwH
+	JMP9ffhzUucmRBhjoALz0BZo9GnIbFerEYjNX3kcAsfzU/NiApmTlbRR7oHzntqkbd6bou
+	4/mWQQ4B5LzHYTP8WSRlG5jGXVlZlow=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-koDl_EePPiGb-b59jBeY3w-1; Thu, 01 Feb 2024 05:18:15 -0500
-X-MC-Unique: koDl_EePPiGb-b59jBeY3w-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5101e826a3dso605343e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 02:18:14 -0800 (PST)
+ us-mta-8-EJFGnSf7MlyxvkMOYtyFOQ-1; Thu, 01 Feb 2024 05:20:00 -0500
+X-MC-Unique: EJFGnSf7MlyxvkMOYtyFOQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a357c92f241so43402866b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 02:20:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706782693; x=1707387493;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jDy8qMMA55AKgVosxl6RqKwoMWR5lT1S9B1uXJ8N2Ak=;
-        b=BsTOPoNg16J0kGel6dpXP45JVVTzTInsnhLM3AFB5wuurHda1XRRLKGv++olyidgMr
-         vwmHMbYKIdgvXFl+CW2Os2ogiZMMCBWptdo6QmLxnY1HWy7+AuQxu01Ph98K1nnM1fPI
-         7wnRfoc6J9Ffjv76tqcILG8wQf/KoUdjOap+dLcL6XL+37x5m0are7BqKpFrANzKfn1i
-         o+ocWPxuqcQyszYUtrSjKdjBpL/KmOJEqspCI+FD+dEcN0VbjLKUiCdVZKRkE+9DIii7
-         nmOYOuEks07wkZcZeuAXECmgFxdX5IIliMUAj/nAmPoXC8KuLNyV+li7LBlznIJ7ge0t
-         w7QQ==
-X-Gm-Message-State: AOJu0Yz/STWVe7jeabDb9AazXiNhZ2cTKWn+xh3LHwTGbuCkCsDiAuzT
-	4jJM6hig1TY8CG0mewf9hrDTjxaVCO3dvYO6PI/vQ+2LQAbwk7WKpE7VEG6ufADgfoBlyno40lI
-	fMAD71S/YbjXupLCcay36NpeA8Q/yZcSnfJVYf9WDwZJ9FfkZL8xfYyUIaVavLw==
-X-Received: by 2002:a19:f812:0:b0:511:f07:b2cc with SMTP id a18-20020a19f812000000b005110f07b2ccmr1550076lff.32.1706782693565;
-        Thu, 01 Feb 2024 02:18:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEZrxIcf+hc9jhz/xRsVxgHlk+RuzEuI5h5BsEGolVmmKFKeL4GQLXufYo2AOftMfryVQQLYw==
-X-Received: by 2002:a19:f812:0:b0:511:f07:b2cc with SMTP id a18-20020a19f812000000b005110f07b2ccmr1550063lff.32.1706782693194;
-        Thu, 01 Feb 2024 02:18:13 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUYSmzKmKnqhmEl97dijC6M6XUtw28yKvZV1GTuAr/q+0yxl+rcCl66T8QXENFpdmfe/B/IGodwDTGWQTRnqdOfscJAimHLISJWkg9PYXTHbOHoWL9AP5iig5x9POH7K2YuJwgrC4lgKm+10oNsAhTAYHriughV3kqGONTCaXm7Z1YvBontJhKlk0ADsUg=
-Received: from localhost.localdomain ([151.29.75.172])
-        by smtp.gmail.com with ESMTPSA id bh23-20020a05600c3d1700b0040d5a9d6b68sm3966505wmb.6.2024.02.01.02.18.12
+        d=1e100.net; s=20230601; t=1706782799; x=1707387599;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v/4dNiv7Gixt65uHC5aCs29qHOR+DNKVZDoHEZy6bqM=;
+        b=a3g6p90Fvbmre4Ml3dZvO1Yqf5cUls7rCtLZa6FrYzDFVOEJY/4xLVAoXXmi4Pwn+P
+         BRv5+VMPX+1Bjn2FD8vujKtcZGxIPMECOyJ1HCoV99A609gMGGCfAFmoKmAbsF2SNaNZ
+         e4cOxqqxldl59S818kY+S8iOgVoJNCFRimPVFuXPWofBls6IbukWzYQ1foaZ61scbJPj
+         w74xqTzu/Uwc3uxVAFl7KCHJfwivsAVN7doKn737jMP4pWJUYwW1RHHZvhfMB5w/9/qP
+         RMBJHKl9qn9xUwoJgnGKAm2mb53QeNMxrb5SPFZX7vCianTIURkt/06QAON0UdfaKSDh
+         mfiA==
+X-Gm-Message-State: AOJu0Yy4c5jIAcPGML++VJT+8NVAd9WhJ/AOgKdpD8iEu9MA8kud70Yu
+	ldsum0/drxFDOIYRNLRiSDdbHEb5bohwlilRyhuv3231VrsrMc9IeUJIQDjPEjFHePDnVRSx0C0
+	QMDHA6N7JBAUmIQJ5I9baW2KP+k4dnRweL7eE+8331NkiOeYhqQPYqkn1uBMDvg==
+X-Received: by 2002:a17:906:d10e:b0:a31:61ad:6554 with SMTP id b14-20020a170906d10e00b00a3161ad6554mr1429949ejz.69.1706782799670;
+        Thu, 01 Feb 2024 02:19:59 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF/GkhU57dioOHC7xr2O/jFX4EwaPurr5DMMYY1FG8VzQcAwtDPgonJDhdsMsmkqsVkOvrUSw==
+X-Received: by 2002:a17:906:d10e:b0:a31:61ad:6554 with SMTP id b14-20020a170906d10e00b00a3161ad6554mr1429938ejz.69.1706782799369;
+        Thu, 01 Feb 2024 02:19:59 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXJSx1+Gy7uGkCto8Zt1KBxcUnD2ZLhWxsVkpmKm5U5+OL9zn33sGzRU7E78tS+Hy/5FlzM9yhmk9DWGTItzzIjvVv8ZeC1z+wfdQXpJcn1hHtAHafdNx0aowOBmkVezCnXw2pjZ0YHGRIJ9+v1aW9ap6nZCdmf+07dLJE/mb05zBj53vU7//jjyQ==
+Received: from fedora (g2.ign.cz. [91.219.240.8])
+        by smtp.gmail.com with ESMTPSA id ps10-20020a170906bf4a00b00a368718314dsm1232216ejb.7.2024.02.01.02.19.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 02:18:12 -0800 (PST)
-Date: Thu, 1 Feb 2024 11:18:10 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org, Cestmir Kalina <ckalina@redhat.com>,
-	Alex Gladkov <agladkov@redhat.com>
-Subject: Re: [RFC PATCH 0/3] workqueue: Enable unbound cpumask update on
- ordered workqueues
-Message-ID: <Zbtv4v2KCKshnCL2@localhost.localdomain>
-References: <20240130183336.511948-1-longman@redhat.com>
- <ZbpElS5sQV_o9NG1@localhost.localdomain>
- <89927d84-279a-492e-83d3-6d3e20b722f7@redhat.com>
+        Thu, 01 Feb 2024 02:19:58 -0800 (PST)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Jan Richter <jarichte@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Sean
+ Christopherson <seanjc@google.com>
+Subject: Re: [PATCH] KVM: selftests: Compare wall time from xen shinfo
+ against KVM_GET_CLOCK
+In-Reply-To: <596b2d7ce6941e5dd6bd7b2da6d3ea7d74f6c95a.camel@infradead.org>
+References: <20240111135901.1785096-1-vkuznets@redhat.com>
+ <596b2d7ce6941e5dd6bd7b2da6d3ea7d74f6c95a.camel@infradead.org>
+Date: Thu, 01 Feb 2024 11:19:57 +0100
+Message-ID: <87h6is7agi.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89927d84-279a-492e-83d3-6d3e20b722f7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 31/01/24 10:31, Waiman Long wrote:
-> 
-> On 1/31/24 08:01, Juri Lelli wrote:
-> > Hi Waiman,
-> > 
-> > Thanks for working on this!
-> > 
-> > On 30/01/24 13:33, Waiman Long wrote:
-> > > Ordered workqueues does not currently follow changes made to the
-> > > global unbound cpumask because per-pool workqueue changes may break
-> > > the ordering guarantee. IOW, a work function in an ordered workqueue
-> > > may run on a cpuset isolated CPU.
-> > > 
-> > > This series enables ordered workqueues to follow changes made to the
-> > > global unbound cpumask by temporaily saving the work items in an
-> > > internal queue until the old pwq has been properly flushed and to be
-> > > freed. At that point, those work items, if present, are queued back to
-> > > the new pwq to be executed.
-> > I took it for a quick first spin (on top of wq/for-6.9) and this is what
-> > I'm seeing.
-> > 
-> > Let's take edac-poller ordered wq, as the behavior seems to be the same
-> > for the rest.
-> > 
-> > Initially we have (using wq_dump.py)
-> > 
-> > wq_unbound_cpumask=0xffffffff 000000ff
-> > ...
-> > pool[80] ref= 44 nice=  0 idle/workers=  2/  2 cpus=0xffffffff 000000ff pod_cpus=0xffffffff 000000ff
-> > ...
-> > edac-poller                      ordered    80 80 80 80 80 80 80 80 ...
-> > ...
-> > edac-poller                      0xffffffff 000000ff    345 0xffffffff 000000ff
-> > 
-> > after I
-> > 
-> > # echo 3 >/sys/devices/virtual/workqueue/cpumask
-> > 
-> > I get
-> > 
-> > wq_unbound_cpumask=00000003
-> > ...
-> > pool[86] ref= 44 nice=  0 idle/workers=  2/  2 cpus=00000003 pod_cpus=00000003
-> > ...
-> > edac-poller                      ordered    86 86 86 86 86 86 86 86 86 86 ...
-> > ...
-> > edac-poller                      0xffffffff 000000ff    345 0xffffffff 000000ff
-> > 
-> > So, IIUC, the pool and wq -> pool settings are updated correctly, but
-> > the wq.unbound_cpus (and its associated rescure affinity) are left
-> > untouched. Is this expected or are we maybe still missing an additional
-> > step?
-> 
-> Isn't this what the 4th patch of your RFC workqueue patch series does?
-> 
-> https://lore.kernel.org/lkml/20240116161929.232885-5-juri.lelli@redhat.com/
-> 
-> The focus of this series is to make sure that we can update the pool cpumask
-> of ordered workqueue to follow changes in global unbound workqueue cpumask.
-> So I haven't touched anything related to rescuer at all.
+David Woodhouse <dwmw2@infradead.org> writes:
 
-My patch only uses the wq->unbound_attrs->cpumask to change the
-associated rescuer cpumask, but I don't think your series modifies the
-former?
+> Sorry for delayed response.
+>
+> On Thu, 2024-01-11 at 14:59 +0100, Vitaly Kuznetsov wrote:
+>>=20
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vm_ioctl(vm, KVM_GET_CLOCK, &kcdat=
+a);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 delta =3D (wc->sec * NSEC_PER_SEC =
++ wc->nsec) - (kcdata.realtime - kcdata.clock);
+>
+> I think you need to check for KVM_CLOCK_REALTIME in the flags here,
+> don't you? It might not always be set.
 
-Thanks,
-Juri
+Good suggestion; while this shouldn't be a common use-case on x86_64, it
+is possible when TSC is *not* the clocksource used on the host. I guess
+we can just skip the sub-test with a message in this case.
+
+>
+> And also, nobody should ever be using KVM_CLOCK_REALTIME as it stands
+> at the moment. It's fundamentally broken because it should always have
+> used CLOCK_TAI not CLOCK_REALTIME.
+>
+> I'm in the process of fixing that up as an incremental ABI change,
+> putting the TAI offset into one of the spare pad fields in the
+> kvm_clock_data and adding a new KVM_CLOCK_TAI_OFFSET flag.
+>
+>> +       TEST_ASSERT(llabs(delta) < 100,
+>> +                   "Guest's epoch from shinfo %d.%09d differs from KVM_=
+GET_CLOCK %lld.%lld",
+>> +                   wc->sec, wc->nsec, (kcdata.realtime - kcdata.clock) =
+/ NSEC_PER_SEC,
+>> +                   (kcdata.realtime - kcdata.clock) % NSEC_PER_SEC);
+>>=20
+>
+>> Replace the check with comparing wall clock data from shinfo to
+>> KVM_GET_CLOCK. The later gives both realtime and kvmclock so guest's epo=
+ch
+>> can be calculated by subtraction. Note, the computed epoch may still dif=
+fer
+>> a few nanoseconds from shinfo as different TSC is used and there are
+>> rounding errors but 100 nanoseconds margin should be enough to cover
+>> it (famous last words).
+>
+> Aren't those just bugs? Surely this *should* be cycle-perfect, if the
+> host has a stable TSC?
+>
+> But I suppose this isn't the test case for that. This is just testing
+> that the Xen shinfo is doing basically the right thing.
+>
+> And we're going to need a few more fixes like this WIP before we get
+> get to cycle perfection from the horrid mess that is our kvmclock code:
+> https://git.infradead.org/?p=3Dusers/dwmw2/linux.git;a=3Dcommitdiff;h=3Db=
+c557e5ee4
+
+(Some time ago I was considering suggesting we switch to Hypet-V TSC page
+clocksource for Linux guests to avoid fixing the mess :-) It's becoming
+less and less relevant as with modern hardware which supports TSC
+scaling (and which doesn't support famous TSC bugs like TSC divergence
+across sockets :-) passing through raw TSC to guests is becoming more
+and more popular.)
+
+Regarding this fix, what's your decree? My intention here is to
+basically get rid on xen_shinfo flakyness without reducing test
+coverage. I.e. we still want to test that shinfo data is somewhat
+sane. Later, when you get your 'cycle perfection' and 'TAI' patches in,
+we can always adjust the test accordingly. In case you agree, I can
+re-send this with KVM_CLOCK_REALTIME check added.
+
+--=20
+Vitaly
 
