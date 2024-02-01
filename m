@@ -1,110 +1,142 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B039015AAB9;
-	Thu,  1 Feb 2024 09:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F05E15B105;
+	Thu,  1 Feb 2024 09:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706779793; cv=none; b=Dd5boGBfVCychg2s2cvNehrSdC2BQ7mJAe/4EMDnKMRgM0mZgKqllhxzX3oR5QEuYaFgd44ISial0B2mGl/XJw4nRvErENhokQRvoH4Z/mT4Cm9jdu9ZpHS9F64zwComNFGobpfk3y3itonGMuX/zNRhMTDB9/gUzBPFhKKCdD4=
+	t=1706779830; cv=none; b=bEEIjJCE816EvQ4nP0jxfD/AtoqUMOi4AMs4q2HNCenaZ7Q7WRMihnywTCSFFEkDCVLToYLIvQSem3Vk/DqxoCGKQ78tdvhbe2YRTwPduzYe8UCHV1ALXFYApP/N5tK7pkzYzXxeCtXXn+an+0ZkkLtj0IyJVo+fhqx91seX3fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706779793; c=relaxed/simple;
-	bh=+NCwuuUEC8gh4wddwJD1ZoXxyVyQK76LQS+PgiYO2+g=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWF4TTGOLbE2HPkofwtXghHTmELIPH/Y7PU0WIYokOEmYLWpbtl4AGr+H6iIRH01wh4hshWTXryXgREAicAePBN88cET1EDdFj6k2iiR+Et68VDdncrbE7TrBclZne1wIaa+Isf8MUI+GF+UUIcu20RETB0+EeKzszRpgog56TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FHwRg8MB; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHwRg8MB"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51124d86022so1133758e87.0;
-        Thu, 01 Feb 2024 01:29:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706779789; x=1707384589; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=gR2SCc4BIE8sv2cc5ChJ04+ZAy4Os5pvthMcTA+RFl4=;
-        b=FHwRg8MBbZz9LTfqahu/eeaEIoEL2gZun3E5ETN0LDqIh3ssanfBB4adiY4/emZMrQ
-         knFxAwUaA8RfhZTlrgCZVxO7KV3ChwZ3+zk7ArnTNi3akAavIrAD5tSeNKMwtJ26FLge
-         EHgiEZQ2N/TlzlrJynns/8ZjuFXU24/HSDxfMkz+lzOf+nXhTNM7brCALny4BICGY3tD
-         ByXDYXf8WrVgzDhbW3D76T+MVd9e74m3KkL9+9N+cf7qhfwCvTxqkKwlRr0XPOpX7r6k
-         PKnhkxE2I8rp095ta8kFngzPKjGqFB1cCHBpumGmvCG1Ihja35wRyd3Gb8r8jwS4fJ1s
-         E4DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706779789; x=1707384589;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gR2SCc4BIE8sv2cc5ChJ04+ZAy4Os5pvthMcTA+RFl4=;
-        b=iTn1SNxFeyHfL7qT2eL8sHAjafTcWZY1bowsL9zOMv1R9BKqPPnH2stft7H4cOEnD2
-         +fXEqyu4xRCvl4VpO8CvFYUoFLOc5IMM2miiX79icew7VETo5tDQDVaKyHVHCZ4QtAM3
-         czoBMqYqvEE1NbdLJ/m746pUUYOKvc6jOa8SFre3UYXi17+sPdCiyk4BFhh8Fw57+lYd
-         3bYt5Uk3pNoz59CpxLjeLsEQQVQPxHd/lariZiv+vBSAkeKatr6px2Y1MX01vXJCygtA
-         P2x+PwbAaaOJnyJtyC1YSQIH6vCkYBw2sFJwayL3reXftQOWlsoBFtyYTyFmP0RkHcZi
-         /jZA==
-X-Gm-Message-State: AOJu0YyVOBGEne3W/V7dZJHe50cFsEkl6ItstmVAxdKCpYNVy0EkUo7D
-	1hZBuAcTq16uGKw8HgMIq4ixyixoMFpBeXKiLpE3sXZUJpTwV5d0
-X-Google-Smtp-Source: AGHT+IFbfqsdGNQ6Wd46t2iNvuziOkb8PC1smvpxI4cq1BjUl4UTFC/HQ0I0EBborC1Ks4Nt1NmrTQ==
-X-Received: by 2002:a05:6512:21c1:b0:50e:6b5d:5976 with SMTP id d1-20020a05651221c100b0050e6b5d5976mr1296346lft.40.1706779789357;
-        Thu, 01 Feb 2024 01:29:49 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWqnYUTtWXGe3JQ3yFJz0StJ0H2XP76LgcJO3yNTUDd3r5jlndDZgz1LhqosHGqFg1UCaI8VuwW7z73Ynx1FhROro2avzqUVaiRi/6RKSKsKqN4ZtOZLRTtIoqO14upwk8SulrX4cdu3+lBVdfrQ+dppF7DHp5BQ1TOmwjZUixp
-Received: from akanner-r14. ([77.222.24.25])
-        by smtp.gmail.com with ESMTPSA id b25-20020a196719000000b0050e74ec73f6sm2177203lfc.124.2024.02.01.01.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 01:29:48 -0800 (PST)
-Message-ID: <65bb648c.190a0220.d431d.4f63@mx.google.com>
-X-Google-Original-Message-ID: <ZbtkigG3xRB/hSto@akanner-r14.>
-Date: Thu, 1 Feb 2024 12:29:46 +0300
-From: Andrew Kanner <andrew.kanner@gmail.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: mcgrof@kernel.org, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mchehab@kernel.org
-Subject: Re: [PATCH v1] module.h: define __symbol_get_gpl() as a regular
- __symbol_get()
-References: <20240131190251.4668-1-andrew.kanner@gmail.com>
- <20240201052958.GA14943@lst.de>
+	s=arc-20240116; t=1706779830; c=relaxed/simple;
+	bh=niaIFrprWvPwC2Lv0RN5Cl1tFCytXopzeriQpGSoAMg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MpoSpwa8+pBknnpZirnoXmS4nUWBxljhhyFl370geFCfkrMyb339iRhwugW4VexslKOrYRKqHTj8AIHU6vB0uPsSVl7MUoc0/snWPMTfXLhsF/kh9cTeDPMQbvE1HZfZsdTQK5aF1VD95dKGo38+rYIuTLHrRNpUgJfmZkx+l74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TQYXs2rwzz4f3l6f;
+	Thu,  1 Feb 2024 17:30:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 974E11A0283;
+	Thu,  1 Feb 2024 17:30:25 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBGtZLtl8V6KCg--.33515S5;
+	Thu, 01 Feb 2024 17:30:25 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: mpatocka@redhat.com,
+	heinzm@redhat.com,
+	xni@redhat.com,
+	blazej.kucman@linux.intel.com,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	dm-devel@lists.linux.dev,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	jbrassow@f14.redhat.com,
+	neilb@suse.de,
+	shli@fb.com,
+	akpm@osdl.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v5 01/14] md: don't ignore suspended array in md_check_recovery()
+Date: Thu,  1 Feb 2024 17:25:46 +0800
+Message-Id: <20240201092559.910982-2-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240201092559.910982-1-yukuai1@huaweicloud.com>
+References: <20240201092559.910982-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201052958.GA14943@lst.de>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCXaBGtZLtl8V6KCg--.33515S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxJryDAF43ArW7JrWrZr1xGrg_yoW8ZFy7pa
+	yIkF1YyrWjyFZ7Aa4qka4UZa4rAr1jqrW5AFy3u34rCa4fKw43CrWYgFyDXFyqkFyxKrZY
+	vw4rJa15uw18KF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
+	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU4T5dUUUUU
+	=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Thu, Feb 01, 2024 at 06:29:58AM +0100, Christoph Hellwig wrote:
-> On Wed, Jan 31, 2024 at 10:02:52PM +0300, Andrew Kanner wrote:
-> > Prototype for __symbol_get_gpl() was introduced in the initial git
-> > commit 1da177e4c3f4 ("Linux-2.6.12-rc2"), but was not used after that.
-> > 
-> > In commit 9011e49d54dc ("modules: only allow symbol_get of
-> > EXPORT_SYMBOL_GPL modules") Christoph Hellwig switched __symbol_get()
-> > to process GPL symbols only, most likely this is what
-> > __symbol_get_gpl() was designed to do.
-> > 
-> > We might either define __symbol_get_gpl() as __symbol_get() or remove
-> > it completely as suggested by Mauro Carvalho Chehab.
-> 
-> Just remove it, there is no need to keep unused funtionality around.
-> 
-> Btw, where did the discussion start?  I hope you're not trying to
-> add new symbol_get users?
-> 
+From: Yu Kuai <yukuai3@huawei.com>
 
-Of course not, no new users needed.
+mddev_suspend() never stop sync_thread, hence it doesn't make sense to
+ignore suspended array in md_check_recovery(), which might cause
+sync_thread can't be unregistered.
 
-I haven't discussed it directly. I found the unused __symbol_get_gpl()
-myself, but during investigation of wether it was ever used somewhere
-found the old patch series suggested by Mauro Carvalho Chehab (in Cc).
+After commit f52f5c71f3d4 ("md: fix stopping sync thread"), following
+hang can be triggered by test shell/integrity-caching.sh:
 
-Link: https://lore.kernel.org/lkml/5f001015990a76c0da35a4c3cf08e457ec353ab2.1652113087.git.mchehab@kernel.org/
+1) suspend the array:
+raid_postsuspend
+ mddev_suspend
 
-The patch series is from 2022 and not merged. You can take [PATCH v6
-1/4] which removes the unused symbol from the link.
+2) stop the array:
+raid_dtr
+ md_stop
+  __md_stop_writes
+   stop_sync_thread
+    set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+    md_wakeup_thread_directly(mddev->sync_thread);
+    wait_event(..., !test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
 
-Or I can resend v2 with my commit msg. But not sure about how it works
-in such a case - will adding Suggested-by tag (if no objections from
-Mauro) with the Link be ok?
+3) sync thread done:
+md_do_sync
+ set_bit(MD_RECOVERY_DONE, &mddev->recovery);
+ md_wakeup_thread(mddev->thread);
 
+4) daemon thread can't unregister sync thread:
+md_check_recovery
+ if (mddev->suspended)
+   return; -> return directly
+ md_read_sync_thread
+ clear_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
+ -> MD_RECOVERY_RUNNING can't be cleared, hence step 2 hang;
+
+This problem is not just related to dm-raid, fix it by ignoring
+suspended array in md_check_recovery(). And follow up patches will
+improve dm-raid better to frozen sync thread during suspend.
+
+Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+Closes: https://lore.kernel.org/all/8fb335e-6d2c-dbb5-d7-ded8db5145a@redhat.com/
+Fixes: 68866e425be2 ("MD: no sync IO while suspended")
+Fixes: f52f5c71f3d4 ("md: fix stopping sync thread")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/md/md.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 2266358d8074..07b80278eaa5 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -9469,9 +9469,6 @@ static void md_start_sync(struct work_struct *ws)
+  */
+ void md_check_recovery(struct mddev *mddev)
+ {
+-	if (READ_ONCE(mddev->suspended))
+-		return;
+-
+ 	if (mddev->bitmap)
+ 		md_bitmap_daemon_work(mddev);
+ 
 -- 
-Andrew Kanner
+2.39.2
+
