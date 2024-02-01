@@ -1,180 +1,112 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from gepdcl09.sg.gdce.sony.com.sg (unknown [121.100.38.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A81815B965;
-	Thu,  1 Feb 2024 10:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603AD4DA1D;
+	Thu,  1 Feb 2024 10:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.100.38.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706782805; cv=none; b=YY7zV7sf/T37MnAX5ya2aOdHJHJOt8x924fhGG3FQNftJzTkYb4AgRNAANJS+ZFZvlv/Pu+XuoDfm76DuZ38nnrXj7IJ700X/Q42NU6SqRfvKooblUYbxirrywp1gctDtZOF84SqEYM8vISLyoGbaosN2EiiPwMzJF54wt1ZVUU=
+	t=1706782841; cv=none; b=uQPep8RJlPq0VKjUXYK1GvPZjT657cXvv7mkQ+GHY2KhABgfRvO31Dw3crvWXuHEQ0dLjpKx1lyFRgml6lKjdkMwnaNaSUY+dXDCdoFwdPMSmbp/brbiAUsGFG4FxIP6xzpyFzzVMczGLgf7Mnz4QQP8uDXjA/17ua9Ra+sp2lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706782805; c=relaxed/simple;
-	bh=xi/8b3BxqRfZl77tejalMtSOj09xnAZLoeQvbFNl7Vg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=atM5R1K7XDqnBLkLnde2NoCAQbTJEFLkNN+atPXoHP7edI5h5yoggsl/xSMSorRBmZWsF5rldxJZFQ1br5M/bY8J0cn3ACUFPdVvBsIPMWiBhYeVaCJMRE2Js+UekiXZyn7Woe3C10lpC52As0ff8120hFK+33eA5vtn0UzqsV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LWCg70vn; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LWCg70vn"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4114DSw5014975;
-	Thu, 1 Feb 2024 10:20:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=Cs6WgiiciK9vVs7gFUVZL5uOfzrCe61iHmJ3EgRx1bE=; b=LW
-	Cg70vn/Y+L/LYLCutVlTiQXfpIv5cfkNGoo8KUcbuvpZ+qg+jM8cpwIrs0bW+qgn
-	Tf5OrhMZkYh8nlpX5RGCfNjffFF1AeVNjqFswGe6zyJbyf+SMkRmaRalqIe/8pE5
-	dTmOW2gMRjQEnQ80VVmgvuQ/4r2m90gi+BFb8Uq5CV+PjJgN6sA5YKl8DJqhg4yy
-	SVxwuH2bsTbO1y0Twid60b6frA4cfi+TjvCbqO4UDHnfaZzR5coSD6toVz+kD6oY
-	IertvFV3d/B155jBkNdlisBZ4husnefl7hqifqDhrcQFZn5+VUcpUJONRkfm+pVX
-	QNRU8APvPKUW1ndGPvWQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vypaq2vs3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 Feb 2024 10:19:59 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 411AJxGZ007078
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 Feb 2024 10:19:59 GMT
-Received: from [10.218.25.146] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 1 Feb
- 2024 02:19:55 -0800
-Message-ID: <9d895aca-eeb6-4530-bda9-c4832c777c5d@quicinc.com>
-Date: Thu, 1 Feb 2024 15:49:52 +0530
+	s=arc-20240116; t=1706782841; c=relaxed/simple;
+	bh=pYr5nSckZllMvDyVy8SYcl+YX0JIp0Bb40dbMDbdlLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AkBE7XAYpA8ZCR1LvD133gR4+sd/BFBWpBNyB4lvJoZIv7hPWICt7pMY806zXKfVVaHAeQsCN3xWYUIxz0xt/6/NH413YM3zIzUAF8MEzqTnmUocY7e+gpzAI19+xqRvUjhrycfzVbM4Cac5yQcqaJ3sSoU0qZ5b1nNPuv5isTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; arc=none smtp.client-ip=121.100.38.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
+Received: from gepdcl04.s.gdce.sony.com.sg (SGGDCSE1NS08.sony.com.sg [146.215.123.198])
+	by gepdcl09.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 411AJ2we009066;
+	Thu, 1 Feb 2024 18:20:07 +0800
+Received: from mail.sony.com ([43.88.80.246])
+	by gepdcl04.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 411AIUEB008473;
+	Thu, 1 Feb 2024 18:18:30 +0800
+Received: by mail.sony.com (Postfix, from userid 1000)
+	id 9BD1820C1C49; Thu,  1 Feb 2024 15:46:57 +0530 (IST)
+Date: Thu, 1 Feb 2024 15:46:57 +0530
+From: Sreenath Vijayan <sreenath.vijayan@sony.com>
+To: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
+        jirislaby@kernel.org, pmladek@suse.com
+Cc: rdunlap@infradead.org, rostedt@goodmis.org, senozhatsky@chromium.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, taichi.shimoyashiki@sony.com,
+        daniel.palmer@sony.com, anandakumar.balasubramaniam@sony.com,
+        sreenath.vijayan@sony.com
+Subject: [PATCH v4 0/2] Add support to dump printk buffer to console via sysrq
+Message-ID: <cover.1706772349.git.sreenath.vijayan@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [V2] i2c: i2c-qcom-geni: Correct I2C TRE sequence
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <andi.shyti@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vkoul@kernel.org>, <quic_bjorande@quicinc.com>,
-        <manivannan.sadhasivam@linaro.org>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>
-References: <20240129061003.4085-1-quic_vdadhani@quicinc.com>
- <CAA8EJpr_KXsjTUYha7OVg4HLLJLqMRvJun9DnMkBFvq3R2nk=Q@mail.gmail.com>
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <CAA8EJpr_KXsjTUYha7OVg4HLLJLqMRvJun9DnMkBFvq3R2nk=Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 57YP34WQwBylirESFTnFb50SIszsdLf2
-X-Proofpoint-GUID: 57YP34WQwBylirESFTnFb50SIszsdLf2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
- malwarescore=0 spamscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2402010083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi,
 
+This patch series enables one to dump the messages in printk ring
+buffer unless all CPUs are locked up. This is useful to view the
+kernel messages when terminal is unresponsive to enter commands
+like dmesg and syslog services are also disabled, especially on
+embedded targets. Although debug features like kdb/kgdb already
+allow this, these debug configs should be enabled which is often
+not the case.
 
-On 1/30/2024 5:19 AM, Dmitry Baryshkov wrote:
-> On Mon, 29 Jan 2024 at 08:10, Viken Dadhaniya <quic_vdadhani@quicinc.com> wrote:
->>
->> For i2c read operation, we are getting gsi mode timeout due
->> to malformed TRE(Transfer Ring Element). Currently we are
->> configuring incorrect TRE sequence in gpi driver
->> (drivers/dma/qcom/gpi.c) as below
->>
->> - Sets up CONFIG
->> - Sets up DMA tre
->> - Sets up GO tre
->>
->> As per HPG(Hardware programming guide), We should configure TREs in below
->> sequence for any i2c transfer
->>
->> - Sets up CONFIG tre
->> - Sets up GO tre
->> - Sets up DMA tre
-> 
-> It is not clear how this is relevant and/or affected by swapping
-> I2C_WRITE and I2C_READ gpi calls.
-> 
+Till the last version, kmsg_dump* interface was being used to
+retrieve the messages in printk buffer before dumping them to
+consoles. However, John Ogness pointed out the issue with
+kmsg_dump* interface that it doesn't work well with extended
+consoles. He suggested a new method to reuse the code in
+console_flush_on_panic() but without disabling scheduling.
 
-Submitted V3 with proper commit log.
+In the first commit, code under CONSOLE_REPLAY_ALL mode in
+console_flush_on_panic() is taken out to a helper function
+console_rewind_all() to set the console sequence numbder to
+oldest record in the printk buffer. And the new function to
+dump the buffer called dump_printk_buffer() calls this function
+after taking the console lock and then releases the lock which
+flushes out the contents of printk buffer to console.
 
->>
->> For only write operation or write followed by read operation,
->> existing software sequence is correct.
->>
->> for only read operation, TRE sequence need to be corrected.
->> Hence, we have changed the sequence to submit GO tre before DMA tre.
->>
->> Tested covering i2c read/write transfer on QCM6490 RB3 board.
-> 
-> Please read Documentation/process/submitting-patches.rst, understand
-> it and write a proper commit message.
-> 
->>
->> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->> Fixes: commit d8703554f4de ("i2c: qcom-geni: Add support for GPI DMA")
-> 
-> As it was pointed out, this line shows ignorance of the mentioned file
-> and of the existing community practices.
-> 
+In the second commit, code is added to call dump_printk_buffer()
+function when sysrq+D is pressed. As the function may sleep,
+it cannot be called from interrupt context. A work is queued
+in the system unbound workqueue to call the function when
+the key is pressed.
 
-Updated fixes tag in V3.
+Links to previous discussion:
+- https://lore.kernel.org/all/cover.1705331453.git.sreenath.vijayan@sony.com/T/#t
+- https://lore.kernel.org/linux-serial/20231221133953.1507021-1-sreenath.vijayan@sony.com/
 
->> ---
->> v1 -> v2:
->> - Remove redundant check.
->> - update commit log.
->> - add fix tag.
->> ---
->> ---
->>   drivers/i2c/busses/i2c-qcom-geni.c | 14 +++++++-------
->>   1 file changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
->> index 0d2e7171e3a6..da94df466e83 100644
->> --- a/drivers/i2c/busses/i2c-qcom-geni.c
->> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
->> @@ -613,20 +613,20 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->>
->>                  peripheral.addr = msgs[i].addr;
->>
->> +               ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
->> +                                   &tx_addr, &tx_buf, I2C_WRITE, gi2c->tx_c);
->> +               if (ret)
->> +                       goto err;
->> +
->>                  if (msgs[i].flags & I2C_M_RD) {
->>                          ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
->>                                              &rx_addr, &rx_buf, I2C_READ, gi2c->rx_c);
->>                          if (ret)
->>                                  goto err;
->> -               }
->> -
->> -               ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
->> -                                   &tx_addr, &tx_buf, I2C_WRITE, gi2c->tx_c);
->> -               if (ret)
->> -                       goto err;
->>
->> -               if (msgs[i].flags & I2C_M_RD)
->>                          dma_async_issue_pending(gi2c->rx_c);
->> +               }
->> +
->>                  dma_async_issue_pending(gi2c->tx_c);
->>
->>                  timeout = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
->>
-> 
-> 
+Changelog:
+V3 -> V4:
+- refactored code in console_flush_on_panic() under CONSOLE_REPLAY_ALL mode
+- added helper function console_rewind_all()
+- used console_rewind_all() instead of ksmg_dump*() in dump_printk_buffer()
+
+V2 -> V3:
+- split the implementation into two commits
+- added function in printk.c to dump printk buffer to consoles
+- added Suggested-by tag
+- removed code to dump printk buffer from sysrq.c and called
+new function
+
+V1 -> V2:
+- modified kernel ring buffer to printk ring buffer
+- allocated buf dynamically to prevent stack frame size warnings
+- used buf of size 2048 to match PRINTK_MESSAGE_MAX and added comment
+
+-- Sreenath
+
+Sreenath Vijayan (2):
+  printk: Add function to dump printk buffer directly to consoles
+  tty/sysrq: Dump printk ring buffer messages via sysrq
+
+ Documentation/admin-guide/sysrq.rst |  2 +
+ drivers/tty/sysrq.c                 | 20 +++++++++-
+ include/linux/printk.h              |  4 ++
+ kernel/printk/printk.c              | 61 +++++++++++++++++------------
+ 4 files changed, 62 insertions(+), 25 deletions(-)
+
+-- 
+2.43.0
+
