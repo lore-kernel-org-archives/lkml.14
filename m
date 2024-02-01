@@ -1,124 +1,88 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ACA5D461;
-	Thu,  1 Feb 2024 14:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB335D479
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 14:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706796030; cv=none; b=HkZleadKEMzvRrJ4F2z2O7HPfnAuGa/E98MsCi3HW11gYcV9JQn3Or0VkP8zzeFOIWaB8SwuCDNPONWF2c/Dc1z97Qd7OIiSbdIN9qTnPhwHn9dLrY4tRbk5fK3dv4nrA4Yj1+pCozdHhijWjL+ks1gGm9GfKwk7CXANaf+Oq94=
+	t=1706796115; cv=none; b=Q4Gu8a1Wu622l12w1dhYZyr1Mxccf21V/jgI69akpDfGTOQlghxgyV4JhGt5ov33ty5sg0FNOLYxrcFt965rlrjf8y6Q8hKqkUY6rZJ/b61pP39DLrTQKxob4cf55tQX57tiArzDOrjN4wvPuAwQB6VQgXblNUXvo/1WV5zS9v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706796030; c=relaxed/simple;
-	bh=xMwJiP7MmYCabqx5cyil4Dn67arKtEGuoUBogTvOSRs=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=HTfBHpuoFKivzstAup7qY3UGA/fWwgHCyeX44Y2vphj3Ciiw/AU18GGx1HYVu574MXchoqbRPRgSgDl+U4b72u0GC8GiRASuY9UyIz78r2mK5HugGYeJeKo0nBgAg+/TMNN1+1HqoyheGjGuipQrPNKI0JNgBFpKqSNNtI6uupo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=F6gZrOgC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ox+jViU1; arc=none smtp.client-ip=66.111.4.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1706796115; c=relaxed/simple;
+	bh=frJYg2PC2XdkrXkJAOqtJTdtAXRNCmZKF9NX2CrmgFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LbCfaFEAh4i/YjUtW8OhFWKPRhWLPcc1Szt630DAVdcG5OYwr1i1SK/M+COv4dMRmex4C6xU5bwogUQOdMsGSCtwS9eOzvd3zNksaRGuGRpdG1l0r2UsL2xxhXYil82SiTGjKAWl34S6aHs45FYx9VosEfBnQzBvQYm+dU1rwWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=d1sKTZQc; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="F6gZrOgC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ox+jViU1"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id E50DC5C0195;
-	Thu,  1 Feb 2024 09:00:26 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 01 Feb 2024 09:00:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1706796026; x=1706882426; bh=N58mymRXnR
-	4Pivcrh/fWTAT8wYPAf8WjYxse+92s2hg=; b=F6gZrOgCErZol5JlEh8BtMNAAb
-	XFReSGz51PnubydifA5UziGQWaOjUrlVeJd6wiyUI30AwznPkjRggrV+/JvEUpmZ
-	G6VXhMGYuhsrj+b3Bum2FDSREvLwm8TL9V0hWKXZYgIExd94qv9mJBRPI+aKUVKB
-	Y5AtvJMiux1PV2I/rfluHWYMY0GfWGK2OVUSP0bnwNa6S2VSA97h3zrQ0ul7xvAR
-	SWNED1m+gGD7C4tWxPUrE83bR2sBPURGZI7Pr+XmSJVD97dLAzGZMhCUuFv+V+7/
-	RhcmPrTvAjRWpDVqY4AcYshN+I/OSQIY9eLoRJEhUD/bhkyJc7bM5yzEwZvg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706796026; x=1706882426; bh=N58mymRXnR4Pivcrh/fWTAT8wYPA
-	f8WjYxse+92s2hg=; b=Ox+jViU1ThqKcmFL67a2ZjB2HYMpauiDnSxeuTlvBTyK
-	8nBc62vVLeqniUs8Bk0nQti6pITiM/ZQ4ynVSCwnpjSWXWgJtAP2g7eK/YRUuEYJ
-	/fg7XorJbEVc4bpRnsJzjNmZdoVVzdSIjWyuacscpUSxDqlSDTj/GOFdKdcuAvNY
-	5G3p7le5cbfmhwc3hc35udXXc+7VN8w81Uvx07fufE5O7ZWX9mYYjp3UlWDu0xpk
-	aiVFkQJ2wdh+tUOg7EqZ7VQ5e6wofeM7jSJ2PBar0qNgfm5mUJxTr7y3SDCbM1Eg
-	+HOYtwxJnGioeZtDxqeNE/BfLonCG1uF2NCaicW/zA==
-X-ME-Sender: <xms:-qO7ZVk2qdClUQ7_aDgANRo7zUUhm5i1rYkJA-HDXJUc9jbfVVzeLA>
-    <xme:-qO7ZQ024m7euwGqPZudfKU4sA3LMDLAgVOAVZ1QpD12geP7UtrulClU7l-8wBfyh
-    5mqfnGMrFx8xJ5UDxw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeduuddgheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:-qO7ZboJPYSuxzznt-4RVVRpxtal5gjQ9nsVIGTYC_9wq5KnGEVYtw>
-    <xmx:-qO7ZVmsFa0YBhMsN3EuoqnfrgDQZTp3A56uewgHz65X-oI0YBv0Hg>
-    <xmx:-qO7ZT0cYnf5dAIM08AQgvaBHvr7AgmcBolw1WsQxdlFtMGa52AiIQ>
-    <xmx:-qO7Zcs3LFB3apPfbt1S1mCmk3keICfucKt8dp73qRGMvuPZcx5krQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 15664B6008D; Thu,  1 Feb 2024 09:00:26 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="d1sKTZQc"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-510e0d700c6so1074223e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 06:01:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706796111; x=1707400911; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=frJYg2PC2XdkrXkJAOqtJTdtAXRNCmZKF9NX2CrmgFk=;
+        b=d1sKTZQc2gejwXWVy98BoRcKXeL41FYhyEuTg52qCm7aFDIHlzsDw30Mpq9T0gwmIM
+         E4OxVEbzIX+orj2FOEsPranw0Q32c4BOfJ1J7nvsCq7Hbn5usxPMJszWsI0Rn4Yju9FR
+         0e1XOcXm0pwG/CafdofiJmTuqI93jVZkq+owJlJKPUWlRKxpDoavhGbI3xNU164RVfZb
+         b93fbzumUmKjBFcj2mIMM2xKL8TdwSObEBsZarMuudEEi75smvB1Hwg9sm/Vegb7DDh9
+         4TWqiWLLUPU6bHQ4dxEnKptvPqPk/f6a54ZoPITGz2TWDEx9HcZX6oB0zEJ50lX275vz
+         4FiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706796111; x=1707400911;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=frJYg2PC2XdkrXkJAOqtJTdtAXRNCmZKF9NX2CrmgFk=;
+        b=IoP4ApNWOEulwIPvN1SWw2tKLG+DyFtGHRtGgL3YcvkYywTo2M1mXnQgRwa/pOnEUl
+         I2juVAk0PBwYincLJJElFk2lH66e+mtiCiYUOhluBJeRUxU+iiM2GwwSrOgY1FvLLUwW
+         Rfsy5iyo6w88OveI3lYQkcKXIKWCkzNNT7rZvzgBx63Co4tF8hnecdJgUIJ+lf+gw+7O
+         VPmX9Vr8ZZ82Za/a429QbTrIYdMdtFc/OlCyzLXuXsnPjL4QZlfFQmMKuTfA7qnkoECr
+         uZMuZtAWpFx9LXU+nrgljcjC2LNUP47SOOT3jWxoCK2D6ThKcnvgnEuvSWf+9jpUFwOA
+         Q0Mw==
+X-Gm-Message-State: AOJu0Yw+QnU5RyMGV0I/aQKi3DA4VbZoyjF2EIFtb09fW4B8OXMjJmZs
+	TvhKMfzBjGuwv6C9VRF+XkabnlIzQ2ct5kP9xMz6yI39lbzm67vnFRc729wF1F8zA6HLHL8sA9e
+	mtKs=
+X-Google-Smtp-Source: AGHT+IG9TMHzKkmn1MLR1nInbrtFVlsDxHGMGq2QfUrOTwbaE4ygUkEUKBLaWl1pYF85hpICE28dmQ==
+X-Received: by 2002:a19:644b:0:b0:510:1bbc:96bb with SMTP id b11-20020a19644b000000b005101bbc96bbmr1735662lfj.24.1706796110872;
+        Thu, 01 Feb 2024 06:01:50 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUMUxcq+7ehGQMeOzDkjytYLdEGh+MFJsN5LN+Wo6HUMb8mpckZqVVBQZcZjn46Siy4LaYqrUr5sKwXzK41prZddw6UddEgcDb/pO6bgMZyHzUtuU/vh7XDX03QV+/ltap6yQ8jkrY9cBahHEyZyjuggDddkRxBi3hGPk2Qor9c//vjtd7MQHxijx5QmjX/iHl2Lxli8tfKKF3h56esd8ouQa7/6LZYJPqI113ZZLQPgXCO8wMA9lSsweVD2u3fuE7aKBrYV5ViKmdUbd/EC4tp2jc8HiIOm7CgBeRV5uDtLuJs1ftucK8EZvb9XhGEvSIuGdKLAEGqT0zW3sIVVARhARQ9+rAhzn+Y4zghcp0FjWcckXdOAXR7BPRUlFKCVoHT04W4CEYL4QN4SVKVw+CWXPUIyTj4cA==
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id s6-20020a05600c044600b0040faf410320sm4406076wmb.20.2024.02.01.06.01.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 06:01:50 -0800 (PST)
+Date: Thu, 1 Feb 2024 15:01:47 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Zhipeng Lu <alexious@zju.edu.cn>
+Cc: Sunil Goutham <sgoutham@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	hariprasad <hkelam@marvell.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] octeontx2-pf: Fix a memleak otx2_sq_init
+Message-ID: <ZbukS3j_cS57FmZ9@nanopsycho>
+References: <20240201124714.3053525-1-alexious@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <789b7ca0-80c5-449a-99eb-8c05b5380245@app.fastmail.com>
-In-Reply-To: <ZbuZ_55a-qqDqkeN@smile.fi.intel.com>
-References: <20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org>
- <20240131-descriptors-wireless-v1-1-e1c7c5d68746@linaro.org>
- <613ae419-9a2c-477e-8b19-8a29d42a3164@app.fastmail.com>
- <ZbuZ_55a-qqDqkeN@smile.fi.intel.com>
-Date: Thu, 01 Feb 2024 15:00:05 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>,
- =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
- "Kalle Valo" <kvalo@kernel.org>, "Arend van Spriel" <aspriel@gmail.com>,
- "Franky Lin" <franky.lin@broadcom.com>,
- "Hante Meuleman" <hante.meuleman@broadcom.com>, "Lee Jones" <lee@kernel.org>,
- "Brian Norris" <briannorris@chromium.org>,
- "Srinivasan Raju" <srini.raju@purelifi.com>, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com
-Subject: Re: [PATCH 1/6] wifi: ath9k: Obtain system GPIOS from descriptors
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240201124714.3053525-1-alexious@zju.edu.cn>
 
-On Thu, Feb 1, 2024, at 14:17, Andy Shevchenko wrote:
-> On Thu, Feb 01, 2024 at 01:20:16PM +0100, Arnd Bergmann wrote:
->> On Wed, Jan 31, 2024, at 23:37, Linus Walleij wrote:
+Thu, Feb 01, 2024 at 01:47:13PM CET, alexious@zju.edu.cn wrote:
+>When qmem_alloc and pfvf->hw_ops->sq_aq_init fails, sq->sg should be
+>freed to prevent memleak.
 >
->> +	} else if (ah->led_pin < 0) {
->
-> ...
->
->> +	if (sc->sc_ah->led_gpio)
->
-> Dup check
+>Fixes: c9c12d339d93 ("octeontx2-pf: Add support for PTP clock")
+>Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 
-I don't know what you mean here. To explain what I'm
-trying to do: The idea is that the LED is always backed
-by either gpiolib or the internal gpio controller on
-the PCI device. This means every access to an LED must
-be guarded with 
-
-   if (gpiodesc)
-         gpio_*(gpiodesc);
-   else
-         internal(ah);
-
-We could probably go a little further in the cleanup and
-throw out the gpiolib path entirely, instead relying
-on the existing leds-gpio driver. Since there are currently
-no upstream users of the gpiolib path, that would likely
-lead to cleaner code but require more changes to any
-out-of-tree users that rely on the platform_data to
-pass the GPIOs today.
-
-     Arnd
+Acked-by: Jiri Pirko <jiri@nvidia.com>
