@@ -1,65 +1,69 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A95158D81
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2B6158D8B
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 08:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706775525; cv=none; b=E2JMqYxA1ZPkRDJkFtJeVAbQLcHthn3jYAMYM/O720uHw4Zq/AHh5Wf9YRRHvjb0LSHqwekEZM3QlVGBG94Gf02Z5fdhw9sBH3rFWZPdFw7hycv+WpTYqN7beqoLTRZBUe2tcNzHQY0+myIl4BP/W4sfu8brSCbr+d22bHRMVUY=
+	t=1706775526; cv=none; b=CKFfCJmi2zB577l/vIftkh9D8brenbc8lpp3zEl+q9adItuYD7wMfcW4l4vxyW96EiUMWqrtxNaH9ga3ePRMG1Fqr7o+jXVzkaXJv2Og6ke+xZavBZM4gOX8mgwXnDzsQ2DLD0RdlPkwdVyTpm0mtoA48NwUMSHaAnytJj4npQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706775525; c=relaxed/simple;
-	bh=DIaKZBB4u7WsGLM+tjdwDqov0MpFb1q5HjpRcygEqeU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XVVPmoBp8bpqnKzyjz/tcyksZCkqW21OsfJISWeUM/fTRzMs9JNvKaMdu2pEKzh4laHf+735y5N888VejDI3w5ImpboVNgppzA8AbCjSTiyhx8LzXZK5ry2q/cRz/M41TxEADQEa/7HLUdUFUtPsPi7ukPUZveGJaIyFIvUPg3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KfcFRjaY; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1706775526; c=relaxed/simple;
+	bh=FETEX9eqmzzdwsflyz/twcnhehtjGEh191nHrECpPkg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oyFNUyH+Jfz4dG6jRqOXutDFQE8u6xaqqyh8nLC8uQ7Qw6IR9p8hbqdnnNa2wQlfvCY2xNgM22aS5+KPOx+A+AlI2EvzTsNItXelWio7lYy9nm2Rs2qbdBBn4b4yZD9lxWaZcICcJGGZ4cpBN9lVhPjkcWg8Jb4ab6xa4Np/fYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DnQABFsH; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfcFRjaY"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so840017a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:18:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnQABFsH"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a350bfcc621so73089766b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 00:18:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706775521; x=1707380321; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ifEstaCFW5dRBoYTuvt1sun4+9dM+F8qEM4C8Rq1z4=;
-        b=KfcFRjaYdID3vL9G0/PT1ndAPhEMbh9cBgjT8v6yYffsteP8VXNP99VOy+zAkxtyfM
-         TYVEQegZfPgl2YM+MFx1RsTjV/FNS2GNMhmmxWup+gaTFEPcy8H/3fPRUJeZHTpQ98xL
-         VDIeRm6GJ9gvI1be1W6oKimRf5qJcjPgxO72UhLTVp3ASPHSbFE8ZsaMy0430iNyRpxU
-         D3zdmyFHOQqomi+XETbvS0TFRndv582ZGg2rAe23FLZxBzK9M+NpvEdMN3LiBqtTZCSk
-         hW7sGxo7NmZRY25MuhZg3GvEzWIZNvWa7geOctAw3Dw00roHy5XvkPrm7Y9cfHBL0SMy
-         TdUQ==
+        d=gmail.com; s=20230601; t=1706775523; x=1707380323; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OOlyK86/Jl9rG4TqRWXLT9mehwaragdtILIuDCfPgVU=;
+        b=DnQABFsH6R4jUIvrD2G1vcYlzeV9gldNkvGpyLPabd4/ytqMEnGTktfD6kIwtw5FMQ
+         lPSi0TYKOVL+9FUQ8utibNe4MySnDG/IWu0PGY+6j5/hFNSh/WmDIOO5++JuUAEDzPx5
+         R5GeXRFvrByOndr+TM29jrKa6SNWt9TY61hCcSJytoqsoNyiqCME0aA7msbPHsACP+xi
+         mhkVR8V6Y3u5lkn5HnsXUfCuyGDSHzwJfWn/rRI30gZeDX7IaR0IJ3tuC0CkQ8TX76sR
+         AnhBHEJh74EzD5S+ix76ER8yrLVEtAmSKz99bK702lHEir4K2tzm7vCcXg/xQa0G/TZn
+         /bow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706775521; x=1707380321;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ifEstaCFW5dRBoYTuvt1sun4+9dM+F8qEM4C8Rq1z4=;
-        b=a2McPmiV8LnmR/s1INFaui/DsBB09RYkm0fgYyK4WwWZ/C7wj4tWK07Gonvv6XEeTA
-         z72cbF9bnjyzVZIJl2lWk8mA0SnwsAxbr/2SL9v5AbNN2yv7TORgSUr7QCLtl96Lg7A/
-         7K/nqRi3Bt1BoHpY/fjVgBm6lv0q0Fq7bgkhSAKtC74GZulajBeXHrjH+SxPhnNw3u49
-         29MN+DWwWikhzoZWqZXVHDQ7oW8YRH68xMnRI6fjvdq3ofi6fFkFRxi32DPih+9tOG/C
-         kQjXk5g7WAqZuB+L6VPPZIVag+DKTlAzmprzZnHekPTMKMK0JceWre/AH4c/rFerUUJx
-         uU+g==
-X-Gm-Message-State: AOJu0Yyhox4RpevB7eFg153sfFKhOGU6AWhGO0fbTbHASR9k7cd/KNpM
-	MmV5p54WoQC3vceX9+XwXxc5xJEKDspOSjTUE0x3SlwnqkbPMfFM
-X-Google-Smtp-Source: AGHT+IHMZ0jzWGFDtRQQgsn44+OiI+Av+ADi9gmhMPUppeualZSHIB60NRp8bcasFd+Qgk9dcPdbTg==
-X-Received: by 2002:a17:906:3b0d:b0:a36:9f72:2460 with SMTP id g13-20020a1709063b0d00b00a369f722460mr1746911ejf.0.1706775521201;
-        Thu, 01 Feb 2024 00:18:41 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWVx0Nbo+uM+MZOJnTBy3ppnzAum+Do/fzLfRqjd6KsKPeT0iCnWgD+XZn5bd17BNAlxbXmwgkd5KEvNtqadLxGLxgebopsJnwoA7H0plCrnWPcdqdprxeK2w/am58jtstdAHVAo4ZxjYDlyc6FFma5tgJtSVxmRu7k/TVOk4Gx4FSdg5U=
+        d=1e100.net; s=20230601; t=1706775523; x=1707380323;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OOlyK86/Jl9rG4TqRWXLT9mehwaragdtILIuDCfPgVU=;
+        b=FI4zbnh9PSGp05uEFvaV25OSKe6yvJtBD+xqlln6RxPCCO8GkkaSwNDWVSZGvG8VLR
+         shOCL3ae3Mck+razf2T2QDFjAalQJ9YPbPUNI6Wg/eqwKHJpdvU4JDmHlc3le2Zyjm9v
+         cnjm9TTGmqDpdBdQEtr/iG6mxBuIKbWsypYgfE7MGrbeTAhXU9XWnoLzZJHxZt/wNw+4
+         alL/fZquxFZjxe+I/fe1szVsBmxP9ImF6N6lpboSOJbxKifIkPHIjJsgDK87DrpUCuMk
+         jAdmpq0zaop327iFNekpneGcdPUad3r/djDQwknUobLQjIPWKIg6EgADWPq+P4kEd8Iu
+         vr5A==
+X-Gm-Message-State: AOJu0YzZVg0R4jgviFk2nbluD3JfV3D/CiT6aFPP/BnPMp8JmjMA+rNr
+	OxLZD3+p3Tus7iF6zcWF4z9aAhVnbYXYLkHwyos9VAqTXNT/8X9B
+X-Google-Smtp-Source: AGHT+IF0DhWGDbjBvEh7CKTzLrlHoDnGtWXn+a9/CbtlYL68LP6YIumtsg3AmOrxZ96DJvfC8AF+cw==
+X-Received: by 2002:a17:906:4f84:b0:a36:6dc6:d9c7 with SMTP id o4-20020a1709064f8400b00a366dc6d9c7mr2625892eju.4.1706775522544;
+        Thu, 01 Feb 2024 00:18:42 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXWJSrbehShnkDAJ8GlYl5l8hM1r2LrNh5MxK8BEZPmjmmDhtv++WPsuj6qw2GT5UyL7FAznpseI0+qqFtGrVnv0tpPxEEsmd9o33fDFBtVkyqLyofTO2K76H8+YQmHvzf/uflqdWEPb9oFySBHNFA8tvN3AkTM+/lUNbQiqMV4D50UApM=
 Received: from localhost.localdomain (ip-77-25-34-59.web.vodafone.de. [77.25.34.59])
-        by smtp.gmail.com with ESMTPSA id p7-20020a170906784700b00a310f2b4b91sm6954069ejm.48.2024.02.01.00.18.40
+        by smtp.gmail.com with ESMTPSA id p7-20020a170906784700b00a310f2b4b91sm6954069ejm.48.2024.02.01.00.18.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 00:18:40 -0800 (PST)
+        Thu, 01 Feb 2024 00:18:42 -0800 (PST)
 From: Michael Straube <straube.linux@gmail.com>
 To: gregkh@linuxfoundation.org
 Cc: philipp.g.hortmann@gmail.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 0/3] staging: rtl8192e: some coding style cleanups
-Date: Thu,  1 Feb 2024 09:18:21 +0100
-Message-ID: <20240201081824.6998-1-straube.linux@gmail.com>
+Subject: [PATCH 2/3] staging: rtl8192e: remove return from void function rtl92e_set_channel
+Date: Thu,  1 Feb 2024 09:18:23 +0100
+Message-ID: <20240201081824.6998-3-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240201081824.6998-1-straube.linux@gmail.com>
+References: <20240201081824.6998-1-straube.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,21 +72,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series contains some simple coding style cleanups to clear some
-checkpatch warnings. Compile-tested only.
+Remove return from the void function rtl92e_set_channel.
+Found by checkpatch.
 
-Michael Straube (3):
-  staging: rtl8192e: remove braces from single statement blocks
-  staging: rtl8192e: remove return from void function rtl92e_set_channel
-  staging: rtl8192e: initialize variables at declaration
+WARNING: void function return statements are not generally useful
 
- drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c | 5 ++---
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
  drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c | 1 -
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c   | 3 +--
- drivers/staging/rtl8192e/rtl819x_HTProc.c      | 4 ++--
- drivers/staging/rtl8192e/rtllib_rx.c           | 5 ++---
- 5 files changed, 7 insertions(+), 11 deletions(-)
+ 1 file changed, 1 deletion(-)
 
+diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c
+index e1bd4d67e862..18b948d4d86d 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c
++++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c
+@@ -714,7 +714,6 @@ void rtl92e_set_channel(struct net_device *dev, u8 channel)
+ 	if (priv->up)
+ 		_rtl92e_phy_switch_channel_work_item(dev);
+ 	priv->sw_chnl_in_progress = false;
+-	return;
+ }
+ 
+ static void _rtl92e_cck_tx_power_track_bw_switch_tssi(struct net_device *dev)
 -- 
 2.43.0
 
