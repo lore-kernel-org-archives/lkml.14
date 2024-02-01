@@ -1,110 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B7A15D5B4;
-	Thu,  1 Feb 2024 11:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CC515B961
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 12:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706788778; cv=none; b=p05150c0HQNbd1d0OlSCF19UPmky9T/6QjpdvcohIPKMmGwthJa6qDzzj+Na+TwgUzq481gzZMcuWpF2HvCOTDPOqrG0FhBE7avwIBvCCdRmqqyIhTunzUgJK0Fj1ZoV9lNv8tXIUjjJmiquPG0YD/xZGjPMcPRe6b9I60baftU=
+	t=1706788919; cv=none; b=IJruReh43ZGHabCQiExAagRWQnLXqFSS6K1A39k1GTEh8qUTZT0eSQ9uLHzmRl2XcYTIyKVuwZioZv8Bf8Eebfp1+GqjZsTEksSaVztPSFQMpTln3ObC/VKZ0gQAgCKG0A/i5087yRjxOWmjYXjHyxf1vRigD8PE5kHaElfBt2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706788778; c=relaxed/simple;
-	bh=TVUCRYYR7L1IT+ME8oTcX1x2Rr9n3YCLMjyOODsG+BU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eT9daKrl2NiiqPGm1z8mQYHOi+LBfsU0b57lg2qN5Y6Val3R25Uv07KngdfZM0p4VgsxNnRuYRQA+I24QKGSBxyBX3R1c5wsaKGNXHV7yUsfkbXemSf2zumGYr8xkPsZrooyPg0+i9Fne/rfa/wLWrk56HK0h3ilQSf6up9Q6pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RiBNNyMw; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706788919; c=relaxed/simple;
+	bh=DsE+tvWItQ1J13vN0xMITMFdI6X97MiXwib79KoM0gw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jBKB24rlybjeiVZ+sX8ti3+jjqOGjlsPgl4XKaCQfFvowcOSDul6yXB4MrUA+pYt6fAp2gEMi7y/4os3JMl8NIFd+2MzH0bP7vbhiZluVcE1FjDpezIMuwLlENjhUyRlGoGHv6oIxWtl6qIrE61goAETj8+ufSA9Zz+YtBm1bQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pg2S9/45; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RiBNNyMw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706788777; x=1738324777;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=TVUCRYYR7L1IT+ME8oTcX1x2Rr9n3YCLMjyOODsG+BU=;
-  b=RiBNNyMwVlE5SKeiqTu0Hv5jJNLUxwVcITT+TBBZGTfI/EagY5DlslQI
-   5zW5AS8IPCbirZvKJZP64WisKH6cbt1AaIbQ0N6zds/rVVgM7ldCuQahW
-   sN68e6RE/Xx6h7FtNKRf/pD+2qTNUFZX7ErmnlfyxxENoqWr/eUiQf+Q/
-   SXe7l0smXxUAygc6B7K4pWa4s6fKkpORtOmxr0QzlQTFSaks9LUm5g1xX
-   KKybGVJZZ3pjl5WvchjhPuvCPcXl4zVloBsJ1xSQn7d87XOMd96Xz+4hl
-   SIe4VjT8qU7gcJ92LpU7638a2YaAjBc0ndtfZB1LXLzYvDAGsTQLR30iI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10531082"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="10531082"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 03:59:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="738409877"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="738409877"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 03:59:32 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rVVbz-00000000p6M-3icn;
-	Thu, 01 Feb 2024 13:52:07 +0200
-Date: Thu, 1 Feb 2024 13:52:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rengarajan.S@microchip.com
-Cc: Kumaravel.Thiagarajan@microchip.com, jiaqing.zhao@linux.intel.com,
-	gregkh@linuxfoundation.org, ilpo.jarvinen@linux.intel.com,
-	john.ogness@linutronix.de, tony@atomide.com,
-	linux-kernel@vger.kernel.org, Tharunkumar.Pasumarthi@microchip.com,
-	jirislaby@kernel.org, f.fainelli@gmail.com, tglx@linutronix.de,
-	UNGLinuxDriver@microchip.com, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v1 tty] 8250: microchip: Add 4 Mbps support in PCI1XXXX
- UART
-Message-ID: <ZbuF53TlbnD09rZA@smile.fi.intel.com>
-References: <20240125100619.154873-1-rengarajan.s@microchip.com>
- <ZbZyW_g4OOkCqIxf@smile.fi.intel.com>
- <8406d8866968950b9bb2f2c01aaa92e3107a7a00.camel@microchip.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pg2S9/45"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706788917;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mcEUKdi4uiysteQLExSEli88YMa6cGV3bas2H1wcmjE=;
+	b=Pg2S9/45c0R2QJ+VcUoudu9M0PXTbwCUdPxiQSr7KpRPuVQ/ctsso7Eh+L6B0D79baqFO0
+	ljkfe3et3JQ5GfTctrjYjV0JSTeoFHGXqlHJ2gLReab2ebxho3vunOegyeEW2LyL2sKQJm
+	pz5Yp569oVcrMQMB/FGOJYXoN6b1r1M=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-339-HR9mV4XsNNmcXxaVa7ZrPg-1; Thu, 01 Feb 2024 07:01:55 -0500
+X-MC-Unique: HR9mV4XsNNmcXxaVa7ZrPg-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40f02c4aa13so884105e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 04:01:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706788914; x=1707393714;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mcEUKdi4uiysteQLExSEli88YMa6cGV3bas2H1wcmjE=;
+        b=Ut3KZVnki1CeAShFq3LMg58U5JxAo2DZSqoqbw4b2Q8Zm4ltzoARhPR9csAVGyPk3j
+         fhioz6s2BO3XVmb8XFONyKY3ohyvx3PDz/udzqvCJjcD8f6iM5779TptuuO5EV+c+Zis
+         P9PKB/kPduyHffqtd1QHK0uUxX++/eablWQZTw8W2tFIw04PGOuDZCJYrqvzihj3o7k9
+         bFNlGlEMSIMj2bQLWy3gmAHjrF3JaKP2+LZRofJhkdlN4qoM69Syt1X/lp7hmZUuWjGo
+         72CkV9TSRUbGD2GDqkcrhQlhgHeY5fQtnBeySDLq69jwtHti9b/JJjKbcnPmAh+30Su4
+         eyMw==
+X-Gm-Message-State: AOJu0YwiHXQsT4U5Svwo2oj11o5zUeUC3FR0d0+k109/USu7cxpitQJu
+	dSqrBJEr9F2aS1OVSMsdLeNPC2S3SPYYtXI0zvlgtDZIHVyQPeLcqedGd4JTZQis4H6WTND/59u
+	b7lMorbuM0+tq2qbai6BwKHHU7lxyDnONTwHPmwr14VIZ83GKhcF4y/uXnPFqMA==
+X-Received: by 2002:a5d:43ce:0:b0:33b:1a51:733c with SMTP id v14-20020a5d43ce000000b0033b1a51733cmr520680wrr.6.1706788913797;
+        Thu, 01 Feb 2024 04:01:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFSzFdSnCWWh8DuX2kOUaKPmifpX1BGRedx6WDhyPSJ5Aa+E7ADsiOr/z2Uydt9bsS+//LAHQ==
+X-Received: by 2002:a5d:43ce:0:b0:33b:1a51:733c with SMTP id v14-20020a5d43ce000000b0033b1a51733cmr520651wrr.6.1706788913413;
+        Thu, 01 Feb 2024 04:01:53 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW/u2BuRjHWFot74Lj/r29L7EOgPRqNFE85eGX5C7PoWgKVQlIrBa3Va6N4OMLsqKyR0BgziOAv4N6/mLX5HXTlBR58ZXYn51MY/GFcp7f9uJQgwtYQ8xWmRXYNlBRlPR0hlrEtko2qybOvs7TeFt6zejyNgaDWUx/rZidOu9kVjsVaJvPwKawz/1LaGmp0exN97A5NYcsDCxa8BHmJwUY34bffEpQ46sOVhRLa+07YcQ8MNpUCVdA39W1YgjQbUvEbIdX0obteS9Jiu40aF56QW2Ji4OJGElU9jGzcwIyGKMS/Nt3JFbvf/T0z0Xn7O9RQdrQpjZAVeJ91Lmk4UWwwUC21gfvFJvK91ND+cC9cLmPEWBSUvKKE548=
+Received: from gerbillo.redhat.com (146-241-238-90.dyn.eolo.it. [146.241.238.90])
+        by smtp.gmail.com with ESMTPSA id e13-20020a5d4e8d000000b0033b08b9cd9dsm3083916wru.79.2024.02.01.04.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 04:01:52 -0800 (PST)
+Message-ID: <a8845eca2d9bab5d7805c19a16811820671c41f2.camel@redhat.com>
+Subject: Re: [PATCH v2 5/6] net: wan: fsl_qmc_hdlc: Add runtime timeslots
+ changes support
+From: Paolo Abeni <pabeni@redhat.com>
+To: Herve Codina <herve.codina@bootlin.com>, Vadim Fedorenko
+	 <vadim.fedorenko@linux.dev>, "David S. Miller" <davem@davemloft.net>, Eric
+	Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>, Mark Brown
+ <broonie@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date: Thu, 01 Feb 2024 13:01:51 +0100
+In-Reply-To: <20240130084035.115086-6-herve.codina@bootlin.com>
+References: <20240130084035.115086-1-herve.codina@bootlin.com>
+	 <20240130084035.115086-6-herve.codina@bootlin.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8406d8866968950b9bb2f2c01aaa92e3107a7a00.camel@microchip.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Jan 30, 2024 at 10:52:41AM +0000, Rengarajan.S@microchip.com wrote:
-> On Sun, 2024-01-28 at 17:27 +0200, Andy Shevchenko wrote:
-> > On Thu, Jan 25, 2024 at 03:36:19PM +0530, Rengarajan S wrote:
+On Tue, 2024-01-30 at 09:40 +0100, Herve Codina wrote:
+> QMC channels support runtime timeslots changes but nothing is done at
+> the QMC HDLC driver to handle these changes.
+>=20
+> Use existing IFACE ioctl in order to configure the timeslots to use.
+>=20
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+>  drivers/net/wan/fsl_qmc_hdlc.c | 155 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 154 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdl=
+c.c
+> index e7b2b72a6050..8316f2984864 100644
+> --- a/drivers/net/wan/fsl_qmc_hdlc.c
+> +++ b/drivers/net/wan/fsl_qmc_hdlc.c
+> @@ -7,6 +7,7 @@
+>   * Author: Herve Codina <herve.codina@bootlin.com>
+>   */
+> =20
+> +#include <linux/bitmap.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/hdlc.h>
+>  #include <linux/module.h>
+> @@ -32,6 +33,7 @@ struct qmc_hdlc {
+>  	struct qmc_hdlc_desc tx_descs[8];
+>  	unsigned int tx_out;
+>  	struct qmc_hdlc_desc rx_descs[4];
+> +	u32 slot_map;
+>  };
+> =20
+>  static inline struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *net=
+dev)
+> @@ -202,6 +204,147 @@ static netdev_tx_t qmc_hdlc_xmit(struct sk_buff *sk=
+b, struct net_device *netdev)
+>  	return NETDEV_TX_OK;
+>  }
+> =20
+> +static int qmc_hdlc_xlate_slot_map(struct qmc_hdlc *qmc_hdlc,
+> +				   u32 slot_map, struct qmc_chan_ts_info *ts_info)
+> +{
+> +	DECLARE_BITMAP(ts_mask_avail, 64);
+> +	DECLARE_BITMAP(ts_mask, 64);
+> +	DECLARE_BITMAP(map, 64);
+> +	u32 array32[2];
+> +
+> +	/* Tx and Rx available masks must be identical */
+> +	if (ts_info->rx_ts_mask_avail !=3D ts_info->tx_ts_mask_avail) {
+> +		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx=
+, 0x%llx)\n",
+> +			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
+> +		return -EINVAL;
+> +	}
+> +
+> +	bitmap_from_arr64(ts_mask_avail, &ts_info->rx_ts_mask_avail, 64);
+> +	array32[0] =3D slot_map;
+> +	array32[1] =3D 0;
+> +	bitmap_from_arr32(map, array32, 64);
 
-...
+What about using bitmap_from_u64 everywhere ?
 
-> > > +     /*
-> > > +      * Microchip PCI1XXXX UART supports maximum baud rate up to 4
-> > > Mbps
-> > > +      */
-> > > +     if (up->port.type == PORT_MCHP16550A)
-> > > +             max = 4000000;
-> > 
-> > No. Please refactor the way the 8250_port won't be modified.
-> > 
-> > Also you have a define for this constant, use it.
-> 
-> The current UART clk in MCHP Ports in pci1xxxx.c is set to 62.5 MHz in
-> order to support fractional baud rates which enables generation of
-> acceptable baud rate and lower error percentage from any available
-> frequency. With 62.5 MHz the maximum supported baud rate supported as
-> per serial_8250_get_baud_rate is 3.9 Mbps. In order to extend the
-> support to 4 Mbps we had hardcoded the max value to 4 Mbps. Since, baud
-> rate is calculated here we needed to make these changes in 8250_port
-> and could not find a way to handle as part 8250_pci1xxxx. Can you let
-> us know any alternatives to address this upper(max) limit? 
+Cheers,
 
-Update port->uartclk accordingly in your driver, see how other 8250_* drivers
-do that (e.g., 8250_mid).
-
-So, it will no go with hack in the 8250_port.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Paolo
 
