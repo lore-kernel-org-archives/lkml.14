@@ -1,139 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E35A37C;
-	Thu,  1 Feb 2024 00:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C964637A;
+	Thu,  1 Feb 2024 00:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706746454; cv=none; b=kzdJMc3A/yZnIzPyqi+O2QQIm+5zhXGLUuR1LVlm9Ma+LTSXOumHlMLOJonJrcQIygBvEVG2lsP/BzRKVVcvEFMKzp9DTPTZ7+e7ct0gN9toShPERcNOu9qV3fnqceFMQFoEyjAfmKoZlMS2O0N9NN4XB1C0h0S28QDkRYM3+I8=
+	t=1706746511; cv=none; b=hUCnzkQR8rvnEMkrw2wzISo0aRFs1DBRg9gWpzmSGAyvi6f0wJrFFjgVaGnE58D+x1+lVcc/Jcb7D2cOQOxZBIUshpRYrvuGbZRQnld1If6olmvjhGbGawhohdnoKOooWe3CT7HQXMx4gr1JD6fLoo0RHDzQoeoVOqr6I349eJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706746454; c=relaxed/simple;
-	bh=UYG+bMN6gA1Ij16eOnxlASAzV3Xla9f4HQGKMwAR6is=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eZ7PZY6/CT6ghbtpJaosZNSurINjBLW6jMW2sh7zNqY14pIUrKf6SvZWplcAbuZlbWCODgpP0zfHlf2apF78RxcR7OEyT+9aBYrVwAffaPrteHwjbiFYrIWgh7wScGXGgFPM11YIpA3phkyMqfpPfWvpbVn/GOam/CSHFwwCBOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tbrgd0qG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706746511; c=relaxed/simple;
+	bh=2LBQU3W1CBLmlUwbEx11B9z4juEyOikn6gFpNGoqVpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ENiOmixwKU4LylyD41lrvkUIZbD6S5AuixTPkazAEOcjsYqVg0AlT/KlM13REiPZrJ85gVQYURHVf709qPJZjpA4WI6s32hNx2CKdc0P3hozRcW6yif/2CMEFfbSXxUkxyRoFuh1pzWuy/Mk1Vwz4/ZgOOueJ1VzuHswP97BGEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=lW96T7wT; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tbrgd0qG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2406AC433F1;
-	Thu,  1 Feb 2024 00:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706746453;
-	bh=UYG+bMN6gA1Ij16eOnxlASAzV3Xla9f4HQGKMwAR6is=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Tbrgd0qGQ82NEm2jHe0rpSSX9NBFwIaCQfe/P3IwOZW8ZYq4NJHN/ZRFwRQIvr7+I
-	 sGdzVJdFfG7QiCH21lugyVCDqzf7SonMXoQsi3jq61YyWbd9RWweUHG1ssg0QnUAvC
-	 peoIS3A1Y56J8pmHdCZnlmy9AvGQmG/Myq1oGnlNplYV7M4YnzGkXN1KpfDip8BZBZ
-	 BK2ixEdJEgCvMylk8Ef9xHjnU0bKfsc1Vu5n/Ak7vavEDqfJkFZiKnnKJIZ2YwPs1m
-	 amTu1JuwIl+M1pWqGBNGqKEOD++2B5x/KdCu3eS8xwtSxL4olZnLlYgWgIVR0Cc+fz
-	 k/UPLUzb6ez+g==
-Date: Wed, 31 Jan 2024 16:14:06 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Shinas Rasheed <srasheed@marvell.com>
-Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
- <egallen@redhat.com>, <mschmidt@redhat.com>, <pabeni@redhat.com>,
- <horms@kernel.org>, <wizhao@redhat.com>, <kheib@redhat.com>,
- <konguyen@redhat.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, "Jonathan Corbet" <corbet@lwn.net>,
- Veerasenareddy Burru <vburru@marvell.com>, "Satananda Burla"
- <sburla@marvell.com>, Shannon Nelson <shannon.nelson@amd.com>, "Tony
- Nguyen" <anthony.l.nguyen@intel.com>, Joshua Hay <joshua.a.hay@intel.com>,
- Rahul Rameshbabu <rrameshbabu@nvidia.com>, Brett Creeley
- <brett.creeley@amd.com>, Andrew Lunn <andrew@lunn.ch>, Jacob Keller
- <jacob.e.keller@intel.com>
-Subject: Re: [PATCH net-next v5 1/8] octeon_ep_vf: Add driver framework and
- device initialization
-Message-ID: <20240131161406.22a9e330@kernel.org>
-In-Reply-To: <20240129050254.3047778-2-srasheed@marvell.com>
-References: <20240129050254.3047778-1-srasheed@marvell.com>
-	<20240129050254.3047778-2-srasheed@marvell.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lW96T7wT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1706746498;
+	bh=Mo8m4XGUMpy4yRQ1ibGzCKYA2icyGepWszobc6YR624=;
+	h=Date:From:To:Cc:Subject:From;
+	b=lW96T7wTKrMzs2UhmxdiIAbJCkuzNdM789lrbyNzzo+NwkIFB/HqVd5dEBEOJnrMi
+	 TVTdS821bloRRfKXX6865BzbqFb4NQxb81dOZ6w8CX6u33E4G2+bmSMFyuuDqk/C5u
+	 3Hr5GR7B1RNQ/zuuJZ+gI2mGushbOWWogiw+8vR2A3yF6N3CpgmF6BNwBSa+Hiqnho
+	 wuQ4oBgsthb2YU1KimTJb2anuXrrNA4Ncb2sDqm5wKriBVl9jWm6nxxmQZrfP9ySbY
+	 QJH64Sx0MqfB2iJyqnN6sme0MiCD8tb2rfDgzxsDcygVo1kMd+FHSFO2jU/SIN/wTR
+	 HSevI9vnbszgQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TQKCz2nH6z4wcK;
+	Thu,  1 Feb 2024 11:14:55 +1100 (AEDT)
+Date: Thu, 1 Feb 2024 11:14:53 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Xin Li <xin3.li@intel.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the tip tree
+Message-ID: <20240201111453.0ee3beff@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/B2SPw3IlrpIXX89W7FH1BqJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/B2SPw3IlrpIXX89W7FH1BqJ
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 28 Jan 2024 21:02:47 -0800 Shinas Rasheed wrote:
-> +static int octep_vf_stop(struct net_device *netdev)
-> +{
-> +	struct octep_vf_device *oct = netdev_priv(netdev);
-> +
-> +	netdev_info(netdev, "Stopping the device ...\n");
-> +
-> +	/* Stop Tx from stack */
-> +	netif_tx_stop_all_queues(netdev);
+Hi all,
 
-netif_tx_disable() stops queues, IIRC. You seem to stop them twice.
+After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-> +	netif_carrier_off(netdev);
-> +	netif_tx_disable(netdev);
+vmlinux.o: warning: objtool: fred_extint+0x1c: call to array_index_mask_nos=
+pec.constprop.0() leaves .noinstr.text section
 
-You haven't masked any IRQ or disabled NAPI. What prevents the queues
-from getting restarted right after this call?
+Probably introduced by commit
 
-> +static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
-> +{
-> +	struct octep_vf_device *oct = netdev_priv(netdev);
-> +
-> +	queue_work(octep_vf_wq, &oct->tx_timeout_task);
-> +}
+  6786137bf8fd ("x86/fred: FRED entry/exit and dispatch code")
 
-I don't see you canceling this work. What if someone unregistered
-the device before it runs? You gotta netdev_hold() a reference.
+--=20
+Cheers,
+Stephen Rothwell
 
-> +err_register_dev:
-> +err_mbox_version:
-> +	octep_vf_delete_mbox(octep_vf_dev);
-> +err_setup_mbox:
-> +	octep_vf_device_cleanup(octep_vf_dev);
-> +err_octep_vf_config:
-> +	free_netdev(netdev);
-> +err_alloc_netdev:
-> +	pci_release_mem_regions(pdev);
-> +err_pci_regions:
-> +err_dma_mask:
-> +	pci_disable_device(pdev);
-> +	dev_err(&pdev->dev, "Device probe failed\n");
-> +	return err;
-> +}
+--Sig_/B2SPw3IlrpIXX89W7FH1BqJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Name the labels after what you're jumping to, please.
-It's so much easier to make sure the code is correct that way.
+-----BEGIN PGP SIGNATURE-----
 
-> +static int __init octep_vf_init_module(void)
-> +{
-> +	int ret;
-> +
-> +	pr_info("%s: Loading %s ...\n", OCTEP_VF_DRV_NAME, OCTEP_VF_DRV_STRING);
-> +
-> +	/* work queue for all deferred tasks */
-> +	octep_vf_wq = create_singlethread_workqueue(OCTEP_VF_DRV_NAME);
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmW64n0ACgkQAVBC80lX
+0Gyt8wf+IRxrB3za5wezZkKqUwIJPJTpk6TG0zNayczGLql0Ss2sCHLnH72+TNEb
+xs3d61xiS7TV91gDP9Xx/6/TcglsYJaHBok34DL1lxB0NRxp/jgb41nzGWqP4KuC
+DGkzSHnlJozPJIXlsgwWCK4AzdK7zG9p2oYIFSfZGPlSrLsgZ/ett2VGmaD6lhmS
+pivRxENbC9Z1LWmlAJ2CJGs9yNxAcbmvnRa9cGRWYDfuuuWv1MAywCiX8JnbRRAy
+Ga2Qk726XFuZ8o0wGe7cf7UceQIfKS8DUeS+9x3s2g0AFg/hNuGKiRjP0Brl/mAF
+ZlXAhRxTUYT56y2Cg21W7v9A2EDWDQ==
+=Z0mm
+-----END PGP SIGNATURE-----
 
-Is there a reason this wq has to be single threaded and different than
-system queue? All you schedule on it in this series is the reset task.
-
-> +	if (!octep_vf_wq) {
-> +		pr_err("%s: Failed to create common workqueue\n",
-> +		       OCTEP_VF_DRV_NAME);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = pci_register_driver(&octep_vf_driver);
-> +	if (ret < 0) {
-> +		pr_err("%s: Failed to register PCI driver; err=%d\n",
-> +		       OCTEP_VF_DRV_NAME, ret);
-> +		return ret;
-> +	}
-> +
-> +	pr_info("%s: Loaded successfully !\n", OCTEP_VF_DRV_NAME);
-
-One message when driver is loaded is probably fine, but two is really
-pushing it. Please don't spam the logs.
-
-> +	return ret;
-> +}
--- 
-pw-bot: cr
+--Sig_/B2SPw3IlrpIXX89W7FH1BqJ--
