@@ -1,119 +1,212 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AC912FB23
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C49312FB23
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706810910; cv=none; b=m8A1L133TV8oUqn6kdUunSs8gb+Bh2U9K1u9aFWrRmGAeRjv/hnsmd0DhSqwgYlV/iARVrj6ehLlSIUEudWqHRYGOrE5RMo3x9Vblz9K5JopEzi/1BMcO4ME8lZTi6qhjkf+42YmvJqj6+L3Hzm9+Q33fJwijfqs0Rqi1YG56K8=
+	t=1706810978; cv=none; b=CT4RE1CHkdDAs3CHYRYF4v+ym/ncFoFZaAWQneLS5QqCF2qWftZhUPkBQiu9pj9ERTJf+phDzRZJXq3HArB2s29BNj94jpa4A2azoKmPobI70PJ+wlBpM/62igXszuL1AJO2HuCTGJq+7oNxUGKVKXj3AiYxJgEy263ebw+IKK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706810910; c=relaxed/simple;
-	bh=Bd1XZbZLzxEkpAsi0qzzeglcf93dLiRpddkZTTy19hE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6yWUQeLCyye4jJPvtrRysjJ4+iz6gB8W3agBeFqG28BE7p7Si4BQO1heXq6tuy9IqewA0ZCgpzRUcEqRR6NOtPW11/eDpv+R97L2ZU0EKKlkPeAj/NPwlikNqno0FvMcAgbLS8aFWq0a2CqiVdKd6rJHoXJKpA/r4FKX/SNxwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kv/Plj9Z; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706810978; c=relaxed/simple;
+	bh=XjAesaMRPLp5QxyOh8ZLeX5dtHwXo+xamByfNTJNWZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DafdnSEh4jsv+7/wrBE/B4f51dUitvUL12xNHGvEbNpLCKmvsUu+P5d95KNll+7zfj0ONQD+TqwrbKRD7hr7svJy61LaWjFOcVoYVUqxKPRYF0K+uz/Ii7QQkYgHFa0p0w6QmzVGw3wTO0fyw7pNZpF50IC9YlUMvgLQYY7LULI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=XWjROKzT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kv/Plj9Z"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29080973530so929511a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 10:08:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706810908; x=1707415708; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1Bc9O0i1Ze7/nmdnM6cLthDCGMlH+1F7pPRsecv4DWE=;
-        b=kv/Plj9ZBBwEGtO0u79b2xEWN3YMXZOrUmdgVQXqhnagsVMAvKQXhxmEiX99SeckNG
-         WYnKLO0xCup4ag8h9rLKEsqJMXtClUd6YlrmDJdKSLsXfov/oNosTJhHR9Z5Y2TKqOjN
-         o5yFUHePJukdnpeV1Ji9USCVTFP7YiZ+VjevddtGA7aV/vj2jlCivWFI7+j6rXiLDDVA
-         sjBkwePTT5VBp5QIMGxXJhod2tzSvoJfTA9QxQLpqWK7jc+VSjyJliaQe1CuCfCeiTgB
-         e8GdaWYGNVlV//yVcwUvKmRl1LYq9A+a6xFMbpz4tUaOQkW/vsZy3rplszj+T1S32bP6
-         oaPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706810908; x=1707415708;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Bc9O0i1Ze7/nmdnM6cLthDCGMlH+1F7pPRsecv4DWE=;
-        b=gTwyf5KxLWjBdu0vG0dV6JO5Bf0czpnOxe5YYbnhC16tIReLvTIBNu8JdwyrhNXlEn
-         ttEgk9KVMk4l7r1gNCZ1myCemx0Q6DmGoUmVY5IUFnXUiZmkmTR3PwImWnp4sQHhCOHR
-         lt+z+PyUgYEkAigx4KNEddRLjDIddBqsLDlGyrIOxzabFR6qKGK60Brcdxh8nA/D9lXL
-         AnNlq5yJ+psx/rO0/0SdDiv0agwbosz3XfVwkd3tLN0OyecZIkWssl7TL6WDpAsltCLX
-         6rh6GqFxi3FzYPeH+VZVCilGaC6ihw6RDalLlDMQSjpXTvihCSUuSogIVSsMnQAktgM5
-         iuXw==
-X-Gm-Message-State: AOJu0YziwjfpOztuLRDw2Guic95WC+Lpi6NWFk/WpR+7+Nf0sHzQHcLG
-	6nLBh89O28eBaexqUtGMSsJ4tFpxsqYTr3hBagsGZCY4tAPnArzRTxBb2gs0QQ==
-X-Google-Smtp-Source: AGHT+IGMkP4WiKSJkibWXXMTZOUkyofNPh3rTVvoVv7GQTJsjVlGryczRqjT8ZVoJ8l6bjLChRCAbA==
-X-Received: by 2002:a17:90b:ed2:b0:296:89c:1c2d with SMTP id gz18-20020a17090b0ed200b00296089c1c2dmr3486052pjb.7.1706810907806;
-        Thu, 01 Feb 2024 10:08:27 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXo7l/w9pqoyrFqqJv60ytTKRavThIGePD98TwksZNFWZsIb+NDqTHgsy+9mU8/m4s9nBgGVrye/0dEOII4Y3GAT89ZbP0HPvAzxnTysxC3eld549hIJGUlTWuoqVoK2gPW3/mFKvnjKHmuMP3PneiYerJMtllj5dWUSw==
-Received: from google.com ([2620:15c:2d3:205:c1e2:8dcb:e64a:6cac])
-        by smtp.gmail.com with ESMTPSA id t13-20020a17090a024d00b0028ce81d9f32sm158762pje.16.2024.02.01.10.08.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 10:08:27 -0800 (PST)
-Date: Thu, 1 Feb 2024 10:08:22 -0800
-From: Nick Desaulniers <ndesaulniers@google.com>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-	Tanzir Hasan <tanzhasanwork@gmail.com>,
-	Kees Cook <keescook@google.com>
-Subject: Re: [PATCH 00/28] Fast kernel headers: reduce header dependencies
-Message-ID: <ZbveFuD2lpE7sJfA@google.com>
-References: <20240131145008.1345531-1-max.kellermann@ionos.com>
- <28b1d750-fa74-4279-b292-e36cea995e80@infradead.org>
- <CAKPOu+8QQnMaZG33wyR1EzoifHD5kjSmjf2FQ9Y9gGdYN9dgJw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="XWjROKzT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F10C433C7
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 18:09:37 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="XWjROKzT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1706810972;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F5FPzyCgS3qlpBxGuSDs3VA0uLft4F+6gNLOCZnu3Ao=;
+	b=XWjROKzTtY0aX0iPy4BY8oQI7YxqZ4B6U2mkS2XMgZsduHzT2UXIQnUEeD/XD5aN1l0PJP
+	y18V6HQ7m2F1u1dczNzDLqyYy6CPugk+SbeikCEPzbUqKOLbVs//B4O3Q/N+4n5cvcwwq4
+	F5q4WAIsjBxx2ANA1q7wLKuq55hWTaw=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 67f18ffe (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
+	for <linux-kernel@vger.kernel.org>;
+	Thu, 1 Feb 2024 18:09:32 +0000 (UTC)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6e2794e5a35so240000a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 10:09:32 -0800 (PST)
+X-Gm-Message-State: AOJu0YytMgg7uR5e6eUsMJ4zpmWx4E8qXdab+gj/NViITa/wL9SeKHP/
+	65xWFNLWr+6CFQJAsWRzq0NPzS2C5iLOF85Lz8/MZlEJSSgFfpySPqZH7E6NgS8/CdErwrgIceD
+	Di9nIC03MV8C6n1cmonPXKyYHxZ4=
+X-Google-Smtp-Source: AGHT+IHH/xWjBAnQeRWIcaxySsGSIZkkOGMkMq5jS9NRPgQhc/dVRXjOarvdrc697ZXXsj/QVgmJEQQ8H8vw1Xe6iks=
+X-Received: by 2002:a05:6358:1901:b0:178:a295:996 with SMTP id
+ w1-20020a056358190100b00178a2950996mr6216795rwm.22.1706810970033; Thu, 01 Feb
+ 2024 10:09:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKPOu+8QQnMaZG33wyR1EzoifHD5kjSmjf2FQ9Y9gGdYN9dgJw@mail.gmail.com>
+References: <CAHmME9rum4uwSNFd_GkD9p_+vN4DBxA=feZX7k9RvugFZsZNJg@mail.gmail.com>
+ <DM8PR11MB5750797D0B9B8EB32740F55DE77D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <CAHmME9oC=GE-7QS2m9FA5cs_ss+tQgB9Pj3tKnTtMMFpQmUshg@mail.gmail.com>
+ <DM8PR11MB5750B861F7A105886AA5FCE4E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
+ <20240131140756.GB2356784@mit.edu> <Zbpc8tppxuKr-hnN@zx2c4.com>
+ <20240131171042.GA2371371@mit.edu> <DM8PR11MB5750C7D16DC566CD1329D5A5E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <CAHmME9q-eUXnXnpaDu0VOQemOYysst7SaJ-=b8-vCFP9h50Szg@mail.gmail.com> <20240201045710.GD2356784@mit.edu>
+In-Reply-To: <20240201045710.GD2356784@mit.edu>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Thu, 1 Feb 2024 19:09:17 +0100
+X-Gmail-Original-Message-ID: <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
+Message-ID: <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
+To: "Theodore Ts'o" <tytso@mit.edu>, "Reshetova, Elena" <elena.reshetova@intel.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"x86@kernel.org" <x86@kernel.org>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	"Nakajima, Jun" <jun.nakajima@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	"Kalra, Ashish" <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 11:00:27PM +0100, Max Kellermann wrote:
-> On Wed, Jan 31, 2024 at 10:44 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > How were these (a) missing and (b) unnecessary includes
-> > found or determined?
-> > Did you use some tool for that? If so, which one?
-> 
-> No tool, just stgit to edit the patches (in arbitrary order). I
-> reduced header dependencies, but got lots of build errors because
-> symbols were missing in different sources, which were previously
-> fulfilled by indirect includes that were now removed. I fixed all
-> those build errors by adding missing includes to those headers, moving
-> those changes to the first patch.
-> 
-> I found the unnecessary includes manually along the way by using "git
-> grep" to find all include directives for a certain header; I checked
-> the source for the reason why this header was included, and whether
-> the include could be replaced with "X_types.h" instead. Sometimes, I
-> found that not even "X_types.h" was necessary, but no include at all,
-> so I removed the include completely and had those changes in the
-> second patch.
-> 
-> The first two patches grew along the way. It was refreshed over and
-> over (with stgit), while I was editing the other patches.
-> 
-> I know there's the "iwyu" tool, and it may be helpful eventually, but
-> there's so much low-hanging fruit in the kernel, iwyu is not useful
-> yet I think.
+Hi Ted, Elena, Dave,
 
-We just wrapped up an internship where Tanzir was looking into getting IWYU
-working on the kernel.  He presented about it at Linux Plumbers Conf '23
-recently.
+On Thu, Feb 1, 2024 at 5:57=E2=80=AFAM Theodore Ts'o <tytso@mit.edu> wrote:
+>
+> On Wed, Jan 31, 2024 at 07:01:01PM +0100, Jason A. Donenfeld wrote:
+> > So if this is what we're congealing around, I guess we can:
+> >
+> > 0) Leave RDSEED alone and focus on RDRAND.
+> > 1) Add `WARN_ON_ONCE(in_early_boot);` to the failure path of RDRAND
+> > (and simply hope this doesn't get exploited for guest-guest boot DoS).
+> > 2) Loop forever in RDRAND on CoCo VMs, post-boot, with the comments
+> > and variable naming making it clear that this is a hardware bug
+> > workaround, not a "feature" added for "extra security".
+> > 3) Complain loudly to Intel and get them to fix the hardware.
+> >
+> > Though, a large part of me would really like to skip that step (2),
+> > first because it's a pretty gross bandaid that adds lots of
+> > complexity, and second because it'll make (3) less poignant
+>
+> If we need to loop more than, say, 10 seconds in a CoCo VM, I'd just
+> panic with a repeated RDRAND failure message.  This makes the point of
+> (3) that much pointed, and it's better than having a CoCo VM
+> mysteriously hang in the face of a DOS attack.
 
-https://youtu.be/eFq_oqLiXPM?si=0VhuMnwjHnMPJeaR
-https://youtu.be/XMVLSEzbpQ8?si=_2DQpS7JBlEC4FK1
-https://github.com/ClangBuiltLinux/IWYUScripts
-https://lore.kernel.org/lkml/?q=f%3Atanzirh%40google.com
+Yea, true. Problem is that in theory, userspace can DoS the kernel's
+use of RDRAND. Of course in practice, a userspace process preempting a
+kthread for >10 seconds is probably a larger problem.
 
-Some of his patches have landed, others had requests from maintainers that
-weren't reasonable to satisfy in the short duration of an internship. But still
-worth pursuing. Happy to chat more about the general problem sometime.
+Anyway, I want to lay out the various potential solutions discussed.
+As they all have some drawback, it's worth enumerating them.
 
-> 
-> Max
+=3D=3D
+
+Solution A) WARN_ON_ONCE(is_early_boot)/BUG_ON(is_early_boot) in the
+RDRAND failure path (> 10 retries).
+
+The biggest advantage here is that this is super simple and isn't
+CoCo-specific. The premise is that if RDRAND fails 10 times in a row
+before userspace has started, it's most definitely a hardware problem.
+Systems-wise, the drawback is that, in a VM, it alternatively might be
+a guest-guest DoS attack on RDRAND, or in the CoCo case, a host-guest
+DoS attack (which is presumably easier because the host controls
+scheduling). In the CoCo case, not booting is better than losing
+confidentiality. In the non-CoCo case, that seems like theoretically a
+DoS we might not want. RNG-wise, the drawback is that this doesn't
+help deal with secure reseeding later in time, which is a RNG property
+that we otherwise enjoy.
+
+Solution B) BUG_ON(is_early_boot && is_coco_system) in the RDRAND
+failure path (> 10 retries).
+
+This is slightly less simple than A, because we have to plumb
+CoCo-detection through to the RDRAND helper. [Side note: I feel
+ridiculous typing 'CoCo'.] Systems-wise, I don't see drawbacks.
+RNG-wise, the drawback is that this doesn't help deal with secure
+reseeding later in time, which is a RNG property that we otherwise
+enjoy.
+
+Solution C) WARN_ONCE()/BUG() in the RDRAND failure path (> 10 retries).
+
+The advantage here is also simplicity, and the fact that it "ensures"
+we'll be able to securely reseed later on. Systems-wise, the drawback
+is that userspace can in theory DoS the kernel's RDRAND and cause a
+crash.
+
+Solution D) BUG_ON(is_coco_system) in the RDRAND failure path (> 10 retries=
+).
+
+This is slightly less simple than A, because we have to plumb
+CoCo-detection through to the RDRAND helper, but it "ensures" we'll be
+able to securely reseed later on. Systems-wise, the drawback is that
+userspace can in theory DoS the kernel's RDRAND and cause a crash.
+
+Solution E) BUG() in a new time-based RDRAND failure path on CoCo
+systems (> 10 seconds).
+
+This adds a lot of complexity, and we'd need some alternative code
+path for CoCo with an infinite loop that breaks on a jiffies
+comparison. But it at least makes it harder for userspace to DoS the
+kernel's use of RDRAND, because it seems hard for a user thread to
+preempt a kthread for that long, though maybe somebody has some nasty
+scheduler tricks here that would break that hope.
+
+Solution F) Loop forever in RDRAND on CoCo systems.
+
+This makes debugging harder because of lockups (though I suppose we
+could WARN after some amount of time), but at least it's somewhat
+"sound".
+
+=3D=3D
+
+I am currently leaning toward (B) as being the lightest touch that has
+the least potential to break anything. (F) is also tempting because it
+doesn't have the RNG-drawback. The others seem complex or incomplete
+or otherwise annoying somehow.
+
+There is also "Solution G" -- do nothing and raise a fuss and let
+security researchers go to town and hope Intel gets their act
+together. Given that the CoCo thing seems kind of
+imaginary/aspirational anyway at this point, I'm very attracted by
+this. I don't mean to say that I intend to mount a large argument that
+we *should* do nothing, but it's just sort of sitting there in the
+back of my mind as an appealing possibility.
+
+Also, I wanted to enumerate currently open questions:
+
+=3D=3D
+
+Question i) Just how deterministic can these CoCo VMs be? Elena
+pointed to some TDX code regarding RDTSC that seemed fairly damning,
+but I also wonder what gotchas a motivated researcher might run into
+and how those could help us (or not).
+
+Question ii) Just how DoS-able is RDRAND? From host to guest, where
+the host controls scheduling, that seems easier, but how much so, and
+what's the granularity of these operations, and could retries still
+help, or not at all? What about from guest to guest, where the
+scheduling is out of control; in that case is there a value of N for
+which N retries makes it actually impossible to DoS? What about from
+userspace to kernelspace; good value of N?
+
+Question iii) How likely is Intel to actually fix this in a
+satisfactory way (see "specifying this is an interesting question" in
+[1])? And if they would, what would the timeline even be?
+
+=3D=3D
+
+Anyway, that's about where I'm at. I figure I'll wait to see if the
+internal inquiry within Intel yields anything interesting, and then
+maybe we can move forward with solutions (B) or (F) or (G) or a
+different Roald Dahl novel instead.
+
+Jason
+
+[1] https://lore.kernel.org/all/CAHmME9ps6W5snQrYeNVMFgfhMKFKciky=3D-UxxGFb=
+Ax_RrxSHoA@mail.gmail.com/
