@@ -1,87 +1,102 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBC8EAEF;
-	Thu,  1 Feb 2024 01:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D76BEAE3;
+	Thu,  1 Feb 2024 01:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706752140; cv=none; b=dtQQduC8yQGTjmL9plvLN+LTDqo2S17jo6DEymZ2hKg+SZRlfU8OGjPRxVqIVtb/OpZBbBBp0idj+Pp8LZrC/hEZdgAYB8qNi23aOSTrrK79vxvMStKr7hVajROGau93QBNdNP9nFd/ysnEB57izW8HhYcxR60by710M65OKLyU=
+	t=1706752308; cv=none; b=iJTmQ5MIkD95SK4l2lqgclsLg8GY5hP/yaUXBsfHz46IgMduUi831L3s0LxDwruQSSy7uTmwy7yQQt6kpjrLud57hW5kI3yfRHKGeZcVMwdOBB5ZC5OE1yFP1fdWu/E4qQmiCPYYD24Lj8NIM0fsvkwqw9hvZzNFuWprs4zb14I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706752140; c=relaxed/simple;
-	bh=N6QKfiFvZzxxTVFRsxwYsWWNcRXAOchRha0k2f+iqCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g0jXwMApCs2sm8txI+NNwSle8E1kcvJ1MFljmIQGv22gWsugvTokMCIPPOGFRls/GtvnoyJ7gu4dXShllrUz+RS2S962y6nnK9H4jFvgHNe/XXiuCzjVtcMyogfoaGUjztWIxWDEcZVU+7H3NVSDJV2MwB3Oh0UcVicCxu+FkUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CWJmy8wI; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706752308; c=relaxed/simple;
+	bh=uZifwHdGnq05hwLYvjFee+ZPbSja/gXSEwnvnH97HpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i2mbK7Ug3sbotFKt7Nu+IhYGBn8WVDEeOIIu+pkFRA+0VuYYSowDb5gE+dddwUutuedPl6qGvQv9Nr5ABevp3xvWkbpj3eKeRhsZ51UoYbwjpxcj/Johi0kMKUgD+LGfFADEV0HYMWEpEOzuUB79oJIKu+FENg4jOw0gDfd7UZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=To7JlSp2; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWJmy8wI"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dfc321c677so282571b3a.3;
-        Wed, 31 Jan 2024 17:48:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706752138; x=1707356938; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5yoyeQ03SLQ2/KhLtmuYs2D9JtsD1upyRCzOcNiDbmA=;
-        b=CWJmy8wIgaTohXSffw3wwa1nkAMbvBkI4Xw+Ok3rpV3EfbKDgxCT1O3SfaycZY25Jt
-         uGQFUF1QrwEnbLNW2V+Ug1wli+a+gmPPOeFm0aqa1ICoiQYXfVECHGpMN89k2vDkgR3/
-         uVbAYgvsJmNgxqKPAyQl+9oEETmTnMAG4Km+M0rqU5/CyEKt2xKa4vSwntboYUx9WEZk
-         RApG9TCyKfexdnWw36nnED+Gb1dFVrbZY33VX+2la/3Zvt0f1v0t7ZoFcDzEcn4gi1BR
-         290exQVQMN8p7W5a8KG0XBM37d3z3p1HucU8CV1C3PPfZFxKvY7Ysa9Z099/5PlASguF
-         /xQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706752138; x=1707356938;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5yoyeQ03SLQ2/KhLtmuYs2D9JtsD1upyRCzOcNiDbmA=;
-        b=P8SD1TKZMfwTHzYEjGLv1CSffTmkaI2hbc9tHpZb40xDjTs05mTmplW79e7n98bcl/
-         6gnlLnpDpHeq4G9wF2BxmHK54NFXo6WwgX7Cca7Wrv9EGVPlF0MeqNGcZjV2FbNVpiP3
-         2gusRg9/YEvSiUhgk0B3KOAGMvRvOtFIcGHrJpYa3+sJUxcy5SoX6L11DvePnVFh5fkv
-         4Lm9GNGzu3hlCTR9lq08IS72B22uJ7s1BnJGH+mQslF1knMGP/tosafQp2V7WS1GL8fM
-         n1ysasae7SXQhiCS/Pv0maaDHGK1I8LaIUxGeN63k63DY5BWp8ZeajJeFCI5chNcZtHD
-         ESpw==
-X-Gm-Message-State: AOJu0Yyyt08t5GJo9Jv8nrRWL/ALCmyNQFzTwICPryN0EvE77HKsoKZg
-	P0gV5Rxr+uzumFuuvMvyeQEay4Z4fYJxLLxnJHlvlob5e9FaGG0Nm6qFkFBPnhIC6Q==
-X-Google-Smtp-Source: AGHT+IFxYwb1zXm5LsSCQsfI8y7IMZ5+/9g8tqNylKmrp/LkcNjBnoFR24f3iCwh74oislzN6KhgYw==
-X-Received: by 2002:a62:e705:0:b0:6de:352c:c2c2 with SMTP id s5-20020a62e705000000b006de352cc2c2mr3217324pfh.30.1706752138075;
-        Wed, 31 Jan 2024 17:48:58 -0800 (PST)
-Received: from dragon (173.242.119.193.16clouds.com. [173.242.119.193])
-        by smtp.gmail.com with ESMTPSA id t5-20020a62d145000000b006dde36aaae7sm11033921pfl.64.2024.01.31.17.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 17:48:57 -0800 (PST)
-Date: Thu, 1 Feb 2024 17:47:48 +0800
-From: Shawn Guo <shawn.gsc@gmail.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marek Vasut <marex@denx.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/4] TQMa8Xx (i.MX8QXP/i.MX8DXP) support
-Message-ID: <20240201094748.GC463595@dragon>
-References: <20231214142327.1962914-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="To7JlSp2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706752307; x=1738288307;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uZifwHdGnq05hwLYvjFee+ZPbSja/gXSEwnvnH97HpA=;
+  b=To7JlSp2Yl8PJw2sLNPDlo2Hv3yI/NgDNLIxKSSIPcpa0dMogOV22wWz
+   rzoUeCcZRrO5Wd07hfJJAZTYIc7nML4Zf8pNi1FIGAJLM1hDjyDCk7sCd
+   nWLWICxu5+7cED0MDg0uRKZJHG9Qork1EzEdUL1mhKz1kwmv4Bs2/t8ad
+   o2A+JadUiS8paF1C7sqJ8iG40FUAqNbIxs+CovFKHDc9/II/jUNwjeOzT
+   ZJfx0mQDJQLeH26BLn430tPcB7ihqgBBu7gw4v73X2cvuN3x0/q38BUBA
+   lsGD5Z6U9V9FoBq0yCu3MDxJccGnLlzWBZd08SLe6JnwUzOILBjW/d76o
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3643680"
+X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
+   d="scan'208";a="3643680"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:51:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="961777969"
+X-IronPort-AV: E=Sophos;i="6.05,233,1701158400"; 
+   d="scan'208";a="961777969"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.93.12.33]) ([10.93.12.33])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 17:51:43 -0800
+Message-ID: <50507559-ffb6-4340-a3ac-c0fdba3c9ab8@linux.intel.com>
+Date: Thu, 1 Feb 2024 09:51:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214142327.1962914-1-alexander.stein@ew.tq-group.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 16/29] KVM: selftests: Test Intel PMU architectural
+ events on gp counters
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Jinrong Liang <cloudliang@tencent.com>,
+ Aaron Lewis <aaronlewis@google.com>, Like Xu <likexu@tencent.com>
+References: <20240109230250.424295-1-seanjc@google.com>
+ <20240109230250.424295-17-seanjc@google.com>
+ <5f51fda5-bc07-42ac-a723-d09d90136961@linux.intel.com>
+ <ZaGxNsrf_pUHkFiY@google.com>
+ <cce0483f-539b-4be3-838d-af0ec91db8f0@linux.intel.com>
+ <ZbmF9eM84cQhdvGf@google.com>
+ <d24dc389-8e73-4a7a-9970-1022dcbfa39c@linux.intel.com>
+ <Zbpn284rPe3pMBwI@google.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <Zbpn284rPe3pMBwI@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 14, 2023 at 03:23:23PM +0100, Alexander Stein wrote:
-> Alexander Stein (4):
->   arm64: dts: imx: add imx8dxp support
->   dt-bindings: arm: add TQMa8Xx boards
->   arm64: dts: freescale: add initial device tree for TQMa8Xx
->   arm64: defconfig: Enable i.MX8QXP device drivers
 
-Applied all, thanks!
+On 1/31/2024 11:31 PM, Sean Christopherson wrote:
+> On Wed, Jan 31, 2024, Dapeng Mi wrote:
+>> BTW, I have a patch series to do the bug fixes and improvements for
+>> kvm-unit-tests/pmu test. (some improvement ideas come from this patchset.)
+>>
+>> https://lore.kernel.org/kvm/20240103031409.2504051-1-dapeng1.mi@linux.intel.com/
+>>
+>> Could you please kindly review them? Thanks.
+> Unfortunately, that's probably not going to happen anytime soon.  I am overloaded
+> with KVM/kernel reviews as it is, so I don't expect to have cycles for KUT reviews
+> in the near future.
+>
+> And for PMU tests in particular, I really want to get selftests to the point where
+> the PMU selftests are a superset of the PMU KUT tests so that we can drop the KUT
+> versions.  In short, reviewing PMU KUT changes is very far down my todo list.
+
+Yeah, It's good and convenient that we can have one-stop test suite to 
+verify the PMU functions, so we don't need to verify the PMU functions 
+each time with KUT/PMU test and selftest/pmu test independently.
+
+While it looks KUT/PMU test is still broadly used to verify KVM PMU 
+features by many users, and the patchset mainly fixes several KUT/PMU 
+bugs which would cause false alarms. If these bugs are not fixed, they 
+would mislead the users.
+
+Yeah, patch reviewing takes much time and effort, thanks a lot for you 
+reviewing our patches in the past, and hope you can review this patchset 
+when you are free.
+
