@@ -1,107 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F18215CD52;
-	Thu,  1 Feb 2024 11:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BA915B964;
+	Thu,  1 Feb 2024 11:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706787194; cv=none; b=ZG93B9mCtfQORip3rgirM41Rs/bGiN7dgKops5hZnmSocrNOwA/tO9Ii7BrBohkB+1y0qx3ErSFB3xwWl21GlegMgsG2pdu10a5tQ8eoor4gdyZ8RdjzjAo40jE/U+/j3Fr7ombK6IzSGYDT1jMYi1IR5Sa0nM54e3zdPvWGxqw=
+	t=1706787379; cv=none; b=a4cNCdwq6m2/IRN7X0nCuY2pNAsdTfVTa1CmJLrK2XbNIZuxo6O6EtVwgTPaYXJ+juuyPxk+Otn5LGR2Oq035W/DyXS+svBi70TLwjYdpKEU7amkV0nY4ZNXBmIt0bbR9KZBT3Ka7IrI6F9uBP+QHU3CdOmE5yR5c9RobWP+Tyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706787194; c=relaxed/simple;
-	bh=SpA5zVrSl+lHbVMJomAs4rJfHde7ZHv1wIAINFvCdgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=beFKM2ZVf1nOMfxmwRH9o5q1BL1Czi2wMollj57ijNdpziV2/WNwNQGRLerrbnQ+pOiWU4MC9pXdsqDajZxm/pQwX9m1C0hGHofR89cRzVauzxPZIVvZxy7QnCkM0gvxE0PPv1FL1gMTPmWZTsToKki6rLoiOzmGNInT6aLJOWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mJyJ3vcY; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mJyJ3vcY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706787194; x=1738323194;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=SpA5zVrSl+lHbVMJomAs4rJfHde7ZHv1wIAINFvCdgs=;
-  b=mJyJ3vcYLT5F0TdzGgkcQLr+kNf3vg5WHuPm7Ft8oK661VxpqqsCy5NW
-   vWHUBZ6923ufKd77I8wELq4fx4hKaoTsqC/unXf5iz2jDfGtBVEQfjOXH
-   DSqsSR/bJjCyrlVv/NqLJ1Gow6Nl4Y/CEVbtofHQT22psxNbGASq6cYYR
-   xQmnOHEwoshTEMno9yS/gD2sBe9UrsZxSEF6hxOUyuqI0X8spAlxyFUfu
-   ilGa2eWfTMKj9Gdru9oMZs32MLxefFjL6VrnG44Io5sYq0PJYW5vmQF8x
-   mVD3FrOHmyQFjfJ5YwadX/9jbIsKB2eODR1jOw2b++fGK/0RsicAMZxTU
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="56174"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="56174"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 03:33:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119919385"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="1119919385"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 03:33:00 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rVV99-00000000ogy-0PC7;
-	Thu, 01 Feb 2024 13:22:19 +0200
-Date: Thu, 1 Feb 2024 13:22:18 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] pwm: dwc: simplify error handling
-Message-ID: <Zbt-6vpx1LnFBCIL@smile.fi.intel.com>
-References: <20240122030238.29437-1-raag.jadav@intel.com>
- <20240122030238.29437-3-raag.jadav@intel.com>
- <ZbZpMO9b7L-DNIcb@smile.fi.intel.com>
- <r6vulwv76x7ydkmszlwlswjve7y2pmasz77wkqub73qopd5src@y3ta72owtw5b>
+	s=arc-20240116; t=1706787379; c=relaxed/simple;
+	bh=jGa42X+BFB0gekur+doHwNmJpCnbHR5W4fMjgpjmq+0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fHBcW74SdqqR4u21vaHCHolgfoLGxVOsx/o1sjlZ6eRPsRIWVooOFnHQUijVSUmrUoh2uxf3DYEuYWmMSatC0G4V1hnJpPiro32kfGSzI12lMY02VhtzlwsmQtPGEf7Qghe32iRmyHqWDLTVvuc/M3QPpd5VasN9wejCKA0uxtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TQcGD01SGz6JBVN;
+	Thu,  1 Feb 2024 19:32:52 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6BD2C1400D1;
+	Thu,  1 Feb 2024 19:36:14 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 1 Feb
+ 2024 11:36:13 +0000
+Date: Thu, 1 Feb 2024 11:36:12 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
+CC: Peter Zijlstra <peterz@infradead.org>, <dan.j.williams@intel.com>,
+	<linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	<linux-cxl@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [RFC PATCH v3] cleanup: Add cond_guard() to conditional guards
+Message-ID: <20240201113612.00001d90@Huawei.com>
+In-Reply-To: <1785013.VLH7GnMWUR@fdefranc-mobl3>
+References: <20240131134108.423258-1-fabio.maria.de.francesco@linux.intel.com>
+	<6168759.DvuYhMxLoT@fdefranc-mobl3>
+	<65baefec49c1a_4e7f52946b@dwillia2-xfh.jf.intel.com.notmuch>
+	<1785013.VLH7GnMWUR@fdefranc-mobl3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <r6vulwv76x7ydkmszlwlswjve7y2pmasz77wkqub73qopd5src@y3ta72owtw5b>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Sun, Jan 28, 2024 at 05:58:38PM +0100, Uwe Kleine-König wrote:
-> On Sun, Jan 28, 2024 at 04:48:16PM +0200, Andy Shevchenko wrote:
-> > On Mon, Jan 22, 2024 at 08:32:37AM +0530, Raag Jadav wrote:
-> > > Simplify error handling in ->probe() function using dev_err_probe() helper.
+On Thu, 01 Feb 2024 09:16:59 +0100
+"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com> wrote:
 
-...
-
-> > >  	ret = pcim_iomap_regions(pci, BIT(0), pci_name(pci));
-> > > -	if (ret) {
-> > > -		dev_err(dev, "Failed to iomap PCI BAR (%pe)\n", ERR_PTR(ret));
-> > > -		return ret;
-> > > -	}
-> > > +	if (ret)
-> > > +		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR (%pe)\n", ERR_PTR(ret));
-> > >  
-> > >  	base = pcim_iomap_table(pci)[0];
+> On Thursday, 1 February 2024 02:12:12 CET Dan Williams wrote:
+> > Fabio M. De Francesco wrote:  
+> > > I just noticed that this is not the final version. It misses a semicolon.
+> > > Please discard this v3. I'm sending v4.  
 > > 
-> > > -	if (!base) {
-> > > -		dev_err(dev, "Base address missing\n");
-> > > -		return -ENOMEM;
-> > > -	}
-> > > +	if (!base)
-> > > +		return dev_err_probe(dev, -ENOMEM, "Base address missing\n");
-> > 
-> > This check is bogus. Just remove it completely.
+> > Ok, but do please copy the aspect of scoped_conf_guard() to take a
+> > "_fail" statement argument. Passing a return code collector variable by
+> > reference just feels a bit too magical. I like the explicitness of
+> > passing the statement directly.  
 > 
-> This would be a separate patch though. IMHO mechanically converting to
-> dev_err_probe() is fine.
+> I had introduced a bug in my tests that made me see failures when there were 
+> not. Now I fixed it and tests don't fail.
+> 
+> I'm sending a new version that passes the return variable directly, not as a 
+> reference, similar but not equal to:
+> 
+> 	cond_guard(..., rc, -EINTR, ...);
+> 
+> Actually, I'm doing this:
+> 
+> 	cond_guard(..., rc, 0, -EINTR, ...);
 
-Sure, that's what I meant. First patch to remove, followed by dev_err_probe()
-conversion.
+Can we not works some magic to do.
+	cond_guard(..., return -EINTR, ...)
 
--- 
-With Best Regards,
-Andy Shevchenko
+and not have an rc at all if we don't want to.
 
+Something like
+
+#define cond_guard(_name, _fail, args...) \
+	CLASS(_name, scope)(args); \
+	if (!__guard_ptr(_name)(&scope)) _fail
+
+Completely untested so I'm probably missing some subtleties.
+
+Jonathan
+
+
+> 
+> I'm not passing 'rc = -EINTR' because I want to take into account the 
+> possibility that rc contains values different than 0 from previous assignments. 
+> I'm passing rc, so that the macro can assign either a success code or a 
+> failure error to this variable. Any value from previous assignments must be 
+> always overwritten: 
+> 
+> 	#define cond_guard(_name, _ret, _scs, _err, args...) \
+>         	CLASS(_name, scope)(args); \
+>         	if (!__guard_ptr(_name)(&scope)) _ret = _err; \
+>         	else _ret = _scs;
+> 
+> I should have seen long ago that my tests were failing because of a missing 
+> 'else' when passing a statement in 'cond_guard(..., rc = -EINTR, ...);'. It 
+> had nothing to do with how to pass 'rc'. Sorry for that confusion.
+> 
+> Fabio
+> 
+> Fabio 
+> 
+> 
+> 
 
