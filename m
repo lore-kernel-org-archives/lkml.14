@@ -1,133 +1,167 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEF23FB1D
-	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 22:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDD03FB1D
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 22:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706827023; cv=none; b=epv29azH9CG58p0d6iCKfE1Ka/qmwQBOgVmFA/3J4Yy4lsxt2C5olrmsrjX+rx8Zrbs+70GWDz/URbkYy5K0/VgboTyRXRzw3kay8vuxESAqKP6G5r0NROR931MsbDH0mbumcXQ6ic5gCmesNMaRYgxUz32UvKeOxITgP1c24Tg=
+	t=1706827072; cv=none; b=PcdrZqnj7L7Te6Tk3NPqTEHsasWEvEnVTaq+28usy6FOtOX7f4tOGrQK2u9wu9Kbyvz0dJzZqrQjMz6f5pwX6zkC7m8DTYsagozKOH9AvfIVbpIcgyfeif4fJW/Sr/JpsOQfHesMmR2eZZvyAhtmFMG/rRKfq7IH4aTdqKcEEIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706827023; c=relaxed/simple;
-	bh=C1Td7LS6mQYWKcz4HPRMpRrQao7T6kT+I564bAgKsBU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pmZb8wSnC4kazbLHEoRgjgValAzKYAaThQH/qg6tCfwFFqVo7BlPhILOn/+blyGO1oxQiNVciYnDOibD8N/dcYi4+umci/W3FL4Lekh30Yp/rd0kbCBNDCjC+nEuSVSpM4FV+n+sfuojNkMupTCel8ALZsHZ+TJfygL5bSS8zKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--maskray.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zUrQV2Up; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--maskray.bounces.google.com
+	s=arc-20240116; t=1706827072; c=relaxed/simple;
+	bh=9yIwFf6/pa2yEKL8hInept++VhBkk1WGuFw22mE/WcY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=TLNAybuWi++i8U1JjF/ewGAl/IZXbZzP06kV8nAjVqiiaT9iAAB6fCmgHVgi6j066kh0hjeZjCQCvWdiQw+1+VcXebPmIWlLxokJRBmg8Z3Dg0E3oyvkPP6kS77b+VUeEYM+zmKDXcCccn9F/4pizX6zPAmXi2lH7zYrpMPnTKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hCaxP0ny; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zUrQV2Up"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf618042daso2114982276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 14:37:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hCaxP0ny"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-218dcbd1584so951011fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 14:37:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706827021; x=1707431821; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3B3tF1HYvRY1UkQ2K7cnSqpuGaSyeDgjRqaJd9RSiXg=;
-        b=zUrQV2Upjx8/DfFBOJflmwchTh9DcgyYDnSJXqn3q5/OwLg5BLdy8Ah8HZfKJYtlJS
-         28Nc+A+2y8rrdqcetumgwLd1QBqm2nzHrV/AHX6rTWyaP93zmLl6z1GqX8oEoChaaEjp
-         tcQmn2OakN+SUmpSU6B6Cn59B3bCyFcssKyH2Sn30EGoFbSBoosWgHezncRzeq71YmnM
-         H3MmsplIjTHtElydFCsQTSc1BvIicbnl1+DdWFDlRFkaMFxrzD4qUHqV68xys0prd3Q6
-         4wqmRhDfPyC/yYA4H+gBqMA27L1EJryhphVVPS2Il/nZDyeOZFR4r6+khYwKz5Pzet8a
-         XCJQ==
+        d=chromium.org; s=google; t=1706827067; x=1707431867; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PmoKB9U9mw3t4FpnGtJps1mksky8tREvppcYUjjJHJs=;
+        b=hCaxP0nyY9pgaZWKYE3aTnwHUpi0axiowGdpUByErW3qe1PkYpZAw4tYBA7yecZklw
+         6JDM5OnklC6i+4MIj/heypc8b9uSaiO3oAVwao+O4Kl+055HzYBsqvtgO7kif21DOqTU
+         G7mYtBMx+SVUtpDO4p9eIkHEkvNi9zk4k8GhQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706827021; x=1707431821;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3B3tF1HYvRY1UkQ2K7cnSqpuGaSyeDgjRqaJd9RSiXg=;
-        b=Uk5r86SfktO1MfavuKIp/ZlXLLeKV8HmMjJI27F98bbQs67w/Uj1gmeUVFKvYSMhMu
-         bEXznZtZLo3WvTqXlCFalnxfuYoQLWgRVf+lTFTVXeq9s+mGSb2b1w5jWT+Ae1oMepy2
-         Ydmc189IJnUWoa8BlKXItM8oU6dT3CKxFbciFEScYIR0QKJCv3pi+D2la+s+kgX0SZEQ
-         RX1YWQJQ+N7P0N6ZoZRAyd7qTdoExN9lvRcvOBk4BMqQaEBVQJTUe10nVPiu7renA5Zp
-         0HN0Ri6lr4UQLeyMM20D++e+97Ow69xsbgqVN25Aoxeoz+iAaMfa0lQJRCsLQUePsRRt
-         J2zw==
-X-Gm-Message-State: AOJu0YxSM4u98CZpzX2nkbKOmzsJMBA/sm81uCdsaYdegabSLHbE9uQO
-	TxY+PpMVzqtREgALOfFOqJrlwHD3jVgEFibUb0xtYzDr9YMM5wY1aoZVfSdrg8SmchXn8uYlICt
-	epdHR9Q==
-X-Google-Smtp-Source: AGHT+IEtIsVPxgDfG98U8Bbl2kwE3MvRjxByJZVySc1k/DECQFUpeiwq33gwZ/XYHnQ4uktoKoW718gMTm1N
-X-Received: from maskray.svl.corp.google.com ([2620:15c:2d3:205:7de7:721a:241f:7455])
- (user=maskray job=sendgmr) by 2002:a05:6902:cc9:b0:dc2:57c9:b44d with SMTP id
- cq9-20020a0569020cc900b00dc257c9b44dmr149539ybb.8.1706827021012; Thu, 01 Feb
- 2024 14:37:01 -0800 (PST)
-Date: Thu,  1 Feb 2024 14:35:45 -0800
+        d=1e100.net; s=20230601; t=1706827067; x=1707431867;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PmoKB9U9mw3t4FpnGtJps1mksky8tREvppcYUjjJHJs=;
+        b=BqiPdIPAFjkPB2a9K9rI5UyxjXxIGfMZf7IFSDYTJcRq4nAeCfb/EaZHEvGVSpMryj
+         tSkBG9UigdLhZIVxcQ3CHTfpP/DqOPC4QK/up06iB8JdwYQPMv+Gt6ULYGZmTvgXfBOt
+         z9lCi/ez1EoxiI6rV0jCzEeJV+IiI3nwGmeVgYlrRlzqzzI0DNZZw78ltA96STxFu2p1
+         L8gtMxEdOrGolZ/eWBQxyJUqKBk4R+J0gtfnB387M3+vrpQd1nvLnQNQk22BeyszWgDb
+         TTUfHUq6SwkH3CuA4869MDZUaBIbf3wFLnRRMwyk3lWKbwvKO7HPp8TvrsCntDNrajQt
+         L5HQ==
+X-Gm-Message-State: AOJu0Ywb/zQx0Rjsfjr9LolX1HkY7J+vwgkCOEiWRxg/Q+rpqhxUp6PF
+	56KSrB9T4XX/tHONbFCyTdgy3bv9BmLZtijd6uM4zihsGWCvn2o1O10zm/dqGK/xxS4cVGndQMd
+	YYNyGVsrUGletBN8ZJlpyjCQJFCswnAzSk/EF
+X-Google-Smtp-Source: AGHT+IFXjJjh4U73XklHRwMqQKC6IUK8yT1QB2L/QSJgxVT2r+D8jpRmpXkJyI8e7UxCR3vkuM3rQ/1eDkoKFGaW8GA=
+X-Received: by 2002:a05:6870:f228:b0:210:7f85:c208 with SMTP id
+ t40-20020a056870f22800b002107f85c208mr7371815oao.46.1706827067224; Thu, 01
+ Feb 2024 14:37:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <20240201223545.728028-1-maskray@google.com>
-Subject: [PATCH] arm64: jump_label: use constraints "Si" instead of "i"
-From: Fangrui Song <maskray@google.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org
-Cc: Jisheng Zhang <jszhang@kernel.org>, Dave Martin <Dave.Martin@arm.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Peter Smith <peter.smith@arm.com>, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Fangrui Song <maskray@google.com>
+MIME-Version: 1.0
+References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
+ <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver>
+In-Reply-To: <20240201204512.ht3e33yj77kkxi4q@revolver>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Thu, 1 Feb 2024 14:37:35 -0800
+Message-ID: <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
+	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
+	usama.anjum@collabora.com, rdunlap@infradead.org, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The generic constraint "i" seems to be copied from x86 or arm (and with
-a redundant generic operand modifier "c"). It works with -fno-PIE but
-not with -fPIE/-fPIC in GCC's aarch64 port.
+On Thu, Feb 1, 2024 at 12:45=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+> >
+> > I would love to hear more from Linux developers on this.
+>
+> Linus said it was really important to get the semantics correct, but you
+> took his (unfinished) list and kept going.  I think there are some
+> unanswered questions and that's frustrating some people as you may not
+> be valuing the experience they have in this area.
+>
+Perhaps you didn't follow the discussions closely during the RFCs, so
+I like to clarify the timeline:
 
-The machine constraint "S", which denotes a symbol or label reference
-with a constant offset, supports PIC and has been available in GCC since
-2012 and in Clang since 7.0. However, Clang before 19 does not support
-"S" on a symbol with a constant offset [1] (e.g.
-`static_key_false(&nf_hooks_needed[pf][hook])` in
-include/linux/netfilter.h), so we use "i" as a fallback.
+- Dec.12:
+RFC V3 was  out for comments: [1]
+This version added MAP_SEALABLE and sealing type in mmap()
+The sealing type in mmap() was suggested by  Pedro Falcato during V1. [2]
+And MAP_SEALABLE is new to V3 and I added an open discussion in the
+cover letter.
 
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Link: https://github.com/llvm/llvm-project/pull/80255 [1]
+- Dec.14
+Linus made a set of recommendations based on V3 [3], this is where
+Linus mentioned the semantics.
 
----
-Changes from
-arm64: jump_label: use constraint "S" instead of "i" (https://lore.kernel.org/all/20240131065322.1126831-1-maskray@google.com/)
+Quoted below:
+"Particularly for new system calls with fairly specialized use, I think
+it's very important that the semantics are sensible on a conceptual
+level, and that we do not add system calls that are based on "random
+implementation issue of the day".
 
-* Use "Si" as Ard suggested to support Clang<19
-* Make branch a separate operand
----
- arch/arm64/include/asm/jump_label.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+- Jan.4:
+I sent out V4 of that patch for comments [5]
+This version implements all of Linus's recommendations made in V3.
 
-diff --git a/arch/arm64/include/asm/jump_label.h b/arch/arm64/include/asm/jump_label.h
-index 48ddc0f45d22..1f7d529be608 100644
---- a/arch/arm64/include/asm/jump_label.h
-+++ b/arch/arm64/include/asm/jump_label.h
-@@ -15,6 +15,10 @@
- 
- #define JUMP_LABEL_NOP_SIZE		AARCH64_INSN_SIZE
- 
-+/*
-+ * Prefer the constraint "S" to support PIC with GCC. Clang before 19 does not
-+ * support "S" on a symbol with a constant offset, so we use "i" as a fallback.
-+ */
- static __always_inline bool arch_static_branch(struct static_key * const key,
- 					       const bool branch)
- {
-@@ -23,9 +27,9 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
- 		 "	.pushsection	__jump_table, \"aw\"	\n\t"
- 		 "	.align		3			\n\t"
- 		 "	.long		1b - ., %l[l_yes] - .	\n\t"
--		 "	.quad		%c0 - .			\n\t"
-+		 "	.quad		%0 + %1 - .		\n\t"
- 		 "	.popsection				\n\t"
--		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
-+		 :  :  "Si"(key), "i"(branch) :  : l_yes);
- 
- 	return false;
- l_yes:
-@@ -40,9 +44,9 @@ static __always_inline bool arch_static_branch_jump(struct static_key * const ke
- 		 "	.pushsection	__jump_table, \"aw\"	\n\t"
- 		 "	.align		3			\n\t"
- 		 "	.long		1b - ., %l[l_yes] - .	\n\t"
--		 "	.quad		%c0 - .			\n\t"
-+		 "	.quad		%0 + %1 - .		\n\t"
- 		 "	.popsection				\n\t"
--		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
-+		 :  :  "Si"(key), "i"(branch) :  : l_yes);
- 
- 	return false;
- l_yes:
--- 
-2.43.0.594.gd9cf4e227d-goog
+In V3, I didn't receive comments about MAP_SEALABLE, so I kept that as
+an open discussion item in V4 and specifically mentioned it in the
+first sentence of the V4 cover letter.
 
+"This is V4 of the patch, the patch has improved significantly since V1,
+thanks to diverse inputs, a few discussions remain, please read those
+in the open discussion section of v4 of change history."
+
+- Jan.4:
+Linus  gave a comment on V4: [6]
+
+Quoted below:
+"Other than that, this seems all reasonable to me now."
+
+To me, this means Linus is OK with the general signatures of the APIs.
+
+-Jan.9
+During comments for V5.
+[7]  Kees suggested dropping RFC from subsequent versions, given
+Linus's general approval
+on the v4.
+
+[1] https://lore.kernel.org/all/80897.1705769947@cvs.openbsd.org/T/#mbf4749=
+d465b80a575e1eda3c6f0c66d995abfc39
+
+[2]
+https://lore.kernel.org/lkml/CAKbZUD2A+=3Dbp_sd+Q0Yif7NJqMu8p__eb4yguq0agEc=
+mLH8SDQ@mail.gmail.com/
+
+[3]
+https://lore.kernel.org/all/CAHk-=3DwiVhHmnXviy1xqStLRozC4ziSugTk=3D1JOc8OR=
+Wd2_0h7g@mail.gmail.com/
+
+[4]
+https://lore.kernel.org/all/CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW=
+2jHg@mail.gmail.com/#t
+
+[5]
+https://lore.kernel.org/lkml/796b6877-0548-4d2a-a484-ba4156104a20@infradead=
+.org/T/#mb5c8bfe234759589cadf0bcee10eaa7e07b2301a
+
+[6]
+https://lore.kernel.org/lkml/CAHk-=3Dwiy0nHG9+3rXzQa=3DW8gM8F6-MhsHrs_ZqWaH=
+tjmPK4=3DFA@mail.gmail.com/
+
+[7]
+https://lore.kernel.org/lkml/20240109154547.1839886-1-jeffxu@chromium.org/T=
+/#m657fffd96ffff91902da53dc9dbc1bb093fe367c
+
+> You dropped the RFC from the topic and increment the version numbering
+> on the patch set. I thought it was customary to restart counting after
+> the RFC was complete?  Maybe I'm wrong, but it seemed a bit odd to see
+> that happen.  The documentation also implies there are still questions
+> to be answered, so it seems this is still an RFC in some ways?
+>
+The RFC has been dropped since V6.
+That said, I'm open to feedback from Linux developers.
+I will respond to the rest of your email in seperate emails.
+
+Best Regards.
+-Jeff
