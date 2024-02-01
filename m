@@ -1,121 +1,180 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED23A5A4EC;
-	Thu,  1 Feb 2024 16:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2144626BF
+	for <linux-kernel@vger.kernel.org>; Thu,  1 Feb 2024 16:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706804081; cv=none; b=cY/u2YZCyy8aAlax+lQP+4oTKSTjvdthPNgmFVj4EebRmUQqU5Y9hof0HDrsoFmUMf7jO34UViIpH+HFZ1P0ONNABOFltHFrvyOjMqJme1aXVMnEJdqaK13m8gEwZkqvOgav9vR00E2RaQm/NKhq8K2FYA9PmvYm2Nxif8Z3+QY=
+	t=1706804143; cv=none; b=WpzGBqDP1McgskvcNAJ0rYVNM8NrxmZoDji4ja4WItisFLHHxUEpwt+Mu6dQkbyoHKjLlw8SjnUj2YdyvSVaA8xJ2IrBUujoO02oIbAfKVcXfJxUbJl+vqZ1eIkFH3K/0Q4ZgwBO1Jg/m4PGVmt61g09HV28XcpZh20CvNzHnWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706804081; c=relaxed/simple;
-	bh=ncco8NqeugB/kq7KQpde9jMxzGMA8TKJcj0Em+XhoTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P8tdqMPyBK9B16nIS1qaXARckuhYgro4dINcfejF82yxIX7sWaBqkIKOzzarJAj6apawKTopN1/oEiiWXEnq+YFAzkJUEIY8pdYoKg829ehECwIc2hDSJXzn185vRheXoYOpI/yEJz8OQsicNiV87IG3GJryS8VvS8mPM86zP+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWa3Mi8Q; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706804143; c=relaxed/simple;
+	bh=hucyDoyB198P92XOc/xJ4Fgc9b9ouJQYLAPKAPOOQxI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uIL7wiBMNsmnWWXPLXLPYsJ9dgl7rD5akAK9SlxVKnjOxzwB+uqHBvsEOfF2SXQWX8nZ3sl6m28x+M8Jek/UD63oSyoqfVdT/DkRh93+lI0sVcezd0tXvZommHPB0JTGfoMBWOU0wcsAjJUqc4J3DjubjiOnBCkyJSZEYW9d86A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zHnNgMnK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e11kxeGj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWa3Mi8Q"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51120e285f6so1349422e87.2;
-        Thu, 01 Feb 2024 08:14:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706804078; x=1707408878; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Gfd/Jch068W4pwXVQxoLeTPeF9ebDcb3jfL8IeozdY=;
-        b=ZWa3Mi8QYJH0QGw8Mhl3QdWT/lTq2QGD9oh+WAKnJE2fwB+g7u1miXxjkxofRFO9Pm
-         rbDLTqhwY7kAVX7PbANW80/p2BAeVRc4yr0bMUrSyB1xdSeKkEsMfHaSAum7NcsSqJB4
-         F8U9IHXZ8PK16Q7rMQlWXKelL5L/TwQ+zkbiq2rq8EOavfe1CGW85M95Y2ZbEgG/Btx3
-         AFomehTYQYeG3W02Ho7BUrMuhRjRb5fpp1qR3zesM14tWtEOdqIxGgJyvMCLA37G+Ac4
-         x4XU/Rbs56oiwRkO9ppKXDS6zQuLo5gfvlo8m/PfdXvnYzMhiUfvdTGPMyCxUGnCfqu/
-         pTNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706804078; x=1707408878;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Gfd/Jch068W4pwXVQxoLeTPeF9ebDcb3jfL8IeozdY=;
-        b=AOOEqw8ar9PcfB/3xj+kah0Xamt2JazAYzl9crSwIQiFU0+K2EM3y0OBwq/NQpxKyk
-         IgljJ3xmQY4KtvBFFGjKfd4BpnZ2AEQzMClBp1Nis6chgMt4v8pQa2gy6m/8Vnd6vCed
-         YTMx+Jp4NP+kI0rcjXxwT9Z8zqjefijWd+KmwwBcO6PzhqlSiOhKu/dV4eq01BnRN+Qh
-         gQFSK8LyGrqcBfmfwr6CKMl8M31zwpBCmEbZapU7LCQNGicL4Cy2St1PtL6S3e/EqKEd
-         Tadncvao8fMFOaNWmnUhwHzqrxxOHZa8ierhOq+vLajEcAfAUZp7g6Qw2L0hbH4LAnWl
-         uG2g==
-X-Gm-Message-State: AOJu0YzUTAelS148x4M6V1sdRAB0uD76e2KNQrmoYt6GWng2t7kSX3MP
-	sebdovukFs+AV/fsnYlgOySLsjH6YDsKaawy/G/L9cvpHhN3yUovX5829A/b
-X-Google-Smtp-Source: AGHT+IEs8nHnPdzf++bEISoMlJe1Auuulz6+xr1f07w18f6bKYuIICjifQZOkAoheTAaGcK40vtpxg==
-X-Received: by 2002:a05:6512:376d:b0:510:c75:8e9d with SMTP id z13-20020a056512376d00b005100c758e9dmr2310236lft.26.1706804077668;
-        Thu, 01 Feb 2024 08:14:37 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXagI9c2qRtWoUZ0sftsZbMiG4Khamf5UkQrxuhad4LfR7AsVYz69wHS/0ptr5enXbZ+ZVj58q+1xQjpdSIfmjRrkGQ29PpI08Z0UGQEM+sowEasm5VCm+DNBVcuIONR/SxiwSBlxBhz8o7fJpNS3purxtuHr5mJApsRNjA9HMPzE1UGWAYAAMkFFgDlkE6MuJWnpCQNyD8TLe4GMtO8olbrVJ6wcIFYi5b8g91GFBhEiBRFEk8z4WfZxhAIUPsjT4kvsMDh8igWThJrQUvnxXV1RZnlu3c4nN6HRA2juo/O1lK0KKGZiO+MWXjJbMFeFJnFgp1AYWlI/acnMhox+gdX+gCIDMJQeCSgLbOWGUrG+GqBpriq1yolvqIS5PEOM2GUg==
-Received: from debian ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id 18-20020a05600c025200b0040d4e1393dcsm4876130wmj.20.2024.02.01.08.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 08:14:37 -0800 (PST)
-Date: Thu, 1 Feb 2024 17:14:35 +0100
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v5 net-next 08/13] net: phy: marvell-88q2xxx: add support
- for temperature sensor
-Message-ID: <20240201161435.GA48964@debian>
-References: <20240122212848.3645785-1-dima.fedrau@gmail.com>
- <20240122212848.3645785-9-dima.fedrau@gmail.com>
- <65071184-428b-4850-9e0c-baaa73513c6d@lunn.ch>
- <20240201071137.GA41347@debian>
- <5dc7d495-dd41-4b1f-b0e0-1fe512f1687c@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zHnNgMnK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e11kxeGj"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706804138;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3su6GEjDWeW+aIiB6N0/thC4vCVzN9qzBKEIGmzsb4g=;
+	b=zHnNgMnKaBdSm8FUs7VS3+hdXN3qLbkJds/TPtQ/1tDMhNooenYEAeffEk1O8CZQgUOGH5
+	nzUrv19ZAATTytmM0Dcq4F2PQWjH9hE3fi2Dt5tS2qM5xXwgO48+RimEFoE+EaJdYugak5
+	f29kfz6JhRhx6fpwhBf0y8WHbGPNTgH8SsJzutOX6/0iAvCKBjshXB3Bm5YGykmJafOQGO
+	P9yzhk4evWDhQBnnv+OhB/A8tzQPuOKLZhTNdDEorzqyG0hiw6JeOorqWVe3JYNhNgJe22
+	8GWqFjO8ScwWSUYe6OhiTAk1JBwHjMgjEzTyVZFLCWFE7Uc4b5oiQ0knReJkUA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706804138;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3su6GEjDWeW+aIiB6N0/thC4vCVzN9qzBKEIGmzsb4g=;
+	b=e11kxeGjce5v+N6sZA3Mrsp9i5lD0/ZAhjTXKixvGuinAu4AtRantsGKK9j+ZN9RyWBU6d
+	aA0AvFUFS4rq8eAw==
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Eric Dumazet <edumazet@google.com>, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, Arjan van de Ven <arjan@infradead.org>,
+ "Paul E . McKenney" <paulmck@kernel.org>, Rik van Riel <riel@surriel.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Sebastian Siewior
+ <bigeasy@linutronix.de>, Giovanni Gherdovich <ggherdovich@suse.cz>, Lukasz
+ Luba <lukasz.luba@arm.com>, "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@intel.com>, K Prateek Nayak
+ <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v10 18/20] timers: Implement the hierarchical pull model
+In-Reply-To: <ZbuzMeKlCgebhJZ-@localhost.localdomain>
+References: <20240115143743.27827-1-anna-maria@linutronix.de>
+ <20240115143743.27827-19-anna-maria@linutronix.de>
+ <ZbuzMeKlCgebhJZ-@localhost.localdomain>
+Date: Thu, 01 Feb 2024 17:15:37 +0100
+Message-ID: <87bk90i2ja.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5dc7d495-dd41-4b1f-b0e0-1fe512f1687c@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Am Thu, Feb 01, 2024 at 05:34:05AM -0800 schrieb Guenter Roeck:
-> On 1/31/24 23:11, Dimitri Fedrau wrote:
-> > Am Wed, Jan 31, 2024 at 04:17:06PM +0100 schrieb Andrew Lunn:
-> > > > +static int mv88q2xxx_hwmon_probe(struct phy_device *phydev)
-> > > > +{
-> > > > +	struct device *dev = &phydev->mdio.dev;
-> > > > +	struct device *hwmon;
-> > > > +	char *hwmon_name;
-> > > > +	int ret;
-> > > > +
-> > > > +	/* Enable temperature sensor interrupt */
-> > > > +	ret = phy_set_bits_mmd(phydev, MDIO_MMD_PCS,
-> > > > +			       MDIO_MMD_PCS_MV_TEMP_SENSOR1,
-> > > > +			       MDIO_MMD_PCS_MV_TEMP_SENSOR1_INT_EN);
-> > > 
-> > > You enable an interrupt, but i don't see any changes to the interrupt
-> > > handler to handle any interrupts which are generated?
-> > > 
-> > Hi Andrew,
-> > 
-> > you are right. Have to remove these lines. Besides enabling the interrupt
-> > in MDIO_MMD_PCS_MV_TEMP_SENSOR1, there are two further register writes
-> > necessary to make the interrupt propagate. I didn't want it to propagate.
-> > Anyway it's wrong. I couldn't find a good solution to use the temperature
-> > interrupt. Will have a look into this, and probably figuring out how to
-> > do so. But it won't be part of this patch series.
-> > 
-> 
-> From hwmon perspective, the expected use of such an interrupt would be
-> to call hwmon_notify_event() with the affected limit attribute as argument.
-> This would notify the thermal subsystem if the sensor is registered with it
-> (your patch doesn't set the necessary flag when registering the driver,
-> so this would not happen), it will send a notification to the sysfs
-> attribute, and generate a udev event.
+Frederic Weisbecker <frederic@kernel.org> writes:
+
+> Le Mon, Jan 15, 2024 at 03:37:41PM +0100, Anna-Maria Behnsen a =C3=A9crit=
+ :
+>> +static void tmigr_connect_child_parent(struct tmigr_group *child,
+>> +				       struct tmigr_group *parent)
+>> +{
+>> +	union tmigr_state childstate;
+>> +
+>> +	raw_spin_lock_irq(&child->lock);
+>> +	raw_spin_lock_nested(&parent->lock, SINGLE_DEPTH_NESTING);
+>> +
+>> +	child->parent =3D parent;
+>> +	child->childmask =3D BIT(parent->num_children++);
+>> +
+>> +	raw_spin_unlock(&parent->lock);
+>> +	raw_spin_unlock_irq(&child->lock);
+>> +
+>> +	/*
+>> +	 * To prevent inconsistent states, active children need to be active in
+>> +	 * the new parent as well. Inactive children are already marked inacti=
+ve
+>> +	 * in the parent group.
+>> +	 */
+>> +	childstate.state =3D atomic_read(&child->migr_state);
+>> +	if (childstate.migrator !=3D TMIGR_NONE) {
 >
-Thanks, noted it down. Didn't know about the notification to the thermal
-subsystem and the generated udev event. :)
+> Is it possible here to connect a running online child (not one that we ju=
+st
+> created) to a new parent?
 
-Dimitri
+connect_child_parent() is only executed for the just created ones. So,
+yes in theory this would be possible, but it doesn't happen as
+tmigr_setup_groups() takes care to make it right (hopefully :)). When a
+LVL0 group has some space left, only the connection between tmc and the
+LVL0 group is done in tmigr_setup_groups(). If there is no space left in
+LVL0 group, then a new group is created and depending on the levels
+which has to be created only executed for the new ones.
+
+> If not, is it possible that a newly created child is
+> not TMIGR_NONE?
+
+Yes. See tmigr_cpu_online(). When new groups have to be created starting
+from LVL0, then they are not active - so TMIGR_NONE is set. Activating
+the new online CPU is done afterwards.
+
+But if it is required to add also a new level at the top, then it is
+mandatory to propagate the active state of the already existing child to
+the new parent. The connect_child_parent() is then also executed for the
+formerly top level group (child) to the newly created group (parent).
+
+>
+>> +		struct tmigr_walk data;
+>> +
+>> +		data.childmask =3D child->childmask;
+>> +
+>> +		/*
+>> +		 * There is only one new level per time. When connecting the
+>> +		 * child and the parent and set the child active when the parent
+>> +		 * is inactive, the parent needs to be the uppermost
+>> +		 * level. Otherwise there went something wrong!
+>> +		 */
+>> +		WARN_ON(!tmigr_active_up(parent, child, &data) && parent->parent);
+>> +	}
+>> +}
+> [...]
+>> +static int tmigr_cpu_online(unsigned int cpu)
+>> +{
+>> +	struct tmigr_cpu *tmc =3D this_cpu_ptr(&tmigr_cpu);
+>> +	int ret;
+>> +
+>> +	/* First online attempt? Initialize CPU data */
+>> +	if (!tmc->tmgroup) {
+>> +		raw_spin_lock_init(&tmc->lock);
+>> +
+>> +		ret =3D tmigr_add_cpu(cpu);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		if (tmc->childmask =3D=3D 0)
+>> +			return -EINVAL;
+>> +
+>> +		timerqueue_init(&tmc->cpuevt.nextevt);
+>> +		tmc->cpuevt.nextevt.expires =3D KTIME_MAX;
+>> +		tmc->cpuevt.ignore =3D true;
+>> +		tmc->cpuevt.cpu =3D cpu;
+>> +
+>> +		tmc->remote =3D false;
+>> +		WRITE_ONCE(tmc->wakeup, KTIME_MAX);
+>> +	}
+>> +	raw_spin_lock_irq(&tmc->lock);
+>> +	tmc->idle =3D timer_base_is_idle();
+>> +	if (!tmc->idle)
+>> +		__tmigr_cpu_activate(tmc);
+>
+> Heh, I was about to say that it's impossible that timer_base_is_idle()
+> at this stage but actually if we run in nohz_full...
+>
+> It happens so that nohz_full is deactivated until rcutree_online_cpu()
+> which calls tick_dep_clear() but it's a pure coincidence that might
+> disappear one day. So yes, let's keep it that way.
+
+I instrumented the code (with NOHZ FULL and NOHZ_IDLE) to make sure the
+timer migration hierarchy state 'idle' is in sync with the timer base
+'idle'. And this was one part where it was possible that it runs out of
+sync as I remember correctly. But if I understood you correctly, this
+shouldn't happen at the moment?
+
+Thanks,
+
+	Anna-Maria
+
