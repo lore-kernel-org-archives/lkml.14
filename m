@@ -1,147 +1,100 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4714F3D72
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 12:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE72812
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 12:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706877068; cv=none; b=GBnwYbx8p8DyrRmBC+P7Z6X0ZzMyg35tWEpmU9pKOHoGtmoyuyRTN1kGFebybBRViA/FOVQDNvs7l5RYlR67bK+3/HGRl2IjlBtwJOgE+NbqQBNDt4b1gn9SyGUlTNbt+okDn5OjWfKyrhwbEkQOudMWToB0TtGAKcJe/hH9J+I=
+	t=1706877216; cv=none; b=Dr32XIXNEK+bqW7nFrn37omsBl75doK8DE8u3xY35q3PKnhnNnUr5sqSJBMD/5kD9vTfAjHyCWStAUkiNgb50b1yqSJAej1xqh9GhEmk+CsxpG47cMlI1SDMWoLqSM6IMMtg2mZ6zaS3vdyeLNi8X5r8aw7Dg2uDCXuC8Ry4GF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706877068; c=relaxed/simple;
-	bh=LpszH7bN80s4d8SEsQ1YuXs3jTA07zr8GrbTSAzq/f8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WmUHU/dUfOqg2uNmKYsy8+S1LmGlPs1ZgsIJpuv0rJWhvAXPq+3V8rY9GvNQYQtOYr5etIVu8x2zgQFgvinGF4Y2WkK2QZwfODWUaFrB2ZCU3OJy6eLrg9Esq+Y+jhEszURYvIcogQQpYWfK7OdEu88WnJHcEjbv02ShL3Cu/Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HBFRj/te; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706877216; c=relaxed/simple;
+	bh=17ZmaFXcLxg2KMbiZIcv3+8qkiAx6XN1CMzo1A5epLg=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Hudzv0J59WMyXtNjzuBPx1kQ/CrcNBLbj7qBexosRMxEAPiRntyeoWSQWGfZXd2sFmuvAquDfQG+DOl7E6AmMwtx4yNPHURVpoE2VQtCrYz0w4TJoa5++FgHtOxjtXJB7LIz5DU/IN4KemMpoUr7DByCqElC/tP+V6OLuM/3krk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=SKPUt0wn; arc=none smtp.client-ip=203.205.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBFRj/te"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a363961b96aso270018066b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 04:31:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706877064; x=1707481864; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zay0yPt7mzIwbFHxCrA+J0m0UNJP6Hth5Q4vBN+kW4Y=;
-        b=HBFRj/tez72fsdxy2H1LqkMtAXNnxXXdHLBlhJMNOUgbIlOUXPK0qiA0cN4AZn2+tw
-         YZVdRkkfGLgjsU6A4cG81Q3zXQzJl+gXG0XNu3ufWkVzmRihyqloCk6tchvdWdT62qBu
-         +Ts3/h2VO7m+E7K25tgMCjkmB2qNIK+qu1hryGfl2LPpn25BOmUagvW5stFR4hmoGLw6
-         HinWWQOyuDmqTGE6Mfg5txkAFHmZ/s2MrUQBXRD3Lsomxrhvu0nLlV2ZuFtisN+M+bXn
-         /Bdnyv8DaHFq5wjafPIHYTEefl3FizSSyxZwdj5ff3XoSyfWYVKg8m/APoVRhesKKDnF
-         qrjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706877064; x=1707481864;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zay0yPt7mzIwbFHxCrA+J0m0UNJP6Hth5Q4vBN+kW4Y=;
-        b=R81zuzwWstYknj7ITTloePMTWq1dHwQATaxl3d+FwQ/uak8vD2ngUYSDfTS2ZTPbAI
-         yKBYJ/QBT3fpM7XopLdmyMvXZZobxDaP92dsSuEc2l+32NeniTTrwhA14WHVOfB3/9zZ
-         SCBSq3peNOINrznEfEf1+HZM1a9Oli/5vYy9uhkRG5miAIbvBXrOmAC95jQtq9rVrEeD
-         2LJ1HjghWttLcEeASVfr4KoRVVhOElX0/dPr+bfmHYwoa/yRk6b3RMrxSSdaaMh7uY8W
-         ICvmDU/MhWmt4cvYa/QB2o+HRN8GnsZrixihz1uLBu6g30EDRxJhIBStjYD6xJhd9lR8
-         asBA==
-X-Gm-Message-State: AOJu0Yy5jA6mp9ZVwR1laQVitWusHZzIsyHOLDP394vZUruApVdcd9eq
-	Vc7hjYzZj8GdCaL3ODKTrpHHdqmk8L8waZVHETk/OIC+f1tUWmgQUhNL1wlQhyWDXPVZguHFVDR
-	E
-X-Google-Smtp-Source: AGHT+IGm88eI2qVje8loOU/Pba+0CUUPevNrPoacbfZR46c2qHR5WP3q+owQFrAAJ8bunMkDzHk2GQ==
-X-Received: by 2002:a17:906:4ca:b0:a37:2932:df4 with SMTP id g10-20020a17090604ca00b00a3729320df4mr195465eja.15.1706877064127;
-        Fri, 02 Feb 2024 04:31:04 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUshf9fRHSIWw9BSovZa+W594/TCcQIw45cLWNVtgXgAm2u2VrMiP+yRRFGBBjrDyb8ZWG7NVck6t+1Ji4mWEQYShlneFt6AySo19EKGe9Mt/Co6gq9KQxxr5J798jbkvfb8DEE9LVnSsxL4IGjDTAyC3mKcRQCrdxPDY4goXRd1Zs9hgN18ixp
-Received: from [192.168.159.104] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
-        by smtp.gmail.com with ESMTPSA id kt17-20020a1709079d1100b00a36f42fa79esm848945ejc.16.2024.02.02.04.31.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 04:31:03 -0800 (PST)
-Message-ID: <17cae1aa-98a8-48f4-adf3-2ddfc451bef6@linaro.org>
-Date: Fri, 2 Feb 2024 13:31:01 +0100
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SKPUt0wn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706876911; bh=dzCH+OjkxcpMqkNQvlYI0iK3X0Jm3Cc5qzb5TSQ7P2c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=SKPUt0wny3wwJvfCrH9tGbCBkIML8pnOZywsNvUzdyGsuATG+vAnnhAw1Z6SoKjkz
+	 986U+YyLh4x3+xhZ2qlZpvPsprX8y6vnjfyo72K/wteAPJS84F/gg5aSXMz+miIpTg
+	 SUjVKMPZGXMQZ7mnjK3WDzY/uOzXjtWbORrRAsqU=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 6CB91000; Fri, 02 Feb 2024 20:27:11 +0800
+X-QQ-mid: xmsmtpt1706876831ta40w31ob
+Message-ID: <tencent_620E966237DC4A4C740B777367123CC53609@qq.com>
+X-QQ-XMAILINFO: Nq1uWKlIb9DMSB/dNY69ZZh5B6aeUsPRIkF6+38qDqLZK+CGxkXkf2TAz2J1/G
+	 7naGyC2rao4fmwUXK9AFehZiRyXFw00yq2CoIgJWipOEYVwk2Nf/1sdAW4M/QCqXZOVKbCogHUf5
+	 7dZv1JyN7cguHgZWwQizFQ4jxe4o69k8FKJjNffJySz94C1vPhA686QBtaw0PXgcLrp+bJDq4XdA
+	 BLyeUAqDOshJBl600tEvAMOYzwMQlDlWl8phHVQDhDWx0q4QLQ1QEZcgfNi9pKAhYszNM8hGD+c+
+	 ILpF1qLuMKrnO8CrQNcCZUWshgLihtI02i8q6NNI8nz3K2Hff6LLKzd7gvqgpbXJfo9hhy8wRFCY
+	 buCueFvnQh9kRN0n576b+YnsK5dICv+hznEFJM+32ZMYTdA1QE8FRgcXo6XvIGaf+2gfpBH8wKvm
+	 Zx6zgFoX+gjvxh4YzgWXT3ZbO5llemmN8xrEy1AvtR/62BCe5xnr+agankYOhbDZIOowKZIxe8dF
+	 PQAImyPcigM+D+1ueQHlRVpc26eClE9GJEcjvPF/eLwPbOzu8O9UaOO4K9TQFJCu5PiXw0S4wBdz
+	 aChy6ZJR2M01G/mhbfQXqkkeG+Q91YuFtgBUxPF12SkaukPU7W+64nOsITRAePD/lA3J9SDL3Wv8
+	 tB6n/jnnWs/1rRdS0564pw4cBiCsOYIIzBGlGke/uDqmeG3VDOKsIjW/XPfZnprPSn0lLueCCfDQ
+	 tzuW9nv3HrjzivGaJ9zl7WfzzDX1G7/jijFvJeZHxEOk7RXv9XigaHa3baOpWlc6pUXO1Zp90b8D
+	 POE5R6mzgCr2rJsqotImYt88VEjhg/fD9nq7nd2Kc+zXYmFHK5i0DDYVIJ9A+bPaG4YRuuX5i46Y
+	 Z06V/e+mLJdL4DHq+ncI83oXZBNHUVm0BSduFQlCq8xPtZA0jRVd/JYrh9cRPggHUZOPCNv9bB
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+a4c1a7875b2babd9e359@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [netfs?] KASAN: slab-use-after-free Write in __fscache_relinquish_cookie
+Date: Fri,  2 Feb 2024 20:27:12 +0800
+X-OQ-MSGID: <20240202122711.4045209-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000007e7a63061062fcd9@google.com>
+References: <0000000000007e7a63061062fcd9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Workqueue regression
-Content-Language: en-US
-To: Tejun Heo <tj@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Naohiro.Aota@wdc.com, kernel-team@meta.com,
- Bjorn Andersson <andersson@kernel.org>
-References: <b3d08cd8-d77f-45dd-a2c3-4a4db5a98dfa@kernel.org>
- <ZbxK01xuA_FFWaE6@slm.duckdns.org>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <ZbxK01xuA_FFWaE6@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2.02.2024 02:52, Tejun Heo wrote:
-> Hello,
-> 
-> On Thu, Feb 01, 2024 at 09:57:59PM +0100, Konrad Dybcio wrote:
->> So, commit "Implement system-wide nr_active enforcement for unbound workqueues"
->> broke *something* and now performing a suspend-wakeup cycle on a Qualcomm
->> SC8280XP-based (arm64) platform hangs when performing the resume tasks,
->> presumably somewhere near PCIe reinitialization (but that may be a red herring).
->>
->> Reverting the commit (and the ones on top of it due to conflicts) fixes
->> the issue on next-20240130 and later (plus some out-of-tree patches that
->> are largely unrelated).
->>
->> Not sure where to start looking.
-> 
-> Hmm... sorry about that. Can you please boot with `console_no_suspend` and
-> retry? Once the system gets stuck, you can wait for several minutes till the
-> workqueue watchdog triggers and dumps the state or, if you can, trigger
-> `sysrq-t` which has workqueue state dump at the end.
-> 
-> If the system doesn't become live enough after suspend/resume cycle to get
-> more info, the following might help:
+please test uaf in __fscache_relinquish_cookie
 
-Looks like it's too far gone indeed..
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master 
+diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
+index 360a5304ec03..e36467ed618f 100644
+--- a/fs/9p/vfs_inode.c
++++ b/fs/9p/vfs_inode.c
+@@ -353,7 +353,9 @@ void v9fs_evict_inode(struct inode *inode)
+ 	filemap_fdatawrite(&inode->i_data);
+ 
+ #ifdef CONFIG_9P_FSCACHE
+-	fscache_relinquish_cookie(v9fs_inode_cookie(v9inode), false);
++	printk("mra: %d, %s\n", mapping_release_always(inode->i_mapping), __func__);
++	if (mapping_release_always(inode->i_mapping))
++		fscache_relinquish_cookie(v9fs_inode_cookie(v9inode), false);
+ #endif
+ }
+ 
+diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
+index ef9db3e03506..fd26bafe4279 100644
+--- a/fs/9p/vfs_inode_dotl.c
++++ b/fs/9p/vfs_inode_dotl.c
+@@ -78,6 +78,7 @@ struct inode *v9fs_fid_iget_dotl(struct super_block *sb, struct p9_fid *fid)
+ 
+ 	retval = v9fs_init_inode(v9ses, inode, &fid->qid,
+ 				 st->st_mode, new_decode_dev(st->st_rdev));
++	printk("mra: %d, %s\n", mapping_release_always(inode->i_mapping), __func__);
+ 	kfree(st);
+ 	if (retval)
+ 		goto error;
+@@ -86,6 +87,7 @@ struct inode *v9fs_fid_iget_dotl(struct super_block *sb, struct p9_fid *fid)
+ 	v9fs_set_netfs_context(inode);
+ 	v9fs_cache_inode_get_cookie(inode);
+ 	retval = v9fs_get_acl(inode, fid);
++	printk("2mra: %d, %s\n", mapping_release_always(inode->i_mapping), __func__);
+ 	if (retval)
+ 		goto error;
+ 
 
-> 
-> $ echo test_resume > /sys/power/disk
-> $ echo disk > /sys/power/state
-
-Sadly, hibernation is not a thing on this platform.. Without going into much
-detail of how messy the power management stuff is, you can either have
-"on", "off" or "power collapsed" (bound to s2idle).. Trying to trigger this
-sequence makes the thing lock up and die due to unclocked accesses with or
-without the WQ regression.
-
-Konrad
