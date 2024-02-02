@@ -1,162 +1,95 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C4417C77;
-	Fri,  2 Feb 2024 14:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7546F17C77;
+	Fri,  2 Feb 2024 14:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706883274; cv=none; b=sMcq6tqkJbcYBrZlb31uP4D8bJET9L4M+26HvdG4GxF5/3HaYZjUJDMMq0H9gcV2OGO3WeDgASh+2FGVUE8dVsgFKK9kCXtOG7zYUbP3oGRKuR36ZrNR03m8P0RJVGOK4NS4Zfm/N9Kf9fH3jp4K9/m5GYyFj+3z4ECgqQa/dns=
+	t=1706883297; cv=none; b=Ak6TI6CSRC7JjWHDj5qfR5nOOmnirlNDwHadeZ8mVhD96kf+opWA+G9fi+V2+RKS4T0MBChKbZH6WycuiqJ8pioSquURU7D0VAr6otCJbwt0WnG0dnl/wiytHyoTLG8CU4Zsi/ykU9YGphlz7d94hJyHw18OSKeOjhoRSbKsYeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706883274; c=relaxed/simple;
-	bh=C5tLL27iIQxX+amUfUB+Z1EmnJFC/bDDHpDbQN19W2o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RzZn9UQoAjh7RfzKQg0/m2lIGV49wFpJr7o8/G6wyYZvVcBnp7fIem29/nnLIWib5Ick0xlA8RfjquIGi3HVL3ktH14iWHIuDrrWq56I8TS4YQLw4EN9fzPVj6ajR+EFIHCGSyTTVmTiPRLAJuO1hrgEIHWOXDyL294X2s27xwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSbWDl4/; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706883297; c=relaxed/simple;
+	bh=BJQfplmaSyBDDhVs/RstyS/GWbcJ/Hf09yPAoLpwVRQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=hSNlps2iV6sMIorJIg76+Cda7YLqnUUHalaW3lj6LpkG0e+6wngrxItdsVKgrUgW+HcJonBceLz4UF1Rq8LBhqv0GZzNzWWEljNz2TNJ8CYPmfsMfseNgjYLRLfNHA2nId7GvnpAfKDmsV5RJI+v8JabmcYB9SVG0z9jX3oJA+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HlGjcscK; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSbWDl4/"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a35e9161b8cso297949166b.3;
-        Fri, 02 Feb 2024 06:14:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706883271; x=1707488071; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=irCw3zpBrNbMdCCI+5/zv7b6mFMiTslqVJwC0x/tloU=;
-        b=kSbWDl4/qWUZbYqnYE1E1jLcpEN4lVJaeCjYx7/cwoMXWxh+Cf5ClS//i0zdrbaicX
-         UuUh/J1bcol2i2Rj/Z2xgB8h5+bkiOkCsWttCtwW/LfjMctWKipA7UyUuDI3orgTvnHz
-         9xQ4lfRMKAmt3Pw8DLsSgL9jacFig1AzZeV5i2PSkC2tdbGKn/YFGsL+9C+p7JPsIy15
-         PGXMHbi6DTd+nWf79NwvOeM4kQ4mpiR9z1UNsikunerlYzDLxtl8EpYsgiM9gpsP32iY
-         DbDTuwBBeq/BGs897OGTUmFHr1jdG4xA5tXLdNjQ956sXnMbWe4ELrwLucrUP5Nd/io0
-         b54g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706883271; x=1707488071;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=irCw3zpBrNbMdCCI+5/zv7b6mFMiTslqVJwC0x/tloU=;
-        b=CRq28bQHN8FEJvaOha3EWuFCwm6rkXbEvM7tzu9EoMCVzrYq9wjTr3HyH4uOKzQpZH
-         UFhrIhEbFARF2/h/uMSzcA/7fvuLx8/cZEe9A8OE0DD4+pgtiBgMbGXgJey6Qjo4grY5
-         mGfcBHeJHRu0ptogL0QvjVGFODocOhtA/vcjM9H9docGdRx7tGNY+FrAUJmtBYb/kVXp
-         kgeSdAqmzf/aMYjZ9TFPYXDuxBBWZeHQj+uoOfst9UJnvaAH5CaZhldmcOzAAOtyL9BZ
-         zHhjVuD59rhAOl4N48EpgHY2p30Hs4rzyYJIUyd5ai6JHO1lDfvCH8RH8g4dg/QfSfKt
-         uwyQ==
-X-Gm-Message-State: AOJu0YzMt9zh8qJ24xZNOUDpJfW+JQl+yc2sYRcasC/nC2SOKFqySsfb
-	+1hYbBH2opl+2+1w9M/Kqo0irZI1JtMmqdATEeOJkS/m2OFlaD+s
-X-Google-Smtp-Source: AGHT+IGXu5yuShbHAAlbDv3gd8502iOHA/BULQnnb8k33KOkCXPoYueFh482YFzfe2tcLMeq5EV1FA==
-X-Received: by 2002:a17:907:6d0b:b0:a36:7327:410a with SMTP id sa11-20020a1709076d0b00b00a367327410amr2038816ejc.58.1706883270537;
-        Fri, 02 Feb 2024 06:14:30 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX2zZL9rtqrSy3klM25W0DZ6fxR0WNci2tOV/obUHwd2ByRz/E1kIpWviCrT0TfFEbMOXneXeAO72ZIqsbnZtM5vGSUvIgGhJtXrvDPA/ecC1j40IBloIj3RsWU7sRBijY2gJI6VboY0jYgB3kNm2otC1F4MvtbzzV8RuvMo5obiq2FEBQsGpoetOqc0GMUeopYRxVHG4yLDTMsUwHmbv9AmEcwL84l2nM6ph1H0j5v7/OGCgsSWqKKpFsaLbygv81RVhcvxCmfDTrmHEW/0ISOIdqraBgc0WecydQGVyszyQuSglTKM+Pi0Gowp3saEcvAuzBQx2W6MjJ14boOkbZfoPnwS8dikMs=
-Received: from [10.76.84.182] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id st1-20020a170907c08100b00a35aaa70875sm925219ejc.42.2024.02.02.06.14.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 06:14:30 -0800 (PST)
-Message-ID: <09cc2ecb-b73f-495a-9196-dbb4899f4c85@gmail.com>
-Date: Fri, 2 Feb 2024 16:14:28 +0200
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HlGjcscK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706882984; bh=utGP6OZSBLpmJu+9Td/7txs00XIiQw4x9gVWwrER68U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=HlGjcscKpYIaUpYlkJdx1tCd4V3OAU8gBztf1fOCEJVuYsxtENrCrgHUPuyr+KVeB
+	 2uMrmS3gA3miH3DWBn9RjgmlLQdZQNxdmN/NUSiFCfGpI6keBEW5KhgEaqnyfV8nOi
+	 JRB134zXODyPzGo49nTXl3yoXG+0tJ1wLF32M+hU=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id D329E61; Fri, 02 Feb 2024 22:03:19 +0800
+X-QQ-mid: xmsmtpt1706882599tcbkviljv
+Message-ID: <tencent_2975FB767367603CED3622962437524A8C09@qq.com>
+X-QQ-XMAILINFO: NyTsQ4JOu2J2VwOlPHaW7j2tsaSYtv5nx4xX96Q8K3YFvj37RAaq+YBf17GGzv
+	 ArWxQSrW//mfyCBLhKljL6oRifpo4iGAx8GJ/Bea5/efYq0zN4jXPfZsSyxeFzr7xqc98q7KOh2E
+	 JfG6AWuktRJq8mIlhX6jVhtE3VuMLnq8FEAKm7q+65dvDwLAQVoRh1xAq52WRbgJFFoQ/32YlcD6
+	 eJGFtNUJ7B4WMD2ESJSn9ifhCHkuB22E5pm2jmS19XBqcDyq9ZGK4hZ1W8xhdwWabgYXcvwR0qSZ
+	 W57mVLGvJ5/ub9VBlvex/ONfMZ53lJl/w0NdRaur+SERaZ5J3P7MSKu73wqh0UCECZJnPf8vgfUD
+	 LnGg+VnpYeZyIXsGjrDjbfwouY+A5p/Fh8g7UK3szkmFdwKiAYLo2waBt6ALnY/WwFevedbzPIUX
+	 z8EHR+ADf3DrbkmXf6H51uoiu0z2mH4CA+/SjVpLQGsDqmR1OfATo0WfX70lyo4YluhwXpFUeTry
+	 40uq6W8XD0vzTw2JnFiTKEn9Bna/CL2GpqMHL5HKZWFMX9tjXKUq7RHhU+2LNs73HOTCK6s6Mcut
+	 3BhElnjH9JPhFPOMKJN3YxHkD/fAbyAB3JMg6XE8+N7i6iHxw+ei6MpsoW51Ct+8PD+dVeH6efdU
+	 NmJtJb+UxiQMPyCcnAcNPCN7v8rFwZ8YPGmTbTwCU+bpA/SM2qdw+Qpryif0X2IcIDs54Vhlhwr+
+	 F3f1i+0LqiAzzVV8t5K3f8tiMvrG5VqdREWgwzI/7mxQZ8sHTHxgkWOEaRTIgfrNA8wgR9I0CPWj
+	 Shi2zr51gKhzx8E2Gaw2IMoLSEmEzuzX+LtAePqOQAI7Gur5m0V1QVIuYztVnNEPBB3F07XUOuBP
+	 DLA7Bs2cTpxPFOlOpur+IfFcTsqOPQ94sNawXvT70qIIuuV+0igsmTTlupsGk1j0xs+lFnWr4i
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+a4c1a7875b2babd9e359@syzkaller.appspotmail.com
+Cc: dhowells@redhat.com,
+	jlayton@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH next] fs/9p: fix uaf in in __fscache_relinquish_cookie
+Date: Fri,  2 Feb 2024 22:03:19 +0800
+X-OQ-MSGID: <20240202140318.4147829-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000007e7a63061062fcd9@google.com>
+References: <0000000000007e7a63061062fcd9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: adc: ad7192: Add properties
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Alisa-Dariana Roman <alisa.roman@analog.com>,
- Michael Hennerich <michael.hennerich@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Alexandru Tachici <alexandru.tachici@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-References: <20231114200533.137995-1-alisa.roman@analog.com>
- <20231114200533.137995-2-alisa.roman@analog.com>
- <c6ca5a25-2d41-4a46-95a5-eb994c4cf529@linaro.org>
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-In-Reply-To: <c6ca5a25-2d41-4a46-95a5-eb994c4cf529@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 14.11.2023 22:29, Krzysztof Kozlowski wrote:
-> On 14/11/2023 21:05, Alisa-Dariana Roman wrote:
->> Document properties used for clock configuration.
-> 
-> Some background here is missing - otherwise it looks like you are adding
-> new properties...
-> 
->>
->> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
->> ---
->>   .../devicetree/bindings/iio/adc/adi,ad7192.yaml        | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
->> index 16def2985ab4..9b59d6eea368 100644
->> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
->> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
->> @@ -80,6 +80,16 @@ properties:
->>         and when chop is disabled.
->>       type: boolean
->>   
->> +  adi,clock-xtal:
->> +    description: |
->> +      External crystal connected from MCLK1 to MCLK2.
-> 
-> And this should be input clock.
-> 
->> +    type: boolean
->> +
->> +  adi,int-clock-output-enable:
->> +    description: |
->> +      Internal 4.92 MHz clock available on MCLK2 pin.
->> +    type: boolean
-> 
-> This should be clock-cells and clock provider.
-> 
-> Unless you are just documenting already used interface which you do not
-> want to break...
-> 
->> +
->>     bipolar:
->>       description: see Documentation/devicetree/bindings/iio/adc/adc.yaml
->>       type: boolean
-> 
-> Best regards,
-> Krzysztof
-> 
+In v9fs_fid_get_dotl(), if p9_client_getattr_dotl() or v9fs_init_inode() fails,
+the cookie will not be properly initialized and will result in accessing improperly
+allocated cookies.
 
-Thank you very much for the feedback!
+When the cookie is not initialized, exit the subsequent cookie recycling process
+to avoid this issue.
 
-If I understand correctly, there is already an input clock in the bindings:
-```
-   clocks:
-     maxItems: 1
-     description: phandle to the master clock (mclk)
+Reported-and-tested-by: syzbot+a4c1a7875b2babd9e359@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/9p/vfs_inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-   clock-names:
-     items:
-       - const: mclk
-```
+diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
+index 360a5304ec03..d27b7ecf7163 100644
+--- a/fs/9p/vfs_inode.c
++++ b/fs/9p/vfs_inode.c
+@@ -353,7 +353,8 @@ void v9fs_evict_inode(struct inode *inode)
+ 	filemap_fdatawrite(&inode->i_data);
+ 
+ #ifdef CONFIG_9P_FSCACHE
+-	fscache_relinquish_cookie(v9fs_inode_cookie(v9inode), false);
++	if (mapping_release_always(inode->i_mapping))
++		fscache_relinquish_cookie(v9fs_inode_cookie(v9inode), false);
+ #endif
+ }
+ 
+-- 
+2.43.0
 
-What I wanted to accomplish with this patch is to document these boolean 
-properties (from the ad7192 driver code):
-```
-	/* use internal clock */
-	if (!st->mclk) {
-		if (device_property_read_bool(dev, "adi,int-clock-output-enable"))
-			clock_sel = AD7192_CLK_INT_CO;
-	} else {
-		if (device_property_read_bool(dev, "adi,clock-xtal"))
-			clock_sel = AD7192_CLK_EXT_MCLK1_2;
-		else
-			clock_sel = AD7192_CLK_EXT_MCLK2;
-	}
-```
-
-Please let me know how to proceed further!
-
-Kind regards,
-Alisa-Dariana Roman
