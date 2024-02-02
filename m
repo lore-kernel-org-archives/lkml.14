@@ -1,120 +1,105 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A77D8594A
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2D58061F;
+	Fri,  2 Feb 2024 21:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706910652; cv=none; b=cXW8OZZxCzSwWN5e7zccSETjNvLD3aAS2bmIjTypOP1PdAhwXNV0Qox6n0y8KfEVrLMfaUNGwwMprTr+BvK/CM6VmH9FhR0AMZ65IM1M89KUnWeFQ+0D/jfSYcM44HxbUfxL4n0Wa+Gx+0NnGjXilLhrU/fRvlndg8ZFBNcuNAw=
+	t=1706910874; cv=none; b=bKk266JYJcoJxTm7pGc5qmQi5A1TnrWn/5/5ZQaip2WL+VahS5u0TQBVTniufXOpt2LXyFBwrgvIJnJwS2DwDgoWr9jhorLlbNUew7yyk1iITpIOm6/AVROhdKcebWmaAVrvw6Je2Al9Vzsnsxu6vJXYFG1XlNHQu/FhosXBP1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706910652; c=relaxed/simple;
-	bh=j1+6smkjmxO2TPfR0I7+fbIujkXeFYIF+x2HwXzQ4SY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=QpG1hGmOgA/JW8n8TaMukCvhYDvqn3h/RvYPcrRdDNXXc4H9pkGcelYJKn5N7Q0yVcHwhMpuu7etq/hvxsuIJsFH9ZiVmqV21kHr2m1RA5p3+m00ag1OvQzHLbqj1wPDbBexwwLaujHS8W5a0ycV+V2i5Ehv0rE7TFuwFZns92A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SaGn4WU/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706910874; c=relaxed/simple;
+	bh=g2E+c2yAPlr4mynw8XRrEWwtZ0cuRU9sb/1VLjj4d+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IKdNyXOUvfs9dcG9KL9NzF1C9/fEr41UyaEp2EKRHi/yverhuh7MDqPUtBXFYQlFwg/BzhIIQOoZmDVy4gZjLqSCuSMbBriMSatR4H7cG5H1tBFS9ad5yrxpwMPEJL3ooJZp5K6bg8y69DMEsnYDSt3AZlY3CjE63hN8tH6J8TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NS8zPrba; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SaGn4WU/"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412Lkb4Z000581;
-	Fri, 2 Feb 2024 21:50:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=SVl
-	N3fADnRzFhsjCTs1uFxfAX8KThaSYQyGegUws1dI=; b=SaGn4WU/6EnI4uRJa3L
-	KhPdZHJ55LTV/V4GJrw2+zP7V8ZhSCS+n/7aIhn45hhuVWgshwwp/SsQ+r5Zi6Zj
-	W0EA0VjjkDJN8TAwjwgRUfDP8necTq3y/1pWD/f3X5plC0yemlKqTErG2q9wqB9l
-	6pMYCztFarGh2Y0IiBAF5B9uUcw5e827SyYfAtYVLm4qb4lL5/ywplSVZUzX8aLf
-	blDCjEbFon2HSv7XD38k0d2dY8MypHaGk+3lQ2OFSJaizmaBINrA6Q4AinTbN7OX
-	4leOX7OZg1c6PxxJ2LypVusInfGcoJRVhN7WgfbBdqTlAuGMhLno8djTX66mMOqC
-	7Kw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0ptxjfcd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 21:50:35 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 412LoYEo014779
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 21:50:35 GMT
-Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 13:50:34 -0800
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Fri, 2 Feb 2024 13:50:21 -0800
-Subject: [PATCH] drm/panel: visionox-r66451: Set prepare_prev_first flag
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NS8zPrba"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E936C433C7;
+	Fri,  2 Feb 2024 21:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706910873;
+	bh=g2E+c2yAPlr4mynw8XRrEWwtZ0cuRU9sb/1VLjj4d+A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=NS8zPrbawxvDfY0Eh7Q6yuZ1sIPxS165/J7/2Y7tKanOBPLD+4dB3IXc8L5YVGy80
+	 bSWHpRgxY9QHX90pQtSVPTYdQ/RF+IJfmh4C9vwg31doe1ucpeQzgA1E6HsCWaqTHZ
+	 WCHB5KJ5V0wkgI2ydWwMccY0UpKEymbcFn/iIF/oxzC7FMfuTNMEXPOkifc6HJT1KX
+	 AjBVnvpt9LpUJv70WYr8CkRldTO5/oVEKraxwJZLD566+Vag7nYVd32hSm516qWbzq
+	 RYeFz6sshI5fm5CjbRRLRy0SymKXAinGlASjWBOzggBE/yLhBhaEvy48n0tB++7L6V
+	 ClG0C1+ZWvgsA==
+Date: Fri, 2 Feb 2024 15:54:31 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
+	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
+	kw@linux.com, l.stach@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
+	shawnguo@kernel.org
+Subject: Re: [PATCH v9 05/16] PCI: imx6: Using "linux,pci-domain" as slot ID
+Message-ID: <20240202215431.GA728556@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240202-visionox-r66451-prev-first-v1-1-c267dc889284@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJxjvWUC/yWMSwqAMAwFryJZG+hHU/Aq4sJP1GxUWpGCeHeDL
- of3Zm5IHIUTNMUNkS9Jsm8KtixgXPttYZRJGZxx3gQb8L/sGSNRVVs81MJZYjqRwmA8WTLsHWh
- Ap1nyF2+753kBtzhPXmwAAAA=
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Sam Ravnborg
-	<sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
-        Daniel Vetter
-	<daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-CC: <quic_abhinavk@quicinc.com>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706910634; l=1137;
- i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=j1+6smkjmxO2TPfR0I7+fbIujkXeFYIF+x2HwXzQ4SY=;
- b=a5m4w+x7U6gunqaLxXXorLqcSL4H44MRB2xTmI3wMhsVhLlYvjppnXehX45YL181M7iKIHwQ9
- vfA1I1m9l8nA8rtE+vAze9Fv9qN8bQqkukppk4CkY/J5fQrWXWTveTo
-X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
- pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: NKhIfIUk_Z7tzlG538Iy_nmDTYgJw3ov
-X-Proofpoint-GUID: NKhIfIUk_Z7tzlG538Iy_nmDTYgJw3ov
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-02_14,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 suspectscore=0 mlxlogscore=923 mlxscore=0 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020161
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240119171122.3057511-6-Frank.Li@nxp.com>
 
-The DSI host needs to be enabled for the panel to be initialized in
-prepare(). Ensure this happens by setting prepare_prev_first.
+On Fri, Jan 19, 2024 at 12:11:11PM -0500, Frank Li wrote:
+> Avoid use get slot id by compared with register physical address. If there
+> are more than 2 slots, compared logic will become complex.
+> 
+> "linux,pci-domain" already exist at dts since commit:
+> 	commit (c0b70f05c87f3b arm64: dts: imx8mq: use_dt_domains for pci node).
+> 
+> So it is safe to remove compare basic address code:
+> 	...
+> 	if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+> 		imx6_pcie->controller_id = 1;
+> 	...
 
-Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
- drivers/gpu/drm/panel/panel-visionox-r66451.c | 1 +
- 1 file changed, 1 insertion(+)
+I have no idea what this is telling me.  I guess you don't want to use
+IMX8MQ_PCIE2_BASE_ADDR to decide something?  That much sounds good:
+the *address* of some MMIO space doesn't tell us anything about the
+function of that space.
 
-diff --git a/drivers/gpu/drm/panel/panel-visionox-r66451.c b/drivers/gpu/drm/panel/panel-visionox-r66451.c
-index fbb73464de332..493f2a6076f8d 100644
---- a/drivers/gpu/drm/panel/panel-visionox-r66451.c
-+++ b/drivers/gpu/drm/panel/panel-visionox-r66451.c
-@@ -322,6 +322,7 @@ static int visionox_r66451_probe(struct mipi_dsi_device *dsi)
- 	dsi->lanes = 4;
- 	dsi->format = MIPI_DSI_FMT_RGB888;
- 	dsi->mode_flags = MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+	ctx->panel.prepare_prev_first = true;
- 
- 	drm_panel_init(&ctx->panel, dev, &visionox_r66451_funcs, DRM_MODE_CONNECTOR_DSI);
- 	ctx->panel.backlight = visionox_r66451_create_backlight(dsi);
+I expect the "compatible" string to tell the driver what the
+programming model of the device is.
 
----
-base-commit: 51b70ff55ed88edd19b080a524063446bcc34b62
-change-id: 20230717-visionox-r66451-prev-first-67b036160e32
+> +	/* Using linux,pci-domain as PCI slot id */
+> +	imx6_pcie->controller_id = of_get_pci_domain_nr(node);
+> +	/*
+> +	 * If there are no "linux,pci-domain" property specified in DT, then assume only one
+> +	 * controller is available.
+> +	 */
+> +	if (imx6_pcie->controller_id == -EINVAL)
+> +		imx6_pcie->controller_id = 0;
+> +	else if (imx6_pcie->controller_id < 0)
+> +		return dev_err_probe(dev, imx6_pcie->controller_id,
+> +				     "linux,pci-domain have wrong value\n");
 
-Best regards,
--- 
-Jessica Zhang <quic_jesszhan@quicinc.com>
+Maybe I'm missing something here.  It looks like this driver uses
+controller_id to distinguish between hardware variants or maybe
+between two Root Ports (slots?) in the same SoC?
 
+  imx6_pcie_grp_offset
+    return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
+
+  imx6_pcie_configure_type
+    id = imx6_pcie->controller_id
+    if (!drvdata->mode_mask[id])         # <-- looks unsafe
+      id = 0;
+    regmap_update_bits(drvdata->mode_off[id], ...)
+
+(This "mode_mask[id]" looks like it will reference garbage if the DT
+supplies "linux,pci-domain = <2>".  A bogus DT shouldn't be able to
+cause a driver to misbehave like that.)
+
+That doesn't seem related to "linux,pci-domain" at all.
+
+Bjorn
