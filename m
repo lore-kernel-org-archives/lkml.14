@@ -1,244 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7997764E;
-	Fri,  2 Feb 2024 09:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3497377637;
+	Fri,  2 Feb 2024 09:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706865573; cv=none; b=RB5+jizW4wz64ZA0EJ+FAGGdpzTgNshHA9nXVHRARVaXORdrFvXZZPIrIWP2QDbHtRWtaCqcBP7t5TgYBxCrCTSc+JSDlSzZalzRCe+FaI/12lMIuHLibybb9A3wzGgPIZe1oW0sXSGpFEUDFKu5qMeU84/RLejTHOQevQ4yvkg=
+	t=1706865680; cv=none; b=VErClbij3pvj4wEBWSz6oL5c7HV7OoMGEY7xvmSVMl7oIpH+11p3EMp4iPBQHSkSuX2KsJjIr8p6+NumYow39NKzje5sDPbc5KniuDZdLOMgIejG/v49wc5l7OSLrx9HuFTve3G0MTjibUnqqiwI6J9Dq9Jtj1FI4FC9u24X7fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706865573; c=relaxed/simple;
-	bh=xTag5UeYCBFjGLTqYPztkFTzgUMpHMbTCDlpW8VBOsc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ARnmvB20EOkl+Yl4d/22YohRrO69Lk9Z4SKSENpHy8Zwjk6GdGf6tw/dZiwZwj5jTccz5DdPV73mpeee2jaYeG4wwDG6ka1LyTHrk/BvlczaSc38mH4gvyj/tmc0J+wd7zJ/Py7b0BGheMOki67Up0bCY+Ka7t9tIsOzCUq7CDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJ24hMNu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJ24hMNu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EFB13C43601;
-	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706865573;
-	bh=xTag5UeYCBFjGLTqYPztkFTzgUMpHMbTCDlpW8VBOsc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=jJ24hMNurZacuxVaYkfPuVcw+PJt7GAnMHBCNtW5K5e46vJ+0UA0+KmaF8bMqGa2L
-	 5GOHiKtq4a0roT8zttztYWEdM7ZI3O4o74zjVyS1l46uaWgTbQF/Uxs862gBUQ7uzf
-	 BA1fMHE/xqaA8/xdTH+PF+5BGQRP5BLBJFpdKflwwAwDfhjF+y0nA/EkN8hE+0q37z
-	 JCk1ghXDJUwuCmtJz5biPCE4MRJBMLVAGF2XDtnUB8aJosfaEqIKNoon7Jkv2EVf3l
-	 iQRepIEbKdDhSSWCF/+uxKNpuCq0pqG5WoVrZmILIwv1Z3YTEFC2h+0zwJrEdIpW5F
-	 tv/3F92/9uhAg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92A1C4828E;
-	Fri,  2 Feb 2024 09:19:32 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 02 Feb 2024 12:19:11 +0300
-Subject: [PATCH net-next v3 5/7] net: dsa: mt7530: simplify
- mt7530_setup_port6() and change to void
+	s=arc-20240116; t=1706865680; c=relaxed/simple;
+	bh=O6GmnznGee1J1ZEBFNdrhE/ly46AQTTQPmWiAnOmNRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MEvre0KD4fz9OllPxZ5cSnb0sswU0EKabvFK8p7TdV7MrxaXD3NdoY0e8g/DMV/ueFNMrcDcwlW3UkfRvK6TYXXg16UeqPUgmpTM7tDGK+rbuFV3TIQy1GlnMt35yN6DKiJE2BGNpTjUGuSo6CTzf1fwkTgsQDYaDPWbpsdI4rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2E34DA7;
+	Fri,  2 Feb 2024 01:21:59 -0800 (PST)
+Received: from e129154.nice.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 454CC3F5A1;
+	Fri,  2 Feb 2024 01:21:11 -0800 (PST)
+Date: Fri, 2 Feb 2024 10:20:34 +0100
+From: Beata Michalska <beata.michalska@arm.com>
+To: Ionela Voinescu <ionela.voinescu@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org, sumitg@nvidia.com, sudeep.holla@arm.covm,
+	will@kernel.org, catalin.marinas@arm.com, viresh.kumar@linaro.org,
+	rafael@kernel.org, yang@os.amperecomputing.com,
+	linux-tegra@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 1/2] arm64: Provide an AMU-based version of
+ arch_freq_get_on_cpu
+Message-ID: <Zbyz4mQHLI9aPK6e@e129154.nice.arm.com>
+References: <20231127160838.1403404-2-beata.michalska@arm.com>
+ <ZWYDr6JJJzBvsqf0@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id:
- <20240202-for-netnext-mt7530-improvements-2-v3-5-63d5adae99ca@arinc9.com>
-References:
- <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
-In-Reply-To:
- <20240202-for-netnext-mt7530-improvements-2-v3-0-63d5adae99ca@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706865569; l=5591;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=SClOUTS4gvpigG+FVYtC+TPHpycdVONKPohI+GCk4KI=;
- b=qPBLSFm+L/Yaib7/N//8D44YxDAQUAw4+rorBwSOBqzArtOT3qYv+2l5seZyQMGGDnN3lgyy0
- /XcqPXQzWmPDb54yJubWLPRxknKKft7BqfU3PVIAXJf1KoI3VIC2CRh
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZWYDr6JJJzBvsqf0@arm.com>
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Tue, Nov 28, 2023 at 03:13:51PM +0000, Ionela Voinescu wrote:
+> Hi Beata,
+> 
+> On Monday 27 Nov 2023 at 16:08:37 (+0000), Beata Michalska wrote:
+> > With the Frequency Invariance Engine (FIE) being already wired up with
+> > sched tick and making use of relevant (core counter and constant
+> > counter) AMU counters, getting the current frequency for a given CPU
+> > on supported platforms, can be achieved by utilizing the frequency scale
+> > factor which reflects an average CPU frequency for the last tick period
+> > length.
+> > 
+> > Suggested-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
+> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> > 
+> > Notes:
+> >     Due to [1], if merged, there might be a need to modify the patch to
+> >     accommodate changes [1] introduces:
+> >     
+> >     	freq = cpufreq_get_hw_max_freq(cpu) >> SCHED_CAPACITY_SHIFT
+> >     	to
+> >     	freq = per_cpu(capacity_freq_ref, cpu); >> SCHED_CAPACITY_SHIFT
+> >     [1]
+> >     https://lore.kernel.org/linux-arm-kernel/20231121154349.GA1938@willie-the-truck/T/#mcb018d076dbce6f60ed2779634a9b6ffe622641e
+> > 
+> >  arch/arm64/kernel/topology.c | 39 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> > 
+> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> > index 615c1a20129f..ae2445f6e7da 100644
+> > --- a/arch/arm64/kernel/topology.c
+> > +++ b/arch/arm64/kernel/topology.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/cpufreq.h>
+> >  #include <linux/init.h>
+> >  #include <linux/percpu.h>
+> > +#include <linux/sched/isolation.h>
+> >  
+> >  #include <asm/cpu.h>
+> >  #include <asm/cputype.h>
+> > @@ -186,6 +187,44 @@ static void amu_scale_freq_tick(void)
+> >  	this_cpu_write(arch_freq_scale, (unsigned long)scale);
+> >  }
+> >  
+> > +unsigned int arch_freq_get_on_cpu(int cpu)
+> > +{
+> > +	unsigned int freq;
+> > +	u64 scale;
+> > +
+> > +	if (!cpumask_test_cpu(cpu, amu_fie_cpus))
+> > +		return 0;
+> > +
+> > +	/*
+> > +	 * For those CPUs that are in full dynticks mode, try an alternative
+> > +	 * source for the counters (and thus freq scale),
+> > +	 * if available for given policy
+> > +	 */
+> > +	if (!housekeeping_cpu(cpu, HK_TYPE_TICK)) {
+> > +		struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> > +		int ref_cpu = nr_cpu_ids;
+> > +
+> > +		if (cpumask_intersects(housekeeping_cpumask(HK_TYPE_TICK),
+> > +				       policy->cpus))
+> > +			ref_cpu = cpumask_nth_and(cpu, policy->cpus,
+> > +						  housekeeping_cpumask(HK_TYPE_TICK));
+> > +		cpufreq_cpu_put(policy);
+> > +		if (ref_cpu >= nr_cpu_ids)
+> > +			return 0;
+> > +		cpu = ref_cpu;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Reversed computation to the one used to determine
+> > +	 * the arch_freq_scale value
+> > +	 * (see amu_scale_freq_tick for details)
+> > +	 */
+> > +	scale = per_cpu(arch_freq_scale, cpu);
+> 
+> Any reason for not using arch_scale_freq_capacity() here?
+> 
+> To me it seems a bit nicer to use the "official" function to return the
+> frequency scale factor.
+> 
+Noted.
+> > +	freq = cpufreq_get_hw_max_freq(cpu) >> SCHED_CAPACITY_SHIFT;
+> 
+> Given Vincent's patch at [1] I think here might be best to call
+> arch_scale_freq_ref() instead. That's because the frequency scale factor
+> will use that frequency as the maximum frequency in its calculations and
+> we'd not want to use a different one here.
+> 
+OK.
+> The annoyance is coping with capacity_freq_ref not having been set
+> yet, and that would be easy if capacity_freq_ref was initialized to 0.
+> Luckily with Vincent's changes it can now be 0. I'll comments on his
+> patches and ask him to make this change.
+> 
+> So I think you can safely use arch_scale_freq_ref() here. If
+> arch_scale_freq_ref() returns 0, arch_freq_get_on_cpu() will just return
+> 0 as well.
+> 
+Will do.
+> [1] https://lore.kernel.org/lkml/20231109101438.1139696-8-vincent.guittot@linaro.org/
+> 
+> > +	freq *= scale;
+> 
+> In some scenarios the frequencies visible to cpufreq might not look like
+> actual frequencies, but some scaled abstract performance values. One
+> example is cppc_cpufreq when one does not provide the optional frequency
+> information in the CPC objects but just the performance information.
+> 
+> Therefore the maximum frequency seen here can be quite a small value, so
+> it might be best to do the multiplication first and the shift after that.
+> 
+Right, that was in v1! Must have mixed up things ending with stale data.
+Will address that in the next version - if one is out.
 
-This code is from before this driver was converted to phylink API. Phylink
-deals with the unsupported interface cases before mt7530_setup_port6() is
-run. Therefore, the default case would never run. However, it must be
-defined nonetheless to handle all the remaining enumeration values, the
-phy-modes.
-
-Switch to if statement for RGMII and return which simplifies the code and
-saves an indent.
-
-Set P6_INTF_MODE, which is the the three least significant bits of the
-MT7530_P6ECR register, to 0 for RGMII even though it will already be 0
-after reset. This is to keep supporting dynamic reconfiguration of the port
-in the case the interface changes from TRGMII to RGMII.
-
-Disable the TRGMII clocks for all cases. They will be enabled if TRGMII is
-being used.
-
-Read XTAL after checking for RGMII as it's only needed for the TRGMII
-interface mode.
-
-Change mt7530_setup_port6() to void now that there're no error cases left.
-
-Reviewed-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- drivers/net/dsa/mt7530.c | 101 ++++++++++++++++++++---------------------------
- 1 file changed, 42 insertions(+), 59 deletions(-)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index c4d492e29fdf..e1fdef5766fb 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -414,70 +414,57 @@ mt753x_preferred_default_local_cpu_port(struct dsa_switch *ds)
- }
- 
- /* Setup port 6 interface mode and TRGMII TX circuit */
--static int
-+static void
- mt7530_setup_port6(struct dsa_switch *ds, phy_interface_t interface)
- {
- 	struct mt7530_priv *priv = ds->priv;
--	u32 ncpo1, ssc_delta, trgint, xtal;
-+	u32 ncpo1, ssc_delta, xtal;
- 
--	xtal = mt7530_read(priv, MT7530_MHWTRAP) & HWTRAP_XTAL_MASK;
-+	/* Disable the MT7530 TRGMII clocks */
-+	core_clear(priv, CORE_TRGMII_GSW_CLK_CG, REG_TRGMIICK_EN);
- 
--	switch (interface) {
--	case PHY_INTERFACE_MODE_RGMII:
--		trgint = 0;
--		break;
--	case PHY_INTERFACE_MODE_TRGMII:
--		trgint = 1;
--		if (xtal == HWTRAP_XTAL_25MHZ)
--			ssc_delta = 0x57;
--		else
--			ssc_delta = 0x87;
--		if (priv->id == ID_MT7621) {
--			/* PLL frequency: 125MHz: 1.0GBit */
--			if (xtal == HWTRAP_XTAL_40MHZ)
--				ncpo1 = 0x0640;
--			if (xtal == HWTRAP_XTAL_25MHZ)
--				ncpo1 = 0x0a00;
--		} else { /* PLL frequency: 250MHz: 2.0Gbit */
--			if (xtal == HWTRAP_XTAL_40MHZ)
--				ncpo1 = 0x0c80;
--			if (xtal == HWTRAP_XTAL_25MHZ)
--				ncpo1 = 0x1400;
--		}
--		break;
--	default:
--		dev_err(priv->dev, "xMII interface %d not supported\n",
--			interface);
--		return -EINVAL;
-+	if (interface == PHY_INTERFACE_MODE_RGMII) {
-+		mt7530_rmw(priv, MT7530_P6ECR, P6_INTF_MODE_MASK,
-+			   P6_INTF_MODE(0));
-+		return;
- 	}
- 
--	mt7530_rmw(priv, MT7530_P6ECR, P6_INTF_MODE_MASK,
--		   P6_INTF_MODE(trgint));
-+	mt7530_rmw(priv, MT7530_P6ECR, P6_INTF_MODE_MASK, P6_INTF_MODE(1));
- 
--	if (trgint) {
--		/* Disable the MT7530 TRGMII clocks */
--		core_clear(priv, CORE_TRGMII_GSW_CLK_CG, REG_TRGMIICK_EN);
-+	xtal = mt7530_read(priv, MT7530_MHWTRAP) & HWTRAP_XTAL_MASK;
- 
--		/* Setup the MT7530 TRGMII Tx Clock */
--		core_write(priv, CORE_PLL_GROUP5, RG_LCDDS_PCW_NCPO1(ncpo1));
--		core_write(priv, CORE_PLL_GROUP6, RG_LCDDS_PCW_NCPO0(0));
--		core_write(priv, CORE_PLL_GROUP10, RG_LCDDS_SSC_DELTA(ssc_delta));
--		core_write(priv, CORE_PLL_GROUP11, RG_LCDDS_SSC_DELTA1(ssc_delta));
--		core_write(priv, CORE_PLL_GROUP4,
--			   RG_SYSPLL_DDSFBK_EN | RG_SYSPLL_BIAS_EN |
--			   RG_SYSPLL_BIAS_LPF_EN);
--		core_write(priv, CORE_PLL_GROUP2,
--			   RG_SYSPLL_EN_NORMAL | RG_SYSPLL_VODEN |
--			   RG_SYSPLL_POSDIV(1));
--		core_write(priv, CORE_PLL_GROUP7,
--			   RG_LCDDS_PCW_NCPO_CHG | RG_LCCDS_C(3) |
--			   RG_LCDDS_PWDB | RG_LCDDS_ISO_EN);
-+	if (xtal == HWTRAP_XTAL_25MHZ)
-+		ssc_delta = 0x57;
-+	else
-+		ssc_delta = 0x87;
- 
--		/* Enable the MT7530 TRGMII clocks */
--		core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_TRGMIICK_EN);
-+	if (priv->id == ID_MT7621) {
-+		/* PLL frequency: 125MHz: 1.0GBit */
-+		if (xtal == HWTRAP_XTAL_40MHZ)
-+			ncpo1 = 0x0640;
-+		if (xtal == HWTRAP_XTAL_25MHZ)
-+			ncpo1 = 0x0a00;
-+	} else { /* PLL frequency: 250MHz: 2.0Gbit */
-+		if (xtal == HWTRAP_XTAL_40MHZ)
-+			ncpo1 = 0x0c80;
-+		if (xtal == HWTRAP_XTAL_25MHZ)
-+			ncpo1 = 0x1400;
- 	}
- 
--	return 0;
-+	/* Setup the MT7530 TRGMII Tx Clock */
-+	core_write(priv, CORE_PLL_GROUP5, RG_LCDDS_PCW_NCPO1(ncpo1));
-+	core_write(priv, CORE_PLL_GROUP6, RG_LCDDS_PCW_NCPO0(0));
-+	core_write(priv, CORE_PLL_GROUP10, RG_LCDDS_SSC_DELTA(ssc_delta));
-+	core_write(priv, CORE_PLL_GROUP11, RG_LCDDS_SSC_DELTA1(ssc_delta));
-+	core_write(priv, CORE_PLL_GROUP4, RG_SYSPLL_DDSFBK_EN |
-+		   RG_SYSPLL_BIAS_EN | RG_SYSPLL_BIAS_LPF_EN);
-+	core_write(priv, CORE_PLL_GROUP2, RG_SYSPLL_EN_NORMAL |
-+		   RG_SYSPLL_VODEN | RG_SYSPLL_POSDIV(1));
-+	core_write(priv, CORE_PLL_GROUP7, RG_LCDDS_PCW_NCPO_CHG |
-+		   RG_LCCDS_C(3) | RG_LCDDS_PWDB | RG_LCDDS_ISO_EN);
-+
-+	/* Enable the MT7530 TRGMII clocks */
-+	core_set(priv, CORE_TRGMII_GSW_CLK_CG, REG_TRGMIICK_EN);
- }
- 
- static void
-@@ -2609,15 +2596,11 @@ mt7530_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 		  phy_interface_t interface)
- {
- 	struct mt7530_priv *priv = ds->priv;
--	int ret;
- 
--	if (port == 5) {
-+	if (port == 5)
- 		mt7530_setup_port5(priv->ds, interface);
--	} else if (port == 6) {
--		ret = mt7530_setup_port6(priv->ds, interface);
--		if (ret)
--			return ret;
--	}
-+	else if (port == 6)
-+		mt7530_setup_port6(priv->ds, interface);
- 
- 	return 0;
- }
-
--- 
-2.40.1
-
+BR
+Beata
+> Thanks,
+> Ionela.
+> 
+> > +	return freq;
+> > +}
+> > +
+> >  static struct scale_freq_data amu_sfd = {
+> >  	.source = SCALE_FREQ_SOURCE_ARCH,
+> >  	.set_freq_scale = amu_scale_freq_tick,
+> > -- 
+> > 2.25.1
+> > 
