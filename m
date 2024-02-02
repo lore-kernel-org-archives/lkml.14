@@ -1,109 +1,126 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA28314A4D4
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 16:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706889988; cv=none; b=Yi1fpGms9kLnCPAPPsclOHG1UPuoSLg4a2q/9DcluujS8cpaFC5s98f2lcZOG/Xt3RQGj/l75ni9CQ7lFjKQZzdzV8seJe4gC3+Z1Z9FKNl/WPqEQJ7kjHlwIui+x7DtNyFwbsT04qrBlAYIKvqhztoMlczUToM7Dr9FSiTVqZU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706889988; c=relaxed/simple;
-	bh=Dvndydm0WQiAr8SlU79W28MqK5iSck9hcErAZtsmIyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJX7CaKS4YVkQsP3hnAzh2PmO61lssxJwFhp7GpTUzVGn11hM/jF1PZpK4Hh0I4PLf+6AE4lQctI3dZpjwe63c+BNYowi7RXo4kx9M/BKBql0L4W+HmXQ1IDk7FDGRyGGLGmreVrqJ4H0kuV66V2gRpSZapvAZtyvUaMgY59+8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=XXcPMMbC; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9934214AD02;
+	Fri,  2 Feb 2024 16:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706889991; cv=fail; b=Fj4ILIq1Njui5H9RH6M8LNWs37Wmhyg/Kp1dS5MKlp4oe7QpsZcHN+iDNTSt1GeFHEDfuR9vYTjZWB1XBkv6rjQwT29JvW1crmQ7JUqdW+xs9xC/ljHRVhrmO+0mJnnY4/4LPmjCoI3EdpcID7Xr2MNjflUzy4RkQJyu/dfDuXw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706889991; c=relaxed/simple;
+	bh=MsNYoj6sxe+SfUFtH4QybfrFuLezXoGakiC2UjHPYQ8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t4L8x+bpS2LKDHE/LkuJl82xSr7gTjSM0S6uUYw1E9ucMjyhRMB1kBpe5iHv8YR/uPytHCTQZQfQ9ejkY9qVjIEzkfypaCNed/KCO3djJP97ondGD3JPDoeb4R6R0eh3anmPnPKQiBwGKZpVGRcWFGTFimQdFNFAh5bTqRDyG3Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Lr0pktfi; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="XXcPMMbC"
-Received: from cwcc.thunk.org (pool-173-48-116-13.bstnma.fios.verizon.net [173.48.116.13])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 412G5FUn028060
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 11:05:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1706889920; bh=YNDwaYqILYROFbZ2T7wdnv8w+SAS5ZpbU073hZkeTiI=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=XXcPMMbCQXCYHB/LLJaHRJrNlhp80U9c2YRyCNdycadKxv7zueJalMaApizf6gv1t
-	 z5l6HH5428VQbFp7BT1GMx3w8iiZIHFaCp+X+FNmjqXFUtrjibjupf6AzfI/+9HS91
-	 Jtr+FgTOtX4Atz4KN4UwZlglm4rZbd5SbAG5DPOYKXLeDa/+ztBh9WD0bY5RvniO2Q
-	 Nhk4HXt6Uw5zh1+ZaLrC9b/dO41Er4QHPDGMBGoFBpBduyM1ybZ8IEZ/vCsIVb+Wip
-	 jSxLpDJckcw46RAkCyQEb2zfAV+xW2RseHs79eg2+ZoZOpQLNXI43iB+twSQunUJnH
-	 Gypz0AcZcNs/A==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 536D015C02FC; Fri,  2 Feb 2024 11:05:15 -0500 (EST)
-Date: Fri, 2 Feb 2024 11:05:15 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: James Bottomley <jejb@linux.ibm.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Nakajima, Jun" <jun.nakajima@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish" <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/random: Retry on RDSEED failure
-Message-ID: <20240202160515.GC119530@mit.edu>
-References: <DM8PR11MB5750B861F7A105886AA5FCE4E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9oJvbZgT4yT9Vydc2ZQVSo3Ea65G5aVK7gFxphkV00BnQ@mail.gmail.com>
- <20240131140756.GB2356784@mit.edu>
- <Zbpc8tppxuKr-hnN@zx2c4.com>
- <20240131171042.GA2371371@mit.edu>
- <DM8PR11MB5750C7D16DC566CD1329D5A5E77C2@DM8PR11MB5750.namprd11.prod.outlook.com>
- <CAHmME9q-eUXnXnpaDu0VOQemOYysst7SaJ-=b8-vCFP9h50Szg@mail.gmail.com>
- <20240201045710.GD2356784@mit.edu>
- <CAHmME9oqM2a766dBK22-yKr8=2-icg=UkQzmBOF8G5Zh_Y9E9w@mail.gmail.com>
- <ad1a131a006bf98a506e767a01f5022358b3e291.camel@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Lr0pktfi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wo1Ht4SqPxVNEmYXnPVbEO+IjfYLxKrbLiD3YBg9gbkvPzT7ajfh6sfIs+kI/D9qCLfStYNIwslH4a83AJlhtQvEquY4JnB6cm04/GpQbHkEl/p7WY2MfkpbAwA6syPK3diQJfNSEZVtzNItJzD7YFqbI+Ur8hLO2KMYFdacIHA8i+0WHrMAUGcvKa5l3RualPYekqhlkHV8FRtFQvJS8XaufJMNec/INrABtZUp2tYSkvgtIAYOQSvifDVyzyRfY2uYJhdsVbV0KYjf1GS1R4Z5yucn5d36AglDkClLC+6s/BEoUZmezFd3df7R2KhODa2nA7t1MHl4N2O9fm49AA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DhzUggw8fnZiJ9w5rmA/Y9st0kiBXOVYyMOMpiaa6ag=;
+ b=BFylWXlXI7J7amB5CP5DoiY4oeKk2AO6/xyJK+KJ2V48mCmKtiu4VakJJ1zFqEh3afxLQWzHfeBGhQhFR5vRQmO7nKWuwdttnVzJXvtbqKa0kFmYFbR2VeXk9bmyzc1Ntv4DjxDTi78+vrjJ5+kG44FaIG4b3qjPUQPBTICpcRgfpngMN7X+C/cTFfUKJj4zIuZ+Bmp4DV4Ax5XOQCQj2VTNwZ8ZhIT92xtvGGHFVQhhx6D0chsYCSusLWU74Wv/HFlBGiVfXVYQhR/6PGECFa1BsMJfLdhoHlNcjFO3Ai0q5jGwRVmHcsRhaKFbP3RLAo9ysCbPof7tZX9EIKAw3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DhzUggw8fnZiJ9w5rmA/Y9st0kiBXOVYyMOMpiaa6ag=;
+ b=Lr0pktfiEyyAJqSyvX/P2nOrHt1LSlWP+OqOSPlJ7faQ3q2/FczelzLBpmWq/RZZ4TPeb8Z/3VcbCoaHNIRTtoaGFccrXB1FUCpYJMzMXkpsARGe9caJJj1p5TwCP7+RnqQwifGOo2CkfeafQ1HADEtGEJA9s5x7nfAVp3iDuhs=
+Received: from SJ0PR13CA0101.namprd13.prod.outlook.com (2603:10b6:a03:2c5::16)
+ by DS0PR12MB7971.namprd12.prod.outlook.com (2603:10b6:8:14e::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.28; Fri, 2 Feb
+ 2024 16:06:18 +0000
+Received: from DS2PEPF00003448.namprd04.prod.outlook.com
+ (2603:10b6:a03:2c5:cafe::1c) by SJ0PR13CA0101.outlook.office365.com
+ (2603:10b6:a03:2c5::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24 via Frontend
+ Transport; Fri, 2 Feb 2024 16:06:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003448.mail.protection.outlook.com (10.167.17.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Fri, 2 Feb 2024 16:06:18 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 2 Feb
+ 2024 10:06:18 -0600
+From: Michael Roth <michael.roth@amd.com>
+To: <x86@kernel.org>
+CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<bp@alien8.de>, <sfr@canb.auug.org.au>, <thomas.lendacky@amd.com>,
+	<ashish.kalra@amd.com>
+Subject: [PATCH] Documentation: virt: Fix up pre-formatted text block for SEV ioctls
+Date: Fri, 2 Feb 2024 10:05:44 -0600
+Message-ID: <20240202160544.2297320-1-michael.roth@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad1a131a006bf98a506e767a01f5022358b3e291.camel@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003448:EE_|DS0PR12MB7971:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bbf94b0-ec13-47de-18c9-08dc2408e42e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	n5YYkH8583iWOu7Z9/QlomEWLySn2RaaUktviD1R9hfxZRiU6CyXHSf1USgH0gKva+5OVheSWa47PrAeO9CnGS+zOFYSjSvnSp2hc7Vi09wOTebyXXp2NSFM/ZjG6RabMXSnvECD74oDJhy/YtYZ9JWLHD9WjT/r7elrlfaAqn/tl8he87ElOJ3zulTtxEkwv37uwO14xcbFaex7uqWYhCogt6CL5GEwVDNYKPxEw9pnT5ME5WtiaLy4he9mu/G3dMWrl3U9/k2ppGzICXqFQYAHjm4O1gturPZM4DabyBoySKcibqFgSiDZfEFDHOgRJOgTaOpdZHk94BKs5vdsnjqjMJucPvefhXgqDAFnpyQfEfGcNedbbCm397zxWXTowCqa0EXRsC9f/yObh7+pK4kSBMcQ5+4A8XK/S1eMZK1UXd5uLoZhkSy1CM7ejAnkq9qRIlaHEi7Ar/dMXKmQLIAmwQOmOwouKrueGHxc7auea/DcJmy00JLdt7jpzFfK4Qe5KT3SGE+dtLziKO2t66D56QMDD6h2EfNkbhNklUqvt9CD74/rBemmmDWU241criOM3lzd55GHI5eTHy04ElqeCNMZTDBeOi86E0feD1+QclRU/t2ItlGzsSc5k9UNZlZyjV9paLdyOvru396B/KfnlyJDslqeZQWKQXoZH8pjzUgPHZZGuPWANtF/hy6cv7DoUOVJCzdO230afQtO2BDR2MAk2mv2yotgRfaUP9+KFP87nN3pU77ZEtAk/Kdd2UXhii8ObQecq64BnxXbQ8dx89EOB7qLKt+BTrYQH9OawvZOjetu7Q095qmNBfTY
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(136003)(346002)(396003)(230922051799003)(230173577357003)(230273577357003)(186009)(451199024)(1800799012)(82310400011)(64100799003)(40470700004)(36840700001)(46966006)(40460700003)(40480700001)(83380400001)(36756003)(41300700001)(86362001)(82740400003)(81166007)(36860700001)(356005)(47076005)(1076003)(16526019)(26005)(426003)(336012)(2616005)(2906002)(966005)(8936002)(478600001)(70206006)(316002)(70586007)(6916009)(6666004)(54906003)(4326008)(5660300002)(8676002)(44832011)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 16:06:18.5551
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bbf94b0-ec13-47de-18c9-08dc2408e42e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003448.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7971
 
-On Fri, Feb 02, 2024 at 04:47:11PM +0100, James Bottomley wrote:
-> 
-> It's a lot to quote, so I cut it, but all of your solutions assume a
-> rdseed/rdrand failure equates to a system one but it really doesn't: in
-> most systems there are other entropy sources.  In confidential
-> computing it is an issue because we have no other trusted sources.  The
-> problem with picking on rdseed/rdrand is that there are bound to be
-> older CPUs somewhere that have rng generation bugs that this will
-> expose.
+A missing newline after "::" resulted in the htmldocs build failing to
+recognize the start of a pre-formatted block of text, resulting in
+warnings being generated during the build. Fix this by adding in the
+missing newline.
 
-I'm not sure what you're concerned about.  As far as I know, all of
-the CPU's have some variant of Confidential Compute have some kind of
-RDRAND-like command.  And while we're using the term RDRAND, I'd
-extend this to any CPU architecture-level RNG instruction which can
-return failure if it is subject to exhaustion attacks.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/linux-next/20240202145932.31c62fd6@canb.auug.org.au/
+Fixes: f5db8841ebe5 ("crypto: ccp: Add the SNP_PLATFORM_STATUS command")
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+---
+ Documentation/virt/coco/sev-guest.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-> How about making the failure contingent on the entropy pool
-> not having any entropy when the first random number is requested?
+diff --git a/Documentation/virt/coco/sev-guest.rst b/Documentation/virt/coco/sev-guest.rst
+index 14c9de997b7d..e1eaf6a830ce 100644
+--- a/Documentation/virt/coco/sev-guest.rst
++++ b/Documentation/virt/coco/sev-guest.rst
+@@ -71,6 +71,7 @@ The host ioctls are issued to a file descriptor of the /dev/sev device.
+ The ioctl accepts the command ID/input structure documented below.
+ 
+ ::
++
+         struct sev_issue_cmd {
+                 /* Command ID */
+                 __u32 cmd;
+-- 
+2.25.1
 
-We have tried to avoid characterizing entropy sources as "valid" or
-"invalid".  First of all, it's rarely quite so black-and-white.
-Something which is vulnerable to someone who can spy on inter-packet
-arrival times by having a hardware tap between the CPU and the network
-switch, or a wireless radio right next to the device being attacked,
-might not be easily carried out by someone who doesn't have local
-physical access.
-
-So we may be measuring various things that might or might not have
-"entropy".  In the case of Confidential Compute, we have declared that
-none of those other sources constitute "entropy".  But that's not a
-decision that can be made by the computer, or at least until we've
-tracked the AGI problem.  (At which point, we might have other
-problems --- "I'm sorry, I'm afraid I can't do that.")
-
-	     	  	     	      - Ted
