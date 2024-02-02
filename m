@@ -1,100 +1,103 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4B7152DF3
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 18:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D3F15444D;
+	Fri,  2 Feb 2024 18:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706899175; cv=none; b=JUu4Ex25vTDmNsA9wILQ63nDamvbpTjD9hSCK4olHEOvFGdrGdB2rVgw7c5SH72xXGxXq3OLcdnzt+PFnW53f4I8tUpWXCnI4ItL/QLY5mtC4Yg1DuLIkJbEqMkD6oS2V8Fu6NsU4dyzjaPmch67lpNHpkb5e9Dof4jR6clB898=
+	t=1706899176; cv=none; b=bMa89eyiEfdeqWbQZaqkOdjvQdisJBu9sgt29IZ7Ed+h7EQcibOF4pUXVnXaOGVCPQEoWXvBZ6nykpqEVjnfCTi0YQcTckhiuMac5gC7B78MiVE6m8m0/xjT4G245HPOKxNJOvnzPoqmHonJU1QJCbbjhn56u8BhkhLs9l6P5XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706899175; c=relaxed/simple;
-	bh=6vtu3x2Y1jccAeEZW/cOuVCyNA6GUN7mxte5g1lUOrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MLKrwcO7RXxdyQ6nl+Ao7jQIAb54EIaFtuDiNLirkAu1kK8j2DcnTK7uUloz2lPNMAfHh1E6c9zulODxke/yWaxv1lIHi/mchunFj4BZIONeK0g2fc8Vb5fBj1dfQNhS4zpTrg8CtIri0n4yJVxoiDt6i472FaZy+OSNu77HXa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IHeB54CF; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706899176; c=relaxed/simple;
+	bh=N+iMXqBMlZrQ+J+4xgN6PKCTFmhrm6XrOnA1jsh8+Ps=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WYDiMM7EAagmy0tbjsRmUgocUofosWo7M3GKGmv0LjMJM3FUGWrX5zx4EFhdUv7lzQGivk009nSqhKBoLjNkgTbL5VCLlOUXA/mlKEoKhWWSVbCjARBOw+9P9QHEKMTuO9Z36L1StBnSUn6xTvfXxJq/eEP4asLS/JXT1PJxaRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYRvzNcd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IHeB54CF"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-50eac018059so2971130e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 10:39:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706899171; x=1707503971; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EK/oD0i1K4QS8LEPg1LGpWmJwJIYuOve/SpbccIVK8M=;
-        b=IHeB54CFUk2Pu6lD2GAj8loMeIw5OHB3CUVpXRt/zRmhwMpktRKIlzjd0TGGAQWQCQ
-         Lys1/NvYHNrxHr/aZc2m9O3yaQERM66FEpZEHbGHLGv08Q+OTc1a3JnBUak8NXPz8o2O
-         EhC2n2Bt+Kf0bkekEtuOGGOMSb0/k+M0stkGc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706899171; x=1707503971;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EK/oD0i1K4QS8LEPg1LGpWmJwJIYuOve/SpbccIVK8M=;
-        b=PuZPu2H8nO/AcPaT0NErDrkgJczOKCbTc06ya+6J5JaLiVNaC6W5c3vp8MXeNrO+YT
-         om15WGvZnZVR4M9WPCHCS5/J1V1oYPhXG5THhPxdkWXjTWZ+Bi3N+QPc6CH4Q0I4NDSg
-         BSrF78YC+HJcSeN7Ushsc3qtHs8yOB7tw/lw27nQ3bdL2OMyITfVjKlQ3P/0zQIrvq//
-         cKUP7y3CIeu4vzhinJ71t7XkJeEAM8qVfyIfn8AQem5wddfobrYuh3R1O3129ViAtsro
-         bQ2O0BPUvWiUnZNwg7vFjfRI7Kht8QR5iUcd4xWeoR/hFN5yxya3u/29Lam8RFfCOd18
-         IZlQ==
-X-Gm-Message-State: AOJu0Yx7/lnFuB7uHLZ3I2vnxtZnoLaIDTPMoHOh23EZRvqO2wMJcx6O
-	XJtnk6ufXw9kyCMLLiGDoGuD+w4gJxxCavvZjlwZXzHZSYiNBFHaGY2jFpJ8P8kyaY47d5h+DIo
-	GHObDmg==
-X-Google-Smtp-Source: AGHT+IGxajK4aCpy+yzgUd/THPbj+f2Y2QftwFKv+71/V+HmlJdJ1EK1DI2w7veGfawczdljy6aGxA==
-X-Received: by 2002:ac2:562f:0:b0:511:1ed7:61b9 with SMTP id b15-20020ac2562f000000b005111ed761b9mr1861797lff.39.1706899170774;
-        Fri, 02 Feb 2024 10:39:30 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXPXntYQMr8umIjPTygZH1M4yVhzpd23xnwEJXrruV0ncs9ypiNg+4IxTwxvySETchukT+OUJJnwHrDwWRMXQkWwQ5go9706VHg4XXJ
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id dw12-20020a0565122c8c00b005113dfe177asm62646lfb.304.2024.02.02.10.39.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 10:39:30 -0800 (PST)
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d07ffa0a9cso15353791fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 10:39:30 -0800 (PST)
-X-Received: by 2002:a2e:8882:0:b0:2d0:8225:919d with SMTP id
- k2-20020a2e8882000000b002d08225919dmr1794857lji.21.1706899169784; Fri, 02 Feb
- 2024 10:39:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYRvzNcd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CBAC43390;
+	Fri,  2 Feb 2024 18:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706899175;
+	bh=N+iMXqBMlZrQ+J+4xgN6PKCTFmhrm6XrOnA1jsh8+Ps=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QYRvzNcdr8hc30kvL/TpCjshNW84mUGmJpkYjLxxswUiovN0VS6nwmeSL4nnHB42d
+	 ERNLZMtHwzNByg5IPwTajGRZ5Yqd/gvsiXNirsMQFiEEZHr3DVD2ar5oKuAdpxWmd8
+	 gvzLQ5X7HePL1Oki23rvnGXL29+HnhdqQHoxKDuhyQ5pUZK4KjPjK0wWb+XtqaL2yk
+	 5IkcAuwwRF4/hapUTS6FXXvPQY9NhOdd3kqWiOj0wUNKomBSW483H+MTc5i9JBRxAI
+	 sNhPJQ07ebA/kH/6PYeHsyFIYreMi4IeeTFVqUmdJPc7zbNVXDyBrTaT6T/uWafaUV
+	 tSMHmS8zb4ljg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 05/23] dpll: fix broken error path in dpll_pin_alloc(..)
+Date: Fri,  2 Feb 2024 13:39:01 -0500
+Message-ID: <20240202183926.540467-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240202183926.540467-1-sashal@kernel.org>
+References: <20240202183926.540467-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
-In-Reply-To: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 2 Feb 2024 10:39:13 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiaSjYApqmUYCdCyYfr_bRsfVKDkwU6r6FMmoZzrxHrKQ@mail.gmail.com>
-Message-ID: <CAHk-=wiaSjYApqmUYCdCyYfr_bRsfVKDkwU6r6FMmoZzrxHrKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Handle delay slot for extable lookup
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ben Hutchings <ben@decadent.org.uk>, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.3
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2 Feb 2024 at 04:30, Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
->       ptrace: Introduce exception_ip arch hook
->       MIPS: Clear Cause.BD in instruction_pointer_set
->       mm/memory: Use exception ip to search exception tables
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
 
-Just to clarify: does that second patch fix the problem that
-__isa_exception_epc() does a __get_user()?
+[ Upstream commit b6a11a7fc4d6337f7ea720b9287d1b9749c4eae0 ]
 
-Because that mm/memory.c use of "exception_ip()" most definitely
-cannot take a page fault.
+If pin type is not expected, or pin properities failed to allocate
+memory, the unwind error path shall not destroy pin's xarrays, which
+were not yet initialized.
+Add new goto label and use it to fix broken error path.
 
-So if MIPS cannot do that whole exception IP thing without potentially
-touching user space, I do worry that we might just have to add a
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dpll/dpll_core.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-   #ifndef __MIPS__
+diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
+index 3568149b9562..36f5c0eaf604 100644
+--- a/drivers/dpll/dpll_core.c
++++ b/drivers/dpll/dpll_core.c
+@@ -440,7 +440,7 @@ dpll_pin_alloc(u64 clock_id, u32 pin_idx, struct module *module,
+ 	if (WARN_ON(prop->type < DPLL_PIN_TYPE_MUX ||
+ 		    prop->type > DPLL_PIN_TYPE_MAX)) {
+ 		ret = -EINVAL;
+-		goto err;
++		goto err_pin_prop;
+ 	}
+ 	pin->prop = prop;
+ 	refcount_set(&pin->refcount, 1);
+@@ -448,11 +448,12 @@ dpll_pin_alloc(u64 clock_id, u32 pin_idx, struct module *module,
+ 	xa_init_flags(&pin->parent_refs, XA_FLAGS_ALLOC);
+ 	ret = xa_alloc(&dpll_pin_xa, &pin->id, pin, xa_limit_16b, GFP_KERNEL);
+ 	if (ret)
+-		goto err;
++		goto err_xa_alloc;
+ 	return pin;
+-err:
++err_xa_alloc:
+ 	xa_destroy(&pin->dpll_refs);
+ 	xa_destroy(&pin->parent_refs);
++err_pin_prop:
+ 	kfree(pin);
+ 	return ERR_PTR(ret);
+ }
+-- 
+2.43.0
 
-around this all.
-
-Possibly somehow limited to just the microMIPS/MIPS16e case in Kconfig instead?
-
-            Linus
