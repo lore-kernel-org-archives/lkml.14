@@ -1,70 +1,89 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCE45FDA3
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 09:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A83960DF4;
+	Fri,  2 Feb 2024 09:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706864886; cv=none; b=qHHa2j3Yf/0CyaHLhU5+qQrRiYZRWUiUhdBnS7fLhxXCuFbm2hrHp8LsccGr0HDtlI2M858Ceqm/fveBYFr0caNerYfEsjkjq+3AiKhv+s34+rmudpuQc7wFRRo9KOiU04k7DUhj6B2eM/D1ich4hA7n00FKL5aBJ5e67PVy478=
+	t=1706865017; cv=none; b=ndm4/GUjX3acTBrDbNq62raDIcG/jORlg44eBomtdN8krjrMa4cEVOXF//KVVL6qKYcR4XN6ZpL26feIYe8gG/+G07N5XG36HXAp9yppn5JxdATmjXQKVraxUjuUPDCxpworTcS7+Pd0yeWusESTA8720436EGZJI3rHVSJP75Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706864886; c=relaxed/simple;
-	bh=XY0wgWCyBdKF2c9DVyjRU/KDnI870BxzE/LOzXqWTu0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WGjJU7GPHGSVz6artGm61NJgrWdFa4vuPqz2vwFT0oG1N5t1MYogimqf1TpsAdpZzSnEzw54DF5w1mvDMJ2ZtKmfu530WM79YEj4yaWvK6E+DNTWsx/Bq1WT2+fx2yowsUa2hlvj2PfwXxlQFnwF9JJRXGVFxqGYn9MUZFVNcFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-363b161279aso4586555ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 01:08:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706864883; x=1707469683;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XeDyEjCvb8uDBw570BFodqh+gAPdP68pZyBdqJtXcM0=;
-        b=ZkCDEIXeeauw+t81sveXc9DkZ3yYRWf+rZ+9IHT8NHDugWzd/ktAnfVLEmC99JA/c2
-         6nFeTht0Y+uWMn2mO/cdp8ON27QsVF+j9Ii4pkXX6ODIQgt9sM20Neegb/X58+YtlXA2
-         6KgrhQd1zQTI+H/pwTDCL0ZHkD1IkGTD66fQn/mKSdzFB2HiI67LefRsUqOlIGjkiqnB
-         wNH653f193UYVlUTe9kjBZzFxiEEZnOFgGUFRocLSilYPRgL9oMv9JMs2cxy2AA7RqX/
-         m0CPP64sYf5b//Uhk8YqsQ4CPObftKknoP7IHuwU3fJIWqihKS2DJB8BkJTvdH2JfpHU
-         QHFw==
-X-Gm-Message-State: AOJu0YxWVdzObtjWtgGxFKmjp0TrQS9Vogq7awtg8UEFKSlDRJp/Ya9l
-	2Yv/NW58V1j1s4oeXeJOz2jLFEMDz3uBM5ABxigwRJo7CYP1vMaZbjY2HeyyQcpoL2jljqWj7cY
-	r9J6EhvoT63XQJEBQvvLjesZ4HCZ8CtrP23wW7hWOKCjhgJalWLLcMX1tPA==
-X-Google-Smtp-Source: AGHT+IGwzbGXZSuQ8ya3zWymx/ZS2tMJ7Gxk15Q7LsFjWFECcoZ0SYcn98NhnI6ntgYiJky7awMmzXGg9AivbgpEKkBRkORmXuuj
+	s=arc-20240116; t=1706865017; c=relaxed/simple;
+	bh=9Lw3yyGGfLfAKvtWSVgcJ3MOHZlqdZ5nHi2QTFG85R8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ek7OA4WoFSxRM2ZA5m5PqGMi1yhxUQlXgByeIVQQwK6vgsxR6bjTxdTjLdn4212N1q8+4fiZ+dk7xVBMnd06hGSQQtGQrhWzVV1O/UDIqJAlaDWmfqFrI/XyMoQjkXSrSrUX3sI58CiSZP2eE1ImRl1pPvWHtBe1i1z5Rjez55U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 99FF62800B3D2;
+	Fri,  2 Feb 2024 10:00:33 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 8C6CE2F6385; Fri,  2 Feb 2024 10:00:33 +0100 (CET)
+Date: Fri, 2 Feb 2024 10:00:33 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/2] Enable D3 support for Qualcomm bridges
+Message-ID: <20240202090033.GA9589@wunner.de>
+References: <20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b06:b0:363:7aed:f073 with SMTP id
- i6-20020a056e021b0600b003637aedf073mr95989ilv.0.1706864883646; Fri, 02 Feb
- 2024 01:08:03 -0800 (PST)
-Date: Fri, 02 Feb 2024 01:08:03 -0800
-In-Reply-To: <20240202083546.2409378-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000011d1ee0610627308@google.com>
-Subject: Re: [syzbot] [v9fs?] KASAN: slab-use-after-free Read in v9fs_stat2inode_dotl
-From: syzbot <syzbot+7a3d75905ea1a830dbe5@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello,
+On Fri, Feb 02, 2024 at 12:24:16PM +0530, Manivannan Sadhasivam wrote:
+> This series enables D3 support for PCI bridges found in Qcom SoCs. Currently,
+> PCI core will enable D3 support for PCI bridges only when the following
+> conditions are met:
+> 
+> 1. Platform is ACPI based
+> 2. Thunderbolt controller is used
+> 3. pcie_port_pm=force passed in cmdline
+> 
+> While options 1 and 2 do not apply to Qcom SoCs, option 3 will make the life
+> harder for distro maintainers. Due to this, runtime PM is also not getting
+> enabled for the bridges.
+> 
+> Ideally, D3 support should be enabled by default for the recent PCI bridges,
+> but we do not have a sane way to detect them. So this series adds a new flag
+> "bridge_d3_capable" to "struct pci_dev" which could be set by the bridge
+> drivers for capable devices. This will allow the PCI core to enable D3
+> support for the bridges during enumeration.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I think the right way to do this is to use the existing call to
+platform_pci_bridge_d3() in pci_bridge_d3_possible().
 
-Reported-and-tested-by: syzbot+7a3d75905ea1a830dbe5@syzkaller.appspotmail.com
+Please amend platform_pci_bridge_d3() to call a new of_pci_bridge_d3()
+function which determines whether D3 is supported by the platform.
 
-Tested on:
+E.g. of_pci_bridge_d3() could contain a whitelist of supported VID/DID
+tuples.  Or it could be defined as a __weak function which always
+returns false but can be overridden at link time by a function
+defined somewhere in arch/arm/, arch/arm64/ or in some driver
+whose Kconfig option is enabled in Qualcomm platforms.
 
-commit:         076d56d7 Add linux-next specific files for 20240202
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14811f1fe80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4eccd90d3ac887b2
-dashboard link: https://syzkaller.appspot.com/bug?extid=7a3d75905ea1a830dbe5
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15f20a38180000
+Adding a bit to struct pci_dev essentially duplicates the existing
+platform_pci_bridge_d3() functionality, which seems inelegant.
+It increases the size of struct pci_dev even on platforms which
+don't need it (e.g. ACPI).
 
-Note: testing is done by a robot and is best-effort only.
+Thanks,
+
+Lukas
