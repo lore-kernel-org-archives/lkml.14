@@ -1,96 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439C4C2D7;
-	Fri,  2 Feb 2024 16:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937EE1468E6;
+	Fri,  2 Feb 2024 16:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706892060; cv=none; b=pL80NkbqpEUByQ8uYE0T+TCf9kEM/HWFN9muAGDXYug3u2fcTfkfm1e0jecuBeKw5/xfcd9hR20iFUmOI4N1Y5lQW9bNwGedap6yRCBy+GwwMlEXhXlaxisy0+zcEFWvhObkDwlzfB5JRXMKZ78qXCa3k9hwMYpOqJzXbV6I13I=
+	t=1706892099; cv=none; b=Lni3FipLb79EnU6Km2k10i9MJNKyKKR0bHQ5aCbHvlLdGwUsQ/Zwvjf5w1RpAm8tZl+6qppMoEyoiAQaD5nIpbecCotT9ZFLTdekNIeFy6zHwwT8UtLEtAEYfM3rrvISS8f1ObvI1MsPPWcMIR9A00YXcTgeuBuNMDzAC0w8BJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706892060; c=relaxed/simple;
-	bh=gdl0f+i0PXgN4P/QL2Ew6vbd/GZUjGl8juXLLSYujoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fEmWAkzJltq4ZJLZG2yoO5SN9R9DznxeZtrUlpF4927csy8Kvb7jV10hQignM5UBdQWjP1rcCInnfCmk+9Sww3Ro3ltV/ryxJjXKz2pe/yVxMB4IPji/gZmZeJojrOPvzEOnct8DnLevDiczGNd0FmnhiA/z53+lg6ySM+Webc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GkktAUJJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706892099; c=relaxed/simple;
+	bh=DkFzqq6VgEAoLrB+XtJQVcQtbCAEeTHJOKfjZ5d/3h8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dvt0AY1GE1LiUD2cJaA5SxpKqeF99p9HkY+MqtoYVYt4gQY9lRgbf8qeUBRL1yPWfChVSW5k7D3ixrRT3SQNOs64SKgW27rMCu/KLCHaBs019E/1dSs7eiiUnG16zvqVjvVd/HQGfXG4Ea5MYFzh79ao0dDh8XHDlIuc9FkGIus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1TRem4d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GkktAUJJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0723C433F1;
-	Fri,  2 Feb 2024 16:40:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1TRem4d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCFAC433C7;
+	Fri,  2 Feb 2024 16:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706892059;
-	bh=gdl0f+i0PXgN4P/QL2Ew6vbd/GZUjGl8juXLLSYujoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GkktAUJJgD8/U43goOnrlxN/8BI4Grw8fY7Ivem2EH6bj4zuizMGLK3b8ViGFF4i2
-	 zemezv0z5pdfy7D38bhWWhkyt5USFZkpFHy/hhuoMLqCtT2yvWP44so97ZkeUFbgst
-	 hOvk+TDE05yXBqL571gZpqZBSHk8LUgnk1g094RVDqRIAwCl4jGflQXhEEK2kilUPG
-	 jsOaYjJwN47qkSujqqFd+Qumyo/816LYwCB+hqxxiheQF3L6wwgDL4Zu01cloxpTuS
-	 fSpYguW8Ayt+DqUYfKXTJJk7hbBdublbLK3tn2HRdLenT+JU/wxqH6IHL+w7eNEwID
-	 vhjuyLVlBBYfg==
-Date: Fri, 2 Feb 2024 16:40:54 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: wim@linux-watchdog.org, linux@roeck-us.net, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	p.zabel@pengutronix.de, geert+renesas@glider.be,
-	magnus.damm@gmail.com, biju.das.jz@bp.renesas.com,
-	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v3 8/8] dt-bindings: watchdog: renesas,wdt: Document
- RZ/G3S support
-Message-ID: <20240202-bacteria-genre-aeb373023f4b@spud>
-References: <20240202075849.3422380-1-claudiu.beznea.uj@bp.renesas.com>
- <20240202075849.3422380-9-claudiu.beznea.uj@bp.renesas.com>
+	s=k20201202; t=1706892099;
+	bh=DkFzqq6VgEAoLrB+XtJQVcQtbCAEeTHJOKfjZ5d/3h8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=L1TRem4daGdnoCi+xy4RnDOnGBX4Prm7Y8H0WvEJRsnXOIjI41rcCDcAlUI883BEr
+	 OcjV75aHY7565ua6rSSJO12O/W1DW2o1pPB6eauC9fTOLiT3VZBm4B2ST1ruiuCxJO
+	 T8pJPjsdAi4E9A+7RXXVwh/GX72sKTPNrq+PWRjh3Y127KtwL+ANwO1m1VxC0F1EUz
+	 lNkxiuwVjHeGGW8p9yGDG1Gi6lKNZu5M1QofZjW+9GxRbq4Kd5HeHan9t9j62Z48Sf
+	 pHOWVWNQXcYtXmA4drGyEHBXB308VAHtqA407CHMgHHsLHzlm/x32kQ3Rgn02Nj3sp
+	 O6RyDcitz8qJA==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ claudiu.beznea@tuxon.dev, Andrei Simion <andrei.simion@microchip.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240201161517.492162-1-andrei.simion@microchip.com>
+References: <20240201161517.492162-1-andrei.simion@microchip.com>
+Subject: Re: [PATCH v4] regulator: dt-bindings: microchip,mcp16502: convert
+ to YAML
+Message-Id: <170689209683.101360.163113279723632505.b4-ty@kernel.org>
+Date: Fri, 02 Feb 2024 16:41:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="U8/7lj7TDOE26hKX"
-Content-Disposition: inline
-In-Reply-To: <20240202075849.3422380-9-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-a684c
 
+On Thu, 01 Feb 2024 18:15:17 +0200, Andrei Simion wrote:
+> Convert devicetree binding mcp16502-regulator.txt to YAML format.
+> 
+> 
 
---U8/7lj7TDOE26hKX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Fri, Feb 02, 2024 at 09:58:49AM +0200, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->=20
-> Document the support for the watchdog IP available on RZ/G3S SoC. The
-> watchdog IP available on RZ/G3S SoC is identical to the one found on
-> RZ/G2L SoC.
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->=20
-> Changes in v3:
-> - re-arranged the tags as my b4 am/shazam placed previously the
->   Ab, Rb tags before the author's Sob
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-What's wrong with that?
-You resent the patch, so I don't think there's any chain of custody
-issues there.
+Thanks!
 
-Cheers,
-Conor.
+[1/1] regulator: dt-bindings: microchip,mcp16502: convert to YAML
+      commit: 64db3e8d7be00462ad95dd81f11cf8e3f0968d70
 
---U8/7lj7TDOE26hKX
-Content-Type: application/pgp-signature; name="signature.asc"
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
------BEGIN PGP SIGNATURE-----
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZb0bFgAKCRB4tDGHoIJi
-0g5pAQCpkJOLa7E3TMp29A7DxaBnGTGsPkm5uwCA2OaeQC4RLgD+Jj74655Uch/a
-nzQ+5VvEpBzzO/dpERfeOJ+4Urn40Qw=
-=VZJS
------END PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---U8/7lj7TDOE26hKX--
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
