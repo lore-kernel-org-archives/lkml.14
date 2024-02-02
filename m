@@ -1,95 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA7C15B1;
-	Fri,  2 Feb 2024 12:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4BD15C3;
+	Fri,  2 Feb 2024 12:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706877541; cv=none; b=gAHDxO3XTIOStdXsH0TfiGYbUp0I70buzIL0BIRVM9yAzh9GqSpfL6HtZM+FENwAYHSxMBRo59gTGvK4d9UxewIV57Nc5eSDBW7wfFs1mipwY+my+kGuL1rBlFgB15YDQ37T+fiifHWJa2vYyOo1HCDHGLrj5TM01TR8XHk0HUE=
+	t=1706877726; cv=none; b=jP7Rdm17LZlfBPd/IHTb+Fu8vJwMrwIIPFLFGVaq3GV5yrj8TRGyo2FCytxHODIYqE+ucJUC8wHJPtUPPC3r206DkvrEwOmDlfqeX5rDXlkkSuUwbk1jmL109niB3iUao05Y6hmwTvKXNY7ZcX+H2hv62Q/GiIdqWeRKurb0x14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706877541; c=relaxed/simple;
-	bh=OoPjnrPr8StiPXaPppH3fvGIRnVAs2DNEdph0pRPOO8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qx77xmE8mwhIEhwvvn7YYHW3y+FE9timPOUKQa5fQZHh+dLAxgkdDruXdQIz7inY97gYcgGEuzWC1gPw2lP9/xXujxkoFHEt7gqpvE2jMzjFMnFIryv1VJaWZ+EcruP3xKWHKXpmIw4aH0N2KKx+x5aMW2gq7jVKUokyNkx1mHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VtemBZru; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706877726; c=relaxed/simple;
+	bh=N9Gnq6soIeqbrsWD9myMLZqlJRlR1CNafdpXtCuLg9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VVlpYc/Np8H5RVPxzeaLOFpHXDZFLRmUKXBHW6ySY/CTAmN8o9KJcvDS0Ljz75alvXcxiARsPu4M3+2wWrVnMDfnf1Hs6/SEpRyis2nlfKhAAt5vfRWcl8TKLzRkLNQJGWi/EOUtXqWcqG2WVk2YHLo70SJWnvCoKBT4qrDUtHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMWZWDzU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VtemBZru"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706877539; x=1738413539;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OoPjnrPr8StiPXaPppH3fvGIRnVAs2DNEdph0pRPOO8=;
-  b=VtemBZruukhEu1Jgkk5hOGGpB6U8CdgH0XIg3VFI5PYlwEs+A+H/R8xd
-   ah9AgSb62z9zCrL85f/0ZvzFfTKTmKK/ZdU2mlUSXoqp1OBGI/hCzBY0O
-   WbJXzN9H2c7z+Ij+ypTUlDpz0Kq7nhLpQNgoovWJLusng7POFlveFEm3u
-   JK/DcOb0z5LI4E3FGgFUyi37l7J/YcZT+mqQGPs7snws7GdhBKPgvMW8k
-   toxK/ncNcrczkTgdW5QEmU79voh2edpZ2Tuglp2+usuQDmb8GPk2vxcLv
-   OJk/YP8B1mNb0QMVsM9GRXeZUmfEUOVbh/2yWR/lVHb2jkqbyZv8rYEzU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="64235"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="64235"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 04:38:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="37500256"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 04:38:55 -0800
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 94F661205D0;
-	Fri,  2 Feb 2024 08:40:17 +0200 (EET)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.96)
-	(envelope-from <sakari.ailus@linux.intel.com>)
-	id 1rVnDl-000D9R-1r;
-	Fri, 02 Feb 2024 08:40:17 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org
-Subject: [PATCH 1/1] media: v4l: Fix link frequency helper's kernel-doc
-Date: Fri,  2 Feb 2024 08:40:07 +0200
-Message-Id: <20240202064007.50545-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240202145412.336db5b2@canb.auug.org.au>
-References: <20240202145412.336db5b2@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMWZWDzU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4454FC433C7;
+	Fri,  2 Feb 2024 12:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706877726;
+	bh=N9Gnq6soIeqbrsWD9myMLZqlJRlR1CNafdpXtCuLg9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VMWZWDzUwCZ7FSItV20S6xS2m7NmjioiaHchXA6pqFULzdRvCXAtMAbrlgj1LtajR
+	 kOXRSZ24bnXImJbZC+UteGA3rdkWiN+2KGqN5GojwXNhpUWGLHg9Egqj2+/nwpIzUU
+	 7wwiKa7jJi2B2oB8qL5AViM7XUbbOGAWV3q9nmdM6a/XP+OI+kkNT4jMe2TBQY/DE6
+	 r+y//tsfhuCltXal6BpUSUZuQAI8WlkeiEg/JizlalfvPz4E06LUKaMcKZq93SLbIi
+	 moh5SsYaRolKTG0cBE6V7w+62MXzsrbSnLrMJCLZJeXHR9az07By6fvZKbyPef7Jre
+	 uKzSPkxVDlWRQ==
+Date: Fri, 2 Feb 2024 12:42:01 +0000
+From: Lee Jones <lee@kernel.org>
+To: "xingtong.wu" <xingtong_wu@163.com>
+Cc: hdegoede@redhat.com, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org, pavel@ucw.cz, xingtong.wu@siemens.com,
+	tobias.schaffner@siemens.com, gerd.haeussler.ext@siemens.com,
+	henning@hennsch.de
+Subject: Re: [PATCH 2/3] leds: simatic-ipc-leds-gpio: add support for module
+ BX-59A
+Message-ID: <20240202124201.GC1379817@google.com>
+References: <20230731071424.4663-1-xingtong_wu@163.com>
+ <20230731071833.4725-1-xingtong_wu@163.com>
+ <58d93fe1.336d.18d67e31aaa.Coremail.xingtong_wu@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <58d93fe1.336d.18d67e31aaa.Coremail.xingtong_wu@163.com>
 
-Fix kernel-doc indentation for v4l2_link_freq_to_bitmap().
+On Fri, 02 Feb 2024, xingtong.wu wrote:
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: a68e88e2cf9e ("media: v4l: Add a helper for setting up link-frequencies control")
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-Thanks for reporting this, Stephen.
+> At 2023-07-31 15:18:33, xingtong_wu@163.com wrote:
+> >From: "xingtong.wu" <xingtong.wu@siemens.com>
+> >
+> >This is used for the Siemens Simatic IPC BX-59A, which has its LEDs
+> >connected to GPIOs provided by the Nuvoton NCT6126D
+> >
+> >Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+> >---
+> > .../leds/simple/simatic-ipc-leds-gpio-core.c  |  1 +
+> > .../simple/simatic-ipc-leds-gpio-f7188x.c     | 42 ++++++++++++++++---
+> > 2 files changed, 37 insertions(+), 6 deletions(-)
+> >
+> >diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
+> >index c552ea73ed9d..10dca208d8cc 100644
+> >--- a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
+> >+++ b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
+> >@@ -58,6 +58,7 @@ int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
+> > 	case SIMATIC_IPC_DEVICE_127E:
+> > 	case SIMATIC_IPC_DEVICE_227G:
+> > 	case SIMATIC_IPC_DEVICE_BX_21A:
+> >+	case SIMATIC_IPC_DEVICE_BX_59A:
+> > 		break;
+> > 	default:
+> > 		return -ENODEV;
+> >diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
+> >index 583a6b6c7c22..a5b544b20857 100644
+> >--- a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
+> >+++ b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
+> >@@ -17,7 +17,10 @@
+> > 
+> > #include "simatic-ipc-leds-gpio.h"
+> > 
+> >-static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
+> >+static struct gpiod_lookup_table *led_lookup_table;
+> >+static struct gpiod_lookup_table *led_lookup_table_extra;
+> >+
+> >+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
+> > 	.dev_id = "leds-gpio",
+> > 	.table = {
+> > 		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
+> >@@ -30,7 +33,7 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
+> > 	},
+> > };
+> > 
+> >-static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
+> >+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra_227g = {
+> > 	.dev_id = NULL, /* Filled during initialization */
+> > 	.table = {
+> > 		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
+> >@@ -39,16 +42,43 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
+> > 	},
+> > };
+> > 
+> >+static struct gpiod_lookup_table simatic_ipc_led_gpio_table_bx_59a = {
+> >+	.dev_id = "leds-gpio",
+> >+	.table = {
+> >+		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
+> >+		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 1, GPIO_ACTIVE_LOW),
+> >+		GPIO_LOOKUP_IDX("gpio-f7188x-5", 3, NULL, 2, GPIO_ACTIVE_LOW),
+> >+		GPIO_LOOKUP_IDX("gpio-f7188x-5", 2, NULL, 3, GPIO_ACTIVE_LOW),
+> >+		GPIO_LOOKUP_IDX("gpio-f7188x-7", 7, NULL, 4, GPIO_ACTIVE_LOW),
+> >+		GPIO_LOOKUP_IDX("gpio-f7188x-7", 4, NULL, 5, GPIO_ACTIVE_LOW),
+> >+		{} /* Terminating entry */
+> >+	}
+> >+};
+> >+
+> > static int simatic_ipc_leds_gpio_f7188x_probe(struct platform_device *pdev)
+> > {
+> >-	return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_table,
+> >-					   &simatic_ipc_led_gpio_table_extra);
+> >+	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
+> >+
+> >+	switch (plat->devmode) {
+> >+	case SIMATIC_IPC_DEVICE_227G:
+> >+		led_lookup_table = &simatic_ipc_led_gpio_table_227g;
+> >+		led_lookup_table_extra = &simatic_ipc_led_gpio_table_extra_227g;
+> >+		break;
+> >+	case SIMATIC_IPC_DEVICE_BX_59A:
+> >+		led_lookup_table = &simatic_ipc_led_gpio_table_bx_59a;
+> >+		break;
+> >+	default:
+> >+		return -ENODEV;
+> >+	}
+> >+
+> >+	return simatic_ipc_leds_gpio_probe(pdev, led_lookup_table,
+> >+					   led_lookup_table_extra);
+> > }
+> > 
+> > static int simatic_ipc_leds_gpio_f7188x_remove(struct platform_device *pdev)
+> > {
+> >-	return simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
+> >-					    &simatic_ipc_led_gpio_table_extra);
+> >+	return simatic_ipc_leds_gpio_remove(pdev, led_lookup_table,
+> >+					    led_lookup_table_extra);
+> > }
+> > 
+> > static struct platform_driver simatic_ipc_led_gpio_driver = {
+> >-- 
+> >2.25.1
+> 
+> Hi
+> 
+> After engaging in a thorough discussion, it appears that we have
+> reached a consensus to merge this patch.
 
- include/media/v4l2-common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have no idea what you're referring to here.
 
-diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
-index cd2163f24f8a..602738f7741e 100644
---- a/include/media/v4l2-common.h
-+++ b/include/media/v4l2-common.h
-@@ -563,7 +563,7 @@ u32 v4l2_fraction_to_interval(u32 numerator, u32 denominator);
-  * Return values:
-  *	0: Success
-  *	-ENOENT: No match found between driver-supported link frequencies and
-- *		 those available in firmware.
-+ *	those available in firmware.
-  *	-ENODATA: No link frequencies were specified in firmware.
-  */
- int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+> Considering the considerable
+> duration that has passed, I am sending this email as a gentle reminder,
+> in case there is a possibility that it may have slipped your mind.
+
+Please resubmit all unmerged patches as a [RESEND].
+
 -- 
-2.39.2
-
+Lee Jones [李琼斯]
