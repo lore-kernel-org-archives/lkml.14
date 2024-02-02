@@ -1,134 +1,128 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5470B7CF00
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 09:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6ED77F26
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 09:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706867810; cv=none; b=JPRx3ZBIGvHLEGevd9VPVoS6+pgQGb8JFfoFv5C/tXgWbVBA9bzs3AfoiE7UOOys2cBvb4DhR2SiA6FVF1yxMOa3eSI9mm7ypEMpqxSugiJ5ci9WrIM6CGkAr9RuzFrs+8RAeM3x1NTzw7RJ1i0hekSUOrw7S5R6FnzFAQA9W3c=
+	t=1706867829; cv=none; b=na7YLTEGBfNyMrfW4Po5aVLP3pr0zgP1GZsD1T5QDCXOkW0krKxuUGj1eTYj4CS+fdSuEZ5dX2HjCpOpsE5X47umUReG20qkapar7HB31LpgOaHzOYdC54vl6Trbs5RajvMU8tOVQlXexI2mC+OB+5+W8/k3s6kqxWw0f6zAMbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706867810; c=relaxed/simple;
-	bh=PUyaVOGSZrND1vU/Y/HUwXG66UDPip9IiA9OmTvHwRg=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=D/lN0i5Iui4sqLEyW8/rGs/plYiVlWhjxjPvV+F97fZ4uWMuHRkN7V8UDSOoVl4cd3/1fbgow4GxdZKp6coVCnD5MN1EqcsRvSwwq/475QBH3TEXRX1p0mKagzku8/Xn/TYxhogHNeFeYaZnXs6PwgsJW9IUaAeyNcdpIU3lVIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lqqk6dyP; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com
+	s=arc-20240116; t=1706867829; c=relaxed/simple;
+	bh=bjEXqr7juqAo7r0UWVj0k7PItANAjVW+zMO2xDYVoUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I5hrlcvuOPe20NCgUazN8cIlpLMbIo4wKkZopNH3qRGPgTDe8j+rV9H749mccj3mf5O3/03RjA1aTTvpYYsuBJN13cRjxYLKNTjcA4+mSOarNbDRNER24xqSkTuAo8PBiGHtDfXZ1qbVSBrpr4JFx+VYDWjnyQOcVHC5nx7IJq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FaIptal0; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lqqk6dyP"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6041e5b4367so26879837b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 01:56:49 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FaIptal0"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e12f8506ccso1046036a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 01:57:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706867808; x=1707472608; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ba2yXh5DewPcQ6DrcZcbJKuvXFjQcRv+6+4rV8JAEgE=;
-        b=lqqk6dyPh6MBo7rPnlvLGhhf4J124KWEJUkmhXShy8UGFWh7t/0oaSiJRNGimqRpp0
-         95+tMzms/m6mSS+qpRZ61474vBIuoeedDsqOHvopA6KF+vmzSMBINTFJqhbqMTKNVqGj
-         85hgTI7tMukc4vHfQGJLgJvvAqWLQOT5pAnVevm+7r+KlOT6W4fSNRxEwZ41LvlCmaWv
-         SLGZgOkDB0Ll47r/6Qulc7DHKSqz5HIjxGAIebTHYCtruDXcQ5xKFynn6l1jL7B1yro6
-         IejLngtRw/2nmLD6TPzVSkUSCU3kp4nt8YKReeE2JbSC13W7GI+IiMww/1nqt6vbzL/b
-         U7rw==
+        d=chromium.org; s=google; t=1706867827; x=1707472627; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Yz9MZHC3+Z3f/8BosEm+IOYEK4vP+FaJ0leFZuxaRw=;
+        b=FaIptal05pmHRBxIAtBIGuTAED3nNoIVZxpk7vKZ1k499kytlB/fgHgDL4uqsC15KL
+         s8dnjpvPlNkldhTkGuhtkcqRNWmjsdxoqfN6WzHa1s/yaa0h1A2d1slMVpmDfc6lo9Wk
+         5eav+ZP5vOCVfN1hsdamFqCdBLXxP7h5dZ+7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706867808; x=1707472608;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ba2yXh5DewPcQ6DrcZcbJKuvXFjQcRv+6+4rV8JAEgE=;
-        b=BCWkoTWrFuut/1VmLpw/SPhYDbQE/MQPr6JP93juV9wUjk0O4a2k//1HDLFbxjchdk
-         QQaffJSrzJeGYvR1ZrOpSf4FfepSNK7ZLQjiejOufinNdf3WOs8TMXV5VXfwZi1p1DDn
-         8ABrZi4bGJ4WZN5fdDjrcCIMl69Yd1Ni61+aV6XinX6FiQyvKoLiskah0wmsUjUrzftd
-         hVwjLOBSJQMQf29MHCiyzmm5pHBeOoli9CZnjHS0DLLweOAEBLCpFnl6s3/egyZGNUIB
-         AlEUPPHjTT6AYzr3rwZYsUPp3I+4dLqDcHPeiXWldAvNe3aopJ4sX36djbv4ChDAcUyZ
-         S7GA==
-X-Gm-Message-State: AOJu0YynJy/1MQTVIBBNeyFuxmtu5ijQkhqRRfSIwQNMHFA1SGy52k41
-	o4qrFFeoJZ6GdlvqGyS0GKVlgoQFgDD1kzlrpSTs2jYD8tVq/qxheIkYNW0Hdge09FXhFh4+lbi
-	MG3/MSAOlcEEEmA==
-X-Google-Smtp-Source: AGHT+IFD2LR07FZCDULJxL4IMyHTQCjMDcdj9zpu+KAQZw9+WZqlAZrYDRbbn2uBw8VwnOYfyKVwwrdqky2AYM4=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:6f0:da10:9cb3:5b3])
- (user=saravanak job=sendgmr) by 2002:a81:79cd:0:b0:5fb:7e5b:b877 with SMTP id
- u196-20020a8179cd000000b005fb7e5bb877mr1223600ywc.7.1706867808385; Fri, 02
- Feb 2024 01:56:48 -0800 (PST)
-Date: Fri,  2 Feb 2024 01:56:35 -0800
-In-Reply-To: <20240202095636.868578-1-saravanak@google.com>
-Message-Id: <20240202095636.868578-4-saravanak@google.com>
+        d=1e100.net; s=20230601; t=1706867827; x=1707472627;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3Yz9MZHC3+Z3f/8BosEm+IOYEK4vP+FaJ0leFZuxaRw=;
+        b=htpRvtZL49A5AzzUoHH/iLYY0nnT6fHyH1T1RFqBeOZmCWUPntPF9OZm4GG0EFL1e3
+         1q7O+xadqicIi25pwA0gqXOAFLUj2E2iSdam8SAE20Q6TzaVTaJTTDJYQVeXuAW8CSdL
+         T/Fu7CijUm+35+9Xhket8mHTWGZuoTv307m+rCxT3I6O/aOqKlzPEuDxbnFBaz9DsvOl
+         TQKbBHIm8z6d6h1/Y9bQ/iJGiuKSiVVSCvBHB5A4VBKmou11CaryQzFPS2FxGJfgp324
+         Bu+z5W7fsUOE+HEdKCxbMlDJDMCT97WJh32Bn65dn3TBVCNhLyLVKo4gFHfMYnod3d44
+         jIFw==
+X-Gm-Message-State: AOJu0Yyfcl2390cMfXth+5L1XP+tCOGbTo0YM5vrR1vXlIMHmeIOMcRm
+	MYckbq6iyvajOKUGtRPlKW+otAZrP/tRX0IAPhK/WLhQJg+Gf5zHbTM1lAMdXA==
+X-Google-Smtp-Source: AGHT+IGhZTIVf910PLrWcx+f8/j22fPtLX1oTamO9hshyDyLvopL6psh6+ke57hX8ua5JlyhlOlSxA==
+X-Received: by 2002:a05:6830:2b26:b0:6dd:ecfc:622e with SMTP id l38-20020a0568302b2600b006ddecfc622emr1812794otv.24.1706867827211;
+        Fri, 02 Feb 2024 01:57:07 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXIfVH9IQWGEtrbj/s4rYjobOiW696NXE69dTTUGP712R24JpVzfOQVeXYuf5lelldK9rd42bHbjyJMmQIDBBeFPP/tDqXckQksHFkTuw27epfiTJntaFIuwlUa6Bbstq604qh0ffTCIxiIDYmSbUK6bvThsIsjLAhgyVXJIYMzujwr4RqEZIFrzcoofu3yuG3wrV33Jw==
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h13-20020a63c00d000000b005ceac534e47sm1199559pgg.51.2024.02.02.01.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 01:57:06 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Marco Elver <elver@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] MAINTAINERS: Add UBSAN section
+Date: Fri,  2 Feb 2024 01:57:03 -0800
+Message-Id: <20240202095700.it.233-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240202095636.868578-1-saravanak@google.com>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Subject: [PATCH v2 3/3] driver core: fw_devlink: Improve logs for cycle detection
-From: Saravana Kannan <saravanak@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>
-Cc: Xu Yang <xu.yang_2@nxp.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1379; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=bjEXqr7juqAo7r0UWVj0k7PItANAjVW+zMO2xDYVoUM=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlvLxv2dmYU9Pilnwk3PcFpt5HtFQBMIgPhqNTg
+ giwSkorDYyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZby8bwAKCRCJcvTf3G3A
+ JirNEACDzlT04LRgZbXDSYVEouEFVJC6QZRzfIXS+zsybZ72khGFcfiBX/b0DYQ0PUykkAOreoW
+ mPMzozdlXMJqikO9VtWY4761S/s8ShNtx/yPqNSpGX0lz88lgtAHtz/mGtpOQa7wdS/ZqWoloBK
+ FZmrC0GbLaEN38raOEOetZnCa9GWqaKux4dEwfu5+X7jdmuNbRg3eEi5qDKzBuT1rMZQ6xWGRRt
+ r2Kz3PKxV+vx+BwgFnwNhemE2T1SHSj16X7iekq/B8/YDhSJNeuJ+EF8A87xHEwA74vabaPiK3u
+ AhspdHA+GAjL/Ud5pUqhqoqOzdr2BJGFm7NB2HaJ5olvd40HtMC5HxaJje26/UwtMPC0/gBWGh1
+ 0RIKnmE8f0TKFhN+D5V/T0aiSEYRYvc9cdHQr39dFkbXdR2eaEilteMuQ9PseJdyWh/leBRHAgB
+ DtBa4065JEGKtzPYJXMCLscPNHWp3Jvk19m9VrYWK3t1tQbylbejEhcR7uzXUEkfJWyoJWA6ZAc
+ /BH8smkx5pShfqr5Yy0Ff92laPTlWJ2g//XEE/qhRglgFHaznKqM4UGRwkqIIZC3oiG/Utc8zpT
+ VGd2xewumPpTjqGO3jbxc7BzkDo9qx7knsaEOJPBZoRnD+X2ZXGZbsIwCRWMYhaULEOur60gRRR
+ jdpWN6U MNHb2gJg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-The links in a cycle are not all logged in a consistent manner or not
-logged at all. Make them consistent by adding a "cycle:" string and log all
-the link in the cycles (even the child ==> parent dependency) so that it's
-easier to debug cycle detection code. Also, mark the start and end of a
-cycle so it's easy to tell when multiple cycles are logged back to back.
+The kernel hardening efforts have continued to depend more and more
+heavily on UBSAN, so make an actual MAINTAINERS entry for it.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Acked-by: Andrey Konovalov <andreyknvl@gmail.com>
+Acked-by: Marco Elver <elver@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/base/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+v2:
+ - add kasan-dev, drop Andrey Ryabinin
+v1: https://lore.kernel.org/all/20240130234634.work.003-kees@kernel.org/
+---
+ MAINTAINERS | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index e3d666461835..9828da9b933c 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -125,7 +125,7 @@ static void __fwnode_link_del(struct fwnode_link *link)
-  */
- static void __fwnode_link_cycle(struct fwnode_link *link)
- {
--	pr_debug("%pfwf: Relaxing link with %pfwf\n",
-+	pr_debug("%pfwf: cycle: depends on %pfwf\n",
- 		 link->consumer, link->supplier);
- 	link->flags |= FWLINK_FLAG_CYCLE;
- }
-@@ -1945,6 +1945,7 @@ static bool __fw_devlink_relax_cycles(struct device *con,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..990af78b410d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22471,6 +22471,22 @@ F:	Documentation/block/ublk.rst
+ F:	drivers/block/ublk_drv.c
+ F:	include/uapi/linux/ublk_cmd.h
  
- 	/* Termination condition. */
- 	if (sup_dev == con) {
-+		pr_debug("----- cycle: start -----\n");
- 		ret = true;
- 		goto out;
- 	}
-@@ -1976,8 +1977,11 @@ static bool __fw_devlink_relax_cycles(struct device *con,
- 	else
- 		par_dev = fwnode_get_next_parent_dev(sup_handle);
- 
--	if (par_dev && __fw_devlink_relax_cycles(con, par_dev->fwnode))
-+	if (par_dev && __fw_devlink_relax_cycles(con, par_dev->fwnode)) {
-+		pr_debug("%pfwf: cycle: child of %pfwf\n", sup_handle,
-+			 par_dev->fwnode);
- 		ret = true;
-+	}
- 
- 	if (!sup_dev)
- 		goto out;
-@@ -1993,6 +1997,8 @@ static bool __fw_devlink_relax_cycles(struct device *con,
- 
- 		if (__fw_devlink_relax_cycles(con,
- 					      dev_link->supplier->fwnode)) {
-+			pr_debug("%pfwf: cycle: depends on %pfwf\n", sup_handle,
-+				 dev_link->supplier->fwnode);
- 			fw_devlink_relax_link(dev_link);
- 			dev_link->flags |= DL_FLAG_CYCLE;
- 			ret = true;
-@@ -2072,6 +2078,7 @@ static int fw_devlink_create_devlink(struct device *con,
- 		if (__fw_devlink_relax_cycles(con, sup_handle)) {
- 			__fwnode_link_cycle(link);
- 			flags = fw_devlink_get_flags(link->flags);
-+			pr_debug("----- cycle: end -----\n");
- 			dev_info(con, "Fixed dependency cycle(s) with %pfwf\n",
- 				 sup_handle);
- 		}
++UBSAN
++M:	Kees Cook <keescook@chromium.org>
++R:	Marco Elver <elver@google.com>
++R:	Andrey Konovalov <andreyknvl@gmail.com>
++L:	kasan-dev@googlegroups.com
++L:	linux-hardening@vger.kernel.org
++S:	Supported
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
++F:	Documentation/dev-tools/ubsan.rst
++F:	include/linux/ubsan.h
++F:	lib/Kconfig.ubsan
++F:	lib/test_ubsan.c
++F:	lib/ubsan.c
++F:	scripts/Makefile.ubsan
++K:	\bARCH_HAS_UBSAN\b
++
+ UCLINUX (M68KNOMMU AND COLDFIRE)
+ M:	Greg Ungerer <gerg@linux-m68k.org>
+ L:	linux-m68k@lists.linux-m68k.org
 -- 
-2.43.0.594.gd9cf4e227d-goog
+2.34.1
 
