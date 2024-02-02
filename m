@@ -1,84 +1,110 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8C17C64;
-	Fri,  2 Feb 2024 07:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7610D1775E;
+	Fri,  2 Feb 2024 07:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706860430; cv=none; b=T6NiBtqTbNo67yEsJQPLqKQlVvjBFcOSQnYAiVjY1SY9hf7VU8zV3eISNF5b+peJO21XT8B6Y2qeFWJMQBNKrMVr0tPRFXNA2mhfmvYWOKYQsQeolhtdZT/7hUVnFQ7+KKQGd9DL6DiuYq8GdRyO3hdkDHdb1tarnOYI2RnlUXA=
+	t=1706860455; cv=none; b=jGodFYUGIWcsQYzS7B5wmwQQ8HBCtQ3qlPmEeFr95rwnxXq3hYAZtXuIFEEu35mOv5+q0YDSH2338Eq0T8A9/6PjMb7L0tDyxee6KsXBF1y9+TGWZdEbX6Pnr0WgZoa65XvNAmf2Xq3McShcTig2gi5tQKypcypZ+mOcFuM4iEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706860430; c=relaxed/simple;
-	bh=udxviX13manDkpnOlukyrX/hjFf+xqpC/T6OYP3DU6A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y5NlCiu5DyJAJmPdw1RG0Ee1q12WLZ4KhP7Eie+oXotKd+K6hh9n4nscB9Mv2Yu6Y4kobQ577lbwaHkPJ8mTsPR+1/ae0fJ1Janydz0nULE5lUQcG5eWZSSQUmGlTIZd8LYbKtuFzaQWa04hTOgDqG3SQgr1BDl9G7NfFwlmZY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TR7Fh6QPvz1FKDX;
-	Fri,  2 Feb 2024 15:49:12 +0800 (CST)
-Received: from dggpemm500008.china.huawei.com (unknown [7.185.36.136])
-	by mail.maildlp.com (Postfix) with ESMTPS id 056571400CC;
-	Fri,  2 Feb 2024 15:53:44 +0800 (CST)
-Received: from localhost (10.174.242.157) by dggpemm500008.china.huawei.com
- (7.185.36.136) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 2 Feb
- 2024 15:53:43 +0800
-From: Yunjian Wang <wangyunjian@huawei.com>
-To: <willemdebruijn.kernel@gmail.com>, <jasowang@redhat.com>,
-	<kuba@kernel.org>, <davem@davemloft.net>, <jiri@resnulli.us>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<xudingke@huawei.com>, Yunjian Wang <wangyunjian@huawei.com>
-Subject: [PATCH net-next v2] tun: Implement ethtool's get_channels() callback
-Date: Fri, 2 Feb 2024 15:53:20 +0800
-Message-ID: <1706860400-61484-1-git-send-email-wangyunjian@huawei.com>
-X-Mailer: git-send-email 1.9.5.msysgit.1
+	s=arc-20240116; t=1706860455; c=relaxed/simple;
+	bh=w4xTyhUs6hnT2Oqe8oeFy8xVNAsxkW8LLq4nQWxQ6tE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tl6A4/r5PI14D2nufdY7xrVQTQKvxAr/ggQ+diBzvbEuq70IhpPtJcAxiH4OFhYs4Zz+94pltDWnUYmMV69bqPyNEPimHJU1/pXLOjTVZhAwnCeDKA8L4SCJWkLwpreFUi7z/Twi4CPjK9l/3+yJVe9xNajau5co1/sYcNZ3c5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52DB6C433F1;
+	Fri,  2 Feb 2024 07:54:10 +0000 (UTC)
+Date: Fri, 2 Feb 2024 13:24:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kory Maincent <kory.maincent@bootlin.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Cai Huoqing <cai.huoqing@linux.dev>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: Re: [PATCH v7 0/6] Fix support of dw-edma HDMA NATIVE IP in remote
+ setup
+Message-ID: <20240202075406.GB2961@thinkpad>
+References: <20240129-b4-feature_hdma_mainline-v7-0-8e8c1acb7a46@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500008.china.huawei.com (7.185.36.136)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240129-b4-feature_hdma_mainline-v7-0-8e8c1acb7a46@bootlin.com>
 
-Implement the tun .get_channels functionality. This feature is necessary
-for some tools, such as libxdp, which need to retrieve the queue count.
+On Mon, Jan 29, 2024 at 05:25:56PM +0100, Kory Maincent wrote:
+> This patch series fix the support of dw-edma HDMA NATIVE IP.
+> I can only test it in remote HDMA IP setup with single dma transfer, but
+> with these fixes it works properly.
+> 
+> Few fixes has also been added for eDMA version. Similarly to HDMA I have
+> tested only eDMA in remote setup.
+> 
 
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
----
-  v2: add conditional on IFF_MULTI_QUEUE
----
- drivers/net/tun.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Vinod, could you please merge this series for v6.9? This already missed previous
+release.
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index afa5497f7c35..0b6d25ede7fc 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -3638,12 +3638,22 @@ static int tun_set_coalesce(struct net_device *dev,
- 	return 0;
- }
- 
-+static void tun_get_channels(struct net_device *dev,
-+			     struct ethtool_channels *channels)
-+{
-+	struct tun_struct *tun = netdev_priv(dev);
-+
-+	channels->combined_count = tun->numqueues;
-+	channels->max_combined = tun->flags & IFF_MULTI_QUEUE ? MAX_TAP_QUEUES : 1;
-+}
-+
- static const struct ethtool_ops tun_ethtool_ops = {
- 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_MAX_FRAMES,
- 	.get_drvinfo	= tun_get_drvinfo,
- 	.get_msglevel	= tun_get_msglevel,
- 	.set_msglevel	= tun_set_msglevel,
- 	.get_link	= ethtool_op_get_link,
-+	.get_channels   = tun_get_channels,
- 	.get_ts_info	= ethtool_op_get_ts_info,
- 	.get_coalesce   = tun_get_coalesce,
- 	.set_coalesce   = tun_set_coalesce,
+- Mani
+
+> Changes in v2:
+> - Update comments and fix typos.
+> - Removed patches that tackle hypothetical bug and then were not pertinent.
+> - Add the similar HDMA race condition in remote setup fix to eDMA IP driver.
+> 
+> Changes in v3:
+> - Fix comment style.
+> - Split a patch in two to differ bug fix and simple harmless typo.
+> 
+> Changes in v4:
+> - Update patch git commit message.
+> - Link to v3: https://lore.kernel.org/r/20231011-b4-feature_hdma_mainline-v3-0-24ee0c979c6f@bootlin.com
+> 
+> Changes in v5:
+> - No change
+> - Rebase to mainline 6.7-rc1
+> - Link to v4: https://lore.kernel.org/r/20231011-b4-feature_hdma_mainline-v4-0-43d417b93138@bootlin.com
+> 
+> Changes in v6:
+> - Fix several commit messages and comments.
+> - Link to v5: https://lore.kernel.org/r/20231114-b4-feature_hdma_mainline-v5-0-7bc86d83c6f7@bootlin.com
+> 
+> Changes in v7:
+> - No change, ready for merge
+> - Rebase to mainline 6.8-rc2
+> - Link to v6: https://lore.kernel.org/r/20231117-b4-feature_hdma_mainline-v6-0-ebf7aa0e40d7@bootlin.com
+> 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+> Kory Maincent (6):
+>       dmaengine: dw-edma: Fix the ch_count hdma callback
+>       dmaengine: dw-edma: Fix wrong interrupt bit set for HDMA
+>       dmaengine: dw-edma: HDMA_V0_REMOTEL_STOP_INT_EN typo fix
+>       dmaengine: dw-edma: Add HDMA remote interrupt configuration
+>       dmaengine: dw-edma: HDMA: Add sync read before starting the DMA transfer in remote setup
+>       dmaengine: dw-edma: eDMA: Add sync read before starting the DMA transfer in remote setup
+> 
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 17 +++++++++++++++
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 39 +++++++++++++++++++++++------------
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h |  2 +-
+>  3 files changed, 44 insertions(+), 14 deletions(-)
+> ---
+> base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+> change-id: 20231011-b4-feature_hdma_mainline-b6c57f8e3b5d
+> 
+> Best regards,
+> -- 
+> Köry Maincent, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
+> 
+
 -- 
-2.33.0
-
+மணிவண்ணன் சதாசிவம்
