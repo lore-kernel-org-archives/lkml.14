@@ -1,122 +1,124 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F96E1FCA
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 13:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D376146551;
+	Fri,  2 Feb 2024 13:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706881622; cv=none; b=Fg/s96+vME491sUt0RL/jgMLqf+BjSr0xsHBrvUL8aCGrBelIPuxfXV8qXZWkdlytwvXTVfma0EUWEG1jTISP3oDUPHWZKRh3wCPU/Fo4fE6okKQL806hADUTd41xwPUWMiQqHduemfwg0Ezkc2uGJjGPCM/zceNjHmkjteyOP0=
+	t=1706881740; cv=none; b=nCje9GNEqeruUbbFh4lmU6s+a7J/k1bYbzoaVG+h1GxHFcgYAQgUZRdjGIok/rHha/o/kmGV/+1yCAg98u5JXWqgOvX6af6V6C7R8B269QqJghF6WU0Zp9mUvuPGOwI3doJvsvE21HSF4xSFxrvFS5iBdhBJYnY4NO+fKOgqEAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706881622; c=relaxed/simple;
-	bh=o1y5HKtPqsFZrIHkvUvd/hYmvD5sU0rdmW57LkYYBH8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U+L20cr84VOvpPCSEkrFF7J1pKkpsR7qylyD+nFiQiyajTObBCpJtXAlUjU71Btw3+t/nd5G2CoH6YNYMBBpHYI+ZzCj3sNVf7PqM2JsRsn2OUf+hjBi/XFRrsdSDvLhKTyMQTzR1zsEVy+kcwbQAV9CLovif3VTb8YhDwS7Uto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VSQUCLkO; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706881740; c=relaxed/simple;
+	bh=5oAxVFemPM8II0r20k3cx2T21LfwQLuEcMKNm4dSXFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0JgRo1Y8v9tVUeVEUH1oO0r8uTXkVpWQDAeyZDSQHwZUMWkQSEPRHE3Y3XrjM1ukT1Llg/ausICyJa5A5klSQ0smFu9eb0ABgAB3bBz9bOSd+uTsZ0UXQkHrOD7yhg3RZd7VmEkUMJW3J2hwodHwwpZXaVNtwx231GeZaEaUNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y7aPhw6y; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSQUCLkO"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dc6d8bd612dso1774416276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 05:47:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706881619; x=1707486419; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o1y5HKtPqsFZrIHkvUvd/hYmvD5sU0rdmW57LkYYBH8=;
-        b=VSQUCLkOIeBVFs6vhAbK4VoUgp1I9yVZnPMV/uvgePmniq9P/Tbf3aPnayB4hP6B+r
-         D9GhA0YZ5w6QfY39aZltJeL5e7zcGMuPCgRku4tB7oANIgFDYVOlwwV7nPR2bjoZYw2P
-         X/DGReYQoxAWGtYEnN9U/3ML7bG3zQJ9ZLWAyr1toYyETOokjoHN7Apl2nYMcT+VIUOf
-         bPdaRVDPmTL6dgFjp3rn4hY499FlB27h+yD8T1SGlSuOC7XbhxZcbiabbwHFxmolXs+F
-         kol/FCOWcZO6GUTHjjnO8A3mhEYw58SfK7xrGv7xaHtPSfNB6ENn5q9Ax5UBA8VXY6tO
-         MAsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706881619; x=1707486419;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o1y5HKtPqsFZrIHkvUvd/hYmvD5sU0rdmW57LkYYBH8=;
-        b=E+g1s4/SRlftavyfexXRMGUEe50HIoQ3M04Akd4UbSqcctqLhd1R24MXhHCHCk8C4L
-         wDZGg6i153J6eTGQKk5TkfyBWLY9uDydGmC1qkxBBW7dlZYL8aF/Z/R9b2YzYVhTZuud
-         Zt2mb0rJhyH1cGlH4HotylIR8sIOG+lY57ikl92hvm30XOFVU+e03Db/Aa2Eu6djijpp
-         fUmYN0FPY7rqcZnwFB1fyB0XJfSZPAwrq6i3/McjDcpsKGIF6pK+JPlp9NrsCXIhVTlJ
-         tiNMOPvZREtAAzJ7UdTbti4RsRUpfXN6CrFcSooYKRRXNvgHPR5YfGCefJ8weVIX5a4H
-         x8iw==
-X-Gm-Message-State: AOJu0YwSDJmmAyO/HMTB+dfMeF0YGemp6YG+LcaxStKxqJEckKPqloKH
-	J2GZADJZhb54OlcigZjripAwg+6uXV+Qsad3jPuzOPDLQRDHmvUhVhKxsnhaBZKF4NGgFnxrHv6
-	G0yybSQuzI1Qa8JMdMEFIJQ6ntIM=
-X-Google-Smtp-Source: AGHT+IEIAljnNwy7iRLrPwGbFDdOqoBDMZL/eLzmiiVSynaXLx28wc8lVJ5yULdyIYXoXsb93ZwHcFyEamusv2aJUxA=
-X-Received: by 2002:a25:8701:0:b0:dc6:a128:55a6 with SMTP id
- a1-20020a258701000000b00dc6a12855a6mr2251493ybl.46.1706881619461; Fri, 02 Feb
- 2024 05:46:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y7aPhw6y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706881738; x=1738417738;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5oAxVFemPM8II0r20k3cx2T21LfwQLuEcMKNm4dSXFg=;
+  b=Y7aPhw6yNCEGwNXNgBD5URHq2mPH4UMmAqSflRn1Xeb0JbJI8qYWAj1x
+   kiIdqJnRdEh/HRIJ9T1NH+zthAT6rdqTnRKCwc0PGzo3Zo9E5kz58JbEf
+   INqIVJoNAFKEgPW1OwoLTTi4gJ3UMzHiEhLkOPXCYE+81bD4Fhs9UUHjW
+   abGpZJcs0MIHPGMKCCU5UQvgEUxAB8KH2tIR7L7+oTgWOSZvFiR3k2T0d
+   y+HC0Gl0Q9KuX2VP3X7Ft9KholcQJeS1y0flrd3sNthbXl6E+yOC9ozUL
+   XMyxgL+KhCm5guI/aZ5ZZChNJQGOxXF2XwsiRq+bBYbMzm8agfMlNsFaF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="4059836"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="4059836"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 05:48:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="908579982"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="908579982"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 05:48:55 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 7BCCC1205FA;
+	Fri,  2 Feb 2024 15:41:30 +0200 (EET)
+Date: Fri, 2 Feb 2024 13:41:30 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: Re: [PATCH 1/1] media: v4l: Fix link frequency helper's kernel-doc
+Message-ID: <ZbzxCpxVa8ciu1Wn@kekkonen.localdomain>
+References: <20240202145412.336db5b2@canb.auug.org.au>
+ <20240202064007.50545-1-sakari.ailus@linux.intel.com>
+ <20240202143027.21fe3f5b@coco.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201125226.28372-1-ioworker0@gmail.com> <Zby-sHLDlmTRaUcd@tiehlicka>
- <CAK1f24=7sy_Bczpt5YeDbkhfriYUc1=zreSFdGCxfF3R0D6sRQ@mail.gmail.com>
- <ZbzfxNn4AYnTVFLh@tiehlicka> <CAK1f24mvBkc2c=fHL6UxMhL2mgLHVrSwZfE5516bOR0yVdfZpQ@mail.gmail.com>
- <ZbzmvwyTGeW18nJy@tiehlicka>
-In-Reply-To: <ZbzmvwyTGeW18nJy@tiehlicka>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 2 Feb 2024 21:46:45 +0800
-Message-ID: <CAK1f24kdyOnUjcpnrk6j4cF6bSFXQwwzFk9tM+jD4RsO_Hc4hA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/khugepaged: skip copying lazyfree pages on collapse
-To: Michal Hocko <mhocko@suse.com>
-Cc: akpm@linux-foundation.org, zokeefe@google.com, david@redhat.com, 
-	songmuchun@bytedance.com, shy828301@gmail.com, peterx@redhat.com, 
-	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202143027.21fe3f5b@coco.lan>
 
-Here is a part from the man page explaining
-the MADV_FREE semantics:
+Hi Mauro,
 
-The kernel can thus free thesepages, but the
-freeing could be delayed until memory pressure
-occurs. For each of the pages that has been
-marked to be freed but has not yet been freed,
-the free operation will be canceled if the caller
-writes into the page. If there is no subsequent
-write, the kernel can free the pages at any time.
+On Fri, Feb 02, 2024 at 02:30:27PM +0100, Mauro Carvalho Chehab wrote:
+> Em Fri,  2 Feb 2024 08:40:07 +0200
+> Sakari Ailus <sakari.ailus@linux.intel.com> escreveu:
+> 
+> > Fix kernel-doc indentation for v4l2_link_freq_to_bitmap().
+> > 
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Fixes: a68e88e2cf9e ("media: v4l: Add a helper for setting up link-frequencies control")
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> > Thanks for reporting this, Stephen.
+> > 
+> >  include/media/v4l2-common.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> > index cd2163f24f8a..602738f7741e 100644
+> > --- a/include/media/v4l2-common.h
+> > +++ b/include/media/v4l2-common.h
+> > @@ -563,7 +563,7 @@ u32 v4l2_fraction_to_interval(u32 numerator, u32 denominator);
+> >   * Return values:
+> >   *	0: Success
+> >   *	-ENOENT: No match found between driver-supported link frequencies and
+> > - *		 those available in firmware.
+> > + *	those available in firmware.
+> >   *	-ENODATA: No link frequencies were specified in firmware.
+> >   */
+> >  int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+> 
+> This won't do what's expected at documentation, as Sphinx will just
+> fold everything into a single paragraph, like:
+> 
+> 	"0: Success -ENOENT: No match found between driver-supported link frequencies and those available in firmware. -ENODATA: No link frequencies were specified in firmware."
+> 
+> Maybe you could try using (untested):
+> 
+> 
+> 	* Return values:
+>         *
+> 	* * 0: success
+> 	* * -ENOENT: No match found between driver-supported link frequencies and
+> 	*     those available in firmware.
+>         * * - ENODATA: No link frequencies were specified in firmware.
+> 
+> Please test it and see if the "make htmldocs" output will be what it would
+> be expected.
 
-IIUC, if there is no subsequent write, lazyfree
-pages will eventually be reclaimed. khugepaged
-treats lazyfree pages the same as pte_none,
-avoiding copying them to the new huge page
-during collapse. It seems that lazyfree pages
-are reclaimed before khugepaged collapses them.
-This aligns with user expectations.
+Hans separately submitted a patch to address this better, it's here:
 
-However, IMO, if the content of MADV_FREE pages
-remains valid during collapse, then khugepaged
-treating lazyfree pages the same as pte_none
-might not be suitable.
+<URL:https://lore.kernel.org/linux-media/ZbysG-sUu9jf3fwQ@kekkonen.localdomain/T/#t>
 
-Thanks,
-Lance
+So this one can be ignored.
 
-On Fri, Feb 2, 2024 at 8:57=E2=80=AFPM Michal Hocko <mhocko@suse.com> wrote=
-:
->
-> On Fri 02-02-24 20:52:48, Lance Yang wrote:
-> > On Fri, Feb 2, 2024 at 8:27=E2=80=AFPM Michal Hocko <mhocko@suse.com> w=
-rote:
-> > >
-> > > On Fri 02-02-24 19:18:31, Lance Yang wrote:
-> > > > IMO, since it's treated the same as pte_none,
-> > > > perhaps lazyfree pages shouldn't be copied to
-> > > > the new huge page.
-> > >
-> > > Why? The content of MADV_FREE page is valid until it is reclaimed.
-> >
-> > IMO, if MADV_FREE pages are considered valid until
-> > reclaimed, treating them the same as pte_none might
-> > pose a conflict.
->
-> What kind of conflict?
-> --
-> Michal Hocko
-> SUSE Labs
+-- 
+Regards,
+
+Sakari Ailus
