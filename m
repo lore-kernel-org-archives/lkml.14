@@ -1,177 +1,179 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB2213DB8D
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 10:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6746913D50C
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 10:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706871175; cv=none; b=Xhp/itMK/7ZIVZp3WKgmWQ9Pzl0LuFZJVcYGDeByxCF3wEdiP5OkxUU67vWAztPN4W1de4CE6iAX0thyAbb76oW6cdrj4KKfvbYMed28PEsj/KkoKoXxcnVEaIhouS2/ahCtqVbxO7p9TjbEetAeXh9UCzRSwtlfnlSKXaVx0fY=
+	t=1706871178; cv=none; b=R3pJLG87PgiwMeCvN+Hge3HX07G+6uju+gm8ssGythQCuSuYW7EJRcWc8VhPf96aFRwRiB8YSK9xCtA0KjMnhnb6ID4i7Na75jXhP/EVDiZW93bXT+0ZA40cBvfQnAH+tDFvTN65HqFt8eY6j07ZxYg8MiriHhop5c2VgAHnVZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706871175; c=relaxed/simple;
-	bh=7UJeNk8SiED9yCAZG/fAWeHMgxw0oDG/V8oLEX03H2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bivUzXLdniEtN2z5JDl42ahr5wIiYXPAPWRs4A+cdIHBPkE5lxqjGwnf6Om5rWM9QX5BNYMqaX/Qp5NUDthbQcBKFQbrmNXKXSZYAk/htDAdMgCX08MbAwmVN0XRdgDjdhpX3FcndbVdq+r4othFUGoBOWhwF3/Cb8nc4JM6Lyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=PUlIxPO/; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1706871178; c=relaxed/simple;
+	bh=dqUxwBZX2kfI3B+P5TtoZCK0zVV9VHWfEdhugIz7LIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=af48uh/EI4Vxf//eRcno+vDAfCFqGHsYK9f4NHeO1yAZdx9V3xiZIHp3FVDjOCPI6XYPGuxoNYW9izvdiqk7POVlPkBT6nLYLmR8JebEYewkIWb8qPsjO7zn+ji4l+0DDJzG+cgmhm+zVFhEmSmJuGr1+2ApaW6AhfTSH/bIz90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DOzrgy/W; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="PUlIxPO/"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d73066880eso16698125ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 02:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1706871174; x=1707475974; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kOP4h2DtrQ3eGd2gjxHPsKG03MfGRQ7P7hCdzTURGhs=;
-        b=PUlIxPO/b2maTrliN1Azs6RvKUdrpjtW251kDqmEApuvaKETnnz0hcUX7V0JN2zyQl
-         Lnxlol8EtyE2VxE8TTyDTr9WVvLZMTV5fLB9FQrjQ9+CK9dHCbXCEIJ9DqGodmsZVPsv
-         n/z3bGkSGLjg2e0B6X/sA4oI8kPSGEBb60V3mhG2L8G+iJxb2Owvc0NN/fcoCijNqaCA
-         T0JormCeZWt0K5XO1wyHBWneFQD/5fRPuLC2GAjSGtOYno/EkFo4feZfDP4gYNFD1uNc
-         sTNt2Lvlo+CAoy/a8u/0isu0a5H9mX3Xdl+0SBFXuzyRMc0EDQUag0Rduj+VPSneJy3a
-         VH/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706871174; x=1707475974;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kOP4h2DtrQ3eGd2gjxHPsKG03MfGRQ7P7hCdzTURGhs=;
-        b=VaE06CmjV6ITmZDS4DtFQ014+mWKbwMArUJDaDwSqeNLDNpY8UL61zg+W7j9RKpwHQ
-         tcetFCt6Wwh8Q94/ImXIJyAJL0/Wm6FvLAmwCxVyQzqGWxgeYGLMmPG9fiIddDRys5Ma
-         g4V6Rs427vb0WMfICzJCm1GiMkM6IXPwyIHdAUfR5yaiVYoIqmC5/d+bf9aI73sUOpr3
-         UM9cKNyXtTkpgyc25uSSHXLV9qetop16wBKRyHcqEFg6nyhD65b0eEUz8mwy7u527SnD
-         77Kkk0lTk6OwyBbAKLmRrKkop6QsiFBQlq7IQhZDPgMl8949lo2T5G7sVA2U6YfpM0N2
-         dM4w==
-X-Gm-Message-State: AOJu0YxE31QktETczRDAg0PbXf/YMCHLiMDjiQUcfxPjmxB3xBpIo7Sx
-	2hTrgt/3+CT/g0wC4+nkdSIKZZRM/HLKH16DgWbKRKrhUgIqu+UbTL91t6g+y/x52ZskcPE8KMN
-	GEJhv80FptmGCx4sf8Pp1jRop4ezo9AguHT23zA==
-X-Google-Smtp-Source: AGHT+IEkJP0L3xT2bwErOuiu7V5owciTi/CRmQ50HIFOTE/E57jyLi7R3nqwVwCvKwYNtUGvE3yoO5rSIUwKLuNyRLo=
-X-Received: by 2002:a17:90a:4591:b0:28c:8eaa:e5e3 with SMTP id
- v17-20020a17090a459100b0028c8eaae5e3mr8264623pjg.17.1706871173799; Fri, 02
- Feb 2024 02:52:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DOzrgy/W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706871175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZClaqx53ZJJu0ie6KUCf9aABm/H96wl0onIl5m7Has8=;
+	b=DOzrgy/W08sf3mtiqa3OTy0qrOrN8lADr1U41ZRuGcRJUxE1bPxYVT/mcYK66VWYP7hBjz
+	hhT5MDffNkZdyUVk4Gj0oaafuF+Po1SetQW4B4kcca2+s+rgJwogS22ztlIf53l0a8THJ3
+	ou7aTa8hpvmRhre6EwqFRqP9aODhyXk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-iW2aeLZvPEy-2p72J5_cXA-1; Fri, 02 Feb 2024 05:52:52 -0500
+X-MC-Unique: iW2aeLZvPEy-2p72J5_cXA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 71E5385A588;
+	Fri,  2 Feb 2024 10:52:51 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.16])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D9E5640C95AD;
+	Fri,  2 Feb 2024 10:52:45 +0000 (UTC)
+Date: Fri, 2 Feb 2024 18:52:22 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Don Dutile <ddutile@redhat.com>, Rafael Aquini <raquini@redhat.com>,
+	Dave Chinner <david@fromorbit.com>
+Subject: Re: mm/madvise: set ra_pages as device max request size during
+ ADV_POPULATE_READ
+Message-ID: <ZbzJZji95a1qmhcj@fedora>
+References: <20240202022029.1903629-1-ming.lei@redhat.com>
+ <Zbxy30POPE8rN_YN@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130125602.568719-1-naresh.solanki@9elements.com> <52f1e76e-0953-4625-94ae-2208600f5729@linaro.org>
-In-Reply-To: <52f1e76e-0953-4625-94ae-2208600f5729@linaro.org>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Fri, 2 Feb 2024 16:22:43 +0530
-Message-ID: <CABqG17j5io7S=U6oHktwWjBxaVRnEryWvX7yD9bVAV5cr2ueKg@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>, mazziesaccount@gmail.com, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zbxy30POPE8rN_YN@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Hi Krzysztof,
-
-On Wed, 31 Jan 2024 at 14:02, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 30/01/2024 13:56, Naresh Solanki wrote:
-> > Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
->
-> Subject: everything can be a fix and everything is update. Write
-> something useful.
-Sure. Will update as:
-dt-bindings: pinctrl: cy8x95x0: Update gpio-reserved-ranges
-
->
-> > reserved ranges.
-> > Add input-enable property to allow configuring a pin as input.
-> > Update example & fix alignment.
-> >
-> > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+On Thu, Feb 01, 2024 at 11:43:11PM -0500, Mike Snitzer wrote:
+> On Thu, Feb 01 2024 at  9:20P -0500,
+> Ming Lei <ming.lei@redhat.com> wrote:
+> 
+> > madvise(MADV_POPULATE_READ) tries to populate all page tables in the
+> > specific range, so it is usually sequential IO if VMA is backed by
+> > file.
+> > 
+> > Set ra_pages as device max request size for the involved readahead in
+> > the ADV_POPULATE_READ, this way reduces latency of madvise(MADV_POPULATE_READ)
+> > to 1/10 when running madvise(MADV_POPULATE_READ) over one 1GB file with
+> > usual(default) 128KB of read_ahead_kb.
+> > 
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Don Dutile <ddutile@redhat.com>
+> > Cc: Rafael Aquini <raquini@redhat.com>
+> > Cc: Dave Chinner <david@fromorbit.com>
+> > Cc: Mike Snitzer <snitzer@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > > ---
-> >  .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 38 ++++++++++++++-----
-> >  1 file changed, 28 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> > index 7f30ec2f1e54..90dda5d3cc55 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> > @@ -45,7 +45,8 @@ properties:
-> >      maxItems: 1
-> >
-> >    gpio-reserved-ranges:
-> > -    maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 60
-> >
-> >    vdd-supply:
-> >      description:
-> > @@ -85,6 +86,8 @@ patternProperties:
-> >
-> >        bias-disable: true
-> >
-> > +      input-enable: true
+> >  mm/madvise.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 51 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 912155a94ed5..db5452c8abdd 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -900,6 +900,37 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+> >  		return -EINVAL;
+> >  }
+> >  
+> > +static void madvise_restore_ra_win(struct file **file, unsigned int ra_pages)
+> > +{
+> > +	if (*file) {
+> > +		struct file *f = *file;
 > > +
-> >        output-high: true
-> >
-> >        output-low: true
-> > @@ -125,14 +128,29 @@ examples:
-> >        #size-cells = <0>;
-> >
-> >        pinctrl@20 {
-> > -        compatible = "cypress,cy8c9520";
-> > -        reg = <0x20>;
-> > -        gpio-controller;
-> > -        #gpio-cells = <2>;
-> > -        #interrupt-cells = <2>;
-> > -        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> > -        interrupt-controller;
-> > -        vdd-supply = <&p3v3>;
-> > -        gpio-reserved-ranges = <5 1>;
-> > +          compatible = "cypress,cy8c9520";
->
-> I don't understand why you change from correct indentation to mixed one
-> (2 and 4 spaces). It does not make sense.
-Yes indentation is missed. I'll correct to 2 space in next patch revision
->
->
-> > +          reg = <0x20>;
-> > +          gpio-controller;
-> > +          #gpio-cells = <2>;
-> > +          #interrupt-cells = <2>;
-> > +          interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> > +          interrupt-controller;
-> > +          vdd-supply = <&p3v3>;
-> > +          gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
+> > +		f->f_ra.ra_pages = ra_pages;
+> > +		fput(f);
+> > +		*file = NULL;
+> > +	}
+> > +}
 > > +
-> > +          pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
-> > +          pinctrl-names = "default";
->
-> Missing blank line.
-Will fix in next revision.
->
-> > +          U62160_pins: cfg-pins {
-> > +              pins = "gp03", "gp16", "gp20", "gp50", "gp51";
-> > +              function = "gpio";
-> > +              input-enable;
-> > +              bias-pull-up;
-> > +          };
->
-> Missing blank line.
-Will fix in next revision.
+> > +static struct file *madvise_override_ra_win(struct file *f,
+> > +		unsigned long start, unsigned long end,
+> > +		unsigned int *old_ra_pages)
+> > +{
+> > +	unsigned int io_pages;
+> > +
+> > +	if (!f || !f->f_mapping || !f->f_mapping->host)
+> > +		return NULL;
+> > +
+> > +	io_pages = inode_to_bdi(f->f_mapping->host)->io_pages;
+> > +	if (((end - start) >> PAGE_SHIFT) < io_pages)
+> > +		return NULL;
+> > +
+> > +	f = get_file(f);
+> > +	*old_ra_pages = f->f_ra.ra_pages;
+> > +	f->f_ra.ra_pages = io_pages;
+> > +
+> > +	return f;
+> > +}
+> > +
+> 
+> Does this override imply that madvise_populate resorts to calling
+> filemap_fault() and here you're just arming it to use the larger
+> ->io_pages for the duration of all associated faulting?
 
-Regards,
-Naresh
->
->
-> > +          U62160_ipins: icfg-pins {
-> > +              pins = "gp04", "gp17", "gp21", "gp52", "gp53";
-> > +              function = "gpio";
-> > +              input-enable;
-> > +              bias-pull-up;
-> > +          };
-> >        };
-> >      };
->
-> Best regards,
-> Krzysztof
->
+Yes.
+
+> 
+> Wouldn't it be better to avoid faulting and build up larger page
+
+How can we avoid the fault handling? which is needed to build VA->PA mapping.
+
+> vectors that get sent down to the block layer in one go and let the
+
+filemap_fault() already tries to allocate folio in big size(max order
+is MAX_PAGECACHE_ORDER), see page_cache_ra_order() and ra_alloc_folio().
+
+> block layer split using the device's limits? (like happens with
+> force_page_cache_ra)
+
+Here filemap code won't deal with block directly because there is VFS &
+FS and io mapping is required, and it just calls aops->readahead() or
+aops->read_folio(), but block plug & readahead_control are applied for
+handling everything in batch.
+
+> 
+> I'm concerned that madvise_populate isn't so efficient with filemap
+
+That is why this patch increases readahead window, then
+madvise_populate() performance can be improved by X10 in big file-backed
+popluate read.
+
+> due to excessive faulting (*BUT* I haven't traced to know, I'm just
+> inferring that is why twiddling f->f_ra.ra_pages helps improve
+> madvise_populate by having it issue larger IO. Apologies if I'm way
+> off base)
+
+As mentioned, fault handling can't be avoided, but we can improve
+involved readahead IO perf.
+
+
+
+Thanks,
+Ming
+
