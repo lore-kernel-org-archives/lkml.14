@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB82D30E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9551D2599;
 	Fri,  2 Feb 2024 02:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706841005; cv=none; b=fmc76MBLtwFS24uDs7Jh34kOzj3hLnoX3GFZWNDGGWHB/L1jSx8KNDO3ltdlxG3G9Aq06SqwrDn2C/goRFD2Yf3Y4EcFF2AKa8XKI3Pwmw5nmXCp9rsrNmRY3BymtaOleinbIyt4Kbwc/klB0gY+NR/tss7a0ohudyk2GbfjcZQ=
+	t=1706841005; cv=none; b=I6NBXadiUv9EkGn94qORUiebrQq6l+UajJELkUSmA5yEJlMALeILpQ21JSMXvy2W9j51c+ubTtECFk4DsF5WqkRyDtGZ0/8zKA0tIFS+oVHRoTylr5yu+0S9WcdEScHeM4t8yb2MD/H88kFAy41IPBN+nUjblnjBSIGrq6C659U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706841005; c=relaxed/simple;
-	bh=VbPnmr5i8jO9pUVUWfcJV065CxA6MC9e4dU/HikVKBs=;
+	bh=AXWG6y5U0W8Wo2DTNY5xeIpEyvIS3wzuGoqbGY9WvtY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uId2wm7LgiRAmli/Uc5UAJCbX9f0cqaK5jyy2dfOJ1lLAwoiFl706itrtR4GOpvd6RBBGoQ36MoOe1NwuKQLW4gKAbLLegtQkuxTh3rm9v3Kwcyrgis6Bsee6HsWfbK+8Pxl4hQeaVY4PDbmJbFByG5FNNOETUbJYECENo2O0RI=
+	 Content-Type; b=M7xmdHdF++BZC/Citr6UsYqvDHnMJxCJVuQVumwmgl5gwYjpg2Wj2ltNAZMoZY7CjE8L45KYWGEVw+J4H+K3BjRFTuR/Qn5m7wtSqsjHgwV5fIbJD+XVqAq2w84TYoYapY2lV+/GASxNUvCOe7KjaF+wsHbmxG13h03lfNIa5Kc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27C26C41612;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69ED2C32787;
 	Fri,  2 Feb 2024 02:30:05 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rVjJv-00000005k94-0huT;
+	id 1rVjJv-00000005kA4-244J;
 	Thu, 01 Feb 2024 21:30:23 -0500
-Message-ID: <20240202023023.027918668@goodmis.org>
+Message-ID: <20240202023023.351711432@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 01 Feb 2024 21:30:06 -0500
+Date: Thu, 01 Feb 2024 21:30:08 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -28,12 +28,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  stable@vger.kernel.org,
- Christian Brauner <brauner@kernel.org>,
- Al Viro <viro@ZenIV.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [for-linus][PATCH 07/13] eventfs: Clean up dentry ops and add revalidate function
+ Daniel Bristot de Oliveira <bristot@kernel.org>
+Subject: [for-linus][PATCH 09/13] tracing/timerlat: Move hrtimer_init to timerlat_fd open()
 References: <20240202022959.515961549@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,126 +39,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
 
-In order for the dentries to stay up-to-date with the eventfs changes,
-just add a 'd_revalidate' function that checks the 'is_freed' bit.
+Currently, the timerlat's hrtimer is initialized at the first read of
+timerlat_fd, and destroyed at close(). It works, but it causes an error
+if the user program open() and close() the file without reading.
 
-Also, clean up the dentry release to actually use d_release() rather
-than the slightly odd d_iput() function.  We don't care about the inode,
-all we want to do is to get rid of the refcount to the eventfs data
-added by dentry->d_fsdata.
+Here's an example:
 
-It would probably be cleaner to make eventfs its own filesystem, or at
-least set its own dentry ops when looking up eventfs files.  But as it
-is, only eventfs dentries use d_fsdata, so we don't really need to split
-these things up by use.
+ # echo NO_OSNOISE_WORKLOAD > /sys/kernel/debug/tracing/osnoise/options
+ # echo timerlat > /sys/kernel/debug/tracing/current_tracer
 
-Another thing that might be worth doing is to make all eventfs lookups
-mark their dentries as not worth caching.  We could do that with
-d_delete(), but the DCACHE_DONTCACHE flag would likely be even better.
+ # cat <<EOF > ./timerlat_load.py
+ # !/usr/bin/env python3
 
-As it is, the dentries are all freeable, but they only tend to get freed
-at memory pressure rather than more proactively.  But that's a separate
-issue.
+ timerlat_fd = open("/sys/kernel/tracing/osnoise/per_cpu/cpu0/timerlat_fd", 'r')
+ timerlat_fd.close();
+ EOF
 
-Link: https://lore.kernel.org/linux-trace-kernel/202401291043.e62e89dc-oliver.sang@intel.com/
-Link: https://lore.kernel.org/linux-trace-kernel/20240131185513.124644253@goodmis.org
+ # ./taskset -c 0 ./timerlat_load.py
+<BOOM>
 
-Cc: stable@vger.kernel.org
+ BUG: kernel NULL pointer dereference, address: 0000000000000010
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] PREEMPT SMP NOPTI
+ CPU: 1 PID: 2673 Comm: python3 Not tainted 6.6.13-200.fc39.x86_64 #1
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39 04/01/2014
+ RIP: 0010:hrtimer_active+0xd/0x50
+ Code: 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 57 30 <8b> 42 10 a8 01 74 09 f3 90 8b 42 10 a8 01 75 f7 80 7f 38 00 75 1d
+ RSP: 0018:ffffb031009b7e10 EFLAGS: 00010286
+ RAX: 000000000002db00 RBX: ffff9118f786db08 RCX: 0000000000000000
+ RDX: 0000000000000000 RSI: ffff9117a0e64400 RDI: ffff9118f786db08
+ RBP: ffff9118f786db80 R08: ffff9117a0ddd420 R09: ffff9117804d4f70
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9118f786db08
+ R13: ffff91178fdd5e20 R14: ffff9117840978c0 R15: 0000000000000000
+ FS:  00007f2ffbab1740(0000) GS:ffff9118f7840000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000010 CR3: 00000001b402e000 CR4: 0000000000750ee0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  ? __die+0x23/0x70
+  ? page_fault_oops+0x171/0x4e0
+  ? srso_alias_return_thunk+0x5/0x7f
+  ? avc_has_extended_perms+0x237/0x520
+  ? exc_page_fault+0x7f/0x180
+  ? asm_exc_page_fault+0x26/0x30
+  ? hrtimer_active+0xd/0x50
+  hrtimer_cancel+0x15/0x40
+  timerlat_fd_release+0x48/0xe0
+  __fput+0xf5/0x290
+  __x64_sys_close+0x3d/0x80
+  do_syscall_64+0x60/0x90
+  ? srso_alias_return_thunk+0x5/0x7f
+  ? __x64_sys_ioctl+0x72/0xd0
+  ? srso_alias_return_thunk+0x5/0x7f
+  ? syscall_exit_to_user_mode+0x2b/0x40
+  ? srso_alias_return_thunk+0x5/0x7f
+  ? do_syscall_64+0x6c/0x90
+  ? srso_alias_return_thunk+0x5/0x7f
+  ? exit_to_user_mode_prepare+0x142/0x1f0
+  ? srso_alias_return_thunk+0x5/0x7f
+  ? syscall_exit_to_user_mode+0x2b/0x40
+  ? srso_alias_return_thunk+0x5/0x7f
+  ? do_syscall_64+0x6c/0x90
+  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+ RIP: 0033:0x7f2ffb321594
+ Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 80 3d d5 cd 0d 00 00 74 13 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 3c c3 0f 1f 00 55 48 89 e5 48 83 ec 10 89 7d
+ RSP: 002b:00007ffe8d8eef18 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
+ RAX: ffffffffffffffda RBX: 00007f2ffba4e668 RCX: 00007f2ffb321594
+ RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+ RBP: 00007ffe8d8eef40 R08: 0000000000000000 R09: 0000000000000000
+ R10: 55c926e3167eae79 R11: 0000000000000202 R12: 0000000000000003
+ R13: 00007ffe8d8ef030 R14: 0000000000000000 R15: 00007f2ffba4e668
+  </TASK>
+ CR2: 0000000000000010
+ ---[ end trace 0000000000000000 ]---
+
+Move hrtimer_init to timerlat_fd open() to avoid this problem.
+
+Link: https://lore.kernel.org/linux-trace-kernel/7324dd3fc0035658c99b825204a66049389c56e3.1706798888.git.bristot@kernel.org
+
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Al Viro <viro@ZenIV.linux.org.uk>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Fixes: c1504e510238 ("eventfs: Implement eventfs dir creation functions")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
+Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c |  5 ++---
- fs/tracefs/inode.c       | 27 ++++++++++++++++++---------
- fs/tracefs/internal.h    |  3 ++-
- 3 files changed, 22 insertions(+), 13 deletions(-)
+ kernel/trace/trace_osnoise.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 16ca8d9759b1..b2285d5f3fed 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -378,13 +378,12 @@ static void free_ei(struct eventfs_inode *ei)
- }
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index bd0d01d00fb9..a8e28f9b9271 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2444,6 +2444,9 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
+ 	tlat = this_cpu_tmr_var();
+ 	tlat->count = 0;
  
- /**
-- * eventfs_set_ei_status_free - remove the dentry reference from an eventfs_inode
-- * @ti: the tracefs_inode of the dentry
-+ * eventfs_d_release - dentry is going away
-  * @dentry: dentry which has the reference to remove.
-  *
-  * Remove the association between a dentry from an eventfs_inode.
-  */
--void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
-+void eventfs_d_release(struct dentry *dentry)
- {
- 	struct eventfs_inode *ei;
- 	int i;
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 5c84460feeeb..d65ffad4c327 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -377,21 +377,30 @@ static const struct super_operations tracefs_super_operations = {
- 	.show_options	= tracefs_show_options,
- };
- 
--static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
-+/*
-+ * It would be cleaner if eventfs had its own dentry ops.
-+ *
-+ * Note that d_revalidate is called potentially under RCU,
-+ * so it can't take the eventfs mutex etc. It's fine - if
-+ * we open a file just as it's marked dead, things will
-+ * still work just fine, and just see the old stale case.
-+ */
-+static void tracefs_d_release(struct dentry *dentry)
- {
--	struct tracefs_inode *ti;
-+	if (dentry->d_fsdata)
-+		eventfs_d_release(dentry);
-+}
- 
--	if (!dentry || !inode)
--		return;
-+static int tracefs_d_revalidate(struct dentry *dentry, unsigned int flags)
-+{
-+	struct eventfs_inode *ei = dentry->d_fsdata;
- 
--	ti = get_tracefs(inode);
--	if (ti && ti->flags & TRACEFS_EVENT_INODE)
--		eventfs_set_ei_status_free(ti, dentry);
--	iput(inode);
-+	return !(ei && ei->is_freed);
- }
- 
- static const struct dentry_operations tracefs_dentry_operations = {
--	.d_iput = tracefs_dentry_iput,
-+	.d_revalidate = tracefs_d_revalidate,
-+	.d_release = tracefs_d_release,
- };
- 
- static int trace_fill_super(struct super_block *sb, void *data, int silent)
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 932733a2696a..4b50a0668055 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -78,6 +78,7 @@ struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
- struct dentry *tracefs_end_creating(struct dentry *dentry);
- struct dentry *tracefs_failed_creating(struct dentry *dentry);
- struct inode *tracefs_get_inode(struct super_block *sb);
--void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry);
++	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
++	tlat->timer.function = timerlat_irq;
 +
-+void eventfs_d_release(struct dentry *dentry);
+ 	migrate_enable();
+ 	return 0;
+ };
+@@ -2526,9 +2529,6 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
+ 		tlat->tracing_thread = false;
+ 		tlat->kthread = current;
  
- #endif /* _TRACEFS_INTERNAL_H */
+-		hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
+-		tlat->timer.function = timerlat_irq;
+-
+ 		/* Annotate now to drift new period */
+ 		tlat->abs_period = hrtimer_cb_get_time(&tlat->timer);
+ 
 -- 
 2.43.0
 
