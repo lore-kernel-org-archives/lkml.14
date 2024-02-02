@@ -1,70 +1,70 @@
 Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0577182BB
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 16:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A9F1474B2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 16:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706890579; cv=none; b=Vh/eeo9vUVaATxzB2ZSm0IpbdJnxjOo94kFkFo/+VM4cJQkZxhaYwnmqfYSQZVBd+qxV8qXD32dTzVY8kl7uY6NThqLp+C1fV4rtmTI08aNK9fxPaTltdNSd9m9nvJnuJ+QBWtx5i/WmGICwMeOmpxopwdBNNWa4Mqe72MCLZKE=
+	t=1706890581; cv=none; b=ADFiwMIzklFKesO8G1WdnIGqcYK0fC3BCcguf9R56l7yo3AOegsUNfkDPp50gyiSHa3h6U6/b8yuuyOAHhTFNmUiDjz31BN9LBdhjELEHfUPRckkKM+0rYWph+WRk1AWqXNbL18mM5fv2DYS/y/yM0YfShFMNmQ16mrkHVnBCLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706890579; c=relaxed/simple;
-	bh=9U1mw1yVdLk+BExwcI7S+DGgNlo8VhiS206YK4nSCvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ffRlq0R81Sksgu37oBfCLGYHwR//NmnFoqCdHFi8kb/Yk6wbI0d5z3coNKy3fnpw/smbTrsaOLEuPHgsujv6eELMnGN2K7A/qVdoAbW3vywSw81SlhBXLrNlloC5MBLBzwKK9hEC96824UokQVSd3PZsvtfBAmCJSWNaCZO7TZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=v+j7jFd0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ab9ItWyz; arc=none smtp.client-ip=66.111.4.26
+	s=arc-20240116; t=1706890581; c=relaxed/simple;
+	bh=JQ3XAd6+1pk8HTCEGu8mix5SOQ7LMO81KCcmw2HK8Iw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rDfCbmNNWS0hrEybw09hTXwexXHsQtg13kA8cvJ933cG/LvYZQBu5vTUUG0ZKf6K0/U8WNwXvQxD2E3B7KUA9V+jIYSTLZen9Um3qwPs1KKLwQQ06aDXdZCsEiyxnPWXfwkyX4AAH5pxmh8JGLUTCXBgS8npWdUcDLkIJjRAYvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=Q6BNiPci; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=w3EzSPMY; arc=none smtp.client-ip=66.111.4.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="v+j7jFd0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ab9ItWyz"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id BC04B5C00D2;
-	Fri,  2 Feb 2024 11:16:15 -0500 (EST)
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="Q6BNiPci";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w3EzSPMY"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 450FD5C0108;
+	Fri,  2 Feb 2024 11:16:19 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 02 Feb 2024 11:16:15 -0500
+  by compute3.internal (MEProxy); Fri, 02 Feb 2024 11:16:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:reply-to:subject:subject:to:to; s=fm3; t=1706890575; x=
-	1706976975; bh=sbJRcJVhKwu3xlXdpvrqMPMBrNMkSAU2s2K/uCxEzpo=; b=v
-	+j7jFd0c9xykrWBxQKHlC4Lqv0qDlusH0gSEzy613M7wiNQfNgJbMMliEDhadZ4D
-	wznDUqevKp+erQefUvuQmR8nPV3azE5AOBEtIqZWSFOi9De/f+ODhs/dC7+L67WY
-	DJza7+BsbL22h2J9kBBpm4Di1lFLOG1oleBrlf85ZzKsLEBcscTU8B7NbaW9kpVd
-	0iwrzSqaxAQ3fd+qB5WZo7qBuyl74l5ffCJ35FRx0XSIopnKjvttFkI5027uCy6n
-	fcwIjDYVM6lmy27TeH6pF2ZXxwVyYZ0W40gNcHorP4NDWeQkzPABKMpnW3ffWToa
-	tqyGQEuVCAi8UZQGRauGA==
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1706890579; x=1706976979; bh=Srz2TBF5bSmmDzT+fRItHrkdBt/FNKVEiEo
+	yh1M6V+0=; b=Q6BNiPcizadAd+EZgLpzobSWkpvEDzg+ntUAZW2HFba3/Lbpme2
+	O8sD/KsTLcClEooEDS+rgni1VKTOJVvjKG2BECTjNiNda9PMom5VpxTwxk+kmX9g
+	5SJAxrVHTNtZxoS5jAUi56r/D8XWcS0OJh2+HEwhuwHmt1t9F6ixsOpYuh0Z62lf
+	jsolvlGzfHgQFVTRoeCZd2VaMnTaM1ocYqJaIOR1z9/NUXsfDnUeuUp37YoN3RGo
+	h9R7gudHRW7KTw4tSyeCZ1fkU5pRSQ2k5vAl5Zfe3Gl+tFLgCwcmgP1//oQ2W0+0
+	ZAsBefLjP95IPfEJx9zsNtGrcaHxRnXII7w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1706890575; x=1706976975; bh=s
-	bJRcJVhKwu3xlXdpvrqMPMBrNMkSAU2s2K/uCxEzpo=; b=ab9ItWyzWsppQVL6B
-	kO8yizKcNw9Lm/oTtpaUXiqXCNJfxb9arOTnXjqPyKrmwR5l9tSBHbk2S+E6K91A
-	99Lw5ZxzXiqCzK23Dt2CH2sMDhmQtf56numXYBKZZO2mgJUKc/Xs774gY+ptKyDT
-	5t/be3bkes1T1rjhy/BQ/Ayj5frlChhltWILSaixrwSrX40Psp5VA1oRxwY9t2d2
-	irWpVI+4vbkHWfbRuanednL6+p18fyLueDomWY8ZS7fwsm4q4ffaQm701MjvzRoy
-	xrfS/NbOVD/OC8va3EqfXH8ko+n+8oM5xZ2olY0L+6fVF3BMEbDkjA0WBxVBJMqL
-	RliTg==
-X-ME-Sender: <xms:TBW9ZVvEBg0dW1o8Cuq1ascnD1ic4KpJbONfVrzEeCXYqVn8D2BafQ>
-    <xme:TBW9Zed4Jdb52ccDalelqPq5YAQgKoyCJNwRAJJP_F_KYTMb4gtXxRpuncE7yvLHH
-    Gy7_l6OXaH-V1kkgA>
-X-ME-Received: <xmr:TBW9ZYxc6JZxjwcCby0jjoRAEpGR2qCQzLsoYhCWO3TYlzb5LWvHib6f33-GFzEcMb0BH6zjhAG4OoU3gVcXlMGXVoWumWTTz_SDQxfWkNtDk9w8Flo6hybN>
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1706890579; x=1706976979; bh=Srz2TBF5bSmmDzT+fRItHrkdBt/FNKVEiEo
+	yh1M6V+0=; b=w3EzSPMYiSxw7VrU6CcZVS7tnyWg0o5f4EO+FRuCOUgJup6WH3A
+	gUN6QtlNYcx+Xn13uj0UTgRkf7/WGHrUMYbh0SZWawyQ1VsQMjqfWMGZIYZFIdqB
+	TgfodME8fk/7pVIskKCsZPmLBTaZTRcAhff4gV09XWLcq2pcbc6xc//W7iVxO8y1
+	k6Mv24maaJmmjZhsBbAUxbjFqyQp+8mkxO3FQkx6tvJUlZgqg+MLuMvmItlouDmy
+	QqdBcxCFwfun+0ZBRcIHVEJ2iA/lBy8U/xlgdDOcFYEGbzGP8Vtg7NECbWUCEn7U
+	NABFdFaLw/It9y8LVlvkv8GiKqoNy+b8vYQ==
+X-ME-Sender: <xms:UhW9ZZtMEoFFrUqJio5dr-jDfIUZpnAl7M-C-2bLiBHEmjkLVMqVEA>
+    <xme:UhW9ZSf8d7Zm2f2BHV86_7z0ho--mcrLI1Oc3M4afN7SDR_zC40MsZ1cDxHneGDjp
+    yL1WYmxz6i4YHq9Sw>
+X-ME-Received: <xmr:UhW9Zcy-9boW7Mu7KAD2ZZsOE_-FanBYR7ZPyhvUm_QNk6Xy3yWOkBA2SEIf3kfYYt635Y_qUwECrsOY0bX_Qj0_mzReOXcN73q1lXFFnaMJRpHXAAKAbz_W>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedugedgkeehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofhrgggtgfesthekredtredtjeenucfhrhhomhepkghiucgj
-    rghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepkefhle
-    duhffhjedttdetudejtdeuieevueetuddtuedthffffffgueffhfegjeffnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghdpfhholhhiohhsrdhmmhdptghomhhprggtthhiohhnrd
-    hmmhdpshhplhhithdrmhhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepiihirdihrghnsehsvghnthdrtghomh
-X-ME-Proxy: <xmx:TBW9ZcObCAJS52vSASK9qSYgP2XwmrVl9mEFla37meJuM5oNIehjgA>
-    <xmx:TBW9ZV9Io4eTd5ZcqgcG1sw_h1MnFYFYX7OX6Na_z0o3OG4-vfYCIQ>
-    <xmx:TBW9ZcXGBQ6tqs-zZC7-vcrW3BL32kIUYrN2Pgt_VsBRZ54yC_T-0g>
-    <xmx:TxW9ZY1iqIoZ8jCEjHRhvgF7KGrU4haXx1pmeT9W_HWbYaNFP2OlYg>
+    cujfgurhephffvvefufffkofgjfhhrgggtgfesthekredtredtjeenucfhrhhomhepkghi
+    ucgjrghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepje
+    ekteekffelleekudfftdefvddtjeejuedtuedtteegjefgvedtfedujeekieevnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiihirdihrghnse
+    hsvghnthdrtghomh
+X-ME-Proxy: <xmx:UhW9ZQPxAHXjjMatZ7DnFtCDv1wbQ9s8PLr3a1MiooN7dsn_8Qh10A>
+    <xmx:UhW9ZZ8U966yhoaFToiswjuvfZC4rtZ_QHbJOAYkGFGwwMWXk-Yf1g>
+    <xmx:UhW9ZQU-NeFnmgM3u0P3SUqKRJ8Cwq1_fa_rkKsTiLBi2n-kHGy1rw>
+    <xmx:UxW9Zc0G_6ZQZGBhP71rnnf_MYBlAqUPoMY1tJ5VhiyskbPnKV1kMw>
 Feedback-ID: iccd040f4:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 2 Feb 2024 11:16:11 -0500 (EST)
+ 2 Feb 2024 11:16:17 -0500 (EST)
 From: Zi Yan <zi.yan@sent.com>
 To: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
@@ -86,10 +86,12 @@ Cc: Zi Yan <ziy@nvidia.com>,
 	Mcgrof Chamberlain <mcgrof@kernel.org>,
 	Adam Manzanares <a.manzanares@samsung.com>,
 	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [PATCH v3 0/3] Enable >0 order folio memory compaction
-Date: Fri,  2 Feb 2024 11:15:51 -0500
-Message-ID: <20240202161554.565023-1-zi.yan@sent.com>
+Subject: [PATCH v3 3/3] mm/compaction: optimize >0 order folio compaction with free page split.
+Date: Fri,  2 Feb 2024 11:15:54 -0500
+Message-ID: <20240202161554.565023-4-zi.yan@sent.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240202161554.565023-1-zi.yan@sent.com>
+References: <20240202161554.565023-1-zi.yan@sent.com>
 Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -102,247 +104,80 @@ Content-Transfer-Encoding: 8bit
 
 From: Zi Yan <ziy@nvidia.com>
 
-Hi all,
+During migration in a memory compaction, free pages are placed in an array
+of page lists based on their order. But the desired free page order (i.e.,
+the order of a source page) might not be always present, thus leading to
+migration failures and premature compaction termination. Split a high
+order free pages when source migration page has a lower order to increase
+migration successful rate.
 
-This patchset enables >0 order folio memory compaction, which is one of
-the prerequisitions for large folio support[1]. It includes the fix[4] for
-V2 and is on top of mm-everything-2024-01-29-07-19.
+Note: merging free pages when a migration fails and a lower order free
+page is returned via compaction_free() is possible, but there is too much
+work. Since the free pages are not buddy pages, it is hard to identify
+these free pages using existing PFN-based page merging algorithm.
 
-I am aware of that split free pages is necessary for folio
-migration in compaction, since if >0 order free pages are never split
-and no order-0 free page is scanned, compaction will end prematurely due
-to migration returns -ENOMEM. Free page split becomes a must instead of
-an optimization.
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/compaction.c | 37 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
 
-lkp ncompare results for default LRU (-no-mglru) and CONFIG_LRU_GEN are
-shown at the bottom (on a 8-CPU (Intel Xeon E5-2650 v4 @ 2.20GHz) 16G VM).
-In sum, most of vm-scalability applications do not see performance change,
-and the others see ~4% to ~26% performance boost under default LRU and
-~2% to ~6% performance boost under CONFIG_LRU_GEN.
-
-
-Changelog
-===
-
-From V2 [3]:
-1. Added missing free page count in fast isolation path. This fixed the
-weird performance outcome.
-
-From V1 [2]:
-1. Used folio_test_large() instead of folio_order() > 0. (per Matthew
-Wilcox)
-
-2. Fixed code rebase error. (per Baolin Wang)
-
-3. Used list_split_init() instead of list_split(). (per Ryan Boberts)
-
-4. Added free_pages_prepare_fpi_none() to avoid duplicate free page code
-in compaction_free().
-
-5. Dropped source page order sorting patch.
-
-From RFC [1]:
-1. Enabled >0 order folio compaction in the first patch by splitting all
-to-be-migrated folios. (per Huang, Ying)
-
-2. Stopped isolating compound pages with order greater than cc->order
-to avoid wasting effort, since cc->order gives a hint that no free pages
-with order greater than it exist, thus migrating the compound pages will fail.
-(per Baolin Wang)
-
-3. Retained the folio check within lru lock. (per Baolin Wang)
-
-4. Made isolate_freepages_block() generate order-sorted multi lists.
-(per Johannes Weiner)
-
-Overview
-===
-
-To support >0 order folio compaction, the patchset changes how free pages used
-for migration are kept during compaction. Free pages used to be split into
-order-0 pages that are post allocation processed (i.e., PageBuddy flag cleared,
-page order stored in page->private is zeroed, and page reference is set to 1).
-Now all free pages are kept in a MAX_ORDER+1 array of page lists based
-on their order without post allocation process. When migrate_pages() asks for
-a new page, one of the free pages, based on the requested page order, is
-then processed and given out.
-
-
-Feel free to give comments and ask questions.
-
-Thanks.
-
-vm-scalability results on CONFIG_LRU_GEN
-===
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19+
-  6.8.0-rc1-split-folio-in-compaction+
-  6.8.0-rc1-folio-migration-in-compaction+
-  6.8.0-rc1-folio-migration-free-page-split+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  15107616            +3.2%   15590339            +1.3%   15297619            +3.0%   15567998        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19+
-  6.8.0-rc1-split-folio-in-compaction+
-  6.8.0-rc1-folio-migration-in-compaction+
-  6.8.0-rc1-folio-migration-free-page-split+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  12611785            +1.8%   12832919            +0.9%   12724223            +1.6%   12812682        vm-scalability.throughput
-
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19+
-  6.8.0-rc1-split-folio-in-compaction+
-  6.8.0-rc1-folio-migration-in-compaction+
-  6.8.0-rc1-folio-migration-free-page-split+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   9833393            +5.7%   10390190            +3.0%   10126606            +5.9%   10408804        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19+
-  6.8.0-rc1-split-folio-in-compaction+
-  6.8.0-rc1-folio-migration-in-compaction+
-  6.8.0-rc1-folio-migration-free-page-split+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   7034709 ±  3%      +2.9%    7241429            +3.2%    7256680 ±  2%      +3.9%    7308375        vm-scalability.throughput
-
-
-
-vm-scalability results on default LRU (with -no-mglru suffix)
-===
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
-  6.8.0-rc1-split-folio-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  14401491            +3.7%   14940270            +2.4%   14748626            +4.0%   14975716        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
-  6.8.0-rc1-split-folio-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  11407497            +5.1%   11989632            -0.5%   11349272            +4.8%   11957423        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq-mt/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
-  6.8.0-rc1-split-folio-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  11348474            +3.3%   11719453            -1.2%   11208759            +3.7%   11771926        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
-  6.8.0-rc1-split-folio-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   8065614 ±  3%      +7.7%    8686626 ±  2%      +5.0%    8467577 ±  4%     +11.8%    9016077 ±  2%  vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
-
-commit: 
-  6.8.0-rc1-mm-everything-2024-01-29-07-19-no-mglru+
-  6.8.0-rc1-split-folio-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-in-compaction-no-mglru+
-  6.8.0-rc1-folio-migration-free-page-split-no-mglru+
-
-6.8.0-rc1-mm-eve 6.8.0-rc1-split-folio-in-co 6.8.0-rc1-folio-migration-i 6.8.0-rc1-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   6438422 ±  2%     +27.5%    8206734 ±  2%     +10.6%    7118390           +26.2%    8127192 ±  4%  vm-scalability.throughput
-
-
-
-[1] https://lore.kernel.org/linux-mm/20230912162815.440749-1-zi.yan@sent.com/
-[2] https://lore.kernel.org/linux-mm/20231113170157.280181-1-zi.yan@sent.com/
-[3] https://lore.kernel.org/linux-mm/20240123034636.1095672-1-zi.yan@sent.com/
-[4] https://lore.kernel.org/linux-mm/23BA8CC1-1014-4D09-9C33-938638E13C01@nvidia.com/
-
-Zi Yan (3):
-  mm/compaction: enable compacting >0 order folios.
-  mm/compaction: add support for >0 order folio memory compaction.
-  mm/compaction: optimize >0 order folio compaction with free page
-    split.
-
- mm/compaction.c | 219 ++++++++++++++++++++++++++++++++++--------------
- mm/internal.h   |   9 +-
- mm/page_alloc.c |   6 ++
- 3 files changed, 170 insertions(+), 64 deletions(-)
-
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 58a4e3fb72ec..fa9993c8a389 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1832,9 +1832,43 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+ 	struct compact_control *cc = (struct compact_control *)data;
+ 	struct folio *dst;
+ 	int order = folio_order(src);
++	bool has_isolated_pages = false;
+ 
++again:
+ 	if (!cc->freepages[order].nr_pages) {
+-		isolate_freepages(cc);
++		int i;
++
++		for (i = order + 1; i < NR_PAGE_ORDERS; i++) {
++			if (cc->freepages[i].nr_pages) {
++				struct page *freepage =
++					list_first_entry(&cc->freepages[i].pages,
++							 struct page, lru);
++
++				int start_order = i;
++				unsigned long size = 1 << start_order;
++
++				list_del(&freepage->lru);
++				cc->freepages[i].nr_pages--;
++
++				while (start_order > order) {
++					start_order--;
++					size >>= 1;
++
++					list_add(&freepage[size].lru,
++						&cc->freepages[start_order].pages);
++					cc->freepages[start_order].nr_pages++;
++					set_page_private(&freepage[size], start_order);
++				}
++				dst = (struct folio *)freepage;
++				goto done;
++			}
++		}
++		if (!has_isolated_pages) {
++			isolate_freepages(cc);
++			has_isolated_pages = true;
++			goto again;
++		}
++
+ 		if (!cc->freepages[order].nr_pages)
+ 			return NULL;
+ 	}
+@@ -1842,6 +1876,7 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+ 	dst = list_first_entry(&cc->freepages[order].pages, struct folio, lru);
+ 	cc->freepages[order].nr_pages--;
+ 	list_del(&dst->lru);
++done:
+ 	post_alloc_hook(&dst->page, order, __GFP_MOVABLE);
+ 	if (order)
+ 		prep_compound_page(&dst->page, order);
 -- 
 2.43.0
 
