@@ -1,126 +1,112 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929D214AD35;
-	Fri,  2 Feb 2024 18:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DAA14AD10
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 18:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706897026; cv=none; b=NBAHbtLvRWlSc7lSlmGYXBcMVlja/w7CooVxgdDwwY3c2t0tsr7cA0zmFKeuaCUCJKzd8/AMzRda0tqwotab93Aez2MW5LEq9+0frAtOXmg/8KC/58DGBLEfw3pvzb34OuAkag+NMUwUeErJ8i7FJRmPdKGcRiALuLhDfcgl1ps=
+	t=1706897086; cv=none; b=fR2Ydv2/PzvVNsObKTPkaBE0M3l/kw8eZ2/numINTWVof0m1gpiC6yPYJDLCjyXIcwjF0l5hOjD9QH+HfzwWYT4NDAtS2IlRUgZW4ZCE5BDgP7cyX1c1bme0C7yP1cv51scWZ8f7SHWau0+nuAIcq1yIFKB+YF/xaw3cytMUH7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706897026; c=relaxed/simple;
-	bh=kzlBvr0aP/B5FRnAIbvezcL3LTjM0zwGckpQKkSHedc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=dNWpjrLFDAHFCPU/mfcmljYNydcf0urH+a3Jku/8jD72jMW3h7gAu7eiifSSb4NLWh0WSCh6L2t1gaY56ELcuU5xK/kk3cAWqh9bly/d+gTtE6MTG7tGh0hcAgfDSZRAvpUHYkpJJR8AvAJgtuUHAe9jp1lr53jFfmky5HdcASg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cK7qwIBc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706897086; c=relaxed/simple;
+	bh=Zx4DDxuZPCP/PEq8O78n9UklQLgFp6VRMfg1bUcF2K8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WpKmZVeFKZ4hmh0Ibm22DPx014eaMsYeKlkkpIWhQxqg3UMEaV/A29ShRpHyue/NGSU74eHzlflceu0pjNmDNyJ6wJRa0hYEXkfBId6AcoC502XpJg9Z5AsU1PKz9bew43ywPU5dSaQ4QSxcVdaWL+PQahIjhx0pnxB/U0qRw9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com; spf=none smtp.mailfrom=soleen.com; dkim=fail (0-bit key) header.d=soleen.com header.i=@soleen.com header.b=CI0ae5x+ reason="key not found in DNS"; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cK7qwIBc"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412FPhD8023312;
-	Fri, 2 Feb 2024 18:03:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=Una
-	7WlYaez5PmcWlUF1uNafCq9+QjpMwZztlXuDyaFg=; b=cK7qwIBcwzJt2qFd0yW
-	qHcOvug0IQasDxrWE4APSd1eN8iRLcgjHgXY0SJg/jDSlbKWYMSByZl8aALhyc5o
-	OSf1HYUsDIWt47gwTkelTFQhp4hxaCVXGbYp+cAt3rXrnLjapbbW4FEKowzdgZEa
-	g8v0aHf1ituGeBFMSncs00x7cv0r5DnDj12MYVwbl1GsUvFHfilGsXtYaPyWxHyE
-	x5lsUsBXf0pKQNaDZgG7KqgnzrLBKza5SeDSSeiBxD3Kn4sOGYgw2bXdtWLFsWh1
-	pxi55q6Yc6JtEzHuh7r3qQPTPTFXgGSsssbnYmVddTbChx2DHvHoY5Rmy78oCLIf
-	XQw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0ptvj269-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 18:03:27 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 412I3QAv015830
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 18:03:27 GMT
-Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 10:03:26 -0800
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-Date: Fri, 2 Feb 2024 10:03:11 -0800
-Subject: [PATCH] dt-bindings: visionox-rm69299: Update maintainers
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=soleen.com header.i=@soleen.com header.b="CI0ae5x+"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-42a029c8e76so13338491cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 10:04:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1706897084; x=1707501884; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9bijSb9yEaTmlnOsnr5FnwiHhV7CJXfrStAeun3CCBg=;
+        b=CI0ae5x+4EsSoDWh6pmbUopB8snBPFOp7OyVmAkDWCu2mzbvPgYwUNNBqg09ox20Z4
+         5VoQSdr1ly3zim0hXNuYfu91qY++8DDv751zW1VaifZUqyBeAVchFi2MLhum+8wYGXFQ
+         hB6o9gjmydDRInU75EW2it5bUzcEsg0/4Dh0zvu5vsQhLrW1dQGO2TKDPS8XF85vRQz9
+         ItFkEFl3spBgAcNZsWrI8Kyzxs2DxgxdBGlzS8DfHllyMYx1v5iZRC7i5SPUWmsxo/H8
+         PnvCSqZKq/xCPCMZ4TD87wyjddbmuDFygIvgq5j9lCqbymidtVslnuByRvgvRia3Ek2o
+         6pVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706897084; x=1707501884;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9bijSb9yEaTmlnOsnr5FnwiHhV7CJXfrStAeun3CCBg=;
+        b=fGebbwvlp2f/ddQlZ6v3n8+yKc0xEb9Jf44RzHADvvWGOwMmrPwIi36fTFQARtehek
+         5rUViyr8z3hc55SFQQVQ4AV/CmYAjt1uDq0iayVI2DEDrFjFEMoqTzWJLCtccc+cP2AE
+         e3q0l2JnkhZ1mQcZbdDJizkdJrmPGWmGkvTI9ea8q4H80yMCvA3ZQtVHmjr+jZ9CFXGT
+         1qf+ox+SOMEv19IEC7CRn84eN1GE+ongE3TRGzwBq9d5AGiCFAS5dlYFwY8Z1i1Y0hsk
+         TwkzusVQS24OwZG/jHRpDRe+SV9tF/cC3eJnyOjDUXsO3GPuMwp4oQuG1Pytfe8+E7dJ
+         bJmw==
+X-Gm-Message-State: AOJu0YwGYYeZQEq3WYNuHziVojyluG9ZA8Kcs3fQtmkH17ey6CI411OJ
+	Dotu2u03bevCzEOTG7Ps9e8ZP6ydBpzO4C1HnDOi2uyibvqDwtuflyGo7979OnLuycbQAogxQQX
+	aHhmmu/EJMPVYeS77RXMuFxKrc7gqL+PwwSyQfw==
+X-Google-Smtp-Source: AGHT+IHZP6Un/HfjT028jnx0QVAGxq1NUEXIMQe8jhyWY9SpyTJFVDbuNtWHifT6v8EukAWp/hKqGTYNjWvGHCDW5lY=
+X-Received: by 2002:a05:622a:343:b0:42b:eee7:5f5c with SMTP id
+ r3-20020a05622a034300b0042beee75f5cmr9136031qtw.63.1706897084294; Fri, 02 Feb
+ 2024 10:04:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240202-rm69299-maintainers-v1-1-423aa40f344f@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAF4uvWUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDIKFblGtmaWRpqZubmJlXAsSpRcW65qkGZpZp5hbGxiZpSkCdBUWpaZk
- VYFOjY2trAbVABZBlAAAA
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Sam Ravnborg
-	<sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
-        Daniel Vetter
-	<daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <quic_abhinavk@quicinc.com>, Bjorn Andersson <quic_bjorande@quicinc.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706897006; l=1230;
- i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
- bh=kzlBvr0aP/B5FRnAIbvezcL3LTjM0zwGckpQKkSHedc=;
- b=qQpgZM8HQmHnxJuQ4l4mhjgIvdWxD/GfFXRYqXUuREXsHNV8hAdSg7cOZ/Isdn/MGSIXDPM1F
- W/hcrGFTEQWBTbYgh9XnxnRBFrClocNPEaT3OFewODBb3eKw8HnXOui
-X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
- pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vTpHZNHFYSI8YyLMPeYrtWc4yuLnJWCN
-X-Proofpoint-ORIG-GUID: vTpHZNHFYSI8YyLMPeYrtWc4yuLnJWCN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-02_11,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=882 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 impostorscore=0
- mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020130
+References: <20240201193014.2785570-1-tatashin@google.com> <02610629-05ef-4956-a122-36b6ac98fbc2@arm.com>
+ <CA+CK2bD_q3pnThtLVSzFCjyevBEaG6Ad+1o2=1tVZsYg35UMmg@mail.gmail.com> <84c7e816-f749-48d8-a429-8b0ef799cdbb@arm.com>
+In-Reply-To: <84c7e816-f749-48d8-a429-8b0ef799cdbb@arm.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 2 Feb 2024 13:04:08 -0500
+Message-ID: <CA+CK2bCFbeRHT172KUci5+8WJNUeo-2A1M=UXsSqqOy64w1LJw@mail.gmail.com>
+Subject: Re: [PATCH] iommu/iova: use named kmem_cache for iova magazines
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rientjes@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-The current maintainer (Harigovindan P) is no longer reachable through
-the listed email. Update maintainers list to be Abhinav and I.
+> Hmm, I did misspeak slightly (it's late and I really should have left
+> this for tomorrow...) - that's 12KB per CPU *per domain*, but still that
+> would seem to imply well over 100 domains if you have 242MB of magazine
+> allocations while the iommu_iova cache isn't even on the charts... what
+> the heck is that driver doing?
+>
+> (I don't necessarily disagree with the spirit of the patch BTW, I just
+> really want to understand the situation that prompted it, and make sure
+> we don't actually have a subtle leak somewhere.)
 
-Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
- Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Robin,
 
-diff --git a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-index fa745a6f4456c..7723990675158 100644
---- a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-@@ -7,7 +7,8 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Visionox model RM69299 Panels
- 
- maintainers:
--  - Harigovindan P <harigovi@codeaurora.org>
-+  - Abhinav Kumar <quic_abhinavk@quicinc.com>
-+  - Jessica Zhang <quic_jesszhan@quicinc.com>
- 
- description: |
-   This binding is for display panels using a Visionox RM692999 panel.
+The following tracing is without Google TPU, simply upstream kernel:
 
----
-base-commit: 51b70ff55ed88edd19b080a524063446bcc34b62
-change-id: 20240202-rm69299-maintainers-7e069f78334f
+The iova_domain_init_rcaches is called 159 with the following stack:
 
-Best regards,
--- 
-Jessica Zhang <quic_jesszhan@quicinc.com>
+ iova_domain_init_rcaches
+ iommu_setup_dma_ops
+ amd_iommu_probe_finalize
+ bus_iommu_probe
+ iommu_device_register
+ iommu_init_pci
+ amd_iommu_init_pci
+ state_next
+ iommu_go_to_state
+ amd_iommu_init
+ pci_iommu_init
+ do_one_initcall
 
+Each time 1536K is allocated: in total 159 * 1536K = 238.5M
+
+The allocation happens like this:
+for (IOVA_RANGE_CACHE_MAX_SIZE)
+    for_each_possible_cpu()
+        iova_magazine_alloc
+        iova_magazine_alloc
+
+IOVA_RANGE_CACHE_MAX_SIZE = 6
+ncpu = 128
+sizeof (struct iova_magazine) = 1K
+
+6 * 128 * (1K + 1K) = 1536K
+
+Pasha
