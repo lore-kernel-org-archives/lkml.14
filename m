@@ -1,89 +1,179 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11064182B5;
-	Fri,  2 Feb 2024 09:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D7F5FDD3;
+	Fri,  2 Feb 2024 09:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706867334; cv=none; b=nWLVF6IwKlg3MXkBYOTrZgR+qygrEATeJapf5tGZ+7iikrGCxto0bl8kbs76s+Jmkm7q8l+MkhsMMmguZCDYyTO4mamtkSAOtVR4T3bXHl7OKDG5Y4RO5x298z0h7uZooHRzLWFD+JK5QsY06CN8e4KMVaqulR/3u+U9RS6t29w=
+	t=1706867451; cv=none; b=ox6S2lIyfmk2Yvy5apXZO8+wC5/022PQfBRB59mpE5w/UbXwpJmtIud6JoB8C7MLqXuc1WZd+9hgszt2l5SIz4h/2BP4Z0h904t7cfkkF40JKUhkqTnH2m0RSYYasGWtjoH18ajaPigy6NetnPQ2g2cYqT4mCHjjfx9UfLkLfa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706867334; c=relaxed/simple;
-	bh=NxwVlXQNaf6oC1kwNfeXy43EStLgElZO/E6ZQWQQG9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PeKGh9jHGnyRxZHXK8sUHdQDKQlNVpB4mhzorQTpZ8Fr+3E366B75rEgePzXEpe74Sbiv+23KkBSGI5bA5PaV0YQfdI0ge6UcNEK8rasqVXBm9fvmp7Wlom7HjoAG4TofYgdr3RscAiKHVFRh0NzvcGPXl7tRbvJ/W1Av/F2mTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rVqAB-0092Oc-OW; Fri, 02 Feb 2024 17:48:48 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 02 Feb 2024 17:49:01 +0800
-Date: Fri, 2 Feb 2024 17:49:01 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Chenghai Huang <huangchenghai2@huawei.com>
-Cc: davem@davemloft.net, linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org, shenyang39@huawei.com
-Subject: Re: [PATCH] crypto: hisilicon/zip - Modify some data type and code
- cleanup
-Message-ID: <Zby6jat2npUKMCx8@gondor.apana.org.au>
-References: <20240127060850.183186-1-huangchenghai2@huawei.com>
+	s=arc-20240116; t=1706867451; c=relaxed/simple;
+	bh=UOv9WAUGo6DdvUWTEevdtBG7+uDQpU9zejiXNAWE2SQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WjK3lv08v6Fh1L9S/msTP8vXppIdZSIDeRyBYvgLMzTUWo/7aC4kb3iA2k1gbZQ9pBrw6V7fj4rOIjkgVunS+5CwhvCMelMuzuaQVvSh5mUWPLali0aw0Jyirfiy4NBCzHS7J7nM14tXHU30C8ZTICWTVQdGDN0ZIeyni8GOIhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcsYYEuZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcsYYEuZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39313C433F1;
+	Fri,  2 Feb 2024 09:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706867451;
+	bh=UOv9WAUGo6DdvUWTEevdtBG7+uDQpU9zejiXNAWE2SQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TcsYYEuZ7l1QCEZntExjJ94bXFMnEaNIxLX6Qr25qXgq+Yip2galckpy4o2QUgAz+
+	 6cuXLDGqKxe+CgWLd7SA1vanGv8BVgQUBVm+K8QUR2RoGrfSuNkHnlx5Q1Hh7Svav1
+	 0+hbU/2ze31D36CfZW4FYcN8GzMrxWNoMNfsy+QLcaX3NEVLE2ayQvel/pPPX+Ptx6
+	 FqAsk8Mk4d3IY2DcUHu0+dO09vYFUoXie9LlDqsiX6OeoluQSQQdsOY4uNLMRKKMHY
+	 bmv118fteCTYyhqOOLacOQEJjBZnzWnjWLXLz2fRTnDlWe0q96+haS6AfYxloez+w3
+	 F7rBrv28oqHGA==
+Message-ID: <0c44863b-7a3e-48bc-bdc8-1069df6d79bd@kernel.org>
+Date: Fri, 2 Feb 2024 11:50:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240127060850.183186-1-huangchenghai2@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 11/13] arm64: dts: ti: k3-am62p: Add missing
+ properties for MMC
+Content-Language: en-US
+To: Judith Mendez <jm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Andrew Davis <afd@ti.com>,
+ Udit Kumar <u-kumar1@ti.com>, devicetree@vger.kernel.org,
+ Randolph Sapp <rs@ti.com>
+References: <20240131003714.2779593-1-jm@ti.com>
+ <20240131003714.2779593-12-jm@ti.com>
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20240131003714.2779593-12-jm@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jan 27, 2024 at 02:08:50PM +0800, Chenghai Huang wrote:
-> From: Yang Shen <shenyang39@huawei.com>
+
+
+On 31/01/2024 02:37, Judith Mendez wrote:
+> Add missing properties to enable HS200 timing for MMC0 and
+> SDR104 timing for MMC1 according to the datasheet [0] for
+> AM62p device, refer to Table 7-79 for MMC0 and Table 7-97
+> for MMC1/MMC2.
 > 
-> Improve some inappropriate variable types to make variable expression more
-> accurate.
+> [0] https://www.ti.com/lit/ds/symlink/am625.pdf
 > 
-> Signed-off-by: Yang Shen <shenyang39@huawei.com>
-> Signed-off-by: Chenghai Huang <huangchenghai2@huawei.com>
+> Signed-off-by: Judith Mendez <jm@ti.com>
 > ---
->  drivers/crypto/hisilicon/zip/zip_main.c | 29 +++++++++++--------------
->  1 file changed, 13 insertions(+), 16 deletions(-)
+>  arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 44 +++++++++++++++++++++--
+>  arch/arm64/boot/dts/ti/k3-am62p5-sk.dts   |  6 ++--
+>  2 files changed, 45 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-> index 479ba8a1d6b5..b3e2b58ba7d7 100644
-> --- a/drivers/crypto/hisilicon/zip/zip_main.c
-> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
-> @@ -809,21 +809,20 @@ DEFINE_SHOW_ATTRIBUTE(hisi_zip_regs);
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> index 4c51bae06b57..f743700dd5bd 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> @@ -534,7 +534,21 @@ sdhci0: mmc@fa10000 {
+>  		clock-names = "clk_ahb", "clk_xin";
+>  		assigned-clocks = <&k3_clks 57 2>;
+>  		assigned-clock-parents = <&k3_clks 57 4>;
+> -		ti,otap-del-sel-legacy = <0x0>;
+> +		bus-width = <8>;
+> +		mmc-ddr-1_8v;
+> +		mmc-hs200-1_8v;
+> +		mmc-hs400-1_8v;
+> +		ti,clkbuf-sel = <0x7>;
+> +		ti,strobe-sel = <0x77>;
+> +		ti,trm-icp = <0x8>;
+> +		ti,otap-del-sel-legacy = <0x1>;
+> +		ti,otap-del-sel-mmc-hs = <0x1>;
+> +		ti,otap-del-sel-ddr52 = <0x6>;
+> +		ti,otap-del-sel-hs200 = <0x8>;
+> +		ti,otap-del-sel-hs400 = <0x5>;
+> +		ti,itap-del-sel-legacy = <0x10>;
+> +		ti,itap-del-sel-mmc-hs = <0xa>;
+> +		ti,itap-del-sel-ddr52 = <0x3>;
+>  		status = "disabled";
+>  	};
 >  
->  static int hisi_zip_core_debug_init(struct hisi_qm *qm)
->  {
-> -	u32 zip_core_num, zip_comp_core_num;
-> +	u32 zip_core_num, zip_comp_core_num, i;
->  	struct device *dev = &qm->pdev->dev;
->  	struct debugfs_regset32 *regset;
->  	struct dentry *tmp_d;
->  	char buf[HZIP_BUF_SIZE];
-> -	int i;
+> @@ -545,7 +559,19 @@ sdhci1: mmc@fa00000 {
+>  		power-domains = <&k3_pds 58 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 58 5>, <&k3_clks 58 6>;
+>  		clock-names = "clk_ahb", "clk_xin";
+> -		ti,otap-del-sel-legacy = <0x8>;
+> +		bus-width = <4>;
+> +		ti,clkbuf-sel = <0x7>;
+> +		ti,otap-del-sel-legacy = <0x0>;
+> +		ti,otap-del-sel-sd-hs = <0x0>;
+> +		ti,otap-del-sel-sdr12 = <0xf>;
+> +		ti,otap-del-sel-sdr25 = <0xf>;
+> +		ti,otap-del-sel-sdr50 = <0xc>;
+> +		ti,otap-del-sel-ddr50 = <0x9>;
+> +		ti,otap-del-sel-sdr104 = <0x6>;
+> +		ti,itap-del-sel-legacy = <0x0>;
+> +		ti,itap-del-sel-sd-hs = <0x0>;
+> +		ti,itap-del-sel-sdr12 = <0x0>;
+> +		ti,itap-del-sel-sdr25 = <0x0>;
+>  		status = "disabled";
+>  	};
 >  
->  	zip_core_num = qm->cap_tables.dev_cap_table[ZIP_CORE_NUM_CAP_IDX].cap_val;
->  	zip_comp_core_num = qm->cap_tables.dev_cap_table[ZIP_CLUSTER_COMP_NUM_CAP_IDX].cap_val;
+> @@ -556,7 +582,19 @@ sdhci2: mmc@fa20000 {
+>  		power-domains = <&k3_pds 184 TI_SCI_PD_EXCLUSIVE>;
+>  		clocks = <&k3_clks 184 5>, <&k3_clks 184 6>;
+>  		clock-names = "clk_ahb", "clk_xin";
+> -		ti,otap-del-sel-legacy = <0x8>;
+> +		bus-width = <4>;
+> +		ti,clkbuf-sel = <0x7>;
+> +		ti,otap-del-sel-legacy = <0x0>;
+> +		ti,otap-del-sel-sd-hs = <0x0>;
+> +		ti,otap-del-sel-sdr12 = <0xf>;
+> +		ti,otap-del-sel-sdr25 = <0xf>;
+> +		ti,otap-del-sel-sdr50 = <0xc>;
+> +		ti,otap-del-sel-ddr50 = <0x9>;
+> +		ti,otap-del-sel-sdr104 = <0x6>;
+> +		ti,itap-del-sel-legacy = <0x0>;
+> +		ti,itap-del-sel-sd-hs = <0x0>;
+> +		ti,itap-del-sel-sdr12 = <0x0>;
+> +		ti,itap-del-sel-sdr25 = <0x0>;
+>  		status = "disabled";
+>  	};
 >  
->  	for (i = 0; i < zip_core_num; i++) {
->  		if (i < zip_comp_core_num)
-> -			scnprintf(buf, sizeof(buf), "comp_core%d", i);
-> +			scnprintf(buf, sizeof(buf), "comp_core%u", i);
->  		else
-> -			scnprintf(buf, sizeof(buf), "decomp_core%d",
-> +			scnprintf(buf, sizeof(buf), "decomp_core%u",
->  				  i - zip_comp_core_num);
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> index 1773c05f752c..10156a04a92c 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> @@ -410,13 +410,17 @@ &main_i2c2 {
+>  };
 >  
->  		regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
+>  &sdhci0 {
+> +	/* eMMC */
+> +	bootph-all;
+>  	status = "okay";
+> +	non-removable;
+>  	ti,driver-strength-ohm = <50>;
+>  	disable-wp;
+>  };
+>  
+>  &sdhci1 {
+>  	/* SD/MMC */
+> +	bootph-all;
+>  	status = "okay";
+>  	vmmc-supply = <&vdd_mmc1>;
+>  	vqmmc-supply = <&vddshv_sdio>;
+> @@ -424,8 +428,6 @@ &sdhci1 {
+>  	pinctrl-0 = <&main_mmc1_pins_default>;
+>  	ti,driver-strength-ohm = <50>;
+>  	disable-wp;
+> -	no-1-8-v;
 
-What issues does this patch fix? This change appears to be
-gratuitous.
+Why was 'no-1-8-v' removed?
 
-Cheers,
+> -	bootph-all;
+>  };
+>  
+>  &cpsw3g {
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+cheers,
+-roger
