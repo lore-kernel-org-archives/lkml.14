@@ -1,57 +1,55 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2105.outbound.protection.outlook.com [40.107.22.105])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2095.outbound.protection.outlook.com [40.107.22.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D797814460C;
-	Fri,  2 Feb 2024 14:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90B213EFED;
+	Fri,  2 Feb 2024 14:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.95
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706883749; cv=fail; b=RHsrSBLw7F2nHDgMaouM+FhkWr73NT35WPNRsQZduz/Tlb2G3Pw1e5xAEAPBjLBbm9f5mhc/qHWgALxwfpIYwFYoErrA6hPI0RXui7Nhr/afygGZNZQ6HAAZSUkZjBpfClr/WvsWPq35uXtRBLabqwbrkXYHorf5ap3ttMoo8GI=
+	t=1706883751; cv=fail; b=TNcE5yVXAKbMvt9Nm6dC7VS4YYbY1jr+/KxGJmDF74xZjG0E8t48LRVKlhxSrXzJArUR0oikS8/e6abRzr57XAwv7U2MO6HwQsbF1V8j+aWJmCC2SbqnWFI0sxrnrDgFRBp6+WT02TF4MeZyT38HWxzsncImrVTDQ3H/Rstys5o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706883749; c=relaxed/simple;
-	bh=WSQP33IDEhBriBwDLMC+uoEcmCdyJAiNT43VjAzwp40=;
-	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=Hdgt8BJum44TJiAtGXW/2C2PNFGuAmY1SkefZEuftMi/TBAXmy9n7ueV2HGuP7rXkCRnJNGwrrbdXknAXszVDPr+VFevf61sWEhuUJjftwtBEYGzwakQHk+NkmtOoAalYFDuGTUcEm1Zjg8BxPJLE+VBEfeN0Pl7l5KvtHaufOM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=WNkmhb0U; arc=fail smtp.client-ip=40.107.22.105
+	s=arc-20240116; t=1706883751; c=relaxed/simple;
+	bh=LB2Ryn4lgStnKggJCsftSlS2OR2xOegMn+CXH0G54Zs=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=lCADR0Rbbdv1PrbCpiBECSA4ASUXO9/SZTnkNNeRbzL1JFioG9pdBnSGXVv9HtfhTjiprX1nibHdnUNzj5Y7YeG261nUFG6U6iBuQ69601qly9fjNptRa9zSmR/Os19j1WRTTMswwfGE4D9ewCiyjOmdcZgrduURGecnzbH0QoA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=rUAfYV3j; arc=fail smtp.client-ip=40.107.22.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="WNkmhb0U"
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="rUAfYV3j"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lDlGtyWfP5y1jWQxeTtizVfw+HClBw/6l2wX1T4HBmBqnYsQlsD7e+zoaJ4IZB6e7XOWcDWIgCiXBK8w6A4S9TAgVX/WCyCL4kVlY4d8gv/CxH3Jx9qVnQq3MQEImp+aKCRtx27MPMkwkMz8Cg7LsOozQJ1ulBogt67b46LMRtMZiZ/C2i+JgAcIrvWr+YysGRzgukpbUIz7TXiAz/p9k04JX/iwLsMZkmVu/2M6hST8rYPFroTFbNtg+e/eAHrhU29bPpA4OMU7JBQUcPBY1Raqn8SKGmTNxWOh2CBFpuTEibDeeQ7ml9sJfrWK0/cD0feB+87ZwWNL+RkHcetc+A==
+ b=JVYSLMTRQpx+8MPF2CaEbASSBfyqLqPOCn5oMtT8XAbsUOy+M6hDIlyqI6lbkrZK/sC4bcFogLZQ3Wrso03kXa07WXa6Qc5BoZ4Mc+83pioKQis7TdSfphyUDnq4TjmeDuLNdoD8rlJb2rF/kAXdItbqoNO6QmdYxBkU/yjZJ8mcXhg9POEFqGd+6hsk2Y4eVAU2gIpGshZIWLqNVrBAZsutlGZTOd/PydKDY2lnzQcogyrhN8ezDpOF80auwedZUzDSkA4S6J2W44gGzSa25QsoBSkZDq6hiesY6jSaJCR+0L0/VdUN+KHL+DCFjA+F9tkV0LkGdu0SD9oLpUY4fw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9hz0xKYn9qGcauF0wSRJBZ76G42t28i7K6qPkeazRAQ=;
- b=RCh36m8mvtT3pEBmjY/CydBKnVhjfQlPmDwKW5DnOKAZAEhwo3olBlojYIeK8+ADDQZbA8aRAvtBN6rakR3wgkKQ4DKLd95uA76wGDnO0K6v4LxP4C4w44DxtDCEbirsEEofPhPGcUQbrSCM1hRN7gWPshcYOJHvfgNKtzuLs/VgVgleJxUJaUdfEegyE0fizPlLekCxKEymfnR7ng1gZ/yiIOQDPmQy9sKX1bw3Uyo5yeVzLTOuI52xK0xk3nPwijctwxHWtVC7GMj670sYNy3pEhAMdGCup0kFekyLqa0Eb66ovXecBGf2qa5tLPBJGG/TTglthh7WSICtlfRUWQ==
+ bh=ub35LsPDmUJ5uZk6wMaz9doOf6058r4EEFssfdGLy/I=;
+ b=Ic610RjiA5RfhF1OBvUXV4OtLVDLWCojmFK+TMQ1YsXNS+EqNTrvCrB8nG5CDVPoEW/W1hxzen3cnYmV3OWUJ0XBBC9tKSqpIgwSouC54qBY1pnbT9mBk5nlkPYx97d6SsOJ7y+6TDVL5K4pl+RNmY0Fa4snbq+R+QpwhHVoZBfHGc65vyk49cnj5w0X/cuNeX3lu5Ra5AR2ag8r59/7mwYc6kr/q2pOQ9vrr6w8TOKiymEf6iXOuV4RsQUGWxp/xXowGMddnkYc7e5FKLYTanEB1qDRg48G3bqiNa16VGzG6u0cvHP0NWw5tL7/IO/JeBea+eRMMofS2KSreSjaww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=solid-run.com; dmarc=pass action=none
  header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9hz0xKYn9qGcauF0wSRJBZ76G42t28i7K6qPkeazRAQ=;
- b=WNkmhb0UptTlvetss4objVplwTAO6vm3xtlM+g9DOrlYmoC8Gocy82d/NZSgNFCW9NiPFTZKzmv/N4XulEj+hYfzNHapjpYKiVmxunKTSItGpUzEs1WnK55Dt1d/e473PgYdqaPLQkTluWqI9XDZs7YKAf5bYxIwzTISq7iAWYY=
+ bh=ub35LsPDmUJ5uZk6wMaz9doOf6058r4EEFssfdGLy/I=;
+ b=rUAfYV3j938ymptkia9S+dYIPHmpvZWszo93R9Jt0jB0GpUuZ3oXny4D6yWDKWNwIGxP9pVOBG0dsi6yB/N2/N8EXl3G+baooA2W4NeAwsozTqpn3FF6o1NdoE/dlsI0FvVuZ9zm73G2NpT6yxJOAI05AaL5kmiFV4PIRc8f6Yg=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=solid-run.com;
 Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
- by PAXPR04MB9007.eurprd04.prod.outlook.com (2603:10a6:102:20f::12) with
+ by AS8PR04MB9093.eurprd04.prod.outlook.com (2603:10a6:20b:444::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.26; Fri, 2 Feb
- 2024 14:22:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.30; Fri, 2 Feb
+ 2024 14:22:23 +0000
 Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
  ([fe80::3b94:f607:ebe1:7d6c]) by AM9PR04MB7586.eurprd04.prod.outlook.com
  ([fe80::3b94:f607:ebe1:7d6c%7]) with mapi id 15.20.7249.027; Fri, 2 Feb 2024
- 14:22:22 +0000
+ 14:22:23 +0000
 From: Josua Mayer <josua@solid-run.com>
-Subject: [PATCH v3 0/5] arm64: dts: add description for solidrun am642 som
- and hummingboard evb
-Date: Fri, 02 Feb 2024 15:22:16 +0100
-Message-Id: <20240202-add-am64-som-v3-0-2f44023d50e9@solid-run.com>
+Date: Fri, 02 Feb 2024 15:22:18 +0100
+Subject: [PATCH v3 2/5] dt-bindings: rtc: abx80x: convert to yaml
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJj6vGUC/13MSwrCMBSF4a2UjL2Se5M+dOQ+xEHIwwZsI4kGp
- XTvpgVBO/wPnG9iyUZvEztWE4s2++TDWELsKqZ7NV4teFOaESfJkSMoY0ANjYQUBqhRoVaytcY
- JVi73aJ1/rdz5Urr36RHie9UzLusXEv9QRuBgjEJ3IGqVdacUbt5AfI57HQa2YJl+AKQNQAVA0
- dUkGy2p01tgnucPbKDmLu0AAAA=
+Message-Id: <20240202-add-am64-som-v3-2-2f44023d50e9@solid-run.com>
+References: <20240202-add-am64-som-v3-0-2f44023d50e9@solid-run.com>
+In-Reply-To: <20240202-add-am64-som-v3-0-2f44023d50e9@solid-run.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
  Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -60,10 +58,7 @@ To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
 Cc: Yazan Shhady <yazan.shhady@solid-run.com>, 
  linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, 
- Josua Mayer <josua@solid-run.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Suman Anna <s-anna@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, 
- MD Danish Anwar <danishanwar@ti.com>
+ Josua Mayer <josua@solid-run.com>
 X-Mailer: b4 0.12.4
 X-ClientProxiedBy: FR0P281CA0174.DEUP281.PROD.OUTLOOK.COM
  (2603:10a6:d10:b4::7) To AM9PR04MB7586.eurprd04.prod.outlook.com
@@ -75,159 +70,192 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|PAXPR04MB9007:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b87df91-c5e1-4253-0f2a-08dc23fa5ed5
+X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|AS8PR04MB9093:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f76430c-8295-4218-2c14-08dc23fa5f97
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	qgJsC0ri/YQW+F6rmD9QC77OalKSGROWuiiGdIRyp0rqjRbYFP8kihSdhmSTFIjTZe0N+UuUOr8rA3qfPBJ6ICa9HpfAxwjTDZJu/LFl8uE5+pjsYXuH5a0SVugObqLM+ivxTrizHBNuBUyNuo+YR5rVuP9Wd4DTkIyiZp+eGUq3lyhpPKlCJX1TdbGUX6wYd2r9YYNi1nlWjvQgifecgZje3y7rSEYij0jFLaJRD14/EGS+fJIIcxHM4BSx+SZ8BT1aeIj9f+6TqtZ7Eu667CK0JgyCl3XEvNyj3RyKkpk6Gi2VRhD1yFA18Qak8Fu4RbeU9g7KShoXDmhnrb3DcSR41IStrIopIrd1k6RTmUYnjdBP9P5AStYh221uCg0lMqi3no79ZokaTHTpI0PhkQnURpP7iJejN2v8CCf+Zf+3uMueGl12gT6ux+p/zP7iK23FepuEBZe2NTL3rzygKwumEe1KmLs0WGmCE5fWJaUfmGg3kJvVKdD8smL1ue5XgB2tFPIXiGHpVBrBGmN4f3wDzzMMpqbKpo0WS2CCjyQZZowAtNKmSc6/uHCbEeNvuJeRAOrsOfltQEVenO8DPthodM2P2AusQGAZqReFcjp2LJ0aq5UXc7NSv0yKxqvnFHMSYuMV4w2F3ZXCoCS/5w==
+	t/Lk3pNLUteuYqJ+ehl/pF+3/g/3kjmHebtKSCwHFKiqnbbiDg9KD6suDYkxGjMcO9WsvqLTCcHYzFejqmPDhPufJfxPJRUwL/PVaaFhPLMOFEDbACxOM9EDWA3+9+omdvo6ui9Ref/ujQj4P2NqwDgtfqY8yefzPUjlxcez/8J/aNUcDCMn3LtSNPpZQvBuLvuerUWfHkFuQFW05/2tr4/OKGCcAoxkWQz4oeGgzWOLIZbusyf/DW4SlcWiDRb6Ydwb/oVKHgyWm9A06NSOpA6M9vjXTAqF1akooOMpfUk/Dk8WsCFi0Eunuwhn1P87bY944FSYidDo0+nDEuoi0vKs9ad8rCh2sMkhdzCgt9nop4aAMxyGEgGgc6grJBvDg+cqlVd7Vm/1WrFi0xeRfB5lp34Fqr0T+4QAtTSTvZfOZ5/gzMZNLdCi4TsPljHV4/X4C2drM1+RIyyTMbiQjvAR4NFc3eVBcvHPF7zh6A1U9LWb+nFftaL0VzW0C240DUjXOrEgiH1DEwW/blTqQQNhMvdGJeY3nHxiBCdAGr0vn9mn1WtLBSVDtI6k3xWDH1KWGh6tCLXc1cfMOP6knaH8g77M24nBqcwqzawuoTU=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(39840400004)(396003)(376002)(230273577357003)(230173577357003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(26005)(6512007)(38100700002)(7416002)(41300700001)(83380400001)(316002)(66476007)(6666004)(478600001)(6486002)(54906003)(66946007)(66556008)(52116002)(110136005)(966005)(6506007)(2616005)(4326008)(86362001)(8936002)(8676002)(38350700005)(36756003)(2906002)(5660300002);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(396003)(366004)(39840400004)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(6512007)(38100700002)(41300700001)(8936002)(6666004)(36756003)(8676002)(6506007)(2616005)(52116002)(26005)(7416002)(2906002)(5660300002)(54906003)(6486002)(966005)(107886003)(66946007)(316002)(66476007)(66556008)(4326008)(110136005)(478600001)(86362001)(83380400001)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OUl2citXVU9lcnZjWEJURkdzczlVb3JqZm9kMWg2M1FUKzV1UFptSjdOYUtm?=
- =?utf-8?B?ZTAvUlpEL1djY1M4WUZQRFBXYnRqUWFqMXpYbkhPeWJzNy96enNwSjBLU2Nu?=
- =?utf-8?B?MVBnK2gxN1hKSkY3dm9HaEo0dy9MQUhIMjR3NG9ZdjNBV1hRSy91Q1RDcCty?=
- =?utf-8?B?S1hIVDd2anNFSFUwck8yNXFoaElnaEhmMzF4UkZGeTJLU0N4dHlYN0FvVHR6?=
- =?utf-8?B?NkdNRzg3OGw0aDdGTnludFFuWk1Xb201V1BtTlNXR0gxK2lGZi9jMjRkSGFM?=
- =?utf-8?B?QjhpOEhCK1RFdyt0Ym1aVkJRdldHeUJURUNjWmVaMzFXK0JUMndXdFg1WVpM?=
- =?utf-8?B?RDlCemlFVEt5Vy84ckUrZStCZmkrK0hpSEl6YkFYenNPTUR4bW56YTVNNnRC?=
- =?utf-8?B?TlB3aDJaL1VIbXB0WjVyRm5PRW1kN0RVT0dnUWxKNFVwYmhPN3FiTW1sUTdi?=
- =?utf-8?B?Rk9hTDdPMkVDUVNtdXpqZnJ1YzB1bVB4NWJjcU1wVjUvU0tuNFN5WXBobFRQ?=
- =?utf-8?B?Ni9ZdHZUa01oMFo4eWpLRVdQQUhMbFFDb1hwUlBzRVYyUzFEdElpK0N5OHFw?=
- =?utf-8?B?Q2c2c0E2aytXQm9WTTB0bGFMeUpEQWtySUhzdlBmSWpuSmoveHBWaFFqaHBs?=
- =?utf-8?B?d2FNSVhDcVFBUFN0aVpCVzFIZ1krUm8zVUdnSzVUY204Z0hxRHEvSmUyQlpV?=
- =?utf-8?B?bDZZdDhDN2lDeE9jcjN4SWRIMy9iM3RiV2MzSlFzaEQ4NnpkQTdQeW9ORC8y?=
- =?utf-8?B?MDREeFBWaFlPRmhiZUxBNXBrcVZMb3pzME9FWnRYR2kvRCtmcUJxNlk3S1BR?=
- =?utf-8?B?Q3luVUxPNGZSWEp4ZzJJV0xLa0Z4MFJUdXpHYUF1NG1WdWMvOE03Z1JjNlEv?=
- =?utf-8?B?R3ZNYWkwSnNpaUhDYlVJS1dJdWpoQVpjVUVUZUs0em00NEZjbXJMM0srYkUr?=
- =?utf-8?B?ZWZMQ1ZMWUdEcWhLcDllYzR5c2NES29CQU05Kzkrems3OFlrWDNTWTlpMklK?=
- =?utf-8?B?dGp1bmhrbGx1K0NQWTJ3TU5KeU5MeFZmZDVGam5lQzFiR0xpbjRQNWxudWo0?=
- =?utf-8?B?eUZGcVR2bHFxK3FQS282TzdNS3F2Y2Y4WmY4cTdjMEpYTHdZdkJ4NlQrYW95?=
- =?utf-8?B?Z2Q1bjY0dTNhYTNtb3FUZXVLendPRmZSMGwvMEJ1b01VSG1wM2N1dExyY2hE?=
- =?utf-8?B?ak82NlY2TzQ5K0dndTV4SHJnc3hCZU1FZDZlUEd4MTkxU1Y4ajNhbGFsRyt5?=
- =?utf-8?B?VTZQckR3eWo5WFNxQ3hjNTdOY0JPei9EY1k0a2N0SG1HdG9aTkRsb0EzN1Ny?=
- =?utf-8?B?WlA1OHVxLytGM1hZa0VrMkMwQXhGVHIwekNqMkw1dDRaMXJFNTFhUG9oR0JM?=
- =?utf-8?B?NjcrRXZhQnllTFNKWUs0RmdGZ1JkSkxac3VZOFZpRFREcFFVejU5aHhyaHdI?=
- =?utf-8?B?bXM5Q1JQYi9sMTBOREFIZVliMTBZTnZsVllTc2JMbWZWL01mcHpTR091ZjRt?=
- =?utf-8?B?cHVxcHBZQUIxUXIzRnlaUW1ibWhESnpLNXE0OFRuek1QdmJwRVVZWG5IODBo?=
- =?utf-8?B?NXFla3JnTnFKbk8rQkVjNnpRNnkwTzdXbWZUdllzeTU2c2hieGRCOS9HYk9X?=
- =?utf-8?B?S2xXaTJraXM4WHEvb05CQk9CUDVkSlV0NnZncm1rTUZScitYMnU2MnEreDRI?=
- =?utf-8?B?ZUtFZlV4aXprcjgwZHlyL3NBd0FSMGEzcDRLdzBBTGlNTnhZNUR4V010RTRw?=
- =?utf-8?B?QzJOQ0NDaGhVRE5UaEtCY3RMWTQ3YkdBYlh4S0d0ZktJaWliOW0zVHJvTHpQ?=
- =?utf-8?B?RzFXQ2RMMCtjNWhnQmpMdDAyYi9lMHNIZWRwdm1PR01GTEdKRmd1QU5xOTJr?=
- =?utf-8?B?RlU5a2VnVFM2cU1idDBBZTN1M1V2dmNjei90M3dDT3ZMRzhBaTY1T2ZqZDV2?=
- =?utf-8?B?WXlBWm9CeHB4UERZVVVjVGxmcHREeXYzd2pocVpMSk53b3BwQnVVWm5yU29T?=
- =?utf-8?B?ZWNtTHVwUnU5MGtlWE5RdHFrWDhoaTc2YWkwR1NOWFNrSFRHNVBQSy9TQUcr?=
- =?utf-8?B?cWprZ0NKUWY1OEIwRDV1L3hESUZma1MrbXEzVmZsMVVhZHdTYWg2SHFlSkZP?=
- =?utf-8?Q?skYotvsyu6zsbiqEPxXADETLS?=
+	=?utf-8?B?TzlUMUM2Vm5NOTdsUEpJaStNcGZ2NU9jNUVZdDk4eUdycWdLMzhYR04ralgy?=
+ =?utf-8?B?Z2FJb0s2S3JzT1ByZkRqdE4rQkFPMUwxalo3REIzTHlVMC9TRzNqTVhoYXE4?=
+ =?utf-8?B?bDZBRUxUc2ZpTm0vQXBLS3dGSDkyWVFNTGtWRnNyRTB5WjY0bEg0VWhvZENC?=
+ =?utf-8?B?ZU13dmtacnNKT2QwNVFIdG96U1FIYlYyOEhmOXVxR1JFcWxFOVB3dWFuZExu?=
+ =?utf-8?B?N3phN203OVM3R0NNbWhQS0RiV3pwTUVLZk5FWE5DY0gzOVpUc20waDZXUExx?=
+ =?utf-8?B?SFRTVlJsZmwwTTJYbXc1YktibHZQMXd0L2Fnbk8vT08yc0VKbldTUEU4dS9y?=
+ =?utf-8?B?OEJOQmFmM2gwcS81S1k2blNIODBqTkRsRi9ZVmsrN2g5c0FZNmVDcFFZRURm?=
+ =?utf-8?B?K2NDSmVYdWNqVUtWNmZJTG9SYVZkaUFlV250RFBwMW1hdzlOa0hrTmRRUU9q?=
+ =?utf-8?B?SjNyM2M3SVg4czh0WTJJUG0vU0pncFZkYXRjaXRNanFCSXg5aWhoTVIzbFJ5?=
+ =?utf-8?B?OEVzR2VGM2ZZSVloNkFQR0c3aDhhRHdOVVNyWXpZYlBVUEVFSGZLUlF2UHdU?=
+ =?utf-8?B?TE9PbjRhMGVYNWNFUkFmVlpPZGdGaFFqT0FKYjU0K1hyd3JCb21kNzhHckRQ?=
+ =?utf-8?B?dVAvSXNUMTkzclVkUnIrMUJLd0xHVVpkc0kxbHZ2Z3JqUmFEeGZnZ2VqQWRZ?=
+ =?utf-8?B?OFhBNFltamlldU5ZQ2dNNXdzdWRwdlNubzY1aHQxaUlNM1NLdCtQR2I5bU9i?=
+ =?utf-8?B?OVJzUjF2SEg2Mkp3ekpadjNJaWlsTGVpdUJkamI4eVBray9hM0tUdU9Ea0hF?=
+ =?utf-8?B?QmFXRStsUElmRURRbS81YlNoVHpyWEhFZm1uaVVyMmxnMU1LdnBBS1dNOGlx?=
+ =?utf-8?B?Z2dlVEN1SEprUEdPT25jK2gzM0dtLzVVTk9aSlQ0cU5teTdtWnBtYXVRTXpK?=
+ =?utf-8?B?ZTJSaUxvOWRiSm03bTBGbVBoMkJLSE9QU2d2Sm5Cc3E3UENkVzJVL0FSOWFw?=
+ =?utf-8?B?emxWcVVOYlM3UXROMk9KQWlsNVFudUhPMS90T1ZaSDBiSUd1Z3ZiZWlndVY2?=
+ =?utf-8?B?aC9jK2FFQVVqSEtLTWJCOTliTktKdXdoQmpjR1dKVHpHcmFsRUIrMnpLSG13?=
+ =?utf-8?B?ZmFiNjdtMTNSNTNzdkNDNXZaYkE2QlVGajRZem4wbDZWZ202YlJRdTdGc0dT?=
+ =?utf-8?B?RXlOdnZRVG5UZXZWWTM0SkhiYkQrZHdlYUpSWjdNb2xJTEZnQmZibUtPVHhF?=
+ =?utf-8?B?Y3VKdEk3djI3NWZJaU9YU2lVU0EzcjMvbmNRQUpYSDVRUXZJNEdzdWRicHR6?=
+ =?utf-8?B?ZndZMXpJZGdEblIza3dEaFgyWFJtTjRVUFpqaFZyeEwyV2ErQWEyWUMzREp3?=
+ =?utf-8?B?Uk5ha3RtNXFvbjFnaU5aZmtCNWxweSs5dzFMT2pSR0pRZFpEMUtIR0VNSTc0?=
+ =?utf-8?B?WlpZYmI4UFdjVEhQdHZKMGNpMGp6dVVOOENHeGJua20xMTZ4MVBsU0YvUVUz?=
+ =?utf-8?B?TUI3aWdjaWk0NkxMalArcVdmUWVDR2NQSlQzbkZNWmd0d0RDcjRubWxFVnpL?=
+ =?utf-8?B?YVZtb3VrSWlybDdERktHVUdIZndna0tCTDZCcUFvaU43T2dZVVdSa2pLL1FT?=
+ =?utf-8?B?QzFmU1JkM2FIZWRhaE5adXJQeThLMHFiSDFpdjRWM3N0Tkl2emlLM3U3OERs?=
+ =?utf-8?B?M2Zid3lVdlQyaEFSNWRRQWlBa0Y4ZUVBRVdJVDFla1VMUTZxZWtQZ2VWZVpZ?=
+ =?utf-8?B?QktGdnE3RzhJdGw1MHpXNzcwdDRvZVM5NFZnNnVhbmhyWlNhN3ZmQlpqeWtE?=
+ =?utf-8?B?cmhiR2NjQnBYbDJtTE5HNFlRMFJWZVJ2WW1yUXlXb2xESWJCOFdEenZJbXhy?=
+ =?utf-8?B?M0I1endkcEpydDBTaWJhQWpkakxLeDNLcmxpVUJnU2NRYlBDVlFmSGF5UzVu?=
+ =?utf-8?B?cE1oc0RXSjk2Y3ZoVXhzQjZXazE3MVFTdThNb29wZHNBZHc3Z3RZTzV6eHJS?=
+ =?utf-8?B?dHBRSDltTkdGYjc2bCszVklwME5TNWIvTVQwa3JwNElXMllLOTJ5ektaajZi?=
+ =?utf-8?B?cDZ6bnhNNHYwSUhPMUp1VWVlUEFsSHFHcnptdzBSUnJYZzBmcXRWZ1pzOXpi?=
+ =?utf-8?Q?+B+l7li8BHpnphytulJTzBeKD?=
 X-OriginatorOrg: solid-run.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b87df91-c5e1-4253-0f2a-08dc23fa5ed5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f76430c-8295-4218-2c14-08dc23fa5f97
 X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 14:22:22.1132
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 14:22:23.3175
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3EvsiDC4XCyFBkP3WGzGyvQYR9PrlOyotZOzMS+cMaggew9eef3FkcApDS3n3Bkd3Iq4R7bqsFvTsDjBw7S6gA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9007
+X-MS-Exchange-CrossTenant-UserPrincipalName: uA44vqWo1hkSeYQ50IlhXt4Dhnr4xV8F/fV36EBCfEJ7HkkcH5uWeCl9+XUKy30yS7Or/bpjWJws11m8TXTtrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9093
 
-This series adds DT bindings and dts descriptions for SolidRun AM642
-based SoM and Hummingboard EVB.
+Convert the abracon abx80x rtc text bindings to dt-schema format.
 
-Additionally a commit from downstream vendor kernel are included,
-enhancing support for pru based ethernet.
-I wasn't sure how to properly annotate it in commit description /
-signed-off area ...:
-
-1. add description for "Industrial Ethernet Peripherals" (IEP) to am64
-   https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/arch/arm64/boot/dts/ti/k3-am64-main.dtsi?h=ti-linux-6.1.y-cicd&id=5afb73d82a014b59462162d960b350b8c58e5ae6
-   IEP is already supported in-tree by a driver, and used in
-   k3-am65-main.dtsi.
-
-Unfortunately dtbs_check reported many problems, I put some remarks:
-
-- 'mux-controller' does not match any of the regexes
-  The expectation seems to be that a mux-controller at minimum has an
-  address, something to put behind an @. However this is a gpio mux, not
-  sure how to name it better.
-
-- unevaluated properties: interrupts, interrupt-parent
-  sensors and flash yaml are missing interrupt descriptions, but these
-  parts definitely have an interrupt signal in this solidrun board.
-
-- wrong names for pinctrl nodes
-  Other TI DTSs consistently end with *-pins-default. Should a different
-  naming convention be used?
-
-- cdns,phy-type required property
-  inherited from k3-am64-main.dtsi
-  there is a PHY_NONE value in dt-bindings/phy/phy.h,
-  but not allowed in phy-cadence-torrent.yaml
+In addition to the text description reference generic interrupts
+properties and add an example.
 
 Signed-off-by: Josua Mayer <josua@solid-run.com>
 ---
-Changes in v3:
-- removed lots more status properties, double-checked against soc dtsi
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>)
-  (reported by Andrew Davis <afd@ti.com>)
-- removed intentionally-disabled pcie node from dts
-- rewrote yaml bindings to use enum instead of anyof+const+description
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>)
-- abracon yaml
-  - added missing maintainer
-  - added diode type property type
-  - added example
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>)
-  - added reference to /schemas/interrupts.yaml#
-- use generic name for pru ethernet controller node
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>)
-- removed unnamed dmas from pru ethernet controller node
-- moved pcie/usb3 features to dtb overlays
-- Link to v2: https://lore.kernel.org/r/20240112-add-am64-som-v2-0-1385246c428c@solid-run.com
+ .../devicetree/bindings/rtc/abracon,abx80x.txt     | 31 ----------
+ .../devicetree/bindings/rtc/abracon,abx80x.yaml    | 72 ++++++++++++++++++++++
+ 2 files changed, 72 insertions(+), 31 deletions(-)
 
-Changes in v2:
-- reordered patchset to drop separate patch adding iep handle to som
-- moved dtbs_check warnings to cover letter
-- converted abracon abx80x rtc bindings to yaml
-- updated dts:
-  - remove unnecessary status properties
-  - changed non-generic node names
-  - use color property for led descriptions,
-    they have no default function on evaluation board
-  - drop earlycon bootargs from chosen node
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>)
-- converted charger node to comment, part not assembled, has no bindings
-- picked up acked-by on board bindings patch
-- Link to v1: https://lore.kernel.org/r/20240103-add-am64-som-v1-0-dda1f9227aef@solid-run.com
+diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
+deleted file mode 100644
+index 2405e35a1bc0..000000000000
+--- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-Abracon ABX80X I2C ultra low power RTC/Alarm chip
+-
+-The Abracon ABX80X family consist of the ab0801, ab0803, ab0804, ab0805, ab1801,
+-ab1803, ab1804 and ab1805. The ab0805 is the superset of ab080x and the ab1805
+-is the superset of ab180x.
+-
+-Required properties:
+-
+- - "compatible": should one of:
+-        "abracon,abx80x"
+-        "abracon,ab0801"
+-        "abracon,ab0803"
+-        "abracon,ab0804"
+-        "abracon,ab0805"
+-        "abracon,ab1801"
+-        "abracon,ab1803"
+-        "abracon,ab1804"
+-        "abracon,ab1805"
+-        "microcrystal,rv1805"
+-	Using "abracon,abx80x" will enable chip autodetection.
+- - "reg": I2C bus address of the device
+-
+-Optional properties:
+-
+-The abx804 and abx805 have a trickle charger that is able to charge the
+-connected battery or supercap. Both the following properties have to be defined
+-and valid to enable charging:
+-
+- - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
+- - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
+-                          resistor, the other values are in kOhm.
+diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.yaml b/Documentation/devicetree/bindings/rtc/abracon,abx80x.yaml
+new file mode 100644
+index 000000000000..0c2cf6410604
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/abracon,abx80x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Abracon ABX80X I2C ultra low power RTC/Alarm chip
++
++maintainers:
++  - devicetree@vger.kernel.org
++
++allOf:
++  - $ref: rtc.yaml#
++  - $ref: /schemas/interrupts.yaml#
++
++properties:
++  compatible:
++    description:
++      Select a specific compatible chip.
++
++      'abracon,abx80x' has special meaning,
++      it provides auto-dection based on ID register.
++    enum:
++      - abracon,abx80x
++      - abracon,ab0801
++      - abracon,ab0803
++      - abracon,ab0804
++      - abracon,ab0805
++      - abracon,ab1801
++      - abracon,ab1803
++      - abracon,ab1804
++      - abracon,ab1805
++      - microcrystal,rv1805
++
++  reg:
++    maxItems: 1
++
++  abracon,tc-diode:
++    description:
++      Trickle-charge diode type.
++      Required to enable charging backup battery.
++
++      Supported are 'standard' diodes with a 0.6V drop
++      and 'schottky' diodes with a 0.3V drop.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum:
++      - standard
++      - schottky
++
++  abracon,tc-resistor:
++    description:
++      Trickle-charge resistor value in kOhm.
++      Required to enable charging backup battery.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 3, 6, 11]
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    rtc: rtc@69 {
++        compatible = "abracon,abx80x";
++        reg = <0x69>;
++        abracon,tc-diode = "schottky";
++        abracon,tc-resistor = <3>;
++        interrupt-parent = <&gpio0>;
++        interrupts = <44 IRQ_TYPE_EDGE_FALLING>;
++    };
 
----
-Josua Mayer (4):
-      dt-bindings: arm: ti: Add bindings for SolidRun AM642 HummingBoard-T
-      dt-bindings: rtc: abx80x: convert to yaml
-      arm64: dts: add description for solidrun am642 som and evaluation board
-      arm64: dts: ti: hummingboard-t: add overlays for m.2 pci-e and usb-3
-
-Suman Anna (1):
-      arm64: dts: ti: k3-am64-main: Add ICSSG IEP nodes
-
- Documentation/devicetree/bindings/arm/ti/k3.yaml   |   7 +
- .../devicetree/bindings/rtc/abracon,abx80x.txt     |  31 --
- .../devicetree/bindings/rtc/abracon,abx80x.yaml    |  72 +++
- arch/arm64/boot/dts/ti/Makefile                    |   7 +
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi           |  24 +
- .../boot/dts/ti/k3-am642-hummingboard-t-pcie.dtso  |  45 ++
- .../boot/dts/ti/k3-am642-hummingboard-t-usb3.dtso  |  44 ++
- arch/arm64/boot/dts/ti/k3-am642-hummingboard-t.dts | 292 ++++++++++
- arch/arm64/boot/dts/ti/k3-am642-sr-som.dtsi        | 592 +++++++++++++++++++++
- 9 files changed, 1083 insertions(+), 31 deletions(-)
----
-base-commit: 861deac3b092f37b2c5e6871732f3e11486f7082
-change-id: 20240101-add-am64-som-51a1ca47edf3
-
-Sincerely,
 -- 
-Josua Mayer <josua@solid-run.com>
+2.35.3
 
