@@ -1,83 +1,89 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82244E549;
-	Fri,  2 Feb 2024 04:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A15E54E;
+	Fri,  2 Feb 2024 04:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706846713; cv=none; b=pEf18maCz62ErsJgI4knNR5EVI56hPbMM20FB3I/aCHJgSWYBLK7j9t1EgJUY/sgXY+X8OUfCAJenW/5g+M+xM5iHPxUZXQNXTbOqyYk3ZJW1U7yHAFgVMwzye1cypXvpYKcyuCSRmiJscVO2C06T6rbH+OHuhthYt1RxGP1bFo=
+	t=1706846713; cv=none; b=A+xPLVZ8IQTqt5vUolbXkjD5SAl5B7HMwmNk9Ap2dA9si/1gbdWHKCFNezeSfqwBxC+OIk2S/Vim7og4s7/GLD9D20owd2YlL9yTFsvADkUNQTopBi64TTEs1N+wK/2dwZq7DRiiKO9YmSUBunutnvrsl3SXtUdTL9oagnk3M9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706846713; c=relaxed/simple;
-	bh=hZfxudAQbzcTFkLzrUZ/iFfqiq5eoB8LM/fFig+PAHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uBMoMYYBb2zR97aJvt0THOGBr1gL4bsr3gTXc8ZQ11FxIVZw2Dex8yrD+tx+8Pme0IZn4cqNg60sqy5cMdqxNL09EOPdyYq8sayb2h6ktkS99RTxeO0kzbC+CUFAv/cqaII09sAUjfU+x+Bp51kJWOrvqPGk+6/V1MSmFcobhrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=pIco9+AE; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	bh=Jw1hElvm+csPgqkv8qTrMigYX9yL+XS5VTTdrbpFuLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YwoRmaR+oAF/c4w+AwKNlTUDtSwty/eRAV4sEBYbqOMduPglHCZCFIrA0UFk0nGvs5lTBMIBxEONk/tovwOm7LMKEQXC6ilSUOqil9KMtrSz7SwuAxM8C1LucMrQiOLLz2E5+n/2Qc+qghQSfm5DU8gG6+cloPZlq50jvBZx1Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=rMxKknfg; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="pIco9+AE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zprcRbdEZTEbzRJzXIqOfmdBLyrHEeb0z5ZjrW+eJjk=; b=pIco9+AEcGpi1eJkqd1+TWTTQ/
-	XggxqzL2w7JuIlqFb/qCdHy0ULmOVossWG+kEFJsaGwMh+RytusUgg82M15TvEDjlqwGslNf7cvUq
-	sPt2Vassayxn3kWT9oVofZJaRl0DIN7pORLgWXb+9VTqqAlio+oguHQ5mP/B5DZuelRkEJdARnyFU
-	m/G0i2qfxHjXcpG4x8OeVf8YUMVphbhJ7Uxp1eVbk/1W+xGbO+bqjutgFRWwu6i/wdiHFEvnCchz4
-	ZhCB1hItyVOF2KQdksSMyIe3+2vMkZTegZ2UOl9ci4kUZVIH/f16rNHViC/gdF6VL8VPSjwmx0o57
-	Hxxlk+WA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rVknX-003e9i-0F;
-	Fri, 02 Feb 2024 04:05:03 +0000
-Date: Fri, 2 Feb 2024 04:05:03 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>, Jan Kara <jack@suse.cz>,
-	Kees Cook <keescook@chromium.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] regset: use vmalloc() for regset_get_alloc()
-Message-ID: <20240202040503.GX2087318@ZenIV>
-References: <20240201171159.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid>
- <20240202012249.GU2087318@ZenIV>
- <CAD=FV=X5dpMyCGg4Xn+ApRwmiLB5zB0LTMCoSfW_X6eAsfQy8w@mail.gmail.com>
- <20240202030438.GV2087318@ZenIV>
- <CAD=FV=Wbq7R9AirvxnW1aWoEnp2fWQrwBsxsDB46xbfTLHCZ4w@mail.gmail.com>
- <20240202034925.GW2087318@ZenIV>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rMxKknfg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1706846709;
+	bh=ZrGmotBDevwYVbTrda2vy1NJOx3UexgQB5LZDDxTWoU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=rMxKknfgJ0mfu2KViCf4zR9TxlWm9rI6Xm48vVHXDG5BrMeW0d/lqsSddj3eBgqxd
+	 JqSPCSJTfpSJu9YeyV/kVLgzjiAJ8lV3XN7SMUCf4kk2ZFF91XIpwATFxfotqB6FTQ
+	 T5gXMO2YrpuPJQ8HKQtpOZD4wuG7ApJhzNi9Hmq/VX5hRIBFoBeCdVgTuwTsaelTtP
+	 C0ytQXBj+TB57BV98PWev0AfKfOF4yAxERaxKD4d6WADP0wXTz66AKBaU7n55FWLWN
+	 +dfOoec6RjF9+tddiuAfGVuUUsWsFJj7axsj8gHLYdPNpan6ex41+W7RT0O6UHFSGM
+	 H2lpcx30Ud5uQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TR2H81XWHz4wcT;
+	Fri,  2 Feb 2024 15:05:08 +1100 (AEDT)
+Date: Fri, 2 Feb 2024 15:05:07 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>,
+ Thierry Reding <treding@nvidia.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the tegra tree
+Message-ID: <20240202150507.468210de@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202034925.GW2087318@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: multipart/signed; boundary="Sig_/P_ee485e5U85eUMusTPx26g";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Feb 02, 2024 at 03:49:25AM +0000, Al Viro wrote:
-> On Thu, Feb 01, 2024 at 07:15:48PM -0800, Doug Anderson wrote:
-> > >
-> > > Well, the next step would be to see which regset it is - if you
-> > > see that kind of allocation, print regset->n, regset->size and
-> > > regset->core_note_type.
-> > 
-> > Of course! Here are the big ones:
-> > 
-> > [   45.875574] DOUG: Allocating 279584 bytes, n=17474, size=16,
-> > core_note_type=1029
-> 
-> 0x405, NT_ARM_SVE
->         [REGSET_SVE] = { /* Scalable Vector Extension */
->                 .core_note_type = NT_ARM_SVE,
->                 .n = DIV_ROUND_UP(SVE_PT_SIZE(SVE_VQ_MAX, SVE_PT_REGS_SVE),
->                                   SVE_VQ_BYTES),
->                 .size = SVE_VQ_BYTES,
-> 
-> IDGI.  Wasn't SVE up to 32 * 2Kbit, i.e. 8Kbyte max?  Any ARM folks around?
-> Sure, I understand that it's variable-sized and we want to allocate enough
-> for the worst case, but can we really get about 280Kb there?  Context switches
-> would be really unpleasant on such boxen...
+--Sig_/P_ee485e5U85eUMusTPx26g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-FWIW, this apparently intends to be "variable, up to SVE_PT_SIZE(...) bytes";
-no idea if SVE_PT_SIZE is the right thing to use here.
+Hi all,
+
+The following commit is also in arm-soc-fixes tree as a different commit
+(but the same patch):
+
+  d820100a1bde ("soc/tegra: Fix build failure on Tegra241")
+
+this is commit
+
+  1b5af823d703 ("soc/tegra: fix build failure on Tegra241")
+
+in the arm-soc-fixes tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/P_ee485e5U85eUMusTPx26g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmW8afMACgkQAVBC80lX
+0GxMbwf/RbMTdgGODjlwdEX8THaIcagBVb+Ys1xwEtMZNC3UT8izhQtVRCsNRjX+
+MlrtulWuj9lRs2LC4k1SVcp2nGsRnQQD0Jurk2Jl3wBmqvi8LS4ZRUvXTHCkKQTQ
+zk6vwsWnjVRHUUFjcjm9Xxq5OdCcwuBqEuWEkDxNvdtjGJHxXGqjKwC1EdkNnHW2
+e/7GYei/pv/ZTkRc84YHRiOtE61IPFqF6WmwqbFjQyn2GuvFw1LbPdTwsPivmcq9
+CLpMT99oLDiPTPw0zoczC2cbzJkOpP8OUrz3GdVnPuGWQyLZKHzYiB3UefiPxL2N
+vxmYYSEaNJMMfSWZLwFNbnsDc2yEfA==
+=MeHy
+-----END PGP SIGNATURE-----
+
+--Sig_/P_ee485e5U85eUMusTPx26g--
