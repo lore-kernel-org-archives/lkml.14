@@ -1,188 +1,924 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9331B13D506;
-	Fri,  2 Feb 2024 11:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E138460BA2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 11:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706873892; cv=fail; b=crrQ02uMLhmgNGpB3svvYBcy9EWeOHm8pTo9m6a7yZqD6w45syk9iYj8Dr/L/xTsip98B5fHu1hevwH1Uuz1tawCgfy8rX/fUDzl4Bda+lcH3JBnHe/Utb6l6n56d7w3bA/lezSasciK+1TYZ34Cz/x6vFGNdkgmqJt9OupApZc=
+	t=1706873908; cv=fail; b=MpxHbJwVdhopTEAPHYpuGf9QBfGGVDnD/IhovPonQVGtRe1PsTT3WtrIy/lB2NT/hwXm7SJiswfBSClaMRhbK7apdydgFv3xK3X+i8rFvrB+si7/aVcmC7Pj2Q5r7pxaq4iQkiou4UUKktffboXyvzOitXYfn+HAj0hQLckFjvE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706873892; c=relaxed/simple;
-	bh=cZioGB2HtDrsXgG5wz4fFN840drduEIUgNpk7rQWJg8=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DzXEDkoDsIjVtK7++sWu9mZl2JyBfKttPyj2snGM9v4kIfHAUFJw5b75YN7FIsx4KFA60LCew9vX//MKgLF1OupSOFlSMJU2vef/BKAI4d6AyFdldl+pP9Z4Dhd2HObFF/4WCODe6d54eZ+atTXkHRCrydontfSouxSsLkSZp6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B+trUOcr; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706873908; c=relaxed/simple;
+	bh=Fmy5iCwOcBFK9OCamKKWNCyZXIZGwlzZ8ttt0R9h86Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kXWLy/DgcUB4JTLlAkNa9aj3l7JcI7VE+Ih7e8l6HUw6OCVXSXdZmhzEUEla0hiygkxJUqso6fLRVEIM135i4xJwaZ+4OcLtNkPWViWi5F4Kya1I5QZIoOWLSkM05Bsm19h2I1ExuMsO4tYuqrtDCMwIKF+VKRXetVleWuoAN3I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=trE6vCiu; arc=fail smtp.client-ip=40.107.237.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B+trUOcr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706873890; x=1738409890;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=cZioGB2HtDrsXgG5wz4fFN840drduEIUgNpk7rQWJg8=;
-  b=B+trUOcrVqmTihgPdv+bP4WfTo5jEK88PtkRh77nh8GyEzpRrD8/CkHC
-   OBsCIJmJcwkZcStVRkxWInX4U0D4esUemjI0exUSRuOG5Euqy1B6Tg7SY
-   lX3WuvAnP7QFfRyXl27E5xO8hDeAiNGJ/szyYoKVD8efq6XEaJ41IIi9n
-   QBMkXjDruI1h3DJi6g6/cWzNkizFdeFpCFbYmQOKep+z78aTSOj2jIJCV
-   XJ59Kva3WSxlbZkTb+H+ooNPQNb2NRMPTPxp7gdYAFYyE2Nh06Pgus22n
-   n2UtX6mu+UtTcR+yapc4zyhZ6Ov03RY+ZD85/olHPUMNcZQT2hzf16t8U
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="10793588"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="10793588"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 03:38:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="45142"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Feb 2024 03:38:06 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 2 Feb 2024 03:38:06 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 2 Feb 2024 03:38:06 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 2 Feb 2024 03:38:06 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 2 Feb 2024 03:38:06 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="trE6vCiu"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cAfMfP+pVx7CN7xJvt341/fSgTugNAVyU0mYBm4K6T0n+0lxiRsrsv/koZVfeCgwhgXBk9f1RnI2sdb+L2Qman9vHjRTMdSTQgRiotzATfUln5pIuI6yE5ty9EC/4WMSO+VwXbWs8CvW+7lVAxsgVtnNOuK2PJTRs3Cf+qVe8ueFcAd+D69KkTQF5z1Cy/Jq9bhNgT8bQlZNzd9+057HRdbK0pFprXhWSWuYnLFEPlGflXQrGwcXzeDtCl7vfXXpDrC9Q88MJmsmfLvyQgW5hfI5jdARypKkyd/x4w9FKhwLqtDJxMRmG77fOPJO6QErN6i9kdxfPJUXZHhN7/Pe1A==
+ b=kdlxXC+id7BzwpMIeqo4rtg4sa6oF3OQBDLgluGy7bISF/6pholRpRUinZ2gZ18y28pa5ikfxV6sUe1faS8fqpeoAin6BerkUROb7gtuxuT5Ikr2ggqnCdiRiLw6gR9PnlhOG8kFrV/l/DaX2+JEntpQ6+8teOn8Zxa5TzzpLWN2DJ+PknwmcwNez/F9HSR9rDwYrX7dl1kR6x53VTX6n7Ooi6yAWzc0BqbFwbnNVjI5oPb++AbJF+ZtMCfYPLnJlSpeUCO7AMQ4shIEut5I9vx39wxNfwZdQeVaE8TyzD/eNtHaf7WAJiQTnvMzGWSWzleq7aBoom1+Ezrd0peR7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M584L8oCKrEJ2Rt2VGppr/AiDCbSayeL6c/cGgHNpHA=;
- b=OuorxP84oRk3Lh7+SI/4pDNkadZqmIX52ga/qs50q0mRy+LJg5NbUx5sxCprB4e/gJx8ctPetEmfg4pbSwKZwySoC7OoJlSo2O6kyxy4ERokt/Np2s++3e8Li7Xgpf9b5tT8rZrVMmEyiPkNbHKAgP0Z9bdssu5eLjGkeLoY5t96SaE0ePacm0McrP62O8EYDYUBezJ2/IHJE3mK5IR4wkpzVGkL43v0sE9wzEvwBrdqhjatobKSOlhXTN/i5fKHm77dSWYq47PZO7LL+GXf39v1yU0RBAXONnVRGVwsELEPnelCZYnCoPa6xqLxn1jBa44dNYcd87ov2L/Ms3cImA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
- by SA0PR11MB4541.namprd11.prod.outlook.com (2603:10b6:806:94::7) with
+ bh=zpIe+RY54xRiuGqFSlJQKLJV0zGvDUoxCjh3b/cVqk8=;
+ b=BeqRhtPZ4Y4yyuxkC9ODNpS5DjoToNE4dzuicABFy8CxGsYuOKB7C1Gbp/Cr7egcZGPl6z3rjn9hOd1nDSMF2ujYFVS0ItgpS6B6w65DYLPKlIJb1o2dULLkLcU99zfNRN6U/r4Qg0LzEgoyQCAgJvOC6Uc1xPrE26Gqm2TDOJeG0zy2blH/4eJQ9QOO07Atl5S2NByR9EtgFTfGpj7t4tYtvaFgRya/DKCG9naazUTFUfmJMJY3qbno1t7fSoriXgpoelZsAjlMiUrPeSWcGcICd0SBigx6pgVghyrDGDr8bX+1Ks1BViv9wPCPwDF/AIpYHNvgEFoQFQlAwa9TNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zpIe+RY54xRiuGqFSlJQKLJV0zGvDUoxCjh3b/cVqk8=;
+ b=trE6vCiuSt59kEG2w7moi99ZF2i1dl+D1w1F0oVOmOF/dnxC0utiMBlS2R3j1fQur6NeF3YgZ71V8P8iwm3g3/UGv4pi8Y3tu5FXTNeA2LKg6bpxiMrwwxuXbVdGqWDduShrRx4fW2o8a6ysHKytv5QCPPXiOs7Gdgbuuw9A/IY=
+Received: from CYZPR17CA0016.namprd17.prod.outlook.com (2603:10b6:930:8c::25)
+ by BN9PR12MB5353.namprd12.prod.outlook.com (2603:10b6:408:102::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.29; Fri, 2 Feb
- 2024 11:38:04 +0000
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::b1b8:dbaa:aa04:a6bf]) by MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::b1b8:dbaa:aa04:a6bf%7]) with mapi id 15.20.7249.024; Fri, 2 Feb 2024
- 11:38:04 +0000
-Message-ID: <694382da-8d3e-4092-8a52-1982f655aca1@intel.com>
-Date: Fri, 2 Feb 2024 12:37:54 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 11/21] tools: move alignment-related macros to
- new <linux/align.h>
-Content-Language: en-US
-To: Alexander Lobakin <aleksander.lobakin@intel.com>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Marcin Szycik
-	<marcin.szycik@linux.intel.com>, Wojciech Drewek <wojciech.drewek@intel.com>,
-	Yury Norov <yury.norov@gmail.com>, Andy Shevchenko <andy@kernel.org>, "Rasmus
- Villemoes" <linux@rasmusvillemoes.dk>, Alexander Potapenko
-	<glider@google.com>, Jiri Pirko <jiri@resnulli.us>, Ido Schimmel
-	<idosch@nvidia.com>, Simon Horman <horms@kernel.org>,
-	<linux-btrfs@vger.kernel.org>, <dm-devel@redhat.com>,
-	<ntfs3@lists.linux.dev>, <linux-s390@vger.kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240201122216.2634007-1-aleksander.lobakin@intel.com>
- <20240201122216.2634007-12-aleksander.lobakin@intel.com>
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-In-Reply-To: <20240201122216.2634007-12-aleksander.lobakin@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR0P281CA0048.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:48::10) To MN6PR11MB8102.namprd11.prod.outlook.com
- (2603:10b6:208:46d::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.8; Fri, 2 Feb
+ 2024 11:38:21 +0000
+Received: from CY4PEPF0000E9CF.namprd03.prod.outlook.com
+ (2603:10b6:930:8c:cafe::e9) by CYZPR17CA0016.outlook.office365.com
+ (2603:10b6:930:8c::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.29 via Frontend
+ Transport; Fri, 2 Feb 2024 11:38:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CY4PEPF0000E9CF.mail.protection.outlook.com (10.167.241.142) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Fri, 2 Feb 2024 11:38:20 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 2 Feb
+ 2024 05:38:19 -0600
+Received: from xhdipdslab41.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Fri, 2 Feb 2024 05:38:16 -0600
+From: Nipun Gupta <nipun.gupta@amd.com>
+To: <gregkh@linuxfoundation.org>, <maz@kernel.org>, <tglx@linutronix.de>,
+	<jgg@ziepe.ca>, <linux-kernel@vger.kernel.org>
+CC: <git@amd.com>, <harpreet.anand@amd.com>,
+	<pieter.jansen-van-vuuren@amd.com>, <nikhil.agarwal@amd.com>,
+	<michal.simek@amd.com>, <abhijit.gangurde@amd.com>, <srivatsa@csail.mit.edu>,
+	Nipun Gupta <nipun.gupta@amd.com>
+Subject: [PATCH v7] cdx: add MSI support for CDX bus
+Date: Fri, 2 Feb 2024 17:08:11 +0530
+Message-ID: <20240202113811.2546311-1-nipun.gupta@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|SA0PR11MB4541:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09fa2ed5-fe72-4ad0-885a-08dc23e36b2b
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CF:EE_|BN9PR12MB5353:EE_
+X-MS-Office365-Filtering-Correlation-Id: 749116f1-d928-498a-e774-08dc23e37534
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C1jgBuhuOLBMfiGqailvrlKvqgT+O0JEpP/Xm99tRhcSpkOc/nkzYhjUIe0MKnBkiAfXqCeZw3YOoQRouXhpvH3bEOaXZlVjOu9UCeoIVtzaLkeDm+X42/l93OLcFP8Kkv/anpIFkUoeNNWl+9ZI9iVLNyQEiwXXy3r82D35VR+yx1+U5VfyKpzi0ArXecqnOtp2aFLOpAnjRk99Nb70eqt3Eclr6dEeN9KwFUycb1xkgG5zEQ+574Rn+E78iYkRNzDcGWXzVWHBUZmAnUiv9UMWTydXkgu0ume/m1uxrmwl+cuhGyFqzyFq3hQ68XX8Wpuv3Suw7EXg/lhfGCTbmbr6uAPq1gvXDA7z7zokqLhhW/LotGBus4Mn7N5oB4GqtC+lCRawhm6ys/TXolY1jnsVeAX8toJU4rHM2R/UvJ3UPixF+5/lTliZq5dBAPhBNszWyypmEXZP5ZUUmAM1rY8q24tAZdOIQ6wHtUfq5zHPj20588ynXhzEpi7nRctZ8Vazm9fCj9p4Dgs7+n/z93PjQr43e3tySZkXSkOslP0RiTPaQElqrjTf1W59lBt6PhKz9Oso8HqN2feGufy/vusEIttsQoYCVm9+PZrxR/6cZucQ39cTKAUKzokNHkiWIFlxQTkMjJtgvbCwvbzP7w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(376002)(136003)(39860400002)(346002)(230922051799003)(186009)(1800799012)(451199024)(64100799003)(83380400001)(26005)(41300700001)(2616005)(54906003)(82960400001)(8936002)(38100700002)(110136005)(66946007)(8676002)(316002)(66556008)(4326008)(66476007)(5660300002)(4744005)(7416002)(2906002)(6666004)(6506007)(6486002)(6512007)(478600001)(53546011)(86362001)(31696002)(36756003)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S3hrTW04YmJYNElOY1Ixc052dW9MQkFNelhjVHUrZjJWSisxZk9PU3ljRDRl?=
- =?utf-8?B?S3AyUk5KTHQ0dEpKbDhlWEJjTFhEZU9mMitMYmdoZFpGNmtCRDlXMEdkMEhV?=
- =?utf-8?B?K0ZoZEs3dE81QSs3WGJtdE9qK083dWhtelk3WnFsTWM5bFg5TlRYYkthNzUw?=
- =?utf-8?B?UjJrcTBlRTJnQ2RrL3NkNFhZV0N0cHl0c3I0djZLdndKWkduaG5oZk5kbkRP?=
- =?utf-8?B?ZW5UQkxWTm5waExjVnpaNDBZbkRKclFJaUFNUVJRdkdGSURmV21ya29ZRFQx?=
- =?utf-8?B?SXFKZy82MTdyMDE0ZUpad3lUVG5VVndNc1BJc1htaGJCK0NMM3YwRXN2djVq?=
- =?utf-8?B?b3F2TEliWUdXSCtWdnZuOVZRZkloK2ZYVkljdGYyOUl0VUwwOHg1ZmRmcEE2?=
- =?utf-8?B?eXRLUVRmNXFETmtFMTZxb0xWNUhYLy9BdU5OUVRTeXg4SjQ3OWViWmxORkl3?=
- =?utf-8?B?aC81MVZRODRDMTZBWExNaVA1NGs3K2I0dGkxRWlzOTIzbWZMY1hrRW9Dd1hz?=
- =?utf-8?B?SGl3Zk1Gb1g5aVhOR3RNVUVIVzF0Vi9sZHB0YlFKZEVzZHZ1eGRyQkxOK205?=
- =?utf-8?B?TFh4SExJUnN2M05QcU0xbVZpMTljcnhpTVBvTU51TjU1NkdhVlVqY0dpREkz?=
- =?utf-8?B?MjZxbUNKZU9RS0g3dkhaajdUaWk3d211MXl4dzUwdlc2NHFXMnRoTTd6SXRH?=
- =?utf-8?B?dzdldDNFMS9BOUhPR0JZblNCelBrMWgxUEJKMXFTRGR3eDZZakNtQUtSSXJo?=
- =?utf-8?B?RkZwSkZidkJ5MGMrbHRUeHNDeUU2V3d4aThtakI3YUdQM2gyVm9IQ2l0eS91?=
- =?utf-8?B?cDMvS0hselJyeGJKQkRNa2gwL3ovVzRsTVNZNlcwRGRnd21PRjRIQ29kT0Zu?=
- =?utf-8?B?QjlvbTVOalhzdTlzZExEV2drQU1tOEoyd0VxUWpSUGxTcTBwOG1XYktDZC9h?=
- =?utf-8?B?eHFxTEhpZWRQYnB0WnFEU0R5OU9ERGtwSS81Rm9PQ0tjRHBiNUgveUhCY1pw?=
- =?utf-8?B?YnlGT214bktJR0xyQkh4QjAzMDJuOE44ZFBpbHlsTGkwOW0yWU9OWUhGcDMz?=
- =?utf-8?B?Rm9EcytsUGJPOGVlRDJ1RVZUYm5rang5cDFiZVB1aWhjSGtwUlh6RG8waDl2?=
- =?utf-8?B?bjYycXZxVldsWUg4cGtNMUYzSVY3R2hTYml1Vzd6T2dLUzU5a3ZwdSs5NEYr?=
- =?utf-8?B?c0hjcU1zZDRET1RNZEpWYy96Nys1aEFnZ0NYRGl1aEp0ZmcxdGNHTHZYb1k5?=
- =?utf-8?B?QmRIb1J6TTFBRkdEejNSMytZcHhzOC9aNTI4R2JEbTRkSEFnZjZuOGIvcGh2?=
- =?utf-8?B?M0dGRGpUM1AyWlVqOTkwWE05enVYaVRvSC9QQnRaQURuN2k0aEhGQjBRR2dT?=
- =?utf-8?B?K1l2NTJkRDRzMEU1VFkyTDZaV3h1NTRKOGxqMkZwSnU5UG5BZDNSQVVsNVEw?=
- =?utf-8?B?Q09nLzdKbm5NQko5NkF5UkNmOVFycTBDZ3gyYzR3eUpYVVBiSEprTWN4Y2Vm?=
- =?utf-8?B?WDAzelhoamJoMzVJTXZtOUkzN0lrRHBPZTBMQWljVGRMOTU1MEk2bCszMzY4?=
- =?utf-8?B?cExmNzdsdFVpOHlsU2NNSVpTSTV5dkhDQlM3S2JURThUSXVHRitKMm01aHFJ?=
- =?utf-8?B?cGtxRmRKUWNEYmNGdlhnMU4xVGJPTTMyeWZZWERxMEE3WjhDSW9RM1IrVmV6?=
- =?utf-8?B?UnhNME9mZmdBZU13TlhBZFBudXlOQkszbHQraUZvT0FwMFRLS0JmNU5tZG1L?=
- =?utf-8?B?cmViOC8wRUZpS3VwRS9hQ29BbGJ6WmNxVW9ZQThuZ3NGVlBZYkV2OFlLbjN5?=
- =?utf-8?B?cGQ5cVVKL0FlWHdSZVcvRzFuc0lpYXBGTjV1TlQ5eWc5RG50YmxMQVlDSUNm?=
- =?utf-8?B?ZkRmdzB1blc5VXZsUUJWU2FPZEVCc0xDYTlXd3k4SDBTZXZ3UWJJK2xSNnhE?=
- =?utf-8?B?K1g5NHpaWE1KOEM0b25WdXBhREF3TTd4YS9zZnZqdGVTakIya2drTnpFQmph?=
- =?utf-8?B?MVpzWnBZOXFidWQ0cFZ0c2JhVVZvN2VIN2NVRmJtZ09wN1JjR3Z5L0x4ekhq?=
- =?utf-8?B?R2hZSDBGOVkwa0luTHlqcTdQNUlTUnJXTS9MV250aDhmKzUvNjBsYjJlWitv?=
- =?utf-8?B?TWxtc2dibGE0ZndWbC94bGxvTVo5Tkxpb280SG9yMCtSc292SE9SYUMrNVFI?=
- =?utf-8?B?MlE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09fa2ed5-fe72-4ad0-885a-08dc23e36b2b
-X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 11:38:04.3982
+X-Microsoft-Antispam-Message-Info:
+	/I+hVo9rW/9iG2bf4CvYArDEFUScNy8iBNkkZ2btUh90MW1U9q1wEgyYc9B+ep43df42AQDHIPSZuMRqnGfCpGERHnAp/lbouIVz3RyewuM/aNfJ/yRdIqOY5ERqwF9Bq143das/R6RSXgJJ0v2tncykAPzMZayYEhENq8bu5zd1bcSP6aQjq+gD6QIko8eNWZqC3o9/mwwN26IvEB4Xd4WqqNutec8XPw8rLVg52x/tIiP5Y4JGQNuGi8oF5T1SxbHD6rmZFdPhM72+S7LdKeuM5Xa/DS+lzDffxYyuQbXl98OFLnRD0KDqxoeAvKzlYbqupIXYZTqy3LuVCj192DkPJvpMd4h2JZmBR1zJNWzzD17eUwXhFBPny2r0VVP2YerADW1LuUookh3nbYiHbHj/KsZqJrP0Zx01H3xPHxhp2Go0adeQZ2b+mUvwgKFYt2lidlNmvY6FeMf3OdIPdGJyMLL7vhUc84HWhdQTsYjwRmYsJgm05nKcpmgpWHe9Chi4zDuA/x8+b4gBgLrU3+V/FG0acULxi4yxK0kLghFhuW5yyqXhXhLWRqoVt9+f1C/OkFidMcCQn4jpxSGRI5/29TRCpoHfPaalBqC4syBl0kTMRG+3CaRl+tzlbecyl7RrpJm5xWHM8sKVW/p0sAVOXqIPoseKvumKGfbrkUu3lMYiwV5m0+i/kLeZJujeS4AmVLney1CLa/z9y3SMgW7Ga60neI1mAplkj3IPux9Yx3d7fPpt7CZoVXRHZaxjgS6zT+84Iv200HZTYAZSDw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(346002)(396003)(136003)(230922051799003)(1800799012)(64100799003)(82310400011)(451199024)(186009)(36840700001)(46966006)(40470700004)(26005)(40480700001)(40460700003)(426003)(336012)(2616005)(1076003)(41300700001)(36860700001)(316002)(83380400001)(47076005)(6666004)(478600001)(36756003)(81166007)(82740400003)(356005)(30864003)(54906003)(70206006)(5660300002)(110136005)(2906002)(8676002)(86362001)(4326008)(70586007)(8936002)(44832011)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 11:38:20.9467
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +VWa99jho0GVibwLN2kSkXbVoe0JbG4QizQGg2o9zixWert2WkY1RhFpFvsExM0Q1fB13XVrR9MwvvAduzVBj5i3ouJ4YGblQWor7PY273c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4541
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 749116f1-d928-498a-e774-08dc23e37534
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9CF.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5353
 
-On 2/1/24 13:22, Alexander Lobakin wrote:
-> Currently, tools have *ALIGN*() macros scattered across the unrelated
-> headers, as there are only 3 of them and they were added separately
-> each time on an as-needed basis.
-> Anyway, let's make it more consistent with the kernel headers and allow
-> using those macros outside of the mentioned headers. Create
-> <linux/align.h> inside the tools/ folder and include it where needed.
-> 
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> ---
->   tools/include/linux/align.h  | 12 ++++++++++++
->   tools/include/linux/bitmap.h |  2 +-
->   tools/include/linux/mm.h     |  5 +----
->   3 files changed, 14 insertions(+), 5 deletions(-)
->   create mode 100644 tools/include/linux/align.h
-> 
+Add CDX-MSI domain per CDX controller with gic-its domain as
+a parent, to support MSI for CDX devices. CDX devices allocate
+MSIs from the CDX domain. Also, introduce APIs to alloc and free
+IRQs for CDX domain.
 
-Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+In CDX subsystem firmware is a controller for all devices and
+their configuration. CDX bus controller sends all the write_msi_msg
+commands to firmware running on RPU and the firmware interfaces with
+actual devices to pass this information to devices
+
+Since, CDX controller is the only way to communicate with the Firmware
+for MSI write info, CDX domain per controller required in contrast to
+having a CDX domain per device.
+
+Changes v6->v7:
+- Rebased on Linux 6.8-rc2
+
+Changes v5->v6:
+- Rebased on Linux 6.7-rc1
+
+Changes v4->v5:
+- Use GENERIC_MSI_IRQ instead of deprecated GENERIC_MSI_IRQ_DOMAIN
+  config option.
+- Remove CDX bus dependency on MSI support (CDX can compile without
+  MSI as well).
+- Remove un-necessary debug logs
+- Remove un-necessay initialization of dev_id in msi_prepare
+- Add required msi enable and disable APIs
+
+Changes v3->v4:
+- Rebased on Linux 6.6-rc1
+
+Changes v2->v3:
+- Rebased on Linux 6.5-rc1
+- Used FW provided 'msi_dev_id' as device ID for GIC instead of 'req_id'.
+
+Changes v1->v2:
+- fixed scenario where msi write was called asynchronously in
+  an atomic context, by using irq_chip_(un)lock, and using sync
+  MCDI API for write MSI message.
+- fixed broken Signed-off-by chain.
+
+Co-developed-by: Nikhil Agarwal <nikhil.agarwal@amd.com>
+Signed-off-by: Nikhil Agarwal <nikhil.agarwal@amd.com>
+Co-developed-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
+Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
+Signed-off-by: Nipun Gupta <nipun.gupta@amd.com>
+Reviewed-by: Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>
+Tested-by: Nikhil Agarwal <nikhil.agarwal@amd.com>
+---
+ drivers/cdx/Makefile                    |   4 +
+ drivers/cdx/cdx.c                       |   9 +
+ drivers/cdx/cdx.h                       |  14 +-
+ drivers/cdx/cdx_msi.c                   | 217 ++++++++++++++++++++++++
+ drivers/cdx/controller/Kconfig          |   1 +
+ drivers/cdx/controller/cdx_controller.c |  27 +++
+ drivers/cdx/controller/mc_cdx_pcol.h    |  64 +++++++
+ drivers/cdx/controller/mcdi_functions.c |  33 +++-
+ drivers/cdx/controller/mcdi_functions.h |  33 ++++
+ include/linux/cdx/cdx_bus.h             |  76 ++++++++-
+ kernel/irq/msi.c                        |   1 +
+ 11 files changed, 475 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/cdx/cdx_msi.c
+
+diff --git a/drivers/cdx/Makefile b/drivers/cdx/Makefile
+index 5d1ea482419f..749a3295c2bd 100644
+--- a/drivers/cdx/Makefile
++++ b/drivers/cdx/Makefile
+@@ -8,3 +8,7 @@
+ ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CDX_BUS
+ 
+ obj-$(CONFIG_CDX_BUS) += cdx.o controller/
++
++ifdef CONFIG_GENERIC_MSI_IRQ
++obj-$(CONFIG_CDX_BUS) += cdx_msi.o
++endif
+diff --git a/drivers/cdx/cdx.c b/drivers/cdx/cdx.c
+index b74d76afccb6..686894e28c2b 100644
+--- a/drivers/cdx/cdx.c
++++ b/drivers/cdx/cdx.c
+@@ -56,6 +56,7 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -787,6 +788,7 @@ int cdx_device_add(struct cdx_dev_params *dev_params)
+ 
+ 	/* Populate CDX dev params */
+ 	cdx_dev->req_id = dev_params->req_id;
++	cdx_dev->msi_dev_id = dev_params->msi_dev_id;
+ 	cdx_dev->vendor = dev_params->vendor;
+ 	cdx_dev->device = dev_params->device;
+ 	cdx_dev->subsystem_vendor = dev_params->subsys_vendor;
+@@ -804,12 +806,19 @@ int cdx_device_add(struct cdx_dev_params *dev_params)
+ 	cdx_dev->dev.bus = &cdx_bus_type;
+ 	cdx_dev->dev.dma_mask = &cdx_dev->dma_mask;
+ 	cdx_dev->dev.release = cdx_device_release;
++	cdx_dev->msi_write_pending = false;
++	mutex_init(&cdx_dev->irqchip_lock);
+ 
+ 	/* Set Name */
+ 	dev_set_name(&cdx_dev->dev, "cdx-%02x:%02x",
+ 		     ((cdx->id << CDX_CONTROLLER_ID_SHIFT) | (cdx_dev->bus_num & CDX_BUS_NUM_MASK)),
+ 		     cdx_dev->dev_num);
+ 
++	if (cdx->msi_domain) {
++		cdx_dev->num_msi = dev_params->num_msi;
++		dev_set_msi_domain(&cdx_dev->dev, cdx->msi_domain);
++	}
++
+ 	ret = device_add(&cdx_dev->dev);
+ 	if (ret) {
+ 		dev_err(&cdx_dev->dev,
+diff --git a/drivers/cdx/cdx.h b/drivers/cdx/cdx.h
+index 300ad8be7a34..23628b07fb2d 100644
+--- a/drivers/cdx/cdx.h
++++ b/drivers/cdx/cdx.h
+@@ -25,6 +25,8 @@
+  * @req_id: Requestor ID associated with CDX device
+  * @class: Class of the CDX Device
+  * @revision: Revision of the CDX device
++ * @msi_dev_id: MSI device ID associated with CDX device
++ * @num_msi: Number of MSI's supported by the device
+  */
+ struct cdx_dev_params {
+ 	struct cdx_controller *cdx;
+@@ -40,6 +42,8 @@ struct cdx_dev_params {
+ 	u32 req_id;
+ 	u32 class;
+ 	u8 revision;
++	u32 msi_dev_id;
++	u32 num_msi;
+ };
+ 
+ /**
+@@ -78,5 +82,13 @@ int cdx_device_add(struct cdx_dev_params *dev_params);
+  * Return: associated Linux generic device pointer on success or NULL on failure.
+  */
+ struct device *cdx_bus_add(struct cdx_controller *cdx, u8 bus_num);
+-
++#ifdef CONFIG_GENERIC_MSI_IRQ
++/**
++ * cdx_msi_domain_init - Init the CDX bus MSI domain.
++ * @dev: Device of the CDX bus controller
++ *
++ * Return: CDX MSI domain, NULL on failure
++ */
++struct irq_domain *cdx_msi_domain_init(struct device *dev);
++#endif
+ #endif /* _CDX_H_ */
+diff --git a/drivers/cdx/cdx_msi.c b/drivers/cdx/cdx_msi.c
+new file mode 100644
+index 000000000000..12d0fbd1d4cd
+--- /dev/null
++++ b/drivers/cdx/cdx_msi.c
+@@ -0,0 +1,217 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD CDX bus driver MSI support
++ *
++ * Copyright (C) 2022-2023, Advanced Micro Devices, Inc.
++ */
++
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/msi.h>
++#include <linux/cdx/cdx_bus.h>
++
++#include "cdx.h"
++
++static void cdx_msi_write_msg(struct irq_data *irq_data,
++			      struct msi_msg *msg)
++{
++	struct msi_desc *msi_desc = irq_data_get_msi_desc(irq_data);
++	struct cdx_device *cdx_dev = to_cdx_device(msi_desc->dev);
++
++	/* We would not operate on msg here rather we wait for
++	 * irq_bus_sync_unlock() to be called from preemptible
++	 * task context.
++	 */
++	msi_desc->msg = *msg;
++	cdx_dev->msi_write_pending = true;
++}
++
++static void cdx_msi_write_irq_lock(struct irq_data *irq_data)
++{
++	struct msi_desc *msi_desc = irq_data_get_msi_desc(irq_data);
++	struct cdx_device *cdx_dev = to_cdx_device(msi_desc->dev);
++
++	mutex_lock(&cdx_dev->irqchip_lock);
++}
++
++static void cdx_msi_write_irq_unlock(struct irq_data *irq_data)
++{
++	struct msi_desc *msi_desc = irq_data_get_msi_desc(irq_data);
++	struct cdx_device *cdx_dev = to_cdx_device(msi_desc->dev);
++	struct cdx_controller *cdx = cdx_dev->cdx;
++	struct cdx_device_config dev_config;
++
++	if (!cdx_dev->msi_write_pending) {
++		mutex_unlock(&cdx_dev->irqchip_lock);
++		return;
++	}
++
++	cdx_dev->msi_write_pending = false;
++	mutex_unlock(&cdx_dev->irqchip_lock);
++
++	dev_config.msi.msi_index = msi_desc->msi_index;
++	dev_config.msi.data = msi_desc->msg.data;
++	dev_config.msi.addr = ((u64)(msi_desc->msg.address_hi) << 32) |
++			      msi_desc->msg.address_lo;
++
++	/*
++	 * dev_configure is a controller callback which can interact with
++	 * Firmware or other entities, and can sleep, so invoke this function
++	 * outside of the mutex lock.
++	 */
++	dev_config.type = CDX_DEV_MSI_CONF;
++	if (cdx->ops->dev_configure)
++		cdx->ops->dev_configure(cdx, cdx_dev->bus_num, cdx_dev->dev_num,
++					&dev_config);
++}
++
++int cdx_enable_msi(struct cdx_device *cdx_dev)
++{
++	struct cdx_controller *cdx = cdx_dev->cdx;
++	struct cdx_device_config dev_config;
++
++	dev_config.type = CDX_DEV_MSI_ENABLE;
++	dev_config.msi_enable = true;
++	if (cdx->ops->dev_configure)
++		return cdx->ops->dev_configure(cdx, cdx_dev->bus_num,
++					       cdx_dev->dev_num,
++					       &dev_config);
++
++	return -EOPNOTSUPP;
++}
++EXPORT_SYMBOL_GPL(cdx_enable_msi);
++
++void cdx_disable_msi(struct cdx_device *cdx_dev)
++{
++	struct cdx_controller *cdx = cdx_dev->cdx;
++	struct cdx_device_config dev_config;
++
++	dev_config.type = CDX_DEV_MSI_ENABLE;
++	dev_config.msi_enable = false;
++	if (cdx->ops->dev_configure)
++		cdx->ops->dev_configure(cdx, cdx_dev->bus_num, cdx_dev->dev_num,
++					&dev_config);
++}
++EXPORT_SYMBOL_GPL(cdx_disable_msi);
++
++static struct irq_chip cdx_msi_irq_chip = {
++	.name			= "CDX-MSI",
++	.irq_mask		= irq_chip_mask_parent,
++	.irq_unmask		= irq_chip_unmask_parent,
++	.irq_eoi		= irq_chip_eoi_parent,
++	.irq_set_affinity	= msi_domain_set_affinity,
++	.irq_write_msi_msg	= cdx_msi_write_msg,
++	.irq_bus_lock		= cdx_msi_write_irq_lock,
++	.irq_bus_sync_unlock	= cdx_msi_write_irq_unlock
++};
++
++int cdx_msi_domain_alloc_irqs(struct device *dev, unsigned int irq_count)
++{
++	int ret;
++
++	ret = msi_setup_device_data(dev);
++	if (ret)
++		return ret;
++
++	ret = msi_domain_alloc_irqs_range(dev, MSI_DEFAULT_DOMAIN,
++					  0, irq_count - 1);
++	if (ret)
++		dev_err(dev, "Failed to allocate IRQs: %d\n", ret);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(cdx_msi_domain_alloc_irqs);
++
++/* Convert an msi_desc to a unique identifier within the domain. */
++static irq_hw_number_t cdx_domain_calc_hwirq(struct cdx_device *dev,
++					     struct msi_desc *desc)
++{
++	return ((irq_hw_number_t)dev->msi_dev_id << 10) | desc->msi_index;
++}
++
++static void cdx_msi_set_desc(msi_alloc_info_t *arg,
++			     struct msi_desc *desc)
++{
++	arg->desc = desc;
++	arg->hwirq = cdx_domain_calc_hwirq(to_cdx_device(desc->dev), desc);
++}
++
++static int cdx_msi_prepare(struct irq_domain *msi_domain,
++			   struct device *dev,
++			   int nvec, msi_alloc_info_t *info)
++{
++	struct cdx_device *cdx_dev = to_cdx_device(dev);
++	struct device *parent = cdx_dev->cdx->dev;
++	struct msi_domain_info *msi_info;
++	u32 dev_id;
++	int ret;
++
++	/* Retrieve device ID from requestor ID using parent device */
++	ret = of_map_id(parent->of_node, cdx_dev->msi_dev_id, "msi-map",
++			"msi-map-mask", NULL, &dev_id);
++	if (ret) {
++		dev_err(dev, "of_map_id failed for MSI: %d\n", ret);
++		return ret;
++	}
++
++#ifdef GENERIC_MSI_DOMAIN_OPS
++	/* Set the device Id to be passed to the GIC-ITS */
++	info->scratchpad[0].ul = dev_id;
++#endif
++
++	msi_info = msi_get_domain_info(msi_domain->parent);
++
++	return msi_info->ops->msi_prepare(msi_domain->parent, dev, nvec, info);
++}
++
++static struct msi_domain_ops cdx_msi_ops = {
++	.msi_prepare	= cdx_msi_prepare,
++	.set_desc	= cdx_msi_set_desc
++};
++
++static struct msi_domain_info cdx_msi_domain_info = {
++	.ops	= &cdx_msi_ops,
++	.chip	= &cdx_msi_irq_chip,
++	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
++		  MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS | MSI_FLAG_FREE_MSI_DESCS
++};
++
++struct irq_domain *cdx_msi_domain_init(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct fwnode_handle *fwnode_handle;
++	struct irq_domain *cdx_msi_domain;
++	struct device_node *parent_node;
++	struct irq_domain *parent;
++
++	fwnode_handle = of_node_to_fwnode(np);
++
++	parent_node = of_parse_phandle(np, "msi-map", 1);
++	if (!parent_node) {
++		dev_err(dev, "msi-map not present on cdx controller\n");
++		return NULL;
++	}
++
++	parent = irq_find_matching_fwnode(of_node_to_fwnode(parent_node),
++					  DOMAIN_BUS_NEXUS);
++	if (!parent || !msi_get_domain_info(parent)) {
++		dev_err(dev, "unable to locate ITS domain\n");
++		return NULL;
++	}
++
++	cdx_msi_domain = msi_create_irq_domain(fwnode_handle, &cdx_msi_domain_info,
++					       parent);
++	if (!cdx_msi_domain) {
++		dev_err(dev, "unable to create CDX-MSI domain\n");
++		return NULL;
++	}
++
++	dev_dbg(dev, "CDX-MSI domain created\n");
++
++	return cdx_msi_domain;
++}
++EXPORT_SYMBOL_NS_GPL(cdx_msi_domain_init, CDX_BUS_CONTROLLER);
+diff --git a/drivers/cdx/controller/Kconfig b/drivers/cdx/controller/Kconfig
+index 61bf17fbe433..f8e729761aee 100644
+--- a/drivers/cdx/controller/Kconfig
++++ b/drivers/cdx/controller/Kconfig
+@@ -9,6 +9,7 @@ if CDX_BUS
+ 
+ config CDX_CONTROLLER
+ 	tristate "CDX bus controller"
++	select GENERIC_MSI_IRQ
+ 	select REMOTEPROC
+ 	select RPMSG
+ 	help
+diff --git a/drivers/cdx/controller/cdx_controller.c b/drivers/cdx/controller/cdx_controller.c
+index 85fe4b1c4e5e..1a4782c5601f 100644
+--- a/drivers/cdx/controller/cdx_controller.c
++++ b/drivers/cdx/controller/cdx_controller.c
+@@ -9,6 +9,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/cdx/cdx_bus.h>
++#include <linux/irqdomain.h>
+ 
+ #include "cdx_controller.h"
+ #include "../cdx.h"
+@@ -60,9 +61,20 @@ static int cdx_configure_device(struct cdx_controller *cdx,
+ 				u8 bus_num, u8 dev_num,
+ 				struct cdx_device_config *dev_config)
+ {
++	u16 msi_index;
+ 	int ret = 0;
++	u32 data;
++	u64 addr;
+ 
+ 	switch (dev_config->type) {
++	case CDX_DEV_MSI_CONF:
++		msi_index = dev_config->msi.msi_index;
++		data = dev_config->msi.data;
++		addr = dev_config->msi.addr;
++
++		ret = cdx_mcdi_write_msi(cdx->priv, bus_num, dev_num,
++					 msi_index, addr, data);
++		break;
+ 	case CDX_DEV_RESET_CONF:
+ 		ret = cdx_mcdi_reset_device(cdx->priv, bus_num, dev_num);
+ 		break;
+@@ -70,6 +82,10 @@ static int cdx_configure_device(struct cdx_controller *cdx,
+ 		ret = cdx_mcdi_bus_master_enable(cdx->priv, bus_num, dev_num,
+ 						 dev_config->bus_master_enable);
+ 		break;
++	case CDX_DEV_MSI_ENABLE:
++		ret = cdx_mcdi_msi_enable(cdx->priv, bus_num, dev_num,
++					  dev_config->msi_enable);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+@@ -178,6 +194,14 @@ static int xlnx_cdx_probe(struct platform_device *pdev)
+ 	cdx->priv = cdx_mcdi;
+ 	cdx->ops = &cdx_ops;
+ 
++	/* Create MSI domain */
++	cdx->msi_domain = cdx_msi_domain_init(&pdev->dev);
++	if (!cdx->msi_domain) {
++		dev_err(&pdev->dev, "cdx_msi_domain_init() failed");
++		ret = -ENODEV;
++		goto cdx_msi_fail;
++	}
++
+ 	ret = cdx_setup_rpmsg(pdev);
+ 	if (ret) {
+ 		if (ret != -EPROBE_DEFER)
+@@ -189,6 +213,8 @@ static int xlnx_cdx_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ cdx_rpmsg_fail:
++	irq_domain_remove(cdx->msi_domain);
++cdx_msi_fail:
+ 	kfree(cdx);
+ cdx_alloc_fail:
+ 	cdx_mcdi_finish(cdx_mcdi);
+@@ -205,6 +231,7 @@ static int xlnx_cdx_remove(struct platform_device *pdev)
+ 
+ 	cdx_destroy_rpmsg(pdev);
+ 
++	irq_domain_remove(cdx->msi_domain);
+ 	kfree(cdx);
+ 
+ 	cdx_mcdi_finish(cdx_mcdi);
+diff --git a/drivers/cdx/controller/mc_cdx_pcol.h b/drivers/cdx/controller/mc_cdx_pcol.h
+index 2de019406b57..832a44af963e 100644
+--- a/drivers/cdx/controller/mc_cdx_pcol.h
++++ b/drivers/cdx/controller/mc_cdx_pcol.h
+@@ -455,6 +455,12 @@
+ #define MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_REQUESTER_ID_OFST			84
+ #define MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_REQUESTER_ID_LEN			4
+ 
++/* MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_V2 msgresponse */
++#define MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_V2_LEN				92
++/* Requester ID used by device for GIC ITS DeviceID */
++#define MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_V2_REQUESTER_DEVICE_ID_OFST	88
++#define MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_V2_REQUESTER_DEVICE_ID_LEN		4
++
+ /***********************************/
+ /*
+  * MC_CMD_CDX_BUS_DOWN
+@@ -616,6 +622,64 @@
+ #define MC_CMD_CDX_DEVICE_CONTROL_GET_OUT_MMIO_REGIONS_ENABLE_LBN	2
+ #define MC_CMD_CDX_DEVICE_CONTROL_GET_OUT_MMIO_REGIONS_ENABLE_WIDTH	1
+ 
++/***********************************/
++/*
++ * MC_CMD_CDX_DEVICE_WRITE_MSI_MSG
++ * Populates the MSI message to be used by the hardware to raise the specified
++ * interrupt vector. Versal-net implementation specific limitations are that
++ * only 4 CDX devices with MSI interrupt capability are supported and all
++ * vectors within a device must use the same write address. The command will
++ * return EINVAL if any of these limitations is violated.
++ */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG					0x9
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_MSGSET				0x9
++#undef MC_CMD_0x9_PRIVILEGE_CTG
++
++#define MC_CMD_0x9_PRIVILEGE_CTG SRIOV_CTG_ADMIN
++
++/* MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN msgrequest */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_LEN				28
++/* Device bus number, in range 0 to BUS_COUNT-1 */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_BUS_OFST			0
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_BUS_LEN			4
++/* Device number relative to the bus, in range 0 to DEVICE_COUNT-1 for that bus */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_DEVICE_OFST			4
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_DEVICE_LEN			4
++/*
++ * Device-relative MSI vector number. Must be < MSI_COUNT reported for the
++ * device.
++ */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_VECTOR_OFST		8
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_VECTOR_LEN		4
++/* Reserved (alignment) */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_RESERVED_OFST		12
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_RESERVED_LEN			4
++/*
++ * MSI address to be used by the hardware. Typically, on ARM systems this
++ * address is translated by the IOMMU (if enabled) and it is the responsibility
++ * of the entity managing the IOMMU (APU kernel) to supply the correct IOVA
++ * here.
++ */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_OFST		16
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_LEN		8
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_LO_OFST		16
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_LO_LEN		4
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_LO_LBN		128
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_LO_WIDTH		32
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_HI_OFST		20
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_HI_LEN		4
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_HI_LBN		160
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS_HI_WIDTH		32
++/*
++ * MSI data to be used by the hardware. On versal-net, only the lower 16-bits
++ * are used, the remaining bits are ignored and should be set to zero.
++ */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_DATA_OFST		24
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_DATA_LEN			4
++
++/* MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_OUT msgresponse */
++#define MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_OUT_LEN				0
++
+ /***********************************/
+ /* MC_CMD_V2_EXTN - Encapsulation for a v2 extended command */
+ #define MC_CMD_V2_EXTN					0x7f
+diff --git a/drivers/cdx/controller/mcdi_functions.c b/drivers/cdx/controller/mcdi_functions.c
+index b1f530946389..885c69e6ebe5 100644
+--- a/drivers/cdx/controller/mcdi_functions.c
++++ b/drivers/cdx/controller/mcdi_functions.c
+@@ -49,7 +49,7 @@ int cdx_mcdi_get_dev_config(struct cdx_mcdi *cdx,
+ 			    u8 bus_num, u8 dev_num,
+ 			    struct cdx_dev_params *dev_params)
+ {
+-	MCDI_DECLARE_BUF(outbuf, MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_LEN);
++	MCDI_DECLARE_BUF(outbuf, MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_V2_LEN);
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_IN_LEN);
+ 	struct resource *res = &dev_params->res[0];
+ 	size_t outlen;
+@@ -64,7 +64,7 @@ int cdx_mcdi_get_dev_config(struct cdx_mcdi *cdx,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (outlen != MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_LEN)
++	if (outlen != MC_CMD_CDX_BUS_GET_DEVICE_CONFIG_OUT_V2_LEN)
+ 		return -EIO;
+ 
+ 	dev_params->bus_num = bus_num;
+@@ -73,6 +73,9 @@ int cdx_mcdi_get_dev_config(struct cdx_mcdi *cdx,
+ 	req_id = MCDI_DWORD(outbuf, CDX_BUS_GET_DEVICE_CONFIG_OUT_REQUESTER_ID);
+ 	dev_params->req_id = req_id;
+ 
++	dev_params->msi_dev_id = MCDI_DWORD(outbuf,
++					    CDX_BUS_GET_DEVICE_CONFIG_OUT_V2_REQUESTER_DEVICE_ID);
++
+ 	dev_params->res_count = 0;
+ 	if (MCDI_QWORD(outbuf, CDX_BUS_GET_DEVICE_CONFIG_OUT_MMIO_REGION0_SIZE) != 0) {
+ 		res[dev_params->res_count].start =
+@@ -127,6 +130,7 @@ int cdx_mcdi_get_dev_config(struct cdx_mcdi *cdx,
+ 	dev_params->class = MCDI_DWORD(outbuf,
+ 				       CDX_BUS_GET_DEVICE_CONFIG_OUT_DEVICE_CLASS) & 0xFFFFFF;
+ 	dev_params->revision = MCDI_BYTE(outbuf, CDX_BUS_GET_DEVICE_CONFIG_OUT_DEVICE_REVISION);
++	dev_params->num_msi = MCDI_DWORD(outbuf, CDX_BUS_GET_DEVICE_CONFIG_OUT_MSI_COUNT);
+ 
+ 	return 0;
+ }
+@@ -155,6 +159,24 @@ int cdx_mcdi_bus_disable(struct cdx_mcdi *cdx, u8 bus_num)
+ 	return ret;
+ }
+ 
++int cdx_mcdi_write_msi(struct cdx_mcdi *cdx, u8 bus_num, u8 dev_num,
++		       u32 msi_vector, u64 msi_address, u32 msi_data)
++{
++	MCDI_DECLARE_BUF(inbuf, MC_CMD_CDX_DEVICE_WRITE_MSI_MSG_IN_LEN);
++	int ret;
++
++	MCDI_SET_DWORD(inbuf, CDX_DEVICE_WRITE_MSI_MSG_IN_BUS, bus_num);
++	MCDI_SET_DWORD(inbuf, CDX_DEVICE_WRITE_MSI_MSG_IN_DEVICE, dev_num);
++	MCDI_SET_DWORD(inbuf, CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_VECTOR, msi_vector);
++	MCDI_SET_QWORD(inbuf, CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_ADDRESS, msi_address);
++	MCDI_SET_DWORD(inbuf, CDX_DEVICE_WRITE_MSI_MSG_IN_MSI_DATA, msi_data);
++
++	ret = cdx_mcdi_rpc(cdx, MC_CMD_CDX_DEVICE_WRITE_MSI_MSG, inbuf, sizeof(inbuf),
++			   NULL, 0, NULL);
++
++	return ret;
++}
++
+ int cdx_mcdi_reset_device(struct cdx_mcdi *cdx, u8 bus_num, u8 dev_num)
+ {
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_CDX_DEVICE_RESET_IN_LEN);
+@@ -226,3 +248,10 @@ int cdx_mcdi_bus_master_enable(struct cdx_mcdi *cdx, u8 bus_num,
+ 	return cdx_mcdi_ctrl_flag_set(cdx, bus_num, dev_num, enable,
+ 			MC_CMD_CDX_DEVICE_CONTROL_SET_IN_BUS_MASTER_ENABLE_LBN);
+ }
++
++int cdx_mcdi_msi_enable(struct cdx_mcdi *cdx, u8 bus_num,
++			u8 dev_num, bool enable)
++{
++	return cdx_mcdi_ctrl_flag_set(cdx, bus_num, dev_num, enable,
++			MC_CMD_CDX_DEVICE_CONTROL_SET_IN_MSI_ENABLE_LBN);
++}
+diff --git a/drivers/cdx/controller/mcdi_functions.h b/drivers/cdx/controller/mcdi_functions.h
+index 258a5462fbe3..b9942affdc6b 100644
+--- a/drivers/cdx/controller/mcdi_functions.h
++++ b/drivers/cdx/controller/mcdi_functions.h
+@@ -65,6 +65,26 @@ int cdx_mcdi_bus_enable(struct cdx_mcdi *cdx, u8 bus_num);
+  */
+ int cdx_mcdi_bus_disable(struct cdx_mcdi *cdx, u8 bus_num);
+ 
++/**
++ * cdx_mcdi_write_msi - Write MSI configuration for CDX device
++ * @cdx: pointer to MCDI interface.
++ * @bus_num: Bus number.
++ * @dev_num: Device number.
++ * @msi_vector: Device-relative MSI vector number.
++ *	Must be < MSI_COUNT reported for the device.
++ * @msi_address: MSI address to be used by the hardware. Typically, on ARM
++ *	systems this address is translated by the IOMMU (if enabled) and
++ *	it is the responsibility of the entity managing the IOMMU (APU kernel)
++ *	to supply the correct IOVA here.
++ * @msi_data: MSI data to be used by the hardware. On versal-net, only the
++ *	lower 16-bits are used, the remaining bits are ignored and should be
++ *	set to zero.
++ *
++ * Return: 0 on success, <0 on failure
++ */
++int cdx_mcdi_write_msi(struct cdx_mcdi *cdx, u8 bus_num, u8 dev_num,
++		       u32 msi_vector, u64 msi_address, u32 msi_data);
++
+ /**
+  * cdx_mcdi_reset_device - Reset cdx device represented by bus_num:dev_num
+  * @cdx: pointer to MCDI interface.
+@@ -89,4 +109,17 @@ int cdx_mcdi_reset_device(struct cdx_mcdi *cdx,
+ int cdx_mcdi_bus_master_enable(struct cdx_mcdi *cdx, u8 bus_num,
+ 			       u8 dev_num, bool enable);
+ 
++/**
++ * cdx_mcdi_msi_enable - Enable/Disable MSIs for cdx device represented
++ *			 by bus_num:dev_num
++ * @cdx: pointer to MCDI interface.
++ * @bus_num: Bus number.
++ * @dev_num: Device number.
++ * @enable: Enable msi's if set, disable otherwise.
++ *
++ * Return: 0 on success, <0 on failure
++ */
++int cdx_mcdi_msi_enable(struct cdx_mcdi *cdx, u8 bus_num,
++			u8 dev_num, bool enable);
++
+ #endif /* CDX_MCDI_FUNCTIONS_H */
+diff --git a/include/linux/cdx/cdx_bus.h b/include/linux/cdx/cdx_bus.h
+index 6355a36a3f81..681fd4d644ab 100644
+--- a/include/linux/cdx/cdx_bus.h
++++ b/include/linux/cdx/cdx_bus.h
+@@ -12,6 +12,7 @@
+ #include <linux/device.h>
+ #include <linux/list.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/msi.h>
+ 
+ #define MAX_CDX_DEV_RESOURCES	4
+ #define CDX_CONTROLLER_ID_SHIFT 4
+@@ -21,13 +22,25 @@
+ struct cdx_controller;
+ 
+ enum {
++	CDX_DEV_MSI_CONF,
+ 	CDX_DEV_BUS_MASTER_CONF,
+ 	CDX_DEV_RESET_CONF,
++	CDX_DEV_MSI_ENABLE,
++};
++
++struct cdx_msi_config {
++	u64 addr;
++	u32 data;
++	u16 msi_index;
+ };
+ 
+ struct cdx_device_config {
+ 	u8 type;
+-	bool bus_master_enable;
++	union {
++		struct cdx_msi_config msi;
++		bool bus_master_enable;
++		bool msi_enable;
++	};
+ };
+ 
+ typedef int (*cdx_bus_enable_cb)(struct cdx_controller *cdx, u8 bus_num);
+@@ -87,6 +100,7 @@ struct cdx_ops {
+  * struct cdx_controller: CDX controller object
+  * @dev: Linux device associated with the CDX controller.
+  * @priv: private data
++ * @msi_domain: MSI domain
+  * @id: Controller ID
+  * @controller_registered: controller registered with bus
+  * @ops: CDX controller ops
+@@ -94,6 +108,7 @@ struct cdx_ops {
+ struct cdx_controller {
+ 	struct device *dev;
+ 	void *priv;
++	struct irq_domain *msi_domain;
+ 	u32 id;
+ 	bool controller_registered;
+ 	struct cdx_ops *ops;
+@@ -120,9 +135,13 @@ struct cdx_controller {
+  * @req_id: Requestor ID associated with CDX device
+  * @is_bus: Is this bus device
+  * @enabled: is this bus enabled
++ * @msi_dev_id: MSI Device ID associated with CDX device
++ * @num_msi: Number of MSI's supported by the device
+  * @driver_override: driver name to force a match; do not set directly,
+  *                   because core frees it; use driver_set_override() to
+  *                   set or clear it.
++ * @irqchip_lock: lock to synchronize irq/msi configuration
++ * @msi_write_pending: MSI write pending for this device
+  */
+ struct cdx_device {
+ 	struct device dev;
+@@ -144,7 +163,11 @@ struct cdx_device {
+ 	u32 req_id;
+ 	bool is_bus;
+ 	bool enabled;
++	u32 msi_dev_id;
++	u32 num_msi;
+ 	const char *driver_override;
++	struct mutex irqchip_lock; /* Serialize write msi configuration */
++	bool msi_write_pending;
+ };
+ 
+ #define to_cdx_device(_dev) \
+@@ -237,4 +260,55 @@ int cdx_set_master(struct cdx_device *cdx_dev);
+  */
+ int cdx_clear_master(struct cdx_device *cdx_dev);
+ 
++#ifdef CONFIG_GENERIC_MSI_IRQ
++/**
++ * cdx_msi_domain_alloc_irqs - Allocate MSI's for the CDX device
++ * @dev: device pointer
++ * @irq_count: Number of MSI's to be allocated
++ *
++ * Return: 0 for success, -errno on failure
++ */
++int cdx_msi_domain_alloc_irqs(struct device *dev, unsigned int irq_count);
++
++/**
++ * cdx_msi_domain_free_irqs - Free MSI's for CDX device
++ */
++#define cdx_msi_domain_free_irqs msi_domain_free_irqs_all
++
++/**
++ * cdx_enable_msi - Enable MSI for the CDX device.
++ * @cdx_dev: device pointer
++ *
++ * Return: 0 for success, -errno on failure
++ */
++int cdx_enable_msi(struct cdx_device *cdx_dev);
++
++/**
++ * cdx_disable_msi - Disable MSI for the CDX device.
++ * @cdx_dev: device pointer
++ */
++void cdx_disable_msi(struct cdx_device *cdx_dev);
++
++#else /* CONFIG_GENERIC_MSI_IRQ */
++
++static inline int cdx_msi_domain_alloc_irqs(struct device *dev, unsigned int irq_count)
++{
++	return -ENODEV;
++}
++
++static inline void cdx_msi_domain_free_irqs(struct device *dev, unsigned int domid)
++{
++}
++
++static inline int cdx_enable_msi(struct cdx_device *cdx_dev)
++{
++	return -ENODEV;
++}
++
++static inline void cdx_disable_msi(struct cdx_device *cdx_dev)
++{
++}
++
++#endif /* CONFIG_GENERIC_MSI_IRQ */
++
+ #endif /* _CDX_BUS_H_ */
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 79b4a58ba9c3..90b78abcb4c1 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -1627,6 +1627,7 @@ void msi_domain_free_irqs_all(struct device *dev, unsigned int domid)
+ 	msi_domain_free_irqs_all_locked(dev, domid);
+ 	msi_unlock_descs(dev);
+ }
++EXPORT_SYMBOL_GPL(msi_domain_free_irqs_all);
+ 
+ /**
+  * msi_get_domain_info - Get the MSI interrupt domain info for @domain
+-- 
+2.34.1
+
