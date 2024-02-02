@@ -1,194 +1,192 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F072B9BB
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 14:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706884532; cv=none; b=RV9yfkVkeaY3S1oGU4CRvUwWV6DcAUjioW8racca2MuCr16yyIAlb8blsn5zchVtSjmKji+EIhGyfBE3U+NqHms4cyo+pDK7VCyJePUIsgVrGodajMuT+V0TIO0KCLdTJUOiiw/Dyn6qx3RZgEmn0oxFNE2FswGbgzkmNHkV1rY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706884532; c=relaxed/simple;
-	bh=4HTPW99u3wqlNp6Rv9yUxE8nx6RD09MRp/DTp8XNPyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNeDvy9tV7GL/2oze+pYityGWFrot5DNhEJEzuilEn1aQKWd5a7R9sSG3hmC5FHkHf1YClMkr0cy7Zi7UlEmtnUPcRkTkj28lQoUku+LlZYwuW8rBSnamMg1u6T5m4we2FLdfFTHOjA/JoPI7IZb8TewVu2cBtMtYel3Pg52umo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UjO9/ecV; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7DC20DFA;
+	Fri,  2 Feb 2024 14:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706884803; cv=fail; b=ZqR8ID62KubWpa8EiR2dbJHsyr8EnoBfK7vP6SDSo/CTAvXMW2PJXI+TPPJ+z6hktWHtr9UezRl3lzd2fyRtEqVzwjPjq01dgSiWhilbN94LySOFYz5RrYwdCDvlyKL44rd7CeMOCniYOFtBXc8/FMAeY+GomnEMyeNh/SstpSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706884803; c=relaxed/simple;
+	bh=pYsCDGwyYymbmB+k6Y2V4kh/gmMwP6zECw704kEsf+Q=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VBjRSrVHL2UMLJc8Bhxhh7glXSpd6XWqr0r6ONrc63TleQjIghElKDe+j17BI3LdY20LcU/r67wExxz6eU03q7i8MFCBFeqSVUDNGWdGUKEdWX1mgeC9/BInaMQod+IGTMbgmGjMxNVf4qqgljQsRZ0zdgVNuQPqZy09gn9jcZA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f3k3M0jI; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UjO9/ecV"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a370e63835cso80723466b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 06:35:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1706884528; x=1707489328; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTXW/IgMSjYbmMUv1HG2gfGoIaBkbzHe0l/jl6UZwLo=;
-        b=UjO9/ecVNR/RUm04u4QZKxgCHIA9a2v2SWleCJevZdtdE9voJWl1BHAMxwx+An0qaT
-         dQWWgU6dIJ8MQt2CgoWMJL+YRq0/jxRyTM+qgZ1Onf4wVLe31m6zvFFRUgYmQxwCv0YN
-         bPchINApGtEpAVoSEysAI6ZVB74NNKH1BqgU4tJsNRJugbBAVVfPIyqB0b/7h9w/FpPj
-         QZvn6rGBnWIkv9Bsvdpypz7F8S3La5f5SnYrUS4pflsRaNPApQB5uduf1YhgC69WtgCn
-         WQ2m4ngqgL1iakKye3WKhaBsopHA9vm+ZuA2GtlveOrDy1Wk5SMIvy1Dh9JiFAUVDeMz
-         7mfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706884528; x=1707489328;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QTXW/IgMSjYbmMUv1HG2gfGoIaBkbzHe0l/jl6UZwLo=;
-        b=ZdKhFPB2CFUzt+BYdD2r1MrqeQ4+gzIIPRAXuTwmv6uHjWOBWrEcoOnzamixUc/229
-         XSQTXazaUe/crj2lYYdGubZabkCSMFpYDzBqVKfoIy7Wr9MWol59xvd0tiaFCQg+P3sC
-         m429dzbFz79z/7wAckJjqQlXEs5n29tQOPlvDrb/2nAqUCp0jOjOhx6ES1mKKuyO4jG5
-         NPvLkw8u/cVKLmkct9fvoixQI0eGPd6bN5+JyJ+jKWeQ/wbvaXY8XyTOPXLa3Ik0sEF/
-         ra3CWWge9TuB2hwN4j06lzel0wrORkR8yzcbh0ohNhTT6Hvg6ep9ImepJYOzg6KRr/F9
-         O+gQ==
-X-Gm-Message-State: AOJu0YxyyvOpICugCrHgxP/EhsQpbwfGcEVsYpNrrbvrqFw1s5lXlHF2
-	2qpF+woukqgcmXSY619FX5tIuAtwBXniW1kDt2fpOOIiU9uZ1bPP52iX4P/eOrI=
-X-Google-Smtp-Source: AGHT+IFnvcF1Cgbp3auZh5Hvq7VVtHB9gdIUhyH3RjHaICfoQfPm9TKvtiW1TdbmnhPTjjxEN/xzcw==
-X-Received: by 2002:a17:906:5399:b0:a36:fc06:6f7b with SMTP id g25-20020a170906539900b00a36fc066f7bmr1294273ejo.44.1706884528064;
-        Fri, 02 Feb 2024 06:35:28 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV3+2fQtHpjtsymH97+zaX2cVRDP0JvZtZ3prHAs/d0++TLMhL5qi+ITYLMFuhkLHeZ2QxJsvPpVrxMXdyNXt1U1yuU59BZkcijCPKsj1xAeB4j0NfUej06nU+S3NEO8ptT2KRNdG9s5v6/dkuRBKjLgjtZE0YGY5wC8eTwCeI77tedMJ7ndPZhX1sAnk/ro28jxc0KYcFbLI0NFy8wg2PlyhbDazwT+2j1+WJsctddRoip0+cNvcA5tnCgcdzZHNjTM9UkFNe2BUkfZfhzFveoD2kLh+CqjLbW
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id f14-20020a17090624ce00b00a3683b565fbsm924750ejb.187.2024.02.02.06.35.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 06:35:27 -0800 (PST)
-Date: Fri, 2 Feb 2024 15:35:26 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [BUG] workqueues and printk not playing nice since next-20240130
-Message-ID: <Zbz9rlGPbwBJMFLG@alley>
-References: <410d6a87-bf34-457e-b714-1e6149d48532@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f3k3M0jI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706884802; x=1738420802;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=pYsCDGwyYymbmB+k6Y2V4kh/gmMwP6zECw704kEsf+Q=;
+  b=f3k3M0jI8ePgwD5si/hRDrhKPSQywkvJV7SyRkyxayjFtZJ1Pa4GXaB9
+   e832Z5uiF3ZsekJzPyQHJ9q2/2yzaCFqOPLmoh4KzRgQBAi8N5aBE1Oak
+   MGVYekviBvAcmvJAg1NkFj+S9UqYFarilQhxMoFohU7u3fDJpe0x1Ofb2
+   gz61dtu3gjfrJEavmcB2NpXWvcUQgI1uE1BiOmGVDx6QcQjQ3PtD/nIVg
+   0eS2Yv5dZvCWqj2puoC3elAYj1pDxf20e2ouYzRIKcqmc8ADEGP7SQwYh
+   iUoFwoaGvOvG3qSE9BPQtqk3NcJSTUDHhr5Kx+57dZWklTxQryzMYyAfo
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="4067877"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="4067877"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 06:39:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="368644"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Feb 2024 06:39:23 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 2 Feb 2024 06:39:22 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 2 Feb 2024 06:39:22 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 2 Feb 2024 06:39:22 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 2 Feb 2024 06:39:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XlW6gEOXvR3Mn1P0B6NgoyBQy/ky1LRkwUaBLCH2LmKbKzi+emripGO5K4Nsi24JIZFwg4kKq2o/z1yFoV9k13RmS1JksXydil9Okrx1HoN9+bStNxB7lgI9WnE4iHnhM6RkG0wTPBSvY7+2+rfW5yVvFJad9TccNO4ycg21ZLfNcANUXkIsPdtLVTA5iQso/862XMHTLWZXlN65qGw3OY5Sj++e8D76lk/MBR/r4bGqeKhpE846Xaz12FNNFJ+O+ZmRz0r1sGn5J1MPfn4CKsvT+98P/+SCeROc2Qb3PYPoLxFugVTVt+T77Bub4uWD7T7SyuO+QFUEs/1KkeaQvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0Dor3yZqd/Db7aUYo+NgPp4C4OIbol+EPXFqML7to7g=;
+ b=heSUTIXKOTszwHc47W+luMVv8fJB7GAWdKy6xuS82SBcNZ5eNdzYmTYvqI4ZuUOigQBq6jmhTH2+lPRvHFhLMdZn64rA1k4uT1FL3jm/qb7AVGdhb7njaDHPKY21VYS0YBajPlfqka+Eto6NlipxZGwS6DLazgVOwn3FWI6/JsN5s9NBdxlmvIVV1Rtl85yIrT5qYqA/AOrf+YhhMG40IKi4DgJFdJfGu8PDzp7cWkGLbsimwzdkQ5C1YBopqOqREkxgXFgv1NtXT7F0xHIic3qU3NcpGATY5Nq3XXY8+7Yj62dLvLmcTs42NPUVWndYQXaycZQlbYr8fPpJq67MKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ PH7PR11MB7572.namprd11.prod.outlook.com (2603:10b6:510:27b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.26; Fri, 2 Feb
+ 2024 14:39:20 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::81e3:37ec:f363:689e]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::81e3:37ec:f363:689e%6]) with mapi id 15.20.7249.027; Fri, 2 Feb 2024
+ 14:39:19 +0000
+Date: Fri, 2 Feb 2024 22:09:45 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+CC: Linus Walleij <linus.walleij@linaro.org>, guoren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Jonas Bonn <jonas@southpole.se>, "Stefan
+ Kristiansson" <stefan.kristiansson@saunalahti.fi>, Stafford Horne
+	<shorne@gmail.com>, Linux-Arch <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, "linux-csky@vger.kernel.org"
+	<linux-csky@vger.kernel.org>, <linux-hexagon@vger.kernel.org>,
+	"linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>
+Subject: Re: [PATCH 0/4] apply page shift to PFN instead of VA in pfn_to_virt
+Message-ID: <Zbz3qVq+8le1xuKr@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20240131055159.2506-1-yan.y.zhao@intel.com>
+ <5e55b5c0-6c8d-45b4-ac04-cf694bcb08d3@app.fastmail.com>
+ <ZbrfcTaiuu2gaa2A@yzhao56-desk.sh.intel.com>
+ <9f27c23b-ea8b-443c-b09c-03ecaa210cd5@app.fastmail.com>
+ <Zbw/PpNkCQCbXPdP@yzhao56-desk.sh.intel.com>
+ <33a5d3a9-3154-4dad-afae-18b16e6cf61e@app.fastmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <33a5d3a9-3154-4dad-afae-18b16e6cf61e@app.fastmail.com>
+X-ClientProxiedBy: SGXP274CA0001.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::13)
+ To DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <410d6a87-bf34-457e-b714-1e6149d48532@paulmck-laptop>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|PH7PR11MB7572:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ed646ca-b1e2-4fa2-2eea-08dc23fcbd4b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: X4b+tUYRRZqSJhK5/tAdLO2m7LpBsGy+jOZVQoE5ZGLvnL6PaZM2lar/SFZGmTzZ4rarIUOrkIaeguc2VIppyuxpX1pos3/U9XYtg0Hi6zsqzcvcyM738vzQ0FDvt/N82Z8/LXsXvIyJDj+c4At020lG6XetV6pUmOgpqlJuOUFGeYZRK+8XmiUx1t00NCD2JbA9AONUcW8aC6vLcwU34ui7vIzFcKGWXcOuoIpK+ydW5DpI2DmWGYgxl/8axZPq+YYmlAyXnmi44758qls6KcB8tgpfyXKfltlDjnfhS0+y7xTcM8vK0vM/BNGGDYt4hYYJgChW0uerNSPqL40wYpm1izM2s7opJZwt2rZWuWE8o+54TUTexOoRSCDSdCvlbigbHqzDVhiTqLovDBY3+qRHCzS1QTtVer/tJZAmHYAwPcKd/POlufYWrehXVEBWOt19F7r+5bDtngmHHWD5bi1cvGNkPI0zz9g3uPfglB3z9zHisNwynu9kXvDjpfMwv2WvheZAQyFo6otR64FvT603awrDX5dVP4Y1YeP+4HkRlpP8QZyaC0N2/kzSPUJwhLSQKVo0zFiMNyTPSPp1Td90tYYcae/bfYnSCuD78Sg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(136003)(366004)(376002)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(6512007)(6506007)(26005)(6666004)(82960400001)(41300700001)(83380400001)(86362001)(38100700002)(966005)(6486002)(478600001)(8936002)(8676002)(4326008)(3450700001)(5660300002)(7416002)(66946007)(2906002)(54906003)(316002)(66476007)(66556008)(6916009)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?f1RLqVPwIWnXKGSHCAWw+UD85Lj7J7bQH13oUGPsKEMu6nv1uplNt21YBdc+?=
+ =?us-ascii?Q?tRv5wjfECIvB+Yt2DOGQWnXjeoTNs2zB0p08vAa2EYlGPja4Y/xNLZCErAjE?=
+ =?us-ascii?Q?1kw//HR5K60sUiCapiDJ1G4ltS0797CD2xXFqjs3s3erbYpOZuS89XsNKo+5?=
+ =?us-ascii?Q?+ZxdWjzUItrYuT48fL2A2HRwRt5sA32WfMDywR3xtVX8z08qWt7z6WxumTYt?=
+ =?us-ascii?Q?1dtDZEaas0jbZLPI8FtiFnLSYokuXRvJpWNL9JHpahe0OdRyLbhDVCYB9jOY?=
+ =?us-ascii?Q?BKQt/iYiTT5p3Sa5mNWMWiEJdcq7ON1Q+48t55pJF8jOLR0dcP7tagxw1FLO?=
+ =?us-ascii?Q?6iz0HebsL4vj/yobxeBYvc7V1boQLOUIpygoaxocd/MIPqVvcGzWWEn8MCbO?=
+ =?us-ascii?Q?3xVJfkV2LiHXE/dzpwwGgRhcr5iiCtqFy44KbmSw8FjwgaIT+d3hr5QwmOi2?=
+ =?us-ascii?Q?mXR3efaCVyb+zlUmD5kELxq7qsFyhWqQb+HVns+F+SUh6xe1mS2J3PEfULAs?=
+ =?us-ascii?Q?vMKomjn2S6Gr6gfvss4qNkVywSj8ok+TiCHb8Lmcv6Rhzs+/9DP11tLtyP+Y?=
+ =?us-ascii?Q?VFy5aL4Hzlvb7OVXZAE27c7VmQFuQTo1ykgh8augBNJJfSz5og4rc6HXOcUZ?=
+ =?us-ascii?Q?CqXAfMXgLoCgu7LVQ9rwFepZHBGPGXtdjodZ/7IRYO6GxwLKY66ZDTgRid2/?=
+ =?us-ascii?Q?RPosQ35bzht9neEx0mHZ8CiQwceIDvRxau31sjEvnfWzvO3nlCf0Bi9A6Don?=
+ =?us-ascii?Q?AyuwTNNd7AqpFxYMcZnw3SMp11EpIMTo8wXdTO4HgWZwDhKVIsMHQxHxAunM?=
+ =?us-ascii?Q?kqguuP83xksmO/Oohriq23Dk4sAdUvm8W7aticTxuxhnF9208RjrBCUH/K7L?=
+ =?us-ascii?Q?GtpsseGa0rLo2iUt25dSJ8d29Fe6YLpO8l7B/gzIY7JOI5OUATcmNyz65HQ1?=
+ =?us-ascii?Q?QZEak1WV7pLbfBwwRktqli9EC0UBEPcRHnFFHTjj1lOuUdcCDkbqsAqvtFMz?=
+ =?us-ascii?Q?hEODLfuZUSB8TeiSG6JK18H8UbI9W4VwilOgnT7FN+suI7Kr8Nl3mJGk0loB?=
+ =?us-ascii?Q?O9ZvghlyyP1ZO/Zz3QYc7VhSysZJiIXQO1/JP8mLTLtzGAEGMFP/oHXe6nQ8?=
+ =?us-ascii?Q?CkcdduYkurqIJa0BsNZEAuFHOL4KXytOfn25ZuXSgZh8TKBe3j0DIOT/GWZo?=
+ =?us-ascii?Q?YYBpBOMVt2fg3+cMDLm1MtG3ow123wbofAow5RE6D+E9OyRKPBstKSpK92tj?=
+ =?us-ascii?Q?P76TNySAgkaPac0d/4zlCvdK5bFJLLBAlKTLkSIJ9FMbRT2uJ5N1H7svzoHv?=
+ =?us-ascii?Q?BtQf62QWT7DSGbKW6V7qBT2TaCwKu411aRQmYFUYFlFjl0IR9LpIm/YuzNeq?=
+ =?us-ascii?Q?eC669Jx6MghY4DIKrynwc2RMzZDYXxP0wQLAeV5AxsYecuDNU34ivO8yIo0s?=
+ =?us-ascii?Q?tSgoJpwSZpHExw0X0TqtvE0M8g0hwSuMI6omNzctAw2ZnIuVpKGsMdTrAoRe?=
+ =?us-ascii?Q?AfUUV1zQlNRRt0ipxwaliZfKzCDESRU1ezBM+0oWa4YWpGugL+c/PKUcMvEr?=
+ =?us-ascii?Q?kRyYGSGX3W9xS2qO7eigzoTxY9IHSvTlJxUfRB1w?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ed646ca-b1e2-4fa2-2eea-08dc23fcbd4b
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 14:39:19.5621
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9PLCsTVo+NLyxkEtylqxyhQ6SWAaxPKV7A7/WU+2j+JBsPCKCdO5UwMIAojHo2Xxo2djOsFaN8PpgMcZ5J2t2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7572
+X-OriginatorOrg: intel.com
 
-On Fri 2024-02-02 05:04:45, Paul E. McKenney wrote:
-> Hello!
+On Fri, Feb 02, 2024 at 08:04:34AM +0100, Arnd Bergmann wrote:
+> On Fri, Feb 2, 2024, at 02:02, Yan Zhao wrote:
+> > On Thu, Feb 01, 2024 at 06:46:46AM +0100, Arnd Bergmann wrote:
+> >> 
+> >> I think it's fair to assume we won't need asm-generic/page.h any
+> >> more, as we likely won't be adding new NOMMU architectures.
+> >> I can have a look myself at removing any such unused headers in
+> >> include/asm-generic/, it's probably not the only one.
+> >> 
+> >> Can you just send a patch to remove the unused pfn_to_virt()
+> >> functions?
+> > Ok. I'll do it!
+> > BTW: do you think it's also good to keep this fixing series though we'll
+> > remove the unused function later?
+> > So if people want to revert the removal some day, they can get right one.
+> >
+> > Or maybe I'm just paranoid, and explanation about the fix in the commit
+> > message of patch for function removal is enough.
+> >
+> > What's your preference? :)
 > 
-> Starting with next-20240130 (and perhaps a bit earlier), rcutorture gets
-> what initially looked like early-boot hangs, but only when running on
-> dual-socket x86 systems [1], as it it works just fine on my x86 laptop [2].
-> But when running on dual-socket systems, this happens all the time,
-> perhaps because rcutorture works hard to split each guest OS across a
-> socket boundary.
+> I would just remove it, there is no point in having both
+> pfn_to_kaddr() and pfn_to_virt() when they do the exact
+> same thing aside from this bug.
+>
+> Just do a single patch for all architectures, no need to
+> have three or four identical ones when I'm going to merge
+> them all through the same tree anyway.
 > 
-> This is the reproducer:
-> 
-> tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs "10*TREE01" --trust-make
-> 
-> By "looked like early-boot hangs" I mean that qemu was quite happy,
-> but there was absolutely no console output.
-> 
-> Bisection identified this commit:
-> 
-> 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
-> 
-> Reverting this commit made the problem go away.  Except that it is really
-> hard to imagine this commit having any effect whatsoever on early boot
-> execution.  Of course, this might be a failure of imagination on my part,
-> so I enlisted the aid of gdb:
-> 
-> tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 1m --configs "TREE01" --trust-make --gdb
-> 
-> After following the resulting gdb startup instructions and waiting for
-> about ten seconds, I hit control-C on the gdb window and then:
-> 
-> 	(gdb) bt
-> 	#0  default_idle () at arch/x86/kernel/process.c:743
-> 	#1  0xffffffff81e94d34 in default_idle_call () at kernel/sched/idle.c:97
-> 	#2  0xffffffff810d746d in cpuidle_idle_call () at kernel/sched/idle.c:170
-> 	#3  do_idle () at kernel/sched/idle.c:312
-> 	#4  0xffffffff810d76a4 in cpu_startup_entry (state=state@entry=CPUHP_ONLINE)
-> 	    at kernel/sched/idle.c:410
-> 	#5  0xffffffff81e95417 in rest_init () at init/main.c:730
-> 	#6  0xffffffff8329adf2 in start_kernel () at init/main.c:1067
-> 	#7  0xffffffff832a5038 in x86_64_start_reservations (
-> 	    real_mode_data=real_mode_data@entry=0x13d50 <exception_stacks+32080> <error: Cannot access memory at address 0x13d50>) at arch/x86/kernel/head64.c:555
-> 	#8  0xffffffff832a513c in x86_64_start_kernel (
-> 	    real_mode_data=0x13d50 <exception_stacks+32080> <error: Cannot access memory at address 0x13d50>) at arch/x86/kernel/head64.c:536
-> 	#9  0xffffffff810001d2 in secondary_startup_64 ()
-> 	    at arch/x86/kernel/head_64.S:461
-> 	#10 0x0000000000000000 in ?? ()
-> 	(gdb) print jiffies
-> 	$1 = 4294676330
-> 	(gdb) print system_state
-> 	$2 = SYSTEM_RUNNING
-> 
-> In other words, the system really has booted, and at least one CPU is
-> happily idling in the idle loop.  And another CPU is (maybe not quite
-> so happily) running rcutorture:
-> 
-> 	(gdb) thread 6
-> 	[Switching to thread 6 (Thread 1.6)]
-> 	#0  0xffffffff8111160b in rcu_torture_one_read (
-> 	    trsp=trsp@entry=0xffffc900004abe90, myid=myid@entry=4)
-> 	    at kernel/rcu/rcutorture.c:2003
-> 	2003            completed = cur_ops->get_gp_seq();
-> 	(gdb) bt
-> 	#0  0xffffffff8111160b in rcu_torture_one_read (
-> 	    trsp=trsp@entry=0xffffc900004abe90, myid=myid@entry=4)
-> 	    at kernel/rcu/rcutorture.c:2003
-> 	#1  0xffffffff81111bef in rcu_torture_reader (arg=0x4 <fixed_percpu_data+4>)
-> 	    at kernel/rcu/rcutorture.c:2097
-> 	#2  0xffffffff810af3e0 in kthread (_create=0xffff8880047aa480)
-> 	    at kernel/kthread.c:388
-> 	#3  0xffffffff8103af1f in ret_from_fork (prev=<optimized out>,
-> 	    regs=0xffffc900004abf58, fn=0xffffffff810af300 <kthread>,
-> 	    fn_arg=0xffff8880047aa480) at arch/x86/kernel/process.c:147
-> 	#4  0xffffffff8100247a in ret_from_fork_asm () at arch/x86/entry/entry_64.S:242
-> 	#5  0x0000000000000000 in ?? ()
-> 
-> So the system really did boot and is running just fine.  It is just that
-> there is no console output.  Details, details!
-> 
-> Is there anything I can do to some combination of workqueues and printk
-> to help debug this?  Or that I can do to anything else, as I am not
-> feeling all that picky.  ;-)
+> Just make sure you explain in the changelog what the bug was
+> and how you noticed it, in case anyone is ever tempted to
+> bring the function back.
+Done.
+https://lore.kernel.org/all/20240202140550.9886-1-yan.y.zhao@intel.com
+Thanks for you guidance :)
 
-It really sounds strange. Console drivers should not use workqueues
-at least for console->write() callbacks. The main reason is that
-workqueues do not work in panic(). But it might bring many problems
-even when the system is running "normally"
-
-You wrote above that there was absolutely no console output so the problem
-was from the very beginning.
-
-I looks like that the consoles get blocked either during registration
-of the first console or when trying to flush the first message.
-
-Consoles, except for early consoles, are registered by
-console_initcall(). And init calls are proceed when the workqueues
-subsystem is already initialized. So, workqueues might
-somehow affect console driver initialization and registration.
-
-My first though was that the workqueues change might somehow
-block synchronize_srcu() which is used when updating console_list.
-But it not called during console registration. It is called only
-during suspend, resume, and console unregistration. So, it should
-not block the first boot messages.
-
-My current theory is that the change in workqueues might somehow
-block a console driver initialization. I think that some console
-drivers might use workqueues for some tasks even though they
-could not use them in the write() callback.
-
-Could you please provide console log when the problematic patch
-is disabled? I wonder what consoles drivers are registered and when.
-
-Just to be sure. Does the rcu torture configuration modify the
-behavior of srcu_read_lock_nmisafe() which is used by
-console_srcu_read_lock()?
-
-Best Regards,
-Petr
