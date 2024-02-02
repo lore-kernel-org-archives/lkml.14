@@ -1,111 +1,70 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144CA81735;
-	Fri,  2 Feb 2024 20:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C64681733;
+	Fri,  2 Feb 2024 20:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706905537; cv=none; b=FJPYXKmEkF1iyz6AS+FFCrsBOrX0qDLl/ArgWPTGs1LK9pP+H7aFGMUV2LA/tYW3NbI/poIFmRzKt53ExZ8MhgMelKya5S4V8QQB3s3bEW/slp/EWM8aNORvpFNgTKgZx1yEq6ooiS/zYLuujtTI3sKcCEqzklqWVrGI7K6TbHs=
+	t=1706905548; cv=none; b=I1QoxcTiDZhm+ORtRQXku5KNDUYiHGtKRpdbgqKXrt8fFhuGtwMXVWBYkUxmFPoGdZll3LYHsFSBOwOb+YNhsJK//+4ZMo+DmhkzREHXhrgtJaof0GgLB17kKbNQJG3Uy0zHyL6qSIZA7o9RsWFRvEkwkFWGjOHxVjpJRH7wFdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706905537; c=relaxed/simple;
-	bh=yz3zxHugykM9lmHHUfpsYzvgVhB64m/8uHKxj3+Yz8w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NLllXdDwqLjbJvfX66wV6Ig9g+dXjbl/AWSRpqsEGJ5QnbudFDb4woOezzYcL1+rcYE3TE2+ImfuRR+TBeFZwhIYkluERXX36OMgSUQXuL+igL76lJIB98hmXWfMxMI0DmVexBbf4nZpW9gyCzpfp44GjZ7bHUBnyiovL+pzDSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cm93/6vx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706905548; c=relaxed/simple;
+	bh=MxAY5Cr9y7y/S5/XsNbAVU3wBhUsOla7ylwsneRNvHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zj8383eBWKrCo+NO0PmgDftdC0Ip/YBjiYDjDP2WsWdeXMFXoSocYJnp+t+7FsiRBMSl7L4VhsXnf7juLJf5YO12GRL7h2QdaILKSH/ET9KUh6wUCXdeDXA4JPVcApB1MIjaA9EdmTUHctkQMnUUsapSJX7nXTi/CeS/7f01xHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvuEFcSe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cm93/6vx"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412KMGVN028044;
-	Fri, 2 Feb 2024 20:25:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=Afo404L
-	YcvCxL1GgzN5QeGathxGMm4/1sj38HK/JY0k=; b=cm93/6vxDtu87M5dB/4482a
-	D2vpSE1iCnkb7xPYVxbWm2qG4oXumeW2yiBjDnGach+FMa1yh9/fRJlkxuawhLIV
-	EPhLOYkxRCmH1r3WZLsGBz6UaFqFuN50mJZFyZ5LyWWoTcjAeY0RH2ZeV2sVhj7S
-	WF0x5ut39bQCS68xzjvGJWQY17dF1DlAh+nHv4lKVt9OFs+q5dM9O5LVhPB6FiUa
-	RcjksXjqzskyhBgAnTTV6l27HoAZewP9t/NgbOyS5q6MiT3ICtJSr0DhwAzMGEOc
-	byPBXNFHu76inrdrvwNgPn2o9V00JfaXSS0jlWhPvcetRRd7nSWUZM57XI5oTTg=
-	=
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0ptxjbh0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 20:25:18 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 412KPH2p028541
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 20:25:17 GMT
-Received: from jhugo-lnx.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 12:24:24 -0800
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-To: <dianders@chromium.org>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@gmail.com>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <quic_bjorande@quicinc.com>
-CC: <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>
-Subject: [PATCH] dt-bindings: drm/bridge: ti-sn65dsi86: Fix bouncing @codeaurora address
-Date: Fri, 2 Feb 2024 13:23:29 -0700
-Message-ID: <20240202202329.4172917-1-quic_jhugo@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvuEFcSe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C772DC433C7;
+	Fri,  2 Feb 2024 20:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706905548;
+	bh=MxAY5Cr9y7y/S5/XsNbAVU3wBhUsOla7ylwsneRNvHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lvuEFcSerMoxvaB1n89J940CgGMD9ZbGWrbU5KHXB6NaJQ+jZzmgg2xhE9x/GjOob
+	 ihGS6Vqnv6/EqSbFnw8SKz7ZQyLX6BJELWJToO9XiyvIRCsO47pIv5+pWZSCCAWY0W
+	 t96J4AvkyDEvPNsKwScqxJPYxhl0/fb6utAk9cG3k5uN/FNCmyRDk1gXh5EgDayATn
+	 mzagtP0dFT+hiuPFwlAI5Pb67If5tkeaA9TiC8BtQRlQuQaOrz1Y3Zsw9VuY2Iigdt
+	 c9OX+vyRmSWl0JFYs2FrR/OAh52So3r8ORVoMRu9RQr44jo5qZaVSOkXNj/er6FET6
+	 HT/0b2o2GF1LA==
+Date: Fri, 2 Feb 2024 14:25:45 -0600
+From: Rob Herring <robh@kernel.org>
+To: Michal Simek <michal.simek@amd.com>
+Cc: linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, michal.simek@xilinx.com,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Sungbo Eo <mans0n@gorani.run>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	monstr@monstr.eu, git@xilinx.com,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-pca9570: Add label property
+Message-ID: <170690554482.1072178.3894093393921778859.robh@kernel.org>
+References: <a8396308c995959349fd40e61199853a9b711ece.1706783050.git.michal.simek@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Q4qoOcffb7SFd5V_Ctg6wIpmPxhMPUnM
-X-Proofpoint-GUID: Q4qoOcffb7SFd5V_Ctg6wIpmPxhMPUnM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-02_14,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020149
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8396308c995959349fd40e61199853a9b711ece.1706783050.git.michal.simek@amd.com>
 
-The servers for the @codeaurora domain are long retired and any messages
-sent there bounce.  Sandeep Panda's email address is no longer valid and
-should be repleaced.  However Sandeep has left the company and has not
-been active sice, therefore it looks like this binding is orphaned.
 
-Doug is listed as the reviewer for this file in MAINTAINERS and has
-volunteered to be listed within the file as the binding maintainer.
-Therefore replace Sandeep with Doug to make the documentation current.
+On Thu, 01 Feb 2024 11:24:20 +0100, Michal Simek wrote:
+> Add a label property to allow a custom name to be used for identifying
+> a device on the board. This is useful when multiple devices are present on
+> the same board. Similar change was done by commit ffae65fb1ae4
+> ("dt-bindings: spi: spi-cadence: Add label property") or by commit
+> a53faa6bfa3b ("dt-bindings: hwmon: ina2xx: Add label property").
+> 
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
----
- .../devicetree/bindings/display/bridge/ti,sn65dsi86.yaml        | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-index 6ec6d287bff4..c93878b6d718 100644
---- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: SN65DSI86 DSI to eDP bridge chip
- 
- maintainers:
--  - Sandeep Panda <spanda@codeaurora.org>
-+  - Douglas Anderson <dianders@chromium.org>
- 
- description: |
-   The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
--- 
-2.34.1
+Acked-by: Rob Herring <robh@kernel.org>
 
