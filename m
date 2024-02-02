@@ -1,56 +1,56 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B044218B02
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 06:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100DC1AACA
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 06:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706854573; cv=none; b=NoA7qR4Sak328Z5hWwRlV75K+B3mThYv2v7TKlD7nSvL9Pa8QEY89c2EUwWxVnZF/7C0eem9dtiW92SvFTh1CDY67bNpuqlwXCLT2siHG89WXwF8bZw+1PiTI5bCebhYjQ/tR7MaxcYjRwe3US4IayyzQXS6n+E/94v6+PYBKa8=
+	t=1706854576; cv=none; b=YnCP13zeaV/+QryXIYieaa0sNXfHkAu7J97oHJWfKfNQfnroDVzH53IWHPJuNcCe5FnQPrqR/04pC0a0/LKvQ5ciwlpsnD0wTqJ66JZ7Ewh1hc+m0IN66O/1tgwOfEEdahPXf/bjW0FyKIeF5gTc6AAZN/dkAYj34VH2FA5BorA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706854573; c=relaxed/simple;
-	bh=ar+h6lW4xcIxzdvZbvzL64J6bTCD6UFYPdk5Pkaa3hQ=;
+	s=arc-20240116; t=1706854576; c=relaxed/simple;
+	bh=vS3HQqPNbnCSG6H0mLijqDfI30W+eyfGf7Du2zJBBGI=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=UIqrtOOsUsfMbXY+Ao2E/8oBBD2LQbxIagNxL8W0jaKS6Pl2Lnx27G6xB5PQmRrfvjykdHR31TRvTz1eh/jI39N/EHIuAPeDFfpng1xZ0hsnDQMKHhvQyV9SdGouaR85lBTOD0trME0s/ULEL9qHtPLpoyr1Zq5PuRqK2MLpCEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Je2mC/DA; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=nR8hg9EOztzWSXcj7piQdfsbHD8jzpsYys5psadj6S1KbqwpKdbAco+p3tC2op8d9yOWIEMR1BzVfmt+yZDCwR83569ybJt7GWfoC3Y1RKS4SEUrqiPqhE2qsM+4t4peRCFfih7ALaBB+nHhIOXazjVzZco/oNGDvAORq4YFpIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LqWkOEnn; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Je2mC/DA"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf216080f5so2808220276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 22:16:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LqWkOEnn"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc657e9bdc4so2429413276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 Feb 2024 22:16:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706854569; x=1707459369; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706854574; x=1707459374; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=T6mw7Xtg2kK14DjlLq7BifI7GtEprdY4uQDlUS0jAeg=;
-        b=Je2mC/DAC2JRCwzcJ0s2U7AOMAmBnasb8Q9UaAHRZYVygUsjlY4K1qjORCYDwuZYvD
-         +H1Z4IP9up/JYHyF6gbEpI9nB3cSCljk6baIlOyjBdwBWqeYHxiCnDul7Wz/jPRbJxUH
-         A+norGsWQ2abTjukx1Fv5UbzYro0fvODMt6x7xcm4K/QHmyTLVMyVZ7cVq/4IQV08SZ0
-         2Jz0PKhUSeMS+S4XpCLDGi8LE/Xx4BLf8iGg9a9jousQuIWNZVWALSXrl5dU7eXOHPV4
-         pIfSB8fA8CGKwHLyOSru8Nzy9qG6wMSUzj6frKi3roaz0jMULape9c1T0LRKuWZwtPDZ
-         lWPA==
+        bh=r8cuyus4waavntWUzMcbs7+5xI+OsCPQ5CRbneZJkcA=;
+        b=LqWkOEnnZ/TIfV4hGMcpYhLQBD888gwe4X3PrdMFKQlUgDPXmhvmTZ6dQcrUNP5UJN
+         vrSF9+kl9dF0P3icPObwZ9C6qPgmTCbG+P4l9z5lbxsM9JMQ7tOyZ0R+WPkazYrQaITs
+         15rrg1flN2Lv8oKroAjyaL6GldCzCAaywPeVOiF1tqujFPo70GfuAn7nb/MqzN7HxmLV
+         pLQ8C2y/pDZsF+ejWNOSc9hJIk5OyWc1grbkmgMD+TuEOZDl0IaMHuJ5GUqCYzVzEmHJ
+         mv13VhHg1+dTEfUjvHnk71Ml6B1PwaTlPcT9YdNBf2SxT2LYrVIbzQzAQcsulzc35mP5
+         7ZLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706854569; x=1707459369;
+        d=1e100.net; s=20230601; t=1706854574; x=1707459374;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T6mw7Xtg2kK14DjlLq7BifI7GtEprdY4uQDlUS0jAeg=;
-        b=dqs9vLrKEvSqgUlnihW4CLseYDZylDu2J/LMNjfLVE7adIZ73QERPPeZ/CUQcEivZD
-         uEeYPPY8pjdxFNPchIANmExLTi0zxpY2/UZp7yjsAshdt49HB1+DWXqih/nG9ZUICVfr
-         B0/VpN3qxiVjO17BbYpPwDq/9+q7jvIWcCkH+iogKJOj7f361fdlM9+09bKbZLhHIP41
-         zHem2rvrO5MPs4FLtJPXJ/si1DtKksJAsrrAQYx7/0raZrjv4c6ae7QHJkiFGOeeuBRg
-         opofFyHgY42ETNdg2wsLwOvzPSBXZoiYmTmByTlC1Z8eAT5Bj1rtE+BHxFR6c/Vhz+H1
-         iI3w==
-X-Gm-Message-State: AOJu0YyLRGL2gf1cL47hd1u5WqWvR21amhzMweNZcsKNhiHaN/ZotMVc
-	cex/bbtPeOtlg54Cncxo1dGj4Xqe08eoLrnP//qSQb0peDDkRDFaLw+12tPEG91bwhfo7DyE86V
-	My/DTqA==
-X-Google-Smtp-Source: AGHT+IEw/Ym4EmlZFNH/BuM+k/izcqPlKcBFteZgBYzUyt5PfaotXjis6um1xqkabsZGibi3BcC8S+z7xnHi
+        bh=r8cuyus4waavntWUzMcbs7+5xI+OsCPQ5CRbneZJkcA=;
+        b=Bl+T2c4wp7Jpwac6vdrgSjAgA7NaIDMHrMvfjV4qHbLcFVqfV8enJWWFeH9VFQlD+F
+         q2p3eblryV/8VZ5IpKReALAQEy/6/zos5mDwO1vqTCObBMXcDRXPaJnQ762x3aydm0ES
+         5Nktg2u5XZiOt5NntpeExQzzL/wjSZ3Jyfj/JvCeSEaxh+i+o2Vb6wj7aeijxhSa4pWf
+         XPfj9bJOn0ihEGyMrW9/QIGQ+wlwFrCStjqBd4e8N3ugPsnV2wJK6A5uzoIWaNuG+GtQ
+         nVGVnk0wJ25YRotdSahA5LZKVWY+I2KDVM40fwaG5TcB6ztuZ+TdSWHezDVYJg368VZI
+         Qljw==
+X-Gm-Message-State: AOJu0Ywqp2Z5YNS1qZKoZcLQLXoIo6LVOgS0aVHawtWDfUS77BQ+OZ8J
+	mGvBTkOpGlW47d1xpWkc8pVgOb7ahoh8cxnv6pvzb0ixTMRIFa6u6C2nEe8QsYHhI7RLl13pS+j
+	iN7EP7w==
+X-Google-Smtp-Source: AGHT+IHo61aPg8+VSrE0Jdi6fMiTgetovOiZUbnffWIUJ90oc6AilIipmayHOdRerd36zz7rK6WFwF/PtVic
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a85f:db1d:a66b:7f53])
- (user=irogers job=sendgmr) by 2002:a05:6902:2186:b0:dc2:466a:23c4 with SMTP
- id dl6-20020a056902218600b00dc2466a23c4mr375837ybb.4.1706854569681; Thu, 01
- Feb 2024 22:16:09 -0800 (PST)
-Date: Thu,  1 Feb 2024 22:15:17 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:108d:b0:dc6:d9eb:6422 with SMTP
+ id v13-20020a056902108d00b00dc6d9eb6422mr67423ybu.10.1706854574065; Thu, 01
+ Feb 2024 22:16:14 -0800 (PST)
+Date: Thu,  1 Feb 2024 22:15:19 -0800
 In-Reply-To: <20240202061532.1939474-1-irogers@google.com>
-Message-Id: <20240202061532.1939474-11-irogers@google.com>
+Message-Id: <20240202061532.1939474-13-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240202061532.1939474-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Subject: [PATCH v8 10/25] perf machine: Move fprintf to for_each loop and a callback
+Subject: [PATCH v8 12/25] perf threads: Switch from rbtree to hashmap
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -80,79 +80,279 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid exposing the threads data structure by switching to the callback
-machine__for_each_thread approach. machine__fprintf is only used in
-tests and verbose >3 output so don't turn to list and sort. Add
-machine__threads_nr to be refactored later.
-
-Note, all existing *_fprintf routines ignore fprintf errors.
+The rbtree provides a sorting on entries but this is unused. Switch to
+using hashmap for O(1) rather than O(log n) find/insert/remove
+complexity.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 43 ++++++++++++++++++++++++---------------
- 1 file changed, 27 insertions(+), 16 deletions(-)
+ tools/perf/util/threads.c | 146 ++++++++++++--------------------------
+ tools/perf/util/threads.h |   6 +-
+ 2 files changed, 47 insertions(+), 105 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 7872ce92c9fc..e072b2115b64 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1113,29 +1113,40 @@ size_t machine__fprintf_vmlinux_path(struct machine *machine, FILE *fp)
- 	return printed;
- }
+diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
+index d984ec939c7b..55923be53180 100644
+--- a/tools/perf/util/threads.c
++++ b/tools/perf/util/threads.c
+@@ -3,25 +3,30 @@
+ #include "machine.h"
+ #include "thread.h"
  
--size_t machine__fprintf(struct machine *machine, FILE *fp)
-+struct machine_fprintf_cb_args {
-+	FILE *fp;
-+	size_t printed;
-+};
-+
-+static int machine_fprintf_cb(struct thread *thread, void *data)
+-struct thread_rb_node {
+-	struct rb_node rb_node;
+-	struct thread *thread;
+-};
+-
+ static struct threads_table_entry *threads__table(struct threads *threads, pid_t tid)
  {
--	struct rb_node *nd;
--	size_t ret;
--	int i;
-+	struct machine_fprintf_cb_args *args = data;
- 
--	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads *threads = &machine->threads[i];
-+	/* TODO: handle fprintf errors. */
-+	args->printed += thread__fprintf(thread, args->fp);
-+	return 0;
-+}
- 
--		down_read(&threads->lock);
-+static size_t machine__threads_nr(const struct machine *machine)
-+{
-+	size_t nr = 0;
- 
--		ret = fprintf(fp, "Threads: %u\n", threads->nr);
-+	for (int i = 0; i < THREADS__TABLE_SIZE; i++)
-+		nr += machine->threads[i].nr;
- 
--		for (nd = rb_first_cached(&threads->entries); nd;
--		     nd = rb_next(nd)) {
--			struct thread *pos = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
-+	return nr;
-+}
- 
--			ret += thread__fprintf(pos, fp);
--		}
-+size_t machine__fprintf(struct machine *machine, FILE *fp)
-+{
-+	struct machine_fprintf_cb_args args = {
-+		.fp = fp,
-+		.printed = 0,
-+	};
-+	size_t ret = fprintf(fp, "Threads: %zu\n", machine__threads_nr(machine));
- 
--		up_read(&threads->lock);
--	}
--	return ret;
-+	machine__for_each_thread(machine, machine_fprintf_cb, &args);
-+	return ret + args.printed;
+ 	/* Cast it to handle tid == -1 */
+ 	return &threads->table[(unsigned int)tid % THREADS__TABLE_SIZE];
  }
  
- static struct dso *machine__get_kernel(struct machine *machine)
++static size_t key_hash(long key, void *ctx __maybe_unused)
++{
++	/* The table lookup removes low bit entropy, but this is just ignored here. */
++	return key;
++}
++
++static bool key_equal(long key1, long key2, void *ctx __maybe_unused)
++{
++	return key1 == key2;
++}
++
+ void threads__init(struct threads *threads)
+ {
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+ 
+-		table->entries = RB_ROOT_CACHED;
++		hashmap__init(&table->shard, key_hash, key_equal, NULL);
+ 		init_rwsem(&table->lock);
+-		table->nr = 0;
+ 		table->last_match = NULL;
+ 	}
+ }
+@@ -32,6 +37,7 @@ void threads__exit(struct threads *threads)
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+ 
++		hashmap__clear(&table->shard);
+ 		exit_rwsem(&table->lock);
+ 	}
+ }
+@@ -44,7 +50,7 @@ size_t threads__nr(struct threads *threads)
+ 		struct threads_table_entry *table = &threads->table[i];
+ 
+ 		down_read(&table->lock);
+-		nr += table->nr;
++		nr += hashmap__size(&table->shard);
+ 		up_read(&table->lock);
+ 	}
+ 	return nr;
+@@ -86,28 +92,13 @@ static void threads_table_entry__set_last_match(struct threads_table_entry *tabl
+ struct thread *threads__find(struct threads *threads, pid_t tid)
+ {
+ 	struct threads_table_entry *table  = threads__table(threads, tid);
+-	struct rb_node **p;
+-	struct thread *res = NULL;
++	struct thread *res;
+ 
+ 	down_read(&table->lock);
+ 	res = __threads_table_entry__get_last_match(table, tid);
+-	if (res)
+-		return res;
+-
+-	p = &table->entries.rb_root.rb_node;
+-	while (*p != NULL) {
+-		struct rb_node *parent = *p;
+-		struct thread *th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
+-
+-		if (thread__tid(th) == tid) {
+-			res = thread__get(th);
+-			break;
+-		}
+-
+-		if (tid < thread__tid(th))
+-			p = &(*p)->rb_left;
+-		else
+-			p = &(*p)->rb_right;
++	if (!res) {
++		if (hashmap__find(&table->shard, tid, &res))
++			res = thread__get(res);
+ 	}
+ 	up_read(&table->lock);
+ 	if (res)
+@@ -118,49 +109,25 @@ struct thread *threads__find(struct threads *threads, pid_t tid)
+ struct thread *threads__findnew(struct threads *threads, pid_t pid, pid_t tid, bool *created)
+ {
+ 	struct threads_table_entry *table  = threads__table(threads, tid);
+-	struct rb_node **p;
+-	struct rb_node *parent = NULL;
+ 	struct thread *res = NULL;
+-	struct thread_rb_node *nd;
+-	bool leftmost = true;
+ 
+ 	*created = false;
+ 	down_write(&table->lock);
+-	p = &table->entries.rb_root.rb_node;
+-	while (*p != NULL) {
+-		struct thread *th;
+-
+-		parent = *p;
+-		th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
+-
+-		if (thread__tid(th) == tid) {
+-			__threads_table_entry__set_last_match(table, th);
+-			res = thread__get(th);
+-			goto out_unlock;
+-		}
+-
+-		if (tid < thread__tid(th))
+-			p = &(*p)->rb_left;
+-		else {
+-			leftmost = false;
+-			p = &(*p)->rb_right;
+-		}
+-	}
+-	nd = malloc(sizeof(*nd));
+-	if (nd == NULL)
+-		goto out_unlock;
+ 	res = thread__new(pid, tid);
+-	if (!res)
+-		free(nd);
+-	else {
+-		*created = true;
+-		nd->thread = thread__get(res);
+-		rb_link_node(&nd->rb_node, parent, p);
+-		rb_insert_color_cached(&nd->rb_node, &table->entries, leftmost);
+-		++table->nr;
+-		__threads_table_entry__set_last_match(table, res);
++	if (res) {
++		if (hashmap__add(&table->shard, tid, res)) {
++			/* Add failed. Assume a race so find other entry. */
++			thread__put(res);
++			res = NULL;
++			if (hashmap__find(&table->shard, tid, &res))
++				res = thread__get(res);
++		} else {
++			res = thread__get(res);
++			*created = true;
++		}
++		if (res)
++			__threads_table_entry__set_last_match(table, res);
+ 	}
+-out_unlock:
+ 	up_write(&table->lock);
+ 	return res;
+ }
+@@ -169,57 +136,32 @@ void threads__remove_all_threads(struct threads *threads)
+ {
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+-		struct rb_node *nd;
++		struct hashmap_entry *cur, *tmp;
++		size_t bkt;
+ 
+ 		down_write(&table->lock);
+ 		__threads_table_entry__set_last_match(table, NULL);
+-		nd = rb_first_cached(&table->entries);
+-		while (nd) {
+-			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
+-
+-			nd = rb_next(nd);
+-			thread__put(trb->thread);
+-			rb_erase_cached(&trb->rb_node, &table->entries);
+-			RB_CLEAR_NODE(&trb->rb_node);
+-			--table->nr;
++		hashmap__for_each_entry_safe((&table->shard), cur, tmp, bkt) {
++			struct thread *old_value;
+ 
+-			free(trb);
++			hashmap__delete(&table->shard, cur->key, /*old_key=*/NULL, &old_value);
++			thread__put(old_value);
+ 		}
+-		assert(table->nr == 0);
+ 		up_write(&table->lock);
+ 	}
+ }
+ 
+ void threads__remove(struct threads *threads, struct thread *thread)
+ {
+-	struct rb_node **p;
+ 	struct threads_table_entry *table  = threads__table(threads, thread__tid(thread));
+-	pid_t tid = thread__tid(thread);
++	struct thread *old_value;
+ 
+ 	down_write(&table->lock);
+ 	if (table->last_match && RC_CHK_EQUAL(table->last_match, thread))
+ 		__threads_table_entry__set_last_match(table, NULL);
+ 
+-	p = &table->entries.rb_root.rb_node;
+-	while (*p != NULL) {
+-		struct rb_node *parent = *p;
+-		struct thread_rb_node *nd = rb_entry(parent, struct thread_rb_node, rb_node);
+-		struct thread *th = nd->thread;
+-
+-		if (RC_CHK_EQUAL(th, thread)) {
+-			thread__put(nd->thread);
+-			rb_erase_cached(&nd->rb_node, &table->entries);
+-			RB_CLEAR_NODE(&nd->rb_node);
+-			--table->nr;
+-			free(nd);
+-			break;
+-		}
+-
+-		if (tid < thread__tid(th))
+-			p = &(*p)->rb_left;
+-		else
+-			p = &(*p)->rb_right;
+-	}
++	hashmap__delete(&table->shard, thread__tid(thread), /*old_key=*/NULL, &old_value);
++	thread__put(old_value);
+ 	up_write(&table->lock);
+ }
+ 
+@@ -229,11 +171,11 @@ int threads__for_each_thread(struct threads *threads,
+ {
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
+-		struct rb_node *nd;
++		struct hashmap_entry *cur;
++		size_t bkt;
+ 
+-		for (nd = rb_first_cached(&table->entries); nd; nd = rb_next(nd)) {
+-			struct thread_rb_node *trb = rb_entry(nd, struct thread_rb_node, rb_node);
+-			int rc = fn(trb->thread, data);
++		hashmap__for_each_entry((&table->shard), cur, bkt) {
++			int rc = fn((struct thread *)cur->pvalue, data);
+ 
+ 			if (rc != 0)
+ 				return rc;
+diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
+index ed67de627578..d03bd91a7769 100644
+--- a/tools/perf/util/threads.h
++++ b/tools/perf/util/threads.h
+@@ -2,7 +2,7 @@
+ #ifndef __PERF_THREADS_H
+ #define __PERF_THREADS_H
+ 
+-#include <linux/rbtree.h>
++#include "hashmap.h"
+ #include "rwsem.h"
+ 
+ struct thread;
+@@ -11,9 +11,9 @@ struct thread;
+ #define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
+ 
+ struct threads_table_entry {
+-	struct rb_root_cached  entries;
++	/* Key is tid, value is struct thread. */
++	struct hashmap	       shard;
+ 	struct rw_semaphore    lock;
+-	unsigned int	       nr;
+ 	struct thread	       *last_match;
+ };
+ 
 -- 
 2.43.0.594.gd9cf4e227d-goog
 
