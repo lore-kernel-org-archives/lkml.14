@@ -1,196 +1,238 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADAC80634
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 20:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6850580628;
+	Fri,  2 Feb 2024 20:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706904885; cv=none; b=SPefF/qUpoRqhVNrEhguXlyWcht4W9OkzASfSC/M5SFsFZ1EEHVBjL2IpqigUUYPXNNa6tQoN6jNVGMM65YEvERZ0XJuSqwBoVjGqL4nyQlhbDsso9KSkudl+ilqLKsuUOJgn1YA/8LNG54o4d0UQLo7Iv6ab0BN7V+Zbh11PF8=
+	t=1706904904; cv=none; b=hhjTCxvO7g7/5L68Nq1vlI0GUOq5k+UkdwS8iE6qC8P/CbzAoQafpQyZ2pewge3SIylxjAQulK/UPntEwcD4+BBixC0DytkOBUb1bxTiFZyRIzM9wD2lsVLy4XYU/nD0oPhxlt0pL0dQt/jTVi+J1yzYeFmtmeHwMtDC3BnfACM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706904885; c=relaxed/simple;
-	bh=sx4sFIFIHZ82OGYD+khz42RvuPih8T9qNkm0UgLfxCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=MT6Jl2ZbTPEcOS0tGtaG+ki4z9VVvdrM5SXfu/F2k7+Dirv1i6jmz6r3eRyVs2aUb9FyKx69QzPmXwHZHqSeH+zRP5KeNJKyOIaU12hyh5Jmvd3m+vxXQOiZmAmHgrRWfpQ9kPe/KNKRBUZOrBbBK8NDEXmfXFvQPWcoSlfk35A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=N74BO7gP; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706904904; c=relaxed/simple;
+	bh=As08Hoz1r6/7sqmqTnM0RRJh+snjRDORsY8yXsb0HRU=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=uv7zB7ujo50Y46G5nFIkYbZpmExjZ+VGcokaC2JgwMej/HTw0pq9QQmjB0YMEXTOCVvU9iNaysP4T2XEJ53GXERNqBadOcSldKU4FAMkWDlV9QCxVfyy61KtTtBORKFR6urrU1JQt79YdNXLUp+SIs+vBvF3Lx30sO8Yt91awV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=DXbiRx2j; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N74BO7gP"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-216f774c827so1299793fac.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 12:14:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706904883; x=1707509683; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xqTNsAxhlA2YuESAciCqyaWHxO/Ad9sPBhytH5Lgwoo=;
-        b=N74BO7gP4Bl8t1oytthp3F2tkb0+NRqXG7rMXDT6f7aY42IDLRji+2z50dHq13e5qe
-         516tctlhfcdTosZ7XxqvPBwd8KIQXLBTFdFJnGkP1ZJ6NyHH2xV4caKp2tnuxUyh9Z0E
-         K6XK2MTfJy31FyuIqyxJN9l40nntzCKjxY5UE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706904883; x=1707509683;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xqTNsAxhlA2YuESAciCqyaWHxO/Ad9sPBhytH5Lgwoo=;
-        b=BVy5vwjZHsltVAlVlxQ/pd0pvUu3CFwUKUjKwO7ZNDFdOkNJNc2tJypY/D3MffQR6Y
-         xNDk7UCdTORIWJ+o1ATcEMTxRnzz5DiOcV792EnghQ99p4JpO4nTYixTgVSwCLubVe+C
-         rlpD+SsayINinfz5u5uB0dO5dfvfn3UQx3IxRe4sSfwCiS0EMI4ComXnvLJEiKCXpSAu
-         savbDN/wAUt3smGvrPj8gXBYVnde5h06yxP+EayfjcWN0h2haSxVex6jh8ClOngI7+AF
-         Yg90oRS2GkSMQP76gYwkbxQpQkJwGKWYrrp1cm+MrHKs99wkW/iw2H6mw4MPQNDt/6h3
-         uOkQ==
-X-Gm-Message-State: AOJu0Yzjpz3hMRAnCvGRUutHrdm7u8W2inv00z7K4qypbmXqPjRdD0Fb
-	CyRujUK+TsIHb/Vjd9df7j+6z+10UWN4pRYvDtob/YsLsaXBRotbMuijRKRONTV2VHiVUxzZWko
-	bZN9IDef2I/T1jUmdDj9GSZ67jtr44b00IRYE
-X-Google-Smtp-Source: AGHT+IFXZk9NEru0SMUk4ua6BbcA0uxSwiHUSIrvMKOjEmnDZTutfkU8uby9d0bZyeAELY8c6gc2tX4NnGWiDQ1x4nA=
-X-Received: by 2002:a05:6870:3920:b0:219:3d70:97c4 with SMTP id
- b32-20020a056870392000b002193d7097c4mr863481oap.20.1706904882945; Fri, 02 Feb
- 2024 12:14:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="DXbiRx2j"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
- <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
- <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
- <20240202151345.kj4nhb5uog4aknsp@revolver> <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com>
- <20240202192137.6lupguvhtdt72rbr@revolver>
-In-Reply-To: <20240202192137.6lupguvhtdt72rbr@revolver>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 2 Feb 2024 12:14:30 -0800
-Message-ID: <CABi2SkV+DaHHOwpVsbYbgkQNZ=Ynjx1vXWkPuz4J3O2vspTNLA@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
-	Jeff Xu <jeffxu@google.com>, Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
-	willy@infradead.org, gregkh@linuxfoundation.org, 
-	torvalds@linux-foundation.org, usama.anjum@collabora.com, 
-	rdunlap@infradead.org, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1706904898;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=azvYitpzHFcBsNABC+bzx/2dZxQ21D8VOQgAFUteWBg=;
+	b=DXbiRx2j365q8TCBx1wXUUobz2thdRqSwuViaViPBN7HBlHYIhty2jFou+4Oq88r+FxmQo
+	a77Aeo/znUDDwp1zO9ibM+1W1MncGuBlPv8hxgz9e/uWPTLa5FVzaAq+d4y66rhX3iC3cy
+	3fAD+dLaxB4JSMW+ZNalrmwMYbWn6RFlFYa3JNjAT/1bSCHO0QLS9XIYgMcnF4NMW3nZi3
+	j2AUELzx+2cEwiFHnrY2XPzVgo9s9I2A9R5XjEKPmt6+UggkeQlkJmy+XopELWkPuetoIN
+	wncKuasBSEGGeOqEAy2l9nd/dhlRXqNDEGp7sN3xTXGvo3zLVBULSDIJbrg5EQ==
+Date: Fri, 02 Feb 2024 21:14:58 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: wens@kernel.org, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] arm64: dts: rockchip: enable temperature driven
+ fan control on Rock 5B
+In-Reply-To: <CABjd4Yy0HYFEdW-XA4vmX4aMhCS-fKd7X_f=ar3qcm_4ROxk1A@mail.gmail.com>
+References: <20240130-rk-dts-additions-v2-0-c6222c4c78df@gmail.com>
+ <20240130-rk-dts-additions-v2-2-c6222c4c78df@gmail.com>
+ <CAGb2v65--rgb2FqmG_0-w1-jUL0odqKXxiZJ-XPYA4uomfYmaQ@mail.gmail.com>
+ <5e3e12d65e4919372e7fb02d56202393@manjaro.org>
+ <CABjd4Yx0kQ67fScrFVavjObMLaNt_PJ3TVOhLpCmj00Dx9dOqA@mail.gmail.com>
+ <a8aa04ca0061cd09c7b3eb5336e534a4@manjaro.org>
+ <bd6e93cf907572e86697dc10a50bfe66@manjaro.org>
+ <CABjd4Yy0HYFEdW-XA4vmX4aMhCS-fKd7X_f=ar3qcm_4ROxk1A@mail.gmail.com>
+Message-ID: <4e7c2b5a938bd7c919b852699c951701@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Fri, Feb 2, 2024 at 11:21=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * Jeff Xu <jeffxu@chromium.org> [240202 12:24]:
->
-> ...
->
-> > > Provide code that uses this feature.
->
-> Please do this too :)
->
-Yes. Will do.
+Hello Alexey,
 
+On 2024-02-02 15:42, Alexey Charkov wrote:
+> On Thu, Feb 1, 2024 at 11:43 PM Dragan Simic <dsimic@manjaro.org> 
+> wrote:
+>> On 2024-02-01 20:31, Dragan Simic wrote:
+>>> On 2024-02-01 20:15, Alexey Charkov wrote:
+>>>> On Thu, Feb 1, 2024 at 9:34 PM Dragan Simic <dsimic@manjaro.org> 
+>>>> wrote:
+>>>>> On 2024-02-01 15:26, Chen-Yu Tsai wrote:
+>>>>>> Is there any reason this can't be enabled by default in the .dtsi 
+>>>>>> file?
+>>>>>> The thermal sensor doesn't depend on anything external, so there 
+>>>>>> should
+>>>>>> be no reason to push this down to the board level.
+>>>>> 
+>>>>> Actually, there is a reason.  Different boards can handle the
+>>>>> critical overheating differently, by letting the CRU or the PMIC
+>>>>> handle it.  This was also the case for the RK3399.
+>>>>> 
+>>>>> Please, have a look at the following DT properties, which are
+>>>>> consumed by drivers/thermal/rockchip_thermal.c:
+>>>>>    - "rockchip,hw-tshut-mode"
+>>>>>    - "rockchip,hw-tshut-polarity"
+>>>>> 
+>>>>> See also page 1,372 of the RK3588 TRM v1.0.
+>>>>> 
+>>>>> This has also reminded me to check how is the Rock 5B actually 
+>>>>> wired,
+>>>>> just to make sure.  We actually need to provide the two DT 
+>>>>> properties
+>>>>> listed above, at least to avoid emitting the warnings.
+>>>> 
+>>>> Well the defaults are already provided in rk3588s.dtsi, so there 
+>>>> won't
+>>>> be any warnings (see lines 2222-2223 in Linus' master version), and
+>>>> according to the vendor kernel those are also what Rock 5B uses.
+>>> 
+>>> Yes, I noticed the same a couple of minutes after sending my last
+>>> message, but didn't want to make more noise about it. :)  I would've
+>>> mentioned it in my next message, of course.
+>> 
+>> Just checked the Rock 5B schematic and it expects the CRU to be used
+>> to perform the hardware reset in case of a thermal runaway, so the
+>> defaults in the RK3588s dtsi are fine.  I had to double-check it. :)
+> 
+> I've just looked at Rock 5B, Rock 5A and NanoPC T6 schematics, and
+> they all seem to have the TSADC_SHUT line connected to RESET_L.
 
-> > >
-> > > Provide benchmark results where you apply mseal to 1, 2, 4, 8, 16, an=
-d
-> > > 32 VMAs.
-> > >
-> > I will prepare for the benchmark tests.
->
-> Thank you, please also include runs of calls that you are modifying for
-> checking for mseal() as we are adding loops there.
->
-It will includes mmap/mremap/mprotect/munmap
+Ah, I see it now in the Rock 5B schematic, thank you for the
+correction.  I somehow managed to miss it initially;  here's
+the link to a screenshot from the Rock 5B schematic v1.423, for
+future reference:  https://i.imgur.com/IGAPPgl.png .
 
-> >
-> > > Provide code that tests and checks the failure paths.  Failures at th=
-e
-> > > start, middle, and end of the modifications.
-> > >
-> > Regarding, "Failures at the start, middle, and end of the modifications=
-."
-> >
-> > With the current implementation, e.g. it checks if the sealing is
-> > applied before actual modification of VMAs, so partial modifications
-> > are avoided in mprotect, mremap, munmap.
-> >
-> > There are test cases in the selftests to cover the failure path,
-> > including the beginning, middle and end of VMAs.
-> > test_seal_unmapped_start
-> > test_seal_unmapped_middle
-> > test_seal_unmapped_end
-> > test_seal_invalid_input
-> > test_seal_start_mprotect
-> > test_seal_end_mprotect
-> > etc.
-> >
-> > Are those what you are looking for ?
->
-> Those are certainly good, but we need more checking in there.  You have
-> a seal_split test that splits the vma by mseal but you don't check the
-> flags on the VMAs.
->
-I can add the flag check.
+> At the same time, Radxa's device tree uses the default
+> CRU-based option.
 
-> What I'm more concerned about is what happens if you call mseal() on a
-> range and it can mseal a portion.  Like, what happens to the first vma
-> in your test_seal_unmapped_middle case?  I see it returns an error, but
-> is the first VMA mseal()'ed? (no it's not, but test that)
->
-The first VMA is not sealed.
-That was covered by test_seal_mprotect_two_vma_with_gap.
+Here's the link to a screenshot from the RK3588 Hardware
+Design Guide v1.0, which shows the recommended reset signal
+paths for RK3588 boards:  https://i.imgur.com/DNqhjfP.png .
 
-> What about the other system calls that will be denied on an mseal() VMA?
-The other system call's behavior is kept as is, if the memory is not sealed=
-.
+As visible in the Rock 5B schematic, it expectedly follows
+this recommendation from Rockchip, so we should actually use
+GPIO-based handling for the thermal runaways on the Rock 5B,
+to have the PMIC reset as well.  Here's the link to another
+screenshot from the Rock 5B schematic v1.423, for future
+reference:  https://i.imgur.com/BdgZ30C.png .
 
-> Do they still behave the same?  do_mprotect_pkey() will break out of the
-> loop on the first error it sees - but it has modified some VMAs up to
-> that point, I believe?
-Yes. The description about do_mprotect_pkey() is correct.
+Of course, it should be tested to make sure that the thermal
+runaway resets work fine.
 
-> You have changed this to abort before anything
-> is modified.  This is probably acceptable because it won't affect
-> existing applications unless they start using mseal(), but that's just
-> my opinion.
->
-To make sure this, the test was written with sealing=3Dfalse, those
-tests are passed in the main (before applying my patch) to make sure
-the test is correct.
+It isn't uncommon for downstream DTs to sometimes contain
+some small mistakes that somehow remained undetected.
 
-> It would be good to state the change in behaviour because it is changing
-> the fundamental model of changing mprotect/madvise until an issue is
-> hit.  I think you are covering this by "it blocks X" but it's doing more
-> than, say, a flag verification.  One could reasonably assume this is
-> just another flag verification.
->
-Will add more in documentation.
+> To me this seems to imply that the CRU option should always work, by
+> the virtue of CRU being on-chip. At the same time, if the right GPIOs
+> are wired to the PMIC reset line for a particular board, the board
+> may also choose to use the GPIO option - or stick with CRU.
+> 
+> If that interpretation is correct, then I suggest we enable TSADC by
+> default in the .dtsi, and let it handle both throttling and CRU-based
+> critical resets on all boards. Those who know what they are doing may
+> then elect to switch their board to GPIO-PMIC based reset.
+> 
+> What do you think?
 
-> >
-> > > Document what happens in those failure paths.
->
-> I'd like to know how this affects other system calls in the partial
-> success cases/return error cases.  Some will now return new error codes
-> and some may change the behaviour.
->
-For the mapping that is not sealed, all remain unchanged, including
-the error handling path.
-For the mapping that is sealed, EPREM is returned if the sealing check
-fails, and all of VMAs remain unchanged.
+I think that, if we choose to enable CRU-based thermal runaway
+resets without going into too much detail for each board (but
+we should go into the publicly available board schematics, as
+also noted in my last comment in this message), we should do
+that in the board dts files, instead of just enabling the TSADC
+in the RK3588(s) SoC dtsi.
 
-> It may even be okay to allow munmap() to split VMAs at the start/end of
-> the region and fail to munmap because some VMA in the middle is
-> mseal()'ed - but maybe not?  I haven't put a whole lot of thought into
-> it.
-If you are referring to something like below
-[unmapped][map1][unmapped][map2][unmapped][map3][unmapped]
-and map2 is sealed.
+That way, we would clearly indicate the TSADC to be a board-
+specific feature, and hopefully gain more attention from the
+people interested in the boards, to perform some additional
+testing, etc.
 
-unmap(start of map1,end of map3) will fail.
-mmap/mremap/unmap/mprotect on an address range that includes map2 will
-fail with EPERM, with map1/map2/map3 unchanged.
+>> However, now I have some open questions related to interrupt-driven
+>> operation.  I'll research it further and come back with an update.
+>> 
+>>>> This made me think however: what if a board doesn't enable TSADC, 
+>>>> but
+>>>> has OPPs in place for higher voltage and frequency states? There 
+>>>> won't
+>>>> be any throttling (as there won't be any thermal monitoring) and 
+>>>> there
+>>>> might not be a critical shutdown at all if it heats up - possibly 
+>>>> even
+>>>> causing hardware damage. In this case it seems that having TSADC
+>>>> enabled by default would at least trigger passive cooling, hopefully
+>>>> avoiding the critical shutdown altogether and making those 
+>>>> properties
+>>>> irrelevant in 99% cases.
+>>> 
+>>> Those are very good questions.  Thumbs up!
+>>> 
+>>> The trouble is that the boards can use different wiring to handle the
+>>> thermal runaways, by expecting the PMIC to handle it or not.  Thus,
+>>> it's IMHO better to simply leave that to be tested and enabled on a
+>>> board-by-board basis, whenever a new RK3588(s)-based board is added.
+>>> 
+>>> Thus, the only right way at this point would be to merge the addition
+>>> of the OPPs and the enabling of the TSADC for all currently supported
+>>> RK3588(s)-based boards at once, instead of just for the Rock 5B.
+> 
+> If we can agree on a workable 'default-on' configuration for TSADC to
+> be included in the .dtsi I think that would be preferable, because it
+> would enable all boards to benefit from higher OPPs and throttling.
 
-Thanks
--Jeff
+Please, see my other comments.  I hope we can agree on that.
 
->
-> Thanks,
-> Liam
+> This would also save us from a scenario when OPPs get included in the
+> default .dtsi, but TSADC is off by default, and then some poor soul
+> tries to add a new board with a minimal .dts, forgetting to enable
+> TSADC and having their SoC fried under high load...
+
+Well, those poor souls can't escape the need to know what are
+they doing. :)  Also, I think it's much more likely that adding
+a new RK3588-based board would actually start by editing the
+board dts of some already supported RK3588 board, which the way
+I propose this to be handled would already have the TSADC enabled,
+eliminating the risks yout pointed out.
+
+Please note that the TSADC has been disabled in the RK3399 SoC
+dtsi and enabled on a per-RK3399-board-dtsi basis, so we'd also
+have some consistency by following the same approach with the
+RK3588(s) SoC dtsi.  Consistency is good, if you agree.
+
+>>> I can handle the required changes for the QuartzPro64 dts file.  For
+>>> other supported RK3588(s)-based boards, if there are no people having
+>>> access to them and willing to perform the dts changes and the 
+>>> testing,
+>>> I'd be willing to go through the board schematics, to enable the
+>>> TSADC for them as well.
+>> 
+>> Please, let me know are you fine with the above-described approach.
+> 
+> I believe it's great if we can go through the schematics no matter
+> what! Although if we agree that CRU is an always-working default
+> option for all, then why don't we just enable TSADC for all, and leave
+> the conversion to GPIO-PMIC resets for later and for where it's
+> needed?
+
+Great!  We can surely go through the supported RK3588(s) boards
+that make their schematics publicly available, and enable the
+TSADC in their board dts files accordingly.
+
+For the remaining RK3588(s) boards that remain "black boxes" to
+us, we can enable the TSADC in their board dts files with the
+let-the-CRU-handle-thermal-runaway defaults, and leave any future
+refinements to the people interested in those boards.
+
+That would be a rather clean approach, if you agree.
