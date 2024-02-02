@@ -1,111 +1,109 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D86214D439
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 18:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4755114E2E6;
+	Fri,  2 Feb 2024 18:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706898605; cv=none; b=LlxQclHupwU0vWe2zfgTqHrN4CiQe+CSNod7H2UraITs0Wa3n2xLqKrinpCM+qHqtPAeIpkdeGOhQ3ZxI9Hn2UNfK22e/vx8V/i1D4ZpVx52IcXFukcQx2HBOgna6XFMGkoBK24DyuFOO8JJpC6kyTonzmq3SpFkz9FLGwAaJLU=
+	t=1706898615; cv=none; b=Nhi6eWqOjF1j9eS9pRU9feqJ73NFrTMN0VxvIdeAbeNuhDLuT4GtP7pYE2ga91QdpJEFsceBcxYhksQZdGGA23gj2AMPU0W/NPRvqxc//WF2iplQLiBHd/A9y2IsVQU0LvRe8wQbh1sUafSGo2jL3qlKz8nyCkfKBd3pEu296vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706898605; c=relaxed/simple;
-	bh=+B2EP3owSfGpJRy7wHKXkx5eiCN3WHUSCd8s+L5o5Ps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bnXS7NbGjLP+7g10IFuQ1NP93JsyoPW1QL2pDe6dW5LFv8IRcF0FzdnUuD1ePw81YyJXyy0IWXET/Cw3sgO3W4lxdaODChRVeUbHYx2GAtmRVOYaDbX5aYRYaRE3kwnvVxdvpPjxPhEW8o0uesGMP06K3hJauHuAOtps6SA4FwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DTsOsIw6; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706898615; c=relaxed/simple;
+	bh=HEqr0Ka0XfhTPzD0Hbv7z55pk+epJSYZPO6YlCuwLtk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JOMofc2+JxJXzQ/1HsrZaKBVtlzMwiXzWnUF/peX759zvgE73yvoBQdIVxyviRJSPTAZ4vJoFhnQoyviNE2FDulT+1JzGFzCeDasZe+OHH+nH0JFoygIFgUKYhimYz7RrESyzST/WilzRERiOLE5cqVGg2cOXdp3XxaoMSGXuVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3LLeq3E; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DTsOsIw6"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a354fc17f24so310798866b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 10:30:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3LLeq3E"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ce2aada130so2288691a12.1;
+        Fri, 02 Feb 2024 10:30:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706898601; x=1707503401; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wred9oKbZUWrUWPqoPWJe75vDju4/OS5/kZYLMHwsFs=;
-        b=DTsOsIw6MG+XwIwjWUJF37ZNxE9AUaNJsPGdVKIQNhAZDj3+kKIMa5Lzgj0jdk+ksU
-         +C6fNBRtKr//peDdPNI7l2W4wVWBXwMFEflX/lUMk53fHWcRGLXKy3vyRozs9te879A6
-         KoXUwM2IE337W+ISa48E1UiLCK1xU6/guXlLk=
+        d=gmail.com; s=20230601; t=1706898613; x=1707503413; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=1+tnDh49EEgOrgjB9N3P+ro3Ir4pX+HnP3v58dVzwIg=;
+        b=D3LLeq3EczNM1RtsNu6rxMLrsri7be8NtJ/y1gcmqE1hycFl2HSkZqUkbwM6uL369F
+         4G2b4NBgcD2pFgRZv9fvQYzBwjDtoW1wPpczmoF9xp6hb2N9nuCHtgkvLXjvItTfEpkr
+         qP+LpS55tZUAJns8XMvkQBco95zRw7qgB186BmCWiS41HtqHzdQ7Gbvmv8werCyulHKo
+         YnDzYXWU400ToSiTLjYLB6TToFcF5/MkT4ACz5cbG7cu6xt8tWrezZvbko9l8oyVbhu5
+         YPTM1dko9TdY/cXmnfqH7zRDUHFwy7fe1KKu3xhA1P+Ok60l0TVWvJJkl8nBLlAD8HW2
+         JfBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706898601; x=1707503401;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wred9oKbZUWrUWPqoPWJe75vDju4/OS5/kZYLMHwsFs=;
-        b=NWxLfPH4uyu2iXh5H9ZQeiB6NaeWQ+jqEml2NqXQa7mkVzA7OrfuWMs8I5mcfvE7AL
-         FsTm9BqT/lz5TGedDyNp0LTJy4hB4w6yWlV+hH1iMEew4c2VidQwnmCrcCsUfzJTwnjS
-         3flQVQOeM7BqZYNHoQrfQh+7mPnxbMddjiVJPkygv6JyUz0H6Y5axjR9A5A1hndFmJJI
-         Eu9sedhkGuEqcri2vm7nlESiLbXstc2mz22IC/1oj0e9RUvarxdpXsTR9SkN3rOzV81G
-         ntTsKk+E+tZEz11POy8oT+beWLZ7j68xJABhoujTvVgkTlnZgFMmfEuwXigZAMo2fVZV
-         JKUw==
-X-Gm-Message-State: AOJu0YxOEUS9sAxC+u5fgk80zIjeQdYwCQw+XAA72DwSt8Oz4J/icAkw
-	K++GpMUAX6/vWKrFnOQWylwq4BVrOyLyiccZz6R4oN6Pu40IDa21cSc5k2eI7IStNtfFkrrwsGo
-	9aaiduA==
-X-Google-Smtp-Source: AGHT+IGhm3GSI8CCYaJwayUVj/yDiIsRCKDXdvKsvfrHDoNhGdGnl1dT/ThEVHButEWWzrB0/mNiCQ==
-X-Received: by 2002:a17:906:3157:b0:a37:2c8f:6ca2 with SMTP id e23-20020a170906315700b00a372c8f6ca2mr703167eje.37.1706898601268;
-        Fri, 02 Feb 2024 10:30:01 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXgTF6gDox8LLScHzwNOvaf5eHRl8d/BxvGN7WpxSvWgrDmNlUFYpdcYNuCC7FDv3vaYSWgooqf3njcbNxL8h8uDjAxzyvUmJRWfjv5
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id gx2-20020a1709068a4200b00a35ed4fd4cesm1128317ejc.115.2024.02.02.10.30.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 10:30:00 -0800 (PST)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56010d9aab4so155000a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 10:30:00 -0800 (PST)
-X-Received: by 2002:aa7:c718:0:b0:55f:e682:9720 with SMTP id
- i24-20020aa7c718000000b0055fe6829720mr317170edq.25.1706898600270; Fri, 02 Feb
- 2024 10:30:00 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706898613; x=1707503413;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1+tnDh49EEgOrgjB9N3P+ro3Ir4pX+HnP3v58dVzwIg=;
+        b=n2ynrza1+MDBcEtQ6cxlfyADopJm2xRh+6li5a7xGg8Dm+jLv6WTwzMn4riH4yNjdH
+         DeNRbPWjYnNW0lPpRwtE/rcdkHJu6FuDdaLaUew7l0JUuHKVynK2LM68A0pfRs73RYcR
+         cVcyhvT/2FelPLeSDbj/FBvK/d4y7H9YZhJO5yC2510FKU8U9NWF0JJY6C0ul0nfWIVN
+         Kpg2J7WL1mOL0c9lxmTTNlFkHLxjJhWKp1CRSJMS1wUVYLEC2R9W9oaDTvovg9Mx4ZCK
+         eMec8bUXoRI4BlFNkYVx6SUtJVmz+XAvT6X1oiY6XKqAsCrci515TF7JAAEdw0eTJceA
+         41hA==
+X-Gm-Message-State: AOJu0Yyu8unR+Bs96sJMARk/sRG0KoSU4eHH5SpOfHHxvY4b395BBtq0
+	knPTqExA1QOPSRxu/D3gQvVkwJ5aBtdhiCLGuXSgi8y72rJCaXp+lAjJ+UHX
+X-Google-Smtp-Source: AGHT+IH9Cae2OPNMcOUQD5VzMSQxLhBjQF8LU4vJEzkCHDFVFVQ80oBQ7bf2/LXbx1T9uK4/E1bu6g==
+X-Received: by 2002:a17:90b:68e:b0:295:64de:c443 with SMTP id m14-20020a17090b068e00b0029564dec443mr8827745pjz.21.1706898613430;
+        Fri, 02 Feb 2024 10:30:13 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV7WOh9S0hu5OS3MynphFWP4wJRwW87yKT6JmMesEGIPijHjAm72zZV+4dw13fbLRj8hgzDCUT0Mdry+56tjxvcQ7AzcROR091ZOLC5
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h5-20020a17090adb8500b002904cba0ffbsm338663pjv.32.2024.02.02.10.30.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 10:30:13 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon fixes for v6.8-rc3
+Date: Fri,  2 Feb 2024 10:30:12 -0800
+Message-Id: <20240202183012.1607147-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Za6JwRpknVIlfhPF@work> <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
- <34210a52-f4b3-46a1-b301-c76fb24adc42@app.fastmail.com>
-In-Reply-To: <34210a52-f4b3-46a1-b301-c76fb24adc42@app.fastmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 2 Feb 2024 10:29:43 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whzBDLC024NXgJEsFOOpJ9BO2BkuxHXr4h5wOSYK9AwbQ@mail.gmail.com>
-Message-ID: <CAHk-=whzBDLC024NXgJEsFOOpJ9BO2BkuxHXr4h5wOSYK9AwbQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 1 Feb 2024 at 23:53, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> I did a creduce pass on this warning when it first showed up
-> and opened a gcc bug report as well as a driver workaround:
->
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113214
-> https://lore.kernel.org/lkml/20240103114819.2913937-1-arnd@kernel.org/#r
+Hi Linus,
 
-Ugh. The fact that *that* patch to the Xe driver makes a difference to
-the compiler actually only makes me even less happy about this.
+Please pull hwmon fixes for Linux v6.8-rc3 from signed tag:
 
-The "&a[b]" -> "a+b" transformation is _literally_ just syntactic.
-They are EXACTLY the same expression, and any compiler person or
-sanitizer person who treats them differently is just completely
-incompetent and bonkers.
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v6.8-rc3
 
-That transformation should have been done fairly early in the
-compiler, later passes shouldn't see any kind of difference. At most
-you might have a sanity check at that point to say that "a" should be
-a pointer (because _technically_ it could be 'b' that is the pointer
-expression, but at that point I understand why a compiler would say
-"you're doing some silly sh*t" and give a warning)
+Thanks,
+Guenter
+------
 
-So while I think your driver workaround is fine - and I personally
-actually generally prefer the simpler pointer addition syntax - I do
-not think it's fine at all that the compiler then warns for one and
-not the other.
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
 
-It's just a sign of some serious confusion in some part of the
-compiler. And yes, I suspect Pinski is right in that bugzilla entry
-that it's a sanitizer that causes this, and that's mainly because I
-hope to $DEITY that no _core_ C compiler person would ever make that
-mistake.
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
 
-             Linus
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v6.8-rc3
+
+for you to fetch changes up to 915644189c22d9c93e9fee7c7c993b58e745bef7:
+
+  hwmon: (pmbus/mp2975) Correct comment inside 'mp2975_read_byte_data' (2024-01-27 08:03:18 -0800)
+
+----------------------------------------------------------------
+hwmon fixes for v6.8-rc3
+
+- pmbus/mp2975: Fix driver initialization
+
+- gigabyte_waterforce: Add missing unlock in error handling path
+
+----------------------------------------------------------------
+Harshit Mogalapalli (1):
+      hwmon: gigabyte_waterforce: Fix locking bug in waterforce_get_status()
+
+Konstantin Aladyshev (2):
+      hwmon: (pmbus/mp2975) Fix driver initialization for MP2975 device
+      hwmon: (pmbus/mp2975) Correct comment inside 'mp2975_read_byte_data'
+
+ drivers/hwmon/gigabyte_waterforce.c |  2 +-
+ drivers/hwmon/pmbus/mp2975.c        | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
