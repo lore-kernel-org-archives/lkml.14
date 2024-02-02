@@ -1,230 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505C313E223;
-	Fri,  2 Feb 2024 11:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D5D7C0B9
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 11:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706871709; cv=none; b=Ko/f6P/8xTxT3qc/a9VXx+Y41WI8pQkQUAWVefZK6I8izv3nwX2kR5xA2QRhHnNTOXUJc1gUz+CfO5tILRJxqL/Lkh60cOCusHH9uRSKFvulaQD7V7FAroS7F2cHWCkPWh4dOBkUtAzMC4+yRLNHnmALWFIPpHv0OlLV1b41FE8=
+	t=1706871757; cv=none; b=DbP233LaL1py4AEZX1UrsCo8Zrpr2HT6dORNtG2knjAOsixsCc4w1GzK2indDLDdYob/XmcUhcnxBzC5dCkt63mRRFYlTP0cFb7HAwlvrhs3rNXawGNttJDGYeJlQlKLf35KXTvxiDVlaoZCPdYivrSEtL8ZEycy+VPS6O1juRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706871709; c=relaxed/simple;
-	bh=dc2O85R1+54lcZQTbhpdideOJEc3GjHDCDPyDd2m00A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iUGchhXqjJeq7E3cjbp1HDdUpD3BJetKnUtMK6t+6iCIJiRfFV8UTHGP9fbNo6xSs8uYHsyjlx7nRRPqx+OSAF3nAnJukmEHcRO1/rp2URNsy+soITyQV/OAhEeT2YufL+tIgo/uoJqEkW6m7LVtloRZOe2obTsE8Dada7WDe3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sm1uYxhm; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706871757; c=relaxed/simple;
+	bh=D74xUy1ymoMyy6G89fvtRm0D45tUlhGfHmdtylAdP74=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kwIeo4y/6Iu6wag5/MggeUTNFrZyJhpaHxgzmN6uBKnY/IAtdsZW/hCithNCZdVRDpeFozrg7rhPLVximcjFAQCxCLvtbOVyQqcx5wM7u4kW4ptYNeqjgfyEUDvWzvF3Ex7om8pWjC/VI9qsMP0cHsuNNJK8uT/I+fMbxZps5mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mRLrVqNU; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sm1uYxhm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706871708; x=1738407708;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dc2O85R1+54lcZQTbhpdideOJEc3GjHDCDPyDd2m00A=;
-  b=Sm1uYxhmoBgSDxgHiC/mtYd96GxnJ41nimomHhG/1mxeZq8ytEtZHrNC
-   O9dP6qgBYQ6mTPX24Yxrh9Fr2n0G9n3yywtIgaZOyJeUkq1UtpZzjigC7
-   8A4GEIdwBTP80b7zWg838bf3T+wnhs6CXtkXbfk/U1qxAY80Lve6fkAo9
-   u9SIX3/EC7v+YXUrgZ+XHdOWWvnNvjeSXr/T3SqfwT4LXbGCo1vMjoaC+
-   Vuzs2gweHfff7M5qW2eZYTrZ6qWQ648tApxI2PsWN0vrvwSfVFJI/di+d
-   9AFPhVFC620kRTPM93Zq5psA//y6dqqZcj9jCNp2uGk3qvBj8YZTV6dlB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="394571891"
-X-IronPort-AV: E=Sophos;i="6.05,237,1701158400"; 
-   d="scan'208";a="394571891"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 03:01:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,237,1701158400"; 
-   d="scan'208";a="4639313"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.59.118])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 03:01:45 -0800
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] perf symbols: Slightly improve module file executable section mappings
-Date: Fri,  2 Feb 2024 13:01:30 +0200
-Message-Id: <20240202110130.3553-3-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240202110130.3553-1-adrian.hunter@intel.com>
-References: <20240202110130.3553-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mRLrVqNU"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3beb1d4d872so993499b6e.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 03:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706871754; x=1707476554; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AKvTOkMfs92gzE0M+TFiSJEhkCKRpJTzmpH7agAwUHE=;
+        b=mRLrVqNUC0+K74GLOl3vqaKFfnZylYJ9FexXfOF7UWpR79qSkQVkNE7M3Dd3TeVLhb
+         PhrYT0Eam/JvsohsUplCZo2sC80k7JA38WiRwJR/Tiyzu/netZn4T1zXO+n3szutFE73
+         AYobjBPAq6heSsJap54Cc/4cOZ8dsmtVBSb6YNXMp+K+Jr4A2Z1ZH9RdF9OcyE2iAv6G
+         Nvgx8OhKbCbIVM0OPBdwcEm0cU9+gsvREElE+bIRwnrDrW9OsJ3y2hB0935KlI0qV1vb
+         EmXVwTpkOERbd8aEchG0ttIRworAU5vnn5ah8i+faa84zzD9AT9VD008Sx+sdyvHnbPE
+         OCtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706871754; x=1707476554;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AKvTOkMfs92gzE0M+TFiSJEhkCKRpJTzmpH7agAwUHE=;
+        b=U7xUkzs3YTiE1CD1VTgMB7mrpA6tXatrSQOvGozDKO4SolCFFiBjDTedNB/9UmkXlg
+         UNZ2QhLsNdQ3vsUBzZAII8nNMRfFA/8nXd0nTs9keQwRLyseGnVYWfSLPeD5EBaEGrxZ
+         JglINQtbkBvEP3qbwqgXRR+2x+USgbe1B8S1rY/V6hxlzcC0Ks/sj3EcXwk9QPM1fxn/
+         P1MuDW8a0IQlva/MycG/Gyqt+Wj50I2IN+kYKhKBkQcAyp9ZE5wJILpljmNPliFC/t5b
+         aK95qNJ7yaaavR2Lfx/mJhinDfG/i7dLi4dty4oQQNbo1HQFXd3pBIqhi4ifqQX+WYpf
+         cmxg==
+X-Gm-Message-State: AOJu0Yyx2xj1Z8Ia4Kz5a++ydWXlI8yRhdCEFAIrXhacrNLZAvnlFkn3
+	EKayvUTfS+VVX3Oq/jieVztCVV4uZaBCas5hPdvgUf9Q41VocKvWi5U4uAlGtUotL76GPI0p9BD
+	ulNqJNBVWqE6P12F9PDMBnMk7JtswiotUuZqB
+X-Google-Smtp-Source: AGHT+IFRpqtiZKVAmnfyGxbOhfn+Xv95kz9Cj0dh1dh0pmbX0ph2z2DTZnuR3soBcYzNT173zBRShjkf603kulKsELQ=
+X-Received: by 2002:a05:6808:10c3:b0:3bf:80de:9831 with SMTP id
+ s3-20020a05680810c300b003bf80de9831mr1988318ois.10.1706871754161; Fri, 02 Feb
+ 2024 03:02:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+References: <20240202101311.it.893-kees@kernel.org> <20240202101642.156588-2-keescook@chromium.org>
+In-Reply-To: <20240202101642.156588-2-keescook@chromium.org>
+From: Marco Elver <elver@google.com>
+Date: Fri, 2 Feb 2024 12:01:55 +0100
+Message-ID: <CANpmjNPPbTNPJfM5MNE6tW-jCse+u_RB8bqGLT3cTxgCsL+x-A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] ubsan: Reintroduce signed and unsigned overflow sanitizers
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Hao Luo <haoluo@google.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Fangrui Song <maskray@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Bill Wendling <morbo@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-doc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Currently perf does not record module section addresses except for
-the .text section. In general that means perf cannot get module section
-mappings correct (except for .text) when loading symbols from a kernel
-module file. (Note using --kcore does not have this issue)
+On Fri, 2 Feb 2024 at 11:16, Kees Cook <keescook@chromium.org> wrote:
+>
+> Effectively revert commit 6aaa31aeb9cf ("ubsan: remove overflow
+> checks"), to allow the kernel to be built with the "overflow"
+> sanitizers again. This gives developers a chance to experiment[1][2][3]
+> with the instrumentation again, while compilers adjust their sanitizers
+> to deal with the impact of -fno-strict-oveflow (i.e. moving from
+> "overflow" checking to "wrap-around" checking).
+>
+> Notably, the naming of the options is adjusted to use the name "WRAP"
+> instead of "OVERFLOW". In the strictest sense, arithmetic "overflow"
+> happens when a result exceeds the storage of the type, and is considered
+> by the C standard and compilers to be undefined behavior for signed
+> and pointer types (without -fno-strict-overflow). Unsigned arithmetic
+> overflow is defined as always wrapping around.
+>
+> Because the kernel is built with -fno-strict-overflow, signed and pointer
+> arithmetic is defined to always wrap around instead of "overflowing"
+> (which could either be elided due to being undefined behavior or would
+> wrap around, which led to very weird bugs in the kernel).
+>
+> So, the config options are added back as CONFIG_UBSAN_SIGNED_WRAP and
+> CONFIG_UBSAN_UNSIGNED_WRAP. Since the kernel has several places that
+> explicitly depend on wrap-around behavior (e.g. counters, atomics, crypto,
+> etc), also introduce the __signed_wrap and __unsigned_wrap function
+> attributes for annotating functions where wrapping is expected and should
+> not be instrumented. This will allow us to distinguish in the kernel
+> between intentional and unintentional cases of arithmetic wrap-around.
+>
+> Additionally keep these disabled under CONFIG_COMPILE_TEST for now.
+>
+> Link: https://github.com/KSPP/linux/issues/26 [1]
+> Link: https://github.com/KSPP/linux/issues/27 [2]
+> Link: https://github.com/KSPP/linux/issues/344 [3]
+> Cc: Justin Stitt <justinstitt@google.com>
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/compiler_types.h | 14 ++++++-
+>  lib/Kconfig.ubsan              | 19 ++++++++++
+>  lib/test_ubsan.c               | 49 ++++++++++++++++++++++++
+>  lib/ubsan.c                    | 68 ++++++++++++++++++++++++++++++++++
+>  lib/ubsan.h                    |  4 ++
+>  scripts/Makefile.ubsan         |  2 +
+>  6 files changed, 155 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 6f1ca49306d2..e585614f3152 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -282,11 +282,23 @@ struct ftrace_likely_data {
+>  #define __no_sanitize_or_inline __always_inline
+>  #endif
+>
+> +/* Allow wrapping arithmetic within an annotated function. */
+> +#ifdef CONFIG_UBSAN_SIGNED_WRAP
+> +# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
+> +#else
+> +# define __signed_wrap
+> +#endif
+> +#ifdef CONFIG_UBSAN_UNSIGNED_WRAP
+> +# define __unsigned_wrap __attribute__((no_sanitize("unsigned-integer-overflow")))
+> +#else
+> +# define __unsigned_wrap
+> +#endif
+> +
+>  /* Section for code which can't be instrumented at all */
+>  #define __noinstr_section(section)                                     \
+>         noinline notrace __attribute((__section__(section)))            \
+>         __no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
+> -       __no_sanitize_memory
+> +       __no_sanitize_memory __signed_wrap __unsigned_wrap
+>
+>  #define noinstr __noinstr_section(".noinstr.text")
+>
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index 59e21bfec188..a7003e5bd2a1 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -116,6 +116,25 @@ config UBSAN_UNREACHABLE
+>           This option enables -fsanitize=unreachable which checks for control
+>           flow reaching an expected-to-be-unreachable position.
+>
+> +config UBSAN_SIGNED_WRAP
+> +       bool "Perform checking for signed arithmetic wrap-around"
+> +       default UBSAN
+> +       depends on !COMPILE_TEST
+> +       depends on $(cc-option,-fsanitize=signed-integer-overflow)
+> +       help
+> +         This option enables -fsanitize=signed-integer-overflow which checks
+> +         for wrap-around of any arithmetic operations with signed integers.
+> +
+> +config UBSAN_UNSIGNED_WRAP
+> +       bool "Perform checking for unsigned arithmetic wrap-around"
+> +       depends on $(cc-option,-fsanitize=unsigned-integer-overflow)
+> +       depends on !X86_32 # avoid excessive stack usage on x86-32/clang
+> +       depends on !COMPILE_TEST
+> +       help
+> +         This option enables -fsanitize=unsigned-integer-overflow which checks
+> +         for wrap-around of any arithmetic operations with unsigned integers. This
+> +         currently causes x86 to fail to boot.
 
-Improve that situation slightly by identifying executable sections that
-use the same mapping as the .text section. That happens when an
-executable section comes directly after the .text section, both in memory
-and on file, something that can be determined by following the same layout
-rules used by the kernel, refer kernel layout_sections(). Note whether
-that happens is somewhat arbitrary, so this is not a final solution.
+My hypothesis is that these options will quickly be enabled by various
+test and fuzzing setups, to the detriment of kernel developers. While
+the commit message states that these are for experimentation, I do not
+think it is at all clear from the Kconfig options.
 
-Example from tracing a virtual machine process:
+Unsigned integer wrap-around is relatively common (it is _not_ UB
+after all). While I can appreciate that in some cases wrap around is a
+genuine semantic bug, and that's what we want to find with these
+changes, ultimately marking all semantically valid wrap arounds to
+catch the unmarked ones. Given these patterns are so common, and C
+programmers are used to them, it will take a lot of effort to mark all
+the intentional cases. But I fear that even if we get to that place,
+_unmarked_  but semantically valid unsigned wrap around will keep
+popping up again and again.
 
- Before:
+What is the long-term vision to minimize the additional churn this may
+introduce?
 
-  $ perf script | grep unknown
-         CPU 0/KVM    1718   203.511270:     318341 cpu-cycles:P:  ffffffffc13e8a70 [unknown] (/lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko)
-  $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel | grep 'noinstr.text\|ffff'
-  Map: 0-7e0 41430 [kvm_intel].noinstr.text
-  Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko
+I think the problem reminds me a little of the data race problem,
+although I suspect unsigned integer wraparound is much more common
+than data races (which unlike unsigned wrap around is actually UB) -
+so chasing all intentional unsigned integer wrap arounds and marking
+will take even more effort than marking all intentional data races
+(which we're still slowly, but steadily, making progress towards).
 
- After:
+At the very least, these options should 'depends on EXPERT' or even
+'depends on BROKEN' while the story is still being worked out.
 
-  $ perf script | grep 203.511270
-         CPU 0/KVM    1718   203.511270:     318341 cpu-cycles:P:  ffffffffc13e8a70 vmx_vmexit+0x0 (/lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko)
-  $ perf script -vvv 2>&1 >/dev/null | grep kvm.intel | grep 'noinstr.text\|ffff'
-  Map: ffffffffc13a7000-ffffffffc1421000 a0 /lib/modules/6.7.2-local/kernel/arch/x86/kvm/kvm-intel.ko
-
-Reported-by: Like Xu <like.xu.linux@gmail.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/symbol-elf.c | 75 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 73 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 9e7eeaf616b8..98bf0881aaf6 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -23,6 +23,7 @@
- #include <linux/ctype.h>
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
-+#include <linux/string.h>
- #include <symbol/kallsyms.h>
- #include <internal/lib.h>
- 
-@@ -1329,6 +1330,58 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 	return -1;
- }
- 
-+static bool is_exe_text(int flags)
-+{
-+	return (flags & (SHF_ALLOC | SHF_EXECINSTR)) == (SHF_ALLOC | SHF_EXECINSTR);
-+}
-+
-+/*
-+ * Some executable module sections like .noinstr.text might be laid out with
-+ * .text so they can use the same mapping (memory address to file offset).
-+ * Check if that is the case. Refer to kernel layout_sections(). Return the
-+ * maximum offset.
-+ */
-+static u64 max_text_section(Elf *elf, GElf_Ehdr *ehdr)
-+{
-+	Elf_Scn *sec = NULL;
-+	GElf_Shdr shdr;
-+	u64 offs = 0;
-+
-+	/* Doesn't work for some arch */
-+	if (ehdr->e_machine == EM_PARISC ||
-+	    ehdr->e_machine == EM_ALPHA)
-+		return 0;
-+
-+	/* ELF is corrupted/truncated, avoid calling elf_strptr. */
-+	if (!elf_rawdata(elf_getscn(elf, ehdr->e_shstrndx), NULL))
-+		return 0;
-+
-+	while ((sec = elf_nextscn(elf, sec)) != NULL) {
-+		char *sec_name;
-+
-+		if (!gelf_getshdr(sec, &shdr))
-+			break;
-+
-+		if (!is_exe_text(shdr.sh_flags))
-+			continue;
-+
-+		/* .init and .exit sections are not placed with .text */
-+		sec_name = elf_strptr(elf, ehdr->e_shstrndx, shdr.sh_name);
-+		if (!sec_name ||
-+		    strstarts(sec_name, ".init") ||
-+		    strstarts(sec_name, ".exit"))
-+			break;
-+
-+		/* Must be next to previous, assumes .text is first */
-+		if (offs && PERF_ALIGN(offs, shdr.sh_addralign ?: 1) != shdr.sh_offset)
-+			break;
-+
-+		offs = shdr.sh_offset + shdr.sh_size;
-+	}
-+
-+	return offs;
-+}
-+
- /**
-  * ref_reloc_sym_not_found - has kernel relocation symbol been found.
-  * @kmap: kernel maps and relocation reference symbol
-@@ -1368,7 +1421,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 				      struct maps *kmaps, struct kmap *kmap,
- 				      struct dso **curr_dsop, struct map **curr_mapp,
- 				      const char *section_name,
--				      bool adjust_kernel_syms, bool kmodule, bool *remap_kernel)
-+				      bool adjust_kernel_syms, bool kmodule, bool *remap_kernel,
-+				      u64 max_text_sh_offset)
- {
- 	struct dso *curr_dso = *curr_dsop;
- 	struct map *curr_map;
-@@ -1425,6 +1479,17 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 	if (!kmap)
- 		return 0;
- 
-+	/*
-+	 * perf does not record module section addresses except for .text, but
-+	 * some sections can use the same mapping as .text.
-+	 */
-+	if (kmodule && adjust_kernel_syms && is_exe_text(shdr->sh_flags) &&
-+	    shdr->sh_offset <= max_text_sh_offset) {
-+		*curr_mapp = map;
-+		*curr_dsop = dso;
-+		return 0;
-+	}
-+
- 	snprintf(dso_name, sizeof(dso_name), "%s%s", dso->short_name, section_name);
- 
- 	curr_map = maps__find_by_name(kmaps, dso_name);
-@@ -1499,6 +1564,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	Elf *elf;
- 	int nr = 0;
- 	bool remap_kernel = false, adjust_kernel_syms = false;
-+	u64 max_text_sh_offset = 0;
- 
- 	if (kmap && !kmaps)
- 		return -1;
-@@ -1586,6 +1652,10 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		remap_kernel = true;
- 		adjust_kernel_syms = dso->adjust_symbols;
- 	}
-+
-+	if (kmodule && adjust_kernel_syms)
-+		max_text_sh_offset = max_text_section(runtime_ss->elf, &runtime_ss->ehdr);
-+
- 	elf_symtab__for_each_symbol(syms, nr_syms, idx, sym) {
- 		struct symbol *f;
- 		const char *elf_name = elf_sym__name(&sym, symstrs);
-@@ -1675,7 +1745,8 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 
- 		if (dso->kernel) {
- 			if (dso__process_kernel_symbol(dso, map, &sym, &shdr, kmaps, kmap, &curr_dso, &curr_map,
--						       section_name, adjust_kernel_syms, kmodule, &remap_kernel))
-+						       section_name, adjust_kernel_syms, kmodule,
-+						       &remap_kernel, max_text_sh_offset))
- 				goto out_elf_end;
- 		} else if ((used_opd && runtime_ss->adjust_symbols) ||
- 			   (!used_opd && syms_ss->adjust_symbols)) {
--- 
-2.34.1
-
+Thanks,
+-- Marco
