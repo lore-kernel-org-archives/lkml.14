@@ -1,61 +1,60 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF20524A5
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0DF1862A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 08:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706861394; cv=none; b=s6lURxytMAkT4FCVSeYqq2DcMgEtQVfkHotJt+PUrEax6SDflava2bgU8PKPFsaAcdiixy3wc9f+B001YGyFCOgkqkypEKavFEBJH3dM9qE1ptqIAKo1K0PCzEjxAAAhRr7H3ZuoSfGADxwwh248YWyyQMecntuShIXkDVbUBr0=
+	t=1706861443; cv=none; b=ojkVLnnyUGGW1pxDEfGSDWBVWJBToKJOxWwy41FSlT3RJrQZfw5rAzYA8/TvUWlelNu1EgYIVz7P6hxoITaREN2+LVO4CXnJjtBZdipM2XjHoILPARMO/N96j2ZtDGuEiFVqqiDB+1hSJKol9PAnI5O/kOZ0B2ln3T2WOiF/N3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706861394; c=relaxed/simple;
-	bh=ijMp3DkZ/wdpVXZzkuK32MFSQt5qBP1fjMRpyIyA//8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QR73NoktLrfAEe97Isf4lmbgWbzmAgeNIs5+vDqTPBggoOmLe3A55Rf3UZhMypyubJpAOUTLfqYifGNqqMzB1GI3Wwh4aKUCjIUTN+cEsrIS9yrtcUBrpI4Zv8MeCcM/NhyOmSwU1Wbz1nIp9p5Ho739fagopZ678rgOllRhVKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B01B1C00;
-	Fri,  2 Feb 2024 00:10:34 -0800 (PST)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F6B93F5A1;
-	Fri,  2 Feb 2024 00:09:48 -0800 (PST)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Barry Song <21cnbao@gmail.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 25/25] arm64/mm: Automatically fold contpte mappings
-Date: Fri,  2 Feb 2024 08:07:56 +0000
-Message-Id: <20240202080756.1453939-26-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240202080756.1453939-1-ryan.roberts@arm.com>
-References: <20240202080756.1453939-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1706861443; c=relaxed/simple;
+	bh=MD21gr1pgcIMWXHaCJV480KvwOiiueatQdLrRHxxvMg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i+zuOv9jkTkMKC5idfBTM7L0Ewwt5HasB6FPZ242vGHdpPRhz1GZtkHv2LiS8Y/uV0t9uUD1E3YFFyWn4WKXUgTU8unWWqlnzK7KdG2bhhgJ9YWardjPC8GQl7j6cVf80VZMOv/7G95bsbDLXB8Scq5a5tuTeFvWliq1flcVHME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H0f7NL+i; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H0f7NL+i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706861440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KUBTSSnCMRH6RPlY32VRu5gXb8g/6xAYOWnkQ3qaCZ8=;
+	b=H0f7NL+if2Z/wWDkt57s8+U/fVXpCl0OFUcmTfHYXpnbPmNtBr79AD9plCokqzeqg3Q27X
+	4V3iOYo8WLCfMT7ZNqzSouR7tY8/IcGpFUrfQndBFUAIevkOTGdJzOnTGN41FCuZmEcKvS
+	uo8rygcCDMewqh02OTejfAdw93xtCoQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-158-XOImpI0tNd2Xi7e2dHIDLA-1; Fri, 02 Feb 2024 03:10:37 -0500
+X-MC-Unique: XOImpI0tNd2Xi7e2dHIDLA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A1E5A8352A2;
+	Fri,  2 Feb 2024 08:10:36 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 38CD0C2590D;
+	Fri,  2 Feb 2024 08:10:34 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [RFC PATCH v2 0/5] sched/fair: Defer CFS throttle to user entry
+Date: Fri,  2 Feb 2024 09:09:15 +0100
+Message-ID: <20240202080920.3337862-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,151 +62,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-There are situations where a change to a single PTE could cause the
-contpte block in which it resides to become foldable (i.e. could be
-repainted with the contiguous bit). Such situations arise, for example,
-when user space temporarily changes protections, via mprotect, for
-individual pages, such can be the case for certain garbage collectors.
+Hi folks,
 
-We would like to detect when such a PTE change occurs. However this can
-be expensive due to the amount of checking required. Therefore only
-perform the checks when an indiviual PTE is modified via mprotect
-(ptep_modify_prot_commit() -> set_pte_at() -> set_ptes(nr=1)) and only
-when we are setting the final PTE in a contpte-aligned block.
+Problem statement
+=================
 
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- arch/arm64/include/asm/pgtable.h | 26 +++++++++++++
- arch/arm64/mm/contpte.c          | 64 ++++++++++++++++++++++++++++++++
- 2 files changed, 90 insertions(+)
+CFS tasks can end up throttled while holding locks that other, non-throttled
+tasks are blocking on.
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index cdc310880a3b..d3357fe4eb89 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1192,6 +1192,8 @@ void vmemmap_update_pte(unsigned long addr, pte_t *ptep, pte_t pte);
-  * where it is possible and makes sense to do so. The PTE_CONT bit is considered
-  * a private implementation detail of the public ptep API (see below).
-  */
-+extern void __contpte_try_fold(struct mm_struct *mm, unsigned long addr,
-+				pte_t *ptep, pte_t pte);
- extern void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
- 				pte_t *ptep, pte_t pte);
- extern pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte);
-@@ -1213,6 +1215,29 @@ extern int contpte_ptep_set_access_flags(struct vm_area_struct *vma,
- 				unsigned long addr, pte_t *ptep,
- 				pte_t entry, int dirty);
- 
-+static __always_inline void contpte_try_fold(struct mm_struct *mm,
-+				unsigned long addr, pte_t *ptep, pte_t pte)
-+{
-+	/*
-+	 * Only bother trying if both the virtual and physical addresses are
-+	 * aligned and correspond to the last entry in a contig range. The core
-+	 * code mostly modifies ranges from low to high, so this is the likely
-+	 * the last modification in the contig range, so a good time to fold.
-+	 * We can't fold special mappings, because there is no associated folio.
-+	 */
-+
-+	const unsigned long contmask = CONT_PTES - 1;
-+	bool valign = ((addr >> PAGE_SHIFT) & contmask) == contmask;
-+
-+	if (unlikely(valign)) {
-+		bool palign = (pte_pfn(pte) & contmask) == contmask;
-+
-+		if (unlikely(palign &&
-+		    pte_valid(pte) && !pte_cont(pte) && !pte_special(pte)))
-+			__contpte_try_fold(mm, addr, ptep, pte);
-+	}
-+}
-+
- static __always_inline void contpte_try_unfold(struct mm_struct *mm,
- 				unsigned long addr, pte_t *ptep, pte_t pte)
- {
-@@ -1287,6 +1312,7 @@ static __always_inline void set_ptes(struct mm_struct *mm, unsigned long addr,
- 	if (likely(nr == 1)) {
- 		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
- 		__set_ptes(mm, addr, ptep, pte, 1);
-+		contpte_try_fold(mm, addr, ptep, pte);
- 	} else {
- 		contpte_set_ptes(mm, addr, ptep, pte, nr);
- 	}
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index 80346108450b..2c7dafd0552a 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -67,6 +67,70 @@ static void contpte_convert(struct mm_struct *mm, unsigned long addr,
- 	__set_ptes(mm, start_addr, start_ptep, pte, CONT_PTES);
- }
- 
-+void __contpte_try_fold(struct mm_struct *mm, unsigned long addr,
-+			pte_t *ptep, pte_t pte)
-+{
-+	/*
-+	 * We have already checked that the virtual and pysical addresses are
-+	 * correctly aligned for a contpte mapping in contpte_try_fold() so the
-+	 * remaining checks are to ensure that the contpte range is fully
-+	 * covered by a single folio, and ensure that all the ptes are valid
-+	 * with contiguous PFNs and matching prots. We ignore the state of the
-+	 * access and dirty bits for the purpose of deciding if its a contiguous
-+	 * range; the folding process will generate a single contpte entry which
-+	 * has a single access and dirty bit. Those 2 bits are the logical OR of
-+	 * their respective bits in the constituent pte entries. In order to
-+	 * ensure the contpte range is covered by a single folio, we must
-+	 * recover the folio from the pfn, but special mappings don't have a
-+	 * folio backing them. Fortunately contpte_try_fold() already checked
-+	 * that the pte is not special - we never try to fold special mappings.
-+	 * Note we can't use vm_normal_page() for this since we don't have the
-+	 * vma.
-+	 */
-+
-+	unsigned long folio_saddr, folio_eaddr;
-+	unsigned long cont_saddr, cont_eaddr;
-+	pte_t expected_pte, subpte;
-+	struct folio *folio;
-+	struct page *page;
-+	unsigned long pfn;
-+	pte_t *orig_ptep;
-+	pgprot_t prot;
-+
-+	int i;
-+
-+	if (!mm_is_user(mm))
-+		return;
-+
-+	page = pte_page(pte);
-+	folio = page_folio(page);
-+	folio_saddr = addr - (page - &folio->page) * PAGE_SIZE;
-+	folio_eaddr = folio_saddr + folio_nr_pages(folio) * PAGE_SIZE;
-+	cont_saddr = ALIGN_DOWN(addr, CONT_PTE_SIZE);
-+	cont_eaddr = cont_saddr + CONT_PTE_SIZE;
-+
-+	if (folio_saddr > cont_saddr || folio_eaddr < cont_eaddr)
-+		return;
-+
-+	pfn = pte_pfn(pte) - ((addr - cont_saddr) >> PAGE_SHIFT);
-+	prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
-+	expected_pte = pfn_pte(pfn, prot);
-+	orig_ptep = ptep;
-+	ptep = contpte_align_down(ptep);
-+
-+	for (i = 0; i < CONT_PTES; i++) {
-+		subpte = pte_mkold(pte_mkclean(__ptep_get(ptep)));
-+		if (!pte_same(subpte, expected_pte))
-+			return;
-+		expected_pte = pte_advance_pfn(expected_pte, 1);
-+		ptep++;
-+	}
-+
-+	pte = pte_mkcont(pte);
-+	contpte_convert(mm, addr, orig_ptep, pte);
-+}
-+EXPORT_SYMBOL(__contpte_try_fold);
-+
- void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
- 			pte_t *ptep, pte_t pte)
- {
--- 
-2.25.1
+For !PREEMPT_RT, this can be a source of latency due to the throttling causing a
+resource acquisition denial.
+
+For PREEMPT_RT, this is worse and can lead to a deadlock:
+o A CFS task p0 gets throttled while holding read_lock(&lock)
+o A task p1 blocks on write_lock(&lock), making further readers enter the
+  slowpath
+o A ktimers or ksoftirqd task blocks on read_lock(&lock)
+
+If the cfs_bandwidth.period_timer to replenish p0's runtime is enqueued on
+the same CPU as one where ktimers/ksoftirqd is blocked on read_lock(&lock),
+this creates a circular dependency.
+
+This has been observed to happen with:
+o fs/eventpoll.c::ep->lock
+o net/netlink/af_netlink.c::nl_table_lock (after hand-fixing the above)
+but can trigger with any rwlock that can be acquired in both process and
+softirq contexts.
+
+The linux-rt tree has had
+  1ea50f9636f0 ("softirq: Use a dedicated thread for timer wakeups.")
+which helped this scenario for non-rwlock locks by ensuring the throttled
+task would get PI'd to FIFO1 (ktimers' default priority). Unfortunately,
+rwlocks cannot sanely do PI as they allow multiple readers.
+
+Proposed approach
+=================
+
+Peter mentioned [1] that there have been discussions on changing /when/ the
+throttling happens: rather than have it be done immediately upon updating
+the runtime statistics and realizing the cfs_rq has depleted its quota, we wait
+for the task to be about to return to userspace: if it's in userspace, it can't
+hold any in-kernel lock.
+
+I submitted an initial jab at this [2] and Ben Segall added his own version to
+the conversation [3]. This series contains Ben's patch plus my additions. The
+main change here is updating the .h_nr_running counts throughout the cfs_rq
+hierachies to improve the picture given to load_balance().
+
+The main thing that remains doing for this series is making the second cfs_rq
+tree an actual RB tree (it's just a plain list ATM).
+
+This also doesn't touch rq.nr_running yet, I'm not entirely sure whether we want
+to expose this outside of CFS, but it is another field that's used by load balance.
+
+Testing
+=======
+
+Tested on QEMU via:
+
+  mount -t cgroup -o cpu none /root/cpu
+
+  mkdir /root/cpu/cg0
+  echo 10000 >  /root/cpu/cg0/cpu.cfs_period_us
+  echo 1000 > /root/cpu/cg0/cpu.cfs_quota_us
+
+  mkdir /root/cpu/cg0/cg00
+  mkdir /root/cpu/cg0/cg01
+
+  mkdir /root/cpu/cg0/cg00/cg000
+  mkdir /root/cpu/cg0/cg00/cg001
+
+  spawn() {
+      while true; do cat /sys/devices/system/cpu/smt/active &>/dev/null; done &
+      PID=$!
+      echo "Starting PID${PID}"
+      echo $PID > $1
+  }
+
+  spawn cpu/cg0/tasks
+  spawn cpu/cg0/tasks
+  spawn cpu/cg0/tasks
+  spawn cpu/cg0/tasks
+
+  spawn cpu/cg0/cg01/tasks
+
+  spawn cpu/cg0/cg00/cg000/tasks
+  spawn cpu/cg0/cg00/cg001/tasks
+
+  sleep 120
+
+  kill $(jobs -p)  
+
+Links
+=====
+  
+[1]: https://lore.kernel.org/all/20231031160120.GE15024@noisy.programming.kicks-ass.net/
+[2]: http://lore.kernel.org/r/20231130161245.3894682-1-vschneid@redhat.com
+[3]: http://lore.kernel.org/r/xm26edfxpock.fsf@bsegall-linux.svl.corp.google.com
+
+Benjamin Segall (1):
+  sched/fair: Only throttle CFS tasks on return to userspace
+
+Valentin Schneider (4):
+  sched: Note schedule() invocations at return-to-user with SM_USER
+  sched/fair: Delete cfs_rq_throttled_loose(), use
+    cfs_rq->throttle_pending instead
+  sched/fair: Track count of tasks running in userspace
+  sched/fair: Assert user/kernel/total nr invariants
+
+ include/linux/sched.h |   7 +
+ kernel/entry/common.c |   2 +-
+ kernel/entry/kvm.c    |   2 +-
+ kernel/sched/core.c   |  45 ++++-
+ kernel/sched/debug.c  |  28 +++
+ kernel/sched/fair.c   | 399 ++++++++++++++++++++++++++++++++++++++++--
+ kernel/sched/sched.h  |   5 +
+ 7 files changed, 466 insertions(+), 22 deletions(-)
+
+--
+2.43.0
 
