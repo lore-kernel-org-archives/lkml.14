@@ -1,143 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5046E15E5D8;
-	Fri,  2 Feb 2024 19:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D28D15E5DB
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 19:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706902691; cv=none; b=PIr1JrFHq6opl77RcLlrskmFl7z0zHB94S8+NTN7oh9e4akS9bjd0m7yTfxHL/ZtxM7OfOYMSczNHxWSWt00QIaNW7BUcq/ka1kYDH9fa8ffWBYMd1l4Iw/vUYkh4TPLNgyMQNWeyrI8miBkFK4+xrJJlwOCAyT0BqQQr2E9HCw=
+	t=1706902872; cv=none; b=SVOdRJTxfXjBER7hmeYNIG5hYmAgp4271DDI22k9ex2YevQop3nA/Vk4/jXQPueSZ62m2821wNhp7WU6/Jzlq3jRZhaSRovHlH+Zp8r9f69fe9/DcDUO80Qq95d1SFAzRK/WCBXiHJeDW/hApQZP+19rQXM2PsbRA/MmRD53nxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706902691; c=relaxed/simple;
-	bh=cXSewaIhyGydS5Gw01kUhO+TK9P0kL9oR3wsJgkpSXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c2+cUy4K12Ry734F4Kqv6SgyGf6pjLe86z8/VXXi9TBps6mBqYYp3HX9Dxz0hk4UMCdLzX1pqDWFd9XnvE2SV/eFZNBRvQuFXffJ7G/bJ8ISo847rG0PgoeDHYCBhX5lBYa+lbZa+98QQWQPKg8Qpx3erxH5bLhX21P7qaUaESs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovi+0ekJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovi+0ekJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B896C433C7;
-	Fri,  2 Feb 2024 19:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706902690;
-	bh=cXSewaIhyGydS5Gw01kUhO+TK9P0kL9oR3wsJgkpSXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ovi+0ekJPZurgLg8k360G3rdBWysmMIochoK+bC4Dcn43HvlSf4ueyyed1iL/BIKp
-	 pxEKuGpZMJgyE5VB2iyakVKzVkI2z27TLziSvsZ4MBVpP8XEWYFAY5S0rSaNa7I0UG
-	 SKlElFrz4Z9VulT1xnl556sxrDbnc+j8TwwhaKH4uSReLWdLMGT2fi1fd8C7dP5jrO
-	 rM+V/ev1Bil/ScnFXez9obyL29t300jIRIfkQUgX4ZB9faRUULT7KshaFJKNwYCoHV
-	 JObzf2YabL/I7Jf8mWG8M//XHvb2ipLKSxgKCp88Y6Q7G7+p85bTJwyv93zIvOThvZ
-	 bwDBvEtB+tMRg==
-Date: Fri, 2 Feb 2024 13:38:08 -0600
-From: Rob Herring <robh@kernel.org>
-To: Mao Jinlong <quic_jinlmao@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-msm@vger.kernel.org,
-	Tingwei Zhang <quic_tingweiz@quicinc.com>,
-	Yuanfang Zhang <quic_yuanfang@quicinc.com>,
-	Tao Zhang <quic_taozha@quicinc.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: arm: Add device-name in the
- coresight components
-Message-ID: <20240202193808.GA581322-robh@kernel.org>
-References: <20240131082628.6288-1-quic_jinlmao@quicinc.com>
- <20240131082628.6288-3-quic_jinlmao@quicinc.com>
+	s=arc-20240116; t=1706902872; c=relaxed/simple;
+	bh=VpngUHRaXYWmrJgabtVDx1DpEtalXhvl7s08O1tQRK4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=UPu3Bn0E9ogaAxgXEcIBIpnZIg0c0GkfyoIaAOPA6ozxicZTgewKLoCeLn5ussNRhcFs17k+RKV+KvU6rYEFcKOOmD/1txtCdCyup7slVqyO2TfaUn3lxx5/ef9Dg2SifrkhEhXfQj9edrMhePlrxdLOfujmpAquGOpSVKYNjao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3610073a306so21917725ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 11:41:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706902869; x=1707507669;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VpngUHRaXYWmrJgabtVDx1DpEtalXhvl7s08O1tQRK4=;
+        b=WOL6Fpth1+l6eEFDd3tZzzdpCDnMif1rY+/N1aQQOZyucync1suNNlmvGbJeGtjiIN
+         11SvdmmZMls4LvaGfKUNVOUzDV2GK8URbXcyNM6OI4+bxdfiamMWUNpym23cQra00tkx
+         aYhDgVSOSo2ek+apHrrMctI2QkaA0tgArK0+dWpUN5vbNA1nN9GCKCG7uK1PnSnLdft0
+         KtOsnThoPkakrf9zilkRnOtzRXQYTg7eJ4vL/+cXLziwy/xXf7Zu11kCHbdsMydCbODQ
+         zbHX0jpeR+PfQwh8nmCmrCZEAe1KToixGWovRQgUpKMnrtKENU5dt93yQo8qUIzAU+7h
+         87Vw==
+X-Gm-Message-State: AOJu0YykYq9CYFJZy7TKDZwKtKwSZv2cABnTeFGBLNlctvhTt9wKdQXa
+	N5Gdzj7VHLQ4QYnAtDH+pA3WRiXQ/4wjsBE52otiMbNmwEJ3fFlU5k5aXCBGJ/qcdwbROWv3ybz
+	Zj4fKaZkX4AgUOfKvgjjXKi+9N0G3c9ibdnKS3NLZPHZCLc1NBjrfWQw5pg==
+X-Google-Smtp-Source: AGHT+IEpFGyPGC251jR6NEJ01hBF20ClUjR41xzjeCM6BlTlcwfiKorhTaxqZqLyQIEqxpTLtNK+iz02ZC5EXMtL8VhF5iifpusU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240131082628.6288-3-quic_jinlmao@quicinc.com>
+X-Received: by 2002:a05:6e02:1cad:b0:361:a961:b31a with SMTP id
+ x13-20020a056e021cad00b00361a961b31amr789526ill.5.1706902869444; Fri, 02 Feb
+ 2024 11:41:09 -0800 (PST)
+Date: Fri, 02 Feb 2024 11:41:09 -0800
+In-Reply-To: <00000000000021d73706086b097c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000033111306106b4b52@google.com>
+Subject: Re: [syzbot] Re: possible deadlock in hci_rfkill_set_block
+From: syzbot <syzbot+f93d183bc91522d90de9@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 31, 2024 at 12:26:26AM -0800, Mao Jinlong wrote:
-> Current name of coresight component's folder consists of prefix of
-> the device and the id in the device list. When run 'ls' command,
-> we can get the register address of the device. Take CTI for example,
-> if we want to set the config for modem CTI, but we can't know which
-> CTI is modem CTI from all current information.
-> 
-> cti_sys0 -> ../../../devices/platform/soc@0/138f0000.cti/cti_sys0
-> cti_sys1 -> ../../../devices/platform/soc@0/13900000.cti/cti_sys1
-> 
-> Add device-name in device tree which can provide a better description
-> of the coresight device. It can provide the info like the system or
-> HW it belongs to.
-> 
-> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-> ---
->  .../devicetree/bindings/arm/arm,coresight-catu.yaml         | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-cpu-debug.yaml    | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-cti.yaml          | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-dummy-sink.yaml   | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-dummy-source.yaml | 6 ++++++
->  .../bindings/arm/arm,coresight-dynamic-funnel.yaml          | 6 ++++++
->  .../bindings/arm/arm,coresight-dynamic-replicator.yaml      | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-etb10.yaml        | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-etm.yaml          | 6 ++++++
->  .../bindings/arm/arm,coresight-static-funnel.yaml           | 6 ++++++
->  .../bindings/arm/arm,coresight-static-replicator.yaml       | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-stm.yaml          | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-tmc.yaml          | 6 ++++++
->  .../devicetree/bindings/arm/arm,coresight-tpiu.yaml         | 6 ++++++
->  .../devicetree/bindings/arm/qcom,coresight-tpda.yaml        | 6 ++++++
->  .../devicetree/bindings/arm/qcom,coresight-tpdm.yaml        | 6 ++++++
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Why do you need a name on everything? Funnels and replicators, for 
-example, aren't a source of data, but just connected to things that are. 
-ETM is tightly coupled to a CPU and you have a link to it. You have 
-graph links to show connections. Limit this to where you actually need 
-it. 
+***
 
->  16 files changed, 96 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-catu.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-catu.yaml
-> index 2bae06eed693..a4d20aad0c70 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,coresight-catu.yaml
-> +++ b/Documentation/devicetree/bindings/arm/arm,coresight-catu.yaml
-> @@ -44,6 +44,12 @@ properties:
->        - const: arm,coresight-catu
->        - const: arm,primecell
->  
-> +  device-name:
+Subject: Re: possible deadlock in hci_rfkill_set_block
+Author: pchelkin@ispras.ru
 
-This is too generic of a name. Make is something closer to how it is 
-used or what it is for. Naming sysfs devices is not how it is used. 
-That's just an intermediate step.
+Was fixed by 769bf60e17ee ("Bluetooth: Fix deadlock in vhci_send_frame").
 
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description:
-> +      Define the name which can describe what kind of HW or system the
-> +      device is for.
-> +
->    reg:
->      maxItems: 1
->  
-> diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-cpu-debug.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-cpu-debug.yaml
-> index 0a6bc03ebe00..6094cc9cb834 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,coresight-cpu-debug.yaml
-> +++ b/Documentation/devicetree/bindings/arm/arm,coresight-cpu-debug.yaml
-> @@ -39,6 +39,12 @@ properties:
->        - const: arm,coresight-cpu-debug
->        - const: arm,primecell
->  
-> +  device-name:
-> +    $ref: /schemas/types.yaml#/definitions/string
-
-If you are redefining the type multiple times, there's a problem in the 
-structure of the schemas. Really, that's true for anything duplicated in 
-the kernel.
-
-Rob
+#syz fix: Bluetooth: Fix deadlock in vhci_send_frame
