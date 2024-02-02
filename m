@@ -1,341 +1,185 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E68714078F;
-	Fri,  2 Feb 2024 11:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDE4140799;
+	Fri,  2 Feb 2024 11:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706873965; cv=fail; b=mVO09UQv1DPC9uZGU/r6c85XvdqDVtS2RAzQZhV80jj7lgr/rRoOWblP8CDnefNO0jQhvSrdgOQRm4Nb6V3PPm+ZrHPIja2beJF+rsci/KrVfcgTwTKUf7TlY+P0ct4WzYWgLgcu3q/vkR0/fmaJPWFOhHUxqkdp90nkpWalqXE=
+	t=1706873966; cv=fail; b=OQa46ZCif7/qDvV0euuxqxHKV5HRc85OJhqK0RsnuI4g+lE5MaDCmsFodHGv8ZbuDYPbDHCsularyBbCzRT72dGkkYD/atMowwQJ038sE/lD/t3Z1PvdkU4zssX0f/Q5F0cKqYdWpqAFIJlQxUwQ2B9f7GVYW3K2emc8lIx5WS4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706873965; c=relaxed/simple;
-	bh=WVTpUF6lr7OOUcZb25Jy9nufIQNXCZSCJWS88wlpWpM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kesLpLzcDdPLdds9Tqs1OlUoBBHcdQ2jmt0R4o4YSlnZQMl5F/FQ5lJ50y+oA87Kpb7isjsPU70ccVG6fh8htLnTYIWb74ao4ajs/xfgVSvCKHBRcbkNiCXe0nOJFQqYLjKGEa3eBe+o1Npf+hWKsTnQAu0iwsPRqIytwUWQT+g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=peoti+4H; arc=fail smtp.client-ip=40.107.236.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1706873966; c=relaxed/simple;
+	bh=xkRf+LBm8U5DEanN/lZV3DQwOVae4xDfjQDOjqaI/ao=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ch++FQ9/qxQJT7FTk14Ex72phDkxKi8JTI1IebMo+WyUZ7THHvwJd0JCc0U6pDZXLXs55wAk1cx4GebiME1FwjbU+XcwQHP6a1OZD7zQH9aacxhpE0tLjg1hMCdzuATx67Oocmxo+bHCRNh8f8spFXTQE0OEkwpOXwHtV5iKSEs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MgZN88Vj; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="peoti+4H"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MgZN88Vj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706873964; x=1738409964;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=xkRf+LBm8U5DEanN/lZV3DQwOVae4xDfjQDOjqaI/ao=;
+  b=MgZN88Vjso0HeaDxmHADPAZyZqZwWsR6T8cfCoTsISBSW6XcQMzTx2HD
+   rXpdRTS/B33ZJEQyWlWSaEMvzI7tkqka0aiRQs8M2qcGjbDVpV1G/jpyq
+   gw4R9jsDZ3gjwlOvvOcXvX84GIIRPLrG0Zmm6VNLcmUIRjZWYz6H/Pgf2
+   P7d8s7Sqizc/hJwe7wwTddkllp1TJ3QQgNZSIDOSS06XCmHmHSNnRfqzf
+   oWbaki6+3r8XdSEwTQRb3IPYsuAu7o/R1KNpU+ablZtVroBRSZCbgSwx9
+   s9RGtYalFbgii9zc+vg9tqUnkrNCVtBmSZVbOG+s6gCBPShy+yj/bxVpc
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="17669972"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="17669972"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 03:39:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="4809814"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Feb 2024 03:39:23 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 2 Feb 2024 03:39:21 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 2 Feb 2024 03:39:21 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 2 Feb 2024 03:39:21 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=loXGbOAojIdWL3bi9dQpQVQ2drC1+Z2LN+Buf8zRaoh/SHa6K1ubs7fveD6jLF94GppXcFJvUxB23kp8B76uJEQeyUwYjcG5QV5M/NJAQc40Tbolz9OTRqPYkQTa5KoNHFj/5VLqSN56VdLGjgNtrYBM2Ys9aLx8OMVf8UU3lA90YemSAK+9+ncbtPndvAqTEWgYbaPSUI0+lhWc01w/XDuT2RW9zoBUtboVVYzbvurL3lBqNqtkjoPTrRw9FVh9twnSYDXxDDCkRx3G5obU4FEFn0qeUxHg2WAgX+gj60G1B/Lg9+GhRXdMdS0lNdBqCvldPVNH3Yp/XS0+GYR9oQ==
+ b=GmSFvVNnVeQHtavRwKt2xg1A5zeOK+UczFE6XqoFjYas7deyMZPmZT7SjAkbTLSdeXPnqTCc3Kk7d3IjSXCSEeeOI9NC8hA0DXjOLS9HEEr41OMeCSveYaABrBIuY9SCK8vusAUciKO385MCESmJKqM5vTHK0Oe6zmHRd0WLKfY5b07D5pRITqeaI1tj1rFdt/nmza/MI1pvYQJGPZRKUJ9ppvUsYdp3oZNopig0sut3szdGe8C/4nDkT3oEA9/JljPytYaZdt2nF6H6ulGHyfZzRpJ75UZ0AnFyQuX+zJCgl5gQW9JMyzXnx3fbA+srh+Kxitoxb39t1XRy4d2UTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N2+6k1dAPykebW78rDXHC8q5YjqCp4KU6kCHtB1JTWY=;
- b=amqsxcI1ZrThU9ZUw3dIAU81tr2tnM86wFeWVgi1FUOgiwTjddZWQM6T0KqiYR9kCxDrOIv40CGyNvRuHdikUsF4Gt3nkZvXvwfD3aP9Y0Fibkox4c0MmDjRhYmODy6q5gP9xn5xn/Fqn6b9p7Wzm/nOz0WrbAAQDlyFyLmKTnDEsGkp9ZzhOGFVzvmT7Hg79wGDbfqGGadzfItfWgL9Npxf4U4bHEHyIqguJvvznEmT+M5Iq02STBUVvtgXJRH2acafcZF54NOAZxAQZ/aufWrtBMB3Pfqn7PT3j6Ch63oishBijFSLabcpc1hxrVC1KUtVBu+CL4DeuWed7Vzzuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N2+6k1dAPykebW78rDXHC8q5YjqCp4KU6kCHtB1JTWY=;
- b=peoti+4HC55YhICcP5z5fhJze8tPB7TWi0bDIigz2+lE2Fw/sjgb8tA621OfpDmRw+u3ewEtn8G+BMs8rUXo8fnt53VxEDcp/xUyXkc8ULppO2kupDPrn/D+WbHEPwltulIRCoDVc/1KKQy92h3PSl76T2a75Yc1BzBFVBQfNl4=
-Received: from PH8PR07CA0001.namprd07.prod.outlook.com (2603:10b6:510:2cd::26)
- by DS0PR12MB8561.namprd12.prod.outlook.com (2603:10b6:8:166::8) with
+ bh=Hi4MUfAEBzT+yrIX5ELl+hDWxei4TQFm65P8IE06RFo=;
+ b=Jxes1CRFRHzZeheE3DC9mvswx5vzCZkYXLwYyAHLsw2eBM07609OKlo0LuN+jlDA8oNB3QxRcAdfWW6Z7EFxPUvrlVebzmC0fUaqdiYc4a9M8G+mWp+mcwmm7G2t6rJo33aaWs0UQx1nBdR9JsiZYx9z8W1EQxAY/zxU5BRMw6pINW/F2QmJ5ct+Ag/G6kTuKmv4zuJ80JjfIAhiIy2zkfQokj8aRJX8nrpKrU1JmfuzCLQXrb7WTubN0XwSRqcmTb6toaGgiJOMEHmpzT084CS6QAsrvMNztHTRhzATzGY6QY5bS1SjYvsuV3S76IIndQMSkeNG79NcO4ZDAqQTGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
+ by SA0PR11MB4541.namprd11.prod.outlook.com (2603:10b6:806:94::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Fri, 2 Feb
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.29; Fri, 2 Feb
  2024 11:39:19 +0000
-Received: from SN1PEPF0002BA4C.namprd03.prod.outlook.com
- (2603:10b6:510:2cd:cafe::98) by PH8PR07CA0001.outlook.office365.com
- (2603:10b6:510:2cd::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.30 via Frontend
- Transport; Fri, 2 Feb 2024 11:39:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002BA4C.mail.protection.outlook.com (10.167.242.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7249.19 via Frontend Transport; Fri, 2 Feb 2024 11:39:18 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 2 Feb
- 2024 05:39:18 -0600
-Received: from xhdbharathm40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
- Transport; Fri, 2 Feb 2024 05:39:16 -0600
-From: Praveen Teja Kundanala <praveen.teja.kundanala@amd.com>
-To: <srinivas.kandagatla@linaro.org>, <michal.simek@amd.com>,
-	<kalyani.akula@amd.com>, <praveen.teja.kundanala@amd.com>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <linux-kernel@vger.kernel.org>
-Subject: [PATCH V4 3/4] nvmem: zynqmp_nvmem: Add support to access efuse
-Date: Fri, 2 Feb 2024 17:08:42 +0530
-Message-ID: <20240202113843.17999-4-praveen.teja.kundanala@amd.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240202113843.17999-1-praveen.teja.kundanala@amd.com>
-References: <20240202113843.17999-1-praveen.teja.kundanala@amd.com>
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::b1b8:dbaa:aa04:a6bf]) by MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::b1b8:dbaa:aa04:a6bf%7]) with mapi id 15.20.7249.024; Fri, 2 Feb 2024
+ 11:39:19 +0000
+Message-ID: <b6b16208-4dd0-4c34-b377-3bdf5bbdfeb4@intel.com>
+Date: Fri, 2 Feb 2024 12:39:13 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 13/21] bitmap: make bitmap_{get,set}_value8()
+ use bitmap_{read,write}()
+Content-Language: en-US
+To: Alexander Lobakin <aleksander.lobakin@intel.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+CC: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Marcin Szycik
+	<marcin.szycik@linux.intel.com>, Wojciech Drewek <wojciech.drewek@intel.com>,
+	Yury Norov <yury.norov@gmail.com>, Andy Shevchenko <andy@kernel.org>, "Rasmus
+ Villemoes" <linux@rasmusvillemoes.dk>, Alexander Potapenko
+	<glider@google.com>, Jiri Pirko <jiri@resnulli.us>, Ido Schimmel
+	<idosch@nvidia.com>, Simon Horman <horms@kernel.org>,
+	<linux-btrfs@vger.kernel.org>, <dm-devel@redhat.com>,
+	<ntfs3@lists.linux.dev>, <linux-s390@vger.kernel.org>,
+	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240201122216.2634007-1-aleksander.lobakin@intel.com>
+ <20240201122216.2634007-14-aleksander.lobakin@intel.com>
+From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+In-Reply-To: <20240201122216.2634007-14-aleksander.lobakin@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0048.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:48::10) To MN6PR11MB8102.namprd11.prod.outlook.com
+ (2603:10b6:208:46d::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4C:EE_|DS0PR12MB8561:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5503b8d8-6aea-4f1c-a4c6-08dc23e397ba
+X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|SA0PR11MB4541:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2fca6fda-f59b-487c-a1b2-08dc23e39828
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	UcxyHNT+syXmRqf5ZbgvqJ9sHxe9/qLzy+PVEHLNjeUhfL2z3v1RlGXcgxDqwxsIGn6mDQRcejASsqHA+kSXreCN0eXPnt0HwXbDo7XQH6cDmEoc1fMAcL+yThAGuxyXh8rdDOyaOnszmn18crpJFsOLGjhgM9qUvxS7tywkpY/ze6/kV+ZT8OFkVbDy2u0ULq/Xoa3CMKxqhClFjc7H7oozAr3H99UMSn33tnO70MAotasesxXW1GuJZrtvGL77H+uebi42WnhNNCRcYTCK/8YBr18s6haojI61K5WDNGlZWcCdAtI7ZEZJs5AM/+93pkhYiybWZR7de4MYjENiyA4w7VdsvwqzPOUcbFzgDeqBAAmObLj2HyRRAEl1xwm4xIMhhYpOwSp5Sk5YWxXGQKHyjFJNuF6DMuMD8H0RLIGz0G31otSreWEqpqmyZWM8YCJ6RoXgZhiYS6hvY5mAQv4w5naVNwSnbIpwVQbgedA9SooqE05Rj4Oxn5kLq6JTjTa36rD4maKyAiKqPD279KxkGVfaoWBzphE7PJly+i6/kNfhDysBedXk0sW8RVhu9n/+lt7s6XhokXkHZls44/95sHOdU69EPWPJx7U90UccHVsl5fwgJLgen6iFE73u1gDzcf9yuvTjlkRnj4L6K5nCzmTYuak9Bd2Q+w1wxNJD4zYP4HuZSzQRRFvmhuPNQ3ZDyKx1199eEHu9sl2cPIvVaKNdmi7QDSsO34Wlde5h1UPzjjPHW5DO12ezV0ZXLRLiV2P1/lGcep7sbCA0Gw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(376002)(39860400002)(346002)(230922051799003)(82310400011)(64100799003)(1800799012)(451199024)(186009)(46966006)(40470700004)(36840700001)(36860700001)(5660300002)(4326008)(2616005)(8676002)(8936002)(103116003)(40480700001)(40460700003)(82740400003)(81166007)(83380400001)(110136005)(86362001)(336012)(41300700001)(47076005)(70206006)(26005)(2906002)(1076003)(36756003)(478600001)(6666004)(70586007)(316002)(356005)(426003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 11:39:18.9282
+X-Microsoft-Antispam-Message-Info: ORk0m+9eu95yKvcd2sujVW9SnkNtOl1wnGIdN6B4S3pEWIqTamo9LC8uvz2JYTw7uDqiQWO42M4dp9/u3/iKo480A/+WGchutcIA74ejpjwMUyXGN7+RY1J2x1YUeAWpZcpU0UYKpxD9Rzodsw3yMm86JBpQfMO1WAM8X7p0JZdN/yRQwS54agmfBMvbskRpo9aTh7N3YUYAb8HYEmBanub6CFJTFzT8cvkTHXSi5Txs5Xe4v3tbDHKuVUKVr1Gwe8LUkeCghWNZ0YQNV/SOuhNb3r2XfwuxTCk9hZ/7TnmjiA1iTCE6cSM181SW5ma2ZfxeEhHIMZD5rf7P7hCnmkiIGR2f3iNIl9/ABi+YO7LDKpPXhq3hHdmVN5FJcqRthZ379tw3Z3HKzhjkqRUXKfRNXk5mQ6QvDIkcA8f13BObYfcPMqZwRv4AWKFRo9FeYhocuQ06hYLT3HXnGo2Lds2b7q7TeLmSZo+QtoLeri815BIEHwJUnnV0pGTYbOQZL5hpAs3ZAACqfC9cC9a4oopp7tgiUn4bR2nBRDXeo6AZ0LrH29gZEMYts802V5+lX49xRRTFwJoeQFwaX7Qh4tAmJXcmFtC58PNOK8XPDHW/tUKZn4AMpyAFogULHNs1MKKn8NBSWHCh+PwbeWtPwg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(376002)(136003)(39860400002)(346002)(230922051799003)(186009)(1800799012)(451199024)(64100799003)(83380400001)(26005)(41300700001)(2616005)(54906003)(82960400001)(8936002)(38100700002)(110136005)(66946007)(8676002)(316002)(66556008)(4326008)(66476007)(5660300002)(4744005)(7416002)(2906002)(6666004)(6506007)(6486002)(6512007)(478600001)(53546011)(86362001)(31696002)(36756003)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aDBFakY3NE5aUFozaVpvMWJiendFMWRGeHV5cHhvdFltamhKdDA3NDBIbGNu?=
+ =?utf-8?B?YjdpblZYVG9TSDlraG5oWnZkWDlpYzNiMC9Sbk9VTDNqN1dRWW5CL1pCTG5C?=
+ =?utf-8?B?WUwxVEY0TXZNOW9zYjBJdUlmcUxmWDM0VkR4MWVnaEhCM3BsdXRvRFcvdmNp?=
+ =?utf-8?B?U0dKeW9uUjh3SE94ajgxK1l3NTF5emZxVkJaUGtOdVpUMmtFTkhNamY1NnlX?=
+ =?utf-8?B?WkRTeW9lVVdVWGNiVGFpVUJjLzNBQkpvRjdoZVNpL0JTNGRDYzVod3o2T1Fv?=
+ =?utf-8?B?MWhpYWMzQ05GNm1sS2Z1ZXNWZ1hDWk5IK1M1RTgvbytCQWRZQlVkUUhDM2hy?=
+ =?utf-8?B?YVUvLzFlRmFwRVBoK2x1WjFEbzh5dUswN0Fyd0RINkZaSnhMMGg0aXpMZkxC?=
+ =?utf-8?B?akRMQjBOWitxaWtJbGxBRXJWbkwvTy9oSXUwYjhFcC9vK2tRTnBHUEVIZldv?=
+ =?utf-8?B?Q0hta1RCTHdSZ3l1U3E4dXcwV0RoYnRtTVJZZU9tTEd3RUVLTC9xVWxaUzMw?=
+ =?utf-8?B?V0FsTXRyQ3dLaEY0VnVuNVJkQllsZFVSdnpWL21NdmRXTzBndjdrN3NObm5E?=
+ =?utf-8?B?N1BzaDRDMGM3MnBydWpNV3hkeGYrdWY3ZmF2RTZNVzdpK1oxaEhHV3FYWmlB?=
+ =?utf-8?B?SmMrV2Npc1hxb2V5RVlMQXBRNHlYcGJBWkJXNnhJTnBDRXN0dXdocHg0RWpZ?=
+ =?utf-8?B?SHRsUHJla2tlWlVDdVFWck9FMDQvYlJvTWlWWTAyT05WYW5RSzNYZDhnQ2xW?=
+ =?utf-8?B?SW01TDdLQ3o4TmVyWjU2QlVSVllLekF3eUp4UnRYeG1lNlFqMGtBaEd0U1V1?=
+ =?utf-8?B?TTF6clNOdkJ3T2tGdDJQYWZCcllWQmFnZDIvTUNIZVE0cjVqTXhqSWs4bVZK?=
+ =?utf-8?B?c1YyYko4K1daNDQzOUZ0VU81UlA4UkgxcWRTK0VhcjJENGhzRVhlVTBId0Ri?=
+ =?utf-8?B?UGJWS0VOeGF5R3FweTNuKzE4VTU4S2xqVTJ4b0tYa0ZoejVFL3p0Tk1OZmFv?=
+ =?utf-8?B?eE9lUnp6UUQyWHlESkdKdVEyNlNWMk9jRGR2L2VXNG1kQmtpMllYMDh2czJB?=
+ =?utf-8?B?VXVKZVBVSmNiemU0dWJtdjVVYkhxWkIzS1o5RTA1bXVNeXpoc1FyN3FudzVX?=
+ =?utf-8?B?YVR0N2srN3ZVSXpLREpmaG5panVBbCtabmxQQmZZUW1NdTE3cXBTVjJCSlBi?=
+ =?utf-8?B?VlhHbFFJM1BkODZPZ3d6UVVjWk1lMUkycUJnbFh0eXVPK2ZIS3BIMGxiTGNG?=
+ =?utf-8?B?cWJVRWVJR0pGU0JIU1BUV2cxQVp2T3RiVmdkRjd1MUt6LzRtSXVXdm90WGt4?=
+ =?utf-8?B?VDVKbkJ4V01mNjFIM0NtUk42T1E2SlNmdkRiWDllTDN0Q1JCWktGeC9IZFZM?=
+ =?utf-8?B?VmZvM0lDRld6b2dBTFF5TFBIK2VZd0ZacnJHMTQrRmd6L1pXdlNDejhwUEVG?=
+ =?utf-8?B?aUtRblU3SlFrUWUvZmRYYUpTeGxocEUxYStXOHQvUmlMMUR6R1ZWOHBOZ3BZ?=
+ =?utf-8?B?MURlTjVkd3VYZjBzcXZjbUNGQXZkQllCTjNZN1VFUWsrOU94eitOcTZsU3lr?=
+ =?utf-8?B?RFc2T0poYXZjVzlVdnR0cldRMnM4blZhenpsU3hRa2REbWNndll0UzlyN2o5?=
+ =?utf-8?B?a3B6aThjdG8wQ1ErREc4a1VYUzhlNWdWVWdXYXRQaGtpRTJtNGx6UkUyaUR3?=
+ =?utf-8?B?N296bjFzNloxRlFMUU1LOXV1cGZkR3F5S3pEb1R1VDhWeXNuTFFoSFg5NFJR?=
+ =?utf-8?B?cGozU2xDb0RuTUdwNEdpTDJHOHYyWlBnZ1Y4eThsU21kanhMNVk3TWJNckpn?=
+ =?utf-8?B?bkNubFJLSmVwTWlhUWN6S3JsTFVubkF4N0tVc0cwNkIxSzhVZmN4Y2MzRFBW?=
+ =?utf-8?B?b210MjY2bVNjWWpMNDNBT0dlVVJGUkhhWUZVZUkyVHZFc2RtaWpnRlJoV040?=
+ =?utf-8?B?WVprQjZnZTdIZ0hmdHNDRlYxUEwxNWlPMFBaNi9nb3hUTitCTEhtRHM1WW1s?=
+ =?utf-8?B?cGFTZEdYZTVqK1hGY2lrVFJ3ZWZBS0tlNllVa2l1M0Y1MExxZ1VjSXdLbFJr?=
+ =?utf-8?B?MWFHYm9FNGZQaFJvbnBVREpqNkZSMXM0dW12RXhzaGJ2bGFpbUZtNWJTQTZH?=
+ =?utf-8?B?dzNVUW8wc2htYmxuTno0aHdDOEkrYXhDN2RQUnF5QWxGOU9RNU03OW9oeE13?=
+ =?utf-8?B?MGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fca6fda-f59b-487c-a1b2-08dc23e39828
+X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2024 11:39:19.8069
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5503b8d8-6aea-4f1c-a4c6-08dc23e397ba
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002BA4C.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8561
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BcyHDi9ANWfe4tpz2OsFerogpgZISJJEWzdICXR452ROKg5LgNvcui26uMhqYPNoFdVPQAFTeeuQpyfIdzJNQNtNHeMC/SGl+d/K2pIx5JA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4541
+X-OriginatorOrg: intel.com
 
-Add support to read/write efuse memory map of ZynqMP.
-Below are the offsets of ZynqMP efuse memory map
-	0 - SOC version(read only)
-	0xC - 0xFC -ZynqMP specific purpose efuses
-	0x100 - 0x17F - Physical Unclonable Function(PUF)
-                efuses repurposed as user efuses
+On 2/1/24 13:22, Alexander Lobakin wrote:
+> Now that we have generic bitmap_read() and bitmap_write(), which are
+> inline and try to take care of non-bound-crossing and aligned cases
+> to keep them optimized, collapse bitmap_{get,set}_value8() into
+> simple wrappers around the former ones.
+> bloat-o-meter shows no difference in vmlinux and -2 bytes for
+> gpio-pca953x.ko, which says the optimization didn't suffer due to
+> that change. The converted helpers have the value width embedded
+> and always compile-time constant and that helps a lot.
+> 
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> ---
+>   include/linux/bitmap.h | 38 +++++---------------------------------
+>   1 file changed, 5 insertions(+), 33 deletions(-)
+> 
 
-Signed-off-by: Praveen Teja Kundanala <praveen.teja.kundanala@amd.com>
----
- drivers/nvmem/zynqmp_nvmem.c | 186 +++++++++++++++++++++++++++++++++--
- 1 file changed, 176 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/nvmem/zynqmp_nvmem.c b/drivers/nvmem/zynqmp_nvmem.c
-index 391d8e88b270..8682adaacd69 100644
---- a/drivers/nvmem/zynqmp_nvmem.c
-+++ b/drivers/nvmem/zynqmp_nvmem.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2022 - 2023, Advanced Micro Devices, Inc.
-  */
- 
-+#include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/nvmem-provider.h>
- #include <linux/of.h>
-@@ -11,24 +12,189 @@
- #include <linux/firmware/xlnx-zynqmp.h>
- 
- #define SILICON_REVISION_MASK 0xF
-+#define P_USER_0_64_UPPER_MASK	GENMASK(31, 16)
-+#define P_USER_127_LOWER_4_BIT_MASK GENMASK(3, 0)
-+#define WORD_INBYTES		4
-+#define SOC_VER_SIZE		0x4
-+#define EFUSE_MEMORY_SIZE	0x177
-+#define UNUSED_SPACE		0x8
-+#define ZYNQMP_NVMEM_SIZE	(SOC_VER_SIZE + UNUSED_SPACE + \
-+				 EFUSE_MEMORY_SIZE)
-+#define SOC_VERSION_OFFSET	0x0
-+#define EFUSE_START_OFFSET	0xC
-+#define EFUSE_END_OFFSET	0xFC
-+#define EFUSE_PUF_START_OFFSET	0x100
-+#define EFUSE_PUF_MID_OFFSET	0x140
-+#define EFUSE_PUF_END_OFFSET	0x17F
-+#define EFUSE_NOT_ENABLED	29
- 
-+/*
-+ * efuse access type
-+ */
-+enum efuse_access {
-+	EFUSE_READ = 0,
-+	EFUSE_WRITE
-+};
-+
-+/**
-+ * struct xilinx_efuse - the basic structure
-+ * @src:	address of the buffer to store the data to be write/read
-+ * @size:	read/write word count
-+ * @offset:	read/write offset
-+ * @flag:	0 - represents efuse read and 1- represents efuse write
-+ * @pufuserfuse:0 - represents non-puf efuses, offset is used for read/write
-+ *		1 - represents puf user fuse row number.
-+ *
-+ * this structure stores all the required details to
-+ * read/write efuse memory.
-+ */
-+struct xilinx_efuse {
-+	u64 src;
-+	u32 size;
-+	u32 offset;
-+	enum efuse_access flag;
-+	u32 pufuserfuse;
-+};
-+
-+static int zynqmp_efuse_access(void *context, unsigned int offset,
-+			       void *val, size_t bytes, enum efuse_access flag,
-+			       unsigned int pufflag)
-+{
-+	struct device *dev = context;
-+	struct xilinx_efuse *efuse;
-+	dma_addr_t dma_addr;
-+	dma_addr_t dma_buf;
-+	size_t words = bytes / WORD_INBYTES;
-+	int ret;
-+	int value;
-+	char *data;
-+
-+	if (bytes % WORD_INBYTES != 0) {
-+		dev_err(dev, "Bytes requested should be word aligned\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (pufflag == 0 && offset % WORD_INBYTES) {
-+		dev_err(dev, "Offset requested should be word aligned\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (pufflag == 1 && flag == EFUSE_WRITE) {
-+		memcpy(&value, val, bytes);
-+		if ((offset == EFUSE_PUF_START_OFFSET ||
-+		     offset == EFUSE_PUF_MID_OFFSET) &&
-+		    value & P_USER_0_64_UPPER_MASK) {
-+			dev_err(dev, "Only lower 4 bytes are allowed to be programmed in P_USER_0 & P_USER_64\n");
-+			return -EOPNOTSUPP;
-+		}
-+
-+		if (offset == EFUSE_PUF_END_OFFSET &&
-+		    (value & P_USER_127_LOWER_4_BIT_MASK)) {
-+			dev_err(dev, "Only MSB 28 bits are allowed to be programmed for P_USER_127\n");
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
-+	efuse = dma_alloc_coherent(dev, sizeof(struct xilinx_efuse),
-+				   &dma_addr, GFP_KERNEL);
-+	if (!efuse)
-+		return -ENOMEM;
- 
--static int zynqmp_nvmem_read(void *context, unsigned int offset,
--			     void *val, size_t bytes)
-+	data = dma_alloc_coherent(dev, sizeof(bytes),
-+				  &dma_buf, GFP_KERNEL);
-+	if (!data) {
-+		ret = -ENOMEM;
-+		goto efuse_data_fail;
-+	}
-+
-+	if (flag == EFUSE_WRITE) {
-+		memcpy(data, val, bytes);
-+		efuse->flag = EFUSE_WRITE;
-+	} else {
-+		efuse->flag = EFUSE_READ;
-+	}
-+
-+	efuse->src = dma_buf;
-+	efuse->size = words;
-+	efuse->offset = offset;
-+	efuse->pufuserfuse = pufflag;
-+
-+	zynqmp_pm_efuse_access(dma_addr, (u32 *)&ret);
-+	if (ret != 0) {
-+		if (ret == EFUSE_NOT_ENABLED) {
-+			dev_err(dev, "efuse access is not enabled\n");
-+			ret = -EOPNOTSUPP;
-+		} else {
-+			dev_err(dev, "Error in efuse read %x\n", ret);
-+			ret = -EPERM;
-+		}
-+		goto efuse_access_err;
-+	}
-+
-+	if (flag == EFUSE_READ)
-+		memcpy(val, data, bytes);
-+efuse_access_err:
-+	dma_free_coherent(dev, sizeof(bytes),
-+			  data, dma_buf);
-+efuse_data_fail:
-+	dma_free_coherent(dev, sizeof(struct xilinx_efuse),
-+			  efuse, dma_addr);
-+
-+	return ret;
-+}
-+
-+static int zynqmp_nvmem_read(void *context, unsigned int offset, void *val, size_t bytes)
- {
- 	struct device *dev = context;
- 	int ret;
-+	int pufflag = 0;
- 	int idcode;
- 	int version;
- 
--	ret = zynqmp_pm_get_chipid(&idcode, &version);
--	if (ret < 0)
--		return ret;
-+	if (offset >= EFUSE_PUF_START_OFFSET && offset <= EFUSE_PUF_END_OFFSET)
-+		pufflag = 1;
-+
-+	switch (offset) {
-+	/* Soc version offset is zero */
-+	case SOC_VERSION_OFFSET:
-+		if (bytes != SOC_VER_SIZE)
-+			return -EOPNOTSUPP;
-+
-+		ret = zynqmp_pm_get_chipid((u32 *)&idcode, (u32 *)&version);
-+		if (ret < 0)
-+			return ret;
-+
-+		dev_dbg(dev, "Read chipid val %x %x\n", idcode, version);
-+		*(int *)val = version & SILICON_REVISION_MASK;
-+		break;
-+	/* Efuse offset starts from 0xc */
-+	case EFUSE_START_OFFSET ... EFUSE_END_OFFSET:
-+	case EFUSE_PUF_START_OFFSET ... EFUSE_PUF_END_OFFSET:
-+		ret = zynqmp_efuse_access(context, offset, val,
-+					  bytes, EFUSE_READ, pufflag);
-+		break;
-+	default:
-+		*(u32 *)val = 0xDEADBEEF;
-+		ret = 0;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int zynqmp_nvmem_write(void *context,
-+			      unsigned int offset, void *val, size_t bytes)
-+{
-+	int pufflag = 0;
-+
-+	if (offset < EFUSE_START_OFFSET || offset > EFUSE_PUF_END_OFFSET)
-+		return -EOPNOTSUPP;
- 
--	dev_dbg(dev, "Read chipid val %x %x\n", idcode, version);
--	*(int *)val = version & SILICON_REVISION_MASK;
-+	if (offset >= EFUSE_PUF_START_OFFSET && offset <= EFUSE_PUF_END_OFFSET)
-+		pufflag = 1;
- 
--	return 0;
-+	return zynqmp_efuse_access(context, offset,
-+				   val, bytes, EFUSE_WRITE, pufflag);
- }
- 
- static const struct of_device_id zynqmp_nvmem_match[] = {
-@@ -45,11 +211,11 @@ static int zynqmp_nvmem_probe(struct platform_device *pdev)
- 	econfig.name = "zynqmp-nvmem";
- 	econfig.owner = THIS_MODULE;
- 	econfig.word_size = 1;
--	econfig.size = 1;
-+	econfig.size = ZYNQMP_NVMEM_SIZE;
- 	econfig.dev = dev;
- 	econfig.add_legacy_fixed_of_cells = true;
--	econfig.read_only = true;
- 	econfig.reg_read = zynqmp_nvmem_read;
-+	econfig.reg_write = zynqmp_nvmem_write;
- 
- 	return PTR_ERR_OR_ZERO(devm_nvmem_register(dev, &econfig));
- }
--- 
-2.37.6
-
+Hah, nice!
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
