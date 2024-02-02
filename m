@@ -1,169 +1,95 @@
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472DD7CF3F;
-	Fri,  2 Feb 2024 21:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5ED83A03;
+	Fri,  2 Feb 2024 21:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706909490; cv=none; b=s6QGXtodnyuUIO+jZF/rDaMAXN1osLgR2lDfoTqYdav5rxLhLo3FK4G9ILFz73u2wPTLtQGMMI2UsBipG7fTslCO8NHPNn6LLQS6x9671bIRaeCnWrI2k1/JXOrm5kIkEfEF/zNct1j9k1jdDM/akgOI0bYIiFOAoO/yjc4Kwgk=
+	t=1706909497; cv=none; b=m9leEEsqZeBLTKhtZKRw9XnxildElhpPpOYJc1Yz80/DnxYh7MagB5kSD25Vpnky20DECKGDEH6EPgevKYsrjwmKgGml5Pc1CHG9KhL6xQrwxhlPMEdO8dECpZbzwdDHRFR5WUtLIe4lZXaUfM48nZwXjHNLSHudEb3nBjACLe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706909490; c=relaxed/simple;
-	bh=GZn2RPQk6SbEn/s/Sbfuic93/awRSAyfMfvV1+Vrw1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LSoMHAPq/i83gj1bVtANQnVnXHt0wjg2TrcZ8XB2bV1DuA+n2BEV6rp+r0gYMir4Humaqu7WNRuWeUkovwR2IILm558b5dO1qZTOeyGC7WyeAUa/5G/o5fwoUOYV9wpSSXw2FNBIOcDCQQG75IUMH8dhPK6WUNlJwr2p4VZ6MZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=kJYzCHo6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KsqblSve; arc=none smtp.client-ip=64.147.123.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1706909497; c=relaxed/simple;
+	bh=e/jtn8sn44EpFq31C7CYmB+SiierH0OvgSrhIK/xiS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KG3gGPtCxCkpv/gGEvyx6UId8wyTw1Km0w/sZw22YfAfIdx2mMzpAuijdZYl+dipoIT0qpDvOC+duW5ZcrD9sXrzif3l0sp9U4sVAn7/Z7J4Gieq2BED8EvmKA9N/dWH+c4j6dyMdQ3Wg3eMTH34St21iYhkdY0SGh4m2n/4Pj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OKgdLLSG; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="kJYzCHo6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KsqblSve"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailout.west.internal (Postfix) with ESMTP id 3DC403200A48;
-	Fri,  2 Feb 2024 16:31:26 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Fri, 02 Feb 2024 16:31:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1706909485;
-	 x=1706995885; bh=DYDb62ASAO+7468yzkEHNBIMHhgVPwqNfMHXZN7z5uY=; b=
-	kJYzCHo67NJQ+tGmByKa44EmqkmF2dI+rInMf7dUKlALkvfBwObk5SJ8JimFrvA3
-	aryt9i0hqElHcNR9A2RVfqU+H9VYSGbEJgcQyq+gzVSGAtX/x/OwEBXkUHHwSkWP
-	lXeZvBYZUo49eURQ5ZSDTJ81MpE55L/N+fJgYWErxyfMSaKnydVYqzeRk1X9lFYF
-	EXAdQ5l0Qkm4/qVVs6qu1DFGcM2vF6fQxgX8kbbwKbrvoqHg4OQ27V0TqlkR/9/+
-	KXvNSZmfgLpCja0wxebxTh9lQv1USNEiO1xVdSyecr3T24pnp2xxSa7oUMWaST8p
-	v0IzkXIvBCzKQmEdMPuf2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706909485; x=
-	1706995885; bh=DYDb62ASAO+7468yzkEHNBIMHhgVPwqNfMHXZN7z5uY=; b=K
-	sqblSve46eltPJrilQStnN11oNRppN3TF9Taba6gsmyPCf2t3Ojlo8qA8Gy7jVDJ
-	RFNmdhN/Lr70NAL0KZMROL0EGugO0A5h39guVya5JYU2WUDYY1AllwQIPg7i2ek9
-	IuZ9fZJh45t6LEJWhNWMPPlVCXoIl3JTEAEblqpqCDqlZNxDm2RTzUup82rxIsxa
-	xLAXxXTrE7a1SL8GbKQVZPAvG5n843MUrAC7R0CaoE+hD3mQDFjrV+EJBceq2aMO
-	tW6iRHX0nKJT1be3EFEk2xKQnCCIUKVm7EXakV+dH5zxT9vhX4efGoAAGoiFdxlR
-	5Ck6Oe0AyUlUt++C2ulQw==
-X-ME-Sender: <xms:LV-9ZVx48v-V-bwZB-wqFFpqrY6Ny-Mg4RoCswEqwytVJofBZWoTdw>
-    <xme:LV-9ZVQDJtfcF3FJav-8dOT4SX7Cf4k-HIirPYrOU4RKb30LjFlBSutKVqKPjy1-g
-    xB_X4DSy-PlM0rjMQ8>
-X-ME-Received: <xmr:LV-9ZfU6_aIZTRY3uhYQlrci08XJNR_VYarpk-kQz_2-1syiLWgNtoL_xVItA11STS_f_FKRZC_1HN5-UPjrKZAtsiP-H-Mhv9ySPJs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedugedgudegjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheplfhi
-    rgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
-    enucggtffrrghtthgvrhhnpeelueffheehgeeluedvlefghfeukeejteeuveeuhffftdfg
-    uefhgefgueekffeftdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:LV-9ZXikif2PPF1vsmVBQ84PS5-rwOLZ--KwPBsSWDDEb3wZ8wHd2g>
-    <xmx:LV-9ZXCbQog9GHS81eQOYt3k07P96ecJ_6Z9TnELCXbMBeYTn1y7Mg>
-    <xmx:LV-9ZQJrKcjlsNDaEsPY6qYi4j6QeLlAP9TMOwPMlIdmHcURX2xH4g>
-    <xmx:LV-9Zb3KdCuyAXjjmzigjrPisMcR-k3h27zTUZBKTf6UeeK7UCw1gA>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 2 Feb 2024 16:31:23 -0500 (EST)
-Message-ID: <21ed604c-8607-43b7-853a-9bd1623bd918@flygoat.com>
-Date: Fri, 2 Feb 2024 21:31:22 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OKgdLLSG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706909496; x=1738445496;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=e/jtn8sn44EpFq31C7CYmB+SiierH0OvgSrhIK/xiS4=;
+  b=OKgdLLSGYbzT8o94fCo7cSVgzI3lU9DYBgmv0Icw9nvaEijRHRzVxiLj
+   ZIzMAT4GbTvObt5Xte+MlsAprBNjRywiQFrdOt+NXu0PSdno+Vyv36Qkn
+   0MY+ikNlzhF1KD7/lCwGvAFHmLOoXWFnwOSsqX0zGPSqXmPkRmX8aHyC7
+   IEEcmXIbgyiIsN+BrJ82xNOBx4s3KvN7jKkjSUTBhpmcokqEG5X4D6sI/
+   0sI83L0CuNG0E3iYCKpW3B4FxYEOjdx/3LCOJX3mljcHwdUJ9NdBOuQMK
+   9VFAEdLeqawxTCfpLmJ5rsGpD46tS2U+3FB7h6GfkL749fmxVMXsID658
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="143422"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="143422"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 13:31:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="481566"
+Received: from shannonw-mobl2.amr.corp.intel.com (HELO desk) ([10.209.74.93])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 13:31:34 -0800
+Date: Fri, 2 Feb 2024 13:31:32 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, tony.luck@intel.com,
+	ak@linux.intel.com, tim.c.chen@linux.intel.com,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Alyssa Milburn <alyssa.milburn@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	antonio.gomez.iglesias@linux.intel.com,
+	Alyssa Milburn <alyssa.milburn@intel.com>
+Subject: Re: [PATCH  v6 1/6] x86/bugs: Add asm helpers for executing VERW
+Message-ID: <20240202213132.kvdyz3dqqkzw7gox@desk>
+References: <20240123-delay-verw-v6-0-a8206baca7d3@linux.intel.com>
+ <20240123-delay-verw-v6-1-a8206baca7d3@linux.intel.com>
+ <20240202032909.exegdxpgyndlkn2n@treble>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] Handle delay slot for extable lookup
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Oleg Nesterov <oleg@redhat.com>, Andrew Morton
- <akpm@linux-foundation.org>, Ben Hutchings <ben@decadent.org.uk>,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- Xi Ruoyao <xry111@xry111.site>
-References: <20240202-exception_ip-v2-0-e6894d5ce705@flygoat.com>
- <CAHk-=wiaSjYApqmUYCdCyYfr_bRsfVKDkwU6r6FMmoZzrxHrKQ@mail.gmail.com>
-Content-Language: en-US
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Autocrypt: addr=jiaxun.yang@flygoat.com;
- keydata= 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
- HVO98ZmbMeg=
-In-Reply-To: <CAHk-=wiaSjYApqmUYCdCyYfr_bRsfVKDkwU6r6FMmoZzrxHrKQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202032909.exegdxpgyndlkn2n@treble>
 
+On Thu, Feb 01, 2024 at 07:29:09PM -0800, Josh Poimboeuf wrote:
+> On Tue, Jan 23, 2024 at 11:41:01PM -0800, Pawan Gupta wrote:
+> > index 4af140cf5719..79a7e81b9458 100644
+> > --- a/arch/x86/include/asm/cpufeatures.h
+> > +++ b/arch/x86/include/asm/cpufeatures.h
+> > @@ -308,10 +308,10 @@
+> >  #define X86_FEATURE_SMBA		(11*32+21) /* "" Slow Memory Bandwidth Allocation */
+> >  #define X86_FEATURE_BMEC		(11*32+22) /* "" Bandwidth Monitoring Event Configuration */
+> >  #define X86_FEATURE_USER_SHSTK		(11*32+23) /* Shadow stack support for user mode applications */
+> > -
+> >  #define X86_FEATURE_SRSO		(11*32+24) /* "" AMD BTB untrain RETs */
+> >  #define X86_FEATURE_SRSO_ALIAS		(11*32+25) /* "" AMD BTB untrain RETs through aliasing */
+> >  #define X86_FEATURE_IBPB_ON_VMEXIT	(11*32+26) /* "" Issue an IBPB only on VMEXIT */
+> > +#define X86_FEATURE_CLEAR_CPU_BUF	(11*32+27) /* "" Clear CPU buffers using VERW */
+> 
+> This will need to be rebased.  And the "11*32" level is now full in
+> Linus' tree, so this will presumably need to go to a different "level".
 
-
-在 2024/2/2 18:39, Linus Torvalds 写道:
-> On Fri, 2 Feb 2024 at 04:30, Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->>        ptrace: Introduce exception_ip arch hook
->>        MIPS: Clear Cause.BD in instruction_pointer_set
->>        mm/memory: Use exception ip to search exception tables
-> Just to clarify: does that second patch fix the problem that
-> __isa_exception_epc() does a __get_user()?
-
-No it only covers an obvious case when I was playing around exception_ip 
-with kgdb.
-There are still potential cases __isa_exception_epc may touch user space.
-
-> Because that mm/memory.c use of "exception_ip()" most definitely
-> cannot take a page fault.
->
-> So if MIPS cannot do that whole exception IP thing without potentially
-> touching user space, I do worry that we might just have to add a
->
->     #ifndef __MIPS__
->
-> around this all.
-
-It is possible to perform exception_ip() without touching user space by 
-saving "BadInstr" in pt_regs
-at exception entries. For newer hardware it's as simple as saving an 
-extra CP0 register, on older hardware
-we may have to read it from user space.
-
-+ Thomas (MIPS maintainer), what's your opinion?
-
-Thanks
->
-> Possibly somehow limited to just the microMIPS/MIPS16e case in Kconfig instead?
->
->              Linus
-
--- 
----
-Jiaxun Yang
-
+Yes, will send a new rebased version.
