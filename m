@@ -1,158 +1,192 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B85D14900A;
-	Fri,  2 Feb 2024 17:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA8E148FF0;
+	Fri,  2 Feb 2024 17:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706893403; cv=none; b=OmDy6sMHxndPPfjAkN607eHN/fXzFWeSUNesoTRpvE0EuqjoPj7AgdRVQU7clYKOYK0wbCqGu5dFHsPs1EC6RpEW50PZIiU8ggolkb+n6jCviCeHxYDhjN3FiXcwVsnQM+lZ4V4rXOFLYTnC9o85NSW5XYSUDuxZ3LLnX/4vStc=
+	t=1706893461; cv=none; b=VsdUsCftPhVRBYsewDY7aKRD2pBliwUZFx/brhk6kU9uwbslADsXTbwXFTUkt2mYH6a22gaDEhGTMSc19/M+bFw5KOAmjk11xBzVI2nBW2Om11aR3vKEdDE1aFWkIx08QNF99p2yrxE0ACUXOMhj0+x3MHSEEIqCSc2rRnermE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706893403; c=relaxed/simple;
-	bh=UNcjKbgtq2SHVkgxXgFW1sGPDotmGruVW6Uw3ganfnU=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gKIdXceIxC9AluiM8NCFgkLj3CV5N8o8uVdeF4/UG3F6Po4ilNs/HPu10kF2vS+71OEZP2wLb2Ux+KY1YW5KINxsZSNgN2fZn3jiGL7ta/QEkt9BmtGlnuW31r+mURyRBMgsg6vdO3nlJVV+rU6++sLWC2PKxPhb01pL/rj0NOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k5YYYMdy; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5YYYMdy"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40fccd090c2so763095e9.0;
-        Fri, 02 Feb 2024 09:03:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706893400; x=1707498200; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOlCKHisK2Tg4+zoV5Rvslpll2neVr4rhQD1dXHl3vw=;
-        b=k5YYYMdyI4ctkL89KlTxGVDdp101wJTgKz7p69JDvpYfqKFnaD4N3jfieG1dQig1vS
-         FivnWViPXONCvkTguRvhYfqDe3rUnm2TlF1X7S7LbRKQ7mc1noBf2UQy7a41gjtsEoT2
-         6/p+kenqtrQmSOtPkEphbEI/V6/D8qIvh6H4Fw3AElMDz86FMcwFKDvUycyY3P8rQtdV
-         OJQJCU1Hp5+smkhjeDqxGuWFi3I7nGKgF1aezZu7xHNu0DqVXOVY6XsGYDvCYcy2/dAT
-         PZrQg4FHyg3HOtL05sFDhnXfMbV4tRX6d3ieDvCwW2J5zzJSLQCrj75zfhY8BoG/WZsX
-         +Bfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706893400; x=1707498200;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DOlCKHisK2Tg4+zoV5Rvslpll2neVr4rhQD1dXHl3vw=;
-        b=Cyipclo8GjhjnJ17OtPazmvDpSPVYXaWeQ4tKuHVDfWJvwazlmby6q4HuqQzOPdg4O
-         kQzIEt7ytnmxGpXAmyLXUqTIs8cGfH9ohxgWkNpcsNu5F2LeuAU5ko0M0B9y8bXC5lnM
-         guFyQvNLZ86F4GK35Q5SiR3JYo8F71G+Qif/Ndyzt8CLWmpq92zKIP31Fz2O/2zmum/a
-         HhBsEJwwvqovr2bHvuvcQM8AzTBDE2Najn5hUdS8Blnb4xCDqHU+pBN+2872CeSd5xXR
-         ES7QaQPMLqrKwX+qpOPjbtyBzjDezcKa5y0DratJEtvRyOGSnkgJkpBGG/ORQtTUTQkV
-         aMVg==
-X-Gm-Message-State: AOJu0YyA+vnEfRmCrRwhUYjW9YstRu2bbIPwqZQcim1xs7beNUjxnJaG
-	iqLwcukXh7EdNX7gDuwHlcBSk26Xh7pcjsMBkt1nNkBcMkioj+yG
-X-Google-Smtp-Source: AGHT+IEjhLMP/SwXID7gjUKxnJg7zcodpyKpg5Aat7driagvPstkgl7qEfPavqvpBZw231y/w/1ZkA==
-X-Received: by 2002:a05:600c:35c4:b0:40e:f67e:a4e2 with SMTP id r4-20020a05600c35c400b0040ef67ea4e2mr6389283wmq.39.1706893399939;
-        Fri, 02 Feb 2024 09:03:19 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVQYKLQqDENSg0SCkt1ywpIL+KTmSCRIXPvPPJrk/z1CWS4YUOPYvekFRipoeD1fCIvLSiRs2SlOP4SIMufYY6UB7dTLYsy95bKEMRZ3HlRzJCM98cHdDl8jvRlhKtgPHYEDLDBxSIW+YeURxonmb5R7h59tMJdXDKXiPzyBUCHXRtAckb6vZVDGvZ5PL6whoxWypn2ERD47PImeJyDoggBYM2aYrhyljFnUoc2PtcAA4VqeiYm8OcjjFX+bTnu2uK6gWt095pfmjylOsrvSUBc58vpfQopGMZj2XYcr13B7bUWDLTN/i5dUBrzNv5R3Zwrh23XGP1RQ8Gh6f6aOrAsWr17/VfKG/saJUaOlohsfQyJWRwqA5kgkPdIwUDQ9Vh8l0I6jOUNri3qqyVeSb7bzas6hru2z58BmQWA1v66GSUwriuWbJ4XcZP6+AAFyqjnrLJnrJvqYBvauM06mnIiGmio0W3nWBhiNjlp+tqkrOuk+GN1ZslJ1sX+ru8l8Vh2DLs6oOVNFb0UX92rAr9zY9Yy1OxqT7KQu+IHQK8u
-Received: from Ansuel-xps. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.gmail.com with ESMTPSA id l30-20020a05600c1d1e00b0040eee852a3dsm447924wms.10.2024.02.02.09.03.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 09:03:19 -0800 (PST)
-Message-ID: <65bd2057.050a0220.e4621.31f2@mx.google.com>
-X-Google-Original-Message-ID: <Zb0gVMjOskSC--_T@Ansuel-xps.>
-Date: Fri, 2 Feb 2024 18:03:16 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Robert Marko <robert.marko@sartura.hr>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [net-next PATCH v5 5/9] dt-bindings: net: add QCA807x PHY defines
-References: <20240201151747.7524-1-ansuelsmth@gmail.com>
- <20240201151747.7524-6-ansuelsmth@gmail.com>
- <9933685a-5265-467e-aa39-d2c92a12edca@linaro.org>
- <65bd07f7.050a0220.e8e5e.9e28@mx.google.com>
- <20240202-absurd-guidable-527a3f3147bb@spud>
+	s=arc-20240116; t=1706893461; c=relaxed/simple;
+	bh=+6PX3jMjQrHTOGNXA5nPZT3qkryf5lBqoyw4ViAwdas=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qMJNc3ggIgSTtivM/VQGoBlUKanWt+y3otX2f/FbG6Vx839/D/GcS5nSZh4f0hTniBFw8FAzs0qnwhMmsDcQOUN7sH1qKP/WndVtA6GkcD9VSk1+cZsSxzt5OaBDP34Waib2aoN8Vvhjnx8pUvvkDoBvJ/TJJZGGYmrdHO7nZ6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TRMV93hsYz6J9h8;
+	Sat,  3 Feb 2024 01:00:49 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 69A141400CD;
+	Sat,  3 Feb 2024 01:04:15 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 2 Feb
+ 2024 17:04:14 +0000
+Date: Fri, 2 Feb 2024 17:04:13 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, <acpica-devel@lists.linuxfoundation.org>,
+	<linux-csky@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-ia64@vger.kernel.org>, <linux-parisc@vger.kernel.org>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>, James Morse
+	<james.morse@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH RFC v4 14/15] arm64: document virtual CPU hotplug's
+ expectations
+Message-ID: <20240202170413.0000154e@Huawei.com>
+In-Reply-To: <E1rVDnU-0027Zf-GF@rmk-PC.armlinux.org.uk>
+References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
+	<E1rVDnU-0027Zf-GF@rmk-PC.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202-absurd-guidable-527a3f3147bb@spud>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, Feb 02, 2024 at 04:58:32PM +0000, Conor Dooley wrote:
-> On Fri, Feb 02, 2024 at 04:19:15PM +0100, Christian Marangi wrote:
-> > On Fri, Feb 02, 2024 at 08:41:56AM +0100, Krzysztof Kozlowski wrote:
-> > > On 01/02/2024 16:17, Christian Marangi wrote:
-> > > > From: Robert Marko <robert.marko@sartura.hr>
-> > > > 
-> > > > Add DT bindings defined for Qualcomm QCA807x PHY series related to
-> > > > calibration and DAC settings.
-> > > 
-> > > Nothing from this file is used and your commit msg does not provide
-> > > rationale "why", thus it does not look like something for bindings.
-> > > Otherwise please point me which patch with *driver* uses these bindings.
-> > >
-> > 
-> > Hi, since I have to squash this, I will include the reason in the schema
-> > patch.
-> > 
-> > Anyway these are raw values used to configure the qcom,control-dac
-> > property.
+On Wed, 31 Jan 2024 16:50:48 +0000
+Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
+
+> From: James Morse <james.morse@arm.com>
 > 
-> Maybe I am missing something, but a quick scan of the patchset and a
-> grep of the tree doesn't show this property being documented anywhere.
+> Add a description of physical and virtual CPU hotplug, explain the
+> differences and elaborate on what is required in ACPI for a working
+> virtual hotplug system.
 > 
-> > In the driver it's used by qca807x_config_init. We read what is set in
-> > DT and we configure the reg accordingly.
-> > 
-> > If this is wrong should we use a more schema friendly approach with
-> > declaring an enum of string and document that there?
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+> Outstanding comment:
+>  https://lore.kernel.org/r/20230914174137.00000a62@Huawei.com
+
+Outstanding but an ACPI Spec question rather than one about this description.
+I've finally regained access to Mantis etc so can follow that up at some point.
+
+If we get clarify on how to tell that CPUs that are present and enabled at boot
+can be removed later we can relax this text to allow for that.
+
+
+>  https://lore.kernel.org/r/20231215170428.00000d81@Huawei.com
+That's a comment on the above comment to say I'm fine with it as is :)
+
+This @Huawei guy is really annoying ;)
+
+Jonathan
+
+> ---
+>  Documentation/arch/arm64/cpu-hotplug.rst | 79 ++++++++++++++++++++++++
+>  Documentation/arch/arm64/index.rst       |  1 +
+>  2 files changed, 80 insertions(+)
+>  create mode 100644 Documentation/arch/arm64/cpu-hotplug.rst
 > 
-> Without any idea of what that property is used for it is hard to say,
-> but personally I much prefer enums of strings for what looks like a
-> property that holds register values.
-> 
-> That you felt it necessary to add defines for the values makes it more
-> like that that is the case.
->
+> diff --git a/Documentation/arch/arm64/cpu-hotplug.rst b/Documentation/arch/arm64/cpu-hotplug.rst
+> new file mode 100644
+> index 000000000000..76ba8d932c72
+> --- /dev/null
+> +++ b/Documentation/arch/arm64/cpu-hotplug.rst
+> @@ -0,0 +1,79 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. _cpuhp_index:
+> +
+> +====================
+> +CPU Hotplug and ACPI
+> +====================
+> +
+> +CPU hotplug in the arm64 world is commonly used to describe the kernel taking
+> +CPUs online/offline using PSCI. This document is about ACPI firmware allowing
+> +CPUs that were not available during boot to be added to the system later.
+> +
+> +``possible`` and ``present`` refer to the state of the CPU as seen by linux.
+> +
+> +
+> +CPU Hotplug on physical systems - CPUs not present at boot
+> +----------------------------------------------------------
+> +
+> +Physical systems need to mark a CPU that is ``possible`` but not ``present`` as
+> +being ``present``. An example would be a dual socket machine, where the package
+> +in one of the sockets can be replaced while the system is running.
+> +
+> +This is not supported.
+> +
+> +In the arm64 world CPUs are not a single device but a slice of the system.
+> +There are no systems that support the physical addition (or removal) of CPUs
+> +while the system is running, and ACPI is not able to sufficiently describe
+> +them.
+> +
+> +e.g. New CPUs come with new caches, but the platform's cache toplogy is
+> +described in a static table, the PPTT. How caches are shared between CPUs is
+> +not discoverable, and must be described by firmware.
+> +
+> +e.g. The GIC redistributor for each CPU must be accessed by the driver during
+> +boot to discover the system wide supported features. ACPI's MADT GICC
+> +structures can describe a redistributor associated with a disabled CPU, but
+> +can't describe whether the redistributor is accessible, only that it is not
+> +'always on'.
+> +
+> +arm64's ACPI tables assume that everything described is ``present``.
+> +
+> +
+> +CPU Hotplug on virtual systems - CPUs not enabled at boot
+> +---------------------------------------------------------
+> +
+> +Virtual systems have the advantage that all the properties the system will
+> +ever have can be described at boot. There are no power-domain considerations
+> +as such devices are emulated.
+> +
+> +CPU Hotplug on virtual systems is supported. It is distinct from physical
+> +CPU Hotplug as all resources are described as ``present``, but CPUs may be
+> +marked as disabled by firmware. Only the CPU's online/offline behaviour is
+> +influenced by firmware. An example is where a virtual machine boots with a
+> +single CPU, and additional CPUs are added once a cloud orchestrator deploys
+> +the workload.
+> +
+> +For a virtual machine, the VMM (e.g. Qemu) plays the part of firmware.
+> +
+> +Virtual hotplug is implemented as a firmware policy affecting which CPUs can be
+> +brought online. Firmware can enforce its policy via PSCI's return codes. e.g.
+> +``DENIED``.
+> +
+> +The ACPI tables must describe all the resources of the virtual machine. CPUs
+> +that firmware wishes to disable either from boot (or later) should not be
+> +``enabled`` in the MADT GICC structures, but should have the ``online capable``
+> +bit set, to indicate they can be enabled later. The boot CPU must be marked as
+> +``enabled``.  The 'always on' GICR structure must be used to describe the
+> +redistributors.
+> +
+> +CPUs described as ``online capable`` but not ``enabled`` can be set to enabled
+> +by the DSDT's Processor object's _STA method. On virtual systems the _STA method
+> +must always report the CPU as ``present``. Changes to the firmware policy can
+> +be notified to the OS via device-check or eject-request.
+> +
+> +CPUs described as ``enabled`` in the static table, should not have their _STA
+> +modified dynamically by firmware. Soft-restart features such as kexec will
+> +re-read the static properties of the system from these static tables, and
+> +may malfunction if these no longer describe the running system. Linux will
+> +re-discover the dynamic properties of the system from the _STA method later
+> +during boot.
+> diff --git a/Documentation/arch/arm64/index.rst b/Documentation/arch/arm64/index.rst
+> index d08e924204bf..78544de0a8a9 100644
+> --- a/Documentation/arch/arm64/index.rst
+> +++ b/Documentation/arch/arm64/index.rst
+> @@ -13,6 +13,7 @@ ARM64 Architecture
+>      asymmetric-32bit
+>      booting
+>      cpu-feature-registers
+> +    cpu-hotplug
+>      elf_hwcaps
+>      hugetlbpage
+>      kdump
 
-Ok, no problem. The big idea here was really to skip having to have a
-big function that parse strings but I get that it's better handle with
-string and have them documented directly in the yaml.
-
-> > 
-> > > > 
-> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> > > > ---
-> > > >  include/dt-bindings/net/qcom-qca807x.h | 30 ++++++++++++++++++++++++++
-> > > 
-> > > Use filename matching compatible, so vendor,device. No wildcards, unless
-> > > your compatible also has them.
-> > > 
-> > > >  1 file changed, 30 insertions(+)
-> > > >  create mode 100644 include/dt-bindings/net/qcom-qca807x.h
-> > > > 
-> > > 
-> > > 
-> > > 
-> > > Best regards,
-> > > Krzysztof
-> > > 
-> > 
-> > -- 
-> > 	Ansuel
-
-
-
--- 
-	Ansuel
