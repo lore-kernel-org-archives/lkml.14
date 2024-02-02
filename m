@@ -1,59 +1,59 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B2A145353;
-	Fri,  2 Feb 2024 14:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E0218036
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 14:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706884347; cv=none; b=R/4UimlynTb8NcbNDMpHO01XL2SoCHSvmn+ImIdfZcBi0HQ1UNm6Y1WhHlkLPpSqZTJj2X+x5WhxePdJxIbKpUf8j+EVKrmsfgYZ+7n6yj9g7iuH4xrU9J2tH4TT09oRMzkIKFFJSGchvGTtnwOR5RR8T9dsh3mTZC2qok8a1tQ=
+	t=1706884454; cv=none; b=m0RfZfu/agfqpsdIAS3YEw2OPCaCRtcOe9ysGtXGQWwfpidxoL5mBgwtTDDHpsGR+JDyRDiZmu68QMLRF5kXvCSyZwh7QTAzrLg6XTKr6bToXsSUrpyGqL7NYYi24Mnvs9HlkfkGeGf+fqAuJxLARzRD+5Jp+BnOvQm8OTy/jKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706884347; c=relaxed/simple;
-	bh=aEyCAg5r7C7mGUU+wZa9a1AvTO9rjirBlH3sTiTaSn0=;
+	s=arc-20240116; t=1706884454; c=relaxed/simple;
+	bh=smELjAc+1lxu7z3cmyggWXvk5TEfu9w8DqoHbL7V/Sk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pSLJMqal7eiBp7oGOi67Hc8KRqjKz2lAPq8zm72QrtaEhLDpwu6x0EqjIFCSCGVdiGyS6PZxZ5k3KA/5KTjSxf5/z8m+qrBBErPKTX2wruoiSz+WOtTZ+1H5Ngjv0K64N5zyLjNxiauepXxJJ24IWGA/m3HKQRopLKejiXiFVTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnccJTCB; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=U7dU/n1iYKZs4B49zbcYcLP+t3P3F4BBHprzfaOsHv+t+wokqeXteD79skAg93Ii6qxZMulimUThorb82c57P/15HDwpItrM8eX5orP4pFPPnkUL5HmIU8b284QBCxiz9F42Wib9NT1GfI+BPvpQjSmHg+YbaWnnGOSpubmtdaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MwS/uEMt; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnccJTCB"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a370e63835cso80193966b.1;
-        Fri, 02 Feb 2024 06:32:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MwS/uEMt"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a30f7c9574eso309932466b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 06:34:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706884336; x=1707489136; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1706884450; x=1707489250; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/XFbEk8TjvWrH3OpqkG5Nm22jl0ZreNTnoVcouMOMeQ=;
-        b=HnccJTCB7ozWvQ5q6XwXEouFC7hW0b4/Z+sn+yUKfRLQn7xEw7+pSi0j1yYNuoLJqS
-         29MH9M7/oQuAkpqiGC6sOUXwRqQqsbQqAFQlwe7MywJifLHMPbzJ0tWS939mEyahPfL3
-         8Arab3AqdCosz6zAVURtJcpmeHWwHFjRkWIGCsN0NqHoOOTmamCwd+lhALz7fFVBESrr
-         i55jU8G3hpY8B0Wp0/zI/EBMFnn72j+bcIHCe5ILjpvKWZmgjsD7K89ceAbitBnkj59L
-         Bsn0VG7mKi+fvrnkTXBmQQCZ+Ngn1DW9j81lpj34HsMQoKAPd8RDI/WDzMaWK7vtkkJu
-         TaYw==
+        bh=cZAWF8WNyPIOZBGCeXYXz44JlQLAqQAUYrdryEsZijM=;
+        b=MwS/uEMtCSoLHwpqkQOTzsj6AsPwpt/XIWi5Dd74ab4LRsI0F0+SK5RSAJ7pPWzlqh
+         N1Bo9oQkupjUM8KJ5AlhYxuXN0cm2QuHlF6coOIS2l0o7RPqxqSIfY+H35RTBkv2GAv4
+         YP1huzY5SYenBtmttpsY83UsqG31k9CMFQGkcWCURIP3tg6t9/WsW1HpbTt8B4FxL3ZT
+         u5H1Bx2K42jz4WJrtgP9fiql4jkvy/eHltv9Y2ob/1xHAGpdOd52rCTQAHei21Iz/q46
+         xsJ5/jTDYL8Qd58ekoonMar1eYAL4DOq/LYWQX6gJ/QZqA1TxpAxQu3jLgBdtRDyPo9S
+         YGig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706884336; x=1707489136;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1706884450; x=1707489250;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/XFbEk8TjvWrH3OpqkG5Nm22jl0ZreNTnoVcouMOMeQ=;
-        b=p4TbcBeNC3cf396wvGwjlLmzsStwu9SBF0uaIRJ7f2WuGN+IAmeYpCa8P0hOdpjwZj
-         zE8ncuGKk9tvCa1F8aCo+iCkDvFPVii+qikl446hsjbKgCF7AmLVIgewvFJYbFRDuw9e
-         GWIMlQrfVyU+xwQcZeew1HH4tejCcP7wjv/fLg1lcNvcR8Ll9iy1vTHRgdQP3UQwcqto
-         YPEtuLANDX2o5MRwKzDGIrbEPCspAEGmzN9wJZOwaKTMFKRdy2DHN0fRsK5uAGBwV+aT
-         9C8KBlZlms2nT9cpb9pWQqtJUWbj5fnKuzSTq21LjQ9hlD4r4v3n181WpUM15BjY94AE
-         1XyA==
-X-Gm-Message-State: AOJu0YyRirBhYZ6iqzWDZJdT59fTpWPFp3y5JTIfTOX94/sD0McCmAYC
-	xsvgWHAVbFyIpXzcEygLI+81X1EF30Cr4d6REveC6NBXVtIwSy2Z
-X-Google-Smtp-Source: AGHT+IE90c2PgiDGC1ohmOdD4Hq2fvODX53JZMl4Yes8Q1Pqg4ZO4D2dFkGCGV2u7q867spZtxNT3g==
-X-Received: by 2002:a17:906:f107:b0:a2d:52dc:1841 with SMTP id gv7-20020a170906f10700b00a2d52dc1841mr3956312ejb.18.1706884336128;
-        Fri, 02 Feb 2024 06:32:16 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWWMwX2rUnBTEWm4GD5TeeQVOz9SsTzA3cCLLc9C4Pw51Lvv+APyc1HN+F4OhADXF+Iu0ZiCuTS9CEFm9jgaUFP9dND+OKJuzMnSNVP6493qWkROD7l6plHBwQdKQGq4n51HQspY2yO78/hZ0qHzitYMAR7xL8kW1TDLV+HUDmGIxHHsnBTo7jwBM46cnp/IfRDvH0T8QYOloUcclYGBoP6KSJCkZ2hdMWLYhcqrNw7FBdwU6CMoQEf1uFC/c29idq1QXZOT7ku8aflHNYzx+IWcePRdL4yiQxdytGbJ/JZgZKjM4NWvS7pF84nbGVP16bx0eIPcb3AKHP/GYrAVFKBevkp7uxZpJT+M5GF+x1ihlxl0RWp3fqIQGH/U3UTzOYD5Rk7WvuPrUAWwL51nAp9LSCOLQ==
-Received: from [10.76.84.182] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id c3-20020a170906340300b00a35a659cab5sm944245ejb.179.2024.02.02.06.32.14
+        bh=cZAWF8WNyPIOZBGCeXYXz44JlQLAqQAUYrdryEsZijM=;
+        b=V5UadIwF/Fr0OywwfW9u9ZI3+sfZ5INH3E1NqtB2sQtspPlOrlfQK8jp9RmZM5jeGs
+         jm3sCnfe7H1ZQWhR+YRozMnuBlTC4de5RY+6xHiSh+KwJ6Xjn5DncExPm1gvBQqW6OJU
+         tVxq8Zdr7it9dhz06lEhjy3JFzjXO0xm2P7BtdR3uaCjNZu/AiO9IJe8HTVc0/sasmU7
+         jeOQLkMggordkVjwX8jOMJ53HLlTpAL9c1bh3npLDUYeL02/HbQ0OjpaQtGCPAIQGkP7
+         CILUqQbLwr9VBAyy2PwatCSXOeb6/n0J9hDrsWLkud5xC5TWwWmVdzMV0Vy/wYmsMd/I
+         7fMg==
+X-Gm-Message-State: AOJu0YzKebJjDwexuiv/itsEN5yN//b+sK9IxSnMG2OHCrOJY66P1196
+	ogBvLTb7hTe0armKuvEid0LDwaLdoXjkktBD8fJQttCyLnRwmiXDHozcUsYdP7I=
+X-Google-Smtp-Source: AGHT+IGXuaTTYhVenIjzovitfKix3bgmDZdzjbESI6N5z4LDL1eDMWWfGVRPtwxUruoQW7Ka5UHeJg==
+X-Received: by 2002:a17:906:cecc:b0:a36:5b1c:fb4b with SMTP id si12-20020a170906cecc00b00a365b1cfb4bmr4122804ejb.13.1706884450450;
+        Fri, 02 Feb 2024 06:34:10 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXYmZXJ+RWUJegx40QB/r2pp3Jr8YWrATIFHx8G7qlJxkzSeYSDGDVaiaO2LMtiDXSlDXsUH369aGGIoZZ230i8i32jLBLqxiNBvU/w+AM59d1g4tXXOKwLVC377h25Bd2UMiS+O8hGAeJJ/xoee1cGoRXOsV0+3+bwlDXgqzDiLKfmJXdBQLTrKo8ncMarZKm9Wj82GjGcZaSvOMSwLmrRj5PzQWtCoDhtF5C29a4clzXDgYlEN+Kvy4YjYjywXbDQIGRBOaGHdLAJX1ylTKtXvS2FrACm4ztiFKbCXM8ggLNJz++6ymXHC6qMjMMq3ngdtuZF5whtiN076J+cqjINYvjH8jl7hwyhsHp3EQoc+bdiivcA
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id uz12-20020a170907118c00b00a3685526ed6sm922654ejb.183.2024.02.02.06.34.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 06:32:15 -0800 (PST)
-Message-ID: <8c7839a9-b1f1-4e58-b35e-afdc8503c90f@gmail.com>
-Date: Fri, 2 Feb 2024 16:32:14 +0200
+        Fri, 02 Feb 2024 06:34:09 -0800 (PST)
+Message-ID: <7e7bc8ba-f349-47f5-b6ba-6594edccaaa8@linaro.org>
+Date: Fri, 2 Feb 2024 15:34:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,55 +61,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iio: adc: ad7192: Add AD7194 support
+Subject: Re: [PATCH v4 1/6] dt-bindings: arm: qcom: Document QCM8550, QCS8550
+ SoC and board
 Content-Language: en-US
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Alisa-Dariana Roman <alisa.roman@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Alexandru Tachici <alexandru.tachici@analog.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20231114200533.137995-1-alisa.roman@analog.com>
- <20231114200533.137995-5-alisa.roman@analog.com>
- <20231126163426.66e51114@jic23-huawei>
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-In-Reply-To: <20231126163426.66e51114@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ dmitry.baryshkov@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20240119100621.11788-1-quic_tengfan@quicinc.com>
+ <20240119100621.11788-2-quic_tengfan@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240119100621.11788-2-quic_tengfan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26.11.2023 18:34, Jonathan Cameron wrote:
-> On Tue, 14 Nov 2023 22:05:33 +0200
-> Alisa-Dariana Roman <alisadariana@gmail.com> wrote:
+On 19/01/2024 11:06, Tengfei Fan wrote:
+> Document QCM8550, QCS8550 SoC and the AIM300 AIoT board bindings.
+> QCS8550 and QCM8550 processor combines powerful computing, extreme edge
+> AI processing, Wi-Fi 7, and robust video and graphics for a wide range
+> of use cases for the Internet of Things (IoT). QCS8550 is a QCS version
+> for QCM8550. Modem RF only in QCM8550 but not in QCS8550.
+> AIM300 Series is a highly optimized family of modules designed to
+> support AIoT applications. The module is mounted onto Qualcomm AIoT
+> carrier board to support verification, evaluation and development. It
+> integrates QCS8550 SoC, UFS and PMIC chip etc.
+> AIM stands for Artificial Intelligence Module. AIoT stands for AI IoT.
 > 
->> Unlike the other AD719Xs, AD7194 has configurable differential
->> channels. The default configuration for these channels can be changed
->> from the devicetree.
->>
->> The default configuration is hardcoded in order to have a stable number
->> of channels.
->>
->> Also modify config AD7192 description for better scaling.
->>
->> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
-> 
-> Not directly related to this patch (which looks fine to me)
-> but any idea why 3db_frequency_available is not using read_avail?
-> 
-> Seems sensible to convert it over given all the other cases are using that
-> and it will allow dropping at least some of the attributes infrastructure
-> for some devices.
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thank you very much for the feedback!
+I want to unreview it.
 
-I actually tried then to use read_avail for the 3db frequencies, but it 
-required a greater rework. If I remember correctly, the four possible 
-frequency choices need to be stored in the ad7192_state for it to work. 
-Should I add a patch with these changes?
+Please fix your commit msg to drop marketing and instead describe the
+SoC. I don't see for example any explanation why there is qcm8550 and
+sm8550. Aren't they the same?
 
-Kind regards,
-Alisa-Dariana Roman
+
+
+Best regards,
+Krzysztof
 
