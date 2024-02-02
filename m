@@ -1,153 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA02E56D;
-	Fri,  2 Feb 2024 02:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E74C2CD;
+	Fri,  2 Feb 2024 03:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706842762; cv=none; b=GehGN/wLRdd/tB3GmdiPpsOIaAHjlN4Aic7lw2pYW+kSiOQil4ZQMY44rv2GyLDz3RV/wrEJpi/3xkN8g78kOuQGK+tJC1cFevpH5KykmmH2A4Ld5L5o3gAcHqeyMEHI3Vh3me4ZdMRW6AGXvEu6gf7DjQSR9vv3vcRk4RDI2Qs=
+	t=1706842875; cv=none; b=FkHQgC7oo5vNWBsqtZf8DhEaUWYRmvNsDwd+07X8JQ18laTDqa9PVSTfi5gRzYc3Y4xY8nTXKpJPliPhMtOekE4BGvBDjKQWu1NJc9RVCegfGI2Bf7JtPHm7k5YkHMlQ327BcrF5pcHA7d9mHHtawnCAoVvvVwcd9fEIAt1sD24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706842762; c=relaxed/simple;
-	bh=r+SvB9zLGCJWcQpfU6TkqIBEDh5OyZdXwt12sASYJsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dSWwUvo/P82UUKAACqfA9tpg5oJCBxEE55kjOjXj9qAgsD7SXKvCKZt/R+vTlG3A9JmdV1yPAi0pX9fRIvHFGeRqvTeqXqOo+DhJ0Ib4B2P50vXp3+WGIcT2Yhjp25dIE5LI3/QoiWPHMSc0WHVY2+YGeb3Trqu8kVryMjFnrug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sC+1NFyp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706842875; c=relaxed/simple;
+	bh=QphI2QaFh5i8mpq3LXJuXnOJcGXvW8OtRDIwjhj/MoM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dRpWGmIOoJnRV+FWDdiKkNv3f+pz0YjcKt/xPsLJ9NTXNPN7JFqsvZTSWhSer+tYrdLjGmg/giSxS0HwwIrAGoA+0z8RcyXGwW0iMW20VIQq510Szq7WXcXeHhGChJxNVbq9YEtirXLVshVwLLUvp4mZfUAfim+Gz9DEETdvSgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EZZiWmmc; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sC+1NFyp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D387C433C7;
-	Fri,  2 Feb 2024 02:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706842761;
-	bh=r+SvB9zLGCJWcQpfU6TkqIBEDh5OyZdXwt12sASYJsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sC+1NFypNfxuFBEhWIbnU8IRj9MaBq/uUm+ma3F4l7JIWq9z5VS4/4a8GOX+KyCDg
-	 8+ZaI2eUJnh81vL3qdRrh7lh/Cvgf7OyTOBVZ7by+sjZ+raxykejfcb67QeO9Ym0Wn
-	 edY3kWWKi/6WmtZJJ5JtOqAkQkAQCSXeGArYIdJP3hVBpmrW2P4mGsEM4oDrYGyqE9
-	 jgDOIRVHrI93PvE21HBfzBj8fl+BxOoItaSf/Pj8CFkxlpd4jf6cYmk8iV8G+zGIVQ
-	 CEtxelvPpoMi+SOqRKGaoNN/jgqwhh9GW+oMQ9XyZyBiEjNRswGZgpdyVnfBmm4cc5
-	 hkoPR2kKyI36A==
-Date: Thu, 1 Feb 2024 20:59:18 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pci@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC 6/9] PCI: create platform devices for child OF nodes of the
- port node
-Message-ID: <4epbzsmxj2gfvjcufclfw7vnamr6hyeickrbyakibdtubwnefs@lkyt7mth43nq>
-References: <20240201155532.49707-1-brgl@bgdev.pl>
- <20240201155532.49707-7-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EZZiWmmc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706842873; x=1738378873;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QphI2QaFh5i8mpq3LXJuXnOJcGXvW8OtRDIwjhj/MoM=;
+  b=EZZiWmmcBpSq9tmUcL4yWi4pqMcGsklJrCIcNQ4aY5gzu+RaPRHW2sSK
+   lKy8nTR+A/W8oZ3PyYrXetwL6sLD+DbPv5kOOKmMVhtoKcMmyiU8SCubr
+   uTClcNYMFL4AuaDx+Cq6c4/B2zFT/UQavHBmuH2nlfQMlCfsxuFCSRLBF
+   8VojYry5uGu5a8TKckVGZgAiL5blbft9eFG7omIhdLpKja6+fAeJS1ixN
+   swZ6sy+sDiiEZX8aOwLpMO5+RCgqm+vrqJvRJRvJauOmxYDDgpaC3nLA9
+   09gjNHI2h3ggZWH91XZxXGaSUguGATp2ktUuaKzU6lFrpggZzyZvnEcq9
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="401187693"
+X-IronPort-AV: E=Sophos;i="6.05,237,1701158400"; 
+   d="scan'208";a="401187693"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 19:01:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,237,1701158400"; 
+   d="scan'208";a="257260"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.22.55]) ([10.247.22.55])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 19:01:00 -0800
+Message-ID: <2ad1f55c-f361-4439-9174-6af1bb429d55@linux.intel.com>
+Date: Fri, 2 Feb 2024 11:00:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201155532.49707-7-brgl@bgdev.pl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
+ the new interface mode
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Andrew Halaney
+ <ahalaney@redhat.com>, Simon Horman <simon.horman@corigine.com>,
+ Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, bpf@vger.kernel.org,
+ Voon Wei Feng <weifeng.voon@intel.com>,
+ Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+ Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+ Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+ <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
+ <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
+ <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
+ <ZbtYaXkNf2ZF1prE@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <ZbtYaXkNf2ZF1prE@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 01, 2024 at 04:55:29PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On 1/2/2024 4:38 pm, Russell King (Oracle) wrote:
+> Note the "This must not modify any state." statement. By reinitialising
+> the PCS in this method, you are violating that statement.
 > 
-> In order to introduce PCI power-sequencing,
-
-Please provide a proper problem description.
-
-> we need to create platform
-
-And properly express why this is a "need".
-
-> devices for child nodes of the port node. They will get matched against
-> the pwrseq drivers
-
-That's not what happens in your code, the child nodes of the bridge node
-in DeviceTree will match against arbitrary platform_drivers.
-
-I also would like this commit message to express that the job of the
-matched device is to:
-
-1) power up said device, followed by triggering a scan on the parent PCI
-bus during it's probe function.
-
-2)  power down said device, during its remove function.
-
-> (if one exists) and then the actual PCI device will
-> reuse the node once it's detected on the bus.
-
-I think the "reuse" deserves to be clarified as there will be both a pci
-and a platform device associated with the same of_node.
-
+> This requirement is because this method will be called by
+> phylink_validate_mac_and_pcs() at various times, potentially for each
+> and every interface that stmmac supports, which will lead to you
+> reinitialising the PCS, killing the link, each time we ask the MAC for
+> a PCS, whether we are going to make use of it in that mode or not.
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/pci/bus.c    | 9 ++++++++-
->  drivers/pci/remove.c | 2 ++
->  2 files changed, 10 insertions(+), 1 deletion(-)
+> You can not do this. Sorry. Hard NAK for this approach.
 > 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 826b5016a101..17ab41094c4e 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -12,6 +12,7 @@
->  #include <linux/errno.h>
->  #include <linux/ioport.h>
->  #include <linux/of.h>
-> +#include <linux/of_platform.h>
->  #include <linux/proc_fs.h>
->  #include <linux/slab.h>
->  
-> @@ -342,8 +343,14 @@ void pci_bus_add_device(struct pci_dev *dev)
->  	 */
->  	pcibios_bus_add_device(dev);
->  	pci_fixup_device(pci_fixup_final, dev);
-> -	if (pci_is_bridge(dev))
-> +	if (pci_is_bridge(dev)) {
->  		of_pci_make_dev_node(dev);
-> +		retval = of_platform_populate(dev->dev.of_node, NULL, NULL,
-> +					      &dev->dev);
+Thank you for taking the time to review, got your concerns, and I'll 
+address the following concerns before submitting a new patch series:
 
-I'm not familiar enough with the ins and outs of the PCI code. Can you
-confirm that there are no problems with this (possibly) calling
-pci_rescan_bus() before the bridge device is fully initialized below?
+1. Remove allow_switch_interface and have the PHY driver fill in 
+phydev->possible_interfaces.
+2. Rework on the PCS to have similar implementation with the following 
+patch "net: macb: use .mac_select_pcs() interface" 
+(https://lore.kernel.org/netdev/E1n568J-002SZX-Gr@rmk-PC.armlinux.org.uk/T/).
 
-Regards,
-Bjorn
-
-> +		if (retval)
-> +			pci_err(dev, "failed to populate child OF nodes (%d)\n",
-> +				retval);
-> +	}
->  	pci_create_sysfs_dev_files(dev);
->  	pci_proc_attach_device(dev);
->  	pci_bridge_d3_update(dev);
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index d749ea8250d6..fc9db2805888 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/pci.h>
->  #include <linux/module.h>
-> +#include <linux/of_platform.h>
->  #include "pci.h"
->  
->  static void pci_free_resources(struct pci_dev *dev)
-> @@ -22,6 +23,7 @@ static void pci_stop_dev(struct pci_dev *dev)
->  		device_release_driver(&dev->dev);
->  		pci_proc_detach_device(dev);
->  		pci_remove_sysfs_dev_files(dev);
-> +		of_platform_depopulate(&dev->dev);
->  		of_pci_remove_node(dev);
->  
->  		pci_dev_assign_added(dev, false);
-> -- 
-> 2.40.1
-> 
+Kindly let me know if there are any additional concerns or suggestions.
