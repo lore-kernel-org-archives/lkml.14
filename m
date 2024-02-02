@@ -1,86 +1,120 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488DF839F9
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A77D8594A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 21:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706910649; cv=none; b=Zae9cM/GEuvMUsgX7o0kchP0Qwm3MY5gn5/gzbVDOON1mdmuokNiOucVhFAi9HVQE/YK7jjikzrOUJdP8642Obz1x0tk+S/5p2UPxlDfIYzDBKHb6/+hArny4p02FzO+nIM5P8lwglnCEqBp0cCyK6e79tHYPLTzOUSa9zygBKI=
+	t=1706910652; cv=none; b=cXW8OZZxCzSwWN5e7zccSETjNvLD3aAS2bmIjTypOP1PdAhwXNV0Qox6n0y8KfEVrLMfaUNGwwMprTr+BvK/CM6VmH9FhR0AMZ65IM1M89KUnWeFQ+0D/jfSYcM44HxbUfxL4n0Wa+Gx+0NnGjXilLhrU/fRvlndg8ZFBNcuNAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706910649; c=relaxed/simple;
-	bh=VZbnTeSWw8U2MGSVh9v3Lwt3NwuQtFuNk5k6Qqx8jyw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EKWQbTtjTe9sub+HJ1r2762sgKff/L6wB8z8FYJHHj6rWN/hxtbOuDMm1vUPYaodMRApXLU79cgDOGyzjUKlh2BsYHP5vIvYTcb9TwSA2Y2V/FXs38TAaYLMFrMhwlai1KwLJ6/tKMfpd+JbCFVJG/Dygtztoo912xdbWU76mHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JN6Gmx9k; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1706910652; c=relaxed/simple;
+	bh=j1+6smkjmxO2TPfR0I7+fbIujkXeFYIF+x2HwXzQ4SY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=QpG1hGmOgA/JW8n8TaMukCvhYDvqn3h/RvYPcrRdDNXXc4H9pkGcelYJKn5N7Q0yVcHwhMpuu7etq/hvxsuIJsFH9ZiVmqV21kHr2m1RA5p3+m00ag1OvQzHLbqj1wPDbBexwwLaujHS8W5a0ycV+V2i5Ehv0rE7TFuwFZns92A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SaGn4WU/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JN6Gmx9k"
-Message-ID: <b7a0b41e-569d-4d70-957d-0bb8e3556b32@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706910645;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R+DDcT4cQ+ZQNKsrJ8G/v4WyIDU0Jo5aM9bFB2AEJog=;
-	b=JN6Gmx9kZZt2cVs44M1gPVCj48aVYfbzkXs9/84xuss/aVnvDDLtRQUGIkFRSqo2feg4qf
-	AyQeuZt0SJBw2BlWNmtEb/i3ViP/TnccSFSfOu883L2KsfX3t47Bej0HZk4IgKsS3o6U2U
-	rRv5Lg99QsIb2LqVC+VH7tyYc+QjZXs=
-Date: Fri, 2 Feb 2024 13:50:35 -0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SaGn4WU/"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412Lkb4Z000581;
+	Fri, 2 Feb 2024 21:50:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=SVl
+	N3fADnRzFhsjCTs1uFxfAX8KThaSYQyGegUws1dI=; b=SaGn4WU/6EnI4uRJa3L
+	KhPdZHJ55LTV/V4GJrw2+zP7V8ZhSCS+n/7aIhn45hhuVWgshwwp/SsQ+r5Zi6Zj
+	W0EA0VjjkDJN8TAwjwgRUfDP8necTq3y/1pWD/f3X5plC0yemlKqTErG2q9wqB9l
+	6pMYCztFarGh2Y0IiBAF5B9uUcw5e827SyYfAtYVLm4qb4lL5/ywplSVZUzX8aLf
+	blDCjEbFon2HSv7XD38k0d2dY8MypHaGk+3lQ2OFSJaizmaBINrA6Q4AinTbN7OX
+	4leOX7OZg1c6PxxJ2LypVusInfGcoJRVhN7WgfbBdqTlAuGMhLno8djTX66mMOqC
+	7Kw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0ptxjfcd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 Feb 2024 21:50:35 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 412LoYEo014779
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 2 Feb 2024 21:50:35 GMT
+Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 2 Feb 2024 13:50:34 -0800
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+Date: Fri, 2 Feb 2024 13:50:21 -0800
+Subject: [PATCH] drm/panel: visionox-r66451: Set prepare_prev_first flag
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] selftests/bpf: Use ARRAY_SIZE for array length
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org, daniel@iogearbox.net,
- song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
- shuah@kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>,
- andrii@kernel.org
-References: <20240202090652.11294-1-jiapeng.chong@linux.alibaba.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-Content-Language: en-US
-In-Reply-To: <20240202090652.11294-1-jiapeng.chong@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Message-ID: <20240202-visionox-r66451-prev-first-v1-1-c267dc889284@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAJxjvWUC/yWMSwqAMAwFryJZG+hHU/Aq4sJP1GxUWpGCeHeDL
+ of3Zm5IHIUTNMUNkS9Jsm8KtixgXPttYZRJGZxx3gQb8L/sGSNRVVs81MJZYjqRwmA8WTLsHWh
+ Ap1nyF2+753kBtzhPXmwAAAA=
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Sam Ravnborg
+	<sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
+        Daniel Vetter
+	<daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+CC: <quic_abhinavk@quicinc.com>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706910634; l=1137;
+ i=quic_jesszhan@quicinc.com; s=20230329; h=from:subject:message-id;
+ bh=j1+6smkjmxO2TPfR0I7+fbIujkXeFYIF+x2HwXzQ4SY=;
+ b=a5m4w+x7U6gunqaLxXXorLqcSL4H44MRB2xTmI3wMhsVhLlYvjppnXehX45YL181M7iKIHwQ9
+ vfA1I1m9l8nA8rtE+vAze9Fv9qN8bQqkukppk4CkY/J5fQrWXWTveTo
+X-Developer-Key: i=quic_jesszhan@quicinc.com; a=ed25519;
+ pk=gAUCgHZ6wTJOzQa3U0GfeCDH7iZLlqIEPo4rrjfDpWE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: NKhIfIUk_Z7tzlG538Iy_nmDTYgJw3ov
+X-Proofpoint-GUID: NKhIfIUk_Z7tzlG538Iy_nmDTYgJw3ov
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-02_14,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 suspectscore=0 mlxlogscore=923 mlxscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402020161
 
-On 2/2/24 1:06 AM, Jiapeng Chong wrote:
-> Use of macro ARRAY_SIZE to calculate array size minimizes
-> the redundant code and improves code reusability.
-> 
-> ./tools/testing/selftests/bpf/progs/syscall.c:122:26-27: WARNING: Use ARRAY_SIZE.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8170
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> ---
->   tools/testing/selftests/bpf/progs/syscall.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/progs/syscall.c b/tools/testing/selftests/bpf/progs/syscall.c
-> index 3d3cafdebe72..297a34f224c3 100644
-> --- a/tools/testing/selftests/bpf/progs/syscall.c
-> +++ b/tools/testing/selftests/bpf/progs/syscall.c
-> @@ -119,7 +119,7 @@ int load_prog(struct args *ctx)
->   	static __u64 value = 34;
->   	static union bpf_attr prog_load_attr = {
->   		.prog_type = BPF_PROG_TYPE_XDP,
-> -		.insn_cnt = sizeof(insns) / sizeof(insns[0]),
-> +		.insn_cnt = ARRAY_SIZE(insns)
+The DSI host needs to be enabled for the panel to be initialized in
+prepare(). Ensure this happens by setting prepare_prev_first.
 
-This does not even compile: 
-https://github.com/kernel-patches/bpf/actions/runs/7761734279/job/21170796228
+Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+---
+ drivers/gpu/drm/panel/panel-visionox-r66451.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The existing code here is fine.
+diff --git a/drivers/gpu/drm/panel/panel-visionox-r66451.c b/drivers/gpu/drm/panel/panel-visionox-r66451.c
+index fbb73464de332..493f2a6076f8d 100644
+--- a/drivers/gpu/drm/panel/panel-visionox-r66451.c
++++ b/drivers/gpu/drm/panel/panel-visionox-r66451.c
+@@ -322,6 +322,7 @@ static int visionox_r66451_probe(struct mipi_dsi_device *dsi)
+ 	dsi->lanes = 4;
+ 	dsi->format = MIPI_DSI_FMT_RGB888;
+ 	dsi->mode_flags = MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS;
++	ctx->panel.prepare_prev_first = true;
+ 
+ 	drm_panel_init(&ctx->panel, dev, &visionox_r66451_funcs, DRM_MODE_CONNECTOR_DSI);
+ 	ctx->panel.backlight = visionox_r66451_create_backlight(dsi);
 
->   	};
->   	int ret;
->   
+---
+base-commit: 51b70ff55ed88edd19b080a524063446bcc34b62
+change-id: 20230717-visionox-r66451-prev-first-67b036160e32
+
+Best regards,
+-- 
+Jessica Zhang <quic_jesszhan@quicinc.com>
 
