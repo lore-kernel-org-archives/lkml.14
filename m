@@ -1,93 +1,101 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B540145B3B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 Feb 2024 15:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36FA145B20;
+	Fri,  2 Feb 2024 15:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706887910; cv=none; b=BKhkjWI2RiH5D+OeoaJX+08y8lOOHlhu/e3dAmZ7LY6bmLs0pNNB0iwakIfAL7Rgvapc8I+aVlOag9dFnxxCe60+akPa42LwT25of48BOTG8cBPRmxhxQ9Wu0ArrgzuDJ3ELjj/45uekA484ziLSGNaPNoK+cycJsPy4JnRjicY=
+	t=1706887953; cv=none; b=INvZvkyCQzQM+fKNfu7oGv81SuEYMoJfDgzm+FHgGs/PdM+dVRScvVig8DSquG2pmtUBnUceAriIviRv3MLW7sGbrr9Pn69uwJ8VohA0tq764hX7FWcyz4KD9nCPOwSBUVk7MzydmTuvTuWrGZ1lcBqD+k34VvN+MtxNluNEAYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706887910; c=relaxed/simple;
-	bh=X7CHp42Qev89FZqIAikgLbDlNbexH9c5Zo5LqW50PQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I7m4E72z2LKvd8jeBISbRPloPnZm17U7licMsd+0DxLea3RKhk8rDluWdebQHcuGgXdPpk0SC8zSa9/WT7DjXnzmf7HpXcqij9v1mXy2TeE0atsZGmbEBvp6ri+86Y0jIV5x1S1smz0Jco6+cLVp7x+bu2m9s6clooFht/X7GuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=eErp11Hu; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1706887953; c=relaxed/simple;
+	bh=YPkSvytEEBb/qeJVsFU1fMko8TQCBCDq/nPKJnIl+bE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C80NCfetwq5tiqCHvum1hX9eUNaevSnXfgBNbp3zb8XHjH6bDwCAZ8mbU6mqRkAOjIVX7XupojnzHd38IPV6l1P8XkXOgoKiXV8pP3tMWkN8L8XJL2vTLrZhTGFkp7gELUGMX9nZX7Kr372QCC+v7S3Ww7jarC27sl7TOOuSE5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FYG8Adgk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="eErp11Hu"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6d24737d7so2128091276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 Feb 2024 07:31:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1706887908; x=1707492708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uyvOAzMFIzsSlq2kiKta6LgOvAhbSJpfLskxvPgpInU=;
-        b=eErp11HujsPY4cWoXSjHHOZ7vPmZED3O/U8ftVzZuTZ9g8qtb1trzvxG56JUjAaxMe
-         RYQwlFbhMdnu52+jdMDjo+xHKRRUCrDwB98PFLqVAyWEsuG9nYI/1bWr1/WZOM6GR7PM
-         mDqgxLlkDkuKH2n5zT7fADQz6mAC+zklOOkx+B8YzO7FhSG76XI6cXN+GrD0tZyXOpWL
-         /i2EbwUNkBn8XW1MaKndDq0v+JxbYX7Qh91kOTTym5JUIT3CA2kn+df1ZilHYqBBUqgs
-         mZuCQUU7pJXm9KOFOp8RiJajcoHhpoxEVR3UUobSDWfHKC7DEv+J1y+X95C6sSgQmRFi
-         DEBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706887908; x=1707492708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uyvOAzMFIzsSlq2kiKta6LgOvAhbSJpfLskxvPgpInU=;
-        b=a6qqiAqAYGdOpLfVJxMGqZ4S9xwf4OtQK9FkuDIy1xPR7HVaJkOWBLQBOzS+nab10e
-         o9XryreBHDZOIqF9VtRfVyaQubYG0pWFlkfupQGDVcW6T47rnmj9vdwN4GCAYL6298Qe
-         4HLwHC4rQivEXT5CwCLKsOV87XuwN5VP6V2drbyJ4GTePa3X55WGQjQVdAtM0hIEaqoL
-         YuKvBDcSHTxMT0opOKrz89e1YH3YXNhPPVWVLl5rvJUsmiKRLtj7aPhwgsuSUT090sp7
-         wyXz+raPYPPz6wHB6j0LqFXtMlQ+k9ar+erYYZsRG279VPSLJI7vDSAlfTUl5ji9v24L
-         w2/A==
-X-Gm-Message-State: AOJu0YxiFuWO7rb00KAv8IOPmH9oLDJ1j2gF+qfofn9YVu1alF1su60d
-	P2+mLoxYDGLtPBYUhS/B6gH+GUIdMM+AIYzV++lxMyrHOyaMDcX3l2WW4C6JX7OnQTlgwiLlHTd
-	gjGcnXLfwpWFQ4MJOQSE5U1K4e/RrRs1LvMXj
-X-Google-Smtp-Source: AGHT+IF23FJH1CrfkAGumfzPLOg3qie8GMPsuoo1BWOC2z8criLcQmZEuP8ymTXXNdxx7AdItEawlzLieCj8emW2AW4=
-X-Received: by 2002:a25:df91:0:b0:dbc:c56f:465e with SMTP id
- w139-20020a25df91000000b00dbcc56f465emr8987242ybg.3.1706887907968; Fri, 02
- Feb 2024 07:31:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FYG8Adgk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59519C433C7;
+	Fri,  2 Feb 2024 15:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706887953;
+	bh=YPkSvytEEBb/qeJVsFU1fMko8TQCBCDq/nPKJnIl+bE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FYG8AdgkCYmUNEylUzdiCra/uwbz+wT6RZmwsK8OkWghJ8Ix0/vvI7Qfp3UxOuIIv
+	 6IKy/LnZhGZ7Gy1osozYYVn+kPhHbRYeIVQQh45FCU8LaKXD59ywLuOWHsdsy08FFj
+	 j4qZzJuvlSgHKzYduAM18rihd5uGjQJsGjiNvBto=
+Date: Fri, 2 Feb 2024 07:32:32 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: naveenkrishna.chatradhi@amd.com, linux-kernel@vger.kernel.org,
+	Carlos Bilbao <carlos.bilbao@amd.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86/amd/hsmp: switch to use
+ device_add_groups()
+Message-ID: <2024020243-blinks-pantomime-c51e@gregkh>
+References: <2024020145-junior-outnumber-3e76@gregkh>
+ <07010c54-2e44-463b-9a9b-95697fd30ffd@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202034448.717589-1-dongtai.guo@linux.dev>
-In-Reply-To: <20240202034448.717589-1-dongtai.guo@linux.dev>
-From: Paul Moore <paul@paul-moore.com>
-Date: Fri, 2 Feb 2024 10:31:37 -0500
-Message-ID: <CAHC9VhS2F8LkjRNQv7=x1DyRqDjatpuHJL5QNjqz7ru8-0Y1_A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Modify macro NETLBL_CATMAP_MAPTYPE to define a type
- using typedef
-To: George Guo <dongtai.guo@linux.dev>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, George Guo <guodongtai@kylinos.cn>, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07010c54-2e44-463b-9a9b-95697fd30ffd@redhat.com>
 
-On Thu, Feb 1, 2024 at 10:45=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
-wrote:
->
-> From: George Guo <guodongtai@kylinos.cn>
->
-> Modify NETLBL_CATMAP_MAPTYPE to netlbl_catmap_map_t, which is more
-> readable.
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  include/net/netlabel.h       | 8 ++++----
->  net/netlabel/netlabel_kapi.c | 8 ++++----
->  2 files changed, 8 insertions(+), 8 deletions(-)
+On Fri, Feb 02, 2024 at 08:49:39AM +0100, Hans de Goede wrote:
+> Hi Greg,
+> 
+> On 2/2/24 03:44, Greg Kroah-Hartman wrote:
+> > The use of devm_*() functions works properly for when the device
+> > structure itself is dynamic, but the hsmp driver is attempting to have a
+> > local, static, struct device and then calls devm_() functions attaching
+> > memory to the device that will never be freed.
+> 
+> As I mentioned in my reply to v1, this is not correct.
+> 
+> There is a global data struct, but that holds a struct device
+> pointer, not the device struct.
 
-I'm generally not in favor of minor rename patches like this unless
-they are part of a larger effort (code churn with little benefit).
-I'm not going to block it if the netdev folks want to merge this, but
-I can't say I really support it either.
+Ooops, I misread that:
+	static struct hsmp_plat_device plat_dev;
+was not the actual device struct anymore.
 
---
-paul-moore.com
+> The device itself is created with platform_device_alloc() +
+> platform_device_add() from module-init and it is removed
+> on module-exit by calling platform_device_unregister()
+
+Ok, much better.
+
+> So AFAICT this should keep using the devm_ variant to properly
+> cleanup the sysfs attributes.
+
+This devm_ variant is odd, and should never have been created as the
+sysfs core always cleans up the sysfs attributes when a device is
+removed, there is no need for it (i.e. they do the same thing.)
+
+That's why I want to get rid of it, it's pointless :)
+
+> But what this really needs is to be converted to using
+> amd_hsmp_driver.driver.dev_groups rather then manually
+> calling devm_device_add_groups() I have already asked
+> Suma Hegde (AMD) to take a look at this.
+
+The initial issue I saw with this is that these attributes are being
+created dynamically, so using dev_groups can be a bit harder.  The code
+paths here are twisty and not obvious as it seems to want to support
+devices of multiple types in the same codebase at the same time.
+
+But yes, using dev_groups is ideal, and if that happens, I'm happy.
+It's just that there are now only 2 in-kernel users of
+devm_device_add_groups() and I have a patch series to get rid of the
+other one, and so this would be the last, hence my attention to this.
+
+Again, moving from devm_device_add_groups() to device_add_groups() is a
+no-op from a functional standpoint, so this should be fine.
+
+thanks,
+
+greg k-h
